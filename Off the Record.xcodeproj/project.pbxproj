@@ -1,0 +1,311 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		D9F9377D13F44BD3009A3D84 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9F9377C13F44BD3009A3D84 /* UIKit.framework */; };
+		D9F9377F13F44BD3009A3D84 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9F9377E13F44BD3009A3D84 /* Foundation.framework */; };
+		D9F9378513F44BD3009A3D84 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D9F9378313F44BD3009A3D84 /* InfoPlist.strings */; };
+		D9F9378713F44BD3009A3D84 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D9F9378613F44BD3009A3D84 /* main.m */; };
+		D9F9378B13F44BD3009A3D84 /* OTRAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D9F9378A13F44BD3009A3D84 /* OTRAppDelegate.m */; };
+		D9F9378E13F44BD3009A3D84 /* OTRFirstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9F9378D13F44BD3009A3D84 /* OTRFirstViewController.m */; };
+		D9F9379013F44BD3009A3D84 /* first.png in Resources */ = {isa = PBXBuildFile; fileRef = D9F9378F13F44BD3009A3D84 /* first.png */; };
+		D9F9379213F44BD3009A3D84 /* first@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D9F9379113F44BD3009A3D84 /* first@2x.png */; };
+		D9F9379513F44BD3009A3D84 /* OTRSecondViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9F9379413F44BD3009A3D84 /* OTRSecondViewController.m */; };
+		D9F9379713F44BD3009A3D84 /* second.png in Resources */ = {isa = PBXBuildFile; fileRef = D9F9379613F44BD3009A3D84 /* second.png */; };
+		D9F9379913F44BD3009A3D84 /* second@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D9F9379813F44BD3009A3D84 /* second@2x.png */; };
+		D9F9379C13F44BD3009A3D84 /* OTRFirstViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9F9379A13F44BD3009A3D84 /* OTRFirstViewController.xib */; };
+		D9F9379F13F44BD3009A3D84 /* OTRSecondViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9F9379D13F44BD3009A3D84 /* OTRSecondViewController.xib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		D9F9377813F44BD3009A3D84 /* Off the Record.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Off the Record.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D9F9377C13F44BD3009A3D84 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		D9F9377E13F44BD3009A3D84 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		D9F9378213F44BD3009A3D84 /* Off the Record-Info.plist */ = {isa = PBXFileReference; path = "Off the Record-Info.plist"; sourceTree = "<group>"; };
+		D9F9378413F44BD3009A3D84 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		D9F9378613F44BD3009A3D84 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		D9F9378813F44BD3009A3D84 /* Off the Record-Prefix.pch */ = {isa = PBXFileReference; path = "Off the Record-Prefix.pch"; sourceTree = "<group>"; };
+		D9F9378913F44BD3009A3D84 /* OTRAppDelegate.h */ = {isa = PBXFileReference; path = OTRAppDelegate.h; sourceTree = "<group>"; };
+		D9F9378A13F44BD3009A3D84 /* OTRAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OTRAppDelegate.m; sourceTree = "<group>"; };
+		D9F9378C13F44BD3009A3D84 /* OTRFirstViewController.h */ = {isa = PBXFileReference; path = OTRFirstViewController.h; sourceTree = "<group>"; };
+		D9F9378D13F44BD3009A3D84 /* OTRFirstViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OTRFirstViewController.m; sourceTree = "<group>"; };
+		D9F9378F13F44BD3009A3D84 /* first.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = first.png; sourceTree = "<group>"; };
+		D9F9379113F44BD3009A3D84 /* first@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "first@2x.png"; sourceTree = "<group>"; };
+		D9F9379313F44BD3009A3D84 /* OTRSecondViewController.h */ = {isa = PBXFileReference; path = OTRSecondViewController.h; sourceTree = "<group>"; };
+		D9F9379413F44BD3009A3D84 /* OTRSecondViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OTRSecondViewController.m; sourceTree = "<group>"; };
+		D9F9379613F44BD3009A3D84 /* second.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = second.png; sourceTree = "<group>"; };
+		D9F9379813F44BD3009A3D84 /* second@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "second@2x.png"; sourceTree = "<group>"; };
+		D9F9379B13F44BD3009A3D84 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/OTRFirstViewController.xib; sourceTree = "<group>"; };
+		D9F9379E13F44BD3009A3D84 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/OTRSecondViewController.xib; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D9F9377513F44BD3009A3D84 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D9F9377D13F44BD3009A3D84 /* UIKit.framework in Frameworks */,
+				D9F9377F13F44BD3009A3D84 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		D9F9376D13F44BD3009A3D84 = {
+			isa = PBXGroup;
+			children = (
+				D9F9378013F44BD3009A3D84 /* Off the Record */,
+				D9F9377B13F44BD3009A3D84 /* Frameworks */,
+				D9F9377913F44BD3009A3D84 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		D9F9377913F44BD3009A3D84 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D9F9377813F44BD3009A3D84 /* Off the Record.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D9F9377B13F44BD3009A3D84 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D9F9377C13F44BD3009A3D84 /* UIKit.framework */,
+				D9F9377E13F44BD3009A3D84 /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D9F9378013F44BD3009A3D84 /* Off the Record */ = {
+			isa = PBXGroup;
+			children = (
+				D9F9378913F44BD3009A3D84 /* OTRAppDelegate.h */,
+				D9F9378A13F44BD3009A3D84 /* OTRAppDelegate.m */,
+				D9F9378C13F44BD3009A3D84 /* OTRFirstViewController.h */,
+				D9F9378D13F44BD3009A3D84 /* OTRFirstViewController.m */,
+				D9F9378F13F44BD3009A3D84 /* first.png */,
+				D9F9379113F44BD3009A3D84 /* first@2x.png */,
+				D9F9379313F44BD3009A3D84 /* OTRSecondViewController.h */,
+				D9F9379413F44BD3009A3D84 /* OTRSecondViewController.m */,
+				D9F9379613F44BD3009A3D84 /* second.png */,
+				D9F9379813F44BD3009A3D84 /* second@2x.png */,
+				D9F9379A13F44BD3009A3D84 /* OTRFirstViewController.xib */,
+				D9F9379D13F44BD3009A3D84 /* OTRSecondViewController.xib */,
+				D9F9378113F44BD3009A3D84 /* Supporting Files */,
+			);
+			path = "Off the Record";
+			sourceTree = "<group>";
+		};
+		D9F9378113F44BD3009A3D84 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				D9F9378213F44BD3009A3D84 /* Off the Record-Info.plist */,
+				D9F9378313F44BD3009A3D84 /* InfoPlist.strings */,
+				D9F9378613F44BD3009A3D84 /* main.m */,
+				D9F9378813F44BD3009A3D84 /* Off the Record-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		D9F9377713F44BD3009A3D84 /* Off the Record */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D9F937A213F44BD3009A3D84 /* Build configuration list for PBXNativeTarget "Off the Record" */;
+			buildPhases = (
+				D9F9377413F44BD3009A3D84 /* Sources */,
+				D9F9377513F44BD3009A3D84 /* Frameworks */,
+				D9F9377613F44BD3009A3D84 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Off the Record";
+			productName = "Off the Record";
+			productReference = D9F9377813F44BD3009A3D84 /* Off the Record.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D9F9376F13F44BD3009A3D84 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+			};
+			buildConfigurationList = D9F9377213F44BD3009A3D84 /* Build configuration list for PBXProject "Off the Record" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = D9F9376D13F44BD3009A3D84;
+			productRefGroup = D9F9377913F44BD3009A3D84 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D9F9377713F44BD3009A3D84 /* Off the Record */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		D9F9377613F44BD3009A3D84 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D9F9378513F44BD3009A3D84 /* InfoPlist.strings in Resources */,
+				D9F9379013F44BD3009A3D84 /* first.png in Resources */,
+				D9F9379213F44BD3009A3D84 /* first@2x.png in Resources */,
+				D9F9379713F44BD3009A3D84 /* second.png in Resources */,
+				D9F9379913F44BD3009A3D84 /* second@2x.png in Resources */,
+				D9F9379C13F44BD3009A3D84 /* OTRFirstViewController.xib in Resources */,
+				D9F9379F13F44BD3009A3D84 /* OTRSecondViewController.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D9F9377413F44BD3009A3D84 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D9F9378713F44BD3009A3D84 /* main.m in Sources */,
+				D9F9378B13F44BD3009A3D84 /* OTRAppDelegate.m in Sources */,
+				D9F9378E13F44BD3009A3D84 /* OTRFirstViewController.m in Sources */,
+				D9F9379513F44BD3009A3D84 /* OTRSecondViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		D9F9378313F44BD3009A3D84 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D9F9378413F44BD3009A3D84 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		D9F9379A13F44BD3009A3D84 /* OTRFirstViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D9F9379B13F44BD3009A3D84 /* en */,
+			);
+			name = OTRFirstViewController.xib;
+			sourceTree = "<group>";
+		};
+		D9F9379D13F44BD3009A3D84 /* OTRSecondViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D9F9379E13F44BD3009A3D84 /* en */,
+			);
+			name = OTRSecondViewController.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		D9F937A013F44BD3009A3D84 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		D9F937A113F44BD3009A3D84 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		D9F937A313F44BD3009A3D84 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Off the Record/Off the Record-Prefix.pch";
+				INFOPLIST_FILE = "Off the Record/Off the Record-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		D9F937A413F44BD3009A3D84 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Off the Record/Off the Record-Prefix.pch";
+				INFOPLIST_FILE = "Off the Record/Off the Record-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		D9F9377213F44BD3009A3D84 /* Build configuration list for PBXProject "Off the Record" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D9F937A013F44BD3009A3D84 /* Debug */,
+				D9F937A113F44BD3009A3D84 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D9F937A213F44BD3009A3D84 /* Build configuration list for PBXNativeTarget "Off the Record" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D9F937A313F44BD3009A3D84 /* Debug */,
+				D9F937A413F44BD3009A3D84 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D9F9376F13F44BD3009A3D84 /* Project object */;
+}
