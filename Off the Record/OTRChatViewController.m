@@ -248,11 +248,33 @@ static OtrlMessageAppOps ui_ops = {
     AIMSessionManager *theSession = buddyListController.theSession;
     AIMMessage * msg = [AIMMessage messageWithBuddy:[theSession.session.buddyList buddyWithUsername:self.title] message:newMessage];
 	[theSession.messageHandler sendMessage:msg];
+    
+    otrl_message_free(newmessage);
 }
 
 -(void)receiveMessage:(NSString *)message
 {
-    chatHistoryTextView.text = [chatHistoryTextView.text stringByAppendingString:[NSString stringWithFormat:@"\n%@: %@",self.title,message]];
+    int ignore_message;
+    char *newmessage = NULL;
+    
+    ignore_message = otrl_message_receiving(buddyListController.OTR_userState, &ui_ops, NULL,[buddyListController.accountName UTF8String], "prpl-oscar", [self.title UTF8String], [message UTF8String], &newmessage, NULL, NULL, NULL);
+    
+    NSLog(@"%@",message);
+
+    if(ignore_message == 0)
+    {
+        NSString *newMessage;
+        if(newmessage)
+        {
+            newMessage = [NSString stringWithUTF8String:newmessage];
+        }
+        else
+            newMessage = message;
+            
+        chatHistoryTextView.text = [chatHistoryTextView.text stringByAppendingString:[NSString stringWithFormat:@"\n%@: %@",self.title,newMessage]];
+    }
+    
+    otrl_message_free(newmessage);
 }
 
 @end
