@@ -11,6 +11,7 @@
 #import "CommandTokenizer.h"
 #import "proto.h"
 
+static     OtrlUserState s_OTR_userState;
 
 @interface OTRBuddyListViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, AIMLoginDelegate, AIMSessionManagerDelegate, AIMFeedbagHandlerDelegate, AIMICBMHandlerDelegate, AIMStatusHandlerDelegate, AIMRateLimitHandlerDelegate, AIMRendezvousHandlerDelegate, UIAlertViewDelegate> {
     
@@ -26,18 +27,17 @@
     
     UIViewController *loginController;
     
-    OtrlUserState OTR_userState;
     NSString *accountName;
 }
 
 @property (nonatomic, retain) IBOutlet UITableView *buddyListTableView;
 @property (nonatomic, retain) AIMSessionManager * theSession;
 @property (nonatomic, retain) AIMLogin * login;
-@property OtrlUserState OTR_userState;
 @property (nonatomic, retain)     NSString *accountName;
 
 
 -(void)enterConversation:(NSString*)buddyName;
++(OtrlUserState) OTR_userState;
 
 
 //test

@@ -18,7 +18,6 @@
 @synthesize buddyListTableView;
 @synthesize theSession;
 @synthesize login;
-@synthesize OTR_userState;
 @synthesize accountName;
 
 - (void)blockingCheck {
@@ -509,7 +508,7 @@
     
     // initialize OTR
     OTRL_INIT;
-    OTR_userState = otrl_userstate_create();
+    s_OTR_userState = otrl_userstate_create();
     //otrl_privkey_read(OTR_userState,"privkeyfilename");
     //otrl_privkey_read_fingerprints(OTR_userState, "fingerprintfilename", NULL, NULL);
     
@@ -638,6 +637,11 @@
                 [self enterConversation:alertView.title];
         }
     }
+}
+
++(OtrlUserState) OTR_userState
+{
+    return s_OTR_userState;
 }
 
 

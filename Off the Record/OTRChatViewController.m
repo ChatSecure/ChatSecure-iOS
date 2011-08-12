@@ -10,6 +10,9 @@
 #import "message.h"
 #import "privkey.h"
 
+#define PRIVKEYFNAME @"otr.private_key"
+#define STOREFNAME @"otr.fingerprints"
+
 @implementation OTRChatViewController
 @synthesize chatHistoryTextView;
 @synthesize messageTextField;
@@ -34,7 +37,15 @@ static void protocol_name_free_cb(void *opdata, const char *protocol_name)
 static void create_privkey_cb(void *opdata, const char *accountname,
                               const char *protocol)
 {
+    FILE *privf;
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *path = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",PRIVKEYFNAME]];
+    privf = fopen([path UTF8String], "w+b");
+    
     //otrg_plugin_create_privkey(accountname, protocol);
+    otrl_privkey_generate_FILEp([OTRBuddyListViewController OTR_userState], privf, accountname, protocol);
+    fclose(privf);
 }
 
 static int is_logged_in_cb(void *opdata, const char *accountname,
@@ -68,6 +79,7 @@ static void inject_message_cb(void *opdata, const char *accountname,
         return;
     }
     otrg_plugin_inject_message(account, recipient, message);*/
+    
 }
 
 static void notify_cb(void *opdata, OtrlNotifyLevel level,
@@ -111,6 +123,9 @@ static void confirm_fingerprint_cb(void *opdata, OtrlUserState us,
 {
     //otrg_dialog_unknown_fingerprint(us, accountname, protocol, username,
     //                                fingerprint);
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Unknown Fingerprint" message:[NSString stringWithFormat:@"%s: %s",username, fingerprint] delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+    [alert show];
+    [alert release];
 }
 
 static void write_fingerprints_cb(void *opdata)
@@ -118,16 +133,29 @@ static void write_fingerprints_cb(void *opdata)
     /*otrg_plugin_write_fingerprints();
     otrg_ui_update_keylist();
     otrg_dialog_resensitize_all();*/
+    
+    FILE *storef;
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *path = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",STOREFNAME]];
+    storef = fopen([path UTF8String], "wb");
+    
+    if (!storef) return;
+    otrl_privkey_write_fingerprints_FILEp([OTRBuddyListViewController OTR_userState], storef);
+    fclose(storef);
 }
 
 static void gone_secure_cb(void *opdata, ConnContext *context)
 {
     //otrg_dialog_connected(context);
+    NSLog(@"gone secure");
 }
 
 static void gone_insecure_cb(void *opdata, ConnContext *context)
 {
    // otrg_dialog_disconnected(context);
+    NSLog(@"gone insecure");
+
 }
 
 static void still_secure_cb(void *opdata, ConnContext *context, int is_reply)
@@ -135,11 +163,15 @@ static void still_secure_cb(void *opdata, ConnContext *context, int is_reply)
     /*if (is_reply == 0) {
         otrg_dialog_stillconnected(context);
     }*/
+    NSLog(@"still secure");
+
 }
 
 static void log_message_cb(void *opdata, const char *message)
 {
     //purple_debug_info("otr", message);
+    NSLog(@"otr: %s",message);
+
 }
 
 static int max_message_size_cb(void *opdata, ConnContext *context)
@@ -238,7 +270,7 @@ static OtrlMessageAppOps ui_ops = {
     gcry_error_t err;
     char *newmessage = NULL;
     
-    err = otrl_message_sending(buddyListController.OTR_userState, &ui_ops, NULL,
+    err = otrl_message_sending([OTRBuddyListViewController OTR_userState], &ui_ops, NULL,
                                [buddyListController.accountName UTF8String], "prpl-oscar", [self.title UTF8String], [message UTF8String], NULL, &newmessage,
                                NULL, NULL);
     NSString *newMessage = [NSString stringWithUTF8String:newmessage];
@@ -257,7 +289,7 @@ static OtrlMessageAppOps ui_ops = {
     int ignore_message;
     char *newmessage = NULL;
     
-    ignore_message = otrl_message_receiving(buddyListController.OTR_userState, &ui_ops, NULL,[buddyListController.accountName UTF8String], "prpl-oscar", [self.title UTF8String], [message UTF8String], &newmessage, NULL, NULL, NULL);
+    ignore_message = otrl_message_receiving([OTRBuddyListViewController OTR_userState], &ui_ops, NULL,[buddyListController.accountName UTF8String], "prpl-oscar", [self.title UTF8String], [message UTF8String], &newmessage, NULL, NULL, NULL);
     
     NSLog(@"%@",message);
 
