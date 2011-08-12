@@ -63,6 +63,7 @@
     if(![usernameTextField.text isEqualToString:@""] && ![passwordTextField.text isEqualToString:@""])
     {
         buddyController.login = [[AIMLogin alloc] initWithUsername:usernameTextField.text password:passwordTextField.text];
+        buddyController.accountName = usernameTextField.text;
         
         [buddyController.login setDelegate:buddyController];
         if (![buddyController.login beginAuthorization]) {

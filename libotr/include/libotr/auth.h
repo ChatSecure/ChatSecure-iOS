@@ -20,7 +20,7 @@
 #ifndef __AUTH_H__
 #define __AUTH_H__
 
-#include <gcrypt.h>
+#include "gcrypt.h"
 #include "dh.h"
 
 typedef enum {

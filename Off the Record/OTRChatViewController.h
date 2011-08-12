@@ -21,5 +21,6 @@
 
 - (IBAction)sendButtonPressed:(id)sender;
 - (void)receiveMessage:(NSString*)message;
+- (void)sendMessage:(NSString*)message;
 
 @end

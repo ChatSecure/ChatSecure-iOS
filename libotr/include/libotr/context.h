@@ -20,7 +20,7 @@
 #ifndef __CONTEXT_H__
 #define __CONTEXT_H__
 
-#include <gcrypt.h>
+#include "gcrypt.h"
 
 #include "dh.h"
 #include "auth.h"

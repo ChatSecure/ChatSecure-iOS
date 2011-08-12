@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "LibOrange.h"
 #import "CommandTokenizer.h"
+#import "proto.h"
+
 
 @interface OTRBuddyListViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, AIMLoginDelegate, AIMSessionManagerDelegate, AIMFeedbagHandlerDelegate, AIMICBMHandlerDelegate, AIMStatusHandlerDelegate, AIMRateLimitHandlerDelegate, AIMRendezvousHandlerDelegate, UIAlertViewDelegate> {
     
@@ -23,11 +25,16 @@
     NSMutableDictionary *chatViewControllers;
     
     UIViewController *loginController;
+    
+    OtrlUserState OTR_userState;
+    NSString *accountName;
 }
 
 @property (nonatomic, retain) IBOutlet UITableView *buddyListTableView;
 @property (nonatomic, retain) AIMSessionManager * theSession;
 @property (nonatomic, retain) AIMLogin * login;
+@property OtrlUserState OTR_userState;
+@property (nonatomic, retain)     NSString *accountName;
 
 
 -(void)enterConversation:(NSString*)buddyName;

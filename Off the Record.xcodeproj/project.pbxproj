@@ -11,6 +11,9 @@
 		D9991A4C13F44F87002D3008 /* OTRChatListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9991A4A13F44F86002D3008 /* OTRChatListViewController.xib */; };
 		D9991A5113F44F9A002D3008 /* OTRChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9991A4F13F44F9A002D3008 /* OTRChatViewController.m */; };
 		D9991A5213F44F9A002D3008 /* OTRChatViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9991A5013F44F9A002D3008 /* OTRChatViewController.xib */; };
+		D9D552C113F5262B0089138B /* libgcrypt.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D552B913F5262B0089138B /* libgcrypt.a */; };
+		D9D552C213F5262B0089138B /* libgpg-error.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D552BA13F5262B0089138B /* libgpg-error.a */; };
+		D9D552C313F5262B0089138B /* libotr.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D552BB13F5262B0089138B /* libotr.a */; };
 		D9DE274C13F4F0A500E335CA /* OTRLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9DE274A13F4F0A400E335CA /* OTRLoginViewController.m */; };
 		D9DE274D13F4F0A500E335CA /* OTRLoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9DE274B13F4F0A500E335CA /* OTRLoginViewController.xib */; };
 		D9DE293513F4F93400E335CA /* AIMBArtDownloadReply.m in Sources */ = {isa = PBXBuildFile; fileRef = D9DE287513F4F93400E335CA /* AIMBArtDownloadReply.m */; };
@@ -120,6 +123,26 @@
 		D9991A4E13F44F9A002D3008 /* OTRChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRChatViewController.h; sourceTree = "<group>"; };
 		D9991A4F13F44F9A002D3008 /* OTRChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRChatViewController.m; sourceTree = "<group>"; };
 		D9991A5013F44F9A002D3008 /* OTRChatViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OTRChatViewController.xib; sourceTree = "<group>"; };
+		D9D552A613F5262B0089138B /* gcrypt-module.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gcrypt-module.h"; sourceTree = "<group>"; };
+		D9D552A713F5262B0089138B /* gcrypt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gcrypt.h; sourceTree = "<group>"; };
+		D9D552A813F5262B0089138B /* gpg-error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gpg-error.h"; sourceTree = "<group>"; };
+		D9D552AA13F5262B0089138B /* auth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = auth.h; sourceTree = "<group>"; };
+		D9D552AB13F5262B0089138B /* b64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = b64.h; sourceTree = "<group>"; };
+		D9D552AC13F5262B0089138B /* context.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = context.h; sourceTree = "<group>"; };
+		D9D552AD13F5262B0089138B /* dh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dh.h; sourceTree = "<group>"; };
+		D9D552AE13F5262B0089138B /* mem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mem.h; sourceTree = "<group>"; };
+		D9D552AF13F5262B0089138B /* message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = message.h; sourceTree = "<group>"; };
+		D9D552B013F5262B0089138B /* privkey-t.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "privkey-t.h"; sourceTree = "<group>"; };
+		D9D552B113F5262B0089138B /* privkey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = privkey.h; sourceTree = "<group>"; };
+		D9D552B213F5262B0089138B /* proto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = proto.h; sourceTree = "<group>"; };
+		D9D552B313F5262B0089138B /* serial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = serial.h; sourceTree = "<group>"; };
+		D9D552B413F5262B0089138B /* sm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sm.h; sourceTree = "<group>"; };
+		D9D552B513F5262B0089138B /* tlv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tlv.h; sourceTree = "<group>"; };
+		D9D552B613F5262B0089138B /* userstate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = userstate.h; sourceTree = "<group>"; };
+		D9D552B713F5262B0089138B /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = version.h; sourceTree = "<group>"; };
+		D9D552B913F5262B0089138B /* libgcrypt.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libgcrypt.a; sourceTree = "<group>"; };
+		D9D552BA13F5262B0089138B /* libgpg-error.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libgpg-error.a"; sourceTree = "<group>"; };
+		D9D552BB13F5262B0089138B /* libotr.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libotr.a; sourceTree = "<group>"; };
 		D9DE274913F4F0A400E335CA /* OTRLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRLoginViewController.h; sourceTree = "<group>"; };
 		D9DE274A13F4F0A400E335CA /* OTRLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRLoginViewController.m; sourceTree = "<group>"; };
 		D9DE274B13F4F0A500E335CA /* OTRLoginViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OTRLoginViewController.xib; sourceTree = "<group>"; };
@@ -333,12 +356,66 @@
 			files = (
 				D9F9377D13F44BD3009A3D84 /* UIKit.framework in Frameworks */,
 				D9F9377F13F44BD3009A3D84 /* Foundation.framework in Frameworks */,
+				D9D552C113F5262B0089138B /* libgcrypt.a in Frameworks */,
+				D9D552C213F5262B0089138B /* libgpg-error.a in Frameworks */,
+				D9D552C313F5262B0089138B /* libotr.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D9D552A413F5262B0089138B /* libotr */ = {
+			isa = PBXGroup;
+			children = (
+				D9D552A513F5262B0089138B /* include */,
+				D9D552B813F5262B0089138B /* lib */,
+			);
+			path = libotr;
+			sourceTree = "<group>";
+		};
+		D9D552A513F5262B0089138B /* include */ = {
+			isa = PBXGroup;
+			children = (
+				D9D552A613F5262B0089138B /* gcrypt-module.h */,
+				D9D552A713F5262B0089138B /* gcrypt.h */,
+				D9D552A813F5262B0089138B /* gpg-error.h */,
+				D9D552A913F5262B0089138B /* libotr */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		D9D552A913F5262B0089138B /* libotr */ = {
+			isa = PBXGroup;
+			children = (
+				D9D552AA13F5262B0089138B /* auth.h */,
+				D9D552AB13F5262B0089138B /* b64.h */,
+				D9D552AC13F5262B0089138B /* context.h */,
+				D9D552AD13F5262B0089138B /* dh.h */,
+				D9D552AE13F5262B0089138B /* mem.h */,
+				D9D552AF13F5262B0089138B /* message.h */,
+				D9D552B013F5262B0089138B /* privkey-t.h */,
+				D9D552B113F5262B0089138B /* privkey.h */,
+				D9D552B213F5262B0089138B /* proto.h */,
+				D9D552B313F5262B0089138B /* serial.h */,
+				D9D552B413F5262B0089138B /* sm.h */,
+				D9D552B513F5262B0089138B /* tlv.h */,
+				D9D552B613F5262B0089138B /* userstate.h */,
+				D9D552B713F5262B0089138B /* version.h */,
+			);
+			path = libotr;
+			sourceTree = "<group>";
+		};
+		D9D552B813F5262B0089138B /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				D9D552B913F5262B0089138B /* libgcrypt.a */,
+				D9D552BA13F5262B0089138B /* libgpg-error.a */,
+				D9D552BB13F5262B0089138B /* libotr.a */,
+			);
+			path = lib;
+			sourceTree = "<group>";
+		};
 		D9DE287313F4F93400E335CA /* LibOrange */ = {
 			isa = PBXGroup;
 			children = (
@@ -539,6 +616,7 @@
 		D9F9376D13F44BD3009A3D84 = {
 			isa = PBXGroup;
 			children = (
+				D9D552A413F5262B0089138B /* libotr */,
 				D9DE287313F4F93400E335CA /* LibOrange */,
 				D9F9378013F44BD3009A3D84 /* Off the Record */,
 				D9F9377B13F44BD3009A3D84 /* Frameworks */,
@@ -832,6 +910,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Off the Record/Off the Record-Prefix.pch";
 				INFOPLIST_FILE = "Off the Record/Off the Record-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/libotr/lib\"",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -843,6 +925,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Off the Record/Off the Record-Prefix.pch";
 				INFOPLIST_FILE = "Off the Record/Off the Record-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/libotr/lib\"",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

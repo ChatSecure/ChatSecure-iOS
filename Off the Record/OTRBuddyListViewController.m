@@ -9,6 +9,8 @@
 #import "OTRBuddyListViewController.h"
 #import "OTRChatViewController.h"
 #import "OTRLoginViewController.h"
+#import "message.h"
+#import "privkey.h"
 
 //#define kSignoffTime 500
 
@@ -16,6 +18,8 @@
 @synthesize buddyListTableView;
 @synthesize theSession;
 @synthesize login;
+@synthesize OTR_userState;
+@synthesize accountName;
 
 - (void)blockingCheck {
 	static NSDate * lastTime = nil;
@@ -501,6 +505,15 @@
     loginViewController.buddyController = self;
     [self presentModalViewController:loginViewController animated:YES];
     loginController = loginViewController;
+    
+    
+    // initialize OTR
+    OTRL_INIT;
+    OTR_userState = otrl_userstate_create();
+    //otrl_privkey_read(OTR_userState,"privkeyfilename");
+    //otrl_privkey_read_fingerprints(OTR_userState, "fingerprintfilename", NULL, NULL);
+    
+    
 }
 
 - (void)viewDidUnload
@@ -621,7 +634,8 @@
     {
         if(buttonIndex == 1) // Reply
         {
-            [self enterConversation:alertView.title];
+            if(alertView.title)
+                [self enterConversation:alertView.title];
         }
     }
 }

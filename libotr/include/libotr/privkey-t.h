@@ -20,7 +20,7 @@
 #ifndef __PRIVKEY_T_H__
 #define __PRIVKEY_T_H__
 
-#include <gcrypt.h>
+#include "gcrypt.h"
 
 typedef struct s_OtrlPrivKey {
     struct s_OtrlPrivKey *next;

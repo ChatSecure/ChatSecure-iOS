@@ -20,7 +20,7 @@
 #ifndef __SM_H__
 #define __SM_H__
 
-#include <gcrypt.h>
+#include "gcrypt.h"
 
 #define SM_HASH_ALGORITHM GCRY_MD_SHA256
 #define SM_DIGEST_SIZE 32
