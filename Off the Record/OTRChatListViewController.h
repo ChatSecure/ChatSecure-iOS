@@ -1,5 +1,5 @@
 //
-//  OTRFirstViewController.h
+//  OTRChatListViewController.h
 //  Off the Record
 //
 //  Created by Chris Ballinger on 8/11/11.
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface OTRFirstViewController : UIViewController
+@interface OTRChatListViewController : UIViewController
 
 @end

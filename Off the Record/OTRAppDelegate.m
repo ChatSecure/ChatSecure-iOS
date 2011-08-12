@@ -8,9 +8,9 @@
 
 #import "OTRAppDelegate.h"
 
-#import "OTRFirstViewController.h"
+#import "OTRBuddyListViewController.h"
 
-#import "OTRSecondViewController.h"
+#import "OTRChatListViewController.h"
 
 @implementation OTRAppDelegate
 
@@ -21,10 +21,13 @@
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
-    UIViewController *viewController1 = [[OTRFirstViewController alloc] initWithNibName:@"OTRFirstViewController" bundle:nil];
-    UIViewController *viewController2 = [[OTRSecondViewController alloc] initWithNibName:@"OTRSecondViewController" bundle:nil];
+
+    UIViewController *viewController1 = [[OTRBuddyListViewController alloc] initWithNibName:@"OTRBuddyListViewController" bundle:nil];
+    UIViewController *navController = [[UINavigationController alloc] initWithRootViewController:viewController1];
+    UIViewController *viewController2 = [[OTRChatListViewController alloc] initWithNibName:@"OTRChatListViewController" bundle:nil];
+    UIViewController *navController2 = [[UINavigationController alloc] initWithRootViewController:viewController2];
     self.tabBarController = [[UITabBarController alloc] init];
-    self.tabBarController.viewControllers = [NSArray arrayWithObjects:viewController1, viewController2, nil];
+    self.tabBarController.viewControllers = [NSArray arrayWithObjects:navController, navController2, nil];
     self.window.rootViewController = self.tabBarController;
     [self.window makeKeyAndVisible];
     return YES;
