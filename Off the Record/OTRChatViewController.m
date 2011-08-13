@@ -80,6 +80,13 @@ static void inject_message_cb(void *opdata, const char *accountname,
     }
     otrg_plugin_inject_message(account, recipient, message);*/
     
+    AIMSessionManager *theSession = [[OTRBuddyListViewController AIMSession] retain];
+    AIMMessage * msg = [AIMMessage messageWithBuddy:[theSession.session.buddyList buddyWithUsername:[NSString stringWithUTF8String:recipient]] message:[NSString stringWithUTF8String:message]];
+	[theSession.messageHandler sendMessage:msg];
+
+    [theSession release];
+    NSLog(@"sent inject: %s",message);
+    
 }
 
 static void notify_cb(void *opdata, OtrlNotifyLevel level,
@@ -181,7 +188,7 @@ static int max_message_size_cb(void *opdata, ConnContext *context)
         return 0;
     else
         return *((int*)lookup_result);*/
-    return 0;
+    return 10000000;
 }
 
 static OtrlMessageAppOps ui_ops = {
@@ -277,7 +284,7 @@ static OtrlMessageAppOps ui_ops = {
     
     NSLog(@"%@",newMessage);
     
-    AIMSessionManager *theSession = buddyListController.theSession;
+    AIMSessionManager *theSession = [OTRBuddyListViewController AIMSession];
     AIMMessage * msg = [AIMMessage messageWithBuddy:[theSession.session.buddyList buddyWithUsername:self.title] message:newMessage];
 	[theSession.messageHandler sendMessage:msg];
     

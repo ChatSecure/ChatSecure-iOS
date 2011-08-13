@@ -16,7 +16,6 @@
 
 @implementation OTRBuddyListViewController
 @synthesize buddyListTableView;
-@synthesize theSession;
 @synthesize login;
 @synthesize accountName;
 
@@ -643,6 +642,12 @@
 {
     return s_OTR_userState;
 }
+
++(AIMSessionManager*) AIMSession
+{
+    return theSession;
+}
+
 
 
 @end

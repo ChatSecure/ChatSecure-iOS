@@ -12,11 +12,12 @@
 #import "proto.h"
 
 static     OtrlUserState s_OTR_userState;
+static 	   AIMSessionManager * theSession;
+
 
 @interface OTRBuddyListViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, AIMLoginDelegate, AIMSessionManagerDelegate, AIMFeedbagHandlerDelegate, AIMICBMHandlerDelegate, AIMStatusHandlerDelegate, AIMRateLimitHandlerDelegate, AIMRendezvousHandlerDelegate, UIAlertViewDelegate> {
     
     AIMLogin * login;
-	AIMSessionManager * theSession;
 	NSThread * mainThread;
     
     UITableView *buddyListTableView;
@@ -31,13 +32,13 @@ static     OtrlUserState s_OTR_userState;
 }
 
 @property (nonatomic, retain) IBOutlet UITableView *buddyListTableView;
-@property (nonatomic, retain) AIMSessionManager * theSession;
 @property (nonatomic, retain) AIMLogin * login;
 @property (nonatomic, retain)     NSString *accountName;
 
 
 -(void)enterConversation:(NSString*)buddyName;
 +(OtrlUserState) OTR_userState;
++(AIMSessionManager*) AIMSession;
 
 
 //test
