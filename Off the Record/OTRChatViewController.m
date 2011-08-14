@@ -266,6 +266,8 @@ static OtrlMessageAppOps ui_ops = {
     [self sendMessage:textField.text];
     
     chatHistoryTextView.text = [chatHistoryTextView.text stringByAppendingString:[NSString stringWithFormat:@"\nMe: %@",textField.text]];
+    [self scrollTextView:chatHistoryTextView];
+
     
     textField.text = @"";
     
@@ -311,9 +313,22 @@ static OtrlMessageAppOps ui_ops = {
             newMessage = message;
             
         chatHistoryTextView.text = [chatHistoryTextView.text stringByAppendingString:[NSString stringWithFormat:@"\n%@: %@",self.title,newMessage]];
+        
+        [self scrollTextView:chatHistoryTextView];
+
     }
     
     otrl_message_free(newmessage);
+}
+
+-(void)scrollTextView: (UITextView *)textView
+{
+    textView.selectedRange = NSMakeRange(textView.text.length - 1, 0);
+}
+
+-(BOOL)textViewShouldBeginEditing:(UITextView *)textView
+{
+    return NO;
 }
 
 @end

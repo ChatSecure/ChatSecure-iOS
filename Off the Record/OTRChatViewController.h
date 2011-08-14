@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "OTRBuddyListViewController.h"
 
-@interface OTRChatViewController : UIViewController <UITextFieldDelegate> {
+@interface OTRChatViewController : UIViewController <UITextFieldDelegate, UITextViewDelegate> {
     UITextView *chatHistoryTextView;
     UITextField *messageTextField;
     OTRBuddyListViewController *buddyListController;
@@ -22,5 +22,6 @@
 - (IBAction)sendButtonPressed:(id)sender;
 - (void)receiveMessage:(NSString*)message;
 - (void)sendMessage:(NSString*)message;
+-(void)scrollTextView: (UITextView *)textView;
 
 @end
