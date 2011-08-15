@@ -183,12 +183,23 @@ static void log_message_cb(void *opdata, const char *message)
 
 static int max_message_size_cb(void *opdata, ConnContext *context)
 {
+    /*Although the maximum message size depends on a number of factors, we
+     found experimentally that the following rough values based solely on the
+     (pidgin) protocol name work well:
+     "prpl-msn",   1409
+     "prpl-icq",   2346
+     "prpl-aim",   2343
+     "prpl-yahoo", 832
+     "prpl-gg",    1999
+     "prpl-irc",   417
+     "prpl-oscar", 2343
+     */
     /*void* lookup_result = g_hash_table_lookup(mms_table, context->protocol);
     if (!lookup_result)
         return 0;
     else
         return *((int*)lookup_result);*/
-    return 10000000;
+    return 2343;
 }
 
 static OtrlMessageAppOps ui_ops = {
