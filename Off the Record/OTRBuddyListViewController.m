@@ -18,6 +18,7 @@
 @synthesize buddyListTableView;
 @synthesize login;
 @synthesize accountName;
+@synthesize chatViewControllers;
 
 - (void)blockingCheck {
 	static NSDate * lastTime = nil;

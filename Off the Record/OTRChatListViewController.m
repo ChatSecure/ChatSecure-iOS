@@ -7,8 +7,11 @@
 //
 
 #import "OTRChatListViewController.h"
+#import "OTRChatViewController.h"
 
 @implementation OTRChatListViewController
+
+@synthesize buddyController;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -43,10 +46,48 @@
     // e.g. self.myOutlet = nil;
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    if(buddyController.chatViewControllers)
+        return [buddyController.chatViewControllers count];
+    
+    return 0;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Return YES for supported orientations
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
+	if (cell == nil)
+	{
+		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"Cell"];
+	}
+	
+    if(buddyController.chatViewControllers)
+    {
+        NSArray *keyArray =  [buddyController.chatViewControllers allKeys];
+        OTRChatViewController *tmp = [buddyController.chatViewControllers objectForKey:[ keyArray objectAtIndex:indexPath.row]];
+        cell.textLabel.text = tmp.title;    
+        
+        int detailLength = 25;
+        
+        cell.detailTextLabel.text = [tmp.chatHistoryTextView.text substringFromIndex:[tmp.chatHistoryTextView.text length] - detailLength];
+    }
+    
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    
+	return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSArray *keyArray =  [buddyController.chatViewControllers allKeys];
+    OTRChatViewController *tmp = [buddyController.chatViewControllers objectForKey:[ keyArray objectAtIndex:indexPath.row]];
+    [self.navigationController pushViewController:tmp animated:YES];
+    
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 @end

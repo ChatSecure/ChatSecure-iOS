@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "OTRBuddyListViewController.h"
 
-@interface OTRChatListViewController : UIViewController
+@interface OTRChatListViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+
+@property (nonatomic, retain) OTRBuddyListViewController *buddyController;
 
 @end

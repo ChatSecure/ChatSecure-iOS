@@ -22,9 +22,10 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
 
-    UIViewController *viewController1 = [[OTRBuddyListViewController alloc] initWithNibName:@"OTRBuddyListViewController" bundle:nil];
+    OTRBuddyListViewController *viewController1 = [[OTRBuddyListViewController alloc] initWithNibName:@"OTRBuddyListViewController" bundle:nil];
     UIViewController *navController = [[UINavigationController alloc] initWithRootViewController:viewController1];
-    UIViewController *viewController2 = [[OTRChatListViewController alloc] initWithNibName:@"OTRChatListViewController" bundle:nil];
+    OTRChatListViewController *viewController2 = [[OTRChatListViewController alloc] initWithNibName:@"OTRChatListViewController" bundle:nil];
+    viewController2.buddyController = viewController1;
     UIViewController *navController2 = [[UINavigationController alloc] initWithRootViewController:viewController2];
     navController2.title = @"Conversations";
     self.tabBarController = [[UITabBarController alloc] init];

@@ -32,6 +32,7 @@ static 	   AIMSessionManager * theSession;
 }
 
 @property (nonatomic, retain) IBOutlet UITableView *buddyListTableView;
+@property (nonatomic, retain)     NSMutableDictionary *chatViewControllers;
 @property (nonatomic, retain) AIMLogin * login;
 @property (nonatomic, retain)     NSString *accountName;
 
