@@ -47,6 +47,12 @@
     // e.g. self.myOutlet = nil;
 }
 
+-(void)viewDidDisappear:(BOOL)animated
+{
+    if(HUD)
+        [HUD hide:YES];
+}
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
@@ -66,7 +72,17 @@
         buddyController.accountName = usernameTextField.text;
         
         [buddyController.login setDelegate:buddyController];
+        
+        HUD = [[MBProgressHUD alloc] initWithView:self.view];
+        [self.view addSubview:HUD];
+        
+        HUD.delegate = self;
+        HUD.labelText = @"Logging in...";
+        
+        [HUD show:YES];
+        
         if (![buddyController.login beginAuthorization]) {
+            [HUD hide:YES];
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:@"Failed to start authenticating. Please try again." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
             [alert show];
             [alert release];
@@ -84,6 +100,16 @@
 {
     [textField resignFirstResponder];
     return YES;
+}
+
+#pragma mark -
+#pragma mark MBProgressHUDDelegate methods
+
+- (void)hudWasHidden:(MBProgressHUD *)hud {
+    // Remove HUD from screen when the HUD was hidded
+    [HUD removeFromSuperview];
+    [HUD release];
+	HUD = nil;
 }
 
 @end

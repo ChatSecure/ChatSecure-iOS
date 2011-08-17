@@ -8,12 +8,14 @@
 
 #import <UIKit/UIKit.h>
 #import "OTRBuddyListViewController.h"
+#import "MBProgressHUD.h"
 
-@interface OTRLoginViewController : UIViewController <UITextFieldDelegate> {
+@interface OTRLoginViewController : UIViewController <UITextFieldDelegate, MBProgressHUDDelegate> {
     UITextField *usernameTextField;
     UITextField *passwordTextField;
     
     OTRBuddyListViewController *buddyController;
+    MBProgressHUD *HUD;
 }
 
 @property (retain, nonatomic) IBOutlet UITextField *usernameTextField;

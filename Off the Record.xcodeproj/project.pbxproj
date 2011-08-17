@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D90B80A913FC7026006EFF3D /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = D90B80A813FC7026006EFF3D /* MBProgressHUD.m */; };
+		D90B80AC13FC719B006EFF3D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D90B80AB13FC719B006EFF3D /* CoreGraphics.framework */; };
 		D9991A4B13F44F87002D3008 /* OTRChatListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9991A4913F44F86002D3008 /* OTRChatListViewController.m */; };
 		D9991A4C13F44F87002D3008 /* OTRChatListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9991A4A13F44F86002D3008 /* OTRChatListViewController.xib */; };
 		D9991A5113F44F9A002D3008 /* OTRChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9991A4F13F44F9A002D3008 /* OTRChatViewController.m */; };
@@ -117,6 +119,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D90B80A713FC7026006EFF3D /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
+		D90B80A813FC7026006EFF3D /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
+		D90B80AB13FC719B006EFF3D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		D9991A4813F44F86002D3008 /* OTRChatListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRChatListViewController.h; sourceTree = "<group>"; };
 		D9991A4913F44F86002D3008 /* OTRChatListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRChatListViewController.m; sourceTree = "<group>"; };
 		D9991A4A13F44F86002D3008 /* OTRChatListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OTRChatListViewController.xib; sourceTree = "<group>"; };
@@ -354,6 +359,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D90B80AC13FC719B006EFF3D /* CoreGraphics.framework in Frameworks */,
 				D9F9377D13F44BD3009A3D84 /* UIKit.framework in Frameworks */,
 				D9F9377F13F44BD3009A3D84 /* Foundation.framework in Frameworks */,
 				D9D552C113F5262B0089138B /* libgcrypt.a in Frameworks */,
@@ -365,6 +371,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D90B80A613FC7026006EFF3D /* MBProgressHUD */ = {
+			isa = PBXGroup;
+			children = (
+				D90B80A713FC7026006EFF3D /* MBProgressHUD.h */,
+				D90B80A813FC7026006EFF3D /* MBProgressHUD.m */,
+			);
+			path = MBProgressHUD;
+			sourceTree = "<group>";
+		};
 		D9D552A413F5262B0089138B /* libotr */ = {
 			isa = PBXGroup;
 			children = (
@@ -616,6 +631,8 @@
 		D9F9376D13F44BD3009A3D84 = {
 			isa = PBXGroup;
 			children = (
+				D90B80AB13FC719B006EFF3D /* CoreGraphics.framework */,
+				D90B80A613FC7026006EFF3D /* MBProgressHUD */,
 				D9D552A413F5262B0089138B /* libotr */,
 				D9DE287313F4F93400E335CA /* LibOrange */,
 				D9F9378013F44BD3009A3D84 /* Off the Record */,
@@ -836,6 +853,7 @@
 				D9DE299013F4F93400E335CA /* SBJsonWriter.m in Sources */,
 				D9DE299113F4F93400E335CA /* SNAC.m in Sources */,
 				D9DE299213F4F93400E335CA /* TLV.m in Sources */,
+				D90B80A913FC7026006EFF3D /* MBProgressHUD.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
