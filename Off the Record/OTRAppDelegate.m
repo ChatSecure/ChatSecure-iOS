@@ -26,6 +26,7 @@
     UIViewController *navController = [[UINavigationController alloc] initWithRootViewController:viewController1];
     UIViewController *viewController2 = [[OTRChatListViewController alloc] initWithNibName:@"OTRChatListViewController" bundle:nil];
     UIViewController *navController2 = [[UINavigationController alloc] initWithRootViewController:viewController2];
+    navController2.title = @"Conversations";
     self.tabBarController = [[UITabBarController alloc] init];
     self.tabBarController.viewControllers = [NSArray arrayWithObjects:navController, navController2, nil];
     self.window.rootViewController = self.tabBarController;

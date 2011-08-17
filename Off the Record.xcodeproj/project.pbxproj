@@ -631,7 +631,6 @@
 		D9F9376D13F44BD3009A3D84 = {
 			isa = PBXGroup;
 			children = (
-				D90B80AB13FC719B006EFF3D /* CoreGraphics.framework */,
 				D90B80A613FC7026006EFF3D /* MBProgressHUD */,
 				D9D552A413F5262B0089138B /* libotr */,
 				D9DE287313F4F93400E335CA /* LibOrange */,
@@ -652,6 +651,7 @@
 		D9F9377B13F44BD3009A3D84 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D90B80AB13FC719B006EFF3D /* CoreGraphics.framework */,
 				D9F9377C13F44BD3009A3D84 /* UIKit.framework */,
 				D9F9377E13F44BD3009A3D84 /* Foundation.framework */,
 			);
