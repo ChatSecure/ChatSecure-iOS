@@ -41,7 +41,6 @@
 		D913A6FB13FC9E8C00C97C1C /* UIColor+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = D913A6D413FC9E8C00C97C1C /* UIColor+HTML.m */; };
 		D913A6FD13FC9E8C00C97C1C /* UIDevice+DTVersion.m in Sources */ = {isa = PBXBuildFile; fileRef = D913A6D813FC9E8C00C97C1C /* UIDevice+DTVersion.m */; };
 		D913A70413FCA95700C97C1C /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D913A70313FCA95700C97C1C /* CoreText.framework */; };
-		D913A70613FCA96B00C97C1C /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D913A70513FCA96B00C97C1C /* CoreImage.framework */; };
 		D913A70813FCA9AB00C97C1C /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D913A70713FCA9AB00C97C1C /* QuartzCore.framework */; };
 		D913A70A13FCA9C200C97C1C /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D913A70913FCA9C200C97C1C /* ImageIO.framework */; };
 		D9991A4B13F44F87002D3008 /* OTRChatListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9991A4913F44F86002D3008 /* OTRChatListViewController.m */; };
@@ -462,7 +461,6 @@
 			files = (
 				D913A70A13FCA9C200C97C1C /* ImageIO.framework in Frameworks */,
 				D913A70813FCA9AB00C97C1C /* QuartzCore.framework in Frameworks */,
-				D913A70613FCA96B00C97C1C /* CoreImage.framework in Frameworks */,
 				D913A70413FCA95700C97C1C /* CoreText.framework in Frameworks */,
 				D90B80AC13FC719B006EFF3D /* CoreGraphics.framework in Frameworks */,
 				D9F9377D13F44BD3009A3D84 /* UIKit.framework in Frameworks */,
