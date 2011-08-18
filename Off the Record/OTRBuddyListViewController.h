@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "OTRCodec.h"
 #import "LibOrange.h"
 #import "CommandTokenizer.h"
 #import "proto.h"
@@ -35,6 +36,7 @@ static 	   AIMSessionManager * theSession;
 @property (nonatomic, retain)     NSMutableDictionary *chatViewControllers;
 @property (nonatomic, retain) AIMLogin * login;
 @property (nonatomic, retain)     NSString *accountName;
+@property (nonatomic, retain) OTRCodec *messageCodec;
 
 
 -(void)enterConversation:(NSString*)buddyName;

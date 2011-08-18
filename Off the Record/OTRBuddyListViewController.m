@@ -19,6 +19,7 @@
 @synthesize login;
 @synthesize accountName;
 @synthesize chatViewControllers;
+@synthesize messageCodec;
 
 - (void)blockingCheck {
 	static NSDate * lastTime = nil;
@@ -84,6 +85,7 @@
 	
 	// uncomment to test rate limit detection.
 	// [self sendBogus];
+    messageCodec = [[OTRCodec alloc] initWithAccountName:accountName];
     [loginController dismissModalViewControllerAnimated:YES];
 }
 
@@ -178,19 +180,25 @@
 	NSString * autoresp = [message isAutoresponse] ? @" (Auto-Response)" : @"";
 	NSLog(@"(%@) %@%@: %@", [NSDate date], [[message buddy] username], autoresp, [message plainTextMessage]);
     
-    if(![[self.navigationController visibleViewController].title isEqualToString:message.buddy.username])
-    {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:message.buddy.username message:[message plainTextMessage] delegate:self cancelButtonTitle:@"Ignore" otherButtonTitles:@"Reply", nil];
-        alert.tag = 1;
-        [alert show];
-        [alert release];
-    }
-
+    NSString *decodedMessage = [messageCodec decodeMessage:[message plainTextMessage] fromUser:message.buddy.username];
     
-    if([chatViewControllers objectForKey:message.buddy.username])
+    if(decodedMessage)
     {
-        OTRChatViewController *chatController = [chatViewControllers objectForKey:message.buddy.username];
-        [chatController receiveMessage:[message plainTextMessage]];
+        if(![[self.navigationController visibleViewController].title isEqualToString:message.buddy.username])
+        {
+
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:message.buddy.username message:decodedMessage delegate:self cancelButtonTitle:@"Ignore" otherButtonTitles:@"Reply", nil];
+            alert.tag = 1;
+            [alert show];
+            [alert release];
+        }
+
+        
+        if([chatViewControllers objectForKey:message.buddy.username])
+        {
+            OTRChatViewController *chatController = [chatViewControllers objectForKey:message.buddy.username];
+            [chatController receiveMessage:decodedMessage];
+        }
     }
 	
 	NSArray * tokens = [CommandTokenizer tokensOfCommand:msgTxt];
