@@ -9,8 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "OTRBuddyListViewController.h"
 
-@interface OTRChatListViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+@interface OTRChatListViewController : UIViewController <UITableViewDataSource, UITableViewDelegate> {
+    UITableView *chatListTableView;
+}
+
 
 @property (nonatomic, retain) OTRBuddyListViewController *buddyController;
+@property (retain, nonatomic) IBOutlet UITableView *chatListTableView;
 
 @end

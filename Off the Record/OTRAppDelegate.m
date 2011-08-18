@@ -26,6 +26,8 @@
     UIViewController *navController = [[UINavigationController alloc] initWithRootViewController:viewController1];
     OTRChatListViewController *viewController2 = [[OTRChatListViewController alloc] initWithNibName:@"OTRChatListViewController" bundle:nil];
     viewController2.buddyController = viewController1;
+    viewController1.chatListController = viewController2;
+    viewController1.tabController = _tabBarController;
     UIViewController *navController2 = [[UINavigationController alloc] initWithRootViewController:viewController2];
     navController2.title = @"Conversations";
     self.tabBarController = [[UITabBarController alloc] init];

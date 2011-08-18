@@ -12,6 +12,7 @@
 @implementation OTRChatListViewController
 
 @synthesize buddyController;
+@synthesize chatListTableView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -39,8 +40,14 @@
     self.title = @"Conversations";
 }
 
+-(void)viewWillAppear:(BOOL)animated
+{
+    [chatListTableView reloadData];
+}
+
 - (void)viewDidUnload
 {
+    [self setChatListTableView:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -91,4 +98,8 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
+- (void)dealloc {
+    [chatListTableView release];
+    [super dealloc];
+}
 @end

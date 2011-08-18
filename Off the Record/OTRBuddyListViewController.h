@@ -37,6 +37,8 @@ static 	   AIMSessionManager * theSession;
 @property (nonatomic, retain) AIMLogin * login;
 @property (nonatomic, retain)     NSString *accountName;
 @property (nonatomic, retain) OTRCodec *messageCodec;
+@property (nonatomic, retain) UIViewController *chatListController;
+@property (nonatomic, retain) UITabBarController *tabController;
 
 
 -(void)enterConversation:(NSString*)buddyName;

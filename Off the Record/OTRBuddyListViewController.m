@@ -20,6 +20,8 @@
 @synthesize accountName;
 @synthesize chatViewControllers;
 @synthesize messageCodec;
+@synthesize chatListController;
+@synthesize tabController;
 
 - (void)blockingCheck {
 	static NSDate * lastTime = nil;
@@ -185,21 +187,21 @@
     
     if(decodedMessage)
     {
-        if(![[self.navigationController visibleViewController].title isEqualToString:message.buddy.username])
+        
+        if(![[self.navigationController visibleViewController].title isEqualToString:message.buddy.username] && ![[chatListController.navigationController visibleViewController].title isEqualToString:message.buddy.username])
         {
-
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:message.buddy.username message:decodedMessage delegate:self cancelButtonTitle:@"Ignore" otherButtonTitles:@"Reply", nil];
             alert.tag = 1;
             [alert show];
             [alert release];
         }
-
         
         if([chatViewControllers objectForKey:message.buddy.username])
         {
             OTRChatViewController *chatController = [chatViewControllers objectForKey:message.buddy.username];
             [chatController receiveMessage:decodedMessage];
         }
+        
     }
 	
 	NSArray * tokens = [CommandTokenizer tokensOfCommand:msgTxt];
@@ -632,8 +634,17 @@
         [chatViewControllers setObject:chatController forKey:buddyName];
     }
     
-    NSArray *controllerArray = [NSArray arrayWithObjects:self, chatController, nil];
-    [self.navigationController setViewControllers:controllerArray animated:YES];
+    if(tabController.selectedIndex == 0)
+    {
+        NSArray *controllerArray = [NSArray arrayWithObjects:self, chatController, nil];
+        [self.navigationController setViewControllers:controllerArray animated:YES];
+    }
+    else
+    {
+        UIViewController *selected = chatListController;
+        NSArray *controllerArray = [NSArray arrayWithObjects:selected, chatController, nil];
+        [chatListController.navigationController setViewControllers:controllerArray animated:YES];
+    }
 }
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
