@@ -49,7 +49,8 @@
 - (void)aimLogin:(AIMLogin *)theLogin failedWithError:(NSError *)error {
 	[self checkThreading];
     
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:[NSString stringWithFormat:@"AIM login failed: %@. Please try again.", error] delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+    NSLog(@"login error: %@",[error description]);
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Login Error" message:@"AIM login failed. Please check your username and password and try again." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
     [alert show];
     [alert release];
     
