@@ -478,7 +478,8 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+        self.title = @"Buddy List";
+        self.tabBarItem.image = [UIImage imageNamed:@"112-group.png"];
     }
     return self;
 }
@@ -507,7 +508,6 @@
     [self blockingCheck];
 
     
-    self.title = @"Buddy List";
     
     chatViewControllers = [[NSMutableDictionary alloc] initWithCapacity:3];
     

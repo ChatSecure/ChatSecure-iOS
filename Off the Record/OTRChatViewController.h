@@ -31,5 +31,6 @@
 -(void)scrollTextViewToBottom;
 
 -(void)updateChatHistory;
+-(void)setupLockButton;
 
 @end

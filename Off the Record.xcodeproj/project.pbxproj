@@ -47,6 +47,10 @@
 		D9991A4C13F44F87002D3008 /* OTRChatListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9991A4A13F44F86002D3008 /* OTRChatListViewController.xib */; };
 		D9991A5113F44F9A002D3008 /* OTRChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9991A4F13F44F9A002D3008 /* OTRChatViewController.m */; };
 		D9991A5213F44F9A002D3008 /* OTRChatViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9991A5013F44F9A002D3008 /* OTRChatViewController.xib */; };
+		D9CE422F13FDC9EF003EC27C /* 08-chat.png in Resources */ = {isa = PBXBuildFile; fileRef = D9CE422E13FDC9EF003EC27C /* 08-chat.png */; };
+		D9CE423213FDCA0F003EC27C /* 112-group.png in Resources */ = {isa = PBXBuildFile; fileRef = D9CE423113FDCA0F003EC27C /* 112-group.png */; };
+		D9CE42C313FDCBDD003EC27C /* Lock_Locked.png in Resources */ = {isa = PBXBuildFile; fileRef = D9CE42C113FDCBDD003EC27C /* Lock_Locked.png */; };
+		D9CE42C413FDCBDD003EC27C /* Lock_Unlocked.png in Resources */ = {isa = PBXBuildFile; fileRef = D9CE42C213FDCBDD003EC27C /* Lock_Unlocked.png */; };
 		D9D552C113F5262B0089138B /* libgcrypt.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D552B913F5262B0089138B /* libgcrypt.a */; };
 		D9D552C213F5262B0089138B /* libgpg-error.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D552BA13F5262B0089138B /* libgpg-error.a */; };
 		D9D552C313F5262B0089138B /* libotr.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D552BB13F5262B0089138B /* libotr.a */; };
@@ -228,6 +232,10 @@
 		D9991A4E13F44F9A002D3008 /* OTRChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRChatViewController.h; sourceTree = "<group>"; };
 		D9991A4F13F44F9A002D3008 /* OTRChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRChatViewController.m; sourceTree = "<group>"; };
 		D9991A5013F44F9A002D3008 /* OTRChatViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OTRChatViewController.xib; sourceTree = "<group>"; };
+		D9CE422E13FDC9EF003EC27C /* 08-chat.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "08-chat.png"; sourceTree = "<group>"; };
+		D9CE423113FDCA0F003EC27C /* 112-group.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "112-group.png"; sourceTree = "<group>"; };
+		D9CE42C113FDCBDD003EC27C /* Lock_Locked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Lock_Locked.png; sourceTree = "<group>"; };
+		D9CE42C213FDCBDD003EC27C /* Lock_Unlocked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Lock_Unlocked.png; sourceTree = "<group>"; };
 		D9D552A613F5262B0089138B /* gcrypt-module.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gcrypt-module.h"; sourceTree = "<group>"; };
 		D9D552A713F5262B0089138B /* gcrypt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gcrypt.h; sourceTree = "<group>"; };
 		D9D552A813F5262B0089138B /* gpg-error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gpg-error.h"; sourceTree = "<group>"; };
@@ -853,6 +861,10 @@
 				D9DE274913F4F0A400E335CA /* OTRLoginViewController.h */,
 				D9DE274A13F4F0A400E335CA /* OTRLoginViewController.m */,
 				D9DE274B13F4F0A500E335CA /* OTRLoginViewController.xib */,
+				D9CE42C113FDCBDD003EC27C /* Lock_Locked.png */,
+				D9CE42C213FDCBDD003EC27C /* Lock_Unlocked.png */,
+				D9CE423113FDCA0F003EC27C /* 112-group.png */,
+				D9CE422E13FDC9EF003EC27C /* 08-chat.png */,
 				D9F9378113F44BD3009A3D84 /* Supporting Files */,
 			);
 			path = "Off the Record";
@@ -924,6 +936,10 @@
 				D9991A4C13F44F87002D3008 /* OTRChatListViewController.xib in Resources */,
 				D9991A5213F44F9A002D3008 /* OTRChatViewController.xib in Resources */,
 				D9DE274D13F4F0A500E335CA /* OTRLoginViewController.xib in Resources */,
+				D9CE422F13FDC9EF003EC27C /* 08-chat.png in Resources */,
+				D9CE423213FDCA0F003EC27C /* 112-group.png in Resources */,
+				D9CE42C313FDCBDD003EC27C /* Lock_Locked.png in Resources */,
+				D9CE42C413FDCBDD003EC27C /* Lock_Unlocked.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

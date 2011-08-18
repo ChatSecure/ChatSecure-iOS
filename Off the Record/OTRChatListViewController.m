@@ -18,7 +18,8 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+        self.title = @"Conversations";
+        self.tabBarItem.image = [UIImage imageNamed:@"08-chat.png"];
     }
     return self;
 }
@@ -37,7 +38,6 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    self.title = @"Conversations";
 }
 
 -(void)viewWillAppear:(BOOL)animated

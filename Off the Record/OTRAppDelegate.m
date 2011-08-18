@@ -29,7 +29,6 @@
     viewController1.chatListController = viewController2;
     viewController1.tabController = _tabBarController;
     UIViewController *navController2 = [[UINavigationController alloc] initWithRootViewController:viewController2];
-    navController2.title = @"Conversations";
     self.tabBarController = [[UITabBarController alloc] init];
     self.tabBarController.viewControllers = [NSArray arrayWithObjects:navController, navController2, nil];
     self.window.rootViewController = self.tabBarController;
