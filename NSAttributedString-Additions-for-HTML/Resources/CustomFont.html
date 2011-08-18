@@ -1,0 +1,15 @@
+<h1>Custom Fonts</h1>
+<p>Usage of custom fonts is supported. You have to register these in the info.plist.</p>
+<p>Note: For some fonts you might have to bundle the normal as well as the bold variant for CTFontDescriptor to find the normal font.</p>
+<p>Core Text automatically display Right-to-Left Text as such if only RTL characters are used
+<p>XB Niloofar:</p>
+<p dir="rtl" style="font-weight:normal;font-family:'XB Niloofar';font-size:24px">بِسْمِ اللّٰهِ</p>
+<p>American Typewriter:</p>
+<right><p style="font-family:'American Typewriter';font-size:20px">AmericanTypewriter</p></right>
+<p>American Typewriter Bold:</p>
+<right><p style="font-weight:bold;font-family:'American Typewriter';font-size:20px">AmericanTypewriter</p></right>
+<h2>Font Variants</h2>
+<p>The font variant 'Small Caps' is supported by synthesizing an attributed string that has the lower case characters in the same font as the upper case ones, but 30% smaller.</p>
+<p>Helvetica (synthesized):<br/><span style="font-family:'Helvetica';font-size:30px;font-variant:small-caps">The Quick Brown <b>Fox</b> Jumps ...</span></p>
+<p>HoeflerText (native, iPad only):<br/><span style="font-family:'Hoefler Text';font-size:30px;font-variant:small-caps">The Quick Brown <b>Fox</b> Jumps ...</span></p><p>Supported values for the style font-variant:</p>
+<p><ul><li>inherit</li><li>normal</li><li>small-caps</li></ul><p>

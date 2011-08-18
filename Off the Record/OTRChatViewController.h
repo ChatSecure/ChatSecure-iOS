@@ -8,20 +8,28 @@
 
 #import <UIKit/UIKit.h>
 #import "OTRBuddyListViewController.h"
+#import "DTAttributedTextView.h"
 
-@interface OTRChatViewController : UIViewController <UITextFieldDelegate, UITextViewDelegate> {
-    UITextView *chatHistoryTextView;
+@interface OTRChatViewController : UIViewController <UITextFieldDelegate, UITextViewDelegate, DTAttributedTextContentViewDelegate, UIActionSheetDelegate> {
+    DTAttributedTextView *chatHistoryTextView;
     UITextField *messageTextField;
     OTRBuddyListViewController *buddyListController;
+    
+    NSURL *lastActionLink;
+    NSMutableString *rawChatHistory;
 }
 
-@property (retain, nonatomic) IBOutlet UITextView *chatHistoryTextView;
+@property (retain, nonatomic) DTAttributedTextView *chatHistoryTextView;
 @property (retain, nonatomic) IBOutlet UITextField *messageTextField;
 @property (retain, nonatomic) OTRBuddyListViewController *buddyListController;
+@property (nonatomic, retain) NSMutableString *rawChatHistory;
+
 
 - (IBAction)sendButtonPressed:(id)sender;
 - (void)receiveMessage:(NSString*)message;
 - (void)sendMessage:(NSString*)message;
--(void)scrollTextView: (UITextView *)textView;
+-(void)scrollTextViewToBottom;
+
+-(void)updateChatHistory;
 
 @end

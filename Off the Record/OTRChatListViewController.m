@@ -73,7 +73,8 @@
         
         int detailLength = 25;
         
-        cell.detailTextLabel.text = [tmp.chatHistoryTextView.text substringFromIndex:[tmp.chatHistoryTextView.text length] - detailLength];
+        //cell.detailTextLabel.text = [tmp.chatHistoryTextView.text substringFromIndex:[tmp.chatHistoryTextView.text length] - detailLength];
+        cell.detailTextLabel.text = [tmp.rawChatHistory substringFromIndex:[tmp.rawChatHistory length] - detailLength];
     }
     
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;

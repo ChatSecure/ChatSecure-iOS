@@ -88,15 +88,15 @@ static void inject_message_cb(void *opdata, const char *accountname,
      return;
      }
      otrg_plugin_inject_message(account, recipient, message);*/
+
     
-    AIMSessionManager *theSession = [[OTRBuddyListViewController AIMSession] retain];
-    AIMMessage * msg = [AIMMessage messageWithBuddy:[theSession.session.buddyList buddyWithUsername:[NSString stringWithUTF8String:recipient]] message:[NSString stringWithUTF8String:message]];
-	[theSession.messageHandler sendMessage:msg];
+    // use delay to prevent OSCAR rate-limiting problem
+    [OTRCodec sendMessage:[NSString stringWithUTF8String:message] toUser:[NSString stringWithUTF8String:recipient] withDelay:0.1];
     
-    [theSession release];
     NSLog(@"sent inject: %s",message);
     
 }
+
 
 static void notify_cb(void *opdata, OtrlNotifyLevel level,
                       const char *accountname, const char *protocol, const char *username,
@@ -279,6 +279,24 @@ static OtrlMessageAppOps ui_ops = {
     
     return newMessage;
 }
+
++(void)sendMessage:(NSString*)message toUser:(NSString*)recipient withDelay:(float)delay
+{
+    
+    
+    AIMSessionManager *theSession = [[OTRBuddyListViewController AIMSession] retain];
+    AIMMessage * msg = [AIMMessage messageWithBuddy:[theSession.session.buddyList buddyWithUsername:recipient] message:message];
+    
+    // use delay to prevent OSCAR rate-limiting problem
+    NSDate *future = [NSDate dateWithTimeIntervalSinceNow: delay ];
+    [NSThread sleepUntilDate:future];
+    
+	[theSession.messageHandler sendMessage:msg];
+    
+    [theSession release];
+    
+}
+
 
 
 @end

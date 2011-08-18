@@ -17,4 +17,6 @@
 -(NSString*) decodeMessage:(NSString*) message fromUser:(NSString*)friendAccount;
 -(NSString*) encodeMessage:(NSString*) message toUser:(NSString*)recipientAccount;
 
++(void)sendMessage:(NSString*)message toUser:(NSString*)recipient withDelay:(float)delay;
+
 @end
