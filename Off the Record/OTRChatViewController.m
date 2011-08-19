@@ -18,7 +18,8 @@
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
+    if (self) 
+    {
         // Custom initialization
     }
     return self;
@@ -34,7 +35,39 @@
 
 -(void)setupLockButton
 {
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    UIImage *buttonImage = [UIImage imageNamed:@"Lock_Locked.png"];
+    [button setBackgroundImage:buttonImage forState:UIControlStateNormal];
+    CGRect buttonFrame = [button frame];
+    buttonFrame.size.width = buttonImage.size.width;
+    buttonFrame.size.height = buttonImage.size.height;
+    [button setFrame:buttonFrame];
+    [button addTarget:self action:@selector(lockButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     
+    lockButton = [[UIBarButtonItem alloc] initWithCustomView:button];
+    
+    button = [UIButton buttonWithType:UIButtonTypeCustom];
+    buttonImage = [UIImage imageNamed:@"Lock_Unlocked.png"];
+    [button setBackgroundImage:buttonImage forState:UIControlStateNormal];
+    buttonFrame = [button frame];
+    buttonFrame.size.width = buttonImage.size.width;
+    buttonFrame.size.height = buttonImage.size.height;
+    [button setFrame:buttonFrame];
+    [button addTarget:self action:@selector(lockButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    
+    unlockedButton = [[UIBarButtonItem alloc] initWithCustomView:button];
+    
+    self.navigationItem.rightBarButtonItem = unlockedButton;
+
+}
+
+-(void)lockButtonPressed
+{
+    UIActionSheet *popupQuery = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Verify", nil];
+    popupQuery.actionSheetStyle = UIActionSheetStyleBlackOpaque;
+    popupQuery.tag = 420;
+    [popupQuery showFromTabBar:self.tabBarController.tabBar];
+    [popupQuery release];
 }
 
 #pragma mark - View lifecycle
@@ -69,6 +102,39 @@
 	chatHistoryTextView.contentView.edgeInsets = UIEdgeInsetsMake(10, 10, 10, 10);
 	chatHistoryTextView.attributedString = string;
     chatHistoryTextView.userInteractionEnabled = YES;
+    
+    
+    [self setupLockButton];
+    
+    NSString* secureNotification = [NSString stringWithFormat:@"%@_gone_secure",self.title];
+    NSString* insecureNotification = [NSString stringWithFormat:@"%@_gone_insecure",self.title];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(receiveNotification:) 
+                                                 name:secureNotification
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(receiveNotification:) 
+                                                 name:insecureNotification
+                                               object:nil];
+    
+}
+
+- (void) receiveNotification:(NSNotification *) notification
+{
+    NSString* secureNotification = [NSString stringWithFormat:@"%@_gone_secure",self.title];
+    NSString* insecureNotification = [NSString stringWithFormat:@"%@_gone_insecure",self.title];
+    NSLog(@"received notification: %@",[notification name]);
+    
+    if ([[notification name] isEqualToString:secureNotification])
+    {
+        self.navigationItem.rightBarButtonItem = lockButton;
+        
+    }
+    else if([[notification name] isEqualToString:insecureNotification])
+    {
+        self.navigationItem.rightBarButtonItem = unlockedButton;
+    }
 }
 
 - (void)viewDidUnload
@@ -220,6 +286,18 @@
 	{
 		[[UIApplication sharedApplication] openURL:[lastActionLink absoluteURL]];
 	}
+    
+    if(actionSheet.tag == 420)
+    {
+        if (buttonIndex == 0) // Verify
+        {
+            
+        } 
+        else if (buttonIndex == 1) // Cancel
+        {
+            
+        } 
+    }
 }
 
 - (void)linkLongPressed:(UILongPressGestureRecognizer *)gesture
@@ -233,7 +311,7 @@
 		if ([[UIApplication sharedApplication] canOpenURL:[button.url absoluteURL]])
 		{
 			UIActionSheet *action = [[[UIActionSheet alloc] initWithTitle:[[button.url absoluteURL] description] delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Open in Safari", nil] autorelease];
-			[action showFromRect:button.frame inView:button.superview animated:YES];
+			[action showFromTabBar:self.tabBarController.tabBar];
 		}
 	}
 }

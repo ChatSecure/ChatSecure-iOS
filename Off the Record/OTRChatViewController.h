@@ -17,6 +17,9 @@
     
     NSURL *lastActionLink;
     NSMutableString *rawChatHistory;
+    
+    UIBarButtonItem *lockButton;
+    UIBarButtonItem *unlockedButton;
 }
 
 @property (retain, nonatomic) DTAttributedTextView *chatHistoryTextView;
@@ -32,5 +35,6 @@
 
 -(void)updateChatHistory;
 -(void)setupLockButton;
+-(void)lockButtonPressed;
 
 @end

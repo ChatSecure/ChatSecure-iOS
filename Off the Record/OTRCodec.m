@@ -168,14 +168,35 @@ static void write_fingerprints_cb(void *opdata)
 static void gone_secure_cb(void *opdata, ConnContext *context)
 {
     //otrg_dialog_connected(context);
-    NSLog(@"gone secure");
+    //NSLog(@"gone secure");
+    
+    /*unsigned char* fingerprint = context->fingerprint_root.fingerprint;
+    
+    NSMutableString *hex = [NSMutableString string];
+    for (int i=0; i<20; i++)
+        [hex appendFormat:@"%02x", fingerprint[i]];
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Your  Fingerprint" message:[NSString stringWithFormat:@"%@", hex] delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+    [alert show];
+    [alert release];*/
+    
+    NSString* username = [NSString stringWithUTF8String:context->username];
+    NSString* notification = [NSString stringWithFormat:@"%@_gone_secure",username];
+    
+    NSLog(@"%@",notification);
+    [[NSNotificationCenter defaultCenter] postNotificationName:notification object:nil];
 }
 
 static void gone_insecure_cb(void *opdata, ConnContext *context)
 {
     // otrg_dialog_disconnected(context);
-    NSLog(@"gone insecure");
+    //NSLog(@"gone insecure");
     
+    NSString* username = [NSString stringWithUTF8String:context->username];
+    NSString* notification = [NSString stringWithFormat:@"%@_gone_insecure",username];
+    
+    NSLog(@"%@",notification);
+    [[NSNotificationCenter defaultCenter] postNotificationName:notification object:nil];
 }
 
 static void still_secure_cb(void *opdata, ConnContext *context, int is_reply)
