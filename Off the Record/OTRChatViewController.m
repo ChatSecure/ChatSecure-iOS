@@ -57,8 +57,22 @@
     
     unlockedButton = [[UIBarButtonItem alloc] initWithCustomView:button];
     
-    self.navigationItem.rightBarButtonItem = unlockedButton;
+    [self refreshLockButton];
+}
 
+-(void)refreshLockButton
+{
+    if(context)
+    {
+        if(context->msgstate == OTRL_MSGSTATE_ENCRYPTED)
+            self.navigationItem.rightBarButtonItem = lockButton;
+        else
+            self.navigationItem.rightBarButtonItem = unlockedButton;
+    }
+    else
+    {
+        self.navigationItem.rightBarButtonItem = unlockedButton;
+    }
 }
 
 -(void)lockButtonPressed
@@ -104,7 +118,6 @@
     chatHistoryTextView.userInteractionEnabled = YES;
     
     
-    [self setupLockButton];
     
     NSString* secureNotification = [NSString stringWithFormat:@"%@_gone_secure",self.title];
     NSString* insecureNotification = [NSString stringWithFormat:@"%@_gone_insecure",self.title];
@@ -118,6 +131,9 @@
                                                  name:insecureNotification
                                                object:nil];
     
+    context = otrl_context_find([OTRBuddyListViewController OTR_userState], [self.title UTF8String],[buddyListController.accountName UTF8String], "prpl-oscar",NO,NULL,NULL, NULL);
+    
+    [self setupLockButton];
 }
 
 - (void) receiveNotification:(NSNotification *) notification
@@ -291,6 +307,22 @@
     {
         if (buttonIndex == 0) // Verify
         {
+            if(!context)
+            {
+                context = otrl_context_find([OTRBuddyListViewController OTR_userState], [self.title UTF8String],[buddyListController.accountName UTF8String], "prpl-oscar",NO,NULL,NULL, NULL);
+            }
+            if(context)
+            {
+                unsigned char* fingerprint = context->active_fingerprint->fingerprint;
+                
+                NSMutableString *hex = [NSMutableString string];
+                for (int i=0; i<20; i++)
+                    [hex appendFormat:@"%02x", fingerprint[i]];
+                
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Verify Fingerprint" message:[NSString stringWithFormat:@"%@: %@",self.title, hex] delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+                [alert show];
+                [alert release];
+            }
             
         } 
         else if (buttonIndex == 1) // Cancel
@@ -314,6 +346,15 @@
 			[action showFromTabBar:self.tabBarController.tabBar];
 		}
 	}
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    if(!context)
+    {
+        context = otrl_context_find([OTRBuddyListViewController OTR_userState], [self.title UTF8String],[buddyListController.accountName UTF8String], "prpl-oscar",NO,NULL,NULL, NULL);
+    }
+    [self refreshLockButton];
 }
 
 /*- (void)debugButton:(UIBarButtonItem *)sender

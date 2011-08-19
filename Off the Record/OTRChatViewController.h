@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "OTRBuddyListViewController.h"
 #import "DTAttributedTextView.h"
+#import "context.h"
+
 
 @interface OTRChatViewController : UIViewController <UITextFieldDelegate, UITextViewDelegate, DTAttributedTextContentViewDelegate, UIActionSheetDelegate> {
     DTAttributedTextView *chatHistoryTextView;
@@ -20,6 +22,7 @@
     
     UIBarButtonItem *lockButton;
     UIBarButtonItem *unlockedButton;
+    ConnContext *context;
 }
 
 @property (retain, nonatomic) DTAttributedTextView *chatHistoryTextView;
@@ -35,6 +38,7 @@
 
 -(void)updateChatHistory;
 -(void)setupLockButton;
+-(void)refreshLockButton;
 -(void)lockButtonPressed;
 
 @end

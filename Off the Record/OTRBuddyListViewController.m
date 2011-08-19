@@ -12,6 +12,9 @@
 #import "message.h"
 #import "privkey.h"
 
+#define PRIVKEYFNAME @"otr.private_key"
+#define STOREFNAME @"otr.fingerprints"
+
 //#define kSignoffTime 500
 
 @implementation OTRBuddyListViewController
@@ -520,8 +523,27 @@
     // initialize OTR
     OTRL_INIT;
     s_OTR_userState = otrl_userstate_create();
+    
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+
     //otrl_privkey_read(OTR_userState,"privkeyfilename");
+    FILE *privf;
+    NSString *path = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",PRIVKEYFNAME]];
+    privf = fopen([path UTF8String], "w+b");
+    
+    if(privf)
+        otrl_privkey_read_FILEp([OTRBuddyListViewController OTR_userState], privf);
+    fclose(privf);
+    
     //otrl_privkey_read_fingerprints(OTR_userState, "fingerprintfilename", NULL, NULL);
+    FILE *storef;
+    path = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",STOREFNAME]];
+    storef = fopen([path UTF8String], "wb");
+    
+    if (storef)
+        otrl_privkey_read_fingerprints_FILEp([OTRBuddyListViewController OTR_userState], storef, NULL, NULL);
+    fclose(storef);
     
     
 }
