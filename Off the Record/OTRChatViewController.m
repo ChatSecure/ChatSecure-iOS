@@ -8,6 +8,7 @@
 
 #import "OTRChatViewController.h"
 #import "DTLinkButton.h"
+#import "privkey.h"
 
 @implementation OTRChatViewController
 @synthesize chatHistoryTextView;
@@ -313,13 +314,17 @@
             }
             if(context)
             {
-                unsigned char* fingerprint = context->active_fingerprint->fingerprint;
+                char our_hash[45], their_hash[45];
                 
-                NSMutableString *hex = [NSMutableString string];
-                for (int i=0; i<20; i++)
-                    [hex appendFormat:@"%02x", fingerprint[i]];
+                Fingerprint *fingerprint = context->active_fingerprint;
                 
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Verify Fingerprint" message:[NSString stringWithFormat:@"%@: %@",self.title, hex] delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+                otrl_privkey_fingerprint([OTRBuddyListViewController OTR_userState], our_hash, context->accountname, context->protocol);
+                
+                otrl_privkey_hash_to_human(their_hash, fingerprint->fingerprint);
+                
+                NSString *msg = [NSString stringWithFormat:@"Fingerprint for you, %s:\n%s\n\nPurported fingerprint for %s:\n%s\n", context->accountname, our_hash, context->username, their_hash];
+                
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Verify Fingerprint" message:msg delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
                 [alert show];
                 [alert release];
             }
