@@ -93,9 +93,9 @@ static void inject_message_cb(void *opdata, const char *accountname,
 
     
     // use delay to prevent OSCAR rate-limiting problem
-    double val = floorf(((double)arc4random() / ARC4RANDOM_MAX) * 100.0f);
-    float delay = (val+50.0f)/100.0f;
-    
+    //double val = floorf(((double)arc4random() / ARC4RANDOM_MAX) * 100.0f);
+    //float delay = (val+50.0f)/100.0f;
+    float delay = 0.0;
     
     [OTRCodec sendMessage:[NSString stringWithUTF8String:message] toUser:[NSString stringWithUTF8String:recipient] withDelay:delay];
     
@@ -315,8 +315,8 @@ static OtrlMessageAppOps ui_ops = {
     AIMMessage * msg = [AIMMessage messageWithBuddy:[theSession.session.buddyList buddyWithUsername:recipient] message:message];
     
     // use delay to prevent OSCAR rate-limiting problem
-    NSDate *future = [NSDate dateWithTimeIntervalSinceNow: delay ];
-    [NSThread sleepUntilDate:future];
+    //NSDate *future = [NSDate dateWithTimeIntervalSinceNow: delay ];
+    //[NSThread sleepUntilDate:future];
     
 	[theSession.messageHandler sendMessage:msg];
     

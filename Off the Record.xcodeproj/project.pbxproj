@@ -1150,7 +1150,7 @@
 		D9F937A313F44BD3009A3D84 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Chris Ballinger (9P62QGET7G)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Off the Record/Off the Record-Prefix.pch";
 				INFOPLIST_FILE = "Off the Record/Off the Record-Info.plist";
@@ -1159,7 +1159,7 @@
 					"\"$(SRCROOT)/libotr/lib\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "BA0630B8-6692-4F34-9F6B-1995A30D3A30";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1167,7 +1167,7 @@
 		D9F937A413F44BD3009A3D84 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Chris Ballinger (9P62QGET7G)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Off the Record/Off the Record-Prefix.pch";
 				INFOPLIST_FILE = "Off the Record/Off the Record-Info.plist";
@@ -1176,7 +1176,7 @@
 					"\"$(SRCROOT)/libotr/lib\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "BA0630B8-6692-4F34-9F6B-1995A30D3A30";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
