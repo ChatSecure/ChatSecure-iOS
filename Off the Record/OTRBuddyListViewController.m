@@ -530,7 +530,7 @@
     //otrl_privkey_read(OTR_userState,"privkeyfilename");
     FILE *privf;
     NSString *path = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",PRIVKEYFNAME]];
-    privf = fopen([path UTF8String], "w+b");
+    privf = fopen([path UTF8String], "rb");
     
     if(privf)
         otrl_privkey_read_FILEp([OTRBuddyListViewController OTR_userState], privf);
@@ -539,7 +539,7 @@
     //otrl_privkey_read_fingerprints(OTR_userState, "fingerprintfilename", NULL, NULL);
     FILE *storef;
     path = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",STOREFNAME]];
-    storef = fopen([path UTF8String], "wb");
+    storef = fopen([path UTF8String], "rb");
     
     if (storef)
         otrl_privkey_read_fingerprints_FILEp([OTRBuddyListViewController OTR_userState], storef, NULL, NULL);

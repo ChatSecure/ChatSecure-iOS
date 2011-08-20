@@ -13,6 +13,8 @@
 
 #define PRIVKEYFNAME @"otr.private_key"
 #define STOREFNAME @"otr.fingerprints"
+#define ARC4RANDOM_MAX      0x100000000
+
 
 @implementation OTRCodec
 
@@ -91,7 +93,11 @@ static void inject_message_cb(void *opdata, const char *accountname,
 
     
     // use delay to prevent OSCAR rate-limiting problem
-    [OTRCodec sendMessage:[NSString stringWithUTF8String:message] toUser:[NSString stringWithUTF8String:recipient] withDelay:0.1];
+    double val = floorf(((double)arc4random() / ARC4RANDOM_MAX) * 100.0f);
+    float delay = (val+50.0f)/100.0f;
+    
+    
+    [OTRCodec sendMessage:[NSString stringWithUTF8String:message] toUser:[NSString stringWithUTF8String:recipient] withDelay:delay];
     
     NSLog(@"sent inject: %s",message);
     
