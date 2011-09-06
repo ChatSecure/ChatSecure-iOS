@@ -7,55 +7,33 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "OTRCodec.h"
-#import "LibOrange.h"
-#import "CommandTokenizer.h"
-#import "proto.h"
+#import "OTRProtocolManager.h"
 
-static     OtrlUserState s_OTR_userState;
-static 	   AIMSessionManager * theSession;
-
-
-@interface OTRBuddyListViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, AIMLoginDelegate, AIMSessionManagerDelegate, AIMFeedbagHandlerDelegate, AIMICBMHandlerDelegate, AIMStatusHandlerDelegate, AIMRateLimitHandlerDelegate, AIMRendezvousHandlerDelegate, UIAlertViewDelegate> {
+@interface OTRBuddyListViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate> {
     
-    AIMLogin * login;
-	NSThread * mainThread;
     
     UITableView *buddyListTableView;
     
-    AIMBlist *buddyList;
     
     NSMutableDictionary *chatViewControllers;
     
     UIViewController *loginController;
     
-    NSString *accountName;
+    OTRProtocolManager *protocolManager;
+    
+    AIMBlist *buddyList;
 }
 
 @property (nonatomic, retain) IBOutlet UITableView *buddyListTableView;
-@property (nonatomic, retain)     NSMutableDictionary *chatViewControllers;
-@property (nonatomic, retain) AIMLogin * login;
-@property (nonatomic, retain)     NSString *accountName;
-@property (nonatomic, retain) OTRCodec *messageCodec;
+@property (nonatomic, retain) NSMutableDictionary *chatViewControllers;
 @property (nonatomic, retain) UIViewController *chatListController;
 @property (nonatomic, retain) UITabBarController *tabController;
 
+@property (nonatomic, retain)     OTRProtocolManager *protocolManager;
 
 -(void)enterConversation:(NSString*)buddyName;
-+(OtrlUserState) OTR_userState;
-+(AIMSessionManager*) AIMSession;
-
-
-//test
-- (void)blockingCheck;
-- (void)checkThreading;
-
-- (NSString *)removeBuddy:(NSString *)username;
-- (NSString *)addBuddy:(NSString *)username toGroup:(NSString *)groupName;
-- (NSString *)deleteGroup:(NSString *)groupName;
-- (NSString *)addGroup:(NSString *)groupName;
-- (NSString *)denyUser:(NSString *)username;
-- (NSString *)undenyUser:(NSString *)username;
-//end test
+-(void)aimLoggedInSuccessfully;
+-(void)buddyListUpdate;
+-(void)messageReceived:(NSNotification*)notification;
 
 @end

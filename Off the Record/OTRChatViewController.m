@@ -7,6 +7,7 @@
 //
 
 #import "OTRChatViewController.h"
+#import "OTREncryptionManager.h"
 #import "DTLinkButton.h"
 #import "privkey.h"
 
@@ -15,6 +16,7 @@
 @synthesize messageTextField;
 @synthesize buddyListController;
 @synthesize rawChatHistory;
+@synthesize protocolManager;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -132,7 +134,7 @@
                                                  name:insecureNotification
                                                object:nil];
     
-    context = otrl_context_find([OTRBuddyListViewController OTR_userState], [self.title UTF8String],[buddyListController.accountName UTF8String], "prpl-oscar",NO,NULL,NULL, NULL);
+    context = otrl_context_find([OTREncryptionManager OTR_userState], [self.title UTF8String],[buddyListController.protocolManager.oscarManager.accountName UTF8String], "prpl-oscar",NO,NULL,NULL, NULL);
     
     [self setupLockButton];
 }
@@ -203,9 +205,9 @@
 
 -(void)sendMessage:(NSString *)message
 {
-    NSString *newMessage = [buddyListController.messageCodec encodeMessage:message toUser:self.title];
+    NSString *newMessage = [buddyListController.protocolManager.oscarManager.messageCodec encodeMessage:message toUser:self.title];
     
-    AIMSessionManager *theSession = [OTRBuddyListViewController AIMSession];
+    AIMSessionManager *theSession = [OTROscarManager AIMSession];
     AIMMessage * msg = [AIMMessage messageWithBuddy:[theSession.session.buddyList buddyWithUsername:self.title] message:newMessage];
 	[theSession.messageHandler sendMessage:msg];
     
@@ -310,7 +312,7 @@
         {
             if(!context)
             {
-                context = otrl_context_find([OTRBuddyListViewController OTR_userState], [self.title UTF8String],[buddyListController.accountName UTF8String], "prpl-oscar",NO,NULL,NULL, NULL);
+                context = otrl_context_find([OTREncryptionManager OTR_userState], [self.title UTF8String],[buddyListController.protocolManager.oscarManager.accountName UTF8String], "prpl-oscar",NO,NULL,NULL, NULL);
             }
             if(context)
             {
@@ -318,7 +320,7 @@
                 
                 Fingerprint *fingerprint = context->active_fingerprint;
                 
-                otrl_privkey_fingerprint([OTRBuddyListViewController OTR_userState], our_hash, context->accountname, context->protocol);
+                otrl_privkey_fingerprint([OTREncryptionManager OTR_userState], our_hash, context->accountname, context->protocol);
                 
                 otrl_privkey_hash_to_human(their_hash, fingerprint->fingerprint);
                 
@@ -357,7 +359,7 @@
 {
     if(!context)
     {
-        context = otrl_context_find([OTRBuddyListViewController OTR_userState], [self.title UTF8String],[buddyListController.accountName UTF8String], "prpl-oscar",NO,NULL,NULL, NULL);
+        context = otrl_context_find([OTREncryptionManager OTR_userState], [self.title UTF8String],[buddyListController.protocolManager.oscarManager.accountName UTF8String], "prpl-oscar",NO,NULL,NULL, NULL);
     }
     [self refreshLockButton];
 }

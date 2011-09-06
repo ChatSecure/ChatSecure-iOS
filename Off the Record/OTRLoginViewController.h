@@ -7,20 +7,21 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "OTRBuddyListViewController.h"
+#import "OTRProtocolManager.h"
 #import "MBProgressHUD.h"
 
 @interface OTRLoginViewController : UIViewController <UITextFieldDelegate, MBProgressHUDDelegate> {
     UITextField *usernameTextField;
     UITextField *passwordTextField;
     
-    OTRBuddyListViewController *buddyController;
+    OTRProtocolManager *protocolManager;
     MBProgressHUD *HUD;
 }
 
 @property (retain, nonatomic) IBOutlet UITextField *usernameTextField;
 @property (retain, nonatomic) IBOutlet UITextField *passwordTextField;
-@property (nonatomic, retain) OTRBuddyListViewController *buddyController;
+@property (nonatomic, retain) OTRProtocolManager *protocolManager;
+
 
 - (IBAction)loginPressed:(id)sender;
 

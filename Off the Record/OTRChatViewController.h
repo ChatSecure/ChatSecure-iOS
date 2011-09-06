@@ -10,6 +10,8 @@
 #import "OTRBuddyListViewController.h"
 #import "DTAttributedTextView.h"
 #import "context.h"
+#import "OTRProtocolManager.h"
+
 
 
 @interface OTRChatViewController : UIViewController <UITextFieldDelegate, UITextViewDelegate, DTAttributedTextContentViewDelegate, UIActionSheetDelegate> {
@@ -24,6 +26,8 @@
     UIBarButtonItem *unlockedButton;
     ConnContext *context;
 }
+
+@property (nonatomic, retain) OTRProtocolManager *protocolManager;
 
 @property (retain, nonatomic) DTAttributedTextView *chatHistoryTextView;
 @property (retain, nonatomic) IBOutlet UITextField *messageTextField;

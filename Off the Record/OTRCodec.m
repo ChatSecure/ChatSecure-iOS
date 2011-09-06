@@ -8,8 +8,9 @@
 
 #import "OTRCodec.h"
 #import "OTRBuddyListViewController.h"
-#import "message.h"
+#import "OTREncryptionManager.h"
 #import "privkey.h"
+#import "message.h"
 
 #define PRIVKEYFNAME @"otr.private_key"
 #define STOREFNAME @"otr.fingerprints"
@@ -55,7 +56,7 @@ static void create_privkey_cb(void *opdata, const char *accountname,
     privf = fopen([path UTF8String], "w+b");
     
     //otrg_plugin_create_privkey(accountname, protocol);
-    otrl_privkey_generate_FILEp([OTRBuddyListViewController OTR_userState], privf, accountname, protocol);
+    otrl_privkey_generate_FILEp([OTREncryptionManager OTR_userState], privf, accountname, protocol);
     fclose(privf);
 }
 
@@ -167,7 +168,7 @@ static void write_fingerprints_cb(void *opdata)
     storef = fopen([path UTF8String], "wb");
     
     if (!storef) return;
-    otrl_privkey_write_fingerprints_FILEp([OTRBuddyListViewController OTR_userState], storef);
+    otrl_privkey_write_fingerprints_FILEp([OTREncryptionManager OTR_userState], storef);
     fclose(storef);
 }
 
@@ -268,7 +269,7 @@ static OtrlMessageAppOps ui_ops = {
     int ignore_message;
     char *newmessage = NULL;
     
-    ignore_message = otrl_message_receiving([OTRBuddyListViewController OTR_userState], &ui_ops, NULL,[accountName UTF8String], "prpl-oscar", [friendAccount UTF8String], [message UTF8String], &newmessage, NULL, NULL, NULL);
+    ignore_message = otrl_message_receiving([OTREncryptionManager OTR_userState], &ui_ops, NULL,[accountName UTF8String], "prpl-oscar", [friendAccount UTF8String], [message UTF8String], &newmessage, NULL, NULL, NULL);
     
     NSString *newMessage;
     
@@ -297,7 +298,7 @@ static OtrlMessageAppOps ui_ops = {
     gcry_error_t err;
     char *newmessage = NULL;
     
-    err = otrl_message_sending([OTRBuddyListViewController OTR_userState], &ui_ops, NULL,
+    err = otrl_message_sending([OTREncryptionManager OTR_userState], &ui_ops, NULL,
                                [accountName UTF8String], "prpl-oscar", [recipientAccount UTF8String], [message UTF8String], NULL, &newmessage,
                                NULL, NULL);
     NSString *newMessage = [NSString stringWithUTF8String:newmessage];
@@ -308,10 +309,8 @@ static OtrlMessageAppOps ui_ops = {
 }
 
 +(void)sendMessage:(NSString*)message toUser:(NSString*)recipient withDelay:(float)delay
-{
-    
-    
-    AIMSessionManager *theSession = [[OTRBuddyListViewController AIMSession] retain];
+{    
+    AIMSessionManager *theSession = [[OTROscarManager AIMSession] retain];
     AIMMessage * msg = [AIMMessage messageWithBuddy:[theSession.session.buddyList buddyWithUsername:recipient] message:message];
     
     // use delay to prevent OSCAR rate-limiting problem

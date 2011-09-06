@@ -11,7 +11,7 @@
 @implementation OTRLoginViewController
 @synthesize usernameTextField;
 @synthesize passwordTextField;
-@synthesize buddyController;
+@synthesize protocolManager;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -35,7 +35,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
 }
 
 - (void)viewDidUnload
@@ -68,10 +67,10 @@
 {
     if(![usernameTextField.text isEqualToString:@""] && ![passwordTextField.text isEqualToString:@""])
     {
-        buddyController.login = [[AIMLogin alloc] initWithUsername:usernameTextField.text password:passwordTextField.text];
-        buddyController.accountName = usernameTextField.text;
+        protocolManager.oscarManager.login = [[AIMLogin alloc] initWithUsername:usernameTextField.text password:passwordTextField.text];
+        protocolManager.oscarManager.accountName = usernameTextField.text;
         
-        [buddyController.login setDelegate:buddyController];
+        [protocolManager.oscarManager.login setDelegate:protocolManager.oscarManager];
         
         HUD = [[MBProgressHUD alloc] initWithView:self.view];
         [self.view addSubview:HUD];
@@ -81,7 +80,7 @@
         
         [HUD show:YES];
         
-        if (![buddyController.login beginAuthorization]) {
+        if (![protocolManager.oscarManager.login beginAuthorization]) {
             [HUD hide:YES];
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:@"Failed to start authenticating. Please try again." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
             [alert show];
