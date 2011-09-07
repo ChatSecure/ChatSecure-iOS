@@ -24,5 +24,8 @@
 
 
 - (IBAction)loginPressed:(id)sender;
+- (IBAction)xmppLoginPressed:(id)sender;
+
+-(BOOL)checkFields;
 
 @end

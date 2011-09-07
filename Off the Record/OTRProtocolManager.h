@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "OTROscarManager.h"
+#import "OTRXMPPManager.h"
 #import "OTREncryptionManager.h"
 
 @interface OTRProtocolManager : NSObject
@@ -16,6 +17,7 @@
 }
 
 @property (nonatomic, retain) OTROscarManager *oscarManager;
+@property (nonatomic, retain) OTRXMPPManager *xmppManager;
 @property (nonatomic, retain) OTREncryptionManager *encryptionManager;
 
 + (OTRProtocolManager*)sharedInstance; // Singleton method

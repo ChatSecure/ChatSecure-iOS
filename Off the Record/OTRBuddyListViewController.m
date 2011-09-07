@@ -48,8 +48,14 @@
     
     [[NSNotificationCenter defaultCenter]
      addObserver:self
-     selector:@selector(aimLoggedInSuccessfully)
+     selector:@selector(loggedInSuccessfully)
      name:@"OscarLoginNotification"
+     object:nil ];
+    
+    [[NSNotificationCenter defaultCenter]
+     addObserver:self
+     selector:@selector(loggedInSuccessfully)
+     name:@"XMPPLoginNotification"
      object:nil ];
     
     
@@ -96,7 +102,7 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
--(void)aimLoggedInSuccessfully
+-(void)loggedInSuccessfully
 {
     [loginController dismissModalViewControllerAnimated:YES];
 }

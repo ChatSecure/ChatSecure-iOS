@@ -14,6 +14,7 @@ static OTRProtocolManager *sharedManager = nil;
 
 @synthesize oscarManager;
 @synthesize encryptionManager;
+@synthesize xmppManager;
 
 -(id)init
 {
@@ -21,6 +22,7 @@ static OTRProtocolManager *sharedManager = nil;
     if(self)
     {
         oscarManager = [[OTROscarManager alloc] init];
+        xmppManager = [[OTRXMPPManager alloc] init];
         encryptionManager = [[OTREncryptionManager alloc] init];
     }
     return self;

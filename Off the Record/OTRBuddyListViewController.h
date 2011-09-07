@@ -32,7 +32,7 @@
 @property (nonatomic, retain)     OTRProtocolManager *protocolManager;
 
 -(void)enterConversation:(NSString*)buddyName;
--(void)aimLoggedInSuccessfully;
+-(void)loggedInSuccessfully;
 -(void)buddyListUpdate;
 -(void)messageReceived:(NSNotification*)notification;
 

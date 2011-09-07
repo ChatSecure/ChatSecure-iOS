@@ -65,7 +65,8 @@
 }
 - (IBAction)loginPressed:(id)sender 
 {
-    if(![usernameTextField.text isEqualToString:@""] && ![passwordTextField.text isEqualToString:@""])
+    BOOL fields = [self checkFields];
+    if(fields)
     {
         protocolManager.oscarManager.login = [[AIMLogin alloc] initWithUsername:usernameTextField.text password:passwordTextField.text];
         protocolManager.oscarManager.accountName = usernameTextField.text;
@@ -87,12 +88,50 @@
             [alert release];
         }
     }
-    else
+}
+
+- (IBAction)xmppLoginPressed:(id)sender 
+{
+    BOOL fields = [self checkFields];
+    if(fields)
+    {
+        HUD = [[MBProgressHUD alloc] initWithView:self.view];
+        [self.view addSubview:HUD];
+        
+        HUD.delegate = self;
+        HUD.labelText = @"Logging in...";
+        
+        [HUD show:YES];
+        
+        BOOL connect = [protocolManager.xmppManager connectWithJID:usernameTextField.text password:passwordTextField.text];
+        
+        if(connect)
+        {
+            [[NSNotificationCenter defaultCenter]
+             postNotificationName:@"XMPPLoginNotification"
+             object:self];
+        }
+        else
+        {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:@"Failed to connect to XMPP server. Please check your login credentials and internet connection and try again." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+            [alert show];
+            [alert release];
+        }
+    }
+}
+
+-(BOOL)checkFields
+{
+    BOOL fields = ![usernameTextField.text isEqualToString:@""] && ![passwordTextField.text isEqualToString:@""];
+    
+    if(!fields)
     {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:@"You must enter a username and a password to login." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
         [alert show];
         [alert release];
     }
+    
+    return fields;
 }
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField
