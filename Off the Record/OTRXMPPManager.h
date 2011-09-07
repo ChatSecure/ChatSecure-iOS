@@ -19,7 +19,7 @@
 #import "XMPPCapabilities.h"
 #import "XMPPCapabilitiesCoreDataStorage.h"
 
-@interface OTRXMPPManager : NSObject <UIApplicationDelegate, XMPPRosterDelegate, UIAlertViewDelegate>
+@interface OTRXMPPManager : NSObject <XMPPRosterDelegate>
 {
 	XMPPStream *xmppStream;
 	XMPPReconnect *xmppReconnect;
