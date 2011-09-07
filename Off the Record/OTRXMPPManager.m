@@ -361,6 +361,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	}
     
     JID = [XMPPJID jidWithString:myJID];
+    [JID retain];
     
 	[xmppStream setMyJID:JID];
 	password = myPassword;
