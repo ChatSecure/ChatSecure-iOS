@@ -13,7 +13,7 @@
 
 
 
-static 	   AIMSessionManager * s_AIMSession = nil;
+//static 	   AIMSessionManager * s_AIMSession = nil;
 
 
 @interface OTROscarManager : NSObject <AIMLoginDelegate, AIMSessionManagerDelegate, AIMFeedbagHandlerDelegate, AIMICBMHandlerDelegate, AIMStatusHandlerDelegate, AIMRateLimitHandlerDelegate, AIMRendezvousHandlerDelegate>
@@ -31,7 +31,7 @@ static 	   AIMSessionManager * s_AIMSession = nil;
 @property (nonatomic, retain) NSString *accountName;
 
 
-+(AIMSessionManager*) AIMSession;
+//+(AIMSessionManager*) AIMSession;
 
 - (void)blockingCheck;
 - (void)checkThreading;

@@ -9,12 +9,13 @@
 #import <Foundation/Foundation.h>
 #import "proto.h"
 
-static     OtrlUserState s_OTR_userState = nil;
+//static     OtrlUserState s_OTR_userState = nil;
 
 @interface OTREncryptionManager : NSObject
 
+@property OtrlUserState userState;
 
-+(OtrlUserState) OTR_userState;
+//+(OtrlUserState) OTR_userState;
 
 
 @end

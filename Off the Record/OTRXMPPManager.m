@@ -549,6 +549,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
         NSDictionary *messageInfo = [[OTRCodec messageWithSender:[[user jid] full] recipient:[JID full] message:body protocol:@"xmpp"] retain];
         
+        NSLog(@"%@ %@ %@ %@", [messageInfo objectForKey:@"sender"],[messageInfo objectForKey:@"recipient"], [messageInfo objectForKey:@"message"], [messageInfo objectForKey:@"protocol"]);
+        
         NSDictionary *decodedMessageInfo = [messageCodec decodeMessage:messageInfo];
         
         if(decodedMessageInfo)

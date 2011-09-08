@@ -68,7 +68,7 @@
 	[login release];
 	login = nil;
 	theSession = [session retain];
-    s_AIMSession = theSession;
+    //s_AIMSession = theSession;
 	
 	/* Set handler delegates */
 	session.feedbagHandler.delegate = self;
@@ -505,9 +505,9 @@
 	return msg;
 }
 
-+(AIMSessionManager*) AIMSession
+/*+(AIMSessionManager*) AIMSession
 {
     return s_AIMSession;
-}
+}*/
 
 @end

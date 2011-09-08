@@ -135,13 +135,14 @@
                                              selector:@selector(receiveNotification:) 
                                                  name:insecureNotification
                                                object:nil];
+    if(!protocolManager)
+        protocolManager = [OTRProtocolManager sharedInstance];
     
-    context = otrl_context_find([OTREncryptionManager OTR_userState], [self.title UTF8String],[accountName UTF8String], [protocol UTF8String],NO,NULL,NULL, NULL);
+    context = otrl_context_find(protocolManager.encryptionManager.userState, [self.title UTF8String],[accountName UTF8String], [protocol UTF8String],NO,NULL,NULL, NULL);
     
     [self setupLockButton];
     
-    if(!protocolManager)
-        protocolManager = [OTRProtocolManager sharedInstance];
+
 }
 
 - (void) receiveNotification:(NSNotification *) notification
@@ -213,6 +214,11 @@
     NSDictionary *newMessageInfo = [OTRCodec messageWithSender:accountName recipient:self.title message:message protocol:protocol];
     
     OTRCodec *codec = [protocolManager codecForProtocol:protocol];
+    
+    [OTRCodec printDebugMessageInfo:newMessageInfo];
+    
+    if(!codec)
+        NSLog(@"codec is nil!");
     
     NSDictionary *encodedMessageInfo = [codec encodeMessage:newMessageInfo];
     
@@ -323,7 +329,7 @@
         {
             if(!context)
             {
-                context = otrl_context_find([OTREncryptionManager OTR_userState], [self.title UTF8String],[buddyListController.protocolManager.oscarManager.accountName UTF8String], [protocol UTF8String],NO,NULL,NULL, NULL);
+                context = otrl_context_find(protocolManager.encryptionManager.userState, [self.title UTF8String],[buddyListController.protocolManager.oscarManager.accountName UTF8String], [protocol UTF8String],NO,NULL,NULL, NULL);
             }
             if(context)
             {
@@ -331,7 +337,7 @@
                 
                 Fingerprint *fingerprint = context->active_fingerprint;
                 
-                otrl_privkey_fingerprint([OTREncryptionManager OTR_userState], our_hash, context->accountname, context->protocol);
+                otrl_privkey_fingerprint(protocolManager.encryptionManager.userState, our_hash, context->accountname, context->protocol);
                 
                 otrl_privkey_hash_to_human(their_hash, fingerprint->fingerprint);
                 
@@ -370,7 +376,7 @@
 {
     if(!context)
     {
-        context = otrl_context_find([OTREncryptionManager OTR_userState], [self.title UTF8String],[buddyListController.protocolManager.oscarManager.accountName UTF8String], [protocol UTF8String],NO,NULL,NULL, NULL);
+        context = otrl_context_find(protocolManager.encryptionManager.userState, [self.title UTF8String],[buddyListController.protocolManager.oscarManager.accountName UTF8String], [protocol UTF8String],NO,NULL,NULL, NULL);
     }
     [self refreshLockButton];
 }

@@ -101,7 +101,7 @@ static OTRProtocolManager *sharedManager = nil;
     NSString *recipient = [messageInfo objectForKey:@"recipient"];
     NSString *message = [messageInfo objectForKey:@"message"];
     
-    AIMSessionManager *theSession = [[OTROscarManager AIMSession] retain];
+    AIMSessionManager *theSession = [oscarManager.theSession retain];
     AIMMessage * msg = [AIMMessage messageWithBuddy:[theSession.session.buddyList buddyWithUsername:recipient] message:message];
     
     // use delay to prevent OSCAR rate-limiting problem

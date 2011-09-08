@@ -16,6 +16,8 @@
 
 @implementation OTREncryptionManager
 
+@synthesize userState;
+
 -(id)init
 {
     self = [super init];
@@ -24,7 +26,8 @@
     {
         // initialize OTR
         OTRL_INIT;
-        s_OTR_userState = otrl_userstate_create();
+        userState = otrl_userstate_create();
+        //s_OTR_userState = userState;
         
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
         NSString *documentsDirectory = [paths objectAtIndex:0];
@@ -35,7 +38,7 @@
         privf = fopen([path UTF8String], "rb");
         
         if(privf)
-            otrl_privkey_read_FILEp(s_OTR_userState, privf);
+            otrl_privkey_read_FILEp(userState, privf);
         fclose(privf);
         
         //otrl_privkey_read_fingerprints(OTR_userState, "fingerprintfilename", NULL, NULL);
@@ -44,16 +47,16 @@
         storef = fopen([path UTF8String], "rb");
         
         if (storef)
-            otrl_privkey_read_fingerprints_FILEp(s_OTR_userState, storef, NULL, NULL);
+            otrl_privkey_read_fingerprints_FILEp(userState, storef, NULL, NULL);
         fclose(storef);
     }
     
     return self;
 }
 
-+(OtrlUserState) OTR_userState
+/*+(OtrlUserState) OTR_userState
 {
     return s_OTR_userState;
-}
+}*/
 
 @end

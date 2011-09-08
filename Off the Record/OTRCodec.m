@@ -8,7 +8,7 @@
 
 #import "OTRCodec.h"
 #import "OTRBuddyListViewController.h"
-#import "OTREncryptionManager.h"
+#import "OTRProtocolManager.h"
 #import "privkey.h"
 #import "message.h"
 
@@ -57,7 +57,9 @@ static void create_privkey_cb(void *opdata, const char *accountname,
     privf = fopen([path UTF8String], "w+b");
     
     //otrg_plugin_create_privkey(accountname, protocol);
-    otrl_privkey_generate_FILEp([OTREncryptionManager OTR_userState], privf, accountname, protocol);
+    OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
+    
+    otrl_privkey_generate_FILEp(protocolManager.encryptionManager.userState, privf, accountname, protocol);
     fclose(privf);
 }
 
@@ -165,7 +167,9 @@ static void write_fingerprints_cb(void *opdata)
     storef = fopen([path UTF8String], "wb");
     
     if (!storef) return;
-    otrl_privkey_write_fingerprints_FILEp([OTREncryptionManager OTR_userState], storef);
+    OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
+    
+    otrl_privkey_write_fingerprints_FILEp(protocolManager.encryptionManager.userState, storef);
     fclose(storef);
 }
 
@@ -275,8 +279,18 @@ static OtrlMessageAppOps ui_ops = {
     NSString *message = [messageInfo objectForKey:@"message"];
     NSString *friendAccount = [messageInfo objectForKey:@"sender"];
     NSString *protocol = [messageInfo objectForKey:@"protocol"];
+    NSString *myAccountName = [messageInfo objectForKey:@"recipient"];
     
-    ignore_message = otrl_message_receiving([OTREncryptionManager OTR_userState], &ui_ops, NULL,[accountName UTF8String], [protocol UTF8String], [friendAccount UTF8String], [message UTF8String], &newmessage, NULL, NULL, NULL);
+    OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
+    
+    OtrlUserState userstate = protocolManager.encryptionManager.userState;
+    
+    if(!userstate)
+        NSLog(@"userstate is nil!");
+    
+    NSLog(@"%@ %@ %@ %@", myAccountName, friendAccount, message, protocol);
+    
+    ignore_message = otrl_message_receiving(userstate, &ui_ops, NULL,[myAccountName UTF8String], [protocol UTF8String], [friendAccount UTF8String], [message UTF8String], &newmessage, NULL, NULL, NULL);
     
     NSString *newMessage;
     
@@ -314,7 +328,9 @@ static OtrlMessageAppOps ui_ops = {
     NSString *recipientAccount = [messageInfo objectForKey:@"recipient"];
     NSString *protocol = [messageInfo objectForKey:@"protocol"];
     
-    err = otrl_message_sending([OTREncryptionManager OTR_userState], &ui_ops, NULL,
+    OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
+    
+    err = otrl_message_sending(protocolManager.encryptionManager.userState, &ui_ops, NULL,
                                [accountName UTF8String], [protocol UTF8String], [recipientAccount UTF8String], [message UTF8String], NULL, &newmessage,
                                NULL, NULL);
     NSString *newMessage = [NSString stringWithUTF8String:newmessage];
@@ -355,6 +371,16 @@ static OtrlMessageAppOps ui_ops = {
     [messageInfo setObject:protocol forKey:@"protocol"];
     
     return messageInfo;
+}
+
++(void)printDebugMessageInfo:(NSDictionary*)messageInfo;
+{
+    NSString *sender = [messageInfo objectForKey:@"sender"];
+    NSString *recipient = [messageInfo objectForKey:@"recipient"];
+    NSString *message = [messageInfo objectForKey:@"message"];
+    NSString *protocol = [messageInfo objectForKey:@"protocol"];
+    
+    NSLog(@"S:%@ R:%@ M:%@ P:%@",sender,recipient,message,protocol);
 }
 
 @end

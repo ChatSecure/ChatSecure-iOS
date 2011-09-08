@@ -24,5 +24,6 @@
 +(void)sendMessage:(NSDictionary*)messageInfo;
 +(NSDictionary*)messageWithSender:(NSString*)sender recipient:(NSString*)recipient message:(NSString*)message protocol:(NSString*)protocol;
 
++(void)printDebugMessageInfo:(NSDictionary*)messageInfo;
 
 @end
