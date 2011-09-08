@@ -38,6 +38,7 @@ static OtrlPolicy policy_cb(void *opdata, ConnContext *context)
 static const char *protocol_name_cb(void *opdata, const char *protocol)
 {
     //return "prpl-oscar";
+    NSLog(@"protocol: %s",protocol);
     return protocol;
 }
 
@@ -327,11 +328,14 @@ static OtrlMessageAppOps ui_ops = {
     NSString *message = [messageInfo objectForKey:@"message"];
     NSString *recipientAccount = [messageInfo objectForKey:@"recipient"];
     NSString *protocol = [messageInfo objectForKey:@"protocol"];
+    NSString *sendingAccount = [messageInfo objectForKey:@"sender"];
+    
+    [OTRCodec printDebugMessageInfo:messageInfo];
     
     OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
     
     err = otrl_message_sending(protocolManager.encryptionManager.userState, &ui_ops, NULL,
-                               [accountName UTF8String], [protocol UTF8String], [recipientAccount UTF8String], [message UTF8String], NULL, &newmessage,
+                               [sendingAccount UTF8String], [protocol UTF8String], [recipientAccount UTF8String], [message UTF8String], NULL, &newmessage,
                                NULL, NULL);
     NSString *newMessage = [NSString stringWithUTF8String:newmessage];
     
