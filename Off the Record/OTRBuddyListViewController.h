@@ -30,6 +30,7 @@
 @property (nonatomic, retain) UITabBarController *tabController;
 
 @property (nonatomic, retain)     OTRProtocolManager *protocolManager;
+@property (nonatomic, retain) NSMutableDictionary *recentMessages;
 
 -(void)enterConversation:(NSString*)buddyName;
 -(void)loggedInSuccessfully;

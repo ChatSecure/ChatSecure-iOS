@@ -19,6 +19,7 @@
 @synthesize chatListController;
 @synthesize tabController;
 @synthesize protocolManager;
+@synthesize recentMessages;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -86,6 +87,8 @@
     loginController = loginViewController;    
     
     buddyList = protocolManager.oscarManager.buddyList;
+    
+    recentMessages = [[NSMutableDictionary alloc] initWithCapacity:3];
 }
 
 - (void)viewDidUnload
@@ -125,10 +128,14 @@
     NSString *userName = [notification.userInfo objectForKey:@"sender"];
     NSString *decodedMessage = [notification.userInfo objectForKey:@"message"];
     
+    
     if(![[self.navigationController visibleViewController].title isEqualToString:userName] && ![[chatListController.navigationController visibleViewController].title isEqualToString:userName])
      {
          UIAlertView *alert = [[UIAlertView alloc] initWithTitle:userName message:decodedMessage delegate:self cancelButtonTitle:@"Ignore" otherButtonTitles:@"Reply", nil];
          alert.tag = 1;
+         
+         [recentMessages setObject:notification.userInfo forKey:userName];
+
          [alert show];
          [alert release];
      }
@@ -230,6 +237,19 @@
     {
         chatController = [[OTRChatViewController alloc] init];
         chatController.title = buddyName;
+        NSDictionary *messageInfo = [recentMessages objectForKey:buddyName];
+        if(messageInfo)
+        {
+            chatController.protocol = [messageInfo objectForKey:@"protocol"];
+            chatController.accountName = [messageInfo objectForKey:@"recipient"];
+        }
+        else
+        {
+            //FIXME
+            chatController.protocol = @"prpl-oscar";
+            OTRCodec *codec = [protocolManager codecForProtocol:@"prpl-oscar"];
+            chatController.accountName = codec.accountName;
+        }
         chatController.buddyListController = self;
         [chatViewControllers setObject:chatController forKey:buddyName];
     }
@@ -245,6 +265,8 @@
         NSArray *controllerArray = [NSArray arrayWithObjects:selected, chatController, nil];
         [chatListController.navigationController setViewControllers:controllerArray animated:YES];
     }
+    
+    [recentMessages removeObjectForKey:buddyName];
 }
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
@@ -255,6 +277,10 @@
         {
             if(alertView.title)
                 [self enterConversation:alertView.title];
+        }
+        else // Ignore
+        {
+            [recentMessages removeObjectForKey:alertView.title];
         }
     }
 }

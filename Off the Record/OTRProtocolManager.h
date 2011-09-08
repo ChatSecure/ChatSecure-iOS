@@ -10,6 +10,7 @@
 #import "OTROscarManager.h"
 #import "OTRXMPPManager.h"
 #import "OTREncryptionManager.h"
+#import "OTRCodec.h"
 
 @interface OTRProtocolManager : NSObject
 {
@@ -22,5 +23,11 @@
 
 + (OTRProtocolManager*)sharedInstance; // Singleton method
 
+-(void)sendMessage:(NSNotification*)notification;
+
+-(void)sendMessageOSCAR:(NSDictionary*)messageInfo;
+-(void)sendMessageXMPP:(NSDictionary*)messageInfo;
+
+-(OTRCodec*)codecForProtocol:(NSString*)protocol;
 
 @end

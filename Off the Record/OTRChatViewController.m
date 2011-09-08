@@ -17,6 +17,8 @@
 @synthesize buddyListController;
 @synthesize rawChatHistory;
 @synthesize protocolManager;
+@synthesize protocol;
+@synthesize accountName;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -134,9 +136,12 @@
                                                  name:insecureNotification
                                                object:nil];
     
-    context = otrl_context_find([OTREncryptionManager OTR_userState], [self.title UTF8String],[buddyListController.protocolManager.oscarManager.accountName UTF8String], "prpl-oscar",NO,NULL,NULL, NULL);
+    context = otrl_context_find([OTREncryptionManager OTR_userState], [self.title UTF8String],[accountName UTF8String], [protocol UTF8String],NO,NULL,NULL, NULL);
     
     [self setupLockButton];
+    
+    if(!protocolManager)
+        protocolManager = [OTRProtocolManager sharedInstance];
 }
 
 - (void) receiveNotification:(NSNotification *) notification
@@ -204,12 +209,18 @@
 }
 
 -(void)sendMessage:(NSString *)message
-{
-    NSString *newMessage = [buddyListController.protocolManager.oscarManager.messageCodec encodeMessage:message toUser:self.title];
+{    
+    NSDictionary *newMessageInfo = [OTRCodec messageWithSender:accountName recipient:self.title message:message protocol:protocol];
     
-    AIMSessionManager *theSession = [OTROscarManager AIMSession];
+    OTRCodec *codec = [protocolManager codecForProtocol:protocol];
+    
+    NSDictionary *encodedMessageInfo = [codec encodeMessage:newMessageInfo];
+    
+    [OTRCodec sendMessage:encodedMessageInfo];    
+    /*AIMSessionManager *theSession = [OTROscarManager AIMSession];
     AIMMessage * msg = [AIMMessage messageWithBuddy:[theSession.session.buddyList buddyWithUsername:self.title] message:newMessage];
-	[theSession.messageHandler sendMessage:msg];
+	[theSession.messageHandler sendMessage:msg];*/
+    
     
     NSString *username = @"<FONT COLOR=\"#0000ff\"><b>Me:</b></FONT>";
     
@@ -312,7 +323,7 @@
         {
             if(!context)
             {
-                context = otrl_context_find([OTREncryptionManager OTR_userState], [self.title UTF8String],[buddyListController.protocolManager.oscarManager.accountName UTF8String], "prpl-oscar",NO,NULL,NULL, NULL);
+                context = otrl_context_find([OTREncryptionManager OTR_userState], [self.title UTF8String],[buddyListController.protocolManager.oscarManager.accountName UTF8String], [protocol UTF8String],NO,NULL,NULL, NULL);
             }
             if(context)
             {
@@ -359,7 +370,7 @@
 {
     if(!context)
     {
-        context = otrl_context_find([OTREncryptionManager OTR_userState], [self.title UTF8String],[buddyListController.protocolManager.oscarManager.accountName UTF8String], "prpl-oscar",NO,NULL,NULL, NULL);
+        context = otrl_context_find([OTREncryptionManager OTR_userState], [self.title UTF8String],[buddyListController.protocolManager.oscarManager.accountName UTF8String], [protocol UTF8String],NO,NULL,NULL, NULL);
     }
     [self refreshLockButton];
 }

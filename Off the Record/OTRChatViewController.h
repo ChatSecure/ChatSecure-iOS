@@ -25,6 +25,8 @@
     UIBarButtonItem *lockButton;
     UIBarButtonItem *unlockedButton;
     ConnContext *context;
+    
+    NSString *protocol;
 }
 
 @property (nonatomic, retain) OTRProtocolManager *protocolManager;
@@ -33,6 +35,8 @@
 @property (retain, nonatomic) IBOutlet UITextField *messageTextField;
 @property (retain, nonatomic) OTRBuddyListViewController *buddyListController;
 @property (nonatomic, retain) NSMutableString *rawChatHistory;
+@property (nonatomic, retain) NSString *protocol;
+@property (nonatomic, retain)     NSString *accountName;
 
 
 - (IBAction)sendButtonPressed:(id)sender;

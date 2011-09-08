@@ -216,20 +216,17 @@
 	NSString * autoresp = [message isAutoresponse] ? @" (Auto-Response)" : @"";
 	NSLog(@"(%@) %@%@: %@", [NSDate date], [[message buddy] username], autoresp, [message plainTextMessage]);
     
-    NSString *decodedMessage = [messageCodec decodeMessage:[message plainTextMessage] fromUser:message.buddy.username];
+    NSDictionary *userInfo = [OTRCodec messageWithSender:message.buddy.username recipient:accountName message:msgTxt protocol:@"prpl-oscar"];
     
-    if(decodedMessage)
+    NSDictionary *decodedMessageInfo = [messageCodec decodeMessage:userInfo];
+    
+    if(decodedMessageInfo)
     {
-        NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
-                                         
-        [userInfo setObject:decodedMessage forKey:@"message"];
-        [userInfo setObject:message.buddy.username forKey:@"sender"];
-        [userInfo setObject:accountName forKey:@"receiver"];
-        [userInfo setObject:@"oscar" forKey:@"protocol"];
+        
         
         [[NSNotificationCenter defaultCenter]
          postNotificationName:@"MessageReceivedNotification"
-         object:self userInfo:userInfo];
+         object:self userInfo:decodedMessageInfo];
         
     }
 	

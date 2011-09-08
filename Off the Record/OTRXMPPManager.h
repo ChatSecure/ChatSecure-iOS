@@ -18,6 +18,7 @@
 #import "XMPPvCardCoreDataStorage.h"
 #import "XMPPCapabilities.h"
 #import "XMPPCapabilitiesCoreDataStorage.h"
+#import "OTRCodec.h"
 
 @interface OTRXMPPManager : NSObject <XMPPRosterDelegate>
 {
@@ -52,6 +53,8 @@
 @property (nonatomic, readonly) XMPPvCardAvatarModule *xmppvCardAvatarModule;
 @property (nonatomic, readonly) XMPPCapabilities *xmppCapabilities;
 @property (nonatomic, readonly) XMPPCapabilitiesCoreDataStorage *xmppCapabilitiesStorage;
+
+@property (nonatomic, retain) OTRCodec *messageCodec;
 
 - (NSManagedObjectContext *)managedObjectContext_roster;
 - (NSManagedObjectContext *)managedObjectContext_capabilities;

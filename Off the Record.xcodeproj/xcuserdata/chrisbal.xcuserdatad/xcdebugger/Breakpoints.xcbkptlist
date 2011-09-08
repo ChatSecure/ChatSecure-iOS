@@ -8,13 +8,13 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          isPathRelative = "1"
-         filePath = "Off the Record/OTROscarManager.m"
-         timestampString = "337030917.478217"
+         filePath = "Off the Record/OTRXMPPManager.m"
+         timestampString = "337207965.082263"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "118"
-         endingLineNumber = "118"
-         landmarkName = "-aimFeedbagHandlerGotBuddyList:"
+         startingLineNumber = "550"
+         endingLineNumber = "550"
+         landmarkName = "-xmppStream:didReceiveMessage:"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>

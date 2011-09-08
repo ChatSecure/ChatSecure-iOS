@@ -37,7 +37,8 @@ static OtrlPolicy policy_cb(void *opdata, ConnContext *context)
 
 static const char *protocol_name_cb(void *opdata, const char *protocol)
 {
-    return "prpl-oscar";
+    //return "prpl-oscar";
+    return protocol;
 }
 
 static void protocol_name_free_cb(void *opdata, const char *protocol_name)
@@ -91,14 +92,10 @@ static void inject_message_cb(void *opdata, const char *accountname,
      return;
      }
      otrg_plugin_inject_message(account, recipient, message);*/
-
     
-    // use delay to prevent OSCAR rate-limiting problem
-    //double val = floorf(((double)arc4random() / ARC4RANDOM_MAX) * 100.0f);
-    //float delay = (val+50.0f)/100.0f;
-    float delay = 0.0;
+    NSDictionary *messageInfo = [OTRCodec messageWithSender:[NSString stringWithUTF8String:accountname] recipient:[NSString stringWithUTF8String:recipient] message:[NSString stringWithUTF8String:message] protocol:[NSString stringWithUTF8String:protocol]];
     
-    [OTRCodec sendMessage:[NSString stringWithUTF8String:message] toUser:[NSString stringWithUTF8String:recipient] withDelay:delay];
+    [OTRCodec sendMessage:messageInfo];
     
     NSLog(@"sent inject: %s",message);
     
@@ -240,7 +237,12 @@ static int max_message_size_cb(void *opdata, ConnContext *context)
      return 0;
      else
      return *((int*)lookup_result);*/
-    return 2343;
+    NSString *protocol = [NSString stringWithUTF8String:context->protocol];
+    
+    if([protocol isEqualToString:@"prpl-oscar"])
+        return 2343;
+    
+    return 0;
 }
 
 static OtrlMessageAppOps ui_ops = {
@@ -264,12 +266,17 @@ static OtrlMessageAppOps ui_ops = {
     NULL                    /* account_name_free */
 };
 
--(NSString*) decodeMessage:(NSString*) message fromUser:(NSString*)friendAccount
+//-(NSString*) decodeMessage:(NSString*) message fromUser:(NSString*)friendAccount
+-(NSDictionary*)decodeMessage:(NSDictionary *)messageInfo
 {
     int ignore_message;
     char *newmessage = NULL;
     
-    ignore_message = otrl_message_receiving([OTREncryptionManager OTR_userState], &ui_ops, NULL,[accountName UTF8String], "prpl-oscar", [friendAccount UTF8String], [message UTF8String], &newmessage, NULL, NULL, NULL);
+    NSString *message = [messageInfo objectForKey:@"message"];
+    NSString *friendAccount = [messageInfo objectForKey:@"sender"];
+    NSString *protocol = [messageInfo objectForKey:@"protocol"];
+    
+    ignore_message = otrl_message_receiving([OTREncryptionManager OTR_userState], &ui_ops, NULL,[accountName UTF8String], [protocol UTF8String], [friendAccount UTF8String], [message UTF8String], &newmessage, NULL, NULL, NULL);
     
     NSString *newMessage;
     
@@ -290,27 +297,40 @@ static OtrlMessageAppOps ui_ops = {
     }
     
     otrl_message_free(newmessage);
-    return newMessage;
+    
+    NSMutableDictionary *newMessageInfo = [[NSMutableDictionary alloc] initWithDictionary:messageInfo];
+    [newMessageInfo setObject:newMessage forKey:@"message"];
+    
+    return newMessageInfo;
 }
 
--(NSString*) encodeMessage:(NSString*) message toUser:(NSString*)recipientAccount
+//-(NSString*) encodeMessage:(NSString*) message toUser:(NSString*)recipientAccount
+-(NSDictionary*)encodeMessage:(NSDictionary *)messageInfo
 {
     gcry_error_t err;
     char *newmessage = NULL;
     
+    NSString *message = [messageInfo objectForKey:@"message"];
+    NSString *recipientAccount = [messageInfo objectForKey:@"recipient"];
+    NSString *protocol = [messageInfo objectForKey:@"protocol"];
+    
     err = otrl_message_sending([OTREncryptionManager OTR_userState], &ui_ops, NULL,
-                               [accountName UTF8String], "prpl-oscar", [recipientAccount UTF8String], [message UTF8String], NULL, &newmessage,
+                               [accountName UTF8String], [protocol UTF8String], [recipientAccount UTF8String], [message UTF8String], NULL, &newmessage,
                                NULL, NULL);
     NSString *newMessage = [NSString stringWithUTF8String:newmessage];
     
     otrl_message_free(newmessage);
     
-    return newMessage;
+    NSMutableDictionary *newMessageInfo = [[NSMutableDictionary alloc] initWithDictionary:messageInfo];
+    [newMessageInfo setObject:newMessage forKey:@"message"];
+    
+    return newMessageInfo;
 }
 
-+(void)sendMessage:(NSString*)message toUser:(NSString*)recipient withDelay:(float)delay
+//+(void)sendMessage:(NSString*)message toUser:(NSString*)recipient withDelay:(float)delay
++(void)sendMessage:(NSDictionary *)messageInfo
 {    
-    AIMSessionManager *theSession = [[OTROscarManager AIMSession] retain];
+    /*AIMSessionManager *theSession = [[OTROscarManager AIMSession] retain];
     AIMMessage * msg = [AIMMessage messageWithBuddy:[theSession.session.buddyList buddyWithUsername:recipient] message:message];
     
     // use delay to prevent OSCAR rate-limiting problem
@@ -319,10 +339,22 @@ static OtrlMessageAppOps ui_ops = {
     
 	[theSession.messageHandler sendMessage:msg];
     
-    [theSession release];
+    [theSession release];*/
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"SendMessageNotification" object:self userInfo:messageInfo];
+
     
 }
 
-
++(NSDictionary*)messageWithSender:(NSString*)sender recipient:(NSString*)recipient message:(NSString*)message protocol:(NSString*)protocol
+{
+    NSMutableDictionary *messageInfo = [[NSMutableDictionary alloc] initWithCapacity:4];
+    [messageInfo setObject:sender forKey:@"sender"];
+    [messageInfo setObject:recipient forKey:@"recipient"];
+    [messageInfo setObject:message forKey:@"message"];
+    [messageInfo setObject:protocol forKey:@"protocol"];
+    
+    return messageInfo;
+}
 
 @end

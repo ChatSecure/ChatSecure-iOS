@@ -50,6 +50,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 @synthesize xmppvCardAvatarModule;
 @synthesize xmppCapabilities;
 @synthesize xmppCapabilitiesStorage;
+@synthesize messageCodec;
 
 -(id)init
 {
@@ -63,7 +64,9 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         
         // Setup the XMPP stream
         
+        
         [self setupStream];
+        
         
     }
 
@@ -363,6 +366,9 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     JID = [XMPPJID jidWithString:myJID];
     [JID retain];
     
+    messageCodec = [[OTRCodec alloc] initWithAccountName:[JID full]];
+
+    
 	[xmppStream setMyJID:JID];
 	password = myPassword;
     
@@ -533,25 +539,24 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	// A simple example of inbound message handling.
     
 	if ([message isChatMessageWithBody])
-	{
-        NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
-        
+	{        
         XMPPUserCoreDataStorageObject *user = [xmppRosterStorage userForJID:[message from]
                                                                  xmppStream:xmppStream
                                                        managedObjectContext:[self managedObjectContext_roster]];
         
         NSString *body = [[message elementForName:@"body"] stringValue];
-        NSString *displayName = [user displayName];
+        //NSString *displayName = [user displayName];
 
+        NSDictionary *messageInfo = [[OTRCodec messageWithSender:[[user jid] full] recipient:[JID full] message:body protocol:@"xmpp"] retain];
         
-        [userInfo setObject:body forKey:@"message"];
-        [userInfo setObject:displayName forKey:@"sender"];
-        [userInfo setObject:[JID full] forKey:@"receiver"];
-        [userInfo setObject:@"xmpp" forKey:@"protocol"];
+        NSDictionary *decodedMessageInfo = [messageCodec decodeMessage:messageInfo];
         
-        [[NSNotificationCenter defaultCenter]
-         postNotificationName:@"MessageReceivedNotification"
-         object:self userInfo:userInfo];
+        if(decodedMessageInfo)
+        {
+            [[NSNotificationCenter defaultCenter]
+             postNotificationName:@"MessageReceivedNotification"
+             object:self userInfo:decodedMessageInfo];
+        }
         
 		/*XMPPUserCoreDataStorageObject *user = [xmppRosterStorage userForJID:[message from]
          xmppStream:xmppStream
