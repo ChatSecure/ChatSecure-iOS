@@ -91,6 +91,13 @@
     recentMessages = [[NSMutableDictionary alloc] initWithCapacity:3];
 }
 
+-(void)viewWillAppear:(BOOL)animated
+{
+    [[NSNotificationCenter defaultCenter]
+     postNotificationName:@"BuddyListUpdateNotification"
+     object:self];
+}
+
 - (void)viewDidUnload
 {
     [self setBuddyListTableView:nil];

@@ -14,6 +14,7 @@
 			<bool key="EncodedWithXMLCoder">YES</bool>
 			<string>IBUILabel</string>
 			<string>IBUIButton</string>
+			<string>IBUIImageView</string>
 			<string>IBUIView</string>
 			<string>IBUITextField</string>
 			<string>IBProxyObject</string>
@@ -44,7 +45,7 @@
 					<object class="IBUITextField" id="1040179389">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{97, 108}, {203, 31}}</string>
+						<string key="NSFrame">{{97, 152}, {203, 31}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSNextKeyView" ref="494290929"/>
 						<string key="NSReuseIdentifierKey">_NS:209</string>
@@ -78,33 +79,10 @@
 							<int key="NSfFlags">16</int>
 						</object>
 					</object>
-					<object class="IBUILabel" id="249771835">
-						<reference key="NSNextResponder" ref="191373211"/>
-						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{118, 20}, {84, 21}}</string>
-						<reference key="NSSuperview" ref="191373211"/>
-						<reference key="NSNextKeyView" ref="1031177398"/>
-						<string key="NSReuseIdentifierKey">_NS:121</string>
-						<bool key="IBUIOpaque">NO</bool>
-						<bool key="IBUIClipsSubviews">YES</bool>
-						<int key="IBUIContentMode">7</int>
-						<bool key="IBUIUserInteractionEnabled">NO</bool>
-						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-						<string key="IBUIText">Log-in to AIM</string>
-						<object class="NSColor" key="IBUITextColor" id="623943118">
-							<int key="NSColorSpace">1</int>
-							<bytes key="NSRGB">MCAwIDAAA</bytes>
-						</object>
-						<nil key="IBUIHighlightedColor"/>
-						<int key="IBUIBaselineAdjustment">1</int>
-						<float key="IBUIMinimumFontSize">10</float>
-						<reference key="IBUIFontDescription" ref="385226795"/>
-						<reference key="IBUIFont" ref="930604170"/>
-					</object>
 					<object class="IBUILabel" id="1031177398">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{9, 112}, {80, 21}}</string>
+						<string key="NSFrame">{{9, 156}, {80, 21}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSNextKeyView" ref="1040179389"/>
 						<string key="NSReuseIdentifierKey">_NS:121</string>
@@ -114,7 +92,10 @@
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						<string key="IBUIText">Username:</string>
-						<reference key="IBUITextColor" ref="623943118"/>
+						<object class="NSColor" key="IBUITextColor" id="623943118">
+							<int key="NSColorSpace">1</int>
+							<bytes key="NSRGB">MCAwIDAAA</bytes>
+						</object>
 						<nil key="IBUIHighlightedColor"/>
 						<int key="IBUIBaselineAdjustment">1</int>
 						<float key="IBUIMinimumFontSize">10</float>
@@ -125,7 +106,7 @@
 					<object class="IBUILabel" id="494290929">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{9, 151}, {80, 21}}</string>
+						<string key="NSFrame">{{9, 195}, {80, 21}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSNextKeyView" ref="782725272"/>
 						<string key="NSReuseIdentifierKey">_NS:121</string>
@@ -146,7 +127,7 @@
 					<object class="IBUITextField" id="782725272">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{97, 147}, {203, 31}}</string>
+						<string key="NSFrame">{{97, 191}, {203, 31}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSNextKeyView" ref="876653851"/>
 						<string key="NSReuseIdentifierKey">_NS:209</string>
@@ -184,7 +165,7 @@
 						<int key="IBUIContentHorizontalAlignment">0</int>
 						<int key="IBUIContentVerticalAlignment">0</int>
 						<int key="IBUIButtonType">1</int>
-						<string key="IBUINormalTitle">Log-in to AIM</string>
+						<string key="IBUINormalTitle">Login to AIM</string>
 						<object class="NSColor" key="IBUIHighlightedTitleColor" id="437551555">
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MQA</bytes>
@@ -229,10 +210,24 @@
 						<reference key="IBUIFontDescription" ref="555479740"/>
 						<reference key="IBUIFont" ref="373062546"/>
 					</object>
+					<object class="IBUIImageView" id="490473997">
+						<reference key="NSNextResponder" ref="191373211"/>
+						<int key="NSvFlags">292</int>
+						<string key="NSFrame">{{20, 20}, {275, 113}}</string>
+						<reference key="NSSuperview" ref="191373211"/>
+						<reference key="NSNextKeyView" ref="1031177398"/>
+						<string key="NSReuseIdentifierKey">_NS:567</string>
+						<bool key="IBUIUserInteractionEnabled">NO</bool>
+						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+						<object class="NSCustomResource" key="IBUIImage">
+							<string key="NSClassName">NSImage</string>
+							<string key="NSResourceName">chatsecure_banner.png</string>
+						</object>
+					</object>
 				</object>
 				<string key="NSFrame">{{0, 20}, {320, 460}}</string>
 				<reference key="NSSuperview"/>
-				<reference key="NSNextKeyView" ref="249771835"/>
+				<reference key="NSNextKeyView" ref="490473997"/>
 				<object class="NSColor" key="IBUIBackgroundColor">
 					<int key="NSColorSpace">3</int>
 					<bytes key="NSWhite">MQA</bytes>
@@ -320,13 +315,13 @@
 						<reference key="object" ref="191373211"/>
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<reference ref="249771835"/>
 							<reference ref="1040179389"/>
 							<reference ref="782725272"/>
 							<reference ref="1031177398"/>
 							<reference ref="494290929"/>
 							<reference ref="876653851"/>
 							<reference ref="265638582"/>
+							<reference ref="490473997"/>
 						</object>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -344,11 +339,6 @@
 					<object class="IBObjectRecord">
 						<int key="objectID">4</int>
 						<reference key="object" ref="1040179389"/>
-						<reference key="parent" ref="191373211"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">5</int>
-						<reference key="object" ref="249771835"/>
 						<reference key="parent" ref="191373211"/>
 					</object>
 					<object class="IBObjectRecord">
@@ -376,6 +366,11 @@
 						<reference key="object" ref="265638582"/>
 						<reference key="parent" ref="191373211"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">17</int>
+						<reference key="object" ref="490473997"/>
+						<reference key="parent" ref="191373211"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -388,8 +383,8 @@
 					<string>-2.IBPluginDependency</string>
 					<string>1.IBPluginDependency</string>
 					<string>15.IBPluginDependency</string>
+					<string>17.IBPluginDependency</string>
 					<string>4.IBPluginDependency</string>
-					<string>5.IBPluginDependency</string>
 					<string>6.IBPluginDependency</string>
 					<string>7.IBPluginDependency</string>
 					<string>8.IBPluginDependency</string>
@@ -423,7 +418,7 @@
 				<reference key="dict.values" ref="0"/>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">16</int>
+			<int key="maxID">17</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes"/>
 		<int key="IBDocument.localizationMode">0</int>
@@ -434,6 +429,10 @@
 		</object>
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
+		<object class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
+			<string key="NS.key.0">chatsecure_banner.png</string>
+			<string key="NS.object.0">{275, 113}</string>
+		</object>
 		<string key="IBCocoaTouchPluginVersion">931</string>
 	</data>
 </archive>

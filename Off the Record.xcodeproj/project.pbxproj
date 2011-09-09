@@ -55,6 +55,8 @@
 		D9991A5113F44F9A002D3008 /* OTRChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9991A4F13F44F9A002D3008 /* OTRChatViewController.m */; };
 		D9991A5213F44F9A002D3008 /* OTRChatViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9991A5013F44F9A002D3008 /* OTRChatViewController.xib */; };
 		D9BEFD5B141A9425008064A7 /* 19-gear.png in Resources */ = {isa = PBXBuildFile; fileRef = D9BEFD5A141A9425008064A7 /* 19-gear.png */; };
+		D9BEFD63141AB35D008064A7 /* chatsecure_banner@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D9BEFD61141AB35D008064A7 /* chatsecure_banner@2x.png */; };
+		D9BEFD64141AB35D008064A7 /* chatsecure_banner.png in Resources */ = {isa = PBXBuildFile; fileRef = D9BEFD62141AB35D008064A7 /* chatsecure_banner.png */; };
 		D9CE422F13FDC9EF003EC27C /* 08-chat.png in Resources */ = {isa = PBXBuildFile; fileRef = D9CE422E13FDC9EF003EC27C /* 08-chat.png */; };
 		D9CE423213FDCA0F003EC27C /* 112-group.png in Resources */ = {isa = PBXBuildFile; fileRef = D9CE423113FDCA0F003EC27C /* 112-group.png */; };
 		D9CE42C313FDCBDD003EC27C /* Lock_Locked.png in Resources */ = {isa = PBXBuildFile; fileRef = D9CE42C113FDCBDD003EC27C /* Lock_Locked.png */; };
@@ -319,6 +321,8 @@
 		D9991A4F13F44F9A002D3008 /* OTRChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRChatViewController.m; sourceTree = "<group>"; };
 		D9991A5013F44F9A002D3008 /* OTRChatViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OTRChatViewController.xib; sourceTree = "<group>"; };
 		D9BEFD5A141A9425008064A7 /* 19-gear.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "19-gear.png"; path = "../../Desktop/desktop/glyphish-icons/icons/19-gear.png"; sourceTree = "<group>"; };
+		D9BEFD61141AB35D008064A7 /* chatsecure_banner@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatsecure_banner@2x.png"; sourceTree = SOURCE_ROOT; };
+		D9BEFD62141AB35D008064A7 /* chatsecure_banner.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chatsecure_banner.png; sourceTree = SOURCE_ROOT; };
 		D9CE422E13FDC9EF003EC27C /* 08-chat.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "08-chat.png"; sourceTree = "<group>"; };
 		D9CE423113FDCA0F003EC27C /* 112-group.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "112-group.png"; sourceTree = "<group>"; };
 		D9CE42C113FDCBDD003EC27C /* Lock_Locked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Lock_Locked.png; sourceTree = "<group>"; };
@@ -1462,6 +1466,8 @@
 				D9DE274913F4F0A400E335CA /* OTRLoginViewController.h */,
 				D9DE274A13F4F0A400E335CA /* OTRLoginViewController.m */,
 				D9DE274B13F4F0A500E335CA /* OTRLoginViewController.xib */,
+				D9BEFD61141AB35D008064A7 /* chatsecure_banner@2x.png */,
+				D9BEFD62141AB35D008064A7 /* chatsecure_banner.png */,
 				D95F8E971419C5900094A634 /* Default@2x.png */,
 				D95F8E951419C58D0094A634 /* Default.png */,
 				D95F8E931419C3E00094A634 /* chatsecure_icon@2x.png */,
@@ -1551,6 +1557,8 @@
 				D95F8E961419C58D0094A634 /* Default.png in Resources */,
 				D95F8E981419C5900094A634 /* Default@2x.png in Resources */,
 				D9BEFD5B141A9425008064A7 /* 19-gear.png in Resources */,
+				D9BEFD63141AB35D008064A7 /* chatsecure_banner@2x.png in Resources */,
+				D9BEFD64141AB35D008064A7 /* chatsecure_banner.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

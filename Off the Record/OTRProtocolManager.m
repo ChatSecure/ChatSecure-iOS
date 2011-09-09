@@ -198,6 +198,66 @@ static OTRProtocolManager *sharedManager = nil;
             [buddyList setObject:groupDictionary forKey:[NSString stringWithFormat:@"AIM - %@", group.name]];
         }
     }
+    
+    if(xmppManager.isXmppConnected)
+    {
+        NSFetchedResultsController *frc = [xmppManager fetchedResultsController];
+        
+        NSArray *sections = [frc sections];
+
+        int sectionsCount = [sections count];
+        
+        NSMutableArray *rowsInSection = [[NSMutableArray alloc] initWithCapacity:sectionsCount];
+                
+        for(int sectionIndex = 0; sectionIndex < sectionsCount; sectionIndex++)
+        {
+            id <NSFetchedResultsSectionInfo> sectionInfo = [sections objectAtIndex:sectionIndex];
+            [rowsInSection addObject:[NSNumber numberWithInt:sectionInfo.numberOfObjects]];
+        }
+        
+        for(int i = 0; i < sectionsCount; i++)
+        {
+            NSMutableDictionary *groupDictionary = [[NSMutableDictionary alloc] initWithCapacity:sectionsCount];
+            
+            NSString *sectionName;
+            NSString *status;
+            switch (i) {
+                case 0:
+                    sectionName = @"XMPP - Available";
+                    status = @"Available";
+                    break;
+                case 1:
+                    sectionName = @"XMPP - Away";
+                    status = @"Away";
+                default:
+                    sectionName = @"XMPP - Offline";
+                    status = @"Offline";
+                    break;
+            }
+            [groupDictionary setObject:sectionName forKey:@"group_name"];
+            
+            NSMutableDictionary *buddyDictionary = [[NSMutableDictionary alloc] initWithCapacity:[[rowsInSection objectAtIndex:i] intValue]];
+
+            for(int j = 0; j < [[rowsInSection objectAtIndex:i] intValue]; j++)
+            {
+                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:j inSection:i];
+                
+                XMPPUserCoreDataStorageObject *user = [frc objectAtIndexPath:indexPath]; 
+                
+                NSMutableDictionary *buddyData = [[NSMutableDictionary alloc] init];
+                [buddyData setObject:user.displayName forKey:@"buddy_name"];
+                [buddyData setObject:@"xmpp" forKey:@"protocol"];
+                [buddyData setObject:status forKey:@"status"];
+
+                
+                [buddyDictionary setObject:buddyData forKey:user.displayName];
+            }
+            [groupDictionary setObject:buddyDictionary forKey:@"group_data"];
+            
+            [buddyList setObject:groupDictionary forKey:[NSString stringWithFormat:@"XMPP - %@", sectionName]];
+
+        }
+    }
 }
 
 @end

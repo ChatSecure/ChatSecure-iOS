@@ -20,7 +20,7 @@
 #import "XMPPCapabilitiesCoreDataStorage.h"
 #import "OTRCodec.h"
 
-@interface OTRXMPPManager : NSObject <XMPPRosterDelegate>
+@interface OTRXMPPManager : NSObject <XMPPRosterDelegate, NSFetchedResultsControllerDelegate>
 {
 	XMPPStream *xmppStream;
 	XMPPReconnect *xmppReconnect;
@@ -43,6 +43,7 @@
 	
 	BOOL isXmppConnected;
 	
+    NSFetchedResultsController *fetchedResultsController;
 }
 
 @property (nonatomic, readonly) XMPPStream *xmppStream;
@@ -53,6 +54,7 @@
 @property (nonatomic, readonly) XMPPvCardAvatarModule *xmppvCardAvatarModule;
 @property (nonatomic, readonly) XMPPCapabilities *xmppCapabilities;
 @property (nonatomic, readonly) XMPPCapabilitiesCoreDataStorage *xmppCapabilitiesStorage;
+@property 	BOOL isXmppConnected;
 
 @property (nonatomic, retain) OTRCodec *messageCodec;
 
@@ -61,5 +63,7 @@
 
 - (BOOL)connectWithJID:(NSString*) myJID password:(NSString*)myPassword;
 - (void)disconnect;
+
+- (NSFetchedResultsController *)fetchedResultsController;
 
 @end

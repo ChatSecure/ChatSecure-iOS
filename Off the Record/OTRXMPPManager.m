@@ -51,6 +51,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 @synthesize xmppCapabilities;
 @synthesize xmppCapabilitiesStorage;
 @synthesize messageCodec;
+@synthesize isXmppConnected;
 
 -(id)init
 {
@@ -80,6 +81,57 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	[password release];
     
 	[super dealloc];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark NSFetchedResultsController
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+- (NSFetchedResultsController *)fetchedResultsController
+{
+	if (fetchedResultsController == nil)
+	{
+		NSManagedObjectContext *moc = [self managedObjectContext_roster];
+		
+		NSEntityDescription *entity = [NSEntityDescription entityForName:@"XMPPUserCoreDataStorageObject"
+		                                          inManagedObjectContext:moc];
+		
+		NSSortDescriptor *sd1 = [[NSSortDescriptor alloc] initWithKey:@"sectionNum" ascending:YES];
+		NSSortDescriptor *sd2 = [[NSSortDescriptor alloc] initWithKey:@"displayName" ascending:YES];
+		
+		NSArray *sortDescriptors = [NSArray arrayWithObjects:sd1, sd2, nil];
+		
+		NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+		[fetchRequest setEntity:entity];
+		[fetchRequest setSortDescriptors:sortDescriptors];
+		[fetchRequest setFetchBatchSize:10];
+		
+		fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest
+		                                                               managedObjectContext:moc
+		                                                                 sectionNameKeyPath:@"sectionNum"
+		                                                                          cacheName:nil];
+		[fetchedResultsController setDelegate:self];
+		
+		[sd1 release];
+		[sd2 release];
+		[fetchRequest release];
+		
+		NSError *error = nil;
+		if (![fetchedResultsController performFetch:&error])
+		{
+			NSLog(@"Error performing fetch: %@", error);
+		}
+        
+	}
+	
+	return fetchedResultsController;
+}
+
+- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
+{
+    [[NSNotificationCenter defaultCenter]
+     postNotificationName:@"BuddyListUpdateNotification"
+     object:self];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
