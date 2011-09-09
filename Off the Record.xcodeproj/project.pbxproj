@@ -44,6 +44,10 @@
 		D913A70813FCA9AB00C97C1C /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D913A70713FCA9AB00C97C1C /* QuartzCore.framework */; };
 		D913A70A13FCA9C200C97C1C /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D913A70913FCA9C200C97C1C /* ImageIO.framework */; };
 		D92B775514142F150058A789 /* OTREncryptionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D92B775414142F150058A789 /* OTREncryptionManager.m */; };
+		D95F8E921419C3D00094A634 /* chatsecure_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = D95F8E911419C3D00094A634 /* chatsecure_icon.png */; };
+		D95F8E941419C3E10094A634 /* chatsecure_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D95F8E931419C3E00094A634 /* chatsecure_icon@2x.png */; };
+		D95F8E961419C58D0094A634 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = D95F8E951419C58D0094A634 /* Default.png */; };
+		D95F8E981419C5900094A634 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D95F8E971419C5900094A634 /* Default@2x.png */; };
 		D99907531414299200D573EE /* OTROscarManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D99907521414299200D573EE /* OTROscarManager.m */; };
 		D999075D14142CC400D573EE /* OTRProtocolManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D999075C14142CC400D573EE /* OTRProtocolManager.m */; };
 		D9991A4B13F44F87002D3008 /* OTRChatListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9991A4913F44F86002D3008 /* OTRChatListViewController.m */; };
@@ -299,6 +303,10 @@
 		D913A70913FCA9C200C97C1C /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		D92B775314142F150058A789 /* OTREncryptionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTREncryptionManager.h; sourceTree = "<group>"; };
 		D92B775414142F150058A789 /* OTREncryptionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTREncryptionManager.m; sourceTree = "<group>"; };
+		D95F8E911419C3D00094A634 /* chatsecure_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chatsecure_icon.png; sourceTree = "<group>"; };
+		D95F8E931419C3E00094A634 /* chatsecure_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatsecure_icon@2x.png"; sourceTree = "<group>"; };
+		D95F8E951419C58D0094A634 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		D95F8E971419C5900094A634 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		D99907511414299200D573EE /* OTROscarManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTROscarManager.h; sourceTree = "<group>"; };
 		D99907521414299200D573EE /* OTROscarManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTROscarManager.m; sourceTree = "<group>"; };
 		D999075B14142CC400D573EE /* OTRProtocolManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRProtocolManager.h; sourceTree = "<group>"; };
@@ -667,7 +675,7 @@
 		D9E068EF13F44D2900AC10A3 /* OTRBuddyListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBuddyListViewController.h; sourceTree = "<group>"; };
 		D9E068F013F44D2900AC10A3 /* OTRBuddyListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBuddyListViewController.m; sourceTree = "<group>"; };
 		D9E068F113F44D2900AC10A3 /* OTRBuddyListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OTRBuddyListViewController.xib; sourceTree = "<group>"; };
-		D9F9377813F44BD3009A3D84 /* Off the Record.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Off the Record.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D9F9377813F44BD3009A3D84 /* ChatSecure.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatSecure.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D9F9377C13F44BD3009A3D84 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		D9F9377E13F44BD3009A3D84 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D9F9378213F44BD3009A3D84 /* Off the Record-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Off the Record-Info.plist"; sourceTree = "<group>"; };
@@ -1399,6 +1407,10 @@
 		D9F9376D13F44BD3009A3D84 = {
 			isa = PBXGroup;
 			children = (
+				D95F8E971419C5900094A634 /* Default@2x.png */,
+				D95F8E951419C58D0094A634 /* Default.png */,
+				D95F8E931419C3E00094A634 /* chatsecure_icon@2x.png */,
+				D95F8E911419C3D00094A634 /* chatsecure_icon.png */,
 				D9F9378013F44BD3009A3D84 /* Off the Record */,
 				D9D69B03141806150056FB9E /* 3rd Party Frameworks */,
 				D9F9377B13F44BD3009A3D84 /* Frameworks */,
@@ -1409,7 +1421,7 @@
 		D9F9377913F44BD3009A3D84 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				D9F9377813F44BD3009A3D84 /* Off the Record.app */,
+				D9F9377813F44BD3009A3D84 /* ChatSecure.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1489,7 +1501,7 @@
 			);
 			name = "Off the Record";
 			productName = "Off the Record";
-			productReference = D9F9377813F44BD3009A3D84 /* Off the Record.app */;
+			productReference = D9F9377813F44BD3009A3D84 /* ChatSecure.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -1531,6 +1543,10 @@
 				D9CE423213FDCA0F003EC27C /* 112-group.png in Resources */,
 				D9CE42C313FDCBDD003EC27C /* Lock_Locked.png in Resources */,
 				D9CE42C413FDCBDD003EC27C /* Lock_Unlocked.png in Resources */,
+				D95F8E921419C3D00094A634 /* chatsecure_icon.png in Resources */,
+				D95F8E941419C3E10094A634 /* chatsecure_icon@2x.png in Resources */,
+				D95F8E961419C58D0094A634 /* Default.png in Resources */,
+				D95F8E981419C5900094A634 /* Default@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1815,7 +1831,7 @@
 					"\"$(SRCROOT)/libotr/lib\"",
 					"\"$(SRCROOT)/xmppframework/Vendor/libidn\"",
 				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = ChatSecure;
 				PROVISIONING_PROFILE = "BA0630B8-6692-4F34-9F6B-1995A30D3A30";
 				WRAPPER_EXTENSION = app;
 			};
@@ -1834,7 +1850,7 @@
 					"\"$(SRCROOT)/libotr/lib\"",
 					"\"$(SRCROOT)/xmppframework/Vendor/libidn\"",
 				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = ChatSecure;
 				PROVISIONING_PROFILE = "BA0630B8-6692-4F34-9F6B-1995A30D3A30";
 				WRAPPER_EXTENSION = app;
 			};
