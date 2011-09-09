@@ -26,6 +26,7 @@
     if(self = [super init])
     {
         accountName = account;
+        [accountName retain];
     }
     return self;
 }
@@ -369,7 +370,11 @@ static OtrlMessageAppOps ui_ops = {
 +(NSDictionary*)messageWithSender:(NSString*)sender recipient:(NSString*)recipient message:(NSString*)message protocol:(NSString*)protocol
 {
     NSMutableDictionary *messageInfo = [[NSMutableDictionary alloc] initWithCapacity:4];
-    [messageInfo setObject:sender forKey:@"sender"];
+    if(sender)
+        [messageInfo setObject:sender forKey:@"sender"];
+    else
+        [messageInfo setObject:recipient forKey:@"sender"];
+
     [messageInfo setObject:recipient forKey:@"recipient"];
     [messageInfo setObject:message forKey:@"message"];
     [messageInfo setObject:protocol forKey:@"protocol"];

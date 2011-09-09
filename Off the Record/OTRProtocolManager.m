@@ -245,7 +245,7 @@ static OTRProtocolManager *sharedManager = nil;
                 XMPPUserCoreDataStorageObject *user = [frc objectAtIndexPath:indexPath]; 
                 
                 NSMutableDictionary *buddyData = [[NSMutableDictionary alloc] init];
-                [buddyData setObject:user.displayName forKey:@"buddy_name"];
+                [buddyData setObject:[user.displayName copy] forKey:@"buddy_name"];
                 [buddyData setObject:@"xmpp" forKey:@"protocol"];
                 [buddyData setObject:status forKey:@"status"];
 

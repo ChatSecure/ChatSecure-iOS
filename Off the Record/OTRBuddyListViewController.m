@@ -165,7 +165,11 @@
     if(buddyList)
     {
         NSArray *allKeys = [buddyList allKeys];
-        return [allKeys objectAtIndex:section];
+        NSString *currentKey = [allKeys objectAtIndex:section];
+        
+        NSDictionary *groupDictionary = [buddyList objectForKey:currentKey];
+        
+        return [groupDictionary objectForKey:@"group_name"];
     }
     
     return nil;
