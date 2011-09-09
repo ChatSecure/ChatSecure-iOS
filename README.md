@@ -6,10 +6,13 @@ ChatSecure is a very simple IM client for iOS that integrates encrypted "Off the
 Compatibility
 =========
 Tested
-    * [Adium](http://adium.im/) - OTR works over both XMPP and Oscar.
+
+* [Adium](http://adium.im/) - OTR works over both XMPP and Oscar.
+
 Untested
-	* [Pidgin](http://pidgin.im/) (with [pidgin-otr](http://www.cypherpunks.ca/otr/index.php#downloads) plugin)
-    * [Gibberbot](https://guardianproject.info/apps/gibber/)
+
+* [Pidgin](http://pidgin.im/) (with [pidgin-otr](http://www.cypherpunks.ca/otr/index.php#downloads) plugin)
+* [Gibberbot](https://guardianproject.info/apps/gibber/)
 
 License
 =========
@@ -19,8 +22,6 @@ If you want to use this code in your own project please let me know!
 Acknowledgements
 =========
 
-[Nick Hum](http://nickhum.com/) - awesome icon concept.
-
-[Glyphish](http://glyphish.com/) - icons used on the tab bar.
-
-[Adium](http://adium.im/) - lock/unlock icon used in chat window.
+* [Nick Hum](http://nickhum.com/) - awesome icon concept.
+* [Glyphish](http://glyphish.com/) - icons used on the tab bar.
+* [Adium](http://adium.im/) - lock/unlock icon used in chat window.
