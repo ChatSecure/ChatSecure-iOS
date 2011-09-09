@@ -21,7 +21,7 @@
     
     OTRProtocolManager *protocolManager;
     
-    AIMBlist *buddyList;
+    NSMutableDictionary *buddyList;
 }
 
 @property (nonatomic, retain) IBOutlet UITableView *buddyListTableView;
@@ -32,7 +32,7 @@
 @property (nonatomic, retain)     OTRProtocolManager *protocolManager;
 @property (nonatomic, retain) NSMutableDictionary *recentMessages;
 
--(void)enterConversation:(NSString*)buddyName;
+-(void)enterConversation:(NSString*)buddyName withProtocol:(NSString*)protocol;
 -(void)loggedInSuccessfully;
 -(void)buddyListUpdate;
 -(void)messageReceived:(NSNotification*)notification;

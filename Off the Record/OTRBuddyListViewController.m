@@ -86,7 +86,7 @@
     [self presentModalViewController:loginViewController animated:YES];
     loginController = loginViewController;    
     
-    buddyList = protocolManager.oscarManager.buddyList;
+    buddyList = protocolManager.buddyList;
     
     recentMessages = [[NSMutableDictionary alloc] initWithCapacity:3];
 }
@@ -112,7 +112,7 @@
 
 -(void)buddyListUpdate
 {
-    buddyList = protocolManager.oscarManager.buddyList;
+    buddyList = protocolManager.buddyList;
     [buddyList retain];
 
     [buddyListTableView reloadData];
@@ -120,7 +120,7 @@
     if(!buddyList)
         NSLog(@"blist is nil!");
     else
-        NSLog(@"blist groups: %d", [buddyList.groups count]);
+        NSLog(@"blist groups: %d", [buddyList count]);
 }
 
 -(void)messageReceived:(NSNotification*)notification;
@@ -149,7 +149,7 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     if(buddyList)
-        return [buddyList.groups count];
+        return [buddyList count];
 
     return 0;
 }
@@ -157,8 +157,8 @@
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     if(buddyList)
     {
-        AIMBlistGroup *group = [buddyList.groups objectAtIndex:section];
-        return group.name;
+        NSArray *allKeys = [buddyList allKeys];
+        return [allKeys objectAtIndex:section];
     }
     
     return nil;
@@ -167,8 +167,12 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if(buddyList)
     {
-        AIMBlistGroup *group = [buddyList.groups objectAtIndex:section];
-        return [group.buddies count];
+        NSArray *allKeys = [buddyList allKeys];
+        NSString *currentKey = [allKeys objectAtIndex:section];
+        
+        NSDictionary *groupDictionary = [buddyList objectForKey:currentKey];
+        NSDictionary *buddyDictionary = [groupDictionary objectForKey:@"group_data"];
+        return [buddyDictionary count];
     }
     
     return 0;
@@ -184,34 +188,39 @@
 	
     if(buddyList)
     {
-        AIMBlistGroup *group = [[buddyList.groups objectAtIndex:indexPath.section] retain];
-        AIMBlistBuddy *buddy = [group.buddies objectAtIndex:indexPath.row];
-        cell.textLabel.text =  buddy.username;
+        NSArray *allKeys = [buddyList allKeys];
+        NSString *currentKey = [allKeys objectAtIndex:indexPath.section];
+        NSDictionary *groupDictionary = [buddyList objectForKey:currentKey];
+        NSDictionary *buddyDictionary = [groupDictionary objectForKey:@"group_data"];
+        NSArray *buddyKeys = [buddyDictionary allKeys];
+        NSString *currentBuddyKey = [buddyKeys objectAtIndex:indexPath.row];
         
-        //cell.imageView.image = [UIImage imageWithData:buddy.buddyIcon.iconData];
+        NSDictionary *buddyData = [buddyDictionary objectForKey:currentBuddyKey];
         
+        NSString *buddyUsername = [buddyData objectForKey:@"buddy_name"];
+        NSString *buddyStatus = [buddyData objectForKey:@"status"];
+        
+        cell.textLabel.text = buddyUsername;
+                
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         cell.detailTextLabel.textColor = [UIColor lightGrayColor];
         
-        if(buddy.status.statusType == AIMBuddyStatusOffline)
+        if([buddyStatus isEqualToString:@"Offline"])
         {
             cell.textLabel.textColor = [UIColor lightGrayColor];
             cell.detailTextLabel.text = @"Offline";
         }
-        else if(buddy.status.statusType == AIMBuddyStatusAway)
+        else if([buddyStatus isEqualToString:@"Away"])
         {
             cell.textLabel.textColor = [UIColor darkGrayColor];
             cell.detailTextLabel.text = @"Away";
         }
-        else if(buddy.status.statusType == AIMBuddyStatusAvailable)
+        else
         {
             cell.textLabel.textColor = [UIColor darkTextColor];
             cell.detailTextLabel.text = @"Available";
 
         }
-        if(![buddy.status.statusMessage isEqualToString:@""])
-            cell.detailTextLabel.text = [cell.detailTextLabel.text stringByAppendingFormat:@": %@", buddy.status.statusMessage];
-
     }
     
     
@@ -221,12 +230,23 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSString *buddyName = [tableView cellForRowAtIndexPath:indexPath].textLabel.text;
-    [self enterConversation:buddyName];
+    NSArray *allKeys = [buddyList allKeys];
+    NSString *currentKey = [allKeys objectAtIndex:indexPath.section];
+    NSDictionary *groupDictionary = [buddyList objectForKey:currentKey];
+    NSDictionary *buddyDictionary = [groupDictionary objectForKey:@"group_data"];
+    NSArray *buddyKeys = [buddyDictionary allKeys];
+    NSString *currentBuddyKey = [buddyKeys objectAtIndex:indexPath.row];
+    
+    NSDictionary *buddyData = [buddyDictionary objectForKey:currentBuddyKey];
+    
+    NSString *buddyUsername = [buddyData objectForKey:@"buddy_name"];
+    NSString *buddyProtocol = [buddyData objectForKey:@"protocol"];
+    
+    [self enterConversation:buddyUsername withProtocol:buddyProtocol];
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
--(void)enterConversation:(NSString*)buddyName
+-(void)enterConversation:(NSString*)buddyName withProtocol:(NSString *)protocol
 {
     OTRChatViewController *chatController;
     if([chatViewControllers objectForKey:buddyName])
@@ -246,8 +266,8 @@
         else
         {
             //FIXME
-            chatController.protocol = @"prpl-oscar";
-            OTRCodec *codec = [protocolManager codecForProtocol:@"prpl-oscar"];
+            chatController.protocol = protocol;
+            OTRCodec *codec = [protocolManager codecForProtocol:protocol];
             chatController.accountName = codec.accountName;
         }
         chatController.buddyListController = self;
@@ -276,7 +296,7 @@
         if(buttonIndex == 1) // Reply
         {
             if(alertView.title)
-                [self enterConversation:alertView.title];
+                [self enterConversation:alertView.title withProtocol:nil];
         }
         else // Ignore
         {

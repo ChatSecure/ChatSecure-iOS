@@ -17,6 +17,8 @@
     
 }
 
+@property (nonatomic, retain) NSMutableDictionary *buddyList;
+
 @property (nonatomic, retain) OTROscarManager *oscarManager;
 @property (nonatomic, retain) OTRXMPPManager *xmppManager;
 @property (nonatomic, retain) OTREncryptionManager *encryptionManager;
@@ -29,5 +31,8 @@
 -(void)sendMessageXMPP:(NSDictionary*)messageInfo;
 
 -(OTRCodec*)codecForProtocol:(NSString*)protocol;
+
+-(void)buddyListUpdate;
+
 
 @end

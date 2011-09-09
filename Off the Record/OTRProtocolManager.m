@@ -15,6 +15,7 @@ static OTRProtocolManager *sharedManager = nil;
 @synthesize oscarManager;
 @synthesize encryptionManager;
 @synthesize xmppManager;
+@synthesize buddyList;
 
 -(id)init
 {
@@ -30,6 +31,15 @@ static OTRProtocolManager *sharedManager = nil;
          selector:@selector(sendMessage:)
          name:@"SendMessageNotification"
          object:nil ];
+        
+        [[NSNotificationCenter defaultCenter]
+         addObserver:self
+         selector:@selector(buddyListUpdate)
+         name:@"BuddyListUpdateNotification"
+         object:nil ];
+        
+        
+        buddyList = [[NSMutableDictionary alloc] init];
     }
     return self;
 }
@@ -142,6 +152,52 @@ static OTRProtocolManager *sharedManager = nil;
         return xmppManager.messageCodec;
     }
     return nil;
+}
+
+-(void)buddyListUpdate
+{
+    [buddyList removeAllObjects];
+    
+    if(oscarManager.buddyList)
+    {
+        AIMBlist *blist = oscarManager.buddyList;
+        
+
+        
+        for(AIMBlistGroup *group in blist.groups)
+        {
+            NSMutableDictionary *groupDictionary = [[NSMutableDictionary alloc] initWithCapacity:[blist.groups count]];
+            
+            [groupDictionary setObject:group.name forKey:@"group_name"];
+            
+            NSMutableDictionary *buddyDictionary = [[NSMutableDictionary alloc] initWithCapacity:[group.buddies count]];
+            
+            for(AIMBlistBuddy *buddy in group.buddies)
+            {
+                NSMutableDictionary *buddyData = [[NSMutableDictionary alloc] init];
+                [buddyData setObject:buddy.username forKey:@"buddy_name"];
+                [buddyData setObject:@"prpl-oscar" forKey:@"protocol"];
+                
+                switch (buddy.status.statusType) 
+                {
+                    case AIMBuddyStatusAvailable:
+                        [buddyData setObject:@"Available" forKey:@"status"];
+                        break;
+                    case AIMBuddyStatusAway:
+                        [buddyData setObject:@"Away" forKey:@"status"];
+                        break;
+                    default:
+                        [buddyData setObject:@"Offline" forKey:@"status"];
+                        break;
+                }
+                
+                [buddyDictionary setObject:buddyData forKey:buddy.username];
+            }
+            [groupDictionary setObject:buddyDictionary forKey:@"group_data"];
+            
+            [buddyList setObject:groupDictionary forKey:[NSString stringWithFormat:@"AIM - %@", group.name]];
+        }
+    }
 }
 
 @end
