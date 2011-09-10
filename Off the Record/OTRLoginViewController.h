@@ -21,10 +21,13 @@
 @property (retain, nonatomic) IBOutlet UITextField *usernameTextField;
 @property (retain, nonatomic) IBOutlet UITextField *passwordTextField;
 @property (nonatomic, retain) OTRProtocolManager *protocolManager;
+@property (retain, nonatomic) IBOutlet UIButton *aimButton;
+@property (retain, nonatomic) IBOutlet UIButton *xmppButton;
 
 
 - (IBAction)loginPressed:(id)sender;
 - (IBAction)xmppLoginPressed:(id)sender;
+- (IBAction)cancelPressed:(id)sender;
 
 -(BOOL)checkFields;
 

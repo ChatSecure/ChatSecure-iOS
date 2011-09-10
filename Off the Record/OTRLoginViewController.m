@@ -12,6 +12,8 @@
 @synthesize usernameTextField;
 @synthesize passwordTextField;
 @synthesize protocolManager;
+@synthesize aimButton;
+@synthesize xmppButton;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -41,6 +43,8 @@
 {
     [self setUsernameTextField:nil];
     [self setPasswordTextField:nil];
+    [self setAimButton:nil];
+    [self setXmppButton:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -61,6 +65,8 @@
 - (void)dealloc {
     [usernameTextField release];
     [passwordTextField release];
+    [aimButton release];
+    [xmppButton release];
     [super dealloc];
 }
 - (IBAction)loginPressed:(id)sender 
@@ -118,6 +124,10 @@
             [alert release];
         }
     }
+}
+
+- (IBAction)cancelPressed:(id)sender {
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 -(BOOL)checkFields

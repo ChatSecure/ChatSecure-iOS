@@ -48,6 +48,12 @@
 		D95F8E941419C3E10094A634 /* chatsecure_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D95F8E931419C3E00094A634 /* chatsecure_icon@2x.png */; };
 		D95F8E961419C58D0094A634 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = D95F8E951419C58D0094A634 /* Default.png */; };
 		D95F8E981419C5900094A634 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D95F8E971419C5900094A634 /* Default@2x.png */; };
+		D99550B4141AD8CD00A82FAC /* OTRAccountsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D99550B2141AD8CD00A82FAC /* OTRAccountsViewController.m */; };
+		D99550B5141AD8CD00A82FAC /* OTRAccountsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D99550B3141AD8CD00A82FAC /* OTRAccountsViewController.xib */; };
+		D99550BB141AE07D00A82FAC /* gtalk.png in Resources */ = {isa = PBXBuildFile; fileRef = D99550B7141AE07D00A82FAC /* gtalk.png */; };
+		D99550BC141AE07D00A82FAC /* gtalk@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D99550B8141AE07D00A82FAC /* gtalk@2x.png */; };
+		D99550BD141AE07D00A82FAC /* aim.png in Resources */ = {isa = PBXBuildFile; fileRef = D99550B9141AE07D00A82FAC /* aim.png */; };
+		D99550BE141AE07D00A82FAC /* aim@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D99550BA141AE07D00A82FAC /* aim@2x.png */; };
 		D99907531414299200D573EE /* OTROscarManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D99907521414299200D573EE /* OTROscarManager.m */; };
 		D999075D14142CC400D573EE /* OTRProtocolManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D999075C14142CC400D573EE /* OTRProtocolManager.m */; };
 		D9991A4B13F44F87002D3008 /* OTRChatListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9991A4913F44F86002D3008 /* OTRChatListViewController.m */; };
@@ -310,6 +316,13 @@
 		D95F8E931419C3E00094A634 /* chatsecure_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "chatsecure_icon@2x.png"; path = "../chatsecure_icon@2x.png"; sourceTree = "<group>"; };
 		D95F8E951419C58D0094A634 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = ../Default.png; sourceTree = "<group>"; };
 		D95F8E971419C5900094A634 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default@2x.png"; path = "../Default@2x.png"; sourceTree = "<group>"; };
+		D99550B1141AD8CD00A82FAC /* OTRAccountsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAccountsViewController.h; sourceTree = "<group>"; };
+		D99550B2141AD8CD00A82FAC /* OTRAccountsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAccountsViewController.m; sourceTree = "<group>"; };
+		D99550B3141AD8CD00A82FAC /* OTRAccountsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OTRAccountsViewController.xib; sourceTree = "<group>"; };
+		D99550B7141AE07D00A82FAC /* gtalk.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gtalk.png; sourceTree = "<group>"; };
+		D99550B8141AE07D00A82FAC /* gtalk@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gtalk@2x.png"; sourceTree = "<group>"; };
+		D99550B9141AE07D00A82FAC /* aim.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = aim.png; sourceTree = "<group>"; };
+		D99550BA141AE07D00A82FAC /* aim@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "aim@2x.png"; sourceTree = "<group>"; };
 		D99907511414299200D573EE /* OTROscarManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTROscarManager.h; sourceTree = "<group>"; };
 		D99907521414299200D573EE /* OTROscarManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTROscarManager.m; sourceTree = "<group>"; };
 		D999075B14142CC400D573EE /* OTRProtocolManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRProtocolManager.h; sourceTree = "<group>"; };
@@ -1466,6 +1479,9 @@
 				D9DE274913F4F0A400E335CA /* OTRLoginViewController.h */,
 				D9DE274A13F4F0A400E335CA /* OTRLoginViewController.m */,
 				D9DE274B13F4F0A500E335CA /* OTRLoginViewController.xib */,
+				D99550B1141AD8CD00A82FAC /* OTRAccountsViewController.h */,
+				D99550B2141AD8CD00A82FAC /* OTRAccountsViewController.m */,
+				D99550B3141AD8CD00A82FAC /* OTRAccountsViewController.xib */,
 				D9BEFD61141AB35D008064A7 /* chatsecure_banner@2x.png */,
 				D9BEFD62141AB35D008064A7 /* chatsecure_banner.png */,
 				D95F8E971419C5900094A634 /* Default@2x.png */,
@@ -1477,6 +1493,10 @@
 				D9CE423113FDCA0F003EC27C /* 112-group.png */,
 				D9CE422E13FDC9EF003EC27C /* 08-chat.png */,
 				D9BEFD5A141A9425008064A7 /* 19-gear.png */,
+				D99550B7141AE07D00A82FAC /* gtalk.png */,
+				D99550B8141AE07D00A82FAC /* gtalk@2x.png */,
+				D99550B9141AE07D00A82FAC /* aim.png */,
+				D99550BA141AE07D00A82FAC /* aim@2x.png */,
 				D9F9378113F44BD3009A3D84 /* Supporting Files */,
 			);
 			path = "Off the Record";
@@ -1559,6 +1579,11 @@
 				D9BEFD5B141A9425008064A7 /* 19-gear.png in Resources */,
 				D9BEFD63141AB35D008064A7 /* chatsecure_banner@2x.png in Resources */,
 				D9BEFD64141AB35D008064A7 /* chatsecure_banner.png in Resources */,
+				D99550B5141AD8CD00A82FAC /* OTRAccountsViewController.xib in Resources */,
+				D99550BB141AE07D00A82FAC /* gtalk.png in Resources */,
+				D99550BC141AE07D00A82FAC /* gtalk@2x.png in Resources */,
+				D99550BD141AE07D00A82FAC /* aim.png in Resources */,
+				D99550BE141AE07D00A82FAC /* aim@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1762,6 +1787,7 @@
 				D9D69B78141809110056FB9E /* XMPPCapabilities.m in Sources */,
 				D9D69B79141809110056FB9E /* XMPPvCardAvatarModule.m in Sources */,
 				D9D69B7A141809110056FB9E /* XMPPElement+Delay.m in Sources */,
+				D99550B4141AD8CD00A82FAC /* OTRAccountsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

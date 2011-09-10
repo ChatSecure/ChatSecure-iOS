@@ -9,8 +9,8 @@
 #import "OTRAppDelegate.h"
 
 #import "OTRBuddyListViewController.h"
-
 #import "OTRChatListViewController.h"
+#import "OTRAccountsViewController.h"
 
 @implementation OTRAppDelegate
 
@@ -25,12 +25,15 @@
     OTRBuddyListViewController *viewController1 = [[OTRBuddyListViewController alloc] initWithNibName:@"OTRBuddyListViewController" bundle:nil];
     UIViewController *navController = [[UINavigationController alloc] initWithRootViewController:viewController1];
     OTRChatListViewController *viewController2 = [[OTRChatListViewController alloc] initWithNibName:@"OTRChatListViewController" bundle:nil];
+    OTRAccountsViewController *viewController3 = [[OTRAccountsViewController alloc] init];
+    UIViewController *navController3 = [[UINavigationController alloc] initWithRootViewController:viewController3];
+    
     viewController2.buddyController = viewController1;
     viewController1.chatListController = viewController2;
     viewController1.tabController = _tabBarController;
     UIViewController *navController2 = [[UINavigationController alloc] initWithRootViewController:viewController2];
     self.tabBarController = [[UITabBarController alloc] init];
-    self.tabBarController.viewControllers = [NSArray arrayWithObjects:navController, navController2, nil];
+    self.tabBarController.viewControllers = [NSArray arrayWithObjects:navController, navController2, navController3, nil];
     self.window.rootViewController = self.tabBarController;
     [self.window makeKeyAndVisible];
     return YES;

@@ -49,19 +49,6 @@
     
     [[NSNotificationCenter defaultCenter]
      addObserver:self
-     selector:@selector(loggedInSuccessfully)
-     name:@"OscarLoginNotification"
-     object:nil ];
-    
-    [[NSNotificationCenter defaultCenter]
-     addObserver:self
-     selector:@selector(loggedInSuccessfully)
-     name:@"XMPPLoginNotification"
-     object:nil ];
-    
-    
-    [[NSNotificationCenter defaultCenter]
-     addObserver:self
      selector:@selector(buddyListUpdate)
      name:@"BuddyListUpdateNotification"
      object:nil ];
@@ -80,11 +67,6 @@
     
     
     chatViewControllers = [[NSMutableDictionary alloc] initWithCapacity:3];
-    
-    OTRLoginViewController *loginViewController = [[OTRLoginViewController alloc] init];
-    loginViewController.protocolManager = protocolManager;
-    [self presentModalViewController:loginViewController animated:YES];
-    loginController = loginViewController;    
     
     buddyList = protocolManager.buddyList;
     
@@ -112,10 +94,10 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
--(void)loggedInSuccessfully
+/*-(void)loggedInSuccessfully
 {
     [loginController dismissModalViewControllerAnimated:YES];
-}
+}*/
 
 -(void)buddyListUpdate
 {

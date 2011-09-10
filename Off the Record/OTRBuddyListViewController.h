@@ -17,7 +17,7 @@
     
     NSMutableDictionary *chatViewControllers;
     
-    UIViewController *loginController;
+//    UIViewController *loginController;
     
     OTRProtocolManager *protocolManager;
     
@@ -33,7 +33,7 @@
 @property (nonatomic, retain) NSMutableDictionary *recentMessages;
 
 -(void)enterConversation:(NSString*)buddyName withProtocol:(NSString*)protocol;
--(void)loggedInSuccessfully;
+//-(void)loggedInSuccessfully;
 -(void)buddyListUpdate;
 -(void)messageReceived:(NSNotification*)notification;
 
