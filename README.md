@@ -25,3 +25,5 @@ Acknowledgements
 * [Nick Hum](http://nickhum.com/) - awesome icon concept.
 * [Glyphish](http://glyphish.com/) - icons used on the tab bar.
 * [Adium](http://adium.im/) - lock/unlock icon used in chat window.
+* [Sergio Sánchez López](http://www.iconfinder.com/icondetails/7043/128/aim_icon) - AIM protocol icon.
+* [Goxxy](http://rocketdock.com/addon/icons/3462) - Google Talk icon.
