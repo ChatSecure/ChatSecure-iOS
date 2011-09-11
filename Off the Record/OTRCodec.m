@@ -14,22 +14,8 @@
 
 #define PRIVKEYFNAME @"otr.private_key"
 #define STOREFNAME @"otr.fingerprints"
-#define ARC4RANDOM_MAX      0x100000000
-
 
 @implementation OTRCodec
-
-@synthesize accountName;
-
--(id)initWithAccountName:(NSString*)account
-{
-    if(self = [super init])
-    {
-        accountName = account;
-        [accountName retain];
-    }
-    return self;
-}
 
 static OtrlPolicy policy_cb(void *opdata, ConnContext *context)
 {
@@ -97,11 +83,11 @@ static void inject_message_cb(void *opdata, const char *accountname,
      }
      otrg_plugin_inject_message(account, recipient, message);*/
     
-    NSDictionary *messageInfo = [OTRCodec messageWithSender:[NSString stringWithUTF8String:accountname] recipient:[NSString stringWithUTF8String:recipient] message:[NSString stringWithUTF8String:message] protocol:[NSString stringWithUTF8String:protocol]];
+    OTRMessage *newMessage = [OTRMessage messageWithSender:[NSString stringWithUTF8String:accountname] recipient:[NSString stringWithUTF8String:recipient] message:[NSString stringWithUTF8String:message] protocol:[NSString stringWithUTF8String:protocol]];
     
-    [OTRCodec sendMessage:messageInfo];
+    [OTRMessage sendMessage:newMessage];
     
-    NSLog(@"sent inject: %s",message);
+    //NSLog(@"sent inject: %s",message);
     
 }
 
@@ -147,11 +133,26 @@ static void confirm_fingerprint_cb(void *opdata, OtrlUserState us,
 {
     //otrg_dialog_unknown_fingerprint(us, accountname, protocol, username,
     //                                fingerprint);
-    NSMutableString *hex = [NSMutableString string];
+    /*NSMutableString *hex = [NSMutableString string];
     for (int i=0; i<20; i++)
         [hex appendFormat:@"%02x", fingerprint[i]];
     
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Unknown Fingerprint" message:[NSString stringWithFormat:@"%s: %@",username, hex] delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+    [alert show];
+    [alert release];*/
+    char our_hash[45], their_hash[45];
+    
+    OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
+    
+    ConnContext *context = otrl_context_find(protocolManager.encryptionManager.userState, username,accountname, protocol,NO,NULL,NULL, NULL);
+        
+    otrl_privkey_fingerprint(protocolManager.encryptionManager.userState, our_hash, context->accountname, context->protocol);
+    
+    otrl_privkey_hash_to_human(their_hash, fingerprint);
+    
+    NSString *msg = [NSString stringWithFormat:@"Fingerprint for you, %s:\n%s\n\nPurported fingerprint for %s:\n%s\n", context->accountname, our_hash, context->username, their_hash];
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Verify Fingerprint" message:msg delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
     [alert show];
     [alert release];
 }
@@ -272,16 +273,15 @@ static OtrlMessageAppOps ui_ops = {
     NULL                    /* account_name_free */
 };
 
-//-(NSString*) decodeMessage:(NSString*) message fromUser:(NSString*)friendAccount
--(NSDictionary*)decodeMessage:(NSDictionary *)messageInfo
++(OTRMessage*) decodeMessage:(OTRMessage*)theMessage;
 {
     int ignore_message;
     char *newmessage = NULL;
     
-    NSString *message = [messageInfo objectForKey:@"message"];
-    NSString *friendAccount = [messageInfo objectForKey:@"sender"];
-    NSString *protocol = [messageInfo objectForKey:@"protocol"];
-    NSString *myAccountName = [messageInfo objectForKey:@"recipient"];
+    NSString *message = theMessage.message;
+    NSString *friendAccount = theMessage.sender;
+    NSString *protocol = theMessage.protocol;
+    NSString *myAccountName = theMessage.recipient;
     
     OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
     
@@ -289,9 +289,7 @@ static OtrlMessageAppOps ui_ops = {
     
     if(!userstate)
         NSLog(@"userstate is nil!");
-    
-    NSLog(@"%@ %@ %@ %@", myAccountName, friendAccount, message, protocol);
-    
+        
     ignore_message = otrl_message_receiving(userstate, &ui_ops, NULL,[myAccountName UTF8String], [protocol UTF8String], [friendAccount UTF8String], [message UTF8String], &newmessage, NULL, NULL, NULL);
     
     NSString *newMessage;
@@ -314,25 +312,22 @@ static OtrlMessageAppOps ui_ops = {
     
     otrl_message_free(newmessage);
     
-    NSMutableDictionary *newMessageInfo = [[NSMutableDictionary alloc] initWithDictionary:messageInfo];
-    [newMessageInfo setObject:newMessage forKey:@"message"];
+    OTRMessage *newOTRMessage = [OTRMessage messageWithSender:theMessage.sender recipient:theMessage.recipient message:newMessage protocol:theMessage.protocol];
     
-    return newMessageInfo;
+    return newOTRMessage;
 }
 
-//-(NSString*) encodeMessage:(NSString*) message toUser:(NSString*)recipientAccount
--(NSDictionary*)encodeMessage:(NSDictionary *)messageInfo
+
++(OTRMessage*) encodeMessage:(OTRMessage*)theMessage;
 {
     gcry_error_t err;
     char *newmessage = NULL;
     
-    NSString *message = [messageInfo objectForKey:@"message"];
-    NSString *recipientAccount = [messageInfo objectForKey:@"recipient"];
-    NSString *protocol = [messageInfo objectForKey:@"protocol"];
-    NSString *sendingAccount = [messageInfo objectForKey:@"sender"];
-    
-    [OTRCodec printDebugMessageInfo:messageInfo];
-    
+    NSString *message = theMessage.message;
+    NSString *recipientAccount = theMessage.recipient;
+    NSString *protocol = theMessage.protocol;
+    NSString *sendingAccount = theMessage.sender;
+        
     OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
     
     err = otrl_message_sending(protocolManager.encryptionManager.userState, &ui_ops, NULL,
@@ -342,54 +337,10 @@ static OtrlMessageAppOps ui_ops = {
     
     otrl_message_free(newmessage);
     
-    NSMutableDictionary *newMessageInfo = [[NSMutableDictionary alloc] initWithDictionary:messageInfo];
-    [newMessageInfo setObject:newMessage forKey:@"message"];
+    OTRMessage *newOTRMessage = [OTRMessage messageWithSender:theMessage.sender recipient:theMessage.recipient message:newMessage protocol:theMessage.protocol];
     
-    return newMessageInfo;
+    return newOTRMessage;
 }
 
-//+(void)sendMessage:(NSString*)message toUser:(NSString*)recipient withDelay:(float)delay
-+(void)sendMessage:(NSDictionary *)messageInfo
-{    
-    /*AIMSessionManager *theSession = [[OTROscarManager AIMSession] retain];
-    AIMMessage * msg = [AIMMessage messageWithBuddy:[theSession.session.buddyList buddyWithUsername:recipient] message:message];
-    
-    // use delay to prevent OSCAR rate-limiting problem
-    //NSDate *future = [NSDate dateWithTimeIntervalSinceNow: delay ];
-    //[NSThread sleepUntilDate:future];
-    
-	[theSession.messageHandler sendMessage:msg];
-    
-    [theSession release];*/
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"SendMessageNotification" object:self userInfo:messageInfo];
-
-    
-}
-
-+(NSDictionary*)messageWithSender:(NSString*)sender recipient:(NSString*)recipient message:(NSString*)message protocol:(NSString*)protocol
-{
-    NSMutableDictionary *messageInfo = [[NSMutableDictionary alloc] initWithCapacity:4];
-    if(sender)
-        [messageInfo setObject:sender forKey:@"sender"];
-    else
-        [messageInfo setObject:recipient forKey:@"sender"];
-
-    [messageInfo setObject:recipient forKey:@"recipient"];
-    [messageInfo setObject:message forKey:@"message"];
-    [messageInfo setObject:protocol forKey:@"protocol"];
-    
-    return messageInfo;
-}
-
-+(void)printDebugMessageInfo:(NSDictionary*)messageInfo;
-{
-    NSString *sender = [messageInfo objectForKey:@"sender"];
-    NSString *recipient = [messageInfo objectForKey:@"recipient"];
-    NSString *message = [messageInfo objectForKey:@"message"];
-    NSString *protocol = [messageInfo objectForKey:@"protocol"];
-    
-    NSLog(@"S:%@ R:%@ M:%@ P:%@",sender,recipient,message,protocol);
-}
 
 @end

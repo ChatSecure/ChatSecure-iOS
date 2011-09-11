@@ -50,7 +50,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 @synthesize xmppvCardAvatarModule;
 @synthesize xmppCapabilities;
 @synthesize xmppCapabilitiesStorage;
-@synthesize messageCodec;
 @synthesize isXmppConnected;
 
 -(id)init
@@ -418,9 +417,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     JID = [XMPPJID jidWithString:myJID];
     [JID retain];
     
-    messageCodec = [[OTRCodec alloc] initWithAccountName:[JID full]];
-
-    
 	[xmppStream setMyJID:JID];
 	password = myPassword;
     
@@ -605,17 +601,17 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         if(!sender)
             sender = @"";
         
-        NSDictionary *messageInfo = [[OTRCodec messageWithSender:[[user jid] full] recipient:[JID full] message:body protocol:@"xmpp"] retain];
+        OTRMessage *otrMessage = [OTRMessage messageWithSender:[[user jid] full] recipient:[JID full] message:body protocol:@"xmpp"];
         
-        NSLog(@"%@ %@ %@ %@", [messageInfo objectForKey:@"sender"],[messageInfo objectForKey:@"recipient"], [messageInfo objectForKey:@"message"], [messageInfo objectForKey:@"protocol"]);
+        OTRMessage *decodedMessage = [OTRCodec decodeMessage:otrMessage];
         
-        NSDictionary *decodedMessageInfo = [messageCodec decodeMessage:messageInfo];
-        
-        if(decodedMessageInfo)
+        if(decodedMessage)
         {
+            NSDictionary *messageInfo = [NSDictionary dictionaryWithObject:decodedMessage forKey:@"message"];
+            
             [[NSNotificationCenter defaultCenter]
              postNotificationName:@"MessageReceivedNotification"
-             object:self userInfo:decodedMessageInfo];
+             object:self userInfo:messageInfo];
         }
         
 		/*XMPPUserCoreDataStorageObject *user = [xmppRosterStorage userForJID:[message from]
@@ -718,5 +714,9 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	
 }
 
+-(NSString*)accountName
+{
+    return [JID full];
+}
 
 @end

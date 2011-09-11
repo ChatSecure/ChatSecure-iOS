@@ -10,7 +10,6 @@
 
 @implementation OTROscarManager
 
-@synthesize messageCodec;
 @synthesize accountName;
 @synthesize buddyList;
 @synthesize theSession;
@@ -92,9 +91,7 @@
 	
 	// uncomment to test rate limit detection.
 	// [self sendBogus];
-    
-    messageCodec = [[OTRCodec alloc] initWithAccountName:accountName];
-    
+        
     [[NSNotificationCenter defaultCenter]
      postNotificationName:@"OscarLoginNotification"
      object:self];
@@ -216,17 +213,18 @@
 	NSString * autoresp = [message isAutoresponse] ? @" (Auto-Response)" : @"";
 	NSLog(@"(%@) %@%@: %@", [NSDate date], [[message buddy] username], autoresp, [message plainTextMessage]);
     
-    NSDictionary *userInfo = [OTRCodec messageWithSender:message.buddy.username recipient:accountName message:msgTxt protocol:@"prpl-oscar"];
+    OTRMessage *otrMessage = [OTRMessage messageWithSender:message.buddy.username recipient:accountName message:msgTxt protocol:@"prpl-oscar"];
     
-    NSDictionary *decodedMessageInfo = [messageCodec decodeMessage:userInfo];
+    OTRMessage *decodedMessage = [OTRCodec decodeMessage:otrMessage];
     
-    if(decodedMessageInfo)
+    if(decodedMessage)
     {
-        
+     
+        NSDictionary *messageInfo = [NSDictionary dictionaryWithObject:decodedMessage forKey:@"message"];
         
         [[NSNotificationCenter defaultCenter]
          postNotificationName:@"MessageReceivedNotification"
-         object:self userInfo:decodedMessageInfo];
+         object:self userInfo:messageInfo];
         
     }
 	

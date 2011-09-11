@@ -90,26 +90,26 @@ static OTRProtocolManager *sharedManager = nil;
 
 -(void)sendMessage:(NSNotification *)notification
 {
-    NSDictionary *userInfo = notification.userInfo;
-    NSString *protocol = [userInfo objectForKey:@"protocol"];
+    OTRMessage *message = [notification.userInfo objectForKey:@"message"];
+    NSString *protocol = message.protocol;
     
-    NSLog(@"send message (%@): %@", protocol, [userInfo objectForKey:@"message"]);
+    NSLog(@"send message (%@): %@", protocol, message.message);
     
     
     if([protocol isEqualToString:@"xmpp"])
     {
-        [self sendMessageXMPP:userInfo];
+        [self sendMessageXMPP:message];
     }
     else if([protocol isEqualToString:@"prpl-oscar"])
     {
-        [self sendMessageOSCAR:userInfo];
+        [self sendMessageOSCAR:message];
     }
 }
 
--(void)sendMessageOSCAR:(NSDictionary *)messageInfo
+-(void)sendMessageOSCAR:(OTRMessage *)theMessage
 {
-    NSString *recipient = [messageInfo objectForKey:@"recipient"];
-    NSString *message = [messageInfo objectForKey:@"message"];
+    NSString *recipient = theMessage.recipient;
+    NSString *message = theMessage.message;
     
     AIMSessionManager *theSession = [oscarManager.theSession retain];
     AIMMessage * msg = [AIMMessage messageWithBuddy:[theSession.session.buddyList buddyWithUsername:recipient] message:message];
@@ -123,9 +123,9 @@ static OTRProtocolManager *sharedManager = nil;
     [theSession release];
 }
 
--(void)sendMessageXMPP:(NSDictionary *)messageInfo
+-(void)sendMessageXMPP:(OTRMessage *)theMessage
 {
-    NSString *messageStr = [messageInfo objectForKey:@"message"];
+    NSString *messageStr = theMessage.message;
 	
 	if([messageStr length] > 0)
 	{
@@ -134,24 +134,11 @@ static OTRProtocolManager *sharedManager = nil;
 		
 		NSXMLElement *message = [NSXMLElement elementWithName:@"message"];
 		[message addAttributeWithName:@"type" stringValue:@"chat"];
-		[message addAttributeWithName:@"to" stringValue:[messageInfo objectForKey:@"recipient"]];
+		[message addAttributeWithName:@"to" stringValue:theMessage.recipient];
 		[message addChild:body];
 		
 		[xmppManager.xmppStream sendElement:message];		
 	}
-}
-
--(OTRCodec*)codecForProtocol:(NSString*)protocol
-{
-    if([protocol isEqualToString:@"prpl-oscar"])
-    {
-        return oscarManager.messageCodec;
-    }
-    else if([protocol isEqualToString:@"xmpp"])
-    {
-        return xmppManager.messageCodec;
-    }
-    return nil;
 }
 
 -(void)buddyListUpdate
@@ -258,6 +245,19 @@ static OTRProtocolManager *sharedManager = nil;
 
         }
     }
+}
+
+-(NSString*)accountNameForProtocol:(NSString*)protocol
+{
+    if([protocol isEqualToString:@"prpl-oscar"])
+    {
+        return oscarManager.accountName;
+    }
+    else if([protocol isEqualToString:@"xmpp"])
+    {
+        return [xmppManager accountName];
+    }
+    return nil;
 }
 
 @end

@@ -26,7 +26,6 @@
 
 @property (nonatomic, retain) AIMLogin * login;
 @property (nonatomic, retain) AIMBlist *buddyList;
-@property (nonatomic, retain) OTRCodec *messageCodec;
 @property (nonatomic, retain) AIMSessionManager *theSession;
 @property (nonatomic, retain) NSString *accountName;
 

@@ -56,8 +56,6 @@
 @property (nonatomic, readonly) XMPPCapabilitiesCoreDataStorage *xmppCapabilitiesStorage;
 @property 	BOOL isXmppConnected;
 
-@property (nonatomic, retain) OTRCodec *messageCodec;
-
 - (NSManagedObjectContext *)managedObjectContext_roster;
 - (NSManagedObjectContext *)managedObjectContext_capabilities;
 
@@ -65,5 +63,7 @@
 - (void)disconnect;
 
 - (NSFetchedResultsController *)fetchedResultsController;
+
+-(NSString*)accountName;
 
 @end

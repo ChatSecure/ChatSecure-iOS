@@ -54,9 +54,4 @@
     return self;
 }
 
-/*+(OtrlUserState) OTR_userState
-{
-    return s_OTR_userState;
-}*/
-
 @end

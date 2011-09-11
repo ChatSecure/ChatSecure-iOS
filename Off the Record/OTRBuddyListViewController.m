@@ -114,8 +114,9 @@
 
 -(void)messageReceived:(NSNotification*)notification;
 {
-    NSString *userName = [notification.userInfo objectForKey:@"sender"];
-    NSString *decodedMessage = [notification.userInfo objectForKey:@"message"];
+    OTRMessage *message = [notification.userInfo objectForKey:@"message"];
+    NSString *userName = message.sender;
+    NSString *decodedMessage = message.message;
     
     
     if(![[self.navigationController visibleViewController].title isEqualToString:userName] && ![[chatListController.navigationController visibleViewController].title isEqualToString:userName])
@@ -258,10 +259,8 @@
         }
         else
         {
-            //FIXME
             chatController.protocol = protocol;
-            OTRCodec *codec = [protocolManager codecForProtocol:protocol];
-            chatController.accountName = codec.accountName;
+            chatController.accountName = [protocolManager accountNameForProtocol:protocol];
         }
         chatController.buddyListController = self;
         [chatViewControllers setObject:chatController forKey:buddyName];

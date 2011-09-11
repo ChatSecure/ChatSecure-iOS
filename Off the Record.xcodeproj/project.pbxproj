@@ -60,6 +60,7 @@
 		D9991A4C13F44F87002D3008 /* OTRChatListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9991A4A13F44F86002D3008 /* OTRChatListViewController.xib */; };
 		D9991A5113F44F9A002D3008 /* OTRChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9991A4F13F44F9A002D3008 /* OTRChatViewController.m */; };
 		D9991A5213F44F9A002D3008 /* OTRChatViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9991A5013F44F9A002D3008 /* OTRChatViewController.xib */; };
+		D99BA290141D3F3A00D051B6 /* OTRMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = D99BA28F141D3F3A00D051B6 /* OTRMessage.m */; };
 		D9BEFD5B141A9425008064A7 /* 19-gear.png in Resources */ = {isa = PBXBuildFile; fileRef = D9BEFD5A141A9425008064A7 /* 19-gear.png */; };
 		D9BEFD63141AB35D008064A7 /* chatsecure_banner@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D9BEFD61141AB35D008064A7 /* chatsecure_banner@2x.png */; };
 		D9BEFD64141AB35D008064A7 /* chatsecure_banner.png in Resources */ = {isa = PBXBuildFile; fileRef = D9BEFD62141AB35D008064A7 /* chatsecure_banner.png */; };
@@ -333,6 +334,8 @@
 		D9991A4E13F44F9A002D3008 /* OTRChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRChatViewController.h; sourceTree = "<group>"; };
 		D9991A4F13F44F9A002D3008 /* OTRChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRChatViewController.m; sourceTree = "<group>"; };
 		D9991A5013F44F9A002D3008 /* OTRChatViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OTRChatViewController.xib; sourceTree = "<group>"; };
+		D99BA28E141D3F3A00D051B6 /* OTRMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRMessage.h; sourceTree = "<group>"; };
+		D99BA28F141D3F3A00D051B6 /* OTRMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRMessage.m; sourceTree = "<group>"; };
 		D9BEFD5A141A9425008064A7 /* 19-gear.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "19-gear.png"; path = "../../Desktop/desktop/glyphish-icons/icons/19-gear.png"; sourceTree = "<group>"; };
 		D9BEFD61141AB35D008064A7 /* chatsecure_banner@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatsecure_banner@2x.png"; sourceTree = SOURCE_ROOT; };
 		D9BEFD62141AB35D008064A7 /* chatsecure_banner.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chatsecure_banner.png; sourceTree = SOURCE_ROOT; };
@@ -1043,6 +1046,8 @@
 				D90B80AE13FC7E5F006EFF3D /* OTRCodec.m */,
 				D9D69B041418069F0056FB9E /* OTRXMPPManager.h */,
 				D9D69B051418069F0056FB9E /* OTRXMPPManager.m */,
+				D99BA28E141D3F3A00D051B6 /* OTRMessage.h */,
+				D99BA28F141D3F3A00D051B6 /* OTRMessage.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -1788,6 +1793,7 @@
 				D9D69B79141809110056FB9E /* XMPPvCardAvatarModule.m in Sources */,
 				D9D69B7A141809110056FB9E /* XMPPElement+Delay.m in Sources */,
 				D99550B4141AD8CD00A82FAC /* OTRAccountsViewController.m in Sources */,
+				D99BA290141D3F3A00D051B6 /* OTRMessage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -27,12 +27,12 @@
 
 -(void)sendMessage:(NSNotification*)notification;
 
--(void)sendMessageOSCAR:(NSDictionary*)messageInfo;
--(void)sendMessageXMPP:(NSDictionary*)messageInfo;
-
--(OTRCodec*)codecForProtocol:(NSString*)protocol;
+-(void)sendMessageOSCAR:(OTRMessage*)theMessage;
+-(void)sendMessageXMPP:(OTRMessage*)theMessage;
 
 -(void)buddyListUpdate;
+
+-(NSString*)accountNameForProtocol:(NSString*)protocol;
 
 
 @end

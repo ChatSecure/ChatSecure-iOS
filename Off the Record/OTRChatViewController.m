@@ -187,6 +187,7 @@
 }
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField{
+    
     [self sendMessage:textField.text];
 
     
@@ -211,22 +212,11 @@
 
 -(void)sendMessage:(NSString *)message
 {    
-    NSDictionary *newMessageInfo = [OTRCodec messageWithSender:accountName recipient:self.title message:message protocol:protocol];
+    OTRMessage *newMessage = [OTRMessage messageWithSender:accountName recipient:self.title message:message protocol:protocol];
     
-    OTRCodec *codec = [protocolManager codecForProtocol:protocol];
+    OTRMessage *encodedMessage = [OTRCodec encodeMessage:newMessage];
     
-    [OTRCodec printDebugMessageInfo:newMessageInfo];
-    
-    if(!codec)
-        NSLog(@"codec is nil!");
-    
-    NSDictionary *encodedMessageInfo = [codec encodeMessage:newMessageInfo];
-    
-    [OTRCodec sendMessage:encodedMessageInfo];    
-    /*AIMSessionManager *theSession = [OTROscarManager AIMSession];
-    AIMMessage * msg = [AIMMessage messageWithBuddy:[theSession.session.buddyList buddyWithUsername:self.title] message:newMessage];
-	[theSession.messageHandler sendMessage:msg];*/
-    
+    [OTRMessage sendMessage:encodedMessage];    
     
     NSString *username = @"<FONT COLOR=\"#0000ff\"><b>Me:</b></FONT>";
     
