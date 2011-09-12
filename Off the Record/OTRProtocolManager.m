@@ -7,6 +7,7 @@
 //
 
 #import "OTRProtocolManager.h"
+#import "OTRBuddy.h"
 
 static OTRProtocolManager *sharedManager = nil;
 
@@ -161,24 +162,24 @@ static OTRProtocolManager *sharedManager = nil;
             
             for(AIMBlistBuddy *buddy in group.buddies)
             {
-                NSMutableDictionary *buddyData = [[NSMutableDictionary alloc] init];
-                [buddyData setObject:buddy.username forKey:@"buddy_name"];
-                [buddyData setObject:@"prpl-oscar" forKey:@"protocol"];
+                OTRBuddyStatus buddyStatus;
                 
                 switch (buddy.status.statusType) 
                 {
                     case AIMBuddyStatusAvailable:
-                        [buddyData setObject:@"Available" forKey:@"status"];
+                        buddyStatus = kOTRBuddyStatusAvailable;
                         break;
                     case AIMBuddyStatusAway:
-                        [buddyData setObject:@"Away" forKey:@"status"];
+                        buddyStatus = kOTRBuddyStatusAway;
                         break;
                     default:
-                        [buddyData setObject:@"Offline" forKey:@"status"];
+                        buddyStatus = kOTRBuddyStatusOffline;
                         break;
                 }
                 
-                [buddyDictionary setObject:buddyData forKey:buddy.username];
+                OTRBuddy *newBuddy = [OTRBuddy buddyWithName:buddy.username protocol:@"prpl-oscar" status:buddyStatus groupName:group.name];
+                
+                [buddyDictionary setObject:newBuddy forKey:buddy.username];
             }
             [groupDictionary setObject:buddyDictionary forKey:@"group_data"];
             
@@ -207,18 +208,19 @@ static OTRProtocolManager *sharedManager = nil;
             NSMutableDictionary *groupDictionary = [[NSMutableDictionary alloc] initWithCapacity:sectionsCount];
             
             NSString *sectionName;
-            NSString *status;
+            OTRBuddyStatus otrBuddyStatus;
+            
             switch (i) {
                 case 0:
                     sectionName = @"XMPP - Available";
-                    status = @"Available";
+                    otrBuddyStatus = kOTRBuddyStatusAvailable;
                     break;
                 case 1:
                     sectionName = @"XMPP - Away";
-                    status = @"Away";
+                    otrBuddyStatus = kOTRBuddyStatusAway;
                 default:
                     sectionName = @"XMPP - Offline";
-                    status = @"Offline";
+                    otrBuddyStatus = kOTRBuddyStatusOffline;
                     break;
             }
             [groupDictionary setObject:sectionName forKey:@"group_name"];
@@ -231,13 +233,9 @@ static OTRProtocolManager *sharedManager = nil;
                 
                 XMPPUserCoreDataStorageObject *user = [frc objectAtIndexPath:indexPath]; 
                 
-                NSMutableDictionary *buddyData = [[NSMutableDictionary alloc] init];
-                [buddyData setObject:[user.displayName copy] forKey:@"buddy_name"];
-                [buddyData setObject:@"xmpp" forKey:@"protocol"];
-                [buddyData setObject:status forKey:@"status"];
-
+                OTRBuddy *newBuddy = [OTRBuddy buddyWithName:user.displayName protocol:@"xmpp" status:otrBuddyStatus groupName:sectionName];
                 
-                [buddyDictionary setObject:buddyData forKey:user.displayName];
+                [buddyDictionary setObject:newBuddy forKey:user.displayName];
             }
             [groupDictionary setObject:buddyDictionary forKey:@"group_data"];
             

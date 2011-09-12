@@ -9,7 +9,7 @@
 #import "OTRBuddyListViewController.h"
 #import "OTRChatViewController.h"
 #import "OTRLoginViewController.h"
-
+#import "OTRBuddy.h"
 
 //#define kSignoffTime 500
 
@@ -189,31 +189,30 @@
         NSArray *buddyKeys = [buddyDictionary allKeys];
         NSString *currentBuddyKey = [buddyKeys objectAtIndex:indexPath.row];
         
-        NSDictionary *buddyData = [buddyDictionary objectForKey:currentBuddyKey];
+        OTRBuddy *buddyData = [buddyDictionary objectForKey:currentBuddyKey];
         
-        NSString *buddyUsername = [buddyData objectForKey:@"buddy_name"];
-        NSString *buddyStatus = [buddyData objectForKey:@"status"];
+        NSString *buddyUsername = buddyData.name;
+        OTRBuddyStatus buddyStatus = buddyData.status;
         
         cell.textLabel.text = buddyUsername;
                 
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         cell.detailTextLabel.textColor = [UIColor lightGrayColor];
         
-        if([buddyStatus isEqualToString:@"Offline"])
+        switch(buddyStatus)
         {
-            cell.textLabel.textColor = [UIColor lightGrayColor];
-            cell.detailTextLabel.text = @"Offline";
-        }
-        else if([buddyStatus isEqualToString:@"Away"])
-        {
-            cell.textLabel.textColor = [UIColor darkGrayColor];
-            cell.detailTextLabel.text = @"Away";
-        }
-        else
-        {
-            cell.textLabel.textColor = [UIColor darkTextColor];
-            cell.detailTextLabel.text = @"Available";
-
+            case kOTRBuddyStatusOffline:
+                cell.textLabel.textColor = [UIColor lightGrayColor];
+                cell.detailTextLabel.text = @"Offline";
+                break;
+            case kOTRBuddyStatusAway:
+                cell.textLabel.textColor = [UIColor darkGrayColor];
+                cell.detailTextLabel.text = @"Away";
+                break;
+            default:
+                cell.textLabel.textColor = [UIColor darkTextColor];
+                cell.detailTextLabel.text = @"Available";
+                break;
         }
     }
     
@@ -231,10 +230,10 @@
     NSArray *buddyKeys = [buddyDictionary allKeys];
     NSString *currentBuddyKey = [buddyKeys objectAtIndex:indexPath.row];
     
-    NSDictionary *buddyData = [buddyDictionary objectForKey:currentBuddyKey];
+    OTRBuddy *buddyData = [buddyDictionary objectForKey:currentBuddyKey];
     
-    NSString *buddyUsername = [buddyData objectForKey:@"buddy_name"];
-    NSString *buddyProtocol = [buddyData objectForKey:@"protocol"];
+    NSString *buddyUsername = buddyData.name;
+    NSString *buddyProtocol = buddyData.protocol;
     
     [self enterConversation:buddyUsername withProtocol:buddyProtocol];
     [tableView deselectRowAtIndexPath:indexPath animated:YES];

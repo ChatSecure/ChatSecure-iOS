@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D902D31E141E930C00AA3479 /* OTRBuddy.m in Sources */ = {isa = PBXBuildFile; fileRef = D902D31D141E930C00AA3479 /* OTRBuddy.m */; };
 		D90B80A913FC7026006EFF3D /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = D90B80A813FC7026006EFF3D /* MBProgressHUD.m */; };
 		D90B80AC13FC719B006EFF3D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D90B80AB13FC719B006EFF3D /* CoreGraphics.framework */; };
 		D90B80AF13FC7E5F006EFF3D /* OTRCodec.m in Sources */ = {isa = PBXBuildFile; fileRef = D90B80AE13FC7E5F006EFF3D /* OTRCodec.m */; };
@@ -242,6 +243,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D902D31C141E930C00AA3479 /* OTRBuddy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBuddy.h; sourceTree = "<group>"; };
+		D902D31D141E930C00AA3479 /* OTRBuddy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBuddy.m; sourceTree = "<group>"; };
 		D90B80A713FC7026006EFF3D /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
 		D90B80A813FC7026006EFF3D /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
 		D90B80AB13FC719B006EFF3D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -1036,6 +1039,8 @@
 		D9D69B07141806BB0056FB9E /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				D902D31C141E930C00AA3479 /* OTRBuddy.h */,
+				D902D31D141E930C00AA3479 /* OTRBuddy.m */,
 				D999075B14142CC400D573EE /* OTRProtocolManager.h */,
 				D999075C14142CC400D573EE /* OTRProtocolManager.m */,
 				D99907511414299200D573EE /* OTROscarManager.h */,
@@ -1794,6 +1799,7 @@
 				D9D69B7A141809110056FB9E /* XMPPElement+Delay.m in Sources */,
 				D99550B4141AD8CD00A82FAC /* OTRAccountsViewController.m in Sources */,
 				D99BA290141D3F3A00D051B6 /* OTRMessage.m in Sources */,
+				D902D31E141E930C00AA3479 /* OTRBuddy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
