@@ -13,6 +13,7 @@
 {
     UITableView *accountsTableView;
     OTRLoginViewController *loginController;
+    UIBarButtonItem *aboutButton;
     
     BOOL isAIMloggedIn;
     BOOL isXMPPloggedIn;
@@ -22,5 +23,6 @@
 -(void)oscarLoggedInSuccessfully;
 -(void)xmppLoggedInSuccessfully;
 -(void)accountLoggedIn;
+-(void)showAboutScreen;
 
 @end

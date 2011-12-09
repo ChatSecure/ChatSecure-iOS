@@ -62,7 +62,11 @@
 		D9991A5113F44F9A002D3008 /* OTRChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9991A4F13F44F9A002D3008 /* OTRChatViewController.m */; };
 		D9991A5213F44F9A002D3008 /* OTRChatViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9991A5013F44F9A002D3008 /* OTRChatViewController.xib */; };
 		D99BA290141D3F3A00D051B6 /* OTRMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = D99BA28F141D3F3A00D051B6 /* OTRMessage.m */; };
-		D9BEFD5B141A9425008064A7 /* 19-gear.png in Resources */ = {isa = PBXBuildFile; fileRef = D9BEFD5A141A9425008064A7 /* 19-gear.png */; };
+		D9BBCD3B1491F7AB00AF1B9F /* 19-gear.png in Resources */ = {isa = PBXBuildFile; fileRef = D9BBCD3A1491F7AB00AF1B9F /* 19-gear.png */; };
+		D9BBCD3F1491F8B400AF1B9F /* OTRAboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9BBCD3D1491F8B400AF1B9F /* OTRAboutViewController.m */; };
+		D9BBCD401491F8B400AF1B9F /* OTRAboutViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9BBCD3E1491F8B400AF1B9F /* OTRAboutViewController.xib */; };
+		D9BBCD431491FFC800AF1B9F /* about_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = D9BBCD411491FFC800AF1B9F /* about_icon.png */; };
+		D9BBCD441491FFC800AF1B9F /* about_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D9BBCD421491FFC800AF1B9F /* about_icon@2x.png */; };
 		D9BEFD63141AB35D008064A7 /* chatsecure_banner@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D9BEFD61141AB35D008064A7 /* chatsecure_banner@2x.png */; };
 		D9BEFD64141AB35D008064A7 /* chatsecure_banner.png in Resources */ = {isa = PBXBuildFile; fileRef = D9BEFD62141AB35D008064A7 /* chatsecure_banner.png */; };
 		D9CE422F13FDC9EF003EC27C /* 08-chat.png in Resources */ = {isa = PBXBuildFile; fileRef = D9CE422E13FDC9EF003EC27C /* 08-chat.png */; };
@@ -339,7 +343,12 @@
 		D9991A5013F44F9A002D3008 /* OTRChatViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OTRChatViewController.xib; sourceTree = "<group>"; };
 		D99BA28E141D3F3A00D051B6 /* OTRMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRMessage.h; sourceTree = "<group>"; };
 		D99BA28F141D3F3A00D051B6 /* OTRMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRMessage.m; sourceTree = "<group>"; };
-		D9BEFD5A141A9425008064A7 /* 19-gear.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "19-gear.png"; path = "../../Desktop/desktop/glyphish-icons/icons/19-gear.png"; sourceTree = "<group>"; };
+		D9BBCD3A1491F7AB00AF1B9F /* 19-gear.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "19-gear.png"; sourceTree = "<group>"; };
+		D9BBCD3C1491F8B400AF1B9F /* OTRAboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAboutViewController.h; sourceTree = "<group>"; };
+		D9BBCD3D1491F8B400AF1B9F /* OTRAboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAboutViewController.m; sourceTree = "<group>"; };
+		D9BBCD3E1491F8B400AF1B9F /* OTRAboutViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OTRAboutViewController.xib; sourceTree = "<group>"; };
+		D9BBCD411491FFC800AF1B9F /* about_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = about_icon.png; sourceTree = "<group>"; };
+		D9BBCD421491FFC800AF1B9F /* about_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "about_icon@2x.png"; sourceTree = "<group>"; };
 		D9BEFD61141AB35D008064A7 /* chatsecure_banner@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatsecure_banner@2x.png"; sourceTree = SOURCE_ROOT; };
 		D9BEFD62141AB35D008064A7 /* chatsecure_banner.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chatsecure_banner.png; sourceTree = SOURCE_ROOT; };
 		D9CE422E13FDC9EF003EC27C /* 08-chat.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "08-chat.png"; sourceTree = "<group>"; };
@@ -1492,6 +1501,11 @@
 				D99550B1141AD8CD00A82FAC /* OTRAccountsViewController.h */,
 				D99550B2141AD8CD00A82FAC /* OTRAccountsViewController.m */,
 				D99550B3141AD8CD00A82FAC /* OTRAccountsViewController.xib */,
+				D9BBCD3C1491F8B400AF1B9F /* OTRAboutViewController.h */,
+				D9BBCD3D1491F8B400AF1B9F /* OTRAboutViewController.m */,
+				D9BBCD3E1491F8B400AF1B9F /* OTRAboutViewController.xib */,
+				D9BBCD411491FFC800AF1B9F /* about_icon.png */,
+				D9BBCD421491FFC800AF1B9F /* about_icon@2x.png */,
 				D9BEFD61141AB35D008064A7 /* chatsecure_banner@2x.png */,
 				D9BEFD62141AB35D008064A7 /* chatsecure_banner.png */,
 				D95F8E971419C5900094A634 /* Default@2x.png */,
@@ -1501,8 +1515,8 @@
 				D9CE42C113FDCBDD003EC27C /* Lock_Locked.png */,
 				D9CE42C213FDCBDD003EC27C /* Lock_Unlocked.png */,
 				D9CE423113FDCA0F003EC27C /* 112-group.png */,
+				D9BBCD3A1491F7AB00AF1B9F /* 19-gear.png */,
 				D9CE422E13FDC9EF003EC27C /* 08-chat.png */,
-				D9BEFD5A141A9425008064A7 /* 19-gear.png */,
 				D99550B7141AE07D00A82FAC /* gtalk.png */,
 				D99550B8141AE07D00A82FAC /* gtalk@2x.png */,
 				D99550B9141AE07D00A82FAC /* aim.png */,
@@ -1586,7 +1600,6 @@
 				D95F8E941419C3E10094A634 /* chatsecure_icon@2x.png in Resources */,
 				D95F8E961419C58D0094A634 /* Default.png in Resources */,
 				D95F8E981419C5900094A634 /* Default@2x.png in Resources */,
-				D9BEFD5B141A9425008064A7 /* 19-gear.png in Resources */,
 				D9BEFD63141AB35D008064A7 /* chatsecure_banner@2x.png in Resources */,
 				D9BEFD64141AB35D008064A7 /* chatsecure_banner.png in Resources */,
 				D99550B5141AD8CD00A82FAC /* OTRAccountsViewController.xib in Resources */,
@@ -1594,6 +1607,10 @@
 				D99550BC141AE07D00A82FAC /* gtalk@2x.png in Resources */,
 				D99550BD141AE07D00A82FAC /* aim.png in Resources */,
 				D99550BE141AE07D00A82FAC /* aim@2x.png in Resources */,
+				D9BBCD3B1491F7AB00AF1B9F /* 19-gear.png in Resources */,
+				D9BBCD401491F8B400AF1B9F /* OTRAboutViewController.xib in Resources */,
+				D9BBCD431491FFC800AF1B9F /* about_icon.png in Resources */,
+				D9BBCD441491FFC800AF1B9F /* about_icon@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1800,6 +1817,7 @@
 				D99550B4141AD8CD00A82FAC /* OTRAccountsViewController.m in Sources */,
 				D99BA290141D3F3A00D051B6 /* OTRMessage.m in Sources */,
 				D902D31E141E930C00AA3479 /* OTRBuddy.m in Sources */,
+				D9BBCD3F1491F8B400AF1B9F /* OTRAboutViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

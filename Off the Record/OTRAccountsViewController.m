@@ -8,6 +8,7 @@
 
 #import "OTRAccountsViewController.h"
 #import "OTRProtocolManager.h"
+#import "OTRAboutViewController.h"
 
 @implementation OTRAccountsViewController
 @synthesize accountsTableView;
@@ -37,6 +38,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     accountsTableView.backgroundColor = [UIColor clearColor];
+    aboutButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"about_icon.png"] style:UIBarButtonItemStylePlain target:self action:@selector(showAboutScreen)];
+    self.navigationItem.rightBarButtonItem = aboutButton;
     
     [[NSNotificationCenter defaultCenter]
      addObserver:self
@@ -51,6 +54,14 @@
      object:nil ];
 }
 
+-(void)showAboutScreen
+{
+    OTRAboutViewController *aboutController = [[OTRAboutViewController alloc] init];
+    [self.navigationController pushViewController:aboutController animated:YES];
+    [aboutController release];
+}
+
+                                                                           
 -(void)oscarLoggedInSuccessfully
 {
     isAIMloggedIn = YES;
@@ -85,6 +96,7 @@
 
 - (void)dealloc {
     [accountsTableView release];
+    [aboutButton release];
     [super dealloc];
 }
 
