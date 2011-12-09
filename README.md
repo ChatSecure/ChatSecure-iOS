@@ -50,14 +50,14 @@ Third-party Libraries
 
 * [Cypherpunks libotr](http://www.cypherpunks.ca/otr/) - provides the core encryption capabilities
 * [LibOrange](https://github.com/unixpickle/LibOrange) - handles all of the OSCAR (AIM) functionality
-* [xmppframework](http://code.google.com/p/xmppframework/) - XMPP support
-* [NSAttributedString-Additions-for-HTML](https://github.com/Cocoanetics/NSAttributedString-Additions-for-HTML) - prettier chat window
+* [XMPPFramework](https://github.com/robbiehanson/XMPPFramework) - XMPP support
+* [DTCoreText](https://github.com/Cocoanetics/DTCoreText) - prettier chat window
 * [MBProgressHUD](https://github.com/jdg/MBProgressHUD) - a nice looking progress HUD
 
 Acknowledgements
 =========
 
-* [Nick Hum](http://nickhum.com/) - awesome icon concept.
+* [Nick Hum](http://nickhum.com/) - awesome icon.
 * [Glyphish](http://glyphish.com/) - icons used on the tab bar.
 * [Adium](http://adium.im/) - lock/unlock icon used in chat window.
 * [Sergio Sánchez López](http://www.iconfinder.com/icondetails/7043/128/aim_icon) - AIM protocol icon.
