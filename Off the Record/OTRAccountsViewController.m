@@ -137,7 +137,7 @@
     }
     else if(indexPath.row == 1)
     {
-        cell.textLabel.text = @"XMPP (Google Talk / Jabber)";
+        cell.textLabel.text = @"Google Talk (XMPP)";
         
         if(isXMPPloggedIn)
         {

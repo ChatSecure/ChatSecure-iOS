@@ -7,7 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "DTAttributedTextView.h"
 
-@interface OTRAboutViewController : UIViewController
+@interface OTRAboutViewController : UIViewController <DTAttributedTextContentViewDelegate, UIActionSheetDelegate>
+{
+    NSURL *lastActionLink;
+    DTAttributedTextView *aboutTextView;
+}
 
 @end
