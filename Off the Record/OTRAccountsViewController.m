@@ -52,6 +52,29 @@
      selector:@selector(xmppLoggedInSuccessfully)
      name:@"XMPPLoginNotification"
      object:nil ];
+    
+    [[NSNotificationCenter defaultCenter]
+     addObserver:self
+     selector:@selector(aimLoggedOff)
+     name:@"OscarLogoutNotification"
+     object:nil ];
+    
+    [[NSNotificationCenter defaultCenter]
+     addObserver:self
+     selector:@selector(xmppLoggedOff)
+     name:@"XMPPLogoutNotification"
+     object:nil ];
+}
+
+-(void)aimLoggedOff
+{
+    isAIMloggedIn = NO;
+    [accountsTableView reloadData];
+}
+-(void)xmppLoggedOff
+{
+    isXMPPloggedIn = NO;
+    [accountsTableView reloadData];
 }
 
 -(void)showAboutScreen
@@ -173,6 +196,7 @@
         else
         {
             UIActionSheet *logoutSheet = [[UIActionSheet alloc] initWithTitle:@"Logout from AIM?" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Logout" otherButtonTitles: nil];
+            [logoutSheet setTag:1];
             [logoutSheet showFromTabBar:self.tabBarController.tabBar];
         }
     }
@@ -195,6 +219,7 @@
         else
         {
             UIActionSheet *logoutSheet = [[UIActionSheet alloc] initWithTitle:@"Logout from XMPP?" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Logout" otherButtonTitles: nil];
+            [logoutSheet setTag:2];
             [logoutSheet showFromTabBar:self.tabBarController.tabBar];
         }
     }
@@ -207,7 +232,25 @@
 
 -(void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
-    // TODO implement logging out
+    if(actionSheet.tag == 1) // logout of AIM
+    {
+        if(buttonIndex == 0) //logout
+        {
+            /*AIMSessionManager *sessionManager = [[[OTRProtocolManager sharedInstance] oscarManager] theSession];
+            [sessionManager aimSessionClosed:sessionManager.session];
+            [sessionManager release];*/
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Not Implemented" message:@"Sorry, this hasn't been written yet. You can always close the app to logout." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+            [alert show];
+            [alert release];
+        }
+    }
+    else if(actionSheet.tag == 2) // logout of XMPP
+    {
+        if(buttonIndex == 0) //logout
+        {
+            [[[OTRProtocolManager sharedInstance] xmppManager] disconnect];
+        }
+    }
 }
 
 @end

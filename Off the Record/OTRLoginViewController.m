@@ -111,6 +111,7 @@
         
         BOOL connect = [protocolManager.xmppManager connectWithJID:usernameTextField.text password:passwordTextField.text];
         
+        
         if(connect)
         {
             [[NSNotificationCenter defaultCenter]

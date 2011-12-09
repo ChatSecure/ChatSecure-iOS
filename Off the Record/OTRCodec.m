@@ -82,10 +82,13 @@ static void inject_message_cb(void *opdata, const char *accountname,
      return;
      }
      otrg_plugin_inject_message(account, recipient, message);*/
-    
-    OTRMessage *newMessage = [OTRMessage messageWithSender:[NSString stringWithUTF8String:accountname] recipient:[NSString stringWithUTF8String:recipient] message:[NSString stringWithUTF8String:message] protocol:[NSString stringWithUTF8String:protocol]];
-    
-    [OTRMessage sendMessage:newMessage];
+    if(accountname && recipient && message && protocol)
+    {
+        OTRMessage *newMessage = [OTRMessage messageWithSender:[NSString stringWithUTF8String:accountname] recipient:[NSString stringWithUTF8String:recipient] message:[NSString stringWithUTF8String:message] protocol:[NSString stringWithUTF8String:protocol]];
+        
+        [OTRMessage sendMessage:newMessage];
+    }
+
     
     //NSLog(@"sent inject: %s",message);
     
@@ -190,24 +193,28 @@ static void gone_secure_cb(void *opdata, ConnContext *context)
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Your  Fingerprint" message:[NSString stringWithFormat:@"%@", hex] delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
     [alert show];
     [alert release];*/
-    
-    NSString* username = [NSString stringWithUTF8String:context->username];
-    NSString* notification = [NSString stringWithFormat:@"%@_gone_secure",username];
-    
-    NSLog(@"%@",notification);
-    [[NSNotificationCenter defaultCenter] postNotificationName:notification object:nil];
+    if(context->username)
+    {
+        NSString* username = [NSString stringWithUTF8String:context->username];
+        NSString* notification = [NSString stringWithFormat:@"%@_gone_secure",username];
+        
+        NSLog(@"%@",notification);
+        [[NSNotificationCenter defaultCenter] postNotificationName:notification object:nil];
+    }
 }
 
 static void gone_insecure_cb(void *opdata, ConnContext *context)
 {
     // otrg_dialog_disconnected(context);
     //NSLog(@"gone insecure");
-    
-    NSString* username = [NSString stringWithUTF8String:context->username];
-    NSString* notification = [NSString stringWithFormat:@"%@_gone_insecure",username];
-    
-    NSLog(@"%@",notification);
-    [[NSNotificationCenter defaultCenter] postNotificationName:notification object:nil];
+    if(context->username)
+    {
+        NSString* username = [NSString stringWithUTF8String:context->username];
+        NSString* notification = [NSString stringWithFormat:@"%@_gone_insecure",username];
+        
+        NSLog(@"%@",notification);
+        [[NSNotificationCenter defaultCenter] postNotificationName:notification object:nil];
+    }
 }
 
 static void still_secure_cb(void *opdata, ConnContext *context, int is_reply)
@@ -244,11 +251,13 @@ static int max_message_size_cb(void *opdata, ConnContext *context)
      return 0;
      else
      return *((int*)lookup_result);*/
-    NSString *protocol = [NSString stringWithUTF8String:context->protocol];
-    
-    if([protocol isEqualToString:@"prpl-oscar"])
-        return 2343;
-    
+    if(context->protocol)
+    {
+        NSString *protocol = [NSString stringWithUTF8String:context->protocol];
+        
+        if([protocol isEqualToString:@"prpl-oscar"])
+            return 2343;
+    }
     return 0;
 }
 
@@ -333,7 +342,11 @@ static OtrlMessageAppOps ui_ops = {
     err = otrl_message_sending(protocolManager.encryptionManager.userState, &ui_ops, NULL,
                                [sendingAccount UTF8String], [protocol UTF8String], [recipientAccount UTF8String], [message UTF8String], NULL, &newmessage,
                                NULL, NULL);
-    NSString *newMessage = [NSString stringWithUTF8String:newmessage];
+    NSString *newMessage;
+    if(newmessage)
+        newMessage = [NSString stringWithUTF8String:newmessage];
+    else
+        newMessage = @"";
     
     otrl_message_free(newmessage);
     

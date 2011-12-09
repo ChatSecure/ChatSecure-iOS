@@ -24,5 +24,7 @@
 -(void)xmppLoggedInSuccessfully;
 -(void)accountLoggedIn;
 -(void)showAboutScreen;
+-(void)aimLoggedOff;
+-(void)xmppLoggedOff;
 
 @end

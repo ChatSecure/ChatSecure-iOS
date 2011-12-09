@@ -83,7 +83,8 @@
 	AIMBuddyStatus * newStatus = [[AIMBuddyStatus alloc] initWithMessage:@"Available" type:AIMBuddyStatusAvailable timeIdle:0 caps:caps];
 	[session.statusHandler updateStatus:newStatus];
 	[newStatus release];
-	
+
+    
 	NSLog(@"Got session: %@", session);
 	NSLog(@"Our status: %@", session.statusHandler.userStatus);
 	//NSLog(@"Disconnecting in %d seconds ...", kSignoffTime);
@@ -104,6 +105,10 @@
 	[theSession autorelease];
 	theSession = nil;
 	NSLog(@"Session signed off");
+    
+    [[NSNotificationCenter defaultCenter]
+     postNotificationName:@"OscarLogoutNotification"
+     object:self];
 }
 
 #pragma mark Buddy List Methods

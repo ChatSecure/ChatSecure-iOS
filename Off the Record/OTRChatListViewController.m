@@ -69,7 +69,9 @@
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
 	if (cell == nil)
 	{
-		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"Cell"];
+		//cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"Cell"];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
+
 	}
 	
     if(buddyController.chatViewControllers)
@@ -78,7 +80,7 @@
         OTRChatViewController *tmp = [buddyController.chatViewControllers objectForKey:[ keyArray objectAtIndex:indexPath.row]];
         cell.textLabel.text = tmp.title;    
         
-        int detailLength = 25;
+        /*int detailLength = 25;
         
         //cell.detailTextLabel.text = [tmp.chatHistoryTextView.text substringFromIndex:[tmp.chatHistoryTextView.text length] - detailLength];
         if(tmp.rawChatHistory)
@@ -87,7 +89,7 @@
                 cell.detailTextLabel.text = [tmp.rawChatHistory substringFromIndex:[tmp.rawChatHistory length] - detailLength];
             else
                 cell.detailTextLabel.text = tmp.rawChatHistory;
-        }
+        }*/
     }
     
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;

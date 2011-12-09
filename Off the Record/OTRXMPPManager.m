@@ -399,7 +399,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	if (![xmppStream isDisconnected]) {
 		return YES;
 	}
-        
+    
 	//
 	// If you don't want to use the Settings view to set the JID, 
 	// uncomment the section below to hard code a JID and password.
@@ -443,6 +443,10 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     [self goOffline];
     
     [xmppStream disconnect];
+    
+    [[NSNotificationCenter defaultCenter]
+     postNotificationName:@"XMPPLogoutNotification"
+     object:self];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
