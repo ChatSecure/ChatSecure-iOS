@@ -11,6 +11,9 @@
 		D90B80A913FC7026006EFF3D /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = D90B80A813FC7026006EFF3D /* MBProgressHUD.m */; };
 		D90B80AC13FC719B006EFF3D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D90B80AB13FC719B006EFF3D /* CoreGraphics.framework */; };
 		D90B80AF13FC7E5F006EFF3D /* OTRCodec.m in Sources */ = {isa = PBXBuildFile; fileRef = D90B80AE13FC7E5F006EFF3D /* OTRCodec.m */; };
+		D90FAF2314A05D4B00DA7C56 /* available.png in Resources */ = {isa = PBXBuildFile; fileRef = D90FAF2014A05D4B00DA7C56 /* available.png */; };
+		D90FAF2414A05D4B00DA7C56 /* away.png in Resources */ = {isa = PBXBuildFile; fileRef = D90FAF2114A05D4B00DA7C56 /* away.png */; };
+		D90FAF2514A05D4B00DA7C56 /* offline.png in Resources */ = {isa = PBXBuildFile; fileRef = D90FAF2214A05D4B00DA7C56 /* offline.png */; };
 		D913A6D913FC9E8C00C97C1C /* CGUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = D913A69013FC9E8C00C97C1C /* CGUtils.m */; };
 		D913A6DD13FC9E8C00C97C1C /* DTAttributedTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D913A69813FC9E8C00C97C1C /* DTAttributedTextCell.m */; };
 		D913A6DE13FC9E8C00C97C1C /* DTAttributedTextContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = D913A69A13FC9E8C00C97C1C /* DTAttributedTextContentView.m */; };
@@ -254,6 +257,9 @@
 		D90B80AB13FC719B006EFF3D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		D90B80AD13FC7E5E006EFF3D /* OTRCodec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRCodec.h; sourceTree = "<group>"; };
 		D90B80AE13FC7E5F006EFF3D /* OTRCodec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRCodec.m; sourceTree = "<group>"; };
+		D90FAF2014A05D4B00DA7C56 /* available.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = available.png; sourceTree = "<group>"; };
+		D90FAF2114A05D4B00DA7C56 /* away.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = away.png; sourceTree = "<group>"; };
+		D90FAF2214A05D4B00DA7C56 /* offline.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = offline.png; sourceTree = "<group>"; };
 		D913A68F13FC9E8C00C97C1C /* CGUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGUtils.h; sourceTree = "<group>"; };
 		D913A69013FC9E8C00C97C1C /* CGUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGUtils.m; sourceTree = "<group>"; };
 		D913A69713FC9E8C00C97C1C /* DTAttributedTextCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DTAttributedTextCell.h; sourceTree = "<group>"; };
@@ -1521,6 +1527,9 @@
 				D99550B8141AE07D00A82FAC /* gtalk@2x.png */,
 				D99550B9141AE07D00A82FAC /* aim.png */,
 				D99550BA141AE07D00A82FAC /* aim@2x.png */,
+				D90FAF2014A05D4B00DA7C56 /* available.png */,
+				D90FAF2114A05D4B00DA7C56 /* away.png */,
+				D90FAF2214A05D4B00DA7C56 /* offline.png */,
 				D9F9378113F44BD3009A3D84 /* Supporting Files */,
 			);
 			path = "Off the Record";
@@ -1611,6 +1620,9 @@
 				D9BBCD401491F8B400AF1B9F /* OTRAboutViewController.xib in Resources */,
 				D9BBCD431491FFC800AF1B9F /* about_icon.png in Resources */,
 				D9BBCD441491FFC800AF1B9F /* about_icon@2x.png in Resources */,
+				D90FAF2314A05D4B00DA7C56 /* available.png in Resources */,
+				D90FAF2414A05D4B00DA7C56 /* away.png in Resources */,
+				D90FAF2514A05D4B00DA7C56 /* offline.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1900,7 +1912,7 @@
 					"\"$(SRCROOT)/xmppframework/Vendor/libidn\"",
 				);
 				PRODUCT_NAME = ChatSecure;
-				PROVISIONING_PROFILE = "BA0630B8-6692-4F34-9F6B-1995A30D3A30";
+				PROVISIONING_PROFILE = "9BD4BC0F-229B-441F-842A-B2D5E0D3DB42";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1908,7 +1920,8 @@
 		D9F937A413F44BD3009A3D84 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Chris Ballinger (9P62QGET7G)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Chris Ballinger";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Off the Record/Off the Record-Prefix.pch";
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
@@ -1919,7 +1932,8 @@
 					"\"$(SRCROOT)/xmppframework/Vendor/libidn\"",
 				);
 				PRODUCT_NAME = ChatSecure;
-				PROVISIONING_PROFILE = "BA0630B8-6692-4F34-9F6B-1995A30D3A30";
+				PROVISIONING_PROFILE = "9FE69816-E6FB-4F0B-9DC3-85543822BD14";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

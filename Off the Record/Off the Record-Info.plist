@@ -25,15 +25,6 @@
 			<key>UIPrerenderedIcon</key>
 			<false/>
 		</dict>
-		<key>UINewsstandIcon</key>
-		<dict>
-			<key>CFBundleIconFiles</key>
-			<array/>
-			<key>UINewsstandBindingEdge</key>
-			<string>UINewsstandBindingEdgeLeft</string>
-			<key>UINewsstandBindingType</key>
-			<string>UINewsstandBindingTypeMagazine</string>
-		</dict>
 	</dict>
 	<key>CFBundleIdentifier</key>
 	<string>com.chrisballinger.${PRODUCT_NAME:rfc1034identifier}</string>
@@ -44,11 +35,11 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>1.0.1</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>1.0</string>
+	<string>1.0.1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UISupportedInterfaceOrientations</key>

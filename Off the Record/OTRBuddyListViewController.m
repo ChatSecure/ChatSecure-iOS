@@ -204,14 +204,17 @@
             case kOTRBuddyStatusOffline:
                 cell.textLabel.textColor = [UIColor lightGrayColor];
                 cell.detailTextLabel.text = @"Offline";
+                cell.imageView.image = [UIImage imageNamed:@"offline.png"];
                 break;
             case kOTRBuddyStatusAway:
                 cell.textLabel.textColor = [UIColor darkGrayColor];
                 cell.detailTextLabel.text = @"Away";
+                cell.imageView.image = [UIImage imageNamed:@"away.png"];
                 break;
             default:
                 cell.textLabel.textColor = [UIColor darkTextColor];
                 cell.detailTextLabel.text = @"Available";
+                cell.imageView.image = [UIImage imageNamed:@"available.png"];
                 break;
         }
     }

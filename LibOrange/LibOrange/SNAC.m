@@ -119,7 +119,8 @@ SNAC_ID SNAC_ID_DECODE (UInt32 buf) {
 		// we are using the TLV class.
 		const char * bytes = [data bytes];
 		int length = (int)[data length];
-		NSAssert([TLV decodeTLVLBlock:bytes length:&length] != nil, @"A SNAC came in claiming to have a TLVlBlock header, but it didn't");
+		NSArray * theData = [TLV decodeTLVLBlock:bytes length:&length];
+		NSAssert(theData != nil, @"A SNAC came in claiming to have a TLVlBlock header, but it didn't");
 		int contentsLength = (int)[data length] - length;
 		innerContents = [[NSData alloc] initWithBytes:&bytes[length] length:contentsLength];
 		return innerContents;

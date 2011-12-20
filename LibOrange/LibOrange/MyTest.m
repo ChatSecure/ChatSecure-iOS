@@ -127,6 +127,24 @@ static void stripNL (char * buff) {
 	[self checkThreading];
 	NSLog(@"%@ got the buddy list.", feedbagHandler);
 	NSLog(@"Blist: %@", [theSession.session buddyList]);
+	
+	// The following is an example of how to use LibOrange to spam somebody.
+	
+	/*
+	
+	NSString * buddyName = @"emmiey2k";
+	AIMBlistBuddy * buddy = [[theSession.session buddyList] buddyWithUsername:buddyName];
+	
+	while (true) {
+		[theSession.messageHandler sendMessage:[AIMMessage messageWithBuddy:buddy message:@"<BODY>brb</BODY>"]];
+		NSLog(@"sent: brb");
+		[[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:5]];
+		[theSession.messageHandler sendMessage:[AIMMessage messageWithBuddy:buddy message:@"<BODY>back</BODY>"]];
+		NSLog(@"sent: back");
+		[[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:5]];
+	}
+	 
+	*/
 }
 
 - (void)aimFeedbagHandler:(AIMFeedbagHandler *)sender buddyAdded:(AIMBlistBuddy *)newBuddy {
@@ -183,7 +201,7 @@ static void stripNL (char * buff) {
 	NSString * msgTxt = [message plainTextMessage];
 	
 	NSString * autoresp = [message isAutoresponse] ? @" (Auto-Response)" : @"";
-	NSLog(@"(%@) %@%@: %@", [NSDate date], [[message buddy] username], autoresp, [message plainTextMessage]);
+	NSLog(@"(%@) %@%@: %@", [NSDate date], [[message buddy] username], autoresp, msgTxt);
 	
 	NSArray * tokens = [CommandTokenizer tokensOfCommand:msgTxt];
 	if ([tokens count] == 1) {

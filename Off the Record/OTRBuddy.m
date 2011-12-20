@@ -17,7 +17,7 @@
 
 -(id)initWithName:(NSString*)buddyName protocol:(NSString*)buddyProtocol status:(OTRBuddyStatus)buddyStatus groupName:(NSString*)buddyGroupName
 {
-    self = [self init];
+    self = [super init];
     
     if(self)
     {

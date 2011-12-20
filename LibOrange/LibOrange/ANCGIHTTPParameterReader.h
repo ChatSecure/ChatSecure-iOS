@@ -6,11 +6,7 @@
 //  Copyright 2010 __MyCompanyName__. All rights reserved.
 //
 
-#ifdef TARGET_OS_IPHONE
-    #import <UIKit/UIKit.h>
-#else
-    #import <Cocoa/Cocoa.h>
-#endif
+#import <Foundation/Foundation.h>
 
 #import "ANStringEscaper.h"
 
