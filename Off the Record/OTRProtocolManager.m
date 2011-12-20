@@ -40,7 +40,7 @@ static OTRProtocolManager *sharedManager = nil;
          object:nil ];
         
         
-        buddyList = [[NSMutableDictionary alloc] init];
+        buddyList = [[OTRBuddyList alloc] init];
     }
     return self;
 }
@@ -144,22 +144,14 @@ static OTRProtocolManager *sharedManager = nil;
 
 -(void)buddyListUpdate
 {
-    [buddyList removeAllObjects];
+    //[buddyList removeAllObjects];
     
     if(oscarManager.buddyList)
     {
         AIMBlist *blist = oscarManager.buddyList;
         
-
-        
         for(AIMBlistGroup *group in blist.groups)
         {
-            NSMutableDictionary *groupDictionary = [[NSMutableDictionary alloc] initWithCapacity:[blist.groups count]];
-            
-            [groupDictionary setObject:group.name forKey:@"group_name"];
-            
-            NSMutableDictionary *buddyDictionary = [[NSMutableDictionary alloc] initWithCapacity:[group.buddies count]];
-            
             for(AIMBlistBuddy *buddy in group.buddies)
             {
                 OTRBuddyStatus buddyStatus;
@@ -177,13 +169,19 @@ static OTRProtocolManager *sharedManager = nil;
                         break;
                 }
                 
-                OTRBuddy *newBuddy = [OTRBuddy buddyWithName:buddy.username protocol:@"prpl-oscar" status:buddyStatus groupName:group.name];
-                
-                [buddyDictionary setObject:newBuddy forKey:buddy.username];
+                OTRBuddy *otrBuddy = [buddyList.oscarBuddies objectForKey:buddy.username];
+
+                if(otrBuddy)
+                {
+                    otrBuddy.status = buddyStatus;
+                    otrBuddy.groupName = group.name;
+                }
+                else
+                {
+                    OTRBuddy *newBuddy = [OTRBuddy buddyWithName:buddy.username protocol:@"prpl-oscar" status:buddyStatus groupName:group.name];
+                    [buddyList addBuddy:newBuddy];
+                }
             }
-            [groupDictionary setObject:buddyDictionary forKey:@"group_data"];
-            
-            [buddyList setObject:groupDictionary forKey:[NSString stringWithFormat:@"AIM - %@", group.name]];
         }
     }
     
@@ -204,9 +202,7 @@ static OTRProtocolManager *sharedManager = nil;
         }
         
         for(int i = 0; i < sectionsCount; i++)
-        {
-            NSMutableDictionary *groupDictionary = [[NSMutableDictionary alloc] initWithCapacity:sectionsCount];
-            
+        {            
             NSString *sectionName;
             OTRBuddyStatus otrBuddyStatus;
             
@@ -223,24 +219,26 @@ static OTRProtocolManager *sharedManager = nil;
                     otrBuddyStatus = kOTRBuddyStatusOffline;
                     break;
             }
-            [groupDictionary setObject:sectionName forKey:@"group_name"];
             
-            NSMutableDictionary *buddyDictionary = [[NSMutableDictionary alloc] initWithCapacity:[[rowsInSection objectAtIndex:i] intValue]];
-
             for(int j = 0; j < [[rowsInSection objectAtIndex:i] intValue]; j++)
             {
                 NSIndexPath *indexPath = [NSIndexPath indexPathForRow:j inSection:i];
                 
                 XMPPUserCoreDataStorageObject *user = [frc objectAtIndexPath:indexPath]; 
                 
-                OTRBuddy *newBuddy = [OTRBuddy buddyWithName:user.displayName protocol:@"xmpp" status:otrBuddyStatus groupName:sectionName];
+                OTRBuddy *otrBuddy = [buddyList.oscarBuddies objectForKey:user.displayName];
                 
-                [buddyDictionary setObject:newBuddy forKey:user.displayName];
+                if(otrBuddy)
+                {
+                    otrBuddy.status = otrBuddyStatus;
+                }
+                else
+                {
+                    OTRBuddy *newBuddy = [OTRBuddy buddyWithName:user.displayName protocol:@"xmpp" status:otrBuddyStatus groupName:sectionName];
+                    [buddyList addBuddy:newBuddy];
+                }
+     
             }
-            [groupDictionary setObject:buddyDictionary forKey:@"group_data"];
-            
-            [buddyList setObject:groupDictionary forKey:[NSString stringWithFormat:@"XMPP - %@", sectionName]];
-
         }
     }
 }

@@ -17,17 +17,17 @@
 
 -(id)initWithSender:(NSString*)theSender recipient:(NSString*)theRecipient message:(NSString*)theMessage protocol:(NSString*)theProtocol
 {
-    self = [self init];
+    self = [super init];
     
     if(self)
     {
         if(theSender)
-            sender = theSender;
+            sender = [theSender retain];
         else
-            sender = theRecipient;
-        recipient = theRecipient;
-        message = theMessage;
-        protocol = theProtocol;
+            sender = [theRecipient retain];
+        recipient = [theRecipient retain];
+        message = [theMessage retain];
+        protocol = [theProtocol retain];
     }
     return self;
 }
@@ -49,6 +49,15 @@
     NSDictionary *messageInfo = [NSDictionary dictionaryWithObject:message forKey:@"message"];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:@"SendMessageNotification" object:self userInfo:messageInfo];
+}
+
+-(void)dealloc
+{
+    [sender release];
+    [recipient release];
+    [message release];
+    [protocol release];
+    [super dealloc];
 }
 
 @end

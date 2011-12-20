@@ -12,8 +12,8 @@ typedef unsigned int OTRBuddyStatus;
 
 enum OTRBuddyStatus {
     kOTRBuddyStatusOffline = 0,
-    kOTRBuddyStatusAvailable = 1,
-    kOTRBuddyStatusAway = 2
+    kOTRBuddyStatusAway = 1,
+    kOTRBuddyStatusAvailable = 2
 };
 
 @interface OTRBuddy : NSObject

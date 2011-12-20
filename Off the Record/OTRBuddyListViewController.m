@@ -67,9 +67,7 @@
     
     
     chatViewControllers = [[NSMutableDictionary alloc] initWithCapacity:3];
-    
-    buddyList = protocolManager.buddyList;
-    
+        
     recentMessages = [[NSMutableDictionary alloc] initWithCapacity:3];
 }
 
@@ -101,15 +99,19 @@
 
 -(void)buddyListUpdate
 {
-    buddyList = protocolManager.buddyList;
-    [buddyList retain];
-
-    [buddyListTableView reloadData];
     NSLog(@"blist update tableview");
-    if(!buddyList)
+    if(!protocolManager.buddyList)
+    {
         NSLog(@"blist is nil!");
-    else
-        NSLog(@"blist groups: %d", [buddyList count]);
+        return;
+    }
+    
+    if(sortedBuddies)
+        [sortedBuddies release];
+    
+    sortedBuddies = [[OTRBuddyList sortBuddies:[protocolManager.buddyList allBuddies]] retain];
+    
+    [buddyListTableView reloadData];
 }
 
 -(void)messageReceived:(NSNotification*)notification;
@@ -138,35 +140,14 @@
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    if(buddyList)
-        return [buddyList count];
-
-    return 0;
+    return 1;
 }
 
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    if(buddyList)
-    {
-        NSArray *allKeys = [buddyList allKeys];
-        NSString *currentKey = [allKeys objectAtIndex:section];
-        
-        NSDictionary *groupDictionary = [buddyList objectForKey:currentKey];
-        
-        return [groupDictionary objectForKey:@"group_name"];
-    }
-    
-    return nil;
-}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if(buddyList)
+    if(protocolManager.buddyList)
     {
-        NSArray *allKeys = [buddyList allKeys];
-        NSString *currentKey = [allKeys objectAtIndex:section];
-        
-        NSDictionary *groupDictionary = [buddyList objectForKey:currentKey];
-        NSDictionary *buddyDictionary = [groupDictionary objectForKey:@"group_data"];
-        return [buddyDictionary count];
+        return [protocolManager.buddyList count];
     }
     
     return 0;
@@ -180,16 +161,9 @@
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"Cell"];
 	}
 	
-    if(buddyList)
+    if(sortedBuddies)
     {
-        NSArray *allKeys = [buddyList allKeys];
-        NSString *currentKey = [allKeys objectAtIndex:indexPath.section];
-        NSDictionary *groupDictionary = [buddyList objectForKey:currentKey];
-        NSDictionary *buddyDictionary = [groupDictionary objectForKey:@"group_data"];
-        NSArray *buddyKeys = [buddyDictionary allKeys];
-        NSString *currentBuddyKey = [buddyKeys objectAtIndex:indexPath.row];
-        
-        OTRBuddy *buddyData = [buddyDictionary objectForKey:currentBuddyKey];
+        OTRBuddy *buddyData = [sortedBuddies objectAtIndex:indexPath.row];
         
         NSString *buddyUsername = buddyData.name;
         OTRBuddyStatus buddyStatus = buddyData.status;
@@ -226,19 +200,15 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSArray *allKeys = [buddyList allKeys];
-    NSString *currentKey = [allKeys objectAtIndex:indexPath.section];
-    NSDictionary *groupDictionary = [buddyList objectForKey:currentKey];
-    NSDictionary *buddyDictionary = [groupDictionary objectForKey:@"group_data"];
-    NSArray *buddyKeys = [buddyDictionary allKeys];
-    NSString *currentBuddyKey = [buddyKeys objectAtIndex:indexPath.row];
-    
-    OTRBuddy *buddyData = [buddyDictionary objectForKey:currentBuddyKey];
-    
-    NSString *buddyUsername = buddyData.name;
-    NSString *buddyProtocol = buddyData.protocol;
-    
-    [self enterConversation:buddyUsername withProtocol:buddyProtocol];
+    if(sortedBuddies)
+    {
+        OTRBuddy *buddyData = [sortedBuddies objectAtIndex:indexPath.row];
+        
+        NSString *buddyUsername = buddyData.name;
+        NSString *buddyProtocol = buddyData.protocol;
+        
+        [self enterConversation:buddyUsername withProtocol:buddyProtocol];
+    }
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 

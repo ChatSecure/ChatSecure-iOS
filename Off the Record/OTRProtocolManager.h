@@ -11,13 +11,14 @@
 #import "OTRXMPPManager.h"
 #import "OTREncryptionManager.h"
 #import "OTRCodec.h"
+#import "OTRBuddyList.h"
 
 @interface OTRProtocolManager : NSObject
 {
     
 }
 
-@property (nonatomic, retain) NSMutableDictionary *buddyList;
+@property (nonatomic, retain) OTRBuddyList *buddyList;
 
 @property (nonatomic, retain) OTROscarManager *oscarManager;
 @property (nonatomic, retain) OTRXMPPManager *xmppManager;

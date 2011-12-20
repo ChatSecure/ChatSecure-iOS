@@ -21,10 +21,10 @@
     
     if(self)
     {
-        name = buddyName;
-        protocol = buddyProtocol;
+        name = [buddyName retain];
+        protocol = [buddyProtocol retain];
         status = buddyStatus;
-        groupName = buddyGroupName;
+        groupName = [buddyGroupName retain];
     }
     return self;
 }
@@ -33,6 +33,14 @@
 {
     OTRBuddy *newBuddy = [[[OTRBuddy alloc] initWithName:buddyName protocol:buddyProtocol status:buddyStatus groupName:buddyGroupName] autorelease];
     return newBuddy;
+}
+
+-(void)dealloc
+{
+    [name release];
+    [protocol release];
+    [groupName release];
+    [super dealloc];
 }
 
 @end

@@ -18,8 +18,7 @@
     NSMutableDictionary *chatViewControllers;
         
     OTRProtocolManager *protocolManager;
-    
-    NSMutableDictionary *buddyList;
+    NSArray *sortedBuddies;
 }
 
 @property (nonatomic, retain) IBOutlet UITableView *buddyListTableView;
