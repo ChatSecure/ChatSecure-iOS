@@ -21,7 +21,7 @@
 #import "AIMRateLimitHandler.h"
 #import "AIMRendezvousHandler.h"
 
-#define kMinICBMInterval 200
+#define kMinICBMInterval 10
 
 @class AIMSessionManager;
 
