@@ -3,7 +3,7 @@
 //  Off the Record
 //
 //  Created by Chris Ballinger on 9/4/11.
-//  Copyright (c) 2011 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2011 Chris Ballinger. All rights reserved.
 //
 
 #import "OTROscarManager.h"

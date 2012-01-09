@@ -3,7 +3,7 @@
 //  Off the Record
 //
 //  Created by Chris on 8/17/11.
-//  Copyright (c) 2011 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2011 Chris Ballinger. All rights reserved.
 //
 
 #import "OTRCodec.h"
