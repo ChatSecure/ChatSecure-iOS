@@ -236,12 +236,8 @@
     {
         if(buttonIndex == 0) //logout
         {
-            /*AIMSessionManager *sessionManager = [[[OTRProtocolManager sharedInstance] oscarManager] theSession];
-            [sessionManager aimSessionClosed:sessionManager.session];
-            [sessionManager release];*/
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Not Implemented" message:@"Sorry, this hasn't been written yet. You can always close the app to logout." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
-            [alert show];
-            [alert release];
+            AIMSessionManager *sessionManager = [[[OTRProtocolManager sharedInstance] oscarManager] theSession];
+            [sessionManager.session closeConnection];
         }
     }
     else if(actionSheet.tag == 2) // logout of XMPP

@@ -7,6 +7,7 @@
 //
 
 #import "OTROscarManager.h"
+#import "OTRProtocolManager.h"
 
 @implementation OTROscarManager
 
@@ -102,6 +103,9 @@
 
 - (void)aimSessionManagerSignedOff:(AIMSessionManager *)sender {
 	[self checkThreading];
+    [[[[OTRProtocolManager sharedInstance] buddyList] oscarBuddies] removeAllObjects];
+    [buddyList autorelease];
+    buddyList = nil;
 	[theSession autorelease];
 	theSession = nil;
 	NSLog(@"Session signed off");
@@ -119,7 +123,6 @@
 	//NSLog(@"Blist: %@", );
     
     buddyList = [[theSession.session buddyList] retain];
-    [buddyList retain];
     
     [[NSNotificationCenter defaultCenter]
      postNotificationName:@"BuddyListUpdateNotification"
