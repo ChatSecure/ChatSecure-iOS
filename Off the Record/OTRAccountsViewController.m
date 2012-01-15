@@ -187,9 +187,12 @@
             
             OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
             
+            loginViewController.xmppButton.hidden = YES;
+            loginViewController.useXMPP = NO;
             loginViewController.protocolManager = protocolManager;
             [self.tabBarController presentModalViewController:loginViewController animated:YES];
-            loginViewController.xmppButton.hidden = YES;
+
+            
             
             loginController = loginViewController;
         }
@@ -207,10 +210,11 @@
             OTRLoginViewController *loginViewController = [[OTRLoginViewController alloc] init];
             
             OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
-            
+            loginViewController.aimButton.hidden = YES;
+            loginViewController.useXMPP = YES;
             loginViewController.protocolManager = protocolManager;
             [self.tabBarController presentModalViewController:loginViewController animated:YES];
-            loginViewController.aimButton.hidden = YES;
+
 
             
             loginController = loginViewController;

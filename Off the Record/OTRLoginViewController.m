@@ -14,6 +14,8 @@
 @synthesize protocolManager;
 @synthesize aimButton;
 @synthesize xmppButton;
+@synthesize rememberUserNameSwitch;
+@synthesize useXMPP;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -34,9 +36,36 @@
 
 #pragma mark - View lifecycle
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
+- (void) viewWillAppear:(BOOL)animated {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    if([[defaults objectForKey:@"saveUsername"] boolValue])
+    {
+        [rememberUserNameSwitch setOn:YES];
+    }
+    if(rememberUserNameSwitch.on) {
+        if(useXMPP) {
+            usernameTextField.text = [defaults objectForKey:@"xmppUsername"];
+        }
+        else {
+            usernameTextField.text = [defaults objectForKey:@"aimUsername"];
+        }
+    }
+}
+
+- (void) viewWillDisappear:(BOOL)animated {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    if(rememberUserNameSwitch.on) {
+        if(useXMPP) {
+            [defaults setObject:usernameTextField.text forKey:@"xmppUsername"];
+        }
+        else {
+            [defaults setObject:usernameTextField.text forKey:@"aimUsername"];
+        }
+    }
+    [defaults setObject:[NSNumber numberWithBool:rememberUserNameSwitch.on] forKey:@"saveUsername"];
+    [defaults synchronize];
 }
 
 - (void)viewDidUnload
@@ -45,6 +74,7 @@
     [self setPasswordTextField:nil];
     [self setAimButton:nil];
     [self setXmppButton:nil];
+    [self setRememberUserNameSwitch:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -67,8 +97,10 @@
     [passwordTextField release];
     [aimButton release];
     [xmppButton release];
+    [rememberUserNameSwitch release];
     [super dealloc];
 }
+
 - (IBAction)loginPressed:(id)sender 
 {
     BOOL fields = [self checkFields];

@@ -23,6 +23,8 @@
 @property (nonatomic, retain) OTRProtocolManager *protocolManager;
 @property (retain, nonatomic) IBOutlet UIButton *aimButton;
 @property (retain, nonatomic) IBOutlet UIButton *xmppButton;
+@property (retain, nonatomic) IBOutlet UISwitch *rememberUserNameSwitch;
+@property (nonatomic) BOOL useXMPP;
 
 
 - (IBAction)loginPressed:(id)sender;
