@@ -112,7 +112,7 @@
 	CGSize maxImageSize = CGSizeMake(self.view.bounds.size.width - 20.0, self.view.bounds.size.height - 20.0);
 	
 	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:1.0], NSTextSizeMultiplierDocumentOption, [NSValue valueWithCGSize:maxImageSize], DTMaxImageSize,
-                             @"Times New Roman", DTDefaultFontFamily,  @"purple", DTDefaultLinkColor, nil]; // @"green",DTDefaultTextColor,
+                             @"Helvetica", DTDefaultFontFamily,  @"purple", DTDefaultLinkColor, nil]; // @"green",DTDefaultTextColor,
    
     NSData *data = [rawChatHistory dataUsingEncoding:NSUTF8StringEncoding];
 	NSAttributedString *string = [[NSAttributedString alloc] initWithHTML:data options:options documentAttributes:NULL];
@@ -202,7 +202,7 @@
 	CGSize maxImageSize = CGSizeMake(self.view.bounds.size.width - 20.0, self.view.bounds.size.height - 20.0);
 	
 	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:1.0], NSTextSizeMultiplierDocumentOption, [NSValue valueWithCGSize:maxImageSize], DTMaxImageSize,
-                             @"Times New Roman", DTDefaultFontFamily,  @"purple", DTDefaultLinkColor, nil]; // @"green",DTDefaultTextColor,
+                             @"Helvetica", DTDefaultFontFamily,  @"purple", DTDefaultLinkColor, nil]; // @"green",DTDefaultTextColor,
     
     NSData *data = [rawChatHistory dataUsingEncoding:NSUTF8StringEncoding];
 	NSAttributedString *string = [[NSAttributedString alloc] initWithHTML:data options:options documentAttributes:NULL];
@@ -218,9 +218,9 @@
     
     [OTRMessage sendMessage:encodedMessage];    
     
-    NSString *username = @"<FONT COLOR=\"#0000ff\"><b>Me:</b></FONT>";
+    NSString *username = @"<FONT SIZE=16 COLOR=\"#0000ff\"><b>Me:</b></FONT>";
     
-    [rawChatHistory appendFormat:@"%@ %@<br>",username, message];
+    [rawChatHistory appendFormat:@"%@ <FONT SIZE=16>%@</FONT><br>",username, message];
     
     [self updateChatHistory];
     [self scrollTextViewToBottom];
@@ -234,11 +234,11 @@
     
     NSRange htmlStart = [message rangeOfString:@"<HTML>"];
     
-    NSString *username = [NSString stringWithFormat:@"<FONT COLOR=\"#ff0000\"><b>%@:</b></FONT>",self.title];
+    NSString *username = [NSString stringWithFormat:@"<FONT SIZE=16 COLOR=\"#ff0000\"><b>%@:</b></FONT>",self.title];
     
     if(htmlStart.location == NSNotFound)
     {
-        [rawChatHistory appendFormat:@"%@ %@<br>",username,message];
+        [rawChatHistory appendFormat:@"%@ <FONT SIZE=16>%@</FONT><br>",username,message];
     }
     else
     {
