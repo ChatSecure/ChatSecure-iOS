@@ -188,45 +188,37 @@ static OTRProtocolManager *sharedManager = nil;
     if(xmppManager.isXmppConnected)
     {
         NSFetchedResultsController *frc = [xmppManager fetchedResultsController];
-        
-        NSArray *sections = [frc sections];
-
-        int sectionsCount = [sections count];
-        
-        NSMutableArray *rowsInSection = [[NSMutableArray alloc] initWithCapacity:sectionsCount];
-                
+        NSArray *sections = [[xmppManager fetchedResultsController] sections];
+        int sectionsCount = [[[xmppManager fetchedResultsController] sections] count];
+                        
         for(int sectionIndex = 0; sectionIndex < sectionsCount; sectionIndex++)
         {
             id <NSFetchedResultsSectionInfo> sectionInfo = [sections objectAtIndex:sectionIndex];
-            [rowsInSection addObject:[NSNumber numberWithInt:sectionInfo.numberOfObjects]];
-        }
-        
-        for(int i = 0; i < sectionsCount; i++)
-        {            
             NSString *sectionName;
             OTRBuddyStatus otrBuddyStatus;
             
-            switch (i) {
-                case 0:
+            int section = [sectionInfo.name intValue];
+            switch (section)
+            {
+                case 0  : 
                     sectionName = @"XMPP - Available";
                     otrBuddyStatus = kOTRBuddyStatusAvailable;
                     break;
-                case 1:
+                case 1  : 
                     sectionName = @"XMPP - Away";
                     otrBuddyStatus = kOTRBuddyStatusAway;
-                default:
+                    break;
+                default : 
                     sectionName = @"XMPP - Offline";
                     otrBuddyStatus = kOTRBuddyStatusOffline;
                     break;
             }
-            
-            for(int j = 0; j < [[rowsInSection objectAtIndex:i] intValue]; j++)
+            for(int j = 0; j < sectionInfo.numberOfObjects; j++)
             {
-                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:j inSection:i];
-                
+                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:j inSection:sectionIndex];
                 XMPPUserCoreDataStorageObject *user = [frc objectAtIndexPath:indexPath]; 
-                
-                OTRBuddy *otrBuddy = [buddyList.oscarBuddies objectForKey:user.displayName];
+                OTRBuddy *otrBuddy = [buddyList.xmppBuddies objectForKey:user.displayName];
+                                
                 
                 if(otrBuddy)
                 {
@@ -237,7 +229,6 @@ static OTRProtocolManager *sharedManager = nil;
                     OTRBuddy *newBuddy = [OTRBuddy buddyWithName:user.displayName protocol:@"xmpp" status:otrBuddyStatus groupName:sectionName];
                     [buddyList addBuddy:newBuddy];
                 }
-     
             }
         }
     }
