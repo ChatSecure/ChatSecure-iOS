@@ -207,7 +207,7 @@
     {
         OTRBuddy *buddyData = [sortedBuddies objectAtIndex:indexPath.row];
         
-        NSString *buddyUsername = buddyData.displayName;
+        NSString *buddyUsername = buddyData.accountName;
         NSString *buddyProtocol = buddyData.protocol;
         
         [self enterConversation:buddyUsername withProtocol:buddyProtocol];
