@@ -226,8 +226,7 @@ static OTRProtocolManager *sharedManager = nil;
                 }
                 else
                 {
-                    //OTRBuddy *newBuddy = [OTRBuddy buddyWithDisplayName:user.displayName accountName: [[user jid] full] protocol:@"xmpp" status:otrBuddyStatus groupName:sectionName];
-                    OTRBuddy *newBuddy = [OTRBuddy buddyWithDisplayName:user.displayName accountName: user.displayName protocol:@"xmpp" status:otrBuddyStatus groupName:sectionName];
+                    OTRBuddy *newBuddy = [OTRBuddy buddyWithDisplayName:user.displayName accountName: [[user jid] full] protocol:@"xmpp" status:otrBuddyStatus groupName:sectionName];
                     [buddyList addBuddy:newBuddy];
                 }
             }

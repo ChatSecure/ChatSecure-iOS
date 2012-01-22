@@ -25,7 +25,7 @@
 
 +(NSArray*)sortBuddies:(NSMutableDictionary*)buddies
 {
-    NSSortDescriptor *buddyNameDescriptor = [[[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)] autorelease];
+    NSSortDescriptor *buddyNameDescriptor = [[[NSSortDescriptor alloc] initWithKey:@"displayName" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)] autorelease];
     
     NSSortDescriptor *statusDescriptor = [[[NSSortDescriptor alloc] initWithKey:@"status"
                                                       ascending:NO] autorelease];
