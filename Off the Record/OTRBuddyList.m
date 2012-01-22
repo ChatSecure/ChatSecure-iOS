@@ -61,11 +61,11 @@
 {
     if([newBuddy.protocol isEqualToString:@"prpl-oscar"])
     {
-        [oscarBuddies setObject:newBuddy forKey:newBuddy.name];
+        [oscarBuddies setObject:newBuddy forKey:newBuddy.displayName];
     }
     else if([newBuddy.protocol isEqualToString:@"xmpp"])
     {
-        [xmppBuddies setObject:newBuddy forKey:newBuddy.name];
+        [xmppBuddies setObject:newBuddy forKey:newBuddy.displayName];
     }
 }
 

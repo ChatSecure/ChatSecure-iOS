@@ -396,6 +396,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 - (BOOL)connectWithJID:(NSString*) myJID password:(NSString*)myPassword;
 {
+    NSLog(@"myJID %@",myJID);
 	if (![xmppStream isDisconnected]) {
 		return YES;
 	}

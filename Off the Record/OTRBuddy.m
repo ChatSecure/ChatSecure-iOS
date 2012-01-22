@@ -10,18 +10,20 @@
 
 @implementation OTRBuddy
 
-@synthesize name;
+@synthesize accountName;
+@synthesize displayName;
 @synthesize protocol;
 @synthesize groupName;
 @synthesize status;
 
--(id)initWithName:(NSString*)buddyName protocol:(NSString*)buddyProtocol status:(OTRBuddyStatus)buddyStatus groupName:(NSString*)buddyGroupName
+-(id)initWithDisplayName:(NSString*)buddyName accountName:(NSString*) buddyAccountName protocol:(NSString*)buddyProtocol status:(OTRBuddyStatus)buddyStatus groupName:(NSString*)buddyGroupName
 {
     self = [super init];
     
     if(self)
     {
-        name = [buddyName retain];
+        displayName = [buddyName retain];
+        accountName = [buddyAccountName retain];
         protocol = [buddyProtocol retain];
         status = buddyStatus;
         groupName = [buddyGroupName retain];
@@ -29,15 +31,16 @@
     return self;
 }
 
-+(OTRBuddy*)buddyWithName:(NSString*)buddyName protocol:(NSString*)buddyProtocol status:(OTRBuddyStatus)buddyStatus groupName:(NSString *)buddyGroupName
++(OTRBuddy*)buddyWithDisplayName:(NSString*)buddyName accountName:(NSString*) accountName protocol:(NSString*)buddyProtocol status:(OTRBuddyStatus)buddyStatus groupName:(NSString*)buddyGroupName
 {
-    OTRBuddy *newBuddy = [[[OTRBuddy alloc] initWithName:buddyName protocol:buddyProtocol status:buddyStatus groupName:buddyGroupName] autorelease];
+    OTRBuddy *newBuddy = [[[OTRBuddy alloc] initWithDisplayName:buddyName accountName:accountName protocol:buddyProtocol status:buddyStatus groupName:buddyGroupName] autorelease];
     return newBuddy;
 }
 
 -(void)dealloc
 {
-    [name release];
+    [accountName release];
+    [displayName release];
     [protocol release];
     [groupName release];
     [super dealloc];

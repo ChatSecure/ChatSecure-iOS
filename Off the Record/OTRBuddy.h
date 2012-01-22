@@ -18,12 +18,14 @@ enum OTRBuddyStatus {
 
 @interface OTRBuddy : NSObject
 
-@property (readonly, retain) NSString* name;
-@property (readonly, retain) NSString* protocol;
+@property (nonatomic, retain) NSString* displayName;
+@property (nonatomic, retain) NSString* accountName;
+@property (nonatomic, retain) NSString* protocol;
 @property (nonatomic, retain) NSString* groupName;
+
 @property OTRBuddyStatus status;
 
--(id)initWithName:(NSString*)buddyName protocol:(NSString*)buddyProtocol status:(OTRBuddyStatus)buddyStatus groupName:(NSString*)buddyGroupName;
-+(OTRBuddy*)buddyWithName:(NSString*)buddyName protocol:(NSString*)buddyProtocol status:(OTRBuddyStatus)buddyStatus groupName:(NSString*)buddyGroupName;
+-(id)initWithDisplayName:(NSString*)buddyName accountName:(NSString*) accountName protocol:(NSString*)buddyProtocol status:(OTRBuddyStatus)buddyStatus groupName:(NSString*)buddyGroupName;
++(OTRBuddy*)buddyWithDisplayName:(NSString*)buddyName accountName:(NSString*) accountName protocol:(NSString*)buddyProtocol status:(OTRBuddyStatus)buddyStatus groupName:(NSString*)buddyGroupName;
 
 @end
