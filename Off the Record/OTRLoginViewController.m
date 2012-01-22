@@ -26,6 +26,16 @@
     return self;
 }
 
+- (void) viewDidLoad 
+{
+    if (useXMPP) {
+        aimButton.hidden = YES;
+    }
+    else {
+        xmppButton.hidden = YES;
+    }
+}
+
 - (void)didReceiveMemoryWarning
 {
     // Releases the view if it doesn't have a superview.
