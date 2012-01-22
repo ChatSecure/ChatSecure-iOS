@@ -211,8 +211,11 @@
 }
 
 -(void)sendMessage:(NSString *)message
-{    
-    OTRMessage *newMessage = [OTRMessage messageWithSender:accountName recipient:self.title message:message protocol:protocol];
+{
+    OTRBuddyList * buddyList = protocolManager.buddyList;
+    OTRBuddy* theBuddy = [buddyList getBuddyByName:self.title];
+    
+    OTRMessage *newMessage = [OTRMessage messageWithSender:accountName recipient:theBuddy.accountName message:message protocol:protocol];
     
     OTRMessage *encodedMessage = [OTRCodec encodeMessage:newMessage];
     

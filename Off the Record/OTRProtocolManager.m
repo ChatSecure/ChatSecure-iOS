@@ -178,7 +178,7 @@ static OTRProtocolManager *sharedManager = nil;
                 }
                 else
                 {
-                    OTRBuddy *newBuddy = [OTRBuddy buddyWithName:buddy.username protocol:@"prpl-oscar" status:buddyStatus groupName:group.name];
+                    OTRBuddy *newBuddy = [OTRBuddy buddyWithDisplayName:buddy.username accountName:buddy.username protocol:@"prpl-oscar" status:buddyStatus groupName:group.name];
                     [buddyList addBuddy:newBuddy];
                 }
             }
@@ -226,7 +226,7 @@ static OTRProtocolManager *sharedManager = nil;
                 }
                 else
                 {
-                    OTRBuddy *newBuddy = [OTRBuddy buddyWithName:user.displayName protocol:@"xmpp" status:otrBuddyStatus groupName:sectionName];
+                    OTRBuddy *newBuddy = [OTRBuddy buddyWithDisplayName:user.displayName accountName: [[user jid] full] protocol:@"xmpp" status:otrBuddyStatus groupName:sectionName];
                     [buddyList addBuddy:newBuddy];
                 }
             }

@@ -17,6 +17,7 @@
 -(NSMutableDictionary*)allBuddies;
 -(void)addBuddy:(OTRBuddy*)newBuddy;
 -(NSUInteger)count;
+-(OTRBuddy*)getBuddyByName:(NSString*)buddyName;
 
 +(NSArray*)sortBuddies:(NSMutableDictionary*)buddies;
 
