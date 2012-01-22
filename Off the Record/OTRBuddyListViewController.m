@@ -168,7 +168,7 @@
     {
         OTRBuddy *buddyData = [sortedBuddies objectAtIndex:indexPath.row];
         
-        NSString *buddyUsername = buddyData.name;
+        NSString *buddyUsername = buddyData.displayName;
         OTRBuddyStatus buddyStatus = buddyData.status;
         
         cell.textLabel.text = buddyUsername;
@@ -207,7 +207,7 @@
     {
         OTRBuddy *buddyData = [sortedBuddies objectAtIndex:indexPath.row];
         
-        NSString *buddyUsername = buddyData.name;
+        NSString *buddyUsername = buddyData.accountName;
         NSString *buddyProtocol = buddyData.protocol;
         
         [self enterConversation:buddyUsername withProtocol:buddyProtocol];

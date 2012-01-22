@@ -25,7 +25,7 @@
 
 +(NSArray*)sortBuddies:(NSMutableDictionary*)buddies
 {
-    NSSortDescriptor *buddyNameDescriptor = [[[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)] autorelease];
+    NSSortDescriptor *buddyNameDescriptor = [[[NSSortDescriptor alloc] initWithKey:@"displayName" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)] autorelease];
     
     NSSortDescriptor *statusDescriptor = [[[NSSortDescriptor alloc] initWithKey:@"status"
                                                       ascending:NO] autorelease];
@@ -61,11 +61,11 @@
 {
     if([newBuddy.protocol isEqualToString:@"prpl-oscar"])
     {
-        [oscarBuddies setObject:newBuddy forKey:newBuddy.name];
+        [oscarBuddies setObject:newBuddy forKey:newBuddy.accountName];
     }
     else if([newBuddy.protocol isEqualToString:@"xmpp"])
     {
-        [xmppBuddies setObject:newBuddy forKey:newBuddy.name];
+        [xmppBuddies setObject:newBuddy forKey:newBuddy.accountName];
     }
 }
 
