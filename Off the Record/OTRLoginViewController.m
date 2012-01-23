@@ -143,6 +143,7 @@
     BOOL fields = [self checkFields];
     if(fields)
     {
+        NSLog(@"show HUD");
         HUD = [[MBProgressHUD alloc] initWithView:self.view];
         [self.view addSubview:HUD];
         
@@ -162,6 +163,7 @@
         }
         else
         {
+            [HUD hide:YES];
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:@"Failed to connect to XMPP server. Please check your login credentials and internet connection and try again." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
             [alert show];
             [alert release];
