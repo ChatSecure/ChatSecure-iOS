@@ -249,6 +249,8 @@
         if(buttonIndex == 0) //logout
         {
             [[[OTRProtocolManager sharedInstance] xmppManager] disconnect];
+            [[[OTRProtocolManager sharedInstance] buddyList] removeXmppBuddies];
+            
         }
     }
 }

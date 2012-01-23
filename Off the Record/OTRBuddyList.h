@@ -16,6 +16,8 @@
 
 -(NSMutableDictionary*)allBuddies;
 -(void)addBuddy:(OTRBuddy*)newBuddy;
+-(void)removeOScarBuddies;
+-(void)removeXmppBuddies;
 -(NSUInteger)count;
 -(OTRBuddy*)getBuddyByName:(NSString*)buddyName;
 
