@@ -9,6 +9,7 @@
 #import "OTRBuddyListViewController.h"
 #import "OTRChatViewController.h"
 #import "OTRLoginViewController.h"
+#import "OTRXMPPManager.h"
 #import "OTRBuddy.h"
 
 //#define kSignoffTime 500
@@ -147,11 +148,22 @@
 }
 
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)sectionIndex {
     if(protocolManager.buddyList)
     {
         NSLog(@"Buddy list count: %d",[protocolManager.buddyList count]);
         return [protocolManager.buddyList count];
+        
+        
+       /* NSArray *sections = [protocolManager frcSections];
+        
+        if (sectionIndex < [sections count])
+        {
+            id <NSFetchedResultsSectionInfo> sectionInfo = [sections objectAtIndex:sectionIndex];
+            return sectionInfo.numberOfObjects;
+        }
+        
+        return 0;*/
     }
     
     return 0;

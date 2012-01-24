@@ -21,13 +21,21 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+        
+        
+       
     }
     return self;
 }
 
 - (void) viewDidLoad 
 {
+    [[NSNotificationCenter defaultCenter]
+     addObserver:self
+     selector:@selector(aimLoginFailed)
+     name:@"AimLoginFailedNotification"
+     object:nil ];
+    
     if (useXMPP) {
         aimButton.hidden = YES;
     }
@@ -111,23 +119,29 @@
     [super dealloc];
 }
 
+-(void) attemptAimLogin 
+{
+    protocolManager.oscarManager.login = [[AIMLogin alloc] initWithUsername:usernameTextField.text password:passwordTextField.text];
+    protocolManager.oscarManager.accountName = usernameTextField.text;
+    
+    [protocolManager.oscarManager.login setDelegate:protocolManager.oscarManager];
+}
+
 - (IBAction)loginPressed:(id)sender 
 {
     BOOL fields = [self checkFields];
     if(fields)
     {
-        protocolManager.oscarManager.login = [[AIMLogin alloc] initWithUsername:usernameTextField.text password:passwordTextField.text];
-        protocolManager.oscarManager.accountName = usernameTextField.text;
-        
-        [protocolManager.oscarManager.login setDelegate:protocolManager.oscarManager];
-        
         HUD = [[MBProgressHUD alloc] initWithView:self.view];
         [self.view addSubview:HUD];
-        
         HUD.delegate = self;
-        HUD.labelText = @"Logging in...";
         
+        
+        HUD.labelText = @"Logging in...";
+        [self attemptAimLogin];
         [HUD show:YES];
+        //[HUD showWhileExecuting:@selector(attemptAimLogin) onTarget:self withObject:nil animated:YES];
+        
         
         if (![protocolManager.oscarManager.login beginAuthorization]) {
             [HUD hide:YES];
@@ -135,8 +149,23 @@
             [alert show];
             [alert release];
         }
+        else if(protocolManager.oscarManager.loginFailed)
+        {
+            [HUD hide:YES];
+            /*UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:@"Failed to start authenticating. Please try again." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+            [alert show];
+            [alert release];*/
+            
+        }
     }
 }
+
+-(void) aimLoginFailed
+{
+    if(HUD)
+        [HUD hide:YES];
+}
+
 
 - (IBAction)xmppLoginPressed:(id)sender 
 {
