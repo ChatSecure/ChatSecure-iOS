@@ -32,6 +32,8 @@
 - (IBAction)cancelPressed:(id)sender;
 
 -(void)aimLoginFailed;
+-(void)xmppLoginFailed;
+-(void)xmppLoginSuccess;
 -(BOOL)checkFields;
 
 @end

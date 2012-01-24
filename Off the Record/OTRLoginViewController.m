@@ -36,6 +36,18 @@
      name:@"AimLoginFailedNotification"
      object:nil ];
     
+    [[NSNotificationCenter defaultCenter]
+     addObserver:self
+     selector:@selector(xmppLoginFailed)
+     name:@"XMPPLoginFailedNotification"
+     object:nil ];
+    
+    [[NSNotificationCenter defaultCenter]
+     addObserver:self
+     selector:@selector(xmppLoginSuccess)
+     name:@"XMPPLoginSuccessNotification"
+     object:nil ];
+    
     if (useXMPP) {
         aimButton.hidden = YES;
     }
@@ -119,28 +131,20 @@
     [super dealloc];
 }
 
--(void) attemptAimLogin 
-{
-    protocolManager.oscarManager.login = [[AIMLogin alloc] initWithUsername:usernameTextField.text password:passwordTextField.text];
-    protocolManager.oscarManager.accountName = usernameTextField.text;
-    
-    [protocolManager.oscarManager.login setDelegate:protocolManager.oscarManager];
-}
-
 - (IBAction)loginPressed:(id)sender 
 {
     BOOL fields = [self checkFields];
     if(fields)
     {
+        protocolManager.oscarManager.login = [[AIMLogin alloc] initWithUsername:usernameTextField.text password:passwordTextField.text];
+        protocolManager.oscarManager.accountName = usernameTextField.text;
+        [protocolManager.oscarManager.login setDelegate:protocolManager.oscarManager];
+        
         HUD = [[MBProgressHUD alloc] initWithView:self.view];
         [self.view addSubview:HUD];
         HUD.delegate = self;
-        
-        
         HUD.labelText = @"Logging in...";
-        [self attemptAimLogin];
         [HUD show:YES];
-        //[HUD showWhileExecuting:@selector(attemptAimLogin) onTarget:self withObject:nil animated:YES];
         
         
         if (![protocolManager.oscarManager.login beginAuthorization]) {
@@ -148,14 +152,6 @@
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:@"Failed to start authenticating. Please try again." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
             [alert show];
             [alert release];
-        }
-        else if(protocolManager.oscarManager.loginFailed)
-        {
-            [HUD hide:YES];
-            /*UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:@"Failed to start authenticating. Please try again." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
-            [alert show];
-            [alert release];*/
-            
         }
     }
 }
@@ -166,6 +162,21 @@
         [HUD hide:YES];
 }
 
+-(void) xmppLoginSuccess
+{
+    [[NSNotificationCenter defaultCenter]
+     postNotificationName:@"XMPPLoginNotification"
+     object:self];
+}
+-(void) xmppLoginFailed
+{
+    [HUD hide:YES];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:@"Failed to connect to XMPP server. Please check your login credentials and internet connection and try again." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+    [alert show];
+    [alert release];
+}
+
+
 
 - (IBAction)xmppLoginPressed:(id)sender 
 {
@@ -175,15 +186,16 @@
         NSLog(@"show HUD");
         HUD = [[MBProgressHUD alloc] initWithView:self.view];
         [self.view addSubview:HUD];
-        
         HUD.delegate = self;
         HUD.labelText = @"Logging in...";
-        
-        [HUD show:YES];
+            [HUD show:YES];
         
         BOOL connect = [protocolManager.xmppManager connectWithJID:usernameTextField.text password:passwordTextField.text];
         
-        
+        if (connect) {
+            NSLog(@"xmppLogin attempt");
+        }
+        /*
         if(connect)
         {
             [[NSNotificationCenter defaultCenter]
@@ -196,7 +208,7 @@
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:@"Failed to connect to XMPP server. Please check your login credentials and internet connection and try again." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
             [alert show];
             [alert release];
-        }
+        }*/
     }
 }
 

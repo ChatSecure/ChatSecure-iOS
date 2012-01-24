@@ -35,6 +35,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 - (void)goOnline;
 - (void)goOffline;
+- (void)failedToConnect;
 
 @end
 
@@ -377,6 +378,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 - (void)goOnline
 {
+    [[NSNotificationCenter defaultCenter]
+     postNotificationName:@"XMPPLoginSuccessNotification" object:nil];
 	XMPPPresence *presence = [XMPPPresence presence]; // type="available" is implicit
 	
 	[[self xmppStream] sendElement:presence];
@@ -389,6 +392,11 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	[[self xmppStream] sendElement:presence];
 }
 
+- (void)failedToConnect
+{
+    [[NSNotificationCenter defaultCenter]
+     postNotificationName:@"XMPPLoginFailedNotification" object:nil];    
+}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark Connect/disconnect
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -574,7 +582,9 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 - (void)xmppStream:(XMPPStream *)sender didNotAuthenticate:(NSXMLElement *)error
 {
+    
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
+    [self failedToConnect];
 }
 
 - (BOOL)xmppStream:(XMPPStream *)sender didReceiveIQ:(XMPPIQ *)iq
