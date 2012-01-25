@@ -75,7 +75,7 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     //[self buddyListUpdate];
-
+    
     [[NSNotificationCenter defaultCenter]
      postNotificationName:@"BuddyListUpdateNotification"
      object:self];

@@ -383,6 +383,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	XMPPPresence *presence = [XMPPPresence presence]; // type="available" is implicit
 	
 	[[self xmppStream] sendElement:presence];
+    [[NSNotificationCenter defaultCenter]
+     postNotificationName:@"BuddyListUpdateNotification" object:nil];
 }
 
 - (void)goOffline
