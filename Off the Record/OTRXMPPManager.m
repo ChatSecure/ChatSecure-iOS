@@ -676,6 +676,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	if (!isXmppConnected)
 	{
 		DDLogError(@"Unable to connect to server. Check xmppStream.hostName");
+        [self failedToConnect];
 	}
 }
 
