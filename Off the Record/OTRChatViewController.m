@@ -10,6 +10,7 @@
 #import "OTREncryptionManager.h"
 #import "DTLinkButton.h"
 #import "privkey.h"
+#import <QuartzCore/QuartzCore.h>
 
 @implementation OTRChatViewController
 @synthesize chatHistoryTextView;
@@ -19,6 +20,10 @@
 @synthesize protocolManager;
 @synthesize protocol;
 @synthesize accountName;
+@synthesize chatBox;
+@synthesize viewChatHistory;
+@synthesize viewChatBox;
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -95,14 +100,16 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    [messageTextField becomeFirstResponder];
+    //[chatBox becomeFirstResponder];
+    [chatBox.layer setCornerRadius:5];
     
     CGRect frame = CGRectMake(0.0, 0.0, 320, 142);
 
+    
     chatHistoryTextView = [[DTAttributedTextView alloc] initWithFrame:frame];
 	chatHistoryTextView.textDelegate = self;
 	chatHistoryTextView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-	[self.view addSubview:chatHistoryTextView];
+	[viewChatHistory addSubview:chatHistoryTextView];
     
     if(!rawChatHistory)
         rawChatHistory = [[NSMutableString alloc] init];
@@ -142,7 +149,180 @@
     
     [self setupLockButton];
     
+    //set notification for when keyboard shows/hides
+    [[NSNotificationCenter defaultCenter] addObserver:self 
+                                             selector:@selector(keyboardWillShow:) 
+                                                 name:UIKeyboardWillShowNotification 
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self 
+                                             selector:@selector(keyboardWillHide:) 
+                                                 name:UIKeyboardWillHideNotification 
+                                               object:nil];
+    
+    //set notification for when a key is pressed.
+    [[NSNotificationCenter defaultCenter] addObserver:self 
+                                             selector: @selector(keyPressed:) 
+                                                 name: UITextViewTextDidChangeNotification 
+                                               object: nil];
+    
+    //turn off scrolling and set the font details.
+    chatBox.scrollEnabled = NO;
+    chatBox.font = [UIFont fontWithName:@"Helvetica" size:14]; 
+        
+    
 
+}
+
+-(void) keyboardWillShow:(NSNotification *)note{
+    // get keyboard size and loction
+	CGRect keyboardBounds;
+    [[note.userInfo valueForKey:UIKeyboardBoundsUserInfoKey] getValue: &keyboardBounds];
+    
+	// get the height since this is the main value that we need.
+	NSInteger kbSizeH = keyboardBounds.size.height;
+    
+	// get a rect for the table/main frame
+	CGRect tableFrame = viewChatHistory.frame;
+	tableFrame.size.height -= kbSizeH-49;
+    
+	// get a rect for the form frame
+	CGRect formFrame = viewChatBox.frame;
+	formFrame.origin.y -= kbSizeH-49;
+    
+	// animations settings
+	[UIView beginAnimations:nil context:NULL];
+	[UIView setAnimationBeginsFromCurrentState:YES];
+    [UIView setAnimationDuration:0.3f];
+    
+	// set views with new info
+	viewChatHistory.frame = tableFrame;
+	viewChatBox.frame = formFrame;
+    
+	// commit animations
+	[UIView commitAnimations];
+}
+
+-(void) keyPressed: (NSNotification*) notification{
+	// get the size of the text block so we can work our magic
+	CGSize newSize = [chatBox.text 
+                      sizeWithFont:[UIFont fontWithName:@"Helvetica" size:14] 
+                      constrainedToSize:CGSizeMake(222,9999) 
+                      lineBreakMode:UILineBreakModeWordWrap];
+	NSInteger newSizeH = newSize.height;
+	NSInteger newSizeW = newSize.width;
+    
+    // I output the new dimensions to the console 
+    // so we can see what is happening
+	NSLog(@"NEW SIZE : %d X %d", newSizeW, newSizeH);
+	if (chatBox.hasText)
+	{
+        // if the height of our new chatbox is
+        // below 90 we can set the height
+		if (newSizeH <= 90)
+		{
+			[chatBox scrollRectToVisible:CGRectMake(0,0,1,1) animated:NO];
+            
+			// chatbox
+			CGRect chatBoxFrame = chatBox.frame;
+			NSInteger chatBoxH = chatBoxFrame.size.height;
+			NSInteger chatBoxW = chatBoxFrame.size.width;
+			NSLog(@"CHAT BOX SIZE : %d X %d", chatBoxW, chatBoxH);
+			chatBoxFrame.size.height = newSizeH + 12;
+			chatBox.frame = chatBoxFrame;
+            
+			// form view
+			CGRect formFrame = viewChatBox.frame;
+			NSInteger viewFormH = formFrame.size.height;
+			NSLog(@"FORM VIEW HEIGHT : %d", viewFormH);
+			formFrame.size.height = 30 + newSizeH;
+			formFrame.origin.y = 199 - (newSizeH - 18)-49;
+			viewChatBox.frame = formFrame;
+            
+			// table view
+			CGRect tableFrame = viewChatHistory.frame;
+			NSInteger viewTableH = tableFrame.size.height;
+			NSLog(@"TABLE VIEW HEIGHT : %d", viewTableH);
+			//tableFrame.size.height = 199 - (newSizeH - 18);
+            tableFrame.size.height = 199 - (newSizeH - 18)-49;
+			viewChatHistory.frame = tableFrame;
+		}
+        
+        // if our new height is greater than 90
+        // sets not set the height or move things
+        // around and enable scrolling
+		if (newSizeH > 90)
+		{
+			chatBox.scrollEnabled = YES;
+		}
+	}
+}
+- (void)chatButtonClick 
+{
+	// hide the keyboard, we are done with it.
+	//[chatBox resignFirstResponder];
+	//chatBox.text = nil;
+    
+	// chatbox
+	CGRect chatBoxFrame = chatBox.frame;
+	chatBoxFrame.size.height = 30;
+	chatBox.frame = chatBoxFrame;
+    
+	// form view
+	//CGRect formFrame = viewChatBox.frame;
+	//formFrame.size.height = 45;
+	//formFrame.origin.y = 415;
+	//viewChatBox.frame = formFrame;
+    
+	// table view
+	//CGRect tableFrame = viewChatHistory.frame;
+	//tableFrame.size.height = 415;
+	//viewChatHistory.frame = tableFrame;
+    
+    // form view
+    CGRect formFrame = viewChatBox.frame;
+    //NSInteger viewFormH = formFrame.size.height;
+    //NSLog(@"FORM VIEW HEIGHT : %d", viewFormH);
+    formFrame.size.height = 30 + 12;
+    formFrame.origin.y = 199 - (12 - 18)-49;
+    viewChatBox.frame = formFrame;
+    
+    // table view
+    CGRect tableFrame = viewChatHistory.frame;
+    //NSInteger viewTableH = tableFrame.size.height;
+    //NSLog(@"TABLE VIEW HEIGHT : %d", viewTableH);
+    //tableFrame.size.height = 199 - (newSizeH - 18);
+    tableFrame.size.height = 199 - (12 - 18)-49;
+    viewChatHistory.frame = tableFrame;
+
+}
+-(void) keyboardWillHide:(NSNotification *)note{
+    // get keyboard size and loction
+    
+	CGRect keyboardBounds;
+    [[note.userInfo valueForKey:UIKeyboardBoundsUserInfoKey] getValue: &keyboardBounds];
+    
+	// get the height since this is the main value that we need.
+	NSInteger kbSizeH = keyboardBounds.size.height;
+    
+	// get a rect for the table/main frame
+	CGRect tableFrame = viewChatHistory.frame;
+	tableFrame.size.height += kbSizeH;
+    
+	// get a rect for the form frame
+	CGRect formFrame = viewChatBox.frame;
+	formFrame.origin.y += kbSizeH;
+    
+	// animations settings
+	[UIView beginAnimations:nil context:NULL];
+	[UIView setAnimationBeginsFromCurrentState:YES];
+    [UIView setAnimationDuration:0.3f];
+    
+	// set views with new info
+	viewChatHistory.frame = tableFrame;
+	viewChatBox.frame = formFrame;
+    
+	// commit animations
+	[UIView commitAnimations];
 }
 
 - (void) receiveNotification:(NSNotification *) notification
@@ -180,21 +360,26 @@
 - (void)dealloc {
     [chatHistoryTextView release];
     [messageTextField release];
+    [chatBox release];
+    [viewChatHistory release];
+    [viewChatBox release];
     [super dealloc];
 }
-- (IBAction)sendButtonPressed:(id)sender {
-    [self textFieldShouldReturn:messageTextField];
-}
-
--(BOOL)textFieldShouldReturn:(UITextField *)textField{
+-(BOOL)textViewShouldReturn:(UITextView *)textView {
+    [self sendMessage:textView.text];
+    //[self sendMessage:textField.text];
     
-    [self sendMessage:textField.text];
-
-    
-    textField.text = @"";
+    textView.text=@"";
+    //textField.text = @"";
     
     return YES;
 }
+- (IBAction)sendButtonPressed:(id)sender {
+    [self textViewShouldReturn:chatBox];
+    [self chatButtonClick];
+}
+
+
 
 -(void)updateChatHistory
 {
