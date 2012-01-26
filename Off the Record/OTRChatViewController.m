@@ -30,7 +30,8 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) 
     {
-        // Custom initialization
+        //set notification for when keyboard shows/hides
+        
     }
     return self;
 }
@@ -94,16 +95,19 @@
     [popupQuery release];
 }
 
+
+
 #pragma mark - View lifecycle
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    //[chatBox becomeFirstResponder];
+    [chatBox becomeFirstResponder];
     [chatBox.layer setCornerRadius:5];
+    //[chatBox setContentInset:UIEdgeInsetsZero];
     
-    CGRect frame = CGRectMake(0.0, 0.0, 320, 142);
+    CGRect frame = CGRectMake(0.0, 0.0, 320, 146);
 
     
     chatHistoryTextView = [[DTAttributedTextView alloc] initWithFrame:frame];
@@ -149,15 +153,7 @@
     
     [self setupLockButton];
     
-    //set notification for when keyboard shows/hides
-    [[NSNotificationCenter defaultCenter] addObserver:self 
-                                             selector:@selector(keyboardWillShow:) 
-                                                 name:UIKeyboardWillShowNotification 
-                                               object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self 
-                                             selector:@selector(keyboardWillHide:) 
-                                                 name:UIKeyboardWillHideNotification 
-                                               object:nil];
+    
     
     //set notification for when a key is pressed.
     [[NSNotificationCenter defaultCenter] addObserver:self 
@@ -173,43 +169,15 @@
 
 }
 
--(void) keyboardWillShow:(NSNotification *)note{
-    // get keyboard size and loction
-	CGRect keyboardBounds;
-    [[note.userInfo valueForKey:UIKeyboardBoundsUserInfoKey] getValue: &keyboardBounds];
-    
-	// get the height since this is the main value that we need.
-	NSInteger kbSizeH = keyboardBounds.size.height;
-    
-	// get a rect for the table/main frame
-	CGRect tableFrame = viewChatHistory.frame;
-	tableFrame.size.height -= kbSizeH-49;
-    
-	// get a rect for the form frame
-	CGRect formFrame = viewChatBox.frame;
-	formFrame.origin.y -= kbSizeH-49;
-    
-	// animations settings
-	[UIView beginAnimations:nil context:NULL];
-	[UIView setAnimationBeginsFromCurrentState:YES];
-    [UIView setAnimationDuration:0.3f];
-    
-	// set views with new info
-	viewChatHistory.frame = tableFrame;
-	viewChatBox.frame = formFrame;
-    
-	// commit animations
-	[UIView commitAnimations];
-}
-
 -(void) keyPressed: (NSNotification*) notification{
 	// get the size of the text block so we can work our magic
-	CGSize newSize = [chatBox.text 
-                      sizeWithFont:[UIFont fontWithName:@"Helvetica" size:14] 
-                      constrainedToSize:CGSizeMake(222,9999) 
-                      lineBreakMode:UILineBreakModeWordWrap];
-	NSInteger newSizeH = newSize.height;
-	NSInteger newSizeW = newSize.width;
+	//CGSize newSize = [chatBox.text 
+    //                  sizeWithFont:[UIFont fontWithName:@"Helvetica" size:14] 
+    //                  constrainedToSize:CGSizeMake(222,9999) 
+    //                  lineBreakMode:UILineBreakModeWordWrap];
+    //CGSize newSize = chatBox.contentSize.height;
+	NSInteger newSizeH = chatBox.contentSize.height-12;
+	NSInteger newSizeW = chatBox.contentSize.width;
     
     // I output the new dimensions to the console 
     // so we can see what is happening
@@ -264,7 +232,7 @@
     
 	// chatbox
 	CGRect chatBoxFrame = chatBox.frame;
-	chatBoxFrame.size.height = 30;
+	chatBoxFrame.size.height = 34;
 	chatBox.frame = chatBoxFrame;
     
 	// form view
@@ -294,35 +262,6 @@
     tableFrame.size.height = 199 - (12 - 18)-49;
     viewChatHistory.frame = tableFrame;
 
-}
--(void) keyboardWillHide:(NSNotification *)note{
-    // get keyboard size and loction
-    
-	CGRect keyboardBounds;
-    [[note.userInfo valueForKey:UIKeyboardBoundsUserInfoKey] getValue: &keyboardBounds];
-    
-	// get the height since this is the main value that we need.
-	NSInteger kbSizeH = keyboardBounds.size.height;
-    
-	// get a rect for the table/main frame
-	CGRect tableFrame = viewChatHistory.frame;
-	tableFrame.size.height += kbSizeH;
-    
-	// get a rect for the form frame
-	CGRect formFrame = viewChatBox.frame;
-	formFrame.origin.y += kbSizeH;
-    
-	// animations settings
-	[UIView beginAnimations:nil context:NULL];
-	[UIView setAnimationBeginsFromCurrentState:YES];
-    [UIView setAnimationDuration:0.3f];
-    
-	// set views with new info
-	viewChatHistory.frame = tableFrame;
-	viewChatBox.frame = formFrame;
-    
-	// commit animations
-	[UIView commitAnimations];
 }
 
 - (void) receiveNotification:(NSNotification *) notification
