@@ -336,13 +336,14 @@ static OtrlMessageAppOps ui_ops = {
     NSString *recipientAccount = theMessage.recipient;
     NSString *protocol = theMessage.protocol;
     NSString *sendingAccount = theMessage.sender;
-        
+    NSLog(@"inside encodeMessage: %@ %@ %@ %@",message,recipientAccount,protocol,sendingAccount);
     OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
     
     err = otrl_message_sending(protocolManager.encryptionManager.userState, &ui_ops, NULL,
                                [sendingAccount UTF8String], [protocol UTF8String], [recipientAccount UTF8String], [message UTF8String], NULL, &newmessage,
                                NULL, NULL);
     NSString *newMessage;
+    NSLog(@"newmessage char: %s",newmessage);
     if(newmessage)
         newMessage = [NSString stringWithUTF8String:newmessage];
     else

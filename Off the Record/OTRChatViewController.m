@@ -338,11 +338,12 @@
 {
     OTRBuddyList * buddyList = protocolManager.buddyList;
     OTRBuddy* theBuddy = [buddyList getBuddyByName:self.title];
-    
+    message = [message stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    NSLog(@"message to be sent: %@",message);
     OTRMessage *newMessage = [OTRMessage messageWithSender:accountName recipient:theBuddy.accountName message:message protocol:protocol];
-    
+    NSLog(@"newMessagge: %@",newMessage.message);
     OTRMessage *encodedMessage = [OTRCodec encodeMessage:newMessage];
-    
+    NSLog(@"encoded message: %@",encodedMessage.message);
     [OTRMessage sendMessage:encodedMessage];    
     
     NSString *username = @"<FONT SIZE=16 COLOR=\"#0000ff\"><b>Me:</b></FONT>";
