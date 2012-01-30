@@ -250,8 +250,10 @@
     CGRect formFrame = viewChatBox.frame;
     //NSInteger viewFormH = formFrame.size.height;
     //NSLog(@"FORM VIEW HEIGHT : %d", viewFormH);
-    formFrame.size.height = 30 + 12;
-    formFrame.origin.y = 199 - (12 - 18)-49;
+    //formFrame.size.height = 30 + 12;
+    formFrame.size.height = 52;
+    //formFrame.origin.y = 199 - (12 - 18)-49;
+    formFrame.origin.y = 146;
     viewChatBox.frame = formFrame;
     
     // table view
@@ -259,7 +261,7 @@
     //NSInteger viewTableH = tableFrame.size.height;
     //NSLog(@"TABLE VIEW HEIGHT : %d", viewTableH);
     //tableFrame.size.height = 199 - (newSizeH - 18);
-    tableFrame.size.height = 199 - (12 - 18)-49;
+    tableFrame.size.height = 146;
     viewChatHistory.frame = tableFrame;
 
 }
