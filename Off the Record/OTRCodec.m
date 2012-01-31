@@ -298,10 +298,12 @@ static OtrlMessageAppOps ui_ops = {
     
     if(!userstate)
         NSLog(@"userstate is nil!");
-        
-    ignore_message = otrl_message_receiving(userstate, &ui_ops, NULL,[myAccountName UTF8String], [protocol UTF8String], [friendAccount UTF8String], [message UTF8String], &newmessage, NULL, NULL, NULL);
     
+    
+    ignore_message = otrl_message_receiving(userstate, &ui_ops, NULL,[myAccountName UTF8String], [protocol UTF8String], [friendAccount UTF8String], [message UTF8String], &newmessage, NULL, NULL, NULL);
+    NSLog(@"ignore message: %d",ignore_message);
     NSString *newMessage;
+    
     
     if(ignore_message == 0)
     {

@@ -344,7 +344,19 @@
     NSLog(@"message to be sent: %@",message);
     OTRMessage *newMessage = [OTRMessage messageWithSender:accountName recipient:theBuddy.accountName message:message protocol:protocol];
     NSLog(@"newMessagge: %@",newMessage.message);
-    OTRMessage *encodedMessage = [OTRCodec encodeMessage:newMessage];
+    [self refreshLockButton];
+    OTRMessage *encodedMessage;
+    if(self.navigationItem.rightBarButtonItem == lockButton)
+    {
+        encodedMessage = [OTRCodec encodeMessage:newMessage];
+    }
+    else
+    {
+        encodedMessage = newMessage;
+    }
+    
+    
+    
     NSLog(@"encoded message: %@",encodedMessage.message);
     [OTRMessage sendMessage:encodedMessage];    
     
@@ -394,9 +406,10 @@
 {
     //CGPoint bottomOffset = CGPointMake(0, [chatHistoryTextView contentSize].height);
     //[chatHistoryTextView setContentOffset: bottomOffset animated: YES];
-    
-    
+     CGRect bottomRect = CGRectMake(0, 0, 1, [chatHistoryTextView contentSize].height);
     //textView.selectedRange = NSMakeRange(textView.text.length - 1, 0);
+    //[chatHistoryTextView setContentOffset:CGPointMake(0, 0) animated:YES];
+    [chatHistoryTextView scrollRectToVisible: bottomRect animated:YES];
 }
 
 -(BOOL)textViewShouldBeginEditing:(UITextView *)textView
