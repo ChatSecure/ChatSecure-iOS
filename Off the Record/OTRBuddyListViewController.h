@@ -29,7 +29,8 @@
 @property (nonatomic, retain) OTRProtocolManager *protocolManager;
 @property (nonatomic, retain) NSMutableDictionary *recentMessages;
 
--(void)enterConversation:(NSString*)buddyName withProtocol:(NSString*)protocol;
+-(void)startConversation:(NSString*)buddyName withProtocol:(NSString*)protocol withMessage:(NSString*)message;
+-(void)enterConversation:(NSString*)buddyName withProtocol:(NSString*)protocol withMessage:(NSString*)message;
 -(void)buddyListUpdate;
 -(void)messageReceived:(NSNotification*)notification;
 

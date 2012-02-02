@@ -406,9 +406,9 @@
 {
     //CGPoint bottomOffset = CGPointMake(0, [chatHistoryTextView contentSize].height);
     //[chatHistoryTextView setContentOffset: bottomOffset animated: YES];
-     CGRect bottomRect = CGRectMake(0, 0, 1, [chatHistoryTextView contentSize].height);
     //textView.selectedRange = NSMakeRange(textView.text.length - 1, 0);
-    //[chatHistoryTextView setContentOffset:CGPointMake(0, 0) animated:YES];
+    //NSLog(@"chat history text view height: %f",[chatHistoryTextView contentSize].height);
+    CGRect bottomRect = CGRectMake(0, 0, 1, [chatHistoryTextView contentSize].height);
     [chatHistoryTextView scrollRectToVisible: bottomRect animated:YES];
 }
 
