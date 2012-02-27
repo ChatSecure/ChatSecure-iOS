@@ -255,7 +255,6 @@
         chatController.buddyListController = self;
         [chatViewControllers setObject:chatController forKey:buddyName];
     }
-    NSLog(@"Chat controller protocol: %@",chatController.protocol);
     [recentMessages removeObjectForKey:buddyName];
 
 }
@@ -320,7 +319,6 @@
                 {
                     proto = mess.protocol;
                 }
-                NSLog(@"proto: %@",proto);
                 [self enterConversation:alertView.title withProtocol:proto  withMessage:alertView.message];
             }
         }   
@@ -330,7 +328,6 @@
             {
                 proto = mess.protocol;
             }
-            NSLog(@"proto: %@",proto);
             [self startConversation:alertView.title withProocol:proto withMessage:alertView.message];
             [recentMessages removeObjectForKey:alertView.title];
         }
