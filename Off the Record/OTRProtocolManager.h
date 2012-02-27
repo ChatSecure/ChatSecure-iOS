@@ -27,6 +27,7 @@
 + (OTRProtocolManager*)sharedInstance; // Singleton method
 
 -(void)sendMessage:(NSNotification*)notification;
+-(NSArray*)frcSections;
 
 -(void)sendMessageOSCAR:(OTRMessage*)theMessage;
 -(void)sendMessageXMPP:(OTRMessage*)theMessage;

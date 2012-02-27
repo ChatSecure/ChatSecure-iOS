@@ -234,6 +234,11 @@ static OTRProtocolManager *sharedManager = nil;
     }
 }
 
+-(NSArray*) frcSections
+{
+    return [[xmppManager fetchedResultsController] sections];
+}
+
 -(NSString*)accountNameForProtocol:(NSString*)protocol
 {
     if([protocol isEqualToString:@"prpl-oscar"])

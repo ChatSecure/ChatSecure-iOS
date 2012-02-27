@@ -69,12 +69,15 @@
 -(void)aimLoggedOff
 {
     isAIMloggedIn = NO;
+    //[[[OTRProtocolManager sharedInstance] buddyList] removeOscarBuddies];
     [accountsTableView reloadData];
 }
 -(void)xmppLoggedOff
 {
     isXMPPloggedIn = NO;
+    [[[OTRProtocolManager sharedInstance] buddyList] removeXmppBuddies];
     [accountsTableView reloadData];
+    
 }
 
 -(void)showAboutScreen
@@ -249,6 +252,8 @@
         if(buttonIndex == 0) //logout
         {
             [[[OTRProtocolManager sharedInstance] xmppManager] disconnect];
+            
+            
         }
     }
 }

@@ -339,11 +339,11 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">aimButton</string>
+						<string key="label">rememberUserNameSwitch</string>
 						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="876653851"/>
+						<reference key="destination" ref="414321038"/>
 					</object>
-					<int key="connectionID">18</int>
+					<int key="connectionID">24</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
@@ -351,15 +351,15 @@
 						<reference key="source" ref="372490531"/>
 						<reference key="destination" ref="265638582"/>
 					</object>
-					<int key="connectionID">19</int>
+					<int key="connectionID">25</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">rememberUserNameSwitch</string>
+						<string key="label">aimButton</string>
 						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="414321038"/>
+						<reference key="destination" ref="876653851"/>
 					</object>
-					<int key="connectionID">24</int>
+					<int key="connectionID">26</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
@@ -427,10 +427,10 @@
 							<reference ref="494290929"/>
 							<reference ref="490473997"/>
 							<reference ref="876653851"/>
-							<reference ref="265638582"/>
 							<reference ref="711270093"/>
 							<reference ref="414321038"/>
 							<reference ref="624992708"/>
+							<reference ref="265638582"/>
 						</object>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -548,7 +548,7 @@
 				<reference key="dict.values" ref="0"/>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">24</int>
+			<int key="maxID">26</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">

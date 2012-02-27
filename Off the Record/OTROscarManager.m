@@ -15,6 +15,9 @@
 @synthesize buddyList;
 @synthesize theSession;
 @synthesize login;
+@synthesize loginFailed;
+
+BOOL loginFailed;
 
 -(id)init
 {
@@ -53,7 +56,7 @@
 
 - (void)aimLogin:(AIMLogin *)theLogin failedWithError:(NSError *)error {
 	[self checkThreading];
-    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"AimLoginFailedNotification" object:nil];
     NSLog(@"login error: %@",[error description]);
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Login Error" message:@"AIM login failed. Please check your username and password and try again." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
     [alert show];
