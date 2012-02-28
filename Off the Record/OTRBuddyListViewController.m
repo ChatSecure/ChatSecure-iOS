@@ -9,6 +9,7 @@
 #import "OTRBuddyListViewController.h"
 #import "OTRChatViewController.h"
 #import "OTRLoginViewController.h"
+#import "OTRXMPPManager.h"
 #import "OTRBuddy.h"
 
 //#define kSignoffTime 500
@@ -74,7 +75,7 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     //[self buddyListUpdate];
-
+    
     [[NSNotificationCenter defaultCenter]
      postNotificationName:@"BuddyListUpdateNotification"
      object:self];
@@ -147,10 +148,22 @@
 }
 
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)sectionIndex {
     if(protocolManager.buddyList)
     {
+        NSLog(@"Buddy list count: %d",[protocolManager.buddyList count]);
         return [protocolManager.buddyList count];
+        
+        
+       /* NSArray *sections = [protocolManager frcSections];
+        
+        if (sectionIndex < [sections count])
+        {
+            id <NSFetchedResultsSectionInfo> sectionInfo = [sections objectAtIndex:sectionIndex];
+            return sectionInfo.numberOfObjects;
+        }
+        
+        return 0;*/
     }
     
     return 0;
@@ -210,12 +223,12 @@
         NSString *buddyUsername = buddyData.accountName;
         NSString *buddyProtocol = buddyData.protocol;
         
-        [self enterConversation:buddyUsername withProtocol:buddyProtocol];
+        [self enterConversation:buddyUsername withProtocol:buddyProtocol withMessage:@""];
     }
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
--(void)enterConversation:(NSString*)buddyName withProtocol:(NSString *)protocol
+-(void)startConversation:(NSString *)buddyName withProocol:(NSString *)protocol withMessage:(NSString *)message
 {
     OTRChatViewController *chatController;
     if([chatViewControllers objectForKey:buddyName])
@@ -227,10 +240,43 @@
         chatController = [[OTRChatViewController alloc] init];
         chatController.title = buddyName;
         NSDictionary *messageInfo = [recentMessages objectForKey:buddyName];
+        OTRMessage * mess = [messageInfo objectForKey:@"message"];
         if(messageInfo)
         {
-            chatController.protocol = [messageInfo objectForKey:@"protocol"];
-            chatController.accountName = [messageInfo objectForKey:@"recipient"];
+            chatController.protocol = mess.protocol;
+            chatController.accountName = mess.recipient;
+            [chatController receiveMessage:message];
+        }
+        else
+        {
+            chatController.protocol = protocol;
+            chatController.accountName = [protocolManager accountNameForProtocol:protocol];
+        }
+        chatController.buddyListController = self;
+        [chatViewControllers setObject:chatController forKey:buddyName];
+    }
+    [recentMessages removeObjectForKey:buddyName];
+
+}
+
+-(void)enterConversation:(NSString *)buddyName withProtocol:(NSString *)protocol withMessage:(NSString *)message
+{
+    OTRChatViewController *chatController;
+    if([chatViewControllers objectForKey:buddyName])
+    {
+        chatController = [chatViewControllers objectForKey:buddyName];
+    }
+    else
+    {
+        chatController = [[OTRChatViewController alloc] init];
+        chatController.title = buddyName;
+        NSDictionary *messageInfo = [recentMessages objectForKey:buddyName];
+        OTRMessage * mess = [messageInfo objectForKey:@"message"];
+        if(messageInfo)
+        {
+            chatController.protocol = mess.protocol;
+            chatController.accountName = mess.recipient;
+            [chatController receiveMessage:message];
         }
         else
         {
@@ -253,6 +299,7 @@
         [chatListController.navigationController setViewControllers:controllerArray animated:YES];
     }
     
+    
     [recentMessages removeObjectForKey:buddyName];
 }
 
@@ -260,13 +307,28 @@
 {
     if(alertView.tag == 1)
     {
+        NSString * buddyName=alertView.title;
+        NSString * proto;
+        NSDictionary *messageInfo = [recentMessages objectForKey:buddyName];
+        OTRMessage * mess = [messageInfo objectForKey:@"message"];
         if(buttonIndex == 1) // Reply
         {
             if(alertView.title)
-                [self enterConversation:alertView.title withProtocol:nil];
-        }
+            {
+                if(messageInfo)
+                {
+                    proto = mess.protocol;
+                }
+                [self enterConversation:alertView.title withProtocol:proto  withMessage:alertView.message];
+            }
+        }   
         else // Ignore
         {
+            if(messageInfo)
+            {
+                proto = mess.protocol;
+            }
+            [self startConversation:alertView.title withProocol:proto withMessage:alertView.message];
             [recentMessages removeObjectForKey:alertView.title];
         }
     }

@@ -51,6 +51,16 @@
     return [xmppBuddies count] + [oscarBuddies count];
 }
 
+-(void)removeXmppBuddies
+{
+    [xmppBuddies removeAllObjects];
+}
+
+-(void)removeOscarBuddies
+{
+    [oscarBuddies removeAllObjects];
+}
+
 -(void)removeAllBuddies
 {
     [xmppBuddies removeAllObjects];

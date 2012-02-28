@@ -28,6 +28,8 @@
 @property (nonatomic, retain) AIMBlist *buddyList;
 @property (nonatomic, retain) AIMSessionManager *theSession;
 @property (nonatomic, retain) NSString *accountName;
+@property (nonatomic, assign) BOOL loginFailed;
+
 
 
 //+(AIMSessionManager*) AIMSession;

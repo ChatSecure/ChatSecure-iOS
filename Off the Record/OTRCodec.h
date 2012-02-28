@@ -8,8 +8,10 @@
 
 #import <Foundation/Foundation.h>
 #import "OTRMessage.h"
+#import "context.h"
 
 @interface OTRCodec : NSObject
+
 
 +(OTRMessage*) decodeMessage:(OTRMessage*)theMessage;
 +(OTRMessage*) encodeMessage:(OTRMessage*)theMessage;

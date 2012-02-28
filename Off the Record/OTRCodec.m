@@ -298,10 +298,12 @@ static OtrlMessageAppOps ui_ops = {
     
     if(!userstate)
         NSLog(@"userstate is nil!");
-        
-    ignore_message = otrl_message_receiving(userstate, &ui_ops, NULL,[myAccountName UTF8String], [protocol UTF8String], [friendAccount UTF8String], [message UTF8String], &newmessage, NULL, NULL, NULL);
     
+    
+    ignore_message = otrl_message_receiving(userstate, &ui_ops, NULL,[myAccountName UTF8String], [protocol UTF8String], [friendAccount UTF8String], [message UTF8String], &newmessage, NULL, NULL, NULL);
+    NSLog(@"ignore message: %d",ignore_message);
     NSString *newMessage;
+    
     
     if(ignore_message == 0)
     {
@@ -336,13 +338,14 @@ static OtrlMessageAppOps ui_ops = {
     NSString *recipientAccount = theMessage.recipient;
     NSString *protocol = theMessage.protocol;
     NSString *sendingAccount = theMessage.sender;
-        
+    NSLog(@"inside encodeMessage: %@ %@ %@ %@",message,recipientAccount,protocol,sendingAccount);
     OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
     
     err = otrl_message_sending(protocolManager.encryptionManager.userState, &ui_ops, NULL,
                                [sendingAccount UTF8String], [protocol UTF8String], [recipientAccount UTF8String], [message UTF8String], NULL, &newmessage,
                                NULL, NULL);
     NSString *newMessage;
+    NSLog(@"newmessage char: %s",newmessage);
     if(newmessage)
         newMessage = [NSString stringWithUTF8String:newmessage];
     else

@@ -197,6 +197,7 @@
 	int status = [statusCode intValue];
 	if (status != 200) {
 		// the request returned unsuccessful.
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"AimLoginFailedNotification" object:nil];
 		NSLog(@"startOSCAR error code: %d", status);
 		if ([(id)delegate respondsToSelector:@selector(authorizer:didFailWithError:)]) {
 			if ([delegate respondsToSelector:@selector(aimLogin:failedWithError:)]) {
