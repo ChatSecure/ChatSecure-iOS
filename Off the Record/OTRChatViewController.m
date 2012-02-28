@@ -88,7 +88,7 @@
 
 -(void)lockButtonPressed
 {
-    UIActionSheet *popupQuery = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Verify", nil];
+    UIActionSheet *popupQuery = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Initiate Encrypted Chat", @"Verify", nil];
     popupQuery.actionSheetStyle = UIActionSheetStyleBlackOpaque;
     popupQuery.tag = 420;
     [popupQuery showFromTabBar:self.tabBarController.tabBar];
@@ -451,14 +451,10 @@
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-	if (buttonIndex != actionSheet.cancelButtonIndex)
-	{
-		[[UIApplication sharedApplication] openURL:[lastActionLink absoluteURL]];
-	}
-    
+    NSLog(@"buttonIndex: %d",buttonIndex);
     if(actionSheet.tag == 420)
     {
-        if (buttonIndex == 0) // Verify
+        if (buttonIndex == 1) // Verify
         {
             if(!context)
             {
@@ -471,21 +467,38 @@
                 Fingerprint *fingerprint = context->active_fingerprint;
                 
                 otrl_privkey_fingerprint(protocolManager.encryptionManager.userState, our_hash, context->accountname, context->protocol);
-                
-                otrl_privkey_hash_to_human(their_hash, fingerprint->fingerprint);
-                
-                NSString *msg = [NSString stringWithFormat:@"Fingerprint for you, %s:\n%s\n\nPurported fingerprint for %s:\n%s\n", context->accountname, our_hash, context->username, their_hash];
-                
+                NSString *msg = nil;
+                if(fingerprint && fingerprint->fingerprint) {
+                    otrl_privkey_hash_to_human(their_hash, fingerprint->fingerprint);
+                    msg = [NSString stringWithFormat:@"Fingerprint for you, %s:\n%s\n\nPurported fingerprint for %s:\n%s\n", context->accountname, our_hash, context->username, their_hash];
+                } else {
+                    msg = @"You must be in a secure conversation first.";
+                }
+                                
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Verify Fingerprint" message:msg delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
                 [alert show];
                 [alert release];
             }
-            
-        } 
-        else if (buttonIndex == 1) // Cancel
+        }
+        else if (buttonIndex == 0)
+        {
+            OTRBuddyList * buddyList = protocolManager.buddyList;
+            OTRBuddy* theBuddy = [buddyList getBuddyByName:self.title];
+            OTRMessage *newMessage = [OTRMessage messageWithSender:accountName recipient:theBuddy.accountName message:@"" protocol:protocol];
+            OTRMessage *encodedMessage = [OTRCodec encodeMessage:newMessage];
+            [OTRMessage sendMessage:encodedMessage];    
+        }
+        else if (buttonIndex == actionSheet.cancelButtonIndex) // Cancel
         {
             
-        } 
+        }
+    }
+    else
+    {
+        if (buttonIndex != actionSheet.cancelButtonIndex)
+        {
+            [[UIApplication sharedApplication] openURL:[lastActionLink absoluteURL]];
+        }
     }
 }
 
