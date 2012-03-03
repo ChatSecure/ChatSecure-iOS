@@ -84,6 +84,9 @@ typedef enum {
 	float width;
 	float height;
 	
+	CGSize minSize;
+	BOOL square;
+	
 	float margin;
 	
 	BOOL dimBackground;
@@ -101,8 +104,14 @@ typedef enum {
 	
 	float progress;
 	
+#if __has_feature(objc_arc_weak)
+	id<MBProgressHUDDelegate> __weak delegate;
+#elif __has_feature(objc_arc)
+	id<MBProgressHUDDelegate> __unsafe_unretained delegate;
+#else
 	id<MBProgressHUDDelegate> delegate;
-	NSString *labelText;
+#endif
+    NSString *labelText;
 	NSString *detailsLabelText;
 	float opacity;
 	UIFont *labelFont;
@@ -129,7 +138,7 @@ typedef enum {
 + (MBProgressHUD *)showHUDAddedTo:(UIView *)view animated:(BOOL)animated;
 
 /**
- * Finds a HUD sibview and hides it. The counterpart to this method is showHUDAddedTo:animated:.
+ * Finds a HUD subview and hides it. The counterpart to this method is showHUDAddedTo:animated:.
  *
  * @param view The view that is going to be searched for a HUD subview.
  * @param animated If set to YES the HUD will disappear using the current animationType. If set to NO the HUD will not use
@@ -162,7 +171,11 @@ typedef enum {
  * The UIView (i.g., a UIIMageView) to be shown when the HUD is in MBProgressHUDModeCustomView.
  * For best results use a 37 by 37 pixel view (so the bounds match the build in indicator bounds). 
  */
+#if __has_feature(objc_arc)
+@property (strong) UIView *customView;
+#else
 @property (retain) UIView *customView;
+#endif
 
 /** 
  * MBProgressHUD operation mode. Switches between indeterminate (MBProgressHUDModeIndeterminate) and determinate
@@ -184,7 +197,13 @@ typedef enum {
  * delegate should conform to the MBProgressHUDDelegate protocol and implement the hudWasHidden method. The delegate
  * object will not be retained.
  */
+#if __has_feature(objc_arc_weak)
+@property (weak) id<MBProgressHUDDelegate> delegate;
+#elif __has_feature(objc_arc)
+@property (unsafe_unretained) id<MBProgressHUDDelegate> delegate;
+#else
 @property (assign) id<MBProgressHUDDelegate> delegate;
+#endif
 
 /** 
  * An optional short message to be displayed below the activity indicator. The HUD is automatically resized to fit
@@ -264,18 +283,35 @@ typedef enum {
 /** 
  * Font to be used for the main label. Set this property if the default is not adequate. 
  */
+#if __has_feature(objc_arc)
+@property (strong) UIFont* labelFont;
+#else
 @property (retain) UIFont* labelFont;
+#endif
 
 /** 
  * Font to be used for the details label. Set this property if the default is not adequate. 
  */
+#if __has_feature(objc_arc)
+@property (strong) UIFont* detailsLabelFont;
+#else
 @property (retain) UIFont* detailsLabelFont;
+#endif
 
 /** 
  * The progress of the progress indicator, from 0.0 to 1.0. Defaults to 0.0. 
  */
 @property (assign) float progress;
 
+/**
+ * The minimum size of the HUD bezel. Defaults to CGSizeZero.
+ */
+@property (assign) CGSize minSize;
+
+/**
+ * Force the HUD dimensions to be equal if possible. 
+ */
+@property (assign, getter = isSquare) BOOL square;
 
 /** 
  * Display the HUD. You need to make sure that the main thread completes its run loop soon after this method call so

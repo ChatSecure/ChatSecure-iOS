@@ -19,19 +19,24 @@
 - (void)handleMinShowTimer:(NSTimer *)theTimer;
 - (void)setTransformForCurrentOrientation:(BOOL)animated;
 - (void)cleanUp;
-- (void)deviceOrientationDidChange:(NSNotification*)notification;
 - (void)launchExecution;
 - (void)deviceOrientationDidChange:(NSNotification *)notification;
 - (void)hideDelayed:(NSNumber *)animated;
-- (void)launchExecution;
-- (void)cleanUp;
 
+#if __has_feature(objc_arc)
+@property (strong) UIView *indicator;
+@property (strong) NSTimer *graceTimer;
+@property (strong) NSTimer *minShowTimer;
+@property (strong) NSDate *showStarted;
+#else
 @property (retain) UIView *indicator;
-@property (assign) float width;
-@property (assign) float height;
 @property (retain) NSTimer *graceTimer;
 @property (retain) NSTimer *minShowTimer;
 @property (retain) NSDate *showStarted;
+#endif
+
+@property (assign) float width;
+@property (assign) float height;
 
 @end
 
@@ -54,6 +59,8 @@
 @synthesize height;
 @synthesize xOffset;
 @synthesize yOffset;
+@synthesize minSize;
+@synthesize square;
 @synthesize margin;
 @synthesize dimBackground;
 
@@ -147,14 +154,18 @@
 
 - (void)updateLabelText:(NSString *)newText {
     if (labelText != newText) {
+#if !__has_feature(objc_arc)
         [labelText release];
+#endif
         labelText = [newText copy];
     }
 }
 
 - (void)updateDetailsLabelText:(NSString *)newText {
     if (detailsLabelText != newText) {
+#if !__has_feature(objc_arc)
         [detailsLabelText release];
+#endif
         detailsLabelText = [newText copy];
     }
 }
@@ -169,13 +180,22 @@
     }
 	
     if (mode == MBProgressHUDModeDeterminate) {
+#if __has_feature(objc_arc)
+        self.indicator = [[MBRoundProgressView alloc] init];
+#else
         self.indicator = [[[MBRoundProgressView alloc] init] autorelease];
-    }
+#endif
+}
     else if (mode == MBProgressHUDModeCustomView && self.customView != nil){
         self.indicator = self.customView;
     } else {
+#if __has_feature(objc_arc)
+		self.indicator = [[UIActivityIndicatorView alloc]
+						   initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+#else
 		self.indicator = [[[UIActivityIndicatorView alloc]
 						   initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge] autorelease];
+#endif
         [(UIActivityIndicatorView *)indicator startAnimating];
 	}
 	
@@ -198,7 +218,11 @@
 	MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:view];
 	[view addSubview:hud];
 	[hud show:animated];
+#if __has_feature(objc_arc)
+	return hud;
+#else
 	return [hud autorelease];
+#endif
 }
 
 + (BOOL)hideHUDForView:(UIView *)view animated:(BOOL)animated {
@@ -243,6 +267,15 @@
 	return me;
 }
 
+- (void)removeFromSuperview {
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIDeviceOrientationDidChangeNotification
+                                                  object:nil];
+    
+    [super removeFromSuperview];
+}
+
+
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
 	if (self) {
@@ -261,6 +294,8 @@
 		self.graceTime = 0.0f;
 		self.minShowTime = 0.0f;
 		self.removeFromSuperViewOnHide = NO;
+		self.minSize = CGSizeZero;
+		self.square = NO;
 		
 		self.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
 		
@@ -283,9 +318,8 @@
     return self;
 }
 
+#if !__has_feature(objc_arc)
 - (void)dealloc {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	
     [indicator release];
     [label release];
     [detailsLabel release];
@@ -297,6 +331,7 @@
 	[customView release];
     [super dealloc];
 }
+#endif
 
 #pragma mark -
 #pragma mark Layout
@@ -322,7 +357,7 @@
         // Compute label dimensions based on font metrics if size is larger than max then clip the label width
         float lHeight = dims.height;
         float lWidth;
-        if (dims.width <= (frame.size.width - 2 * margin)) {
+        if (dims.width <= (frame.size.width - 4 * margin)) {
             lWidth = dims.width;
         }
         else {
@@ -358,17 +393,6 @@
 		
         // Add details label delatils text was set
         if (nil != self.detailsLabelText) {
-            // Get size of label text
-            dims = [self.detailsLabelText sizeWithFont:self.detailsLabelFont];
-			
-            // Compute label dimensions based on font metrics if size is larger than max then clip the label width
-            lHeight = dims.height;
-            if (dims.width <= (frame.size.width - 2 * margin)) {
-                lWidth = dims.width;
-            }
-            else {
-                lWidth = frame.size.width - 4 * margin;
-            }
 			
             // Set label properties
             detailsLabel.font = self.detailsLabelFont;
@@ -378,6 +402,12 @@
             detailsLabel.backgroundColor = [UIColor clearColor];
             detailsLabel.textColor = [UIColor whiteColor];
             detailsLabel.text = self.detailsLabelText;
+            detailsLabel.numberOfLines = 0;
+
+			CGFloat maxHeight = frame.size.height - self.height - 2*margin;
+			CGSize labelSize = [detailsLabel.text sizeWithFont:detailsLabel.font constrainedToSize:CGSizeMake(frame.size.width - 4*margin, maxHeight) lineBreakMode:detailsLabel.lineBreakMode];
+            lHeight = labelSize.height;
+            lWidth = labelSize.width;
 			
             // Update HUD size
             if (self.width < lWidth) {
@@ -401,6 +431,23 @@
             [self addSubview:detailsLabel];
         }
     }
+	
+	if (square) {
+		CGFloat max = MAX(self.width, self.height);
+		if (max <= frame.size.width - 2*margin) {
+			self.width = max;
+		}
+		if (max <= frame.size.height - 2*margin) {
+			self.height = max;
+		}
+	}
+	
+	if (self.width < minSize.width) {
+		self.width = minSize.width;
+	} 
+	if (self.height < minSize.height) {
+		self.height = minSize.height;
+	}
 }
 
 #pragma mark -
@@ -446,7 +493,7 @@
 }
 
 - (void)hide:(BOOL)animated afterDelay:(NSTimeInterval)delay {
-	[self performSelector:@selector(hideDelayed:) withObject:[NSNumber numberWithBool:delay] afterDelay:delay];
+	[self performSelector:@selector(hideDelayed:) withObject:[NSNumber numberWithBool:animated] afterDelay:delay];
 }
 
 - (void)hideDelayed:(NSNumber *)animated {
@@ -468,9 +515,14 @@
 - (void)showWhileExecuting:(SEL)method onTarget:(id)target withObject:(id)object animated:(BOOL)animated {
 	
     methodForExecution = method;
+#if __has_feature(objc_arc)
+    targetForExecution = target;
+    objectForExecution = object;	
+#else
     targetForExecution = [target retain];
     objectForExecution = [object retain];
-	
+#endif
+    
     // Launch execution in new thread
 	taskInProgress = YES;
     [NSThread detachNewThreadSelector:@selector(launchExecution) toTarget:self withObject:nil];
@@ -480,16 +532,21 @@
 }
 
 - (void)launchExecution {
+#if !__has_feature(objc_arc)
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	
+#endif	
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
     // Start executing the requested task
     [targetForExecution performSelector:methodForExecution withObject:objectForExecution];
-	
+#pragma clang diagnostic pop
     // Task completed, update view in main thread (note: view operations should
     // be done only in the main thread)
     [self performSelectorOnMainThread:@selector(cleanUp) withObject:nil waitUntilDone:NO];
 	
+#if !__has_feature(objc_arc)
     [pool release];
+#endif
 }
 
 - (void)animationFinished:(NSString *)animationID finished:(BOOL)finished context:(void*)context {
@@ -520,8 +577,10 @@
 	
 	self.indicator = nil;
 	
+#if !__has_feature(objc_arc)
     [targetForExecution release];
     [objectForExecution release];
+#endif
 	
     [self hide:useAnimation];
 }
@@ -626,8 +685,12 @@
 	if (!self.superview) {
 		return;
 	}
+	
 	if ([self.superview isKindOfClass:[UIWindow class]]) {
 		[self setTransformForCurrentOrientation:YES];
+	} else {
+		self.bounds = self.superview.bounds;
+		[self setNeedsDisplay];
 	}
 }
 

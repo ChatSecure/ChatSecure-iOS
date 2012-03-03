@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		D902D31E141E930C00AA3479 /* OTRBuddy.m in Sources */ = {isa = PBXBuildFile; fileRef = D902D31D141E930C00AA3479 /* OTRBuddy.m */; };
-		D90B80A913FC7026006EFF3D /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = D90B80A813FC7026006EFF3D /* MBProgressHUD.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		D90B80A913FC7026006EFF3D /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = D90B80A813FC7026006EFF3D /* MBProgressHUD.m */; };
 		D90B80AC13FC719B006EFF3D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D90B80AB13FC719B006EFF3D /* CoreGraphics.framework */; };
 		D90B80AF13FC7E5F006EFF3D /* OTRCodec.m in Sources */ = {isa = PBXBuildFile; fileRef = D90B80AE13FC7E5F006EFF3D /* OTRCodec.m */; };
 		D90FAF2314A05D4B00DA7C56 /* available.png in Resources */ = {isa = PBXBuildFile; fileRef = D90FAF2014A05D4B00DA7C56 /* available.png */; };
@@ -1717,7 +1717,6 @@
 		D9F9376D13F44BD3009A3D84 = {
 			isa = PBXGroup;
 			children = (
-				D974DABC15021E540028B2F4 /* libiconv.dylib */,
 				D9F9378013F44BD3009A3D84 /* Off the Record */,
 				D9D69B03141806150056FB9E /* 3rd Party Frameworks */,
 				D9F9377B13F44BD3009A3D84 /* Frameworks */,
@@ -1741,6 +1740,7 @@
 				D9D69B7B14180A230056FB9E /* CoreLocation.framework */,
 				D9D69B011417FF450056FB9E /* libresolv.dylib */,
 				D9D69ABB1417FDF90056FB9E /* libxml2.dylib */,
+				D974DABC15021E540028B2F4 /* libiconv.dylib */,
 				D9D69AA81417FDBA0056FB9E /* CFNetwork.framework */,
 				D913A70913FCA9C200C97C1C /* ImageIO.framework */,
 				D913A70713FCA9AB00C97C1C /* QuartzCore.framework */,
