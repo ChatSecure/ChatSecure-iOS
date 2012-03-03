@@ -122,15 +122,6 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-- (void)dealloc {
-    [usernameTextField release];
-    [passwordTextField release];
-    [aimButton release];
-    [xmppButton release];
-    [rememberUserNameSwitch release];
-    [super dealloc];
-}
-
 - (IBAction)loginPressed:(id)sender 
 {
     BOOL fields = [self checkFields];
@@ -151,7 +142,6 @@
             [HUD hide:YES];
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:@"Failed to start authenticating. Please try again." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
             [alert show];
-            [alert release];
         }
     }
 }
@@ -173,7 +163,6 @@
     [HUD hide:YES];
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:@"Failed to connect to XMPP server. Please check your login credentials and internet connection and try again." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
     [alert show];
-    [alert release];
 }
 
 
@@ -224,7 +213,6 @@
     {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:@"You must enter a username and a password to login." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
         [alert show];
-        [alert release];
     }
     
     return fields;
@@ -242,8 +230,6 @@
 - (void)hudWasHidden:(MBProgressHUD *)hud {
     // Remove HUD from screen when the HUD was hidded
     [HUD removeFromSuperview];
-    [HUD release];
-	HUD = nil;
 }
 
 @end

@@ -72,23 +72,6 @@ static OTRProtocolManager *sharedManager = nil;
     return self;
 }
 
-- (id)retain {
-    return self;
-}
-
-- (unsigned)retainCount {
-    return UINT_MAX;  // denotes an object that cannot be released
-}
-
-/*- (void)release {
- //do nothing
- }*/
-
-- (id)autorelease {
-    return self;
-}
-
-
 -(void)sendMessage:(NSNotification *)notification
 {
     OTRMessage *message = [notification.userInfo objectForKey:@"message"];
@@ -112,7 +95,7 @@ static OTRProtocolManager *sharedManager = nil;
     NSString *recipient = theMessage.recipient;
     NSString *message = theMessage.message;
     
-    AIMSessionManager *theSession = [oscarManager.theSession retain];
+    AIMSessionManager *theSession = oscarManager.theSession;
     AIMMessage * msg = [AIMMessage messageWithBuddy:[theSession.session.buddyList buddyWithUsername:recipient] message:message];
     
     // use delay to prevent OSCAR rate-limiting problem
@@ -120,8 +103,6 @@ static OTRProtocolManager *sharedManager = nil;
     //[NSThread sleepUntilDate:future];
     
 	[theSession.messageHandler sendMessage:msg];
-    
-    [theSession release];
 }
 
 -(void)sendMessageXMPP:(OTRMessage *)theMessage

@@ -29,6 +29,12 @@
 
 #import "SBJsonWriter.h"
 #import "SBJsonStreamWriter.h"
+#import "SBJsonStreamWriterAccumulator.h"
+
+
+@interface SBJsonWriter ()
+@property (copy) NSString *error;
+@end
 
 @implementation SBJsonWriter
 
@@ -38,22 +44,21 @@
 @synthesize error;
 @synthesize maxDepth;
 
+@synthesize sortKeysComparator;
+
 - (id)init {
     self = [super init];
-    if (self)
-        self.maxDepth = 512;
+    if (self) {
+        self.maxDepth = 32u;        
+    }
     return self;
 }
 
-- (void)dealloc {
-    [error release];
-    [super dealloc];
-}
 
 - (NSString*)stringWithObject:(id)value {
 	NSData *data = [self dataWithObject:value];
 	if (data)
-		return [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
+		return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 	return nil;
 }	
 
@@ -64,17 +69,23 @@
     
     if (error_) {
 		NSDictionary *ui = [NSDictionary dictionaryWithObjectsAndKeys:error, NSLocalizedDescriptionKey, nil];
-        *error_ = [NSError errorWithDomain:@"org.brautaset.json.parser.ErrorDomain" code:0 userInfo:ui];
+        *error_ = [NSError errorWithDomain:@"org.brautaset.SBJsonWriter.ErrorDomain" code:0 userInfo:ui];
 	}
 	
     return nil;
 }
 
 - (NSData*)dataWithObject:(id)object {	
-	SBJsonStreamWriter *streamWriter = [[[SBJsonStreamWriter alloc] init] autorelease];
+    self.error = nil;
+
+    SBJsonStreamWriterAccumulator *accumulator = [[SBJsonStreamWriterAccumulator alloc] init];
+    
+	SBJsonStreamWriter *streamWriter = [[SBJsonStreamWriter alloc] init];
 	streamWriter.sortKeys = self.sortKeys;
 	streamWriter.maxDepth = self.maxDepth;
+	streamWriter.sortKeysComparator = self.sortKeysComparator;
 	streamWriter.humanReadable = self.humanReadable;
+    streamWriter.delegate = accumulator;
 	
 	BOOL ok = NO;
 	if ([object isKindOfClass:[NSDictionary class]])
@@ -91,12 +102,11 @@
 	}
 	
 	if (ok)
-		return streamWriter.data;
+		return accumulator.data;
 	
 	self.error = streamWriter.error;
 	return nil;	
 }
 	
 	
-
 @end

@@ -22,19 +22,19 @@
     if(self)
     {
         if(theSender)
-            sender = [theSender retain];
+            sender = theSender;
         else
-            sender = [theRecipient retain];
-        recipient = [theRecipient retain];
-        message = [theMessage retain];
-        protocol = [theProtocol retain];
+            sender = theRecipient;
+        recipient = theRecipient;
+        message = theMessage;
+        protocol = theProtocol;
     }
     return self;
 }
 
 +(OTRMessage*)messageWithSender:(NSString*)sender recipient:(NSString*)recipient message:(NSString*)message protocol:(NSString*)protocol
 {
-    OTRMessage *newMessage = [[[OTRMessage alloc] initWithSender:sender recipient:recipient message:message protocol:protocol] autorelease];
+    OTRMessage *newMessage = [[OTRMessage alloc] initWithSender:sender recipient:recipient message:message protocol:protocol];
     
     return newMessage;
 }
@@ -49,15 +49,6 @@
     NSDictionary *messageInfo = [NSDictionary dictionaryWithObject:message forKey:@"message"];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:@"SendMessageNotification" object:self userInfo:messageInfo];
-}
-
--(void)dealloc
-{
-    [sender release];
-    [recipient release];
-    [message release];
-    [protocol release];
-    [super dealloc];
 }
 
 @end

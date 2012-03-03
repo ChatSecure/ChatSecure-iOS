@@ -25,10 +25,10 @@
 
 +(NSArray*)sortBuddies:(NSMutableDictionary*)buddies
 {
-    NSSortDescriptor *buddyNameDescriptor = [[[NSSortDescriptor alloc] initWithKey:@"displayName" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)] autorelease];
+    NSSortDescriptor *buddyNameDescriptor = [[NSSortDescriptor alloc] initWithKey:@"displayName" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)];
     
-    NSSortDescriptor *statusDescriptor = [[[NSSortDescriptor alloc] initWithKey:@"status"
-                                                      ascending:NO] autorelease];
+    NSSortDescriptor *statusDescriptor = [[NSSortDescriptor alloc] initWithKey:@"status"
+                                                      ascending:NO];
     NSArray *sortDescriptors = [NSArray arrayWithObjects:statusDescriptor, buddyNameDescriptor, nil];
     
     return [[buddies allValues] sortedArrayUsingDescriptors:sortDescriptors];
@@ -87,13 +87,6 @@
     if(!buddy)
         buddy = [xmppBuddies objectForKey:buddyName];
     return buddy;
-}
-
--(void)dealloc
-{
-    [xmppBuddies release];
-    [oscarBuddies release];
-    [super dealloc];
 }
 
 @end

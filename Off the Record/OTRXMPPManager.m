@@ -76,10 +76,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 - (void)dealloc
 {
 	[self teardownStream];
-    
-	[password release];
-    
-	[super dealloc];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -110,10 +106,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		                                                                 sectionNameKeyPath:@"sectionNum"
 		                                                                          cacheName:nil];
 		[fetchedResultsController setDelegate:self];
-		
-		[sd1 release];
-		[sd2 release];
-		[fetchRequest release];
 		
 		NSError *error = nil;
 		if (![fetchedResultsController performFetch:&error])
@@ -268,7 +260,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	// The vCard Avatar module works in conjuction with the standard vCard Temp module to download user avatars.
 	// The XMPPRoster will automatically integrate with XMPPvCardAvatarModule to cache roster photos in the roster.
 	
-	xmppvCardStorage = [[XMPPvCardCoreDataStorage sharedInstance] retain];
+	xmppvCardStorage = [XMPPvCardCoreDataStorage sharedInstance];
 	xmppvCardTempModule = [[XMPPvCardTempModule alloc] initWithvCardStorage:xmppvCardStorage];
 	
 	xmppvCardAvatarModule = [[XMPPvCardAvatarModule alloc] initWithvCardTempModule:xmppvCardTempModule];
@@ -292,7 +284,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	// The XMPPCapabilitiesCoreDataStorage is an ideal solution.
 	// It can also be shared amongst multiple streams to further reduce hash lookups.
 	
-	xmppCapabilitiesStorage = [[XMPPCapabilitiesCoreDataStorage sharedInstance] retain];
+	xmppCapabilitiesStorage = [XMPPCapabilitiesCoreDataStorage sharedInstance];
     xmppCapabilities = [[XMPPCapabilities alloc] initWithCapabilitiesStorage:xmppCapabilitiesStorage];
     
     xmppCapabilities.autoFetchHashedCapabilities = YES;
@@ -343,16 +335,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	[xmppCapabilities      deactivate];
 	
 	[xmppStream disconnect];
-	
-	[xmppStream release];
-	[xmppReconnect release];
-	[xmppRoster release];
-	[xmppRosterStorage release];
-	[xmppvCardStorage release];
-	[xmppvCardTempModule release];
-	[xmppvCardAvatarModule release];
-	[xmppCapabilities release];
-	[xmppCapabilitiesStorage release];
 	
 	xmppStream = nil;
 	xmppReconnect = nil;
@@ -425,7 +407,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	}
     
     JID = [XMPPJID jidWithString:myJID];
-    [JID retain];
     
 	[xmppStream setMyJID:JID];
 	password = myPassword;
@@ -439,7 +420,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		                                          cancelButtonTitle:@"Ok" 
 		                                          otherButtonTitles:nil];
 		[alertView show];
-		[alertView release];
         
 		DDLogError(@"Error connecting: %@", error);
         
@@ -716,7 +696,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		                                          cancelButtonTitle:@"Not implemented"
 		                                          otherButtonTitles:nil];
 		[alertView show];
-		[alertView release];
 	} 
 	else 
 	{
@@ -726,7 +705,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		localNotification.alertBody = body;
 		
 		[[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
-		[localNotification release];
 	}
 	
 }

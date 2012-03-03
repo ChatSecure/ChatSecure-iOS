@@ -22,28 +22,19 @@
     
     if(self)
     {
-        displayName = [buddyName retain];
-        accountName = [buddyAccountName retain];
-        protocol = [buddyProtocol retain];
+        displayName = buddyName;
+        accountName = buddyAccountName;
+        protocol = buddyProtocol;
         status = buddyStatus;
-        groupName = [buddyGroupName retain];
+        groupName = buddyGroupName;
     }
     return self;
 }
 
 +(OTRBuddy*)buddyWithDisplayName:(NSString*)buddyName accountName:(NSString*) accountName protocol:(NSString*)buddyProtocol status:(OTRBuddyStatus)buddyStatus groupName:(NSString*)buddyGroupName
 {
-    OTRBuddy *newBuddy = [[[OTRBuddy alloc] initWithDisplayName:buddyName accountName:accountName protocol:buddyProtocol status:buddyStatus groupName:buddyGroupName] autorelease];
+    OTRBuddy *newBuddy = [[OTRBuddy alloc] initWithDisplayName:buddyName accountName:accountName protocol:buddyProtocol status:buddyStatus groupName:buddyGroupName];
     return newBuddy;
-}
-
--(void)dealloc
-{
-    [accountName release];
-    [displayName release];
-    [protocol release];
-    [groupName release];
-    [super dealloc];
 }
 
 @end

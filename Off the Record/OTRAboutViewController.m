@@ -60,12 +60,6 @@
 
 }
 
-- (void)dealloc
-{
-    [aboutTextView release];
-    [super dealloc];
-}
-
 - (void)viewDidUnload
 {
     [super viewDidUnload];
@@ -82,7 +76,7 @@
 #pragma mark Custom Views on Text
 - (UIView *)attributedTextContentView:(DTAttributedTextContentView *)attributedTextContentView viewForLink:(NSURL *)url identifier:(NSString *)identifier frame:(CGRect)frame
 {
-	DTLinkButton *button = [[[DTLinkButton alloc] initWithFrame:frame] autorelease];
+	DTLinkButton *button = [[DTLinkButton alloc] initWithFrame:frame];
 	button.url = url;
 	button.minimumHitSize = CGSizeMake(25, 25); // adjusts it's bounds so that button is always large enough
 	button.guid = identifier;
@@ -91,7 +85,7 @@
 	[button addTarget:self action:@selector(linkPushed:) forControlEvents:UIControlEventTouchUpInside];
 	
 	// demonstrate combination with long press
-	UILongPressGestureRecognizer *longPress = [[[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(linkLongPressed:)] autorelease];
+	UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(linkLongPressed:)];
 	[button addGestureRecognizer:longPress];
 	
 	return button;
@@ -129,7 +123,7 @@
 		
 		if ([[UIApplication sharedApplication] canOpenURL:[button.url absoluteURL]])
 		{
-			UIActionSheet *action = [[[UIActionSheet alloc] initWithTitle:[[button.url absoluteURL] description] delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Open in Safari", nil] autorelease];
+			UIActionSheet *action = [[UIActionSheet alloc] initWithTitle:[[button.url absoluteURL] description] delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Open in Safari", nil];
 			[action showFromTabBar:self.tabBarController.tabBar];
 		}
 	}

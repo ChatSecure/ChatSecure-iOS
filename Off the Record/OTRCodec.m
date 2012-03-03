@@ -157,7 +157,6 @@ static void confirm_fingerprint_cb(void *opdata, OtrlUserState us,
     
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Verify Fingerprint" message:msg delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
     [alert show];
-    [alert release];
 }
 
 static void write_fingerprints_cb(void *opdata)

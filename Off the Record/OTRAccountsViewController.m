@@ -84,7 +84,6 @@
 {
     OTRAboutViewController *aboutController = [[OTRAboutViewController alloc] init];
     [self.navigationController pushViewController:aboutController animated:YES];
-    [aboutController release];
 }
 
                                                                            
@@ -118,12 +117,6 @@
 {
     // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
-}
-
-- (void)dealloc {
-    [accountsTableView release];
-    [aboutButton release];
-    [super dealloc];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {

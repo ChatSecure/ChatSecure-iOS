@@ -109,11 +109,8 @@
         NSLog(@"blist is nil!");
         return;
     }
-    
-    if(sortedBuddies)
-        [sortedBuddies release];
-    
-    sortedBuddies = [[OTRBuddyList sortBuddies:[protocolManager.buddyList allBuddies]] retain];
+        
+    sortedBuddies = [OTRBuddyList sortBuddies:[protocolManager.buddyList allBuddies]];
     
     [buddyListTableView reloadData];
 }
@@ -133,7 +130,6 @@
          [recentMessages setObject:notification.userInfo forKey:userName];
 
          [alert show];
-         [alert release];
      }
      
      if([chatViewControllers objectForKey:userName])

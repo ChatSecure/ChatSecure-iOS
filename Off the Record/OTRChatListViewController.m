@@ -106,8 +106,4 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
-- (void)dealloc {
-    [chatListTableView release];
-    [super dealloc];
-}
 @end

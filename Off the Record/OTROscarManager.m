@@ -32,15 +32,14 @@ BOOL loginFailed;
 - (void)blockingCheck {
 	static NSDate * lastTime = nil;
 	if (!lastTime) {
-		lastTime = [[NSDate date] retain];
+		lastTime = [NSDate date];
 	} else {
 		NSDate * newTime = [NSDate date];
 		NSTimeInterval ti = [newTime timeIntervalSinceDate:lastTime];
 		if (ti > 0.2) {
 			NSLog(@"Main thread blocked for %d milliseconds.", (int)round(ti * 1000.0));
 		}
-		[lastTime release];
-		lastTime = [newTime retain];
+		lastTime = newTime;
 	}
 	[self performSelector:@selector(blockingCheck) withObject:nil afterDelay:0.05];
 }
@@ -60,17 +59,13 @@ BOOL loginFailed;
     NSLog(@"login error: %@",[error description]);
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Login Error" message:@"AIM login failed. Please check your username and password and try again." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
     [alert show];
-    [alert release];
-    
-	[login release];
 }
 
 - (void)aimLogin:(AIMLogin *)theLogin openedSession:(AIMSessionManager *)session {
 	[self checkThreading];
 	[session setDelegate:self];
-	[login release];
 	login = nil;
-	theSession = [session retain];
+	theSession = session;
     //s_AIMSession = theSession;
 	
 	/* Set handler delegates */
@@ -83,11 +78,9 @@ BOOL loginFailed;
 	[session configureBuddyArt];
 	AIMCapability * fileTransfers = [[AIMCapability alloc] initWithType:AIMCapabilityFileTransfer];
 	AIMCapability * getFiles = [[AIMCapability alloc] initWithType:AIMCapabilityGetFiles];
-	NSArray * caps = [NSArray arrayWithObjects:[fileTransfers autorelease], [getFiles autorelease], nil];
+	NSArray * caps = [NSArray arrayWithObjects:fileTransfers, getFiles, nil];
 	AIMBuddyStatus * newStatus = [[AIMBuddyStatus alloc] initWithMessage:@"Available" type:AIMBuddyStatusAvailable timeIdle:0 caps:caps];
 	[session.statusHandler updateStatus:newStatus];
-	[newStatus release];
-
     
 	NSLog(@"Got session: %@", session);
 	NSLog(@"Our status: %@", session.statusHandler.userStatus);
@@ -107,9 +100,7 @@ BOOL loginFailed;
 - (void)aimSessionManagerSignedOff:(AIMSessionManager *)sender {
 	[self checkThreading];
     [[[[OTRProtocolManager sharedInstance] buddyList] oscarBuddies] removeAllObjects];
-    [buddyList autorelease];
     buddyList = nil;
-	[theSession autorelease];
 	theSession = nil;
 	NSLog(@"Session signed off");
     
@@ -125,7 +116,7 @@ BOOL loginFailed;
 	NSLog(@"%@ got the buddy list.", feedbagHandler);
 	//NSLog(@"Blist: %@", );
     
-    buddyList = [[theSession.session buddyList] retain];
+    buddyList = [theSession.session buddyList];
     
     [[NSNotificationCenter defaultCenter]
      postNotificationName:@"BuddyListUpdateNotification"
@@ -450,7 +441,6 @@ BOOL loginFailed;
 	if (buddy && [buddy group]) {
 		FTRemoveBuddy * remove = [[FTRemoveBuddy alloc] initWithBuddy:buddy];
 		[theSession.feedbagHandler pushTransaction:remove];
-		[remove release];
 		return @"Remove (buddy) request sent.";
 	} else {
 		return @"Err: buddy not found.";
@@ -467,7 +457,6 @@ BOOL loginFailed;
 	}
 	FTAddBuddy * addBudd = [[FTAddBuddy alloc] initWithUsername:username group:group];
 	[theSession.feedbagHandler pushTransaction:addBudd];
-	[addBudd release];
 	return @"Add (buddy) request sent.";
 }
 - (NSString *)deleteGroup:(NSString *)groupName {
@@ -477,7 +466,6 @@ BOOL loginFailed;
 	}
 	FTRemoveGroup * delGrp = [[FTRemoveGroup alloc] initWithGroup:group];
 	[theSession.feedbagHandler pushTransaction:delGrp];
-	[delGrp release];
 	return @"Delete (group) request sent.";
 }
 - (NSString *)addGroup:(NSString *)groupName {
@@ -487,7 +475,6 @@ BOOL loginFailed;
 	}
 	FTAddGroup * addGrp = [[FTAddGroup alloc] initWithName:groupName];
 	[theSession.feedbagHandler pushTransaction:addGrp];
-	[addGrp release];
 	return @"Add (group) request sent.";
 }
 - (NSString *)denyUser:(NSString *)username {
@@ -495,12 +482,10 @@ BOOL loginFailed;
 	if ([theSession.feedbagHandler currentPDMode:NULL] != PD_MODE_DENY_SOME) {
 		FTSetPDMode * pdMode = [[FTSetPDMode alloc] initWithPDMode:PD_MODE_DENY_SOME pdFlags:PD_FLAGS_APPLIES_IM];
 		[theSession.feedbagHandler pushTransaction:pdMode];
-		[pdMode release];
 		msg = @"Set PD_MODE and sent add deny";
 	}
 	FTAddDeny * deny = [[FTAddDeny alloc] initWithUsername:username];
 	[theSession.feedbagHandler pushTransaction:deny];
-	[deny release];
 	return msg;
 }
 - (NSString *)undenyUser:(NSString *)username {
@@ -510,7 +495,6 @@ BOOL loginFailed;
 	}
 	FTDelDeny * delDeny = [[FTDelDeny alloc] initWithUsername:username];
 	[theSession.feedbagHandler pushTransaction:delDeny];
-	[delDeny release];
 	return msg;
 }
 
