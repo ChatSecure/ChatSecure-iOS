@@ -9,8 +9,10 @@
 #import "OTRChatViewController.h"
 #import "OTREncryptionManager.h"
 #import "DTLinkButton.h"
+#import "DTCoreTextConstants.h"
 #import "privkey.h"
 #import <QuartzCore/QuartzCore.h>
+#import "DTHTMLAttributedStringBuilder.h"
 
 @implementation OTRChatViewController
 @synthesize chatHistoryTextView;
@@ -108,8 +110,8 @@
     
     CGRect frame = CGRectMake(0.0, 0.0, 320, 146);
 
-    
-    chatHistoryTextView = [[DTAttributedTextView alloc] initWithFrame:frame];
+    [DTAttributedTextContentView setLayerClass:[CATiledLayer class]];
+    self.chatHistoryTextView = [[DTAttributedTextView alloc] initWithFrame:frame];
 	chatHistoryTextView.textDelegate = self;
 	chatHistoryTextView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 	[viewChatHistory addSubview:chatHistoryTextView];
@@ -125,7 +127,9 @@
                              @"Helvetica", DTDefaultFontFamily,  @"purple", DTDefaultLinkColor, nil]; // @"green",DTDefaultTextColor,
    
     NSData *data = [rawChatHistory dataUsingEncoding:NSUTF8StringEncoding];
-	NSAttributedString *string = [[NSAttributedString alloc] initWithHTML:data options:options documentAttributes:NULL];
+    
+    NSAttributedString *string = [[NSAttributedString alloc] initWithHTML:data options:options documentAttributes:nil];
+
 	
 	// Display string
 	chatHistoryTextView.contentView.edgeInsets = UIEdgeInsetsMake(10, 10, 10, 10);
@@ -322,9 +326,10 @@
                              @"Helvetica", DTDefaultFontFamily,  @"purple", DTDefaultLinkColor, nil]; // @"green",DTDefaultTextColor,
     
     NSData *data = [rawChatHistory dataUsingEncoding:NSUTF8StringEncoding];
-	NSAttributedString *string = [[NSAttributedString alloc] initWithHTML:data options:options documentAttributes:NULL];
+    
+    NSAttributedString *string = [[NSAttributedString alloc] initWithHTML:data options:options documentAttributes:nil];
+    
     chatHistoryTextView.attributedString = string;
-
 }
 
 -(void)sendMessage:(NSString *)message

@@ -12,8 +12,6 @@
 #import "context.h"
 #import "OTRProtocolManager.h"
 
-
-
 @interface OTRChatViewController : UIViewController <UITextFieldDelegate, UITextViewDelegate,DTAttributedTextContentViewDelegate, UIActionSheetDelegate> {
     DTAttributedTextView *chatHistoryTextView;
     UITextField *messageTextField;

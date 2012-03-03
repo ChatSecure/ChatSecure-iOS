@@ -8,6 +8,7 @@
 
 #import "OTRAboutViewController.h"
 #import "DTLinkButton.h"
+#import "DTCoreTextConstants.h"
 
 @implementation OTRAboutViewController
 
