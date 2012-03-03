@@ -7,6 +7,11 @@
 @protocol XMPPRoomStorage;
 @protocol XMPPRoomDelegate;
 
+static NSString *const XMPPMUCNamespace      = @"http://jabber.org/protocol/muc";
+static NSString *const XMPPMUCUserNamespace  = @"http://jabber.org/protocol/muc#user";
+static NSString *const XMPPMUCAdminNamespace = @"http://jabber.org/protocol/muc#admin";
+static NSString *const XMPPMUCOwnerNamespace = @"http://jabber.org/protocol/muc#owner";
+
 
 @interface XMPPRoom : XMPPModule
 {
@@ -50,6 +55,8 @@
  
 */
 
+#pragma mark Properties
+
 @property (readonly) id <XMPPRoomStorage> xmppRoomStorage;
 
 @property (readonly) XMPPJID * roomJID;     // E.g. xmpp-development@conference.deusty.com
@@ -61,25 +68,34 @@
 
 @property (readonly) BOOL isJoined;
 
+#pragma mark Room Lifecycle
+
 /**
- * Sends a presence element to the join room, and indicating desire to create the room if it doesn't already exist.
+ * Sends a presence element to the join room.
+ * 
+ * If the room already exists, then the xmppRoomDidJoin: delegate method will be invoked upon
+ * notifiaction from the server that we successfully joined the room.
  * 
  * If the room did not already exist, and the authenticated user is allowed to create the room,
- * then the xmppRoomDidCreate: delegate method will be invoked.
- * At this point you'll need to configure the room before others can join.
+ * then the server will automatically create the room,
+ * and the xmppRoomDidCreate: delegate method will be invoked (followed by xmppRoomDidJoin:).
+ * You'll then need to configure the room before others can join.
  * 
- * If the room already exists, then the xmppRoomDidJoin: delegate method will be invoked.
+ * @param desiredNickname (required)
+ *        The nickname to use within the room.
+ *        If the room is anonymous, this is the only identifier other occupants of the room will see.
+ * 
+ * @param history (optional)
+ *        A history element specifying how much discussion history to request from the server.
+ *        E.g. <history maxstanzas='100'/>
+ *        For more information, please see XEP-0045, Section 7.1.16 - Managing Discussion History.
+ *        You may also want to query your storage module to see how old the most recent stored message for this room is.
  * 
  * @see fetchConfigurationForm
  * @see configureRoomUsingOptions:
 **/
-- (void)createOrJoinRoomUsingNickname:(NSString *)desiredNickname;
-
-/**
- * Sends a presence element to join the room.
- * If successful, the xmppRoomDidJoin: delegate method will be invoked.
-**/
-- (void)joinRoomUsingNickname:(NSString *)desiredNickname;
+- (void)joinRoomUsingNickname:(NSString *)desiredNickname history:(NSXMLElement *)history;
+- (void)joinRoomUsingNickname:(NSString *)desiredNickname history:(NSXMLElement *)history password:(NSString *)passwd;
 
 /**
  * There are two ways to configure a room.
@@ -101,12 +117,16 @@
 - (void)leaveRoom;
 - (void)destoryRoom;
 
+#pragma mark Room Interaction
+
 - (void)chageNickname:(NSString *)newNickname;
 - (void)changeRoomSubject:(NSString *)newRoomSubject;
 
 - (void)inviteUser:(XMPPJID *)jid withMessage:(NSString *)invitationMessage;
 
 - (void)sendMessage:(NSString *)msg;
+
+#pragma mark Room Moderation
 
 - (void)fetchBanList;
 - (void)fetchMembersList;
@@ -125,8 +145,14 @@
  * @see itemWithRole:jid:
  * 
  * The authenticated user must be an admin or owner of the room, or the server will deny the request.
+ * 
+ * To add a member: <item 
+ * 
+ * 
+ * @return The id of the XMPPIQ that was sent.
+ *         This may be used to match multiple change requests with the responses in xmppRoom:didEditPrivileges:.
 **/
-- (void)editRoomPrivileges:(NSArray *)items;
+- (NSString *)editRoomPrivileges:(NSArray *)items;
 
 + (NSXMLElement *)itemWithAffiliation:(NSString *)affiliation jid:(XMPPJID *)jid;
 + (NSXMLElement *)itemWithRole:(NSString *)role jid:(XMPPJID *)jid;
@@ -193,10 +219,18 @@
 - (void)handleIncomingMessage:(XMPPMessage *)message room:(XMPPRoom *)room;
 - (void)handleOutgoingMessage:(XMPPMessage *)message room:(XMPPRoom *)room;
 
+/**
+ * Handles leaving the room, which generally means clearing the list of occupants.
+**/
+- (void)handleDidLeaveRoom:(XMPPRoom *)room;
+
 @optional
 
-- (void)handleDidJoinRoom:(XMPPJID *)roomJID withNickname:(NSString *)nickname;
-- (void)handleDidLeaveRoom:(XMPPJID *)roomJID;
+/**
+ * May be used if there's anything special to do when joining a room.
+**/
+- (void)handleDidJoinRoom:(XMPPRoom *)room withNickname:(NSString *)nickname;
+
 
 @end
 
@@ -238,10 +272,14 @@
 - (void)xmppRoom:(XMPPRoom *)sender didFetchConfigurationForm:(NSXMLElement *)configForm;
 
 - (void)xmppRoom:(XMPPRoom *)sender willSendConfiguration:(XMPPIQ *)roomConfigForm;
-- (void)xmppRoomDidConfigure:(XMPPRoom *)sender;
+
+- (void)xmppRoom:(XMPPRoom *)sender didConfigure:(XMPPIQ *)iqResult;
+- (void)xmppRoom:(XMPPRoom *)sender didNotConfigure:(XMPPIQ *)iqResult;
 
 - (void)xmppRoomDidJoin:(XMPPRoom *)sender;
 - (void)xmppRoomDidLeave:(XMPPRoom *)sender;
+
+- (void)xmppRoomDidDestroy:(XMPPRoom *)sender;
 
 - (void)xmppRoom:(XMPPRoom *)sender occupantDidJoin:(XMPPJID *)occupantJID withPresence:(XMPPPresence *)presence;
 - (void)xmppRoom:(XMPPRoom *)sender occupantDidLeave:(XMPPJID *)occupantJID withPresence:(XMPPPresence *)presence;
@@ -262,7 +300,7 @@
 - (void)xmppRoom:(XMPPRoom *)sender didFetchModeratorsList:(NSArray *)items;
 - (void)xmppRoom:(XMPPRoom *)sender didNotFetchModeratorsList:(XMPPIQ *)iqError;
 
-- (void)xmppRoomDidEditPrivileges:(XMPPRoom *)sender;
+- (void)xmppRoom:(XMPPRoom *)sender didEditPrivileges:(XMPPIQ *)iqResult;
 - (void)xmppRoom:(XMPPRoom *)sender didNotEditPrivileges:(XMPPIQ *)iqError;
 
 @end

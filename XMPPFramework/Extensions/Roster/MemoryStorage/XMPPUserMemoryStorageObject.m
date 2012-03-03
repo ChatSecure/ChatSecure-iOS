@@ -5,7 +5,7 @@
 #warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
 #endif
 
-@interface XMPPUserMemoryStorage (PrivateAPI)
+@interface XMPPUserMemoryStorageObject (PrivateAPI)
 - (void)recalculatePrimaryResource;
 @end
 
@@ -13,7 +13,17 @@
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@implementation XMPPUserMemoryStorage
+@implementation XMPPUserMemoryStorageObject
+
+- (void)commonInit
+{
+	// This method is here to more easily support subclassing.
+	// That way subclasses can optionally override just commonInit, instead of each individual init method.
+	// 
+	// If you override this method, don't forget to invoke [super commonInit];
+	
+	resources = [[NSMutableDictionary alloc] initWithCapacity:1];
+}
 
 - (id)initWithJID:(XMPPJID *)aJid
 {
@@ -23,7 +33,7 @@
 		
 		itemAttributes = [[NSMutableDictionary alloc] initWithCapacity:0];
 		
-		resources = [[NSMutableDictionary alloc] initWithCapacity:1];
+		[self commonInit];
 	}
 	return self;
 }
@@ -37,7 +47,7 @@
 		
 		itemAttributes = [item attributesAsDictionary];
 		
-		resources = [[NSMutableDictionary alloc] initWithCapacity:1];
+		[self commonInit];
 	}
 	return self;
 }
@@ -51,7 +61,7 @@
 {
 	// We use [self class] to support subclassing
 	
-	XMPPUserMemoryStorage *deepCopy = (XMPPUserMemoryStorage *)[[[self class] alloc] init];
+	XMPPUserMemoryStorageObject *deepCopy = (XMPPUserMemoryStorageObject *)[[[self class] alloc] init];
 	
 	deepCopy->jid = [jid copy];
 	deepCopy->itemAttributes = [itemAttributes mutableCopy];
@@ -60,7 +70,7 @@
 	
 	for (XMPPJID *key in resources)
 	{
-		XMPPResourceMemoryStorage *resourceCopy = [[resources objectForKey:key] copy];
+		XMPPResourceMemoryStorageObject *resourceCopy = [[resources objectForKey:key] copy];
 		
 		[deepCopy->resources setObject:resourceCopy forKey:key];
 	}
@@ -211,17 +221,42 @@
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark Helper Methods
+#pragma mark Hooks
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+- (void)didAddResource:(XMPPResourceMemoryStorageObject *)resource withPresence:(XMPPPresence *)presence
+{
+	// Override / customization hook
+}
+
+- (void)willUpdateResource:(XMPPResourceMemoryStorageObject *)resource withPresence:(XMPPPresence *)presence
+{
+	// Override / customization hook
+}
+
+- (void)didUpdateResource:(XMPPResourceMemoryStorageObject *)resource withPresence:(XMPPPresence *)presence
+{
+	// Override / customization hook
+}
+
+- (void)didRemoveResource:(XMPPResourceMemoryStorageObject *)resource withPresence:(XMPPPresence *)presence
+{
+	// Override / customization hook
+}
 
 - (void)recalculatePrimaryResource
 {
+	// Override me to customize how the primary resource is chosen.
+	// 
+	// This method uses the [XMPPResourceMemoryStorage compare:] method to sort the resources,
+	// and properly supports negative (bot) priorities.
+	
 	primaryResource = nil;
 	
 	NSArray *sortedResources = [[self allResources] sortedArrayUsingSelector:@selector(compare:)];
 	if ([sortedResources count] > 0)
 	{
-		XMPPResourceMemoryStorage *possiblePrimary = [sortedResources objectAtIndex:0];
+		XMPPResourceMemoryStorageObject *possiblePrimary = [sortedResources objectAtIndex:0];
 		
 		// Primary resource must have a non-negative priority
 		if ([[possiblePrimary presence] priority] >= 0)
@@ -255,10 +290,10 @@
 
 - (int)updateWithPresence:(XMPPPresence *)presence
             resourceClass:(Class)resourceClass
-           andGetResource:(XMPPResourceMemoryStorage **)resourcePtr
+           andGetResource:(XMPPResourceMemoryStorageObject **)resourcePtr
 {
 	int result = XMPP_USER_NO_CHANGE;
-	XMPPResourceMemoryStorage *resource;
+	XMPPResourceMemoryStorageObject *resource;
 	
 	XMPPJID *key = [presence from];
 	NSString *presenceType = [presence type];
@@ -269,6 +304,8 @@
 		if (resource)
 		{
 			[resources removeObjectForKey:key];
+			[self didRemoveResource:resource withPresence:presence];
+			
 			result = XMPP_USER_REMOVED_RESOURCE;
 		}
 	}
@@ -277,14 +314,19 @@
 		resource = [resources objectForKey:key];
 		if (resource)
 		{
+			[self willUpdateResource:resource withPresence:presence];
 			[resource updateWithPresence:presence];
+			[self didUpdateResource:resource withPresence:presence];
+			
 			result = XMPP_USER_UPDATED_RESOURCE;
 		}
 		else
 		{
-			resource = (XMPPResourceMemoryStorage *)[[resourceClass alloc] initWithPresence:presence];
+			resource = (XMPPResourceMemoryStorageObject *)[[resourceClass alloc] initWithPresence:presence];
 			
 			[resources setObject:resource forKey:key];
+			[self didAddResource:resource withPresence:presence];
+			
 			result = XMPP_USER_ADDED_RESOURCE;
 		}
 	}
@@ -303,7 +345,7 @@
 /**
  * Returns the result of invoking compareByName:options: with no options.
 **/
-- (NSComparisonResult)compareByName:(XMPPUserMemoryStorage *)another
+- (NSComparisonResult)compareByName:(XMPPUserMemoryStorageObject *)another
 {
 	return [self compareByName:another options:0];
 }
@@ -315,7 +357,7 @@
  * NSCaseInsensitiveSearch, NSLiteralSearch, NSNumericSearch.
  * See "String Programming Guide for Cocoa" for details on these options.
 **/
-- (NSComparisonResult)compareByName:(XMPPUserMemoryStorage *)another options:(NSStringCompareOptions)mask
+- (NSComparisonResult)compareByName:(XMPPUserMemoryStorageObject *)another options:(NSStringCompareOptions)mask
 {
 	NSString *myName = [self displayName];
 	NSString *theirName = [another displayName];
@@ -326,7 +368,7 @@
 /**
  * Returns the result of invoking compareByAvailabilityName:options: with no options.
 **/
-- (NSComparisonResult)compareByAvailabilityName:(XMPPUserMemoryStorage *)another
+- (NSComparisonResult)compareByAvailabilityName:(XMPPUserMemoryStorageObject *)another
 {
 	return [self compareByAvailabilityName:another options:0];
 }
@@ -337,7 +379,8 @@
  * If both users are available, or both users are not available,
  * this method follows the same functionality as the compareByName:options: as documented above.
 **/
-- (NSComparisonResult)compareByAvailabilityName:(XMPPUserMemoryStorage *)another options:(NSStringCompareOptions)mask
+- (NSComparisonResult)compareByAvailabilityName:(XMPPUserMemoryStorageObject *)another
+                                        options:(NSStringCompareOptions)mask
 {
 	if ([self isOnline])
 	{
@@ -368,7 +411,7 @@
 {
 	if ([anObject isMemberOfClass:[self class]])
 	{
-		XMPPUserMemoryStorage *another = (XMPPUserMemoryStorage *)anObject;
+		XMPPUserMemoryStorageObject *another = (XMPPUserMemoryStorageObject *)anObject;
 		
 		return [jid isEqualToJID:[another jid]];
 	}

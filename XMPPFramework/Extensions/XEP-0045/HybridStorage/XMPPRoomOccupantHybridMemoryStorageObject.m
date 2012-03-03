@@ -1,18 +1,25 @@
-#import "XMPPRoomOccupantMemoryStorage.h"
+#import "XMPPRoomOccupantHybridMemoryStorageObject.h"
 
 
-@implementation XMPPRoomOccupantMemoryStorage
+@implementation XMPPRoomOccupantHybridMemoryStorageObject
 {
 	XMPPPresence *presence;
 	XMPPJID *jid;
+	NSDate *createdAt;
+	XMPPJID *streamFullJid;
 }
 
-- (id)initWithPresence:(XMPPPresence *)inPresence
+- (id)initWithPresence:(XMPPPresence *)inPresence streamFullJid:(XMPPJID *)inStreamFullJid
 {
+	NSParameterAssert(inPresence != nil);
+	NSParameterAssert(inStreamFullJid != nil);
+	
 	if ((self = [super init]))
 	{
 		presence = inPresence;
-		jid = [inPresence from];
+		jid = [presence from];
+		createdAt = [[NSDate alloc] init];
+		streamFullJid = inStreamFullJid;
 	}
 	return self;
 }
@@ -38,13 +45,17 @@
 	{
 		if ([coder allowsKeyedCoding])
 		{
-			presence = [coder decodeObjectForKey:@"presence"];
-			jid      = [coder decodeObjectForKey:@"jid"];
+			presence      = [coder decodeObjectForKey:@"presence"];
+			jid           = [coder decodeObjectForKey:@"jid"];
+			createdAt     = [coder decodeObjectForKey:@"createdAt"];
+			streamFullJid = [coder decodeObjectForKey:@"streamFullJid"];
 		}
 		else
 		{
-			presence = [coder decodeObject];
-			jid      = [coder decodeObject];
+			presence      = [coder decodeObject];
+			jid           = [coder decodeObject];
+			createdAt     = [coder decodeObject];
+			streamFullJid = [coder decodeObject];
 		}
 	}
 	return self;
@@ -54,13 +65,17 @@
 {
 	if ([coder allowsKeyedCoding])
 	{
-		[coder encodeObject:presence forKey:@"presence"];
-		[coder encodeObject:jid forKey:@"jid"];
+		[coder encodeObject:presence      forKey:@"presence"];
+		[coder encodeObject:jid           forKey:@"jid"];
+		[coder encodeObject:createdAt     forKey:@"createdAt"];
+		[coder encodeObject:streamFullJid forKey:@"streamFullJid"];
 	}
 	else
 	{
 		[coder encodeObject:presence];
 		[coder encodeObject:jid];
+		[coder encodeObject:createdAt];
+		[coder encodeObject:streamFullJid];
 	}
 }
 
@@ -72,10 +87,13 @@
 {
 	// We use [self class] to support subclassing
 	
-	XMPPRoomOccupantMemoryStorage *deepCopy = (XMPPRoomOccupantMemoryStorage *)[[[self class] alloc] init];
+	XMPPRoomOccupantHybridMemoryStorageObject *deepCopy;
+	deepCopy = (XMPPRoomOccupantHybridMemoryStorageObject *)[[[self class] alloc] init];
 	
-	deepCopy->presence = [presence copy];
-	deepCopy->jid = [jid copy];
+	deepCopy->presence      = [presence copy];
+	deepCopy->jid           = [jid copy];
+	deepCopy->createdAt     = [createdAt copy];
+	deepCopy->streamFullJid = [streamFullJid copy];
 	
 	return deepCopy;
 }
@@ -94,14 +112,19 @@
 #pragma mark Properties
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (XMPPJID *)roomJID
+- (XMPPPresence *)presence
 {
-	return [jid bareJID];
+	return presence;
 }
 
 - (XMPPJID *)jid
 {
 	return jid;
+}
+
+- (XMPPJID *)roomJID
+{
+	return [jid bareJID];
 }
 
 - (NSString *)nickname
@@ -144,18 +167,28 @@
 		return nil;
 }
 
-- (XMPPPresence *)presence
+- (NSDate *)createdAt
 {
-	return presence;
+	return createdAt;
+}
+
+- (XMPPJID *)streamFullJid
+{
+	return streamFullJid;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark Comparisons
+#pragma mark Compare
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (NSComparisonResult)compare:(XMPPRoomOccupantMemoryStorage *)another
+- (NSComparisonResult)compareByNickname:(XMPPRoomOccupantHybridMemoryStorageObject *)another
 {
 	return [self.nickname compare:another.nickname];
+}
+
+- (NSComparisonResult)compareByCreatedAt:(XMPPRoomOccupantHybridMemoryStorageObject *)another
+{
+	return [self.createdAt compare:another.createdAt];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -171,9 +204,15 @@
 {
 	if ([anObject isMemberOfClass:[self class]])
 	{
-		XMPPRoomOccupantMemoryStorage *another = (XMPPRoomOccupantMemoryStorage *)anObject;
+		XMPPRoomOccupantHybridMemoryStorageObject *another = (XMPPRoomOccupantHybridMemoryStorageObject *)anObject;
 		
-		return [jid isEqualToJID:[another jid]];
+		if ([jid isEqualToJID:[another jid]])
+		{
+			if ([streamFullJid isEqualToJID:[another streamFullJid]])
+			{
+				return YES;
+			}
+		}
 	}
 	
 	return NO;

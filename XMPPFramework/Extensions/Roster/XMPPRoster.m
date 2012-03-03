@@ -19,6 +19,7 @@ enum XMPPRosterConfig
 {
 	kAutoFetchRoster = 1 << 0,                   // If set, we automatically fetch roster after authentication
 	kAutoAcceptKnownPresenceSubscriptionRequests = 1 << 1, // See big description in header file... :D
+	kRosterlessOperation = 1 << 2,
 };
 enum XMPPRosterFlags
 {
@@ -193,6 +194,38 @@ enum XMPPRosterFlags
 		dispatch_async(moduleQueue, block);
 }
 
+- (BOOL)allowRosterlessOperation
+{
+	__block BOOL result = NO;
+	
+	dispatch_block_t block = ^{
+		result = (config & kRosterlessOperation) ? YES : NO;
+	};
+	
+	if (dispatch_get_current_queue() == moduleQueue)
+		block();
+	else
+		dispatch_sync(moduleQueue, block);
+	
+	return result;
+}
+
+- (void)setAllowRosterlessOperation:(BOOL)flag
+{
+	dispatch_block_t block = ^{
+		
+		if (flag)
+			config |= kRosterlessOperation;
+		else
+			config &= ~kRosterlessOperation;
+	};
+	
+	if (dispatch_get_current_queue() == moduleQueue)
+		block();
+	else
+		dispatch_async(moduleQueue, block);
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark Utilities
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -349,6 +382,26 @@ enum XMPPRosterFlags
 	[iq addChild:query];
 	
 	[xmppStream sendElement:iq];
+}
+
+- (void)subscribePresenceToUser:(XMPPJID *)jid
+{
+	// This is a public method, so it may be invoked on any thread/queue.
+	
+	if (jid == nil) return;
+	
+	XMPPJID *myJID = xmppStream.myJID;
+	
+	if ([myJID isEqualToJID:jid options:XMPPJIDCompareBare])
+	{
+		XMPPLogInfo(@"%@: %@ - Ignoring request to subscribe presence to myself", [self class], THIS_METHOD);
+		return;
+	}
+	
+	// <presence to='bareJID' type='subscribe'/>
+	
+	XMPPPresence *presence = [XMPPPresence presenceWithType:@"subscribe" to:[jid bareJID]];
+	[xmppStream sendElement:presence];
 }
 
 - (void)unsubscribePresenceFromUser:(XMPPJID *)jid
@@ -570,7 +623,7 @@ enum XMPPRosterFlags
 	
 	XMPPLogTrace();
 	
-	if (![self hasRoster])
+	if (![self hasRoster] && ![self allowRosterlessOperation])
 	{
 		// We received a presence notification,
 		// but we don't have a roster to apply it to yet.

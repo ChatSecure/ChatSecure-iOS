@@ -6,6 +6,31 @@
 // Log levels: off, error, warn, info, verbose
 static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
+#define USE_MEMORY_STORAGE 0
+#define USE_HYBRID_STORAGE 1
+
+@interface MucController ()
+{
+#if USE_MEMORY_STORAGE
+	NSArray *messages;
+	NSArray *occupants;
+#elif USE_HYBRID_STORAGE
+	NSMutableArray *messages;
+	NSMutableArray *occupants;
+	
+	NSArrayController *arrayController;
+#endif
+}
+
+#if USE_HYBRID_STORAGE
+- (NSArrayController *)arrayController;
+#endif
+
+@end
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 @implementation MucController
 
@@ -15,14 +40,23 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 	{
 		xmppStream = stream;
 		
-		xmppRoomStorage = [[XMPPRoomMemoryStorage alloc] init];
+		#if USE_MEMORY_STORAGE
+			xmppRoomStorage = [[XMPPRoomMemoryStorage alloc] init];
+		#elif USE_HYBRID_STORAGE
+			xmppRoomStorage = [XMPPRoomHybridStorage sharedInstance];
+		#endif
 		xmppRoom = [[XMPPRoom alloc] initWithRoomStorage:xmppRoomStorage jid:roomJID];
 		
 		[xmppRoom addDelegate:self delegateQueue:dispatch_get_main_queue()];
 		// xmppRoomStorage automatically inherits the delegate(s) of it's parent xmppRoom
 		
 		[xmppRoom activate:xmppStream];
-		[xmppRoom createOrJoinRoomUsingNickname:@"xmppFrameworkMucTest"];
+		[xmppRoom joinRoomUsingNickname:@"xmppFrameowrkMucTest" history:nil];
+		
+		#if USE_HYBRID_STORAGE
+		messages  = [[NSMutableArray alloc] init];
+		occupants = [[NSMutableArray alloc] init];
+		#endif
 	}
 	return self;
 }
@@ -39,6 +73,8 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 - (void)dealloc
 {
 	DDLogVerbose(@"Deallocating self: %@", self);
+	
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	
 	[xmppRoom deactivate];
 	[xmppRoom removeDelegate:self];
@@ -71,9 +107,13 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
 {
 	if (tableView == messagesTableView)
+	{
 		return [messages count];
+	}
 	else
+	{
 		return [occupants count];
+	}
 }
 
 - (CGFloat)tableView:(NSTableView *)tableView heightOfRow:(NSInteger)row
@@ -171,11 +211,46 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark Core Data
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#if USE_HYBRID_STORAGE
+
+- (NSArrayController *)arrayController
+{
+	if (arrayController == nil)
+	{
+		XMPPRoomHybridStorage *hybridStorage = (XMPPRoomHybridStorage *)xmppRoomStorage;
+		
+		NSPredicate *predicate = [NSPredicate predicateWithFormat:@"roomJIDStr == %@", xmppRoom.roomJID];
+		
+		NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"localTimestamp" ascending:YES];
+		
+		arrayController = [[NSArrayController alloc] initWithContent:nil];
+		arrayController.managedObjectContext = [hybridStorage mainThreadManagedObjectContext];
+		arrayController.entityName = hybridStorage.messageEntityName;
+		arrayController.fetchPredicate = predicate;
+		arrayController.sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
+		
+	//	NSError *error = nil;
+	//	if (![arrayController fetchWithRequest:nil merge:NO error:&error])
+	//	{
+	//		DDLogError(@"arrayController fetch error: %@", error);
+	//	}
+		
+		arrayController.automaticallyPreparesContent = YES;
+	}
+	
+	return arrayController;
+}
+
+#endif
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark XMPPRoomMemoryStorage Delegate
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#if USE_MEMORY_STORAGE
 
 - (void)xmppRoomMemoryStorage:(XMPPRoomMemoryStorage *)sender
-              occupantDidJoin:(XMPPRoomOccupantMemoryStorage *)occupant
+              occupantDidJoin:(XMPPRoomOccupantMemoryStorageObject *)occupant
                       atIndex:(NSUInteger)index
                       inArray:(NSArray *)allOccupants {
 	
@@ -192,7 +267,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
 
 - (void)xmppRoomMemoryStorage:(XMPPRoomMemoryStorage *)sender
-             occupantDidLeave:(XMPPRoomOccupantMemoryStorage *)occupant
+             occupantDidLeave:(XMPPRoomOccupantMemoryStorageObject *)occupant
                       atIndex:(NSUInteger)index
                     fromArray:(NSArray *)allOccupants {
 	
@@ -209,7 +284,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
 
 - (void)xmppRoomMemoryStorage:(XMPPRoomMemoryStorage *)sender
-            occupantDidUpdate:(XMPPRoomOccupantMemoryStorage *)occupant
+            occupantDidUpdate:(XMPPRoomOccupantMemoryStorageObject *)occupant
                     fromIndex:(NSUInteger)oldIndex
                       toIndex:(NSUInteger)newIndex
                       inArray:(NSArray *)allOccupants {
@@ -237,8 +312,8 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
 
 - (void)xmppRoomMemoryStorage:(XMPPRoomMemoryStorage *)sender
-			didReceiveMessage:(XMPPRoomMessageMemoryStorage *)message
-                 fromOccupant:(XMPPRoomOccupantMemoryStorage *)occupantJID
+			didReceiveMessage:(XMPPRoomMessageMemoryStorageObject *)message
+                 fromOccupant:(XMPPRoomOccupantMemoryStorageObject *)occupantJID
                       atIndex:(NSUInteger)index
                       inArray:(NSArray *)allMessages {
 	
@@ -252,6 +327,55 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 	[messagesTableView insertRowsAtIndexes:indexes withAnimation:NSTableViewAnimationSlideUp];
 	[messagesTableView endUpdates];
 }
+
+#endif
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark XMPPRoomHybridStorage Delegate
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#if USE_HYBRID_STORAGE
+
+- (void)xmppRoomHybridStorage:(XMPPRoomHybridStorage *)sender
+              occupantDidJoin:(XMPPRoomOccupantHybridMemoryStorageObject *)occupant
+{
+	NSIndexSet *indexes = [NSIndexSet indexSetWithIndex:[occupants count]];
+	[occupants addObject:occupant];
+	
+	[occupantsTableView beginUpdates];
+	[occupantsTableView insertRowsAtIndexes:indexes withAnimation:NSTableViewAnimationEffectGap];
+	[occupantsTableView endUpdates];
+}
+
+- (void)xmppRoomHybridStorage:(XMPPRoomHybridStorage *)sender
+             occupantDidLeave:(XMPPRoomOccupantHybridMemoryStorageObject *)occupant
+{
+	NSUInteger index = [occupants indexOfObject:occupant];
+	if (index == NSNotFound) return;
+	
+	NSIndexSet *indexes = [NSIndexSet indexSetWithIndex:index];
+	[occupants removeObjectAtIndex:index];
+	
+	[occupantsTableView beginUpdates];
+	[occupantsTableView removeRowsAtIndexes:indexes withAnimation:NSTableViewAnimationEffectGap];
+	[occupantsTableView endUpdates];
+}
+
+- (void)xmppRoomHybridStorage:(XMPPRoomHybridStorage *)sender
+            occupantDidUpdate:(XMPPRoomOccupantHybridMemoryStorageObject *)occupant
+{
+	NSUInteger index = [occupants indexOfObject:occupant];
+	if (index == NSNotFound) return;
+	
+	NSIndexSet *rowIndexes = [NSIndexSet indexSetWithIndex:index];
+	NSIndexSet *colIndexes = [NSIndexSet indexSetWithIndex:0];
+	
+	[occupants replaceObjectAtIndex:index withObject:occupant];
+	
+	[occupantsTableView beginUpdates];
+	[occupantsTableView reloadDataForRowIndexes:rowIndexes columnIndexes:colIndexes];
+	[occupantsTableView endUpdates];
+}
+
+#endif
 
 @end
 

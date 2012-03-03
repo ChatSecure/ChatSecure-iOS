@@ -186,6 +186,11 @@ static NSMutableSet *databaseFileNames;
 	// For example, you may want to perform cleanup of any non-persistent data before you start using the database.
 }
 
+- (void)didSaveManagedObjectContext
+{
+	// Override me if you need to do anything special after changes have been saved to disk.
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark Setup
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -308,6 +313,8 @@ static NSMutableSet *databaseFileNames;
 
 - (XMPPJID *)myJIDForXMPPStream:(XMPPStream *)stream
 {
+	if (stream == nil) return nil;
+	
 	__block XMPPJID *result = nil;
 	
 	dispatch_block_t block = ^{ @autoreleasepool {
@@ -318,7 +325,6 @@ static NSMutableSet *databaseFileNames;
 		if (!result)
 		{
 			result = [stream myJID];
-			
 			if (result)
 			{
 				[myJidCache setObject:result forKey:key];
@@ -394,16 +400,19 @@ static NSMutableSet *databaseFileNames;
 	// This is a public method.
 	// It may be invoked on any thread/queue.
 	
+	__block NSManagedObjectModel *result = nil;
+	
 	dispatch_block_t block = ^{ @autoreleasepool {
 		
 		if (managedObjectModel)
 		{
+			result = managedObjectModel;
 			return;
 		}
 		
-		XMPPLogVerbose(@"%@: Creating managedObjectModel", [self class]);
-		
 		NSString *momName = [self managedObjectModelName];
+		
+		XMPPLogVerbose(@"%@: Creating managedObjectModel (%@)", [self class], momName);
 		
 		NSString *momPath = [[NSBundle mainBundle] pathForResource:momName ofType:@"mom"];
 		if (momPath == nil)
@@ -425,6 +434,7 @@ static NSMutableSet *databaseFileNames;
 			XMPPLogWarn(@"%@: Couldn't find managedObjectModel file - %@", [self class], momName);
 		}
 		
+		result = managedObjectModel;
 	}};
 	
 	if (dispatch_get_current_queue() == storageQueue)
@@ -432,7 +442,7 @@ static NSMutableSet *databaseFileNames;
 	else
 		dispatch_sync(storageQueue, block);
 	
-	return managedObjectModel;
+	return result;
 }
 
 - (NSPersistentStoreCoordinator *)persistentStoreCoordinator
@@ -440,10 +450,13 @@ static NSMutableSet *databaseFileNames;
 	// This is a public method.
 	// It may be invoked on any thread/queue.
 	
+	__block NSPersistentStoreCoordinator *result = nil;
+	
 	dispatch_block_t block = ^{ @autoreleasepool {
 		
 		if (persistentStoreCoordinator)
 		{
+			result = persistentStoreCoordinator;
 			return;
 		}
 		
@@ -477,7 +490,8 @@ static NSMutableSet *databaseFileNames;
 			}
 			else
 			{
-				XMPPLogWarn(@"%@: Error creating persistentStoreCoordinator - Nil persistentStoreDirectory", [self class]);
+				XMPPLogWarn(@"%@: Error creating persistentStoreCoordinator - Nil persistentStoreDirectory",
+							[self class]);
 			}
 		}
 		else
@@ -493,6 +507,8 @@ static NSMutableSet *databaseFileNames;
 			}
 		}
 		
+		result = persistentStoreCoordinator;
+		
 	}};
 	
 	if (dispatch_get_current_queue() == storageQueue)
@@ -500,7 +516,7 @@ static NSMutableSet *databaseFileNames;
 	else
 		dispatch_sync(storageQueue, block);
 
-    return persistentStoreCoordinator;
+    return result;
 }
 
 - (NSManagedObjectContext *)managedObjectContext
@@ -514,7 +530,8 @@ static NSMutableSet *databaseFileNames;
 	// You should NOT give external classes access to the storageQueue! (Excluding subclasses obviously.)
 	// 
 	// When you want a managedObjectContext of your own (again, excluding subclasses),
-	// you should create your own using the public persistentStoreCoordinator.
+	// you can use the mainThreadManagedObjectContext (below),
+	// or you should create your own using the public persistentStoreCoordinator.
 	// 
 	// If you even comtemplate ignoring this warning,
 	// then you need to go read the documentation for core data,
@@ -536,13 +553,86 @@ static NSMutableSet *databaseFileNames;
 	{
 		XMPPLogVerbose(@"%@: Creating managedObjectContext", [self class]);
 		
-		managedObjectContext = [[NSManagedObjectContext alloc] init];
-		[managedObjectContext setPersistentStoreCoordinator:coordinator];
+		if ([NSManagedObjectContext instancesRespondToSelector:@selector(initWithConcurrencyType:)])
+			managedObjectContext =
+			    [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+		else
+			managedObjectContext = [[NSManagedObjectContext alloc] init];
+		
+		managedObjectContext.persistentStoreCoordinator = coordinator;
+		managedObjectContext.undoManager = nil;
 		
 		[self didCreateManagedObjectContext];
 	}
 	
 	return managedObjectContext;
+}
+
+- (NSManagedObjectContext *)mainThreadManagedObjectContext
+{
+	// NSManagedObjectContext is NOT thread-safe.
+	// Therefore it is VERY VERY BAD to use this managedObjectContext outside the main thread.
+	// 
+	// You should NOT remove the assert statement below!
+	// 
+	// When you want a managedObjectContext of your own for non-main-thread use,
+	// you should create your own using the public persistentStoreCoordinator.
+	// 
+	// If you even comtemplate ignoring this warning,
+	// then you need to go read the documentation for core data,
+	// specifically the section entitled "Concurrency with Core Data".
+	// 
+	NSAssert(dispatch_get_current_queue() == dispatch_get_main_queue(), @"Context reserved for main thread only");
+	// 
+	// Do NOT remove the assert statment above!
+	// Read the comments above!
+	// 
+	
+	if (mainThreadManagedObjectContext)
+	{
+		return mainThreadManagedObjectContext;
+	}
+	
+	NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
+	if (coordinator)
+	{
+		XMPPLogVerbose(@"%@: Creating mainThreadManagedObjectContext", [self class]);
+		
+		if ([NSManagedObjectContext instancesRespondToSelector:@selector(initWithConcurrencyType:)])
+			mainThreadManagedObjectContext =
+			    [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
+		else
+			mainThreadManagedObjectContext = [[NSManagedObjectContext alloc] init];
+		
+		mainThreadManagedObjectContext.persistentStoreCoordinator = coordinator;
+		mainThreadManagedObjectContext.undoManager = nil;
+		
+		[[NSNotificationCenter defaultCenter] addObserver:self
+		                                         selector:@selector(managedObjectContextDidSave:)
+		                                             name:NSManagedObjectContextDidSaveNotification
+		                                           object:nil];
+		
+		// Todo: If we knew that our private managedObjectContext was going to be the only one writing to the database,
+		// then a small optimization would be to use it as the object when registering above.
+	}
+	
+	return mainThreadManagedObjectContext;
+}
+
+- (void)managedObjectContextDidSave:(NSNotification *)notification
+{
+	NSManagedObjectContext *sender = (NSManagedObjectContext *)[notification object];
+	
+	if ((sender != mainThreadManagedObjectContext) &&
+	    (sender.persistentStoreCoordinator == mainThreadManagedObjectContext.persistentStoreCoordinator))
+	{
+		XMPPLogVerbose(@"%@: %@ - Merging changes into mainThreadManagedObjectContext", THIS_FILE, THIS_METHOD);
+		
+		dispatch_async(dispatch_get_main_queue(), ^{
+			
+			[mainThreadManagedObjectContext mergeChangesFromContextDidSaveNotification:notification];
+		});
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -569,7 +659,11 @@ static NSMutableSet *databaseFileNames;
 	// called from maybeSave below, which already does this check.
 	
 	NSError *error = nil;
-	if (![[self managedObjectContext] save:&error])
+	if ([[self managedObjectContext] save:&error])
+	{
+		[self didSaveManagedObjectContext];
+	}
+	else
 	{
 		XMPPLogWarn(@"%@: Error saving - %@ %@", [self class], error, [error userInfo]);
 		
@@ -675,13 +769,10 @@ static NSMutableSet *databaseFileNames;
 		[[self class] unregisterDatabaseFileName:databaseFileName];
 	}
 	
-	
 	if (storageQueue)
 	{
 		dispatch_release(storageQueue);
 	}
-	
-	
 }
 
 @end

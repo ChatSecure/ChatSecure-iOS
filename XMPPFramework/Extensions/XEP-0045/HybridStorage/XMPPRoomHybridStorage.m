@@ -1,4 +1,5 @@
-#import "XMPPRoomCoreDataStorage.h"
+#import "XMPPRoomHybridStorage.h"
+#import "XMPPRoomPrivate.h"
 #import "XMPPCoreDataStorageProtected.h"
 #import "XMPPElement+Delay.h"
 #import "XMPPLogging.h"
@@ -17,19 +18,14 @@
 #define AssertPrivateQueue() \
             NSAssert(dispatch_get_current_queue() == storageQueue, @"Private method: MUST run on storageQueue");
 
-@interface XMPPRoomCoreDataStorage ()
+
+@interface XMPPRoomHybridStorage ()
 {
-	/* Inherited from XMPPCoreDataStorage
-	
-	NSString *databaseFileName;
-	NSUInteger saveThreshold;
-	
-	dispatch_queue_t storageQueue;
-	
-	*/
+	// Protected variables are listed in the header file.
+	// These are the private variables.
 	
 	NSString *messageEntityName;
-	NSString *occupantEntityName;
+	Class occupantClass;
 	
 	NSTimeInterval maxMessageAge;
 	NSTimeInterval deleteInterval;
@@ -40,15 +36,10 @@
 	dispatch_source_t deleteTimer;
 }
 
-- (NSEntityDescription *)messageEntity:(NSManagedObjectContext *)moc;
-- (NSEntityDescription *)occupantEntity:(NSManagedObjectContext *)moc;
-
 - (void)performDelete;
 - (void)destroyDeleteTimer;
 - (void)updateDeleteTimer;
 - (void)createAndStartDeleteTimer;
-
-- (void)clearAllOccupantsFromRoom:(XMPPJID *)roomJID;
 
 @end
 
@@ -56,16 +47,16 @@
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@implementation XMPPRoomCoreDataStorage
+@implementation XMPPRoomHybridStorage
 
-static XMPPRoomCoreDataStorage *sharedInstance;
+static XMPPRoomHybridStorage *sharedInstance;
 
-+ (XMPPRoomCoreDataStorage *)sharedInstance
++ (XMPPRoomHybridStorage *)sharedInstance
 {
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
 		
-		sharedInstance = [[XMPPRoomCoreDataStorage alloc] initWithDatabaseFilename:nil];
+		sharedInstance = [[XMPPRoomHybridStorage alloc] initWithDatabaseFilename:nil];
 	});
 	
 	return sharedInstance;
@@ -78,13 +69,22 @@ static XMPPRoomCoreDataStorage *sharedInstance;
 	
 	// This method is invoked by all public init methods of the superclass
 	
-	messageEntityName = NSStringFromClass([XMPPRoomMessageCoreDataStorageObject class]);
-	occupantEntityName = NSStringFromClass([XMPPRoomOccupantCoreDataStorageObject class]);
+	occupantsGlobalDict = [[NSMutableDictionary alloc] init];
+	
+	messageEntityName = NSStringFromClass([XMPPRoomMessageHybridCoreDataStorageObject class]);
+	occupantClass = [XMPPRoomOccupantHybridMemoryStorageObject class];
 	
 	maxMessageAge  = (60 * 60 * 24 * 7); // 7 days
 	deleteInterval = (60 * 5);           // 5 days
 	
 	pausedMessageDeletion = [[NSMutableSet alloc] init];
+}
+
+- (NSString *)managedObjectModelName
+{
+	// This method overrides [XMPPCoreDataStorage managedObjectModelName].
+	
+	return @"XMPPRoomHybrid";
 }
 
 - (void)dealloc
@@ -96,61 +96,8 @@ static XMPPRoomCoreDataStorage *sharedInstance;
 #pragma mark Configuration
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (NSString *)messageEntityName
-{
-	__block NSString *result = nil;
-	
-	dispatch_block_t block = ^{
-		result = messageEntityName;
-	};
-	
-	if (dispatch_get_current_queue() == storageQueue)
-		block();
-	else
-		dispatch_sync(storageQueue, block);
-	
-	return result;
-}
-
-- (void)setMessageEntityName:(NSString *)newMessageEntityName
-{
-	dispatch_block_t block = ^{
-		messageEntityName = newMessageEntityName;
-	};
-	
-	if (dispatch_get_current_queue() == storageQueue)
-		block();
-	else
-		dispatch_async(storageQueue, block);
-}
-
-- (NSString *)occupantEntityName
-{
-	__block NSString *result = nil;
-	
-	dispatch_block_t block = ^{
-		result = occupantEntityName;
-	};
-	
-	if (dispatch_get_current_queue() == storageQueue)
-		block();
-	else
-		dispatch_sync(storageQueue, block);
-	
-	return result;
-}
-
-- (void)setOccupantEntityName:(NSString *)newOccupantEntityName
-{
-	dispatch_block_t block = ^{
-		occupantEntityName = newOccupantEntityName;
-	};
-	
-	if (dispatch_get_current_queue() == storageQueue)
-		block();
-	else
-		dispatch_async(storageQueue, block);
-}
+@synthesize messageEntityName;
+@synthesize occupantClass;
 
 - (NSTimeInterval)maxMessageAge
 {
@@ -333,17 +280,6 @@ static XMPPRoomCoreDataStorage *sharedInstance;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark Overrides
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-- (void)didCreateManagedObjectContext
-{
-	XMPPLogTrace();
-	
-	[self clearAllOccupantsFromRoom:nil];
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark Internal API
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -382,7 +318,7 @@ static XMPPRoomCoreDataStorage *sharedInstance;
 	
 	NSUInteger unsavedCount = [self numberOfUnsavedChanges];
 	
-	for (XMPPRoomMessageCoreDataStorageObject *oldMessage in oldMessages)
+	for (XMPPRoomMessageHybridCoreDataStorageObject *oldMessage in oldMessages)
 	{
 		[moc deleteObject:oldMessage];
 		
@@ -437,42 +373,6 @@ static XMPPRoomCoreDataStorage *sharedInstance;
 		[self updateDeleteTimer];
 		
 		dispatch_resume(deleteTimer);
-	}
-}
-
-- (void)clearAllOccupantsFromRoom:(XMPPJID *)roomJID
-{
-	XMPPLogTrace();
-	AssertPrivateQueue();
-	
-	NSManagedObjectContext *moc = [self managedObjectContext];
-	NSEntityDescription *entity = [self occupantEntity:moc];
-	
-	NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-	[fetchRequest setEntity:entity];
-	[fetchRequest setFetchBatchSize:saveThreshold];
-	
-	if (roomJID)
-	{
-		NSPredicate *predicate;
-		predicate = [NSPredicate predicateWithFormat:@"roomJIDStr == %@", [roomJID bare]];
-		
-		[fetchRequest setPredicate:predicate];
-	}
-	
-	NSArray *allOccupants = [moc executeFetchRequest:fetchRequest error:nil];
-	
-	NSUInteger unsavedCount = [self numberOfUnsavedChanges];
-	
-	for (XMPPRoomOccupantCoreDataStorageObject *occupant in allOccupants)
-	{
-		[moc deleteObject:occupant];
-		
-		if (++unsavedCount >= saveThreshold)
-		{
-			[self save];
-			unsavedCount = 0;
-		}
 	}
 }
 
@@ -562,10 +462,10 @@ static XMPPRoomCoreDataStorage *sharedInstance;
  * 
  * @see insertMessage:outgoing:forRoom:stream:
 **/
-- (void)didInsertMessage:(XMPPRoomMessageCoreDataStorageObject *)message
+- (void)didInsertMessage:(XMPPRoomMessageHybridCoreDataStorageObject *)message
 {
-	// Override me if you're extending the XMPPRoomMessageCoreDataStorageObject class to add additional properties.
-	// You can update your additional properties here.
+	// Override me if you're extending the XMPPRoomMessageHybridCoreDataStorageObject class
+	// to add additional properties, which you can set here.
 	// 
 	// At this point the standard properties have already been set.
 	// So you can, for example, access the XMPPMessage via message.message.
@@ -599,7 +499,7 @@ static XMPPRoomCoreDataStorage *sharedInstance;
 	
 	// Add to database
 	
-	XMPPRoomMessageCoreDataStorageObject *roomMessage = (XMPPRoomMessageCoreDataStorageObject *)
+	XMPPRoomMessageHybridCoreDataStorageObject *roomMessage = (XMPPRoomMessageHybridCoreDataStorageObject *)
 	    [[NSManagedObject alloc] initWithEntity:messageEntity insertIntoManagedObjectContext:nil];
 	
 	roomMessage.message = message;
@@ -612,8 +512,8 @@ static XMPPRoomCoreDataStorage *sharedInstance;
 	roomMessage.isFromMe = isOutgoing;
 	roomMessage.streamBareJidStr = streamBareJidStr;
 	
-	[moc insertObject:roomMessage];      // Hook if subclassing XMPPRoomMessageCoreDataStorageObject (awakeFromInsert)
-	[self didInsertMessage:roomMessage]; // Hook if subclassing XMPPRoomCoreDataStorage
+	[moc insertObject:roomMessage];      // Hook if subclassing XMPPRoomMessageHybridCDSO (awakeFromInsert)
+	[self didInsertMessage:roomMessage]; // Hook if subclassing XMPPRoomHybridStorage
 }
 
 /**
@@ -621,138 +521,112 @@ static XMPPRoomCoreDataStorage *sharedInstance;
  * 
  * @see insertOccupantWithPresence:room:stream:
 **/
-- (void)didInsertOccupant:(XMPPRoomOccupantCoreDataStorageObject *)occupant
+- (void)didInsertOccupant:(XMPPRoomOccupantHybridMemoryStorageObject *)occupant
 {
-	// Override me if you're extending the XMPPRoomOccupantCoreDataStorageObject class to add additional properties.
-	// You can update your additional properties here.
+	// Override me if you're extending the XMPPRoomOccupantHybridMemoryStorageObject class
+	// to add additional properties, which you can set here.
 	// 
-	// At this point the standard XMPPRoomOccupantCDSO properties have already been set.
-	// So you can, for example, access the XMPPPresence via occupant.presence.
+	// At this point the standard properties have already been set.
+	// So you can, for example, access the XMPPPresence via occupant.presece.
 }
 
 /**
  * Optional override hook for general extensions.
- * 
+ *
  * @see updateOccupant:withPresence:room:stream:
 **/
-- (void)didUpdateOccupant:(XMPPRoomOccupantCoreDataStorageObject *)occupant
+- (void)didUpdateOccupant:(XMPPRoomOccupantHybridMemoryStorageObject *)occupant
 {
-	// Override me if you're extending the XMPPRoomOccupantCoreDataStorageObject class to add additional properties.
-	// You can update your additional properties here.
+	// Override me if you're extending the XMPPRoomOccupantHybridMemoryStorageObject class,
+	// and you have additional properties that may need to be updated.
 	// 
-	// At this point the standard XMPPRoomOccupantCDSO properties have already been updated.
-	// So you can, for example, access the XMPPPresence via occupant.presence.
+	// At this point the standard properties have already been updated.
+}
+
+/**
+ * Optional override hook for general extensions.
+**/
+- (void)willRemoveOccupant:(XMPPRoomOccupantHybridMemoryStorageObject *)occupant
+{
+	// Override me if you have any custom work to do before an occupant leaves (is removed from storage).
+}
+
+/**
+ * Optional override hook for general extensions.
+**/
+- (void)didRemoveOccupant:(XMPPRoomOccupantHybridMemoryStorageObject *)occupant
+{
+	// Override me if you have any custom work to do after an occupant leaves (is removed from storage).
 }
 
 /**
  * Optional override hook for complete customization.
- * Override me if you need to do specific custom work when inserting an occupant in a room.
- * 
- * @see didInsertOccupant:
+ * Override me if you need to do custom work when inserting an occupant in a room.
 **/ 
-- (void)insertOccupantWithPresence:(XMPPPresence *)presence
-                              room:(XMPPRoom *)room
-                            stream:(XMPPStream *)xmppStream
+- (XMPPRoomOccupantHybridMemoryStorageObject *)insertOccupantWithPresence:(XMPPPresence *)presence
+                                                                     room:(XMPPRoom *)room
+                                                                   stream:(XMPPStream *)xmppStream
 {
-	// Extract needed information
+	XMPPJID *streamFullJid = [self myJIDForXMPPStream:xmppStream];
+	XMPPJID *roomJid = room.roomJID;
 	
-	XMPPJID *roomJID = room.roomJID;
-	XMPPJID *presenceJID = [presence from];
-	
-	NSString *role = nil;
-	NSString *affiliation = nil;
-	XMPPJID *realJID = nil;
-	
-	NSXMLElement *x = [presence elementForName:@"x" xmlns:@"http://jabber.org/protocol/muc#user"];
-	NSXMLElement *item = [x elementForName:@"item"];
-	if (item)
+	NSMutableDictionary *occupantsRoomsDict = [occupantsGlobalDict objectForKey:streamFullJid];
+	if (occupantsRoomsDict == nil)
 	{
-		role = [[item attributeStringValueForName:@"role"] lowercaseString];
-		affiliation = [[item attributeStringValueForName:@"affiliation"] lowercaseString];
-		
-		NSString *realJIDStr = [item attributeStringValueForName:@"jid"];
-		if (realJIDStr)
-		{
-			realJID = [XMPPJID jidWithString:realJIDStr];
-		}
+		occupantsRoomsDict = [[NSMutableDictionary alloc] init];
+		[occupantsGlobalDict setObject:occupantsRoomsDict forKey:streamFullJid];
 	}
 	
-	// Add to database
+	NSMutableDictionary *occupantsRoomDict = [occupantsRoomsDict objectForKey:roomJid];
+	if (occupantsRoomDict == nil)
+	{
+		occupantsRoomDict = [[NSMutableDictionary alloc] init];
+		[occupantsRoomsDict setObject:occupantsRoomDict forKey:roomJid];
+	}
 	
-	NSManagedObjectContext *moc = [self managedObjectContext];
-	NSString *streamBareJidStr = [[self myJIDForXMPPStream:xmppStream] bare];
+	XMPPRoomOccupantHybridMemoryStorageObject *occupant = (XMPPRoomOccupantHybridMemoryStorageObject *)
+	    [[self.occupantClass alloc] initWithPresence:presence streamFullJid:streamFullJid];
 	
-	NSEntityDescription *occupantEntity = [self occupantEntity:moc];
+	[occupantsRoomDict setObject:occupant forKey:occupant.jid];
 	
-	XMPPRoomOccupantCoreDataStorageObject *occupant = (XMPPRoomOccupantCoreDataStorageObject *)
-	    [[NSManagedObject alloc] initWithEntity:occupantEntity insertIntoManagedObjectContext:nil];
-	
-	occupant.presence = presence;
-	occupant.roomJID = roomJID;
-	occupant.jid = presenceJID;
-	occupant.nickname = [presenceJID resource];
-	occupant.role = role;
-	occupant.affiliation = affiliation;
-	occupant.realJID = realJID;
-	occupant.createdAt = [NSDate date];
-	occupant.streamBareJidStr = streamBareJidStr;
-	
-	[moc insertObject:occupant];       // Hook if subclassing XMPPRoomOccupantCoreDataStorageObject (awakeFromInsert)
-	[self didInsertOccupant:occupant]; // Hook if subclassing XMPPRoomCoreDataStorage
+	return occupant;
 }
 
 /**
  * Optional override hook for complete customization.
- * Override me if you need to do specific custom work when updating an occupant in a room.
- * 
- * @see didUpdateOccupant:
+ * Override me if you need to do custom work when updating an occupant in a room.
 **/
-- (void)updateOccupant:(XMPPRoomOccupantCoreDataStorageObject *)occupant
+- (void)updateOccupant:(XMPPRoomOccupantHybridMemoryStorageObject *)occupant
           withPresence:(XMPPPresence *)presence
                   room:(XMPPRoom *)room
                 stream:(XMPPStream *)stream
 {
-	// Extract needed information
 	
-	NSString *role = nil;
-	NSString *affiliation = nil;
-	XMPPJID *realJID = nil;
-	
-	NSXMLElement *x = [presence elementForName:@"x" xmlns:@"http://jabber.org/protocol/muc#user"];
-	NSXMLElement *item = [x elementForName:@"item"];
-	if (item)
-	{
-		role = [[item attributeStringValueForName:@"role"] lowercaseString];
-		affiliation = [[item attributeStringValueForName:@"affiliation"] lowercaseString];
-		
-		NSString *realJIDStr = [item attributeStringValueForName:@"jid"];
-		if (realJIDStr)
-		{
-			realJID = [XMPPJID jidWithString:realJIDStr];
-		}
-	}
-	
-	// Update database
-	
-	occupant.presence = presence;
-	occupant.role = role;
-	occupant.affiliation = affiliation;
-	occupant.realJID = realJID;
-	
-	[self didUpdateOccupant:occupant]; // Hook if subclassing XMPPRoomCoreDataStorage
+	[occupant updateWithPresence:presence];
 }
 
 /**
- * Optional override hook.
+ * Optional override hook for complete customization.
+ * Override me if you need to do custom work when removing an occupant from a room.
 **/
-- (void)removeOccupant:(XMPPRoomOccupantCoreDataStorageObject *)occupant
+- (void)removeOccupant:(XMPPRoomOccupantHybridMemoryStorageObject *)occupant
           withPresence:(XMPPPresence *)presence
                   room:(XMPPRoom *)room
                 stream:(XMPPStream *)stream
 {
-	// Delete from database
+	// Remove from dictionary
 	
-	[[occupant managedObjectContext] deleteObject:occupant];
+	XMPPJID *streamFullJid = [self myJIDForXMPPStream:stream];
+	XMPPJID *roomJid = occupant.roomJID;
+	
+	NSMutableDictionary *occupantsRoomsDict = [occupantsGlobalDict objectForKey:streamFullJid];
+	NSMutableDictionary *occupantsRoomDict = [occupantsRoomsDict objectForKey:roomJid];
+	
+	[occupantsRoomDict removeObjectForKey:occupant.jid]; // Remove occupant
+	if ([occupantsRoomDict count] == 0)
+	{
+		[occupantsRoomsDict removeObjectForKey:roomJid]; // Remove room if now empty
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -764,15 +638,14 @@ static XMPPRoomCoreDataStorage *sharedInstance;
 	// This method should be thread-safe.
 	// So be sure to access the entity name through the property accessor.
 	
-	return [NSEntityDescription entityForName:[self messageEntityName] inManagedObjectContext:moc];
-}
-
-- (NSEntityDescription *)occupantEntity:(NSManagedObjectContext *)moc
-{
-	// This method should be thread-safe.
-	// So be sure to access the entity name through the property accessor.
+	if (moc == nil)
+	{
+		XMPPLogWarn(@"%@: %@ - Invalid parameter, moc is nil", THIS_FILE, THIS_METHOD);
+		return nil;
+	}
 	
-	return [NSEntityDescription entityForName:[self occupantEntityName] inManagedObjectContext:moc];
+	NSString *entityName = self.messageEntityName;
+	return [NSEntityDescription entityForName:entityName inManagedObjectContext:moc];
 }
 
 - (NSDate *)mostRecentMessageTimestampForRoom:(XMPPJID *)roomJID
@@ -814,7 +687,8 @@ static XMPPRoomCoreDataStorage *sharedInstance;
 		[fetchRequest setFetchLimit:1];
 		
 		NSError *error = nil;
-		XMPPRoomMessageCoreDataStorageObject *message = [[moc executeFetchRequest:fetchRequest error:&error] lastObject];
+		XMPPRoomMessageHybridCoreDataStorageObject *message = (XMPPRoomMessageHybridCoreDataStorageObject *)
+		    [[moc executeFetchRequest:fetchRequest error:&error] lastObject];
 
 		if (error)
 		{
@@ -834,42 +708,96 @@ static XMPPRoomCoreDataStorage *sharedInstance;
 	return result;
 }
 
-- (XMPPRoomOccupantCoreDataStorageObject *)occupantForJID:(XMPPJID *)jid
-                                                   stream:(XMPPStream *)xmppStream
-                                                inContext:(NSManagedObjectContext *)moc
+- (XMPPRoomOccupantHybridMemoryStorageObject *)occupantForJID:(XMPPJID *)occupantJid stream:(XMPPStream *)xmppStream
 {
-	if (jid == nil) return nil;
-	if (moc == nil) return nil;
+	if (occupantJid == nil) return nil;
 	
-	NSEntityDescription *entity = [self occupantEntity:moc];
+	__block XMPPRoomOccupantHybridMemoryStorageObject *occupant = nil;
 	
-	NSPredicate *predicate;
-	if (xmppStream)
-	{
-		NSString *streamBareJidStr = [[self myJIDForXMPPStream:xmppStream] bare];
+	void (^block)(BOOL) = ^(BOOL shouldCopy){ @autoreleasepool {
 		
-		NSString *predicateFormat = @"jidStr == %@ AND streamBareJidStr == %@";
-		predicate = [NSPredicate predicateWithFormat:predicateFormat, jid, streamBareJidStr];
-	}
+		XMPPJID *roomJid = [occupantJid bareJID];
+		
+		if (xmppStream)
+		{
+			XMPPJID *streamFullJid = [self myJIDForXMPPStream:xmppStream];
+			
+			NSDictionary *occupantsRoomsDict = [occupantsGlobalDict objectForKey:streamFullJid];
+			NSDictionary *occupantsRoomDict = [occupantsRoomsDict objectForKey:roomJid];
+			
+			occupant = [occupantsRoomDict objectForKey:occupantJid];
+		}
+		else
+		{
+			for (XMPPJID *streamFullJid in occupantsGlobalDict)
+			{
+				NSDictionary *occupantsRoomsDict = [occupantsGlobalDict objectForKey:streamFullJid];
+				NSDictionary *occupantsRoomDict = [occupantsRoomsDict objectForKey:roomJid];
+								
+				occupant = [occupantsRoomDict objectForKey:occupantJid];
+				if (occupant) break;
+			}
+		}
+		
+		if (shouldCopy)
+		{
+			occupant = [occupant copy];
+		}
+	}};
+	
+	if (dispatch_get_current_queue() == storageQueue)
+		block(NO);
 	else
-	{
-		predicate = [NSPredicate predicateWithFormat:@"jidStr == %@", jid];
-	}
+		dispatch_sync(storageQueue, ^{ block(YES); });
 	
-	NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-	[fetchRequest setEntity:entity];
-	[fetchRequest setPredicate:predicate];
-	[fetchRequest setFetchBatchSize:1];
+	return occupant;
+}
+
+- (NSArray *)occupantsForRoom:(XMPPJID *)roomJid stream:(XMPPStream *)xmppStream
+{
+	roomJid = [roomJid bareJID]; // Just in case a full jid is accidentally passed
 	
-	NSError *error = nil;
-	NSArray *results = [moc executeFetchRequest:fetchRequest error:&error];
+	__block NSArray *results = nil;
 	
-	if (error)
-	{
-		XMPPLogWarn(@"%@: %@ - fetch error: %@", THIS_FILE, THIS_METHOD, error);
-	}
+	void (^block)(BOOL) = ^(BOOL shouldCopy){ @autoreleasepool {
+		
+		if (xmppStream)
+		{
+			XMPPJID *streamFullJid = [self myJIDForXMPPStream:xmppStream];
+			
+			NSDictionary *occupantsRoomsDict = [occupantsGlobalDict objectForKey:streamFullJid];
+			NSDictionary *occupantsRoomDict = [occupantsRoomsDict objectForKey:roomJid];
+			
+			results = [occupantsRoomDict allValues];
+		}
+		else
+		{
+			for (XMPPJID *streamFullJid in occupantsGlobalDict)
+			{
+				NSDictionary *occupantsRoomsDict = [occupantsGlobalDict objectForKey:streamFullJid];
+				NSDictionary *occupantsRoomDict = [occupantsRoomsDict objectForKey:roomJid];
+				
+				if (occupantsRoomDict)
+				{
+					results = [occupantsRoomDict allValues];
+					break;
+				}
+			}
+		}
+		
+		if (shouldCopy)
+		{
+			NSArray *temp = results;
+			results = [[NSArray alloc] initWithArray:temp copyItems:YES];
+		}
+	}};
 	
-	return (XMPPRoomOccupantCoreDataStorageObject *)[results lastObject];
+	if (dispatch_get_current_queue() == storageQueue)
+		block(NO);
+	else
+		dispatch_sync(storageQueue, ^{ block(YES); });
+	
+	return results;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -880,41 +808,83 @@ static XMPPRoomCoreDataStorage *sharedInstance;
 {
 	XMPPLogTrace();
 	
-	
-	XMPPJID *presenceJID = [presence from];
+	dispatch_queue_t roomQueue = room.moduleQueue;
 	XMPPStream *xmppStream = room.xmppStream;
 	
 	[self scheduleBlock:^{
 		
-		NSManagedObjectContext *moc = [self managedObjectContext];
-		
-		// Is occupant already in database?
-		
-		XMPPRoomOccupantCoreDataStorageObject *occupant = 
-		    [self occupantForJID:presenceJID stream:xmppStream inContext:moc];
-		
-		// Is occupant available or unavailable?
+		XMPPJID *from = [presence from];
 		
 		if ([[presence type] isEqualToString:@"unavailable"])
 		{
-			// Remove occupant record from database
-			
+			XMPPRoomOccupantHybridMemoryStorageObject *occupant = [self occupantForJID:from stream:xmppStream];
 			if (occupant)
 			{
+				// Occupant did leave - remove
+				
+				[self willRemoveOccupant:occupant];
 				[self removeOccupant:occupant withPresence:presence room:room stream:xmppStream];
+				[self didRemoveOccupant:occupant];
+				
+				// Notify delegate(s)
+				
+				XMPPRoomOccupantHybridMemoryStorageObject *occupantCopy = [occupant copy];
+				dispatch_async(roomQueue, ^{ @autoreleasepool {
+					
+					GCDMulticastDelegate <XMPPRoomHybridStorageDelegate> *roomMulticastDelegate =
+					    (GCDMulticastDelegate <XMPPRoomHybridStorageDelegate> *)[room multicastDelegate];
+					
+					[roomMulticastDelegate xmppRoomHybridStorage:self
+					                            occupantDidLeave:occupantCopy];
+				}});
 			}
 		}
 		else
 		{
-			// Insert or update occupant in database
-			
-			if (occupant)
+			XMPPRoomOccupantHybridMemoryStorageObject *occupant = [self occupantForJID:from stream:xmppStream];
+			if (occupant == nil)
 			{
-				[self updateOccupant:occupant withPresence:presence room:room stream:xmppStream];
+				// Occupant did join - add
+				
+				occupant = [self insertOccupantWithPresence:presence room:room stream:xmppStream];
+				if (occupant == nil)
+				{
+					// Subclasses may choose to ignore occupants for whatever reason.
+					return;
+				}
+				
+				[self didInsertOccupant:occupant];
+				
+				// Notify delegate(s)
+				
+				XMPPRoomOccupantHybridMemoryStorageObject *occupantCopy = [occupant copy];
+				dispatch_async(roomQueue, ^{ @autoreleasepool {
+				
+					GCDMulticastDelegate <XMPPRoomHybridStorageDelegate> *roomMulticastDelegate =
+					    (GCDMulticastDelegate <XMPPRoomHybridStorageDelegate> *)[room multicastDelegate];
+					
+					[roomMulticastDelegate xmppRoomHybridStorage:self
+					                             occupantDidJoin:occupantCopy];
+				}});
 			}
 			else
 			{
-				[self insertOccupantWithPresence:presence room:room stream:xmppStream];
+				// Occupant did update - move
+				
+				[self updateOccupant:occupant withPresence:presence room:room stream:xmppStream];
+				[self didUpdateOccupant:occupant];
+				
+				// Notify delegate(s)
+				
+				XMPPRoomOccupantHybridMemoryStorageObject *occupantCopy = [occupant copy];
+				dispatch_async(roomQueue, ^{ @autoreleasepool {
+					
+					GCDMulticastDelegate <XMPPRoomHybridStorageDelegate> *roomMulticastDelegate =
+					    (GCDMulticastDelegate <XMPPRoomHybridStorageDelegate> *)[room multicastDelegate];
+					
+					[roomMulticastDelegate xmppRoomHybridStorage:self
+					                           occupantDidUpdate:occupantCopy];
+				}});
 			}
 		}
 	}];
@@ -936,10 +906,10 @@ static XMPPRoomCoreDataStorage *sharedInstance;
 {
 	XMPPLogTrace();
 	
-	XMPPJID *roomJID = room.roomJID;
+	XMPPJID *myRoomJID = room.myRoomJID;
 	XMPPJID *messageJID = [message from];
 	
-	if ([roomJID isEqualToJID:messageJID])
+	if ([myRoomJID isEqualToJID:messageJID])
 	{
 		// Ignore - we already stored message in handleOutgoingMessage:room:
 		return;
@@ -964,11 +934,16 @@ static XMPPRoomCoreDataStorage *sharedInstance;
 {
 	XMPPLogTrace();
 	
-	XMPPJID *roomJID = room.roomJID;
+	XMPPJID *roomJid = room.roomJID;
+	XMPPStream *xmppStream = room.xmppStream;
 	
 	[self scheduleBlock:^{
 		
-		[self clearAllOccupantsFromRoom:roomJID];
+		XMPPJID *streamFullJid = [self myJIDForXMPPStream:xmppStream];
+		
+		NSMutableDictionary *occupantsRoomsDict = [occupantsGlobalDict objectForKey:streamFullJid];
+		
+		[occupantsRoomsDict removeObjectForKey:roomJid]; // Remove room (and all associated occupants)
 	}];
 }
 

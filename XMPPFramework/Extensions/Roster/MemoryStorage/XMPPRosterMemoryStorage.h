@@ -1,11 +1,13 @@
 #import <Foundation/Foundation.h>
 #import "XMPPRoster.h"
-#import "XMPPUserMemoryStorage.h"
-#import "XMPPResourceMemoryStorage.h"
+#import "XMPPUserMemoryStorageObject.h"
+#import "XMPPResourceMemoryStorageObject.h"
 
 
 /**
- * This class is an example implementation of XMPPRosterStorage using core data.
+ * This class is an example implementation of the XMPPRosterStorage protocol.
+ * It simply keeps all roster informatin in memory.
+ * 
  * You are free to substitute your own storage class.
 **/
 
@@ -21,7 +23,7 @@
 	NSMutableDictionary *roster;
 	
 	XMPPJID *myJID;
-	XMPPUserMemoryStorage *myUser;
+	XMPPUserMemoryStorageObject *myUser;
 }
 
 - (id)init;
@@ -35,18 +37,21 @@
 @property (readwrite, assign) Class userClass;
 @property (readwrite, assign) Class resourceClass;
 
-// The methods below provide access to the roster data.
-// If invoked from a dispatch queue other than the roster's queue,
-// the methods return snapshots (copies) of the roster data.
-// These snapshots provide a thread-safe version of the roster data.
-// The thread-safety comes from the fact that the copied data will not be altered,
-// so it can therefore be used from multiple threads/queues if needed.
+/**
+ * The methods below provide access to the roster data.
+ * 
+ * If invoked from a dispatch queue other than the roster's queue,
+ * the methods return snapshots (copies) of the roster data.
+ * These snapshots provide a thread-safe version of the roster data.
+ * The thread-safety comes from the fact that the copied data will not be altered,
+ * so it can therefore be used from multiple threads/queues if needed.
+**/
 
-- (id <XMPPUser>)myUser;
-- (id <XMPPResource>)myResource;
+- (XMPPUserMemoryStorageObject *)myUser;
+- (XMPPResourceMemoryStorageObject *)myResource;
 
-- (id <XMPPUser>)userForJID:(XMPPJID *)jid;
-- (id <XMPPResource>)resourceForJID:(XMPPJID *)jid;
+- (XMPPUserMemoryStorageObject *)userForJID:(XMPPJID *)jid;
+- (XMPPResourceMemoryStorageObject *)resourceForJID:(XMPPJID *)jid;
 
 - (NSArray *)sortedUsersByName;
 - (NSArray *)sortedUsersByAvailabilityName;
@@ -96,23 +101,23 @@
  * 
  * This does not include when resources simply go online / offline.
 **/
-- (void)xmppRoster:(XMPPRosterMemoryStorage *)sender didAddUser:(XMPPUserMemoryStorage *)user;
-- (void)xmppRoster:(XMPPRosterMemoryStorage *)sender didUpdateUser:(XMPPUserMemoryStorage *)user;
-- (void)xmppRoster:(XMPPRosterMemoryStorage *)sender didRemoveUser:(XMPPUserMemoryStorage *)user;
+- (void)xmppRoster:(XMPPRosterMemoryStorage *)sender didAddUser:(XMPPUserMemoryStorageObject *)user;
+- (void)xmppRoster:(XMPPRosterMemoryStorage *)sender didUpdateUser:(XMPPUserMemoryStorageObject *)user;
+- (void)xmppRoster:(XMPPRosterMemoryStorage *)sender didRemoveUser:(XMPPUserMemoryStorageObject *)user;
 
 /**
  * Notifications when resources go online / offline.
 **/
 - (void)xmppRoster:(XMPPRosterMemoryStorage *)sender
-    didAddResource:(XMPPResourceMemoryStorage *)resource
-          withUser:(XMPPUserMemoryStorage *)user;
+    didAddResource:(XMPPResourceMemoryStorageObject *)resource
+          withUser:(XMPPUserMemoryStorageObject *)user;
 
 - (void)xmppRoster:(XMPPRosterMemoryStorage *)sender
- didUpdateResource:(XMPPResourceMemoryStorage *)resource
-          withUser:(XMPPUserMemoryStorage *)user;
+ didUpdateResource:(XMPPResourceMemoryStorageObject *)resource
+          withUser:(XMPPUserMemoryStorageObject *)user;
 
 - (void)xmppRoster:(XMPPRosterMemoryStorage *)sender
- didRemoveResource:(XMPPResourceMemoryStorage *)resource
-          withUser:(XMPPUserMemoryStorage *)user;
+ didRemoveResource:(XMPPResourceMemoryStorageObject *)resource
+          withUser:(XMPPUserMemoryStorageObject *)user;
 
 @end
