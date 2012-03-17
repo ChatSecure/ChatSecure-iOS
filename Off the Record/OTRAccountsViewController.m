@@ -37,6 +37,7 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    self.view.backgroundColor = [UIColor whiteColor];
     accountsTableView.backgroundColor = [UIColor clearColor];
     aboutButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"about_icon.png"] style:UIBarButtonItemStylePlain target:self action:@selector(showAboutScreen)];
     self.navigationItem.rightBarButtonItem = aboutButton;
