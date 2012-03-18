@@ -127,7 +127,6 @@
 		D9991A4B13F44F87002D3008 /* OTRChatListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9991A4913F44F86002D3008 /* OTRChatListViewController.m */; };
 		D9991A4C13F44F87002D3008 /* OTRChatListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9991A4A13F44F86002D3008 /* OTRChatListViewController.xib */; };
 		D9991A5113F44F9A002D3008 /* OTRChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9991A4F13F44F9A002D3008 /* OTRChatViewController.m */; };
-		D9991A5213F44F9A002D3008 /* OTRChatViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9991A5013F44F9A002D3008 /* OTRChatViewController.xib */; };
 		D99BA290141D3F3A00D051B6 /* OTRMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = D99BA28F141D3F3A00D051B6 /* OTRMessage.m */; };
 		D9BBCD3B1491F7AB00AF1B9F /* 19-gear.png in Resources */ = {isa = PBXBuildFile; fileRef = D9BBCD3A1491F7AB00AF1B9F /* 19-gear.png */; };
 		D9BBCD3F1491F8B400AF1B9F /* OTRAboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9BBCD3D1491F8B400AF1B9F /* OTRAboutViewController.m */; };
@@ -572,7 +571,6 @@
 		D9991A4A13F44F86002D3008 /* OTRChatListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OTRChatListViewController.xib; sourceTree = "<group>"; };
 		D9991A4E13F44F9A002D3008 /* OTRChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRChatViewController.h; sourceTree = "<group>"; };
 		D9991A4F13F44F9A002D3008 /* OTRChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRChatViewController.m; sourceTree = "<group>"; };
-		D9991A5013F44F9A002D3008 /* OTRChatViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OTRChatViewController.xib; sourceTree = "<group>"; };
 		D99BA28E141D3F3A00D051B6 /* OTRMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRMessage.h; sourceTree = "<group>"; };
 		D99BA28F141D3F3A00D051B6 /* OTRMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRMessage.m; sourceTree = "<group>"; };
 		D9BBCD3A1491F7AB00AF1B9F /* 19-gear.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "19-gear.png"; sourceTree = "<group>"; };
@@ -1765,7 +1763,6 @@
 				D9991A4A13F44F86002D3008 /* OTRChatListViewController.xib */,
 				D9991A4E13F44F9A002D3008 /* OTRChatViewController.h */,
 				D9991A4F13F44F9A002D3008 /* OTRChatViewController.m */,
-				D9991A5013F44F9A002D3008 /* OTRChatViewController.xib */,
 				D9F9378913F44BD3009A3D84 /* OTRAppDelegate.h */,
 				D9F9378A13F44BD3009A3D84 /* OTRAppDelegate.m */,
 				D9DE274913F4F0A400E335CA /* OTRLoginViewController.h */,
@@ -1912,7 +1909,6 @@
 				D9F9378513F44BD3009A3D84 /* InfoPlist.strings in Resources */,
 				D9E068F313F44D2900AC10A3 /* OTRBuddyListViewController.xib in Resources */,
 				D9991A4C13F44F87002D3008 /* OTRChatListViewController.xib in Resources */,
-				D9991A5213F44F9A002D3008 /* OTRChatViewController.xib in Resources */,
 				D9DE274D13F4F0A500E335CA /* OTRLoginViewController.xib in Resources */,
 				D9CE422F13FDC9EF003EC27C /* 08-chat.png in Resources */,
 				D9CE423213FDCA0F003EC27C /* 112-group.png in Resources */,

@@ -25,6 +25,28 @@
 @synthesize chatBox;
 @synthesize viewChatHistory;
 @synthesize viewChatBox;
+@synthesize context;
+@synthesize lockButton, unlockedButton;
+@synthesize lastActionLink;
+
+- (void) dealloc {
+    self.protocol = nil;
+    self.accountName = nil;
+    self.lastActionLink = nil;
+    self.buddyListController = nil;
+    self.rawChatHistory = nil;
+}
+
+- (void)viewDidUnload {
+    [super viewDidUnload];
+    self.chatHistoryTextView = nil;
+    self.messageTextField = nil;
+    self.lockButton = nil;
+    self.unlockedButton = nil;
+    self.chatBox = nil;
+    self.viewChatHistory = nil;
+    self.viewChatBox = nil;
+}
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -99,6 +121,12 @@
 
 
 #pragma mark - View lifecycle
+
+- (void) loadView {
+    [super loadView];
+    
+    
+}
 
 - (void)viewDidLoad
 {
@@ -286,15 +314,6 @@
     }
 }
 
-- (void)viewDidUnload
-{
-    [self setChatHistoryTextView:nil];
-    [self setMessageTextField:nil];
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
-}
-
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
@@ -310,7 +329,9 @@
     
     return YES;
 }
-- (IBAction)sendButtonPressed:(id)sender {
+
+
+- (void)sendButtonPressed:(id)sender {
     [self textViewShouldReturn:chatBox];
     [self chatButtonClick];
 }

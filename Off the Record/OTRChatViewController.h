@@ -12,38 +12,30 @@
 #import "context.h"
 #import "OTRProtocolManager.h"
 
-@interface OTRChatViewController : UIViewController <UITextFieldDelegate, UITextViewDelegate,DTAttributedTextContentViewDelegate, UIActionSheetDelegate> {
-    DTAttributedTextView *chatHistoryTextView;
-    UITextField *messageTextField;
-    UITextView *chatBox;
-    OTRBuddyListViewController *buddyListController;
-    IBOutlet UIView *viewChatHistory;
-    IBOutlet UIView *viewChatBox;
-    
-    NSURL *lastActionLink;
-    NSMutableString *rawChatHistory;
-    
-    UIBarButtonItem *lockButton;
-    UIBarButtonItem *unlockedButton;
-    ConnContext *context;
-    
-    NSString *protocol;
-}
+@interface OTRChatViewController : UIViewController <UITextFieldDelegate, UITextViewDelegate,DTAttributedTextContentViewDelegate, UIActionSheetDelegate> 
+
+@property (nonatomic) ConnContext *context;
+@property (nonatomic, retain) UIBarButtonItem *lockButton, *unlockedButton;
 
 @property (nonatomic, retain) OTRProtocolManager *protocolManager;
 
 @property (retain, nonatomic) DTAttributedTextView *chatHistoryTextView;
-@property (retain, nonatomic) IBOutlet UITextField *messageTextField;
+@property (retain, nonatomic) UITextField *messageTextField;
+@property (retain, nonatomic) UITextView *chatBox;
+
 @property (retain, nonatomic) OTRBuddyListViewController *buddyListController;
-@property (retain, nonatomic) IBOutlet UITextView *chatBox;
-@property (nonatomic, retain) NSMutableString *rawChatHistory;
-@property (nonatomic, retain) NSString *protocol;
-@property (nonatomic, retain) NSString *accountName;
+
+
 @property (nonatomic, retain) UIView *viewChatHistory;
 @property (nonatomic, retain) UIView *viewChatBox;
 
+@property (nonatomic, retain) NSMutableString *rawChatHistory;
+@property (nonatomic, retain) NSString *protocol;
+@property (nonatomic, retain) NSString *accountName;
+@property (nonatomic, retain) NSURL *lastActionLink;
 
-- (IBAction)sendButtonPressed:(id)sender;
+
+- (void)sendButtonPressed:(id)sender;
 - (void)receiveMessage:(NSString*)message;
 - (void)sendMessage:(NSString*)message;
 - (void)scrollTextViewToBottom;

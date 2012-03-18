@@ -12,6 +12,7 @@
 
 int main(int argc, char *argv[])
 {
-    int retVal = UIApplicationMain(argc, argv, nil, NSStringFromClass([OTRAppDelegate class]));
-    return retVal;
+    @autoreleasepool {
+        return UIApplicationMain(argc, argv, nil, NSStringFromClass([OTRAppDelegate class]));
+    }
 }
