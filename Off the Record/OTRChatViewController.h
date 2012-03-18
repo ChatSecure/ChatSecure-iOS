@@ -19,15 +19,15 @@
 
 @property (nonatomic, retain) OTRProtocolManager *protocolManager;
 
-@property (retain, nonatomic) DTAttributedTextView *chatHistoryTextView;
-@property (retain, nonatomic) UITextField *messageTextField;
-@property (retain, nonatomic) UITextView *chatBox;
+@property (nonatomic, retain) DTAttributedTextView *chatHistoryTextView;
+@property (nonatomic, retain) UITextField *messageTextField;
+@property (nonatomic, retain) UITextView *chatBox;
+@property (nonatomic, retain) UIButton *sendButton;
 
-@property (retain, nonatomic) OTRBuddyListViewController *buddyListController;
+@property (nonatomic, retain) OTRBuddyListViewController *buddyListController;
 
 
-@property (nonatomic, retain) UIView *viewChatHistory;
-@property (nonatomic, retain) UIView *viewChatBox;
+@property (nonatomic, retain) UIView *chatBoxView;
 
 @property (nonatomic, retain) NSMutableString *rawChatHistory;
 @property (nonatomic, retain) NSString *protocol;

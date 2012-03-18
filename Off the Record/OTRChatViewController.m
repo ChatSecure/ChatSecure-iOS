@@ -23,11 +23,11 @@
 @synthesize protocol;
 @synthesize accountName;
 @synthesize chatBox;
-@synthesize viewChatHistory;
-@synthesize viewChatBox;
+@synthesize chatBoxView;
 @synthesize context;
 @synthesize lockButton, unlockedButton;
 @synthesize lastActionLink;
+@synthesize sendButton;
 
 - (void) dealloc {
     self.protocol = nil;
@@ -44,8 +44,8 @@
     self.lockButton = nil;
     self.unlockedButton = nil;
     self.chatBox = nil;
-    self.viewChatHistory = nil;
-    self.viewChatBox = nil;
+    self.chatBoxView = nil;
+    self.sendButton = nil;
 }
 
 
@@ -55,7 +55,7 @@
     if (self) 
     {
         //set notification for when keyboard shows/hides
-        
+        self.title = @"Chat";
     }
     return self;
 }
@@ -124,8 +124,23 @@
 
 - (void) loadView {
     [super loadView];
+    self.view.backgroundColor = [UIColor lightGrayColor];
     
+    self.chatBoxView = [[UIView alloc] initWithFrame:CGRectZero];
+    [self.view addSubview:chatBoxView];
     
+    self.messageTextField = [[UITextField alloc] initWithFrame:CGRectZero];
+    messageTextField.borderStyle = UITextBorderStyleRoundedRect;
+    [self.chatBoxView addSubview:messageTextField];
+
+    
+    self.sendButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    //sendButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+    [sendButton setTitle:@"Send" forState:UIControlStateNormal];
+    [sendButton addTarget:self action:@selector(sendButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [self.chatBoxView addSubview:sendButton];
+    
+
 }
 
 - (void)viewDidLoad
@@ -135,14 +150,23 @@
     [chatBox becomeFirstResponder];
     [chatBox.layer setCornerRadius:5];
     //[chatBox setContentInset:UIEdgeInsetsZero];
+
     
-    CGRect frame = CGRectMake(0.0, 0.0, 320, 146);
+    CGRect frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height-300);
 
     [DTAttributedTextContentView setLayerClass:[CATiledLayer class]];
     self.chatHistoryTextView = [[DTAttributedTextView alloc] initWithFrame:frame];
 	chatHistoryTextView.textDelegate = self;
 	chatHistoryTextView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-	[viewChatHistory addSubview:chatHistoryTextView];
+	[self.view addSubview:chatHistoryTextView];
+    self.chatBoxView.frame = CGRectMake(0, self.chatHistoryTextView.frame.size.height, self.view.frame.size.width, 50);
+    
+    self.messageTextField.frame = CGRectMake(0, 0, self.view.frame.size.width-60, 50);
+    self.sendButton.frame = CGRectMake(self.messageTextField.frame.size.width, 0, 60 , 50);
+    
+    self.chatBoxView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    messageTextField.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
+    sendButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     
     if(!rawChatHistory)
         rawChatHistory = [[NSMutableString alloc] init];
@@ -230,20 +254,20 @@
 			chatBox.frame = chatBoxFrame;
             
 			// form view
-			CGRect formFrame = viewChatBox.frame;
+			CGRect formFrame = chatBoxView.frame;
 			NSInteger viewFormH = formFrame.size.height;
 			NSLog(@"FORM VIEW HEIGHT : %d", viewFormH);
 			formFrame.size.height = 30 + newSizeH;
 			formFrame.origin.y = 199 - (newSizeH - 18)-49;
-			viewChatBox.frame = formFrame;
+			chatBoxView.frame = formFrame;
             
 			// table view
-			CGRect tableFrame = viewChatHistory.frame;
+			CGRect tableFrame = chatHistoryTextView.frame;
 			NSInteger viewTableH = tableFrame.size.height;
 			NSLog(@"TABLE VIEW HEIGHT : %d", viewTableH);
 			//tableFrame.size.height = 199 - (newSizeH - 18);
             tableFrame.size.height = 199 - (newSizeH - 18)-49;
-			viewChatHistory.frame = tableFrame;
+			chatHistoryTextView.frame = tableFrame;
 		}
         
         // if our new height is greater than 90
@@ -278,23 +302,22 @@
 	//viewChatHistory.frame = tableFrame;
     
     // form view
-    CGRect formFrame = viewChatBox.frame;
+    CGRect formFrame = chatBoxView.frame;
     //NSInteger viewFormH = formFrame.size.height;
     //NSLog(@"FORM VIEW HEIGHT : %d", viewFormH);
     //formFrame.size.height = 30 + 12;
     formFrame.size.height = 52;
     //formFrame.origin.y = 199 - (12 - 18)-49;
     formFrame.origin.y = 146;
-    viewChatBox.frame = formFrame;
+    chatBoxView.frame = formFrame;
     
     // table view
-    CGRect tableFrame = viewChatHistory.frame;
+    CGRect tableFrame = chatHistoryTextView.frame;
     //NSInteger viewTableH = tableFrame.size.height;
     //NSLog(@"TABLE VIEW HEIGHT : %d", viewTableH);
     //tableFrame.size.height = 199 - (newSizeH - 18);
     tableFrame.size.height = 146;
-    viewChatHistory.frame = tableFrame;
-
+    chatHistoryTextView.frame = tableFrame;
 }
 
 - (void) receiveNotification:(NSNotification *) notification
