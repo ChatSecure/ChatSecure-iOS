@@ -16,7 +16,6 @@
 
 #define kTabBarHeight 49
 #define kSendButtonWidth 60
-#define kChatBoxViewHeight 30
 
 @implementation OTRChatViewController
 @synthesize chatHistoryTextView;
@@ -49,14 +48,14 @@
     self.unlockedButton = nil;
     self.chatBoxView = nil;
     self.sendButton = nil;
-    [[NSNotificationCenter defaultCenter] removeObserver:self 
+    /*[[NSNotificationCenter defaultCenter] removeObserver:self 
                                                     name:UIKeyboardWillShowNotification 
                                                   object:nil]; 
     [[NSNotificationCenter defaultCenter] removeObserver:self 
                                                     name:UIKeyboardWillHideNotification 
-                                                  object:nil]; 
+                                                  object:nil]; */
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
-
 
 - (id)init {
     if (self = [super init]) {
@@ -64,6 +63,22 @@
         self.title = @"Chat";
     }
     return self;
+}
+
+- (CGFloat) chatBoxViewHeight {
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        return 50.0;
+    } else {
+        return 30.0;
+    }
+}
+
+- (int) fontSize {
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        return 7.0;
+    } else {
+        return 5.0;
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -247,14 +262,14 @@
     //make contentSize bigger than your scrollSize (you will need to figure out for your own use case)
 
     
-    CGRect frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height-kChatBoxViewHeight-kTabBarHeight-self.navigationController.navigationBar.frame.size.height);
+    CGRect frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height-[self chatBoxViewHeight]-kTabBarHeight-self.navigationController.navigationBar.frame.size.height);
 
     [DTAttributedTextContentView setLayerClass:[CATiledLayer class]];
     self.chatHistoryTextView = [[DTAttributedTextView alloc] initWithFrame:frame];
 	chatHistoryTextView.textDelegate = self;
 	chatHistoryTextView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 	[self.view addSubview:chatHistoryTextView];
-    self.chatBoxView.frame = CGRectMake(0, self.chatHistoryTextView.frame.size.height, self.view.frame.size.width, kChatBoxViewHeight);
+    self.chatBoxView.frame = CGRectMake(0, self.chatHistoryTextView.frame.size.height, self.view.frame.size.width, [self chatBoxViewHeight]);
     
     self.messageTextField.frame = CGRectMake(0, 0, self.view.frame.size.width-kSendButtonWidth, self.chatBoxView.frame.size.height);
     self.sendButton.frame = CGRectMake(self.messageTextField.frame.size.width, 0, kSendButtonWidth , self.chatBoxView.frame.size.height);
@@ -444,9 +459,11 @@
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    [textField resignFirstResponder];
-    //[self sendMessage:textField.text];
-    //textField.text = @"";    
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+        [textField resignFirstResponder];
+    } else {
+        [self sendButtonPressed:nil];
+    }
     return YES;
 }
 
@@ -498,9 +515,9 @@
     NSLog(@"encoded message: %@",encodedMessage.message);
     [OTRMessage sendMessage:encodedMessage];    
     
-    NSString *username = @"<FONT SIZE=16 COLOR=\"#0000ff\"><b>Me:</b></FONT>";
+    NSString *username = [NSString stringWithFormat:@"<FONT SIZE=%d COLOR=\"#0000ff\"><b>Me:</b></FONT>",[self fontSize]];
     
-    [rawChatHistory appendFormat:@"%@ <FONT SIZE=16>%@</FONT><br>",username, message];
+    [rawChatHistory appendFormat:@"%@ <FONT SIZE=%d>%@</FONT><br>",username,[self fontSize], message];
     
     [self updateChatHistory];
     [self scrollTextViewToBottom];
@@ -514,11 +531,11 @@
     
     NSRange htmlStart = [message rangeOfString:@"<HTML>"];
     
-    NSString *username = [NSString stringWithFormat:@"<FONT SIZE=16 COLOR=\"#ff0000\"><b>%@:</b></FONT>",self.title];
+    NSString *username = [NSString stringWithFormat:@"<FONT SIZE=%d COLOR=\"#ff0000\"><b>%@:</b></FONT>",[self fontSize],self.title];
     
     if(htmlStart.location == NSNotFound)
     {
-        [rawChatHistory appendFormat:@"%@ <FONT SIZE=16>%@</FONT><br>",username,message];
+        [rawChatHistory appendFormat:@"%@ <FONT SIZE=%d>%@</FONT><br>",username,[self fontSize],message];
     }
     else
     {
