@@ -444,14 +444,16 @@
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    [self sendMessage:textField.text];
-    textField.text = @"";    
+    [textField resignFirstResponder];
+    //[self sendMessage:textField.text];
+    //textField.text = @"";    
     return YES;
 }
 
 
 - (void)sendButtonPressed:(id)sender {
-    [self textFieldShouldReturn:messageTextField];
+    [self sendMessage:messageTextField.text];
+    messageTextField.text = @"";    
     [self chatButtonClick];
 }
 
