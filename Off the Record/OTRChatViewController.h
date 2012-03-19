@@ -21,7 +21,6 @@
 
 @property (nonatomic, retain) DTAttributedTextView *chatHistoryTextView;
 @property (nonatomic, retain) UITextField *messageTextField;
-@property (nonatomic, retain) UITextView *chatBox;
 @property (nonatomic, retain) UIButton *sendButton;
 
 @property (nonatomic, retain) OTRBuddyListViewController *buddyListController;

@@ -22,7 +22,6 @@
 @synthesize protocolManager;
 @synthesize protocol;
 @synthesize accountName;
-@synthesize chatBox;
 @synthesize chatBoxView;
 @synthesize context;
 @synthesize lockButton, unlockedButton;
@@ -43,7 +42,6 @@
     self.messageTextField = nil;
     self.lockButton = nil;
     self.unlockedButton = nil;
-    self.chatBox = nil;
     self.chatBoxView = nil;
     self.sendButton = nil;
 }
@@ -147,8 +145,8 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    [chatBox becomeFirstResponder];
-    [chatBox.layer setCornerRadius:5];
+    //[messageTextField becomeFirstResponder];
+    //[chatBox.layer setCornerRadius:5];
     //[chatBox setContentInset:UIEdgeInsetsZero];
 
     
@@ -217,15 +215,15 @@
                                                object: nil];
     
     //turn off scrolling and set the font details.
-    chatBox.scrollEnabled = NO;
-    chatBox.font = [UIFont fontWithName:@"Helvetica" size:14]; 
+    //chatBox.scrollEnabled = NO;
+    //chatBox.font = [UIFont fontWithName:@"Helvetica" size:14]; 
         
     
 
 }
 
 -(void) keyPressed: (NSNotification*) notification{
-	// get the size of the text block so we can work our magic
+/*	// get the size of the text block so we can work our magic
 	//CGSize newSize = [chatBox.text 
     //                  sizeWithFont:[UIFont fontWithName:@"Helvetica" size:14] 
     //                  constrainedToSize:CGSizeMake(222,9999) 
@@ -277,11 +275,11 @@
 		{
 			chatBox.scrollEnabled = YES;
 		}
-	}
+	}*/
 }
 - (void)chatButtonClick 
 {
-	// hide the keyboard, we are done with it.
+/*	// hide the keyboard, we are done with it.
 	//[chatBox resignFirstResponder];
 	//chatBox.text = nil;
     
@@ -318,6 +316,7 @@
     //tableFrame.size.height = 199 - (newSizeH - 18);
     tableFrame.size.height = 146;
     chatHistoryTextView.frame = tableFrame;
+ */
 }
 
 - (void) receiveNotification:(NSNotification *) notification
@@ -340,14 +339,18 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        return YES;
+    } else {
+        return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+    }
 }
 
--(BOOL)textViewShouldReturn:(UITextView *)textView {
-    [self sendMessage:textView.text];
+-(BOOL)textViewShouldReturn:(UITextField *)textField {
+    [self sendMessage:textField.text];
     //[self sendMessage:textField.text];
     
-    textView.text=@"";
+    textField.text=@"";
     //textField.text = @"";
     
     return YES;
@@ -355,7 +358,7 @@
 
 
 - (void)sendButtonPressed:(id)sender {
-    [self textViewShouldReturn:chatBox];
+    [self textViewShouldReturn:messageTextField];
     [self chatButtonClick];
 }
 
