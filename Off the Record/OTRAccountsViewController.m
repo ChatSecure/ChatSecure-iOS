@@ -13,10 +13,8 @@
 @implementation OTRAccountsViewController
 @synthesize accountsTableView;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
+- (id)init {
+    if (self = [super init]) {
         self.title = @"Accounts";
         self.tabBarItem.image = [UIImage imageNamed:@"19-gear.png"];
     }

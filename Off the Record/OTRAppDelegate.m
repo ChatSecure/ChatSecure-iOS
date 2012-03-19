@@ -23,16 +23,16 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
 
-    OTRBuddyListViewController *viewController1 = [[OTRBuddyListViewController alloc] initWithNibName:@"OTRBuddyListViewController" bundle:nil];
-    UIViewController *navController = [[UINavigationController alloc] initWithRootViewController:viewController1];
-    OTRChatListViewController *viewController2 = [[OTRChatListViewController alloc] initWithNibName:@"OTRChatListViewController" bundle:nil];
+    OTRBuddyListViewController *viewController1 = [[OTRBuddyListViewController alloc] init];
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:viewController1];
+    OTRChatListViewController *viewController2 = [[OTRChatListViewController alloc] init];
     OTRAccountsViewController *viewController3 = [[OTRAccountsViewController alloc] init];
-    UIViewController *navController3 = [[UINavigationController alloc] initWithRootViewController:viewController3];
+    UINavigationController *navController3 = [[UINavigationController alloc] initWithRootViewController:viewController3];
     
     viewController2.buddyController = viewController1;
     viewController1.chatListController = viewController2;
     viewController1.tabController = _tabBarController;
-    UIViewController *navController2 = [[UINavigationController alloc] initWithRootViewController:viewController2];
+    UINavigationController *navController2 = [[UINavigationController alloc] initWithRootViewController:viewController2];
     self.tabBarController = [[UITabBarController alloc] init];
     //self.tabBarController.viewControllers = [NSArray arrayWithObjects:navController, navController2, navController3, nil];
     self.tabBarController.viewControllers = [NSArray arrayWithObjects:navController, navController2, navController3, [[UINavigationController alloc] initWithRootViewController:[[OTRChatViewController alloc] init]], nil];

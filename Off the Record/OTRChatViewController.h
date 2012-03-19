@@ -12,7 +12,7 @@
 #import "context.h"
 #import "OTRProtocolManager.h"
 
-@interface OTRChatViewController : UIViewController <UITextFieldDelegate, UITextViewDelegate,DTAttributedTextContentViewDelegate, UIActionSheetDelegate> 
+@interface OTRChatViewController : UIViewController <UITextFieldDelegate,DTAttributedTextContentViewDelegate, UIActionSheetDelegate> 
 
 @property (nonatomic) ConnContext *context;
 @property (nonatomic, retain) UIBarButtonItem *lockButton, *unlockedButton;
@@ -32,6 +32,7 @@
 @property (nonatomic, retain) NSString *protocol;
 @property (nonatomic, retain) NSString *accountName;
 @property (nonatomic, retain) NSURL *lastActionLink;
+@property (nonatomic) BOOL keyboardIsShown;
 
 
 - (void)sendButtonPressed:(id)sender;

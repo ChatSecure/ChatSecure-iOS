@@ -14,6 +14,10 @@
 #import <QuartzCore/QuartzCore.h>
 #import "DTHTMLAttributedStringBuilder.h"
 
+#define kTabBarHeight 49
+#define kSendButtonWidth 60
+#define kChatBoxViewHeight 30
+
 @implementation OTRChatViewController
 @synthesize chatHistoryTextView;
 @synthesize messageTextField;
@@ -27,6 +31,7 @@
 @synthesize lockButton, unlockedButton;
 @synthesize lastActionLink;
 @synthesize sendButton;
+@synthesize keyboardIsShown;
 
 - (void) dealloc {
     self.protocol = nil;
@@ -44,14 +49,17 @@
     self.unlockedButton = nil;
     self.chatBoxView = nil;
     self.sendButton = nil;
+    [[NSNotificationCenter defaultCenter] removeObserver:self 
+                                                    name:UIKeyboardWillShowNotification 
+                                                  object:nil]; 
+    [[NSNotificationCenter defaultCenter] removeObserver:self 
+                                                    name:UIKeyboardWillHideNotification 
+                                                  object:nil]; 
 }
 
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) 
-    {
+- (id)init {
+    if (self = [super init]) {
         //set notification for when keyboard shows/hides
         self.title = @"Chat";
     }
@@ -64,6 +72,82 @@
     [super didReceiveMemoryWarning];
     
     // Release any cached data, images, etc that aren't in use.
+}
+
+- (NSTimeInterval)keyboardAnimationDurationForNotification:(NSNotification*)notification
+{
+    NSDictionary* info = [notification userInfo];
+    NSValue* value = [info objectForKey:UIKeyboardAnimationDurationUserInfoKey];
+    NSTimeInterval duration = 0;
+    [value getValue:&duration];
+    return duration;
+}
+
+- (CGFloat)keyboardHeightForNotification:(NSNotification*)notification {
+    // get the size of the keyboard
+    NSDictionary* userInfo = [notification userInfo];
+
+    CGRect keyboardEndFrame;
+    
+    [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] getValue:&keyboardEndFrame];
+
+    CGRect keyboardFrame = [self.view convertRect:keyboardEndFrame toView:nil];
+    return keyboardFrame.size.height;
+}
+
+- (void)keyboardWillHide:(NSNotification *)n
+{
+    // get the size of the keyboard
+    CGFloat keyboardHeight = [self keyboardHeightForNotification:n];
+    
+    
+    // resize the scrollview
+    CGRect chatHistoryFrame = self.chatHistoryTextView.frame;
+    CGRect chatBoxViewFrame = self.chatBoxView.frame;
+    // I'm also subtracting a constant kTabBarHeight because my UIScrollView was offset by the UITabBar so really only the portion of the keyboard that is leftover pass the UITabBar is obscuring my UIScrollView.
+    CGFloat offsetHeight = (keyboardHeight - kTabBarHeight);
+    chatHistoryFrame.size.height += offsetHeight;
+    chatBoxViewFrame.origin.y += offsetHeight;
+    
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationBeginsFromCurrentState:YES];
+    // The kKeyboardAnimationDuration I am using is 0.3
+    [UIView setAnimationDuration:[self keyboardAnimationDurationForNotification:n]];
+    self.chatHistoryTextView.frame = chatHistoryFrame;
+    self.chatBoxView.frame = chatBoxViewFrame;
+    [UIView commitAnimations];
+    
+    keyboardIsShown = NO;
+}
+
+- (void)keyboardWillShow:(NSNotification *)n
+{
+    // This is an ivar I'm using to ensure that we do not do the frame size adjustment on the UIScrollView if the keyboard is already shown.  This can happen if the user, after fixing editing a UITextField, scrolls the resized UIScrollView to another UITextField and attempts to edit the next UITextField.  If we were to resize the UIScrollView again, it would be disastrous.  NOTE: The keyboard notification will fire even when the keyboard is already shown.
+    if (keyboardIsShown) {
+        return;
+    }
+        
+    CGFloat keyboardHeight = [self keyboardHeightForNotification:n];
+
+
+    
+    // resize the scrollview
+    CGRect chatHistoryFrame = self.chatHistoryTextView.frame;
+    CGRect chatBoxViewFrame = self.chatBoxView.frame;
+    // I'm also subtracting a constant kTabBarHeight because my UIScrollView was offset by the UITabBar so really only the portion of the keyboard that is leftover pass the UITabBar is obscuring my UIScrollView.
+    CGFloat offsetHeight = (keyboardHeight - kTabBarHeight);
+    chatHistoryFrame.size.height -= offsetHeight;
+    chatBoxViewFrame.origin.y -= offsetHeight;
+    
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationBeginsFromCurrentState:YES];
+    // The kKeyboardAnimationDuration I am using is 0.3
+    [UIView setAnimationDuration:[self keyboardAnimationDurationForNotification:n]];
+    self.chatHistoryTextView.frame = chatHistoryFrame;
+    self.chatBoxView.frame = chatBoxViewFrame;
+    [UIView commitAnimations];
+    
+    keyboardIsShown = YES;
 }
 
 -(void)setupLockButton
@@ -129,6 +213,7 @@
     
     self.messageTextField = [[UITextField alloc] initWithFrame:CGRectZero];
     messageTextField.borderStyle = UITextBorderStyleRoundedRect;
+    messageTextField.delegate = self;
     [self.chatBoxView addSubview:messageTextField];
 
     
@@ -148,19 +233,31 @@
     //[messageTextField becomeFirstResponder];
     //[chatBox.layer setCornerRadius:5];
     //[chatBox setContentInset:UIEdgeInsetsZero];
+    // register for keyboard notifications
+    [[NSNotificationCenter defaultCenter] addObserver:self 
+                                             selector:@selector(keyboardWillShow:) 
+                                                 name:UIKeyboardWillShowNotification 
+                                               object:self.view.window];
+    // register for keyboard notifications
+    [[NSNotificationCenter defaultCenter] addObserver:self 
+                                             selector:@selector(keyboardWillHide:) 
+                                                 name:UIKeyboardWillHideNotification 
+                                               object:self.view.window];
+    keyboardIsShown = NO;
+    //make contentSize bigger than your scrollSize (you will need to figure out for your own use case)
 
     
-    CGRect frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height-300);
+    CGRect frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height-kChatBoxViewHeight-kTabBarHeight-self.navigationController.navigationBar.frame.size.height);
 
     [DTAttributedTextContentView setLayerClass:[CATiledLayer class]];
     self.chatHistoryTextView = [[DTAttributedTextView alloc] initWithFrame:frame];
 	chatHistoryTextView.textDelegate = self;
 	chatHistoryTextView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 	[self.view addSubview:chatHistoryTextView];
-    self.chatBoxView.frame = CGRectMake(0, self.chatHistoryTextView.frame.size.height, self.view.frame.size.width, 50);
+    self.chatBoxView.frame = CGRectMake(0, self.chatHistoryTextView.frame.size.height, self.view.frame.size.width, kChatBoxViewHeight);
     
-    self.messageTextField.frame = CGRectMake(0, 0, self.view.frame.size.width-60, 50);
-    self.sendButton.frame = CGRectMake(self.messageTextField.frame.size.width, 0, 60 , 50);
+    self.messageTextField.frame = CGRectMake(0, 0, self.view.frame.size.width-kSendButtonWidth, self.chatBoxView.frame.size.height);
+    self.sendButton.frame = CGRectMake(self.messageTextField.frame.size.width, 0, kSendButtonWidth , self.chatBoxView.frame.size.height);
     
     self.chatBoxView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     messageTextField.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
@@ -346,19 +443,15 @@
     }
 }
 
--(BOOL)textViewShouldReturn:(UITextField *)textField {
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
     [self sendMessage:textField.text];
-    //[self sendMessage:textField.text];
-    
-    textField.text=@"";
-    //textField.text = @"";
-    
+    textField.text = @"";    
     return YES;
 }
 
 
 - (void)sendButtonPressed:(id)sender {
-    [self textViewShouldReturn:messageTextField];
+    [self textFieldShouldReturn:messageTextField];
     [self chatButtonClick];
 }
 

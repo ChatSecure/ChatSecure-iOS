@@ -23,10 +23,8 @@
 @synthesize recentMessages;
 
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
+- (id)init {
+    if (self = [super init]) {
         self.title = @"Buddy List";
         self.tabBarItem.image = [UIImage imageNamed:@"112-group.png"];
     }

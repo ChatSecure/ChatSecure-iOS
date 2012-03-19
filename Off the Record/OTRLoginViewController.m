@@ -17,13 +17,8 @@
 @synthesize rememberUserNameSwitch;
 @synthesize useXMPP;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        
-        
-       
+- (id)init {
+    if (self = [super init]) {
     }
     return self;
 }
