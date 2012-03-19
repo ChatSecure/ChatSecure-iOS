@@ -34,8 +34,8 @@
     viewController1.tabController = _tabBarController;
     UINavigationController *navController2 = [[UINavigationController alloc] initWithRootViewController:viewController2];
     self.tabBarController = [[UITabBarController alloc] init];
-    //self.tabBarController.viewControllers = [NSArray arrayWithObjects:navController, navController2, navController3, nil];
-    self.tabBarController.viewControllers = [NSArray arrayWithObjects:navController, navController2, navController3, [[UINavigationController alloc] initWithRootViewController:[[OTRChatViewController alloc] init]], nil];
+    self.tabBarController.viewControllers = [NSArray arrayWithObjects:navController, navController2, navController3, nil];
+    //self.tabBarController.viewControllers = [NSArray arrayWithObjects:navController, navController2, navController3, [[UINavigationController alloc] initWithRootViewController:[[OTRChatViewController alloc] init]], nil];
 
     self.window.rootViewController = self.tabBarController;
     [self.window makeKeyAndVisible];
