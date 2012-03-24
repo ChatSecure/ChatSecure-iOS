@@ -116,7 +116,6 @@
 		D974DABA15021DB60028B2F4 /* libidn-1.24.tar.gz in Resources */ = {isa = PBXBuildFile; fileRef = D974DA5E15021DB60028B2F4 /* libidn-1.24.tar.gz */; };
 		D974DABB15021DB60028B2F4 /* libidn.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D974DA5F15021DB60028B2F4 /* libidn.a */; };
 		D974DABD15021E540028B2F4 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D974DABC15021E540028B2F4 /* libiconv.dylib */; };
-		D99071AD151E8009002CECC9 /* OTRBlankChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D99071AB151E8009002CECC9 /* OTRBlankChatViewController.m */; };
 		D99550B4141AD8CD00A82FAC /* OTRAccountsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D99550B2141AD8CD00A82FAC /* OTRAccountsViewController.m */; };
 		D99550B5141AD8CD00A82FAC /* OTRAccountsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D99550B3141AD8CD00A82FAC /* OTRAccountsViewController.xib */; };
 		D99550BB141AE07D00A82FAC /* gtalk.png in Resources */ = {isa = PBXBuildFile; fileRef = D99550B7141AE07D00A82FAC /* gtalk.png */; };
@@ -244,7 +243,6 @@
 		D9DE299113F4F93400E335CA /* SNAC.m in Sources */ = {isa = PBXBuildFile; fileRef = D9DE293013F4F93400E335CA /* SNAC.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		D9DE299213F4F93400E335CA /* TLV.m in Sources */ = {isa = PBXBuildFile; fileRef = D9DE293313F4F93400E335CA /* TLV.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		D9E068F213F44D2900AC10A3 /* OTRBuddyListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9E068F013F44D2900AC10A3 /* OTRBuddyListViewController.m */; };
-		D9E068F313F44D2900AC10A3 /* OTRBuddyListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9E068F113F44D2900AC10A3 /* OTRBuddyListViewController.xib */; };
 		D9F0D4931501F320001F67B1 /* SBJsonStreamParserAccumulator.m in Sources */ = {isa = PBXBuildFile; fileRef = D9F0D48E1501F320001F67B1 /* SBJsonStreamParserAccumulator.m */; };
 		D9F0D4941501F320001F67B1 /* SBJsonStreamWriterAccumulator.m in Sources */ = {isa = PBXBuildFile; fileRef = D9F0D4901501F320001F67B1 /* SBJsonStreamWriterAccumulator.m */; };
 		D9F0D4951501F320001F67B1 /* SBJsonUTF8Stream.m in Sources */ = {isa = PBXBuildFile; fileRef = D9F0D4921501F320001F67B1 /* SBJsonUTF8Stream.m */; };
@@ -556,8 +554,6 @@
 		D974DA5F15021DB60028B2F4 /* libidn.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libidn.a; sourceTree = "<group>"; };
 		D974DA6015021DB60028B2F4 /* stringprep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stringprep.h; sourceTree = "<group>"; };
 		D974DABC15021E540028B2F4 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
-		D99071AA151E8009002CECC9 /* OTRBlankChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBlankChatViewController.h; sourceTree = "<group>"; };
-		D99071AB151E8009002CECC9 /* OTRBlankChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBlankChatViewController.m; sourceTree = "<group>"; };
 		D99550B1141AD8CD00A82FAC /* OTRAccountsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAccountsViewController.h; sourceTree = "<group>"; };
 		D99550B2141AD8CD00A82FAC /* OTRAccountsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAccountsViewController.m; sourceTree = "<group>"; };
 		D99550B3141AD8CD00A82FAC /* OTRAccountsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OTRAccountsViewController.xib; sourceTree = "<group>"; };
@@ -810,7 +806,6 @@
 		D9DE293413F4F93400E335CA /* TLV_Types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLV_Types.h; sourceTree = "<group>"; };
 		D9E068EF13F44D2900AC10A3 /* OTRBuddyListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBuddyListViewController.h; sourceTree = "<group>"; };
 		D9E068F013F44D2900AC10A3 /* OTRBuddyListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBuddyListViewController.m; sourceTree = "<group>"; };
-		D9E068F113F44D2900AC10A3 /* OTRBuddyListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OTRBuddyListViewController.xib; sourceTree = "<group>"; };
 		D9F0D48D1501F320001F67B1 /* SBJsonStreamParserAccumulator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonStreamParserAccumulator.h; sourceTree = "<group>"; };
 		D9F0D48E1501F320001F67B1 /* SBJsonStreamParserAccumulator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonStreamParserAccumulator.m; sourceTree = "<group>"; };
 		D9F0D48F1501F320001F67B1 /* SBJsonStreamWriterAccumulator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonStreamWriterAccumulator.h; sourceTree = "<group>"; };
@@ -1760,9 +1755,6 @@
 				D9D69B07141806BB0056FB9E /* Model */,
 				D9E068EF13F44D2900AC10A3 /* OTRBuddyListViewController.h */,
 				D9E068F013F44D2900AC10A3 /* OTRBuddyListViewController.m */,
-				D99071AA151E8009002CECC9 /* OTRBlankChatViewController.h */,
-				D99071AB151E8009002CECC9 /* OTRBlankChatViewController.m */,
-				D9E068F113F44D2900AC10A3 /* OTRBuddyListViewController.xib */,
 				D9991A4813F44F86002D3008 /* OTRChatListViewController.h */,
 				D9991A4913F44F86002D3008 /* OTRChatListViewController.m */,
 				D9991A4A13F44F86002D3008 /* OTRChatListViewController.xib */,
@@ -1912,7 +1904,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				D9F9378513F44BD3009A3D84 /* InfoPlist.strings in Resources */,
-				D9E068F313F44D2900AC10A3 /* OTRBuddyListViewController.xib in Resources */,
 				D9991A4C13F44F87002D3008 /* OTRChatListViewController.xib in Resources */,
 				D9DE274D13F4F0A500E335CA /* OTRLoginViewController.xib in Resources */,
 				D9CE422F13FDC9EF003EC27C /* 08-chat.png in Resources */,
@@ -2148,7 +2139,6 @@
 				D974DAB715021DB60028B2F4 /* DDXMLDocument.m in Sources */,
 				D974DAB815021DB60028B2F4 /* DDXMLElement.m in Sources */,
 				D974DAB915021DB60028B2F4 /* DDXMLNode.m in Sources */,
-				D99071AD151E8009002CECC9 /* OTRBlankChatViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

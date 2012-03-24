@@ -11,12 +11,13 @@
 #import "OTRLoginViewController.h"
 #import "OTRXMPPManager.h"
 #import "OTRBuddy.h"
+#import "OTRBuddyList.h"
 
 //#define kSignoffTime 500
 
 @implementation OTRBuddyListViewController
 @synthesize buddyListTableView;
-@synthesize chatViewControllers;
+@synthesize chatViewController;
 @synthesize chatListController;
 @synthesize tabController;
 @synthesize protocolManager;
@@ -64,9 +65,6 @@
 	NSLog(@"LibOrange (v: %@): -beginTest\n", @lib_orange_version_string);
     protocolManager = [OTRProtocolManager sharedInstance];
     
-    
-    chatViewControllers = [[NSMutableDictionary alloc] initWithCapacity:3];
-        
     recentMessages = [[NSMutableDictionary alloc] initWithCapacity:3];
 }
 
@@ -133,12 +131,9 @@
 
          [alert show];
      }
-     
-     if([chatViewControllers objectForKey:userName])
-     {
-         OTRChatViewController *chatController = [chatViewControllers objectForKey:userName];
-         [chatController receiveMessage:decodedMessage];
-     }
+    
+    OTRBuddy *buddy = [protocolManager.buddyList getBuddyByName:userName];
+    [buddy receiveMessage:decodedMessage];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -217,88 +212,28 @@
     if(sortedBuddies)
     {
         OTRBuddy *buddyData = [sortedBuddies objectAtIndex:indexPath.row];
-        
-        NSString *buddyUsername = buddyData.accountName;
-        NSString *buddyProtocol = buddyData.protocol;
-        
-        [self enterConversation:buddyUsername withProtocol:buddyProtocol withMessage:@""];
+        [self enterConversationWithBuddy:buddyData];
     }
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
--(void)startConversation:(NSString *)buddyName withProocol:(NSString *)protocol withMessage:(NSString *)message
+
+-(void)enterConversationWithBuddy:(OTRBuddy*)buddy 
 {
-    OTRChatViewController *chatController;
-    if([chatViewControllers objectForKey:buddyName])
-    {
-        chatController = [chatViewControllers objectForKey:buddyName];
-    }
-    else
-    {
-        chatController = [[OTRChatViewController alloc] init];
-        chatController.title = buddyName;
-        NSDictionary *messageInfo = [recentMessages objectForKey:buddyName];
-        OTRMessage * mess = [messageInfo objectForKey:@"message"];
-        if(messageInfo)
+    chatViewController.buddy = buddy;
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+        if(tabController.selectedIndex == 0)
         {
-            chatController.protocol = mess.protocol;
-            chatController.accountName = mess.recipient;
-            [chatController receiveMessage:message];
+            NSArray *controllerArray = [NSArray arrayWithObjects:self, chatViewController, nil];
+            [self.navigationController setViewControllers:controllerArray animated:YES];
         }
         else
         {
-            chatController.protocol = protocol;
-            chatController.accountName = [protocolManager accountNameForProtocol:protocol];
+            UIViewController *selected = chatListController;
+            NSArray *controllerArray = [NSArray arrayWithObjects:selected, chatViewController, nil];
+            [chatListController.navigationController setViewControllers:controllerArray animated:YES];
         }
-        chatController.buddyListController = self;
-        [chatViewControllers setObject:chatController forKey:buddyName];
-    }
-    [recentMessages removeObjectForKey:buddyName];
-
-}
-
--(void)enterConversation:(NSString *)buddyName withProtocol:(NSString *)protocol withMessage:(NSString *)message
-{
-    OTRChatViewController *chatController;
-    if([chatViewControllers objectForKey:buddyName])
-    {
-        chatController = [chatViewControllers objectForKey:buddyName];
-    }
-    else
-    {
-        chatController = [[OTRChatViewController alloc] init];
-        chatController.title = buddyName;
-        NSDictionary *messageInfo = [recentMessages objectForKey:buddyName];
-        OTRMessage * mess = [messageInfo objectForKey:@"message"];
-        if(messageInfo)
-        {
-            chatController.protocol = mess.protocol;
-            chatController.accountName = mess.recipient;
-            [chatController receiveMessage:message];
-        }
-        else
-        {
-            chatController.protocol = protocol;
-            chatController.accountName = [protocolManager accountNameForProtocol:protocol];
-        }
-        chatController.buddyListController = self;
-        [chatViewControllers setObject:chatController forKey:buddyName];
-    }
-    
-    if(tabController.selectedIndex == 0)
-    {
-        NSArray *controllerArray = [NSArray arrayWithObjects:self, chatController, nil];
-        [self.navigationController setViewControllers:controllerArray animated:YES];
-    }
-    else
-    {
-        UIViewController *selected = chatListController;
-        NSArray *controllerArray = [NSArray arrayWithObjects:selected, chatController, nil];
-        [chatListController.navigationController setViewControllers:controllerArray animated:YES];
-    }
-    
-    
-    [recentMessages removeObjectForKey:buddyName];
+    } 
 }
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
@@ -326,7 +261,6 @@
             {
                 proto = mess.protocol;
             }
-            [self startConversation:alertView.title withProocol:proto withMessage:alertView.message];
             [recentMessages removeObjectForKey:alertView.title];
         }
     }

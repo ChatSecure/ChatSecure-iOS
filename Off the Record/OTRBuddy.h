@@ -22,10 +22,14 @@ enum OTRBuddyStatus {
 @property (nonatomic, retain) NSString* accountName;
 @property (nonatomic, retain) NSString* protocol;
 @property (nonatomic, retain) NSString* groupName;
+@property (nonatomic, retain) NSMutableString* chatHistory;
 
 @property OTRBuddyStatus status;
 
 -(id)initWithDisplayName:(NSString*)buddyName accountName:(NSString*) accountName protocol:(NSString*)buddyProtocol status:(OTRBuddyStatus)buddyStatus groupName:(NSString*)buddyGroupName;
 +(OTRBuddy*)buddyWithDisplayName:(NSString*)buddyName accountName:(NSString*) accountName protocol:(NSString*)buddyProtocol status:(OTRBuddyStatus)buddyStatus groupName:(NSString*)buddyGroupName;
+
+-(void)receiveMessage:(NSString *)message;
+-(void)sendMessage:(NSString *)message secure:(BOOL)secure;
 
 @end

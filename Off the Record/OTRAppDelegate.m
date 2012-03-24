@@ -11,7 +11,7 @@
 #import "OTRBuddyListViewController.h"
 #import "OTRChatListViewController.h"
 #import "OTRAccountsViewController.h"
-#import "OTRBlankChatViewController.h"
+#import "OTRChatViewController.h"
 
 @implementation OTRAppDelegate
 
@@ -27,7 +27,7 @@
     OTRBuddyListViewController *buddyListViewController = [[OTRBuddyListViewController alloc] init];
     OTRChatListViewController *chatListViewController = [[OTRChatListViewController alloc] init];
     OTRAccountsViewController *accountsViewController = [[OTRAccountsViewController alloc] init];
-    
+
     chatListViewController.buddyController = buddyListViewController;
     buddyListViewController.chatListController = chatListViewController;
     buddyListViewController.tabController = _tabBarController;
@@ -42,7 +42,8 @@
         tabBarController.viewControllers = [NSArray arrayWithObjects:buddyListNavController, chatListNavController, accountsNavController, nil];
         //self.tabBarController.viewControllers = [NSArray arrayWithObjects:navController, navController2, navController3, [[UINavigationController alloc] initWithRootViewController:[[OTRChatViewController alloc] init]], nil];
     } else {
-        OTRBlankChatViewController *chatViewController = [[OTRBlankChatViewController alloc] init];
+        OTRChatViewController *chatViewController = [[OTRChatViewController alloc] init];
+        buddyListViewController.chatViewController = chatViewController;
         UINavigationController *chatNavController = [[UINavigationController alloc ]initWithRootViewController:chatViewController];
         UISplitViewController *splitViewController = [[UISplitViewController alloc] init];
         splitViewController.viewControllers = [NSArray arrayWithObjects:buddyListNavController, chatNavController, nil];

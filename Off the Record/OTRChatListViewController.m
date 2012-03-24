@@ -56,8 +56,8 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if(buddyController.chatViewControllers)
-        return [buddyController.chatViewControllers count];
+    //if(buddyController.chatViewControllers)
+    //    return [buddyController.chatViewControllers count];
     
     return 0;
 }
@@ -72,23 +72,13 @@
 
 	}
 	
-    if(buddyController.chatViewControllers)
+    /*if(buddyController.chatViewControllers)
     {
         NSArray *keyArray =  [buddyController.chatViewControllers allKeys];
         OTRChatViewController *tmp = [buddyController.chatViewControllers objectForKey:[ keyArray objectAtIndex:indexPath.row]];
         cell.textLabel.text = tmp.title;    
         
-        /*int detailLength = 25;
-        
-        //cell.detailTextLabel.text = [tmp.chatHistoryTextView.text substringFromIndex:[tmp.chatHistoryTextView.text length] - detailLength];
-        if(tmp.rawChatHistory)
-        {
-            if([tmp.rawChatHistory length] > detailLength)
-                cell.detailTextLabel.text = [tmp.rawChatHistory substringFromIndex:[tmp.rawChatHistory length] - detailLength];
-            else
-                cell.detailTextLabel.text = tmp.rawChatHistory;
-        }*/
-    }
+    }*/
     
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
@@ -97,9 +87,9 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSArray *keyArray =  [buddyController.chatViewControllers allKeys];
+    /*NSArray *keyArray =  [buddyController.chatViewControllers allKeys];
     OTRChatViewController *tmp = [buddyController.chatViewControllers objectForKey:[ keyArray objectAtIndex:indexPath.row]];
-    [self.navigationController pushViewController:tmp animated:YES];
+    [self.navigationController pushViewController:tmp animated:YES];*/
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }

@@ -9,20 +9,14 @@
 #import <UIKit/UIKit.h>
 #import "OTRProtocolManager.h"
 
+@class OTRChatViewController;
+
 @interface OTRBuddyListViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate> {
-    
-    
-    UITableView *buddyListTableView;
-    
-    
-    NSMutableDictionary *chatViewControllers;
-        
-    OTRProtocolManager *protocolManager;
     NSArray *sortedBuddies;
 }
 
 @property (nonatomic, retain) IBOutlet UITableView *buddyListTableView;
-@property (nonatomic, retain) NSMutableDictionary *chatViewControllers;
+@property (nonatomic, retain) OTRChatViewController *chatViewController;
 @property (nonatomic, retain) UIViewController *chatListController;
 @property (nonatomic, retain) UITabBarController *tabController;
 

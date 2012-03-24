@@ -21,23 +21,19 @@
 @synthesize chatHistoryTextView;
 @synthesize messageTextField;
 @synthesize buddyListController;
-@synthesize rawChatHistory;
 @synthesize protocolManager;
-@synthesize protocol;
-@synthesize accountName;
 @synthesize chatBoxView;
 @synthesize context;
 @synthesize lockButton, unlockedButton;
 @synthesize lastActionLink;
 @synthesize sendButton;
 @synthesize keyboardIsShown;
+@synthesize buddy;
 
 - (void) dealloc {
-    self.protocol = nil;
-    self.accountName = nil;
     self.lastActionLink = nil;
     self.buddyListController = nil;
-    self.rawChatHistory = nil;
+    self.buddy = nil;
 }
 
 - (void)viewDidUnload {
@@ -70,14 +66,6 @@
         return 50.0;
     } else {
         return 30.0;
-    }
-}
-
-- (int) fontSize {
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-        return 7.0;
-    } else {
-        return 5.0;
     }
 }
 
@@ -192,14 +180,6 @@
     [self refreshLockButton];
 }
 
--(NSString *) stringByStrippingHTML:(NSString*)string {
-    NSRange r;
-    NSString *s = [string copy];
-    while ((r = [s rangeOfString:@"<[^>]+>" options:NSRegularExpressionSearch]).location != NSNotFound)
-        s = [s stringByReplacingCharactersInRange:r withString:@""];
-    return s; 
-}
-
 -(void)refreshLockButton
 {
     if(context)
@@ -285,10 +265,6 @@
     self.chatBoxView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     messageTextField.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
     sendButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-    
-    if(!rawChatHistory)
-        rawChatHistory = [[NSMutableString alloc] init];
-     
 	
 	// Create attributed string from HTML
 	CGSize maxImageSize = CGSizeMake(self.view.bounds.size.width - 20.0, self.view.bounds.size.height - 20.0);
@@ -296,7 +272,7 @@
 	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:1.0], NSTextSizeMultiplierDocumentOption, [NSValue valueWithCGSize:maxImageSize], DTMaxImageSize,
                              @"Helvetica", DTDefaultFontFamily,  @"purple", DTDefaultLinkColor, nil]; // @"green",DTDefaultTextColor,
    
-    NSData *data = [rawChatHistory dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *data = [@"" dataUsingEncoding:NSUTF8StringEncoding];
     
     NSAttributedString *string = [[NSAttributedString alloc] initWithHTML:data options:options documentAttributes:nil];
 
@@ -322,7 +298,6 @@
     if(!protocolManager)
         protocolManager = [OTRProtocolManager sharedInstance];
     
-    context = otrl_context_find(protocolManager.encryptionManager.userState, [self.title UTF8String],[accountName UTF8String], [protocol UTF8String],NO,NULL,NULL, NULL);
     
     [self setupLockButton];
     
@@ -337,10 +312,22 @@
     //turn off scrolling and set the font details.
     //chatBox.scrollEnabled = NO;
     //chatBox.font = [UIFont fontWithName:@"Helvetica" size:14]; 
-        
-    
-
 }
+
+- (void) refreshContext {
+    self.context = otrl_context_find(protocolManager.encryptionManager.userState, [buddy.accountName UTF8String],[[self.protocolManager accountNameForProtocol:buddy.protocol] UTF8String], [buddy.protocol UTF8String],NO,NULL,NULL, NULL);
+}
+
+- (void) setBuddy:(OTRBuddy *)newBuddy {
+    buddy = newBuddy;
+    self.title = newBuddy.displayName;
+    
+    [self refreshContext];
+    [self refreshLockButton];
+    [self updateChatHistory];
+}
+
+
 
 -(void) keyPressed: (NSNotification*) notification{
 /*	// get the size of the text block so we can work our magic
@@ -477,7 +464,8 @@
 
 
 - (void)sendButtonPressed:(id)sender {
-    [self sendMessage:messageTextField.text];
+    BOOL secure = self.navigationItem.rightBarButtonItem == lockButton;
+    [buddy sendMessage:messageTextField.text secure:secure];
     messageTextField.text = @"";    
     [self chatButtonClick];
 }
@@ -492,61 +480,13 @@
 	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:1.0], NSTextSizeMultiplierDocumentOption, [NSValue valueWithCGSize:maxImageSize], DTMaxImageSize,
                              @"Helvetica", DTDefaultFontFamily,  @"purple", DTDefaultLinkColor, nil]; // @"green",DTDefaultTextColor,
     
-    NSData *data = [rawChatHistory dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *data = [buddy.chatHistory dataUsingEncoding:NSUTF8StringEncoding];
     
     NSAttributedString *string = [[NSAttributedString alloc] initWithHTML:data options:options documentAttributes:nil];
     
     chatHistoryTextView.attributedString = string;
 }
 
--(void)sendMessage:(NSString *)message
-{
-    OTRBuddyList * buddyList = protocolManager.buddyList;
-    OTRBuddy* theBuddy = [buddyList getBuddyByName:self.title];
-    message = [message stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    NSLog(@"message to be sent: %@",message);
-    OTRMessage *newMessage = [OTRMessage messageWithSender:accountName recipient:theBuddy.accountName message:message protocol:protocol];
-    NSLog(@"newMessagge: %@",newMessage.message);
-    [self refreshLockButton];
-    OTRMessage *encodedMessage;
-    if(self.navigationItem.rightBarButtonItem == lockButton)
-    {
-        encodedMessage = [OTRCodec encodeMessage:newMessage];
-    }
-    else
-    {
-        encodedMessage = newMessage;
-    }
-    
-    
-    
-    NSLog(@"encoded message: %@",encodedMessage.message);
-    [OTRMessage sendMessage:encodedMessage];    
-    
-    NSString *username = [NSString stringWithFormat:@"<FONT SIZE=%d COLOR=\"#0000ff\"><b>Me:</b></FONT>",[self fontSize]];
-    
-    [rawChatHistory appendFormat:@"%@ <FONT SIZE=%d>%@</FONT><br>",username,[self fontSize], message];
-    
-    [self updateChatHistory];
-    [self scrollTextViewToBottom];
-}
-
--(void)receiveMessage:(NSString *)message
-{
-    NSLog(@"received: %@",message);
-    if(!rawChatHistory)
-        rawChatHistory = [[NSMutableString alloc] init];
-    
-    NSString *rawMessage = [self stringByStrippingHTML:message];
-        
-    NSString *username = [NSString stringWithFormat:@"<FONT SIZE=%d COLOR=\"#ff0000\"><b>%@:</b></FONT>",[self fontSize],self.title];
-    
-    [rawChatHistory appendFormat:@"%@ <FONT SIZE=%d>%@</FONT><br>",username,[self fontSize],rawMessage];
-    
-    [self updateChatHistory];
-    [self scrollTextViewToBottom];
-
-}
 
 -(void)scrollTextViewToBottom
 {
@@ -602,10 +542,7 @@
     {
         if (buttonIndex == 1) // Verify
         {
-            if(!context)
-            {
-                context = otrl_context_find(protocolManager.encryptionManager.userState, [self.title UTF8String],[buddyListController.protocolManager.oscarManager.accountName UTF8String], [protocol UTF8String],NO,NULL,NULL, NULL);
-            }
+            [self refreshContext];
             if(context)
             {
                 char our_hash[45], their_hash[45];
@@ -627,9 +564,8 @@
         }
         else if (buttonIndex == 0)
         {
-            OTRBuddyList * buddyList = protocolManager.buddyList;
-            OTRBuddy* theBuddy = [buddyList getBuddyByName:self.title];
-            OTRMessage *newMessage = [OTRMessage messageWithSender:accountName recipient:theBuddy.accountName message:@"" protocol:protocol];
+            OTRBuddy* theBuddy = buddy;
+            OTRMessage *newMessage = [OTRMessage messageWithSender:[self.protocolManager accountNameForProtocol:buddy.protocol] recipient:theBuddy.accountName message:@"" protocol:buddy.protocol];
             OTRMessage *encodedMessage = [OTRCodec encodeMessage:newMessage];
             [OTRMessage sendMessage:encodedMessage];    
         }
@@ -665,10 +601,7 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
-    if(!context)
-    {
-        context = otrl_context_find(protocolManager.encryptionManager.userState, [self.title UTF8String],[buddyListController.protocolManager.oscarManager.accountName UTF8String], [protocol UTF8String],NO,NULL,NULL, NULL);
-    }
+    [self refreshContext];
     [self refreshLockButton];
 }
 

@@ -11,33 +11,28 @@
 #import "DTAttributedTextView.h"
 #import "context.h"
 #import "OTRProtocolManager.h"
+#import "OTRBuddy.h"
 
 @interface OTRChatViewController : UIViewController <UITextFieldDelegate,DTAttributedTextContentViewDelegate, UIActionSheetDelegate, UISplitViewControllerDelegate> 
 
-@property (nonatomic) ConnContext *context;
-@property (nonatomic, retain) UIBarButtonItem *lockButton, *unlockedButton;
 
+@property (nonatomic, retain) UIBarButtonItem *lockButton, *unlockedButton;
+@property (nonatomic, retain) UITextField *messageTextField;
+@property (nonatomic, retain) UIButton *sendButton;
+@property (nonatomic, retain) UIView *chatBoxView;
+
+@property (nonatomic) ConnContext *context;
+@property (nonatomic, retain) OTRBuddy *buddy;
 @property (nonatomic, retain) OTRProtocolManager *protocolManager;
 
 @property (nonatomic, retain) DTAttributedTextView *chatHistoryTextView;
-@property (nonatomic, retain) UITextField *messageTextField;
-@property (nonatomic, retain) UIButton *sendButton;
-
 @property (nonatomic, retain) OTRBuddyListViewController *buddyListController;
 
-
-@property (nonatomic, retain) UIView *chatBoxView;
-
-@property (nonatomic, retain) NSMutableString *rawChatHistory;
-@property (nonatomic, retain) NSString *protocol;
-@property (nonatomic, retain) NSString *accountName;
 @property (nonatomic, retain) NSURL *lastActionLink;
 @property (nonatomic) BOOL keyboardIsShown;
 
 
 - (void)sendButtonPressed:(id)sender;
-- (void)receiveMessage:(NSString*)message;
-- (void)sendMessage:(NSString*)message;
 - (void)scrollTextViewToBottom;
 
 - (void)updateChatHistory;
