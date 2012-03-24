@@ -12,7 +12,7 @@
 #import "context.h"
 #import "OTRProtocolManager.h"
 
-@interface OTRChatViewController : UIViewController <UITextFieldDelegate,DTAttributedTextContentViewDelegate, UIActionSheetDelegate> 
+@interface OTRChatViewController : UIViewController <UITextFieldDelegate,DTAttributedTextContentViewDelegate, UIActionSheetDelegate, UISplitViewControllerDelegate> 
 
 @property (nonatomic) ConnContext *context;
 @property (nonatomic, retain) UIBarButtonItem *lockButton, *unlockedButton;

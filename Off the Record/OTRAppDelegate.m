@@ -46,8 +46,9 @@
         UINavigationController *chatNavController = [[UINavigationController alloc ]initWithRootViewController:chatViewController];
         UISplitViewController *splitViewController = [[UISplitViewController alloc] init];
         splitViewController.viewControllers = [NSArray arrayWithObjects:buddyListNavController, chatNavController, nil];
+        splitViewController.delegate = chatViewController;
         tabBarController.viewControllers = [NSArray arrayWithObjects:splitViewController, accountsNavController, nil];
-
+        
     }
 
 
