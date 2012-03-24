@@ -192,6 +192,14 @@
     [self refreshLockButton];
 }
 
+-(NSString *) stringByStrippingHTML:(NSString*)string {
+    NSRange r;
+    NSString *s = [string copy];
+    while ((r = [s rangeOfString:@"<[^>]+>" options:NSRegularExpressionSearch]).location != NSNotFound)
+        s = [s stringByReplacingCharactersInRange:r withString:@""];
+    return s; 
+}
+
 -(void)refreshLockButton
 {
     if(context)
@@ -529,28 +537,11 @@
     if(!rawChatHistory)
         rawChatHistory = [[NSMutableString alloc] init];
     
-    NSRange htmlStart = [message rangeOfString:@"<HTML>"];
-    
+    NSString *rawMessage = [self stringByStrippingHTML:message];
+        
     NSString *username = [NSString stringWithFormat:@"<FONT SIZE=%d COLOR=\"#ff0000\"><b>%@:</b></FONT>",[self fontSize],self.title];
     
-    if(htmlStart.location == NSNotFound)
-    {
-        [rawChatHistory appendFormat:@"%@ <FONT SIZE=%d>%@</FONT><br>",username,[self fontSize],message];
-    }
-    else
-    {
-        //<HTML><BODY BGCOLOR="#ffffff"> is 30 characters
-        NSString *substr = [message substringFromIndex:30];
-        NSRange htmlEnd = [substr rangeOfString:@"</BODY>"];
-
-        NSString *substr2 = [substr substringToIndex:htmlEnd.location];
-        
-        [rawChatHistory appendFormat:@"%@ %@<br>",username,substr2];
-        
-        NSLog(@"Stripped: %@",substr2);
-
-    }
-    
+    [rawChatHistory appendFormat:@"%@ <FONT SIZE=%d>%@</FONT><br>",username,[self fontSize],rawMessage];
     
     [self updateChatHistory];
     [self scrollTextViewToBottom];
