@@ -11,7 +11,7 @@
 #import "OTRBuddyListViewController.h"
 #import "OTRChatListViewController.h"
 #import "OTRAccountsViewController.h"
-#import "OTRChatViewController.h"
+#import "OTRBlankChatViewController.h"
 
 @implementation OTRAppDelegate
 
@@ -42,13 +42,15 @@
         tabBarController.viewControllers = [NSArray arrayWithObjects:buddyListNavController, chatListNavController, accountsNavController, nil];
         //self.tabBarController.viewControllers = [NSArray arrayWithObjects:navController, navController2, navController3, [[UINavigationController alloc] initWithRootViewController:[[OTRChatViewController alloc] init]], nil];
     } else {
-        OTRChatViewController *chatViewController = [[OTRChatViewController alloc] init];
+        OTRBlankChatViewController *chatViewController = [[OTRBlankChatViewController alloc] init];
         UINavigationController *chatNavController = [[UINavigationController alloc ]initWithRootViewController:chatViewController];
         UISplitViewController *splitViewController = [[UISplitViewController alloc] init];
         splitViewController.viewControllers = [NSArray arrayWithObjects:buddyListNavController, chatNavController, nil];
         splitViewController.delegate = chatViewController;
         tabBarController.viewControllers = [NSArray arrayWithObjects:splitViewController, accountsNavController, nil];
-        
+        splitViewController.title = @"Chat";
+        splitViewController.tabBarItem.image = [UIImage imageNamed:@"08-chat.png"];
+
     }
 
 
