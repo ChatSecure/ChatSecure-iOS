@@ -22,21 +22,36 @@
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
-
-    OTRBuddyListViewController *viewController1 = [[OTRBuddyListViewController alloc] init];
-    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:viewController1];
-    OTRChatListViewController *viewController2 = [[OTRChatListViewController alloc] init];
-    OTRAccountsViewController *viewController3 = [[OTRAccountsViewController alloc] init];
-    UINavigationController *navController3 = [[UINavigationController alloc] initWithRootViewController:viewController3];
+    UITabBarController *tabBarController = nil;
     
-    viewController2.buddyController = viewController1;
-    viewController1.chatListController = viewController2;
-    viewController1.tabController = _tabBarController;
-    UINavigationController *navController2 = [[UINavigationController alloc] initWithRootViewController:viewController2];
-    self.tabBarController = [[UITabBarController alloc] init];
-    self.tabBarController.viewControllers = [NSArray arrayWithObjects:navController, navController2, navController3, nil];
-    //self.tabBarController.viewControllers = [NSArray arrayWithObjects:navController, navController2, navController3, [[UINavigationController alloc] initWithRootViewController:[[OTRChatViewController alloc] init]], nil];
+    OTRBuddyListViewController *buddyListViewController = [[OTRBuddyListViewController alloc] init];
+    OTRChatListViewController *chatListViewController = [[OTRChatListViewController alloc] init];
+    OTRAccountsViewController *accountsViewController = [[OTRAccountsViewController alloc] init];
+    
+    chatListViewController.buddyController = buddyListViewController;
+    buddyListViewController.chatListController = chatListViewController;
+    buddyListViewController.tabController = _tabBarController;
+    tabBarController = [[UITabBarController alloc] init];
+    UINavigationController *accountsNavController = [[UINavigationController alloc] initWithRootViewController:accountsViewController];
+    UINavigationController *buddyListNavController = [[UINavigationController alloc] initWithRootViewController:buddyListViewController];
 
+    
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+        UINavigationController *chatListNavController = [[UINavigationController alloc] initWithRootViewController:chatListViewController];
+
+        tabBarController.viewControllers = [NSArray arrayWithObjects:buddyListNavController, chatListNavController, accountsNavController, nil];
+        //self.tabBarController.viewControllers = [NSArray arrayWithObjects:navController, navController2, navController3, [[UINavigationController alloc] initWithRootViewController:[[OTRChatViewController alloc] init]], nil];
+    } else {
+        OTRChatViewController *chatViewController = [[OTRChatViewController alloc] init];
+        UINavigationController *chatNavController = [[UINavigationController alloc ]initWithRootViewController:chatViewController];
+        UISplitViewController *splitViewController = [[UISplitViewController alloc] init];
+        splitViewController.viewControllers = [NSArray arrayWithObjects:buddyListNavController, chatNavController, nil];
+        tabBarController.viewControllers = [NSArray arrayWithObjects:splitViewController, accountsNavController, nil];
+
+    }
+
+
+    self.tabBarController = tabBarController;
     self.window.rootViewController = self.tabBarController;
     [self.window makeKeyAndVisible];
     return YES;
