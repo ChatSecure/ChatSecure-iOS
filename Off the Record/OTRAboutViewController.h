@@ -14,5 +14,6 @@
     NSURL *lastActionLink;
     DTAttributedTextView *aboutTextView;
 }
+@property (strong, nonatomic) IBOutlet UILabel *versionLabel;
 
 @end

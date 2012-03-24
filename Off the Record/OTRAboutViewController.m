@@ -11,6 +11,7 @@
 #import "DTCoreTextConstants.h"
 
 @implementation OTRAboutViewController
+@synthesize versionLabel;
 
 - (id)init {
     if (self = [super init]) {
@@ -57,10 +58,13 @@
 	aboutTextView.attributedString = string;
     aboutTextView.userInteractionEnabled = YES;
 
+    NSString *version = [[[NSBundle mainBundle] infoDictionary] valueForKey:@"CFBundleVersion"];
+    versionLabel.text = [NSString stringWithFormat:@"Version %@", version];
 }
 
 - (void)viewDidUnload
 {
+    [self setVersionLabel:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
