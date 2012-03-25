@@ -206,7 +206,9 @@
         OTRBuddy *buddyData = [sortedBuddies objectAtIndex:indexPath.row];
         [self enterConversationWithBuddy:buddyData];
     }
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    }
 }
 
 
