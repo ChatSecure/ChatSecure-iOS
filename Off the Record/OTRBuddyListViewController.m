@@ -120,17 +120,12 @@
     OTRBuddy *buddy = [protocolManager.buddyList getBuddyByName:userName];
     [buddy receiveMessage:decodedMessage];
     
-    
-    if(![[self.navigationController visibleViewController].title isEqualToString:userName] && ![[chatListController.navigationController visibleViewController].title isEqualToString:userName])
+    if(![chatViewController.title isEqualToString:buddy.displayName])
      {
          UIAlertView *alert = [[UIAlertView alloc] initWithTitle:userName message:buddy.lastMessage delegate:self cancelButtonTitle:@"Ignore" otherButtonTitles:@"Reply", nil];
          alert.tag = 1;
-         
-
          [alert show];
      }
-    
-
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
