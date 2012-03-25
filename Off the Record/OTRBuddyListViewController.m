@@ -220,7 +220,7 @@
     chatViewController.buddy = buddy;
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
         self.tabBarController.selectedIndex = 1;
-        [chatListController.navigationController pushViewController:chatViewController animated:YES];
+        [chatListController.navigationController pushViewController:chatViewController animated:NO];
     } 
 }
 

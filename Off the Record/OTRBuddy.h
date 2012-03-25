@@ -10,7 +10,7 @@
 
 typedef unsigned int OTRBuddyStatus;
 
-#define MESSAGE_RECEIVED_NOTIFICATION @"MessageReceivedNotification"
+#define MESSAGE_RECEIVED_NOTIFICATION @"MessageProcessedNotification"
 
 enum OTRBuddyStatus {
     kOTRBuddyStatusOffline = 0,
