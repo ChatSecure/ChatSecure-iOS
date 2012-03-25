@@ -22,11 +22,17 @@
 @synthesize tabController;
 @synthesize protocolManager;
 
+- (void) dealloc {
+    self.protocolManager = nil;
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 
 - (id)init {
     if (self = [super init]) {
         self.title = @"Buddy List";
         self.tabBarItem.image = [UIImage imageNamed:@"112-group.png"];
+        self.protocolManager = [OTRProtocolManager sharedInstance];
+
     }
     return self;
 }
@@ -62,11 +68,11 @@
     // uncomment to see a LOT of console output
 	// [Debug setDebuggingEnabled:YES];
 	NSLog(@"LibOrange (v: %@): -beginTest\n", @lib_orange_version_string);
-    protocolManager = [OTRProtocolManager sharedInstance];
 }
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
     //[self buddyListUpdate];
     
     [[NSNotificationCenter defaultCenter]
@@ -77,10 +83,8 @@
 
 - (void)viewDidUnload
 {
-    [self setBuddyListTableView:nil];
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
+    [self setBuddyListTableView:nil];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
