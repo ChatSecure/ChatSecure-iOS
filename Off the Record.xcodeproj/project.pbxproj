@@ -116,6 +116,9 @@
 		D974DABA15021DB60028B2F4 /* libidn-1.24.tar.gz in Resources */ = {isa = PBXBuildFile; fileRef = D974DA5E15021DB60028B2F4 /* libidn-1.24.tar.gz */; };
 		D974DABB15021DB60028B2F4 /* libidn.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D974DA5F15021DB60028B2F4 /* libidn.a */; };
 		D974DABD15021E540028B2F4 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D974DABC15021E540028B2F4 /* libiconv.dylib */; };
+		D99071B2151EB5C6002CECC9 /* 08-chat@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D99071AF151EB5C5002CECC9 /* 08-chat@2x.png */; };
+		D99071B3151EB5C6002CECC9 /* 19-gear@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D99071B0151EB5C5002CECC9 /* 19-gear@2x.png */; };
+		D99071B4151EB5C6002CECC9 /* 112-group@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D99071B1151EB5C5002CECC9 /* 112-group@2x.png */; };
 		D99550B4141AD8CD00A82FAC /* OTRAccountsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D99550B2141AD8CD00A82FAC /* OTRAccountsViewController.m */; };
 		D99550B5141AD8CD00A82FAC /* OTRAccountsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D99550B3141AD8CD00A82FAC /* OTRAccountsViewController.xib */; };
 		D99550BB141AE07D00A82FAC /* gtalk.png in Resources */ = {isa = PBXBuildFile; fileRef = D99550B7141AE07D00A82FAC /* gtalk.png */; };
@@ -554,6 +557,9 @@
 		D974DA5F15021DB60028B2F4 /* libidn.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libidn.a; sourceTree = "<group>"; };
 		D974DA6015021DB60028B2F4 /* stringprep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stringprep.h; sourceTree = "<group>"; };
 		D974DABC15021E540028B2F4 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
+		D99071AF151EB5C5002CECC9 /* 08-chat@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "08-chat@2x.png"; sourceTree = "<group>"; };
+		D99071B0151EB5C5002CECC9 /* 19-gear@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "19-gear@2x.png"; sourceTree = "<group>"; };
+		D99071B1151EB5C5002CECC9 /* 112-group@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "112-group@2x.png"; sourceTree = "<group>"; };
 		D99550B1141AD8CD00A82FAC /* OTRAccountsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAccountsViewController.h; sourceTree = "<group>"; };
 		D99550B2141AD8CD00A82FAC /* OTRAccountsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAccountsViewController.m; sourceTree = "<group>"; };
 		D99550B3141AD8CD00A82FAC /* OTRAccountsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OTRAccountsViewController.xib; sourceTree = "<group>"; };
@@ -1784,6 +1790,9 @@
 				D9CE423113FDCA0F003EC27C /* 112-group.png */,
 				D9BBCD3A1491F7AB00AF1B9F /* 19-gear.png */,
 				D9CE422E13FDC9EF003EC27C /* 08-chat.png */,
+				D99071AF151EB5C5002CECC9 /* 08-chat@2x.png */,
+				D99071B0151EB5C5002CECC9 /* 19-gear@2x.png */,
+				D99071B1151EB5C5002CECC9 /* 112-group@2x.png */,
 				D99550B7141AE07D00A82FAC /* gtalk.png */,
 				D99550B8141AE07D00A82FAC /* gtalk@2x.png */,
 				D99550B9141AE07D00A82FAC /* aim.png */,
@@ -1930,6 +1939,9 @@
 				D90FAF2514A05D4B00DA7C56 /* offline.png in Resources */,
 				D974DAB515021DB60028B2F4 /* README.txt in Resources */,
 				D974DABA15021DB60028B2F4 /* libidn-1.24.tar.gz in Resources */,
+				D99071B2151EB5C6002CECC9 /* 08-chat@2x.png in Resources */,
+				D99071B3151EB5C6002CECC9 /* 19-gear@2x.png in Resources */,
+				D99071B4151EB5C6002CECC9 /* 112-group@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
