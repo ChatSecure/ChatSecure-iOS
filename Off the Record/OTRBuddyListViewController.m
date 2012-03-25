@@ -216,19 +216,11 @@
 
 -(void)enterConversationWithBuddy:(OTRBuddy*)buddy 
 {
+    [protocolManager.buddyList.activeConversations addObject:buddy];
     chatViewController.buddy = buddy;
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-        if(tabController.selectedIndex == 0)
-        {
-            NSArray *controllerArray = [NSArray arrayWithObjects:self, chatViewController, nil];
-            [self.navigationController setViewControllers:controllerArray animated:YES];
-        }
-        else
-        {
-            UIViewController *selected = chatListController;
-            NSArray *controllerArray = [NSArray arrayWithObjects:selected, chatViewController, nil];
-            [chatListController.navigationController setViewControllers:controllerArray animated:YES];
-        }
+        self.tabBarController.selectedIndex = 1;
+        [chatListController.navigationController pushViewController:chatViewController animated:YES];
     } 
 }
 
@@ -236,7 +228,7 @@
 {
     if(alertView.tag == 1)
     {
-        NSString * buddyName=alertView.title;
+        NSString * buddyName = alertView.title;
         OTRBuddy *buddy = [protocolManager.buddyList getBuddyByName:buddyName];
         if(buttonIndex == 1) // Reply
         {

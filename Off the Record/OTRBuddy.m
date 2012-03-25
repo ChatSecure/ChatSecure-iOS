@@ -40,6 +40,7 @@
         self.status = buddyStatus;
         self.groupName = buddyGroupName;
         self.chatHistory = [NSMutableString string];
+        self.lastMessage = @"";
     }
     return self;
 }
@@ -98,10 +99,10 @@
 
 -(void)receiveMessage:(NSString *)message
 {
-    self.lastMessage = message;
     NSLog(@"received: %@",message);
     
     NSString *rawMessage = [self stringByStrippingHTML:message];
+    self.lastMessage = rawMessage;
     
     NSString *username = [NSString stringWithFormat:@"<FONT SIZE=%d COLOR=\"#ff0000\"><b>%@:</b></FONT>",[self fontSize],self.displayName];
     

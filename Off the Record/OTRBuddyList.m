@@ -12,13 +12,15 @@
 
 @synthesize xmppBuddies;
 @synthesize oscarBuddies;
+@synthesize activeConversations;
 
 -(id)init
 {
     if(self = [super init])
     {
-        xmppBuddies = [[NSMutableDictionary alloc] init];
-        oscarBuddies = [[NSMutableDictionary alloc] init];
+        self.xmppBuddies = [[NSMutableDictionary alloc] init];
+        self.oscarBuddies = [[NSMutableDictionary alloc] init];
+        self.activeConversations = [[NSMutableSet alloc] init];
     }
     return self;
 }

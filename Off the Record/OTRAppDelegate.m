@@ -25,6 +25,8 @@
     UITabBarController *tabBarController = nil;
     
     OTRBuddyListViewController *buddyListViewController = [[OTRBuddyListViewController alloc] init];
+    OTRChatViewController *chatViewController = [[OTRChatViewController alloc] init];
+    buddyListViewController.chatViewController = chatViewController;
     OTRChatListViewController *chatListViewController = [[OTRChatListViewController alloc] init];
     OTRAccountsViewController *accountsViewController = [[OTRAccountsViewController alloc] init];
 
@@ -42,8 +44,7 @@
         tabBarController.viewControllers = [NSArray arrayWithObjects:buddyListNavController, chatListNavController, accountsNavController, nil];
         //self.tabBarController.viewControllers = [NSArray arrayWithObjects:navController, navController2, navController3, [[UINavigationController alloc] initWithRootViewController:[[OTRChatViewController alloc] init]], nil];
     } else {
-        OTRChatViewController *chatViewController = [[OTRChatViewController alloc] init];
-        buddyListViewController.chatViewController = chatViewController;
+
         UINavigationController *chatNavController = [[UINavigationController alloc ]initWithRootViewController:chatViewController];
         UISplitViewController *splitViewController = [[UISplitViewController alloc] init];
         splitViewController.viewControllers = [NSArray arrayWithObjects:buddyListNavController, chatNavController, nil];

@@ -13,6 +13,7 @@
 
 @property (nonatomic, retain) NSMutableDictionary *oscarBuddies;
 @property (nonatomic, retain) NSMutableDictionary *xmppBuddies;
+@property (nonatomic, retain) NSMutableSet *activeConversations;
 
 -(NSMutableDictionary*)allBuddies;
 -(void)addBuddy:(OTRBuddy*)newBuddy;
