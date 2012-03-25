@@ -20,6 +20,7 @@
 @property (nonatomic, retain) UITextField *messageTextField;
 @property (nonatomic, retain) UIButton *sendButton;
 @property (nonatomic, retain) UIView *chatBoxView;
+@property (nonatomic, retain) UILabel *instructionsLabel;
 
 @property (nonatomic) ConnContext *context;
 @property (nonatomic, retain) OTRBuddy *buddy;

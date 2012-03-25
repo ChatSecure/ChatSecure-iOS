@@ -29,6 +29,7 @@
 @synthesize sendButton;
 @synthesize keyboardIsShown;
 @synthesize buddy;
+@synthesize instructionsLabel;
 
 - (void) dealloc {
     self.lastActionLink = nil;
@@ -44,6 +45,7 @@
     self.unlockedButton = nil;
     self.chatBoxView = nil;
     self.sendButton = nil;
+    self.instructionsLabel = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -309,6 +311,7 @@
     [self refreshContext];
     [self refreshLockButton];
     [self updateChatHistory];
+    [self refreshView];
 }
      
      
@@ -586,20 +589,39 @@
 	}
 }
 
+- (void) refreshView {
+    if (!buddy) {
+        if (!instructionsLabel) {
+            int labelWidth = 500;
+            int labelHeight = 100;
+            self.instructionsLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.view.frame.size.width/2-labelWidth/2, self.view.frame.size.height/2-labelHeight/2, labelWidth, labelHeight)];
+            instructionsLabel.text = @"Log in on the Accounts tab and then select a buddy from the Buddy List to start chatting.";
+            instructionsLabel.numberOfLines = 2;
+            [self.view addSubview:instructionsLabel];
+        }
+    } else {
+        if (instructionsLabel) {
+            [self.instructionsLabel removeFromSuperview];
+            self.instructionsLabel = nil;
+        }
+        CGRect frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height-[self chatBoxViewHeight]);
+        self.chatHistoryTextView.frame = frame;
+        self.chatBoxView.frame = CGRectMake(0,frame.size.height, self.view.frame.size.width, [self chatBoxViewHeight]);
+        self.chatHistoryTextView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        self.chatBoxView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
+        
+        self.messageTextField.frame = CGRectMake(0, 0, self.view.frame.size.width-kSendButtonWidth, self.chatBoxView.frame.size.height);
+        self.sendButton.frame = CGRectMake(self.messageTextField.frame.size.width, 0, kSendButtonWidth , self.chatBoxView.frame.size.height);
+        
+        
+        [self refreshContext];
+        [self refreshLockButton];
+    }
+}
+
 -(void)viewWillAppear:(BOOL)animated
 {
-    CGRect frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height-[self chatBoxViewHeight]);
-    self.chatHistoryTextView.frame = frame;
-    self.chatBoxView.frame = CGRectMake(0,frame.size.height, self.view.frame.size.width, [self chatBoxViewHeight]);
-    self.chatHistoryTextView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    self.chatBoxView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
-    
-    self.messageTextField.frame = CGRectMake(0, 0, self.view.frame.size.width-kSendButtonWidth, self.chatBoxView.frame.size.height);
-    self.sendButton.frame = CGRectMake(self.messageTextField.frame.size.width, 0, kSendButtonWidth , self.chatBoxView.frame.size.height);
-    
-
-    [self refreshContext];
-    [self refreshLockButton];
+    [self refreshView];
 }
 
 /*- (void)debugButton:(UIBarButtonItem *)sender
