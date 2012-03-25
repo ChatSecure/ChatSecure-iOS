@@ -108,12 +108,10 @@
 		D974DAB215021DB60028B2F4 /* DDTTYLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = D974DA4715021DB60028B2F4 /* DDTTYLogger.m */; };
 		D974DAB315021DB60028B2F4 /* ContextFilterLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = D974DA4A15021DB60028B2F4 /* ContextFilterLogFormatter.m */; };
 		D974DAB415021DB60028B2F4 /* DispatchQueueLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = D974DA4C15021DB60028B2F4 /* DispatchQueueLogFormatter.m */; };
-		D974DAB515021DB60028B2F4 /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = D974DA4D15021DB60028B2F4 /* README.txt */; };
 		D974DAB615021DB60028B2F4 /* NSString+DDXML.m in Sources */ = {isa = PBXBuildFile; fileRef = D974DA5215021DB60028B2F4 /* NSString+DDXML.m */; };
 		D974DAB715021DB60028B2F4 /* DDXMLDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = D974DA5515021DB60028B2F4 /* DDXMLDocument.m */; };
 		D974DAB815021DB60028B2F4 /* DDXMLElement.m in Sources */ = {isa = PBXBuildFile; fileRef = D974DA5715021DB60028B2F4 /* DDXMLElement.m */; };
 		D974DAB915021DB60028B2F4 /* DDXMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = D974DA5915021DB60028B2F4 /* DDXMLNode.m */; };
-		D974DABA15021DB60028B2F4 /* libidn-1.24.tar.gz in Resources */ = {isa = PBXBuildFile; fileRef = D974DA5E15021DB60028B2F4 /* libidn-1.24.tar.gz */; };
 		D974DABB15021DB60028B2F4 /* libidn.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D974DA5F15021DB60028B2F4 /* libidn.a */; };
 		D974DABD15021E540028B2F4 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D974DABC15021E540028B2F4 /* libiconv.dylib */; };
 		D99071B2151EB5C6002CECC9 /* 08-chat@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D99071AF151EB5C5002CECC9 /* 08-chat@2x.png */; };
@@ -1937,8 +1935,6 @@
 				D90FAF2314A05D4B00DA7C56 /* available.png in Resources */,
 				D90FAF2414A05D4B00DA7C56 /* away.png in Resources */,
 				D90FAF2514A05D4B00DA7C56 /* offline.png in Resources */,
-				D974DAB515021DB60028B2F4 /* README.txt in Resources */,
-				D974DABA15021DB60028B2F4 /* libidn-1.24.tar.gz in Resources */,
 				D99071B2151EB5C6002CECC9 /* 08-chat@2x.png in Resources */,
 				D99071B3151EB5C6002CECC9 /* 19-gear@2x.png in Resources */,
 				D99071B4151EB5C6002CECC9 /* 112-group@2x.png in Resources */,
