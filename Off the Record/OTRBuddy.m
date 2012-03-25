@@ -9,6 +9,7 @@
 #import "OTRBuddy.h"
 #import "OTRMessage.h"
 #import "OTRCodec.h"
+#import "OTRProtocolManager.h"
 
 @implementation OTRBuddy
 
@@ -18,6 +19,7 @@
 @synthesize groupName;
 @synthesize status;
 @synthesize chatHistory;
+@synthesize lastMessage;
 
 - (void) dealloc {
     self.accountName = nil;
@@ -70,7 +72,7 @@
     OTRBuddy* theBuddy = self;
     message = [message stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     NSLog(@"message to be sent: %@",message);
-    OTRMessage *newMessage = [OTRMessage messageWithSender:accountName recipient:theBuddy.accountName message:message protocol:protocol];
+    OTRMessage *newMessage = [OTRMessage messageWithSender:[[OTRProtocolManager sharedInstance] accountNameForProtocol:protocol] recipient:theBuddy.accountName message:message protocol:protocol];
     NSLog(@"newMessagge: %@",newMessage.message);
     OTRMessage *encodedMessage;
     if(secure)
@@ -96,6 +98,7 @@
 
 -(void)receiveMessage:(NSString *)message
 {
+    self.lastMessage = message;
     NSLog(@"received: %@",message);
     
     NSString *rawMessage = [self stringByStrippingHTML:message];
@@ -103,6 +106,7 @@
     NSString *username = [NSString stringWithFormat:@"<FONT SIZE=%d COLOR=\"#ff0000\"><b>%@:</b></FONT>",[self fontSize],self.displayName];
     
     [chatHistory appendFormat:@"%@ <FONT SIZE=%d>%@</FONT><br>",username,[self fontSize],rawMessage];
+    [[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_RECEIVED_NOTIFICATION object:self];
 }
 
 @end

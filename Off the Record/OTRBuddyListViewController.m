@@ -21,7 +21,6 @@
 @synthesize chatListController;
 @synthesize tabController;
 @synthesize protocolManager;
-@synthesize recentMessages;
 
 
 - (id)init {
@@ -64,8 +63,6 @@
 	// [Debug setDebuggingEnabled:YES];
 	NSLog(@"LibOrange (v: %@): -beginTest\n", @lib_orange_version_string);
     protocolManager = [OTRProtocolManager sharedInstance];
-    
-    recentMessages = [[NSMutableDictionary alloc] initWithCapacity:3];
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -127,7 +124,6 @@
          UIAlertView *alert = [[UIAlertView alloc] initWithTitle:userName message:decodedMessage delegate:self cancelButtonTitle:@"Ignore" otherButtonTitles:@"Reply", nil];
          alert.tag = 1;
          
-         [recentMessages setObject:notification.userInfo forKey:userName];
 
          [alert show];
      }
@@ -241,27 +237,16 @@
     if(alertView.tag == 1)
     {
         NSString * buddyName=alertView.title;
-        NSString * proto;
-        NSDictionary *messageInfo = [recentMessages objectForKey:buddyName];
-        OTRMessage * mess = [messageInfo objectForKey:@"message"];
+        OTRBuddy *buddy = [protocolManager.buddyList getBuddyByName:buddyName];
         if(buttonIndex == 1) // Reply
         {
             if(alertView.title)
             {
-                if(messageInfo)
-                {
-                    proto = mess.protocol;
-                }
-                [self enterConversation:alertView.title withProtocol:proto  withMessage:alertView.message];
+                [self enterConversationWithBuddy:buddy];
             }
         }   
         else // Ignore
         {
-            if(messageInfo)
-            {
-                proto = mess.protocol;
-            }
-            [recentMessages removeObjectForKey:alertView.title];
         }
     }
 }

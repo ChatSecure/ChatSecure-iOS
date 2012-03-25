@@ -21,10 +21,8 @@
 @property (nonatomic, retain) UITabBarController *tabController;
 
 @property (nonatomic, retain) OTRProtocolManager *protocolManager;
-@property (nonatomic, retain) NSMutableDictionary *recentMessages;
 
--(void)startConversation:(NSString*)buddyName withProtocol:(NSString*)protocol withMessage:(NSString*)message;
--(void)enterConversation:(NSString*)buddyName withProtocol:(NSString*)protocol withMessage:(NSString*)message;
+-(void)enterConversationWithBuddy:(OTRBuddy*)buddy;
 -(void)buddyListUpdate;
 -(void)messageReceived:(NSNotification*)notification;
 

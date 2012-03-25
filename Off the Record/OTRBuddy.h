@@ -10,6 +10,8 @@
 
 typedef unsigned int OTRBuddyStatus;
 
+#define MESSAGE_RECEIVED_NOTIFICATION @"MessageReceivedNotification"
+
 enum OTRBuddyStatus {
     kOTRBuddyStatusOffline = 0,
     kOTRBuddyStatusAway = 1,
@@ -23,6 +25,7 @@ enum OTRBuddyStatus {
 @property (nonatomic, retain) NSString* protocol;
 @property (nonatomic, retain) NSString* groupName;
 @property (nonatomic, retain) NSMutableString* chatHistory;
+@property (nonatomic, retain) NSString *lastMessage;
 
 @property OTRBuddyStatus status;
 

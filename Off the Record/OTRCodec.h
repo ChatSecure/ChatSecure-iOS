@@ -10,8 +10,9 @@
 #import "OTRMessage.h"
 #import "context.h"
 
-@interface OTRCodec : NSObject
+#define ENCRYPTION_STATE_NOTIFICATION @"EncryptionStateNotification"
 
+@interface OTRCodec : NSObject
 
 +(OTRMessage*) decodeMessage:(OTRMessage*)theMessage;
 +(OTRMessage*) encodeMessage:(OTRMessage*)theMessage;

@@ -44,12 +44,6 @@
     self.unlockedButton = nil;
     self.chatBoxView = nil;
     self.sendButton = nil;
-    /*[[NSNotificationCenter defaultCenter] removeObserver:self 
-                                                    name:UIKeyboardWillShowNotification 
-                                                  object:nil]; 
-    [[NSNotificationCenter defaultCenter] removeObserver:self 
-                                                    name:UIKeyboardWillHideNotification 
-                                                  object:nil]; */
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -282,19 +276,6 @@
 	chatHistoryTextView.attributedString = string;
     chatHistoryTextView.userInteractionEnabled = YES;
     
-    
-    
-    NSString* secureNotification = [NSString stringWithFormat:@"%@_gone_secure",self.title];
-    NSString* insecureNotification = [NSString stringWithFormat:@"%@_gone_insecure",self.title];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(receiveNotification:) 
-                                                 name:secureNotification
-                                               object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(receiveNotification:) 
-                                                 name:insecureNotification
-                                               object:nil];
     if(!protocolManager)
         protocolManager = [OTRProtocolManager sharedInstance];
     
@@ -319,14 +300,26 @@
 }
 
 - (void) setBuddy:(OTRBuddy *)newBuddy {
+    if(buddy) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:ENCRYPTION_STATE_NOTIFICATION object:buddy];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:MESSAGE_RECEIVED_NOTIFICATION object:buddy];
+    }
+    
     buddy = newBuddy;
     self.title = newBuddy.displayName;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(encryptionStateChangeNotification:) name:ENCRYPTION_STATE_NOTIFICATION object:buddy];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messageReceivedNotification:) name:MESSAGE_RECEIVED_NOTIFICATION object:buddy];
     
     [self refreshContext];
     [self refreshLockButton];
     [self updateChatHistory];
 }
-
+     
+     
+- (void) messageReceivedNotification:(NSNotification*)notification {
+    [self updateChatHistory];
+}
 
 
 -(void) keyPressed: (NSNotification*) notification{
@@ -426,18 +419,17 @@
  */
 }
 
-- (void) receiveNotification:(NSNotification *) notification
+- (void) encryptionStateChangeNotification:(NSNotification *) notification
 {
-    NSString* secureNotification = [NSString stringWithFormat:@"%@_gone_secure",self.title];
-    NSString* insecureNotification = [NSString stringWithFormat:@"%@_gone_insecure",self.title];
     NSLog(@"received notification: %@",[notification name]);
+    NSDictionary *userInfo = notification.userInfo;
+    BOOL isSecure = [[userInfo objectForKey:@"secure"] boolValue];
     
-    if ([[notification name] isEqualToString:secureNotification])
+    if (isSecure)
     {
         self.navigationItem.rightBarButtonItem = lockButton;
-        
     }
-    else if([[notification name] isEqualToString:insecureNotification])
+    else
     {
         self.navigationItem.rightBarButtonItem = unlockedButton;
     }
@@ -468,8 +460,8 @@
     [buddy sendMessage:messageTextField.text secure:secure];
     messageTextField.text = @"";    
     [self chatButtonClick];
+    [self updateChatHistory];
 }
-
 
 
 -(void)updateChatHistory

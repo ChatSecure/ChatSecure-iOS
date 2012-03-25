@@ -178,27 +178,17 @@ static void write_fingerprints_cb(void *opdata)
     fclose(storef);
 }
 
+
 static void gone_secure_cb(void *opdata, ConnContext *context)
 {
-    //otrg_dialog_connected(context);
-    //NSLog(@"gone secure");
-    
-    /*unsigned char* fingerprint = context->fingerprint_root.fingerprint;
-    
-    NSMutableString *hex = [NSMutableString string];
-    for (int i=0; i<20; i++)
-        [hex appendFormat:@"%02x", fingerprint[i]];
-    
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Your  Fingerprint" message:[NSString stringWithFormat:@"%@", hex] delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
-    [alert show];
-    [alert release];*/
     if(context->username)
     {
         NSString* username = [NSString stringWithUTF8String:context->username];
-        NSString* notification = [NSString stringWithFormat:@"%@_gone_secure",username];
+        OTRBuddy *buddy = [[[OTRProtocolManager sharedInstance] buddyList] getBuddyByName:username];
+        NSDictionary *userInfo = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES] forKey:@"secure"];
         
-        NSLog(@"%@",notification);
-        [[NSNotificationCenter defaultCenter] postNotificationName:notification object:nil];
+
+        [[NSNotificationCenter defaultCenter] postNotificationName:ENCRYPTION_STATE_NOTIFICATION object:buddy userInfo:userInfo];
     }
 }
 
@@ -209,20 +199,24 @@ static void gone_insecure_cb(void *opdata, ConnContext *context)
     if(context->username)
     {
         NSString* username = [NSString stringWithUTF8String:context->username];
-        NSString* notification = [NSString stringWithFormat:@"%@_gone_insecure",username];
+        OTRBuddy *buddy = [[[OTRProtocolManager sharedInstance] buddyList] getBuddyByName:username];
+        NSDictionary *userInfo = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:NO] forKey:@"secure"];
         
-        NSLog(@"%@",notification);
-        [[NSNotificationCenter defaultCenter] postNotificationName:notification object:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:ENCRYPTION_STATE_NOTIFICATION object:buddy userInfo:userInfo];
     }
 }
 
 static void still_secure_cb(void *opdata, ConnContext *context, int is_reply)
 {
-    /*if (is_reply == 0) {
-     otrg_dialog_stillconnected(context);
-     }*/
-    NSLog(@"still secure");
-    
+    if(context->username)
+    {
+        NSString* username = [NSString stringWithUTF8String:context->username];
+        OTRBuddy *buddy = [[[OTRProtocolManager sharedInstance] buddyList] getBuddyByName:username];
+        NSDictionary *userInfo = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES] forKey:@"secure"];
+        
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"EncryptionStateNotification" object:buddy userInfo:userInfo];
+    }
 }
 
 static void log_message_cb(void *opdata, const char *message)
