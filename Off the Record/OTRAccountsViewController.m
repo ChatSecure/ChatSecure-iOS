@@ -189,6 +189,7 @@
             loginViewController.xmppButton.hidden = YES;
             loginViewController.useXMPP = NO;
             loginViewController.protocolManager = protocolManager;
+            loginViewController.modalPresentationStyle = UIModalPresentationFormSheet;
             [self.tabBarController presentModalViewController:loginViewController animated:YES];
 
             
@@ -212,6 +213,7 @@
             loginViewController.aimButton.hidden = YES;
             loginViewController.useXMPP = YES;
             loginViewController.protocolManager = protocolManager;
+            loginViewController.modalPresentationStyle = UIModalPresentationFormSheet;
             [self.tabBarController presentModalViewController:loginViewController animated:YES];
 
 
