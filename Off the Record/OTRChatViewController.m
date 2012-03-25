@@ -205,20 +205,16 @@
     [super loadView];
     self.view.backgroundColor = [UIColor lightGrayColor];
     
-    self.chatBoxView = [[UIView alloc] initWithFrame:CGRectZero];
-    [self.view addSubview:chatBoxView];
+    self.chatBoxView = [[UIView alloc] init];
     
-    self.messageTextField = [[UITextField alloc] initWithFrame:CGRectZero];
+    self.messageTextField = [[UITextField alloc] init];
     messageTextField.borderStyle = UITextBorderStyleRoundedRect;
     messageTextField.delegate = self;
-    [self.chatBoxView addSubview:messageTextField];
 
     
     self.sendButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    //sendButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     [sendButton setTitle:@"Send" forState:UIControlStateNormal];
     [sendButton addTarget:self action:@selector(sendButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-    [self.chatBoxView addSubview:sendButton];
     
 
 }
@@ -244,22 +240,21 @@
     //make contentSize bigger than your scrollSize (you will need to figure out for your own use case)
 
     
-    CGRect frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height-[self chatBoxViewHeight]-kTabBarHeight-self.navigationController.navigationBar.frame.size.height);
 
     [DTAttributedTextContentView setLayerClass:[CATiledLayer class]];
-    self.chatHistoryTextView = [[DTAttributedTextView alloc] initWithFrame:frame];
+    self.chatHistoryTextView = [[DTAttributedTextView alloc] initWithFrame:CGRectZero];
 	chatHistoryTextView.textDelegate = self;
-	chatHistoryTextView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+	chatHistoryTextView.autoresizingMask = UIViewAutoresizingFlexibleWidth |UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;
 	[self.view addSubview:chatHistoryTextView];
-    self.chatBoxView.frame = CGRectMake(0, self.chatHistoryTextView.frame.size.height, self.view.frame.size.width, [self chatBoxViewHeight]);
     
-    self.messageTextField.frame = CGRectMake(0, 0, self.view.frame.size.width-kSendButtonWidth, self.chatBoxView.frame.size.height);
-    self.sendButton.frame = CGRectMake(self.messageTextField.frame.size.width, 0, kSendButtonWidth , self.chatBoxView.frame.size.height);
-    
-    self.chatBoxView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+
     messageTextField.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
     sendButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-	
+    [self.view addSubview:chatBoxView];
+    [self.chatBoxView addSubview:messageTextField];
+    [self.chatBoxView addSubview:sendButton];
+
+    
 	// Create attributed string from HTML
 	CGSize maxImageSize = CGSizeMake(self.view.bounds.size.width - 20.0, self.view.bounds.size.height - 20.0);
 	
@@ -593,6 +588,16 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    CGRect frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height-[self chatBoxViewHeight]);
+    self.chatHistoryTextView.frame = frame;
+    self.chatBoxView.frame = CGRectMake(0,frame.size.height, self.view.frame.size.width, [self chatBoxViewHeight]);
+    self.chatHistoryTextView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    self.chatBoxView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
+    
+    self.messageTextField.frame = CGRectMake(0, 0, self.view.frame.size.width-kSendButtonWidth, self.chatBoxView.frame.size.height);
+    self.sendButton.frame = CGRectMake(self.messageTextField.frame.size.width, 0, kSendButtonWidth , self.chatBoxView.frame.size.height);
+    
+
     [self refreshContext];
     [self refreshLockButton];
 }
