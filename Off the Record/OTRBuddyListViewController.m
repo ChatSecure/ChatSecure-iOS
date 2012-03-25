@@ -117,19 +117,20 @@
     OTRMessage *message = [notification.userInfo objectForKey:@"message"];
     NSString *userName = message.sender;
     NSString *decodedMessage = message.message;
+    OTRBuddy *buddy = [protocolManager.buddyList getBuddyByName:userName];
+    [buddy receiveMessage:decodedMessage];
     
     
     if(![[self.navigationController visibleViewController].title isEqualToString:userName] && ![[chatListController.navigationController visibleViewController].title isEqualToString:userName])
      {
-         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:userName message:decodedMessage delegate:self cancelButtonTitle:@"Ignore" otherButtonTitles:@"Reply", nil];
+         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:userName message:buddy.lastMessage delegate:self cancelButtonTitle:@"Ignore" otherButtonTitles:@"Reply", nil];
          alert.tag = 1;
          
 
          [alert show];
      }
     
-    OTRBuddy *buddy = [protocolManager.buddyList getBuddyByName:userName];
-    [buddy receiveMessage:decodedMessage];
+
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -220,7 +221,7 @@
     chatViewController.buddy = buddy;
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
         self.tabBarController.selectedIndex = 1;
-        [chatListController.navigationController pushViewController:chatViewController animated:NO];
+        chatListController.navigationController.viewControllers = [NSArray arrayWithObjects:chatListController, chatViewController, nil];
     } 
 }
 
