@@ -124,7 +124,7 @@
     OTRBuddy *buddy = [protocolManager.buddyList getBuddyByName:userName];
     [buddy receiveMessage:decodedMessage];
     
-    if(![chatViewController.title isEqualToString:buddy.displayName])
+    if(![chatViewController.title isEqualToString:buddy.displayName] && ![buddy.lastMessage isEqualToString:@""])
      {
          UIAlertView *alert = [[UIAlertView alloc] initWithTitle:userName message:buddy.lastMessage delegate:self cancelButtonTitle:@"Ignore" otherButtonTitles:@"Reply", nil];
          alert.tag = 1;
@@ -218,12 +218,17 @@
 
 -(void)enterConversationWithBuddy:(OTRBuddy*)buddy 
 {
-    [protocolManager.buddyList.activeConversations addObject:buddy];
-    chatViewController.buddy = buddy;
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-        self.tabBarController.selectedIndex = 1;
-        chatListController.navigationController.viewControllers = [NSArray arrayWithObjects:chatListController, chatViewController, nil];
-    } 
+    if(buddy) {
+        [protocolManager.buddyList.activeConversations addObject:buddy];
+        chatViewController.buddy = buddy;
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+            self.tabBarController.selectedIndex = 1;
+            chatListController.navigationController.viewControllers = [NSArray arrayWithObjects:chatListController, chatViewController, nil];
+        } else {
+            self.tabBarController.selectedIndex = 0;
+        }
+    }
+
 }
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex

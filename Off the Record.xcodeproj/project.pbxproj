@@ -2226,6 +2226,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_OPTIMIZATION_LEVEL = s;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Off the Record/Off the Record-Prefix.pch";
 				GCC_THUMB_SUPPORT = NO;
@@ -2235,7 +2236,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/libotr/lib\"",
-					"\"$(SRCROOT)/xmppframework/Vendor/libidn\"",
 					"\"$(SRCROOT)/XMPPFramework/Vendor/libidn\"",
 				);
 				OTHER_LDFLAGS = "-all_load";
@@ -2261,7 +2261,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/libotr/lib\"",
-					"\"$(SRCROOT)/xmppframework/Vendor/libidn\"",
 					"\"$(SRCROOT)/XMPPFramework/Vendor/libidn\"",
 				);
 				OTHER_LDFLAGS = "-all_load";

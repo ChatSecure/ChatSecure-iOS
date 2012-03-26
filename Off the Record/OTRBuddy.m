@@ -70,44 +70,44 @@
 
 -(void)sendMessage:(NSString *)message secure:(BOOL)secure
 {
-    OTRBuddy* theBuddy = self;
-    message = [message stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    NSLog(@"message to be sent: %@",message);
-    OTRMessage *newMessage = [OTRMessage messageWithSender:[[OTRProtocolManager sharedInstance] accountNameForProtocol:protocol] recipient:theBuddy.accountName message:message protocol:protocol];
-    NSLog(@"newMessagge: %@",newMessage.message);
-    OTRMessage *encodedMessage;
-    if(secure)
-    {
-        encodedMessage = [OTRCodec encodeMessage:newMessage];
+    if (message) {
+        OTRBuddy* theBuddy = self;
+        message = [message stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        //NSLog(@"message to be sent: %@",message);
+        OTRMessage *newMessage = [OTRMessage messageWithSender:[[OTRProtocolManager sharedInstance] accountNameForProtocol:protocol] recipient:theBuddy.accountName message:message protocol:protocol];
+        //NSLog(@"newMessagge: %@",newMessage.message);
+        OTRMessage *encodedMessage;
+        if(secure)
+        {
+            encodedMessage = [OTRCodec encodeMessage:newMessage];
+        }
+        else
+        {
+            encodedMessage = newMessage;
+        }
+        //NSLog(@"encoded message: %@",encodedMessage.message);
+        [OTRMessage sendMessage:encodedMessage];    
+        
+        NSString *username = [NSString stringWithFormat:@"<FONT SIZE=%d COLOR=\"#0000ff\"><b>Me:</b></FONT>",[self fontSize]];
+        
+        [chatHistory appendFormat:@"%@ <FONT SIZE=%d>%@</FONT><br>",username,[self fontSize], message];        
     }
-    else
-    {
-        encodedMessage = newMessage;
-    }
-    
-    
-    
-    NSLog(@"encoded message: %@",encodedMessage.message);
-    [OTRMessage sendMessage:encodedMessage];    
-    
-    NSString *username = [NSString stringWithFormat:@"<FONT SIZE=%d COLOR=\"#0000ff\"><b>Me:</b></FONT>",[self fontSize]];
-    
-    [chatHistory appendFormat:@"%@ <FONT SIZE=%d>%@</FONT><br>",username,[self fontSize], message];
 }
 
 
 
 -(void)receiveMessage:(NSString *)message
 {
-    NSLog(@"received: %@",message);
-    
-    NSString *rawMessage = [self stringByStrippingHTML:message];
-    self.lastMessage = rawMessage;
-    
-    NSString *username = [NSString stringWithFormat:@"<FONT SIZE=%d COLOR=\"#ff0000\"><b>%@:</b></FONT>",[self fontSize],self.displayName];
-    
-    [chatHistory appendFormat:@"%@ <FONT SIZE=%d>%@</FONT><br>",username,[self fontSize],rawMessage];
-    [[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_RECEIVED_NOTIFICATION object:self];
+    //NSLog(@"received: %@",message);
+    if (message) {
+        NSString *rawMessage = [self stringByStrippingHTML:message];
+        self.lastMessage = rawMessage;
+        
+        NSString *username = [NSString stringWithFormat:@"<FONT SIZE=%d COLOR=\"#ff0000\"><b>%@:</b></FONT>",[self fontSize],self.displayName];
+        
+        [chatHistory appendFormat:@"%@ <FONT SIZE=%d>%@</FONT><br>",username,[self fontSize],rawMessage];
+        [[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];
+    }
 }
 
 @end

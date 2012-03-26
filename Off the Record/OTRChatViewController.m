@@ -299,14 +299,14 @@
 - (void) setBuddy:(OTRBuddy *)newBuddy {
     if(buddy) {
         [[NSNotificationCenter defaultCenter] removeObserver:self name:ENCRYPTION_STATE_NOTIFICATION object:buddy];
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:MESSAGE_RECEIVED_NOTIFICATION object:buddy];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:MESSAGE_PROCESSED_NOTIFICATION object:buddy];
     }
     
     buddy = newBuddy;
     self.title = newBuddy.displayName;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(encryptionStateChangeNotification:) name:ENCRYPTION_STATE_NOTIFICATION object:buddy];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messageReceivedNotification:) name:MESSAGE_RECEIVED_NOTIFICATION object:buddy];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messageProcessedNotification:) name:MESSAGE_PROCESSED_NOTIFICATION object:buddy];
     
     [self refreshContext];
     [self refreshLockButton];
@@ -315,7 +315,7 @@
 }
      
      
-- (void) messageReceivedNotification:(NSNotification*)notification {
+- (void) messageProcessedNotification:(NSNotification*)notification {
     [self updateChatHistory];
 }
 
