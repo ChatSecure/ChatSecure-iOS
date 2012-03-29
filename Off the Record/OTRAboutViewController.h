@@ -7,13 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "DTAttributedTextView.h"
 
-@interface OTRAboutViewController : UIViewController <DTAttributedTextContentViewDelegate, UIActionSheetDelegate>
-{
-    NSURL *lastActionLink;
-    DTAttributedTextView *aboutTextView;
-}
+@interface OTRAboutViewController : UIViewController <UIWebViewDelegate, UIActionSheetDelegate>
+
 @property (strong, nonatomic) IBOutlet UILabel *versionLabel;
+@property (nonatomic, retain) UIWebView *aboutTextView;
+@property (nonatomic, retain) NSURL *lastActionLink;
 
 @end

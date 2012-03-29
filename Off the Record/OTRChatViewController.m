@@ -8,11 +8,8 @@
 
 #import "OTRChatViewController.h"
 #import "OTREncryptionManager.h"
-#import "DTLinkButton.h"
-#import "DTCoreTextConstants.h"
 #import "privkey.h"
 #import <QuartzCore/QuartzCore.h>
-#import "DTHTMLAttributedStringBuilder.h"
 
 #define kTabBarHeight 49
 #define kSendButtonWidth 60
@@ -243,9 +240,10 @@
 
     
 
-    [DTAttributedTextContentView setLayerClass:[CATiledLayer class]];
-    self.chatHistoryTextView = [[DTAttributedTextView alloc] initWithFrame:CGRectZero];
-	chatHistoryTextView.textDelegate = self;
+    //self.chatHistoryTextView = [[DTAttributedTextView alloc] initWithFrame:CGRectZero];
+    self.chatHistoryTextView = [[UIWebView alloc] initWithFrame:CGRectZero];
+	//chatHistoryTextView.textDelegate = self;
+    self.chatHistoryTextView.delegate = self;
 	chatHistoryTextView.autoresizingMask = UIViewAutoresizingFlexibleWidth |UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;
 	[self.view addSubview:chatHistoryTextView];
     
@@ -256,21 +254,10 @@
     [self.chatBoxView addSubview:messageTextField];
     [self.chatBoxView addSubview:sendButton];
 
-    
-	// Create attributed string from HTML
-	CGSize maxImageSize = CGSizeMake(self.view.bounds.size.width - 20.0, self.view.bounds.size.height - 20.0);
-	
-	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:1.0], NSTextSizeMultiplierDocumentOption, [NSValue valueWithCGSize:maxImageSize], DTMaxImageSize,
-                             @"Helvetica", DTDefaultFontFamily,  @"purple", DTDefaultLinkColor, nil]; // @"green",DTDefaultTextColor,
-   
-    NSData *data = [@"" dataUsingEncoding:NSUTF8StringEncoding];
-    
-    NSAttributedString *string = [[NSAttributedString alloc] initWithHTML:data options:options documentAttributes:nil];
-
-	
 	// Display string
-	chatHistoryTextView.contentView.edgeInsets = UIEdgeInsetsMake(10, 10, 10, 10);
-	chatHistoryTextView.attributedString = string;
+	//chatHistoryTextView.contentView.edgeInsets = UIEdgeInsetsMake(10, 10, 10, 10);
+	//chatHistoryTextView.attributedString = string;
+    [chatHistoryTextView loadHTMLString:@"" baseURL:[NSURL URLWithString:@"/"]];
     chatHistoryTextView.userInteractionEnabled = YES;
     
     if(!protocolManager)
@@ -464,17 +451,7 @@
 
 -(void)updateChatHistory
 {
-    // Create attributed string from HTML
-	CGSize maxImageSize = CGSizeMake(self.view.bounds.size.width - 20.0, self.view.bounds.size.height - 20.0);
-	
-	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:1.0], NSTextSizeMultiplierDocumentOption, [NSValue valueWithCGSize:maxImageSize], DTMaxImageSize,
-                             @"Helvetica", DTDefaultFontFamily,  @"purple", DTDefaultLinkColor, nil]; // @"green",DTDefaultTextColor,
-    
-    NSData *data = [buddy.chatHistory dataUsingEncoding:NSUTF8StringEncoding];
-    
-    NSAttributedString *string = [[NSAttributedString alloc] initWithHTML:data options:options documentAttributes:nil];
-    
-    chatHistoryTextView.attributedString = string;
+    [chatHistoryTextView loadHTMLString:buddy.chatHistory baseURL:[NSURL URLWithString:@"/"]];
 }
 
 
@@ -484,45 +461,14 @@
     //[chatHistoryTextView setContentOffset: bottomOffset animated: YES];
     //textView.selectedRange = NSMakeRange(textView.text.length - 1, 0);
     //NSLog(@"chat history text view height: %f",[chatHistoryTextView contentSize].height);
-    CGRect bottomRect = CGRectMake(0, 0, 1, [chatHistoryTextView contentSize].height);
-    [chatHistoryTextView scrollRectToVisible: bottomRect animated:YES];
+    
+    //CGRect bottomRect = CGRectMake(0, 0, 1, [chatHistoryTextView contentSize].height);
+    //[chatHistoryTextView scrollRectToVisible: bottomRect animated:YES];
 }
 
 -(BOOL)textViewShouldBeginEditing:(UITextView *)textView
 {
     return NO;
-}
-
-#pragma mark Custom Views on Text
-- (UIView *)attributedTextContentView:(DTAttributedTextContentView *)attributedTextContentView viewForLink:(NSURL *)url identifier:(NSString *)identifier frame:(CGRect)frame
-{
-	DTLinkButton *button = [[DTLinkButton alloc] initWithFrame:frame];
-	button.url = url;
-	button.minimumHitSize = CGSizeMake(25, 25); // adjusts it's bounds so that button is always large enough
-	button.guid = identifier;
-	
-	// use normal push action for opening URL
-	[button addTarget:self action:@selector(linkPushed:) forControlEvents:UIControlEventTouchUpInside];
-	
-	// demonstrate combination with long press
-	UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(linkLongPressed:)];
-	[button addGestureRecognizer:longPress];
-	
-	return button;
-}
-
-- (UIView *)attributedTextContentView:(DTAttributedTextContentView *)attributedTextContentView viewForAttachment:(DTTextAttachment *)attachment frame:(CGRect)frame
-{
-	
-	return nil;
-}
-
-
-#pragma mark Actions
-
-- (void)linkPushed:(DTLinkButton *)button
-{
-	[[UIApplication sharedApplication] openURL:[button.url absoluteURL]];
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -564,7 +510,7 @@
             
         }
     }
-    else
+    else if (actionSheet.tag == 0)
     {
         if (buttonIndex != actionSheet.cancelButtonIndex)
         {
@@ -573,21 +519,6 @@
     }
 }
 
-- (void)linkLongPressed:(UILongPressGestureRecognizer *)gesture
-{
-	if (gesture.state == UIGestureRecognizerStateBegan)
-	{
-		DTLinkButton *button = (id)[gesture view];
-		button.highlighted = NO;
-		lastActionLink = button.url;
-		
-		if ([[UIApplication sharedApplication] canOpenURL:[button.url absoluteURL]])
-		{
-			UIActionSheet *action = [[UIActionSheet alloc] initWithTitle:[[button.url absoluteURL] description] delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Open in Safari", nil];
-			[action showFromTabBar:self.tabBarController.tabBar];
-		}
-	}
-}
 
 - (void) refreshView {
     if (!buddy) {
@@ -598,6 +529,7 @@
             instructionsLabel.text = @"Log in on the Accounts tab and then select a buddy from the Buddy List to start chatting.";
             instructionsLabel.numberOfLines = 2;
             [self.view addSubview:instructionsLabel];
+            self.navigationItem.rightBarButtonItem = nil;
         }
     } else {
         if (instructionsLabel) {
@@ -651,6 +583,29 @@
   invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem
 {
     self.navigationItem.leftBarButtonItem = nil;
+}
+
+
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
+    if ([request.URL.absoluteString isEqualToString:@"file:///"]) {
+        return YES;
+    }
+    if ([[UIApplication sharedApplication] canOpenURL:request.URL])
+    {
+        self.lastActionLink = request.URL;
+        UIActionSheet *action = [[UIActionSheet alloc] initWithTitle:[[request.URL absoluteURL] description] delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Open in Safari", nil];
+        [action setTag:0];
+        [action showFromTabBar:self.tabBarController.tabBar];
+    }
+    return NO;
+}
+
+
+
+- (void)webViewDidFinishLoad:(UIWebView *)webView {
+    NSInteger height = [[webView stringByEvaluatingJavaScriptFromString:@"document.body.offsetHeight;"] intValue];
+    NSString* javascript = [NSString stringWithFormat:@"window.scrollBy(0, %d);", height];   
+    [webView stringByEvaluatingJavaScriptFromString:javascript];
 }
 
 

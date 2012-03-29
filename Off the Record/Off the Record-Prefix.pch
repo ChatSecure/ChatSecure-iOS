@@ -11,6 +11,4 @@
 #ifdef __OBJC__
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
-    #import <CoreText/CoreText.h>
-    #import "DTCoreText.h"
 #endif

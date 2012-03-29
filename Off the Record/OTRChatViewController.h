@@ -8,12 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "OTRBuddyListViewController.h"
-#import "DTAttributedTextView.h"
 #import "context.h"
 #import "OTRProtocolManager.h"
 #import "OTRBuddy.h"
 
-@interface OTRChatViewController : UIViewController <UITextFieldDelegate,DTAttributedTextContentViewDelegate, UIActionSheetDelegate, UISplitViewControllerDelegate> 
+@interface OTRChatViewController : UIViewController <UITextFieldDelegate,UIWebViewDelegate, UIActionSheetDelegate, UISplitViewControllerDelegate> 
 
 
 @property (nonatomic, retain) UIBarButtonItem *lockButton, *unlockedButton;
@@ -26,7 +25,8 @@
 @property (nonatomic, retain) OTRBuddy *buddy;
 @property (nonatomic, retain) OTRProtocolManager *protocolManager;
 
-@property (nonatomic, retain) DTAttributedTextView *chatHistoryTextView;
+//@property (nonatomic, retain) DTAttributedTextView *chatHistoryTextView;
+@property (nonatomic, retain) UIWebView *chatHistoryTextView;
 @property (nonatomic, retain) OTRBuddyListViewController *buddyListController;
 
 @property (nonatomic, retain) NSURL *lastActionLink;

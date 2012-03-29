@@ -10,6 +10,7 @@
 #import "OTRMessage.h"
 #import "OTRCodec.h"
 #import "OTRProtocolManager.h"
+#import "NSString+HTML.h"
 
 @implementation OTRBuddy
 
@@ -59,14 +60,6 @@
     }
 }
 
--(NSString *) stringByStrippingHTML:(NSString*)string {
-    NSRange r;
-    NSString *s = [string copy];
-    while ((r = [s rangeOfString:@"<[^>]+>" options:NSRegularExpressionSearch]).location != NSNotFound)
-        s = [s stringByReplacingCharactersInRange:r withString:@""];
-    return s; 
-}
-
 
 -(void)sendMessage:(NSString *)message secure:(BOOL)secure
 {
@@ -95,12 +88,12 @@
 }
 
 
-
 -(void)receiveMessage:(NSString *)message
 {
     //NSLog(@"received: %@",message);
     if (message) {
-        NSString *rawMessage = [self stringByStrippingHTML:message];
+        // Strip the shit out of it, but hoepfully you're talking with someone who is trusted in the first place
+        NSString *rawMessage = [[[[message stringByStrippingHTML]stringByConvertingHTMLToPlainText]stringByEncodingHTMLEntities:YES] stringByLinkifyingURLs];
         self.lastMessage = rawMessage;
         
         NSString *username = [NSString stringWithFormat:@"<FONT SIZE=%d COLOR=\"#ff0000\"><b>%@:</b></FONT>",[self fontSize],self.displayName];

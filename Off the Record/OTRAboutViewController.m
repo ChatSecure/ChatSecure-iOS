@@ -7,11 +7,13 @@
 //
 
 #import "OTRAboutViewController.h"
-#import "DTLinkButton.h"
-#import "DTCoreTextConstants.h"
 
 @implementation OTRAboutViewController
-@synthesize versionLabel;
+@synthesize versionLabel, aboutTextView, lastActionLink;
+
+- (void) dealloc {
+    self.lastActionLink = nil;
+}
 
 - (id)init {
     if (self = [super init]) {
@@ -38,25 +40,16 @@
     
     CGRect frame = CGRectMake(20.0, 140.0, 280.0, 165.0);
     
-    aboutTextView = [[DTAttributedTextView alloc] initWithFrame:frame];
-	aboutTextView.textDelegate = self;
+    aboutTextView = [[UIWebView alloc] initWithFrame:frame];
+	aboutTextView.delegate = self;
 	aboutTextView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    [aboutTextView loadHTMLString:aboutString baseURL:[NSURL URLWithString:@"/"]];
 	[self.view addSubview:aboutTextView];
     
-	
-	// Create attributed string from HTML
-	CGSize maxImageSize = CGSizeMake(self.view.bounds.size.width - 20.0, self.view.bounds.size.height - 20.0);
-	
-	NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:1.0], NSTextSizeMultiplierDocumentOption, [NSValue valueWithCGSize:maxImageSize], DTMaxImageSize,
-                             @"Helvetica", DTDefaultFontFamily,  @"purple", DTDefaultLinkColor, nil]; // @"green",DTDefaultTextColor,
-    
-    NSData *data = [aboutString dataUsingEncoding:NSUTF8StringEncoding];
-	NSAttributedString *string = [[NSAttributedString alloc] initWithHTML:data options:options documentAttributes:NULL];
-	
-	// Display string
-	aboutTextView.contentView.edgeInsets = UIEdgeInsetsMake(10, 10, 10, 10);
-	aboutTextView.attributedString = string;
     aboutTextView.userInteractionEnabled = YES;
+    if([aboutTextView respondsToSelector:@selector(scrollView)]) {
+        aboutTextView.scrollView.scrollEnabled = NO;
+    }
 
     NSString *version = [[[NSBundle mainBundle] infoDictionary] valueForKey:@"CFBundleVersion"];
     versionLabel.text = [NSString stringWithFormat:@"Version %@", version];
@@ -68,6 +61,7 @@
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+    self.aboutTextView = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -80,37 +74,6 @@
     }
 }
 
-#pragma mark Custom Views on Text
-- (UIView *)attributedTextContentView:(DTAttributedTextContentView *)attributedTextContentView viewForLink:(NSURL *)url identifier:(NSString *)identifier frame:(CGRect)frame
-{
-	DTLinkButton *button = [[DTLinkButton alloc] initWithFrame:frame];
-	button.url = url;
-	button.minimumHitSize = CGSizeMake(25, 25); // adjusts it's bounds so that button is always large enough
-	button.guid = identifier;
-	
-	// use normal push action for opening URL
-	[button addTarget:self action:@selector(linkPushed:) forControlEvents:UIControlEventTouchUpInside];
-	
-	// demonstrate combination with long press
-	UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(linkLongPressed:)];
-	[button addGestureRecognizer:longPress];
-	
-	return button;
-}
-
-- (UIView *)attributedTextContentView:(DTAttributedTextContentView *)attributedTextContentView viewForAttachment:(DTTextAttachment *)attachment frame:(CGRect)frame
-{
-	
-	return nil;
-}
-
-
-#pragma mark Actions
-
-- (void)linkPushed:(DTLinkButton *)button
-{
-	[[UIApplication sharedApplication] openURL:[button.url absoluteURL]];
-}
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
@@ -120,20 +83,17 @@
 	}
 }
 
-- (void)linkLongPressed:(UILongPressGestureRecognizer *)gesture
-{
-	if (gesture.state == UIGestureRecognizerStateBegan)
-	{
-		DTLinkButton *button = (id)[gesture view];
-		button.highlighted = NO;
-		lastActionLink = button.url;
-		
-		if ([[UIApplication sharedApplication] canOpenURL:[button.url absoluteURL]])
-		{
-			UIActionSheet *action = [[UIActionSheet alloc] initWithTitle:[[button.url absoluteURL] description] delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Open in Safari", nil];
-			[action showFromTabBar:self.tabBarController.tabBar];
-		}
-	}
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
+    if ([request.URL.absoluteString isEqualToString:@"file:///"]) {
+        return YES;
+    }
+    if ([[UIApplication sharedApplication] canOpenURL:request.URL])
+    {
+        self.lastActionLink = request.URL;
+        UIActionSheet *action = [[UIActionSheet alloc] initWithTitle:[[request.URL absoluteURL] description] delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Open in Safari", nil];
+        [action showFromTabBar:self.tabBarController.tabBar];
+    }
+    return NO;
 }
 
 
