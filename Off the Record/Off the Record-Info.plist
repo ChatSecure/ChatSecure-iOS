@@ -12,6 +12,14 @@
 	<array>
 		<string>chatsecure_icon.png</string>
 		<string>chatsecure_icon@2x.png</string>
+		<string>ipad.png</string>
+		<string>ipad@2x.png</string>
+		<string>Default-Portrait~ipad.png</string>
+		<string>Default-Portrait@2x~ipad.png</string>
+		<string>Default-Landscape~ipad.png</string>
+		<string>Default-Landscape@2x~ipad.png</string>
+		<string>Default.png</string>
+		<string>Default@2x.png</string>
 	</array>
 	<key>CFBundleIcons</key>
 	<dict>
@@ -21,6 +29,14 @@
 			<array>
 				<string>chatsecure_icon.png</string>
 				<string>chatsecure_icon@2x.png</string>
+				<string>ipad.png</string>
+				<string>ipad@2x.png</string>
+				<string>Default-Portrait~ipad.png</string>
+				<string>Default-Portrait@2x~ipad.png</string>
+				<string>Default-Landscape~ipad.png</string>
+				<string>Default-Landscape@2x~ipad.png</string>
+				<string>Default.png</string>
+				<string>Default@2x.png</string>
 			</array>
 			<key>UIPrerenderedIcon</key>
 			<false/>

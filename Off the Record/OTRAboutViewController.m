@@ -36,7 +36,7 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    NSString *aboutString = @"<p style=\"font-size:120%\">ChatSecure is brought to you by many open source projects: Cypherpunk's libotr, LibOrange, xmppframework, DTCoreText and MBProgressHUD. Check out the source here on Github: <br><br><a href=\"https://github.com/chrisballinger/Off-the-Record-iOS\">https://github.com/chrisballinger/Off-the-Record-iOS</a></p>";
+    NSString *aboutString = @"<p style=\"font-size:120%\">ChatSecure is brought to you by many open source projects: Cypherpunk's libotr, LibOrange, xmppframework, and MBProgressHUD. Check out the source here on Github: <br><br><a href=\"https://github.com/chrisballinger/Off-the-Record-iOS\">https://github.com/chrisballinger/Off-the-Record-iOS</a></p>";
     
     CGRect frame = CGRectMake(20.0, 140.0, 280.0, 165.0);
     
