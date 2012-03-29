@@ -93,7 +93,7 @@
     //NSLog(@"received: %@",message);
     if (message) {
         // Strip the shit out of it, but hoepfully you're talking with someone who is trusted in the first place
-        NSString *rawMessage = [[[[message stringByStrippingHTML]stringByConvertingHTMLToPlainText]stringByEncodingHTMLEntities:YES] stringByLinkifyingURLs];
+        NSString *rawMessage = [[[[message stringByStrippingHTML]stringByConvertingHTMLToPlainText]stringByEncodingHTMLEntities] stringByLinkifyingURLs];
         self.lastMessage = rawMessage;
         
         NSString *username = [NSString stringWithFormat:@"<FONT SIZE=%d COLOR=\"#ff0000\"><b>%@:</b></FONT>",[self fontSize],self.displayName];
