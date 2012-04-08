@@ -61,6 +61,10 @@
 
     NSString *version = [[[NSBundle mainBundle] infoDictionary] valueForKey:@"CFBundleVersion"];
     versionLabel.text = [NSString stringWithFormat:@"%@ %@", VERSION_STRING, version];
+    
+    [self.view addSubview:aboutTextView];
+    [self.view addSubview:imageView];
+    [self.view addSubview:versionLabel];
 }
 
 - (void) viewWillAppear:(BOOL)animated {
@@ -80,18 +84,6 @@
     CGFloat aboutTextViewFrameYOrigin = imageView.frame.origin.y + imageViewFrameHeight + 10;
     aboutTextView.frame = CGRectMake(self.view.frame.size.width/2-aboutTextViewFrameWidth/2, aboutTextViewFrameYOrigin, aboutTextViewFrameWidth, versionLabel.frame.origin.y - aboutTextViewFrameYOrigin);
     aboutTextView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
-
-    
-    [self.view addSubview:aboutTextView];
-    [self.view addSubview:imageView];
-    [self.view addSubview:versionLabel];
-}
-
-- (void) viewDidDisappear:(BOOL)animated {
-    [super viewDidDisappear:animated];
-    [self.aboutTextView removeFromSuperview];
-    [self.imageView removeFromSuperview];
-    [self.versionLabel removeFromSuperview];
 }
 
 - (void)viewDidUnload

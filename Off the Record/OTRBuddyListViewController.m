@@ -50,9 +50,10 @@
 
 - (void) loadView {
     [super loadView];
-    self.buddyListTableView = [[UITableView alloc] init];
+    self.buddyListTableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     buddyListTableView.dataSource = self;
     buddyListTableView.delegate = self;
+    [self.view addSubview:buddyListTableView];
 }
 
 - (void)viewDidLoad
@@ -89,11 +90,6 @@
     
     buddyListTableView.frame = self.view.bounds;
     buddyListTableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleRightMargin;
-    [self.view addSubview:buddyListTableView];
-}
-
-- (void) viewDidDisappear:(BOOL)animated {
-    [buddyListTableView removeFromSuperview];
 }
 
 - (void)viewDidUnload
