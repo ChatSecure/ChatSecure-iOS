@@ -82,8 +82,8 @@ terms of a separate license:
 * [Cypherpunks libotr](http://www.cypherpunks.ca/otr/) - provides the core encryption capabilities
 * [LibOrange](https://github.com/unixpickle/LibOrange) - handles all of the OSCAR (AIM) functionality
 * [XMPPFramework](https://github.com/robbiehanson/XMPPFramework) - XMPP support
-* [DTCoreText](https://github.com/Cocoanetics/DTCoreText) - prettier chat window
 * [MBProgressHUD](https://github.com/jdg/MBProgressHUD) - a nice looking progress HUD
+* [MWFeedParser](https://github.com/mwaterfall/MWFeedParser) - Methods for escaping HTML strings
 
 Acknowledgements
 =========

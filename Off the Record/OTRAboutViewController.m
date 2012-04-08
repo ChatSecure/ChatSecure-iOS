@@ -10,7 +10,7 @@
 #import "Strings.h"
 
 @implementation OTRAboutViewController
-@synthesize versionLabel, aboutTextView, lastActionLink;
+@synthesize versionLabel, aboutTextView, lastActionLink, imageView;
 
 - (void) dealloc {
     self.lastActionLink = nil;
@@ -31,21 +31,28 @@
     // Release any cached data, images, etc that aren't in use.
 }
 
+
 #pragma mark - View lifecycle
+
+
+- (void) loadView 
+{
+    [super loadView];
+    self.versionLabel = [[UILabel alloc] init];
+    self.imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"chatsecure_banner.png"]];
+}
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.view.backgroundColor = [UIColor whiteColor];
     // Do any additional setup after loading the view from its nib.
-    NSString *aboutString = [NSString stringWithFormat:@"<p style=\"font-size:120%\">%@: Cypherpunk's libotr, LibOrange, xmppframework, and MBProgressHUD. %@: <br><br><a href=\"https://github.com/chrisballinger/Off-the-Record-iOS\">https://github.com/chrisballinger/Off-the-Record-iOS</a></p>", ATTRIBUTION_STRING, SOURCE_STRING];
+    NSString *aboutString = [NSString stringWithFormat:@"%@: Cypherpunk's libotr, LibOrange, xmppframework, and MBProgressHUD. %@: <br><br><a href=\"https://github.com/chrisballinger/Off-the-Record-iOS\">https://github.com/chrisballinger/Off-the-Record-iOS</a>", ATTRIBUTION_STRING, SOURCE_STRING];
     
-    CGRect frame = CGRectMake(20.0, 140.0, 280.0, 165.0);
     
-    aboutTextView = [[UIWebView alloc] initWithFrame:frame];
+    aboutTextView = [[UIWebView alloc] init];
 	aboutTextView.delegate = self;
-	aboutTextView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     [aboutTextView loadHTMLString:aboutString baseURL:[NSURL URLWithString:@"/"]];
-	[self.view addSubview:aboutTextView];
     
     aboutTextView.userInteractionEnabled = YES;
     if([aboutTextView respondsToSelector:@selector(scrollView)]) {
@@ -56,13 +63,45 @@
     versionLabel.text = [NSString stringWithFormat:@"%@ %@", VERSION_STRING, version];
 }
 
+- (void) viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    CGFloat imageViewFrameWidth = imageView.image.size.width;
+    CGFloat imageViewFrameHeight = imageView.image.size.height;
+    imageView.frame = CGRectMake(self.view.frame.size.width/2 - imageViewFrameWidth/2, 20, imageViewFrameWidth, imageViewFrameHeight);
+    imageView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;
+    
+    CGFloat versionLabelFrameWidth = 101;
+    CGFloat versionLabelFrameHeight = 21;
+    versionLabel.frame = CGRectMake(self.view.frame.size.width/2 - versionLabelFrameWidth/2, self.view.frame.size.height-versionLabelFrameHeight-20, versionLabelFrameWidth, versionLabelFrameHeight);
+    versionLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin;
+    
+    CGFloat aboutTextViewFrameWidth = self.view.frame.size.width-40;
+    CGFloat aboutTextViewFrameYOrigin = imageView.frame.origin.y + imageViewFrameHeight + 10;
+    aboutTextView.frame = CGRectMake(self.view.frame.size.width/2-aboutTextViewFrameWidth/2, aboutTextViewFrameYOrigin, aboutTextViewFrameWidth, versionLabel.frame.origin.y - aboutTextViewFrameYOrigin);
+    aboutTextView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
+
+    
+    [self.view addSubview:aboutTextView];
+    [self.view addSubview:imageView];
+    [self.view addSubview:versionLabel];
+}
+
+- (void) viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    [self.aboutTextView removeFromSuperview];
+    [self.imageView removeFromSuperview];
+    [self.versionLabel removeFromSuperview];
+}
+
 - (void)viewDidUnload
 {
-    [self setVersionLabel:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+    self.versionLabel = nil;
     self.aboutTextView = nil;
+    self.imageView = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
