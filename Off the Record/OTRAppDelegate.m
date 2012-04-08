@@ -21,6 +21,11 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    NSLocale *locale = [NSLocale currentLocale];
+    
+    NSString *language = [locale displayNameForKey:NSLocaleIdentifier 
+                                             value:[locale localeIdentifier]];
+    NSLog(@"current language: %@",language);
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     UITabBarController *tabBarController = nil;
