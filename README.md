@@ -93,3 +93,5 @@ Acknowledgements
 * [Adium](http://adium.im/) - lock/unlock icon used in chat window.
 * [Sergio Sánchez López](http://www.iconfinder.com/icondetails/7043/128/aim_icon) - AIM protocol icon.
 * [Goxxy](http://rocketdock.com/addon/icons/3462) - Google Talk icon.
+* Localizations
+	* [Jiajuan Lin](http://www.personal.psu.edu/jwl5262/blogs/lin_portfolio/) (Chinese)
