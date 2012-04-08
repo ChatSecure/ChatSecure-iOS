@@ -48,6 +48,13 @@
 
 #pragma mark - View lifecycle
 
+- (void) loadView {
+    [super loadView];
+    self.buddyListTableView = [[UITableView alloc] init];
+    buddyListTableView.dataSource = self;
+    buddyListTableView.delegate = self;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -80,12 +87,19 @@
      postNotificationName:@"BuddyListUpdateNotification"
      object:self];
     
+    buddyListTableView.frame = self.view.bounds;
+    buddyListTableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleRightMargin;
+    [self.view addSubview:buddyListTableView];
+}
+
+- (void) viewDidDisappear:(BOOL)animated {
+    [buddyListTableView removeFromSuperview];
 }
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    [self setBuddyListTableView:nil];
+    self.buddyListTableView = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

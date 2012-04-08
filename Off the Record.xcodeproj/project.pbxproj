@@ -30,7 +30,6 @@
 		D9042E2E153168BE000D264C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D9D8D1F71531056300F9E8D3 /* InfoPlist.strings */; };
 		D9042E2F153168BE000D264C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = D9D8D1F91531056300F9E8D3 /* Localizable.strings */; };
 		D9042E31153168BE000D264C /* OTRAccountsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9D8D1FD1531056300F9E8D3 /* OTRAccountsViewController.xib */; };
-		D9042E32153168BE000D264C /* OTRBuddyListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9D8D1FF1531056300F9E8D3 /* OTRBuddyListViewController.xib */; };
 		D9042E33153168BE000D264C /* OTRChatListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9D8D2011531056300F9E8D3 /* OTRChatListViewController.xib */; };
 		D90B80A913FC7026006EFF3D /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = D90B80A813FC7026006EFF3D /* MBProgressHUD.m */; };
 		D90B80AC13FC719B006EFF3D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D90B80AB13FC719B006EFF3D /* CoreGraphics.framework */; };
@@ -292,7 +291,6 @@
 		D902D31C141E930C00AA3479 /* OTRBuddy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBuddy.h; sourceTree = "<group>"; };
 		D902D31D141E930C00AA3479 /* OTRBuddy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBuddy.m; sourceTree = "<group>"; };
 		D9042E28153168BE000D264C /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_CN; path = "Off the Record/zh_CN.lproj/OTRAccountsViewController.xib"; sourceTree = SOURCE_ROOT; };
-		D9042E29153168BE000D264C /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_CN; path = "Off the Record/zh_CN.lproj/OTRBuddyListViewController.xib"; sourceTree = SOURCE_ROOT; };
 		D9042E2A153168BE000D264C /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_CN; path = "Off the Record/zh_CN.lproj/OTRChatListViewController.xib"; sourceTree = SOURCE_ROOT; };
 		D9042E2B153168BE000D264C /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_CN; path = "Off the Record/zh_CN.lproj/OTRLoginViewController.xib"; sourceTree = SOURCE_ROOT; };
 		D9042E2C153168BE000D264C /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_CN; path = "Off the Record/zh_CN.lproj/InfoPlist.strings"; sourceTree = SOURCE_ROOT; };
@@ -581,7 +579,6 @@
 		D9D8D1F81531056300F9E8D3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = InfoPlist.strings; sourceTree = "<group>"; };
 		D9D8D1FA1531056300F9E8D3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Localizable.strings; sourceTree = "<group>"; };
 		D9D8D1FE1531056300F9E8D3 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = OTRAccountsViewController.xib; sourceTree = "<group>"; };
-		D9D8D2001531056300F9E8D3 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = OTRBuddyListViewController.xib; sourceTree = "<group>"; };
 		D9D8D2021531056300F9E8D3 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = OTRChatListViewController.xib; sourceTree = "<group>"; };
 		D9D8D2041531056300F9E8D3 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = OTRLoginViewController.xib; sourceTree = "<group>"; };
 		D9D8D20C153107E600F9E8D3 /* Strings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Strings.h; path = ../Strings.h; sourceTree = "<group>"; };
@@ -1421,7 +1418,6 @@
 				D9D8D1F71531056300F9E8D3 /* InfoPlist.strings */,
 				D9D8D1F91531056300F9E8D3 /* Localizable.strings */,
 				D9D8D1FD1531056300F9E8D3 /* OTRAccountsViewController.xib */,
-				D9D8D1FF1531056300F9E8D3 /* OTRBuddyListViewController.xib */,
 				D9D8D2011531056300F9E8D3 /* OTRChatListViewController.xib */,
 				D9D8D2031531056300F9E8D3 /* OTRLoginViewController.xib */,
 			);
@@ -1849,7 +1845,6 @@
 				D9042E2E153168BE000D264C /* InfoPlist.strings in Resources */,
 				D9042E2F153168BE000D264C /* Localizable.strings in Resources */,
 				D9042E31153168BE000D264C /* OTRAccountsViewController.xib in Resources */,
-				D9042E32153168BE000D264C /* OTRBuddyListViewController.xib in Resources */,
 				D9042E33153168BE000D264C /* OTRChatListViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2106,11 +2101,10 @@
 		D9D8D1FF1531056300F9E8D3 /* OTRBuddyListViewController.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				D9D8D2001531056300F9E8D3 /* en */,
-				D9042E29153168BE000D264C /* zh_CN */,
 			);
 			name = OTRBuddyListViewController.xib;
-			sourceTree = "<group>";
+			path = "/Users/chrisbal/Off-the-Record-iOS/Off the Record/en.lproj";
+			sourceTree = "<absolute>";
 		};
 		D9D8D2011531056300F9E8D3 /* OTRChatListViewController.xib */ = {
 			isa = PBXVariantGroup;
