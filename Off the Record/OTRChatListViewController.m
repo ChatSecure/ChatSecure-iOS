@@ -8,6 +8,7 @@
 
 #import "OTRChatListViewController.h"
 #import "OTRChatViewController.h"
+#import "Strings.h"
 
 @implementation OTRChatListViewController
 
@@ -16,7 +17,7 @@
 
 - (id)init {
     if (self = [super init]) {
-        self.title = @"Conversations";
+        self.title = CONVERSATIONS_STRING;
         self.tabBarItem.image = [UIImage imageNamed:@"08-chat.png"];
     }
     return self;

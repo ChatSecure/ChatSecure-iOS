@@ -7,6 +7,7 @@
 //
 
 #import "OTRLoginViewController.h"
+#import "Strings.h"
 
 @implementation OTRLoginViewController
 @synthesize usernameTextField;
@@ -139,7 +140,7 @@
         
         if (![protocolManager.oscarManager.login beginAuthorization]) {
             [HUD hide:YES];
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:@"Failed to start authenticating. Please try again." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:OSCAR_FAIL_STRING delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
             [alert show];
         }
     }
@@ -160,7 +161,7 @@
 -(void) xmppLoginFailed
 {
     [HUD hide:YES];
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:@"Failed to connect to XMPP server. Please check your login credentials and internet connection and try again." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:XMPP_FAIL_STRING delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
     [alert show];
 }
 
@@ -175,7 +176,7 @@
         HUD = [[MBProgressHUD alloc] initWithView:self.view];
         [self.view addSubview:HUD];
         HUD.delegate = self;
-        HUD.labelText = @"Logging in...";
+        HUD.labelText = LOGGING_IN_STRING;
             [HUD show:YES];
         
         BOOL connect = [protocolManager.xmppManager connectWithJID:usernameTextField.text password:passwordTextField.text];
@@ -210,7 +211,7 @@
     
     if(!fields)
     {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:@"You must enter a username and a password to login." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:USER_PASS_BLANK_STRING delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
         [alert show];
     }
     

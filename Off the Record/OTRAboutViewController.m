@@ -7,6 +7,7 @@
 //
 
 #import "OTRAboutViewController.h"
+#import "Strings.h"
 
 @implementation OTRAboutViewController
 @synthesize versionLabel, aboutTextView, lastActionLink;
@@ -17,7 +18,7 @@
 
 - (id)init {
     if (self = [super init]) {
-        self.title = @"About";
+        self.title = ABOUT_STRING;
     }
     return self;
 }
@@ -36,7 +37,7 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    NSString *aboutString = @"<p style=\"font-size:120%\">ChatSecure is brought to you by many open source projects: Cypherpunk's libotr, LibOrange, xmppframework, and MBProgressHUD. Check out the source here on Github: <br><br><a href=\"https://github.com/chrisballinger/Off-the-Record-iOS\">https://github.com/chrisballinger/Off-the-Record-iOS</a></p>";
+    NSString *aboutString = [NSString stringWithFormat:@"<p style=\"font-size:120%\">%@: Cypherpunk's libotr, LibOrange, xmppframework, and MBProgressHUD. %@: <br><br><a href=\"https://github.com/chrisballinger/Off-the-Record-iOS\">https://github.com/chrisballinger/Off-the-Record-iOS</a></p>", ATTRIBUTION_STRING, SOURCE_STRING];
     
     CGRect frame = CGRectMake(20.0, 140.0, 280.0, 165.0);
     
@@ -52,7 +53,7 @@
     }
 
     NSString *version = [[[NSBundle mainBundle] infoDictionary] valueForKey:@"CFBundleVersion"];
-    versionLabel.text = [NSString stringWithFormat:@"Version %@", version];
+    versionLabel.text = [NSString stringWithFormat:@"%@ %@", VERSION_STRING, version];
 }
 
 - (void)viewDidUnload
@@ -90,7 +91,7 @@
     if ([[UIApplication sharedApplication] canOpenURL:request.URL])
     {
         self.lastActionLink = request.URL;
-        UIActionSheet *action = [[UIActionSheet alloc] initWithTitle:[[request.URL absoluteURL] description] delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Open in Safari", nil];
+        UIActionSheet *action = [[UIActionSheet alloc] initWithTitle:[[request.URL absoluteURL] description] delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:OPEN_IN_SAFARI_STRING, nil];
         [action showFromTabBar:self.tabBarController.tabBar];
     }
     return NO;

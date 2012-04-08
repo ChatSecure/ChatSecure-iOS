@@ -9,13 +9,14 @@
 #import "OTRAccountsViewController.h"
 #import "OTRProtocolManager.h"
 #import "OTRAboutViewController.h"
+#import "Strings.h"
 
 @implementation OTRAccountsViewController
 @synthesize accountsTableView;
 
 - (id)init {
     if (self = [super init]) {
-        self.title = @"Accounts";
+        self.title = ACCOUNTS_STRING;
         self.tabBarItem.image = [UIImage imageNamed:@"19-gear.png"];
     }
     return self;
@@ -127,7 +128,7 @@
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    return @"Accounts";
+    return ACCOUNTS_STRING;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -144,30 +145,30 @@
 
     if(indexPath.row == 0)
     {
-        cell.textLabel.text = @"AOL Instant Messenger";
+        cell.textLabel.text = AIM_STRING;
         
         if(isAIMloggedIn)
         {
-            cell.detailTextLabel.text = @"Log Out";
+            cell.detailTextLabel.text = LOGOUT_STRING;
         }
         else
         {
-            cell.detailTextLabel.text = @"Log In";
+            cell.detailTextLabel.text = LOGIN_STRING;
         }
 
         cell.imageView.image = [UIImage imageNamed:@"aim.png"];
     }
     else if(indexPath.row == 1)
     {
-        cell.textLabel.text = @"Google Talk (XMPP)";
+        cell.textLabel.text = XMPP_STRING;
         
         if(isXMPPloggedIn)
         {
-            cell.detailTextLabel.text = @"Log Out";
+            cell.detailTextLabel.text = LOGOUT_STRING;
         }
         else
         {
-            cell.detailTextLabel.text = @"Log In";
+            cell.detailTextLabel.text = LOGIN_STRING;
         }
         
         cell.imageView.image = [UIImage imageNamed:@"gtalk.png"];
@@ -198,7 +199,7 @@
         }
         else
         {
-            UIActionSheet *logoutSheet = [[UIActionSheet alloc] initWithTitle:@"Logout from AIM?" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Logout" otherButtonTitles: nil];
+            UIActionSheet *logoutSheet = [[UIActionSheet alloc] initWithTitle:LOGOUT_FROM_AIM_STRING delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:LOGOUT_STRING otherButtonTitles: nil];
             [logoutSheet setTag:1];
             [logoutSheet showFromTabBar:self.tabBarController.tabBar];
         }
@@ -223,7 +224,7 @@
         }
         else
         {
-            UIActionSheet *logoutSheet = [[UIActionSheet alloc] initWithTitle:@"Logout from XMPP?" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Logout" otherButtonTitles: nil];
+            UIActionSheet *logoutSheet = [[UIActionSheet alloc] initWithTitle:LOGOUT_FROM_XMPP_STRING delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:LOGOUT_STRING otherButtonTitles: nil];
             [logoutSheet setTag:2];
             [logoutSheet showFromTabBar:self.tabBarController.tabBar];
         }

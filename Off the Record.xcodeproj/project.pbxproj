@@ -18,7 +18,6 @@
 		D913A70413FCA95700C97C1C /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D913A70313FCA95700C97C1C /* CoreText.framework */; };
 		D913A70813FCA9AB00C97C1C /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D913A70713FCA9AB00C97C1C /* QuartzCore.framework */; };
 		D913A70A13FCA9C200C97C1C /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D913A70913FCA9C200C97C1C /* ImageIO.framework */; };
-		D91BD518151FAC7200EFB497 /* OTRBuddyListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D91BD517151FAC7200EFB497 /* OTRBuddyListViewController.xib */; };
 		D92B775514142F150058A789 /* OTREncryptionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D92B775414142F150058A789 /* OTREncryptionManager.m */; };
 		D95F8E921419C3D00094A634 /* chatsecure_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = D95F8E911419C3D00094A634 /* chatsecure_icon.png */; };
 		D95F8E941419C3E10094A634 /* chatsecure_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D95F8E931419C3E00094A634 /* chatsecure_icon@2x.png */; };
@@ -118,7 +117,6 @@
 		D99071B3151EB5C6002CECC9 /* 19-gear@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D99071B0151EB5C5002CECC9 /* 19-gear@2x.png */; };
 		D99071B4151EB5C6002CECC9 /* 112-group@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D99071B1151EB5C5002CECC9 /* 112-group@2x.png */; };
 		D99550B4141AD8CD00A82FAC /* OTRAccountsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D99550B2141AD8CD00A82FAC /* OTRAccountsViewController.m */; };
-		D99550B5141AD8CD00A82FAC /* OTRAccountsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D99550B3141AD8CD00A82FAC /* OTRAccountsViewController.xib */; };
 		D99550BB141AE07D00A82FAC /* gtalk.png in Resources */ = {isa = PBXBuildFile; fileRef = D99550B7141AE07D00A82FAC /* gtalk.png */; };
 		D99550BC141AE07D00A82FAC /* gtalk@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D99550B8141AE07D00A82FAC /* gtalk@2x.png */; };
 		D99550BD141AE07D00A82FAC /* aim.png in Resources */ = {isa = PBXBuildFile; fileRef = D99550B9141AE07D00A82FAC /* aim.png */; };
@@ -126,7 +124,6 @@
 		D99907531414299200D573EE /* OTROscarManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D99907521414299200D573EE /* OTROscarManager.m */; };
 		D999075D14142CC400D573EE /* OTRProtocolManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D999075C14142CC400D573EE /* OTRProtocolManager.m */; };
 		D9991A4B13F44F87002D3008 /* OTRChatListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9991A4913F44F86002D3008 /* OTRChatListViewController.m */; };
-		D9991A4C13F44F87002D3008 /* OTRChatListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9991A4A13F44F86002D3008 /* OTRChatListViewController.xib */; };
 		D9991A5113F44F9A002D3008 /* OTRChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9991A4F13F44F9A002D3008 /* OTRChatViewController.m */; };
 		D99BA290141D3F3A00D051B6 /* OTRMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = D99BA28F141D3F3A00D051B6 /* OTRMessage.m */; };
 		D9A7E0A0152419D800EEDDB5 /* NSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = D9A7E09F1524132F00EEDDB5 /* NSString+HTML.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -139,7 +136,6 @@
 		D9A7E0AD15242D9000EEDDB5 /* Default-Landscape@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = D9A7E0AC15242D9000EEDDB5 /* Default-Landscape@2x~ipad.png */; };
 		D9BBCD3B1491F7AB00AF1B9F /* 19-gear.png in Resources */ = {isa = PBXBuildFile; fileRef = D9BBCD3A1491F7AB00AF1B9F /* 19-gear.png */; };
 		D9BBCD3F1491F8B400AF1B9F /* OTRAboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9BBCD3D1491F8B400AF1B9F /* OTRAboutViewController.m */; };
-		D9BBCD401491F8B400AF1B9F /* OTRAboutViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9BBCD3E1491F8B400AF1B9F /* OTRAboutViewController.xib */; };
 		D9BBCD431491FFC800AF1B9F /* about_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = D9BBCD411491FFC800AF1B9F /* about_icon.png */; };
 		D9BBCD441491FFC800AF1B9F /* about_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D9BBCD421491FFC800AF1B9F /* about_icon@2x.png */; };
 		D9BEFD63141AB35D008064A7 /* chatsecure_banner@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D9BEFD61141AB35D008064A7 /* chatsecure_banner@2x.png */; };
@@ -158,8 +154,15 @@
 		D9D69B7C14180A230056FB9E /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D69B7B14180A230056FB9E /* CoreLocation.framework */; };
 		D9D69B7E14180A330056FB9E /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D69B7D14180A330056FB9E /* CoreData.framework */; };
 		D9D69B8014180A3A0056FB9E /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D69B7F14180A3A0056FB9E /* SystemConfiguration.framework */; };
+		D9D8D1F31531053300F9E8D3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = D9D8D1F51531053300F9E8D3 /* Localizable.strings */; };
+		D9D8D2051531056300F9E8D3 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D9D8D1F71531056300F9E8D3 /* InfoPlist.strings */; };
+		D9D8D2061531056300F9E8D3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = D9D8D1F91531056300F9E8D3 /* Localizable.strings */; };
+		D9D8D2071531056300F9E8D3 /* OTRAboutViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9D8D1FB1531056300F9E8D3 /* OTRAboutViewController.xib */; };
+		D9D8D2081531056300F9E8D3 /* OTRAccountsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9D8D1FD1531056300F9E8D3 /* OTRAccountsViewController.xib */; };
+		D9D8D2091531056300F9E8D3 /* OTRBuddyListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9D8D1FF1531056300F9E8D3 /* OTRBuddyListViewController.xib */; };
+		D9D8D20A1531056300F9E8D3 /* OTRChatListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9D8D2011531056300F9E8D3 /* OTRChatListViewController.xib */; };
+		D9D8D20B1531056300F9E8D3 /* OTRLoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9D8D2031531056300F9E8D3 /* OTRLoginViewController.xib */; };
 		D9DE274C13F4F0A500E335CA /* OTRLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9DE274A13F4F0A400E335CA /* OTRLoginViewController.m */; };
-		D9DE274D13F4F0A500E335CA /* OTRLoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9DE274B13F4F0A500E335CA /* OTRLoginViewController.xib */; };
 		D9DE293513F4F93400E335CA /* AIMBArtDownloadReply.m in Sources */ = {isa = PBXBuildFile; fileRef = D9DE287513F4F93400E335CA /* AIMBArtDownloadReply.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		D9DE293613F4F93400E335CA /* AIMBArtHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = D9DE287713F4F93400E335CA /* AIMBArtHandler.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		D9DE293713F4F93400E335CA /* AIMBArtID.m in Sources */ = {isa = PBXBuildFile; fileRef = D9DE287913F4F93400E335CA /* AIMBArtID.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -279,7 +282,6 @@
 		D913A70513FCA96B00C97C1C /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
 		D913A70713FCA9AB00C97C1C /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		D913A70913FCA9C200C97C1C /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
-		D91BD517151FAC7200EFB497 /* OTRBuddyListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OTRBuddyListViewController.xib; sourceTree = "<group>"; };
 		D92B775314142F150058A789 /* OTREncryptionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTREncryptionManager.h; sourceTree = "<group>"; };
 		D92B775414142F150058A789 /* OTREncryptionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTREncryptionManager.m; sourceTree = "<group>"; };
 		D95F8E911419C3D00094A634 /* chatsecure_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = chatsecure_icon.png; path = ../chatsecure_icon.png; sourceTree = "<group>"; };
@@ -484,7 +486,6 @@
 		D99071B1151EB5C5002CECC9 /* 112-group@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "112-group@2x.png"; sourceTree = "<group>"; };
 		D99550B1141AD8CD00A82FAC /* OTRAccountsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAccountsViewController.h; sourceTree = "<group>"; };
 		D99550B2141AD8CD00A82FAC /* OTRAccountsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAccountsViewController.m; sourceTree = "<group>"; };
-		D99550B3141AD8CD00A82FAC /* OTRAccountsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OTRAccountsViewController.xib; sourceTree = "<group>"; };
 		D99550B7141AE07D00A82FAC /* gtalk.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gtalk.png; sourceTree = "<group>"; };
 		D99550B8141AE07D00A82FAC /* gtalk@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gtalk@2x.png"; sourceTree = "<group>"; };
 		D99550B9141AE07D00A82FAC /* aim.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = aim.png; sourceTree = "<group>"; };
@@ -495,7 +496,6 @@
 		D999075C14142CC400D573EE /* OTRProtocolManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRProtocolManager.m; sourceTree = "<group>"; };
 		D9991A4813F44F86002D3008 /* OTRChatListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRChatListViewController.h; sourceTree = "<group>"; };
 		D9991A4913F44F86002D3008 /* OTRChatListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRChatListViewController.m; sourceTree = "<group>"; };
-		D9991A4A13F44F86002D3008 /* OTRChatListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OTRChatListViewController.xib; sourceTree = "<group>"; };
 		D9991A4E13F44F9A002D3008 /* OTRChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRChatViewController.h; sourceTree = "<group>"; };
 		D9991A4F13F44F9A002D3008 /* OTRChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRChatViewController.m; sourceTree = "<group>"; };
 		D99BA28E141D3F3A00D051B6 /* OTRMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRMessage.h; sourceTree = "<group>"; };
@@ -513,7 +513,6 @@
 		D9BBCD3A1491F7AB00AF1B9F /* 19-gear.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "19-gear.png"; sourceTree = "<group>"; };
 		D9BBCD3C1491F8B400AF1B9F /* OTRAboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAboutViewController.h; sourceTree = "<group>"; };
 		D9BBCD3D1491F8B400AF1B9F /* OTRAboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAboutViewController.m; sourceTree = "<group>"; };
-		D9BBCD3E1491F8B400AF1B9F /* OTRAboutViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OTRAboutViewController.xib; sourceTree = "<group>"; };
 		D9BBCD411491FFC800AF1B9F /* about_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = about_icon.png; sourceTree = "<group>"; };
 		D9BBCD421491FFC800AF1B9F /* about_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "about_icon@2x.png"; sourceTree = "<group>"; };
 		D9BEFD61141AB35D008064A7 /* chatsecure_banner@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatsecure_banner@2x.png"; sourceTree = SOURCE_ROOT; };
@@ -550,9 +549,17 @@
 		D9D69B7B14180A230056FB9E /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		D9D69B7D14180A330056FB9E /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		D9D69B7F14180A3A0056FB9E /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		D9D8D1F41531053300F9E8D3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		D9D8D1F81531056300F9E8D3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = InfoPlist.strings; sourceTree = "<group>"; };
+		D9D8D1FA1531056300F9E8D3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Localizable.strings; sourceTree = "<group>"; };
+		D9D8D1FC1531056300F9E8D3 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = OTRAboutViewController.xib; sourceTree = "<group>"; };
+		D9D8D1FE1531056300F9E8D3 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = OTRAccountsViewController.xib; sourceTree = "<group>"; };
+		D9D8D2001531056300F9E8D3 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = OTRBuddyListViewController.xib; sourceTree = "<group>"; };
+		D9D8D2021531056300F9E8D3 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = OTRChatListViewController.xib; sourceTree = "<group>"; };
+		D9D8D2041531056300F9E8D3 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = OTRLoginViewController.xib; sourceTree = "<group>"; };
+		D9D8D20C153107E600F9E8D3 /* Strings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Strings.h; sourceTree = "<group>"; };
 		D9DE274913F4F0A400E335CA /* OTRLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRLoginViewController.h; sourceTree = "<group>"; };
 		D9DE274A13F4F0A400E335CA /* OTRLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRLoginViewController.m; sourceTree = "<group>"; };
-		D9DE274B13F4F0A500E335CA /* OTRLoginViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OTRLoginViewController.xib; sourceTree = "<group>"; };
 		D9DE287413F4F93400E335CA /* AIMBArtDownloadReply.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AIMBArtDownloadReply.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		D9DE287513F4F93400E335CA /* AIMBArtDownloadReply.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = AIMBArtDownloadReply.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		D9DE287613F4F93400E335CA /* AIMBArtHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AIMBArtHandler.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -1380,6 +1387,20 @@
 			name = Model;
 			sourceTree = "<group>";
 		};
+		D9D8D1F61531056300F9E8D3 /* en.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				D9D8D1F71531056300F9E8D3 /* InfoPlist.strings */,
+				D9D8D1F91531056300F9E8D3 /* Localizable.strings */,
+				D9D8D1FB1531056300F9E8D3 /* OTRAboutViewController.xib */,
+				D9D8D1FD1531056300F9E8D3 /* OTRAccountsViewController.xib */,
+				D9D8D1FF1531056300F9E8D3 /* OTRBuddyListViewController.xib */,
+				D9D8D2011531056300F9E8D3 /* OTRChatListViewController.xib */,
+				D9D8D2031531056300F9E8D3 /* OTRLoginViewController.xib */,
+			);
+			path = en.lproj;
+			sourceTree = "<group>";
+		};
 		D9DE287313F4F93400E335CA /* LibOrange */ = {
 			isa = PBXGroup;
 			children = (
@@ -1634,23 +1655,18 @@
 				D9D69B07141806BB0056FB9E /* Model */,
 				D9E068EF13F44D2900AC10A3 /* OTRBuddyListViewController.h */,
 				D9E068F013F44D2900AC10A3 /* OTRBuddyListViewController.m */,
-				D91BD517151FAC7200EFB497 /* OTRBuddyListViewController.xib */,
 				D9991A4813F44F86002D3008 /* OTRChatListViewController.h */,
 				D9991A4913F44F86002D3008 /* OTRChatListViewController.m */,
-				D9991A4A13F44F86002D3008 /* OTRChatListViewController.xib */,
 				D9991A4E13F44F9A002D3008 /* OTRChatViewController.h */,
 				D9991A4F13F44F9A002D3008 /* OTRChatViewController.m */,
 				D9F9378913F44BD3009A3D84 /* OTRAppDelegate.h */,
 				D9F9378A13F44BD3009A3D84 /* OTRAppDelegate.m */,
 				D9DE274913F4F0A400E335CA /* OTRLoginViewController.h */,
 				D9DE274A13F4F0A400E335CA /* OTRLoginViewController.m */,
-				D9DE274B13F4F0A500E335CA /* OTRLoginViewController.xib */,
 				D99550B1141AD8CD00A82FAC /* OTRAccountsViewController.h */,
 				D99550B2141AD8CD00A82FAC /* OTRAccountsViewController.m */,
-				D99550B3141AD8CD00A82FAC /* OTRAccountsViewController.xib */,
 				D9BBCD3C1491F8B400AF1B9F /* OTRAboutViewController.h */,
 				D9BBCD3D1491F8B400AF1B9F /* OTRAboutViewController.m */,
-				D9BBCD3E1491F8B400AF1B9F /* OTRAboutViewController.xib */,
 				D9BBCD411491FFC800AF1B9F /* about_icon.png */,
 				D9BBCD421491FFC800AF1B9F /* about_icon@2x.png */,
 				D9BEFD61141AB35D008064A7 /* chatsecure_banner@2x.png */,
@@ -1682,10 +1698,13 @@
 		D9F9378113F44BD3009A3D84 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				D9D8D1F61531056300F9E8D3 /* en.lproj */,
+				D9D8D20C153107E600F9E8D3 /* Strings.h */,
 				D9F9378213F44BD3009A3D84 /* Off the Record-Info.plist */,
 				D9F9378313F44BD3009A3D84 /* InfoPlist.strings */,
 				D9F9378613F44BD3009A3D84 /* main.m */,
 				D9F9378813F44BD3009A3D84 /* Off the Record-Prefix.pch */,
+				D9D8D1F51531053300F9E8D3 /* Localizable.strings */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -1742,8 +1761,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				D9F9378513F44BD3009A3D84 /* InfoPlist.strings in Resources */,
-				D9991A4C13F44F87002D3008 /* OTRChatListViewController.xib in Resources */,
-				D9DE274D13F4F0A500E335CA /* OTRLoginViewController.xib in Resources */,
 				D9CE422F13FDC9EF003EC27C /* 08-chat.png in Resources */,
 				D9CE423213FDCA0F003EC27C /* 112-group.png in Resources */,
 				D9CE42C313FDCBDD003EC27C /* Lock_Locked.png in Resources */,
@@ -1754,13 +1771,11 @@
 				D95F8E981419C5900094A634 /* Default@2x.png in Resources */,
 				D9BEFD63141AB35D008064A7 /* chatsecure_banner@2x.png in Resources */,
 				D9BEFD64141AB35D008064A7 /* chatsecure_banner.png in Resources */,
-				D99550B5141AD8CD00A82FAC /* OTRAccountsViewController.xib in Resources */,
 				D99550BB141AE07D00A82FAC /* gtalk.png in Resources */,
 				D99550BC141AE07D00A82FAC /* gtalk@2x.png in Resources */,
 				D99550BD141AE07D00A82FAC /* aim.png in Resources */,
 				D99550BE141AE07D00A82FAC /* aim@2x.png in Resources */,
 				D9BBCD3B1491F7AB00AF1B9F /* 19-gear.png in Resources */,
-				D9BBCD401491F8B400AF1B9F /* OTRAboutViewController.xib in Resources */,
 				D9BBCD431491FFC800AF1B9F /* about_icon.png in Resources */,
 				D9BBCD441491FFC800AF1B9F /* about_icon@2x.png in Resources */,
 				D90FAF2314A05D4B00DA7C56 /* available.png in Resources */,
@@ -1769,13 +1784,20 @@
 				D99071B2151EB5C6002CECC9 /* 08-chat@2x.png in Resources */,
 				D99071B3151EB5C6002CECC9 /* 19-gear@2x.png in Resources */,
 				D99071B4151EB5C6002CECC9 /* 112-group@2x.png in Resources */,
-				D91BD518151FAC7200EFB497 /* OTRBuddyListViewController.xib in Resources */,
 				D9A7E0A315242D4100EEDDB5 /* ipad.png in Resources */,
 				D9A7E0A515242D4600EEDDB5 /* ipad@2x.png in Resources */,
 				D9A7E0A715242D6400EEDDB5 /* Default-Portrait~ipad.png in Resources */,
 				D9A7E0A915242D6800EEDDB5 /* Default-Portrait@2x~ipad.png in Resources */,
 				D9A7E0AB15242D8C00EEDDB5 /* Default-Landscape~ipad.png in Resources */,
 				D9A7E0AD15242D9000EEDDB5 /* Default-Landscape@2x~ipad.png in Resources */,
+				D9D8D1F31531053300F9E8D3 /* Localizable.strings in Resources */,
+				D9D8D2051531056300F9E8D3 /* InfoPlist.strings in Resources */,
+				D9D8D2061531056300F9E8D3 /* Localizable.strings in Resources */,
+				D9D8D2071531056300F9E8D3 /* OTRAboutViewController.xib in Resources */,
+				D9D8D2081531056300F9E8D3 /* OTRAccountsViewController.xib in Resources */,
+				D9D8D2091531056300F9E8D3 /* OTRBuddyListViewController.xib in Resources */,
+				D9D8D20A1531056300F9E8D3 /* OTRChatListViewController.xib in Resources */,
+				D9D8D20B1531056300F9E8D3 /* OTRLoginViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1993,6 +2015,70 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		D9D8D1F51531053300F9E8D3 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D9D8D1F41531053300F9E8D3 /* en */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		D9D8D1F71531056300F9E8D3 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D9D8D1F81531056300F9E8D3 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		D9D8D1F91531056300F9E8D3 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D9D8D1FA1531056300F9E8D3 /* en */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		D9D8D1FB1531056300F9E8D3 /* OTRAboutViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D9D8D1FC1531056300F9E8D3 /* en */,
+			);
+			name = OTRAboutViewController.xib;
+			sourceTree = "<group>";
+		};
+		D9D8D1FD1531056300F9E8D3 /* OTRAccountsViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D9D8D1FE1531056300F9E8D3 /* en */,
+			);
+			name = OTRAccountsViewController.xib;
+			sourceTree = "<group>";
+		};
+		D9D8D1FF1531056300F9E8D3 /* OTRBuddyListViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D9D8D2001531056300F9E8D3 /* en */,
+			);
+			name = OTRBuddyListViewController.xib;
+			sourceTree = "<group>";
+		};
+		D9D8D2011531056300F9E8D3 /* OTRChatListViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D9D8D2021531056300F9E8D3 /* en */,
+			);
+			name = OTRChatListViewController.xib;
+			sourceTree = "<group>";
+		};
+		D9D8D2031531056300F9E8D3 /* OTRLoginViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D9D8D2041531056300F9E8D3 /* en */,
+			);
+			name = OTRLoginViewController.xib;
+			sourceTree = "<group>";
+		};
 		D9F9378313F44BD3009A3D84 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (

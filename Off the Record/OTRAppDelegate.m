@@ -12,6 +12,7 @@
 #import "OTRChatListViewController.h"
 #import "OTRAccountsViewController.h"
 #import "OTRChatViewController.h"
+#import "Strings.h"
 
 @implementation OTRAppDelegate
 
@@ -50,7 +51,7 @@
         splitViewController.viewControllers = [NSArray arrayWithObjects:buddyListNavController, chatNavController, nil];
         splitViewController.delegate = chatViewController;
         tabBarController.viewControllers = [NSArray arrayWithObjects:splitViewController, accountsNavController, nil];
-        splitViewController.title = @"Chat";
+        splitViewController.title = CHAT_STRING;
         splitViewController.tabBarItem.image = [UIImage imageNamed:@"08-chat.png"];
 
     }
