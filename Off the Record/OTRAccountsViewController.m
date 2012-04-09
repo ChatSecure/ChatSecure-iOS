@@ -216,7 +216,6 @@
             
             OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
             
-            loginViewController.xmppButton.hidden = YES;
             loginViewController.useXMPP = NO;
             loginViewController.protocolManager = protocolManager;
             loginViewController.modalPresentationStyle = UIModalPresentationFormSheet;
@@ -240,7 +239,6 @@
             OTRLoginViewController *loginViewController = [[OTRLoginViewController alloc] init];
             
             OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
-            loginViewController.aimButton.hidden = YES;
             loginViewController.useXMPP = YES;
             loginViewController.protocolManager = protocolManager;
             loginViewController.modalPresentationStyle = UIModalPresentationFormSheet;

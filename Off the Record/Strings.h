@@ -52,3 +52,9 @@
 #define SOURCE_STRING NSLocalizedString(@"Check out the source here on Github", "let users know source is on Github")
 #define VERSION_STRING NSLocalizedString(@"Version", @"when displaying version numbers such as 1.0.0")
 
+// OTRLoginViewController
+#define USERNAME_STRING NSLocalizedString(@"Username", @"Label text for username field on login screen")
+#define PASSWORD_STRING NSLocalizedString(@"Password", @"Label text for password field on login screen")
+#define LOGIN_TO_STRING NSLocalizedString(@"Login to", @"Label for button describing which protocol you're logging into, will be followed by a protocol such as XMPP or AIM during layout")
+#define REMEMBER_USERNAME_STRING NSLocalizedString(@"Remember username", @"label for switch for whether or not we should save their username between launches")
+

@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		D902D31E141E930C00AA3479 /* OTRBuddy.m in Sources */ = {isa = PBXBuildFile; fileRef = D902D31D141E930C00AA3479 /* OTRBuddy.m */; };
 		D9042DF515316103000D264C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D9D8D1F71531056300F9E8D3 /* InfoPlist.strings */; };
-		D9042DF815316252000D264C /* OTRLoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9D8D2031531056300F9E8D3 /* OTRLoginViewController.xib */; };
 		D9042DFB153162FB000D264C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = D9D8D1F91531056300F9E8D3 /* Localizable.strings */; };
 		D9042DFD15316308000D264C /* OTRChatListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9D8D2011531056300F9E8D3 /* OTRChatListViewController.xib */; };
 		D9042E0015316357000D264C /* OTRAboutViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9D8D1FB1531056300F9E8D3 /* OTRAboutViewController.xib */; };
@@ -288,7 +287,6 @@
 /* Begin PBXFileReference section */
 		D902D31C141E930C00AA3479 /* OTRBuddy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBuddy.h; sourceTree = "<group>"; };
 		D902D31D141E930C00AA3479 /* OTRBuddy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBuddy.m; sourceTree = "<group>"; };
-		D9042E2B153168BE000D264C /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zh_CN; path = "Off the Record/zh_CN.lproj/OTRLoginViewController.xib"; sourceTree = SOURCE_ROOT; };
 		D9042E2C153168BE000D264C /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_CN; path = "Off the Record/zh_CN.lproj/InfoPlist.strings"; sourceTree = SOURCE_ROOT; };
 		D9042E2D153168BE000D264C /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_CN; path = "Off the Record/zh_CN.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
 		D90B80A713FC7026006EFF3D /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
@@ -574,7 +572,6 @@
 		D9D69B7F14180A3A0056FB9E /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		D9D8D1F81531056300F9E8D3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = InfoPlist.strings; sourceTree = "<group>"; };
 		D9D8D1FA1531056300F9E8D3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Localizable.strings; sourceTree = "<group>"; };
-		D9D8D2041531056300F9E8D3 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = OTRLoginViewController.xib; sourceTree = "<group>"; };
 		D9D8D20C153107E600F9E8D3 /* Strings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Strings.h; path = ../Strings.h; sourceTree = "<group>"; };
 		D9DE274913F4F0A400E335CA /* OTRLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRLoginViewController.h; sourceTree = "<group>"; };
 		D9DE274A13F4F0A400E335CA /* OTRLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRLoginViewController.m; sourceTree = "<group>"; };
@@ -1411,7 +1408,6 @@
 				D9D8D20C153107E600F9E8D3 /* Strings.h */,
 				D9D8D1F71531056300F9E8D3 /* InfoPlist.strings */,
 				D9D8D1F91531056300F9E8D3 /* Localizable.strings */,
-				D9D8D2031531056300F9E8D3 /* OTRLoginViewController.xib */,
 			);
 			name = Resources;
 			path = en.lproj;
@@ -1816,7 +1812,6 @@
 				D9D8D20A1531056300F9E8D3 /* OTRChatListViewController.xib in Resources */,
 				D9D8D20B1531056300F9E8D3 /* OTRLoginViewController.xib in Resources */,
 				D9042DF515316103000D264C /* InfoPlist.strings in Resources */,
-				D9042DF815316252000D264C /* OTRLoginViewController.xib in Resources */,
 				D9042DFB153162FB000D264C /* Localizable.strings in Resources */,
 				D9042DFD15316308000D264C /* OTRChatListViewController.xib in Resources */,
 				D9042E0015316357000D264C /* OTRAboutViewController.xib in Resources */,
@@ -2106,11 +2101,10 @@
 		D9D8D2031531056300F9E8D3 /* OTRLoginViewController.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				D9D8D2041531056300F9E8D3 /* en */,
-				D9042E2B153168BE000D264C /* zh_CN */,
 			);
 			name = OTRLoginViewController.xib;
-			sourceTree = "<group>";
+			path = "/Users/chrisbal/Off-the-Record-iOS/Off the Record/en.lproj";
+			sourceTree = "<absolute>";
 		};
 		D9F9378313F44BD3009A3D84 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
