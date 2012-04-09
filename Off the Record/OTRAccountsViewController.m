@@ -12,7 +12,7 @@
 #import "Strings.h"
 
 @implementation OTRAccountsViewController
-@synthesize accountsTableView;
+@synthesize accountsTableView, logoView;
 
 - (id)init {
     if (self = [super init]) {
@@ -32,11 +32,25 @@
 
 #pragma mark - View lifecycle
 
+- (void) loadView 
+{
+    [super loadView];
+    self.accountsTableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
+    accountsTableView.dataSource = self;
+    accountsTableView.delegate = self;
+    accountsTableView.scrollEnabled = NO;
+    [self.view addSubview:accountsTableView];
+    
+    self.logoView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"chatsecure_banner.png"]];
+    [self.view addSubview:logoView];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     self.view.backgroundColor = [UIColor whiteColor];
+    accountsTableView.backgroundView = nil;
     accountsTableView.backgroundColor = [UIColor clearColor];
     aboutButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"about_icon.png"] style:UIBarButtonItemStylePlain target:self action:@selector(showAboutScreen)];
     self.navigationItem.rightBarButtonItem = aboutButton;
@@ -64,6 +78,18 @@
      selector:@selector(xmppLoggedOff)
      name:@"XMPPLogoutNotification"
      object:nil ];
+}
+
+-(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    CGFloat logoViewFrameWidth = self.logoView.image.size.width;
+    logoView.frame = CGRectMake(self.view.frame.size.width/2 - logoViewFrameWidth/2, 20, logoViewFrameWidth, self.logoView.image.size.height);
+    logoView.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+    
+    CGFloat accountsTableViewYOrigin = logoView.frame.origin.y + logoView.frame.size.height + 10;
+    accountsTableView.frame = CGRectMake(0, accountsTableViewYOrigin, self.view.frame.size.width, self.view.frame.size.height-accountsTableViewYOrigin);
+    accountsTableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
+
 }
 
 -(void)aimLoggedOff
@@ -107,10 +133,8 @@
 
 - (void)viewDidUnload
 {
-    [self setAccountsTableView:nil];
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
+    self.accountsTableView = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -125,6 +149,11 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 70;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {

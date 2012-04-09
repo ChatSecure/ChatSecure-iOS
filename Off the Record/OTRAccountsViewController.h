@@ -18,7 +18,8 @@
     BOOL isAIMloggedIn;
     BOOL isXMPPloggedIn;
 }
-@property (retain, nonatomic) IBOutlet UITableView *accountsTableView;
+@property (retain, nonatomic) UITableView *accountsTableView;
+@property (nonatomic, retain) UIImageView *logoView;
 
 -(void)oscarLoggedInSuccessfully;
 -(void)xmppLoggedInSuccessfully;
