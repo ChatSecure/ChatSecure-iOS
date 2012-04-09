@@ -10,7 +10,8 @@
 
 @interface OTRAboutViewController : UIViewController <UIWebViewDelegate, UIActionSheetDelegate>
 
-@property (strong, nonatomic) IBOutlet UILabel *versionLabel;
+@property (nonatomic, retain) UIImageView *imageView;
+@property (strong, nonatomic) UILabel *versionLabel;
 @property (nonatomic, retain) UIWebView *aboutTextView;
 @property (nonatomic, retain) NSURL *lastActionLink;
 

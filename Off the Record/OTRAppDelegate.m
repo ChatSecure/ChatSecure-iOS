@@ -12,6 +12,7 @@
 #import "OTRChatListViewController.h"
 #import "OTRAccountsViewController.h"
 #import "OTRChatViewController.h"
+#import "Strings.h"
 
 @implementation OTRAppDelegate
 
@@ -20,6 +21,11 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    NSLocale *locale = [NSLocale currentLocale];
+    
+    NSString *language = [locale displayNameForKey:NSLocaleIdentifier 
+                                             value:[locale localeIdentifier]];
+    NSLog(@"current language: %@",language);
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     UITabBarController *tabBarController = nil;
@@ -50,7 +56,7 @@
         splitViewController.viewControllers = [NSArray arrayWithObjects:buddyListNavController, chatNavController, nil];
         splitViewController.delegate = chatViewController;
         tabBarController.viewControllers = [NSArray arrayWithObjects:splitViewController, accountsNavController, nil];
-        splitViewController.title = @"Chat";
+        splitViewController.title = CHAT_STRING;
         splitViewController.tabBarItem.image = [UIImage imageNamed:@"08-chat.png"];
 
     }

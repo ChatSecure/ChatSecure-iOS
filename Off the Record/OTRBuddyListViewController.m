@@ -12,6 +12,7 @@
 #import "OTRXMPPManager.h"
 #import "OTRBuddy.h"
 #import "OTRBuddyList.h"
+#import "Strings.h"
 
 //#define kSignoffTime 500
 
@@ -29,7 +30,7 @@
 
 - (id)init {
     if (self = [super init]) {
-        self.title = @"Buddy List";
+        self.title = BUDDY_LIST_STRING;
         self.tabBarItem.image = [UIImage imageNamed:@"112-group.png"];
         self.protocolManager = [OTRProtocolManager sharedInstance];
 
@@ -46,6 +47,14 @@
 }
 
 #pragma mark - View lifecycle
+
+- (void) loadView {
+    [super loadView];
+    self.buddyListTableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    buddyListTableView.dataSource = self;
+    buddyListTableView.delegate = self;
+    [self.view addSubview:buddyListTableView];
+}
 
 - (void)viewDidLoad
 {
@@ -79,12 +88,14 @@
      postNotificationName:@"BuddyListUpdateNotification"
      object:self];
     
+    buddyListTableView.frame = self.view.bounds;
+    buddyListTableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleRightMargin;
 }
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    [self setBuddyListTableView:nil];
+    self.buddyListTableView = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -126,7 +137,7 @@
     
     if(![chatViewController.title isEqualToString:buddy.displayName] && ![buddy.lastMessage isEqualToString:@""])
      {
-         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:userName message:buddy.lastMessage delegate:self cancelButtonTitle:@"Ignore" otherButtonTitles:@"Reply", nil];
+         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:userName message:buddy.lastMessage delegate:self cancelButtonTitle:IGNORE_STRING otherButtonTitles:REPLY_STRING, nil];
          alert.tag = 1;
          [alert show];
      }
@@ -182,17 +193,17 @@
         {
             case kOTRBuddyStatusOffline:
                 cell.textLabel.textColor = [UIColor lightGrayColor];
-                cell.detailTextLabel.text = @"Offline";
+                cell.detailTextLabel.text = OFFLINE_STRING;
                 cell.imageView.image = [UIImage imageNamed:@"offline.png"];
                 break;
             case kOTRBuddyStatusAway:
                 cell.textLabel.textColor = [UIColor darkGrayColor];
-                cell.detailTextLabel.text = @"Away";
+                cell.detailTextLabel.text = AWAY_STRING;
                 cell.imageView.image = [UIImage imageNamed:@"away.png"];
                 break;
             default:
                 cell.textLabel.textColor = [UIColor darkTextColor];
-                cell.detailTextLabel.text = @"Available";
+                cell.detailTextLabel.text = AVAILABLE_STRING;
                 cell.imageView.image = [UIImage imageNamed:@"available.png"];
                 break;
         }

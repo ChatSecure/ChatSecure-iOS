@@ -8,6 +8,7 @@
 
 #import "OTRChatListViewController.h"
 #import "OTRChatViewController.h"
+#import "Strings.h"
 
 @implementation OTRChatListViewController
 
@@ -16,7 +17,7 @@
 
 - (id)init {
     if (self = [super init]) {
-        self.title = @"Conversations";
+        self.title = CONVERSATIONS_STRING;
         self.tabBarItem.image = [UIImage imageNamed:@"08-chat.png"];
     }
     return self;
@@ -32,6 +33,14 @@
 
 #pragma mark - View lifecycle
 
+- (void) loadView {
+    [super loadView];
+    self.chatListTableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    chatListTableView.dataSource = self;
+    chatListTableView.delegate = self;
+    [self.view addSubview:chatListTableView];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -40,15 +49,17 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
+    chatListTableView.frame = self.view.bounds;
+    chatListTableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleRightMargin;
+    
     [chatListTableView reloadData];
 }
 
 - (void)viewDidUnload
 {
-    [self setChatListTableView:nil];
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
+    self.chatListTableView = nil;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {

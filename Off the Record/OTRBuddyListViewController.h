@@ -15,7 +15,7 @@
     NSArray *sortedBuddies;
 }
 
-@property (nonatomic, retain) IBOutlet UITableView *buddyListTableView;
+@property (nonatomic, retain) UITableView *buddyListTableView;
 @property (nonatomic, retain) OTRChatViewController *chatViewController;
 @property (nonatomic, retain) UIViewController *chatListController;
 @property (nonatomic, retain) UITabBarController *tabController;

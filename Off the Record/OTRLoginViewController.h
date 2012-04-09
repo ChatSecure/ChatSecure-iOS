@@ -18,18 +18,24 @@
     MBProgressHUD *HUD;
 }
 
-@property (retain, nonatomic) IBOutlet UITextField *usernameTextField;
-@property (retain, nonatomic) IBOutlet UITextField *passwordTextField;
+@property (retain, nonatomic) UITextField *usernameTextField;
+@property (retain, nonatomic) UITextField *passwordTextField;
 @property (nonatomic, retain) OTRProtocolManager *protocolManager;
-@property (retain, nonatomic) IBOutlet UIButton *aimButton;
-@property (retain, nonatomic) IBOutlet UIButton *xmppButton;
-@property (retain, nonatomic) IBOutlet UISwitch *rememberUserNameSwitch;
+@property (retain, nonatomic) UIButton *aimButton;
+@property (retain, nonatomic) UIButton *xmppButton;
+@property (nonatomic, retain) UIButton *cancelButton;
+@property (retain, nonatomic) UISwitch *rememberUserNameSwitch;
 @property (nonatomic) BOOL useXMPP;
 
+@property (nonatomic, retain) UILabel *usernameLabel;
+@property (nonatomic, retain) UILabel *passwordLabel;
+@property (nonatomic, retain) UILabel *rememberUsernameLabel;
+@property (nonatomic, retain) UIImageView *logoView;
 
-- (IBAction)loginPressed:(id)sender;
-- (IBAction)xmppLoginPressed:(id)sender;
-- (IBAction)cancelPressed:(id)sender;
+
+- (void)loginPressed:(id)sender;
+- (void)xmppLoginPressed:(id)sender;
+- (void)cancelPressed:(id)sender;
 
 -(void)aimLoginFailed;
 -(void)xmppLoginFailed;

@@ -10,6 +10,7 @@
 #import "OTREncryptionManager.h"
 #import "privkey.h"
 #import <QuartzCore/QuartzCore.h>
+#import "Strings.h"
 
 #define kTabBarHeight 49
 #define kSendButtonWidth 60
@@ -49,7 +50,7 @@
 - (id)init {
     if (self = [super init]) {
         //set notification for when keyboard shows/hides
-        self.title = @"Chat";
+        self.title = CHAT_STRING;
     }
     return self;
 }
@@ -190,7 +191,7 @@
 
 -(void)lockButtonPressed
 {
-    UIActionSheet *popupQuery = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Initiate Encrypted Chat", @"Verify", nil];
+    UIActionSheet *popupQuery = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:INITIATE_ENCRYPTED_CHAT_STRING, VERIFY_STRING, nil];
     popupQuery.actionSheetStyle = UIActionSheetStyleBlackOpaque;
     popupQuery.tag = 420;
     [popupQuery showFromTabBar:self.tabBarController.tabBar];
@@ -212,7 +213,7 @@
 
     
     self.sendButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [sendButton setTitle:@"Send" forState:UIControlStateNormal];
+    [sendButton setTitle:SEND_STRING forState:UIControlStateNormal];
     [sendButton addTarget:self action:@selector(sendButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     
 
@@ -489,12 +490,12 @@
                 NSString *msg = nil;
                 if(fingerprint && fingerprint->fingerprint) {
                     otrl_privkey_hash_to_human(their_hash, fingerprint->fingerprint);
-                    msg = [NSString stringWithFormat:@"Fingerprint for you, %s:\n%s\n\nPurported fingerprint for %s:\n%s\n", context->accountname, our_hash, context->username, their_hash];
+                    msg = [NSString stringWithFormat:@"%@, %s:\n%s\n\n%@ %s:\n%s\n", YOUR_FINGERPRINT_STRING, context->accountname, our_hash, THEIR_FINGERPRINT_STRING, context->username, their_hash];
                 } else {
-                    msg = @"You must be in a secure conversation first.";
+                    msg = SECURE_CONVERSATION_STRING;
                 }
                                 
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Verify Fingerprint" message:msg delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:VERIFY_FINGERPRINT_STRING message:msg delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
                 [alert show];
             }
         }
@@ -526,7 +527,7 @@
             int labelWidth = 500;
             int labelHeight = 100;
             self.instructionsLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.view.frame.size.width/2-labelWidth/2, self.view.frame.size.height/2-labelHeight/2, labelWidth, labelHeight)];
-            instructionsLabel.text = @"Log in on the Accounts tab and then select a buddy from the Buddy List to start chatting.";
+            instructionsLabel.text = CHAT_INSTRUCTIONS_LABEL_STRING;
             instructionsLabel.numberOfLines = 2;
             [self.view addSubview:instructionsLabel];
             self.navigationItem.rightBarButtonItem = nil;
@@ -570,7 +571,7 @@
           withBarButtonItem:(UIBarButtonItem*)barButtonItem 
        forPopoverController:(UIPopoverController*)pc
 {  
-    [barButtonItem setTitle:@"Buddy List"];
+    [barButtonItem setTitle:BUDDY_LIST_STRING];
     
     
     
@@ -593,7 +594,7 @@
     if ([[UIApplication sharedApplication] canOpenURL:request.URL])
     {
         self.lastActionLink = request.URL;
-        UIActionSheet *action = [[UIActionSheet alloc] initWithTitle:[[request.URL absoluteURL] description] delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Open in Safari", nil];
+        UIActionSheet *action = [[UIActionSheet alloc] initWithTitle:[[request.URL absoluteURL] description] delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:OPEN_IN_SAFARI_STRING, nil];
         [action setTag:0];
         [action showFromTabBar:self.tabBarController.tabBar];
     }
