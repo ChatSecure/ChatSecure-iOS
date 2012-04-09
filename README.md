@@ -3,6 +3,16 @@ ChatSecure
 
 ChatSecure is a very simple IM client for iOS that integrates encrypted "Off the Record" messaging support from the [libotr](http://www.cypherpunks.ca/otr/) library. It uses the [LibOrange](https://github.com/unixpickle/LibOrange) library to handle all of the OSCAR functionality and the [xmppframework](http://code.google.com/p/xmppframework/) to handle XMPP.
 
+Localization
+=========
+
+If you would like to contribute/improve a translation:
+
+ 1. Visit our [Transifex project page](https://www.transifex.net/projects/p/chatsecure/) and make an account if you don't have one already.
+ 2. Go to the resources subsites [AppStore.strings](https://www.transifex.net/projects/p/chatsecure/resource/appstorestrings/) & [Localizable.strings](https://www.transifex.net/projects/p/chatsecure/resource/strings/) to add a new language or improve an existing translation. 
+ 3. [Open an issue on Github](https://github.com/chrisballinger/Off-the-Record-iOS/issues) notifying us of your translation.
+ 
+ 
 Compatibility
 =========
 
@@ -95,3 +105,4 @@ Acknowledgements
 * [Goxxy](http://rocketdock.com/addon/icons/3462) - Google Talk icon.
 * Localizations
 	* [Jiajuan Lin](http://www.personal.psu.edu/jwl5262/blogs/lin_portfolio/) (Chinese)
+	* [Jan-Christoph Borchardt](http://jancborchardt.net/) (German)
