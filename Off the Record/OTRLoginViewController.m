@@ -60,10 +60,14 @@
     self.usernameTextField = [[UITextField alloc] init];
     self.usernameTextField.delegate = self;
     self.usernameTextField.borderStyle = UITextBorderStyleRoundedRect;
+    self.usernameTextField.autocapitalizationType = UITextAutocorrectionTypeNo;
+    self.usernameTextField.autocorrectionType = UITextAutocorrectionTypeNo;
+    self.usernameTextField.text = @"";
     self.passwordTextField = [[UITextField alloc] init];
     self.passwordTextField.delegate = self;
     self.passwordTextField.borderStyle = UITextBorderStyleRoundedRect;
     self.passwordTextField.secureTextEntry = YES;
+    self.passwordTextField.text = @"";
     [self.view addSubview:usernameTextField];
     [self.view addSubview:passwordTextField];
     
