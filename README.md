@@ -106,3 +106,4 @@ Acknowledgements
 * Localizations
 	* [Jiajuan Lin](http://www.personal.psu.edu/jwl5262/blogs/lin_portfolio/) (Chinese)
 	* [Jan-Christoph Borchardt](http://jancborchardt.net/) (German)
+	* [vitalyster](https://github.com/vitalyster) (Russian)
