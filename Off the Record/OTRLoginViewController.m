@@ -114,6 +114,14 @@
     }
 }
 
+- (CGSize) textSizeForLabel:(UILabel*)label {
+    return [label.text sizeWithFont:label.font];
+}
+
+- (CGRect) textFieldFrameForLabel:(UILabel*)label {
+    return CGRectMake(label.frame.origin.x + label.frame.size.width + 5, label.frame.origin.y, self.view.frame.size.width - label.frame.origin.x - label.frame.size.width - 10, 31);
+}
+
 
 #pragma mark - View lifecycle
 
@@ -142,24 +150,29 @@
     self.logoView.frame = CGRectMake(self.view.frame.size.width/2 - logoViewFrameWidth/2, 20, logoViewFrameWidth, self.logoView.image.size.height);
     self.logoView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
     
-    CGFloat usernameLabelFrameYOrigin = logoView.frame.origin.y + logoView.frame.size.height + 10;
-    self.usernameLabel.frame = CGRectMake(10, usernameLabelFrameYOrigin, 80, 21);
+    CGFloat usernameLabelFrameYOrigin = logoView.frame.origin.y + logoView.frame.size.height + 15;
+    CGSize usernameLabelTextSize = [self textSizeForLabel:usernameLabel];
+    self.usernameLabel.frame = CGRectMake(10, usernameLabelFrameYOrigin, usernameLabelTextSize.width, 21);
     self.usernameLabel.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;
-    self.usernameTextField.frame = CGRectMake(usernameLabel.frame.origin.x + usernameLabel.frame.size.width + 5, usernameLabelFrameYOrigin, 203, 31);
-    self.usernameTextField.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin;
+    self.usernameTextField.frame = [self textFieldFrameForLabel:usernameLabel];
+    self.usernameTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
+    self.usernameTextField.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth;
     
-    CGFloat passwordLabelFrameYOrigin = usernameLabelFrameYOrigin + self.usernameLabel.frame.size.height + 10;
-    self.passwordLabel.frame = CGRectMake(10, passwordLabelFrameYOrigin, 80, 21);
+    CGFloat passwordLabelFrameYOrigin = usernameLabelFrameYOrigin + self.usernameLabel.frame.size.height + 15;
+    CGSize passwordLabelTextSize = [self textSizeForLabel:passwordLabel];
+    self.passwordLabel.frame = CGRectMake(10, passwordLabelFrameYOrigin, passwordLabelTextSize.width, 21);
     self.passwordLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
     
-    self.passwordTextField.frame = CGRectMake(passwordLabel.frame.origin.x + passwordLabel.frame.size.width + 5, passwordLabelFrameYOrigin, 203, 31);
+    self.passwordTextField.frame = [self textFieldFrameForLabel:passwordLabel];
+    self.passwordTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
     self.passwordTextField.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin;
     
-    CGFloat rememberUsernameLabelFrameYOrigin = passwordLabel.frame.origin.y + passwordLabel.frame.size.height + 30;
+    CGFloat rememberUsernameLabelFrameYOrigin = passwordLabel.frame.origin.y + passwordLabel.frame.size.height + 15;
     self.rememberUsernameLabel.frame = CGRectMake(10, rememberUsernameLabelFrameYOrigin, 170, 21);
     self.rememberUsernameLabel.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;
     
-    self.rememberUserNameSwitch.frame = CGRectMake(rememberUsernameLabel.frame.origin.x + rememberUsernameLabel.frame.size.width + 20, rememberUsernameLabelFrameYOrigin, 79, 27);
+    CGFloat rememberUserNameSwitchFrameWidth = 79;
+    self.rememberUserNameSwitch.frame = CGRectMake(self.view.frame.size.width-rememberUserNameSwitchFrameWidth-5, rememberUsernameLabelFrameYOrigin, rememberUserNameSwitchFrameWidth, 27);
     self.rememberUserNameSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
     
     CGFloat loginButtonFrameWidth = 131;
