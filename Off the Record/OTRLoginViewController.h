@@ -21,9 +21,6 @@
 @property (retain, nonatomic) UITextField *usernameTextField;
 @property (retain, nonatomic) UITextField *passwordTextField;
 @property (nonatomic, retain) OTRProtocolManager *protocolManager;
-@property (retain, nonatomic) UIButton *aimButton;
-@property (retain, nonatomic) UIButton *xmppButton;
-@property (nonatomic, retain) UIButton *cancelButton;
 @property (retain, nonatomic) UISwitch *rememberUserNameSwitch;
 @property (nonatomic) BOOL useXMPP;
 
@@ -31,6 +28,10 @@
 @property (nonatomic, retain) UILabel *passwordLabel;
 @property (nonatomic, retain) UILabel *rememberUsernameLabel;
 @property (nonatomic, retain) UIImageView *logoView;
+
+@property (nonatomic, retain) UIToolbar *bottomToolbar;
+@property (nonatomic, retain) UIBarButtonItem *loginButton;
+@property (nonatomic, retain) UIBarButtonItem *cancelButton;
 
 
 - (void)loginPressed:(id)sender;

@@ -13,21 +13,19 @@
 @synthesize usernameTextField;
 @synthesize passwordTextField;
 @synthesize protocolManager;
-@synthesize aimButton, xmppButton, cancelButton;
+@synthesize loginButton, cancelButton;
 @synthesize rememberUserNameSwitch;
 @synthesize useXMPP;
 @synthesize usernameLabel, passwordLabel, rememberUsernameLabel;
 @synthesize logoView;
-
-- (id)init {
-    if (self = [super init]) {
-    }
-    return self;
-}
+@synthesize bottomToolbar;
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"AimLoginFailedNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"XMPPLoginFailedNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"XMPPLoginSuccessNotification" object:nil];
     self.logoView = nil;
     self.usernameLabel = nil;
     self.passwordLabel = nil;
@@ -35,9 +33,9 @@
     self.rememberUserNameSwitch = nil;
     self.usernameTextField = nil;
     self.passwordTextField = nil;
-    self.xmppButton = nil;
-    self.aimButton = nil;
+    self.loginButton = nil;
     self.cancelButton = nil;
+    self.bottomToolbar = nil;
 }
 
 
@@ -69,18 +67,27 @@
     [self.view addSubview:usernameTextField];
     [self.view addSubview:passwordTextField];
     
-    self.xmppButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [xmppButton addTarget:self action:@selector(xmppLoginPressed:) forControlEvents:UIControlEventTouchUpInside];
-    [xmppButton setTitle:[NSString stringWithFormat:@"%@ XMPP", LOGIN_TO_STRING] forState:UIControlStateNormal];
-    self.aimButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [aimButton addTarget:self action:@selector(loginPressed:) forControlEvents:UIControlEventTouchUpInside];
-    [aimButton setTitle:[NSString stringWithFormat:@"%@ AIM", LOGIN_TO_STRING] forState:UIControlStateNormal];
-    self.cancelButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [cancelButton setTitle:CANCEL_STRING forState:UIControlStateNormal];
-    [cancelButton addTarget:self action:@selector(cancelPressed:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:xmppButton];
-    [self.view addSubview:aimButton];
-    [self.view addSubview:cancelButton];
+    self.bottomToolbar = [[UIToolbar alloc] init];
+    
+    NSString *loginButtonString;
+    SEL loginButtonAction;
+    if (useXMPP) 
+    {
+        loginButtonString = [NSString stringWithFormat:@"%@ XMPP", LOGIN_TO_STRING];
+        loginButtonAction = @selector(xmppLoginPressed:);
+    } 
+    else 
+    {
+        loginButtonString = [NSString stringWithFormat:@"%@ AIM", LOGIN_TO_STRING];
+        loginButtonAction = @selector(loginPressed:);
+    }
+    
+    self.loginButton = [[UIBarButtonItem alloc] initWithTitle:loginButtonString style:UIBarButtonItemStyleDone target:self action:loginButtonAction];
+    self.cancelButton = [[UIBarButtonItem alloc] initWithTitle:CANCEL_STRING style:UIBarButtonItemStyleBordered target:self action:@selector(cancelPressed:)];
+    
+    self.bottomToolbar.items = [NSArray arrayWithObjects:cancelButton, [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil], loginButton, nil];
+    
+    [self.view addSubview:bottomToolbar];
 }
 
 - (void) viewDidLoad 
@@ -105,13 +112,6 @@
      selector:@selector(xmppLoginSuccess)
      name:@"XMPPLoginSuccessNotification"
      object:nil ];
-    
-    if (useXMPP) {
-        aimButton.hidden = YES;
-    }
-    else {
-        xmppButton.hidden = YES;
-    }
 }
 
 - (CGSize) textSizeForLabel:(UILabel*)label {
@@ -175,19 +175,9 @@
     self.rememberUserNameSwitch.frame = CGRectMake(self.view.frame.size.width-rememberUserNameSwitchFrameWidth-5, rememberUsernameLabelFrameYOrigin, rememberUserNameSwitchFrameWidth, 27);
     self.rememberUserNameSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
     
-    CGFloat loginButtonFrameWidth = 131;
-    CGFloat loginButtonFrameHeight = 37;
-    CGRect loginButtonFrame = CGRectMake(self.view.frame.size.width/2 - loginButtonFrameWidth/2, self.view.frame.size.height-loginButtonFrameHeight-60, loginButtonFrameWidth, loginButtonFrameHeight);
-    self.aimButton.frame = loginButtonFrame;
-    self.aimButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin;
-
-    self.xmppButton.frame = loginButtonFrame;
-    self.xmppButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin;
-    
-    CGFloat cancelButtonFrameHeight = loginButtonFrameHeight;
-    CGFloat cancelButtonFrameYOrigin = self.view.frame.size.height - cancelButtonFrameHeight - 10;
-    self.cancelButton.frame = CGRectMake(10, cancelButtonFrameYOrigin, 74, cancelButtonFrameHeight);
-    self.cancelButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin;
+    CGFloat bottomToolbarFrameHeight = 45;
+    self.bottomToolbar.frame = CGRectMake(0, self.view.frame.size.height - bottomToolbarFrameHeight, self.view.frame.size.width, bottomToolbarFrameHeight);
+    self.bottomToolbar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin;
 }
 
 - (void) viewWillDisappear:(BOOL)animated 
