@@ -63,6 +63,10 @@
     self.usernameTextField.autocapitalizationType = UITextAutocorrectionTypeNo;
     self.usernameTextField.autocorrectionType = UITextAutocorrectionTypeNo;
     self.usernameTextField.text = @"";
+    if (useXMPP)
+    {
+        self.usernameTextField.placeholder = @"user@example.com";
+    }
     self.passwordTextField = [[UITextField alloc] init];
     self.passwordTextField.delegate = self;
     self.passwordTextField.borderStyle = UITextBorderStyleRoundedRect;
@@ -156,15 +160,17 @@
     
     CGFloat usernameLabelFrameYOrigin = logoView.frame.origin.y + logoView.frame.size.height + 15;
     CGSize usernameLabelTextSize = [self textSizeForLabel:usernameLabel];
-    self.usernameLabel.frame = CGRectMake(10, usernameLabelFrameYOrigin, usernameLabelTextSize.width, 21);
+    CGSize passwordLabelTextSize = [self textSizeForLabel:passwordLabel];
+    CGFloat labelWidth = MAX(usernameLabelTextSize.width, passwordLabelTextSize.width);
+
+    self.usernameLabel.frame = CGRectMake(10, usernameLabelFrameYOrigin, labelWidth, 21);
     self.usernameLabel.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;
     self.usernameTextField.frame = [self textFieldFrameForLabel:usernameLabel];
     self.usernameTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
     self.usernameTextField.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth;
     
     CGFloat passwordLabelFrameYOrigin = usernameLabelFrameYOrigin + self.usernameLabel.frame.size.height + 15;
-    CGSize passwordLabelTextSize = [self textSizeForLabel:passwordLabel];
-    self.passwordLabel.frame = CGRectMake(10, passwordLabelFrameYOrigin, passwordLabelTextSize.width, 21);
+    self.passwordLabel.frame = CGRectMake(10, passwordLabelFrameYOrigin, labelWidth, 21);
     self.passwordLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
     
     self.passwordTextField.frame = [self textFieldFrameForLabel:passwordLabel];
