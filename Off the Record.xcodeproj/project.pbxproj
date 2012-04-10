@@ -544,6 +544,7 @@
 		D9991A4F13F44F9A002D3008 /* OTRChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRChatViewController.m; sourceTree = "<group>"; };
 		D99BA28E141D3F3A00D051B6 /* OTRMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRMessage.h; sourceTree = "<group>"; };
 		D99BA28F141D3F3A00D051B6 /* OTRMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRMessage.m; sourceTree = "<group>"; };
+		D9A10BBF1534AB23003ED1F6 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = "Off the Record/ru.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
 		D9A7E09C1524132F00EEDDB5 /* GTMNSString+HTML.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "GTMNSString+HTML.h"; path = "MWFeedParser/Classes/GTMNSString+HTML.h"; sourceTree = "<group>"; };
 		D9A7E09D1524132F00EEDDB5 /* GTMNSString+HTML.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "GTMNSString+HTML.m"; path = "MWFeedParser/Classes/GTMNSString+HTML.m"; sourceTree = "<group>"; };
 		D9A7E09E1524132F00EEDDB5 /* NSString+HTML.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "NSString+HTML.h"; path = "MWFeedParser/Classes/NSString+HTML.h"; sourceTree = "<group>"; };
@@ -1793,6 +1794,7 @@
 				zh,
 				zh_CN,
 				de,
+				ru,
 			);
 			mainGroup = D9F9376D13F44BD3009A3D84;
 			productRefGroup = D9F9377913F44BD3009A3D84 /* Products */;
@@ -2122,6 +2124,7 @@
 				D9D8D1FA1531056300F9E8D3 /* en */,
 				D9042E2D153168BE000D264C /* zh_CN */,
 				D9FCA72C1533A3B6009AD599 /* de */,
+				D9A10BBF1534AB23003ED1F6 /* ru */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
