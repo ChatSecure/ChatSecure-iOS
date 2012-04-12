@@ -13,6 +13,12 @@
 #import "OTRAccountsViewController.h"
 #import "OTRChatViewController.h"
 #import "Strings.h"
+#import "OTRSettingsViewController.h"
+
+#ifdef CRITTERCISM_ENABLED
+#import "Crittercism.h"
+#import "OTRCrittercismSecrets.h"
+#endif
 
 @implementation OTRAppDelegate
 
@@ -21,36 +27,42 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    NSLocale *locale = [NSLocale currentLocale];
-    
-    NSString *language = [locale displayNameForKey:NSLocaleIdentifier 
-                                             value:[locale localeIdentifier]];
-    NSLog(@"current language: %@",language);
+#ifdef CRITTERCISM_ENABLED
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    if([defaults boolForKey:CRITTERCISM_OPT_IN])
+    {
+        [Crittercism initWithAppID:CRITTERCISM_APP_ID
+                            andKey:CRITTERCISM_KEY
+                         andSecret:CRITTERCISM_SECRET];
+        [Crittercism setOptOutStatus:NO];
+    } 
+    else 
+    {
+        [Crittercism setOptOutStatus:YES];
+    }
+#endif
+
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    // Override point for customization after application launch.
     UITabBarController *tabBarController = nil;
     
     OTRBuddyListViewController *buddyListViewController = [[OTRBuddyListViewController alloc] init];
     OTRChatViewController *chatViewController = [[OTRChatViewController alloc] init];
     buddyListViewController.chatViewController = chatViewController;
     OTRChatListViewController *chatListViewController = [[OTRChatListViewController alloc] init];
-    OTRAccountsViewController *accountsViewController = [[OTRAccountsViewController alloc] init];
+    //OTRAccountsViewController *accountsViewController = [[OTRAccountsViewController alloc] init];
+    OTRSettingsViewController *settingsViewController = [[OTRSettingsViewController alloc] init];
 
     chatListViewController.buddyController = buddyListViewController;
     buddyListViewController.chatListController = chatListViewController;
     buddyListViewController.tabController = _tabBarController;
     tabBarController = [[UITabBarController alloc] init];
-    UINavigationController *accountsNavController = [[UINavigationController alloc] initWithRootViewController:accountsViewController];
+    UINavigationController *accountsNavController = [[UINavigationController alloc] initWithRootViewController:settingsViewController];
     UINavigationController *buddyListNavController = [[UINavigationController alloc] initWithRootViewController:buddyListViewController];
-
     
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
         UINavigationController *chatListNavController = [[UINavigationController alloc] initWithRootViewController:chatListViewController];
-
         tabBarController.viewControllers = [NSArray arrayWithObjects:buddyListNavController, chatListNavController, accountsNavController, nil];
-        //self.tabBarController.viewControllers = [NSArray arrayWithObjects:navController, navController2, navController3, [[UINavigationController alloc] initWithRootViewController:[[OTRChatViewController alloc] init]], nil];
     } else {
-
         UINavigationController *chatNavController = [[UINavigationController alloc ]initWithRootViewController:chatViewController];
         UISplitViewController *splitViewController = [[UISplitViewController alloc] init];
         splitViewController.viewControllers = [NSArray arrayWithObjects:buddyListNavController, chatNavController, nil];
@@ -58,9 +70,7 @@
         tabBarController.viewControllers = [NSArray arrayWithObjects:splitViewController, accountsNavController, nil];
         splitViewController.title = CHAT_STRING;
         splitViewController.tabBarItem.image = [UIImage imageNamed:@"08-chat.png"];
-
     }
-
 
     self.tabBarController = tabBarController;
     self.window.rootViewController = self.tabBarController;

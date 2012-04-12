@@ -58,3 +58,10 @@
 #define LOGIN_TO_STRING NSLocalizedString(@"Login to", @"Label for button describing which protocol you're logging into, will be followed by a protocol such as XMPP or AIM during layout")
 #define REMEMBER_USERNAME_STRING NSLocalizedString(@"Remember username", @"label for switch for whether or not we should save their username between launches")
 
+// OTRSettingsManager
+#define CRITTERCISM_TITLE_STRING NSLocalizedString(@"Send Crash Reports", @"Title for crash reports settings switch")
+#define CRITTERCISM_DESCRIPTION_STRING NSLocalizedString(@"Automatically send anonymous crash logs (opt-in)", @"Description for crash reports settings switch")
+#define OTHER_STRING NSLocalizedString(@"Other", @"Title for other miscellaneous settings group")
+
+// OTRSettingsViewController
+#define SETTINGS_STRING NSLocalizedString(@"Settings", @"Title for the Settings screen")

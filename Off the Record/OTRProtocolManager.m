@@ -17,16 +17,31 @@ static OTRProtocolManager *sharedManager = nil;
 @synthesize encryptionManager;
 @synthesize xmppManager;
 @synthesize buddyList;
+@synthesize settingsManager;
+
+- (void) dealloc 
+{
+    self.oscarManager = nil;
+    self.encryptionManager = nil;
+    self.xmppManager = nil;
+    self.buddyList = nil;
+    self.settingsManager = nil;
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"SendMessageNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"BuddyListUpdateNotification" object:nil];
+}
 
 -(id)init
 {
     self = [super init];
     if(self)
     {
-        oscarManager = [[OTROscarManager alloc] init];
-        xmppManager = [[OTRXMPPManager alloc] init];
-        encryptionManager = [[OTREncryptionManager alloc] init];
-        
+        self.oscarManager = [[OTROscarManager alloc] init];
+        self.xmppManager = [[OTRXMPPManager alloc] init];
+        self.encryptionManager = [[OTREncryptionManager alloc] init];
+        self.settingsManager = [[OTRSettingsManager alloc] init];
+        self.buddyList = [[OTRBuddyList alloc] init];
+
         [[NSNotificationCenter defaultCenter]
          addObserver:self
          selector:@selector(sendMessage:)
@@ -38,9 +53,6 @@ static OTRProtocolManager *sharedManager = nil;
          selector:@selector(buddyListUpdate)
          name:@"BuddyListUpdateNotification"
          object:nil ];
-        
-        
-        buddyList = [[OTRBuddyList alloc] init];
     }
     return self;
 }

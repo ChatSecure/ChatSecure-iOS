@@ -92,6 +92,11 @@
     buddyListTableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleRightMargin;
 }
 
+
+-(void)viewDidAppear:(BOOL)animated {
+    
+}
+
 - (void)viewDidUnload
 {
     [super viewDidUnload];
