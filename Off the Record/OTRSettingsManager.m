@@ -39,8 +39,14 @@
     OTRSettingsGroup *accountsGroup = [[OTRSettingsGroup alloc] initWithTitle:ACCOUNTS_STRING settings:[NSArray arrayWithObject:accountsViewSetting]];
     [settingsGroups addObject:accountsGroup];
     
+    OTRBoolSetting *allowSelfSignedCertificates = [[OTRBoolSetting alloc] initWithTitle:ALLOW_SELF_SIGNED_CERTIFICATES_STRING description:SECURITY_WARNING_STRING settingsKey:kOTRSettingKeyAllowSelfSignedSSL];
+    OTRBoolSetting *allowSSLHostnameMismatch = [[OTRBoolSetting alloc] initWithTitle:ALLOW_SSL_HOSTNAME_MISMATCH_STRING description:SECURITY_WARNING_STRING settingsKey:kOTRSettingKeyAllowSSLHostNameMismatch];
+    OTRSettingsGroup *xmppGroup = [[OTRSettingsGroup alloc] initWithTitle:@"XMPP" settings:[NSArray arrayWithObjects:allowSelfSignedCertificates, allowSSLHostnameMismatch, nil]];
+    [settingsGroups addObject:xmppGroup];
+    
+    
 #ifdef CRITTERCISM_ENABLED
-    OTRBoolSetting *crittercismSetting = [[OTRBoolSetting alloc] initWithTitle:CRITTERCISM_TITLE_STRING description:CRITTERCISM_DESCRIPTION_STRING settingsKey:CRITTERCISM_OPT_IN];
+    OTRBoolSetting *crittercismSetting = [[OTRBoolSetting alloc] initWithTitle:CRITTERCISM_TITLE_STRING description:CRITTERCISM_DESCRIPTION_STRING settingsKey:kOTRSettingKeyCrittercismOptIn];
     OTRSettingsGroup *otherGroup = [[OTRSettingsGroup alloc] initWithTitle:OTHER_STRING settings:[NSArray arrayWithObject:crittercismSetting]];
     [settingsGroups addObject:otherGroup];
 #endif
@@ -62,6 +68,12 @@
 {
     OTRSettingsGroup *settingsGroup = [settingsGroups objectAtIndex:section];
     return [settingsGroup.settings count];
+}
+
++ (BOOL) boolForOTRSettingKey:(NSString*)key
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    return [defaults boolForKey:key];
 }
 
 @end

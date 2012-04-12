@@ -10,8 +10,11 @@
 #import "OTRSetting.h"
 
 #ifdef CRITTERCISM_ENABLED
-#define CRITTERCISM_OPT_IN @"CRITTERCISM_OPT_IN"
+#define kOTRSettingKeyCrittercismOptIn @"kOTRSettingKeyCrittercismOptIn"
 #endif
+
+#define kOTRSettingKeyAllowSelfSignedSSL @"kOTRSettingKeyAllowSelfSignedSSL"
+#define kOTRSettingKeyAllowSSLHostNameMismatch @"kOTRSettingKeyAllowSSLHostNameMismatch"
 
 @interface OTRSettingsManager : NSObject
 
@@ -20,5 +23,7 @@
 - (OTRSetting*) settingAtIndexPath:(NSIndexPath*)indexPath;
 - (NSString*) stringForGroupInSection:(NSUInteger)section;
 - (NSUInteger) numberOfSettingsInSection:(NSUInteger)section;
+
++ (BOOL) boolForOTRSettingKey:(NSString*)key;
 
 @end

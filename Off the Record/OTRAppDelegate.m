@@ -14,7 +14,12 @@
 #import "OTRChatViewController.h"
 #import "Strings.h"
 #import "OTRSettingsViewController.h"
+#import "OTRSettingsManager.h"
 
+// If you downloaded this source from Github delete the
+// CRITTERCISM_ENABLED key in the Preprocessor Macros
+// section of the project file to compile the project without
+// error reporting support.
 #ifdef CRITTERCISM_ENABLED
 #import "Crittercism.h"
 #import "OTRCrittercismSecrets.h"
@@ -28,8 +33,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
 #ifdef CRITTERCISM_ENABLED
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    if([defaults boolForKey:CRITTERCISM_OPT_IN])
+    if([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyCrittercismOptIn])
     {
         [Crittercism initWithAppID:CRITTERCISM_APP_ID
                             andKey:CRITTERCISM_KEY

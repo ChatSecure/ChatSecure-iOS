@@ -62,6 +62,9 @@
 #define CRITTERCISM_TITLE_STRING NSLocalizedString(@"Send Crash Reports", @"Title for crash reports settings switch")
 #define CRITTERCISM_DESCRIPTION_STRING NSLocalizedString(@"Automatically send anonymous crash logs (opt-in)", @"Description for crash reports settings switch")
 #define OTHER_STRING NSLocalizedString(@"Other", @"Title for other miscellaneous settings group")
+#define ALLOW_SELF_SIGNED_CERTIFICATES_STRING NSLocalizedString(@"Allow Self-Signed SSL", @"Title for settings cell on whether or not the XMPP library should allow self-signed SSL certificates")
+#define ALLOW_SSL_HOSTNAME_MISMATCH_STRING NSLocalizedString(@"Allow SSL Hostname Mismatch", @"Title for settings cell on whether or not the XMPP library should allow SSL hostname mismatch")
+#define SECURITY_WARNING_STRING NSLocalizedString(@"Warning: Use with caution. This may reduce your security.", @"Cell description text that warns users that enabling that option may reduce their security.")
 
 // OTRSettingsViewController
 #define SETTINGS_STRING NSLocalizedString(@"Settings", @"Title for the Settings screen")

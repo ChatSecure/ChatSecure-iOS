@@ -21,6 +21,8 @@
 
 #import <CFNetwork/CFNetwork.h>
 
+#import "OTRSettingsManager.h"
+
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
 static const int ddLogLevel = LOG_LEVEL_VERBOSE;
@@ -319,8 +321,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	
     
 	// You may need to alter these settings depending on the server you're connecting to
-	allowSelfSignedCertificates = NO;
-	allowSSLHostNameMismatch = NO;
+	allowSelfSignedCertificates = [OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyAllowSelfSignedSSL];
+	allowSSLHostNameMismatch = [OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyAllowSSLHostNameMismatch];
 }
 
 - (void)teardownStream
