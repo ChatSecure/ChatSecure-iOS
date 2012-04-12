@@ -60,8 +60,8 @@
     self.usernameTextField = [[UITextField alloc] init];
     self.usernameTextField.delegate = self;
     self.usernameTextField.borderStyle = UITextBorderStyleRoundedRect;
-    self.usernameTextField.autocapitalizationType = UITextAutocorrectionTypeNo;
     self.usernameTextField.autocorrectionType = UITextAutocorrectionTypeNo;
+    self.usernameTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     self.usernameTextField.text = @"";
     if (useXMPP)
     {
