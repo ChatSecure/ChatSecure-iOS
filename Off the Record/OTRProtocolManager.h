@@ -12,17 +12,15 @@
 #import "OTREncryptionManager.h"
 #import "OTRCodec.h"
 #import "OTRBuddyList.h"
+#import "OTRSettingsManager.h"
 
 @interface OTRProtocolManager : NSObject
-{
-    
-}
 
 @property (nonatomic, retain) OTRBuddyList *buddyList;
-
 @property (nonatomic, retain) OTROscarManager *oscarManager;
 @property (nonatomic, retain) OTRXMPPManager *xmppManager;
 @property (nonatomic, retain) OTREncryptionManager *encryptionManager;
+@property (nonatomic, retain) OTRSettingsManager *settingsManager;
 
 + (OTRProtocolManager*)sharedInstance; // Singleton method
 
