@@ -15,6 +15,10 @@
 #import "OTRBoolSetting.h"
 #import "OTRViewSetting.h"
 
+@interface OTRSettingsManager(Private)
+- (void) populateSettings;
+@end
+
 @implementation OTRSettingsManager
 @synthesize settingsGroups;
 

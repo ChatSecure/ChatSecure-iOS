@@ -15,6 +15,10 @@
 #define kTabBarHeight 49
 #define kSendButtonWidth 60
 
+@interface OTRChatViewController(Private)
+- (void) refreshView;
+@end
+
 @implementation OTRChatViewController
 @synthesize chatHistoryTextView;
 @synthesize messageTextField;

@@ -18,7 +18,7 @@
 
 @interface OTRSettingsManager : NSObject
 
-@property (nonatomic, readonly) NSMutableArray *settingsGroups;
+@property (nonatomic, strong, readonly) NSMutableArray *settingsGroups;
 
 - (OTRSetting*) settingAtIndexPath:(NSIndexPath*)indexPath;
 - (NSString*) stringForGroupInSection:(NSUInteger)section;
