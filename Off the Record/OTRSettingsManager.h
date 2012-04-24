@@ -16,6 +16,8 @@
 #define kOTRSettingKeyAllowSelfSignedSSL @"kOTRSettingKeyAllowSelfSignedSSL"
 #define kOTRSettingKeyAllowSSLHostNameMismatch @"kOTRSettingKeyAllowSSLHostNameMismatch"
 
+#define kOTRSettingKeyFontSize @"kOTRSettingKeyFontSize"
+
 @interface OTRSettingsManager : NSObject
 
 @property (nonatomic, strong, readonly) NSMutableArray *settingsGroups;
@@ -25,5 +27,6 @@
 - (NSUInteger) numberOfSettingsInSection:(NSUInteger)section;
 
 + (BOOL) boolForOTRSettingKey:(NSString*)key;
++ (double) doubleForOTRSettingKey:(NSString*)key;
 
 @end

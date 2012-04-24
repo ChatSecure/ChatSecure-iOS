@@ -343,6 +343,8 @@
 		D9F9378513F44BD3009A3D84 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D9F9378313F44BD3009A3D84 /* InfoPlist.strings */; };
 		D9F9378713F44BD3009A3D84 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D9F9378613F44BD3009A3D84 /* main.m */; };
 		D9F9378B13F44BD3009A3D84 /* OTRAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D9F9378A13F44BD3009A3D84 /* OTRAppDelegate.m */; };
+		D9FBD71415472A8400126568 /* OTRDoubleSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = D9FBD71315472A8400126568 /* OTRDoubleSetting.m */; };
+		D9FBD71815472FA700126568 /* OTRSettingTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D9FBD71715472FA700126568 /* OTRSettingTableViewCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -961,6 +963,10 @@
 		D9F9378813F44BD3009A3D84 /* Off the Record-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Off the Record-Prefix.pch"; sourceTree = "<group>"; };
 		D9F9378913F44BD3009A3D84 /* OTRAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OTRAppDelegate.h; sourceTree = "<group>"; };
 		D9F9378A13F44BD3009A3D84 /* OTRAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OTRAppDelegate.m; sourceTree = "<group>"; };
+		D9FBD71215472A8400126568 /* OTRDoubleSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRDoubleSetting.h; sourceTree = "<group>"; };
+		D9FBD71315472A8400126568 /* OTRDoubleSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRDoubleSetting.m; sourceTree = "<group>"; };
+		D9FBD71615472FA700126568 /* OTRSettingTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; path = OTRSettingTableViewCell.h; sourceTree = "<group>"; };
+		D9FBD71715472FA700126568 /* OTRSettingTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRSettingTableViewCell.m; sourceTree = "<group>"; };
 		D9FCA72B1533A3B6009AD599 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = "Off the Record/de.lproj/InfoPlist.strings"; sourceTree = SOURCE_ROOT; };
 		D9FCA72C1533A3B6009AD599 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = "Off the Record/de.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -1173,6 +1179,8 @@
 				D96495CE15365B3F009A8C33 /* OTRValueSetting.m */,
 				D96495C6153635A8009A8C33 /* OTRBoolSetting.h */,
 				D96495C7153635A8009A8C33 /* OTRBoolSetting.m */,
+				D9FBD71215472A8400126568 /* OTRDoubleSetting.h */,
+				D9FBD71315472A8400126568 /* OTRDoubleSetting.m */,
 			);
 			name = Value;
 			sourceTree = "<group>";
@@ -2014,8 +2022,7 @@
 				D9991A4F13F44F9A002D3008 /* OTRChatViewController.m */,
 				D9F9378913F44BD3009A3D84 /* OTRAppDelegate.h */,
 				D9F9378A13F44BD3009A3D84 /* OTRAppDelegate.m */,
-				D9C7463B15350F62003445ED /* OTRSettingsViewController.h */,
-				D9C7463C15350F62003445ED /* OTRSettingsViewController.m */,
+				D9FBD71915472FB400126568 /* Settings */,
 				D9DE274913F4F0A400E335CA /* OTRLoginViewController.h */,
 				D9DE274A13F4F0A400E335CA /* OTRLoginViewController.m */,
 				D99550B1141AD8CD00A82FAC /* OTRAccountsViewController.h */,
@@ -2038,6 +2045,17 @@
 				D9F9378813F44BD3009A3D84 /* Off the Record-Prefix.pch */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		D9FBD71915472FB400126568 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				D9C7463B15350F62003445ED /* OTRSettingsViewController.h */,
+				D9C7463C15350F62003445ED /* OTRSettingsViewController.m */,
+				D9FBD71615472FA700126568 /* OTRSettingTableViewCell.h */,
+				D9FBD71715472FA700126568 /* OTRSettingTableViewCell.m */,
+			);
+			name = Settings;
 			sourceTree = "<group>";
 		};
 		D9FCA7291533A37F009AD599 /* Images */ = {
@@ -2462,6 +2480,8 @@
 				D96495CB15363C0F009A8C33 /* OTRViewSetting.m in Sources */,
 				D96495CF15365B3F009A8C33 /* OTRValueSetting.m in Sources */,
 				D96495D7153668D2009A8C33 /* OTRSettingsGroup.m in Sources */,
+				D9FBD71415472A8400126568 /* OTRDoubleSetting.m in Sources */,
+				D9FBD71815472FA700126568 /* OTRSettingTableViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

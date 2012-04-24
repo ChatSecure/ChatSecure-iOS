@@ -11,7 +11,6 @@
 @interface OTRBoolSetting : OTRValueSetting
 
 @property (nonatomic) BOOL enabled;
-@property (nonatomic, retain) UISwitch *boolSwitch;
 
 - (void) toggle;
 

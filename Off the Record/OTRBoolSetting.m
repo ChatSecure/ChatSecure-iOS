@@ -9,16 +9,14 @@
 #import "OTRBoolSetting.h"
 
 @implementation OTRBoolSetting
-@synthesize boolSwitch, action;
+@synthesize action;
 
 - (id) initWithTitle:(NSString *)newTitle description:(NSString *)newDescription settingsKey:(NSString *)newSettingsKey
 {
     if (self = [super initWithTitle:newTitle description:newDescription settingsKey:newSettingsKey])
     {
         self.action = @selector(toggle);
-        self.boolSwitch = [[UISwitch alloc] init];
-        [boolSwitch addTarget:self action:self.action forControlEvents:UIControlEventValueChanged];
-        boolSwitch.on = [self enabled];
+
 
     }
     return self;
@@ -32,7 +30,7 @@
 - (void) setEnabled:(BOOL)enabled
 {
     [self setValue:[NSNumber numberWithBool:enabled]];
-    [boolSwitch setOn:enabled animated:YES];
+    [self.delegate refreshView];
 }
 
 - (BOOL) enabled

@@ -10,7 +10,7 @@
 #import "OTRViewSetting.h"
 #import "OTRSettingsManager.h"
 
-@interface OTRSettingsViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, OTRViewSettingDelegate>
+@interface OTRSettingsViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, OTRSettingDelegate>
 
 @property (nonatomic, retain) UITableView *settingsTableView;
 @property (nonatomic, retain) OTRSettingsManager *settingsManager;

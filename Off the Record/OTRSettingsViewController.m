@@ -10,6 +10,7 @@
 #import "OTRProtocolManager.h"
 #import "OTRBoolSetting.h"
 #import "Strings.h"
+#import "OTRSettingTableViewCell.h"
 
 @implementation OTRSettingsViewController
 @synthesize settingsTableView, settingsManager;
@@ -66,41 +67,14 @@
 
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
+    OTRSettingTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
 	if (cell == nil)
 	{
-		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"Cell"];
+		cell = [[OTRSettingTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"Cell"];
 	}
     OTRSetting *setting = [settingsManager settingAtIndexPath:indexPath];
-    
-    cell.textLabel.text = setting.title;
-    cell.detailTextLabel.text = setting.description;
-    if(setting.imageName)
-    {
-        cell.imageView.image = [UIImage imageNamed:setting.imageName];
-    }
-    else 
-    {
-        cell.imageView.image = nil;
-    }
-    
-    UIView *accessoryView = nil;
-    if ([setting isKindOfClass:[OTRBoolSetting class]]) {
-        OTRBoolSetting *boolSetting = (OTRBoolSetting*)setting;
-        accessoryView = boolSetting.boolSwitch;
-        cell.accessoryType = UITableViewCellAccessoryNone;
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    } 
-    else if ([setting isKindOfClass:[OTRViewSetting class]])
-    {
-        OTRViewSetting *viewSetting = (OTRViewSetting*)setting;
-        viewSetting.delegate = self;
-        accessoryView = nil;
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        cell.selectionStyle = UITableViewCellSelectionStyleBlue;
-        
-    }
-    cell.accessoryView = accessoryView;
+    setting.delegate = self;
+    cell.otrSetting = setting;
     
     return cell;
 }
@@ -135,6 +109,12 @@
 #pragma clang diagnostic pop
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
+}
+
+#pragma mark OTRSettingDelegate method
+
+- (void) refreshView {
+    [self.settingsTableView reloadData];
 }
 
 #pragma mark OTRSettingViewDelegate method

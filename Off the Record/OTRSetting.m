@@ -9,7 +9,7 @@
 #import "OTRSetting.h"
 
 @implementation OTRSetting
-@synthesize title, description, action, imageName;
+@synthesize title, description, action, imageName, delegate;
 
 - (void) dealloc
 {
@@ -17,6 +17,7 @@
     description = nil;
     self.action = nil;
     self.imageName = nil;
+    self.delegate = nil;
 }
 
 - (id) initWithTitle:(NSString*)newTitle description:(NSString*)newDescription

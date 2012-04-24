@@ -80,4 +80,10 @@
     return [defaults boolForKey:key];
 }
 
++ (double) doubleForOTRSettingKey:(NSString*)key
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    return [defaults doubleForKey:key];
+}
+
 @end

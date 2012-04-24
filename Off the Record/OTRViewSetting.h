@@ -8,7 +8,7 @@
 
 #import "OTRSetting.h"
 
-@protocol OTRViewSettingDelegate <NSObject>
+@protocol OTRViewSettingDelegate <OTRSettingDelegate>
 @required
 - (void)showViewControllerClass:(Class)viewControllerClass;
 @end
