@@ -9,8 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "OTRSetting.h"
 
+
+
 @interface OTRSettingDetailViewController : UIViewController
 
 @property (nonatomic, retain) OTRSetting *otrSetting;
+@property (nonatomic, retain) UIBarButtonItem *saveButton;
+- (void) save:(id)sender;
 
 @end

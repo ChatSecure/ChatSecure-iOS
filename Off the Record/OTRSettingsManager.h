@@ -21,10 +21,12 @@
 @interface OTRSettingsManager : NSObject
 
 @property (nonatomic, strong, readonly) NSMutableArray *settingsGroups;
+@property (nonatomic, strong, readonly) NSDictionary *settingsDictionary;
 
 - (OTRSetting*) settingAtIndexPath:(NSIndexPath*)indexPath;
 - (NSString*) stringForGroupInSection:(NSUInteger)section;
 - (NSUInteger) numberOfSettingsInSection:(NSUInteger)section;
+- (OTRSetting*) settingForOTRSettingKey:(NSString*)key;
 
 + (BOOL) boolForOTRSettingKey:(NSString*)key;
 + (double) doubleForOTRSettingKey:(NSString*)key;

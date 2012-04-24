@@ -14,17 +14,19 @@
 #import "OTRSetting.h"
 #import "OTRBoolSetting.h"
 #import "OTRViewSetting.h"
+#import "OTRDoubleSetting.h"
 
 @interface OTRSettingsManager(Private)
 - (void) populateSettings;
 @end
 
 @implementation OTRSettingsManager
-@synthesize settingsGroups;
+@synthesize settingsGroups, settingsDictionary;
 
 - (void) dealloc
 {
     settingsGroups = nil;
+    settingsDictionary = nil;
 }
 
 - (id) init
@@ -39,21 +41,38 @@
 
 - (void) populateSettings
 {
+    NSMutableDictionary *newSettingsDictionary = [NSMutableDictionary dictionary];
     OTRViewSetting *accountsViewSetting = [[OTRViewSetting alloc] initWithTitle:ACCOUNTS_STRING description:nil viewControllerClass:[OTRAccountsViewController class]];
     OTRSettingsGroup *accountsGroup = [[OTRSettingsGroup alloc] initWithTitle:ACCOUNTS_STRING settings:[NSArray arrayWithObject:accountsViewSetting]];
     [settingsGroups addObject:accountsGroup];
     
+    
+    OTRDoubleSetting *fontSizeSetting = [[OTRDoubleSetting alloc] initWithTitle:FONT_SIZE_STRING description:FONT_SIZE_DESCRIPTION_STRING settingsKey:kOTRSettingKeyFontSize];
+    fontSizeSetting.maxValue = 2.5;
+    fontSizeSetting.minValue = 0.5;
+    fontSizeSetting.numValues = 4;
+    fontSizeSetting.defaultValue = 1.0;
+    fontSizeSetting.isPercentage = YES;
+    OTRSettingsGroup *chatSettingsGroup = [[OTRSettingsGroup alloc] initWithTitle:CHAT_STRING settings:[NSArray arrayWithObject:fontSizeSetting]];
+    [newSettingsDictionary setObject:fontSizeSetting forKey:kOTRSettingKeyFontSize];
+    [settingsGroups addObject:chatSettingsGroup];
+    
+    
     OTRBoolSetting *allowSelfSignedCertificates = [[OTRBoolSetting alloc] initWithTitle:ALLOW_SELF_SIGNED_CERTIFICATES_STRING description:SECURITY_WARNING_STRING settingsKey:kOTRSettingKeyAllowSelfSignedSSL];
     OTRBoolSetting *allowSSLHostnameMismatch = [[OTRBoolSetting alloc] initWithTitle:ALLOW_SSL_HOSTNAME_MISMATCH_STRING description:SECURITY_WARNING_STRING settingsKey:kOTRSettingKeyAllowSSLHostNameMismatch];
     OTRSettingsGroup *xmppGroup = [[OTRSettingsGroup alloc] initWithTitle:@"XMPP" settings:[NSArray arrayWithObjects:allowSelfSignedCertificates, allowSSLHostnameMismatch, nil]];
+    [newSettingsDictionary setObject:allowSelfSignedCertificates forKey:kOTRSettingKeyAllowSelfSignedSSL];
+    [newSettingsDictionary setObject:allowSSLHostnameMismatch forKey:kOTRSettingKeyAllowSSLHostNameMismatch];
     [settingsGroups addObject:xmppGroup];
     
     
 #ifdef CRITTERCISM_ENABLED
     OTRBoolSetting *crittercismSetting = [[OTRBoolSetting alloc] initWithTitle:CRITTERCISM_TITLE_STRING description:CRITTERCISM_DESCRIPTION_STRING settingsKey:kOTRSettingKeyCrittercismOptIn];
     OTRSettingsGroup *otherGroup = [[OTRSettingsGroup alloc] initWithTitle:OTHER_STRING settings:[NSArray arrayWithObject:crittercismSetting]];
+    [newSettingsDictionary setObject:crittercismSetting forKey:kOTRSettingKeyCrittercismOptIn];
     [settingsGroups addObject:otherGroup];
 #endif
+    settingsDictionary = newSettingsDictionary;
 }
 
 - (OTRSetting*) settingAtIndexPath:(NSIndexPath*)indexPath
@@ -84,6 +103,10 @@
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     return [defaults doubleForKey:key];
+}
+
+- (OTRSetting*) settingForOTRSettingKey:(NSString*)key {
+    return [settingsDictionary objectForKey:key];
 }
 
 @end

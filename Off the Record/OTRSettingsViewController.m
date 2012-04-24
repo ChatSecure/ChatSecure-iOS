@@ -12,6 +12,7 @@
 #import "Strings.h"
 #import "OTRSettingTableViewCell.h"
 #import "OTRSettingDetailViewController.h"
+#import "OTRAboutViewController.h"
 
 @implementation OTRSettingsViewController
 @synthesize settingsTableView, settingsManager;
@@ -46,6 +47,9 @@
     self.settingsTableView.delegate = self;
     self.settingsTableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
     [self.view addSubview:settingsTableView];
+    
+    UIBarButtonItem *aboutButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"about_icon.png"] style:UIBarButtonItemStylePlain target:self action:@selector(showAboutScreen)];
+    self.navigationItem.rightBarButtonItem = aboutButton;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -110,6 +114,12 @@
 #pragma clang diagnostic pop
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
+}
+
+-(void)showAboutScreen
+{
+    OTRAboutViewController *aboutController = [[OTRAboutViewController alloc] init];
+    [self.navigationController pushViewController:aboutController animated:YES];
 }
 
 #pragma mark OTRSettingDelegate method

@@ -7,30 +7,59 @@
 //
 
 #import "OTRDoubleSetting.h"
+#import "OTRDoubleSettingViewController.h"
 
 @implementation OTRDoubleSetting
-@synthesize doubleValue;
+@synthesize doubleValue, minValue, maxValue, numValues, defaultValue, isPercentage;
 
 - (id) initWithTitle:(NSString *)newTitle description:(NSString *)newDescription settingsKey:(NSString *)newSettingsKey
 {
     if (self = [super initWithTitle:newTitle description:newDescription settingsKey:newSettingsKey])
     {
         self.action = @selector(editValue);
+        self.defaultValue = 0.0;
+        self.isPercentage = NO;
     }
     return self;
 }
 
 - (void) editValue {
-    
+    if(self.delegate && [self.delegate conformsToProtocol:@protocol(OTRSettingDelegate)]) {
+        [self.delegate otrSetting:self showDetailViewControllerClass:[OTRDoubleSettingViewController class]];
+    }
 }
 
 - (void) setDoubleValue:(double)value {
     [self setValue:[NSNumber numberWithDouble:value]];
-    [self.delegate refreshView];
+    if(self.delegate && [self.delegate conformsToProtocol:@protocol(OTRSettingDelegate)]) {
+        [self.delegate refreshView];
+    }
 }
 
 - (double) doubleValue {
-    return [[self value] doubleValue];
+    NSNumber *value = [self value];
+    if (!value) 
+    {
+        self.doubleValue = defaultValue;
+        return defaultValue;
+    } 
+    else 
+    {
+        return [[self value] doubleValue];
+    }
+}
+
+- (NSString*) stringValue {
+    NSString *text = nil;
+    if(isPercentage) 
+    {
+        text = [NSString stringWithFormat:@"%d%%", (int)([self doubleValue] * 100)];
+    }
+    else 
+    {
+        text = [NSString stringWithFormat:@"%.02f", [self doubleValue]];
+    }
+    return text;
 }
 
 @end

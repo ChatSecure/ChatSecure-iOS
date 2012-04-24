@@ -19,6 +19,7 @@
 		D913A70813FCA9AB00C97C1C /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D913A70713FCA9AB00C97C1C /* QuartzCore.framework */; };
 		D913A70A13FCA9C200C97C1C /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D913A70913FCA9C200C97C1C /* ImageIO.framework */; };
 		D91DAE8615473EB5009D0B74 /* OTRSettingDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D91DAE8515473EB5009D0B74 /* OTRSettingDetailViewController.m */; };
+		D91DAE89154740CE009D0B74 /* OTRDoubleSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D91DAE88154740CE009D0B74 /* OTRDoubleSettingViewController.m */; };
 		D92B775514142F150058A789 /* OTREncryptionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D92B775414142F150058A789 /* OTREncryptionManager.m */; };
 		D95F8E921419C3D00094A634 /* chatsecure_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = D95F8E911419C3D00094A634 /* chatsecure_icon.png */; };
 		D95F8E941419C3E10094A634 /* chatsecure_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D95F8E931419C3E00094A634 /* chatsecure_icon@2x.png */; };
@@ -369,6 +370,8 @@
 		D913A70913FCA9C200C97C1C /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		D91DAE8415473EB5009D0B74 /* OTRSettingDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRSettingDetailViewController.h; sourceTree = "<group>"; };
 		D91DAE8515473EB5009D0B74 /* OTRSettingDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRSettingDetailViewController.m; sourceTree = "<group>"; };
+		D91DAE87154740CD009D0B74 /* OTRDoubleSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRDoubleSettingViewController.h; sourceTree = "<group>"; };
+		D91DAE88154740CE009D0B74 /* OTRDoubleSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRDoubleSettingViewController.m; sourceTree = "<group>"; };
 		D92B775314142F150058A789 /* OTREncryptionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTREncryptionManager.h; sourceTree = "<group>"; };
 		D92B775414142F150058A789 /* OTREncryptionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTREncryptionManager.m; sourceTree = "<group>"; };
 		D95F8E911419C3D00094A634 /* chatsecure_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = chatsecure_icon.png; path = ../chatsecure_icon.png; sourceTree = "<group>"; };
@@ -1010,6 +1013,17 @@
 				D90B80A813FC7026006EFF3D /* MBProgressHUD.m */,
 			);
 			path = MBProgressHUD;
+			sourceTree = "<group>";
+		};
+		D91DAE8A154740D5009D0B74 /* Detail Views */ = {
+			isa = PBXGroup;
+			children = (
+				D91DAE8415473EB5009D0B74 /* OTRSettingDetailViewController.h */,
+				D91DAE8515473EB5009D0B74 /* OTRSettingDetailViewController.m */,
+				D91DAE87154740CD009D0B74 /* OTRDoubleSettingViewController.h */,
+				D91DAE88154740CE009D0B74 /* OTRDoubleSettingViewController.m */,
+			);
+			name = "Detail Views";
 			sourceTree = "<group>";
 		};
 		D96219AC14CB765B007EF05D /* XMPPFramework */ = {
@@ -2055,8 +2069,7 @@
 			children = (
 				D9C7463B15350F62003445ED /* OTRSettingsViewController.h */,
 				D9C7463C15350F62003445ED /* OTRSettingsViewController.m */,
-				D91DAE8415473EB5009D0B74 /* OTRSettingDetailViewController.h */,
-				D91DAE8515473EB5009D0B74 /* OTRSettingDetailViewController.m */,
+				D91DAE8A154740D5009D0B74 /* Detail Views */,
 				D9FBD71615472FA700126568 /* OTRSettingTableViewCell.h */,
 				D9FBD71715472FA700126568 /* OTRSettingTableViewCell.m */,
 			);
@@ -2488,6 +2501,7 @@
 				D9FBD71415472A8400126568 /* OTRDoubleSetting.m in Sources */,
 				D9FBD71815472FA700126568 /* OTRSettingTableViewCell.m in Sources */,
 				D91DAE8615473EB5009D0B74 /* OTRSettingDetailViewController.m in Sources */,
+				D91DAE89154740CE009D0B74 /* OTRDoubleSettingViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2622,10 +2636,6 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Off the Record/Off the Record-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					CRITTERCISM_ENABLED,
-					"DEBUG=1",
-				);
 				GCC_THUMB_SUPPORT = NO;
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
 				INFOPLIST_FILE = "Off the Record/Off the Record-Info.plist";

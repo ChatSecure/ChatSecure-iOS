@@ -11,6 +11,7 @@
 #import "privkey.h"
 #import <QuartzCore/QuartzCore.h>
 #import "Strings.h"
+#import "OTRDoubleSetting.h"
 
 #define kTabBarHeight 49
 #define kSendButtonWidth 60
@@ -456,7 +457,11 @@
 
 -(void)updateChatHistory
 {
-    [chatHistoryTextView loadHTMLString:buddy.chatHistory baseURL:[NSURL URLWithString:@"/"]];
+    if (buddy.chatHistory) {
+        OTRDoubleSetting *fontSizeSetting = (OTRDoubleSetting*)[protocolManager.settingsManager settingForOTRSettingKey:kOTRSettingKeyFontSize];
+        NSString *htmlString = [NSString stringWithFormat:@"<html><head><style type=\"text/css\">p{font-size:%@;}</style></head><body>%@</body></html>",fontSizeSetting.stringValue, buddy.chatHistory];
+        [chatHistoryTextView loadHTMLString:htmlString baseURL:[NSURL URLWithString:@"/"]];
+    }
 }
 
 
@@ -559,6 +564,7 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [self refreshView];
+    [self updateChatHistory];
 }
 
 /*- (void)debugButton:(UIBarButtonItem *)sender

@@ -28,13 +28,13 @@
 - (id) value
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    return [defaults valueForKey:key];
+    return [defaults objectForKey:key];
 }
 
 - (void) setValue:(id)settingsValue
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setValue:settingsValue forKey:key];
+    [defaults setObject:settingsValue forKey:key];
     [defaults synchronize];
 }
 

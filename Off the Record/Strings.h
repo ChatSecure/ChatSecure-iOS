@@ -66,5 +66,14 @@
 #define ALLOW_SSL_HOSTNAME_MISMATCH_STRING NSLocalizedString(@"Allow SSL Hostname Mismatch", @"Title for settings cell on whether or not the XMPP library should allow SSL hostname mismatch")
 #define SECURITY_WARNING_STRING NSLocalizedString(@"Warning: Use with caution. This may reduce your security.", @"Cell description text that warns users that enabling that option may reduce their security.")
 
+#define FONT_SIZE_STRING NSLocalizedString(@"Font Size", @"Size for the font in the chat screen")
+#define FONT_SIZE_DESCRIPTION_STRING NSLocalizedString(@"Size for font in chat view", @"description for what the font size setting affects")
+
 // OTRSettingsViewController
 #define SETTINGS_STRING NSLocalizedString(@"Settings", @"Title for the Settings screen")
+
+// OTRSettingsDetailViewController
+#define SAVE_STRING NSLocalizedString(@"Save", "Title for button for saving a setting")
+// OTRDoubleSettingViewController
+#define NEW_STRING NSLocalizedString(@"New", "For a new settings value")
+#define OLD_STRING NSLocalizedString(@"Old", "For an old settings value")

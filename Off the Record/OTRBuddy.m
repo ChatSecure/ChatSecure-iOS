@@ -52,14 +52,6 @@
     return newBuddy;
 }
 
-- (int) fontSize {
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-        return 7.0;
-    } else {
-        return 5.0;
-    }
-}
-
 
 -(void)sendMessage:(NSString *)message secure:(BOOL)secure
 {
@@ -81,9 +73,9 @@
         //NSLog(@"encoded message: %@",encodedMessage.message);
         [OTRMessage sendMessage:encodedMessage];    
         
-        NSString *username = [NSString stringWithFormat:@"<FONT SIZE=%d COLOR=\"#0000ff\"><b>Me:</b></FONT>",[self fontSize]];
+        NSString *username = [NSString stringWithFormat:@"<p><strong style=\"color:blue\">Me:</strong>"];
         
-        [chatHistory appendFormat:@"%@ <FONT SIZE=%d>%@</FONT><br>",username,[self fontSize], message];        
+        [chatHistory appendFormat:@"%@ %@</p>",username, message];
     }
 }
 
@@ -92,13 +84,14 @@
 {
     //NSLog(@"received: %@",message);
     if (message) {
-        // Strip the shit out of it, but hoepfully you're talking with someone who is trusted in the first place
+        // Strip the shit out of it, but hopefully you're talking with someone who is trusted in the first place
+        // TODO: fix this so it doesn't break some cyrillic encodings
         NSString *rawMessage = [[[[message stringByStrippingHTML]stringByConvertingHTMLToPlainText]stringByEncodingHTMLEntities] stringByLinkifyingURLs];
         self.lastMessage = rawMessage;
         
-        NSString *username = [NSString stringWithFormat:@"<FONT SIZE=%d COLOR=\"#ff0000\"><b>%@:</b></FONT>",[self fontSize],self.displayName];
+        NSString *username = [NSString stringWithFormat:@"<p><strong style=\"color:red\">%@:</strong>",self.displayName];
         
-        [chatHistory appendFormat:@"%@ <FONT SIZE=%d>%@</FONT><br>",username,[self fontSize],rawMessage];
+        [chatHistory appendFormat:@"%@ %@</p>",username,rawMessage];
         [[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];
     }
 }

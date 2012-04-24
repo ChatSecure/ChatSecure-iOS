@@ -8,7 +8,6 @@
 
 #import "OTRAccountsViewController.h"
 #import "OTRProtocolManager.h"
-#import "OTRAboutViewController.h"
 #import "Strings.h"
 
 @implementation OTRAccountsViewController
@@ -52,8 +51,6 @@
     self.view.backgroundColor = [UIColor whiteColor];
     accountsTableView.backgroundView = nil;
     accountsTableView.backgroundColor = [UIColor clearColor];
-    aboutButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"about_icon.png"] style:UIBarButtonItemStylePlain target:self action:@selector(showAboutScreen)];
-    self.navigationItem.rightBarButtonItem = aboutButton;
     
     [[NSNotificationCenter defaultCenter]
      addObserver:self
@@ -98,18 +95,13 @@
     //[[[OTRProtocolManager sharedInstance] buddyList] removeOscarBuddies];
     [accountsTableView reloadData];
 }
+
 -(void)xmppLoggedOff
 {
     isXMPPloggedIn = NO;
     [[[OTRProtocolManager sharedInstance] buddyList] removeXmppBuddies];
     [accountsTableView reloadData];
     
-}
-
--(void)showAboutScreen
-{
-    OTRAboutViewController *aboutController = [[OTRAboutViewController alloc] init];
-    [self.navigationController pushViewController:aboutController animated:YES];
 }
 
                                                                            

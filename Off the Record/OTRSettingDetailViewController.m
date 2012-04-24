@@ -7,12 +7,30 @@
 //
 
 #import "OTRSettingDetailViewController.h"
+#import "Strings.h"
 
 @implementation OTRSettingDetailViewController
-@synthesize otrSetting;
+@synthesize otrSetting, saveButton;
 
 - (void) dealloc {
+    self.saveButton = nil;
     self.otrSetting = nil;
+}
+
+- (id) init {
+    if (self = [super init]) {
+        self.saveButton = [[UIBarButtonItem alloc] initWithTitle:SAVE_STRING style:UIBarButtonItemStyleDone target:self action:@selector(save:)];
+    }
+    return self;
+}
+
+- (void) viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    self.navigationItem.rightBarButtonItem = saveButton;
+}
+
+- (void) save:(id)sender {
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 @end
