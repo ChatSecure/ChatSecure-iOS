@@ -8,8 +8,11 @@
 
 #import "OTRValueSetting.h"
 
+
 @interface OTRDoubleSetting : OTRValueSetting
 
 @property (nonatomic) double doubleValue;
+
+- (void) editValue;
 
 @end

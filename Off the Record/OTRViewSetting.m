@@ -23,7 +23,7 @@
 
 - (void) showView
 {
-    [self.delegate showViewControllerClass:viewControllerClass];
+    [self.delegate otrSetting:self showDetailViewControllerClass:viewControllerClass];
 }
 
 

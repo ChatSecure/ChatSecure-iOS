@@ -8,15 +8,10 @@
 
 #import "OTRSetting.h"
 
-@protocol OTRViewSettingDelegate <OTRSettingDelegate>
-@required
-- (void)showViewControllerClass:(Class)viewControllerClass;
-@end
 
 @interface OTRViewSetting : OTRSetting
 
 @property (nonatomic, readonly) Class viewControllerClass;
-@property (nonatomic, retain) id<OTRViewSettingDelegate> delegate;
 
 - (id) initWithTitle:(NSString*)newTitle description:(NSString*)newDescription viewControllerClass:(Class)newViewControllerClass;
 

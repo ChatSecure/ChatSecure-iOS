@@ -11,6 +11,7 @@
 #import "OTRBoolSetting.h"
 #import "Strings.h"
 #import "OTRSettingTableViewCell.h"
+#import "OTRSettingDetailViewController.h"
 
 @implementation OTRSettingsViewController
 @synthesize settingsTableView, settingsManager;
@@ -113,14 +114,20 @@
 
 #pragma mark OTRSettingDelegate method
 
-- (void) refreshView {
+- (void) refreshView 
+{
     [self.settingsTableView reloadData];
 }
 
 #pragma mark OTRSettingViewDelegate method
-- (void) showViewControllerClass:(Class)viewControllerClass
+- (void) otrSetting:(OTRSetting*)setting showDetailViewControllerClass:(Class)viewControllerClass 
 {
     UIViewController *viewController = [[viewControllerClass alloc] init];
+    if ([viewController isKindOfClass:[OTRSettingDetailViewController class]]) 
+    {
+        OTRSettingDetailViewController *detailSettingViewController = (OTRSettingDetailViewController*)viewController;
+        detailSettingViewController.otrSetting = setting;
+    }
     [self.navigationController pushViewController:viewController animated:YES];
 }
 

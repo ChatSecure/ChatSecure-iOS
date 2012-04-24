@@ -8,6 +8,7 @@
 
 #import "OTRSetting.h"
 
+
 @interface OTRValueSetting : OTRSetting
 
 @property (nonatomic, readonly) NSString *key;

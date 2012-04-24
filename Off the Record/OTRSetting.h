@@ -8,9 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
+@class OTRSetting;
+
 @protocol OTRSettingDelegate <NSObject>
 @required
 - (void) refreshView;
+- (void) otrSetting:(OTRSetting*)setting showDetailViewControllerClass:(Class)viewControllerClass;
 @end
 
 @interface OTRSetting : NSObject

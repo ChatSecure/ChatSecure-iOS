@@ -18,6 +18,7 @@
 		D913A70413FCA95700C97C1C /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D913A70313FCA95700C97C1C /* CoreText.framework */; };
 		D913A70813FCA9AB00C97C1C /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D913A70713FCA9AB00C97C1C /* QuartzCore.framework */; };
 		D913A70A13FCA9C200C97C1C /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D913A70913FCA9C200C97C1C /* ImageIO.framework */; };
+		D91DAE8615473EB5009D0B74 /* OTRSettingDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D91DAE8515473EB5009D0B74 /* OTRSettingDetailViewController.m */; };
 		D92B775514142F150058A789 /* OTREncryptionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D92B775414142F150058A789 /* OTREncryptionManager.m */; };
 		D95F8E921419C3D00094A634 /* chatsecure_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = D95F8E911419C3D00094A634 /* chatsecure_icon.png */; };
 		D95F8E941419C3E10094A634 /* chatsecure_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D95F8E931419C3E00094A634 /* chatsecure_icon@2x.png */; };
@@ -366,6 +367,8 @@
 		D913A70513FCA96B00C97C1C /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
 		D913A70713FCA9AB00C97C1C /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		D913A70913FCA9C200C97C1C /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
+		D91DAE8415473EB5009D0B74 /* OTRSettingDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRSettingDetailViewController.h; sourceTree = "<group>"; };
+		D91DAE8515473EB5009D0B74 /* OTRSettingDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRSettingDetailViewController.m; sourceTree = "<group>"; };
 		D92B775314142F150058A789 /* OTREncryptionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTREncryptionManager.h; sourceTree = "<group>"; };
 		D92B775414142F150058A789 /* OTREncryptionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTREncryptionManager.m; sourceTree = "<group>"; };
 		D95F8E911419C3D00094A634 /* chatsecure_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = chatsecure_icon.png; path = ../chatsecure_icon.png; sourceTree = "<group>"; };
@@ -965,7 +968,7 @@
 		D9F9378A13F44BD3009A3D84 /* OTRAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OTRAppDelegate.m; sourceTree = "<group>"; };
 		D9FBD71215472A8400126568 /* OTRDoubleSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRDoubleSetting.h; sourceTree = "<group>"; };
 		D9FBD71315472A8400126568 /* OTRDoubleSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRDoubleSetting.m; sourceTree = "<group>"; };
-		D9FBD71615472FA700126568 /* OTRSettingTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; path = OTRSettingTableViewCell.h; sourceTree = "<group>"; };
+		D9FBD71615472FA700126568 /* OTRSettingTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRSettingTableViewCell.h; sourceTree = "<group>"; };
 		D9FBD71715472FA700126568 /* OTRSettingTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRSettingTableViewCell.m; sourceTree = "<group>"; };
 		D9FCA72B1533A3B6009AD599 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = "Off the Record/de.lproj/InfoPlist.strings"; sourceTree = SOURCE_ROOT; };
 		D9FCA72C1533A3B6009AD599 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = "Off the Record/de.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
@@ -1161,10 +1164,10 @@
 			children = (
 				D9C7463E153512DE003445ED /* OTRSettingsManager.h */,
 				D9C7463F153512DE003445ED /* OTRSettingsManager.m */,
-				D96495C2153629FE009A8C33 /* OTRSetting.h */,
-				D96495C3153629FE009A8C33 /* OTRSetting.m */,
 				D96495D5153668D2009A8C33 /* OTRSettingsGroup.h */,
 				D96495D6153668D2009A8C33 /* OTRSettingsGroup.m */,
+				D96495C2153629FE009A8C33 /* OTRSetting.h */,
+				D96495C3153629FE009A8C33 /* OTRSetting.m */,
 				D96495C915363C0F009A8C33 /* OTRViewSetting.h */,
 				D96495CA15363C0F009A8C33 /* OTRViewSetting.m */,
 				D96495D315366004009A8C33 /* Value */,
@@ -2052,6 +2055,8 @@
 			children = (
 				D9C7463B15350F62003445ED /* OTRSettingsViewController.h */,
 				D9C7463C15350F62003445ED /* OTRSettingsViewController.m */,
+				D91DAE8415473EB5009D0B74 /* OTRSettingDetailViewController.h */,
+				D91DAE8515473EB5009D0B74 /* OTRSettingDetailViewController.m */,
 				D9FBD71615472FA700126568 /* OTRSettingTableViewCell.h */,
 				D9FBD71715472FA700126568 /* OTRSettingTableViewCell.m */,
 			);
@@ -2482,6 +2487,7 @@
 				D96495D7153668D2009A8C33 /* OTRSettingsGroup.m in Sources */,
 				D9FBD71415472A8400126568 /* OTRDoubleSetting.m in Sources */,
 				D9FBD71815472FA700126568 /* OTRSettingTableViewCell.m in Sources */,
+				D91DAE8615473EB5009D0B74 /* OTRSettingDetailViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
