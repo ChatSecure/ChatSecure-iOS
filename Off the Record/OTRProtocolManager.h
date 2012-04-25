@@ -14,6 +14,9 @@
 #import "OTRBuddyList.h"
 #import "OTRSettingsManager.h"
 
+#define kOTRProtocolTypeXMPP @"xmpp"
+#define kOTRProtocolTypeAIM @"prpl-oscar"
+
 @interface OTRProtocolManager : NSObject
 
 @property (nonatomic, retain) OTRBuddyList *buddyList;

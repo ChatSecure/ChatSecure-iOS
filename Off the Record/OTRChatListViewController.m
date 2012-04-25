@@ -15,6 +15,11 @@
 @synthesize buddyController;
 @synthesize chatListTableView;
 
+
+- (void) dealloc {
+    
+}
+
 - (id)init {
     if (self = [super init]) {
         self.title = CONVERSATIONS_STRING;
@@ -45,7 +50,40 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    [[NSNotificationCenter defaultCenter]
+     addObserver:self
+     selector:@selector(aimLoggedOff)
+     name:@"OscarLogoutNotification"
+     object:nil ];
+    
+    [[NSNotificationCenter defaultCenter]
+     addObserver:self
+     selector:@selector(xmppLoggedOff)
+     name:@"XMPPLogoutNotification"
+     object:nil ];
 }
+
+- (void) aimLoggedOff {
+    [self removeConversationsForProtocol:kOTRProtocolTypeAIM];
+}
+
+- (void) xmppLoggedOff {
+    [self removeConversationsForProtocol:kOTRProtocolTypeXMPP];
+}
+
+- (void) removeConversationsForProtocol:(NSString*)protocol {
+    NSMutableSet *activeConversations = [OTRProtocolManager sharedInstance].buddyList.activeConversations;
+    NSSet *iterableConversations = [activeConversations copy];
+
+    
+    for (OTRBuddy *buddy in iterableConversations) {
+        if ([buddy.protocol isEqualToString:protocol]) {
+            [activeConversations removeObject:buddy];
+        }
+    }
+    [chatListTableView reloadData];
+}
+
 
 -(void)viewWillAppear:(BOOL)animated
 {
@@ -60,6 +98,9 @@
 {
     [super viewDidUnload];
     self.chatListTableView = nil;
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"OscarLogoutNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"XMPPLogoutNotification" object:nil];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {

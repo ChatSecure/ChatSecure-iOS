@@ -64,7 +64,7 @@
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         return 50.0;
     } else {
-        return 30.0;
+        return 44.0;
     }
 }
 
