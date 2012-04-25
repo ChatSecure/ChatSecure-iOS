@@ -72,16 +72,17 @@
 }
 
 - (void) removeConversationsForProtocol:(NSString*)protocol {
-    NSMutableSet *activeConversations = [OTRProtocolManager sharedInstance].buddyList.activeConversations;
-    NSSet *iterableConversations = [activeConversations copy];
-
-    
-    for (OTRBuddy *buddy in iterableConversations) {
-        if ([buddy.protocol isEqualToString:protocol]) {
-            [activeConversations removeObject:buddy];
+    if ([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyDeleteOnDisconnect]) {
+        NSMutableSet *activeConversations = [OTRProtocolManager sharedInstance].buddyList.activeConversations;
+        NSSet *iterableConversations = [activeConversations copy];
+        
+        for (OTRBuddy *buddy in iterableConversations) {
+            if ([buddy.protocol isEqualToString:protocol]) {
+                [activeConversations removeObject:buddy];
+            }
         }
+        [chatListTableView reloadData];
     }
-    [chatListTableView reloadData];
 }
 
 

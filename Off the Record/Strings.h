@@ -14,16 +14,19 @@
 #define CANCEL_STRING NSLocalizedString(@"Cancel", @"Cancel an alert window")
 #define INITIATE_ENCRYPTED_CHAT_STRING NSLocalizedString(@"Initiate Encrypted Chat", @"Shown when starting an encrypted chat session")
 #define VERIFY_STRING NSLocalizedString(@"Verify", @"Shown when verifying fingerprints")
-#define SEND_STRING NSLocalizedString(@"Send", "For sending a message")
-#define OK_STRING NSLocalizedString(@"OK", "Accept the dialog")
+#define SEND_STRING NSLocalizedString(@"Send", @"For sending a message")
+#define OK_STRING NSLocalizedString(@"OK", @"Accept the dialog")
 
 // Used in OTRChatViewController
 #define YOUR_FINGERPRINT_STRING NSLocalizedString(@"Fingerprint for you", @"your fingerprint")
-#define THEIR_FINGERPRINT_STRING NSLocalizedString(@"Purported fingerprint for", "the alleged fingerprint of their other person")
+#define THEIR_FINGERPRINT_STRING NSLocalizedString(@"Purported fingerprint for", @"the alleged fingerprint of their other person")
 #define SECURE_CONVERSATION_STRING NSLocalizedString(@"You must be in a secure conversation first.", @"Inform user that they must be secure their conversation before doing that action")
 #define VERIFY_FINGERPRINT_STRING NSLocalizedString(@"Verify Fingerprint", "Title of the dialog for fingerprint verification")
 #define CHAT_INSTRUCTIONS_LABEL_STRING NSLocalizedString(@"Log in on the Accounts tab and then select a buddy from the Buddy List to start chatting.", @"Instructions on how to start using the program")
-#define OPEN_IN_SAFARI_STRING NSLocalizedString(@"Open in Safari", "Shown when trying to open a link, asking if they want to switch to Safari to view it")
+#define OPEN_IN_SAFARI_STRING NSLocalizedString(@"Open in Safari", @"Shown when trying to open a link, asking if they want to switch to Safari to view it")
+#define DISCONNECTED_TITLE_STRING NSLocalizedString(@"Disconnected", @"Title of alert when user is disconnected from protocol")
+#define DISCONNECTED_MESSAGE_STRING NSLocalizedString(@"You have disconnected.", @"Message shown when user is disconnected")
+#define DISCONNECTION_WARNING_STRING NSLocalizedString(@"When you leave this conversation it will be deleted forever.", @"Warn user that conversation will be deleted after leaving it")
 
 // OTRBuddyListViewController
 #define IGNORE_STRING NSLocalizedString(@"Ignore", @"Ignore an incoming message")
@@ -36,8 +39,8 @@
 #define ERROR_STRING NSLocalizedString(@"Error!", "Title of error message popup box")
 #define OSCAR_FAIL_STRING NSLocalizedString(@"Failed to start authenticating. Please try again.", @"Authentication failed, tell user to try again")
 #define XMPP_FAIL_STRING NSLocalizedString(@"Failed to connect to XMPP server. Please check your login credentials and internet connection and try again.", @"Message when cannot connect to XMPP server")
-#define LOGGING_IN_STRING NSLocalizedString(@"Logging in...", "shown during the login proceess")
-#define USER_PASS_BLANK_STRING NSLocalizedString(@"You must enter a username and a password to login.", "error message shown when user doesnt fill in a username or password")
+#define LOGGING_IN_STRING NSLocalizedString(@"Logging in...", @"shown during the login proceess")
+#define USER_PASS_BLANK_STRING NSLocalizedString(@"You must enter a username and a password to login.", @"error message shown when user doesnt fill in a username or password")
 
 // OTRAccountsViewController
 #define AIM_STRING NSLocalizedString(@"AOL Instant Messenger", "the name for AIM")
@@ -62,10 +65,11 @@
 #define CRITTERCISM_TITLE_STRING NSLocalizedString(@"Send Crash Reports", @"Title for crash reports settings switch")
 #define CRITTERCISM_DESCRIPTION_STRING NSLocalizedString(@"Automatically send anonymous crash logs (opt-in)", @"Description for crash reports settings switch")
 #define OTHER_STRING NSLocalizedString(@"Other", @"Title for other miscellaneous settings group")
-#define ALLOW_SELF_SIGNED_CERTIFICATES_STRING NSLocalizedString(@"Allow Self-Signed SSL", @"Title for settings cell on whether or not the XMPP library should allow self-signed SSL certificates")
-#define ALLOW_SSL_HOSTNAME_MISMATCH_STRING NSLocalizedString(@"Allow SSL Hostname Mismatch", @"Title for settings cell on whether or not the XMPP library should allow SSL hostname mismatch")
-#define SECURITY_WARNING_STRING NSLocalizedString(@"Warning: Use with caution. This may reduce your security.", @"Cell description text that warns users that enabling that option may reduce their security.")
-
+#define ALLOW_SELF_SIGNED_CERTIFICATES_STRING NSLocalizedString(@"Self-Signed SSL", @"Title for settings cell on whether or not the XMPP library should allow self-signed SSL certificates")
+#define ALLOW_SSL_HOSTNAME_MISMATCH_STRING NSLocalizedString(@"Hostname Mismatch", @"Title for settings cell on whether or not the XMPP library should allow SSL hostname mismatch")
+#define SECURITY_WARNING_STRING NSLocalizedString(@"Warning: Use with caution! This may reduce your security.", @"Cell description text that warns users that enabling that option may reduce their security.")
+#define DELETE_CONVERSATIONS_ON_DISCONNECT_TITLE_STRING NSLocalizedString(@"Auto-delete", @"Title for automatic conversation deletion setting")
+#define DELETE_CONVERSATIONS_ON_DISCONNECT_DESCRIPTION_STRING NSLocalizedString(@"Delete chats on disconnect", @"Description for automatic conversation deletion")
 #define FONT_SIZE_STRING NSLocalizedString(@"Font Size", @"Size for the font in the chat screen")
 #define FONT_SIZE_DESCRIPTION_STRING NSLocalizedString(@"Size for font in chat view", @"description for what the font size setting affects")
 
@@ -77,3 +81,4 @@
 // OTRDoubleSettingViewController
 #define NEW_STRING NSLocalizedString(@"New", "For a new settings value")
 #define OLD_STRING NSLocalizedString(@"Old", "For an old settings value")
+

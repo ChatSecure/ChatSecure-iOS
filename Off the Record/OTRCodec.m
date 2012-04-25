@@ -25,7 +25,7 @@ static OtrlPolicy policy_cb(void *opdata, ConnContext *context)
 static const char *protocol_name_cb(void *opdata, const char *protocol)
 {
     //return "prpl-oscar";
-    NSLog(@"protocol: %s",protocol);
+    //NSLog(@"protocol: %s",protocol);
     return protocol;
 }
 
@@ -222,7 +222,7 @@ static void still_secure_cb(void *opdata, ConnContext *context, int is_reply)
 static void log_message_cb(void *opdata, const char *message)
 {
     //purple_debug_info("otr", message);
-    NSLog(@"otr: %s",message);
+    //NSLog(@"otr: %s",message);
     
 }
 
@@ -294,7 +294,7 @@ static OtrlMessageAppOps ui_ops = {
     
     
     ignore_message = otrl_message_receiving(userstate, &ui_ops, NULL,[myAccountName UTF8String], [protocol UTF8String], [friendAccount UTF8String], [message UTF8String], &newmessage, NULL, NULL, NULL);
-    NSLog(@"ignore message: %d",ignore_message);
+    //NSLog(@"ignore message: %d",ignore_message);
     NSString *newMessage;
     
     
@@ -331,14 +331,14 @@ static OtrlMessageAppOps ui_ops = {
     NSString *recipientAccount = theMessage.recipient;
     NSString *protocol = theMessage.protocol;
     NSString *sendingAccount = theMessage.sender;
-    NSLog(@"inside encodeMessage: %@ %@ %@ %@",message,recipientAccount,protocol,sendingAccount);
+    //NSLog(@"inside encodeMessage: %@ %@ %@ %@",message,recipientAccount,protocol,sendingAccount);
     OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
     
     err = otrl_message_sending(protocolManager.encryptionManager.userState, &ui_ops, NULL,
                                [sendingAccount UTF8String], [protocol UTF8String], [recipientAccount UTF8String], [message UTF8String], NULL, &newmessage,
                                NULL, NULL);
     NSString *newMessage;
-    NSLog(@"newmessage char: %s",newmessage);
+    //NSLog(@"newmessage char: %s",newmessage);
     if(newmessage)
         newMessage = [NSString stringWithUTF8String:newmessage];
     else

@@ -53,8 +53,11 @@
     fontSizeSetting.numValues = 4;
     fontSizeSetting.defaultValue = 1.0;
     fontSizeSetting.isPercentage = YES;
-    OTRSettingsGroup *chatSettingsGroup = [[OTRSettingsGroup alloc] initWithTitle:CHAT_STRING settings:[NSArray arrayWithObject:fontSizeSetting]];
+
     [newSettingsDictionary setObject:fontSizeSetting forKey:kOTRSettingKeyFontSize];
+    OTRBoolSetting *deletedDisconnectedConversations = [[OTRBoolSetting alloc] initWithTitle:DELETE_CONVERSATIONS_ON_DISCONNECT_TITLE_STRING description:DELETE_CONVERSATIONS_ON_DISCONNECT_DESCRIPTION_STRING settingsKey:kOTRSettingKeyDeleteOnDisconnect];
+    [newSettingsDictionary setObject:deletedDisconnectedConversations forKey:kOTRSettingKeyDeleteOnDisconnect];
+    OTRSettingsGroup *chatSettingsGroup = [[OTRSettingsGroup alloc] initWithTitle:CHAT_STRING settings:[NSArray arrayWithObjects:fontSizeSetting, deletedDisconnectedConversations, nil]];
     [settingsGroups addObject:chatSettingsGroup];
     
     

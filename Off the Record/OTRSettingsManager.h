@@ -17,6 +17,7 @@
 #define kOTRSettingKeyAllowSSLHostNameMismatch @"kOTRSettingKeyAllowSSLHostNameMismatch"
 
 #define kOTRSettingKeyFontSize @"kOTRSettingKeyFontSize"
+#define kOTRSettingKeyDeleteOnDisconnect @"kOTRSettingKeyDeleteOnDisconnect"
 
 @interface OTRSettingsManager : NSObject
 

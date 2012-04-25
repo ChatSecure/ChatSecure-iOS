@@ -283,6 +283,26 @@
     //turn off scrolling and set the font details.
     //chatBox.scrollEnabled = NO;
     //chatBox.font = [UIFont fontWithName:@"Helvetica" size:14]; 
+    [[NSNotificationCenter defaultCenter]
+     addObserver:self
+     selector:@selector(showDisconnectionAlert:)
+     name:@"OscarLogoutNotification"
+     object:nil ];
+    
+    [[NSNotificationCenter defaultCenter]
+     addObserver:self
+     selector:@selector(showDisconnectionAlert:)
+     name:@"XMPPLogoutNotification"
+     object:nil ];
+}
+
+- (void) showDisconnectionAlert:(NSNotification*)notification {
+    NSMutableString *message = [NSMutableString stringWithString:DISCONNECTED_MESSAGE_STRING];
+    if ([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyDeleteOnDisconnect]) {
+        [message appendFormat:@" %@", DISCONNECTION_WARNING_STRING];
+    }
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:DISCONNECTED_TITLE_STRING message:message delegate:nil cancelButtonTitle:OK_STRING otherButtonTitles: nil];
+    [alert show];
 }
 
 - (void) refreshContext {

@@ -89,7 +89,7 @@ static OTRProtocolManager *sharedManager = nil;
     OTRMessage *message = [notification.userInfo objectForKey:@"message"];
     NSString *protocol = message.protocol;
     
-    NSLog(@"send message (%@): %@", protocol, message.message);
+    //NSLog(@"send message (%@): %@", protocol, message.message);
     
     
     if([protocol isEqualToString:@"xmpp"])
