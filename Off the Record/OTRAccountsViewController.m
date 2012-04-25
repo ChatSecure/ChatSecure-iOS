@@ -86,19 +86,18 @@
     CGFloat accountsTableViewYOrigin = logoView.frame.origin.y + logoView.frame.size.height + 10;
     accountsTableView.frame = CGRectMake(0, accountsTableViewYOrigin, self.view.frame.size.width, self.view.frame.size.height-accountsTableViewYOrigin);
     accountsTableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
-
 }
 
 -(void)aimLoggedOff
 {
-    isAIMloggedIn = NO;
+    [OTRProtocolManager sharedInstance].oscarManager.loggedIn = NO;
     //[[[OTRProtocolManager sharedInstance] buddyList] removeOscarBuddies];
     [accountsTableView reloadData];
 }
 
 -(void)xmppLoggedOff
 {
-    isXMPPloggedIn = NO;
+    [OTRProtocolManager sharedInstance].xmppManager.isXmppConnected = NO;
     [[[OTRProtocolManager sharedInstance] buddyList] removeXmppBuddies];
     [accountsTableView reloadData];
     
@@ -107,13 +106,13 @@
                                                                            
 -(void)oscarLoggedInSuccessfully
 {
-    isAIMloggedIn = YES;
+    [OTRProtocolManager sharedInstance].oscarManager.loggedIn = YES;
     [self accountLoggedIn];
 }
 
 -(void)xmppLoggedInSuccessfully
 {
-    isXMPPloggedIn = YES;
+    [OTRProtocolManager sharedInstance].xmppManager.isXmppConnected = YES;
     [self accountLoggedIn];
 }
 
@@ -168,7 +167,7 @@
     {
         cell.textLabel.text = AIM_STRING;
         
-        if(isAIMloggedIn)
+        if([OTRProtocolManager sharedInstance].oscarManager.loggedIn)
         {
             cell.detailTextLabel.text = LOGOUT_STRING;
         }
@@ -183,7 +182,7 @@
     {
         cell.textLabel.text = XMPP_STRING;
         
-        if(isXMPPloggedIn)
+        if([OTRProtocolManager sharedInstance].xmppManager.isXmppConnected)
         {
             cell.detailTextLabel.text = LOGOUT_STRING;
         }
@@ -202,7 +201,7 @@
 {
     if(indexPath.row == 0) // AIM
     {
-        if(!isAIMloggedIn)
+        if(![OTRProtocolManager sharedInstance].oscarManager.loggedIn)
         {
             OTRLoginViewController *loginViewController = [[OTRLoginViewController alloc] init];
             
@@ -226,7 +225,7 @@
     }
     else
     {
-        if(!isXMPPloggedIn)
+        if(![OTRProtocolManager sharedInstance].xmppManager.isXmppConnected)
         {
             OTRLoginViewController *loginViewController = [[OTRLoginViewController alloc] init];
             

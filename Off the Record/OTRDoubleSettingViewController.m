@@ -27,7 +27,6 @@
         self.valuePicker = [[UIPickerView alloc] init];
         self.valuePicker.delegate = self;
         self.valuePicker.dataSource = self;
-        self.title = otrSetting.title;
     }
     return self;
 }

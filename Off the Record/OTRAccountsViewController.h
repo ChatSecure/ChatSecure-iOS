@@ -13,9 +13,6 @@
 {
     UITableView *accountsTableView;
     OTRLoginViewController *loginController;
-    
-    BOOL isAIMloggedIn;
-    BOOL isXMPPloggedIn;
 }
 @property (retain, nonatomic) UITableView *accountsTableView;
 @property (nonatomic, retain) UIImageView *logoView;

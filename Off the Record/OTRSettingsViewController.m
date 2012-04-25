@@ -130,15 +130,20 @@
 }
 
 #pragma mark OTRSettingViewDelegate method
-- (void) otrSetting:(OTRSetting*)setting showDetailViewControllerClass:(Class)viewControllerClass 
+- (void) otrSetting:(OTRSetting*)setting showDetailViewControllerClass:(Class)viewControllerClass
 {
     UIViewController *viewController = [[viewControllerClass alloc] init];
     if ([viewController isKindOfClass:[OTRSettingDetailViewController class]]) 
     {
         OTRSettingDetailViewController *detailSettingViewController = (OTRSettingDetailViewController*)viewController;
         detailSettingViewController.otrSetting = setting;
+        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:detailSettingViewController];
+        navController.modalPresentationStyle = UIModalPresentationFormSheet;
+        [self.tabBarController presentModalViewController:navController animated:YES];
+    } else {
+        [self.navigationController pushViewController:viewController animated:YES];
     }
-    [self.navigationController pushViewController:viewController animated:YES];
+
 }
 
 @end

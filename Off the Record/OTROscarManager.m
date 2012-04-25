@@ -16,6 +16,7 @@
 @synthesize theSession;
 @synthesize login;
 @synthesize loginFailed;
+@synthesize loggedIn;
 
 BOOL loginFailed;
 
