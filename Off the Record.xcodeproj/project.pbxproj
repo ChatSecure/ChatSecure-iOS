@@ -2069,9 +2069,9 @@
 			children = (
 				D9C7463B15350F62003445ED /* OTRSettingsViewController.h */,
 				D9C7463C15350F62003445ED /* OTRSettingsViewController.m */,
-				D91DAE8A154740D5009D0B74 /* Detail Views */,
 				D9FBD71615472FA700126568 /* OTRSettingTableViewCell.h */,
 				D9FBD71715472FA700126568 /* OTRSettingTableViewCell.m */,
+				D91DAE8A154740D5009D0B74 /* Detail Views */,
 			);
 			name = Settings;
 			sourceTree = "<group>";

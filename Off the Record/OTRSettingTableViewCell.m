@@ -62,5 +62,4 @@
     otrSetting = setting;
 }
 
-
 @end
