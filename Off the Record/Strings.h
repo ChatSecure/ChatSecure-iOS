@@ -75,6 +75,9 @@
 
 // OTRSettingsViewController
 #define SETTINGS_STRING NSLocalizedString(@"Settings", @"Title for the Settings screen")
+#define SHARE_STRING NSLocalizedString(@"Share", @"Title for sharing a link to the app")
+#define NOT_AVAILABLE_STRING NSLocalizedString(@"Not Available", @"Shown when a feature is not available, for example SMS")
+#define SHARE_MESSAGE_STRING NSLocalizedString(@"Chat with me securely", @"Body of SMS or email when sharing a link to the app")
 
 // OTRSettingsDetailViewController
 #define SAVE_STRING NSLocalizedString(@"Save", "Title for button for saving a setting")

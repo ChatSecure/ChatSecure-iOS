@@ -49,8 +49,11 @@
     [self.view addSubview:settingsTableView];
     
     UIBarButtonItem *aboutButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"about_icon.png"] style:UIBarButtonItemStylePlain target:self action:@selector(showAboutScreen)];
+    UIBarButtonItem *shareButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(shareButtonPressed:)];
     self.navigationItem.rightBarButtonItem = aboutButton;
+    self.navigationItem.leftBarButtonItem = shareButton;
 }
+
 
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -66,6 +69,15 @@
     } else {
         return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
     }
+}
+
+- (void) shareButtonPressed:(id)sender {
+    UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:SHARE_STRING delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:@"SMS", @"E-mail", nil];
+    [sheet showFromTabBar:self.tabBarController.tabBar];
+}
+
+- (NSString*) shareString {
+    return [NSString stringWithFormat:@"%@: https://get.chatsecure.org", SHARE_MESSAGE_STRING];
 }
 
 #pragma mark UITableViewDataSource methods
@@ -143,7 +155,53 @@
     } else {
         [self.navigationController pushViewController:viewController animated:YES];
     }
+}
 
+#pragma mark UIActionSheetDelegate methods
+
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex 
+{
+    if (buttonIndex == 0) // SMS
+    {
+        if (![MFMessageComposeViewController canSendText]) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:[NSString stringWithFormat:@"SMS %@", NOT_AVAILABLE_STRING] delegate:nil cancelButtonTitle:OK_STRING otherButtonTitles:nil];
+            [alert show];
+        } else {
+            MFMessageComposeViewController *sms = [[MFMessageComposeViewController alloc] init];
+            sms.messageComposeDelegate = self;
+            sms.body = [self shareString];
+            [self presentModalViewController:sms animated:YES];
+        }
+    } 
+    else if (buttonIndex == 1) // Email
+    { 
+        if (![MFMailComposeViewController canSendMail]) 
+        {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:[NSString stringWithFormat:@"E-mail %@", NOT_AVAILABLE_STRING] delegate:nil cancelButtonTitle:OK_STRING otherButtonTitles:nil];
+            [alert show];
+        }
+        else 
+        {
+            MFMailComposeViewController *email = [[MFMailComposeViewController alloc] init];
+            email.mailComposeDelegate = self;
+            [email setSubject:@"ChatSecure"];
+            [email setMessageBody:[self shareString] isHTML:NO];
+            [self presentModalViewController:email animated:YES];
+        }
+    }
+}
+
+#pragma mark MFMessageComposeViewControllerDelegate methods
+
+- (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result
+{
+    [self dismissModalViewControllerAnimated:YES];
+}
+
+#pragma mark MFMailComposeViewControllerDelegate Methods
+
+- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 @end

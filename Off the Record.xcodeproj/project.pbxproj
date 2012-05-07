@@ -347,6 +347,7 @@
 		D9F9378B13F44BD3009A3D84 /* OTRAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D9F9378A13F44BD3009A3D84 /* OTRAppDelegate.m */; };
 		D9FBD71415472A8400126568 /* OTRDoubleSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = D9FBD71315472A8400126568 /* OTRDoubleSetting.m */; };
 		D9FBD71815472FA700126568 /* OTRSettingTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D9FBD71715472FA700126568 /* OTRSettingTableViewCell.m */; };
+		D9FC9860155881710039518D /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9FC985F155881700039518D /* MessageUI.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -973,6 +974,7 @@
 		D9FBD71315472A8400126568 /* OTRDoubleSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRDoubleSetting.m; sourceTree = "<group>"; };
 		D9FBD71615472FA700126568 /* OTRSettingTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRSettingTableViewCell.h; sourceTree = "<group>"; };
 		D9FBD71715472FA700126568 /* OTRSettingTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRSettingTableViewCell.m; sourceTree = "<group>"; };
+		D9FC985F155881700039518D /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		D9FCA72B1533A3B6009AD599 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = "Off the Record/de.lproj/InfoPlist.strings"; sourceTree = SOURCE_ROOT; };
 		D9FCA72C1533A3B6009AD599 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = "Off the Record/de.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -982,6 +984,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D9FC9860155881710039518D /* MessageUI.framework in Frameworks */,
 				D974DABD15021E540028B2F4 /* libiconv.dylib in Frameworks */,
 				D9D69ABC1417FDF90056FB9E /* libxml2.dylib in Frameworks */,
 				D9D69B8014180A3A0056FB9E /* SystemConfiguration.framework in Frameworks */,
@@ -1991,6 +1994,7 @@
 		D9F9376D13F44BD3009A3D84 = {
 			isa = PBXGroup;
 			children = (
+				D9FC985F155881700039518D /* MessageUI.framework */,
 				D9F9378013F44BD3009A3D84 /* Off the Record */,
 				D9D69B03141806150056FB9E /* 3rd Party Frameworks */,
 				D9F9377B13F44BD3009A3D84 /* Frameworks */,
