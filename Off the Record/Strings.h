@@ -85,3 +85,5 @@
 #define NEW_STRING NSLocalizedString(@"New", "For a new settings value")
 #define OLD_STRING NSLocalizedString(@"Old", "For an old settings value")
 
+// OTRQRCodeViewController
+#define DONE_STRING NSLocalizedString(@"Done", "Title for button to press when user is finished")

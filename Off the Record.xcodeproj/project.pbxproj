@@ -348,6 +348,9 @@
 		D9FBD71415472A8400126568 /* OTRDoubleSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = D9FBD71315472A8400126568 /* OTRDoubleSetting.m */; };
 		D9FBD71815472FA700126568 /* OTRSettingTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D9FBD71715472FA700126568 /* OTRSettingTableViewCell.m */; };
 		D9FC9860155881710039518D /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9FC985F155881700039518D /* MessageUI.framework */; };
+		D9FC986C15588E300039518D /* OTRQRCodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9FC986B15588E300039518D /* OTRQRCodeViewController.m */; };
+		D9FC987015588F230039518D /* chatsecure_qrcode.png in Resources */ = {isa = PBXBuildFile; fileRef = D9FC986E15588F230039518D /* chatsecure_qrcode.png */; };
+		D9FC987115588F230039518D /* chatsecure_qrcode@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D9FC986F15588F230039518D /* chatsecure_qrcode@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -975,6 +978,10 @@
 		D9FBD71615472FA700126568 /* OTRSettingTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRSettingTableViewCell.h; sourceTree = "<group>"; };
 		D9FBD71715472FA700126568 /* OTRSettingTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRSettingTableViewCell.m; sourceTree = "<group>"; };
 		D9FC985F155881700039518D /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
+		D9FC986A15588E300039518D /* OTRQRCodeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRQRCodeViewController.h; sourceTree = "<group>"; };
+		D9FC986B15588E300039518D /* OTRQRCodeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRQRCodeViewController.m; sourceTree = "<group>"; };
+		D9FC986E15588F230039518D /* chatsecure_qrcode.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chatsecure_qrcode.png; sourceTree = SOURCE_ROOT; };
+		D9FC986F15588F230039518D /* chatsecure_qrcode@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatsecure_qrcode@2x.png"; sourceTree = SOURCE_ROOT; };
 		D9FCA72B1533A3B6009AD599 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = "Off the Record/de.lproj/InfoPlist.strings"; sourceTree = SOURCE_ROOT; };
 		D9FCA72C1533A3B6009AD599 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = "Off the Record/de.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -2073,6 +2080,8 @@
 			children = (
 				D9C7463B15350F62003445ED /* OTRSettingsViewController.h */,
 				D9C7463C15350F62003445ED /* OTRSettingsViewController.m */,
+				D9FC986A15588E300039518D /* OTRQRCodeViewController.h */,
+				D9FC986B15588E300039518D /* OTRQRCodeViewController.m */,
 				D9FBD71615472FA700126568 /* OTRSettingTableViewCell.h */,
 				D9FBD71715472FA700126568 /* OTRSettingTableViewCell.m */,
 				D91DAE8A154740D5009D0B74 /* Detail Views */,
@@ -2083,6 +2092,8 @@
 		D9FCA7291533A37F009AD599 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				D9FC986E15588F230039518D /* chatsecure_qrcode.png */,
+				D9FC986F15588F230039518D /* chatsecure_qrcode@2x.png */,
 				D9A7E0AC15242D9000EEDDB5 /* Default-Landscape@2x~ipad.png */,
 				D9A7E0AA15242D8C00EEDDB5 /* Default-Landscape~ipad.png */,
 				D9A7E0A815242D6800EEDDB5 /* Default-Portrait@2x~ipad.png */,
@@ -2284,6 +2295,8 @@
 				D9628A401535043A008F4C02 /* CrittercismGridViewController.xib in Resources */,
 				D9628A411535043A008F4C02 /* CrittercismRootViewController.xib in Resources */,
 				D9628A421535043A008F4C02 /* CrittercismViewController.xib in Resources */,
+				D9FC987015588F230039518D /* chatsecure_qrcode.png in Resources */,
+				D9FC987115588F230039518D /* chatsecure_qrcode@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2506,6 +2519,7 @@
 				D9FBD71815472FA700126568 /* OTRSettingTableViewCell.m in Sources */,
 				D91DAE8615473EB5009D0B74 /* OTRSettingDetailViewController.m in Sources */,
 				D91DAE89154740CE009D0B74 /* OTRDoubleSettingViewController.m in Sources */,
+				D9FC986C15588E300039518D /* OTRQRCodeViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

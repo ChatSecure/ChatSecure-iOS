@@ -13,6 +13,7 @@
 #import "OTRSettingTableViewCell.h"
 #import "OTRSettingDetailViewController.h"
 #import "OTRAboutViewController.h"
+#import "OTRQRCodeViewController.h"
 
 @implementation OTRSettingsViewController
 @synthesize settingsTableView, settingsManager;
@@ -72,12 +73,12 @@
 }
 
 - (void) shareButtonPressed:(id)sender {
-    UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:SHARE_STRING delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:@"SMS", @"E-mail", nil];
+    UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:SHARE_STRING delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:@"SMS", @"E-mail", @"QR Code", nil];
     [sheet showFromTabBar:self.tabBarController.tabBar];
 }
 
 - (NSString*) shareString {
-    return [NSString stringWithFormat:@"%@: https://get.chatsecure.org", SHARE_MESSAGE_STRING];
+    return [NSString stringWithFormat:@"%@: http://get.chatsecure.org", SHARE_MESSAGE_STRING];
 }
 
 #pragma mark UITableViewDataSource methods
@@ -188,6 +189,12 @@
             [email setMessageBody:[self shareString] isHTML:NO];
             [self presentModalViewController:email animated:YES];
         }
+    }
+    else if (buttonIndex == 2) // QR code
+    {
+        OTRQRCodeViewController *qrCode = [[OTRQRCodeViewController alloc] init];
+        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:qrCode];
+        [self presentModalViewController:nav animated:YES];
     }
 }
 
