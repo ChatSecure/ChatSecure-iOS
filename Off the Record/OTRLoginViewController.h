@@ -29,7 +29,6 @@
 @property (nonatomic, retain) UILabel *rememberUsernameLabel;
 @property (nonatomic, retain) UIImageView *logoView;
 
-@property (nonatomic, retain) UIToolbar *bottomToolbar;
 @property (nonatomic, retain) UIBarButtonItem *loginButton;
 @property (nonatomic, retain) UIBarButtonItem *cancelButton;
 

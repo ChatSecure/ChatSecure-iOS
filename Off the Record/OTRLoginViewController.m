@@ -18,7 +18,6 @@
 @synthesize useXMPP;
 @synthesize usernameLabel, passwordLabel, rememberUsernameLabel;
 @synthesize logoView;
-@synthesize bottomToolbar;
 
 - (void)viewDidUnload
 {
@@ -35,7 +34,6 @@
     self.passwordTextField = nil;
     self.loginButton = nil;
     self.cancelButton = nil;
-    self.bottomToolbar = nil;
 }
 
 
@@ -75,27 +73,25 @@
     [self.view addSubview:usernameTextField];
     [self.view addSubview:passwordTextField];
     
-    self.bottomToolbar = [[UIToolbar alloc] init];
     
-    NSString *loginButtonString;
+    NSString *loginButtonString = LOGIN_STRING;
     SEL loginButtonAction;
     if (useXMPP) 
     {
-        loginButtonString = [NSString stringWithFormat:@"%@ XMPP", LOGIN_TO_STRING];
         loginButtonAction = @selector(xmppLoginPressed:);
+        self.title = @"XMPP";
     } 
     else 
     {
-        loginButtonString = [NSString stringWithFormat:@"%@ AIM", LOGIN_TO_STRING];
         loginButtonAction = @selector(loginPressed:);
+        self.title = @"AIM";
     }
     
     self.loginButton = [[UIBarButtonItem alloc] initWithTitle:loginButtonString style:UIBarButtonItemStyleDone target:self action:loginButtonAction];
     self.cancelButton = [[UIBarButtonItem alloc] initWithTitle:CANCEL_STRING style:UIBarButtonItemStyleBordered target:self action:@selector(cancelPressed:)];
     
-    self.bottomToolbar.items = [NSArray arrayWithObjects:cancelButton, [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil], loginButton, nil];
-    
-    [self.view addSubview:bottomToolbar];
+    self.navigationItem.rightBarButtonItem = loginButton;
+    self.navigationItem.leftBarButtonItem = cancelButton;
 }
 
 - (void) viewDidLoad 
@@ -184,10 +180,6 @@
     CGFloat rememberUserNameSwitchFrameWidth = 79;
     self.rememberUserNameSwitch.frame = CGRectMake(self.view.frame.size.width-rememberUserNameSwitchFrameWidth-5, rememberUsernameLabelFrameYOrigin, rememberUserNameSwitchFrameWidth, 27);
     self.rememberUserNameSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
-    
-    CGFloat bottomToolbarFrameHeight = 45;
-    self.bottomToolbar.frame = CGRectMake(0, self.view.frame.size.height - bottomToolbarFrameHeight, self.view.frame.size.width, bottomToolbarFrameHeight);
-    self.bottomToolbar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin;
 }
 
 - (void) viewWillDisappear:(BOOL)animated 

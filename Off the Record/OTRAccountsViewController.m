@@ -204,16 +204,15 @@
         if(![OTRProtocolManager sharedInstance].oscarManager.loggedIn)
         {
             OTRLoginViewController *loginViewController = [[OTRLoginViewController alloc] init];
+            UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:loginViewController];
             
             OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
             
             loginViewController.useXMPP = NO;
             loginViewController.protocolManager = protocolManager;
             loginViewController.modalPresentationStyle = UIModalPresentationFormSheet;
-            [self.tabBarController presentModalViewController:loginViewController animated:YES];
+            [self.tabBarController presentModalViewController:nav animated:YES];
 
-            
-            
             loginController = loginViewController;
         }
         else
@@ -228,17 +227,15 @@
         if(![OTRProtocolManager sharedInstance].xmppManager.isXmppConnected)
         {
             OTRLoginViewController *loginViewController = [[OTRLoginViewController alloc] init];
+            UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:loginViewController];
             
             OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
             loginViewController.useXMPP = YES;
             loginViewController.protocolManager = protocolManager;
             loginViewController.modalPresentationStyle = UIModalPresentationFormSheet;
-            [self.tabBarController presentModalViewController:loginViewController animated:YES];
+            [self.tabBarController presentModalViewController:nav animated:YES];
 
-
-            
             loginController = loginViewController;
-
         }
         else
         {
@@ -247,10 +244,7 @@
             [logoutSheet showFromTabBar:self.tabBarController.tabBar];
         }
     }
-    
-    
-    
-    
+
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
