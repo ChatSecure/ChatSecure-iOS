@@ -11,5 +11,6 @@
 @interface OTRQRCodeViewController : UIViewController
 
 @property (nonatomic, retain) UIImageView *imageView;
+@property (nonatomic, retain) UILabel *instructionsLabel;
 
 @end

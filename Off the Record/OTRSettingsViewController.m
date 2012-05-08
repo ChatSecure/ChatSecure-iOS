@@ -171,6 +171,7 @@
             MFMessageComposeViewController *sms = [[MFMessageComposeViewController alloc] init];
             sms.messageComposeDelegate = self;
             sms.body = [self shareString];
+            sms.modalPresentationStyle = UIModalPresentationFormSheet;
             [self presentModalViewController:sms animated:YES];
         }
     } 
@@ -187,6 +188,8 @@
             email.mailComposeDelegate = self;
             [email setSubject:@"ChatSecure"];
             [email setMessageBody:[self shareString] isHTML:NO];
+            email.modalPresentationStyle = UIModalPresentationFormSheet;
+
             [self presentModalViewController:email animated:YES];
         }
     }
@@ -194,6 +197,7 @@
     {
         OTRQRCodeViewController *qrCode = [[OTRQRCodeViewController alloc] init];
         UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:qrCode];
+        nav.modalPresentationStyle = UIModalPresentationFormSheet;
         [self presentModalViewController:nav animated:YES];
     }
 }
