@@ -112,8 +112,6 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
     NSLog(@"Application entered background state.");
-    // UIBackgroundTaskIdentifier bgTask is instance variable
-    // UIInvalidBackgroundTask has been renamed to UIBackgroundTaskInvalid
     NSAssert(self.backgroundTask == UIBackgroundTaskInvalid, nil);
     
     self.backgroundTask = [application beginBackgroundTaskWithExpirationHandler: ^{
@@ -150,9 +148,9 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     }
     if ([application backgroundTimeRemaining] < 10) 
     {
+        // Clean up here
         [self.backgroundTimer invalidate];
         self.backgroundTimer = nil;
-        NSLog(@"Background loop finished");
         [application endBackgroundTask:self.backgroundTask];
         self.backgroundTask = UIBackgroundTaskInvalid;
     }
@@ -160,9 +158,15 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
+
+}
+
+- (void)applicationDidBecomeActive:(UIApplication *)application
+{
     /*
-     Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+     Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
      */
+    NSLog(@"Application became active");
     if (self.backgroundTimer) 
     {
         [self.backgroundTimer invalidate];
@@ -173,17 +177,8 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
         [application endBackgroundTask:self.backgroundTask];
         self.backgroundTask = UIBackgroundTaskInvalid;
     }
-
     
     application.applicationIconBadgeNumber = 0;
-
-}
-
-- (void)applicationDidBecomeActive:(UIApplication *)application
-{
-    /*
-     Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-     */
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -226,11 +221,11 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 }
 */
 
-- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
+/*- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
     NSLog(@"Notification Body: %@", notification.alertBody);
     NSLog(@"%@", notification.userInfo);
     
     application.applicationIconBadgeNumber = 0;
-}
+}*/
 
 @end
