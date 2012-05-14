@@ -88,3 +88,7 @@
 // OTRQRCodeViewController
 #define DONE_STRING NSLocalizedString(@"Done", "Title for button to press when user is finished")
 #define QR_CODE_INSTRUCTIONS_STRING NSLocalizedString(@"This QR Code contains a link to http://omniqrcode.com/q/chatsecure and will redirect to the App Store.", @"Instructions label text underneath QR code")
+
+// OTRAppDelegate
+#define EXPIRATION_STRING NSLocalizedString(@"Background session will expire in one minute.", @"Message displayed in Notification Manager when session will expire in one minute")
+#define READ_STRING NSLocalizedString(@"Read", @"Title for action button on alert dialog, used as a verb in the present tense")
