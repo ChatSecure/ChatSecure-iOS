@@ -51,13 +51,16 @@
     fontSizeSetting.maxValue = 2.5;
     fontSizeSetting.minValue = 0.5;
     fontSizeSetting.numValues = 4;
-    fontSizeSetting.defaultValue = 1.0;
+    fontSizeSetting.defaultValue = [NSNumber numberWithDouble:1.0];
     fontSizeSetting.isPercentage = YES;
 
     [newSettingsDictionary setObject:fontSizeSetting forKey:kOTRSettingKeyFontSize];
     OTRBoolSetting *deletedDisconnectedConversations = [[OTRBoolSetting alloc] initWithTitle:DELETE_CONVERSATIONS_ON_DISCONNECT_TITLE_STRING description:DELETE_CONVERSATIONS_ON_DISCONNECT_DESCRIPTION_STRING settingsKey:kOTRSettingKeyDeleteOnDisconnect];
     [newSettingsDictionary setObject:deletedDisconnectedConversations forKey:kOTRSettingKeyDeleteOnDisconnect];
-    OTRSettingsGroup *chatSettingsGroup = [[OTRSettingsGroup alloc] initWithTitle:CHAT_STRING settings:[NSArray arrayWithObjects:fontSizeSetting, deletedDisconnectedConversations, nil]];
+    OTRBoolSetting *showDisconnectionWarning = [[OTRBoolSetting alloc] initWithTitle:DISCONNECTION_WARNING_TITLE_STRING description:DISCONNECTION_WARNING_DESC_STRING settingsKey:kOTRSettingKeyShowDisconnectionWarning];
+    showDisconnectionWarning.defaultValue = [NSNumber numberWithBool:YES];
+    [newSettingsDictionary setObject:showDisconnectionWarning forKey:kOTRSettingKeyShowDisconnectionWarning];
+    OTRSettingsGroup *chatSettingsGroup = [[OTRSettingsGroup alloc] initWithTitle:CHAT_STRING settings:[NSArray arrayWithObjects:fontSizeSetting, deletedDisconnectedConversations, showDisconnectionWarning, nil]];
     [settingsGroups addObject:chatSettingsGroup];
     
     

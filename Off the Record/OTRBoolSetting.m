@@ -16,8 +16,7 @@
     if (self = [super initWithTitle:newTitle description:newDescription settingsKey:newSettingsKey])
     {
         self.action = @selector(toggle);
-
-
+        self.defaultValue = [NSNumber numberWithBool:NO];
     }
     return self;
 }
@@ -35,6 +34,10 @@
 
 - (BOOL) enabled
 {
+    if (![self value]) 
+    {
+        self.value = self.defaultValue;
+    }
     return [[self value] boolValue];
 }
 

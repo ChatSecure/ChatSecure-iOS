@@ -18,6 +18,7 @@
 
 #define kOTRSettingKeyFontSize @"kOTRSettingKeyFontSize"
 #define kOTRSettingKeyDeleteOnDisconnect @"kOTRSettingKeyDeleteOnDisconnect"
+#define kOTRSettingKeyShowDisconnectionWarning @"kOTRSettingKeyShowDisconnectionWarning"
 
 @interface OTRSettingsManager : NSObject
 
