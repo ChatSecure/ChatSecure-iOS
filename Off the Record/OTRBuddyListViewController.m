@@ -14,6 +14,7 @@
 #import "OTRBuddyList.h"
 #import "Strings.h"
 
+
 //#define kSignoffTime 500
 
 @implementation OTRBuddyListViewController
@@ -94,7 +95,17 @@
 
 
 -(void)viewDidAppear:(BOOL)animated {
-    
+    [super viewDidAppear:animated];
+    [self showEULAWarning];
+}
+
+- (void) showEULAWarning {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    if (![[defaults objectForKey:kOTRSettingUserAgreedToEULA] boolValue]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:SECURITY_WARNING_STRING message:[NSString stringWithFormat:@"%@\n\n%@",EULA_WARNING_STRING,EULA_BSD_STRING] delegate:self cancelButtonTitle:DISAGREE_STRING otherButtonTitles:AGREE_STRING,nil];
+        alert.tag = 123;
+        [alert show];
+    }
 }
 
 - (void)viewDidUnload
@@ -263,6 +274,21 @@
         else // Ignore
         {
         }
+    }
+    else if (alertView.tag == 123)
+    {
+        if (buttonIndex == alertView.cancelButtonIndex) 
+        {
+            [self showEULAWarning];
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://en.wikipedia.org/wiki/Off-the-Record_Messaging"]];
+        }
+        else
+        {
+            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+            [defaults setObject:[NSNumber numberWithBool:YES] forKey:kOTRSettingUserAgreedToEULA];
+            [defaults synchronize];
+        }
+        NSLog(@"buttonIndex: %d", buttonIndex);
     }
 }
 
