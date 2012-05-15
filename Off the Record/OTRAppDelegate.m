@@ -16,6 +16,7 @@
 #import "OTRSettingsViewController.h"
 #import "OTRSettingsManager.h"
 #import "DDLog.h"
+#import "OTRUIKeyboardListener.h"
 
 
 // Log levels: off, error, warn, info, verbose
@@ -207,6 +208,10 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
      }
 }
 
+-(void)applicationDidFinishLaunching:(UIApplication *)application
+{
+    [OTRUIKeyboardListener shared];
+}
 /*
 // Optional UITabBarControllerDelegate method.
 - (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController

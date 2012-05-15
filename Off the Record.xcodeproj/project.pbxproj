@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		63FD24D515630A240041374A /* OTRUIKeyboardListener.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FD24D415630A240041374A /* OTRUIKeyboardListener.m */; };
 		D902D31E141E930C00AA3479 /* OTRBuddy.m in Sources */ = {isa = PBXBuildFile; fileRef = D902D31D141E930C00AA3479 /* OTRBuddy.m */; };
 		D90B80A913FC7026006EFF3D /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = D90B80A813FC7026006EFF3D /* MBProgressHUD.m */; };
 		D90B80AC13FC719B006EFF3D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D90B80AB13FC719B006EFF3D /* CoreGraphics.framework */; };
@@ -354,6 +355,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		63FD24D315630A240041374A /* OTRUIKeyboardListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRUIKeyboardListener.h; sourceTree = "<group>"; };
+		63FD24D415630A240041374A /* OTRUIKeyboardListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRUIKeyboardListener.m; sourceTree = "<group>"; };
 		D902D31C141E930C00AA3479 /* OTRBuddy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBuddy.h; sourceTree = "<group>"; };
 		D902D31D141E930C00AA3479 /* OTRBuddy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBuddy.m; sourceTree = "<group>"; };
 		D9042E2C153168BE000D264C /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_CN; path = "Off the Record/zh_CN.lproj/InfoPlist.strings"; sourceTree = SOURCE_ROOT; };
@@ -1779,6 +1782,8 @@
 				D90B80AE13FC7E5F006EFF3D /* OTRCodec.m */,
 				D99BA28E141D3F3A00D051B6 /* OTRMessage.h */,
 				D99BA28F141D3F3A00D051B6 /* OTRMessage.m */,
+				63FD24D315630A240041374A /* OTRUIKeyboardListener.h */,
+				63FD24D415630A240041374A /* OTRUIKeyboardListener.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -2520,6 +2525,7 @@
 				D91DAE8615473EB5009D0B74 /* OTRSettingDetailViewController.m in Sources */,
 				D91DAE89154740CE009D0B74 /* OTRDoubleSettingViewController.m in Sources */,
 				D9FC986C15588E300039518D /* OTRQRCodeViewController.m in Sources */,
+				63FD24D515630A240041374A /* OTRUIKeyboardListener.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2646,8 +2652,8 @@
 					"$(ARCHS_STANDARD_32_BIT)",
 					armv6,
 				);
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: David Chiles (8TSMC84YJV)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: David Chiles (8TSMC84YJV)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Off the Record/Off the Record-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -2666,8 +2672,8 @@
 				);
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = ChatSecure;
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "D533400E-30E3-4BDC-B6B4-CF8A87E5200D";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6EF2E80F-3407-4FB3-8CE7-98BDC7A21848";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
@@ -2680,8 +2686,8 @@
 					"$(ARCHS_STANDARD_32_BIT)",
 					armv6,
 				);
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer: David Chiles (8TSMC84YJV)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: David Chiles (8TSMC84YJV)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Off the Record/Off the Record-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -2700,8 +2706,8 @@
 				);
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = ChatSecure;
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "D533400E-30E3-4BDC-B6B4-CF8A87E5200D";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6EF2E80F-3407-4FB3-8CE7-98BDC7A21848";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
