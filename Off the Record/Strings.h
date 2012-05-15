@@ -72,8 +72,8 @@
 #define DELETE_CONVERSATIONS_ON_DISCONNECT_DESCRIPTION_STRING NSLocalizedString(@"Delete chats on disconnect", @"Description for automatic conversation deletion")
 #define FONT_SIZE_STRING NSLocalizedString(@"Font Size", @"Size for the font in the chat screen")
 #define FONT_SIZE_DESCRIPTION_STRING NSLocalizedString(@"Size for font in chat view", @"description for what the font size setting affects")
-#define DISCONNECTION_WARNING_TITLE_STRING NSLocalizedString(@"Disconnection Warning", @"Title for setting about showing a warning before disconnection")
-#define DISCONNECTION_WARNING_DESC_STRING NSLocalizedString(@"Show 1 Minute Warning Before Disconnection", @"Description for disconnection warning setting")
+#define DISCONNECTION_WARNING_TITLE_STRING NSLocalizedString(@"Signout Warning", @"Title for setting about showing a warning before disconnection")
+#define DISCONNECTION_WARNING_DESC_STRING NSLocalizedString(@"1 Minute Alert Before Disconnection", @"Description for disconnection warning setting")
 
 
 // OTRSettingsViewController
