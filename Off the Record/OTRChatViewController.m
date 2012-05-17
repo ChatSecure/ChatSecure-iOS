@@ -156,7 +156,7 @@
     }
     
     
-    
+    [self scrollTextViewToBottom];
     keyboardIsShown = YES;
 }
 
@@ -512,6 +512,16 @@
     
     //CGRect bottomRect = CGRectMake(0, 0, 1, [chatHistoryTextView contentSize].height);
     //[chatHistoryTextView scrollRectToVisible: bottomRect animated:YES];
+    NSString * chatHistory = buddy.chatHistory;
+    
+    if(![buddy.chatHistory isEqualToString:@""])
+    {
+        NSInteger height = [[chatHistoryTextView stringByEvaluatingJavaScriptFromString:@"document.body.offsetHeight;"] intValue];
+        NSString* javascript = [NSString stringWithFormat:@"window.scrollBy(0, %d);", height];   
+        [chatHistoryTextView stringByEvaluatingJavaScriptFromString:javascript];
+    }
+    
+    
 }
 
 -(BOOL)textViewShouldBeginEditing:(UITextView *)textView
