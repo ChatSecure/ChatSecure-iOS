@@ -118,3 +118,4 @@ Acknowledgements
 	* [Jan-Christoph Borchardt](http://jancborchardt.net/) (German)
 	* [vitalyster](https://github.com/vitalyster) (Russian)
 	* [burhan teoman](https://www.transifex.net/accounts/profile/burhanteoman/) (Turkish)
+	* [shikibiomernok](https://www.transifex.net/accounts/profile/shikibiomernok/) (Hungarian)
