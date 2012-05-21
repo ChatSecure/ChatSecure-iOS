@@ -46,6 +46,8 @@ static void create_privkey_cb(void *opdata, const char *accountname,
     
     //otrg_plugin_create_privkey(accountname, protocol);
     OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
+    [protocolManager.encryptionManager protectFileWithPath:path];
+    
     
     otrl_privkey_generate_FILEp(protocolManager.encryptionManager.userState, privf, accountname, protocol);
     fclose(privf);
@@ -173,6 +175,8 @@ static void write_fingerprints_cb(void *opdata)
     
     if (!storef) return;
     OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
+    [protocolManager.encryptionManager protectFileWithPath:path];
+
     
     otrl_privkey_write_fingerprints_FILEp(protocolManager.encryptionManager.userState, storef);
     fclose(storef);

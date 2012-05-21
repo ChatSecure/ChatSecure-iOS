@@ -35,6 +35,7 @@
         //otrl_privkey_read(OTR_userState,"privkeyfilename");
         FILE *privf;
         NSString *path = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",PRIVKEYFNAME]];
+        [self protectFileWithPath:path];
         privf = fopen([path UTF8String], "rb");
         
         if(privf)
@@ -44,6 +45,7 @@
         //otrl_privkey_read_fingerprints(OTR_userState, "fingerprintfilename", NULL, NULL);
         FILE *storef;
         path = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",STOREFNAME]];
+        [self protectFileWithPath:path];
         storef = fopen([path UTF8String], "rb");
         
         if (storef)
@@ -52,6 +54,17 @@
     }
     
     return self;
+}
+
+- (void) protectFileWithPath:(NSString*)path {
+    NSError *error = nil;
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    [fileManager setAttributes:[NSDictionary dictionaryWithObject:NSFileProtectionComplete forKey:NSFileProtectionKey] ofItemAtPath:path error:&error];
+    if (error) 
+    {
+        NSLog(@"Error setting file protection key for %@: %@%@",path,[error localizedDescription], [error userInfo]);
+        error = nil;
+    }
 }
 
 @end
