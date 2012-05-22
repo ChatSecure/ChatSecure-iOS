@@ -140,7 +140,20 @@
     OTRBuddy *buddy = [protocolManager.buddyList getBuddyByName:userName];
     [buddy receiveMessage:decodedMessage];
     
-    NSString * currentTitle = chatListController.navigationController.topViewController.title;
+    NSString * currentTitle;
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+    {
+        UIViewController * vc = self.tabBarController.selectedViewController;
+        currentTitle = [vc title];
+        if ([vc isKindOfClass:[UISplitViewController class]]) {
+            currentTitle = [[((UISplitViewController *)vc).viewControllers objectAtIndex:1] title];
+        }
+        
+    }
+    else {
+        currentTitle = chatListController.navigationController.topViewController.title;
+    }
+    
     
     if(![currentTitle isEqualToString:buddy.displayName] && ![buddy.lastMessage isEqualToString:@""] && ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive))
      {

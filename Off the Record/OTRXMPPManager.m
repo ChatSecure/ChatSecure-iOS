@@ -593,6 +593,9 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 		DDLogError(@"Unable to connect to server. Check xmppStream.hostName");
         [self failedToConnect];
 	}
+    else {
+        //Lost connection
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
