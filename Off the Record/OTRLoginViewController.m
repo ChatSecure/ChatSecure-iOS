@@ -18,6 +18,7 @@
 @synthesize useXMPP;
 @synthesize usernameLabel, passwordLabel, rememberUsernameLabel;
 @synthesize logoView;
+@synthesize timeoutTimer;
 
 - (void)viewDidUnload
 {
@@ -75,19 +76,16 @@
     
     
     NSString *loginButtonString = LOGIN_STRING;
-    SEL loginButtonAction;
     if (useXMPP) 
     {
-        loginButtonAction = @selector(xmppLoginPressed:);
         self.title = @"XMPP";
     } 
     else 
     {
-        loginButtonAction = @selector(loginPressed:);
         self.title = @"AIM";
     }
     
-    self.loginButton = [[UIBarButtonItem alloc] initWithTitle:loginButtonString style:UIBarButtonItemStyleDone target:self action:loginButtonAction];
+    self.loginButton = [[UIBarButtonItem alloc] initWithTitle:loginButtonString style:UIBarButtonItemStyleDone target:self action:@selector(loginButtonPressed:)];
     self.cancelButton = [[UIBarButtonItem alloc] initWithTitle:CANCEL_STRING style:UIBarButtonItemStyleBordered target:self action:@selector(cancelPressed:)];
     
     self.navigationItem.rightBarButtonItem = loginButton;
@@ -219,7 +217,7 @@
     }
 }
 
-- (void)loginPressed:(id)sender 
+- (void)aimLoginPressed:(id)sender 
 {
     BOOL fields = [self checkFields];
     if(fields)
@@ -235,11 +233,20 @@
         [HUD show:YES];
         
         
+        
         if (![protocolManager.oscarManager.login beginAuthorization]) {
             [HUD hide:YES];
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:OSCAR_FAIL_STRING delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
             [alert show];
         }
+    }
+}
+
+-(void) timeout:(NSTimer *) timer
+{
+    //[timeoutTimer invalidate];
+    if (HUD) {
+        [HUD hide:YES];
     }
 }
 
@@ -254,12 +261,14 @@
     [[NSNotificationCenter defaultCenter]
      postNotificationName:@"XMPPLoginNotification"
      object:self];
+    [timeoutTimer invalidate];
 }
 -(void) xmppLoginFailed
 {
     [HUD hide:YES];
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:XMPP_FAIL_STRING delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
     [alert show];
+    
 }
 
 
@@ -281,6 +290,7 @@
         if (connect) {
             NSLog(@"xmppLogin attempt");
         }
+        
         /*
         if(connect)
         {
@@ -296,6 +306,21 @@
             [alert release];
         }*/
     }
+}
+
+- (void)loginButtonPressed:(id)sender {
+    if (useXMPP) 
+    {
+        [self xmppLoginPressed:sender];
+    } 
+    else 
+    {
+        [self aimLoginPressed:sender];
+    }
+    timeoutTimer = [NSTimer timerWithTimeInterval:45.0 target:self selector:@selector(timeout:) userInfo:nil repeats:NO];
+
+
+    
 }
 
 - (void)cancelPressed:(id)sender {
@@ -319,6 +344,12 @@
 {
     [textField resignFirstResponder];
     return YES;
+}
+
+-(void)dealloc
+{
+    [timeoutTimer invalidate];
+    
 }
 
 #pragma mark -

@@ -38,6 +38,7 @@
     accountsTableView.dataSource = self;
     accountsTableView.delegate = self;
     accountsTableView.scrollEnabled = NO;
+    //accountsTableView.transform = CGAffineTransformMakeRotation(-1.5707);
     [self.view addSubview:accountsTableView];
     
     self.logoView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"chatsecure_banner.png"]];
@@ -166,6 +167,7 @@
     if(indexPath.row == 0)
     {
         cell.textLabel.text = AIM_STRING;
+        //cell.textLabel.transform = CGAffineTransformMakeRotation(-1.5707);
         
         if([OTRProtocolManager sharedInstance].oscarManager.loggedIn)
         {
@@ -181,6 +183,7 @@
     else if(indexPath.row == 1)
     {
         cell.textLabel.text = XMPP_STRING;
+        //cell.textLabel.transform = CGAffineTransformMakeRotation(-1.5707);
         
         if([OTRProtocolManager sharedInstance].xmppManager.isXmppConnected)
         {
