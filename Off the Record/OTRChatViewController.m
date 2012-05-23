@@ -512,7 +512,7 @@
     
     //CGRect bottomRect = CGRectMake(0, 0, 1, [chatHistoryTextView contentSize].height);
     //[chatHistoryTextView scrollRectToVisible: bottomRect animated:YES];
-    NSString * chatHistory = buddy.chatHistory;
+    //NSString * chatHistory = buddy.chatHistory;
     
     if(![buddy.chatHistory isEqualToString:@""])
     {
