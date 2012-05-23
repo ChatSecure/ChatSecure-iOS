@@ -11,6 +11,7 @@
 #import "OTRCodec.h"
 #import "OTRProtocolManager.h"
 #import "NSString+HTML.h"
+#import "Strings.h"
 
 @implementation OTRBuddy
 
@@ -93,6 +94,17 @@
         
         [chatHistory appendFormat:@"%@ %@</p>",username,rawMessage];
         [[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];
+        
+        if (![[UIApplication sharedApplication] applicationState] == UIApplicationStateActive)
+        {
+            // We are not active, so use a local notification instead
+            UILocalNotification *localNotification = [[UILocalNotification alloc] init];
+            localNotification.alertAction = REPLY_STRING;
+            localNotification.applicationIconBadgeNumber = [UIApplication sharedApplication].applicationIconBadgeNumber + 1;
+            localNotification.alertBody = [NSString stringWithFormat:@"%@: %@",self.displayName,self.lastMessage];
+            
+            [[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
+        }
     }
 }
 

@@ -15,6 +15,16 @@
 #import "Strings.h"
 #import "OTRSettingsViewController.h"
 #import "OTRSettingsManager.h"
+#import "DDLog.h"
+#import "OTRUIKeyboardListener.h"
+
+
+// Log levels: off, error, warn, info, verbose
+#if DEBUG
+static const int ddLogLevel = LOG_LEVEL_VERBOSE;
+#else
+static const int ddLogLevel = LOG_LEVEL_WARN;
+#endif
 
 // If you downloaded this source from Github delete the
 // CRITTERCISM_ENABLED key in the Preprocessor Macros
@@ -29,6 +39,7 @@
 
 @synthesize window = _window;
 @synthesize tabBarController = _tabBarController;
+@synthesize backgroundTask, backgroundTimer;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -79,6 +90,15 @@
     self.tabBarController = tabBarController;
     self.window.rootViewController = self.tabBarController;
     [self.window makeKeyAndVisible];
+    
+    UILocalNotification *localNotification = [launchOptions objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];
+    if (localNotification) {
+        NSLog(@"Notification Body: %@",localNotification.alertBody);
+        NSLog(@"%@", localNotification.userInfo);
+    }
+    
+    application.applicationIconBadgeNumber = 0;
+    
     return YES;
 }
 
@@ -92,17 +112,54 @@
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-    /*
-     Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
-     If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-     */
+    NSLog(@"Application entered background state.");
+    NSAssert(self.backgroundTask == UIBackgroundTaskInvalid, nil);
+    
+    self.backgroundTask = [application beginBackgroundTaskWithExpirationHandler: ^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSLog(@"Background task expired");
+            if (self.backgroundTimer) 
+            {
+                [self.backgroundTimer invalidate];
+                self.backgroundTimer = nil;
+            }
+            [application endBackgroundTask:self.backgroundTask];
+            self.backgroundTask = UIBackgroundTaskInvalid;
+        });
+    }];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.backgroundTimer = [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(timerUpdate:) userInfo:nil repeats:YES];
+    });
+}
+                                
+- (void) timerUpdate:(NSTimer*)timer {
+    UIApplication *application = [UIApplication sharedApplication];
+
+    NSLog(@"Timer update, background time left: %f", application.backgroundTimeRemaining);
+    
+    if ([application backgroundTimeRemaining] < 60) 
+    {
+        UILocalNotification *localNotif = [[UILocalNotification alloc] init];
+        if (localNotif) {
+            localNotif.alertBody = EXPIRATION_STRING;
+            localNotif.alertAction = OK_STRING;
+            [application presentLocalNotificationNow:localNotif];
+        }
+    }
+    if ([application backgroundTimeRemaining] < 10) 
+    {
+        // Clean up here
+        [self.backgroundTimer invalidate];
+        self.backgroundTimer = nil;
+        [application endBackgroundTask:self.backgroundTask];
+        self.backgroundTask = UIBackgroundTaskInvalid;
+    }
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
-    /*
-     Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-     */
+
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
@@ -110,6 +167,19 @@
     /*
      Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
      */
+    NSLog(@"Application became active");
+    if (self.backgroundTimer) 
+    {
+        [self.backgroundTimer invalidate];
+        self.backgroundTimer = nil;
+    }
+    if (self.backgroundTask != UIBackgroundTaskInvalid) 
+    {
+        [application endBackgroundTask:self.backgroundTask];
+        self.backgroundTask = UIBackgroundTaskInvalid;
+    }
+    
+    application.applicationIconBadgeNumber = 0;
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -138,6 +208,10 @@
      }
 }
 
+-(void)applicationDidFinishLaunching:(UIApplication *)application
+{
+    [OTRUIKeyboardListener shared];
+}
 /*
 // Optional UITabBarControllerDelegate method.
 - (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController
@@ -151,5 +225,12 @@
 {
 }
 */
+
+/*- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
+    NSLog(@"Notification Body: %@", notification.alertBody);
+    NSLog(@"%@", notification.userInfo);
+    
+    application.applicationIconBadgeNumber = 0;
+}*/
 
 @end

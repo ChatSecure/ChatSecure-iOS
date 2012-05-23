@@ -10,7 +10,9 @@
 
 @interface OTRAppDelegate : UIResponder <UIApplicationDelegate, UITabBarControllerDelegate>
 
-@property (nonatomic, retain)  UIWindow *window;
-@property (nonatomic, retain)  UITabBarController *tabBarController;
+@property (nonatomic, retain) UIWindow *window;
+@property (nonatomic, retain) UITabBarController *tabBarController;
+@property (nonatomic, retain) NSTimer *backgroundTimer;
+@property (nonatomic) UIBackgroundTaskIdentifier backgroundTask;
 
 @end

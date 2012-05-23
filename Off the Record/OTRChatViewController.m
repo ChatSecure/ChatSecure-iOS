@@ -33,6 +33,7 @@
 @synthesize keyboardIsShown;
 @synthesize buddy;
 @synthesize instructionsLabel;
+@synthesize keyboardListener;
 
 - (void) dealloc {
     self.lastActionLink = nil;
@@ -49,6 +50,7 @@
     self.chatBoxView = nil;
     self.sendButton = nil;
     self.instructionsLabel = nil;
+    self.keyboardListener = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -119,15 +121,13 @@
     self.chatBoxView.frame = chatBoxViewFrame;
     [UIView commitAnimations];
     
-    keyboardIsShown = NO;
+    keyboardIsShown = [keyboardListener isVisible];
 }
 
 - (void)keyboardWillShow:(NSNotification *)n
 {
     // This is an ivar I'm using to ensure that we do not do the frame size adjustment on the UIScrollView if the keyboard is already shown.  This can happen if the user, after fixing editing a UITextField, scrolls the resized UIScrollView to another UITextField and attempts to edit the next UITextField.  If we were to resize the UIScrollView again, it would be disastrous.  NOTE: The keyboard notification will fire even when the keyboard is already shown.
-    if (keyboardIsShown) {
-        return;
-    }
+    
         
     CGFloat keyboardHeight = [self keyboardHeightForNotification:n];
 
@@ -141,14 +141,22 @@
     chatHistoryFrame.size.height -= offsetHeight;
     chatBoxViewFrame.origin.y -= offsetHeight;
     
-    [UIView beginAnimations:nil context:NULL];
-    [UIView setAnimationBeginsFromCurrentState:YES];
-    // The kKeyboardAnimationDuration I am using is 0.3
-    [UIView setAnimationDuration:[self keyboardAnimationDurationForNotification:n]];
-    self.chatHistoryTextView.frame = chatHistoryFrame;
-    self.chatBoxView.frame = chatBoxViewFrame;
-    [UIView commitAnimations];
+    if ([keyboardListener isVisible]) {
+        self.chatHistoryTextView.frame = chatHistoryFrame;
+        self.chatBoxView.frame = chatBoxViewFrame;
+    }
+    else {
+        [UIView beginAnimations:nil context:NULL];
+        [UIView setAnimationBeginsFromCurrentState:YES];
+        // The kKeyboardAnimationDuration I am using is 0.3
+        [UIView setAnimationDuration:[self keyboardAnimationDurationForNotification:n]];
+        self.chatHistoryTextView.frame = chatHistoryFrame;
+        self.chatBoxView.frame = chatBoxViewFrame;
+        [UIView commitAnimations];
+    }
     
+    
+    [self scrollTextViewToBottom];
     keyboardIsShown = YES;
 }
 
@@ -241,7 +249,8 @@
                                              selector:@selector(keyboardWillHide:) 
                                                  name:UIKeyboardWillHideNotification 
                                                object:self.view.window];
-    keyboardIsShown = NO;
+    keyboardListener = [OTRUIKeyboardListener shared];
+    keyboardIsShown = [keyboardListener isVisible];
     //make contentSize bigger than your scrollSize (you will need to figure out for your own use case)
 
     
@@ -294,6 +303,15 @@
      selector:@selector(showDisconnectionAlert:)
      name:@"XMPPLogoutNotification"
      object:nil ];
+}
+
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    keyboardIsShown = [keyboardListener isVisible];
+    
+    
 }
 
 - (void) showDisconnectionAlert:(NSNotification*)notification {
@@ -494,6 +512,16 @@
     
     //CGRect bottomRect = CGRectMake(0, 0, 1, [chatHistoryTextView contentSize].height);
     //[chatHistoryTextView scrollRectToVisible: bottomRect animated:YES];
+    NSString * chatHistory = buddy.chatHistory;
+    
+    if(![buddy.chatHistory isEqualToString:@""])
+    {
+        NSInteger height = [[chatHistoryTextView stringByEvaluatingJavaScriptFromString:@"document.body.offsetHeight;"] intValue];
+        NSString* javascript = [NSString stringWithFormat:@"window.scrollBy(0, %d);", height];   
+        [chatHistoryTextView stringByEvaluatingJavaScriptFromString:javascript];
+    }
+    
+    
 }
 
 -(BOOL)textViewShouldBeginEditing:(UITextView *)textView
@@ -578,6 +606,9 @@
         
         [self refreshContext];
         [self refreshLockButton];
+        
+        if ([keyboardListener isVisible])
+            [self keyboardWillShow:[self.keyboardListener lastNotification]];
     }
 }
 
