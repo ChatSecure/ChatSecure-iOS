@@ -13,6 +13,8 @@
 
 @property (nonatomic, readonly) NSString *key;
 @property (nonatomic) id value;
+@property (nonatomic, retain) NSNumber *defaultValue;
+
 
 - (id) initWithTitle:(NSString*)newTitle description:(NSString*)newDescription settingsKey:(NSString*)newSettingsKey;
 
