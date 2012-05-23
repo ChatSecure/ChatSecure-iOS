@@ -14,6 +14,8 @@
     NSNotification * lastNotification;
 }
 
+@property (nonatomic) CGRect keyboardFrame;
+
 + (OTRUIKeyboardListener *) shared;
 
 -(BOOL)isVisible;

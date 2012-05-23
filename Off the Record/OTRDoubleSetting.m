@@ -10,14 +10,14 @@
 #import "OTRDoubleSettingViewController.h"
 
 @implementation OTRDoubleSetting
-@synthesize doubleValue, minValue, maxValue, numValues, defaultValue, isPercentage;
+@synthesize doubleValue, minValue, maxValue, numValues, isPercentage;
 
 - (id) initWithTitle:(NSString *)newTitle description:(NSString *)newDescription settingsKey:(NSString *)newSettingsKey
 {
     if (self = [super initWithTitle:newTitle description:newDescription settingsKey:newSettingsKey])
     {
         self.action = @selector(editValue);
-        self.defaultValue = 0.0;
+        self.defaultValue = [NSNumber numberWithDouble:0.0];
         self.isPercentage = NO;
     }
     return self;
@@ -37,16 +37,11 @@
 }
 
 - (double) doubleValue {
-    NSNumber *value = [self value];
-    if (!value) 
+    if (![self value]) 
     {
-        self.doubleValue = defaultValue;
-        return defaultValue;
+        self.value = self.defaultValue;
     } 
-    else 
-    {
-        return [[self value] doubleValue];
-    }
+    return [[self value] doubleValue];
 }
 
 - (NSString*) stringValue {

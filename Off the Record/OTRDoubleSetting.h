@@ -14,7 +14,6 @@
 @property (nonatomic) double doubleValue;
 @property (nonatomic) double minValue;
 @property (nonatomic) double maxValue;
-@property (nonatomic) double defaultValue;
 @property (nonatomic) BOOL isPercentage;
 @property (nonatomic) NSUInteger numValues;
 

@@ -51,18 +51,21 @@
     fontSizeSetting.maxValue = 2.5;
     fontSizeSetting.minValue = 0.5;
     fontSizeSetting.numValues = 4;
-    fontSizeSetting.defaultValue = 1.0;
+    fontSizeSetting.defaultValue = [NSNumber numberWithDouble:1.0];
     fontSizeSetting.isPercentage = YES;
 
     [newSettingsDictionary setObject:fontSizeSetting forKey:kOTRSettingKeyFontSize];
     OTRBoolSetting *deletedDisconnectedConversations = [[OTRBoolSetting alloc] initWithTitle:DELETE_CONVERSATIONS_ON_DISCONNECT_TITLE_STRING description:DELETE_CONVERSATIONS_ON_DISCONNECT_DESCRIPTION_STRING settingsKey:kOTRSettingKeyDeleteOnDisconnect];
     [newSettingsDictionary setObject:deletedDisconnectedConversations forKey:kOTRSettingKeyDeleteOnDisconnect];
-    OTRSettingsGroup *chatSettingsGroup = [[OTRSettingsGroup alloc] initWithTitle:CHAT_STRING settings:[NSArray arrayWithObjects:fontSizeSetting, deletedDisconnectedConversations, nil]];
+    OTRBoolSetting *showDisconnectionWarning = [[OTRBoolSetting alloc] initWithTitle:DISCONNECTION_WARNING_TITLE_STRING description:DISCONNECTION_WARNING_DESC_STRING settingsKey:kOTRSettingKeyShowDisconnectionWarning];
+    showDisconnectionWarning.defaultValue = [NSNumber numberWithBool:YES];
+    [newSettingsDictionary setObject:showDisconnectionWarning forKey:kOTRSettingKeyShowDisconnectionWarning];
+    OTRSettingsGroup *chatSettingsGroup = [[OTRSettingsGroup alloc] initWithTitle:CHAT_STRING settings:[NSArray arrayWithObjects:fontSizeSetting, deletedDisconnectedConversations, showDisconnectionWarning, nil]];
     [settingsGroups addObject:chatSettingsGroup];
     
     
-    OTRBoolSetting *allowSelfSignedCertificates = [[OTRBoolSetting alloc] initWithTitle:ALLOW_SELF_SIGNED_CERTIFICATES_STRING description:SECURITY_WARNING_STRING settingsKey:kOTRSettingKeyAllowSelfSignedSSL];
-    OTRBoolSetting *allowSSLHostnameMismatch = [[OTRBoolSetting alloc] initWithTitle:ALLOW_SSL_HOSTNAME_MISMATCH_STRING description:SECURITY_WARNING_STRING settingsKey:kOTRSettingKeyAllowSSLHostNameMismatch];
+    OTRBoolSetting *allowSelfSignedCertificates = [[OTRBoolSetting alloc] initWithTitle:ALLOW_SELF_SIGNED_CERTIFICATES_STRING description:SECURITY_WARNING_DESCRIPTION_STRING settingsKey:kOTRSettingKeyAllowSelfSignedSSL];
+    OTRBoolSetting *allowSSLHostnameMismatch = [[OTRBoolSetting alloc] initWithTitle:ALLOW_SSL_HOSTNAME_MISMATCH_STRING description:SECURITY_WARNING_DESCRIPTION_STRING settingsKey:kOTRSettingKeyAllowSSLHostNameMismatch];
     OTRSettingsGroup *xmppGroup = [[OTRSettingsGroup alloc] initWithTitle:@"XMPP" settings:[NSArray arrayWithObjects:allowSelfSignedCertificates, allowSSLHostnameMismatch, nil]];
     [newSettingsDictionary setObject:allowSelfSignedCertificates forKey:kOTRSettingKeyAllowSelfSignedSSL];
     [newSettingsDictionary setObject:allowSSLHostnameMismatch forKey:kOTRSettingKeyAllowSSLHostNameMismatch];

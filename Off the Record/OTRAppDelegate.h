@@ -14,5 +14,6 @@
 @property (nonatomic, retain) UITabBarController *tabBarController;
 @property (nonatomic, retain) NSTimer *backgroundTimer;
 @property (nonatomic) UIBackgroundTaskIdentifier backgroundTask;
+@property (nonatomic) BOOL didShowDisconnectionWarning;
 
 @end
