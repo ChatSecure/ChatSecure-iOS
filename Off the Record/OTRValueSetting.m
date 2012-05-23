@@ -9,7 +9,7 @@
 #import "OTRValueSetting.h"
 
 @implementation OTRValueSetting
-@synthesize key;
+@synthesize key, defaultValue;
 
 - (void) dealloc
 {

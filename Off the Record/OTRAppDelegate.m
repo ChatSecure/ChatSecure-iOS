@@ -39,7 +39,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 
 @synthesize window = _window;
 @synthesize tabBarController = _tabBarController;
-@synthesize backgroundTask, backgroundTimer;
+@synthesize backgroundTask, backgroundTimer, didShowDisconnectionWarning;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -114,6 +114,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 {
     NSLog(@"Application entered background state.");
     NSAssert(self.backgroundTask == UIBackgroundTaskInvalid, nil);
+    self.didShowDisconnectionWarning = NO;
     
     self.backgroundTask = [application beginBackgroundTaskWithExpirationHandler: ^{
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -138,7 +139,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 
     NSLog(@"Timer update, background time left: %f", application.backgroundTimeRemaining);
     
-    if ([application backgroundTimeRemaining] < 60) 
+    if ([application backgroundTimeRemaining] < 60 && !self.didShowDisconnectionWarning && [OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyShowDisconnectionWarning]) 
     {
         UILocalNotification *localNotif = [[UILocalNotification alloc] init];
         if (localNotif) {
@@ -146,6 +147,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
             localNotif.alertAction = OK_STRING;
             [application presentLocalNotificationNow:localNotif];
         }
+        self.didShowDisconnectionWarning = YES;
     }
     if ([application backgroundTimeRemaining] < 10) 
     {

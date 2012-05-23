@@ -34,6 +34,11 @@
 #define OFFLINE_STRING NSLocalizedString(@"Offline", @"Label in buddylist for users that are offline")
 #define AWAY_STRING NSLocalizedString(@"Away", @"Label in buddylist for users that are away")
 #define AVAILABLE_STRING NSLocalizedString(@"Available", "Label in buddylist for users that are available")
+#define SECURITY_WARNING_STRING NSLocalizedString(@"Security Warning", @"Title of alert box warning about security issues")
+#define AGREE_STRING NSLocalizedString(@"Agree", "Agree to EULA")
+#define DISAGREE_STRING NSLocalizedString(@"Disagree",@"Disagree with EULA")
+#define EULA_WARNING_STRING NSLocalizedString(@"If you require true security, meet in person. This software, its dependencies, or the underlying OTR protocol could contain security issues. The full source code is available on Github but has not yet been audited by an independent security expert. Use at your own risk.", @"Text describing possible security risks")
+#define EULA_BSD_STRING @"Modified BSD License:\nTHIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
 
 // OTRLoginViewController
 #define ERROR_STRING NSLocalizedString(@"Error!", "Title of error message popup box")
@@ -67,11 +72,14 @@
 #define OTHER_STRING NSLocalizedString(@"Other", @"Title for other miscellaneous settings group")
 #define ALLOW_SELF_SIGNED_CERTIFICATES_STRING NSLocalizedString(@"Self-Signed SSL", @"Title for settings cell on whether or not the XMPP library should allow self-signed SSL certificates")
 #define ALLOW_SSL_HOSTNAME_MISMATCH_STRING NSLocalizedString(@"Hostname Mismatch", @"Title for settings cell on whether or not the XMPP library should allow SSL hostname mismatch")
-#define SECURITY_WARNING_STRING NSLocalizedString(@"Warning: Use with caution! This may reduce your security.", @"Cell description text that warns users that enabling that option may reduce their security.")
+#define SECURITY_WARNING_DESCRIPTION_STRING NSLocalizedString(@"Warning: Use with caution! This may reduce your security.", @"Cell description text that warns users that enabling that option may reduce their security.")
 #define DELETE_CONVERSATIONS_ON_DISCONNECT_TITLE_STRING NSLocalizedString(@"Auto-delete", @"Title for automatic conversation deletion setting")
 #define DELETE_CONVERSATIONS_ON_DISCONNECT_DESCRIPTION_STRING NSLocalizedString(@"Delete chats on disconnect", @"Description for automatic conversation deletion")
 #define FONT_SIZE_STRING NSLocalizedString(@"Font Size", @"Size for the font in the chat screen")
 #define FONT_SIZE_DESCRIPTION_STRING NSLocalizedString(@"Size for font in chat view", @"description for what the font size setting affects")
+#define DISCONNECTION_WARNING_TITLE_STRING NSLocalizedString(@"Signout Warning", @"Title for setting about showing a warning before disconnection")
+#define DISCONNECTION_WARNING_DESC_STRING NSLocalizedString(@"1 Minute Alert Before Disconnection", @"Description for disconnection warning setting")
+
 
 // OTRSettingsViewController
 #define SETTINGS_STRING NSLocalizedString(@"Settings", @"Title for the Settings screen")
