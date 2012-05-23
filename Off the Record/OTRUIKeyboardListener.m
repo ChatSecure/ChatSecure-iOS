@@ -10,6 +10,7 @@
 
 @implementation OTRUIKeyboardListener
 
+@synthesize keyboardFrame;
 
 + (OTRUIKeyboardListener *) shared {
     static OTRUIKeyboardListener * sListener;    
@@ -33,11 +34,17 @@
 -(void) noticeShowKeyboard:(NSNotification *)inNotification {
     visible = true;
     lastNotification = inNotification;
+    CGRect keyboardFrameRaw = [[[inNotification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    UIWindow *window = [[[UIApplication sharedApplication] windows]objectAtIndex:0];
+    UIView *mainSubviewOfWindow = window.rootViewController.view;
+    self.keyboardFrame = [mainSubviewOfWindow convertRect:keyboardFrameRaw fromView:window];
+    
 }
 
 -(void) noticeHideKeyboard:(NSNotification *)inNotification {
     visible = false;
     lastNotification = inNotification;
+    self.keyboardFrame = CGRectNull;
 }
 
 -(BOOL) isVisible {

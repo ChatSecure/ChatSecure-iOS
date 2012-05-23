@@ -98,6 +98,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     }
     
     application.applicationIconBadgeNumber = 0;
+    [OTRUIKeyboardListener shared];
     
     return YES;
 }
@@ -210,10 +211,6 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
      }
 }
 
--(void)applicationDidFinishLaunching:(UIApplication *)application
-{
-    [OTRUIKeyboardListener shared];
-}
 /*
 // Optional UITabBarControllerDelegate method.
 - (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController
