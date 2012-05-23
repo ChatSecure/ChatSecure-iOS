@@ -36,8 +36,8 @@
     lastNotification = inNotification;
     CGRect keyboardFrameRaw = [[[inNotification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
     UIWindow *window = [[[UIApplication sharedApplication] windows]objectAtIndex:0];
-    UIView *mainSubviewOfWindow = window.rootViewController.view;
-    self.keyboardFrame = [mainSubviewOfWindow convertRect:keyboardFrameRaw fromView:window];
+    UIView *mainSubviewOfWindow = ((UITabBarController *)window.rootViewController).selectedViewController.view;
+    self.keyboardFrame = [mainSubviewOfWindow convertRect:keyboardFrameRaw toView:nil];
     
 }
 

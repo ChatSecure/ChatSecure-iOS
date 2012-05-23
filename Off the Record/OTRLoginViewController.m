@@ -379,8 +379,10 @@
     OTRUIKeyboardListener * keyboardListenter = [OTRUIKeyboardListener shared];
     CGSize keyboardSize = keyboardListenter.keyboardFrame.size;
     
+    float keyboardHeight = MIN(keyboardSize.height, keyboardSize.width);
+    
     float viewHeight = self.view.frame.size.height;
-    return (viewHeight - keyboardSize.height)/2.0-(viewHeight/2.0);
+    return (viewHeight - keyboardHeight)/2.0-(viewHeight/2.0);
 }
 
 -(void)dealloc
