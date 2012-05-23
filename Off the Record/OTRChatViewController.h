@@ -11,6 +11,7 @@
 #import "context.h"
 #import "OTRProtocolManager.h"
 #import "OTRBuddy.h"
+#import "OTRUIKeyboardListener.h"
 
 @interface OTRChatViewController : UIViewController <UITextFieldDelegate,UIWebViewDelegate, UIActionSheetDelegate, UISplitViewControllerDelegate> 
 
@@ -31,6 +32,8 @@
 
 @property (nonatomic, retain) NSURL *lastActionLink;
 @property (nonatomic) BOOL keyboardIsShown;
+
+@property (nonatomic, strong) OTRUIKeyboardListener * keyboardListener;
 
 
 - (void)sendButtonPressed:(id)sender;

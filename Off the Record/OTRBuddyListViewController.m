@@ -140,7 +140,22 @@
     OTRBuddy *buddy = [protocolManager.buddyList getBuddyByName:userName];
     [buddy receiveMessage:decodedMessage];
     
-    if(![chatViewController.title isEqualToString:buddy.displayName] && ![buddy.lastMessage isEqualToString:@""])
+    NSString * currentTitle;
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+    {
+        UIViewController * vc = self.tabBarController.selectedViewController;
+        currentTitle = [vc title];
+        if ([vc isKindOfClass:[UISplitViewController class]]) {
+            currentTitle = [[((UISplitViewController *)vc).viewControllers objectAtIndex:1] title];
+        }
+        
+    }
+    else {
+        currentTitle = chatListController.navigationController.topViewController.title;
+    }
+    
+    
+    if(![currentTitle isEqualToString:buddy.displayName] && ![buddy.lastMessage isEqualToString:@""] && ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive))
      {
          UIAlertView *alert = [[UIAlertView alloc] initWithTitle:userName message:buddy.lastMessage delegate:self cancelButtonTitle:IGNORE_STRING otherButtonTitles:REPLY_STRING, nil];
          alert.tag = 1;
@@ -240,6 +255,7 @@
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
             self.tabBarController.selectedIndex = 1;
             chatListController.navigationController.viewControllers = [NSArray arrayWithObjects:chatListController, chatViewController, nil];
+            //[chatListController.navigationController pushViewController:chatViewController animated:YES];
         } else {
             self.tabBarController.selectedIndex = 0;
         }

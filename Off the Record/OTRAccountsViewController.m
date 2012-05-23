@@ -38,6 +38,7 @@
     accountsTableView.dataSource = self;
     accountsTableView.delegate = self;
     accountsTableView.scrollEnabled = NO;
+    //accountsTableView.transform = CGAffineTransformMakeRotation(-1.5707);
     [self.view addSubview:accountsTableView];
     
     self.logoView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"chatsecure_banner.png"]];
@@ -166,6 +167,7 @@
     if(indexPath.row == 0)
     {
         cell.textLabel.text = AIM_STRING;
+        //cell.textLabel.transform = CGAffineTransformMakeRotation(-1.5707);
         
         if([OTRProtocolManager sharedInstance].oscarManager.loggedIn)
         {
@@ -181,6 +183,7 @@
     else if(indexPath.row == 1)
     {
         cell.textLabel.text = XMPP_STRING;
+        //cell.textLabel.transform = CGAffineTransformMakeRotation(-1.5707);
         
         if([OTRProtocolManager sharedInstance].xmppManager.isXmppConnected)
         {
@@ -204,16 +207,15 @@
         if(![OTRProtocolManager sharedInstance].oscarManager.loggedIn)
         {
             OTRLoginViewController *loginViewController = [[OTRLoginViewController alloc] init];
+            UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:loginViewController];
             
             OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
             
             loginViewController.useXMPP = NO;
             loginViewController.protocolManager = protocolManager;
             loginViewController.modalPresentationStyle = UIModalPresentationFormSheet;
-            [self.tabBarController presentModalViewController:loginViewController animated:YES];
+            [self.tabBarController presentModalViewController:nav animated:YES];
 
-            
-            
             loginController = loginViewController;
         }
         else
@@ -228,17 +230,15 @@
         if(![OTRProtocolManager sharedInstance].xmppManager.isXmppConnected)
         {
             OTRLoginViewController *loginViewController = [[OTRLoginViewController alloc] init];
+            UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:loginViewController];
             
             OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
             loginViewController.useXMPP = YES;
             loginViewController.protocolManager = protocolManager;
             loginViewController.modalPresentationStyle = UIModalPresentationFormSheet;
-            [self.tabBarController presentModalViewController:loginViewController animated:YES];
+            [self.tabBarController presentModalViewController:nav animated:YES];
 
-
-            
             loginController = loginViewController;
-
         }
         else
         {
@@ -247,10 +247,7 @@
             [logoutSheet showFromTabBar:self.tabBarController.tabBar];
         }
     }
-    
-    
-    
-    
+
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 

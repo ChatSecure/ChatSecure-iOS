@@ -18,7 +18,7 @@
 @synthesize useXMPP;
 @synthesize usernameLabel, passwordLabel, rememberUsernameLabel;
 @synthesize logoView;
-@synthesize bottomToolbar;
+@synthesize timeoutTimer;
 
 - (void)viewDidUnload
 {
@@ -35,7 +35,6 @@
     self.passwordTextField = nil;
     self.loginButton = nil;
     self.cancelButton = nil;
-    self.bottomToolbar = nil;
 }
 
 
@@ -75,27 +74,22 @@
     [self.view addSubview:usernameTextField];
     [self.view addSubview:passwordTextField];
     
-    self.bottomToolbar = [[UIToolbar alloc] init];
     
-    NSString *loginButtonString;
-    SEL loginButtonAction;
+    NSString *loginButtonString = LOGIN_STRING;
     if (useXMPP) 
     {
-        loginButtonString = [NSString stringWithFormat:@"%@ XMPP", LOGIN_TO_STRING];
-        loginButtonAction = @selector(xmppLoginPressed:);
+        self.title = @"XMPP";
     } 
     else 
     {
-        loginButtonString = [NSString stringWithFormat:@"%@ AIM", LOGIN_TO_STRING];
-        loginButtonAction = @selector(loginPressed:);
+        self.title = @"AIM";
     }
     
-    self.loginButton = [[UIBarButtonItem alloc] initWithTitle:loginButtonString style:UIBarButtonItemStyleDone target:self action:loginButtonAction];
+    self.loginButton = [[UIBarButtonItem alloc] initWithTitle:loginButtonString style:UIBarButtonItemStyleDone target:self action:@selector(loginButtonPressed:)];
     self.cancelButton = [[UIBarButtonItem alloc] initWithTitle:CANCEL_STRING style:UIBarButtonItemStyleBordered target:self action:@selector(cancelPressed:)];
     
-    self.bottomToolbar.items = [NSArray arrayWithObjects:cancelButton, [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil], loginButton, nil];
-    
-    [self.view addSubview:bottomToolbar];
+    self.navigationItem.rightBarButtonItem = loginButton;
+    self.navigationItem.leftBarButtonItem = cancelButton;
 }
 
 - (void) viewDidLoad 
@@ -184,10 +178,6 @@
     CGFloat rememberUserNameSwitchFrameWidth = 79;
     self.rememberUserNameSwitch.frame = CGRectMake(self.view.frame.size.width-rememberUserNameSwitchFrameWidth-5, rememberUsernameLabelFrameYOrigin, rememberUserNameSwitchFrameWidth, 27);
     self.rememberUserNameSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
-    
-    CGFloat bottomToolbarFrameHeight = 45;
-    self.bottomToolbar.frame = CGRectMake(0, self.view.frame.size.height - bottomToolbarFrameHeight, self.view.frame.size.width, bottomToolbarFrameHeight);
-    self.bottomToolbar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin;
 }
 
 - (void) viewWillDisappear:(BOOL)animated 
@@ -227,7 +217,7 @@
     }
 }
 
-- (void)loginPressed:(id)sender 
+- (void)aimLoginPressed:(id)sender 
 {
     BOOL fields = [self checkFields];
     if(fields)
@@ -243,11 +233,20 @@
         [HUD show:YES];
         
         
+        
         if (![protocolManager.oscarManager.login beginAuthorization]) {
             [HUD hide:YES];
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:OSCAR_FAIL_STRING delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
             [alert show];
         }
+    }
+}
+
+-(void) timeout:(NSTimer *) timer
+{
+    //[timeoutTimer invalidate];
+    if (HUD) {
+        [HUD hide:YES];
     }
 }
 
@@ -262,12 +261,14 @@
     [[NSNotificationCenter defaultCenter]
      postNotificationName:@"XMPPLoginNotification"
      object:self];
+    [timeoutTimer invalidate];
 }
 -(void) xmppLoginFailed
 {
     [HUD hide:YES];
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:XMPP_FAIL_STRING delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
     [alert show];
+    
 }
 
 
@@ -289,6 +290,7 @@
         if (connect) {
             NSLog(@"xmppLogin attempt");
         }
+        
         /*
         if(connect)
         {
@@ -304,6 +306,21 @@
             [alert release];
         }*/
     }
+}
+
+- (void)loginButtonPressed:(id)sender {
+    if (useXMPP) 
+    {
+        [self xmppLoginPressed:sender];
+    } 
+    else 
+    {
+        [self aimLoginPressed:sender];
+    }
+    timeoutTimer = [NSTimer timerWithTimeInterval:45.0 target:self selector:@selector(timeout:) userInfo:nil repeats:NO];
+
+
+    
 }
 
 - (void)cancelPressed:(id)sender {
@@ -327,6 +344,12 @@
 {
     [textField resignFirstResponder];
     return YES;
+}
+
+-(void)dealloc
+{
+    [timeoutTimer invalidate];
+    
 }
 
 #pragma mark -

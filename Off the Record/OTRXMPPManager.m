@@ -15,6 +15,7 @@
 #import "XMPPRosterCoreDataStorage.h"
 #import "XMPPvCardAvatarModule.h"
 #import "XMPPvCardCoreDataStorage.h"
+#import "Strings.h"
 
 #import "DDLog.h"
 #import "DDTTYLogger.h"
@@ -441,41 +442,6 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
      object:self];
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark UIApplicationDelegate
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-- (void)applicationDidEnterBackground:(UIApplication *)application 
-{
-	// Use this method to release shared resources, save user data, invalidate timers, and store
-	// enough application state information to restore your application to its current state in case
-	// it is terminated later.
-	// 
-	// If your application supports background execution,
-	// called instead of applicationWillTerminate: when the user quits.
-	
-	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
-    
-#if TARGET_IPHONE_SIMULATOR
-	DDLogError(@"The iPhone simulator does not process background network traffic. "
-			   @"Inbound traffic is queued until the keepAliveTimeout:handler: fires.");
-#endif
-    
-	if ([application respondsToSelector:@selector(setKeepAliveTimeout:handler:)]) 
-	{
-		[application setKeepAliveTimeout:600 handler:^{
-			
-			DDLogVerbose(@"KeepAliveHandler");
-			
-			// Do other keep alive stuff here.
-		}];
-	}
-}
-
-- (void)applicationWillEnterForeground:(UIApplication *)application 
-{
-	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
-}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark XMPPStream Delegate
@@ -605,35 +571,6 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
              postNotificationName:@"MessageReceivedNotification"
              object:self userInfo:messageInfo];
         }
-        
-		/*XMPPUserCoreDataStorageObject *user = [xmppRosterStorage userForJID:[message from]
-         xmppStream:xmppStream
-         managedObjectContext:[self managedObjectContext_roster]];
-         
-         NSString *body = [[message elementForName:@"body"] stringValue];
-         NSString *displayName = [user displayName];
-         
-         if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive)
-         {
-         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:displayName
-         message:body 
-         delegate:nil 
-         cancelButtonTitle:@"Ok" 
-         otherButtonTitles:nil];
-         [alertView show];
-         [alertView release];
-         }
-         else
-         {
-         // We are not active, so use a local notification instead
-         UILocalNotification *localNotification = [[UILocalNotification alloc] init];
-         localNotification.alertAction = @"Ok";
-         localNotification.alertBody = [NSString stringWithFormat:@"From: %@\n\n%@",displayName,body];
-         
-         [[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
-         [localNotification release];
-         }*/
-        
 	}
 }
 
@@ -656,6 +593,9 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 		DDLogError(@"Unable to connect to server. Check xmppStream.hostName");
         [self failedToConnect];
 	}
+    else {
+        //Lost connection
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

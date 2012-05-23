@@ -75,6 +75,9 @@
 
 // OTRSettingsViewController
 #define SETTINGS_STRING NSLocalizedString(@"Settings", @"Title for the Settings screen")
+#define SHARE_STRING NSLocalizedString(@"Share", @"Title for sharing a link to the app")
+#define NOT_AVAILABLE_STRING NSLocalizedString(@"Not Available", @"Shown when a feature is not available, for example SMS")
+#define SHARE_MESSAGE_STRING NSLocalizedString(@"Chat with me securely", @"Body of SMS or email when sharing a link to the app")
 
 // OTRSettingsDetailViewController
 #define SAVE_STRING NSLocalizedString(@"Save", "Title for button for saving a setting")
@@ -82,3 +85,10 @@
 #define NEW_STRING NSLocalizedString(@"New", "For a new settings value")
 #define OLD_STRING NSLocalizedString(@"Old", "For an old settings value")
 
+// OTRQRCodeViewController
+#define DONE_STRING NSLocalizedString(@"Done", "Title for button to press when user is finished")
+#define QR_CODE_INSTRUCTIONS_STRING NSLocalizedString(@"This QR Code contains a link to http://omniqrcode.com/q/chatsecure and will redirect to the App Store.", @"Instructions label text underneath QR code")
+
+// OTRAppDelegate
+#define EXPIRATION_STRING NSLocalizedString(@"Background session will expire in one minute.", @"Message displayed in Notification Manager when session will expire in one minute")
+#define READ_STRING NSLocalizedString(@"Read", @"Title for action button on alert dialog, used as a verb in the present tense")
