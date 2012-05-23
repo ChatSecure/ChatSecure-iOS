@@ -20,6 +20,7 @@
 
 -(BOOL)isVisible;
 -(NSNotification *) lastNotification;
+-(CGRect) getFrameWithView:(UIView *)view;
 
 
 @end

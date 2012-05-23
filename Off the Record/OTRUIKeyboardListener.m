@@ -34,11 +34,17 @@
 -(void) noticeShowKeyboard:(NSNotification *)inNotification {
     visible = true;
     lastNotification = inNotification;
-    CGRect keyboardFrameRaw = [[[inNotification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
-    UIWindow *window = [[[UIApplication sharedApplication] windows]objectAtIndex:0];
-    UIView *mainSubviewOfWindow = ((UITabBarController *)window.rootViewController).selectedViewController.view;
-    self.keyboardFrame = [mainSubviewOfWindow convertRect:keyboardFrameRaw toView:nil];
+    keyboardFrame = [[[inNotification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    //UIWindow *window = [[[UIApplication sharedApplication] windows]objectAtIndex:0];
+    //UIView *mainSubviewOfWindow = ((UITabBarController *)window.rootViewController).selectedViewController.view;
+    //self.keyboardFrame = [mainSubviewOfWindow convertRect:keyboardFrameRaw toView:nil];
     
+}
+
+-(CGRect) getFrameWithView:(UIView *)view
+{
+    return [view convertRect:self.keyboardFrame toView:nil];
+
 }
 
 -(void) noticeHideKeyboard:(NSNotification *)inNotification {
