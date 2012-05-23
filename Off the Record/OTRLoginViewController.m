@@ -148,11 +148,12 @@
         }
     }
     
-    CGFloat logoViewFrameWidth = self.logoView.image.size.width;
-    self.logoView.frame = CGRectMake(self.view.frame.size.width/2 - logoViewFrameWidth/2, 20, logoViewFrameWidth, self.logoView.image.size.height);
+    double scale = 0.75;
+    CGFloat logoViewFrameWidth = (int)(self.logoView.image.size.width * scale);
+    self.logoView.frame = CGRectMake(self.view.frame.size.width/2 - logoViewFrameWidth/2, 5, logoViewFrameWidth, (int)(self.logoView.image.size.height * scale));
     self.logoView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
     
-    CGFloat usernameLabelFrameYOrigin = logoView.frame.origin.y + logoView.frame.size.height + 15;
+    CGFloat usernameLabelFrameYOrigin = logoView.frame.origin.y + logoView.frame.size.height + 5;
     CGSize usernameLabelTextSize = [self textSizeForLabel:usernameLabel];
     CGSize passwordLabelTextSize = [self textSizeForLabel:passwordLabel];
     CGFloat labelWidth = MAX(usernameLabelTextSize.width, passwordLabelTextSize.width);
@@ -178,6 +179,8 @@
     CGFloat rememberUserNameSwitchFrameWidth = 79;
     self.rememberUserNameSwitch.frame = CGRectMake(self.view.frame.size.width-rememberUserNameSwitchFrameWidth-5, rememberUsernameLabelFrameYOrigin, rememberUserNameSwitchFrameWidth, 27);
     self.rememberUserNameSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
+    
+    [self.usernameTextField becomeFirstResponder];
 }
 
 - (void) viewWillDisappear:(BOOL)animated 
@@ -342,8 +345,9 @@
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-    [textField resignFirstResponder];
-    return YES;
+    //[textField resignFirstResponder];
+    //return YES;
+    return NO;
 }
 
 -(void)dealloc
