@@ -8,6 +8,7 @@
 
 #import "OTRLoginViewController.h"
 #import "Strings.h"
+#import "OTRUIKeyboardListener.h"
 
 @implementation OTRLoginViewController
 @synthesize usernameTextField;
@@ -19,6 +20,7 @@
 @synthesize usernameLabel, passwordLabel, rememberUsernameLabel;
 @synthesize logoView;
 @synthesize timeoutTimer;
+
 
 - (void)viewDidUnload
 {
@@ -162,15 +164,20 @@
     self.usernameLabel.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;
     self.usernameTextField.frame = [self textFieldFrameForLabel:usernameLabel];
     self.usernameTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
-    self.usernameTextField.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth;
+    self.usernameTextField.returnKeyType = UIReturnKeyNext;
+    if (useXMPP) {
+        self.usernameTextField.keyboardType = UIKeyboardTypeEmailAddress;
+    }
+    self.usernameTextField.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth;
     
     CGFloat passwordLabelFrameYOrigin = usernameLabelFrameYOrigin + self.usernameLabel.frame.size.height + 15;
     self.passwordLabel.frame = CGRectMake(10, passwordLabelFrameYOrigin, labelWidth, 21);
-    self.passwordLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
+    self.passwordLabel.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;
     
     self.passwordTextField.frame = [self textFieldFrameForLabel:passwordLabel];
     self.passwordTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
-    self.passwordTextField.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin;
+    self.passwordTextField.returnKeyType = UIReturnKeyGo;
+    self.passwordTextField.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth;
     
     CGFloat rememberUsernameLabelFrameYOrigin = passwordLabel.frame.origin.y + passwordLabel.frame.size.height + 15;
     self.rememberUsernameLabel.frame = CGRectMake(10, rememberUsernameLabelFrameYOrigin, 170, 21);
@@ -180,7 +187,14 @@
     self.rememberUserNameSwitch.frame = CGRectMake(self.view.frame.size.width-rememberUserNameSwitchFrameWidth-5, rememberUsernameLabelFrameYOrigin, rememberUserNameSwitchFrameWidth, 27);
     self.rememberUserNameSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
     
-    [self.usernameTextField becomeFirstResponder];
+    if([self.usernameTextField.text isEqualToString:@""])
+    {
+        [self.usernameTextField becomeFirstResponder];
+    }
+    else {
+        [self.passwordTextField becomeFirstResponder];
+    }
+    
 }
 
 - (void) viewWillDisappear:(BOOL)animated 
@@ -216,7 +230,8 @@
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         return YES;
     } else {
-        return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+        //return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+        return NO;
     }
 }
 
@@ -231,6 +246,10 @@
         
         HUD = [[MBProgressHUD alloc] initWithView:self.view];
         [self.view addSubview:HUD];
+        
+        float hudOffsetY = [self getMidpointOffsetforHUD];
+        
+        HUD.yOffset = hudOffsetY;
         HUD.delegate = self;
         HUD.labelText = @"Logging in...";
         [HUD show:YES];
@@ -286,7 +305,9 @@
         [self.view addSubview:HUD];
         HUD.delegate = self;
         HUD.labelText = LOGGING_IN_STRING;
-            [HUD show:YES];
+        float hudOffsetY = [self getMidpointOffsetforHUD];
+        HUD.yOffset = hudOffsetY;
+        [HUD show:YES];
         
         BOOL connect = [protocolManager.xmppManager connectWithJID:usernameTextField.text password:passwordTextField.text];
         
@@ -345,9 +366,23 @@
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-    //[textField resignFirstResponder];
-    //return YES;
+    if (self.usernameTextField.isFirstResponder)
+        [self.passwordTextField becomeFirstResponder];
+    else
+        [self loginButtonPressed:nil];
+    
     return NO;
+}
+
+-(float)getMidpointOffsetforHUD
+{
+    OTRUIKeyboardListener * keyboardListenter = [OTRUIKeyboardListener shared];
+    CGSize keyboardSize = [keyboardListenter getFrameWithView:self.view].size;
+    
+    
+    
+    float viewHeight = self.view.frame.size.height;
+    return (viewHeight - keyboardSize.height)/2.0-(viewHeight/2.0);
 }
 
 -(void)dealloc
