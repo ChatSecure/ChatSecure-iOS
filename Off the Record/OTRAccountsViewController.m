@@ -213,7 +213,7 @@
             
             loginViewController.useXMPP = NO;
             loginViewController.protocolManager = protocolManager;
-            loginViewController.modalPresentationStyle = UIModalPresentationFormSheet;
+            nav.modalPresentationStyle = UIModalPresentationFormSheet;
             [self.tabBarController presentModalViewController:nav animated:YES];
 
             loginController = loginViewController;
@@ -235,7 +235,7 @@
             OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
             loginViewController.useXMPP = YES;
             loginViewController.protocolManager = protocolManager;
-            loginViewController.modalPresentationStyle = UIModalPresentationFormSheet;
+            nav.modalPresentationStyle = UIModalPresentationFormSheet;
             [self.tabBarController presentModalViewController:nav animated:YES];
 
             loginController = loginViewController;
