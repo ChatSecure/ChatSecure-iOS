@@ -497,7 +497,7 @@
 {
     if (buddy.chatHistory) {
         OTRDoubleSetting *fontSizeSetting = (OTRDoubleSetting*)[protocolManager.settingsManager settingForOTRSettingKey:kOTRSettingKeyFontSize];
-        NSString *htmlString = [NSString stringWithFormat:@"<html><head><style type=\"text/css\">p{font-size:%@;}</style></head><body>%@</body></html>",fontSizeSetting.stringValue, buddy.chatHistory];
+        NSString *htmlString = [NSString stringWithFormat:@"<html><head><style type=\"text/css\">p{font-size:%@;font-family: geneva, arial, helvetica, sans-serif;}</style></head><body>%@</body></html>",fontSizeSetting.stringValue, buddy.chatHistory];
         [chatHistoryTextView loadHTMLString:htmlString baseURL:[NSURL URLWithString:@"/"]];
     }
 }
