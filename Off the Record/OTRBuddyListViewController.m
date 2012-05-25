@@ -100,12 +100,14 @@
 }
 
 - (void) showEULAWarning {
+    /*
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     if (![[defaults objectForKey:kOTRSettingUserAgreedToEULA] boolValue]) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:SECURITY_WARNING_STRING message:[NSString stringWithFormat:@"%@\n\n%@",EULA_WARNING_STRING,EULA_BSD_STRING] delegate:self cancelButtonTitle:DISAGREE_STRING otherButtonTitles:AGREE_STRING,nil];
         alert.tag = 123;
         [alert show];
     }
+    */
 }
 
 - (void)viewDidUnload
