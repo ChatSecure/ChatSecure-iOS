@@ -576,7 +576,18 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 
 - (void)xmppStream:(XMPPStream *)sender didReceivePresence:(XMPPPresence *)presence
 {
-	DDLogVerbose(@"%@: %@ - %@", THIS_FILE, THIS_METHOD, [presence fromStr]);
+	DDLogVerbose(@"%@: %@ - %@\nType: %@\nShow: %@\nStatus: %@", THIS_FILE, THIS_METHOD, [presence from], [presence type], [presence show],[presence status]);
+    
+    [self performSelectorOnMainThread:@selector(stutsUpdateNotifcation:) withObject:[[presence from] bare] waitUntilDone:NO];
+    
+}
+
+-(void)stutsUpdateNotifcation:(NSString *)user
+{
+    [[NSNotificationCenter defaultCenter]
+     postNotificationName:@"StatusUpdatedNotification" 
+     object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys: user ,@"user", nil]];
+    
 }
 
 - (void)xmppStream:(XMPPStream *)sender didReceiveError:(id)error
@@ -587,6 +598,8 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 - (void)xmppStreamDidDisconnect:(XMPPStream *)sender withError:(NSError *)error
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
+    [[NSNotificationCenter defaultCenter]
+     postNotificationName:@"XMPPDisconnectedNotification" object:nil]; 
 	
 	if (!isXmppConnected)
 	{

@@ -169,6 +169,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)sectionIndex {
     if(protocolManager.buddyList)
     {
+        
         NSLog(@"Buddy list count: %d",[protocolManager.buddyList count]);
         return [protocolManager.buddyList count];
         
