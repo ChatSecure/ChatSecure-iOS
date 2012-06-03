@@ -3,7 +3,7 @@ ChatSecure
 
 ChatSecure is an instant messaging client for iOS that integrates encrypted "Off the Record" messaging support from the [libotr](http://www.cypherpunks.ca/otr/) library. It uses the [LibOrange](https://github.com/unixpickle/LibOrange) library to handle all of the AIM (OSCAR) functionality and the [xmppframework](http://code.google.com/p/xmppframework/) to handle Jabber/GTalk (XMPP).
 
-<!--
+
 Cost
 =========
 
@@ -11,7 +11,7 @@ This project is \***100% free**\* because it is important that all people around
 However, developing and supporting this project is hard work and costs real money. Please help support the development of this project!
 
 [![donation](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=XRBHJ9AX5VWNA)
--->
+
 
 Localization
 =========
