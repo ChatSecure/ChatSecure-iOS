@@ -100,12 +100,14 @@
 }
 
 - (void) showEULAWarning {
+    /*
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     if (![[defaults objectForKey:kOTRSettingUserAgreedToEULA] boolValue]) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:SECURITY_WARNING_STRING message:[NSString stringWithFormat:@"%@\n\n%@",EULA_WARNING_STRING,EULA_BSD_STRING] delegate:self cancelButtonTitle:DISAGREE_STRING otherButtonTitles:AGREE_STRING,nil];
         alert.tag = 123;
         [alert show];
     }
+    */
 }
 
 - (void)viewDidUnload
@@ -151,7 +153,20 @@
     OTRBuddy *buddy = [protocolManager.buddyList getBuddyByName:userName];
     [buddy receiveMessage:decodedMessage];
     
-    NSString * currentTitle = chatListController.navigationController.topViewController.title;
+    NSString * currentTitle;
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+    {
+        UIViewController * vc = self.tabBarController.selectedViewController;
+        currentTitle = [vc title];
+        if ([vc isKindOfClass:[UISplitViewController class]]) {
+            currentTitle = [[((UISplitViewController *)vc).viewControllers objectAtIndex:1] title];
+        }
+        
+    }
+    else {
+        currentTitle = chatListController.navigationController.topViewController.title;
+    }
+    
     
     if(![currentTitle isEqualToString:buddy.displayName] && ![buddy.lastMessage isEqualToString:@""] && ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive))
      {

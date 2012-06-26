@@ -64,8 +64,8 @@
     [settingsGroups addObject:chatSettingsGroup];
     
     
-    OTRBoolSetting *allowSelfSignedCertificates = [[OTRBoolSetting alloc] initWithTitle:ALLOW_SELF_SIGNED_CERTIFICATES_STRING description:SECURITY_WARNING_STRING settingsKey:kOTRSettingKeyAllowSelfSignedSSL];
-    OTRBoolSetting *allowSSLHostnameMismatch = [[OTRBoolSetting alloc] initWithTitle:ALLOW_SSL_HOSTNAME_MISMATCH_STRING description:SECURITY_WARNING_STRING settingsKey:kOTRSettingKeyAllowSSLHostNameMismatch];
+    OTRBoolSetting *allowSelfSignedCertificates = [[OTRBoolSetting alloc] initWithTitle:ALLOW_SELF_SIGNED_CERTIFICATES_STRING description:SECURITY_WARNING_DESCRIPTION_STRING settingsKey:kOTRSettingKeyAllowSelfSignedSSL];
+    OTRBoolSetting *allowSSLHostnameMismatch = [[OTRBoolSetting alloc] initWithTitle:ALLOW_SSL_HOSTNAME_MISMATCH_STRING description:SECURITY_WARNING_DESCRIPTION_STRING settingsKey:kOTRSettingKeyAllowSSLHostNameMismatch];
     OTRSettingsGroup *xmppGroup = [[OTRSettingsGroup alloc] initWithTitle:@"XMPP" settings:[NSArray arrayWithObjects:allowSelfSignedCertificates, allowSSLHostnameMismatch, nil]];
     [newSettingsDictionary setObject:allowSelfSignedCertificates forKey:kOTRSettingKeyAllowSelfSignedSSL];
     [newSettingsDictionary setObject:allowSSLHostnameMismatch forKey:kOTRSettingKeyAllowSSLHostNameMismatch];

@@ -42,7 +42,11 @@
 }
 
 - (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
-    return (toInterfaceOrientation == UIInterfaceOrientationPortrait);
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+        return (toInterfaceOrientation == UIInterfaceOrientationPortrait);
+    } else {
+        return YES;
+    }
 }
 
 @end

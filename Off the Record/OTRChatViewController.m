@@ -497,7 +497,7 @@
 {
     if (buddy.chatHistory) {
         OTRDoubleSetting *fontSizeSetting = (OTRDoubleSetting*)[protocolManager.settingsManager settingForOTRSettingKey:kOTRSettingKeyFontSize];
-        NSString *htmlString = [NSString stringWithFormat:@"<html><head><style type=\"text/css\">p{font-size:%@;}</style></head><body>%@</body></html>",fontSizeSetting.stringValue, buddy.chatHistory];
+        NSString *htmlString = [NSString stringWithFormat:@"<html><head><style type=\"text/css\">p{font-size:%@;font-family: geneva, arial, helvetica, sans-serif;}</style></head><body>%@</body></html>",fontSizeSetting.stringValue, buddy.chatHistory];
         [chatHistoryTextView loadHTMLString:htmlString baseURL:[NSURL URLWithString:@"/"]];
     }
 }
@@ -505,14 +505,6 @@
 
 -(void)scrollTextViewToBottom
 {
-    //CGPoint bottomOffset = CGPointMake(0, [chatHistoryTextView contentSize].height);
-    //[chatHistoryTextView setContentOffset: bottomOffset animated: YES];
-    //textView.selectedRange = NSMakeRange(textView.text.length - 1, 0);
-    //NSLog(@"chat history text view height: %f",[chatHistoryTextView contentSize].height);
-    
-    //CGRect bottomRect = CGRectMake(0, 0, 1, [chatHistoryTextView contentSize].height);
-    //[chatHistoryTextView scrollRectToVisible: bottomRect animated:YES];
-    NSString * chatHistory = buddy.chatHistory;
     
     if(![buddy.chatHistory isEqualToString:@""])
     {

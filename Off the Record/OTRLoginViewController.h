@@ -32,8 +32,10 @@
 @property (nonatomic, retain) UIBarButtonItem *loginButton;
 @property (nonatomic, retain) UIBarButtonItem *cancelButton;
 
+@property (nonatomic, strong) NSTimer * timeoutTimer;
 
-- (void)loginPressed:(id)sender;
+- (void)loginButtonPressed:(id)sender;
+- (void)aimLoginPressed:(id)sender;
 - (void)xmppLoginPressed:(id)sender;
 - (void)cancelPressed:(id)sender;
 

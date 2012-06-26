@@ -8,6 +8,7 @@
 
 #import "OTRLoginViewController.h"
 #import "Strings.h"
+#import "OTRUIKeyboardListener.h"
 
 @implementation OTRLoginViewController
 @synthesize usernameTextField;
@@ -18,6 +19,8 @@
 @synthesize useXMPP;
 @synthesize usernameLabel, passwordLabel, rememberUsernameLabel;
 @synthesize logoView;
+@synthesize timeoutTimer;
+
 
 - (void)viewDidUnload
 {
@@ -75,19 +78,16 @@
     
     
     NSString *loginButtonString = LOGIN_STRING;
-    SEL loginButtonAction;
     if (useXMPP) 
     {
-        loginButtonAction = @selector(xmppLoginPressed:);
         self.title = @"XMPP";
     } 
     else 
     {
-        loginButtonAction = @selector(loginPressed:);
         self.title = @"AIM";
     }
     
-    self.loginButton = [[UIBarButtonItem alloc] initWithTitle:loginButtonString style:UIBarButtonItemStyleDone target:self action:loginButtonAction];
+    self.loginButton = [[UIBarButtonItem alloc] initWithTitle:loginButtonString style:UIBarButtonItemStyleDone target:self action:@selector(loginButtonPressed:)];
     self.cancelButton = [[UIBarButtonItem alloc] initWithTitle:CANCEL_STRING style:UIBarButtonItemStyleBordered target:self action:@selector(cancelPressed:)];
     
     self.navigationItem.rightBarButtonItem = loginButton;
@@ -150,11 +150,12 @@
         }
     }
     
-    CGFloat logoViewFrameWidth = self.logoView.image.size.width;
-    self.logoView.frame = CGRectMake(self.view.frame.size.width/2 - logoViewFrameWidth/2, 20, logoViewFrameWidth, self.logoView.image.size.height);
+    double scale = 0.75;
+    CGFloat logoViewFrameWidth = (int)(self.logoView.image.size.width * scale);
+    self.logoView.frame = CGRectMake(self.view.frame.size.width/2 - logoViewFrameWidth/2, 5, logoViewFrameWidth, (int)(self.logoView.image.size.height * scale));
     self.logoView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
     
-    CGFloat usernameLabelFrameYOrigin = logoView.frame.origin.y + logoView.frame.size.height + 15;
+    CGFloat usernameLabelFrameYOrigin = logoView.frame.origin.y + logoView.frame.size.height + 5;
     CGSize usernameLabelTextSize = [self textSizeForLabel:usernameLabel];
     CGSize passwordLabelTextSize = [self textSizeForLabel:passwordLabel];
     CGFloat labelWidth = MAX(usernameLabelTextSize.width, passwordLabelTextSize.width);
@@ -163,15 +164,20 @@
     self.usernameLabel.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;
     self.usernameTextField.frame = [self textFieldFrameForLabel:usernameLabel];
     self.usernameTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
-    self.usernameTextField.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth;
+    self.usernameTextField.returnKeyType = UIReturnKeyNext;
+    if (useXMPP) {
+        self.usernameTextField.keyboardType = UIKeyboardTypeEmailAddress;
+    }
+    self.usernameTextField.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth;
     
     CGFloat passwordLabelFrameYOrigin = usernameLabelFrameYOrigin + self.usernameLabel.frame.size.height + 15;
     self.passwordLabel.frame = CGRectMake(10, passwordLabelFrameYOrigin, labelWidth, 21);
-    self.passwordLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
+    self.passwordLabel.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;
     
     self.passwordTextField.frame = [self textFieldFrameForLabel:passwordLabel];
     self.passwordTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
-    self.passwordTextField.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin;
+    self.passwordTextField.returnKeyType = UIReturnKeyGo;
+    self.passwordTextField.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth;
     
     CGFloat rememberUsernameLabelFrameYOrigin = passwordLabel.frame.origin.y + passwordLabel.frame.size.height + 15;
     self.rememberUsernameLabel.frame = CGRectMake(10, rememberUsernameLabelFrameYOrigin, 170, 21);
@@ -180,6 +186,15 @@
     CGFloat rememberUserNameSwitchFrameWidth = 79;
     self.rememberUserNameSwitch.frame = CGRectMake(self.view.frame.size.width-rememberUserNameSwitchFrameWidth-5, rememberUsernameLabelFrameYOrigin, rememberUserNameSwitchFrameWidth, 27);
     self.rememberUserNameSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
+    
+    if([self.usernameTextField.text isEqualToString:@""])
+    {
+        [self.usernameTextField becomeFirstResponder];
+    }
+    else {
+        [self.passwordTextField becomeFirstResponder];
+    }
+    
 }
 
 - (void) viewWillDisappear:(BOOL)animated 
@@ -215,11 +230,12 @@
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         return YES;
     } else {
-        return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+        //return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+        return NO;
     }
 }
 
-- (void)loginPressed:(id)sender 
+- (void)aimLoginPressed:(id)sender 
 {
     BOOL fields = [self checkFields];
     if(fields)
@@ -230,9 +246,14 @@
         
         HUD = [[MBProgressHUD alloc] initWithView:self.view];
         [self.view addSubview:HUD];
+        
+        float hudOffsetY = [self getMidpointOffsetforHUD];
+        
+        HUD.yOffset = hudOffsetY;
         HUD.delegate = self;
         HUD.labelText = @"Logging in...";
         [HUD show:YES];
+        
         
         
         if (![protocolManager.oscarManager.login beginAuthorization]) {
@@ -240,6 +261,14 @@
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:OSCAR_FAIL_STRING delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
             [alert show];
         }
+    }
+}
+
+-(void) timeout:(NSTimer *) timer
+{
+    //[timeoutTimer invalidate];
+    if (HUD) {
+        [HUD hide:YES];
     }
 }
 
@@ -254,12 +283,14 @@
     [[NSNotificationCenter defaultCenter]
      postNotificationName:@"XMPPLoginNotification"
      object:self];
+    [timeoutTimer invalidate];
 }
 -(void) xmppLoginFailed
 {
     [HUD hide:YES];
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:XMPP_FAIL_STRING delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
     [alert show];
+    
 }
 
 
@@ -274,13 +305,16 @@
         [self.view addSubview:HUD];
         HUD.delegate = self;
         HUD.labelText = LOGGING_IN_STRING;
-            [HUD show:YES];
+        float hudOffsetY = [self getMidpointOffsetforHUD];
+        HUD.yOffset = hudOffsetY;
+        [HUD show:YES];
         
         BOOL connect = [protocolManager.xmppManager connectWithJID:usernameTextField.text password:passwordTextField.text];
         
         if (connect) {
             NSLog(@"xmppLogin attempt");
         }
+        
         /*
         if(connect)
         {
@@ -296,6 +330,21 @@
             [alert release];
         }*/
     }
+}
+
+- (void)loginButtonPressed:(id)sender {
+    if (useXMPP) 
+    {
+        [self xmppLoginPressed:sender];
+    } 
+    else 
+    {
+        [self aimLoginPressed:sender];
+    }
+    timeoutTimer = [NSTimer timerWithTimeInterval:45.0 target:self selector:@selector(timeout:) userInfo:nil repeats:NO];
+
+
+    
 }
 
 - (void)cancelPressed:(id)sender {
@@ -317,8 +366,29 @@
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-    [textField resignFirstResponder];
-    return YES;
+    if (self.usernameTextField.isFirstResponder)
+        [self.passwordTextField becomeFirstResponder];
+    else
+        [self loginButtonPressed:nil];
+    
+    return NO;
+}
+
+-(float)getMidpointOffsetforHUD
+{
+    OTRUIKeyboardListener * keyboardListenter = [OTRUIKeyboardListener shared];
+    CGSize keyboardSize = [keyboardListenter getFrameWithView:self.view].size;
+    
+    
+    
+    float viewHeight = self.view.frame.size.height;
+    return (viewHeight - keyboardSize.height)/2.0-(viewHeight/2.0);
+}
+
+-(void)dealloc
+{
+    [timeoutTimer invalidate];
+    
 }
 
 #pragma mark -

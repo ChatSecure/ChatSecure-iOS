@@ -47,6 +47,9 @@
 +(void)sendMessage:(OTRMessage *)message
 {    
     NSDictionary *messageInfo = [NSDictionary dictionaryWithObject:message forKey:@"message"];
+    [protocol send:self];
+    
+    
     
     [[NSNotificationCenter defaultCenter] postNotificationName:@"SendMessageNotification" object:self userInfo:messageInfo];
 }

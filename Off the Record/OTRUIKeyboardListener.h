@@ -14,10 +14,13 @@
     NSNotification * lastNotification;
 }
 
+@property (nonatomic) CGRect keyboardFrame;
+
 + (OTRUIKeyboardListener *) shared;
 
 -(BOOL)isVisible;
 -(NSNotification *) lastNotification;
+-(CGRect) getFrameWithView:(UIView *)view;
 
 
 @end

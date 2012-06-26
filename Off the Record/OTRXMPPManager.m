@@ -606,6 +606,9 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 		DDLogError(@"Unable to connect to server. Check xmppStream.hostName");
         [self failedToConnect];
 	}
+    else {
+        //Lost connection
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -658,6 +661,28 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 -(NSString*)accountName
 {
     return [JID full];
+}
+
+-(void)sendMessage:(OTRMessage *)theMessage
+{
+    NSString *messageStr = theMessage.message;
+	
+	if([messageStr length] > 0)
+	{
+		NSXMLElement *body = [NSXMLElement elementWithName:@"body"];
+		[body setStringValue:messageStr];
+		
+		NSXMLElement *message = [NSXMLElement elementWithName:@"message"];
+		[message addAttributeWithName:@"type" stringValue:@"chat"];
+		[message addAttributeWithName:@"to" stringValue:theMessage.recipient];
+		[message addChild:body];
+		
+		[xmppStream sendElement:message];		
+	}
+}
+
+- (NSString*) type {
+    return kOTRProtocolTypeAIM;
 }
 
 @end

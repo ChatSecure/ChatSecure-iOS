@@ -10,13 +10,13 @@
 #import "OTRCodec.h"
 #import "LibOrange.h"
 #import "CommandTokenizer.h"
-
+#import "OTRProtocol.h"
 
 
 //static 	   AIMSessionManager * s_AIMSession = nil;
 
 
-@interface OTROscarManager : NSObject <AIMLoginDelegate, AIMSessionManagerDelegate, AIMFeedbagHandlerDelegate, AIMICBMHandlerDelegate, AIMStatusHandlerDelegate, AIMRateLimitHandlerDelegate, AIMRendezvousHandlerDelegate>
+@interface OTROscarManager : NSObject <AIMLoginDelegate, AIMSessionManagerDelegate, AIMFeedbagHandlerDelegate, AIMICBMHandlerDelegate, AIMStatusHandlerDelegate, AIMRateLimitHandlerDelegate, AIMRendezvousHandlerDelegate, OTRProtocol>
 {
     AIMLogin * login;
     AIMBlist *buddyList;
