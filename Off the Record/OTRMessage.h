@@ -7,13 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "OTRProtocol.h"
 
 @interface OTRMessage : NSObject
 
-@property (readonly, retain) NSString *sender;
-@property (readonly, retain) NSString *recipient;
 @property (readonly, retain) NSString *message;
-@property (readonly, retain) NSString *protocol;
+@property (nonatomic, retain) OTRBuddy *buddy;
+
+- (void) send;
 
 -(id)initWithSender:(NSString*)theSender recipient:(NSString*)theRecipient message:(NSString*)theMessage protocol:(NSString*)theProtocol;
 +(OTRMessage*)messageWithSender:(NSString*)sender recipient:(NSString*)recipient message:(NSString*)message protocol:(NSString*)protocol;

@@ -504,4 +504,26 @@ BOOL loginFailed;
     return s_AIMSession;
 }*/
 
+-(void)sendMessage:(OTRMessage *)theMessage
+{
+    NSString *recipient = theMessage.recipient;
+    NSString *message = theMessage.message;
+    
+    AIMMessage * msg = [AIMMessage messageWithBuddy:[theSession.session.buddyList buddyWithUsername:recipient] message:message];
+    
+    // use delay to prevent OSCAR rate-limiting problem
+    //NSDate *future = [NSDate dateWithTimeIntervalSinceNow: delay ];
+    //[NSThread sleepUntilDate:future];
+    
+	[theSession.messageHandler sendMessage:msg];
+}
+
+- (NSString*) type {
+    return kOTRProtocolTypeAIM;
+}
+
+- (NSString*) accountName {
+    
+}
+
 @end

@@ -13,9 +13,7 @@
 #import "OTRCodec.h"
 #import "OTRBuddyList.h"
 #import "OTRSettingsManager.h"
-
-#define kOTRProtocolTypeXMPP @"xmpp"
-#define kOTRProtocolTypeAIM @"prpl-oscar"
+#import "OTRProtocol.h"
 
 @interface OTRProtocolManager : NSObject
 

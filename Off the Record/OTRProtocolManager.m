@@ -88,6 +88,8 @@ static OTRProtocolManager *sharedManager = nil;
 {
     OTRMessage *message = [notification.userInfo objectForKey:@"message"];
     NSString *protocol = message.protocol;
+    OTRMessage *message = [notification object];
+    [message.protocol sendMessage:<#(id)#>
     
     //NSLog(@"send message (%@): %@", protocol, message.message);
     
@@ -102,38 +104,6 @@ static OTRProtocolManager *sharedManager = nil;
     }
 }
 
--(void)sendMessageOSCAR:(OTRMessage *)theMessage
-{
-    NSString *recipient = theMessage.recipient;
-    NSString *message = theMessage.message;
-    
-    AIMSessionManager *theSession = oscarManager.theSession;
-    AIMMessage * msg = [AIMMessage messageWithBuddy:[theSession.session.buddyList buddyWithUsername:recipient] message:message];
-    
-    // use delay to prevent OSCAR rate-limiting problem
-    //NSDate *future = [NSDate dateWithTimeIntervalSinceNow: delay ];
-    //[NSThread sleepUntilDate:future];
-    
-	[theSession.messageHandler sendMessage:msg];
-}
-
--(void)sendMessageXMPP:(OTRMessage *)theMessage
-{
-    NSString *messageStr = theMessage.message;
-	
-	if([messageStr length] > 0)
-	{
-		NSXMLElement *body = [NSXMLElement elementWithName:@"body"];
-		[body setStringValue:messageStr];
-		
-		NSXMLElement *message = [NSXMLElement elementWithName:@"message"];
-		[message addAttributeWithName:@"type" stringValue:@"chat"];
-		[message addAttributeWithName:@"to" stringValue:theMessage.recipient];
-		[message addChild:body];
-		
-		[xmppManager.xmppStream sendElement:message];		
-	}
-}
 
 -(void)buddyListUpdate
 {
