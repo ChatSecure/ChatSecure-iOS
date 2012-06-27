@@ -551,7 +551,7 @@
         else if (buttonIndex == 0)
         {
             OTRBuddy* theBuddy = buddy;
-            OTRMessage *newMessage = [OTRMessage messageWithSender:[self.protocolManager accountNameForProtocol:buddy.protocol] recipient:theBuddy.accountName message:@"" protocol:buddy.protocol];
+            OTRMessage * newMessage = [OTRMessage messageWithBuddy:theBuddy message:@""];
             OTRMessage *encodedMessage = [OTRCodec encodeMessage:newMessage];
             [OTRMessage sendMessage:encodedMessage];    
         }

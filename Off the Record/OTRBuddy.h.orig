@@ -27,13 +27,16 @@ enum OTRBuddyStatus {
 @property (nonatomic, retain) NSString* groupName;
 @property (nonatomic, retain) NSMutableString* chatHistory;
 @property (nonatomic, retain) NSString *lastMessage;
-@property (nonatomic, retain) id<OTRProtocol> protocol;
+<<<<<<< HEAD
 @property (nonatomic) BOOL lastMessageDisconnected;
+=======
+@property (nonatomic, retain) id<OTRProtocol> protocol;
+>>>>>>> c1c3a08ff4ae116e9a9274beb14a4abf47df09f9
 
 @property (nonatomic) OTRBuddyStatus status;
 
--(id)initWithDisplayName:(NSString*)buddyName accountName:(NSString*) accountName protocol:(id <OTRProtocol>)buddyProtocol status:(OTRBuddyStatus)buddyStatus groupName:(NSString*)buddyGroupName;
-+(OTRBuddy*)buddyWithDisplayName:(NSString*)buddyName accountName:(NSString*) accountName protocol:(id <OTRProtocol>)buddyProtocol status:(OTRBuddyStatus)buddyStatus groupName:(NSString*)buddyGroupName;
+-(id)initWithDisplayName:(NSString*)buddyName accountName:(NSString*) accountName protocol:(NSString*)buddyProtocol status:(OTRBuddyStatus)buddyStatus groupName:(NSString*)buddyGroupName;
++(OTRBuddy*)buddyWithDisplayName:(NSString*)buddyName accountName:(NSString*) accountName protocol:(NSString*)buddyProtocol status:(OTRBuddyStatus)buddyStatus groupName:(NSString*)buddyGroupName;
 
 -(void)receiveMessage:(NSString *)message;
 -(void)sendMessage:(NSString *)message secure:(BOOL)secure;

@@ -33,7 +33,7 @@
 }
 
 
--(id)initWithDisplayName:(NSString*)buddyName accountName:(NSString*) buddyAccountName protocol:(NSString*)buddyProtocol status:(OTRBuddyStatus)buddyStatus groupName:(NSString*)buddyGroupName
+-(id)initWithDisplayName:(NSString*)buddyName accountName:(NSString*) buddyAccountName protocol:(id <OTRProtocol>)buddyProtocol status:(OTRBuddyStatus)buddyStatus groupName:(NSString*)buddyGroupName
 {
     if(self = [super init])
     {
@@ -56,7 +56,7 @@
     return self;
 }
 
-+(OTRBuddy*)buddyWithDisplayName:(NSString*)buddyName accountName:(NSString*) accountName protocol:(NSString*)buddyProtocol status:(OTRBuddyStatus)buddyStatus groupName:(NSString*)buddyGroupName
++(OTRBuddy*)buddyWithDisplayName:(NSString*)buddyName accountName:(NSString*) accountName protocol:(id <OTRProtocol>)buddyProtocol status:(OTRBuddyStatus)buddyStatus groupName:(NSString*)buddyGroupName
 {
     OTRBuddy *newBuddy = [[OTRBuddy alloc] initWithDisplayName:buddyName accountName:accountName protocol:buddyProtocol status:buddyStatus groupName:buddyGroupName];
     return newBuddy;
@@ -130,15 +130,18 @@
 
 -(void)setStatus:(OTRBuddyStatus)newStatus
 {
-    if ([self.chatHistory length]!=0 && newStatus!=status)
+    if([self.protocol isEqualToString:@"xmpp"])
     {
-        if( newStatus == 0)
-            [self receiveStatusMessage:OFFLINE_STRING];
-        else if (newStatus == 1)
-            [self receiveMessage:AWAY_STRING];
-        else if( newStatus == 2)
-            [self receiveMessage:AVAILABLE_STRING];
-        
+        if ([self.chatHistory length]!=0 && newStatus!=status)
+        {
+            if( newStatus == 0)
+                [self receiveStatusMessage:OFFLINE_STRING];
+            else if (newStatus == 1)
+                [self receiveMessage:AWAY_STRING];
+            else if( newStatus == 2)
+                [self receiveMessage:AVAILABLE_STRING];
+            
+        }
     }
     status = newStatus;
 }
