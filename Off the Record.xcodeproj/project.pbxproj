@@ -22,6 +22,10 @@
 		D91DAE8615473EB5009D0B74 /* OTRSettingDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D91DAE8515473EB5009D0B74 /* OTRSettingDetailViewController.m */; };
 		D91DAE89154740CE009D0B74 /* OTRDoubleSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D91DAE88154740CE009D0B74 /* OTRDoubleSettingViewController.m */; };
 		D92B775514142F150058A789 /* OTREncryptionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D92B775414142F150058A789 /* OTREncryptionManager.m */; };
+		D93C316F159A6719006316C7 /* OTRAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = D93C316E159A6719006316C7 /* OTRAccount.m */; };
+		D93C3173159A6C10006316C7 /* OTRAccountsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D93C3172159A6C10006316C7 /* OTRAccountsManager.m */; };
+		D93C31B5159A7DDA006316C7 /* SFHFKeychainUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = D93C31B4159A7DDA006316C7 /* SFHFKeychainUtils.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		D93C31B7159A8B4F006316C7 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D93C31B6159A8B4F006316C7 /* Security.framework */; };
 		D95F8E921419C3D00094A634 /* chatsecure_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = D95F8E911419C3D00094A634 /* chatsecure_icon.png */; };
 		D95F8E941419C3E10094A634 /* chatsecure_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D95F8E931419C3E00094A634 /* chatsecure_icon@2x.png */; };
 		D95F8E961419C58D0094A634 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = D95F8E951419C58D0094A634 /* Default.png */; };
@@ -383,6 +387,13 @@
 		D91DAE88154740CE009D0B74 /* OTRDoubleSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRDoubleSettingViewController.m; sourceTree = "<group>"; };
 		D92B775314142F150058A789 /* OTREncryptionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTREncryptionManager.h; sourceTree = "<group>"; };
 		D92B775414142F150058A789 /* OTREncryptionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTREncryptionManager.m; sourceTree = "<group>"; };
+		D93C316D159A6719006316C7 /* OTRAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAccount.h; sourceTree = "<group>"; };
+		D93C316E159A6719006316C7 /* OTRAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAccount.m; sourceTree = "<group>"; };
+		D93C3171159A6C10006316C7 /* OTRAccountsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAccountsManager.h; sourceTree = "<group>"; };
+		D93C3172159A6C10006316C7 /* OTRAccountsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAccountsManager.m; sourceTree = "<group>"; };
+		D93C31B3159A7DDA006316C7 /* SFHFKeychainUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFHFKeychainUtils.h; sourceTree = "<group>"; };
+		D93C31B4159A7DDA006316C7 /* SFHFKeychainUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFHFKeychainUtils.m; sourceTree = "<group>"; };
+		D93C31B6159A8B4F006316C7 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		D95F8E911419C3D00094A634 /* chatsecure_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = chatsecure_icon.png; path = ../chatsecure_icon.png; sourceTree = "<group>"; };
 		D95F8E931419C3E00094A634 /* chatsecure_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "chatsecure_icon@2x.png"; path = "../chatsecure_icon@2x.png"; sourceTree = "<group>"; };
 		D95F8E951419C58D0094A634 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = ../Default.png; sourceTree = "<group>"; };
@@ -996,6 +1007,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D93C31B7159A8B4F006316C7 /* Security.framework in Frameworks */,
 				D9FC9860155881710039518D /* MessageUI.framework in Frameworks */,
 				D974DABD15021E540028B2F4 /* libiconv.dylib in Frameworks */,
 				D9D69ABC1417FDF90056FB9E /* libxml2.dylib in Frameworks */,
@@ -1039,6 +1051,15 @@
 				D91DAE88154740CE009D0B74 /* OTRDoubleSettingViewController.m */,
 			);
 			name = "Detail Views";
+			sourceTree = "<group>";
+		};
+		D93C31B2159A7DDA006316C7 /* SFHFKeychainUtils */ = {
+			isa = PBXGroup;
+			children = (
+				D93C31B3159A7DDA006316C7 /* SFHFKeychainUtils.h */,
+				D93C31B4159A7DDA006316C7 /* SFHFKeychainUtils.m */,
+			);
+			path = SFHFKeychainUtils;
 			sourceTree = "<group>";
 		};
 		D96219AC14CB765B007EF05D /* XMPPFramework */ = {
@@ -1754,6 +1775,7 @@
 		D9D69B03141806150056FB9E /* 3rd Party Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D93C31B2159A7DDA006316C7 /* SFHFKeychainUtils */,
 				D962898E1535043A008F4C02 /* CrittercismSDK */,
 				D9A7E09B1524131400EEDDB5 /* MWFeedParser */,
 				D96219AC14CB765B007EF05D /* XMPPFramework */,
@@ -1786,6 +1808,10 @@
 				D99BA28F141D3F3A00D051B6 /* OTRMessage.m */,
 				63FD24D315630A240041374A /* OTRUIKeyboardListener.h */,
 				63FD24D415630A240041374A /* OTRUIKeyboardListener.m */,
+				D93C316D159A6719006316C7 /* OTRAccount.h */,
+				D93C316E159A6719006316C7 /* OTRAccount.m */,
+				D93C3171159A6C10006316C7 /* OTRAccountsManager.h */,
+				D93C3172159A6C10006316C7 /* OTRAccountsManager.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -2008,6 +2034,7 @@
 		D9F9376D13F44BD3009A3D84 = {
 			isa = PBXGroup;
 			children = (
+				D93C31B6159A8B4F006316C7 /* Security.framework */,
 				D9FC985F155881700039518D /* MessageUI.framework */,
 				D9F9378013F44BD3009A3D84 /* Off the Record */,
 				D9D69B03141806150056FB9E /* 3rd Party Frameworks */,
@@ -2530,6 +2557,9 @@
 				D91DAE89154740CE009D0B74 /* OTRDoubleSettingViewController.m in Sources */,
 				D9FC986C15588E300039518D /* OTRQRCodeViewController.m in Sources */,
 				63FD24D515630A240041374A /* OTRUIKeyboardListener.m in Sources */,
+				D93C316F159A6719006316C7 /* OTRAccount.m in Sources */,
+				D93C3173159A6C10006316C7 /* OTRAccountsManager.m in Sources */,
+				D93C31B5159A7DDA006316C7 /* SFHFKeychainUtils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -18,6 +18,7 @@ static OTRProtocolManager *sharedManager = nil;
 @synthesize xmppManager;
 @synthesize buddyList;
 @synthesize settingsManager;
+@synthesize accountsManager;
 
 - (void) dealloc 
 {
@@ -26,6 +27,7 @@ static OTRProtocolManager *sharedManager = nil;
     self.xmppManager = nil;
     self.buddyList = nil;
     self.settingsManager = nil;
+    self.accountsManager = nil;
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"SendMessageNotification" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"BuddyListUpdateNotification" object:nil];
@@ -36,6 +38,7 @@ static OTRProtocolManager *sharedManager = nil;
     self = [super init];
     if(self)
     {
+        self.accountsManager = [[OTRAccountsManager alloc] init];
         self.oscarManager = [[OTROscarManager alloc] init];
         self.xmppManager = [[OTRXMPPManager alloc] init];
         self.encryptionManager = [[OTREncryptionManager alloc] init];

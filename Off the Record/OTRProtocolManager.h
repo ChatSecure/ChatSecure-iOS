@@ -13,6 +13,7 @@
 #import "OTRCodec.h"
 #import "OTRBuddyList.h"
 #import "OTRSettingsManager.h"
+#import "OTRAccountsManager.h"
 
 #define kOTRProtocolTypeXMPP @"xmpp"
 #define kOTRProtocolTypeAIM @"prpl-oscar"
@@ -24,6 +25,7 @@
 @property (nonatomic, retain) OTRXMPPManager *xmppManager;
 @property (nonatomic, retain) OTREncryptionManager *encryptionManager;
 @property (nonatomic, retain) OTRSettingsManager *settingsManager;
+@property (nonatomic, retain) OTRAccountsManager *accountsManager;
 
 + (OTRProtocolManager*)sharedInstance; // Singleton method
 
