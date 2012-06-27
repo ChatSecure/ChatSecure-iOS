@@ -13,9 +13,10 @@
 
 @protocol OTRProtocol <NSObject>
 
+@property (nonatomic, strong) id account;
+@property (nonatomic, strong) NSMutableDictionary * protocolBuddyList;
+
 - (void) sendMessage:(OTRMessage*)message;
-- (NSString*) type;
-- (NSString*) accountName;
 - (NSArray*) buddyList;
 
 @end

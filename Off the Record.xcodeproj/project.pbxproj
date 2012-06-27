@@ -2666,7 +2666,6 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					_GCRYPT_IN_LIBGCRYPT,
 					"DEBUG=1",
-					CRITTERCISM_ENABLED,
 				);
 				GCC_THUMB_SUPPORT = NO;
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
@@ -2696,10 +2695,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Chris Ballinger";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Off the Record/Off the Record-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					_GCRYPT_IN_LIBGCRYPT,
-					CRITTERCISM_ENABLED,
-				);
+				GCC_PREPROCESSOR_DEFINITIONS = _GCRYPT_IN_LIBGCRYPT;
 				GCC_THUMB_SUPPORT = NO;
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
 				INFOPLIST_FILE = "Off the Record/Off the Record-Info.plist";

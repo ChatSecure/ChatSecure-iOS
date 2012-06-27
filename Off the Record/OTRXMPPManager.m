@@ -23,6 +23,7 @@
 #import <CFNetwork/CFNetwork.h>
 
 #import "OTRSettingsManager.h"
+#import "OTRBuddy.h"
 
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
@@ -54,6 +55,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 @synthesize xmppCapabilities;
 @synthesize xmppCapabilitiesStorage;
 @synthesize isXmppConnected;
+@synthesize protocolBuddyList,account;
 
 -(id)init
 {
@@ -69,7 +71,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
         
         
         [self setupStream];
-        
+        protocolBuddyList = [[NSMutableDictionary alloc] init];
         
     }
 
@@ -559,8 +561,9 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
         NSString *body = [[message elementForName:@"body"] stringValue];
         //NSString *displayName = [user displayName];
         
-        OTRMessage *otrMessage = [OTRMessage messageWithSender:[[user jid] full] recipient:[JID full] message:body protocol:@"xmpp"];
+        OTRBuddy * messageBuddy = [protocolBuddyList objectForKey:user.jidStr];
         
+        OTRMessage *otrMessage = [OTRMessage messageWithBuddy:messageBuddy message:body];        
         OTRMessage *decodedMessage = [OTRCodec decodeMessage:otrMessage];
         
         if(decodedMessage)
@@ -576,7 +579,11 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 
 - (void)xmppStream:(XMPPStream *)sender didReceivePresence:(XMPPPresence *)presence
 {
-	DDLogVerbose(@"%@: %@ - %@", THIS_FILE, THIS_METHOD, [presence fromStr]);
+	DDLogVerbose(@"%@: %@ - %@\nType: %@\nShow: %@\nStatus: %@", THIS_FILE, THIS_METHOD, [presence from], [presence type], [presence show],[presence status]);
+    
+    [[NSNotificationCenter defaultCenter]
+     postNotificationName:@"StatusUpdatedNotification" 
+     object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys: [[presence from]bare] ,@"user", nil]];
 }
 
 - (void)xmppStream:(XMPPStream *)sender didReceiveError:(id)error
@@ -587,6 +594,8 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 - (void)xmppStreamDidDisconnect:(XMPPStream *)sender withError:(NSError *)error
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
+    [[NSNotificationCenter defaultCenter]
+     postNotificationName:@"XMPPDisconnectedNotification" object:nil]; 
 	
 	if (!isXmppConnected)
 	{
@@ -645,31 +654,85 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	
 }
 
--(NSString*)accountName
-{
-    return [JID full];
-}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark OTRProtocol 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
--(void)sendMessage:(OTRMessage *)theMessage
+- (void) sendMessage:(OTRMessage*)theMessage
 {
     NSString *messageStr = theMessage.message;
-	
-	if([messageStr length] > 0)
-	{
-		NSXMLElement *body = [NSXMLElement elementWithName:@"body"];
+    
+    if ([messageStr length] >0) 
+    {
+        NSXMLElement *body = [NSXMLElement elementWithName:@"body"];
 		[body setStringValue:messageStr];
 		
 		NSXMLElement *message = [NSXMLElement elementWithName:@"message"];
 		[message addAttributeWithName:@"type" stringValue:@"chat"];
-		[message addAttributeWithName:@"to" stringValue:theMessage.recipient];
+		[message addAttributeWithName:@"to" stringValue:theMessage.buddy.accountName];
 		[message addChild:body];
 		
-		[xmppStream sendElement:message];		
-	}
+		[xmppStream sendElement:message];
+    }
+    
+}
+- (NSString*) accountName
+{
+    return [JID full];
+    
+}
+- (NSArray*) buddyList
+{
+    NSFetchedResultsController *frc = [self fetchedResultsController];
+    NSArray *sections = [[self fetchedResultsController] sections];
+    int sectionsCount = [[[self fetchedResultsController] sections] count];
+    
+    for(int sectionIndex = 0; sectionIndex < sectionsCount; sectionIndex++)
+    {
+        id <NSFetchedResultsSectionInfo> sectionInfo = [sections objectAtIndex:sectionIndex];
+        NSString *sectionName;
+        OTRBuddyStatus otrBuddyStatus;
+        
+        int section = [sectionInfo.name intValue];
+        switch (section)
+        {
+            case 0  : 
+                sectionName = @"XMPP - Available";
+                otrBuddyStatus = kOTRBuddyStatusAvailable;
+                break;
+            case 1  : 
+                sectionName = @"XMPP - Away";
+                otrBuddyStatus = kOTRBuddyStatusAway;
+                break;
+            default : 
+                sectionName = @"XMPP - Offline";
+                otrBuddyStatus = kOTRBuddyStatusOffline;
+                break;
+        }
+        for(int j = 0; j < sectionInfo.numberOfObjects; j++)
+        {
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:j inSection:sectionIndex];
+            XMPPUserCoreDataStorageObject *user = [frc objectAtIndexPath:indexPath]; 
+            OTRBuddy *otrBuddy = [protocolBuddyList objectForKey:user.jidStr];
+            
+            
+            if(otrBuddy)
+            {
+                otrBuddy.status = otrBuddyStatus;
+            }
+            else
+            {
+                OTRBuddy *newBuddy = [OTRBuddy buddyWithDisplayName:user.displayName accountName: [[user jid] full] protocol:self status:otrBuddyStatus groupName:sectionName];
+                [protocolBuddyList setObject:newBuddy forKey:user.jidStr];
+            }
+        }
+    }
+    return [protocolBuddyList allValues];
+    
 }
 
 - (NSString*) type {
-    return kOTRProtocolTypeAIM;
+    return kOTRProtocolTypeXMPP;
 }
 
 @end
