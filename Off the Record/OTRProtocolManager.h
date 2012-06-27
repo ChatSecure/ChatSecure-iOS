@@ -14,6 +14,7 @@
 #import "OTRBuddyList.h"
 #import "OTRSettingsManager.h"
 #import "OTRProtocol.h"
+#import "OTRAccountsManager.h"
 
 @interface OTRProtocolManager : NSObject
 
@@ -22,6 +23,7 @@
 @property (nonatomic, retain) OTRXMPPManager *xmppManager;
 @property (nonatomic, retain) OTREncryptionManager *encryptionManager;
 @property (nonatomic, retain) OTRSettingsManager *settingsManager;
+@property (nonatomic, retain) OTRAccountsManager *accountsManager;
 
 + (OTRProtocolManager*)sharedInstance; // Singleton method
 
