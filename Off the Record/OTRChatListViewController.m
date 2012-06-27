@@ -9,6 +9,7 @@
 #import "OTRChatListViewController.h"
 #import "OTRChatViewController.h"
 #import "Strings.h"
+#import "OTRProtocol.h"
 
 @implementation OTRChatListViewController
 
@@ -71,13 +72,29 @@
     [self removeConversationsForProtocol:kOTRProtocolTypeXMPP];
 }
 
-- (void) removeConversationsForProtocol:(NSString*)protocol {
+
+
+- (void) removeConversationsForProtocol:(NSString*)protocol { ///Needs to be removed
     if ([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyDeleteOnDisconnect]) {
         NSMutableSet *activeConversations = [OTRProtocolManager sharedInstance].buddyList.activeConversations;
         NSSet *iterableConversations = [activeConversations copy];
         
         for (OTRBuddy *buddy in iterableConversations) {
-            if ([buddy.protocol isEqualToString:protocol]) {
+            if ([buddy.protocol.account.protocol isEqualToString:protocol]) {
+                [activeConversations removeObject:buddy];
+            }
+        }
+        [chatListTableView reloadData];
+    }
+}
+
+-(void) removeConversationsForAccountUniqueIdentifier:(NSString *)uniqueIdentifier {
+    if ([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyDeleteOnDisconnect]) {
+        NSMutableSet *activeConversations = [OTRProtocolManager sharedInstance].buddyList.activeConversations;
+        NSSet *iterableConversations = [activeConversations copy];
+        
+        for (OTRBuddy *buddy in iterableConversations) {
+            if ([buddy.protocol.account.uniqueIdentifier isEqualToString:uniqueIdentifier]) {
                 [activeConversations removeObject:buddy];
             }
         }

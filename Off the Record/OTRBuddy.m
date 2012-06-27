@@ -70,7 +70,7 @@
         OTRBuddy* theBuddy = self;
         message = [message stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         //NSLog(@"message to be sent: %@",message);
-        OTRMessage *newMessage = [OTRMessage messageWithSender:[[OTRProtocolManager sharedInstance] accountNameForProtocol:protocol] recipient:theBuddy.accountName message:message protocol:protocol];
+        OTRMessage *newMessage = [OTRMessage messageWithBuddy:theBuddy message:message];
         //NSLog(@"newMessagge: %@",newMessage.message);
         OTRMessage *encodedMessage;
         if(secure)
@@ -130,7 +130,7 @@
 
 -(void)setStatus:(OTRBuddyStatus)newStatus
 {
-    if([self.protocol isEqualToString:@"xmpp"])
+    if([self.protocol.account.protocol isEqualToString:kOTRProtocolTypeXMPP])
     {
         if ([self.chatHistory length]!=0 && newStatus!=status)
         {

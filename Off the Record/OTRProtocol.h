@@ -9,11 +9,13 @@
 #define kOTRProtocolTypeXMPP @"xmpp"
 #define kOTRProtocolTypeAIM @"prpl-oscar"
 
+#import "OTRAccount.h"
+
 @class OTRMessage, OTRBuddy;
 
 @protocol OTRProtocol <NSObject>
 
-@property (nonatomic, strong) id account;
+@property (nonatomic, strong) OTRAccount * account;
 @property (nonatomic, strong) NSMutableDictionary * protocolBuddyList;
 
 - (void) sendMessage:(OTRMessage*)message;

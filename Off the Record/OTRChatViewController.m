@@ -324,7 +324,7 @@
 }
 
 - (void) refreshContext {
-    self.context = otrl_context_find(protocolManager.encryptionManager.userState, [buddy.accountName UTF8String],[[self.protocolManager accountNameForProtocol:buddy.protocol] UTF8String], [buddy.protocol UTF8String],NO,NULL,NULL, NULL);
+    self.context = otrl_context_find(protocolManager.encryptionManager.userState, [buddy.accountName UTF8String],[[self.protocolManager accountNameForProtocol:buddy.protocol.account.protocol] UTF8String], [buddy.protocol.account.protocol UTF8String],NO,NULL,NULL, NULL);
 }
 
 - (void) setBuddy:(OTRBuddy *)newBuddy {
