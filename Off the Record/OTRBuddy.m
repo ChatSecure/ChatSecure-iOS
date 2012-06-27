@@ -22,6 +22,7 @@
 @synthesize status;
 @synthesize chatHistory;
 @synthesize lastMessage;
+@synthesize lastMessageDisconnected;
 
 - (void) dealloc {
     self.accountName = nil;
@@ -32,7 +33,7 @@
 }
 
 
--(id)initWithDisplayName:(NSString*)buddyName accountName:(NSString*) buddyAccountName protocol:(NSString*)buddyProtocol status:(OTRBuddyStatus)buddyStatus groupName:(NSString*)buddyGroupName
+-(id)initWithDisplayName:(NSString*)buddyName accountName:(NSString*) buddyAccountName protocol:(id <OTRProtocol>)buddyProtocol status:(OTRBuddyStatus)buddyStatus groupName:(NSString*)buddyGroupName
 {
     if(self = [super init])
     {
@@ -43,11 +44,19 @@
         self.groupName = buddyGroupName;
         self.chatHistory = [NSMutableString string];
         self.lastMessage = @"";
+        self.lastMessageDisconnected = NO;
+        
+        [[NSNotificationCenter defaultCenter]
+         addObserver:self selector:@selector(xmppDisconnected) name:@"XMPPDisconnectedNotification" object:nil];
+         
+         
+         //postNotificationName:@"XMPPDisconnectedNotification" object:nil]; 
+        
     }
     return self;
 }
 
-+(OTRBuddy*)buddyWithDisplayName:(NSString*)buddyName accountName:(NSString*) accountName protocol:(NSString*)buddyProtocol status:(OTRBuddyStatus)buddyStatus groupName:(NSString*)buddyGroupName
++(OTRBuddy*)buddyWithDisplayName:(NSString*)buddyName accountName:(NSString*) accountName protocol:(id <OTRProtocol>)buddyProtocol status:(OTRBuddyStatus)buddyStatus groupName:(NSString*)buddyGroupName
 {
     OTRBuddy *newBuddy = [[OTRBuddy alloc] initWithDisplayName:buddyName accountName:accountName protocol:buddyProtocol status:buddyStatus groupName:buddyGroupName];
     return newBuddy;
@@ -57,6 +66,7 @@
 -(void)sendMessage:(NSString *)message secure:(BOOL)secure
 {
     if (message) {
+        lastMessageDisconnected = NO;
         OTRBuddy* theBuddy = self;
         message = [message stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         //NSLog(@"message to be sent: %@",message);
@@ -85,6 +95,7 @@
 {
     //NSLog(@"received: %@",message);
     if (message) {
+        lastMessageDisconnected = NO;
         // Strip the shit out of it, but hopefully you're talking with someone who is trusted in the first place
         // TODO: fix this so it doesn't break some cyrillic encodings
         NSString *rawMessage = [[[[message stringByStrippingHTML]stringByConvertingHTMLToPlainText]stringByEncodingHTMLEntities] stringByLinkifyingURLs];
@@ -106,6 +117,44 @@
             [[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
         }
     }
+}
+
+-(void)receiveStatusMessage:(NSString *)message
+{
+    if (message) {
+        NSString *username = [NSString stringWithFormat:@"<p><strong style=\"color:red\">%@ </strong>",self.displayName];
+        [chatHistory appendFormat:@"%@ %@</p>",username,message];
+        [[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];
+    }
+}
+
+-(void)setStatus:(OTRBuddyStatus)newStatus
+{
+    if([self.protocol isEqualToString:@"xmpp"])
+    {
+        if ([self.chatHistory length]!=0 && newStatus!=status)
+        {
+            if( newStatus == 0)
+                [self receiveStatusMessage:OFFLINE_STRING];
+            else if (newStatus == 1)
+                [self receiveMessage:AWAY_STRING];
+            else if( newStatus == 2)
+                [self receiveMessage:AVAILABLE_STRING];
+            
+        }
+    }
+    status = newStatus;
+}
+         
+-(void) xmppDisconnected
+{
+    if( [self.chatHistory length]!=0 && !lastMessageDisconnected)
+    {
+        [chatHistory appendFormat:@"<p><strong style=\"color:blue\"> You </strong> Disconnected </p>"];
+        [[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];
+        lastMessageDisconnected = YES;
+    }
+             
 }
 
 @end

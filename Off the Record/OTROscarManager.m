@@ -12,11 +12,12 @@
 @implementation OTROscarManager
 
 @synthesize accountName;
-@synthesize buddyList;
+@synthesize aimBuddyList;
 @synthesize theSession;
 @synthesize login;
 @synthesize loginFailed;
 @synthesize loggedIn;
+@synthesize protocolBuddyList,account;
 
 BOOL loginFailed;
 
@@ -26,6 +27,7 @@ BOOL loginFailed;
     if(self)
     {
         mainThread = [NSThread currentThread];
+        protocolBuddyList = [[NSMutableDictionary alloc] init];
     }
     return self;
 }
@@ -101,7 +103,7 @@ BOOL loginFailed;
 - (void)aimSessionManagerSignedOff:(AIMSessionManager *)sender {
 	[self checkThreading];
     [[[[OTRProtocolManager sharedInstance] buddyList] oscarBuddies] removeAllObjects];
-    buddyList = nil;
+    aimBuddyList = nil;
 	theSession = nil;
 	NSLog(@"Session signed off");
     
@@ -117,7 +119,7 @@ BOOL loginFailed;
 	NSLog(@"%@ got the buddy list.", feedbagHandler);
 	//NSLog(@"Blist: %@", );
     
-    buddyList = [theSession.session buddyList];
+    aimBuddyList = [theSession.session buddyList];
     
     [[NSNotificationCenter defaultCenter]
      postNotificationName:@"BuddyListUpdateNotification"
@@ -216,7 +218,9 @@ BOOL loginFailed;
 	NSString * autoresp = [message isAutoresponse] ? @" (Auto-Response)" : @"";
 	NSLog(@"(%@) %@%@: %@", [NSDate date], [[message buddy] username], autoresp, [message plainTextMessage]);
     
-    OTRMessage *otrMessage = [OTRMessage messageWithSender:message.buddy.username recipient:accountName message:msgTxt protocol:@"prpl-oscar"];
+    OTRBuddy * messageBuddy = [protocolBuddyList objectForKey:message.buddy.username];
+    
+    OTRMessage *otrMessage = [OTRMessage messageWithBuddy:messageBuddy message:msgTxt];
     
     OTRMessage *decodedMessage = [OTRCodec decodeMessage:otrMessage];
     
@@ -506,7 +510,7 @@ BOOL loginFailed;
 
 -(void)sendMessage:(OTRMessage *)theMessage
 {
-    NSString *recipient = theMessage.recipient;
+    NSString *recipient = theMessage.buddy.accountName;
     NSString *message = theMessage.message;
     
     AIMMessage * msg = [AIMMessage messageWithBuddy:[theSession.session.buddyList buddyWithUsername:recipient] message:message];
@@ -518,11 +522,44 @@ BOOL loginFailed;
 	[theSession.messageHandler sendMessage:msg];
 }
 
-- (NSString*) type {
-    return kOTRProtocolTypeAIM;
-}
+- (NSArray*) buddyList
+{
+    AIMBlist *blist = self.aimBuddyList;
+    
+    for(AIMBlistGroup *group in blist.groups)
+    {
+        for(AIMBlistBuddy *buddy in group.buddies)
+        {
+            OTRBuddyStatus buddyStatus;
+            
+            switch (buddy.status.statusType) 
+            {
+                case AIMBuddyStatusAvailable:
+                    buddyStatus = kOTRBuddyStatusAvailable;
+                    break;
+                case AIMBuddyStatusAway:
+                    buddyStatus = kOTRBuddyStatusAway;
+                    break;
+                default:
+                    buddyStatus = kOTRBuddyStatusOffline;
+                    break;
+            }
+            
+            OTRBuddy *otrBuddy = [protocolBuddyList objectForKey:buddy.username];
+            
+            if(otrBuddy)
+            {
+                otrBuddy.status = buddyStatus;
+                otrBuddy.groupName = group.name;
+            }
+            else
+            {
+                OTRBuddy *newBuddy = [OTRBuddy buddyWithDisplayName:buddy.username accountName:buddy.username protocol:self status:buddyStatus groupName:group.name];
+                [protocolBuddyList setObject:newBuddy forKey:buddy.username];
+            }
+        }
+    }
 
-- (NSString*) accountName {
     
 }
 

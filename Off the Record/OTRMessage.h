@@ -16,11 +16,10 @@
 
 - (void) send;
 
--(id)initWithSender:(NSString*)theSender recipient:(NSString*)theRecipient message:(NSString*)theMessage protocol:(NSString*)theProtocol;
-+(OTRMessage*)messageWithSender:(NSString*)sender recipient:(NSString*)recipient message:(NSString*)message protocol:(NSString*)protocol;
+-(id)initWithBuddy:(OTRBuddy *)buddy message:(NSString *)message;
++(OTRMessage*)messageWithBuddy:(OTRBuddy *)buddy message:(NSString *)message;
 
 +(void)sendMessage:(OTRMessage *)message;
-+(void)printDebugMessageInfo:(OTRMessage*)messageInfo;
 
 
 @end
