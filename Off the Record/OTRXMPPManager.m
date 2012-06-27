@@ -581,16 +581,9 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 {
 	DDLogVerbose(@"%@: %@ - %@\nType: %@\nShow: %@\nStatus: %@", THIS_FILE, THIS_METHOD, [presence from], [presence type], [presence show],[presence status]);
     
-    [self performSelectorOnMainThread:@selector(stutsUpdateNotifcation:) withObject:[[presence from] bare] waitUntilDone:NO];
-    
-}
-
--(void)stutsUpdateNotifcation:(NSString *)user
-{
     [[NSNotificationCenter defaultCenter]
      postNotificationName:@"StatusUpdatedNotification" 
-     object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys: user ,@"user", nil]];
-    
+     object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys: [[presence from]bare] ,@"user", nil]];
 }
 
 - (void)xmppStream:(XMPPStream *)sender didReceiveError:(id)error
