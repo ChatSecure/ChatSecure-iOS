@@ -57,45 +57,21 @@
      selector:@selector(protocolLoggedOff)
      name:kOTRProtocolLogout
      object:nil ];
-    
-    [[NSNotificationCenter defaultCenter]
-     addObserver:self
-     selector:@selector(xmppLoggedOff)
-     name:@"XMPPLogoutNotification"
-     object:nil ];
 }
 
-- (void) aimLoggedOff {
-    [self removeConversationsForProtocol:kOTRProtocolTypeAIM];
+-(void) protocolLoggedOff:(NSNotification *) notification
+{
+    id <OTRProtocol> protocol = notification.object;
+    [self removeConversationsForAccount:protocol.account];
 }
 
-- (void) xmppLoggedOff {
-    [self removeConversationsForProtocol:kOTRProtocolTypeXMPP];
-}
-
-
-
-- (void) removeConversationsForProtocol:(NSString*)protocol { ///Needs to be removed
+-(void) removeConversationsForAccount:(OTRAccount *)account {
     if ([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyDeleteOnDisconnect]) {
         NSMutableSet *activeConversations = [OTRProtocolManager sharedInstance].buddyList.activeConversations;
         NSSet *iterableConversations = [activeConversations copy];
         
         for (OTRBuddy *buddy in iterableConversations) {
-            if ([buddy.protocol.account.protocol isEqualToString:protocol]) {
-                [activeConversations removeObject:buddy];
-            }
-        }
-        [chatListTableView reloadData];
-    }
-}
-
--(void) removeConversationsForAccountUniqueIdentifier:(NSString *)uniqueIdentifier {
-    if ([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyDeleteOnDisconnect]) {
-        NSMutableSet *activeConversations = [OTRProtocolManager sharedInstance].buddyList.activeConversations;
-        NSSet *iterableConversations = [activeConversations copy];
-        
-        for (OTRBuddy *buddy in iterableConversations) {
-            if ([buddy.protocol.account.uniqueIdentifier isEqualToString:uniqueIdentifier]) {
+            if ([buddy.protocol.account.uniqueIdentifier isEqualToString:account.uniqueIdentifier]) {
                 [activeConversations removeObject:buddy];
             }
         }

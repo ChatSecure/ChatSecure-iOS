@@ -12,6 +12,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "Strings.h"
 #import "OTRDoubleSetting.h"
+#import "OTRConstants.h"
 
 #define kTabBarHeight 49
 #define kSendButtonWidth 60
@@ -295,13 +296,7 @@
     [[NSNotificationCenter defaultCenter]
      addObserver:self
      selector:@selector(showDisconnectionAlert:)
-     name:@"OscarLogoutNotification"
-     object:nil ];
-    
-    [[NSNotificationCenter defaultCenter]
-     addObserver:self
-     selector:@selector(showDisconnectionAlert:)
-     name:@"XMPPLogoutNotification"
+     name:kOTRProtocolDiconnect
      object:nil ];
 }
 
