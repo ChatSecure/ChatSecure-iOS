@@ -14,9 +14,7 @@ static OTRProtocolManager *sharedManager = nil;
 
 @implementation OTRProtocolManager
 
-@synthesize oscarManager;
 @synthesize encryptionManager;
-@synthesize xmppManager;
 @synthesize buddyList;
 @synthesize settingsManager;
 @synthesize accountsManager;
@@ -24,9 +22,7 @@ static OTRProtocolManager *sharedManager = nil;
 
 - (void) dealloc 
 {
-    self.oscarManager = nil;
     self.encryptionManager = nil;
-    self.xmppManager = nil;
     self.buddyList = nil;
     self.settingsManager = nil;
     self.accountsManager = nil;
@@ -106,24 +102,6 @@ static OTRProtocolManager *sharedManager = nil;
     }
     
     
-}
-
--(NSArray*) frcSections
-{
-    return [[xmppManager fetchedResultsController] sections];
-}
-
--(NSString*)accountNameForProtocol:(NSString*)protocol
-{
-    if([protocol isEqualToString:@"prpl-oscar"])
-    {
-        return oscarManager.accountName;
-    }
-    else if([protocol isEqualToString:@"xmpp"])
-    {
-        return [xmppManager accountName];
-    }
-    return nil;
 }
 
 -(id<OTRProtocol>)protocolForAccountName:(NSString *)accountName

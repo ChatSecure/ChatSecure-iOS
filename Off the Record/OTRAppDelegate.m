@@ -192,6 +192,8 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
      Save data if appropriate.
      See also applicationDidEnterBackground:.
      */
+    
+    /*
     OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
     NSPersistentStoreCoordinator *storeCoordinator = [protocolManager.xmppManager.xmppRosterStorage
  persistentStoreCoordinator];
@@ -209,6 +211,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
      if(error2)
      NSLog(@"%@",[error2 description]);
      }
+     */
 }
 
 /*

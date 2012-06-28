@@ -19,8 +19,6 @@
 @interface OTRProtocolManager : NSObject
 
 @property (nonatomic, retain) OTRBuddyList *buddyList;
-@property (nonatomic, retain) OTROscarManager *oscarManager;
-@property (nonatomic, retain) OTRXMPPManager *xmppManager;
 @property (nonatomic, retain) OTREncryptionManager *encryptionManager;
 @property (nonatomic, retain) OTRSettingsManager *settingsManager;
 @property (nonatomic, retain) OTRAccountsManager *accountsManager;
@@ -29,11 +27,8 @@
 + (OTRProtocolManager*)sharedInstance; // Singleton method
 
 -(void)sendMessage:(NSNotification*)notification;
--(NSArray*)frcSections;
 
 -(void)buddyListUpdate;
-
--(NSString*)accountNameForProtocol:(NSString*)protocol;
 
 -(OTRBuddy *)buddyByUserName:(NSString *)buddyUserName accountName:(NSString *)accountName;
 
