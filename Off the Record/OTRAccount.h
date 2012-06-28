@@ -12,6 +12,8 @@
 #define kOTRAccountDomainKey @"domain"
 #define kOTRAccountProtocolKey @"protocol"
 #define kOTRAccountRememberPasswordKey @"remember"
+#define kOTRAccountImageKey @"image"
+
 
 @interface OTRAccount : NSObject
 
@@ -20,8 +22,11 @@
 @property (nonatomic, retain) NSString *protocol; // kOTRProtocolType, defined in OTRProtocolManager.h
 @property (nonatomic, retain) NSString *password; // nil if rememberPassword = NO, not stored in memory
 @property (nonatomic, readonly) NSString *uniqueIdentifier;
+@property (nonatomic, readonly) NSString *imageName;
 @property (nonatomic) BOOL rememberPassword;
+@property (nonatomic) BOOL isConnected;
 
+- (id) initWithUsername:(NSString*)newUsername domain:(NSString*)newDomain protocol:(NSString*)newProtocol;
 - (id) initWithSettingsDictionary:(NSDictionary*)dictionary uniqueIdentifier:(NSString*)uniqueID;
 - (void) save;
 

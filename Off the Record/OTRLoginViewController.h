@@ -11,23 +11,21 @@
 #import "MBProgressHUD.h"
 
 @interface OTRLoginViewController : UIViewController <UITextFieldDelegate, MBProgressHUDDelegate> {
-    UITextField *usernameTextField;
-    UITextField *passwordTextField;
-    
-    OTRProtocolManager *protocolManager;
     MBProgressHUD *HUD;
 }
 
-@property (retain, nonatomic) UITextField *usernameTextField;
-@property (retain, nonatomic) UITextField *passwordTextField;
-@property (nonatomic, retain) OTRProtocolManager *protocolManager;
-@property (retain, nonatomic) UISwitch *rememberUserNameSwitch;
+- (id) initWithAccount:(OTRAccount*)newAccount;
+
+@property (nonatomic, retain) OTRAccount *account;
 @property (nonatomic) BOOL useXMPP;
 
 @property (nonatomic, retain) UILabel *usernameLabel;
 @property (nonatomic, retain) UILabel *passwordLabel;
-@property (nonatomic, retain) UILabel *rememberUsernameLabel;
+@property (nonatomic, retain) UILabel *rememberPasswordLabel;
+@property (nonatomic, retain) UISwitch *rememberPasswordSwitch;
 @property (nonatomic, retain) UIImageView *logoView;
+@property (nonatomic, retain) UITextField *usernameTextField;
+@property (nonatomic, retain) UITextField *passwordTextField;
 
 @property (nonatomic, retain) UIBarButtonItem *loginButton;
 @property (nonatomic, retain) UIBarButtonItem *cancelButton;
@@ -35,8 +33,6 @@
 @property (nonatomic, strong) NSTimer * timeoutTimer;
 
 - (void)loginButtonPressed:(id)sender;
-- (void)aimLoginPressed:(id)sender;
-- (void)xmppLoginPressed:(id)sender;
 - (void)cancelPressed:(id)sender;
 
 -(void)aimLoginFailed;

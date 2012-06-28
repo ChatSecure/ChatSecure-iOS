@@ -10,11 +10,9 @@
 #import "OTRLoginViewController.h"
 
 @interface OTRAccountsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate>
-{
-    UITableView *accountsTableView;
-    OTRLoginViewController *loginController;
-}
-@property (retain, nonatomic) UITableView *accountsTableView;
+
+@property (nonatomic, retain) OTRLoginViewController *loginController;
+@property (nonatomic, retain) UITableView *accountsTableView;
 @property (nonatomic, retain) UIImageView *logoView;
 
 -(void)oscarLoggedInSuccessfully;

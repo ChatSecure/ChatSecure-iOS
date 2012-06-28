@@ -7,9 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "OTRAccount.h"
 
 @interface OTRAccountsManager : NSObject
 
-@property (nonatomic, retain) NSMutableArray *accounts;
+@property (nonatomic, retain) NSMutableDictionary *accountsDictionary;
+@property (nonatomic, retain, readonly) NSArray *accountsArray;
+
+- (void) addAccount:(OTRAccount*)account;
 
 @end
