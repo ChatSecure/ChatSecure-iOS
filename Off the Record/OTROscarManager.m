@@ -8,6 +8,7 @@
 
 #import "OTROscarManager.h"
 #import "OTRProtocolManager.h"
+#import "OTRConstants.h"
 
 @implementation OTROscarManager
 
@@ -58,7 +59,7 @@ BOOL loginFailed;
 
 - (void)aimLogin:(AIMLogin *)theLogin failedWithError:(NSError *)error {
 	[self checkThreading];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"AimLoginFailedNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kOTRProtocolLoginFail object:self];
     NSLog(@"login error: %@",[error description]);
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Login Error" message:@"AIM login failed. Please check your username and password and try again." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
     [alert show];
@@ -94,7 +95,7 @@ BOOL loginFailed;
 	// [self sendBogus];
         
     [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"OscarLoginNotification"
+     postNotificationName:kOTRProtocolLoginSuccess
      object:self];
 }
 
@@ -108,7 +109,7 @@ BOOL loginFailed;
 	NSLog(@"Session signed off");
     
     [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"OscarLogoutNotification"
+     postNotificationName:kOTRProtocolLogout
      object:self];
 }
 
@@ -122,7 +123,7 @@ BOOL loginFailed;
     aimBuddyList = [theSession.session buddyList];
     
     [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"BuddyListUpdateNotification"
+     postNotificationName:kOTRBuddyListUpdate
      object:self];
 }
 
@@ -131,7 +132,7 @@ BOOL loginFailed;
 	NSLog(@"Buddy added: %@", newBuddy);
     
     [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"BuddyListUpdateNotification"
+     postNotificationName:kOTRBuddyListUpdate
      object:self];
 }
 
@@ -140,7 +141,7 @@ BOOL loginFailed;
 	NSLog(@"Buddy removed: %@", oldBuddy);
     
     [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"BuddyListUpdateNotification"
+     postNotificationName:kOTRBuddyListUpdate
      object:self];
 }
 
@@ -149,7 +150,7 @@ BOOL loginFailed;
 	NSLog(@"Group added: %@", [newGroup name]);
     
     [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"BuddyListUpdateNotification"
+     postNotificationName:kOTRBuddyListUpdate
      object:self];
 }
 
@@ -158,7 +159,7 @@ BOOL loginFailed;
 	NSLog(@"Group removed: %@", [oldGroup name]);
     
     [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"BuddyListUpdateNotification"
+     postNotificationName:kOTRBuddyListUpdate
      object:self];
 }
 
@@ -168,7 +169,7 @@ BOOL loginFailed;
 	NSLog(@"Blist: %@", theSession.session.buddyList);
     
     [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"BuddyListUpdateNotification"
+     postNotificationName:kOTRBuddyListUpdate
      object:self];
 }
 
@@ -176,7 +177,7 @@ BOOL loginFailed;
 	NSLog(@"User blocked: %@", username);
     
     [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"BuddyListUpdateNotification"
+     postNotificationName:kOTRBuddyListUpdate
      object:self];
 }
 
@@ -184,7 +185,7 @@ BOOL loginFailed;
 	NSLog(@"User permitted: %@", username);
     
     [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"BuddyListUpdateNotification"
+     postNotificationName:kOTRBuddyListUpdate
      object:self];
 }
 
@@ -192,14 +193,14 @@ BOOL loginFailed;
 	NSLog(@"User un-blocked: %@", username);
     
     [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"BuddyListUpdateNotification"
+     postNotificationName:kOTRBuddyListUpdate
      object:self];
 }
 - (void)aimFeedbagHandler:(AIMFeedbagHandler *)sender buddyUnpermitted:(NSString *)username {
 	NSLog(@"User un-permitted: %@", username);
     
     [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"BuddyListUpdateNotification"
+     postNotificationName:kOTRBuddyListUpdate
      object:self];
 }
 
@@ -230,7 +231,7 @@ BOOL loginFailed;
         NSDictionary *messageInfo = [NSDictionary dictionaryWithObject:decodedMessage forKey:@"message"];
         
         [[NSNotificationCenter defaultCenter]
-         postNotificationName:@"MessageReceivedNotification"
+         postNotificationName:kOTRMessageReceived
          object:self userInfo:messageInfo];
         
     }
@@ -341,7 +342,7 @@ BOOL loginFailed;
 	NSLog(@"\"%@\"%s%@", theBuddy, ".status = ", status);
     
     [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"BuddyListUpdateNotification"
+     postNotificationName:kOTRBuddyListUpdate
      object:self];
     
 }
@@ -351,7 +352,7 @@ BOOL loginFailed;
 	NSLog(@"user.status = %@", [handler userStatus]);
     
     [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"BuddyListUpdateNotification"
+     postNotificationName:kOTRBuddyListUpdate
      object:self];
     
 }

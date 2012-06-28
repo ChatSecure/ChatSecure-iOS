@@ -10,6 +10,7 @@
 #import "OTRChatViewController.h"
 #import "Strings.h"
 #import "OTRProtocol.h"
+#import "OTRConstants.h"
 
 @implementation OTRChatListViewController
 
@@ -54,7 +55,7 @@
     [[NSNotificationCenter defaultCenter]
      addObserver:self
      selector:@selector(aimLoggedOff)
-     name:@"OscarLogoutNotification"
+     name:kOTRProtocolLogout
      object:nil ];
     
     [[NSNotificationCenter defaultCenter]
@@ -117,8 +118,7 @@
     [super viewDidUnload];
     self.chatListTableView = nil;
     
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"OscarLogoutNotification" object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"XMPPLogoutNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kOTRProtocolLogout object:nil];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {

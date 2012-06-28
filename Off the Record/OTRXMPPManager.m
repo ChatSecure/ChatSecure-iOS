@@ -24,6 +24,7 @@
 
 #import "OTRSettingsManager.h"
 #import "OTRBuddy.h"
+#import "OTRConstants.h"
 
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
@@ -366,12 +367,12 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 - (void)goOnline
 {
     [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"XMPPLoginSuccessNotification" object:nil];
+     postNotificationName:kOTRProtocolLoginSuccess object:self];
 	XMPPPresence *presence = [XMPPPresence presence]; // type="available" is implicit
 	
 	[[self xmppStream] sendElement:presence];
     [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"BuddyListUpdateNotification" object:nil];
+     postNotificationName:kOTRBuddyListUpdate object:nil];
 }
 
 - (void)goOffline
@@ -384,7 +385,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 - (void)failedToConnect
 {
     [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"XMPPLoginFailedNotification" object:nil];    
+     postNotificationName:kOTRProtocolLoginFail object:self];    
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark Connect/disconnect
@@ -440,7 +441,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     [xmppStream disconnect];
     
     [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"XMPPLogoutNotification"
+     postNotificationName:kOTRProtocolLogout
      object:self];
 }
 
@@ -571,7 +572,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
             NSDictionary *messageInfo = [NSDictionary dictionaryWithObject:decodedMessage forKey:@"message"];
             
             [[NSNotificationCenter defaultCenter]
-             postNotificationName:@"MessageReceivedNotification"
+             postNotificationName:kOTRMessageReceived
              object:self userInfo:messageInfo];
         }
 	}
@@ -582,7 +583,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	DDLogVerbose(@"%@: %@ - %@\nType: %@\nShow: %@\nStatus: %@", THIS_FILE, THIS_METHOD, [presence from], [presence type], [presence show],[presence status]);
     
     [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"StatusUpdatedNotification" 
+     postNotificationName:kOTRStatusUpdate
      object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys: [[presence from]bare] ,@"user", nil]];
 }
 
@@ -595,7 +596,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
     [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"XMPPDisconnectedNotification" object:nil]; 
+     postNotificationName:kOTRProtocolDiconnect object:self]; 
 	
 	if (!isXmppConnected)
 	{

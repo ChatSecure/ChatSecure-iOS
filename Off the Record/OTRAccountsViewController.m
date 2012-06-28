@@ -67,7 +67,7 @@
     
     [[NSNotificationCenter defaultCenter]
      addObserver:self
-     selector:@selector(aimLoggedOff)
+     selector:@selector(protocolLoggedOff:)
      name:@"OscarLogoutNotification"
      object:nil ];
     

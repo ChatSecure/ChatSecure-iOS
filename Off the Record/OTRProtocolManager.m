@@ -41,8 +41,6 @@ static OTRProtocolManager *sharedManager = nil;
     if(self)
     {
         self.accountsManager = [[OTRAccountsManager alloc] init];
-        self.oscarManager = [[OTROscarManager alloc] init];
-        self.xmppManager = [[OTRXMPPManager alloc] init];
         self.encryptionManager = [[OTREncryptionManager alloc] init];
         self.settingsManager = [[OTRSettingsManager alloc] init];
         self.buddyList = [[OTRBuddyList alloc] init];
@@ -101,6 +99,7 @@ static OTRProtocolManager *sharedManager = nil;
 
 -(void)buddyListUpdate
 {
+    NSLog(@"Protocols: %@",[protocolManagers allKeys]);
     for (id key in protocolManagers) {
         [self.buddyList updateBuddies:[[protocolManagers objectForKey:key] buddyList]];
     }
@@ -126,7 +125,7 @@ static OTRProtocolManager *sharedManager = nil;
     return nil;
 }
 
--(id<OTRProtocol>)getProtocolfromAccountName:(NSString *)accountName
+-(id<OTRProtocol>)protocolForAccountName:(NSString *)accountName
 {
     id<OTRProtocol> protocol;
     for(id key in protocolManagers)
@@ -137,9 +136,17 @@ static OTRProtocolManager *sharedManager = nil;
     return protocol;
 }
 
--(OTRBuddy *)getBuddyByUserName:(NSString *)buddyUserName fromAccountName:(NSString *)accountName
+-(OTRBuddy *)buddyByUserName:(NSString *)buddyUserName accountName:(NSString *)accountName
 {
-    return [self.buddyList getbuddyByUserName:buddyUserName accountUniqueIdentifier:[self getProtocolfromAccountName:buddyUserName].account.uniqueIdentifier];
+    return [self.buddyList getbuddyByUserName:buddyUserName accountUniqueIdentifier:[self protocolForAccountName:buddyUserName].account.uniqueIdentifier];
+    
+    
+}
+
+- (id <OTRProtocol>)protocolForAccount:(OTRAccount *)account
+{
+    //check if in dictionary
+    //if(account.protocol isEqualToString:kOTRProtocolTypeAIM)
     
     
 }

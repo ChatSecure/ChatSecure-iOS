@@ -7,6 +7,7 @@
 //
 
 #import "AIMLogin.h"
+#import "OTRConstants.h"
 
 @interface AIMLogin (private)
 

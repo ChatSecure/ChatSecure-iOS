@@ -13,6 +13,7 @@
 
 @interface OTRBuddyListViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate> {
     NSArray *sortedBuddies;
+    NSMutableDictionary * buddyDictionary;
 }
 
 @property (nonatomic, retain) UITableView *buddyListTableView;

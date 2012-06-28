@@ -12,6 +12,7 @@
 #import "OTRProtocolManager.h"
 #import "NSString+HTML.h"
 #import "Strings.h"
+#import "OTRConstants.h"
 
 @implementation OTRBuddy
 
@@ -47,7 +48,7 @@
         self.lastMessageDisconnected = NO;
         
         [[NSNotificationCenter defaultCenter]
-         addObserver:self selector:@selector(xmppDisconnected) name:@"XMPPDisconnectedNotification" object:nil];
+         addObserver:self selector:@selector(protocolDisconnected) name:kOTRProtocolDiconnect object:nil];
          
          
          //postNotificationName:@"XMPPDisconnectedNotification" object:nil]; 
@@ -146,7 +147,7 @@
     status = newStatus;
 }
          
--(void) xmppDisconnected
+-(void) protocolDisconnected
 {
     if( [self.chatHistory length]!=0 && !lastMessageDisconnected)
     {

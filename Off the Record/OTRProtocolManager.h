@@ -31,14 +31,12 @@
 -(void)sendMessage:(NSNotification*)notification;
 -(NSArray*)frcSections;
 
--(void)sendMessageOSCAR:(OTRMessage*)theMessage;
--(void)sendMessageXMPP:(OTRMessage*)theMessage;
-
 -(void)buddyListUpdate;
 
 -(NSString*)accountNameForProtocol:(NSString*)protocol;
 
 -(OTRBuddy *)getBuddyByUserName:(NSString *)buddyUserName fromAccountName:(NSString *)accountName;
 
+-(id <OTRProtocol>) protocolForAccount:(OTRAccount *)account;
 
 @end

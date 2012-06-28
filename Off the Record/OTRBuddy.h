@@ -38,6 +38,4 @@ enum OTRBuddyStatus {
 -(void)receiveMessage:(NSString *)message;
 -(void)sendMessage:(NSString *)message secure:(BOOL)secure;
 
-- (OTRMessage*)messageWithContents:(NSString*)contents secure:(BOOL)secure;
-
 @end
