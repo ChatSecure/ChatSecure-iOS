@@ -11,16 +11,15 @@
 
 @interface OTRBuddyList : NSObject
 
-@property (nonatomic, retain) NSMutableDictionary *oscarBuddies;
-@property (nonatomic, retain) NSMutableDictionary *xmppBuddies;
+@property (nonatomic, retain) NSMutableDictionary *allBuddies;
 @property (nonatomic, retain) NSMutableSet *activeConversations;
 
--(NSMutableDictionary*)allBuddies;
+
 -(void)addBuddy:(OTRBuddy*)newBuddy;
--(void)removeOscarBuddies;
--(void)removeXmppBuddies;
+-(void)removeBuddiesforUniqueIdentifier:(NSString *)UniqueIdentifier;
 -(NSUInteger)count;
--(OTRBuddy*)getBuddyByName:(NSString*)buddyName;
+-(OTRBuddy*)getbuddyByUserName:(NSString *)buddyUserName accountUniqueIdentifier:(NSString *)uniqueIdentifier;
+-(void) updateBuddies:(NSArray *)arrayOfBuddies;
 
 +(NSArray*)sortBuddies:(NSMutableDictionary*)buddies;
 

@@ -13,10 +13,8 @@
 #import "OTRCodec.h"
 #import "OTRBuddyList.h"
 #import "OTRSettingsManager.h"
+#import "OTRProtocol.h"
 #import "OTRAccountsManager.h"
-
-#define kOTRProtocolTypeXMPP @"xmpp"
-#define kOTRProtocolTypeAIM @"prpl-oscar"
 
 @interface OTRProtocolManager : NSObject
 
@@ -26,20 +24,19 @@
 @property (nonatomic, retain) OTREncryptionManager *encryptionManager;
 @property (nonatomic, retain) OTRSettingsManager *settingsManager;
 @property (nonatomic, retain) OTRAccountsManager *accountsManager;
+@property (nonatomic, strong) NSMutableDictionary * protocolManagers;
 
 + (OTRProtocolManager*)sharedInstance; // Singleton method
 
 -(void)sendMessage:(NSNotification*)notification;
 -(NSArray*)frcSections;
 
--(void)sendMessageOSCAR:(OTRMessage*)theMessage;
--(void)sendMessageXMPP:(OTRMessage*)theMessage;
-
 -(void)buddyListUpdate;
 
 -(NSString*)accountNameForProtocol:(NSString*)protocol;
 
--(id)protocolForAccount:(OTRAccount*)account;
+-(OTRBuddy *)getBuddyByUserName:(NSString *)buddyUserName fromAccountName:(NSString *)accountName;
 
+-(id <OTRProtocol>) protocolForAccount:(OTRAccount *)account;
 
 @end

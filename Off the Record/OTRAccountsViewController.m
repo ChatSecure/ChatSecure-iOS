@@ -72,7 +72,7 @@
     
     [[NSNotificationCenter defaultCenter]
      addObserver:self
-     selector:@selector(aimLoggedOff)
+     selector:@selector(protocolLoggedOff:)
      name:@"OscarLogoutNotification"
      object:nil ];
     
@@ -104,7 +104,7 @@
 -(void)xmppLoggedOff
 {
     [OTRProtocolManager sharedInstance].xmppManager.isXmppConnected = NO;
-    [[[OTRProtocolManager sharedInstance] buddyList] removeXmppBuddies];
+    //[[[OTRProtocolManager sharedInstance] buddyList] removeXmppBuddies];
     [accountsTableView reloadData];
     
 }

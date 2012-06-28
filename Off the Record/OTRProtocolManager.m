@@ -19,6 +19,7 @@ static OTRProtocolManager *sharedManager = nil;
 @synthesize buddyList;
 @synthesize settingsManager;
 @synthesize accountsManager;
+@synthesize protocolManagers;
 
 - (void) dealloc 
 {
@@ -28,6 +29,7 @@ static OTRProtocolManager *sharedManager = nil;
     self.buddyList = nil;
     self.settingsManager = nil;
     self.accountsManager = nil;
+    self.protocolManagers = nil;
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"SendMessageNotification" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"BuddyListUpdateNotification" object:nil];
@@ -39,11 +41,10 @@ static OTRProtocolManager *sharedManager = nil;
     if(self)
     {
         self.accountsManager = [[OTRAccountsManager alloc] init];
-        self.oscarManager = [[OTROscarManager alloc] init];
-        self.xmppManager = [[OTRXMPPManager alloc] init];
         self.encryptionManager = [[OTREncryptionManager alloc] init];
         self.settingsManager = [[OTRSettingsManager alloc] init];
         self.buddyList = [[OTRBuddyList alloc] init];
+        self.protocolManagers = [[NSMutableDictionary alloc] init];
 
         [[NSNotificationCenter defaultCenter]
          addObserver:self
@@ -89,145 +90,21 @@ static OTRProtocolManager *sharedManager = nil;
 
 -(void)sendMessage:(NSNotification *)notification
 {
-    OTRMessage *message = [notification.userInfo objectForKey:@"message"];
-    NSString *protocol = message.protocol;
+    OTRMessage *message = [notification object];
+    [message send];
     
     //NSLog(@"send message (%@): %@", protocol, message.message);
-    
-    
-    if([protocol isEqualToString:@"xmpp"])
-    {
-        [self sendMessageXMPP:message];
-    }
-    else if([protocol isEqualToString:@"prpl-oscar"])
-    {
-        [self sendMessageOSCAR:message];
-    }
 }
 
--(void)sendMessageOSCAR:(OTRMessage *)theMessage
-{
-    NSString *recipient = theMessage.recipient;
-    NSString *message = theMessage.message;
-    
-    AIMSessionManager *theSession = oscarManager.theSession;
-    AIMMessage * msg = [AIMMessage messageWithBuddy:[theSession.session.buddyList buddyWithUsername:recipient] message:message];
-    
-    // use delay to prevent OSCAR rate-limiting problem
-    //NSDate *future = [NSDate dateWithTimeIntervalSinceNow: delay ];
-    //[NSThread sleepUntilDate:future];
-    
-	[theSession.messageHandler sendMessage:msg];
-}
-
--(void)sendMessageXMPP:(OTRMessage *)theMessage
-{
-    NSString *messageStr = theMessage.message;
-	
-	if([messageStr length] > 0)
-	{
-		NSXMLElement *body = [NSXMLElement elementWithName:@"body"];
-		[body setStringValue:messageStr];
-		
-		NSXMLElement *message = [NSXMLElement elementWithName:@"message"];
-		[message addAttributeWithName:@"type" stringValue:@"chat"];
-		[message addAttributeWithName:@"to" stringValue:theMessage.recipient];
-		[message addChild:body];
-		
-		[xmppManager.xmppStream sendElement:message];		
-	}
-}
 
 -(void)buddyListUpdate
 {
-    //[buddyList removeAllObjects];
-    
-    if(oscarManager.buddyList)
-    {
-        AIMBlist *blist = oscarManager.buddyList;
-        
-        for(AIMBlistGroup *group in blist.groups)
-        {
-            for(AIMBlistBuddy *buddy in group.buddies)
-            {
-                OTRBuddyStatus buddyStatus;
-                
-                switch (buddy.status.statusType) 
-                {
-                    case AIMBuddyStatusAvailable:
-                        buddyStatus = kOTRBuddyStatusAvailable;
-                        break;
-                    case AIMBuddyStatusAway:
-                        buddyStatus = kOTRBuddyStatusAway;
-                        break;
-                    default:
-                        buddyStatus = kOTRBuddyStatusOffline;
-                        break;
-                }
-                
-                OTRBuddy *otrBuddy = [buddyList.oscarBuddies objectForKey:buddy.username];
-
-                if(otrBuddy)
-                {
-                    otrBuddy.status = buddyStatus;
-                    otrBuddy.groupName = group.name;
-                }
-                else
-                {
-                    OTRBuddy *newBuddy = [OTRBuddy buddyWithDisplayName:buddy.username accountName:buddy.username protocol:@"prpl-oscar" status:buddyStatus groupName:group.name];
-                    [buddyList addBuddy:newBuddy];
-                }
-            }
-        }
+    NSLog(@"Protocols: %@",[protocolManagers allKeys]);
+    for (id key in protocolManagers) {
+        [self.buddyList updateBuddies:[[protocolManagers objectForKey:key] buddyList]];
     }
     
-    if(xmppManager.isXmppConnected)
-    {
-        NSFetchedResultsController *frc = [xmppManager fetchedResultsController];
-        NSArray *sections = [[xmppManager fetchedResultsController] sections];
-        int sectionsCount = [[[xmppManager fetchedResultsController] sections] count];
-                        
-        for(int sectionIndex = 0; sectionIndex < sectionsCount; sectionIndex++)
-        {
-            id <NSFetchedResultsSectionInfo> sectionInfo = [sections objectAtIndex:sectionIndex];
-            NSString *sectionName;
-            OTRBuddyStatus otrBuddyStatus;
-            
-            int section = [sectionInfo.name intValue];
-            switch (section)
-            {
-                case 0  : 
-                    sectionName = @"XMPP - Available";
-                    otrBuddyStatus = kOTRBuddyStatusAvailable;
-                    break;
-                case 1  : 
-                    sectionName = @"XMPP - Away";
-                    otrBuddyStatus = kOTRBuddyStatusAway;
-                    break;
-                default : 
-                    sectionName = @"XMPP - Offline";
-                    otrBuddyStatus = kOTRBuddyStatusOffline;
-                    break;
-            }
-            for(int j = 0; j < sectionInfo.numberOfObjects; j++)
-            {
-                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:j inSection:sectionIndex];
-                XMPPUserCoreDataStorageObject *user = [frc objectAtIndexPath:indexPath]; 
-                OTRBuddy *otrBuddy = [buddyList.xmppBuddies objectForKey:user.displayName];
-                                
-                
-                if(otrBuddy)
-                {
-                    otrBuddy.status = otrBuddyStatus;
-                }
-                else
-                {
-                    OTRBuddy *newBuddy = [OTRBuddy buddyWithDisplayName:user.displayName accountName: [[user jid] full] protocol:@"xmpp" status:otrBuddyStatus groupName:sectionName];
-                    [buddyList addBuddy:newBuddy];
-                }
-            }
-        }
-    }
+    
 }
 
 -(NSArray*) frcSections
@@ -246,6 +123,32 @@ static OTRProtocolManager *sharedManager = nil;
         return [xmppManager accountName];
     }
     return nil;
+}
+
+-(id<OTRProtocol>)protocolForAccountName:(NSString *)accountName
+{
+    id<OTRProtocol> protocol;
+    for(id key in protocolManagers)
+    {
+        if ([((id <OTRProtocol>)[protocolManagers objectForKey:key]).account.username isEqualToString:accountName])
+            return [protocolManagers objectForKey:key];
+    }
+    return protocol;
+}
+
+-(OTRBuddy *)buddyByUserName:(NSString *)buddyUserName accountName:(NSString *)accountName
+{
+    return [self.buddyList getbuddyByUserName:buddyUserName accountUniqueIdentifier:[self protocolForAccountName:buddyUserName].account.uniqueIdentifier];
+    
+    
+}
+
+- (id <OTRProtocol>)protocolForAccount:(OTRAccount *)account
+{
+    //check if in dictionary
+    //if(account.protocol isEqualToString:kOTRProtocolTypeAIM)
+    
+    
 }
 
 @end

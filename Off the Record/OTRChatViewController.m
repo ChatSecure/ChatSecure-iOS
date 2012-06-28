@@ -324,7 +324,7 @@
 }
 
 - (void) refreshContext {
-    self.context = otrl_context_find(protocolManager.encryptionManager.userState, [buddy.accountName UTF8String],[[self.protocolManager accountNameForProtocol:buddy.protocol] UTF8String], [buddy.protocol UTF8String],NO,NULL,NULL, NULL);
+    self.context = otrl_context_find(protocolManager.encryptionManager.userState, [buddy.accountName UTF8String],[[self.protocolManager accountNameForProtocol:buddy.protocol.account.protocol] UTF8String], [buddy.protocol.account.protocol UTF8String],NO,NULL,NULL, NULL);
 }
 
 - (void) setBuddy:(OTRBuddy *)newBuddy {
@@ -551,7 +551,7 @@
         else if (buttonIndex == 0)
         {
             OTRBuddy* theBuddy = buddy;
-            OTRMessage *newMessage = [OTRMessage messageWithSender:[self.protocolManager accountNameForProtocol:buddy.protocol] recipient:theBuddy.accountName message:@"" protocol:buddy.protocol];
+            OTRMessage * newMessage = [OTRMessage messageWithBuddy:theBuddy message:@""];
             OTRMessage *encodedMessage = [OTRCodec encodeMessage:newMessage];
             [OTRMessage sendMessage:encodedMessage];    
         }

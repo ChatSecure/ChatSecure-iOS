@@ -359,6 +359,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		634CBFDB159CEAC70046FB3B /* OTRConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OTRConstants.h; sourceTree = "<group>"; };
 		63FD24D315630A240041374A /* OTRUIKeyboardListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRUIKeyboardListener.h; sourceTree = "<group>"; };
 		63FD24D415630A240041374A /* OTRUIKeyboardListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRUIKeyboardListener.m; sourceTree = "<group>"; };
 		D902D31C141E930C00AA3479 /* OTRBuddy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBuddy.h; sourceTree = "<group>"; };
@@ -394,6 +395,7 @@
 		D93C31B3159A7DDA006316C7 /* SFHFKeychainUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFHFKeychainUtils.h; sourceTree = "<group>"; };
 		D93C31B4159A7DDA006316C7 /* SFHFKeychainUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFHFKeychainUtils.m; sourceTree = "<group>"; };
 		D93C31B6159A8B4F006316C7 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		D940EA7915992A0800E5527A /* OTRProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRProtocol.h; sourceTree = "<group>"; };
 		D95F8E911419C3D00094A634 /* chatsecure_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = chatsecure_icon.png; path = ../chatsecure_icon.png; sourceTree = "<group>"; };
 		D95F8E931419C3E00094A634 /* chatsecure_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "chatsecure_icon@2x.png"; path = "../chatsecure_icon@2x.png"; sourceTree = "<group>"; };
 		D95F8E951419C58D0094A634 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = ../Default.png; sourceTree = "<group>"; };
@@ -1790,8 +1792,10 @@
 			isa = PBXGroup;
 			children = (
 				D96495CC15363C1F009A8C33 /* Settings */,
+				634CBFDB159CEAC70046FB3B /* OTRConstants.h */,
 				D902D31C141E930C00AA3479 /* OTRBuddy.h */,
 				D902D31D141E930C00AA3479 /* OTRBuddy.m */,
+				D940EA7915992A0800E5527A /* OTRProtocol.h */,
 				D90FAF2714A0624B00DA7C56 /* OTRBuddyList.h */,
 				D90FAF2814A0624B00DA7C56 /* OTRBuddyList.m */,
 				D999075B14142CC400D573EE /* OTRProtocolManager.h */,
@@ -2694,7 +2698,6 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					_GCRYPT_IN_LIBGCRYPT,
 					"DEBUG=1",
-					CRITTERCISM_ENABLED,
 				);
 				GCC_THUMB_SUPPORT = NO;
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
@@ -2724,10 +2727,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Off the Record/Off the Record-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					_GCRYPT_IN_LIBGCRYPT,
-					CRITTERCISM_ENABLED,
-				);
+				GCC_PREPROCESSOR_DEFINITIONS = _GCRYPT_IN_LIBGCRYPT;
 				GCC_THUMB_SUPPORT = NO;
 				HEADER_SEARCH_PATHS = /usr/include/libxml2;
 				INFOPLIST_FILE = "Off the Record/Off the Record-Info.plist";

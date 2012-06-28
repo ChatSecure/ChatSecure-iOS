@@ -9,6 +9,7 @@
 #import "OTRLoginViewController.h"
 #import "Strings.h"
 #import "OTRUIKeyboardListener.h"
+#import "OTRConstants.h"
 
 @implementation OTRLoginViewController
 @synthesize usernameTextField;
