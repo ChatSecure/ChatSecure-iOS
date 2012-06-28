@@ -35,4 +35,9 @@
     return self;
 }
 
+- (void) addAccount:(OTRAccount*)account {
+    [accounts addObject:account];
+    [account save];
+}
+
 @end

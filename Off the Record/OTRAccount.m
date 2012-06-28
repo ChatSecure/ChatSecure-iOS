@@ -12,7 +12,7 @@
 #define kOTRServiceName @"org.chatsecure.ChatSecure"
 
 @implementation OTRAccount
-@synthesize username, domain, protocol, password, rememberPassword, uniqueIdentifier;
+@synthesize username, domain, protocol, password, rememberPassword, uniqueIdentifier, isConnected;
 
 - (void) dealloc {
     self.username = nil;
@@ -22,12 +22,27 @@
     uniqueIdentifier = nil;
 }
 
+- (id) initWithUsername:(NSString*)newUsername domain:(NSString*)newDomain protocol:(NSString*)newProtocol {
+    if (self = [super init]) {
+        self.username = newUsername;
+        self.domain = newDomain;
+        self.protocol = newProtocol;
+        self.rememberPassword = NO;
+        self.isConnected = NO;
+        CFUUIDRef theUUID = CFUUIDCreate(NULL);
+        NSString* uuidString = (__bridge_transfer NSString*)CFUUIDCreateString(NULL, theUUID);
+        CFRelease(theUUID);
+        uniqueIdentifier = uuidString;
+    }
+}
+
 - (id) initWithSettingsDictionary:(NSDictionary *)dictionary uniqueIdentifier:(NSString*) uniqueID {
     if (self = [super init]) {
         self.username = [dictionary objectForKey:kOTRAccountUsernameKey];
         self.domain = [dictionary objectForKey:kOTRAccountDomainKey];
         self.rememberPassword = [[dictionary objectForKey:kOTRAccountRememberPasswordKey] boolValue];
         uniqueIdentifier = uniqueID;
+        self.isConnected = NO;
     }
     return self;
 }
@@ -50,6 +65,7 @@
 
 - (NSString*) password {
     if (!rememberPassword) {
+        password = nil;
         return nil;
     }
     NSError *error = nil;
@@ -64,6 +80,7 @@
 - (void) setUsername:(NSString *)newUsername {
     if (!rememberPassword) {
         username = newUsername;
+        self.password = nil;
         return;
     }
     NSString *tempPassword = self.password;    

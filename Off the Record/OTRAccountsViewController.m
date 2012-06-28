@@ -13,6 +13,11 @@
 @implementation OTRAccountsViewController
 @synthesize accountsTableView, logoView;
 
+- (void) dealloc {
+    self.accountsTableView = nil;
+    self.logoView = nil;
+}
+
 - (id)init {
     if (self = [super init]) {
         self.title = ACCOUNTS_STRING;
@@ -153,7 +158,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 2;
+    return [[OTRProtocolManager sharedInstance].accountsManager.accounts count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath

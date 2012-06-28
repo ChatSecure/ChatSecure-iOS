@@ -15,28 +15,36 @@
 @synthesize passwordTextField;
 @synthesize protocolManager;
 @synthesize loginButton, cancelButton;
-@synthesize rememberUserNameSwitch;
+@synthesize rememberPasswordSwitch;
 @synthesize useXMPP;
-@synthesize usernameLabel, passwordLabel, rememberUsernameLabel;
+@synthesize usernameLabel, passwordLabel, rememberPasswordLabel;
 @synthesize logoView;
 @synthesize timeoutTimer;
+@synthesize account;
 
-
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
+- (void) dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"AimLoginFailedNotification" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"XMPPLoginFailedNotification" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"XMPPLoginSuccessNotification" object:nil];
     self.logoView = nil;
     self.usernameLabel = nil;
     self.passwordLabel = nil;
-    self.rememberUsernameLabel = nil;
-    self.rememberUserNameSwitch = nil;
+    self.rememberPasswordLabel = nil;
+    self.rememberPasswordSwitch = nil;
     self.usernameTextField = nil;
     self.passwordTextField = nil;
     self.loginButton = nil;
     self.cancelButton = nil;
+    [timeoutTimer invalidate];
+    self.timeoutTimer = nil;
+    self.account = nil;
+}
+
+- (id) initWithAccount:(OTRAccount*)newAccount {
+    if (self = [super init]) {
+        self.account = newAccount;
+    }
+    return self;
 }
 
 
@@ -50,20 +58,20 @@
     self.usernameLabel.text = USERNAME_STRING;
     self.passwordLabel = [[UILabel alloc] init];
     self.passwordLabel.text = PASSWORD_STRING;
-    self.rememberUsernameLabel = [[UILabel alloc] init];
-    self.rememberUsernameLabel.text = REMEMBER_USERNAME_STRING;
-    self.rememberUserNameSwitch = [[UISwitch alloc] init];
+    self.rememberPasswordLabel = [[UILabel alloc] init];
+    self.rememberPasswordLabel.text = REMEMBER_USERNAME_STRING;
+    self.rememberPasswordSwitch = [[UISwitch alloc] init];
     [self.view addSubview:usernameLabel];
     [self.view addSubview:passwordLabel];
-    [self.view addSubview:rememberUsernameLabel];
-    [self.view addSubview:rememberUserNameSwitch];
+    [self.view addSubview:rememberPasswordLabel];
+    [self.view addSubview:rememberPasswordSwitch];
     
     self.usernameTextField = [[UITextField alloc] init];
     self.usernameTextField.delegate = self;
     self.usernameTextField.borderStyle = UITextBorderStyleRoundedRect;
     self.usernameTextField.autocorrectionType = UITextAutocorrectionTypeNo;
     self.usernameTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-    self.usernameTextField.text = @"";
+    self.usernameTextField.text = account.username;
     if (useXMPP)
     {
         self.usernameTextField.placeholder = @"user@example.com";
@@ -72,7 +80,11 @@
     self.passwordTextField.delegate = self;
     self.passwordTextField.borderStyle = UITextBorderStyleRoundedRect;
     self.passwordTextField.secureTextEntry = YES;
-    self.passwordTextField.text = @"";
+    if (account.rememberPassword) {
+        self.passwordTextField.text = account.password;
+    } else {
+        self.passwordTextField.text = @"";
+    }
     [self.view addSubview:usernameTextField];
     [self.view addSubview:passwordTextField];
     
@@ -132,23 +144,6 @@
 - (void) viewWillAppear:(BOOL)animated 
 {
     [super viewWillAppear:animated];
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    
-    if([[defaults objectForKey:@"saveUsername"] boolValue])
-    {
-        [rememberUserNameSwitch setOn:YES];
-    }
-    if(rememberUserNameSwitch.on) 
-    {
-        if(useXMPP) 
-        {
-            usernameTextField.text = [defaults objectForKey:@"xmppUsername"];
-        }
-        else 
-        {
-            usernameTextField.text = [defaults objectForKey:@"aimUsername"];
-        }
-    }
     
     double scale = 0.75;
     CGFloat logoViewFrameWidth = (int)(self.logoView.image.size.width * scale);
@@ -180,12 +175,12 @@
     self.passwordTextField.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth;
     
     CGFloat rememberUsernameLabelFrameYOrigin = passwordLabel.frame.origin.y + passwordLabel.frame.size.height + 15;
-    self.rememberUsernameLabel.frame = CGRectMake(10, rememberUsernameLabelFrameYOrigin, 170, 21);
-    self.rememberUsernameLabel.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;
+    self.rememberPasswordLabel.frame = CGRectMake(10, rememberUsernameLabelFrameYOrigin, 170, 21);
+    self.rememberPasswordLabel.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;
     
     CGFloat rememberUserNameSwitchFrameWidth = 79;
-    self.rememberUserNameSwitch.frame = CGRectMake(self.view.frame.size.width-rememberUserNameSwitchFrameWidth-5, rememberUsernameLabelFrameYOrigin, rememberUserNameSwitchFrameWidth, 27);
-    self.rememberUserNameSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
+    self.rememberPasswordSwitch.frame = CGRectMake(self.view.frame.size.width-rememberUserNameSwitchFrameWidth-5, rememberUsernameLabelFrameYOrigin, rememberUserNameSwitchFrameWidth, 27);
+    self.rememberPasswordSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
     
     if([self.usernameTextField.text isEqualToString:@""])
     {
@@ -197,24 +192,9 @@
     
 }
 
-- (void) viewWillDisappear:(BOOL)animated 
-{
+- (void) viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    
-    if(rememberUserNameSwitch.on) 
-    {
-        if(useXMPP) 
-        {
-            [defaults setObject:usernameTextField.text forKey:@"xmppUsername"];
-        }
-        else 
-        {
-            [defaults setObject:usernameTextField.text forKey:@"aimUsername"];
-        }
-    }
-    [defaults setObject:[NSNumber numberWithBool:rememberUserNameSwitch.on] forKey:@"saveUsername"];
-    [defaults synchronize];
+    [account save];
 }
 
 -(void)viewDidDisappear:(BOOL)animated
@@ -285,6 +265,7 @@
      object:self];
     [timeoutTimer invalidate];
 }
+
 -(void) xmppLoginFailed
 {
     [HUD hide:YES];
@@ -292,7 +273,6 @@
     [alert show];
     
 }
-
 
 
 - (void)xmppLoginPressed:(id)sender 
@@ -385,11 +365,6 @@
     return (viewHeight - keyboardSize.height)/2.0-(viewHeight/2.0);
 }
 
--(void)dealloc
-{
-    [timeoutTimer invalidate];
-    
-}
 
 #pragma mark -
 #pragma mark MBProgressHUDDelegate methods

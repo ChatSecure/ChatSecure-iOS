@@ -39,5 +39,7 @@
 
 -(NSString*)accountNameForProtocol:(NSString*)protocol;
 
+-(id)protocolForAccount:(OTRAccount*)account;
+
 
 @end

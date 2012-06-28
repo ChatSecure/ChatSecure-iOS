@@ -2688,7 +2688,7 @@
 					"$(ARCHS_STANDARD_32_BIT)",
 					armv6,
 				);
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Chris Ballinger";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Off the Record/Off the Record-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -2708,7 +2708,7 @@
 				);
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = ChatSecure;
-				PROVISIONING_PROFILE = "28FA0889-0053-42DA-8720-54664AC0CDB9";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
@@ -2721,7 +2721,7 @@
 					"$(ARCHS_STANDARD_32_BIT)",
 					armv6,
 				);
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Chris Ballinger";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Off the Record/Off the Record-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -2740,7 +2740,7 @@
 				);
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = ChatSecure;
-				PROVISIONING_PROFILE = "28FA0889-0053-42DA-8720-54664AC0CDB9";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
