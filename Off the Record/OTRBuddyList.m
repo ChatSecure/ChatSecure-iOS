@@ -10,16 +10,13 @@
 
 @implementation OTRBuddyList
 
-@synthesize xmppBuddies;
-@synthesize oscarBuddies;
+@synthesize allBuddies;
 @synthesize activeConversations;
 
 -(id)init
 {
     if(self = [super init])
     {
-        self.xmppBuddies = [[NSMutableDictionary alloc] init];
-        self.oscarBuddies = [[NSMutableDictionary alloc] init];
         self.activeConversations = [[NSMutableSet alloc] init];
     }
     return self;
@@ -27,68 +24,60 @@
 
 +(NSArray*)sortBuddies:(NSMutableDictionary*)buddies
 {
+    NSMutableArray * tempAllBuddies = [[NSMutableArray alloc] init];
+    for(NSDictionary * tempBuddies in [buddies allValues])
+    {
+        [tempAllBuddies addObjectsFromArray:[tempBuddies allValues]];
+    }
+    
     NSSortDescriptor *buddyNameDescriptor = [[NSSortDescriptor alloc] initWithKey:@"displayName" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)];
     
     NSSortDescriptor *statusDescriptor = [[NSSortDescriptor alloc] initWithKey:@"status"
                                                       ascending:NO];
     NSArray *sortDescriptors = [NSArray arrayWithObjects:statusDescriptor, buddyNameDescriptor, nil];
     
-    return [[buddies allValues] sortedArrayUsingDescriptors:sortDescriptors];
-}
-
--(NSMutableDictionary*)allBuddies
-{
-    NSMutableDictionary *allBuddies = [NSMutableDictionary dictionaryWithCapacity:[self count]];
-    
-    if(xmppBuddies)
-        [allBuddies addEntriesFromDictionary:xmppBuddies];
-    if(oscarBuddies)
-        [allBuddies addEntriesFromDictionary:oscarBuddies];
-    
-    return allBuddies;
+    return [tempAllBuddies sortedArrayUsingDescriptors:sortDescriptors];
 }
 
 -(NSUInteger)count
 {
-    return [xmppBuddies count] + [oscarBuddies count];
-}
-
--(void)removeXmppBuddies
-{
-    [xmppBuddies removeAllObjects];
-}
-
--(void)removeOscarBuddies
-{
-    [oscarBuddies removeAllObjects];
+    NSUInteger numberOfBuddies = 0;
+    for (NSDictionary * accountBuddies in self.allBuddies)
+    {
+        numberOfBuddies += [accountBuddies count];
+    }
+    return numberOfBuddies;
 }
 
 -(void)removeAllBuddies
 {
-    [xmppBuddies removeAllObjects];
-    [oscarBuddies removeAllObjects];
+    [self.allBuddies removeAllObjects];
+}
+
+-(void)removeBuddiesforUniqueIdentifier:(NSString *)UniqueIdentifier{
+    [self.allBuddies removeObjectForKey:UniqueIdentifier];
 }
 
 -(void)addBuddy:(OTRBuddy*)newBuddy
 {
-    if([newBuddy.protocol isEqualToString:@"prpl-oscar"])
+    [[self.allBuddies objectForKey:newBuddy.protocol.account.uniqueIdentifier] setObject:newBuddy forKey:newBuddy.accountName];
+}
+
+-(void) updateBuddies:(NSArray *)arrayOfBuddies
+{
+    for (OTRBuddy * buddy in arrayOfBuddies)
     {
-        [oscarBuddies setObject:newBuddy forKey:newBuddy.accountName];
-    }
-    else if([newBuddy.protocol isEqualToString:@"xmpp"])
-    {
-        [xmppBuddies setObject:newBuddy forKey:newBuddy.accountName];
+        OTRBuddy * existingBuddy = [[self.allBuddies objectForKey:buddy.protocol.account.uniqueIdentifier] objectForKey:buddy.accountName];
+        if(!existingBuddy)
+        {
+            [[self.allBuddies objectForKey:buddy.protocol.account.uniqueIdentifier] setObject:buddy forKey:buddy.accountName];
+        }
     }
 }
 
--(OTRBuddy*)getBuddyByName:(NSString*)buddyName
+-(OTRBuddy *)getbuddyByUserName:(NSString *)buddyUserName accountUniqueIdentifier:(NSString *)uniqueIdentifier
 {
-    OTRBuddy *buddy = nil;
-    
-    buddy = [oscarBuddies objectForKey:buddyName];
-    if(!buddy)
-        buddy = [xmppBuddies objectForKey:buddyName];
-    return buddy;
+    return [[allBuddies objectForKey:uniqueIdentifier] objectForKey:buddyUserName];
 }
 
 @end

@@ -20,5 +20,7 @@
 
 - (void) sendMessage:(OTRMessage*)message;
 - (NSArray*) buddyList;
+- (OTRBuddy *) getBuddyByUserName:(NSString *)buddyUserName;
+- (BOOL) isConnected;
 
 @end

@@ -24,6 +24,7 @@
 @property (nonatomic, retain) OTREncryptionManager *encryptionManager;
 @property (nonatomic, retain) OTRSettingsManager *settingsManager;
 @property (nonatomic, retain) OTRAccountsManager *accountsManager;
+@property (nonatomic, strong) NSMutableDictionary * protocolManagers;
 
 + (OTRProtocolManager*)sharedInstance; // Singleton method
 
@@ -36,6 +37,8 @@
 -(void)buddyListUpdate;
 
 -(NSString*)accountNameForProtocol:(NSString*)protocol;
+
+-(OTRBuddy *)getBuddyByUserName:(NSString *)buddyUserName fromAccountName:(NSString *)accountName;
 
 
 @end

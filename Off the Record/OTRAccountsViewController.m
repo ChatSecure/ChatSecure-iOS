@@ -99,7 +99,7 @@
 -(void)xmppLoggedOff
 {
     [OTRProtocolManager sharedInstance].xmppManager.isXmppConnected = NO;
-    [[[OTRProtocolManager sharedInstance] buddyList] removeXmppBuddies];
+    //[[[OTRProtocolManager sharedInstance] buddyList] removeXmppBuddies];
     [accountsTableView reloadData];
     
 }

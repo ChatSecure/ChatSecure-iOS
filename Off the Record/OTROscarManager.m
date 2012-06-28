@@ -102,7 +102,7 @@ BOOL loginFailed;
 
 - (void)aimSessionManagerSignedOff:(AIMSessionManager *)sender {
 	[self checkThreading];
-    [[[[OTRProtocolManager sharedInstance] buddyList] oscarBuddies] removeAllObjects];
+    [[[OTRProtocolManager sharedInstance] buddyList] removeBuddiesforUniqueIdentifier:self.account.uniqueIdentifier];
     aimBuddyList = nil;
 	theSession = nil;
 	NSLog(@"Session signed off");
@@ -559,8 +559,15 @@ BOOL loginFailed;
             }
         }
     }
+}
+- (OTRBuddy *) getBuddyByAccountName:(NSString *)buddyAccountName
+{
+    if (protocolBuddyList)
+        return [protocolBuddyList objectForKey:buddyAccountName];
+}
 
-    
+- (BOOL) isConnected {
+    return loggedIn;
 }
 
 @end

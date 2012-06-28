@@ -735,4 +735,15 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     return kOTRProtocolTypeXMPP;
 }
 
+- (OTRBuddy *) getBuddyByAccountName:(NSString *)buddyAccountName
+{
+    if (protocolBuddyList)
+        return [protocolBuddyList objectForKey:buddyAccountName];
+}
+
+- (BOOL) isConnected {
+    return isXmppConnected;
+}
+
+
 @end
