@@ -127,7 +127,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
 {
     [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"BuddyListUpdateNotification"
+     postNotificationName:kOTRBuddyListUpdate
      object:self];
 }
 
@@ -742,9 +742,12 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
         return [protocolBuddyList objectForKey:buddyAccountName];
 }
 
-- (BOOL) isConnected {
-    return isXmppConnected;
+-(void)connectWithPassword:(NSString *)myPassword
+{
+    [self connectWithJID:self.account.username password:myPassword];
+    
 }
+
 
 
 @end

@@ -54,7 +54,7 @@
     // Do any additional setup after loading the view from its nib.
     [[NSNotificationCenter defaultCenter]
      addObserver:self
-     selector:@selector(aimLoggedOff)
+     selector:@selector(protocolLoggedOff)
      name:kOTRProtocolLogout
      object:nil ];
     

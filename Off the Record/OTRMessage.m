@@ -8,6 +8,7 @@
 
 #import "OTRMessage.h"
 #import "OTRBuddy.h"
+#import "OTRConstants.h"
 
 @implementation OTRMessage
 
@@ -52,7 +53,7 @@
     [message.buddy.protocol sendMessage:message];
     
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"SendMessageNotification" object:self userInfo:messageInfo];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kOTRSendMessage object:self userInfo:messageInfo];
 }
 
 @end

@@ -35,7 +35,7 @@
 
 -(NSString*)accountNameForProtocol:(NSString*)protocol;
 
--(OTRBuddy *)getBuddyByUserName:(NSString *)buddyUserName fromAccountName:(NSString *)accountName;
+-(OTRBuddy *)buddyByUserName:(NSString *)buddyUserName accountName:(NSString *)accountName;
 
 -(id <OTRProtocol>) protocolForAccount:(OTRAccount *)account;
 

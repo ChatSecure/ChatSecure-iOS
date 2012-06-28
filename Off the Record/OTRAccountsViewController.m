@@ -9,6 +9,7 @@
 #import "OTRAccountsViewController.h"
 #import "OTRProtocolManager.h"
 #import "Strings.h"
+#import "OTRConstants.h"
 
 @implementation OTRAccountsViewController
 @synthesize accountsTableView, logoView;
@@ -55,8 +56,8 @@
     
     [[NSNotificationCenter defaultCenter]
      addObserver:self
-     selector:@selector(oscarLoggedInSuccessfully)
-     name:@"OscarLoginNotification"
+     selector:@selector(protocolLoggedInSuccessfully)
+     name:kOTRProtocolLoginSuccess
      object:nil ];
     
     [[NSNotificationCenter defaultCenter]
@@ -68,7 +69,7 @@
     [[NSNotificationCenter defaultCenter]
      addObserver:self
      selector:@selector(protocolLoggedOff:)
-     name:@"OscarLogoutNotification"
+     name: kOTRProtocolLogout
      object:nil ];
     
     [[NSNotificationCenter defaultCenter]

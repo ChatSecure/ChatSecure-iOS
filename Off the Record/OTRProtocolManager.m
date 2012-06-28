@@ -8,6 +8,7 @@
 
 #import "OTRProtocolManager.h"
 #import "OTRBuddy.h"
+#import "OTRConstants.h"
 
 static OTRProtocolManager *sharedManager = nil;
 
@@ -31,8 +32,8 @@ static OTRProtocolManager *sharedManager = nil;
     self.accountsManager = nil;
     self.protocolManagers = nil;
     
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"SendMessageNotification" object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"BuddyListUpdateNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kOTRSendMessage object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kOTRBuddyListUpdate object:nil];
 }
 
 -(id)init
@@ -49,13 +50,13 @@ static OTRProtocolManager *sharedManager = nil;
         [[NSNotificationCenter defaultCenter]
          addObserver:self
          selector:@selector(sendMessage:)
-         name:@"SendMessageNotification"
+         name:kOTRSendMessage
          object:nil ];
         
         [[NSNotificationCenter defaultCenter]
          addObserver:self
          selector:@selector(buddyListUpdate)
-         name:@"BuddyListUpdateNotification"
+         name:kOTRBuddyListUpdate
          object:nil ];
     }
     return self;
@@ -145,10 +146,21 @@ static OTRProtocolManager *sharedManager = nil;
 
 - (id <OTRProtocol>)protocolForAccount:(OTRAccount *)account
 {
-    //check if in dictionary
-    //if(account.protocol isEqualToString:kOTRProtocolTypeAIM)
-    
-    
+    id <OTRProtocol> protocol = [protocolManagers objectForKey:account.uniqueIdentifier];
+    if(!protocol)
+    {
+        if([account.protocol isEqualToString:kOTRProtocolTypeAIM])
+        {
+            protocol = [[OTROscarManager alloc] init];
+        }
+        else if([account.protocol isEqualToString:kOTRProtocolTypeXMPP])
+        {
+            protocol = [[OTRXMPPManager alloc] init];
+        }
+        protocol.account = account;
+        [protocolManagers setObject:protocol forKey:account.uniqueIdentifier];
+    }
+    return protocol;
 }
 
 @end

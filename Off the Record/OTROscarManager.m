@@ -57,6 +57,10 @@ BOOL loginFailed;
 
 #pragma mark Login Delegate
 
+-(void)authorizer:(id)authorizer didFailWithError:(NSError *)error {
+    NSLog(@"Authorizer Error: %@",[error description]);
+}
+
 - (void)aimLogin:(AIMLogin *)theLogin failedWithError:(NSError *)error {
 	[self checkThreading];
     [[NSNotificationCenter defaultCenter] postNotificationName:kOTRProtocolLoginFail object:self];
@@ -567,8 +571,15 @@ BOOL loginFailed;
         return [protocolBuddyList objectForKey:buddyAccountName];
 }
 
-- (BOOL) isConnected {
-    return loggedIn;
+-(void)connectWithPassword:(NSString *)myPassword
+{
+    self.login = [[AIMLogin alloc] initWithUsername:account.username password:myPassword];
+    [self.login setDelegate:self];
+    
+}
+-(void)disconnect
+{
+    [[self theSession].session closeConnection];
 }
 
 @end

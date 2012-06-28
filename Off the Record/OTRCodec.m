@@ -87,7 +87,7 @@ static void inject_message_cb(void *opdata, const char *accountname,
     if(accountname && recipient && message && protocol)
     {
         
-        OTRMessage *newMessage = [OTRMessage messageWithBuddy:[[OTRProtocolManager sharedInstance] getBuddyByUserName:[NSString stringWithUTF8String:recipient] fromAccountName:[NSString stringWithUTF8String:accountname] ] message:[NSString stringWithUTF8String:message]];
+        OTRMessage *newMessage = [OTRMessage messageWithBuddy:[[OTRProtocolManager sharedInstance] buddyByUserName:[NSString stringWithUTF8String:recipient] accountName:[NSString stringWithUTF8String:accountname] ] message:[NSString stringWithUTF8String:message]];
         
         
         [newMessage send];
@@ -191,7 +191,7 @@ static void gone_secure_cb(void *opdata, ConnContext *context)
     {
         NSString* username = [NSString stringWithUTF8String:context->username];
         NSString* accountname = [NSString stringWithUTF8String:context->accountname];
-        OTRBuddy *buddy = [[OTRProtocolManager sharedInstance] getBuddyByUserName:username fromAccountName:accountname];
+        OTRBuddy *buddy = [[OTRProtocolManager sharedInstance] buddyByUserName:username accountName:accountname];
         NSDictionary *userInfo = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES] forKey:@"secure"];
         
 
@@ -207,7 +207,7 @@ static void gone_insecure_cb(void *opdata, ConnContext *context)
     {
         NSString* username = [NSString stringWithUTF8String:context->username];
         NSString* accountname = [NSString stringWithUTF8String:context->accountname];
-        OTRBuddy *buddy = [[OTRProtocolManager sharedInstance] getBuddyByUserName:username fromAccountName:accountname];
+        OTRBuddy *buddy = [[OTRProtocolManager sharedInstance] buddyByUserName:username accountName:accountname];
         NSDictionary *userInfo = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:NO] forKey:@"secure"];
         
         [[NSNotificationCenter defaultCenter] postNotificationName:ENCRYPTION_STATE_NOTIFICATION object:buddy userInfo:userInfo];
@@ -220,11 +220,11 @@ static void still_secure_cb(void *opdata, ConnContext *context, int is_reply)
     {
         NSString* username = [NSString stringWithUTF8String:context->username];
         NSString* accountname = [NSString stringWithUTF8String:context->accountname];
-        OTRBuddy *buddy = [[OTRProtocolManager sharedInstance] getBuddyByUserName:username fromAccountName:accountname];
+        OTRBuddy *buddy = [[OTRProtocolManager sharedInstance] buddyByUserName:username accountName:accountname];
         NSDictionary *userInfo = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES] forKey:@"secure"];
         
         
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"EncryptionStateNotification" object:buddy userInfo:userInfo];
+        [[NSNotificationCenter defaultCenter] postNotificationName:ENCRYPTION_STATE_NOTIFICATION object:buddy userInfo:userInfo];
     }
 }
 

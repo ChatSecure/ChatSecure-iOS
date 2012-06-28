@@ -13,4 +13,5 @@
 #define kOTRMessageReceived @"MessageReceivedNotification"
 #define kOTRStatusUpdate @"StatusUpdatedNotification" 
 #define kOTRProtocolDiconnect @"DisconnectedNotification"
+#define kOTRSendMessage @"SendMessageNotification"
 
