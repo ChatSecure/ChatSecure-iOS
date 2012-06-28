@@ -21,5 +21,6 @@
 - (void) sendMessage:(OTRMessage*)message;
 - (NSArray*) buddyList;
 - (void) connectWithPassword:(NSString *)password;
+- (void) disconnect;
 
 @end

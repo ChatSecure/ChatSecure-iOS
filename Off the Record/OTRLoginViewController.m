@@ -14,7 +14,6 @@
 @implementation OTRLoginViewController
 @synthesize usernameTextField;
 @synthesize passwordTextField;
-@synthesize protocolManager;
 @synthesize loginButton, cancelButton;
 @synthesize rememberPasswordSwitch;
 @synthesize useXMPP;
@@ -44,6 +43,11 @@
 - (id) initWithAccount:(OTRAccount*)newAccount {
     if (self = [super init]) {
         self.account = newAccount;
+        if ([account.protocol isEqualToString:kOTRProtocolTypeXMPP]) {
+            self.useXMPP = YES;
+        } else {
+            self.useXMPP = NO;
+        }
     }
     return self;
 }
@@ -195,7 +199,16 @@
 
 - (void) viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+    account.username = self.usernameTextField.text;
+    account.rememberPassword = rememberPasswordSwitch.on;
+    
+    if (account.rememberPassword) {
+        account.password = self.passwordTextField.text;
+    } else {
+        account.password = nil;
+    }
     [account save];
+    [[[OTRProtocolManager sharedInstance] accountsManager] addAccount:account];
 }
 
 -(void)viewDidDisappear:(BOOL)animated
@@ -213,35 +226,6 @@
     } else {
         //return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
         return NO;
-    }
-}
-
-- (void)aimLoginPressed:(id)sender 
-{
-    BOOL fields = [self checkFields];
-    if(fields)
-    {
-        protocolManager.oscarManager.login = [[AIMLogin alloc] initWithUsername:usernameTextField.text password:passwordTextField.text];
-        protocolManager.oscarManager.accountName = usernameTextField.text;
-        [protocolManager.oscarManager.login setDelegate:protocolManager.oscarManager];
-        
-        HUD = [[MBProgressHUD alloc] initWithView:self.view];
-        [self.view addSubview:HUD];
-        
-        float hudOffsetY = [self getMidpointOffsetforHUD];
-        
-        HUD.yOffset = hudOffsetY;
-        HUD.delegate = self;
-        HUD.labelText = @"Logging in...";
-        [HUD show:YES];
-        
-        
-        
-        if (![protocolManager.oscarManager.login beginAuthorization]) {
-            [HUD hide:YES];
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:OSCAR_FAIL_STRING delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
-            [alert show];
-        }
     }
 }
 
@@ -276,12 +260,10 @@
 }
 
 
-- (void)xmppLoginPressed:(id)sender 
-{
+- (void)loginButtonPressed:(id)sender {
     BOOL fields = [self checkFields];
     if(fields)
     {
-        NSLog(@"show HUD");
         HUD = [[MBProgressHUD alloc] initWithView:self.view];
         [self.view addSubview:HUD];
         HUD.delegate = self;
@@ -290,42 +272,12 @@
         HUD.yOffset = hudOffsetY;
         [HUD show:YES];
         
-        BOOL connect = [protocolManager.xmppManager connectWithJID:usernameTextField.text password:passwordTextField.text];
-        
-        if (connect) {
-            NSLog(@"xmppLogin attempt");
-        }
-        
-        /*
-        if(connect)
-        {
-            [[NSNotificationCenter defaultCenter]
-             postNotificationName:@"XMPPLoginNotification"
-             object:self];
-        }
-        else
-        {
-            [HUD hide:YES];
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:@"Failed to connect to XMPP server. Please check your login credentials and internet connection and try again." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
-            [alert show];
-            [alert release];
-        }*/
+        id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
+        [protocol connectWithPassword:self.passwordTextField.text];
     }
-}
-
-- (void)loginButtonPressed:(id)sender {
-    if (useXMPP) 
-    {
-        [self xmppLoginPressed:sender];
-    } 
-    else 
-    {
-        [self aimLoginPressed:sender];
-    }
-    timeoutTimer = [NSTimer timerWithTimeInterval:45.0 target:self selector:@selector(timeout:) userInfo:nil repeats:NO];
-
-
-    
+    self.timeoutTimer = [NSTimer timerWithTimeInterval:45.0 target:self selector:@selector(timeout:) userInfo:nil repeats:NO];
+    [[[OTRProtocolManager sharedInstance] accountsManager] addAccount:account];
+    [account save];
 }
 
 - (void)cancelPressed:(id)sender {
@@ -334,7 +286,7 @@
 
 -(BOOL)checkFields
 {
-    BOOL fields = ![usernameTextField.text isEqualToString:@""] && ![passwordTextField.text isEqualToString:@""];
+    BOOL fields = usernameTextField.text && ![usernameTextField.text isEqualToString:@""] && passwordTextField.text && ![passwordTextField.text isEqualToString:@""];
     
     if(!fields)
     {

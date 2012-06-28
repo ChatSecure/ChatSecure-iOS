@@ -10,9 +10,13 @@
 #import "OTRSettingsManager.h"
 #import "SFHFKeychainUtils.h"
 #define kOTRServiceName @"org.chatsecure.ChatSecure"
+#import "OTRProtocol.h"
+
+#define kAIMImageName @"aim.png"
+#define kGTalkImageName @"gtalk.png"
 
 @implementation OTRAccount
-@synthesize username, domain, protocol, password, rememberPassword, uniqueIdentifier, isConnected;
+@synthesize username, domain, protocol, password, rememberPassword, uniqueIdentifier, isConnected, imageName;
 
 - (void) dealloc {
     self.username = nil;
@@ -20,6 +24,7 @@
     self.protocol = nil;
     self.password = nil;
     uniqueIdentifier = nil;
+    imageName = nil;
 }
 
 - (id) initWithUsername:(NSString*)newUsername domain:(NSString*)newDomain protocol:(NSString*)newProtocol {
@@ -33,7 +38,15 @@
         NSString* uuidString = (__bridge_transfer NSString*)CFUUIDCreateString(NULL, theUUID);
         CFRelease(theUUID);
         uniqueIdentifier = uuidString;
+        
+        if ([protocol isEqualToString:kOTRProtocolTypeAIM]) {
+            imageName = kAIMImageName;
+        } else if ([protocol isEqualToString:kOTRProtocolTypeXMPP]) {
+            // TODO: check domain and show different images for custom XMPP and Facebook
+            imageName = kGTalkImageName;
+        }
     }
+    return self;
 }
 
 - (id) initWithSettingsDictionary:(NSDictionary *)dictionary uniqueIdentifier:(NSString*) uniqueID {
@@ -41,6 +54,7 @@
         self.username = [dictionary objectForKey:kOTRAccountUsernameKey];
         self.domain = [dictionary objectForKey:kOTRAccountDomainKey];
         self.rememberPassword = [[dictionary objectForKey:kOTRAccountRememberPasswordKey] boolValue];
+        imageName = [dictionary objectForKey:kOTRAccountImageKey];
         uniqueIdentifier = uniqueID;
         self.isConnected = NO;
     }
@@ -104,6 +118,7 @@
     [accountDictionary setObject:self.domain forKey:kOTRAccountDomainKey];
     [accountDictionary setObject:self.protocol forKey:kOTRAccountProtocolKey];
     [accountDictionary setObject:[NSNumber numberWithBool:self.rememberPassword] forKey:kOTRAccountRememberPasswordKey];
+    [accountDictionary setObject:self.imageName forKey:kOTRAccountImageKey];
     [accountsDictionary setObject:accountDictionary forKey:self.uniqueIdentifier];
     BOOL synchronized = [defaults synchronize];
     if (!synchronized) {

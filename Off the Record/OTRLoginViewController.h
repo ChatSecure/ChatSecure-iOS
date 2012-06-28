@@ -16,7 +16,6 @@
 
 - (id) initWithAccount:(OTRAccount*)newAccount;
 
-@property (nonatomic, retain) OTRProtocolManager *protocolManager;
 @property (nonatomic, retain) OTRAccount *account;
 @property (nonatomic) BOOL useXMPP;
 
@@ -34,8 +33,6 @@
 @property (nonatomic, strong) NSTimer * timeoutTimer;
 
 - (void)loginButtonPressed:(id)sender;
-- (void)aimLoginPressed:(id)sender;
-- (void)xmppLoginPressed:(id)sender;
 - (void)cancelPressed:(id)sender;
 
 -(void)aimLoginFailed;
