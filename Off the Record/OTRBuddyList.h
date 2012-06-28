@@ -16,7 +16,7 @@
 
 
 -(void)addBuddy:(OTRBuddy*)newBuddy;
--(void)removeBuddiesforUniqueIdentifier:(NSString *)UniqueIdentifier;
+-(void)removeBuddiesforAccount:(OTRAccount *)account;
 -(NSUInteger)count;
 -(OTRBuddy*)getbuddyByUserName:(NSString *)buddyUserName accountUniqueIdentifier:(NSString *)uniqueIdentifier;
 -(void) updateBuddies:(NSArray *)arrayOfBuddies;

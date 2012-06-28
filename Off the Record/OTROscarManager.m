@@ -107,7 +107,7 @@ BOOL loginFailed;
 
 - (void)aimSessionManagerSignedOff:(AIMSessionManager *)sender {
 	[self checkThreading];
-    [[[OTRProtocolManager sharedInstance] buddyList] removeBuddiesforUniqueIdentifier:self.account.uniqueIdentifier];
+    [[[OTRProtocolManager sharedInstance] buddyList] removeBuddiesforAccount:self.account];
     aimBuddyList = nil;
 	theSession = nil;
 	NSLog(@"Session signed off");

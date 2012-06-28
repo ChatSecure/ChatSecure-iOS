@@ -69,26 +69,14 @@
     
     [[NSNotificationCenter defaultCenter]
      addObserver:self
-     selector:@selector(protocolLoggedInSuccessfully)
+     selector:@selector(protocolLoggedInSuccessfully:)
      name:kOTRProtocolLoginSuccess
-     object:nil ];
-    
-    [[NSNotificationCenter defaultCenter]
-     addObserver:self
-     selector:@selector(xmppLoggedInSuccessfully)
-     name:@"XMPPLoginNotification"
      object:nil ];
     
     [[NSNotificationCenter defaultCenter]
      addObserver:self
      selector:@selector(protocolLoggedOff:)
      name: kOTRProtocolLogout
-     object:nil ];
-    
-    [[NSNotificationCenter defaultCenter]
-     addObserver:self
-     selector:@selector(xmppLoggedOff)
-     name:@"XMPPLogoutNotification"
      object:nil ];
 }
 
@@ -103,32 +91,19 @@
     accountsTableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
 }
 
--(void)aimLoggedOff
+-(void)protocolLoggedInSuccessfully:(NSNotification *)notification
 {
-    [OTRProtocolManager sharedInstance].oscarManager.loggedIn = NO;
-    //[[[OTRProtocolManager sharedInstance] buddyList] removeOscarBuddies];
-    [accountsTableView reloadData];
-}
-
--(void)xmppLoggedOff
-{
-    [OTRProtocolManager sharedInstance].xmppManager.isXmppConnected = NO;
-    //[[[OTRProtocolManager sharedInstance] buddyList] removeXmppBuddies];
-    [accountsTableView reloadData];
-    
-}
-
-                                                                           
--(void)oscarLoggedInSuccessfully
-{
-    [OTRProtocolManager sharedInstance].oscarManager.loggedIn = YES;
+    id <OTRProtocol> protocol = notification.object;
+    protocol.account.isConnected = YES;
     [self accountLoggedIn];
 }
 
--(void)xmppLoggedInSuccessfully
+-(void)protocolLoggedOff:(NSNotification *)notification
 {
-    [OTRProtocolManager sharedInstance].xmppManager.isXmppConnected = YES;
-    [self accountLoggedIn];
+    id <OTRProtocol> protocol = notification.object;
+    protocol.account.isConnected = NO;
+    [[[OTRProtocolManager sharedInstance] buddyList] removeBuddiesforAccount:protocol.account];
+    [accountsTableView reloadData];
 }
 
 -(void)accountLoggedIn

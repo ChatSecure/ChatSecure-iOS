@@ -54,8 +54,8 @@
     [self.allBuddies removeAllObjects];
 }
 
--(void)removeBuddiesforUniqueIdentifier:(NSString *)UniqueIdentifier{
-    [self.allBuddies removeObjectForKey:UniqueIdentifier];
+-(void)removeBuddiesforAccount:(OTRAccount *)account{
+    [self.allBuddies removeObjectForKey:account.uniqueIdentifier];
 }
 
 -(void)addBuddy:(OTRBuddy*)newBuddy

@@ -15,10 +15,8 @@
 @property (nonatomic, retain) UITableView *accountsTableView;
 @property (nonatomic, retain) UIImageView *logoView;
 
--(void)oscarLoggedInSuccessfully;
--(void)xmppLoggedInSuccessfully;
+-(void)protocolLoggedInSuccessfully:(NSNotification *)notification;
+-(void)protocolLoggedOff:(NSNotification *)notification;
 -(void)accountLoggedIn;
--(void)aimLoggedOff;
--(void)xmppLoggedOff;
 
 @end
