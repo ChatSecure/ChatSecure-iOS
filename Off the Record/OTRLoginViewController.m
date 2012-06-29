@@ -272,6 +272,9 @@
         HUD.yOffset = hudOffsetY;
         [HUD show:YES];
         
+        self.account.username = usernameTextField.text;
+        self.account.password = passwordTextField.text;
+        
         id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
         [protocol connectWithPassword:self.passwordTextField.text];
     }
