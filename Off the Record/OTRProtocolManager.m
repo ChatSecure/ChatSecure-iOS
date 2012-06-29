@@ -127,14 +127,7 @@ static OTRProtocolManager *sharedManager = nil;
     id <OTRProtocol> protocol = [protocolManagers objectForKey:account.uniqueIdentifier];
     if(!protocol)
     {
-        if([account.protocol isEqualToString:kOTRProtocolTypeAIM])
-        {
-            protocol = [[OTROscarManager alloc] init];
-        }
-        else if([account.protocol isEqualToString:kOTRProtocolTypeXMPP])
-        {
-            protocol = [[OTRXMPPManager alloc] init];
-        }
+        protocol = [[[account protocolClass] alloc] init];
         protocol.account = account;
         [protocolManagers setObject:protocol forKey:account.uniqueIdentifier];
     }

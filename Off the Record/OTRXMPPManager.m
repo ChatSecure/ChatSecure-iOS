@@ -71,7 +71,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
         // Setup the XMPP stream
         
         
-        [self setupStream];
+        //[self setupStream];
         protocolBuddyList = [[NSMutableDictionary alloc] init];
         
     }
@@ -252,6 +252,8 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	// or setup your own using raw SQLite, or create your own storage mechanism.
 	// You can do it however you like! It's your application.
 	// But you do need to provide the roster with some storage facility.
+    
+    NSLog(@"Unique Identifier: %@",self.account.uniqueIdentifier);
 	
     xmppRosterStorage = [[XMPPRosterCoreDataStorage alloc] initWithDatabaseFilename:self.account.uniqueIdentifier];
     //  xmppRosterStorage = [[XMPPRosterCoreDataStorage alloc] init];
@@ -745,10 +747,10 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 
 -(void)connectWithPassword:(NSString *)myPassword
 {
+    [self setupStream];
     [self connectWithJID:self.account.username password:myPassword];
     
 }
-
 
 
 @end

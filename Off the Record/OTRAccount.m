@@ -11,6 +11,8 @@
 #import "SFHFKeychainUtils.h"
 #define kOTRServiceName @"org.chatsecure.ChatSecure"
 #import "OTRProtocol.h"
+#import "OTRXMPPManager.h"
+#import "OTROscarManager.h"
 
 #define kAIMImageName @"aim.png"
 #define kGTalkImageName @"gtalk.png"
@@ -123,6 +125,16 @@
     BOOL synchronized = [defaults synchronize];
     if (!synchronized) {
         NSLog(@"Error saving account: %@", self.username);
+    }
+}
+- (Class)protocolClass {
+    if([self.protocol isEqualToString:kOTRProtocolTypeAIM])
+    {
+        return [OTROscarManager class];
+    }
+    else if([self.protocol isEqualToString:kOTRProtocolTypeXMPP])
+    {
+        return [OTRXMPPManager class];
     }
 }
 

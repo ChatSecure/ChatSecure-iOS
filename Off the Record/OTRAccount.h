@@ -29,6 +29,7 @@
 - (id) initWithUsername:(NSString*)newUsername domain:(NSString*)newDomain protocol:(NSString*)newProtocol;
 - (id) initWithSettingsDictionary:(NSDictionary*)dictionary uniqueIdentifier:(NSString*)uniqueID;
 - (void) save;
+- (Class)protocolClass;
 
 //- (id<OTRProtocol>)protocolManager;
 
