@@ -253,7 +253,8 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	// You can do it however you like! It's your application.
 	// But you do need to provide the roster with some storage facility.
 	
-	xmppRosterStorage = [[XMPPRosterCoreDataStorage alloc] init];
+    xmppRosterStorage = [[XMPPRosterCoreDataStorage alloc] initWithDatabaseFilename:self.account.uniqueIdentifier];
+    //  xmppRosterStorage = [[XMPPRosterCoreDataStorage alloc] init];
     //	xmppRosterStorage = [[XMPPRosterCoreDataStorage alloc] initWithInMemoryStore];
 	
 	xmppRoster = [[XMPPRoster alloc] initWithRosterStorage:xmppRosterStorage];
