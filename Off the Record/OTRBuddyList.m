@@ -18,6 +18,7 @@
     if(self = [super init])
     {
         self.activeConversations = [[NSMutableSet alloc] init];
+        self.allBuddies = [[NSMutableDictionary alloc] init];
     }
     return self;
 }
@@ -42,9 +43,9 @@
 -(NSUInteger)count
 {
     NSUInteger numberOfBuddies = 0;
-    for (NSDictionary * accountBuddies in self.allBuddies)
+    for (id key in self.allBuddies)
     {
-        numberOfBuddies += [accountBuddies count];
+        numberOfBuddies = numberOfBuddies + [[self.allBuddies objectForKey:key] count];
     }
     return numberOfBuddies;
 }
@@ -67,6 +68,10 @@
 {
     for (OTRBuddy * buddy in arrayOfBuddies)
     {
+        if(![self.allBuddies objectForKey:buddy.protocol.account.uniqueIdentifier])
+        {
+            [self.allBuddies setObject:[NSMutableDictionary dictionaryWithCapacity:arrayOfBuddies.count] forKey:buddy.protocol.account.uniqueIdentifier];
+        }
         OTRBuddy * existingBuddy = [[self.allBuddies objectForKey:buddy.protocol.account.uniqueIdentifier] objectForKey:buddy.accountName];
         if(!existingBuddy)
         {
