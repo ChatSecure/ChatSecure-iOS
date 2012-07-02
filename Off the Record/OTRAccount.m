@@ -53,9 +53,10 @@
 
 - (id) initWithSettingsDictionary:(NSDictionary *)dictionary uniqueIdentifier:(NSString*) uniqueID {
     if (self = [super init]) {
+        self.rememberPassword = [[dictionary objectForKey:kOTRAccountRememberPasswordKey] boolValue];
         self.username = [dictionary objectForKey:kOTRAccountUsernameKey];
         self.domain = [dictionary objectForKey:kOTRAccountDomainKey];
-        self.rememberPassword = [[dictionary objectForKey:kOTRAccountRememberPasswordKey] boolValue];
+        self.protocol = [dictionary objectForKey:kOTRAccountProtocolKey];
         imageName = [dictionary objectForKey:kOTRAccountImageKey];
         uniqueIdentifier = uniqueID;
         self.isConnected = NO;
@@ -94,15 +95,25 @@
 }
 
 - (void) setUsername:(NSString *)newUsername {
+    NSString *oldUsername = [username copy];
+    username = newUsername;
+    if ([username isEqualToString:newUsername]) {
+        return;
+    }
     if (!rememberPassword) {
         username = newUsername;
         self.password = nil;
         return;
     }
-    NSString *tempPassword = self.password;    
-    self.password = nil;
-    username = newUsername;
-    self.password = tempPassword;
+    if (oldUsername && ![oldUsername isEqualToString:newUsername]) {
+        NSString *tempPassword = self.password;    
+        NSError *error = nil;
+        [SFHFKeychainUtils deleteItemForUsername:oldUsername andServiceName:kOTRServiceName error:&error];
+        if (error) {
+            NSLog(@"Error deleting old password from keychain: %@%@", [error localizedDescription], [error userInfo]);
+        }
+        self.password = tempPassword;
+    }
 }
 
 - (void) setRememberPassword:(BOOL)remember {
@@ -122,6 +133,7 @@
     [accountDictionary setObject:[NSNumber numberWithBool:self.rememberPassword] forKey:kOTRAccountRememberPasswordKey];
     [accountDictionary setObject:self.imageName forKey:kOTRAccountImageKey];
     [accountsDictionary setObject:accountDictionary forKey:self.uniqueIdentifier];
+    [defaults setObject:accountsDictionary forKey:kOTRSettingAccountsKey];
     BOOL synchronized = [defaults synchronize];
     if (!synchronized) {
         NSLog(@"Error saving account: %@", self.username);

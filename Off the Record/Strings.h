@@ -65,6 +65,8 @@
 #define PASSWORD_STRING NSLocalizedString(@"Password", @"Label text for password field on login screen")
 #define LOGIN_TO_STRING NSLocalizedString(@"Login to", @"Label for button describing which protocol you're logging into, will be followed by a protocol such as XMPP or AIM during layout")
 #define REMEMBER_USERNAME_STRING NSLocalizedString(@"Remember username", @"label for switch for whether or not we should save their username between launches")
+#define REMEMBER_PASSWORD_STRING NSLocalizedString(@"Remember password", @"label for switch for whether or not we should save their password between launches")
+
 
 // OTRSettingsManager
 #define CRITTERCISM_TITLE_STRING NSLocalizedString(@"Send Crash Reports", @"Title for crash reports settings switch")

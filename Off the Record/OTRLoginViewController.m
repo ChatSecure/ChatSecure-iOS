@@ -64,7 +64,7 @@
     self.passwordLabel = [[UILabel alloc] init];
     self.passwordLabel.text = PASSWORD_STRING;
     self.rememberPasswordLabel = [[UILabel alloc] init];
-    self.rememberPasswordLabel.text = REMEMBER_USERNAME_STRING;
+    self.rememberPasswordLabel.text = REMEMBER_PASSWORD_STRING;
     self.rememberPasswordSwitch = [[UISwitch alloc] init];
     [self.view addSubview:usernameLabel];
     [self.view addSubview:passwordLabel];
@@ -85,11 +85,6 @@
     self.passwordTextField.delegate = self;
     self.passwordTextField.borderStyle = UITextBorderStyleRoundedRect;
     self.passwordTextField.secureTextEntry = YES;
-    if (account.rememberPassword) {
-        self.passwordTextField.text = account.password;
-    } else {
-        self.passwordTextField.text = @"";
-    }
     [self.view addSubview:usernameTextField];
     [self.view addSubview:passwordTextField];
     
@@ -187,7 +182,7 @@
     self.rememberPasswordSwitch.frame = CGRectMake(self.view.frame.size.width-rememberUserNameSwitchFrameWidth-5, rememberUsernameLabelFrameYOrigin, rememberUserNameSwitchFrameWidth, 27);
     self.rememberPasswordSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
     
-    if([self.usernameTextField.text isEqualToString:@""])
+    if(!self.usernameTextField.text || [self.usernameTextField.text isEqualToString:@""])
     {
         [self.usernameTextField becomeFirstResponder];
     }
@@ -195,6 +190,13 @@
         [self.passwordTextField becomeFirstResponder];
     }
     
+    
+    self.rememberPasswordSwitch.on = self.account.rememberPassword;
+    if (account.rememberPassword) {
+        self.passwordTextField.text = account.password;
+    } else {
+        self.passwordTextField.text = @"";
+    }
 }
 
 - (void) viewWillDisappear:(BOOL)animated {
