@@ -70,7 +70,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
         [DDLog addLogger:[DDTTYLogger sharedInstance]];
         
         // Setup the XMPP stream
-        
+        [self setupStream];
         
         //[self setupStream];
         protocolBuddyList = [[NSMutableDictionary alloc] init];
@@ -256,9 +256,9 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     
     NSLog(@"Unique Identifier: %@",self.account.uniqueIdentifier);
 	
-    xmppRosterStorage = [[XMPPRosterCoreDataStorage alloc] initWithDatabaseFilename:self.account.uniqueIdentifier];
+    //xmppRosterStorage = [[XMPPRosterCoreDataStorage alloc] initWithDatabaseFilename:self.account.uniqueIdentifier];
     //  xmppRosterStorage = [[XMPPRosterCoreDataStorage alloc] init];
-    //	xmppRosterStorage = [[XMPPRosterCoreDataStorage alloc] initWithInMemoryStore];
+    	xmppRosterStorage = [[XMPPRosterCoreDataStorage alloc] initWithInMemoryStore];
 	
 	xmppRoster = [[XMPPRoster alloc] initWithRosterStorage:xmppRosterStorage];
 	
@@ -795,7 +795,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 
 -(void)connectWithPassword:(NSString *)myPassword
 {
-    [self setupStream];
+    
     [self connectWithJID:self.account.username password:myPassword];
     
 }
