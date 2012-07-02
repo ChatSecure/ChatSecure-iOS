@@ -580,6 +580,10 @@ BOOL loginFailed;
 -(void)disconnect
 {
     [[self theSession].session closeConnection];
+    OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
+    [protocolManager.protocolManagers removeObjectForKey:self.account.uniqueIdentifier];
+    self.protocolBuddyList = nil;
+    
 }
 
 @end
