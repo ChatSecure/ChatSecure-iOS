@@ -25,7 +25,6 @@
 @synthesize chatHistoryTextView;
 @synthesize messageTextField;
 @synthesize buddyListController;
-@synthesize protocolManager;
 @synthesize chatBoxView;
 @synthesize context;
 @synthesize lockButton, unlockedButton;
@@ -276,9 +275,6 @@
     [chatHistoryTextView loadHTMLString:@"" baseURL:[NSURL URLWithString:@"/"]];
     chatHistoryTextView.userInteractionEnabled = YES;
     
-    if(!protocolManager)
-        protocolManager = [OTRProtocolManager sharedInstance];
-    
     
     [self setupLockButton];
     
@@ -319,7 +315,7 @@
 }
 
 - (void) refreshContext {
-    self.context = otrl_context_find(protocolManager.encryptionManager.userState, [buddy.accountName UTF8String],[buddy.protocol.account.username UTF8String], [buddy.protocol.account.protocol UTF8String],NO,NULL,NULL, NULL);
+    self.context = otrl_context_find([OTRProtocolManager sharedInstance].encryptionManager.userState, [buddy.accountName UTF8String],[buddy.protocol.account.username UTF8String], [buddy.protocol.account.protocol UTF8String],NO,NULL,NULL, NULL);
 }
 
 - (void) setBuddy:(OTRBuddy *)newBuddy {
@@ -491,7 +487,7 @@
 -(void)updateChatHistory
 {
     if (buddy.chatHistory) {
-        OTRDoubleSetting *fontSizeSetting = (OTRDoubleSetting*)[protocolManager.settingsManager settingForOTRSettingKey:kOTRSettingKeyFontSize];
+        OTRDoubleSetting *fontSizeSetting = (OTRDoubleSetting*)[[OTRProtocolManager sharedInstance].settingsManager settingForOTRSettingKey:kOTRSettingKeyFontSize];
         NSString *htmlString = [NSString stringWithFormat:@"<html><head><style type=\"text/css\">p{font-size:%@;font-family: geneva, arial, helvetica, sans-serif;}</style></head><body>%@</body></html>",fontSizeSetting.stringValue, buddy.chatHistory];
         [chatHistoryTextView loadHTMLString:htmlString baseURL:[NSURL URLWithString:@"/"]];
     }
@@ -530,7 +526,7 @@
                 
                 Fingerprint *fingerprint = context->active_fingerprint;
                 
-                otrl_privkey_fingerprint(protocolManager.encryptionManager.userState, our_hash, context->accountname, context->protocol);
+                otrl_privkey_fingerprint([OTRProtocolManager sharedInstance].encryptionManager.userState, our_hash, context->accountname, context->protocol);
                 NSString *msg = nil;
                 if(fingerprint && fingerprint->fingerprint) {
                     otrl_privkey_hash_to_human(their_hash, fingerprint->fingerprint);

@@ -24,7 +24,6 @@
 
 @property (nonatomic) ConnContext *context;
 @property (nonatomic, retain) OTRBuddy *buddy;
-@property (nonatomic, retain) OTRProtocolManager *protocolManager;
 
 //@property (nonatomic, retain) DTAttributedTextView *chatHistoryTextView;
 @property (nonatomic, retain) UIWebView *chatHistoryTextView;

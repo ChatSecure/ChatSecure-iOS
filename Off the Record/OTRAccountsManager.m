@@ -11,7 +11,7 @@
 #import "OTRAccount.h"
 
 @implementation OTRAccountsManager
-@synthesize accountsDictionary, accountsArray;
+@synthesize accountsDictionary, accountsArray, reverseLookupDictionary;
 
 - (void) dealloc {
     self.accountsDictionary = nil;
@@ -22,6 +22,7 @@
     if (self = [super init]) {
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         NSDictionary *rawAccountsDictionary = [defaults objectForKey:kOTRSettingAccountsKey];
+        reverseLookupDictionary = [[NSMutableDictionary alloc] init];
         NSArray *values = [rawAccountsDictionary allValues];
         NSArray *keys = [rawAccountsDictionary allKeys];
         int count = [values count];
@@ -31,6 +32,7 @@
             NSString *settingKey = [keys objectAtIndex:i];
             OTRAccount *account = [[OTRAccount alloc] initWithSettingsDictionary:settingsDictionary uniqueIdentifier:settingKey];
             [accountsDictionary setObject:account forKey:account.uniqueIdentifier];
+            [reverseLookupDictionary setObject:[NSDictionary dictionaryWithObject:account forKey:account.username] forKey:account.protocol];
         }
     }
     return self;
@@ -42,6 +44,7 @@
         return;
     }
     [accountsDictionary setObject:account forKey:account.uniqueIdentifier];    
+    [reverseLookupDictionary setObject:[NSDictionary dictionaryWithObject:account forKey:account.username] forKey:account.protocol];
     [account save];
 }
 
@@ -56,6 +59,7 @@
     [rawAcountsDictionary removeObjectForKey:account.uniqueIdentifier];
     [defaults setObject:rawAcountsDictionary forKey:kOTRSettingAccountsKey];
     [accountsDictionary removeObjectForKey:account.uniqueIdentifier];
+    [[reverseLookupDictionary objectForKey:account.protocol] removeObjectForKey:account.username];
 }
 
 - (NSArray*) accountsArray {
@@ -68,6 +72,11 @@
     NSArray *sortedArray = [accounts sortedArrayUsingDescriptors:sortDescriptors];
     accountsArray = sortedArray;
     return accountsArray;
+}
+
+-(OTRAccount *)accountForProtocol:(NSString *)protocol accountName:(NSString *)accountName
+{
+    return [[reverseLookupDictionary objectForKey:protocol] objectForKey:accountName];
 }
 
 @end

@@ -80,7 +80,7 @@
     }
 }
 
--(OTRBuddy *)getbuddyByUserName:(NSString *)buddyUserName accountUniqueIdentifier:(NSString *)uniqueIdentifier
+-(OTRBuddy *)getbuddyForUserName:(NSString *)buddyUserName accountUniqueIdentifier:(NSString *)uniqueIdentifier
 {
     return [[allBuddies objectForKey:uniqueIdentifier] objectForKey:buddyUserName];
 }

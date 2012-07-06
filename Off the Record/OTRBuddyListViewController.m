@@ -35,6 +35,7 @@
         self.title = BUDDY_LIST_STRING;
         self.tabBarItem.image = [UIImage imageNamed:@"112-group.png"];
         self.protocolManager = [OTRProtocolManager sharedInstance];
+        buddyDictionary = [[NSMutableDictionary alloc] init];
 
     }
     return self;
@@ -298,13 +299,10 @@
     
     
     OTRBuddy *buddy = [buddyDictionary objectForKey:[NSNumber numberWithInt: alertView.tag]];
-    [buddyDictionary removeObjectForKey:[NSNumber numberWithInt:alertView.tag]];
+    //[buddyDictionary removeObjectForKey:[NSNumber numberWithInt:alertView.tag]];
     if(buttonIndex == 1) // Reply
     {
-        if(alertView.title)
-        {
-            [self enterConversationWithBuddy:buddy];
-        }
+        [self enterConversationWithBuddy:buddy];
     }   
     else // Ignore
     {
