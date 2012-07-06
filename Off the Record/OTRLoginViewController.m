@@ -23,9 +23,8 @@
 @synthesize account;
 
 - (void) dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"AimLoginFailedNotification" object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"XMPPLoginFailedNotification" object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"XMPPLoginSuccessNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kOTRProtocolLoginFail object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kOTRProtocolLoginSuccess object:nil];
     self.logoView = nil;
     self.usernameLabel = nil;
     self.passwordLabel = nil;
@@ -113,20 +112,14 @@
     
     [[NSNotificationCenter defaultCenter]
      addObserver:self
-     selector:@selector(aimLoginFailed)
-     name:@"AimLoginFailedNotification"
+     selector:@selector(protocolLoginFailed)
+     name:kOTRProtocolLoginFail
      object:nil ];
     
     [[NSNotificationCenter defaultCenter]
      addObserver:self
-     selector:@selector(xmppLoginFailed)
-     name:@"XMPPLoginFailedNotification"
-     object:nil ];
-    
-    [[NSNotificationCenter defaultCenter]
-     addObserver:self
-     selector:@selector(xmppLoginSuccess)
-     name:@"XMPPLoginSuccessNotification"
+     selector:@selector(protocolLoginSuccess)
+     name:kOTRProtocolLoginSuccess
      object:nil ];
 }
 
@@ -239,27 +232,31 @@
     }
 }
 
--(void) aimLoginFailed
+-(void)protocolLoginFailed
 {
     if(HUD)
         [HUD hide:YES];
+    if([account.protocol isEqualToString:kOTRProtocolTypeXMPP])
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:XMPP_FAIL_STRING delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
+        [alert show];
+    }
 }
 
--(void) xmppLoginSuccess
+-(void)protocolLoginSuccess
 {
-    [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"XMPPLoginNotification"
-     object:self];
-    [timeoutTimer invalidate];
-}
-
--(void) xmppLoginFailed
-{
-    [HUD hide:YES];
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:XMPP_FAIL_STRING delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
-    [alert show];
-    
-}
+    if(HUD)
+        [HUD hide:YES];
+    /* not sure why this was ever needed
+    if([account.protocol isEqualToString:kOTRProtocolTypeXMPP])
+    {
+        [[NSNotificationCenter defaultCenter]
+         postNotificationName:@"XMPPLoginNotification"
+         object:self];
+        [timeoutTimer invalidate];
+    }
+     */
+}  
 
 
 - (void)loginButtonPressed:(id)sender {
