@@ -35,9 +35,6 @@
 - (void)loginButtonPressed:(id)sender;
 - (void)cancelPressed:(id)sender;
 
--(void)aimLoginFailed;
--(void)xmppLoginFailed;
--(void)xmppLoginSuccess;
 -(BOOL)checkFields;
 
 @end

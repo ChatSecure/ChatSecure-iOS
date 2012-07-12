@@ -142,6 +142,14 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    
+    if ([[OTRProtocolManager sharedInstance].accountsManager.accountsArray count] > 2) {
+        tableView.scrollEnabled = YES;
+    }
+    else {
+        tableView.scrollEnabled = NO;
+    }
+
     return [[OTRProtocolManager sharedInstance].accountsManager.accountsArray count];
 }
 
