@@ -13,9 +13,13 @@
 #import "OTRProtocol.h"
 #import "OTRXMPPManager.h"
 #import "OTROscarManager.h"
+#import "OTRConstants.h"
+#import "Strings.h"
 
 #define kAIMImageName @"aim.png"
 #define kGTalkImageName @"gtalk.png"
+#define kFacebookImageName @"facebook.png"
+#define kXMPPImageName @"xmpp.png"
 
 @implementation OTRAccount
 @synthesize username, domain, protocol, password, rememberPassword, uniqueIdentifier, isConnected, imageName;
@@ -45,7 +49,18 @@
             imageName = kAIMImageName;
         } else if ([protocol isEqualToString:kOTRProtocolTypeXMPP]) {
             // TODO: check domain and show different images for custom XMPP and Facebook
-            imageName = kGTalkImageName;
+            if([domain isEqualToString:kOTRFacebookDomain])
+            {
+                imageName = kFacebookImageName;
+            }
+            else if ([domain isEqualToString:kOTRGoogleTalkDomain] )
+            {
+                imageName = kGTalkImageName;
+            }
+            else
+            {
+                imageName = kXMPPImageName;
+            }
         }
     }
     return self;
@@ -148,6 +163,28 @@
     {
         return [OTRXMPPManager class];
     }
+}
+
+-(NSString *)providerName
+{
+    if ([protocol isEqualToString:kOTRProtocolTypeAIM])
+    {
+        return AIM_STRING ;
+    }
+    else if ([protocol isEqualToString:kOTRProtocolTypeXMPP])
+    {
+        if ([domain isEqualToString:kOTRFacebookDomain]) {
+            return FACEBOOK_STRING;
+        }
+        else if ([domain isEqualToString:kOTRGoogleTalkDomain])
+        {
+            return GOOGLE_TALK_STRING;
+        }
+        else {
+            return JABBER_STRING;
+        }
+    }
+    return @"";
 }
 
 

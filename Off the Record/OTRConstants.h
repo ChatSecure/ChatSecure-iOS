@@ -15,3 +15,5 @@
 #define kOTRProtocolDiconnect @"DisconnectedNotification"
 #define kOTRSendMessage @"SendMessageNotification"
 
+#define kOTRFacebookDomain @"chat.facebook.com"
+#define kOTRGoogleTalkDomain @"talk.google.com"

@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6352DC8815AF9F16007AD0B4 /* OTRNewAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6352DC8715AF9F16007AD0B4 /* OTRNewAccountViewController.m */; };
+		6352DC8C15AFB252007AD0B4 /* xmpp.png in Resources */ = {isa = PBXBuildFile; fileRef = 6352DC8A15AFB252007AD0B4 /* xmpp.png */; };
+		6352DC8D15AFB252007AD0B4 /* xmpp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6352DC8B15AFB252007AD0B4 /* xmpp@2x.png */; };
+		6352DC9015AFB3D2007AD0B4 /* facebook.png in Resources */ = {isa = PBXBuildFile; fileRef = 6352DC8E15AFB3D2007AD0B4 /* facebook.png */; };
+		6352DC9115AFB3D2007AD0B4 /* facebook@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6352DC8F15AFB3D2007AD0B4 /* facebook@2x.png */; };
 		63FD24D515630A240041374A /* OTRUIKeyboardListener.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FD24D415630A240041374A /* OTRUIKeyboardListener.m */; };
 		D902D31E141E930C00AA3479 /* OTRBuddy.m in Sources */ = {isa = PBXBuildFile; fileRef = D902D31D141E930C00AA3479 /* OTRBuddy.m */; };
 		D90B80A913FC7026006EFF3D /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = D90B80A813FC7026006EFF3D /* MBProgressHUD.m */; };
@@ -360,6 +365,12 @@
 
 /* Begin PBXFileReference section */
 		634CBFDB159CEAC70046FB3B /* OTRConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OTRConstants.h; sourceTree = "<group>"; };
+		6352DC8615AF9F16007AD0B4 /* OTRNewAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRNewAccountViewController.h; sourceTree = "<group>"; };
+		6352DC8715AF9F16007AD0B4 /* OTRNewAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRNewAccountViewController.m; sourceTree = "<group>"; };
+		6352DC8A15AFB252007AD0B4 /* xmpp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = xmpp.png; sourceTree = "<group>"; };
+		6352DC8B15AFB252007AD0B4 /* xmpp@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "xmpp@2x.png"; sourceTree = "<group>"; };
+		6352DC8E15AFB3D2007AD0B4 /* facebook.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = facebook.png; sourceTree = "<group>"; };
+		6352DC8F15AFB3D2007AD0B4 /* facebook@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "facebook@2x.png"; sourceTree = "<group>"; };
 		63FD24D315630A240041374A /* OTRUIKeyboardListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRUIKeyboardListener.h; sourceTree = "<group>"; };
 		63FD24D415630A240041374A /* OTRUIKeyboardListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRUIKeyboardListener.m; sourceTree = "<group>"; };
 		D902D31C141E930C00AA3479 /* OTRBuddy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBuddy.h; sourceTree = "<group>"; };
@@ -2093,6 +2104,8 @@
 				D9DE274A13F4F0A400E335CA /* OTRLoginViewController.m */,
 				D99550B1141AD8CD00A82FAC /* OTRAccountsViewController.h */,
 				D99550B2141AD8CD00A82FAC /* OTRAccountsViewController.m */,
+				6352DC8615AF9F16007AD0B4 /* OTRNewAccountViewController.h */,
+				6352DC8715AF9F16007AD0B4 /* OTRNewAccountViewController.m */,
 				D9BBCD3C1491F8B400AF1B9F /* OTRAboutViewController.h */,
 				D9BBCD3D1491F8B400AF1B9F /* OTRAboutViewController.m */,
 				D9C7463A15350A21003445ED /* OTRCrittercismSecrets.h */,
@@ -2158,6 +2171,10 @@
 				D99550B8141AE07D00A82FAC /* gtalk@2x.png */,
 				D99550B9141AE07D00A82FAC /* aim.png */,
 				D99550BA141AE07D00A82FAC /* aim@2x.png */,
+				6352DC8A15AFB252007AD0B4 /* xmpp.png */,
+				6352DC8B15AFB252007AD0B4 /* xmpp@2x.png */,
+				6352DC8E15AFB3D2007AD0B4 /* facebook.png */,
+				6352DC8F15AFB3D2007AD0B4 /* facebook@2x.png */,
 				D90FAF2014A05D4B00DA7C56 /* available.png */,
 				D90FAF2114A05D4B00DA7C56 /* away.png */,
 				D90FAF2214A05D4B00DA7C56 /* offline.png */,
@@ -2337,6 +2354,10 @@
 				D9628A421535043A008F4C02 /* CrittercismViewController.xib in Resources */,
 				D9FC987015588F230039518D /* chatsecure_qrcode.png in Resources */,
 				D9FC987115588F230039518D /* chatsecure_qrcode@2x.png in Resources */,
+				6352DC8C15AFB252007AD0B4 /* xmpp.png in Resources */,
+				6352DC8D15AFB252007AD0B4 /* xmpp@2x.png in Resources */,
+				6352DC9015AFB3D2007AD0B4 /* facebook.png in Resources */,
+				6352DC9115AFB3D2007AD0B4 /* facebook@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2564,6 +2585,7 @@
 				D93C316F159A6719006316C7 /* OTRAccount.m in Sources */,
 				D93C3173159A6C10006316C7 /* OTRAccountsManager.m in Sources */,
 				D93C31B5159A7DDA006316C7 /* SFHFKeychainUtils.m in Sources */,
+				6352DC8815AF9F16007AD0B4 /* OTRNewAccountViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

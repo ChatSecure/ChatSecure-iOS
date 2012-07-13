@@ -30,6 +30,7 @@
 - (id) initWithSettingsDictionary:(NSDictionary*)dictionary uniqueIdentifier:(NSString*)uniqueID;
 - (void) save;
 - (Class)protocolClass;
+- (NSString *)providerName;
 
 //- (id<OTRProtocol>)protocolManager;
 

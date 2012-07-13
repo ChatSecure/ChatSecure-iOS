@@ -48,8 +48,6 @@
 #define USER_PASS_BLANK_STRING NSLocalizedString(@"You must enter a username and a password to login.", @"error message shown when user doesnt fill in a username or password")
 
 // OTRAccountsViewController
-#define AIM_STRING NSLocalizedString(@"AOL Instant Messenger", "the name for AIM")
-#define XMPP_STRING NSLocalizedString(@"Google Talk (XMPP)", "the name for google talk, also include (XMPP) at the end")
 #define LOGOUT_STRING NSLocalizedString(@"Log Out", @"log out from account")
 #define LOGIN_STRING NSLocalizedString(@"Log In", "log in to account")
 #define LOGOUT_FROM_AIM_STRING NSLocalizedString(@"Logout from AIM?", "Ask user if they want to logout of AIM")
@@ -102,3 +100,14 @@
 // OTRAppDelegate
 #define EXPIRATION_STRING NSLocalizedString(@"Background session will expire in one minute.", @"Message displayed in Notification Manager when session will expire in one minute")
 #define READ_STRING NSLocalizedString(@"Read", @"Title for action button on alert dialog, used as a verb in the present tense")
+
+// OTRNewAccountViewControler
+#define NEW_ACCOUNT_STIRNG NSLocalizedString(@"New Account", @"Title for New Account View")
+
+//OTRAccount
+#define AIM_STRING NSLocalizedString(@"AOL Instant Messenger", "the name for AIM")
+#define GOOGLE_TALK_STRING NSLocalizedString(@"Google Talk", "the name for google talk")
+#define FACEBOOK_STRING NSLocalizedString(@"Facebook","the name for facebook")
+#define JABBER_STRING NSLocalizedString(@"Jabber (XMPP)","the name for jabber, also include (XMPP) at the end")
+
+

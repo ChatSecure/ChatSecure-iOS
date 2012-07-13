@@ -11,6 +11,7 @@
 #import "Strings.h"
 #import "OTRAccount.h"
 #import "OTRConstants.h"
+#import "OTRNewAccountViewController.h"
 
 @implementation OTRAccountsViewController
 @synthesize accountsTableView, logoView, loginController;
@@ -31,8 +32,13 @@
 }
 
 - (void) addAccount:(id)sender {
-    OTRAccount *account = [[OTRAccount alloc] initWithUsername:@"" domain:@"" protocol:kOTRProtocolTypeXMPP];
-    [self showLoginControllerForAccount:account];
+   
+    OTRNewAccountViewController * newAccountView = [[OTRNewAccountViewController alloc] init];
+   
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:newAccountView];
+    nav.modalPresentationStyle = UIModalPresentationFormSheet;
+    [self.tabBarController presentModalViewController:nav animated:YES];
+    
 }
 
 - (void)didReceiveMemoryWarning
