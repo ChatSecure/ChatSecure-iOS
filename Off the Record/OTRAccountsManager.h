@@ -12,8 +12,11 @@
 @interface OTRAccountsManager : NSObject
 
 @property (nonatomic, retain) NSMutableDictionary *accountsDictionary;
+@property (nonatomic, retain) NSMutableDictionary *reverseLookupDictionary;
 @property (nonatomic, retain, readonly) NSArray *accountsArray;
 
 - (void) addAccount:(OTRAccount*)account;
+
+- (OTRAccount *) accountForProtocol:(NSString *)protocol accountName: (NSString *) accountName;
 
 @end

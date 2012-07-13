@@ -25,6 +25,7 @@
 #import "OTRSettingsManager.h"
 #import "OTRBuddy.h"
 #import "OTRConstants.h"
+#import "OTRProtocolManager.h"
 
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
@@ -69,7 +70,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
         [DDLog addLogger:[DDTTYLogger sharedInstance]];
         
         // Setup the XMPP stream
-        
+        [self setupStream];
         
         //[self setupStream];
         protocolBuddyList = [[NSMutableDictionary alloc] init];
@@ -255,9 +256,9 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     
     NSLog(@"Unique Identifier: %@",self.account.uniqueIdentifier);
 	
-    xmppRosterStorage = [[XMPPRosterCoreDataStorage alloc] initWithDatabaseFilename:self.account.uniqueIdentifier];
+    //xmppRosterStorage = [[XMPPRosterCoreDataStorage alloc] initWithDatabaseFilename:self.account.uniqueIdentifier];
     //  xmppRosterStorage = [[XMPPRosterCoreDataStorage alloc] init];
-    //	xmppRosterStorage = [[XMPPRosterCoreDataStorage alloc] initWithInMemoryStore];
+    	xmppRosterStorage = [[XMPPRosterCoreDataStorage alloc] initWithInMemoryStore];
 	
 	xmppRoster = [[XMPPRoster alloc] initWithRosterStorage:xmppRosterStorage];
 	
@@ -442,6 +443,53 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     [self goOffline];
     
     [xmppStream disconnect];
+    
+    OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
+    [protocolManager.protocolManagers removeObjectForKey:self.account.uniqueIdentifier];
+    
+    [self.xmppRosterStorage clearAllUsersAndResourcesForXMPPStream:self.xmppStream];
+    
+    /*
+    self.protocolBuddyList = nil;
+    
+    NSString * entityDescription;
+    
+    
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:entityDescription inManagedObjectContext:managedObjectContext_roster];
+    [fetchRequest setEntity:entity];
+    
+    NSError *error;
+    NSArray *items = [managedObjectContext_roster executeFetchRequest:fetchRequest error:&error];
+    
+    
+    for (NSManagedObject *managedObject in items) {
+        [managedObjectContext_roster deleteObject:managedObject];
+        NSLog(@"%@ object deleted",entityDescription);
+    }
+    if (![managedObjectContext_roster save:&error]) {
+        NSLog(@"Error deleting %@ - error:%@",entityDescription,error);
+    }
+
+    
+    
+    
+    
+    
+    
+    NSPersistentStoreCoordinator * storeCoordinator = self.xmppRosterStorage.persistentStoreCoordinator;
+    NSArray *stores = storeCoordinator.persistentStores;
+    
+    for(NSPersistentStore *store in stores)
+    {
+        NSError * error = nil;
+        NSURL *storeURL = store.URL;
+        [storeCoordinator removePersistentStore:store error:&error];
+        [[NSFileManager defaultManager] removeItemAtPath:storeURL.path error:&error];
+        if(error)
+            NSLog(@"%@",[error description]);
+    }
+    */
     
     [[NSNotificationCenter defaultCenter]
      postNotificationName:kOTRProtocolLogout
@@ -747,7 +795,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 
 -(void)connectWithPassword:(NSString *)myPassword
 {
-    [self setupStream];
+    
     [self connectWithJID:self.account.username password:myPassword];
     
 }

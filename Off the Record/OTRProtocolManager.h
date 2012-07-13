@@ -30,7 +30,7 @@
 
 -(void)buddyListUpdate;
 
--(OTRBuddy *)buddyByUserName:(NSString *)buddyUserName accountName:(NSString *)accountName;
+-(OTRBuddy *)buddyForUserName:(NSString *)buddyUserName accountName:(NSString *)accountName protocol:(NSString *)protocol;
 
 -(id <OTRProtocol>) protocolForAccount:(OTRAccount *)account;
 

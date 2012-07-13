@@ -87,9 +87,13 @@ static OTRProtocolManager *sharedManager = nil;
 
 -(void)sendMessage:(NSNotification *)notification
 {
-    OTRMessage *message = [notification object];
-    [message send];
-    
+    NSObject *messageObject = [notification object];
+    if ([messageObject isKindOfClass:[OTRMessage class]]) {
+        OTRMessage *message = (OTRMessage *)messageObject;
+        [message send];
+
+    }
+        
     //NSLog(@"send message (%@): %@", protocol, message.message);
 }
 
@@ -104,20 +108,9 @@ static OTRProtocolManager *sharedManager = nil;
     
 }
 
--(id<OTRProtocol>)protocolForAccountName:(NSString *)accountName
+-(OTRBuddy *)buddyForUserName:(NSString *)buddyUserName accountName:(NSString *)accountName protocol:(NSString *)protocol
 {
-    id<OTRProtocol> protocol;
-    for(id key in protocolManagers)
-    {
-        if ([((id <OTRProtocol>)[protocolManagers objectForKey:key]).account.username isEqualToString:accountName])
-            return [protocolManagers objectForKey:key];
-    }
-    return protocol;
-}
-
--(OTRBuddy *)buddyByUserName:(NSString *)buddyUserName accountName:(NSString *)accountName
-{
-    return [self.buddyList getbuddyByUserName:buddyUserName accountUniqueIdentifier:[self protocolForAccountName:buddyUserName].account.uniqueIdentifier];
+    return [self.buddyList getbuddyForUserName:buddyUserName accountUniqueIdentifier:[self.accountsManager accountForProtocol:protocol accountName:accountName].uniqueIdentifier];
     
     
 }
