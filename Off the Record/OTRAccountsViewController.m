@@ -177,6 +177,16 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete) 
+    {
+        OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
+        OTRAccount *account = [protocolManager.accountsManager.accountsArray objectAtIndex:indexPath.row];
+        [protocolManager.accountsManager removeAccount:account];        
+        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+    }
+}
+
 - (void) showLoginControllerForAccount:(OTRAccount*)account {
     OTRLoginViewController *loginViewController = [[OTRLoginViewController alloc] initWithAccount:account];
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:loginViewController];
