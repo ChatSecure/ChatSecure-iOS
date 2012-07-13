@@ -191,6 +191,17 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete) 
+    {
+        OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
+        OTRAccount *account = [protocolManager.accountsManager.accountsArray objectAtIndex:indexPath.row];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:DELETE_ACCOUNT_TITLE_STRING message:[NSString stringWithFormat:@"%@ %@?", DELETE_ACCOUNT_MESSAGE_STRING, account.username] delegate:self cancelButtonTitle:CANCEL_STRING otherButtonTitles:OK_STRING, nil];
+        alert.tag = indexPath.row;
+        [alert show];
+    }
+}
+
 - (void) showLoginControllerForAccount:(OTRAccount*)account {
     OTRLoginViewController *loginViewController = [[OTRLoginViewController alloc] initWithAccount:account];
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:loginViewController];
@@ -209,6 +220,15 @@
     if(buttonIndex == 0) //logout
     {
         [protocol disconnect];
+    }
+}
+
+- (void) alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
+    if (buttonIndex != alertView.cancelButtonIndex) {
+        OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
+        OTRAccount *account = [protocolManager.accountsManager.accountsArray objectAtIndex:alertView.tag];
+        [protocolManager.accountsManager removeAccount:account];        
+        [accountsTableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:alertView.tag inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
     }
 }
 

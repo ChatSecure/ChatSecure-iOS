@@ -52,6 +52,8 @@
 #define LOGIN_STRING NSLocalizedString(@"Log In", "log in to account")
 #define LOGOUT_FROM_AIM_STRING NSLocalizedString(@"Logout from AIM?", "Ask user if they want to logout of AIM")
 #define LOGOUT_FROM_XMPP_STRING NSLocalizedString(@"Logout from XMPP?", "ask user if they want to log out of xmpp")
+#define DELETE_ACCOUNT_TITLE_STRING NSLocalizedString(@"Delete Account?", @"Ask user if they want to delete the stored account information")
+#define DELETE_ACCOUNT_MESSAGE_STRING NSLocalizedString(@"Permanently delete", @"Ask user if they want to delete the stored account information")
 
 // OTRAboutViewController
 #define ATTRIBUTION_STRING NSLocalizedString(@"ChatSecure is brought to you by many open source projects", @"for attribution of other projects")
