@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "OTRLoginViewController.h"
 
-@interface OTRAccountsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate>
+@interface OTRAccountsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
 
 @property (nonatomic, retain) OTRLoginViewController *loginController;
 @property (nonatomic, retain) UITableView *accountsTableView;
