@@ -797,7 +797,6 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 {
     
     [self connectWithJID:self.account.username password:myPassword];
-    
 }
 
 

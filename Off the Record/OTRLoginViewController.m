@@ -89,14 +89,7 @@
     
     
     NSString *loginButtonString = LOGIN_STRING;
-    if (useXMPP) 
-    {
-        self.title = @"XMPP";
-    } 
-    else 
-    {
-        self.title = @"AIM";
-    }
+    self.title = [account providerName];
     
     self.loginButton = [[UIBarButtonItem alloc] initWithTitle:loginButtonString style:UIBarButtonItemStyleDone target:self action:@selector(loginButtonPressed:)];
     self.cancelButton = [[UIBarButtonItem alloc] initWithTitle:CANCEL_STRING style:UIBarButtonItemStyleBordered target:self action:@selector(cancelPressed:)];
@@ -202,8 +195,14 @@
     } else {
         account.password = nil;
     }
-    [account save];
-    [[[OTRProtocolManager sharedInstance] accountsManager] addAccount:account];
+    
+    if([account.username length]!=0 && [account.password length] !=0 )
+    {
+        [account save];
+        [[[OTRProtocolManager sharedInstance] accountsManager] addAccount:account];
+    }
+    
+    
 }
 
 -(void)viewDidDisappear:(BOOL)animated

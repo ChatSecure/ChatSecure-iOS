@@ -54,6 +54,7 @@
 #define LOGOUT_FROM_XMPP_STRING NSLocalizedString(@"Logout from XMPP?", "ask user if they want to log out of xmpp")
 #define DELETE_ACCOUNT_TITLE_STRING NSLocalizedString(@"Delete Account?", @"Ask user if they want to delete the stored account information")
 #define DELETE_ACCOUNT_MESSAGE_STRING NSLocalizedString(@"Permanently delete", @"Ask user if they want to delete the stored account information")
+#define NO_ACCOUNT_SAVED_STRING NSLocalizedString (@"No Saved Accounts", @"Message infomring user that there are no accounts currently saved")
 
 // OTRAboutViewController
 #define ATTRIBUTION_STRING NSLocalizedString(@"ChatSecure is brought to you by many open source projects", @"for attribution of other projects")

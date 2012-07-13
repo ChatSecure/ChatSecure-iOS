@@ -11,6 +11,7 @@
 #import "OTRProtocol.h"
 #import "OTRConstants.h"
 #import "OTRLoginViewController.h"
+#import "QuartzCore/QuartzCore.h"
 
 #define rowHeight 70
 
@@ -89,7 +90,15 @@
     }
     OTRAccount * cellAccount = [accounts objectAtIndex:indexPath.row];
     cell.textLabel.text = [cellAccount providerName];
+    cell.textLabel.font = [UIFont boldSystemFontOfSize:19];
     cell.imageView.image = [UIImage imageNamed:cellAccount.imageName];
+    
+    if( [[cellAccount providerName] isEqualToString:FACEBOOK_STRING])
+    {
+        cell.imageView.layer.masksToBounds = YES;
+        cell.imageView.layer.cornerRadius = 10.0;
+    }
+    
     
     
     return cell;

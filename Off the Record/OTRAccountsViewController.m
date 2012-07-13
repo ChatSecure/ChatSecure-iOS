@@ -12,6 +12,7 @@
 #import "OTRAccount.h"
 #import "OTRConstants.h"
 #import "OTRNewAccountViewController.h"
+#import "QuartzCore/QuartzCore.h"
 
 @implementation OTRAccountsViewController
 @synthesize accountsTableView, logoView, loginController;
@@ -172,6 +173,12 @@
     cell.textLabel.text = account.username;
     cell.detailTextLabel.text = account.protocol;
     cell.imageView.image = [UIImage imageNamed:account.imageName];
+    
+    if( [[account providerName] isEqualToString:FACEBOOK_STRING])
+    {
+        cell.imageView.layer.masksToBounds = YES;
+        cell.imageView.layer.cornerRadius = 10.0;
+    }
     
     return cell;
 }
