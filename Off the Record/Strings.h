@@ -17,6 +17,7 @@
 #define SEND_STRING NSLocalizedString(@"Send", @"For sending a message")
 #define OK_STRING NSLocalizedString(@"OK", @"Accept the dialog")
 
+
 // Used in OTRChatViewController
 #define YOUR_FINGERPRINT_STRING NSLocalizedString(@"Fingerprint for you", @"your fingerprint")
 #define THEIR_FINGERPRINT_STRING NSLocalizedString(@"Purported fingerprint for", @"the alleged fingerprint of their other person")
@@ -64,9 +65,12 @@
 // OTRLoginViewController
 #define USERNAME_STRING NSLocalizedString(@"Username", @"Label text for username field on login screen")
 #define PASSWORD_STRING NSLocalizedString(@"Password", @"Label text for password field on login screen")
+#define DOMAIN_STRING NSLocalizedString(@"Domain", @"Label text for domain field on login scree")
 #define LOGIN_TO_STRING NSLocalizedString(@"Login to", @"Label for button describing which protocol you're logging into, will be followed by a protocol such as XMPP or AIM during layout")
 #define REMEMBER_USERNAME_STRING NSLocalizedString(@"Remember username", @"label for switch for whether or not we should save their username between launches")
 #define REMEMBER_PASSWORD_STRING NSLocalizedString(@"Remember password", @"label for switch for whether or not we should save their password between launches")
+#define OPTIONAL_STRING NSLocalizedString(@"Optional", @"Hint text for domain field telling user this field is not required")
+#define FACEBOOK_HELP_STRING NSLocalizedString( @"Your Facebook username is not the email address that you use to login to Facebook",@"Text that makes it clear which username to use")
 
 
 // OTRSettingsManager

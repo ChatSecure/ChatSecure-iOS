@@ -11,16 +11,19 @@
 #import "OTRUIKeyboardListener.h"
 #import "OTRConstants.h"
 
+#define kFieldBuffer 20;
+
 @implementation OTRLoginViewController
 @synthesize usernameTextField;
 @synthesize passwordTextField;
 @synthesize loginButton, cancelButton;
 @synthesize rememberPasswordSwitch;
-@synthesize useXMPP;
 @synthesize usernameLabel, passwordLabel, rememberPasswordLabel;
 @synthesize logoView;
 @synthesize timeoutTimer;
 @synthesize account;
+@synthesize domainLabel,domainTextField;
+@synthesize facebookInfoButton;
 
 - (void) dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kOTRProtocolLoginFail object:nil];
@@ -37,16 +40,13 @@
     [timeoutTimer invalidate];
     self.timeoutTimer = nil;
     self.account = nil;
+    self.domainTextField = nil;
+    self.domainLabel = nil;
 }
 
 - (id) initWithAccount:(OTRAccount*)newAccount {
     if (self = [super init]) {
         self.account = newAccount;
-        if ([account.protocol isEqualToString:kOTRProtocolTypeXMPP]) {
-            self.useXMPP = YES;
-        } else {
-            self.useXMPP = NO;
-        }
     }
     return self;
 }
@@ -55,8 +55,8 @@
 - (void )loadView {
     [super loadView];
     
-    self.logoView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"chatsecure_banner.png"]];
-    [self.view addSubview:logoView];
+    //self.logoView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"chatsecure_banner.png"]];
+    //[self.view addSubview:logoView];
     
     self.usernameLabel = [[UILabel alloc] init];
     self.usernameLabel.text = USERNAME_STRING;
@@ -76,7 +76,28 @@
     self.usernameTextField.autocorrectionType = UITextAutocorrectionTypeNo;
     self.usernameTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     self.usernameTextField.text = account.username;
-    if (useXMPP)
+    
+    if ([account.domain isEqualToString:kOTRGoogleTalkDomain]) {
+        self.usernameTextField.placeholder = @"user@gmail.com";
+    }
+    else if ([account.domain isEqualToString:kOTRFacebookDomain])
+    {
+        facebookHelpLabel = [[UILabel alloc] init];
+        facebookHelpLabel.text = FACEBOOK_HELP_STRING;
+        facebookHelpLabel.textAlignment = UITextAlignmentLeft;
+        facebookHelpLabel.lineBreakMode = UILineBreakModeWordWrap;
+        facebookHelpLabel.numberOfLines = 0;
+        facebookHelpLabel.font = [UIFont systemFontOfSize:14];
+        
+        self.facebookInfoButton = [UIButton buttonWithType:UIButtonTypeInfoDark];
+        [self.facebookInfoButton addTarget:self action:@selector(facebookInfoButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+        
+        [self.view addSubview:facebookHelpLabel];
+        [self.view addSubview:facebookInfoButton];
+        
+        self.usernameTextField.placeholder = @"";
+    }
+    else if ([account.protocol isEqualToString:kOTRProtocolTypeXMPP])
     {
         self.usernameTextField.placeholder = @"user@example.com";
     }
@@ -84,9 +105,31 @@
     self.passwordTextField.delegate = self;
     self.passwordTextField.borderStyle = UITextBorderStyleRoundedRect;
     self.passwordTextField.secureTextEntry = YES;
+    
+    padding = [[UIView alloc] init];
+    
     [self.view addSubview:usernameTextField];
     [self.view addSubview:passwordTextField];
     
+    
+    //Jabber domain fields
+    if([account.domain isEqualToString:@""] && [account.protocol isEqualToString:kOTRProtocolTypeXMPP])
+    {
+        self.domainLabel = [[UILabel alloc] init];
+        self.domainLabel.text = DOMAIN_STRING;
+        
+        [self.view addSubview:domainLabel];
+        
+        self.domainTextField = [[UITextField alloc] init];
+        self.domainTextField.delegate = self;
+        self.domainTextField.autocorrectionType = UITextAutocorrectionTypeNo;
+        self.domainTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+        self.domainTextField.borderStyle = UITextBorderStyleRoundedRect;
+        self.domainTextField.placeholder = OPTIONAL_STRING;
+        
+        [self.view addSubview:domainTextField];
+        
+    }
     
     NSString *loginButtonString = LOGIN_STRING;
     self.title = [account providerName];
@@ -131,27 +174,74 @@
 {
     [super viewWillAppear:animated];
     
-    double scale = 0.75;
-    CGFloat logoViewFrameWidth = (int)(self.logoView.image.size.width * scale);
-    self.logoView.frame = CGRectMake(self.view.frame.size.width/2 - logoViewFrameWidth/2, 5, logoViewFrameWidth, (int)(self.logoView.image.size.height * scale));
-    self.logoView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
+    //double scale = 0.75;
+    //CGFloat logoViewFrameWidth = (int)(self.logoView.image.size.width * scale);
+    //self.logoView.frame = CGRectMake(self.view.frame.size.width/2 - logoViewFrameWidth/2, 5, logoViewFrameWidth, (int)(self.logoView.image.size.height * scale));
+    //self.logoView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
+    padding.frame = CGRectMake(0, 0, self.view.frame.size.width, 30);
     
-    CGFloat usernameLabelFrameYOrigin = logoView.frame.origin.y + logoView.frame.size.height + 5;
+    
+    CGFloat usernameLabelFrameYOrigin = padding.frame.origin.y + padding.frame.size.height;
     CGSize usernameLabelTextSize = [self textSizeForLabel:usernameLabel];
     CGSize passwordLabelTextSize = [self textSizeForLabel:passwordLabel];
-    CGFloat labelWidth = MAX(usernameLabelTextSize.width, passwordLabelTextSize.width);
+    CGSize domainLabelTextSize = [self textSizeForLabel:domainLabel];
+    CGFloat labelWidth = MAX( MAX(usernameLabelTextSize.width, passwordLabelTextSize.width),domainLabelTextSize.width);
 
     self.usernameLabel.frame = CGRectMake(10, usernameLabelFrameYOrigin, labelWidth, 21);
     self.usernameLabel.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;
     self.usernameTextField.frame = [self textFieldFrameForLabel:usernameLabel];
     self.usernameTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
     self.usernameTextField.returnKeyType = UIReturnKeyNext;
-    if (useXMPP) {
+    if ([account.protocol isEqualToString:kOTRProtocolTypeXMPP]) {
         self.usernameTextField.keyboardType = UIKeyboardTypeEmailAddress;
     }
     self.usernameTextField.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth;
     
-    CGFloat passwordLabelFrameYOrigin = usernameLabelFrameYOrigin + self.usernameLabel.frame.size.height + 15;
+    CGFloat passwordLabelFrameYOrigin;
+    if(self.domainLabel && self.domainTextField)
+    {
+        CGFloat domainLabelFrameYOrigin = usernameLabelFrameYOrigin + self.usernameLabel.frame.size.height +kFieldBuffer;
+        self.domainLabel.frame = CGRectMake(10, domainLabelFrameYOrigin, labelWidth, 21);
+        self.domainLabel.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;
+        
+        self.domainTextField.frame = [self textFieldFrameForLabel:domainLabel];
+        self.domainTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
+        self.domainTextField.returnKeyType = UIReturnKeyNext;
+        self.domainTextField.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth;
+        
+        passwordLabelFrameYOrigin = domainLabelFrameYOrigin + self.domainLabel.frame.size.height +kFieldBuffer;
+        
+    }
+    else if (facebookHelpLabel)
+    {
+        CGFloat facebookHelpLabeFrameYOrigin = usernameLabelFrameYOrigin + self.usernameLabel.frame.size.height +kFieldBuffer;
+        
+        facebookHelpLabel.frame = CGRectMake(10, facebookHelpLabeFrameYOrigin, self.view.frame.size.width-40, 21);
+        
+        CGSize maximumLabelSize = CGSizeMake(296,9999);
+        
+        CGSize expectedLabelSize = [facebookHelpLabel.text sizeWithFont:facebookHelpLabel.font constrainedToSize:maximumLabelSize lineBreakMode:facebookHelpLabel.lineBreakMode];   
+        
+        //adjust the label the the new height.
+        CGRect newFrame = facebookHelpLabel.frame;
+        newFrame.size.height = expectedLabelSize.height;
+        facebookHelpLabel.frame = newFrame;
+        
+        
+        
+        facebookHelpLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
+        
+        CGSize infoButtonSize = self.facebookInfoButton.frame.size;
+        CGFloat facebookInfoButtonFrameYOrigin = facebookHelpLabeFrameYOrigin + (expectedLabelSize.height - infoButtonSize.height)/2;
+        
+        self.facebookInfoButton.frame = CGRectMake(facebookHelpLabel.frame.origin.x + facebookHelpLabel.frame.size.width, facebookInfoButtonFrameYOrigin, infoButtonSize.width, infoButtonSize.height);
+        
+        passwordLabelFrameYOrigin = facebookHelpLabeFrameYOrigin +facebookHelpLabel.frame.size.height +kFieldBuffer;
+    }
+    else {
+        passwordLabelFrameYOrigin = usernameLabelFrameYOrigin + self.usernameLabel.frame.size.height + kFieldBuffer;
+    }
+    
     self.passwordLabel.frame = CGRectMake(10, passwordLabelFrameYOrigin, labelWidth, 21);
     self.passwordLabel.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;
     
@@ -160,7 +250,7 @@
     self.passwordTextField.returnKeyType = UIReturnKeyGo;
     self.passwordTextField.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth;
     
-    CGFloat rememberUsernameLabelFrameYOrigin = passwordLabel.frame.origin.y + passwordLabel.frame.size.height + 15;
+    CGFloat rememberUsernameLabelFrameYOrigin = passwordLabel.frame.origin.y + passwordLabel.frame.size.height + kFieldBuffer;
     self.rememberPasswordLabel.frame = CGRectMake(10, rememberUsernameLabelFrameYOrigin, 170, 21);
     self.rememberPasswordLabel.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;
     
@@ -270,8 +360,21 @@
         HUD.yOffset = hudOffsetY;
         [HUD show:YES];
         
-        self.account.username = usernameTextField.text;
+        NSString * usernameText = [usernameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+        NSString * domainText = [domainTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+        
+        if([self.account.domain isEqualToString:kOTRFacebookDomain])
+        {
+            usernameText = [NSString stringWithFormat:@"%@@%@",usernameText,kOTRFacebookDomain];
+        }
+        
+        self.account.username = usernameText;
         self.account.password = passwordTextField.text;
+        
+        if([domainText length])
+        {
+            self.account.domain = domainText;
+        }
         
         id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
         [protocol connectWithPassword:self.passwordTextField.text];
@@ -300,8 +403,14 @@
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-    if (self.usernameTextField.isFirstResponder)
+    if (self.usernameTextField.isFirstResponder && self.domainTextField)
+        [self.domainTextField becomeFirstResponder];
+    else if (self.usernameTextField.isFirstResponder) {
         [self.passwordTextField becomeFirstResponder];
+    }
+    else if (self.domainTextField.isFirstResponder) {
+        [self.passwordTextField becomeFirstResponder];
+    }
     else
         [self loginButtonPressed:nil];
     
@@ -319,6 +428,12 @@
     return (viewHeight - keyboardSize.height)/2.0-(viewHeight/2.0);
 }
 
+-(void)facebookInfoButtonPressed:(id)sender
+{
+    UIActionSheet * urlActionSheet = [[UIActionSheet alloc] initWithTitle:kOTRFacebookUsernameLink delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:OPEN_IN_SAFARI_STRING, nil];
+    [urlActionSheet showInView:self.view];
+}
+
 
 #pragma mark -
 #pragma mark MBProgressHUDDelegate methods
@@ -326,6 +441,18 @@
 - (void)hudWasHidden:(MBProgressHUD *)hud {
     // Remove HUD from screen when the HUD was hidded
     [HUD removeFromSuperview];
+}
+
+#pragma mark UIActionSheetDelegate
+
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 0) {
+        
+        NSURL *url = [ [ NSURL alloc ] initWithString: kOTRFacebookUsernameLink ];
+        [[UIApplication sharedApplication] openURL:url];
+        
+    }
 }
 
 @end
