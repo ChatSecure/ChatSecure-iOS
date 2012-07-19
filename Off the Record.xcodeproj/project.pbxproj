@@ -2080,8 +2080,6 @@
 		D9F9376D13F44BD3009A3D84 = {
 			isa = PBXGroup;
 			children = (
-				D93C31B6159A8B4F006316C7 /* Security.framework */,
-				D9FC985F155881700039518D /* MessageUI.framework */,
 				D9F9378013F44BD3009A3D84 /* Off the Record */,
 				D9D69B03141806150056FB9E /* 3rd Party Frameworks */,
 				D9F9377B13F44BD3009A3D84 /* Frameworks */,
@@ -2100,6 +2098,8 @@
 		D9F9377B13F44BD3009A3D84 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D93C31B6159A8B4F006316C7 /* Security.framework */,
+				D9FC985F155881700039518D /* MessageUI.framework */,
 				D9D69B7F14180A3A0056FB9E /* SystemConfiguration.framework */,
 				D9D69B7D14180A330056FB9E /* CoreData.framework */,
 				D9D69B7B14180A230056FB9E /* CoreLocation.framework */,

@@ -60,6 +60,8 @@
 // OTRAboutViewController
 #define ATTRIBUTION_STRING NSLocalizedString(@"ChatSecure is brought to you by many open source projects", @"for attribution of other projects")
 #define SOURCE_STRING NSLocalizedString(@"Check out the source here on Github", "let users know source is on Github")
+#define CONTRIBUTE_TRANSLATION_STRING NSLocalizedString(@"Contribute a translation", @"label for a link to contribute a new translation")
+#define PROJECT_HOMEPAGE_STRING NSLocalizedString(@"Project Homepage", @"label for link to ChatSecure project website")
 #define VERSION_STRING NSLocalizedString(@"Version", @"when displaying version numbers such as 1.0.0")
 
 // OTRLoginViewController
