@@ -23,6 +23,9 @@
 #import <CFNetwork/CFNetwork.h>
 
 #import "OTRSettingsManager.h"
+#import "OTRBuddy.h"
+#import "OTRConstants.h"
+#import "OTRProtocolManager.h"
 
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
@@ -54,6 +57,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 @synthesize xmppCapabilities;
 @synthesize xmppCapabilitiesStorage;
 @synthesize isXmppConnected;
+@synthesize protocolBuddyList,account;
 
 -(id)init
 {
@@ -66,10 +70,10 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
         [DDLog addLogger:[DDTTYLogger sharedInstance]];
         
         // Setup the XMPP stream
-        
-        
         [self setupStream];
         
+        //[self setupStream];
+        protocolBuddyList = [[NSMutableDictionary alloc] init];
         
     }
 
@@ -124,7 +128,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
 {
     [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"BuddyListUpdateNotification"
+     postNotificationName:kOTRBuddyListUpdate
      object:self];
 }
 
@@ -249,9 +253,12 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	// or setup your own using raw SQLite, or create your own storage mechanism.
 	// You can do it however you like! It's your application.
 	// But you do need to provide the roster with some storage facility.
+    
+    NSLog(@"Unique Identifier: %@",self.account.uniqueIdentifier);
 	
-	xmppRosterStorage = [[XMPPRosterCoreDataStorage alloc] init];
-    //	xmppRosterStorage = [[XMPPRosterCoreDataStorage alloc] initWithInMemoryStore];
+    //xmppRosterStorage = [[XMPPRosterCoreDataStorage alloc] initWithDatabaseFilename:self.account.uniqueIdentifier];
+    //  xmppRosterStorage = [[XMPPRosterCoreDataStorage alloc] init];
+    	xmppRosterStorage = [[XMPPRosterCoreDataStorage alloc] initWithInMemoryStore];
 	
 	xmppRoster = [[XMPPRoster alloc] initWithRosterStorage:xmppRosterStorage];
 	
@@ -364,12 +371,12 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 - (void)goOnline
 {
     [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"XMPPLoginSuccessNotification" object:nil];
+     postNotificationName:kOTRProtocolLoginSuccess object:self];
 	XMPPPresence *presence = [XMPPPresence presence]; // type="available" is implicit
 	
 	[[self xmppStream] sendElement:presence];
     [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"BuddyListUpdateNotification" object:nil];
+     postNotificationName:kOTRBuddyListUpdate object:nil];
 }
 
 - (void)goOffline
@@ -382,7 +389,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 - (void)failedToConnect
 {
     [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"XMPPLoginFailedNotification" object:nil];    
+     postNotificationName:kOTRProtocolLoginFail object:self];    
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark Connect/disconnect
@@ -412,6 +419,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     JID = [XMPPJID jidWithString:myJID];
     
 	[xmppStream setMyJID:JID];
+    [xmppStream setHostName:self.account.domain];
 	password = myPassword;
     
 	NSError *error = nil;
@@ -437,8 +445,55 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     
     [xmppStream disconnect];
     
+    OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
+    [protocolManager.protocolManagers removeObjectForKey:self.account.uniqueIdentifier];
+    
+    [self.xmppRosterStorage clearAllUsersAndResourcesForXMPPStream:self.xmppStream];
+    
+    /*
+    self.protocolBuddyList = nil;
+    
+    NSString * entityDescription;
+    
+    
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:entityDescription inManagedObjectContext:managedObjectContext_roster];
+    [fetchRequest setEntity:entity];
+    
+    NSError *error;
+    NSArray *items = [managedObjectContext_roster executeFetchRequest:fetchRequest error:&error];
+    
+    
+    for (NSManagedObject *managedObject in items) {
+        [managedObjectContext_roster deleteObject:managedObject];
+        NSLog(@"%@ object deleted",entityDescription);
+    }
+    if (![managedObjectContext_roster save:&error]) {
+        NSLog(@"Error deleting %@ - error:%@",entityDescription,error);
+    }
+
+    
+    
+    
+    
+    
+    
+    NSPersistentStoreCoordinator * storeCoordinator = self.xmppRosterStorage.persistentStoreCoordinator;
+    NSArray *stores = storeCoordinator.persistentStores;
+    
+    for(NSPersistentStore *store in stores)
+    {
+        NSError * error = nil;
+        NSURL *storeURL = store.URL;
+        [storeCoordinator removePersistentStore:store error:&error];
+        [[NSFileManager defaultManager] removeItemAtPath:storeURL.path error:&error];
+        if(error)
+            NSLog(@"%@",[error description]);
+    }
+    */
+    
     [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"XMPPLogoutNotification"
+     postNotificationName:kOTRProtocolLogout
      object:self];
 }
 
@@ -559,8 +614,9 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
         NSString *body = [[message elementForName:@"body"] stringValue];
         //NSString *displayName = [user displayName];
         
-        OTRMessage *otrMessage = [OTRMessage messageWithSender:[[user jid] full] recipient:[JID full] message:body protocol:@"xmpp"];
+        OTRBuddy * messageBuddy = [protocolBuddyList objectForKey:user.jidStr];
         
+        OTRMessage *otrMessage = [OTRMessage messageWithBuddy:messageBuddy message:body];        
         OTRMessage *decodedMessage = [OTRCodec decodeMessage:otrMessage];
         
         if(decodedMessage)
@@ -568,7 +624,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
             NSDictionary *messageInfo = [NSDictionary dictionaryWithObject:decodedMessage forKey:@"message"];
             
             [[NSNotificationCenter defaultCenter]
-             postNotificationName:@"MessageReceivedNotification"
+             postNotificationName:kOTRMessageReceived
              object:self userInfo:messageInfo];
         }
 	}
@@ -576,7 +632,11 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 
 - (void)xmppStream:(XMPPStream *)sender didReceivePresence:(XMPPPresence *)presence
 {
-	DDLogVerbose(@"%@: %@ - %@", THIS_FILE, THIS_METHOD, [presence fromStr]);
+	DDLogVerbose(@"%@: %@ - %@\nType: %@\nShow: %@\nStatus: %@", THIS_FILE, THIS_METHOD, [presence from], [presence type], [presence show],[presence status]);
+    
+    [[NSNotificationCenter defaultCenter]
+     postNotificationName:kOTRStatusUpdate
+     object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys: [[presence from]bare] ,@"user", nil]];
 }
 
 - (void)xmppStream:(XMPPStream *)sender didReceiveError:(id)error
@@ -587,6 +647,8 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 - (void)xmppStreamDidDisconnect:(XMPPStream *)sender withError:(NSError *)error
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
+    [[NSNotificationCenter defaultCenter]
+     postNotificationName:kOTRProtocolDiconnect object:self]; 
 	
 	if (!isXmppConnected)
 	{
@@ -645,9 +707,98 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	
 }
 
--(NSString*)accountName
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark OTRProtocol 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+- (void) sendMessage:(OTRMessage*)theMessage
+{
+    NSString *messageStr = theMessage.message;
+    
+    if ([messageStr length] >0) 
+    {
+        NSXMLElement *body = [NSXMLElement elementWithName:@"body"];
+		[body setStringValue:messageStr];
+		
+		NSXMLElement *message = [NSXMLElement elementWithName:@"message"];
+		[message addAttributeWithName:@"type" stringValue:@"chat"];
+		[message addAttributeWithName:@"to" stringValue:theMessage.buddy.accountName];
+		[message addChild:body];
+		
+		[xmppStream sendElement:message];
+    }
+    
+}
+- (NSString*) accountName
 {
     return [JID full];
+    
 }
+- (NSArray*) buddyList
+{
+    NSFetchedResultsController *frc = [self fetchedResultsController];
+    NSArray *sections = [[self fetchedResultsController] sections];
+    int sectionsCount = [[[self fetchedResultsController] sections] count];
+    
+    for(int sectionIndex = 0; sectionIndex < sectionsCount; sectionIndex++)
+    {
+        id <NSFetchedResultsSectionInfo> sectionInfo = [sections objectAtIndex:sectionIndex];
+        NSString *sectionName;
+        OTRBuddyStatus otrBuddyStatus;
+        
+        int section = [sectionInfo.name intValue];
+        switch (section)
+        {
+            case 0  : 
+                sectionName = @"XMPP - Available";
+                otrBuddyStatus = kOTRBuddyStatusAvailable;
+                break;
+            case 1  : 
+                sectionName = @"XMPP - Away";
+                otrBuddyStatus = kOTRBuddyStatusAway;
+                break;
+            default : 
+                sectionName = @"XMPP - Offline";
+                otrBuddyStatus = kOTRBuddyStatusOffline;
+                break;
+        }
+        for(int j = 0; j < sectionInfo.numberOfObjects; j++)
+        {
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:j inSection:sectionIndex];
+            XMPPUserCoreDataStorageObject *user = [frc objectAtIndexPath:indexPath]; 
+            OTRBuddy *otrBuddy = [protocolBuddyList objectForKey:user.jidStr];
+            
+            
+            if(otrBuddy)
+            {
+                otrBuddy.status = otrBuddyStatus;
+            }
+            else
+            {
+                OTRBuddy *newBuddy = [OTRBuddy buddyWithDisplayName:user.displayName accountName: [[user jid] full] protocol:self status:otrBuddyStatus groupName:sectionName];
+                [protocolBuddyList setObject:newBuddy forKey:user.jidStr];
+            }
+        }
+    }
+    return [protocolBuddyList allValues];
+    
+}
+
+- (NSString*) type {
+    return kOTRProtocolTypeXMPP;
+}
+
+- (OTRBuddy *) getBuddyByAccountName:(NSString *)buddyAccountName
+{
+    if (protocolBuddyList)
+        return [protocolBuddyList objectForKey:buddyAccountName];
+}
+
+-(void)connectWithPassword:(NSString *)myPassword
+{
+    
+    [self connectWithJID:self.account.username password:myPassword];
+}
+
 
 @end

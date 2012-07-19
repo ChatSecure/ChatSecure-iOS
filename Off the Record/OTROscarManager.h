@@ -10,22 +10,22 @@
 #import "OTRCodec.h"
 #import "LibOrange.h"
 #import "CommandTokenizer.h"
-
+#import "OTRProtocol.h"
 
 
 //static 	   AIMSessionManager * s_AIMSession = nil;
 
 
-@interface OTROscarManager : NSObject <AIMLoginDelegate, AIMSessionManagerDelegate, AIMFeedbagHandlerDelegate, AIMICBMHandlerDelegate, AIMStatusHandlerDelegate, AIMRateLimitHandlerDelegate, AIMRendezvousHandlerDelegate>
+@interface OTROscarManager : NSObject <AIMLoginDelegate, AIMSessionManagerDelegate, AIMFeedbagHandlerDelegate, AIMICBMHandlerDelegate, AIMStatusHandlerDelegate, AIMRateLimitHandlerDelegate, AIMRendezvousHandlerDelegate, OTRProtocol>
 {
     AIMLogin * login;
-    AIMBlist *buddyList;
+    AIMBlist * aimBuddyList;
 	NSThread * mainThread;
     AIMSessionManager *theSession;
 }
 
 @property (nonatomic, retain) AIMLogin * login;
-@property (nonatomic, retain) AIMBlist *buddyList;
+@property (nonatomic, retain) AIMBlist * aimBuddyList;
 @property (nonatomic, retain) AIMSessionManager *theSession;
 @property (nonatomic, retain) NSString *accountName;
 @property (nonatomic, assign) BOOL loginFailed;

@@ -17,6 +17,7 @@
 #define SEND_STRING NSLocalizedString(@"Send", @"For sending a message")
 #define OK_STRING NSLocalizedString(@"OK", @"Accept the dialog")
 
+
 // Used in OTRChatViewController
 #define YOUR_FINGERPRINT_STRING NSLocalizedString(@"Fingerprint for you", @"your fingerprint")
 #define THEIR_FINGERPRINT_STRING NSLocalizedString(@"Purported fingerprint for", @"the alleged fingerprint of their other person")
@@ -48,12 +49,13 @@
 #define USER_PASS_BLANK_STRING NSLocalizedString(@"You must enter a username and a password to login.", @"error message shown when user doesnt fill in a username or password")
 
 // OTRAccountsViewController
-#define AIM_STRING NSLocalizedString(@"AOL Instant Messenger", "the name for AIM")
-#define XMPP_STRING NSLocalizedString(@"Google Talk (XMPP)", "the name for google talk, also include (XMPP) at the end")
 #define LOGOUT_STRING NSLocalizedString(@"Log Out", @"log out from account")
 #define LOGIN_STRING NSLocalizedString(@"Log In", "log in to account")
 #define LOGOUT_FROM_AIM_STRING NSLocalizedString(@"Logout from AIM?", "Ask user if they want to logout of AIM")
 #define LOGOUT_FROM_XMPP_STRING NSLocalizedString(@"Logout from XMPP?", "ask user if they want to log out of xmpp")
+#define DELETE_ACCOUNT_TITLE_STRING NSLocalizedString(@"Delete Account?", @"Ask user if they want to delete the stored account information")
+#define DELETE_ACCOUNT_MESSAGE_STRING NSLocalizedString(@"Permanently delete", @"Ask user if they want to delete the stored account information")
+#define NO_ACCOUNT_SAVED_STRING NSLocalizedString (@"No Saved Accounts", @"Message infomring user that there are no accounts currently saved")
 
 // OTRAboutViewController
 #define ATTRIBUTION_STRING NSLocalizedString(@"ChatSecure is brought to you by many open source projects", @"for attribution of other projects")
@@ -63,8 +65,13 @@
 // OTRLoginViewController
 #define USERNAME_STRING NSLocalizedString(@"Username", @"Label text for username field on login screen")
 #define PASSWORD_STRING NSLocalizedString(@"Password", @"Label text for password field on login screen")
+#define DOMAIN_STRING NSLocalizedString(@"Domain", @"Label text for domain field on login scree")
 #define LOGIN_TO_STRING NSLocalizedString(@"Login to", @"Label for button describing which protocol you're logging into, will be followed by a protocol such as XMPP or AIM during layout")
 #define REMEMBER_USERNAME_STRING NSLocalizedString(@"Remember username", @"label for switch for whether or not we should save their username between launches")
+#define REMEMBER_PASSWORD_STRING NSLocalizedString(@"Remember password", @"label for switch for whether or not we should save their password between launches")
+#define OPTIONAL_STRING NSLocalizedString(@"Optional", @"Hint text for domain field telling user this field is not required")
+#define FACEBOOK_HELP_STRING NSLocalizedString( @"Your Facebook username is not the email address that you use to login to Facebook",@"Text that makes it clear which username to use")
+
 
 // OTRSettingsManager
 #define CRITTERCISM_TITLE_STRING NSLocalizedString(@"Send Crash Reports", @"Title for crash reports settings switch")
@@ -100,3 +107,14 @@
 // OTRAppDelegate
 #define EXPIRATION_STRING NSLocalizedString(@"Background session will expire in one minute.", @"Message displayed in Notification Manager when session will expire in one minute")
 #define READ_STRING NSLocalizedString(@"Read", @"Title for action button on alert dialog, used as a verb in the present tense")
+
+// OTRNewAccountViewControler
+#define NEW_ACCOUNT_STIRNG NSLocalizedString(@"New Account", @"Title for New Account View")
+
+//OTRAccount
+#define AIM_STRING NSLocalizedString(@"AOL Instant Messenger", "the name for AIM")
+#define GOOGLE_TALK_STRING NSLocalizedString(@"Google Talk", "the name for google talk")
+#define FACEBOOK_STRING NSLocalizedString(@"Facebook","the name for facebook")
+#define JABBER_STRING NSLocalizedString(@"Jabber (XMPP)","the name for jabber, also include (XMPP) at the end")
+
+

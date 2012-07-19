@@ -19,8 +19,9 @@
 #import "XMPPCapabilities.h"
 #import "XMPPCapabilitiesCoreDataStorage.h"
 #import "OTRCodec.h"
+#import "OTRProtocol.h"
 
-@interface OTRXMPPManager : NSObject <XMPPRosterDelegate, NSFetchedResultsControllerDelegate>
+@interface OTRXMPPManager : NSObject <XMPPRosterDelegate, NSFetchedResultsControllerDelegate, OTRProtocol>
 {
 	XMPPStream *xmppStream;
 	XMPPReconnect *xmppReconnect;
@@ -65,5 +66,7 @@
 - (NSFetchedResultsController *)fetchedResultsController;
 
 -(NSString*)accountName;
+
+
 
 @end

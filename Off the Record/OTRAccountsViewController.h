@@ -9,18 +9,14 @@
 #import <UIKit/UIKit.h>
 #import "OTRLoginViewController.h"
 
-@interface OTRAccountsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate>
-{
-    UITableView *accountsTableView;
-    OTRLoginViewController *loginController;
-}
-@property (retain, nonatomic) UITableView *accountsTableView;
+@interface OTRAccountsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
+
+@property (nonatomic, retain) OTRLoginViewController *loginController;
+@property (nonatomic, retain) UITableView *accountsTableView;
 @property (nonatomic, retain) UIImageView *logoView;
 
--(void)oscarLoggedInSuccessfully;
--(void)xmppLoggedInSuccessfully;
+-(void)protocolLoggedInSuccessfully:(NSNotification *)notification;
+-(void)protocolLoggedOff:(NSNotification *)notification;
 -(void)accountLoggedIn;
--(void)aimLoggedOff;
--(void)xmppLoggedOff;
 
 @end

@@ -9,6 +9,8 @@
 #import "OTRChatListViewController.h"
 #import "OTRChatViewController.h"
 #import "Strings.h"
+#import "OTRProtocol.h"
+#import "OTRConstants.h"
 
 @implementation OTRChatListViewController
 
@@ -52,32 +54,24 @@
     // Do any additional setup after loading the view from its nib.
     [[NSNotificationCenter defaultCenter]
      addObserver:self
-     selector:@selector(aimLoggedOff)
-     name:@"OscarLogoutNotification"
-     object:nil ];
-    
-    [[NSNotificationCenter defaultCenter]
-     addObserver:self
-     selector:@selector(xmppLoggedOff)
-     name:@"XMPPLogoutNotification"
+     selector:@selector(protocolLoggedOff:)
+     name:kOTRProtocolLogout
      object:nil ];
 }
 
-- (void) aimLoggedOff {
-    [self removeConversationsForProtocol:kOTRProtocolTypeAIM];
+-(void) protocolLoggedOff:(NSNotification *) notification
+{
+    id <OTRProtocol> protocol = notification.object;
+    [self removeConversationsForAccount:protocol.account];
 }
 
-- (void) xmppLoggedOff {
-    [self removeConversationsForProtocol:kOTRProtocolTypeXMPP];
-}
-
-- (void) removeConversationsForProtocol:(NSString*)protocol {
+-(void) removeConversationsForAccount:(OTRAccount *)account {
     if ([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyDeleteOnDisconnect]) {
         NSMutableSet *activeConversations = [OTRProtocolManager sharedInstance].buddyList.activeConversations;
         NSSet *iterableConversations = [activeConversations copy];
         
         for (OTRBuddy *buddy in iterableConversations) {
-            if ([buddy.protocol isEqualToString:protocol]) {
+            if ([buddy.protocol.account.uniqueIdentifier isEqualToString:account.uniqueIdentifier]) {
                 [activeConversations removeObject:buddy];
             }
         }
@@ -100,8 +94,7 @@
     [super viewDidUnload];
     self.chatListTableView = nil;
     
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"OscarLogoutNotification" object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"XMPPLogoutNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kOTRProtocolLogout object:nil];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {

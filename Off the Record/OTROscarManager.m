@@ -8,15 +8,17 @@
 
 #import "OTROscarManager.h"
 #import "OTRProtocolManager.h"
+#import "OTRConstants.h"
 
 @implementation OTROscarManager
 
 @synthesize accountName;
-@synthesize buddyList;
+@synthesize aimBuddyList;
 @synthesize theSession;
 @synthesize login;
 @synthesize loginFailed;
 @synthesize loggedIn;
+@synthesize protocolBuddyList,account;
 
 BOOL loginFailed;
 
@@ -26,6 +28,7 @@ BOOL loginFailed;
     if(self)
     {
         mainThread = [NSThread currentThread];
+        protocolBuddyList = [[NSMutableDictionary alloc] init];
     }
     return self;
 }
@@ -54,9 +57,13 @@ BOOL loginFailed;
 
 #pragma mark Login Delegate
 
+-(void)authorizer:(id)authorizer didFailWithError:(NSError *)error {
+    NSLog(@"Authorizer Error: %@",[error description]);
+}
+
 - (void)aimLogin:(AIMLogin *)theLogin failedWithError:(NSError *)error {
 	[self checkThreading];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"AimLoginFailedNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kOTRProtocolLoginFail object:self];
     NSLog(@"login error: %@",[error description]);
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Login Error" message:@"AIM login failed. Please check your username and password and try again." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
     [alert show];
@@ -92,7 +99,7 @@ BOOL loginFailed;
 	// [self sendBogus];
         
     [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"OscarLoginNotification"
+     postNotificationName:kOTRProtocolLoginSuccess
      object:self];
 }
 
@@ -100,13 +107,13 @@ BOOL loginFailed;
 
 - (void)aimSessionManagerSignedOff:(AIMSessionManager *)sender {
 	[self checkThreading];
-    [[[[OTRProtocolManager sharedInstance] buddyList] oscarBuddies] removeAllObjects];
-    buddyList = nil;
+    [[[OTRProtocolManager sharedInstance] buddyList] removeBuddiesforAccount:self.account];
+    aimBuddyList = nil;
 	theSession = nil;
 	NSLog(@"Session signed off");
     
     [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"OscarLogoutNotification"
+     postNotificationName:kOTRProtocolLogout
      object:self];
 }
 
@@ -117,10 +124,10 @@ BOOL loginFailed;
 	NSLog(@"%@ got the buddy list.", feedbagHandler);
 	//NSLog(@"Blist: %@", );
     
-    buddyList = [theSession.session buddyList];
+    aimBuddyList = [theSession.session buddyList];
     
     [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"BuddyListUpdateNotification"
+     postNotificationName:kOTRBuddyListUpdate
      object:self];
 }
 
@@ -129,7 +136,7 @@ BOOL loginFailed;
 	NSLog(@"Buddy added: %@", newBuddy);
     
     [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"BuddyListUpdateNotification"
+     postNotificationName:kOTRBuddyListUpdate
      object:self];
 }
 
@@ -138,7 +145,7 @@ BOOL loginFailed;
 	NSLog(@"Buddy removed: %@", oldBuddy);
     
     [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"BuddyListUpdateNotification"
+     postNotificationName:kOTRBuddyListUpdate
      object:self];
 }
 
@@ -147,7 +154,7 @@ BOOL loginFailed;
 	NSLog(@"Group added: %@", [newGroup name]);
     
     [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"BuddyListUpdateNotification"
+     postNotificationName:kOTRBuddyListUpdate
      object:self];
 }
 
@@ -156,7 +163,7 @@ BOOL loginFailed;
 	NSLog(@"Group removed: %@", [oldGroup name]);
     
     [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"BuddyListUpdateNotification"
+     postNotificationName:kOTRBuddyListUpdate
      object:self];
 }
 
@@ -166,7 +173,7 @@ BOOL loginFailed;
 	NSLog(@"Blist: %@", theSession.session.buddyList);
     
     [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"BuddyListUpdateNotification"
+     postNotificationName:kOTRBuddyListUpdate
      object:self];
 }
 
@@ -174,7 +181,7 @@ BOOL loginFailed;
 	NSLog(@"User blocked: %@", username);
     
     [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"BuddyListUpdateNotification"
+     postNotificationName:kOTRBuddyListUpdate
      object:self];
 }
 
@@ -182,7 +189,7 @@ BOOL loginFailed;
 	NSLog(@"User permitted: %@", username);
     
     [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"BuddyListUpdateNotification"
+     postNotificationName:kOTRBuddyListUpdate
      object:self];
 }
 
@@ -190,14 +197,14 @@ BOOL loginFailed;
 	NSLog(@"User un-blocked: %@", username);
     
     [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"BuddyListUpdateNotification"
+     postNotificationName:kOTRBuddyListUpdate
      object:self];
 }
 - (void)aimFeedbagHandler:(AIMFeedbagHandler *)sender buddyUnpermitted:(NSString *)username {
 	NSLog(@"User un-permitted: %@", username);
     
     [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"BuddyListUpdateNotification"
+     postNotificationName:kOTRBuddyListUpdate
      object:self];
 }
 
@@ -216,7 +223,9 @@ BOOL loginFailed;
 	NSString * autoresp = [message isAutoresponse] ? @" (Auto-Response)" : @"";
 	NSLog(@"(%@) %@%@: %@", [NSDate date], [[message buddy] username], autoresp, [message plainTextMessage]);
     
-    OTRMessage *otrMessage = [OTRMessage messageWithSender:message.buddy.username recipient:accountName message:msgTxt protocol:@"prpl-oscar"];
+    OTRBuddy * messageBuddy = [protocolBuddyList objectForKey:message.buddy.username];
+    
+    OTRMessage *otrMessage = [OTRMessage messageWithBuddy:messageBuddy message:msgTxt];
     
     OTRMessage *decodedMessage = [OTRCodec decodeMessage:otrMessage];
     
@@ -226,7 +235,7 @@ BOOL loginFailed;
         NSDictionary *messageInfo = [NSDictionary dictionaryWithObject:decodedMessage forKey:@"message"];
         
         [[NSNotificationCenter defaultCenter]
-         postNotificationName:@"MessageReceivedNotification"
+         postNotificationName:kOTRMessageReceived
          object:self userInfo:messageInfo];
         
     }
@@ -337,7 +346,7 @@ BOOL loginFailed;
 	NSLog(@"\"%@\"%s%@", theBuddy, ".status = ", status);
     
     [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"BuddyListUpdateNotification"
+     postNotificationName:kOTRBuddyListUpdate
      object:self];
     
 }
@@ -347,7 +356,7 @@ BOOL loginFailed;
 	NSLog(@"user.status = %@", [handler userStatus]);
     
     [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"BuddyListUpdateNotification"
+     postNotificationName:kOTRBuddyListUpdate
      object:self];
     
 }
@@ -503,5 +512,82 @@ BOOL loginFailed;
 {
     return s_AIMSession;
 }*/
+
+-(void)sendMessage:(OTRMessage *)theMessage
+{
+    NSString *recipient = theMessage.buddy.accountName;
+    NSString *message = theMessage.message;
+    
+    AIMMessage * msg = [AIMMessage messageWithBuddy:[theSession.session.buddyList buddyWithUsername:recipient] message:message];
+    
+    // use delay to prevent OSCAR rate-limiting problem
+    //NSDate *future = [NSDate dateWithTimeIntervalSinceNow: delay ];
+    //[NSThread sleepUntilDate:future];
+    
+	[theSession.messageHandler sendMessage:msg];
+}
+
+- (NSArray*) buddyList
+{ 
+    NSMutableSet *otrBuddyListSet = [NSMutableSet set];
+    AIMBlist *blist = self.aimBuddyList;
+    
+    for(AIMBlistGroup *group in blist.groups)
+    {
+        for(AIMBlistBuddy *buddy in group.buddies)
+        {
+            OTRBuddyStatus buddyStatus;
+            
+            switch (buddy.status.statusType) 
+            {
+                case AIMBuddyStatusAvailable:
+                    buddyStatus = kOTRBuddyStatusAvailable;
+                    break;
+                case AIMBuddyStatusAway:
+                    buddyStatus = kOTRBuddyStatusAway;
+                    break;
+                default:
+                    buddyStatus = kOTRBuddyStatusOffline;
+                    break;
+            }
+            
+            OTRBuddy *otrBuddy = [protocolBuddyList objectForKey:buddy.username];
+            
+            if(otrBuddy)
+            {
+                otrBuddy.status = buddyStatus;
+                otrBuddy.groupName = group.name;
+            }
+            else
+            {
+                otrBuddy = [OTRBuddy buddyWithDisplayName:buddy.username accountName:buddy.username protocol:self status:buddyStatus groupName:group.name];
+                [protocolBuddyList setObject:otrBuddy forKey:buddy.username];
+            }
+            [otrBuddyListSet addObject:otrBuddy];
+        }
+    }
+    return [otrBuddyListSet allObjects];
+}
+
+- (OTRBuddy *) getBuddyByAccountName:(NSString *)buddyAccountName
+{
+    if (protocolBuddyList)
+        return [protocolBuddyList objectForKey:buddyAccountName];
+}
+
+-(void)connectWithPassword:(NSString *)myPassword
+{
+    self.login = [[AIMLogin alloc] initWithUsername:account.username password:myPassword];
+    [self.login setDelegate:self];
+    [self.login beginAuthorization];
+}
+-(void)disconnect
+{
+    [[self theSession].session closeConnection];
+    OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
+    [protocolManager.protocolManagers removeObjectForKey:self.account.uniqueIdentifier];
+    self.protocolBuddyList = nil;
+    
+}
 
 @end

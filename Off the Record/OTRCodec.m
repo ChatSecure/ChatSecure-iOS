@@ -86,9 +86,11 @@ static void inject_message_cb(void *opdata, const char *accountname,
      otrg_plugin_inject_message(account, recipient, message);*/
     if(accountname && recipient && message && protocol)
     {
-        OTRMessage *newMessage = [OTRMessage messageWithSender:[NSString stringWithUTF8String:accountname] recipient:[NSString stringWithUTF8String:recipient] message:[NSString stringWithUTF8String:message] protocol:[NSString stringWithUTF8String:protocol]];
         
-        [OTRMessage sendMessage:newMessage];
+        OTRMessage *newMessage = [OTRMessage messageWithBuddy:[[OTRProtocolManager sharedInstance] buddyForUserName:[NSString stringWithUTF8String:recipient] accountName:[NSString stringWithUTF8String:accountname] protocol:[NSString stringWithUTF8String:protocol ] ] message:[NSString stringWithUTF8String:message]];
+        
+        
+        [newMessage send];
     }
 
     
@@ -188,7 +190,9 @@ static void gone_secure_cb(void *opdata, ConnContext *context)
     if(context->username)
     {
         NSString* username = [NSString stringWithUTF8String:context->username];
-        OTRBuddy *buddy = [[[OTRProtocolManager sharedInstance] buddyList] getBuddyByName:username];
+        NSString* accountname = [NSString stringWithUTF8String:context->accountname];
+        NSString* protocol = [NSString stringWithUTF8String:context->protocol];
+        OTRBuddy *buddy = [[OTRProtocolManager sharedInstance] buddyForUserName:username accountName:accountname protocol:protocol];
         NSDictionary *userInfo = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES] forKey:@"secure"];
         
 
@@ -203,7 +207,9 @@ static void gone_insecure_cb(void *opdata, ConnContext *context)
     if(context->username)
     {
         NSString* username = [NSString stringWithUTF8String:context->username];
-        OTRBuddy *buddy = [[[OTRProtocolManager sharedInstance] buddyList] getBuddyByName:username];
+        NSString* accountname = [NSString stringWithUTF8String:context->accountname];
+        NSString* protocol = [NSString stringWithUTF8String:context->protocol];
+        OTRBuddy *buddy = [[OTRProtocolManager sharedInstance] buddyForUserName:username accountName:accountname protocol:protocol];
         NSDictionary *userInfo = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:NO] forKey:@"secure"];
         
         [[NSNotificationCenter defaultCenter] postNotificationName:ENCRYPTION_STATE_NOTIFICATION object:buddy userInfo:userInfo];
@@ -215,11 +221,13 @@ static void still_secure_cb(void *opdata, ConnContext *context, int is_reply)
     if(context->username)
     {
         NSString* username = [NSString stringWithUTF8String:context->username];
-        OTRBuddy *buddy = [[[OTRProtocolManager sharedInstance] buddyList] getBuddyByName:username];
+        NSString* accountname = [NSString stringWithUTF8String:context->accountname];
+        NSString* protocol = [NSString stringWithUTF8String:context->protocol];
+        OTRBuddy *buddy = [[OTRProtocolManager sharedInstance] buddyForUserName:username accountName:accountname protocol:protocol];
         NSDictionary *userInfo = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES] forKey:@"secure"];
         
         
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"EncryptionStateNotification" object:buddy userInfo:userInfo];
+        [[NSNotificationCenter defaultCenter] postNotificationName:ENCRYPTION_STATE_NOTIFICATION object:buddy userInfo:userInfo];
     }
 }
 
@@ -285,9 +293,9 @@ static OtrlMessageAppOps ui_ops = {
     char *newmessage = NULL;
     
     NSString *message = theMessage.message;
-    NSString *friendAccount = theMessage.sender;
-    NSString *protocol = theMessage.protocol;
-    NSString *myAccountName = theMessage.recipient;
+    NSString *friendAccount = theMessage.buddy.accountName;
+    NSString *protocol = theMessage.buddy.protocol.account.protocol;
+    NSString *myAccountName = theMessage.buddy.protocol.account.username;
     
     OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
     
@@ -320,7 +328,7 @@ static OtrlMessageAppOps ui_ops = {
     
     otrl_message_free(newmessage);
     
-    OTRMessage *newOTRMessage = [OTRMessage messageWithSender:theMessage.sender recipient:theMessage.recipient message:newMessage protocol:theMessage.protocol];
+    OTRMessage *newOTRMessage = [OTRMessage messageWithBuddy:theMessage.buddy message:newMessage];
     
     return newOTRMessage;
 }
@@ -332,9 +340,9 @@ static OtrlMessageAppOps ui_ops = {
     char *newmessage = NULL;
     
     NSString *message = theMessage.message;
-    NSString *recipientAccount = theMessage.recipient;
-    NSString *protocol = theMessage.protocol;
-    NSString *sendingAccount = theMessage.sender;
+    NSString *recipientAccount = theMessage.buddy.accountName;
+    NSString *protocol = theMessage.buddy.protocol.account.protocol;
+    NSString *sendingAccount = theMessage.buddy.protocol.account.username;
     //NSLog(@"inside encodeMessage: %@ %@ %@ %@",message,recipientAccount,protocol,sendingAccount);
     OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
     
@@ -350,7 +358,7 @@ static OtrlMessageAppOps ui_ops = {
     
     otrl_message_free(newmessage);
     
-    OTRMessage *newOTRMessage = [OTRMessage messageWithSender:theMessage.sender recipient:theMessage.recipient message:newMessage protocol:theMessage.protocol];
+    OTRMessage *newOTRMessage = [OTRMessage messageWithBuddy:theMessage.buddy message:newMessage];
     
     return newOTRMessage;
 }

@@ -9,16 +9,37 @@
 #import "OTRAccountsViewController.h"
 #import "OTRProtocolManager.h"
 #import "Strings.h"
+#import "OTRAccount.h"
+#import "OTRConstants.h"
+#import "OTRNewAccountViewController.h"
+#import "QuartzCore/QuartzCore.h"
 
 @implementation OTRAccountsViewController
-@synthesize accountsTableView, logoView;
+@synthesize accountsTableView, logoView, loginController;
+
+- (void) dealloc {
+    self.accountsTableView = nil;
+    self.logoView = nil;
+    self.loginController = nil;
+}
 
 - (id)init {
     if (self = [super init]) {
         self.title = ACCOUNTS_STRING;
         self.tabBarItem.image = [UIImage imageNamed:@"19-gear.png"];
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addAccount:)];
     }
     return self;
+}
+
+- (void) addAccount:(id)sender {
+   
+    OTRNewAccountViewController * newAccountView = [[OTRNewAccountViewController alloc] init];
+   
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:newAccountView];
+    nav.modalPresentationStyle = UIModalPresentationFormSheet;
+    [self.tabBarController presentModalViewController:nav animated:YES];
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -55,26 +76,14 @@
     
     [[NSNotificationCenter defaultCenter]
      addObserver:self
-     selector:@selector(oscarLoggedInSuccessfully)
-     name:@"OscarLoginNotification"
+     selector:@selector(protocolLoggedInSuccessfully:)
+     name:kOTRProtocolLoginSuccess
      object:nil ];
     
     [[NSNotificationCenter defaultCenter]
      addObserver:self
-     selector:@selector(xmppLoggedInSuccessfully)
-     name:@"XMPPLoginNotification"
-     object:nil ];
-    
-    [[NSNotificationCenter defaultCenter]
-     addObserver:self
-     selector:@selector(aimLoggedOff)
-     name:@"OscarLogoutNotification"
-     object:nil ];
-    
-    [[NSNotificationCenter defaultCenter]
-     addObserver:self
-     selector:@selector(xmppLoggedOff)
-     name:@"XMPPLogoutNotification"
+     selector:@selector(protocolLoggedOff:)
+     name: kOTRProtocolLogout
      object:nil ];
 }
 
@@ -89,32 +98,19 @@
     accountsTableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
 }
 
--(void)aimLoggedOff
+-(void)protocolLoggedInSuccessfully:(NSNotification *)notification
 {
-    [OTRProtocolManager sharedInstance].oscarManager.loggedIn = NO;
-    //[[[OTRProtocolManager sharedInstance] buddyList] removeOscarBuddies];
-    [accountsTableView reloadData];
-}
-
--(void)xmppLoggedOff
-{
-    [OTRProtocolManager sharedInstance].xmppManager.isXmppConnected = NO;
-    [[[OTRProtocolManager sharedInstance] buddyList] removeXmppBuddies];
-    [accountsTableView reloadData];
-    
-}
-
-                                                                           
--(void)oscarLoggedInSuccessfully
-{
-    [OTRProtocolManager sharedInstance].oscarManager.loggedIn = YES;
+    id <OTRProtocol> protocol = notification.object;
+    protocol.account.isConnected = YES;
     [self accountLoggedIn];
 }
 
--(void)xmppLoggedInSuccessfully
+-(void)protocolLoggedOff:(NSNotification *)notification
 {
-    [OTRProtocolManager sharedInstance].xmppManager.isXmppConnected = YES;
-    [self accountLoggedIn];
+    id <OTRProtocol> protocol = notification.object;
+    protocol.account.isConnected = NO;
+    [[[OTRProtocolManager sharedInstance] buddyList] removeBuddiesforAccount:protocol.account];
+    [accountsTableView reloadData];
 }
 
 -(void)accountLoggedIn
@@ -153,48 +149,35 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 2;
+    
+    if ([[OTRProtocolManager sharedInstance].accountsManager.accountsArray count] > 2) {
+        tableView.scrollEnabled = YES;
+    }
+    else {
+        tableView.scrollEnabled = NO;
+    }
+
+    return [[OTRProtocolManager sharedInstance].accountsManager.accountsArray count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
+    static NSString *cellIdentifier = @"Cell";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
 	if (cell == nil)
 	{
-		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"Cell"];
+		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
 	}
-
-    if(indexPath.row == 0)
+    
+    OTRAccount *account = [[OTRProtocolManager sharedInstance].accountsManager.accountsArray objectAtIndex:indexPath.row];
+    cell.textLabel.text = account.username;
+    cell.detailTextLabel.text = account.protocol;
+    cell.imageView.image = [UIImage imageNamed:account.imageName];
+    
+    if( [[account providerName] isEqualToString:FACEBOOK_STRING])
     {
-        cell.textLabel.text = AIM_STRING;
-        //cell.textLabel.transform = CGAffineTransformMakeRotation(-1.5707);
-        
-        if([OTRProtocolManager sharedInstance].oscarManager.loggedIn)
-        {
-            cell.detailTextLabel.text = LOGOUT_STRING;
-        }
-        else
-        {
-            cell.detailTextLabel.text = LOGIN_STRING;
-        }
-
-        cell.imageView.image = [UIImage imageNamed:@"aim.png"];
-    }
-    else if(indexPath.row == 1)
-    {
-        cell.textLabel.text = XMPP_STRING;
-        //cell.textLabel.transform = CGAffineTransformMakeRotation(-1.5707);
-        
-        if([OTRProtocolManager sharedInstance].xmppManager.isXmppConnected)
-        {
-            cell.detailTextLabel.text = LOGOUT_STRING;
-        }
-        else
-        {
-            cell.detailTextLabel.text = LOGIN_STRING;
-        }
-        
-        cell.imageView.image = [UIImage imageNamed:@"gtalk.png"];
+        cell.imageView.layer.masksToBounds = YES;
+        cell.imageView.layer.cornerRadius = 10.0;
     }
     
     return cell;
@@ -202,73 +185,57 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(indexPath.row == 0) // AIM
-    {
-        if(![OTRProtocolManager sharedInstance].oscarManager.loggedIn)
-        {
-            OTRLoginViewController *loginViewController = [[OTRLoginViewController alloc] init];
-            UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:loginViewController];
-            
-            OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
-            
-            loginViewController.useXMPP = NO;
-            loginViewController.protocolManager = protocolManager;
-            nav.modalPresentationStyle = UIModalPresentationFormSheet;
-            [self.tabBarController presentModalViewController:nav animated:YES];
-
-            loginController = loginViewController;
-        }
-        else
-        {
-            UIActionSheet *logoutSheet = [[UIActionSheet alloc] initWithTitle:LOGOUT_FROM_AIM_STRING delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:LOGOUT_STRING otherButtonTitles: nil];
-            [logoutSheet setTag:1];
-            [logoutSheet showFromTabBar:self.tabBarController.tabBar];
-        }
-    }
-    else
-    {
-        if(![OTRProtocolManager sharedInstance].xmppManager.isXmppConnected)
-        {
-            OTRLoginViewController *loginViewController = [[OTRLoginViewController alloc] init];
-            UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:loginViewController];
-            
-            OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
-            loginViewController.useXMPP = YES;
-            loginViewController.protocolManager = protocolManager;
-            nav.modalPresentationStyle = UIModalPresentationFormSheet;
-            [self.tabBarController presentModalViewController:nav animated:YES];
-
-            loginController = loginViewController;
-        }
-        else
-        {
-            UIActionSheet *logoutSheet = [[UIActionSheet alloc] initWithTitle:LOGOUT_FROM_XMPP_STRING delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:LOGOUT_STRING otherButtonTitles: nil];
-            [logoutSheet setTag:2];
-            [logoutSheet showFromTabBar:self.tabBarController.tabBar];
-        }
+    OTRAccount *account = [[OTRProtocolManager sharedInstance].accountsManager.accountsArray objectAtIndex:indexPath.row];
+    
+    if (!account.isConnected) {
+        [self showLoginControllerForAccount:account];
+    } else {
+        UIActionSheet *logoutSheet = [[UIActionSheet alloc] initWithTitle:LOGOUT_STRING delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:LOGOUT_STRING otherButtonTitles: nil];
+        [logoutSheet setTag:indexPath.row];
+        [logoutSheet showFromTabBar:self.tabBarController.tabBar];
     }
 
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete) 
+    {
+        OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
+        OTRAccount *account = [protocolManager.accountsManager.accountsArray objectAtIndex:indexPath.row];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:DELETE_ACCOUNT_TITLE_STRING message:[NSString stringWithFormat:@"%@ %@?", DELETE_ACCOUNT_MESSAGE_STRING, account.username] delegate:self cancelButtonTitle:CANCEL_STRING otherButtonTitles:OK_STRING, nil];
+        alert.tag = indexPath.row;
+        [alert show];
+    }
+}
+
+- (void) showLoginControllerForAccount:(OTRAccount*)account {
+    OTRLoginViewController *loginViewController = [[OTRLoginViewController alloc] initWithAccount:account];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:loginViewController];
+    nav.modalPresentationStyle = UIModalPresentationFormSheet;
+    [self.tabBarController presentModalViewController:nav animated:YES];
+    
+    self.loginController = loginViewController;
+}
+
 -(void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
-    if(actionSheet.tag == 1) // logout of AIM
+    OTRAccount *account = [[OTRProtocolManager sharedInstance].accountsManager.accountsArray objectAtIndex:actionSheet.tag];
+    
+    id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:account];
+    
+    if(buttonIndex == 0) //logout
     {
-        if(buttonIndex == 0) //logout
-        {
-            AIMSessionManager *sessionManager = [[[OTRProtocolManager sharedInstance] oscarManager] theSession];
-            [sessionManager.session closeConnection];
-        }
+        [protocol disconnect];
     }
-    else if(actionSheet.tag == 2) // logout of XMPP
-    {
-        if(buttonIndex == 0) //logout
-        {
-            [[[OTRProtocolManager sharedInstance] xmppManager] disconnect];
-            
-            
-        }
+}
+
+- (void) alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
+    if (buttonIndex != alertView.cancelButtonIndex) {
+        OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
+        OTRAccount *account = [protocolManager.accountsManager.accountsArray objectAtIndex:alertView.tag];
+        [protocolManager.accountsManager removeAccount:account];        
+        [accountsTableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:alertView.tag inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
     }
 }
 

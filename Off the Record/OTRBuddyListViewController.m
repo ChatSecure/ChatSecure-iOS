@@ -13,6 +13,7 @@
 #import "OTRBuddy.h"
 #import "OTRBuddyList.h"
 #import "Strings.h"
+#import "OTRConstants.h"
 
 
 //#define kSignoffTime 500
@@ -34,6 +35,7 @@
         self.title = BUDDY_LIST_STRING;
         self.tabBarItem.image = [UIImage imageNamed:@"112-group.png"];
         self.protocolManager = [OTRProtocolManager sharedInstance];
+        buddyDictionary = [[NSMutableDictionary alloc] init];
 
     }
     return self;
@@ -65,13 +67,13 @@
     [[NSNotificationCenter defaultCenter]
      addObserver:self
      selector:@selector(buddyListUpdate)
-     name:@"BuddyListUpdateNotification"
+     name:kOTRBuddyListUpdate
      object:nil ];
     
     [[NSNotificationCenter defaultCenter]
      addObserver:self
      selector:@selector(messageReceived:)
-     name:@"MessageReceivedNotification"
+     name:kOTRMessageReceived
      object:nil ];
 
     
@@ -86,7 +88,7 @@
     //[self buddyListUpdate];
     
     [[NSNotificationCenter defaultCenter]
-     postNotificationName:@"BuddyListUpdateNotification"
+     postNotificationName:kOTRBuddyListUpdate
      object:self];
     
     buddyListTableView.frame = self.view.bounds;
@@ -140,7 +142,7 @@
         return;
     }
         
-    sortedBuddies = [OTRBuddyList sortBuddies:[protocolManager.buddyList allBuddies]];
+    sortedBuddies = [OTRBuddyList sortBuddies:protocolManager.buddyList.allBuddies];
     
     [buddyListTableView reloadData];
 }
@@ -148,32 +150,47 @@
 -(void)messageReceived:(NSNotification*)notification;
 {
     OTRMessage *message = [notification.userInfo objectForKey:@"message"];
-    NSString *userName = message.sender;
     NSString *decodedMessage = message.message;
-    OTRBuddy *buddy = [protocolManager.buddyList getBuddyByName:userName];
+    OTRBuddy *buddy = message.buddy;
     [buddy receiveMessage:decodedMessage];
+    
+    UIViewController * currentViewController;
     
     NSString * currentTitle;
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
     {
-        UIViewController * vc = self.tabBarController.selectedViewController;
-        currentTitle = [vc title];
-        if ([vc isKindOfClass:[UISplitViewController class]]) {
-            currentTitle = [[((UISplitViewController *)vc).viewControllers objectAtIndex:1] title];
+        currentViewController = self.tabBarController.selectedViewController;
+        if ([currentViewController isKindOfClass:[UISplitViewController class]]) {
+            currentTitle = [((UISplitViewController *)currentViewController).viewControllers objectAtIndex:1];
         }
         
     }
     else {
-        currentTitle = chatListController.navigationController.topViewController.title;
+        currentViewController = chatListController.navigationController.topViewController;
     }
     
+    if(![currentViewController isKindOfClass:[OTRChatViewController class]])
+    {
+        
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:buddy.displayName message:buddy.lastMessage delegate:self cancelButtonTitle:IGNORE_STRING otherButtonTitles:REPLY_STRING, nil];
+        NSUInteger tag = [buddy hash];
+        alert.tag = tag;
+        [buddyDictionary setObject:buddy forKey:[NSNumber numberWithInt:tag]];
+        [alert show];
+        
+    }
+    else {
+        if (![((OTRChatViewController *)currentViewController).buddy.protocol.account isEqual:buddy.protocol.account] && ![buddy.lastMessage isEqualToString:@""] && [[UIApplication sharedApplication] applicationState] == UIApplicationStateActive)
+        {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:buddy.displayName message:buddy.lastMessage delegate:self cancelButtonTitle:IGNORE_STRING otherButtonTitles:REPLY_STRING, nil];
+            NSUInteger tag = [buddy hash];
+            alert.tag = tag;
+            [buddyDictionary setObject:buddy forKey:[NSNumber numberWithInt:tag]];
+            [alert show];
+        }
+    }
     
-    if(![currentTitle isEqualToString:buddy.displayName] && ![buddy.lastMessage isEqualToString:@""] && ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive))
-     {
-         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:userName message:buddy.lastMessage delegate:self cancelButtonTitle:IGNORE_STRING otherButtonTitles:REPLY_STRING, nil];
-         alert.tag = 1;
-         [alert show];
-     }
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -184,6 +201,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)sectionIndex {
     if(protocolManager.buddyList)
     {
+        
         NSLog(@"Buddy list count: %d",[protocolManager.buddyList count]);
         return [protocolManager.buddyList count];
         
@@ -278,21 +296,18 @@
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
-    if(alertView.tag == 1)
+    
+    
+    OTRBuddy *buddy = [buddyDictionary objectForKey:[NSNumber numberWithInt: alertView.tag]];
+    //[buddyDictionary removeObjectForKey:[NSNumber numberWithInt:alertView.tag]];
+    if(buttonIndex == 1) // Reply
     {
-        NSString * buddyName = alertView.title;
-        OTRBuddy *buddy = [protocolManager.buddyList getBuddyByName:buddyName];
-        if(buttonIndex == 1) // Reply
-        {
-            if(alertView.title)
-            {
-                [self enterConversationWithBuddy:buddy];
-            }
-        }   
-        else // Ignore
-        {
-        }
+        [self enterConversationWithBuddy:buddy];
+    }   
+    else // Ignore
+    {
     }
+    /* Unsused for
     else if (alertView.tag == 123)
     {
         if (buttonIndex == alertView.cancelButtonIndex) 
@@ -308,6 +323,7 @@
         }
         NSLog(@"buttonIndex: %d", buttonIndex);
     }
+     */
 }
 
 @end

@@ -10,24 +10,27 @@
 #import "OTRProtocolManager.h"
 #import "MBProgressHUD.h"
 
-@interface OTRLoginViewController : UIViewController <UITextFieldDelegate, MBProgressHUDDelegate> {
-    UITextField *usernameTextField;
-    UITextField *passwordTextField;
-    
-    OTRProtocolManager *protocolManager;
+@interface OTRLoginViewController : UIViewController <UITextFieldDelegate, MBProgressHUDDelegate, UIActionSheetDelegate> {
     MBProgressHUD *HUD;
+    UIView *padding;
+    UILabel *facebookHelpLabel;
 }
 
-@property (retain, nonatomic) UITextField *usernameTextField;
-@property (retain, nonatomic) UITextField *passwordTextField;
-@property (nonatomic, retain) OTRProtocolManager *protocolManager;
-@property (retain, nonatomic) UISwitch *rememberUserNameSwitch;
-@property (nonatomic) BOOL useXMPP;
+- (id) initWithAccount:(OTRAccount*)newAccount;
+
+@property (nonatomic, retain) OTRAccount *account;
 
 @property (nonatomic, retain) UILabel *usernameLabel;
 @property (nonatomic, retain) UILabel *passwordLabel;
-@property (nonatomic, retain) UILabel *rememberUsernameLabel;
+@property (nonatomic, strong) UILabel *domainLabel;
+@property (nonatomic, retain) UILabel *rememberPasswordLabel;
+@property (nonatomic, retain) UISwitch *rememberPasswordSwitch;
 @property (nonatomic, retain) UIImageView *logoView;
+@property (nonatomic, retain) UITextField *usernameTextField;
+@property (nonatomic, retain) UITextField *passwordTextField;
+@property (nonatomic, strong) UITextField *domainTextField;
+
+@property (nonatomic, strong) UIButton *facebookInfoButton;
 
 @property (nonatomic, retain) UIBarButtonItem *loginButton;
 @property (nonatomic, retain) UIBarButtonItem *cancelButton;
@@ -35,13 +38,8 @@
 @property (nonatomic, strong) NSTimer * timeoutTimer;
 
 - (void)loginButtonPressed:(id)sender;
-- (void)aimLoginPressed:(id)sender;
-- (void)xmppLoginPressed:(id)sender;
 - (void)cancelPressed:(id)sender;
 
--(void)aimLoginFailed;
--(void)xmppLoginFailed;
--(void)xmppLoginSuccess;
 -(BOOL)checkFields;
 
 @end

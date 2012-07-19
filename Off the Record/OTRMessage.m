@@ -7,48 +7,53 @@
 //
 
 #import "OTRMessage.h"
+#import "OTRBuddy.h"
+#import "OTRConstants.h"
 
 @implementation OTRMessage
 
-@synthesize sender;
-@synthesize recipient;
-@synthesize message;
-@synthesize protocol;
 
--(id)initWithSender:(NSString*)theSender recipient:(NSString*)theRecipient message:(NSString*)theMessage protocol:(NSString*)theProtocol
+@synthesize message;
+@synthesize buddy;
+
+
+-(id)initWithBuddy:(OTRBuddy *)theBuddy message:(NSString *)theMessage
 {
     self = [super init];
     
     if(self)
     {
-        if(theSender)
-            sender = theSender;
-        else
-            sender = theRecipient;
-        recipient = theRecipient;
+        buddy = theBuddy;
         message = theMessage;
-        protocol = theProtocol;
+        
     }
     return self;
 }
 
-+(OTRMessage*)messageWithSender:(NSString*)sender recipient:(NSString*)recipient message:(NSString*)message protocol:(NSString*)protocol
++(OTRMessage*)messageWithBuddy:(OTRBuddy *)theBuddy message:(NSString *)theMessage
 {
-    OTRMessage *newMessage = [[OTRMessage alloc] initWithSender:sender recipient:recipient message:message protocol:protocol];
-    
-    return newMessage;
+    return [[OTRMessage alloc] initWithBuddy:theBuddy message:theMessage];
 }
 
-+(void)printDebugMessageInfo:(OTRMessage*)messageInfo;
+
+-(NSString *)description
 {
-    NSLog(@"S:%@ R:%@ M:%@ P:%@",messageInfo.sender,messageInfo.recipient,messageInfo.message,messageInfo.protocol);
+    return [NSString stringWithFormat:@"Buddy:%@\nAccount:%@\nMessage:%@",self.buddy.accountName,self.buddy.protocol.account,self.message];
+}
+
+-(void)send
+{
+    [self.buddy.protocol sendMessage:self];
 }
 
 +(void)sendMessage:(OTRMessage *)message
 {    
     NSDictionary *messageInfo = [NSDictionary dictionaryWithObject:message forKey:@"message"];
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"SendMessageNotification" object:self userInfo:messageInfo];
+    [message.buddy.protocol sendMessage:message];
+    
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:kOTRSendMessage object:self userInfo:messageInfo];
 }
 
 @end
