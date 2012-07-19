@@ -528,7 +528,8 @@ BOOL loginFailed;
 }
 
 - (NSArray*) buddyList
-{
+{ 
+    NSMutableSet *otrBuddyListSet = [NSMutableSet set];
     AIMBlist *blist = self.aimBuddyList;
     
     for(AIMBlistGroup *group in blist.groups)
@@ -562,9 +563,12 @@ BOOL loginFailed;
                 OTRBuddy *newBuddy = [OTRBuddy buddyWithDisplayName:buddy.username accountName:buddy.username protocol:self status:buddyStatus groupName:group.name];
                 [protocolBuddyList setObject:newBuddy forKey:buddy.username];
             }
+            [otrBuddyListSet addObject:otrBuddy];
         }
     }
+    return [otrBuddyListSet allObjects];
 }
+
 - (OTRBuddy *) getBuddyByAccountName:(NSString *)buddyAccountName
 {
     if (protocolBuddyList)
