@@ -148,13 +148,13 @@
     
     [[NSNotificationCenter defaultCenter]
      addObserver:self
-     selector:@selector(protocolLoginFailed)
+     selector:@selector(protocolLoginFailed:)
      name:kOTRProtocolLoginFail
      object:nil ];
     
     [[NSNotificationCenter defaultCenter]
      addObserver:self
-     selector:@selector(protocolLoginSuccess)
+     selector:@selector(protocolLoginSuccess:)
      name:kOTRProtocolLoginSuccess
      object:nil ];
 }
@@ -321,7 +321,7 @@
     }
 }
 
--(void)protocolLoginFailed
+-(void)protocolLoginFailed:(NSNotification*)notification
 {
     if(HUD)
         [HUD hide:YES];
@@ -332,10 +332,11 @@
     }
 }
 
--(void)protocolLoginSuccess
+-(void)protocolLoginSuccess:(NSNotification*)notification
 {
     if(HUD)
         [HUD hide:YES];
+    [self dismissModalViewControllerAnimated:YES];
     /* not sure why this was ever needed
     if([account.protocol isEqualToString:kOTRProtocolTypeXMPP])
     {
