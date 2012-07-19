@@ -560,8 +560,8 @@ BOOL loginFailed;
             }
             else
             {
-                OTRBuddy *newBuddy = [OTRBuddy buddyWithDisplayName:buddy.username accountName:buddy.username protocol:self status:buddyStatus groupName:group.name];
-                [protocolBuddyList setObject:newBuddy forKey:buddy.username];
+                otrBuddy = [OTRBuddy buddyWithDisplayName:buddy.username accountName:buddy.username protocol:self status:buddyStatus groupName:group.name];
+                [protocolBuddyList setObject:otrBuddy forKey:buddy.username];
             }
             [otrBuddyListSet addObject:otrBuddy];
         }
@@ -579,7 +579,7 @@ BOOL loginFailed;
 {
     self.login = [[AIMLogin alloc] initWithUsername:account.username password:myPassword];
     [self.login setDelegate:self];
-    
+    [self.login beginAuthorization];
 }
 -(void)disconnect
 {
