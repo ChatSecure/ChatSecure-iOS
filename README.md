@@ -1,7 +1,7 @@
 ChatSecure
 =========
 
-ChatSecure is an instant messaging client for iOS that integrates encrypted "Off the Record" messaging support from the [libotr](http://www.cypherpunks.ca/otr/) library. It uses the [LibOrange](https://github.com/unixpickle/LibOrange) library to handle all of the AIM (OSCAR) functionality and the [xmppframework](http://code.google.com/p/xmppframework/) to handle Jabber/GTalk (XMPP).
+ChatSecure is an instant messaging client for iOS that integrates encrypted "Off the Record" messaging support from the [libotr](http://www.cypherpunks.ca/otr/) library. It uses the [LibOrange](https://github.com/unixpickle/LibOrange) library to handle all of the AIM (OSCAR) functionality and the [xmppframework](https://github.com/robbiehanson/XMPPFramework/) to handle Jabber/GTalk (XMPP).
 
 
 Cost
@@ -58,37 +58,38 @@ Proxy (download [here](http://www.cypherpunks.ca/otr/index.php#downloads))
 Phone apps
 ------
 * [Gibberbot](https://guardianproject.info/apps/gibber/) (formerly OtRChat), a free and open source Android application (still in early development) produced by The Guardian Project, provides OTR protocol compatible over XMPP chat.
+* [BEEM](http://beem-project.com/projects/beem) - Android XMPP client (compatibility unknown)
 
 [Full List](http://en.wikipedia.org/wiki/Off-the-Record_Messaging#Client_support)
 
 License
 =========
 
-Software License Agreement (Modified BSD License)
-
-Copyright (c) 2011, Chris Ballinger. All rights reserved.
-
-Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright
-      notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of ChatSecure nor the
-      names of its contributors may be used to endorse or promote products
-      derived from this software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL CHRIS BALLINGER BE LIABLE FOR ANY
-DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+	Software License Agreement (Modified BSD License)
+	
+	Copyright (c) 2012, Chris Ballinger. All rights reserved.
+	
+	Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+	
+	    * Redistributions of source code must retain the above copyright
+	      notice, this list of conditions and the following disclaimer.
+	    * Redistributions in binary form must reproduce the above copyright
+	      notice, this list of conditions and the following disclaimer in the
+	      documentation and/or other materials provided with the distribution.
+	    * Neither the name of ChatSecure nor the
+	      names of its contributors may be used to endorse or promote products
+	      derived from this software without specific prior written permission.
+	
+	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+	ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+	WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+	DISCLAIMED. IN NO EVENT SHALL CHRIS BALLINGER BE LIABLE FOR ANY
+	DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+	(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+	LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+	ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+	(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 This software additionally references or incorporates the following sources
 of intellectual property, the license terms for which are set forth
@@ -100,21 +101,27 @@ Third-party Libraries
 The following dependencies are bundled with the ChatSecure, but are under
 terms of a separate license:
 
-* [Cypherpunks libotr](http://www.cypherpunks.ca/otr/) - provides the core encryption capabilities
+* [libotr](http://www.cypherpunks.ca/otr/) - provides the core message encryption capabilities
+	* [libgcrypt](http://www.gnu.org/software/libgcrypt/) - handles core libotr encryption routines
+	* [libgpg-error](http://www.gnupg.org/related_software/libgpg-error/) - error codes used by libotr
 * [LibOrange](https://github.com/unixpickle/LibOrange) - handles all of the OSCAR (AIM) functionality
 * [XMPPFramework](https://github.com/robbiehanson/XMPPFramework) - XMPP support
 * [MBProgressHUD](https://github.com/jdg/MBProgressHUD) - a nice looking progress HUD
 * [MWFeedParser](https://github.com/mwaterfall/MWFeedParser) - Methods for escaping HTML strings
+* [Crittercism](http://www.crittercism.com/) - crash reports, only submitted via opt-in
+* [SFHFKeychainUtils](https://github.com/ldandersen/scifihifi-iphone/tree/master/security/) - Utilities to store passwords securely in the iOS keychain
+* [Appirater](https://github.com/arashpayan/appirater) - nags people to give reviews
+
 
 Acknowledgements
 =========
 
 * [Nick Hum](http://nickhum.com/) - awesome icon.
 * [Glyphish](http://glyphish.com/) - icons used on the tab bar.
-* [Adium](http://adium.im/) - lock/unlock icon used in chat window.
+* [Adium](http://adium.im/) - lock/unlock icon used in chat window, status gems.
 * [Sergio Sánchez López](http://www.iconfinder.com/icondetails/7043/128/aim_icon) - AIM protocol icon.
 * [Goxxy](http://rocketdock.com/addon/icons/3462) - Google Talk icon.
-* Localizations
+* [Localizations](https://www.transifex.com/projects/p/chatsecure/)
 	* [Jiajuan Lin](http://www.personal.psu.edu/jwl5262/blogs/lin_portfolio/) (Chinese)
 	* [Jan-Christoph Borchardt](http://jancborchardt.net/) (German)
 	* [vitalyster](https://github.com/vitalyster) (Russian)
