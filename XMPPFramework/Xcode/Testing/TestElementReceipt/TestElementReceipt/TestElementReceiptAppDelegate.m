@@ -16,11 +16,33 @@
 
 @synthesize window;
 
+- (void)test0
+{
+	NSLog(@"========== test0 ==========");
+	
+	XMPPElementReceipt *receipt = [[XMPPElementReceipt alloc] init];
+	
+	dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+	
+	double delayInSeconds = 4.0;
+	dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+	dispatch_after(popTime, concurrentQueue, ^{
+		[receipt signalSuccess];
+	});
+	
+	NSLog(@"Should fire in %.0f seconds", delayInSeconds);
+	
+	BOOL result = [receipt wait:-1.0];
+	NSLog(@"YES =?= %@", (result ? @"YES" : @"NO"));
+}
+
 - (void)test1
 {
 	NSLog(@"========== test1 ==========");
 	
-	XMPPElementReceipt *receipt = [[[XMPPElementReceipt alloc] init] autorelease];
+	XMPPElementReceipt *receipt = [[XMPPElementReceipt alloc] init];
+	
+	NSLog(@"Should fire immediately");
 	
 	BOOL result = [receipt wait:0.0];
 	NSLog(@"NO =?= %@", (result ? @"YES" : @"NO"));
@@ -30,7 +52,7 @@
 {
 	NSLog(@"========== test2 ==========");
 	
-	XMPPElementReceipt *receipt = [[[XMPPElementReceipt alloc] init] autorelease];
+	XMPPElementReceipt *receipt = [[XMPPElementReceipt alloc] init];
 	
 	dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
 	
@@ -40,7 +62,9 @@
 		[receipt signalSuccess];
 	});
 	
-	BOOL result = [receipt wait:4.0];
+	NSLog(@"Should fire in %.0f seconds", delayInSeconds);
+	
+	BOOL result = [receipt wait:60.0];
 	NSLog(@"YES =?= %@", (result ? @"YES" : @"NO"));
 }
 
@@ -48,7 +72,7 @@
 {
 	NSLog(@"========== test3 ==========");
 	
-	XMPPElementReceipt *receipt = [[[XMPPElementReceipt alloc] init] autorelease];
+	XMPPElementReceipt *receipt = [[XMPPElementReceipt alloc] init];
 	
 	dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
 	
@@ -58,8 +82,12 @@
 		[receipt signalSuccess];
 	});
 	
+	NSLog(@"Should fire in 3 seconds");
+	
 	BOOL result1 = [receipt wait:3.0];
 	NSLog(@"NO =?= %@", (result1 ? @"YES" : @"NO"));
+	
+	NSLog(@"Should fire in about 2 seconds");
 	
 	BOOL result2 = [receipt wait:3.0];
 	NSLog(@"YES =?= %@", (result2 ? @"YES" : @"NO"));
@@ -69,7 +97,7 @@
 {
 	NSLog(@"========== test4 ==========");
 	
-	XMPPElementReceipt *receipt = [[[XMPPElementReceipt alloc] init] autorelease];
+	XMPPElementReceipt *receipt = [[XMPPElementReceipt alloc] init];
 	
 	dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
 	
@@ -79,8 +107,12 @@
 		[receipt signalFailure];
 	});
 	
+	NSLog(@"Should fire in %.0f seconds", delayInSeconds);
+	
 	BOOL result1 = [receipt wait:4.0];
 	NSLog(@"NO =?= %@", (result1 ? @"YES" : @"NO"));
+	
+	NSLog(@"Should fire immediately");
 	
 	BOOL result2 = [receipt wait:4.0];
 	NSLog(@"NO =?= %@", (result2 ? @"YES" : @"NO"));
@@ -90,7 +122,7 @@
 {
 	NSLog(@"========== test5 ==========");
 	
-	XMPPElementReceipt *receipt = [[[XMPPElementReceipt alloc] init] autorelease];
+	XMPPElementReceipt *receipt = [[XMPPElementReceipt alloc] init];
 	
 	dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
 	
@@ -113,6 +145,7 @@
 {
 	dispatch_queue_t myQueue = dispatch_queue_create("Testing", NULL);
 	dispatch_async(myQueue, ^{
+		[self test0];
 		[self test1];
 		[self test2];
 		[self test3];

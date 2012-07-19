@@ -12,6 +12,32 @@
 #warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
 #endif
 
+/**
+ * Does ARC support support GCD objects?
+ * It does if the minimum deployment target is iOS 6+ or Mac OS X 10.8+
+**/
+#if TARGET_OS_IPHONE
+
+  // Compiling for iOS
+
+  #if __IPHONE_OS_VERSION_MIN_REQUIRED >= 60000 // iOS 6.0 or later
+    #define NEEDS_DISPATCH_RETAIN_RELEASE 0
+  #else                                         // iOS 5.X or earlier
+    #define NEEDS_DISPATCH_RETAIN_RELEASE 1
+  #endif
+
+#else
+
+  // Compiling for Mac OS X
+
+  #if MAC_OS_X_VERSION_MIN_REQUIRED >= 1080     // Mac OS X 10.8 or later
+    #define NEEDS_DISPATCH_RETAIN_RELEASE 0
+  #else
+    #define NEEDS_DISPATCH_RETAIN_RELEASE 1     // Mac OS X 10.7 or earlier
+  #endif
+
+#endif
+
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
   static const int xmppLogLevel = XMPP_LOG_LEVEL_WARN;
@@ -157,7 +183,14 @@ static NSMutableSet *databaseFileNames;
     // Override me, if needed, to provide customized behavior.
 	// 
 	// For example, if you are using the database for non-persistent data and the model changes, 
-    // you may want to delete the database file if it already exists on disk.
+	// you may want to delete the database file if it already exists on disk.
+	// 
+	// E.g:
+	// 
+	// [[NSFileManager defaultManager] removeItemAtPath:storePath error:NULL];
+	// [self addPersistentStoreWithPath:storePath error:NULL];
+	//
+	// This method is invoked on the storageQueue.
     
 #if TARGET_OS_IPHONE
     XMPPLogError(@"%@:\n"
@@ -182,13 +215,30 @@ static NSMutableSet *databaseFileNames;
 - (void)didCreateManagedObjectContext
 {
 	// Override me to provide customized behavior.
-	// 
 	// For example, you may want to perform cleanup of any non-persistent data before you start using the database.
+	// 
+	// This method is invoked on the storageQueue.
+}
+
+- (void)willSaveManagedObjectContext
+{
+	// Override me if you need to do anything special just before changes are saved to disk.
+	// 
+	// This method is invoked on the storageQueue.
 }
 
 - (void)didSaveManagedObjectContext
 {
 	// Override me if you need to do anything special after changes have been saved to disk.
+	// 
+	// This method is invoked on the storageQueue.
+}
+
+- (void)mainThreadManagedObjectContextDidMergeChanges
+{
+	// Override me if you want to do anything special when changes get propogated to the main thread.
+	// 
+	// This method is invoked on the main thread.
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -340,6 +390,13 @@ static NSMutableSet *databaseFileNames;
 	return result;
 }
 
+- (void)didChangeCachedMyJID:(XMPPJID *)cachedMyJID forXMPPStream:(XMPPStream *)stream
+{
+	// Override me if you'd like to do anything special when this happens.
+	// 
+	// For example, if your custom storage class prefetches data related to the current user.
+}
+
 - (void)updateJidCache:(NSNotification *)notification
 {
 	// Notifications are delivered on the thread/queue that posted them.
@@ -347,20 +404,35 @@ static NSMutableSet *databaseFileNames;
 	
 	XMPPStream *stream = (XMPPStream *)[notification object];
 	
-	dispatch_async(storageQueue, ^{ @autoreleasepool {
+	dispatch_block_t block = ^{ @autoreleasepool {
 		
 		NSNumber *key = [NSNumber numberWithPtr:(__bridge void *)stream];
-		if ([myJidCache objectForKey:key])
-		{
-			XMPPJID *newMyJID = [stream myJID];
-			
-			if (newMyJID)
-				[myJidCache setObject:newMyJID forKey:key];
-			else
-				[myJidCache removeObjectForKey:key];
-		}
+		XMPPJID *cachedJID = [myJidCache objectForKey:key];
 		
-	}});
+		if (cachedJID)
+		{
+			XMPPJID *newJID = [stream myJID];
+			
+			if (newJID)
+			{
+				if (![cachedJID isEqualToJID:newJID])
+				{
+					[myJidCache setObject:newJID forKey:key];
+					[self didChangeCachedMyJID:newJID forXMPPStream:stream];
+				}
+			}
+			else
+			{
+				[myJidCache removeObjectForKey:key];
+				[self didChangeCachedMyJID:nil forXMPPStream:stream];
+			}
+		}
+	}};
+	
+	if (dispatch_get_current_queue() == storageQueue)
+		block();
+	else
+		dispatch_async(storageQueue, block);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -631,6 +703,7 @@ static NSMutableSet *databaseFileNames;
 		dispatch_async(dispatch_get_main_queue(), ^{
 			
 			[mainThreadManagedObjectContext mergeChangesFromContextDidSaveNotification:notification];
+			[self mainThreadManagedObjectContextDidMergeChanges];
 		});
     }
 }
@@ -658,9 +731,12 @@ static NSMutableSet *databaseFileNames;
 	// So there's no need for us to do it here, especially since this method is usually
 	// called from maybeSave below, which already does this check.
 	
+	[self willSaveManagedObjectContext];
+	
 	NSError *error = nil;
 	if ([[self managedObjectContext] save:&error])
 	{
+		saveCount++;
 		[self didSaveManagedObjectContext];
 	}
 	else
@@ -769,10 +845,10 @@ static NSMutableSet *databaseFileNames;
 		[[self class] unregisterDatabaseFileName:databaseFileName];
 	}
 	
+	#if NEEDS_DISPATCH_RETAIN_RELEASE
 	if (storageQueue)
-	{
 		dispatch_release(storageQueue);
-	}
+	#endif
 }
 
 @end
