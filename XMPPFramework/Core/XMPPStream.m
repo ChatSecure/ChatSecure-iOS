@@ -1,11 +1,19 @@
-#import "XMPP.h"
-#import "XMPPParser.h"
-#import "XMPPLogging.h"
+#import "XMPPStream.h"
 #import "XMPPInternal.h"
-#import "XMPPSRVResolver.h"
+#import "XMPPParser.h"
+#import "XMPPJID.h"
+#import "XMPPIQ.h"
+#import "XMPPMessage.h"
+#import "XMPPPresence.h"
+#import "XMPPModule.h"
+#import "XMPPLogging.h"
 #import "NSData+XMPP.h"
+#import "NSXMLElement+XMPP.h"
+#import "XMPPDigestAuthentication.h"
+#import "XMPPXFacebookPlatformAuthentication.h"
+#import "XMPPSRVResolver.h"
+#import "DDList.h"
 
-#import <objc/runtime.h>
 #import <libkern/OSAtomic.h>
 
 #if TARGET_OS_IPHONE
@@ -17,37 +25,10 @@
 #warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
 #endif
 
-/**
- * Does ARC support support GCD objects?
- * It does if the minimum deployment target is iOS 6+ or Mac OS X 10.8+
-**/
 #if TARGET_OS_IPHONE
-
-  // Compiling for iOS
-
-  #if __IPHONE_OS_VERSION_MIN_REQUIRED >= 60000 // iOS 6.0 or later
-    #define NEEDS_DISPATCH_RETAIN_RELEASE 0
-  #else                                         // iOS 5.X or earlier
-    #define NEEDS_DISPATCH_RETAIN_RELEASE 1
-  #endif
-
+  #define SOCKET_BUFFER_SIZE 512  // bytes
 #else
-
-  // Compiling for Mac OS X
-
-  #if MAC_OS_X_VERSION_MIN_REQUIRED >= 1080     // Mac OS X 10.8 or later
-    #define NEEDS_DISPATCH_RETAIN_RELEASE 0
-  #else
-    #define NEEDS_DISPATCH_RETAIN_RELEASE 1     // Mac OS X 10.7 or earlier
-  #endif
-
-#endif
-
-// Log levels: off, error, warn, info, verbose
-#if DEBUG
-  static const int xmppLogLevel = XMPP_LOG_LEVEL_INFO | XMPP_LOG_FLAG_SEND_RECV; // | XMPP_LOG_FLAG_TRACE;
-#else
-  static const int xmppLogLevel = XMPP_LOG_LEVEL_WARN;
+  #define SOCKET_BUFFER_SIZE 1024 // bytes
 #endif
 
 /**
@@ -57,20 +38,18 @@
 **/
 #define return_from_block  return
 
-// Define the timeouts (in seconds) for retreiving various parts of the XML stream
-#define TIMEOUT_XMPP_WRITE         -1
-#define TIMEOUT_XMPP_READ_START    10
-#define TIMEOUT_XMPP_READ_STREAM   -1
+// Log levels: off, error, warn, info, verbose
+#if DEBUG
+  static const int xmppLogLevel = XMPP_LOG_LEVEL_INFO | XMPP_LOG_FLAG_SEND_RECV; // | XMPP_LOG_FLAG_TRACE;
+#else
+  static const int xmppLogLevel = XMPP_LOG_LEVEL_WARN;
+#endif
 
-// Define the tags we'll use to differentiate what it is we're currently reading or writing
-#define TAG_XMPP_READ_START         100
-#define TAG_XMPP_READ_STREAM        101
-#define TAG_XMPP_WRITE_START        200
-#define TAG_XMPP_WRITE_STREAM       201
-#define TAG_XMPP_WRITE_RECEIPT      202
 
 NSString *const XMPPStreamErrorDomain = @"XMPPStreamErrorDomain";
 NSString *const XMPPStreamDidChangeMyJIDNotification = @"XMPPStreamDidChangeMyJID";
+
+static NSString *const XMPPFacebookChatHostName = @"chat.facebook.com";
 
 
 enum XMPPStreamFlags
@@ -94,82 +73,17 @@ enum XMPPStreamConfig
 #pragma mark -
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@interface XMPPStream ()
-{
-	dispatch_queue_t xmppQueue;
-	
-	dispatch_queue_t willSendIqQueue;
-	dispatch_queue_t willSendMessageQueue;
-	dispatch_queue_t willSendPresenceQueue;
-	
-	dispatch_queue_t willReceiveIqQueue;
-	dispatch_queue_t willReceiveMessageQueue;
-	dispatch_queue_t willReceivePresenceQueue;
-	
-	dispatch_queue_t didReceiveIqQueue;
-	
-	GCDMulticastDelegate <XMPPStreamDelegate> *multicastDelegate;
-	
-	int state;
-	
-	GCDAsyncSocket *asyncSocket;
-	
-	UInt64 numberOfBytesSent;
-	UInt64 numberOfBytesReceived;
-	
-	XMPPParser *parser;
-	NSError *parserError;
-	
-	Byte flags;
-	Byte config;
-	
-	NSString *hostName;
-	UInt16 hostPort;
-	
-	id <XMPPSASLAuthentication> auth;
-	
-	XMPPJID *myJID_setByClient;
-	XMPPJID *myJID_setByServer;
-	XMPPJID *remoteJID;
-	
-	XMPPPresence *myPresence;
-	NSXMLElement *rootElement;
-	
-	NSTimeInterval keepAliveInterval;
-	dispatch_source_t keepAliveTimer;
-	NSTimeInterval lastSendReceiveTime;
-	NSData *keepAliveData;
-	
-	NSMutableArray *registeredModules;
-	NSMutableDictionary *autoDelegateDict;
-	
-	XMPPSRVResolver *srvResolver;
-	NSArray *srvResults;
-	NSUInteger srvResultsIndex;
-	
-	NSMutableArray *receipts;
-	
-	NSThread *xmppUtilityThread;
-	NSRunLoop *xmppUtilityRunLoop;
-	
-	id userTag;
-}
+@interface XMPPStream (PrivateAPI)
 
+- (void)cleanup;
 - (void)setIsSecure:(BOOL)flag;
 - (void)setIsAuthenticated:(BOOL)flag;
-- (void)continueSendIQ:(XMPPIQ *)iq withTag:(long)tag;
-- (void)continueSendMessage:(XMPPMessage *)message withTag:(long)tag;
-- (void)continueSendPresence:(XMPPPresence *)presence withTag:(long)tag;
+- (void)continueSendElement:(NSXMLElement *)element withTag:(long)tag;
 - (void)startNegotiation;
 - (void)sendOpeningNegotiation;
 - (void)continueStartTLS:(NSMutableDictionary *)settings;
-- (void)continueHandleBinding:(NSString *)alternativeResource;
 - (void)setupKeepAliveTimer;
 - (void)keepAlive;
-
-- (void)continueReceiveMessage:(XMPPMessage *)message;
-- (void)continueReceiveIQ:(XMPPIQ *)iq;
-- (void)continueReceivePresence:(XMPPPresence *)presence;
 
 @end
 
@@ -193,17 +107,8 @@ enum XMPPStreamConfig
 **/
 - (void)commonInit
 {
-	xmppQueue = dispatch_queue_create("xmpp", NULL);
-	
-	willSendIqQueue = dispatch_queue_create("xmpp.willSendIq", NULL);
-	willSendMessageQueue = dispatch_queue_create("xmpp.willSendMessage", NULL);
-	willSendPresenceQueue = dispatch_queue_create("xmpp.willSendPresence", NULL);
-	
-	willReceiveIqQueue = dispatch_queue_create("xmpp.willReceiveIq", NULL);
-	willReceiveMessageQueue = dispatch_queue_create("xmpp.willReceiveMessage", NULL);
-	willReceivePresenceQueue = dispatch_queue_create("xmpp.willReceivePresence", NULL);
-	
-	didReceiveIqQueue = dispatch_queue_create("xmpp.didReceiveIq", NULL);
+	xmppQueue = dispatch_queue_create("xmppStreamQueue", NULL);
+	parserQueue = dispatch_queue_create("xmppParserQueue", NULL);
 	
 	multicastDelegate = (GCDMulticastDelegate <XMPPStreamDelegate> *)[[GCDMulticastDelegate alloc] init];
 	
@@ -215,13 +120,12 @@ enum XMPPStreamConfig
 	numberOfBytesSent = 0;
 	numberOfBytesReceived = 0;
 	
-	parser = [[XMPPParser alloc] initWithDelegate:self delegateQueue:xmppQueue];
+	parser = [(XMPPParser *)[XMPPParser alloc] initWithDelegate:self];
 	
 	hostPort = 5222;
 	keepAliveInterval = DEFAULT_KEEPALIVE_INTERVAL;
-	keepAliveData = [@" " dataUsingEncoding:NSUTF8StringEncoding];
 	
-	registeredModules = [[NSMutableArray alloc] init];
+	registeredModules = [[DDList alloc] init];
 	autoDelegateDict = [[NSMutableDictionary alloc] init];
 	
 	receipts = [[NSMutableArray alloc] init];
@@ -246,7 +150,7 @@ enum XMPPStreamConfig
 		[self commonInit];
 		
 		// Initialize socket
-		asyncSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:xmppQueue];
+		asyncSocket = [(GCDAsyncSocket *)[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:xmppQueue];
 	}
 	return self;
 }
@@ -263,7 +167,7 @@ enum XMPPStreamConfig
 		[self commonInit];
 		
 		// Store JID
-		myJID_setByClient = jid;
+		myJID = jid;
         
         // We do not initialize the socket, since the connectP2PWithSocket: method might be used.
         
@@ -273,32 +177,47 @@ enum XMPPStreamConfig
 	return self;
 }
 
+
+/**
+ * Facebook Chat X-FACEBOOK-PLATFORM SASL authentication initialization.
+ * This is a convienence init method to help configure Facebook Chat.
+**/
+- (id)initWithFacebookAppId:(NSString *)fbAppId 
+{
+    if ((self = [self init]))
+    {
+        self.appId = fbAppId;
+        self.myJID = [XMPPJID jidWithString:XMPPFacebookChatHostName];
+        self.hostName = XMPPFacebookChatHostName;
+    }
+    return self;
+}
+
 /**
  * Standard deallocation method.
  * Every object variable declared in the header file should be released here.
 **/
 - (void)dealloc
 {
-	#if NEEDS_DISPATCH_RETAIN_RELEASE
 	dispatch_release(xmppQueue);
-	dispatch_release(willSendIqQueue);
-	dispatch_release(willSendMessageQueue);
-	dispatch_release(willSendPresenceQueue);
-	dispatch_release(willReceiveIqQueue);
-	dispatch_release(willReceiveMessageQueue);
-	dispatch_release(willReceivePresenceQueue);
-	dispatch_release(didReceiveIqQueue);
-	#endif
+	dispatch_release(parserQueue);
+	
 	
 	[asyncSocket setDelegate:nil delegateQueue:NULL];
 	[asyncSocket disconnect];
 	
-	[parser setDelegate:nil delegateQueue:NULL];
+	[parser setDelegate:nil];
+	
+	
+	
+	
 	
 	if (keepAliveTimer)
 	{
 		dispatch_source_cancel(keepAliveTimer);
 	}
+	
+	
     
 	for (XMPPElementReceipt *receipt in receipts)
 	{
@@ -309,28 +228,50 @@ enum XMPPStreamConfig
 	                     onThread:xmppUtilityThread
 	                   withObject:nil
 	                waitUntilDone:NO];
+	
+	
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark Properties
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-@synthesize xmppQueue;
-
-- (XMPPStreamState)state
+- (NSString *)appId
 {
-	__block XMPPStreamState result = STATE_XMPP_DISCONNECTED;
-	
-	dispatch_block_t block = ^{
-		result = (XMPPStreamState)state;
-	};
-	
 	if (dispatch_get_current_queue() == xmppQueue)
-		block();
+	{
+		return appId;
+	}
 	else
-		dispatch_sync(xmppQueue, block);
-	
-	return result;
+	{
+		__block NSString *result;
+		
+		dispatch_sync(xmppQueue, ^{
+			result = appId;
+		});
+		
+		return result;
+	}
+}
+
+- (void)setAppId:(NSString *)newAppId
+{
+	if (dispatch_get_current_queue() == xmppQueue)
+	{
+		if (appId != newAppId)
+		{
+			appId = [newAppId copy];
+		}
+	}
+	else
+	{
+		NSString *newAppIdCopy = [newAppId copy];
+		
+		dispatch_async(xmppQueue, ^{
+			appId = newAppIdCopy;
+		});
+		
+	}
 }
 
 - (NSString *)hostName
@@ -403,81 +344,40 @@ enum XMPPStreamConfig
 
 - (XMPPJID *)myJID
 {
-	__block XMPPJID *result = nil;
-	
-	dispatch_block_t block = ^{
-		
-		if (myJID_setByServer)
-			result = myJID_setByServer;
-		else
-			result = myJID_setByClient;
-	};
-	
 	if (dispatch_get_current_queue() == xmppQueue)
-		block();
+	{
+		return myJID;
+	}
 	else
-		dispatch_sync(xmppQueue, block);
-	
-	return result;
-}
-
-- (void)setMyJID_setByClient:(XMPPJID *)newMyJID
-{
-	// XMPPJID is an immutable class (copy == retain)
-	
-	dispatch_block_t block = ^{
+	{
+		__block XMPPJID *result;
 		
-		if (![myJID_setByClient isEqualToJID:newMyJID])
-		{
-			myJID_setByClient = newMyJID;
-			
-			if (myJID_setByServer == nil)
-			{
-				[[NSNotificationCenter defaultCenter] postNotificationName:XMPPStreamDidChangeMyJIDNotification
-				                                                    object:self];
-			}
-		}
-	};
-	
-	if (dispatch_get_current_queue() == xmppQueue)
-		block();
-	else
-		dispatch_async(xmppQueue, block);
-}
-
-- (void)setMyJID_setByServer:(XMPPJID *)newMyJID
-{
-	// XMPPJID is an immutable class (copy == retain)
-	
-	dispatch_block_t block = ^{
+		dispatch_sync(xmppQueue, ^{
+			result = myJID;
+		});
 		
-		if (![myJID_setByServer isEqualToJID:newMyJID])
-		{
-			XMPPJID *oldMyJID;
-			if (myJID_setByServer)
-				oldMyJID = myJID_setByServer;
-			else
-				oldMyJID = myJID_setByClient;
-			
-			myJID_setByServer = newMyJID;
-			
-			if (![oldMyJID isEqualToJID:newMyJID])
-			{
-				[[NSNotificationCenter defaultCenter] postNotificationName:XMPPStreamDidChangeMyJIDNotification
-				                                                    object:self];
-			}
-		}
-	};
-	
-	if (dispatch_get_current_queue() == xmppQueue)
-		block();
-	else
-		dispatch_async(xmppQueue, block);
+		return result;
+	}
 }
 
 - (void)setMyJID:(XMPPJID *)newMyJID
 {
-	[self setMyJID_setByClient:newMyJID];
+	// XMPPJID is an immutable class (copy == retain)
+	
+	dispatch_block_t block = ^{
+	
+		if (myJID != newMyJID)
+		{
+			myJID = newMyJID;
+		}
+		
+		[[NSNotificationCenter defaultCenter] postNotificationName:XMPPStreamDidChangeMyJIDNotification object:self];
+	};
+	
+	if (dispatch_get_current_queue() == xmppQueue)
+		block();
+	else
+		dispatch_async(xmppQueue, block);
 }
 
 - (XMPPJID *)remoteJID
@@ -518,18 +418,20 @@ enum XMPPStreamConfig
 
 - (NSTimeInterval)keepAliveInterval
 {
-	__block NSTimeInterval result = 0.0;
-	
-	dispatch_block_t block = ^{
-		result = keepAliveInterval;
-	};
-	
 	if (dispatch_get_current_queue() == xmppQueue)
-		block();
+	{
+		return keepAliveInterval;
+	}
 	else
-		dispatch_sync(xmppQueue, block);
-	
-	return result;
+	{
+		__block NSTimeInterval result;
+		
+		dispatch_sync(xmppQueue, ^{
+			result = keepAliveInterval;
+		});
+		
+		return result;
+	}
 }
 
 - (void)setKeepAliveInterval:(NSTimeInterval)interval
@@ -544,43 +446,6 @@ enum XMPPStreamConfig
 				keepAliveInterval = MAX(interval, MIN_KEEPALIVE_INTERVAL);
 			
 			[self setupKeepAliveTimer];
-		}
-	};
-	
-	if (dispatch_get_current_queue() == xmppQueue)
-		block();
-	else
-		dispatch_async(xmppQueue, block);
-}
-
-- (char)keepAliveWhitespaceCharacter
-{
-	__block char keepAliveChar = ' ';
-	
-	dispatch_block_t block = ^{
-		
-		NSString *keepAliveString = [[NSString alloc] initWithData:keepAliveData encoding:NSUTF8StringEncoding];
-		if ([keepAliveString length] > 0)
-		{
-			keepAliveChar = (char)[keepAliveString characterAtIndex:0];
-		}
-	};
-	
-	if (dispatch_get_current_queue() == xmppQueue)
-		block();
-	else
-		dispatch_sync(xmppQueue, block);
-	
-	return keepAliveChar;
-}
-
-- (void)setKeepAliveWhitespaceCharacter:(char)keepAliveChar
-{
-	dispatch_block_t block = ^{
-		
-		if (keepAliveChar == ' ' || keepAliveChar == '\n' || keepAliveChar == '\t')
-		{
-			keepAliveData = [[NSString stringWithFormat:@"%c", keepAliveChar] dataUsingEncoding:NSUTF8StringEncoding];
 		}
 	};
 	
@@ -909,7 +774,7 @@ enum XMPPStreamConfig
 			return_from_block;
 		}
 		
-		if (myJID_setByClient == nil)
+		if (myJID == nil)
 		{
 			// Note: If you wish to use anonymous authentication, you should still set myJID prior to calling connect.
 			// You can simply set it to something like "anonymous@<domain>", where "<domain>" is the proper domain.
@@ -936,6 +801,14 @@ enum XMPPStreamConfig
 
 		// Notify delegates
 		[multicastDelegate xmppStreamWillConnect:self];
+        
+        // Check for Facebook Chat and set hostName if not set.
+        // As of October 8, 2011, Facebook doesn't have their XMPP SRV records configured properly
+        // and we have to wait for the SRV timeout before trying the A record.
+        if ([hostName length] == 0 && [myJID.domain isEqualToString:XMPPFacebookChatHostName])
+        {
+            self.hostName = XMPPFacebookChatHostName;
+        }
 
 		if ([hostName length] == 0)
 		{
@@ -948,7 +821,7 @@ enum XMPPStreamConfig
 			srvResults = nil;
 			srvResultsIndex = 0;
 			
-			NSString *srvName = [XMPPSRVResolver srvNameFromXMPPDomain:[myJID_setByClient domain]];
+			NSString *srvName = [XMPPSRVResolver srvNameFromXMPPDomain:[myJID domain]];
 			
 			[srvResolver startWithSRVName:srvName timeout:30.0];
 			
@@ -1251,13 +1124,6 @@ enum XMPPStreamConfig
 			}
 			else
 			{
-				NSString *termStr = @"</stream:stream>";
-				NSData *termData = [termStr dataUsingEncoding:NSUTF8StringEncoding];
-				
-				XMPPLogSend(@"SEND: %@", termStr);
-				numberOfBytesSent += [termData length];
-				
-				[asyncSocket writeData:termData withTimeout:TIMEOUT_XMPP_WRITE tag:TAG_XMPP_WRITE_STREAM];
 				[asyncSocket disconnectAfterWriting];
 				
 				// Everthing will be handled in socketDidDisconnect:withError:
@@ -1334,6 +1200,20 @@ enum XMPPStreamConfig
 		dispatch_sync(xmppQueue, block);
 	
 	return result;
+}
+
+- (void)sendSASLRequestForMechanism:(NSString *)mechanism
+{
+  NSString *auth = [NSString stringWithFormat:@"<auth xmlns='urn:ietf:params:xml:ns:xmpp-sasl' mechanism='%@'/>", mechanism];
+  
+  NSData *outgoingData = [auth dataUsingEncoding:NSUTF8StringEncoding];
+  
+  XMPPLogSend(@"SEND: %@", auth);
+  numberOfBytesSent += [outgoingData length];
+  
+  [asyncSocket writeData:outgoingData
+             withTimeout:TIMEOUT_XMPP_WRITE
+                     tag:TAG_XMPP_WRITE_STREAM];
 }
 
 - (void)sendStartTLSRequest
@@ -1467,7 +1347,7 @@ enum XMPPStreamConfig
 			return_from_block;
 		}
 		
-		if (myJID_setByClient == nil)
+		if (myJID == nil)
 		{
 			NSString *errMsg = @"You must set myJID before calling registerWithPassword:error:.";
 			NSDictionary *info = [NSDictionary dictionaryWithObject:errMsg forKey:NSLocalizedDescriptionKey];
@@ -1489,7 +1369,7 @@ enum XMPPStreamConfig
 			return_from_block;
 		}
 		
-		NSString *username = [myJID_setByClient user];
+		NSString *username = [myJID user];
 		
 		NSXMLElement *queryElement = [NSXMLElement elementWithName:@"query" xmlns:@"jabber:iq:register"];
 		[queryElement addChild:[NSXMLElement elementWithName:@"username" stringValue:username]];
@@ -1529,52 +1409,18 @@ enum XMPPStreamConfig
 #pragma mark Authentication
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (NSArray *)supportedAuthenticationMechanisms
-{
-	__block NSMutableArray *result = [[NSMutableArray alloc] init];
-	
-	dispatch_block_t block = ^{ @autoreleasepool {
-		
-		// The root element can be properly queried for authentication mechanisms anytime after the
-		// stream:features are received, and TLS has been setup (if required).
-		
-		if (state >= STATE_XMPP_POST_NEGOTIATION)
-		{
-			NSXMLElement *features = [rootElement elementForName:@"stream:features"];
-			NSXMLElement *mech = [features elementForName:@"mechanisms" xmlns:@"urn:ietf:params:xml:ns:xmpp-sasl"];
-			
-			NSArray *mechanisms = [mech elementsForName:@"mechanism"];
-			
-			for (NSXMLElement *mechanism in mechanisms)
-			{
-				[result addObject:[mechanism stringValue]];
-			}
-		}
-	}};
-	
-	if (dispatch_get_current_queue() == xmppQueue)
-		block();
-	else
-		dispatch_sync(xmppQueue, block);
-	
-	return result;
-}
-
 /**
- * This method checks the stream features of the connected server to determine
- * if the given authentication mechanism is supported.
- * 
- * If we are not connected to a server, this method simply returns NO.
-**/
-- (BOOL)supportsAuthenticationMechanism:(NSString *)mechanismType
+ * This method checks the stream features of the connected server to determine if SASL Anonymous Authentication (XEP-0175)
+ * is supported. If we are not connected to a server, this method simply returns NO.
+ **/
+- (BOOL)supportsAnonymousAuthentication
 {
 	__block BOOL result = NO;
 	
 	dispatch_block_t block = ^{ @autoreleasepool {
 		
 		// The root element can be properly queried for authentication mechanisms anytime after the
-		// stream:features are received, and TLS has been setup (if required).
-		
+		// stream:features are received, and TLS has been setup (if required)
 		if (state >= STATE_XMPP_POST_NEGOTIATION)
 		{
 			NSXMLElement *features = [rootElement elementForName:@"stream:features"];
@@ -1584,7 +1430,7 @@ enum XMPPStreamConfig
 			
 			for (NSXMLElement *mechanism in mechanisms)
 			{
-				if ([[mechanism stringValue] isEqualToString:mechanismType])
+				if ([[mechanism stringValue] isEqualToString:@"ANONYMOUS"])
 				{
 					result = YES;
 					break;
@@ -1601,54 +1447,259 @@ enum XMPPStreamConfig
 	return result;
 }
 
-- (BOOL)authenticate:(id <XMPPSASLAuthentication>)inAuth error:(NSError **)errPtr
+/**
+ * This method checks the stream features of the connected server to determine if plain authentication is supported.
+ * If we are not connected to a server, this method simply returns NO.
+**/
+- (BOOL)supportsPlainAuthentication
 {
-	XMPPLogTrace();
-	
 	__block BOOL result = NO;
-	__block NSError *err = nil;
 	
 	dispatch_block_t block = ^{ @autoreleasepool {
 		
-		if (state != STATE_XMPP_CONNECTED)
+		// The root element can be properly queried for authentication mechanisms anytime after the
+		//stream:features are received, and TLS has been setup (if required)
+		if (state >= STATE_XMPP_POST_NEGOTIATION)
 		{
-			NSString *errMsg = @"Please wait until the stream is connected.";
-			NSDictionary *info = [NSDictionary dictionaryWithObject:errMsg forKey:NSLocalizedDescriptionKey];
+			NSXMLElement *features = [rootElement elementForName:@"stream:features"];
+			NSXMLElement *mech = [features elementForName:@"mechanisms" xmlns:@"urn:ietf:params:xml:ns:xmpp-sasl"];
 			
-			err = [NSError errorWithDomain:XMPPStreamErrorDomain code:XMPPStreamInvalidState userInfo:info];
+			NSArray *mechanisms = [mech elementsForName:@"mechanism"];
 			
-			result = NO;
-			return_from_block;
-		}
-		
-		if (myJID_setByClient == nil)
-		{
-			NSString *errMsg = @"You must set myJID before calling authenticate:error:.";
-			NSDictionary *info = [NSDictionary dictionaryWithObject:errMsg forKey:NSLocalizedDescriptionKey];
-			
-			err = [NSError errorWithDomain:XMPPStreamErrorDomain code:XMPPStreamInvalidProperty userInfo:info];
-			
-			result = NO;
-			return_from_block;
-		}
-		
-		// Change state.
-		// We do this now because when we invoke the start method below,
-		// it may in turn invoke our sendAuthElement method, which expects us to be in STATE_XMPP_AUTH.
-		state = STATE_XMPP_AUTH;
-		
-		if ([inAuth start:&err])
-		{
-			auth = inAuth;
-			result = YES;
-		}
-		else
-		{
-			// Unable to start authentication for some reason.
-			// Revert back to connected state.
-			state = STATE_XMPP_CONNECTED;
+			for (NSXMLElement *mechanism in mechanisms)
+			{
+				if ([[mechanism stringValue] isEqualToString:@"PLAIN"])
+				{
+					result = YES;
+					break;
+				}
+			}
 		}
 	}};
+	
+	if (dispatch_get_current_queue() == xmppQueue)
+		block();
+	else
+		dispatch_sync(xmppQueue, block);
+	
+	return result;
+}
+
+/**
+ * This method checks the stream features of the connected server to determine if digest authentication is supported.
+ * If we are not connected to a server, this method simply returns NO.
+ * 
+ * This is the preferred authentication technique, and will be used if the server supports it.
+**/
+- (BOOL)supportsDigestMD5Authentication
+{
+	__block BOOL result = NO;
+	
+	dispatch_block_t block = ^{ @autoreleasepool {
+		
+		// The root element can be properly queried for authentication mechanisms anytime after the
+		// stream:features are received, and TLS has been setup (if required)
+		if (state >= STATE_XMPP_POST_NEGOTIATION)
+		{
+			NSXMLElement *features = [rootElement elementForName:@"stream:features"];
+			NSXMLElement *mech = [features elementForName:@"mechanisms" xmlns:@"urn:ietf:params:xml:ns:xmpp-sasl"];
+			
+			NSArray *mechanisms = [mech elementsForName:@"mechanism"];
+			
+			for (NSXMLElement *mechanism in mechanisms)
+			{
+				if ([[mechanism stringValue] isEqualToString:@"DIGEST-MD5"])
+				{
+					result = YES;
+					break;
+				}
+			}
+		}
+	}};
+	
+	if (dispatch_get_current_queue() == xmppQueue)
+		block();
+	else
+		dispatch_sync(xmppQueue, block);
+	
+	return result;
+}
+
+/**
+ * This method checks the stream features of the connected server to
+ * determine if X-FACEBOOK-PLATFORM authentication is supported.
+ * If we are not connected to a server, this method simply returns NO.
+ **/
+- (BOOL)supportsXFacebookPlatformAuthentication
+{
+	__block BOOL result = NO;
+	
+	dispatch_block_t block = ^{ @autoreleasepool {
+		
+		// The root element can be properly queried for authentication mechanisms anytime after the
+		// stream:features are received, and TLS has been setup (if required)
+		if (state >= STATE_XMPP_POST_NEGOTIATION)
+		{
+			NSXMLElement *features = [rootElement elementForName:@"stream:features"];
+			NSXMLElement *mech = [features elementForName:@"mechanisms" xmlns:@"urn:ietf:params:xml:ns:xmpp-sasl"];
+			
+			NSArray *mechanisms = [mech elementsForName:@"mechanism"];
+			
+			for (NSXMLElement *mechanism in mechanisms)
+			{
+				if ([[mechanism stringValue] isEqualToString:@"X-FACEBOOK-PLATFORM"])
+				{
+					result = YES;
+					break;
+				}
+			}
+		}
+	}};
+	
+	if (dispatch_get_current_queue() == xmppQueue)
+		block();
+	else
+		dispatch_sync(xmppQueue, block);
+	
+	return result;
+}
+
+/**
+ * This method only applies to servers that don't support XMPP version 1.0, as defined in RFC 3920.
+ * With these servers, we attempt to discover supported authentication modes via the jabber:iq:auth namespace.
+**/
+- (BOOL)supportsDeprecatedPlainAuthentication
+{
+	__block BOOL result = NO;
+	
+	dispatch_block_t block = ^{ @autoreleasepool {
+		
+		// The root element can be properly queried for authentication mechanisms anytime after the
+		// stream:features are received, and TLS has been setup (if required)
+		if (state >= STATE_XMPP_POST_NEGOTIATION)
+		{
+			// Search for an iq element within the rootElement.
+			// Recall that some servers might stupidly add a "jabber:client" namespace which might cause problems
+			// if we simply used the elementForName method.
+			
+			NSXMLElement *iq = nil;
+			
+			NSUInteger i, count = [rootElement childCount];
+			for (i = 0; i < count; i++)
+			{
+				NSXMLNode *childNode = [rootElement childAtIndex:i];
+				
+				if ([childNode kind] == NSXMLElementKind)
+				{
+					if ([[childNode name] isEqualToString:@"iq"])
+					{
+						iq = (NSXMLElement *)childNode;
+					}
+				}
+			}
+			
+			NSXMLElement *query = [iq elementForName:@"query" xmlns:@"jabber:iq:auth"];
+			NSXMLElement *plain = [query elementForName:@"password"];
+			
+			result = (plain != nil);
+		}
+	}};
+	
+	if (dispatch_get_current_queue() == xmppQueue)
+		block();
+	else
+		dispatch_sync(xmppQueue, block);
+	
+	return result;
+}
+
+/**
+ * This method only applies to servers that don't support XMPP version 1.0, as defined in RFC 3920.
+ * With these servers, we attempt to discover supported authentication modes via the jabber:iq:auth namespace.
+**/
+- (BOOL)supportsDeprecatedDigestAuthentication
+{
+	__block BOOL result = NO;
+	
+	dispatch_block_t block = ^{ @autoreleasepool {
+		
+		// The root element can be properly queried for authentication mechanisms anytime after the
+		// stream:features are received, and TLS has been setup (if required)
+		if (state >= STATE_XMPP_POST_NEGOTIATION)
+		{
+			// Search for an iq element within the rootElement.
+			// Recall that some servers might stupidly add a "jabber:client" namespace which might cause problems
+			// if we simply used the elementForName method.
+			
+			NSXMLElement *iq = nil;
+			
+			NSUInteger i, count = [rootElement childCount];
+			for (i = 0; i < count; i++)
+			{
+				NSXMLNode *childNode = [rootElement childAtIndex:i];
+				
+				if ([childNode kind] == NSXMLElementKind)
+				{
+					if ([[childNode name] isEqualToString:@"iq"])
+					{
+						iq = (NSXMLElement *)childNode;
+					}
+				}
+			}
+			
+			NSXMLElement *query = [iq elementForName:@"query" xmlns:@"jabber:iq:auth"];
+			NSXMLElement *digest = [query elementForName:@"digest"];
+			
+			result = (digest != nil);
+		}
+	}};
+	
+	if (dispatch_get_current_queue() == xmppQueue)
+		block();
+	else
+		dispatch_sync(xmppQueue, block);
+	
+	return result;
+}
+
+/**
+ * This method attempts to connect to the Facebook Chat servers 
+ * using the Facebook OAuth token returned by the Facebook OAuth 2.0 authentication process.
+**/
+- (BOOL)authenticateWithFacebookAccessToken:(NSString *)accessToken error:(NSError **)errPtr
+{
+	XMPPLogTrace();
+	
+	__block BOOL result = YES;
+	__block NSError *err = nil;
+	
+	dispatch_block_t block = ^{ @autoreleasepool {
+				
+		if (![self supportsXFacebookPlatformAuthentication])
+		{
+			NSString *errMsg = @"The server does not support X-FACEBOOK-PLATFORM authentication.";
+			NSDictionary *info = [NSDictionary dictionaryWithObject:errMsg forKey:NSLocalizedDescriptionKey];
+
+			err = [NSError errorWithDomain:XMPPStreamErrorDomain code:XMPPStreamUnsupportedAction userInfo:info];
+
+			result = NO;
+			return_from_block;
+		}
+
+		// Save authentication information
+		isAccessToken = YES;
+		tempPassword = [accessToken copy];
+
+		NSError *authErr = nil;
+		result = [self authenticateWithPassword:accessToken error:&authErr];
+    
+		if (!result)
+		{
+			err = authErr;
+		}
+		
+	}};
+	
 	
 	if (dispatch_get_current_queue() == xmppQueue)
 		block();
@@ -1662,20 +1713,13 @@ enum XMPPStreamConfig
 }
 
 /**
- * This method applies to standard password authentication schemes only.
- * This is NOT the primary authentication method.
- * 
- * @see authenticate:error:
- * 
- * This method exists for backwards compatibility, and may disappear in future versions.
+ * This method attempts to sign-in to the server using the configured myJID and given password.
+ * This method also works with Facebook Chat and the Facebook user's password, but authenticating
+ * with authenticateWithFacebookAccessToken:error: is preferred by Facebook.
 **/
-- (BOOL)authenticateWithPassword:(NSString *)inPassword error:(NSError **)errPtr
+- (BOOL)authenticateWithPassword:(NSString *)password error:(NSError **)errPtr
 {
 	XMPPLogTrace();
-	
-	// The given password parameter could be mutable
-	NSString *password = [inPassword copy];
-	
 	
 	__block BOOL result = YES;
 	__block NSError *err = nil;
@@ -1693,9 +1737,9 @@ enum XMPPStreamConfig
 			return_from_block;
 		}
 		
-		if (myJID_setByClient == nil)
+		if (myJID == nil)
 		{
-			NSString *errMsg = @"You must set myJID before calling authenticate:error:.";
+			NSString *errMsg = @"You must set myJID before calling authenticateWithPassword:error:.";
 			NSDictionary *info = [NSDictionary dictionaryWithObject:errMsg forKey:NSLocalizedDescriptionKey];
 			
 			err = [NSError errorWithDomain:XMPPStreamErrorDomain code:XMPPStreamInvalidProperty userInfo:info];
@@ -1704,41 +1748,108 @@ enum XMPPStreamConfig
 			return_from_block;
 		}
 		
-		// Choose the best authentication method.
-		// 
-		// P.S. - This method is deprecated.
-		
-		id <XMPPSASLAuthentication> someAuth = nil;
-		
-		if ([self supportsDigestMD5Authentication])
+        // Facebook authentication
+        if (isAccessToken)
+        {
+            [self sendSASLRequestForMechanism:@"X-FACEBOOK-PLATFORM"];
+      			
+			// Update state
+			state = STATE_XMPP_AUTH_1;
+		} 
+        else if ([self supportsDigestMD5Authentication])
 		{
-			someAuth = [[XMPPDigestMD5Authentication alloc] initWithStream:self password:password];
-			result = [self authenticate:someAuth error:&err];
+            [self sendSASLRequestForMechanism:@"DIGEST-MD5"];
+			
+			// Save authentication information
+            isAccessToken = NO;
+			tempPassword = [password copy];
+			
+			// Update state
+			state = STATE_XMPP_AUTH_1;
 		}
 		else if ([self supportsPlainAuthentication])
 		{
-			someAuth = [[XMPPPlainAuthentication alloc] initWithStream:self password:password];
-			result = [self authenticate:someAuth error:&err];
-		}
-		else if ([self supportsDeprecatedDigestAuthentication])
-		{
-			someAuth = [[XMPPDeprecatedDigestAuthentication alloc] initWithStream:self password:password];
-			result = [self authenticate:someAuth error:&err];
-		}
-		else if ([self supportsDeprecatedPlainAuthentication])
-		{
-			someAuth = [[XMPPDeprecatedDigestAuthentication alloc] initWithStream:self password:password];
-			result = [self authenticate:someAuth error:&err];
+			// From RFC 4616 - PLAIN SASL Mechanism:
+			// [authzid] UTF8NUL authcid UTF8NUL passwd
+			// 
+			// authzid: authorization identity
+			// authcid: authentication identity (username)
+			// passwd : password for authcid
+			
+			NSString *username = [myJID user];
+			
+			NSString *payload = [NSString stringWithFormat:@"%C%@%C%@", 0, username, 0, password];
+			NSString *base64 = [[payload dataUsingEncoding:NSUTF8StringEncoding] base64Encoded];
+			
+			NSXMLElement *auth = [NSXMLElement elementWithName:@"auth" xmlns:@"urn:ietf:params:xml:ns:xmpp-sasl"];
+			[auth addAttributeWithName:@"mechanism" stringValue:@"PLAIN"];
+			[auth setStringValue:base64];
+			
+			NSString *outgoingStr = [auth compactXMLString];
+			NSData *outgoingData = [outgoingStr dataUsingEncoding:NSUTF8StringEncoding];
+			
+			XMPPLogSend(@"SEND: %@", outgoingStr);
+			numberOfBytesSent += [outgoingData length];
+			
+			[asyncSocket writeData:outgoingData
+					   withTimeout:TIMEOUT_XMPP_WRITE
+							   tag:TAG_XMPP_WRITE_STREAM];
+			
+			// Update state
+			state = STATE_XMPP_AUTH_1;
 		}
 		else
 		{
-			NSString *errMsg = @"No suitable authentication method found";
-			NSDictionary *info = [NSDictionary dictionaryWithObject:errMsg forKey:NSLocalizedDescriptionKey];
+			// The server does not appear to support SASL authentication (at least any type we can use)
+			// So we'll revert back to the old fashioned jabber:iq:auth mechanism
 			
-			err = [NSError errorWithDomain:XMPPStreamErrorDomain code:XMPPStreamUnsupportedAction userInfo:info];
+			NSString *username = [myJID user];
+			NSString *resource = [myJID resource];
 			
-			result = NO;
+			if ([resource length] == 0)
+			{
+				// If resource is nil or empty, we need to auto-create one
+				
+				resource = [self generateUUID];
+			}
+			
+			NSXMLElement *queryElement = [NSXMLElement elementWithName:@"query" xmlns:@"jabber:iq:auth"];
+			[queryElement addChild:[NSXMLElement elementWithName:@"username" stringValue:username]];
+			[queryElement addChild:[NSXMLElement elementWithName:@"resource" stringValue:resource]];
+			
+			if ([self supportsDeprecatedDigestAuthentication])
+			{
+				NSString *rootID = [[[self rootElement] attributeForName:@"id"] stringValue];
+				NSString *digestStr = [NSString stringWithFormat:@"%@%@", rootID, password];
+				NSData *digestData = [digestStr dataUsingEncoding:NSUTF8StringEncoding];
+				
+				NSString *digest = [[digestData sha1Digest] hexStringValue];
+				
+				[queryElement addChild:[NSXMLElement elementWithName:@"digest" stringValue:digest]];
+			}
+			else
+			{
+				[queryElement addChild:[NSXMLElement elementWithName:@"password" stringValue:password]];
+			}
+			
+			NSXMLElement *iqElement = [NSXMLElement elementWithName:@"iq"];
+			[iqElement addAttributeWithName:@"type" stringValue:@"set"];
+			[iqElement addChild:queryElement];
+			
+			NSString *outgoingStr = [iqElement compactXMLString];
+			NSData *outgoingData = [outgoingStr dataUsingEncoding:NSUTF8StringEncoding];
+			
+			XMPPLogSend(@"SEND: %@", outgoingStr);
+			numberOfBytesSent += [outgoingData length];
+			
+			[asyncSocket writeData:outgoingData
+					   withTimeout:TIMEOUT_XMPP_WRITE
+							   tag:TAG_XMPP_WRITE_STREAM];
+			
+			// Update state
+			state = STATE_XMPP_AUTH_1;
 		}
+		
 	}};
 	
 	
@@ -1753,20 +1864,87 @@ enum XMPPStreamConfig
 	return result;
 }
 
-- (BOOL)isAuthenticated
+/**
+ * This method attempts to sign-in to the using SASL Anonymous Authentication (XEP-0175)
+**/
+- (BOOL)authenticateAnonymously:(NSError **)errPtr
 {
-	__block BOOL result = NO;
+	XMPPLogTrace();
 	
-	dispatch_block_t block = ^{
-		result = (flags & kIsAuthenticated) ? YES : NO;
-	};
+	__block BOOL result = YES;
+	__block NSError *err = nil;
+	
+	dispatch_block_t block = ^{ @autoreleasepool {
+		
+		if (state != STATE_XMPP_CONNECTED)
+		{
+			NSString *errMsg = @"Please wait until the stream is connected.";
+			NSDictionary *info = [NSDictionary dictionaryWithObject:errMsg forKey:NSLocalizedDescriptionKey];
+			
+			err = [NSError errorWithDomain:XMPPStreamErrorDomain code:XMPPStreamInvalidState userInfo:info];
+			
+			result = NO;
+			return_from_block;
+		}
+		
+		if (![self supportsAnonymousAuthentication])
+		{
+			NSString *errMsg = @"The server does not support anonymous authentication.";
+			NSDictionary *info = [NSDictionary dictionaryWithObject:errMsg forKey:NSLocalizedDescriptionKey];
+			
+			err = [NSError errorWithDomain:XMPPStreamErrorDomain code:XMPPStreamUnsupportedAction userInfo:info];
+			
+			result = NO;
+			return_from_block;
+		}
+		
+		NSXMLElement *auth = [NSXMLElement elementWithName:@"auth" xmlns:@"urn:ietf:params:xml:ns:xmpp-sasl"];
+		[auth addAttributeWithName:@"mechanism" stringValue:@"ANONYMOUS"];
+		
+		NSString *outgoingStr = [auth compactXMLString];
+		NSData *outgoingData = [outgoingStr dataUsingEncoding:NSUTF8StringEncoding];
+		
+		XMPPLogSend(@"SEND: %@", outgoingStr);
+		numberOfBytesSent += [outgoingData length];
+		
+		[asyncSocket writeData:outgoingData
+		           withTimeout:TIMEOUT_XMPP_WRITE
+		                   tag:TAG_XMPP_WRITE_STREAM];
+		
+		isAccessToken = NO;
+    
+		// Update state
+		state = STATE_XMPP_AUTH_3;
+		
+	}};
 	
 	if (dispatch_get_current_queue() == xmppQueue)
 		block();
 	else
 		dispatch_sync(xmppQueue, block);
 	
+	if (errPtr)
+		*errPtr = err;
+	
 	return result;
+}
+
+- (BOOL)isAuthenticated
+{
+	if (dispatch_get_current_queue() == xmppQueue)
+	{
+		return (flags & kIsAuthenticated) ? YES : NO;
+	}
+	else
+	{
+		__block BOOL result;
+		
+		dispatch_sync(xmppQueue, ^{
+			result = (flags & kIsAuthenticated) ? YES : NO;
+		});
+		
+		return result;
+	}
 }
 
 - (void)setIsAuthenticated:(BOOL)flag
@@ -1842,67 +2020,49 @@ enum XMPPStreamConfig
 	NSAssert(dispatch_get_current_queue() == xmppQueue, @"Invoked on incorrect queue");
 	NSAssert(state == STATE_XMPP_CONNECTED, @"Invoked with incorrect state");
 	
+	
 	// We're getting ready to send an IQ.
-	// Notify delegates to allow them to optionally alter/filter the outgoing IQ.
+	// We need to notify delegates of this action to allow them to optionally alter the IQ element.
 	
 	SEL selector = @selector(xmppStream:willSendIQ:);
 	
-	if (![multicastDelegate hasDelegateThatRespondsToSelector:selector])
+	if ([multicastDelegate countForSelector:selector] == 0)
 	{
 		// None of the delegates implement the method.
 		// Use a shortcut.
 		
-		[self continueSendIQ:iq withTag:tag];
+		[self continueSendElement:iq withTag:tag];
 	}
 	else
 	{
 		// Notify all interested delegates.
-		// This must be done serially to allow them to alter the element in a thread-safe manner.
+		// This must be done serially to allow them to alter the element.
 		
 		GCDMulticastDelegateEnumerator *delegateEnumerator = [multicastDelegate delegateEnumerator];
 		
-		dispatch_async(willSendIqQueue, ^{ @autoreleasepool {
+		dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+		dispatch_async(concurrentQueue, ^{ @autoreleasepool {
 			
-			// Allow delegates to modify and/or filter outgoing element
-			
-			__block XMPPIQ *modifiedIQ = iq;
+			// Allow delegates to modify outgoing element
 			
 			id del;
 			dispatch_queue_t dq;
 			
-			while (modifiedIQ && [delegateEnumerator getNextDelegate:&del delegateQueue:&dq forSelector:selector])
+			while ([delegateEnumerator getNextDelegate:&del delegateQueue:&dq forSelector:selector])
 			{
-				#if DEBUG
-				{
-					char methodReturnType[32];
-				
-					Method method = class_getInstanceMethod([del class], selector);
-					method_getReturnType(method, methodReturnType, sizeof(methodReturnType));
-				
-					if (strcmp(methodReturnType, @encode(XMPPIQ*)) != 0)
-					{
-						NSAssert(NO, @"Method xmppStream:willSendIQ: is no longer void (see XMPPStream.h). "
-						             @"Culprit = %@", NSStringFromClass([del class]));
-					}
-				}
-				#endif
-				
 				dispatch_sync(dq, ^{ @autoreleasepool {
 					
-					modifiedIQ = [del xmppStream:self willSendIQ:modifiedIQ];
+					[del xmppStream:self willSendIQ:iq];
 					
 				}});
 			}
 			
-			if (modifiedIQ)
-			{
-				dispatch_async(xmppQueue, ^{ @autoreleasepool {
-					
-					if (state == STATE_XMPP_CONNECTED) {
-						[self continueSendIQ:modifiedIQ withTag:tag];
-					}
-				}});
-			}
+			dispatch_async(xmppQueue, ^{ @autoreleasepool {
+				
+				[self continueSendElement:iq withTag:tag];
+				
+			}});
+			
 		}});
 	}
 }
@@ -1912,67 +2072,49 @@ enum XMPPStreamConfig
 	NSAssert(dispatch_get_current_queue() == xmppQueue, @"Invoked on incorrect queue");
 	NSAssert(state == STATE_XMPP_CONNECTED, @"Invoked with incorrect state");
 	
+	
 	// We're getting ready to send a message.
-	// Notify delegates to allow them to optionally alter/filter the outgoing message.
+	// We need to notify delegates of this action to allow them to optionally alter the message element.
 	
 	SEL selector = @selector(xmppStream:willSendMessage:);
 	
-	if (![multicastDelegate hasDelegateThatRespondsToSelector:selector])
+	if ([multicastDelegate countForSelector:selector] == 0)
 	{
 		// None of the delegates implement the method.
 		// Use a shortcut.
 		
-		[self continueSendMessage:message withTag:tag];
+		[self continueSendElement:message withTag:tag];
 	}
 	else
 	{
 		// Notify all interested delegates.
-		// This must be done serially to allow them to alter the element in a thread-safe manner.
+		// This must be done serially to allow them to alter the element.
 		
 		GCDMulticastDelegateEnumerator *delegateEnumerator = [multicastDelegate delegateEnumerator];
 		
-		dispatch_async(willSendMessageQueue, ^{ @autoreleasepool {
+		dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+		dispatch_async(concurrentQueue, ^{ @autoreleasepool {
 			
 			// Allow delegates to modify outgoing element
-			
-			__block XMPPMessage *modifiedMessage = message;
 			
 			id del;
 			dispatch_queue_t dq;
 			
-			while (modifiedMessage && [delegateEnumerator getNextDelegate:&del delegateQueue:&dq forSelector:selector])
+			while ([delegateEnumerator getNextDelegate:&del delegateQueue:&dq forSelector:selector])
 			{
-				#if DEBUG
-				{
-					char methodReturnType[32];
-				
-					Method method = class_getInstanceMethod([del class], selector);
-					method_getReturnType(method, methodReturnType, sizeof(methodReturnType));
-				
-					if (strcmp(methodReturnType, @encode(XMPPMessage*)) != 0)
-					{
-						NSAssert(NO, @"Method xmppStream:willSendMessage: is no longer void (see XMPPStream.h). "
-						             @"Culprit = %@", NSStringFromClass([del class]));
-					}
-				}
-				#endif
-				
 				dispatch_sync(dq, ^{ @autoreleasepool {
 					
-					modifiedMessage = [del xmppStream:self willSendMessage:modifiedMessage];
+					[del xmppStream:self willSendMessage:message];
 					
 				}});
 			}
 			
-			if (modifiedMessage)
-			{
-				dispatch_async(xmppQueue, ^{ @autoreleasepool {
-					
-					if (state == STATE_XMPP_CONNECTED) {
-						[self continueSendMessage:modifiedMessage withTag:tag];
-					}
-				}});
-			}
+			dispatch_async(xmppQueue, ^{ @autoreleasepool {
+				
+				[self continueSendElement:message withTag:tag];
+				
+			}});
+			
 		}});
 	}
 }
@@ -1982,17 +2124,18 @@ enum XMPPStreamConfig
 	NSAssert(dispatch_get_current_queue() == xmppQueue, @"Invoked on incorrect queue");
 	NSAssert(state == STATE_XMPP_CONNECTED, @"Invoked with incorrect state");
 	
+	
 	// We're getting ready to send a presence element.
-	// Notify delegates to allow them to optionally alter/filter the outgoing presence.
+	// We need to notify delegates of this action to allow them to optionally alter the presence element.
 	
 	SEL selector = @selector(xmppStream:willSendPresence:);
 	
-	if (![multicastDelegate hasDelegateThatRespondsToSelector:selector])
+	if ([multicastDelegate countForSelector:selector] == 0)
 	{
 		// None of the delegates implement the method.
 		// Use a shortcut.
 		
-		[self continueSendPresence:presence withTag:tag];
+		[self continueSendElement:presence withTag:tag];
 	}
 	else
 	{
@@ -2001,135 +2144,79 @@ enum XMPPStreamConfig
 		
 		GCDMulticastDelegateEnumerator *delegateEnumerator = [multicastDelegate delegateEnumerator];
 		
-		dispatch_async(willSendPresenceQueue, ^{ @autoreleasepool {
+		dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+		dispatch_async(concurrentQueue, ^{ @autoreleasepool {
 			
 			// Allow delegates to modify outgoing element
-			
-			__block XMPPPresence *modifiedPresence = presence;
 			
 			id del;
 			dispatch_queue_t dq;
 			
-			while (modifiedPresence && [delegateEnumerator getNextDelegate:&del delegateQueue:&dq forSelector:selector])
+			while ([delegateEnumerator getNextDelegate:&del delegateQueue:&dq forSelector:selector])
 			{
-				#if DEBUG
-				{
-					char methodReturnType[32];
-				
-					Method method = class_getInstanceMethod([del class], selector);
-					method_getReturnType(method, methodReturnType, sizeof(methodReturnType));
-				
-					if (strcmp(methodReturnType, @encode(XMPPPresence*)) != 0)
-					{
-						NSAssert(NO, @"Method xmppStream:willSendPresence: is no longer void (see XMPPStream.h). "
-						             @"Culprit = %@", NSStringFromClass([del class]));
-					}
-				}
-				#endif
-				
 				dispatch_sync(dq, ^{ @autoreleasepool {
 					
-					modifiedPresence = [del xmppStream:self willSendPresence:modifiedPresence];
+					[del xmppStream:self willSendPresence:presence];
 					
 				}});
 			}
 			
-			if (modifiedPresence)
-			{
-				dispatch_async(xmppQueue, ^{ @autoreleasepool {
-					
-					if (state == STATE_XMPP_CONNECTED) {
-						[self continueSendPresence:presence withTag:tag];
-					}
-				}});
-			}
+			dispatch_async(xmppQueue, ^{ @autoreleasepool {
+				
+				[self continueSendElement:presence withTag:tag];
+				
+			}});
+			
 		}});
 	}
-}
-
-- (void)continueSendIQ:(XMPPIQ *)iq withTag:(long)tag
-{
-	NSAssert(dispatch_get_current_queue() == xmppQueue, @"Invoked on incorrect queue");
-	NSAssert(state == STATE_XMPP_CONNECTED, @"Invoked with incorrect state");
-	
-	NSString *outgoingStr = [iq compactXMLString];
-	NSData *outgoingData = [outgoingStr dataUsingEncoding:NSUTF8StringEncoding];
-	
-	XMPPLogSend(@"SEND: %@", outgoingStr);
-	numberOfBytesSent += [outgoingData length];
-	
-	[asyncSocket writeData:outgoingData
-	           withTimeout:TIMEOUT_XMPP_WRITE
-	                   tag:tag];
-	
-	[multicastDelegate xmppStream:self didSendIQ:iq];
-}
-
-- (void)continueSendMessage:(XMPPMessage *)message withTag:(long)tag
-{
-	NSAssert(dispatch_get_current_queue() == xmppQueue, @"Invoked on incorrect queue");
-	NSAssert(state == STATE_XMPP_CONNECTED, @"Invoked with incorrect state");
-	
-	NSString *outgoingStr = [message compactXMLString];
-	NSData *outgoingData = [outgoingStr dataUsingEncoding:NSUTF8StringEncoding];
-	
-	XMPPLogSend(@"SEND: %@", outgoingStr);
-	numberOfBytesSent += [outgoingData length];
-	
-	[asyncSocket writeData:outgoingData
-	           withTimeout:TIMEOUT_XMPP_WRITE
-	                   tag:tag];
-	
-	[multicastDelegate xmppStream:self didSendMessage:message];
-}
-
-- (void)continueSendPresence:(XMPPPresence *)presence withTag:(long)tag
-{
-	NSAssert(dispatch_get_current_queue() == xmppQueue, @"Invoked on incorrect queue");
-	NSAssert(state == STATE_XMPP_CONNECTED, @"Invoked with incorrect state");
-	
-	NSString *outgoingStr = [presence compactXMLString];
-	NSData *outgoingData = [outgoingStr dataUsingEncoding:NSUTF8StringEncoding];
-	
-	XMPPLogSend(@"SEND: %@", outgoingStr);
-	numberOfBytesSent += [outgoingData length];
-	
-	[asyncSocket writeData:outgoingData
-	           withTimeout:TIMEOUT_XMPP_WRITE
-	                   tag:tag];
-	
-	// Update myPresence if this is a normal presence element.
-	// In other words, ignore presence subscription stuff, MUC room stuff, etc.
-	// 
-	// We use the built-in [presence type] which guarantees lowercase strings,
-	// and will return @"available" if there was no set type (as available is implicit).
-	
-	NSString *type = [presence type];
-	if ([type isEqualToString:@"available"] || [type isEqualToString:@"unavailable"])
-	{
-		if ([presence toStr] == nil && myPresence != presence)
-		{
-			myPresence = presence;
-		}
-	}
-	
-	[multicastDelegate xmppStream:self didSendPresence:presence];
 }
 
 - (void)continueSendElement:(NSXMLElement *)element withTag:(long)tag
 {
 	NSAssert(dispatch_get_current_queue() == xmppQueue, @"Invoked on incorrect queue");
-	NSAssert(state == STATE_XMPP_CONNECTED, @"Invoked with incorrect state");
 	
-	NSString *outgoingStr = [element compactXMLString];
-	NSData *outgoingData = [outgoingStr dataUsingEncoding:NSUTF8StringEncoding];
-	
-	XMPPLogSend(@"SEND: %@", outgoingStr);
-	numberOfBytesSent += [outgoingData length];
-	
-	[asyncSocket writeData:outgoingData
-	           withTimeout:TIMEOUT_XMPP_WRITE
-	                   tag:tag];
+	if (state == STATE_XMPP_CONNECTED)
+	{
+		NSString *outgoingStr = [element compactXMLString];
+		NSData *outgoingData = [outgoingStr dataUsingEncoding:NSUTF8StringEncoding];
+		
+		XMPPLogSend(@"SEND: %@", outgoingStr);
+		numberOfBytesSent += [outgoingData length];
+		
+		[asyncSocket writeData:outgoingData
+		           withTimeout:TIMEOUT_XMPP_WRITE
+		                   tag:tag];
+		
+		if ([element isKindOfClass:[XMPPIQ class]])
+		{
+			[multicastDelegate xmppStream:self didSendIQ:(XMPPIQ *)element];
+		}
+		else if ([element isKindOfClass:[XMPPMessage class]])
+		{
+			[multicastDelegate xmppStream:self didSendMessage:(XMPPMessage *)element];
+		}
+		else if ([element isKindOfClass:[XMPPPresence class]])
+		{
+			// Update myPresence if this is a normal presence element.
+			// In other words, ignore presence subscription stuff, MUC room stuff, etc.
+			
+			XMPPPresence *presence = (XMPPPresence *)element;
+			
+			// We use the built-in [presence type] which guarantees lowercase strings,
+			// and will return @"available" if there was no set type (as available is implicit).
+			
+			NSString *type = [presence type];
+			if ([type isEqualToString:@"available"] || [type isEqualToString:@"unavailable"])
+			{
+				if ([presence toStr] == nil && myPresence != presence)
+				{
+					myPresence = presence;
+				}
+			}
+			
+			[multicastDelegate xmppStream:self didSendPresence:(XMPPPresence *)element];
+		}
+	}
 }
 
 /**
@@ -2169,28 +2256,24 @@ enum XMPPStreamConfig
 		{
 			[self sendPresence:[XMPPPresence presenceFromElement:element] withTag:tag];
 		}
-		else
-		{
-			[self continueSendElement:element withTag:tag];
-		}
 	}
 }
 
 /**
- * This methods handles sending an XML stanza.
+ * This methods handles sending an XML fragment.
  * If the XMPPStream is not connected, this method does nothing.
 **/
 - (void)sendElement:(NSXMLElement *)element
 {
-	if (element == nil) return;
-	
-	dispatch_block_t block = ^{ @autoreleasepool {
+	dispatch_block_t block = ^{
 		
 		if (state == STATE_XMPP_CONNECTED)
 		{
-			[self sendElement:element withTag:TAG_XMPP_WRITE_STREAM];
+			@autoreleasepool {
+				[self sendElement:element withTag:TAG_XMPP_WRITE_STREAM];
+			}
 		}
-	}};
+	};
 	
 	if (dispatch_get_current_queue() == xmppQueue)
 		block();
@@ -2199,7 +2282,7 @@ enum XMPPStreamConfig
 }
 
 /**
- * This method handles sending an XML stanza.
+ * This method handles sending an XML fragment.
  * If the XMPPStream is not connected, this method does nothing.
  * 
  * After the element has been successfully sent,
@@ -2207,8 +2290,6 @@ enum XMPPStreamConfig
 **/
 - (void)sendElement:(NSXMLElement *)element andGetReceipt:(XMPPElementReceipt **)receiptPtr
 {
-	if (element == nil) return;
-	
 	if (receiptPtr == nil)
 	{
 		[self sendElement:element];
@@ -2217,16 +2298,19 @@ enum XMPPStreamConfig
 	{
 		__block XMPPElementReceipt *receipt = nil;
 		
-		dispatch_block_t block = ^{ @autoreleasepool {
+		dispatch_block_t block = ^{
 			
 			if (state == STATE_XMPP_CONNECTED)
 			{
-				receipt = [[XMPPElementReceipt alloc] init];
-				[receipts addObject:receipt];
+				@autoreleasepool {
 				
-				[self sendElement:element withTag:TAG_XMPP_WRITE_RECEIPT];
+					receipt = [[XMPPElementReceipt alloc] init]; // autoreleased below
+					[receipts addObject:receipt];
+					
+					[self sendElement:element withTag:TAG_XMPP_WRITE_RECEIPT];
+				}
 			}
-		}};
+		};
 		
 		if (dispatch_get_current_queue() == xmppQueue)
 			block();
@@ -2235,390 +2319,6 @@ enum XMPPStreamConfig
 		
 		*receiptPtr = receipt;
 	}
-}
-
-/**
- * Retrieves the current presence and resends it in once atomic operation.
- * Useful for various components that need to update injected information in the presence stanza.
-**/
-- (void)resendMyPresence
-{
-	dispatch_block_t block = ^{ @autoreleasepool {
-		
-		if (myPresence && [[myPresence type] isEqualToString:@"available"])
-		{
-			[self sendElement:myPresence];
-		}
-	}};
-	
-	if (dispatch_get_current_queue() == xmppQueue)
-		block();
-	else
-		dispatch_async(xmppQueue, block);
-}
-
-/**
- * This method is for use by xmpp authentication mechanism classes.
- * They should send elements using this method instead of the public sendElement classes,
- * as those methods don't send the elements while authentication is in progress.
-**/
-- (void)sendAuthElement:(NSXMLElement *)element
-{
-	dispatch_block_t block = ^{ @autoreleasepool {
-		
-		if (state == STATE_XMPP_AUTH)
-		{
-			NSString *outgoingStr = [element compactXMLString];
-			NSData *outgoingData = [outgoingStr dataUsingEncoding:NSUTF8StringEncoding];
-			
-			XMPPLogSend(@"SEND: %@", outgoingStr);
-			numberOfBytesSent += [outgoingData length];
-			
-			[asyncSocket writeData:outgoingData
-			           withTimeout:TIMEOUT_XMPP_WRITE
-			                   tag:TAG_XMPP_WRITE_STREAM];
-		}
-		else
-		{
-			XMPPLogWarn(@"Unable to send element while not in STATE_XMPP_AUTH: %@", [element compactXMLString]);
-		}
-	}};
-	
-	if (dispatch_get_current_queue() == xmppQueue)
-		block();
-	else
-		dispatch_async(xmppQueue, block);
-}
-
-- (void)receiveIQ:(XMPPIQ *)iq
-{
-	NSAssert(dispatch_get_current_queue() == xmppQueue, @"Invoked on incorrect queue");
-	NSAssert(state == STATE_XMPP_CONNECTED, @"Invoked with incorrect state");
-	
-	// We're getting ready to receive an IQ.
-	// Notify delegates to allow them to optionally alter/filter the incoming IQ element.
-	
-	SEL selector = @selector(xmppStream:willReceiveIQ:);
-	
-	if (![multicastDelegate hasDelegateThatRespondsToSelector:selector])
-	{
-		// None of the delegates implement the method.
-		// Use a shortcut.
-		
-		[self continueReceiveIQ:iq];
-	}
-	else
-	{
-		// Notify all interested delegates.
-		// This must be done serially to allow them to alter the element in a thread-safe manner.
-		
-		GCDMulticastDelegateEnumerator *delegateEnumerator = [multicastDelegate delegateEnumerator];
-		
-		dispatch_async(willReceiveIqQueue, ^{ @autoreleasepool {
-			
-			// Allow delegates to modify and/or filter incoming element
-			
-			__block XMPPIQ *modifiedIQ = iq;
-			
-			id del;
-			dispatch_queue_t dq;
-			
-			while (modifiedIQ && [delegateEnumerator getNextDelegate:&del delegateQueue:&dq forSelector:selector])
-			{
-				dispatch_sync(dq, ^{ @autoreleasepool {
-					
-					modifiedIQ = [del xmppStream:self willReceiveIQ:modifiedIQ];
-					
-				}});
-			}
-			
-			if (modifiedIQ)
-			{
-				dispatch_async(xmppQueue, ^{ @autoreleasepool {
-					
-					if (state == STATE_XMPP_CONNECTED) {
-						[self continueReceiveIQ:modifiedIQ];
-					}
-				}});
-			}
-		}});
-	}
-}
-
-- (void)receiveMessage:(XMPPMessage *)message
-{
-	NSAssert(dispatch_get_current_queue() == xmppQueue, @"Invoked on incorrect queue");
-	NSAssert(state == STATE_XMPP_CONNECTED, @"Invoked with incorrect state");
-	
-	// We're getting ready to receive a message.
-	// Notify delegates to allow them to optionally alter/filter the incoming message.
-	
-	SEL selector = @selector(xmppStream:willReceiveMessage:);
-	
-	if (![multicastDelegate hasDelegateThatRespondsToSelector:selector])
-	{
-		// None of the delegates implement the method.
-		// Use a shortcut.
-		
-		[self continueReceiveMessage:message];
-	}
-	else
-	{
-		// Notify all interested delegates.
-		// This must be done serially to allow them to alter the element in a thread-safe manner.
-		
-		GCDMulticastDelegateEnumerator *delegateEnumerator = [multicastDelegate delegateEnumerator];
-		
-		dispatch_async(willReceiveMessageQueue, ^{ @autoreleasepool {
-			
-			// Allow delegates to modify incoming element
-			
-			__block XMPPMessage *modifiedMessage = message;
-			
-			id del;
-			dispatch_queue_t dq;
-			
-			while (modifiedMessage && [delegateEnumerator getNextDelegate:&del delegateQueue:&dq forSelector:selector])
-			{
-				dispatch_sync(dq, ^{ @autoreleasepool {
-					
-					modifiedMessage = [del xmppStream:self willReceiveMessage:modifiedMessage];
-					
-				}});
-			}
-			
-			if (modifiedMessage)
-			{
-				dispatch_async(xmppQueue, ^{ @autoreleasepool {
-					
-					if (state == STATE_XMPP_CONNECTED) {
-						[self continueReceiveMessage:modifiedMessage];
-					}
-				}});
-			}
-		}});
-	}
-}
-
-- (void)receivePresence:(XMPPPresence *)presence
-{
-	NSAssert(dispatch_get_current_queue() == xmppQueue, @"Invoked on incorrect queue");
-	NSAssert(state == STATE_XMPP_CONNECTED, @"Invoked with incorrect state");
-	
-	// We're getting ready to receive a presence element.
-	// Notify delegates to allow them to optionally alter/filter the incoming presence.
-	
-	SEL selector = @selector(xmppStream:willReceivePresence:);
-	
-	if (![multicastDelegate hasDelegateThatRespondsToSelector:selector])
-	{
-		// None of the delegates implement the method.
-		// Use a shortcut.
-		
-		[self continueReceivePresence:presence];
-	}
-	else
-	{
-		// Notify all interested delegates.
-		// This must be done serially to allow them to alter the element in a thread-safe manner.
-		
-		GCDMulticastDelegateEnumerator *delegateEnumerator = [multicastDelegate delegateEnumerator];
-		
-		dispatch_async(willSendPresenceQueue, ^{ @autoreleasepool {
-			
-			// Allow delegates to modify outgoing element
-			
-			__block XMPPPresence *modifiedPresence = presence;
-			
-			id del;
-			dispatch_queue_t dq;
-			
-			while (modifiedPresence && [delegateEnumerator getNextDelegate:&del delegateQueue:&dq forSelector:selector])
-			{
-				dispatch_sync(dq, ^{ @autoreleasepool {
-					
-					modifiedPresence = [del xmppStream:self willReceivePresence:modifiedPresence];
-					
-				}});
-			}
-			
-			if (modifiedPresence)
-			{
-				dispatch_async(xmppQueue, ^{ @autoreleasepool {
-					
-					if (state == STATE_XMPP_CONNECTED) {
-						[self continueReceivePresence:presence];
-					}
-				}});
-			}
-		}});
-	}
-}
-
-- (void)continueReceiveIQ:(XMPPIQ *)iq
-{
-	if ([iq requiresResponse])
-	{
-		// As per the XMPP specificiation, if the IQ requires a response,
-		// and we don't have any delegates or modules that can properly respond to the IQ,
-		// we MUST send back and error IQ.
-		//
-		// So we notifiy all interested delegates and modules about the received IQ,
-		// keeping track of whether or not any of them have handled it.
-		
-		GCDMulticastDelegateEnumerator *delegateEnumerator = [multicastDelegate delegateEnumerator];
-		
-		id del;
-		dispatch_queue_t dq;
-		
-		SEL selector = @selector(xmppStream:didReceiveIQ:);
-		
-		dispatch_semaphore_t delSemaphore = dispatch_semaphore_create(0);
-		dispatch_group_t delGroup = dispatch_group_create();
-		
-		while ([delegateEnumerator getNextDelegate:&del delegateQueue:&dq forSelector:selector])
-		{
-			dispatch_group_async(delGroup, dq, ^{ @autoreleasepool {
-				
-				if ([del xmppStream:self didReceiveIQ:iq])
-				{
-					dispatch_semaphore_signal(delSemaphore);
-				}
-				
-			}});
-		}
-		
-		dispatch_async(didReceiveIqQueue, ^{ @autoreleasepool {
-			
-			dispatch_group_wait(delGroup, DISPATCH_TIME_FOREVER);
-			
-			// Did any of the delegates handle the IQ? (handle == will response)
-			
-			BOOL handled = (dispatch_semaphore_wait(delSemaphore, DISPATCH_TIME_NOW) == 0);
-			
-			// An entity that receives an IQ request of type "get" or "set" MUST reply
-			// with an IQ response of type "result" or "error".
-			//
-			// The response MUST preserve the 'id' attribute of the request.
-			
-			if (!handled)
-			{
-				// Return error message:
-				//
-				// <iq to="jid" type="error" id="id">
-				//   <query xmlns="ns"/>
-				//   <error type="cancel" code="501">
-				//     <feature-not-implemented xmlns="urn:ietf:params:xml:ns:xmpp-stanzas"/>
-				//   </error>
-				// </iq>
-				
-				NSXMLElement *reason = [NSXMLElement elementWithName:@"feature-not-implemented"
-				                                               xmlns:@"urn:ietf:params:xml:ns:xmpp-stanzas"];
-				
-				NSXMLElement *error = [NSXMLElement elementWithName:@"error"];
-				[error addAttributeWithName:@"type" stringValue:@"cancel"];
-				[error addAttributeWithName:@"code" stringValue:@"501"];
-				[error addChild:reason];
-				
-				XMPPIQ *iqResponse = [XMPPIQ iqWithType:@"error"
-				                                     to:[iq from]
-				                              elementID:[iq elementID]
-				                                  child:error];
-				
-				NSXMLElement *iqChild = [iq childElement];
-				if (iqChild)
-				{
-					NSXMLNode *iqChildCopy = [iqChild copy];
-					[iqResponse insertChild:iqChildCopy atIndex:0];
-				}
-				
-				// Purposefully go through the sendElement: method
-				// so that it gets dispatched onto the xmppQueue,
-				// and so that modules may get notified of the outgoing error message.
-				
-				[self sendElement:iqResponse];
-			}
-			
-			#if NEEDS_DISPATCH_RETAIN_RELEASE
-			dispatch_release(delSemaphore);
-			dispatch_release(delGroup);
-			#endif
-			
-		}});
-	}
-	else
-	{
-		// The IQ doesn't require a response.
-		// So we can just fire the delegate method and ignore the responses.
-		
-		[multicastDelegate xmppStream:self didReceiveIQ:iq];
-	}
-}
-
-- (void)continueReceiveMessage:(XMPPMessage *)message
-{
-	[multicastDelegate xmppStream:self didReceiveMessage:message];
-}
-
-- (void)continueReceivePresence:(XMPPPresence *)presence
-{
-	[multicastDelegate xmppStream:self didReceivePresence:presence];
-}
-
-/**
- * This method allows you to inject an element into the stream as if it was received on the socket.
- * This is an advanced technique, but makes for some interesting possibilities.
-**/
-- (void)injectElement:(NSXMLElement *)element
-{
-	if (element == nil) return;
-	
-	dispatch_block_t block = ^{ @autoreleasepool {
-		
-		if (state != STATE_XMPP_CONNECTED)
-		{
-			return_from_block;
-		}
-		
-		if ([element isKindOfClass:[XMPPIQ class]])
-		{
-			[self receiveIQ:(XMPPIQ *)element];
-		}
-		else if ([element isKindOfClass:[XMPPMessage class]])
-		{
-			[self receiveMessage:(XMPPMessage *)element];
-		}
-		else if ([element isKindOfClass:[XMPPPresence class]])
-		{
-			[self receivePresence:(XMPPPresence *)element];
-		}
-		else
-		{
-			NSString *elementName = [element name];
-			
-			if ([elementName isEqualToString:@"iq"])
-			{
-				[self receiveIQ:[XMPPIQ iqFromElement:element]];
-			}
-			else if ([elementName isEqualToString:@"message"])
-			{
-				[self receiveMessage:[XMPPMessage messageFromElement:element]];
-			}
-			else if ([elementName isEqualToString:@"presence"])
-			{
-				[self receivePresence:[XMPPPresence presenceFromElement:element]];
-			}
-			else
-			{
-				[multicastDelegate xmppStream:self didReceiveError:element];
-			}
-		}
-	}};
-	
-	if (dispatch_get_current_queue() == xmppQueue)
-		block();
-	else
-		dispatch_async(xmppQueue, block);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2641,8 +2341,18 @@ enum XMPPStreamConfig
 	// Inform delegate that the TCP connection is open, and the stream handshake has begun
 	[multicastDelegate xmppStreamDidStartNegotiation:self];
 	
+	// Initialize socket buffer
+	if (socketBuffer == nil)
+	{
+		socketBuffer = [[NSMutableData alloc] initWithLength:SOCKET_BUFFER_SIZE];
+	}
+	
 	// And start reading in the server's XML stream
-	[asyncSocket readDataWithTimeout:TIMEOUT_XMPP_READ_START tag:TAG_XMPP_READ_START];
+	[asyncSocket readDataWithTimeout:TIMEOUT_XMPP_READ_START
+	                          buffer:socketBuffer
+	                    bufferOffset:0
+	                       maxLength:[socketBuffer length]
+	                             tag:TAG_XMPP_READ_START];
 }
 
 /**
@@ -2676,16 +2386,16 @@ enum XMPPStreamConfig
 		XMPPLogVerbose(@"%@: Resetting parser...", THIS_FILE);
 		
 		// We're restarting our negotiation, so we need to reset the parser.
-		[parser setDelegate:nil delegateQueue:NULL];
+		[parser setDelegate:nil];
 		
-		parser = [[XMPPParser alloc] initWithDelegate:self delegateQueue:xmppQueue];
+		parser = [(XMPPParser *)[XMPPParser alloc] initWithDelegate:self];
 	}
 	else if (parser == nil)
 	{
 		XMPPLogVerbose(@"%@: Initializing parser...", THIS_FILE);
 		
 		// Need to create parser (it was destroyed when the socket was last disconnected)
-		parser = [[XMPPParser alloc] initWithDelegate:self delegateQueue:NULL];
+		parser = [(XMPPParser *)[XMPPParser alloc] initWithDelegate:self];
 	}
 	else
 	{
@@ -2698,15 +2408,15 @@ enum XMPPStreamConfig
 	NSString *temp, *s2;
     if ([self isP2P])
     {
-		if (myJID_setByClient && remoteJID)
+		if (myJID && remoteJID)
 		{
 			temp = @"<stream:stream xmlns='%@' xmlns:stream='%@' version='1.0' from='%@' to='%@'>";
-			s2 = [NSString stringWithFormat:temp, xmlns, xmlns_stream, [myJID_setByClient bare], [remoteJID bare]];
+			s2 = [NSString stringWithFormat:temp, xmlns, xmlns_stream, [myJID bare], [remoteJID bare]];
 		}
-		else if (myJID_setByClient)
+		else if (myJID)
 		{
 			temp = @"<stream:stream xmlns='%@' xmlns:stream='%@' version='1.0' from='%@'>";
-			s2 = [NSString stringWithFormat:temp, xmlns, xmlns_stream, [myJID_setByClient bare]];
+			s2 = [NSString stringWithFormat:temp, xmlns, xmlns_stream, [myJID bare]];
 		}
 		else if (remoteJID)
 		{
@@ -2721,10 +2431,10 @@ enum XMPPStreamConfig
     }
     else
     {
-		if (myJID_setByClient)
+		if (myJID)
 		{
 			temp = @"<stream:stream xmlns='%@' xmlns:stream='%@' version='1.0' to='%@'>";
-            s2 = [NSString stringWithFormat:temp, xmlns, xmlns_stream, [myJID_setByClient domain]];
+            s2 = [NSString stringWithFormat:temp, xmlns, xmlns_stream, [myJID domain]];
 		}
         else if ([hostName length] > 0)
         {
@@ -2813,7 +2523,7 @@ enum XMPPStreamConfig
 			NSString *expectedCertName = hostName;
 			if (expectedCertName == nil)
 			{
-				expectedCertName = [myJID_setByClient domain];
+				expectedCertName = [myJID domain];
 			}
 			
 			if ([expectedCertName length] > 0)
@@ -2835,7 +2545,11 @@ enum XMPPStreamConfig
 			
 			// We paused reading from the socket.
 			// We're ready to continue now.
-			[asyncSocket readDataWithTimeout:TIMEOUT_XMPP_READ_STREAM tag:TAG_XMPP_READ_STREAM];
+			[asyncSocket readDataWithTimeout:TIMEOUT_XMPP_READ_STREAM
+			                          buffer:socketBuffer
+			                    bufferOffset:0
+			                       maxLength:[socketBuffer length]
+			                             tag:TAG_XMPP_READ_STREAM];
 		}
 		else
 		{
@@ -2892,7 +2606,7 @@ enum XMPPStreamConfig
 		// Binding is required for this connection
 		state = STATE_XMPP_BINDING;
 		
-		NSString *requestedResource = [myJID_setByClient resource];
+		NSString *requestedResource = [myJID resource];
 		
 		if ([requestedResource length] > 0)
 		{
@@ -3012,66 +2726,221 @@ enum XMPPStreamConfig
  * challenge response.  If plain sasl was used, we sent our authentication information, and we're waiting for a 
  * success response.
 **/
-- (void)handleAuth:(NSXMLElement *)authResponse
+- (void)handleAuth1:(NSXMLElement *)response
 {
 	NSAssert(dispatch_get_current_queue() == xmppQueue, @"Invoked on incorrect queue");
 	
 	XMPPLogTrace();
 	
-	XMPPHandleAuthResponse result = [auth handleAuth:authResponse];
-	
-	if (result == XMPP_AUTH_SUCCESS)
+  if ([self supportsDigestMD5Authentication] || isAccessToken)
 	{
-		// We are successfully authenticated (via sasl:digest-md5)
-		[self setIsAuthenticated:YES];
-		
-		BOOL shouldRenegotiate = YES;
-		if ([auth respondsToSelector:@selector(shouldResendOpeningNegotiationAfterSuccessfulAuthentication)])
+		// We're expecting a challenge response
+		// If we get anything else we can safely assume it's the equivalent of a failure response
+		if ( ![[response name] isEqualToString:@"challenge"])
 		{
-			shouldRenegotiate = [auth shouldResendOpeningNegotiationAfterSuccessfulAuthentication];
-		}
-		
-		if (shouldRenegotiate)
-		{
-			// Now we start our negotiation over again...
-			[self sendOpeningNegotiation];
+			// Revert back to connected state (from authenticating state)
+			state = STATE_XMPP_CONNECTED;
+			
+			[multicastDelegate xmppStream:self didNotAuthenticate:response];
 		}
 		else
 		{
+			// Create authentication object from the given challenge
+			// We'll release this object at the end of this else block
+      id<XMPPSASLAuthentication> auth = nil;
+      
+      if (isAccessToken)
+      {
+        auth = [[XMPPXFacebookPlatformAuthentication alloc] initWithChallenge:response 
+                                                                        appId:self.appId 
+                                                                    accessToken:tempPassword];
+
+        // Update state
+          state = STATE_XMPP_AUTH_3;
+      }
+      else
+      {
+        auth = [[XMPPDigestAuthentication alloc] initWithChallenge:response];
+        
+        NSString *virtualHostName = [myJID domain];
+        NSString *serverHostName = hostName;
+        
+        // Sometimes the realm isn't specified
+        // In this case I believe the realm is implied as the virtual host name
+        if (![(XMPPDigestAuthentication *)auth realm])
+        {
+          if([virtualHostName length] > 0)
+            [(XMPPDigestAuthentication *)auth setRealm:virtualHostName];
+          else
+            [(XMPPDigestAuthentication *)auth setRealm:serverHostName];
+        }
+        
+        // Set digest-uri
+        if([virtualHostName length] > 0)
+          [(XMPPDigestAuthentication *)auth setDigestURI:[NSString stringWithFormat:@"xmpp/%@", virtualHostName]];
+        else
+          [(XMPPDigestAuthentication *)auth setDigestURI:[NSString stringWithFormat:@"xmpp/%@", serverHostName]];
+        
+        // Set username and password
+        [(XMPPDigestAuthentication *)auth setUsername:[myJID user] password:tempPassword];
+
+        // Update state
+        state = STATE_XMPP_AUTH_2;
+      }
+			
+			// Create and send challenge response element
+			NSXMLElement *cr = [NSXMLElement elementWithName:@"response" xmlns:@"urn:ietf:params:xml:ns:xmpp-sasl"];
+			[cr setStringValue:[auth base64EncodedFullResponse]];
+			
+			NSString *outgoingStr = [cr compactXMLString];
+			NSData *outgoingData = [outgoingStr dataUsingEncoding:NSUTF8StringEncoding];
+			
+			XMPPLogSend(@"SEND: %@", outgoingStr);
+			numberOfBytesSent += [outgoingData length];
+			
+			[asyncSocket writeData:outgoingData
+					   withTimeout:TIMEOUT_XMPP_WRITE
+							   tag:TAG_XMPP_WRITE_STREAM];
+			
+			// Release unneeded resources
+			isAccessToken = NO;
+			tempPassword = nil;
+		}
+	}
+	else if ([self supportsPlainAuthentication])
+	{
+		// We're expecting a success response
+		// If we get anything else we can safely assume it's the equivalent of a failure response
+		if ( ![[response name] isEqualToString:@"success"])
+		{
+			// Revert back to connected state (from authenticating state)
+			state = STATE_XMPP_CONNECTED;
+			
+			[multicastDelegate xmppStream:self didNotAuthenticate:response];
+		}
+		else
+		{
+			// We are successfully authenticated (via sasl:plain)
+			[self setIsAuthenticated:YES];
+			
+			// Now we start our negotiation over again...
+			[self sendOpeningNegotiation];
+		}
+	}
+	else
+	{
+		// We used the old fashioned jabber:iq:auth mechanism
+		
+		if ([[response attributeStringValueForName:@"type"] isEqualToString:@"error"])
+		{
+			// Revert back to connected state (from authenticating state)
+			state = STATE_XMPP_CONNECTED;
+			
+			[multicastDelegate xmppStream:self didNotAuthenticate:response];
+		}
+		else
+		{
+			// We are successfully authenticated (via non-sasl:digest)
+			// And we've binded our resource as well
+			[self setIsAuthenticated:YES];
+			
 			// Revert back to connected state (from authenticating state)
 			state = STATE_XMPP_CONNECTED;
 			
 			[multicastDelegate xmppStreamDidAuthenticate:self];
 		}
-		
-		// Done with auth
-		auth = nil;
-		
 	}
-	else if (result == XMPP_AUTH_FAIL)
+}
+
+/**
+ * This method handles the result of our challenge response we sent in handleAuth1 using digest-md5 sasl.
+**/
+- (void)handleAuth2:(NSXMLElement *)response
+{
+	NSAssert(dispatch_get_current_queue() == xmppQueue, @"Invoked on incorrect queue");
+	
+	XMPPLogTrace();
+	
+	if ([[response name] isEqualToString:@"challenge"])
+	{
+		XMPPDigestAuthentication *auth = [[XMPPDigestAuthentication alloc] initWithChallenge:response];
+		
+		if(![auth rspauth])
+		{
+			// We're getting another challenge???
+			// I'm not sure what this could possibly be, so for now I'll assume it's a failure
+			
+			// Revert back to connected state (from authenticating state)
+			state = STATE_XMPP_CONNECTED;
+			
+			[multicastDelegate xmppStream:self didNotAuthenticate:response];
+		}
+		else
+		{
+			// We received another challenge, but it's really just an rspauth
+			// This is supposed to be included in the success element (according to the updated RFC)
+			// but many implementations incorrectly send it inside a second challenge request.
+			
+			// Create and send empty challenge response element
+			NSXMLElement *cr = [NSXMLElement elementWithName:@"response" xmlns:@"urn:ietf:params:xml:ns:xmpp-sasl"];
+			
+			NSString *outgoingStr = [cr compactXMLString];
+			NSData *outgoingData = [outgoingStr dataUsingEncoding:NSUTF8StringEncoding];
+			
+			XMPPLogSend(@"SEND: %@", outgoingStr);
+			numberOfBytesSent += [outgoingData length];
+			
+			[asyncSocket writeData:outgoingData
+					   withTimeout:TIMEOUT_XMPP_WRITE
+							   tag:TAG_XMPP_WRITE_STREAM];
+			
+			// The state remains in STATE_XMPP_AUTH_2
+		}
+	}
+	else if ([[response name] isEqualToString:@"success"])
+	{
+		// We are successfully authenticated (via sasl:digest-md5)
+		[self setIsAuthenticated:YES];
+		
+		// Now we start our negotiation over again...
+		[self sendOpeningNegotiation];
+	}
+	else
+	{
+		// We received some kind of <failure/> element
+		
+		// Revert back to connected state (from authenticating state)
+		state = STATE_XMPP_CONNECTED;
+		
+		[multicastDelegate xmppStream:self didNotAuthenticate:response];
+	}
+}
+
+/**
+ * This method handles the result of our SASL Anonymous Authentication challenge
+**/
+- (void)handleAuth3:(NSXMLElement *)response
+{
+	NSAssert(dispatch_get_current_queue() == xmppQueue, @"Invoked on incorrect queue");
+	
+	XMPPLogTrace();
+	
+	// We're expecting a success response
+	// If we get anything else we can safely assume it's the equivalent of a failure response
+	if ( ![[response name] isEqualToString:@"success"])
 	{
 		// Revert back to connected state (from authenticating state)
 		state = STATE_XMPP_CONNECTED;
 		
-		// Notify delegate
-		[multicastDelegate xmppStream:self didNotAuthenticate:authResponse];
-		
-		// Done with auth
-		auth = nil;
-		
-	}
-	else if (result == XMPP_AUTH_CONTINUE)
-	{
-		// Authentication continues.
-		// State doesn't change.
+		[multicastDelegate xmppStream:self didNotAuthenticate:response];
 	}
 	else
 	{
-		XMPPLogError(@"Authentication class (%@) returned invalid response code (%i)",
-		           NSStringFromClass([auth class]), (int)result);
+		// We are successfully authenticated (via sasl:x-facebook-platform or sasl:plain)
+		[self setIsAuthenticated:YES];
 		
-		NSAssert(NO, @"Authentication class (%@) returned invalid response code (%i)",
-		             NSStringFromClass([auth class]), (int)result);
+		// Now we start our negotiation over again...
+		[self sendOpeningNegotiation];
 	}
 }
 
@@ -3090,7 +2959,7 @@ enum XMPPStreamConfig
 		// Extract and save our resource (it may not be what we originally requested)
 		NSString *fullJIDStr = [r_jid stringValue];
 		
-		[self setMyJID_setByServer:[XMPPJID jidWithString:fullJIDStr]];
+		[self setMyJID:[XMPPJID jidWithString:fullJIDStr]];
 		
 		// And we may now have to do one last thing before we're ready - start an IM session
 		NSXMLElement *features = [rootElement elementForName:@"stream:features"];
@@ -3132,107 +3001,12 @@ enum XMPPStreamConfig
 	else
 	{
 		// It appears the server didn't allow our resource choice
-		// First check if we want to try an alternative resource
-		
-		NSXMLElement *r_error = [response elementForName:@"error"];
-		NSXMLElement *r_conflict = [r_error elementForName:@"conflict" xmlns:@"urn:ietf:params:xml:ns:xmpp-stanzas"];
-        
-		if (r_conflict)
-		{
-			SEL selector = @selector(xmppStream:alternativeResourceForConflictingResource:);
-			
-			if (![multicastDelegate hasDelegateThatRespondsToSelector:selector])
-			{
-				// None of the delegates implement the method.
-				// Use a shortcut.
-				
-				[self continueHandleBinding:nil];
-			}
-			else
-			{
-				// Query all interested delegates.
-				// This must be done serially to maintain thread safety.
-				
-				GCDMulticastDelegateEnumerator *delegateEnumerator = [multicastDelegate delegateEnumerator];
-				
-				dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-				dispatch_async(concurrentQueue, ^{ @autoreleasepool {
-					
-					// Query delegates for alternative resource
-					
-					NSString *currentResource = [[self myJID] resource];
-					__block NSString *alternativeResource = nil;
-					
-					id delegate;
-					dispatch_queue_t dq;
-					
-					while ([delegateEnumerator getNextDelegate:&delegate delegateQueue:&dq forSelector:selector])
-					{
-						dispatch_sync(dq, ^{ @autoreleasepool {
-							
-							NSString *delegateAlternativeResource =
-							    [delegate xmppStream:self alternativeResourceForConflictingResource:currentResource];
-							
-							if (delegateAlternativeResource)
-							{
-								alternativeResource = delegateAlternativeResource;
-							}
-						}});
-					}
-					
-					dispatch_async(xmppQueue, ^{ @autoreleasepool {
-						
-						[self continueHandleBinding:alternativeResource];
-						
-					}});
-					
-				}});
-			}
-        }
-		else
-		{
-			// Appears to be a conflicting resource, but server didn't specify conflict
-			[self continueHandleBinding:nil];
-		}
-	}
-}
-
-- (void)continueHandleBinding:(NSString *)alternativeResource
-{
-	if ([alternativeResource length] > 0)
-	{
-		// Update myJID
-		
-		[self setMyJID_setByClient:[myJID_setByClient jidWithNewResource:alternativeResource]];
-		
-		NSXMLElement *resource = [NSXMLElement elementWithName:@"resource"];
-		[resource setStringValue:alternativeResource];
-		
-		NSXMLElement *bind = [NSXMLElement elementWithName:@"bind" xmlns:@"urn:ietf:params:xml:ns:xmpp-bind"];
-		[bind addChild:resource];
-		
-		XMPPIQ *iq = [XMPPIQ iqWithType:@"set"];
-		[iq addChild:bind];
-		
-		NSString *outgoingStr = [iq compactXMLString];
-		NSData *outgoingData = [outgoingStr dataUsingEncoding:NSUTF8StringEncoding];
-		
-		XMPPLogSend(@"SEND: %@", outgoingStr);
-		numberOfBytesSent += [outgoingData length];
-		
-		[asyncSocket writeData:outgoingData
-		           withTimeout:TIMEOUT_XMPP_WRITE
-		                   tag:TAG_XMPP_WRITE_STREAM];
-		
-		// The state remains in STATE_XMPP_BINDING
-	}
-	else
-	{
 		// We'll simply let the server choose then
 		
 		NSXMLElement *bind = [NSXMLElement elementWithName:@"bind" xmlns:@"urn:ietf:params:xml:ns:xmpp-bind"];
 		
-		XMPPIQ *iq = [XMPPIQ iqWithType:@"set"];
+		NSXMLElement *iq = [NSXMLElement elementWithName:@"iq"];
+		[iq addAttributeWithName:@"type" stringValue:@"set"];
 		[iq addChild:bind];
 		
 		NSString *outgoingStr = [iq compactXMLString];
@@ -3242,8 +3016,8 @@ enum XMPPStreamConfig
 		numberOfBytesSent += [outgoingData length];
 		
 		[asyncSocket writeData:outgoingData
-		           withTimeout:TIMEOUT_XMPP_WRITE
-		                   tag:TAG_XMPP_WRITE_STREAM];
+				   withTimeout:TIMEOUT_XMPP_WRITE
+						   tag:TAG_XMPP_WRITE_STREAM];
 		
 		// The state remains in STATE_XMPP_BINDING
 	}
@@ -3312,7 +3086,7 @@ enum XMPPStreamConfig
 		// 
 		// In other words, just try connecting to the domain specified in the JID.
 		
-		success = [self connectToHost:[myJID_setByClient domain] onPort:5222 error:&connectError];
+		success = [self connectToHost:[myJID domain] onPort:5222 error:&connectError];
 	}
 	
 	if (!success)
@@ -3421,30 +3195,43 @@ enum XMPPStreamConfig
 	XMPPLogTrace();
 	
 	lastSendReceiveTime = [NSDate timeIntervalSinceReferenceDate];
+	
+	if (XMPP_LOG_RECV_PRE)
+	{
+		NSString *dataAsStr = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+		
+		XMPPLogRecvPre(@"RECV: %@", dataAsStr);
+	}
+	
 	numberOfBytesReceived += [data length];
 	
-	XMPPLogRecvPre(@"RECV: %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
-	
-	// Asynchronously parse the xml data
-	[parser parseData:data];
-	
-	if ([self isSecure])
-	{
-		// Continue reading for XML elements
-		if (state == STATE_XMPP_OPENING)
-		{
-			[asyncSocket readDataWithTimeout:TIMEOUT_XMPP_READ_START tag:TAG_XMPP_READ_START];
-		}
-		else if (state != STATE_XMPP_STARTTLS_2)
-		{
-			[asyncSocket readDataWithTimeout:TIMEOUT_XMPP_READ_STREAM tag:TAG_XMPP_READ_STREAM];
-		}
-	}
-	else
-	{
-		// Don't queue up a read on the socket as we may need to upgrade to TLS.
-		// We'll read more data after we've parsed the current chunk of data.
-	}
+	dispatch_async(parserQueue, ^{ @autoreleasepool {
+		
+		[parser parseData:data];
+		
+		dispatch_async(xmppQueue, ^{ @autoreleasepool {
+			
+			// Continue reading for XML elements.
+			
+			if (state == STATE_XMPP_OPENING)
+			{
+				[asyncSocket readDataWithTimeout:TIMEOUT_XMPP_READ_START
+										  buffer:socketBuffer
+									bufferOffset:0
+									   maxLength:[socketBuffer length]
+											 tag:TAG_XMPP_READ_START];
+			}
+			else if (state != STATE_XMPP_STARTTLS_2)
+			{
+				[asyncSocket readDataWithTimeout:TIMEOUT_XMPP_READ_STREAM
+										  buffer:socketBuffer
+									bufferOffset:0
+									   maxLength:[socketBuffer length]
+											 tag:TAG_XMPP_READ_STREAM];
+			}
+			
+		}});
+	}});
 }
 
 /**
@@ -3490,17 +3277,20 @@ enum XMPPStreamConfig
 		// Update state
 		state = STATE_XMPP_DISCONNECTED;
 		
+		// Release socket buffer
+		socketBuffer = nil;
+		
 		// Release the parser (to free underlying resources)
-		[parser setDelegate:nil delegateQueue:NULL];
+		[parser setDelegate:nil];
 		parser = nil;
 		
 		// Clear any saved authentication information
-		auth = nil;
+		isAccessToken = NO;
+		tempPassword = nil;
 		
 		// Clear stored elements
-		myJID_setByServer = nil;
-		myPresence = nil;
-		rootElement = nil;
+		 myPresence = nil;
+		 rootElement = nil;
 		
 		// Stop the keep alive timer
 		if (keepAliveTimer)
@@ -3547,223 +3337,315 @@ enum XMPPStreamConfig
 **/
 - (void)xmppParser:(XMPPParser *)sender didReadRoot:(NSXMLElement *)root
 {
-	// This method is invoked on the xmppQueue.
-	
-	if (sender != parser) return;
+	NSAssert(dispatch_get_current_queue() == parserQueue, @"Invoked on incorrect queue");
 	
 	XMPPLogTrace();
-	XMPPLogRecvPost(@"RECV: %@", [root compactXMLString]);
-		
-	// At this point we've sent our XML stream header, and we've received the response XML stream header.
-	// We save the root element of our stream for future reference.
 	
-	rootElement = root;
+	dispatch_async(xmppQueue, ^{ @autoreleasepool {
+		
+		if (sender != parser) return_from_block;
 	
-	if ([self isP2P])
-	{
-		// XEP-0174 specifies that <stream:features/> SHOULD be sent by the receiver.
-		// In other words, if we're the recipient we will now send our features.
-		// But if we're the initiator, we can't depend on receiving their features.
+		XMPPLogRecvPost(@"RECV: %@", [root compactXMLString]);
 		
-		// Either way, we're connected at this point.
-		state = STATE_XMPP_CONNECTED;
+		// At this point we've sent our XML stream header, and we've received the response XML stream header.
+		// We save the root element of our stream for future reference.
+		// Digest Access authentication requires us to know the ID attribute from the <stream:stream/> element.
 		
-		if ([self isP2PRecipient])
+		rootElement = root;
+		
+		if ([self isP2P])
 		{
-			// Extract the remoteJID:
-			//
-			// <stream:stream ... from='<remoteJID>' to='<myJID>'>
+			// XEP-0174 specifies that <stream:features/> SHOULD be sent by the receiver.
+			// In other words, if we're the recipient we will now send our features.
+			// But if we're the initiator, we can't depend on receiving their features.
 			
-			NSString *from = [[rootElement attributeForName:@"from"] stringValue];
-			remoteJID = [XMPPJID jidWithString:from];
+			// Either way, we're connected at this point.
+			state = STATE_XMPP_CONNECTED;
 			
-			// Send our stream features.
-			// To do so we need to ask the delegate to fill it out for us.
+			if ([self isP2PRecipient])
+			{
+				// Extract the remoteJID:
+				// 
+				// <stream:stream ... from='<remoteJID>' to='<myJID>'>
+				
+				NSString *from = [[rootElement attributeForName:@"from"] stringValue];
+				remoteJID = [XMPPJID jidWithString:from];
+				
+				// Send our stream features.
+				// To do so we need to ask the delegate to fill it out for us.
+				
+				NSXMLElement *streamFeatures = [NSXMLElement elementWithName:@"stream:features"];
+				
+				[multicastDelegate xmppStream:self willSendP2PFeatures:streamFeatures];
+				
+				NSString *outgoingStr = [streamFeatures compactXMLString];
+				NSData *outgoingData = [outgoingStr dataUsingEncoding:NSUTF8StringEncoding];
+				
+				XMPPLogSend(@"SEND: %@", outgoingStr);
+				numberOfBytesSent += [outgoingData length];
+				
+				[asyncSocket writeData:outgoingData
+						   withTimeout:TIMEOUT_XMPP_WRITE
+								   tag:TAG_XMPP_WRITE_STREAM];
+				
+			}
 			
-			NSXMLElement *streamFeatures = [NSXMLElement elementWithName:@"stream:features"];
+			// Make sure the delegate didn't disconnect us in the xmppStream:willSendP2PFeatures: method.
 			
-			[multicastDelegate xmppStream:self willSendP2PFeatures:streamFeatures];
-			
-			NSString *outgoingStr = [streamFeatures compactXMLString];
-			NSData *outgoingData = [outgoingStr dataUsingEncoding:NSUTF8StringEncoding];
-			
-			XMPPLogSend(@"SEND: %@", outgoingStr);
-			numberOfBytesSent += [outgoingData length];
-			
-			[asyncSocket writeData:outgoingData
-			           withTimeout:TIMEOUT_XMPP_WRITE
-			                   tag:TAG_XMPP_WRITE_STREAM];
-		}
-		
-		// Make sure the delegate didn't disconnect us in the xmppStream:willSendP2PFeatures: method.
-		
-		if ([self isConnected])
-		{
-			[multicastDelegate xmppStreamDidConnect:self];
-		}
-	}
-	else
-	{
-		// Check for RFC compliance
-		if ([self serverXmppStreamVersionNumber] >= 1.0)
-		{
-			// Update state - we're now onto stream negotiations
-			state = STATE_XMPP_NEGOTIATING;
-			
-			// Note: We're waiting for the <stream:features> now
+			if ([self isConnected])
+			{
+				[multicastDelegate xmppStreamDidConnect:self];
+			}
 		}
 		else
 		{
-			// The server isn't RFC comliant, and won't be sending any stream features.
-			
-			// We would still like to know what authentication features it supports though,
-			// so we'll use the jabber:iq:auth namespace, which was used prior to the RFC spec.
-			
-			// Update state - we're onto psuedo negotiation
-			state = STATE_XMPP_NEGOTIATING;
-			
-			NSXMLElement *query = [NSXMLElement elementWithName:@"query" xmlns:@"jabber:iq:auth"];
-			
-			NSXMLElement *iq = [NSXMLElement elementWithName:@"iq"];
-			[iq addAttributeWithName:@"type" stringValue:@"get"];
-			[iq addChild:query];
-			
-			NSString *outgoingStr = [iq compactXMLString];
-			NSData *outgoingData = [outgoingStr dataUsingEncoding:NSUTF8StringEncoding];
-			
-			XMPPLogSend(@"SEND: %@", outgoingStr);
-			numberOfBytesSent += [outgoingData length];
-			
-			[asyncSocket writeData:outgoingData
-			           withTimeout:TIMEOUT_XMPP_WRITE
-			                   tag:TAG_XMPP_WRITE_STREAM];
-			
-			// Now wait for the response IQ
+			// Check for RFC compliance
+			if ([self serverXmppStreamVersionNumber] >= 1.0)
+			{
+				// Update state - we're now onto stream negotiations
+				state = STATE_XMPP_NEGOTIATING;
+				
+				// Note: We're waiting for the <stream:features> now
+			}
+			else
+			{
+				// The server isn't RFC comliant, and won't be sending any stream features.
+				
+				// We would still like to know what authentication features it supports though,
+				// so we'll use the jabber:iq:auth namespace, which was used prior to the RFC spec.
+				
+				// Update state - we're onto psuedo negotiation
+				state = STATE_XMPP_NEGOTIATING;
+				
+				NSXMLElement *query = [NSXMLElement elementWithName:@"query" xmlns:@"jabber:iq:auth"];
+				
+				NSXMLElement *iq = [NSXMLElement elementWithName:@"iq"];
+				[iq addAttributeWithName:@"type" stringValue:@"get"];
+				[iq addChild:query];
+				
+				NSString *outgoingStr = [iq compactXMLString];
+				NSData *outgoingData = [outgoingStr dataUsingEncoding:NSUTF8StringEncoding];
+				
+				XMPPLogSend(@"SEND: %@", outgoingStr);
+				numberOfBytesSent += [outgoingData length];
+				
+				[asyncSocket writeData:outgoingData
+						   withTimeout:TIMEOUT_XMPP_WRITE
+								   tag:TAG_XMPP_WRITE_STREAM];
+				
+				// Now wait for the response IQ
+			}
 		}
-	}
+		
+	}});
 }
 
 - (void)xmppParser:(XMPPParser *)sender didReadElement:(NSXMLElement *)element
 {
-	// This method is invoked on the xmppQueue.
-	
-	if (sender != parser) return;
+	NSAssert(dispatch_get_current_queue() == parserQueue, @"Invoked on incorrect queue");
 	
 	XMPPLogTrace();
-	XMPPLogRecvPost(@"RECV: %@", [element compactXMLString]);
-		
-	NSString *elementName = [element name];
 	
-	if ([elementName isEqualToString:@"stream:error"] || [elementName isEqualToString:@"error"])
-	{
-		[multicastDelegate xmppStream:self didReceiveError:element];
+	dispatch_async(xmppQueue, ^{ @autoreleasepool {
 		
-		return;
-	}
-	
-	if (state == STATE_XMPP_NEGOTIATING)
-	{
-		// We've just read in the stream features
-		// We consider this part of the root element, so we'll add it (replacing any previously sent features)
-		[rootElement setChildren:[NSArray arrayWithObject:element]];
+		if (sender != parser) return_from_block;
 		
-		// Call a method to handle any requirements set forth in the features
-		[self handleStreamFeatures];
-	}
-	else if (state == STATE_XMPP_STARTTLS_1)
-	{
-		// The response from our starttls message
-		[self handleStartTLSResponse:element];
-	}
-	else if (state == STATE_XMPP_REGISTERING)
-	{
-		// The iq response from our registration request
-		[self handleRegistration:element];
-	}
-	else if (state == STATE_XMPP_AUTH)
-	{
-		// Some response to the authentication process
-		[self handleAuth:element];
-	}
-	else if (state == STATE_XMPP_BINDING)
-	{
-		// The response from our binding request
-		[self handleBinding:element];
-	}
-	else if (state == STATE_XMPP_START_SESSION)
-	{
-		// The response from our start session request
-		[self handleStartSessionResponse:element];
-	}
-	else
-	{
-		if ([elementName isEqualToString:@"iq"])
+		XMPPLogRecvPost(@"RECV: %@", [element compactXMLString]);
+		
+		NSString *elementName = [element name];
+		
+		if ([elementName isEqualToString:@"stream:error"] || [elementName isEqualToString:@"error"])
 		{
-			[self receiveIQ:[XMPPIQ iqFromElement:element]];
+			[multicastDelegate xmppStream:self didReceiveError:element];
+			
+			return_from_block;
 		}
-		else if ([elementName isEqualToString:@"message"])
+		
+		if (state == STATE_XMPP_NEGOTIATING)
 		{
-			[self receiveMessage:[XMPPMessage messageFromElement:element]];
+			// We've just read in the stream features
+			// We consider this part of the root element, so we'll add it (replacing any previously sent features)
+			[rootElement setChildren:[NSArray arrayWithObject:element]];
+			
+			// Call a method to handle any requirements set forth in the features
+			[self handleStreamFeatures];
 		}
-		else if ([elementName isEqualToString:@"presence"])
+		else if (state == STATE_XMPP_STARTTLS_1)
 		{
-			[self receivePresence:[XMPPPresence presenceFromElement:element]];
+			// The response from our starttls message
+			[self handleStartTLSResponse:element];
 		}
-		else if ([self isP2P] &&
-				([elementName isEqualToString:@"stream:features"] || [elementName isEqualToString:@"features"]))
+		else if (state == STATE_XMPP_REGISTERING)
 		{
-			[multicastDelegate xmppStream:self didReceiveP2PFeatures:element];
+			// The iq response from our registration request
+			[self handleRegistration:element];
+		}
+		else if (state == STATE_XMPP_AUTH_1)
+		{
+			// The challenge response from our auth message
+			[self handleAuth1:element];
+		}
+		else if (state == STATE_XMPP_AUTH_2)
+		{
+			// The response from our challenge response
+			[self handleAuth2:element];
+		}
+		else if (state == STATE_XMPP_AUTH_3)
+		{
+			// The response from our x-facebook-platform or authenticateAnonymously challenge
+			[self handleAuth3:element];
+		}
+		else if (state == STATE_XMPP_BINDING)
+		{
+			// The response from our binding request
+			[self handleBinding:element];
+		}
+		else if (state == STATE_XMPP_START_SESSION)
+		{
+			// The response from our start session request
+			[self handleStartSessionResponse:element];
 		}
 		else
 		{
-			[multicastDelegate xmppStream:self didReceiveError:element];
+			if ([elementName isEqualToString:@"iq"])
+			{
+				XMPPIQ *iq = [XMPPIQ iqFromElement:element];
+				
+				// Notify all interested delegates about the received IQ.
+				// Keep track of whether the delegates respond to the IQ.
+				
+				GCDMulticastDelegateEnumerator *delegateEnumerator = [multicastDelegate delegateEnumerator];
+				
+				id del;
+				dispatch_queue_t dq;
+				
+				SEL selector = @selector(xmppStream:didReceiveIQ:);
+				
+				dispatch_semaphore_t delSemaphore = dispatch_semaphore_create(0);
+				dispatch_group_t delGroup = dispatch_group_create();
+				
+				while ([delegateEnumerator getNextDelegate:&del delegateQueue:&dq forSelector:selector])
+				{
+					dispatch_group_async(delGroup, dq, ^{ @autoreleasepool {
+						
+						if ([del xmppStream:self didReceiveIQ:iq])
+						{
+							dispatch_semaphore_signal(delSemaphore);
+						}
+						
+					}});
+				}
+				
+				dispatch_queue_t concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+				dispatch_async(concurrentQueue, ^{ @autoreleasepool {
+					
+					dispatch_group_wait(delGroup, DISPATCH_TIME_FOREVER);
+					
+					// Did any of the delegates respond to the IQ?
+					
+					BOOL responded = (dispatch_semaphore_wait(delSemaphore, DISPATCH_TIME_NOW) == 0);
+					
+					// An entity that receives an IQ request of type "get" or "set" MUST reply
+					// with an IQ response of type "result" or "error".
+					// 
+					// The response MUST preserve the 'id' attribute of the request.
+					
+					if (!responded && [iq requiresResponse])
+					{
+						// Return error message:
+						// 
+						// <iq to="jid" type="error" id="id">
+						//   <query xmlns="ns"/>
+						//   <error type="cancel" code="501">
+						//     <feature-not-implemented xmlns="urn:ietf:params:xml:ns:xmpp-stanzas"/>
+						//   </error>
+						// </iq>
+						
+						NSXMLElement *reason = [NSXMLElement elementWithName:@"feature-not-implemented"
+																	   xmlns:@"urn:ietf:params:xml:ns:xmpp-stanzas"];
+						
+						NSXMLElement *error = [NSXMLElement elementWithName:@"error"];
+						[error addAttributeWithName:@"type" stringValue:@"cancel"];
+						[error addAttributeWithName:@"code" stringValue:@"501"];
+						[error addChild:reason];
+						
+						XMPPIQ *iqResponse = [XMPPIQ iqWithType:@"error"
+						                                     to:[iq from]
+						                              elementID:[iq elementID]
+						                                  child:error];
+						
+						NSXMLElement *iqChild = [iq childElement];
+						if (iqChild)
+						{
+							NSXMLNode *iqChildCopy = [iqChild copy];
+							[iqResponse insertChild:iqChildCopy atIndex:0];
+						}
+						
+						// Purposefully go through the sendElement: method
+						// so that it gets dispatched onto the xmppQueue,
+						// and so that modules may get notified of the outgoing error message.
+						
+						[self sendElement:iqResponse];
+					}
+					
+					dispatch_release(delSemaphore);
+					dispatch_release(delGroup);
+					
+				}});
+			
+			}
+			else if ([elementName isEqualToString:@"message"])
+			{
+				[multicastDelegate xmppStream:self didReceiveMessage:[XMPPMessage messageFromElement:element]];
+			}
+			else if ([elementName isEqualToString:@"presence"])
+			{
+				[multicastDelegate xmppStream:self didReceivePresence:[XMPPPresence presenceFromElement:element]];
+			}
+			else if ([self isP2P] &&
+					([elementName isEqualToString:@"stream:features"] || [elementName isEqualToString:@"features"]))
+			{
+				[multicastDelegate xmppStream:self didReceiveP2PFeatures:element];
+			}
+			else
+			{
+				[multicastDelegate xmppStream:self didReceiveError:element];
+			}
 		}
-	}
-}
-
-- (void)xmppParserDidParseData:(XMPPParser *)sender
-{
-	// This method is invoked on the xmppQueue.
-	
-	if (sender != parser) return;
-	
-	XMPPLogTrace();
-	
-	if (![self isSecure])
-	{
-		// Continue reading for XML elements
-		if (state == STATE_XMPP_OPENING)
-		{
-			[asyncSocket readDataWithTimeout:TIMEOUT_XMPP_READ_START tag:TAG_XMPP_READ_START];
-		}
-		else if (state != STATE_XMPP_STARTTLS_2)
-		{
-			[asyncSocket readDataWithTimeout:TIMEOUT_XMPP_READ_STREAM tag:TAG_XMPP_READ_STREAM];
-		}
-	}
+		
+	}});
 }
 
 - (void)xmppParserDidEnd:(XMPPParser *)sender
 {
-	// This method is invoked on the xmppQueue.
-	
-	if (sender != parser) return;
+	NSAssert(dispatch_get_current_queue() == parserQueue, @"Invoked on incorrect queue");
 	
 	XMPPLogTrace();
 	
-	[asyncSocket disconnect];
+	dispatch_async(xmppQueue, ^{ @autoreleasepool {
+		
+		if (sender != parser) return_from_block;
+		
+		[asyncSocket disconnect];
+		
+	}});
 }
 
 - (void)xmppParser:(XMPPParser *)sender didFail:(NSError *)error
 {
-	// This method is invoked on the xmppQueue.
-	
-	if (sender != parser) return;
+	NSAssert(dispatch_get_current_queue() == parserQueue, @"Invoked on incorrect queue");
 	
 	XMPPLogTrace();
 	
-	parserError = error;
-	[asyncSocket disconnect];
+	dispatch_async(xmppQueue, ^{ @autoreleasepool {
+		
+		if (sender != parser) return_from_block;
+		
+		parserError = error;
+		
+		[asyncSocket disconnect];
+		
+	}});
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3793,14 +3675,12 @@ enum XMPPStreamConfig
 				[self keepAlive];
 			}});
 			
-			#if NEEDS_DISPATCH_RETAIN_RELEASE
 			dispatch_source_t theKeepAliveTimer = keepAliveTimer;
 			
 			dispatch_source_set_cancel_handler(keepAliveTimer, ^{
 				XMPPLogVerbose(@"dispatch_release(keepAliveTimer)");
 				dispatch_release(theKeepAliveTimer);
 			});
-			#endif
 			
 			// Everytime we send or receive data, we update our lastSendReceiveTime.
 			// We set our timer to fire several times per keepAliveInterval.
@@ -3828,9 +3708,11 @@ enum XMPPStreamConfig
 		
 		if (elapsed < 0 || elapsed >= keepAliveInterval)
 		{
-			numberOfBytesSent += [keepAliveData length];
+			NSData *outgoingData = [@" " dataUsingEncoding:NSUTF8StringEncoding];
 			
-			[asyncSocket writeData:keepAliveData
+			numberOfBytesSent += [outgoingData length];
+			
+			[asyncSocket writeData:outgoingData
 			           withTimeout:TIMEOUT_XMPP_WRITE
 			                   tag:TAG_XMPP_WRITE_STREAM];
 			
@@ -3858,7 +3740,7 @@ enum XMPPStreamConfig
 		
 		// Register module
 		
-		[registeredModules addObject:module];
+		[registeredModules add:(__bridge void *)module];
 		
 		// Add auto delegates (if there are any)
 		
@@ -3916,7 +3798,7 @@ enum XMPPStreamConfig
 		
 		// Unregister modules
 		
-		[registeredModules removeObject:module];
+		[registeredModules remove:(__bridge void *)module];
 		
 	}};
 	
@@ -3941,7 +3823,10 @@ enum XMPPStreamConfig
 		
 		// Add the delegate to all currently registered modules of the given class.
 		
-		for (XMPPModule *module in registeredModules)
+		DDListEnumerator *registeredModulesEnumerator = [registeredModules listEnumerator];
+		XMPPModule *module;
+		
+		while ((module = (XMPPModule *)[registeredModulesEnumerator nextElement]))
 		{
 			if ([module isKindOfClass:aClass])
 			{
@@ -3953,6 +3838,7 @@ enum XMPPStreamConfig
 		// It will be added as a delegate to future registered modules of the given class.
 		
 		id delegates = [autoDelegateDict objectForKey:className];
+		
 		if (delegates == nil)
 		{
 			delegates = [[GCDMulticastDelegate alloc] init];
@@ -3986,7 +3872,10 @@ enum XMPPStreamConfig
 		{
 			// Remove the delegate from all currently registered modules of ANY class.
 			
-			for (XMPPModule *module in registeredModules)
+			DDListEnumerator *registeredModulesEnumerator = [registeredModules listEnumerator];
+			XMPPModule *module;
+			
+			while ((module = (XMPPModule *)[registeredModulesEnumerator nextElement]))
 			{
 				[module removeDelegate:delegate delegateQueue:delegateQueue];
 			}
@@ -4005,7 +3894,10 @@ enum XMPPStreamConfig
 			
 			// Remove the delegate from all currently registered modules of the given class.
 			
-			for (XMPPModule *module in registeredModules)
+			DDListEnumerator *registeredModulesEnumerator = [registeredModules listEnumerator];
+			XMPPModule *module;
+			
+			while ((module = (XMPPModule *)[registeredModulesEnumerator nextElement]))
 			{
 				if ([module isKindOfClass:aClass])
 				{
@@ -4018,11 +3910,6 @@ enum XMPPStreamConfig
 			
 			GCDMulticastDelegate *delegates = [autoDelegateDict objectForKey:className];
 			[delegates removeDelegate:delegate delegateQueue:delegateQueue];
-			
-			if ([delegates count] == 0)
-			{
-				[autoDelegateDict removeObjectForKey:className];
-			}
 		}
 		
 	}};
@@ -4041,10 +3928,13 @@ enum XMPPStreamConfig
 	
 	dispatch_block_t block = ^{ @autoreleasepool {
 		
+		DDListEnumerator *registeredModulesEnumerator = [registeredModules listEnumerator];
+		
+		XMPPModule *module;
 		NSUInteger i = 0;
 		BOOL stop = NO;
 		
-		for (XMPPModule *module in registeredModules)
+		while ((module = (XMPPModule *)[registeredModulesEnumerator nextElement]))
 		{
 			enumBlock(module, i, &stop);
 			
@@ -4053,6 +3943,7 @@ enum XMPPStreamConfig
 			else
 				i++;
 		}
+		
 	}};
 	
 	// Synchronous operation
@@ -4181,16 +4072,11 @@ enum XMPPStreamConfig
 
 @implementation XMPPElementReceipt
 
-static const uint32_t receipt_unknown = 0 << 0;
-static const uint32_t receipt_failure = 1 << 0;
-static const uint32_t receipt_success = 1 << 1;
-
-
 - (id)init
 {
 	if ((self = [super init]))
 	{
-		atomicFlags = receipt_unknown;
+		atomicFlags = 0;
 		semaphore = dispatch_semaphore_create(0);
 	}
 	return self;
@@ -4198,7 +4084,7 @@ static const uint32_t receipt_success = 1 << 1;
 
 - (void)signalSuccess
 {
-	uint32_t mask = receipt_success;
+	uint32_t mask = 3;
 	OSAtomicOr32Barrier(mask, &atomicFlags);
 	
 	dispatch_semaphore_signal(semaphore);
@@ -4206,7 +4092,7 @@ static const uint32_t receipt_success = 1 << 1;
 
 - (void)signalFailure
 {
-	uint32_t mask = receipt_failure;
+	uint32_t mask = 1;
 	OSAtomicOr32Barrier(mask, &atomicFlags);
 	
 	dispatch_semaphore_signal(semaphore);
@@ -4217,12 +4103,12 @@ static const uint32_t receipt_success = 1 << 1;
 	uint32_t mask = 0;
 	uint32_t flags = OSAtomicOr32Barrier(mask, &atomicFlags);
 	
-	if (flags != receipt_unknown) return (flags == receipt_success);
+	if (flags > 0) return (flags > 1);
 	
 	dispatch_time_t timeout_nanos;
 	
-	if (isless(timeout_seconds, 0.0))
-		timeout_nanos = DISPATCH_TIME_FOREVER;
+	if (timeout_seconds < 0.0)
+		timeout_nanos = DISPATCH_TIME_NOW;
 	else
 		timeout_nanos = dispatch_time(DISPATCH_TIME_NOW, (timeout_seconds * NSEC_PER_SEC));
 	
@@ -4241,20 +4127,18 @@ static const uint32_t receipt_success = 1 << 1;
 	{
 		flags = OSAtomicOr32Barrier(mask, &atomicFlags);
 		
-		return (flags == receipt_success);
+		return (flags > 1);
 	}
 	else
 	{
-		// Timed out waiting...
 		return NO;
 	}
 }
 
 - (void)dealloc
 {
-	#if NEEDS_DISPATCH_RETAIN_RELEASE
 	dispatch_release(semaphore);
-	#endif
+	
 }
 
 @end

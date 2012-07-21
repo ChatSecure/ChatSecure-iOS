@@ -21,8 +21,7 @@
 {
 	if ((self = [super init]))
 	{
-		listHead = NULL;
-		listTail = NULL;
+		list = NULL;
 	}
 	return self;
 }
@@ -39,29 +38,26 @@
 	// Each node object is allocated and placed in the list.
 	// It is not deallocated until it is later removed from the linked list.
 	
-	if (listTail == NULL)
+	if (list == NULL)
 	{
-		node->next = NULL;
 		node->prev = NULL;
+        node->next = NULL;
 	}
     else
     {
-		node->next = NULL;
-        node->prev = listTail;
-		node->prev->next = node;
+        node->prev = NULL;
+		node->next = list;
+		node->next->prev = node;
     }
 	
-	listTail = node;
-	
-	if (listHead == NULL)
-		listHead = node;
+	list = node;
 }
 
 - (void)remove:(void *)element allInstances:(BOOL)allInstances
 {
 	if(element == NULL) return;
 	
-	DDListNode *node = listHead;
+	DDListNode *node = list;
 	while (node != NULL)
 	{
 		if (element == node->element)
@@ -79,12 +75,10 @@
 			if (node->prev != NULL)
 				node->prev->next = node->next;
 			else
-				listHead = node->next;
+				list = node->next;
 			
 			if (node->next != NULL)
 				node->next->prev = node->prev;
-			else
-				listTail = node->prev;
 			
 			free(node);
 			
@@ -109,7 +103,7 @@
 
 - (void)removeAllElements
 {
-	DDListNode *node = listHead;
+	DDListNode *node = list;
 	while (node != NULL)
 	{
 		DDListNode *next = node->next;
@@ -118,22 +112,7 @@
 		node = next;
 	}
 	
-	listHead = NULL;
-	listTail = NULL;
-}
-
-- (BOOL)contains:(void *)element
-{
-	DDListNode *node;
-	for (node = listHead; node != NULL; node = node->next)
-	{
-		if (node->element == element)
-		{
-			return YES;
-		}
-	}
-	
-	return NO;
+	list = NULL;
 }
 
 - (NSUInteger)count
@@ -141,7 +120,7 @@
 	NSUInteger count = 0;
 	
 	DDListNode *node;
-	for (node = listHead; node != NULL; node = node->next)
+	for (node = list; node != NULL; node = node->next)
 	{
 		count++;
 	}
@@ -149,48 +128,14 @@
 	return count;
 }
 
-- (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state
-                                  objects:(id __unsafe_unretained [])buffer
-                                    count:(NSUInteger)len
-{
-	DDListNode *currentNode;
-	
-	if (state->extra[0] == 1)
-		return 0;
-	
-	if (state->state == 0)
-		currentNode = listHead;
-	else
-		currentNode = (DDListNode *)state->state;
-	
-	NSUInteger batchCount = 0;
-	while (currentNode != NULL && batchCount < len)
-	{
-		buffer[batchCount] = (__bridge id)currentNode->element;
-		currentNode = currentNode->next;
-		batchCount++;
-	}
-	
-	state->state = (unsigned long)currentNode;
-	state->itemsPtr = buffer;
-	state->mutationsPtr = (__bridge void *)self;
-	
-	if (currentNode == NULL)
-		state->extra[0] = 1;
-	else
-		state->extra[0] = 0;
-	
-	return batchCount;
-}
-
 - (DDListEnumerator *)listEnumerator
 {
-	return [[DDListEnumerator alloc] initWithList:listHead reverse:NO];
+	return [[DDListEnumerator alloc] initWithList:list reverse:NO];
 }
 
 - (DDListEnumerator *)reverseListEnumerator
 {
-	return [[DDListEnumerator alloc] initWithList:listTail reverse:YES];
+	return [[DDListEnumerator alloc] initWithList:list reverse:YES];
 }
 
 - (void)dealloc
@@ -206,7 +151,7 @@
 
 @implementation DDListEnumerator
 
-- (id)initWithList:(DDListNode *)list reverse:(BOOL)reverse
+- (id)initWithList:(DDListNode *)aList reverse:(BOOL)reverse
 {
 	if ((self = [super init]))
 	{
@@ -214,45 +159,55 @@
 		currentElementIndex = 0;
 		
 		// First get a count of the number of elements in the given list.
+		// Also, get a reference to the last node in the list.
 		
-		if (reverse)
+		DDListNode *node = aList;
+		
+		if (node != NULL)
 		{
-			for (DDListNode *node = list; node != NULL; node = node->prev)
-			{
-				numElements++;
-			}
-		}
-		else
-		{
-			for (DDListNode *node = list; node != NULL; node = node->next)
-			{
-				numElements++;
-			}
+			numElements++;
 			
+			while (node->next != NULL)
+			{
+				numElements++;
+				node = node->next;
+			}
 		}
 		
-		// Now copy the list into a C array.
+		// At this point:
+		// 
+		// aList -> points to the first element in the list
+		// node  -> points to the last element in the list
+		
+		// Recall that new elements are added to the beginning of the linked list.
+		// The last element in the list is the first element that was added.
 		
 		if (numElements > 0)
 		{
 			elements = malloc(numElements * sizeof(void *));
 			
-			DDListNode *node = list;
-			
 			if (reverse)
 			{
-				for (NSUInteger i = 0; i < numElements; i++)
+				NSUInteger i = 0;
+				
+				while (aList != NULL)
 				{
-					elements[i] = node->element;
-					node = node->prev;
+					elements[i] = aList->element;
+					
+					i++;
+					aList = aList->next;
 				}			
 			}
 			else
 			{
-				for (NSUInteger i = 0; i < numElements; i++)
+				NSUInteger i = 0;
+				
+				while (node != NULL)
 				{
 					elements[i] = node->element;
-					node = node->next;
+					
+					i++;
+					node = node->prev;
 				}
 			}
 		}

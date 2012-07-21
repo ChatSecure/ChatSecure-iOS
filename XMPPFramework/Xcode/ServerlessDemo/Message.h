@@ -7,14 +7,14 @@
 
 // Properties
 
-@property (nonatomic) NSString * content;
-@property (nonatomic) NSNumber * outbound;
-@property (nonatomic) NSNumber * read;
-@property (nonatomic) NSDate   * timeStamp;
+@property (nonatomic, retain) NSString * content;
+@property (nonatomic, retain) NSNumber * outbound;
+@property (nonatomic, retain) NSNumber * read;
+@property (nonatomic, retain) NSDate   * timeStamp;
 
 // Relationships
 
-@property (nonatomic) Service * service;
+@property (nonatomic, retain) Service * service;
 
 // Convenience Properties
 

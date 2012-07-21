@@ -40,6 +40,7 @@ static BonjourClient *sharedInstance;
 	// Only allow one instance of this class to ever be created
 	if(sharedInstance)
 	{
+		[self release];
 		return nil;
 	}
 	

@@ -63,7 +63,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 {
 	DDLogInfo(@"%@: %@", THIS_FILE, THIS_METHOD);
 	
-	[xmppRoom joinRoomUsingNickname:@"quack" history:nil];
+	[xmppRoom createOrJoinRoomUsingNickname:@"quack"];
 }
 
 - (void)xmppStream:(XMPPStream *)sender didNotAuthenticate:(NSXMLElement *)error
@@ -125,33 +125,28 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 	DDLogInfo(@"%@: %@", THIS_FILE, THIS_METHOD);
 }
 
-- (void)handleDidLeaveRoom:(XMPPRoom *)room
-{
-	DDLogInfo(@"%@: %@", THIS_FILE, THIS_METHOD);
-}
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark XMPPRoomStorage Protocol
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (void)handlePresence:(XMPPPresence *)presence room:(XMPPRoom *)room
+- (id <XMPPRoomOccupant>)occupantForJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream
 {
-
-}
-
-- (void)handleIncomingMessage:(XMPPMessage *)message room:(XMPPRoom *)room
-{
-
-}
-
-- (void)handleOutgoingMessage:(XMPPMessage *)message room:(XMPPRoom *)room
-{
-
+	return nil;
 }
 
 - (BOOL)configureWithParent:(XMPPRoom *)aParent queue:(dispatch_queue_t)queue
 {
 	return YES;
+}
+
+- (id <XMPPRoomOccupant>)handlePresence:(XMPPPresence *)presence xmppStream:(XMPPStream *)xmppStream
+{
+	return nil;
+}
+
+- (id <XMPPRoomOccupant>)handleMessage:(XMPPMessage *)message xmppStream:(XMPPStream *)xmppStream
+{
+	return nil;
 }
 
 @end

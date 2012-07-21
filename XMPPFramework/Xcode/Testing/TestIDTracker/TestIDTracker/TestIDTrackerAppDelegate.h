@@ -16,9 +16,9 @@
 	NSString *fetch7;
 	NSString *fetch8;
 	
-	__unsafe_unretained NSWindow *window;
+	NSWindow *window;
 }
 
-@property (unsafe_unretained) IBOutlet NSWindow *window;
+@property (assign) IBOutlet NSWindow *window;
 
 @end

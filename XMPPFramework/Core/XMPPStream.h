@@ -1,13 +1,12 @@
 #import <Foundation/Foundation.h>
-#import "XMPPSASLAuthentication.h"
 #import "GCDAsyncSocket.h"
 #import "GCDMulticastDelegate.h"
-
 #if TARGET_OS_IPHONE
   #import "DDXML.h"
 #endif
 
 @class XMPPSRVResolver;
+@class DDList;
 @class XMPPParser;
 @class XMPPJID;
 @class XMPPIQ;
@@ -39,6 +38,58 @@ typedef enum XMPPStreamErrorCode XMPPStreamErrorCode;
 
 
 @interface XMPPStream : NSObject <GCDAsyncSocketDelegate>
+{
+	dispatch_queue_t xmppQueue;
+	dispatch_queue_t parserQueue;
+	
+	GCDMulticastDelegate <XMPPStreamDelegate> *multicastDelegate;
+	
+	int state;
+	
+	GCDAsyncSocket *asyncSocket;
+	NSMutableData *socketBuffer;
+	
+	UInt64 numberOfBytesSent;
+	UInt64 numberOfBytesReceived;
+	
+	XMPPParser *parser;
+	NSError *parserError;
+	
+	Byte flags;
+	Byte config;
+	
+	NSString *hostName;
+	UInt16 hostPort;
+	
+	NSString *tempPassword;
+	BOOL isAccessToken;
+	
+	NSString *appId;
+	
+	XMPPJID *myJID;
+	XMPPJID *remoteJID;
+	
+	XMPPPresence *myPresence;
+	NSXMLElement *rootElement;
+	
+	NSTimeInterval keepAliveInterval;
+	dispatch_source_t keepAliveTimer;
+	NSTimeInterval lastSendReceiveTime;
+	
+	DDList *registeredModules;
+	NSMutableDictionary *autoDelegateDict;
+	
+	XMPPSRVResolver *srvResolver;
+	NSArray *srvResults;
+	NSUInteger srvResultsIndex;
+	
+	NSMutableArray *receipts;
+	
+	NSThread *xmppUtilityThread;
+	NSRunLoop *xmppUtilityRunLoop;
+	
+	id userTag;
+}
 
 /**
  * Standard XMPP initialization.
@@ -56,6 +107,12 @@ typedef enum XMPPStreamErrorCode XMPPStreamErrorCode;
 - (id)initP2PFrom:(XMPPJID *)myJID;
 
 /**
+ * Facebook Chat X-FACEBOOK-PLATFORM SASL authentication initialization.
+ * This is a convienence init method to help configure Facebook Chat.
+ **/
+- (id)initWithFacebookAppId:(NSString *)fbAppId;
+
+/**
  * XMPPStream uses a multicast delegate.
  * This allows one to add multiple delegates to a single XMPPStream instance,
  * which makes it easier to separate various components and extensions.
@@ -70,6 +127,12 @@ typedef enum XMPPStreamErrorCode XMPPStreamErrorCode;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark Properties
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * The appId can be passed to custom authentication classes.
+ * For example, the appId is used for Facebook Chat X-FACEBOOK-PLATFORM SASL authentication.
+**/
+@property (readwrite,copy) NSString *appId;
 
 /**
  * The server's hostname that should be used to make the TCP connection.
@@ -161,23 +224,10 @@ typedef enum XMPPStreamErrorCode XMPPStreamErrorCode;
 @property (readwrite, assign) NSTimeInterval keepAliveInterval;
 
 /**
- * The keep-alive mechanism sends whitespace which is ignored by the xmpp protocol.
- * The default whitespace character is a space (' ').
- * 
- * This can be changed, for whatever reason, to another whitespace character.
- * Valid whitespace characters are space(' '), tab('\t') and newline('\n').
- * 
- * If you attempt to set the character to any non-whitespace character, the attempt is ignored.
-**/
-@property (readwrite, assign) char keepAliveWhitespaceCharacter;
-
-/**
  * Represents the last sent presence element concerning the presence of myJID on the server.
  * In other words, it represents the presence as others see us.
  * 
  * This excludes presence elements sent concerning subscriptions, MUC rooms, etc.
- * 
- * @see resendMyPresence
 **/
 @property (strong, readonly) XMPPPresence *myPresence;
 
@@ -279,23 +329,18 @@ typedef enum XMPPStreamErrorCode XMPPStreamErrorCode;
 
 /**
  * Disconnects from the remote host by closing the underlying TCP socket connection.
- * The terminating </stream:stream> element is not sent to the server.
  * 
- * This method is synchronous.
+ * The disconnect method is synchronous.
  * Meaning that the disconnect will happen immediately, even if there are pending elements yet to be sent.
+ * The xmppStreamDidDisconnect:withError: method will be invoked before the disconnect method returns.
  * 
- * The xmppStreamDidDisconnect:withError: delegate method will immediately be dispatched onto the delegate queue.
+ * The disconnectAfterSending method is asynchronous.
+ * The disconnect will happen after all pending elements have been sent.
+ * Attempting to send elements after this method is called will not result in the elements getting sent.
+ * The disconnectAfterSending method will return immediately,
+ * and the xmppStreamDidDisconnect:withError: delegate method will be invoked at a later time.
 **/
 - (void)disconnect;
-
-/**
- * Disconnects from the remote host by sending the terminating </stream:stream> element,
- * and then closing the underlying TCP socket connection.
- * 
- * This method is asynchronous.
- * The disconnect will happen after all pending elements have been sent.
- * Attempting to send elements after this method has been called will not work (the elements won't get sent).
-**/
 - (void)disconnectAfterSending;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -373,76 +418,36 @@ typedef enum XMPPStreamErrorCode XMPPStreamErrorCode;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Returns the server's list of supported authentication mechanisms.
- * Each item in the array will be of type NSString.
+ * Authentication.
  * 
- * For example, if the server supplied this stanza within it's reported stream:features:
- * 
- * <mechanisms xmlns="urn:ietf:params:xml:ns:xmpp-sasl">
- *     <mechanism>DIGEST-MD5</mechanism>
- *     <mechanism>PLAIN</mechanism>
- * </mechanisms>
- * 
- * Then this method would return [@"DIGEST-MD5", @"PLAIN"].
-**/
-- (NSArray *)supportedAuthenticationMechanisms;
-
-/**
- * Returns whether or not the given authentication mechanism name was specified in the
- * server's list of supported authentication mechanisms.
- * 
- * Note: The authentication classes often provide a category on XMPPStream, adding useful methods.
- * 
- * @see XMPPPlainAuthentication - supportsPlainAuthentication
- * @see XMPPDigestMD5Authentication - supportsDigestMD5Authentication
- * @see XMPPXFacebookPlatformAuthentication - supportsXFacebookPlatformAuthentication
- * @see XMPPDeprecatedPlainAuthentication - supportsDeprecatedPlainAuthentication
- * @see XMPPDeprecatedDigestAuthentication - supportsDeprecatedDigestAuthentication
-**/
-- (BOOL)supportsAuthenticationMechanism:(NSString *)mechanism;
-
-/**
- * This is the root authentication method.
- * All other authentication methods go through this one.
- * 
- * This method attempts to start the authentication process given the auth instance.
- * That is, this method will invoke start: on the given auth instance.
- * If it returns YES, then the stream will enter into authentication mode.
- * It will then continually invoke the handleAuth: method on the given instance until authentication is complete.
- * 
- * This method is asynchronous.
+ * The authenticateWithPassword:error: and authenticateWithFacebookAccessToken:error: methods are asynchronous.
+ * Each will return immediately, and the delegate methods are used to determine success.
+ * See the xmppStreamDidAuthenticate: and xmppStream:didNotAuthenticate: methods.
  * 
  * If there is something immediately wrong, such as the stream is not connected,
  * the method will return NO and set the error.
- * Otherwise the delegate callbacks are used to communicate auth success or failure.
  * 
- * @see xmppStreamDidAuthenticate:
- * @see xmppStream:didNotAuthenticate:
+ * The errPtr parameter is optional - you may pass nil.
  * 
- * @see authenticateWithPassword:error:
+ * The authenticateWithPassword:error: method will choose the most secure protocol to send the password.
  * 
- * Note: The security process is abstracted in order to provide flexibility,
- *       and allow developers to easily implement their own custom authentication protocols.
- *       The authentication classes often provide a category on XMPPStream, adding useful methods.
- * 
- * @see XMPPXFacebookPlatformAuthentication - authenticateWithFacebookAccessToken:error:
-**/
-- (BOOL)authenticate:(id <XMPPSASLAuthentication>)auth error:(NSError **)errPtr;
-
-/**
- * This method applies to standard password authentication schemes only.
- * This is NOT the primary authentication method.
- * 
- * @see authenticate:error:
- * 
- * This method exists for backwards compatibility, and may disappear in future versions.
-**/
-- (BOOL)authenticateWithPassword:(NSString *)password error:(NSError **)errPtr;
-
-/**
- * Returns whether or not the xmpp stream has successfully authenticated with the server.
+ * Security Note:
+ * Care should be taken if sending passwords in the clear is not acceptable.
+ * You may use the supportsXAuthentication methods below to determine
+ * if an acceptable authentication protocol is supported.
 **/
 - (BOOL)isAuthenticated;
+- (BOOL)supportsAnonymousAuthentication;
+- (BOOL)supportsPlainAuthentication;
+- (BOOL)supportsDigestMD5Authentication;
+- (BOOL)supportsXFacebookPlatformAuthentication;
+- (BOOL)supportsDeprecatedPlainAuthentication;
+- (BOOL)supportsDeprecatedDigestAuthentication;
+- (BOOL)authenticateWithFacebookAccessToken:(NSString *)accessToken error:(NSError **)errPtr;
+- (BOOL)authenticateWithPassword:(NSString *)password error:(NSError **)errPtr;
+- (BOOL)authenticateAnonymously:(NSError **)errPtr;
+
+- (void)handleAuth1:(NSXMLElement *)response;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark Server Info
@@ -455,7 +460,7 @@ typedef enum XMPPStreamErrorCode XMPPStreamErrorCode;
  * If multiple <stream:features/> have been received during the course of stream negotiation,
  * the root element contains only the most recent (current) version.
  * 
- * Note: The rootElement is "empty", in-so-far as it does not contain all the XML elements the stream has
+ * Note: The rootElement is "empty", in so much as it does not contain all the XML elements the stream has
  * received during it's connection. This is done for performance reasons and for the obvious benefit
  * of being more memory efficient.
 **/
@@ -508,20 +513,6 @@ typedef enum XMPPStreamErrorCode XMPPStreamErrorCode;
  * Even if you close the xmpp stream after this point, the OS will still do everything it can to send the data.
 **/
 - (void)sendElement:(NSXMLElement *)element andGetReceipt:(XMPPElementReceipt **)receiptPtr;
-
-/**
- * Fetches and resends the myPresence element (if available) in a single atomic operation.
- * 
- * There are various xmpp extensions that hook into the xmpp stream and append information to outgoing presence stanzas.
- * For example, the XMPPCapabilities module automatically appends capabilities information (as a hash).
- * When these modules need to update/change their appended information,
- * they should use this method to do so.
- * 
- * The alternative is to fetch the myPresence element, and resend it manually using the sendElement method.
- * However, that is 2 seperate operations, and the user, may send a different presence element inbetween.
- * Using this method guarantees everything is done as an atomic operation.
-**/
-- (void)resendMyPresence;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark Module Plug-In System
@@ -758,49 +749,11 @@ typedef enum XMPPStreamErrorCode XMPPStreamErrorCode;
 - (void)xmppStream:(XMPPStream *)sender didNotAuthenticate:(NSXMLElement *)error;
 
 /**
- * This method is called if the XMPP server doesn't allow our resource of choice
- * because it conflicts with an existing resource.
- * 
- * Return an alternative resource or return nil to let the server automatically pick a resource for us.
-**/
-- (NSString *)xmppStream:(XMPPStream *)sender alternativeResourceForConflictingResource:(NSString *)conflictingResource;
-
-/**
- * These methods are called before their respective XML elements are broadcast as received to the rest of the stack.
- * These methods can be used to modify elements on the fly.
- * (E.g. perform custom decryption so the rest of the stack sees readable text.)
- * 
- * You may also filter incoming elements by returning nil.
- * 
- * When implementing these methods to modify the element, you do not need to copy the given element.
- * You can simply edit the given element, and return it.
- * The reason these methods return an element, instead of void, is to allow filtering.
- * 
- * Concerning thread-safety, delegates implementing the method are invoked one-at-a-time to
- * allow thread-safe modification of the given elements.
- *
- * You should NOT implement these methods unless you have good reason to do so.
- * For general processing and notification of received elements, please use xmppStream:didReceiveX: methods.
- * 
- * @see xmppStream:didReceiveIQ:
- * @see xmppStream:didReceiveMessage:
- * @see xmppStream:didReceivePresence:
-**/
-- (XMPPIQ *)xmppStream:(XMPPStream *)sender willReceiveIQ:(XMPPIQ *)iq;
-- (XMPPMessage *)xmppStream:(XMPPStream *)sender willReceiveMessage:(XMPPMessage *)message;
-- (XMPPPresence *)xmppStream:(XMPPStream *)sender willReceivePresence:(XMPPPresence *)presence;
-
-/**
  * These methods are called after their respective XML elements are received on the stream.
  * 
  * In the case of an IQ, the delegate method should return YES if it has or will respond to the given IQ.
  * If the IQ is of type 'get' or 'set', and no delegates respond to the IQ,
  * then xmpp stream will automatically send an error response.
- * 
- * Concerning thread-safety, delegates shouldn't modify the given elements.
- * As documented in NSXML / KissXML, elements are read-access thread-safe, but write-access thread-unsafe.
- * If you have need to modify an element for any reason,
- * you should copy the element first, and then modify and use the copy.
 **/
 - (BOOL)xmppStream:(XMPPStream *)sender didReceiveIQ:(XMPPIQ *)iq;
 - (void)xmppStream:(XMPPStream *)sender didReceiveMessage:(XMPPMessage *)message;
@@ -819,28 +772,12 @@ typedef enum XMPPStreamErrorCode XMPPStreamErrorCode;
 
 /**
  * These methods are called before their respective XML elements are sent over the stream.
- * These methods can be used to modify outgoing elements on the fly.
+ * These methods can be used to customize elements on the fly.
  * (E.g. add standard information for custom protocols.)
- * 
- * You may also filter outgoing elements by returning nil.
- * 
- * When implementing these methods to modify the element, you do not need to copy the given element.
- * You can simply edit the given element, and return it.
- * The reason these methods return an element, instead of void, is to allow filtering.
- * 
- * Concerning thread-safety, delegates implementing the method are invoked one-at-a-time to
- * allow thread-safe modification of the given elements.
- * 
- * You should NOT implement these methods unless you have good reason to do so.
- * For general processing and notification of sent elements, please use xmppStream:didSendX: methods.
- * 
- * @see xmppStream:didSendIQ:
- * @see xmppStream:didSendMessage:
- * @see xmppStream:didSendPresence:
 **/
-- (XMPPIQ *)xmppStream:(XMPPStream *)sender willSendIQ:(XMPPIQ *)iq;
-- (XMPPMessage *)xmppStream:(XMPPStream *)sender willSendMessage:(XMPPMessage *)message;
-- (XMPPPresence *)xmppStream:(XMPPStream *)sender willSendPresence:(XMPPPresence *)presence;
+- (void)xmppStream:(XMPPStream *)sender willSendIQ:(XMPPIQ *)iq;
+- (void)xmppStream:(XMPPStream *)sender willSendMessage:(XMPPMessage *)message;
+- (void)xmppStream:(XMPPStream *)sender willSendPresence:(XMPPPresence *)presence;
 
 /**
  * These methods are called after their respective XML elements are sent over the stream.

@@ -7,36 +7,10 @@
 #warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
 #endif
 
-/**
- * Does ARC support support GCD objects?
- * It does if the minimum deployment target is iOS 6+ or Mac OS X 10.8+
-**/
-#if TARGET_OS_IPHONE
-
-  // Compiling for iOS
-
-  #if __IPHONE_OS_VERSION_MIN_REQUIRED >= 60000 // iOS 6.0 or later
-    #define NEEDS_DISPATCH_RETAIN_RELEASE 0
-  #else                                         // iOS 5.X or earlier
-    #define NEEDS_DISPATCH_RETAIN_RELEASE 1
-  #endif
-
-#else
-
-  // Compiling for Mac OS X
-
-  #if MAC_OS_X_VERSION_MIN_REQUIRED >= 1080     // Mac OS X 10.8 or later
-    #define NEEDS_DISPATCH_RETAIN_RELEASE 0
-  #else
-    #define NEEDS_DISPATCH_RETAIN_RELEASE 1     // Mac OS X 10.7 or earlier
-  #endif
-
-#endif
-
 // Log levels: off, error, warn, info, verbose
 // Log flags: trace
 #if DEBUG
-  static const int xmppLogLevel = XMPP_LOG_LEVEL_WARN;
+  static const int xmppLogLevel = XMPP_LOG_LEVEL_VERBOSE; // | XMPP_LOG_FLAG_TRACE;
 #else
   static const int xmppLogLevel = XMPP_LOG_LEVEL_WARN;
 #endif
@@ -434,21 +408,7 @@ static NSInteger sortForms(NSXMLElement *form1, NSXMLElement *form2, void *conte
 	
 	// The formTypeValue variable is guaranteed to be properly encoded.
 	
-	if (formTypeValue1)
-	{
-		if (formTypeValue2)
-			return [formTypeValue1 compare:formTypeValue2 options:NSLiteralSearch];
-		else
-			return NSOrderedAscending;
-	}
-	else if (formTypeValue2)
-	{
-		return NSOrderedDescending;
-	}
-	else
-	{
-		return NSOrderedSame;
-	}
+	return [formTypeValue1 compare:formTypeValue2 options:NSLiteralSearch];
 }
 
 static NSInteger sortFormFields(NSXMLElement *field1, NSXMLElement *field2, void *context)
@@ -692,7 +652,7 @@ static NSInteger sortFieldValues(NSXMLElement *value1, NSXMLElement *value2, voi
 	
 	SEL selector = @selector(xmppCapabilities:collectingMyCapabilities:);
 	
-	if (![multicastDelegate hasDelegateThatRespondsToSelector:selector])
+	if ([multicastDelegate countForSelector:selector] == 0)
 	{
 		// None of the delegates implement the method.
 		// Use a shortcut.
@@ -749,7 +709,7 @@ static NSInteger sortFieldValues(NSXMLElement *value1, NSXMLElement *value2, voi
 	
 	if (hash == nil)
 	{
-		XMPPLogWarn(@"%@: Unable to hash capabilites (in order to send in presense element)\n"
+		XMPPLogWarn(@"%@: Unable to hash capabilites (in order to send in presense element)\n",
 					"Perhaps there are duplicate advertised features...\n%@", THIS_FILE,
 					[query XMLStringWithOptions:(NSXMLNodeCompactEmptyElement | NSXMLNodePrettyPrint)]);
 		return;
@@ -777,7 +737,11 @@ static NSInteger sortFieldValues(NSXMLElement *value1, NSXMLElement *value2, voi
 	// and ended up taking so long as to not be available when the presence was sent,
 	// we should re-broadcast our presence now that we know what our capabilities are.
 	
-	[xmppStream resendMyPresence];
+	XMPPPresence *myPresence = [xmppStream myPresence];
+	if (myPresence)
+	{
+		[xmppStream sendElement:myPresence];
+	}
 }
 
 - (void)recollectMyCapabilities
@@ -1520,7 +1484,7 @@ static NSInteger sortFieldValues(NSXMLElement *value1, NSXMLElement *value2, voi
 	return YES;
 }
 
-- (XMPPPresence *)xmppStream:(XMPPStream *)sender willSendPresence:(XMPPPresence *)presence
+- (void)xmppStream:(XMPPStream *)sender willSendPresence:(XMPPPresence *)presence
 {
 	// This method is invoked on the moduleQueue.
 	
@@ -1546,8 +1510,6 @@ static NSInteger sortFieldValues(NSXMLElement *value1, NSXMLElement *value2, voi
 			[presence addChild:c];
 		}
 	}
-	
-	return presence;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1572,9 +1534,8 @@ static NSInteger sortFieldValues(NSXMLElement *value1, NSXMLElement *value2, voi
 		[self processTimeoutWithJID:jid];
 		
 		dispatch_source_cancel(timer);
-		#if NEEDS_DISPATCH_RETAIN_RELEASE
 		dispatch_release(timer);
-		#endif
+		
 	}});
 	
 	dispatch_time_t tt = dispatch_time(DISPATCH_TIME_NOW, (CAPABILITIES_REQUEST_TIMEOUT * NSEC_PER_SEC));
@@ -1608,9 +1569,8 @@ static NSInteger sortFieldValues(NSXMLElement *value1, NSXMLElement *value2, voi
 		[self processTimeoutWithHashKey:key];
 		
 		dispatch_source_cancel(timer);
-		#if NEEDS_DISPATCH_RETAIN_RELEASE
 		dispatch_release(timer);
-		#endif
+		
 	}});
 	
 	dispatch_time_t tt = dispatch_time(DISPATCH_TIME_NOW, (CAPABILITIES_REQUEST_TIMEOUT * NSEC_PER_SEC));
@@ -1685,9 +1645,7 @@ static NSInteger sortFieldValues(NSXMLElement *value1, NSXMLElement *value2, voi
 	if ((self = [super init]))
 	{
 		timer = aTimer;
-		#if NEEDS_DISPATCH_RETAIN_RELEASE
 		dispatch_retain(timer);
-		#endif
 	}
 	return self;
 }
@@ -1697,9 +1655,7 @@ static NSInteger sortFieldValues(NSXMLElement *value1, NSXMLElement *value2, voi
 	if (timer)
 	{
 		dispatch_source_cancel(timer);
-		#if NEEDS_DISPATCH_RETAIN_RELEASE
 		dispatch_release(timer);
-		#endif
 		timer = NULL;
 	}
 }

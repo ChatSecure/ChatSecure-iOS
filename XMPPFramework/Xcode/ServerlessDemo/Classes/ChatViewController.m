@@ -298,7 +298,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 	UITableViewCell *cell = [sender dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil)
 	{
-		cell = [self newMessageBubbleCellWithIdentifier:CellIdentifier];
+		cell = [[self newMessageBubbleCellWithIdentifier:CellIdentifier] autorelease];
 	}
 	
 	[self configureCell:cell atIndexPath:indexPath];
@@ -347,6 +347,9 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 	[cell.contentView addSubview:bubbleImageView];
 	[cell.contentView addSubview:contentLabel];
     
+	[timestampLabel release];
+	[contentLabel release];
+	[bubbleImageView release];
 	
     return cell;
 }
@@ -551,6 +554,9 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 			DDLogError(@"Error fetching messages: %@ %@", error, [error userInfo]);
         }
 		
+		[dateSD release];
+		[sortDescriptors release];
+		[fetchRequest release];
     }
 	
     return fetchedResultsController;
@@ -733,14 +739,20 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
 	
+	[service release];
 	
 	[netService setDelegate:nil];
 	[netService stop];
+	[netService release];
 	
 	[xmppStream removeDelegate:self];
 	[xmppStream disconnect];
+	[xmppStream release];
 	
+	[fetchedResultsController release];
+	[managedObjectContext release];
 	
+	[super dealloc];
 }
 
 

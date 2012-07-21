@@ -80,7 +80,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 	if (managedObjectModel != nil) {
         return managedObjectModel;
     }
-    managedObjectModel = [NSManagedObjectModel mergedModelFromBundles:nil];    
+    managedObjectModel = [[NSManagedObjectModel mergedModelFromBundles:nil] retain];    
     return managedObjectModel;
 }
 
@@ -211,6 +211,16 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 #pragma mark Memory management
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+- (void)dealloc
+{
+    [managedObjectContext release];
+    [managedObjectModel release];
+    [persistentStoreCoordinator release];
+    
+	[navigationController release];
+	[window release];
+	[super dealloc];
+}
 
 
 @end

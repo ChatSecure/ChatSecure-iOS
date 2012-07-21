@@ -9,9 +9,9 @@
 #import <Cocoa/Cocoa.h>
 
 @interface TestElementReceiptAppDelegate : NSObject <NSApplicationDelegate> {
-	__unsafe_unretained NSWindow *window;
+	NSWindow *window;
 }
 
-@property (unsafe_unretained) IBOutlet NSWindow *window;
+@property (assign) IBOutlet NSWindow *window;
 
 @end

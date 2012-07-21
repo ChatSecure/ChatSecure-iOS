@@ -1,5 +1,4 @@
 #import "DDAbstractDatabaseLogger.h"
-#import <math.h>
 
 /**
  * Welcome to Cocoa Lumberjack!
@@ -13,32 +12,6 @@
 
 #if ! __has_feature(objc_arc)
 #warning This file must be compiled with ARC. Use -fobjc-arc flag (or convert project to ARC).
-#endif
-
-/**
- * Does ARC support support GCD objects?
- * It does if the minimum deployment target is iOS 6+ or Mac OS X 10.8+
-**/
-#if TARGET_OS_IPHONE
-
-  // Compiling for iOS
-
-  #if __IPHONE_OS_VERSION_MIN_REQUIRED >= 60000 // iOS 6.0 or later
-    #define NEEDS_DISPATCH_RETAIN_RELEASE 0
-  #else                                         // iOS 5.X or earlier
-    #define NEEDS_DISPATCH_RETAIN_RELEASE 1
-  #endif
-
-#else
-
-  // Compiling for Mac OS X
-
-  #if MAC_OS_X_VERSION_MIN_REQUIRED >= 1080     // Mac OS X 10.8 or later
-    #define NEEDS_DISPATCH_RETAIN_RELEASE 0
-  #else
-    #define NEEDS_DISPATCH_RETAIN_RELEASE 1     // Mac OS X 10.7 or earlier
-  #endif
-
 #endif
 
 @interface DDAbstractDatabaseLogger ()
@@ -141,15 +114,7 @@
 	if (saveTimer)
 	{
 		dispatch_source_cancel(saveTimer);
-		if (saveTimerSuspended)
-		{
-			// Must resume a timer before releasing it (or it will crash)
-			dispatch_resume(saveTimer);
-			saveTimerSuspended = NO;
-		}
-		#if NEEDS_DISPATCH_RETAIN_RELEASE
 		dispatch_release(saveTimer);
-		#endif
 		saveTimer = NULL;
 	}
 }
@@ -192,9 +157,7 @@
 	if (deleteTimer)
 	{
 		dispatch_source_cancel(deleteTimer);
-		#if NEEDS_DISPATCH_RETAIN_RELEASE
 		dispatch_release(deleteTimer);
-		#endif
 		deleteTimer = NULL;
 	}
 }
@@ -307,10 +270,7 @@
 {
 	dispatch_block_t block = ^{
 	
-		// C99 recommended floating point comparison macro
-		// Read: isLessThanOrGreaterThan(floatA, floatB)
-		
-		if (/* saveInterval != interval */ islessgreater(saveInterval, interval))
+		if (saveInterval != interval)
 		{
 			saveInterval = interval;
 			
@@ -390,10 +350,7 @@
 {
 	dispatch_block_t block = ^{
 		
-		// C99 recommended floating point comparison macro
-		// Read: isLessThanOrGreaterThan(floatA, floatB)
-		
-		if (/* maxAge != interval */ islessgreater(maxAge, interval))
+		if (maxAge != interval)
 		{
 			NSTimeInterval oldMaxAge = maxAge;
 			NSTimeInterval newMaxAge = interval;
@@ -479,10 +436,7 @@
 {
 	dispatch_block_t block = ^{
 		
-		// C99 recommended floating point comparison macro
-		// Read: isLessThanOrGreaterThan(floatA, floatB)
-		
-		if (/* deleteInterval != interval */ islessgreater(deleteInterval, interval))
+		if (deleteInterval != interval)
 		{
 			deleteInterval = interval;
 			

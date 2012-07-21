@@ -91,8 +91,13 @@
 	[self parserTest];
 	
 	// Override point for customization after application launch
-    window.rootViewController = [UIViewController new];
 	[window makeKeyAndVisible];
+}
+
+- (void)dealloc
+{
+	[window release];
+	[super dealloc];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -152,6 +157,7 @@
 				NSLog(@"\n\n%@\n", [doc XMLStringWithOptions:(NSXMLNodeCompactEmptyElement | NSXMLNodePrettyPrint)]);
 			}			
 			
+			[doc release];
 			[mData setLength:0];
 		}
 		

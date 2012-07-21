@@ -21,19 +21,11 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 {
 	if ((self = [super init]))
 	{
-		// 
 		// Configure logging framework
-		// 
-		// The XMPPFramework uses the CocoaLumberjack framework to provide fast & flexible logging.
-		// There's tons of information about Lumberjack online:
-		// https://github.com/robbiehanson/CocoaLumberjack
-		// https://github.com/robbiehanson/CocoaLumberjack/wiki
-		// 
-		// But this one line is all we need to configure the logging framework to dump to the Xcode console.
 		
 		[DDLog addLogger:[DDTTYLogger sharedInstance]];
 		
-		// Initialize xmpp stream and modules
+		// Initialize variables
 		
 		xmppStream = [[XMPPStream alloc] init];
 		
@@ -42,7 +34,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 		xmppRosterStorage = [[XMPPRosterMemoryStorage alloc] init];
 		xmppRoster = [[XMPPRoster alloc] initWithRosterStorage:xmppRosterStorage];
 		
-	//	xmppCapabilitiesStorage = [XMPPCapabilitiesCoreDataStorage sharedInstance];
+	//	xmppCapabilitiesStorage = [[XMPPCapabilitiesCoreDataStorage alloc] init];
 	//	xmppCapabilities = [[XMPPCapabilities alloc] initWithCapabilitiesStorage:xmppCapabilitiesStorage];
 		
 	//	xmppCapabilities.autoFetchHashedCapabilities = YES;
@@ -50,21 +42,6 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 		
 	//	xmppPing = [[XMPPPing alloc] init];
 	//	xmppTime = [[XMPPTime alloc] init];
-		
-		// Activate xmpp modules
-		
-		[xmppReconnect activate:xmppStream];
-		[xmppRoster activate:xmppStream];
-		[xmppCapabilities activate:xmppStream];
-		[xmppPing activate:xmppStream];
-		[xmppTime activate:xmppStream];
-		
-		// Add ourself as a delegate to anything we may be interested in
-		
-		[xmppReconnect addDelegate:self delegateQueue:dispatch_get_main_queue()];
-		[xmppCapabilities addDelegate:self delegateQueue:dispatch_get_main_queue()];
-		
-		// Initialize other stuff
 		
 		turnSockets = [[NSMutableArray alloc] init];
 	}
@@ -75,9 +52,32 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 {
 	DDLogInfo(@"%@: %@", THIS_FILE, THIS_METHOD);
 	
+	[xmppStream addDelegate:self delegateQueue:dispatch_get_main_queue()];
+	
+	// Activate xmpp modules
+	
+	[xmppReconnect activate:xmppStream];
+	[xmppRoster activate:xmppStream];
+	[xmppCapabilities activate:xmppStream];
+	[xmppPing activate:xmppStream];
+	[xmppTime activate:xmppStream];
+	
+	// Add ourself as a delegate to anything we may be interested in
+	
+//	[xmppStream addDelegate:self delegateQueue:dispatch_get_main_queue()];
+	[xmppReconnect addDelegate:self delegateQueue:dispatch_get_main_queue()];
+	[xmppCapabilities addDelegate:self delegateQueue:dispatch_get_main_queue()];
+	[xmppPing addDelegate:self delegateQueue:dispatch_get_main_queue()];
+	[xmppTime addDelegate:self delegateQueue:dispatch_get_main_queue()];
+	
 	// Start the GUI stuff
 	
 	[rosterController displaySignInSheet];
+}
+
+- (void)xmppStream:(XMPPStream *)sender didRegisterModule:(id)module
+{
+	DDLogVerbose(@"%@: xmppStream:didRegisterModule: %@", THIS_FILE, module);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

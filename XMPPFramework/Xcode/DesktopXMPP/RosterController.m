@@ -184,10 +184,10 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 - (void)updateAccountInfo
 {
 	NSString *domain = [serverField stringValue];
-	self.xmppStream.hostName = domain;
+	[[self xmppStream] setHostName:domain];
 	
 	int port = [portField intValue];
-	self.xmppStream.hostPort = port;
+	[[self xmppStream] setHostPort:port];
 	
 	useSSL                      = ([sslButton state] == NSOnState);
 	allowSelfSignedCertificates = ([selfSignedButton state] == NSOnState);
@@ -200,8 +200,9 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 	}
 	
 	XMPPJID *jid = [XMPPJID jidWithString:[jidField stringValue] resource:resource];
-	self.xmppStream.myJID = jid;
 	
+	[[self xmppStream] setMyJID:jid];
+    
 	// Update persistent info
 	
 	NSUserDefaults *dflts = [NSUserDefaults standardUserDefaults];
@@ -272,8 +273,6 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
 - (IBAction)signIn:(id)sender
 {
-	[signInSheet makeFirstResponder:nil]; // workaround for some odd UI bug I don't understand
-	
 	[self updateAccountInfo];
 	
 	NSError *error = nil;
@@ -571,28 +570,18 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 	NSString *password = [passwordField stringValue];
 	
 	NSError *error = nil;
-	BOOL operationInProgress;
+	BOOL success;
 	
-	if (isRegistering)
+	if(isRegistering)
 	{
-		// Start **_asynchronous_** operation.
-		// 
-		// If there's some kind of problem, the method will return NO and report the reason.
-		// For example: "server doesn't support in-band-registration"
-		// 
-		operationInProgress = [[self xmppStream] registerWithPassword:password error:&error];
+		success = [[self xmppStream] registerWithPassword:password error:&error];
 	}
 	else
 	{
-		// Start **_asynchronous_** operation.
-		// 
-		// If there's some kind of problem, the method will return NO and report the reason.
-		// For example: "xmpp stream isn't connected"
-		// 
-		operationInProgress = [[self xmppStream] authenticateWithPassword:password error:&error];
+		success = [[self xmppStream] authenticateWithPassword:password error:&error];
 	}
 	
-	if (!operationInProgress)
+	if (!success)
 	{
 		[messageField setStringValue:[error localizedDescription]];
 	}

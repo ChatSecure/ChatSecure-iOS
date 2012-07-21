@@ -9,7 +9,7 @@
 	XMPPAutoPing *xmppAutoPing;
 }
 
-@property (nonatomic) IBOutlet UIWindow *window;
-@property (nonatomic) IBOutlet AutoPingTestViewController *viewController;
+@property (nonatomic, retain) IBOutlet UIWindow *window;
+@property (nonatomic, retain) IBOutlet AutoPingTestViewController *viewController;
 
 @end

@@ -279,8 +279,6 @@
 
 - (void)updateWithItem:(NSXMLElement *)item
 {
-	[itemAttributes removeAllObjects];
-	
 	for (NSXMLNode *node in [item attributes])
 	{
 		NSString *key   = [node name];

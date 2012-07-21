@@ -137,6 +137,7 @@
     
 	count = [self.managedObjectContext countForFetchRequest:fetchRequest error:&error];
 	
+	[fetchRequest release];
 	
 	if (error)
     {

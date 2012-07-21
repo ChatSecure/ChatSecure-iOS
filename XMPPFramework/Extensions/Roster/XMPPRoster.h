@@ -9,7 +9,7 @@
 #import "XMPPResource.h"
 
 @protocol XMPPRosterStorage;
-@class DDList;
+
 
 /**
  * The XMPPRoster provides the scaffolding for a roster solution.
@@ -44,8 +44,6 @@
 	Byte flags;
 	
 	NSMutableArray *earlyPresenceElements;
-	
-	DDList *mucModules;
 }
 
 - (id)initWithRosterStorage:(id <XMPPRosterStorage>)storage;
