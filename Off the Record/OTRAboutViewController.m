@@ -77,7 +77,7 @@
     
     CGFloat versionLabelFrameWidth = 101;
     CGFloat versionLabelFrameHeight = 21;
-    versionLabel.frame = CGRectMake(self.view.frame.size.width/2 - versionLabelFrameWidth/2, self.view.frame.size.height-versionLabelFrameHeight-20, versionLabelFrameWidth, versionLabelFrameHeight);
+    versionLabel.frame = CGRectMake(floorf(self.view.frame.size.width/2 - versionLabelFrameWidth/2), self.view.frame.size.height-versionLabelFrameHeight-20, versionLabelFrameWidth, versionLabelFrameHeight);
     versionLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin;
     
     CGFloat aboutTextViewFrameWidth = self.view.frame.size.width-40;
