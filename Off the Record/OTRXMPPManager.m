@@ -421,10 +421,10 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     
     NSString * resource = [NSString stringWithFormat:@"%@%d",kOTRXMPPResource,r];
     
-    JID = [XMPPJID jidWithUser:myJID domain:self.account.domain resource:resource];
+    JID = [XMPPJID jidWithString:myJID resource:resource];
     
 	[xmppStream setMyJID:JID];
-    //[xmppStream setHostName:self.account.domain];
+    [xmppStream setHostName:self.account.domain];
 	password = myPassword;
     
 	NSError *error = nil;
