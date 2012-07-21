@@ -18,4 +18,6 @@
 #define kOTRFacebookDomain @"chat.facebook.com"
 #define kOTRGoogleTalkDomain @"talk.google.com"
 
+#define kOTRXMPPResource @"chatsecure"
+
 #define kOTRFacebookUsernameLink @"http://www.facebook.com/help/?faq=211813265517027#What-are-usernames?"

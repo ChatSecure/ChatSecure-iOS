@@ -232,7 +232,7 @@
         facebookHelpLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
         
         CGSize infoButtonSize = self.facebookInfoButton.frame.size;
-        CGFloat facebookInfoButtonFrameYOrigin = facebookHelpLabeFrameYOrigin + (expectedLabelSize.height - infoButtonSize.height)/2;
+        CGFloat facebookInfoButtonFrameYOrigin = floorf(facebookHelpLabeFrameYOrigin + (expectedLabelSize.height - infoButtonSize.height)/2);
         
         self.facebookInfoButton.frame = CGRectMake(facebookHelpLabel.frame.origin.x + facebookHelpLabel.frame.size.width, facebookInfoButtonFrameYOrigin, infoButtonSize.width, infoButtonSize.height);
         

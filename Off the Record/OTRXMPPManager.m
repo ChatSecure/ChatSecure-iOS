@@ -26,6 +26,7 @@
 #import "OTRBuddy.h"
 #import "OTRConstants.h"
 #import "OTRProtocolManager.h"
+#include <stdlib.h>
 
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
@@ -416,10 +417,14 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 		return NO;
 	}
     
-    JID = [XMPPJID jidWithString:myJID];
+    int r = arc4random() % 99999;
+    
+    NSString * resource = [NSString stringWithFormat:@"%@%d",kOTRXMPPResource,r];
+    
+    JID = [XMPPJID jidWithUser:myJID domain:self.account.domain resource:resource];
     
 	[xmppStream setMyJID:JID];
-    [xmppStream setHostName:self.account.domain];
+    //[xmppStream setHostName:self.account.domain];
 	password = myPassword;
     
 	NSError *error = nil;
