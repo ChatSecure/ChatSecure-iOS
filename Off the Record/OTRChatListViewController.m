@@ -16,10 +16,12 @@
 
 @synthesize buddyController;
 @synthesize chatListTableView;
-
+@synthesize activeConversations;
 
 - (void) dealloc {
-    
+    self.activeConversations = nil;
+    self.chatListTableView = nil;
+    self.buddyController = nil;
 }
 
 - (id)init {
@@ -59,6 +61,8 @@
      object:nil ];
 }
 
+
+
 -(void) protocolLoggedOff:(NSNotification *) notification
 {
     id <OTRProtocol> protocol = notification.object;
@@ -67,15 +71,15 @@
 
 -(void) removeConversationsForAccount:(OTRAccount *)account {
     if ([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyDeleteOnDisconnect]) {
-        NSMutableSet *activeConversations = [OTRProtocolManager sharedInstance].buddyList.activeConversations;
-        NSSet *iterableConversations = [activeConversations copy];
+        NSArray *iterableConversations = [activeConversations copy];
         
         for (OTRBuddy *buddy in iterableConversations) {
             if ([buddy.protocol.account.uniqueIdentifier isEqualToString:account.uniqueIdentifier]) {
-                [activeConversations removeObject:buddy];
+                [[[[OTRProtocolManager sharedInstance] buddyList] activeConversations] removeObject:buddy];
             }
         }
-        [chatListTableView reloadData];
+        
+        [self refreshActiveConversations];
     }
 }
 
@@ -85,6 +89,11 @@
     [super viewWillAppear:animated];
     chatListTableView.frame = self.view.bounds;
     chatListTableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleRightMargin;
+    [self refreshActiveConversations];
+}
+
+- (void) refreshActiveConversations {
+    self.activeConversations = [NSMutableArray arrayWithArray:[[OTRProtocolManager sharedInstance].buddyList.activeConversations allObjects]];
     
     [chatListTableView reloadData];
 }
@@ -105,6 +114,20 @@
     return [[[[OTRProtocolManager sharedInstance] buddyList] activeConversations] count];
 }
 
+- (void) deleteBuddy:(OTRBuddy*)buddy {
+    buddy.chatHistory = [NSMutableString string];
+    buddy.lastMessage = @"";
+    [[[[OTRProtocolManager sharedInstance] buddyList] activeConversations] removeObject:buddy];
+}
+
+- (void) tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        OTRBuddy *buddy = [activeConversations objectAtIndex:indexPath.row];
+        [self deleteBuddy:buddy];
+        [self refreshActiveConversations];
+    }
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
@@ -112,9 +135,8 @@
 	{
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"Cell"];
 	}
-	NSArray *convoList = [[[[OTRProtocolManager sharedInstance] buddyList] activeConversations] allObjects];
     
-    OTRBuddy *buddy = [convoList objectAtIndex:indexPath.row];
+    OTRBuddy *buddy = [activeConversations objectAtIndex:indexPath.row];
     cell.textLabel.text = buddy.displayName;
     cell.detailTextLabel.text = buddy.lastMessage;
     
