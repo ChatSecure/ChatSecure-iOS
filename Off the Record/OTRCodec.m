@@ -307,10 +307,30 @@ static OtrlMessageAppOps ui_ops = {
     
     ignore_message = otrl_message_receiving(userstate, &ui_ops, NULL,[myAccountName UTF8String], [protocol UTF8String], [friendAccount UTF8String], [message UTF8String], &newmessage, NULL, NULL, NULL);
     //NSLog(@"ignore message: %d",ignore_message);
-    NSString *newMessage;
+    NSString * returnMessage = nil;
+    
+    if(ignore_message == 1)
+    {
+        otrl_message_free(newmessage);
+        return nil;
+    }
+    else if(ignore_message == 0) {
+        if(newmessage)
+        {
+            returnMessage = [NSString stringWithUTF8String:newmessage];
+        }
+        else {
+            returnMessage = message;
+        }
+        otrl_message_free(newmessage);
+    }
+    else {
+        NSLog(@"Unkown ignore_message value");
+    }
     
     
-    if(ignore_message == 0)
+    /*
+    if(ignore_message == 0) //Not Ignoring
     {
         
         if(newmessage)
@@ -327,8 +347,9 @@ static OtrlMessageAppOps ui_ops = {
     }
     
     otrl_message_free(newmessage);
+     */
     
-    OTRMessage *newOTRMessage = [OTRMessage messageWithBuddy:theMessage.buddy message:newMessage];
+    OTRMessage *newOTRMessage = [OTRMessage messageWithBuddy:theMessage.buddy message:returnMessage];
     
     return newOTRMessage;
 }

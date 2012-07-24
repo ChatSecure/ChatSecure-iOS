@@ -192,13 +192,20 @@
     if(context)
     {
         if(context->msgstate == OTRL_MSGSTATE_ENCRYPTED)
+        {
             self.navigationItem.rightBarButtonItem = lockButton;
+            [self.buddy updateEncryptionStatus:kOTRBUddyEncryptionStatusEncrypted];
+        }
         else
+        {
             self.navigationItem.rightBarButtonItem = unlockedButton;
+            [self.buddy updateEncryptionStatus:kOTRBuddyEncryptionStatusUnencrypted];
+        }
     }
     else
     {
         self.navigationItem.rightBarButtonItem = unlockedButton;
+        [self.buddy updateEncryptionStatus:kOTRBuddyEncryptionStatusUnencrypted];
     }
 }
 
@@ -448,10 +455,12 @@
     if (isSecure)
     {
         self.navigationItem.rightBarButtonItem = lockButton;
+        [self.buddy updateEncryptionStatus:kOTRBUddyEncryptionStatusEncrypted];
     }
     else
     {
         self.navigationItem.rightBarButtonItem = unlockedButton;
+        [self.buddy updateEncryptionStatus:kOTRBuddyEncryptionStatusUnencrypted];
     }
 }
 

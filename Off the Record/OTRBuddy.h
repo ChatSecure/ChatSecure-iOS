@@ -10,6 +10,7 @@
 #import "OTRProtocol.h"
 
 typedef unsigned int OTRBuddyStatus;
+typedef unsigned int OTRBuddyEncryptionStatus;
 
 #define MESSAGE_PROCESSED_NOTIFICATION @"MessageProcessedNotification"
 
@@ -17,6 +18,12 @@ enum OTRBuddyStatus {
     kOTRBuddyStatusOffline = 0,
     kOTRBuddyStatusAway = 1,
     kOTRBuddyStatusAvailable = 2
+};
+
+enum OTRBuddyEncryptionStatus {
+    kOTRBuddyEncryptionStatusUnencrypted = 0,
+    kOTRBUddyEncryptionStatusEncrypted = 1,
+    kOTRBuddyEncryptionStatusEncryptedAndVerified = 2
 };
 
 @interface OTRBuddy : NSObject
@@ -31,11 +38,14 @@ enum OTRBuddyStatus {
 @property (nonatomic) BOOL lastMessageDisconnected;
 
 @property (nonatomic) OTRBuddyStatus status;
+@property (nonatomic) OTRBuddyEncryptionStatus encryptionStatus;
 
 -(id)initWithDisplayName:(NSString*)buddyName accountName:(NSString*) accountName protocol:(id <OTRProtocol>)buddyProtocol status:(OTRBuddyStatus)buddyStatus groupName:(NSString*)buddyGroupName;
 +(OTRBuddy*)buddyWithDisplayName:(NSString*)buddyName accountName:(NSString*) accountName protocol:(id <OTRProtocol>)buddyProtocol status:(OTRBuddyStatus)buddyStatus groupName:(NSString*)buddyGroupName;
 
 -(void)receiveMessage:(NSString *)message;
 -(void)sendMessage:(NSString *)message secure:(BOOL)secure;
+
+-(void)updateEncryptionStatus:(OTRBuddyEncryptionStatus)encryptionStatus;
 
 @end
