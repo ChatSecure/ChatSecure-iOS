@@ -10,7 +10,6 @@
 
 #import "OTRBuddyListViewController.h"
 #import "OTRChatListViewController.h"
-#import "OTRAccountsViewController.h"
 #import "OTRChatViewController.h"
 #import "Strings.h"
 #import "OTRSettingsViewController.h"

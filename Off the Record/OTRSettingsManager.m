@@ -9,7 +9,6 @@
 #import "OTRSettingsManager.h"
 #import "OTRViewSetting.h"
 #import "Strings.h"
-#import "OTRAccountsViewController.h"
 #import "OTRSettingsGroup.h"
 #import "OTRSetting.h"
 #import "OTRBoolSetting.h"
@@ -42,7 +41,8 @@
 - (void) populateSettings
 {
     NSMutableDictionary *newSettingsDictionary = [NSMutableDictionary dictionary];
-    OTRViewSetting *accountsViewSetting = [[OTRViewSetting alloc] initWithTitle:ACCOUNTS_STRING description:nil viewControllerClass:[OTRAccountsViewController class]];
+    // Leave this in for now
+    OTRViewSetting *accountsViewSetting = [[OTRViewSetting alloc] initWithTitle:ACCOUNTS_STRING description:nil viewControllerClass:nil];
     OTRSettingsGroup *accountsGroup = [[OTRSettingsGroup alloc] initWithTitle:ACCOUNTS_STRING settings:[NSArray arrayWithObject:accountsViewSetting]];
     [settingsGroups addObject:accountsGroup];
     
