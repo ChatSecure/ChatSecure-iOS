@@ -34,7 +34,7 @@
 {
     [super viewDidLoad];
 	
-    self.title = NEW_ACCOUNT_STIRNG;
+    self.title = NEW_ACCOUNT_STRING;
     UITableView * tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) style:UITableViewStyleGrouped];
     tableView.dataSource = self;
     tableView.delegate = self;
