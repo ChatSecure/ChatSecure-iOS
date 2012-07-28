@@ -21,15 +21,6 @@
 
 @implementation OTRNewAccountViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -38,10 +29,7 @@
     UITableView * tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) style:UITableViewStyleGrouped];
     tableView.dataSource = self;
     tableView.delegate = self;
-    CGFloat headerHeight = (tableView.frame.size.height - 4*rowHeight)  / 4;
-    
-    tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, headerHeight)];
-    
+    tableView.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleHeight;
     tableView.scrollEnabled = NO;
     [self.view addSubview:tableView];
     
@@ -92,6 +80,7 @@
     cell.textLabel.text = [cellAccount providerName];
     cell.textLabel.font = [UIFont boldSystemFontOfSize:19];
     cell.imageView.image = [UIImage imageNamed:cellAccount.imageName];
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
     if( [[cellAccount providerName] isEqualToString:FACEBOOK_STRING])
     {
@@ -108,24 +97,19 @@
 {
     OTRAccount * cellAccount = [accounts objectAtIndex:indexPath.row];
     OTRLoginViewController *loginViewController = [[OTRLoginViewController alloc] initWithAccount:cellAccount];
+    loginViewController.isNewAccount = YES;
     [self.navigationController pushViewController:loginViewController animated:YES];
-    
-    
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];    
 }
 
 - (void)cancelPressed:(id)sender {
     [self dismissModalViewControllerAnimated:YES];
 }
 
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-}
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    return YES;
 }
 
 @end

@@ -24,6 +24,7 @@
 @synthesize account;
 @synthesize domainLabel,domainTextField;
 @synthesize facebookInfoButton;
+@synthesize isNewAccount;
 
 - (void) dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kOTRProtocolLoginFail object:nil];
@@ -135,10 +136,13 @@
     self.title = [account providerName];
     
     self.loginButton = [[UIBarButtonItem alloc] initWithTitle:loginButtonString style:UIBarButtonItemStyleDone target:self action:@selector(loginButtonPressed:)];
-    self.cancelButton = [[UIBarButtonItem alloc] initWithTitle:CANCEL_STRING style:UIBarButtonItemStyleBordered target:self action:@selector(cancelPressed:)];
-    
     self.navigationItem.rightBarButtonItem = loginButton;
-    self.navigationItem.leftBarButtonItem = cancelButton;
+
+    if (!isNewAccount) {
+        self.cancelButton = [[UIBarButtonItem alloc] initWithTitle:CANCEL_STRING style:UIBarButtonItemStyleBordered target:self action:@selector(cancelPressed:)];
+        self.navigationItem.leftBarButtonItem = cancelButton;
+
+    }
 }
 
 - (void) viewDidLoad 
