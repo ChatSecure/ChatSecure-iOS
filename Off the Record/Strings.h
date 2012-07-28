@@ -16,7 +16,7 @@
 #define VERIFY_STRING NSLocalizedString(@"Verify", @"Shown when verifying fingerprints")
 #define SEND_STRING NSLocalizedString(@"Send", @"For sending a message")
 #define OK_STRING NSLocalizedString(@"OK", @"Accept the dialog")
-
+#define RECENT_STRING NSLocalizedString(@"Recent", @"Title for header of Buddy list view with Recent Buddies")
 
 // Used in OTRChatViewController
 #define YOUR_FINGERPRINT_STRING NSLocalizedString(@"Fingerprint for you", @"your fingerprint")

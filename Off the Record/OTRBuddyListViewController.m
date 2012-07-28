@@ -18,15 +18,29 @@
 
 //#define kSignoffTime 500
 
+#define RECENTS_SECTION_INDEX 0
+#define BUDDIES_SECTION_INDEX 1
+
 @implementation OTRBuddyListViewController
 @synthesize buddyListTableView;
 @synthesize chatViewController;
-@synthesize chatListController;
 @synthesize tabController;
 @synthesize protocolManager;
+@synthesize activeConversations;
+@synthesize buddyDictionary;
+@synthesize sortedBuddies;
+@synthesize selectedBuddy;
 
 - (void) dealloc {
     self.protocolManager = nil;
+    self.buddyListTableView = nil;
+    self.chatViewController = nil;
+    self.tabController = nil;
+    self.protocolManager = nil;
+    self.activeConversations = nil;
+    self.buddyDictionary = nil;
+    self.sortedBuddies = nil;
+    self.selectedBuddy = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -35,7 +49,7 @@
         self.title = BUDDY_LIST_STRING;
         self.tabBarItem.image = [UIImage imageNamed:@"112-group.png"];
         self.protocolManager = [OTRProtocolManager sharedInstance];
-        buddyDictionary = [[NSMutableDictionary alloc] init];
+        self.buddyDictionary = [[NSMutableDictionary alloc] init];
 
     }
     return self;
@@ -54,6 +68,7 @@
 - (void) loadView {
     [super loadView];
     self.buddyListTableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    self.buddyListTableView.allowsMultipleSelection = YES;
     buddyListTableView.dataSource = self;
     buddyListTableView.delegate = self;
     [self.view addSubview:buddyListTableView];
@@ -74,6 +89,12 @@
      addObserver:self
      selector:@selector(messageReceived:)
      name:kOTRMessageReceived
+     object:nil ];
+    
+    [[NSNotificationCenter defaultCenter]
+     addObserver:self
+     selector:@selector(protocolLoggedOff:)
+     name:kOTRProtocolLogout
      object:nil ];
 
     
@@ -98,7 +119,7 @@
 
 -(void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    [self showEULAWarning];
+    //[self showEULAWarning];
 }
 
 - (void) showEULAWarning {
@@ -145,6 +166,7 @@
     sortedBuddies = [OTRBuddyList sortBuddies:protocolManager.buddyList.allBuddies];
     
     [buddyListTableView reloadData];
+    [self selectActiveConversation];
 }
 
 -(void)messageReceived:(NSNotification*)notification;
@@ -164,9 +186,6 @@
             currentTitle = [((UISplitViewController *)currentViewController).viewControllers objectAtIndex:1];
         }
         
-    }
-    else {
-        currentViewController = chatListController.navigationController.topViewController;
     }
     
     if(![currentViewController isKindOfClass:[OTRChatViewController class]])
@@ -194,11 +213,23 @@
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
+    return 2;
+}
+
+- (NSString*)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    if (section == RECENTS_SECTION_INDEX) {
+        return RECENT_STRING;
+    } else if (section == BUDDIES_SECTION_INDEX) {
+        return BUDDY_LIST_STRING;
+    }
+    return @"";
 }
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)sectionIndex {
+    if (sectionIndex == RECENTS_SECTION_INDEX) {
+        return [self.activeConversations count];
+    }
     if(protocolManager.buddyList)
     {
         
@@ -227,71 +258,148 @@
 	{
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"Cell"];
 	}
-	
-    if(sortedBuddies)
-    {
-        OTRBuddy *buddyData = [sortedBuddies objectAtIndex:indexPath.row];
+    if (indexPath.section == RECENTS_SECTION_INDEX) {
+        OTRBuddy *buddy = [activeConversations objectAtIndex:indexPath.row];
+        cell.textLabel.text = buddy.displayName;
+        cell.detailTextLabel.text = buddy.lastMessage;
         
-        NSString *buddyUsername = buddyData.displayName;
-        OTRBuddyStatus buddyStatus = buddyData.status;
-        
-        cell.textLabel.text = buddyUsername;
-                
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        cell.detailTextLabel.textColor = [UIColor lightGrayColor];
-        
-        switch(buddyStatus)
+        return cell;
+    } else if (indexPath.section == BUDDIES_SECTION_INDEX) {
+        if(sortedBuddies)
         {
-            case kOTRBuddyStatusOffline:
-                cell.textLabel.textColor = [UIColor lightGrayColor];
-                cell.detailTextLabel.text = OFFLINE_STRING;
-                cell.imageView.image = [UIImage imageNamed:@"offline.png"];
-                break;
-            case kOTRBuddyStatusAway:
-                cell.textLabel.textColor = [UIColor darkGrayColor];
-                cell.detailTextLabel.text = AWAY_STRING;
-                cell.imageView.image = [UIImage imageNamed:@"away.png"];
-                break;
-            default:
-                cell.textLabel.textColor = [UIColor darkTextColor];
-                cell.detailTextLabel.text = AVAILABLE_STRING;
-                cell.imageView.image = [UIImage imageNamed:@"available.png"];
-                break;
+            OTRBuddy *buddyData = [sortedBuddies objectAtIndex:indexPath.row];
+            
+            NSString *buddyUsername = buddyData.displayName;
+            OTRBuddyStatus buddyStatus = buddyData.status;
+            
+            cell.textLabel.text = buddyUsername;
+            
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            cell.detailTextLabel.textColor = [UIColor lightGrayColor];
+            
+            switch(buddyStatus)
+            {
+                case kOTRBuddyStatusOffline:
+                    cell.textLabel.textColor = [UIColor lightGrayColor];
+                    cell.detailTextLabel.text = OFFLINE_STRING;
+                    cell.imageView.image = [UIImage imageNamed:@"offline.png"];
+                    break;
+                case kOTRBuddyStatusAway:
+                    cell.textLabel.textColor = [UIColor darkGrayColor];
+                    cell.detailTextLabel.text = AWAY_STRING;
+                    cell.imageView.image = [UIImage imageNamed:@"away.png"];
+                    break;
+                default:
+                    cell.textLabel.textColor = [UIColor darkTextColor];
+                    cell.detailTextLabel.text = AVAILABLE_STRING;
+                    cell.imageView.image = [UIImage imageNamed:@"available.png"];
+                    break;
+            }
         }
+        return cell;
     }
+	
     
-    
-    
-	return cell;
+}
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.section == RECENTS_SECTION_INDEX) {
+        return UITableViewCellEditingStyleDelete;
+    } else if (indexPath.section == BUDDIES_SECTION_INDEX) {
+        return UITableViewCellEditingStyleNone;
+    }
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(sortedBuddies)
-    {
-        OTRBuddy *buddyData = [sortedBuddies objectAtIndex:indexPath.row];
-        [self enterConversationWithBuddy:buddyData];
+    if (indexPath.section == RECENTS_SECTION_INDEX) {
+        OTRBuddy *buddy = [activeConversations objectAtIndex:indexPath.row];
+        [self enterConversationWithBuddy:buddy];
+    } else if (indexPath.section == BUDDIES_SECTION_INDEX) {
+        if(sortedBuddies)
+        {
+            OTRBuddy *buddyData = [sortedBuddies objectAtIndex:indexPath.row];
+            [self enterConversationWithBuddy:buddyData];
+        }
     }
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
     }
 }
 
+-(void) protocolLoggedOff:(NSNotification *) notification
+{
+    id <OTRProtocol> protocol = notification.object;
+    [self removeConversationsForAccount:protocol.account];
+}
+
+-(void) removeConversationsForAccount:(OTRAccount *)account {
+    if ([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyDeleteOnDisconnect]) {
+        NSArray *iterableConversations = [activeConversations copy];
+        
+        for (OTRBuddy *buddy in iterableConversations) {
+            if ([buddy.protocol.account.uniqueIdentifier isEqualToString:account.uniqueIdentifier]) {
+                [[[[OTRProtocolManager sharedInstance] buddyList] activeConversations] removeObject:buddy];
+            }
+        }
+        
+        [self refreshActiveConversations];
+    }
+}
+
+- (void) refreshActiveConversations {
+    self.activeConversations = [NSMutableArray arrayWithArray:[[OTRProtocolManager sharedInstance].buddyList.activeConversations allObjects]];
+    
+    [buddyListTableView reloadData];
+    
+    [self selectActiveConversation];
+}
+
+- (void) selectActiveConversation {
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+        return;
+    }
+    if ([activeConversations containsObject:selectedBuddy]) {
+        int indexOfSelectedBuddy = [activeConversations indexOfObject:selectedBuddy];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:indexOfSelectedBuddy inSection:RECENTS_SECTION_INDEX];
+        [self.buddyListTableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+    }
+    if ([sortedBuddies containsObject:selectedBuddy]) {
+        int indexOfSelectedBuddy = [sortedBuddies indexOfObject:selectedBuddy];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:indexOfSelectedBuddy inSection:BUDDIES_SECTION_INDEX];
+        [self.buddyListTableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+    }
+}
+
+
+- (void) tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.section == RECENTS_SECTION_INDEX && editingStyle == UITableViewCellEditingStyleDelete) {
+        OTRBuddy *buddy = [activeConversations objectAtIndex:indexPath.row];
+        [self deleteBuddy:buddy];
+        [self refreshActiveConversations];
+    }
+}
+
+- (void) deleteBuddy:(OTRBuddy*)buddy {
+    buddy.chatHistory = [NSMutableString string];
+    buddy.lastMessage = @"";
+    [[[[OTRProtocolManager sharedInstance] buddyList] activeConversations] removeObject:buddy];
+}
 
 -(void)enterConversationWithBuddy:(OTRBuddy*)buddy 
 {
     if(buddy) {
+        self.selectedBuddy = buddy;
         [protocolManager.buddyList.activeConversations addObject:buddy];
         chatViewController.buddy = buddy;
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-            self.tabBarController.selectedIndex = 1;
-            chatListController.navigationController.viewControllers = [NSArray arrayWithObjects:chatListController, chatViewController, nil];
-            //[chatListController.navigationController pushViewController:chatViewController animated:YES];
-        } else {
-            self.tabBarController.selectedIndex = 0;
+            [self.navigationController pushViewController:chatViewController animated:YES];
         }
+        self.tabBarController.selectedIndex = 0;
+        [self refreshActiveConversations];
     }
-
 }
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
