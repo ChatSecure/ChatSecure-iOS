@@ -96,13 +96,13 @@ typedef unsigned int   NSUInteger;
 #define _JSONKIT_H_
 
 #if defined(__GNUC__) && (__GNUC__ >= 4) && defined(__APPLE_CC__) && (__APPLE_CC__ >= 5465)
-#define CrittercismJK_DEPRECATED_ATTRIBUTE __attribute__((deprecated))
+#define JK_DEPRECATED_ATTRIBUTE __attribute__((deprecated))
 #else
-#define CrittercismJK_DEPRECATED_ATTRIBUTE
+#define JK_DEPRECATED_ATTRIBUTE
 #endif
   
-#define CRITTERCISON_VERSION_MAJOR 1
-#define CRITTERCISON_VERSION_MINOR 4
+#define JSONKIT_VERSION_MAJOR 1
+#define JSONKIT_VERSION_MINOR 4
 
 typedef NSUInteger CrittercismJKFlags;
 
@@ -140,7 +140,7 @@ typedef struct CrittercismJKParseState CrittercismJKParseState; // Opaque intern
 
 // As a general rule of thumb, if you use a method that doesn't accept a CrittercismJKParseOptionFlags argument, it defaults to CrittercismJKParseOptionStrict
 
-@interface CrittercismJSONKitDeserializing : NSObject {
+@interface CrittercismJSONDecoder : NSObject {
   CrittercismJKParseState *parseState;
 }
 + (id)decoder;
@@ -149,11 +149,11 @@ typedef struct CrittercismJKParseState CrittercismJKParseState; // Opaque intern
 - (void)clearCache;
 
 // The parse... methods were deprecated in v1.4 in favor of the v1.4 objectWith... methods.
-- (id)parseUTF8String:(const unsigned char *)string length:(size_t)length                         CrittercismJK_DEPRECATED_ATTRIBUTE; // Deprecated in JSONKit v1.4.  Use objectWithUTF8String:length:        instead.
-- (id)parseUTF8String:(const unsigned char *)string length:(size_t)length error:(NSError **)error CrittercismJK_DEPRECATED_ATTRIBUTE; // Deprecated in JSONKit v1.4.  Use objectWithUTF8String:length:error:  instead.
+- (id)parseUTF8String:(const unsigned char *)string length:(size_t)length                         JK_DEPRECATED_ATTRIBUTE; // Deprecated in JSONKit v1.4.  Use objectWithUTF8String:length:        instead.
+- (id)parseUTF8String:(const unsigned char *)string length:(size_t)length error:(NSError **)error JK_DEPRECATED_ATTRIBUTE; // Deprecated in JSONKit v1.4.  Use objectWithUTF8String:length:error:  instead.
 // The NSData MUST be UTF8 encoded JSON.
-- (id)parseJSONData:(NSData *)jsonData                                                            CrittercismJK_DEPRECATED_ATTRIBUTE; // Deprecated in JSONKit v1.4.  Use objectWithData:                     instead.
-- (id)parseJSONData:(NSData *)jsonData error:(NSError **)error                                    CrittercismJK_DEPRECATED_ATTRIBUTE; // Deprecated in JSONKit v1.4.  Use objectWithData:error:               instead.
+- (id)parseJSONData:(NSData *)jsonData                                                            JK_DEPRECATED_ATTRIBUTE; // Deprecated in JSONKit v1.4.  Use objectWithData:                     instead.
+- (id)parseJSONData:(NSData *)jsonData error:(NSError **)error                                    JK_DEPRECATED_ATTRIBUTE; // Deprecated in JSONKit v1.4.  Use objectWithData:error:               instead.
 
 // Methods that return immutable collection objects.
 - (id)objectWithUTF8String:(const unsigned char *)string length:(NSUInteger)length;
@@ -176,22 +176,22 @@ typedef struct CrittercismJKParseState CrittercismJKParseState; // Opaque intern
 ////////////
 
 @interface NSString (CrittercismJSONKitDeserializing)
-- (id)objectFromJSONString;
-- (id)objectFromJSONStringWithParseOptions:(CrittercismJKParseOptionFlags)parseOptionFlags;
-- (id)objectFromJSONStringWithParseOptions:(CrittercismJKParseOptionFlags)parseOptionFlags error:(NSError **)error;
-- (id)mutableObjectFromJSONString;
-- (id)mutableObjectFromJSONStringWithParseOptions:(CrittercismJKParseOptionFlags)parseOptionFlags;
-- (id)mutableObjectFromJSONStringWithParseOptions:(CrittercismJKParseOptionFlags)parseOptionFlags error:(NSError **)error;
+- (id)objectFromJSONStringCrittercism;
+- (id)objectFromJSONStringWithParseOptionsCrittercism:(CrittercismJKParseOptionFlags)parseOptionFlags;
+- (id)objectFromJSONStringWithParseOptionsCrittercism:(CrittercismJKParseOptionFlags)parseOptionFlags error:(NSError **)error;
+- (id)mutableObjectFromJSONStringCrittercism;
+- (id)mutableObjectFromJSONStringWithParseOptionsCrittercism:(CrittercismJKParseOptionFlags)parseOptionFlags;
+- (id)mutableObjectFromJSONStringWithParseOptionsCrittercism:(CrittercismJKParseOptionFlags)parseOptionFlags error:(NSError **)error;
 @end
 
 @interface NSData (CrittercismJSONKitDeserializing)
 // The NSData MUST be UTF8 encoded JSON.
-- (id)objectFromJSONData;
-- (id)objectFromJSONDataWithParseOptions:(CrittercismJKParseOptionFlags)parseOptionFlags;
-- (id)objectFromJSONDataWithParseOptions:(CrittercismJKParseOptionFlags)parseOptionFlags error:(NSError **)error;
-- (id)mutableObjectFromJSONData;
-- (id)mutableObjectFromJSONDataWithParseOptions:(CrittercismJKParseOptionFlags)parseOptionFlags;
-- (id)mutableObjectFromJSONDataWithParseOptions:(CrittercismJKParseOptionFlags)parseOptionFlags error:(NSError **)error;
+- (id)objectFromJSONDataCrittercism;
+- (id)objectFromJSONDataWithParseOptionsCrittercism:(CrittercismJKParseOptionFlags)parseOptionFlags;
+- (id)objectFromJSONDataWithParseOptionsCrittercism:(CrittercismJKParseOptionFlags)parseOptionFlags error:(NSError **)error;
+- (id)mutableObjectFromJSONDataCrittercism;
+- (id)mutableObjectFromJSONDataWithParseOptionsCrittercism:(CrittercismJKParseOptionFlags)parseOptionFlags;
+- (id)mutableObjectFromJSONDataWithParseOptionsCrittercism:(CrittercismJKParseOptionFlags)parseOptionFlags error:(NSError **)error;
 @end
 
 ////////////
@@ -203,25 +203,25 @@ typedef struct CrittercismJKParseState CrittercismJKParseState; // Opaque intern
 // Normally, a string that is serialized to JSON has quotation marks surrounding it, which you may or may not want when serializing a single string, and can be controlled with includeQuotes:
 // includeQuotes:YES `a "test"...` -> `"a \"test\"..."`
 // includeQuotes:NO  `a "test"...` -> `a \"test\"...`
-- (NSData *)JSONData;     // Invokes JSONDataWithOptions:CrittercismJKSerializeOptionNone   includeQuotes:YES
-- (NSData *)JSONDataWithOptions:(CrittercismJKSerializeOptionFlags)serializeOptions includeQuotes:(BOOL)includeQuotes error:(NSError **)error;
+- (NSData *)CrittercismJSONData;     // Invokes CrittercismJSONDataWithOptions:CrittercismJKSerializeOptionNone   includeQuotes:YES
+- (NSData *)CrittercismJSONDataWithOptions:(CrittercismJKSerializeOptionFlags)serializeOptions includeQuotes:(BOOL)includeQuotes error:(NSError **)error;
 - (NSString *)CrittercismJSONString; // Invokes CrittercismJSONStringWithOptions:CrittercismJKSerializeOptionNone includeQuotes:YES
 - (NSString *)CrittercismJSONStringWithOptions:(CrittercismJKSerializeOptionFlags)serializeOptions includeQuotes:(BOOL)includeQuotes error:(NSError **)error;
 @end
 
 @interface NSArray (CrittercismJSONKitSerializing)
-- (NSData *)JSONData;
-- (NSData *)JSONDataWithOptions:(CrittercismJKSerializeOptionFlags)serializeOptions error:(NSError **)error;
-- (NSData *)JSONDataWithOptions:(CrittercismJKSerializeOptionFlags)serializeOptions serializeUnsupportedClassesUsingDelegate:(id)delegate selector:(SEL)selector error:(NSError **)error;
+- (NSData *)CrittercismJSONData;
+- (NSData *)CrittercismJSONDataWithOptions:(CrittercismJKSerializeOptionFlags)serializeOptions error:(NSError **)error;
+- (NSData *)CrittercismJSONDataWithOptions:(CrittercismJKSerializeOptionFlags)serializeOptions serializeUnsupportedClassesUsingDelegate:(id)delegate selector:(SEL)selector error:(NSError **)error;
 - (NSString *)CrittercismJSONString;
 - (NSString *)CrittercismJSONStringWithOptions:(CrittercismJKSerializeOptionFlags)serializeOptions error:(NSError **)error;
 - (NSString *)CrittercismJSONStringWithOptions:(CrittercismJKSerializeOptionFlags)serializeOptions serializeUnsupportedClassesUsingDelegate:(id)delegate selector:(SEL)selector error:(NSError **)error;
 @end
 
 @interface NSDictionary (CrittercismJSONKitSerializing)
-- (NSData *)JSONData;
-- (NSData *)JSONDataWithOptions:(CrittercismJKSerializeOptionFlags)serializeOptions error:(NSError **)error;
-- (NSData *)JSONDataWithOptions:(CrittercismJKSerializeOptionFlags)serializeOptions serializeUnsupportedClassesUsingDelegate:(id)delegate selector:(SEL)selector error:(NSError **)error;
+- (NSData *)CrittercismJSONData;
+- (NSData *)CrittercismJSONDataWithOptions:(CrittercismJKSerializeOptionFlags)serializeOptions error:(NSError **)error;
+- (NSData *)CrittercismJSONDataWithOptions:(CrittercismJKSerializeOptionFlags)serializeOptions serializeUnsupportedClassesUsingDelegate:(id)delegate selector:(SEL)selector error:(NSError **)error;
 - (NSString *)CrittercismJSONString;
 - (NSString *)CrittercismJSONStringWithOptions:(CrittercismJKSerializeOptionFlags)serializeOptions error:(NSError **)error;
 - (NSString *)CrittercismJSONStringWithOptions:(CrittercismJKSerializeOptionFlags)serializeOptions serializeUnsupportedClassesUsingDelegate:(id)delegate selector:(SEL)selector error:(NSError **)error;
@@ -230,12 +230,12 @@ typedef struct CrittercismJKParseState CrittercismJKParseState; // Opaque intern
 #ifdef __BLOCKS__
 
 @interface NSArray (CrittercismJSONKitSerializingBlockAdditions)
-- (NSData *)JSONDataWithOptions:(CrittercismJKSerializeOptionFlags)serializeOptions serializeUnsupportedClassesUsingBlock:(id(^)(id object))block error:(NSError **)error;
+- (NSData *)CrittercismJSONDataWithOptions:(CrittercismJKSerializeOptionFlags)serializeOptions serializeUnsupportedClassesUsingBlock:(id(^)(id object))block error:(NSError **)error;
 - (NSString *)CrittercismJSONStringWithOptions:(CrittercismJKSerializeOptionFlags)serializeOptions serializeUnsupportedClassesUsingBlock:(id(^)(id object))block error:(NSError **)error;
 @end
 
 @interface NSDictionary (CrittercismJSONKitSerializingBlockAdditions)
-- (NSData *)JSONDataWithOptions:(CrittercismJKSerializeOptionFlags)serializeOptions serializeUnsupportedClassesUsingBlock:(id(^)(id object))block error:(NSError **)error;
+- (NSData *)CrittercismJSONDataWithOptions:(CrittercismJKSerializeOptionFlags)serializeOptions serializeUnsupportedClassesUsingBlock:(id(^)(id object))block error:(NSError **)error;
 - (NSString *)CrittercismJSONStringWithOptions:(CrittercismJKSerializeOptionFlags)serializeOptions serializeUnsupportedClassesUsingBlock:(id(^)(id object))block error:(NSError **)error;
 @end
   
