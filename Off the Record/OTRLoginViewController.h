@@ -29,6 +29,11 @@
 @property (nonatomic, retain) UITextField *usernameTextField;
 @property (nonatomic, retain) UITextField *passwordTextField;
 @property (nonatomic, strong) UITextField *domainTextField;
+@property (nonatomic, strong) UISegmentedControl *basicAdvancedSegmentedControl;
+@property (nonatomic, strong) UILabel *sslMismatchLabel;
+@property (nonatomic, strong) UISwitch *sslMismatchSwitch;
+@property (nonatomic, strong) UILabel *selfSignedLabel;
+@property (nonatomic, strong) UISwitch *selfSignedSwitch;
 
 @property (nonatomic, strong) UIButton *facebookInfoButton;
 

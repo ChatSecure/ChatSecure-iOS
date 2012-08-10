@@ -26,6 +26,8 @@
 @synthesize domainLabel,domainTextField;
 @synthesize facebookInfoButton;
 @synthesize isNewAccount;
+@synthesize basicAdvancedSegmentedControl;
+@synthesize sslMismatchLabel,sslMismatchSwitch,selfSignedLabel,selfSignedSwitch;
 
 - (void) dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kOTRProtocolLoginFail object:nil];
@@ -44,6 +46,11 @@
     self.account = nil;
     self.domainTextField = nil;
     self.domainLabel = nil;
+    self.basicAdvancedSegmentedControl = nil;
+    self.selfSignedLabel = nil;
+    self.selfSignedSwitch = nil;
+    self.sslMismatchLabel = nil;
+    self.sslMismatchSwitch = nil;
 }
 
 - (id) initWithAccount:(OTRAccount*)newAccount {
@@ -122,6 +129,27 @@
             self.domainTextField.borderStyle = UITextBorderStyleRoundedRect;
             self.domainTextField.placeholder = OPTIONAL_STRING;
             
+            self.basicAdvancedSegmentedControl = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:BASIC_STRING,ADVANCED_STRING, nil]];
+            [self.basicAdvancedSegmentedControl addTarget:self action:@selector(segmentedControlChanged) forControlEvents:UIControlEventValueChanged];
+            self.basicAdvancedSegmentedControl.segmentedControlStyle = UISegmentedControlStyleBar;
+            self.basicAdvancedSegmentedControl.selectedSegmentIndex = 0;
+            
+            self.sslMismatchLabel = [[UILabel alloc]init];
+            self.sslMismatchLabel.text = SSL_MISMATCH_STRING;
+            [self.view addSubview:sslMismatchLabel];
+            
+            self.sslMismatchSwitch = [[UISwitch alloc]init];
+            [self.view addSubview:sslMismatchSwitch];
+            
+            self.selfSignedLabel = [[UILabel alloc]init];
+            self.selfSignedLabel.text = SELF_SIGNED_SSL_STRING;
+            [self.view addSubview:selfSignedLabel];
+            
+            self.selfSignedSwitch = [[UISwitch alloc]init];
+            [self.view addSubview:selfSignedSwitch];
+            
+            
+            [self.view addSubview:basicAdvancedSegmentedControl];
             [self.view addSubview:domainTextField];
             
         }
@@ -194,6 +222,15 @@
     //self.logoView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
     padding.frame = CGRectMake(0, 0, self.view.frame.size.width, 30);
     
+    if (self.basicAdvancedSegmentedControl) {
+        self.basicAdvancedSegmentedControl.frame = CGRectMake(1, 1, 200, 28);
+        self.basicAdvancedSegmentedControl.center = CGPointMake(self.view.center.x, self.basicAdvancedSegmentedControl.center.y);
+        //padding.frame = CGRectMake(0, 0, self.view.frame.size.width, 32)
+    }
+    else
+    {
+
+    }
     
     CGFloat usernameLabelFrameYOrigin = padding.frame.origin.y + padding.frame.size.height;
     CGSize usernameLabelTextSize = [self textSizeForLabel:usernameLabel];
@@ -212,18 +249,44 @@
     self.usernameTextField.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth;
     
     CGFloat passwordLabelFrameYOrigin;
-    if(self.domainLabel && self.domainTextField)
+    if(self.domainLabel && self.domainTextField && self.basicAdvancedSegmentedControl)
     {
-        CGFloat domainLabelFrameYOrigin = usernameLabelFrameYOrigin + self.usernameLabel.frame.size.height +kFieldBuffer;
-        self.domainLabel.frame = CGRectMake(10, domainLabelFrameYOrigin, labelWidth, 21);
+        //CGFloat domainLabelFrameYOrigin = usernameLabelFrameYOrigin + self.usernameLabel.frame.size.height +kFieldBuffer;
+        self.domainLabel.frame = CGRectMake(10, usernameLabelFrameYOrigin, labelWidth, 21);
         self.domainLabel.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;
         
         self.domainTextField.frame = [self textFieldFrameForLabel:domainLabel];
         self.domainTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
-        self.domainTextField.returnKeyType = UIReturnKeyNext;
+        self.domainTextField.returnKeyType = UIReturnKeyGo;
         self.domainTextField.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth;
+        [self.domainTextField setHidden:YES];
         
-        passwordLabelFrameYOrigin = domainLabelFrameYOrigin + self.domainLabel.frame.size.height +kFieldBuffer;
+        CGFloat sslMismatchLabelFrameYOrigin = domainLabel.frame.origin.y + domainLabel.frame.size.height + kFieldBuffer;
+        self.sslMismatchLabel.frame = CGRectMake(10, sslMismatchLabelFrameYOrigin, 200, 21);
+        self.sslMismatchLabel.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;
+        [self.sslMismatchLabel setHidden:YES];
+        
+        
+        CGFloat sslMismatchSwitchFrameWidth = 79;
+        self.sslMismatchSwitch.frame = CGRectMake(self.view.frame.size.width-sslMismatchSwitchFrameWidth-5, sslMismatchLabelFrameYOrigin, sslMismatchSwitchFrameWidth, 27);
+        self.sslMismatchSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
+        [self.sslMismatchSwitch setHidden:YES];
+        
+        
+        CGFloat selfSignedFrameYOrigin = sslMismatchLabel.frame.origin.y + sslMismatchLabel.frame.size.height + kFieldBuffer;
+        self.selfSignedLabel.frame = CGRectMake(10, selfSignedFrameYOrigin, 180, 21);
+        self.selfSignedLabel.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;
+        [self.selfSignedLabel setHidden:YES];
+        
+        
+        CGFloat selfSignedSwitchFrameWidth = 79;
+        self.selfSignedSwitch.frame = CGRectMake(self.view.frame.size.width-selfSignedSwitchFrameWidth-5, selfSignedFrameYOrigin, selfSignedSwitchFrameWidth, 27);
+        self.selfSignedSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
+        [self.selfSignedSwitch setHidden:YES];
+        
+        
+        //passwordLabelFrameYOrigin = domainLabelFrameYOrigin + self.domainLabel.frame.size.height +kFieldBuffer;
+        passwordLabelFrameYOrigin = usernameLabelFrameYOrigin + self.usernameLabel.frame.size.height + kFieldBuffer;
         
     }
     else if (facebookHelpLabel)
@@ -287,6 +350,49 @@
     } else {
         self.passwordTextField.text = @"";
     }
+}
+
+-(void) segmentedControlChanged
+{
+    //baseic setup
+    if([basicAdvancedSegmentedControl selectedSegmentIndex]==0)
+    {
+        [self.domainLabel setHidden:YES];
+        [self.domainTextField setHidden:YES];
+        [self.usernameTextField becomeFirstResponder];
+        [self.sslMismatchSwitch setHidden:YES];
+        [self.sslMismatchLabel setHidden:YES];
+        [self.selfSignedLabel setHidden:YES];
+        [self.selfSignedSwitch setHidden:YES];
+        
+        
+        [self.usernameLabel setHidden:NO];
+        [self.usernameTextField setHidden:NO];
+        [self.rememberPasswordLabel setHidden:NO];
+        [self.rememberPasswordSwitch setHidden:NO];
+        [self.passwordLabel setHidden:NO];
+        [self.passwordTextField setHidden:NO];
+        
+    }
+    else //advanced setup
+    {
+        [self.domainLabel setHidden:NO];
+        [self.domainTextField setHidden:NO];
+        [self.domainTextField becomeFirstResponder];
+        [self.sslMismatchSwitch setHidden:NO];
+        [self.sslMismatchLabel setHidden:NO];
+        [self.selfSignedLabel setHidden:NO];
+        [self.selfSignedSwitch setHidden:NO];
+        
+        
+        [self.usernameLabel setHidden:YES];
+        [self.usernameTextField setHidden:YES];
+        [self.rememberPasswordLabel setHidden:YES];
+        [self.rememberPasswordSwitch setHidden:YES];
+        [self.passwordLabel setHidden:YES];
+        [self.passwordTextField setHidden:YES];
+    }
+    
 }
 
 - (void) viewWillDisappear:(BOOL)animated {
@@ -424,9 +530,7 @@
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-    if (self.usernameTextField.isFirstResponder && self.domainTextField)
-        [self.domainTextField becomeFirstResponder];
-    else if (self.usernameTextField.isFirstResponder) {
+    if (self.usernameTextField.isFirstResponder) {
         [self.passwordTextField becomeFirstResponder];
     }
     else if (self.domainTextField.isFirstResponder) {

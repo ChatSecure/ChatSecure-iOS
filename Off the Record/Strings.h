@@ -50,6 +50,10 @@
 #define XMPP_FAIL_STRING NSLocalizedString(@"Failed to connect to XMPP server. Please check your login credentials and internet connection and try again.", @"Message when cannot connect to XMPP server")
 #define LOGGING_IN_STRING NSLocalizedString(@"Logging in...", @"shown during the login proceess")
 #define USER_PASS_BLANK_STRING NSLocalizedString(@"You must enter a username and a password to login.", @"error message shown when user doesnt fill in a username or password")
+#define BASIC_STRING NSLocalizedString(@"Basic", @"string to describe basic set of settings")
+#define ADVANCED_STRING NSLocalizedString(@"Advanced", "stirng to describe advanced set of settings")
+#define SSL_MISMATCH_STRING NSLocalizedString(@"SSL Hostname Mismatch",@"stirng for settings to allow ssl mismatch")
+#define SELF_SIGNED_SSL_STRING NSLocalizedString(@"Self Signed SSL",@"string for settings to allow self signed ssl stirng")
 
 // OTRAccountsViewController
 #define LOGOUT_STRING NSLocalizedString(@"Log Out", @"log out from account")
