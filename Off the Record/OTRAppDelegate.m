@@ -9,8 +9,6 @@
 #import "OTRAppDelegate.h"
 
 #import "OTRBuddyListViewController.h"
-#import "OTRChatListViewController.h"
-#import "OTRAccountsViewController.h"
 #import "OTRChatViewController.h"
 #import "Strings.h"
 #import "OTRSettingsViewController.h"
@@ -63,20 +61,16 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     OTRBuddyListViewController *buddyListViewController = [[OTRBuddyListViewController alloc] init];
     OTRChatViewController *chatViewController = [[OTRChatViewController alloc] init];
     buddyListViewController.chatViewController = chatViewController;
-    OTRChatListViewController *chatListViewController = [[OTRChatListViewController alloc] init];
     //OTRAccountsViewController *accountsViewController = [[OTRAccountsViewController alloc] init];
     OTRSettingsViewController *settingsViewController = [[OTRSettingsViewController alloc] init];
 
-    chatListViewController.buddyController = buddyListViewController;
-    buddyListViewController.chatListController = chatListViewController;
     buddyListViewController.tabController = _tabBarController;
     tabBarController = [[UITabBarController alloc] init];
     UINavigationController *accountsNavController = [[UINavigationController alloc] initWithRootViewController:settingsViewController];
     UINavigationController *buddyListNavController = [[UINavigationController alloc] initWithRootViewController:buddyListViewController];
     
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-        UINavigationController *chatListNavController = [[UINavigationController alloc] initWithRootViewController:chatListViewController];
-        tabBarController.viewControllers = [NSArray arrayWithObjects:buddyListNavController, chatListNavController, accountsNavController, nil];
+        tabBarController.viewControllers = [NSArray arrayWithObjects:buddyListNavController, accountsNavController, nil];
     } else {
         UINavigationController *chatNavController = [[UINavigationController alloc ]initWithRootViewController:chatViewController];
         UISplitViewController *splitViewController = [[UISplitViewController alloc] init];

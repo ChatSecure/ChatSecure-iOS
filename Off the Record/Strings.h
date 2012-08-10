@@ -16,7 +16,7 @@
 #define VERIFY_STRING NSLocalizedString(@"Verify", @"Shown when verifying fingerprints")
 #define SEND_STRING NSLocalizedString(@"Send", @"For sending a message")
 #define OK_STRING NSLocalizedString(@"OK", @"Accept the dialog")
-
+#define RECENT_STRING NSLocalizedString(@"Recent", @"Title for header of Buddy list view with Recent Buddies")
 
 // Used in OTRChatViewController
 #define YOUR_FINGERPRINT_STRING NSLocalizedString(@"Fingerprint for you", @"your fingerprint")
@@ -98,6 +98,7 @@
 #define SHARE_STRING NSLocalizedString(@"Share", @"Title for sharing a link to the app")
 #define NOT_AVAILABLE_STRING NSLocalizedString(@"Not Available", @"Shown when a feature is not available, for example SMS")
 #define SHARE_MESSAGE_STRING NSLocalizedString(@"Chat with me securely", @"Body of SMS or email when sharing a link to the app")
+#define CONNECTED_STRING NSLocalizedString(@"Connected", @"Whether or not account is logged in")
 
 // OTRSettingsDetailViewController
 #define SAVE_STRING NSLocalizedString(@"Save", "Title for button for saving a setting")
@@ -114,7 +115,7 @@
 #define READ_STRING NSLocalizedString(@"Read", @"Title for action button on alert dialog, used as a verb in the present tense")
 
 // OTRNewAccountViewControler
-#define NEW_ACCOUNT_STIRNG NSLocalizedString(@"New Account", @"Title for New Account View")
+#define NEW_ACCOUNT_STRING NSLocalizedString(@"New Account", @"Title for New Account View")
 
 //OTRAccount
 #define AIM_STRING NSLocalizedString(@"AOL Instant Messenger", "the name for AIM")

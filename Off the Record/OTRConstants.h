@@ -17,6 +17,11 @@
 
 #define kOTRFacebookDomain @"chat.facebook.com"
 #define kOTRGoogleTalkDomain @"talk.google.com"
+#define kOTRProtocolTypeXMPP @"xmpp"
+#define kOTRProtocolTypeAIM @"prpl-oscar"
+
+#define kOTRXMPPAccountAllowSelfSignedSSLKey @"kOTRXMPPAccountAllowSelfSignedSSLKey"
+#define kOTRXMPPAccountAllowSSLHostNameMismatch @"kOTRXMPPAccountAllowSSLHostNameMismatch"
 
 #define kOTRXMPPResource @"chatsecure"
 

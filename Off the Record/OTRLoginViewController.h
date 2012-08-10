@@ -37,6 +37,8 @@
 
 @property (nonatomic, strong) NSTimer * timeoutTimer;
 
+@property (nonatomic) BOOL isNewAccount;
+
 - (void)loginButtonPressed:(id)sender;
 - (void)cancelPressed:(id)sender;
 

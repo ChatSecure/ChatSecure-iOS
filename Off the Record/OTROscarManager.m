@@ -231,7 +231,8 @@ BOOL loginFailed;
     
     if(decodedMessage)
     {
-     
+        [messageBuddy receiveMessage:decodedMessage.message];
+
         NSDictionary *messageInfo = [NSDictionary dictionaryWithObject:decodedMessage forKey:@"message"];
         
         [[NSNotificationCenter defaultCenter]

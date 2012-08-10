@@ -6,9 +6,6 @@
 //  Copyright (c) 2012 Chris Ballinger. All rights reserved.
 //
 
-#define kOTRProtocolTypeXMPP @"xmpp"
-#define kOTRProtocolTypeAIM @"prpl-oscar"
-
 #import "OTRAccount.h"
 
 @class OTRMessage, OTRBuddy;

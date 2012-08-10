@@ -330,8 +330,8 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	
     
 	// You may need to alter these settings depending on the server you're connecting to
-	allowSelfSignedCertificates = [OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyAllowSelfSignedSSL];
-	allowSSLHostNameMismatch = [OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyAllowSSLHostNameMismatch];
+	allowSelfSignedCertificates = account.allowSelfSignedSSL;
+	allowSSLHostNameMismatch = account.allowSSLHostNameMismatch;
 }
 
 - (void)teardownStream
@@ -626,11 +626,14 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
         
         if(decodedMessage)
         {
+            [messageBuddy receiveMessage:decodedMessage.message];
+
             NSDictionary *messageInfo = [NSDictionary dictionaryWithObject:decodedMessage forKey:@"message"];
             
             [[NSNotificationCenter defaultCenter]
              postNotificationName:kOTRMessageReceived
              object:self userInfo:messageInfo];
+            
         }
 	}
 }

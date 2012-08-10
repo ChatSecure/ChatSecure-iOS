@@ -9,6 +9,9 @@
 #import "OTRAccountsManager.h"
 #import "OTRSettingsManager.h"
 #import "OTRAccount.h"
+#import "OTRConstants.h"
+#import "OTROscarAccount.h"
+#import "OTRXMPPAccount.h"
 
 @implementation OTRAccountsManager
 @synthesize accountsDictionary, accountsArray, reverseLookupDictionary;
@@ -30,7 +33,14 @@
         for (int i = 0; i < count; i++) {
             NSDictionary *settingsDictionary = [values objectAtIndex:i];
             NSString *settingKey = [keys objectAtIndex:i];
-            OTRAccount *account = [[OTRAccount alloc] initWithSettingsDictionary:settingsDictionary uniqueIdentifier:settingKey];
+            
+            OTRAccount *account = nil;
+            if ([[settingsDictionary objectForKey:kOTRAccountProtocolKey] isEqualToString:kOTRProtocolTypeXMPP]) {
+                account = [[OTRXMPPAccount alloc] initWithSettingsDictionary:settingsDictionary uniqueIdentifier:settingKey];
+            } else if ([[settingsDictionary objectForKey:kOTRAccountProtocolKey] isEqualToString:kOTRProtocolTypeAIM]) {
+                account = [[OTROscarAccount alloc] initWithSettingsDictionary:settingsDictionary uniqueIdentifier:settingKey];
+            }
+
             [accountsDictionary setObject:account forKey:account.uniqueIdentifier];
             [reverseLookupDictionary setObject:[NSMutableDictionary dictionaryWithObject:account forKey:account.username] forKey:account.protocol];
         }

@@ -12,6 +12,8 @@
 #import "OTRConstants.h"
 #import "OTRLoginViewController.h"
 #import "QuartzCore/QuartzCore.h"
+#import "OTRXMPPAccount.h"
+#import "OTROscarAccount.h"
 
 #define rowHeight 70
 
@@ -21,41 +23,28 @@
 
 @implementation OTRNewAccountViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	
-    self.title = NEW_ACCOUNT_STIRNG;
+    self.title = NEW_ACCOUNT_STRING;
     UITableView * tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) style:UITableViewStyleGrouped];
     tableView.dataSource = self;
     tableView.delegate = self;
-    CGFloat headerHeight = (tableView.frame.size.height - 4*rowHeight)  / 4;
-    
-    tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, headerHeight)];
-    
-    tableView.scrollEnabled = NO;
+    tableView.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleHeight;
     [self.view addSubview:tableView];
     
     //Facebook
-    OTRAccount * facebookAccount = [[OTRAccount alloc] initWithUsername:@"" domain:kOTRFacebookDomain protocol:kOTRProtocolTypeXMPP];
+    OTRXMPPAccount * facebookAccount = [[OTRXMPPAccount alloc] initWithDomain:kOTRFacebookDomain];
     
     //Google Chat
-    OTRAccount * googleAccount = [[OTRAccount alloc] initWithUsername:@"" domain:kOTRGoogleTalkDomain protocol:kOTRProtocolTypeXMPP];
+    OTRXMPPAccount * googleAccount = [[OTRXMPPAccount alloc] initWithDomain:kOTRGoogleTalkDomain];
     
     //Jabber
-     OTRAccount * jabberAccount = [[OTRAccount alloc] initWithUsername:@"" domain:@"" protocol:kOTRProtocolTypeXMPP];
+    OTRXMPPAccount * jabberAccount = [[OTRXMPPAccount alloc] initWithDomain:@""];
     
     //Aim
-    OTRAccount * aimAccount = [[OTRAccount alloc] initWithUsername:@"" domain:@"" protocol:kOTRProtocolTypeAIM];
+    OTROscarAccount * aimAccount = [[OTROscarAccount alloc] init];
     
     accounts = [NSArray arrayWithObjects:facebookAccount,googleAccount,jabberAccount,aimAccount, nil];
     
@@ -92,6 +81,7 @@
     cell.textLabel.text = [cellAccount providerName];
     cell.textLabel.font = [UIFont boldSystemFontOfSize:19];
     cell.imageView.image = [UIImage imageNamed:cellAccount.imageName];
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
     if( [[cellAccount providerName] isEqualToString:FACEBOOK_STRING])
     {
@@ -108,24 +98,19 @@
 {
     OTRAccount * cellAccount = [accounts objectAtIndex:indexPath.row];
     OTRLoginViewController *loginViewController = [[OTRLoginViewController alloc] initWithAccount:cellAccount];
+    loginViewController.isNewAccount = YES;
     [self.navigationController pushViewController:loginViewController animated:YES];
-    
-    
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];    
 }
 
 - (void)cancelPressed:(id)sender {
     [self dismissModalViewControllerAnimated:YES];
 }
 
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-}
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    return YES;
 }
 
 @end

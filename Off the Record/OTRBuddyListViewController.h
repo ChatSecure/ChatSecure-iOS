@@ -11,15 +11,15 @@
 
 @class OTRChatViewController;
 
-@interface OTRBuddyListViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate> {
-    NSArray *sortedBuddies;
-    NSMutableDictionary * buddyDictionary;
-}
+@interface OTRBuddyListViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate>
 
+@property (nonatomic, retain) NSArray *sortedBuddies;
+@property (nonatomic, retain) NSMutableDictionary *buddyDictionary;
+@property (nonatomic, retain) NSMutableArray *activeConversations;
 @property (nonatomic, retain) UITableView *buddyListTableView;
 @property (nonatomic, retain) OTRChatViewController *chatViewController;
-@property (nonatomic, retain) UIViewController *chatListController;
 @property (nonatomic, retain) UITabBarController *tabController;
+@property (nonatomic, retain) OTRBuddy *selectedBuddy;
 
 @property (nonatomic, retain) OTRProtocolManager *protocolManager;
 
