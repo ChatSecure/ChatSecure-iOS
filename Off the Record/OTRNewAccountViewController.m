@@ -30,7 +30,6 @@
     tableView.dataSource = self;
     tableView.delegate = self;
     tableView.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleHeight;
-    tableView.scrollEnabled = NO;
     [self.view addSubview:tableView];
     
     //Facebook

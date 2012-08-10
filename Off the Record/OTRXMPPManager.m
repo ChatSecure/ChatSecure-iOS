@@ -621,11 +621,14 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
         
         if(decodedMessage)
         {
+            [messageBuddy receiveMessage:decodedMessage.message];
+
             NSDictionary *messageInfo = [NSDictionary dictionaryWithObject:decodedMessage forKey:@"message"];
             
             [[NSNotificationCenter defaultCenter]
              postNotificationName:kOTRMessageReceived
              object:self userInfo:messageInfo];
+            
         }
 	}
 }

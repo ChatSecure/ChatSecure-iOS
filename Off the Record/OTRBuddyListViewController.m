@@ -172,44 +172,20 @@
 -(void)messageReceived:(NSNotification*)notification;
 {
     OTRMessage *message = [notification.userInfo objectForKey:@"message"];
-    NSString *decodedMessage = message.message;
     OTRBuddy *buddy = message.buddy;
-    [buddy receiveMessage:decodedMessage];
-    
-    UIViewController * currentViewController;
-    
-    NSString * currentTitle;
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-    {
-        currentViewController = self.tabBarController.selectedViewController;
-        if ([currentViewController isKindOfClass:[UISplitViewController class]]) {
-            currentTitle = [((UISplitViewController *)currentViewController).viewControllers objectAtIndex:1];
-        }
-        
+    if (!message.message || [message.message isEqualToString:@""]) {
+        return;
     }
     
-    if(![currentViewController isKindOfClass:[OTRChatViewController class]])
-    {
-        
-        
+    BOOL chatViewIsVisible = chatViewController.isViewLoaded && chatViewController.view.window;
+
+    if ((chatViewController.buddy != buddy || !chatViewIsVisible) && [[UIApplication sharedApplication] applicationState] == UIApplicationStateActive) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:buddy.displayName message:buddy.lastMessage delegate:self cancelButtonTitle:IGNORE_STRING otherButtonTitles:REPLY_STRING, nil];
         NSUInteger tag = [buddy hash];
         alert.tag = tag;
         [buddyDictionary setObject:buddy forKey:[NSNumber numberWithInt:tag]];
         [alert show];
-        
     }
-    else {
-        if (![((OTRChatViewController *)currentViewController).buddy.protocol.account isEqual:buddy.protocol.account] && ![buddy.lastMessage isEqualToString:@""] && [[UIApplication sharedApplication] applicationState] == UIApplicationStateActive)
-        {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:buddy.displayName message:buddy.lastMessage delegate:self cancelButtonTitle:IGNORE_STRING otherButtonTitles:REPLY_STRING, nil];
-            NSUInteger tag = [buddy hash];
-            alert.tag = tag;
-            [buddyDictionary setObject:buddy forKey:[NSNumber numberWithInt:tag]];
-            [alert show];
-        }
-    }
-    
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -229,25 +205,9 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)sectionIndex {
     if (sectionIndex == RECENTS_SECTION_INDEX) {
         return [self.activeConversations count];
-    }
-    if(protocolManager.buddyList)
-    {
-        
-        NSLog(@"Buddy list count: %d",[protocolManager.buddyList count]);
+    } else if (sectionIndex == BUDDIES_SECTION_INDEX) {
         return [protocolManager.buddyList count];
-        
-        
-       /* NSArray *sections = [protocolManager frcSections];
-        
-        if (sectionIndex < [sections count])
-        {
-            id <NSFetchedResultsSectionInfo> sectionInfo = [sections objectAtIndex:sectionIndex];
-            return sectionInfo.numberOfObjects;
-        }
-        
-        return 0;*/
     }
-    
     return 0;
 }
 
@@ -390,48 +350,29 @@
 
 -(void)enterConversationWithBuddy:(OTRBuddy*)buddy 
 {
-    if(buddy) {
-        self.selectedBuddy = buddy;
-        [protocolManager.buddyList.activeConversations addObject:buddy];
-        chatViewController.buddy = buddy;
-        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-            [self.navigationController pushViewController:chatViewController animated:YES];
-        }
-        self.tabBarController.selectedIndex = 0;
-        [self refreshActiveConversations];
+    if(!buddy) {
+        return;
     }
+    self.selectedBuddy = buddy;
+    [protocolManager.buddyList.activeConversations addObject:buddy];
+    chatViewController.buddy = buddy;
+    
+    BOOL chatViewIsVisible = chatViewController.isViewLoaded && chatViewController.view.window;
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone && !chatViewIsVisible && self.navigationController.visibleViewController != chatViewController) {
+        [self.navigationController pushViewController:chatViewController animated:YES];
+    }
+    self.tabBarController.selectedIndex = 0;
+    [self refreshActiveConversations];
 }
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
-    
-    
     OTRBuddy *buddy = [buddyDictionary objectForKey:[NSNumber numberWithInt: alertView.tag]];
     //[buddyDictionary removeObjectForKey:[NSNumber numberWithInt:alertView.tag]];
     if(buttonIndex == 1) // Reply
     {
         [self enterConversationWithBuddy:buddy];
-    }   
-    else // Ignore
-    {
     }
-    /* Unsused for
-    else if (alertView.tag == 123)
-    {
-        if (buttonIndex == alertView.cancelButtonIndex) 
-        {
-            [self showEULAWarning];
-            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://en.wikipedia.org/wiki/Off-the-Record_Messaging"]];
-        }
-        else
-        {
-            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-            [defaults setObject:[NSNumber numberWithBool:YES] forKey:kOTRSettingUserAgreedToEULA];
-            [defaults synchronize];
-        }
-        NSLog(@"buttonIndex: %d", buttonIndex);
-    }
-     */
 }
 
 @end
