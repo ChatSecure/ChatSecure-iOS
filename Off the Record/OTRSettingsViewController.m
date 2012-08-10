@@ -17,6 +17,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "OTRNewAccountViewController.h"
 #import "OTRConstants.h"
+#import <Twitter/Twitter.h>
 
 #define ACTIONSHEET_DISCONNECT_TAG 1
 #define ACTIONSHEET_SHARE_TAG 2
@@ -73,7 +74,7 @@
     [self.view addSubview:settingsTableView];
     
     UIBarButtonItem *aboutButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"about_icon.png"] style:UIBarButtonItemStylePlain target:self action:@selector(showAboutScreen)];
-    UIBarButtonItem *shareButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(shareButtonPressed:)];
+    UIBarButtonItem *shareButton = [[UIBarButtonItem alloc] initWithTitle:SHARE_STRING style:UIBarButtonItemStyleBordered target:self action:@selector(shareButtonPressed:)];
     self.navigationItem.rightBarButtonItem = aboutButton;
     self.navigationItem.leftBarButtonItem = shareButton;
 }
@@ -96,12 +97,36 @@
 }
 
 - (void) shareButtonPressed:(id)sender {
-    UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:SHARE_STRING delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:@"SMS", @"E-mail", @"QR Code", nil];
+    UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:SHARE_STRING delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil];
+    NSArray *buttonTitles = [self buttonTitlesForShareButton];
+    for (NSString *title in buttonTitles) {
+        [sheet addButtonWithTitle:title];
+    }
+    sheet.tag = ACTIONSHEET_SHARE_TAG;
+    sheet.cancelButtonIndex = [buttonTitles count] - 1;
+    
     [sheet showFromTabBar:self.tabBarController.tabBar];
+}
+
+- (NSArray*) buttonTitlesForShareButton {
+    NSMutableArray *titleArray = [NSMutableArray arrayWithCapacity:4];
+    [titleArray addObject:@"SMS"];
+    [titleArray addObject:@"E-mail"];
+    [titleArray addObject:@"QR Code"];
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 5.0)
+    {
+        [titleArray addObject:@"Twitter"];
+    }
+    [titleArray addObject:CANCEL_STRING];
+    return titleArray;
 }
 
 - (NSString*) shareString {
     return [NSString stringWithFormat:@"%@: http://get.chatsecure.org", SHARE_MESSAGE_STRING];
+}
+
+- (NSString*) twitterShareString {
+    return [NSString stringWithFormat:@"%@ @ChatSecure", [self shareString]];
 }
 
 #pragma mark UITableViewDataSource methods
@@ -329,6 +354,12 @@
             UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:qrCode];
             nav.modalPresentationStyle = UIModalPresentationFormSheet;
             [self presentModalViewController:nav animated:YES];
+        } else if (buttonIndex == [[self buttonTitlesForShareButton] count] - 2 && [[[UIDevice currentDevice] systemVersion] floatValue] >= 5.0)
+        {
+            TWTweetComposeViewController *tweetSheet =
+            [[TWTweetComposeViewController alloc] init];
+            [tweetSheet setInitialText:[self twitterShareString]];
+            [self presentModalViewController:tweetSheet animated:YES];
         }
     }
 }
