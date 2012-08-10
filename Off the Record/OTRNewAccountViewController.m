@@ -12,6 +12,8 @@
 #import "OTRConstants.h"
 #import "OTRLoginViewController.h"
 #import "QuartzCore/QuartzCore.h"
+#import "OTRXMPPAccount.h"
+#import "OTROscarAccount.h"
 
 #define rowHeight 70
 
@@ -33,16 +35,16 @@
     [self.view addSubview:tableView];
     
     //Facebook
-    OTRAccount * facebookAccount = [[OTRAccount alloc] initWithUsername:@"" domain:kOTRFacebookDomain protocol:kOTRProtocolTypeXMPP];
+    OTRXMPPAccount * facebookAccount = [[OTRXMPPAccount alloc] initWithDomain:kOTRFacebookDomain];
     
     //Google Chat
-    OTRAccount * googleAccount = [[OTRAccount alloc] initWithUsername:@"" domain:kOTRGoogleTalkDomain protocol:kOTRProtocolTypeXMPP];
+    OTRXMPPAccount * googleAccount = [[OTRXMPPAccount alloc] initWithDomain:kOTRGoogleTalkDomain];
     
     //Jabber
-     OTRAccount * jabberAccount = [[OTRAccount alloc] initWithUsername:@"" domain:@"" protocol:kOTRProtocolTypeXMPP];
+    OTRXMPPAccount * jabberAccount = [[OTRXMPPAccount alloc] initWithDomain:@""];
     
     //Aim
-    OTRAccount * aimAccount = [[OTRAccount alloc] initWithUsername:@"" domain:@"" protocol:kOTRProtocolTypeAIM];
+    OTROscarAccount * aimAccount = [[OTROscarAccount alloc] init];
     
     accounts = [NSArray arrayWithObjects:facebookAccount,googleAccount,jabberAccount,aimAccount, nil];
     

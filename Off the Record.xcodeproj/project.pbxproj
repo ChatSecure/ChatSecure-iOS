@@ -152,6 +152,8 @@
 		D9A7E0AB15242D8C00EEDDB5 /* Default-Landscape~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = D9A7E0AA15242D8C00EEDDB5 /* Default-Landscape~ipad.png */; };
 		D9A7E0AD15242D9000EEDDB5 /* Default-Landscape@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = D9A7E0AC15242D9000EEDDB5 /* Default-Landscape@2x~ipad.png */; };
 		D9ABC98D15D47BD600AAB730 /* libCrittercismCrashOnly_v3_2_5.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D9ABC98C15D47BD600AAB730 /* libCrittercismCrashOnly_v3_2_5.a */; };
+		D9ABC99015D48B7F00AAB730 /* OTRXMPPAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = D9ABC98F15D48B7E00AAB730 /* OTRXMPPAccount.m */; };
+		D9ABC99315D48C4F00AAB730 /* OTROscarAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = D9ABC99215D48C4F00AAB730 /* OTROscarAccount.m */; };
 		D9BBCD3B1491F7AB00AF1B9F /* 19-gear.png in Resources */ = {isa = PBXBuildFile; fileRef = D9BBCD3A1491F7AB00AF1B9F /* 19-gear.png */; };
 		D9BBCD3F1491F8B400AF1B9F /* OTRAboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9BBCD3D1491F8B400AF1B9F /* OTRAboutViewController.m */; };
 		D9BBCD431491FFC800AF1B9F /* about_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = D9BBCD411491FFC800AF1B9F /* about_icon.png */; };
@@ -669,6 +671,10 @@
 		D9A7E0AA15242D8C00EEDDB5 /* Default-Landscape~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-Landscape~ipad.png"; path = "../Default-Landscape~ipad.png"; sourceTree = "<group>"; };
 		D9A7E0AC15242D9000EEDDB5 /* Default-Landscape@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-Landscape@2x~ipad.png"; path = "../Default-Landscape@2x~ipad.png"; sourceTree = "<group>"; };
 		D9ABC98C15D47BD600AAB730 /* libCrittercismCrashOnly_v3_2_5.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libCrittercismCrashOnly_v3_2_5.a; sourceTree = "<group>"; };
+		D9ABC98E15D48B7E00AAB730 /* OTRXMPPAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPAccount.h; sourceTree = "<group>"; };
+		D9ABC98F15D48B7E00AAB730 /* OTRXMPPAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPAccount.m; sourceTree = "<group>"; };
+		D9ABC99115D48C4E00AAB730 /* OTROscarAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTROscarAccount.h; sourceTree = "<group>"; };
+		D9ABC99215D48C4F00AAB730 /* OTROscarAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTROscarAccount.m; sourceTree = "<group>"; };
 		D9BBCD3A1491F7AB00AF1B9F /* 19-gear.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "19-gear.png"; sourceTree = "<group>"; };
 		D9BBCD3C1491F8B400AF1B9F /* OTRAboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAboutViewController.h; sourceTree = "<group>"; };
 		D9BBCD3D1491F8B400AF1B9F /* OTRAboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAboutViewController.m; sourceTree = "<group>"; };
@@ -1764,6 +1770,10 @@
 				63FD24D415630A240041374A /* OTRUIKeyboardListener.m */,
 				D93C316D159A6719006316C7 /* OTRAccount.h */,
 				D93C316E159A6719006316C7 /* OTRAccount.m */,
+				D9ABC99115D48C4E00AAB730 /* OTROscarAccount.h */,
+				D9ABC99215D48C4F00AAB730 /* OTROscarAccount.m */,
+				D9ABC98E15D48B7E00AAB730 /* OTRXMPPAccount.h */,
+				D9ABC98F15D48B7E00AAB730 /* OTRXMPPAccount.m */,
 				D93C3171159A6C10006316C7 /* OTRAccountsManager.h */,
 				D93C3172159A6C10006316C7 /* OTRAccountsManager.m */,
 			);
@@ -2468,6 +2478,8 @@
 				D93C3173159A6C10006316C7 /* OTRAccountsManager.m in Sources */,
 				D93C31B5159A7DDA006316C7 /* SFHFKeychainUtils.m in Sources */,
 				6352DC8815AF9F16007AD0B4 /* OTRNewAccountViewController.m in Sources */,
+				D9ABC99015D48B7F00AAB730 /* OTRXMPPAccount.m in Sources */,
+				D9ABC99315D48C4F00AAB730 /* OTROscarAccount.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

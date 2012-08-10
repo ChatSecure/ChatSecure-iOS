@@ -16,27 +16,19 @@
 #import "OTRConstants.h"
 #import "Strings.h"
 
-#define kAIMImageName @"aim.png"
-#define kGTalkImageName @"gtalk.png"
-#define kFacebookImageName @"facebook.png"
-#define kXMPPImageName @"xmpp.png"
-
 @implementation OTRAccount
-@synthesize username, domain, protocol, password, rememberPassword, uniqueIdentifier, isConnected, imageName;
+@synthesize username, protocol, password, rememberPassword, uniqueIdentifier, isConnected;
 
 - (void) dealloc {
     self.username = nil;
-    self.domain = nil;
     self.protocol = nil;
     self.password = nil;
     uniqueIdentifier = nil;
-    imageName = nil;
 }
 
-- (id) initWithUsername:(NSString*)newUsername domain:(NSString*)newDomain protocol:(NSString*)newProtocol {
+- (id) initWithProtocol:(NSString*)newProtocol {
     if (self = [super init]) {
-        self.username = newUsername;
-        self.domain = newDomain;
+        self.username = @"";
         self.protocol = newProtocol;
         self.rememberPassword = NO;
         self.isConnected = NO;
@@ -45,34 +37,21 @@
         CFRelease(theUUID);
         uniqueIdentifier = uuidString;
         
-        if ([protocol isEqualToString:kOTRProtocolTypeAIM]) {
-            imageName = kAIMImageName;
-        } else if ([protocol isEqualToString:kOTRProtocolTypeXMPP]) {
-            // TODO: check domain and show different images for custom XMPP and Facebook
-            if([domain isEqualToString:kOTRFacebookDomain])
-            {
-                imageName = kFacebookImageName;
-            }
-            else if ([domain isEqualToString:kOTRGoogleTalkDomain] )
-            {
-                imageName = kGTalkImageName;
-            }
-            else
-            {
-                imageName = kXMPPImageName;
-            }
-        }
+        
     }
     return self;
+}
+
+// Default, this will be overridden in subclasses
+- (NSString *) imageName {
+    return kXMPPImageName;
 }
 
 - (id) initWithSettingsDictionary:(NSDictionary *)dictionary uniqueIdentifier:(NSString*) uniqueID {
     if (self = [super init]) {
         self.rememberPassword = [[dictionary objectForKey:kOTRAccountRememberPasswordKey] boolValue];
         self.username = [dictionary objectForKey:kOTRAccountUsernameKey];
-        self.domain = [dictionary objectForKey:kOTRAccountDomainKey];
         self.protocol = [dictionary objectForKey:kOTRAccountProtocolKey];
-        imageName = [dictionary objectForKey:kOTRAccountImageKey];
         uniqueIdentifier = uniqueID;
         self.isConnected = NO;
     }
@@ -141,49 +120,32 @@
 - (void) save {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSMutableDictionary *accountsDictionary = [NSMutableDictionary dictionaryWithDictionary:[defaults objectForKey:kOTRSettingAccountsKey]];
-    NSMutableDictionary *accountDictionary = [NSMutableDictionary dictionaryWithCapacity:4];
-    [accountDictionary setObject:self.username forKey:kOTRAccountUsernameKey];
-    [accountDictionary setObject:self.domain forKey:kOTRAccountDomainKey];
-    [accountDictionary setObject:self.protocol forKey:kOTRAccountProtocolKey];
-    [accountDictionary setObject:[NSNumber numberWithBool:self.rememberPassword] forKey:kOTRAccountRememberPasswordKey];
-    [accountDictionary setObject:self.imageName forKey:kOTRAccountImageKey];
+        [defaults setObject:accountsDictionary forKey:kOTRSettingAccountsKey];
+    NSDictionary *accountDictionary = [self accountDictionary];
     [accountsDictionary setObject:accountDictionary forKey:self.uniqueIdentifier];
-    [defaults setObject:accountsDictionary forKey:kOTRSettingAccountsKey];
     BOOL synchronized = [defaults synchronize];
     if (!synchronized) {
         NSLog(@"Error saving account: %@", self.username);
     }
 }
-- (Class)protocolClass {
-    if([self.protocol isEqualToString:kOTRProtocolTypeAIM])
-    {
-        return [OTROscarManager class];
-    }
-    else if([self.protocol isEqualToString:kOTRProtocolTypeXMPP])
-    {
-        return [OTRXMPPManager class];
-    }
+
+- (NSMutableDictionary*) accountDictionary {
+    NSMutableDictionary *accountDictionary = [NSMutableDictionary dictionaryWithCapacity:4];
+    [accountDictionary setObject:self.username forKey:kOTRAccountUsernameKey];
+    [accountDictionary setObject:self.protocol forKey:kOTRAccountProtocolKey];
+    [accountDictionary setObject:[NSNumber numberWithBool:self.rememberPassword] forKey:kOTRAccountRememberPasswordKey];
+    [accountDictionary setObject:self.imageName forKey:kOTRAccountImageKey];
+    return accountDictionary;
 }
 
--(NSString *)providerName
+
+- (Class)protocolClass {
+    return nil;
+}
+
+// Overridden by subclasses
+- (NSString *)providerName
 {
-    if ([protocol isEqualToString:kOTRProtocolTypeAIM])
-    {
-        return AIM_STRING ;
-    }
-    else if ([protocol isEqualToString:kOTRProtocolTypeXMPP])
-    {
-        if ([domain isEqualToString:kOTRFacebookDomain]) {
-            return FACEBOOK_STRING;
-        }
-        else if ([domain isEqualToString:kOTRGoogleTalkDomain])
-        {
-            return GOOGLE_TALK_STRING;
-        }
-        else {
-            return JABBER_STRING;
-        }
-    }
     return @"";
 }
 

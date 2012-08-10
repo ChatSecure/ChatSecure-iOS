@@ -10,6 +10,7 @@
 #import "Strings.h"
 #import "OTRUIKeyboardListener.h"
 #import "OTRConstants.h"
+#import "OTRXMPPAccount.h"
 
 #define kFieldBuffer 20;
 
@@ -78,30 +79,56 @@
     self.usernameTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     self.usernameTextField.text = account.username;
     
-    if ([account.domain isEqualToString:kOTRGoogleTalkDomain]) {
-        self.usernameTextField.placeholder = @"user@gmail.com";
-    }
-    else if ([account.domain isEqualToString:kOTRFacebookDomain])
-    {
-        facebookHelpLabel = [[UILabel alloc] init];
-        facebookHelpLabel.text = FACEBOOK_HELP_STRING;
-        facebookHelpLabel.textAlignment = UITextAlignmentLeft;
-        facebookHelpLabel.lineBreakMode = UILineBreakModeWordWrap;
-        facebookHelpLabel.numberOfLines = 0;
-        facebookHelpLabel.font = [UIFont systemFontOfSize:14];
+    
+    if ([account isKindOfClass:[OTRXMPPAccount class]]) {
+        OTRXMPPAccount *xmppAccount = (OTRXMPPAccount*) account;
+        if ([xmppAccount.domain isEqualToString:kOTRGoogleTalkDomain]) {
+            self.usernameTextField.placeholder = @"user@gmail.com";
+        }
+        else if ([xmppAccount.domain isEqualToString:kOTRFacebookDomain])
+        {
+            facebookHelpLabel = [[UILabel alloc] init];
+            facebookHelpLabel.text = FACEBOOK_HELP_STRING;
+            facebookHelpLabel.textAlignment = UITextAlignmentLeft;
+            facebookHelpLabel.lineBreakMode = UILineBreakModeWordWrap;
+            facebookHelpLabel.numberOfLines = 0;
+            facebookHelpLabel.font = [UIFont systemFontOfSize:14];
+            
+            self.facebookInfoButton = [UIButton buttonWithType:UIButtonTypeInfoDark];
+            [self.facebookInfoButton addTarget:self action:@selector(facebookInfoButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+            
+            [self.view addSubview:facebookHelpLabel];
+            [self.view addSubview:facebookInfoButton];
+            
+            self.usernameTextField.placeholder = @"";
+        }
+        else if ([account.protocol isEqualToString:kOTRProtocolTypeXMPP])
+        {
+            self.usernameTextField.placeholder = @"user@example.com";
+        }
         
-        self.facebookInfoButton = [UIButton buttonWithType:UIButtonTypeInfoDark];
-        [self.facebookInfoButton addTarget:self action:@selector(facebookInfoButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-        
-        [self.view addSubview:facebookHelpLabel];
-        [self.view addSubview:facebookInfoButton];
-        
-        self.usernameTextField.placeholder = @"";
+        //Jabber domain fields
+        if([xmppAccount.domain isEqualToString:@""] && [account.protocol isEqualToString:kOTRProtocolTypeXMPP])
+        {
+            self.domainLabel = [[UILabel alloc] init];
+            self.domainLabel.text = DOMAIN_STRING;
+            
+            [self.view addSubview:domainLabel];
+            
+            self.domainTextField = [[UITextField alloc] init];
+            self.domainTextField.delegate = self;
+            self.domainTextField.autocorrectionType = UITextAutocorrectionTypeNo;
+            self.domainTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+            self.domainTextField.borderStyle = UITextBorderStyleRoundedRect;
+            self.domainTextField.placeholder = OPTIONAL_STRING;
+            
+            [self.view addSubview:domainTextField];
+            
+        }
     }
-    else if ([account.protocol isEqualToString:kOTRProtocolTypeXMPP])
-    {
-        self.usernameTextField.placeholder = @"user@example.com";
-    }
+    
+
+    
     self.passwordTextField = [[UITextField alloc] init];
     self.passwordTextField.delegate = self;
     self.passwordTextField.borderStyle = UITextBorderStyleRoundedRect;
@@ -113,24 +140,7 @@
     [self.view addSubview:passwordTextField];
     
     
-    //Jabber domain fields
-    if([account.domain isEqualToString:@""] && [account.protocol isEqualToString:kOTRProtocolTypeXMPP])
-    {
-        self.domainLabel = [[UILabel alloc] init];
-        self.domainLabel.text = DOMAIN_STRING;
-        
-        [self.view addSubview:domainLabel];
-        
-        self.domainTextField = [[UITextField alloc] init];
-        self.domainTextField.delegate = self;
-        self.domainTextField.autocorrectionType = UITextAutocorrectionTypeNo;
-        self.domainTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-        self.domainTextField.borderStyle = UITextBorderStyleRoundedRect;
-        self.domainTextField.placeholder = OPTIONAL_STRING;
-        
-        [self.view addSubview:domainTextField];
-        
-    }
+
     
     NSString *loginButtonString = LOGIN_STRING;
     self.title = [account providerName];
@@ -368,18 +378,24 @@
         NSString * usernameText = [usernameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
         NSString * domainText = [domainTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
         
-        if([self.account.domain isEqualToString:kOTRFacebookDomain])
-        {
-            usernameText = [NSString stringWithFormat:@"%@@%@",usernameText,kOTRFacebookDomain];
+        if ([account isKindOfClass:[OTRXMPPAccount class]]) {
+            OTRXMPPAccount *xmppAccount = (OTRXMPPAccount*) account;
+            if([xmppAccount.domain isEqualToString:kOTRFacebookDomain])
+            {
+                usernameText = [NSString stringWithFormat:@"%@@%@",usernameText,kOTRFacebookDomain];
+            }
+            if([domainText length])
+            {
+                xmppAccount.domain = domainText;
+            }
         }
+
+
         
         self.account.username = usernameText;
         self.account.password = passwordTextField.text;
         
-        if([domainText length])
-        {
-            self.account.domain = domainText;
-        }
+
         
         id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
         [protocol connectWithPassword:self.passwordTextField.text];

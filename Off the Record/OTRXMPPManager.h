@@ -20,6 +20,7 @@
 #import "XMPPCapabilitiesCoreDataStorage.h"
 #import "OTRCodec.h"
 #import "OTRProtocol.h"
+#import "OTRXMPPAccount.h"
 
 @interface OTRXMPPManager : NSObject <XMPPRosterDelegate, NSFetchedResultsControllerDelegate, OTRProtocol>
 {
@@ -66,6 +67,8 @@
 - (NSFetchedResultsController *)fetchedResultsController;
 
 -(NSString*)accountName;
+
+@property (nonatomic, retain) OTRXMPPAccount *account;
 
 
 
