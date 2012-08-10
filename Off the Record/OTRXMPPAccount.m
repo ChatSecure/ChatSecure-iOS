@@ -27,6 +27,8 @@
 - (id) initWithSettingsDictionary:(NSDictionary *)dictionary uniqueIdentifier:(NSString*) uniqueID {
     if (self = [super initWithSettingsDictionary:dictionary uniqueIdentifier:uniqueID]) {
         self.domain = [dictionary objectForKey:kOTRAccountDomainKey];
+        self.allowSelfSignedSSL = [[dictionary objectForKey:kOTRXMPPAccountAllowSelfSignedSSLKey] boolValue];
+        self.allowSSLHostNameMismatch = [[dictionary objectForKey:kOTRXMPPAccountAllowSSLHostNameMismatch] boolValue];
     }
     return self;
 }
@@ -42,6 +44,22 @@
         imageName = kGTalkImageName;
     }
     return imageName;
+}
+
+// Don't allow self-signed SSL for Facebook and Google Talk
+- (BOOL) allowSelfSignedSSL {
+    if ([domain isEqualToString:kOTRFacebookDomain] || [domain isEqualToString:kOTRGoogleTalkDomain]) {
+        return NO;
+    }
+    return allowSelfSignedSSL;
+}
+
+// Don't allow SSL host-name mismatch for Facebook
+- (BOOL) allowSSLHostNameMismatch {
+    if ([domain isEqualToString:kOTRFacebookDomain]) {
+        return NO;
+    }
+    return allowSSLHostNameMismatch;
 }
 
 - (NSString *)providerName {
@@ -64,6 +82,8 @@
 - (NSDictionary*) accountDictionary {
     NSMutableDictionary *accountDictionary = [super accountDictionary];
     [accountDictionary setObject:self.domain forKey:kOTRAccountDomainKey];
+    [accountDictionary setObject:[NSNumber numberWithBool:self.allowSelfSignedSSL] forKey:kOTRXMPPAccountAllowSelfSignedSSLKey];
+    [accountDictionary setObject:[NSNumber numberWithBool:self.allowSSLHostNameMismatch] forKey:kOTRXMPPAccountAllowSSLHostNameMismatch];
     return accountDictionary;
 }
 @end

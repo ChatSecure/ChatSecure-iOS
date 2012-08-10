@@ -20,4 +20,7 @@
 #define kOTRProtocolTypeXMPP @"xmpp"
 #define kOTRProtocolTypeAIM @"prpl-oscar"
 
+#define kOTRXMPPAccountAllowSelfSignedSSLKey @"kOTRXMPPAccountAllowSelfSignedSSLKey"
+#define kOTRXMPPAccountAllowSSLHostNameMismatch @"kOTRXMPPAccountAllowSSLHostNameMismatch"
+
 #define kOTRFacebookUsernameLink @"http://www.facebook.com/help/?faq=211813265517027#What-are-usernames?"

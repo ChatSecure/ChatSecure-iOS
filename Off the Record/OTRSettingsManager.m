@@ -63,15 +63,6 @@
     OTRSettingsGroup *chatSettingsGroup = [[OTRSettingsGroup alloc] initWithTitle:CHAT_STRING settings:[NSArray arrayWithObjects:fontSizeSetting, deletedDisconnectedConversations, showDisconnectionWarning, nil]];
     [settingsGroups addObject:chatSettingsGroup];
     
-    
-    OTRBoolSetting *allowSelfSignedCertificates = [[OTRBoolSetting alloc] initWithTitle:ALLOW_SELF_SIGNED_CERTIFICATES_STRING description:SECURITY_WARNING_DESCRIPTION_STRING settingsKey:kOTRSettingKeyAllowSelfSignedSSL];
-    OTRBoolSetting *allowSSLHostnameMismatch = [[OTRBoolSetting alloc] initWithTitle:ALLOW_SSL_HOSTNAME_MISMATCH_STRING description:SECURITY_WARNING_DESCRIPTION_STRING settingsKey:kOTRSettingKeyAllowSSLHostNameMismatch];
-    OTRSettingsGroup *xmppGroup = [[OTRSettingsGroup alloc] initWithTitle:@"XMPP" settings:[NSArray arrayWithObjects:allowSelfSignedCertificates, allowSSLHostnameMismatch, nil]];
-    [newSettingsDictionary setObject:allowSelfSignedCertificates forKey:kOTRSettingKeyAllowSelfSignedSSL];
-    [newSettingsDictionary setObject:allowSSLHostnameMismatch forKey:kOTRSettingKeyAllowSSLHostNameMismatch];
-    [settingsGroups addObject:xmppGroup];
-    
-    
 #ifdef CRITTERCISM_ENABLED
     OTRBoolSetting *crittercismSetting = [[OTRBoolSetting alloc] initWithTitle:CRITTERCISM_TITLE_STRING description:CRITTERCISM_DESCRIPTION_STRING settingsKey:kOTRSettingKeyCrittercismOptIn];
     OTRSettingsGroup *otherGroup = [[OTRSettingsGroup alloc] initWithTitle:OTHER_STRING settings:[NSArray arrayWithObject:crittercismSetting]];

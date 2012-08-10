@@ -13,9 +13,6 @@
 #define kOTRSettingKeyCrittercismOptIn @"kOTRSettingKeyCrittercismOptIn"
 #endif
 
-#define kOTRSettingKeyAllowSelfSignedSSL @"kOTRSettingKeyAllowSelfSignedSSL"
-#define kOTRSettingKeyAllowSSLHostNameMismatch @"kOTRSettingKeyAllowSSLHostNameMismatch"
-
 #define kOTRSettingKeyFontSize @"kOTRSettingKeyFontSize"
 #define kOTRSettingKeyDeleteOnDisconnect @"kOTRSettingKeyDeleteOnDisconnect"
 #define kOTRSettingKeyShowDisconnectionWarning @"kOTRSettingKeyShowDisconnectionWarning"
