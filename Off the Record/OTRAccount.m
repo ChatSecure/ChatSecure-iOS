@@ -9,20 +9,21 @@
 #import "OTRAccount.h"
 #import "OTRSettingsManager.h"
 #import "SFHFKeychainUtils.h"
-#define kOTRServiceName @"org.chatsecure.ChatSecure"
 #import "OTRProtocol.h"
 #import "OTRXMPPManager.h"
 #import "OTROscarManager.h"
 #import "OTRConstants.h"
 #import "Strings.h"
 
+#define kOTRServiceName @"org.chatsecure.ChatSecure"
+
+
 @implementation OTRAccount
-@synthesize username, protocol, password, rememberPassword, uniqueIdentifier, isConnected;
+@synthesize username, protocol, rememberPassword, uniqueIdentifier, isConnected;
 
 - (void) dealloc {
     self.username = nil;
     self.protocol = nil;
-    self.password = nil;
     uniqueIdentifier = nil;
 }
 
@@ -76,11 +77,10 @@
 
 - (NSString*) password {
     if (!rememberPassword) {
-        password = nil;
         return nil;
     }
     NSError *error = nil;
-    password = [SFHFKeychainUtils getPasswordForUsername:username andServiceName:kOTRServiceName error:&error];
+    NSString *password = [SFHFKeychainUtils getPasswordForUsername:username andServiceName:kOTRServiceName error:&error];
     if (error) {
         NSLog(@"Error retreiving password from keychain: %@%@", [error localizedDescription], [error userInfo]);
         error = nil;
@@ -120,9 +120,9 @@
 - (void) save {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSMutableDictionary *accountsDictionary = [NSMutableDictionary dictionaryWithDictionary:[defaults objectForKey:kOTRSettingAccountsKey]];
-        [defaults setObject:accountsDictionary forKey:kOTRSettingAccountsKey];
     NSDictionary *accountDictionary = [self accountDictionary];
     [accountsDictionary setObject:accountDictionary forKey:self.uniqueIdentifier];
+    [defaults setObject:accountsDictionary forKey:kOTRSettingAccountsKey];
     BOOL synchronized = [defaults synchronize];
     if (!synchronized) {
         NSLog(@"Error saving account: %@", self.username);
@@ -130,11 +130,10 @@
 }
 
 - (NSMutableDictionary*) accountDictionary {
-    NSMutableDictionary *accountDictionary = [NSMutableDictionary dictionaryWithCapacity:4];
+    NSMutableDictionary *accountDictionary = [NSMutableDictionary dictionaryWithCapacity:5];
     [accountDictionary setObject:self.username forKey:kOTRAccountUsernameKey];
     [accountDictionary setObject:self.protocol forKey:kOTRAccountProtocolKey];
     [accountDictionary setObject:[NSNumber numberWithBool:self.rememberPassword] forKey:kOTRAccountRememberPasswordKey];
-    [accountDictionary setObject:self.imageName forKey:kOTRAccountImageKey];
     return accountDictionary;
 }
 

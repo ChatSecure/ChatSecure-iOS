@@ -8,10 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-#define kOTRAccountUsernameKey @"username"
-#define kOTRAccountProtocolKey @"protocol"
-#define kOTRAccountRememberPasswordKey @"remember"
-#define kOTRAccountImageKey @"image"
+#define kOTRAccountUsernameKey @"kOTRAccountUsernameKey"
+#define kOTRAccountProtocolKey @"kOTRAccountProtocolKey"
+#define kOTRAccountRememberPasswordKey @"kOTRAccountRememberPasswordKey"
 
 #define kAIMImageName @"aim.png"
 #define kGTalkImageName @"gtalk.png"
