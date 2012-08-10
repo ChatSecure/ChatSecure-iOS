@@ -148,6 +148,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
         if (localNotif) {
             localNotif.alertBody = EXPIRATION_STRING;
             localNotif.alertAction = OK_STRING;
+            localNotif.soundName = UILocalNotificationDefaultSoundName;
             [application presentLocalNotificationNow:localNotif];
         }
         self.didShowDisconnectionWarning = YES;

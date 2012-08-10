@@ -114,6 +114,7 @@
             // We are not active, so use a local notification instead
             UILocalNotification *localNotification = [[UILocalNotification alloc] init];
             localNotification.alertAction = REPLY_STRING;
+            localNotification.soundName = UILocalNotificationDefaultSoundName;
             localNotification.applicationIconBadgeNumber = [UIApplication sharedApplication].applicationIconBadgeNumber + 1;
             localNotification.alertBody = [NSString stringWithFormat:@"%@: %@",self.displayName,self.lastMessage];
             
