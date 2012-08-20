@@ -26,6 +26,11 @@
 		D913A70A13FCA9C200C97C1C /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D913A70913FCA9C200C97C1C /* ImageIO.framework */; };
 		D91DAE8615473EB5009D0B74 /* OTRSettingDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D91DAE8515473EB5009D0B74 /* OTRSettingDetailViewController.m */; };
 		D91DAE89154740CE009D0B74 /* OTRDoubleSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D91DAE88154740CE009D0B74 /* OTRDoubleSettingViewController.m */; };
+		D92061DC15E2E0D8003EEF3A /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = D92061BD15E2E0D8003EEF3A /* LICENSE */; };
+		D92061DD15E2E0D8003EEF3A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D92061BF15E2E0D8003EEF3A /* InfoPlist.strings */; };
+		D92061DE15E2E0D8003EEF3A /* OTRKit-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D92061C115E2E0D8003EEF3A /* OTRKit-Info.plist */; };
+		D92061E015E2E0D8003EEF3A /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = D92061C815E2E0D8003EEF3A /* README.md */; };
+		D92061E915E2E185003EEF3A /* libOTRKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D92061E315E2E0D8003EEF3A /* libOTRKit.a */; };
 		D92B775514142F150058A789 /* OTREncryptionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D92B775414142F150058A789 /* OTREncryptionManager.m */; };
 		D93C316F159A6719006316C7 /* OTRAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = D93C316E159A6719006316C7 /* OTRAccount.m */; };
 		D93C3173159A6C10006316C7 /* OTRAccountsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D93C3172159A6C10006316C7 /* OTRAccountsManager.m */; };
@@ -167,9 +172,6 @@
 		D9CE423213FDCA0F003EC27C /* 112-group.png in Resources */ = {isa = PBXBuildFile; fileRef = D9CE423113FDCA0F003EC27C /* 112-group.png */; };
 		D9CE42C313FDCBDD003EC27C /* Lock_Locked.png in Resources */ = {isa = PBXBuildFile; fileRef = D9CE42C113FDCBDD003EC27C /* Lock_Locked.png */; };
 		D9CE42C413FDCBDD003EC27C /* Lock_Unlocked.png in Resources */ = {isa = PBXBuildFile; fileRef = D9CE42C213FDCBDD003EC27C /* Lock_Unlocked.png */; };
-		D9D552C113F5262B0089138B /* libgcrypt.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D552B913F5262B0089138B /* libgcrypt.a */; };
-		D9D552C213F5262B0089138B /* libgpg-error.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D552BA13F5262B0089138B /* libgpg-error.a */; };
-		D9D552C313F5262B0089138B /* libotr.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D552BB13F5262B0089138B /* libotr.a */; };
 		D9D69AA91417FDBA0056FB9E /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D69AA81417FDBA0056FB9E /* CFNetwork.framework */; };
 		D9D69ABC1417FDF90056FB9E /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D69ABB1417FDF90056FB9E /* libxml2.dylib */; };
 		D9D69B021417FF450056FB9E /* libresolv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D69B011417FF450056FB9E /* libresolv.dylib */; };
@@ -290,6 +292,23 @@
 		D9FC987115588F230039518D /* chatsecure_qrcode@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D9FC986F15588F230039518D /* chatsecure_qrcode@2x.png */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		D92061E215E2E0D8003EEF3A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D92061C515E2E0D8003EEF3A /* OTRKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D905CFCB155B2B0000654181;
+			remoteInfo = OTRKit;
+		};
+		D92061E715E2E180003EEF3A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D92061C515E2E0D8003EEF3A /* OTRKit.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D905CFCA155B2B0000654181;
+			remoteInfo = OTRKit;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		634CBFDB159CEAC70046FB3B /* OTRConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OTRConstants.h; sourceTree = "<group>"; };
 		6352DC8615AF9F16007AD0B4 /* OTRNewAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRNewAccountViewController.h; sourceTree = "<group>"; };
@@ -324,6 +343,31 @@
 		D91DAE8515473EB5009D0B74 /* OTRSettingDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRSettingDetailViewController.m; sourceTree = "<group>"; };
 		D91DAE87154740CD009D0B74 /* OTRDoubleSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRDoubleSettingViewController.h; sourceTree = "<group>"; };
 		D91DAE88154740CE009D0B74 /* OTRDoubleSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRDoubleSettingViewController.m; sourceTree = "<group>"; };
+		D92061A715E2E0D8003EEF3A /* gcrypt-module.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gcrypt-module.h"; sourceTree = "<group>"; };
+		D92061A815E2E0D8003EEF3A /* gcrypt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gcrypt.h; sourceTree = "<group>"; };
+		D92061A915E2E0D8003EEF3A /* gpg-error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gpg-error.h"; sourceTree = "<group>"; };
+		D92061AB15E2E0D8003EEF3A /* auth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = auth.h; sourceTree = "<group>"; };
+		D92061AC15E2E0D8003EEF3A /* b64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = b64.h; sourceTree = "<group>"; };
+		D92061AD15E2E0D8003EEF3A /* context.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = context.h; sourceTree = "<group>"; };
+		D92061AE15E2E0D8003EEF3A /* dh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dh.h; sourceTree = "<group>"; };
+		D92061AF15E2E0D8003EEF3A /* mem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mem.h; sourceTree = "<group>"; };
+		D92061B015E2E0D8003EEF3A /* message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = message.h; sourceTree = "<group>"; };
+		D92061B115E2E0D8003EEF3A /* privkey-t.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "privkey-t.h"; sourceTree = "<group>"; };
+		D92061B215E2E0D8003EEF3A /* privkey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = privkey.h; sourceTree = "<group>"; };
+		D92061B315E2E0D8003EEF3A /* proto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = proto.h; sourceTree = "<group>"; };
+		D92061B415E2E0D8003EEF3A /* serial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = serial.h; sourceTree = "<group>"; };
+		D92061B515E2E0D8003EEF3A /* sm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sm.h; sourceTree = "<group>"; };
+		D92061B615E2E0D8003EEF3A /* tlv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tlv.h; sourceTree = "<group>"; };
+		D92061B715E2E0D8003EEF3A /* userstate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = userstate.h; sourceTree = "<group>"; };
+		D92061B815E2E0D8003EEF3A /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = version.h; sourceTree = "<group>"; };
+		D92061BD15E2E0D8003EEF3A /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		D92061C015E2E0D8003EEF3A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		D92061C115E2E0D8003EEF3A /* OTRKit-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "OTRKit-Info.plist"; sourceTree = "<group>"; };
+		D92061C215E2E0D8003EEF3A /* OTRKit-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OTRKit-Prefix.pch"; sourceTree = "<group>"; };
+		D92061C315E2E0D8003EEF3A /* OTRKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRKit.h; sourceTree = "<group>"; };
+		D92061C415E2E0D8003EEF3A /* OTRKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRKit.m; sourceTree = "<group>"; };
+		D92061C515E2E0D8003EEF3A /* OTRKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = OTRKit.xcodeproj; sourceTree = "<group>"; };
+		D92061C815E2E0D8003EEF3A /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		D92B775314142F150058A789 /* OTREncryptionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTREncryptionManager.h; sourceTree = "<group>"; };
 		D92B775414142F150058A789 /* OTREncryptionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTREncryptionManager.m; sourceTree = "<group>"; };
 		D93C316D159A6719006316C7 /* OTRAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAccount.h; sourceTree = "<group>"; };
@@ -693,26 +737,6 @@
 		D9CE423113FDCA0F003EC27C /* 112-group.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "112-group.png"; sourceTree = "<group>"; };
 		D9CE42C113FDCBDD003EC27C /* Lock_Locked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Lock_Locked.png; sourceTree = "<group>"; };
 		D9CE42C213FDCBDD003EC27C /* Lock_Unlocked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Lock_Unlocked.png; sourceTree = "<group>"; };
-		D9D552A613F5262B0089138B /* gcrypt-module.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gcrypt-module.h"; sourceTree = "<group>"; };
-		D9D552A713F5262B0089138B /* gcrypt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gcrypt.h; sourceTree = "<group>"; };
-		D9D552A813F5262B0089138B /* gpg-error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gpg-error.h"; sourceTree = "<group>"; };
-		D9D552AA13F5262B0089138B /* auth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = auth.h; sourceTree = "<group>"; };
-		D9D552AB13F5262B0089138B /* b64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = b64.h; sourceTree = "<group>"; };
-		D9D552AC13F5262B0089138B /* context.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = context.h; sourceTree = "<group>"; };
-		D9D552AD13F5262B0089138B /* dh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dh.h; sourceTree = "<group>"; };
-		D9D552AE13F5262B0089138B /* mem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mem.h; sourceTree = "<group>"; };
-		D9D552AF13F5262B0089138B /* message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = message.h; sourceTree = "<group>"; };
-		D9D552B013F5262B0089138B /* privkey-t.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "privkey-t.h"; sourceTree = "<group>"; };
-		D9D552B113F5262B0089138B /* privkey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = privkey.h; sourceTree = "<group>"; };
-		D9D552B213F5262B0089138B /* proto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = proto.h; sourceTree = "<group>"; };
-		D9D552B313F5262B0089138B /* serial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = serial.h; sourceTree = "<group>"; };
-		D9D552B413F5262B0089138B /* sm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sm.h; sourceTree = "<group>"; };
-		D9D552B513F5262B0089138B /* tlv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tlv.h; sourceTree = "<group>"; };
-		D9D552B613F5262B0089138B /* userstate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = userstate.h; sourceTree = "<group>"; };
-		D9D552B713F5262B0089138B /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = version.h; sourceTree = "<group>"; };
-		D9D552B913F5262B0089138B /* libgcrypt.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libgcrypt.a; sourceTree = "<group>"; };
-		D9D552BA13F5262B0089138B /* libgpg-error.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libgpg-error.a"; sourceTree = "<group>"; };
-		D9D552BB13F5262B0089138B /* libotr.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libotr.a; sourceTree = "<group>"; };
 		D9D69AA81417FDBA0056FB9E /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		D9D69ABB1417FDF90056FB9E /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		D9D69B011417FF450056FB9E /* libresolv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libresolv.dylib; path = usr/lib/libresolv.dylib; sourceTree = SDKROOT; };
@@ -966,6 +990,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D92061E915E2E185003EEF3A /* libOTRKit.a in Frameworks */,
 				D989E88E15D4F92E0081DFD1 /* Twitter.framework in Frameworks */,
 				D93C31B7159A8B4F006316C7 /* Security.framework in Frameworks */,
 				D9FC9860155881710039518D /* MessageUI.framework in Frameworks */,
@@ -982,9 +1007,6 @@
 				D90B80AC13FC719B006EFF3D /* CoreGraphics.framework in Frameworks */,
 				D9F9377D13F44BD3009A3D84 /* UIKit.framework in Frameworks */,
 				D9F9377F13F44BD3009A3D84 /* Foundation.framework in Frameworks */,
-				D9D552C113F5262B0089138B /* libgcrypt.a in Frameworks */,
-				D9D552C213F5262B0089138B /* libgpg-error.a in Frameworks */,
-				D9D552C313F5262B0089138B /* libotr.a in Frameworks */,
 				D974DABB15021DB60028B2F4 /* libidn.a in Frameworks */,
 				D9ABC98D15D47BD600AAB730 /* libCrittercismCrashOnly_v3_2_5.a in Frameworks */,
 			);
@@ -1011,6 +1033,78 @@
 				D91DAE88154740CE009D0B74 /* OTRDoubleSettingViewController.m */,
 			);
 			name = "Detail Views";
+			sourceTree = "<group>";
+		};
+		D920619415E2E0D8003EEF3A /* OTRKit */ = {
+			isa = PBXGroup;
+			children = (
+				D920619F15E2E0D8003EEF3A /* dependencies */,
+				D92061BD15E2E0D8003EEF3A /* LICENSE */,
+				D92061BE15E2E0D8003EEF3A /* OTRKit */,
+				D92061C515E2E0D8003EEF3A /* OTRKit.xcodeproj */,
+				D92061C815E2E0D8003EEF3A /* README.md */,
+			);
+			path = OTRKit;
+			sourceTree = SOURCE_ROOT;
+		};
+		D920619F15E2E0D8003EEF3A /* dependencies */ = {
+			isa = PBXGroup;
+			children = (
+				D92061A615E2E0D8003EEF3A /* include */,
+			);
+			path = dependencies;
+			sourceTree = "<group>";
+		};
+		D92061A615E2E0D8003EEF3A /* include */ = {
+			isa = PBXGroup;
+			children = (
+				D92061A715E2E0D8003EEF3A /* gcrypt-module.h */,
+				D92061A815E2E0D8003EEF3A /* gcrypt.h */,
+				D92061A915E2E0D8003EEF3A /* gpg-error.h */,
+				D92061AA15E2E0D8003EEF3A /* libotr */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		D92061AA15E2E0D8003EEF3A /* libotr */ = {
+			isa = PBXGroup;
+			children = (
+				D92061AB15E2E0D8003EEF3A /* auth.h */,
+				D92061AC15E2E0D8003EEF3A /* b64.h */,
+				D92061AD15E2E0D8003EEF3A /* context.h */,
+				D92061AE15E2E0D8003EEF3A /* dh.h */,
+				D92061AF15E2E0D8003EEF3A /* mem.h */,
+				D92061B015E2E0D8003EEF3A /* message.h */,
+				D92061B115E2E0D8003EEF3A /* privkey-t.h */,
+				D92061B215E2E0D8003EEF3A /* privkey.h */,
+				D92061B315E2E0D8003EEF3A /* proto.h */,
+				D92061B415E2E0D8003EEF3A /* serial.h */,
+				D92061B515E2E0D8003EEF3A /* sm.h */,
+				D92061B615E2E0D8003EEF3A /* tlv.h */,
+				D92061B715E2E0D8003EEF3A /* userstate.h */,
+				D92061B815E2E0D8003EEF3A /* version.h */,
+			);
+			path = libotr;
+			sourceTree = "<group>";
+		};
+		D92061BE15E2E0D8003EEF3A /* OTRKit */ = {
+			isa = PBXGroup;
+			children = (
+				D92061BF15E2E0D8003EEF3A /* InfoPlist.strings */,
+				D92061C115E2E0D8003EEF3A /* OTRKit-Info.plist */,
+				D92061C215E2E0D8003EEF3A /* OTRKit-Prefix.pch */,
+				D92061C315E2E0D8003EEF3A /* OTRKit.h */,
+				D92061C415E2E0D8003EEF3A /* OTRKit.m */,
+			);
+			path = OTRKit;
+			sourceTree = "<group>";
+		};
+		D92061C615E2E0D8003EEF3A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D92061E315E2E0D8003EEF3A /* libOTRKit.a */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		D93C31B2159A7DDA006316C7 /* SFHFKeychainUtils */ = {
@@ -1681,67 +1775,16 @@
 			name = MWFeedParser;
 			sourceTree = "<group>";
 		};
-		D9D552A413F5262B0089138B /* libotr */ = {
-			isa = PBXGroup;
-			children = (
-				D9D552A513F5262B0089138B /* include */,
-				D9D552B813F5262B0089138B /* lib */,
-			);
-			path = libotr;
-			sourceTree = "<group>";
-		};
-		D9D552A513F5262B0089138B /* include */ = {
-			isa = PBXGroup;
-			children = (
-				D9D552A613F5262B0089138B /* gcrypt-module.h */,
-				D9D552A713F5262B0089138B /* gcrypt.h */,
-				D9D552A813F5262B0089138B /* gpg-error.h */,
-				D9D552A913F5262B0089138B /* libotr */,
-			);
-			path = include;
-			sourceTree = "<group>";
-		};
-		D9D552A913F5262B0089138B /* libotr */ = {
-			isa = PBXGroup;
-			children = (
-				D9D552AA13F5262B0089138B /* auth.h */,
-				D9D552AB13F5262B0089138B /* b64.h */,
-				D9D552AC13F5262B0089138B /* context.h */,
-				D9D552AD13F5262B0089138B /* dh.h */,
-				D9D552AE13F5262B0089138B /* mem.h */,
-				D9D552AF13F5262B0089138B /* message.h */,
-				D9D552B013F5262B0089138B /* privkey-t.h */,
-				D9D552B113F5262B0089138B /* privkey.h */,
-				D9D552B213F5262B0089138B /* proto.h */,
-				D9D552B313F5262B0089138B /* serial.h */,
-				D9D552B413F5262B0089138B /* sm.h */,
-				D9D552B513F5262B0089138B /* tlv.h */,
-				D9D552B613F5262B0089138B /* userstate.h */,
-				D9D552B713F5262B0089138B /* version.h */,
-			);
-			path = libotr;
-			sourceTree = "<group>";
-		};
-		D9D552B813F5262B0089138B /* lib */ = {
-			isa = PBXGroup;
-			children = (
-				D9D552B913F5262B0089138B /* libgcrypt.a */,
-				D9D552BA13F5262B0089138B /* libgpg-error.a */,
-				D9D552BB13F5262B0089138B /* libotr.a */,
-			);
-			path = lib;
-			sourceTree = "<group>";
-		};
 		D9D69B03141806150056FB9E /* 3rd Party Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D920619415E2E0D8003EEF3A /* OTRKit */,
 				D9EB0A5D15AFA1CA00AA1428 /* appirater */,
 				D93C31B2159A7DDA006316C7 /* SFHFKeychainUtils */,
 				D962898E1535043A008F4C02 /* CrittercismSDK */,
 				D9A7E09B1524131400EEDDB5 /* MWFeedParser */,
 				D96219AC14CB765B007EF05D /* XMPPFramework */,
 				D90B80A613FC7026006EFF3D /* MBProgressHUD */,
-				D9D552A413F5262B0089138B /* libotr */,
 				D9DE287313F4F93400E335CA /* LibOrange */,
 			);
 			name = "3rd Party Frameworks";
@@ -2012,7 +2055,6 @@
 		D9F9376D13F44BD3009A3D84 = {
 			isa = PBXGroup;
 			children = (
-				D989E88D15D4F92E0081DFD1 /* Twitter.framework */,
 				D9F9378013F44BD3009A3D84 /* Off the Record */,
 				D9D69B03141806150056FB9E /* 3rd Party Frameworks */,
 				D9F9377B13F44BD3009A3D84 /* Frameworks */,
@@ -2031,6 +2073,7 @@
 		D9F9377B13F44BD3009A3D84 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D989E88D15D4F92E0081DFD1 /* Twitter.framework */,
 				D93C31B6159A8B4F006316C7 /* Security.framework */,
 				D9FC985F155881700039518D /* MessageUI.framework */,
 				D9D69B7F14180A3A0056FB9E /* SystemConfiguration.framework */,
@@ -2159,6 +2202,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				D92061E815E2E180003EEF3A /* PBXTargetDependency */,
 			);
 			name = "Off the Record";
 			productName = "Off the Record";
@@ -2202,12 +2246,28 @@
 			mainGroup = D9F9376D13F44BD3009A3D84;
 			productRefGroup = D9F9377913F44BD3009A3D84 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = D92061C615E2E0D8003EEF3A /* Products */;
+					ProjectRef = D92061C515E2E0D8003EEF3A /* OTRKit.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				D9F9377713F44BD3009A3D84 /* Off the Record */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		D92061E315E2E0D8003EEF3A /* libOTRKit.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libOTRKit.a;
+			remoteRef = D92061E215E2E0D8003EEF3A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		D9F9377613F44BD3009A3D84 /* Resources */ = {
@@ -2255,6 +2315,10 @@
 				6352DC9115AFB3D2007AD0B4 /* facebook@2x.png in Resources */,
 				D974577715BE34E7002B9192 /* 31-circle-plus.png in Resources */,
 				D974577815BE34E7002B9192 /* 31-circle-plus@2x.png in Resources */,
+				D92061DC15E2E0D8003EEF3A /* LICENSE in Resources */,
+				D92061DD15E2E0D8003EEF3A /* InfoPlist.strings in Resources */,
+				D92061DE15E2E0D8003EEF3A /* OTRKit-Info.plist in Resources */,
+				D92061E015E2E0D8003EEF3A /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2489,7 +2553,23 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		D92061E815E2E180003EEF3A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = OTRKit;
+			targetProxy = D92061E715E2E180003EEF3A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin PBXVariantGroup section */
+		D92061BF15E2E0D8003EEF3A /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D92061C015E2E0D8003EEF3A /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
 		D9D8D1F71531056300F9E8D3 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -2600,14 +2680,17 @@
 					"DEBUG=1",
 				);
 				GCC_THUMB_SUPPORT = NO;
-				HEADER_SEARCH_PATHS = /usr/include/libxml2;
+				HEADER_SEARCH_PATHS = (
+					/usr/include/libxml2,
+					"\"$(SRCROOT)/OTRKit/dependencies/include\"",
+				);
 				INFOPLIST_FILE = "Off the Record/Off the Record-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/libotr/lib\"",
 					"\"$(SRCROOT)/XMPPFramework/Vendor/libidn\"",
 					"\"$(SRCROOT)/CrittercismSDK\"",
+					"\"$(SRCROOT)/OTRKit/dependencies/lib\"",
 				);
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = ChatSecure;
@@ -2629,14 +2712,17 @@
 				GCC_PREFIX_HEADER = "Off the Record/Off the Record-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = _GCRYPT_IN_LIBGCRYPT;
 				GCC_THUMB_SUPPORT = NO;
-				HEADER_SEARCH_PATHS = /usr/include/libxml2;
+				HEADER_SEARCH_PATHS = (
+					/usr/include/libxml2,
+					"\"$(SRCROOT)/OTRKit/dependencies/include\"",
+				);
 				INFOPLIST_FILE = "Off the Record/Off the Record-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/libotr/lib\"",
 					"\"$(SRCROOT)/XMPPFramework/Vendor/libidn\"",
 					"\"$(SRCROOT)/CrittercismSDK\"",
+					"\"$(SRCROOT)/OTRKit/dependencies/lib\"",
 				);
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = ChatSecure;

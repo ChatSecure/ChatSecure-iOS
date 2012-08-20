@@ -7,11 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "proto.h"
+#import "OTRKit.h"
 
-@interface OTREncryptionManager : NSObject
+@interface OTREncryptionManager : NSObject <OTRKitDelegate>
 
-@property OtrlUserState userState;
-- (void) protectFileWithPath:(NSString*)path;
++ (void) protectFileWithPath:(NSString*)path;
 
 @end

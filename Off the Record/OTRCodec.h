@@ -8,9 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "OTRMessage.h"
-#import "context.h"
-
-#define ENCRYPTION_STATE_NOTIFICATION @"EncryptionStateNotification"
+#import "OTRKit.h"
 
 @interface OTRCodec : NSObject
 

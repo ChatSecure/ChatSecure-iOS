@@ -168,7 +168,7 @@
     
 }
 
--(void)updateEncryptionStatus:(OTRBuddyEncryptionStatus)newEncryptionStatus
+-(void)setEncryptionStatus:(OTRBuddyEncryptionStatus)newEncryptionStatus
 {
     if(![self.chatHistory length] && newEncryptionStatus == kOTRBuddyEncryptionStatusUnencrypted)
     {
@@ -180,7 +180,7 @@
             case kOTRBuddyEncryptionStatusUnencrypted:
                 [self receiveEncryptionMessage:CONVERSATION_NOT_SECURE_WARNING_STRING];
                 break;
-            case kOTRBUddyEncryptionStatusEncrypted:
+            case kOTRBuddyEncryptionStatusEncrypted:
                 [self receiveEncryptionMessage:CONVERSATION_SECURE_WARNING_STRING];
                 break;
             case kOTRBuddyEncryptionStatusEncryptedAndVerified:
@@ -188,11 +188,14 @@
                 break;
                 
             default:
-                NSLog(@"Unkown Encryption State");
+                NSLog(@"Unknown Encryption State");
                 break;
         }
         
     }
+    encryptionStatus = newEncryptionStatus;
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:kOTREncryptionStateNotification object:self];
 }
 
 @end
