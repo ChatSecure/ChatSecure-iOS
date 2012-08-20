@@ -22,7 +22,7 @@
 ###########################################################################
 #  Choose your libotr version and your currently-installed iOS SDK version:
 #
-VERSION="3.2.0"
+VERSION="3.2.1"
 SDKVERSION="5.1"
 #
 #
