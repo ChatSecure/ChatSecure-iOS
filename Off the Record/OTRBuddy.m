@@ -139,11 +139,11 @@
         if ([self.chatHistory length]!=0 && newStatus!=status)
         {
             if( newStatus == 0)
-                [self receiveStatusMessage:OFFLINE_STRING];
+                [self receiveStatusMessage:OFFLINE_MESSAGE_STRING];
             else if (newStatus == 1)
-                [self receiveMessage:AWAY_STRING];
+                [self receiveStatusMessage:AWAY_MESSAGE_STRING];
             else if( newStatus == 2)
-                [self receiveMessage:AVAILABLE_STRING];
+                [self receiveStatusMessage:AVAILABLE_MESSAGE_STRING];
             
         }
     }
