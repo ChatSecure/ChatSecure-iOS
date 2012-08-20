@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import "OTRBuddyListViewController.h"
-#import "context.h"
 #import "OTRProtocolManager.h"
 #import "OTRBuddy.h"
 #import "OTRUIKeyboardListener.h"
@@ -22,10 +21,8 @@
 @property (nonatomic, retain) UIView *chatBoxView;
 @property (nonatomic, retain) UILabel *instructionsLabel;
 
-@property (nonatomic) ConnContext *context;
 @property (nonatomic, retain) OTRBuddy *buddy;
 
-//@property (nonatomic, retain) DTAttributedTextView *chatHistoryTextView;
 @property (nonatomic, retain) UIWebView *chatHistoryTextView;
 @property (nonatomic, retain) OTRBuddyListViewController *buddyListController;
 

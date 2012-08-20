@@ -13,6 +13,8 @@ typedef unsigned int OTRBuddyStatus;
 typedef unsigned int OTRBuddyEncryptionStatus;
 
 #define MESSAGE_PROCESSED_NOTIFICATION @"MessageProcessedNotification"
+#define kOTREncryptionStateNotification @"kOTREncryptionStateNotification"
+
 
 enum OTRBuddyStatus {
     kOTRBuddyStatusOffline = 0,
@@ -22,7 +24,7 @@ enum OTRBuddyStatus {
 
 enum OTRBuddyEncryptionStatus {
     kOTRBuddyEncryptionStatusUnencrypted = 0,
-    kOTRBUddyEncryptionStatusEncrypted = 1,
+    kOTRBuddyEncryptionStatusEncrypted = 1,
     kOTRBuddyEncryptionStatusEncryptedAndVerified = 2
 };
 
@@ -45,7 +47,5 @@ enum OTRBuddyEncryptionStatus {
 
 -(void)receiveMessage:(NSString *)message;
 -(void)sendMessage:(NSString *)message secure:(BOOL)secure;
-
--(void)updateEncryptionStatus:(OTRBuddyEncryptionStatus)encryptionStatus;
 
 @end
