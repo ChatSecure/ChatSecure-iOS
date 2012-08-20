@@ -65,6 +65,7 @@
         NSLog(@"Account is nil!");
         return;
     }
+    
     account.password = nil;
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSMutableDictionary *rawAcountsDictionary = [NSMutableDictionary dictionaryWithDictionary:[defaults objectForKey:kOTRSettingAccountsKey]];

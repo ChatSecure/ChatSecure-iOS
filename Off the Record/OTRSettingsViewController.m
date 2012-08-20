@@ -401,7 +401,13 @@
 - (void) alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
     if (alertView.tag == ALERTVIEW_DELETE_TAG) {
         if (buttonIndex != alertView.cancelButtonIndex) {
+            if([selectedAccount isConnected])
+            {
+                id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:selectedAccount];
+                [protocol disconnect];
+            }
             OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
+            
             [protocolManager.accountsManager removeAccount:selectedAccount];        
             [settingsTableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:selectedIndexPath] withRowAnimation:UITableViewRowAnimationFade];
         }
