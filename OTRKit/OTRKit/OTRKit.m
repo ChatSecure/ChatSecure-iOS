@@ -45,7 +45,7 @@
 static OtrlUserState userState;
 
 @interface OTRKit(Private)
-- (void) updateEncryptionStatusWithContext:(ConnContext*)context secure:(BOOL)secure;
+- (void) updateEncryptionStatusWithContext:(ConnContext*)context;
 @end
 
 @implementation OTRKit
@@ -171,24 +171,19 @@ static void write_fingerprints_cb(void *opdata)
 static void gone_secure_cb(void *opdata, ConnContext *context)
 {
     OTRKit *otrKit = [OTRKit sharedInstance];
-    [otrKit updateEncryptionStatusWithContext:context secure:YES];
+    [otrKit updateEncryptionStatusWithContext:context];
 
 }
 
 static void gone_insecure_cb(void *opdata, ConnContext *context) // this method is never called
 {
     OTRKit *otrKit = [OTRKit sharedInstance];
-    [otrKit updateEncryptionStatusWithContext:context secure:NO];
+    [otrKit updateEncryptionStatusWithContext:context];
 }
 
-- (void) updateEncryptionStatusWithContext:(ConnContext*)context secure:(BOOL)secure {
+- (void) updateEncryptionStatusWithContext:(ConnContext*)context {
     if (delegate && [delegate respondsToSelector:@selector(updateMessageStateForUsername:accountName:protocol:messageState:)]) {
-        OTRKitMessageState messageState;
-        if (secure) {
-            messageState = kOTRKitMessageStateEncrypted;
-        } else {
-            messageState = [self messageStateForUsername:[NSString stringWithUTF8String:context->username] accountName:[NSString stringWithUTF8String:context->accountname] protocol:[NSString stringWithUTF8String:context->protocol]];
-        }
+        OTRKitMessageState messageState = [self messageStateForUsername:[NSString stringWithUTF8String:context->username] accountName:[NSString stringWithUTF8String:context->accountname] protocol:[NSString stringWithUTF8String:context->protocol]];
         [delegate updateMessageStateForUsername:[NSString stringWithUTF8String:context->username] accountName:[NSString stringWithUTF8String:context->accountname] protocol:[NSString stringWithUTF8String:context->protocol] messageState:messageState];
     } else {
         NSLog(@"Your delegate must implement the updateMessageStateForUsername:accountName:protocol:messageState: selector!");
@@ -198,7 +193,7 @@ static void gone_insecure_cb(void *opdata, ConnContext *context) // this method 
 static void still_secure_cb(void *opdata, ConnContext *context, int is_reply)
 {
     OTRKit *otrKit = [OTRKit sharedInstance];
-    [otrKit updateEncryptionStatusWithContext:context secure:YES];
+    [otrKit updateEncryptionStatusWithContext:context];
 }
 
 static void log_message_cb(void *opdata, const char *message)
@@ -365,7 +360,7 @@ static OtrlMessageAppOps ui_ops = {
 }
 
 - (ConnContext*) contextForUsername:(NSString*)username accountName:(NSString*)accountName protocol:(NSString*) protocol {
-    ConnContext *context = otrl_context_find(userState, [accountName UTF8String],[username UTF8String], [protocol UTF8String],NO,NULL,NULL, NULL);
+    ConnContext *context = otrl_context_find(userState, [username UTF8String], [accountName UTF8String], [protocol UTF8String],NO,NULL,NULL, NULL);
     return context;
 }
 
