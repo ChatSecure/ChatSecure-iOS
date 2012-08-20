@@ -109,14 +109,10 @@
             
             self.usernameTextField.placeholder = @"";
         }
-        else if ([account.protocol isEqualToString:kOTRProtocolTypeXMPP])
+        else if ([account.protocol isEqualToString:kOTRProtocolTypeXMPP] && ![xmppAccount.domain isEqualToString:kOTRGoogleTalkDomain])  //Jabber domain fields
         {
             self.usernameTextField.placeholder = @"user@example.com";
-        }
-        
-        //Jabber domain fields
-        if([xmppAccount.domain isEqualToString:@""] && [account.protocol isEqualToString:kOTRProtocolTypeXMPP])
-        {
+
             self.domainLabel = [[UILabel alloc] init];
             self.domainLabel.text = DOMAIN_STRING;
             
@@ -128,6 +124,7 @@
             self.domainTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
             self.domainTextField.borderStyle = UITextBorderStyleRoundedRect;
             self.domainTextField.placeholder = OPTIONAL_STRING;
+            [self.view addSubview:domainTextField];
             
             self.basicAdvancedSegmentedControl = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:BASIC_STRING,ADVANCED_STRING, nil]];
             [self.basicAdvancedSegmentedControl addTarget:self action:@selector(segmentedControlChanged) forControlEvents:UIControlEventValueChanged];
@@ -150,7 +147,6 @@
             
             
             [self.view addSubview:basicAdvancedSegmentedControl];
-            [self.view addSubview:domainTextField];
             
         }
     }
@@ -227,10 +223,6 @@
         self.basicAdvancedSegmentedControl.center = CGPointMake(self.view.center.x, self.basicAdvancedSegmentedControl.center.y);
         //padding.frame = CGRectMake(0, 0, self.view.frame.size.width, 32)
     }
-    else
-    {
-
-    }
     
     CGFloat usernameLabelFrameYOrigin = padding.frame.origin.y + padding.frame.size.height;
     CGSize usernameLabelTextSize = [self textSizeForLabel:usernameLabel];
@@ -254,9 +246,11 @@
         //CGFloat domainLabelFrameYOrigin = usernameLabelFrameYOrigin + self.usernameLabel.frame.size.height +kFieldBuffer;
         self.domainLabel.frame = CGRectMake(10, usernameLabelFrameYOrigin, labelWidth, 21);
         self.domainLabel.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;
+        [self.domainLabel setHidden:YES];
         
         self.domainTextField.frame = [self textFieldFrameForLabel:domainLabel];
         self.domainTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
+        self.domainTextField.keyboardType = UIKeyboardTypeURL;
         self.domainTextField.returnKeyType = UIReturnKeyGo;
         self.domainTextField.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth;
         [self.domainTextField setHidden:YES];
@@ -283,6 +277,10 @@
         self.selfSignedSwitch.frame = CGRectMake(self.view.frame.size.width-selfSignedSwitchFrameWidth-5, selfSignedFrameYOrigin, selfSignedSwitchFrameWidth, 27);
         self.selfSignedSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
         [self.selfSignedSwitch setHidden:YES];
+        
+        self.domainTextField.text = ((OTRXMPPAccount*)self.account).domain;
+        self.sslMismatchSwitch.on = ((OTRXMPPAccount*)self.account).allowSSLHostNameMismatch;
+        self.selfSignedSwitch.on = ((OTRXMPPAccount*)self.account).allowSelfSignedSSL;
         
         
         //passwordLabelFrameYOrigin = domainLabelFrameYOrigin + self.domainLabel.frame.size.height +kFieldBuffer;
@@ -399,6 +397,13 @@
     [super viewWillDisappear:animated];
     account.username = self.usernameTextField.text;
     account.rememberPassword = rememberPasswordSwitch.on;
+    
+    if([account isKindOfClass:[OTRXMPPAccount class]])
+    {
+        ((OTRXMPPAccount *)account).allowSelfSignedSSL = selfSignedSwitch.on;
+        ((OTRXMPPAccount *)account).allowSSLHostNameMismatch = sslMismatchSwitch.on;
+    }
+    
     
     if (account.rememberPassword) {
         account.password = self.passwordTextField.text;
