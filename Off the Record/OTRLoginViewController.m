@@ -25,6 +25,7 @@
 #import "OTRUIKeyboardListener.h"
 #import "OTRConstants.h"
 #import "OTRXMPPAccount.h"
+#import "OTRAppDelegate.h"
 
 #define kFieldBuffer 20;
 
@@ -575,7 +576,7 @@
 -(void)facebookInfoButtonPressed:(id)sender
 {
     UIActionSheet * urlActionSheet = [[UIActionSheet alloc] initWithTitle:kOTRFacebookUsernameLink delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:OPEN_IN_SAFARI_STRING, nil];
-    [urlActionSheet showInView:self.view];
+    [urlActionSheet showInView:[OTR_APP_DELEGATE window]];
 }
 
 

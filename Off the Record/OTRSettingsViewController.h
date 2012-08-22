@@ -28,7 +28,7 @@
 
 @class OTRAccount;
 
-@interface OTRSettingsViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, OTRSettingDelegate, UIActionSheetDelegate, MFMessageComposeViewControllerDelegate, MFMailComposeViewControllerDelegate>
+@interface OTRSettingsViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, OTRSettingDelegate, UIActionSheetDelegate>
 
 @property (nonatomic, retain) UITableView *settingsTableView;
 @property (nonatomic, retain) OTRSettingsManager *settingsManager;

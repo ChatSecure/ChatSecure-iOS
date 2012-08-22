@@ -21,8 +21,10 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 #import <UIKit/UIKit.h>
+#import <Twitter/Twitter.h>
+#import <MessageUI/MessageUI.h>
 
-@interface OTRAboutViewController : UIViewController <UIWebViewDelegate, UIActionSheetDelegate>
+@interface OTRAboutViewController : UIViewController <UIWebViewDelegate, UIActionSheetDelegate, MFMessageComposeViewControllerDelegate, MFMailComposeViewControllerDelegate>
 
 @property (nonatomic, retain) UIImageView *imageView;
 @property (strong, nonatomic) UILabel *versionLabel;

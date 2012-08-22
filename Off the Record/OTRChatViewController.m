@@ -26,6 +26,7 @@
 #import "Strings.h"
 #import "OTRDoubleSetting.h"
 #import "OTRConstants.h"
+#import "OTRAppDelegate.h"
 
 #define kTabBarHeight 0
 #define kSendButtonWidth 60
@@ -216,7 +217,7 @@
     UIActionSheet *popupQuery = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:INITIATE_ENCRYPTED_CHAT_STRING, VERIFY_STRING, nil];
     popupQuery.actionSheetStyle = UIActionSheetStyleBlackOpaque;
     popupQuery.tag = 420;
-    [popupQuery showInView:self.view];
+    [popupQuery showInView:[OTR_APP_DELEGATE window]];
 }
 
 
@@ -624,7 +625,7 @@
         self.lastActionLink = request.URL;
         UIActionSheet *action = [[UIActionSheet alloc] initWithTitle:[[request.URL absoluteURL] description] delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:OPEN_IN_SAFARI_STRING, nil];
         [action setTag:0];
-        [action showInView:self.view];
+        [action showInView:[OTR_APP_DELEGATE window]];
     }
     return NO;
 }

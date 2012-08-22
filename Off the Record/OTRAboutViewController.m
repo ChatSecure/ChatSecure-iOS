@@ -22,6 +22,11 @@
 
 #import "OTRAboutViewController.h"
 #import "Strings.h"
+#import "OTRQRCodeViewController.h"
+#import "OTRAppDelegate.h"
+
+#define ACTIONSHEET_SHARE_TAG 2
+#define ACTIONSHEET_LINK_TAG 1
 
 @implementation OTRAboutViewController
 @synthesize versionLabel, aboutTextView, lastActionLink, imageView;
@@ -54,6 +59,9 @@
     [super loadView];
     self.versionLabel = [[UILabel alloc] init];
     self.imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"chatsecure_banner.png"]];
+    UIBarButtonItem *shareButton = [[UIBarButtonItem alloc] initWithTitle:SHARE_STRING style:UIBarButtonItemStyleBordered target:self action:@selector(shareButtonPressed:)];
+    self.navigationItem.rightBarButtonItem = shareButton;
+
 }
 
 - (void)viewDidLoad
@@ -120,13 +128,92 @@
     }
 }
 
+- (void) shareButtonPressed:(id)sender {
+    UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:SHARE_STRING delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil];
+    NSArray *buttonTitles = [self buttonTitlesForShareButton];
+    for (NSString *title in buttonTitles) {
+        [sheet addButtonWithTitle:title];
+    }
+    sheet.tag = ACTIONSHEET_SHARE_TAG;
+    sheet.cancelButtonIndex = [buttonTitles count] - 1;
+    
+    [sheet showInView:[OTR_APP_DELEGATE window]];
+}
+
+- (NSArray*) buttonTitlesForShareButton {
+    NSMutableArray *titleArray = [NSMutableArray arrayWithCapacity:4];
+    [titleArray addObject:@"SMS"];
+    [titleArray addObject:@"E-mail"];
+    [titleArray addObject:@"QR Code"];
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 5.0)
+    {
+        [titleArray addObject:@"Twitter"];
+    }
+    [titleArray addObject:CANCEL_STRING];
+    return titleArray;
+}
+
+- (NSString*) shareString {
+    return [NSString stringWithFormat:@"%@: http://get.chatsecure.org", SHARE_MESSAGE_STRING];
+}
+
+- (NSString*) twitterShareString {
+    return [NSString stringWithFormat:@"%@ @ChatSecure", [self shareString]];
+}
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-	if (buttonIndex != actionSheet.cancelButtonIndex)
-	{
-		[[UIApplication sharedApplication] openURL:[lastActionLink absoluteURL]];
-	}
+    if (actionSheet.tag == ACTIONSHEET_LINK_TAG) {
+        if (buttonIndex != actionSheet.cancelButtonIndex)
+        {
+            [[UIApplication sharedApplication] openURL:[lastActionLink absoluteURL]];
+        }
+    } else if (actionSheet.tag == ACTIONSHEET_SHARE_TAG) {
+        if (buttonIndex == 0) // SMS
+        {
+            if (![MFMessageComposeViewController canSendText]) {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:[NSString stringWithFormat:@"SMS %@", NOT_AVAILABLE_STRING] delegate:nil cancelButtonTitle:OK_STRING otherButtonTitles:nil];
+                [alert show];
+            } else {
+                MFMessageComposeViewController *sms = [[MFMessageComposeViewController alloc] init];
+                sms.messageComposeDelegate = self;
+                sms.body = [self shareString];
+                sms.modalPresentationStyle = UIModalPresentationFormSheet;
+                [self presentModalViewController:sms animated:YES];
+            }
+        }
+        else if (buttonIndex == 1) // Email
+        {
+            if (![MFMailComposeViewController canSendMail])
+            {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:[NSString stringWithFormat:@"E-mail %@", NOT_AVAILABLE_STRING] delegate:nil cancelButtonTitle:OK_STRING otherButtonTitles:nil];
+                [alert show];
+            }
+            else
+            {
+                MFMailComposeViewController *email = [[MFMailComposeViewController alloc] init];
+                email.mailComposeDelegate = self;
+                [email setSubject:@"ChatSecure"];
+                [email setMessageBody:[self shareString] isHTML:NO];
+                email.modalPresentationStyle = UIModalPresentationFormSheet;
+                
+                [self presentModalViewController:email animated:YES];
+            }
+        }
+        else if (buttonIndex == 2) // QR code
+        {
+            OTRQRCodeViewController *qrCode = [[OTRQRCodeViewController alloc] init];
+            UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:qrCode];
+            nav.modalPresentationStyle = UIModalPresentationFormSheet;
+            [self presentModalViewController:nav animated:YES];
+        } else if (buttonIndex == [[self buttonTitlesForShareButton] count] - 2 && [[[UIDevice currentDevice] systemVersion] floatValue] >= 5.0)
+        {
+            TWTweetComposeViewController *tweetSheet =
+            [[TWTweetComposeViewController alloc] init];
+            [tweetSheet setInitialText:[self twitterShareString]];
+            [self presentModalViewController:tweetSheet animated:YES];
+        }
+    }
 }
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
@@ -137,10 +224,22 @@
     {
         self.lastActionLink = request.URL;
         UIActionSheet *action = [[UIActionSheet alloc] initWithTitle:[[request.URL absoluteURL] description] delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:OPEN_IN_SAFARI_STRING, nil];
-        [action showInView:self.view];
+        [action showInView:[OTR_APP_DELEGATE window]];
     }
     return NO;
 }
 
+#pragma mark MFMessageComposeViewControllerDelegate methods
+
+- (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result
+{
+    [self dismissModalViewControllerAnimated:YES];
+}
+
+#pragma mark MFMailComposeViewControllerDelegate Methods
+
+- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
+    [self dismissModalViewControllerAnimated:YES];
+}
 
 @end
