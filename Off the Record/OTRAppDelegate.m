@@ -50,8 +50,8 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 @implementation OTRAppDelegate
 
 @synthesize window = _window;
-@synthesize tabBarController = _tabBarController;
 @synthesize backgroundTask, backgroundTimer, didShowDisconnectionWarning;
+@synthesize settingsViewController, buddyListViewController;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -70,33 +70,27 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 #endif
 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    UITabBarController *tabBarController = nil;
     
-    OTRBuddyListViewController *buddyListViewController = [[OTRBuddyListViewController alloc] init];
+    self.buddyListViewController = [[OTRBuddyListViewController alloc] init];
     OTRChatViewController *chatViewController = [[OTRChatViewController alloc] init];
     buddyListViewController.chatViewController = chatViewController;
-    //OTRAccountsViewController *accountsViewController = [[OTRAccountsViewController alloc] init];
-    OTRSettingsViewController *settingsViewController = [[OTRSettingsViewController alloc] init];
+    self.settingsViewController = [[OTRSettingsViewController alloc] init];
 
-    buddyListViewController.tabController = _tabBarController;
-    tabBarController = [[UITabBarController alloc] init];
-    UINavigationController *accountsNavController = [[UINavigationController alloc] initWithRootViewController:settingsViewController];
     UINavigationController *buddyListNavController = [[UINavigationController alloc] initWithRootViewController:buddyListViewController];
-    
+    UIViewController *rootViewController = nil;
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-        tabBarController.viewControllers = [NSArray arrayWithObjects:buddyListNavController, accountsNavController, nil];
+        rootViewController = buddyListNavController;
     } else {
         UINavigationController *chatNavController = [[UINavigationController alloc ]initWithRootViewController:chatViewController];
         UISplitViewController *splitViewController = [[UISplitViewController alloc] init];
         splitViewController.viewControllers = [NSArray arrayWithObjects:buddyListNavController, chatNavController, nil];
         splitViewController.delegate = chatViewController;
-        tabBarController.viewControllers = [NSArray arrayWithObjects:splitViewController, accountsNavController, nil];
+        rootViewController = splitViewController;
         splitViewController.title = CHAT_STRING;
         splitViewController.tabBarItem.image = [UIImage imageNamed:@"08-chat.png"];
     }
 
-    self.tabBarController = tabBarController;
-    self.window.rootViewController = self.tabBarController;
+    self.window.rootViewController = rootViewController;
     [self.window makeKeyAndVisible];
     
     UILocalNotification *localNotification = [launchOptions objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];

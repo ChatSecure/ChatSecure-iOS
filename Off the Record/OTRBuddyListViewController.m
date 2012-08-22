@@ -28,7 +28,8 @@
 #import "OTRBuddyList.h"
 #import "Strings.h"
 #import "OTRConstants.h"
-
+#import "OTRAppDelegate.h"
+#import "OTRSettingsViewController.h"
 
 //#define kSignoffTime 500
 
@@ -85,6 +86,7 @@
     self.buddyListTableView.allowsMultipleSelection = YES;
     buddyListTableView.dataSource = self;
     buddyListTableView.delegate = self;
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"14-gear.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(showSettingsView:)];
     [self.view addSubview:buddyListTableView];
 }
 
@@ -134,6 +136,10 @@
 -(void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     //[self showEULAWarning];
+}
+
+- (void) showSettingsView:(id)sender {
+    [self.navigationController pushViewController:[OTR_APP_DELEGATE settingsViewController] animated:YES];
 }
 
 - (void) showEULAWarning {

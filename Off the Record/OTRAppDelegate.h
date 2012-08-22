@@ -22,10 +22,15 @@
 
 #import <UIKit/UIKit.h>
 
-@interface OTRAppDelegate : UIResponder <UIApplicationDelegate, UITabBarControllerDelegate>
+@class OTRSettingsViewController, OTRBuddyListViewController;
+
+#define OTR_APP_DELEGATE (OTRAppDelegate *)[[UIApplication sharedApplication] delegate]
+
+@interface OTRAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (nonatomic, retain) UIWindow *window;
-@property (nonatomic, retain) UITabBarController *tabBarController;
+@property (nonatomic, retain) OTRSettingsViewController *settingsViewController;
+@property (nonatomic, retain) OTRBuddyListViewController *buddyListViewController;
 @property (nonatomic, retain) NSTimer *backgroundTimer;
 @property (nonatomic) UIBackgroundTaskIdentifier backgroundTask;
 @property (nonatomic) BOOL didShowDisconnectionWarning;
