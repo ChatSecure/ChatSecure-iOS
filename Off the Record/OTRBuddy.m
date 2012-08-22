@@ -61,7 +61,7 @@
         self.chatHistory = [NSMutableString string];
         self.lastMessage = @"";
         self.lastMessageDisconnected = NO;
-        self.encryptionStatus = kOTRBuddyEncryptionStatusUnencrypted;
+        self.encryptionStatus = kOTRKitMessageStatePlaintext;
         
         [[NSNotificationCenter defaultCenter]
          addObserver:self selector:@selector(protocolDisconnected) name:kOTRProtocolDiconnect object:nil];
@@ -182,25 +182,24 @@
     
 }
 
--(void)setEncryptionStatus:(OTRBuddyEncryptionStatus)newEncryptionStatus
+-(void)setEncryptionStatus:(OTRKitMessageState)newEncryptionStatus
 {
-    if(![self.chatHistory length] && newEncryptionStatus == kOTRBuddyEncryptionStatusUnencrypted)
+    if(![self.chatHistory length] && newEncryptionStatus != kOTRKitMessageStateEncrypted)
     {
         [self receiveEncryptionMessage:CONVERSATION_NOT_SECURE_WARNING_STRING];
     }
     else if(newEncryptionStatus != self.encryptionStatus)
     {
         switch (newEncryptionStatus) {
-            case kOTRBuddyEncryptionStatusUnencrypted:
+            case kOTRKitMessageStatePlaintext:
                 [self receiveEncryptionMessage:CONVERSATION_NOT_SECURE_WARNING_STRING];
                 break;
-            case kOTRBuddyEncryptionStatusEncrypted:
+            case kOTRKitMessageStateEncrypted:
                 [self receiveEncryptionMessage:CONVERSATION_SECURE_WARNING_STRING];
                 break;
-            case kOTRBuddyEncryptionStatusEncryptedAndVerified:
-                [self receiveEncryptionMessage:CONVERSATION_SECURE_AND_VERIFIED_WARNING_STRING];
+            case kOTRKitMessageStateFinished:
+                [self receiveEncryptionMessage:CONVERSATION_NOT_SECURE_WARNING_STRING];
                 break;
-                
             default:
                 NSLog(@"Unknown Encryption State");
                 break;

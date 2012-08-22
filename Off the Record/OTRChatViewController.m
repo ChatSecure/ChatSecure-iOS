@@ -201,7 +201,7 @@
 
 -(void)refreshLockButton
 {
-    if(buddy.encryptionStatus == kOTRBuddyEncryptionStatusEncrypted)
+    if(buddy.encryptionStatus == kOTRKitMessageStateEncrypted)
     {
         self.navigationItem.rightBarButtonItem = lockButton;
     }

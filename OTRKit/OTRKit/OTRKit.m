@@ -309,9 +309,13 @@ static OtrlMessageAppOps ui_ops = {
     ignore_message = otrl_message_receiving(userState, &ui_ops, NULL,[accountName UTF8String], [protocol UTF8String], [recipient UTF8String], [message UTF8String], &newmessage, NULL, NULL, NULL);
     NSString *newMessage = nil;
     
+    ConnContext *context = [self contextForUsername:recipient accountName:accountName protocol:protocol];
+    if (context->msgstate == OTRL_MSGSTATE_FINISHED) {
+        otrl_message_disconnect(userState, &ui_ops, NULL, [accountName UTF8String], [protocol UTF8String], [recipient UTF8String]);
+    }
+    
     if(ignore_message == 0)
     {
-        
         if(newmessage)
         {
             newMessage = [NSString stringWithUTF8String:newmessage];

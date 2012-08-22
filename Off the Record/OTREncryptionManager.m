@@ -41,15 +41,7 @@
 - (void) updateMessageStateForUsername:(NSString*)username accountName:(NSString*)accountName protocol:(NSString*)protocol messageState:(OTRKitMessageState)messageState {
 
     OTRBuddy *buddy = [[OTRProtocolManager sharedInstance] buddyForUserName:username accountName:accountName protocol:protocol];
-    
-    if(messageState == kOTRKitMessageStateEncrypted)
-    {
-        buddy.encryptionStatus = kOTRBuddyEncryptionStatusEncrypted;
-    }
-    else
-    {
-        buddy.encryptionStatus = kOTRBuddyEncryptionStatusUnencrypted;
-    }
+    buddy.encryptionStatus = messageState;
 }
 
 - (void) injectMessage:(NSString*)message recipient:(NSString*)recipient accountName:(NSString*)accountName protocol:(NSString*)protocol {

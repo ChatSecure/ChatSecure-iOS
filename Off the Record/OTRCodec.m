@@ -38,6 +38,8 @@
     NSString *decodedMessageString = [[OTRKit sharedInstance] decodeMessage:message recipient:friendAccount accountName:myAccountName protocol:protocol];
     
     OTRMessage *newOTRMessage = [OTRMessage messageWithBuddy:theMessage.buddy message:decodedMessageString];
+    OTRKitMessageState messageState = [[OTRKit sharedInstance] messageStateForUsername:friendAccount accountName:myAccountName protocol:protocol];
+    theMessage.buddy.encryptionStatus = messageState;
     
     return newOTRMessage;
 }
