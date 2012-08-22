@@ -39,7 +39,6 @@
 @implementation OTRBuddyListViewController
 @synthesize buddyListTableView;
 @synthesize chatViewController;
-@synthesize tabController;
 @synthesize protocolManager;
 @synthesize activeConversations;
 @synthesize buddyDictionary;
@@ -50,7 +49,6 @@
     self.protocolManager = nil;
     self.buddyListTableView = nil;
     self.chatViewController = nil;
-    self.tabController = nil;
     self.protocolManager = nil;
     self.activeConversations = nil;
     self.buddyDictionary = nil;
@@ -62,7 +60,6 @@
 - (id)init {
     if (self = [super init]) {
         self.title = BUDDY_LIST_STRING;
-        self.tabBarItem.image = [UIImage imageNamed:@"112-group.png"];
         self.protocolManager = [OTRProtocolManager sharedInstance];
         self.buddyDictionary = [[NSMutableDictionary alloc] init];
 
@@ -381,7 +378,6 @@
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone && !chatViewIsVisible && self.navigationController.visibleViewController != chatViewController) {
         [self.navigationController pushViewController:chatViewController animated:YES];
     }
-    self.tabBarController.selectedIndex = 0;
     [self refreshActiveConversations];
 }
 

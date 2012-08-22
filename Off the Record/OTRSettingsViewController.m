@@ -55,7 +55,6 @@
     if (self = [super init])
     {
         self.title = SETTINGS_STRING;
-        self.tabBarItem.image = [UIImage imageNamed:@"19-gear.png"];
         self.settingsManager = [OTRProtocolManager sharedInstance].settingsManager;
         [[NSNotificationCenter defaultCenter]
          addObserver:self
@@ -119,7 +118,7 @@
     sheet.tag = ACTIONSHEET_SHARE_TAG;
     sheet.cancelButtonIndex = [buttonTitles count] - 1;
     
-    [sheet showFromTabBar:self.tabBarController.tabBar];
+    [sheet showInView:self.view];
 }
 
 - (NSArray*) buttonTitlesForShareButton {
@@ -239,7 +238,7 @@
                 self.selectedAccount = account;
                 self.selectedIndexPath = indexPath;
                 logoutSheet.tag = ACTIONSHEET_DISCONNECT_TAG;
-                [logoutSheet showFromTabBar:self.tabBarController.tabBar];
+                [logoutSheet showInView:self.view];
             }
         }
     } else {
@@ -273,7 +272,7 @@
     OTRLoginViewController *loginViewController = [[OTRLoginViewController alloc] initWithAccount:account];
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:loginViewController];
     nav.modalPresentationStyle = UIModalPresentationFormSheet;
-    [self.tabBarController presentModalViewController:nav animated:YES];
+    [self presentModalViewController:nav animated:YES];
     
     self.loginController = loginViewController;
 }
@@ -290,7 +289,7 @@
     
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:newAccountView];
     nav.modalPresentationStyle = UIModalPresentationFormSheet;
-    [self.tabBarController presentModalViewController:nav animated:YES];
+    [self presentModalViewController:nav animated:YES];
     
 }
 
@@ -311,7 +310,7 @@
         detailSettingViewController.otrSetting = setting;
         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:detailSettingViewController];
         navController.modalPresentationStyle = UIModalPresentationFormSheet;
-        [self.tabBarController presentModalViewController:navController animated:YES];
+        [self presentModalViewController:navController animated:YES];
     } else {
         [self.navigationController pushViewController:viewController animated:YES];
     }

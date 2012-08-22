@@ -27,7 +27,7 @@
 #import "OTRDoubleSetting.h"
 #import "OTRConstants.h"
 
-#define kTabBarHeight 49
+#define kTabBarHeight 0
 #define kSendButtonWidth 60
 
 @interface OTRChatViewController(Private)
@@ -216,7 +216,7 @@
     UIActionSheet *popupQuery = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:INITIATE_ENCRYPTED_CHAT_STRING, VERIFY_STRING, nil];
     popupQuery.actionSheetStyle = UIActionSheetStyleBlackOpaque;
     popupQuery.tag = 420;
-    [popupQuery showFromTabBar:self.tabBarController.tabBar];
+    [popupQuery showInView:self.view];
 }
 
 
@@ -624,7 +624,7 @@
         self.lastActionLink = request.URL;
         UIActionSheet *action = [[UIActionSheet alloc] initWithTitle:[[request.URL absoluteURL] description] delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:OPEN_IN_SAFARI_STRING, nil];
         [action setTag:0];
-        [action showFromTabBar:self.tabBarController.tabBar];
+        [action showInView:self.view];
     }
     return NO;
 }

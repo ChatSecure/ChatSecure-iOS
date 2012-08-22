@@ -87,7 +87,6 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
         splitViewController.delegate = chatViewController;
         rootViewController = splitViewController;
         splitViewController.title = CHAT_STRING;
-        splitViewController.tabBarItem.image = [UIImage imageNamed:@"08-chat.png"];
     }
 
     self.window.rootViewController = rootViewController;

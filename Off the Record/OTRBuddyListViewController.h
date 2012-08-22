@@ -32,7 +32,6 @@
 @property (nonatomic, retain) NSMutableArray *activeConversations;
 @property (nonatomic, retain) UITableView *buddyListTableView;
 @property (nonatomic, retain) OTRChatViewController *chatViewController;
-@property (nonatomic, retain) UITabBarController *tabController;
 @property (nonatomic, retain) OTRBuddy *selectedBuddy;
 
 @property (nonatomic, retain) OTRProtocolManager *protocolManager;

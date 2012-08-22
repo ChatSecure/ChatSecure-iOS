@@ -137,7 +137,7 @@
     {
         self.lastActionLink = request.URL;
         UIActionSheet *action = [[UIActionSheet alloc] initWithTitle:[[request.URL absoluteURL] description] delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:OPEN_IN_SAFARI_STRING, nil];
-        [action showFromTabBar:self.tabBarController.tabBar];
+        [action showInView:self.view];
     }
     return NO;
 }
