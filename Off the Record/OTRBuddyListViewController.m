@@ -235,49 +235,45 @@
 	{
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"Cell"];
 	}
-    if (indexPath.section == RECENTS_SECTION_INDEX) {
-        OTRBuddy *buddy = [activeConversations objectAtIndex:indexPath.row];
-        cell.textLabel.text = buddy.displayName;
-        cell.detailTextLabel.text = buddy.lastMessage;
-        
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        return cell;
-    } else if (indexPath.section == BUDDIES_SECTION_INDEX) {
-        if(sortedBuddies)
-        {
-            OTRBuddy *buddyData = [sortedBuddies objectAtIndex:indexPath.row];
-            
-            NSString *buddyUsername = buddyData.displayName;
-            OTRBuddyStatus buddyStatus = buddyData.status;
-            
-            cell.textLabel.text = buddyUsername;
-            
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-            cell.detailTextLabel.textColor = [UIColor lightGrayColor];
-            
-            switch(buddyStatus)
-            {
-                case kOTRBuddyStatusOffline:
-                    cell.textLabel.textColor = [UIColor lightGrayColor];
-                    cell.detailTextLabel.text = OFFLINE_STRING;
-                    cell.imageView.image = [UIImage imageNamed:@"offline.png"];
-                    break;
-                case kOTRBuddyStatusAway:
-                    cell.textLabel.textColor = [UIColor darkGrayColor];
-                    cell.detailTextLabel.text = AWAY_STRING;
-                    cell.imageView.image = [UIImage imageNamed:@"away.png"];
-                    break;
-                default:
-                    cell.textLabel.textColor = [UIColor darkTextColor];
-                    cell.detailTextLabel.text = AVAILABLE_STRING;
-                    cell.imageView.image = [UIImage imageNamed:@"available.png"];
-                    break;
-            }
-        }
-        return cell;
-    }
-	
+    OTRBuddy *buddy = nil;
     
+    if (indexPath.section == RECENTS_SECTION_INDEX) {
+        buddy = [activeConversations objectAtIndex:indexPath.row];
+    } else if (indexPath.section == BUDDIES_SECTION_INDEX) {
+        buddy = [sortedBuddies objectAtIndex:indexPath.row];
+    }
+            
+    NSString *buddyUsername = buddy.displayName;
+    OTRBuddyStatus buddyStatus = buddy.status;
+    
+    cell.textLabel.text = buddyUsername;
+    
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    cell.detailTextLabel.textColor = [UIColor lightGrayColor];
+    
+    switch(buddyStatus)
+    {
+        case kOTRBuddyStatusOffline:
+            cell.textLabel.textColor = [UIColor lightGrayColor];
+            cell.detailTextLabel.text = OFFLINE_STRING;
+            cell.imageView.image = [UIImage imageNamed:@"offline.png"];
+            break;
+        case kOTRBuddyStatusAway:
+            cell.textLabel.textColor = [UIColor darkGrayColor];
+            cell.detailTextLabel.text = AWAY_STRING;
+            cell.imageView.image = [UIImage imageNamed:@"away.png"];
+            break;
+        case kOTRBuddyStatusAvailable:
+            cell.textLabel.textColor = [UIColor darkTextColor];
+            cell.detailTextLabel.text = AVAILABLE_STRING;
+            cell.imageView.image = [UIImage imageNamed:@"available.png"];
+            break;
+        default:
+            cell.textLabel.textColor = [UIColor lightGrayColor];
+            cell.detailTextLabel.text = OFFLINE_STRING;
+            cell.imageView.image = [UIImage imageNamed:@"offline.png"];
+    }
+    return cell;
 }
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -341,11 +337,6 @@
     if ([activeConversations containsObject:selectedBuddy]) {
         int indexOfSelectedBuddy = [activeConversations indexOfObject:selectedBuddy];
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:indexOfSelectedBuddy inSection:RECENTS_SECTION_INDEX];
-        [self.buddyListTableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
-    }
-    if ([sortedBuddies containsObject:selectedBuddy]) {
-        int indexOfSelectedBuddy = [sortedBuddies indexOfObject:selectedBuddy];
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:indexOfSelectedBuddy inSection:BUDDIES_SECTION_INDEX];
         [self.buddyListTableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
     }
 }
