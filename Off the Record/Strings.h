@@ -43,6 +43,7 @@
 #define DISCONNECTED_MESSAGE_STRING NSLocalizedString(@"You have disconnected.", @"Message shown when user is disconnected")
 #define DISCONNECTION_WARNING_STRING NSLocalizedString(@"When you leave this conversation it will be deleted forever.", @"Warn user that conversation will be deleted after leaving it")
 #define CONVERSATION_NOT_SECURE_WARNING_STRING NSLocalizedString(@"Warning: This chat is not encrypted", @"Warn user that the current chat is not secure")
+#define CONVERSATION_NO_LONGER_SECURE_STRING NSLocalizedString(@"The conversation with %@ is no longer secure.", @"Warn user that the current chat is no longer secure")
 #define CONVERSATION_SECURE_WARNING_STRING NSLocalizedString(@"This chat is secured",@"Warns user that the current chat is secure")
 #define CONVERSATION_SECURE_AND_VERIFIED_WARNING_STRING NSLocalizedString(@"This chat is secured and verified",@"Warns user that the current chat is secure and verified")
 

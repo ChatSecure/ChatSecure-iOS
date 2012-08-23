@@ -190,6 +190,9 @@
     }
     else if(newEncryptionStatus != self.encryptionStatus)
     {
+        if (newEncryptionStatus != kOTRKitMessageStateEncrypted && encryptionStatus == kOTRKitMessageStateEncrypted) {
+            [[[UIAlertView alloc] initWithTitle:SECURITY_WARNING_STRING message:[NSString stringWithFormat:CONVERSATION_NO_LONGER_SECURE_STRING, self.displayName] delegate:nil cancelButtonTitle:OK_STRING otherButtonTitles:nil] show];
+        }
         switch (newEncryptionStatus) {
             case kOTRKitMessageStatePlaintext:
                 [self receiveEncryptionMessage:CONVERSATION_NOT_SECURE_WARNING_STRING];
