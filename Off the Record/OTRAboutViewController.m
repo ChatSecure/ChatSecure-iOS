@@ -224,6 +224,7 @@
     {
         self.lastActionLink = request.URL;
         UIActionSheet *action = [[UIActionSheet alloc] initWithTitle:[[request.URL absoluteURL] description] delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:OPEN_IN_SAFARI_STRING, nil];
+        action.tag = ACTIONSHEET_LINK_TAG;
         [action showInView:[OTR_APP_DELEGATE window]];
     }
     return NO;
