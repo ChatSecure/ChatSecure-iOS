@@ -30,6 +30,9 @@
 
 #define kTabBarHeight 0
 #define kSendButtonWidth 60
+#define ACTIONSHEET_SAFARI_TAG 0
+#define ACTIONSHEET_ENCRYPTION_OPTIONS_TAG 1
+
 
 @interface OTRChatViewController(Private)
 - (void) refreshView;
@@ -214,9 +217,13 @@
 
 -(void)lockButtonPressed
 {
-    UIActionSheet *popupQuery = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:INITIATE_ENCRYPTED_CHAT_STRING, VERIFY_STRING, nil];
+    NSString *encryptionString = INITIATE_ENCRYPTED_CHAT_STRING;
+    if (buddy.encryptionStatus == kOTRKitMessageStateEncrypted) {
+        encryptionString = CANCEL_ENCRYPTED_CHAT_STRING;
+    }
+    UIActionSheet *popupQuery = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:encryptionString, VERIFY_STRING, CLEAR_CHAT_HISTORY_STRING, nil];
     popupQuery.actionSheetStyle = UIActionSheetStyleBlackOpaque;
-    popupQuery.tag = 420;
+    popupQuery.tag = ACTIONSHEET_ENCRYPTION_OPTIONS_TAG;
     [popupQuery showInView:[OTR_APP_DELEGATE window]];
 }
 
@@ -509,7 +516,7 @@
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     NSLog(@"buttonIndex: %d",buttonIndex);
-    if(actionSheet.tag == 420)
+    if(actionSheet.tag == ACTIONSHEET_ENCRYPTION_OPTIONS_TAG)
     {
         if (buttonIndex == 1) // Verify
         {
@@ -526,19 +533,29 @@
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:VERIFY_FINGERPRINT_STRING message:msg delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
             [alert show];
         }
-        else if (buttonIndex == 0)
+        else if (buttonIndex == 0) // Initiate/cancel encryption
         {
-            OTRBuddy* theBuddy = buddy;
-            OTRMessage * newMessage = [OTRMessage messageWithBuddy:theBuddy message:@""];
-            OTRMessage *encodedMessage = [OTRCodec encodeMessage:newMessage];
-            [OTRMessage sendMessage:encodedMessage];    
+            if(buddy.encryptionStatus == kOTRKitMessageStateEncrypted)
+            {
+                [[OTRKit sharedInstance]disableEncryptionForUsername:buddy.accountName accountName:buddy.protocol.account.username protocol:buddy.protocol.account.protocol];
+            } else {
+                OTRBuddy* theBuddy = buddy;
+                OTRMessage * newMessage = [OTRMessage messageWithBuddy:theBuddy message:@""];
+                OTRMessage *encodedMessage = [OTRCodec encodeMessage:newMessage];
+                [OTRMessage sendMessage:encodedMessage];
+            }
+        }
+        else if (buttonIndex == 2) { // Clear Chat History
+            buddy.chatHistory = [NSMutableString string];
+            buddy.lastMessage = @"";
+            [self updateChatHistory];
         }
         else if (buttonIndex == actionSheet.cancelButtonIndex) // Cancel
         {
             
         }
     }
-    else if (actionSheet.tag == 0)
+    else if (actionSheet.tag == ACTIONSHEET_SAFARI_TAG)
     {
         if (buttonIndex != actionSheet.cancelButtonIndex)
         {
@@ -624,7 +641,7 @@
     {
         self.lastActionLink = request.URL;
         UIActionSheet *action = [[UIActionSheet alloc] initWithTitle:[[request.URL absoluteURL] description] delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:OPEN_IN_SAFARI_STRING, nil];
-        [action setTag:0];
+        [action setTag:ACTIONSHEET_SAFARI_TAG];
         [action showInView:[OTR_APP_DELEGATE window]];
     }
     return NO;
