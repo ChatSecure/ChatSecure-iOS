@@ -39,7 +39,7 @@
 #define THEIR_FINGERPRINT_STRING NSLocalizedString(@"Purported fingerprint for", @"the alleged fingerprint of their other person")
 #define SECURE_CONVERSATION_STRING NSLocalizedString(@"You must be in a secure conversation first.", @"Inform user that they must be secure their conversation before doing that action")
 #define VERIFY_FINGERPRINT_STRING NSLocalizedString(@"Verify Fingerprint", "Title of the dialog for fingerprint verification")
-#define CHAT_INSTRUCTIONS_LABEL_STRING NSLocalizedString(@"Log in on the Accounts tab and then select a buddy from the Buddy List to start chatting.", @"Instructions on how to start using the program")
+#define CHAT_INSTRUCTIONS_LABEL_STRING NSLocalizedString(@"Log in on the Settings page (found on top right corner of buddy list) and then select a buddy from the Buddy List to start chatting.", @"Instructions on how to start using the program")
 #define OPEN_IN_SAFARI_STRING NSLocalizedString(@"Open in Safari", @"Shown when trying to open a link, asking if they want to switch to Safari to view it")
 #define DISCONNECTED_TITLE_STRING NSLocalizedString(@"Disconnected", @"Title of alert when user is disconnected from protocol")
 #define DISCONNECTED_MESSAGE_STRING NSLocalizedString(@"You have disconnected.", @"Message shown when user is disconnected")
