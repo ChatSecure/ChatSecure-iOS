@@ -140,7 +140,7 @@ static void confirm_fingerprint_cb(void *opdata, OtrlUserState us,
 {
     char our_hash[45], their_hash[45];
     
-    ConnContext *context = otrl_context_find(userState, username,accountname, protocol,NO,NULL,NULL, NULL);
+    ConnContext *context = otrl_context_find(userState, username,accountname, protocol,OTRL_INSTAG_BEST, NO,NULL,NULL, NULL);
     
     otrl_privkey_fingerprint(userState, our_hash, context->accountname, context->protocol);
     
@@ -305,13 +305,13 @@ static OtrlMessageAppOps ui_ops = {
 {
     int ignore_message;
     char *newmessage = NULL;
-        
-    ignore_message = otrl_message_receiving(userState, &ui_ops, NULL,[accountName UTF8String], [protocol UTF8String], [recipient UTF8String], [message UTF8String], &newmessage, NULL, NULL, NULL);
+    ConnContext *context = [self contextForUsername:recipient accountName:accountName protocol:protocol];
+
+    ignore_message = otrl_message_receiving(userState, &ui_ops, NULL,[accountName UTF8String], [protocol UTF8String], [recipient UTF8String], [message UTF8String], &newmessage, NULL, &context, NULL, NULL);
     NSString *newMessage = nil;
     
-    ConnContext *context = [self contextForUsername:recipient accountName:accountName protocol:protocol];
     if (context->msgstate == OTRL_MSGSTATE_FINISHED) {
-        [self disableEncryptionForUsername:recipient accountName:accountName protocol:protocol];
+        otrl_message_disconnect(userState, &ui_ops, NULL, [accountName UTF8String], [protocol UTF8String], [recipient UTF8String], OTRL_INSTAG_BEST);
     }
     
     if(ignore_message == 0)
@@ -340,8 +340,9 @@ static OtrlMessageAppOps ui_ops = {
     gcry_error_t err;
     char *newmessage = NULL;
     
+    ConnContext *context = [self contextForUsername:recipient accountName:accountName protocol:protocol];
     err = otrl_message_sending(userState, &ui_ops, NULL,
-                               [accountName UTF8String], [protocol UTF8String], [recipient UTF8String], [message UTF8String], NULL, &newmessage,
+                               [accountName UTF8String], [protocol UTF8String], [recipient UTF8String], OTRL_INSTAG_BEST, [message UTF8String], NULL, &newmessage, OTRL_FRAGMENT_SEND_SKIP, &context,
                                NULL, NULL);
     NSString *newMessage = nil;
     //NSLog(@"newmessage char: %s",newmessage);
@@ -364,7 +365,7 @@ static OtrlMessageAppOps ui_ops = {
 }
 
 - (ConnContext*) contextForUsername:(NSString*)username accountName:(NSString*)accountName protocol:(NSString*) protocol {
-    ConnContext *context = otrl_context_find(userState, [username UTF8String], [accountName UTF8String], [protocol UTF8String],NO,NULL,NULL, NULL);
+    ConnContext *context = otrl_context_find(userState, [username UTF8String], [accountName UTF8String], [protocol UTF8String], OTRL_INSTAG_BEST, NO,NULL,NULL, NULL);
     return context;
 }
 
@@ -405,11 +406,6 @@ static OtrlMessageAppOps ui_ops = {
         }
     }
     return messageState;
-}
-
-- (void) disableEncryptionForUsername:(NSString*)username accountName:(NSString*)accountName protocol:(NSString*) protocol {
-    otrl_message_disconnect(userState, &ui_ops, NULL, [accountName UTF8String], [protocol UTF8String], [username UTF8String]);
-    [self updateEncryptionStatusWithContext:[self contextForUsername:username accountName:accountName protocol:protocol]];
 }
 
 
