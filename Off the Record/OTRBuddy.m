@@ -64,11 +64,7 @@
         self.encryptionStatus = kOTRKitMessageStatePlaintext;
         
         [[NSNotificationCenter defaultCenter]
-         addObserver:self selector:@selector(protocolDisconnected) name:kOTRProtocolDiconnect object:nil];
-         
-         
-         //postNotificationName:@"XMPPDisconnectedNotification" object:nil]; 
-        
+         addObserver:self selector:@selector(protocolDisconnected:) name:kOTRProtocolDiconnect object:buddyProtocol];
     }
     return self;
 }
@@ -164,15 +160,15 @@
     status = newStatus;
 }
          
--(void) protocolDisconnected
+-(void) protocolDisconnected:(id)sender
 {
     if( [self.chatHistory length]!=0 && !lastMessageDisconnected)
     {
         [chatHistory appendFormat:@"<p><strong style=\"color:blue\"> You </strong> Disconnected </p>"];
         [[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];
         lastMessageDisconnected = YES;
+        self.status = kOTRBuddyStatusOffline;
     }
-             
 }
 
 -(void)receiveEncryptionMessage:(NSString *)message

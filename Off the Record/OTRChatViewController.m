@@ -305,12 +305,7 @@
     
     //turn off scrolling and set the font details.
     //chatBox.scrollEnabled = NO;
-    //chatBox.font = [UIFont fontWithName:@"Helvetica" size:14]; 
-    [[NSNotificationCenter defaultCenter]
-     addObserver:self
-     selector:@selector(showDisconnectionAlert:)
-     name:kOTRProtocolDiconnect
-     object:nil ];
+    //chatBox.font = [UIFont fontWithName:@"Helvetica" size:14];
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -323,7 +318,7 @@
 }
 
 - (void) showDisconnectionAlert:(NSNotification*)notification {
-    NSMutableString *message = [NSMutableString stringWithString:DISCONNECTED_MESSAGE_STRING];
+    NSMutableString *message = [NSMutableString stringWithFormat:DISCONNECTED_MESSAGE_STRING, buddy.protocol.account.username];
     if ([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyDeleteOnDisconnect]) {
         [message appendFormat:@" %@", DISCONNECTION_WARNING_STRING];
     }
@@ -335,6 +330,7 @@
     if(buddy) {
         [[NSNotificationCenter defaultCenter] removeObserver:self name:kOTREncryptionStateNotification object:buddy];
         [[NSNotificationCenter defaultCenter] removeObserver:self name:MESSAGE_PROCESSED_NOTIFICATION object:buddy];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:kOTRProtocolDiconnect object:self.buddy.protocol];
     }
     
     buddy = newBuddy;
@@ -342,6 +338,11 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(encryptionStateChangeNotification:) name:kOTREncryptionStateNotification object:buddy];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messageProcessedNotification:) name:MESSAGE_PROCESSED_NOTIFICATION object:buddy];
+    [[NSNotificationCenter defaultCenter]
+     addObserver:self
+     selector:@selector(showDisconnectionAlert:)
+     name:kOTRProtocolDiconnect
+     object:self.buddy.protocol];
     
     [self refreshLockButton];
     [self updateChatHistory];

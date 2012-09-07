@@ -42,7 +42,7 @@
 #define CHAT_INSTRUCTIONS_LABEL_STRING NSLocalizedString(@"Log in on the Settings page (found on top right corner of buddy list) and then select a buddy from the Buddy List to start chatting.", @"Instructions on how to start using the program")
 #define OPEN_IN_SAFARI_STRING NSLocalizedString(@"Open in Safari", @"Shown when trying to open a link, asking if they want to switch to Safari to view it")
 #define DISCONNECTED_TITLE_STRING NSLocalizedString(@"Disconnected", @"Title of alert when user is disconnected from protocol")
-#define DISCONNECTED_MESSAGE_STRING NSLocalizedString(@"You have disconnected.", @"Message shown when user is disconnected")
+#define DISCONNECTED_MESSAGE_STRING NSLocalizedString(@"You (%@) have disconnected.", @"Message shown when user is disconnected")
 #define DISCONNECTION_WARNING_STRING NSLocalizedString(@"When you leave this conversation it will be deleted forever.", @"Warn user that conversation will be deleted after leaving it")
 #define CONVERSATION_NOT_SECURE_WARNING_STRING NSLocalizedString(@"Warning: This chat is not encrypted", @"Warn user that the current chat is not secure")
 #define CONVERSATION_NO_LONGER_SECURE_STRING NSLocalizedString(@"The conversation with %@ is no longer secure.", @"Warn user that the current chat is no longer secure")

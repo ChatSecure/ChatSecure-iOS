@@ -311,7 +311,7 @@ static OtrlMessageAppOps ui_ops = {
     NSString *newMessage = nil;
     
     if (context->msgstate == OTRL_MSGSTATE_FINISHED) {
-        otrl_message_disconnect(userState, &ui_ops, NULL, [accountName UTF8String], [protocol UTF8String], [recipient UTF8String], OTRL_INSTAG_BEST);
+        [self disableEncryptionForUsername:recipient accountName:accountName protocol:protocol];
     }
     
     if(ignore_message == 0)
@@ -354,6 +354,11 @@ static OtrlMessageAppOps ui_ops = {
     otrl_message_free(newmessage);
     
     return newMessage;
+}
+
+- (void) disableEncryptionForUsername:(NSString*)username accountName:(NSString*)accountName protocol:(NSString*) protocol {
+  otrl_message_disconnect_all_instances(userState, &ui_ops, NULL, [accountName UTF8String], [protocol UTF8String], [username UTF8String]);
+  [self updateEncryptionStatusWithContext:[self contextForUsername:username accountName:accountName protocol:protocol]];
 }
 
 - (NSString*) fingerprintForAccountName:(NSString*)accountName protocol:(NSString*) protocol {
