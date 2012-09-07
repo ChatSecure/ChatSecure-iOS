@@ -69,9 +69,11 @@ enum OTRKitMessageState { // OtrlMessageState
 @interface OTRKit : NSObject
 
 @property (nonatomic, assign) id<OTRKitDelegate> delegate;
+@property (nonatomic, retain) NSTimer *pollTimer;
 
 - (NSString*) privateKeyPath;
 - (NSString*) fingerprintsPath;
+- (NSString*) instanceTagsPath;
 
 - (NSString*) decodeMessage:(NSString*)message recipient:(NSString*)recipient accountName:(NSString*)accountName protocol:(NSString*)protocol;
 - (NSString*) encodeMessage:(NSString*)message recipient:(NSString*)recipient accountName:(NSString*)accountName protocol:(NSString*)protocol;
