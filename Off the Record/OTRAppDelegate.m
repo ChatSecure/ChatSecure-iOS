@@ -30,6 +30,7 @@
 #import "DDLog.h"
 #import "OTRUIKeyboardListener.h"
 #import "Appirater.h"
+#import "OTRConstants.h"
 
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
@@ -91,12 +92,6 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 
     self.window.rootViewController = rootViewController;
     [self.window makeKeyAndVisible];
-    
-    UILocalNotification *localNotification = [launchOptions objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];
-    if (localNotification) {
-        NSLog(@"Notification Body: %@",localNotification.alertBody);
-        NSLog(@"%@", localNotification.userInfo);
-    }
     
     application.applicationIconBadgeNumber = 0;
     [OTRUIKeyboardListener shared];
@@ -240,11 +235,20 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 }
 */
 
-/*- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
+- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
     NSLog(@"Notification Body: %@", notification.alertBody);
-    NSLog(@"%@", notification.userInfo);
+    NSLog(@"User Info: %@", notification.userInfo);
     
-    application.applicationIconBadgeNumber = 0;
-}*/
+    NSDictionary *userInfo = notification.userInfo;
+    NSString *accountName = [userInfo objectForKey:kOTRNotificationAccountNameKey];
+    NSString *userName = [userInfo objectForKey:kOTRNotificationUserNameKey];
+    NSString *protocol = [userInfo objectForKey:kOTRNotificationProtocolKey];
+    if (!accountName || !userName || !protocol) {
+        return;
+    }
+    OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
+    OTRBuddy *buddy = [protocolManager buddyForUserName:userName accountName:accountName protocol:protocol];
+    [buddyListViewController enterConversationWithBuddy:buddy];
+}
 
 @end

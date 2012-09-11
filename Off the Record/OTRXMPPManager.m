@@ -706,27 +706,6 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	{
 		body = [NSString stringWithFormat:@"Buddy request from %@", displayName];
 	}
-	
-	
-	if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive)
-	{
-		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:displayName
-		                                                    message:body 
-		                                                   delegate:nil 
-		                                          cancelButtonTitle:@"Not implemented"
-		                                          otherButtonTitles:nil];
-		[alertView show];
-	} 
-	else 
-	{
-		// We are not active, so use a local notification instead
-		UILocalNotification *localNotification = [[UILocalNotification alloc] init];
-		localNotification.alertAction = @"Not implemented";
-		localNotification.alertBody = body;
-		
-		[[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
-	}
-	
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

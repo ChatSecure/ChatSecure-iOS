@@ -367,7 +367,7 @@
     
     BOOL chatViewIsVisible = chatViewController.isViewLoaded && chatViewController.view.window;
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone && !chatViewIsVisible && self.navigationController.visibleViewController != chatViewController) {
-        [self.navigationController pushViewController:chatViewController animated:YES];
+        [self.navigationController setViewControllers:[NSArray arrayWithObjects:self, chatViewController, nil] animated:YES];
     }
     [self refreshActiveConversations];
 }

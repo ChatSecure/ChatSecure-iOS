@@ -34,6 +34,10 @@
 #define kOTRProtocolTypeXMPP @"xmpp"
 #define kOTRProtocolTypeAIM @"prpl-oscar"
 
+#define kOTRNotificationAccountNameKey @"kOTRNotificationAccountNameKey"
+#define kOTRNotificationUserNameKey @"kOTRNotificationUserNameKey"
+#define kOTRNotificationProtocolKey @"kOTRNotificationProtocolKey"
+
 #define kOTRXMPPAccountAllowSelfSignedSSLKey @"kOTRXMPPAccountAllowSelfSignedSSLKey"
 #define kOTRXMPPAccountAllowSSLHostNameMismatch @"kOTRXMPPAccountAllowSSLHostNameMismatch"
 

@@ -127,6 +127,12 @@
             localNotification.soundName = UILocalNotificationDefaultSoundName;
             localNotification.applicationIconBadgeNumber = [UIApplication sharedApplication].applicationIconBadgeNumber + 1;
             localNotification.alertBody = [NSString stringWithFormat:@"%@: %@",self.displayName,self.lastMessage];
+          
+            NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithCapacity:3];
+            [userInfo setObject:accountName forKey:kOTRNotificationUserNameKey];
+            [userInfo setObject:protocol.account.username forKey:kOTRNotificationAccountNameKey];
+            [userInfo setObject:protocol.account.protocol forKey:kOTRNotificationProtocolKey];
+            localNotification.userInfo = userInfo;
             
             [[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
         }
