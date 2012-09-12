@@ -139,6 +139,7 @@
 		D974DAB915021DB60028B2F4 /* DDXMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = D974DA5915021DB60028B2F4 /* DDXMLNode.m */; };
 		D974DABB15021DB60028B2F4 /* libidn.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D974DA5F15021DB60028B2F4 /* libidn.a */; };
 		D974DABD15021E540028B2F4 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D974DABC15021E540028B2F4 /* libiconv.dylib */; };
+		D97BF53B160150CF00DA91F9 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D97BF53A160150CE00DA91F9 /* Default-568h@2x.png */; };
 		D989E88E15D4F92E0081DFD1 /* Twitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D989E88D15D4F92E0081DFD1 /* Twitter.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		D99071B2151EB5C6002CECC9 /* 08-chat@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D99071AF151EB5C5002CECC9 /* 08-chat@2x.png */; };
 		D99071B3151EB5C6002CECC9 /* 19-gear@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D99071B0151EB5C5002CECC9 /* 19-gear@2x.png */; };
@@ -693,6 +694,7 @@
 		D974DA5F15021DB60028B2F4 /* libidn.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libidn.a; sourceTree = "<group>"; };
 		D974DA6015021DB60028B2F4 /* stringprep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stringprep.h; sourceTree = "<group>"; };
 		D974DABC15021E540028B2F4 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
+		D97BF53A160150CE00DA91F9 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		D989E88D15D4F92E0081DFD1 /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
 		D99071AF151EB5C5002CECC9 /* 08-chat@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "08-chat@2x.png"; sourceTree = "<group>"; };
 		D99071B0151EB5C5002CECC9 /* 19-gear@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "19-gear@2x.png"; sourceTree = "<group>"; };
@@ -2059,6 +2061,7 @@
 		D9F9376D13F44BD3009A3D84 = {
 			isa = PBXGroup;
 			children = (
+				D97BF53A160150CE00DA91F9 /* Default-568h@2x.png */,
 				D9F9378013F44BD3009A3D84 /* Off the Record */,
 				D9D69B03141806150056FB9E /* 3rd Party Frameworks */,
 				D9F9377B13F44BD3009A3D84 /* Frameworks */,
@@ -2327,6 +2330,7 @@
 				D92061E015E2E0D8003EEF3A /* README.md in Resources */,
 				D93E34F315E48FE600D587B2 /* 14-gear.png in Resources */,
 				D93E34F415E48FE600D587B2 /* 14-gear@2x.png in Resources */,
+				D97BF53B160150CF00DA91F9 /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2636,7 +2640,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
@@ -2659,7 +2662,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
@@ -2676,10 +2678,6 @@
 		D9F937A313F44BD3009A3D84 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					"$(ARCHS_STANDARD_32_BIT)",
-					armv6,
-				);
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Off the Record/Off the Record-Prefix.pch";
@@ -2693,7 +2691,7 @@
 					"\"$(SRCROOT)/OTRKit/dependencies/include\"",
 				);
 				INFOPLIST_FILE = "Off the Record/Off the Record-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/XMPPFramework/Vendor/libidn\"",
@@ -2711,10 +2709,6 @@
 		D9F937A413F44BD3009A3D84 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					"$(ARCHS_STANDARD_32_BIT)",
-					armv6,
-				);
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Off the Record/Off the Record-Prefix.pch";
@@ -2725,7 +2719,7 @@
 					"\"$(SRCROOT)/OTRKit/dependencies/include\"",
 				);
 				INFOPLIST_FILE = "Off the Record/Off the Record-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/XMPPFramework/Vendor/libidn\"",
