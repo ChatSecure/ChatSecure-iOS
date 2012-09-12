@@ -23,7 +23,7 @@
 #  Choose your libotr version and your currently-installed iOS SDK version:
 #
 VERSION="4.0.0"
-SDKVERSION="5.1"
+SDKVERSION="6.0"
 #
 #
 ###########################################################################
@@ -34,7 +34,7 @@ SDKVERSION="5.1"
 
 # No need to change this since xcode build will only compile in the
 # necessary bits from the libraries we create
-ARCHS="i386 armv7 armv6"
+ARCHS="i386 armv7 armv7s"
 
 DEVELOPER=`xcode-select -print-path`
 
