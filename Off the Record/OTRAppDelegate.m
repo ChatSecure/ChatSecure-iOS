@@ -251,4 +251,12 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     [buddyListViewController enterConversationWithBuddy:buddy];
 }
 
+- (void) presentActionSheet:(UIActionSheet*)sheet inView:(UIView*)view {
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+        [sheet showInView:view];
+    } else if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        [sheet showInView:self.window];
+    }
+}
+
 @end

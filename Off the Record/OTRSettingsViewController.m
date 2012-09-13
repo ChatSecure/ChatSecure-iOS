@@ -205,7 +205,7 @@
                 self.selectedAccount = account;
                 self.selectedIndexPath = indexPath;
                 logoutSheet.tag = ACTIONSHEET_DISCONNECT_TAG;
-                [logoutSheet showInView:[OTR_APP_DELEGATE window]];
+                [OTR_APP_DELEGATE presentActionSheet:logoutSheet inView:self.view];
             }
         }
     } else {

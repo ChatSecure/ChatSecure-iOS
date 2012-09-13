@@ -35,4 +35,6 @@
 @property (nonatomic) UIBackgroundTaskIdentifier backgroundTask;
 @property (nonatomic) BOOL didShowDisconnectionWarning;
 
+- (void) presentActionSheet:(UIActionSheet*)sheet inView:(UIView*)view;
+
 @end

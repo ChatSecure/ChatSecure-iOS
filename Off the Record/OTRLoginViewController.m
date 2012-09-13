@@ -576,7 +576,7 @@
 -(void)facebookInfoButtonPressed:(id)sender
 {
     UIActionSheet * urlActionSheet = [[UIActionSheet alloc] initWithTitle:kOTRFacebookUsernameLink delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:OPEN_IN_SAFARI_STRING, nil];
-    [urlActionSheet showInView:[OTR_APP_DELEGATE window]];
+    [OTR_APP_DELEGATE presentActionSheet:urlActionSheet inView:self.view];
 }
 
 

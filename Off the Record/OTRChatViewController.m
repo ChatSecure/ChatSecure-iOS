@@ -224,7 +224,7 @@
     UIActionSheet *popupQuery = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:encryptionString, VERIFY_STRING, CLEAR_CHAT_HISTORY_STRING, nil];
     popupQuery.actionSheetStyle = UIActionSheetStyleBlackOpaque;
     popupQuery.tag = ACTIONSHEET_ENCRYPTION_OPTIONS_TAG;
-    [popupQuery showInView:[OTR_APP_DELEGATE window]];
+    [OTR_APP_DELEGATE presentActionSheet:popupQuery inView:self.view];
 }
 
 
@@ -643,7 +643,7 @@
         self.lastActionLink = request.URL;
         UIActionSheet *action = [[UIActionSheet alloc] initWithTitle:[[request.URL absoluteURL] description] delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:OPEN_IN_SAFARI_STRING, nil];
         [action setTag:ACTIONSHEET_SAFARI_TAG];
-        [action showInView:[OTR_APP_DELEGATE window]];
+        [OTR_APP_DELEGATE presentActionSheet:action inView:self.view];
     }
     return NO;
 }
