@@ -269,7 +269,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	// You can do it however you like! It's your application.
 	// But you do need to provide the roster with some storage facility.
     
-    NSLog(@"Unique Identifier: %@",self.account.uniqueIdentifier);
+    //NSLog(@"Unique Identifier: %@",self.account.uniqueIdentifier);
 	
     //xmppRosterStorage = [[XMPPRosterCoreDataStorage alloc] initWithDatabaseFilename:self.account.uniqueIdentifier];
     //  xmppRosterStorage = [[XMPPRosterCoreDataStorage alloc] init];
@@ -412,7 +412,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 
 - (BOOL)connectWithJID:(NSString*) myJID password:(NSString*)myPassword;
 {
-    NSLog(@"myJID %@",myJID);
+    //NSLog(@"myJID %@",myJID);
 	if (![xmppStream isDisconnected]) {
 		return YES;
 	}

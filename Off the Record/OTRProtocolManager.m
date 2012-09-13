@@ -114,7 +114,7 @@ static OTRProtocolManager *sharedManager = nil;
 
 -(void)buddyListUpdate
 {
-    NSLog(@"Protocols: %@",[protocolManagers allKeys]);
+    //NSLog(@"Protocols: %@",[protocolManagers allKeys]);
     for (id key in protocolManagers) {
         [self.buddyList updateBuddies:[[protocolManagers objectForKey:key] buddyList]];
     }

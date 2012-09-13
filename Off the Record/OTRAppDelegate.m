@@ -236,8 +236,8 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 */
 
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
-    NSLog(@"Notification Body: %@", notification.alertBody);
-    NSLog(@"User Info: %@", notification.userInfo);
+    //NSLog(@"Notification Body: %@", notification.alertBody);
+    //NSLog(@"User Info: %@", notification.userInfo);
     
     NSDictionary *userInfo = notification.userInfo;
     NSString *accountName = [userInfo objectForKey:kOTRNotificationAccountNameKey];

@@ -55,7 +55,7 @@ BOOL loginFailed;
 		NSDate * newTime = [NSDate date];
 		NSTimeInterval ti = [newTime timeIntervalSinceDate:lastTime];
 		if (ti > 0.2) {
-			NSLog(@"Main thread blocked for %d milliseconds.", (int)round(ti * 1000.0));
+			//NSLog(@"Main thread blocked for %d milliseconds.", (int)round(ti * 1000.0));
 		}
 		lastTime = newTime;
 	}
@@ -64,7 +64,7 @@ BOOL loginFailed;
 
 - (void)checkThreading {
 	if ([NSThread currentThread] != mainThread) {
-		NSLog(@"warning: NOT RUNNING ON MAIN THREAD!");
+		//NSLog(@"warning: NOT RUNNING ON MAIN THREAD!");
 	}
 }
 
@@ -72,13 +72,13 @@ BOOL loginFailed;
 #pragma mark Login Delegate
 
 -(void)authorizer:(id)authorizer didFailWithError:(NSError *)error {
-    NSLog(@"Authorizer Error: %@",[error description]);
+    //NSLog(@"Authorizer Error: %@",[error description]);
 }
 
 - (void)aimLogin:(AIMLogin *)theLogin failedWithError:(NSError *)error {
 	[self checkThreading];
     [[NSNotificationCenter defaultCenter] postNotificationName:kOTRProtocolLoginFail object:self];
-    NSLog(@"login error: %@",[error description]);
+    //NSLog(@"login error: %@",[error description]);
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Login Error" message:@"AIM login failed. Please check your username and password and try again." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
     [alert show];
 }
@@ -104,8 +104,8 @@ BOOL loginFailed;
 	AIMBuddyStatus * newStatus = [[AIMBuddyStatus alloc] initWithMessage:@"Available" type:AIMBuddyStatusAvailable timeIdle:0 caps:caps];
 	[session.statusHandler updateStatus:newStatus];
     
-	NSLog(@"Got session: %@", session);
-	NSLog(@"Our status: %@", session.statusHandler.userStatus);
+	//NSLog(@"Got session: %@", session);
+	//NSLog(@"Our status: %@", session.statusHandler.userStatus);
 	//NSLog(@"Disconnecting in %d seconds ...", kSignoffTime);
 	//[[session session] performSelector:@selector(closeConnection) withObject:nil afterDelay:kSignoffTime];
 	
@@ -124,7 +124,7 @@ BOOL loginFailed;
     [[[OTRProtocolManager sharedInstance] buddyList] removeBuddiesforAccount:self.account];
     aimBuddyList = nil;
 	theSession = nil;
-	NSLog(@"Session signed off");
+	///NSLog(@"Session signed off");
     
     [[NSNotificationCenter defaultCenter]
      postNotificationName:kOTRProtocolLogout
@@ -135,7 +135,7 @@ BOOL loginFailed;
 
 - (void)aimFeedbagHandlerGotBuddyList:(AIMFeedbagHandler *)feedbagHandler {
 	[self checkThreading];
-	NSLog(@"%@ got the buddy list.", feedbagHandler);
+	//NSLog(@"%@ got the buddy list.", feedbagHandler);
 	//NSLog(@"Blist: %@", );
     
     aimBuddyList = [theSession.session buddyList];
@@ -147,7 +147,7 @@ BOOL loginFailed;
 
 - (void)aimFeedbagHandler:(AIMFeedbagHandler *)sender buddyAdded:(AIMBlistBuddy *)newBuddy {
 	[self checkThreading];
-	NSLog(@"Buddy added: %@", newBuddy);
+	//NSLog(@"Buddy added: %@", newBuddy);
     
     [[NSNotificationCenter defaultCenter]
      postNotificationName:kOTRBuddyListUpdate
@@ -156,7 +156,7 @@ BOOL loginFailed;
 
 - (void)aimFeedbagHandler:(AIMFeedbagHandler *)sender buddyDeleted:(AIMBlistBuddy *)oldBuddy {
 	[self checkThreading];
-	NSLog(@"Buddy removed: %@", oldBuddy);
+	//NSLog(@"Buddy removed: %@", oldBuddy);
     
     [[NSNotificationCenter defaultCenter]
      postNotificationName:kOTRBuddyListUpdate
@@ -165,7 +165,7 @@ BOOL loginFailed;
 
 - (void)aimFeedbagHandler:(AIMFeedbagHandler *)sender groupAdded:(AIMBlistGroup *)newGroup {
 	[self checkThreading];
-	NSLog(@"Group added: %@", [newGroup name]);
+	//NSLog(@"Group added: %@", [newGroup name]);
     
     [[NSNotificationCenter defaultCenter]
      postNotificationName:kOTRBuddyListUpdate
@@ -174,7 +174,7 @@ BOOL loginFailed;
 
 - (void)aimFeedbagHandler:(AIMFeedbagHandler *)sender groupDeleted:(AIMBlistGroup *)oldGroup {
 	[self checkThreading];
-	NSLog(@"Group removed: %@", [oldGroup name]);
+	//NSLog(@"Group removed: %@", [oldGroup name]);
     
     [[NSNotificationCenter defaultCenter]
      postNotificationName:kOTRBuddyListUpdate
@@ -183,8 +183,8 @@ BOOL loginFailed;
 
 - (void)aimFeedbagHandler:(AIMFeedbagHandler *)sender groupRenamed:(AIMBlistGroup *)theGroup {
 	[self checkThreading];
-	NSLog(@"Group renamed: %@", [theGroup name]);
-	NSLog(@"Blist: %@", theSession.session.buddyList);
+	//NSLog(@"Group renamed: %@", [theGroup name]);
+	//NSLog(@"Blist: %@", theSession.session.buddyList);
     
     [[NSNotificationCenter defaultCenter]
      postNotificationName:kOTRBuddyListUpdate
@@ -192,7 +192,7 @@ BOOL loginFailed;
 }
 
 - (void)aimFeedbagHandler:(AIMFeedbagHandler *)sender buddyDenied:(NSString *)username {
-	NSLog(@"User blocked: %@", username);
+	//NSLog(@"User blocked: %@", username);
     
     [[NSNotificationCenter defaultCenter]
      postNotificationName:kOTRBuddyListUpdate
@@ -200,7 +200,7 @@ BOOL loginFailed;
 }
 
 - (void)aimFeedbagHandler:(AIMFeedbagHandler *)sender buddyPermitted:(NSString *)username {
-	NSLog(@"User permitted: %@", username);
+	//NSLog(@"User permitted: %@", username);
     
     [[NSNotificationCenter defaultCenter]
      postNotificationName:kOTRBuddyListUpdate
@@ -208,14 +208,14 @@ BOOL loginFailed;
 }
 
 - (void)aimFeedbagHandler:(AIMFeedbagHandler *)sender buddyUndenied:(NSString *)username {
-	NSLog(@"User un-blocked: %@", username);
+	//NSLog(@"User un-blocked: %@", username);
     
     [[NSNotificationCenter defaultCenter]
      postNotificationName:kOTRBuddyListUpdate
      object:self];
 }
 - (void)aimFeedbagHandler:(AIMFeedbagHandler *)sender buddyUnpermitted:(NSString *)username {
-	NSLog(@"User un-permitted: %@", username);
+	//NSLog(@"User un-permitted: %@", username);
     
     [[NSNotificationCenter defaultCenter]
      postNotificationName:kOTRBuddyListUpdate
@@ -224,7 +224,7 @@ BOOL loginFailed;
 
 - (void)aimFeedbagHandler:(AIMFeedbagHandler *)sender transactionFailed:(id<FeedbagTransaction>)transaction {
 	[self checkThreading];
-	NSLog(@"Transaction failed: %@", transaction);
+	//NSLog(@"Transaction failed: %@", transaction);
 }
 
 #pragma mark Message Handler
@@ -234,8 +234,8 @@ BOOL loginFailed;
 	
 	NSString * msgTxt = [message plainTextMessage];
 	
-	NSString * autoresp = [message isAutoresponse] ? @" (Auto-Response)" : @"";
-	NSLog(@"(%@) %@%@: %@", [NSDate date], [[message buddy] username], autoresp, [message plainTextMessage]);
+	//NSString * autoresp = [message isAutoresponse] ? @" (Auto-Response)" : @"";
+	//NSLog(@"(%@) %@%@: %@", [NSDate date], [[message buddy] username], autoresp, [message plainTextMessage]);
     
     OTRBuddy * messageBuddy = [protocolBuddyList objectForKey:message.buddy.username];
     
@@ -351,14 +351,14 @@ BOOL loginFailed;
 
 - (void)aimICBMHandler:(AIMICBMHandler *)sender gotMissedCall:(AIMMissedCall *)missedCall {
 	[self checkThreading];
-	NSLog(@"Missed call from %@", [missedCall buddy]);
+	//NSLog(@"Missed call from %@", [missedCall buddy]);
 }
 
 #pragma mark Status Handler
 
 - (void)aimStatusHandler:(AIMStatusHandler *)handler buddy:(AIMBlistBuddy *)theBuddy statusChanged:(AIMBuddyStatus *)status {
 	[self checkThreading];
-	NSLog(@"\"%@\"%s%@", theBuddy, ".status = ", status);
+	//NSLog(@"\"%@\"%s%@", theBuddy, ".status = ", status);
     
     [[NSNotificationCenter defaultCenter]
      postNotificationName:kOTRBuddyListUpdate
@@ -368,7 +368,7 @@ BOOL loginFailed;
 
 - (void)aimStatusHandlerUserStatusUpdated:(AIMStatusHandler *)handler {
 	[self checkThreading];
-	NSLog(@"user.status = %@", [handler userStatus]);
+	//NSLog(@"user.status = %@", [handler userStatus]);
     
     [[NSNotificationCenter defaultCenter]
      postNotificationName:kOTRBuddyListUpdate
@@ -405,14 +405,14 @@ BOOL loginFailed;
 }
 
 - (void)aimStatusHandler:(AIMStatusHandler *)handler setIconFailed:(AIMIconUploadErrorType)reason {
-	NSLog(@"Failed to set our buddy icon.");
+	//NSLog(@"Failed to set our buddy icon.");
 }
 
 #pragma mark Rate Handlers
 
 - (void)aimRateLimitHandler:(AIMRateLimitHandler *)handler gotRateAlert:(AIMRateNotificationInfo *)info {
 	// use this to show the user that they should stop sending messages.
-	NSLog(@"Rate alert");
+	//NSLog(@"Rate alert");
 }
 
 #pragma mark File Transfers
@@ -422,11 +422,11 @@ BOOL loginFailed;
      NSString * path = [NSString stringWithFormat:@"/var/tmp/%@", [ft remoteFileName]];
      [rvHandler acceptFileTransfer:ft saveToPath:path];
      NSLog(@"Save to path: %@", path);*/
-    NSLog(@"File transfer disabled.");
+    //NSLog(@"File transfer disabled.");
 }
 
 - (void)aimRendezvousHandler:(AIMRendezvousHandler *)rvHandler fileTransferCancelled:(AIMFileTransfer *)ft reason:(UInt16)reason {
-	NSLog(@"File transfer cancelled: %@", ft);
+	//NSLog(@"File transfer cancelled: %@", ft);
 	if ([ft isKindOfClass:[AIMSendingFileTransfer class]]) {
 		AIMSendingFileTransfer * send = (AIMSendingFileTransfer *)ft;
 		[[NSFileManager defaultManager] removeItemAtPath:[send localFile] error:nil];
@@ -434,7 +434,7 @@ BOOL loginFailed;
 }
 
 - (void)aimRendezvousHandler:(AIMRendezvousHandler *)rvHandler fileTransferFailed:(AIMFileTransfer *)ft {
-	NSLog(@"File transfer failed: %@", ft);
+	//NSLog(@"File transfer failed: %@", ft);
 	if ([ft isKindOfClass:[AIMSendingFileTransfer class]]) {
 		AIMSendingFileTransfer * send = (AIMSendingFileTransfer *)ft;
 		[[NSFileManager defaultManager] removeItemAtPath:[send localFile] error:nil];
@@ -442,7 +442,7 @@ BOOL loginFailed;
 }
 
 - (void)aimRendezvousHandler:(AIMRendezvousHandler *)rvHandler fileTransferStarted:(AIMFileTransfer *)ft {
-	NSLog(@"File transfer started: %@", ft);
+	//NSLog(@"File transfer started: %@", ft);
 }
 
 - (void)aimRendezvousHandler:(AIMRendezvousHandler *)rvHandler fileTransferProgressChanged:(AIMFileTransfer *)ft {
@@ -452,7 +452,7 @@ BOOL loginFailed;
 }
 
 - (void)aimRendezvousHandler:(AIMRendezvousHandler *)rvHandler fileTransferDone:(AIMFileTransfer *)ft {
-	NSLog(@"File transfer done: %@", ft);
+	//NSLog(@"File transfer done: %@", ft);
 	if ([ft isKindOfClass:[AIMSendingFileTransfer class]]) {
 		AIMSendingFileTransfer * send = (AIMSendingFileTransfer *)ft;
 		[[NSFileManager defaultManager] removeItemAtPath:[send localFile] error:nil];
