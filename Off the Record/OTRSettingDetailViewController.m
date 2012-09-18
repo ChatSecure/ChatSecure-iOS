@@ -55,11 +55,13 @@
     [self dismissModalViewControllerAnimated:YES];
 }
 
-- (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-        return (toInterfaceOrientation == UIInterfaceOrientationPortrait);
-    } else {
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    // Return YES for supported orientations
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         return YES;
+    } else {
+        return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
     }
 }
 

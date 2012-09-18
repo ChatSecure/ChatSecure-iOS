@@ -448,8 +448,7 @@
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         return YES;
     } else {
-        //return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
-        return NO;
+        return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
     }
 }
 
