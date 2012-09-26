@@ -439,6 +439,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     
 	[xmppStream setMyJID:JID];
     [xmppStream setHostName:self.account.domain];
+    [xmppStream setHostPort:self.account.port];
 	password = myPassword;
     
 	NSError *error = nil;

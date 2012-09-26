@@ -40,6 +40,7 @@
 
 #define kOTRXMPPAccountAllowSelfSignedSSLKey @"kOTRXMPPAccountAllowSelfSignedSSLKey"
 #define kOTRXMPPAccountAllowSSLHostNameMismatch @"kOTRXMPPAccountAllowSSLHostNameMismatch"
+#define kOTRXMPPAccountPortNumber @"kOTRXMPPAccountPortNumber"
 
 #define kOTRXMPPResource @"chatsecure"
 

@@ -26,14 +26,17 @@
 #import "Strings.h"
 #import "OTRXMPPManager.h"
 
+#define DEFAULT_PORT_NUMBER 5222
+
 @implementation OTRXMPPAccount
-@synthesize allowSelfSignedSSL, allowSSLHostNameMismatch, domain;
+@synthesize allowSelfSignedSSL, allowSSLHostNameMismatch, domain, port;
 
 - (id) initWithDomain:(NSString *)newDomain {
     if (self = [super initWithProtocol:kOTRProtocolTypeXMPP]) {
         self.domain = newDomain;
         self.allowSelfSignedSSL = NO;
         self.allowSSLHostNameMismatch = NO;
+        self.port = DEFAULT_PORT_NUMBER; // Default XMPP port number
     }
     return self;
 }
@@ -43,6 +46,12 @@
         self.domain = [dictionary objectForKey:kOTRAccountDomainKey];
         self.allowSelfSignedSSL = [[dictionary objectForKey:kOTRXMPPAccountAllowSelfSignedSSLKey] boolValue];
         self.allowSSLHostNameMismatch = [[dictionary objectForKey:kOTRXMPPAccountAllowSSLHostNameMismatch] boolValue];
+        NSNumber *portNumber = [dictionary objectForKey:kOTRXMPPAccountPortNumber];
+        if (portNumber) {
+            self.port = [portNumber intValue];
+        } else {
+            self.port = DEFAULT_PORT_NUMBER;
+        }
     }
     return self;
 }
@@ -68,9 +77,9 @@
     return allowSelfSignedSSL;
 }
 
-// Don't allow SSL host-name mismatch for Facebook
+// Don't allow SSL host-name mismatch for Facebook or Google Talk
 - (BOOL) allowSSLHostNameMismatch {
-    if ([domain isEqualToString:kOTRFacebookDomain]) {
+    if ([domain isEqualToString:kOTRFacebookDomain] || [domain isEqualToString:kOTRGoogleTalkDomain]) {
         return NO;
     }
     return allowSSLHostNameMismatch;
@@ -98,6 +107,12 @@
     [accountDictionary setObject:self.domain forKey:kOTRAccountDomainKey];
     [accountDictionary setObject:[NSNumber numberWithBool:self.allowSelfSignedSSL] forKey:kOTRXMPPAccountAllowSelfSignedSSLKey];
     [accountDictionary setObject:[NSNumber numberWithBool:self.allowSSLHostNameMismatch] forKey:kOTRXMPPAccountAllowSSLHostNameMismatch];
+    [accountDictionary setObject:[NSNumber numberWithInt:self.port] forKey:kOTRXMPPAccountPortNumber];
     return accountDictionary;
 }
+
++(UInt16)defaultPortNumber {
+    return DEFAULT_PORT_NUMBER;
+}
+
 @end

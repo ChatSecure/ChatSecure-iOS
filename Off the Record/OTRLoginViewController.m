@@ -43,6 +43,7 @@
 @synthesize isNewAccount;
 @synthesize basicAdvancedSegmentedControl;
 @synthesize sslMismatchLabel,sslMismatchSwitch,selfSignedLabel,selfSignedSwitch;
+@synthesize portLabel, portTextField;
 
 - (void) dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kOTRProtocolLoginFail object:nil];
@@ -66,6 +67,8 @@
     self.selfSignedSwitch = nil;
     self.sslMismatchLabel = nil;
     self.sslMismatchSwitch = nil;
+    self.portLabel = nil;
+    self.portTextField = nil;
 }
 
 - (id) initWithAccount:(OTRAccount*)newAccount {
@@ -126,6 +129,8 @@
         }
         else if ([account.protocol isEqualToString:kOTRProtocolTypeXMPP] && ![xmppAccount.domain isEqualToString:kOTRGoogleTalkDomain])  //Jabber domain fields
         {
+            OTRXMPPAccount *xmppAccount = (OTRXMPPAccount*)self.account;
+
             self.usernameTextField.placeholder = @"user@example.com";
 
             self.domainLabel = [[UILabel alloc] init];
@@ -139,6 +144,7 @@
             self.domainTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
             self.domainTextField.borderStyle = UITextBorderStyleRoundedRect;
             self.domainTextField.placeholder = OPTIONAL_STRING;
+            self.domainTextField.text = xmppAccount.domain;
             [self.view addSubview:domainTextField];
             
             self.basicAdvancedSegmentedControl = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:BASIC_STRING,ADVANCED_STRING, nil]];
@@ -160,6 +166,17 @@
             self.selfSignedSwitch = [[UISwitch alloc]init];
             [self.view addSubview:selfSignedSwitch];
             
+            self.portLabel = [[UILabel alloc] init];
+            self.portLabel.text = PORT_STRING;
+            [self.view addSubview:portLabel];
+            self.portTextField = [[UITextField alloc] init];
+            self.portTextField.delegate = self;
+            self.portTextField.autocorrectionType = UITextAutocorrectionTypeNo;
+            self.portTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+            self.portTextField.borderStyle = UITextBorderStyleRoundedRect;
+            self.portTextField.placeholder = [NSString stringWithFormat:@"%d",xmppAccount.port];
+            [self.view addSubview:portTextField];
+
             
             [self.view addSubview:basicAdvancedSegmentedControl];
             
@@ -293,10 +310,26 @@
         self.selfSignedSwitch.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
         [self.selfSignedSwitch setHidden:YES];
         
-        self.domainTextField.text = ((OTRXMPPAccount*)self.account).domain;
-        self.sslMismatchSwitch.on = ((OTRXMPPAccount*)self.account).allowSSLHostNameMismatch;
-        self.selfSignedSwitch.on = ((OTRXMPPAccount*)self.account).allowSelfSignedSSL;
+        OTRXMPPAccount *xmppAccount = (OTRXMPPAccount*)self.account;
         
+        self.domainTextField.text = xmppAccount.domain;
+        self.sslMismatchSwitch.on = xmppAccount.allowSSLHostNameMismatch;
+        self.selfSignedSwitch.on = xmppAccount.allowSelfSignedSSL;
+        self.portTextField.text = [NSString stringWithFormat:@"%d", xmppAccount.port];
+        
+        CGFloat portYOrigin = self.selfSignedLabel.frame.origin.y + self.selfSignedLabel.frame.size.height + kFieldBuffer;
+        CGFloat edgePadding = 10.0f;
+
+        self.portLabel.frame = CGRectMake(edgePadding, portYOrigin, self.view.frame.size.width/2-edgePadding, 21);
+        self.portTextField.frame = CGRectMake(self.view.frame.size.width/2, portYOrigin, self.view.frame.size.width/2-edgePadding, 21);
+        [portLabel setHidden:YES];
+        [portTextField setHidden:YES];
+        
+        self.portTextField.frame = [self textFieldFrameForLabel:portLabel];
+        self.portTextField.clearButtonMode = UITextFieldViewModeWhileEditing;
+        self.portTextField.keyboardType = UIKeyboardTypeNumberPad;
+        self.portTextField.returnKeyType = UIReturnKeyGo;
+        self.portTextField.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth;
         
         //passwordLabelFrameYOrigin = domainLabelFrameYOrigin + self.domainLabel.frame.size.height +kFieldBuffer;
         passwordLabelFrameYOrigin = usernameLabelFrameYOrigin + self.usernameLabel.frame.size.height + kFieldBuffer;
@@ -377,7 +410,8 @@
         [self.sslMismatchLabel setHidden:YES];
         [self.selfSignedLabel setHidden:YES];
         [self.selfSignedSwitch setHidden:YES];
-        
+        [self.portTextField setHidden:YES];
+        [self.portLabel setHidden:YES];
         
         [self.usernameLabel setHidden:NO];
         [self.usernameTextField setHidden:NO];
@@ -396,6 +430,8 @@
         [self.sslMismatchLabel setHidden:NO];
         [self.selfSignedLabel setHidden:NO];
         [self.selfSignedSwitch setHidden:NO];
+        [self.portTextField setHidden:NO];
+        [self.portLabel setHidden:NO];
         
         
         [self.usernameLabel setHidden:YES];
@@ -513,6 +549,12 @@
             {
                 xmppAccount.domain = domainText;
             }
+            int portNumber = [self.portTextField.text intValue];
+            if (portNumber > 0 && portNumber <= 65535) {
+                xmppAccount.port = portNumber;
+            } else {
+                xmppAccount.port = [OTRXMPPAccount defaultPortNumber];
+            }
         }
 
 
@@ -532,6 +574,15 @@
 
 - (void)cancelPressed:(id)sender {
     [self dismissModalViewControllerAnimated:YES];
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    if (textField == portTextField) {
+        return [string isEqualToString:@""] ||
+        ([string stringByTrimmingCharactersInSet:
+          [[NSCharacterSet decimalDigitCharacterSet] invertedSet]].length > 0);
+    }
+    return YES;
 }
 
 -(BOOL)checkFields

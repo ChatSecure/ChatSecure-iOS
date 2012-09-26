@@ -48,6 +48,8 @@
 @property (nonatomic, strong) UISwitch *sslMismatchSwitch;
 @property (nonatomic, strong) UILabel *selfSignedLabel;
 @property (nonatomic, strong) UISwitch *selfSignedSwitch;
+@property (nonatomic, strong) UILabel *portLabel;
+@property (nonatomic, strong) UITextField *portTextField;
 
 @property (nonatomic, strong) UIButton *facebookInfoButton;
 

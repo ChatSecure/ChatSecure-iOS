@@ -29,7 +29,10 @@
 @property (nonatomic) BOOL allowSelfSignedSSL;
 @property (nonatomic) BOOL allowSSLHostNameMismatch;
 @property (nonatomic, retain) NSString *domain; // xmpp only, used for custom domains
+@property (nonatomic) UInt16 port;
 
 - (id) initWithDomain:(NSString*)newDomain;
+
++(UInt16)defaultPortNumber;
 
 @end
