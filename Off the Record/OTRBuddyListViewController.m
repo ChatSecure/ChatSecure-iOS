@@ -30,6 +30,7 @@
 #import "OTRConstants.h"
 #import "OTRAppDelegate.h"
 #import "OTRSettingsViewController.h"
+#import "OTRStoreViewController.h"
 
 //#define kSignoffTime 500
 
@@ -84,7 +85,13 @@
     buddyListTableView.dataSource = self;
     buddyListTableView.delegate = self;
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"14-gear.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(showSettingsView:)];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:STORE_STRING style:UIBarButtonItemStyleBordered target:self action:@selector(showStoreView:)];
     [self.view addSubview:buddyListTableView];
+}
+
+- (void) showStoreView:(id)sender {
+    OTRStoreViewController *storeView = [[OTRStoreViewController alloc] init];
+    [self.navigationController pushViewController:storeView animated:YES];
 }
 
 - (void)viewDidLoad

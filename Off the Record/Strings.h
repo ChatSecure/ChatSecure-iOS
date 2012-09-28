@@ -63,6 +63,7 @@
 #define DISAGREE_STRING NSLocalizedString(@"Disagree",@"Disagree with EULA")
 #define EULA_WARNING_STRING NSLocalizedString(@"If you require true security, meet in person. This software, its dependencies, or the underlying OTR protocol could contain security issues. The full source code is available on Github but has not yet been audited by an independent security expert. Use at your own risk.", @"Text describing possible security risks")
 #define EULA_BSD_STRING @"Modified BSD License:\nTHIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
+#define STORE_STRING NSLocalizedString(@"Store", @"The button name for the shop to buy ChatSecure In-App Purchases")
 
 // OTRLoginViewController
 #define ERROR_STRING NSLocalizedString(@"Error!", "Title of error message popup box")
