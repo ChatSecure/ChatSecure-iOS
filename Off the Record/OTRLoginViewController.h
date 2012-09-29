@@ -24,7 +24,7 @@
 #import "OTRProtocolManager.h"
 #import "MBProgressHUD.h"
 
-@interface OTRLoginViewController : UIViewController <UITextFieldDelegate, MBProgressHUDDelegate, UIActionSheetDelegate> {
+@interface OTRLoginViewController : UIViewController <UITextFieldDelegate, MBProgressHUDDelegate, UIActionSheetDelegate, UITableViewDataSource,UITableViewDelegate> {
     MBProgressHUD *HUD;
     UIView *padding;
     UILabel *facebookHelpLabel;

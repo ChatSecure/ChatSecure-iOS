@@ -74,29 +74,14 @@
 - (id) initWithAccount:(OTRAccount*)newAccount {
     if (self = [super init]) {
         self.account = newAccount;
+        
+        NSLog(@"Account Dictionary: %@",[account accountDictionary]);
     }
     return self;
 }
 
-
-- (void )loadView {
-    [super loadView];
-    
-    //self.logoView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"chatsecure_banner.png"]];
-    //[self.view addSubview:logoView];
-    
-    self.usernameLabel = [[UILabel alloc] init];
-    self.usernameLabel.text = USERNAME_STRING;
-    self.passwordLabel = [[UILabel alloc] init];
-    self.passwordLabel.text = PASSWORD_STRING;
-    self.rememberPasswordLabel = [[UILabel alloc] init];
-    self.rememberPasswordLabel.text = REMEMBER_PASSWORD_STRING;
-    self.rememberPasswordSwitch = [[UISwitch alloc] init];
-    [self.view addSubview:usernameLabel];
-    [self.view addSubview:passwordLabel];
-    [self.view addSubview:rememberPasswordLabel];
-    [self.view addSubview:rememberPasswordSwitch];
-    
+-(void)setUpFields
+{
     self.usernameTextField = [[UITextField alloc] init];
     self.usernameTextField.delegate = self;
     self.usernameTextField.borderStyle = UITextBorderStyleRoundedRect;
@@ -105,110 +90,69 @@
     self.usernameTextField.text = account.username;
     
     
-    if ([account isKindOfClass:[OTRXMPPAccount class]]) {
-        OTRXMPPAccount *xmppAccount = (OTRXMPPAccount*) account;
-        if ([xmppAccount.domain isEqualToString:kOTRGoogleTalkDomain]) {
-            self.usernameTextField.placeholder = @"user@gmail.com";
-        }
-        else if ([xmppAccount.domain isEqualToString:kOTRFacebookDomain])
-        {
-            facebookHelpLabel = [[UILabel alloc] init];
-            facebookHelpLabel.text = FACEBOOK_HELP_STRING;
-            facebookHelpLabel.textAlignment = UITextAlignmentLeft;
-            facebookHelpLabel.lineBreakMode = UILineBreakModeWordWrap;
-            facebookHelpLabel.numberOfLines = 0;
-            facebookHelpLabel.font = [UIFont systemFontOfSize:14];
-            
-            self.facebookInfoButton = [UIButton buttonWithType:UIButtonTypeInfoDark];
-            [self.facebookInfoButton addTarget:self action:@selector(facebookInfoButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-            
-            [self.view addSubview:facebookHelpLabel];
-            [self.view addSubview:facebookInfoButton];
-            
-            self.usernameTextField.placeholder = @"";
-        }
-        else if ([account.protocol isEqualToString:kOTRProtocolTypeXMPP] && ![xmppAccount.domain isEqualToString:kOTRGoogleTalkDomain])  //Jabber domain fields
-        {
-            OTRXMPPAccount *xmppAccount = (OTRXMPPAccount*)self.account;
-
-            self.usernameTextField.placeholder = @"user@example.com";
-
-            self.domainLabel = [[UILabel alloc] init];
-            self.domainLabel.text = DOMAIN_STRING;
-            
-            [self.view addSubview:domainLabel];
-            
-            self.domainTextField = [[UITextField alloc] init];
-            self.domainTextField.delegate = self;
-            self.domainTextField.autocorrectionType = UITextAutocorrectionTypeNo;
-            self.domainTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-            self.domainTextField.borderStyle = UITextBorderStyleRoundedRect;
-            self.domainTextField.placeholder = OPTIONAL_STRING;
-            self.domainTextField.text = xmppAccount.domain;
-            [self.view addSubview:domainTextField];
-            
-            self.basicAdvancedSegmentedControl = [[UISegmentedControl alloc] initWithItems:[NSArray arrayWithObjects:BASIC_STRING,ADVANCED_STRING, nil]];
-            [self.basicAdvancedSegmentedControl addTarget:self action:@selector(segmentedControlChanged) forControlEvents:UIControlEventValueChanged];
-            self.basicAdvancedSegmentedControl.segmentedControlStyle = UISegmentedControlStyleBar;
-            self.basicAdvancedSegmentedControl.selectedSegmentIndex = 0;
-            
-            self.sslMismatchLabel = [[UILabel alloc]init];
-            self.sslMismatchLabel.text = SSL_MISMATCH_STRING;
-            [self.view addSubview:sslMismatchLabel];
-            
-            self.sslMismatchSwitch = [[UISwitch alloc]init];
-            [self.view addSubview:sslMismatchSwitch];
-            
-            self.selfSignedLabel = [[UILabel alloc]init];
-            self.selfSignedLabel.text = SELF_SIGNED_SSL_STRING;
-            [self.view addSubview:selfSignedLabel];
-            
-            self.selfSignedSwitch = [[UISwitch alloc]init];
-            [self.view addSubview:selfSignedSwitch];
-            
-            self.portLabel = [[UILabel alloc] init];
-            self.portLabel.text = PORT_STRING;
-            [self.view addSubview:portLabel];
-            self.portTextField = [[UITextField alloc] init];
-            self.portTextField.delegate = self;
-            self.portTextField.autocorrectionType = UITextAutocorrectionTypeNo;
-            self.portTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-            self.portTextField.borderStyle = UITextBorderStyleRoundedRect;
-            self.portTextField.placeholder = [NSString stringWithFormat:@"%d",xmppAccount.port];
-            [self.view addSubview:portTextField];
-
-            
-            [self.view addSubview:basicAdvancedSegmentedControl];
-            
-        }
-    }
-    
-
-    
     self.passwordTextField = [[UITextField alloc] init];
     self.passwordTextField.delegate = self;
     self.passwordTextField.borderStyle = UITextBorderStyleRoundedRect;
     self.passwordTextField.secureTextEntry = YES;
     
-    padding = [[UIView alloc] init];
-    
-    [self.view addSubview:usernameTextField];
-    [self.view addSubview:passwordTextField];
-    
-    
-
+    self.rememberPasswordSwitch = [[UISwitch alloc] init];
     
     NSString *loginButtonString = LOGIN_STRING;
     self.title = [account providerName];
     
     self.loginButton = [[UIBarButtonItem alloc] initWithTitle:loginButtonString style:UIBarButtonItemStyleDone target:self action:@selector(loginButtonPressed:)];
     self.navigationItem.rightBarButtonItem = loginButton;
-
+    
     if (!isNewAccount) {
         self.cancelButton = [[UIBarButtonItem alloc] initWithTitle:CANCEL_STRING style:UIBarButtonItemStyleBordered target:self action:@selector(cancelPressed:)];
         self.navigationItem.leftBarButtonItem = cancelButton;
-
     }
+    
+    NSString * accountDomainString = [[self.account accountDictionary] objectForKey:kOTRAccountDomainKey];
+    
+    if ([accountDomainString isEqualToString:kOTRGoogleTalkDomain]) {
+        self.usernameTextField.placeholder = GOOGLE_TALK_EXAMPLE_STRING;
+    }
+    else if([accountDomainString isEqualToString:kOTRFacebookDomain])
+    {
+        facebookHelpLabel = [[UILabel alloc] init];
+        facebookHelpLabel.text = FACEBOOK_HELP_STRING;
+        facebookHelpLabel.textAlignment = UITextAlignmentLeft;
+        facebookHelpLabel.lineBreakMode = UILineBreakModeWordWrap;
+        facebookHelpLabel.numberOfLines = 0;
+        facebookHelpLabel.font = [UIFont systemFontOfSize:14];
+        
+        self.facebookInfoButton = [UIButton buttonWithType:UIButtonTypeInfoDark];
+        [self.facebookInfoButton addTarget:self action:@selector(facebookInfoButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+        
+        [self.view addSubview:facebookHelpLabel];
+        [self.view addSubview:facebookInfoButton];
+        
+        self.usernameTextField.placeholder = @"";
+    }
+    else if([account.protocol isEqualToString:kOTRProtocolTypeXMPP])
+    {
+        self.usernameTextField.placeholder = @"user@example.com";
+        
+        self.domainTextField = [[UITextField alloc] init];
+        self.domainTextField.delegate = self;
+        self.domainTextField.autocorrectionType = UITextAutocorrectionTypeNo;
+        self.domainTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+        self.domainTextField.borderStyle = UITextBorderStyleRoundedRect;
+        self.domainTextField.placeholder = OPTIONAL_STRING;
+        self.domainTextField.text = accountDomainString;
+        
+        self.sslMismatchSwitch = [[UISwitch alloc]init];
+        self.selfSignedSwitch = [[UISwitch alloc] init];
+        
+        self.portTextField = [[UITextField alloc] init];
+        self.portTextField.delegate = self;
+        self.portTextField.autocorrectionType = UITextAutocorrectionTypeNo;
+        self.portTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+        self.portTextField.borderStyle = UITextBorderStyleRoundedRect;
+        self.portTextField.placeholder = [NSString stringWithFormat:@"%@",[[self.account accountDictionary] objectForKey:kOTRXMPPAccountPortNumber]];
+    }
+    
 }
 
 - (void) viewDidLoad 
@@ -227,7 +171,194 @@
      selector:@selector(protocolLoginSuccess:)
      name:kOTRProtocolLoginSuccess
      object:nil ];
+    
+    [self setUpFields];
+    
+    
+    UITableView * loginTableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
+    loginTableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+    [loginTableView setDelegate:self];
+    [loginTableView setDataSource:self];
+    [self.view addSubview:loginTableView];
 }
+
+-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    NSString * domainValueString = [[self.account accountDictionary] objectForKey:kOTRAccountDomainKey];
+    if ([domainValueString isEqualToString:kOTRFacebookDomain] || [domainValueString isEqualToString:kOTRGoogleTalkDomain] || [[[self.account accountDictionary] objectForKey:kOTRAccountProtocolKey] isEqualToString:kOTRProtocolTypeAIM])
+    {
+        return 1;
+    }
+    return 2;
+    
+}
+
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    if(section == 0)
+    {
+        if ([[[self.account accountDictionary] objectForKey:kOTRAccountDomainKey] isEqualToString:kOTRFacebookDomain]) {
+            return 4;
+        }
+        return 3;
+    }
+    return 3;
+    
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    if(tableView.numberOfSections > 0)
+    {
+        if(section == 0)
+            return BASIC_STRING;
+        else if (section == 1)
+            return ADVANCED_STRING;
+    }
+    return @"";
+}
+
+
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSString * usernameTextFieldIdentifier = @"usernameTextFieldCell";
+    NSString * passwordTextFieldIdentifier = @"passwordTextFieldCell";
+    NSString * domainTextFieldIdentifier = @"domainTextFieldCell";
+    NSString * faceBookHelpIdentifier = @"faceBookHelpIdentifier";
+    NSString * switchIdentifier = @"switchIdentifier";
+    //NSString * textFieldIdentifier = @"textFieldCell";
+    
+    UITableViewCell * cell;
+    
+    if(indexPath.section == 0)
+    {
+        if( indexPath.row == 0)
+        {
+            cell = [tableView dequeueReusableCellWithIdentifier:usernameTextFieldIdentifier];
+            if (cell == nil)
+            {
+                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:usernameTextFieldIdentifier];
+            }
+            
+            cell.textLabel.text = USERNAME_STRING;
+            [cell layoutIfNeeded];
+            self.usernameTextField.frame = CGRectMake(cell.textLabel.frame.size.width+10, cell.textLabel.frame.origin.y, 200, cell.contentView.frame.size.height-20);
+            self.usernameTextField.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+            self.usernameTextField.backgroundColor = [UIColor clearColor];
+            
+            [cell.contentView addSubview:self.usernameTextField];
+        }
+        else if(indexPath.row == 1 && [[[self.account accountDictionary] objectForKey:kOTRAccountDomainKey] isEqualToString:kOTRFacebookDomain])
+        {
+            cell = [tableView dequeueReusableCellWithIdentifier:faceBookHelpIdentifier];
+            if (cell == nil)
+            {
+                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:faceBookHelpIdentifier];
+                
+                facebookHelpLabel = [[UILabel alloc] init];
+                facebookHelpLabel.text = FACEBOOK_HELP_STRING;
+                facebookHelpLabel.textAlignment = UITextAlignmentLeft;
+                facebookHelpLabel.lineBreakMode = UILineBreakModeWordWrap;
+                facebookHelpLabel.numberOfLines = 0;
+                facebookHelpLabel.font = [UIFont systemFontOfSize:14];
+                facebookHelpLabel.backgroundColor = [UIColor clearColor];
+                facebookHelpLabel.frame = CGRectMake(5, 5, 250, 40);
+                facebookHelpLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+                
+                self.facebookInfoButton = [UIButton buttonWithType:UIButtonTypeInfoDark];
+                [self.facebookInfoButton addTarget:self action:@selector(facebookInfoButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+                self.facebookInfoButton.frame = CGRectMake(0, 0, self.facebookInfoButton.frame.size.width, self.facebookInfoButton.frame.size.height);
+                
+                [cell.contentView addSubview:facebookHelpLabel];
+                cell.accessoryView = facebookInfoButton;
+            }
+            
+            
+        }
+        else if (indexPath.row == 1 || ( indexPath.row == 2 && [[[self.account accountDictionary] objectForKey:kOTRAccountDomainKey] isEqualToString:kOTRFacebookDomain]))
+        {
+            cell = [tableView dequeueReusableCellWithIdentifier:passwordTextFieldIdentifier];
+            if (cell == nil)
+            {
+                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:passwordTextFieldIdentifier];
+            }
+            
+            
+            cell.textLabel.text = PASSWORD_STRING;
+            [cell layoutIfNeeded];
+            self.passwordTextField.frame = CGRectMake(cell.textLabel.frame.size.width+10, cell.textLabel.frame.origin.y, 200, cell.contentView.frame.size.height-20);
+            self.passwordTextField.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+            self.passwordTextField.backgroundColor = [UIColor clearColor];
+            
+            [cell.contentView addSubview:self.passwordTextField];
+        }
+        else if (indexPath.row == 2 || ( indexPath.row == 3 && [[[self.account accountDictionary] objectForKey:kOTRAccountDomainKey] isEqualToString:kOTRFacebookDomain]))
+        {
+            cell = [tableView dequeueReusableCellWithIdentifier:switchIdentifier];
+            if (cell == nil)
+            {
+                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:switchIdentifier];
+            }
+            [cell layoutIfNeeded];
+            
+            cell.textLabel.text = REMEMBER_PASSWORD_STRING;
+            cell.accessoryView = self.rememberPasswordSwitch;
+        }
+        
+    }
+    else if(indexPath.section == 1)
+    {
+        cell = [tableView dequeueReusableCellWithIdentifier:domainTextFieldIdentifier];
+        if (cell == nil)
+        {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:domainTextFieldIdentifier];
+            
+        }
+        
+        if( indexPath.row == 0)
+        {
+            cell.textLabel.text = DOMAIN_STRING;
+            [cell layoutIfNeeded];
+            self.domainTextField.frame = CGRectMake(cell.textLabel.frame.size.width+10, cell.textLabel.frame.origin.y, 200, cell.contentView.frame.size.height-20);
+            self.domainTextField.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+            
+            [cell.contentView addSubview:self.domainTextField];
+        }
+        else if(indexPath.row == 1)
+        {
+            cell = [tableView dequeueReusableCellWithIdentifier:switchIdentifier];
+            if (cell == nil)
+            {
+                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:switchIdentifier];
+            }
+            cell.textLabel.text = SSL_MISMATCH_STRING;
+            cell.accessoryView = sslMismatchSwitch;
+        }
+        else if (indexPath.row == 2)
+        {
+            cell = [tableView dequeueReusableCellWithIdentifier:switchIdentifier];
+            if (cell == nil)
+            {
+                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:switchIdentifier];
+            }
+            cell.textLabel.text = SELF_SIGNED_SSL_STRING;
+            cell.accessoryView = selfSignedSwitch;
+        }
+
+        
+    }
+    
+    
+    
+    //cell.userInteractionEnabled = NO;
+    return cell;
+}
+
+-(void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+
 
 - (CGSize) textSizeForLabel:(UILabel*)label {
     return [label.text sizeWithFont:label.font];
@@ -339,7 +470,7 @@
     {
         CGFloat facebookHelpLabeFrameYOrigin = usernameLabelFrameYOrigin + self.usernameLabel.frame.size.height +kFieldBuffer;
         
-        facebookHelpLabel.frame = CGRectMake(10, facebookHelpLabeFrameYOrigin, self.view.frame.size.width-40, 21);
+        //facebookHelpLabel.frame = CGRectMake(10, facebookHelpLabeFrameYOrigin, self.view.frame.size.width-40, 21);
         
         CGSize maximumLabelSize = CGSizeMake(296,9999);
         
