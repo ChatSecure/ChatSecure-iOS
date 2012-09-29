@@ -1,5 +1,5 @@
 //
-//  OTRStoreViewController.h
+//  OTRPushController.m
 //  Off the Record
 //
 //  Created by Christopher Ballinger on 9/28/12.
@@ -20,15 +20,37 @@
 //  You should have received a copy of the GNU General Public License
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
-#import <UIKit/UIKit.h>
-#import <StoreKit/StoreKit.h>
-#import "OTRStoreTableViewCell.h"
-#import "OTRPurchaseController.h"
+#import "OTRPushController.h"
 
-@interface OTRStoreViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, OTRPurchaseControllerDelegate>
+@implementation OTRPushController
 
-@property (nonatomic, weak) OTRPurchaseController *purchaseController;
-@property (nonatomic, weak) NSArray *products;
-@property (nonatomic, strong) UITableView *productTableView;
+
+- (id) init {
+    if (self = [super init]) {
+    }
+    return self;
+}
+
++ (OTRPushController*)sharedInstance
+{
+    static dispatch_once_t once;
+    static OTRPushController *sharedInstance;
+    dispatch_once(&once, ^{
+        sharedInstance = [[OTRPushController alloc] init];
+    });
+    return sharedInstance;
+}
+
++ (void) registerForPushNotifications {
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+}
+
+- (void) registerWithPaymentTransaction:(SKPaymentTransaction*)transaction {
+    
+}
+
+- (void) updateDevicePushToken:(NSData *)devicePushToken {
+    
+}
 
 @end

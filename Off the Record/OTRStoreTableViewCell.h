@@ -1,5 +1,5 @@
 //
-//  OTRStoreViewController.h
+//  OTRStoreTableViewCell.h
 //  Off the Record
 //
 //  Created by Christopher Ballinger on 9/28/12.
@@ -22,13 +22,9 @@
 
 #import <UIKit/UIKit.h>
 #import <StoreKit/StoreKit.h>
-#import "OTRStoreTableViewCell.h"
-#import "OTRPurchaseController.h"
 
-@interface OTRStoreViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, OTRPurchaseControllerDelegate>
+@interface OTRStoreTableViewCell : UITableViewCell
 
-@property (nonatomic, weak) OTRPurchaseController *purchaseController;
-@property (nonatomic, weak) NSArray *products;
-@property (nonatomic, strong) UITableView *productTableView;
+@property (nonatomic, strong) SKProduct *product;
 
 @end

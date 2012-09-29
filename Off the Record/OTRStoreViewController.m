@@ -5,22 +5,36 @@
 //  Created by Christopher Ballinger on 9/28/12.
 //  Copyright (c) 2012 Chris Ballinger. All rights reserved.
 //
+//  This file is part of ChatSecure.
+//
+//  ChatSecure is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//
+//  ChatSecure is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "OTRStoreViewController.h"
 #import "MBProgressHUD.h"
-#import "AFNetworking.h"
 #import "Strings.h"
 
-#define SERVER_URL @"http://127.0.0.1:5000/" 
-#define REQUEST_PRODUCT_IDENTIFIERS @"request_product_identifiers"
-#define PRODUCT_IDENTIFIERS_KEY @"identifiers"
 
 @interface OTRStoreViewController ()
 
 @end
 
 @implementation OTRStoreViewController
-@synthesize productIdentifiers, productTableView;
+@synthesize productTableView, products, purchaseController;
+
+- (void) dealloc {
+    self.productTableView = nil;
+}
 
 - (id)init {
     if(self = [super init]) {
@@ -28,6 +42,9 @@
         self.productTableView.delegate = self;
         self.productTableView.dataSource = self;
         self.title = STORE_STRING;
+        self.purchaseController = [OTRPurchaseController sharedInstance];
+        purchaseController.delegate = self;
+        self.products = [NSArray array];
     }
     return self;
 }
@@ -37,54 +54,47 @@
 	[self.view addSubview:productTableView];
 }
 
-- (void) requestProductIdentifiers {
-    // Code to request product identifiers here
-    NSURLRequest *productsRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:[SERVER_URL stringByAppendingString:REQUEST_PRODUCT_IDENTIFIERS]]];
-    AFJSONRequestOperation *request = [AFJSONRequestOperation JSONRequestOperationWithRequest:productsRequest success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
-        self.productIdentifiers = [JSON objectForKey:PRODUCT_IDENTIFIERS_KEY];
-        [self hideHUD];
-        [productTableView reloadData];
-    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-        NSLog(@"Error loading product identifiers: %@%@", [error localizedDescription], [error userInfo]);
-        [self hideHUD];
-    }];
-    [request start];
-}
-
 - (void) hideHUD {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [MBProgressHUD hideHUDForView:self.view animated:YES];
-    });
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
 }
 
-     
+- (void) showHUD {
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+}
 
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     self.productTableView.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
     self.productTableView.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    [self requestProductIdentifiers];
+    [self showHUD];
+    [purchaseController requestProducts];
 }
 
 - (UITableViewCell*) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *cellIdentifier = @"CellIdentifier";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    OTRStoreTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
+        cell = [[OTRStoreTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
     }
-    cell.textLabel.text = [productIdentifiers objectAtIndex:indexPath.row];
+    SKProduct *product = [products objectAtIndex:indexPath.row];
+    cell.product = product;
     return cell;
 }
 
 - (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [productIdentifiers count];
+    return [products count];
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void) productsUpdated:(NSArray*)newProducts {
+    self.products = newProducts;
+    [self hideHUD];
+    [self.productTableView reloadData];
 }
 
 @end

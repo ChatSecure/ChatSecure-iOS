@@ -31,6 +31,8 @@
 #import "OTRUIKeyboardListener.h"
 #import "Appirater.h"
 #import "OTRConstants.h"
+#import "OTRPurchaseController.h"
+#import "OTRPushController.h"
 
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
@@ -97,6 +99,10 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     [OTRUIKeyboardListener shared];
   
     [Appirater appLaunched:YES];
+    
+    OTRPurchaseController *purchaseController = [OTRPurchaseController sharedInstance];
+    [purchaseController requestProducts];
+    [OTRPushController registerForPushNotifications];
     
     return YES;
 }
@@ -257,6 +263,15 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     } else if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         [sheet showInView:self.window];
     }
+}
+
+// Delegation methods
+- (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)devToken {
+    [[OTRPushController sharedInstance] updateDevicePushToken:devToken];
+}
+
+- (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {
+    NSLog(@"Error in registration. Error: %@%@", [err localizedDescription], [err userInfo]);
 }
 
 @end

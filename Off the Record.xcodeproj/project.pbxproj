@@ -156,6 +156,10 @@
 		D96B8199161652EA00F97D0F /* CHANGELOG.md in Resources */ = {isa = PBXBuildFile; fileRef = D96B8195161652EA00F97D0F /* CHANGELOG.md */; };
 		D96B819A161652EA00F97D0F /* JSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = D96B8197161652EA00F97D0F /* JSONKit.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		D96B819B161652EA00F97D0F /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = D96B8198161652EA00F97D0F /* README.md */; };
+		D96B81A116165C5D00F97D0F /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D96B81A016165C5D00F97D0F /* StoreKit.framework */; };
+		D96B81A416165F3400F97D0F /* OTRStoreTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D96B81A316165F3400F97D0F /* OTRStoreTableViewCell.m */; };
+		D96B81BE1616772A00F97D0F /* OTRPurchaseController.m in Sources */ = {isa = PBXBuildFile; fileRef = D96B81BD1616772A00F97D0F /* OTRPurchaseController.m */; };
+		D96B81C11616896D00F97D0F /* OTRPushController.m in Sources */ = {isa = PBXBuildFile; fileRef = D96B81C01616896D00F97D0F /* OTRPushController.m */; };
 		D974577715BE34E7002B9192 /* 31-circle-plus.png in Resources */ = {isa = PBXBuildFile; fileRef = D974577515BE34E7002B9192 /* 31-circle-plus.png */; };
 		D974577815BE34E7002B9192 /* 31-circle-plus@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D974577615BE34E7002B9192 /* 31-circle-plus@2x.png */; };
 		D974DABD15021E540028B2F4 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D974DABC15021E540028B2F4 /* libiconv.dylib */; };
@@ -679,6 +683,13 @@
 		D96B8196161652EA00F97D0F /* JSONKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONKit.h; sourceTree = "<group>"; };
 		D96B8197161652EA00F97D0F /* JSONKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONKit.m; sourceTree = "<group>"; };
 		D96B8198161652EA00F97D0F /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
+		D96B81A016165C5D00F97D0F /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		D96B81A216165F3400F97D0F /* OTRStoreTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRStoreTableViewCell.h; sourceTree = "<group>"; };
+		D96B81A316165F3400F97D0F /* OTRStoreTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRStoreTableViewCell.m; sourceTree = "<group>"; };
+		D96B81BC1616772A00F97D0F /* OTRPurchaseController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRPurchaseController.h; sourceTree = "<group>"; };
+		D96B81BD1616772A00F97D0F /* OTRPurchaseController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRPurchaseController.m; sourceTree = "<group>"; };
+		D96B81BF1616896D00F97D0F /* OTRPushController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRPushController.h; sourceTree = "<group>"; };
+		D96B81C01616896D00F97D0F /* OTRPushController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRPushController.m; sourceTree = "<group>"; };
 		D974577515BE34E7002B9192 /* 31-circle-plus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "31-circle-plus.png"; sourceTree = "<group>"; };
 		D974577615BE34E7002B9192 /* 31-circle-plus@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "31-circle-plus@2x.png"; sourceTree = "<group>"; };
 		D974DABC15021E540028B2F4 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
@@ -983,6 +994,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D96B81A116165C5D00F97D0F /* StoreKit.framework in Frameworks */,
 				D92061E915E2E185003EEF3A /* libOTRKit.a in Frameworks */,
 				D989E88E15D4F92E0081DFD1 /* Twitter.framework in Frameworks */,
 				D93C31B7159A8B4F006316C7 /* Security.framework in Frameworks */,
@@ -1796,6 +1808,21 @@
 			path = JSONKit;
 			sourceTree = "<group>";
 		};
+		D96B81C216168C5600F97D0F /* Store */ = {
+			isa = PBXGroup;
+			children = (
+				D96B815D1616428100F97D0F /* OTRStoreViewController.h */,
+				D96B815E1616428100F97D0F /* OTRStoreViewController.m */,
+				D96B81BC1616772A00F97D0F /* OTRPurchaseController.h */,
+				D96B81BD1616772A00F97D0F /* OTRPurchaseController.m */,
+				D96B81BF1616896D00F97D0F /* OTRPushController.h */,
+				D96B81C01616896D00F97D0F /* OTRPushController.m */,
+				D96B81A216165F3400F97D0F /* OTRStoreTableViewCell.h */,
+				D96B81A316165F3400F97D0F /* OTRStoreTableViewCell.m */,
+			);
+			name = Store;
+			sourceTree = "<group>";
+		};
 		D9A7E09B1524131400EEDDB5 /* MWFeedParser */ = {
 			isa = PBXGroup;
 			children = (
@@ -2089,6 +2116,7 @@
 		D9F9376D13F44BD3009A3D84 = {
 			isa = PBXGroup;
 			children = (
+				D96B81A016165C5D00F97D0F /* StoreKit.framework */,
 				D97BF53A160150CE00DA91F9 /* Default-568h@2x.png */,
 				D9F9378013F44BD3009A3D84 /* Off the Record */,
 				D9D69B03141806150056FB9E /* 3rd Party Frameworks */,
@@ -2132,8 +2160,7 @@
 		D9F9378013F44BD3009A3D84 /* Off the Record */ = {
 			isa = PBXGroup;
 			children = (
-				D96B815D1616428100F97D0F /* OTRStoreViewController.h */,
-				D96B815E1616428100F97D0F /* OTRStoreViewController.m */,
+				D96B81C216168C5600F97D0F /* Store */,
 				D9D69B07141806BB0056FB9E /* Model */,
 				D9E068EF13F44D2900AC10A3 /* OTRBuddyListViewController.h */,
 				D9E068F013F44D2900AC10A3 /* OTRBuddyListViewController.m */,
@@ -2610,6 +2637,9 @@
 				D96B81921616529500F97D0F /* AFXMLRequestOperation.m in Sources */,
 				D96B81931616529500F97D0F /* UIImageView+AFNetworking.m in Sources */,
 				D96B819A161652EA00F97D0F /* JSONKit.m in Sources */,
+				D96B81A416165F3400F97D0F /* OTRStoreTableViewCell.m in Sources */,
+				D96B81BE1616772A00F97D0F /* OTRPurchaseController.m in Sources */,
+				D96B81C11616896D00F97D0F /* OTRPushController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2741,7 +2771,7 @@
 					"\"$(SRCROOT)/OTRKit/dependencies/include\"",
 				);
 				INFOPLIST_FILE = "Off the Record/Off the Record-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/XMPPFramework/Vendor/libidn\"",
@@ -2772,7 +2802,7 @@
 					"\"$(SRCROOT)/OTRKit/dependencies/include\"",
 				);
 				INFOPLIST_FILE = "Off the Record/Off the Record-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/XMPPFramework/Vendor/libidn\"",

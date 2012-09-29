@@ -1,5 +1,5 @@
 //
-//  OTRStoreViewController.h
+//  OTRPushController.h
 //  Off the Record
 //
 //  Created by Christopher Ballinger on 9/28/12.
@@ -20,15 +20,17 @@
 //  You should have received a copy of the GNU General Public License
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 #import <StoreKit/StoreKit.h>
-#import "OTRStoreTableViewCell.h"
-#import "OTRPurchaseController.h"
 
-@interface OTRStoreViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, OTRPurchaseControllerDelegate>
+@interface OTRPushController : NSObject
 
-@property (nonatomic, weak) OTRPurchaseController *purchaseController;
-@property (nonatomic, weak) NSArray *products;
-@property (nonatomic, strong) UITableView *productTableView;
+- (void) registerWithPaymentTransaction:(SKPaymentTransaction*)transaction;
+- (void) updateDevicePushToken:(NSData*)devicePushToken;
+
++ (void) registerForPushNotifications;
+
++ (OTRPushController*) sharedInstance;
+
 
 @end

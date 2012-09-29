@@ -150,3 +150,5 @@
 #define JABBER_STRING NSLocalizedString(@"Jabber (XMPP)","the name for jabber, also include (XMPP) at the end")
 
 
+// OTRStoreViewController
+#define CANT_MAKE_PAYMENTS_STRING NSLocalizedString(@"Sorry, payments aren't allowed at this time. Please check your parent control settings and try again.", @"String to describe when payments aren't allowed.")
