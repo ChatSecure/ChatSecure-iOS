@@ -21,12 +21,18 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "OTRPushController.h"
+#import "OTRPushAPIClient.h"
+#import "NSData+XMPP.h"
+
+#define SERVER_URL @"http://192.168.1.44:5000/"
+#define REGISTER_PATH @"register"
 
 @implementation OTRPushController
-
+@synthesize pushClient;
 
 - (id) init {
     if (self = [super init]) {
+        self.pushClient = [OTRPushAPIClient sharedClient];
     }
     return self;
 }
@@ -45,12 +51,28 @@
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
 }
 
-- (void) registerWithPaymentTransaction:(SKPaymentTransaction*)transaction {
-    
++ (NSURL*) baseURL {
+    return [NSURL URLWithString:SERVER_URL];
+}
+
+- (void) registerWithReceipt:(NSData*)receipt transactionIdentifier:(NSString*)transactionIdentifier {
+    NSString *receiptString = [receipt base64Encoded];
+    //NSLog(@"Receipt bytes: %@", [receipt description]);
+    if (!receiptString) {
+        NSLog(@"Receipt string is nil!");
+        return;
+    }
+    //NSLog(@"Receipt string: %@", receiptString);
+    NSDictionary *parameters = [NSDictionary dictionaryWithObject:receiptString forKey:@"receipt-data"];
+    [pushClient postPath:REGISTER_PATH parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"response: %@", [responseObject description]);
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"Error registering with receipt: %@%@", [error localizedDescription], [error userInfo]);
+    }];
 }
 
 - (void) updateDevicePushToken:(NSData *)devicePushToken {
-    
+    NSLog(@"Updated device push token: %s", [devicePushToken bytes]);
 }
 
 @end

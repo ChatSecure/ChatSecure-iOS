@@ -22,15 +22,19 @@
 
 #import <Foundation/Foundation.h>
 #import <StoreKit/StoreKit.h>
+#import "OTRPushAPIClient.h"
 
 @interface OTRPushController : NSObject
 
-- (void) registerWithPaymentTransaction:(SKPaymentTransaction*)transaction;
+@property (nonatomic, weak) OTRPushAPIClient *pushClient;
+
+- (void) registerWithReceipt:(NSData*)receipt transactionIdentifier:(NSString*)transactionIdentifier;
 - (void) updateDevicePushToken:(NSData*)devicePushToken;
 
 + (void) registerForPushNotifications;
 
 + (OTRPushController*) sharedInstance;
++ (NSURL*) baseURL;
 
 
 @end

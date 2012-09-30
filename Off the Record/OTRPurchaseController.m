@@ -25,7 +25,6 @@
 #import "Strings.h"
 #import "OTRPushController.h"
 
-#define SERVER_URL @"http://127.0.0.1:5000/"
 #define REQUEST_PRODUCT_IDENTIFIERS @"request_product_identifiers"
 #define PRODUCT_IDENTIFIERS_KEY @"identifiers"
 
@@ -63,7 +62,7 @@
 
 - (void) requestProductIdentifiers {
     // Code to request product identifiers here
-    NSURLRequest *productsRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:[SERVER_URL stringByAppendingString:REQUEST_PRODUCT_IDENTIFIERS]]];
+    NSURLRequest *productsRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:REQUEST_PRODUCT_IDENTIFIERS relativeToURL:[OTRPushController baseURL]]];
     AFJSONRequestOperation *request = [AFJSONRequestOperation JSONRequestOperationWithRequest:productsRequest success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
         [self fetchProductsWithIdentifiers:[NSSet setWithArray:[JSON objectForKey:PRODUCT_IDENTIFIERS_KEY]]];
     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
@@ -99,15 +98,25 @@
 
 - (void)paymentQueue:(SKPaymentQueue *)queue updatedTransactions:(NSArray *)transactions {
     for (SKPaymentTransaction *transaction in transactions) {
+        NSLog(@"Transaction: %@", transaction.transactionIdentifier);
         switch (transaction.transactionState) {
             case SKPaymentTransactionStatePurchased:
-                [[OTRPushController sharedInstance] registerWithPaymentTransaction:transaction];
+                NSLog(@"Transaction purchased");
+                [[OTRPushController sharedInstance] registerWithReceipt:transaction.transactionReceipt transactionIdentifier:transaction.transactionIdentifier];
+                [[SKPaymentQueue defaultQueue] finishTransaction: transaction];
                 break;
             case SKPaymentTransactionStateFailed:
+                NSLog(@"Transaction failed");
+                [[SKPaymentQueue defaultQueue] finishTransaction: transaction];
                 break;
             case SKPaymentTransactionStateRestored:
+                NSLog(@"Original transaction restored: %@", transaction.originalTransaction.transactionIdentifier);
+                [[OTRPushController sharedInstance] registerWithReceipt:transaction.transactionReceipt transactionIdentifier:transaction.originalTransaction.transactionIdentifier];
+                [[SKPaymentQueue defaultQueue] finishTransaction: transaction]; 
+                NSLog(@"Transaction restored");
                 break;
             case SKPaymentTransactionStatePurchasing:
+                NSLog(@"Purchasing transaction... ");
                 break;
             default:
                 break;

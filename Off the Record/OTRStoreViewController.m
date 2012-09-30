@@ -45,6 +45,7 @@
         self.purchaseController = [OTRPurchaseController sharedInstance];
         purchaseController.delegate = self;
         self.products = [NSArray array];
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:RESTORE_STRING style:UIBarButtonItemStyleBordered target:self action:@selector(restorePurchases:)];
     }
     return self;
 }
@@ -60,6 +61,10 @@
 
 - (void) showHUD {
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+}
+
+- (void) restorePurchases:(id)sender {
+    [purchaseController restorePurchases];
 }
 
 - (void) viewWillAppear:(BOOL)animated {
