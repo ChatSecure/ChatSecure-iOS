@@ -153,3 +153,4 @@
 // OTRStoreViewController
 #define CANT_MAKE_PAYMENTS_STRING NSLocalizedString(@"Sorry, payments aren't allowed at this time. Please check your parent control settings and try again.", @"String to describe when payments aren't allowed.")
 #define RESTORE_STRING NSLocalizedString(@"Restore", @"Title for Button that restores your transactions")
+#define PURCHASED_STRING NSLocalizedString(@"Purchased", @"Shown when a product has been purchased already")

@@ -24,7 +24,7 @@
 #import "OTRPushAPIClient.h"
 #import "NSData+XMPP.h"
 
-#define SERVER_URL @"http://192.168.1.44:5000/"
+#define SERVER_URL @"http://192.168.1.82:5000/"
 #define REGISTER_PATH @"register"
 
 @implementation OTRPushController

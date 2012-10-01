@@ -22,6 +22,7 @@
 
 #import "OTRStoreTableViewCell.h"
 #import "OTRPurchaseController.h"
+#import "Strings.h"
 
 @implementation OTRStoreTableViewCell
 @synthesize product;
@@ -37,16 +38,28 @@
     [numberFormatter setLocale:product.priceLocale];
     NSString *priceString = [numberFormatter stringFromNumber:product.price];
     
+    BOOL productPurchased = [[OTRPurchaseController sharedInstance] isProductIdentifierPurchased:product.productIdentifier];
+    if (productPurchased) {
+        priceString = PURCHASED_STRING;
+    }
+    
     UISegmentedControl *buyButton = [[UISegmentedControl alloc]initWithItems:@[priceString]];
     buyButton.segmentedControlStyle = UISegmentedControlStyleBar;
     buyButton.momentary = YES;
-    [buyButton addTarget:self
-                  action:@selector(buyButtonPressed:)
-        forControlEvents:UIControlEventValueChanged];
+    if (productPurchased) {
+        buyButton.enabled = NO;
+    } else {
+        [buyButton addTarget:self
+                      action:@selector(buyButtonPressed:)
+            forControlEvents:UIControlEventValueChanged];
+    }
     self.accessoryView = buyButton;
 }
 
 - (void) buyButtonPressed:(id)sender {
+    UIActivityIndicatorView *activityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    [activityView startAnimating];
+    self.accessoryView = activityView;
     [[OTRPurchaseController sharedInstance] buyProduct:self.product];
 }
 

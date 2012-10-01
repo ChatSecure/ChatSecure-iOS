@@ -34,6 +34,7 @@
 
 - (void) dealloc {
     self.productTableView = nil;
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (id)init {
@@ -46,8 +47,13 @@
         purchaseController.delegate = self;
         self.products = [NSArray array];
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:RESTORE_STRING style:UIBarButtonItemStyleBordered target:self action:@selector(restorePurchases:)];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedProductUpdateNotification:) name:kOTRPurchaseControllerProductUpdateNotification object:purchaseController];
     }
     return self;
+}
+
+- (void) receivedProductUpdateNotification:(NSNotification*)notification {
+    [self.productTableView reloadData];
 }
 
 - (void) loadView {

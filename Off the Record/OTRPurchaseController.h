@@ -24,6 +24,8 @@
 #import <StoreKit/StoreKit.h>
 #import "OTRStoreTableViewCell.h"
 
+#define kOTRPurchaseControllerProductUpdateNotification @"kOTRPurchaseControllerProductUpdateNotification"
+
 @protocol OTRPurchaseControllerDelegate <NSObject>
 @required
 - (void) productsUpdated:(NSArray*)products;
@@ -37,6 +39,9 @@
 - (void) requestProducts;
 - (void) buyProduct:(SKProduct *)product;
 - (void) restorePurchases;
+
+- (BOOL) isProductIdentifierPurchased:(NSString*)productIdentifier;
+- (void) setProductIdentifier:(NSString*)productIdentifier purchased:(BOOL)purchased;
 
 + (OTRPurchaseController*) sharedInstance;
 

@@ -28,6 +28,8 @@
 #define REQUEST_PRODUCT_IDENTIFIERS @"request_product_identifiers"
 #define PRODUCT_IDENTIFIERS_KEY @"identifiers"
 
+#define PRODUCTS_KEY @"products"
+
 @implementation OTRPurchaseController
 @synthesize products;
 
@@ -103,16 +105,21 @@
             case SKPaymentTransactionStatePurchased:
                 NSLog(@"Transaction purchased");
                 [[OTRPushController sharedInstance] registerWithReceipt:transaction.transactionReceipt transactionIdentifier:transaction.transactionIdentifier];
+                [self setProductIdentifier:transaction.payment.productIdentifier purchased:YES];
+                [self sendProductUpdateNotification];
                 [[SKPaymentQueue defaultQueue] finishTransaction: transaction];
                 break;
             case SKPaymentTransactionStateFailed:
                 NSLog(@"Transaction failed");
+                [self sendProductUpdateNotification];
                 [[SKPaymentQueue defaultQueue] finishTransaction: transaction];
                 break;
             case SKPaymentTransactionStateRestored:
                 NSLog(@"Original transaction restored: %@", transaction.originalTransaction.transactionIdentifier);
                 [[OTRPushController sharedInstance] registerWithReceipt:transaction.transactionReceipt transactionIdentifier:transaction.originalTransaction.transactionIdentifier];
-                [[SKPaymentQueue defaultQueue] finishTransaction: transaction]; 
+                [self setProductIdentifier:transaction.payment.productIdentifier purchased:YES];
+                [self sendProductUpdateNotification];
+                [[SKPaymentQueue defaultQueue] finishTransaction: transaction];
                 NSLog(@"Transaction restored");
                 break;
             case SKPaymentTransactionStatePurchasing:
@@ -122,6 +129,44 @@
                 break;
         }
     }
+}
+
+- (void) sendProductUpdateNotification {
+    [[NSNotificationCenter defaultCenter] postNotificationName:kOTRPurchaseControllerProductUpdateNotification object:self];
+}
+
+- (BOOL) isProductIdentifierPurchased:(NSString*)productIdentifier {
+    NSMutableDictionary *productsDictionary = [self productsDictionary];
+    NSNumber *productValue = [productsDictionary objectForKey:productIdentifier];
+    if (!productValue) {
+        return NO;
+    }
+    return [productValue boolValue];
+}
+
+- (NSMutableDictionary*) productsDictionary {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSMutableDictionary *productDictionary = [NSMutableDictionary dictionaryWithDictionary:[defaults objectForKey:PRODUCTS_KEY]];
+    if (!productDictionary) {
+        productDictionary = [NSMutableDictionary dictionary];
+    }
+    return productDictionary;
+}
+
+- (void) saveProductsDictionary:(NSMutableDictionary*)productsDictionary {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObject:productsDictionary forKey:PRODUCTS_KEY];
+    BOOL success = [defaults synchronize];
+    if (!success) {
+        NSLog(@"Product preferences not saved to disk!");
+    }
+}
+
+
+- (void) setProductIdentifier:(NSString*)productIdentifier purchased:(BOOL)purchased {
+    NSMutableDictionary *productsDictionary = [self productsDictionary];
+    [productsDictionary setObject:[NSNumber numberWithBool:purchased] forKey:productIdentifier];
+    [self saveProductsDictionary:productsDictionary];
 }
 
 - (void) restorePurchases {
