@@ -23,6 +23,8 @@
 #import <UIKit/UIKit.h>
 #import "OTRProtocolManager.h"
 #import "MBProgressHUD.h"
+#import "Strings.h"
+#import "OTRConstants.h"
 
 #define kTextLabelTextKey @"textLabelTextKey"
 #define kCellTypeKey @"cellTypeKey"
@@ -40,22 +42,10 @@
 
 @property (nonatomic, retain) OTRAccount *account;
 
-@property (nonatomic, retain) UILabel *usernameLabel;
-@property (nonatomic, retain) UILabel *passwordLabel;
-@property (nonatomic, strong) UILabel *domainLabel;
-@property (nonatomic, retain) UILabel *rememberPasswordLabel;
 @property (nonatomic, retain) UISwitch *rememberPasswordSwitch;
 @property (nonatomic, retain) UIImageView *logoView;
 @property (nonatomic, retain) UITextField *usernameTextField;
 @property (nonatomic, retain) UITextField *passwordTextField;
-@property (nonatomic, strong) UITextField *domainTextField;
-@property (nonatomic, strong) UISegmentedControl *basicAdvancedSegmentedControl;
-@property (nonatomic, strong) UILabel *sslMismatchLabel;
-@property (nonatomic, strong) UISwitch *sslMismatchSwitch;
-@property (nonatomic, strong) UILabel *selfSignedLabel;
-@property (nonatomic, strong) UISwitch *selfSignedSwitch;
-@property (nonatomic, strong) UILabel *portLabel;
-@property (nonatomic, strong) UITextField *portTextField;
 
 @property (nonatomic, retain) UIBarButtonItem *loginButton;
 @property (nonatomic, retain) UIBarButtonItem *cancelButton;
@@ -72,6 +62,7 @@
 -(BOOL)checkFields;
 
 -(void)addCellinfoWithSection:(NSInteger)section row:(NSInteger)row labelText:(id)text cellType:(NSString *)type userInputView:(UIView *)inputView;
+-(void)readInFields;
 
 +(OTRLoginViewController *)loginViewControllerWithAcccount:(OTRAccount *)account;
 

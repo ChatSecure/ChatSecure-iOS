@@ -7,6 +7,7 @@
 //
 
 #import "OTRGoogleTalkLoginViewController.h"
+#import "Strings.h"
 
 @interface OTRGoogleTalkLoginViewController ()
 
@@ -26,7 +27,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
+	
+    self.usernameTextField.placeholder = GOOGLE_TALK_EXAMPLE_STRING;
 }
 
 - (void)didReceiveMemoryWarning
