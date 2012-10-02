@@ -27,7 +27,14 @@
 #import "OTRXMPPAccount.h"
 #import "OTRAppDelegate.h"
 
+#import "OTRXMPPLoginViewController.h"
+#import "OTRFacebookLoginViewController.h"
+#import "OTROscarLoginViewController.h"
+#import "OTRGoogleTalkLoginViewController.h"
+#import "OTRInLineTextEditTableViewCell.h"
+
 #define kFieldBuffer 20;
+
 
 @implementation OTRLoginViewController
 @synthesize usernameTextField;
@@ -39,11 +46,12 @@
 @synthesize timeoutTimer;
 @synthesize account;
 @synthesize domainLabel,domainTextField;
-@synthesize facebookInfoButton;
 @synthesize isNewAccount;
 @synthesize basicAdvancedSegmentedControl;
 @synthesize sslMismatchLabel,sslMismatchSwitch,selfSignedLabel,selfSignedSwitch;
 @synthesize portLabel, portTextField;
+
+@synthesize tableViewArray;
 
 - (void) dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kOTRProtocolLoginFail object:nil];
@@ -82,6 +90,9 @@
 
 -(void)setUpFields
 {
+    //tableViewArray = [[NSMutableArray alloc] init];
+    
+    
     self.usernameTextField = [[UITextField alloc] init];
     self.usernameTextField.delegate = self;
     self.usernameTextField.borderStyle = UITextBorderStyleRoundedRect;
@@ -89,13 +100,29 @@
     self.usernameTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     self.usernameTextField.text = account.username;
     
+    //NSDictionary * userNameCellDictionary = [NSDictionary dictionaryWithObjectsAndKeys:USERNAME_STRING,kTextLabelTextKey,kCellTypeTextField,kCellTypeKey,self.usernameTextField,kUserInputViewKey, nil];
+    
+    [self addCellinfoWithSection:0 row:0 labelText:USERNAME_STRING cellType:kCellTypeTextField userInputView:self.usernameTextField];
+    
     
     self.passwordTextField = [[UITextField alloc] init];
     self.passwordTextField.delegate = self;
     self.passwordTextField.borderStyle = UITextBorderStyleRoundedRect;
     self.passwordTextField.secureTextEntry = YES;
     
+    //NSDictionary * passwordCellDictionary = [NSDictionary dictionaryWithObjectsAndKeys:PASSWORD_STRING,kTextLabelTextKey,kCellTypeTextField,kCellTypeKey,self.passwordTextField,kUserInputViewKey, nil];
+    
+    [self addCellinfoWithSection:0 row:1 labelText:PASSWORD_STRING cellType:kCellTypeTextField userInputView:self.passwordTextField];
+    
     self.rememberPasswordSwitch = [[UISwitch alloc] init];
+    
+    //NSDictionary * RememberPasswordCellDictionary = [NSDictionary dictionaryWithObjectsAndKeys:REMEMBER_PASSWORD_STRING,kTextLabelTextKey,kCellTypeSwitch,kCellTypeKey,self.rememberPasswordSwitch,kUserInputViewKey, nil];
+    
+    [self addCellinfoWithSection:0 row:2 labelText:REMEMBER_PASSWORD_STRING cellType:kCellTypeSwitch userInputView:self.rememberPasswordSwitch];
+    
+    //NSMutableArray * basicSettingsArray = [NSMutableArray arrayWithObjects:userNameCellDictionary,passwordCellDictionary,RememberPasswordCellDictionary, nil];
+    
+    //[tableViewArray addObject:basicSettingsArray];
     
     NSString *loginButtonString = LOGIN_STRING;
     self.title = [account providerName];
@@ -112,23 +139,6 @@
     
     if ([accountDomainString isEqualToString:kOTRGoogleTalkDomain]) {
         self.usernameTextField.placeholder = GOOGLE_TALK_EXAMPLE_STRING;
-    }
-    else if([accountDomainString isEqualToString:kOTRFacebookDomain])
-    {
-        facebookHelpLabel = [[UILabel alloc] init];
-        facebookHelpLabel.text = FACEBOOK_HELP_STRING;
-        facebookHelpLabel.textAlignment = UITextAlignmentLeft;
-        facebookHelpLabel.lineBreakMode = UILineBreakModeWordWrap;
-        facebookHelpLabel.numberOfLines = 0;
-        facebookHelpLabel.font = [UIFont systemFontOfSize:14];
-        
-        self.facebookInfoButton = [UIButton buttonWithType:UIButtonTypeInfoDark];
-        [self.facebookInfoButton addTarget:self action:@selector(facebookInfoButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-        
-        [self.view addSubview:facebookHelpLabel];
-        [self.view addSubview:facebookInfoButton];
-        
-        self.usernameTextField.placeholder = @"";
     }
     else if([account.protocol isEqualToString:kOTRProtocolTypeXMPP])
     {
@@ -152,6 +162,23 @@
         self.portTextField.borderStyle = UITextBorderStyleRoundedRect;
         self.portTextField.placeholder = [NSString stringWithFormat:@"%@",[[self.account accountDictionary] objectForKey:kOTRXMPPAccountPortNumber]];
     }
+    
+}
+
+-(void)addCellinfoWithSection:(NSInteger)section row:(NSInteger)row labelText:(id)text cellType:(NSString *)type userInputView:(UIView *)inputView;
+{
+    if (!tableViewArray) {
+        self.tableViewArray = [[NSMutableArray alloc] init];
+        //[self.tableViewArray setObject:[[NSMutableArray alloc] init] atIndexedSubscript:section];
+        
+    }
+    if ([self.tableViewArray count]<(section+1)) {
+        [self.tableViewArray setObject:[[NSMutableArray alloc] init] atIndexedSubscript:section];
+    }
+    
+    NSDictionary * cellDictionary = [NSDictionary dictionaryWithObjectsAndKeys:text,kTextLabelTextKey,type,kCellTypeKey,inputView,kUserInputViewKey, nil];
+    
+    [[tableViewArray objectAtIndex:section] insertObject:cellDictionary atIndex:row];
     
 }
 
@@ -184,31 +211,19 @@
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    NSString * domainValueString = [[self.account accountDictionary] objectForKey:kOTRAccountDomainKey];
-    if ([domainValueString isEqualToString:kOTRFacebookDomain] || [domainValueString isEqualToString:kOTRGoogleTalkDomain] || [[[self.account accountDictionary] objectForKey:kOTRAccountProtocolKey] isEqualToString:kOTRProtocolTypeAIM])
-    {
-        return 1;
-    }
-    return 2;
+    return [tableViewArray count];
     
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if(section == 0)
-    {
-        if ([[[self.account accountDictionary] objectForKey:kOTRAccountDomainKey] isEqualToString:kOTRFacebookDomain]) {
-            return 4;
-        }
-        return 3;
-    }
-    return 3;
+        return [[tableViewArray objectAtIndex:section] count];
     
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    if(tableView.numberOfSections > 0)
+    if([tableViewArray count] > 1)
     {
         if(section == 0)
             return BASIC_STRING;
@@ -221,15 +236,53 @@
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    /*
     NSString * usernameTextFieldIdentifier = @"usernameTextFieldCell";
     NSString * passwordTextFieldIdentifier = @"passwordTextFieldCell";
     NSString * domainTextFieldIdentifier = @"domainTextFieldCell";
     NSString * faceBookHelpIdentifier = @"faceBookHelpIdentifier";
     NSString * switchIdentifier = @"switchIdentifier";
     //NSString * textFieldIdentifier = @"textFieldCell";
+     */
     
-    UITableViewCell * cell;
+    NSDictionary * cellDictionary = [[tableViewArray objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+    NSString * cellType = [cellDictionary objectForKey:kCellTypeKey];
     
+    UITableViewCell * cell = [tableView dequeueReusableCellWithIdentifier:cellType];
+    
+    if( [cellType isEqualToString:kCellTypeSwitch])
+    {
+        if(cell==nil)
+        {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellType];
+        }
+        cell.textLabel.text = [cellDictionary objectForKey:kTextLabelTextKey];
+        cell.accessoryView=[cellDictionary objectForKey:kUserInputViewKey];
+        
+    }
+    else if( [cellType isEqualToString:KCellTypeHelp])
+    {
+        if(cell==nil)
+        {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellType];
+            
+            [cell.contentView addSubview:[cellDictionary objectForKey:kTextLabelTextKey]];
+            cell.accessoryView = [cellDictionary objectForKey:kUserInputViewKey];
+        }
+        
+    }
+    else if([cellType isEqualToString:kCellTypeTextField])
+    {
+        if(cell == nil)
+        {
+            cell = [[OTRInLineTextEditTableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellType];
+        }
+        cell.textLabel.text = [cellDictionary objectForKey:kTextLabelTextKey];
+        [cell layoutIfNeeded];
+        ((OTRInLineTextEditTableViewCell *)cell).textField = [cellDictionary objectForKey:kUserInputViewKey];
+    }
+    
+    /*
     if(indexPath.section == 0)
     {
         if( indexPath.row == 0)
@@ -351,6 +404,7 @@
     
     
     //cell.userInteractionEnabled = NO;
+     */
     return cell;
 }
 
@@ -466,6 +520,7 @@
         passwordLabelFrameYOrigin = usernameLabelFrameYOrigin + self.usernameLabel.frame.size.height + kFieldBuffer;
         
     }
+    /*
     else if (facebookHelpLabel)
     {
         CGFloat facebookHelpLabeFrameYOrigin = usernameLabelFrameYOrigin + self.usernameLabel.frame.size.height +kFieldBuffer;
@@ -492,6 +547,7 @@
         
         passwordLabelFrameYOrigin = facebookHelpLabeFrameYOrigin +facebookHelpLabel.frame.size.height +kFieldBuffer;
     }
+     */
     else {
         passwordLabelFrameYOrigin = usernameLabelFrameYOrigin + self.usernameLabel.frame.size.height + kFieldBuffer;
     }
@@ -779,6 +835,31 @@
         [[UIApplication sharedApplication] openURL:url];
         
     }
+}
+
++(OTRLoginViewController *)loginViewControllerWithAcccount:(OTRAccount *)account
+{
+    if([[account.accountDictionary objectForKey:kOTRAccountDomainKey] isEqualToString:kOTRFacebookDomain])
+    {
+        //FacebookLoginViewController
+        return [[OTRFacebookLoginViewController alloc] initWithAccount:account];
+    }
+    else if ([[account.accountDictionary objectForKey:kOTRAccountDomainKey] isEqualToString:kOTRGoogleTalkDomain])
+    {
+        //GoogleTalkLoginViewController
+        return [[OTRGoogleTalkLoginViewController alloc] initWithAccount:account];
+    }
+    else if ([[account.accountDictionary objectForKey:kOTRAccountProtocolKey] isEqualToString:kOTRProtocolTypeXMPP])
+    {
+        //XMPP account addvanced
+        return [[OTRXMPPLoginViewController alloc] initWithAccount:account];
+    }
+    else if ([[account.accountDictionary objectForKey:kOTRAccountProtocolKey] isEqualToString:kOTRProtocolTypeAIM])
+    {
+        //Aim Protocol
+        return [[OTROscarLoginViewController alloc] initWithAccount:account];
+    }
+
 }
 
 @end

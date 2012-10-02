@@ -24,10 +24,16 @@
 #import "OTRProtocolManager.h"
 #import "MBProgressHUD.h"
 
+#define kTextLabelTextKey @"textLabelTextKey"
+#define kCellTypeKey @"cellTypeKey"
+#define kUserInputViewKey @"userInputViewKey"
+#define kCellTypeTextField @"cellTypeTextField"
+#define kCellTypeSwitch @"cellTypeSwitch"
+#define KCellTypeHelp @"cellTypeHelp"
+
 @interface OTRLoginViewController : UIViewController <UITextFieldDelegate, MBProgressHUDDelegate, UIActionSheetDelegate, UITableViewDataSource,UITableViewDelegate> {
     MBProgressHUD *HUD;
     UIView *padding;
-    UILabel *facebookHelpLabel;
 }
 
 - (id) initWithAccount:(OTRAccount*)newAccount;
@@ -51,12 +57,12 @@
 @property (nonatomic, strong) UILabel *portLabel;
 @property (nonatomic, strong) UITextField *portTextField;
 
-@property (nonatomic, strong) UIButton *facebookInfoButton;
-
 @property (nonatomic, retain) UIBarButtonItem *loginButton;
 @property (nonatomic, retain) UIBarButtonItem *cancelButton;
 
 @property (nonatomic, strong) NSTimer * timeoutTimer;
+
+@property (nonatomic, strong) NSMutableArray * tableViewArray;
 
 @property (nonatomic) BOOL isNewAccount;
 
@@ -64,5 +70,9 @@
 - (void)cancelPressed:(id)sender;
 
 -(BOOL)checkFields;
+
+-(void)addCellinfoWithSection:(NSInteger)section row:(NSInteger)row labelText:(id)text cellType:(NSString *)type userInputView:(UIView *)inputView;
+
++(OTRLoginViewController *)loginViewControllerWithAcccount:(OTRAccount *)account;
 
 @end
