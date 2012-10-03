@@ -87,7 +87,6 @@
 - (void) loadView {
     [super loadView];
     self.buddyListTableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
-    self.buddyListTableView.allowsMultipleSelection = YES;
     buddyListTableView.dataSource = self;
     buddyListTableView.delegate = self;
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"14-gear.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(showSettingsView:)];
