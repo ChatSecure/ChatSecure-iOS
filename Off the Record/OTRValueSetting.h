@@ -25,8 +25,8 @@
 
 @interface OTRValueSetting : OTRSetting
 
-@property (nonatomic, readonly) NSString *key;
-@property (nonatomic) id value;
+@property (nonatomic, retain, readonly) NSString *key;
+@property (nonatomic, retain) id value;
 @property (nonatomic, retain) NSNumber *defaultValue;
 
 

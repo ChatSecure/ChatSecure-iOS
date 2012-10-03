@@ -27,6 +27,10 @@
 #import "OTROscarAccount.h"
 #import "OTRXMPPAccount.h"
 
+@interface OTRAccountsManager(Private)
+- (void) refreshAccountsArray;
+@end
+
 @implementation OTRAccountsManager
 @synthesize accountsDictionary, accountsArray, reverseLookupDictionary;
 

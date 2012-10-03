@@ -36,6 +36,13 @@
 #define RECENTS_SECTION_INDEX 0
 #define BUDDIES_SECTION_INDEX 1
 
+@interface OTRBuddyListViewController(Private)
+- (void) selectActiveConversation;
+- (void) refreshActiveConversations;
+- (void) removeConversationsForAccount:(OTRAccount *)account;
+- (void) deleteBuddy:(OTRBuddy*)buddy;
+@end
+
 @implementation OTRBuddyListViewController
 @synthesize buddyListTableView;
 @synthesize chatViewController;

@@ -29,6 +29,10 @@
 
 #define kFieldBuffer 20;
 
+@interface OTRLoginViewController(Private)
+- (float) getMidpointOffsetforHUD;
+@end
+
 @implementation OTRLoginViewController
 @synthesize usernameTextField;
 @synthesize passwordTextField;

@@ -36,6 +36,11 @@
 #define ACTIONSHEET_DISCONNECT_TAG 1
 #define ALERTVIEW_DELETE_TAG 1
 
+@interface OTRSettingsViewController(Private)
+- (void) addAccount:(id)sender;
+- (void) showLoginControllerForAccount:(OTRAccount*)account;
+@end
+
 @implementation OTRSettingsViewController
 @synthesize settingsTableView, settingsManager, loginController, selectedAccount, selectedIndexPath;
 

@@ -36,7 +36,7 @@
 @property (nonatomic, retain) NSString *username; // 
 @property (nonatomic, retain) NSString *protocol; // kOTRProtocolType, defined in OTRProtocolManager.h
 @property (nonatomic, retain) NSString *password; // nil if rememberPassword = NO, not stored in memory
-@property (nonatomic, readonly) NSString *uniqueIdentifier;
+@property (nonatomic, retain, readonly) NSString *uniqueIdentifier;
 @property (nonatomic) BOOL rememberPassword;
 @property (nonatomic) BOOL isConnected;
 

@@ -25,8 +25,8 @@
 
 @interface OTRSettingsGroup : NSObject
 
-@property (nonatomic, readonly) NSArray *settings;
-@property (nonatomic, readonly) NSString *title;
+@property (nonatomic, retain, readonly) NSArray *settings;
+@property (nonatomic, retain, readonly) NSString *title;
 
 - (id) initWithTitle:(NSString*)newTitle settings:(NSArray*)newSettings;
 

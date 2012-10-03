@@ -25,7 +25,7 @@
 
 @interface OTRViewSetting : OTRSetting
 
-@property (nonatomic, readonly) Class viewControllerClass;
+@property (nonatomic, retain, readonly) Class viewControllerClass;
 
 - (id) initWithTitle:(NSString*)newTitle description:(NSString*)newDescription viewControllerClass:(Class)newViewControllerClass;
 
