@@ -35,8 +35,11 @@
     [super viewDidLoad];
     
     NSString * accountDomainString = [[self.account accountDictionary] objectForKey:kOTRAccountDomainKey];
+    BOOL sslMismatchSwitchSatus = [[[self.account accountDictionary] objectForKey:kOTRXMPPAccountAllowSSLHostNameMismatch] boolValue];
+    BOOL selfSignedSwithStatus = [[[self.account accountDictionary] objectForKey:kOTRXMPPAccountAllowSelfSignedSSLKey] boolValue];
 	
     self.usernameTextField.placeholder = @"user@example.com";
+    self.usernameTextField.keyboardType = UIKeyboardTypeEmailAddress;
     
     self.domainTextField = [[UITextField alloc] init];
     self.domainTextField.delegate = self;
@@ -46,12 +49,13 @@
     self.domainTextField.placeholder = OPTIONAL_STRING;
     self.domainTextField.text = accountDomainString;
     self.domainTextField.returnKeyType = UIReturnKeyDone;
+    self.domainTextField.keyboardType = UIKeyboardTypeURL;
     
     self.sslMismatchSwitch = [[UISwitch alloc]init];
-    self.sslMismatchSwitch.on = [[[self.account accountDictionary] objectForKey:kOTRXMPPAccountAllowSSLHostNameMismatch] boolValue];
+    self.sslMismatchSwitch.on = sslMismatchSwitchSatus;
     
     self.selfSignedSwitch = [[UISwitch alloc] init];
-    self.selfSignedSwitch.on = [[[self.account accountDictionary] objectForKey:kOTRXMPPAccountAllowSelfSignedSSLKey] boolValue];
+    self.selfSignedSwitch.on = selfSignedSwithStatus;
     
     self.portTextField = [[UITextField alloc] init];
     self.portTextField.delegate = self;
@@ -60,6 +64,7 @@
     self.portTextField.borderStyle = UITextBorderStyleRoundedRect;
     self.portTextField.placeholder = [NSString stringWithFormat:@"%@",[[self.account accountDictionary] objectForKey:kOTRXMPPAccountPortNumber]];
     self.portTextField.returnKeyType = UIReturnKeyDone;
+    self.portTextField.keyboardType = UIKeyboardTypeNumberPad;
     
     [self addCellinfoWithSection:1 row:0 labelText:DOMAIN_STRING cellType:kCellTypeTextField userInputView:self.domainTextField];
     [self addCellinfoWithSection:1 row:1 labelText:SSL_MISMATCH_STRING cellType:kCellTypeSwitch userInputView:self.sslMismatchSwitch];
@@ -96,12 +101,19 @@
         
          NSString * domainText = [domainTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
         ((OTRXMPPAccount *)self.account).domain = domainText;
-        int portNumber = [self.portTextField.text intValue];
-        if (portNumber > 0 && portNumber <= 65535) {
-             ((OTRXMPPAccount *)self.account).port = portNumber;
-        } else {
-             ((OTRXMPPAccount *)self.account).port = [OTRXMPPAccount defaultPortNumber];
+        
+        if([self.portTextField.text length])
+        {
+            int portNumber = [self.portTextField.text intValue];
+            if (portNumber > 0 && portNumber <= 65535) {
+                ((OTRXMPPAccount *)self.account).port = portNumber;
+            } else {
+                ((OTRXMPPAccount *)self.account).port = [OTRXMPPAccount defaultPortNumber];
+            }
         }
+        
+        
+        
     }
 }
 

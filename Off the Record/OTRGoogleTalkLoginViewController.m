@@ -29,6 +29,7 @@
     [super viewDidLoad];
 	
     self.usernameTextField.placeholder = GOOGLE_TALK_EXAMPLE_STRING;
+    self.usernameTextField.keyboardType = UIKeyboardTypeEmailAddress;
 }
 
 - (void)didReceiveMemoryWarning

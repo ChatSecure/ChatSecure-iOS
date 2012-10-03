@@ -276,7 +276,7 @@
     [super viewWillDisappear:animated];
     [self readInFields];
     
-    if([account.username length]!=0 && [account.password length] !=0 )
+    if([account.username length] && [account.password length] )
     {
         [account save];
         [[[OTRProtocolManager sharedInstance] accountsManager] addAccount:account];
