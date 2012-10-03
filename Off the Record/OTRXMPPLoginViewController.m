@@ -7,6 +7,7 @@
 //
 
 #import "OTRXMPPLoginViewController.h"
+#import "OTRConstants.h"
 
 
 @interface OTRXMPPLoginViewController ()
@@ -44,9 +45,13 @@
     self.domainTextField.borderStyle = UITextBorderStyleRoundedRect;
     self.domainTextField.placeholder = OPTIONAL_STRING;
     self.domainTextField.text = accountDomainString;
+    self.domainTextField.returnKeyType = UIReturnKeyDone;
     
     self.sslMismatchSwitch = [[UISwitch alloc]init];
+    self.sslMismatchSwitch.on = [[[self.account accountDictionary] objectForKey:kOTRXMPPAccountAllowSSLHostNameMismatch] boolValue];
+    
     self.selfSignedSwitch = [[UISwitch alloc] init];
+    self.selfSignedSwitch.on = [[[self.account accountDictionary] objectForKey:kOTRXMPPAccountAllowSelfSignedSSLKey] boolValue];
     
     self.portTextField = [[UITextField alloc] init];
     self.portTextField.delegate = self;
@@ -54,13 +59,16 @@
     self.portTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     self.portTextField.borderStyle = UITextBorderStyleRoundedRect;
     self.portTextField.placeholder = [NSString stringWithFormat:@"%@",[[self.account accountDictionary] objectForKey:kOTRXMPPAccountPortNumber]];
+    self.portTextField.returnKeyType = UIReturnKeyDone;
     
     [self addCellinfoWithSection:1 row:0 labelText:DOMAIN_STRING cellType:kCellTypeTextField userInputView:self.domainTextField];
     [self addCellinfoWithSection:1 row:1 labelText:SSL_MISMATCH_STRING cellType:kCellTypeSwitch userInputView:self.sslMismatchSwitch];
     [self addCellinfoWithSection:1 row:2 labelText:SELF_SIGNED_SSL_STRING cellType:kCellTypeSwitch userInputView:self.selfSignedSwitch];
     [self addCellinfoWithSection:1 row:3 labelText:PORT_STRING cellType:kCellTypeTextField userInputView:self.portTextField];
     
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHideOrShow:) name:UIKeyboardWillHideNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHideOrShow:) name:UIKeyboardWillShowNotification object:nil];
+
 }
 
 - (void)didReceiveMemoryWarning
@@ -76,20 +84,6 @@
           [[NSCharacterSet decimalDigitCharacterSet] invertedSet]].length > 0);
     }
     return YES;
-}
-
--(BOOL)textFieldShouldReturn:(UITextField *)textField
-{
-    if (self.usernameTextField.isFirstResponder) {
-        [self.passwordTextField becomeFirstResponder];
-    }
-    else if (self.domainTextField.isFirstResponder) {
-        [self.passwordTextField becomeFirstResponder];
-    }
-    else
-        [self loginButtonPressed:nil];
-    
-    return NO;
 }
 
 -(void)readInFields
@@ -109,6 +103,44 @@
              ((OTRXMPPAccount *)self.account).port = [OTRXMPPAccount defaultPortNumber];
         }
     }
+}
+
+-(void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    selectedCell = (UITableViewCell*) [[textField superview] superview];
+    [self.loginViewTableView scrollToRowAtIndexPath:[self.loginViewTableView indexPathForCell:selectedCell] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+}
+
+-(void)keyboardWillHideOrShow:(NSNotification *)note
+{
+    NSDictionary *userInfo = note.userInfo;
+    NSTimeInterval duration = [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+    UIViewAnimationCurve curve = [[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue];
+    
+    CGRect keyboardFrame = [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    CGRect keyboardFrameForTableView = [self.loginViewTableView.superview convertRect:keyboardFrame fromView:nil];
+    
+    CGRect newTableViewFrame = CGRectMake(0, 0, self.loginViewTableView.frame.size.width, keyboardFrameForTableView.origin.y);
+    
+    //keyboardFrameForTextField.origin.y - newTextFieldFrame.size.height;
+    
+    [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionBeginFromCurrentState | curve animations:^{
+        self.loginViewTableView.frame = newTableViewFrame;
+    } completion:nil];
+    
+    if(selectedCell)
+    {
+        [self.loginViewTableView scrollToRowAtIndexPath:[self.loginViewTableView indexPathForCell:selectedCell] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+    }
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    self.domainTextField = nil;
+    self.sslMismatchSwitch = nil;
+    self.selfSignedSwitch = nil;
+    self.portTextField = nil;
 }
 
 

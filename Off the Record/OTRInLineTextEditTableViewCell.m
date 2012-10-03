@@ -8,6 +8,8 @@
 
 #import "OTRInLineTextEditTableViewCell.h"
 
+#define textLeftFieldBuffer 100
+
 @implementation OTRInLineTextEditTableViewCell
 
 @synthesize textField = _textField;
@@ -26,28 +28,25 @@
 {
     self = [super initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:reuseIdentifier];
     self.textField = cellTextField;
+    self.textField.tag = 999;
     self.textLabel.text = name;
     [self layoutIfNeeded];
     
-    self.textField.frame = CGRectMake(self.textLabel.frame.size.width+10, self.textLabel.frame.origin.y, 200, self.contentView.frame.size.height-20);
+    self.textField.frame = CGRectMake(textLeftFieldBuffer, self.textLabel.frame.origin.y, self.contentView.frame.size.width-textLeftFieldBuffer, self.contentView.frame.size.height-20);
     self.textField.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
     
     [self.contentView addSubview:self.textField];
     
 }
 
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated
-{
-    [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
-}
-
 -(void)setTextField:(UITextField *)newTextField
 {
+    [[self.contentView viewWithTag:999] removeFromSuperview];
     _textField = newTextField;
-    self.textField.frame = CGRectMake(self.textLabel.frame.size.width+10, self.textLabel.frame.origin.y, 200, self.contentView.frame.size.height-20);
+    [self layoutIfNeeded];
+    self.textField.frame = CGRectMake(textLeftFieldBuffer, self.textLabel.frame.origin.y, self.contentView.frame.size.width-textLeftFieldBuffer, self.contentView.frame.size.height-20);
     self.textField.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+    self.textField.tag = 999;
     [self.contentView addSubview:self.textField];
 }
 

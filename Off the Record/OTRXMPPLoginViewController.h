@@ -9,6 +9,9 @@
 #import "OTRLoginViewController.h"
 
 @interface OTRXMPPLoginViewController : OTRLoginViewController
+{
+    UITableViewCell * selectedCell;
+}
 
 @property (nonatomic, strong) UITextField *domainTextField;
 @property (nonatomic, strong) UISwitch *sslMismatchSwitch;

@@ -44,6 +44,7 @@
 @synthesize timeoutTimer;
 @synthesize account;
 @synthesize isNewAccount;
+@synthesize loginViewTableView;
 
 @synthesize tableViewArray;
 
@@ -81,6 +82,7 @@
     self.usernameTextField.autocorrectionType = UITextAutocorrectionTypeNo;
     self.usernameTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     self.usernameTextField.text = account.username;
+    self.usernameTextField.returnKeyType = UIReturnKeyDone;
     
     
     [self addCellinfoWithSection:0 row:0 labelText:USERNAME_STRING cellType:kCellTypeTextField userInputView:self.usernameTextField];
@@ -90,6 +92,7 @@
     self.passwordTextField.delegate = self;
     self.passwordTextField.borderStyle = UITextBorderStyleRoundedRect;
     self.passwordTextField.secureTextEntry = YES;
+    self.passwordTextField.returnKeyType = UIReturnKeyDone;
     
     [self addCellinfoWithSection:0 row:1 labelText:PASSWORD_STRING cellType:kCellTypeTextField userInputView:self.passwordTextField];
     
@@ -149,11 +152,11 @@
     [self setUpFields];
     
     
-    UITableView * loginTableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
-    loginTableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-    [loginTableView setDelegate:self];
-    [loginTableView setDataSource:self];
-    [self.view addSubview:loginTableView];
+    loginViewTableView= [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
+    loginViewTableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+    [loginViewTableView setDelegate:self];
+    [loginViewTableView setDataSource:self];
+    [self.view addSubview:loginViewTableView];
 }
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -398,13 +401,8 @@
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-    if (self.usernameTextField.isFirstResponder) {
-        [self.passwordTextField becomeFirstResponder];
-    }
-    else
-        [self loginButtonPressed:nil];
-    
-    return NO;
+    [textField resignFirstResponder];
+    return YES;
 }
 
 -(float)getMidpointOffsetforHUD

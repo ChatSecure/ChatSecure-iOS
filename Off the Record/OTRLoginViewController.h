@@ -54,6 +54,8 @@
 
 @property (nonatomic, strong) NSMutableArray * tableViewArray;
 
+@property (nonatomic, strong) UITableView * loginViewTableView;
+
 @property (nonatomic) BOOL isNewAccount;
 
 - (void)loginButtonPressed:(id)sender;
