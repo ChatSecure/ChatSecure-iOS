@@ -281,8 +281,8 @@
         [account save];
         [[[OTRProtocolManager sharedInstance] accountsManager] addAccount:account];
     }
-    
-    
+    [self.view resignFirstResponder];
+
 }
 
 -(void)readInFields

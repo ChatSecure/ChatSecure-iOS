@@ -33,6 +33,9 @@
 {
     [super viewDidLoad];
     
+    //Removes @chat.facebook.com so to display plain username
+    self.usernameTextField.text = [self.account.username stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"@%@",kOTRFacebookDomain] withString:[NSString string]];
+    
     facebookHelpLabel = [[UILabel alloc] init];
     facebookHelpLabel.text = FACEBOOK_HELP_STRING;
     facebookHelpLabel.textAlignment = UITextAlignmentLeft;
