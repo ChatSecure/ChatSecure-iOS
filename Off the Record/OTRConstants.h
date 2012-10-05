@@ -25,6 +25,7 @@
 #define kOTRBuddyListUpdate @"BuddyListUpdateNotification"
 #define kOTRProtocolLogout @"LogoutNotification"
 #define kOTRMessageReceived @"MessageReceivedNotification"
+#define kOTRMessageReceiptResonseReceived @"MessageReceiptResponseNotification"
 #define kOTRStatusUpdate @"StatusUpdatedNotification" 
 #define kOTRProtocolDiconnect @"DisconnectedNotification"
 #define kOTRSendMessage @"SendMessageNotification"

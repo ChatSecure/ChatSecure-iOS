@@ -29,6 +29,7 @@
 #import "XMPPRosterCoreDataStorage.h"
 #import "XMPPvCardAvatarModule.h"
 #import "XMPPvCardCoreDataStorage.h"
+#import "XMPPMessage+XEP_0184.h"
 #import "Strings.h"
 
 #import "DDLog.h"
@@ -406,6 +407,8 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     [[NSNotificationCenter defaultCenter]
      postNotificationName:kOTRProtocolLoginFail object:self];    
 }
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark Connect/disconnect
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -625,8 +628,30 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     
 	// A simple example of inbound message handling.
     
+    //Posible needs a setting to turn on and off
+    if([message hasReceiptRequest])
+    {
+        XMPPMessage * responseMessage = [message generateReceiptResponse];
+        [xmppStream sendElement:responseMessage];
+    }
+    
+    if ([message hasReceiptResponse]) {
+        
+        XMPPUserCoreDataStorageObject *user = [xmppRosterStorage userForJID:[message from]
+                                                                 xmppStream:xmppStream
+                                                       managedObjectContext:[self managedObjectContext_roster]];
+        
+        OTRBuddy * messageBuddy = [protocolBuddyList objectForKey:user.jidStr];
+        [messageBuddy receiveReceiptResonse:[message extractReceiptResponseID]];
+    }
+    
+    
+    
 	if ([message isChatMessageWithBody])
-	{        
+	{
+        
+        
+        
         XMPPUserCoreDataStorageObject *user = [xmppRosterStorage userForJID:[message from]
                                                                  xmppStream:xmppStream
                                                        managedObjectContext:[self managedObjectContext_roster]];
@@ -725,6 +750,13 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 		NSXMLElement *message = [NSXMLElement elementWithName:@"message"];
 		[message addAttributeWithName:@"type" stringValue:@"chat"];
 		[message addAttributeWithName:@"to" stringValue:theMessage.buddy.accountName];
+        NSString * messageID = [NSString stringWithFormat:@"%d",theMessage.buddy.numberOfMessagesSent];
+        [message addAttributeWithName:@"id" stringValue:messageID];
+        
+        NSXMLElement * receiptRequest = [NSXMLElement elementWithName:@"request"];
+        [receiptRequest addAttributeWithName:@"xmlns" stringValue:@"urn:xmpp:receipts"];
+        [message addChild:receiptRequest];
+        
 		[message addChild:body];
 		
 		[xmppStream sendElement:message];

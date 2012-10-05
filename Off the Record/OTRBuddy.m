@@ -53,6 +53,7 @@
 {
     if(self = [super init])
     {
+        self.numberOfMessagesSent = 0;
         self.displayName = buddyName;
         self.accountName = buddyAccountName;
         self.protocol = buddyProtocol;
@@ -79,6 +80,7 @@
 -(void)sendMessage:(NSString *)message secure:(BOOL)secure
 {
     if (message) {
+        self.numberOfMessagesSent +=1;
         lastMessageDisconnected = NO;
         OTRBuddy* theBuddy = self;
         message = [message stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
@@ -97,7 +99,7 @@
         //NSLog(@"encoded message: %@",encodedMessage.message);
         [OTRMessage sendMessage:encodedMessage];    
         
-        NSString *username = [NSString stringWithFormat:@"<p><strong style=\"color:blue\">Me:</strong>"];
+        NSString *username = [NSString stringWithFormat:@"<p id=\"%d\"><strong style=\"color:blue\">Me:</strong>",self.numberOfMessagesSent];
         
         [chatHistory appendFormat:@"%@ %@</p>",username, message];
     }
@@ -146,6 +148,24 @@
         [chatHistory appendFormat:@"%@ %@</p>",username,message];
         [[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];
     }
+}
+
+-(void)receiveReceiptResonse:(NSString *)responseID
+{
+    NSLog(@"Receipt Resonse: %@",responseID);
+    
+    NSString * ReceiptResonseScript = [NSString stringWithFormat:@"<script>x=document.getElementById('%@');x.innerHTML = x.innerHTML+\" (delivered)\";</script>",responseID];
+    
+    [chatHistory appendString:ReceiptResonseScript];
+    
+    
+    
+    
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];
+    
+    
+    
 }
 
 -(void)setStatus:(OTRBuddyStatus)newStatus

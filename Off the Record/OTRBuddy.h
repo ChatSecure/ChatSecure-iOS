@@ -46,6 +46,7 @@ enum OTRBuddyStatus {
 @property (nonatomic, retain) NSString *lastMessage;
 @property (nonatomic, retain) id<OTRProtocol> protocol;
 @property (nonatomic) BOOL lastMessageDisconnected;
+@property (nonatomic) int numberOfMessagesSent;
 
 @property (nonatomic) OTRBuddyStatus status;
 @property (nonatomic) OTRKitMessageState encryptionStatus;
@@ -54,6 +55,7 @@ enum OTRBuddyStatus {
 +(OTRBuddy*)buddyWithDisplayName:(NSString*)buddyName accountName:(NSString*) accountName protocol:(id <OTRProtocol>)buddyProtocol status:(OTRBuddyStatus)buddyStatus groupName:(NSString*)buddyGroupName;
 
 -(void)receiveMessage:(NSString *)message;
+-(void)receiveReceiptResonse:(NSString *)responseID;
 -(void)sendMessage:(NSString *)message secure:(BOOL)secure;
 
 @end
