@@ -382,17 +382,13 @@
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
-    
     NSRange textFieldRange = NSMakeRange(0, [textField.text length]);
-    [buddy restartPausedChatStateTimer];
-
+    
+    [buddy sendComposingChatState];
     
     if (NSEqualRanges(range, textFieldRange) && [string length] == 0)
     {
         [buddy sendActiveChatState];
-    }
-    else if (buddy.lastSentChatState != kOTRChatStateComposing) {
-        [buddy sendChatState:kOTRChatStateComposing];
     }
     
     return YES;

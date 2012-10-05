@@ -122,6 +122,15 @@
     }
     
 }
+
+-(void)sendComposingChatState
+{
+    if(self.lastSentChatState != kOTRChatStateComposing)
+    {
+        [self sendChatState:kOTRChatStateComposing];
+    }
+    [self restartPausedChatStateTimer];
+}
 -(void)sendPausedChatState
 {
     [self sendChatState:kOTRChatStatePaused];

@@ -75,6 +75,6 @@ enum OTRChatState {
 -(void)restartPausedChatStateTimer;
 -(void)sendPausedChatState;
 -(void)sendActiveChatState;
-
+-(void)sendComposingChatState;
 
 @end
