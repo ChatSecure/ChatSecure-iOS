@@ -241,6 +241,11 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 }
 */
 
+- (void)application:(UIApplication *)application
+didReceiveRemoteNotification:(NSDictionary *)userInfo {
+    NSLog(@"Push received! %@", [userInfo description]);
+}
+
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
     //NSLog(@"Notification Body: %@", notification.alertBody);
     //NSLog(@"User Info: %@", notification.userInfo);
@@ -268,8 +273,8 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 // Delegation methods
 - (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)devToken {
     [[OTRPushController sharedInstance] updateDevicePushToken:devToken];
-    [[OTRPushController sharedInstance] requestPushAccessTokenForBuddy:nil];
-    //[[OTRPushController sharedInstance] knockWithAccountID:<#(NSString *)#> pat:<#(NSString *)#>]
+    //[[OTRPushController sharedInstance] requestPushAccessTokenForBuddy:nil];
+    [[OTRPushController sharedInstance] knockWithAccountID:@"9846905" pat:@"1975460"];
 }
 
 - (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {
