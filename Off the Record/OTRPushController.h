@@ -32,6 +32,7 @@
 - (void) registerWithReceipt:(NSData*)receipt transactionIdentifier:(NSString*)transactionIdentifier;
 - (void) updateDevicePushToken:(NSData*)devicePushToken;
 - (void) requestPushAccessTokenForBuddy:(OTRBuddy*)buddy;
+- (void) knockWithAccountID:(NSString*)accountID pat:(NSString*)pat;
 
 + (void) registerForPushNotifications;
 

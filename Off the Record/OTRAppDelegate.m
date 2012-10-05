@@ -269,6 +269,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 - (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)devToken {
     [[OTRPushController sharedInstance] updateDevicePushToken:devToken];
     [[OTRPushController sharedInstance] requestPushAccessTokenForBuddy:nil];
+    //[[OTRPushController sharedInstance] knockWithAccountID:<#(NSString *)#> pat:<#(NSString *)#>]
 }
 
 - (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {

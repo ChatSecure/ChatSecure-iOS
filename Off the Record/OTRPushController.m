@@ -29,6 +29,7 @@
 #define REGISTER_PATH @"register"
 #define ADD_DPT_PATH @"add_dpt"
 #define REQUEST_PAT_PATH @"request_pat"
+#define KNOCK_PATH @"knock"
 
 #define kOTRPushAccountKey @"kOTRPushAccountKey"
 
@@ -185,6 +186,21 @@
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"Error requesting PAT: %@%@", [error localizedDescription], [error userInfo]);
     }];
+}
+
+- (void) knockWithAccountID:(NSString*)accountID pat:(NSString*)pat {
+    
+    NSMutableDictionary *postDictionary = [NSMutableDictionary dictionaryWithCapacity:2];
+    [postDictionary setObject:accountID forKey:ACCOUNT_ID_KEY];
+    [postDictionary setObject:pat forKey:PAT_KEY];
+    
+    [pushClient postPath:KNOCK_PATH parameters:postDictionary success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"Response: %@", responseObject);
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"Error sending knock: %@%@", [error localizedDescription], [error userInfo]);
+    }];
+
 }
 
 @end
