@@ -25,6 +25,7 @@
 #import "OTRKit.h"
 
 typedef unsigned int OTRBuddyStatus;
+typedef unsigned int OTRChatState;
 
 #define MESSAGE_PROCESSED_NOTIFICATION @"MessageProcessedNotification"
 #define kOTREncryptionStateNotification @"kOTREncryptionStateNotification"
@@ -34,6 +35,15 @@ enum OTRBuddyStatus {
     kOTRBuddyStatusOffline = 0,
     kOTRBuddyStatusAway = 1,
     kOTRBuddyStatusAvailable = 2
+};
+
+enum OTRChatState {
+    kOTRChatStateUnknown =0,
+    kOTRChatStateActive = 1,
+    kOTRChatStateComposing = 2,
+    kOTRChatStatePaused = 3,
+    kOTRChatStateInactive = 4,
+    kOTRChatStateGone =5
 };
 
 @interface OTRBuddy : NSObject
@@ -49,11 +59,14 @@ enum OTRBuddyStatus {
 
 @property (nonatomic) OTRBuddyStatus status;
 @property (nonatomic) OTRKitMessageState encryptionStatus;
+@property (nonatomic) OTRChatState chatState;
 
 -(id)initWithDisplayName:(NSString*)buddyName accountName:(NSString*) accountName protocol:(id <OTRProtocol>)buddyProtocol status:(OTRBuddyStatus)buddyStatus groupName:(NSString*)buddyGroupName;
 +(OTRBuddy*)buddyWithDisplayName:(NSString*)buddyName accountName:(NSString*) accountName protocol:(id <OTRProtocol>)buddyProtocol status:(OTRBuddyStatus)buddyStatus groupName:(NSString*)buddyGroupName;
 
 -(void)receiveMessage:(NSString *)message;
+-(void)receiveChatStateMessage:(OTRChatState) chatState;
 -(void)sendMessage:(NSString *)message secure:(BOOL)secure;
+
 
 @end

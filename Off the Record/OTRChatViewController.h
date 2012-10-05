@@ -34,6 +34,7 @@
 @property (nonatomic, retain) UIButton *sendButton;
 @property (nonatomic, retain) UIView *chatBoxView;
 @property (nonatomic, retain) UILabel *instructionsLabel;
+@property (nonatomic, strong) UILabel *chatStateLabel;
 
 @property (nonatomic, retain) OTRBuddy *buddy;
 
@@ -53,5 +54,6 @@
 - (void)setupLockButton;
 - (void)refreshLockButton;
 - (void)lockButtonPressed;
+- (void)updateChatState;
 
 @end

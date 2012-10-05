@@ -62,6 +62,7 @@
         self.lastMessage = @"";
         self.lastMessageDisconnected = NO;
         self.encryptionStatus = kOTRKitMessageStatePlaintext;
+        self.chatState = kOTRChatStateUnknown;
         
         [[NSNotificationCenter defaultCenter]
          addObserver:self selector:@selector(protocolDisconnected:) name:kOTRProtocolDiconnect object:buddyProtocol];
@@ -146,6 +147,12 @@
         [chatHistory appendFormat:@"%@ %@</p>",username,message];
         [[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];
     }
+}
+
+-(void)receiveChatStateMessage:(OTRChatState) chatState
+{
+    self.chatState = chatState;
+    [[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];
 }
 
 -(void)setStatus:(OTRBuddyStatus)newStatus

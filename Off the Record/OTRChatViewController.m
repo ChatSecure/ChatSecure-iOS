@@ -50,6 +50,7 @@
 @synthesize buddy;
 @synthesize instructionsLabel;
 @synthesize keyboardListener;
+@synthesize chatStateLabel;
 
 - (void) dealloc {
     self.lastActionLink = nil;
@@ -348,10 +349,39 @@
     [self updateChatHistory];
     [self refreshView];
 }
-     
+
+
      
 - (void) messageProcessedNotification:(NSNotification*)notification {
     [self updateChatHistory];
+    [self updateChatState];
+}
+
+- (void)updateChatState
+{
+    if(!chatStateLabel)
+    {
+        chatStateLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 22)];
+        chatStateLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        chatStateLabel.backgroundColor = [UIColor blackColor];
+        //chatStateLabel.alpha = .7;
+        chatStateLabel.tag = 888;
+        chatStateLabel.textColor = [UIColor whiteColor];
+        [self.view addSubview:chatStateLabel];
+    }
+    if(self.buddy.chatState == kOTRChatStateUnknown)
+        chatStateLabel.text = [NSString string];
+    else if(self.buddy.chatState == kOTRChatStateComposing)
+        chatStateLabel.text = CHAT_STATE_COMPOSING_STRING;
+    else if(self.buddy.chatState == kOTRChatStatePaused)
+        chatStateLabel.text = CHAT_STATE_PAUSED_STRING;
+    else if(self.buddy.chatState == kOTRChatStateActive)
+        chatStateLabel.text = CHAT_STATE_ACTIVE_STRING;
+    else if(self.buddy.chatState == kOTRChatStateInactive)
+        chatStateLabel.text = CHAT_STATE_INACTVIE_STRING;
+    else if(self.buddy.chatState == kOTRChatStateGone)
+        chatStateLabel.text = CHAT_STATE_GONE_STRING;
+    
 }
 
 
@@ -595,6 +625,7 @@
         
         if ([keyboardListener isVisible])
             [self keyboardWillShow:[self.keyboardListener lastNotification]];
+        [self updateChatState];
     }
 }
 

@@ -29,6 +29,7 @@
 #import "XMPPRosterCoreDataStorage.h"
 #import "XMPPvCardAvatarModule.h"
 #import "XMPPvCardCoreDataStorage.h"
+#import "XMPPMessage+XEP_0085.h"
 #import "Strings.h"
 
 #import "DDLog.h"
@@ -327,6 +328,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     
 	[xmppStream addDelegate:self delegateQueue:dispatch_get_main_queue()];
 	[xmppRoster addDelegate:self delegateQueue:dispatch_get_main_queue()];
+    [xmppCapabilities addDelegate:self delegateQueue:dispatch_get_main_queue()];
     
 	// Optional:
 	// 
@@ -406,6 +408,17 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     [[NSNotificationCenter defaultCenter]
      postNotificationName:kOTRProtocolLoginFail object:self];    
 }
+
+
+///////////////////////////////
+#pragma mark Capabilities Collected
+- (void)xmppCapabilities:(XMPPCapabilities *)sender collectingMyCapabilities:(NSXMLElement *)query
+{
+    NSXMLElement * chatStateFeature = [NSXMLElement elementWithName:@"feature"];
+	[chatStateFeature addAttributeWithName:@"var" stringValue:@"http://jabber.org/protocol/chatstates"];
+    [query addChild:chatStateFeature];
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark Connect/disconnect
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -619,22 +632,43 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	return NO;
 }
 
+-(OTRBuddy *)buddyWithMessage:(XMPPMessage *)message
+{
+    XMPPUserCoreDataStorageObject *user = [xmppRosterStorage userForJID:[message from]
+                                                             xmppStream:xmppStream
+                                                   managedObjectContext:[self managedObjectContext_roster]];
+    
+    return [protocolBuddyList objectForKey:user.jidStr];
+}
+
 - (void)xmppStream:(XMPPStream *)sender didReceiveMessage:(XMPPMessage *)message
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
     
 	// A simple example of inbound message handling.
+    if([message hasChatState])
+    {
+        OTRBuddy * messageBuddy = [self buddyWithMessage:message];
+        if([message isComposingChatState])
+            [messageBuddy receiveChatStateMessage:kOTRChatStateComposing];
+        else if([message isPausedChatState])
+            [messageBuddy receiveChatStateMessage:kOTRChatStatePaused];
+        else if([message isActiveChatState])
+            [messageBuddy receiveChatStateMessage:kOTRChatStateActive];
+        else if([message isInactiveChatState])
+            [messageBuddy receiveChatStateMessage:kOTRChatStateInactive];
+        else if([message isGoneChatState])
+            [messageBuddy receiveChatStateMessage:kOTRChatStateGone];
+    }
+    
     
 	if ([message isChatMessageWithBody])
 	{        
-        XMPPUserCoreDataStorageObject *user = [xmppRosterStorage userForJID:[message from]
-                                                                 xmppStream:xmppStream
-                                                       managedObjectContext:[self managedObjectContext_roster]];
         
         NSString *body = [[message elementForName:@"body"] stringValue];
         //NSString *displayName = [user displayName];
         
-        OTRBuddy * messageBuddy = [protocolBuddyList objectForKey:user.jidStr];
+        OTRBuddy * messageBuddy = [self buddyWithMessage:message];
         
         OTRMessage *otrMessage = [OTRMessage messageWithBuddy:messageBuddy message:body];        
         OTRMessage *decodedMessage = [OTRCodec decodeMessage:otrMessage];

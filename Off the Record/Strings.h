@@ -49,6 +49,12 @@
 #define CONVERSATION_SECURE_WARNING_STRING NSLocalizedString(@"This chat is secured",@"Warns user that the current chat is secure")
 #define CONVERSATION_SECURE_AND_VERIFIED_WARNING_STRING NSLocalizedString(@"This chat is secured and verified",@"Warns user that the current chat is secure and verified")
 
+#define CHAT_STATE_ACTIVE_STRING NSLocalizedString(@"Active",@"String to be displayed when a buddy is Active")
+#define CHAT_STATE_COMPOSING_STRING NSLocalizedString(@"Typing",@"String to be displayed when a buddy is currently composing a message")
+#define CHAT_STATE_PAUSED_STRING NSLocalizedString(@"Entered Text",@"String to be displayed when a buddy has stopped composing and text has been entered")
+#define CHAT_STATE_INACTVIE_STRING NSLocalizedString(@"Inactive",@"String to be displayed when a budy has become inactive")
+#define CHAT_STATE_GONE_STRING NSLocalizedString(@"Gone",@"String to be displayed when a buddy is inactive for an extended period of time")
+
 // OTRBuddyListViewController
 #define IGNORE_STRING NSLocalizedString(@"Ignore", @"Ignore an incoming message")
 #define REPLY_STRING NSLocalizedString(@"Reply", @"Reply to an incoming message")
