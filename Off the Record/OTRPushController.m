@@ -24,12 +24,17 @@
 #import "OTRPushAPIClient.h"
 #import "NSData+XMPP.h"
 
-#define SERVER_URL @"http://192.168.1.102:5000/"
+#define SERVER_URL @"http://192.168.1.44:5000/"
+
 #define REGISTER_PATH @"register"
+#define ADD_DPT_PATH @"add_dpt"
+
 #define kOTRPushAccountKey @"kOTRPushAccountKey"
+
 #define ACCOUNT_ID_KEY @"account_id"
 #define PASSWORD_KEY @"password"
 #define EXPIRATION_DATE_KEY @"expiration_date"
+#define DPT_KEY @"dpt"
 
 @implementation OTRPushController
 @synthesize pushClient;
@@ -107,7 +112,34 @@
 }
 
 - (void) updateDevicePushToken:(NSData *)devicePushToken {
-    NSLog(@"Updated device push token: %@", [devicePushToken hexStringValue]);
+    NSMutableDictionary *accountDictionary = [self accountDictionary];
+
+    NSString *accountID = [accountDictionary objectForKey:ACCOUNT_ID_KEY];
+    NSString *password = [accountDictionary objectForKey:PASSWORD_KEY];
+    NSDate *expirationDate = [accountDictionary objectForKey:EXPIRATION_DATE_KEY];
+    
+    if (!accountID || !password) {
+        return;
+    }
+    
+    BOOL subscriptionExpired = [expirationDate compare:[NSDate date]] == NSOrderedAscending;
+    if (subscriptionExpired) {
+        NSLog(@"Push subscription expired on: %@", [expirationDate description]);
+        return;
+    }
+    
+    NSMutableDictionary *postDictionary = [NSMutableDictionary dictionaryWithCapacity:3];
+    NSString *dpt = [devicePushToken hexStringValue];
+    [postDictionary setObject:dpt forKey:DPT_KEY];
+    [postDictionary setObject:accountID forKey:ACCOUNT_ID_KEY];
+    [postDictionary setObject:password forKey:PASSWORD_KEY];
+    
+    [pushClient postPath:ADD_DPT_PATH parameters:postDictionary success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"Updated device push token: %@", dpt);
+        NSLog(@"Response: %@", responseObject);
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"Error updating device push token: %@%@", [error localizedDescription], [error userInfo]);
+    }];
 }
 
 @end
