@@ -34,4 +34,8 @@
 - (void) connectWithPassword:(NSString *)password;
 - (void) disconnect;
 
+@optional
+
+- (void)sendChatState:(int)chatState withBuddy:(OTRBuddy *)buddy;
+
 @end

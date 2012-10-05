@@ -47,6 +47,8 @@
 @property (nonatomic, strong) OTRUIKeyboardListener * keyboardListener;
 
 
+
+
 - (void)sendButtonPressed:(id)sender;
 - (void)scrollTextViewToBottom;
 

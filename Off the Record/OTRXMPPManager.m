@@ -38,7 +38,6 @@
 #import <CFNetwork/CFNetwork.h>
 
 #import "OTRSettingsManager.h"
-#import "OTRBuddy.h"
 #import "OTRConstants.h"
 #import "OTRProtocolManager.h"
 #include <stdlib.h>
@@ -760,11 +759,15 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 		[message addAttributeWithName:@"type" stringValue:@"chat"];
 		[message addAttributeWithName:@"to" stringValue:theMessage.buddy.accountName];
 		[message addChild:body];
+        
+        XMPPMessage * xMessage = [XMPPMessage messageFromElement:message];
+        [xMessage addActiveChatState];
 		
 		[xmppStream sendElement:message];
+       
     }
-    
 }
+
 - (NSString*) accountName
 {
     return [JID full];
@@ -834,6 +837,43 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 {
     
     [self connectWithJID:self.account.username password:myPassword];
+}
+
+-(void)sendChatState:(int)chatState withBuddy:(OTRBuddy *)buddy
+{
+    NSXMLElement *message = [NSXMLElement elementWithName:@"message"];
+    [message addAttributeWithName:@"type" stringValue:@"chat"];
+    [message addAttributeWithName:@"to" stringValue:buddy.accountName];
+    XMPPMessage * xMessage = [XMPPMessage messageFromElement:message];
+    
+    BOOL shouldSend = YES;
+    
+    switch (chatState)
+    {
+        case kOTRChatStateActive  :
+            [xMessage addActiveChatState];
+            break;
+        case kOTRChatStateComposing  :
+            [xMessage addComposingChatState];
+            break;
+        case kOTRChatStateInactive:
+            [xMessage addInactiveChatState];
+            break;
+        case kOTRChatStatePaused:
+            [xMessage addPausedChatState];
+            break;
+        case kOTRChatStateGone:
+            [xMessage addGoneChatState];
+            break;
+        default :
+            shouldSend = NO;
+            break;
+    }
+    
+    if(shouldSend)
+        [xmppStream sendElement:message];
+    
+    
 }
 
 

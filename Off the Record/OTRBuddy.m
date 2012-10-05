@@ -39,6 +39,10 @@
 @synthesize lastMessage;
 @synthesize lastMessageDisconnected;
 @synthesize encryptionStatus;
+@synthesize chatState;
+@synthesize lastSentChatState;
+@synthesize pausedChatStateTimer;
+@synthesize inactiveChatStateTimer;
 
 - (void) dealloc {
     self.accountName = nil;
@@ -46,6 +50,10 @@
     self.protocol = nil;
     self.groupName = nil;
     self.chatHistory = nil;
+    [self.pausedChatStateTimer invalidate];
+    self.pausedChatStateTimer = nil;
+    [self.inactiveChatStateTimer invalidate];
+    self.inactiveChatStateTimer = nil;
 }
 
 
@@ -63,6 +71,7 @@
         self.lastMessageDisconnected = NO;
         self.encryptionStatus = kOTRKitMessageStatePlaintext;
         self.chatState = kOTRChatStateUnknown;
+        self.lastSentChatState = kOTRChatStateUnknown;
         
         [[NSNotificationCenter defaultCenter]
          addObserver:self selector:@selector(protocolDisconnected:) name:kOTRProtocolDiconnect object:buddyProtocol];
@@ -102,6 +111,33 @@
         
         [chatHistory appendFormat:@"%@ %@</p>",username, message];
     }
+}
+
+-(void)sendChatState:(OTRChatState) sendingChatState
+{
+    if([self.protocol respondsToSelector:@selector(sendChatState:withBuddy:)])
+    {
+        lastSentChatState = sendingChatState;
+        [self.protocol sendChatState:sendingChatState withBuddy:self];
+    }
+    
+}
+-(void)sendPausedChatState
+{
+    [self sendChatState:kOTRChatStatePaused];
+}
+
+-(void)sendActiveChatState
+{
+    [pausedChatStateTimer invalidate];
+    [self sendChatState:kOTRChatStateActive];
+}
+
+-(void)restartPausedChatStateTimer
+{
+    [pausedChatStateTimer invalidate];
+    pausedChatStateTimer = [NSTimer scheduledTimerWithTimeInterval:kOTRChatStatePausedTimeout target:self selector:@selector(sendPausedChatState) userInfo:nil repeats:NO];
+    
 }
 
 
@@ -149,9 +185,9 @@
     }
 }
 
--(void)receiveChatStateMessage:(OTRChatState) chatState
+-(void)receiveChatStateMessage:(OTRChatState) newChatState
 {
-    self.chatState = chatState;
+    self.chatState = newChatState;
     [[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];
 }
 

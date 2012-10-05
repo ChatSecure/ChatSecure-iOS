@@ -299,11 +299,6 @@
     
     
     //set notification for when a key is pressed.
-    [[NSNotificationCenter defaultCenter] addObserver:self 
-                                             selector: @selector(keyPressed:) 
-                                                 name: UITextViewTextDidChangeNotification 
-                                               object: nil];
-    
     //turn off scrolling and set the font details.
     //chatBox.scrollEnabled = NO;
     //chatBox.font = [UIFont fontWithName:@"Helvetica" size:14];
@@ -385,7 +380,26 @@
 }
 
 
--(void) keyPressed: (NSNotification*) notification{
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    
+    NSRange textFieldRange = NSMakeRange(0, [textField.text length]);
+    [buddy restartPausedChatStateTimer];
+
+    
+    if (NSEqualRanges(range, textFieldRange) && [string length] == 0)
+    {
+        [buddy sendActiveChatState];
+    }
+    else if (buddy.lastSentChatState != kOTRChatStateComposing) {
+        [buddy sendChatState:kOTRChatStateComposing];
+    }
+    
+    return YES;
+}
+
+-(void) keyPressed
+{
 /*	// get the size of the text block so we can work our magic
 	//CGSize newSize = [chatBox.text 
     //                  sizeWithFont:[UIFont fontWithName:@"Helvetica" size:14] 

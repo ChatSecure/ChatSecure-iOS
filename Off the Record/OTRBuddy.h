@@ -60,6 +60,10 @@ enum OTRChatState {
 @property (nonatomic) OTRBuddyStatus status;
 @property (nonatomic) OTRKitMessageState encryptionStatus;
 @property (nonatomic) OTRChatState chatState;
+@property (nonatomic) OTRChatState lastSentChatState;
+
+@property (nonatomic, strong) NSTimer * pausedChatStateTimer;
+@property (nonatomic, strong) NSTimer * inactiveChatStateTimer;
 
 -(id)initWithDisplayName:(NSString*)buddyName accountName:(NSString*) accountName protocol:(id <OTRProtocol>)buddyProtocol status:(OTRBuddyStatus)buddyStatus groupName:(NSString*)buddyGroupName;
 +(OTRBuddy*)buddyWithDisplayName:(NSString*)buddyName accountName:(NSString*) accountName protocol:(id <OTRProtocol>)buddyProtocol status:(OTRBuddyStatus)buddyStatus groupName:(NSString*)buddyGroupName;
@@ -67,6 +71,10 @@ enum OTRChatState {
 -(void)receiveMessage:(NSString *)message;
 -(void)receiveChatStateMessage:(OTRChatState) chatState;
 -(void)sendMessage:(NSString *)message secure:(BOOL)secure;
+-(void)sendChatState:(OTRChatState)chatState;
+-(void)restartPausedChatStateTimer;
+-(void)sendPausedChatState;
+-(void)sendActiveChatState;
 
 
 @end
