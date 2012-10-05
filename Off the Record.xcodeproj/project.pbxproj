@@ -127,7 +127,6 @@
 		D9375414160801180059321E /* DDXMLElement.m in Sources */ = {isa = PBXBuildFile; fileRef = D937518D160801160059321E /* DDXMLElement.m */; };
 		D9375415160801180059321E /* DDXMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = D937518F160801160059321E /* DDXMLNode.m */; };
 		D9375417160801180059321E /* libidn.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D9375195160801160059321E /* libidn.a */; };
-		D937552B1608034B0059321E /* libCrittercismCrashOnly.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D93755111608034B0059321E /* libCrittercismCrashOnly.a */; };
 		D93C316F159A6719006316C7 /* OTRAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = D93C316E159A6719006316C7 /* OTRAccount.m */; };
 		D93C3173159A6C10006316C7 /* OTRAccountsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D93C3172159A6C10006316C7 /* OTRAccountsManager.m */; };
 		D93C31B5159A7DDA006316C7 /* SFHFKeychainUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = D93C31B4159A7DDA006316C7 /* SFHFKeychainUtils.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -1016,7 +1015,6 @@
 				D9F9377D13F44BD3009A3D84 /* UIKit.framework in Frameworks */,
 				D9F9377F13F44BD3009A3D84 /* Foundation.framework in Frameworks */,
 				D9375417160801180059321E /* libidn.a in Frameworks */,
-				D937552B1608034B0059321E /* libCrittercismCrashOnly.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2764,7 +2762,7 @@
 		D9F937A313F44BD3009A3D84 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Chris Ballinger (9P62QGET7G)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Off the Record/Off the Record-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -2786,7 +2784,7 @@
 				);
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = ChatSecure;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "87758896-F13C-4C33-9EC4-9B1C68024C2E";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
@@ -2795,7 +2793,7 @@
 		D9F937A413F44BD3009A3D84 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Chris Ballinger (9P62QGET7G)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Off the Record/Off the Record-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -2817,7 +2815,7 @@
 				);
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = ChatSecure;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "87758896-F13C-4C33-9EC4-9B1C68024C2E";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
