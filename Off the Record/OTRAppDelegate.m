@@ -268,6 +268,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 // Delegation methods
 - (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)devToken {
     [[OTRPushController sharedInstance] updateDevicePushToken:devToken];
+    [[OTRPushController sharedInstance] requestPushAccessTokenForBuddy:nil];
 }
 
 - (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {

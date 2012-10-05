@@ -28,6 +28,7 @@
 
 #define REGISTER_PATH @"register"
 #define ADD_DPT_PATH @"add_dpt"
+#define REQUEST_PAT_PATH @"request_pat"
 
 #define kOTRPushAccountKey @"kOTRPushAccountKey"
 
@@ -35,6 +36,8 @@
 #define PASSWORD_KEY @"password"
 #define EXPIRATION_DATE_KEY @"expiration_date"
 #define DPT_KEY @"dpt"
+#define PAT_KEY @"pat"
+#define PATS_KEY @"pats"
 
 @implementation OTRPushController
 @synthesize pushClient;
@@ -111,23 +114,32 @@
     }
 }
 
-- (void) updateDevicePushToken:(NSData *)devicePushToken {
+- (BOOL) checkSubscriptionStatus {
     NSMutableDictionary *accountDictionary = [self accountDictionary];
-
+    
     NSString *accountID = [accountDictionary objectForKey:ACCOUNT_ID_KEY];
     NSString *password = [accountDictionary objectForKey:PASSWORD_KEY];
     NSDate *expirationDate = [accountDictionary objectForKey:EXPIRATION_DATE_KEY];
     
     if (!accountID || !password) {
-        return;
+        return NO;
     }
     
     BOOL subscriptionExpired = [expirationDate compare:[NSDate date]] == NSOrderedAscending;
     if (subscriptionExpired) {
         NSLog(@"Push subscription expired on: %@", [expirationDate description]);
+        return NO;
+    }
+    return YES;
+}
+
+- (void) updateDevicePushToken:(NSData *)devicePushToken {
+    if (![self checkSubscriptionStatus]) {
         return;
     }
-    
+    NSMutableDictionary *accountDictionary = [self accountDictionary];
+    NSString *accountID = [accountDictionary objectForKey:ACCOUNT_ID_KEY];
+    NSString *password = [accountDictionary objectForKey:PASSWORD_KEY];
     NSMutableDictionary *postDictionary = [NSMutableDictionary dictionaryWithCapacity:3];
     NSString *dpt = [devicePushToken hexStringValue];
     [postDictionary setObject:dpt forKey:DPT_KEY];
@@ -139,6 +151,39 @@
         NSLog(@"Response: %@", responseObject);
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"Error updating device push token: %@%@", [error localizedDescription], [error userInfo]);
+    }];
+}
+
+- (void) requestPushAccessTokenForBuddy:(OTRBuddy*)buddy {
+    if (![self checkSubscriptionStatus]) {
+        return;
+    }
+    NSMutableDictionary *accountDictionary = [self accountDictionary];
+    NSString *accountID = [accountDictionary objectForKey:ACCOUNT_ID_KEY];
+    NSString *password = [accountDictionary objectForKey:PASSWORD_KEY];
+    NSMutableDictionary *postDictionary = [NSMutableDictionary dictionaryWithCapacity:2];
+    [postDictionary setObject:accountID forKey:ACCOUNT_ID_KEY];
+    [postDictionary setObject:password forKey:PASSWORD_KEY];
+        
+    [pushClient postPath:REQUEST_PAT_PATH parameters:postDictionary success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"Response: %@", responseObject);
+        NSString *pat = [responseObject objectForKey:PAT_KEY];
+        if (!pat || !pat.length) {
+            return;
+        }
+        NSMutableDictionary *pats = [NSMutableDictionary dictionaryWithDictionary:[accountDictionary objectForKey:PATS_KEY]];
+        if (!pats) {
+            pats = [NSMutableDictionary dictionary];
+        }
+        NSString *displayName = buddy.displayName;
+        if (!displayName) {
+            displayName = @"???";
+        }
+        [pats setObject:displayName forKey:pat];
+        [accountDictionary setObject:pats forKey:PATS_KEY];
+        [self saveAccountDictionary:accountDictionary];
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"Error requesting PAT: %@%@", [error localizedDescription], [error userInfo]);
     }];
 }
 

@@ -23,6 +23,7 @@
 #import <Foundation/Foundation.h>
 #import <StoreKit/StoreKit.h>
 #import "OTRPushAPIClient.h"
+#import "OTRBuddy.h"
 
 @interface OTRPushController : NSObject
 
@@ -30,6 +31,7 @@
 
 - (void) registerWithReceipt:(NSData*)receipt transactionIdentifier:(NSString*)transactionIdentifier;
 - (void) updateDevicePushToken:(NSData*)devicePushToken;
+- (void) requestPushAccessTokenForBuddy:(OTRBuddy*)buddy;
 
 + (void) registerForPushNotifications;
 
