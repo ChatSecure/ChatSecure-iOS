@@ -152,6 +152,7 @@
 {
     [super viewWillAppear:animated];
     [self.usernameTextField resignFirstResponder];
+    [self.passwordTextField resignFirstResponder];
 }
 
 - (void)dealloc
