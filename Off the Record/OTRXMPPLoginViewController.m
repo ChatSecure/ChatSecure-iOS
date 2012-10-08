@@ -45,11 +45,12 @@
     self.domainTextField.delegate = self;
     self.domainTextField.autocorrectionType = UITextAutocorrectionTypeNo;
     self.domainTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-    self.domainTextField.borderStyle = UITextBorderStyleRoundedRect;
+    //self.domainTextField.borderStyle = UITextBorderStyleRoundedRect;
     self.domainTextField.placeholder = OPTIONAL_STRING;
     self.domainTextField.text = accountDomainString;
     self.domainTextField.returnKeyType = UIReturnKeyDone;
     self.domainTextField.keyboardType = UIKeyboardTypeURL;
+    self.domainTextField.textColor = self.textFieldTextColor;
     
     self.sslMismatchSwitch = [[UISwitch alloc]init];
     self.sslMismatchSwitch.on = sslMismatchSwitchSatus;
@@ -61,10 +62,11 @@
     self.portTextField.delegate = self;
     self.portTextField.autocorrectionType = UITextAutocorrectionTypeNo;
     self.portTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-    self.portTextField.borderStyle = UITextBorderStyleRoundedRect;
+    //self.portTextField.borderStyle = UITextBorderStyleRoundedRect;
     self.portTextField.placeholder = [NSString stringWithFormat:@"%@",[[self.account accountDictionary] objectForKey:kOTRXMPPAccountPortNumber]];
     self.portTextField.returnKeyType = UIReturnKeyDone;
     self.portTextField.keyboardType = UIKeyboardTypeNumberPad;
+    self.portTextField.textColor = self.textFieldTextColor;
     
     [self addCellinfoWithSection:1 row:0 labelText:DOMAIN_STRING cellType:kCellTypeTextField userInputView:self.domainTextField];
     [self addCellinfoWithSection:1 row:1 labelText:SSL_MISMATCH_STRING cellType:kCellTypeSwitch userInputView:self.sslMismatchSwitch];
@@ -144,6 +146,12 @@
     {
         [self.loginViewTableView scrollToRowAtIndexPath:[self.loginViewTableView indexPathForCell:selectedCell] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
     }
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self.usernameTextField resignFirstResponder];
 }
 
 - (void)dealloc

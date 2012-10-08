@@ -55,6 +55,7 @@
 @property (nonatomic, strong) NSMutableArray * tableViewArray;
 
 @property (nonatomic, strong) UITableView * loginViewTableView;
+@property (nonatomic, strong) UIColor * textFieldTextColor;
 
 @property (nonatomic) BOOL isNewAccount;
 

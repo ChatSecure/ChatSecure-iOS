@@ -17,10 +17,6 @@
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-    if (self) {
-        
-        
-    }
     return self;
 }
 
@@ -28,14 +24,13 @@
 {
     self = [super initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:reuseIdentifier];
     self.textField = cellTextField;
+    self.textField.autocorrectionType = UITextAutocorrectionTypeNo;
+    self.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+    self.textField.backgroundColor = [UIColor whiteColor];
     self.textField.tag = 999;
+    
     self.textLabel.text = name;
-    [self layoutIfNeeded];
     
-    self.textField.frame = CGRectMake(textLeftFieldBuffer, self.textLabel.frame.origin.y, self.contentView.frame.size.width-textLeftFieldBuffer, self.contentView.frame.size.height-20);
-    self.textField.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
-    
-    [self.contentView addSubview:self.textField];
     
 }
 
@@ -44,7 +39,7 @@
     [[self.contentView viewWithTag:999] removeFromSuperview];
     _textField = newTextField;
     [self layoutIfNeeded];
-    self.textField.frame = CGRectMake(textLeftFieldBuffer, self.textLabel.frame.origin.y, self.contentView.frame.size.width-textLeftFieldBuffer, self.contentView.frame.size.height-20);
+    self.textField.frame = CGRectMake(textLeftFieldBuffer, self.textLabel.frame.origin.y, self.contentView.frame.size.width-textLeftFieldBuffer-5, self.contentView.frame.size.height-20);
     self.textField.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
     self.textField.tag = 999;
     [self.contentView addSubview:self.textField];

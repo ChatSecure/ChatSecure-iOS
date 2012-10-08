@@ -45,6 +45,7 @@
 @synthesize account;
 @synthesize isNewAccount;
 @synthesize loginViewTableView;
+@synthesize textFieldTextColor;
 
 @synthesize tableViewArray;
 
@@ -60,6 +61,7 @@
     [timeoutTimer invalidate];
     self.timeoutTimer = nil;
     self.account = nil;
+    self.textFieldTextColor = nil;
 }
 
 - (id) initWithAccount:(OTRAccount*)newAccount {
@@ -67,6 +69,7 @@
         self.account = newAccount;
         
         NSLog(@"Account Dictionary: %@",[account accountDictionary]);
+        self.textFieldTextColor = [UIColor colorWithRed:0.22 green:0.33 blue:0.53 alpha:1.0];
     }
     return self;
 }
@@ -78,21 +81,23 @@
     
     self.usernameTextField = [[UITextField alloc] init];
     self.usernameTextField.delegate = self;
-    self.usernameTextField.borderStyle = UITextBorderStyleRoundedRect;
+    //self.usernameTextField.borderStyle = UITextBorderStyleRoundedRect;
     self.usernameTextField.autocorrectionType = UITextAutocorrectionTypeNo;
     self.usernameTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     self.usernameTextField.text = account.username;
     self.usernameTextField.returnKeyType = UIReturnKeyDone;
-    
+    self.usernameTextField.textColor = self.textFieldTextColor;
     
     [self addCellinfoWithSection:0 row:0 labelText:USERNAME_STRING cellType:kCellTypeTextField userInputView:self.usernameTextField];
     
     
     self.passwordTextField = [[UITextField alloc] init];
     self.passwordTextField.delegate = self;
-    self.passwordTextField.borderStyle = UITextBorderStyleRoundedRect;
+    //self.passwordTextField.borderStyle = UITextBorderStyleRoundedRect;
     self.passwordTextField.secureTextEntry = YES;
     self.passwordTextField.returnKeyType = UIReturnKeyDone;
+    self.passwordTextField.textColor = self.textFieldTextColor;
+    self.passwordTextField.placeholder = REQUIRED_STRING;
     
     [self addCellinfoWithSection:0 row:1 labelText:PASSWORD_STRING cellType:kCellTypeTextField userInputView:self.passwordTextField];
     
@@ -232,22 +237,11 @@
         [cell layoutIfNeeded];
         ((OTRInLineTextEditTableViewCell *)cell).textField = [cellDictionary objectForKey:kUserInputViewKey];
     }
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     return cell;
 }
 
--(void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-}
 
-
-- (CGSize) textSizeForLabel:(UILabel*)label {
-    return [label.text sizeWithFont:label.font];
-}
-
-- (CGRect) textFieldFrameForLabel:(UILabel*)label {
-    return CGRectMake(label.frame.origin.x + label.frame.size.width + 5, label.frame.origin.y, self.view.frame.size.width - label.frame.origin.x - label.frame.size.width - 10, 31);
-}
 
 
 #pragma mark - View lifecycle
@@ -373,7 +367,7 @@
         id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
         [protocol connectWithPassword:self.passwordTextField.text];
     }
-    self.timeoutTimer = [NSTimer timerWithTimeInterval:45.0 target:self selector:@selector(timeout:) userInfo:nil repeats:NO];
+    self.timeoutTimer = [NSTimer scheduledTimerWithTimeInterval:45.0 target:self selector:@selector(timeout:) userInfo:nil repeats:NO];
     [[[OTRProtocolManager sharedInstance] accountsManager] addAccount:account];
     [account save];
 }
