@@ -345,17 +345,24 @@
     [self refreshLockButton];
     [self updateChatHistory];
     [self refreshView];
+    [self updateChatState:NO];
 }
 
 
      
 - (void) messageProcessedNotification:(NSNotification*)notification {
     [self updateChatHistory];
-    [self updateChatState];
+    [self updateChatState:YES];
 }
 
-- (void)updateChatState
+- (void)updateChatState:(BOOL)animated
 {
+    CGFloat animateTime;
+    if(animated)
+        animateTime = 1.0;
+    else
+        animateTime = 0.0;
+    
     if(!chatStateLabel)
     {
         chatStateLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 22)];
@@ -376,12 +383,10 @@
     
     
     
-    if(self.buddy.chatState == kOTRChatStateUnknown)
-        chatStateLabel.text = [NSString string];
-    else if(self.buddy.chatState == kOTRChatStateComposing)
+    if(self.buddy.chatState == kOTRChatStateComposing)
     {
         chatStateLabel.text = CHAT_STATE_COMPOSING_STRING;
-        [UIView animateWithDuration:1.5 animations:^{
+        [UIView animateWithDuration:animateTime animations:^{
             chatStateImage.alpha = 1.0;
         }];
         
@@ -389,7 +394,7 @@
     else if(self.buddy.chatState == kOTRChatStatePaused)
     {
         chatStateLabel.text = CHAT_STATE_PAUSED_STRING;
-        [UIView animateWithDuration:1.5 animations:^{
+        [UIView animateWithDuration:animateTime animations:^{
             chatStateImage.alpha = 0.3;
         }];
         
@@ -397,7 +402,7 @@
     else if(self.buddy.chatState == kOTRChatStateActive)
     {
         chatStateLabel.text = CHAT_STATE_ACTIVE_STRING;
-        [UIView animateWithDuration:1.5 animations:^{
+        [UIView animateWithDuration:animateTime animations:^{
             chatStateImage.alpha = 0;
         }];
     }
@@ -405,6 +410,8 @@
         chatStateLabel.text = CHAT_STATE_INACTVIE_STRING;
     else if(self.buddy.chatState == kOTRChatStateGone)
         chatStateLabel.text = CHAT_STATE_GONE_STRING;
+    else
+        chatStateImage.alpha = 0;
     
 }
 
@@ -665,7 +672,6 @@
         
         if ([keyboardListener isVisible])
             [self keyboardWillShow:[self.keyboardListener lastNotification]];
-        [self updateChatState];
     }
 }
 
@@ -673,6 +679,7 @@
 {
     [self refreshView];
     [self updateChatHistory];
+    [self updateChatState:NO];
 }
 
 /*- (void)debugButton:(UIBarButtonItem *)sender

@@ -57,6 +57,6 @@
 - (void)setupLockButton;
 - (void)refreshLockButton;
 - (void)lockButtonPressed;
-- (void)updateChatState;
+- (void)updateChatState:(BOOL)animated;
 
 @end
