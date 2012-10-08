@@ -35,6 +35,7 @@
 @property (nonatomic, retain) UIView *chatBoxView;
 @property (nonatomic, retain) UILabel *instructionsLabel;
 @property (nonatomic, strong) UILabel *chatStateLabel;
+@property (nonatomic, strong) UIImageView * chatStateImage;
 
 @property (nonatomic, retain) OTRBuddy *buddy;
 

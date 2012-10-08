@@ -51,11 +51,13 @@
 @synthesize instructionsLabel;
 @synthesize keyboardListener;
 @synthesize chatStateLabel;
+@synthesize chatStateImage;
 
 - (void) dealloc {
     self.lastActionLink = nil;
     self.buddyListController = nil;
     self.buddy = nil;
+    self.chatStateImage = nil;
 }
 
 - (void)viewDidUnload {
@@ -362,16 +364,43 @@
         //chatStateLabel.alpha = .7;
         chatStateLabel.tag = 888;
         chatStateLabel.textColor = [UIColor whiteColor];
-        [self.view addSubview:chatStateLabel];
+        //[self.view addSubview:chatStateLabel];
     }
+    if(!chatStateImage)
+    {
+        chatStateImage = [[UIImageView alloc] initWithFrame:CGRectMake(self.view.frame.size.width-25, 0, 25, 25)];
+        chatStateImage.image = [UIImage imageNamed:@"penciltemp.png"];
+        chatStateImage.alpha = 0.0;
+        [self.view addSubview:chatStateImage];
+    }
+    
+    
+    
     if(self.buddy.chatState == kOTRChatStateUnknown)
         chatStateLabel.text = [NSString string];
     else if(self.buddy.chatState == kOTRChatStateComposing)
+    {
         chatStateLabel.text = CHAT_STATE_COMPOSING_STRING;
+        [UIView animateWithDuration:1.5 animations:^{
+            chatStateImage.alpha = 1.0;
+        }];
+        
+    }
     else if(self.buddy.chatState == kOTRChatStatePaused)
+    {
         chatStateLabel.text = CHAT_STATE_PAUSED_STRING;
+        [UIView animateWithDuration:1.5 animations:^{
+            chatStateImage.alpha = 0.3;
+        }];
+        
+    }
     else if(self.buddy.chatState == kOTRChatStateActive)
+    {
         chatStateLabel.text = CHAT_STATE_ACTIVE_STRING;
+        [UIView animateWithDuration:1.5 animations:^{
+            chatStateImage.alpha = 0;
+        }];
+    }
     else if(self.buddy.chatState == kOTRChatStateInactive)
         chatStateLabel.text = CHAT_STATE_INACTVIE_STRING;
     else if(self.buddy.chatState == kOTRChatStateGone)
@@ -520,7 +549,8 @@
 - (void)sendButtonPressed:(id)sender {
     BOOL secure = self.navigationItem.rightBarButtonItem == lockButton;
     [buddy sendMessage:messageTextField.text secure:secure];
-    messageTextField.text = @"";    
+    messageTextField.text = @"";
+    [self.buddy.pausedChatStateTimer invalidate];
     [self chatButtonClick];
     [self updateChatHistory];
 }
