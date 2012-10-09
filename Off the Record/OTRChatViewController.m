@@ -376,7 +376,7 @@
     if(!chatStateImage)
     {
         chatStateImage = [[UIImageView alloc] initWithFrame:CGRectMake(self.view.frame.size.width-25, 0, 25, 25)];
-        chatStateImage.image = [UIImage imageNamed:@"penciltemp.png"];
+        chatStateImage.image = [UIImage imageNamed:@"pencil"];
         chatStateImage.alpha = 0.0;
         [self.view addSubview:chatStateImage];
     }
