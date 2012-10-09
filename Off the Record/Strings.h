@@ -81,6 +81,8 @@
 #define SSL_MISMATCH_STRING NSLocalizedString(@"SSL Hostname Mismatch",@"stirng for settings to allow ssl mismatch")
 #define SELF_SIGNED_SSL_STRING NSLocalizedString(@"Self Signed SSL",@"string for settings to allow self signed ssl stirng")
 #define PORT_STRING NSLocalizedString(@"Port", @"Label for port number field for connecting to service")
+#define GOOGLE_TALK_EXAMPLE_STRING NSLocalizedString(@"user@gmail.com", @"example of a google talk account");
+#define REQUIRED_STRING NSLocalizedString(@"Required",@"String to let user know a certain field like a password is required to create an account")
 
 // OTRAccountsViewController
 #define LOGOUT_STRING NSLocalizedString(@"Log Out", @"log out from account")

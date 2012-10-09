@@ -39,3 +39,8 @@ What the hell is wrong with you?
 ================================
 
 Well, first of all, I have recently adopted an obsession with making IM protocols and rewriting OSCAR APIs. I wrote two more before this, each being more readable than the last. But I'm probably going to end up writing another one after this one, probably in RoR.
+
+License
+=======
+
+This project is now under the [Mozilla Public License (MPL)](http://www.mozilla.org/MPL/).

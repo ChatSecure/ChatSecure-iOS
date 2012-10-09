@@ -14,6 +14,7 @@
     AIMLogin * login;
 	AIMSessionManager * theSession;
 	NSThread * mainThread;
+	int incr;
 }
 
 - (void)beginTest;

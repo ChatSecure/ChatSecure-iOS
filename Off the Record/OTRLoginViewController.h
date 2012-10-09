@@ -23,40 +23,39 @@
 #import <UIKit/UIKit.h>
 #import "OTRProtocolManager.h"
 #import "MBProgressHUD.h"
+#import "Strings.h"
+#import "OTRConstants.h"
 
-@interface OTRLoginViewController : UIViewController <UITextFieldDelegate, MBProgressHUDDelegate, UIActionSheetDelegate> {
+#define kTextLabelTextKey @"textLabelTextKey"
+#define kCellTypeKey @"cellTypeKey"
+#define kUserInputViewKey @"userInputViewKey"
+#define kCellTypeTextField @"cellTypeTextField"
+#define kCellTypeSwitch @"cellTypeSwitch"
+#define KCellTypeHelp @"cellTypeHelp"
+
+@interface OTRLoginViewController : UIViewController <UITextFieldDelegate, MBProgressHUDDelegate, UIActionSheetDelegate, UITableViewDataSource,UITableViewDelegate> {
     MBProgressHUD *HUD;
     UIView *padding;
-    UILabel *facebookHelpLabel;
 }
 
 - (id) initWithAccount:(OTRAccount*)newAccount;
 
 @property (nonatomic, retain) OTRAccount *account;
 
-@property (nonatomic, retain) UILabel *usernameLabel;
-@property (nonatomic, retain) UILabel *passwordLabel;
-@property (nonatomic, strong) UILabel *domainLabel;
-@property (nonatomic, retain) UILabel *rememberPasswordLabel;
 @property (nonatomic, retain) UISwitch *rememberPasswordSwitch;
 @property (nonatomic, retain) UIImageView *logoView;
 @property (nonatomic, retain) UITextField *usernameTextField;
 @property (nonatomic, retain) UITextField *passwordTextField;
-@property (nonatomic, strong) UITextField *domainTextField;
-@property (nonatomic, strong) UISegmentedControl *basicAdvancedSegmentedControl;
-@property (nonatomic, strong) UILabel *sslMismatchLabel;
-@property (nonatomic, strong) UISwitch *sslMismatchSwitch;
-@property (nonatomic, strong) UILabel *selfSignedLabel;
-@property (nonatomic, strong) UISwitch *selfSignedSwitch;
-@property (nonatomic, strong) UILabel *portLabel;
-@property (nonatomic, strong) UITextField *portTextField;
-
-@property (nonatomic, strong) UIButton *facebookInfoButton;
 
 @property (nonatomic, retain) UIBarButtonItem *loginButton;
 @property (nonatomic, retain) UIBarButtonItem *cancelButton;
 
 @property (nonatomic, strong) NSTimer * timeoutTimer;
+
+@property (nonatomic, strong) NSMutableArray * tableViewArray;
+
+@property (nonatomic, strong) UITableView * loginViewTableView;
+@property (nonatomic, strong) UIColor * textFieldTextColor;
 
 @property (nonatomic) BOOL isNewAccount;
 
@@ -64,5 +63,10 @@
 - (void)cancelPressed:(id)sender;
 
 -(BOOL)checkFields;
+
+-(void)addCellinfoWithSection:(NSInteger)section row:(NSInteger)row labelText:(id)text cellType:(NSString *)type userInputView:(UIView *)inputView;
+-(void)readInFields;
+
++(OTRLoginViewController *)loginViewControllerWithAcccount:(OTRAccount *)account;
 
 @end
