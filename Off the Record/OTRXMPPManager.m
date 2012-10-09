@@ -636,6 +636,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
         NSString *body = [[message elementForName:@"body"] stringValue];
         //NSString *displayName = [user displayName];
         
+        
         OTRBuddy * messageBuddy = [protocolBuddyList objectForKey:user.jidStr];
         
         OTRMessage *otrMessage = [OTRMessage messageWithBuddy:messageBuddy message:body];        
