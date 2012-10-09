@@ -43,6 +43,7 @@
 @synthesize lastSentChatState;
 @synthesize pausedChatStateTimer;
 @synthesize inactiveChatStateTimer;
+@synthesize composingMessageString;
 
 - (void) dealloc {
     self.accountName = nil;
@@ -130,25 +131,37 @@
         [self sendChatState:kOTRChatStateComposing];
     }
     [self restartPausedChatStateTimer];
+    [self.inactiveChatStateTimer invalidate];
 }
 -(void)sendPausedChatState
 {
     [self sendChatState:kOTRChatStatePaused];
+    [self.inactiveChatStateTimer invalidate];
 }
 
 -(void)sendActiveChatState
 {
     [pausedChatStateTimer invalidate];
+    [self restartInactiveChatStateTimer];
     [self sendChatState:kOTRChatStateActive];
+}
+-(void)sendInactiveChatState
+{
+    [self.inactiveChatStateTimer invalidate];
+    if(self.lastSentChatState != kOTRChatStateInactive)
+        [self sendChatState:kOTRChatStateInactive];
 }
 
 -(void)restartPausedChatStateTimer
 {
     [pausedChatStateTimer invalidate];
     pausedChatStateTimer = [NSTimer scheduledTimerWithTimeInterval:kOTRChatStatePausedTimeout target:self selector:@selector(sendPausedChatState) userInfo:nil repeats:NO];
-    
 }
-
+-(void)restartInactiveChatStateTimer
+{
+    [inactiveChatStateTimer invalidate];
+    inactiveChatStateTimer = [NSTimer scheduledTimerWithTimeInterval:kOTRChatStateInactiveTimeout target:self selector:@selector(sendInactiveChatState) userInfo:nil repeats:NO];
+}
 
 -(void)receiveMessage:(NSString *)message
 {

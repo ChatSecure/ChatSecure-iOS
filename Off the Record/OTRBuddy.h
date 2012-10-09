@@ -54,6 +54,7 @@ enum OTRChatState {
 @property (nonatomic, retain) NSString* groupName;
 @property (nonatomic, retain) NSMutableString* chatHistory;
 @property (nonatomic, retain) NSString *lastMessage;
+@property (nonatomic, strong) NSString * composingMessageString;
 @property (nonatomic, retain) id<OTRProtocol> protocol;
 @property (nonatomic) BOOL lastMessageDisconnected;
 
@@ -73,8 +74,10 @@ enum OTRChatState {
 -(void)sendMessage:(NSString *)message secure:(BOOL)secure;
 -(void)sendChatState:(OTRChatState)chatState;
 -(void)restartPausedChatStateTimer;
+-(void)restartInactiveChatStateTimer;
 -(void)sendPausedChatState;
 -(void)sendActiveChatState;
+-(void)sendInactiveChatState;
 -(void)sendComposingChatState;
 
 @end

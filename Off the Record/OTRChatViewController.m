@@ -677,9 +677,24 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    self.messageTextField.text = self.buddy.composingMessageString;
+    if(![self.buddy.composingMessageString length])
+    {
+        [self.buddy sendActiveChatState];
+    }
     [self refreshView];
     [self updateChatHistory];
     [self updateChatState:NO];
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    self.buddy.composingMessageString = self.messageTextField.text;
+    if(![self.buddy.composingMessageString length])
+    {
+        [self.buddy sendInactiveChatState];
+    }
 }
 
 /*- (void)debugButton:(UIBarButtonItem *)sender

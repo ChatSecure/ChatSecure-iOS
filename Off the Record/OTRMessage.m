@@ -63,6 +63,7 @@
 +(void)sendMessage:(OTRMessage *)message
 {    
     NSDictionary *messageInfo = [NSDictionary dictionaryWithObject:message forKey:@"message"];
+    [message.buddy restartInactiveChatStateTimer];
     
     [message.buddy.protocol sendMessage:message];
     
