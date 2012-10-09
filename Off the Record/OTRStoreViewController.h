@@ -24,10 +24,12 @@
 #import <StoreKit/StoreKit.h>
 #import "OTRStoreTableViewCell.h"
 #import "OTRPurchaseController.h"
+#import "OTRPushController.h"
 
 @interface OTRStoreViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, OTRPurchaseControllerDelegate>
 
 @property (nonatomic, weak) OTRPurchaseController *purchaseController;
+@property (nonatomic, weak) OTRPushController *pushController;
 @property (nonatomic, weak) NSArray *products;
 @property (nonatomic, strong) UITableView *productTableView;
 

@@ -274,7 +274,7 @@ didReceiveRemoteNotification:(NSDictionary *)userInfo {
 - (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)devToken {
     [[OTRPushController sharedInstance] updateDevicePushToken:devToken];
     //[[OTRPushController sharedInstance] requestPushAccessTokenForBuddy:nil];
-    [[OTRPushController sharedInstance] knockWithAccountID:@"9846905" pat:@"1975460"];
+    //[[OTRPushController sharedInstance] knockWithAccountID:@"9846905" pat:@"1975460"];
 }
 
 - (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {

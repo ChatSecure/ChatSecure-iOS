@@ -24,13 +24,23 @@
 #import "MBProgressHUD.h"
 #import "Strings.h"
 
+enum {
+    ACCOUNT_INFO_SECTION = 0,
+    PRODUCTS_SECTION
+};
+
+enum {
+    ACCOUNT_INFO_ACCOUNT_ROW = 0,
+    ACCOUNT_INFO_PASSWORD_ROW,
+    ACCOUNT_INFO_EXPIRATION_ROW
+};
 
 @interface OTRStoreViewController ()
 
 @end
 
 @implementation OTRStoreViewController
-@synthesize productTableView, products, purchaseController;
+@synthesize productTableView, products, purchaseController, pushController;
 
 - (void) dealloc {
     self.productTableView = nil;
@@ -44,6 +54,7 @@
         self.productTableView.dataSource = self;
         self.title = STORE_STRING;
         self.purchaseController = [OTRPurchaseController sharedInstance];
+        self.pushController = [OTRPushController sharedInstance];
         purchaseController.delegate = self;
         self.products = [NSArray array];
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:RESTORE_STRING style:UIBarButtonItemStyleBordered target:self action:@selector(restorePurchases:)];
@@ -82,18 +93,61 @@
 }
 
 - (UITableViewCell*) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString *cellIdentifier = @"CellIdentifier";
-    OTRStoreTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-    if (!cell) {
-        cell = [[OTRStoreTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
+    if (indexPath.section == ACCOUNT_INFO_SECTION) {
+        static NSString *cellIdentifier = @"InfoCellIdentifier";
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+        if (!cell) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
+        }
+        if (indexPath.row == ACCOUNT_INFO_ACCOUNT_ROW) {
+            cell.textLabel.text = ACCOUNT_ID_STRING;
+            cell.detailTextLabel.text = pushController.accountID;
+        } else if (indexPath.row == ACCOUNT_INFO_PASSWORD_ROW) {
+            cell.textLabel.text = PASSWORD_STRING;
+            cell.detailTextLabel.text = pushController.password;
+        } else if (indexPath.row == ACCOUNT_INFO_EXPIRATION_ROW) {
+            cell.textLabel.text = EXPIRATION_TITLE_STRING;
+            cell.detailTextLabel.text = [pushController.expirationDate description];
+        }
+        return cell;
     }
-    SKProduct *product = [products objectAtIndex:indexPath.row];
-    cell.product = product;
-    return cell;
+    if (indexPath.section == PRODUCTS_SECTION) {
+        static NSString *cellIdentifier = @"StoreCellIdentifier";
+        OTRStoreTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+        if (!cell) {
+            cell = [[OTRStoreTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
+        }
+        SKProduct *product = [products objectAtIndex:indexPath.row];
+        cell.product = product;
+        return cell;
+    }
+    return nil;
+}
+
+- (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+
+- (NSInteger) numberOfSectionsInTableView:(UITableView *)tableView {
+    return 2;
+}
+
+- (NSString*) tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    if (section == ACCOUNT_INFO_SECTION) {
+        return ACCOUNT_INFO_STRING;
+    } else if (section == PRODUCTS_SECTION) {
+        return PRODUCTS_SECTION_STRING;
+    }
+    return nil;
 }
 
 - (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [products count];
+    if (section == ACCOUNT_INFO_SECTION) {
+        return 3;
+    } else if (section == PRODUCTS_SECTION) {
+        return [products count];
+    }
+    return 0;
 }
 
 - (void)didReceiveMemoryWarning

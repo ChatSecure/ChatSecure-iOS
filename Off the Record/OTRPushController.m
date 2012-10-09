@@ -68,7 +68,7 @@
     return [NSURL URLWithString:SERVER_URL];
 }
 
-- (void) registerWithReceipt:(NSData*)receipt transactionIdentifier:(NSString*)transactionIdentifier {
+- (void) registerWithReceipt:(NSData*)receipt {
     NSString *receiptString = [receipt base64Encoded];
     //NSLog(@"Receipt bytes: %@", [receipt description]);
     if (!receiptString) {
@@ -95,6 +95,18 @@
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"Error registering with receipt: %@%@", [error localizedDescription], [error userInfo]);
     }];
+}
+
+- (NSString*) accountID {
+    return [[self accountDictionary] objectForKey:ACCOUNT_ID_KEY];
+}
+
+- (NSString*) password {
+    return [[self accountDictionary] objectForKey:PASSWORD_KEY];
+}
+
+- (NSDate*) expirationDate {
+    return [[self accountDictionary] objectForKey:EXPIRATION_DATE_KEY];
 }
 
 - (NSMutableDictionary*) accountDictionary {
