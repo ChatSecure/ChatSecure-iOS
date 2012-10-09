@@ -23,8 +23,10 @@
 #import "OTRDoubleSettingViewController.h"
 #import "Strings.h"
 
-@interface OTRDoubleSettingViewController ()
-
+@interface OTRDoubleSettingViewController (Private)
+- (void) setTextForValueLabel;
+- (NSString*) stringForValue:(double)value;
+- (int) indexForValue:(double)value;
 @end
 
 @implementation OTRDoubleSettingViewController

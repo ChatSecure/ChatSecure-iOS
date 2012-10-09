@@ -28,6 +28,10 @@
 #define ACTIONSHEET_SHARE_TAG 2
 #define ACTIONSHEET_LINK_TAG 1
 
+@interface OTRAboutViewController(Private)
+- (NSArray*) buttonTitlesForShareButton;
+@end
+
 @implementation OTRAboutViewController
 @synthesize versionLabel, aboutTextView, lastActionLink, imageView;
 

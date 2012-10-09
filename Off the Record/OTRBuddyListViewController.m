@@ -37,6 +37,13 @@
 #define RECENTS_SECTION_INDEX 0
 #define BUDDIES_SECTION_INDEX 1
 
+@interface OTRBuddyListViewController(Private)
+- (void) selectActiveConversation;
+- (void) refreshActiveConversations;
+- (void) removeConversationsForAccount:(OTRAccount *)account;
+- (void) deleteBuddy:(OTRBuddy*)buddy;
+@end
+
 @implementation OTRBuddyListViewController
 @synthesize buddyListTableView;
 @synthesize chatViewController;
@@ -81,7 +88,6 @@
 - (void) loadView {
     [super loadView];
     self.buddyListTableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
-    self.buddyListTableView.allowsMultipleSelection = YES;
     buddyListTableView.dataSource = self;
     buddyListTableView.delegate = self;
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"14-gear.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(showSettingsView:)];

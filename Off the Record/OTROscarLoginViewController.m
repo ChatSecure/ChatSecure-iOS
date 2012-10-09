@@ -1,8 +1,8 @@
 //
-//  OTRViewSetting.h
+//  OTROscarLoginViewController.m
 //  Off the Record
 //
-//  Created by Chris Ballinger on 4/11/12.
+//  Created by David on 10/2/12.
 //  Copyright (c) 2012 Chris Ballinger. All rights reserved.
 //
 //  This file is part of ChatSecure.
@@ -20,15 +20,33 @@
 //  You should have received a copy of the GNU General Public License
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
-#import "OTRSetting.h"
+#import "OTROscarLoginViewController.h"
 
+@interface OTROscarLoginViewController ()
 
-@interface OTRViewSetting : OTRSetting
+@end
 
-@property (nonatomic, retain, readonly) Class viewControllerClass;
+@implementation OTROscarLoginViewController
 
-- (id) initWithTitle:(NSString*)newTitle description:(NSString*)newDescription viewControllerClass:(Class)newViewControllerClass;
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        // Custom initialization
+    }
+    return self;
+}
 
-- (void) showView;
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+	// Do any additional setup after loading the view.
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
 
 @end

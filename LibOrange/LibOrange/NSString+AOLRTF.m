@@ -17,7 +17,7 @@
 	int depth = 0;
 	NSMutableString * tagName = nil;
 	for (int i = 0; i < [self length]; i++) {
-		char c = [self characterAtIndex:i];
+		unichar c = [self characterAtIndex:i];
 		if (c == '<') depth += 1;
 		else if (c == '>') depth -= 1;
 		else if (depth == 0) {
@@ -28,10 +28,10 @@
 				[tagName release];
 				tagName = nil;
 			}
-			[newString appendFormat:@"%c", c];
+			[newString appendFormat:@"%C", c];
 		} else {
 			if (!tagName) tagName = [[NSMutableString alloc] init];
-			[tagName appendFormat:@"%c"];
+			[tagName appendFormat:@"%C", c];
 		}
 		if (tagName) {
 			if ([[tagName lowercaseString] hasPrefix:@"br"]) {

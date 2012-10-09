@@ -68,9 +68,11 @@
 }
 
 - (void)sessionClosed {
+    [Debug log:@"-sessionClosed from AIMBArtHandler"];
 	[bossSession removeHandler:self];
 	[bossSession autorelease];
 	bossSession = nil;
+    [self closeBArtConnection];
 }
 
 - (BOOL)fetchBArtIcon:(AIMBArtID *)bartID forUser:(NSString *)username {
@@ -124,6 +126,7 @@
 }
 
 - (void)_delegateInformDisconnected {
+    [Debug log:@"-delegateInformDisconnected from BArt Handler"];
 	NSAssert([NSThread currentThread] == [bossSession mainThread], @"Running on incorrect thread");
 	if ([delegate respondsToSelector:@selector(aimBArtHandlerDisconnected:)]) {
 		[delegate aimBArtHandlerDisconnected:self];
@@ -259,6 +262,7 @@
 }
 
 - (void)oscarConnectionClosed:(OSCARConnection *)connection {
+    [Debug log:@"-oscarConnectionClosed: AIMBArtHandler"];
 	[currentConnection autorelease];
 	currentConnection = nil;
 	[self performSelector:@selector(_delegateInformDisconnected) onThread:[bossSession mainThread] withObject:nil waitUntilDone:NO];

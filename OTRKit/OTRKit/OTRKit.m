@@ -48,6 +48,7 @@ static OtrlUserState userState;
 @interface OTRKit(Private)
 - (void) updateEncryptionStatusWithContext:(ConnContext*)context;
 - (void) messagePoll;
+- (ConnContext*) contextForUsername:(NSString*)username accountName:(NSString*)accountName protocol:(NSString*) protocol;
 @end
 
 @implementation OTRKit
