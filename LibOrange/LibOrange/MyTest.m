@@ -105,8 +105,8 @@ static void stripNL (char * buff) {
 	
 	NSLog(@"Got session: %@", session);
 	NSLog(@"Our status: %@", session.statusHandler.userStatus);
-	NSLog(@"Disconnecting in %d seconds ...", kSignoffTime);
-	[[session session] performSelector:@selector(closeConnection) withObject:nil afterDelay:kSignoffTime];
+	// NSLog(@"Disconnecting in %d seconds ...", kSignoffTime);
+	// [[session session] performSelector:@selector(closeConnection) withObject:nil afterDelay:kSignoffTime];
 	
 	// uncomment to test rate limit detection.
 	// [self sendBogus];
@@ -127,24 +127,6 @@ static void stripNL (char * buff) {
 	[self checkThreading];
 	NSLog(@"%@ got the buddy list.", feedbagHandler);
 	NSLog(@"Blist: %@", [theSession.session buddyList]);
-	
-	// The following is an example of how to use LibOrange to spam somebody.
-	
-	/*
-	
-	NSString * buddyName = @"emmiey2k";
-	AIMBlistBuddy * buddy = [[theSession.session buddyList] buddyWithUsername:buddyName];
-	
-	while (true) {
-		[theSession.messageHandler sendMessage:[AIMMessage messageWithBuddy:buddy message:@"<BODY>brb</BODY>"]];
-		NSLog(@"sent: brb");
-		[[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:5]];
-		[theSession.messageHandler sendMessage:[AIMMessage messageWithBuddy:buddy message:@"<BODY>back</BODY>"]];
-		NSLog(@"sent: back");
-		[[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:5]];
-	}
-	 
-	*/
 }
 
 - (void)aimFeedbagHandler:(AIMFeedbagHandler *)sender buddyAdded:(AIMBlistBuddy *)newBuddy {
@@ -201,8 +183,8 @@ static void stripNL (char * buff) {
 	NSString * msgTxt = [message plainTextMessage];
 	
 	NSString * autoresp = [message isAutoresponse] ? @" (Auto-Response)" : @"";
-	NSLog(@"(%@) %@%@: %@", [NSDate date], [[message buddy] username], autoresp, msgTxt);
-	
+	NSLog(@"(%@) %@%@: %@", [NSDate date], [[message buddy] username], autoresp, [message message]);
+		
 	NSArray * tokens = [CommandTokenizer tokensOfCommand:msgTxt];
 	if ([tokens count] == 1) {
 		if ([[tokens objectAtIndex:0] isEqual:@"blist"]) {
@@ -253,7 +235,7 @@ static void stripNL (char * buff) {
 			}
 		} else if ([[tokens objectAtIndex:0] isEqual:@"echo"]) {
 			NSString * msg = [tokens objectAtIndex:1];
-			[sender sendMessage:[AIMMessage messageWithBuddy:[message buddy] message:[msg stringByAddingAOLRTFTags]]];
+			[sender sendMessage:[AIMMessage messageWithBuddy:[message buddy] message:msg]];
 		} else if ([[tokens objectAtIndex:0] isEqual:@"sendfile"]) {
 			NSString * messagestr = [tokens objectAtIndex:1];
 			BOOL canTransfer = NO;
@@ -263,7 +245,7 @@ static void stripNL (char * buff) {
 				}
 			}
 			if (canTransfer) {
-				NSString * tempPath = [NSTemporaryDirectory() stringByAppendingFormat:@"/%d%d.txt", arc4random(), time(NULL)];
+				NSString * tempPath = [NSTemporaryDirectory() stringByAppendingFormat:@"/%d%lu.txt", arc4random(), time(NULL)];
 				[messagestr writeToFile:tempPath atomically:NO encoding:NSUTF8StringEncoding error:nil];
 				if (![theSession.rendezvousHandler sendFile:tempPath toUser:message.buddy]) {
 					[[NSFileManager defaultManager] removeItemAtPath:tempPath error:nil];
@@ -294,7 +276,10 @@ static void stripNL (char * buff) {
 				[sender sendMessage:[AIMMessage messageWithBuddy:[message buddy] message:[msg stringByAddingAOLRTFTags]]];
 			}
 		}
-	}
+	} else if ([msgTxt hasPrefix:@"echo "]) {
+        NSString * part = [msgTxt substringFromIndex:5];
+        [sender sendMessage:[AIMMessage messageWithBuddy:[message buddy] message:part]];
+    }
 }
 
 - (void)aimICBMHandler:(AIMICBMHandler *)sender gotMissedCall:(AIMMissedCall *)missedCall {
