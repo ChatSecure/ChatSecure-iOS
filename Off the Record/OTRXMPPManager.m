@@ -408,6 +408,14 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
      postNotificationName:kOTRProtocolLoginFail object:self];    
 }
 
+///////////////////////////////
+#pragma mark Capabilities Collected
+- (void)xmppCapabilities:(XMPPCapabilities *)sender collectingMyCapabilities:(NSXMLElement *)query
+{
+    NSXMLElement * deliveryReceiptsFeature = [NSXMLElement elementWithName:@"feature"];
+    [deliveryReceiptsFeature addAttributeWithName:@"var" stringValue:@"urn:xmpp:receipts"];
+    [query addChild:deliveryReceiptsFeature];
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark Connect/disconnect
