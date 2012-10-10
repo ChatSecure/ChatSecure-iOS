@@ -7,7 +7,7 @@
 //
 
 #import "AIMLogin.h"
-#import "OTRConstants.h"
+#import "JSON.h"
 
 @interface AIMLogin (private)
 
@@ -95,7 +95,7 @@
 #pragma mark Private
 
 - (void)configurePost:(NSData *)postData onRequest:(NSMutableURLRequest *)request {
-	NSString * postLen = [NSString stringWithFormat:@"%d", [postData length]];
+	NSString * postLen = [NSString stringWithFormat:@"%lu", [postData length]];
 	[request setHTTPMethod:@"POST"];
 	[request setHTTPBody:postData];
 	[request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
@@ -198,7 +198,6 @@
 	int status = [statusCode intValue];
 	if (status != 200) {
 		// the request returned unsuccessful.
-        //[[NSNotificationCenter defaultCenter] postNotificationName:@"AimLoginFailedNotification" object:nil];
 		NSLog(@"startOSCAR error code: %d", status);
 		if ([(id)delegate respondsToSelector:@selector(authorizer:didFailWithError:)]) {
 			if ([delegate respondsToSelector:@selector(aimLogin:failedWithError:)]) {

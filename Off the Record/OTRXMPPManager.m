@@ -591,14 +591,16 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
 	
-	isXmppConnected = YES;
 	
 	NSError *error = nil;
 	
 	if (![[self xmppStream] authenticateWithPassword:password error:&error])
 	{
 		DDLogError(@"Error authenticating: %@", error);
+        isXmppConnected = NO;
+        return;
 	}
+    isXmppConnected = YES;
 }
 
 - (void)xmppStreamDidAuthenticate:(XMPPStream *)sender
@@ -658,6 +660,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
         
         NSString *body = [[message elementForName:@"body"] stringValue];
         //NSString *displayName = [user displayName];
+        
         
         OTRBuddy * messageBuddy = [protocolBuddyList objectForKey:user.jidStr];
         

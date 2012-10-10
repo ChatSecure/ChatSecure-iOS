@@ -23,7 +23,7 @@
 		self.loginID = user;
 		
 		NSData * asciiData = [msg dataUsingEncoding:NSASCIIStringEncoding];
-		NSData * unicodeData = [msg dataUsingEncoding:NSUnicodeStringEncoding];
+		NSData * unicodeData = [msg dataUsingEncoding:NSUTF16BigEndianStringEncoding];
 		if (!asciiData && !unicodeData) {
 			NSLog(@"Failed to encode message: %@", msg);
 			// send the other user a little surprise.
