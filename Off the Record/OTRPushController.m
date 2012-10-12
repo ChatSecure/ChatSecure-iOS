@@ -24,7 +24,7 @@
 #import "OTRPushAPIClient.h"
 #import "NSData+XMPP.h"
 
-#define SERVER_URL @"http://192.168.1.44:5000/"
+#define SERVER_URL @"http://192.168.1.104:5000/"
 
 #define REGISTER_PATH @"register"
 #define ADD_DPT_PATH @"add_dpt"
@@ -179,7 +179,7 @@
     [postDictionary setObject:password forKey:PASSWORD_KEY];
         
     [pushClient postPath:REQUEST_PAT_PATH parameters:postDictionary success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSLog(@"Response: %@", responseObject);
+        NSLog(@"PAT Request Response: %@", responseObject);
         NSString *pat = [responseObject objectForKey:PAT_KEY];
         if (!pat || !pat.length) {
             return;
@@ -207,12 +207,11 @@
     [postDictionary setObject:pat forKey:PAT_KEY];
     
     [pushClient postPath:KNOCK_PATH parameters:postDictionary success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSLog(@"Response: %@", responseObject);
+        NSLog(@"Knock Response: %@", responseObject);
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"Error sending knock: %@%@", [error localizedDescription], [error userInfo]);
     }];
-
 }
 
 @end
