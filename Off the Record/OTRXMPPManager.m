@@ -29,6 +29,7 @@
 #import "XMPPRosterCoreDataStorage.h"
 #import "XMPPvCardAvatarModule.h"
 #import "XMPPvCardCoreDataStorage.h"
+#import "XMPPMessage+XEP_0184.h"
 #import "XMPPMessage+XEP_0085.h"
 #import "Strings.h"
 
@@ -408,11 +409,14 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
      postNotificationName:kOTRProtocolLoginFail object:self];    
 }
 
-
 ///////////////////////////////
 #pragma mark Capabilities Collected
 - (void)xmppCapabilities:(XMPPCapabilities *)sender collectingMyCapabilities:(NSXMLElement *)query
 {
+    NSXMLElement * deliveryReceiptsFeature = [NSXMLElement elementWithName:@"feature"];
+    [deliveryReceiptsFeature addAttributeWithName:@"var" stringValue:@"urn:xmpp:receipts"];
+    [query addChild:deliveryReceiptsFeature];
+    
     NSXMLElement * chatStateFeature = [NSXMLElement elementWithName:@"feature"];
 	[chatStateFeature addAttributeWithName:@"var" stringValue:@"http://jabber.org/protocol/chatstates"];
     [query addChild:chatStateFeature];
@@ -662,9 +666,33 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
             [messageBuddy receiveChatStateMessage:kOTRChatStateGone];
     }
     
+    //Posible needs a setting to turn on and off
+    if([message hasReceiptRequest])
+    {
+        XMPPMessage * responseMessage = [message generateReceiptResponse];
+        [xmppStream sendElement:responseMessage];
+    }
+    
+    if ([message hasReceiptResponse]) {
+        
+        XMPPUserCoreDataStorageObject *user = [xmppRosterStorage userForJID:[message from]
+                                                                 xmppStream:xmppStream
+                                                       managedObjectContext:[self managedObjectContext_roster]];
+        
+        OTRBuddy * messageBuddy = [protocolBuddyList objectForKey:user.jidStr];
+        [messageBuddy receiveReceiptResonse:[message extractReceiptResponseID]];
+    }
+    
+    
     
 	if ([message isChatMessageWithBody])
-	{        
+	{
+        
+        
+        
+        XMPPUserCoreDataStorageObject *user = [xmppRosterStorage userForJID:[message from]
+                                                                 xmppStream:xmppStream
+                                                       managedObjectContext:[self managedObjectContext_roster]];
         
         NSString *body = [[message elementForName:@"body"] stringValue];
         //NSString *displayName = [user displayName];
@@ -760,6 +788,13 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 		NSXMLElement *message = [NSXMLElement elementWithName:@"message"];
 		[message addAttributeWithName:@"type" stringValue:@"chat"];
 		[message addAttributeWithName:@"to" stringValue:theMessage.buddy.accountName];
+        NSString * messageID = [NSString stringWithFormat:@"%d",theMessage.buddy.numberOfMessagesSent];
+        [message addAttributeWithName:@"id" stringValue:messageID];
+        
+        NSXMLElement * receiptRequest = [NSXMLElement elementWithName:@"request"];
+        [receiptRequest addAttributeWithName:@"xmlns" stringValue:@"urn:xmpp:receipts"];
+        [message addChild:receiptRequest];
+        
 		[message addChild:body];
         
         XMPPMessage * xMessage = [XMPPMessage messageFromElement:message];
