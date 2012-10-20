@@ -378,6 +378,7 @@
         chatStateImage = [[UIImageView alloc] initWithFrame:CGRectMake(self.view.frame.size.width-25, 0, 25, 25)];
         chatStateImage.image = [UIImage imageNamed:@"pencil"];
         chatStateImage.alpha = 0.0;
+        chatStateImage.autoresizingMask= UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
         [self.view addSubview:chatStateImage];
     }
     
