@@ -24,7 +24,7 @@
 #import "OTRPushAPIClient.h"
 #import "NSData+XMPP.h"
 
-#define SERVER_URL @"http://192.168.1.104:5000/"
+#define SERVER_URL @"http://push.chatsecure.org:5000/"
 
 #define REGISTER_PATH @"register"
 #define ADD_DPT_PATH @"add_dpt"
@@ -39,6 +39,7 @@
 #define DPT_KEY @"dpt"
 #define PAT_KEY @"pat"
 #define PATS_KEY @"pats"
+#define PAT_NAME_KEY @"name"
 
 @implementation OTRPushController
 @synthesize pushClient;
@@ -107,6 +108,15 @@
 
 - (NSDate*) expirationDate {
     return [[self accountDictionary] objectForKey:EXPIRATION_DATE_KEY];
+}
+
+- (NSArray*) pats {
+    NSDictionary *accountDictionary = [self accountDictionary];
+    return [accountDictionary objectForKey:PATS_KEY];
+}
+
+- (NSArray*) accountIDs {
+    return nil;
 }
 
 - (NSMutableDictionary*) accountDictionary {
@@ -184,16 +194,20 @@
         if (!pat || !pat.length) {
             return;
         }
-        NSMutableDictionary *pats = [NSMutableDictionary dictionaryWithDictionary:[accountDictionary objectForKey:PATS_KEY]];
-        if (!pats) {
-            pats = [NSMutableDictionary dictionary];
+        NSMutableArray *patsArray = [NSMutableArray arrayWithArray:[accountDictionary objectForKey:PATS_KEY]];
+        if (!patsArray) {
+            patsArray = [NSMutableArray array];
         }
         NSString *displayName = buddy.displayName;
         if (!displayName) {
             displayName = @"???";
         }
-        [pats setObject:displayName forKey:pat];
-        [accountDictionary setObject:pats forKey:PATS_KEY];
+        
+        NSMutableDictionary *patsDictionary = [NSMutableDictionary dictionaryWithCapacity:2];
+        [patsDictionary setObject:buddy.accountName forKey:PAT_NAME_KEY];
+        [patsDictionary setObject:pat forKey:PAT_KEY];
+        [patsArray addObject:patsDictionary];
+        [accountDictionary setObject:patsArray forKey:PATS_KEY];
         [self saveAccountDictionary:accountDictionary];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"Error requesting PAT: %@%@", [error localizedDescription], [error userInfo]);

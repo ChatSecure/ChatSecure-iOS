@@ -27,12 +27,17 @@
 
 @interface OTRPushController : NSObject
 
-@property (nonatomic, weak) OTRPushAPIClient *pushClient;
+@property (nonatomic, assign) OTRPushAPIClient *pushClient;
+
 
 - (void) registerWithReceipt:(NSData*)receipt;
 - (void) updateDevicePushToken:(NSData*)devicePushToken;
 - (void) requestPushAccessTokenForBuddy:(OTRBuddy*)buddy;
 - (void) knockWithAccountID:(NSString*)accountID pat:(NSString*)pat;
+- (void) refreshActivePats;
+
+- (NSArray*) pats;
+- (NSArray*) accountIDs;
 
 @property (nonatomic, readonly) NSString *accountID;
 @property (nonatomic, readonly) NSString *password;

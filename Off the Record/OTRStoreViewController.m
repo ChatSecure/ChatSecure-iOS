@@ -23,9 +23,11 @@
 #import "OTRStoreViewController.h"
 #import "MBProgressHUD.h"
 #import "Strings.h"
+#import "OTRPushAccessViewController.h"
 
 enum {
     ACCOUNT_INFO_SECTION = 0,
+    PATS_SECTION,
     PRODUCTS_SECTION
 };
 
@@ -121,15 +123,28 @@ enum {
         cell.product = product;
         return cell;
     }
+    if (indexPath.section == PATS_SECTION) {
+        static NSString *cellIdentifier = @"CellIdentifier";
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+        if (!cell) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+        }
+        cell.textLabel.text = PATS_SECTION_STRING;
+        return cell;
+    }
     return nil;
 }
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    if (indexPath.section == PATS_SECTION) {
+        OTRPushAccessViewController *patViewController = [[OTRPushAccessViewController alloc] init];
+        [self.navigationController pushViewController:patViewController animated:YES];
+    }
 }
 
 - (NSInteger) numberOfSectionsInTableView:(UITableView *)tableView {
-    return 2;
+    return 3;
 }
 
 - (NSString*) tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -137,6 +152,8 @@ enum {
         return ACCOUNT_INFO_STRING;
     } else if (section == PRODUCTS_SECTION) {
         return PRODUCTS_SECTION_STRING;
+    } else if (section == PATS_SECTION) {
+        return PATS_SECTION_STRING;
     }
     return nil;
 }
@@ -146,6 +163,8 @@ enum {
         return 3;
     } else if (section == PRODUCTS_SECTION) {
         return [products count];
+    } else if (section == PATS_SECTION) {
+        return 1;
     }
     return 0;
 }

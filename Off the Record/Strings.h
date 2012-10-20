@@ -160,6 +160,7 @@
 #define EXPIRATION_TITLE_STRING NSLocalizedString(@"Expiration", @"Title for cell describing when subscription expires")
 #define ACCOUNT_INFO_STRING NSLocalizedString(@"Account Info", @"Title for table view section describing push subscription account information")
 #define PRODUCTS_SECTION_STRING NSLocalizedString(@"Products", @"Title for table view section describing push subscription products")
+#define PATS_SECTION_STRING NSLocalizedString(@"Manage", @"Manage the push tokens title label")
 
 // Push message localization
 #define PUSH_MESSAGE_ALERT_STRING NSLocalizedString(@"Someone has requested to chat with you securely.", @"Shown in background when receiving a push message from server")

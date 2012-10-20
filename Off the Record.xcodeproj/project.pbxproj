@@ -294,6 +294,7 @@
 		D9BEFD64141AB35D008064A7 /* chatsecure_banner.png in Resources */ = {isa = PBXBuildFile; fileRef = D9BEFD62141AB35D008064A7 /* chatsecure_banner.png */; };
 		D9C7463D15350F62003445ED /* OTRSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C7463C15350F62003445ED /* OTRSettingsViewController.m */; };
 		D9C74640153512DE003445ED /* OTRSettingsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C7463F153512DE003445ED /* OTRSettingsManager.m */; };
+		D9C78F7C1633563F00EBC6A0 /* OTRPushAccessViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C78F7B1633563F00EBC6A0 /* OTRPushAccessViewController.m */; };
 		D9CE422F13FDC9EF003EC27C /* 08-chat.png in Resources */ = {isa = PBXBuildFile; fileRef = D9CE422E13FDC9EF003EC27C /* 08-chat.png */; };
 		D9CE423213FDCA0F003EC27C /* 112-group.png in Resources */ = {isa = PBXBuildFile; fileRef = D9CE423113FDCA0F003EC27C /* 112-group.png */; };
 		D9CE42C313FDCBDD003EC27C /* Lock_Locked.png in Resources */ = {isa = PBXBuildFile; fileRef = D9CE42C113FDCBDD003EC27C /* Lock_Locked.png */; };
@@ -955,6 +956,8 @@
 		D9C7463C15350F62003445ED /* OTRSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRSettingsViewController.m; sourceTree = "<group>"; };
 		D9C7463E153512DE003445ED /* OTRSettingsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRSettingsManager.h; sourceTree = "<group>"; };
 		D9C7463F153512DE003445ED /* OTRSettingsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRSettingsManager.m; sourceTree = "<group>"; };
+		D9C78F7A1633563F00EBC6A0 /* OTRPushAccessViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRPushAccessViewController.h; sourceTree = "<group>"; };
+		D9C78F7B1633563F00EBC6A0 /* OTRPushAccessViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRPushAccessViewController.m; sourceTree = "<group>"; };
 		D9CE422E13FDC9EF003EC27C /* 08-chat.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "08-chat.png"; sourceTree = "<group>"; };
 		D9CE423113FDCA0F003EC27C /* 112-group.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "112-group.png"; sourceTree = "<group>"; };
 		D9CE42C113FDCBDD003EC27C /* Lock_Locked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Lock_Locked.png; sourceTree = "<group>"; };
@@ -2066,6 +2069,8 @@
 				D96B81BD1616772A00F97D0F /* OTRPurchaseController.m */,
 				D96B81BF1616896D00F97D0F /* OTRPushController.h */,
 				D96B81C01616896D00F97D0F /* OTRPushController.m */,
+				D9C78F7A1633563F00EBC6A0 /* OTRPushAccessViewController.h */,
+				D9C78F7B1633563F00EBC6A0 /* OTRPushAccessViewController.m */,
 				D9772AB11617C1E80008687D /* OTRPushAPIClient.h */,
 				D9772AB21617C1E80008687D /* OTRPushAPIClient.m */,
 				D96B81A216165F3400F97D0F /* OTRStoreTableViewCell.h */,
@@ -2694,6 +2699,7 @@
 				D96B81BE1616772A00F97D0F /* OTRPurchaseController.m in Sources */,
 				D96B81C11616896D00F97D0F /* OTRPushController.m in Sources */,
 				D9772AB31617C1E80008687D /* OTRPushAPIClient.m in Sources */,
+				D9C78F7C1633563F00EBC6A0 /* OTRPushAccessViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
