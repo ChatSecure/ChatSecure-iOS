@@ -113,6 +113,7 @@
         NSString *username = [NSString stringWithFormat:@"<p id=\"%d\"><strong style=\"color:blue\">Me:</strong>",self.numberOfMessagesSent];
         
         [chatHistory appendFormat:@"%@ %@</p>",username, message];
+        self.lastSentChatState=kOTRChatStateActive;
     }
 }
 
