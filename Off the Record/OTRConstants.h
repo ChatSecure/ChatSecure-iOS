@@ -40,6 +40,8 @@
 #define kOTRNotificationProtocolKey @"kOTRNotificationProtocolKey"
 
 #define kOTRXMPPAccountAllowSelfSignedSSLKey @"kOTRXMPPAccountAllowSelfSignedSSLKey"
+#define kOTRXMPPAccountSendReadReceiptsKey @"kOTRXMPPAccountSendReadReceiptsKey"
+#define kOTRXMPPAccountSendTypingNotificationsKey @"kOTRXMPPAccountSendTypingNotificationsKey"
 #define kOTRXMPPAccountAllowSSLHostNameMismatch @"kOTRXMPPAccountAllowSSLHostNameMismatch"
 #define kOTRXMPPAccountPortNumber @"kOTRXMPPAccountPortNumber"
 
