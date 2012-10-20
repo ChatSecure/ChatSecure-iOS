@@ -667,7 +667,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     }
     
     //Posible needs a setting to turn on and off
-    if([message hasReceiptRequest])
+    if([message hasReceiptRequest] && self.account.sendReadReceipts)
     {
         XMPPMessage * responseMessage = [message generateReceiptResponse];
         [xmppStream sendElement:responseMessage];
@@ -878,6 +878,9 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 
 -(void)sendChatState:(int)chatState withBuddy:(OTRBuddy *)buddy
 {
+    if (!self.account.sendTypingNotifications) {
+        return;
+    }
     NSXMLElement *message = [NSXMLElement elementWithName:@"message"];
     [message addAttributeWithName:@"type" stringValue:@"chat"];
     [message addAttributeWithName:@"to" stringValue:buddy.accountName];

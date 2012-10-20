@@ -38,7 +38,7 @@
         self.allowSSLHostNameMismatch = NO;
         self.port = DEFAULT_PORT_NUMBER; // Default XMPP port number
         self.sendReadReceipts = NO;
-        self.sendTypingNotifications = YES;
+        self.sendTypingNotifications = YES; // Default typing notifications to yes
     }
     return self;
 }
@@ -49,7 +49,13 @@
         self.allowSelfSignedSSL = [[dictionary objectForKey:kOTRXMPPAccountAllowSelfSignedSSLKey] boolValue];
         self.allowSSLHostNameMismatch = [[dictionary objectForKey:kOTRXMPPAccountAllowSSLHostNameMismatch] boolValue];
         self.sendReadReceipts = [[dictionary objectForKey:kOTRXMPPAccountSendReadReceiptsKey] boolValue];
-        self.sendTypingNotifications = [[dictionary objectForKey:kOTRXMPPAccountSendTypingNotificationsKey] boolValue];
+        NSNumber *sendTypingNotificationsNumber = [dictionary objectForKey:kOTRXMPPAccountSendTypingNotificationsKey];
+        BOOL shouldSendTypingNotifications = YES;
+        if (sendTypingNotificationsNumber) {
+            shouldSendTypingNotifications = [sendTypingNotificationsNumber boolValue];
+        }
+        self.sendTypingNotifications = shouldSendTypingNotifications;
+        
         NSNumber *portNumber = [dictionary objectForKey:kOTRXMPPAccountPortNumber];
         if (portNumber) {
             self.port = [portNumber intValue];
