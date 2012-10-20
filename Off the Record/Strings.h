@@ -83,6 +83,8 @@
 #define PORT_STRING NSLocalizedString(@"Port", @"Label for port number field for connecting to service")
 #define GOOGLE_TALK_EXAMPLE_STRING NSLocalizedString(@"user@gmail.com", @"example of a google talk account");
 #define REQUIRED_STRING NSLocalizedString(@"Required",@"String to let user know a certain field like a password is required to create an account")
+#define SEND_DELIVERY_RECEIPT_STRING NSLocalizedString(@"Send Delivery Receipts",@"String in login settings asking to send delivery receipts")
+#define SEND_TYPING_NOTIFICATION_STRING NSLocalizedString(@"Send Typing Notificaction",@"Stirng in login settings asking to send typing notification")
 
 // OTRAccountsViewController
 #define LOGOUT_STRING NSLocalizedString(@"Log Out", @"log out from account")

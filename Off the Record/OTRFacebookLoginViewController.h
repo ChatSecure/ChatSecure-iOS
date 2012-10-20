@@ -20,9 +20,9 @@
 //  You should have received a copy of the GNU General Public License
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
-#import "OTRLoginViewController.h"
+#import "OTRXMPPLoginViewController.h"
 
-@interface OTRFacebookLoginViewController : OTRLoginViewController
+@interface OTRFacebookLoginViewController : OTRXMPPLoginViewController
 
 
 @property (nonatomic,strong) UILabel * facebookHelpLabel;

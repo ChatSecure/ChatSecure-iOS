@@ -20,8 +20,8 @@
 //  You should have received a copy of the GNU General Public License
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
-#import "OTRLoginViewController.h"
+#import "OTRXMPPLoginViewController.h"
 
-@interface OTRGoogleTalkLoginViewController : OTRLoginViewController
+@interface OTRGoogleTalkLoginViewController : OTRXMPPLoginViewController
 
 @end

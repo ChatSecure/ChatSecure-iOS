@@ -413,9 +413,12 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 #pragma mark Capabilities Collected
 - (void)xmppCapabilities:(XMPPCapabilities *)sender collectingMyCapabilities:(NSXMLElement *)query
 {
-    NSXMLElement * deliveryReceiptsFeature = [NSXMLElement elementWithName:@"feature"];
-    [deliveryReceiptsFeature addAttributeWithName:@"var" stringValue:@"urn:xmpp:receipts"];
-    [query addChild:deliveryReceiptsFeature];
+    if(account.sendDeliveryReceipts)
+    {
+        NSXMLElement * deliveryReceiptsFeature = [NSXMLElement elementWithName:@"feature"];
+        [deliveryReceiptsFeature addAttributeWithName:@"var" stringValue:@"urn:xmpp:receipts"];
+        [query addChild:deliveryReceiptsFeature];
+    }
     
     NSXMLElement * chatStateFeature = [NSXMLElement elementWithName:@"feature"];
 	[chatStateFeature addAttributeWithName:@"var" stringValue:@"http://jabber.org/protocol/chatstates"];
@@ -667,7 +670,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     }
     
     //Posible needs a setting to turn on and off
-    if([message hasReceiptRequest] && self.account.sendReadReceipts)
+    if([message hasReceiptRequest] && self.account.sendDeliveryReceipts)
     {
         XMPPMessage * responseMessage = [message generateReceiptResponse];
         [xmppStream sendElement:responseMessage];

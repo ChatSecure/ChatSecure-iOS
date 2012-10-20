@@ -29,7 +29,7 @@
 #define DEFAULT_PORT_NUMBER 5222
 
 @implementation OTRXMPPAccount
-@synthesize allowSelfSignedSSL, allowSSLHostNameMismatch, domain, port, sendReadReceipts, sendTypingNotifications;
+@synthesize allowSelfSignedSSL, allowSSLHostNameMismatch, domain, port, sendDeliveryReceipts, sendTypingNotifications;
 
 - (id) initWithDomain:(NSString *)newDomain {
     if (self = [super initWithProtocol:kOTRProtocolTypeXMPP]) {
@@ -37,7 +37,7 @@
         self.allowSelfSignedSSL = NO;
         self.allowSSLHostNameMismatch = NO;
         self.port = DEFAULT_PORT_NUMBER; // Default XMPP port number
-        self.sendReadReceipts = NO;
+        self.sendDeliveryReceipts = NO;
         self.sendTypingNotifications = YES; // Default typing notifications to yes
     }
     return self;
@@ -48,7 +48,7 @@
         self.domain = [dictionary objectForKey:kOTRAccountDomainKey];
         self.allowSelfSignedSSL = [[dictionary objectForKey:kOTRXMPPAccountAllowSelfSignedSSLKey] boolValue];
         self.allowSSLHostNameMismatch = [[dictionary objectForKey:kOTRXMPPAccountAllowSSLHostNameMismatch] boolValue];
-        self.sendReadReceipts = [[dictionary objectForKey:kOTRXMPPAccountSendReadReceiptsKey] boolValue];
+        self.sendDeliveryReceipts = [[dictionary objectForKey:kOTRXMPPAccountSendDeliveryReceiptsKey] boolValue];
         NSNumber *sendTypingNotificationsNumber = [dictionary objectForKey:kOTRXMPPAccountSendTypingNotificationsKey];
         BOOL shouldSendTypingNotifications = YES;
         if (sendTypingNotificationsNumber) {
@@ -118,7 +118,7 @@
     [accountDictionary setObject:[NSNumber numberWithBool:self.allowSelfSignedSSL] forKey:kOTRXMPPAccountAllowSelfSignedSSLKey];
     [accountDictionary setObject:[NSNumber numberWithBool:self.allowSSLHostNameMismatch] forKey:kOTRXMPPAccountAllowSSLHostNameMismatch];
     [accountDictionary setObject:[NSNumber numberWithInt:self.port] forKey:kOTRXMPPAccountPortNumber];
-    [accountDictionary setObject:[NSNumber numberWithBool:self.sendReadReceipts] forKey:kOTRXMPPAccountSendReadReceiptsKey];
+    [accountDictionary setObject:[NSNumber numberWithBool:self.sendDeliveryReceipts] forKey:kOTRXMPPAccountSendDeliveryReceiptsKey];
     [accountDictionary setObject:[NSNumber numberWithBool:self.sendTypingNotifications] forKey:kOTRXMPPAccountSendTypingNotificationsKey];
     return accountDictionary;
 }

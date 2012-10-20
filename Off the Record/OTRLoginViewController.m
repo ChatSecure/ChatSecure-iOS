@@ -27,6 +27,7 @@
 
 
 #import "OTRXMPPLoginViewController.h"
+#import "OTRJabberLoginViewController.h"
 #import "OTRFacebookLoginViewController.h"
 #import "OTROscarLoginViewController.h"
 #import "OTRGoogleTalkLoginViewController.h"
@@ -195,7 +196,8 @@
 {
     if([[[[tableViewArray objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] objectForKey:kCellTypeKey] isEqualToString:KCellTypeHelp])
     {
-        return ((UILabel *)[[[tableViewArray objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] objectForKey:kTextLabelTextKey]).frame.size.height+10;
+        CGFloat height = ((UILabel *)[[[tableViewArray objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] objectForKey:kTextLabelTextKey]).frame.size.height+10;
+        return height;
     }
     return 44.0f;
 }
@@ -437,7 +439,7 @@
     else if ([[account.accountDictionary objectForKey:kOTRAccountProtocolKey] isEqualToString:kOTRProtocolTypeXMPP])
     {
         //XMPP account addvanced
-        return [[OTRXMPPLoginViewController alloc] initWithAccount:account];
+        return [[OTRJabberLoginViewController alloc] initWithAccount:account];
     }
     else if ([[account.accountDictionary objectForKey:kOTRAccountProtocolKey] isEqualToString:kOTRProtocolTypeAIM])
     {
