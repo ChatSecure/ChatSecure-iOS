@@ -27,6 +27,7 @@
 #import "OTRDoubleSetting.h"
 #import "OTRConstants.h"
 #import "OTRAppDelegate.h"
+#import "OTRPushController.h"
 
 #define kTabBarHeight 0
 #define kSendButtonWidth 60
@@ -221,7 +222,7 @@
     if (buddy.encryptionStatus == kOTRKitMessageStateEncrypted) {
         encryptionString = CANCEL_ENCRYPTED_CHAT_STRING;
     }
-    UIActionSheet *popupQuery = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:encryptionString, VERIFY_STRING, CLEAR_CHAT_HISTORY_STRING, nil];
+    UIActionSheet *popupQuery = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:encryptionString, VERIFY_STRING, CLEAR_CHAT_HISTORY_STRING, REQUEST_PAT_STRING, nil];
     popupQuery.actionSheetStyle = UIActionSheetStyleBlackOpaque;
     popupQuery.tag = ACTIONSHEET_ENCRYPTION_OPTIONS_TAG;
     [OTR_APP_DELEGATE presentActionSheet:popupQuery inView:self.view];
@@ -550,6 +551,8 @@
             buddy.chatHistory = [NSMutableString string];
             buddy.lastMessage = @"";
             [self updateChatHistory];
+        } else if (buttonIndex == 3) { // Request push access token
+            [[OTRPushController sharedInstance] requestPushAccessTokenForBuddy:self.buddy];
         }
         else if (buttonIndex == actionSheet.cancelButtonIndex) // Cancel
         {
