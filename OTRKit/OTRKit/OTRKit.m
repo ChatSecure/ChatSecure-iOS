@@ -272,17 +272,20 @@ static const char* otr_error_message_cb(void *opdata, ConnContext *context,
 
 static void otr_error_message_free_cb(void *opdata, const char *err_msg)
 {
-    if (err_msg) free((char*)err_msg);
+    // Leak memory here instead of crashing:
+    // if (err_msg) free((char*)err_msg);
 }
 
 static const char *resent_msg_prefix_cb(void *opdata, ConnContext *context)
 {
-	return "[resent]";
+    NSString *resentString = @"[resent]";
+	return [resentString UTF8String];
 }
 
 static void resent_msg_prefix_free_cb(void *opdata, const char *prefix)
 {
-	if (prefix) free((char*)prefix);
+    // Leak memory here instead of crashing:
+	// if (prefix) free((char*)prefix);
 }
 
 static void handle_smp_event_cb(void *opdata, OtrlSMPEvent smp_event,
