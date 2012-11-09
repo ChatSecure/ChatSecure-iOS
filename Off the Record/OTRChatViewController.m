@@ -243,6 +243,7 @@
         [[NSNotificationCenter defaultCenter] removeObserver:self name:MESSAGE_PROCESSED_NOTIFICATION object:buddy];
         [[NSNotificationCenter defaultCenter] removeObserver:self name:kOTRProtocolDiconnect object:self.buddy.protocol];
     }
+    [self saveCurrentMessageText];
     
     buddy = newBuddy;
     self.title = newBuddy.displayName;
@@ -475,6 +476,11 @@
             self.instructionsLabel = nil;
         }
         [self.messageTextField resignFirstResponder];
+        self.messageTextField.text = self.buddy.composingMessageString;
+        if(![self.buddy.composingMessageString length])
+        {
+            [self.buddy sendActiveChatState];
+        }
         CGRect frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height-[self chatBoxViewHeight]);
         self.chatHistoryTextView.frame = frame;
         self.chatBoxView.frame = CGRectMake(0,frame.size.height, self.view.frame.size.width, [self chatBoxViewHeight]);
@@ -490,19 +496,13 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
-    self.messageTextField.text = self.buddy.composingMessageString;
-    if(![self.buddy.composingMessageString length])
-    {
-        [self.buddy sendActiveChatState];
-    }
     [self refreshView];
     [self updateChatHistory];
     [self updateChatState:NO];
 }
 
--(void)viewWillDisappear:(BOOL)animated
+-(void)saveCurrentMessageText
 {
-    [super viewWillDisappear:animated];
     self.buddy.composingMessageString = self.messageTextField.text;
     if(![self.buddy.composingMessageString length])
     {
