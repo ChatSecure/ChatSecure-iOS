@@ -178,6 +178,8 @@ static void gone_secure_cb(void *opdata, ConnContext *context)
 {
     OTRKit *otrKit = [OTRKit sharedInstance];
     [otrKit updateEncryptionStatusWithContext:context];
+    [NSException raise:NSInvalidArgumentException
+                format:@"Foo must not be nil"];
 
 }
 
