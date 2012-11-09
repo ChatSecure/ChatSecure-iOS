@@ -21,7 +21,6 @@
 		639FDE4716334FA500387666 /* OTRJabberLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 639FDE4616334FA500387666 /* OTRJabberLoginViewController.m */; };
 		63DF97741623A3310043E295 /* pencil@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63DF97731623A3310043E295 /* pencil@2x.png */; };
 		63DF97761623A3F30043E295 /* pencil.png in Resources */ = {isa = PBXBuildFile; fileRef = 63DF97751623A3F30043E295 /* pencil.png */; };
-		63FD24D515630A240041374A /* OTRUIKeyboardListener.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FD24D415630A240041374A /* OTRUIKeyboardListener.m */; };
 		D902D31E141E930C00AA3479 /* OTRBuddy.m in Sources */ = {isa = PBXBuildFile; fileRef = D902D31D141E930C00AA3479 /* OTRBuddy.m */; };
 		D90999E1163DD078008F71C9 /* libCrittercismCrashOnly.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D93755111608034B0059321E /* libCrittercismCrashOnly.a */; };
 		D90B80A913FC7026006EFF3D /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = D90B80A813FC7026006EFF3D /* MBProgressHUD.m */; };
@@ -349,8 +348,6 @@
 		639FDE4616334FA500387666 /* OTRJabberLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRJabberLoginViewController.m; sourceTree = "<group>"; };
 		63DF97731623A3310043E295 /* pencil@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pencil@2x.png"; sourceTree = "<group>"; };
 		63DF97751623A3F30043E295 /* pencil.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pencil.png; sourceTree = "<group>"; };
-		63FD24D315630A240041374A /* OTRUIKeyboardListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRUIKeyboardListener.h; sourceTree = "<group>"; };
-		63FD24D415630A240041374A /* OTRUIKeyboardListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRUIKeyboardListener.m; sourceTree = "<group>"; };
 		D902D31C141E930C00AA3479 /* OTRBuddy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBuddy.h; sourceTree = "<group>"; };
 		D902D31D141E930C00AA3479 /* OTRBuddy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBuddy.m; sourceTree = "<group>"; };
 		D902DAF2156AE7320091C9A1 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = "Off the Record/tr.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
@@ -2025,8 +2022,6 @@
 				D90B80AE13FC7E5F006EFF3D /* OTRCodec.m */,
 				D99BA28E141D3F3A00D051B6 /* OTRMessage.h */,
 				D99BA28F141D3F3A00D051B6 /* OTRMessage.m */,
-				63FD24D315630A240041374A /* OTRUIKeyboardListener.h */,
-				63FD24D415630A240041374A /* OTRUIKeyboardListener.m */,
 				D93C316D159A6719006316C7 /* OTRAccount.h */,
 				D93C316E159A6719006316C7 /* OTRAccount.m */,
 				D9ABC99115D48C4E00AAB730 /* OTROscarAccount.h */,
@@ -2377,7 +2372,6 @@
 				D91DAE8615473EB5009D0B74 /* OTRSettingDetailViewController.m in Sources */,
 				D91DAE89154740CE009D0B74 /* OTRDoubleSettingViewController.m in Sources */,
 				D9FC986C15588E300039518D /* OTRQRCodeViewController.m in Sources */,
-				63FD24D515630A240041374A /* OTRUIKeyboardListener.m in Sources */,
 				D9EB0A6F15AFA1CA00AA1428 /* Appirater.m in Sources */,
 				D93C316F159A6719006316C7 /* OTRAccount.m in Sources */,
 				D93C3173159A6C10006316C7 /* OTRAccountsManager.m in Sources */,

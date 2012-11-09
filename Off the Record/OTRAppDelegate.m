@@ -28,7 +28,6 @@
 #import "OTRSettingsViewController.h"
 #import "OTRSettingsManager.h"
 #import "DDLog.h"
-#import "OTRUIKeyboardListener.h"
 #import "Appirater.h"
 #import "OTRConstants.h"
 
@@ -94,7 +93,6 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     [self.window makeKeyAndVisible];
     
     application.applicationIconBadgeNumber = 0;
-    [OTRUIKeyboardListener shared];
   
     [Appirater appLaunched:YES];
     

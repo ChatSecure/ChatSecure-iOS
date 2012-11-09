@@ -21,7 +21,6 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "OTRLoginViewController.h"
-#import "OTRUIKeyboardListener.h"
 #import "OTRConstants.h"
 #import "OTRXMPPAccount.h"
 
@@ -351,16 +350,16 @@
 }  
 
 
+
 - (void)loginButtonPressed:(id)sender {
     BOOL fields = [self checkFields];
     if(fields)
     {
+        [self.view endEditing:YES];
         HUD = [[MBProgressHUD alloc] initWithView:self.view];
         [self.view addSubview:HUD];
         HUD.delegate = self;
         HUD.labelText = LOGGING_IN_STRING;
-        float hudOffsetY = [self getMidpointOffsetforHUD];
-        HUD.yOffset = hudOffsetY;
         [HUD show:YES];
         
         [self readInFields];
@@ -403,18 +402,6 @@
     [textField resignFirstResponder];
     return YES;
 }
-
--(float)getMidpointOffsetforHUD
-{
-    OTRUIKeyboardListener * keyboardListenter = [OTRUIKeyboardListener shared];
-    CGSize keyboardSize = [keyboardListenter getFrameWithView:self.view].size;
-    
-    
-    
-    float viewHeight = self.view.frame.size.height;
-    return (viewHeight - keyboardSize.height)/2.0-(viewHeight/2.0);
-}
-
 
 #pragma mark -
 #pragma mark MBProgressHUDDelegate methods
