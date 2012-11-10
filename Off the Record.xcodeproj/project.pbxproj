@@ -353,11 +353,10 @@
 		63F6E845164DE01900F67BDB /* bo */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = bo; path = bo.lproj/Localizable.strings; sourceTree = "<group>"; };
 		63F6E846164DE01900F67BDB /* bo */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = bo; path = bo.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		63F6E847164DE01900F67BDB /* bo */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = bo; path = bo.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		63F6E849164DE1A600F67BDB /* ru-RU */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ru-RU"; path = "ru-RU.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
-		63F6E84A164DE1A600F67BDB /* ru-RU */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ru-RU"; path = "ru-RU.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		63F6E84B164DE1A600F67BDB /* ru-RU */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ru-RU"; path = "ru-RU.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
-		63F6E84C164DE1A600F67BDB /* ru-RU */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ru-RU"; path = "ru-RU.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
-		63F6E84D164DE1A700F67BDB /* ru-RU */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ru-RU"; path = "ru-RU.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		63F6E84E164DE2CB00F67BDB /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		63F6E84F164DE2CD00F67BDB /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		63F6E850164DE2CD00F67BDB /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
+		63F6E851164DE2CD00F67BDB /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		D902D31C141E930C00AA3479 /* OTRBuddy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBuddy.h; sourceTree = "<group>"; };
 		D902D31D141E930C00AA3479 /* OTRBuddy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBuddy.m; sourceTree = "<group>"; };
 		D902DAF2156AE7320091C9A1 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = "Off the Record/tr.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
@@ -2604,7 +2603,7 @@
 			children = (
 				D92061C015E2E0D8003EEF3A /* en */,
 				63F6E847164DE01900F67BDB /* bo */,
-				63F6E84C164DE1A600F67BDB /* ru-RU */,
+				63F6E851164DE2CD00F67BDB /* ru */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -2616,7 +2615,7 @@
 				D9042E2C153168BE000D264C /* zh_CN */,
 				D9FCA72B1533A3B6009AD599 /* de */,
 				63F6E843164DE01800F67BDB /* bo */,
-				63F6E849164DE1A600F67BDB /* ru-RU */,
+				63F6E84F164DE2CD00F67BDB /* ru */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -2630,7 +2629,7 @@
 				D902DAF2156AE7320091C9A1 /* tr */,
 				D902DB13156AE82B0091C9A1 /* hu */,
 				63F6E844164DE01800F67BDB /* bo */,
-				63F6E84A164DE1A600F67BDB /* ru-RU */,
+				63F6E850164DE2CD00F67BDB /* ru */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -2651,7 +2650,6 @@
 				D9EB0A6B15AFA1CA00AA1428 /* pt */,
 				D9EB0A6E15AFA1CA00AA1428 /* sv */,
 				63F6E845164DE01900F67BDB /* bo */,
-				63F6E84D164DE1A700F67BDB /* ru-RU */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -2661,7 +2659,7 @@
 			children = (
 				D9F9378413F44BD3009A3D84 /* en */,
 				63F6E846164DE01900F67BDB /* bo */,
-				63F6E84B164DE1A600F67BDB /* ru-RU */,
+				63F6E84E164DE2CB00F67BDB /* ru */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
