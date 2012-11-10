@@ -38,7 +38,7 @@
 
 -(void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
 {
-    [delegate dismissMailViewConntroller];
+    [self.delegate dismissMailViewConntroller];
 }
 
 @end

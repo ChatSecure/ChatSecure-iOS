@@ -28,8 +28,6 @@
 @required
 - (void) refreshView;
 - (void) otrSetting:(OTRSetting*)setting showDetailViewControllerClass:(Class)viewControllerClass;
-- (void) presentMailViewController:(UIViewController *)modalViewController;
-- (void) dismissMailViewConntroller;
 @end
 
 @interface OTRSetting : NSObject
