@@ -213,6 +213,7 @@
 				bo,
 				"ru-RU",
 				ru,
+				it,
 			);
 			mainGroup = D905CF58155B010A00654181;
 			productRefGroup = D905CF68155B010B00654181 /* Products */;
