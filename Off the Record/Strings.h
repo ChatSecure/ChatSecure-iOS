@@ -74,6 +74,7 @@
 #define ERROR_STRING NSLocalizedString(@"Error!", "Title of error message popup box")
 #define OSCAR_FAIL_STRING NSLocalizedString(@"Failed to start authenticating. Please try again.", @"Authentication failed, tell user to try again")
 #define XMPP_FAIL_STRING NSLocalizedString(@"Failed to connect to XMPP server. Please check your login credentials and internet connection and try again.", @"Message when cannot connect to XMPP server")
+#define XMPP_PORT_FAIL_STRING NSLocalizedString(@"Domain needs to be set manually when specifying a custom port", @"Message when port is changed but domain not set")
 #define LOGGING_IN_STRING NSLocalizedString(@"Logging in...", @"shown during the login proceess")
 #define USER_PASS_BLANK_STRING NSLocalizedString(@"You must enter a username and a password to login.", @"error message shown when user doesnt fill in a username or password")
 #define BASIC_STRING NSLocalizedString(@"Basic", @"string to describe basic set of settings")

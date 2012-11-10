@@ -111,6 +111,29 @@
     
 }
 
+-(void)loginButtonPressed:(id)sender
+{
+    if([self.portTextField.text length] || self.account.port != [OTRXMPPAccount defaultPortNumber])
+    {
+        int portNumber = [self.portTextField.text intValue];
+        NSString * domainText = [domainTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+        if (portNumber == [OTRXMPPAccount defaultPortNumber] || [domainText length])
+        {
+            [super loginButtonPressed:sender];
+        }
+        else{
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:XMPP_PORT_FAIL_STRING delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
+            [alert show];
+        }
+    }
+    else
+    {
+        [super loginButtonPressed:sender];
+    }
+    
+    
+}
+
 -(void)textFieldDidBeginEditing:(UITextField *)textField
 {
     selectedCell = (UITableViewCell*) [[textField superview] superview];
