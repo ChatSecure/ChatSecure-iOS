@@ -113,6 +113,7 @@
 
 -(void)loginButtonPressed:(id)sender
 {
+    //If custom port set than a domain needs to be set to work with XMPPframework
     if([self.portTextField.text length] || self.account.port != [OTRXMPPAccount defaultPortNumber])
     {
         int portNumber = [self.portTextField.text intValue];

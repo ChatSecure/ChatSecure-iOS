@@ -288,6 +288,18 @@
     }
 }
 
+-(void)presentMailViewController:(UIViewController *)modalViewController
+{
+    [self presentModalViewController:modalViewController animated:YES];
+}
+
+-(void)dismissMailViewConntroller
+{
+    [self dismissModalViewControllerAnimated:YES];
+}
+
+
+
 #pragma mark UIActionSheetDelegate methods
 
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex 

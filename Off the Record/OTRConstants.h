@@ -49,6 +49,8 @@
 
 #define kOTRFacebookUsernameLink @"http://www.facebook.com/help/?faq=211813265517027#What-are-usernames?"
 
+#define kOTRFeedbackEmail @"support@chatsecure.org"
+
 #define kOTRChatStatePausedTimeout 5
 #define kOTRChatStateInactiveTimeout 120
 

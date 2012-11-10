@@ -136,6 +136,8 @@
 #define SHARE_MESSAGE_STRING NSLocalizedString(@"Chat with me securely", @"Body of SMS or email when sharing a link to the app")
 #define CONNECTED_STRING NSLocalizedString(@"Connected", @"Whether or not account is logged in")
 
+#define SEND_FEEDBACK_STRING NSLocalizedString(@"Send Feedback", @"String on button to email feedback")
+
 // OTRSettingsDetailViewController
 #define SAVE_STRING NSLocalizedString(@"Save", "Title for button for saving a setting")
 // OTRDoubleSettingViewController

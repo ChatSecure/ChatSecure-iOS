@@ -28,6 +28,9 @@
 #import "OTRBoolSetting.h"
 #import "OTRViewSetting.h"
 #import "OTRDoubleSetting.h"
+#import "OTRFeedbackSetting.h"
+#import "OTRConstants.h"
+#import <MessageUI/MFMailComposeViewController.h>
 
 @interface OTRSettingsManager(Private)
 - (void) populateSettings;
@@ -77,11 +80,20 @@
     OTRSettingsGroup *chatSettingsGroup = [[OTRSettingsGroup alloc] initWithTitle:CHAT_STRING settings:[NSArray arrayWithObjects:fontSizeSetting, deletedDisconnectedConversations, showDisconnectionWarning, nil]];
     [settingsGroups addObject:chatSettingsGroup];
     
+    
+    OTRFeedbackSetting * feedbackViewSetting = [[OTRFeedbackSetting alloc] initWithTitle:SEND_FEEDBACK_STRING description:nil];
+    feedbackViewSetting.mailToRecipients = [NSArray arrayWithObject:kOTRFeedbackEmail];
+    feedbackViewSetting.mailSubject = [NSString stringWithFormat:@"Feedback for %@ iOS V%@ ChatSecure V%@",[[UIDevice currentDevice] model],[[UIDevice currentDevice] systemVersion],[[[NSBundle mainBundle] infoDictionary] valueForKey:@"CFBundleVersion"]];
+    
+    
 #ifdef CRITTERCISM_ENABLED
     OTRBoolSetting *crittercismSetting = [[OTRBoolSetting alloc] initWithTitle:CRITTERCISM_TITLE_STRING description:CRITTERCISM_DESCRIPTION_STRING settingsKey:kOTRSettingKeyCrittercismOptIn];
-    OTRSettingsGroup *otherGroup = [[OTRSettingsGroup alloc] initWithTitle:OTHER_STRING settings:[NSArray arrayWithObject:crittercismSetting]];
+    OTRSettingsGroup *otherGroup = [[OTRSettingsGroup alloc] initWithTitle:OTHER_STRING settings:[NSArray arrayWithObjects:crittercismSetting,feedbackViewSetting,nil]];
     [newSettingsDictionary setObject:crittercismSetting forKey:kOTRSettingKeyCrittercismOptIn];
     [settingsGroups addObject:otherGroup];
+#else
+    OTRSettingsGroup *otherGroup = [[OTRSettingsGroup alloc] initWithTitle:OTHER_STRING settings:[NSArray arrayWithObject:feedbackViewSetting]];
+    
 #endif
     settingsDictionary = newSettingsDictionary;
 }
