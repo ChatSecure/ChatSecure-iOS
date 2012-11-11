@@ -30,5 +30,5 @@
 @property (strong, nonatomic) UILabel *versionLabel;
 @property (nonatomic, retain) UIWebView *aboutTextView;
 @property (nonatomic, retain) NSURL *lastActionLink;
-
+@property (nonatomic,strong) UIScrollView * scrollView;
 @end

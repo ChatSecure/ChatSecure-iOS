@@ -33,6 +33,7 @@
 
 @implementation OTRAboutViewController
 @synthesize versionLabel, aboutTextView,lastActionLink, imageView;
+@synthesize scrollView;
 
 
 - (id)init {
@@ -59,6 +60,7 @@
     [super loadView];
     self.versionLabel = [[UILabel alloc] init];
     self.imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"chatsecure_banner.png"]];
+    
 
 }
 
@@ -69,6 +71,8 @@
     // Do any additional setup after loading the view from its nib.
     NSString *aboutString = [NSString stringWithFormat:@"%@: libotr, libgcrypt, libgpg-error, LibOrange, XMPPFramework, MBProgressHUD, Appirater, and SFHFKeychainUtils.<br><a href=\"https://chatsecure.org/\">%@</a><br><a href=\"https://github.com/chrisballinger/Off-the-Record-iOS\">%@</a><br><a href=\"https://www.transifex.com/projects/p/chatsecure\">%@</a>", ATTRIBUTION_STRING, PROJECT_HOMEPAGE_STRING, SOURCE_STRING, CONTRIBUTE_TRANSLATION_STRING];
     
+    self.scrollView = [[UIScrollView alloc] initWithFrame:self.view.bounds];
+    scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     
     aboutTextView = [[UIWebView alloc] init];
 	aboutTextView.delegate = self;
@@ -82,9 +86,13 @@
     NSString *version = [[[NSBundle mainBundle] infoDictionary] valueForKey:@"CFBundleVersion"];
     versionLabel.text = [NSString stringWithFormat:@"%@ %@", VERSION_STRING, version];
     
-    [self.view addSubview:aboutTextView];
-    [self.view addSubview:imageView];
-    [self.view addSubview:versionLabel];
+    [scrollView addSubview:aboutTextView];
+    [scrollView addSubview:imageView];
+    [scrollView addSubview:versionLabel];
+    
+    
+    
+    [self.view addSubview:scrollView];
 }
 
 - (void) viewWillAppear:(BOOL)animated {
@@ -98,12 +106,14 @@
     CGFloat versionLabelFrameWidth = 101;
     CGFloat versionLabelFrameHeight = 21;
     versionLabel.frame = CGRectMake(floorf(self.view.frame.size.width/2 - versionLabelFrameWidth/2), self.view.frame.size.height-versionLabelFrameHeight-20, versionLabelFrameWidth, versionLabelFrameHeight);
-    versionLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin;
+    versionLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;
     
     CGFloat aboutTextViewFrameWidth = self.view.frame.size.width-40;
     CGFloat aboutTextViewFrameYOrigin = imageView.frame.origin.y + imageViewFrameHeight + 10;
     aboutTextView.frame = CGRectMake(self.view.frame.size.width/2-aboutTextViewFrameWidth/2, aboutTextViewFrameYOrigin, aboutTextViewFrameWidth, versionLabel.frame.origin.y - aboutTextViewFrameYOrigin);
     aboutTextView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
+    
+    scrollView.contentSize = CGSizeMake(self.view.frame.size.width, versionLabel.frame.origin.y+versionLabelFrameHeight);
 }
 
 - (void)viewDidUnload
