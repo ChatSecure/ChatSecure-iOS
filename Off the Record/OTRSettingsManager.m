@@ -30,7 +30,7 @@
 #import "OTRDoubleSetting.h"
 #import "OTRFeedbackSetting.h"
 #import "OTRConstants.h"
-#import <MessageUI/MFMailComposeViewController.h>
+#import "OTRShareSetting.h"
 
 @interface OTRSettingsManager(Private)
 - (void) populateSettings;
@@ -85,14 +85,16 @@
     feedbackViewSetting.mailToRecipients = [NSArray arrayWithObject:kOTRFeedbackEmail];
     feedbackViewSetting.mailSubject = [NSString stringWithFormat:@"Feedback for %@ iOS V%@ ChatSecure V%@",[[UIDevice currentDevice] model],[[UIDevice currentDevice] systemVersion],[[[NSBundle mainBundle] infoDictionary] valueForKey:@"CFBundleVersion"]];
     
+    OTRShareSetting * shareViewSetting = [[OTRShareSetting alloc] initWithTitle:SHARE_STRING description:nil];
+    
     
 #ifdef CRITTERCISM_ENABLED
     OTRBoolSetting *crittercismSetting = [[OTRBoolSetting alloc] initWithTitle:CRITTERCISM_TITLE_STRING description:CRITTERCISM_DESCRIPTION_STRING settingsKey:kOTRSettingKeyCrittercismOptIn];
-    OTRSettingsGroup *otherGroup = [[OTRSettingsGroup alloc] initWithTitle:OTHER_STRING settings:[NSArray arrayWithObjects:crittercismSetting,feedbackViewSetting,nil]];
+    OTRSettingsGroup *otherGroup = [[OTRSettingsGroup alloc] initWithTitle:OTHER_STRING settings:[NSArray arrayWithObjects:crittercismSetting,feedbackViewSetting,shareViewSetting,nil]];
     [newSettingsDictionary setObject:crittercismSetting forKey:kOTRSettingKeyCrittercismOptIn];
     [settingsGroups addObject:otherGroup];
 #else
-    OTRSettingsGroup *otherGroup = [[OTRSettingsGroup alloc] initWithTitle:OTHER_STRING settings:[NSArray arrayWithObject:feedbackViewSetting]];
+    OTRSettingsGroup *otherGroup = [[OTRSettingsGroup alloc] initWithTitle:OTHER_STRING settings:[NSArray arrayWithObject:feedbackViewSetting,shareViewSetting]];
     
 #endif
     settingsDictionary = newSettingsDictionary;

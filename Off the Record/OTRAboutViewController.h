@@ -24,7 +24,7 @@
 #import <Twitter/Twitter.h>
 #import <MessageUI/MessageUI.h>
 
-@interface OTRAboutViewController : UIViewController <UIWebViewDelegate, UIActionSheetDelegate, MFMessageComposeViewControllerDelegate, MFMailComposeViewControllerDelegate>
+@interface OTRAboutViewController : UIViewController <UIWebViewDelegate, UIActionSheetDelegate>
 
 @property (nonatomic, retain) UIImageView *imageView;
 @property (strong, nonatomic) UILabel *versionLabel;

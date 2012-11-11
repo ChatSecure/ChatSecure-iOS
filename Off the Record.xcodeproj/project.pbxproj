@@ -18,6 +18,7 @@
 		636FE4B9161B7701002B28EF /* OTRXMPPLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 636FE4B8161B7701002B28EF /* OTRXMPPLoginViewController.m */; };
 		636FE4BC161B771E002B28EF /* OTROscarLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 636FE4BB161B771E002B28EF /* OTROscarLoginViewController.m */; };
 		636FE4C0161B7C68002B28EF /* OTRInLineTextEditTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 636FE4BF161B7C68002B28EF /* OTRInLineTextEditTableViewCell.m */; };
+		639B9A71164F21D900C021A9 /* OTRShareSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 639B9A70164F21D900C021A9 /* OTRShareSetting.m */; };
 		639FDE4716334FA500387666 /* OTRJabberLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 639FDE4616334FA500387666 /* OTRJabberLoginViewController.m */; };
 		63DF97741623A3310043E295 /* pencil@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63DF97731623A3310043E295 /* pencil@2x.png */; };
 		63DF97761623A3F30043E295 /* pencil.png in Resources */ = {isa = PBXBuildFile; fileRef = 63DF97751623A3F30043E295 /* pencil.png */; };
@@ -360,6 +361,8 @@
 		639B9A6C164F176D00C021A9 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Localizable.strings; sourceTree = "<group>"; };
 		639B9A6D164F176D00C021A9 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		639B9A6E164F176F00C021A9 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Localizable.strings; sourceTree = "<group>"; };
+		639B9A6F164F21D900C021A9 /* OTRShareSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRShareSetting.h; sourceTree = "<group>"; };
+		639B9A70164F21D900C021A9 /* OTRShareSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRShareSetting.m; sourceTree = "<group>"; };
 		639FDE4516334FA500387666 /* OTRJabberLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRJabberLoginViewController.h; sourceTree = "<group>"; };
 		639FDE4616334FA500387666 /* OTRJabberLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRJabberLoginViewController.m; sourceTree = "<group>"; };
 		63DF97731623A3310043E295 /* pencil@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pencil@2x.png"; sourceTree = "<group>"; };
@@ -1982,6 +1985,8 @@
 				D96495CA15363C0F009A8C33 /* OTRViewSetting.m */,
 				63F6E852164E000B00F67BDB /* OTRFeedbackSetting.h */,
 				63F6E853164E000B00F67BDB /* OTRFeedbackSetting.m */,
+				639B9A6F164F21D900C021A9 /* OTRShareSetting.h */,
+				639B9A70164F21D900C021A9 /* OTRShareSetting.m */,
 				D96495D315366004009A8C33 /* Value */,
 			);
 			name = Settings;
@@ -2606,6 +2611,7 @@
 				D95B374A1623A05B0091F843 /* SBJsonWriter.m in Sources */,
 				639FDE4716334FA500387666 /* OTRJabberLoginViewController.m in Sources */,
 				63F6E854164E000C00F67BDB /* OTRFeedbackSetting.m in Sources */,
+				639B9A71164F21D900C021A9 /* OTRShareSetting.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
