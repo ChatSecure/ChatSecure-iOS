@@ -26,5 +26,11 @@
     return self;
 }
 
+-(void)setValue:(id)newValue
+{
+    [super setValue:newValue];
+    [languageManager setLocale:newValue];
+}
+
 @end
 

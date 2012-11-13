@@ -44,7 +44,7 @@
 {
     NSMutableArray *languages = [NSMutableArray arrayWithArray:[self.languageLookupDictionary allKeys]];
     
-    [languages insertObject:DEFAULT_LANGUAGE_STRING atIndex:0];
+    //[languages insertObject:DEFAULT_LANGUAGE_STRING atIndex:0];
     
     
     return languages;
@@ -52,14 +52,9 @@
 
 -(void)setLocale:(NSString *)locale
 {
-    NSString * newLocales;
-    if ([locale isEqualToString:DEFAULT_LANGUAGE_STRING]) {
-        //reset to default
-    }
-    else
-    {
-        newLocales = [NSArray arrayWithObject:[self.languageLookupDictionary objectForKey:locale]];
-    }
+    NSArray * newLocales;
+   
+    newLocales = [NSArray arrayWithObject:[self.languageLookupDictionary objectForKey:locale]];
     
     [[NSUserDefaults standardUserDefaults] setObject:newLocales forKey:@"AppleLanguages"];
 }

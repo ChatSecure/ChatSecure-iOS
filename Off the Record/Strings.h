@@ -138,6 +138,7 @@
 #define CONNECTED_STRING NSLocalizedString(@"Connected", @"Whether or not account is logged in")
 
 #define SEND_FEEDBACK_STRING NSLocalizedString(@"Send Feedback", @"String on button to email feedback")
+#define LANGUAGE_STRING NSLocalizedString(@"Language",@"string to bring up language selector")
 
 // OTRSettingsDetailViewController
 #define SAVE_STRING NSLocalizedString(@"Save", "Title for button for saving a setting")

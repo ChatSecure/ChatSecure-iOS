@@ -32,6 +32,7 @@
 #define kOTRSettingKeyShowDisconnectionWarning @"kOTRSettingKeyShowDisconnectionWarning"
 #define kOTRSettingUserAgreedToEULA @"kOTRSettingUserAgreedToEULA"
 #define kOTRSettingAccountsKey @"kOTRSettingAccountsKey"
+#define kOTRSettingKeyLanguage @"userSelectedSetting"
 
 @interface OTRSettingsManager : NSObject
 

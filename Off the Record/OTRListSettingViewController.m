@@ -42,7 +42,13 @@
     self.valueTable.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.valueTable.frame = self.view.frame;
     
+    newValue = [otrSetting value];
+    
+    self.selectedPath = [NSIndexPath indexPathForRow:[otrSetting.possibleValues indexOfObject:newValue] inSection:0];
+    
     [self.view addSubview:self.valueTable];
+    
+
 }
 
 -(void) viewWillAppear:(BOOL)animated
@@ -50,6 +56,12 @@
     [super viewWillAppear:animated];
     
     valueTable.frame = self.view.bounds;
+}
+
+-(void)save:(id)sender
+{
+    [otrSetting setValue:newValue];
+    [super save:sender];
 }
 
 #pragma mark UITableViewDataSource methods
@@ -78,8 +90,9 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [tableView deselectRowAtIndexPath:indexPath animated:NO];
     self.selectedPath = indexPath;
-    //newValue = [self.otrSetting.possibleValues objectAtIndex:indexPath.row];
+    newValue = [self.otrSetting.possibleValues objectAtIndex:indexPath.row];
     [self.valueTable reloadData];
     [self.valueTable selectRowAtIndexPath:selectedPath animated:NO scrollPosition:UITableViewScrollPositionNone];
 }

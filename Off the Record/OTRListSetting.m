@@ -13,6 +13,7 @@
 
 @synthesize possibleValues;
 @synthesize defaultValue;
+@synthesize value;
 
 - (void)dealloc
 {
@@ -37,11 +38,21 @@
 
 -(NSString *)value
 {
-    if(![self value])
+    value = [super value];
+    if(!value)
     {
-        self.value = self.defaultValue;
+        value = self.defaultValue;
     }
-    return [self value];
+    return value;
+}
+
+-(void)setValue:(NSString *)newValue
+{
+    [super setValue:newValue];
+    if(self.delegate && [self.delegate conformsToProtocol:@protocol(OTRSettingDelegate)]) {
+        [self.delegate refreshView];
+    }
+    
 }
 
 @end

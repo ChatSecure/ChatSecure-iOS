@@ -88,7 +88,7 @@
     
     OTRShareSetting * shareViewSetting = [[OTRShareSetting alloc] initWithTitle:SHARE_STRING description:nil];
     
-    OTRLanguageSetting * languageSetting = [[OTRLanguageSetting alloc]initWithTitle:@"Language" description:nil settingsKey:@"userSelectedSetting"];
+    OTRLanguageSetting * languageSetting = [[OTRLanguageSetting alloc]initWithTitle:LANGUAGE_STRING description:nil settingsKey:kOTRSettingKeyLanguage];
     
 #ifdef CRITTERCISM_ENABLED
     OTRBoolSetting *crittercismSetting = [[OTRBoolSetting alloc] initWithTitle:CRITTERCISM_TITLE_STRING description:CRITTERCISM_DESCRIPTION_STRING settingsKey:kOTRSettingKeyCrittercismOptIn];
