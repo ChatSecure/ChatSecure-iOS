@@ -94,7 +94,8 @@
     [newSettingsDictionary setObject:crittercismSetting forKey:kOTRSettingKeyCrittercismOptIn];
     [settingsGroups addObject:otherGroup];
 #else
-    OTRSettingsGroup *otherGroup = [[OTRSettingsGroup alloc] initWithTitle:OTHER_STRING settings:[NSArray arrayWithObject:shareViewSetting,feedbackViewSetting]];
+    OTRSettingsGroup *otherGroup = [[OTRSettingsGroup alloc] initWithTitle:OTHER_STRING settings:[NSArray arrayWithObjects:shareViewSetting,feedbackViewSetting,nil]];
+    [settingsGroups addObject:otherGroup];
     
 #endif
     settingsDictionary = newSettingsDictionary;
