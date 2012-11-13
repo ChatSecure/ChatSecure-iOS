@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		633406391652C31300A54C52 /* OTRListSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 633406381652C31300A54C52 /* OTRListSetting.m */; };
+		6334063C1652C33300A54C52 /* OTRListSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6334063B1652C33300A54C52 /* OTRListSettingViewController.m */; };
+		633406411652D50F00A54C52 /* OTRLanguageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 633406401652D50F00A54C52 /* OTRLanguageManager.m */; };
+		633406451652E44600A54C52 /* OTRLanguageSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 633406441652E44500A54C52 /* OTRLanguageSetting.m */; };
 		634205781644893E009C6BA4 /* libOTRKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D92061E315E2E0D8003EEF3A /* libOTRKit.a */; };
 		6352DC8815AF9F16007AD0B4 /* OTRNewAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6352DC8715AF9F16007AD0B4 /* OTRNewAccountViewController.m */; };
 		6352DC8C15AFB252007AD0B4 /* xmpp.png in Resources */ = {isa = PBXBuildFile; fileRef = 6352DC8A15AFB252007AD0B4 /* xmpp.png */; };
@@ -329,6 +333,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		633406371652C31300A54C52 /* OTRListSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRListSetting.h; sourceTree = "<group>"; };
+		633406381652C31300A54C52 /* OTRListSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRListSetting.m; sourceTree = "<group>"; };
+		6334063A1652C33300A54C52 /* OTRListSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRListSettingViewController.h; sourceTree = "<group>"; };
+		6334063B1652C33300A54C52 /* OTRListSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRListSettingViewController.m; sourceTree = "<group>"; };
+		633406401652D50F00A54C52 /* OTRLanguageManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRLanguageManager.m; sourceTree = "<group>"; };
+		633406421652D52400A54C52 /* OTRLanguageManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRLanguageManager.h; sourceTree = "<group>"; };
+		633406431652E44500A54C52 /* OTRLanguageSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRLanguageSetting.h; sourceTree = "<group>"; };
+		633406441652E44500A54C52 /* OTRLanguageSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRLanguageSetting.m; sourceTree = "<group>"; };
 		634CBFDB159CEAC70046FB3B /* OTRConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OTRConstants.h; sourceTree = "<group>"; };
 		6352DC8615AF9F16007AD0B4 /* OTRNewAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRNewAccountViewController.h; sourceTree = "<group>"; };
 		6352DC8715AF9F16007AD0B4 /* OTRNewAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRNewAccountViewController.m; sourceTree = "<group>"; };
@@ -1059,6 +1071,8 @@
 				D91DAE8515473EB5009D0B74 /* OTRSettingDetailViewController.m */,
 				D91DAE87154740CD009D0B74 /* OTRDoubleSettingViewController.h */,
 				D91DAE88154740CE009D0B74 /* OTRDoubleSettingViewController.m */,
+				6334063A1652C33300A54C52 /* OTRListSettingViewController.h */,
+				6334063B1652C33300A54C52 /* OTRListSettingViewController.m */,
 			);
 			name = "Detail Views";
 			sourceTree = "<group>";
@@ -1977,6 +1991,8 @@
 			children = (
 				D9C7463E153512DE003445ED /* OTRSettingsManager.h */,
 				D9C7463F153512DE003445ED /* OTRSettingsManager.m */,
+				633406421652D52400A54C52 /* OTRLanguageManager.h */,
+				633406401652D50F00A54C52 /* OTRLanguageManager.m */,
 				D96495D5153668D2009A8C33 /* OTRSettingsGroup.h */,
 				D96495D6153668D2009A8C33 /* OTRSettingsGroup.m */,
 				D96495C2153629FE009A8C33 /* OTRSetting.h */,
@@ -2001,6 +2017,10 @@
 				D96495C7153635A8009A8C33 /* OTRBoolSetting.m */,
 				D9FBD71215472A8400126568 /* OTRDoubleSetting.h */,
 				D9FBD71315472A8400126568 /* OTRDoubleSetting.m */,
+				633406371652C31300A54C52 /* OTRListSetting.h */,
+				633406381652C31300A54C52 /* OTRListSetting.m */,
+				633406431652E44500A54C52 /* OTRLanguageSetting.h */,
+				633406441652E44500A54C52 /* OTRLanguageSetting.m */,
 			);
 			name = Value;
 			sourceTree = "<group>";
@@ -2612,6 +2632,10 @@
 				639FDE4716334FA500387666 /* OTRJabberLoginViewController.m in Sources */,
 				63F6E854164E000C00F67BDB /* OTRFeedbackSetting.m in Sources */,
 				639B9A71164F21D900C021A9 /* OTRShareSetting.m in Sources */,
+				633406391652C31300A54C52 /* OTRListSetting.m in Sources */,
+				6334063C1652C33300A54C52 /* OTRListSettingViewController.m in Sources */,
+				633406411652D50F00A54C52 /* OTRLanguageManager.m in Sources */,
+				633406451652E44600A54C52 /* OTRLanguageSetting.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

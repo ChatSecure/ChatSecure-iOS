@@ -127,6 +127,7 @@
 #define FONT_SIZE_DESCRIPTION_STRING NSLocalizedString(@"Size for font in chat view", @"description for what the font size setting affects")
 #define DISCONNECTION_WARNING_TITLE_STRING NSLocalizedString(@"Signout Warning", @"Title for setting about showing a warning before disconnection")
 #define DISCONNECTION_WARNING_DESC_STRING NSLocalizedString(@"1 Minute Alert Before Disconnection", @"Description for disconnection warning setting")
+#define DEFAULT_LANGUAGE_STRING NSLocalizedString(@"Default",@"default string to revert to normal language behaviour")
 
 
 // OTRSettingsViewController
