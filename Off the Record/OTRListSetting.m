@@ -7,7 +7,7 @@
 //
 
 #import "OTRListSetting.h"
-#import "OTRListSettingViewController.h"
+#import "OTRLanguageListSettingViewController.h"
 
 @implementation OTRListSetting
 
@@ -32,18 +32,8 @@
 
 - (void) editValue {
     if(self.delegate && [self.delegate conformsToProtocol:@protocol(OTRSettingDelegate)]) {
-        [self.delegate otrSetting:self showDetailViewControllerClass:[OTRListSettingViewController class]];
+        [self.delegate otrSetting:self showDetailViewControllerClass:[OTRLanguageListSettingViewController class]];
     }
-}
-
--(NSString *)value
-{
-    value = [super value];
-    if(!value)
-    {
-        value = self.defaultValue;
-    }
-    return value;
 }
 
 -(void)setValue:(NSString *)newValue

@@ -23,8 +23,9 @@
         {
             NSLocale *frLocale = [[NSLocale alloc] initWithLocaleIdentifier:locale];
             NSString *displayNameString = [frLocale displayNameForKey:NSLocaleIdentifier value:locale];
+
             
-            [newLookupDictionary setObject:locale forKey:displayNameString];
+            [newLookupDictionary setObject:locale forKey:[displayNameString capitalizedStringWithLocale:frLocale]];
         }
         
         self.languageLookupDictionary = [[NSDictionary alloc] initWithDictionary:newLookupDictionary];
@@ -36,7 +37,10 @@
 
 -(NSString *)currentValue
 {
-    return DEFAULT_LANGUAGE_STRING;
+    NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
+    NSString * locale = [[defaults objectForKey:@"AppleLanguages"] objectAtIndex:0];
+    NSString * val = [[self.languageLookupDictionary allKeysForObject:locale] objectAtIndex:0];
+    return val;
     
 }
 
@@ -44,19 +48,39 @@
 {
     NSMutableArray *languages = [NSMutableArray arrayWithArray:[self.languageLookupDictionary allKeys]];
     
-    //[languages insertObject:DEFAULT_LANGUAGE_STRING atIndex:0];
-    
-    
-    return languages;
+    return [languages sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
 }
 
 -(void)setLocale:(NSString *)locale
 {
-    NSArray * newLocales;
+    NSMutableArray * newLocales;
    
-    newLocales = [NSArray arrayWithObject:[self.languageLookupDictionary objectForKey:locale]];
+    newLocales = [NSMutableArray arrayWithObject:[self.languageLookupDictionary objectForKey:locale]];
     
-    [[NSUserDefaults standardUserDefaults] setObject:newLocales forKey:@"AppleLanguages"];
+    
+    NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
+    
+    if([defaults objectForKey:kOTRLanguageDefaultArrayKey])
+        [newLocales addObjectsFromArray:[defaults objectForKey:kOTRLanguageDefaultArrayKey]];
+    
+    [defaults setObject:newLocales forKey:@"AppleLanguages"];
+    [defaults synchronize];
+}
+
++(void)saveDefaultLanguageArray
+{
+    NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
+    NSArray * languageArray = [defaults objectForKey:@"AppleLanguages"];
+    [defaults setObject:languageArray forKey:kOTRLanguageDefaultArrayKey];
+    [defaults synchronize];
+}
+
++(BOOL)defaultLanguagesSaved
+{
+    NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
+    if ([defaults objectForKey:kOTRLanguageDefaultArrayKey])
+        return YES;
+    return NO;
 }
 
 @end

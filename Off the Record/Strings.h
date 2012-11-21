@@ -139,6 +139,8 @@
 
 #define SEND_FEEDBACK_STRING NSLocalizedString(@"Send Feedback", @"String on button to email feedback")
 #define LANGUAGE_STRING NSLocalizedString(@"Language",@"string to bring up language selector")
+#define LANGUAGE_ALERT_TITLE_STRING NSLocalizedString(@"Language Change", @"Stirng of title to alert user langague is change")
+#define LANGUAGE_ALERT_MESSAGE_STRING NSLocalizedString(@"In order to change langugages return to the home screen and remove ChatSecure from the recently used apps", @"Message alerting user that they need to return to the home screen and force close ChatSecure")
 
 // OTRSettingsDetailViewController
 #define SAVE_STRING NSLocalizedString(@"Save", "Title for button for saving a setting")

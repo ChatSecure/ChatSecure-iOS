@@ -83,6 +83,7 @@
     } else {
         cell.accessoryType = UITableViewCellAccessoryNone;
     }
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     return cell;
 }
 
@@ -90,7 +91,6 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [tableView deselectRowAtIndexPath:indexPath animated:NO];
     self.selectedPath = indexPath;
     newValue = [self.otrSetting.possibleValues objectAtIndex:indexPath.row];
     [self.valueTable reloadData];

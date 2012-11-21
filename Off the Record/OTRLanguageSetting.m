@@ -13,6 +13,7 @@
 @synthesize possibleValues;
 @synthesize defaultValue;
 @synthesize languageManager;
+@synthesize value;
 
 
 -(id)initWithTitle:(NSString *)newTitle description:(NSString *)newDescription settingsKey:(NSString *)newSettingsKey
@@ -21,7 +22,7 @@
     {
         languageManager = [[OTRLanguageManager alloc] init];
         self.possibleValues = [languageManager supportedLanguages];
-        self.defaultValue = [languageManager currentValue];
+        //self.defaultValue = [languageManager currentValue];
     }
     return self;
 }
@@ -30,6 +31,16 @@
 {
     [super setValue:newValue];
     [languageManager setLocale:newValue];
+}
+
+-(NSString *)value
+{
+    if(![super value])
+    {
+        return [languageManager currentValue];
+    }
+    return [super value];
+    
 }
 
 @end
