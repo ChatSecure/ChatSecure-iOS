@@ -46,9 +46,22 @@
 
 -(NSArray *)supportedLanguages
 {
-    NSMutableArray *languages = [NSMutableArray arrayWithArray:[self.languageLookupDictionary allKeys]];
+    NSMutableArray *languages = [[NSMutableArray alloc] init];
+    
+    NSString * resourcePath = [[NSBundle mainBundle] pathForResource:@"supportedLanguages" ofType:@"plist" inDirectory:nil forLocalization:nil];
+    NSArray * twoLetterLanguages = [NSArray arrayWithContentsOfFile:resourcePath];
+    
+    for(NSString * locale in twoLetterLanguages)
+    {
+        [languages addObject:[self languageNameForLocalization:locale]];
+    }
     
     return [languages sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+}
+
+-(NSString *)languageNameForLocalization:(NSString *)locale
+{
+    return [[self.languageLookupDictionary allKeysForObject:locale] objectAtIndex:0];
 }
 
 -(void)setLocale:(NSString *)locale
