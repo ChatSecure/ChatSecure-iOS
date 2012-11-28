@@ -178,9 +178,6 @@ static void gone_secure_cb(void *opdata, ConnContext *context)
 {
     OTRKit *otrKit = [OTRKit sharedInstance];
     [otrKit updateEncryptionStatusWithContext:context];
-    [NSException raise:NSInvalidArgumentException
-                format:@"Foo must not be nil"];
-
 }
 
 static void gone_insecure_cb(void *opdata, ConnContext *context) // this method is never called
@@ -677,7 +674,20 @@ static OtrlMessageAppOps ui_ops = {
     return context;
 }
 
+-(Fingerprint *) fullFingerprintForUsername:(NSString*)username accountName:(NSString*)accountName protocol:(NSString*) protocol {
+    Fingerprint * fingerprint = nil;
+    ConnContext *context = [self contextForUsername:username accountName:accountName protocol:protocol];
+    if(context)
+    {
+        fingerprint = context->active_fingerprint;
+    }
+    return fingerprint;
+    
+}
+
+
 - (NSString *) fingerprintForUsername:(NSString*)username accountName:(NSString*)accountName protocol:(NSString*) protocol {
+    /*
     ConnContext *context = [self contextForUsername:username accountName:accountName protocol:protocol];
     NSString *fingerprintString = nil;
     if(context)
@@ -692,6 +702,57 @@ static OtrlMessageAppOps ui_ops = {
         }
     }
     return fingerprintString;
+     */
+    NSString *fingerprintString = nil;
+    char their_hash[45];
+    Fingerprint * fingerprint = [self fullFingerprintForUsername:username accountName:accountName protocol:protocol];
+    if(fingerprint && fingerprint->fingerprint) {
+        otrl_privkey_hash_to_human(their_hash, fingerprint->fingerprint);
+        fingerprintString = [NSString stringWithUTF8String:their_hash];
+    }
+    return fingerprintString;
+    
+}
+
+- (BOOL) finerprintIsVerifiedForUsername:(NSString*)username accountName:(NSString*)accountName protocol:(NSString*) protocol
+{
+    BOOL verified = NO;
+    Fingerprint * fingerprint = [self fullFingerprintForUsername:username accountName:accountName protocol:protocol];
+    
+    if( fingerprint && fingerprint->trust)
+    {
+        if(otrl_context_is_fingerprint_trusted(fingerprint))
+            verified = YES;
+    }
+    
+    
+    
+    return verified;
+}
+- (void) changeVerifyFingerprintForUsername:(NSString*)username accountName:(NSString*)accountName protocol:(NSString*) protocol verrified:(BOOL)trusted
+{
+    Fingerprint * fingerprint = [self fullFingerprintForUsername:username accountName:accountName protocol:protocol];
+    const char * newTrust = nil;
+    if(trusted)
+        newTrust = [@"verified" UTF8String];
+    
+    if(fingerprint)
+    {
+        otrl_context_set_trust(fingerprint, newTrust);
+        [self writeFingerprints];
+    }
+    
+}
+
+-(void)writeFingerprints
+{
+    OTRKit *otrKit = [OTRKit sharedInstance];
+    FILE *storef;
+    NSString *path = [otrKit fingerprintsPath];
+    storef = fopen([path UTF8String], "wb");
+    if (!storef) return;
+    otrl_privkey_write_fingerprints_FILEp(userState, storef);
+    fclose(storef);
 }
 
 - (OTRKitMessageState) messageStateForUsername:(NSString*)username accountName:(NSString*)accountName protocol:(NSString*) protocol {
