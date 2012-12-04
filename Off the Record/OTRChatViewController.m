@@ -43,7 +43,7 @@
 @synthesize messageTextField;
 @synthesize buddyListController;
 @synthesize chatBoxView;
-@synthesize lockButton, unlockedButton;
+@synthesize lockButton, unlockedButton,lockVerifiedButton;
 @synthesize lastActionLink;
 @synthesize sendButton;
 @synthesize buddy;
@@ -119,12 +119,28 @@
     
     unlockedButton = [[UIBarButtonItem alloc] initWithCustomView:button];
     
+    button = [UIButton buttonWithType:UIButtonTypeCustom];
+    buttonImage = [UIImage imageNamed:@"Lock_Locked_Verified.png"];
+    [button setBackgroundImage:buttonImage forState:UIControlStateNormal];
+    buttonFrame = [button frame];
+    buttonFrame.size.width = buttonImage.size.width;
+    buttonFrame.size.height = buttonImage.size.height;
+    [button setFrame:buttonFrame];
+    [button addTarget:self action:@selector(lockButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    
+    lockVerifiedButton = [[UIBarButtonItem alloc] initWithCustomView:button];
+    
     [self refreshLockButton];
 }
 
 -(void)refreshLockButton
 {
-    if(buddy.encryptionStatus == kOTRKitMessageStateEncrypted)
+    BOOL trusted = [[OTRKit sharedInstance] finerprintIsVerifiedForUsername:buddy.accountName accountName:buddy.protocol.account.username protocol:buddy.protocol.account.protocol];
+    if(buddy.encryptionStatus == kOTRKitMessageStateEncrypted && trusted)
+    {
+        self.navigationItem.rightBarButtonItem = lockVerifiedButton;
+    }
+    else if(buddy.encryptionStatus == kOTRKitMessageStateEncrypted)
     {
         self.navigationItem.rightBarButtonItem = lockButton;
     }
@@ -137,10 +153,7 @@
 -(void)lockButtonPressed
 {
     NSString *encryptionString = INITIATE_ENCRYPTED_CHAT_STRING;
-    BOOL trusted = [[OTRKit sharedInstance] finerprintIsVerifiedForUsername:buddy.accountName accountName:buddy.protocol.account.username protocol:buddy.protocol.account.protocol];
     NSString * verifiedString = VERIFY_STRING;
-    if(trusted)
-        verifiedString = VERIFIED_STRING;
     if (buddy.encryptionStatus == kOTRKitMessageStateEncrypted) {
         encryptionString = CANCEL_ENCRYPTED_CHAT_STRING;
     }
@@ -474,6 +487,7 @@
     if(buttonIndex == 1)
     {
         [[OTRKit sharedInstance] changeVerifyFingerprintForUsername:buddy.accountName accountName:buddy.protocol.account.username protocol:buddy.protocol.account.protocol verrified:YES];
+        [self refreshLockButton];
     }
 }
 

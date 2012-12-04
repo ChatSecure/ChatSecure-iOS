@@ -20,6 +20,10 @@
 		636FE4C0161B7C68002B28EF /* OTRInLineTextEditTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 636FE4BF161B7C68002B28EF /* OTRInLineTextEditTableViewCell.m */; };
 		639B9A71164F21D900C021A9 /* OTRShareSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 639B9A70164F21D900C021A9 /* OTRShareSetting.m */; };
 		639FDE4716334FA500387666 /* OTRJabberLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 639FDE4616334FA500387666 /* OTRJabberLoginViewController.m */; };
+		63B43C2D166D93D5004A4C54 /* Lock_Locked_Verified.png in Resources */ = {isa = PBXBuildFile; fileRef = 63B43C29166D93D5004A4C54 /* Lock_Locked_Verified.png */; };
+		63B43C2E166D93D5004A4C54 /* Lock_Locked_Verified@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63B43C2A166D93D5004A4C54 /* Lock_Locked_Verified@2x.png */; };
+		63B43C2F166D93D5004A4C54 /* Lock_Locked@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63B43C2B166D93D5004A4C54 /* Lock_Locked@2x.png */; };
+		63B43C30166D93D5004A4C54 /* Lock_Unlocked@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63B43C2C166D93D5004A4C54 /* Lock_Unlocked@2x.png */; };
 		63DF97741623A3310043E295 /* pencil@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63DF97731623A3310043E295 /* pencil@2x.png */; };
 		63DF97761623A3F30043E295 /* pencil.png in Resources */ = {isa = PBXBuildFile; fileRef = 63DF97751623A3F30043E295 /* pencil.png */; };
 		63F6E854164E000C00F67BDB /* OTRFeedbackSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F6E853164E000B00F67BDB /* OTRFeedbackSetting.m */; };
@@ -365,6 +369,10 @@
 		639B9A70164F21D900C021A9 /* OTRShareSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRShareSetting.m; sourceTree = "<group>"; };
 		639FDE4516334FA500387666 /* OTRJabberLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRJabberLoginViewController.h; sourceTree = "<group>"; };
 		639FDE4616334FA500387666 /* OTRJabberLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRJabberLoginViewController.m; sourceTree = "<group>"; };
+		63B43C29166D93D5004A4C54 /* Lock_Locked_Verified.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Lock_Locked_Verified.png; sourceTree = "<group>"; };
+		63B43C2A166D93D5004A4C54 /* Lock_Locked_Verified@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Lock_Locked_Verified@2x.png"; sourceTree = "<group>"; };
+		63B43C2B166D93D5004A4C54 /* Lock_Locked@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Lock_Locked@2x.png"; sourceTree = "<group>"; };
+		63B43C2C166D93D5004A4C54 /* Lock_Unlocked@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Lock_Unlocked@2x.png"; sourceTree = "<group>"; };
 		63DF97731623A3310043E295 /* pencil@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pencil@2x.png"; sourceTree = "<group>"; };
 		63DF97751623A3F30043E295 /* pencil.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pencil.png; sourceTree = "<group>"; };
 		63F6E843164DE01800F67BDB /* bo */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = bo; path = bo.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -2201,6 +2209,10 @@
 				D95F8E931419C3E00094A634 /* chatsecure_icon@2x.png */,
 				D95F8E911419C3D00094A634 /* chatsecure_icon.png */,
 				D9CE42C113FDCBDD003EC27C /* Lock_Locked.png */,
+				63B43C29166D93D5004A4C54 /* Lock_Locked_Verified.png */,
+				63B43C2A166D93D5004A4C54 /* Lock_Locked_Verified@2x.png */,
+				63B43C2B166D93D5004A4C54 /* Lock_Locked@2x.png */,
+				63B43C2C166D93D5004A4C54 /* Lock_Unlocked@2x.png */,
 				D9CE42C213FDCBDD003EC27C /* Lock_Unlocked.png */,
 				D974577515BE34E7002B9192 /* 31-circle-plus.png */,
 				D974577615BE34E7002B9192 /* 31-circle-plus@2x.png */,
@@ -2368,6 +2380,10 @@
 				63DF97741623A3310043E295 /* pencil@2x.png in Resources */,
 				63DF97761623A3F30043E295 /* pencil.png in Resources */,
 				D95B36F316239D3A0091F843 /* LibOrange.1 in Resources */,
+				63B43C2D166D93D5004A4C54 /* Lock_Locked_Verified.png in Resources */,
+				63B43C2E166D93D5004A4C54 /* Lock_Locked_Verified@2x.png in Resources */,
+				63B43C2F166D93D5004A4C54 /* Lock_Locked@2x.png in Resources */,
+				63B43C30166D93D5004A4C54 /* Lock_Unlocked@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
