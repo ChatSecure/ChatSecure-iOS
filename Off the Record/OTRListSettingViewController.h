@@ -12,6 +12,7 @@
 @interface OTRListSettingViewController : OTRSettingDetailViewController <UITableViewDataSource,UITableViewDelegate>
 {
     NSString * newValue;
+    NSString * oldValue;
 }
 
 @property (nonatomic,strong) OTRListSetting * otrSetting;

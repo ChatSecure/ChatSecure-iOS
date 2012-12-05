@@ -15,10 +15,15 @@
 
 @implementation OTRLanguageListSettingViewController
 
+
+
 -(void)save:(id)sender
 {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle: LANGUAGE_ALERT_TITLE_STRING message:LANGUAGE_ALERT_MESSAGE_STRING delegate:self cancelButtonTitle:OK_STRING otherButtonTitles:nil];
-    [alert show];
+    if(![oldValue isEqualToString:newValue])
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle: LANGUAGE_ALERT_TITLE_STRING message:LANGUAGE_ALERT_MESSAGE_STRING delegate:self cancelButtonTitle:OK_STRING otherButtonTitles:nil];
+        [alert show];
+    }
     [super save:sender];
 }
 

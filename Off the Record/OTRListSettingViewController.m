@@ -43,6 +43,7 @@
     self.valueTable.frame = self.view.frame;
     
     newValue = [otrSetting value];
+    oldValue = [otrSetting value];
     
     self.selectedPath = [NSIndexPath indexPathForRow:[otrSetting.possibleValues indexOfObject:newValue] inSection:0];
     
