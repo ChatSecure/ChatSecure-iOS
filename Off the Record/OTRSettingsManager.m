@@ -85,10 +85,14 @@
     OTRFeedbackSetting * feedbackViewSetting = [[OTRFeedbackSetting alloc] initWithTitle:SEND_FEEDBACK_STRING description:nil];
     feedbackViewSetting.mailToRecipients = [NSArray arrayWithObject:kOTRFeedbackEmail];
     feedbackViewSetting.mailSubject = [NSString stringWithFormat:@"Feedback for %@ iOS V%@ ChatSecure V%@",[[UIDevice currentDevice] model],[[UIDevice currentDevice] systemVersion],[[[NSBundle mainBundle] infoDictionary] valueForKey:@"CFBundleVersion"]];
+    feedbackViewSetting.imageName = @"18-envelope.png";
     
     OTRShareSetting * shareViewSetting = [[OTRShareSetting alloc] initWithTitle:SHARE_STRING description:nil];
+    shareViewSetting.imageName = @"29-heart.png";
     
     OTRLanguageSetting * languageSetting = [[OTRLanguageSetting alloc]initWithTitle:LANGUAGE_STRING description:nil settingsKey:kOTRSettingKeyLanguage];
+    languageSetting.imageName = @"globe.png";
+    
     
 #ifdef CRITTERCISM_ENABLED
     OTRBoolSetting *crittercismSetting = [[OTRBoolSetting alloc] initWithTitle:CRITTERCISM_TITLE_STRING description:CRITTERCISM_DESCRIPTION_STRING settingsKey:kOTRSettingKeyCrittercismOptIn];
