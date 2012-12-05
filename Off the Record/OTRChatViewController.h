@@ -25,10 +25,10 @@
 #import "OTRProtocolManager.h"
 #import "OTRBuddy.h"
 
-@interface OTRChatViewController : UIViewController <UITextFieldDelegate,UIWebViewDelegate, UIActionSheetDelegate, UISplitViewControllerDelegate> 
+@interface OTRChatViewController : UIViewController <UITextFieldDelegate,UIWebViewDelegate, UIActionSheetDelegate, UISplitViewControllerDelegate,UIAlertViewDelegate>
 
 
-@property (nonatomic, retain) UIBarButtonItem *lockButton, *unlockedButton;
+@property (nonatomic, retain) UIBarButtonItem *lockButton, *unlockedButton, *lockVerifiedButton;
 @property (nonatomic, retain) UITextField *messageTextField;
 @property (nonatomic, retain) UIButton *sendButton;
 @property (nonatomic, retain) UIView *chatBoxView;

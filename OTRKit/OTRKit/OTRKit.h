@@ -80,6 +80,9 @@ enum OTRKitMessageState { // OtrlMessageState
 
 - (NSString*) fingerprintForAccountName:(NSString*)accountName protocol:(NSString*) protocol; // Returns your fingerprint
 - (NSString *) fingerprintForUsername:(NSString*)username accountName:(NSString*)accountName protocol:(NSString*) protocol; // Returns buddy's fingerprint
+- (BOOL) finerprintIsVerifiedForUsername:(NSString*)username accountName:(NSString*)accountName protocol:(NSString*) protocol;
+- (void) changeVerifyFingerprintForUsername:(NSString*)username accountName:(NSString*)accountName protocol:(NSString*) protocol verrified:(BOOL)trusted;
+- (void) writeFingerprints;
 
 - (void) disableEncryptionForUsername:(NSString*)username accountName:(NSString*)accountName protocol:(NSString*) protocol;
 

@@ -114,6 +114,7 @@ Acknowledgements
 * [Glyphish](http://glyphish.com/) - icons used on the tab bar.
 * [Adium](http://adium.im/) - lock/unlock icon used in chat window, status gems.
 * [Sergio Sánchez López](http://www.iconfinder.com/icondetails/7043/128/aim_icon) - AIM protocol icon.
+* [NounProject](htt://thenounproject.com) - [Lock image](http://thenounproject.com/noun/unlock/#icon-No300)
 * [Goxxy](http://rocketdock.com/addon/icons/3462) - Google Talk icon.
 * [Localizations](https://www.transifex.com/projects/p/chatsecure/)
 	* [Jiajuan Lin](http://www.personal.psu.edu/jwl5262/blogs/lin_portfolio/) (Chinese)
