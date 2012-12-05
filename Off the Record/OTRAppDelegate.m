@@ -30,6 +30,7 @@
 #import "DDLog.h"
 #import "Appirater.h"
 #import "OTRConstants.h"
+#import "OTRLanguageManager.h"
 
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
@@ -68,6 +69,9 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
         [Crittercism setOptOutStatus:YES];
     }
 #endif
+    
+    if(![OTRLanguageManager defaultLanguagesSaved])
+        [OTRLanguageManager saveDefaultLanguageArray];
 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     

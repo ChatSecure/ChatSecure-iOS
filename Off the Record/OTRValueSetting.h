@@ -27,7 +27,7 @@
 
 @property (nonatomic, retain, readonly) NSString *key;
 @property (nonatomic, retain) id value;
-@property (nonatomic, retain) NSNumber *defaultValue;
+@property (nonatomic, retain) id defaultValue;
 
 
 - (id) initWithTitle:(NSString*)newTitle description:(NSString*)newDescription settingsKey:(NSString*)newSettingsKey;

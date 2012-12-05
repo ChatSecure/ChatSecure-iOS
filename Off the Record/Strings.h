@@ -130,6 +130,7 @@
 #define FONT_SIZE_DESCRIPTION_STRING NSLocalizedString(@"Size for font in chat view", @"description for what the font size setting affects")
 #define DISCONNECTION_WARNING_TITLE_STRING NSLocalizedString(@"Signout Warning", @"Title for setting about showing a warning before disconnection")
 #define DISCONNECTION_WARNING_DESC_STRING NSLocalizedString(@"1 Minute Alert Before Disconnection", @"Description for disconnection warning setting")
+#define DEFAULT_LANGUAGE_STRING NSLocalizedString(@"Default",@"default string to revert to normal language behaviour")
 
 
 // OTRSettingsViewController
@@ -140,6 +141,9 @@
 #define CONNECTED_STRING NSLocalizedString(@"Connected", @"Whether or not account is logged in")
 
 #define SEND_FEEDBACK_STRING NSLocalizedString(@"Send Feedback", @"String on button to email feedback")
+#define LANGUAGE_STRING NSLocalizedString(@"Language",@"string to bring up language selector")
+#define LANGUAGE_ALERT_TITLE_STRING NSLocalizedString(@"Language Change", @"Stirng of title to alert user langague is change")
+#define LANGUAGE_ALERT_MESSAGE_STRING NSLocalizedString(@"In order to change langugages return to the home screen and remove ChatSecure from the recently used apps", @"Message alerting user that they need to return to the home screen and force close ChatSecure")
 
 // OTRSettingsDetailViewController
 #define SAVE_STRING NSLocalizedString(@"Save", "Title for button for saving a setting")
