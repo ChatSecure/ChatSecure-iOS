@@ -9,7 +9,7 @@
 #import "OTRLanguageManager.h"
 #import "Strings.h"
 
-#define kOTRAppleLanguagesKey @"AppleLanguages"
+
 
 @implementation OTRLanguageManager
 
@@ -25,8 +25,11 @@
         {
             NSLocale *frLocale = [[NSLocale alloc] initWithLocaleIdentifier:locale];
             NSString *displayNameString = [frLocale displayNameForKey:NSLocaleIdentifier value:locale];
-
-            [newLookupDictionary setObject:locale forKey:[displayNameString capitalizedString]];
+            
+            if([displayNameString respondsToSelector:@selector(capitalizedStringWithLocale:)])
+                [newLookupDictionary setObject:locale forKey:[displayNameString capitalizedStringWithLocale:frLocale]];
+            else
+                [newLookupDictionary setObject:locale forKey:[displayNameString capitalizedString]];
 
         }
         
@@ -40,15 +43,24 @@
 -(NSString *)currentValue
 {
     NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
-    if([[defaults objectForKey:kOTRAppleLanguagesKey] isEqualToArray:[defaults objectForKey:kOTRLanguageDefaultArrayKey]])
+    if([[defaults objectForKey:kOTRLanguageDefaultKey] isEqualToString:[defaults objectForKey:kOTRUserSetLanguageKey]])
     {
         //default setting
         return DEFAULT_LANGUAGE_STRING;
     }
-    NSString * locale = [[defaults objectForKey:kOTRAppleLanguagesKey] objectAtIndex:0];
+    NSString * locale = [defaults objectForKey:kOTRUserSetLanguageKey];
     NSString * val = [[self.languageLookupDictionary allKeysForObject:locale] objectAtIndex:0];
     return val;
     
+}
++(NSString *)currentLocale
+{
+    NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
+    if([defaults objectForKey:kOTRUserSetLanguageKey])
+        return [defaults objectForKey:kOTRUserSetLanguageKey];
+
+    NSString * locale = [[defaults objectForKey:kOTRAppleLanguagesKey] objectAtIndex:0];
+    return locale;
 }
 
 -(NSArray *)supportedLanguages
@@ -82,21 +94,13 @@
     }
     else
     {
-        NSMutableArray * newLocalesArray = [[NSMutableArray alloc] init];
         
         NSString * newLocaleString = [self.languageLookupDictionary objectForKey:locale];
         
         NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
         
-        if([defaults objectForKey:kOTRLanguageDefaultArrayKey])
-        {
-            [newLocalesArray addObjectsFromArray:[defaults objectForKey:kOTRLanguageDefaultArrayKey]];
-            [newLocalesArray removeObject:newLocaleString];
-            [newLocalesArray insertObject:newLocaleString atIndex:0];
-        }
         
-        
-        [defaults setObject:newLocalesArray forKey:kOTRAppleLanguagesKey];
+        [defaults setObject:newLocaleString forKey:kOTRUserSetLanguageKey];
         [defaults synchronize];
     }
     
@@ -105,10 +109,9 @@
 -(void)resetToDefaults
 {
     NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
-    if([defaults objectForKey:kOTRLanguageDefaultArrayKey])
-    {
-        [defaults setObject:[defaults objectForKey:kOTRLanguageDefaultArrayKey] forKey:kOTRAppleLanguagesKey];
-    }
+    
+    [defaults setObject:[defaults objectForKey:kOTRLanguageDefaultKey] forKey:kOTRUserSetLanguageKey];
+    
     [defaults synchronize];
 }
 
@@ -117,15 +120,30 @@
     NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
     NSArray * languageArray = [defaults objectForKey:kOTRAppleLanguagesKey];
     [defaults setObject:languageArray forKey:kOTRLanguageDefaultArrayKey];
+    [defaults setObject:[languageArray objectAtIndex:0] forKey:kOTRLanguageDefaultKey];
+    [defaults setObject:[languageArray objectAtIndex:0] forKey:kOTRUserSetLanguageKey];
+    [defaults setObject:[NSArray arrayWithObject:@"en"] forKey:kOTRAppleLanguagesKey];
     [defaults synchronize];
 }
 
 +(BOOL)defaultLanguagesSaved
 {
     NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
-    if ([defaults objectForKey:kOTRLanguageDefaultArrayKey])
+    if ([defaults objectForKey:kOTRLanguageDefaultKey])
         return YES;
     return NO;
+}
+
++(NSString *)translatedString:(NSString *)englishString
+{
+    NSString * currentLocale = [OTRLanguageManager currentLocale];
+    NSString *bundlePath = [[NSBundle mainBundle] pathForResource:@"Localizable" ofType:@"strings" inDirectory:nil forLocalization:currentLocale];
+    NSBundle *foreignBundle = [[NSBundle alloc] initWithPath:[bundlePath stringByDeletingLastPathComponent]];
+    [foreignBundle load];
+    NSString * translatedString = NSLocalizedStringFromTableInBundle(englishString, nil, foreignBundle, nil);
+    
+    return translatedString;
+    
 }
 
 @end

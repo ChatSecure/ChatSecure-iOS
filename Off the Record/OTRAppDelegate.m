@@ -70,8 +70,6 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     }
 #endif
     
-    if(![OTRLanguageManager defaultLanguagesSaved])
-        [OTRLanguageManager saveDefaultLanguageArray];
 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
