@@ -391,7 +391,7 @@
 
 
 - (void)sendButtonPressed:(id)sender {
-    BOOL secure = self.navigationItem.rightBarButtonItem == lockButton;
+    BOOL secure = buddy.encryptionStatus == kOTRKitMessageStateEncrypted;
     [buddy sendMessage:messageTextField.text secure:secure];
     messageTextField.text = @"";
     [self.buddy.pausedChatStateTimer invalidate];
