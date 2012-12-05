@@ -13,7 +13,6 @@
 		633406411652D50F00A54C52 /* OTRLanguageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 633406401652D50F00A54C52 /* OTRLanguageManager.m */; };
 		633406451652E44600A54C52 /* OTRLanguageSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 633406441652E44500A54C52 /* OTRLanguageSetting.m */; };
 		6336CDE0165C4E9E00C8CBA8 /* OTRLanguageListSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6336CDDF165C4E9E00C8CBA8 /* OTRLanguageListSettingViewController.m */; };
-		634205781644893E009C6BA4 /* libOTRKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D92061E315E2E0D8003EEF3A /* libOTRKit.a */; };
 		6352DC8815AF9F16007AD0B4 /* OTRNewAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6352DC8715AF9F16007AD0B4 /* OTRNewAccountViewController.m */; };
 		6352DC8C15AFB252007AD0B4 /* xmpp.png in Resources */ = {isa = PBXBuildFile; fileRef = 6352DC8A15AFB252007AD0B4 /* xmpp.png */; };
 		6352DC8D15AFB252007AD0B4 /* xmpp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6352DC8B15AFB252007AD0B4 /* xmpp@2x.png */; };
@@ -267,9 +266,7 @@
 		D96B81911616529500F97D0F /* AFURLConnectionOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D96B81861616529500F97D0F /* AFURLConnectionOperation.m */; };
 		D96B81921616529500F97D0F /* AFXMLRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D96B81881616529500F97D0F /* AFXMLRequestOperation.m */; };
 		D96B81931616529500F97D0F /* UIImageView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = D96B818A1616529500F97D0F /* UIImageView+AFNetworking.m */; };
-		D96B8199161652EA00F97D0F /* CHANGELOG.md in Resources */ = {isa = PBXBuildFile; fileRef = D96B8195161652EA00F97D0F /* CHANGELOG.md */; };
 		D96B819A161652EA00F97D0F /* JSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = D96B8197161652EA00F97D0F /* JSONKit.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		D96B819B161652EA00F97D0F /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = D96B8198161652EA00F97D0F /* README.md */; };
 		D96B81A116165C5D00F97D0F /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D96B81A016165C5D00F97D0F /* StoreKit.framework */; };
 		D96B81A416165F3400F97D0F /* OTRStoreTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D96B81A316165F3400F97D0F /* OTRStoreTableViewCell.m */; };
 		D96B81BE1616772A00F97D0F /* OTRPurchaseController.m in Sources */ = {isa = PBXBuildFile; fileRef = D96B81BD1616772A00F97D0F /* OTRPurchaseController.m */; };
@@ -1087,7 +1084,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				D96B81A116165C5D00F97D0F /* StoreKit.framework in Frameworks */,
-				D92061E915E2E185003EEF3A /* libOTRKit.a in Frameworks */,
 				D989E88E15D4F92E0081DFD1 /* Twitter.framework in Frameworks */,
 				D93C31B7159A8B4F006316C7 /* Security.framework in Frameworks */,
 				D9FC9860155881710039518D /* MessageUI.framework in Frameworks */,
