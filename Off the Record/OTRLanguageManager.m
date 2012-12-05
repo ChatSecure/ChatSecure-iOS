@@ -24,8 +24,12 @@
             NSLocale *frLocale = [[NSLocale alloc] initWithLocaleIdentifier:locale];
             NSString *displayNameString = [frLocale displayNameForKey:NSLocaleIdentifier value:locale];
 
-            
-            [newLookupDictionary setObject:locale forKey:[displayNameString capitalizedStringWithLocale:frLocale]];
+            if ([displayNameString respondsToSelector:@selector(capitalizedStringWithLocale:)]) { // only supported on iOS 6+
+                [newLookupDictionary setObject:locale forKey:[displayNameString capitalizedStringWithLocale:frLocale]];
+            } else {
+                [newLookupDictionary setObject:locale forKey:[displayNameString capitalizedString]];
+            }
+
         }
         
         self.languageLookupDictionary = [[NSDictionary alloc] initWithDictionary:newLookupDictionary];
