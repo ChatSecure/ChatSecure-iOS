@@ -9,6 +9,8 @@
 #import "OTRLanguageManager.h"
 #import "Strings.h"
 
+#define kOTRAppleLanguagesKey @"AppleLanguages"
+
 @implementation OTRLanguageManager
 
 
@@ -38,7 +40,12 @@
 -(NSString *)currentValue
 {
     NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
-    NSString * locale = [[defaults objectForKey:@"AppleLanguages"] objectAtIndex:0];
+    if([[defaults objectForKey:kOTRAppleLanguagesKey] isEqualToArray:[defaults objectForKey:kOTRLanguageDefaultArrayKey]])
+    {
+        //default setting
+        return DEFAULT_LANGUAGE_STRING;
+    }
+    NSString * locale = [[defaults objectForKey:kOTRAppleLanguagesKey] objectAtIndex:0];
     NSString * val = [[self.languageLookupDictionary allKeysForObject:locale] objectAtIndex:0];
     return val;
     
@@ -56,7 +63,10 @@
         [languages addObject:[self languageNameForLocalization:locale]];
     }
     
-    return [languages sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+    NSMutableArray * finalLanguages = [[NSMutableArray alloc] initWithArray:[languages sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)]];
+    [finalLanguages insertObject:DEFAULT_LANGUAGE_STRING atIndex:0];
+    
+    return finalLanguages;
 }
 
 -(NSString *)languageNameForLocalization:(NSString *)locale
@@ -66,24 +76,46 @@
 
 -(void)setLocale:(NSString *)locale
 {
-    NSMutableArray * newLocales;
-   
-    newLocales = [NSMutableArray arrayWithObject:[self.languageLookupDictionary objectForKey:locale]];
+    if([locale isEqualToString:DEFAULT_LANGUAGE_STRING])
+    {
+        [self resetToDefaults];
+    }
+    else
+    {
+        NSMutableArray * newLocalesArray = [[NSMutableArray alloc] init];
+        
+        NSString * newLocaleString = [self.languageLookupDictionary objectForKey:locale];
+        
+        NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
+        
+        if([defaults objectForKey:kOTRLanguageDefaultArrayKey])
+        {
+            [newLocalesArray addObjectsFromArray:[defaults objectForKey:kOTRLanguageDefaultArrayKey]];
+            [newLocalesArray removeObject:newLocaleString];
+            [newLocalesArray insertObject:newLocaleString atIndex:0];
+        }
+        
+        
+        [defaults setObject:newLocalesArray forKey:kOTRAppleLanguagesKey];
+        [defaults synchronize];
+    }
     
-    
+}
+
+-(void)resetToDefaults
+{
     NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
-    
     if([defaults objectForKey:kOTRLanguageDefaultArrayKey])
-        [newLocales addObjectsFromArray:[defaults objectForKey:kOTRLanguageDefaultArrayKey]];
-    
-    [defaults setObject:newLocales forKey:@"AppleLanguages"];
+    {
+        [defaults setObject:[defaults objectForKey:kOTRLanguageDefaultArrayKey] forKey:kOTRAppleLanguagesKey];
+    }
     [defaults synchronize];
 }
 
 +(void)saveDefaultLanguageArray
 {
     NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
-    NSArray * languageArray = [defaults objectForKey:@"AppleLanguages"];
+    NSArray * languageArray = [defaults objectForKey:kOTRAppleLanguagesKey];
     [defaults setObject:languageArray forKey:kOTRLanguageDefaultArrayKey];
     [defaults synchronize];
 }
