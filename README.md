@@ -10,7 +10,7 @@ Cost
 This project is \***100% free**\* because it is important that all people around the world have unrestricted access to privacy tools.
 However, developing and supporting this project is hard work and costs real money. Please help support the development of this project!
 
-[![donation](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=XRBHJ9AX5VWNA)
+[![donation](https://chatsecure.org/static/images/paypal_donate.png)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=XRBHJ9AX5VWNA)
 
 
 Localization
@@ -114,6 +114,7 @@ Acknowledgements
 * [Glyphish](http://glyphish.com/) - icons used on the tab bar.
 * [Adium](http://adium.im/) - lock/unlock icon used in chat window, status gems.
 * [Sergio Sánchez López](http://www.iconfinder.com/icondetails/7043/128/aim_icon) - AIM protocol icon.
+* [Mateo Zlatar](http://thenounproject.com/mateozlatar/#) - [World Icon](http://thenounproject.com/noun/world/#icon-No6502)
 * [Goxxy](http://rocketdock.com/addon/icons/3462) - Google Talk icon.
 * [Localizations](https://www.transifex.com/projects/p/chatsecure/)
 	* [Jiajuan Lin](http://www.personal.psu.edu/jwl5262/blogs/lin_portfolio/) (Chinese)

@@ -39,6 +39,11 @@
 @synthesize lastMessage;
 @synthesize lastMessageDisconnected;
 @synthesize encryptionStatus;
+@synthesize chatState;
+@synthesize lastSentChatState;
+@synthesize pausedChatStateTimer;
+@synthesize inactiveChatStateTimer;
+@synthesize composingMessageString;
 
 - (void) dealloc {
     self.accountName = nil;
@@ -46,6 +51,10 @@
     self.protocol = nil;
     self.groupName = nil;
     self.chatHistory = nil;
+    [self.pausedChatStateTimer invalidate];
+    self.pausedChatStateTimer = nil;
+    [self.inactiveChatStateTimer invalidate];
+    self.inactiveChatStateTimer = nil;
 }
 
 
@@ -53,6 +62,7 @@
 {
     if(self = [super init])
     {
+        self.numberOfMessagesSent = 0;
         self.displayName = buddyName;
         self.accountName = buddyAccountName;
         self.protocol = buddyProtocol;
@@ -62,6 +72,8 @@
         self.lastMessage = @"";
         self.lastMessageDisconnected = NO;
         self.encryptionStatus = kOTRKitMessageStatePlaintext;
+        self.chatState = kOTRChatStateUnknown;
+        self.lastSentChatState = kOTRChatStateUnknown;
         
         [[NSNotificationCenter defaultCenter]
          addObserver:self selector:@selector(protocolDisconnected:) name:kOTRProtocolDiconnect object:buddyProtocol];
@@ -79,6 +91,7 @@
 -(void)sendMessage:(NSString *)message secure:(BOOL)secure
 {
     if (message) {
+        self.numberOfMessagesSent +=1;
         lastMessageDisconnected = NO;
         OTRBuddy* theBuddy = self;
         message = [message stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
@@ -97,12 +110,61 @@
         //NSLog(@"encoded message: %@",encodedMessage.message);
         [OTRMessage sendMessage:encodedMessage];    
         
-        NSString *username = [NSString stringWithFormat:@"<p><strong style=\"color:blue\">Me:</strong>"];
+        NSString *username = [NSString stringWithFormat:@"<p id=\"%d\"><strong style=\"color:blue\">Me:</strong>",self.numberOfMessagesSent];
         
         [chatHistory appendFormat:@"%@ %@</p>",username, message];
+        self.lastSentChatState=kOTRChatStateActive;
     }
 }
 
+-(void)sendChatState:(OTRChatState) sendingChatState
+{
+    if([self.protocol respondsToSelector:@selector(sendChatState:withBuddy:)])
+    {
+        lastSentChatState = sendingChatState;
+        [self.protocol sendChatState:sendingChatState withBuddy:self];
+    }
+    
+}
+
+-(void)sendComposingChatState
+{
+    if(self.lastSentChatState != kOTRChatStateComposing)
+    {
+        [self sendChatState:kOTRChatStateComposing];
+    }
+    [self restartPausedChatStateTimer];
+    [self.inactiveChatStateTimer invalidate];
+}
+-(void)sendPausedChatState
+{
+    [self sendChatState:kOTRChatStatePaused];
+    [self.inactiveChatStateTimer invalidate];
+}
+
+-(void)sendActiveChatState
+{
+    [pausedChatStateTimer invalidate];
+    [self restartInactiveChatStateTimer];
+    [self sendChatState:kOTRChatStateActive];
+}
+-(void)sendInactiveChatState
+{
+    [self.inactiveChatStateTimer invalidate];
+    if(self.lastSentChatState != kOTRChatStateInactive)
+        [self sendChatState:kOTRChatStateInactive];
+}
+
+-(void)restartPausedChatStateTimer
+{
+    [pausedChatStateTimer invalidate];
+    pausedChatStateTimer = [NSTimer scheduledTimerWithTimeInterval:kOTRChatStatePausedTimeout target:self selector:@selector(sendPausedChatState) userInfo:nil repeats:NO];
+}
+-(void)restartInactiveChatStateTimer
+{
+    [inactiveChatStateTimer invalidate];
+    inactiveChatStateTimer = [NSTimer scheduledTimerWithTimeInterval:kOTRChatStateInactiveTimeout target:self selector:@selector(sendInactiveChatState) userInfo:nil repeats:NO];
+}
 
 -(void)receiveMessage:(NSString *)message
 {
@@ -146,6 +208,30 @@
         [chatHistory appendFormat:@"%@ %@</p>",username,message];
         [[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];
     }
+}
+
+-(void)receiveChatStateMessage:(OTRChatState) newChatState
+{
+    self.chatState = newChatState;
+    [[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];
+}
+
+-(void)receiveReceiptResonse:(NSString *)responseID
+{
+    NSLog(@"Receipt Resonse: %@",responseID);
+    
+    NSString * ReceiptResonseScript = [NSString stringWithFormat:@"<script>x=document.getElementById('%@');x.innerHTML = x.innerHTML+\" (delivered)\";</script>",responseID];
+    
+    [chatHistory appendString:ReceiptResonseScript];
+    
+    
+    
+    
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];
+    
+    
+    
 }
 
 -(void)setStatus:(OTRBuddyStatus)newStatus

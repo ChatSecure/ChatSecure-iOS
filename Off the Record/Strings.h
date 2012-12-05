@@ -29,6 +29,9 @@
 #define INITIATE_ENCRYPTED_CHAT_STRING NSLocalizedString(@"Initiate Encrypted Chat", @"Shown when starting an encrypted chat session")
 #define CANCEL_ENCRYPTED_CHAT_STRING NSLocalizedString(@"Cancel Encrypted Chat", @"Shown when ending an encrypted chat session")
 #define VERIFY_STRING NSLocalizedString(@"Verify", @"Shown when verifying fingerprints")
+#define VERIFIED_STRING NSLocalizedString(@"Verified", @"Shown when verifying fingerprints")
+#define NOT_VERIFIED_STRING NSLocalizedString(@"Not Verified", @"Not Verfied or cancle verified")
+#define VERIFY_LATER_STRING NSLocalizedString(@"Verify Later", @"Shown when verifying fingerprings")
 #define CLEAR_CHAT_HISTORY_STRING NSLocalizedString(@"Clear Chat History", @"String shown in dialog for removing chat history")
 #define SEND_STRING NSLocalizedString(@"Send", @"For sending a message")
 #define OK_STRING NSLocalizedString(@"OK", @"Accept the dialog")
@@ -48,6 +51,12 @@
 #define CONVERSATION_NO_LONGER_SECURE_STRING NSLocalizedString(@"The conversation with %@ is no longer secure.", @"Warn user that the current chat is no longer secure")
 #define CONVERSATION_SECURE_WARNING_STRING NSLocalizedString(@"This chat is secured",@"Warns user that the current chat is secure")
 #define CONVERSATION_SECURE_AND_VERIFIED_WARNING_STRING NSLocalizedString(@"This chat is secured and verified",@"Warns user that the current chat is secure and verified")
+
+#define CHAT_STATE_ACTIVE_STRING NSLocalizedString(@"Active",@"String to be displayed when a buddy is Active")
+#define CHAT_STATE_COMPOSING_STRING NSLocalizedString(@"Typing",@"String to be displayed when a buddy is currently composing a message")
+#define CHAT_STATE_PAUSED_STRING NSLocalizedString(@"Entered Text",@"String to be displayed when a buddy has stopped composing and text has been entered")
+#define CHAT_STATE_INACTVIE_STRING NSLocalizedString(@"Inactive",@"String to be displayed when a budy has become inactive")
+#define CHAT_STATE_GONE_STRING NSLocalizedString(@"Gone",@"String to be displayed when a buddy is inactive for an extended period of time")
 
 // OTRBuddyListViewController
 #define IGNORE_STRING NSLocalizedString(@"Ignore", @"Ignore an incoming message")
@@ -69,6 +78,7 @@
 #define ERROR_STRING NSLocalizedString(@"Error!", "Title of error message popup box")
 #define OSCAR_FAIL_STRING NSLocalizedString(@"Failed to start authenticating. Please try again.", @"Authentication failed, tell user to try again")
 #define XMPP_FAIL_STRING NSLocalizedString(@"Failed to connect to XMPP server. Please check your login credentials and internet connection and try again.", @"Message when cannot connect to XMPP server")
+#define XMPP_PORT_FAIL_STRING NSLocalizedString(@"Domain needs to be set manually when specifying a custom port", @"Message when port is changed but domain not set")
 #define LOGGING_IN_STRING NSLocalizedString(@"Logging in...", @"shown during the login proceess")
 #define USER_PASS_BLANK_STRING NSLocalizedString(@"You must enter a username and a password to login.", @"error message shown when user doesnt fill in a username or password")
 #define BASIC_STRING NSLocalizedString(@"Basic", @"string to describe basic set of settings")
@@ -78,6 +88,8 @@
 #define PORT_STRING NSLocalizedString(@"Port", @"Label for port number field for connecting to service")
 #define GOOGLE_TALK_EXAMPLE_STRING NSLocalizedString(@"user@gmail.com", @"example of a google talk account");
 #define REQUIRED_STRING NSLocalizedString(@"Required",@"String to let user know a certain field like a password is required to create an account")
+#define SEND_DELIVERY_RECEIPT_STRING NSLocalizedString(@"Send Delivery Receipts",@"String in login settings asking to send delivery receipts")
+#define SEND_TYPING_NOTIFICATION_STRING NSLocalizedString(@"Send Typing Notificaction",@"Stirng in login settings asking to send typing notification")
 
 // OTRAccountsViewController
 #define LOGOUT_STRING NSLocalizedString(@"Log Out", @"log out from account")
@@ -119,6 +131,7 @@
 #define FONT_SIZE_DESCRIPTION_STRING NSLocalizedString(@"Size for font in chat view", @"description for what the font size setting affects")
 #define DISCONNECTION_WARNING_TITLE_STRING NSLocalizedString(@"Signout Warning", @"Title for setting about showing a warning before disconnection")
 #define DISCONNECTION_WARNING_DESC_STRING NSLocalizedString(@"1 Minute Alert Before Disconnection", @"Description for disconnection warning setting")
+#define DEFAULT_LANGUAGE_STRING NSLocalizedString(@"Default",@"default string to revert to normal language behaviour")
 
 
 // OTRSettingsViewController
@@ -127,6 +140,11 @@
 #define NOT_AVAILABLE_STRING NSLocalizedString(@"Not Available", @"Shown when a feature is not available, for example SMS")
 #define SHARE_MESSAGE_STRING NSLocalizedString(@"Chat with me securely", @"Body of SMS or email when sharing a link to the app")
 #define CONNECTED_STRING NSLocalizedString(@"Connected", @"Whether or not account is logged in")
+
+#define SEND_FEEDBACK_STRING NSLocalizedString(@"Send Feedback", @"String on button to email feedback")
+#define LANGUAGE_STRING NSLocalizedString(@"Language",@"string to bring up language selector")
+#define LANGUAGE_ALERT_TITLE_STRING NSLocalizedString(@"Language Change", @"Stirng of title to alert user langague is change")
+#define LANGUAGE_ALERT_MESSAGE_STRING NSLocalizedString(@"In order to change langugages return to the home screen and remove ChatSecure from the recently used apps", @"Message alerting user that they need to return to the home screen and force close ChatSecure")
 
 // OTRSettingsDetailViewController
 #define SAVE_STRING NSLocalizedString(@"Save", "Title for button for saving a setting")

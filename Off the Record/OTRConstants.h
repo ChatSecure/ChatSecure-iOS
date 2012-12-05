@@ -25,6 +25,7 @@
 #define kOTRBuddyListUpdate @"BuddyListUpdateNotification"
 #define kOTRProtocolLogout @"LogoutNotification"
 #define kOTRMessageReceived @"MessageReceivedNotification"
+#define kOTRMessageReceiptResonseReceived @"MessageReceiptResponseNotification"
 #define kOTRStatusUpdate @"StatusUpdatedNotification" 
 #define kOTRProtocolDiconnect @"DisconnectedNotification"
 #define kOTRSendMessage @"SendMessageNotification"
@@ -39,9 +40,18 @@
 #define kOTRNotificationProtocolKey @"kOTRNotificationProtocolKey"
 
 #define kOTRXMPPAccountAllowSelfSignedSSLKey @"kOTRXMPPAccountAllowSelfSignedSSLKey"
+#define kOTRXMPPAccountSendDeliveryReceiptsKey @"kOTRXMPPAccountSendDeliveryReceiptsKey"
+#define kOTRXMPPAccountSendTypingNotificationsKey @"kOTRXMPPAccountSendTypingNotificationsKey"
 #define kOTRXMPPAccountAllowSSLHostNameMismatch @"kOTRXMPPAccountAllowSSLHostNameMismatch"
 #define kOTRXMPPAccountPortNumber @"kOTRXMPPAccountPortNumber"
 
 #define kOTRXMPPResource @"chatsecure"
 
 #define kOTRFacebookUsernameLink @"http://www.facebook.com/help/?faq=211813265517027#What-are-usernames?"
+
+#define kOTRFeedbackEmail @"support@chatsecure.org"
+
+#define kOTRChatStatePausedTimeout 5
+#define kOTRChatStateInactiveTimeout 120
+
+

@@ -28,11 +28,11 @@
 #import "OTRSettingsViewController.h"
 #import "OTRSettingsManager.h"
 #import "DDLog.h"
-#import "OTRUIKeyboardListener.h"
 #import "Appirater.h"
 #import "OTRConstants.h"
 #import "OTRPurchaseController.h"
 #import "OTRPushController.h"
+#import "OTRLanguageManager.h"
 
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
@@ -71,6 +71,9 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
         [Crittercism setOptOutStatus:YES];
     }
 #endif
+    
+    if(![OTRLanguageManager defaultLanguagesSaved])
+        [OTRLanguageManager saveDefaultLanguageArray];
 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
@@ -96,7 +99,6 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     [self.window makeKeyAndVisible];
     
     application.applicationIconBadgeNumber = 0;
-    [OTRUIKeyboardListener shared];
   
     [Appirater appLaunched:YES];
     

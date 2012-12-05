@@ -21,12 +21,12 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "OTRLoginViewController.h"
-#import "OTRUIKeyboardListener.h"
 #import "OTRConstants.h"
 #import "OTRXMPPAccount.h"
 
 
 #import "OTRXMPPLoginViewController.h"
+#import "OTRJabberLoginViewController.h"
 #import "OTRFacebookLoginViewController.h"
 #import "OTROscarLoginViewController.h"
 #import "OTRGoogleTalkLoginViewController.h"
@@ -195,7 +195,8 @@
 {
     if([[[[tableViewArray objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] objectForKey:kCellTypeKey] isEqualToString:KCellTypeHelp])
     {
-        return ((UILabel *)[[[tableViewArray objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] objectForKey:kTextLabelTextKey]).frame.size.height+10;
+        CGFloat height = ((UILabel *)[[[tableViewArray objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] objectForKey:kTextLabelTextKey]).frame.size.height+10;
+        return height;
     }
     return 44.0f;
 }
@@ -349,16 +350,16 @@
 }  
 
 
+
 - (void)loginButtonPressed:(id)sender {
     BOOL fields = [self checkFields];
     if(fields)
     {
+        [self.view endEditing:YES];
         HUD = [[MBProgressHUD alloc] initWithView:self.view];
         [self.view addSubview:HUD];
         HUD.delegate = self;
         HUD.labelText = LOGGING_IN_STRING;
-        float hudOffsetY = [self getMidpointOffsetforHUD];
-        HUD.yOffset = hudOffsetY;
         [HUD show:YES];
         
         [self readInFields];
@@ -402,18 +403,6 @@
     return YES;
 }
 
--(float)getMidpointOffsetforHUD
-{
-    OTRUIKeyboardListener * keyboardListenter = [OTRUIKeyboardListener shared];
-    CGSize keyboardSize = [keyboardListenter getFrameWithView:self.view].size;
-    
-    
-    
-    float viewHeight = self.view.frame.size.height;
-    return (viewHeight - keyboardSize.height)/2.0-(viewHeight/2.0);
-}
-
-
 #pragma mark -
 #pragma mark MBProgressHUDDelegate methods
 
@@ -437,7 +426,7 @@
     else if ([[account.accountDictionary objectForKey:kOTRAccountProtocolKey] isEqualToString:kOTRProtocolTypeXMPP])
     {
         //XMPP account addvanced
-        return [[OTRXMPPLoginViewController alloc] initWithAccount:account];
+        return [[OTRJabberLoginViewController alloc] initWithAccount:account];
     }
     else if ([[account.accountDictionary objectForKey:kOTRAccountProtocolKey] isEqualToString:kOTRProtocolTypeAIM])
     {

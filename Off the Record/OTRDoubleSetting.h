@@ -30,6 +30,7 @@
 @property (nonatomic) double maxValue;
 @property (nonatomic) BOOL isPercentage;
 @property (nonatomic) NSUInteger numValues;
+@property (nonatomic, retain) NSNumber *defaultValue;
 
 - (void) editValue;
 - (NSString*) stringValue;

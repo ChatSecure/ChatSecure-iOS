@@ -56,11 +56,12 @@
     facebookHelpLabel.lineBreakMode = UILineBreakModeWordWrap;
     facebookHelpLabel.numberOfLines = 0;
     facebookHelpLabel.font = [UIFont systemFontOfSize:14];
-    CGSize labelSize = [FACEBOOK_HELP_STRING sizeWithFont:facebookHelpLabel.font forWidth:280 lineBreakMode:facebookHelpLabel.lineBreakMode];
-    labelSize = [FACEBOOK_HELP_STRING sizeWithFont:facebookHelpLabel.font constrainedToSize:CGSizeMake(260, 100) lineBreakMode:facebookHelpLabel.lineBreakMode];
+    CGSize maximumLabelSize = CGSizeMake(296,9999);
+    CGSize labelSize = [FACEBOOK_HELP_STRING sizeWithFont:facebookHelpLabel.font constrainedToSize:maximumLabelSize lineBreakMode:facebookHelpLabel.lineBreakMode];
+    
     facebookHelpLabel.frame = CGRectMake(5, 3, labelSize.width, labelSize.height);
     facebookHelpLabel.backgroundColor = [UIColor clearColor];
-    facebookHelpLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    //facebookHelpLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     
     self.facebookInfoButton = [UIButton buttonWithType:UIButtonTypeInfoDark];
     [self.facebookInfoButton addTarget:self action:@selector(facebookInfoButtonPressed:) forControlEvents:UIControlEventTouchUpInside];

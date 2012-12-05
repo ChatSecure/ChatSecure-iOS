@@ -178,7 +178,6 @@ static void gone_secure_cb(void *opdata, ConnContext *context)
 {
     OTRKit *otrKit = [OTRKit sharedInstance];
     [otrKit updateEncryptionStatusWithContext:context];
-
 }
 
 static void gone_insecure_cb(void *opdata, ConnContext *context) // this method is never called
@@ -272,17 +271,20 @@ static const char* otr_error_message_cb(void *opdata, ConnContext *context,
 
 static void otr_error_message_free_cb(void *opdata, const char *err_msg)
 {
-    if (err_msg) free((char*)err_msg);
+    // Leak memory here instead of crashing:
+    // if (err_msg) free((char*)err_msg);
 }
 
 static const char *resent_msg_prefix_cb(void *opdata, ConnContext *context)
 {
-	return "[resent]";
+    NSString *resentString = @"[resent]";
+	return [resentString UTF8String];
 }
 
 static void resent_msg_prefix_free_cb(void *opdata, const char *prefix)
 {
-	if (prefix) free((char*)prefix);
+    // Leak memory here instead of crashing:
+	// if (prefix) free((char*)prefix);
 }
 
 static void handle_smp_event_cb(void *opdata, OtrlSMPEvent smp_event,
@@ -672,7 +674,20 @@ static OtrlMessageAppOps ui_ops = {
     return context;
 }
 
+-(Fingerprint *) fullFingerprintForUsername:(NSString*)username accountName:(NSString*)accountName protocol:(NSString*) protocol {
+    Fingerprint * fingerprint = nil;
+    ConnContext *context = [self contextForUsername:username accountName:accountName protocol:protocol];
+    if(context)
+    {
+        fingerprint = context->active_fingerprint;
+    }
+    return fingerprint;
+    
+}
+
+
 - (NSString *) fingerprintForUsername:(NSString*)username accountName:(NSString*)accountName protocol:(NSString*) protocol {
+    /*
     ConnContext *context = [self contextForUsername:username accountName:accountName protocol:protocol];
     NSString *fingerprintString = nil;
     if(context)
@@ -687,6 +702,57 @@ static OtrlMessageAppOps ui_ops = {
         }
     }
     return fingerprintString;
+     */
+    NSString *fingerprintString = nil;
+    char their_hash[45];
+    Fingerprint * fingerprint = [self fullFingerprintForUsername:username accountName:accountName protocol:protocol];
+    if(fingerprint && fingerprint->fingerprint) {
+        otrl_privkey_hash_to_human(their_hash, fingerprint->fingerprint);
+        fingerprintString = [NSString stringWithUTF8String:their_hash];
+    }
+    return fingerprintString;
+    
+}
+
+- (BOOL) finerprintIsVerifiedForUsername:(NSString*)username accountName:(NSString*)accountName protocol:(NSString*) protocol
+{
+    BOOL verified = NO;
+    Fingerprint * fingerprint = [self fullFingerprintForUsername:username accountName:accountName protocol:protocol];
+    
+    if( fingerprint && fingerprint->trust)
+    {
+        if(otrl_context_is_fingerprint_trusted(fingerprint))
+            verified = YES;
+    }
+    
+    
+    
+    return verified;
+}
+- (void) changeVerifyFingerprintForUsername:(NSString*)username accountName:(NSString*)accountName protocol:(NSString*) protocol verrified:(BOOL)trusted
+{
+    Fingerprint * fingerprint = [self fullFingerprintForUsername:username accountName:accountName protocol:protocol];
+    const char * newTrust = nil;
+    if(trusted)
+        newTrust = [@"verified" UTF8String];
+    
+    if(fingerprint)
+    {
+        otrl_context_set_trust(fingerprint, newTrust);
+        [self writeFingerprints];
+    }
+    
+}
+
+-(void)writeFingerprints
+{
+    OTRKit *otrKit = [OTRKit sharedInstance];
+    FILE *storef;
+    NSString *path = [otrKit fingerprintsPath];
+    storef = fopen([path UTF8String], "wb");
+    if (!storef) return;
+    otrl_privkey_write_fingerprints_FILEp(userState, storef);
+    fclose(storef);
 }
 
 - (OTRKitMessageState) messageStateForUsername:(NSString*)username accountName:(NSString*)accountName protocol:(NSString*) protocol {

@@ -34,6 +34,9 @@
 #define ACTIONSHEET_SAFARI_TAG 0
 #define ACTIONSHEET_ENCRYPTION_OPTIONS_TAG 1
 
+#define ALERTVIEW_NOT_VERIFIED_TAG 0
+#define ALERTVIEW_VERIFIED_TAG 1
+
 
 @interface OTRChatViewController(Private)
 - (void) refreshView;
@@ -44,18 +47,19 @@
 @synthesize messageTextField;
 @synthesize buddyListController;
 @synthesize chatBoxView;
-@synthesize lockButton, unlockedButton;
+@synthesize lockButton, unlockedButton,lockVerifiedButton;
 @synthesize lastActionLink;
 @synthesize sendButton;
-@synthesize keyboardIsShown;
 @synthesize buddy;
 @synthesize instructionsLabel;
-@synthesize keyboardListener;
+@synthesize chatStateLabel;
+@synthesize chatStateImage;
 
 - (void) dealloc {
     self.lastActionLink = nil;
     self.buddyListController = nil;
     self.buddy = nil;
+    self.chatStateImage = nil;
 }
 
 - (void)viewDidUnload {
@@ -67,7 +71,6 @@
     self.chatBoxView = nil;
     self.sendButton = nil;
     self.instructionsLabel = nil;
-    self.keyboardListener = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -95,87 +98,6 @@
     // Release any cached data, images, etc that aren't in use.
 }
 
-- (NSTimeInterval)keyboardAnimationDurationForNotification:(NSNotification*)notification
-{
-    NSDictionary* info = [notification userInfo];
-    NSValue* value = [info objectForKey:UIKeyboardAnimationDurationUserInfoKey];
-    NSTimeInterval duration = 0;
-    [value getValue:&duration];
-    return duration;
-}
-
-- (CGFloat)keyboardHeightForNotification:(NSNotification*)notification {
-    // get the size of the keyboard
-    NSDictionary* userInfo = [notification userInfo];
-
-    CGRect keyboardEndFrame;
-    
-    [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] getValue:&keyboardEndFrame];
-
-    CGRect keyboardFrame = [self.view convertRect:keyboardEndFrame toView:nil];
-    return keyboardFrame.size.height;
-}
-
-- (void)keyboardWillHide:(NSNotification *)n
-{
-    // get the size of the keyboard
-    CGFloat keyboardHeight = [self keyboardHeightForNotification:n];
-    
-    
-    // resize the scrollview
-    CGRect chatHistoryFrame = self.chatHistoryTextView.frame;
-    CGRect chatBoxViewFrame = self.chatBoxView.frame;
-    // I'm also subtracting a constant kTabBarHeight because my UIScrollView was offset by the UITabBar so really only the portion of the keyboard that is leftover pass the UITabBar is obscuring my UIScrollView.
-    CGFloat offsetHeight = (keyboardHeight - kTabBarHeight);
-    chatHistoryFrame.size.height += offsetHeight;
-    chatBoxViewFrame.origin.y += offsetHeight;
-    
-    [UIView beginAnimations:nil context:NULL];
-    [UIView setAnimationBeginsFromCurrentState:YES];
-    // The kKeyboardAnimationDuration I am using is 0.3
-    [UIView setAnimationDuration:[self keyboardAnimationDurationForNotification:n]];
-    self.chatHistoryTextView.frame = chatHistoryFrame;
-    self.chatBoxView.frame = chatBoxViewFrame;
-    [UIView commitAnimations];
-    
-    keyboardIsShown = [keyboardListener isVisible];
-}
-
-- (void)keyboardWillShow:(NSNotification *)n
-{
-    // This is an ivar I'm using to ensure that we do not do the frame size adjustment on the UIScrollView if the keyboard is already shown.  This can happen if the user, after fixing editing a UITextField, scrolls the resized UIScrollView to another UITextField and attempts to edit the next UITextField.  If we were to resize the UIScrollView again, it would be disastrous.  NOTE: The keyboard notification will fire even when the keyboard is already shown.
-    
-        
-    CGFloat keyboardHeight = [self keyboardHeightForNotification:n];
-
-
-    
-    // resize the scrollview
-    CGRect chatHistoryFrame = self.chatHistoryTextView.frame;
-    CGRect chatBoxViewFrame = self.chatBoxView.frame;
-    // I'm also subtracting a constant kTabBarHeight because my UIScrollView was offset by the UITabBar so really only the portion of the keyboard that is leftover pass the UITabBar is obscuring my UIScrollView.
-    CGFloat offsetHeight = (keyboardHeight - kTabBarHeight);
-    chatHistoryFrame.size.height -= offsetHeight;
-    chatBoxViewFrame.origin.y -= offsetHeight;
-    
-    if ([keyboardListener isVisible]) {
-        self.chatHistoryTextView.frame = chatHistoryFrame;
-        self.chatBoxView.frame = chatBoxViewFrame;
-    }
-    else {
-        [UIView beginAnimations:nil context:NULL];
-        [UIView setAnimationBeginsFromCurrentState:YES];
-        // The kKeyboardAnimationDuration I am using is 0.3
-        [UIView setAnimationDuration:[self keyboardAnimationDurationForNotification:n]];
-        self.chatHistoryTextView.frame = chatHistoryFrame;
-        self.chatBoxView.frame = chatBoxViewFrame;
-        [UIView commitAnimations];
-    }
-    
-    
-    [self scrollTextViewToBottom];
-    keyboardIsShown = YES;
-}
 
 -(void)setupLockButton
 {
@@ -201,12 +123,28 @@
     
     unlockedButton = [[UIBarButtonItem alloc] initWithCustomView:button];
     
+    button = [UIButton buttonWithType:UIButtonTypeCustom];
+    buttonImage = [UIImage imageNamed:@"Lock_Locked_Verified.png"];
+    [button setBackgroundImage:buttonImage forState:UIControlStateNormal];
+    buttonFrame = [button frame];
+    buttonFrame.size.width = buttonImage.size.width;
+    buttonFrame.size.height = buttonImage.size.height;
+    [button setFrame:buttonFrame];
+    [button addTarget:self action:@selector(lockButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    
+    lockVerifiedButton = [[UIBarButtonItem alloc] initWithCustomView:button];
+    
     [self refreshLockButton];
 }
 
 -(void)refreshLockButton
 {
-    if(buddy.encryptionStatus == kOTRKitMessageStateEncrypted)
+    BOOL trusted = [[OTRKit sharedInstance] finerprintIsVerifiedForUsername:buddy.accountName accountName:buddy.protocol.account.username protocol:buddy.protocol.account.protocol];
+    if(buddy.encryptionStatus == kOTRKitMessageStateEncrypted && trusted)
+    {
+        self.navigationItem.rightBarButtonItem = lockVerifiedButton;
+    }
+    else if(buddy.encryptionStatus == kOTRKitMessageStateEncrypted)
     {
         self.navigationItem.rightBarButtonItem = lockButton;
     }
@@ -219,10 +157,12 @@
 -(void)lockButtonPressed
 {
     NSString *encryptionString = INITIATE_ENCRYPTED_CHAT_STRING;
+    NSString * verifiedString = VERIFY_STRING;
     if (buddy.encryptionStatus == kOTRKitMessageStateEncrypted) {
         encryptionString = CANCEL_ENCRYPTED_CHAT_STRING;
     }
     UIActionSheet *popupQuery = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:encryptionString, VERIFY_STRING, CLEAR_CHAT_HISTORY_STRING, REQUEST_PAT_STRING, nil];
+    UIActionSheet *popupQuery = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:encryptionString, verifiedString, CLEAR_CHAT_HISTORY_STRING, nil];
     popupQuery.actionSheetStyle = UIActionSheetStyleBlackOpaque;
     popupQuery.tag = ACTIONSHEET_ENCRYPTION_OPTIONS_TAG;
     [OTR_APP_DELEGATE presentActionSheet:popupQuery inView:self.view];
@@ -253,27 +193,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
-    //[messageTextField becomeFirstResponder];
-    //[chatBox.layer setCornerRadius:5];
-    //[chatBox setContentInset:UIEdgeInsetsZero];
-    // register for keyboard notifications
-    [[NSNotificationCenter defaultCenter] addObserver:self 
-                                             selector:@selector(keyboardWillShow:) 
-                                                 name:UIKeyboardWillShowNotification 
-                                               object:self.view.window];
-    // register for keyboard notifications
-    [[NSNotificationCenter defaultCenter] addObserver:self 
-                                             selector:@selector(keyboardWillHide:) 
-                                                 name:UIKeyboardWillHideNotification 
-                                               object:self.view.window];
-    keyboardListener = [OTRUIKeyboardListener shared];
-    keyboardIsShown = [keyboardListener isVisible];
-    //make contentSize bigger than your scrollSize (you will need to figure out for your own use case)
-
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHideOrShow:) name:UIKeyboardWillHideNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHideOrShow:) name:UIKeyboardWillShowNotification object:nil];
 
-    //self.chatHistoryTextView = [[DTAttributedTextView alloc] initWithFrame:CGRectZero];
     self.chatHistoryTextView = [[UIWebView alloc] initWithFrame:CGRectZero];
 	//chatHistoryTextView.textDelegate = self;
     self.chatHistoryTextView.delegate = self;
@@ -299,23 +222,32 @@
     
     
     //set notification for when a key is pressed.
-    [[NSNotificationCenter defaultCenter] addObserver:self 
-                                             selector: @selector(keyPressed:) 
-                                                 name: UITextViewTextDidChangeNotification 
-                                               object: nil];
-    
     //turn off scrolling and set the font details.
     //chatBox.scrollEnabled = NO;
     //chatBox.font = [UIFont fontWithName:@"Helvetica" size:14];
 }
 
--(void)viewDidAppear:(BOOL)animated
+-(void)keyboardWillHideOrShow:(NSNotification *)note
 {
-    [super viewDidAppear:animated];
+    NSDictionary *userInfo = note.userInfo;
+    NSTimeInterval duration = [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+    UIViewAnimationCurve curve = [[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue];
     
-    keyboardIsShown = [keyboardListener isVisible];
+    CGRect keyboardFrame = [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
     
+    CGRect keyboardFrameForTextField = [self.chatBoxView.superview convertRect:keyboardFrame fromView:nil];
+    CGRect newTextFieldFrame = self.chatBoxView.frame;
     
+    newTextFieldFrame.origin.y = keyboardFrameForTextField.origin.y - newTextFieldFrame.size.height;
+    
+    CGRect keyboardFrameForTableView = [self.chatHistoryTextView.superview convertRect:keyboardFrame fromView:nil];
+    CGRect newTableViewFrame = CGRectMake(0, 0, self.chatHistoryTextView.frame.size.width, keyboardFrameForTableView.origin.y-newTextFieldFrame.size.height);
+    
+    [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionBeginFromCurrentState | curve animations:^{
+        self.chatHistoryTextView.frame = newTableViewFrame;
+        self.chatBoxView.frame = newTextFieldFrame;
+    } completion:nil];
+    [self scrollTextViewToBottom];
 }
 
 - (void) showDisconnectionAlert:(NSNotification*)notification {
@@ -333,6 +265,7 @@
         [[NSNotificationCenter defaultCenter] removeObserver:self name:MESSAGE_PROCESSED_NOTIFICATION object:buddy];
         [[NSNotificationCenter defaultCenter] removeObserver:self name:kOTRProtocolDiconnect object:self.buddy.protocol];
     }
+    [self saveCurrentMessageText];
     
     buddy = newBuddy;
     self.title = newBuddy.displayName;
@@ -348,109 +281,90 @@
     [self refreshLockButton];
     [self updateChatHistory];
     [self refreshView];
+    [self updateChatState:NO];
 }
-     
+
+
      
 - (void) messageProcessedNotification:(NSNotification*)notification {
     [self updateChatHistory];
+    [self updateChatState:YES];
 }
 
-
--(void) keyPressed: (NSNotification*) notification{
-/*	// get the size of the text block so we can work our magic
-	//CGSize newSize = [chatBox.text 
-    //                  sizeWithFont:[UIFont fontWithName:@"Helvetica" size:14] 
-    //                  constrainedToSize:CGSizeMake(222,9999) 
-    //                  lineBreakMode:UILineBreakModeWordWrap];
-    //CGSize newSize = chatBox.contentSize.height;
-	NSInteger newSizeH = chatBox.contentSize.height-12;
-	NSInteger newSizeW = chatBox.contentSize.width;
-    
-    // I output the new dimensions to the console 
-    // so we can see what is happening
-	NSLog(@"NEW SIZE : %d X %d", newSizeW, newSizeH);
-	if (chatBox.hasText)
-	{
-        // if the height of our new chatbox is
-        // below 90 we can set the height
-		if (newSizeH <= 90)
-		{
-			[chatBox scrollRectToVisible:CGRectMake(0,0,1,1) animated:NO];
-            
-			// chatbox
-			CGRect chatBoxFrame = chatBox.frame;
-			NSInteger chatBoxH = chatBoxFrame.size.height;
-			NSInteger chatBoxW = chatBoxFrame.size.width;
-			NSLog(@"CHAT BOX SIZE : %d X %d", chatBoxW, chatBoxH);
-			chatBoxFrame.size.height = newSizeH + 12;
-			chatBox.frame = chatBoxFrame;
-            
-			// form view
-			CGRect formFrame = chatBoxView.frame;
-			NSInteger viewFormH = formFrame.size.height;
-			NSLog(@"FORM VIEW HEIGHT : %d", viewFormH);
-			formFrame.size.height = 30 + newSizeH;
-			formFrame.origin.y = 199 - (newSizeH - 18)-49;
-			chatBoxView.frame = formFrame;
-            
-			// table view
-			CGRect tableFrame = chatHistoryTextView.frame;
-			NSInteger viewTableH = tableFrame.size.height;
-			NSLog(@"TABLE VIEW HEIGHT : %d", viewTableH);
-			//tableFrame.size.height = 199 - (newSizeH - 18);
-            tableFrame.size.height = 199 - (newSizeH - 18)-49;
-			chatHistoryTextView.frame = tableFrame;
-		}
-        
-        // if our new height is greater than 90
-        // sets not set the height or move things
-        // around and enable scrolling
-		if (newSizeH > 90)
-		{
-			chatBox.scrollEnabled = YES;
-		}
-	}*/
-}
-- (void)chatButtonClick 
+- (void)updateChatState:(BOOL)animated
 {
-/*	// hide the keyboard, we are done with it.
-	//[chatBox resignFirstResponder];
-	//chatBox.text = nil;
+    CGFloat animateTime;
+    if(animated)
+        animateTime = 1.0;
+    else
+        animateTime = 0.0;
     
-	// chatbox
-	CGRect chatBoxFrame = chatBox.frame;
-	chatBoxFrame.size.height = 34;
-	chatBox.frame = chatBoxFrame;
+    if(!chatStateLabel)
+    {
+        chatStateLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 22)];
+        chatStateLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        chatStateLabel.backgroundColor = [UIColor blackColor];
+        //chatStateLabel.alpha = .7;
+        chatStateLabel.tag = 888;
+        chatStateLabel.textColor = [UIColor whiteColor];
+        //[self.view addSubview:chatStateLabel];
+    }
+    if(!chatStateImage)
+    {
+        chatStateImage = [[UIImageView alloc] initWithFrame:CGRectMake(self.view.frame.size.width-25, 0, 25, 25)];
+        chatStateImage.image = [UIImage imageNamed:@"pencil"];
+        chatStateImage.alpha = 0.0;
+        chatStateImage.autoresizingMask= UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
+        [self.view addSubview:chatStateImage];
+    }
     
-	// form view
-	//CGRect formFrame = viewChatBox.frame;
-	//formFrame.size.height = 45;
-	//formFrame.origin.y = 415;
-	//viewChatBox.frame = formFrame;
     
-	// table view
-	//CGRect tableFrame = viewChatHistory.frame;
-	//tableFrame.size.height = 415;
-	//viewChatHistory.frame = tableFrame;
     
-    // form view
-    CGRect formFrame = chatBoxView.frame;
-    //NSInteger viewFormH = formFrame.size.height;
-    //NSLog(@"FORM VIEW HEIGHT : %d", viewFormH);
-    //formFrame.size.height = 30 + 12;
-    formFrame.size.height = 52;
-    //formFrame.origin.y = 199 - (12 - 18)-49;
-    formFrame.origin.y = 146;
-    chatBoxView.frame = formFrame;
+    if(self.buddy.chatState == kOTRChatStateComposing)
+    {
+        chatStateLabel.text = CHAT_STATE_COMPOSING_STRING;
+        [UIView animateWithDuration:animateTime animations:^{
+            chatStateImage.alpha = 1.0;
+        }];
+        
+    }
+    else if(self.buddy.chatState == kOTRChatStatePaused)
+    {
+        chatStateLabel.text = CHAT_STATE_PAUSED_STRING;
+        [UIView animateWithDuration:animateTime animations:^{
+            chatStateImage.alpha = 0.3;
+        }];
+        
+    }
+    else if(self.buddy.chatState == kOTRChatStateActive)
+    {
+        chatStateLabel.text = CHAT_STATE_ACTIVE_STRING;
+        [UIView animateWithDuration:animateTime animations:^{
+            chatStateImage.alpha = 0;
+        }];
+    }
+    else if(self.buddy.chatState == kOTRChatStateInactive)
+        chatStateLabel.text = CHAT_STATE_INACTVIE_STRING;
+    else if(self.buddy.chatState == kOTRChatStateGone)
+        chatStateLabel.text = CHAT_STATE_GONE_STRING;
+    else
+        chatStateImage.alpha = 0;
     
-    // table view
-    CGRect tableFrame = chatHistoryTextView.frame;
-    //NSInteger viewTableH = tableFrame.size.height;
-    //NSLog(@"TABLE VIEW HEIGHT : %d", viewTableH);
-    //tableFrame.size.height = 199 - (newSizeH - 18);
-    tableFrame.size.height = 146;
-    chatHistoryTextView.frame = tableFrame;
- */
+}
+
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    NSRange textFieldRange = NSMakeRange(0, [textField.text length]);
+    
+    [buddy sendComposingChatState];
+    
+    if (NSEqualRanges(range, textFieldRange) && [string length] == 0)
+    {
+        [buddy sendActiveChatState];
+    }
+    
+    return YES;
 }
 
 - (void) encryptionStateChangeNotification:(NSNotification *) notification
@@ -481,8 +395,8 @@
 - (void)sendButtonPressed:(id)sender {
     BOOL secure = self.navigationItem.rightBarButtonItem == lockButton;
     [buddy sendMessage:messageTextField.text secure:secure];
-    messageTextField.text = @"";    
-    [self chatButtonClick];
+    messageTextField.text = @"";
+    [self.buddy.pausedChatStateTimer invalidate];
     [self updateChatHistory];
 }
 
@@ -525,14 +439,27 @@
             NSString *msg = nil;
             NSString *ourFingerprintString = [[OTRKit sharedInstance] fingerprintForAccountName:buddy.protocol.account.username protocol:buddy.protocol.account.protocol];
             NSString *theirFingerprintString = [[OTRKit sharedInstance] fingerprintForUsername:buddy.accountName accountName:buddy.protocol.account.username protocol:buddy.protocol.account.protocol];
+            BOOL trusted = [[OTRKit sharedInstance] finerprintIsVerifiedForUsername:buddy.accountName accountName:buddy.protocol.account.username protocol:buddy.protocol.account.protocol];
             
+            
+            UIAlertView * alert;
             if(ourFingerprintString && theirFingerprintString) {
                 msg = [NSString stringWithFormat:@"%@, %@:\n%@\n\n%@ %@:\n%@\n", YOUR_FINGERPRINT_STRING, buddy.protocol.account.username, ourFingerprintString, THEIR_FINGERPRINT_STRING, buddy.accountName, theirFingerprintString];
+                if(trusted)
+                {
+                    alert = [[UIAlertView alloc] initWithTitle:VERIFY_FINGERPRINT_STRING message:msg delegate:self cancelButtonTitle:OK_STRING otherButtonTitles:NOT_VERIFIED_STRING, nil];
+                    alert.tag = ALERTVIEW_VERIFIED_TAG;
+                }
+                else
+                {
+                    alert = [[UIAlertView alloc] initWithTitle:VERIFY_FINGERPRINT_STRING message:msg delegate:self cancelButtonTitle:VERIFY_LATER_STRING otherButtonTitles:VERIFIED_STRING, nil];
+                    alert.tag = ALERTVIEW_NOT_VERIFIED_TAG;
+                }
             } else {
                 msg = SECURE_CONVERSATION_STRING;
+               alert = [[UIAlertView alloc] initWithTitle:nil message:msg delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
             }
                             
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:VERIFY_FINGERPRINT_STRING message:msg delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
             [alert show];
         }
         else if (buttonIndex == 0) // Initiate/cancel encryption
@@ -568,6 +495,20 @@
     }
 }
 
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if(buttonIndex == 1 && alertView.tag == ALERTVIEW_NOT_VERIFIED_TAG)
+    {
+        [[OTRKit sharedInstance] changeVerifyFingerprintForUsername:buddy.accountName accountName:buddy.protocol.account.username protocol:buddy.protocol.account.protocol verrified:YES];
+        [self refreshLockButton];
+    }
+    else if(buttonIndex == 1 && alertView.tag == ALERTVIEW_VERIFIED_TAG)
+    {
+        [[OTRKit sharedInstance] changeVerifyFingerprintForUsername:buddy.accountName accountName:buddy.protocol.account.username  protocol:buddy.protocol.account.protocol verrified:NO];
+        [self refreshLockButton];
+    }
+}
+
 
 - (void) refreshView {
     if (!buddy) {
@@ -585,6 +526,12 @@
             [self.instructionsLabel removeFromSuperview];
             self.instructionsLabel = nil;
         }
+        [self.messageTextField resignFirstResponder];
+        self.messageTextField.text = self.buddy.composingMessageString;
+        if(![self.buddy.composingMessageString length])
+        {
+            [self.buddy sendActiveChatState];
+        }
         CGRect frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height-[self chatBoxViewHeight]);
         self.chatHistoryTextView.frame = frame;
         self.chatBoxView.frame = CGRectMake(0,frame.size.height, self.view.frame.size.width, [self chatBoxViewHeight]);
@@ -595,9 +542,6 @@
         self.sendButton.frame = CGRectMake(self.messageTextField.frame.size.width, 0, kSendButtonWidth , self.chatBoxView.frame.size.height);
         
         [self refreshLockButton];
-        
-        if ([keyboardListener isVisible])
-            [self keyboardWillShow:[self.keyboardListener lastNotification]];
     }
 }
 
@@ -605,6 +549,16 @@
 {
     [self refreshView];
     [self updateChatHistory];
+    [self updateChatState:NO];
+}
+
+-(void)saveCurrentMessageText
+{
+    self.buddy.composingMessageString = self.messageTextField.text;
+    if(![self.buddy.composingMessageString length])
+    {
+        [self.buddy sendInactiveChatState];
+    }
 }
 
 /*- (void)debugButton:(UIBarButtonItem *)sender

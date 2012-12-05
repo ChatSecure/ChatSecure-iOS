@@ -23,13 +23,10 @@
 #import "OTRLoginViewController.h"
 
 @interface OTRXMPPLoginViewController : OTRLoginViewController
-{
-    UITableViewCell * selectedCell;
-}
 
-@property (nonatomic, strong) UITextField *domainTextField;
-@property (nonatomic, strong) UISwitch *sslMismatchSwitch;
-@property (nonatomic, strong) UISwitch *selfSignedSwitch;
-@property (nonatomic, strong) UITextField *portTextField;
+@property (nonatomic,strong) OTRXMPPAccount * account;
+
+@property (nonatomic, strong) UISwitch *deliveryReceiptSwitch;
+@property (nonatomic, strong) UISwitch *typingNotificatoinSwitch;
 
 @end

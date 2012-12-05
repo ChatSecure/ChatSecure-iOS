@@ -25,6 +25,7 @@
 #import "OTRKit.h"
 
 typedef unsigned int OTRBuddyStatus;
+typedef unsigned int OTRChatState;
 
 #define MESSAGE_PROCESSED_NOTIFICATION @"MessageProcessedNotification"
 #define kOTREncryptionStateNotification @"kOTREncryptionStateNotification"
@@ -36,6 +37,15 @@ enum OTRBuddyStatus {
     kOTRBuddyStatusAvailable = 2
 };
 
+enum OTRChatState {
+    kOTRChatStateUnknown =0,
+    kOTRChatStateActive = 1,
+    kOTRChatStateComposing = 2,
+    kOTRChatStatePaused = 3,
+    kOTRChatStateInactive = 4,
+    kOTRChatStateGone =5
+};
+
 @interface OTRBuddy : NSObject
 
 
@@ -44,16 +54,32 @@ enum OTRBuddyStatus {
 @property (nonatomic, retain) NSString* groupName;
 @property (nonatomic, retain) NSMutableString* chatHistory;
 @property (nonatomic, retain) NSString *lastMessage;
+@property (nonatomic, strong) NSString * composingMessageString;
 @property (nonatomic, retain) id<OTRProtocol> protocol;
 @property (nonatomic) BOOL lastMessageDisconnected;
+@property (nonatomic) int numberOfMessagesSent;
 
 @property (nonatomic) OTRBuddyStatus status;
 @property (nonatomic) OTRKitMessageState encryptionStatus;
+@property (nonatomic) OTRChatState chatState;
+@property (nonatomic) OTRChatState lastSentChatState;
+
+@property (nonatomic, strong) NSTimer * pausedChatStateTimer;
+@property (nonatomic, strong) NSTimer * inactiveChatStateTimer;
 
 -(id)initWithDisplayName:(NSString*)buddyName accountName:(NSString*) accountName protocol:(id <OTRProtocol>)buddyProtocol status:(OTRBuddyStatus)buddyStatus groupName:(NSString*)buddyGroupName;
 +(OTRBuddy*)buddyWithDisplayName:(NSString*)buddyName accountName:(NSString*) accountName protocol:(id <OTRProtocol>)buddyProtocol status:(OTRBuddyStatus)buddyStatus groupName:(NSString*)buddyGroupName;
 
 -(void)receiveMessage:(NSString *)message;
+-(void)receiveChatStateMessage:(OTRChatState) chatState;
+-(void)receiveReceiptResonse:(NSString *)responseID;
 -(void)sendMessage:(NSString *)message secure:(BOOL)secure;
+-(void)sendChatState:(OTRChatState)chatState;
+-(void)restartPausedChatStateTimer;
+-(void)restartInactiveChatStateTimer;
+-(void)sendPausedChatState;
+-(void)sendActiveChatState;
+-(void)sendInactiveChatState;
+-(void)sendComposingChatState;
 
 @end

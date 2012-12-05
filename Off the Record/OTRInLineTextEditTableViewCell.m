@@ -42,6 +42,7 @@
     self.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     self.textField.backgroundColor = [UIColor whiteColor];
     self.textField.tag = 999;
+
     
     self.textLabel.text = name;
     
@@ -53,7 +54,11 @@
     [[self.contentView viewWithTag:999] removeFromSuperview];
     _textField = newTextField;
     [self layoutIfNeeded];
-    self.textField.frame = CGRectMake(textLeftFieldBuffer, self.textLabel.frame.origin.y, self.contentView.frame.size.width-textLeftFieldBuffer-5, self.contentView.frame.size.height-20);
+    CGFloat labelWidth = self.textLabel.frame.size.width+self.textLabel.frame.origin.x;
+    if(labelWidth < textLeftFieldBuffer)
+        labelWidth = textLeftFieldBuffer;
+    
+    self.textField.frame = CGRectMake(labelWidth, self.textLabel.frame.origin.y, self.contentView.frame.size.width-labelWidth-5, self.contentView.frame.size.height-20);
     self.textField.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
     self.textField.tag = 999;
     [self.contentView addSubview:self.textField];
