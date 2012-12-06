@@ -120,7 +120,8 @@
     NSString * currentLocale = [OTRLanguageManager currentLocale];
     NSString *bundlePath = [[NSBundle mainBundle] pathForResource:@"Localizable" ofType:@"strings" inDirectory:nil forLocalization:currentLocale];
     NSBundle *foreignBundle = [[NSBundle alloc] initWithPath:[bundlePath stringByDeletingLastPathComponent]];
-    [foreignBundle load];
+    NSError * error = nil;
+    //BOOL load = [foreignBundle loadAndReturnError:&error];
     NSString * translatedString = NSLocalizedStringFromTableInBundle(englishString, nil, foreignBundle, nil);
     
     return translatedString;
