@@ -84,7 +84,7 @@
     } else {
         cell.accessoryType = UITableViewCellAccessoryNone;
     }
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    //cell.selectionStyle = UITableViewCellSelectionStyleNone;
     return cell;
 }
 
@@ -96,6 +96,7 @@
     newValue = [self.otrSetting.possibleValues objectAtIndex:indexPath.row];
     [self.valueTable reloadData];
     [self.valueTable selectRowAtIndexPath:selectedPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 - (void)didReceiveMemoryWarning

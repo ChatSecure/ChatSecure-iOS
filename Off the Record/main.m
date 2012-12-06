@@ -27,17 +27,6 @@
 
 int main(int argc, char *argv[])
 {
-    if(![OTRLanguageManager defaultLanguagesSaved])
-    {
-        [OTRLanguageManager saveDefaultLanguageArray];
-    }
-    else
-    {
-        NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
-        [defaults setObject:[NSArray arrayWithObject:@"en"] forKey:kOTRAppleLanguagesKey];
-    }
-        
-    
     @autoreleasepool {
         return UIApplicationMain(argc, argv, nil, NSStringFromClass([OTRAppDelegate class]));
     }

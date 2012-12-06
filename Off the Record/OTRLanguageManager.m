@@ -43,7 +43,7 @@
 -(NSString *)currentValue
 {
     NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
-    if([[defaults objectForKey:kOTRLanguageDefaultKey] isEqualToString:[defaults objectForKey:kOTRUserSetLanguageKey]])
+    if(![defaults objectForKey:kOTRUserSetLanguageKey])
     {
         //default setting
         return DEFAULT_LANGUAGE_STRING;
@@ -110,28 +110,9 @@
 {
     NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
     
-    [defaults setObject:[defaults objectForKey:kOTRLanguageDefaultKey] forKey:kOTRUserSetLanguageKey];
+    [defaults removeObjectForKey:kOTRUserSetLanguageKey];
     
     [defaults synchronize];
-}
-
-+(void)saveDefaultLanguageArray
-{
-    NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
-    NSArray * languageArray = [defaults objectForKey:kOTRAppleLanguagesKey];
-    [defaults setObject:languageArray forKey:kOTRLanguageDefaultArrayKey];
-    [defaults setObject:[languageArray objectAtIndex:0] forKey:kOTRLanguageDefaultKey];
-    [defaults setObject:[languageArray objectAtIndex:0] forKey:kOTRUserSetLanguageKey];
-    [defaults setObject:[NSArray arrayWithObject:@"en"] forKey:kOTRAppleLanguagesKey];
-    [defaults synchronize];
-}
-
-+(BOOL)defaultLanguagesSaved
-{
-    NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
-    if ([defaults objectForKey:kOTRLanguageDefaultKey])
-        return YES;
-    return NO;
 }
 
 +(NSString *)translatedString:(NSString *)englishString
