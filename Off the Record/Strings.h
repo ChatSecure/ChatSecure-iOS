@@ -90,7 +90,7 @@
 #define EN_SEND_TYPING_NOTIFICATION_STRING @"Send Typing Notificaction"
 #define EN_LOGOUT_STRING @"Log Out"
 #define EN_LOGIN_STRING @"Log In"
-#define EN_LOGOUT_FROM_AIM_STRING @"Logout from AIM?"
+#define EN_LOGOUT_FROM_AIM_STRING @"Logout from OSCAR?"
 #define EN_LOGOUT_FROM_XMPP_STRING @"Logout from XMPP?"
 #define EN_DELETE_ACCOUNT_TITLE_STRING @"Delete Account?"
 #define EN_DELETE_ACCOUNT_MESSAGE_STRING @"Permanently delete"
@@ -138,7 +138,7 @@
 #define EN_EXPIRATION_STRING @"Background session will expire in one minute."
 #define EN_READ_STRING @"Read"
 #define EN_NEW_ACCOUNT_STRING @"New Account"
-#define EN_AIM_STRING @"AOL Instant Messenger"
+#define EN_AIM_STRING @"OSCAR Instant Messenger"
 #define EN_GOOGLE_TALK_STRING @"Google Talk"
 #define EN_FACEBOOK_STRING @"Facebook"
 #define EN_JABBER_STRING @"Jabber (XMPP)"
@@ -325,7 +325,7 @@
 #define LOC_SEND_TYPING_NOTIFICATION_STRING NSLocalizedString(EN_SEND_TYPING_NOTIFICATION_STRING , @"Stirng in login settings asking to send typing notification")
 #define LOC_LOGOUT_STRING NSLocalizedString(EN_LOGOUT_STRING , @"log out from account")
 #define LOC_LOGIN_STRING NSLocalizedString(EN_LOGIN_STRING , @"log in to account")
-#define LOC_LOGOUT_FROM_AIM_STRING NSLocalizedString(EN_LOGOUT_FROM_AIM_STRING , @"Ask user if they want to logout of AIM")
+#define LOC_LOGOUT_FROM_AIM_STRING NSLocalizedString(EN_LOGOUT_FROM_AIM_STRING , @"Ask user if they want to logout of OSCAR")
 #define LOC_LOGOUT_FROM_XMPP_STRING NSLocalizedString(EN_LOGOUT_FROM_XMPP_STRING , @"ask user if they want to log out of xmpp")
 #define LOC_DELETE_ACCOUNT_TITLE_STRING NSLocalizedString(EN_DELETE_ACCOUNT_TITLE_STRING , @"Ask user if they want to delete the stored account information")
 #define LOC_DELETE_ACCOUNT_MESSAGE_STRING NSLocalizedString(EN_DELETE_ACCOUNT_MESSAGE_STRING , @"Ask user if they want to delete the stored account information")
