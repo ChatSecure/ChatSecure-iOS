@@ -479,7 +479,6 @@
 		D93750B1160801160059321E /* XMPP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPP.h; sourceTree = "<group>"; };
 		D93750B2160801160059321E /* XMPPElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPElement.h; sourceTree = "<group>"; };
 		D93750B3160801160059321E /* XMPPElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPElement.m; sourceTree = "<group>"; };
-		D93750B4160801160059321E /* XMPPFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPFramework.h; sourceTree = "<group>"; };
 		D93750B5160801160059321E /* XMPPInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPInternal.h; sourceTree = "<group>"; };
 		D93750B6160801160059321E /* XMPPIQ.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPIQ.h; sourceTree = "<group>"; };
 		D93750B7160801160059321E /* XMPPIQ.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPIQ.m; sourceTree = "<group>"; };
@@ -953,6 +952,7 @@
 		D9ABC98F15D48B7E00AAB730 /* OTRXMPPAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPAccount.m; sourceTree = "<group>"; };
 		D9ABC99115D48C4E00AAB730 /* OTROscarAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTROscarAccount.h; sourceTree = "<group>"; };
 		D9ABC99215D48C4F00AAB730 /* OTROscarAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTROscarAccount.m; sourceTree = "<group>"; };
+		D9B1FAE61673E765008ACC4F /* XMPPFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMPPFramework.h; sourceTree = "<group>"; };
 		D9BBCD3A1491F7AB00AF1B9F /* 19-gear.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "19-gear.png"; sourceTree = "<group>"; };
 		D9BBCD3C1491F8B400AF1B9F /* OTRAboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAboutViewController.h; sourceTree = "<group>"; };
 		D9BBCD3D1491F8B400AF1B9F /* OTRAboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAboutViewController.m; sourceTree = "<group>"; };
@@ -1176,6 +1176,7 @@
 		D9375090160801160059321E /* XMPPFramework */ = {
 			isa = PBXGroup;
 			children = (
+				D9B1FAE61673E765008ACC4F /* XMPPFramework.h */,
 				D9375094160801160059321E /* Authentication */,
 				D93750A8160801160059321E /* Categories */,
 				D93750B0160801160059321E /* Core */,
@@ -1273,7 +1274,6 @@
 				D93750B1160801160059321E /* XMPP.h */,
 				D93750B2160801160059321E /* XMPPElement.h */,
 				D93750B3160801160059321E /* XMPPElement.m */,
-				D93750B4160801160059321E /* XMPPFramework.h */,
 				D93750B5160801160059321E /* XMPPInternal.h */,
 				D93750B6160801160059321E /* XMPPIQ.h */,
 				D93750B7160801160059321E /* XMPPIQ.m */,
