@@ -8,7 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-#define kOTRLanguageDefaultArrayKey @"kOTRLanguageDefaultArrayKey"
+#define kOTRAppleLanguagesKey @"AppleLanguages"
+#define kOTRUserSetLanguageKey @"userSetLanguageKey"
 
 @interface OTRLanguageManager : NSObject
 
@@ -18,7 +19,7 @@
 -(NSArray *)supportedLanguages;
 -(void)setLocale:(NSString *)locale;
 -(NSString *)currentValue;
-+(void)saveDefaultLanguageArray;
-+(BOOL)defaultLanguagesSaved;
++(NSString *)currentLocale;
++(NSString *)translatedString:(NSString *)englishString;
 
 @end

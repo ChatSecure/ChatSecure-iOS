@@ -392,7 +392,7 @@
 
 
 - (void)sendButtonPressed:(id)sender {
-    BOOL secure = self.navigationItem.rightBarButtonItem == lockButton;
+    BOOL secure = buddy.encryptionStatus == kOTRKitMessageStateEncrypted;
     [buddy sendMessage:messageTextField.text secure:secure];
     messageTextField.text = @"";
     [self.buddy.pausedChatStateTimer invalidate];
@@ -446,7 +446,7 @@
                 msg = [NSString stringWithFormat:@"%@, %@:\n%@\n\n%@ %@:\n%@\n", YOUR_FINGERPRINT_STRING, buddy.protocol.account.username, ourFingerprintString, THEIR_FINGERPRINT_STRING, buddy.accountName, theirFingerprintString];
                 if(trusted)
                 {
-                    alert = [[UIAlertView alloc] initWithTitle:VERIFY_FINGERPRINT_STRING message:msg delegate:self cancelButtonTitle:OK_STRING otherButtonTitles:NOT_VERIFIED_STRING, nil];
+                    alert = [[UIAlertView alloc] initWithTitle:VERIFY_FINGERPRINT_STRING message:msg delegate:self cancelButtonTitle:VERIFIED_STRING otherButtonTitles:NOT_VERIFIED_STRING, nil];
                     alert.tag = ALERTVIEW_VERIFIED_TAG;
                 }
                 else

@@ -329,6 +329,8 @@
 		D905CFD7155B2B0000654181 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = NO;
 				DSTROOT = /tmp/OTRKit.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "OTRKit/OTRKit-Prefix.pch";
