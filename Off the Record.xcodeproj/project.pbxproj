@@ -329,6 +329,7 @@
 		D9D8D2061531056300F9E8D3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = D9D8D1F91531056300F9E8D3 /* Localizable.strings */; };
 		D9DE274C13F4F0A500E335CA /* OTRLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9DE274A13F4F0A400E335CA /* OTRLoginViewController.m */; };
 		D9E068F213F44D2900AC10A3 /* OTRBuddyListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9E068F013F44D2900AC10A3 /* OTRBuddyListViewController.m */; };
+		D9E72E46167EC32400C6CB75 /* OTRPushAccessTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D9E72E45167EC32400C6CB75 /* OTRPushAccessTableViewCell.m */; };
 		D9EB0A6F15AFA1CA00AA1428 /* Appirater.m in Sources */ = {isa = PBXBuildFile; fileRef = D9EB0A5F15AFA1CA00AA1428 /* Appirater.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		D9EB0A7015AFA1CA00AA1428 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = D9EB0A6015AFA1CA00AA1428 /* Localizable.strings */; };
 		D9F9377D13F44BD3009A3D84 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9F9377C13F44BD3009A3D84 /* UIKit.framework */; };
@@ -1028,6 +1029,8 @@
 		D9DE274A13F4F0A400E335CA /* OTRLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRLoginViewController.m; sourceTree = "<group>"; };
 		D9E068EF13F44D2900AC10A3 /* OTRBuddyListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBuddyListViewController.h; sourceTree = "<group>"; };
 		D9E068F013F44D2900AC10A3 /* OTRBuddyListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBuddyListViewController.m; sourceTree = "<group>"; };
+		D9E72E44167EC32300C6CB75 /* OTRPushAccessTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRPushAccessTableViewCell.h; sourceTree = "<group>"; };
+		D9E72E45167EC32400C6CB75 /* OTRPushAccessTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRPushAccessTableViewCell.m; sourceTree = "<group>"; };
 		D9EB0A5E15AFA1CA00AA1428 /* Appirater.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Appirater.h; sourceTree = "<group>"; };
 		D9EB0A5F15AFA1CA00AA1428 /* Appirater.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Appirater.m; sourceTree = "<group>"; };
 		D9EB0A6315AFA1CA00AA1428 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -2123,6 +2126,8 @@
 				D96B81BD1616772A00F97D0F /* OTRPurchaseController.m */,
 				D96B81BF1616896D00F97D0F /* OTRPushController.h */,
 				D96B81C01616896D00F97D0F /* OTRPushController.m */,
+				D9E72E44167EC32300C6CB75 /* OTRPushAccessTableViewCell.h */,
+				D9E72E45167EC32400C6CB75 /* OTRPushAccessTableViewCell.m */,
 				D9C78F7A1633563F00EBC6A0 /* OTRPushAccessViewController.h */,
 				D9C78F7B1633563F00EBC6A0 /* OTRPushAccessViewController.m */,
 				D9772AB11617C1E80008687D /* OTRPushAPIClient.h */,
@@ -2787,6 +2792,7 @@
 				633406411652D50F00A54C52 /* OTRLanguageManager.m in Sources */,
 				633406451652E44600A54C52 /* OTRLanguageSetting.m in Sources */,
 				6336CDE0165C4E9E00C8CBA8 /* OTRLanguageListSettingViewController.m in Sources */,
+				D9E72E46167EC32400C6CB75 /* OTRPushAccessTableViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

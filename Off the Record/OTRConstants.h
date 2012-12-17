@@ -54,4 +54,6 @@
 #define kOTRChatStatePausedTimeout 5
 #define kOTRChatStateInactiveTimeout 120
 
+#define kOTRServiceName @"org.chatsecure.ChatSecure"
 
+#define kOTRPushAccountUpdateNotification @"kOTRPushAccountUpdateNotification"

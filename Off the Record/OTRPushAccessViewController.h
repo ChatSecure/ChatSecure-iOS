@@ -27,7 +27,6 @@
 
 @property (nonatomic, retain) UITableView *tokenTableView;
 @property (nonatomic, assign) OTRPushController *pushController;
-@property (nonatomic, retain) NSArray *accountIDs;
-@property (nonatomic, retain) NSArray *pats;
+@property (nonatomic, retain) NSArray *buddies;
 
 @end

@@ -24,6 +24,7 @@
 #import "MBProgressHUD.h"
 #import "Strings.h"
 #import "OTRPushAccessViewController.h"
+#import "OTRConstants.h"
 
 enum {
     ACCOUNT_INFO_SECTION = 0,
@@ -61,6 +62,7 @@ enum {
         self.products = [NSArray array];
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:RESTORE_STRING style:UIBarButtonItemStyleBordered target:self action:@selector(restorePurchases:)];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedProductUpdateNotification:) name:kOTRPurchaseControllerProductUpdateNotification object:purchaseController];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedProductUpdateNotification:) name:kOTRPushAccountUpdateNotification object:pushController];
     }
     return self;
 }

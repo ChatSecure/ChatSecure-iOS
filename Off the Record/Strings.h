@@ -37,6 +37,11 @@
 #define EN_SEND_STRING @"Send"
 #define EN_OK_STRING @"OK"
 
+// ChatSecure Push
+#define EN_STORE_STRING @"Store"
+#define EN_REQUEST_PAT_STRING @"Request PAT"
+
+
 //Used in OTRChatViewController
 #define EN_RECENT_STRING @"Recent"
 #define EN_YOUR_FINGERPRINT_STRING @"Fingerprint for you"
@@ -261,6 +266,22 @@
 #define FACEBOOK_STRING [OTRLanguageManager translatedString: EN_FACEBOOK_STRING]
 #define JABBER_STRING [OTRLanguageManager translatedString: EN_JABBER_STRING]
 
+#define STORE_STRING [OTRLanguageManager translatedString: EN_STORE_STRING]
+#define REQUEST_PAT_STRING [OTRLanguageManager translatedString: EN_REQUEST_PAT_STRING]
+#define LOC_STORE_STRING NSLocalizedString(EN_STORE_STRING, @"Title for the ChatSecure in-app-purchase store")
+#define LOC_REQUEST_PAT_STRING NSLocalizedString(EN_REQUEST_PAT_STRING, @"Title for requesting a push access token")
+
+// OTRStoreViewController
+#define CANT_MAKE_PAYMENTS_STRING NSLocalizedString(@"Sorry, payments aren't allowed at this time. Please check your parent control settings and try again.", @"String to describe when payments aren't allowed.")
+#define RESTORE_STRING NSLocalizedString(@"Restore", @"Title for Button that restores your transactions")
+#define PURCHASED_STRING NSLocalizedString(@"Purchased", @"Shown when a product has been purchased already")
+#define ACCOUNT_ID_STRING NSLocalizedString(@"Account ID", @"Title for cell showing Account ID")
+#define EXPIRATION_TITLE_STRING NSLocalizedString(@"Expiration", @"Title for cell describing when subscription expires")
+#define ACCOUNT_INFO_STRING NSLocalizedString(@"Account Info", @"Title for table view section describing push subscription account information")
+#define PRODUCTS_SECTION_STRING NSLocalizedString(@"Products", @"Title for table view section describing push subscription products")
+#define PATS_SECTION_STRING NSLocalizedString(@"Manage", @"Manage the push tokens title label")
+#define PATS_STRING NSLocalizedString(@"PATs", "Push access tokens")
+#define ACCOUNT_IDS_STRING NSLocalizedString(@"Account IDs", "Plural for account id")
 
 #define LOC_BUDDY_LIST_STRING NSLocalizedString(EN_BUDDY_LIST_STRING , @"Title for the buddy list tab")
 #define LOC_CONVERSATIONS_STRING NSLocalizedString(EN_CONVERSATIONS_STRING , @"Title for the conversations tab")

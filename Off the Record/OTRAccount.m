@@ -29,7 +29,6 @@
 #import "OTRConstants.h"
 #import "Strings.h"
 
-#define kOTRServiceName @"org.chatsecure.ChatSecure"
 
 
 @implementation OTRAccount

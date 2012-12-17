@@ -21,6 +21,7 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "OTRPushAccessViewController.h"
+#import "Strings.h"
 
 @interface OTRPushAccessViewController ()
 
@@ -30,7 +31,7 @@
 #define PATS_SECTION 1
 
 @implementation OTRPushAccessViewController
-@synthesize tokenTableView, pushController, accountIDs, pats;
+@synthesize tokenTableView, pushController, buddies;
 
 - (id)init {
     if (self = [super init]) {
@@ -38,8 +39,7 @@
         self.tokenTableView.delegate = self;
         self.tokenTableView.dataSource = self;
         self.pushController = [OTRPushController sharedInstance];
-        self.accountIDs = [pushController accountIDs];
-        self.pats = [pushController pats];
+        self.buddies = [pushController buddies];
     }
     return self;
 }
@@ -56,16 +56,11 @@
 }
 
 - (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (section == ACCOUNT_IDS_SECTION) {
-        return [accountIDs count];
-    } else if (section == PATS_SECTION) {
-        return [pats count];
-    }
-    return 0;
+    return buddies.count;
 }
 
 - (NSInteger) numberOfSectionsInTableView:(UITableView *)tableView {
-    return 2;
+    return 1;
 }
 
 - (UITableViewCell*) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -74,14 +69,9 @@
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
     }
-    if (indexPath.section == ACCOUNT_IDS_SECTION) {
-    
-    }
-    else if (indexPath.section == PATS_SECTION) {
-        NSDictionary *pat = [pats objectAtIndex:indexPath.row];
-        cell.textLabel.text = [pat objectForKey:@"name"];
-        cell.detailTextLabel.text = [pat objectForKey:@"pat"];
-    }
+    OTRBuddy *buddy = [buddies objectAtIndex:indexPath.row];
+    cell.textLabel.text = buddy.displayName;
+    cell.detailTextLabel.text = [[OTRPushController sharedInstance] localPATForBuddy:buddy];
     
     return cell;
 }

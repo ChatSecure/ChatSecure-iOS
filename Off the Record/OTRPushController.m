@@ -23,6 +23,9 @@
 #import "OTRPushController.h"
 #import "OTRPushAPIClient.h"
 #import "NSData+XMPP.h"
+#import "SFHFKeychainUtils.h"
+#import "OTRConstants.h"
+#import "OTRProtocolManager.h"
 
 #define SERVER_URL @"http://192.168.1.44:5000/"
 
@@ -40,6 +43,15 @@
 #define PAT_KEY @"pat"
 #define PATS_KEY @"pats"
 #define PAT_NAME_KEY @"name"
+#define ACCOUNTS_KEY @"accounts"
+#define RESET_KEY @"reset"
+#define RECEIPT_KEY @"receipt-data"
+
+#define LOCAL_PAT_KEY @"local_pat"
+#define REMOTE_PAT_KEY @"remote_pat"
+#define REMOTE_ACCOUNT_ID_KEY @"account_id"
+#define LOCAL_PATS_KEY @"local_pats"
+#define PAT_DICTIONARY_KEY @"pats"
 
 @implementation OTRPushController
 @synthesize pushClient;
@@ -69,7 +81,7 @@
     return [NSURL URLWithString:SERVER_URL];
 }
 
-- (void) registerWithReceipt:(NSData*)receipt {
+- (void) registerWithReceipt:(NSData*)receipt resetAccount:(BOOL)resetAccount {
     NSString *receiptString = [receipt base64Encoded];
     //NSLog(@"Receipt bytes: %@", [receipt description]);
     if (!receiptString) {
@@ -77,7 +89,8 @@
         return;
     }
     //NSLog(@"Receipt string: %@", receiptString);
-    NSDictionary *parameters = [NSDictionary dictionaryWithObject:receiptString forKey:@"receipt-data"];
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithObject:receiptString forKey:RECEIPT_KEY];
+    [parameters setObject:@(resetAccount) forKey:RESET_KEY];
     [pushClient postPath:REGISTER_PATH parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSLog(@"response: %@", [responseObject description]);
         NSString *accountID = [responseObject objectForKey:ACCOUNT_ID_KEY];
@@ -89,9 +102,10 @@
             dateFormatter.dateFormat = @"yyyy-MM-dd";
             NSDate *expirationDate = [dateFormatter dateFromString:expirationDateString];
             [accountDictionary setObject:accountID forKey:ACCOUNT_ID_KEY];
-            [accountDictionary setObject:password forKey:PASSWORD_KEY]; // TODO: store this in the keychain
             [accountDictionary setObject:expirationDate forKey:EXPIRATION_DATE_KEY];
             [self saveAccountDictionary:accountDictionary];
+            self.password = password;
+            [[NSNotificationCenter defaultCenter] postNotificationName:kOTRPushAccountUpdateNotification object:self];
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"Error registering with receipt: %@%@", [error localizedDescription], [error userInfo]);
@@ -103,7 +117,20 @@
 }
 
 - (NSString*) password {
-    return [[self accountDictionary] objectForKey:PASSWORD_KEY];
+    NSError *error = nil;
+    NSString *password = [SFHFKeychainUtils getPasswordForUsername:[self accountID] andServiceName:kOTRServiceName error:&error];
+    if (error) {
+        NSLog(@"Error retreiving password from keychain: %@", [error userInfo]);
+    }
+    return password;
+}
+
+- (void) setPassword:(NSString *)password {
+    NSError *error = nil;
+    [SFHFKeychainUtils storeUsername:[self accountID] andPassword:password forServiceName:kOTRServiceName updateExisting:YES error:&error];
+    if (error) {
+        NSLog(@"Error storing password in keychain: %@", [error userInfo]);
+    }
 }
 
 - (NSDate*) expirationDate {
@@ -116,7 +143,8 @@
 }
 
 - (NSArray*) accountIDs {
-    return nil;
+    NSDictionary *accountDictionary = [self accountDictionary];
+    return [accountDictionary objectForKey:ACCOUNTS_KEY];
 }
 
 - (NSMutableDictionary*) accountDictionary {
@@ -128,6 +156,30 @@
     return productDictionary;
 }
 
+- (NSArray*) buddies {
+    NSMutableArray *buddyArray = [NSMutableArray array];
+    
+    NSMutableDictionary *accountDictionary = [self accountDictionary];
+    
+    NSDictionary *patsDictionary = [accountDictionary objectForKey:PATS_KEY];
+    NSArray *protocols = [patsDictionary allKeys];
+    for (NSString *protocol in protocols) {
+        NSDictionary *accountsDictionary = [patsDictionary objectForKey:protocol];
+        NSArray *accounts = [accountsDictionary allKeys];
+        for (NSString *account in accounts) {
+            NSDictionary *usersDictionary = [accountsDictionary objectForKey:account];
+            NSArray *usernames = [usersDictionary allKeys];
+            for (NSString *username in usernames) {
+                OTRBuddy *buddy = [[OTRProtocolManager sharedInstance] buddyForUserName:username accountName:account protocol:protocol];
+                if (buddy) {
+                    [buddyArray addObject:buddy];
+                }
+            }
+        }
+    }
+    return buddyArray;
+}
+
 - (void) saveAccountDictionary:(NSMutableDictionary*)productsDictionary {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults setObject:productsDictionary forKey:kOTRPushAccountKey];
@@ -137,12 +189,10 @@
     }
 }
 
-- (BOOL) checkSubscriptionStatus {
-    NSMutableDictionary *accountDictionary = [self accountDictionary];
-    
-    NSString *accountID = [accountDictionary objectForKey:ACCOUNT_ID_KEY];
-    NSString *password = [accountDictionary objectForKey:PASSWORD_KEY];
-    NSDate *expirationDate = [accountDictionary objectForKey:EXPIRATION_DATE_KEY];
+- (BOOL) checkSubscriptionStatus {    
+    NSString *accountID = [self accountID];
+    NSString *password = [self password];
+    NSDate *expirationDate = [self expirationDate];
     
     if (!accountID || !password) {
         return NO;
@@ -160,9 +210,8 @@
     if (![self checkSubscriptionStatus]) {
         return;
     }
-    NSMutableDictionary *accountDictionary = [self accountDictionary];
-    NSString *accountID = [accountDictionary objectForKey:ACCOUNT_ID_KEY];
-    NSString *password = [accountDictionary objectForKey:PASSWORD_KEY];
+    NSString *accountID = [self accountID];
+    NSString *password = [self password];
     NSMutableDictionary *postDictionary = [NSMutableDictionary dictionaryWithCapacity:3];
     NSString *dpt = [devicePushToken hexStringValue];
     [postDictionary setObject:dpt forKey:DPT_KEY];
@@ -177,13 +226,119 @@
     }];
 }
 
+- (NSMutableDictionary*) patDictionaryForBuddy:(OTRBuddy*)buddy {
+    NSMutableDictionary *patsAccountDictionary = [self patAccountsDictionaryForBuddy:buddy];
+    NSMutableDictionary *patsUserDictionary = [NSMutableDictionary dictionaryWithDictionary:[patsAccountDictionary objectForKey:buddy.accountName]];
+    if (!patsUserDictionary) {
+        patsUserDictionary = [NSMutableDictionary dictionary];
+    }
+    return patsUserDictionary;
+}
+
+- (NSMutableDictionary*) patAccountsDictionaryForBuddy:(OTRBuddy*)buddy {
+    NSMutableDictionary *patsProtocolDictionary = [self patsProtocolDictionaryForBuddy:buddy];
+    NSMutableDictionary *patsAccountDictionary = [NSMutableDictionary dictionaryWithDictionary:[patsProtocolDictionary objectForKey:buddy.protocol.account.username]];
+    if (!patsAccountDictionary) {
+        patsAccountDictionary = [NSMutableDictionary dictionary];
+    }
+    return patsAccountDictionary;
+}
+
+- (NSMutableDictionary*) patsProtocolDictionaryForBuddy:(OTRBuddy*)buddy {
+    NSMutableDictionary *accountDictionary = [self accountDictionary];
+    
+    NSMutableDictionary *patsDictionary = [NSMutableDictionary dictionaryWithDictionary:[accountDictionary objectForKey:PATS_KEY]];
+    if (!patsDictionary) {
+        patsDictionary = [NSMutableDictionary dictionary];
+    }
+    NSMutableDictionary *patsProtocolDictionary = [NSMutableDictionary dictionaryWithDictionary:[patsDictionary objectForKey:buddy.protocol.account.protocol]];
+    if (!patsProtocolDictionary) {
+        patsProtocolDictionary = [NSMutableDictionary dictionary];
+    }
+    return patsProtocolDictionary;
+}
+
+- (void) setPatDictionary:(NSMutableDictionary*)patDictionary forBuddy:(OTRBuddy*)buddy {
+    NSMutableDictionary *accountDictionary = [self accountDictionary];
+    NSMutableDictionary *patsDictionary = [NSMutableDictionary dictionaryWithDictionary:[accountDictionary objectForKey:PATS_KEY]];
+    
+    NSMutableDictionary *patsProtocolDictionary = [self patsProtocolDictionaryForBuddy:buddy];
+    NSMutableDictionary *patsAccountDictionary = [self patAccountsDictionaryForBuddy:buddy];
+    [patsAccountDictionary setObject:patDictionary forKey:buddy.accountName];
+    [patsProtocolDictionary setObject:patsAccountDictionary forKey:buddy.protocol.account.username];
+    [patsDictionary setObject:patsProtocolDictionary forKey:buddy.protocol.account.protocol];
+    [accountDictionary setObject:patsDictionary forKey:PATS_KEY];
+    [self saveAccountDictionary:accountDictionary];
+}
+
+- (void) setLocalPAT:(NSString*)pat forBuddy:(OTRBuddy*)buddy {
+    NSMutableDictionary *patDictionary = [self patDictionaryForBuddy:buddy];
+    
+    if (pat) {
+        [patDictionary setObject:pat forKey:LOCAL_PAT_KEY];
+        [self setName:buddy.displayName forLocalPAT:pat];
+    } else {
+        [patDictionary removeObjectForKey:LOCAL_PAT_KEY];
+        [self setName:nil forLocalPAT:pat];
+    }
+    
+    [self setPatDictionary:patDictionary forBuddy:buddy];
+}
+
+- (NSString*) nameForLocalPAT:(NSString*)pat {
+    NSMutableDictionary *accountDictionary = [self accountDictionary];
+    NSMutableDictionary *localPatsDictionary = [NSMutableDictionary dictionaryWithDictionary:[accountDictionary objectForKey:LOCAL_PATS_KEY]];
+    if (!localPatsDictionary) {
+        localPatsDictionary = [NSMutableDictionary dictionary];
+    }
+    return [localPatsDictionary objectForKey:pat];
+}
+
+- (void) setName:(NSString*)name forLocalPAT:(NSString*)localPAT {
+    NSMutableDictionary *accountDictionary = [self accountDictionary];
+    NSMutableDictionary *localPatsDictionary = [NSMutableDictionary dictionaryWithDictionary:[accountDictionary objectForKey:LOCAL_PATS_KEY]];
+    if (!localPatsDictionary) {
+        localPatsDictionary = [NSMutableDictionary dictionary];
+    }
+    if (name) {
+        [localPatsDictionary setObject:name forKey:localPAT];
+    } else {
+        [localPatsDictionary removeObjectForKey:localPAT];
+    }
+    [accountDictionary setObject:localPatsDictionary forKey:LOCAL_PATS_KEY];
+    [self saveAccountDictionary:accountDictionary];
+}
+
+- (NSString*) localPATForBuddy:(OTRBuddy*)buddy {
+    NSMutableDictionary *patDictionary = [self patDictionaryForBuddy:buddy];
+    return [patDictionary objectForKey:LOCAL_PAT_KEY];
+}
+
+- (NSString*) remotePATForBuddy:(OTRBuddy*)buddy {
+    NSMutableDictionary *patDictionary = [self patDictionaryForBuddy:buddy];
+    return [patDictionary objectForKey:REMOTE_PAT_KEY];
+}
+
+- (NSString*) accountIDForBuddy:(OTRBuddy*)buddy {
+    NSMutableDictionary *patDictionary = [self patDictionaryForBuddy:buddy];
+    return [patDictionary objectForKey:ACCOUNT_ID_KEY];
+}
+
+- (void) setRemotePAT:(NSString*)pat accountID:(NSString*)accountID forBuddy:(OTRBuddy*)buddy {
+    NSMutableDictionary *patDictionary = [self patDictionaryForBuddy:buddy];
+    
+    [patDictionary setObject:pat forKey:REMOTE_PAT_KEY];
+    [patDictionary setObject:accountID forKey:REMOTE_ACCOUNT_ID_KEY];
+    
+    [self setPatDictionary:patDictionary forBuddy:buddy];
+}
+
 - (void) requestPushAccessTokenForBuddy:(OTRBuddy*)buddy {
     if (![self checkSubscriptionStatus]) {
         return;
     }
-    NSMutableDictionary *accountDictionary = [self accountDictionary];
-    NSString *accountID = [accountDictionary objectForKey:ACCOUNT_ID_KEY];
-    NSString *password = [accountDictionary objectForKey:PASSWORD_KEY];
+    NSString *accountID = [self accountID];
+    NSString *password = [self password];
     NSMutableDictionary *postDictionary = [NSMutableDictionary dictionaryWithCapacity:2];
     [postDictionary setObject:accountID forKey:ACCOUNT_ID_KEY];
     [postDictionary setObject:password forKey:PASSWORD_KEY];
@@ -194,21 +349,7 @@
         if (!pat || !pat.length) {
             return;
         }
-        NSMutableArray *patsArray = [NSMutableArray arrayWithArray:[accountDictionary objectForKey:PATS_KEY]];
-        if (!patsArray) {
-            patsArray = [NSMutableArray array];
-        }
-        NSString *displayName = buddy.displayName;
-        if (!displayName) {
-            displayName = @"???";
-        }
-        
-        NSMutableDictionary *patsDictionary = [NSMutableDictionary dictionaryWithCapacity:2];
-        [patsDictionary setObject:buddy.accountName forKey:PAT_NAME_KEY];
-        [patsDictionary setObject:pat forKey:PAT_KEY];
-        [patsArray addObject:patsDictionary];
-        [accountDictionary setObject:patsArray forKey:PATS_KEY];
-        [self saveAccountDictionary:accountDictionary];
+        [self setLocalPAT:pat forBuddy:buddy];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"Error requesting PAT: %@%@", [error localizedDescription], [error userInfo]);
     }];
@@ -227,5 +368,7 @@
         NSLog(@"Error sending knock: %@%@", [error localizedDescription], [error userInfo]);
     }];
 }
+
+- (void) refreshActivePats {}
 
 @end

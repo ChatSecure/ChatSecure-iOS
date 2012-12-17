@@ -30,14 +30,13 @@
 @property (nonatomic, assign) OTRPushAPIClient *pushClient;
 
 
-- (void) registerWithReceipt:(NSData*)receipt;
+- (void) registerWithReceipt:(NSData*)receipt resetAccount:(BOOL)resetAccount;
 - (void) updateDevicePushToken:(NSData*)devicePushToken;
 - (void) requestPushAccessTokenForBuddy:(OTRBuddy*)buddy;
 - (void) knockWithAccountID:(NSString*)accountID pat:(NSString*)pat;
 - (void) refreshActivePats;
 
-- (NSArray*) pats;
-- (NSArray*) accountIDs;
+- (NSArray*) buddies; // returns array of OTRBuddys that are participating
 
 @property (nonatomic, readonly) NSString *accountID;
 @property (nonatomic, readonly) NSString *password;
@@ -48,5 +47,15 @@
 + (OTRPushController*) sharedInstance;
 + (NSURL*) baseURL;
 
+// For getting human-readable names for recieved PATs in push messages
+- (NSString*) nameForLocalPAT:(NSString*)pat;
+- (void) setName:(NSString*)name forLocalPAT:(NSString*)localPAT;
+
+
+- (void) setLocalPAT:(NSString*)pat forBuddy:(OTRBuddy*)buddy;
+- (void) setRemotePAT:(NSString*)pat accountID:(NSString*)accountID forBuddy:(OTRBuddy*)buddy;
+- (NSString*) localPATForBuddy:(OTRBuddy*)buddy;
+- (NSString*) remotePATForBuddy:(OTRBuddy*)buddy;
+- (NSString*) accountIDForBuddy:(OTRBuddy*)buddy;
 
 @end

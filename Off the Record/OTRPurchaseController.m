@@ -104,7 +104,7 @@
         switch (transaction.transactionState) {
             case SKPaymentTransactionStatePurchased:
                 NSLog(@"Transaction purchased");
-                [[OTRPushController sharedInstance] registerWithReceipt:transaction.transactionReceipt];
+                [[OTRPushController sharedInstance] registerWithReceipt:transaction.transactionReceipt resetAccount:NO];
                 [self setProductIdentifier:transaction.payment.productIdentifier purchased:YES];
                 [self sendProductUpdateNotification];
                 [[SKPaymentQueue defaultQueue] finishTransaction: transaction];
@@ -116,7 +116,7 @@
                 break;
             case SKPaymentTransactionStateRestored:
                 NSLog(@"Original transaction restored: %@", transaction.originalTransaction.transactionIdentifier);
-                [[OTRPushController sharedInstance] registerWithReceipt:transaction.transactionReceipt];
+                [[OTRPushController sharedInstance] registerWithReceipt:transaction.transactionReceipt resetAccount:YES];
                 [self setProductIdentifier:transaction.payment.productIdentifier purchased:YES];
                 [self sendProductUpdateNotification];
                 [[SKPaymentQueue defaultQueue] finishTransaction: transaction];
