@@ -100,7 +100,7 @@ do
 
 	mkdir -p "${INTERDIR}/${PLATFORM}${SDKVERSION}-${ARCH}.sdk"
 
-	./configure --disable-shared --enable-static --with-gpg-error-prefix=${OUTPUTDIR} ${EXTRA_CONFIG} \
+	./configure --disable-shared --enable-static --with-pic --with-gpg-error-prefix=${OUTPUTDIR} ${EXTRA_CONFIG} \
     --prefix="${INTERDIR}/${PLATFORM}${SDKVERSION}-${ARCH}.sdk" \
     CC="${CCACHE}${DEVELOPER}/Platforms/${PLATFORM}.platform/Developer/usr/bin/gcc -arch ${ARCH}" \
     LDFLAGS="$LDFLAGS -L${OUTPUTDIR}/lib" \

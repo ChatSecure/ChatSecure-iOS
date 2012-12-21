@@ -28,7 +28,7 @@ cflags=""
 api_version="1"
 
 # Configured for host
-my_host="i386-apple-darwin12.1.0"
+my_host="i386-apple-darwin12.2.0"
 
 # Misc information.
 symmetric_ciphers="arcfour blowfish cast5 des aes twofish serpent rfc2268 seed camellia"
