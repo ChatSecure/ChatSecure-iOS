@@ -19,3 +19,6 @@
 [submodule "Submodules/Crittercism"]
 	path = Submodules/Crittercism
 	url = git@github.com:ChatSecure/Crittercism-SDK.git
+[submodule "Submodules/LibOrange"]
+	path = Submodules/LibOrange
+	url = git@github.com:ChatSecure/LibOrange.git
