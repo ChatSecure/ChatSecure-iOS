@@ -119,6 +119,11 @@
 {
     NSString * currentLocale = [OTRLanguageManager currentLocale];
     NSString *bundlePath = [[NSBundle mainBundle] pathForResource:@"Localizable" ofType:@"strings" inDirectory:nil forLocalization:currentLocale];
+    if (!bundlePath && currentLocale.length > 2) {
+        currentLocale = [currentLocale substringToIndex:2];
+        bundlePath = [[NSBundle mainBundle] pathForResource:@"Localizable" ofType:@"strings" inDirectory:nil forLocalization:currentLocale];
+        NSLog(@"Bundle path is nil! Falling back to 2-character locale.");
+    }
     if (!bundlePath) {
         NSString *defaultLocale = @"en";
         bundlePath = [[NSBundle mainBundle] pathForResource:@"Localizable" ofType:@"strings" inDirectory:nil forLocalization:defaultLocale];
