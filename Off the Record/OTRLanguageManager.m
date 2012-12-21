@@ -122,12 +122,12 @@
     if (!bundlePath && currentLocale.length > 2) {
         currentLocale = [currentLocale substringToIndex:2];
         bundlePath = [[NSBundle mainBundle] pathForResource:@"Localizable" ofType:@"strings" inDirectory:nil forLocalization:currentLocale];
-        NSLog(@"Bundle path is nil! Falling back to 2-character locale.");
+        //NSLog(@"Bundle path is nil! Falling back to 2-character locale.");
     }
     if (!bundlePath) {
         NSString *defaultLocale = @"en";
         bundlePath = [[NSBundle mainBundle] pathForResource:@"Localizable" ofType:@"strings" inDirectory:nil forLocalization:defaultLocale];
-        NSLog(@"Bundle path is nil! Falling back to english locale.");
+        //NSLog(@"Bundle path is nil! Falling back to english locale.");
     }
     NSBundle *foreignBundle = [[NSBundle alloc] initWithPath:[bundlePath stringByDeletingLastPathComponent]];
     //NSError * error = nil;
