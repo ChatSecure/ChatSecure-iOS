@@ -59,9 +59,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 #ifdef CRITTERCISM_ENABLED
     if([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyCrittercismOptIn])
     {
-        [Crittercism initWithAppID:CRITTERCISM_APP_ID
-                            andKey:CRITTERCISM_KEY
-                         andSecret:CRITTERCISM_SECRET];
+        [Crittercism enableWithAppID:CRITTERCISM_APP_ID];
         [Crittercism setOptOutStatus:NO];
     } 
     else 
