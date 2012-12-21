@@ -103,7 +103,6 @@
 		D9CE42C413FDCBDD003EC27C /* Lock_Unlocked.png in Resources */ = {isa = PBXBuildFile; fileRef = D9CE42C213FDCBDD003EC27C /* Lock_Unlocked.png */; };
 		D9CEED891684237700B236B5 /* Appirater.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CEED6E1684237700B236B5 /* Appirater.m */; };
 		D9CEED8A1684237700B236B5 /* AppiraterLocalizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = D9CEED701684237700B236B5 /* AppiraterLocalizable.strings */; };
-		D9CEED921684238D00B236B5 /* libCrittercism_v3_4_6.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D9CEED901684238D00B236B5 /* libCrittercism_v3_4_6.a */; };
 		D9CEEE60168423CA00B236B5 /* AIMBArtDownloadReply.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CEED97168423CA00B236B5 /* AIMBArtDownloadReply.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		D9CEEE61168423CA00B236B5 /* AIMBArtHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CEED99168423CA00B236B5 /* AIMBArtHandler.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		D9CEEE62168423CA00B236B5 /* AIMBArtID.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CEED9B168423CA00B236B5 /* AIMBArtID.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -173,8 +172,6 @@
 		D9CEEEA2168423CA00B236B5 /* FTSetBArtItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CEEE1C168423CA00B236B5 /* FTSetBArtItem.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		D9CEEEA3168423CA00B236B5 /* FTSetPDMode.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CEEE1E168423CA00B236B5 /* FTSetPDMode.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		D9CEEEA4168423CA00B236B5 /* hmac-sha256.c in Sources */ = {isa = PBXBuildFile; fileRef = D9CEEE1F168423CA00B236B5 /* hmac-sha256.c */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		D9CEEEA6168423CA00B236B5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CEEE25168423CA00B236B5 /* main.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		D9CEEEA7168423CA00B236B5 /* MyTest.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CEEE27168423CA00B236B5 /* MyTest.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		D9CEEEA8168423CA00B236B5 /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CEEE29168423CA00B236B5 /* NSData+Base64.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		D9CEEEA9168423CA00B236B5 /* NSMutableData+FlipBit.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CEEE2B168423CA00B236B5 /* NSMutableData+FlipBit.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		D9CEEEAA168423CA00B236B5 /* NSObject+JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CEEE2D168423CA00B236B5 /* NSObject+JSON.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -276,7 +273,6 @@
 		D9CEF08F1684247400B236B5 /* XMPPTime.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CEEFFF1684247400B236B5 /* XMPPTime.m */; };
 		D9CEF0901684247400B236B5 /* XMPPElement+Delay.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CEF0021684247400B236B5 /* XMPPElement+Delay.m */; };
 		D9CEF0911684247400B236B5 /* XMPPAttentionModule.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CEF0051684247400B236B5 /* XMPPAttentionModule.m */; };
-		D9CEF0921684247400B236B5 /* XMPPMessage+XEP_0224.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CEF0071684247400B236B5 /* XMPPMessage+XEP_0224.m */; };
 		D9CEF0931684247400B236B5 /* DDList.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CEF00A1684247400B236B5 /* DDList.m */; };
 		D9CEF0941684247400B236B5 /* GCDMulticastDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CEF00C1684247400B236B5 /* GCDMulticastDelegate.m */; };
 		D9CEF0951684247400B236B5 /* LibIDN.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CEF00E1684247400B236B5 /* LibIDN.m */; };
@@ -295,7 +291,6 @@
 		D9CEF0A31684247400B236B5 /* DDXMLDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CEF0311684247400B236B5 /* DDXMLDocument.m */; };
 		D9CEF0A41684247400B236B5 /* DDXMLElement.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CEF0331684247400B236B5 /* DDXMLElement.m */; };
 		D9CEF0A51684247400B236B5 /* DDXMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CEF0351684247400B236B5 /* DDXMLNode.m */; };
-		D9CEF0A71684247400B236B5 /* libidn.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D9CEF03B1684247400B236B5 /* libidn.a */; };
 		D9CEF0AB1684268500B236B5 /* libOTRKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D9CEED6A1684235C00B236B5 /* libOTRKit.a */; };
 		D9CEF0C616842A5B00B236B5 /* NSObject+SBJson.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CEF0AE16842A5B00B236B5 /* NSObject+SBJson.m */; };
 		D9CEF0C716842A5B00B236B5 /* SBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CEF0B116842A5B00B236B5 /* SBJsonParser.m */; };
@@ -309,6 +304,10 @@
 		D9CEF0CF16842A5B00B236B5 /* SBJsonTokeniser.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CEF0C116842A5B00B236B5 /* SBJsonTokeniser.m */; };
 		D9CEF0D016842A5B00B236B5 /* SBJsonUTF8Stream.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CEF0C316842A5B00B236B5 /* SBJsonUTF8Stream.m */; };
 		D9CEF0D116842A5B00B236B5 /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CEF0C516842A5B00B236B5 /* SBJsonWriter.m */; };
+		D9CEF0E916842AC700B236B5 /* GTMNSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CEF0D616842AC700B236B5 /* GTMNSString+HTML.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		D9CEF0EF16842AC700B236B5 /* NSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CEF0E316842AC700B236B5 /* NSString+HTML.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		D9CEF0F216842E5600B236B5 /* libCrittercism_v3_4_6.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D9CEED901684238D00B236B5 /* libCrittercism_v3_4_6.a */; };
+		D9CEF0F316842E6100B236B5 /* libidn.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D9CEF03B1684247400B236B5 /* libidn.a */; };
 		D9D69AA91417FDBA0056FB9E /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D69AA81417FDBA0056FB9E /* CFNetwork.framework */; };
 		D9D69ABC1417FDF90056FB9E /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D69ABB1417FDF90056FB9E /* libxml2.dylib */; };
 		D9D69B021417FF450056FB9E /* libresolv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D69B011417FF450056FB9E /* libresolv.dylib */; };
@@ -664,11 +663,7 @@
 		D9CEEE1F168423CA00B236B5 /* hmac-sha256.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "hmac-sha256.c"; sourceTree = "<group>"; };
 		D9CEEE20168423CA00B236B5 /* hmac-sha256.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "hmac-sha256.h"; sourceTree = "<group>"; };
 		D9CEEE21168423CA00B236B5 /* JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSON.h; sourceTree = "<group>"; };
-		D9CEEE22168423CA00B236B5 /* LibOrange-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "LibOrange-Prefix.pch"; sourceTree = "<group>"; };
 		D9CEEE24168423CA00B236B5 /* LibOrange.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LibOrange.h; sourceTree = "<group>"; };
-		D9CEEE25168423CA00B236B5 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		D9CEEE26168423CA00B236B5 /* MyTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyTest.h; sourceTree = "<group>"; };
-		D9CEEE27168423CA00B236B5 /* MyTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyTest.m; sourceTree = "<group>"; };
 		D9CEEE28168423CA00B236B5 /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64.h"; sourceTree = "<group>"; };
 		D9CEEE29168423CA00B236B5 /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = "<group>"; };
 		D9CEEE2A168423CA00B236B5 /* NSMutableData+FlipBit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableData+FlipBit.h"; sourceTree = "<group>"; };
@@ -952,6 +947,10 @@
 		D9CEF0C316842A5B00B236B5 /* SBJsonUTF8Stream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonUTF8Stream.m; sourceTree = "<group>"; };
 		D9CEF0C416842A5B00B236B5 /* SBJsonWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonWriter.h; sourceTree = "<group>"; };
 		D9CEF0C516842A5B00B236B5 /* SBJsonWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonWriter.m; sourceTree = "<group>"; };
+		D9CEF0D516842AC700B236B5 /* GTMNSString+HTML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GTMNSString+HTML.h"; sourceTree = "<group>"; };
+		D9CEF0D616842AC700B236B5 /* GTMNSString+HTML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GTMNSString+HTML.m"; sourceTree = "<group>"; };
+		D9CEF0E216842AC700B236B5 /* NSString+HTML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+HTML.h"; sourceTree = "<group>"; };
+		D9CEF0E316842AC700B236B5 /* NSString+HTML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+HTML.m"; sourceTree = "<group>"; };
 		D9D69AA81417FDBA0056FB9E /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		D9D69ABB1417FDF90056FB9E /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		D9D69B011417FF450056FB9E /* libresolv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libresolv.dylib; path = usr/lib/libresolv.dylib; sourceTree = SDKROOT; };
@@ -1009,8 +1008,8 @@
 				D90B80AC13FC719B006EFF3D /* CoreGraphics.framework in Frameworks */,
 				D9F9377D13F44BD3009A3D84 /* UIKit.framework in Frameworks */,
 				D9F9377F13F44BD3009A3D84 /* Foundation.framework in Frameworks */,
-				D9CEED921684238D00B236B5 /* libCrittercism_v3_4_6.a in Frameworks */,
-				D9CEF0A71684247400B236B5 /* libidn.a in Frameworks */,
+				D9CEF0F216842E5600B236B5 /* libCrittercism_v3_4_6.a in Frameworks */,
+				D9CEF0F316842E6100B236B5 /* libidn.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1095,6 +1094,7 @@
 		D9CEED611684234D00B236B5 /* Submodules */ = {
 			isa = PBXGroup;
 			children = (
+				D9CEF0D216842AC700B236B5 /* MWFeedParser */,
 				D9CEF0AC16842A5B00B236B5 /* SBJson */,
 				D9CEEF281684245F00B236B5 /* XMPPFramework */,
 				D9CEEF031684242A00B236B5 /* SSKeychain */,
@@ -1281,11 +1281,7 @@
 				D9CEEE1F168423CA00B236B5 /* hmac-sha256.c */,
 				D9CEEE20168423CA00B236B5 /* hmac-sha256.h */,
 				D9CEEE21168423CA00B236B5 /* JSON.h */,
-				D9CEEE22168423CA00B236B5 /* LibOrange-Prefix.pch */,
 				D9CEEE24168423CA00B236B5 /* LibOrange.h */,
-				D9CEEE25168423CA00B236B5 /* main.m */,
-				D9CEEE26168423CA00B236B5 /* MyTest.h */,
-				D9CEEE27168423CA00B236B5 /* MyTest.m */,
 				D9CEEE28168423CA00B236B5 /* NSData+Base64.h */,
 				D9CEEE29168423CA00B236B5 /* NSData+Base64.m */,
 				D9CEEE2A168423CA00B236B5 /* NSMutableData+FlipBit.h */,
@@ -2010,6 +2006,18 @@
 			path = Submodules/LibOrange/Submodules/SBJson/Classes;
 			sourceTree = "<group>";
 		};
+		D9CEF0D216842AC700B236B5 /* MWFeedParser */ = {
+			isa = PBXGroup;
+			children = (
+				D9CEF0D516842AC700B236B5 /* GTMNSString+HTML.h */,
+				D9CEF0D616842AC700B236B5 /* GTMNSString+HTML.m */,
+				D9CEF0E216842AC700B236B5 /* NSString+HTML.h */,
+				D9CEF0E316842AC700B236B5 /* NSString+HTML.m */,
+			);
+			name = MWFeedParser;
+			path = Submodules/MWFeedParser/Classes;
+			sourceTree = "<group>";
+		};
 		D9D69B07141806BB0056FB9E /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -2485,8 +2493,6 @@
 				D9CEEEA2168423CA00B236B5 /* FTSetBArtItem.m in Sources */,
 				D9CEEEA3168423CA00B236B5 /* FTSetPDMode.m in Sources */,
 				D9CEEEA4168423CA00B236B5 /* hmac-sha256.c in Sources */,
-				D9CEEEA6168423CA00B236B5 /* main.m in Sources */,
-				D9CEEEA7168423CA00B236B5 /* MyTest.m in Sources */,
 				D9CEEEA8168423CA00B236B5 /* NSData+Base64.m in Sources */,
 				D9CEEEA9168423CA00B236B5 /* NSMutableData+FlipBit.m in Sources */,
 				D9CEEEAA168423CA00B236B5 /* NSObject+JSON.m in Sources */,
@@ -2588,7 +2594,6 @@
 				D9CEF08F1684247400B236B5 /* XMPPTime.m in Sources */,
 				D9CEF0901684247400B236B5 /* XMPPElement+Delay.m in Sources */,
 				D9CEF0911684247400B236B5 /* XMPPAttentionModule.m in Sources */,
-				D9CEF0921684247400B236B5 /* XMPPMessage+XEP_0224.m in Sources */,
 				D9CEF0931684247400B236B5 /* DDList.m in Sources */,
 				D9CEF0941684247400B236B5 /* GCDMulticastDelegate.m in Sources */,
 				D9CEF0951684247400B236B5 /* LibIDN.m in Sources */,
@@ -2619,6 +2624,8 @@
 				D9CEF0CF16842A5B00B236B5 /* SBJsonTokeniser.m in Sources */,
 				D9CEF0D016842A5B00B236B5 /* SBJsonUTF8Stream.m in Sources */,
 				D9CEF0D116842A5B00B236B5 /* SBJsonWriter.m in Sources */,
+				D9CEF0E916842AC700B236B5 /* GTMNSString+HTML.m in Sources */,
+				D9CEF0EF16842AC700B236B5 /* NSString+HTML.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2759,9 +2766,6 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/XMPPFramework/Vendor/libidn\"",
-					"\"$(SRCROOT)/CrittercismSDK\"",
-					"\"$(SRCROOT)/OTRKit/dependencies/lib\"",
 					"\"$(SRCROOT)/Submodules/Crittercism\"",
 					"\"$(SRCROOT)/Submodules/XMPPFramework/Vendor/libidn\"",
 				);
@@ -2793,9 +2797,6 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/XMPPFramework/Vendor/libidn\"",
-					"\"$(SRCROOT)/CrittercismSDK\"",
-					"\"$(SRCROOT)/OTRKit/dependencies/lib\"",
 					"\"$(SRCROOT)/Submodules/Crittercism\"",
 					"\"$(SRCROOT)/Submodules/XMPPFramework/Vendor/libidn\"",
 				);

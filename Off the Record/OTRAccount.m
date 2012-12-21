@@ -22,7 +22,7 @@
 
 #import "OTRAccount.h"
 #import "OTRSettingsManager.h"
-#import "SFHFKeychainUtils.h"
+#import "SSKeychain.h"
 #import "OTRProtocol.h"
 #import "OTRXMPPManager.h"
 #import "OTROscarManager.h"
@@ -76,14 +76,14 @@
 - (void) setPassword:(NSString *)newPassword {
     if (!newPassword || [newPassword isEqualToString:@""] || !rememberPassword) {
         NSError *error = nil;
-        [SFHFKeychainUtils deleteItemForUsername:self.username andServiceName:kOTRServiceName error:&error];
+        [SSKeychain deletePasswordForService:kOTRServiceName account:self.username error:&error];
         if (error) {
             NSLog(@"Error deleting password from keychain: %@%@", [error localizedDescription], [error userInfo]);
         }
         return;
     }
     NSError *error = nil;
-    [SFHFKeychainUtils storeUsername:self.username andPassword:newPassword forServiceName:kOTRServiceName updateExisting:YES error:&error];
+    [SSKeychain setPassword:newPassword forService:kOTRServiceName account:self.username error:&error];
     if (error) {
         NSLog(@"Error saving password to keychain: %@%@", [error localizedDescription], [error userInfo]);
     }
@@ -94,7 +94,7 @@
         return nil;
     }
     NSError *error = nil;
-    NSString *password = [SFHFKeychainUtils getPasswordForUsername:username andServiceName:kOTRServiceName error:&error];
+    NSString *password = [SSKeychain passwordForService:kOTRServiceName account:username error:&error];
     if (error) {
         NSLog(@"Error retreiving password from keychain: %@%@", [error localizedDescription], [error userInfo]);
         error = nil;
@@ -116,7 +116,7 @@
     if (oldUsername && ![oldUsername isEqualToString:newUsername]) {
         NSString *tempPassword = self.password;    
         NSError *error = nil;
-        [SFHFKeychainUtils deleteItemForUsername:oldUsername andServiceName:kOTRServiceName error:&error];
+        [SSKeychain deletePasswordForService:oldUsername account:kOTRServiceName error:&error];
         if (error) {
             NSLog(@"Error deleting old password from keychain: %@%@", [error localizedDescription], [error userInfo]);
         }
