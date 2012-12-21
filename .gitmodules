@@ -4,9 +4,6 @@
 [submodule "Submodules/Appirater"]
 	path = Submodules/Appirater
 	url = git://github.com/arashpayan/appirater.git
-[submodule "Submodules/LibOrange"]
-	path = Submodules/LibOrange
-	url = git://github.com/unixpickle/LibOrange.git
 [submodule "Submodules/SSKeychain"]
 	path = Submodules/SSKeychain
 	url = git://github.com/soffes/sskeychain.git
