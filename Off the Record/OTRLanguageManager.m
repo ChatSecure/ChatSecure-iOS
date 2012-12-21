@@ -75,10 +75,10 @@
         [languages addObject:[self languageNameForLocalization:locale]];
     }
     
-    NSMutableArray * finalLanguages = [[NSMutableArray alloc] initWithArray:[languages sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)]];
-    [finalLanguages insertObject:DEFAULT_LANGUAGE_STRING atIndex:0];
+    [languages sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+    [languages insertObject:DEFAULT_LANGUAGE_STRING atIndex:0];
     
-    return finalLanguages;
+    return languages;
 }
 
 -(NSString *)languageNameForLocalization:(NSString *)locale
@@ -119,8 +119,13 @@
 {
     NSString * currentLocale = [OTRLanguageManager currentLocale];
     NSString *bundlePath = [[NSBundle mainBundle] pathForResource:@"Localizable" ofType:@"strings" inDirectory:nil forLocalization:currentLocale];
+    if (!bundlePath) {
+        NSString *defaultLocale = @"en";
+        bundlePath = [[NSBundle mainBundle] pathForResource:@"Localizable" ofType:@"strings" inDirectory:nil forLocalization:defaultLocale];
+        NSLog(@"Bundle path is nil! Falling back to english locale.");
+    }
     NSBundle *foreignBundle = [[NSBundle alloc] initWithPath:[bundlePath stringByDeletingLastPathComponent]];
-    NSError * error = nil;
+    //NSError * error = nil;
     //BOOL load = [foreignBundle loadAndReturnError:&error];
     NSString * translatedString = NSLocalizedStringFromTableInBundle(englishString, nil, foreignBundle, nil);
     

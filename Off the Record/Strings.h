@@ -238,7 +238,6 @@
 #define FONT_SIZE_DESCRIPTION_STRING [OTRLanguageManager translatedString: EN_FONT_SIZE_DESCRIPTION_STRING]
 #define DISCONNECTION_WARNING_TITLE_STRING [OTRLanguageManager translatedString: EN_DISCONNECTION_WARNING_TITLE_STRING]
 #define DISCONNECTION_WARNING_DESC_STRING [OTRLanguageManager translatedString: EN_DISCONNECTION_WARNING_DESC_STRING]
-#define DEFAULT_LANGUAGE_STRING [OTRLanguageManager translatedString: EN_DEFAULT_LANGUAGE_STRING]
 #define SETTINGS_STRING [OTRLanguageManager translatedString: EN_SETTINGS_STRING]
 #define SHARE_STRING [OTRLanguageManager translatedString: EN_SHARE_STRING]
 #define NOT_AVAILABLE_STRING [OTRLanguageManager translatedString: EN_NOT_AVAILABLE_STRING]
@@ -356,6 +355,7 @@
 #define LOC_DISCONNECTION_WARNING_TITLE_STRING NSLocalizedString(EN_DISCONNECTION_WARNING_TITLE_STRING , @"Title for setting about showing a warning before disconnection")
 #define LOC_DISCONNECTION_WARNING_DESC_STRING NSLocalizedString(EN_DISCONNECTION_WARNING_DESC_STRING , @"Description for disconnection warning setting")
 #define LOC_DEFAULT_LANGUAGE_STRING NSLocalizedString(EN_DEFAULT_LANGUAGE_STRING , @"default string to revert to normal language behaviour")
+#define DEFAULT_LANGUAGE_STRING LOC_DEFAULT_LANGUAGE_STRING
 #define LOC_SETTINGS_STRING NSLocalizedString(EN_SETTINGS_STRING , @"Title for the Settings screen")
 #define LOC_SHARE_STRING NSLocalizedString(EN_SHARE_STRING , @"Title for sharing a link to the app")
 #define LOC_NOT_AVAILABLE_STRING NSLocalizedString(EN_NOT_AVAILABLE_STRING , @"Shown when a feature is not available, for example SMS")
