@@ -22,3 +22,9 @@
 [submodule "Submodules/LibOrange"]
 	path = Submodules/LibOrange
 	url = git@github.com:ChatSecure/LibOrange.git
+[submodule "Submodules/encrypted-core-data"]
+	path = Submodules/encrypted-core-data
+	url = git@github.com:ChatSecure/encrypted-core-data.git
+[submodule "Submodules/MagicalRecord"]
+	path = Submodules/MagicalRecord
+	url = git@github.com:ChatSecure/MagicalRecord.git
