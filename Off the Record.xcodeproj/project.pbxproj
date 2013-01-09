@@ -337,6 +337,7 @@
 		D9D37176169D2CEB0086F358 /* MagicalRecord+Setup.m in Sources */ = {isa = PBXBuildFile; fileRef = D9D37158169D2CEB0086F358 /* MagicalRecord+Setup.m */; };
 		D9D37177169D2CEB0086F358 /* MagicalRecord+ShorthandSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = D9D3715A169D2CEB0086F358 /* MagicalRecord+ShorthandSupport.m */; };
 		D9D37178169D2CEB0086F358 /* MagicalRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = D9D3715C169D2CEB0086F358 /* MagicalRecord.m */; };
+		D9D3717B169D34630086F358 /* OTRDatabaseUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = D9D3717A169D34630086F358 /* OTRDatabaseUtils.m */; };
 		D9D69AA91417FDBA0056FB9E /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D69AA81417FDBA0056FB9E /* CFNetwork.framework */; };
 		D9D69ABC1417FDF90056FB9E /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D69ABB1417FDF90056FB9E /* libxml2.dylib */; };
 		D9D69B021417FF450056FB9E /* libresolv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D69B011417FF450056FB9E /* libresolv.dylib */; };
@@ -1066,6 +1067,8 @@
 		D9D3715C169D2CEB0086F358 /* MagicalRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MagicalRecord.m; sourceTree = "<group>"; };
 		D9D3715D169D2CEB0086F358 /* MagicalRecordShorthand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MagicalRecordShorthand.h; sourceTree = "<group>"; };
 		D9D3715E169D2CEB0086F358 /* CoreData+MagicalRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CoreData+MagicalRecord.h"; sourceTree = "<group>"; };
+		D9D37179169D34630086F358 /* OTRDatabaseUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRDatabaseUtils.h; sourceTree = "<group>"; };
+		D9D3717A169D34630086F358 /* OTRDatabaseUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRDatabaseUtils.m; sourceTree = "<group>"; };
 		D9D69AA81417FDBA0056FB9E /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		D9D69ABB1417FDF90056FB9E /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		D9D69B011417FF450056FB9E /* libresolv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libresolv.dylib; path = usr/lib/libresolv.dylib; sourceTree = SDKROOT; };
@@ -2363,6 +2366,8 @@
 				D9D69B07141806BB0056FB9E /* Model */,
 				D9E068EF13F44D2900AC10A3 /* OTRBuddyListViewController.h */,
 				D9E068F013F44D2900AC10A3 /* OTRBuddyListViewController.m */,
+				D9D37179169D34630086F358 /* OTRDatabaseUtils.h */,
+				D9D3717A169D34630086F358 /* OTRDatabaseUtils.m */,
 				D9991A4E13F44F9A002D3008 /* OTRChatViewController.h */,
 				D9991A4F13F44F9A002D3008 /* OTRChatViewController.m */,
 				D9F9378913F44BD3009A3D84 /* OTRAppDelegate.h */,
@@ -2926,6 +2931,7 @@
 				D9D37176169D2CEB0086F358 /* MagicalRecord+Setup.m in Sources */,
 				D9D37177169D2CEB0086F358 /* MagicalRecord+ShorthandSupport.m in Sources */,
 				D9D37178169D2CEB0086F358 /* MagicalRecord.m in Sources */,
+				D9D3717B169D34630086F358 /* OTRDatabaseUtils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

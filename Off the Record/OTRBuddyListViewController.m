@@ -30,6 +30,7 @@
 #import "OTRConstants.h"
 #import "OTRAppDelegate.h"
 #import "OTRSettingsViewController.h"
+#import "OTRDatabaseUtils.h"
 
 //#define kSignoffTime 500
 
@@ -139,6 +140,14 @@
 -(void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     //[self showEULAWarning];
+    
+    
+    // DATABASE TESTS
+    [MagicalRecord setupCoreDataStack];
+    
+    NSPersistentStoreCoordinator *storeCoordinator = [OTRDatabaseUtils persistentStoreCoordinatorWithDBName:@"db.sqlite" passphrase:@"test"];
+    
+    [NSPersistentStoreCoordinator MR_setDefaultStoreCoordinator:storeCoordinator];
 }
 
 - (void) showSettingsView:(id)sender {
