@@ -245,7 +245,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
         return;
     }
     OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
-    OTRBuddy *buddy = [protocolManager buddyForUserName:userName accountName:accountName protocol:protocol];
+    OTRManagedBuddy *buddy = [protocolManager buddyForUserName:userName accountName:accountName protocol:protocol];
     [buddyListViewController enterConversationWithBuddy:buddy];
 }
 

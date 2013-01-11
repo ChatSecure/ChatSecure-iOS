@@ -21,7 +21,7 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "OTRProtocolManager.h"
-#import "OTRBuddy.h"
+#import "OTRManagedBuddy.h"
 #import "OTRConstants.h"
 
 static OTRProtocolManager *sharedManager = nil;
@@ -102,13 +102,10 @@ static OTRProtocolManager *sharedManager = nil;
 -(void)sendMessage:(NSNotification *)notification
 {
     NSObject *messageObject = [notification object];
-    if ([messageObject isKindOfClass:[OTRMessage class]]) {
-        OTRMessage *message = (OTRMessage *)messageObject;
+    if ([messageObject isKindOfClass:[OTRManagedMessage class]]) {
+        OTRManagedMessage *message = (OTRManagedMessage *)messageObject;
         [message send];
-
-    }
-        
-    //NSLog(@"send message (%@): %@", protocol, message.message);
+    }        
 }
 
 
@@ -122,14 +119,14 @@ static OTRProtocolManager *sharedManager = nil;
     
 }
 
--(OTRBuddy *)buddyForUserName:(NSString *)buddyUserName accountName:(NSString *)accountName protocol:(NSString *)protocol
+-(OTRManagedBuddy *)buddyForUserName:(NSString *)buddyUserName accountName:(NSString *)accountName protocol:(NSString *)protocol
 {
     return [self.buddyList getBuddyForUserName:buddyUserName accountUniqueIdentifier:[self.accountsManager accountForProtocol:protocol accountName:accountName].uniqueIdentifier];
     
     
 }
 
-- (id <OTRProtocol>)protocolForAccount:(OTRAccount *)account
+- (id <OTRProtocol>)protocolForAccount:(OTRManagedAccount *)account
 {
     id <OTRProtocol> protocol = [protocolManagers objectForKey:account.uniqueIdentifier];
     if(!protocol)

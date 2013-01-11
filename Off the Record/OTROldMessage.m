@@ -20,8 +20,8 @@
 //  You should have received a copy of the GNU General Public License
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
-#import "OTRMessage.h"
-#import "OTRBuddy.h"
+#import "OTRManagedMessage.h"
+#import "OTRManagedBuddy.h"
 #import "OTRConstants.h"
 
 @implementation OTRMessage

@@ -21,6 +21,17 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "OTRManagedXMPPAccount.h"
+#import "OTRProtocol.h"
+#import "OTRConstants.h"
+#import "Strings.h"
+#import "OTRXMPPManager.h"
+
+#define DEFAULT_PORT_NUMBER 5222
+
+@interface OTRManagedXMPPAccount()
+@property (nonatomic) BOOL allowSelfSignedSSL;
+@property (nonatomic) BOOL allowSSLHostNameMismatch;
+@end
 
 
 @implementation OTRManagedXMPPAccount
@@ -31,5 +42,72 @@
 @dynamic sendTypingNotifications;
 @dynamic domain;
 @dynamic port;
+
+- (void) setDefaultsWithDomain:(NSString *)newDomain {
+    [super setDefaultsWithProtocol:kOTRProtocolTypeXMPP];
+    self.domain = newDomain;
+    self.allowSelfSignedSSL = NO;
+    self.allowSSLHostNameMismatch = NO;
+    self.port = DEFAULT_PORT_NUMBER; // Default XMPP port number
+    self.sendDeliveryReceipts = NO;
+    self.sendTypingNotifications = YES; // Default typing notifications to yes
+}
+
++(uint16_t)defaultPortNumber {
+    return DEFAULT_PORT_NUMBER;
+}
+
+- (NSString *) imageName {
+    NSString *imageName = kXMPPImageName;
+    if([self.domain isEqualToString:kOTRFacebookDomain])
+    {
+        imageName = kFacebookImageName;
+    }
+    else if ([self.domain isEqualToString:kOTRGoogleTalkDomain] )
+    {
+        imageName = kGTalkImageName;
+    }
+    return imageName;
+}
+
+// Don't allow self-signed SSL for Facebook and Google Talk
+- (BOOL) shouldAllowSelfSignedSSL {
+    if ([self.domain isEqualToString:kOTRFacebookDomain] || [self.domain isEqualToString:kOTRGoogleTalkDomain]) {
+        return NO;
+    }
+    return self.allowSelfSignedSSL;
+}
+
+- (void) setShouldAllowSelfSignedSSL:(BOOL)shouldAllowSelfSignedSSL {
+    self.allowSelfSignedSSL = shouldAllowSelfSignedSSL;
+}
+
+- (BOOL) shouldAllowSSLHostNameMismatch {
+    if ([self.domain isEqualToString:kOTRFacebookDomain] || [self.domain isEqualToString:kOTRGoogleTalkDomain]) {
+        return NO;
+    }
+    return self.allowSSLHostNameMismatch;
+}
+
+- (void) setShouldAllowSSLHostNameMismatch:(BOOL)shouldAllowSSLHostNameMismatch {
+    self.allowSSLHostNameMismatch = shouldAllowSSLHostNameMismatch;
+}
+
+- (NSString *)providerName {
+    if ([self.domain isEqualToString:kOTRFacebookDomain]) {
+        return FACEBOOK_STRING;
+    }
+    else if ([self.domain isEqualToString:kOTRGoogleTalkDomain])
+    {
+        return GOOGLE_TALK_STRING;
+    }
+    else {
+        return JABBER_STRING;
+    }
+}
+
+- (Class)protocolClass {
+    return [OTRXMPPManager class];
+}
 
 @end

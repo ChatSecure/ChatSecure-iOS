@@ -22,12 +22,44 @@
 
 #import "OTRManagedMessage.h"
 #import "OTRManagedBuddy.h"
-
+#import "OTRConstants.h"
 
 @implementation OTRManagedMessage
 
 @dynamic date;
 @dynamic message;
 @dynamic buddy;
+@dynamic isEncrypted;
+
++(OTRManagedMessage*)newMessageWithBuddy:(OTRManagedBuddy *)theBuddy message:(NSString *)theMessage
+{
+    OTRManagedMessage *managedMessage = [OTRManagedMessage MR_createEntity];
+    managedMessage.buddy = theBuddy;
+    managedMessage.message = theMessage;
+    managedMessage.date = [NSDate date];
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    [context MR_saveNestedContexts];
+    return managedMessage;
+}
+
+-(void)send
+{
+    // TODO: fix this!!
+    assert("fix this!");
+    //[self.buddy.protocol sendMessage:self];
+}
+
++(void)sendMessage:(OTRManagedMessage *)message
+{
+    NSDictionary *messageInfo = [NSDictionary dictionaryWithObject:message.objectID forKey:@"message"];
+    [message.buddy restartInactiveChatStateTimer];
+    
+    // TODO: fix this!!
+    assert("fix this!");
+    //[message.buddy.protocol sendMessage:message];
+    
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:kOTRSendMessage object:self userInfo:messageInfo];
+}
 
 @end

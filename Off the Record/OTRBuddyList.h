@@ -21,7 +21,8 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 #import <Foundation/Foundation.h>
-#import "OTRBuddy.h"
+#import "OTRManagedBuddy.h"
+#import "OTRManagedAccount.h"
 
 @interface OTRBuddyList : NSObject
 
@@ -29,10 +30,10 @@
 @property (nonatomic, retain) NSMutableSet *activeConversations;
 
 
--(void)addBuddy:(OTRBuddy*)newBuddy;
--(void)removeBuddiesforAccount:(OTRAccount *)account;
+-(void)addBuddy:(OTRManagedBuddy*)newBuddy;
+-(void)removeBuddiesforAccount:(OTRManagedAccount *)account;
 -(NSUInteger)count;
--(OTRBuddy*)getBuddyForUserName:(NSString *)buddyUserName accountUniqueIdentifier:(NSString *)uniqueIdentifier;
+-(OTRManagedBuddy*)getBuddyForUserName:(NSString *)buddyUserName accountUniqueIdentifier:(NSString *)uniqueIdentifier;
 -(void) updateBuddies:(NSArray *)arrayOfBuddies;
 
 +(NSArray*)sortBuddies:(NSMutableDictionary*)buddies;

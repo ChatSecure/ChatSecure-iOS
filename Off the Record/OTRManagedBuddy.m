@@ -21,7 +21,12 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "OTRManagedBuddy.h"
-
+#import "OTRManagedMessage.h"
+#import "OTRCodec.h"
+#import "OTRProtocolManager.h"
+#import "NSString+HTML.h"
+#import "Strings.h"
+#import "OTRConstants.h"
 
 @implementation OTRManagedBuddy
 
@@ -34,5 +39,31 @@
 @dynamic groupName;
 @dynamic lastMessageDisconnected;
 @dynamic messages;
+@dynamic composingMessageString;
+
+-(void)sendMessage:(NSString *)message secure:(BOOL)secure
+{
+    if (message) {
+        self.lastMessageDisconnected = NO;
+        OTRManagedBuddy* theBuddy = self;
+        message = [message stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        //NSLog(@"message to be sent: %@",message);
+        OTRManagedMessage *newMessage = [OTRManagedMessage newMessageWithBuddy:theBuddy message:message];
+        //NSLog(@"newMessagge: %@",newMessage.message);
+        OTRManagedMessage *encodedMessage;
+        if(secure)
+        {
+            encodedMessage = [OTRCodec encodeMessage:newMessage];
+        }
+        else
+        {
+            encodedMessage = newMessage;
+        }
+        //NSLog(@"encoded message: %@",encodedMessage.message);
+        [OTRManagedMessage sendMessage:encodedMessage];
+
+        self.lastSentChatState=kOTRChatStateActive;
+    }
+}
 
 @end

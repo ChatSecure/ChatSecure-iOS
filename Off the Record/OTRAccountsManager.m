@@ -22,10 +22,10 @@
 
 #import "OTRAccountsManager.h"
 #import "OTRSettingsManager.h"
-#import "OTRAccount.h"
+#import "OTRManagedAccount.h"
 #import "OTRConstants.h"
-#import "OTROscarAccount.h"
-#import "OTRXMPPAccount.h"
+#import "OTRManagedOscarAccount.h"
+#import "OTRManagedXMPPAccount.h"
 
 @interface OTRAccountsManager(Private)
 - (void) refreshAccountsArray;
@@ -52,12 +52,14 @@
             NSDictionary *settingsDictionary = [values objectAtIndex:i];
             NSString *settingKey = [keys objectAtIndex:i];
             
-            OTRAccount *account = nil;
+            OTRManagedAccount *account = nil;
+            /****** todo setup account or delete this 
             if ([[settingsDictionary objectForKey:kOTRAccountProtocolKey] isEqualToString:kOTRProtocolTypeXMPP]) {
                 account = [[OTRXMPPAccount alloc] initWithSettingsDictionary:settingsDictionary uniqueIdentifier:settingKey];
             } else if ([[settingsDictionary objectForKey:kOTRAccountProtocolKey] isEqualToString:kOTRProtocolTypeAIM]) {
                 account = [[OTROscarAccount alloc] initWithSettingsDictionary:settingsDictionary uniqueIdentifier:settingKey];
             }
+             *////////////
 
             [accountsDictionary setObject:account forKey:account.uniqueIdentifier];
             [reverseLookupDictionary setObject:[NSMutableDictionary dictionaryWithObject:account forKey:account.username] forKey:account.protocol];
@@ -67,7 +69,7 @@
     return self;
 }
 
-- (void) addAccount:(OTRAccount*)account {
+- (void) addAccount:(OTRManagedAccount*)account {
     if (!account) {
         NSLog(@"Account is nil!");
         return;
@@ -78,7 +80,7 @@
     [self refreshAccountsArray];
 }
 
-- (void) removeAccount:(OTRAccount*)account {
+- (void) removeAccount:(OTRManagedAccount*)account {
     if (!account) {
         NSLog(@"Account is nil!");
         return;
@@ -104,7 +106,7 @@
     self.accountsArray = sortedArray;
 }
 
--(OTRAccount *)accountForProtocol:(NSString *)protocol accountName:(NSString *)accountName
+-(OTRManagedAccount *)accountForProtocol:(NSString *)protocol accountName:(NSString *)accountName
 {
     return [[reverseLookupDictionary objectForKey:protocol] objectForKey:accountName];
 }

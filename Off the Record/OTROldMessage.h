@@ -22,6 +22,7 @@
 
 #import <Foundation/Foundation.h>
 #import "OTRProtocol.h"
+#import "OTRBuddy.h"
 
 @interface OTRMessage : NSObject
 

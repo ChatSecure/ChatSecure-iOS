@@ -346,8 +346,8 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	
     
 	// You may need to alter these settings depending on the server you're connecting to
-	allowSelfSignedCertificates = account.allowSelfSignedSSL;
-	allowSSLHostNameMismatch = account.allowSSLHostNameMismatch;
+	allowSelfSignedCertificates = account.shouldAllowSelfSignedSSL;
+	allowSSLHostNameMismatch = account.shouldAllowSSLHostNameMismatch;
 }
 
 - (void)teardownStream
@@ -640,7 +640,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	return NO;
 }
 
--(OTRBuddy *)buddyWithMessage:(XMPPMessage *)message
+-(OTRManagedBuddy *)buddyWithMessage:(XMPPMessage *)message
 {
     XMPPUserCoreDataStorageObject *user = [xmppRosterStorage userForJID:[message from]
                                                              xmppStream:xmppStream
@@ -656,7 +656,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	// A simple example of inbound message handling.
     if([message hasChatState])
     {
-        OTRBuddy * messageBuddy = [self buddyWithMessage:message];
+        OTRManagedBuddy * messageBuddy = [self buddyWithMessage:message];
         if([message isComposingChatState])
             [messageBuddy receiveChatStateMessage:kOTRChatStateComposing];
         else if([message isPausedChatState])
@@ -682,7 +682,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
                                                                  xmppStream:xmppStream
                                                        managedObjectContext:[self managedObjectContext_roster]];
         
-        OTRBuddy * messageBuddy = [protocolBuddyList objectForKey:user.jidStr];
+        OTRManagedBuddy * messageBuddy = [protocolBuddyList objectForKey:user.jidStr];
         [messageBuddy receiveReceiptResonse:[message extractReceiptResponseID]];
     }
     
@@ -700,16 +700,17 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
         NSString *body = [[message elementForName:@"body"] stringValue];
         //NSString *displayName = [user displayName];
         
-        OTRBuddy * messageBuddy = [self buddyWithMessage:message];
+        OTRManagedBuddy * messageBuddy = [self buddyWithMessage:message];
         
-        OTRMessage *otrMessage = [OTRMessage messageWithBuddy:messageBuddy message:body];        
-        OTRMessage *decodedMessage = [OTRCodec decodeMessage:otrMessage];
+        OTRManagedMessage *otrMessage = [OTRManagedMessage newMessageWithBuddy:messageBuddy message:body];
+        otrMessage.isEncrypted = YES;
+        [OTRCodec decodeMessage:otrMessage];
         
-        if(decodedMessage)
+        if(otrMessage)
         {
-            [messageBuddy receiveMessage:decodedMessage.message];
+            [messageBuddy receiveMessage:otrMessage.message];
 
-            NSDictionary *messageInfo = [NSDictionary dictionaryWithObject:decodedMessage forKey:@"message"];
+            NSDictionary *messageInfo = [NSDictionary dictionaryWithObject:otrMessage.objectID forKey:@"message"];
             
             [[NSNotificationCenter defaultCenter]
              postNotificationName:kOTRMessageReceived
@@ -779,7 +780,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 #pragma mark OTRProtocol 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (void) sendMessage:(OTRMessage*)theMessage
+- (void) sendMessage:(OTRManagedMessage*)theMessage
 {
     NSString *messageStr = theMessage.message;
     
@@ -791,7 +792,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 		NSXMLElement *message = [NSXMLElement elementWithName:@"message"];
 		[message addAttributeWithName:@"type" stringValue:@"chat"];
 		[message addAttributeWithName:@"to" stringValue:theMessage.buddy.accountName];
-        NSString * messageID = [NSString stringWithFormat:@"%d",theMessage.buddy.numberOfMessagesSent];
+        NSString * messageID = [NSString stringWithFormat:@"%d",theMessage.buddy.messages.count];
         [message addAttributeWithName:@"id" stringValue:messageID];
         
         NSXMLElement * receiptRequest = [NSXMLElement elementWithName:@"request"];
@@ -845,7 +846,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
         {
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:j inSection:sectionIndex];
             XMPPUserCoreDataStorageObject *user = [frc objectAtIndexPath:indexPath]; 
-            OTRBuddy *otrBuddy = [protocolBuddyList objectForKey:user.jidStr];
+            OTRManagedBuddy *otrBuddy = [protocolBuddyList objectForKey:user.jidStr];
             
             
             if(otrBuddy)
@@ -854,7 +855,14 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
             }
             else
             {
-                OTRBuddy *newBuddy = [OTRBuddy buddyWithDisplayName:user.displayName accountName: [[user jid] full] protocol:self status:otrBuddyStatus groupName:sectionName];
+                OTRManagedBuddy *newBuddy = [OTRManagedBuddy MR_createEntity];
+                newBuddy.displayName = user.displayName;
+                newBuddy.accountName = [[user jid] full];
+                newBuddy.account = self.account;
+                newBuddy.status = otrBuddyStatus;
+                newBuddy.groupName = sectionName;
+                NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+                [context MR_saveNestedContexts];
                 [protocolBuddyList setObject:newBuddy forKey:user.jidStr];
             }
         }
@@ -867,7 +875,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     return kOTRProtocolTypeXMPP;
 }
 
-- (OTRBuddy *) getBuddyByAccountName:(NSString *)buddyAccountName
+- (OTRManagedBuddy *) getBuddyByAccountName:(NSString *)buddyAccountName
 {
     if (protocolBuddyList)
         return [protocolBuddyList objectForKey:buddyAccountName];
@@ -879,7 +887,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     [self connectWithJID:self.account.username password:myPassword];
 }
 
--(void)sendChatState:(int)chatState withBuddy:(OTRBuddy *)buddy
+-(void)sendChatState:(int)chatState withBuddy:(OTRManagedBuddy *)buddy
 {
     if (!self.account.sendTypingNotifications) {
         return;

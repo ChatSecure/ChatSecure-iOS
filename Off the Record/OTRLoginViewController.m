@@ -22,7 +22,8 @@
 
 #import "OTRLoginViewController.h"
 #import "OTRConstants.h"
-#import "OTRXMPPAccount.h"
+#import "OTRManagedXMPPAccount.h"
+#import "OTRManagedOscarAccount.h"
 
 
 #import "OTRXMPPLoginViewController.h"
@@ -67,11 +68,11 @@
     self.textFieldTextColor = nil;
 }
 
-- (id) initWithAccount:(OTRAccount*)newAccount {
+- (id) initWithAccount:(OTRManagedAccount*)newAccount {
     if (self = [super init]) {
         self.account = newAccount;
         
-        NSLog(@"Account Dictionary: %@",[account accountDictionary]);
+        //NSLog(@"Account Dictionary: %@",[account accountDictionary]);
         self.textFieldTextColor = [UIColor colorWithRed:0.22 green:0.33 blue:0.53 alpha:1.0];
     }
     return self;
@@ -285,8 +286,8 @@
 
 -(void)readInFields
 {
-    account.username = [usernameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-    account.rememberPassword = rememberPasswordSwitch.on;
+    [account setNewUsername:[usernameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
+    [account setShouldRememberPassword:rememberPasswordSwitch.on];
     
     if (account.rememberPassword) {
         account.password = self.passwordTextField.text;
@@ -411,24 +412,27 @@
     [HUD removeFromSuperview];
 }
 
-+(OTRLoginViewController *)loginViewControllerWithAcccount:(OTRAccount *)account
++(OTRLoginViewController *)loginViewControllerWithAcccount:(OTRManagedAccount *)account
 {
-    if([[account.accountDictionary objectForKey:kOTRAccountDomainKey] isEqualToString:kOTRFacebookDomain])
-    {
-        //FacebookLoginViewController
-        return [[OTRFacebookLoginViewController alloc] initWithAccount:account];
+    if ([account isKindOfClass:[OTRManagedXMPPAccount class]]) {
+        OTRManagedXMPPAccount *xmppAccount = (OTRManagedXMPPAccount*)account;
+        if([xmppAccount.domain isEqualToString:kOTRFacebookDomain])
+        {
+            //FacebookLoginViewController
+            return [[OTRFacebookLoginViewController alloc] initWithAccount:account];
+        }
+        else if ([xmppAccount.domain isEqualToString:kOTRGoogleTalkDomain])
+        {
+            //GoogleTalkLoginViewController
+            return [[OTRGoogleTalkLoginViewController alloc] initWithAccount:account];
+        }
+        else if ([xmppAccount.domain isEqualToString:kOTRProtocolTypeXMPP])
+        {
+            //XMPP account addvanced
+            return [[OTRJabberLoginViewController alloc] initWithAccount:account];
+        }
     }
-    else if ([[account.accountDictionary objectForKey:kOTRAccountDomainKey] isEqualToString:kOTRGoogleTalkDomain])
-    {
-        //GoogleTalkLoginViewController
-        return [[OTRGoogleTalkLoginViewController alloc] initWithAccount:account];
-    }
-    else if ([[account.accountDictionary objectForKey:kOTRAccountProtocolKey] isEqualToString:kOTRProtocolTypeXMPP])
-    {
-        //XMPP account addvanced
-        return [[OTRJabberLoginViewController alloc] initWithAccount:account];
-    }
-    else if ([[account.accountDictionary objectForKey:kOTRAccountProtocolKey] isEqualToString:kOTRProtocolTypeAIM])
+    else if ([account isKindOfClass:[OTRManagedOscarAccount class]])
     {
         //Aim Protocol
         return [[OTROscarLoginViewController alloc] initWithAccount:account];

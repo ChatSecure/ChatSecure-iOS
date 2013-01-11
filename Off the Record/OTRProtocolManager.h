@@ -44,8 +44,8 @@
 
 -(void)buddyListUpdate;
 
--(OTRBuddy *)buddyForUserName:(NSString *)buddyUserName accountName:(NSString *)accountName protocol:(NSString *)protocol;
+-(OTRManagedBuddy *)buddyForUserName:(NSString *)buddyUserName accountName:(NSString *)accountName protocol:(NSString *)protocol;
 
--(id <OTRProtocol>) protocolForAccount:(OTRAccount *)account;
+-(id <OTRProtocol>) protocolForAccount:(OTRManagedAccount *)account;
 
 @end

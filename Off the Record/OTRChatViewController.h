@@ -23,7 +23,7 @@
 #import <UIKit/UIKit.h>
 #import "OTRBuddyListViewController.h"
 #import "OTRProtocolManager.h"
-#import "OTRBuddy.h"
+#import "OTRManagedBuddy.h"
 
 @interface OTRChatViewController : UIViewController <UITextFieldDelegate,UIWebViewDelegate, UIActionSheetDelegate, UISplitViewControllerDelegate,UIAlertViewDelegate>
 
@@ -36,14 +36,15 @@
 @property (nonatomic, strong) UILabel *chatStateLabel;
 @property (nonatomic, strong) UIImageView * chatStateImage;
 
-@property (nonatomic, retain) OTRBuddy *buddy;
+@property (nonatomic, retain) OTRManagedBuddy *buddy;
 
 @property (nonatomic, retain) UIWebView *chatHistoryTextView;
 @property (nonatomic, retain) OTRBuddyListViewController *buddyListController;
 
 @property (nonatomic, retain) NSURL *lastActionLink;
 
-
+@property (nonatomic, strong) NSTimer * pausedChatStateTimer;
+@property (nonatomic, strong) NSTimer * inactiveChatStateTimer;
 
 
 - (void)sendButtonPressed:(id)sender;

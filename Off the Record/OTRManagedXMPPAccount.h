@@ -24,16 +24,19 @@
 #import <CoreData/CoreData.h>
 #import "OTRManagedAccount.h"
 
+#define kOTRAccountDomainKey @"domain"
 
 @interface OTRManagedXMPPAccount : OTRManagedAccount
 
-@property (nonatomic) BOOL allowSelfSignedSSL;
-@property (nonatomic) BOOL allowSSLHostNameMismatch;
+@property (nonatomic) BOOL shouldAllowSelfSignedSSL;
+@property (nonatomic) BOOL shouldAllowSSLHostNameMismatch;
 @property (nonatomic) BOOL sendDeliveryReceipts;
 @property (nonatomic) BOOL sendTypingNotifications;
 @property (nonatomic, retain) NSString * domain;
 @property (nonatomic) uint16_t port;
 
 +(uint16_t)defaultPortNumber;
+
+- (void) setDefaultsWithDomain:(NSString *)newDomain;
 
 @end

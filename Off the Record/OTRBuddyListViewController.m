@@ -24,7 +24,6 @@
 #import "OTRChatViewController.h"
 #import "OTRLoginViewController.h"
 #import "OTRXMPPManager.h"
-#import "OTRBuddy.h"
 #import "OTRBuddyList.h"
 #import "Strings.h"
 #import "OTRConstants.h"
@@ -40,8 +39,8 @@
 @interface OTRBuddyListViewController(Private)
 - (void) selectActiveConversation;
 - (void) refreshActiveConversations;
-- (void) removeConversationsForAccount:(OTRAccount *)account;
-- (void) deleteBuddy:(OTRBuddy*)buddy;
+- (void) removeConversationsForAccount:(OTRManagedAccount *)account;
+- (void) deleteBuddy:(OTRManagedBuddy*)buddy;
 @end
 
 @implementation OTRBuddyListViewController
@@ -203,8 +202,11 @@
 
 -(void)messageReceived:(NSNotification*)notification;
 {
-    OTRMessage *message = [notification.userInfo objectForKey:@"message"];
-    OTRBuddy *buddy = message.buddy;
+    
+    NSManagedObjectID *objectID = [notification.userInfo objectForKey:@"message"];
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    OTRManagedMessage *message = (OTRManagedMessage*)[context objectWithID:objectID];
+    OTRManagedBuddy *buddy = message.buddy;
     if (!message.message || [message.message isEqualToString:@""]) {
         return;
     }
@@ -212,7 +214,9 @@
     BOOL chatViewIsVisible = chatViewController.isViewLoaded && chatViewController.view.window;
 
     if ((chatViewController.buddy != buddy || !chatViewIsVisible) && [[UIApplication sharedApplication] applicationState] == UIApplicationStateActive) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:buddy.displayName message:buddy.lastMessage delegate:self cancelButtonTitle:IGNORE_STRING otherButtonTitles:REPLY_STRING, nil];
+        NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"date" ascending:YES]; // not sure if this is the right order
+        OTRManagedMessage *message = [[buddy.messages sortedArrayUsingDescriptors:@[sortDescriptor]] lastObject]; // TODO: fix this horrible inefficiency
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:buddy.displayName message:message.message delegate:self cancelButtonTitle:IGNORE_STRING otherButtonTitles:REPLY_STRING, nil];
         NSUInteger tag = [buddy hash];
         alert.tag = tag;
         [buddyDictionary setObject:buddy forKey:[NSNumber numberWithInt:tag]];
@@ -250,7 +254,7 @@
 	{
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"Cell"];
 	}
-    OTRBuddy *buddy = nil;
+    OTRManagedBuddy *buddy = nil;
     
     if (indexPath.section == RECENTS_SECTION_INDEX) {
         buddy = [activeConversations objectAtIndex:indexPath.row];
@@ -303,12 +307,12 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section == RECENTS_SECTION_INDEX) {
-        OTRBuddy *buddy = [activeConversations objectAtIndex:indexPath.row];
+        OTRManagedBuddy *buddy = [activeConversations objectAtIndex:indexPath.row];
         [self enterConversationWithBuddy:buddy];
     } else if (indexPath.section == BUDDIES_SECTION_INDEX) {
         if(sortedBuddies)
         {
-            OTRBuddy *buddyData = [sortedBuddies objectAtIndex:indexPath.row];
+            OTRManagedBuddy *buddyData = [sortedBuddies objectAtIndex:indexPath.row];
             [self enterConversationWithBuddy:buddyData];
         }
     }
@@ -323,12 +327,12 @@
     [self removeConversationsForAccount:protocol.account];
 }
 
--(void) removeConversationsForAccount:(OTRAccount *)account {
+-(void) removeConversationsForAccount:(OTRManagedAccount *)account {
     if ([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyDeleteOnDisconnect]) {
         NSArray *iterableConversations = [activeConversations copy];
         
-        for (OTRBuddy *buddy in iterableConversations) {
-            if ([buddy.protocol.account.uniqueIdentifier isEqualToString:account.uniqueIdentifier]) {
+        for (OTRManagedBuddy *buddy in iterableConversations) {
+            if ([buddy.account.uniqueIdentifier isEqualToString:account.uniqueIdentifier]) {
                 [[[[OTRProtocolManager sharedInstance] buddyList] activeConversations] removeObject:buddy];
             }
         }
@@ -359,19 +363,17 @@
 
 - (void) tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == RECENTS_SECTION_INDEX && editingStyle == UITableViewCellEditingStyleDelete) {
-        OTRBuddy *buddy = [activeConversations objectAtIndex:indexPath.row];
+        OTRManagedBuddy *buddy = [activeConversations objectAtIndex:indexPath.row];
         [self deleteBuddy:buddy];
         [self refreshActiveConversations];
     }
 }
 
-- (void) deleteBuddy:(OTRBuddy*)buddy {
-    buddy.chatHistory = [NSMutableString string];
-    buddy.lastMessage = @"";
+- (void) deleteBuddy:(OTRManagedBuddy*)buddy {
     [[[[OTRProtocolManager sharedInstance] buddyList] activeConversations] removeObject:buddy];
 }
 
--(void)enterConversationWithBuddy:(OTRBuddy*)buddy 
+-(void)enterConversationWithBuddy:(OTRManagedBuddy*)buddy
 {
     if(!buddy) {
         return;
@@ -389,7 +391,7 @@
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
-    OTRBuddy *buddy = [buddyDictionary objectForKey:[NSNumber numberWithInt: alertView.tag]];
+    OTRManagedBuddy *buddy = [buddyDictionary objectForKey:[NSNumber numberWithInt: alertView.tag]];
     //[buddyDictionary removeObjectForKey:[NSNumber numberWithInt:alertView.tag]];
     if(buttonIndex == 1) // Reply
     {

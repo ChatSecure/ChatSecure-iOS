@@ -22,13 +22,20 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
+//#import "OTRProtocol.h"
 
 @class OTRManagedBuddy;
 
 @interface OTRManagedMessage : NSManagedObject
 
-@property (nonatomic) NSTimeInterval date;
+@property (nonatomic, strong) NSDate *date;
 @property (nonatomic, retain) NSString * message;
 @property (nonatomic, retain) OTRManagedBuddy *buddy;
+@property (nonatomic) BOOL isEncrypted;
+
+- (void) send;
+
++(OTRManagedMessage*)newMessageWithBuddy:(OTRManagedBuddy *)theBuddy message:(NSString *)theMessage;
++(void)sendMessage:(OTRManagedMessage *)message;
 
 @end

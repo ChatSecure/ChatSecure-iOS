@@ -53,6 +53,7 @@
 @synthesize instructionsLabel;
 @synthesize chatStateLabel;
 @synthesize chatStateImage;
+@synthesize pausedChatStateTimer, inactiveChatStateTimer;
 
 - (void) dealloc {
     self.lastActionLink = nil;
@@ -138,7 +139,7 @@
 
 -(void)refreshLockButton
 {
-    BOOL trusted = [[OTRKit sharedInstance] finerprintIsVerifiedForUsername:buddy.accountName accountName:buddy.protocol.account.username protocol:buddy.protocol.account.protocol];
+    BOOL trusted = [[OTRKit sharedInstance] finerprintIsVerifiedForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
     if(buddy.encryptionStatus == kOTRKitMessageStateEncrypted && trusted)
     {
         self.navigationItem.rightBarButtonItem = lockVerifiedButton;
@@ -249,7 +250,7 @@
 }
 
 - (void) showDisconnectionAlert:(NSNotification*)notification {
-    NSMutableString *message = [NSMutableString stringWithFormat:DISCONNECTED_MESSAGE_STRING, buddy.protocol.account.username];
+    NSMutableString *message = [NSMutableString stringWithFormat:DISCONNECTED_MESSAGE_STRING, buddy.account.username];
     if ([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyDeleteOnDisconnect]) {
         [message appendFormat:@" %@", DISCONNECTION_WARNING_STRING];
     }
@@ -257,11 +258,11 @@
     [alert show];
 }
 
-- (void) setBuddy:(OTRBuddy *)newBuddy {
+- (void) setBuddy:(OTRManagedBuddy *)newBuddy {
     if(buddy) {
         [[NSNotificationCenter defaultCenter] removeObserver:self name:kOTREncryptionStateNotification object:buddy];
         [[NSNotificationCenter defaultCenter] removeObserver:self name:MESSAGE_PROCESSED_NOTIFICATION object:buddy];
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:kOTRProtocolDiconnect object:self.buddy.protocol];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:kOTRProtocolDiconnect object:nil];
     }
     [self saveCurrentMessageText];
     
@@ -274,7 +275,7 @@
      addObserver:self
      selector:@selector(showDisconnectionAlert:)
      name:kOTRProtocolDiconnect
-     object:self.buddy.protocol];
+     object:nil];
     
     [self refreshLockButton];
     [self updateChatHistory];
@@ -394,25 +395,27 @@
     BOOL secure = buddy.encryptionStatus == kOTRKitMessageStateEncrypted;
     [buddy sendMessage:messageTextField.text secure:secure];
     messageTextField.text = @"";
-    [self.buddy.pausedChatStateTimer invalidate];
+    [self.pausedChatStateTimer invalidate];
     [self updateChatHistory];
 }
 
 
 -(void)updateChatHistory
 {
-    if (buddy.chatHistory) {
-        OTRDoubleSetting *fontSizeSetting = (OTRDoubleSetting*)[[OTRProtocolManager sharedInstance].settingsManager settingForOTRSettingKey:kOTRSettingKeyFontSize];
-        NSString *htmlString = [NSString stringWithFormat:@"<html><head><style type=\"text/css\">p{font-size:%@;font-family: geneva, arial, helvetica, sans-serif;}</style></head><body>%@</body></html>",fontSizeSetting.stringValue, buddy.chatHistory];
+    OTRDoubleSetting *fontSizeSetting = (OTRDoubleSetting*)[[OTRProtocolManager sharedInstance].settingsManager settingForOTRSettingKey:kOTRSettingKeyFontSize];
+    
+    // TODO fetch X number of recent messages from active Buddy
+    /*
+    NSString *htmlString = [NSString stringWithFormat:@"<html><head><style type=\"text/css\">p{font-size:%@;font-family: geneva, arial, helvetica, sans-serif;}</style></head><body>%@</body></html>",fontSizeSetting.stringValue, buddy.chatHistory];
         [chatHistoryTextView loadHTMLString:htmlString baseURL:[NSURL URLWithString:@"/"]];
-    }
+     */
 }
 
 
 -(void)scrollTextViewToBottom
 {
     
-    if(![buddy.chatHistory isEqualToString:@""])
+    if([buddy.messages count] > 0)
     {
         NSInteger height = [[chatHistoryTextView stringByEvaluatingJavaScriptFromString:@"document.body.offsetHeight;"] intValue];
         NSString* javascript = [NSString stringWithFormat:@"window.scrollBy(0, %d);", height];   
@@ -435,14 +438,14 @@
         if (buttonIndex == 1) // Verify
         {
             NSString *msg = nil;
-            NSString *ourFingerprintString = [[OTRKit sharedInstance] fingerprintForAccountName:buddy.protocol.account.username protocol:buddy.protocol.account.protocol];
-            NSString *theirFingerprintString = [[OTRKit sharedInstance] fingerprintForUsername:buddy.accountName accountName:buddy.protocol.account.username protocol:buddy.protocol.account.protocol];
-            BOOL trusted = [[OTRKit sharedInstance] finerprintIsVerifiedForUsername:buddy.accountName accountName:buddy.protocol.account.username protocol:buddy.protocol.account.protocol];
+            NSString *ourFingerprintString = [[OTRKit sharedInstance] fingerprintForAccountName:buddy.account.username protocol:buddy.account.protocol];
+            NSString *theirFingerprintString = [[OTRKit sharedInstance] fingerprintForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
+            BOOL trusted = [[OTRKit sharedInstance] finerprintIsVerifiedForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
             
             
             UIAlertView * alert;
             if(ourFingerprintString && theirFingerprintString) {
-                msg = [NSString stringWithFormat:@"%@, %@:\n%@\n\n%@ %@:\n%@\n", YOUR_FINGERPRINT_STRING, buddy.protocol.account.username, ourFingerprintString, THEIR_FINGERPRINT_STRING, buddy.accountName, theirFingerprintString];
+                msg = [NSString stringWithFormat:@"%@, %@:\n%@\n\n%@ %@:\n%@\n", YOUR_FINGERPRINT_STRING, buddy.account.username, ourFingerprintString, THEIR_FINGERPRINT_STRING, buddy.accountName, theirFingerprintString];
                 if(trusted)
                 {
                     alert = [[UIAlertView alloc] initWithTitle:VERIFY_FINGERPRINT_STRING message:msg delegate:self cancelButtonTitle:VERIFIED_STRING otherButtonTitles:NOT_VERIFIED_STRING, nil];
@@ -464,17 +467,16 @@
         {
             if(buddy.encryptionStatus == kOTRKitMessageStateEncrypted)
             {
-                [[OTRKit sharedInstance]disableEncryptionForUsername:buddy.accountName accountName:buddy.protocol.account.username protocol:buddy.protocol.account.protocol];
+                [[OTRKit sharedInstance]disableEncryptionForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
             } else {
-                OTRBuddy* theBuddy = buddy;
-                OTRMessage * newMessage = [OTRMessage messageWithBuddy:theBuddy message:@""];
-                OTRMessage *encodedMessage = [OTRCodec encodeMessage:newMessage];
-                [OTRMessage sendMessage:encodedMessage];
+                OTRManagedBuddy* theBuddy = buddy;
+                OTRManagedMessage * newMessage = [OTRManagedMessage newMessageWithBuddy:theBuddy message:@""];
+                OTRManagedMessage *encodedMessage = [OTRCodec encodeMessage:newMessage];
+                [OTRManagedMessage sendMessage:encodedMessage];
             }
         }
         else if (buttonIndex == 2) { // Clear Chat History
-            buddy.chatHistory = [NSMutableString string];
-            buddy.lastMessage = @"";
+            [buddy removeMessages:buddy.messages];
             [self updateChatHistory];
         }
         else if (buttonIndex == actionSheet.cancelButtonIndex) // Cancel
@@ -495,12 +497,12 @@
 {
     if(buttonIndex == 1 && alertView.tag == ALERTVIEW_NOT_VERIFIED_TAG)
     {
-        [[OTRKit sharedInstance] changeVerifyFingerprintForUsername:buddy.accountName accountName:buddy.protocol.account.username protocol:buddy.protocol.account.protocol verrified:YES];
+        [[OTRKit sharedInstance] changeVerifyFingerprintForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol verrified:YES];
         [self refreshLockButton];
     }
     else if(buttonIndex == 1 && alertView.tag == ALERTVIEW_VERIFIED_TAG)
     {
-        [[OTRKit sharedInstance] changeVerifyFingerprintForUsername:buddy.accountName accountName:buddy.protocol.account.username  protocol:buddy.protocol.account.protocol verrified:NO];
+        [[OTRKit sharedInstance] changeVerifyFingerprintForUsername:buddy.accountName accountName:buddy.account.username  protocol:buddy.account.protocol verrified:NO];
         [self refreshLockButton];
     }
 }

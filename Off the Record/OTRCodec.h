@@ -21,12 +21,12 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 #import <Foundation/Foundation.h>
-#import "OTRMessage.h"
+#import "OTRManagedMessage.h"
 #import "OTRKit.h"
 
 @interface OTRCodec : NSObject
 
-+(OTRMessage*) decodeMessage:(OTRMessage*)theMessage;
-+(OTRMessage*) encodeMessage:(OTRMessage*)theMessage;
++(void) decodeMessage:(OTRManagedMessage*)theMessage;
++(OTRManagedMessage*) encodeMessage:(OTRManagedMessage*)theMessage;
 
 @end

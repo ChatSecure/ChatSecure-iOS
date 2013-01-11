@@ -42,6 +42,8 @@
 @property (nonatomic, retain) NSString * uniqueIdentifier;
 @property (nonatomic, retain, readonly) NSString * username;
 
+@property (nonatomic, retain) NSSet *buddies;
+
 - (void) save;
 - (Class) protocolClass;
 - (NSString *) providerName;
@@ -51,5 +53,13 @@
 - (void) setNewUsername:(NSString *)newUsername;
 - (void) setShouldRememberPassword:(BOOL)remember;
 
+@end
+
+@interface OTRManagedAccount (CoreDataGeneratedAccessors)
+
+- (void)addBuddiesObject:(NSManagedObject *)value;
+- (void)removeBuddiesObject:(NSManagedObject *)value;
+- (void)addBuddies:(NSSet *)values;
+- (void)removeBuddies:(NSSet *)values;
 
 @end

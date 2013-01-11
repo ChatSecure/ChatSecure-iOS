@@ -22,19 +22,59 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
+#import "OTRKit.h"
+
+@class OTRManagedAccount;
+
+typedef unsigned int OTRBuddyStatus;
+typedef unsigned int OTRChatState;
+
+#define MESSAGE_PROCESSED_NOTIFICATION @"MessageProcessedNotification"
+#define kOTREncryptionStateNotification @"kOTREncryptionStateNotification"
+
+
+enum OTRBuddyStatus {
+    kOTRBuddyStatusOffline = 0,
+    kOTRBuddyStatusAway = 1,
+    kOTRBuddyStatusAvailable = 2
+};
+
+enum OTRChatState {
+    kOTRChatStateUnknown =0,
+    kOTRChatStateActive = 1,
+    kOTRChatStateComposing = 2,
+    kOTRChatStatePaused = 3,
+    kOTRChatStateInactive = 4,
+    kOTRChatStateGone =5
+};
 
 
 @interface OTRManagedBuddy : NSManagedObject
 
 @property (nonatomic, retain) NSString * accountName;
-@property (nonatomic) int16_t chatState;
+@property (nonatomic) OTRChatState chatState;
 @property (nonatomic, retain) NSString * displayName;
-@property (nonatomic) int16_t encryptionStatus;
-@property (nonatomic) int16_t lastSentChatState;
-@property (nonatomic) int16_t status;
+@property (nonatomic) OTRKitMessageState encryptionStatus;
+@property (nonatomic) OTRChatState lastSentChatState;
+@property (nonatomic) OTRBuddyStatus status;
 @property (nonatomic, retain) NSString * groupName;
+@property (nonatomic, retain) NSString * composingMessageString;
 @property (nonatomic) BOOL lastMessageDisconnected;
 @property (nonatomic, retain) NSSet *messages;
+@property (nonatomic, retain) OTRManagedAccount *account;
+
+-(void)receiveMessage:(NSString *)message;
+-(void)receiveChatStateMessage:(OTRChatState) chatState;
+-(void)receiveReceiptResonse:(NSString *)responseID;
+-(void)sendMessage:(NSString *)message secure:(BOOL)secure;
+-(void)sendChatState:(OTRChatState)chatState;
+-(void)restartPausedChatStateTimer;
+-(void)restartInactiveChatStateTimer;
+-(void)sendPausedChatState;
+-(void)sendActiveChatState;
+-(void)sendInactiveChatState;
+-(void)sendComposingChatState;
+
 @end
 
 @interface OTRManagedBuddy (CoreDataGeneratedAccessors)

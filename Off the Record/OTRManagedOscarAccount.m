@@ -21,9 +21,26 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "OTRManagedOscarAccount.h"
+#import "OTRProtocol.h"
+#import "Strings.h"
+#import "OTROscarManager.h"
+#import "OTRConstants.h"
 
 
 @implementation OTRManagedOscarAccount
 
+
+- (NSString *) imageName {
+    return kAIMImageName;
+}
+
+- (NSString *)providerName
+{
+    return AIM_STRING;
+}
+
+- (Class) protocolClass {
+    return [OTROscarManager class];
+}
 
 @end
