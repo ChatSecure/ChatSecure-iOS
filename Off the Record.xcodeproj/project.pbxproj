@@ -35,6 +35,12 @@
 		D902D31E141E930C00AA3479 /* OTRBuddy.m in Sources */ = {isa = PBXBuildFile; fileRef = D902D31D141E930C00AA3479 /* OTRBuddy.m */; };
 		D90B80AC13FC719B006EFF3D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D90B80AB13FC719B006EFF3D /* CoreGraphics.framework */; };
 		D90B80AF13FC7E5F006EFF3D /* OTRCodec.m in Sources */ = {isa = PBXBuildFile; fileRef = D90B80AE13FC7E5F006EFF3D /* OTRCodec.m */; };
+		D90B9FA1169FE61200A923EF /* CMDEncryptedSQLiteStore.m in Sources */ = {isa = PBXBuildFile; fileRef = D90B9FA0169FE61200A923EF /* CMDEncryptedSQLiteStore.m */; };
+		D90B9FA4169FF48F00A923EF /* OTRManagedAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = D90B9FA3169FF48F00A923EF /* OTRManagedAccount.m */; };
+		D90B9FA7169FF4A200A923EF /* OTRManagedBuddy.m in Sources */ = {isa = PBXBuildFile; fileRef = D90B9FA6169FF4A200A923EF /* OTRManagedBuddy.m */; };
+		D90B9FAA169FF4D500A923EF /* OTRManagedMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = D90B9FA9169FF4D500A923EF /* OTRManagedMessage.m */; };
+		D90B9FAD169FF4EE00A923EF /* OTRManagedOscarAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = D90B9FAC169FF4EE00A923EF /* OTRManagedOscarAccount.m */; };
+		D90B9FB0169FF4FB00A923EF /* OTRManagedXMPPAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = D90B9FAF169FF4FB00A923EF /* OTRManagedXMPPAccount.m */; };
 		D90FAF2314A05D4B00DA7C56 /* available.png in Resources */ = {isa = PBXBuildFile; fileRef = D90FAF2014A05D4B00DA7C56 /* available.png */; };
 		D90FAF2414A05D4B00DA7C56 /* away.png in Resources */ = {isa = PBXBuildFile; fileRef = D90FAF2114A05D4B00DA7C56 /* away.png */; };
 		D90FAF2514A05D4B00DA7C56 /* offline.png in Resources */ = {isa = PBXBuildFile; fileRef = D90FAF2214A05D4B00DA7C56 /* offline.png */; };
@@ -308,7 +314,6 @@
 		D9CEF0EF16842AC700B236B5 /* NSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CEF0E316842AC700B236B5 /* NSString+HTML.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		D9CEF0F216842E5600B236B5 /* libCrittercism_v3_4_6.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D9CEED901684238D00B236B5 /* libCrittercism_v3_4_6.a */; };
 		D9CEF0F316842E6100B236B5 /* libidn.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D9CEF03B1684247400B236B5 /* libidn.a */; };
-		D9D370F6169D20EB0086F358 /* CMDEncryptedSQLiteStore.m in Sources */ = {isa = PBXBuildFile; fileRef = D9D370F5169D20EB0086F358 /* CMDEncryptedSQLiteStore.m */; };
 		D9D370FB169D21570086F358 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D370E8169D20C20086F358 /* libcrypto.a */; };
 		D9D370FC169D215A0086F358 /* libsqlcipher.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D370F2169D20C90086F358 /* libsqlcipher.a */; };
 		D9D3715F169D2CEB0086F358 /* MagicalImportFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = D9D37127169D2CEB0086F358 /* MagicalImportFunctions.m */; };
@@ -464,6 +469,18 @@
 		D90B80AB13FC719B006EFF3D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		D90B80AD13FC7E5E006EFF3D /* OTRCodec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRCodec.h; sourceTree = "<group>"; };
 		D90B80AE13FC7E5F006EFF3D /* OTRCodec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRCodec.m; sourceTree = "<group>"; };
+		D90B9F9F169FE61200A923EF /* CMDEncryptedSQLiteStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMDEncryptedSQLiteStore.h; sourceTree = "<group>"; };
+		D90B9FA0169FE61200A923EF /* CMDEncryptedSQLiteStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMDEncryptedSQLiteStore.m; sourceTree = "<group>"; };
+		D90B9FA2169FF48F00A923EF /* OTRManagedAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRManagedAccount.h; sourceTree = "<group>"; };
+		D90B9FA3169FF48F00A923EF /* OTRManagedAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRManagedAccount.m; sourceTree = "<group>"; };
+		D90B9FA5169FF4A200A923EF /* OTRManagedBuddy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRManagedBuddy.h; sourceTree = "<group>"; };
+		D90B9FA6169FF4A200A923EF /* OTRManagedBuddy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRManagedBuddy.m; sourceTree = "<group>"; };
+		D90B9FA8169FF4D500A923EF /* OTRManagedMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRManagedMessage.h; sourceTree = "<group>"; };
+		D90B9FA9169FF4D500A923EF /* OTRManagedMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRManagedMessage.m; sourceTree = "<group>"; };
+		D90B9FAB169FF4EE00A923EF /* OTRManagedOscarAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRManagedOscarAccount.h; sourceTree = "<group>"; };
+		D90B9FAC169FF4EE00A923EF /* OTRManagedOscarAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRManagedOscarAccount.m; sourceTree = "<group>"; };
+		D90B9FAE169FF4FB00A923EF /* OTRManagedXMPPAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRManagedXMPPAccount.h; sourceTree = "<group>"; };
+		D90B9FAF169FF4FB00A923EF /* OTRManagedXMPPAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRManagedXMPPAccount.m; sourceTree = "<group>"; };
 		D90FAF2014A05D4B00DA7C56 /* available.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = available.png; sourceTree = "<group>"; };
 		D90FAF2114A05D4B00DA7C56 /* away.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = away.png; sourceTree = "<group>"; };
 		D90FAF2214A05D4B00DA7C56 /* offline.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = offline.png; sourceTree = "<group>"; };
@@ -1012,8 +1029,6 @@
 		D9CEF0E316842AC700B236B5 /* NSString+HTML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+HTML.m"; sourceTree = "<group>"; };
 		D9D370E0169D20C20086F358 /* openssl.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openssl.xcodeproj; path = "Submodules/encrypted-core-data/vendor/openssl/openssl.xcodeproj"; sourceTree = "<group>"; };
 		D9D370E9169D20C80086F358 /* sqlcipher.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = sqlcipher.xcodeproj; path = "Submodules/encrypted-core-data/vendor/sqlcipher/sqlcipher.xcodeproj"; sourceTree = "<group>"; };
-		D9D370F4169D20EB0086F358 /* CMDEncryptedSQLiteStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMDEncryptedSQLiteStore.h; sourceTree = "<group>"; };
-		D9D370F5169D20EB0086F358 /* CMDEncryptedSQLiteStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMDEncryptedSQLiteStore.m; sourceTree = "<group>"; };
 		D9D37126169D2CEB0086F358 /* MagicalImportFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MagicalImportFunctions.h; sourceTree = "<group>"; };
 		D9D37127169D2CEB0086F358 /* MagicalImportFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MagicalImportFunctions.m; sourceTree = "<group>"; };
 		D9D37128169D2CEB0086F358 /* NSAttributeDescription+MagicalDataImport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSAttributeDescription+MagicalDataImport.h"; sourceTree = "<group>"; };
@@ -2163,8 +2178,8 @@
 		D9D370F3169D20EB0086F358 /* encrypted-core-data */ = {
 			isa = PBXGroup;
 			children = (
-				D9D370F4169D20EB0086F358 /* CMDEncryptedSQLiteStore.h */,
-				D9D370F5169D20EB0086F358 /* CMDEncryptedSQLiteStore.m */,
+				D90B9F9F169FE61200A923EF /* CMDEncryptedSQLiteStore.h */,
+				D90B9FA0169FE61200A923EF /* CMDEncryptedSQLiteStore.m */,
 			);
 			name = "encrypted-core-data";
 			path = "Submodules/encrypted-core-data/Incremental Store";
@@ -2292,6 +2307,16 @@
 		D9D69B07141806BB0056FB9E /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				D90B9FAE169FF4FB00A923EF /* OTRManagedXMPPAccount.h */,
+				D90B9FAF169FF4FB00A923EF /* OTRManagedXMPPAccount.m */,
+				D90B9FAB169FF4EE00A923EF /* OTRManagedOscarAccount.h */,
+				D90B9FAC169FF4EE00A923EF /* OTRManagedOscarAccount.m */,
+				D90B9FA8169FF4D500A923EF /* OTRManagedMessage.h */,
+				D90B9FA9169FF4D500A923EF /* OTRManagedMessage.m */,
+				D90B9FA5169FF4A200A923EF /* OTRManagedBuddy.h */,
+				D90B9FA6169FF4A200A923EF /* OTRManagedBuddy.m */,
+				D90B9FA2169FF48F00A923EF /* OTRManagedAccount.h */,
+				D90B9FA3169FF48F00A923EF /* OTRManagedAccount.m */,
 				D9D3717F169D40600086F358 /* Managers */,
 				D96495CC15363C1F009A8C33 /* Settings */,
 				634CBFDB159CEAC70046FB3B /* OTRConstants.h */,
@@ -2915,7 +2940,6 @@
 				D9CEF0D116842A5B00B236B5 /* SBJsonWriter.m in Sources */,
 				D9CEF0E916842AC700B236B5 /* GTMNSString+HTML.m in Sources */,
 				D9CEF0EF16842AC700B236B5 /* NSString+HTML.m in Sources */,
-				D9D370F6169D20EB0086F358 /* CMDEncryptedSQLiteStore.m in Sources */,
 				D9D3715F169D2CEB0086F358 /* MagicalImportFunctions.m in Sources */,
 				D9D37160169D2CEB0086F358 /* NSAttributeDescription+MagicalDataImport.m in Sources */,
 				D9D37161169D2CEB0086F358 /* NSEntityDescription+MagicalDataImport.m in Sources */,
@@ -2944,6 +2968,12 @@
 				D9D37178169D2CEB0086F358 /* MagicalRecord.m in Sources */,
 				D9D3717B169D34630086F358 /* OTRDatabaseUtils.m in Sources */,
 				D9D3717E169D40500086F358 /* ChatSecure.xcdatamodeld in Sources */,
+				D90B9FA1169FE61200A923EF /* CMDEncryptedSQLiteStore.m in Sources */,
+				D90B9FA4169FF48F00A923EF /* OTRManagedAccount.m in Sources */,
+				D90B9FA7169FF4A200A923EF /* OTRManagedBuddy.m in Sources */,
+				D90B9FAA169FF4D500A923EF /* OTRManagedMessage.m in Sources */,
+				D90B9FAD169FF4EE00A923EF /* OTRManagedOscarAccount.m in Sources */,
+				D90B9FB0169FF4FB00A923EF /* OTRManagedXMPPAccount.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
