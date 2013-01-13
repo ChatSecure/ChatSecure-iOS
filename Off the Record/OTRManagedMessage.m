@@ -30,6 +30,22 @@
 @dynamic message;
 @dynamic buddy;
 @dynamic isEncrypted;
+@dynamic isIncoming;
+
++(OTRManagedMessage*)newMessageToBuddy:(OTRManagedBuddy *)theBuddy message:(NSString *)theMessage {
+    OTRManagedMessage *message = [OTRManagedMessage newMessageWithBuddy:theBuddy message:theMessage];
+    message.isIncoming = NO;
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
+    [context MR_save];
+    return message;
+}
++(OTRManagedMessage*)newMessageFromBuddy:(OTRManagedBuddy *)theBuddy message:(NSString *)theMessage {
+    OTRManagedMessage *message = [OTRManagedMessage newMessageWithBuddy:theBuddy message:theMessage];
+    message.isIncoming = YES;
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
+    [context MR_save];
+    return message;
+}
 
 +(OTRManagedMessage*)newMessageWithBuddy:(OTRManagedBuddy *)theBuddy message:(NSString *)theMessage
 {
@@ -37,8 +53,8 @@
     managedMessage.buddy = theBuddy;
     managedMessage.message = theMessage;
     managedMessage.date = [NSDate date];
-    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
-    [context MR_saveNestedContexts];
+    managedMessage.isEncrypted = NO;
+
     return managedMessage;
 }
 

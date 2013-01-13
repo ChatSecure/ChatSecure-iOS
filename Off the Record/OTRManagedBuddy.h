@@ -26,8 +26,8 @@
 
 @class OTRManagedAccount;
 
-typedef unsigned int OTRBuddyStatus;
-typedef unsigned int OTRChatState;
+typedef int16_t OTRBuddyStatus;
+typedef int16_t OTRChatState;
 
 #define MESSAGE_PROCESSED_NOTIFICATION @"MessageProcessedNotification"
 #define kOTREncryptionStateNotification @"kOTREncryptionStateNotification"
@@ -54,9 +54,9 @@ enum OTRChatState {
 @property (nonatomic, retain) NSString * accountName;
 @property (nonatomic) OTRChatState chatState;
 @property (nonatomic, retain) NSString * displayName;
-@property (nonatomic) OTRKitMessageState encryptionStatus;
+@property (nonatomic, readonly) OTRKitMessageState encryptionStatus;
 @property (nonatomic) OTRChatState lastSentChatState;
-@property (nonatomic) OTRBuddyStatus status;
+@property (nonatomic, readonly) OTRBuddyStatus status;
 @property (nonatomic, retain) NSString * groupName;
 @property (nonatomic, retain) NSString * composingMessageString;
 @property (nonatomic) BOOL lastMessageDisconnected;
@@ -74,6 +74,9 @@ enum OTRChatState {
 -(void)sendActiveChatState;
 -(void)sendInactiveChatState;
 -(void)sendComposingChatState;
+
+- (void) setNewStatus:(OTRBuddyStatus)newStatus;
+- (void) setNewEncryptionStatus:(OTRKitMessageState)newEncryptionStatus;
 
 @end
 

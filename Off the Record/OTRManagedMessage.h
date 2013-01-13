@@ -32,10 +32,12 @@
 @property (nonatomic, retain) NSString * message;
 @property (nonatomic, retain) OTRManagedBuddy *buddy;
 @property (nonatomic) BOOL isEncrypted;
+@property (nonatomic) BOOL isIncoming; // YES if a message received from this buddy, NO if its a message we sent to them
 
 - (void) send;
 
-+(OTRManagedMessage*)newMessageWithBuddy:(OTRManagedBuddy *)theBuddy message:(NSString *)theMessage;
++(OTRManagedMessage*)newMessageToBuddy:(OTRManagedBuddy *)theBuddy message:(NSString *)theMessage;
++(OTRManagedMessage*)newMessageFromBuddy:(OTRManagedBuddy *)theBuddy message:(NSString *)theMessage;
 +(void)sendMessage:(OTRManagedMessage *)message;
 
 @end

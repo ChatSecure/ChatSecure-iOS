@@ -43,12 +43,7 @@
 @dynamic rememberPassword;
 @dynamic uniqueIdentifier;
 @dynamic username;
-
-- (void) dealloc {
-    self.username = nil;
-    self.protocol = nil;
-    self.uniqueIdentifier = nil;
-}
+@dynamic buddies;
 
 - (void) setDefaultsWithProtocol:(NSString*)newProtocol {
     self.username = @"";

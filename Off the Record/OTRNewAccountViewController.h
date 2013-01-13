@@ -26,7 +26,7 @@
 
 @interface OTRNewAccountViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
 {
-    NSArray * accounts;
+    NSMutableArray * accounts;
 }
 
 @end

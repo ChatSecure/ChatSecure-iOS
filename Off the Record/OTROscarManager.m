@@ -239,7 +239,7 @@ BOOL loginFailed;
     
     OTRManagedBuddy * messageBuddy = [protocolBuddyList objectForKey:message.buddy.username];
     
-    OTRManagedMessage *otrMessage = [OTRManagedMessage newMessageWithBuddy:messageBuddy message:msgTxt];
+    OTRManagedMessage *otrMessage = [OTRManagedMessage newMessageFromBuddy:messageBuddy message:msgTxt];
     otrMessage.isEncrypted = YES;
     
     [OTRCodec decodeMessage:otrMessage];
@@ -571,7 +571,7 @@ BOOL loginFailed;
             
             if(otrBuddy)
             {
-                otrBuddy.status = buddyStatus;
+                [otrBuddy setNewStatus:buddyStatus];
                 otrBuddy.groupName = group.name;
             }
             else
@@ -579,11 +579,11 @@ BOOL loginFailed;
                 otrBuddy = [OTRManagedBuddy MR_createEntity];
                 otrBuddy.displayName = buddy.username;
                 otrBuddy.accountName = buddy.username;
-                otrBuddy.status = buddyStatus;
+                [otrBuddy setNewStatus:buddyStatus];
                 otrBuddy.groupName = group.name;
                 otrBuddy.account = self.account;
-                NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
-                [context MR_saveNestedContexts];
+                NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
+                [context MR_save];
                 [protocolBuddyList setObject:otrBuddy forKey:buddy.username];
             }
             [otrBuddyListSet addObject:otrBuddy];

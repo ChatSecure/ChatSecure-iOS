@@ -56,6 +56,15 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    // DATABASE TESTS
+    [MagicalRecord setupCoreDataStackWithStoreNamed:@"db.sqlite"];
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
+    [context setRetainsRegisteredObjects:YES];
+    
+    //NSPersistentStoreCoordinator *storeCoordinator = [OTRDatabaseUtils persistentStoreCoordinatorWithDBName:@"db.sqlite" passphrase:@"test"];
+    
+    //[NSPersistentStoreCoordinator MR_setDefaultStoreCoordinator:storeCoordinator];
+    
 #ifdef CRITTERCISM_ENABLED
     if([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyCrittercismOptIn])
     {
@@ -95,6 +104,8 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     application.applicationIconBadgeNumber = 0;
   
     [Appirater appLaunched:YES];
+    
+    
     
     return YES;
 }

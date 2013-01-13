@@ -141,12 +141,7 @@
     //[self showEULAWarning];
     
     
-    // DATABASE TESTS
-    [MagicalRecord setupCoreDataStack];
-    
-    NSPersistentStoreCoordinator *storeCoordinator = [OTRDatabaseUtils persistentStoreCoordinatorWithDBName:@"db.sqlite" passphrase:@"test"];
-    
-    [NSPersistentStoreCoordinator MR_setDefaultStoreCoordinator:storeCoordinator];
+
 }
 
 - (void) showSettingsView:(id)sender {

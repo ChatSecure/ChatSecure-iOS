@@ -28,36 +28,32 @@
 @implementation OTRDatabaseUtils
 
 + (NSPersistentStoreCoordinator *)persistentStoreCoordinatorWithDBName:(NSString*)dbName passphrase:(NSString*)passphrase  {
-    static NSPersistentStoreCoordinator *coordinator = nil;
-    static dispatch_once_t token;
-    dispatch_once(&token, ^{
-        
-        // get the model
-        NSManagedObjectModel *model = [NSManagedObjectModel mergedModelFromBundles:nil];
-        
-        // get the coordinator
-        coordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:model];
-        
-        // add store
-        NSFileManager *fileManager = [NSFileManager defaultManager];
-        NSURL *applicationSupportURL = [[fileManager URLsForDirectory:NSApplicationSupportDirectory inDomains:NSUserDomainMask] lastObject];
-        [fileManager createDirectoryAtURL:applicationSupportURL withIntermediateDirectories:NO attributes:nil error:nil];
-        NSURL *databaseURL = [applicationSupportURL URLByAppendingPathComponent:dbName];
-        NSDictionary *options = @{
-        CMDEncryptedSQLiteStorePassphraseKey : passphrase,
-        NSMigratePersistentStoresAutomaticallyOption : @YES,
-        NSInferMappingModelAutomaticallyOption : @YES
-        };
-        NSError *error = nil;
-        NSPersistentStore *store = [coordinator
-                                    addPersistentStoreWithType:CMDEncryptedSQLiteStoreType
-                                    configuration:nil
-                                    URL:databaseURL
-                                    options:options
-                                    error:&error];
-        NSAssert(store, @"Unable to add persistent store\n%@", error);
-        
-    });
+    NSPersistentStoreCoordinator *coordinator = nil;
+    // get the model
+    NSManagedObjectModel *model = [NSManagedObjectModel mergedModelFromBundles:nil];
+    
+    // get the coordinator
+    coordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:model];
+    
+    // add store
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSURL *applicationSupportURL = [[fileManager URLsForDirectory:NSApplicationSupportDirectory inDomains:NSUserDomainMask] lastObject];
+    [fileManager createDirectoryAtURL:applicationSupportURL withIntermediateDirectories:NO attributes:nil error:nil];
+    NSURL *databaseURL = [applicationSupportURL URLByAppendingPathComponent:dbName];
+    NSDictionary *options = @{
+    CMDEncryptedSQLiteStorePassphraseKey : passphrase,
+    NSMigratePersistentStoresAutomaticallyOption : @YES,
+    NSInferMappingModelAutomaticallyOption : @YES
+    };
+    NSError *error = nil;
+    NSPersistentStore *store = [coordinator
+                                addPersistentStoreWithType:CMDEncryptedSQLiteStoreType
+                                configuration:nil
+                                URL:databaseURL
+                                options:options
+                                error:&error];
+    NSAssert(store, @"Unable to add persistent store\n%@", error);
+    
     return coordinator;
 }
 

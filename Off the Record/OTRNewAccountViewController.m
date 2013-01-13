@@ -54,16 +54,21 @@
     
     //Google Chat
     OTRManagedXMPPAccount * googleAccount = [OTRManagedXMPPAccount MR_createEntity];
-    [facebookAccount setDefaultsWithDomain:kOTRGoogleTalkDomain];
+    [googleAccount setDefaultsWithDomain:kOTRGoogleTalkDomain];
     
     //Jabber
     OTRManagedXMPPAccount * jabberAccount = [OTRManagedXMPPAccount MR_createEntity];
-    [facebookAccount setDefaultsWithDomain:@""];
+    [jabberAccount setDefaultsWithDomain:@""];
     
     //Aim
     OTRManagedOscarAccount * aimAccount = [OTRManagedOscarAccount MR_createEntity];
+    [aimAccount setDefaultsWithProtocol:kOTRProtocolTypeAIM];
     
-    accounts = [NSArray arrayWithObjects:facebookAccount,googleAccount,jabberAccount,aimAccount, nil];
+    accounts = [NSMutableArray arrayWithObjects:facebookAccount,googleAccount,jabberAccount,aimAccount, nil];
+    
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
+    [context MR_save];
+    
     
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:CANCEL_STRING style:UIBarButtonItemStyleBordered target:self action:@selector(cancelPressed:)];
     
@@ -114,6 +119,14 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     OTRManagedAccount * cellAccount = [accounts objectAtIndex:indexPath.row];
+    [accounts removeObject:cellAccount];
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
+
+    for (OTRManagedAccount *account in accounts) {
+        [context deleteObject:[context objectWithID:account.objectID]];
+    }
+    [context MR_save];
+    
     OTRLoginViewController *loginViewController = [OTRLoginViewController loginViewControllerWithAcccount:cellAccount];
     loginViewController.isNewAccount = YES;
     [self.navigationController pushViewController:loginViewController animated:YES];

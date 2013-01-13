@@ -702,7 +702,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
         
         OTRManagedBuddy * messageBuddy = [self buddyWithMessage:message];
         
-        OTRManagedMessage *otrMessage = [OTRManagedMessage newMessageWithBuddy:messageBuddy message:body];
+        OTRManagedMessage *otrMessage = [OTRManagedMessage newMessageFromBuddy:messageBuddy message:body];
         otrMessage.isEncrypted = YES;
         [OTRCodec decodeMessage:otrMessage];
         
@@ -851,7 +851,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
             
             if(otrBuddy)
             {
-                otrBuddy.status = otrBuddyStatus;
+                [otrBuddy setNewStatus:otrBuddyStatus];
             }
             else
             {
@@ -859,10 +859,10 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
                 newBuddy.displayName = user.displayName;
                 newBuddy.accountName = [[user jid] full];
                 newBuddy.account = self.account;
-                newBuddy.status = otrBuddyStatus;
+                [otrBuddy setNewStatus:otrBuddyStatus];
                 newBuddy.groupName = sectionName;
-                NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
-                [context MR_saveNestedContexts];
+                NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
+                [context MR_save];
                 [protocolBuddyList setObject:newBuddy forKey:user.jidStr];
             }
         }

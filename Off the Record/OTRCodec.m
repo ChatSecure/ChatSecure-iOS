@@ -39,7 +39,7 @@
     theMessage.message = decodedMessageString;
 
     OTRKitMessageState messageState = [[OTRKit sharedInstance] messageStateForUsername:friendAccount accountName:myAccountName protocol:protocol];
-    theMessage.buddy.encryptionStatus = messageState;
+    [theMessage.buddy setNewEncryptionStatus:messageState];
 }
 
 
@@ -52,7 +52,8 @@
     
     NSString *encodedMessageString = [[OTRKit sharedInstance] encodeMessage:message recipient:recipientAccount accountName:sendingAccount protocol:protocol];
     
-    OTRManagedMessage *newOTRMessage = [OTRManagedMessage newMessageWithBuddy:theMessage.buddy message:encodedMessageString];
+    OTRManagedMessage *newOTRMessage = [OTRManagedMessage newMessageToBuddy:theMessage.buddy message:encodedMessageString];
+    newOTRMessage.date = theMessage.date;
     newOTRMessage.isEncrypted = YES;
     
     return newOTRMessage;
