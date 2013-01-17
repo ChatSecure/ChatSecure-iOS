@@ -24,6 +24,8 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSMutableDictionary *accountsDictionary = [NSMutableDictionary dictionaryWithDictionary:[defaults objectForKey:kOTRSettingAccountsKey]];
     
+    NSArray * list = [OTRManagedAccount MR_findAll];
+    
     if(accountsDictionary)
         return YES;
     else
@@ -94,6 +96,8 @@
             NSDictionary * accountDictionary = [accountsDictionary objectForKey:key];
             [self saveDictionary:accountDictionary withUniqueId:key];
         }
+        NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
+        [context MR_save];
         [defaults removeObjectForKey:kOTRSettingAccountsKey];
     }
 }
