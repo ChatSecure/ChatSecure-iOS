@@ -68,8 +68,9 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     
     
     //CONVERT LEGACY ACCOUNT DICTIONARIES
-    if ([OTRConvertAccount hasLegacyAccountSettings]) {
-        [OTRConvertAccount convertAllLegacyAcountSettings];
+    OTRConvertAccount * accountConverter = [[OTRConvertAccount alloc] init];
+    if ([accountConverter hasLegacyAccountSettings]) {
+        [accountConverter convertAllLegacyAcountSettings];
     }
     
     

@@ -8,10 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
+
 @interface OTRConvertAccount : NSObject
 
 
-+(BOOL)hasLegacyAccountSettings;
-+(BOOL)convertAllLegacyAcountSettings;
+-(BOOL)hasLegacyAccountSettings;
+-(BOOL)convertAllLegacyAcountSettings;
 
 @end

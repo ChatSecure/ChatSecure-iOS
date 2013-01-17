@@ -24,6 +24,9 @@
 		636FE4BC161B771E002B28EF /* OTROscarLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 636FE4BB161B771E002B28EF /* OTROscarLoginViewController.m */; };
 		636FE4C0161B7C68002B28EF /* OTRInLineTextEditTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 636FE4BF161B7C68002B28EF /* OTRInLineTextEditTableViewCell.m */; };
 		63769EFB16A77EF400E10BF9 /* OTRConvertAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 63769EFA16A77EF400E10BF9 /* OTRConvertAccount.m */; };
+		63769F1916A7915000E10BF9 /* OTROldOscarAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = D9ABC99215D48C4F00AAB730 /* OTROldOscarAccount.m */; };
+		63769F1A16A7915000E10BF9 /* OTROldXMPPAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = D9ABC98F15D48B7E00AAB730 /* OTROldXMPPAccount.m */; };
+		63769F1B16A7917800E10BF9 /* OTROldAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = D93C316E159A6719006316C7 /* OTROldAccount.m */; };
 		639B9A71164F21D900C021A9 /* OTRShareSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 639B9A70164F21D900C021A9 /* OTRShareSetting.m */; };
 		639FDE4716334FA500387666 /* OTRJabberLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 639FDE4616334FA500387666 /* OTRJabberLoginViewController.m */; };
 		63B43C2D166D93D5004A4C54 /* Lock_Locked_Verified.png in Resources */ = {isa = PBXBuildFile; fileRef = 63B43C29166D93D5004A4C54 /* Lock_Locked_Verified.png */; };
@@ -2946,6 +2949,9 @@
 				D90B9FAD169FF4EE00A923EF /* OTRManagedOscarAccount.m in Sources */,
 				D90B9FB0169FF4FB00A923EF /* OTRManagedXMPPAccount.m in Sources */,
 				63769EFB16A77EF400E10BF9 /* OTRConvertAccount.m in Sources */,
+				63769F1916A7915000E10BF9 /* OTROldOscarAccount.m in Sources */,
+				63769F1A16A7915000E10BF9 /* OTROldXMPPAccount.m in Sources */,
+				63769F1B16A7917800E10BF9 /* OTROldAccount.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
