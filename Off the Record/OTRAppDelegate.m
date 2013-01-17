@@ -31,6 +31,7 @@
 #import "Appirater.h"
 #import "OTRConstants.h"
 #import "OTRLanguageManager.h"
+#import "OTRConvertAccount.h"
 
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
@@ -64,6 +65,13 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     //NSPersistentStoreCoordinator *storeCoordinator = [OTRDatabaseUtils persistentStoreCoordinatorWithDBName:@"db.sqlite" passphrase:@"test"];
     
     //[NSPersistentStoreCoordinator MR_setDefaultStoreCoordinator:storeCoordinator];
+    
+    
+    //CONVERT LEGACY ACCOUNT DICTIONARIES
+    if ([OTRConvertAccount hasLegacyAccountSettings]) {
+        [OTRConvertAccount convertAllLegacyAcountSettings];
+    }
+    
     
 #ifdef CRITTERCISM_ENABLED
     if([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyCrittercismOptIn])

@@ -41,7 +41,7 @@
         <element name="OTRManagedAccount" positionX="340" positionY="153" width="128" height="135"/>
         <element name="OTRManagedBuddy" positionX="106" positionY="-0" width="128" height="208"/>
         <element name="OTRManagedMessage" positionX="-99" positionY="111" width="128" height="120"/>
-        <element name="OTRManagedOscarAccount" positionX="529" positionY="72" width="128" height="45"/>
+        <element name="OTRManagedOscarAccount" positionX="529" positionY="72" width="128" height="43"/>
         <element name="OTRManagedXMPPAccount" positionX="565" positionY="216" width="128" height="135"/>
     </elements>
 </model>

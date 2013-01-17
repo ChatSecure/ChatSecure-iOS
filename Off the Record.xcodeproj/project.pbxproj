@@ -23,6 +23,7 @@
 		636FE4B9161B7701002B28EF /* OTRXMPPLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 636FE4B8161B7701002B28EF /* OTRXMPPLoginViewController.m */; };
 		636FE4BC161B771E002B28EF /* OTROscarLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 636FE4BB161B771E002B28EF /* OTROscarLoginViewController.m */; };
 		636FE4C0161B7C68002B28EF /* OTRInLineTextEditTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 636FE4BF161B7C68002B28EF /* OTRInLineTextEditTableViewCell.m */; };
+		63769EFB16A77EF400E10BF9 /* OTRConvertAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 63769EFA16A77EF400E10BF9 /* OTRConvertAccount.m */; };
 		639B9A71164F21D900C021A9 /* OTRShareSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 639B9A70164F21D900C021A9 /* OTRShareSetting.m */; };
 		639FDE4716334FA500387666 /* OTRJabberLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 639FDE4616334FA500387666 /* OTRJabberLoginViewController.m */; };
 		63B43C2D166D93D5004A4C54 /* Lock_Locked_Verified.png in Resources */ = {isa = PBXBuildFile; fileRef = 63B43C29166D93D5004A4C54 /* Lock_Locked_Verified.png */; };
@@ -34,7 +35,6 @@
 		63F6E854164E000C00F67BDB /* OTRFeedbackSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F6E853164E000B00F67BDB /* OTRFeedbackSetting.m */; };
 		D90B80AC13FC719B006EFF3D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D90B80AB13FC719B006EFF3D /* CoreGraphics.framework */; };
 		D90B80AF13FC7E5F006EFF3D /* OTRCodec.m in Sources */ = {isa = PBXBuildFile; fileRef = D90B80AE13FC7E5F006EFF3D /* OTRCodec.m */; };
-		D90B9FA1169FE61200A923EF /* CMDEncryptedSQLiteStore.m in Sources */ = {isa = PBXBuildFile; fileRef = D90B9FA0169FE61200A923EF /* CMDEncryptedSQLiteStore.m */; };
 		D90B9FA4169FF48F00A923EF /* OTRManagedAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = D90B9FA3169FF48F00A923EF /* OTRManagedAccount.m */; };
 		D90B9FA7169FF4A200A923EF /* OTRManagedBuddy.m in Sources */ = {isa = PBXBuildFile; fileRef = D90B9FA6169FF4A200A923EF /* OTRManagedBuddy.m */; };
 		D90B9FAA169FF4D500A923EF /* OTRManagedMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = D90B9FA9169FF4D500A923EF /* OTRManagedMessage.m */; };
@@ -309,8 +309,6 @@
 		D9CEF0EF16842AC700B236B5 /* NSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CEF0E316842AC700B236B5 /* NSString+HTML.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		D9CEF0F216842E5600B236B5 /* libCrittercism_v3_4_6.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D9CEED901684238D00B236B5 /* libCrittercism_v3_4_6.a */; };
 		D9CEF0F316842E6100B236B5 /* libidn.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D9CEF03B1684247400B236B5 /* libidn.a */; };
-		D9D370FB169D21570086F358 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D370E8169D20C20086F358 /* libcrypto.a */; };
-		D9D370FC169D215A0086F358 /* libsqlcipher.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D370F2169D20C90086F358 /* libsqlcipher.a */; };
 		D9D3715F169D2CEB0086F358 /* MagicalImportFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = D9D37127169D2CEB0086F358 /* MagicalImportFunctions.m */; };
 		D9D37160169D2CEB0086F358 /* NSAttributeDescription+MagicalDataImport.m in Sources */ = {isa = PBXBuildFile; fileRef = D9D37129169D2CEB0086F358 /* NSAttributeDescription+MagicalDataImport.m */; };
 		D9D37161169D2CEB0086F358 /* NSEntityDescription+MagicalDataImport.m in Sources */ = {isa = PBXBuildFile; fileRef = D9D3712B169D2CEB0086F358 /* NSEntityDescription+MagicalDataImport.m */; };
@@ -337,7 +335,6 @@
 		D9D37176169D2CEB0086F358 /* MagicalRecord+Setup.m in Sources */ = {isa = PBXBuildFile; fileRef = D9D37158169D2CEB0086F358 /* MagicalRecord+Setup.m */; };
 		D9D37177169D2CEB0086F358 /* MagicalRecord+ShorthandSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = D9D3715A169D2CEB0086F358 /* MagicalRecord+ShorthandSupport.m */; };
 		D9D37178169D2CEB0086F358 /* MagicalRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = D9D3715C169D2CEB0086F358 /* MagicalRecord.m */; };
-		D9D3717B169D34630086F358 /* OTRDatabaseUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = D9D3717A169D34630086F358 /* OTRDatabaseUtils.m */; };
 		D9D3717E169D40500086F358 /* ChatSecure.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D9D3717C169D404F0086F358 /* ChatSecure.xcdatamodeld */; };
 		D9D69AA91417FDBA0056FB9E /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D69AA81417FDBA0056FB9E /* CFNetwork.framework */; };
 		D9D69ABC1417FDF90056FB9E /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D69ABB1417FDF90056FB9E /* libxml2.dylib */; };
@@ -391,20 +388,6 @@
 			remoteGlobalIDString = D2AAC046055464E500DB518D;
 			remoteInfo = sqlcipher;
 		};
-		D9D370F7169D21130086F358 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D9D370E0169D20C20086F358 /* openssl.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 9069D28B0FCE659A0042E34C;
-			remoteInfo = crypto;
-		};
-		D9D370F9169D21160086F358 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D9D370E9169D20C80086F358 /* sqlcipher.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = D2AAC045055464E500DB518D;
-			remoteInfo = sqlcipher;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -445,6 +428,8 @@
 		636FE4BB161B771E002B28EF /* OTROscarLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTROscarLoginViewController.m; sourceTree = "<group>"; };
 		636FE4BE161B7C68002B28EF /* OTRInLineTextEditTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRInLineTextEditTableViewCell.h; sourceTree = "<group>"; };
 		636FE4BF161B7C68002B28EF /* OTRInLineTextEditTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRInLineTextEditTableViewCell.m; sourceTree = "<group>"; };
+		63769EF916A77EF400E10BF9 /* OTRConvertAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRConvertAccount.h; sourceTree = "<group>"; };
+		63769EFA16A77EF400E10BF9 /* OTRConvertAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRConvertAccount.m; sourceTree = "<group>"; };
 		639B9A6F164F21D900C021A9 /* OTRShareSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRShareSetting.h; sourceTree = "<group>"; };
 		639B9A70164F21D900C021A9 /* OTRShareSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRShareSetting.m; sourceTree = "<group>"; };
 		639FDE4516334FA500387666 /* OTRJabberLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRJabberLoginViewController.h; sourceTree = "<group>"; };
@@ -1121,8 +1106,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D9D370FC169D215A0086F358 /* libsqlcipher.a in Frameworks */,
-				D9D370FB169D21570086F358 /* libcrypto.a in Frameworks */,
 				D9CEF0AB1684268500B236B5 /* libOTRKit.a in Frameworks */,
 				D989E88E15D4F92E0081DFD1 /* Twitter.framework in Frameworks */,
 				D93C31B7159A8B4F006316C7 /* Security.framework in Frameworks */,
@@ -2409,6 +2392,8 @@
 				6352DC8715AF9F16007AD0B4 /* OTRNewAccountViewController.m */,
 				D9BBCD3C1491F8B400AF1B9F /* OTRAboutViewController.h */,
 				D9BBCD3D1491F8B400AF1B9F /* OTRAboutViewController.m */,
+				63769EF916A77EF400E10BF9 /* OTRConvertAccount.h */,
+				63769EFA16A77EF400E10BF9 /* OTRConvertAccount.m */,
 				D9C7463A15350A21003445ED /* OTRCrittercismSecrets.h */,
 				D9CEF0A81684253B00B236B5 /* XMPPFramework.h */,
 				D9D8D1F61531056300F9E8D3 /* Resources */,
@@ -2515,8 +2500,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				D9D370F8169D21130086F358 /* PBXTargetDependency */,
-				D9D370FA169D21160086F358 /* PBXTargetDependency */,
 				D9CEF0AA1684267E00B236B5 /* PBXTargetDependency */,
 			);
 			name = "Off the Record";
@@ -2956,14 +2939,13 @@
 				D9D37176169D2CEB0086F358 /* MagicalRecord+Setup.m in Sources */,
 				D9D37177169D2CEB0086F358 /* MagicalRecord+ShorthandSupport.m in Sources */,
 				D9D37178169D2CEB0086F358 /* MagicalRecord.m in Sources */,
-				D9D3717B169D34630086F358 /* OTRDatabaseUtils.m in Sources */,
 				D9D3717E169D40500086F358 /* ChatSecure.xcdatamodeld in Sources */,
-				D90B9FA1169FE61200A923EF /* CMDEncryptedSQLiteStore.m in Sources */,
 				D90B9FA4169FF48F00A923EF /* OTRManagedAccount.m in Sources */,
 				D90B9FA7169FF4A200A923EF /* OTRManagedBuddy.m in Sources */,
 				D90B9FAA169FF4D500A923EF /* OTRManagedMessage.m in Sources */,
 				D90B9FAD169FF4EE00A923EF /* OTRManagedOscarAccount.m in Sources */,
 				D90B9FB0169FF4FB00A923EF /* OTRManagedXMPPAccount.m in Sources */,
+				63769EFB16A77EF400E10BF9 /* OTRConvertAccount.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2974,16 +2956,6 @@
 			isa = PBXTargetDependency;
 			name = OTRKit;
 			targetProxy = D9CEF0A91684267E00B236B5 /* PBXContainerItemProxy */;
-		};
-		D9D370F8169D21130086F358 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = crypto;
-			targetProxy = D9D370F7169D21130086F358 /* PBXContainerItemProxy */;
-		};
-		D9D370FA169D21160086F358 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = sqlcipher;
-			targetProxy = D9D370F9169D21160086F358 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

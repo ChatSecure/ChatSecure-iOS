@@ -48,7 +48,7 @@
     tableView.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleHeight;
     [self.view addSubview:tableView];
     
-    //Faceboo
+    //Facebook
     OTRManagedXMPPAccount * facebookAccount = [OTRManagedXMPPAccount MR_createEntity];
     [facebookAccount setDefaultsWithDomain:kOTRFacebookDomain];
     
