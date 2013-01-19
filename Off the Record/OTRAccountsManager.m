@@ -85,17 +85,15 @@
         NSLog(@"Account is nil!");
         return;
     }
-    
     account.password = nil;
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSMutableDictionary *rawAcountsDictionary = [NSMutableDictionary dictionaryWithDictionary:[defaults objectForKey:kOTRSettingAccountsKey]];
     
-    [rawAcountsDictionary removeObjectForKey:account.uniqueIdentifier];
-    [defaults setObject:rawAcountsDictionary forKey:kOTRSettingAccountsKey];
-    [accountsDictionary removeObjectForKey:account.uniqueIdentifier];
-    [[reverseLookupDictionary objectForKey:account.protocol] removeObjectForKey:account.username];
-    [self refreshAccountsArray];
-    [defaults synchronize];
+    
+    NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
+    //[context deleteObject:account];
+    [[context objectWithID:account.objectID] MR_deleteEntity];
+    [context MR_saveNestedContexts];
+    
+   
 }
 
 - (void) refreshAccountsArray {
@@ -104,6 +102,11 @@
     NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
     NSArray *sortedArray = [accounts sortedArrayUsingDescriptors:sortDescriptors];
     self.accountsArray = sortedArray;
+}
+
+-(NSArray *)allAccounts
+{
+    return [OTRManagedAccount MR_findAllSortedBy:@"username" ascending:YES];
 }
 
 -(OTRManagedAccount *)accountForProtocol:(NSString *)protocol accountName:(NSString *)accountName

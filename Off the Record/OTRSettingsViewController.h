@@ -27,11 +27,16 @@
 #import "OTRLoginViewController.h"
 
 @interface OTRSettingsViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, OTRSettingDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate>
+{
+    NSMutableArray * accounts;
+}
 
 @property (nonatomic, retain) UITableView *settingsTableView;
 @property (nonatomic, retain) OTRSettingsManager *settingsManager;
 @property (nonatomic, retain) OTRLoginViewController *loginController;
 @property (nonatomic, retain) OTRManagedAccount *selectedAccount;
 @property (nonatomic, retain) NSIndexPath *selectedIndexPath;
+
+-(void)refreshAccounts;
 
 @end

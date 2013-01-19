@@ -30,6 +30,8 @@
 #import "OTRManagedOscarAccount.h"
 
 #define rowHeight 70
+#define kDisplayNameKey @"displayNameKey"
+#define kProviderImageKey @"providerImageKey"
 
 @interface OTRNewAccountViewController ()
 
@@ -49,26 +51,26 @@
     [self.view addSubview:tableView];
     
     //Facebook
-    OTRManagedXMPPAccount * facebookAccount = [OTRManagedXMPPAccount MR_createEntity];
-    [facebookAccount setDefaultsWithDomain:kOTRFacebookDomain];
+    NSMutableDictionary * facebookAccount = [NSMutableDictionary dictionary];
+    [facebookAccount setObject:FACEBOOK_STRING forKey:kDisplayNameKey];
+    [facebookAccount setObject:kFacebookImageName forKey:kProviderImageKey];
     
     //Google Chat
-    OTRManagedXMPPAccount * googleAccount = [OTRManagedXMPPAccount MR_createEntity];
-    [googleAccount setDefaultsWithDomain:kOTRGoogleTalkDomain];
+     NSMutableDictionary * googleAccount = [NSMutableDictionary dictionary];
+    [googleAccount setObject:GOOGLE_TALK_STRING forKey:kDisplayNameKey];
+    [googleAccount setObject:kGTalkImageName forKey:kProviderImageKey];
     
     //Jabber
-    OTRManagedXMPPAccount * jabberAccount = [OTRManagedXMPPAccount MR_createEntity];
-    [jabberAccount setDefaultsWithDomain:@""];
+     NSMutableDictionary * jabberAccount = [NSMutableDictionary dictionary];
+    [jabberAccount setObject:JABBER_STRING forKey:kDisplayNameKey];
+    [jabberAccount setObject:kXMPPImageName forKey:kProviderImageKey];
     
     //Aim
-    OTRManagedOscarAccount * aimAccount = [OTRManagedOscarAccount MR_createEntity];
-    [aimAccount setDefaultsWithProtocol:kOTRProtocolTypeAIM];
+     NSMutableDictionary * aimAccount = [NSMutableDictionary dictionary];
+    [aimAccount setObject:AIM_STRING forKey:kDisplayNameKey];
+    [aimAccount setObject:kAIMImageName forKey:kProviderImageKey];
     
-    accounts = [NSMutableArray arrayWithObjects:facebookAccount,googleAccount,jabberAccount,aimAccount, nil];
-    
-    NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
-    [context MR_save];
-    
+    accounts = [NSMutableArray arrayWithObjects:facebookAccount,googleAccount,jabberAccount,aimAccount, nil];    
     
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:CANCEL_STRING style:UIBarButtonItemStyleBordered target:self action:@selector(cancelPressed:)];
     
@@ -99,13 +101,13 @@
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
-    OTRManagedAccount * cellAccount = [accounts objectAtIndex:indexPath.row];
-    cell.textLabel.text = [cellAccount providerName];
+    NSDictionary * cellAccount = [accounts objectAtIndex:indexPath.row];
+    cell.textLabel.text = [cellAccount objectForKey:kDisplayNameKey];
     cell.textLabel.font = [UIFont boldSystemFontOfSize:19];
-    cell.imageView.image = [UIImage imageNamed:cellAccount.imageName];
+    cell.imageView.image = [UIImage imageNamed:[cellAccount objectForKey:kProviderImageKey]];
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
-    if( [[cellAccount providerName] isEqualToString:FACEBOOK_STRING])
+    if( [[cellAccount objectForKey:kDisplayNameKey] isEqualToString:FACEBOOK_STRING])
     {
         cell.imageView.layer.masksToBounds = YES;
         cell.imageView.layer.cornerRadius = 10.0;
@@ -118,13 +120,9 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    OTRManagedAccount * cellAccount = [accounts objectAtIndex:indexPath.row];
-    [accounts removeObject:cellAccount];
+    OTRManagedAccount * cellAccount = [self accountForName:[[accounts objectAtIndex:indexPath.row] objectForKey:kDisplayNameKey]];
     NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
 
-    for (OTRManagedAccount *account in accounts) {
-        [context deleteObject:[context objectWithID:account.objectID]];
-    }
     [context MR_save];
     
     OTRLoginViewController *loginViewController = [OTRLoginViewController loginViewControllerWithAcccount:cellAccount];
@@ -146,6 +144,46 @@
     } else {
         return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
     }
+}
+
+-(OTRManagedAccount *)accountForName:(NSString *)name
+{
+    //Facebook
+    OTRManagedAccount * newAccount;
+    if([name isEqualToString:FACEBOOK_STRING])
+    {
+        OTRManagedXMPPAccount * facebookAccount = [OTRManagedXMPPAccount MR_createEntity];
+        [facebookAccount setDefaultsWithDomain:kOTRFacebookDomain];
+        newAccount = facebookAccount;
+    }
+    else if([name isEqualToString:GOOGLE_TALK_STRING])
+    {
+        //Google Chat
+        OTRManagedXMPPAccount * googleAccount = [OTRManagedXMPPAccount MR_createEntity];
+        [googleAccount setDefaultsWithDomain:kOTRGoogleTalkDomain];
+        newAccount = googleAccount;
+    }
+    else if([name isEqualToString:JABBER_STRING])
+    {
+        //Jabber
+        OTRManagedXMPPAccount * jabberAccount = [OTRManagedXMPPAccount MR_createEntity];
+        [jabberAccount setDefaultsWithDomain:@""];
+        newAccount = jabberAccount;
+    }
+    else if([name isEqualToString:AIM_STRING])
+    {
+        //Aim
+        OTRManagedOscarAccount * aimAccount = [OTRManagedOscarAccount MR_createEntity];
+        [aimAccount setDefaultsWithProtocol:kOTRProtocolTypeAIM];
+        newAccount = aimAccount;
+    }
+    return newAccount;
+    
+    
+    
+    
+    
+        
 }
 
 @end

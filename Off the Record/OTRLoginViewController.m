@@ -404,6 +404,15 @@
     return YES;
 }
 
+-(void) didMoveToParentViewController:(UIViewController *)parent
+{
+    //Delete Account because user went back to choose different account type
+    if(!parent)
+    {
+        [[OTRProtocolManager sharedInstance].accountsManager removeAccount:self.account];
+    }
+}
+
 #pragma mark -
 #pragma mark MBProgressHUDDelegate methods
 
@@ -426,7 +435,7 @@
             //GoogleTalkLoginViewController
             return [[OTRGoogleTalkLoginViewController alloc] initWithAccount:account];
         }
-        else if ([xmppAccount.domain isEqualToString:kOTRProtocolTypeXMPP])
+        else
         {
             //XMPP account addvanced
             return [[OTRJabberLoginViewController alloc] initWithAccount:account];

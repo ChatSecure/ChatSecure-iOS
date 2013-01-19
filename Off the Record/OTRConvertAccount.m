@@ -24,8 +24,6 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSMutableDictionary *accountsDictionary = [NSMutableDictionary dictionaryWithDictionary:[defaults objectForKey:kOTRSettingAccountsKey]];
     
-    NSArray * list = [OTRManagedAccount MR_findAll];
-    
     if(accountsDictionary)
         return YES;
     else

@@ -100,6 +100,8 @@
 {
     [super viewWillAppear:animated];
     self.settingsTableView.frame = self.view.bounds;
+    [self refreshAccounts];
+    [settingsTableView reloadData];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -118,7 +120,7 @@
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section == 0 && indexPath.row != [[OTRProtocolManager sharedInstance].accountsManager.accountsArray count])
+    if (indexPath.section == 0 && indexPath.row != [accounts count])
     {
         return UITableViewCellEditingStyleDelete;
     }
@@ -137,12 +139,12 @@
         {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:accountCellIdentifier];
         }
-        if (indexPath.row == [[OTRProtocolManager sharedInstance].accountsManager.accountsArray count]) {
+        if (indexPath.row == [accounts count]) {
             cell.textLabel.text = NEW_ACCOUNT_STRING;
             cell.imageView.image = [UIImage imageNamed:@"31-circle-plus.png"];
             cell.detailTextLabel.text = @"";
         } else {
-            OTRManagedAccount *account = [[OTRProtocolManager sharedInstance].accountsManager.accountsArray objectAtIndex:indexPath.row];
+            OTRManagedAccount *account = [accounts objectAtIndex:indexPath.row];
             cell.textLabel.text = account.username;
             if (account.isConnected) {
                 cell.detailTextLabel.text = CONNECTED_STRING;
@@ -180,7 +182,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)sectionIndex
 {
     if (sectionIndex == 0) {
-        return [[OTRProtocolManager sharedInstance].accountsManager.accountsArray count]+1;
+        return [accounts count]+1;
     }
     return [self.settingsManager numberOfSettingsInSection:sectionIndex];
 }
@@ -198,10 +200,10 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section == 0) { // Accounts
-        if (indexPath.row == [[OTRProtocolManager sharedInstance].accountsManager.accountsArray count]) {
+        if (indexPath.row == [accounts count]) {
             [self addAccount:nil];
         } else {
-            OTRManagedAccount *account = [[OTRProtocolManager sharedInstance].accountsManager.accountsArray objectAtIndex:indexPath.row];
+            OTRManagedAccount *account = [accounts objectAtIndex:indexPath.row];
             
             if (!account.isConnected) {
                 [self showLoginControllerForAccount:account];
@@ -230,8 +232,7 @@
     }
     if (editingStyle == UITableViewCellEditingStyleDelete) 
     {
-        OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
-        OTRManagedAccount *account = [protocolManager.accountsManager.accountsArray objectAtIndex:indexPath.row];
+        OTRManagedAccount *account = [accounts objectAtIndex:indexPath.row];
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:DELETE_ACCOUNT_TITLE_STRING message:[NSString stringWithFormat:@"%@ %@?", DELETE_ACCOUNT_MESSAGE_STRING, account.username] delegate:self cancelButtonTitle:CANCEL_STRING otherButtonTitles:OK_STRING, nil];
         alert.tag = ALERTVIEW_DELETE_TAG;
         self.selectedIndexPath = indexPath;
@@ -345,14 +346,22 @@
                 [protocol disconnect];
             }
             OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
+            [protocolManager.accountsManager removeAccount:selectedAccount];
+            [self refreshAccounts];
+            //[accounts removeObjectAtIndex:selectedIndexPath.row];
             
-            [protocolManager.accountsManager removeAccount:selectedAccount];        
             [settingsTableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:selectedIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            
         }
         self.selectedIndexPath = nil;
         self.selectedAccount = nil;
     }
 
+}
+
+-(void)refreshAccounts
+{
+    accounts = [[[OTRProtocolManager sharedInstance].accountsManager allAccounts] mutableCopy];
 }
 
 @end

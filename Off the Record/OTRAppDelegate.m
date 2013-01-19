@@ -218,25 +218,8 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
         id <OTRProtocol> protocol = [protocolManager.protocolManagers objectForKey:key];
         [protocol disconnect];
     }
-    
-    /*
-    NSPersistentStoreCoordinator *storeCoordinator = [protocolManager.xmppManager.xmppRosterStorage
- persistentStoreCoordinator];
-     NSArray *stores = [storeCoordinator persistentStores];
-     
-     for(NSPersistentStore *store in stores)
-     {
-     NSError *error = nil;
-     NSError *error2 = nil;
-     NSURL *storeURL = store.URL;
-     [storeCoordinator removePersistentStore:store error:&error];
-     [[NSFileManager defaultManager] removeItemAtURL:storeURL error:&error];
-     if(error)
-     NSLog(@"%@",[error description]);
-     if(error2)
-     NSLog(@"%@",[error2 description]);
-     }
-     */
+
+    [MagicalRecord cleanUp];
 }
 
 /*
