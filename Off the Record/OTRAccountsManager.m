@@ -32,52 +32,13 @@
 @end
 
 @implementation OTRAccountsManager
-@synthesize accountsDictionary, accountsArray, reverseLookupDictionary;
-
-- (void) dealloc {
-    self.accountsDictionary = nil;
-    self.accountsArray = nil;
-}
-
-- (id) init {
-    if (self = [super init]) {
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        NSDictionary *rawAccountsDictionary = [defaults objectForKey:kOTRSettingAccountsKey];
-        reverseLookupDictionary = [[NSMutableDictionary alloc] init];
-        NSArray *values = [rawAccountsDictionary allValues];
-        NSArray *keys = [rawAccountsDictionary allKeys];
-        int count = [values count];
-        self.accountsDictionary = [NSMutableDictionary dictionaryWithCapacity:count];
-        for (int i = 0; i < count; i++) {
-            NSDictionary *settingsDictionary = [values objectAtIndex:i];
-            NSString *settingKey = [keys objectAtIndex:i];
-            
-            OTRManagedAccount *account = nil;
-            /****** todo setup account or delete this 
-            if ([[settingsDictionary objectForKey:kOTRAccountProtocolKey] isEqualToString:kOTRProtocolTypeXMPP]) {
-                account = [[OTRXMPPAccount alloc] initWithSettingsDictionary:settingsDictionary uniqueIdentifier:settingKey];
-            } else if ([[settingsDictionary objectForKey:kOTRAccountProtocolKey] isEqualToString:kOTRProtocolTypeAIM]) {
-                account = [[OTROscarAccount alloc] initWithSettingsDictionary:settingsDictionary uniqueIdentifier:settingKey];
-            }
-             *////////////
-
-            [accountsDictionary setObject:account forKey:account.uniqueIdentifier];
-            [reverseLookupDictionary setObject:[NSMutableDictionary dictionaryWithObject:account forKey:account.username] forKey:account.protocol];
-        }
-        [self refreshAccountsArray];
-    }
-    return self;
-}
 
 - (void) addAccount:(OTRManagedAccount*)account {
     if (!account) {
         NSLog(@"Account is nil!");
         return;
     }
-    [accountsDictionary setObject:account forKey:account.uniqueIdentifier];    
-    [reverseLookupDictionary setObject:[NSMutableDictionary dictionaryWithObject:account forKey:account.username] forKey:account.protocol];
     [account save];
-    [self refreshAccountsArray];
 }
 
 - (void) removeAccount:(OTRManagedAccount*)account {
@@ -89,19 +50,10 @@
     
     
     NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
-    //[context deleteObject:account];
     [[context objectWithID:account.objectID] MR_deleteEntity];
     [context MR_saveNestedContexts];
     
    
-}
-
-- (void) refreshAccountsArray {
-    NSArray *accounts = [accountsDictionary allValues];
-    NSSortDescriptor *sortDescriptor =  [[NSSortDescriptor alloc] initWithKey:@"username" ascending:YES];
-    NSArray *sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
-    NSArray *sortedArray = [accounts sortedArrayUsingDescriptors:sortDescriptors];
-    self.accountsArray = sortedArray;
 }
 
 -(NSArray *)allAccounts
@@ -111,7 +63,17 @@
 
 -(OTRManagedAccount *)accountForProtocol:(NSString *)protocol accountName:(NSString *)accountName
 {
-    return [[reverseLookupDictionary objectForKey:protocol] objectForKey:accountName];
+    NSPredicate * accountFilter = [NSPredicate predicateWithFormat:@"protocol== %@ AND username==%@",protocol,accountName];
+    NSArray * results = [OTRManagedAccount MR_findAllWithPredicate:accountFilter];
+    
+    
+    OTRManagedAccount * fetchedAccount = nil;
+    if (results) {
+        fetchedAccount = [results lastObject];
+    }
+    return fetchedAccount;
+    
+    //return [[reverseLookupDictionary objectForKey:protocol] objectForKey:accountName];
 }
 
 @end

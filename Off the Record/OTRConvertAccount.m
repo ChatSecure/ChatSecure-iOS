@@ -51,7 +51,7 @@
         managagedXmppAccount.protocol = xmppAccount.protocol;
         [managagedXmppAccount setShouldRememberPassword:xmppAccount.rememberPassword];
         managagedXmppAccount.password = xmppAccount.password;
-        managagedXmppAccount.isConnected = NO;
+        [managagedXmppAccount setIsConnected:NO];
         
         
         [managagedXmppAccount save];
