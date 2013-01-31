@@ -74,6 +74,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 @synthesize xmppCapabilitiesStorage;
 @synthesize isXmppConnected;
 @synthesize protocolBuddyList,account;
+@synthesize buddyTimers;
 
 -(id)init
 {
@@ -89,7 +90,8 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
         [self setupStream];
         
         //[self setupStream];
-        protocolBuddyList = [[NSMutableDictionary alloc] init];
+        protocolBuddyList = [NSMutableDictionary dictionary];
+        buddyTimers = [NSMutableDictionary dictionary];
         
     }
 
@@ -887,7 +889,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     [self connectWithJID:self.account.username password:myPassword];
 }
 
--(void)sendChatState:(int)chatState withBuddy:(OTRManagedBuddy *)buddy
+-(void)sendChatState:(OTRChatState)chatState withBuddy:(OTRManagedBuddy *)buddy
 {
     if (!self.account.sendTypingNotifications) {
         return;
@@ -927,5 +929,61 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     
 }
 
+//Chat State
+
+-(OTRXMPPBudyTimers *)buddyTimersForBuddyObjectID:(NSManagedObjectID *)
+managedBuddyObjectID
+{
+    OTRXMPPBudyTimers * timers = (OTRXMPPBudyTimers *)[buddyTimers objectForKey:managedBuddyObjectID];
+    return timers;
+}
+
+-(NSTimer *)inactiveChatStateTimerForBuddyObjectID:(NSManagedObjectID *)
+managedBuddyObjectID
+{
+   return [self buddyTimersForBuddyObjectID:managedBuddyObjectID].inactiveChatStateTimer;
+    
+}
+-(NSTimer *)pausedChatStateTimerForBuddyObjectID:(NSManagedObjectID *)
+managedBuddyObjectID
+{
+    return [self buddyTimersForBuddyObjectID:managedBuddyObjectID].pausedChatStateTimer;
+}
+
+-(void)restartPausedChatStateTimerForBuddyObjectID:(NSManagedObject *)managedBuddyObjectID
+{
+    OTRXMPPBudyTimers * timer = (OTRXMPPBudyTimers *)[buddyTimers objectForKey:managedBuddyObjectID];
+    [timer.pausedChatStateTimer invalidate];
+    timer.pausedChatStateTimer = [NSTimer scheduledTimerWithTimeInterval:kOTRChatStatePausedTimeout target:self selector:@selector(sendPausedChatState) userInfo:managedBuddyObjectID repeats:NO];
+}
+-(void)restartInactiveChatStateTimerForBuddyObjectID:(NSManagedObject *)managedBuddyObjectID
+{
+    OTRXMPPBudyTimers * timer = (OTRXMPPBudyTimers *)[buddyTimers objectForKey:managedBuddyObjectID];
+    [timer.inactiveChatStateTimer invalidate];
+    timer.inactiveChatStateTimer = [NSTimer scheduledTimerWithTimeInterval:kOTRChatStatePausedTimeout target:self selector:@selector(sendPausedChatState) userInfo:managedBuddyObjectID repeats:NO];
+    
+}
+-(void)sendPausedChatState:(NSTimer *)timer
+{
+    NSManagedObjectID * managedBuddyObjectID= (NSManagedObjectID *)timer.userInfo;
+    [timer invalidate];
+    OTRManagedBuddy * managedBuddy =
+    
+    OTRXMPPBudyTimers * timer = (OTRXMPPBudyTimers *)[buddyTimers objectForKey:managedBuddyObjectID];
+    
+    
+}
+-(void)sendActiveChatState:(NSTimer *)timer
+{
+    
+}
+-(void)sendInactiveChatState:(NSTimer *)timer
+{
+    
+}
+-(void)sendComposingChatState:(NSTimer *)timer
+{
+    
+}
 
 @end

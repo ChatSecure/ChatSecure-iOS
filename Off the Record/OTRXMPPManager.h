@@ -36,6 +36,7 @@
 #import "OTRProtocol.h"
 #import "OTRManagedXMPPAccount.h"
 #import "OTRManagedBuddy.h"
+#import "OTRXMPPBudyTimers.h"
 
 @interface OTRXMPPManager : NSObject <XMPPRosterDelegate, NSFetchedResultsControllerDelegate, OTRProtocol>
 {
@@ -72,6 +73,7 @@
 @property (nonatomic, readonly) XMPPCapabilities *xmppCapabilities;
 @property (nonatomic, readonly) XMPPCapabilitiesCoreDataStorage *xmppCapabilitiesStorage;
 @property 	BOOL isXmppConnected;
+@property (nonatomic, strong)NSMutableDictionary * buddyTimers;
 
 - (NSManagedObjectContext *)managedObjectContext_roster;
 - (NSManagedObjectContext *)managedObjectContext_capabilities;
@@ -82,6 +84,15 @@
 - (NSFetchedResultsController *)fetchedResultsController;
 
 - (NSString*)accountName;
+
+
+//Chat State
+-(void)restartPausedChatStateTimerForBuddyObjectID:(NSManagedObject *)managedBuddyObjectID;
+-(void)restartInactiveChatStateTimerForBuddyObjectID:(NSManagedObject *)managedBuddyObjectID;
+-(void)sendPausedChatState:(NSTimer *)timer;
+-(void)sendActiveChatState:(NSTimer *)timer;
+-(void)sendInactiveChatState:(NSTimer *)timer;
+-(void)sendComposingChatState:(NSTimer *)timer;
 
 @property (nonatomic, retain) OTRManagedXMPPAccount *account;
 
