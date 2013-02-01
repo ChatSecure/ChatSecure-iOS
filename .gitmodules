@@ -22,3 +22,6 @@
 [submodule "Submodules/LibOrange"]
 	path = Submodules/LibOrange
 	url = git@github.com:ChatSecure/LibOrange.git
+[submodule "Submodules/XMPPFramework-chatsecure"]
+	path = Submodules/XMPPFramework-chatsecure
+	url = git@github.com:ChatSecure/XMPPFramework.git
