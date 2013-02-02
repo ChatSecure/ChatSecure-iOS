@@ -235,6 +235,9 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	// Everything else plugs into the xmppStream, such as modules/extensions and delegates.
     
 	xmppStream = [[XMPPStream alloc] init];
+    
+    //Makes sure not allow any sending of password in plain text
+    xmppStream.requireSecureAuthentication = YES;
 	
 #if !TARGET_IPHONE_SIMULATOR
 	{
