@@ -696,9 +696,10 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
         
         
         
-        XMPPUserCoreDataStorageObject *user = [xmppRosterStorage userForJID:[message from]
+        /*XMPPUserCoreDataStorageObject *user = [xmppRosterStorage userForJID:[message from]
                                                                  xmppStream:xmppStream
                                                        managedObjectContext:[self managedObjectContext_roster]];
+         */
         
         NSString *body = [[message elementForName:@"body"] stringValue];
         //NSString *displayName = [user displayName];

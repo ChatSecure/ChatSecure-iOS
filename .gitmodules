@@ -10,7 +10,7 @@
 	url = git://github.com/jdg/MBProgressHUD.git
 [submodule "Submodules/MWFeedParser"]
 	path = Submodules/MWFeedParser
-	url = git://github.com/mwaterfall/MWFeedParser.git
+	url = git@github.com:ChatSecure/MWFeedParser.git
 [submodule "Submodules/OTRKit"]
 	path = Submodules/OTRKit
 	url = git@github.com:ChatSecure/OTRKit.git

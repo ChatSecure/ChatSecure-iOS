@@ -315,7 +315,7 @@ BOOL loginFailed;
 				}
 			}
 			if (canTransfer) {
-				NSString * tempPath = [NSTemporaryDirectory() stringByAppendingFormat:@"/%d%d.txt", arc4random(), time(NULL)];
+				NSString * tempPath = [NSTemporaryDirectory() stringByAppendingFormat:@"/%d%ld.txt", arc4random(), time(NULL)];
 				[messagestr writeToFile:tempPath atomically:NO encoding:NSUTF8StringEncoding error:nil];
 				if (![theSession.rendezvousHandler sendFile:tempPath toUser:message.buddy]) {
 					[[NSFileManager defaultManager] removeItemAtPath:tempPath error:nil];
