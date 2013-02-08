@@ -74,9 +74,6 @@ enum OTRChatState {
 -(void)receiveChatStateMessage:(OTRChatState) chatState;
 -(void)receiveReceiptResonse:(NSString *)responseID;
 -(void)sendMessage:(NSString *)message secure:(BOOL)secure;
--(void)sendChatState:(OTRChatState)chatState;
--(void)restartPausedChatStateTimer;
--(void)restartInactiveChatStateTimer;
 -(void)sendPausedChatState;
 -(void)sendActiveChatState;
 -(void)sendInactiveChatState;

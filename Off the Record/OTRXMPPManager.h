@@ -87,12 +87,13 @@
 
 
 //Chat State
--(void)restartPausedChatStateTimerForBuddyObjectID:(NSManagedObject *)managedBuddyObjectID;
--(void)restartInactiveChatStateTimerForBuddyObjectID:(NSManagedObject *)managedBuddyObjectID;
+-(void)sendChatState:(OTRChatState)chatState withBuddyID:(NSManagedObjectID *)managedBuddyObjectID;
+-(void)restartPausedChatStateTimerForBuddyObjectID:(NSManagedObjectID *)managedBuddyObjectID;
+-(void)restartInactiveChatStateTimerForBuddyObjectID:(NSManagedObjectID *)managedBuddyObjectID;
 -(void)sendPausedChatState:(NSTimer *)timer;
--(void)sendActiveChatState:(NSTimer *)timer;
 -(void)sendInactiveChatState:(NSTimer *)timer;
--(void)sendComposingChatState:(NSTimer *)timer;
+-(NSTimer *)inactiveChatStateTimerForBuddyObjectID:(NSManagedObjectID *)managedBuddyObjectID;
+-(NSTimer *)pausedChatStateTimerForBuddyObjectID:(NSManagedObjectID *)managedBuddyObjectID;
 
 @property (nonatomic, retain) OTRManagedXMPPAccount *account;
 

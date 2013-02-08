@@ -23,6 +23,7 @@
 #import "OTRManagedMessage.h"
 #import "OTRManagedBuddy.h"
 #import "OTRConstants.h"
+#import "OTRProtocolManager.h"
 
 @implementation OTRManagedMessage
 
@@ -60,22 +61,24 @@
 
 -(void)send
 {
-    // TODO: fix this!!
-    assert("fix this!");
-    //[self.buddy.protocol sendMessage:self];
+    OTRProtocolManager * protocolManager =[OTRProtocolManager sharedInstance];
+    id<OTRProtocol> protocol = [protocolManager protocolForAccount:self.buddy.account];
+    [protocol sendMessage:self];
 }
 
 +(void)sendMessage:(OTRManagedMessage *)message
 {
     NSDictionary *messageInfo = [NSDictionary dictionaryWithObject:message.objectID forKey:@"message"];
-    [message.buddy restartInactiveChatStateTimer];
     
-    // TODO: fix this!!
-    assert("fix this!");
-    //[message.buddy.protocol sendMessage:message];
+    [message.buddy invalidatePausedChatStateTimer];
     
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:kOTRSendMessage object:self userInfo:messageInfo];
+    OTRProtocolManager * protocolManager =[OTRProtocolManager sharedInstance];
+    id<OTRProtocol> protocol = [protocolManager protocolForAccount:message.buddy.account];
+    [protocol sendMessage:message];
+    
+    
+    //[[NSNotificationCenter defaultCenter] postNotificationName:kOTRSendMessage object:self userInfo:messageInfo];
 }
 
 @end

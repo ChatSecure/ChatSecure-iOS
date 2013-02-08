@@ -889,11 +889,16 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     [self connectWithJID:self.account.username password:myPassword];
 }
 
--(void)sendChatState:(OTRChatState)chatState withBuddy:(OTRManagedBuddy *)buddy
+-(void)sendChatState:(OTRChatState)chatState withBuddyID:(NSManagedObjectID *)managedBuddyObjectID
 {
-    if (!self.account.sendTypingNotifications) {
+    
+    OTRManagedBuddy * buddy = [self managedBuddyWithObjectID:managedBuddyObjectID];
+    
+
+    if (buddy.lastSentChatState == chatState) {
         return;
     }
+    
     NSXMLElement *message = [NSXMLElement elementWithName:@"message"];
     [message addAttributeWithName:@"type" stringValue:@"chat"];
     [message addAttributeWithName:@"to" stringValue:buddy.accountName];
@@ -901,36 +906,65 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     
     BOOL shouldSend = YES;
     
-    switch (chatState)
+    if (chatState == kOTRChatStateActive) {
+        [[self pausedChatStateTimerForBuddyObjectID:managedBuddyObjectID] invalidate];
+        [self restartInactiveChatStateTimerForBuddyObjectID:managedBuddyObjectID];
+        [xMessage addActiveChatState];
+    }
+    else if (chatState == kOTRChatStateComposing)
     {
-        case kOTRChatStateActive  :
-            [xMessage addActiveChatState];
-            break;
-        case kOTRChatStateComposing  :
+        if(buddy.lastSentChatState !=kOTRChatStateComposing)
             [xMessage addComposingChatState];
-            break;
-        case kOTRChatStateInactive:
-            [xMessage addInactiveChatState];
-            break;
-        case kOTRChatStatePaused:
-            [xMessage addPausedChatState];
-            break;
-        case kOTRChatStateGone:
-            [xMessage addGoneChatState];
-            break;
-        default :
+        else
             shouldSend = NO;
-            break;
+        
+        [self restartPausedChatStateTimerForBuddyObjectID:managedBuddyObjectID];
+        [[self inactiveChatStateTimerForBuddyObjectID:managedBuddyObjectID] invalidate];
+        
+    }
+    else if(chatState == kOTRChatStateInactive)
+    {
+        if(buddy.lastSentChatState != kOTRChatStateInactive)
+            [xMessage addInactiveChatState];
+        else
+            shouldSend = NO;
+    }
+    else if (chatState == kOTRChatStatePaused)
+    {
+        [xMessage addPausedChatState];
+    }
+    else if (chatState == kOTRChatStateGone)
+    {
+        [xMessage addGoneChatState];
+    }
+    else
+    {
+        shouldSend = NO;
     }
     
     if(shouldSend)
+    {
+        buddy.lastSentChatState = chatState;
+        NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+        [context MR_saveNestedContexts];
         [xmppStream sendElement:message];
+    }
     
     
 }
 
 //Chat State
-
+-(OTRManagedBuddy *)managedBuddyWithObjectID:(NSManagedObjectID *)managedBuddyObjectID
+{
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
+    NSError * error = nil;
+    OTRManagedBuddy * managedBuddy = (OTRManagedBuddy *)[context existingObjectWithID:managedBuddyObjectID error:&error];
+    if (error) {
+        NSLog(@"Error Fetching Buddy: %@",error);
+    }
+    return managedBuddy;
+    
+}
 -(OTRXMPPBudyTimers *)buddyTimersForBuddyObjectID:(NSManagedObjectID *)
 managedBuddyObjectID
 {
@@ -950,39 +984,40 @@ managedBuddyObjectID
     return [self buddyTimersForBuddyObjectID:managedBuddyObjectID].pausedChatStateTimer;
 }
 
--(void)restartPausedChatStateTimerForBuddyObjectID:(NSManagedObject *)managedBuddyObjectID
+-(void)restartPausedChatStateTimerForBuddyObjectID:(NSManagedObjectID *)managedBuddyObjectID
 {
     OTRXMPPBudyTimers * timer = (OTRXMPPBudyTimers *)[buddyTimers objectForKey:managedBuddyObjectID];
+    if(!timer)
+    {
+        timer = [[OTRXMPPBudyTimers alloc] init];
+    }
     [timer.pausedChatStateTimer invalidate];
-    timer.pausedChatStateTimer = [NSTimer scheduledTimerWithTimeInterval:kOTRChatStatePausedTimeout target:self selector:@selector(sendPausedChatState) userInfo:managedBuddyObjectID repeats:NO];
+    timer.pausedChatStateTimer = [NSTimer scheduledTimerWithTimeInterval:kOTRChatStatePausedTimeout target:self selector:@selector(sendPausedChatState:) userInfo:managedBuddyObjectID repeats:NO];
+    [buddyTimers setObject:timer forKey:managedBuddyObjectID];
 }
--(void)restartInactiveChatStateTimerForBuddyObjectID:(NSManagedObject *)managedBuddyObjectID
+-(void)restartInactiveChatStateTimerForBuddyObjectID:(NSManagedObjectID *)managedBuddyObjectID
 {
     OTRXMPPBudyTimers * timer = (OTRXMPPBudyTimers *)[buddyTimers objectForKey:managedBuddyObjectID];
+    if(!timer)
+    {
+        timer = [[OTRXMPPBudyTimers alloc] init];
+    }
     [timer.inactiveChatStateTimer invalidate];
-    timer.inactiveChatStateTimer = [NSTimer scheduledTimerWithTimeInterval:kOTRChatStatePausedTimeout target:self selector:@selector(sendPausedChatState) userInfo:managedBuddyObjectID repeats:NO];
+    timer.inactiveChatStateTimer = [NSTimer scheduledTimerWithTimeInterval:kOTRChatStateInactiveTimeout target:self selector:@selector(sendInactiveChatState:) userInfo:managedBuddyObjectID repeats:NO];
+    [buddyTimers setObject:timer forKey:managedBuddyObjectID];
     
 }
 -(void)sendPausedChatState:(NSTimer *)timer
 {
     NSManagedObjectID * managedBuddyObjectID= (NSManagedObjectID *)timer.userInfo;
     [timer invalidate];
-    OTRManagedBuddy * managedBuddy =
-    
-    OTRXMPPBudyTimers * timer = (OTRXMPPBudyTimers *)[buddyTimers objectForKey:managedBuddyObjectID];
-    
-    
-}
--(void)sendActiveChatState:(NSTimer *)timer
-{
-    
+    [self sendChatState:kOTRChatStatePaused withBuddyID:managedBuddyObjectID];
 }
 -(void)sendInactiveChatState:(NSTimer *)timer
 {
-    
-}
--(void)sendComposingChatState:(NSTimer *)timer
-{
+    NSManagedObjectID * managedBuddyObjectID= (NSManagedObjectID *)timer.userInfo;
+    [timer invalidate];
+    [self sendChatState:kOTRChatStateInactive withBuddyID:managedBuddyObjectID];
     
 }
 

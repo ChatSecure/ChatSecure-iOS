@@ -155,17 +155,6 @@
         [self sendChatState:kOTRChatStateInactive];
 }
 
--(void)restartPausedChatStateTimer
-{
-    [pausedChatStateTimer invalidate];
-    pausedChatStateTimer = [NSTimer scheduledTimerWithTimeInterval:kOTRChatStatePausedTimeout target:self selector:@selector(sendPausedChatState) userInfo:nil repeats:NO];
-}
--(void)restartInactiveChatStateTimer
-{
-    [inactiveChatStateTimer invalidate];
-    inactiveChatStateTimer = [NSTimer scheduledTimerWithTimeInterval:kOTRChatStateInactiveTimeout target:self selector:@selector(sendInactiveChatState) userInfo:nil repeats:NO];
-}
-
 -(void)receiveMessage:(NSString *)message
 {
     //NSLog(@"received: %@",message);

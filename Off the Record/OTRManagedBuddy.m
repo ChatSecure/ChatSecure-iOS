@@ -27,6 +27,7 @@
 #import "NSString+HTML.h"
 #import "Strings.h"
 #import "OTRConstants.h"
+#import "OTRXMPPManager.h"
 
 @interface OTRManagedBuddy()
 @property (nonatomic) OTRBuddyStatus status;
@@ -84,58 +85,64 @@
     self.lastSentChatState = kOTRChatStateUnknown;
 }
 
--(void)sendChatState:(OTRChatState) sendingChatState
+-(BOOL)protocolIsXMPP
 {
-    /*
-    if([self.protocol respondsToSelector:@selector(sendChatState:withBuddy:)])
-    {
-        lastSentChatState = sendingChatState;
-        [self.protocol sendChatState:sendingChatState withBuddy:self];
+    OTRProtocolManager * protocolManager = [OTRProtocolManager sharedInstance];
+    id<OTRProtocol> protocol = [protocolManager protocolForAccount:self.account];
+    if ([protocol isKindOfClass:[OTRXMPPManager class]]) {
+        return YES;
     }
-    */
+    return NO;
 }
 
 -(void)sendComposingChatState
 {
-    if(self.lastSentChatState != kOTRChatStateComposing)
+    if([self protocolIsXMPP])
     {
-        [self sendChatState:kOTRChatStateComposing];
+        OTRProtocolManager * protocolManager = [OTRProtocolManager sharedInstance];
+        OTRXMPPManager * protocol = (OTRXMPPManager *)[protocolManager protocolForAccount:self.account];
+        [protocol sendChatState:kOTRChatStateComposing withBuddyID:self.objectID];
     }
-    [self restartPausedChatStateTimer];
-    //[self.inactiveChatStateTimer invalidate];
-}
--(void)sendPausedChatState
-{
-    [self sendChatState:kOTRChatStatePaused];
-    //[self.inactiveChatStateTimer invalidate];
 }
 
 -(void)sendActiveChatState
 {
-    //[pausedChatStateTimer invalidate];
-    [self restartInactiveChatStateTimer];
-    [self sendChatState:kOTRChatStateActive];
+    if([self protocolIsXMPP])
+    {
+        OTRProtocolManager * protocolManager = [OTRProtocolManager sharedInstance];
+        OTRXMPPManager * protocol = (OTRXMPPManager *)[protocolManager protocolForAccount:self.account];
+        [protocol sendChatState:kOTRChatStateActive withBuddyID:self.objectID];
+    }
 }
 -(void)sendInactiveChatState
 {
-    //[self.inactiveChatStateTimer invalidate];
-    if(self.lastSentChatState != kOTRChatStateInactive)
-        [self sendChatState:kOTRChatStateInactive];
+    if([self protocolIsXMPP])
+    {
+        OTRProtocolManager * protocolManager = [OTRProtocolManager sharedInstance];
+        OTRXMPPManager * protocol = (OTRXMPPManager *)[protocolManager protocolForAccount:self.account];
+        [protocol sendChatState:kOTRChatStateInactive withBuddyID:self.objectID];
+    }
 }
-
--(void)restartPausedChatStateTimer
+-(void)invalidatePausedChatStateTimer
 {
-    /*
-    [pausedChatStateTimer invalidate];
-    pausedChatStateTimer = [NSTimer scheduledTimerWithTimeInterval:kOTRChatStatePausedTimeout target:self selector:@selector(sendPausedChatState) userInfo:nil repeats:NO];
-     */
+    if([self protocolIsXMPP])
+    {
+        OTRProtocolManager * protocolManager = [OTRProtocolManager sharedInstance];
+        OTRXMPPManager * protocol = (OTRXMPPManager *)[protocolManager protocolForAccount:self.account];
+        [[protocol pausedChatStateTimerForBuddyObjectID:self.objectID] invalidate];
+        
+    }
+    
 }
--(void)restartInactiveChatStateTimer
+-(void)invalidateInactiveChatStateTimer
 {
-    /*
-    [inactiveChatStateTimer invalidate];
-    inactiveChatStateTimer = [NSTimer scheduledTimerWithTimeInterval:kOTRChatStateInactiveTimeout target:self selector:@selector(sendInactiveChatState) userInfo:nil repeats:NO];
-     */
+    if([self protocolIsXMPP])
+    {
+        OTRProtocolManager * protocolManager = [OTRProtocolManager sharedInstance];
+        OTRXMPPManager * protocol = (OTRXMPPManager *)[protocolManager protocolForAccount:self.account];
+        [[protocol inactiveChatStateTimerForBuddyObjectID:self.objectID] invalidate];
+    }
+    
 }
 
 -(void)receiveMessage:(NSString *)message
