@@ -45,7 +45,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 // error reporting support.
 #ifdef CRITTERCISM_ENABLED
 #import "Crittercism.h"
-#import "OTRCrittercismSecrets.h"
+#import "OTRSecrets.h"
 #endif
 
 @implementation OTRAppDelegate

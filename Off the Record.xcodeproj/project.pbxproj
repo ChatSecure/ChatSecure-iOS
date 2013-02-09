@@ -157,6 +157,7 @@
 		D93C99EB16BF953600344386 /* libidn.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D93C995016BF94AF00344386 /* libidn.a */; };
 		D93E34F315E48FE600D587B2 /* 14-gear.png in Resources */ = {isa = PBXBuildFile; fileRef = D93E34F115E48FE600D587B2 /* 14-gear.png */; };
 		D93E34F415E48FE600D587B2 /* 14-gear@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D93E34F215E48FE600D587B2 /* 14-gear@2x.png */; };
+		D953117C16C6FF3400AAB1D2 /* libUserVoice.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D953117916C6FF1A00AAB1D2 /* libUserVoice.a */; };
 		D95F8E921419C3D00094A634 /* chatsecure_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = D95F8E911419C3D00094A634 /* chatsecure_icon.png */; };
 		D95F8E941419C3E10094A634 /* chatsecure_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D95F8E931419C3E00094A634 /* chatsecure_icon@2x.png */; };
 		D95F8E961419C58D0094A634 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = D95F8E951419C58D0094A634 /* Default.png */; };
@@ -335,6 +336,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		D953117816C6FF1A00AAB1D2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D953117416C6FF1A00AAB1D2 /* UserVoice.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D2AAC07E0554694100DB518D;
+			remoteInfo = UserVoice;
+		};
+		D953117A16C6FF2F00AAB1D2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D953117416C6FF1A00AAB1D2 /* UserVoice.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC07D0554694100DB518D;
+			remoteInfo = UserVoice;
+		};
 		D9CEED691684235C00B236B5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D9CEED621684235B00B236B5 /* OTRKit.xcodeproj */;
@@ -653,6 +668,8 @@
 		D93E34F115E48FE600D587B2 /* 14-gear.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "14-gear.png"; sourceTree = "<group>"; };
 		D93E34F215E48FE600D587B2 /* 14-gear@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "14-gear@2x.png"; sourceTree = "<group>"; };
 		D940EA7915992A0800E5527A /* OTRProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRProtocol.h; sourceTree = "<group>"; };
+		D953117416C6FF1A00AAB1D2 /* UserVoice.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = UserVoice.xcodeproj; path = Submodules/UserVoice/UserVoice.xcodeproj; sourceTree = "<group>"; };
+		D953117D16C6FFF000AAB1D2 /* OTRSecrets.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OTRSecrets.h; sourceTree = "<group>"; };
 		D95F8E911419C3D00094A634 /* chatsecure_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = chatsecure_icon.png; path = ../chatsecure_icon.png; sourceTree = "<group>"; };
 		D95F8E931419C3E00094A634 /* chatsecure_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "chatsecure_icon@2x.png"; path = "../chatsecure_icon@2x.png"; sourceTree = "<group>"; };
 		D95F8E951419C58D0094A634 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = ../Default.png; sourceTree = "<group>"; };
@@ -710,7 +727,6 @@
 		D9BE44A8166F330A00A628C7 /* globe@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "globe@2x.png"; sourceTree = "<group>"; };
 		D9BEFD61141AB35D008064A7 /* chatsecure_banner@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatsecure_banner@2x.png"; sourceTree = SOURCE_ROOT; };
 		D9BEFD62141AB35D008064A7 /* chatsecure_banner.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chatsecure_banner.png; sourceTree = SOURCE_ROOT; };
-		D9C7463A15350A21003445ED /* OTRCrittercismSecrets.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OTRCrittercismSecrets.h; sourceTree = "<group>"; };
 		D9C7463B15350F62003445ED /* OTRSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRSettingsViewController.h; sourceTree = "<group>"; };
 		D9C7463C15350F62003445ED /* OTRSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRSettingsViewController.m; sourceTree = "<group>"; };
 		D9C7463E153512DE003445ED /* OTRSettingsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRSettingsManager.h; sourceTree = "<group>"; };
@@ -994,6 +1010,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D953117C16C6FF3400AAB1D2 /* libUserVoice.a in Frameworks */,
 				D9CEF0AB1684268500B236B5 /* libOTRKit.a in Frameworks */,
 				D989E88E15D4F92E0081DFD1 /* Twitter.framework in Frameworks */,
 				D93C31B7159A8B4F006316C7 /* Security.framework in Frameworks */,
@@ -1682,6 +1699,14 @@
 			path = libidn;
 			sourceTree = "<group>";
 		};
+		D953117516C6FF1A00AAB1D2 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D953117916C6FF1A00AAB1D2 /* libUserVoice.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		D96495CC15363C1F009A8C33 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
@@ -1730,6 +1755,7 @@
 				D9CEEF031684242A00B236B5 /* SSKeychain */,
 				D9CEEEC21684240900B236B5 /* MBProgressHUD */,
 				D9CEED95168423CA00B236B5 /* LibOrange */,
+				D953117416C6FF1A00AAB1D2 /* UserVoice.xcodeproj */,
 				D9CEED8C1684238D00B236B5 /* Crittercism */,
 				D9CEED6B1684237700B236B5 /* Appirater */,
 				D9CEED621684235B00B236B5 /* OTRKit.xcodeproj */,
@@ -2119,7 +2145,7 @@
 				6352DC8715AF9F16007AD0B4 /* OTRNewAccountViewController.m */,
 				D9BBCD3C1491F8B400AF1B9F /* OTRAboutViewController.h */,
 				D9BBCD3D1491F8B400AF1B9F /* OTRAboutViewController.m */,
-				D9C7463A15350A21003445ED /* OTRCrittercismSecrets.h */,
+				D953117D16C6FFF000AAB1D2 /* OTRSecrets.h */,
 				D9CEF0A81684253B00B236B5 /* XMPPFramework.h */,
 				D9D8D1F61531056300F9E8D3 /* Resources */,
 				D9F9378113F44BD3009A3D84 /* Supporting Files */,
@@ -2225,6 +2251,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				D953117B16C6FF2F00AAB1D2 /* PBXTargetDependency */,
 				D9CEF0AA1684267E00B236B5 /* PBXTargetDependency */,
 			);
 			name = "Off the Record";
@@ -2285,6 +2312,10 @@
 					ProductGroup = D9CEED631684235B00B236B5 /* Products */;
 					ProjectRef = D9CEED621684235B00B236B5 /* OTRKit.xcodeproj */;
 				},
+				{
+					ProductGroup = D953117516C6FF1A00AAB1D2 /* Products */;
+					ProjectRef = D953117416C6FF1A00AAB1D2 /* UserVoice.xcodeproj */;
+				},
 			);
 			projectRoot = "";
 			targets = (
@@ -2294,6 +2325,13 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		D953117916C6FF1A00AAB1D2 /* libUserVoice.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libUserVoice.a;
+			remoteRef = D953117816C6FF1A00AAB1D2 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		D9CEED6A1684235C00B236B5 /* libOTRKit.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -2630,6 +2668,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		D953117B16C6FF2F00AAB1D2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = UserVoice;
+			targetProxy = D953117A16C6FF2F00AAB1D2 /* PBXContainerItemProxy */;
+		};
 		D9CEF0AA1684267E00B236B5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = OTRKit;
@@ -2786,6 +2829,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					_GCRYPT_IN_LIBGCRYPT,
 					CRITTERCISM_ENABLED,
+					USERVOICE_ENABLED,
 				);
 				GCC_THUMB_SUPPORT = NO;
 				HEADER_SEARCH_PATHS = (

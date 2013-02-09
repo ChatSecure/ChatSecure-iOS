@@ -14,7 +14,7 @@
 
 @interface OTRShareSetting : OTRSetting <UIWebViewDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate,MFMessageComposeViewControllerDelegate>
 
-@property (nonatomic,strong) id delegate;
+@property (nonatomic,weak) id delegate;
 @property (nonatomic, retain) NSURL *lastActionLink;
 
 

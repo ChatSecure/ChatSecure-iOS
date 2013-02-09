@@ -23,3 +23,6 @@
 [submodule "Submodules/XMPPFramework"]
 	path = Submodules/XMPPFramework
 	url = git@github.com:ChatSecure/XMPPFramework.git
+[submodule "Submodules/UserVoice"]
+	path = Submodules/UserVoice
+	url = git@github.com:ChatSecure/uservoice-iphone-sdk.git
