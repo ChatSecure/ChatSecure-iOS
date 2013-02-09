@@ -6,6 +6,6 @@ project.xcworkspace
 xcuserdata
 .svn
 DerivedData
-OTRCrittercismSecrets.h
+OTRSecrets.h
 *.orig
 

@@ -36,7 +36,7 @@
 @property (nonatomic, strong, readonly) NSString *description;
 @property (nonatomic, strong) NSString *imageName;
 @property (nonatomic) SEL action;
-@property (nonatomic, retain) id<OTRSettingDelegate> delegate;
+@property (nonatomic, weak) id<OTRSettingDelegate> delegate;
 
 - (id) initWithTitle:(NSString *)newTitle description:(NSString *)newDescription;
 

@@ -7,21 +7,16 @@
 //
 
 #import "OTRSetting.h"
-#import <MessageUI/MFMailComposeViewController.h>
+#import "UserVoice.h"
 
 @protocol OTRFeedbackSettingDelegate <OTRSettingDelegate>
 @required
-- (void) presentMailViewController:(UIViewController *)modalViewController;
-- (void) dismissMailViewConntroller;
+- (void) presentUserVoiceWithConfig:(UVConfig*)config;
 @end
 
-@interface OTRFeedbackSetting : OTRSetting <MFMailComposeViewControllerDelegate>
+@interface OTRFeedbackSetting : OTRSetting
 
-@property (nonatomic,strong) id <OTRFeedbackSettingDelegate> delegate;
-@property (nonatomic,strong) NSString * mailSubject;
-@property (nonatomic,strong) NSArray * mailToRecipients;
-
-
+@property (nonatomic, weak) id <OTRFeedbackSettingDelegate> delegate;
 
 - (id) initWithTitle:(NSString*)newTitle description:(NSString*)newDescription;
 

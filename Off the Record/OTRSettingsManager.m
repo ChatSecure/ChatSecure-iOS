@@ -83,8 +83,6 @@
     
     
     OTRFeedbackSetting * feedbackViewSetting = [[OTRFeedbackSetting alloc] initWithTitle:SEND_FEEDBACK_STRING description:nil];
-    feedbackViewSetting.mailToRecipients = [NSArray arrayWithObject:kOTRFeedbackEmail];
-    feedbackViewSetting.mailSubject = [NSString stringWithFormat:@"Feedback for %@ iOS V%@ ChatSecure V%@",[[UIDevice currentDevice] model],[[UIDevice currentDevice] systemVersion],[[[NSBundle mainBundle] infoDictionary] valueForKey:@"CFBundleVersion"]];
     feedbackViewSetting.imageName = @"18-envelope.png";
     
     OTRShareSetting * shareViewSetting = [[OTRShareSetting alloc] initWithTitle:SHARE_STRING description:nil];
