@@ -438,10 +438,9 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	if (![xmppStream isDisconnected]) {
 		return YES;
 	}
-    if(self.account.requireSecureAuthentication)
-        xmppStream.requireSecureAuthentication = YES;
-    else
-        xmppStream.requireSecureAuthentication = NO;
+    
+    xmppStream.requireTLS = self.account.requireTLS;
+    xmppStream.allowPlaintextAuthentication = self.account.allowPlainTextAuthentication;
     
 	//
 	// If you don't want to use the Settings view to set the JID, 
