@@ -265,4 +265,14 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:kOTREncryptionStateNotification object:self];
 }
 
+-(NSArray *)fetchChatHistory:(int)numberOfMessages
+{
+    NSSortDescriptor * dateSortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"Date" ascending:YES];
+    
+    NSArray * sortedMessages = [self.messages sortedArrayUsingDescriptors:[NSArray arrayWithObject:dateSortDescriptor]];
+    
+    return sortedMessages;
+    
+}
+
 @end

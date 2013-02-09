@@ -68,6 +68,8 @@ enum OTRChatState {
 -(void)receiveReceiptResonse:(NSString *)responseID;
 -(void)sendMessage:(NSString *)message secure:(BOOL)secure;
 
+-(NSArray *)fetchChatHistory:(int)numberOfMessages;
+
 -(BOOL)protocolIsXMPP;
 
 -(void)sendActiveChatState;

@@ -404,6 +404,20 @@
 {
     OTRDoubleSetting *fontSizeSetting = (OTRDoubleSetting*)[[OTRProtocolManager sharedInstance].settingsManager settingForOTRSettingKey:kOTRSettingKeyFontSize];
     
+    NSArray * messageArray = [self.buddy fetchChatHistory:10];
+    NSString * chatHistory = @"";
+    
+    for(OTRManagedMessage * message in messageArray)
+    {
+        if (message.isIncoming) {
+            
+        }
+        else
+        {
+            
+        }
+    }
+    
     // TODO fetch X number of recent messages from active Buddy
     /*
     NSString *htmlString = [NSString stringWithFormat:@"<html><head><style type=\"text/css\">p{font-size:%@;font-family: geneva, arial, helvetica, sans-serif;}</style></head><body>%@</body></html>",fontSizeSetting.stringValue, buddy.chatHistory];
