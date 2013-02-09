@@ -75,12 +75,13 @@
     self.portTextField.keyboardType = UIKeyboardTypeNumberPad;
     self.portTextField.textColor = self.textFieldTextColor;
     
-    [self addCellinfoWithSection:1 row:2 labelText:DOMAIN_STRING cellType:kCellTypeTextField userInputView:self.domainTextField];
-    [self addCellinfoWithSection:1 row:3 labelText:SSL_MISMATCH_STRING cellType:kCellTypeSwitch userInputView:self.sslMismatchSwitch];
-    [self addCellinfoWithSection:1 row:4 labelText:SELF_SIGNED_SSL_STRING cellType:kCellTypeSwitch userInputView:self.selfSignedSwitch];
-    [self addCellinfoWithSection:1 row:5 labelText:ALLOW_PLAIN_TEXT_AUTHENTICATION_STRING cellType:kCellTypeSwitch userInputView:self.allowPlaintextAuthentication];
-    [self addCellinfoWithSection:1 row:6 labelText:REQUIRE_TLS_STRING cellType:kCellTypeSwitch userInputView:self.requireTLS];
-    [self addCellinfoWithSection:1 row:7 labelText:PORT_STRING cellType:kCellTypeTextField userInputView:self.portTextField];
+    [self addCellinfoWithSection:1 row:0 labelText:DOMAIN_STRING cellType:kCellTypeTextField userInputView:self.domainTextField];
+    [self addCellinfoWithSection:1 row:1 labelText:PORT_STRING cellType:kCellTypeTextField userInputView:self.portTextField];
+    [self addCellinfoWithSection:1 row:4 labelText:SSL_MISMATCH_STRING cellType:kCellTypeSwitch userInputView:self.sslMismatchSwitch];
+    [self addCellinfoWithSection:1 row:5 labelText:SELF_SIGNED_SSL_STRING cellType:kCellTypeSwitch userInputView:self.selfSignedSwitch];
+    [self addCellinfoWithSection:1 row:6 labelText:ALLOW_PLAIN_TEXT_AUTHENTICATION_STRING cellType:kCellTypeSwitch userInputView:self.allowPlaintextAuthentication];
+    [self addCellinfoWithSection:1 row:7 labelText:REQUIRE_TLS_STRING cellType:kCellTypeSwitch userInputView:self.requireTLS];
+    
     
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHideOrShow:) name:UIKeyboardWillHideNotification object:nil];
