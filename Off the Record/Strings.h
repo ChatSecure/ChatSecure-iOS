@@ -83,6 +83,7 @@
 #define EN_ADVANCED_STRING @"Advanced"
 #define EN_SSL_MISMATCH_STRING @"SSL Hostname Mismatch"
 #define EN_SELF_SIGNED_SSL_STRING @"Self Signed SSL"
+#define EN_ALLOW_PLAIN_TEXT_PASSWORD @"Require Secure Login"
 #define EN_PORT_STRING @"Port"
 #define EN_GOOGLE_TALK_EXAMPLE_STRING @"user@gmail.com"
 #define EN_REQUIRED_STRING @"Required"
@@ -201,6 +202,7 @@
 #define ADVANCED_STRING [OTRLanguageManager translatedString: EN_ADVANCED_STRING]
 #define SSL_MISMATCH_STRING [OTRLanguageManager translatedString: EN_SSL_MISMATCH_STRING]
 #define SELF_SIGNED_SSL_STRING [OTRLanguageManager translatedString: EN_SELF_SIGNED_SSL_STRING]
+#define ALLOW_PLAIN_TEXT_PASSWORD [OTRLanguageManager translatedString: EN_ALLOW_PLAIN_TEXT_PASSWORD]
 #define PORT_STRING [OTRLanguageManager translatedString: EN_PORT_STRING]
 #define GOOGLE_TALK_EXAMPLE_STRING [OTRLanguageManager translatedString: EN_GOOGLE_TALK_EXAMPLE_STRING]
 #define REQUIRED_STRING [OTRLanguageManager translatedString: EN_REQUIRED_STRING]

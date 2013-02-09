@@ -44,6 +44,7 @@
 #define kOTRXMPPAccountSendTypingNotificationsKey @"kOTRXMPPAccountSendTypingNotificationsKey"
 #define kOTRXMPPAccountAllowSSLHostNameMismatch @"kOTRXMPPAccountAllowSSLHostNameMismatch"
 #define kOTRXMPPAccountPortNumber @"kOTRXMPPAccountPortNumber"
+#define kOTRXMPPAccountRequireSecureAuthentication @"kOTRXMPPAccountRequireSecureAuthentication"
 
 #define kOTRXMPPResource @"chatsecure"
 

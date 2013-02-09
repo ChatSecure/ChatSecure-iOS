@@ -30,6 +30,7 @@
 @property (nonatomic) BOOL allowSSLHostNameMismatch;
 @property (nonatomic) BOOL sendDeliveryReceipts;
 @property (nonatomic) BOOL sendTypingNotifications;
+@property (nonatomic) BOOL requireSecureAuthentication;
 @property (nonatomic, retain) NSString *domain; // xmpp only, used for custom domains
 @property (nonatomic) UInt16 port;
 

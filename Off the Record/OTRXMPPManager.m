@@ -237,7 +237,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	xmppStream = [[XMPPStream alloc] init];
     
     //Makes sure not allow any sending of password in plain text
-    xmppStream.requireSecureAuthentication = YES;
+    
 	
 #if !TARGET_IPHONE_SIMULATOR
 	{
@@ -438,6 +438,10 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	if (![xmppStream isDisconnected]) {
 		return YES;
 	}
+    if(self.account.requireSecureAuthentication)
+        xmppStream.requireSecureAuthentication = YES;
+    else
+        xmppStream.requireSecureAuthentication = NO;
     
 	//
 	// If you don't want to use the Settings view to set the JID, 

@@ -30,6 +30,7 @@
 
 @implementation OTRXMPPAccount
 @synthesize allowSelfSignedSSL, allowSSLHostNameMismatch, domain, port, sendDeliveryReceipts, sendTypingNotifications;
+@synthesize requireSecureAuthentication;
 
 - (id) initWithDomain:(NSString *)newDomain {
     if (self = [super initWithProtocol:kOTRProtocolTypeXMPP]) {
@@ -39,6 +40,7 @@
         self.port = DEFAULT_PORT_NUMBER; // Default XMPP port number
         self.sendDeliveryReceipts = NO;
         self.sendTypingNotifications = YES; // Default typing notifications to yes
+        self.requireSecureAuthentication = YES; //Default require Secure Authentication
     }
     return self;
 }
@@ -49,6 +51,7 @@
         self.allowSelfSignedSSL = [[dictionary objectForKey:kOTRXMPPAccountAllowSelfSignedSSLKey] boolValue];
         self.allowSSLHostNameMismatch = [[dictionary objectForKey:kOTRXMPPAccountAllowSSLHostNameMismatch] boolValue];
         self.sendDeliveryReceipts = [[dictionary objectForKey:kOTRXMPPAccountSendDeliveryReceiptsKey] boolValue];
+        self.requireSecureAuthentication = [[dictionary objectForKey:kOTRXMPPAccountRequireSecureAuthentication]boolValue];
         NSNumber *sendTypingNotificationsNumber = [dictionary objectForKey:kOTRXMPPAccountSendTypingNotificationsKey];
         BOOL shouldSendTypingNotifications = YES;
         if (sendTypingNotificationsNumber) {
@@ -120,6 +123,7 @@
     [accountDictionary setObject:[NSNumber numberWithInt:self.port] forKey:kOTRXMPPAccountPortNumber];
     [accountDictionary setObject:[NSNumber numberWithBool:self.sendDeliveryReceipts] forKey:kOTRXMPPAccountSendDeliveryReceiptsKey];
     [accountDictionary setObject:[NSNumber numberWithBool:self.sendTypingNotifications] forKey:kOTRXMPPAccountSendTypingNotificationsKey];
+    [accountDictionary setObject:[NSNumber numberWithBool:self.requireSecureAuthentication] forKey:kOTRXMPPAccountRequireSecureAuthentication];
     return accountDictionary;
 }
 
