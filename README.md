@@ -103,9 +103,9 @@ terms of a separate license:
 * [MBProgressHUD](https://github.com/jdg/MBProgressHUD) - a nice looking progress HUD
 * [MWFeedParser](https://github.com/mwaterfall/MWFeedParser) - Methods for escaping HTML strings
 * [Crittercism](http://www.crittercism.com/) - crash reports, only submitted via opt-in
-* [SFHFKeychainUtils](https://github.com/ldandersen/scifihifi-iphone/tree/master/security/) - Utilities to store passwords securely in the iOS keychain
+* [SSKeychain](https://github.com/soffes/sskeychain) - Utilities to store passwords securely in the iOS keychain
 * [Appirater](https://github.com/arashpayan/appirater) - nags people to give reviews
-
+* [UserVoice](http://www.uservoice.com) - in-app support forum
 
 Acknowledgements
 =========
