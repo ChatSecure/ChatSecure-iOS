@@ -21,7 +21,7 @@ for line in file:
 		commaSplit = line.split(',',1)
 		parSplit = commaSplit[0].split('(',1)
 		key = parSplit[1].strip()
-		newFile.write( 'NSLocalizedString( '+ lookupDictionary[key].strip() + ','+commaSplit[1].strip()+'\n')
+		newFile.write( '#define a'+str(totalLOC) +' NSLocalizedString('+ lookupDictionary[key].strip() + ' , '+commaSplit[1].strip()+'\n')
 		del lookupDictionary[key]
 		
 	
