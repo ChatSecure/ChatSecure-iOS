@@ -678,6 +678,7 @@
 		D953118416C70DD200AAB1D2 /* OTRDonateSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRDonateSetting.h; sourceTree = "<group>"; };
 		D953118516C70DD200AAB1D2 /* OTRDonateSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRDonateSetting.m; sourceTree = "<group>"; };
 		D953118916C71C2700AAB1D2 /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_TW; path = "Off the Record/zh_TW.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
+		D953118A16C71CFD00AAB1D2 /* pt_BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt_BR; path = "Off the Record/pt_BR.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
 		D95F8E911419C3D00094A634 /* chatsecure_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = chatsecure_icon.png; path = ../chatsecure_icon.png; sourceTree = "<group>"; };
 		D95F8E931419C3E00094A634 /* chatsecure_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "chatsecure_icon@2x.png"; path = "../chatsecure_icon@2x.png"; sourceTree = "<group>"; };
 		D95F8E951419C58D0094A634 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = ../Default.png; sourceTree = "<group>"; };
@@ -2316,6 +2317,7 @@
 				nb,
 				sk,
 				zh_TW,
+				pt_BR,
 			);
 			mainGroup = D9F9376D13F44BD3009A3D84;
 			productRefGroup = D9F9377913F44BD3009A3D84 /* Products */;
@@ -2750,6 +2752,7 @@
 				63488BC4167BE32F0017594D /* tr */,
 				63488BC5167BE3380017594D /* vi */,
 				D953118916C71C2700AAB1D2 /* zh_TW */,
+				D953118A16C71CFD00AAB1D2 /* pt_BR */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
