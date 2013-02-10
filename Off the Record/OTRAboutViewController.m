@@ -69,7 +69,7 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
     // Do any additional setup after loading the view from its nib.
-    NSString *aboutString = [NSString stringWithFormat:@"%@: libotr, libgcrypt, libgpg-error, LibOrange, XMPPFramework, MBProgressHUD, Appirater, and SFHFKeychainUtils.<br><a href=\"https://chatsecure.org/\">%@</a><br><a href=\"https://github.com/chrisballinger/Off-the-Record-iOS\">%@</a><br><a href=\"https://www.transifex.com/projects/p/chatsecure\">%@</a>", ATTRIBUTION_STRING, PROJECT_HOMEPAGE_STRING, SOURCE_STRING, CONTRIBUTE_TRANSLATION_STRING];
+    NSString *aboutString = [NSString stringWithFormat:@"%@: libotr, libgcrypt, libgpg-error, LibOrange, XMPPFramework, MBProgressHUD, Appirater, SSKeychain, Crittercism, UserVoice.<br><a href=\"https://chatsecure.org/\">%@</a><br><a href=\"https://github.com/chrisballinger/Off-the-Record-iOS\">%@</a><br><a href=\"https://www.transifex.com/projects/p/chatsecure\">%@</a>", ATTRIBUTION_STRING, PROJECT_HOMEPAGE_STRING, SOURCE_STRING, CONTRIBUTE_TRANSLATION_STRING];
     
     self.scrollView = [[UIScrollView alloc] initWithFrame:self.view.bounds];
     scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;

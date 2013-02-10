@@ -37,6 +37,9 @@
 #define EN_SEND_STRING @"Send"
 #define EN_OK_STRING @"OK"
 
+#define EN_DONATE_STRING @"Donate"
+#define EN_DONATE_MESSAGE_STRING @"Your donation will help fund the continued development of ChatSecure."
+
 //Used in OTRChatViewController
 #define EN_RECENT_STRING @"Recent"
 #define EN_YOUR_FINGERPRINT_STRING @"Fingerprint for you"
@@ -258,7 +261,8 @@
 #define GOOGLE_TALK_STRING [OTRLanguageManager translatedString: EN_GOOGLE_TALK_STRING]
 #define FACEBOOK_STRING [OTRLanguageManager translatedString: EN_FACEBOOK_STRING]
 #define JABBER_STRING [OTRLanguageManager translatedString: EN_JABBER_STRING]
-
+#define DONATE_STRING [OTRLanguageManager translatedString: EN_DONATE_STRING]
+#define DONATE_MESSAGE_STRING [OTRLanguageManager translatedString: EN_DONATE_MESSAGE_STRING]
 
 #define LOC_BUDDY_LIST_STRING NSLocalizedString(EN_BUDDY_LIST_STRING , @"Title for the buddy list tab")
 #define LOC_CONVERSATIONS_STRING NSLocalizedString(EN_CONVERSATIONS_STRING , @"Title for the conversations tab")
@@ -378,3 +382,7 @@
 
 #define LOC_ALLOW_PLAIN_TEXT_AUTHENTICATION_STRING NSLocalizedString(EN_ALLOW_PLAIN_TEXT_AUTHENTICATION_STRING , @"Setting name for allowing authentication to happen in plain text or in the clear")
 #define LOC_REQUIRE_TLS_STRING NSLocalizedString(EN_REQUIRE_TLS_STRING , @"Setting name for requiring a TLS connection")
+
+
+#define LOC_DONATE_STRING NSLocalizedString(EN_DONATE_STRING, @"Title for donation link")
+#define LOC_DONATE_MESSAGE_STRING NSLocalizedString(EN_DONATE_MESSAGE_STRING, @"Message shown when about to donate")

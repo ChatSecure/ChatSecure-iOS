@@ -32,6 +32,7 @@
 #import "OTRConstants.h"
 #import "OTRShareSetting.h"
 #import "OTRLanguageSetting.h"
+#import "OTRDonateSetting.h"
 
 @interface OTRSettingsManager(Private)
 - (void) populateSettings;
@@ -86,10 +87,13 @@
     feedbackViewSetting.imageName = @"18-envelope.png";
     
     OTRShareSetting * shareViewSetting = [[OTRShareSetting alloc] initWithTitle:SHARE_STRING description:nil];
-    shareViewSetting.imageName = @"29-heart.png";
+    shareViewSetting.imageName = @"275-broadcast.png";
     
     OTRLanguageSetting * languageSetting = [[OTRLanguageSetting alloc]initWithTitle:LANGUAGE_STRING description:nil settingsKey:kOTRSettingKeyLanguage];
     languageSetting.imageName = @"globe.png";
+    
+    OTRDonateSetting *donateSetting = [[OTRDonateSetting alloc] initWithTitle:DONATE_STRING description:nil];
+    donateSetting.imageName = @"29-heart.png";
     
     
 #ifdef CRITTERCISM_ENABLED
@@ -98,7 +102,7 @@
     [newSettingsDictionary setObject:crittercismSetting forKey:kOTRSettingKeyCrittercismOptIn];
     [settingsGroups addObject:otherGroup];
 #else
-    OTRSettingsGroup *otherGroup = [[OTRSettingsGroup alloc] initWithTitle:OTHER_STRING settings:[NSArray arrayWithObjects:languageSetting,shareViewSetting,feedbackViewSetting,nil]];
+    OTRSettingsGroup *otherGroup = [[OTRSettingsGroup alloc] initWithTitle:OTHER_STRING settings:@[languageSetting,donateSetting, shareViewSetting,feedbackViewSetting]];
     [settingsGroups addObject:otherGroup];
     
 #endif
