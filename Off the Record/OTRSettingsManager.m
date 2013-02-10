@@ -95,17 +95,15 @@
     OTRDonateSetting *donateSetting = [[OTRDonateSetting alloc] initWithTitle:DONATE_STRING description:nil];
     donateSetting.imageName = @"29-heart.png";
     
-    
+    NSMutableArray *otherSettings = [NSMutableArray arrayWithCapacity:5];
+    [otherSettings addObjectsFromArray:@[languageSetting,donateSetting, shareViewSetting,feedbackViewSetting]];
 #ifdef CRITTERCISM_ENABLED
     OTRBoolSetting *crittercismSetting = [[OTRBoolSetting alloc] initWithTitle:CRITTERCISM_TITLE_STRING description:CRITTERCISM_DESCRIPTION_STRING settingsKey:kOTRSettingKeyCrittercismOptIn];
-    OTRSettingsGroup *otherGroup = [[OTRSettingsGroup alloc] initWithTitle:OTHER_STRING settings:[NSArray arrayWithObjects:languageSetting, shareViewSetting,feedbackViewSetting,crittercismSetting,nil]];
     [newSettingsDictionary setObject:crittercismSetting forKey:kOTRSettingKeyCrittercismOptIn];
-    [settingsGroups addObject:otherGroup];
-#else
-    OTRSettingsGroup *otherGroup = [[OTRSettingsGroup alloc] initWithTitle:OTHER_STRING settings:@[languageSetting,donateSetting, shareViewSetting,feedbackViewSetting]];
-    [settingsGroups addObject:otherGroup];
-    
+    [otherSettings addObject:crittercismSetting];
 #endif
+    OTRSettingsGroup *otherGroup = [[OTRSettingsGroup alloc] initWithTitle:OTHER_STRING settings:otherSettings];
+    [settingsGroups addObject:otherGroup];
     settingsDictionary = newSettingsDictionary;
 }
 
