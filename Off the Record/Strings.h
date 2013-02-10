@@ -70,9 +70,6 @@
 #define EN_SECURITY_WARNING_STRING @"Security Warning"
 #define EN_AGREE_STRING @"Agree"
 #define EN_DISAGREE_STRING @"Disagree"
-#define EN_EULA_WARNING_STRING @"If you require true security, meet in person. This software, its dependencies, or the underlying OTR protocol could contain security issues. The full source code is available on Github but has not yet been audited by an independent security expert. Use at your own risk."
-#define EN_EULA_BSD_STRING @"Modified BSD License:\nTHIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
-
 #define EN_ERROR_STRING @"Error!"
 #define EN_OSCAR_FAIL_STRING @"Failed to start authenticating. Please try again."
 #define EN_XMPP_FAIL_STRING @"Failed to connect to XMPP server. Please check your login credentials and internet connection and try again."
@@ -191,8 +188,6 @@
 #define SECURITY_WARNING_STRING [OTRLanguageManager translatedString: EN_SECURITY_WARNING_STRING]
 #define AGREE_STRING [OTRLanguageManager translatedString: EN_AGREE_STRING]
 #define DISAGREE_STRING [OTRLanguageManager translatedString: EN_DISAGREE_STRING]
-#define EULA_WARNING_STRING [OTRLanguageManager translatedString: EN_EULA_WARNING_STRING]
-#define EULA_BSD_STRING [OTRLanguageManager translatedString: EN_EULA_BSD_STRING]
 #define ERROR_STRING [OTRLanguageManager translatedString: EN_ERROR_STRING]
 #define OSCAR_FAIL_STRING [OTRLanguageManager translatedString: EN_OSCAR_FAIL_STRING]
 #define XMPP_FAIL_STRING [OTRLanguageManager translatedString: EN_XMPP_FAIL_STRING]
@@ -310,7 +305,6 @@
 #define LOC_SECURITY_WARNING_STRING NSLocalizedString(EN_SECURITY_WARNING_STRING , @"Title of alert box warning about security issues")
 #define LOC_AGREE_STRING NSLocalizedString(EN_AGREE_STRING , @"Agree to EULA")
 #define LOC_DISAGREE_STRING NSLocalizedString(EN_DISAGREE_STRING , @"Disagree with EULA")
-#define LOC_EULA_WARNING_STRING NSLocalizedString(EN_EULA_WARNING_STRING , @"Text describing possible security risks")
 #define LOC_ERROR_STRING NSLocalizedString(EN_ERROR_STRING , @"Title of error message popup box")
 #define LOC_OSCAR_FAIL_STRING NSLocalizedString(EN_OSCAR_FAIL_STRING , @"Authentication failed, tell user to try again")
 #define LOC_XMPP_FAIL_STRING NSLocalizedString(EN_XMPP_FAIL_STRING , @"Message when cannot connect to XMPP server")
@@ -381,3 +375,6 @@
 #define LOC_GOOGLE_TALK_STRING NSLocalizedString(EN_GOOGLE_TALK_STRING , @"the name for google talk")
 #define LOC_FACEBOOK_STRING NSLocalizedString(EN_FACEBOOK_STRING , @"the name for facebook")
 #define LOC_JABBER_STRING NSLocalizedString(EN_JABBER_STRING , @"the name for jabber, also include (XMPP) at the end")
+
+#define LOC_ALLOW_PLAIN_TEXT_AUTHENTICATION_STRING NSLocalizedString(EN_ALLOW_PLAIN_TEXT_AUTHENTICATION_STRING , @"Setting name for allowing authentication to happen in plain text or in the clear")
+#define LOC_REQUIRE_TLS_STRING NSLocalizedString(EN_REQUIRE_TLS_STRING , @"Setting name for requiring a TLS connection")
