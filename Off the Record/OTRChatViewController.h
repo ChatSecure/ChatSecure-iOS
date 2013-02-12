@@ -25,7 +25,7 @@
 #import "OTRProtocolManager.h"
 #import "OTRManagedBuddy.h"
 
-@interface OTRChatViewController : UIViewController <UITextFieldDelegate,UIWebViewDelegate, UIActionSheetDelegate, UISplitViewControllerDelegate,UIAlertViewDelegate>
+@interface OTRChatViewController : UIViewController <UITextFieldDelegate,UIWebViewDelegate, UIActionSheetDelegate, UISplitViewControllerDelegate,UIAlertViewDelegate,UITableViewDataSource,UITableViewDelegate,NSFetchedResultsControllerDelegate>
 
 
 @property (nonatomic, retain) UIBarButtonItem *lockButton, *unlockedButton, *lockVerifiedButton;
@@ -35,6 +35,9 @@
 @property (nonatomic, retain) UILabel *instructionsLabel;
 @property (nonatomic, strong) UILabel *chatStateLabel;
 @property (nonatomic, strong) UIImageView * chatStateImage;
+
+@property (nonatomic, strong) UITableView * chatHistoryTableView;
+@property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;
 
 @property (nonatomic, retain) OTRManagedBuddy *buddy;
 

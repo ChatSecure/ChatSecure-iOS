@@ -54,12 +54,14 @@
 @synthesize chatStateLabel;
 @synthesize chatStateImage;
 @synthesize pausedChatStateTimer, inactiveChatStateTimer;
+@synthesize chatHistoryTableView;
 
 - (void) dealloc {
     self.lastActionLink = nil;
     self.buddyListController = nil;
     self.buddy = nil;
     self.chatStateImage = nil;
+    self.chatHistoryTableView = nil;
 }
 
 - (void)viewDidUnload {
@@ -71,6 +73,7 @@
     self.chatBoxView = nil;
     self.sendButton = nil;
     self.instructionsLabel = nil;
+    self.chatHistoryTableView = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -200,7 +203,14 @@
 	//chatHistoryTextView.textDelegate = self;
     self.chatHistoryTextView.delegate = self;
 	chatHistoryTextView.autoresizingMask = UIViewAutoresizingFlexibleWidth |UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;
-	[self.view addSubview:chatHistoryTextView];
+	//[self.view addSubview:chatHistoryTextView];
+    
+    self.chatHistoryTableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    self.chatHistoryTableView.dataSource = self;
+    self.chatHistoryTableView.delegate = self;
+    self.chatHistoryTableView.autoresizingMask = UIViewAutoresizingFlexibleWidth |UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;
+    self.chatHistoryTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    [self.view addSubview:self.chatHistoryTableView];
     
 
     messageTextField.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
@@ -239,11 +249,11 @@
     
     newTextFieldFrame.origin.y = keyboardFrameForTextField.origin.y - newTextFieldFrame.size.height;
     
-    CGRect keyboardFrameForTableView = [self.chatHistoryTextView.superview convertRect:keyboardFrame fromView:nil];
-    CGRect newTableViewFrame = CGRectMake(0, 0, self.chatHistoryTextView.frame.size.width, keyboardFrameForTableView.origin.y-newTextFieldFrame.size.height);
+    CGRect keyboardFrameForTableView = [self.chatHistoryTableView.superview convertRect:keyboardFrame fromView:nil];
+    CGRect newTableViewFrame = CGRectMake(0, 0, self.chatHistoryTableView.frame.size.width, keyboardFrameForTableView.origin.y-newTextFieldFrame.size.height);
     
     [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionBeginFromCurrentState | curve animations:^{
-        self.chatHistoryTextView.frame = newTableViewFrame;
+        self.chatHistoryTableView.frame = newTableViewFrame;
         self.chatBoxView.frame = newTextFieldFrame;
     } completion:nil];
     [self scrollTextViewToBottom];
@@ -559,6 +569,7 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    _fetchedResultsController = nil;
     [self refreshView];
     [self updateChatHistory];
     [self updateChatState:NO];
@@ -624,7 +635,57 @@
     [webView stringByEvaluatingJavaScriptFromString:javascript];
 }
 
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return [[self.fetchedResultsController sections][section] numberOfObjects];
+}
 
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
+    if (!cell) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
+    }
+    OTRManagedMessage *message = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    
+    cell.textLabel.text = message.message;
+    
+    return cell;
+    
+}
+
+#pragma mark - NSFetchedResultsControllerDelegate
+
+- (NSFetchedResultsController *)fetchedResultsController {
+    if (_fetchedResultsController)
+        return _fetchedResultsController;
+    
+    NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"buddy == %@",self.buddy];
+    
+    _fetchedResultsController = [OTRManagedMessage MR_fetchAllGroupedBy:nil withPredicate:buddyFilter sortedBy:@"date" ascending:YES delegate:self inContext:[NSManagedObjectContext MR_defaultContext]];
+
+    return _fetchedResultsController;
+}
+
+- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
+    [self.chatHistoryTableView beginUpdates];
+}
+
+- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject
+       atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
+      newIndexPath:(NSIndexPath *)newIndexPath {
+    UITableView *tableView = self.chatHistoryTableView;
+    switch(type) {
+        case NSFetchedResultsChangeInsert:
+            [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+    }
+}
+
+- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
+    [self.chatHistoryTableView endUpdates];
+    //[self scrollToBottomAnimated:YES];
+}
 
 
 
