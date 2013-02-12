@@ -75,10 +75,10 @@
         [languages addObject:[self languageNameForLocalization:locale]];
     }
     
-    [languages sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
-    [languages insertObject:DEFAULT_LANGUAGE_STRING atIndex:0];
+    NSMutableArray * sortedLanguages =[[languages sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)] mutableCopy];
+    [sortedLanguages insertObject:DEFAULT_LANGUAGE_STRING atIndex:0];
     
-    return languages;
+    return sortedLanguages;
 }
 
 -(NSString *)languageNameForLocalization:(NSString *)locale
