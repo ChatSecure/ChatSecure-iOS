@@ -59,6 +59,7 @@
     NSString *recipientAccount = theMessage.buddy.accountName;
     NSString *protocol = theMessage.buddy.account.protocol;
     NSString *sendingAccount = theMessage.buddy.account.username;
+    theMessage.isEncryptedValue = NO;
     
     NSString *encodedMessageString = [[OTRKit sharedInstance] encodeMessage:message recipient:recipientAccount accountName:sendingAccount protocol:protocol];
     

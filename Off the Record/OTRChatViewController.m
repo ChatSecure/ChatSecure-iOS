@@ -549,6 +549,8 @@
             [self.instructionsLabel removeFromSuperview];
             self.instructionsLabel = nil;
         }
+        
+        [self.chatHistoryTableView reloadData];
         [self.messageTextField resignFirstResponder];
         self.messageTextField.text = self.buddy.composingMessageString;
         if(![self.buddy.composingMessageString length])
@@ -556,9 +558,9 @@
             [self.buddy sendActiveChatState];
         }
         CGRect frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height-[self chatBoxViewHeight]);
-        self.chatHistoryTextView.frame = frame;
+        self.chatHistoryTableView.frame = frame;
         self.chatBoxView.frame = CGRectMake(0,frame.size.height, self.view.frame.size.width, [self chatBoxViewHeight]);
-        self.chatHistoryTextView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        self.chatHistoryTableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         self.chatBoxView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
         
         self.messageTextField.frame = CGRectMake(0, 0, self.view.frame.size.width-kSendButtonWidth, self.chatBoxView.frame.size.height);
