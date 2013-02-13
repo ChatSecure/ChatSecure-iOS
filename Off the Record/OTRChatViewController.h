@@ -37,11 +37,11 @@
 @property (nonatomic, strong) UIImageView * chatStateImage;
 
 @property (nonatomic, strong) UITableView * chatHistoryTableView;
-@property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;
+@property (nonatomic, strong) NSFetchedResultsController *messagesFetchedResultsController;
+@property (nonatomic, strong) NSFetchedResultsController *buddyFetchedResultsController;
 
 @property (nonatomic, retain) OTRManagedBuddy *buddy;
 
-@property (nonatomic, retain) UIWebView *chatHistoryTextView;
 @property (nonatomic, retain) OTRBuddyListViewController *buddyListController;
 
 @property (nonatomic, retain) NSURL *lastActionLink;

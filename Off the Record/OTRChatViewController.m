@@ -42,7 +42,6 @@
 @end
 
 @implementation OTRChatViewController
-@synthesize chatHistoryTextView;
 @synthesize messageTextField;
 @synthesize buddyListController;
 @synthesize chatBoxView;
@@ -66,7 +65,6 @@
 
 - (void)viewDidUnload {
     [super viewDidUnload];
-    self.chatHistoryTextView = nil;
     self.messageTextField = nil;
     self.lockButton = nil;
     self.unlockedButton = nil;
@@ -74,6 +72,8 @@
     self.sendButton = nil;
     self.instructionsLabel = nil;
     self.chatHistoryTableView = nil;
+    _messagesFetchedResultsController = nil;
+    _buddyFetchedResultsController = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -198,12 +198,6 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHideOrShow:) name:UIKeyboardWillHideNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHideOrShow:) name:UIKeyboardWillShowNotification object:nil];
-
-    self.chatHistoryTextView = [[UIWebView alloc] initWithFrame:CGRectZero];
-	//chatHistoryTextView.textDelegate = self;
-    self.chatHistoryTextView.delegate = self;
-	chatHistoryTextView.autoresizingMask = UIViewAutoresizingFlexibleWidth |UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;
-	//[self.view addSubview:chatHistoryTextView];
     
     self.chatHistoryTableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     self.chatHistoryTableView.dataSource = self;
@@ -218,12 +212,6 @@
     [self.view addSubview:chatBoxView];
     [self.chatBoxView addSubview:messageTextField];
     [self.chatBoxView addSubview:sendButton];
-
-	// Display string
-	//chatHistoryTextView.contentView.edgeInsets = UIEdgeInsetsMake(10, 10, 10, 10);
-	//chatHistoryTextView.attributedString = string;
-    [chatHistoryTextView loadHTMLString:@"" baseURL:[NSURL URLWithString:@"/"]];
-    chatHistoryTextView.userInteractionEnabled = YES;
     
     
     [self setupLockButton];
@@ -256,7 +244,7 @@
         self.chatHistoryTableView.frame = newTableViewFrame;
         self.chatBoxView.frame = newTextFieldFrame;
     } completion:nil];
-    [self scrollTextViewToBottom];
+    //[self scrollTextViewToBottom];
 }
 
 - (void) showDisconnectionAlert:(NSNotification*)notification {
@@ -286,10 +274,10 @@
      selector:@selector(showDisconnectionAlert:)
      name:kOTRProtocolDiconnect
      object:nil];
-    _fetchedResultsController = nil;
+    _messagesFetchedResultsController = nil;
+    _buddyFetchedResultsController = nil;
     
     [self refreshLockButton];
-    [self updateChatHistory];
     [self refreshView];
     [self updateChatState:NO];
 }
@@ -297,61 +285,62 @@
 
      
 - (void) messageProcessedNotification:(NSNotification*)notification {
-    [self updateChatHistory];
     [self updateChatState:YES];
+}
+
+-(BOOL)isComposingVisible
+{
+    if ([self.chatHistoryTableView numberOfRowsInSection:0] == [[self.messagesFetchedResultsController sections][0] numberOfObjects]) {
+        return NO;
+    }
+    return YES;
+}
+-(NSIndexPath *)lastIndexPath
+{
+    return [NSIndexPath indexPathForRow:([self.chatHistoryTableView numberOfRowsInSection:0] - 1) inSection:0];
+}
+
+
+-(void)removeComposing
+{
+    [self.chatHistoryTableView beginUpdates];
+    [self.chatHistoryTableView deleteRowsAtIndexPaths:@[[self lastIndexPath]] withRowAnimation:UITableViewRowAnimationAutomatic];
+    [self.chatHistoryTableView endUpdates];
+    
+}
+-(void)addComposing
+{
+    NSIndexPath * lastIndexPath = [self lastIndexPath];
+    NSInteger newLast = [lastIndexPath indexAtPosition:lastIndexPath.length-1]+1;
+    lastIndexPath = [[lastIndexPath indexPathByRemovingLastIndex] indexPathByAddingIndex:newLast];
+    [self.chatHistoryTableView beginUpdates];
+    [self.chatHistoryTableView insertRowsAtIndexPaths:@[lastIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+    [self.chatHistoryTableView endUpdates];
 }
 
 - (void)updateChatState:(BOOL)animated
 {
-    CGFloat animateTime;
-    if(animated)
-        animateTime = 1.0;
-    else
-        animateTime = 0.0;
-    
-    if(!chatStateLabel)
-    {
-        chatStateLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 22)];
-        chatStateLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        chatStateLabel.backgroundColor = [UIColor blackColor];
-        //chatStateLabel.alpha = .7;
-        chatStateLabel.tag = 888;
-        chatStateLabel.textColor = [UIColor whiteColor];
-        //[self.view addSubview:chatStateLabel];
-    }
-    if(!chatStateImage)
-    {
-        chatStateImage = [[UIImageView alloc] initWithFrame:CGRectMake(self.view.frame.size.width-25, 0, 25, 25)];
-        chatStateImage.image = [UIImage imageNamed:@"pencil"];
-        chatStateImage.alpha = 0.0;
-        chatStateImage.autoresizingMask= UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin;
-        [self.view addSubview:chatStateImage];
-    }
-    
-    
-    
     if(self.buddy.chatState.intValue == kOTRChatStateComposing)
     {
-        chatStateLabel.text = CHAT_STATE_COMPOSING_STRING;
-        [UIView animateWithDuration:animateTime animations:^{
-            chatStateImage.alpha = 1.0;
-        }];
+        if (![self isComposingVisible]) {
+            [self addComposing];
+        }
         
     }
     else if(self.buddy.chatState.intValue == kOTRChatStatePaused)
     {
-        chatStateLabel.text = CHAT_STATE_PAUSED_STRING;
-        [UIView animateWithDuration:animateTime animations:^{
-            chatStateImage.alpha = 0.3;
-        }];
+        if (![self isComposingVisible]) {
+            [self addComposing];
+        }
+
         
     }
     else if(self.buddy.chatState.intValue == kOTRChatStateActive)
     {
-        chatStateLabel.text = CHAT_STATE_ACTIVE_STRING;
-        [UIView animateWithDuration:animateTime animations:^{
-            chatStateImage.alpha = 0;
-        }];
+        if ([self isComposingVisible]) {
+            [self removeComposing];
+        }
+
     }
     else if(self.buddy.chatState.intValue == kOTRChatStateInactive)
         chatStateLabel.text = CHAT_STATE_INACTVIE_STRING;
@@ -407,47 +396,6 @@
     [buddy sendMessage:messageTextField.text secure:secure];
     messageTextField.text = @"";
     [self.pausedChatStateTimer invalidate];
-    [self updateChatHistory];
-}
-
-
--(void)updateChatHistory
-{
-    OTRDoubleSetting *fontSizeSetting = (OTRDoubleSetting*)[[OTRProtocolManager sharedInstance].settingsManager settingForOTRSettingKey:kOTRSettingKeyFontSize];
-    
-    NSArray * messageArray = [self.buddy fetchChatHistory:10];
-    NSString * chatHistory = @"";
-    
-    for(OTRManagedMessage * message in messageArray)
-    {
-        if (message.isIncoming) {
-            
-        }
-        else
-        {
-            
-        }
-    }
-    
-    // TODO fetch X number of recent messages from active Buddy
-    /*
-    NSString *htmlString = [NSString stringWithFormat:@"<html><head><style type=\"text/css\">p{font-size:%@;font-family: geneva, arial, helvetica, sans-serif;}</style></head><body>%@</body></html>",fontSizeSetting.stringValue, buddy.chatHistory];
-        [chatHistoryTextView loadHTMLString:htmlString baseURL:[NSURL URLWithString:@"/"]];
-     */
-}
-
-
--(void)scrollTextViewToBottom
-{
-    
-    if([buddy.messages count] > 0)
-    {
-        NSInteger height = [[chatHistoryTextView stringByEvaluatingJavaScriptFromString:@"document.body.offsetHeight;"] intValue];
-        NSString* javascript = [NSString stringWithFormat:@"window.scrollBy(0, %d);", height];   
-        [chatHistoryTextView stringByEvaluatingJavaScriptFromString:javascript];
-    }
-    
-    
 }
 
 -(BOOL)textViewShouldBeginEditing:(UITextView *)textView
@@ -502,7 +450,6 @@
         }
         else if (buttonIndex == 2) { // Clear Chat History
             [buddy removeMessages:buddy.messages];
-            [self updateChatHistory];
         }
         else if (buttonIndex == actionSheet.cancelButtonIndex) // Cancel
         {
@@ -573,7 +520,6 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [self refreshView];
-    [self updateChatHistory];
     [self updateChatState:NO];
 }
 
@@ -639,7 +585,12 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [[self.fetchedResultsController sections][section] numberOfObjects];
+    NSInteger numMessages = [[self.messagesFetchedResultsController sections][section] numberOfObjects];
+    if (buddy.chatStateValue == 2 || buddy.chatStateValue == 3) {
+        numMessages +=1;
+    }
+    return numMessages;
+    
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -648,12 +599,19 @@
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
     }
-    OTRManagedMessage *message = [self.fetchedResultsController objectAtIndexPath:indexPath];
     
-    cell.textLabel.text = message.message;
-    cell.textLabel.textColor = [UIColor redColor];
-    if (message.isIncoming) {
-        cell.textLabel.textColor = [UIColor blueColor];
+
+    if ((buddy.chatStateValue == 2 || buddy.chatStateValue == 3) && indexPath.row > [[self.messagesFetchedResultsController sections][indexPath.section] numberOfObjects]-1){
+        cell.textLabel.text = @"Composing";
+    }
+    else {
+        OTRManagedMessage *message = [self.messagesFetchedResultsController objectAtIndexPath:indexPath];
+        
+        cell.textLabel.text = message.message;
+        cell.textLabel.textColor = [UIColor redColor];
+        if (message.isIncoming) {
+            cell.textLabel.textColor = [UIColor blueColor];
+        }
     }
     
     return cell;
@@ -662,17 +620,30 @@
 
 #pragma mark - NSFetchedResultsControllerDelegate
 
-- (NSFetchedResultsController *)fetchedResultsController {
-    if (_fetchedResultsController)
-        return _fetchedResultsController;
+-(NSFetchedResultsController *)buddyFetchedResultsController{
+    if (_buddyFetchedResultsController)
+        return _buddyFetchedResultsController;
+    
+    NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"self == %@",self.buddy];
+    NSPredicate * chatStateFilter = [NSPredicate predicateWithFormat:@"chatState == 2 OR chatState == 3"];
+    NSPredicate *predicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[buddyFilter,chatStateFilter]];
+    
+    _buddyFetchedResultsController = [OTRManagedBuddy MR_fetchAllGroupedBy:nil withPredicate:predicate sortedBy:nil ascending:YES delegate:nil];
+    
+    return _buddyFetchedResultsController;
+}
+
+- (NSFetchedResultsController *)messagesFetchedResultsController {
+    if (_messagesFetchedResultsController)
+        return _messagesFetchedResultsController;
     
     NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"buddy == %@",self.buddy];
     NSPredicate * encryptionFilter = [NSPredicate predicateWithFormat:@"isEncrypted == NO"];
     NSPredicate *predicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[buddyFilter, encryptionFilter]];
     
-    _fetchedResultsController = [OTRManagedMessage MR_fetchAllGroupedBy:nil withPredicate:predicate sortedBy:@"date" ascending:YES delegate:self];
+    _messagesFetchedResultsController = [OTRManagedMessage MR_fetchAllGroupedBy:nil withPredicate:predicate sortedBy:@"date" ascending:YES delegate:self];
 
-    return _fetchedResultsController;
+    return _messagesFetchedResultsController;
 }
 
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
@@ -683,6 +654,7 @@
        atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
       newIndexPath:(NSIndexPath *)newIndexPath {
     UITableView *tableView = self.chatHistoryTableView;
+    
     switch(type) {
         case NSFetchedResultsChangeInsert:
             [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationBottom];
