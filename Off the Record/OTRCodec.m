@@ -38,9 +38,9 @@
     NSString *decodedMessageString = [[OTRKit sharedInstance] decodeMessage:message recipient:friendAccount accountName:myAccountName protocol:protocol];
     if(decodedMessageString) {
         theMessage.message = decodedMessageString;
-        theMessage.isEncrypted = NO;
+        [theMessage setIsEncryptedValue:NO];
     } else {
-        theMessage.isEncrypted = YES;
+        [theMessage setIsEncryptedValue:YES];
     }
         
     
@@ -64,7 +64,7 @@
     
     OTRManagedMessage *newOTRMessage = [OTRManagedMessage newMessageToBuddy:theMessage.buddy message:encodedMessageString];
     newOTRMessage.date = theMessage.date;
-    newOTRMessage.isEncrypted = YES;
+    [newOTRMessage setIsEncryptedValue:YES];
     
     NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
     [context MR_saveToPersistentStoreAndWait];

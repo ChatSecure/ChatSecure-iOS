@@ -29,32 +29,23 @@
 #define DEFAULT_PORT_NUMBER 5222
 
 @interface OTRManagedXMPPAccount()
-@property (nonatomic) BOOL allowSelfSignedSSL;
-@property (nonatomic) BOOL allowSSLHostNameMismatch;
 @end
 
 
 @implementation OTRManagedXMPPAccount
 
-@dynamic allowSelfSignedSSL;
-@dynamic allowSSLHostNameMismatch;
-@dynamic sendDeliveryReceipts;
-@dynamic sendTypingNotifications;
-@dynamic domain;
-@dynamic port;
-
 - (void) setDefaultsWithDomain:(NSString *)newDomain {
     [super setDefaultsWithProtocol:kOTRProtocolTypeXMPP];
     self.domain = newDomain;
-    self.allowSelfSignedSSL = NO;
-    self.allowSSLHostNameMismatch = NO;
-    self.port = DEFAULT_PORT_NUMBER; // Default XMPP port number
-    self.sendDeliveryReceipts = NO;
-    self.sendTypingNotifications = YES; // Default typing notifications to yes
+    [self setAllowSelfSignedSSLValue: NO];
+    [self setAllowSSLHostNameMismatchValue: NO];
+    self.port = @(DEFAULT_PORT_NUMBER); // Default XMPP port number
+    [self setSendDeliveryReceiptsValue: NO];
+    [self setSendTypingNotificationsValue: YES]; // Default typing notifications to yes
 }
 
-+(uint16_t)defaultPortNumber {
-    return DEFAULT_PORT_NUMBER;
++(NSNumber *)defaultPortNumber {
+    return @(DEFAULT_PORT_NUMBER);
 }
 
 - (NSString *) imageName {
@@ -79,7 +70,7 @@
 }
 
 - (void) setShouldAllowSelfSignedSSL:(BOOL)shouldAllowSelfSignedSSL {
-    self.allowSelfSignedSSL = shouldAllowSelfSignedSSL;
+    self.allowSelfSignedSSL = @(shouldAllowSelfSignedSSL);
 }
 
 - (BOOL) shouldAllowSSLHostNameMismatch {
@@ -90,7 +81,7 @@
 }
 
 - (void) setShouldAllowSSLHostNameMismatch:(BOOL)shouldAllowSSLHostNameMismatch {
-    self.allowSSLHostNameMismatch = shouldAllowSSLHostNameMismatch;
+    self.allowSSLHostNameMismatch = @(shouldAllowSSLHostNameMismatch);
 }
 
 - (NSString *)providerName {

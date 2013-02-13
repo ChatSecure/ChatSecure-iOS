@@ -32,18 +32,9 @@
 #define kOTRServiceName @"org.chatsecure.ChatSecure"
 
 @interface OTRManagedAccount()
-@property (nonatomic, retain) NSString *username;
-@property (nonatomic) BOOL rememberPassword;
 @end
 
 @implementation OTRManagedAccount
-
-@dynamic isConnected;
-@dynamic protocol;
-@dynamic rememberPassword;
-@dynamic uniqueIdentifier;
-@dynamic username;
-@dynamic buddies;
 
 - (void) setDefaultsWithProtocol:(NSString*)newProtocol {
     self.username = @"";
@@ -89,11 +80,13 @@
     }
     return password;
 }
-
-- (void) setNewUsername:(NSString *)newUsername {
+-(void)setNewUsername:(NSString *)newUsername
+{
     NSString *oldUsername = [self.username copy];
+    
     self.username = newUsername;
-    if ([self.username isEqualToString:newUsername]) {
+    
+    if ([self.username isEqualToString:oldUsername]) {
         return;
     }
     if (!self.rememberPassword) {
@@ -110,10 +103,11 @@
         }
         self.password = tempPassword;
     }
+    
 }
 
-- (void) setShouldRememberPassword:(BOOL)remember {
-    self.rememberPassword = remember;
+- (void) setRememberPasswordValue:(BOOL)remember {
+    [super setRememberPasswordValue: remember];
     if (!self.rememberPassword) {
         self.password = nil;
     }

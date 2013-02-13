@@ -240,7 +240,7 @@ BOOL loginFailed;
     OTRManagedBuddy * messageBuddy = [protocolBuddyList objectForKey:message.buddy.username];
     
     OTRManagedMessage *otrMessage = [OTRManagedMessage newMessageFromBuddy:messageBuddy message:msgTxt];
-    otrMessage.isEncrypted = YES;
+    [otrMessage setIsEncryptedValue:YES];
     
     [OTRCodec decodeMessage:otrMessage];
     

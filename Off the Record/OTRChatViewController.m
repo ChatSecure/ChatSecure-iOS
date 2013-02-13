@@ -143,11 +143,11 @@
 -(void)refreshLockButton
 {
     BOOL trusted = [[OTRKit sharedInstance] finerprintIsVerifiedForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
-    if(buddy.encryptionStatus == kOTRKitMessageStateEncrypted && trusted)
+    if(buddy.encryptionStatus.intValue == kOTRKitMessageStateEncrypted && trusted)
     {
         self.navigationItem.rightBarButtonItem = lockVerifiedButton;
     }
-    else if(buddy.encryptionStatus == kOTRKitMessageStateEncrypted)
+    else if(buddy.encryptionStatus.intValue == kOTRKitMessageStateEncrypted)
     {
         self.navigationItem.rightBarButtonItem = lockButton;
     }
@@ -161,7 +161,7 @@
 {
     NSString *encryptionString = INITIATE_ENCRYPTED_CHAT_STRING;
     NSString * verifiedString = VERIFY_STRING;
-    if (buddy.encryptionStatus == kOTRKitMessageStateEncrypted) {
+    if (buddy.encryptionStatus.intValue == kOTRKitMessageStateEncrypted) {
         encryptionString = CANCEL_ENCRYPTED_CHAT_STRING;
     }
     UIActionSheet *popupQuery = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:encryptionString, verifiedString, CLEAR_CHAT_HISTORY_STRING, nil];
@@ -330,7 +330,7 @@
     
     
     
-    if(self.buddy.chatState == kOTRChatStateComposing)
+    if(self.buddy.chatState.intValue == kOTRChatStateComposing)
     {
         chatStateLabel.text = CHAT_STATE_COMPOSING_STRING;
         [UIView animateWithDuration:animateTime animations:^{
@@ -338,7 +338,7 @@
         }];
         
     }
-    else if(self.buddy.chatState == kOTRChatStatePaused)
+    else if(self.buddy.chatState.intValue == kOTRChatStatePaused)
     {
         chatStateLabel.text = CHAT_STATE_PAUSED_STRING;
         [UIView animateWithDuration:animateTime animations:^{
@@ -346,16 +346,16 @@
         }];
         
     }
-    else if(self.buddy.chatState == kOTRChatStateActive)
+    else if(self.buddy.chatState.intValue == kOTRChatStateActive)
     {
         chatStateLabel.text = CHAT_STATE_ACTIVE_STRING;
         [UIView animateWithDuration:animateTime animations:^{
             chatStateImage.alpha = 0;
         }];
     }
-    else if(self.buddy.chatState == kOTRChatStateInactive)
+    else if(self.buddy.chatState.intValue == kOTRChatStateInactive)
         chatStateLabel.text = CHAT_STATE_INACTVIE_STRING;
-    else if(self.buddy.chatState == kOTRChatStateGone)
+    else if(self.buddy.chatState.intValue == kOTRChatStateGone)
         chatStateLabel.text = CHAT_STATE_GONE_STRING;
     else
         chatStateImage.alpha = 0;
@@ -403,7 +403,7 @@
 
 
 - (void)sendButtonPressed:(id)sender {
-    BOOL secure = buddy.encryptionStatus == kOTRKitMessageStateEncrypted;
+    BOOL secure = buddy.encryptionStatus.intValue == kOTRKitMessageStateEncrypted;
     [buddy sendMessage:messageTextField.text secure:secure];
     messageTextField.text = @"";
     [self.pausedChatStateTimer invalidate];
@@ -490,7 +490,7 @@
         }
         else if (buttonIndex == 0) // Initiate/cancel encryption
         {
-            if(buddy.encryptionStatus == kOTRKitMessageStateEncrypted)
+            if(buddy.encryptionStatus.intValue == kOTRKitMessageStateEncrypted)
             {
                 [[OTRKit sharedInstance]disableEncryptionForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
             } else {

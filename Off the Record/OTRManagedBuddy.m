@@ -30,23 +30,9 @@
 #import "OTRXMPPManager.h"
 
 @interface OTRManagedBuddy()
-@property (nonatomic) OTRBuddyStatus status;
-@property (nonatomic) OTRKitMessageState encryptionStatus;
 @end
 
 @implementation OTRManagedBuddy
-
-@dynamic accountName;
-@dynamic chatState;
-@dynamic displayName;
-@dynamic encryptionStatus;
-@dynamic lastSentChatState;
-@dynamic status;
-@dynamic groupName;
-@dynamic lastMessageDisconnected;
-@dynamic messages;
-@dynamic composingMessageString;
-@dynamic account;
 
 -(void)sendMessage:(NSString *)message secure:(BOOL)secure
 {
@@ -65,11 +51,12 @@
         else
         {
             encodedMessage = newMessage;
+            encodedMessage.isEncryptedValue = NO;
         }
         //NSLog(@"encoded message: %@",encodedMessage.message);
         [OTRManagedMessage sendMessage:encodedMessage];
 
-        self.lastSentChatState=kOTRChatStateActive;
+        self.lastSentChatStateValue=kOTRChatStateActive;
     }
 }
 
@@ -77,7 +64,7 @@
 {
     self.displayName = buddyName;
     self.accountName = buddyAccountName;
-    self.status = buddyStatus;
+    self.statusValue = buddyStatus;
     self.groupName = buddyGroupName;
     self.lastMessageDisconnected = NO;
     self.encryptionStatus = kOTRKitMessageStatePlaintext;
@@ -185,7 +172,7 @@
 
 -(void)receiveChatStateMessage:(OTRChatState) newChatState
 {
-    self.chatState = newChatState;
+    self.chatStateValue = newChatState;
     [[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];
 }
 
@@ -201,7 +188,7 @@
 - (void) setNewStatus:(OTRBuddyStatus)newStatus {
     if([self.account.protocol isEqualToString:kOTRProtocolTypeXMPP])
     {
-        if ([self.messages count]!=0 && newStatus!=self.status)
+        if ([self.messages count]!=0 && newStatus!=self.statusValue)
         {
             if( newStatus == 0)
                 [self receiveStatusMessage:OFFLINE_MESSAGE_STRING];
@@ -212,7 +199,7 @@
             
         }
     }
-    self.status = (int16_t)newStatus;
+    self.statusValue = (int16_t)newStatus;
 }
 
 -(void) protocolDisconnected:(id)sender
@@ -221,7 +208,7 @@
     {
         //[chatHistory appendFormat:@"<p><strong style=\"color:blue\"> You </strong> Disconnected </p>"];
         [[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];
-        self.lastMessageDisconnected = YES;
+        self.lastMessageDisconnectedValue = YES;
         self.status = kOTRBuddyStatusOffline;
     }
 }
@@ -239,9 +226,9 @@
     {
         [self receiveEncryptionMessage:CONVERSATION_NOT_SECURE_WARNING_STRING];
     }
-    else if(newEncryptionStatus != self.encryptionStatus)
+    else if(newEncryptionStatus != self.encryptionStatusValue)
     {
-        if (newEncryptionStatus != kOTRKitMessageStateEncrypted && self.encryptionStatus == kOTRKitMessageStateEncrypted) {
+        if (newEncryptionStatus != kOTRKitMessageStateEncrypted && self.encryptionStatusValue == kOTRKitMessageStateEncrypted) {
             [[[UIAlertView alloc] initWithTitle:SECURITY_WARNING_STRING message:[NSString stringWithFormat:CONVERSATION_NO_LONGER_SECURE_STRING, self.displayName] delegate:nil cancelButtonTitle:OK_STRING otherButtonTitles:nil] show];
         }
         switch (newEncryptionStatus) {
@@ -260,7 +247,7 @@
         }
         
     }
-    self.encryptionStatus = newEncryptionStatus;
+    self.encryptionStatusValue = newEncryptionStatus;
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kOTREncryptionStateNotification object:self];
 }

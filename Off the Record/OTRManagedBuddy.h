@@ -23,6 +23,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 #import "OTRKit.h"
+#import "_OTRManagedBuddy.h"
 
 @class OTRManagedAccount;
 
@@ -49,19 +50,7 @@ enum OTRChatState {
 };
 
 
-@interface OTRManagedBuddy : NSManagedObject
-
-@property (nonatomic, retain) NSString * accountName;
-@property (nonatomic) OTRChatState chatState;
-@property (nonatomic, retain) NSString * displayName;
-@property (nonatomic, readonly) OTRKitMessageState encryptionStatus;
-@property (nonatomic) OTRChatState lastSentChatState;
-@property (nonatomic, readonly) OTRBuddyStatus status;
-@property (nonatomic, retain) NSString * groupName;
-@property (nonatomic, retain) NSString * composingMessageString;
-@property (nonatomic) BOOL lastMessageDisconnected;
-@property (nonatomic, retain) NSSet *messages;
-@property (nonatomic, retain) OTRManagedAccount *account;
+@interface OTRManagedBuddy : _OTRManagedBuddy
 
 -(void)receiveMessage:(NSString *)message;
 -(void)receiveChatStateMessage:(OTRChatState) chatState;

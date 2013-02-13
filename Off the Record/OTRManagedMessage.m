@@ -27,12 +27,6 @@
 
 @implementation OTRManagedMessage
 
-@dynamic date;
-@dynamic message;
-@dynamic buddy;
-@dynamic isEncrypted;
-@dynamic isIncoming;
-
 +(OTRManagedMessage*)newMessageToBuddy:(OTRManagedBuddy *)theBuddy message:(NSString *)theMessage {
     OTRManagedMessage *message = [OTRManagedMessage newMessageWithBuddy:theBuddy message:theMessage];
     message.isIncoming = NO;
@@ -42,7 +36,7 @@
 }
 +(OTRManagedMessage*)newMessageFromBuddy:(OTRManagedBuddy *)theBuddy message:(NSString *)theMessage {
     OTRManagedMessage *message = [OTRManagedMessage newMessageWithBuddy:theBuddy message:theMessage];
-    message.isIncoming = YES;
+    [message setIsIncomingValue:YES];
     NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
     [context MR_saveToPersistentStoreAndWait];
     return message;

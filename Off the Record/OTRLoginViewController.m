@@ -264,7 +264,7 @@
     }
     
     
-    self.rememberPasswordSwitch.on = self.account.rememberPassword;
+    self.rememberPasswordSwitch.on = self.account.rememberPasswordValue;
     if (account.rememberPassword) {
         self.passwordTextField.text = account.password;
     } else {
@@ -287,7 +287,7 @@
 -(void)readInFields
 {
     [account setNewUsername:[usernameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
-    [account setShouldRememberPassword:rememberPasswordSwitch.on];
+    [account setRememberPasswordValue:rememberPasswordSwitch.on];
     
     if (account.rememberPassword) {
         account.password = self.passwordTextField.text;

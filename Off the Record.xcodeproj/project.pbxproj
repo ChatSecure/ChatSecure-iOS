@@ -6,6 +6,20 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		63C1062316CB108A00D2C860 /* Mogenerator */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 63C1062416CB108A00D2C860 /* Build configuration list for PBXAggregateTarget "Mogenerator" */;
+			buildPhases = (
+				63C1062716CB108E00D2C860 /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = Mogenerator;
+			productName = Mogenerator;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		6319F696165EAB1F0063AC93 /* supportedLanguages.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6319F695165EAB1F0063AC93 /* supportedLanguages.plist */; };
 		633406391652C31300A54C52 /* OTRListSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 633406381652C31300A54C52 /* OTRListSetting.m */; };
@@ -35,6 +49,11 @@
 		63B43C30166D93D5004A4C54 /* Lock_Unlocked@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63B43C2C166D93D5004A4C54 /* Lock_Unlocked@2x.png */; };
 		63DF97741623A3310043E295 /* pencil@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63DF97731623A3310043E295 /* pencil@2x.png */; };
 		63DF97761623A3F30043E295 /* pencil.png in Resources */ = {isa = PBXBuildFile; fileRef = 63DF97751623A3F30043E295 /* pencil.png */; };
+		63E72B9D16CB11E800B6F389 /* _OTRManagedAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E72B9416CB11E800B6F389 /* _OTRManagedAccount.m */; };
+		63E72B9E16CB11E800B6F389 /* _OTRManagedBuddy.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E72B9616CB11E800B6F389 /* _OTRManagedBuddy.m */; };
+		63E72B9F16CB11E800B6F389 /* _OTRManagedMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E72B9816CB11E800B6F389 /* _OTRManagedMessage.m */; };
+		63E72BA016CB11E800B6F389 /* _OTRManagedOscarAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E72B9A16CB11E800B6F389 /* _OTRManagedOscarAccount.m */; };
+		63E72BA116CB11E800B6F389 /* _OTRManagedXMPPAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E72B9C16CB11E800B6F389 /* _OTRManagedXMPPAccount.m */; };
 		63F6E854164E000C00F67BDB /* OTRFeedbackSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F6E853164E000B00F67BDB /* OTRFeedbackSetting.m */; };
 		63FAEEDB16B7553E004F1205 /* OTRXMPPBudyTimers.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FAEEDA16B7553E004F1205 /* OTRXMPPBudyTimers.m */; };
 		D90B80AC13FC719B006EFF3D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D90B80AB13FC719B006EFF3D /* CoreGraphics.framework */; };
@@ -364,6 +383,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		63C1062816CB111100D2C860 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D9F9376F13F44BD3009A3D84 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 63C1062316CB108A00D2C860;
+			remoteInfo = Mogenerator;
+		};
 		D9CEED691684235C00B236B5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D9CEED621684235B00B236B5 /* OTRKit.xcodeproj */;
@@ -444,6 +470,16 @@
 		63B43C2C166D93D5004A4C54 /* Lock_Unlocked@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Lock_Unlocked@2x.png"; sourceTree = "<group>"; };
 		63DF97731623A3310043E295 /* pencil@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pencil@2x.png"; sourceTree = "<group>"; };
 		63DF97751623A3F30043E295 /* pencil.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pencil.png; sourceTree = "<group>"; };
+		63E72B9316CB11E800B6F389 /* _OTRManagedAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _OTRManagedAccount.h; sourceTree = "<group>"; };
+		63E72B9416CB11E800B6F389 /* _OTRManagedAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _OTRManagedAccount.m; sourceTree = "<group>"; };
+		63E72B9516CB11E800B6F389 /* _OTRManagedBuddy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _OTRManagedBuddy.h; sourceTree = "<group>"; };
+		63E72B9616CB11E800B6F389 /* _OTRManagedBuddy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _OTRManagedBuddy.m; sourceTree = "<group>"; };
+		63E72B9716CB11E800B6F389 /* _OTRManagedMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _OTRManagedMessage.h; sourceTree = "<group>"; };
+		63E72B9816CB11E800B6F389 /* _OTRManagedMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _OTRManagedMessage.m; sourceTree = "<group>"; };
+		63E72B9916CB11E800B6F389 /* _OTRManagedOscarAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _OTRManagedOscarAccount.h; sourceTree = "<group>"; };
+		63E72B9A16CB11E800B6F389 /* _OTRManagedOscarAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _OTRManagedOscarAccount.m; sourceTree = "<group>"; };
+		63E72B9B16CB11E800B6F389 /* _OTRManagedXMPPAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _OTRManagedXMPPAccount.h; sourceTree = "<group>"; };
+		63E72B9C16CB11E800B6F389 /* _OTRManagedXMPPAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _OTRManagedXMPPAccount.m; sourceTree = "<group>"; };
 		63F6E852164E000B00F67BDB /* OTRFeedbackSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRFeedbackSetting.h; sourceTree = "<group>"; };
 		63F6E853164E000B00F67BDB /* OTRFeedbackSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRFeedbackSetting.m; sourceTree = "<group>"; };
 		63FAEED916B7553D004F1205 /* OTRXMPPBudyTimers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPBudyTimers.h; sourceTree = "<group>"; };
@@ -1156,6 +1192,23 @@
 				636FE4BF161B7C68002B28EF /* OTRInLineTextEditTableViewCell.m */,
 			);
 			name = Login;
+			sourceTree = "<group>";
+		};
+		63E72BA216CB11EE00B6F389 /* mogen */ = {
+			isa = PBXGroup;
+			children = (
+				63E72B9316CB11E800B6F389 /* _OTRManagedAccount.h */,
+				63E72B9416CB11E800B6F389 /* _OTRManagedAccount.m */,
+				63E72B9516CB11E800B6F389 /* _OTRManagedBuddy.h */,
+				63E72B9616CB11E800B6F389 /* _OTRManagedBuddy.m */,
+				63E72B9716CB11E800B6F389 /* _OTRManagedMessage.h */,
+				63E72B9816CB11E800B6F389 /* _OTRManagedMessage.m */,
+				63E72B9916CB11E800B6F389 /* _OTRManagedOscarAccount.h */,
+				63E72B9A16CB11E800B6F389 /* _OTRManagedOscarAccount.m */,
+				63E72B9B16CB11E800B6F389 /* _OTRManagedXMPPAccount.h */,
+				63E72B9C16CB11E800B6F389 /* _OTRManagedXMPPAccount.m */,
+			);
+			name = mogen;
 			sourceTree = "<group>";
 		};
 		D91DAE8A154740D5009D0B74 /* Detail Views */ = {
@@ -2291,6 +2344,7 @@
 		D9D69B07141806BB0056FB9E /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				63E72BA216CB11EE00B6F389 /* mogen */,
 				D90B9FAE169FF4FB00A923EF /* OTRManagedXMPPAccount.h */,
 				D90B9FAF169FF4FB00A923EF /* OTRManagedXMPPAccount.m */,
 				D90B9FAB169FF4EE00A923EF /* OTRManagedOscarAccount.h */,
@@ -2508,6 +2562,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				63C1062916CB111100D2C860 /* PBXTargetDependency */,
 				D9CEF0AA1684267E00B236B5 /* PBXTargetDependency */,
 			);
 			name = "Off the Record";
@@ -2580,6 +2635,7 @@
 			projectRoot = "";
 			targets = (
 				D9F9377713F44BD3009A3D84 /* Off the Record */,
+				63C1062316CB108A00D2C860 /* Mogenerator */,
 			);
 		};
 /* End PBXProject section */
@@ -2673,6 +2729,22 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		63C1062716CB108E00D2C860 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cd \"Off the Record\"\nmogenerator --template-var arc=true -m ChatSecure.xcdatamodeld/ChatSecure.xcdatamodel/";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		D9F9377413F44BD3009A3D84 /* Sources */ = {
@@ -2958,12 +3030,22 @@
 				63769F1A16A7915000E10BF9 /* OTROldXMPPAccount.m in Sources */,
 				63769F1B16A7917800E10BF9 /* OTROldAccount.m in Sources */,
 				63FAEEDB16B7553E004F1205 /* OTRXMPPBudyTimers.m in Sources */,
+				63E72B9D16CB11E800B6F389 /* _OTRManagedAccount.m in Sources */,
+				63E72B9E16CB11E800B6F389 /* _OTRManagedBuddy.m in Sources */,
+				63E72B9F16CB11E800B6F389 /* _OTRManagedMessage.m in Sources */,
+				63E72BA016CB11E800B6F389 /* _OTRManagedOscarAccount.m in Sources */,
+				63E72BA116CB11E800B6F389 /* _OTRManagedXMPPAccount.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		63C1062916CB111100D2C860 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 63C1062316CB108A00D2C860 /* Mogenerator */;
+			targetProxy = 63C1062816CB111100D2C860 /* PBXContainerItemProxy */;
+		};
 		D9CEF0AA1684267E00B236B5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = OTRKit;
@@ -3039,6 +3121,20 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		63C1062516CB108A00D2C860 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		63C1062616CB108A00D2C860 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		D9F937A013F44BD3009A3D84 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -3150,6 +3246,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		63C1062416CB108A00D2C860 /* Build configuration list for PBXAggregateTarget "Mogenerator" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				63C1062516CB108A00D2C860 /* Debug */,
+				63C1062616CB108A00D2C860 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		D9F9377213F44BD3009A3D84 /* Build configuration list for PBXProject "Off the Record" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

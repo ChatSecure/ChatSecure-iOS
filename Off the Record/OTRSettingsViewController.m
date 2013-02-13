@@ -325,7 +325,7 @@
 -(void)protocolLoggedInSuccessfully:(NSNotification *)notification
 {
     id <OTRProtocol> protocol = notification.object;
-    protocol.account.isConnected = YES;
+    [protocol.account setIsConnectedValue:YES];
     [self accountLoggedIn];
 }
 

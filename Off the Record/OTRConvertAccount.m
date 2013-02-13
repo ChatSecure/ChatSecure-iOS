@@ -43,13 +43,13 @@
         managagedXmppAccount.uniqueIdentifier = xmppAccount.uniqueIdentifier;
         [managagedXmppAccount setNewUsername:xmppAccount.username];
         managagedXmppAccount.domain = xmppAccount.domain;
-        managagedXmppAccount.port = xmppAccount.port;
-        managagedXmppAccount.sendDeliveryReceipts = xmppAccount.sendDeliveryReceipts;
-        managagedXmppAccount.sendTypingNotifications = xmppAccount.sendTypingNotifications;
-        managagedXmppAccount.shouldAllowSelfSignedSSL = xmppAccount.allowSelfSignedSSL;
-         managagedXmppAccount.shouldAllowSSLHostNameMismatch = xmppAccount.allowSSLHostNameMismatch;
+        [managagedXmppAccount setPortValue:xmppAccount.port];
+        [managagedXmppAccount setSendDeliveryReceiptsValue:xmppAccount.sendDeliveryReceipts];
+        [managagedXmppAccount setSendTypingNotificationsValue:xmppAccount.sendTypingNotifications];
+        [managagedXmppAccount setAllowSelfSignedSSLValue:xmppAccount.allowSelfSignedSSL ];
+         managagedXmppAccount.allowSSLHostNameMismatchValue = xmppAccount.allowSSLHostNameMismatch;
         managagedXmppAccount.protocol = xmppAccount.protocol;
-        [managagedXmppAccount setShouldRememberPassword:xmppAccount.rememberPassword];
+        [managagedXmppAccount setRememberPasswordValue:xmppAccount.rememberPassword];
         managagedXmppAccount.password = xmppAccount.password;
         [managagedXmppAccount setIsConnected:NO];
         
@@ -69,7 +69,7 @@
         managedOscarAccount.password = oscarAccount.password;
         managedOscarAccount.uniqueIdentifier = managedOscarAccount.uniqueIdentifier;
         [managedOscarAccount setNewUsername:oscarAccount.username];
-        [managedOscarAccount setShouldRememberPassword:oscarAccount.rememberPassword];
+        [managedOscarAccount setRememberPasswordValue:oscarAccount.rememberPassword];
         managedOscarAccount.isConnected = NO;
         
         [managedOscarAccount save];

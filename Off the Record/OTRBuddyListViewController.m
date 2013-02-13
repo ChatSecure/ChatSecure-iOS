@@ -258,7 +258,7 @@
     }
             
     NSString *buddyUsername = buddy.displayName;
-    OTRBuddyStatus buddyStatus = buddy.status;
+    OTRBuddyStatus buddyStatus = buddy.statusValue;
     
     cell.textLabel.text = buddyUsername;
     

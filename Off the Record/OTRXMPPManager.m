@@ -348,8 +348,8 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	
     
 	// You may need to alter these settings depending on the server you're connecting to
-	allowSelfSignedCertificates = account.shouldAllowSelfSignedSSL;
-	allowSSLHostNameMismatch = account.shouldAllowSSLHostNameMismatch;
+	allowSelfSignedCertificates = account.shouldAllowSSLHostNameMismatch;
+	allowSSLHostNameMismatch = account.shouldAllowSelfSignedSSL;
 }
 
 - (void)teardownStream
@@ -705,7 +705,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
         OTRManagedBuddy * messageBuddy = [self buddyWithMessage:message];
         
         OTRManagedMessage *otrMessage = [OTRManagedMessage newMessageFromBuddy:messageBuddy message:body];
-        otrMessage.isEncrypted = YES;
+        [otrMessage setIsEncryptedValue:YES];
         [OTRCodec decodeMessage:otrMessage];
         
         if(otrMessage)
@@ -895,7 +895,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     OTRManagedBuddy * buddy = [self managedBuddyWithObjectID:managedBuddyObjectID];
     
 
-    if (buddy.lastSentChatState == chatState) {
+    if (buddy.lastSentChatState.intValue == chatState) {
         return;
     }
     
@@ -913,7 +913,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     }
     else if (chatState == kOTRChatStateComposing)
     {
-        if(buddy.lastSentChatState !=kOTRChatStateComposing)
+        if(buddy.lastSentChatState.intValue !=kOTRChatStateComposing)
             [xMessage addComposingChatState];
         else
             shouldSend = NO;
@@ -924,7 +924,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     }
     else if(chatState == kOTRChatStateInactive)
     {
-        if(buddy.lastSentChatState != kOTRChatStateInactive)
+        if(buddy.lastSentChatState.intValue != kOTRChatStateInactive)
             [xMessage addInactiveChatState];
         else
             shouldSend = NO;
@@ -944,7 +944,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     
     if(shouldSend)
     {
-        buddy.lastSentChatState = chatState;
+        [buddy setLastSentChatStateValue:chatState];
         NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
         [context MR_saveToPersistentStoreAndWait];
         [xmppStream sendElement:message];

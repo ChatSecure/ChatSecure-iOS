@@ -22,6 +22,7 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
+#import "_OTRManagedAccount.h"
 
 #define kOTRAccountUsernameKey @"kOTRAccountUsernameKey"
 #define kOTRAccountProtocolKey @"kOTRAccountProtocolKey"
@@ -33,25 +34,18 @@
 #define kXMPPImageName @"xmpp.png"
 
 
-@interface OTRManagedAccount : NSManagedObject
+@interface OTRManagedAccount : _OTRManagedAccount
 
-@property (nonatomic) BOOL isConnected;
-@property (nonatomic, retain) NSString * protocol;
-@property (nonatomic, readonly) BOOL rememberPassword;
+
 @property (nonatomic, retain) NSString *password; // nil if rememberPassword = NO, not stored in memory
-@property (nonatomic, retain) NSString * uniqueIdentifier;
-@property (nonatomic, retain, readonly) NSString * username;
-
-@property (nonatomic, retain) NSSet *buddies;
 
 - (void) save;
 - (Class) protocolClass;
 - (NSString *) providerName;
 - (NSString *) imageName;
 
+-(void)setNewUsername:(NSString *)newUsername;
 - (void) setDefaultsWithProtocol:(NSString*)newProtocol;
-- (void) setNewUsername:(NSString *)newUsername;
-- (void) setShouldRememberPassword:(BOOL)remember;
 
 @end
 
