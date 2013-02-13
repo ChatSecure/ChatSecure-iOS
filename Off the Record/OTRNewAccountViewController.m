@@ -121,9 +121,9 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     OTRManagedAccount * cellAccount = [self accountForName:[[accounts objectAtIndex:indexPath.row] objectForKey:kDisplayNameKey]];
-    NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
 
-    [context MR_save];
+    [context MR_saveToPersistentStoreAndWait];
     
     OTRLoginViewController *loginViewController = [OTRLoginViewController loginViewControllerWithAcccount:cellAccount];
     loginViewController.isNewAccount = YES;

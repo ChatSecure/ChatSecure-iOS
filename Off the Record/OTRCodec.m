@@ -36,7 +36,17 @@
     NSString *myAccountName = theMessage.buddy.account.username;
     
     NSString *decodedMessageString = [[OTRKit sharedInstance] decodeMessage:message recipient:friendAccount accountName:myAccountName protocol:protocol];
-    theMessage.message = decodedMessageString;
+    if(decodedMessageString) {
+        theMessage.message = decodedMessageString;
+        theMessage.isEncrypted = NO;
+    } else {
+        theMessage.isEncrypted = YES;
+    }
+        
+    
+    
+    NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
+    [context MR_saveToPersistentStoreAndWait];
 
     OTRKitMessageState messageState = [[OTRKit sharedInstance] messageStateForUsername:friendAccount accountName:myAccountName protocol:protocol];
     [theMessage.buddy setNewEncryptionStatus:messageState];
@@ -55,6 +65,9 @@
     OTRManagedMessage *newOTRMessage = [OTRManagedMessage newMessageToBuddy:theMessage.buddy message:encodedMessageString];
     newOTRMessage.date = theMessage.date;
     newOTRMessage.isEncrypted = YES;
+    
+    NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
+    [context MR_saveToPersistentStoreAndWait];
     
     return newOTRMessage;
 }

@@ -94,8 +94,8 @@
             NSDictionary * accountDictionary = [accountsDictionary objectForKey:key];
             [self saveDictionary:accountDictionary withUniqueId:key];
         }
-        NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
-        [context MR_save];
+        NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+        [context MR_saveToPersistentStoreAndWait];
         [defaults removeObjectForKey:kOTRSettingAccountsKey];
     }
 }

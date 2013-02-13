@@ -59,8 +59,6 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 {
     // DATABASE TESTS
     [MagicalRecord setupCoreDataStackWithStoreNamed:@"db.sqlite"];
-    NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
-    [context setRetainsRegisteredObjects:YES];
     
     //NSPersistentStoreCoordinator *storeCoordinator = [OTRDatabaseUtils persistentStoreCoordinatorWithDBName:@"db.sqlite" passphrase:@"test"];
     

@@ -286,6 +286,7 @@
      selector:@selector(showDisconnectionAlert:)
      name:kOTRProtocolDiconnect
      object:nil];
+    _fetchedResultsController = nil;
     
     [self refreshLockButton];
     [self updateChatHistory];
@@ -569,7 +570,6 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
-    _fetchedResultsController = nil;
     [self refreshView];
     [self updateChatHistory];
     [self updateChatState:NO];
@@ -649,6 +649,10 @@
     OTRManagedMessage *message = [self.fetchedResultsController objectAtIndexPath:indexPath];
     
     cell.textLabel.text = message.message;
+    cell.textLabel.textColor = [UIColor redColor];
+    if (message.isIncoming) {
+        cell.textLabel.textColor = [UIColor blueColor];
+    }
     
     return cell;
     
@@ -661,8 +665,10 @@
         return _fetchedResultsController;
     
     NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"buddy == %@",self.buddy];
+    NSPredicate * encryptionFilter = [NSPredicate predicateWithFormat:@"isEncrypted == NO"];
+    NSPredicate *predicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[buddyFilter, encryptionFilter]];
     
-    _fetchedResultsController = [OTRManagedMessage MR_fetchAllGroupedBy:nil withPredicate:buddyFilter sortedBy:@"date" ascending:YES delegate:self inContext:[NSManagedObjectContext MR_defaultContext]];
+    _fetchedResultsController = [OTRManagedMessage MR_fetchAllGroupedBy:nil withPredicate:predicate sortedBy:@"date" ascending:YES delegate:self];
 
     return _fetchedResultsController;
 }
@@ -677,7 +683,7 @@
     UITableView *tableView = self.chatHistoryTableView;
     switch(type) {
         case NSFetchedResultsChangeInsert:
-            [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationBottom];
             break;
     }
 }

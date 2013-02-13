@@ -863,8 +863,8 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
                 newBuddy.account = self.account;
                 [otrBuddy setNewStatus:otrBuddyStatus];
                 newBuddy.groupName = sectionName;
-                NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
-                [context MR_save];
+                NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+                [context MR_saveToPersistentStoreAndWait];
                 [protocolBuddyList setObject:newBuddy forKey:user.jidStr];
             }
         }
@@ -946,7 +946,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     {
         buddy.lastSentChatState = chatState;
         NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
-        [context MR_saveNestedContexts];
+        [context MR_saveToPersistentStoreAndWait];
         [xmppStream sendElement:message];
     }
     
@@ -956,7 +956,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 //Chat State
 -(OTRManagedBuddy *)managedBuddyWithObjectID:(NSManagedObjectID *)managedBuddyObjectID
 {
-    NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
     NSError * error = nil;
     OTRManagedBuddy * managedBuddy = (OTRManagedBuddy *)[context existingObjectWithID:managedBuddyObjectID error:&error];
     if (error) {

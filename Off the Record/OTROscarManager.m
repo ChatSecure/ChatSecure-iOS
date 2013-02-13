@@ -582,8 +582,8 @@ BOOL loginFailed;
                 [otrBuddy setNewStatus:buddyStatus];
                 otrBuddy.groupName = group.name;
                 otrBuddy.account = self.account;
-                NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
-                [context MR_save];
+                NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+                [context MR_saveToPersistentStoreAndWait];
                 [protocolBuddyList setObject:otrBuddy forKey:buddy.username];
             }
             [otrBuddyListSet addObject:otrBuddy];

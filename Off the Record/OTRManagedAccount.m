@@ -121,7 +121,7 @@
 
 - (void) save {
     NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
-    [context MR_saveNestedContexts];
+    [context MR_saveToPersistentStoreAndWait];
 }
 
 

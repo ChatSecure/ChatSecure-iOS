@@ -51,7 +51,7 @@
     
     NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
     [[context objectWithID:account.objectID] MR_deleteEntity];
-    [context MR_saveNestedContexts];
+    [context MR_saveToPersistentStoreAndWait];
     
    
 }
