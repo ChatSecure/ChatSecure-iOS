@@ -36,9 +36,24 @@
 #define ALERTVIEW_NOT_VERIFIED_TAG 0
 #define ALERTVIEW_VERIFIED_TAG 1
 
+#define SentDateFontSize                     13
+#define MessageFontSize                      16
+#define MESSAGE_MARGIN_TOP                   7
+#define MESSAGE_MARGIN_BOTTOM                10
+#define MESSAGE_TEXT_WIDTH_MAX               180
+#define MESSAGE_SENT_DATE_LABEL_HEIGHT       (SentDateFontSize+7)
+#define MESSAGE_SENT_DATE_SHOW_TIME_INTERVAL 10*60 // 10 minutes
+
+#define MESSAGE_TEXT_SIZE_WITH_FONT(message, font) \
+[message.message sizeWithFont:font constrainedToSize:CGSizeMake(MESSAGE_TEXT_WIDTH_MAX, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap]
+
 
 @interface OTRChatViewController(Private)
+
 - (void) refreshView;
+
+
+
 @end
 
 @implementation OTRChatViewController
@@ -198,6 +213,8 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHideOrShow:) name:UIKeyboardWillHideNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHideOrShow:) name:UIKeyboardWillShowNotification object:nil];
+    
+    _heightForRow = [NSMutableArray array];
     
     self.chatHistoryTableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     self.chatHistoryTableView.dataSource = self;
@@ -583,6 +600,41 @@
     [webView stringByEvaluatingJavaScriptFromString:javascript];
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    //    NSLog(@"heightForRowAtIndexPath: %@", indexPath);
+    
+    if (indexPath.row < [[self.messagesFetchedResultsController sections][indexPath.section] numberOfObjects]) {
+        OTRManagedMessage *message = [self.messagesFetchedResultsController objectAtIndexPath:indexPath];
+        
+        NSArray *messageDetails = nil;
+        if ([_heightForRow count] > indexPath.row) {
+            messageDetails = _heightForRow[indexPath.row];
+        }
+        
+        CGFloat messageSentDateLabelHeight = 0;
+        CGFloat messageTextLabelHeight;
+        if (messageDetails) {
+            messageSentDateLabelHeight = [messageDetails[0] floatValue];
+            messageTextLabelHeight = [messageDetails[1] CGSizeValue].height;
+        } else {
+            if ((!_previousShownSentDate || [message.date timeIntervalSinceDate:_previousShownSentDate] > MESSAGE_SENT_DATE_SHOW_TIME_INTERVAL)) {
+                _previousShownSentDate = message.date;
+                messageSentDateLabelHeight = MESSAGE_SENT_DATE_LABEL_HEIGHT;
+            }
+            CGSize messageTextLabelSize = MESSAGE_TEXT_SIZE_WITH_FONT(message, [UIFont systemFontOfSize:MessageFontSize]);
+            messageTextLabelHeight = messageTextLabelSize.height;
+            
+            _heightForRow[indexPath.row] = @[@(messageSentDateLabelHeight), [NSValue valueWithCGSize:messageTextLabelSize]];
+        }
+        
+        return messageSentDateLabelHeight+messageTextLabelHeight+MESSAGE_MARGIN_TOP+MESSAGE_MARGIN_BOTTOM;
+    }
+    else {
+        //Composing messsage height
+    }
+    
+}
+
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     NSInteger numMessages = [[self.messagesFetchedResultsController sections][section] numberOfObjects];
@@ -602,9 +654,10 @@
     
 
     if ((buddy.chatStateValue == 2 || buddy.chatStateValue == 3) && indexPath.row > [[self.messagesFetchedResultsController sections][indexPath.section] numberOfObjects]-1){
-        cell.textLabel.text = @"Composing";
+        cell.textLabel.textColor = [UIColor blackColor];
+        cell.textLabel.text = @"Composing...";
     }
-    else {
+    else if( [[self.messagesFetchedResultsController sections][indexPath.section] numberOfObjects] >= indexPath.row+1) {
         OTRManagedMessage *message = [self.messagesFetchedResultsController objectAtIndexPath:indexPath];
         
         cell.textLabel.text = message.message;

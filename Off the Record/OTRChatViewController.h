@@ -26,6 +26,10 @@
 #import "OTRManagedBuddy.h"
 
 @interface OTRChatViewController : UIViewController <UITextFieldDelegate,UIWebViewDelegate, UIActionSheetDelegate, UISplitViewControllerDelegate,UIAlertViewDelegate,UITableViewDataSource,UITableViewDelegate,NSFetchedResultsControllerDelegate>
+{
+    NSMutableArray * _heightForRow;
+    NSDate *_previousShownSentDate;
+}
 
 
 @property (nonatomic, retain) UIBarButtonItem *lockButton, *unlockedButton, *lockVerifiedButton;
