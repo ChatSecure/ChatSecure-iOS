@@ -29,6 +29,9 @@
 {
     NSMutableArray * _heightForRow;
     NSDate *_previousShownSentDate;
+    UIImage *_messageBubbleGray;
+    UIImage *_messageBubbleBlue;
+    UIImage *_messageBubbleComposing;
 }
 
 

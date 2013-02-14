@@ -27,6 +27,7 @@
 #import "OTRDoubleSetting.h"
 #import "OTRConstants.h"
 #import "OTRAppDelegate.h"
+#import "ACPlaceholderTextView.h"
 
 #define kTabBarHeight 0
 #define kSendButtonWidth 60
@@ -43,6 +44,9 @@
 #define MESSAGE_TEXT_WIDTH_MAX               180
 #define MESSAGE_SENT_DATE_LABEL_HEIGHT       (SentDateFontSize+7)
 #define MESSAGE_SENT_DATE_SHOW_TIME_INTERVAL 10*60 // 10 minutes
+#define MESSAGE_SENT_DATE_LABEL_TAG          100
+#define MESSAGE_BACKGROUND_IMAGE_VIEW_TAG    101
+#define MESSAGE_TEXT_LABEL_TAG               102
 
 #define MESSAGE_TEXT_SIZE_WITH_FONT(message, font) \
 [message.message sizeWithFont:font constrainedToSize:CGSizeMake(MESSAGE_TEXT_WIDTH_MAX, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap]
@@ -215,12 +219,16 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHideOrShow:) name:UIKeyboardWillShowNotification object:nil];
     
     _heightForRow = [NSMutableArray array];
+    _messageBubbleGray = [[UIImage imageNamed:@"MessageBubbleGray"] stretchableImageWithLeftCapWidth:23 topCapHeight:15];
+    _messageBubbleBlue = [[UIImage imageNamed:@"MessageBubbleBlue"] stretchableImageWithLeftCapWidth:15 topCapHeight:13];
+    _messageBubbleComposing = [UIImage imageNamed:@"MessageBubbleTyping"];
     
     self.chatHistoryTableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     self.chatHistoryTableView.dataSource = self;
     self.chatHistoryTableView.delegate = self;
     self.chatHistoryTableView.autoresizingMask = UIViewAutoresizingFlexibleWidth |UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;
     self.chatHistoryTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.chatHistoryTableView.backgroundColor = [UIColor colorWithWhite:245/255.0f alpha:1];
     [self.view addSubview:self.chatHistoryTableView];
     
 
@@ -323,6 +331,7 @@
     [self.chatHistoryTableView beginUpdates];
     [self.chatHistoryTableView deleteRowsAtIndexPaths:@[[self lastIndexPath]] withRowAnimation:UITableViewRowAnimationAutomatic];
     [self.chatHistoryTableView endUpdates];
+    [self scrollToBottomAnimated:YES];
     
 }
 -(void)addComposing
@@ -333,6 +342,7 @@
     [self.chatHistoryTableView beginUpdates];
     [self.chatHistoryTableView insertRowsAtIndexPaths:@[lastIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
     [self.chatHistoryTableView endUpdates];
+    [self scrollToBottomAnimated:YES];
 }
 
 - (void)updateChatState:(BOOL)animated
@@ -521,14 +531,31 @@
         {
             [self.buddy sendActiveChatState];
         }
-        CGRect frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height-[self chatBoxViewHeight]);
-        self.chatHistoryTableView.frame = frame;
-        self.chatBoxView.frame = CGRectMake(0,frame.size.height, self.view.frame.size.width, [self chatBoxViewHeight]);
-        self.chatHistoryTableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        self.chatBoxView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
+        // Create messageInputBar to contain _textView, messageInputBarBackgroundImageView, & _sendButton.
+        UIImageView *messageInputBar = [[UIImageView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height-kChatBarHeight1, self.view.frame.size.width, kChatBarHeight1)];
+        messageInputBar.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin);
+        messageInputBar.opaque = YES;
+        messageInputBar.userInteractionEnabled = YES; // makes subviews tappable
+        messageInputBar.image = [[UIImage imageNamed:@"MessageInputBarBackground"] resizableImageWithCapInsets:UIEdgeInsetsMake(19, 3, 19, 3)]; // 8 x 40
         
-        self.messageTextField.frame = CGRectMake(0, 0, self.view.frame.size.width-kSendButtonWidth, self.chatBoxView.frame.size.height);
-        self.sendButton.frame = CGRectMake(self.messageTextField.frame.size.width, 0, kSendButtonWidth , self.chatBoxView.frame.size.height);
+        // Create _textView to compose messages.
+        // TODO: Shrink cursor height by 1 px on top & 1 px on bottom.
+        _textView = [[ACPlaceholderTextView alloc] initWithFrame:CGRectMake(TEXT_VIEW_X, TEXT_VIEW_Y, TEXT_VIEW_WIDTH, TEXT_VIEW_HEIGHT_MIN)];
+        _textView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        _textView.delegate = self;
+        _textView.backgroundColor = [UIColor colorWithWhite:245/255.0f alpha:1];
+        _textView.scrollIndicatorInsets = UIEdgeInsetsMake(13, 0, 8, 6);
+        _textView.scrollsToTop = NO;
+        _textView.font = [UIFont systemFontOfSize:MessageFontSize];
+        _textView.placeholder = NSLocalizedString(@" Message", nil);
+        [messageInputBar addSubview:_textView];
+        _previousTextViewContentHeight = MessageFontSize+20;
+        
+        // Create messageInputBarBackgroundImageView as subview of messageInputBar.
+        UIImageView *messageInputBarBackgroundImageView = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"MessageInputFieldBackground"] resizableImageWithCapInsets:UIEdgeInsetsMake(20, 12, 18, 18)]]; // 32 x 40
+        messageInputBarBackgroundImageView.frame = CGRectMake(TEXT_VIEW_X-2, 0, TEXT_VIEW_WIDTH+2, kChatBarHeight1);
+        messageInputBarBackgroundImageView.autoresizingMask = _tableView.autoresizingMask;
+        [messageInputBar addSubview:messageInputBarBackgroundImageView];
         
         [self refreshLockButton];
     }
@@ -600,6 +627,13 @@
     [webView stringByEvaluatingJavaScriptFromString:javascript];
 }
 
+- (void)scrollToBottomAnimated:(BOOL)animated {
+    NSInteger numberOfRows = [self.chatHistoryTableView numberOfRowsInSection:0];
+    if (numberOfRows) {
+        [self.chatHistoryTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:numberOfRows-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:animated];
+    }
+}
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     //    NSLog(@"heightForRowAtIndexPath: %@", indexPath);
     
@@ -630,6 +664,7 @@
         return messageSentDateLabelHeight+messageTextLabelHeight+MESSAGE_MARGIN_TOP+MESSAGE_MARGIN_BOTTOM;
     }
     else {
+        return _messageBubbleComposing.size.height;
         //Composing messsage height
     }
     
@@ -638,7 +673,7 @@
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     NSInteger numMessages = [[self.messagesFetchedResultsController sections][section] numberOfObjects];
-    if (buddy.chatStateValue == 2 || buddy.chatStateValue == 3) {
+    if (buddy.chatStateValue == kOTRChatStateComposing || buddy.chatStateValue == kOTRChatStatePaused) {
         numMessages +=1;
     }
     return numMessages;
@@ -647,23 +682,105 @@
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
-    if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
-    }
-    
+    UITableViewCell * cell;
+    NSInteger lastIndex = ([[self.messagesFetchedResultsController sections][indexPath.section] numberOfObjects]-1);
+    BOOL isLastRow = indexPath.row > lastIndex;
+    BOOL isComposing = buddy.chatStateValue == kOTRChatStateComposing;
+    BOOL isPaused = buddy.chatStateValue == kOTRChatStatePaused;
+    BOOL isComposingRow = ((isComposing || isPaused) && isLastRow);
+    if (isComposingRow){
+        static NSString *ComposingCellIdentifier = @"composingCell";
+        cell = [tableView dequeueReusableCellWithIdentifier:ComposingCellIdentifier];
+        if (!cell) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:ComposingCellIdentifier];
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            UIImageView *messageBackgroundImageView;
+            messageBackgroundImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
+            messageBackgroundImageView.tag = MESSAGE_BACKGROUND_IMAGE_VIEW_TAG;
+            messageBackgroundImageView.backgroundColor = tableView.backgroundColor; // speeds scrolling
+            [cell.contentView addSubview:messageBackgroundImageView];
+            
+            messageBackgroundImageView.frame = CGRectMake(0, 0, _messageBubbleComposing.size.width, _messageBubbleComposing.size.height);
+            messageBackgroundImageView.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
+            messageBackgroundImageView.image = _messageBubbleComposing;
 
-    if ((buddy.chatStateValue == 2 || buddy.chatStateValue == 3) && indexPath.row > [[self.messagesFetchedResultsController sections][indexPath.section] numberOfObjects]-1){
-        cell.textLabel.textColor = [UIColor blackColor];
-        cell.textLabel.text = @"Composing...";
+        }
     }
     else if( [[self.messagesFetchedResultsController sections][indexPath.section] numberOfObjects] >= indexPath.row+1) {
+        
+        NSArray *messageDetails = _heightForRow[indexPath.row];
+        CGFloat messageSentDateLabelHeight = [messageDetails[0] floatValue];
+        CGSize messageTextLabelSize = [messageDetails[1] CGSizeValue];
+        
+        UILabel *messageSentDateLabel;
+        UIImageView *messageBackgroundImageView;
+        UILabel *messageTextLabel;
+        
+        static NSString *CellIdentifier = @"Cell";
+        cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        if (!cell) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            
+            // Create messageSentDateLabel.
+            messageSentDateLabel = [[UILabel alloc] initWithFrame:CGRectMake(-2, 0, tableView.frame.size.width, SentDateFontSize+5)];
+            messageSentDateLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+            messageSentDateLabel.tag = MESSAGE_SENT_DATE_LABEL_TAG;
+            messageSentDateLabel.backgroundColor = tableView.backgroundColor;          // speeds scrolling
+            messageSentDateLabel.textColor = [UIColor grayColor];
+            messageSentDateLabel.textAlignment = UITextAlignmentCenter;
+            messageSentDateLabel.font = [UIFont boldSystemFontOfSize:SentDateFontSize];
+            [cell.contentView addSubview:messageSentDateLabel];
+            
+            // Create messageBackgroundImageView.
+            messageBackgroundImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
+            messageBackgroundImageView.tag = MESSAGE_BACKGROUND_IMAGE_VIEW_TAG;
+            messageBackgroundImageView.backgroundColor = tableView.backgroundColor; // speeds scrolling
+            [cell.contentView addSubview:messageBackgroundImageView];
+            
+            // Create messageTextLabel.
+            messageTextLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+            messageTextLabel.tag = MESSAGE_TEXT_LABEL_TAG;
+            messageTextLabel.backgroundColor = [UIColor clearColor];
+            messageTextLabel.numberOfLines = 0;
+            messageTextLabel.lineBreakMode = UILineBreakModeWordWrap;
+            messageTextLabel.font = [UIFont systemFontOfSize:MessageFontSize];
+            [cell.contentView addSubview:messageTextLabel];
+        } else {
+            messageSentDateLabel = (UILabel *)[cell.contentView viewWithTag:MESSAGE_SENT_DATE_LABEL_TAG];
+            messageBackgroundImageView = (UIImageView *)[cell.contentView viewWithTag:MESSAGE_BACKGROUND_IMAGE_VIEW_TAG];
+            messageTextLabel = (UILabel *)[cell.contentView viewWithTag:MESSAGE_TEXT_LABEL_TAG];
+        }
+        
+        
         OTRManagedMessage *message = [self.messagesFetchedResultsController objectAtIndexPath:indexPath];
         
-        cell.textLabel.text = message.message;
-        cell.textLabel.textColor = [UIColor redColor];
-        if (message.isIncoming) {
-            cell.textLabel.textColor = [UIColor blueColor];
+        
+        if (messageSentDateLabelHeight) {
+            
+            char buffer[22]; // Sep 22, 2012 12:15 PM -- 21 chars + 1 for NUL terminator \0
+            time_t time = [message.date timeIntervalSince1970];
+            strftime(buffer, 22, "%b %-e, %Y %-l:%M %p", localtime(&time));
+            messageSentDateLabel.text = [NSString stringWithCString:buffer encoding:NSUTF8StringEncoding];
+        } else {
+            messageSentDateLabel.text = nil;
+        }
+        
+        messageTextLabel.text = message.message;
+        if (!message.isIncomingValue) { // right message
+            messageBackgroundImageView.frame = CGRectMake(tableView.frame.size.width-messageTextLabelSize.width-34, messageSentDateLabelHeight+MessageFontSize-13, messageTextLabelSize.width+34, messageTextLabelSize.height+12);
+            messageBackgroundImageView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+            messageBackgroundImageView.image = _messageBubbleBlue;
+            
+            messageTextLabel.frame = CGRectMake(tableView.frame.size.width-messageTextLabelSize.width-22, messageSentDateLabelHeight+MessageFontSize-9, messageTextLabelSize.width+5, messageTextLabelSize.height);
+            messageTextLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+        } else {
+            messageBackgroundImageView.frame = CGRectMake(0, messageSentDateLabelHeight+MessageFontSize-13, messageTextLabelSize.width+34, messageTextLabelSize.height+12);
+            messageBackgroundImageView.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
+            messageBackgroundImageView.image = _messageBubbleGray;
+            
+            messageTextLabel.frame = CGRectMake(22, messageSentDateLabelHeight+MessageFontSize-9, messageTextLabelSize.width+5, messageTextLabelSize.height);
+            messageTextLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
         }
     }
     
@@ -717,7 +834,7 @@
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
     [self.chatHistoryTableView endUpdates];
-    //[self scrollToBottomAnimated:YES];
+    [self scrollToBottomAnimated:YES];
 }
 
 

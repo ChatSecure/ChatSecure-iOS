@@ -21,6 +21,24 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		63022B9E16CD9ABB00F764F1 /* MessageBubbleBlue.png in Resources */ = {isa = PBXBuildFile; fileRef = 63022B8E16CD9ABB00F764F1 /* MessageBubbleBlue.png */; };
+		63022B9F16CD9ABB00F764F1 /* MessageBubbleBlue@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63022B8F16CD9ABB00F764F1 /* MessageBubbleBlue@2x.png */; };
+		63022BA016CD9ABB00F764F1 /* MessageBubbleGray.png in Resources */ = {isa = PBXBuildFile; fileRef = 63022B9016CD9ABB00F764F1 /* MessageBubbleGray.png */; };
+		63022BA116CD9ABB00F764F1 /* MessageBubbleGray@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63022B9116CD9ABB00F764F1 /* MessageBubbleGray@2x.png */; };
+		63022BA216CD9ABB00F764F1 /* MessageBubbleHighlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = 63022B9216CD9ABB00F764F1 /* MessageBubbleHighlighted.png */; };
+		63022BA316CD9ABB00F764F1 /* MessageBubbleHighlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63022B9316CD9ABB00F764F1 /* MessageBubbleHighlighted@2x.png */; };
+		63022BA416CD9ABB00F764F1 /* MessageBubbleTyping.png in Resources */ = {isa = PBXBuildFile; fileRef = 63022B9416CD9ABB00F764F1 /* MessageBubbleTyping.png */; };
+		63022BA516CD9ABB00F764F1 /* MessageBubbleTyping@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63022B9516CD9ABB00F764F1 /* MessageBubbleTyping@2x.png */; };
+		63022BA616CD9ABB00F764F1 /* MessageInputBarBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 63022B9616CD9ABB00F764F1 /* MessageInputBarBackground.png */; };
+		63022BA716CD9ABB00F764F1 /* MessageInputBarBackground@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63022B9716CD9ABB00F764F1 /* MessageInputBarBackground@2x.png */; };
+		63022BA816CD9ABB00F764F1 /* MessageInputFieldBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 63022B9816CD9ABB00F764F1 /* MessageInputFieldBackground.png */; };
+		63022BA916CD9ABB00F764F1 /* MessageInputFieldBackground@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63022B9916CD9ABB00F764F1 /* MessageInputFieldBackground@2x.png */; };
+		63022BAA16CD9ABB00F764F1 /* SendButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 63022B9A16CD9ABB00F764F1 /* SendButton.png */; };
+		63022BAB16CD9ABB00F764F1 /* SendButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63022B9B16CD9ABB00F764F1 /* SendButton@2x.png */; };
+		63022BAC16CD9ABB00F764F1 /* SendButtonHighlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = 63022B9C16CD9ABB00F764F1 /* SendButtonHighlighted.png */; };
+		63022BAD16CD9ABB00F764F1 /* SendButtonHighlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63022B9D16CD9ABB00F764F1 /* SendButtonHighlighted@2x.png */; };
+		63022BB616CDAD4D00F764F1 /* OTRChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63022BB516CDAD4C00F764F1 /* OTRChatViewController.m */; };
+		63022BB916CDAD5E00F764F1 /* ACPlaceholderTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63022BB816CDAD5E00F764F1 /* ACPlaceholderTextView.m */; };
 		6319F696165EAB1F0063AC93 /* supportedLanguages.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6319F695165EAB1F0063AC93 /* supportedLanguages.plist */; };
 		633406391652C31300A54C52 /* OTRListSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 633406381652C31300A54C52 /* OTRListSetting.m */; };
 		6334063C1652C33300A54C52 /* OTRListSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6334063B1652C33300A54C52 /* OTRListSettingViewController.m */; };
@@ -100,7 +118,6 @@
 		D99550BE141AE07D00A82FAC /* aim@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D99550BA141AE07D00A82FAC /* aim@2x.png */; };
 		D99907531414299200D573EE /* OTROscarManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D99907521414299200D573EE /* OTROscarManager.m */; };
 		D999075D14142CC400D573EE /* OTRProtocolManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D999075C14142CC400D573EE /* OTRProtocolManager.m */; };
-		D9991A5113F44F9A002D3008 /* OTRChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9991A4F13F44F9A002D3008 /* OTRChatViewController.m */; };
 		D9A7E0A315242D4100EEDDB5 /* ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = D9A7E0A215242D4100EEDDB5 /* ipad.png */; };
 		D9A7E0A515242D4600EEDDB5 /* ipad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D9A7E0A415242D4600EEDDB5 /* ipad@2x.png */; };
 		D9A7E0A715242D6400EEDDB5 /* Default-Portrait~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = D9A7E0A615242D6300EEDDB5 /* Default-Portrait~ipad.png */; };
@@ -421,6 +438,26 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		63022B8E16CD9ABB00F764F1 /* MessageBubbleBlue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MessageBubbleBlue.png; path = ../../../chatApp/AcaniChat/Resources/MessageBubbleBlue.png; sourceTree = "<group>"; };
+		63022B8F16CD9ABB00F764F1 /* MessageBubbleBlue@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "MessageBubbleBlue@2x.png"; path = "../../../chatApp/AcaniChat/Resources/MessageBubbleBlue@2x.png"; sourceTree = "<group>"; };
+		63022B9016CD9ABB00F764F1 /* MessageBubbleGray.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MessageBubbleGray.png; path = ../../../chatApp/AcaniChat/Resources/MessageBubbleGray.png; sourceTree = "<group>"; };
+		63022B9116CD9ABB00F764F1 /* MessageBubbleGray@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "MessageBubbleGray@2x.png"; path = "../../../chatApp/AcaniChat/Resources/MessageBubbleGray@2x.png"; sourceTree = "<group>"; };
+		63022B9216CD9ABB00F764F1 /* MessageBubbleHighlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MessageBubbleHighlighted.png; path = ../../../chatApp/AcaniChat/Resources/MessageBubbleHighlighted.png; sourceTree = "<group>"; };
+		63022B9316CD9ABB00F764F1 /* MessageBubbleHighlighted@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "MessageBubbleHighlighted@2x.png"; path = "../../../chatApp/AcaniChat/Resources/MessageBubbleHighlighted@2x.png"; sourceTree = "<group>"; };
+		63022B9416CD9ABB00F764F1 /* MessageBubbleTyping.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MessageBubbleTyping.png; path = ../../../chatApp/AcaniChat/Resources/MessageBubbleTyping.png; sourceTree = "<group>"; };
+		63022B9516CD9ABB00F764F1 /* MessageBubbleTyping@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "MessageBubbleTyping@2x.png"; path = "../../../chatApp/AcaniChat/Resources/MessageBubbleTyping@2x.png"; sourceTree = "<group>"; };
+		63022B9616CD9ABB00F764F1 /* MessageInputBarBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MessageInputBarBackground.png; path = ../../../chatApp/AcaniChat/Resources/MessageInputBarBackground.png; sourceTree = "<group>"; };
+		63022B9716CD9ABB00F764F1 /* MessageInputBarBackground@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "MessageInputBarBackground@2x.png"; path = "../../../chatApp/AcaniChat/Resources/MessageInputBarBackground@2x.png"; sourceTree = "<group>"; };
+		63022B9816CD9ABB00F764F1 /* MessageInputFieldBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MessageInputFieldBackground.png; path = ../../../chatApp/AcaniChat/Resources/MessageInputFieldBackground.png; sourceTree = "<group>"; };
+		63022B9916CD9ABB00F764F1 /* MessageInputFieldBackground@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "MessageInputFieldBackground@2x.png"; path = "../../../chatApp/AcaniChat/Resources/MessageInputFieldBackground@2x.png"; sourceTree = "<group>"; };
+		63022B9A16CD9ABB00F764F1 /* SendButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = SendButton.png; path = ../../../chatApp/AcaniChat/Resources/SendButton.png; sourceTree = "<group>"; };
+		63022B9B16CD9ABB00F764F1 /* SendButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "SendButton@2x.png"; path = "../../../chatApp/AcaniChat/Resources/SendButton@2x.png"; sourceTree = "<group>"; };
+		63022B9C16CD9ABB00F764F1 /* SendButtonHighlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = SendButtonHighlighted.png; path = ../../../chatApp/AcaniChat/Resources/SendButtonHighlighted.png; sourceTree = "<group>"; };
+		63022B9D16CD9ABB00F764F1 /* SendButtonHighlighted@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "SendButtonHighlighted@2x.png"; path = "../../../chatApp/AcaniChat/Resources/SendButtonHighlighted@2x.png"; sourceTree = "<group>"; };
+		63022BB416CDAD4C00F764F1 /* OTRChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRChatViewController.h; sourceTree = "<group>"; };
+		63022BB516CDAD4C00F764F1 /* OTRChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRChatViewController.m; sourceTree = "<group>"; };
+		63022BB716CDAD5E00F764F1 /* ACPlaceholderTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACPlaceholderTextView.h; sourceTree = "<group>"; };
+		63022BB816CDAD5E00F764F1 /* ACPlaceholderTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACPlaceholderTextView.m; sourceTree = "<group>"; };
 		6319F695165EAB1F0063AC93 /* supportedLanguages.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = supportedLanguages.plist; path = "Off the Record/supportedLanguages.plist"; sourceTree = SOURCE_ROOT; };
 		633406371652C31300A54C52 /* OTRListSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRListSetting.h; sourceTree = "<group>"; };
 		633406381652C31300A54C52 /* OTRListSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRListSetting.m; sourceTree = "<group>"; };
@@ -556,8 +593,6 @@
 		D99907521414299200D573EE /* OTROscarManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTROscarManager.m; sourceTree = "<group>"; };
 		D999075B14142CC400D573EE /* OTRProtocolManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRProtocolManager.h; sourceTree = "<group>"; };
 		D999075C14142CC400D573EE /* OTRProtocolManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRProtocolManager.m; sourceTree = "<group>"; };
-		D9991A4E13F44F9A002D3008 /* OTRChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRChatViewController.h; sourceTree = "<group>"; };
-		D9991A4F13F44F9A002D3008 /* OTRChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRChatViewController.m; sourceTree = "<group>"; };
 		D99BA28E141D3F3A00D051B6 /* OTROldMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTROldMessage.h; sourceTree = "<group>"; };
 		D99BA28F141D3F3A00D051B6 /* OTROldMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTROldMessage.m; sourceTree = "<group>"; };
 		D9A7E0A215242D4100EEDDB5 /* ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ipad.png; path = ../ipad.png; sourceTree = "<group>"; };
@@ -2444,8 +2479,10 @@
 				D9E068F013F44D2900AC10A3 /* OTRBuddyListViewController.m */,
 				D9D37179169D34630086F358 /* OTRDatabaseUtils.h */,
 				D9D3717A169D34630086F358 /* OTRDatabaseUtils.m */,
-				D9991A4E13F44F9A002D3008 /* OTRChatViewController.h */,
-				D9991A4F13F44F9A002D3008 /* OTRChatViewController.m */,
+				63022BB716CDAD5E00F764F1 /* ACPlaceholderTextView.h */,
+				63022BB816CDAD5E00F764F1 /* ACPlaceholderTextView.m */,
+				63022BB416CDAD4C00F764F1 /* OTRChatViewController.h */,
+				63022BB516CDAD4C00F764F1 /* OTRChatViewController.m */,
 				D9F9378913F44BD3009A3D84 /* OTRAppDelegate.h */,
 				D9F9378A13F44BD3009A3D84 /* OTRAppDelegate.m */,
 				D9FBD71915472FB400126568 /* Settings */,
@@ -2492,6 +2529,22 @@
 		D9FCA7291533A37F009AD599 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				63022B8E16CD9ABB00F764F1 /* MessageBubbleBlue.png */,
+				63022B8F16CD9ABB00F764F1 /* MessageBubbleBlue@2x.png */,
+				63022B9016CD9ABB00F764F1 /* MessageBubbleGray.png */,
+				63022B9116CD9ABB00F764F1 /* MessageBubbleGray@2x.png */,
+				63022B9216CD9ABB00F764F1 /* MessageBubbleHighlighted.png */,
+				63022B9316CD9ABB00F764F1 /* MessageBubbleHighlighted@2x.png */,
+				63022B9416CD9ABB00F764F1 /* MessageBubbleTyping.png */,
+				63022B9516CD9ABB00F764F1 /* MessageBubbleTyping@2x.png */,
+				63022B9616CD9ABB00F764F1 /* MessageInputBarBackground.png */,
+				63022B9716CD9ABB00F764F1 /* MessageInputBarBackground@2x.png */,
+				63022B9816CD9ABB00F764F1 /* MessageInputFieldBackground.png */,
+				63022B9916CD9ABB00F764F1 /* MessageInputFieldBackground@2x.png */,
+				63022B9A16CD9ABB00F764F1 /* SendButton.png */,
+				63022B9B16CD9ABB00F764F1 /* SendButton@2x.png */,
+				63022B9C16CD9ABB00F764F1 /* SendButtonHighlighted.png */,
+				63022B9D16CD9ABB00F764F1 /* SendButtonHighlighted@2x.png */,
 				D9BE44A7166F330A00A628C7 /* globe.png */,
 				D9BE44A8166F330A00A628C7 /* globe@2x.png */,
 				D9BE44A3166F2F5B00A628C7 /* 18-envelope@2x.png */,
@@ -2725,6 +2778,22 @@
 				D9BE44A9166F330A00A628C7 /* globe.png in Resources */,
 				D9BE44AA166F330A00A628C7 /* globe@2x.png in Resources */,
 				D9CEED8A1684237700B236B5 /* AppiraterLocalizable.strings in Resources */,
+				63022B9E16CD9ABB00F764F1 /* MessageBubbleBlue.png in Resources */,
+				63022B9F16CD9ABB00F764F1 /* MessageBubbleBlue@2x.png in Resources */,
+				63022BA016CD9ABB00F764F1 /* MessageBubbleGray.png in Resources */,
+				63022BA116CD9ABB00F764F1 /* MessageBubbleGray@2x.png in Resources */,
+				63022BA216CD9ABB00F764F1 /* MessageBubbleHighlighted.png in Resources */,
+				63022BA316CD9ABB00F764F1 /* MessageBubbleHighlighted@2x.png in Resources */,
+				63022BA416CD9ABB00F764F1 /* MessageBubbleTyping.png in Resources */,
+				63022BA516CD9ABB00F764F1 /* MessageBubbleTyping@2x.png in Resources */,
+				63022BA616CD9ABB00F764F1 /* MessageInputBarBackground.png in Resources */,
+				63022BA716CD9ABB00F764F1 /* MessageInputBarBackground@2x.png in Resources */,
+				63022BA816CD9ABB00F764F1 /* MessageInputFieldBackground.png in Resources */,
+				63022BA916CD9ABB00F764F1 /* MessageInputFieldBackground@2x.png in Resources */,
+				63022BAA16CD9ABB00F764F1 /* SendButton.png in Resources */,
+				63022BAB16CD9ABB00F764F1 /* SendButton@2x.png in Resources */,
+				63022BAC16CD9ABB00F764F1 /* SendButtonHighlighted.png in Resources */,
+				63022BAD16CD9ABB00F764F1 /* SendButtonHighlighted@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2754,7 +2823,6 @@
 				D9F9378713F44BD3009A3D84 /* main.m in Sources */,
 				D9F9378B13F44BD3009A3D84 /* OTRAppDelegate.m in Sources */,
 				D9E068F213F44D2900AC10A3 /* OTRBuddyListViewController.m in Sources */,
-				D9991A5113F44F9A002D3008 /* OTRChatViewController.m in Sources */,
 				D9DE274C13F4F0A500E335CA /* OTRLoginViewController.m in Sources */,
 				D90B80AF13FC7E5F006EFF3D /* OTRCodec.m in Sources */,
 				D99907531414299200D573EE /* OTROscarManager.m in Sources */,
@@ -3035,6 +3103,8 @@
 				63E72B9F16CB11E800B6F389 /* _OTRManagedMessage.m in Sources */,
 				63E72BA016CB11E800B6F389 /* _OTRManagedOscarAccount.m in Sources */,
 				63E72BA116CB11E800B6F389 /* _OTRManagedXMPPAccount.m in Sources */,
+				63022BB616CDAD4D00F764F1 /* OTRChatViewController.m in Sources */,
+				63022BB916CDAD5E00F764F1 /* ACPlaceholderTextView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
