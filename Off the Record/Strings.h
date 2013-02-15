@@ -142,6 +142,8 @@
 #define EN_GOOGLE_TALK_STRING @"Google Talk"
 #define EN_FACEBOOK_STRING @"Facebook"
 #define EN_JABBER_STRING @"Jabber (XMPP)"
+#define EN_MESSAGE_PLACEHOLDER_STRING @"Message"
+
 
 
 #define BUDDY_LIST_STRING [OTRLanguageManager translatedString: EN_BUDDY_LIST_STRING]
@@ -259,6 +261,7 @@
 #define GOOGLE_TALK_STRING [OTRLanguageManager translatedString: EN_GOOGLE_TALK_STRING]
 #define FACEBOOK_STRING [OTRLanguageManager translatedString: EN_FACEBOOK_STRING]
 #define JABBER_STRING [OTRLanguageManager translatedString: EN_JABBER_STRING]
+#define MESSAGE_PLACEHOLDER_STRING [OTRLanguageManager translatedString: EN_MESSAGE_PLACEHOLDER_STRING]
 
 
 #define LOC_BUDDY_LIST_STRING NSLocalizedString(EN_BUDDY_LIST_STRING , @"Title for the buddy list tab")
@@ -377,3 +380,4 @@
 #define LOC_GOOGLE_TALK_STRING NSLocalizedString(EN_GOOGLE_TALK_STRING , @"the name for google talk")
 #define LOC_FACEBOOK_STRING NSLocalizedString(EN_FACEBOOK_STRING , @"the name for facebook")
 #define LOC_JABBER_STRING NSLocalizedString(EN_JABBER_STRING , @"the name for jabber, also include (XMPP) at the end")
+#define LOC_MESSAGE_PLACEHOLDER_STRING NSLocalizedString(EN_MESSAGE_PLACEHOLDER_STRING , @"just the word as a placeholder for the message text field") 

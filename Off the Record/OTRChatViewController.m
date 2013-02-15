@@ -27,7 +27,6 @@
 #import "OTRDoubleSetting.h"
 #import "OTRConstants.h"
 #import "OTRAppDelegate.h"
-#import "ACPlaceholderTextView.h"
 
 #define kTabBarHeight 0
 #define kSendButtonWidth 60
@@ -37,13 +36,21 @@
 #define ALERTVIEW_NOT_VERIFIED_TAG 0
 #define ALERTVIEW_VERIFIED_TAG 1
 
+#define kChatBarHeight1                      40
+#define kChatBarHeight4                      94
 #define SentDateFontSize                     13
+#define MESSAGE_SENT_DATE_LABEL_HEIGHT       (SentDateFontSize+7)
 #define MessageFontSize                      16
+#define MESSAGE_TEXT_WIDTH_MAX               180
 #define MESSAGE_MARGIN_TOP                   7
 #define MESSAGE_MARGIN_BOTTOM                10
-#define MESSAGE_TEXT_WIDTH_MAX               180
-#define MESSAGE_SENT_DATE_LABEL_HEIGHT       (SentDateFontSize+7)
-#define MESSAGE_SENT_DATE_SHOW_TIME_INTERVAL 10*60 // 10 minutes
+#define TEXT_VIEW_X                          7   // 40  (with CameraButton)
+#define TEXT_VIEW_Y                          2
+#define TEXT_VIEW_WIDTH                      249 // 216 (with CameraButton)
+#define TEXT_VIEW_HEIGHT_MIN                 90
+#define ContentHeightMax                     80
+#define MESSAGE_COUNT_LIMIT                  50
+#define MESSAGE_SENT_DATE_SHOW_TIME_INTERVAL 13*60 // 13 minutes
 #define MESSAGE_SENT_DATE_LABEL_TAG          100
 #define MESSAGE_BACKGROUND_IMAGE_VIEW_TAG    101
 #define MESSAGE_TEXT_LABEL_TAG               102
@@ -61,33 +68,26 @@
 @end
 
 @implementation OTRChatViewController
-@synthesize messageTextField;
 @synthesize buddyListController;
-@synthesize chatBoxView;
 @synthesize lockButton, unlockedButton,lockVerifiedButton;
 @synthesize lastActionLink;
 @synthesize sendButton;
 @synthesize buddy;
 @synthesize instructionsLabel;
-@synthesize chatStateLabel;
-@synthesize chatStateImage;
-@synthesize pausedChatStateTimer, inactiveChatStateTimer;
 @synthesize chatHistoryTableView;
+@synthesize textView;
 
 - (void) dealloc {
     self.lastActionLink = nil;
     self.buddyListController = nil;
     self.buddy = nil;
-    self.chatStateImage = nil;
     self.chatHistoryTableView = nil;
 }
 
 - (void)viewDidUnload {
     [super viewDidUnload];
-    self.messageTextField = nil;
     self.lockButton = nil;
     self.unlockedButton = nil;
-    self.chatBoxView = nil;
     self.sendButton = nil;
     self.instructionsLabel = nil;
     self.chatHistoryTableView = nil;
@@ -197,13 +197,6 @@
     [super loadView];
     self.view.backgroundColor = [UIColor lightGrayColor];
     
-    self.chatBoxView = [[UIView alloc] init];
-    
-    self.messageTextField = [[UITextField alloc] init];
-    messageTextField.borderStyle = UITextBorderStyleRoundedRect;
-    messageTextField.delegate = self;
-
-    
     self.sendButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [sendButton setTitle:SEND_STRING forState:UIControlStateNormal];
     [sendButton addTarget:self action:@selector(sendButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
@@ -223,7 +216,7 @@
     _messageBubbleBlue = [[UIImage imageNamed:@"MessageBubbleBlue"] stretchableImageWithLeftCapWidth:15 topCapHeight:13];
     _messageBubbleComposing = [UIImage imageNamed:@"MessageBubbleTyping"];
     
-    self.chatHistoryTableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    self.chatHistoryTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-kChatBarHeight1)];
     self.chatHistoryTableView.dataSource = self;
     self.chatHistoryTableView.delegate = self;
     self.chatHistoryTableView.autoresizingMask = UIViewAutoresizingFlexibleWidth |UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;
@@ -231,12 +224,57 @@
     self.chatHistoryTableView.backgroundColor = [UIColor colorWithWhite:245/255.0f alpha:1];
     [self.view addSubview:self.chatHistoryTableView];
     
+    // Create messageInputBar to contain textView, messageInputBarBackgroundImageView, & sendButton.
+    UIImageView *messageInputBar = [[UIImageView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height-kChatBarHeight1, self.view.frame.size.width, kChatBarHeight1)];
+    messageInputBar.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin);
+    messageInputBar.opaque = YES;
+    messageInputBar.userInteractionEnabled = YES; // makes subviews tappable
+    messageInputBar.image = [[UIImage imageNamed:@"MessageInputBarBackground"] resizableImageWithCapInsets:UIEdgeInsetsMake(19, 3, 19, 3)]; // 8 x 40
+    
+    // Create textView to compose messages.
+    // TODO: Shrink cursor height by 1 px on top & 1 px on bottom.
+    textView = [[ACPlaceholderTextView alloc] initWithFrame:CGRectMake(TEXT_VIEW_X, TEXT_VIEW_Y, TEXT_VIEW_WIDTH, TEXT_VIEW_HEIGHT_MIN)];
+    textView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    textView.delegate = self;
+    textView.backgroundColor = [UIColor colorWithWhite:245/255.0f alpha:1];
+    textView.scrollIndicatorInsets = UIEdgeInsetsMake(13, 0, 8, 6);
+    textView.scrollsToTop = NO;
+    textView.font = [UIFont systemFontOfSize:MessageFontSize];
+    textView.placeholder = MESSAGE_PLACEHOLDER_STRING;
+    [messageInputBar addSubview:textView];
+    _previousTextViewContentHeight = MessageFontSize+20;
+    
+    
+    // Create messageInputBarBackgroundImageView as subview of messageInputBar.
+    UIImageView *messageInputBarBackgroundImageView = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"MessageInputFieldBackground"] resizableImageWithCapInsets:UIEdgeInsetsMake(20, 12, 18, 18)]]; // 32 x 40
+    messageInputBarBackgroundImageView.frame = CGRectMake(TEXT_VIEW_X-2, 0, TEXT_VIEW_WIDTH+2, kChatBarHeight1);
+    messageInputBarBackgroundImageView.autoresizingMask = self.chatHistoryTableView.autoresizingMask;
+    [messageInputBar addSubview:messageInputBarBackgroundImageView];
+    
+    // Create sendButton.
+    self.sendButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    sendButton.frame = CGRectMake(messageInputBar.frame.size.width-65, 8, 59, 26);
+    sendButton.autoresizingMask = (UIViewAutoresizingFlexibleTopMargin /* multiline input */ | UIViewAutoresizingFlexibleLeftMargin /* landscape */);
+    UIEdgeInsets sendButtonEdgeInsets = UIEdgeInsetsMake(0, 13, 0, 13); // 27 x 27
+    UIImage *sendButtonBackgroundImage = [[UIImage imageNamed:@"SendButton"] resizableImageWithCapInsets:sendButtonEdgeInsets];
+    [sendButton setBackgroundImage:sendButtonBackgroundImage forState:UIControlStateNormal];
+    [sendButton setBackgroundImage:sendButtonBackgroundImage forState:UIControlStateDisabled];
+    [sendButton setBackgroundImage:[[UIImage imageNamed:@"SendButtonHighlighted"] resizableImageWithCapInsets:sendButtonEdgeInsets] forState:UIControlStateHighlighted];
+    sendButton.titleLabel.font = [UIFont boldSystemFontOfSize:16];
+    sendButton.titleLabel.shadowOffset = CGSizeMake(0.0, -1.0);
+    [sendButton setTitle:SEND_STRING forState:UIControlStateNormal];
+    [sendButton setTitleShadowColor:[UIColor colorWithRed:0.325f green:0.463f blue:0.675f alpha:1] forState:UIControlStateNormal];
+    [sendButton addTarget:self action:@selector(sendButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [messageInputBar addSubview:sendButton];
+    
+    [self.view addSubview:messageInputBar];
+    
 
-    messageTextField.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
-    sendButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-    [self.view addSubview:chatBoxView];
-    [self.chatBoxView addSubview:messageTextField];
-    [self.chatBoxView addSubview:sendButton];
+    //messageTextField.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
+    //sendButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+    //[self.view addSubview:chatBoxView];
+    //[self.chatBoxView addSubview:messageTextField];
+    //[self.chatBoxView addSubview:sendButton];
     
     
     [self setupLockButton];
@@ -249,6 +287,8 @@
     //chatBox.font = [UIFont fontWithName:@"Helvetica" size:14];
 }
 
+
+
 -(void)keyboardWillHideOrShow:(NSNotification *)note
 {
     NSDictionary *userInfo = note.userInfo;
@@ -256,18 +296,19 @@
     UIViewAnimationCurve curve = [[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue];
     
     CGRect keyboardFrame = [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
-    
-    CGRect keyboardFrameForTextField = [self.chatBoxView.superview convertRect:keyboardFrame fromView:nil];
-    CGRect newTextFieldFrame = self.chatBoxView.frame;
+    CGRect keyboardFrameForTextField = [self.view convertRect:keyboardFrame fromView:nil];
+    CGFloat viewHeight = keyboardFrameForTextField.origin.y;
+    UIView *messageInputBar = textView.superview;
+    CGRect newTextFieldFrame = messageInputBar.frame;
     
     newTextFieldFrame.origin.y = keyboardFrameForTextField.origin.y - newTextFieldFrame.size.height;
     
-    CGRect keyboardFrameForTableView = [self.chatHistoryTableView.superview convertRect:keyboardFrame fromView:nil];
-    CGRect newTableViewFrame = CGRectMake(0, 0, self.chatHistoryTableView.frame.size.width, keyboardFrameForTableView.origin.y-newTextFieldFrame.size.height);
-    
     [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionBeginFromCurrentState | curve animations:^{
-        self.chatHistoryTableView.frame = newTableViewFrame;
-        self.chatBoxView.frame = newTextFieldFrame;
+        
+                
+        messageInputBar.frame = newTextFieldFrame;
+        chatHistoryTableView.contentInset = chatHistoryTableView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, self.view.frame.size.height-viewHeight, 0);
+        [self scrollToBottomAnimated:NO];
     } completion:nil];
     //[self scrollTextViewToBottom];
 }
@@ -370,14 +411,43 @@
 
     }
     else if(self.buddy.chatState.intValue == kOTRChatStateInactive)
-        chatStateLabel.text = CHAT_STATE_INACTVIE_STRING;
+        return;
     else if(self.buddy.chatState.intValue == kOTRChatStateGone)
-        chatStateLabel.text = CHAT_STATE_GONE_STRING;
-    else
-        chatStateImage.alpha = 0;
-    
+        return;
 }
-
+- (void)textViewDidChange:(UITextView *)tView {
+    // Change height of _tableView & messageInputBar to match textView's content height.
+    CGFloat textViewContentHeight = textView.contentSize.height;
+    CGFloat changeInHeight = textViewContentHeight - _previousTextViewContentHeight;
+    //    NSLog(@"textViewContentHeight: %f", textViewContentHeight);
+    
+    if (textViewContentHeight+changeInHeight > kChatBarHeight4+2) {
+        changeInHeight = kChatBarHeight4+2-_previousTextViewContentHeight;
+    }
+    
+    if (changeInHeight) {
+        [UIView animateWithDuration:0.2 animations:^{
+            self.chatHistoryTableView.contentInset = self.chatHistoryTableView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, self.chatHistoryTableView.contentInset.bottom+changeInHeight, 0);
+            [self scrollToBottomAnimated:NO];
+            UIView *messageInputBar = textView.superview;
+            messageInputBar.frame = CGRectMake(0, messageInputBar.frame.origin.y-changeInHeight, messageInputBar.frame.size.width, messageInputBar.frame.size.height+changeInHeight);
+        } completion:^(BOOL finished) {
+            [textView updateShouldDrawPlaceholder];
+        }];
+        _previousTextViewContentHeight = MIN(textViewContentHeight, kChatBarHeight4+2);
+    }
+    
+    // Enable/disable sendButton if textView.text has/lacks length.
+    if ([textView.text length]) {
+        sendButton.enabled = YES;
+        [buddy sendComposingChatState];
+        sendButton.titleLabel.alpha = 1;
+    } else {
+        sendButton.enabled = NO;
+        [buddy sendActiveChatState];
+        sendButton.titleLabel.alpha = 0.5f; // Sam S. says 0.4f
+    }
+}
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
@@ -420,14 +490,14 @@
 
 - (void)sendButtonPressed:(id)sender {
     BOOL secure = buddy.encryptionStatus.intValue == kOTRKitMessageStateEncrypted;
-    [buddy sendMessage:messageTextField.text secure:secure];
-    messageTextField.text = @"";
-    [self.pausedChatStateTimer invalidate];
+    [buddy sendMessage:textView.text secure:secure];
+    textView.text = nil;
+    [self textViewDidChange:textView];
 }
 
 -(BOOL)textViewShouldBeginEditing:(UITextView *)textView
 {
-    return NO;
+    return YES;
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -525,37 +595,19 @@
         }
         
         [self.chatHistoryTableView reloadData];
-        [self.messageTextField resignFirstResponder];
-        self.messageTextField.text = self.buddy.composingMessageString;
+        [self.textView resignFirstResponder];
+        
         if(![self.buddy.composingMessageString length])
         {
+            textView.text = nil;
             [self.buddy sendActiveChatState];
         }
-        // Create messageInputBar to contain _textView, messageInputBarBackgroundImageView, & _sendButton.
-        UIImageView *messageInputBar = [[UIImageView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height-kChatBarHeight1, self.view.frame.size.width, kChatBarHeight1)];
-        messageInputBar.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin);
-        messageInputBar.opaque = YES;
-        messageInputBar.userInteractionEnabled = YES; // makes subviews tappable
-        messageInputBar.image = [[UIImage imageNamed:@"MessageInputBarBackground"] resizableImageWithCapInsets:UIEdgeInsetsMake(19, 3, 19, 3)]; // 8 x 40
+        else{
+            self.textView.text = self.buddy.composingMessageString;
+            
+        }
+        [self textViewDidChange:textView];
         
-        // Create _textView to compose messages.
-        // TODO: Shrink cursor height by 1 px on top & 1 px on bottom.
-        _textView = [[ACPlaceholderTextView alloc] initWithFrame:CGRectMake(TEXT_VIEW_X, TEXT_VIEW_Y, TEXT_VIEW_WIDTH, TEXT_VIEW_HEIGHT_MIN)];
-        _textView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        _textView.delegate = self;
-        _textView.backgroundColor = [UIColor colorWithWhite:245/255.0f alpha:1];
-        _textView.scrollIndicatorInsets = UIEdgeInsetsMake(13, 0, 8, 6);
-        _textView.scrollsToTop = NO;
-        _textView.font = [UIFont systemFontOfSize:MessageFontSize];
-        _textView.placeholder = NSLocalizedString(@" Message", nil);
-        [messageInputBar addSubview:_textView];
-        _previousTextViewContentHeight = MessageFontSize+20;
-        
-        // Create messageInputBarBackgroundImageView as subview of messageInputBar.
-        UIImageView *messageInputBarBackgroundImageView = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"MessageInputFieldBackground"] resizableImageWithCapInsets:UIEdgeInsetsMake(20, 12, 18, 18)]]; // 32 x 40
-        messageInputBarBackgroundImageView.frame = CGRectMake(TEXT_VIEW_X-2, 0, TEXT_VIEW_WIDTH+2, kChatBarHeight1);
-        messageInputBarBackgroundImageView.autoresizingMask = _tableView.autoresizingMask;
-        [messageInputBar addSubview:messageInputBarBackgroundImageView];
         
         [self refreshLockButton];
     }
@@ -569,7 +621,7 @@
 
 -(void)saveCurrentMessageText
 {
-    self.buddy.composingMessageString = self.messageTextField.text;
+    self.buddy.composingMessageString = self.textView.text;
     if(![self.buddy.composingMessageString length])
     {
         [self.buddy sendInactiveChatState];
@@ -578,8 +630,8 @@
 
 /*- (void)debugButton:(UIBarButtonItem *)sender
 {
-	_textView.contentView.drawDebugFrames = !_textView.contentView.drawDebugFrames;
-	[DTCoreTextLayoutFrame setShouldDrawDebugFrames:_textView.contentView.drawDebugFrames];
+	textView.contentView.drawDebugFrames = !textView.contentView.drawDebugFrames;
+	[DTCoreTextLayoutFrame setShouldDrawDebugFrames:textView.contentView.drawDebugFrames];
 	[self.view setNeedsDisplay];
 }*/
 
