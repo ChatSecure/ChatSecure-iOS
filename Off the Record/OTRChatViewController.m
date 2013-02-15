@@ -50,7 +50,7 @@
 #define TEXT_VIEW_HEIGHT_MIN                 90
 #define ContentHeightMax                     80
 #define MESSAGE_COUNT_LIMIT                  50
-#define MESSAGE_SENT_DATE_SHOW_TIME_INTERVAL 13*60 // 13 minutes
+#define MESSAGE_SENT_DATE_SHOW_TIME_INTERVAL 5*60 // 5 minutes
 #define MESSAGE_SENT_DATE_LABEL_TAG          100
 #define MESSAGE_BACKGROUND_IMAGE_VIEW_TAG    101
 #define MESSAGE_TEXT_LABEL_TAG               102
@@ -219,14 +219,14 @@
     self.chatHistoryTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-kChatBarHeight1)];
     self.chatHistoryTableView.dataSource = self;
     self.chatHistoryTableView.delegate = self;
-    self.chatHistoryTableView.autoresizingMask = UIViewAutoresizingFlexibleWidth |UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;
+    self.chatHistoryTableView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);;
     self.chatHistoryTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.chatHistoryTableView.backgroundColor = [UIColor colorWithWhite:245/255.0f alpha:1];
     [self.view addSubview:self.chatHistoryTableView];
     
     // Create messageInputBar to contain textView, messageInputBarBackgroundImageView, & sendButton.
     UIImageView *messageInputBar = [[UIImageView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height-kChatBarHeight1, self.view.frame.size.width, kChatBarHeight1)];
-    messageInputBar.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin);
+    messageInputBar.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin );
     messageInputBar.opaque = YES;
     messageInputBar.userInteractionEnabled = YES; // makes subviews tappable
     messageInputBar.image = [[UIImage imageNamed:@"MessageInputBarBackground"] resizableImageWithCapInsets:UIEdgeInsetsMake(19, 3, 19, 3)]; // 8 x 40
@@ -287,6 +287,19 @@
     //chatBox.font = [UIFont fontWithName:@"Helvetica" size:14];
 }
 
+-(void)moveMessageBarBottom
+{
+    UIView *messageInputBar = textView.superview;
+    CGRect newTextFieldFrame = messageInputBar.frame;
+    CGFloat viewHeight = self.view.frame.size.height;
+    
+    newTextFieldFrame.origin.y = viewHeight - newTextFieldFrame.size.height;
+    
+    messageInputBar.frame = newTextFieldFrame;
+    chatHistoryTableView.contentInset = chatHistoryTableView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, self.view.frame.size.height-viewHeight-1, 0);
+    
+}
+
 
 
 -(void)keyboardWillHideOrShow:(NSNotification *)note
@@ -294,9 +307,10 @@
     NSDictionary *userInfo = note.userInfo;
     NSTimeInterval duration = [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
     UIViewAnimationCurve curve = [[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue];
-    
     CGRect keyboardFrame = [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    
     CGRect keyboardFrameForTextField = [self.view convertRect:keyboardFrame fromView:nil];
+    
     CGFloat viewHeight = keyboardFrameForTextField.origin.y;
     UIView *messageInputBar = textView.superview;
     CGRect newTextFieldFrame = messageInputBar.frame;
@@ -304,10 +318,8 @@
     newTextFieldFrame.origin.y = keyboardFrameForTextField.origin.y - newTextFieldFrame.size.height;
     
     [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionBeginFromCurrentState | curve animations:^{
-        
-                
         messageInputBar.frame = newTextFieldFrame;
-        chatHistoryTableView.contentInset = chatHistoryTableView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, self.view.frame.size.height-viewHeight, 0);
+        chatHistoryTableView.contentInset = chatHistoryTableView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, self.view.frame.size.height-viewHeight-1, 0);
         [self scrollToBottomAnimated:NO];
     } completion:nil];
     //[self scrollTextViewToBottom];
@@ -596,6 +608,7 @@
         
         [self.chatHistoryTableView reloadData];
         [self.textView resignFirstResponder];
+        [self moveMessageBarBottom];
         
         if(![self.buddy.composingMessageString length])
         {
@@ -608,7 +621,7 @@
         }
         [self textViewDidChange:textView];
         
-        
+        [self scrollToBottomAnimated:NO];
         [self refreshLockButton];
     }
 }
