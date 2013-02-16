@@ -45,10 +45,15 @@
 +(OTRManagedMessage*)newMessageWithBuddy:(OTRManagedBuddy *)theBuddy message:(NSString *)theMessage
 {
     OTRManagedMessage *managedMessage = [OTRManagedMessage MR_createEntity];
+    CFUUIDRef theUUID = CFUUIDCreate(NULL);
+    NSString* uuidString = (__bridge_transfer NSString*)CFUUIDCreateString(NULL, theUUID);
+    CFRelease(theUUID);
+    managedMessage.uniqueID = uuidString;
     managedMessage.buddy = theBuddy;
     managedMessage.message = theMessage;
     managedMessage.date = [NSDate date];
-    managedMessage.isEncrypted = NO;
+    managedMessage.isEncryptedValue = NO;
+    managedMessage.isDeliveredValue = NO;
 
     return managedMessage;
 }
@@ -62,7 +67,7 @@
 
 +(void)sendMessage:(OTRManagedMessage *)message
 {
-    NSDictionary *messageInfo = [NSDictionary dictionaryWithObject:message.objectID forKey:@"message"];
+    //NSDictionary *messageInfo = [NSDictionary dictionaryWithObject:message.objectID forKey:@"message"];
     
     [message.buddy invalidatePausedChatStateTimer];
     
@@ -73,6 +78,22 @@
     
     
     //[[NSNotificationCenter defaultCenter] postNotificationName:kOTRSendMessage object:self userInfo:messageInfo];
+}
+
++(void)receiveMessage:(NSString *)objectIDString
+{
+    NSArray * messageArray = [OTRManagedMessage MR_findByAttribute:@"uniqueID" withValue:objectIDString];
+    
+    for(OTRManagedMessage * message in messageArray)
+    {
+        message.isDeliveredValue = YES;
+    }
+
+    NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
+    [context MR_saveToPersistentStoreAndWait];
+
+
+
 }
 
 @end

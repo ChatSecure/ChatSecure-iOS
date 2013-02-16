@@ -39,6 +39,8 @@
 #define kChatBarHeight1                      40
 #define kChatBarHeight4                      94
 #define SentDateFontSize                     13
+#define DeliveredFontSize                    13
+#define MESSAGE_DELIVERED_LABEL_HEIGHT       (DeliveredFontSize +7)
 #define MESSAGE_SENT_DATE_LABEL_HEIGHT       (SentDateFontSize+7)
 #define MessageFontSize                      16
 #define MESSAGE_TEXT_WIDTH_MAX               180
@@ -54,6 +56,7 @@
 #define MESSAGE_SENT_DATE_LABEL_TAG          100
 #define MESSAGE_BACKGROUND_IMAGE_VIEW_TAG    101
 #define MESSAGE_TEXT_LABEL_TAG               102
+#define MESSAGE_DELIVERED_LABEL_TAG          103
 
 #define MESSAGE_TEXT_SIZE_WITH_FONT(message, font) \
 [message.message sizeWithFont:font constrainedToSize:CGSizeMake(MESSAGE_TEXT_WIDTH_MAX, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap]
@@ -711,10 +714,13 @@
         }
         
         CGFloat messageSentDateLabelHeight = 0;
+        CGFloat messageDeliveredLabelHeight = 0;
         CGFloat messageTextLabelHeight;
+        
         if (messageDetails) {
             messageSentDateLabelHeight = [messageDetails[0] floatValue];
             messageTextLabelHeight = [messageDetails[1] CGSizeValue].height;
+            messageDeliveredLabelHeight = [messageDetails[2] floatValue];
         } else {
             if ((!_previousShownSentDate || [message.date timeIntervalSinceDate:_previousShownSentDate] > MESSAGE_SENT_DATE_SHOW_TIME_INTERVAL)) {
                 _previousShownSentDate = message.date;
@@ -723,10 +729,14 @@
             CGSize messageTextLabelSize = MESSAGE_TEXT_SIZE_WITH_FONT(message, [UIFont systemFontOfSize:MessageFontSize]);
             messageTextLabelHeight = messageTextLabelSize.height;
             
-            _heightForRow[indexPath.row] = @[@(messageSentDateLabelHeight), [NSValue valueWithCGSize:messageTextLabelSize]];
+            
+            messageTextLabelHeight = MESSAGE_DELIVERED_LABEL_HEIGHT;
+            
+            
+            _heightForRow[indexPath.row] = @[@(messageSentDateLabelHeight), [NSValue valueWithCGSize:messageTextLabelSize], @(messageDeliveredLabelHeight)];
         }
         
-        return messageSentDateLabelHeight+messageTextLabelHeight+MESSAGE_MARGIN_TOP+MESSAGE_MARGIN_BOTTOM;
+        return messageSentDateLabelHeight+messageTextLabelHeight+messageDeliveredLabelHeight+MESSAGE_MARGIN_TOP+MESSAGE_MARGIN_BOTTOM;
     }
     else {
         return _messageBubbleComposing.size.height;
@@ -776,10 +786,12 @@
         NSArray *messageDetails = _heightForRow[indexPath.row];
         CGFloat messageSentDateLabelHeight = [messageDetails[0] floatValue];
         CGSize messageTextLabelSize = [messageDetails[1] CGSizeValue];
+        //CGFloat messageDeliveredLabelHeight = [messageDetails[2]floatValue];
         
         UILabel *messageSentDateLabel;
         UIImageView *messageBackgroundImageView;
         UILabel *messageTextLabel;
+        UILabel *messageDeliveredLabel;
         
         static NSString *CellIdentifier = @"Cell";
         cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -811,10 +823,21 @@
             messageTextLabel.lineBreakMode = UILineBreakModeWordWrap;
             messageTextLabel.font = [UIFont systemFontOfSize:MessageFontSize];
             [cell.contentView addSubview:messageTextLabel];
+            
+            //Create messageDeliveredLabel
+            messageDeliveredLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+            messageDeliveredLabel.tag = MESSAGE_DELIVERED_LABEL_TAG;
+            messageDeliveredLabel.backgroundColor = [UIColor clearColor];
+            messageDeliveredLabel.numberOfLines = 1;
+            messageDeliveredLabel.font = [UIFont systemFontOfSize:DeliveredFontSize];
+            messageDeliveredLabel.textAlignment = UITextAlignmentRight;
+            [cell.contentView addSubview:messageDeliveredLabel];
+            
         } else {
             messageSentDateLabel = (UILabel *)[cell.contentView viewWithTag:MESSAGE_SENT_DATE_LABEL_TAG];
             messageBackgroundImageView = (UIImageView *)[cell.contentView viewWithTag:MESSAGE_BACKGROUND_IMAGE_VIEW_TAG];
             messageTextLabel = (UILabel *)[cell.contentView viewWithTag:MESSAGE_TEXT_LABEL_TAG];
+            messageDeliveredLabel = (UILabel *)[cell.contentView viewWithTag:MESSAGE_DELIVERED_LABEL_TAG];
         }
         
         
@@ -847,6 +870,14 @@
             messageTextLabel.frame = CGRectMake(22, messageSentDateLabelHeight+MessageFontSize-9, messageTextLabelSize.width+5, messageTextLabelSize.height);
             messageTextLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
         }
+        
+        if (message.isDeliveredValue) {
+            messageDeliveredLabel.text = DELIVERED_STRING;
+            messageDeliveredLabel.frame = CGRectMake(0, messageBackgroundImageView.frame.size.height, tableView.frame.size.width, MESSAGE_DELIVERED_LABEL_HEIGHT);
+            
+        }
+        else
+            messageDeliveredLabel = nil;
     }
     
     return cell;
@@ -894,12 +925,25 @@
         case NSFetchedResultsChangeInsert:
             [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationBottom];
             break;
+        case NSFetchedResultsChangeUpdate:
+            //[tableView reloadData];
+            [self configureCell:[tableView cellForRowAtIndexPath:newIndexPath]];
+            
+            NSLog(@"Updated Message: %@",newIndexPath);
+            break;
     }
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
     [self.chatHistoryTableView endUpdates];
     [self scrollToBottomAnimated:YES];
+}
+
+-(void)configureCell:(UITableViewCell *)cell
+{
+    //check if message is delivered and if has delivered label otherwise rearrange cell
+    NSLog(@"Configure cell");
+    
 }
 
 

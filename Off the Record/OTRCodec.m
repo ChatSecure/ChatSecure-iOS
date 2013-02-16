@@ -65,6 +65,7 @@
     
     OTRManagedMessage *newOTRMessage = [OTRManagedMessage newMessageToBuddy:theMessage.buddy message:encodedMessageString];
     newOTRMessage.date = theMessage.date;
+    newOTRMessage.uniqueID = theMessage.uniqueID;
     [newOTRMessage setIsEncryptedValue:YES];
     
     NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];

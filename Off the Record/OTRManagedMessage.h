@@ -34,5 +34,6 @@
 +(OTRManagedMessage*)newMessageToBuddy:(OTRManagedBuddy *)theBuddy message:(NSString *)theMessage;
 +(OTRManagedMessage*)newMessageFromBuddy:(OTRManagedBuddy *)theBuddy message:(NSString *)theMessage;
 +(void)sendMessage:(OTRManagedMessage *)message;
++(void)receiveMessage:(NSString *)objectIDString;
 
 @end

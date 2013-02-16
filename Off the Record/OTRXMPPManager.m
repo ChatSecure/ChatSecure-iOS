@@ -684,6 +684,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
                                                                  xmppStream:xmppStream
                                                        managedObjectContext:[self managedObjectContext_roster]];
         
+        
         OTRManagedBuddy * messageBuddy = [protocolBuddyList objectForKey:user.jidStr];
         [messageBuddy receiveReceiptResonse:[message extractReceiptResponseID]];
     }
@@ -794,7 +795,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 		NSXMLElement *message = [NSXMLElement elementWithName:@"message"];
 		[message addAttributeWithName:@"type" stringValue:@"chat"];
 		[message addAttributeWithName:@"to" stringValue:theMessage.buddy.accountName];
-        NSString * messageID = [NSString stringWithFormat:@"%d",theMessage.buddy.messages.count];
+        NSString * messageID = [NSString stringWithFormat:@"%@",theMessage.uniqueID];
         [message addAttributeWithName:@"id" stringValue:messageID];
         
         NSXMLElement * receiptRequest = [NSXMLElement elementWithName:@"request"];

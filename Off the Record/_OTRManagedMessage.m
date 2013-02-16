@@ -5,9 +5,11 @@
 
 const struct OTRManagedMessageAttributes OTRManagedMessageAttributes = {
 	.date = @"date",
+	.isDelivered = @"isDelivered",
 	.isEncrypted = @"isEncrypted",
 	.isIncoming = @"isIncoming",
 	.message = @"message",
+	.uniqueID = @"uniqueID",
 };
 
 const struct OTRManagedMessageRelationships OTRManagedMessageRelationships = {
@@ -43,6 +45,11 @@ const struct OTRManagedMessageFetchedProperties OTRManagedMessageFetchedProperti
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
 	
+	if ([key isEqualToString:@"isDeliveredValue"]) {
+		NSSet *affectingKey = [NSSet setWithObject:@"isDelivered"];
+		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
+		return keyPaths;
+	}
 	if ([key isEqualToString:@"isEncryptedValue"]) {
 		NSSet *affectingKey = [NSSet setWithObject:@"isEncrypted"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
@@ -62,6 +69,32 @@ const struct OTRManagedMessageFetchedProperties OTRManagedMessageFetchedProperti
 
 @dynamic date;
 
+
+
+
+
+
+@dynamic isDelivered;
+
+
+
+- (BOOL)isDeliveredValue {
+	NSNumber *result = [self isDelivered];
+	return [result boolValue];
+}
+
+- (void)setIsDeliveredValue:(BOOL)value_ {
+	[self setIsDelivered:[NSNumber numberWithBool:value_]];
+}
+
+- (BOOL)primitiveIsDeliveredValue {
+	NSNumber *result = [self primitiveIsDelivered];
+	return [result boolValue];
+}
+
+- (void)setPrimitiveIsDeliveredValue:(BOOL)value_ {
+	[self setPrimitiveIsDelivered:[NSNumber numberWithBool:value_]];
+}
 
 
 
@@ -120,6 +153,13 @@ const struct OTRManagedMessageFetchedProperties OTRManagedMessageFetchedProperti
 
 
 @dynamic message;
+
+
+
+
+
+
+@dynamic uniqueID;
 
 
 

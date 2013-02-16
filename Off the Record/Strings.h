@@ -143,6 +143,7 @@
 #define EN_FACEBOOK_STRING @"Facebook"
 #define EN_JABBER_STRING @"Jabber (XMPP)"
 #define EN_MESSAGE_PLACEHOLDER_STRING @"Message"
+#define EN_DELIVERED_STRING @"Deliverd"
 
 
 
@@ -262,6 +263,7 @@
 #define FACEBOOK_STRING [OTRLanguageManager translatedString: EN_FACEBOOK_STRING]
 #define JABBER_STRING [OTRLanguageManager translatedString: EN_JABBER_STRING]
 #define MESSAGE_PLACEHOLDER_STRING [OTRLanguageManager translatedString: EN_MESSAGE_PLACEHOLDER_STRING]
+#define DELIVERED_STRING [OTRLanguageManager translatedString: EN_DELIVERED_STRING]
 
 
 #define LOC_BUDDY_LIST_STRING NSLocalizedString(EN_BUDDY_LIST_STRING , @"Title for the buddy list tab")
@@ -381,3 +383,5 @@
 #define LOC_FACEBOOK_STRING NSLocalizedString(EN_FACEBOOK_STRING , @"the name for facebook")
 #define LOC_JABBER_STRING NSLocalizedString(EN_JABBER_STRING , @"the name for jabber, also include (XMPP) at the end")
 #define LOC_MESSAGE_PLACEHOLDER_STRING NSLocalizedString(EN_MESSAGE_PLACEHOLDER_STRING , @"just the word as a placeholder for the message text field") 
+#define LOC_DELIVERED_STRING NSLocalizedString(EN_DELIVERED_STRING , @"Shows in the chat view when a message has been delivered")
+

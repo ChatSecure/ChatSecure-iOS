@@ -180,6 +180,8 @@
 {
     NSLog(@"Receipt Resonse: %@",responseID);
     
+    [OTRManagedMessage receiveMessage:responseID];
+    
     //NSString * ReceiptResonseScript = [NSString stringWithFormat:@"<script>x=document.getElementById('%@');x.innerHTML = x.innerHTML+\" (delivered)\";</script>",responseID];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];

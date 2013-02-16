@@ -6,9 +6,11 @@
 
 extern const struct OTRManagedMessageAttributes {
 	__unsafe_unretained NSString *date;
+	__unsafe_unretained NSString *isDelivered;
 	__unsafe_unretained NSString *isEncrypted;
 	__unsafe_unretained NSString *isIncoming;
 	__unsafe_unretained NSString *message;
+	__unsafe_unretained NSString *uniqueID;
 } OTRManagedMessageAttributes;
 
 extern const struct OTRManagedMessageRelationships {
@@ -19,6 +21,8 @@ extern const struct OTRManagedMessageFetchedProperties {
 } OTRManagedMessageFetchedProperties;
 
 @class OTRManagedBuddy;
+
+
 
 
 
@@ -43,6 +47,20 @@ extern const struct OTRManagedMessageFetchedProperties {
 
 
 //- (BOOL)validateDate:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSNumber* isDelivered;
+
+
+
+@property BOOL isDeliveredValue;
+- (BOOL)isDeliveredValue;
+- (void)setIsDeliveredValue:(BOOL)value_;
+
+//- (BOOL)validateIsDelivered:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -86,6 +104,16 @@ extern const struct OTRManagedMessageFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSString* uniqueID;
+
+
+
+//- (BOOL)validateUniqueID:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
 @property (nonatomic, strong) OTRManagedBuddy *buddy;
 
 //- (BOOL)validateBuddy:(id*)value_ error:(NSError**)error_;
@@ -105,6 +133,15 @@ extern const struct OTRManagedMessageFetchedProperties {
 
 - (NSDate*)primitiveDate;
 - (void)setPrimitiveDate:(NSDate*)value;
+
+
+
+
+- (NSNumber*)primitiveIsDelivered;
+- (void)setPrimitiveIsDelivered:(NSNumber*)value;
+
+- (BOOL)primitiveIsDeliveredValue;
+- (void)setPrimitiveIsDeliveredValue:(BOOL)value_;
 
 
 
@@ -129,6 +166,12 @@ extern const struct OTRManagedMessageFetchedProperties {
 
 - (NSString*)primitiveMessage;
 - (void)setPrimitiveMessage:(NSString*)value;
+
+
+
+
+- (NSString*)primitiveUniqueID;
+- (void)setPrimitiveUniqueID:(NSString*)value;
 
 
 
