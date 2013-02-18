@@ -28,6 +28,7 @@
 #import "OTRConstants.h"
 #import "OTRAppDelegate.h"
 #import "OTRMessageTableViewCell.h"
+#import "DAKeyboardControl.h"
 
 #define kTabBarHeight 0
 #define kSendButtonWidth 60
@@ -212,11 +213,13 @@
 {
     [super viewDidLoad];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHideOrShow:) name:UIKeyboardWillHideNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHideOrShow:) name:UIKeyboardWillShowNotification object:nil];
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHideOrShow:) name:UIKeyboardWillHideNotification object:nil];
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHideOrShow:) name:UIKeyboardWillShowNotification object:nil];
     
     _heightForRow = [NSMutableArray array];
     _messageBubbleComposing = [UIImage imageNamed:@"MessageBubbleTyping"];
+    
+    
     
     self.chatHistoryTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-kChatBarHeight1)];
     self.chatHistoryTableView.dataSource = self;
@@ -270,6 +273,21 @@
     [messageInputBar addSubview:sendButton];
     
     [self.view addSubview:messageInputBar];
+    
+    self.view.keyboardTriggerOffset = messageInputBar.frame.size.height;
+    
+    [self.view addKeyboardPanningWithActionHandler:^(CGRect keyboardFrameInView) {
+        CGRect messageInputBarFrame = messageInputBar.frame;
+        messageInputBarFrame.origin.y = keyboardFrameInView.origin.y - messageInputBarFrame.size.height;
+        messageInputBar.frame = messageInputBarFrame;
+        
+        //CGRect tableViewFrame = chatHistoryTableView.frame;
+        //tableViewFrame.size.height = toolBarFrame.origin.y;
+        //chatHistoryTableView.frame = tableViewFrame;
+        
+        chatHistoryTableView.contentInset = chatHistoryTableView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, self.view.frame.size.height-keyboardFrameInView.origin.y-1, 0);
+        [self scrollToBottomAnimated:NO];
+    }];
     
 
     //messageTextField.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
@@ -445,10 +463,12 @@
             [self scrollToBottomAnimated:NO];
             UIView *messageInputBar = textView.superview;
             messageInputBar.frame = CGRectMake(0, messageInputBar.frame.origin.y-changeInHeight, messageInputBar.frame.size.width, messageInputBar.frame.size.height+changeInHeight);
+            self.view.keyboardTriggerOffset = messageInputBar.frame.size.height;
         } completion:^(BOOL finished) {
             [textView updateShouldDrawPlaceholder];
         }];
         _previousTextViewContentHeight = MIN(textViewContentHeight, kChatBarHeight4+2);
+        
     }
     
     // Enable/disable sendButton if textView.text has/lacks length.

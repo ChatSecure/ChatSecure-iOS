@@ -32,3 +32,6 @@
 [submodule "Submodules/MagicalRecord"]
 	path = Submodules/MagicalRecord
 	url = git@github.com:ChatSecure/MagicalRecord.git
+[submodule "Submodules/DAKeyboardControl"]
+	path = Submodules/DAKeyboardControl
+	url = git@github.com:danielamitay/DAKeyboardControl.git
