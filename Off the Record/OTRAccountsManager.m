@@ -66,7 +66,7 @@
     NSPredicate * accountFilter = [NSPredicate predicateWithFormat:@"protocol== %@ AND username==%@",protocol,accountName];
     NSArray * results = [OTRManagedAccount MR_findAllWithPredicate:accountFilter];
     
-    
+     
     OTRManagedAccount * fetchedAccount = nil;
     if (results) {
         fetchedAccount = [results lastObject];

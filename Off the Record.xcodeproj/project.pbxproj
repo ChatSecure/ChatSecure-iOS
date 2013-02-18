@@ -39,7 +39,10 @@
 		63022BAD16CD9ABB00F764F1 /* SendButtonHighlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63022B9D16CD9ABB00F764F1 /* SendButtonHighlighted@2x.png */; };
 		63022BB616CDAD4D00F764F1 /* OTRChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63022BB516CDAD4C00F764F1 /* OTRChatViewController.m */; };
 		63022BB916CDAD5E00F764F1 /* ACPlaceholderTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63022BB816CDAD5E00F764F1 /* ACPlaceholderTextView.m */; };
+		6315F5AB16CF124200FC159D /* checkmark.png in Resources */ = {isa = PBXBuildFile; fileRef = 6315F5A916CF124100FC159D /* checkmark.png */; };
+		6315F5AC16CF124200FC159D /* checkmark@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6315F5AA16CF124200FC159D /* checkmark@2x.png */; };
 		6319F696165EAB1F0063AC93 /* supportedLanguages.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6319F695165EAB1F0063AC93 /* supportedLanguages.plist */; };
+		632E5C8616D1A2A90037E37C /* OTRMessageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 632E5C8516D1A2A90037E37C /* OTRMessageTableViewCell.m */; };
 		633406391652C31300A54C52 /* OTRListSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 633406381652C31300A54C52 /* OTRListSetting.m */; };
 		6334063C1652C33300A54C52 /* OTRListSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6334063B1652C33300A54C52 /* OTRListSettingViewController.m */; };
 		633406411652D50F00A54C52 /* OTRLanguageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 633406401652D50F00A54C52 /* OTRLanguageManager.m */; };
@@ -458,7 +461,11 @@
 		63022BB516CDAD4C00F764F1 /* OTRChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRChatViewController.m; sourceTree = "<group>"; };
 		63022BB716CDAD5E00F764F1 /* ACPlaceholderTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACPlaceholderTextView.h; sourceTree = "<group>"; };
 		63022BB816CDAD5E00F764F1 /* ACPlaceholderTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACPlaceholderTextView.m; sourceTree = "<group>"; };
+		6315F5A916CF124100FC159D /* checkmark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = checkmark.png; sourceTree = "<group>"; };
+		6315F5AA16CF124200FC159D /* checkmark@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "checkmark@2x.png"; sourceTree = "<group>"; };
 		6319F695165EAB1F0063AC93 /* supportedLanguages.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = supportedLanguages.plist; path = "Off the Record/supportedLanguages.plist"; sourceTree = SOURCE_ROOT; };
+		632E5C8416D1A2A90037E37C /* OTRMessageTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRMessageTableViewCell.h; sourceTree = "<group>"; };
+		632E5C8516D1A2A90037E37C /* OTRMessageTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRMessageTableViewCell.m; sourceTree = "<group>"; };
 		633406371652C31300A54C52 /* OTRListSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRListSetting.h; sourceTree = "<group>"; };
 		633406381652C31300A54C52 /* OTRListSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRListSetting.m; sourceTree = "<group>"; };
 		6334063A1652C33300A54C52 /* OTRListSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRListSettingViewController.h; sourceTree = "<group>"; };
@@ -2481,6 +2488,8 @@
 				D9D3717A169D34630086F358 /* OTRDatabaseUtils.m */,
 				63022BB716CDAD5E00F764F1 /* ACPlaceholderTextView.h */,
 				63022BB816CDAD5E00F764F1 /* ACPlaceholderTextView.m */,
+				632E5C8416D1A2A90037E37C /* OTRMessageTableViewCell.h */,
+				632E5C8516D1A2A90037E37C /* OTRMessageTableViewCell.m */,
 				63022BB416CDAD4C00F764F1 /* OTRChatViewController.h */,
 				63022BB516CDAD4C00F764F1 /* OTRChatViewController.m */,
 				D9F9378913F44BD3009A3D84 /* OTRAppDelegate.h */,
@@ -2529,6 +2538,8 @@
 		D9FCA7291533A37F009AD599 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				6315F5A916CF124100FC159D /* checkmark.png */,
+				6315F5AA16CF124200FC159D /* checkmark@2x.png */,
 				63022B8E16CD9ABB00F764F1 /* MessageBubbleBlue.png */,
 				63022B8F16CD9ABB00F764F1 /* MessageBubbleBlue@2x.png */,
 				63022B9016CD9ABB00F764F1 /* MessageBubbleGray.png */,
@@ -2794,6 +2805,8 @@
 				63022BAB16CD9ABB00F764F1 /* SendButton@2x.png in Resources */,
 				63022BAC16CD9ABB00F764F1 /* SendButtonHighlighted.png in Resources */,
 				63022BAD16CD9ABB00F764F1 /* SendButtonHighlighted@2x.png in Resources */,
+				6315F5AB16CF124200FC159D /* checkmark.png in Resources */,
+				6315F5AC16CF124200FC159D /* checkmark@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3105,6 +3118,7 @@
 				63E72BA116CB11E800B6F389 /* _OTRManagedXMPPAccount.m in Sources */,
 				63022BB616CDAD4D00F764F1 /* OTRChatViewController.m in Sources */,
 				63022BB916CDAD5E00F764F1 /* ACPlaceholderTextView.m in Sources */,
+				632E5C8616D1A2A90037E37C /* OTRMessageTableViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
