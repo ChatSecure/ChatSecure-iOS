@@ -91,6 +91,25 @@
 		63E5E81516D1D888006E2B01 /* OTROldAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = D93C316E159A6719006316C7 /* OTROldAccount.m */; };
 		63E5E81616D1D888006E2B01 /* OTROldOscarAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = D9ABC99215D48C4F00AAB730 /* OTROldOscarAccount.m */; };
 		63E5E81716D1D888006E2B01 /* OTROldXMPPAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = D9ABC98F15D48B7E00AAB730 /* OTROldXMPPAccount.m */; };
+		63E5E81E16D1DE66006E2B01 /* ChatSecure.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D9D3717C169D404F0086F358 /* ChatSecure.xcdatamodeld */; };
+		63E5E82116D1DEB9006E2B01 /* checkmark.png in Resources */ = {isa = PBXBuildFile; fileRef = 63E5E81F16D1DEB9006E2B01 /* checkmark.png */; };
+		63E5E82216D1DEB9006E2B01 /* checkmark@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63E5E82016D1DEB9006E2B01 /* checkmark@2x.png */; };
+		63E5E83316D1DF14006E2B01 /* MessageBubbleBlue.png in Resources */ = {isa = PBXBuildFile; fileRef = 63E5E82316D1DF14006E2B01 /* MessageBubbleBlue.png */; };
+		63E5E83416D1DF14006E2B01 /* MessageBubbleBlue@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63E5E82416D1DF14006E2B01 /* MessageBubbleBlue@2x.png */; };
+		63E5E83516D1DF14006E2B01 /* MessageBubbleGray.png in Resources */ = {isa = PBXBuildFile; fileRef = 63E5E82516D1DF14006E2B01 /* MessageBubbleGray.png */; };
+		63E5E83616D1DF14006E2B01 /* MessageBubbleGray@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63E5E82616D1DF14006E2B01 /* MessageBubbleGray@2x.png */; };
+		63E5E83716D1DF14006E2B01 /* MessageBubbleHighlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = 63E5E82716D1DF14006E2B01 /* MessageBubbleHighlighted.png */; };
+		63E5E83816D1DF14006E2B01 /* MessageBubbleHighlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63E5E82816D1DF14006E2B01 /* MessageBubbleHighlighted@2x.png */; };
+		63E5E83916D1DF14006E2B01 /* MessageBubbleTyping.png in Resources */ = {isa = PBXBuildFile; fileRef = 63E5E82916D1DF14006E2B01 /* MessageBubbleTyping.png */; };
+		63E5E83A16D1DF14006E2B01 /* MessageBubbleTyping@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63E5E82A16D1DF14006E2B01 /* MessageBubbleTyping@2x.png */; };
+		63E5E83B16D1DF14006E2B01 /* MessageInputBarBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 63E5E82B16D1DF14006E2B01 /* MessageInputBarBackground.png */; };
+		63E5E83C16D1DF14006E2B01 /* MessageInputBarBackground@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63E5E82C16D1DF14006E2B01 /* MessageInputBarBackground@2x.png */; };
+		63E5E83D16D1DF14006E2B01 /* MessageInputFieldBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 63E5E82D16D1DF14006E2B01 /* MessageInputFieldBackground.png */; };
+		63E5E83E16D1DF14006E2B01 /* MessageInputFieldBackground@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63E5E82E16D1DF14006E2B01 /* MessageInputFieldBackground@2x.png */; };
+		63E5E83F16D1DF14006E2B01 /* SendButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 63E5E82F16D1DF14006E2B01 /* SendButton.png */; };
+		63E5E84016D1DF14006E2B01 /* SendButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63E5E83016D1DF14006E2B01 /* SendButton@2x.png */; };
+		63E5E84116D1DF14006E2B01 /* SendButtonHighlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = 63E5E83116D1DF14006E2B01 /* SendButtonHighlighted.png */; };
+		63E5E84216D1DF14006E2B01 /* SendButtonHighlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63E5E83216D1DF14006E2B01 /* SendButtonHighlighted@2x.png */; };
 		63F6E854164E000C00F67BDB /* OTRFeedbackSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F6E853164E000B00F67BDB /* OTRFeedbackSetting.m */; };
 		D90B80AC13FC719B006EFF3D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D90B80AB13FC719B006EFF3D /* CoreGraphics.framework */; };
 		D90B80AF13FC7E5F006EFF3D /* OTRCodec.m in Sources */ = {isa = PBXBuildFile; fileRef = D90B80AE13FC7E5F006EFF3D /* OTRCodec.m */; };
@@ -540,6 +559,24 @@
 		63E5E7E716D1D5BC006E2B01 /* CoreData+MagicalRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CoreData+MagicalRecord.h"; sourceTree = "<group>"; };
 		63E5E81016D1D860006E2B01 /* OTRConvertAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRConvertAccount.h; sourceTree = "<group>"; };
 		63E5E81116D1D860006E2B01 /* OTRConvertAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRConvertAccount.m; sourceTree = "<group>"; };
+		63E5E81F16D1DEB9006E2B01 /* checkmark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = checkmark.png; sourceTree = "<group>"; };
+		63E5E82016D1DEB9006E2B01 /* checkmark@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "checkmark@2x.png"; sourceTree = "<group>"; };
+		63E5E82316D1DF14006E2B01 /* MessageBubbleBlue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MessageBubbleBlue.png; sourceTree = "<group>"; };
+		63E5E82416D1DF14006E2B01 /* MessageBubbleBlue@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MessageBubbleBlue@2x.png"; sourceTree = "<group>"; };
+		63E5E82516D1DF14006E2B01 /* MessageBubbleGray.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MessageBubbleGray.png; sourceTree = "<group>"; };
+		63E5E82616D1DF14006E2B01 /* MessageBubbleGray@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MessageBubbleGray@2x.png"; sourceTree = "<group>"; };
+		63E5E82716D1DF14006E2B01 /* MessageBubbleHighlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MessageBubbleHighlighted.png; sourceTree = "<group>"; };
+		63E5E82816D1DF14006E2B01 /* MessageBubbleHighlighted@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MessageBubbleHighlighted@2x.png"; sourceTree = "<group>"; };
+		63E5E82916D1DF14006E2B01 /* MessageBubbleTyping.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MessageBubbleTyping.png; sourceTree = "<group>"; };
+		63E5E82A16D1DF14006E2B01 /* MessageBubbleTyping@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MessageBubbleTyping@2x.png"; sourceTree = "<group>"; };
+		63E5E82B16D1DF14006E2B01 /* MessageInputBarBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MessageInputBarBackground.png; sourceTree = "<group>"; };
+		63E5E82C16D1DF14006E2B01 /* MessageInputBarBackground@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MessageInputBarBackground@2x.png"; sourceTree = "<group>"; };
+		63E5E82D16D1DF14006E2B01 /* MessageInputFieldBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MessageInputFieldBackground.png; sourceTree = "<group>"; };
+		63E5E82E16D1DF14006E2B01 /* MessageInputFieldBackground@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MessageInputFieldBackground@2x.png"; sourceTree = "<group>"; };
+		63E5E82F16D1DF14006E2B01 /* SendButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SendButton.png; sourceTree = "<group>"; };
+		63E5E83016D1DF14006E2B01 /* SendButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SendButton@2x.png"; sourceTree = "<group>"; };
+		63E5E83116D1DF14006E2B01 /* SendButtonHighlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SendButtonHighlighted.png; sourceTree = "<group>"; };
+		63E5E83216D1DF14006E2B01 /* SendButtonHighlighted@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SendButtonHighlighted@2x.png"; sourceTree = "<group>"; };
 		63E72B9316CB11E800B6F389 /* _OTRManagedAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _OTRManagedAccount.h; sourceTree = "<group>"; };
 		63E72B9416CB11E800B6F389 /* _OTRManagedAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _OTRManagedAccount.m; sourceTree = "<group>"; };
 		63E72B9516CB11E800B6F389 /* _OTRManagedBuddy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _OTRManagedBuddy.h; sourceTree = "<group>"; };
@@ -2497,6 +2534,24 @@
 		D9FCA7291533A37F009AD599 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				63E5E81F16D1DEB9006E2B01 /* checkmark.png */,
+				63E5E82016D1DEB9006E2B01 /* checkmark@2x.png */,
+				63E5E82316D1DF14006E2B01 /* MessageBubbleBlue.png */,
+				63E5E82416D1DF14006E2B01 /* MessageBubbleBlue@2x.png */,
+				63E5E82516D1DF14006E2B01 /* MessageBubbleGray.png */,
+				63E5E82616D1DF14006E2B01 /* MessageBubbleGray@2x.png */,
+				63E5E82716D1DF14006E2B01 /* MessageBubbleHighlighted.png */,
+				63E5E82816D1DF14006E2B01 /* MessageBubbleHighlighted@2x.png */,
+				63E5E82916D1DF14006E2B01 /* MessageBubbleTyping.png */,
+				63E5E82A16D1DF14006E2B01 /* MessageBubbleTyping@2x.png */,
+				63E5E82B16D1DF14006E2B01 /* MessageInputBarBackground.png */,
+				63E5E82C16D1DF14006E2B01 /* MessageInputBarBackground@2x.png */,
+				63E5E82D16D1DF14006E2B01 /* MessageInputFieldBackground.png */,
+				63E5E82E16D1DF14006E2B01 /* MessageInputFieldBackground@2x.png */,
+				63E5E82F16D1DF14006E2B01 /* SendButton.png */,
+				63E5E83016D1DF14006E2B01 /* SendButton@2x.png */,
+				63E5E83116D1DF14006E2B01 /* SendButtonHighlighted.png */,
+				63E5E83216D1DF14006E2B01 /* SendButtonHighlighted@2x.png */,
 				D953118016C70D2F00AAB1D2 /* 275-broadcast.png */,
 				D953118116C70D2F00AAB1D2 /* 275-broadcast@2x.png */,
 				D9BE44A7166F330A00A628C7 /* globe.png */,
@@ -2738,6 +2793,24 @@
 				D93C99E016BF94B000344386 /* build-libidn.sh in Resources */,
 				D953118216C70D2F00AAB1D2 /* 275-broadcast.png in Resources */,
 				D953118316C70D2F00AAB1D2 /* 275-broadcast@2x.png in Resources */,
+				63E5E82116D1DEB9006E2B01 /* checkmark.png in Resources */,
+				63E5E82216D1DEB9006E2B01 /* checkmark@2x.png in Resources */,
+				63E5E83316D1DF14006E2B01 /* MessageBubbleBlue.png in Resources */,
+				63E5E83416D1DF14006E2B01 /* MessageBubbleBlue@2x.png in Resources */,
+				63E5E83516D1DF14006E2B01 /* MessageBubbleGray.png in Resources */,
+				63E5E83616D1DF14006E2B01 /* MessageBubbleGray@2x.png in Resources */,
+				63E5E83716D1DF14006E2B01 /* MessageBubbleHighlighted.png in Resources */,
+				63E5E83816D1DF14006E2B01 /* MessageBubbleHighlighted@2x.png in Resources */,
+				63E5E83916D1DF14006E2B01 /* MessageBubbleTyping.png in Resources */,
+				63E5E83A16D1DF14006E2B01 /* MessageBubbleTyping@2x.png in Resources */,
+				63E5E83B16D1DF14006E2B01 /* MessageInputBarBackground.png in Resources */,
+				63E5E83C16D1DF14006E2B01 /* MessageInputBarBackground@2x.png in Resources */,
+				63E5E83D16D1DF14006E2B01 /* MessageInputFieldBackground.png in Resources */,
+				63E5E83E16D1DF14006E2B01 /* MessageInputFieldBackground@2x.png in Resources */,
+				63E5E83F16D1DF14006E2B01 /* SendButton.png in Resources */,
+				63E5E84016D1DF14006E2B01 /* SendButton@2x.png in Resources */,
+				63E5E84116D1DF14006E2B01 /* SendButtonHighlighted.png in Resources */,
+				63E5E84216D1DF14006E2B01 /* SendButtonHighlighted@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3053,6 +3126,7 @@
 				63E5E81516D1D888006E2B01 /* OTROldAccount.m in Sources */,
 				63E5E81616D1D888006E2B01 /* OTROldOscarAccount.m in Sources */,
 				63E5E81716D1D888006E2B01 /* OTROldXMPPAccount.m in Sources */,
+				63E5E81E16D1DE66006E2B01 /* ChatSecure.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
