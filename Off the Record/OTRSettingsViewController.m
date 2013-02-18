@@ -147,7 +147,7 @@
         } else {
             OTRManagedAccount *account = [accounts objectAtIndex:indexPath.row];
             cell.textLabel.text = account.username;
-            if (account.isConnected) {
+            if (account.isConnectedValue) {
                 cell.detailTextLabel.text = CONNECTED_STRING;
             } else {
                 cell.detailTextLabel.text = nil;
@@ -206,7 +206,7 @@
         } else {
             OTRManagedAccount *account = [accounts objectAtIndex:indexPath.row];
             
-            if (!account.isConnected) {
+            if (!account.isConnectedValue) {
                 [self showLoginControllerForAccount:account];
             } else {
                 UIActionSheet *logoutSheet = [[UIActionSheet alloc] initWithTitle:LOGOUT_STRING delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:LOGOUT_STRING otherButtonTitles: nil];

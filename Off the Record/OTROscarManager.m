@@ -43,6 +43,7 @@ BOOL loginFailed;
     {
         mainThread = [NSThread currentThread];
         protocolBuddyList = [[NSMutableDictionary alloc] init];
+        loggedIn = NO;
     }
     return self;
 }
@@ -80,6 +81,7 @@ BOOL loginFailed;
     [[NSNotificationCenter defaultCenter] postNotificationName:kOTRProtocolLoginFail object:self];
     //NSLog(@"login error: %@",[error description]);
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Login Error" message:@"AIM login failed. Please check your username and password and try again." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+    loggedIn = NO;
     [alert show];
 }
 
@@ -88,6 +90,7 @@ BOOL loginFailed;
 	[session setDelegate:self];
 	login = nil;
 	theSession = session;
+    loggedIn = YES;
     //s_AIMSession = theSession;
 	
 	/* Set handler delegates */
@@ -124,6 +127,7 @@ BOOL loginFailed;
     [[[OTRProtocolManager sharedInstance] buddyList] removeBuddiesforAccount:self.account];
     aimBuddyList = nil;
 	theSession = nil;
+    loggedIn = NO;
 	///NSLog(@"Session signed off");
     
     [[NSNotificationCenter defaultCenter]
@@ -607,10 +611,15 @@ BOOL loginFailed;
 -(void)disconnect
 {
     [[self theSession].session closeConnection];
+    loggedIn = NO;
     OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
     [protocolManager.protocolManagers removeObjectForKey:self.account.uniqueIdentifier];
     self.protocolBuddyList = nil;
     
+}
+-(BOOL)isConnected
+{
+    return [self loggedIn];
 }
 
 @end

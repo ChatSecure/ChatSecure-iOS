@@ -1028,5 +1028,12 @@ managedBuddyObjectID
     [self sendChatState:kOTRChatStateInactive withBuddyID:managedBuddyObjectID];
     
 }
+-(BOOL)isConnected
+{
+    if (![xmppStream isDisconnected]) {
+		return YES;
+	}
+    return NO;
+}
 
 @end

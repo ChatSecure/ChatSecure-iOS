@@ -206,20 +206,14 @@
     [sendButton setTitle:SEND_STRING forState:UIControlStateNormal];
     [sendButton addTarget:self action:@selector(sendButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     
-
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHideOrShow:) name:UIKeyboardWillHideNotification object:nil];
-    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHideOrShow:) name:UIKeyboardWillShowNotification object:nil];
-    
     _heightForRow = [NSMutableArray array];
     _messageBubbleComposing = [UIImage imageNamed:@"MessageBubbleTyping"];
-    
-    
     
     self.chatHistoryTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-kChatBarHeight1)];
     self.chatHistoryTableView.dataSource = self;
@@ -281,10 +275,6 @@
         messageInputBarFrame.origin.y = keyboardFrameInView.origin.y - messageInputBarFrame.size.height;
         messageInputBar.frame = messageInputBarFrame;
         
-        //CGRect tableViewFrame = chatHistoryTableView.frame;
-        //tableViewFrame.size.height = toolBarFrame.origin.y;
-        //chatHistoryTableView.frame = tableViewFrame;
-        
         chatHistoryTableView.contentInset = chatHistoryTableView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, self.view.frame.size.height-keyboardFrameInView.origin.y-1, 0);
         [self scrollToBottomAnimated:NO];
     }];
@@ -318,31 +308,6 @@
     messageInputBar.frame = newTextFieldFrame;
     chatHistoryTableView.contentInset = chatHistoryTableView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, self.view.frame.size.height-viewHeight-1, 0);
     
-}
-
-
-
--(void)keyboardWillHideOrShow:(NSNotification *)note
-{
-    NSDictionary *userInfo = note.userInfo;
-    NSTimeInterval duration = [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
-    UIViewAnimationCurve curve = [[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue];
-    CGRect keyboardFrame = [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
-    
-    CGRect keyboardFrameForTextField = [self.view convertRect:keyboardFrame fromView:nil];
-    
-    CGFloat viewHeight = keyboardFrameForTextField.origin.y;
-    UIView *messageInputBar = textView.superview;
-    CGRect newTextFieldFrame = messageInputBar.frame;
-    
-    newTextFieldFrame.origin.y = keyboardFrameForTextField.origin.y - newTextFieldFrame.size.height;
-    
-    [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionBeginFromCurrentState | curve animations:^{
-        messageInputBar.frame = newTextFieldFrame;
-        chatHistoryTableView.contentInset = chatHistoryTableView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, self.view.frame.size.height-viewHeight-1, 0);
-        [self scrollToBottomAnimated:NO];
-    } completion:nil];
-    //[self scrollTextViewToBottom];
 }
 
 - (void) showDisconnectionAlert:(NSNotification*)notification {

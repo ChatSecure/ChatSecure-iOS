@@ -28,6 +28,7 @@
 #import "OTROscarManager.h"
 #import "OTRConstants.h"
 #import "Strings.h"
+#import "OTRProtocolManager.h"
 
 #define kOTRServiceName @"org.chatsecure.ChatSecure"
 
@@ -128,6 +129,11 @@
 - (NSString *)providerName
 {
     return @"";
+}
+
+-(NSNumber *)isConnected
+{
+    return [NSNumber numberWithBool:[[OTRProtocolManager sharedInstance] isAccountConnected:self]];
 }
 
 @end

@@ -31,6 +31,7 @@
 - (NSArray*) buddyList;
 - (void) connectWithPassword:(NSString *)password;
 - (void) disconnect;
+- (BOOL) isConnected;
 
 @end
 

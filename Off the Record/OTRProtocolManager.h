@@ -48,4 +48,6 @@
 
 -(id <OTRProtocol>) protocolForAccount:(OTRManagedAccount *)account;
 
+-(BOOL)isAccountConnected:(OTRManagedAccount *)account;
+
 @end

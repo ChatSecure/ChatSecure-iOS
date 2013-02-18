@@ -138,4 +138,14 @@ static OTRProtocolManager *sharedManager = nil;
     return protocol;
 }
 
+-(BOOL)isAccountConnected:(OTRManagedAccount *)account;
+{
+    id <OTRProtocol> protocol = [protocolManagers objectForKey:account.uniqueIdentifier];
+    if (protocol) {
+        return [protocol isConnected];
+    }
+    return NO;
+    
+}
+
 @end
