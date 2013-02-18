@@ -5,10 +5,12 @@
 #import "OTRManagedAccount.h"
 
 extern const struct OTRManagedXMPPAccountAttributes {
+	__unsafe_unretained NSString *allowPlainTextAuthentication;
 	__unsafe_unretained NSString *allowSSLHostNameMismatch;
 	__unsafe_unretained NSString *allowSelfSignedSSL;
 	__unsafe_unretained NSString *domain;
 	__unsafe_unretained NSString *port;
+	__unsafe_unretained NSString *requireTLS;
 	__unsafe_unretained NSString *sendDeliveryReceipts;
 	__unsafe_unretained NSString *sendTypingNotifications;
 } OTRManagedXMPPAccountAttributes;
@@ -27,6 +29,8 @@ extern const struct OTRManagedXMPPAccountFetchedProperties {
 
 
 
+
+
 @interface OTRManagedXMPPAccountID : NSManagedObjectID {}
 @end
 
@@ -35,6 +39,20 @@ extern const struct OTRManagedXMPPAccountFetchedProperties {
 + (NSString*)entityName;
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_;
 - (OTRManagedXMPPAccountID*)objectID;
+
+
+
+
+
+@property (nonatomic, strong) NSNumber* allowPlainTextAuthentication;
+
+
+
+@property BOOL allowPlainTextAuthenticationValue;
+- (BOOL)allowPlainTextAuthenticationValue;
+- (void)setAllowPlainTextAuthenticationValue:(BOOL)value_;
+
+//- (BOOL)validateAllowPlainTextAuthentication:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -92,6 +110,20 @@ extern const struct OTRManagedXMPPAccountFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSNumber* requireTLS;
+
+
+
+@property BOOL requireTLSValue;
+- (BOOL)requireTLSValue;
+- (void)setRequireTLSValue:(BOOL)value_;
+
+//- (BOOL)validateRequireTLS:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
 @property (nonatomic, strong) NSNumber* sendDeliveryReceipts;
 
 
@@ -130,6 +162,15 @@ extern const struct OTRManagedXMPPAccountFetchedProperties {
 @interface _OTRManagedXMPPAccount (CoreDataGeneratedPrimitiveAccessors)
 
 
+- (NSNumber*)primitiveAllowPlainTextAuthentication;
+- (void)setPrimitiveAllowPlainTextAuthentication:(NSNumber*)value;
+
+- (BOOL)primitiveAllowPlainTextAuthenticationValue;
+- (void)setPrimitiveAllowPlainTextAuthenticationValue:(BOOL)value_;
+
+
+
+
 - (NSNumber*)primitiveAllowSSLHostNameMismatch;
 - (void)setPrimitiveAllowSSLHostNameMismatch:(NSNumber*)value;
 
@@ -159,6 +200,15 @@ extern const struct OTRManagedXMPPAccountFetchedProperties {
 
 - (int16_t)primitivePortValue;
 - (void)setPrimitivePortValue:(int16_t)value_;
+
+
+
+
+- (NSNumber*)primitiveRequireTLS;
+- (void)setPrimitiveRequireTLS:(NSNumber*)value;
+
+- (BOOL)primitiveRequireTLSValue;
+- (void)setPrimitiveRequireTLSValue:(BOOL)value_;
 
 
 

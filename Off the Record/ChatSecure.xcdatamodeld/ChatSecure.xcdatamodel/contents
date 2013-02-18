@@ -32,10 +32,12 @@
     </entity>
     <entity name="OTRManagedOscarAccount" representedClassName="OTRManagedOscarAccount" parentEntity="OTRManagedAccount" syncable="YES"/>
     <entity name="OTRManagedXMPPAccount" representedClassName="OTRManagedXMPPAccount" parentEntity="OTRManagedAccount" syncable="YES">
+        <attribute name="allowPlainTextAuthentication" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="allowSelfSignedSSL" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="allowSSLHostNameMismatch" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="domain" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="port" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="requireTLS" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="sendDeliveryReceipts" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="sendTypingNotifications" optional="YES" attributeType="Boolean" syncable="YES"/>
     </entity>
@@ -44,6 +46,6 @@
         <element name="OTRManagedBuddy" positionX="106" positionY="-0" width="128" height="208"/>
         <element name="OTRManagedMessage" positionX="-99" positionY="111" width="128" height="148"/>
         <element name="OTRManagedOscarAccount" positionX="529" positionY="72" width="128" height="43"/>
-        <element name="OTRManagedXMPPAccount" positionX="565" positionY="216" width="128" height="135"/>
+        <element name="OTRManagedXMPPAccount" positionX="565" positionY="216" width="128" height="163"/>
     </elements>
 </model>

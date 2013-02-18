@@ -20,8 +20,8 @@
 //  You should have received a copy of the GNU General Public License
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
-#import "OTRBuddy.h"
-#import "OTRMessage.h"
+#import "OTROldBuddy.h"
+#import "OTROldMessage.h"
 #import "OTRCodec.h"
 #import "OTRProtocolManager.h"
 #import "NSString+HTML.h"
@@ -122,7 +122,7 @@
     if([self.protocol respondsToSelector:@selector(sendChatState:withBuddy:)])
     {
         lastSentChatState = sendingChatState;
-        [self.protocol sendChatState:sendingChatState withBuddy:self];
+        //[self.protocol sendChatState:sendingChatState withBuddy:self];
     }
     
 }
@@ -133,7 +133,7 @@
     {
         [self sendChatState:kOTRChatStateComposing];
     }
-    [self restartPausedChatStateTimer];
+    //[self restartPausedChatStateTimer];
     [self.inactiveChatStateTimer invalidate];
 }
 -(void)sendPausedChatState
@@ -145,7 +145,7 @@
 -(void)sendActiveChatState
 {
     [pausedChatStateTimer invalidate];
-    [self restartInactiveChatStateTimer];
+    //[self restartInactiveChatStateTimer];
     [self sendChatState:kOTRChatStateActive];
 }
 -(void)sendInactiveChatState

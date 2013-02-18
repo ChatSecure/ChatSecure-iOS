@@ -35,9 +35,8 @@
     NSString * accountDomainString = self.account.domain;
     BOOL sslMismatchSwitchSatus = self.account.allowSSLHostNameMismatchValue;
     BOOL selfSignedSwithStatus = self.account.allowSSLHostNameMismatchValue;
-    NSString * accountDomainString = [[self.account accountDictionary] objectForKey:kOTRAccountDomainKey];
-    //BOOL allowPlaintextAuthenticationStatus = [[[self.account accountDictionary]objectForKey:kOTRXMPPAllowPlaintextAuthenticationKey] boolValue];
-    //BOOL requireTLSStatus = [[[self.account accountDictionary]objectForKey:kOTRXMPPRequireTLSKey] boolValue];
+    BOOL allowPlaintextAuthenticationStatus = self.account.allowPlainTextAuthenticationValue; 
+    BOOL requireTLSStatus = self.account.requireTLSValue;
 	
     self.usernameTextField.placeholder = @"user@example.com";
     self.usernameTextField.keyboardType = UIKeyboardTypeEmailAddress;
@@ -110,8 +109,8 @@
 
     self.account.allowSelfSignedSSLValue = selfSignedSwitch.on;
     self.account.allowSSLHostNameMismatchValue = sslMismatchSwitch.on;
-    self.account.allowPlainTextAuthentication = allowPlaintextAuthentication.on;
-    self.account.requireTLS = requireTLS.on;
+    self.account.allowPlainTextAuthenticationValue = allowPlaintextAuthentication.on;
+    self.account.requireTLSValue = requireTLS.on;
         
     NSString * domainText = [domainTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     self.account.domain = domainText;
