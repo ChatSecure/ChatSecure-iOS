@@ -8,13 +8,14 @@
 
 #import <UIKit/UIKit.h>
 #import "OTRManagedMessage.h"
+#import "TTTAttributedLabel.h"
 
-@interface OTRMessageTableViewCell : UITableViewCell
+@interface OTRMessageTableViewCell : UITableViewCell <TTTAttributedLabelDelegate>
 
 @property (nonatomic, strong) OTRManagedMessage * message;
 @property (nonatomic, strong) UILabel * messageSentDateLabel;
 @property (nonatomic, strong) UIImageView *messageBackgroundImageView;
-@property (nonatomic, strong) UILabel *messageTextLabel;
+@property (nonatomic, strong) TTTAttributedLabel *messageTextLabel;
 @property (nonatomic, strong) UIImageView * messageDeliverdImageView;
 @property (nonatomic) BOOL showDate;
 

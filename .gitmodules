@@ -35,3 +35,6 @@
 [submodule "Submodules/DAKeyboardControl"]
 	path = Submodules/DAKeyboardControl
 	url = git@github.com:danielamitay/DAKeyboardControl.git
+[submodule "Submodules/TTTAttributedLabel"]
+	path = Submodules/TTTAttributedLabel
+	url = git@github.com:mattt/TTTAttributedLabel.git

@@ -83,12 +83,15 @@
         [self.contentView addSubview:messageBackgroundImageView];
         
         // Create messageTextLabel.
-        messageTextLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+        messageTextLabel = [[TTTAttributedLabel alloc] initWithFrame:CGRectZero];
         messageTextLabel.tag = MESSAGE_TEXT_LABEL_TAG;
+        //messageTextLabel.dataDetectorTypes = UIDataDetectorTypeAll;
         messageTextLabel.backgroundColor = [UIColor clearColor];
         messageTextLabel.numberOfLines = 0;
+        messageTextLabel.dataDetectorTypes = UIDataDetectorTypeLink;
         messageTextLabel.lineBreakMode = UILineBreakModeWordWrap;
         messageTextLabel.font = [UIFont systemFontOfSize:MessageFontSize];
+        messageTextLabel.delegate = self;
         [self.contentView addSubview:messageTextLabel];
         
         //Create MessageDeliveredImageView
@@ -136,6 +139,7 @@
     }
     
     messageTextLabel.text = message.message;
+    
     if (!message.isIncomingValue) { // right message
         UIImage * _messageBubbleBlue = [[UIImage imageNamed:kOTRRightImageName]stretchableImageWithLeftCapWidth:15 topCapHeight:13];
         messageBackgroundImageView.frame = CGRectMake(width-messageTextLabelSize.width-34, messageSentDateLabelHeight+MessageFontSize-13, messageTextLabelSize.width+34, messageTextLabelSize.height+12);
@@ -171,6 +175,13 @@
 {
     return [message.message sizeWithFont:[UIFont systemFontOfSize:MessageFontSize] constrainedToSize:CGSizeMake(MESSAGE_TEXT_WIDTH_MAX, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
     
+}
+
+//Label Delegate
+- (void)attributedLabel:(TTTAttributedLabel *)label
+   didSelectLinkWithURL:(NSURL *)url
+{
+    [[UIApplication sharedApplication] openURL:url];
 }
 
 

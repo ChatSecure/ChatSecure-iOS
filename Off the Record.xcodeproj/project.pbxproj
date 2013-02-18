@@ -44,6 +44,7 @@
 		63B43C2F166D93D5004A4C54 /* Lock_Locked@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63B43C2B166D93D5004A4C54 /* Lock_Locked@2x.png */; };
 		63B43C30166D93D5004A4C54 /* Lock_Unlocked@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63B43C2C166D93D5004A4C54 /* Lock_Unlocked@2x.png */; };
 		63CC9F1C16D2D18100BDA7D1 /* DAKeyboardControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CC9F1B16D2D18100BDA7D1 /* DAKeyboardControl.m */; };
+		63CC9F2116D2E93500BDA7D1 /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CC9F2016D2E93500BDA7D1 /* TTTAttributedLabel.m */; };
 		63DF97741623A3310043E295 /* pencil@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63DF97731623A3310043E295 /* pencil@2x.png */; };
 		63DF97761623A3F30043E295 /* pencil.png in Resources */ = {isa = PBXBuildFile; fileRef = 63DF97751623A3F30043E295 /* pencil.png */; };
 		63E5E7E816D1D5BC006E2B01 /* MagicalImportFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E5E7B016D1D5BC006E2B01 /* MagicalImportFunctions.m */; };
@@ -504,6 +505,8 @@
 		63B43C2C166D93D5004A4C54 /* Lock_Unlocked@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Lock_Unlocked@2x.png"; sourceTree = "<group>"; };
 		63CC9F1A16D2D18100BDA7D1 /* DAKeyboardControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DAKeyboardControl.h; sourceTree = "<group>"; };
 		63CC9F1B16D2D18100BDA7D1 /* DAKeyboardControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DAKeyboardControl.m; sourceTree = "<group>"; };
+		63CC9F1F16D2E93500BDA7D1 /* TTTAttributedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTAttributedLabel.h; sourceTree = "<group>"; };
+		63CC9F2016D2E93500BDA7D1 /* TTTAttributedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTAttributedLabel.m; sourceTree = "<group>"; };
 		63DF97731623A3310043E295 /* pencil@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pencil@2x.png"; sourceTree = "<group>"; };
 		63DF97751623A3F30043E295 /* pencil.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pencil.png; sourceTree = "<group>"; };
 		63E5E7AF16D1D5BC006E2B01 /* MagicalImportFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MagicalImportFunctions.h; sourceTree = "<group>"; };
@@ -1261,6 +1264,16 @@
 			);
 			name = DAKeyboardControl;
 			path = Submodules/DAKeyboardControl/DAKeyboardControl;
+			sourceTree = "<group>";
+		};
+		63CC9F1E16D2E93500BDA7D1 /* TTTAttributedLabel */ = {
+			isa = PBXGroup;
+			children = (
+				63CC9F1F16D2E93500BDA7D1 /* TTTAttributedLabel.h */,
+				63CC9F2016D2E93500BDA7D1 /* TTTAttributedLabel.m */,
+			);
+			name = TTTAttributedLabel;
+			path = Submodules/TTTAttributedLabel/TTTAttributedLabel;
 			sourceTree = "<group>";
 		};
 		63E5E7AC16D1D5BC006E2B01 /* MagicalRecord */ = {
@@ -2076,6 +2089,7 @@
 		D9CEED611684234D00B236B5 /* Submodules */ = {
 			isa = PBXGroup;
 			children = (
+				63CC9F1E16D2E93500BDA7D1 /* TTTAttributedLabel */,
 				63CC9F1916D2D18100BDA7D1 /* DAKeyboardControl */,
 				63E5E7AC16D1D5BC006E2B01 /* MagicalRecord */,
 				D93C97ED16BF949F00344386 /* XMPPFramework */,
@@ -3142,6 +3156,7 @@
 				63E5E81716D1D888006E2B01 /* OTROldXMPPAccount.m in Sources */,
 				63E5E81E16D1DE66006E2B01 /* ChatSecure.xcdatamodeld in Sources */,
 				63CC9F1C16D2D18100BDA7D1 /* DAKeyboardControl.m in Sources */,
+				63CC9F2116D2E93500BDA7D1 /* TTTAttributedLabel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
