@@ -161,8 +161,8 @@
     if (message) {
         lastMessageDisconnected = NO;
         // Strip the shit out of it, but hopefully you're talking with someone who is trusted in the first place
-        // TODO: fix this so it doesn't break some cyrillic encodings
-        NSString *rawMessage = [[[message stringByConvertingHTMLToPlainText]stringByEncodingHTMLEntities] stringByLinkifyingURLs];
+        NSString *rawMessage = [[[message stringByConvertingHTMLToPlainText] stringByEncodingHTMLEntities] stringByLinkifyingURLs];
+        NSString *decodedMessage = [[message stringByConvertingHTMLToPlainText] stringByLinkifyingURLs];
         self.lastMessage = rawMessage;
         
         NSString *username = [NSString stringWithFormat:@"<p><strong style=\"color:red\">%@:</strong>",self.displayName];
@@ -177,7 +177,7 @@
             localNotification.alertAction = REPLY_STRING;
             localNotification.soundName = UILocalNotificationDefaultSoundName;
             localNotification.applicationIconBadgeNumber = [UIApplication sharedApplication].applicationIconBadgeNumber + 1;
-            localNotification.alertBody = [NSString stringWithFormat:@"%@: %@",self.displayName,self.lastMessage];
+            localNotification.alertBody = [NSString stringWithFormat:@"%@: %@",self.displayName, decodedMessage];
           
             NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithCapacity:3];
             [userInfo setObject:accountName forKey:kOTRNotificationUserNameKey];

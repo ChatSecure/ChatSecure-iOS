@@ -237,6 +237,9 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	// Everything else plugs into the xmppStream, such as modules/extensions and delegates.
     
 	xmppStream = [[XMPPStream alloc] init];
+    
+    //Makes sure not allow any sending of password in plain text
+    
 	
 #if !TARGET_IPHONE_SIMULATOR
 	{
@@ -437,6 +440,9 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	if (![xmppStream isDisconnected]) {
 		return YES;
 	}
+    
+    xmppStream.requireTLS = self.account.requireTLS;
+    xmppStream.allowPlaintextAuthentication = self.account.allowPlainTextAuthentication;
     
 	//
 	// If you don't want to use the Settings view to set the JID, 
@@ -696,9 +702,10 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
         
         
         
-        XMPPUserCoreDataStorageObject *user = [xmppRosterStorage userForJID:[message from]
+        /*XMPPUserCoreDataStorageObject *user = [xmppRosterStorage userForJID:[message from]
                                                                  xmppStream:xmppStream
                                                        managedObjectContext:[self managedObjectContext_roster]];
+         */
         
         NSString *body = [[message elementForName:@"body"] stringValue];
         //NSString *displayName = [user displayName];

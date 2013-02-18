@@ -18,6 +18,7 @@
 @synthesize sslMismatchSwitch;
 @synthesize selfSignedSwitch;
 @synthesize portTextField;
+@synthesize allowPlaintextAuthentication, requireTLS;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -34,6 +35,10 @@
     NSString * accountDomainString = self.account.domain;
     BOOL sslMismatchSwitchSatus = self.account.allowSSLHostNameMismatchValue;
     BOOL selfSignedSwithStatus = self.account.allowSSLHostNameMismatchValue;
+    NSString * accountDomainString = [[self.account accountDictionary] objectForKey:kOTRAccountDomainKey];
+    //BOOL allowPlaintextAuthenticationStatus = [[[self.account accountDictionary]objectForKey:kOTRXMPPAllowPlaintextAuthenticationKey] boolValue];
+    //BOOL requireTLSStatus = [[[self.account accountDictionary]objectForKey:kOTRXMPPRequireTLSKey] boolValue];
+	
     self.usernameTextField.placeholder = @"user@example.com";
     self.usernameTextField.keyboardType = UIKeyboardTypeEmailAddress;
     
@@ -54,6 +59,13 @@
     self.selfSignedSwitch = [[UISwitch alloc] init];
     self.selfSignedSwitch.on = selfSignedSwithStatus;
     
+    self.allowPlaintextAuthentication = [[UISwitch alloc] init];
+    self.allowPlaintextAuthentication.on = allowPlaintextAuthenticationStatus;
+    
+    self.requireTLS = [[UISwitch alloc] init];
+    self.requireTLS.on = requireTLSStatus;
+    
+    
     self.portTextField = [[UITextField alloc] init];
     self.portTextField.delegate = self;
     self.portTextField.autocorrectionType = UITextAutocorrectionTypeNo;
@@ -64,10 +76,14 @@
     self.portTextField.keyboardType = UIKeyboardTypeNumberPad;
     self.portTextField.textColor = self.textFieldTextColor;
     
-    [self addCellinfoWithSection:1 row:2 labelText:DOMAIN_STRING cellType:kCellTypeTextField userInputView:self.domainTextField];
-    [self addCellinfoWithSection:1 row:3 labelText:SSL_MISMATCH_STRING cellType:kCellTypeSwitch userInputView:self.sslMismatchSwitch];
-    [self addCellinfoWithSection:1 row:4 labelText:SELF_SIGNED_SSL_STRING cellType:kCellTypeSwitch userInputView:self.selfSignedSwitch];
-    [self addCellinfoWithSection:1 row:5 labelText:PORT_STRING cellType:kCellTypeTextField userInputView:self.portTextField];
+    [self addCellinfoWithSection:1 row:0 labelText:DOMAIN_STRING cellType:kCellTypeTextField userInputView:self.domainTextField];
+    [self addCellinfoWithSection:1 row:1 labelText:PORT_STRING cellType:kCellTypeTextField userInputView:self.portTextField];
+    [self addCellinfoWithSection:1 row:4 labelText:SSL_MISMATCH_STRING cellType:kCellTypeSwitch userInputView:self.sslMismatchSwitch];
+    [self addCellinfoWithSection:1 row:5 labelText:SELF_SIGNED_SSL_STRING cellType:kCellTypeSwitch userInputView:self.selfSignedSwitch];
+    [self addCellinfoWithSection:1 row:6 labelText:ALLOW_PLAIN_TEXT_AUTHENTICATION_STRING cellType:kCellTypeSwitch userInputView:self.allowPlaintextAuthentication];
+    [self addCellinfoWithSection:1 row:7 labelText:REQUIRE_TLS_STRING cellType:kCellTypeSwitch userInputView:self.requireTLS];
+    
+    
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHideOrShow:) name:UIKeyboardWillHideNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHideOrShow:) name:UIKeyboardWillShowNotification object:nil];
@@ -94,6 +110,8 @@
 
     self.account.allowSelfSignedSSLValue = selfSignedSwitch.on;
     self.account.allowSSLHostNameMismatchValue = sslMismatchSwitch.on;
+    self.account.allowPlainTextAuthentication = allowPlaintextAuthentication.on;
+    self.account.requireTLS = requireTLS.on;
         
     NSString * domainText = [domainTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     self.account.domain = domainText;

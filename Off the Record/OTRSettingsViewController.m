@@ -32,6 +32,7 @@
 #import "OTRNewAccountViewController.h"
 #import "OTRConstants.h"
 #import "OTRAppDelegate.h"
+#import "UserVoice.h"
 
 #define ACTIONSHEET_DISCONNECT_TAG 1
 #define ALERTVIEW_DELETE_TAG 1
@@ -289,14 +290,10 @@
     }
 }
 
--(void)presentMailViewController:(UIViewController *)modalViewController
-{
-    [self presentModalViewController:modalViewController animated:YES];
-}
+#pragma mark OTRFeedbackSettingDelegate method
 
--(void)dismissMailViewConntroller
-{
-    [self dismissModalViewControllerAnimated:YES];
+- (void) presentUserVoiceWithConfig:(UVConfig*)config {
+    [UserVoice presentUserVoiceInterfaceForParentViewController:self andConfig:config];
 }
 
 

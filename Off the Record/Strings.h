@@ -37,6 +37,9 @@
 #define EN_SEND_STRING @"Send"
 #define EN_OK_STRING @"OK"
 
+#define EN_DONATE_STRING @"Donate"
+#define EN_DONATE_MESSAGE_STRING @"Your donation will help fund the continued development of ChatSecure."
+
 //Used in OTRChatViewController
 #define EN_RECENT_STRING @"Recent"
 #define EN_YOUR_FINGERPRINT_STRING @"Fingerprint for you"
@@ -70,9 +73,6 @@
 #define EN_SECURITY_WARNING_STRING @"Security Warning"
 #define EN_AGREE_STRING @"Agree"
 #define EN_DISAGREE_STRING @"Disagree"
-#define EN_EULA_WARNING_STRING @"If you require true security, meet in person. This software, its dependencies, or the underlying OTR protocol could contain security issues. The full source code is available on Github but has not yet been audited by an independent security expert. Use at your own risk."
-#define EN_EULA_BSD_STRING @"Modified BSD License:\nTHIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
-
 #define EN_ERROR_STRING @"Error!"
 #define EN_OSCAR_FAIL_STRING @"Failed to start authenticating. Please try again."
 #define EN_XMPP_FAIL_STRING @"Failed to connect to XMPP server. Please check your login credentials and internet connection and try again."
@@ -83,6 +83,8 @@
 #define EN_ADVANCED_STRING @"Advanced"
 #define EN_SSL_MISMATCH_STRING @"SSL Hostname Mismatch"
 #define EN_SELF_SIGNED_SSL_STRING @"Self Signed SSL"
+#define EN_ALLOW_PLAIN_TEXT_AUTHENTICATION_STRING @"Allow Plaintext Authentication"
+#define EN_REQUIRE_TLS_STRING @"Require TLS"
 #define EN_PORT_STRING @"Port"
 #define EN_GOOGLE_TALK_EXAMPLE_STRING @"user@gmail.com"
 #define EN_REQUIRED_STRING @"Required"
@@ -192,8 +194,6 @@
 #define SECURITY_WARNING_STRING [OTRLanguageManager translatedString: EN_SECURITY_WARNING_STRING]
 #define AGREE_STRING [OTRLanguageManager translatedString: EN_AGREE_STRING]
 #define DISAGREE_STRING [OTRLanguageManager translatedString: EN_DISAGREE_STRING]
-#define EULA_WARNING_STRING [OTRLanguageManager translatedString: EN_EULA_WARNING_STRING]
-#define EULA_BSD_STRING [OTRLanguageManager translatedString: EN_EULA_BSD_STRING]
 #define ERROR_STRING [OTRLanguageManager translatedString: EN_ERROR_STRING]
 #define OSCAR_FAIL_STRING [OTRLanguageManager translatedString: EN_OSCAR_FAIL_STRING]
 #define XMPP_FAIL_STRING [OTRLanguageManager translatedString: EN_XMPP_FAIL_STRING]
@@ -204,6 +204,8 @@
 #define ADVANCED_STRING [OTRLanguageManager translatedString: EN_ADVANCED_STRING]
 #define SSL_MISMATCH_STRING [OTRLanguageManager translatedString: EN_SSL_MISMATCH_STRING]
 #define SELF_SIGNED_SSL_STRING [OTRLanguageManager translatedString: EN_SELF_SIGNED_SSL_STRING]
+#define ALLOW_PLAIN_TEXT_AUTHENTICATION_STRING [OTRLanguageManager translatedString: EN_ALLOW_PLAIN_TEXT_AUTHENTICATION_STRING]
+#define REQUIRE_TLS_STRING [OTRLanguageManager translatedString: EN_REQUIRE_TLS_STRING]
 #define PORT_STRING [OTRLanguageManager translatedString: EN_PORT_STRING]
 #define GOOGLE_TALK_EXAMPLE_STRING [OTRLanguageManager translatedString: EN_GOOGLE_TALK_EXAMPLE_STRING]
 #define REQUIRED_STRING [OTRLanguageManager translatedString: EN_REQUIRED_STRING]
@@ -264,7 +266,8 @@
 #define JABBER_STRING [OTRLanguageManager translatedString: EN_JABBER_STRING]
 #define MESSAGE_PLACEHOLDER_STRING [OTRLanguageManager translatedString: EN_MESSAGE_PLACEHOLDER_STRING]
 #define DELIVERED_STRING [OTRLanguageManager translatedString: EN_DELIVERED_STRING]
-
+#define DONATE_STRING [OTRLanguageManager translatedString: EN_DONATE_STRING]
+#define DONATE_MESSAGE_STRING [OTRLanguageManager translatedString: EN_DONATE_MESSAGE_STRING]
 
 #define LOC_BUDDY_LIST_STRING NSLocalizedString(EN_BUDDY_LIST_STRING , @"Title for the buddy list tab")
 #define LOC_CONVERSATIONS_STRING NSLocalizedString(EN_CONVERSATIONS_STRING , @"Title for the conversations tab")
@@ -311,7 +314,6 @@
 #define LOC_SECURITY_WARNING_STRING NSLocalizedString(EN_SECURITY_WARNING_STRING , @"Title of alert box warning about security issues")
 #define LOC_AGREE_STRING NSLocalizedString(EN_AGREE_STRING , @"Agree to EULA")
 #define LOC_DISAGREE_STRING NSLocalizedString(EN_DISAGREE_STRING , @"Disagree with EULA")
-#define LOC_EULA_WARNING_STRING NSLocalizedString(EN_EULA_WARNING_STRING , @"Text describing possible security risks")
 #define LOC_ERROR_STRING NSLocalizedString(EN_ERROR_STRING , @"Title of error message popup box")
 #define LOC_OSCAR_FAIL_STRING NSLocalizedString(EN_OSCAR_FAIL_STRING , @"Authentication failed, tell user to try again")
 #define LOC_XMPP_FAIL_STRING NSLocalizedString(EN_XMPP_FAIL_STRING , @"Message when cannot connect to XMPP server")
@@ -385,3 +387,10 @@
 #define LOC_MESSAGE_PLACEHOLDER_STRING NSLocalizedString(EN_MESSAGE_PLACEHOLDER_STRING , @"just the word as a placeholder for the message text field") 
 #define LOC_DELIVERED_STRING NSLocalizedString(EN_DELIVERED_STRING , @"Shows in the chat view when a message has been delivered")
 
+
+#define LOC_ALLOW_PLAIN_TEXT_AUTHENTICATION_STRING NSLocalizedString(EN_ALLOW_PLAIN_TEXT_AUTHENTICATION_STRING , @"Setting name for allowing authentication to happen in plain text or in the clear")
+#define LOC_REQUIRE_TLS_STRING NSLocalizedString(EN_REQUIRE_TLS_STRING , @"Setting name for requiring a TLS connection")
+
+
+#define LOC_DONATE_STRING NSLocalizedString(EN_DONATE_STRING, @"Title for donation link")
+#define LOC_DONATE_MESSAGE_STRING NSLocalizedString(EN_DONATE_MESSAGE_STRING, @"Message shown when about to donate")

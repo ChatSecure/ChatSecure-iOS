@@ -32,6 +32,7 @@
 #import "OTRConstants.h"
 #import "OTRShareSetting.h"
 #import "OTRLanguageSetting.h"
+#import "OTRDonateSetting.h"
 
 @interface OTRSettingsManager(Private)
 - (void) populateSettings;
@@ -83,27 +84,26 @@
     
     
     OTRFeedbackSetting * feedbackViewSetting = [[OTRFeedbackSetting alloc] initWithTitle:SEND_FEEDBACK_STRING description:nil];
-    feedbackViewSetting.mailToRecipients = [NSArray arrayWithObject:kOTRFeedbackEmail];
-    feedbackViewSetting.mailSubject = [NSString stringWithFormat:@"Feedback for %@ iOS V%@ ChatSecure V%@",[[UIDevice currentDevice] model],[[UIDevice currentDevice] systemVersion],[[[NSBundle mainBundle] infoDictionary] valueForKey:@"CFBundleVersion"]];
     feedbackViewSetting.imageName = @"18-envelope.png";
     
     OTRShareSetting * shareViewSetting = [[OTRShareSetting alloc] initWithTitle:SHARE_STRING description:nil];
-    shareViewSetting.imageName = @"29-heart.png";
+    shareViewSetting.imageName = @"275-broadcast.png";
     
     OTRLanguageSetting * languageSetting = [[OTRLanguageSetting alloc]initWithTitle:LANGUAGE_STRING description:nil settingsKey:kOTRSettingKeyLanguage];
     languageSetting.imageName = @"globe.png";
     
+    OTRDonateSetting *donateSetting = [[OTRDonateSetting alloc] initWithTitle:DONATE_STRING description:nil];
+    donateSetting.imageName = @"29-heart.png";
     
+    NSMutableArray *otherSettings = [NSMutableArray arrayWithCapacity:5];
+    [otherSettings addObjectsFromArray:@[languageSetting,donateSetting, shareViewSetting,feedbackViewSetting]];
 #ifdef CRITTERCISM_ENABLED
     OTRBoolSetting *crittercismSetting = [[OTRBoolSetting alloc] initWithTitle:CRITTERCISM_TITLE_STRING description:CRITTERCISM_DESCRIPTION_STRING settingsKey:kOTRSettingKeyCrittercismOptIn];
-    OTRSettingsGroup *otherGroup = [[OTRSettingsGroup alloc] initWithTitle:OTHER_STRING settings:[NSArray arrayWithObjects:languageSetting, shareViewSetting,feedbackViewSetting,crittercismSetting,nil]];
     [newSettingsDictionary setObject:crittercismSetting forKey:kOTRSettingKeyCrittercismOptIn];
-    [settingsGroups addObject:otherGroup];
-#else
-    OTRSettingsGroup *otherGroup = [[OTRSettingsGroup alloc] initWithTitle:OTHER_STRING settings:[NSArray arrayWithObjects:languageSetting,shareViewSetting,feedbackViewSetting,nil]];
-    [settingsGroups addObject:otherGroup];
-    
+    [otherSettings addObject:crittercismSetting];
 #endif
+    OTRSettingsGroup *otherGroup = [[OTRSettingsGroup alloc] initWithTitle:OTHER_STRING settings:otherSettings];
+    [settingsGroups addObject:otherGroup];
     settingsDictionary = newSettingsDictionary;
 }
 

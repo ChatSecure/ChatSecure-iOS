@@ -107,7 +107,7 @@ terms of a separate license:
 * [Appirater](https://github.com/arashpayan/appirater) - nags people to give reviews
 * [MagicalRecord](https://github.com/magicalpanda/MagicalRecord) - Core Data convenience methods
 * [encrypted-core-data](https://github.com/project-imas/encrypted-core-data) - Core Data + SQLCipher
-
+* [UserVoice](http://www.uservoice.com) - in-app support forum
 
 Acknowledgements
 =========
