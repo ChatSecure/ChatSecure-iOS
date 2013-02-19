@@ -265,7 +265,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
                     buddyStatus = kOTRBuddyStatusAway;
                     break;
                 case 2  :
-                    buddyStatus = kOTRBuddySatusXa;
+                    buddyStatus = kOTRBuddyStatusXa;
                     break;
                 case 3  :
                     buddyStatus = kOTRBUddyStatusDnd;
@@ -274,6 +274,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
                     buddyStatus = kOTRBuddyStatusOffline;
                     break;
             }
+            buddy.statusMessage = user.primaryResource.status;
             buddy.statusValue = buddyStatus;
             buddy.groupName = user.sectionName;
             NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];

@@ -254,37 +254,38 @@
     
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     cell.detailTextLabel.textColor = [UIColor lightGrayColor];
+    cell.detailTextLabel.text = [buddy currentStatusMessage];
     
     switch(buddyStatus)
     {
         case kOTRBuddyStatusOffline:
             cell.textLabel.textColor = [UIColor lightGrayColor];
-            cell.detailTextLabel.text = OFFLINE_STRING;
+            //cell.detailTextLabel.text = OFFLINE_STRING;
             cell.imageView.image = [UIImage imageNamed:@"offline.png"];
             break;
         case kOTRBuddyStatusAway:
             cell.textLabel.textColor = [UIColor darkGrayColor];
-            cell.detailTextLabel.text = AWAY_STRING;
+            //cell.detailTextLabel.text = AWAY_STRING;
             cell.imageView.image = [UIImage imageNamed:@"away.png"];
             break;
-        case kOTRBuddySatusXa:
+        case kOTRBuddyStatusXa:
             cell.textLabel.textColor = [UIColor darkGrayColor];
-            cell.detailTextLabel.text = @"Extended Away";
+            //cell.detailTextLabel.text = @"Extended Away";
             cell.imageView.image = [UIImage imageNamed:@"away.png"];
             break;
         case kOTRBUddyStatusDnd:
             cell.textLabel.textColor = [UIColor darkGrayColor];
-            cell.detailTextLabel.text = @"Do Not Disturb";
+            //cell.detailTextLabel.text = @"Do Not Disturb";
             cell.imageView.image = [UIImage imageNamed:@"away.png"];
             break;
         case kOTRBuddyStatusAvailable:
             cell.textLabel.textColor = [UIColor darkTextColor];
-            cell.detailTextLabel.text = AVAILABLE_STRING;
+            //cell.detailTextLabel.text = AVAILABLE_STRING;
             cell.imageView.image = [UIImage imageNamed:@"available.png"];
             break;
         default:
             cell.textLabel.textColor = [UIColor lightGrayColor];
-            cell.detailTextLabel.text = OFFLINE_STRING;
+            //cell.detailTextLabel.text = OFFLINE_STRING;
             cell.imageView.image = [UIImage imageNamed:@"offline.png"];
     }
     return cell;

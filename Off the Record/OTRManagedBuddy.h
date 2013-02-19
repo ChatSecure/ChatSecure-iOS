@@ -36,7 +36,7 @@ typedef int16_t OTRChatState;
 
 enum OTRBuddyStatus {
     kOTRBuddyStatusOffline = 0,
-    kOTRBuddySatusXa = 1,
+    kOTRBuddyStatusXa = 1,
     kOTRBUddyStatusDnd = 2,
     kOTRBuddyStatusAway = 3,
     kOTRBuddyStatusAvailable = 4
@@ -71,6 +71,7 @@ enum OTRChatState {
 
 - (void) setNewStatus:(OTRBuddyStatus)newStatus;
 - (void) setNewEncryptionStatus:(OTRKitMessageState)newEncryptionStatus;
+- (NSString *)currentStatusMessage;
 
 +(OTRManagedBuddy *)buddyWithAccountName:(NSString *)name account:(OTRManagedAccount *)account;
 +(OTRManagedBuddy *)fetchOrCreateWithName:(NSString *)name account:(OTRManagedAccount *)account;

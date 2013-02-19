@@ -14,6 +14,7 @@ extern const struct OTRManagedBuddyAttributes {
 	__unsafe_unretained NSString *lastMessageDisconnected;
 	__unsafe_unretained NSString *lastSentChatState;
 	__unsafe_unretained NSString *status;
+	__unsafe_unretained NSString *statusMessage;
 } OTRManagedBuddyAttributes;
 
 extern const struct OTRManagedBuddyRelationships {
@@ -26,6 +27,7 @@ extern const struct OTRManagedBuddyFetchedProperties {
 
 @class OTRManagedAccount;
 @class OTRManagedMessage;
+
 
 
 
@@ -160,6 +162,16 @@ extern const struct OTRManagedBuddyFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSString* statusMessage;
+
+
+
+//- (BOOL)validateStatusMessage:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
 @property (nonatomic, strong) OTRManagedAccount *account;
 
 //- (BOOL)validateAccount:(id*)value_ error:(NSError**)error_;
@@ -254,6 +266,12 @@ extern const struct OTRManagedBuddyFetchedProperties {
 
 - (int16_t)primitiveStatusValue;
 - (void)setPrimitiveStatusValue:(int16_t)value_;
+
+
+
+
+- (NSString*)primitiveStatusMessage;
+- (void)setPrimitiveStatusMessage:(NSString*)value;
 
 
 

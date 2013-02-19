@@ -254,6 +254,36 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:kOTREncryptionStateNotification object:self];
 }
 
+-(NSString *)currentStatusMessage
+{
+    if([[self statusMessage] length] && self.statusValue != kOTRBuddyStatusOffline)
+    {
+        return [self statusMessage];
+    }
+    else {
+        switch ([self statusValue]) {
+            case kOTRBuddyStatusXa:
+                return @"Extended Away";
+                break;
+            case kOTRBUddyStatusDnd:
+                return @"Do Not Disturb";
+                break;
+            case kOTRBuddyStatusAway:
+                return AWAY_STRING;
+                break;
+            case kOTRBuddyStatusAvailable:
+                return AVAILABLE_STRING;
+                break;
+                
+            default:
+                return OFFLINE_STRING;
+                break;
+        }
+    }
+    
+    
+}
+
 
 
 +(OTRManagedBuddy *)fetchOrCreateWithName:(NSString *)name account:(OTRManagedAccount *)account
