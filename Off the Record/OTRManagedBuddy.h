@@ -36,8 +36,10 @@ typedef int16_t OTRChatState;
 
 enum OTRBuddyStatus {
     kOTRBuddyStatusOffline = 0,
-    kOTRBuddyStatusAway = 1,
-    kOTRBuddyStatusAvailable = 2
+    kOTRBuddySatusXa = 1,
+    kOTRBUddyStatusDnd = 2,
+    kOTRBuddyStatusAway = 3,
+    kOTRBuddyStatusAvailable = 4
 };
 
 enum OTRChatState {

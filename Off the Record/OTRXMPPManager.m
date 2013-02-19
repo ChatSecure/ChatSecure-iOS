@@ -119,7 +119,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 		NSSortDescriptor *sd1 = [[NSSortDescriptor alloc] initWithKey:@"sectionNum" ascending:YES];
 		NSSortDescriptor *sd2 = [[NSSortDescriptor alloc] initWithKey:@"displayName" ascending:YES];
 		
-		NSArray *sortDescriptors = [NSArray arrayWithObjects:sd1, sd2, nil];
+		NSArray *sortDescriptors = [NSArray arrayWithObjects: sd2, nil];
 		
 		NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
 		[fetchRequest setEntity:entity];
@@ -128,7 +128,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 		
 		fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest
 		                                                               managedObjectContext:moc
-		                                                                 sectionNameKeyPath:@"sectionNum"
+		                                                                 sectionNameKeyPath:nil
 		                                                                          cacheName:nil];
 		[fetchedResultsController setDelegate:self];
 		
@@ -256,13 +256,19 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
             buddy.accountName = [[user jid] full];
             buddy.account = self.account;
             OTRBuddyStatus buddyStatus;
-            switch ([user.sectionNum intValue])
+            switch (user.section)
             {
                 case 0  :
                     buddyStatus = kOTRBuddyStatusAvailable;
                     break;
                 case 1  :
                     buddyStatus = kOTRBuddyStatusAway;
+                    break;
+                case 2  :
+                    buddyStatus = kOTRBuddySatusXa;
+                    break;
+                case 3  :
+                    buddyStatus = kOTRBUddyStatusDnd;
                     break;
                 default :
                     buddyStatus = kOTRBuddyStatusOffline;

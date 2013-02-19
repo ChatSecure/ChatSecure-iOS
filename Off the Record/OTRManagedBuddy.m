@@ -254,6 +254,8 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:kOTREncryptionStateNotification object:self];
 }
 
+
+
 +(OTRManagedBuddy *)fetchOrCreateWithName:(NSString *)name account:(OTRManagedAccount *)account
 {
     OTRManagedBuddy * buddy = nil;
@@ -264,6 +266,14 @@
         buddy.account = account;
     }
     return buddy;
+}
+
+-(int16_t)statusValue
+{
+    if (!self.account.isConnectedValue) {
+        return kOTRBuddyStatusOffline;
+    }
+    return [[self status] shortValue];
 }
 
 +(OTRManagedBuddy *)buddyWithAccountName:(NSString *)name account:(OTRManagedAccount *)account

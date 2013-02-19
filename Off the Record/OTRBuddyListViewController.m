@@ -267,6 +267,16 @@
             cell.detailTextLabel.text = AWAY_STRING;
             cell.imageView.image = [UIImage imageNamed:@"away.png"];
             break;
+        case kOTRBuddySatusXa:
+            cell.textLabel.textColor = [UIColor darkGrayColor];
+            cell.detailTextLabel.text = @"Extended Away";
+            cell.imageView.image = [UIImage imageNamed:@"away.png"];
+            break;
+        case kOTRBUddyStatusDnd:
+            cell.textLabel.textColor = [UIColor darkGrayColor];
+            cell.detailTextLabel.text = @"Do Not Disturb";
+            cell.imageView.image = [UIImage imageNamed:@"away.png"];
+            break;
         case kOTRBuddyStatusAvailable:
             cell.textLabel.textColor = [UIColor darkTextColor];
             cell.detailTextLabel.text = AVAILABLE_STRING;
