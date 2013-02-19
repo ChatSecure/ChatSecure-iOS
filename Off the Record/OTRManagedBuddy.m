@@ -254,14 +254,28 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:kOTREncryptionStateNotification object:self];
 }
 
--(NSArray *)fetchChatHistory:(int)numberOfMessages
++(OTRManagedBuddy *)fetchOrCreateWithName:(NSString *)name account:(OTRManagedAccount *)account
 {
-    NSSortDescriptor * dateSortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"Date" ascending:YES];
+    OTRManagedBuddy * buddy = nil;
+    buddy = [OTRManagedBuddy buddyWithAccountName:name account:account];
+    if (!buddy) {
+        buddy = [OTRManagedBuddy MR_createEntity];
+        buddy.accountName = name;
+        buddy.account = account;
+    }
+    return buddy;
+}
+
++(OTRManagedBuddy *)buddyWithAccountName:(NSString *)name account:(OTRManagedAccount *)account
+{
+    NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"accountName == %@",name];
+    NSSet * filteredArray = [account.buddies filteredSetUsingPredicate:buddyFilter];
     
-    NSArray * sortedMessages = [self.messages sortedArrayUsingDescriptors:[NSArray arrayWithObject:dateSortDescriptor]];
-    
-    return sortedMessages;
-    
+    if([filteredArray count])
+    {
+        return [filteredArray anyObject];
+    }
+    return nil;
 }
 
 @end

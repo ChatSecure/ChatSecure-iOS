@@ -61,7 +61,7 @@
 #define MESSAGE_DELIVERED_LABEL_TAG          103
 
 #define MESSAGE_TEXT_SIZE_WITH_FONT(message, font) \
-[message.message sizeWithFont:font constrainedToSize:CGSizeMake(MESSAGE_TEXT_WIDTH_MAX, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap]
+[message sizeWithFont:font constrainedToSize:CGSizeMake(MESSAGE_TEXT_WIDTH_MAX, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap]
 
 
 @interface OTRChatViewController(Private)
@@ -710,7 +710,7 @@
                 _previousShownSentDate = message.date;
                 messageSentDateLabelHeight = MESSAGE_SENT_DATE_LABEL_HEIGHT;
             }
-            CGSize messageTextLabelSize = MESSAGE_TEXT_SIZE_WITH_FONT(message, [UIFont systemFontOfSize:MessageFontSize]);
+            CGSize messageTextLabelSize = MESSAGE_TEXT_SIZE_WITH_FONT(message.message, [UIFont systemFontOfSize:MessageFontSize]);
             messageTextLabelHeight = messageTextLabelSize.height;
             
             
@@ -723,8 +723,10 @@
         return messageSentDateLabelHeight+messageTextLabelHeight+messageDeliveredLabelHeight+MESSAGE_MARGIN_TOP+MESSAGE_MARGIN_BOTTOM;
     }
     else {
-        return _messageBubbleComposing.size.height+MESSAGE_MARGIN_TOP+MESSAGE_MARGIN_BOTTOM;
+        
         //Composing messsage height
+        CGSize messageTextLabelSize =  MESSAGE_TEXT_SIZE_WITH_FONT(@"t", [UIFont systemFontOfSize:MessageFontSize]);
+        return messageTextLabelSize.height+MESSAGE_MARGIN_TOP+MESSAGE_MARGIN_BOTTOM;
     }
     
 }
@@ -831,7 +833,6 @@
             break;
         case NSFetchedResultsChangeUpdate:
             [tableView reloadData];
-            [self configureCell:[tableView cellForRowAtIndexPath:newIndexPath]];
             
             NSLog(@"Updated Message: %@",newIndexPath);
             break;
@@ -841,13 +842,6 @@
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
     [self.chatHistoryTableView endUpdates];
     [self scrollToBottomAnimated:YES];
-}
-
--(void)configureCell:(UITableViewCell *)cell
-{
-    //check if message is delivered and if has delivered label otherwise rearrange cell
-    NSLog(@"Configure cell");
-    
 }
 
 

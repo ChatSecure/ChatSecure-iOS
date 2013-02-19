@@ -226,7 +226,8 @@
     if (sectionIndex == RECENTS_SECTION_INDEX) {
         return [self.activeConversations count];
     } else if (sectionIndex == BUDDIES_SECTION_INDEX) {
-        return [protocolManager.buddyList count];
+        NSInteger numBuddies = [[self.buddyFetchedResultsController sections][0] numberOfObjects];
+        return numBuddies;
     }
     return 0;
 }
@@ -243,7 +244,7 @@
     if (indexPath.section == RECENTS_SECTION_INDEX) {
         buddy = [activeConversations objectAtIndex:indexPath.row];
     } else if (indexPath.section == BUDDIES_SECTION_INDEX) {
-        buddy = [sortedBuddies objectAtIndex:indexPath.row];
+        buddy = [self.buddyFetchedResultsController objectAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row inSection:0]];
     }
             
     NSString *buddyUsername = buddy.displayName;
@@ -296,7 +297,7 @@
     } else if (indexPath.section == BUDDIES_SECTION_INDEX) {
         if(sortedBuddies)
         {
-            OTRManagedBuddy *buddyData = [sortedBuddies objectAtIndex:indexPath.row];
+            OTRManagedBuddy *buddyData = [self.buddyFetchedResultsController objectAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:0]];
             [self enterConversationWithBuddy:buddyData];
         }
     }
@@ -382,5 +383,48 @@
         [self enterConversationWithBuddy:buddy];
     }
 }
+
+#pragma mark - NSFetchedReusltsControllerDelegate
+    
+-(NSFetchedResultsController *)buddyFetchedResultsController{
+    if (_buddyFetchedResultsController)
+    {
+        return _buddyFetchedResultsController;
+    }
+    
+    _buddyFetchedResultsController = [OTRManagedBuddy MR_fetchAllGroupedBy:nil withPredicate:nil sortedBy:@"status" ascending:NO delegate:self];
+    
+    return _buddyFetchedResultsController;
+}
+
+- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
+    //[self.buddyListTableView beginUpdates];
+}
+
+- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject
+       atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
+      newIndexPath:(NSIndexPath *)newIndexPath {
+    UITableView *tableView = self.buddyListTableView;
+    [self.buddyListTableView reloadData];
+    
+    switch(type) {
+        case NSFetchedResultsChangeInsert:
+            //[tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationBottom];
+            //[tableView reloadData];
+            break;
+        case NSFetchedResultsChangeUpdate:
+            //[tableView reloadData];
+            
+            break;
+    }
+    
+    
+    
+}
+
+- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
+    //[self.buddyListTableView endUpdates];
+}
+
 
 @end

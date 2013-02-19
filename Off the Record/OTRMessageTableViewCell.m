@@ -85,7 +85,6 @@
         // Create messageTextLabel.
         messageTextLabel = [[TTTAttributedLabel alloc] initWithFrame:CGRectZero];
         messageTextLabel.tag = MESSAGE_TEXT_LABEL_TAG;
-        //messageTextLabel.dataDetectorTypes = UIDataDetectorTypeAll;
         messageTextLabel.backgroundColor = [UIColor clearColor];
         messageTextLabel.numberOfLines = 0;
         messageTextLabel.dataDetectorTypes = UIDataDetectorTypeLink;
@@ -113,7 +112,7 @@
     CGFloat imageHeight = _messageDeliveredImage.size.height/2;
     CGFloat imageWidth = _messageDeliveredImage.size.width/2;
     CGFloat imageX = (messageBackgroundImageView.frame.origin.x - 20.0);
-    CGFloat imageY = (messageBackgroundImageView.frame.size.height/2) - (imageHeight/2);
+    CGFloat imageY = messageBackgroundImageView.frame.origin.y + (messageBackgroundImageView.frame.size.height/2) - (imageHeight/2);
     messageDeliverdImageView.frame = CGRectMake(imageX, imageY, imageWidth, imageWidth);
 }
 

@@ -223,6 +223,59 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	}
 }
 
+-(void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath
+{
+    if ([controller isEqual:self.fetchedResultsController]) {
+        XMPPUserCoreDataStorageObject * user = nil;
+        
+        switch (type) {
+            case NSFetchedResultsChangeInsert:
+                user = [controller objectAtIndexPath:newIndexPath];
+                break;
+            case NSFetchedResultsChangeMove:
+                user = [controller objectAtIndexPath:newIndexPath];
+                break;
+            case NSFetchedResultsChangeUpdate:
+                user = [controller objectAtIndexPath:indexPath];
+                break;
+            case NSFetchedResultsChangeDelete:
+                user = [controller objectAtIndexPath:indexPath];
+                break;
+            default:
+                break;
+        }
+        
+        NSString * fullJID = [[user jid] full];
+        
+        
+        
+        
+        if ([[user jid] full]) {
+            OTRManagedBuddy * buddy = [OTRManagedBuddy fetchOrCreateWithName:[[user jid] full] account:self.account];
+            buddy.displayName = user.displayName;
+            buddy.accountName = [[user jid] full];
+            buddy.account = self.account;
+            OTRBuddyStatus buddyStatus;
+            switch ([user.sectionNum intValue])
+            {
+                case 0  :
+                    buddyStatus = kOTRBuddyStatusAvailable;
+                    break;
+                case 1  :
+                    buddyStatus = kOTRBuddyStatusAway;
+                    break;
+                default :
+                    buddyStatus = kOTRBuddyStatusOffline;
+                    break;
+            }
+            buddy.statusValue = buddyStatus;
+            buddy.groupName = user.sectionName;
+            NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+            [context MR_saveToPersistentStoreAndWait];
+        }
+    }
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark Private
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -691,7 +744,9 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
                                                        managedObjectContext:[self managedObjectContext_roster]];
         
         
-        OTRManagedBuddy * messageBuddy = [protocolBuddyList objectForKey:user.jidStr];
+        //OTRManagedBuddy * messageBuddy = [protocolBuddyList objectForKey:user.jidStr];
+        
+        OTRManagedBuddy * messageBuddy = [OTRManagedBuddy buddyWithAccountName:user.jidStr account:self.account];
         [messageBuddy receiveReceiptResonse:[message extractReceiptResponseID]];
     }
     
@@ -856,6 +911,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
         {
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:j inSection:sectionIndex];
             XMPPUserCoreDataStorageObject *user = [frc objectAtIndexPath:indexPath]; 
+            /*
             OTRManagedBuddy *otrBuddy = [protocolBuddyList objectForKey:user.jidStr];
             
             
@@ -865,6 +921,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
             }
             else
             {
+                
                 OTRManagedBuddy *newBuddy = [OTRManagedBuddy MR_createEntity];
                 newBuddy.displayName = user.displayName;
                 newBuddy.accountName = [[user jid] full];
@@ -874,7 +931,9 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
                 NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
                 [context MR_saveToPersistentStoreAndWait];
                 [protocolBuddyList setObject:newBuddy forKey:user.jidStr];
+                 
             }
+             */
         }
     }
     return [protocolBuddyList allValues];

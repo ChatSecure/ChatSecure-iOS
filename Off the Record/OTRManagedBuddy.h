@@ -70,6 +70,9 @@ enum OTRChatState {
 - (void) setNewStatus:(OTRBuddyStatus)newStatus;
 - (void) setNewEncryptionStatus:(OTRKitMessageState)newEncryptionStatus;
 
++(OTRManagedBuddy *)buddyWithAccountName:(NSString *)name account:(OTRManagedAccount *)account;
++(OTRManagedBuddy *)fetchOrCreateWithName:(NSString *)name account:(OTRManagedAccount *)account;
+
 @end
 
 @interface OTRManagedBuddy (CoreDataGeneratedAccessors)
