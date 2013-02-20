@@ -25,7 +25,6 @@
 @protocol OTRProtocol <NSObject>
 
 @property (nonatomic, strong) OTRManagedAccount * account;
-@property (nonatomic, strong) NSMutableDictionary * protocolBuddyList;
 
 - (void) sendMessage:(OTRManagedMessage*)message;
 - (void) connectWithPassword:(NSString *)password;

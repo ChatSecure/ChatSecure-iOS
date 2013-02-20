@@ -39,7 +39,7 @@
 @interface OTRBuddyListViewController(Private)
 - (void) selectActiveConversation;
 - (void) refreshActiveConversations;
-- (void) removeConversationsForAccount:(OTRManagedAccount *)account;
+- (void) removeConversationsForAccount:(NSString *)account;
 - (void) deleteBuddy:(OTRManagedBuddy*)buddy;
 @end
 
@@ -294,16 +294,17 @@
 
 -(void) protocolLoggedOff:(NSNotification *) notification
 {
-    id <OTRProtocol> protocol = notification.object;
-    [self removeConversationsForAccount:protocol.account];
+    NSString * uniqueString = [notification.userInfo objectForKey:kOTRProtocolLogoutUserInfoKey];
+    
+    [self removeConversationsForAccount:uniqueString];
 }
 
--(void) removeConversationsForAccount:(OTRManagedAccount *)account {
+-(void) removeConversationsForAccount:(NSString *)accountUniqueIdentifier {
     if ([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyDeleteOnDisconnect]) {
         NSArray *iterableConversations = [activeConversations copy];
         
         for (OTRManagedBuddy *buddy in iterableConversations) {
-            if ([buddy.account.uniqueIdentifier isEqualToString:account.uniqueIdentifier]) {
+            if ([buddy.account.uniqueIdentifier isEqualToString:accountUniqueIdentifier]) {
                 [[[[OTRProtocolManager sharedInstance] buddyList] activeConversations] removeObject:buddy];
             }
         }

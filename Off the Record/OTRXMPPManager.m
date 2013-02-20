@@ -73,7 +73,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 @synthesize xmppCapabilities;
 @synthesize xmppCapabilitiesStorage;
 @synthesize isXmppConnected;
-@synthesize protocolBuddyList,account;
+@synthesize account;
 @synthesize buddyTimers;
 
 -(id)init
@@ -90,7 +90,6 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
         [self setupStream];
         
         //[self setupStream];
-        protocolBuddyList = [NSMutableDictionary dictionary];
         buddyTimers = [NSMutableDictionary dictionary];
         
     }
@@ -552,6 +551,15 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     [xmppStream disconnect];
     
     OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
+    
+    [self.account setAllBuddiesStuts:kOTRBuddyStatusOffline];
+    
+    [[NSNotificationCenter defaultCenter]
+     postNotificationName:kOTRProtocolLogout
+     object:nil
+     userInfo:@{kOTRProtocolLogoutUserInfoKey: self.account.uniqueIdentifier}];
+    
+    
     [protocolManager.protocolManagers removeObjectForKey:self.account.uniqueIdentifier];
     
     [self.xmppRosterStorage clearAllUsersAndResourcesForXMPPStream:self.xmppStream];
@@ -598,9 +606,9 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     }
     */
     
-    [[NSNotificationCenter defaultCenter]
-     postNotificationName:kOTRProtocolLogout
-     object:self];
+    
+    
+    
 }
 
 
@@ -713,7 +721,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
                                                              xmppStream:xmppStream
                                                    managedObjectContext:[self managedObjectContext_roster]];
     
-    return [protocolBuddyList objectForKey:user.jidStr];
+    return [OTRManagedBuddy fetchOrCreateWithName:[user.jid full] account:self.account];
 }
 
 - (void)xmppStream:(XMPPStream *)sender didReceiveMessage:(XMPPMessage *)message
@@ -749,14 +757,10 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
                                                                  xmppStream:xmppStream
                                                        managedObjectContext:[self managedObjectContext_roster]];
         
+        OTRManagedBuddy * messageBuddy = [OTRManagedBuddy fetchOrCreateWithName:[user.jid full] account:self.account];
         
-        //OTRManagedBuddy * messageBuddy = [protocolBuddyList objectForKey:user.jidStr];
-        
-        OTRManagedBuddy * messageBuddy = [OTRManagedBuddy buddyWithAccountName:user.jidStr account:self.account];
         [messageBuddy receiveReceiptResonse:[message extractReceiptResponseID]];
     }
-    
-    
     
 	if ([message isChatMessageWithBody])
 	{
@@ -888,12 +892,6 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 
 - (NSString*) type {
     return kOTRProtocolTypeXMPP;
-}
-
-- (OTRManagedBuddy *) getBuddyByAccountName:(NSString *)buddyAccountName
-{
-    if (protocolBuddyList)
-        return [protocolBuddyList objectForKey:buddyAccountName];
 }
 
 -(void)connectWithPassword:(NSString *)myPassword

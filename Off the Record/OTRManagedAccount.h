@@ -23,6 +23,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 #import "_OTRManagedAccount.h"
+#import "OTRManagedBuddy.h"
 
 #define kOTRAccountUsernameKey @"kOTRAccountUsernameKey"
 #define kOTRAccountProtocolKey @"kOTRAccountProtocolKey"
@@ -46,6 +47,8 @@
 
 -(void)setNewUsername:(NSString *)newUsername;
 - (void) setDefaultsWithProtocol:(NSString*)newProtocol;
+
+-(void)setAllBuddiesStuts:(OTRBuddyStatus)status;
 
 @end
 

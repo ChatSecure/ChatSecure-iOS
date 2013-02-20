@@ -136,4 +136,11 @@
     return [NSNumber numberWithBool:[[OTRProtocolManager sharedInstance] isAccountConnected:self]];
 }
 
+-(void)setAllBuddiesStuts:(OTRBuddyStatus)status
+{
+    [self.buddies setValue:[NSNumber numberWithInt:status] forKey:@"status"];
+    [self save];
+    
+}
+
 @end

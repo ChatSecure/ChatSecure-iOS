@@ -32,7 +32,7 @@
 @synthesize login;
 @synthesize loginFailed;
 @synthesize loggedIn;
-@synthesize protocolBuddyList,account;
+@synthesize account;
 
 BOOL loginFailed;
 
@@ -42,7 +42,6 @@ BOOL loginFailed;
     if(self)
     {
         mainThread = [NSThread currentThread];
-        protocolBuddyList = [[NSMutableDictionary alloc] init];
         loggedIn = NO;
     }
     return self;
@@ -166,16 +165,20 @@ BOOL loginFailed;
 #pragma mark Session Delegate
 
 - (void)aimSessionManagerSignedOff:(AIMSessionManager *)sender {
+    [self.account setAllBuddiesStuts:kOTRBuddyStatusOffline];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kOTRProtocolLogout object:nil userInfo:@{kOTRProtocolLogoutUserInfoKey: self.account.uniqueIdentifier}];
+    
 	[self checkThreading];
-    [[[OTRProtocolManager sharedInstance] buddyList] removeBuddiesforAccount:self.account];
+    loggedIn = NO;
+    OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
+    [protocolManager.protocolManagers removeObjectForKey:self.account.uniqueIdentifier];
     aimBuddyList = nil;
 	theSession = nil;
-    loggedIn = NO;
+    
 	///NSLog(@"Session signed off");
     
-    [[NSNotificationCenter defaultCenter]
-     postNotificationName:kOTRProtocolLogout
-     object:self];
+    
+    
 }
 
 #pragma mark Buddy List Methods
@@ -282,7 +285,7 @@ BOOL loginFailed;
 	//NSString * autoresp = [message isAutoresponse] ? @" (Auto-Response)" : @"";
 	//NSLog(@"(%@) %@%@: %@", [NSDate date], [[message buddy] username], autoresp, [message plainTextMessage]);
     
-    OTRManagedBuddy * messageBuddy = [protocolBuddyList objectForKey:message.buddy.username];
+    OTRManagedBuddy * messageBuddy = [OTRManagedBuddy fetchOrCreateWithName:message.buddy.username account:self.account];
     
     OTRManagedMessage *otrMessage = [OTRManagedMessage newMessageFromBuddy:messageBuddy message:msgTxt];
     [otrMessage setIsEncryptedValue:YES];
@@ -581,61 +584,6 @@ BOOL loginFailed;
 	[theSession.messageHandler sendMessage:msg];
 }
 
-- (NSArray*) buddyList
-{ 
-    NSMutableSet *otrBuddyListSet = [NSMutableSet set];
-    AIMBlist *blist = self.aimBuddyList;
-    
-    for(AIMBlistGroup *group in blist.groups)
-    {
-        for(AIMBlistBuddy *buddy in group.buddies)
-        {
-            OTRBuddyStatus buddyStatus;
-            
-            switch (buddy.status.statusType) 
-            {
-                case AIMBuddyStatusAvailable:
-                    buddyStatus = kOTRBuddyStatusAvailable;
-                    break;
-                case AIMBuddyStatusAway:
-                    buddyStatus = kOTRBuddyStatusAway;
-                    break;
-                default:
-                    buddyStatus = kOTRBuddyStatusOffline;
-                    break;
-            }
-            
-            OTRManagedBuddy *otrBuddy = [protocolBuddyList objectForKey:buddy.username];
-            
-            if(otrBuddy)
-            {
-                [otrBuddy setNewStatus:buddyStatus];
-                otrBuddy.groupName = group.name;
-            }
-            else
-            {
-                otrBuddy = [OTRManagedBuddy MR_createEntity];
-                otrBuddy.displayName = buddy.username;
-                otrBuddy.accountName = buddy.username;
-                [otrBuddy setNewStatus:buddyStatus];
-                otrBuddy.groupName = group.name;
-                otrBuddy.account = self.account;
-                NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
-                [context MR_saveToPersistentStoreAndWait];
-                [protocolBuddyList setObject:otrBuddy forKey:buddy.username];
-            }
-            [otrBuddyListSet addObject:otrBuddy];
-        }
-    }
-    return [otrBuddyListSet allObjects];
-}
-
-- (OTRManagedBuddy *) getBuddyByAccountName:(NSString *)buddyAccountName
-{
-    if (protocolBuddyList)
-        return [protocolBuddyList objectForKey:buddyAccountName];
-}
-
 -(void)connectWithPassword:(NSString *)myPassword
 {
     self.login = [[AIMLogin alloc] initWithUsername:account.username password:myPassword];
@@ -645,10 +593,7 @@ BOOL loginFailed;
 -(void)disconnect
 {
     [[self theSession].session closeConnection];
-    loggedIn = NO;
-    OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
-    [protocolManager.protocolManagers removeObjectForKey:self.account.uniqueIdentifier];
-    self.protocolBuddyList = nil;
+   
     
 }
 -(BOOL)isConnected

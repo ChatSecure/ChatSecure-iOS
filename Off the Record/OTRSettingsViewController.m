@@ -328,9 +328,6 @@
 
 -(void)protocolLoggedOff:(NSNotification *)notification
 {
-    id <OTRProtocol> protocol = notification.object;
-    protocol.account.isConnected = NO;
-    [[[OTRProtocolManager sharedInstance] buddyList] removeBuddiesforAccount:protocol.account];
     [settingsTableView reloadData];
 }
 
