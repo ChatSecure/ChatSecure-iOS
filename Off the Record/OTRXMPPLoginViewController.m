@@ -73,7 +73,6 @@
     
     self.account.sendDeliveryReceipts = @(self.deliveryReceiptSwitch.on);
     self.account.sendTypingNotifications = @(self.typingNotificatoinSwitch.on);
-    
 }
 
 -(void)keyboardWillHideOrShow:(NSNotification *)note

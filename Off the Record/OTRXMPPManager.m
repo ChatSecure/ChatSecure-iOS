@@ -499,8 +499,8 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 		return YES;
 	}
     
-    xmppStream.requireTLS = self.account.requireTLS;
-    xmppStream.allowPlaintextAuthentication = self.account.allowPlainTextAuthentication;
+    xmppStream.requireTLS = self.account.shouldRequireTLS;
+    xmppStream.allowPlaintextAuthentication = self.account.shouldAllowPlainTextAuthentication;
     
 	//
 	// If you don't want to use the Settings view to set the JID, 
@@ -524,7 +524,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     
 	[xmppStream setMyJID:JID];
     [xmppStream setHostName:self.account.domain];
-    [xmppStream setHostPort:self.account.port];
+    [xmppStream setHostPort:self.account.portValue];
 	password = myPassword;
     
 	NSError *error = nil;

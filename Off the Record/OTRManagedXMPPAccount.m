@@ -42,6 +42,8 @@
     self.port = @(DEFAULT_PORT_NUMBER); // Default XMPP port number
     [self setSendDeliveryReceiptsValue: NO];
     [self setSendTypingNotificationsValue: YES]; // Default typing notifications to yes
+    [self setAllowPlainTextAuthenticationValue:NO];
+    [self setRequireTLSValue:NO];
 }
 
 +(NSNumber *)defaultPortNumber {
@@ -66,7 +68,7 @@
     if ([self.domain isEqualToString:kOTRFacebookDomain] || [self.domain isEqualToString:kOTRGoogleTalkDomain]) {
         return NO;
     }
-    return self.allowSelfSignedSSL;
+    return self.allowSelfSignedSSLValue;
 }
 
 - (void) setShouldAllowSelfSignedSSL:(BOOL)shouldAllowSelfSignedSSL {
@@ -77,11 +79,27 @@
     if ([self.domain isEqualToString:kOTRFacebookDomain] || [self.domain isEqualToString:kOTRGoogleTalkDomain]) {
         return NO;
     }
-    return self.allowSSLHostNameMismatch;
+    return self.allowSSLHostNameMismatchValue;
 }
 
 - (void) setShouldAllowSSLHostNameMismatch:(BOOL)shouldAllowSSLHostNameMismatch {
-    self.allowSSLHostNameMismatch = @(shouldAllowSSLHostNameMismatch);
+    self.allowSSLHostNameMismatchValue = @(shouldAllowSSLHostNameMismatch);
+}
+
+- (BOOL) shouldAllowPlainTextAuthentication
+{
+    if ([self.domain isEqualToString:kOTRFacebookDomain] || [self.domain isEqualToString:kOTRGoogleTalkDomain]) {
+        return NO;
+    }
+    return self.allowPlainTextAuthenticationValue;
+}
+- (BOOL) shouldRequireTLS
+{
+    if ([self.domain isEqualToString:kOTRFacebookDomain] || [self.domain isEqualToString:kOTRGoogleTalkDomain]) {
+        return NO;
+    }
+    return self.requireTLSValue;
+    
 }
 
 - (NSString *)providerName {

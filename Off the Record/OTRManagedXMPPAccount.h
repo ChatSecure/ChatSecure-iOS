@@ -33,5 +33,7 @@
 - (void) setDefaultsWithDomain:(NSString *)newDomain;
 - (BOOL) shouldAllowSelfSignedSSL;
 - (BOOL) shouldAllowSSLHostNameMismatch;
+- (BOOL) shouldAllowPlainTextAuthentication;
+- (BOOL) shouldRequireTLS;
 
 @end
