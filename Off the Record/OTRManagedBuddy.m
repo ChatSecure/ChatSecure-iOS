@@ -41,7 +41,7 @@
         OTRManagedBuddy* theBuddy = self;
         message = [message stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         //NSLog(@"message to be sent: %@",message);
-        OTRManagedMessage *newMessage = [OTRManagedMessage newMessageToBuddy:theBuddy message:message];
+        OTRManagedMessage *newMessage = [OTRManagedMessage newMessageToBuddy:theBuddy message:message encrypted:NO];
         //NSLog(@"newMessagge: %@",newMessage.message);
         OTRManagedMessage *encodedMessage;
         if(secure)

@@ -287,8 +287,7 @@ BOOL loginFailed;
     
     OTRManagedBuddy * messageBuddy = [OTRManagedBuddy fetchOrCreateWithName:message.buddy.username account:self.account];
     
-    OTRManagedMessage *otrMessage = [OTRManagedMessage newMessageFromBuddy:messageBuddy message:msgTxt];
-    [otrMessage setIsEncryptedValue:YES];
+    OTRManagedMessage *otrMessage = [OTRManagedMessage newMessageFromBuddy:messageBuddy message:msgTxt encrypted:YES];
     
     [OTRCodec decodeMessage:otrMessage];
     

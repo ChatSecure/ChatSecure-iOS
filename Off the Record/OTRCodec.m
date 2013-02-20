@@ -59,14 +59,13 @@
     NSString *recipientAccount = theMessage.buddy.accountName;
     NSString *protocol = theMessage.buddy.account.protocol;
     NSString *sendingAccount = theMessage.buddy.account.username;
-    theMessage.isEncryptedValue = NO;
+    //theMessage.isEncryptedValue = NO;
     
     NSString *encodedMessageString = [[OTRKit sharedInstance] encodeMessage:message recipient:recipientAccount accountName:sendingAccount protocol:protocol];
     
-    OTRManagedMessage *newOTRMessage = [OTRManagedMessage newMessageToBuddy:theMessage.buddy message:encodedMessageString];
+    OTRManagedMessage *newOTRMessage = [OTRManagedMessage newMessageToBuddy:theMessage.buddy message:encodedMessageString encrypted:YES];
     newOTRMessage.date = theMessage.date;
     newOTRMessage.uniqueID = theMessage.uniqueID;
-    [newOTRMessage setIsEncryptedValue:YES];
     
     NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
     [context MR_saveToPersistentStoreAndWait];

@@ -777,8 +777,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
         
         OTRManagedBuddy * messageBuddy = [self buddyWithMessage:message];
         
-        OTRManagedMessage *otrMessage = [OTRManagedMessage newMessageFromBuddy:messageBuddy message:body];
-        [otrMessage setIsEncryptedValue:YES];
+        OTRManagedMessage *otrMessage = [OTRManagedMessage newMessageFromBuddy:messageBuddy message:body encrypted:YES];
         [OTRCodec decodeMessage:otrMessage];
         
         if(otrMessage)
