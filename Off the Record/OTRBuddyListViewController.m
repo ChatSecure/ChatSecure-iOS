@@ -239,7 +239,7 @@
         case kOTRBuddyStatusAway:
             cell.textLabel.textColor = [UIColor darkGrayColor];
             //cell.detailTextLabel.text = AWAY_STRING;
-            cell.imageView.image = [UIImage imageNamed:@"away.png"];
+            cell.imageView.image = [UIImage imageNamed:@"idle.png"];
             break;
         case kOTRBuddyStatusXa:
             cell.textLabel.textColor = [UIColor darkGrayColor];
