@@ -27,7 +27,6 @@
 
 @interface OTRBuddyListViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate, NSFetchedResultsControllerDelegate>
 
-@property (nonatomic, retain) NSArray *sortedBuddies;
 @property (nonatomic, retain) NSMutableDictionary *buddyDictionary;
 @property (nonatomic, retain) NSMutableArray *activeConversations;
 @property (nonatomic, retain) UITableView *buddyListTableView;

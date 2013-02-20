@@ -32,7 +32,6 @@
 
 @interface OTRProtocolManager : NSObject
 
-@property (nonatomic, retain) OTRBuddyList *buddyList;
 @property (nonatomic, retain) OTREncryptionManager *encryptionManager;
 @property (nonatomic, retain) OTRSettingsManager *settingsManager;
 @property (nonatomic, retain) OTRAccountsManager *accountsManager;

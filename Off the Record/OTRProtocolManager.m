@@ -29,7 +29,6 @@ static OTRProtocolManager *sharedManager = nil;
 @implementation OTRProtocolManager
 
 @synthesize encryptionManager;
-@synthesize buddyList;
 @synthesize settingsManager;
 @synthesize accountsManager;
 @synthesize protocolManagers;
@@ -37,7 +36,6 @@ static OTRProtocolManager *sharedManager = nil;
 - (void) dealloc 
 {
     self.encryptionManager = nil;
-    self.buddyList = nil;
     self.settingsManager = nil;
     self.accountsManager = nil;
     self.protocolManagers = nil;
@@ -53,7 +51,6 @@ static OTRProtocolManager *sharedManager = nil;
         self.accountsManager = [[OTRAccountsManager alloc] init];
         self.encryptionManager = [[OTREncryptionManager alloc] init];
         self.settingsManager = [[OTRSettingsManager alloc] init];
-        self.buddyList = [[OTRBuddyList alloc] init];
         self.protocolManagers = [[NSMutableDictionary alloc] init];
 
         [[NSNotificationCenter defaultCenter]
@@ -104,9 +101,8 @@ static OTRProtocolManager *sharedManager = nil;
 
 -(OTRManagedBuddy *)buddyForUserName:(NSString *)buddyUserName accountName:(NSString *)accountName protocol:(NSString *)protocol
 {
-    return [self.buddyList getBuddyForUserName:buddyUserName accountUniqueIdentifier:[self.accountsManager accountForProtocol:protocol accountName:accountName].uniqueIdentifier];
-    
-    
+    OTRManagedAccount * account = [self.accountsManager accountForProtocol:protocol accountName:accountName];
+    return [OTRManagedBuddy fetchOrCreateWithName:buddyUserName account:account];
 }
 
 - (id <OTRProtocol>)protocolForAccount:(OTRManagedAccount *)account

@@ -49,7 +49,6 @@
 @synthesize protocolManager;
 @synthesize activeConversations;
 @synthesize buddyDictionary;
-@synthesize sortedBuddies;
 @synthesize selectedBuddy;
 
 - (void) dealloc {
@@ -59,7 +58,6 @@
     self.protocolManager = nil;
     self.activeConversations = nil;
     self.buddyDictionary = nil;
-    self.sortedBuddies = nil;
     self.selectedBuddy = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
@@ -281,11 +279,8 @@
         OTRManagedBuddy *buddy = [activeConversations objectAtIndex:indexPath.row];
         [self enterConversationWithBuddy:buddy];
     } else if (indexPath.section == BUDDIES_SECTION_INDEX) {
-        if(sortedBuddies)
-        {
-            OTRManagedBuddy *buddyData = [self.buddyFetchedResultsController objectAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:0]];
-            [self enterConversationWithBuddy:buddyData];
-        }
+            OTRManagedBuddy * managedBuddy = [self.buddyFetchedResultsController objectAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:0]];
+            [self enterConversationWithBuddy:managedBuddy];
     }
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
@@ -305,7 +300,7 @@
         
         for (OTRManagedBuddy *buddy in iterableConversations) {
             if ([buddy.account.uniqueIdentifier isEqualToString:accountUniqueIdentifier]) {
-                [[[[OTRProtocolManager sharedInstance] buddyList] activeConversations] removeObject:buddy];
+                //[[[[OTRProtocolManager sharedInstance] buddyList] activeConversations] removeObject:buddy];
             }
         }
         
@@ -314,7 +309,7 @@
 }
 
 - (void) refreshActiveConversations {
-    self.activeConversations = [NSMutableArray arrayWithArray:[[OTRProtocolManager sharedInstance].buddyList.activeConversations allObjects]];
+    //self.activeConversations = [NSMutableArray arrayWithArray:[[OTRProtocolManager sharedInstance].buddyList.activeConversations allObjects]];
     
     [buddyListTableView reloadData];
     
@@ -342,7 +337,8 @@
 }
 
 - (void) deleteBuddy:(OTRManagedBuddy*)buddy {
-    [[[[OTRProtocolManager sharedInstance] buddyList] activeConversations] removeObject:buddy];
+    //TODO best way to delete buddy
+    //[[[[OTRProtocolManager sharedInstance] buddyList] activeConversations] removeObject:buddy];
 }
 
 -(void)enterConversationWithBuddy:(OTRManagedBuddy*)buddy
@@ -351,7 +347,6 @@
         return;
     }
     self.selectedBuddy = buddy;
-    [protocolManager.buddyList.activeConversations addObject:buddy];
     chatViewController.buddy = buddy;
     
     BOOL chatViewIsVisible = chatViewController.isViewLoaded && chatViewController.view.window;
