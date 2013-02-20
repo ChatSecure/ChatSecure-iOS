@@ -32,6 +32,24 @@
 		63DF97741623A3310043E295 /* pencil@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63DF97731623A3310043E295 /* pencil@2x.png */; };
 		63DF97761623A3F30043E295 /* pencil.png in Resources */ = {isa = PBXBuildFile; fileRef = 63DF97751623A3F30043E295 /* pencil.png */; };
 		63F6E854164E000C00F67BDB /* OTRFeedbackSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F6E853164E000B00F67BDB /* OTRFeedbackSetting.m */; };
+		D9047C4C16D4C42300C91CB5 /* AFHTTPClient.m in Sources */ = {isa = PBXBuildFile; fileRef = D9047C3A16D4C42200C91CB5 /* AFHTTPClient.m */; };
+		D9047C4D16D4C42300C91CB5 /* AFHTTPRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D9047C3C16D4C42200C91CB5 /* AFHTTPRequestOperation.m */; };
+		D9047C4E16D4C42300C91CB5 /* AFImageRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D9047C3E16D4C42200C91CB5 /* AFImageRequestOperation.m */; };
+		D9047C4F16D4C42300C91CB5 /* AFJSONRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D9047C4016D4C42300C91CB5 /* AFJSONRequestOperation.m */; };
+		D9047C5016D4C42300C91CB5 /* AFNetworkActivityIndicatorManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D9047C4216D4C42300C91CB5 /* AFNetworkActivityIndicatorManager.m */; };
+		D9047C5116D4C42300C91CB5 /* AFPropertyListRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D9047C4516D4C42300C91CB5 /* AFPropertyListRequestOperation.m */; };
+		D9047C5216D4C42300C91CB5 /* AFURLConnectionOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D9047C4716D4C42300C91CB5 /* AFURLConnectionOperation.m */; };
+		D9047C5316D4C42300C91CB5 /* AFXMLRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D9047C4916D4C42300C91CB5 /* AFXMLRequestOperation.m */; };
+		D9047C5416D4C42300C91CB5 /* UIImageView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = D9047C4B16D4C42300C91CB5 /* UIImageView+AFNetworking.m */; };
+		D9047C5816D4C47000C91CB5 /* OTRPurchaseController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9047C5716D4C47000C91CB5 /* OTRPurchaseController.m */; };
+		D9047C6116D4C4B300C91CB5 /* OTRPushAccessTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D9047C5A16D4C4B300C91CB5 /* OTRPushAccessTableViewCell.m */; };
+		D9047C6216D4C4B300C91CB5 /* OTRPushAccessViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9047C5C16D4C4B300C91CB5 /* OTRPushAccessViewController.m */; };
+		D9047C6316D4C4B300C91CB5 /* OTRPushAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = D9047C5E16D4C4B300C91CB5 /* OTRPushAPIClient.m */; };
+		D9047C6416D4C4B300C91CB5 /* OTRPushController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9047C6016D4C4B300C91CB5 /* OTRPushController.m */; };
+		D9047C6716D4C4D100C91CB5 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9047C6616D4C4D100C91CB5 /* MobileCoreServices.framework */; };
+		D9047C6816D4C5FA00C91CB5 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D96B81A016165C5D00F97D0F /* StoreKit.framework */; };
+		D9047C6D16D4C62600C91CB5 /* OTRStoreTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D9047C6A16D4C62600C91CB5 /* OTRStoreTableViewCell.m */; };
+		D9047C6E16D4C62600C91CB5 /* OTRStoreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9047C6C16D4C62600C91CB5 /* OTRStoreViewController.m */; };
 		D90B80AC13FC719B006EFF3D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D90B80AB13FC719B006EFF3D /* CoreGraphics.framework */; };
 		D90B80AF13FC7E5F006EFF3D /* OTRCodec.m in Sources */ = {isa = PBXBuildFile; fileRef = D90B80AE13FC7E5F006EFF3D /* OTRCodec.m */; };
 		D90B9FA1169FE61200A923EF /* CMDEncryptedSQLiteStore.m in Sources */ = {isa = PBXBuildFile; fileRef = D90B9FA0169FE61200A923EF /* CMDEncryptedSQLiteStore.m */; };
@@ -63,25 +81,9 @@
 		D96495CB15363C0F009A8C33 /* OTRViewSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = D96495CA15363C0F009A8C33 /* OTRViewSetting.m */; };
 		D96495CF15365B3F009A8C33 /* OTRValueSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = D96495CE15365B3F009A8C33 /* OTRValueSetting.m */; };
 		D96495D7153668D2009A8C33 /* OTRSettingsGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = D96495D6153668D2009A8C33 /* OTRSettingsGroup.m */; };
-		D96B815F1616428100F97D0F /* OTRStoreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D96B815E1616428100F97D0F /* OTRStoreViewController.m */; };
-		D96B818B1616529500F97D0F /* AFHTTPClient.m in Sources */ = {isa = PBXBuildFile; fileRef = D96B81791616529500F97D0F /* AFHTTPClient.m */; };
-		D96B818C1616529500F97D0F /* AFHTTPRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D96B817B1616529500F97D0F /* AFHTTPRequestOperation.m */; };
-		D96B818D1616529500F97D0F /* AFImageRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D96B817D1616529500F97D0F /* AFImageRequestOperation.m */; };
-		D96B818E1616529500F97D0F /* AFJSONRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D96B817F1616529500F97D0F /* AFJSONRequestOperation.m */; };
-		D96B818F1616529500F97D0F /* AFNetworkActivityIndicatorManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D96B81811616529500F97D0F /* AFNetworkActivityIndicatorManager.m */; };
-		D96B81901616529500F97D0F /* AFPropertyListRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D96B81841616529500F97D0F /* AFPropertyListRequestOperation.m */; };
-		D96B81911616529500F97D0F /* AFURLConnectionOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D96B81861616529500F97D0F /* AFURLConnectionOperation.m */; };
-		D96B81921616529500F97D0F /* AFXMLRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = D96B81881616529500F97D0F /* AFXMLRequestOperation.m */; };
-		D96B81931616529500F97D0F /* UIImageView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = D96B818A1616529500F97D0F /* UIImageView+AFNetworking.m */; };
-		D96B819A161652EA00F97D0F /* JSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = D96B8197161652EA00F97D0F /* JSONKit.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		D96B81A116165C5D00F97D0F /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D96B81A016165C5D00F97D0F /* StoreKit.framework */; };
-		D96B81A416165F3400F97D0F /* OTRStoreTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D96B81A316165F3400F97D0F /* OTRStoreTableViewCell.m */; };
-		D96B81BE1616772A00F97D0F /* OTRPurchaseController.m in Sources */ = {isa = PBXBuildFile; fileRef = D96B81BD1616772A00F97D0F /* OTRPurchaseController.m */; };
-		D96B81C11616896D00F97D0F /* OTRPushController.m in Sources */ = {isa = PBXBuildFile; fileRef = D96B81C01616896D00F97D0F /* OTRPushController.m */; };
 		D974577715BE34E7002B9192 /* 31-circle-plus.png in Resources */ = {isa = PBXBuildFile; fileRef = D974577515BE34E7002B9192 /* 31-circle-plus.png */; };
 		D974577815BE34E7002B9192 /* 31-circle-plus@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D974577615BE34E7002B9192 /* 31-circle-plus@2x.png */; };
 		D974DABD15021E540028B2F4 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D974DABC15021E540028B2F4 /* libiconv.dylib */; };
-		D9772AB31617C1E80008687D /* OTRPushAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = D9772AB21617C1E80008687D /* OTRPushAPIClient.m */; };
 		D97BF53B160150CF00DA91F9 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D97BF53A160150CE00DA91F9 /* Default-568h@2x.png */; };
 		D989E88E15D4F92E0081DFD1 /* Twitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D989E88D15D4F92E0081DFD1 /* Twitter.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		D99071B2151EB5C6002CECC9 /* 08-chat@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D99071AF151EB5C5002CECC9 /* 08-chat@2x.png */; };
@@ -110,12 +112,10 @@
 		D9BE44A6166F2F5B00A628C7 /* 18-envelope.png in Resources */ = {isa = PBXBuildFile; fileRef = D9BE44A4166F2F5B00A628C7 /* 18-envelope.png */; };
 		D9BE44A9166F330A00A628C7 /* globe.png in Resources */ = {isa = PBXBuildFile; fileRef = D9BE44A7166F330A00A628C7 /* globe.png */; };
 		D9BE44AA166F330A00A628C7 /* globe@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D9BE44A8166F330A00A628C7 /* globe@2x.png */; };
-		D9BE44BE166F396D00A628C7 /* libOTRKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D92061E315E2E0D8003EEF3A /* libOTRKit.a */; };
 		D9BEFD63141AB35D008064A7 /* chatsecure_banner@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D9BEFD61141AB35D008064A7 /* chatsecure_banner@2x.png */; };
 		D9BEFD64141AB35D008064A7 /* chatsecure_banner.png in Resources */ = {isa = PBXBuildFile; fileRef = D9BEFD62141AB35D008064A7 /* chatsecure_banner.png */; };
 		D9C7463D15350F62003445ED /* OTRSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C7463C15350F62003445ED /* OTRSettingsViewController.m */; };
 		D9C74640153512DE003445ED /* OTRSettingsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C7463F153512DE003445ED /* OTRSettingsManager.m */; };
-		D9C78F7C1633563F00EBC6A0 /* OTRPushAccessViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C78F7B1633563F00EBC6A0 /* OTRPushAccessViewController.m */; };
 		D9CE422F13FDC9EF003EC27C /* 08-chat.png in Resources */ = {isa = PBXBuildFile; fileRef = D9CE422E13FDC9EF003EC27C /* 08-chat.png */; };
 		D9CE423213FDCA0F003EC27C /* 112-group.png in Resources */ = {isa = PBXBuildFile; fileRef = D9CE423113FDCA0F003EC27C /* 112-group.png */; };
 		D9CE42C313FDCBDD003EC27C /* Lock_Locked.png in Resources */ = {isa = PBXBuildFile; fileRef = D9CE42C113FDCBDD003EC27C /* Lock_Locked.png */; };
@@ -478,6 +478,40 @@
 		D902D31D141E930C00AA3479 /* OTROldBuddy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTROldBuddy.m; sourceTree = "<group>"; };
 		D9042E2C153168BE000D264C /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_CN; path = "Off the Record/zh_CN.lproj/InfoPlist.strings"; sourceTree = SOURCE_ROOT; };
 		D9042E2D153168BE000D264C /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_CN; path = "Off the Record/zh_CN.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
+		D9047C3916D4C42200C91CB5 /* AFHTTPClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPClient.h; sourceTree = "<group>"; };
+		D9047C3A16D4C42200C91CB5 /* AFHTTPClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFHTTPClient.m; sourceTree = "<group>"; };
+		D9047C3B16D4C42200C91CB5 /* AFHTTPRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPRequestOperation.h; sourceTree = "<group>"; };
+		D9047C3C16D4C42200C91CB5 /* AFHTTPRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFHTTPRequestOperation.m; sourceTree = "<group>"; };
+		D9047C3D16D4C42200C91CB5 /* AFImageRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFImageRequestOperation.h; sourceTree = "<group>"; };
+		D9047C3E16D4C42200C91CB5 /* AFImageRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFImageRequestOperation.m; sourceTree = "<group>"; };
+		D9047C3F16D4C42300C91CB5 /* AFJSONRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFJSONRequestOperation.h; sourceTree = "<group>"; };
+		D9047C4016D4C42300C91CB5 /* AFJSONRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFJSONRequestOperation.m; sourceTree = "<group>"; };
+		D9047C4116D4C42300C91CB5 /* AFNetworkActivityIndicatorManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFNetworkActivityIndicatorManager.h; sourceTree = "<group>"; };
+		D9047C4216D4C42300C91CB5 /* AFNetworkActivityIndicatorManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFNetworkActivityIndicatorManager.m; sourceTree = "<group>"; };
+		D9047C4316D4C42300C91CB5 /* AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFNetworking.h; sourceTree = "<group>"; };
+		D9047C4416D4C42300C91CB5 /* AFPropertyListRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFPropertyListRequestOperation.h; sourceTree = "<group>"; };
+		D9047C4516D4C42300C91CB5 /* AFPropertyListRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFPropertyListRequestOperation.m; sourceTree = "<group>"; };
+		D9047C4616D4C42300C91CB5 /* AFURLConnectionOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFURLConnectionOperation.h; sourceTree = "<group>"; };
+		D9047C4716D4C42300C91CB5 /* AFURLConnectionOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFURLConnectionOperation.m; sourceTree = "<group>"; };
+		D9047C4816D4C42300C91CB5 /* AFXMLRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFXMLRequestOperation.h; sourceTree = "<group>"; };
+		D9047C4916D4C42300C91CB5 /* AFXMLRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFXMLRequestOperation.m; sourceTree = "<group>"; };
+		D9047C4A16D4C42300C91CB5 /* UIImageView+AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+AFNetworking.h"; sourceTree = "<group>"; };
+		D9047C4B16D4C42300C91CB5 /* UIImageView+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+AFNetworking.m"; sourceTree = "<group>"; };
+		D9047C5616D4C47000C91CB5 /* OTRPurchaseController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRPurchaseController.h; sourceTree = "<group>"; };
+		D9047C5716D4C47000C91CB5 /* OTRPurchaseController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRPurchaseController.m; sourceTree = "<group>"; };
+		D9047C5916D4C4B300C91CB5 /* OTRPushAccessTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRPushAccessTableViewCell.h; sourceTree = "<group>"; };
+		D9047C5A16D4C4B300C91CB5 /* OTRPushAccessTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRPushAccessTableViewCell.m; sourceTree = "<group>"; };
+		D9047C5B16D4C4B300C91CB5 /* OTRPushAccessViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRPushAccessViewController.h; sourceTree = "<group>"; };
+		D9047C5C16D4C4B300C91CB5 /* OTRPushAccessViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRPushAccessViewController.m; sourceTree = "<group>"; };
+		D9047C5D16D4C4B300C91CB5 /* OTRPushAPIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRPushAPIClient.h; sourceTree = "<group>"; };
+		D9047C5E16D4C4B300C91CB5 /* OTRPushAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRPushAPIClient.m; sourceTree = "<group>"; };
+		D9047C5F16D4C4B300C91CB5 /* OTRPushController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRPushController.h; sourceTree = "<group>"; };
+		D9047C6016D4C4B300C91CB5 /* OTRPushController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRPushController.m; sourceTree = "<group>"; };
+		D9047C6616D4C4D100C91CB5 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		D9047C6916D4C62600C91CB5 /* OTRStoreTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRStoreTableViewCell.h; sourceTree = "<group>"; };
+		D9047C6A16D4C62600C91CB5 /* OTRStoreTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRStoreTableViewCell.m; sourceTree = "<group>"; };
+		D9047C6B16D4C62600C91CB5 /* OTRStoreViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRStoreViewController.h; sourceTree = "<group>"; };
+		D9047C6C16D4C62600C91CB5 /* OTRStoreViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRStoreViewController.m; sourceTree = "<group>"; };
 		D90B80AB13FC719B006EFF3D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		D90B80AD13FC7E5E006EFF3D /* OTRCodec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRCodec.h; sourceTree = "<group>"; };
 		D90B80AE13FC7E5F006EFF3D /* OTRCodec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRCodec.m; sourceTree = "<group>"; };
@@ -530,43 +564,10 @@
 		D96495CE15365B3F009A8C33 /* OTRValueSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRValueSetting.m; sourceTree = "<group>"; };
 		D96495D5153668D2009A8C33 /* OTRSettingsGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRSettingsGroup.h; sourceTree = "<group>"; };
 		D96495D6153668D2009A8C33 /* OTRSettingsGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRSettingsGroup.m; sourceTree = "<group>"; };
-		D96B815D1616428100F97D0F /* OTRStoreViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRStoreViewController.h; sourceTree = "<group>"; };
-		D96B815E1616428100F97D0F /* OTRStoreViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRStoreViewController.m; sourceTree = "<group>"; };
-		D96B81781616529500F97D0F /* AFHTTPClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPClient.h; sourceTree = "<group>"; };
-		D96B81791616529500F97D0F /* AFHTTPClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFHTTPClient.m; sourceTree = "<group>"; };
-		D96B817A1616529500F97D0F /* AFHTTPRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPRequestOperation.h; sourceTree = "<group>"; };
-		D96B817B1616529500F97D0F /* AFHTTPRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFHTTPRequestOperation.m; sourceTree = "<group>"; };
-		D96B817C1616529500F97D0F /* AFImageRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFImageRequestOperation.h; sourceTree = "<group>"; };
-		D96B817D1616529500F97D0F /* AFImageRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFImageRequestOperation.m; sourceTree = "<group>"; };
-		D96B817E1616529500F97D0F /* AFJSONRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFJSONRequestOperation.h; sourceTree = "<group>"; };
-		D96B817F1616529500F97D0F /* AFJSONRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFJSONRequestOperation.m; sourceTree = "<group>"; };
-		D96B81801616529500F97D0F /* AFNetworkActivityIndicatorManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFNetworkActivityIndicatorManager.h; sourceTree = "<group>"; };
-		D96B81811616529500F97D0F /* AFNetworkActivityIndicatorManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFNetworkActivityIndicatorManager.m; sourceTree = "<group>"; };
-		D96B81821616529500F97D0F /* AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFNetworking.h; sourceTree = "<group>"; };
-		D96B81831616529500F97D0F /* AFPropertyListRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFPropertyListRequestOperation.h; sourceTree = "<group>"; };
-		D96B81841616529500F97D0F /* AFPropertyListRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFPropertyListRequestOperation.m; sourceTree = "<group>"; };
-		D96B81851616529500F97D0F /* AFURLConnectionOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFURLConnectionOperation.h; sourceTree = "<group>"; };
-		D96B81861616529500F97D0F /* AFURLConnectionOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFURLConnectionOperation.m; sourceTree = "<group>"; };
-		D96B81871616529500F97D0F /* AFXMLRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFXMLRequestOperation.h; sourceTree = "<group>"; };
-		D96B81881616529500F97D0F /* AFXMLRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFXMLRequestOperation.m; sourceTree = "<group>"; };
-		D96B81891616529500F97D0F /* UIImageView+AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+AFNetworking.h"; sourceTree = "<group>"; };
-		D96B818A1616529500F97D0F /* UIImageView+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+AFNetworking.m"; sourceTree = "<group>"; };
-		D96B8195161652EA00F97D0F /* CHANGELOG.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CHANGELOG.md; sourceTree = "<group>"; };
-		D96B8196161652EA00F97D0F /* JSONKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONKit.h; sourceTree = "<group>"; };
-		D96B8197161652EA00F97D0F /* JSONKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONKit.m; sourceTree = "<group>"; };
-		D96B8198161652EA00F97D0F /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		D96B81A016165C5D00F97D0F /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
-		D96B81A216165F3400F97D0F /* OTRStoreTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRStoreTableViewCell.h; sourceTree = "<group>"; };
-		D96B81A316165F3400F97D0F /* OTRStoreTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRStoreTableViewCell.m; sourceTree = "<group>"; };
-		D96B81BC1616772A00F97D0F /* OTRPurchaseController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRPurchaseController.h; sourceTree = "<group>"; };
-		D96B81BD1616772A00F97D0F /* OTRPurchaseController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRPurchaseController.m; sourceTree = "<group>"; };
-		D96B81BF1616896D00F97D0F /* OTRPushController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRPushController.h; sourceTree = "<group>"; };
-		D96B81C01616896D00F97D0F /* OTRPushController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRPushController.m; sourceTree = "<group>"; };
 		D974577515BE34E7002B9192 /* 31-circle-plus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "31-circle-plus.png"; sourceTree = "<group>"; };
 		D974577615BE34E7002B9192 /* 31-circle-plus@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "31-circle-plus@2x.png"; sourceTree = "<group>"; };
 		D974DABC15021E540028B2F4 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
-		D9772AB11617C1E80008687D /* OTRPushAPIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRPushAPIClient.h; sourceTree = "<group>"; };
-		D9772AB21617C1E80008687D /* OTRPushAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRPushAPIClient.m; sourceTree = "<group>"; };
 		D97BF53A160150CE00DA91F9 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		D989E88D15D4F92E0081DFD1 /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
 		D99071AF151EB5C5002CECC9 /* 08-chat@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "08-chat@2x.png"; sourceTree = "<group>"; };
@@ -607,13 +608,10 @@
 		D9BE44A8166F330A00A628C7 /* globe@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "globe@2x.png"; sourceTree = "<group>"; };
 		D9BEFD61141AB35D008064A7 /* chatsecure_banner@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatsecure_banner@2x.png"; sourceTree = SOURCE_ROOT; };
 		D9BEFD62141AB35D008064A7 /* chatsecure_banner.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chatsecure_banner.png; sourceTree = SOURCE_ROOT; };
-		D9C7463A15350A21003445ED /* OTRCrittercismSecrets.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OTRCrittercismSecrets.h; sourceTree = "<group>"; };
 		D9C7463B15350F62003445ED /* OTRSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRSettingsViewController.h; sourceTree = "<group>"; };
 		D9C7463C15350F62003445ED /* OTRSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRSettingsViewController.m; sourceTree = "<group>"; };
 		D9C7463E153512DE003445ED /* OTRSettingsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRSettingsManager.h; sourceTree = "<group>"; };
 		D9C7463F153512DE003445ED /* OTRSettingsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRSettingsManager.m; sourceTree = "<group>"; };
-		D9C78F7A1633563F00EBC6A0 /* OTRPushAccessViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRPushAccessViewController.h; sourceTree = "<group>"; };
-		D9C78F7B1633563F00EBC6A0 /* OTRPushAccessViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRPushAccessViewController.m; sourceTree = "<group>"; };
 		D9CE422E13FDC9EF003EC27C /* 08-chat.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "08-chat.png"; sourceTree = "<group>"; };
 		D9CE423113FDCA0F003EC27C /* 112-group.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "112-group.png"; sourceTree = "<group>"; };
 		D9CE42C113FDCBDD003EC27C /* Lock_Locked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Lock_Locked.png; sourceTree = "<group>"; };
@@ -1174,6 +1172,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D9047C6816D4C5FA00C91CB5 /* StoreKit.framework in Frameworks */,
+				D9D69B8014180A3A0056FB9E /* SystemConfiguration.framework in Frameworks */,
+				D9047C6716D4C4D100C91CB5 /* MobileCoreServices.framework in Frameworks */,
 				D9D370FC169D215A0086F358 /* libsqlcipher.a in Frameworks */,
 				D9D370FB169D21570086F358 /* libcrypto.a in Frameworks */,
 				D9CEF0AB1684268500B236B5 /* libOTRKit.a in Frameworks */,
@@ -1182,7 +1183,6 @@
 				D9FC9860155881710039518D /* MessageUI.framework in Frameworks */,
 				D974DABD15021E540028B2F4 /* libiconv.dylib in Frameworks */,
 				D9D69ABC1417FDF90056FB9E /* libxml2.dylib in Frameworks */,
-				D9D69B8014180A3A0056FB9E /* SystemConfiguration.framework in Frameworks */,
 				D9D69B7E14180A330056FB9E /* CoreData.framework in Frameworks */,
 				D9D69B7C14180A230056FB9E /* CoreLocation.framework in Frameworks */,
 				D9D69B021417FF450056FB9E /* libresolv.dylib in Frameworks */,
@@ -1220,6 +1220,54 @@
 				636FE4BF161B7C68002B28EF /* OTRInLineTextEditTableViewCell.m */,
 			);
 			name = Login;
+			sourceTree = "<group>";
+		};
+		D9047C3816D4C42200C91CB5 /* AFNetworking */ = {
+			isa = PBXGroup;
+			children = (
+				D9047C3916D4C42200C91CB5 /* AFHTTPClient.h */,
+				D9047C3A16D4C42200C91CB5 /* AFHTTPClient.m */,
+				D9047C3B16D4C42200C91CB5 /* AFHTTPRequestOperation.h */,
+				D9047C3C16D4C42200C91CB5 /* AFHTTPRequestOperation.m */,
+				D9047C3D16D4C42200C91CB5 /* AFImageRequestOperation.h */,
+				D9047C3E16D4C42200C91CB5 /* AFImageRequestOperation.m */,
+				D9047C3F16D4C42300C91CB5 /* AFJSONRequestOperation.h */,
+				D9047C4016D4C42300C91CB5 /* AFJSONRequestOperation.m */,
+				D9047C4116D4C42300C91CB5 /* AFNetworkActivityIndicatorManager.h */,
+				D9047C4216D4C42300C91CB5 /* AFNetworkActivityIndicatorManager.m */,
+				D9047C4316D4C42300C91CB5 /* AFNetworking.h */,
+				D9047C4416D4C42300C91CB5 /* AFPropertyListRequestOperation.h */,
+				D9047C4516D4C42300C91CB5 /* AFPropertyListRequestOperation.m */,
+				D9047C4616D4C42300C91CB5 /* AFURLConnectionOperation.h */,
+				D9047C4716D4C42300C91CB5 /* AFURLConnectionOperation.m */,
+				D9047C4816D4C42300C91CB5 /* AFXMLRequestOperation.h */,
+				D9047C4916D4C42300C91CB5 /* AFXMLRequestOperation.m */,
+				D9047C4A16D4C42300C91CB5 /* UIImageView+AFNetworking.h */,
+				D9047C4B16D4C42300C91CB5 /* UIImageView+AFNetworking.m */,
+			);
+			name = AFNetworking;
+			path = Submodules/AFNetworking/AFNetworking;
+			sourceTree = "<group>";
+		};
+		D9047C6516D4C4B900C91CB5 /* Push */ = {
+			isa = PBXGroup;
+			children = (
+				D9047C6916D4C62600C91CB5 /* OTRStoreTableViewCell.h */,
+				D9047C6A16D4C62600C91CB5 /* OTRStoreTableViewCell.m */,
+				D9047C6B16D4C62600C91CB5 /* OTRStoreViewController.h */,
+				D9047C6C16D4C62600C91CB5 /* OTRStoreViewController.m */,
+				D9047C5916D4C4B300C91CB5 /* OTRPushAccessTableViewCell.h */,
+				D9047C5A16D4C4B300C91CB5 /* OTRPushAccessTableViewCell.m */,
+				D9047C5B16D4C4B300C91CB5 /* OTRPushAccessViewController.h */,
+				D9047C5C16D4C4B300C91CB5 /* OTRPushAccessViewController.m */,
+				D9047C5D16D4C4B300C91CB5 /* OTRPushAPIClient.h */,
+				D9047C5E16D4C4B300C91CB5 /* OTRPushAPIClient.m */,
+				D9047C5F16D4C4B300C91CB5 /* OTRPushController.h */,
+				D9047C6016D4C4B300C91CB5 /* OTRPushController.m */,
+				D9047C5616D4C47000C91CB5 /* OTRPurchaseController.h */,
+				D9047C5716D4C47000C91CB5 /* OTRPurchaseController.m */,
+			);
+			name = Push;
 			sourceTree = "<group>";
 		};
 		D91DAE8A154740D5009D0B74 /* Detail Views */ = {
@@ -1279,6 +1327,7 @@
 		D9CEED611684234D00B236B5 /* Submodules */ = {
 			isa = PBXGroup;
 			children = (
+				D9047C3816D4C42200C91CB5 /* AFNetworking */,
 				D9D37123169D2CEB0086F358 /* MagicalRecord */,
 				D9D370F3169D20EB0086F358 /* encrypted-core-data */,
 				D9D370E9169D20C80086F358 /* sqlcipher.xcodeproj */,
@@ -2404,7 +2453,6 @@
 		D9F9376D13F44BD3009A3D84 = {
 			isa = PBXGroup;
 			children = (
-				D96B81A016165C5D00F97D0F /* StoreKit.framework */,
 				D97BF53A160150CE00DA91F9 /* Default-568h@2x.png */,
 				D9F9378013F44BD3009A3D84 /* Off the Record */,
 				D9CEED611684234D00B236B5 /* Submodules */,
@@ -2424,6 +2472,8 @@
 		D9F9377B13F44BD3009A3D84 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D9047C6616D4C4D100C91CB5 /* MobileCoreServices.framework */,
+				D96B81A016165C5D00F97D0F /* StoreKit.framework */,
 				D989E88D15D4F92E0081DFD1 /* Twitter.framework */,
 				D93C31B6159A8B4F006316C7 /* Security.framework */,
 				D9FC985F155881700039518D /* MessageUI.framework */,
@@ -2448,7 +2498,7 @@
 		D9F9378013F44BD3009A3D84 /* Off the Record */ = {
 			isa = PBXGroup;
 			children = (
-				D96B81C216168C5600F97D0F /* Store */,
+				D9047C6516D4C4B900C91CB5 /* Push */,
 				D9D69B07141806BB0056FB9E /* Model */,
 				D9E068EF13F44D2900AC10A3 /* OTRBuddyListViewController.h */,
 				D9E068F013F44D2900AC10A3 /* OTRBuddyListViewController.m */,
@@ -2464,7 +2514,6 @@
 				6352DC8715AF9F16007AD0B4 /* OTRNewAccountViewController.m */,
 				D9BBCD3C1491F8B400AF1B9F /* OTRAboutViewController.h */,
 				D9BBCD3D1491F8B400AF1B9F /* OTRAboutViewController.m */,
-				D9C7463A15350A21003445ED /* OTRCrittercismSecrets.h */,
 				D9CEF0A81684253B00B236B5 /* XMPPFramework.h */,
 				D9D8D1F61531056300F9E8D3 /* Resources */,
 				D9F9378113F44BD3009A3D84 /* Supporting Files */,
@@ -3018,6 +3067,22 @@
 				D90B9FAA169FF4D500A923EF /* OTRManagedMessage.m in Sources */,
 				D90B9FAD169FF4EE00A923EF /* OTRManagedOscarAccount.m in Sources */,
 				D90B9FB0169FF4FB00A923EF /* OTRManagedXMPPAccount.m in Sources */,
+				D9047C4C16D4C42300C91CB5 /* AFHTTPClient.m in Sources */,
+				D9047C4D16D4C42300C91CB5 /* AFHTTPRequestOperation.m in Sources */,
+				D9047C4E16D4C42300C91CB5 /* AFImageRequestOperation.m in Sources */,
+				D9047C4F16D4C42300C91CB5 /* AFJSONRequestOperation.m in Sources */,
+				D9047C5016D4C42300C91CB5 /* AFNetworkActivityIndicatorManager.m in Sources */,
+				D9047C5116D4C42300C91CB5 /* AFPropertyListRequestOperation.m in Sources */,
+				D9047C5216D4C42300C91CB5 /* AFURLConnectionOperation.m in Sources */,
+				D9047C5316D4C42300C91CB5 /* AFXMLRequestOperation.m in Sources */,
+				D9047C5416D4C42300C91CB5 /* UIImageView+AFNetworking.m in Sources */,
+				D9047C5816D4C47000C91CB5 /* OTRPurchaseController.m in Sources */,
+				D9047C6116D4C4B300C91CB5 /* OTRPushAccessTableViewCell.m in Sources */,
+				D9047C6216D4C4B300C91CB5 /* OTRPushAccessViewController.m in Sources */,
+				D9047C6316D4C4B300C91CB5 /* OTRPushAPIClient.m in Sources */,
+				D9047C6416D4C4B300C91CB5 /* OTRPushController.m in Sources */,
+				D9047C6D16D4C62600C91CB5 /* OTRStoreTableViewCell.m in Sources */,
+				D9047C6E16D4C62600C91CB5 /* OTRStoreViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -69,7 +69,7 @@
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
     }
-    OTRBuddy *buddy = [buddies objectAtIndex:indexPath.row];
+    OTRManagedBuddy *buddy = [buddies objectAtIndex:indexPath.row];
     cell.textLabel.text = buddy.displayName;
     cell.detailTextLabel.text = [[OTRPushController sharedInstance] localPATForBuddy:buddy];
     

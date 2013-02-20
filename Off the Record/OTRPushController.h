@@ -23,7 +23,7 @@
 #import <Foundation/Foundation.h>
 #import <StoreKit/StoreKit.h>
 #import "OTRPushAPIClient.h"
-#import "OTRBuddy.h"
+#import "OTRManagedBuddy.h"
 
 @interface OTRPushController : NSObject
 
@@ -32,7 +32,7 @@
 
 - (void) registerWithReceipt:(NSData*)receipt resetAccount:(BOOL)resetAccount;
 - (void) updateDevicePushToken:(NSData*)devicePushToken;
-- (void) requestPushAccessTokenForBuddy:(OTRBuddy*)buddy;
+- (void) requestPushAccessTokenForBuddy:(OTRManagedBuddy*)buddy;
 - (void) knockWithAccountID:(NSString*)accountID pat:(NSString*)pat;
 - (void) refreshActivePats;
 
@@ -52,10 +52,10 @@
 - (void) setName:(NSString*)name forLocalPAT:(NSString*)localPAT;
 
 
-- (void) setLocalPAT:(NSString*)pat forBuddy:(OTRBuddy*)buddy;
-- (void) setRemotePAT:(NSString*)pat accountID:(NSString*)accountID forBuddy:(OTRBuddy*)buddy;
-- (NSString*) localPATForBuddy:(OTRBuddy*)buddy;
-- (NSString*) remotePATForBuddy:(OTRBuddy*)buddy;
-- (NSString*) accountIDForBuddy:(OTRBuddy*)buddy;
+- (void) setLocalPAT:(NSString*)pat forBuddy:(OTRManagedBuddy*)buddy;
+- (void) setRemotePAT:(NSString*)pat accountID:(NSString*)accountID forBuddy:(OTRManagedBuddy*)buddy;
+- (NSString*) localPATForBuddy:(OTRManagedBuddy*)buddy;
+- (NSString*) remotePATForBuddy:(OTRManagedBuddy*)buddy;
+- (NSString*) accountIDForBuddy:(OTRManagedBuddy*)buddy;
 
 @end

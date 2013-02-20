@@ -23,7 +23,7 @@
 #import "OTRPushController.h"
 #import "OTRPushAPIClient.h"
 #import "NSData+XMPP.h"
-#import "SFHFKeychainUtils.h"
+#import "SSKeychain.h"
 #import "OTRConstants.h"
 #import "OTRProtocolManager.h"
 
@@ -118,7 +118,7 @@
 
 - (NSString*) password {
     NSError *error = nil;
-    NSString *password = [SFHFKeychainUtils getPasswordForUsername:[self accountID] andServiceName:kOTRServiceName error:&error];
+    NSString *password = [SSKeychain passwordForService:kOTRServiceName account:[self accountID] error:&error];
     if (error) {
         NSLog(@"Error retreiving password from keychain: %@", [error userInfo]);
     }
@@ -127,7 +127,7 @@
 
 - (void) setPassword:(NSString *)password {
     NSError *error = nil;
-    [SFHFKeychainUtils storeUsername:[self accountID] andPassword:password forServiceName:kOTRServiceName updateExisting:YES error:&error];
+    [SSKeychain setPassword:password forService:kOTRServiceName account:[self accountID] error:&error];
     if (error) {
         NSLog(@"Error storing password in keychain: %@", [error userInfo]);
     }
@@ -170,7 +170,7 @@
             NSDictionary *usersDictionary = [accountsDictionary objectForKey:account];
             NSArray *usernames = [usersDictionary allKeys];
             for (NSString *username in usernames) {
-                OTRBuddy *buddy = [[OTRProtocolManager sharedInstance] buddyForUserName:username accountName:account protocol:protocol];
+                OTRManagedBuddy *buddy = [[OTRProtocolManager sharedInstance] buddyForUserName:username accountName:account protocol:protocol];
                 if (buddy) {
                     [buddyArray addObject:buddy];
                 }
@@ -226,7 +226,7 @@
     }];
 }
 
-- (NSMutableDictionary*) patDictionaryForBuddy:(OTRBuddy*)buddy {
+- (NSMutableDictionary*) patDictionaryForBuddy:(OTRManagedBuddy*)buddy {
     NSMutableDictionary *patsAccountDictionary = [self patAccountsDictionaryForBuddy:buddy];
     NSMutableDictionary *patsUserDictionary = [NSMutableDictionary dictionaryWithDictionary:[patsAccountDictionary objectForKey:buddy.accountName]];
     if (!patsUserDictionary) {
@@ -235,43 +235,43 @@
     return patsUserDictionary;
 }
 
-- (NSMutableDictionary*) patAccountsDictionaryForBuddy:(OTRBuddy*)buddy {
+- (NSMutableDictionary*) patAccountsDictionaryForBuddy:(OTRManagedBuddy*)buddy {
     NSMutableDictionary *patsProtocolDictionary = [self patsProtocolDictionaryForBuddy:buddy];
-    NSMutableDictionary *patsAccountDictionary = [NSMutableDictionary dictionaryWithDictionary:[patsProtocolDictionary objectForKey:buddy.protocol.account.username]];
+    NSMutableDictionary *patsAccountDictionary = [NSMutableDictionary dictionaryWithDictionary:[patsProtocolDictionary objectForKey:buddy.account.username]];
     if (!patsAccountDictionary) {
         patsAccountDictionary = [NSMutableDictionary dictionary];
     }
     return patsAccountDictionary;
 }
 
-- (NSMutableDictionary*) patsProtocolDictionaryForBuddy:(OTRBuddy*)buddy {
+- (NSMutableDictionary*) patsProtocolDictionaryForBuddy:(OTRManagedBuddy*)buddy {
     NSMutableDictionary *accountDictionary = [self accountDictionary];
     
     NSMutableDictionary *patsDictionary = [NSMutableDictionary dictionaryWithDictionary:[accountDictionary objectForKey:PATS_KEY]];
     if (!patsDictionary) {
         patsDictionary = [NSMutableDictionary dictionary];
     }
-    NSMutableDictionary *patsProtocolDictionary = [NSMutableDictionary dictionaryWithDictionary:[patsDictionary objectForKey:buddy.protocol.account.protocol]];
+    NSMutableDictionary *patsProtocolDictionary = [NSMutableDictionary dictionaryWithDictionary:[patsDictionary objectForKey:buddy.account.protocol]];
     if (!patsProtocolDictionary) {
         patsProtocolDictionary = [NSMutableDictionary dictionary];
     }
     return patsProtocolDictionary;
 }
 
-- (void) setPatDictionary:(NSMutableDictionary*)patDictionary forBuddy:(OTRBuddy*)buddy {
+- (void) setPatDictionary:(NSMutableDictionary*)patDictionary forBuddy:(OTRManagedBuddy*)buddy {
     NSMutableDictionary *accountDictionary = [self accountDictionary];
     NSMutableDictionary *patsDictionary = [NSMutableDictionary dictionaryWithDictionary:[accountDictionary objectForKey:PATS_KEY]];
     
     NSMutableDictionary *patsProtocolDictionary = [self patsProtocolDictionaryForBuddy:buddy];
     NSMutableDictionary *patsAccountDictionary = [self patAccountsDictionaryForBuddy:buddy];
     [patsAccountDictionary setObject:patDictionary forKey:buddy.accountName];
-    [patsProtocolDictionary setObject:patsAccountDictionary forKey:buddy.protocol.account.username];
-    [patsDictionary setObject:patsProtocolDictionary forKey:buddy.protocol.account.protocol];
+    [patsProtocolDictionary setObject:patsAccountDictionary forKey:buddy.account.username];
+    [patsDictionary setObject:patsProtocolDictionary forKey:buddy.account.protocol];
     [accountDictionary setObject:patsDictionary forKey:PATS_KEY];
     [self saveAccountDictionary:accountDictionary];
 }
 
-- (void) setLocalPAT:(NSString*)pat forBuddy:(OTRBuddy*)buddy {
+- (void) setLocalPAT:(NSString*)pat forBuddy:(OTRManagedBuddy*)buddy {
     NSMutableDictionary *patDictionary = [self patDictionaryForBuddy:buddy];
     
     if (pat) {
@@ -309,22 +309,22 @@
     [self saveAccountDictionary:accountDictionary];
 }
 
-- (NSString*) localPATForBuddy:(OTRBuddy*)buddy {
+- (NSString*) localPATForBuddy:(OTRManagedBuddy*)buddy {
     NSMutableDictionary *patDictionary = [self patDictionaryForBuddy:buddy];
     return [patDictionary objectForKey:LOCAL_PAT_KEY];
 }
 
-- (NSString*) remotePATForBuddy:(OTRBuddy*)buddy {
+- (NSString*) remotePATForBuddy:(OTRManagedBuddy*)buddy {
     NSMutableDictionary *patDictionary = [self patDictionaryForBuddy:buddy];
     return [patDictionary objectForKey:REMOTE_PAT_KEY];
 }
 
-- (NSString*) accountIDForBuddy:(OTRBuddy*)buddy {
+- (NSString*) accountIDForBuddy:(OTRManagedBuddy*)buddy {
     NSMutableDictionary *patDictionary = [self patDictionaryForBuddy:buddy];
     return [patDictionary objectForKey:ACCOUNT_ID_KEY];
 }
 
-- (void) setRemotePAT:(NSString*)pat accountID:(NSString*)accountID forBuddy:(OTRBuddy*)buddy {
+- (void) setRemotePAT:(NSString*)pat accountID:(NSString*)accountID forBuddy:(OTRManagedBuddy*)buddy {
     NSMutableDictionary *patDictionary = [self patDictionaryForBuddy:buddy];
     
     [patDictionary setObject:pat forKey:REMOTE_PAT_KEY];
@@ -333,7 +333,7 @@
     [self setPatDictionary:patDictionary forBuddy:buddy];
 }
 
-- (void) requestPushAccessTokenForBuddy:(OTRBuddy*)buddy {
+- (void) requestPushAccessTokenForBuddy:(OTRManagedBuddy*)buddy {
     if (![self checkSubscriptionStatus]) {
         return;
     }
