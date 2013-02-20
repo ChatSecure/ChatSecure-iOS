@@ -38,7 +38,7 @@
 
 @interface OTRSettingsViewController(Private)
 - (void) addAccount:(id)sender;
-- (void) showLoginControllerForAccount:(OTRAccount*)account;
+- (void) showLoginControllerForAccount:(OTRManagedAccount*)account;
 @end
 
 @implementation OTRSettingsViewController
@@ -142,7 +142,7 @@
             cell.imageView.image = [UIImage imageNamed:@"31-circle-plus.png"];
             cell.detailTextLabel.text = @"";
         } else {
-            OTRAccount *account = [[OTRProtocolManager sharedInstance].accountsManager.accountsArray objectAtIndex:indexPath.row];
+            OTRManagedAccount *account = [[OTRProtocolManager sharedInstance].accountsManager.accountsArray objectAtIndex:indexPath.row];
             cell.textLabel.text = account.username;
             if (account.isConnected) {
                 cell.detailTextLabel.text = CONNECTED_STRING;
@@ -201,7 +201,7 @@
         if (indexPath.row == [[OTRProtocolManager sharedInstance].accountsManager.accountsArray count]) {
             [self addAccount:nil];
         } else {
-            OTRAccount *account = [[OTRProtocolManager sharedInstance].accountsManager.accountsArray objectAtIndex:indexPath.row];
+            OTRManagedAccount *account = [[OTRProtocolManager sharedInstance].accountsManager.accountsArray objectAtIndex:indexPath.row];
             
             if (!account.isConnected) {
                 [self showLoginControllerForAccount:account];
@@ -231,7 +231,7 @@
     if (editingStyle == UITableViewCellEditingStyleDelete) 
     {
         OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
-        OTRAccount *account = [protocolManager.accountsManager.accountsArray objectAtIndex:indexPath.row];
+        OTRManagedAccount *account = [protocolManager.accountsManager.accountsArray objectAtIndex:indexPath.row];
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:DELETE_ACCOUNT_TITLE_STRING message:[NSString stringWithFormat:@"%@ %@?", DELETE_ACCOUNT_MESSAGE_STRING, account.username] delegate:self cancelButtonTitle:CANCEL_STRING otherButtonTitles:OK_STRING, nil];
         alert.tag = ALERTVIEW_DELETE_TAG;
         self.selectedIndexPath = indexPath;
@@ -240,7 +240,7 @@
     }
 }
 
-- (void) showLoginControllerForAccount:(OTRAccount*)account {
+- (void) showLoginControllerForAccount:(OTRManagedAccount*)account {
     OTRLoginViewController *loginViewController = [OTRLoginViewController loginViewControllerWithAcccount:account];
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:loginViewController];
     nav.modalPresentationStyle = UIModalPresentationFormSheet;

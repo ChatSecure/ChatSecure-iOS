@@ -58,12 +58,19 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    // DATABASE TESTS
+    [MagicalRecord setupCoreDataStackWithStoreNamed:@"db.sqlite"];
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
+    [context setRetainsRegisteredObjects:YES];
+    
+    //NSPersistentStoreCoordinator *storeCoordinator = [OTRDatabaseUtils persistentStoreCoordinatorWithDBName:@"db.sqlite" passphrase:@"test"];
+    
+    //[NSPersistentStoreCoordinator MR_setDefaultStoreCoordinator:storeCoordinator];
+    
 #ifdef CRITTERCISM_ENABLED
     if([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyCrittercismOptIn])
     {
-        [Crittercism initWithAppID:CRITTERCISM_APP_ID
-                            andKey:CRITTERCISM_KEY
-                         andSecret:CRITTERCISM_SECRET];
+        [Crittercism enableWithAppID:CRITTERCISM_APP_ID];
         [Crittercism setOptOutStatus:NO];
     } 
     else 
@@ -258,7 +265,7 @@ didReceiveRemoteNotification:(NSDictionary *)userInfo {
         return;
     }
     OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
-    OTRBuddy *buddy = [protocolManager buddyForUserName:userName accountName:accountName protocol:protocol];
+    OTRManagedBuddy *buddy = [protocolManager buddyForUserName:userName accountName:accountName protocol:protocol];
     [buddyListViewController enterConversationWithBuddy:buddy];
 }
 

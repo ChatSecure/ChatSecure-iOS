@@ -47,10 +47,9 @@
     [super viewDidLoad];
     
     self.deliveryReceiptSwitch = [[UISwitch alloc] init];
-    self.deliveryReceiptSwitch.on = [[self.account.accountDictionary objectForKey:kOTRXMPPAccountSendDeliveryReceiptsKey] boolValue];
-    
+    self.deliveryReceiptSwitch.on = self.account.sendDeliveryReceipts;
     self.typingNotificatoinSwitch = [[UISwitch alloc] init];
-    self.typingNotificatoinSwitch.on = [[self.account.accountDictionary objectForKey:kOTRXMPPAccountSendTypingNotificationsKey]boolValue];
+    self.typingNotificatoinSwitch.on = self.account.sendTypingNotifications;
     
     [self addCellinfoWithSection:1 row:0 labelText:SEND_DELIVERY_RECEIPT_STRING cellType:kCellTypeSwitch userInputView:self.deliveryReceiptSwitch];
     [self addCellinfoWithSection:1 row:1 labelText:SEND_TYPING_NOTIFICATION_STRING cellType:kCellTypeSwitch userInputView:self.typingNotificatoinSwitch];

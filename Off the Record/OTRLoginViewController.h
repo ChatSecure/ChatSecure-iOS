@@ -38,9 +38,9 @@
     UIView *padding;
 }
 
-- (id) initWithAccount:(OTRAccount*)newAccount;
+- (id) initWithAccount:(OTRManagedAccount*)newAccount;
 
-@property (nonatomic, retain) OTRAccount *account;
+@property (nonatomic, retain) OTRManagedAccount *account;
 
 @property (nonatomic, retain) UISwitch *rememberPasswordSwitch;
 @property (nonatomic, retain) UIImageView *logoView;
@@ -67,6 +67,6 @@
 -(void)addCellinfoWithSection:(NSInteger)section row:(NSInteger)row labelText:(id)text cellType:(NSString *)type userInputView:(UIView *)inputView;
 -(void)readInFields;
 
-+(OTRLoginViewController *)loginViewControllerWithAcccount:(OTRAccount *)account;
++(OTRLoginViewController *)loginViewControllerWithAcccount:(OTRManagedAccount *)account;
 
 @end

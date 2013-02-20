@@ -31,10 +31,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    NSString * accountDomainString = [[self.account accountDictionary] objectForKey:kOTRAccountDomainKey];
-    BOOL sslMismatchSwitchSatus = [[[self.account accountDictionary] objectForKey:kOTRXMPPAccountAllowSSLHostNameMismatch] boolValue];
-    BOOL selfSignedSwithStatus = [[[self.account accountDictionary] objectForKey:kOTRXMPPAccountAllowSelfSignedSSLKey] boolValue];
-	
+    NSString * accountDomainString = self.account.domain;
+    BOOL sslMismatchSwitchSatus = self.account.shouldAllowSSLHostNameMismatch;
+    BOOL selfSignedSwithStatus = self.account.shouldAllowSelfSignedSSL;
     self.usernameTextField.placeholder = @"user@example.com";
     self.usernameTextField.keyboardType = UIKeyboardTypeEmailAddress;
     
@@ -93,8 +92,8 @@
 {
     [super readInFields];
 
-    self.account.allowSelfSignedSSL = selfSignedSwitch.on;
-    self.account.allowSSLHostNameMismatch = sslMismatchSwitch.on;
+    self.account.shouldAllowSelfSignedSSL = selfSignedSwitch.on;
+    self.account.shouldAllowSSLHostNameMismatch = sslMismatchSwitch.on;
         
     NSString * domainText = [domainTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     self.account.domain = domainText;
@@ -105,7 +104,7 @@
         if (portNumber > 0 && portNumber <= 65535) {
             self.account.port = portNumber;
         } else {
-            self.account.port = [OTRXMPPAccount defaultPortNumber];
+            self.account.port = [OTRManagedXMPPAccount defaultPortNumber];
         }
     }
     
@@ -114,11 +113,11 @@
 -(void)loginButtonPressed:(id)sender
 {
     //If custom port set than a domain needs to be set to work with XMPPframework
-    if([self.portTextField.text length] || self.account.port != [OTRXMPPAccount defaultPortNumber])
+    if([self.portTextField.text length] || self.account.port != [OTRManagedXMPPAccount defaultPortNumber])
     {
         int portNumber = [self.portTextField.text intValue];
         NSString * domainText = [domainTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-        if (portNumber == [OTRXMPPAccount defaultPortNumber] || [domainText length])
+        if (portNumber == [OTRManagedXMPPAccount defaultPortNumber] || [domainText length])
         {
             [super loginButtonPressed:sender];
         }

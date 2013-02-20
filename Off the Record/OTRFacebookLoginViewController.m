@@ -90,7 +90,7 @@
     [super readInFields];
     NSString * usernameText = [self.usernameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     usernameText = [NSString stringWithFormat:@"%@@%@",usernameText,kOTRFacebookDomain];
-    self.account.username = usernameText;
+    [self.account setNewUsername:usernameText];
 }
 
 - (void)didReceiveMemoryWarning

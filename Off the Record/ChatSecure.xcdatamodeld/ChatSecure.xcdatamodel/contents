@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1811" systemVersion="12C60" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="OTRManagedAccount" representedClassName="OTRManagedAccount" syncable="YES">
+        <attribute name="isConnected" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="protocol" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="rememberPassword" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="uniqueIdentifier" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="username" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="buddies" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="OTRManagedBuddy" inverseName="account" inverseEntity="OTRManagedBuddy" syncable="YES"/>
+    </entity>
+    <entity name="OTRManagedBuddy" representedClassName="OTRManagedBuddy" syncable="YES">
+        <attribute name="accountName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="chatState" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="composingMessageString" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="displayName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="encryptionStatus" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="groupName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lastMessageDisconnected" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="lastSentChatState" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="status" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <relationship name="account" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="OTRManagedAccount" inverseName="buddies" inverseEntity="OTRManagedAccount" syncable="YES"/>
+        <relationship name="messages" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="OTRManagedMessage" inverseName="buddy" inverseEntity="OTRManagedMessage" syncable="YES"/>
+    </entity>
+    <entity name="OTRManagedMessage" representedClassName="OTRManagedMessage" syncable="YES">
+        <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="isEncrypted" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="isIncoming" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="message" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="buddy" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="OTRManagedBuddy" inverseName="messages" inverseEntity="OTRManagedBuddy" syncable="YES"/>
+    </entity>
+    <entity name="OTRManagedOscarAccount" representedClassName="OTRManagedOscarAccount" parentEntity="OTRManagedAccount" syncable="YES"/>
+    <entity name="OTRManagedXMPPAccount" representedClassName="OTRManagedXMPPAccount" parentEntity="OTRManagedAccount" syncable="YES">
+        <attribute name="allowSelfSignedSSL" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="allowSSLHostNameMismatch" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="domain" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="port" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="sendDeliveryReceipts" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="sendTypingNotifications" optional="YES" attributeType="Boolean" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="OTRManagedAccount" positionX="340" positionY="153" width="128" height="135"/>
+        <element name="OTRManagedBuddy" positionX="106" positionY="-0" width="128" height="208"/>
+        <element name="OTRManagedMessage" positionX="-99" positionY="111" width="128" height="120"/>
+        <element name="OTRManagedOscarAccount" positionX="529" positionY="72" width="128" height="45"/>
+        <element name="OTRManagedXMPPAccount" positionX="565" positionY="216" width="128" height="135"/>
+    </elements>
+</model>

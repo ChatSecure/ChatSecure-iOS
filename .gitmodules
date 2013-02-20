@@ -1,0 +1,30 @@
+[submodule "Submodules/XMPPFramework"]
+	path = Submodules/XMPPFramework
+	url = git://github.com/robbiehanson/XMPPFramework.git
+[submodule "Submodules/Appirater"]
+	path = Submodules/Appirater
+	url = git://github.com/arashpayan/appirater.git
+[submodule "Submodules/SSKeychain"]
+	path = Submodules/SSKeychain
+	url = git://github.com/soffes/sskeychain.git
+[submodule "Submodules/MBProgressHUD"]
+	path = Submodules/MBProgressHUD
+	url = git://github.com/jdg/MBProgressHUD.git
+[submodule "Submodules/MWFeedParser"]
+	path = Submodules/MWFeedParser
+	url = git://github.com/mwaterfall/MWFeedParser.git
+[submodule "Submodules/OTRKit"]
+	path = Submodules/OTRKit
+	url = git@github.com:ChatSecure/OTRKit.git
+[submodule "Submodules/Crittercism"]
+	path = Submodules/Crittercism
+	url = git@github.com:ChatSecure/Crittercism-SDK.git
+[submodule "Submodules/LibOrange"]
+	path = Submodules/LibOrange
+	url = git@github.com:ChatSecure/LibOrange.git
+[submodule "Submodules/encrypted-core-data"]
+	path = Submodules/encrypted-core-data
+	url = git@github.com:ChatSecure/encrypted-core-data.git
+[submodule "Submodules/MagicalRecord"]
+	path = Submodules/MagicalRecord
+	url = git@github.com:ChatSecure/MagicalRecord.git

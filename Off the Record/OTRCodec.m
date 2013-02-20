@@ -23,38 +23,38 @@
 #import "OTRCodec.h"
 #import "OTRBuddyListViewController.h"
 #import "OTRProtocolManager.h"
+#import "OTRManagedBuddy.h"
 
 @implementation OTRCodec
 
 
-+(OTRMessage*) decodeMessage:(OTRMessage*)theMessage;
++(void) decodeMessage:(OTRManagedMessage*)theMessage;
 {
-    
     NSString *message = theMessage.message;
     NSString *friendAccount = theMessage.buddy.accountName;
-    NSString *protocol = theMessage.buddy.protocol.account.protocol;
-    NSString *myAccountName = theMessage.buddy.protocol.account.username;
+    NSString *protocol = theMessage.buddy.account.protocol;
+    NSString *myAccountName = theMessage.buddy.account.username;
     
     NSString *decodedMessageString = [[OTRKit sharedInstance] decodeMessage:message recipient:friendAccount accountName:myAccountName protocol:protocol];
-    
-    OTRMessage *newOTRMessage = [OTRMessage messageWithBuddy:theMessage.buddy message:decodedMessageString];
+    theMessage.message = decodedMessageString;
+
     OTRKitMessageState messageState = [[OTRKit sharedInstance] messageStateForUsername:friendAccount accountName:myAccountName protocol:protocol];
-    theMessage.buddy.encryptionStatus = messageState;
-    
-    return newOTRMessage;
+    [theMessage.buddy setNewEncryptionStatus:messageState];
 }
 
 
-+(OTRMessage*) encodeMessage:(OTRMessage*)theMessage;
++(OTRManagedMessage*) encodeMessage:(OTRManagedMessage*)theMessage;
 {
     NSString *message = theMessage.message;
     NSString *recipientAccount = theMessage.buddy.accountName;
-    NSString *protocol = theMessage.buddy.protocol.account.protocol;
-    NSString *sendingAccount = theMessage.buddy.protocol.account.username;
+    NSString *protocol = theMessage.buddy.account.protocol;
+    NSString *sendingAccount = theMessage.buddy.account.username;
     
     NSString *encodedMessageString = [[OTRKit sharedInstance] encodeMessage:message recipient:recipientAccount accountName:sendingAccount protocol:protocol];
     
-    OTRMessage *newOTRMessage = [OTRMessage messageWithBuddy:theMessage.buddy message:encodedMessageString];
+    OTRManagedMessage *newOTRMessage = [OTRManagedMessage newMessageToBuddy:theMessage.buddy message:encodedMessageString];
+    newOTRMessage.date = theMessage.date;
+    newOTRMessage.isEncrypted = YES;
     
     return newOTRMessage;
 }

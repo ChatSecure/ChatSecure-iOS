@@ -32,11 +32,11 @@
 @property (nonatomic, retain) NSMutableArray *activeConversations;
 @property (nonatomic, retain) UITableView *buddyListTableView;
 @property (nonatomic, retain) OTRChatViewController *chatViewController;
-@property (nonatomic, retain) OTRBuddy *selectedBuddy;
+@property (nonatomic, retain) OTRManagedBuddy *selectedBuddy;
 
 @property (nonatomic, retain) OTRProtocolManager *protocolManager;
 
--(void)enterConversationWithBuddy:(OTRBuddy*)buddy;
+-(void)enterConversationWithBuddy:(OTRManagedBuddy*)buddy;
 -(void)buddyListUpdate;
 -(void)messageReceived:(NSNotification*)notification;
 

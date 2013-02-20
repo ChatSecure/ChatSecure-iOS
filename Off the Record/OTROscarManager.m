@@ -237,17 +237,18 @@ BOOL loginFailed;
 	//NSString * autoresp = [message isAutoresponse] ? @" (Auto-Response)" : @"";
 	//NSLog(@"(%@) %@%@: %@", [NSDate date], [[message buddy] username], autoresp, [message plainTextMessage]);
     
-    OTRBuddy * messageBuddy = [protocolBuddyList objectForKey:message.buddy.username];
+    OTRManagedBuddy * messageBuddy = [protocolBuddyList objectForKey:message.buddy.username];
     
-    OTRMessage *otrMessage = [OTRMessage messageWithBuddy:messageBuddy message:msgTxt];
+    OTRManagedMessage *otrMessage = [OTRManagedMessage newMessageFromBuddy:messageBuddy message:msgTxt];
+    otrMessage.isEncrypted = YES;
     
-    OTRMessage *decodedMessage = [OTRCodec decodeMessage:otrMessage];
+    [OTRCodec decodeMessage:otrMessage];
     
-    if(decodedMessage)
+    if(otrMessage)
     {
-        [messageBuddy receiveMessage:decodedMessage.message];
+        [messageBuddy receiveMessage:otrMessage.message];
 
-        NSDictionary *messageInfo = [NSDictionary dictionaryWithObject:decodedMessage forKey:@"message"];
+        NSDictionary *messageInfo = [NSDictionary dictionaryWithObject:otrMessage.objectID forKey:@"message"];
         
         [[NSNotificationCenter defaultCenter]
          postNotificationName:kOTRMessageReceived
@@ -528,7 +529,7 @@ BOOL loginFailed;
     return s_AIMSession;
 }*/
 
--(void)sendMessage:(OTRMessage *)theMessage
+-(void)sendMessage:(OTRManagedMessage *)theMessage
 {
     NSString *recipient = theMessage.buddy.accountName;
     NSString *message = theMessage.message;
@@ -566,16 +567,23 @@ BOOL loginFailed;
                     break;
             }
             
-            OTRBuddy *otrBuddy = [protocolBuddyList objectForKey:buddy.username];
+            OTRManagedBuddy *otrBuddy = [protocolBuddyList objectForKey:buddy.username];
             
             if(otrBuddy)
             {
-                otrBuddy.status = buddyStatus;
+                [otrBuddy setNewStatus:buddyStatus];
                 otrBuddy.groupName = group.name;
             }
             else
             {
-                otrBuddy = [OTRBuddy buddyWithDisplayName:buddy.username accountName:buddy.username protocol:self status:buddyStatus groupName:group.name];
+                otrBuddy = [OTRManagedBuddy MR_createEntity];
+                otrBuddy.displayName = buddy.username;
+                otrBuddy.accountName = buddy.username;
+                [otrBuddy setNewStatus:buddyStatus];
+                otrBuddy.groupName = group.name;
+                otrBuddy.account = self.account;
+                NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
+                [context MR_save];
                 [protocolBuddyList setObject:otrBuddy forKey:buddy.username];
             }
             [otrBuddyListSet addObject:otrBuddy];
@@ -584,7 +592,7 @@ BOOL loginFailed;
     return [otrBuddyListSet allObjects];
 }
 
-- (OTRBuddy *) getBuddyByAccountName:(NSString *)buddyAccountName
+- (OTRManagedBuddy *) getBuddyByAccountName:(NSString *)buddyAccountName
 {
     if (protocolBuddyList)
         return [protocolBuddyList objectForKey:buddyAccountName];

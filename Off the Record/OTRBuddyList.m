@@ -69,32 +69,32 @@
     [self.allBuddies removeAllObjects];
 }
 
--(void)removeBuddiesforAccount:(OTRAccount *)account{
+-(void)removeBuddiesforAccount:(OTRManagedAccount *)account{
     [self.allBuddies removeObjectForKey:account.uniqueIdentifier];
 }
 
--(void)addBuddy:(OTRBuddy*)newBuddy
+-(void)addBuddy:(OTRManagedBuddy*)newBuddy
 {
-    [[self.allBuddies objectForKey:newBuddy.protocol.account.uniqueIdentifier] setObject:newBuddy forKey:newBuddy.accountName];
+    [[self.allBuddies objectForKey:newBuddy.account.uniqueIdentifier] setObject:newBuddy forKey:newBuddy.accountName];
 }
 
 -(void) updateBuddies:(NSArray *)arrayOfBuddies
 {
-    for (OTRBuddy * buddy in arrayOfBuddies)
+    for (OTRManagedBuddy * buddy in arrayOfBuddies)
     {
-        if(![self.allBuddies objectForKey:buddy.protocol.account.uniqueIdentifier])
+        if(![self.allBuddies objectForKey:buddy.account.uniqueIdentifier])
         {
-            [self.allBuddies setObject:[NSMutableDictionary dictionaryWithCapacity:arrayOfBuddies.count] forKey:buddy.protocol.account.uniqueIdentifier];
+            [self.allBuddies setObject:[NSMutableDictionary dictionaryWithCapacity:arrayOfBuddies.count] forKey:buddy.account.uniqueIdentifier];
         }
-        OTRBuddy * existingBuddy = [[self.allBuddies objectForKey:buddy.protocol.account.uniqueIdentifier] objectForKey:buddy.accountName];
+        OTRManagedBuddy * existingBuddy = [[self.allBuddies objectForKey:buddy.account.uniqueIdentifier] objectForKey:buddy.accountName];
         if(!existingBuddy)
         {
-            [[self.allBuddies objectForKey:buddy.protocol.account.uniqueIdentifier] setObject:buddy forKey:buddy.accountName];
+            [[self.allBuddies objectForKey:buddy.account.uniqueIdentifier] setObject:buddy forKey:buddy.accountName];
         }
     }
 }
 
--(OTRBuddy *)getBuddyForUserName:(NSString *)buddyUserName accountUniqueIdentifier:(NSString *)uniqueIdentifier
+-(OTRManagedBuddy *)getBuddyForUserName:(NSString *)buddyUserName accountUniqueIdentifier:(NSString *)uniqueIdentifier
 {
     return [[allBuddies objectForKey:uniqueIdentifier] objectForKey:buddyUserName];
 }

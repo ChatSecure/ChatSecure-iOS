@@ -26,8 +26,8 @@
 #import "OTRConstants.h"
 #import "OTRLoginViewController.h"
 #import "QuartzCore/QuartzCore.h"
-#import "OTRXMPPAccount.h"
-#import "OTROscarAccount.h"
+#import "OTRManagedXMPPAccount.h"
+#import "OTRManagedOscarAccount.h"
 
 #define rowHeight 70
 
@@ -48,19 +48,27 @@
     tableView.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleHeight;
     [self.view addSubview:tableView];
     
-    //Facebook
-    OTRXMPPAccount * facebookAccount = [[OTRXMPPAccount alloc] initWithDomain:kOTRFacebookDomain];
+    //Faceboo
+    OTRManagedXMPPAccount * facebookAccount = [OTRManagedXMPPAccount MR_createEntity];
+    [facebookAccount setDefaultsWithDomain:kOTRFacebookDomain];
     
     //Google Chat
-    OTRXMPPAccount * googleAccount = [[OTRXMPPAccount alloc] initWithDomain:kOTRGoogleTalkDomain];
+    OTRManagedXMPPAccount * googleAccount = [OTRManagedXMPPAccount MR_createEntity];
+    [googleAccount setDefaultsWithDomain:kOTRGoogleTalkDomain];
     
     //Jabber
-    OTRXMPPAccount * jabberAccount = [[OTRXMPPAccount alloc] initWithDomain:@""];
+    OTRManagedXMPPAccount * jabberAccount = [OTRManagedXMPPAccount MR_createEntity];
+    [jabberAccount setDefaultsWithDomain:@""];
     
     //Aim
-    OTROscarAccount * aimAccount = [[OTROscarAccount alloc] init];
+    OTRManagedOscarAccount * aimAccount = [OTRManagedOscarAccount MR_createEntity];
+    [aimAccount setDefaultsWithProtocol:kOTRProtocolTypeAIM];
     
-    accounts = [NSArray arrayWithObjects:facebookAccount,googleAccount,jabberAccount,aimAccount, nil];
+    accounts = [NSMutableArray arrayWithObjects:facebookAccount,googleAccount,jabberAccount,aimAccount, nil];
+    
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
+    [context MR_save];
+    
     
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:CANCEL_STRING style:UIBarButtonItemStyleBordered target:self action:@selector(cancelPressed:)];
     
@@ -91,7 +99,7 @@
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
-    OTRAccount * cellAccount = [accounts objectAtIndex:indexPath.row];
+    OTRManagedAccount * cellAccount = [accounts objectAtIndex:indexPath.row];
     cell.textLabel.text = [cellAccount providerName];
     cell.textLabel.font = [UIFont boldSystemFontOfSize:19];
     cell.imageView.image = [UIImage imageNamed:cellAccount.imageName];
@@ -110,7 +118,15 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    OTRAccount * cellAccount = [accounts objectAtIndex:indexPath.row];
+    OTRManagedAccount * cellAccount = [accounts objectAtIndex:indexPath.row];
+    [accounts removeObject:cellAccount];
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
+
+    for (OTRManagedAccount *account in accounts) {
+        [context deleteObject:[context objectWithID:account.objectID]];
+    }
+    [context MR_save];
+    
     OTRLoginViewController *loginViewController = [OTRLoginViewController loginViewControllerWithAcccount:cellAccount];
     loginViewController.isNewAccount = YES;
     [self.navigationController pushViewController:loginViewController animated:YES];
