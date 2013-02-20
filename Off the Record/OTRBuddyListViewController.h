@@ -39,7 +39,6 @@
 @property (nonatomic, retain) OTRProtocolManager *protocolManager;
 
 -(void)enterConversationWithBuddy:(OTRManagedBuddy*)buddy;
--(void)buddyListUpdate;
 -(void)messageReceived:(NSNotification*)notification;
 
 @end

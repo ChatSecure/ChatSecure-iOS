@@ -98,11 +98,6 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
-    [[NSNotificationCenter defaultCenter]
-     addObserver:self
-     selector:@selector(buddyListUpdate)
-     name:kOTRBuddyListUpdate
-     object:nil ];
     
     [[NSNotificationCenter defaultCenter]
      addObserver:self
@@ -125,11 +120,6 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    //[self buddyListUpdate];
-    
-    [[NSNotificationCenter defaultCenter]
-     postNotificationName:kOTRBuddyListUpdate
-     object:self];
     
     buddyListTableView.frame = self.view.bounds;
     buddyListTableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleRightMargin;
@@ -168,21 +158,6 @@
 {
     [loginController dismissModalViewControllerAnimated:YES];
 }*/
-
--(void)buddyListUpdate
-{
-    NSLog(@"blist update tableview");
-    if(!protocolManager.buddyList)
-    {
-        NSLog(@"blist is nil!");
-        return;
-    }
-        
-    sortedBuddies = [OTRBuddyList sortBuddies:protocolManager.buddyList.allBuddies];
-    
-    [buddyListTableView reloadData];
-    [self selectActiveConversation];
-}
 
 -(void)messageReceived:(NSNotification*)notification;
 {

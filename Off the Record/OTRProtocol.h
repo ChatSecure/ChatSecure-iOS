@@ -28,7 +28,6 @@
 @property (nonatomic, strong) NSMutableDictionary * protocolBuddyList;
 
 - (void) sendMessage:(OTRManagedMessage*)message;
-- (NSArray*) buddyList;
 - (void) connectWithPassword:(NSString *)password;
 - (void) disconnect;
 - (BOOL) isConnected;

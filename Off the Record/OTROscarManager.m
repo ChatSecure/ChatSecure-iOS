@@ -69,6 +69,49 @@ BOOL loginFailed;
 	}
 }
 
+-(OTRBuddyStatus)convertAimStatus:(AIMBuddyStatus *)status
+{
+    OTRBuddyStatus buddyStatus;
+    
+    switch (status.statusType)
+    {
+        case AIMBuddyStatusAvailable:
+            buddyStatus = kOTRBuddyStatusAvailable;
+            break;
+        case AIMBuddyStatusAway:
+            buddyStatus = kOTRBuddyStatusAway;
+            break;
+        default:
+            buddyStatus = kOTRBuddyStatusOffline;
+            break;
+    }
+    
+    return buddyStatus;
+}
+
+-(void)updateManagedBuddyWith:(AIMBlistBuddy *)buddy
+{
+    OTRBuddyStatus buddyStatus = [self convertAimStatus:buddy.status];
+    
+    OTRManagedBuddy *otrBuddy = [OTRManagedBuddy fetchOrCreateWithName:buddy.username account:self.account];
+    
+    otrBuddy.displayName = buddy.username;
+    otrBuddy.statusMessage = buddy.status.statusMessage;
+    [otrBuddy setNewStatus:buddyStatus];
+    otrBuddy.groupName = buddy.group.name;
+    otrBuddy.account = self.account;
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    [context MR_saveToPersistentStoreAndWait];
+}
+
+-(void)updateMangedBuddyWith:(AIMBlistBuddy *)buddy withStatus:(AIMBuddyStatus *)status
+{
+    OTRBuddyStatus buddyStatus = [self convertAimStatus:status];
+    OTRManagedBuddy *otrBuddy = [OTRManagedBuddy fetchOrCreateWithName:buddy.username account:self.account];
+    [otrBuddy setNewStatus:buddyStatus];
+    otrBuddy.statusMessage = status.statusMessage;
+}
+
 
 #pragma mark Login Delegate
 
@@ -144,18 +187,20 @@ BOOL loginFailed;
     
     aimBuddyList = [theSession.session buddyList];
     
-    [[NSNotificationCenter defaultCenter]
-     postNotificationName:kOTRBuddyListUpdate
-     object:self];
+    for(AIMBlistGroup *group in aimBuddyList.groups)
+    {
+        for(AIMBlistBuddy *buddy in group.buddies)
+        {
+            [self updateManagedBuddyWith:buddy];
+        }
+    }
 }
 
 - (void)aimFeedbagHandler:(AIMFeedbagHandler *)sender buddyAdded:(AIMBlistBuddy *)newBuddy {
 	[self checkThreading];
 	//NSLog(@"Buddy added: %@", newBuddy);
+    [self updateManagedBuddyWith:newBuddy];
     
-    [[NSNotificationCenter defaultCenter]
-     postNotificationName:kOTRBuddyListUpdate
-     object:self];
 }
 
 - (void)aimFeedbagHandler:(AIMFeedbagHandler *)sender buddyDeleted:(AIMBlistBuddy *)oldBuddy {
@@ -170,10 +215,6 @@ BOOL loginFailed;
 - (void)aimFeedbagHandler:(AIMFeedbagHandler *)sender groupAdded:(AIMBlistGroup *)newGroup {
 	[self checkThreading];
 	//NSLog(@"Group added: %@", [newGroup name]);
-    
-    [[NSNotificationCenter defaultCenter]
-     postNotificationName:kOTRBuddyListUpdate
-     object:self];
 }
 
 - (void)aimFeedbagHandler:(AIMFeedbagHandler *)sender groupDeleted:(AIMBlistGroup *)oldGroup {
@@ -364,20 +405,13 @@ BOOL loginFailed;
 - (void)aimStatusHandler:(AIMStatusHandler *)handler buddy:(AIMBlistBuddy *)theBuddy statusChanged:(AIMBuddyStatus *)status {
 	[self checkThreading];
 	//NSLog(@"\"%@\"%s%@", theBuddy, ".status = ", status);
-    
-    [[NSNotificationCenter defaultCenter]
-     postNotificationName:kOTRBuddyListUpdate
-     object:self];
+    [self updateMangedBuddyWith:theBuddy withStatus:status];
     
 }
 
 - (void)aimStatusHandlerUserStatusUpdated:(AIMStatusHandler *)handler {
 	[self checkThreading];
 	//NSLog(@"user.status = %@", [handler userStatus]);
-    
-    [[NSNotificationCenter defaultCenter]
-     postNotificationName:kOTRBuddyListUpdate
-     object:self];
     
 }
 

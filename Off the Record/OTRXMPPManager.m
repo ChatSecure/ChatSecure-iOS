@@ -143,13 +143,6 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	return fetchedResultsController;
 }
 
-- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
-{
-    [[NSNotificationCenter defaultCenter]
-     postNotificationName:kOTRBuddyListUpdate
-     object:self];
-}
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark Core Data
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -457,8 +450,6 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	XMPPPresence *presence = [XMPPPresence presence]; // type="available" is implicit
 	
 	[[self xmppStream] sendElement:presence];
-    [[NSNotificationCenter defaultCenter]
-     postNotificationName:kOTRBuddyListUpdate object:nil];
 }
 
 - (void)goOffline

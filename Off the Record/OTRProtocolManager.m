@@ -43,7 +43,6 @@ static OTRProtocolManager *sharedManager = nil;
     self.protocolManagers = nil;
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kOTRSendMessage object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kOTRBuddyListUpdate object:nil];
 }
 
 -(id)init
@@ -63,11 +62,6 @@ static OTRProtocolManager *sharedManager = nil;
          name:kOTRSendMessage
          object:nil ];
         
-        [[NSNotificationCenter defaultCenter]
-         addObserver:self
-         selector:@selector(buddyListUpdate)
-         name:kOTRBuddyListUpdate
-         object:nil ];
     }
     return self;
 }
@@ -106,17 +100,6 @@ static OTRProtocolManager *sharedManager = nil;
         OTRManagedMessage *message = (OTRManagedMessage *)messageObject;
         [message send];
     }        
-}
-
-
--(void)buddyListUpdate
-{
-    //NSLog(@"Protocols: %@",[protocolManagers allKeys]);
-    for (id key in protocolManagers) {
-        [self.buddyList updateBuddies:  [[protocolManagers objectForKey:key] buddyList]];
-    }
-    
-    
 }
 
 -(OTRManagedBuddy *)buddyForUserName:(NSString *)buddyUserName accountName:(NSString *)accountName protocol:(NSString *)protocol
