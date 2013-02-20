@@ -143,6 +143,13 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	return fetchedResultsController;
 }
 
+- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
+{
+    [[NSNotificationCenter defaultCenter]
+     postNotificationName:kOTRBuddyListUpdate
+     object:self];
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark Core Data
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -450,6 +457,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	XMPPPresence *presence = [XMPPPresence presence]; // type="available" is implicit
 	
 	[[self xmppStream] sendElement:presence];
+    [self fetchedResultsController];
 }
 
 - (void)goOffline
@@ -875,66 +883,6 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 - (NSString*) accountName
 {
     return [JID full];
-    
-}
-- (NSArray*) buddyList
-{
-    NSFetchedResultsController *frc = [self fetchedResultsController];
-    NSArray *sections = [[self fetchedResultsController] sections];
-    int sectionsCount = [[[self fetchedResultsController] sections] count];
-    
-    for(int sectionIndex = 0; sectionIndex < sectionsCount; sectionIndex++)
-    {
-        id <NSFetchedResultsSectionInfo> sectionInfo = [sections objectAtIndex:sectionIndex];
-        NSString *sectionName;
-        OTRBuddyStatus otrBuddyStatus;
-        
-        int section = [sectionInfo.name intValue];
-        switch (section)
-        {
-            case 0  : 
-                sectionName = @"XMPP - Available";
-                otrBuddyStatus = kOTRBuddyStatusAvailable;
-                break;
-            case 1  : 
-                sectionName = @"XMPP - Away";
-                otrBuddyStatus = kOTRBuddyStatusAway;
-                break;
-            default : 
-                sectionName = @"XMPP - Offline";
-                otrBuddyStatus = kOTRBuddyStatusOffline;
-                break;
-        }
-        for(int j = 0; j < sectionInfo.numberOfObjects; j++)
-        {
-            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:j inSection:sectionIndex];
-            XMPPUserCoreDataStorageObject *user = [frc objectAtIndexPath:indexPath]; 
-            /*
-            OTRManagedBuddy *otrBuddy = [protocolBuddyList objectForKey:user.jidStr];
-            
-            
-            if(otrBuddy)
-            {
-                [otrBuddy setNewStatus:otrBuddyStatus];
-            }
-            else
-            {
-                
-                OTRManagedBuddy *newBuddy = [OTRManagedBuddy MR_createEntity];
-                newBuddy.displayName = user.displayName;
-                newBuddy.accountName = [[user jid] full];
-                newBuddy.account = self.account;
-                [otrBuddy setNewStatus:otrBuddyStatus];
-                newBuddy.groupName = sectionName;
-                NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
-                [context MR_saveToPersistentStoreAndWait];
-                [protocolBuddyList setObject:newBuddy forKey:user.jidStr];
-                 
-            }
-             */
-        }
-    }
-    return [protocolBuddyList allValues];
     
 }
 
