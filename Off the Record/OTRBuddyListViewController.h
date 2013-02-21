@@ -25,7 +25,7 @@
 
 @class OTRChatViewController;
 
-@interface OTRBuddyListViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate, NSFetchedResultsControllerDelegate>
+@interface OTRBuddyListViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate, NSFetchedResultsControllerDelegate, UISearchDisplayDelegate>
 
 @property (nonatomic, retain) NSMutableDictionary *buddyDictionary;
 @property (nonatomic, retain) NSMutableArray *activeConversations;
@@ -34,6 +34,9 @@
 @property (nonatomic, retain) OTRManagedBuddy *selectedBuddy;
 
 @property (nonatomic, strong) NSFetchedResultsController * buddyFetchedResultsController;
+@property (nonatomic, strong) NSFetchedResultsController * searchBuddyFetchedResultsController;
+
+@property (nonatomic, strong) UISearchDisplayController * searchDisplayController;
 
 @property (nonatomic, retain) OTRProtocolManager *protocolManager;
 

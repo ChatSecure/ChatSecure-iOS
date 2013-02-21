@@ -66,6 +66,8 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     
     //Delete all stored buddies
     //[OTRManagedBuddy MR_deleteAllMatchingPredicate:nil];
+    //Delete all stored messages
+    //[OTRManagedMessage MR_deleteAllMatchingPredicate:nil];
     
     //CONVERT LEGACY ACCOUNT DICTIONARIES
     OTRConvertAccount * accountConverter = [[OTRConvertAccount alloc] init];

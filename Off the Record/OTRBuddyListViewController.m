@@ -50,6 +50,7 @@
 @synthesize activeConversations;
 @synthesize buddyDictionary;
 @synthesize selectedBuddy;
+@synthesize searchDisplayController;
 
 - (void) dealloc {
     self.protocolManager = nil;
@@ -82,15 +83,6 @@
 
 #pragma mark - View lifecycle
 
-- (void) loadView {
-    [super loadView];
-    self.buddyListTableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
-    buddyListTableView.dataSource = self;
-    buddyListTableView.delegate = self;
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"14-gear.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(showSettingsView:)];
-    [self.view addSubview:buddyListTableView];
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -108,6 +100,26 @@
      selector:@selector(protocolLoggedOff:)
      name:kOTRProtocolLogout
      object:nil ];
+    
+    self.buddyListTableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    buddyListTableView.dataSource = self;
+    buddyListTableView.delegate = self;
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"14-gear.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(showSettingsView:)];
+    [self.view addSubview:buddyListTableView];
+    
+    UISearchBar * searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, self.buddyListTableView.frame.size.width, 44)];
+    //searchBar.delegate = self;
+    self.buddyListTableView.tableHeaderView = searchBar;
+    
+    searchDisplayController = [[UISearchDisplayController alloc] initWithSearchBar:searchBar contentsController:self];
+    
+    searchDisplayController.delegate = self;
+    searchDisplayController.searchResultsDataSource = self;
+    searchDisplayController.searchResultsDelegate = self;
+    
+    //[buddyListTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+    
+    self.buddyListTableView.contentOffset = CGPointMake(0, self.searchDisplayController.searchBar.frame.size.height);
 
     
     // uncomment to see a LOT of console output
@@ -182,27 +194,40 @@
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 2;
+    if ([tableView isEqual:self.buddyListTableView]) {
+        return 2;
+    }
+    return 1;
 }
 
 - (NSString*)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    if (section == RECENTS_SECTION_INDEX) {
-        return RECENT_STRING;
-    } else if (section == BUDDIES_SECTION_INDEX) {
-        return BUDDY_LIST_STRING;
+    if ([tableView isEqual:self.buddyListTableView]) {
+        if (section == RECENTS_SECTION_INDEX) {
+            return RECENT_STRING;
+        } else if (section == BUDDIES_SECTION_INDEX) {
+            return BUDDY_LIST_STRING;
+        }
     }
     return @"";
 }
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)sectionIndex {
-    if (sectionIndex == RECENTS_SECTION_INDEX) {
-        return [self.activeConversations count];
-    } else if (sectionIndex == BUDDIES_SECTION_INDEX) {
-        NSInteger numBuddies = [[self.buddyFetchedResultsController sections][0] numberOfObjects];
-        return numBuddies;
+    if ([tableView isEqual:self.buddyListTableView]) {
+        if (sectionIndex == RECENTS_SECTION_INDEX) {
+            return [self.activeConversations count];
+        } else if (sectionIndex == BUDDIES_SECTION_INDEX) {
+            NSInteger numBuddies = [[self.buddyFetchedResultsController sections][0] numberOfObjects];
+            return numBuddies;
+        }
+        return 0;
     }
-    return 0;
+    else if ([tableView isEqual:self.searchDisplayController.searchResultsTableView])
+    {
+        return [[self.searchBuddyFetchedResultsController sections][sectionIndex] numberOfObjects];
+    }
+    
+    
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -214,7 +239,10 @@
 	}
     OTRManagedBuddy *buddy = nil;
     
-    if (indexPath.section == RECENTS_SECTION_INDEX) {
+    if ([tableView isEqual:self.searchDisplayController.searchResultsTableView]) {
+        buddy = [self.searchBuddyFetchedResultsController objectAtIndexPath:indexPath];
+    }
+    else if (indexPath.section == RECENTS_SECTION_INDEX) {
         buddy = [activeConversations objectAtIndex:indexPath.row];
     } else if (indexPath.section == BUDDIES_SECTION_INDEX) {
         buddy = [self.buddyFetchedResultsController objectAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row inSection:0]];
@@ -379,6 +407,19 @@
     return _buddyFetchedResultsController;
 }
 
+-(NSFetchedResultsController *)searchBuddyFetchedResultsController
+{
+    if (_buddyFetchedResultsController)
+    {
+        return _buddyFetchedResultsController;
+    }
+    
+    _buddyFetchedResultsController = [OTRManagedBuddy MR_fetchAllGroupedBy:nil withPredicate:nil sortedBy:@"status" ascending:NO delegate:self];
+    
+    return _buddyFetchedResultsController;
+    
+}
+
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
     //[self.buddyListTableView beginUpdates];
 }
@@ -386,8 +427,15 @@
 - (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject
        atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
       newIndexPath:(NSIndexPath *)newIndexPath {
-    UITableView *tableView = self.buddyListTableView;
-    [self.buddyListTableView reloadData];
+    UITableView *tableView = nil;
+    if ([controller isEqual:self.buddyFetchedResultsController]) {
+        tableView = self.buddyListTableView;
+    }
+    else if([controller isEqual:self.searchBuddyFetchedResultsController])
+    {
+        tableView = self.searchDisplayController.searchResultsTableView;
+    }
+    [tableView reloadData];
     
     switch(type) {
         case NSFetchedResultsChangeInsert:
@@ -408,5 +456,33 @@
     //[self.buddyListTableView endUpdates];
 }
 
+- (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope
+{
+    NSFetchRequest * searchRequest = [[self searchBuddyFetchedResultsController] fetchRequest];
+    
+    NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"accountName contains[cd] %@ OR displayName contains[cd] %@",searchText ,searchText];
+    
+    [searchRequest setPredicate:buddyFilter];
+    
+    NSError *error = nil;
+    if (![[self searchBuddyFetchedResultsController] performFetch:&error]) {
+        // Handle error
+        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+        abort();
+    }
+}
+
+- (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
+{
+    if([searchString length])
+    {
+        [self filterContentForSearchText:searchString scope:nil];
+        return YES;
+    }
+}
+-(BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchScope:(NSInteger)searchOption
+{
+    return YES;
+}
 
 @end
