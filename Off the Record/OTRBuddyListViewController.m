@@ -303,13 +303,17 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section == RECENTS_SECTION_INDEX) {
-        OTRManagedBuddy *buddy = [activeConversations objectAtIndex:indexPath.row];
-        [self enterConversationWithBuddy:buddy];
-    } else if (indexPath.section == BUDDIES_SECTION_INDEX) {
+    if ([tableView isEqual:self.searchDisplayController.searchResultsTableView]) {
+        [self.searchDisplayController   setActive:NO];
+        OTRManagedBuddy * managedBuddy = [self.searchBuddyFetchedResultsController objectAtIndexPath:indexPath];
+        [self enterConversationWithBuddy:managedBuddy];
+    }
+    
+    if (indexPath.section == BUDDIES_SECTION_INDEX) {
             OTRManagedBuddy * managedBuddy = [self.buddyFetchedResultsController objectAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:0]];
             [self enterConversationWithBuddy:managedBuddy];
     }
+
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
     }
@@ -483,6 +487,13 @@
 -(BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchScope:(NSInteger)searchOption
 {
     return YES;
+}
+
+-(void)searchDisplayController:(UISearchDisplayController *)controller willHideSearchResultsTableView:(UITableView *)tableView
+{
+    self.searchBuddyFetchedResultsController.delegate = nil;
+    self.searchBuddyFetchedResultsController = nil;
+    self.buddyFetchedResultsController = nil;
 }
 
 @end
