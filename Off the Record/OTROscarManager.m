@@ -88,7 +88,7 @@ BOOL loginFailed;
     return buddyStatus;
 }
 
--(void)updateManagedBuddyWith:(AIMBlistBuddy *)buddy
+-(OTRManagedBuddy *)updateManagedBuddyWith:(AIMBlistBuddy *)buddy
 {
     OTRBuddyStatus buddyStatus = [self convertAimStatus:buddy.status];
     
@@ -101,12 +101,13 @@ BOOL loginFailed;
     otrBuddy.account = self.account;
     NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
     [context MR_saveToPersistentStoreAndWait];
+    return otrBuddy;
 }
 
 -(void)updateMangedBuddyWith:(AIMBlistBuddy *)buddy withStatus:(AIMBuddyStatus *)status
 {
     OTRBuddyStatus buddyStatus = [self convertAimStatus:status];
-    OTRManagedBuddy *otrBuddy = [OTRManagedBuddy fetchOrCreateWithName:buddy.username account:self.account];
+    OTRManagedBuddy *otrBuddy = [self updateManagedBuddyWith:buddy];
     [otrBuddy setNewStatus:buddyStatus];
     otrBuddy.statusMessage = status.statusMessage;
 }
