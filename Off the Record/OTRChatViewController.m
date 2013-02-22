@@ -60,6 +60,12 @@
 #define MESSAGE_TEXT_LABEL_TAG               102
 #define MESSAGE_DELIVERED_LABEL_TAG          103
 
+#ifdef UI_USER_INTERFACE_IDIOM
+    #define IS_IPAD() (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+#else
+    #define IS_IPAD() (false)
+#endif  
+
 
 @interface OTRChatViewController(Private)
 
@@ -227,25 +233,21 @@
     messageInputBar.userInteractionEnabled = YES; // makes subviews tappable
     messageInputBar.image = [[UIImage imageNamed:@"MessageInputBarBackground"] resizableImageWithCapInsets:UIEdgeInsetsMake(19, 3, 19, 3)]; // 8 x 40
     
-    // Create textView to compose messages.
-    // TODO: Shrink cursor height by 1 px on top & 1 px on bottom.
-    textView = [[ACPlaceholderTextView alloc] initWithFrame:CGRectMake(TEXT_VIEW_X, TEXT_VIEW_Y, TEXT_VIEW_WIDTH, TEXT_VIEW_HEIGHT_MIN)];
-    textView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    textView.delegate = self;
-    textView.backgroundColor = [UIColor colorWithWhite:245/255.0f alpha:1];
-    textView.scrollIndicatorInsets = UIEdgeInsetsMake(13, 0, 8, 6);
-    textView.scrollsToTop = NO;
-    textView.font = [UIFont systemFontOfSize:MessageFontSize];
-    textView.placeholder = MESSAGE_PLACEHOLDER_STRING;
-    [messageInputBar addSubview:textView];
+    
+    
     _previousTextViewContentHeight = MessageFontSize+20;
+    CGFloat textViewWidth = messageInputBar.frame.size.width-TEXT_VIEW_X-65;
     
     
     // Create messageInputBarBackgroundImageView as subview of messageInputBar.
     UIImageView *messageInputBarBackgroundImageView = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"MessageInputFieldBackground"] resizableImageWithCapInsets:UIEdgeInsetsMake(20, 12, 18, 18)]]; // 32 x 40
-    messageInputBarBackgroundImageView.frame = CGRectMake(TEXT_VIEW_X-2, 0, TEXT_VIEW_WIDTH+2, kChatBarHeight1);
+    messageInputBarBackgroundImageView.frame = CGRectMake(TEXT_VIEW_X-2, 0, textViewWidth+2, kChatBarHeight1);
     messageInputBarBackgroundImageView.autoresizingMask = self.chatHistoryTableView.autoresizingMask;
+    messageInputBarBackgroundImageView.backgroundColor = [UIColor colorWithWhite:245/255.0f alpha:1];
+    
     [messageInputBar addSubview:messageInputBarBackgroundImageView];
+    
+    
     
     // Create sendButton.
     self.sendButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -262,6 +264,22 @@
     [sendButton setTitleShadowColor:[UIColor colorWithRed:0.325f green:0.463f blue:0.675f alpha:1] forState:UIControlStateNormal];
     [sendButton addTarget:self action:@selector(sendButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [messageInputBar addSubview:sendButton];
+    
+    
+    
+    // Create textView to compose messages.
+    // TODO: Shrink cursor height by 1 px on top & 1 px on bottom.
+    textView = [[ACPlaceholderTextView alloc] initWithFrame:CGRectMake(TEXT_VIEW_X, TEXT_VIEW_Y, textViewWidth, TEXT_VIEW_HEIGHT_MIN)];
+    textView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
+    textView.delegate = self;
+    textView.backgroundColor = [UIColor clearColor]; //[UIColor colorWithWhite:245/255.0f alpha:1];
+    textView.scrollIndicatorInsets = UIEdgeInsetsMake(13, 0, 8, 6);
+    textView.scrollsToTop = NO;
+    textView.font = [UIFont systemFontOfSize:MessageFontSize];
+    textView.autocorrectionType =
+    textView.placeholder = MESSAGE_PLACEHOLDER_STRING;
+    
+    [messageInputBar addSubview:textView];
     
     [self.view addSubview:messageInputBar];
     
