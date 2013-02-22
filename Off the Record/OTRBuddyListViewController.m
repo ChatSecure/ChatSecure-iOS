@@ -195,7 +195,7 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     if ([tableView isEqual:self.buddyListTableView]) {
-        return 2;
+        return [[self.buddyFetchedResultsController sections] count]+1;
     }
     return 1;
 }
@@ -217,7 +217,7 @@
         if (sectionIndex == RECENTS_SECTION_INDEX) {
             return [self.activeConversations count];
         } else if (sectionIndex == BUDDIES_SECTION_INDEX) {
-            NSInteger numBuddies = [[self.buddyFetchedResultsController sections][0] numberOfObjects];
+            NSInteger numBuddies = [[self.buddyFetchedResultsController sections][sectionIndex-1] numberOfObjects];
             return numBuddies;
         }
         return 0;
@@ -245,7 +245,7 @@
     else if (indexPath.section == RECENTS_SECTION_INDEX) {
         buddy = [activeConversations objectAtIndex:indexPath.row];
     } else if (indexPath.section == BUDDIES_SECTION_INDEX) {
-        buddy = [self.buddyFetchedResultsController objectAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row inSection:0]];
+        buddy = [self.buddyFetchedResultsController objectAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row inSection:indexPath.section-1]];
     }
     
     [self configureCell:cell withBuddy:buddy];
@@ -271,7 +271,7 @@
     }
     
     if (indexPath.section == BUDDIES_SECTION_INDEX) {
-            OTRManagedBuddy * managedBuddy = [self.buddyFetchedResultsController objectAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:0]];
+            OTRManagedBuddy * managedBuddy = [self.buddyFetchedResultsController objectAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section-1]];
             [self enterConversationWithBuddy:managedBuddy];
     }
 
@@ -386,7 +386,7 @@
 }
 
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
-    /*
+    
     UITableView * tableView = nil;
     
     if ([controller isEqual:self.buddyFetchedResultsController]) {
@@ -398,7 +398,7 @@
     }
     
     [tableView beginUpdates];
-    */
+    
 }
 
 - (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject
@@ -437,8 +437,8 @@
         case NSFetchedResultsChangeMove:
             //[tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
             //[tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [self configureCell:[tableView cellForRowAtIndexPath:modifiedIndexPath] withBuddy:buddy];
             [tableView moveRowAtIndexPath:modifiedIndexPath toIndexPath:modifiedNewIndexPath];
-            [self configureCell:[tableView cellForRowAtIndexPath:modifiedNewIndexPath] withBuddy:buddy];
             break;
     }
     
