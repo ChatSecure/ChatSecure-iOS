@@ -77,6 +77,7 @@
 @synthesize instructionsLabel;
 @synthesize chatHistoryTableView;
 @synthesize textView;
+@synthesize swipeGestureRecognizer;
 
 - (void) dealloc {
     self.lastActionLink = nil;
@@ -286,6 +287,9 @@
         chatHistoryTableView.contentInset = chatHistoryTableView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, self.view.frame.size.height-keyboardFrameInView.origin.y, 0);
     }];
     
+    swipeGestureRecognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(handleSwipeFrom)];
+    [self.view addGestureRecognizer:swipeGestureRecognizer];
+    
 
     //messageTextField.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
     //sendButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
@@ -302,6 +306,13 @@
     //turn off scrolling and set the font details.
     //chatBox.scrollEnabled = NO;
     //chatBox.font = [UIFont fontWithName:@"Helvetica" size:14];
+}
+
+-(void)handleSwipeFrom
+{
+    if (swipeGestureRecognizer.direction == UISwipeGestureRecognizerDirectionRight && UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad) {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
 }
 
 -(void)moveMessageBarBottom
