@@ -101,7 +101,6 @@
 {
     [super viewWillAppear:animated];
     self.settingsTableView.frame = self.view.bounds;
-    [self refreshAccounts];
     [settingsTableView reloadData];
 }
 
@@ -121,7 +120,7 @@
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section == 0 && indexPath.row != [accounts count])
+    if (indexPath.section == 0 && indexPath.row != [self.accountsFetchedResultsController.sections[0] numberOfObjects])
     {
         return UITableViewCellEditingStyleDelete;
     }
@@ -140,25 +139,12 @@
         {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:accountCellIdentifier];
         }
-        if (indexPath.row == [accounts count]) {
+        if (indexPath.row == [self.accountsFetchedResultsController.sections[0] numberOfObjects]) {
             cell.textLabel.text = NEW_ACCOUNT_STRING;
             cell.imageView.image = [UIImage imageNamed:@"31-circle-plus.png"];
             cell.detailTextLabel.text = @"";
         } else {
-            OTRManagedAccount *account = [accounts objectAtIndex:indexPath.row];
-            cell.textLabel.text = account.username;
-            if (account.isConnectedValue) {
-                cell.detailTextLabel.text = CONNECTED_STRING;
-            } else {
-                cell.detailTextLabel.text = nil;
-            }
-            cell.imageView.image = [UIImage imageNamed:account.imageName];
-            
-            if( [[account providerName] isEqualToString:FACEBOOK_STRING])
-            {
-                cell.imageView.layer.masksToBounds = YES;
-                cell.imageView.layer.cornerRadius = 10.0;
-            }
+            [self configureCell:cell atIndexPath:indexPath];
         }
         return cell;
     }
@@ -183,7 +169,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)sectionIndex
 {
     if (sectionIndex == 0) {
-        return [accounts count]+1;
+        return [self.accountsFetchedResultsController.sections[0] numberOfObjects]+1;
     }
     return [self.settingsManager numberOfSettingsInSection:sectionIndex];
 }
@@ -201,10 +187,10 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section == 0) { // Accounts
-        if (indexPath.row == [accounts count]) {
+        if (indexPath.row == [self.accountsFetchedResultsController.sections[0] numberOfObjects]) {
             [self addAccount:nil];
         } else {
-            OTRManagedAccount *account = [accounts objectAtIndex:indexPath.row];
+            OTRManagedAccount *account = [self.accountsFetchedResultsController objectAtIndexPath:indexPath];
             
             if (!account.isConnectedValue) {
                 [self showLoginControllerForAccount:account];
@@ -233,7 +219,7 @@
     }
     if (editingStyle == UITableViewCellEditingStyleDelete) 
     {
-        OTRManagedAccount *account = [accounts objectAtIndex:indexPath.row];
+        OTRManagedAccount *account = [self.accountsFetchedResultsController objectAtIndexPath:indexPath];
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:DELETE_ACCOUNT_TITLE_STRING message:[NSString stringWithFormat:@"%@ %@?", DELETE_ACCOUNT_MESSAGE_STRING, account.username] delegate:self cancelButtonTitle:CANCEL_STRING otherButtonTitles:OK_STRING, nil];
         alert.tag = ALERTVIEW_DELETE_TAG;
         self.selectedIndexPath = indexPath;
@@ -341,10 +327,10 @@
             }
             OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
             [protocolManager.accountsManager removeAccount:selectedAccount];
-            [self refreshAccounts];
+            //[self refreshAccounts];
             //[accounts removeObjectAtIndex:selectedIndexPath.row];
             
-            [settingsTableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:selectedIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            //[settingsTableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:selectedIndexPath] withRowAnimation:UITableViewRowAnimationFade];
             
         }
         self.selectedIndexPath = nil;
@@ -353,9 +339,68 @@
 
 }
 
--(void)refreshAccounts
+-(NSFetchedResultsController *)accountsFetchedResultsController
 {
-    accounts = [[[OTRProtocolManager sharedInstance].accountsManager allAccounts] mutableCopy];
+    if (_accountsFetchedResultsController) {
+        return _accountsFetchedResultsController;
+    }
+    
+    _accountsFetchedResultsController = [OTRManagedAccount MR_fetchAllSortedBy:@"username" ascending:YES withPredicate:nil groupBy:nil delegate:self];
+    
+    return _accountsFetchedResultsController;
+}
+
+- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller
+{
+    [self.settingsTableView beginUpdates];
+}
+
+- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject
+       atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
+      newIndexPath:(NSIndexPath *)newIndexPath {
+    
+    UITableView* tableView = self.settingsTableView;
+    
+    switch (type) {
+        case NSFetchedResultsChangeInsert:
+            [tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+        case NSFetchedResultsChangeDelete:
+            [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+            
+        case NSFetchedResultsChangeUpdate:
+            [self configureCell:[tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
+            break;
+            
+        case NSFetchedResultsChangeMove:
+            [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+    }
+}
+
+- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
+{
+    [self.settingsTableView endUpdates];
+}
+
+-(void) configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
+{
+    OTRManagedAccount *account = [self.accountsFetchedResultsController objectAtIndexPath:indexPath];
+    cell.textLabel.text = account.username;
+    if (account.isConnectedValue) {
+        cell.detailTextLabel.text = CONNECTED_STRING;
+    } else {
+        cell.detailTextLabel.text = nil;
+    }
+    cell.imageView.image = [UIImage imageNamed:account.imageName];
+    
+    if( [[account providerName] isEqualToString:FACEBOOK_STRING])
+    {
+        cell.imageView.layer.masksToBounds = YES;
+        cell.imageView.layer.cornerRadius = 10.0;
+    }
 }
 
 @end

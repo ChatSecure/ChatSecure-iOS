@@ -50,6 +50,10 @@
 
 -(void)setAllBuddiesStuts:(OTRBuddyStatus)status;
 
+
+//Goes through all accounts checks if it's connected againgst ProtocolManager and adjusts buddy status
++(void)resetAccountsConnectionStatus;
+
 @end
 
 @interface OTRManagedAccount (CoreDataGeneratedAccessors)

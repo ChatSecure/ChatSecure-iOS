@@ -53,7 +53,6 @@
 
 - (void)sendButtonPressed:(id)sender;
 
-- (void)updateChatHistory;
 - (void)setupLockButton;
 - (void)refreshLockButton;
 - (void)lockButtonPressed;

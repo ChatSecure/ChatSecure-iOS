@@ -167,6 +167,7 @@ BOOL loginFailed;
 
 - (void)aimSessionManagerSignedOff:(AIMSessionManager *)sender {
     [self.account setAllBuddiesStuts:kOTRBuddyStatusOffline];
+    self.account.isConnectedValue = NO;
     [[NSNotificationCenter defaultCenter] postNotificationName:kOTRProtocolLogout object:nil userInfo:@{kOTRProtocolLogoutUserInfoKey: self.account.uniqueIdentifier}];
     
 	[self checkThreading];

@@ -553,6 +553,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
     
     [self.account setAllBuddiesStuts:kOTRBuddyStatusOffline];
+    self.account.isConnectedValue = NO;
     
     [[NSNotificationCenter defaultCenter]
      postNotificationName:kOTRProtocolLogout

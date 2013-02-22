@@ -26,17 +26,13 @@
 #import <MessageUI/MessageUI.h>
 #import "OTRLoginViewController.h"
 
-@interface OTRSettingsViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, OTRSettingDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate>
-{
-    NSMutableArray * accounts;
-}
+@interface OTRSettingsViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, OTRSettingDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate, NSFetchedResultsControllerDelegate>
 
 @property (nonatomic, retain) UITableView *settingsTableView;
 @property (nonatomic, retain) OTRSettingsManager *settingsManager;
 @property (nonatomic, retain) OTRLoginViewController *loginController;
 @property (nonatomic, retain) OTRManagedAccount *selectedAccount;
 @property (nonatomic, retain) NSIndexPath *selectedIndexPath;
-
--(void)refreshAccounts;
+@property (nonatomic, retain) NSFetchedResultsController * accountsFetchedResultsController;
 
 @end

@@ -101,7 +101,7 @@
         OTRMessage *encodedMessage;
         if(secure)
         {
-            encodedMessage = [OTRCodec encodeMessage:newMessage];
+            //encodedMessage = [OTRCodec encodeMessage:newMessage];
         }
         else
         {

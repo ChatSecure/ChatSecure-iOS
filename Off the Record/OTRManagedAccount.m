@@ -133,6 +133,8 @@
 
 -(NSNumber *)isConnected
 {
+    
+    
     return [NSNumber numberWithBool:[[OTRProtocolManager sharedInstance] isAccountConnected:self]];
 }
 
@@ -140,6 +142,22 @@
 {
     [self.buddies setValue:[NSNumber numberWithInt:status] forKey:@"status"];
     [self save];
+}
+
++(void)resetAccountsConnectionStatus
+{
+    NSArray * allAccountsArray = [OTRManagedAccount MR_findAll];
+    
+    for (OTRManagedAccount * managedAccount in allAccountsArray)
+    {
+        managedAccount.isConnectedValue = [[OTRProtocolManager sharedInstance] isAccountConnected:managedAccount];
+        if (!managedAccount.isConnectedValue) {
+            [managedAccount setAllBuddiesStuts:kOTRBuddyStatusOffline];
+        }
+        
+    }
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    [context MR_saveToPersistentStoreAndWait];
     
 }
 

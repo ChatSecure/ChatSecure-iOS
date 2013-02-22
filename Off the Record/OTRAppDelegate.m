@@ -64,10 +64,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     
     //[NSPersistentStoreCoordinator MR_setDefaultStoreCoordinator:storeCoordinator];
     
-    //Delete all stored buddies
-    //[OTRManagedBuddy MR_deleteAllMatchingPredicate:nil];
-    //Delete all stored messages
-    //[OTRManagedMessage MR_deleteAllMatchingPredicate:nil];
+    
     
     //CONVERT LEGACY ACCOUNT DICTIONARIES
     OTRConvertAccount * accountConverter = [[OTRConvertAccount alloc] init];
@@ -116,7 +113,12 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
   
     [Appirater appLaunched:YES];
     
+    //Delete all stored buddies
+    //[OTRManagedBuddy MR_deleteAllMatchingPredicate:nil];
+    //Delete all stored messages
+    //[OTRManagedMessage MR_deleteAllMatchingPredicate:nil];
     
+    [OTRManagedAccount resetAccountsConnectionStatus];
     
     return YES;
 }
