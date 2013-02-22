@@ -60,9 +60,6 @@
 #define MESSAGE_TEXT_LABEL_TAG               102
 #define MESSAGE_DELIVERED_LABEL_TAG          103
 
-#define MESSAGE_TEXT_SIZE_WITH_FONT(message, font) \
-[message sizeWithFont:font constrainedToSize:CGSizeMake(MESSAGE_TEXT_WIDTH_MAX, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap]
-
 
 @interface OTRChatViewController(Private)
 
@@ -710,7 +707,7 @@
                 _previousShownSentDate = message.date;
                 messageSentDateLabelHeight = MESSAGE_SENT_DATE_LABEL_HEIGHT;
             }
-            CGSize messageTextLabelSize = MESSAGE_TEXT_SIZE_WITH_FONT(message.message, [UIFont systemFontOfSize:MessageFontSize]);
+            CGSize messageTextLabelSize = [OTRMessageTableViewCell messageTextLabelSize:message.message];
             messageTextLabelHeight = messageTextLabelSize.height;
             
             
@@ -725,7 +722,7 @@
     else {
         
         //Composing messsage height
-        CGSize messageTextLabelSize =  MESSAGE_TEXT_SIZE_WITH_FONT(@"t", [UIFont systemFontOfSize:MessageFontSize]);
+        CGSize messageTextLabelSize =[OTRMessageTableViewCell messageTextLabelSize:@"T"];
         return messageTextLabelSize.height+MESSAGE_MARGIN_TOP+MESSAGE_MARGIN_BOTTOM;
     }
     

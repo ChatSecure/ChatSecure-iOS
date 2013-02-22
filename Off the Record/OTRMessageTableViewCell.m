@@ -83,14 +83,7 @@
         [self.contentView addSubview:messageBackgroundImageView];
         
         // Create messageTextLabel.
-        messageTextLabel = [[TTTAttributedLabel alloc] initWithFrame:CGRectZero];
-        messageTextLabel.tag = MESSAGE_TEXT_LABEL_TAG;
-        messageTextLabel.backgroundColor = [UIColor clearColor];
-        messageTextLabel.numberOfLines = 0;
-        messageTextLabel.dataDetectorTypes = UIDataDetectorTypeLink;
-        messageTextLabel.lineBreakMode = UILineBreakModeWordWrap;
-        messageTextLabel.font = [UIFont systemFontOfSize:MessageFontSize];
-        messageTextLabel.delegate = self;
+        messageTextLabel = [OTRMessageTableViewCell defaultLabel];
         [self.contentView addSubview:messageTextLabel];
         
         //Create MessageDeliveredImageView
@@ -121,8 +114,6 @@
     message = newMessage;
     CGFloat width = self.contentView.frame.size.width;
     
-    CGSize messageTextLabelSize = [OTRMessageTableViewCell messageTextLabelSize:message];
-    
     CGFloat messageSentDateLabelHeight = 0;
     
     if (showDate) {
@@ -138,6 +129,7 @@
     }
     
     messageTextLabel.text = message.message;
+    CGSize messageTextLabelSize = [messageTextLabel sizeThatFits:CGSizeMake(MESSAGE_TEXT_WIDTH_MAX, CGFLOAT_MAX)];
     
     if (!message.isIncomingValue) { // right message
         UIImage * _messageBubbleBlue = [[UIImage imageNamed:kOTRRightImageName]stretchableImageWithLeftCapWidth:15 topCapHeight:13];
@@ -170,9 +162,25 @@
     
 }
 
-+(CGSize)messageTextLabelSize:(OTRManagedMessage *)message
++(CGSize)messageTextLabelSize:(NSString *)message
 {
-    return [message.message sizeWithFont:[UIFont systemFontOfSize:MessageFontSize] constrainedToSize:CGSizeMake(MESSAGE_TEXT_WIDTH_MAX, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+    TTTAttributedLabel * label = [OTRMessageTableViewCell defaultLabel];
+    label.text = message;
+    return  [label sizeThatFits:CGSizeMake(MESSAGE_TEXT_WIDTH_MAX, CGFLOAT_MAX)];
+}
+
+
++(TTTAttributedLabel *)defaultLabel
+{
+    TTTAttributedLabel * messageTextLabel = [[TTTAttributedLabel alloc] initWithFrame:CGRectZero];
+    messageTextLabel.tag = MESSAGE_TEXT_LABEL_TAG;
+    messageTextLabel.backgroundColor = [UIColor clearColor];
+    messageTextLabel.numberOfLines = 0;
+    messageTextLabel.dataDetectorTypes = UIDataDetectorTypeLink;
+    messageTextLabel.lineBreakMode = UILineBreakModeWordWrap;
+    messageTextLabel.font = [UIFont systemFontOfSize:MessageFontSize];
+    
+    return messageTextLabel;
     
 }
 

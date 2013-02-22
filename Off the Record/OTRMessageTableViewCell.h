@@ -25,6 +25,6 @@
 
 -(void)showDeliveredAnimated:(BOOL)animated;
 
-+(CGSize)messageTextLabelSize:(OTRManagedMessage *)message;
++(CGSize)messageTextLabelSize:(NSString *)message;
 
 @end
