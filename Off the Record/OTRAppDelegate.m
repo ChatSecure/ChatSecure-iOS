@@ -85,6 +85,15 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     }
 #endif
     
+    //Delete all stored buddies
+    //[OTRManagedBuddy MR_deleteAllMatchingPredicate:nil];
+    //Delete all stored messages
+    //[OTRManagedMessage MR_deleteAllMatchingPredicate:nil];
+    
+    //NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    //[context MR_saveToPersistentStoreAndWait];
+    
+    [OTRManagedAccount resetAccountsConnectionStatus];
 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
@@ -113,12 +122,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
   
     [Appirater appLaunched:YES];
     
-    //Delete all stored buddies
-    //[OTRManagedBuddy MR_deleteAllMatchingPredicate:nil];
-    //Delete all stored messages
-    //[OTRManagedMessage MR_deleteAllMatchingPredicate:nil];
     
-    [OTRManagedAccount resetAccountsConnectionStatus];
     
     return YES;
 }

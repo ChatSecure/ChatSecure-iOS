@@ -211,7 +211,7 @@
         //[chatHistory appendFormat:@"<p><strong style=\"color:blue\"> You </strong> Disconnected </p>"];
         [[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];
         self.lastMessageDisconnectedValue = YES;
-        self.status = kOTRBuddyStatusOffline;
+        self.statusValue = kOTRBuddyStatusOffline;
     }
 }
 

@@ -247,48 +247,9 @@
     } else if (indexPath.section == BUDDIES_SECTION_INDEX) {
         buddy = [self.buddyFetchedResultsController objectAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row inSection:0]];
     }
-            
-    NSString *buddyUsername = buddy.displayName;
-    OTRBuddyStatus buddyStatus = buddy.statusValue;
     
-    cell.textLabel.text = buddyUsername;
+    [self configureCell:cell withBuddy:buddy];
     
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    cell.detailTextLabel.textColor = [UIColor lightGrayColor];
-    cell.detailTextLabel.text = [buddy currentStatusMessage];
-    
-    switch(buddyStatus)
-    {
-        case kOTRBuddyStatusOffline:
-            cell.textLabel.textColor = [UIColor lightGrayColor];
-            //cell.detailTextLabel.text = OFFLINE_STRING;
-            cell.imageView.image = [UIImage imageNamed:@"offline.png"];
-            break;
-        case kOTRBuddyStatusAway:
-            cell.textLabel.textColor = [UIColor darkGrayColor];
-            //cell.detailTextLabel.text = AWAY_STRING;
-            cell.imageView.image = [UIImage imageNamed:@"idle.png"];
-            break;
-        case kOTRBuddyStatusXa:
-            cell.textLabel.textColor = [UIColor darkGrayColor];
-            //cell.detailTextLabel.text = @"Extended Away";
-            cell.imageView.image = [UIImage imageNamed:@"away.png"];
-            break;
-        case kOTRBUddyStatusDnd:
-            cell.textLabel.textColor = [UIColor darkGrayColor];
-            //cell.detailTextLabel.text = @"Do Not Disturb";
-            cell.imageView.image = [UIImage imageNamed:@"away.png"];
-            break;
-        case kOTRBuddyStatusAvailable:
-            cell.textLabel.textColor = [UIColor darkTextColor];
-            //cell.detailTextLabel.text = AVAILABLE_STRING;
-            cell.imageView.image = [UIImage imageNamed:@"available.png"];
-            break;
-        default:
-            cell.textLabel.textColor = [UIColor lightGrayColor];
-            //cell.detailTextLabel.text = OFFLINE_STRING;
-            cell.imageView.image = [UIImage imageNamed:@"offline.png"];
-    }
     return cell;
 }
 
@@ -406,32 +367,28 @@
         return _buddyFetchedResultsController;
     }
     
-    _buddyFetchedResultsController = [OTRManagedBuddy MR_fetchAllGroupedBy:nil withPredicate:nil sortedBy:@"status" ascending:NO delegate:self];
+    _buddyFetchedResultsController = [OTRManagedBuddy MR_fetchAllGroupedBy:nil withPredicate:nil sortedBy:@"status,displayName" ascending:YES delegate:self];
     
     return _buddyFetchedResultsController;
 }
 
 -(NSFetchedResultsController *)searchBuddyFetchedResultsController
 {
-    if (_buddyFetchedResultsController)
+    if (_searchBuddyFetchedResultsController)
     {
-        return _buddyFetchedResultsController;
+        return _searchBuddyFetchedResultsController;
     }
     
-    _buddyFetchedResultsController = [OTRManagedBuddy MR_fetchAllGroupedBy:nil withPredicate:nil sortedBy:@"status" ascending:NO delegate:self];
+    _searchBuddyFetchedResultsController = [OTRManagedBuddy MR_fetchAllGroupedBy:nil withPredicate:nil sortedBy:@"status,displayName" ascending:YES delegate:self];
     
-    return _buddyFetchedResultsController;
+    return _searchBuddyFetchedResultsController;
     
 }
 
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
-    //[self.buddyListTableView beginUpdates];
-}
-
-- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject
-       atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
-      newIndexPath:(NSIndexPath *)newIndexPath {
-    UITableView *tableView = nil;
+    /*
+    UITableView * tableView = nil;
+    
     if ([controller isEqual:self.buddyFetchedResultsController]) {
         tableView = self.buddyListTableView;
     }
@@ -439,16 +396,49 @@
     {
         tableView = self.searchDisplayController.searchResultsTableView;
     }
-    [tableView reloadData];
     
-    switch(type) {
+    [tableView beginUpdates];
+    */
+}
+
+- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject
+       atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
+      newIndexPath:(NSIndexPath *)newIndexPath {
+    
+    UITableView *tableView = nil;
+    OTRManagedBuddy * buddy = anObject;
+    NSIndexPath * modifiedIndexPath = nil;
+    NSIndexPath * modifiedNewIndexPath = nil;
+    
+    if ([controller isEqual:self.buddyFetchedResultsController]) {
+        tableView = self.buddyListTableView;
+        modifiedNewIndexPath = [NSIndexPath indexPathForRow:newIndexPath.row inSection:1];
+        modifiedIndexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:1];
+    }
+    else if([controller isEqual:self.searchBuddyFetchedResultsController])
+    {
+        tableView = self.searchDisplayController.searchResultsTableView;
+        modifiedIndexPath = indexPath;
+        modifiedNewIndexPath = newIndexPath;
+    }
+    
+    switch (type) {
         case NSFetchedResultsChangeInsert:
-            //[tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationBottom];
-            //[tableView reloadData];
+            [tableView insertRowsAtIndexPaths:@[modifiedNewIndexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
-        case NSFetchedResultsChangeUpdate:
-            //[tableView reloadData];
+        case NSFetchedResultsChangeDelete:
+            [tableView deleteRowsAtIndexPaths:@[modifiedIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            break;
             
+        case NSFetchedResultsChangeUpdate:
+            [self configureCell:[tableView cellForRowAtIndexPath:modifiedIndexPath] withBuddy:buddy];
+            break;
+            
+        case NSFetchedResultsChangeMove:
+            //[tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            //[tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [tableView moveRowAtIndexPath:modifiedIndexPath toIndexPath:modifiedNewIndexPath];
+            [self configureCell:[tableView cellForRowAtIndexPath:modifiedNewIndexPath] withBuddy:buddy];
             break;
     }
     
@@ -457,8 +447,60 @@
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
-    //[self.buddyListTableView endUpdates];
+    UITableView * tableView = nil;
+    
+    if ([controller isEqual:self.buddyFetchedResultsController]) {
+        tableView = self.buddyListTableView;
+    }
+    else if([controller isEqual:self.searchBuddyFetchedResultsController])
+    {
+        tableView = self.searchDisplayController.searchResultsTableView;
+    }
+    
+    [tableView endUpdates];
+    //[tableView reloadData];
 }
+
+-(void) configureCell:(UITableViewCell *)cell withBuddy:(OTRManagedBuddy *)buddy
+{
+    NSString *buddyUsername = buddy.displayName;
+    OTRBuddyStatus buddyStatus = buddy.statusValue;
+    
+    cell.textLabel.text = buddyUsername;
+    
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    cell.detailTextLabel.textColor = [UIColor lightGrayColor];
+    cell.detailTextLabel.text = [buddy currentStatusMessage];
+    
+    switch(buddyStatus)
+    {
+        case kOTRBuddyStatusOffline:
+            cell.textLabel.textColor = [UIColor lightGrayColor];
+            cell.imageView.image = [UIImage imageNamed:@"offline.png"];
+            break;
+        case kOTRBuddyStatusAway:
+            cell.textLabel.textColor = [UIColor darkGrayColor];
+            cell.imageView.image = [UIImage imageNamed:@"idle.png"];
+            break;
+        case kOTRBuddyStatusXa:
+            cell.textLabel.textColor = [UIColor darkGrayColor];
+            cell.imageView.image = [UIImage imageNamed:@"away.png"];
+            break;
+        case kOTRBUddyStatusDnd:
+            cell.textLabel.textColor = [UIColor darkGrayColor];
+            cell.imageView.image = [UIImage imageNamed:@"away.png"];
+            break;
+        case kOTRBuddyStatusAvailable:
+            cell.textLabel.textColor = [UIColor darkTextColor];
+            cell.imageView.image = [UIImage imageNamed:@"available.png"];
+            break;
+        default:
+            cell.textLabel.textColor = [UIColor lightGrayColor];
+            cell.imageView.image = [UIImage imageNamed:@"offline.png"];
+    }
+}
+
+
 
 - (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope
 {
@@ -493,7 +535,6 @@
 {
     self.searchBuddyFetchedResultsController.delegate = nil;
     self.searchBuddyFetchedResultsController = nil;
-    self.buddyFetchedResultsController = nil;
 }
 
 @end
