@@ -435,8 +435,6 @@
             break;
             
         case NSFetchedResultsChangeMove:
-            //[tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-            //[tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
             [self configureCell:[tableView cellForRowAtIndexPath:modifiedIndexPath] withBuddy:buddy];
             [tableView moveRowAtIndexPath:modifiedIndexPath toIndexPath:modifiedNewIndexPath];
             break;
@@ -458,7 +456,6 @@
     }
     
     [tableView endUpdates];
-    //[tableView reloadData];
 }
 
 -(void) configureCell:(UITableViewCell *)cell withBuddy:(OTRManagedBuddy *)buddy

@@ -66,7 +66,6 @@
     #define IS_IPAD() (false)
 #endif  
 
-
 @interface OTRChatViewController(Private)
 
 - (void) refreshView;
@@ -290,8 +289,7 @@
         messageInputBarFrame.origin.y = keyboardFrameInView.origin.y - messageInputBarFrame.size.height;
         messageInputBar.frame = messageInputBarFrame;
         
-        chatHistoryTableView.contentInset = chatHistoryTableView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, self.view.frame.size.height-keyboardFrameInView.origin.y-1, 0);
-        
+        chatHistoryTableView.contentInset = chatHistoryTableView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, self.view.frame.size.height-keyboardFrameInView.origin.y, 0);
     }];
     
 
@@ -384,7 +382,7 @@
     [self.chatHistoryTableView beginUpdates];
     [self.chatHistoryTableView deleteRowsAtIndexPaths:@[[self lastIndexPath]] withRowAnimation:UITableViewRowAnimationAutomatic];
     [self.chatHistoryTableView endUpdates];
-    //[self scrollToBottomAnimated:YES];
+    [self scrollToBottomAnimated:YES];
     
 }
 -(void)addComposing
@@ -395,7 +393,7 @@
     [self.chatHistoryTableView beginUpdates];
     [self.chatHistoryTableView insertRowsAtIndexPaths:@[lastIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
     [self.chatHistoryTableView endUpdates];
-    //[self scrollToBottomAnimated:YES];
+    [self scrollToBottomAnimated:YES];
 }
 
 - (void)updateChatState:(BOOL)animated
@@ -445,7 +443,7 @@
     if (changeInHeight) {
         [UIView animateWithDuration:0.2 animations:^{
             self.chatHistoryTableView.contentInset = self.chatHistoryTableView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, self.chatHistoryTableView.contentInset.bottom+changeInHeight, 0);
-            //[self scrollToBottomAnimated:NO];
+            [self scrollToBottomAnimated:NO];
             UIView *messageInputBar = textView.superview;
             messageInputBar.frame = CGRectMake(0, messageInputBar.frame.origin.y-changeInHeight, messageInputBar.frame.size.width, messageInputBar.frame.size.height+changeInHeight);
             self.view.keyboardTriggerOffset = messageInputBar.frame.size.height;
@@ -719,7 +717,7 @@
         
         CGFloat messageSentDateLabelHeight = 0;
         CGFloat messageDeliveredLabelHeight = 0;
-        CGFloat messageTextLabelHeight;
+        CGFloat messageTextLabelHeight = 0;
         
         if (messageDetails) {
             messageSentDateLabelHeight = [messageDetails[0] floatValue];
@@ -734,7 +732,7 @@
             messageTextLabelHeight = messageTextLabelSize.height;
             
             
-            messageTextLabelHeight = MESSAGE_DELIVERED_LABEL_HEIGHT;
+            //messageTextLabelHeight = MESSAGE_DELIVERED_LABEL_HEIGHT;
             
             
             _heightForRow[indexPath.row] = @[@(messageSentDateLabelHeight), [NSValue valueWithCGSize:messageTextLabelSize], @(messageDeliveredLabelHeight)];
