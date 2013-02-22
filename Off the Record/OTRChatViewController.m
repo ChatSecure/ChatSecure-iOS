@@ -60,12 +60,6 @@
 #define MESSAGE_TEXT_LABEL_TAG               102
 #define MESSAGE_DELIVERED_LABEL_TAG          103
 
-#ifdef UI_USER_INTERFACE_IDIOM
-    #define IS_IPAD() (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-#else
-    #define IS_IPAD() (false)
-#endif  
-
 @interface OTRChatViewController(Private)
 
 - (void) refreshView;
