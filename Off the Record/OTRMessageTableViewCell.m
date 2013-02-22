@@ -84,6 +84,7 @@
         
         // Create messageTextLabel.
         messageTextLabel = [OTRMessageTableViewCell defaultLabel];
+        messageTextLabel.delegate = self;
         [self.contentView addSubview:messageTextLabel];
         
         //Create MessageDeliveredImageView
