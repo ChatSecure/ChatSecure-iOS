@@ -192,5 +192,13 @@
     [[UIApplication sharedApplication] openURL:url];
 }
 
+-(void)attributedLabelDidSelectDelete:(TTTAttributedLabel *)label
+{
+    [self.message MR_deleteEntity];
+    
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    [context MR_saveToPersistentStoreAndWait];
+    
+}
 
 @end

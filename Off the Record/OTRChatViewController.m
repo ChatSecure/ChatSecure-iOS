@@ -856,6 +856,8 @@
             break;
         case NSFetchedResultsChangeUpdate:
             [tableView reloadData];
+        case NSFetchedResultsChangeDelete:
+            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
             
             NSLog(@"Updated Message: %@",newIndexPath);
             break;
