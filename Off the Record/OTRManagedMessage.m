@@ -79,6 +79,7 @@
     managedMessage.date = [NSDate date];
     managedMessage.isEncryptedValue = NO;
     managedMessage.isDeliveredValue = NO;
+    theBuddy.lastMessageDate = managedMessage.date;
 
     return managedMessage;
 }

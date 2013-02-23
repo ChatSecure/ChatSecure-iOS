@@ -35,6 +35,7 @@
 
 @property (nonatomic, strong) NSFetchedResultsController * buddyFetchedResultsController;
 @property (nonatomic, strong) NSFetchedResultsController * searchBuddyFetchedResultsController;
+@property (nonatomic, strong) NSFetchedResultsController * recentBuddiesFetchedResultsController;
 
 @property (nonatomic, strong) UISearchDisplayController * searchDisplayController;
 

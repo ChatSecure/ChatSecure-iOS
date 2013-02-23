@@ -215,7 +215,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)sectionIndex {
     if ([tableView isEqual:self.buddyListTableView]) {
         if (sectionIndex == RECENTS_SECTION_INDEX) {
-            return [self.activeConversations count];
+            return [[self.recentBuddiesFetchedResultsController sections][sectionIndex] numberOfObjects];
         } else if (sectionIndex == BUDDIES_SECTION_INDEX) {
             NSInteger numBuddies = [[self.buddyFetchedResultsController sections][sectionIndex-1] numberOfObjects];
             return numBuddies;
@@ -241,14 +241,17 @@
     
     if ([tableView isEqual:self.searchDisplayController.searchResultsTableView]) {
         buddy = [self.searchBuddyFetchedResultsController objectAtIndexPath:indexPath];
+        [self configureCell:cell withBuddy:buddy];
     }
     else if (indexPath.section == RECENTS_SECTION_INDEX) {
-        buddy = [activeConversations objectAtIndex:indexPath.row];
+        buddy = [self.recentBuddiesFetchedResultsController objectAtIndexPath:indexPath];
+        [self configureRecentCell:cell withBuddy:buddy];
     } else if (indexPath.section == BUDDIES_SECTION_INDEX) {
         buddy = [self.buddyFetchedResultsController objectAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row inSection:indexPath.section-1]];
+        [self configureCell:cell withBuddy:buddy];
     }
     
-    [self configureCell:cell withBuddy:buddy];
+    
     
     return cell;
 }
@@ -270,10 +273,17 @@
         [self enterConversationWithBuddy:managedBuddy];
     }
     
-    if (indexPath.section == BUDDIES_SECTION_INDEX) {
+    if ([tableView isEqual:self.buddyListTableView]) {
+        if (indexPath.section == RECENTS_SECTION_INDEX) {
+            OTRManagedBuddy * managedBuddy = [self.recentBuddiesFetchedResultsController objectAtIndexPath:indexPath];
+            [self enterConversationWithBuddy:managedBuddy];
+        }
+        else if (indexPath.section == BUDDIES_SECTION_INDEX) {
             OTRManagedBuddy * managedBuddy = [self.buddyFetchedResultsController objectAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section-1]];
             [self enterConversationWithBuddy:managedBuddy];
+        }
     }
+    
 
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
@@ -385,11 +395,25 @@
     
 }
 
+-(NSFetchedResultsController *)recentBuddiesFetchedResultsController
+{
+    if(_recentBuddiesFetchedResultsController)
+    {
+        return _recentBuddiesFetchedResultsController;
+    }
+    
+    NSPredicate * predicate = [NSPredicate predicateWithFormat:@"messages.@count != 0"];
+    
+    _recentBuddiesFetchedResultsController = [OTRManagedBuddy MR_fetchAllSortedBy:@"lastMessageDate" ascending:NO withPredicate:predicate groupBy:nil delegate:self];
+ 
+    return _recentBuddiesFetchedResultsController;
+}
+
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
     
     UITableView * tableView = nil;
     
-    if ([controller isEqual:self.buddyFetchedResultsController]) {
+    if ([controller isEqual:self.buddyFetchedResultsController] || [controller isEqual:self.recentBuddiesFetchedResultsController]) {
         tableView = self.buddyListTableView;
     }
     else if([controller isEqual:self.searchBuddyFetchedResultsController])
@@ -407,19 +431,21 @@
     
     UITableView *tableView = nil;
     OTRManagedBuddy * buddy = anObject;
-    NSIndexPath * modifiedIndexPath = nil;
-    NSIndexPath * modifiedNewIndexPath = nil;
+    NSIndexPath * modifiedIndexPath = indexPath;
+    NSIndexPath * modifiedNewIndexPath = newIndexPath;
     
     if ([controller isEqual:self.buddyFetchedResultsController]) {
         tableView = self.buddyListTableView;
         modifiedNewIndexPath = [NSIndexPath indexPathForRow:newIndexPath.row inSection:1];
         modifiedIndexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:1];
     }
+    else if ([controller isEqual:self.recentBuddiesFetchedResultsController])
+    {
+        tableView = self.buddyListTableView;
+    }
     else if([controller isEqual:self.searchBuddyFetchedResultsController])
     {
         tableView = self.searchDisplayController.searchResultsTableView;
-        modifiedIndexPath = indexPath;
-        modifiedNewIndexPath = newIndexPath;
     }
     
     switch (type) {
@@ -447,7 +473,7 @@
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
     UITableView * tableView = nil;
     
-    if ([controller isEqual:self.buddyFetchedResultsController]) {
+    if ([controller isEqual:self.buddyFetchedResultsController] || [controller isEqual:self.recentBuddiesFetchedResultsController]) {
         tableView = self.buddyListTableView;
     }
     else if([controller isEqual:self.searchBuddyFetchedResultsController])
@@ -456,6 +482,22 @@
     }
     
     [tableView endUpdates];
+}
+
+
+-(void) configureRecentCell:(UITableViewCell *)cell withBuddy:(OTRManagedBuddy *) buddy
+{
+    [self configureCell:cell withBuddy:buddy];
+    
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"yyyy-MM-dd h:mm"];
+    
+    formatter.timeZone = [NSTimeZone localTimeZone];
+    
+    NSString *stringFromDate = [formatter stringFromDate:buddy.lastMessageDate];
+    
+    
+    cell.detailTextLabel.text = stringFromDate;
 }
 
 -(void) configureCell:(UITableViewCell *)cell withBuddy:(OTRManagedBuddy *)buddy

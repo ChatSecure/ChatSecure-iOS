@@ -15,6 +15,7 @@
         <attribute name="displayName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="encryptionStatus" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="groupName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lastMessageDate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="lastMessageDisconnected" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="lastSentChatState" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="status" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
@@ -44,7 +45,7 @@
     </entity>
     <elements>
         <element name="OTRManagedAccount" positionX="340" positionY="153" width="128" height="135"/>
-        <element name="OTRManagedBuddy" positionX="106" positionY="-0" width="128" height="223"/>
+        <element name="OTRManagedBuddy" positionX="106" positionY="-0" width="128" height="238"/>
         <element name="OTRManagedMessage" positionX="-99" positionY="111" width="128" height="148"/>
         <element name="OTRManagedOscarAccount" positionX="529" positionY="72" width="128" height="43"/>
         <element name="OTRManagedXMPPAccount" positionX="565" positionY="216" width="128" height="163"/>

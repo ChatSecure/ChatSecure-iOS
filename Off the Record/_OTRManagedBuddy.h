@@ -11,6 +11,7 @@ extern const struct OTRManagedBuddyAttributes {
 	__unsafe_unretained NSString *displayName;
 	__unsafe_unretained NSString *encryptionStatus;
 	__unsafe_unretained NSString *groupName;
+	__unsafe_unretained NSString *lastMessageDate;
 	__unsafe_unretained NSString *lastMessageDisconnected;
 	__unsafe_unretained NSString *lastSentChatState;
 	__unsafe_unretained NSString *status;
@@ -27,6 +28,7 @@ extern const struct OTRManagedBuddyFetchedProperties {
 
 @class OTRManagedAccount;
 @class OTRManagedMessage;
+
 
 
 
@@ -115,6 +117,16 @@ extern const struct OTRManagedBuddyFetchedProperties {
 
 
 //- (BOOL)validateGroupName:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSDate* lastMessageDate;
+
+
+
+//- (BOOL)validateLastMessageDate:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -239,6 +251,12 @@ extern const struct OTRManagedBuddyFetchedProperties {
 
 - (NSString*)primitiveGroupName;
 - (void)setPrimitiveGroupName:(NSString*)value;
+
+
+
+
+- (NSDate*)primitiveLastMessageDate;
+- (void)setPrimitiveLastMessageDate:(NSDate*)value;
 
 
 

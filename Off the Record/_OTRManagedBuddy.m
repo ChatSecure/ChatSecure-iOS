@@ -10,6 +10,7 @@ const struct OTRManagedBuddyAttributes OTRManagedBuddyAttributes = {
 	.displayName = @"displayName",
 	.encryptionStatus = @"encryptionStatus",
 	.groupName = @"groupName",
+	.lastMessageDate = @"lastMessageDate",
 	.lastMessageDisconnected = @"lastMessageDisconnected",
 	.lastSentChatState = @"lastSentChatState",
 	.status = @"status",
@@ -156,6 +157,13 @@ const struct OTRManagedBuddyFetchedProperties OTRManagedBuddyFetchedProperties =
 
 
 @dynamic groupName;
+
+
+
+
+
+
+@dynamic lastMessageDate;
 
 
 
