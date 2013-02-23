@@ -355,8 +355,6 @@
      selector:@selector(showDisconnectionAlert:)
      name:kOTRProtocolDiconnect
      object:nil];
-    _messagesFetchedResultsController = nil;
-    _buddyFetchedResultsController = nil;
     
     [self refreshLockButton];
     [self refreshView];
@@ -615,7 +613,8 @@
             [self.instructionsLabel removeFromSuperview];
             self.instructionsLabel = nil;
         }
-        
+        _messagesFetchedResultsController = nil;
+        _buddyFetchedResultsController = nil;
         [self.chatHistoryTableView reloadData];
         [self.textView resignFirstResponder];
         [self moveMessageBarBottom];
@@ -830,11 +829,13 @@
 
 - (NSFetchedResultsController *)messagesFetchedResultsController {
     if (_messagesFetchedResultsController)
+    {
         return _messagesFetchedResultsController;
+    }
     
     NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"buddy == %@",self.buddy];
     NSPredicate * encryptionFilter = [NSPredicate predicateWithFormat:@"isEncrypted == NO"];
-    NSPredicate *predicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[buddyFilter, encryptionFilter]];
+    NSPredicate *predicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[buddyFilter,encryptionFilter]];
     
     _messagesFetchedResultsController = [OTRManagedMessage MR_fetchAllGroupedBy:nil withPredicate:predicate sortedBy:@"date" ascending:YES delegate:self];
 
@@ -855,7 +856,7 @@
             [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationBottom];
             break;
         case NSFetchedResultsChangeUpdate:
-            [tableView reloadData];
+            [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
         case NSFetchedResultsChangeDelete:
             [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
             

@@ -51,7 +51,6 @@
         else
         {
             encodedMessage = newMessage;
-            encodedMessage.isEncryptedValue = NO;
         }
         //NSLog(@"encoded message: %@",encodedMessage.message);
         [OTRManagedMessage sendMessage:encodedMessage];
