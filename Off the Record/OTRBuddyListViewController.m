@@ -38,7 +38,6 @@
 
 @interface OTRBuddyListViewController(Private)
 - (void) selectActiveConversation;
-- (void) refreshActiveConversations;
 - (void) removeConversationsForAccount:(NSString *)account;
 - (void) deleteBuddy:(OTRManagedBuddy*)buddy;
 @end
@@ -47,8 +46,6 @@
 @synthesize buddyListTableView;
 @synthesize chatViewController;
 @synthesize protocolManager;
-@synthesize activeConversations;
-@synthesize buddyDictionary;
 @synthesize selectedBuddy;
 @synthesize searchDisplayController;
 
@@ -57,9 +54,9 @@
     self.buddyListTableView = nil;
     self.chatViewController = nil;
     self.protocolManager = nil;
-    self.activeConversations = nil;
-    self.buddyDictionary = nil;
     self.selectedBuddy = nil;
+    _buddyFetchedResultsController = nil;
+    _recentBuddiesFetchedResultsController = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -67,8 +64,6 @@
     if (self = [super init]) {
         self.title = BUDDY_LIST_STRING;
         self.protocolManager = [OTRProtocolManager sharedInstance];
-        self.buddyDictionary = [[NSMutableDictionary alloc] init];
-
     }
     return self;
 }
@@ -188,7 +183,6 @@
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:buddy.displayName message:message.message delegate:self cancelButtonTitle:IGNORE_STRING otherButtonTitles:REPLY_STRING, nil];
         NSUInteger tag = [buddy hash];
         alert.tag = tag;
-        [buddyDictionary setObject:buddy forKey:[NSNumber numberWithInt:tag]];
         [alert show];
     }
 }
@@ -299,43 +293,15 @@
 
 -(void) removeConversationsForAccount:(NSString *)accountUniqueIdentifier {
     if ([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyDeleteOnDisconnect]) {
-        NSArray *iterableConversations = [activeConversations copy];
         
-        for (OTRManagedBuddy *buddy in iterableConversations) {
-            if ([buddy.account.uniqueIdentifier isEqualToString:accountUniqueIdentifier]) {
-                //[[[[OTRProtocolManager sharedInstance] buddyList] activeConversations] removeObject:buddy];
-            }
-        }
-        
-        [self refreshActiveConversations];
-    }
-}
 
-- (void) refreshActiveConversations {
-    //self.activeConversations = [NSMutableArray arrayWithArray:[[OTRProtocolManager sharedInstance].buddyList.activeConversations allObjects]];
-    
-    [buddyListTableView reloadData];
-    
-    [self selectActiveConversation];
-}
-
-- (void) selectActiveConversation {
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-        return;
-    }
-    if ([activeConversations containsObject:selectedBuddy]) {
-        int indexOfSelectedBuddy = [activeConversations indexOfObject:selectedBuddy];
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:indexOfSelectedBuddy inSection:RECENTS_SECTION_INDEX];
-        [self.buddyListTableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
     }
 }
 
 
 - (void) tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == RECENTS_SECTION_INDEX && editingStyle == UITableViewCellEditingStyleDelete) {
-        OTRManagedBuddy *buddy = [activeConversations objectAtIndex:indexPath.row];
-        [self deleteBuddy:buddy];
-        [self refreshActiveConversations];
+        
     }
 }
 
@@ -356,16 +322,13 @@
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone && !chatViewIsVisible && self.navigationController.visibleViewController != chatViewController) {
         [self.navigationController setViewControllers:[NSArray arrayWithObjects:self, chatViewController, nil] animated:YES];
     }
-    [self refreshActiveConversations];
 }
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
-    OTRManagedBuddy *buddy = [buddyDictionary objectForKey:[NSNumber numberWithInt: alertView.tag]];
-    //[buddyDictionary removeObjectForKey:[NSNumber numberWithInt:alertView.tag]];
     if(buttonIndex == 1) // Reply
     {
-        [self enterConversationWithBuddy:buddy];
+        //[self enterConversationWithBuddy:buddy];
     }
 }
 
@@ -536,6 +499,10 @@
         default:
             cell.textLabel.textColor = [UIColor lightGrayColor];
             cell.imageView.image = [UIImage imageNamed:@"offline.png"];
+    }
+    
+    if ([buddy numberOfUnreadMessages]>0) {
+        cell.textLabel.textColor = [UIColor blueColor];
     }
 }
 

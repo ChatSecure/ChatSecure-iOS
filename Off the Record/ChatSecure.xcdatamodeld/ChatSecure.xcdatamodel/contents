@@ -28,6 +28,7 @@
         <attribute name="isDelivered" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="isEncrypted" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="isIncoming" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="isRead" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="message" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="uniqueID" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="buddy" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="OTRManagedBuddy" inverseName="messages" inverseEntity="OTRManagedBuddy" syncable="YES"/>
@@ -46,7 +47,7 @@
     <elements>
         <element name="OTRManagedAccount" positionX="340" positionY="153" width="128" height="135"/>
         <element name="OTRManagedBuddy" positionX="106" positionY="-0" width="128" height="238"/>
-        <element name="OTRManagedMessage" positionX="-99" positionY="111" width="128" height="148"/>
+        <element name="OTRManagedMessage" positionX="-144" positionY="63" width="128" height="163"/>
         <element name="OTRManagedOscarAccount" positionX="529" positionY="72" width="128" height="43"/>
         <element name="OTRManagedXMPPAccount" positionX="565" positionY="216" width="128" height="163"/>
     </elements>

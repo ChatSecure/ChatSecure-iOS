@@ -279,8 +279,20 @@
                 break;
         }
     }
-    
-    
+}
+-(NSInteger) numberOfUnreadMessages
+{
+    NSPredicate * messageFilter = [NSPredicate predicateWithFormat:@"isRead == NO AND isEncrypted == NO AND isIncoming == YES"];
+    NSSet * finalSet = [self.messages filteredSetUsingPredicate:messageFilter];
+    return [finalSet count];
+}
+
+- (void) allMessagesRead
+{
+    [self.messages setValue:[NSNumber numberWithBool:YES] forKey:@"isRead"];
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    [context MR_saveToPersistentStoreAndWait];
+    //[context MR_saveOnlySelfWithCompletion:^(BOOL success, NSError * error){NSLog(@"Saving buddy"); }];
 }
 
 

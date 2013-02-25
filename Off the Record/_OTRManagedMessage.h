@@ -9,6 +9,7 @@ extern const struct OTRManagedMessageAttributes {
 	__unsafe_unretained NSString *isDelivered;
 	__unsafe_unretained NSString *isEncrypted;
 	__unsafe_unretained NSString *isIncoming;
+	__unsafe_unretained NSString *isRead;
 	__unsafe_unretained NSString *message;
 	__unsafe_unretained NSString *uniqueID;
 } OTRManagedMessageAttributes;
@@ -21,6 +22,7 @@ extern const struct OTRManagedMessageFetchedProperties {
 } OTRManagedMessageFetchedProperties;
 
 @class OTRManagedBuddy;
+
 
 
 
@@ -94,6 +96,20 @@ extern const struct OTRManagedMessageFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSNumber* isRead;
+
+
+
+@property BOOL isReadValue;
+- (BOOL)isReadValue;
+- (void)setIsReadValue:(BOOL)value_;
+
+//- (BOOL)validateIsRead:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
 @property (nonatomic, strong) NSString* message;
 
 
@@ -160,6 +176,15 @@ extern const struct OTRManagedMessageFetchedProperties {
 
 - (BOOL)primitiveIsIncomingValue;
 - (void)setPrimitiveIsIncomingValue:(BOOL)value_;
+
+
+
+
+- (NSNumber*)primitiveIsRead;
+- (void)setPrimitiveIsRead:(NSNumber*)value;
+
+- (BOOL)primitiveIsReadValue;
+- (void)setPrimitiveIsReadValue:(BOOL)value_;
 
 
 

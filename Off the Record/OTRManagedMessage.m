@@ -60,7 +60,7 @@
 {
     OTRManagedMessage *message = [OTRManagedMessage newMessageWithBuddy:theBuddy message:theMessage];
     message.isIncomingValue = NO;
-    message.isEncryptedValue = encryptionStatus;
+    message.isReadValue = YES;
     NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
     [context MR_saveToPersistentStoreAndWait];
     return message;

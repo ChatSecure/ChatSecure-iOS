@@ -118,7 +118,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 		NSSortDescriptor *sd1 = [[NSSortDescriptor alloc] initWithKey:@"sectionNum" ascending:YES];
 		NSSortDescriptor *sd2 = [[NSSortDescriptor alloc] initWithKey:@"displayName" ascending:YES];
 		
-		NSArray *sortDescriptors = [NSArray arrayWithObjects: sd2, nil];
+		NSArray *sortDescriptors = @[sd1,sd2];
 		
 		NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
 		[fetchRequest setEntity:entity];
@@ -243,11 +243,6 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
             default:
                 break;
         }
-        
-        NSString * fullJID = [[user jid] full];
-        
-        
-        
         
         if ([[user jid] full]) {
             OTRManagedBuddy * buddy = [OTRManagedBuddy fetchOrCreateWithName:[[user jid] full] account:self.account];

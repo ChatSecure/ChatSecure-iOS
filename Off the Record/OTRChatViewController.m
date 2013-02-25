@@ -635,10 +635,19 @@
     }
 }
 
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [self.buddy allMessagesRead];
+    [super viewWillDisappear:animated];
+}
+
 -(void)viewWillAppear:(BOOL)animated
 {
+    [self.buddy allMessagesRead];
     [self refreshView];
     [self updateChatState:NO];
+    
+    [super viewWillAppear:animated];
 }
 
 -(void)saveCurrentMessageText
@@ -857,10 +866,9 @@
             break;
         case NSFetchedResultsChangeUpdate:
             [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            break;
         case NSFetchedResultsChangeDelete:
             [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-            
-            NSLog(@"Updated Message: %@",newIndexPath);
             break;
     }
 }
