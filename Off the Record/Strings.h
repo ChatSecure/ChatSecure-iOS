@@ -146,6 +146,8 @@
 #define EN_JABBER_STRING @"Jabber (XMPP)"
 #define EN_MESSAGE_PLACEHOLDER_STRING @"Message"
 #define EN_DELIVERED_STRING @"Deliverd"
+#define EN_EXTENDED_AWAY_STRING @"Extended Away"
+#define EN_DO_NOT_DISTURB_STRING @"Do Not Disturb"
 
 
 
@@ -268,6 +270,8 @@
 #define DELIVERED_STRING [OTRLanguageManager translatedString: EN_DELIVERED_STRING]
 #define DONATE_STRING [OTRLanguageManager translatedString: EN_DONATE_STRING]
 #define DONATE_MESSAGE_STRING [OTRLanguageManager translatedString: EN_DONATE_MESSAGE_STRING]
+#define EXTENDED_AWAY_STRING [OTRLanguageManager translatedString: EN_EXTENDED_AWAY_STRING]
+#define DO_NOT_DISTURB_STRING [OTRLanguageManager translatedString: EN_DO_NOT_DISTURB_STRING]
 
 #define LOC_BUDDY_LIST_STRING NSLocalizedString(EN_BUDDY_LIST_STRING , @"Title for the buddy list tab")
 #define LOC_CONVERSATIONS_STRING NSLocalizedString(EN_CONVERSATIONS_STRING , @"Title for the conversations tab")
@@ -386,11 +390,10 @@
 #define LOC_JABBER_STRING NSLocalizedString(EN_JABBER_STRING , @"the name for jabber, also include (XMPP) at the end")
 #define LOC_MESSAGE_PLACEHOLDER_STRING NSLocalizedString(EN_MESSAGE_PLACEHOLDER_STRING , @"just the word as a placeholder for the message text field") 
 #define LOC_DELIVERED_STRING NSLocalizedString(EN_DELIVERED_STRING , @"Shows in the chat view when a message has been delivered")
-
-
 #define LOC_ALLOW_PLAIN_TEXT_AUTHENTICATION_STRING NSLocalizedString(EN_ALLOW_PLAIN_TEXT_AUTHENTICATION_STRING , @"Setting name for allowing authentication to happen in plain text or in the clear")
 #define LOC_REQUIRE_TLS_STRING NSLocalizedString(EN_REQUIRE_TLS_STRING , @"Setting name for requiring a TLS connection")
-
-
 #define LOC_DONATE_STRING NSLocalizedString(EN_DONATE_STRING, @"Title for donation link")
 #define LOC_DONATE_MESSAGE_STRING NSLocalizedString(EN_DONATE_MESSAGE_STRING, @"Message shown when about to donate")
+#define LOC_DO_NOT_DISTURB_STRING NSLocalizedString(EN_DO_NOT_DISTURB_STRING, @"Default message when a user status is set to do not disturb")
+#define LOC_EXTENDED_AWAY_STRING NSLocalizedString(EN_EXTENDED_AWAY_STRING, @"Default message when a user status is set to extended away")
+

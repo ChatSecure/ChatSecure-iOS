@@ -262,10 +262,10 @@
     else {
         switch ([self statusValue]) {
             case kOTRBuddyStatusXa:
-                return @"Extended Away";
+                return EXTENDED_AWAY_STRING;
                 break;
             case kOTRBUddyStatusDnd:
-                return @"Do Not Disturb";
+                return DO_NOT_DISTURB_STRING;
                 break;
             case kOTRBuddyStatusAway:
                 return AWAY_STRING;

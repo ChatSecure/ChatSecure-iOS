@@ -128,15 +128,12 @@
     
     buddyListTableView.frame = self.view.bounds;
     buddyListTableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleRightMargin;
+    [buddyListTableView reloadData];
 }
 
 
 -(void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    //[self showEULAWarning];
-    
-    
-
 }
 
 - (void) showSettingsView:(id)sender {
