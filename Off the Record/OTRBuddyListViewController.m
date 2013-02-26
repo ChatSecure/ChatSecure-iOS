@@ -30,6 +30,7 @@
 #import "OTRAppDelegate.h"
 #import "OTRSettingsViewController.h"
 #import "OTRDatabaseUtils.h"
+#import "OTRManagedStatus.h"
 
 //#define kSignoffTime 500
 
@@ -172,7 +173,8 @@
     }
     
     BOOL chatViewIsVisible = chatViewController.isViewLoaded && chatViewController.view.window;
-
+    
+    /*
     if ((chatViewController.buddy != buddy || !chatViewIsVisible) && [[UIApplication sharedApplication] applicationState] == UIApplicationStateActive) {
         NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"date" ascending:YES]; // not sure if this is the right order
         OTRManagedMessage *message = [[buddy.messages sortedArrayUsingDescriptors:@[sortDescriptor]] lastObject]; // TODO: fix this horrible inefficiency
@@ -181,6 +183,7 @@
         alert.tag = tag;
         [alert show];
     }
+     */
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -330,7 +333,7 @@
     
     NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"accountName != nil OR displayName != nil"];
     
-    _buddyFetchedResultsController = [OTRManagedBuddy MR_fetchAllGroupedBy:nil withPredicate:buddyFilter sortedBy:@"status,displayName" ascending:YES delegate:self];
+    _buddyFetchedResultsController = [OTRManagedBuddy MR_fetchAllGroupedBy:nil withPredicate:buddyFilter sortedBy:@"currentStatus,displayName" ascending:YES delegate:self];
     
     return _buddyFetchedResultsController;
 }
@@ -343,7 +346,7 @@
     }
     
     NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"accountName != nil OR displayName != nil"];
-    _searchBuddyFetchedResultsController = [OTRManagedBuddy MR_fetchAllGroupedBy:nil withPredicate:buddyFilter sortedBy:@"status,displayName" ascending:YES delegate:self];
+    _searchBuddyFetchedResultsController = [OTRManagedBuddy MR_fetchAllGroupedBy:nil withPredicate:buddyFilter sortedBy:@"currentStatus,displayName" ascending:YES delegate:self];
     
     return _searchBuddyFetchedResultsController;
     
@@ -463,13 +466,13 @@
         buddyUsername = buddy.accountName;
     }
     
-    OTRBuddyStatus buddyStatus = buddy.statusValue;
+    OTRBuddyStatus buddyStatus = [buddy currentStatusMessage].statusValue;
     
     cell.textLabel.text = buddyUsername;
     
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     cell.detailTextLabel.textColor = [UIColor lightGrayColor];
-    cell.detailTextLabel.text = [buddy currentStatusMessage];
+    cell.detailTextLabel.text = [buddy currentStatusMessage].message;
     
     switch(buddyStatus)
     {
