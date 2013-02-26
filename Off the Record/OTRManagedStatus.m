@@ -26,6 +26,7 @@
     
     
     managedStatus.buddy = newBuddy;
+    managedStatus.statusbuddy = newBuddy;
     managedStatus.isIncomingValue = newIsIncoming;
     managedStatus.date = [NSDate date];
     managedStatus.isEncryptedValue = NO;

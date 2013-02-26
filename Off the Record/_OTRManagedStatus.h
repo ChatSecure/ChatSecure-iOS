@@ -9,11 +9,13 @@ extern const struct OTRManagedStatusAttributes {
 } OTRManagedStatusAttributes;
 
 extern const struct OTRManagedStatusRelationships {
+	__unsafe_unretained NSString *statusbuddy;
 } OTRManagedStatusRelationships;
 
 extern const struct OTRManagedStatusFetchedProperties {
 } OTRManagedStatusFetchedProperties;
 
+@class OTRManagedBuddy;
 
 
 
@@ -44,6 +46,13 @@ extern const struct OTRManagedStatusFetchedProperties {
 
 
 
+@property (nonatomic, strong) OTRManagedBuddy *statusbuddy;
+
+//- (BOOL)validateStatusbuddy:(id*)value_ error:(NSError**)error_;
+
+
+
+
 
 @end
 
@@ -61,6 +70,11 @@ extern const struct OTRManagedStatusFetchedProperties {
 - (void)setPrimitiveStatusValue:(int16_t)value_;
 
 
+
+
+
+- (OTRManagedBuddy*)primitiveStatusbuddy;
+- (void)setPrimitiveStatusbuddy:(OTRManagedBuddy*)value;
 
 
 @end

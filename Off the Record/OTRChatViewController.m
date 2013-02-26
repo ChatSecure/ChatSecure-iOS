@@ -721,9 +721,8 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     //    NSLog(@"heightForRowAtIndexPath: %@", indexPath);
     
-    if (indexPath.row < [[self.messagesFetchedResultsController sections][indexPath.section] numberOfObjects]) {
-        OTRManagedMessageAndStatus *message = [self.messagesFetchedResultsController objectAtIndexPath:indexPath];
-        
+    if (indexPath.row < [[self.messagesFetchedResultsController sections][indexPath.section] numberOfObjects])
+    {
         NSArray *messageDetails = nil;
         if ([_heightForRow count] > indexPath.row) {
             messageDetails = _heightForRow[indexPath.row];
@@ -737,29 +736,51 @@
             messageSentDateLabelHeight = [messageDetails[0] floatValue];
             messageTextLabelHeight = [messageDetails[1] CGSizeValue].height;
             messageDeliveredLabelHeight = [messageDetails[2] floatValue];
-        } else {
-            if ((!_previousShownSentDate || [message.date timeIntervalSinceDate:_previousShownSentDate] > MESSAGE_SENT_DATE_SHOW_TIME_INTERVAL)) {
-                _previousShownSentDate = message.date;
-                messageSentDateLabelHeight = MESSAGE_SENT_DATE_LABEL_HEIGHT;
-            }
-            CGSize messageTextLabelSize = [OTRMessageTableViewCell messageTextLabelSize:message.message];
-            messageTextLabelHeight = messageTextLabelSize.height;
-            
-            
-            //messageTextLabelHeight = MESSAGE_DELIVERED_LABEL_HEIGHT;
-            
-            
-            _heightForRow[indexPath.row] = @[@(messageSentDateLabelHeight), [NSValue valueWithCGSize:messageTextLabelSize], @(messageDeliveredLabelHeight)];
         }
         
-        return messageSentDateLabelHeight+messageTextLabelHeight+messageDeliveredLabelHeight+MESSAGE_MARGIN_TOP+MESSAGE_MARGIN_BOTTOM;
-    }
-    else {
+        id messageOrStatus = [self.messagesFetchedResultsController objectAtIndexPath:indexPath];
+        if([messageOrStatus isKindOfClass:[OTRManagedMessage class]])
+        {
+            OTRManagedMessage * message = (OTRManagedMessage *)messageOrStatus;
+            
+            
+            if (!messageDetails)
+            {
+                if ((!_previousShownSentDate || [message.date timeIntervalSinceDate:_previousShownSentDate] > MESSAGE_SENT_DATE_SHOW_TIME_INTERVAL)) {
+                    _previousShownSentDate = message.date;
+                    messageSentDateLabelHeight = MESSAGE_SENT_DATE_LABEL_HEIGHT;
+                }
+                CGSize messageTextLabelSize = [OTRMessageTableViewCell messageTextLabelSize:message.message];
+                messageTextLabelHeight = messageTextLabelSize.height;
+                
+                
+                //messageTextLabelHeight = MESSAGE_DELIVERED_LABEL_HEIGHT;
+                
+                
+                _heightForRow[indexPath.row] = @[@(messageSentDateLabelHeight), [NSValue valueWithCGSize:messageTextLabelSize], @(messageDeliveredLabelHeight)];
+            }
+            
+            return messageSentDateLabelHeight+messageTextLabelHeight+messageDeliveredLabelHeight+MESSAGE_MARGIN_TOP+MESSAGE_MARGIN_BOTTOM;
+        }
+        else
+        {
+            if(!messageDetails)
+            {
+                _heightForRow[indexPath.row] = @[@(MESSAGE_SENT_DATE_LABEL_HEIGHT), [NSValue valueWithCGSize:CGSizeZero], @(messageDeliveredLabelHeight)];
+            }
+            
+            return MESSAGE_SENT_DATE_LABEL_HEIGHT;
+        }
         
+        
+    }
+    else
+    {
         //Composing messsage height
         CGSize messageTextLabelSize =[OTRMessageTableViewCell messageTextLabelSize:@"T"];
         return messageTextLabelSize.height+MESSAGE_MARGIN_TOP+MESSAGE_MARGIN_BOTTOM;
     }
+    
     
 }
 
@@ -830,11 +851,19 @@
             if (!cell) {
                 cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
             }
-            cell.textLabel.text = managedStatus.message;
+            UILabel * statusMessageLabel = [[UILabel alloc] initWithFrame:CGRectMake(-2, 0, tableView.frame.size.width, SentDateFontSize+5)];
+            statusMessageLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+            statusMessageLabel.textColor = [UIColor grayColor];
+            statusMessageLabel.textAlignment = UITextAlignmentCenter;
+            statusMessageLabel.font = [UIFont boldSystemFontOfSize:SentDateFontSize];
+            statusMessageLabel.backgroundColor = [UIColor clearColor];
+            statusMessageLabel.text = managedStatus.message;
+            [cell.contentView addSubview:statusMessageLabel];
+            return cell;
         }
         
         
-        
+       
         
     }
 }

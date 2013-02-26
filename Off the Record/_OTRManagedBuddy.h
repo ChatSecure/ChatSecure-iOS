@@ -19,14 +19,18 @@ extern const struct OTRManagedBuddyAttributes {
 
 extern const struct OTRManagedBuddyRelationships {
 	__unsafe_unretained NSString *account;
+	__unsafe_unretained NSString *messages;
 	__unsafe_unretained NSString *messagesandstatuses;
+	__unsafe_unretained NSString *statuses;
 } OTRManagedBuddyRelationships;
 
 extern const struct OTRManagedBuddyFetchedProperties {
 } OTRManagedBuddyFetchedProperties;
 
 @class OTRManagedAccount;
+@class OTRManagedMessage;
 @class OTRManagedMessageAndStatus;
+@class OTRManagedStatus;
 
 
 
@@ -179,9 +183,23 @@ extern const struct OTRManagedBuddyFetchedProperties {
 
 
 
-@property (nonatomic, strong) OTRManagedMessageAndStatus *messagesandstatuses;
+@property (nonatomic, strong) NSSet *messages;
 
-//- (BOOL)validateMessagesandstatuses:(id*)value_ error:(NSError**)error_;
+- (NSMutableSet*)messagesSet;
+
+
+
+
+@property (nonatomic, strong) NSSet *messagesandstatuses;
+
+- (NSMutableSet*)messagesandstatusesSet;
+
+
+
+
+@property (nonatomic, strong) NSSet *statuses;
+
+- (NSMutableSet*)statusesSet;
 
 
 
@@ -190,6 +208,21 @@ extern const struct OTRManagedBuddyFetchedProperties {
 @end
 
 @interface _OTRManagedBuddy (CoreDataGeneratedAccessors)
+
+- (void)addMessages:(NSSet*)value_;
+- (void)removeMessages:(NSSet*)value_;
+- (void)addMessagesObject:(OTRManagedMessage*)value_;
+- (void)removeMessagesObject:(OTRManagedMessage*)value_;
+
+- (void)addMessagesandstatuses:(NSSet*)value_;
+- (void)removeMessagesandstatuses:(NSSet*)value_;
+- (void)addMessagesandstatusesObject:(OTRManagedMessageAndStatus*)value_;
+- (void)removeMessagesandstatusesObject:(OTRManagedMessageAndStatus*)value_;
+
+- (void)addStatuses:(NSSet*)value_;
+- (void)removeStatuses:(NSSet*)value_;
+- (void)addStatusesObject:(OTRManagedStatus*)value_;
+- (void)removeStatusesObject:(OTRManagedStatus*)value_;
 
 @end
 
@@ -277,8 +310,18 @@ extern const struct OTRManagedBuddyFetchedProperties {
 
 
 
-- (OTRManagedMessageAndStatus*)primitiveMessagesandstatuses;
-- (void)setPrimitiveMessagesandstatuses:(OTRManagedMessageAndStatus*)value;
+- (NSMutableSet*)primitiveMessages;
+- (void)setPrimitiveMessages:(NSMutableSet*)value;
+
+
+
+- (NSMutableSet*)primitiveMessagesandstatuses;
+- (void)setPrimitiveMessagesandstatuses:(NSMutableSet*)value;
+
+
+
+- (NSMutableSet*)primitiveStatuses;
+- (void)setPrimitiveStatuses:(NSMutableSet*)value;
 
 
 @end

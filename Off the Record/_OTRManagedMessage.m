@@ -10,6 +10,7 @@ const struct OTRManagedMessageAttributes OTRManagedMessageAttributes = {
 };
 
 const struct OTRManagedMessageRelationships OTRManagedMessageRelationships = {
+	.messagebuddy = @"messagebuddy",
 };
 
 const struct OTRManagedMessageFetchedProperties OTRManagedMessageFetchedProperties = {
@@ -116,6 +117,10 @@ const struct OTRManagedMessageFetchedProperties OTRManagedMessageFetchedProperti
 
 
 
+
+@dynamic messagebuddy;
+
+	
 
 
 

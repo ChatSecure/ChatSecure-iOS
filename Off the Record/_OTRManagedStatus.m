@@ -8,6 +8,7 @@ const struct OTRManagedStatusAttributes OTRManagedStatusAttributes = {
 };
 
 const struct OTRManagedStatusRelationships OTRManagedStatusRelationships = {
+	.statusbuddy = @"statusbuddy",
 };
 
 const struct OTRManagedStatusFetchedProperties OTRManagedStatusFetchedProperties = {
@@ -76,6 +77,10 @@ const struct OTRManagedStatusFetchedProperties OTRManagedStatusFetchedProperties
 
 
 
+
+@dynamic statusbuddy;
+
+	
 
 
 

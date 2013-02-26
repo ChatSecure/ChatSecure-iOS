@@ -11,11 +11,13 @@ extern const struct OTRManagedMessageAttributes {
 } OTRManagedMessageAttributes;
 
 extern const struct OTRManagedMessageRelationships {
+	__unsafe_unretained NSString *messagebuddy;
 } OTRManagedMessageRelationships;
 
 extern const struct OTRManagedMessageFetchedProperties {
 } OTRManagedMessageFetchedProperties;
 
+@class OTRManagedBuddy;
 
 
 
@@ -72,6 +74,13 @@ extern const struct OTRManagedMessageFetchedProperties {
 
 
 
+@property (nonatomic, strong) OTRManagedBuddy *messagebuddy;
+
+//- (BOOL)validateMessagebuddy:(id*)value_ error:(NSError**)error_;
+
+
+
+
 
 @end
 
@@ -104,6 +113,11 @@ extern const struct OTRManagedMessageFetchedProperties {
 - (void)setPrimitiveUniqueID:(NSString*)value;
 
 
+
+
+
+- (OTRManagedBuddy*)primitiveMessagebuddy;
+- (void)setPrimitiveMessagebuddy:(OTRManagedBuddy*)value;
 
 
 @end

@@ -20,12 +20,15 @@
         <attribute name="lastMessageDisconnected" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="lastSentChatState" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <relationship name="account" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="OTRManagedAccount" inverseName="buddies" inverseEntity="OTRManagedAccount" syncable="YES"/>
-        <relationship name="messagesandstatuses" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="OTRManagedMessageAndStatus" inverseName="buddy" inverseEntity="OTRManagedMessageAndStatus" syncable="YES"/>
+        <relationship name="messages" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="OTRManagedMessage" inverseName="messagebuddy" inverseEntity="OTRManagedMessage" syncable="YES"/>
+        <relationship name="messagesandstatuses" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="OTRManagedMessageAndStatus" inverseName="buddy" inverseEntity="OTRManagedMessageAndStatus" syncable="YES"/>
+        <relationship name="statuses" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="OTRManagedStatus" inverseName="statusbuddy" inverseEntity="OTRManagedStatus" syncable="YES"/>
     </entity>
     <entity name="OTRManagedMessage" representedClassName="OTRManagedMessage" parentEntity="OTRManagedMessageAndStatus" syncable="YES">
         <attribute name="isDelivered" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="isRead" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="uniqueID" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="messagebuddy" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="OTRManagedBuddy" inverseName="messages" inverseEntity="OTRManagedBuddy" syncable="YES"/>
     </entity>
     <entity name="OTRManagedMessageAndStatus" representedClassName="OTRManagedMessageAndStatus" syncable="YES">
         <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
@@ -37,6 +40,7 @@
     <entity name="OTRManagedOscarAccount" representedClassName="OTRManagedOscarAccount" parentEntity="OTRManagedAccount" syncable="YES"/>
     <entity name="OTRManagedStatus" representedClassName="OTRManagedStatus" parentEntity="OTRManagedMessageAndStatus" syncable="YES">
         <attribute name="status" optional="YES" attributeType="Integer 16" defaultValueString="4" syncable="YES"/>
+        <relationship name="statusbuddy" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="OTRManagedBuddy" inverseName="statuses" inverseEntity="OTRManagedBuddy" syncable="YES"/>
     </entity>
     <entity name="OTRManagedXMPPAccount" representedClassName="OTRManagedXMPPAccount" parentEntity="OTRManagedAccount" syncable="YES">
         <attribute name="allowPlainTextAuthentication" optional="YES" attributeType="Boolean" syncable="YES"/>
@@ -50,11 +54,11 @@
     </entity>
     <elements>
         <element name="OTRManagedAccount" positionX="340" positionY="153" width="128" height="135"/>
-        <element name="OTRManagedBuddy" positionX="106" positionY="-0" width="128" height="223"/>
-        <element name="OTRManagedMessage" positionX="-126" positionY="203" width="128" height="88"/>
+        <element name="OTRManagedBuddy" positionX="106" positionY="-0" width="128" height="253"/>
+        <element name="OTRManagedMessage" positionX="-252" positionY="239" width="128" height="103"/>
+        <element name="OTRManagedMessageAndStatus" positionX="-153" positionY="9" width="189" height="118"/>
         <element name="OTRManagedOscarAccount" positionX="529" positionY="72" width="128" height="43"/>
+        <element name="OTRManagedStatus" positionX="-306" positionY="143" width="128" height="73"/>
         <element name="OTRManagedXMPPAccount" positionX="565" positionY="216" width="128" height="163"/>
-        <element name="OTRManagedMessageAndStatus" positionX="-135" positionY="-0" width="189" height="118"/>
-        <element name="OTRManagedStatus" positionX="-306" positionY="143" width="128" height="58"/>
     </elements>
 </model>

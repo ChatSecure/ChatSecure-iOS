@@ -75,6 +75,7 @@
     CFRelease(theUUID);
     managedMessage.uniqueID = uuidString;
     managedMessage.buddy = theBuddy;
+    managedMessage.messagebuddy = theBuddy;
     managedMessage.message = theMessage;
     managedMessage.date = [NSDate date];
     managedMessage.isEncryptedValue = NO;

@@ -243,7 +243,7 @@
 -(OTRManagedStatus *)currentStatusMessage
 {
     NSSortDescriptor * dateSort = [NSSortDescriptor sortDescriptorWithKey:@"date" ascending:NO];
-    NSArray * sortedStatuses = [[self statues] sortedArrayUsingDescriptors:@[dateSort]];
+    NSArray * sortedStatuses = [self.statuses sortedArrayUsingDescriptors:@[dateSort]];
     
     if ([sortedStatuses count]) {
         return sortedStatuses[0];
@@ -251,15 +251,6 @@
     return [OTRManagedStatus newStatus:kOTRBuddyStatusOffline withMessage:nil withBuddy:self incoming:NO];
 
     
-}
--(NSSet *)messages
-{
-    return [NSSet setWithArray:[OTRManagedMessage MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"buddy == %@",self]]];
-}
-
--(NSSet *)statues
-{
-    return [NSSet setWithArray:[OTRManagedStatus MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"buddy == %@",self]]];
 }
 
 -(NSInteger) numberOfUnreadMessages
@@ -271,8 +262,7 @@
 
 - (void) allMessagesRead
 {
-    NSSet * allMessages = [self messages];
-    [allMessages setValue:[NSNumber numberWithBool:YES] forKey:@"isRead"];
+    [self.messages setValue:[NSNumber numberWithBool:YES] forKey:@"isRead"];
     NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
     [context MR_saveToPersistentStoreAndWait];
     //[context MR_saveOnlySelfWithCompletion:^(BOOL success, NSError * error){NSLog(@"Saving buddy"); }];
