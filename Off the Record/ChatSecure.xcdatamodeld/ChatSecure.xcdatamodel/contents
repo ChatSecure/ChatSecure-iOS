@@ -12,28 +12,32 @@
         <attribute name="accountName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="chatState" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="composingMessageString" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="currentStatus" optional="YES" attributeType="Integer 16" defaultValueString="4" syncable="YES"/>
         <attribute name="displayName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="encryptionStatus" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="groupName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="lastMessageDate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="lastMessageDisconnected" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="lastSentChatState" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="status" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="statusMessage" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="account" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="OTRManagedAccount" inverseName="buddies" inverseEntity="OTRManagedAccount" syncable="YES"/>
-        <relationship name="messages" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="OTRManagedMessage" inverseName="buddy" inverseEntity="OTRManagedMessage" syncable="YES"/>
+        <relationship name="messagesandstatuses" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="OTRManagedMessageAndStatus" inverseName="buddy" inverseEntity="OTRManagedMessageAndStatus" syncable="YES"/>
     </entity>
-    <entity name="OTRManagedMessage" representedClassName="OTRManagedMessage" syncable="YES">
-        <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
+    <entity name="OTRManagedMessage" representedClassName="OTRManagedMessage" parentEntity="OTRManagedMessageAndStatus" syncable="YES">
         <attribute name="isDelivered" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="isRead" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="uniqueID" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="OTRManagedMessageAndStatus" representedClassName="OTRManagedMessageAndStatus" syncable="YES">
+        <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="isEncrypted" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="isIncoming" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="isRead" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="message" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="uniqueID" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="buddy" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="OTRManagedBuddy" inverseName="messages" inverseEntity="OTRManagedBuddy" syncable="YES"/>
+        <relationship name="buddy" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="OTRManagedBuddy" inverseName="messagesandstatuses" inverseEntity="OTRManagedBuddy" syncable="YES"/>
     </entity>
     <entity name="OTRManagedOscarAccount" representedClassName="OTRManagedOscarAccount" parentEntity="OTRManagedAccount" syncable="YES"/>
+    <entity name="OTRManagedStatus" representedClassName="OTRManagedStatus" parentEntity="OTRManagedMessageAndStatus" syncable="YES">
+        <attribute name="status" optional="YES" attributeType="Integer 16" defaultValueString="4" syncable="YES"/>
+    </entity>
     <entity name="OTRManagedXMPPAccount" representedClassName="OTRManagedXMPPAccount" parentEntity="OTRManagedAccount" syncable="YES">
         <attribute name="allowPlainTextAuthentication" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="allowSelfSignedSSL" optional="YES" attributeType="Boolean" syncable="YES"/>
@@ -46,9 +50,11 @@
     </entity>
     <elements>
         <element name="OTRManagedAccount" positionX="340" positionY="153" width="128" height="135"/>
-        <element name="OTRManagedBuddy" positionX="106" positionY="-0" width="128" height="238"/>
-        <element name="OTRManagedMessage" positionX="-144" positionY="63" width="128" height="163"/>
+        <element name="OTRManagedBuddy" positionX="106" positionY="-0" width="128" height="223"/>
+        <element name="OTRManagedMessage" positionX="-126" positionY="203" width="128" height="88"/>
         <element name="OTRManagedOscarAccount" positionX="529" positionY="72" width="128" height="43"/>
         <element name="OTRManagedXMPPAccount" positionX="565" positionY="216" width="128" height="163"/>
+        <element name="OTRManagedMessageAndStatus" positionX="-135" positionY="-0" width="189" height="118"/>
+        <element name="OTRManagedStatus" positionX="-306" positionY="143" width="128" height="58"/>
     </elements>
 </model>

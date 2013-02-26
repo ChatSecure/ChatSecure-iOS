@@ -8,27 +8,25 @@ extern const struct OTRManagedBuddyAttributes {
 	__unsafe_unretained NSString *accountName;
 	__unsafe_unretained NSString *chatState;
 	__unsafe_unretained NSString *composingMessageString;
+	__unsafe_unretained NSString *currentStatus;
 	__unsafe_unretained NSString *displayName;
 	__unsafe_unretained NSString *encryptionStatus;
 	__unsafe_unretained NSString *groupName;
 	__unsafe_unretained NSString *lastMessageDate;
 	__unsafe_unretained NSString *lastMessageDisconnected;
 	__unsafe_unretained NSString *lastSentChatState;
-	__unsafe_unretained NSString *status;
-	__unsafe_unretained NSString *statusMessage;
 } OTRManagedBuddyAttributes;
 
 extern const struct OTRManagedBuddyRelationships {
 	__unsafe_unretained NSString *account;
-	__unsafe_unretained NSString *messages;
+	__unsafe_unretained NSString *messagesandstatuses;
 } OTRManagedBuddyRelationships;
 
 extern const struct OTRManagedBuddyFetchedProperties {
 } OTRManagedBuddyFetchedProperties;
 
 @class OTRManagedAccount;
-@class OTRManagedMessage;
-
+@class OTRManagedMessageAndStatus;
 
 
 
@@ -83,6 +81,20 @@ extern const struct OTRManagedBuddyFetchedProperties {
 
 
 //- (BOOL)validateComposingMessageString:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSNumber* currentStatus;
+
+
+
+@property int16_t currentStatusValue;
+- (int16_t)currentStatusValue;
+- (void)setCurrentStatusValue:(int16_t)value_;
+
+//- (BOOL)validateCurrentStatus:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -160,30 +172,6 @@ extern const struct OTRManagedBuddyFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSNumber* status;
-
-
-
-@property int16_t statusValue;
-- (int16_t)statusValue;
-- (void)setStatusValue:(int16_t)value_;
-
-//- (BOOL)validateStatus:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSString* statusMessage;
-
-
-
-//- (BOOL)validateStatusMessage:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
 @property (nonatomic, strong) OTRManagedAccount *account;
 
 //- (BOOL)validateAccount:(id*)value_ error:(NSError**)error_;
@@ -191,9 +179,9 @@ extern const struct OTRManagedBuddyFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSSet *messages;
+@property (nonatomic, strong) OTRManagedMessageAndStatus *messagesandstatuses;
 
-- (NSMutableSet*)messagesSet;
+//- (BOOL)validateMessagesandstatuses:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -202,11 +190,6 @@ extern const struct OTRManagedBuddyFetchedProperties {
 @end
 
 @interface _OTRManagedBuddy (CoreDataGeneratedAccessors)
-
-- (void)addMessages:(NSSet*)value_;
-- (void)removeMessages:(NSSet*)value_;
-- (void)addMessagesObject:(OTRManagedMessage*)value_;
-- (void)removeMessagesObject:(OTRManagedMessage*)value_;
 
 @end
 
@@ -230,6 +213,15 @@ extern const struct OTRManagedBuddyFetchedProperties {
 
 - (NSString*)primitiveComposingMessageString;
 - (void)setPrimitiveComposingMessageString:(NSString*)value;
+
+
+
+
+- (NSNumber*)primitiveCurrentStatus;
+- (void)setPrimitiveCurrentStatus:(NSNumber*)value;
+
+- (int16_t)primitiveCurrentStatusValue;
+- (void)setPrimitiveCurrentStatusValue:(int16_t)value_;
 
 
 
@@ -279,29 +271,14 @@ extern const struct OTRManagedBuddyFetchedProperties {
 
 
 
-- (NSNumber*)primitiveStatus;
-- (void)setPrimitiveStatus:(NSNumber*)value;
-
-- (int16_t)primitiveStatusValue;
-- (void)setPrimitiveStatusValue:(int16_t)value_;
-
-
-
-
-- (NSString*)primitiveStatusMessage;
-- (void)setPrimitiveStatusMessage:(NSString*)value;
-
-
-
-
 
 - (OTRManagedAccount*)primitiveAccount;
 - (void)setPrimitiveAccount:(OTRManagedAccount*)value;
 
 
 
-- (NSMutableSet*)primitiveMessages;
-- (void)setPrimitiveMessages:(NSMutableSet*)value;
+- (OTRManagedMessageAndStatus*)primitiveMessagesandstatuses;
+- (void)setPrimitiveMessagesandstatuses:(OTRManagedMessageAndStatus*)value;
 
 
 @end
