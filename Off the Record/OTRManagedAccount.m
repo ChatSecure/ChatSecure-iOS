@@ -140,10 +140,7 @@
 
 -(void)setAllBuddiesStuts:(OTRBuddyStatus)status
 {
-    for (OTRManagedBuddy * buddy in self.buddies)
-    {
-        [buddy newStatusMessage:nil status:status incoming:NO];
-    }
+    [self.buddies setValue:[NSNumber numberWithInt:status] forKey:@"status"];
     [self save];
 }
 

@@ -29,7 +29,6 @@
 #import "OTRAppDelegate.h"
 #import "OTRMessageTableViewCell.h"
 #import "DAKeyboardControl.h"
-#import "OTRManagedStatus.h"
 
 #define kTabBarHeight 0
 #define kSendButtonWidth 60
@@ -567,7 +566,7 @@
             }
         }
         else if (buttonIndex == 2) { // Clear Chat History
-            [buddy deleteAllMessages];
+            [buddy removeMessages:buddy.messages];
         }
         else if (buttonIndex == actionSheet.cancelButtonIndex) // Cancel
         {
@@ -722,7 +721,7 @@
     //    NSLog(@"heightForRowAtIndexPath: %@", indexPath);
     
     if (indexPath.row < [[self.messagesFetchedResultsController sections][indexPath.section] numberOfObjects]) {
-        OTRManagedMessageAndStatus *message = [self.messagesFetchedResultsController objectAtIndexPath:indexPath];
+        OTRManagedMessage *message = [self.messagesFetchedResultsController objectAtIndexPath:indexPath];
         
         NSArray *messageDetails = nil;
         if ([_heightForRow count] > indexPath.row) {
@@ -801,41 +800,24 @@
         }
         return cell;
     }
-    else if( [[self.messagesFetchedResultsController sections][indexPath.section] numberOfObjects] > indexPath.row) {
+    else if( [[self.messagesFetchedResultsController sections][indexPath.section] numberOfObjects] >= indexPath.row+1) {
         
-        id messageOrStatus = [self.messagesFetchedResultsController objectAtIndexPath:indexPath];
+        OTRManagedMessage *message = [self.messagesFetchedResultsController objectAtIndexPath:indexPath];
+        
         NSArray *messageDetails = _heightForRow[indexPath.row];
         BOOL showDate = [messageDetails[0] boolValue];
-
-        if ([messageOrStatus isKindOfClass:[OTRManagedMessage class]]) {
-            OTRManagedMessage * message = (OTRManagedMessage *)messageOrStatus;
-            static NSString *CellIdentifier = @"Cell";
-            OTRMessageTableViewCell * cell;
-            cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-            if (!cell) {
-                cell = [[OTRMessageTableViewCell alloc] initWithMessage:message withDate:showDate reuseIdentifier:CellIdentifier];
-            } else {
-                cell.showDate = showDate;
-                cell.message = message;
-                
-            }
-            return cell;
+        
+        static NSString *CellIdentifier = @"Cell";
+        OTRMessageTableViewCell * cell;
+        cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        if (!cell) {
+            cell = [[OTRMessageTableViewCell alloc] initWithMessage:message withDate:showDate reuseIdentifier:CellIdentifier];
+        } else {
+            cell.showDate = showDate;
+            cell.message = message;
+            
         }
-        else if ([messageOrStatus isKindOfClass:[OTRManagedStatus class]])
-        {
-            OTRManagedStatus * managedStatus = (OTRManagedStatus *)messageOrStatus;
-            static NSString *CellIdentifier = @"statusCell";
-            UITableViewCell * cell;
-            cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-            if (!cell) {
-                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
-            }
-            cell.textLabel.text = managedStatus.message;
-        }
-        
-        
-        
-        
+        return cell;
     }
 }
 
@@ -860,11 +842,11 @@
         return _messagesFetchedResultsController;
     }
     
-    NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"self.buddy == %@",self.buddy];
+    NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"buddy == %@",self.buddy];
     NSPredicate * encryptionFilter = [NSPredicate predicateWithFormat:@"isEncrypted == NO"];
-    NSPredicate * messagePredicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[buddyFilter,encryptionFilter]];
-
-    _messagesFetchedResultsController = [OTRManagedMessageAndStatus MR_fetchAllGroupedBy:nil withPredicate:messagePredicate sortedBy:@"date" ascending:YES delegate:self];
+    NSPredicate *predicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[buddyFilter,encryptionFilter]];
+    
+    _messagesFetchedResultsController = [OTRManagedMessage MR_fetchAllGroupedBy:nil withPredicate:predicate sortedBy:@"date" ascending:YES delegate:self];
 
     return _messagesFetchedResultsController;
 }

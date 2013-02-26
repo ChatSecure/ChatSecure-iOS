@@ -95,8 +95,8 @@ BOOL loginFailed;
     OTRManagedBuddy *otrBuddy = [OTRManagedBuddy fetchOrCreateWithName:buddy.username account:self.account];
     
     otrBuddy.displayName = buddy.username;
-    [otrBuddy newStatusMessage:buddy.status.statusMessage status:buddyStatus incoming:YES];
-    
+    otrBuddy.statusMessage = buddy.status.statusMessage;
+    [otrBuddy setNewStatus:buddyStatus];
     otrBuddy.groupName = buddy.group.name;
     otrBuddy.account = self.account;
     NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
@@ -108,7 +108,8 @@ BOOL loginFailed;
 {
     OTRBuddyStatus buddyStatus = [self convertAimStatus:status];
     OTRManagedBuddy *otrBuddy = [self updateManagedBuddyWith:buddy];
-    [otrBuddy newStatusMessage:status.statusMessage status:buddyStatus incoming:YES];
+    [otrBuddy setNewStatus:buddyStatus];
+    otrBuddy.statusMessage = status.statusMessage;
 }
 
 

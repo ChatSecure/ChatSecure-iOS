@@ -24,10 +24,33 @@
 #import <CoreData/CoreData.h>
 #import "OTRKit.h"
 #import "_OTRManagedBuddy.h"
-#import "OTRConstants.h"
-#import "OTRManagedStatus.h"
 
 @class OTRManagedAccount;
+
+typedef int16_t OTRBuddyStatus;
+typedef int16_t OTRChatState;
+
+#define MESSAGE_PROCESSED_NOTIFICATION @"MessageProcessedNotification"
+#define kOTREncryptionStateNotification @"kOTREncryptionStateNotification"
+
+
+enum OTRBuddyStatus {
+    kOTRBuddyStatusOffline = 4,
+    kOTRBuddyStatusXa = 3,
+    kOTRBUddyStatusDnd = 2,
+    kOTRBuddyStatusAway = 1,
+    kOTRBuddyStatusAvailable = 0
+};
+
+enum OTRChatState {
+    kOTRChatStateUnknown =0,
+    kOTRChatStateActive = 1,
+    kOTRChatStateComposing = 2,
+    kOTRChatStatePaused = 3,
+    kOTRChatStateInactive = 4,
+    kOTRChatStateGone =5
+};
+
 
 @interface OTRManagedBuddy : _OTRManagedBuddy
 
@@ -44,9 +67,9 @@
 -(void)invalidatePausedChatStateTimer;
 -(void)invalidateInactiveChatStateTimer;
 
--(void) newStatusMessage:(NSString *)newStatusMessage status:(OTRBuddyStatus)newStatus incoming:(BOOL)isIncoming;
+- (void) setNewStatus:(OTRBuddyStatus)newStatus;
 - (void) setNewEncryptionStatus:(OTRKitMessageState)newEncryptionStatus;
-- (OTRManagedStatus *)currentStatusMessage;
+- (NSString *)currentStatusMessage;
 
 - (NSInteger) numberOfUnreadMessages;
 - (void) allMessagesRead;

@@ -7,18 +7,19 @@ const struct OTRManagedBuddyAttributes OTRManagedBuddyAttributes = {
 	.accountName = @"accountName",
 	.chatState = @"chatState",
 	.composingMessageString = @"composingMessageString",
-	.currentStatus = @"currentStatus",
 	.displayName = @"displayName",
 	.encryptionStatus = @"encryptionStatus",
 	.groupName = @"groupName",
 	.lastMessageDate = @"lastMessageDate",
 	.lastMessageDisconnected = @"lastMessageDisconnected",
 	.lastSentChatState = @"lastSentChatState",
+	.status = @"status",
+	.statusMessage = @"statusMessage",
 };
 
 const struct OTRManagedBuddyRelationships OTRManagedBuddyRelationships = {
 	.account = @"account",
-	.messagesandstatuses = @"messagesandstatuses",
+	.messages = @"messages",
 };
 
 const struct OTRManagedBuddyFetchedProperties OTRManagedBuddyFetchedProperties = {
@@ -55,11 +56,6 @@ const struct OTRManagedBuddyFetchedProperties OTRManagedBuddyFetchedProperties =
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
 		return keyPaths;
 	}
-	if ([key isEqualToString:@"currentStatusValue"]) {
-		NSSet *affectingKey = [NSSet setWithObject:@"currentStatus"];
-		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
-		return keyPaths;
-	}
 	if ([key isEqualToString:@"encryptionStatusValue"]) {
 		NSSet *affectingKey = [NSSet setWithObject:@"encryptionStatus"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
@@ -72,6 +68,11 @@ const struct OTRManagedBuddyFetchedProperties OTRManagedBuddyFetchedProperties =
 	}
 	if ([key isEqualToString:@"lastSentChatStateValue"]) {
 		NSSet *affectingKey = [NSSet setWithObject:@"lastSentChatState"];
+		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
+		return keyPaths;
+	}
+	if ([key isEqualToString:@"statusValue"]) {
+		NSSet *affectingKey = [NSSet setWithObject:@"status"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
 		return keyPaths;
 	}
@@ -117,32 +118,6 @@ const struct OTRManagedBuddyFetchedProperties OTRManagedBuddyFetchedProperties =
 
 @dynamic composingMessageString;
 
-
-
-
-
-
-@dynamic currentStatus;
-
-
-
-- (int16_t)currentStatusValue {
-	NSNumber *result = [self currentStatus];
-	return [result shortValue];
-}
-
-- (void)setCurrentStatusValue:(int16_t)value_ {
-	[self setCurrentStatus:[NSNumber numberWithShort:value_]];
-}
-
-- (int16_t)primitiveCurrentStatusValue {
-	NSNumber *result = [self primitiveCurrentStatus];
-	return [result shortValue];
-}
-
-- (void)setPrimitiveCurrentStatusValue:(int16_t)value_ {
-	[self setPrimitiveCurrentStatus:[NSNumber numberWithShort:value_]];
-}
 
 
 
@@ -247,12 +222,54 @@ const struct OTRManagedBuddyFetchedProperties OTRManagedBuddyFetchedProperties =
 
 
 
+@dynamic status;
+
+
+
+- (int16_t)statusValue {
+	NSNumber *result = [self status];
+	return [result shortValue];
+}
+
+- (void)setStatusValue:(int16_t)value_ {
+	[self setStatus:[NSNumber numberWithShort:value_]];
+}
+
+- (int16_t)primitiveStatusValue {
+	NSNumber *result = [self primitiveStatus];
+	return [result shortValue];
+}
+
+- (void)setPrimitiveStatusValue:(int16_t)value_ {
+	[self setPrimitiveStatus:[NSNumber numberWithShort:value_]];
+}
+
+
+
+
+
+@dynamic statusMessage;
+
+
+
+
+
+
 @dynamic account;
 
 	
 
-@dynamic messagesandstatuses;
+@dynamic messages;
 
+	
+- (NSMutableSet*)messagesSet {
+	[self willAccessValueForKey:@"messages"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"messages"];
+  
+	[self didAccessValueForKey:@"messages"];
+	return result;
+}
 	
 
 

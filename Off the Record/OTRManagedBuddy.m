@@ -28,7 +28,6 @@
 #import "Strings.h"
 #import "OTRConstants.h"
 #import "OTRXMPPManager.h"
-#import "OTRManagedStatus.h"
 
 @interface OTRManagedBuddy()
 @end
@@ -58,6 +57,18 @@
 
         self.lastSentChatStateValue=kOTRChatStateActive;
     }
+}
+
+-(void)setupWithDisplayName:(NSString*)buddyName accountName:(NSString*) buddyAccountName status:(OTRBuddyStatus)buddyStatus groupName:(NSString*)buddyGroupName
+{
+    self.displayName = buddyName;
+    self.accountName = buddyAccountName;
+    self.statusValue = buddyStatus;
+    self.groupName = buddyGroupName;
+    self.lastMessageDisconnected = NO;
+    self.encryptionStatus = kOTRKitMessageStatePlaintext;
+    self.chatState = kOTRChatStateUnknown;
+    self.lastSentChatState = kOTRChatStateUnknown;
 }
 
 -(BOOL)protocolIsXMPP
@@ -175,6 +186,23 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];
 }
 
+- (void) setNewStatus:(OTRBuddyStatus)newStatus {
+    if([self.account.protocol isEqualToString:kOTRProtocolTypeXMPP])
+    {
+        if ([self.messages count]!=0 && newStatus!=self.statusValue)
+        {
+            if( newStatus == 0)
+                [self receiveStatusMessage:OFFLINE_MESSAGE_STRING];
+            else if (newStatus == 1)
+                [self receiveStatusMessage:AWAY_MESSAGE_STRING];
+            else if( newStatus == 2)
+                [self receiveStatusMessage:AVAILABLE_MESSAGE_STRING];
+            
+        }
+    }
+    self.statusValue = (int16_t)newStatus;
+}
+
 -(void) protocolDisconnected:(id)sender
 {
     if([self.messages count]!=0 && !self.lastMessageDisconnected)
@@ -182,7 +210,7 @@
         //[chatHistory appendFormat:@"<p><strong style=\"color:blue\"> You </strong> Disconnected </p>"];
         [[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];
         self.lastMessageDisconnectedValue = YES;
-        [self newStatusMessage:nil status:kOTRBuddyStatusOffline incoming:NO];
+        self.statusValue = kOTRBuddyStatusOffline;
     }
 }
 
@@ -225,43 +253,33 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:kOTREncryptionStateNotification object:self];
 }
 
--(void) newStatusMessage:(NSString *)newStatusMessage status:(OTRBuddyStatus)newStatus incoming:(BOOL)isIncoming
+-(NSString *)currentStatusMessage
 {
-    //check if it's the same as last time
-    OTRManagedStatus * currentManagedStatus = [self currentStatusMessage];
-    
-    if (![newStatusMessage length]) {
-        newStatusMessage = [OTRManagedStatus statusMessageWithStatus:newStatus];
+    if([[self statusMessage] length] && self.statusValue != kOTRBuddyStatusOffline)
+    {
+        return [self statusMessage];
     }
-    
-    if (newStatus != currentManagedStatus.statusValue || ![newStatusMessage isEqualToString:currentManagedStatus.message]) {
-        [OTRManagedStatus newStatus:newStatus withMessage:newStatusMessage withBuddy:self incoming:isIncoming];
-        self.currentStatusValue = newStatus;
+    else {
+        switch ([self statusValue]) {
+            case kOTRBuddyStatusXa:
+                return EXTENDED_AWAY_STRING;
+                break;
+            case kOTRBUddyStatusDnd:
+                return DO_NOT_DISTURB_STRING;
+                break;
+            case kOTRBuddyStatusAway:
+                return AWAY_STRING;
+                break;
+            case kOTRBuddyStatusAvailable:
+                return AVAILABLE_STRING;
+                break;
+                
+            default:
+                return OFFLINE_STRING;
+                break;
+        }
     }
 }
-
--(OTRManagedStatus *)currentStatusMessage
-{
-    NSSortDescriptor * dateSort = [NSSortDescriptor sortDescriptorWithKey:@"date" ascending:NO];
-    NSArray * sortedStatuses = [[self statues] sortedArrayUsingDescriptors:@[dateSort]];
-    
-    if ([sortedStatuses count]) {
-        return sortedStatuses[0];
-    }
-    return [OTRManagedStatus newStatus:kOTRBuddyStatusOffline withMessage:nil withBuddy:self incoming:NO];
-
-    
-}
--(NSSet *)messages
-{
-    return [NSSet setWithArray:[OTRManagedMessage MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"buddy == %@",self]]];
-}
-
--(NSSet *)statues
-{
-    return [NSSet setWithArray:[OTRManagedStatus MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"buddy == %@",self]]];
-}
-
 -(NSInteger) numberOfUnreadMessages
 {
     NSPredicate * messageFilter = [NSPredicate predicateWithFormat:@"isRead == NO AND isEncrypted == NO AND isIncoming == YES"];
@@ -271,8 +289,7 @@
 
 - (void) allMessagesRead
 {
-    NSSet * allMessages = [self messages];
-    [allMessages setValue:[NSNumber numberWithBool:YES] forKey:@"isRead"];
+    [self.messages setValue:[NSNumber numberWithBool:YES] forKey:@"isRead"];
     NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
     [context MR_saveToPersistentStoreAndWait];
     //[context MR_saveOnlySelfWithCompletion:^(BOOL success, NSError * error){NSLog(@"Saving buddy"); }];
@@ -281,7 +298,7 @@
 - (void) deleteAllMessages
 {
     NSPredicate * messageFilter = [NSPredicate predicateWithFormat:@"buddy == %@",self];
-    [OTRManagedMessageAndStatus MR_deleteAllMatchingPredicate:messageFilter];
+    [OTRManagedMessage MR_deleteAllMatchingPredicate:messageFilter];
     NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
     [context MR_saveToPersistentStoreAndWait];
 }
@@ -298,6 +315,14 @@
         buddy.account = account;
     }
     return buddy;
+}
+
+-(int16_t)statusValue
+{
+    if (!self.account.isConnectedValue) {
+        return kOTRBuddyStatusOffline;
+    }
+    return [[self status] shortValue];
 }
 
 +(OTRManagedBuddy *)buddyWithAccountName:(NSString *)name account:(OTRManagedAccount *)account

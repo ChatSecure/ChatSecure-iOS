@@ -268,8 +268,8 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
                     buddyStatus = kOTRBuddyStatusOffline;
                     break;
             }
-            [buddy newStatusMessage:user.primaryResource.status status:buddyStatus incoming:YES];
-            
+            buddy.statusMessage = user.primaryResource.status;
+            buddy.statusValue = buddyStatus;
             buddy.groupName = user.sectionName;
             NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
             [context MR_saveToPersistentStoreAndWait];
