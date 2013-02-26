@@ -74,6 +74,8 @@ enum OTRChatState {
 - (NSInteger) numberOfUnreadMessages;
 - (void) allMessagesRead;
 
+- (void) deleteAllMessages;
+
 +(OTRManagedBuddy *)fetchOrCreateWithName:(NSString *)name account:(OTRManagedAccount *)account;
 
 @end

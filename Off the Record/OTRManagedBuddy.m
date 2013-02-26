@@ -295,6 +295,14 @@
     //[context MR_saveOnlySelfWithCompletion:^(BOOL success, NSError * error){NSLog(@"Saving buddy"); }];
 }
 
+- (void) deleteAllMessages
+{
+    NSPredicate * messageFilter = [NSPredicate predicateWithFormat:@"buddy == %@",self];
+    [OTRManagedMessage MR_deleteAllMatchingPredicate:messageFilter];
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    [context MR_saveToPersistentStoreAndWait];
+}
+
 
 
 +(OTRManagedBuddy *)fetchOrCreateWithName:(NSString *)name account:(OTRManagedAccount *)account

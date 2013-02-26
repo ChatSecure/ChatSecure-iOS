@@ -38,7 +38,6 @@
 
 @interface OTRBuddyListViewController(Private)
 - (void) selectActiveConversation;
-- (void) removeConversationsForAccount:(NSString *)account;
 - (void) deleteBuddy:(OTRManagedBuddy*)buddy;
 @end
 
@@ -285,20 +284,12 @@
 {
     NSString * uniqueString = [notification.userInfo objectForKey:kOTRProtocolLogoutUserInfoKey];
     
-    [self removeConversationsForAccount:uniqueString];
+    //[self removeConversationsForAccount:uniqueString];
 }
-
--(void) removeConversationsForAccount:(NSString *)accountUniqueIdentifier {
-    if ([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyDeleteOnDisconnect]) {
-        
-
-    }
-}
-
 
 - (void) tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == RECENTS_SECTION_INDEX && editingStyle == UITableViewCellEditingStyleDelete) {
-        
+        [[self.recentBuddiesFetchedResultsController objectAtIndexPath:indexPath] deleteAllMessages];
     }
 }
 
@@ -337,7 +328,9 @@
         return _buddyFetchedResultsController;
     }
     
-    _buddyFetchedResultsController = [OTRManagedBuddy MR_fetchAllGroupedBy:nil withPredicate:nil sortedBy:@"status,displayName" ascending:YES delegate:self];
+    NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"accountName != nil OR displayName != nil"];
+    
+    _buddyFetchedResultsController = [OTRManagedBuddy MR_fetchAllGroupedBy:nil withPredicate:buddyFilter sortedBy:@"status,displayName" ascending:YES delegate:self];
     
     return _buddyFetchedResultsController;
 }
@@ -349,7 +342,8 @@
         return _searchBuddyFetchedResultsController;
     }
     
-    _searchBuddyFetchedResultsController = [OTRManagedBuddy MR_fetchAllGroupedBy:nil withPredicate:nil sortedBy:@"status,displayName" ascending:YES delegate:self];
+    NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"accountName != nil OR displayName != nil"];
+    _searchBuddyFetchedResultsController = [OTRManagedBuddy MR_fetchAllGroupedBy:nil withPredicate:buddyFilter sortedBy:@"status,displayName" ascending:YES delegate:self];
     
     return _searchBuddyFetchedResultsController;
     
@@ -363,8 +357,10 @@
     }
     
     NSPredicate * predicate = [NSPredicate predicateWithFormat:@"messages.@count != 0"];
+    NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"accountName != nil OR displayName != nil"];
+    NSPredicate * compoundPredicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[predicate,buddyFilter]];
     
-    _recentBuddiesFetchedResultsController = [OTRManagedBuddy MR_fetchAllSortedBy:@"lastMessageDate" ascending:NO withPredicate:predicate groupBy:nil delegate:self];
+    _recentBuddiesFetchedResultsController = [OTRManagedBuddy MR_fetchAllSortedBy:@"lastMessageDate" ascending:NO withPredicate:compoundPredicate groupBy:nil delegate:self];
  
     return _recentBuddiesFetchedResultsController;
 }
@@ -463,6 +459,10 @@
 -(void) configureCell:(UITableViewCell *)cell withBuddy:(OTRManagedBuddy *)buddy
 {
     NSString *buddyUsername = buddy.displayName;
+    if (![buddy.displayName length]) {
+        buddyUsername = buddy.accountName;
+    }
+    
     OTRBuddyStatus buddyStatus = buddy.statusValue;
     
     cell.textLabel.text = buddyUsername;
