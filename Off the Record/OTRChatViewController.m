@@ -857,14 +857,18 @@
             statusMessageLabel.textAlignment = UITextAlignmentCenter;
             statusMessageLabel.font = [UIFont boldSystemFontOfSize:SentDateFontSize];
             statusMessageLabel.backgroundColor = [UIColor clearColor];
-            statusMessageLabel.text = managedStatus.message;
+            if (managedStatus.isIncomingValue) {
+                statusMessageLabel.text = [NSString stringWithFormat:@"New Status Message: %@",managedStatus.message];
+            }
+            else{
+                statusMessageLabel.text = [NSString stringWithFormat:@"You are: %@",managedStatus.message];
+            }
+            
+            
             [cell.contentView addSubview:statusMessageLabel];
+            cell.userInteractionEnabled = NO;
             return cell;
         }
-        
-        
-       
-        
     }
 }
 
