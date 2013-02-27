@@ -11,6 +11,24 @@
 
 @implementation OTRManagedStatus
 
+-(void)updateStatus:(OTRBuddyStatus)newStatus withMessage:(NSString *)newMessage incoming:(BOOL)newIsIncoming
+{
+    self.date = [NSDate date];
+    self.statusValue = newStatus;
+    self.isIncomingValue = newIsIncoming;
+    self.isEncryptedValue = NO;
+    if (![newMessage length]) {
+        self.message = [OTRManagedStatus statusMessageWithStatus:newStatus];
+    }
+    else
+    {
+        self.message = newMessage;
+    }
+    
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    [context MR_saveToPersistentStoreAndWait];
+}
+
 +(OTRManagedStatus *)newStatus:(OTRBuddyStatus)newStatus withMessage:(NSString *)newMessage withBuddy:(OTRManagedBuddy *)newBuddy incoming:(BOOL)newIsIncoming
 {
     OTRManagedStatus * managedStatus = [OTRManagedStatus MR_createEntity];

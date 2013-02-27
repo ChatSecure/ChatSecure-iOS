@@ -60,6 +60,7 @@
 #define MESSAGE_BACKGROUND_IMAGE_VIEW_TAG    101
 #define MESSAGE_TEXT_LABEL_TAG               102
 #define MESSAGE_DELIVERED_LABEL_TAG          103
+#define STATUS_MESSAGE_LABEL_TAG             104
 
 @interface OTRChatViewController(Private)
 
@@ -850,13 +851,19 @@
             cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
             if (!cell) {
                 cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
+                UILabel * statusMessageLabel = [[UILabel alloc] initWithFrame:CGRectMake(-2, 0, tableView.frame.size.width, SentDateFontSize+5)];
+                statusMessageLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+                statusMessageLabel.textColor = [UIColor grayColor];
+                statusMessageLabel.textAlignment = UITextAlignmentCenter;
+                statusMessageLabel.font = [UIFont boldSystemFontOfSize:SentDateFontSize];
+                statusMessageLabel.backgroundColor = [UIColor clearColor];
+                statusMessageLabel.tag = STATUS_MESSAGE_LABEL_TAG;
+                [cell.contentView addSubview:statusMessageLabel];
             }
-            UILabel * statusMessageLabel = [[UILabel alloc] initWithFrame:CGRectMake(-2, 0, tableView.frame.size.width, SentDateFontSize+5)];
-            statusMessageLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-            statusMessageLabel.textColor = [UIColor grayColor];
-            statusMessageLabel.textAlignment = UITextAlignmentCenter;
-            statusMessageLabel.font = [UIFont boldSystemFontOfSize:SentDateFontSize];
-            statusMessageLabel.backgroundColor = [UIColor clearColor];
+            
+            UILabel * statusMessageLabel = (UILabel *)[cell.contentView viewWithTag:STATUS_MESSAGE_LABEL_TAG];
+            
+            
             if (managedStatus.isIncomingValue) {
                 statusMessageLabel.text = [NSString stringWithFormat:@"New Status Message: %@",managedStatus.message];
             }
@@ -865,7 +872,7 @@
             }
             
             
-            [cell.contentView addSubview:statusMessageLabel];
+            
             cell.userInteractionEnabled = NO;
             return cell;
         }
