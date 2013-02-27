@@ -238,6 +238,7 @@
     
     //Make sure the status message is unique compared to the last status message
     if (newStatus != currentManagedStatus.statusValue || ![newStatusMessage isEqualToString:currentManagedStatus.message]) {
+        //if no new messages since last status update just change the most recent status
         if (![managedMessages count]) {
             [currentManagedStatus updateStatus:newStatus withMessage:newStatusMessage incoming:isIncoming];
             self.currentStatusValue = newStatus;

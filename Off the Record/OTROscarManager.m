@@ -165,9 +165,13 @@ BOOL loginFailed;
 #pragma mark Session Delegate
 
 - (void)aimSessionManagerSignedOff:(AIMSessionManager *)sender {
-    [self.account setAllBuddiesStuts:kOTRBuddyStatusOffline];
+    [self.account setAllBuddiesStatuts:kOTRBuddyStatusOffline];
     self.account.isConnectedValue = NO;
-    [[NSNotificationCenter defaultCenter] postNotificationName:kOTRProtocolLogout object:nil userInfo:@{kOTRProtocolLogoutUserInfoKey: self.account.uniqueIdentifier}];
+    
+    if([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyDeleteOnDisconnect])
+    {
+        [self.account deleteAllConversationsForAccount];
+    }
     
 	[self checkThreading];
     loggedIn = NO;

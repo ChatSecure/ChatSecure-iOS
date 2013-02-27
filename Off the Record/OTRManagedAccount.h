@@ -48,7 +48,8 @@
 -(void)setNewUsername:(NSString *)newUsername;
 - (void) setDefaultsWithProtocol:(NSString*)newProtocol;
 
--(void)setAllBuddiesStuts:(OTRBuddyStatus)status;
+-(void)setAllBuddiesStatuts:(OTRBuddyStatus)status;
+-(void)deleteAllConversationsForAccount;
 
 
 //Goes through all accounts checks if it's connected againgst ProtocolManager and adjusts buddy status

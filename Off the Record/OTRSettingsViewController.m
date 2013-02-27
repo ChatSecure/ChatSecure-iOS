@@ -67,11 +67,6 @@
          name:kOTRProtocolLoginSuccess
          object:nil ];
         
-        [[NSNotificationCenter defaultCenter]
-         addObserver:self
-         selector:@selector(protocolLoggedOff:)
-         name: kOTRProtocolLogout
-         object:nil ];
     }
     return self;
 }
@@ -310,11 +305,6 @@
     id <OTRProtocol> protocol = notification.object;
     [protocol.account setIsConnectedValue:YES];
     [self accountLoggedIn];
-}
-
--(void)protocolLoggedOff:(NSNotification *)notification
-{
-    [settingsTableView reloadData];
 }
 
 - (void) alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {

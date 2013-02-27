@@ -90,12 +90,6 @@
      name:kOTRMessageReceived
      object:nil ];
     
-    [[NSNotificationCenter defaultCenter]
-     addObserver:self
-     selector:@selector(protocolLoggedOff:)
-     name:kOTRProtocolLogout
-     object:nil ];
-    
     self.buddyListTableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     buddyListTableView.dataSource = self;
     buddyListTableView.delegate = self;
@@ -281,13 +275,6 @@
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
     }
-}
-
--(void) protocolLoggedOff:(NSNotification *) notification
-{
-    NSString * uniqueString = [notification.userInfo objectForKey:kOTRProtocolLogoutUserInfoKey];
-    
-    //[self removeConversationsForAccount:uniqueString];
 }
 
 - (void) tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {

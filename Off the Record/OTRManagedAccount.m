@@ -138,11 +138,20 @@
     return [NSNumber numberWithBool:[[OTRProtocolManager sharedInstance] isAccountConnected:self]];
 }
 
--(void)setAllBuddiesStuts:(OTRBuddyStatus)status
+-(void)setAllBuddiesStatuts:(OTRBuddyStatus)status
 {
     for (OTRManagedBuddy * buddy in self.buddies)
     {
         [buddy newStatusMessage:nil status:status incoming:NO];
+    }
+    [self save];
+}
+
+-(void)deleteAllConversationsForAccount
+{
+    for (OTRManagedBuddy * buddy in self.buddies)
+    {
+        [buddy deleteAllMessages];
     }
     [self save];
 }
@@ -155,7 +164,7 @@
     {
         managedAccount.isConnectedValue = [[OTRProtocolManager sharedInstance] isAccountConnected:managedAccount];
         if (!managedAccount.isConnectedValue) {
-            [managedAccount setAllBuddiesStuts:kOTRBuddyStatusOffline];
+            [managedAccount setAllBuddiesStatuts:kOTRBuddyStatusOffline];
         }
         
     }

@@ -23,8 +23,6 @@
 #define kOTRProtocolLoginSuccess @"LoginSuccessNotification"
 #define kOTRProtocolLoginFail @"LoginFailedNotification"
 #define kOTRBuddyListUpdate @"BuddyListUpdateNotification"
-#define kOTRProtocolLogout @"LogoutNotification"
-#define kOTRProtocolLogoutUserInfoKey @"LogoutNotificationKey"
 #define kOTRMessageReceived @"MessageReceivedNotification"
 #define kOTRMessageReceiptResonseReceived @"MessageReceiptResponseNotification"
 #define kOTRStatusUpdate @"StatusUpdatedNotification" 
@@ -62,6 +60,13 @@ typedef int16_t OTRChatState;
 
 #define MESSAGE_PROCESSED_NOTIFICATION @"MessageProcessedNotification"
 #define kOTREncryptionStateNotification @"kOTREncryptionStateNotification"
+
+#define kOTRSettingKeyFontSize @"kOTRSettingKeyFontSize"
+#define kOTRSettingKeyDeleteOnDisconnect @"kOTRSettingKeyDeleteOnDisconnect"
+#define kOTRSettingKeyShowDisconnectionWarning @"kOTRSettingKeyShowDisconnectionWarning"
+#define kOTRSettingUserAgreedToEULA @"kOTRSettingUserAgreedToEULA"
+#define kOTRSettingAccountsKey @"kOTRSettingAccountsKey"
+#define kOTRSettingKeyLanguage @"userSelectedSetting"
 
 
 enum OTRBuddyStatus {

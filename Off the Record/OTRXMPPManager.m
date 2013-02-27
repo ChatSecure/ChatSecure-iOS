@@ -547,13 +547,13 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     
     OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
     
-    [self.account setAllBuddiesStuts:kOTRBuddyStatusOffline];
+    [self.account setAllBuddiesStatuts:kOTRBuddyStatusOffline];
     self.account.isConnectedValue = NO;
     
-    [[NSNotificationCenter defaultCenter]
-     postNotificationName:kOTRProtocolLogout
-     object:nil
-     userInfo:@{kOTRProtocolLogoutUserInfoKey: self.account.uniqueIdentifier}];
+    if([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyDeleteOnDisconnect])
+    {
+        [self.account deleteAllConversationsForAccount];
+    }
     
     
     [protocolManager.protocolManagers removeObjectForKey:self.account.uniqueIdentifier];
