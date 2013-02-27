@@ -50,9 +50,9 @@
 #define MESSAGE_MARGIN_TOP                   7
 #define MESSAGE_MARGIN_BOTTOM                10
 #define TEXT_VIEW_X                          7   // 40  (with CameraButton)
-#define TEXT_VIEW_Y                          2
+#define TEXT_VIEW_Y                          9
 #define TEXT_VIEW_WIDTH                      249 // 216 (with CameraButton)
-#define TEXT_VIEW_HEIGHT_MIN                 90
+#define TEXT_VIEW_HEIGHT_MIN                 36
 #define ContentHeightMax                     80
 #define MESSAGE_COUNT_LIMIT                  50
 #define MESSAGE_SENT_DATE_SHOW_TIME_INTERVAL 5*60 // 5 minutes
@@ -270,10 +270,12 @@
     textView.delegate = self;
     textView.backgroundColor = [UIColor clearColor]; //[UIColor colorWithWhite:245/255.0f alpha:1];
     textView.scrollIndicatorInsets = UIEdgeInsetsMake(13, 0, 8, 6);
+    textView.contentInset = UIEdgeInsetsMake(-6, 0, 0, 0);
     textView.scrollsToTop = NO;
     textView.font = [UIFont systemFontOfSize:MessageFontSize];
-    textView.autocorrectionType =
     textView.placeholder = MESSAGE_PLACEHOLDER_STRING;
+    
+    textView.clipsToBounds = YES;
     
     [messageInputBar addSubview:textView];
     
@@ -435,6 +437,7 @@
     [self scrollToBottomAnimated:YES];
 }
 
+
 - (void)textViewDidChange:(UITextView *)tView {
     // Change height of _tableView & messageInputBar to match textView's content height.
     CGFloat textViewContentHeight = textView.contentSize.height;
@@ -445,8 +448,15 @@
         changeInHeight = kChatBarHeight4+2-_previousTextViewContentHeight;
     }
     
+    float duration = 0.2f;
+    
+    
     if (changeInHeight) {
-        [UIView animateWithDuration:0.2 animations:^{
+        [UIView animateWithDuration:duration animations:^{
+            CGRect frame = textView.frame;
+            frame.size.height = MIN(textViewContentHeight, ContentHeightMax);
+            textView.frame = frame;
+            
             self.chatHistoryTableView.contentInset = self.chatHistoryTableView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, self.chatHistoryTableView.contentInset.bottom+changeInHeight, 0);
             [self scrollToBottomAnimated:NO];
             UIView *messageInputBar = textView.superview;
@@ -626,10 +636,12 @@
         
         _messageFontSize = [OTRSettingsManager floatForOTRSettingKey:kOTRSettingKeyFontSize];
         
+        
+        
         if(![self.buddy.composingMessageString length])
         {
-            textView.text = nil;
             [self.buddy sendActiveChatState];
+            textView.text = nil;
         }
         else{
             self.textView.text = self.buddy.composingMessageString;
@@ -644,16 +656,18 @@
 
 - (void)viewWillDisappear:(BOOL)animated
 {
+
     [self.buddy allMessagesRead];
     [super viewWillDisappear:animated];
 }
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
     [self refreshView];
     [self updateChatState:NO];
     
-    [super viewWillAppear:animated];
+    
 }
 
 -(void)saveCurrentMessageText
@@ -663,6 +677,8 @@
     {
         [self.buddy sendInactiveChatState];
     }
+    self.textView.text = nil;
+    //[self textViewDidChange:textView];
 }
 
 /*- (void)debugButton:(UIBarButtonItem *)sender
