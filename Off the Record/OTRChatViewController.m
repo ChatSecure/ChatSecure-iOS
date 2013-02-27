@@ -230,7 +230,7 @@
     messageInputBar.image = [[UIImage imageNamed:@"MessageInputBarBackground"] resizableImageWithCapInsets:UIEdgeInsetsMake(19, 3, 19, 3)]; // 8 x 40
     
     
-    
+    _messageFontSize = [OTRSettingsManager floatForOTRSettingKey:kOTRSettingKeyFontSize];
     _previousTextViewContentHeight = MessageFontSize+20;
     CGFloat textViewWidth = messageInputBar.frame.size.width-TEXT_VIEW_X-65;
     
@@ -607,6 +607,7 @@
             self.instructionsLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.view.frame.size.width/2-labelWidth/2, self.view.frame.size.height/2-labelHeight/2, labelWidth, labelHeight)];
             instructionsLabel.text = CHAT_INSTRUCTIONS_LABEL_STRING;
             instructionsLabel.numberOfLines = 2;
+            instructionsLabel.backgroundColor = self.chatHistoryTableView.backgroundColor;
             [self.view addSubview:instructionsLabel];
             self.navigationItem.rightBarButtonItem = nil;
         }
@@ -617,9 +618,13 @@
         }
         _messagesFetchedResultsController = nil;
         _buddyFetchedResultsController = nil;
+        _heightForRow = nil;
+        [self.buddy allMessagesRead];
         [self.chatHistoryTableView reloadData];
         [self.textView resignFirstResponder];
         [self moveMessageBarBottom];
+        
+        _messageFontSize = [OTRSettingsManager floatForOTRSettingKey:kOTRSettingKeyFontSize];
         
         if(![self.buddy.composingMessageString length])
         {
@@ -645,7 +650,6 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
-    [self.buddy allMessagesRead];
     [self refreshView];
     [self updateChatState:NO];
     

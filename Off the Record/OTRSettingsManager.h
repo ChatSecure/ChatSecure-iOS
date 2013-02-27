@@ -40,5 +40,7 @@
 
 + (BOOL) boolForOTRSettingKey:(NSString*)key;
 + (double) doubleForOTRSettingKey:(NSString*)key;
++ (NSInteger) intForOTRSettingKey:(NSString *)key;
++ (float) floatForOTRSettingKey:(NSString *)key;
 
 @end

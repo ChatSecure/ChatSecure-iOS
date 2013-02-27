@@ -119,6 +119,8 @@
 		63E5E84116D1DF14006E2B01 /* SendButtonHighlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = 63E5E83116D1DF14006E2B01 /* SendButtonHighlighted.png */; };
 		63E5E84216D1DF14006E2B01 /* SendButtonHighlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63E5E83216D1DF14006E2B01 /* SendButtonHighlighted@2x.png */; };
 		63F6E854164E000C00F67BDB /* OTRFeedbackSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F6E853164E000B00F67BDB /* OTRFeedbackSetting.m */; };
+		63F8A52F16DD995400374551 /* OTRIntSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F8A52E16DD995400374551 /* OTRIntSetting.m */; };
+		63F8A53316DD9B6F00374551 /* OTRIntSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F8A53216DD9B6F00374551 /* OTRIntSettingViewController.m */; };
 		D90B80AC13FC719B006EFF3D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D90B80AB13FC719B006EFF3D /* CoreGraphics.framework */; };
 		D90B80AF13FC7E5F006EFF3D /* OTRCodec.m in Sources */ = {isa = PBXBuildFile; fileRef = D90B80AE13FC7E5F006EFF3D /* OTRCodec.m */; };
 		D90FAF2314A05D4B00DA7C56 /* available.png in Resources */ = {isa = PBXBuildFile; fileRef = D90FAF2014A05D4B00DA7C56 /* available.png */; };
@@ -611,6 +613,10 @@
 		63E72B9C16CB11E800B6F389 /* _OTRManagedXMPPAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _OTRManagedXMPPAccount.m; sourceTree = "<group>"; };
 		63F6E852164E000B00F67BDB /* OTRFeedbackSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRFeedbackSetting.h; sourceTree = "<group>"; };
 		63F6E853164E000B00F67BDB /* OTRFeedbackSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRFeedbackSetting.m; sourceTree = "<group>"; };
+		63F8A52D16DD995400374551 /* OTRIntSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRIntSetting.h; sourceTree = "<group>"; };
+		63F8A52E16DD995400374551 /* OTRIntSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRIntSetting.m; sourceTree = "<group>"; };
+		63F8A53116DD9B6E00374551 /* OTRIntSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRIntSettingViewController.h; sourceTree = "<group>"; };
+		63F8A53216DD9B6F00374551 /* OTRIntSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRIntSettingViewController.m; sourceTree = "<group>"; };
 		63FAEED916B7553D004F1205 /* OTRXMPPBudyTimers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPBudyTimers.h; sourceTree = "<group>"; };
 		63FAEEDA16B7553E004F1205 /* OTRXMPPBudyTimers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPBudyTimers.m; sourceTree = "<group>"; };
 		D902D31C141E930C00AA3479 /* OTROldBuddy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTROldBuddy.h; sourceTree = "<group>"; };
@@ -1422,6 +1428,8 @@
 				D91DAE8515473EB5009D0B74 /* OTRSettingDetailViewController.m */,
 				D91DAE87154740CD009D0B74 /* OTRDoubleSettingViewController.h */,
 				D91DAE88154740CE009D0B74 /* OTRDoubleSettingViewController.m */,
+				63F8A53116DD9B6E00374551 /* OTRIntSettingViewController.h */,
+				63F8A53216DD9B6F00374551 /* OTRIntSettingViewController.m */,
 				6334063A1652C33300A54C52 /* OTRListSettingViewController.h */,
 				6334063B1652C33300A54C52 /* OTRListSettingViewController.m */,
 				6336CDDE165C4E9E00C8CBA8 /* OTRLanguageListSettingViewController.h */,
@@ -2098,6 +2106,8 @@
 				D96495C7153635A8009A8C33 /* OTRBoolSetting.m */,
 				D9FBD71215472A8400126568 /* OTRDoubleSetting.h */,
 				D9FBD71315472A8400126568 /* OTRDoubleSetting.m */,
+				63F8A52D16DD995400374551 /* OTRIntSetting.h */,
+				63F8A52E16DD995400374551 /* OTRIntSetting.m */,
 				633406371652C31300A54C52 /* OTRListSetting.h */,
 				633406381652C31300A54C52 /* OTRListSetting.m */,
 				633406431652E44500A54C52 /* OTRLanguageSetting.h */,
@@ -3189,6 +3199,8 @@
 				639BE6B216DC3B2B004B7257 /* _OTRManagedStatus.m in Sources */,
 				639BE6B816DC3B4A004B7257 /* OTRManagedMessageAndStatus.m in Sources */,
 				639BE6B916DC3B4A004B7257 /* OTRManagedStatus.m in Sources */,
+				63F8A52F16DD995400374551 /* OTRIntSetting.m in Sources */,
+				63F8A53316DD9B6F00374551 /* OTRIntSettingViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -32,6 +32,7 @@
     NSDate *_previousShownSentDate;
     UIImage *_messageBubbleComposing;
     CGFloat _previousTextViewContentHeight;
+    CGFloat _messageFontSize;
 }
 
 

@@ -33,6 +33,7 @@
 #import "OTRShareSetting.h"
 #import "OTRLanguageSetting.h"
 #import "OTRDonateSetting.h"
+#import "OTRIntSetting.h"
 
 @interface OTRSettingsManager(Private)
 - (void) populateSettings;
@@ -65,13 +66,20 @@
     OTRSettingsGroup *accountsGroup = [[OTRSettingsGroup alloc] initWithTitle:ACCOUNTS_STRING settings:[NSArray arrayWithObject:accountsViewSetting]];
     [settingsGroups addObject:accountsGroup];
     
-    
+    /*
     OTRDoubleSetting *fontSizeSetting = [[OTRDoubleSetting alloc] initWithTitle:FONT_SIZE_STRING description:FONT_SIZE_DESCRIPTION_STRING settingsKey:kOTRSettingKeyFontSize];
-    fontSizeSetting.maxValue = 2.5;
-    fontSizeSetting.minValue = 0.5;
+    fontSizeSetting.maxValue = 20;
+    fontSizeSetting.minValue = 12;
     fontSizeSetting.numValues = 4;
-    fontSizeSetting.defaultValue = [NSNumber numberWithDouble:1.0];
-    fontSizeSetting.isPercentage = YES;
+    fontSizeSetting.defaultValue = [NSNumber numberWithInt:16];
+    fontSizeSetting.isPercentage = NO;
+    */
+    
+    OTRIntSetting * fontSizeSetting = [[OTRIntSetting alloc] initWithTitle:FONT_SIZE_STRING description:FONT_SIZE_DESCRIPTION_STRING settingsKey:kOTRSettingKeyFontSize];
+    fontSizeSetting.maxValue = 20;
+    fontSizeSetting.minValue = 12;
+    fontSizeSetting.numValues = 4;
+    fontSizeSetting.defaultValue = [NSNumber numberWithInt:16];
 
     [newSettingsDictionary setObject:fontSizeSetting forKey:kOTRSettingKeyFontSize];
     OTRBoolSetting *deletedDisconnectedConversations = [[OTRBoolSetting alloc] initWithTitle:DELETE_CONVERSATIONS_ON_DISCONNECT_TITLE_STRING description:DELETE_CONVERSATIONS_ON_DISCONNECT_DESCRIPTION_STRING settingsKey:kOTRSettingKeyDeleteOnDisconnect];
@@ -135,6 +143,18 @@
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     return [defaults doubleForKey:key];
+}
+
++ (NSInteger) intForOTRSettingKey:(NSString *)key
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    return [defaults integerForKey:key];
+}
+
++ (float) floatForOTRSettingKey:(NSString *)key
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    return [defaults floatForKey:key];
 }
 
 - (OTRSetting*) settingForOTRSettingKey:(NSString*)key {
