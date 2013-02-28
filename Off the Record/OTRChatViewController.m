@@ -906,7 +906,7 @@
         return _buddyFetchedResultsController;
     
     NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"self == %@",self.buddy];
-    NSPredicate * chatStateFilter = [NSPredicate predicateWithFormat:@"chatState == 2 OR chatState == 3"];
+    NSPredicate * chatStateFilter = [NSPredicate predicateWithFormat:@"chatState == %d OR chatState == %d",kOTRChatStateComposing,kOTRChatStatePaused];
     NSPredicate *predicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[buddyFilter,chatStateFilter]];
     
     _buddyFetchedResultsController = [OTRManagedBuddy MR_fetchAllGroupedBy:nil withPredicate:predicate sortedBy:nil ascending:YES delegate:nil];
@@ -930,32 +930,52 @@
 }
 
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
-    [self.chatHistoryTableView beginUpdates];
+    if ([controller isEqual:self.messagesFetchedResultsController])
+    {
+        [self.chatHistoryTableView beginUpdates];
+    }
 }
 
 - (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject
        atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
       newIndexPath:(NSIndexPath *)newIndexPath {
-    UITableView *tableView = self.chatHistoryTableView;
+    UITableView *tableView = nil;
     
-    switch(type) {
-        case NSFetchedResultsChangeInsert:
-            [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationBottom];
-            break;
-        case NSFetchedResultsChangeUpdate:
-            [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-            break;
-        case NSFetchedResultsChangeDelete:
-            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-            break;
+    if ([controller isEqual:self.messagesFetchedResultsController])
+    {
+        tableView = self.chatHistoryTableView;
+        
+        
+        switch(type) {
+            case NSFetchedResultsChangeInsert:
+            {
+                [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationBottom];
+                OTRManagedMessage * newMessage = [controller objectAtIndexPath:newIndexPath];
+                newMessage.isReadValue = YES;
+            }
+                break;
+            case NSFetchedResultsChangeUpdate:
+            {
+                [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            }
+                break;
+            case NSFetchedResultsChangeDelete:
+            {
+                [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            }
+                break;
+        }
+
     }
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
-    [self.chatHistoryTableView endUpdates];
-    [self scrollToBottomAnimated:YES];
+    if ([controller isEqual:self.messagesFetchedResultsController])
+    {
+        [self.chatHistoryTableView endUpdates];
+        [self scrollToBottomAnimated:YES];
+    }
 }
-
 
 
 @end

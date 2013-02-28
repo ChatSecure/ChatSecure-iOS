@@ -112,6 +112,7 @@
     self.buddyListTableView.contentOffset = CGPointMake(0, self.searchDisplayController.searchBar.frame.size.height);
 
     
+    [self updateTitleWithUnreadCount:[[self.unreadMessagesFetchedResultsContrller sections][0] numberOfObjects]];
     // uncomment to see a LOT of console output
 	// [Debug setDebuggingEnabled:YES];
 	NSLog(@"LibOrange (v: %@): -beginTest\n", @lib_orange_version_string);
@@ -356,6 +357,22 @@
     return _recentBuddiesFetchedResultsController;
 }
 
+-(NSFetchedResultsController *)unreadMessagesFetchedResultsContrller
+{
+    if(_unreadMessagesFetchedResultsContrller)
+    {
+        return _unreadMessagesFetchedResultsContrller;
+    }
+    
+    NSPredicate * encryptionFilter = [NSPredicate predicateWithFormat:@"self.isEncrypted == NO"];
+    NSPredicate * unreadFilter = [NSPredicate predicateWithFormat:@"isRead == NO"];
+    NSPredicate * unreadMessagePredicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[encryptionFilter, unreadFilter]];
+    
+    _unreadMessagesFetchedResultsContrller = [OTRManagedMessage MR_fetchAllGroupedBy:nil withPredicate:unreadMessagePredicate sortedBy:nil ascending:YES delegate:self];
+    
+    return _unreadMessagesFetchedResultsContrller;
+}
+
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
     
     UITableView * tableView = nil;
@@ -396,37 +413,40 @@
     {
         tableView = self.searchDisplayController.searchResultsTableView;
     }
-    
-    switch (type) {
-        case NSFetchedResultsChangeInsert:
-            [tableView insertRowsAtIndexPaths:@[modifiedNewIndexPath] withRowAnimation:UITableViewRowAnimationFade];
-            break;
-        case NSFetchedResultsChangeDelete:
-            [tableView deleteRowsAtIndexPaths:@[modifiedIndexPath] withRowAnimation:UITableViewRowAnimationFade];
-            break;
-            
-        case NSFetchedResultsChangeUpdate:
-            if ([controller isEqual:self.recentBuddiesFetchedResultsController]) {
-                [self configureRecentCell:[tableView cellForRowAtIndexPath:modifiedIndexPath] withBuddy:buddy];
-            }
-            else{
-                [self configureCell:[tableView cellForRowAtIndexPath:modifiedIndexPath] withBuddy:buddy];
-            }
-            break;
-            
-        case NSFetchedResultsChangeMove:
-            if ([controller isEqual:self.recentBuddiesFetchedResultsController]) {
-                [self configureRecentCell:[tableView cellForRowAtIndexPath:modifiedIndexPath] withBuddy:buddy];
-            }
-            else{
-                [self configureCell:[tableView cellForRowAtIndexPath:modifiedIndexPath] withBuddy:buddy];
-            }
-            [tableView moveRowAtIndexPath:modifiedIndexPath toIndexPath:modifiedNewIndexPath];
-            break;
+    else if([controller isEqual:self.unreadMessagesFetchedResultsContrller])
+    {
+        [self updateTitleWithUnreadCount:[[controller sections][indexPath.section] numberOfObjects]];
     }
     
-    
-    
+    if (tableView) {
+        switch (type) {
+            case NSFetchedResultsChangeInsert:
+                [tableView insertRowsAtIndexPaths:@[modifiedNewIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+                break;
+            case NSFetchedResultsChangeDelete:
+                [tableView deleteRowsAtIndexPaths:@[modifiedIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+                break;
+                
+            case NSFetchedResultsChangeUpdate:
+                if ([controller isEqual:self.recentBuddiesFetchedResultsController]) {
+                    [self configureRecentCell:[tableView cellForRowAtIndexPath:modifiedIndexPath] withBuddy:buddy];
+                }
+                else{
+                    [self configureCell:[tableView cellForRowAtIndexPath:modifiedIndexPath] withBuddy:buddy];
+                }
+                break;
+                
+            case NSFetchedResultsChangeMove:
+                if ([controller isEqual:self.recentBuddiesFetchedResultsController]) {
+                    [self configureRecentCell:[tableView cellForRowAtIndexPath:modifiedIndexPath] withBuddy:buddy];
+                }
+                else{
+                    [self configureCell:[tableView cellForRowAtIndexPath:modifiedIndexPath] withBuddy:buddy];
+                }
+                [tableView moveRowAtIndexPath:modifiedIndexPath toIndexPath:modifiedNewIndexPath];
+                break;
+        }
+    }
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
@@ -441,6 +461,22 @@
     }
     
     [tableView endUpdates];
+    
+}
+
+-(void)updateTitleWithUnreadCount:(NSInteger) unreadMessagesCount
+{
+    NSMutableString * title = [BUDDY_LIST_STRING mutableCopy];
+    if (unreadMessagesCount > 0) {
+        if (unreadMessagesCount < 100) {
+            [title appendFormat:@" (%d)",unreadMessagesCount];
+        }
+        else{
+            [title appendFormat:@" (99+)"];
+        }
+    }
+    
+    self.title = title;
 }
 
 
