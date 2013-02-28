@@ -31,6 +31,7 @@
 #import "OTRSettingsViewController.h"
 #import "OTRDatabaseUtils.h"
 #import "OTRManagedStatus.h"
+#import <QuartzCore/QuartzCore.h>
 
 //#define kSignoffTime 500
 
@@ -380,12 +381,14 @@
     NSIndexPath * modifiedIndexPath = indexPath;
     NSIndexPath * modifiedNewIndexPath = newIndexPath;
     
+    BOOL isRecentBuddiesFetchedResultsController = [controller isEqual:self.recentBuddiesFetchedResultsController];
+    
     if ([controller isEqual:self.buddyFetchedResultsController]) {
         tableView = self.buddyListTableView;
         modifiedNewIndexPath = [NSIndexPath indexPathForRow:newIndexPath.row inSection:1];
         modifiedIndexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:1];
     }
-    else if ([controller isEqual:self.recentBuddiesFetchedResultsController])
+    else if (isRecentBuddiesFetchedResultsController)
     {
         tableView = self.buddyListTableView;
     }
@@ -403,11 +406,21 @@
             break;
             
         case NSFetchedResultsChangeUpdate:
-            [self configureCell:[tableView cellForRowAtIndexPath:modifiedIndexPath] withBuddy:buddy];
+            if ([controller isEqual:self.recentBuddiesFetchedResultsController]) {
+                [self configureRecentCell:[tableView cellForRowAtIndexPath:modifiedIndexPath] withBuddy:buddy];
+            }
+            else{
+                [self configureCell:[tableView cellForRowAtIndexPath:modifiedIndexPath] withBuddy:buddy];
+            }
             break;
             
         case NSFetchedResultsChangeMove:
-            [self configureCell:[tableView cellForRowAtIndexPath:modifiedIndexPath] withBuddy:buddy];
+            if ([controller isEqual:self.recentBuddiesFetchedResultsController]) {
+                [self configureRecentCell:[tableView cellForRowAtIndexPath:modifiedIndexPath] withBuddy:buddy];
+            }
+            else{
+                [self configureCell:[tableView cellForRowAtIndexPath:modifiedIndexPath] withBuddy:buddy];
+            }
             [tableView moveRowAtIndexPath:modifiedIndexPath toIndexPath:modifiedNewIndexPath];
             break;
     }
@@ -434,6 +447,7 @@
 -(void) configureRecentCell:(UITableViewCell *)cell withBuddy:(OTRManagedBuddy *) buddy
 {
     [self configureCell:cell withBuddy:buddy];
+    NSInteger numberOfUnreadMessages = [buddy numberOfUnreadMessages];
     
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:@"yyyy-MM-dd h:mm"];
@@ -444,6 +458,35 @@
     
     
     cell.detailTextLabel.text = stringFromDate;
+    
+    if (numberOfUnreadMessages>0) {
+        UILabel * messageCountLabel = nil;
+        if (cell.accessoryView) {
+            messageCountLabel = (UILabel *)cell.accessoryView;
+        }
+        else
+        {
+            messageCountLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 42.0, 28.0)];
+            messageCountLabel.backgroundColor = [UIColor darkGrayColor];
+            messageCountLabel.textColor = [UIColor whiteColor];
+            messageCountLabel.layer.cornerRadius = 14;
+            messageCountLabel.numberOfLines = 0;
+            messageCountLabel.lineBreakMode = NSLineBreakByWordWrapping;
+            messageCountLabel.textAlignment = UITextAlignmentCenter;
+        }
+        if (numberOfUnreadMessages > 99) {
+            messageCountLabel.text = [NSString stringWithFormat:@"%d+",99];
+        }
+        else
+        {
+            messageCountLabel.text = [NSString stringWithFormat:@"%d",[buddy numberOfUnreadMessages]];
+        }
+        cell.accessoryView = messageCountLabel;
+    }
+    else
+    {
+        cell.accessoryView=nil;
+    }
 }
 
 -(void) configureCell:(UITableViewCell *)cell withBuddy:(OTRManagedBuddy *)buddy
@@ -486,10 +529,6 @@
         default:
             cell.textLabel.textColor = [UIColor lightGrayColor];
             cell.imageView.image = [UIImage imageNamed:@"offline.png"];
-    }
-    
-    if ([buddy numberOfUnreadMessages]>0) {
-        cell.textLabel.textColor = [UIColor blueColor];
     }
 }
 

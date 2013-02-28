@@ -282,7 +282,10 @@
 - (void) deleteAllMessages
 {
     NSPredicate * messageFilter = [NSPredicate predicateWithFormat:@"buddy == %@",self];
-    [OTRManagedMessageAndStatus MR_deleteAllMatchingPredicate:messageFilter];
+    NSPredicate * notLastStatusFilter = [NSPredicate predicateWithFormat:@"self != %@",[self currentStatusMessage]];
+    NSPredicate * compoundPredicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[messageFilter,notLastStatusFilter]];
+    
+    [OTRManagedMessageAndStatus MR_deleteAllMatchingPredicate:compoundPredicate];
     NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
     [context MR_saveToPersistentStoreAndWait];
 }
