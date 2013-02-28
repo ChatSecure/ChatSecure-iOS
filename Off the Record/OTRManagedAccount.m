@@ -144,7 +144,7 @@
     {
         [buddy newStatusMessage:nil status:status incoming:NO];
         if (status == kOTRBuddyStatusOffline) {
-            buddy.encryptionStatusValue = kOTRKitMessageStatePlaintext;
+            [buddy setNewEncryptionStatus:kOTRKitMessageStatePlaintext];
         }
     }
     [self save];

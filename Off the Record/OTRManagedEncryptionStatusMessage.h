@@ -1,8 +1,9 @@
 #import "_OTRManagedEncryptionStatusMessage.h"
 #import "OTRManagedBuddy.h"
+#import "OTRConstants.h"
 
 @interface OTRManagedEncryptionStatusMessage : _OTRManagedEncryptionStatusMessage {}
 
-+(OTRManagedEncryptionStatusMessage *)newEncryptionStatusMessageWithMessage:(NSString *)message buddy:(OTRManagedBuddy *)buddy;
++(OTRManagedEncryptionStatusMessage *)newEncryptionStatus:(OTRKitMessageState)messageState buddy:(OTRManagedBuddy *)buddy;
 
 @end

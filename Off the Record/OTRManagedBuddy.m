@@ -185,7 +185,7 @@
 -(void)receiveEncryptionMessage:(NSString *)message
 {
     //TODO add type of message for encryption warnings
-    [OTRManagedEncryptionStatusMessage newEncryptionStatusMessageWithMessage:message buddy:self];
+    //[OTRManagedEncryptionStatusMessage newEncryptionStatusMessageWithMessage:message buddy:self];
     
     //[chatHistory appendFormat:@"<p><strong>%@</strong></p>",message];
     //[[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];
@@ -194,35 +194,21 @@
 
 -(void)setNewEncryptionStatus:(OTRKitMessageState)newEncryptionStatus
 {
+    OTRManagedEncryptionStatusMessage * currentEncryptionStatus = [self currentEncryptionStatus];
+    
+    /*
     if([self.messages count] > 0 && newEncryptionStatus != kOTRKitMessageStateEncrypted)
     {
         [self receiveEncryptionMessage:CONVERSATION_NOT_SECURE_WARNING_STRING];
     }
-    else if(newEncryptionStatus != self.encryptionStatusValue)
+    */
+    if(newEncryptionStatus != currentEncryptionStatus.statusValue)
     {
-        if (newEncryptionStatus != kOTRKitMessageStateEncrypted && self.encryptionStatusValue == kOTRKitMessageStateEncrypted) {
+        if (newEncryptionStatus != kOTRKitMessageStateEncrypted && currentEncryptionStatus.statusValue == kOTRKitMessageStateEncrypted) {
             [[[UIAlertView alloc] initWithTitle:SECURITY_WARNING_STRING message:[NSString stringWithFormat:CONVERSATION_NO_LONGER_SECURE_STRING, self.displayName] delegate:nil cancelButtonTitle:OK_STRING otherButtonTitles:nil] show];
         }
-        switch (newEncryptionStatus) {
-            case kOTRKitMessageStatePlaintext:
-                [self receiveEncryptionMessage:CONVERSATION_NOT_SECURE_WARNING_STRING];
-                break;
-            case kOTRKitMessageStateEncrypted:
-                [self receiveEncryptionMessage:CONVERSATION_SECURE_WARNING_STRING];
-                break;
-            case kOTRKitMessageStateFinished:
-                [self receiveEncryptionMessage:CONVERSATION_NOT_SECURE_WARNING_STRING];
-                break;
-            default:
-                NSLog(@"Unknown Encryption State");
-                break;
-        }
-        
+        [OTRManagedEncryptionStatusMessage newEncryptionStatus:newEncryptionStatus buddy:self];
     }
-    self.encryptionStatusValue = newEncryptionStatus;
-    
-    //NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
-    //[context MR_saveToPersistentStoreAndWait];
 }
 
 -(void) newStatusMessage:(NSString *)newStatusMessage status:(OTRBuddyStatus)newStatus incoming:(BOOL)isIncoming
@@ -260,6 +246,19 @@
         return sortedStatuses[0];
     }
     return [OTRManagedStatus newStatus:kOTRBuddyStatusOffline withMessage:nil withBuddy:self incoming:NO];
+
+    
+}
+
+-(OTRManagedEncryptionStatusMessage *)currentEncryptionStatus
+{
+    NSSortDescriptor * dateSort = [NSSortDescriptor sortDescriptorWithKey:@"date" ascending:NO];
+    NSArray * sortedStatuses = [self.encryptionStatusMessages sortedArrayUsingDescriptors:@[dateSort]];
+    
+    if ([sortedStatuses count]) {
+        return sortedStatuses[0];
+    }
+    return [OTRManagedEncryptionStatusMessage newEncryptionStatus:kOTRKitMessageStatePlaintext buddy:self];
 
     
 }

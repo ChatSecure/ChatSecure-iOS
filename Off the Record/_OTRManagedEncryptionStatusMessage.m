@@ -4,6 +4,7 @@
 #import "_OTRManagedEncryptionStatusMessage.h"
 
 const struct OTRManagedEncryptionStatusMessageAttributes OTRManagedEncryptionStatusMessageAttributes = {
+	.status = @"status",
 };
 
 const struct OTRManagedEncryptionStatusMessageRelationships OTRManagedEncryptionStatusMessageRelationships = {
@@ -39,9 +40,40 @@ const struct OTRManagedEncryptionStatusMessageFetchedProperties OTRManagedEncryp
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
 	
+	if ([key isEqualToString:@"statusValue"]) {
+		NSSet *affectingKey = [NSSet setWithObject:@"status"];
+		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
+		return keyPaths;
+	}
 
 	return keyPaths;
 }
+
+
+
+
+@dynamic status;
+
+
+
+- (int16_t)statusValue {
+	NSNumber *result = [self status];
+	return [result shortValue];
+}
+
+- (void)setStatusValue:(int16_t)value_ {
+	[self setStatus:[NSNumber numberWithShort:value_]];
+}
+
+- (int16_t)primitiveStatusValue {
+	NSNumber *result = [self primitiveStatus];
+	return [result shortValue];
+}
+
+- (void)setPrimitiveStatusValue:(int16_t)value_ {
+	[self setPrimitiveStatus:[NSNumber numberWithShort:value_]];
+}
+
 
 
 

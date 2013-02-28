@@ -47,6 +47,7 @@
 -(void) newStatusMessage:(NSString *)newStatusMessage status:(OTRBuddyStatus)newStatus incoming:(BOOL)isIncoming;
 - (void) setNewEncryptionStatus:(OTRKitMessageState)newEncryptionStatus;
 - (OTRManagedStatus *)currentStatusMessage;
+- (OTRManagedEncryptionStatusMessage *)currentEncryptionStatus;
 
 - (NSInteger) numberOfUnreadMessages;
 - (void) allMessagesRead;

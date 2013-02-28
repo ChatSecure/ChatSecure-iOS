@@ -30,6 +30,7 @@
 #import "OTRMessageTableViewCell.h"
 #import "DAKeyboardControl.h"
 #import "OTRManagedStatus.h"
+#import "OTRManagedEncryptionStatusMessage.h"
 
 #define kTabBarHeight 0
 #define kSendButtonWidth 60
@@ -166,11 +167,13 @@
 -(void)refreshLockButton
 {
     BOOL trusted = [[OTRKit sharedInstance] finerprintIsVerifiedForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
-    if(buddy.encryptionStatusValue == kOTRKitMessageStateEncrypted && trusted)
+    int16_t currentEncryptionStatus = [self.buddy currentEncryptionStatus].statusValue;
+    
+    if(currentEncryptionStatus == kOTRKitMessageStateEncrypted && trusted)
     {
         self.navigationItem.rightBarButtonItem = lockVerifiedButton;
     }
-    else if(buddy.encryptionStatusValue == kOTRKitMessageStateEncrypted)
+    else if(currentEncryptionStatus == kOTRKitMessageStateEncrypted)
     {
         self.navigationItem.rightBarButtonItem = lockButton;
     }
@@ -184,7 +187,10 @@
 {
     NSString *encryptionString = INITIATE_ENCRYPTED_CHAT_STRING;
     NSString * verifiedString = VERIFY_STRING;
-    if (buddy.encryptionStatus.intValue == kOTRKitMessageStateEncrypted) {
+    
+    int16_t currentEncryptionStatus = [self.buddy currentEncryptionStatus].statusValue;
+    
+    if (currentEncryptionStatus == kOTRKitMessageStateEncrypted) {
         encryptionString = CANCEL_ENCRYPTED_CHAT_STRING;
     }
     UIActionSheet *popupQuery = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:encryptionString, verifiedString, CLEAR_CHAT_HISTORY_STRING, nil];
@@ -523,7 +529,8 @@
 
 
 - (void)sendButtonPressed:(id)sender {
-    BOOL secure = buddy.encryptionStatus.intValue == kOTRKitMessageStateEncrypted;
+    int16_t currentEncryptionStatus = [self.buddy currentEncryptionStatus].statusValue;
+    BOOL secure = currentEncryptionStatus == kOTRKitMessageStateEncrypted;
     [buddy sendMessage:textView.text secure:secure];
     textView.text = nil;
     [self textViewDidChange:textView];
@@ -569,7 +576,8 @@
         }
         else if (buttonIndex == 0) // Initiate/cancel encryption
         {
-            if(buddy.encryptionStatus.intValue == kOTRKitMessageStateEncrypted)
+            int16_t currentEncryptionStatus = [self.buddy currentEncryptionStatus].statusValue;
+            if(currentEncryptionStatus == kOTRKitMessageStateEncrypted)
             {
                 [[OTRKit sharedInstance]disableEncryptionForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
             } else {
@@ -866,9 +874,8 @@
             }
             return cell;
         }
-        else if ([messageOrStatus isKindOfClass:[OTRManagedStatus class]])
+        else if ([messageOrStatus isKindOfClass:[OTRManagedStatus class]] || [messageOrStatus isKindOfClass:[OTRManagedEncryptionStatusMessage class]])
         {
-            OTRManagedStatus * managedStatus = (OTRManagedStatus *)messageOrStatus;
             static NSString *CellIdentifier = @"statusCell";
             UITableViewCell * cell;
             cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -884,17 +891,27 @@
                 [cell.contentView addSubview:statusMessageLabel];
             }
             
+            
+            NSString * cellText = nil;
+            OTRManagedMessageAndStatus * managedStatus = (OTRManagedMessageAndStatus *)messageOrStatus;
+            
             UILabel * statusMessageLabel = (UILabel *)[cell.contentView viewWithTag:STATUS_MESSAGE_LABEL_TAG];
             
-            
-            if (managedStatus.isIncomingValue) {
-                statusMessageLabel.text = [NSString stringWithFormat:@"New Status Message: %@",managedStatus.message];
+            if ([messageOrStatus isKindOfClass:[OTRManagedStatus class]]) {
+                if (managedStatus.isIncomingValue) {
+                    cellText = [NSString stringWithFormat:@"New Status Message: %@",managedStatus.message];
+                }
+                else{
+                    cellText = [NSString stringWithFormat:@"You are: %@",managedStatus.message];
+                }
             }
             else{
-                statusMessageLabel.text = [NSString stringWithFormat:@"You are: %@",managedStatus.message];
+                cellText = managedStatus.message;
             }
             
             
+            
+            statusMessageLabel.text = cellText;
             
             cell.userInteractionEnabled = NO;
             return cell;

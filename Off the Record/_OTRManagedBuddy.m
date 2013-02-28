@@ -9,7 +9,6 @@ const struct OTRManagedBuddyAttributes OTRManagedBuddyAttributes = {
 	.composingMessageString = @"composingMessageString",
 	.currentStatus = @"currentStatus",
 	.displayName = @"displayName",
-	.encryptionStatus = @"encryptionStatus",
 	.groupName = @"groupName",
 	.lastMessageDate = @"lastMessageDate",
 	.lastMessageDisconnected = @"lastMessageDisconnected",
@@ -60,11 +59,6 @@ const struct OTRManagedBuddyFetchedProperties OTRManagedBuddyFetchedProperties =
 	}
 	if ([key isEqualToString:@"currentStatusValue"]) {
 		NSSet *affectingKey = [NSSet setWithObject:@"currentStatus"];
-		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
-		return keyPaths;
-	}
-	if ([key isEqualToString:@"encryptionStatusValue"]) {
-		NSSet *affectingKey = [NSSet setWithObject:@"encryptionStatus"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
 		return keyPaths;
 	}
@@ -153,32 +147,6 @@ const struct OTRManagedBuddyFetchedProperties OTRManagedBuddyFetchedProperties =
 
 @dynamic displayName;
 
-
-
-
-
-
-@dynamic encryptionStatus;
-
-
-
-- (int16_t)encryptionStatusValue {
-	NSNumber *result = [self encryptionStatus];
-	return [result shortValue];
-}
-
-- (void)setEncryptionStatusValue:(int16_t)value_ {
-	[self setEncryptionStatus:[NSNumber numberWithShort:value_]];
-}
-
-- (int16_t)primitiveEncryptionStatusValue {
-	NSNumber *result = [self primitiveEncryptionStatus];
-	return [result shortValue];
-}
-
-- (void)setPrimitiveEncryptionStatusValue:(int16_t)value_ {
-	[self setPrimitiveEncryptionStatus:[NSNumber numberWithShort:value_]];
-}
 
 
 

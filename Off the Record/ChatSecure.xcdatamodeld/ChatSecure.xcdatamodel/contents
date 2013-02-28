@@ -14,7 +14,6 @@
         <attribute name="composingMessageString" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="currentStatus" optional="YES" attributeType="Integer 16" defaultValueString="4" syncable="YES"/>
         <attribute name="displayName" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="encryptionStatus" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="groupName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="lastMessageDate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="lastMessageDisconnected" optional="YES" attributeType="Boolean" syncable="YES"/>
@@ -26,6 +25,7 @@
         <relationship name="statuses" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="OTRManagedStatus" inverseName="statusbuddy" inverseEntity="OTRManagedStatus" syncable="YES"/>
     </entity>
     <entity name="OTRManagedEncryptionStatusMessage" representedClassName="OTRManagedEncryptionStatusMessage" parentEntity="OTRManagedMessageAndStatus" syncable="YES">
+        <attribute name="status" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <relationship name="encryptionstatusbuddy" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="OTRManagedBuddy" inverseName="encryptionStatusMessages" inverseEntity="OTRManagedBuddy" syncable="YES"/>
     </entity>
     <entity name="OTRManagedMessage" representedClassName="OTRManagedMessage" parentEntity="OTRManagedMessageAndStatus" syncable="YES">
@@ -58,12 +58,12 @@
     </entity>
     <elements>
         <element name="OTRManagedAccount" positionX="340" positionY="153" width="128" height="135"/>
-        <element name="OTRManagedBuddy" positionX="106" positionY="-0" width="128" height="268"/>
+        <element name="OTRManagedBuddy" positionX="106" positionY="-0" width="128" height="253"/>
+        <element name="OTRManagedEncryptionStatusMessage" positionX="-414" positionY="252" width="243" height="73"/>
         <element name="OTRManagedMessage" positionX="-101" positionY="239" width="128" height="103"/>
         <element name="OTRManagedMessageAndStatus" positionX="-153" positionY="9" width="189" height="118"/>
         <element name="OTRManagedOscarAccount" positionX="529" positionY="72" width="128" height="43"/>
-        <element name="OTRManagedStatus" positionX="-306" positionY="143" width="128" height="73"/>
+        <element name="OTRManagedStatus" positionX="-290" positionY="161" width="128" height="73"/>
         <element name="OTRManagedXMPPAccount" positionX="565" positionY="216" width="128" height="163"/>
-        <element name="OTRManagedEncryptionStatusMessage" positionX="-414" positionY="252" width="243" height="58"/>
     </elements>
 </model>

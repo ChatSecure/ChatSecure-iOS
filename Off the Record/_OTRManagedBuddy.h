@@ -10,7 +10,6 @@ extern const struct OTRManagedBuddyAttributes {
 	__unsafe_unretained NSString *composingMessageString;
 	__unsafe_unretained NSString *currentStatus;
 	__unsafe_unretained NSString *displayName;
-	__unsafe_unretained NSString *encryptionStatus;
 	__unsafe_unretained NSString *groupName;
 	__unsafe_unretained NSString *lastMessageDate;
 	__unsafe_unretained NSString *lastMessageDisconnected;
@@ -33,7 +32,6 @@ extern const struct OTRManagedBuddyFetchedProperties {
 @class OTRManagedMessage;
 @class OTRManagedMessageAndStatus;
 @class OTRManagedStatus;
-
 
 
 
@@ -111,20 +109,6 @@ extern const struct OTRManagedBuddyFetchedProperties {
 
 
 //- (BOOL)validateDisplayName:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSNumber* encryptionStatus;
-
-
-
-@property int16_t encryptionStatusValue;
-- (int16_t)encryptionStatusValue;
-- (void)setEncryptionStatusValue:(int16_t)value_;
-
-//- (BOOL)validateEncryptionStatus:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -275,15 +259,6 @@ extern const struct OTRManagedBuddyFetchedProperties {
 
 - (NSString*)primitiveDisplayName;
 - (void)setPrimitiveDisplayName:(NSString*)value;
-
-
-
-
-- (NSNumber*)primitiveEncryptionStatus;
-- (void)setPrimitiveEncryptionStatus:(NSNumber*)value;
-
-- (int16_t)primitiveEncryptionStatusValue;
-- (void)setPrimitiveEncryptionStatusValue:(int16_t)value_;
 
 
 
