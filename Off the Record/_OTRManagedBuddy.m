@@ -9,7 +9,6 @@ const struct OTRManagedBuddyAttributes OTRManagedBuddyAttributes = {
 	.composingMessageString = @"composingMessageString",
 	.currentStatus = @"currentStatus",
 	.displayName = @"displayName",
-	.groupName = @"groupName",
 	.lastMessageDate = @"lastMessageDate",
 	.lastMessageDisconnected = @"lastMessageDisconnected",
 	.lastSentChatState = @"lastSentChatState",
@@ -18,6 +17,7 @@ const struct OTRManagedBuddyAttributes OTRManagedBuddyAttributes = {
 const struct OTRManagedBuddyRelationships OTRManagedBuddyRelationships = {
 	.account = @"account",
 	.encryptionStatusMessages = @"encryptionStatusMessages",
+	.groups = @"groups",
 	.messages = @"messages",
 	.messagesandstatuses = @"messagesandstatuses",
 	.statuses = @"statuses",
@@ -152,13 +152,6 @@ const struct OTRManagedBuddyFetchedProperties OTRManagedBuddyFetchedProperties =
 
 
 
-@dynamic groupName;
-
-
-
-
-
-
 @dynamic lastMessageDate;
 
 
@@ -231,6 +224,19 @@ const struct OTRManagedBuddyFetchedProperties OTRManagedBuddyFetchedProperties =
 	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"encryptionStatusMessages"];
   
 	[self didAccessValueForKey:@"encryptionStatusMessages"];
+	return result;
+}
+	
+
+@dynamic groups;
+
+	
+- (NSMutableSet*)groupsSet {
+	[self willAccessValueForKey:@"groups"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"groups"];
+  
+	[self didAccessValueForKey:@"groups"];
 	return result;
 }
 	

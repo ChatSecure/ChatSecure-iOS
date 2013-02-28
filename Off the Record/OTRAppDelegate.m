@@ -88,7 +88,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     //Delete all stored buddies
     //[OTRManagedBuddy MR_deleteAllMatchingPredicate:nil];
     //Delete all stored messages
-    //[OTRManagedMessage MR_deleteAllMatchingPredicate:nil];
+    //[OTRManagedMessageAndStatus MR_deleteAllMatchingPredicate:nil];
     
     //NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
     //[context MR_saveToPersistentStoreAndWait];

@@ -14,19 +14,23 @@
         <attribute name="composingMessageString" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="currentStatus" optional="YES" attributeType="Integer 16" defaultValueString="4" syncable="YES"/>
         <attribute name="displayName" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="groupName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="lastMessageDate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="lastMessageDisconnected" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="lastSentChatState" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <relationship name="account" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="OTRManagedAccount" inverseName="buddies" inverseEntity="OTRManagedAccount" syncable="YES"/>
         <relationship name="encryptionStatusMessages" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="OTRManagedEncryptionStatusMessage" inverseName="encryptionstatusbuddy" inverseEntity="OTRManagedEncryptionStatusMessage" syncable="YES"/>
+        <relationship name="groups" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="OTRManagedGroup" inverseName="buddies" inverseEntity="OTRManagedGroup" syncable="YES"/>
         <relationship name="messages" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="OTRManagedMessage" inverseName="messagebuddy" inverseEntity="OTRManagedMessage" syncable="YES"/>
-        <relationship name="messagesandstatuses" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="OTRManagedMessageAndStatus" inverseName="buddy" inverseEntity="OTRManagedMessageAndStatus" syncable="YES"/>
+        <relationship name="messagesandstatuses" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="OTRManagedMessageAndStatus" inverseName="buddy" inverseEntity="OTRManagedMessageAndStatus" syncable="YES"/>
         <relationship name="statuses" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="OTRManagedStatus" inverseName="statusbuddy" inverseEntity="OTRManagedStatus" syncable="YES"/>
     </entity>
     <entity name="OTRManagedEncryptionStatusMessage" representedClassName="OTRManagedEncryptionStatusMessage" parentEntity="OTRManagedMessageAndStatus" syncable="YES">
         <attribute name="status" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <relationship name="encryptionstatusbuddy" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="OTRManagedBuddy" inverseName="encryptionStatusMessages" inverseEntity="OTRManagedBuddy" syncable="YES"/>
+    </entity>
+    <entity name="OTRManagedGroup" representedClassName="OTRManagedGroup" syncable="YES">
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="buddies" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="OTRManagedBuddy" inverseName="groups" inverseEntity="OTRManagedBuddy" syncable="YES"/>
     </entity>
     <entity name="OTRManagedMessage" representedClassName="OTRManagedMessage" parentEntity="OTRManagedMessageAndStatus" syncable="YES">
         <attribute name="isDelivered" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
@@ -64,6 +68,7 @@
         <element name="OTRManagedMessageAndStatus" positionX="-153" positionY="9" width="189" height="118"/>
         <element name="OTRManagedOscarAccount" positionX="529" positionY="72" width="128" height="43"/>
         <element name="OTRManagedStatus" positionX="-290" positionY="161" width="128" height="73"/>
-        <element name="OTRManagedXMPPAccount" positionX="565" positionY="216" width="128" height="163"/>
+        <element name="OTRManagedXMPPAccount" positionX="520" positionY="198" width="128" height="163"/>
+        <element name="OTRManagedGroup" positionX="313" positionY="-19" width="128" height="73"/>
     </elements>
 </model>

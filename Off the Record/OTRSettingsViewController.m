@@ -317,10 +317,7 @@
             }
             OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
             [protocolManager.accountsManager removeAccount:selectedAccount];
-            //[self refreshAccounts];
-            //[accounts removeObjectAtIndex:selectedIndexPath.row];
             
-            //[settingsTableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:selectedIndexPath] withRowAnimation:UITableViewRowAnimationFade];
             
         }
         self.selectedIndexPath = nil;

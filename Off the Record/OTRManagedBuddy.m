@@ -171,27 +171,6 @@
     //[[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];
 }
 
--(void) protocolDisconnected:(id)sender
-{
-    if([self.messages count]!=0 && !self.lastMessageDisconnected)
-    {
-        //[chatHistory appendFormat:@"<p><strong style=\"color:blue\"> You </strong> Disconnected </p>"];
-        //[[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];
-        self.lastMessageDisconnectedValue = YES;
-        [self newStatusMessage:nil status:kOTRBuddyStatusOffline incoming:NO];
-    }
-}
-
--(void)receiveEncryptionMessage:(NSString *)message
-{
-    //TODO add type of message for encryption warnings
-    //[OTRManagedEncryptionStatusMessage newEncryptionStatusMessageWithMessage:message buddy:self];
-    
-    //[chatHistory appendFormat:@"<p><strong>%@</strong></p>",message];
-    //[[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];
-    
-}
-
 -(void)setNewEncryptionStatus:(OTRKitMessageState)newEncryptionStatus
 {
     OTRManagedEncryptionStatusMessage * currentEncryptionStatus = [self currentEncryptionStatus];

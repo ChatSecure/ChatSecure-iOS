@@ -21,6 +21,8 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		630FF21316E0267200CC20AD /* _OTRManagedGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 630FF21216E0267200CC20AD /* _OTRManagedGroup.m */; };
+		630FF21716E0269100CC20AD /* OTRManagedGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 630FF21616E0269000CC20AD /* OTRManagedGroup.m */; };
 		6319F696165EAB1F0063AC93 /* supportedLanguages.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6319F695165EAB1F0063AC93 /* supportedLanguages.plist */; };
 		633406391652C31300A54C52 /* OTRListSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 633406381652C31300A54C52 /* OTRListSetting.m */; };
 		6334063C1652C33300A54C52 /* OTRListSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6334063B1652C33300A54C52 /* OTRListSettingViewController.m */; };
@@ -467,6 +469,10 @@
 		63022BB516CDAD4C00F764F1 /* OTRChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRChatViewController.m; sourceTree = "<group>"; };
 		63022BB716CDAD5E00F764F1 /* ACPlaceholderTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACPlaceholderTextView.h; sourceTree = "<group>"; };
 		63022BB816CDAD5E00F764F1 /* ACPlaceholderTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACPlaceholderTextView.m; sourceTree = "<group>"; };
+		630FF21116E0267200CC20AD /* _OTRManagedGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _OTRManagedGroup.h; sourceTree = "<group>"; };
+		630FF21216E0267200CC20AD /* _OTRManagedGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _OTRManagedGroup.m; sourceTree = "<group>"; };
+		630FF21516E0269000CC20AD /* OTRManagedGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRManagedGroup.h; sourceTree = "<group>"; };
+		630FF21616E0269000CC20AD /* OTRManagedGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRManagedGroup.m; sourceTree = "<group>"; };
 		6319F695165EAB1F0063AC93 /* supportedLanguages.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = supportedLanguages.plist; path = "Off the Record/supportedLanguages.plist"; sourceTree = SOURCE_ROOT; };
 		632E5C8416D1A2A90037E37C /* OTRMessageTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRMessageTableViewCell.h; sourceTree = "<group>"; };
 		632E5C8516D1A2A90037E37C /* OTRMessageTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRMessageTableViewCell.m; sourceTree = "<group>"; };
@@ -1412,6 +1418,8 @@
 		63E72BA216CB11EE00B6F389 /* mogen */ = {
 			isa = PBXGroup;
 			children = (
+				630FF21116E0267200CC20AD /* _OTRManagedGroup.h */,
+				630FF21216E0267200CC20AD /* _OTRManagedGroup.m */,
 				63B9423016DEFFB900D6934F /* _OTRManagedEncryptionStatusMessage.h */,
 				63B9423116DEFFB900D6934F /* _OTRManagedEncryptionStatusMessage.m */,
 				639BE6AD16DC3B2B004B7257 /* _OTRManagedMessageAndStatus.h */,
@@ -2468,6 +2476,8 @@
 				639BE6B716DC3B4A004B7257 /* OTRManagedStatus.m */,
 				63B9423316DEFFE200D6934F /* OTRManagedEncryptionStatusMessage.h */,
 				63B9423416DEFFE200D6934F /* OTRManagedEncryptionStatusMessage.m */,
+				630FF21516E0269000CC20AD /* OTRManagedGroup.h */,
+				630FF21616E0269000CC20AD /* OTRManagedGroup.m */,
 				D9D3717F169D40600086F358 /* Managers */,
 				D96495CC15363C1F009A8C33 /* Settings */,
 				634CBFDB159CEAC70046FB3B /* OTRConstants.h */,
@@ -3219,6 +3229,8 @@
 				63B9422E16DEEEE300D6934F /* OTRUtilities.m in Sources */,
 				63B9423216DEFFB900D6934F /* _OTRManagedEncryptionStatusMessage.m in Sources */,
 				63B9423516DEFFE200D6934F /* OTRManagedEncryptionStatusMessage.m in Sources */,
+				630FF21316E0267200CC20AD /* _OTRManagedGroup.m in Sources */,
+				630FF21716E0269100CC20AD /* OTRManagedGroup.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

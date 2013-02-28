@@ -29,6 +29,7 @@
 #import "OTRConstants.h"
 #import "Strings.h"
 #import "OTRProtocolManager.h"
+#import "OTRUtilities.h"
 
 #define kOTRServiceName @"org.chatsecure.ChatSecure"
 
@@ -42,10 +43,7 @@
     self.protocol = newProtocol;
     self.rememberPassword = NO;
     self.isConnected = NO;
-    CFUUIDRef theUUID = CFUUIDCreate(NULL);
-    NSString* uuidString = (__bridge_transfer NSString*)CFUUIDCreateString(NULL, theUUID);
-    CFRelease(theUUID);
-    self.uniqueIdentifier = uuidString;
+    self.uniqueIdentifier = [OTRUtilities uniqueString];
 }
 
 // Default, this will be overridden in subclasses
@@ -157,6 +155,18 @@
         [buddy deleteAllMessages];
     }
     [self save];
+}
+
+-(void)prepareBuddiesandMessagesForDeletion
+{
+    for(OTRManagedBuddy * buddy in self.buddies)
+    {
+        NSPredicate * messageFilter = [NSPredicate predicateWithFormat:@"buddy == %@",self];
+        [OTRManagedMessageAndStatus MR_deleteAllMatchingPredicate:messageFilter];
+        [buddy MR_deleteEntity];
+    }
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    [context MR_saveToPersistentStoreAndWait];
 }
 
 +(void)resetAccountsConnectionStatus

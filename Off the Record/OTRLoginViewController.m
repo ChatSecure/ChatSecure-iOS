@@ -373,8 +373,7 @@
         [protocol connectWithPassword:self.passwordTextField.text];
     }
     self.timeoutTimer = [NSTimer scheduledTimerWithTimeInterval:45.0 target:self selector:@selector(timeout:) userInfo:nil repeats:NO];
-    [[[OTRProtocolManager sharedInstance] accountsManager] addAccount:account];
-    [account save];
+    //[[[OTRProtocolManager sharedInstance] accountsManager] addAccount:account];
 }
 
 - (void)cancelPressed:(id)sender {

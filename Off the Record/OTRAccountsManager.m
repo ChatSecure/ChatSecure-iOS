@@ -38,7 +38,9 @@
         NSLog(@"Account is nil!");
         return;
     }
-    [account save];
+    NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
+    OTRManagedAccount * acct = (OTRManagedAccount *)[context objectWithID:account.objectID];
+    [acct save];
 }
 
 - (void) removeAccount:(OTRManagedAccount*)account {
@@ -48,9 +50,12 @@
     }
     account.password = nil;
     
-    
     NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
-    [[context objectWithID:account.objectID] MR_deleteEntity];
+    OTRManagedAccount * acct = (OTRManagedAccount *)[context objectWithID:account.objectID];
+    
+    [acct prepareBuddiesandMessagesForDeletion];
+    [acct MR_deleteEntity];
+    
     [context MR_saveToPersistentStoreAndWait];
     
    

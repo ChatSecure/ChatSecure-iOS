@@ -108,6 +108,8 @@ terms of a separate license:
 * [MagicalRecord](https://github.com/magicalpanda/MagicalRecord) - Core Data convenience methods
 * [encrypted-core-data](https://github.com/project-imas/encrypted-core-data) - Core Data + SQLCipher
 * [UserVoice](http://www.uservoice.com) - in-app support forum
+* [mogenerator](https://github.com/rentzsch/mogenerator) - creates class files for core data model
+* [DAKeyboardControl](https://github.com/danielamitay/DAKeyboardControl) - support for swiping down keyboard in chat view
 
 Acknowledgements
 =========
@@ -118,6 +120,7 @@ Acknowledgements
 * [Sergio Sánchez López](http://www.iconfinder.com/icondetails/7043/128/aim_icon) - AIM protocol icon.
 * [Mateo Zlatar](http://thenounproject.com/mateozlatar/#) - [World Icon](http://thenounproject.com/noun/world/#icon-No6502)
 * [Goxxy](http://rocketdock.com/addon/icons/3462) - Google Talk icon.
+* [AcaniChat](https://github.com/acani/AcaniChat) - help on setting up chat view input box
 * [Localizations](https://www.transifex.com/projects/p/chatsecure/)
 	* [Jiajuan Lin](http://www.personal.psu.edu/jwl5262/blogs/lin_portfolio/) (Chinese)
 	* [Jan-Christoph Borchardt](http://jancborchardt.net/) (German)

@@ -10,7 +10,6 @@ extern const struct OTRManagedBuddyAttributes {
 	__unsafe_unretained NSString *composingMessageString;
 	__unsafe_unretained NSString *currentStatus;
 	__unsafe_unretained NSString *displayName;
-	__unsafe_unretained NSString *groupName;
 	__unsafe_unretained NSString *lastMessageDate;
 	__unsafe_unretained NSString *lastMessageDisconnected;
 	__unsafe_unretained NSString *lastSentChatState;
@@ -19,6 +18,7 @@ extern const struct OTRManagedBuddyAttributes {
 extern const struct OTRManagedBuddyRelationships {
 	__unsafe_unretained NSString *account;
 	__unsafe_unretained NSString *encryptionStatusMessages;
+	__unsafe_unretained NSString *groups;
 	__unsafe_unretained NSString *messages;
 	__unsafe_unretained NSString *messagesandstatuses;
 	__unsafe_unretained NSString *statuses;
@@ -29,10 +29,10 @@ extern const struct OTRManagedBuddyFetchedProperties {
 
 @class OTRManagedAccount;
 @class OTRManagedEncryptionStatusMessage;
+@class OTRManagedGroup;
 @class OTRManagedMessage;
 @class OTRManagedMessageAndStatus;
 @class OTRManagedStatus;
-
 
 
 
@@ -114,16 +114,6 @@ extern const struct OTRManagedBuddyFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSString* groupName;
-
-
-
-//- (BOOL)validateGroupName:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
 @property (nonatomic, strong) NSDate* lastMessageDate;
 
 
@@ -176,6 +166,13 @@ extern const struct OTRManagedBuddyFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSSet *groups;
+
+- (NSMutableSet*)groupsSet;
+
+
+
+
 @property (nonatomic, strong) NSSet *messages;
 
 - (NSMutableSet*)messagesSet;
@@ -206,6 +203,11 @@ extern const struct OTRManagedBuddyFetchedProperties {
 - (void)removeEncryptionStatusMessages:(NSSet*)value_;
 - (void)addEncryptionStatusMessagesObject:(OTRManagedEncryptionStatusMessage*)value_;
 - (void)removeEncryptionStatusMessagesObject:(OTRManagedEncryptionStatusMessage*)value_;
+
+- (void)addGroups:(NSSet*)value_;
+- (void)removeGroups:(NSSet*)value_;
+- (void)addGroupsObject:(OTRManagedGroup*)value_;
+- (void)removeGroupsObject:(OTRManagedGroup*)value_;
 
 - (void)addMessages:(NSSet*)value_;
 - (void)removeMessages:(NSSet*)value_;
@@ -263,12 +265,6 @@ extern const struct OTRManagedBuddyFetchedProperties {
 
 
 
-- (NSString*)primitiveGroupName;
-- (void)setPrimitiveGroupName:(NSString*)value;
-
-
-
-
 - (NSDate*)primitiveLastMessageDate;
 - (void)setPrimitiveLastMessageDate:(NSDate*)value;
 
@@ -301,6 +297,11 @@ extern const struct OTRManagedBuddyFetchedProperties {
 
 - (NSMutableSet*)primitiveEncryptionStatusMessages;
 - (void)setPrimitiveEncryptionStatusMessages:(NSMutableSet*)value;
+
+
+
+- (NSMutableSet*)primitiveGroups;
+- (void)setPrimitiveGroups:(NSMutableSet*)value;
 
 
 

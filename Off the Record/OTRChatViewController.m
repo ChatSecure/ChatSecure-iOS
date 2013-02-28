@@ -348,35 +348,14 @@
 }
 
 - (void) setBuddy:(OTRManagedBuddy *)newBuddy {
-    if(buddy) {
-        //[[NSNotificationCenter defaultCenter] removeObserver:self name:kOTREncryptionStateNotification object:buddy];
-        //[[NSNotificationCenter defaultCenter] removeObserver:self name:MESSAGE_PROCESSED_NOTIFICATION object:buddy];
-        //[[NSNotificationCenter defaultCenter] removeObserver:self name:kOTRProtocolDiconnect object:nil];
-    }
     [self saveCurrentMessageText];
     
     buddy = newBuddy;
     self.title = newBuddy.displayName;
     
-    /*
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(encryptionStateChangeNotification:) name:kOTREncryptionStateNotification object:buddy];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messageProcessedNotification:) name:MESSAGE_PROCESSED_NOTIFICATION object:buddy];
-    [[NSNotificationCenter defaultCenter]
-     addObserver:self
-     selector:@selector(showDisconnectionAlert:)
-     name:kOTRProtocolDiconnect
-     object:nil];
-     */
-    
     [self refreshLockButton];
     [self refreshView];
     [self updateChatState:NO];
-}
-
-
-     
-- (void) messageProcessedNotification:(NSNotification*)notification {
-    //[self updateChatState:YES];
 }
 
 -(BOOL)isComposingVisible
@@ -460,13 +439,15 @@
     
     
     if (changeInHeight) {
+        CGRect frame = textView.frame;
+        frame.size.height = MIN(textViewContentHeight, ContentHeightMax);
+        textView.frame = frame;
         [UIView animateWithDuration:duration animations:^{
-            CGRect frame = textView.frame;
-            frame.size.height = MIN(textViewContentHeight, ContentHeightMax);
-            textView.frame = frame;
+            
             
             self.chatHistoryTableView.contentInset = self.chatHistoryTableView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, self.chatHistoryTableView.contentInset.bottom+changeInHeight, 0);
             [self scrollToBottomAnimated:NO];
+            
             UIView *messageInputBar = textView.superview;
             messageInputBar.frame = CGRectMake(0, messageInputBar.frame.origin.y-changeInHeight, messageInputBar.frame.size.width, messageInputBar.frame.size.height+changeInHeight);
             self.view.keyboardTriggerOffset = messageInputBar.frame.size.height;

@@ -51,6 +51,8 @@
 -(void)setAllBuddiesStatuts:(OTRBuddyStatus)status;
 -(void)deleteAllConversationsForAccount;
 
+-(void)prepareBuddiesandMessagesForDeletion;
+
 
 //Goes through all accounts checks if it's connected againgst ProtocolManager and adjusts buddy status
 +(void)resetAccountsConnectionStatus;

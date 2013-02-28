@@ -27,7 +27,6 @@
 
 - (void) addAccount:(OTRManagedAccount*)account;
 - (void) removeAccount:(OTRManagedAccount*)account;
-- (NSArray *) allAccounts;
 
 - (OTRManagedAccount *) accountForProtocol:(NSString *)protocol accountName: (NSString *) accountName;
 

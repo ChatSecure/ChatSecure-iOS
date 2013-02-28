@@ -12,5 +12,6 @@
 
 
 +(NSString *)stripHTML:(NSString *)string;
++(NSString *)uniqueString;
 
 @end

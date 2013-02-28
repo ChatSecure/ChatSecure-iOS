@@ -72,10 +72,7 @@
 +(OTRManagedMessage*)newMessageWithBuddy:(OTRManagedBuddy *)theBuddy message:(NSString *)theMessage
 {
     OTRManagedMessage *managedMessage = [OTRManagedMessage MR_createEntity];
-    CFUUIDRef theUUID = CFUUIDCreate(NULL);
-    NSString* uuidString = (__bridge_transfer NSString*)CFUUIDCreateString(NULL, theUUID);
-    CFRelease(theUUID);
-    managedMessage.uniqueID = uuidString;
+    managedMessage.uniqueID = [OTRUtilities uniqueString];
     managedMessage.buddy = theBuddy;
     managedMessage.messagebuddy = theBuddy;
     managedMessage.message = [OTRUtilities stripHTML:theMessage];

@@ -20,6 +20,20 @@
     return finalString;
 }
 
++(NSString *)uniqueString
+{
+    NSString *result = nil;
+	
+	CFUUIDRef uuid = CFUUIDCreate(NULL);
+	if (uuid)
+	{
+		result = (__bridge_transfer NSString *)CFUUIDCreateString(NULL, uuid);
+		CFRelease(uuid);
+	}
+	
+	return result;
+}
+
 @end
 
 
