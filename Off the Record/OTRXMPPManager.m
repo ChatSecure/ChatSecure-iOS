@@ -779,12 +779,6 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
         if(otrMessage)
         {
             [messageBuddy receiveMessage:otrMessage.message];
-
-            NSDictionary *messageInfo = [NSDictionary dictionaryWithObject:otrMessage.objectID forKey:@"message"];
-            
-            [[NSNotificationCenter defaultCenter]
-             postNotificationName:kOTRMessageReceived
-             object:self userInfo:messageInfo];
             
         }
 	}

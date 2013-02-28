@@ -24,6 +24,7 @@
 #import "OTRManagedBuddy.h"
 #import "OTRConstants.h"
 #import "OTRProtocolManager.h"
+#import "OTRUtilities.h"
 
 @implementation OTRManagedMessage
 
@@ -61,6 +62,7 @@
     OTRManagedMessage *message = [OTRManagedMessage newMessageWithBuddy:theBuddy message:theMessage];
     message.isIncomingValue = NO;
     message.isReadValue = YES;
+    message.isEncryptedValue = encryptionStatus;
     NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
     [context MR_saveToPersistentStoreAndWait];
     return message;
@@ -76,9 +78,8 @@
     managedMessage.uniqueID = uuidString;
     managedMessage.buddy = theBuddy;
     managedMessage.messagebuddy = theBuddy;
-    managedMessage.message = theMessage;
+    managedMessage.message = [OTRUtilities stripHTML:theMessage];
     managedMessage.date = [NSDate date];
-    managedMessage.isEncryptedValue = NO;
     managedMessage.isDeliveredValue = NO;
     theBuddy.lastMessageDate = managedMessage.date;
 

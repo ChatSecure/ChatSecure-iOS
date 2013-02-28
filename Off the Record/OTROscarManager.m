@@ -299,13 +299,7 @@ BOOL loginFailed;
     if(otrMessage)
     {
         [messageBuddy receiveMessage:otrMessage.message];
-
-        NSDictionary *messageInfo = [NSDictionary dictionaryWithObject:otrMessage.objectID forKey:@"message"];
-        
-        [[NSNotificationCenter defaultCenter]
-         postNotificationName:kOTRMessageReceived
-         object:self userInfo:messageInfo];
-        
+    
     }
 	
 	NSArray * tokens = [CommandTokenizer tokensOfCommand:msgTxt];

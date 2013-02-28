@@ -84,13 +84,6 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
-    
-    [[NSNotificationCenter defaultCenter]
-     addObserver:self
-     selector:@selector(messageReceived:)
-     name:kOTRMessageReceived
-     object:nil ];
-    
     self.buddyListTableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     buddyListTableView.dataSource = self;
     buddyListTableView.delegate = self;
@@ -150,36 +143,6 @@
     } else {
         return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
     }
-}
-
-/*-(void)loggedInSuccessfully
-{
-    [loginController dismissModalViewControllerAnimated:YES];
-}*/
-
--(void)messageReceived:(NSNotification*)notification;
-{
-    
-    NSManagedObjectID *objectID = [notification.userInfo objectForKey:@"message"];
-    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
-    OTRManagedMessage *message = (OTRManagedMessage*)[context objectWithID:objectID];
-    OTRManagedBuddy *buddy = message.buddy;
-    if (!message.message || [message.message isEqualToString:@""]) {
-        return;
-    }
-    
-    BOOL chatViewIsVisible = chatViewController.isViewLoaded && chatViewController.view.window;
-    
-    /*
-    if ((chatViewController.buddy != buddy || !chatViewIsVisible) && [[UIApplication sharedApplication] applicationState] == UIApplicationStateActive) {
-        NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"date" ascending:YES]; // not sure if this is the right order
-        OTRManagedMessage *message = [[buddy.messages sortedArrayUsingDescriptors:@[sortDescriptor]] lastObject]; // TODO: fix this horrible inefficiency
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:buddy.displayName message:message.message delegate:self cancelButtonTitle:IGNORE_STRING otherButtonTitles:REPLY_STRING, nil];
-        NSUInteger tag = [buddy hash];
-        alert.tag = tag;
-        [alert show];
-    }
-     */
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {

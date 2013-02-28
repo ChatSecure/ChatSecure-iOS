@@ -24,6 +24,7 @@
 #import "OTRBuddyListViewController.h"
 #import "OTRProtocolManager.h"
 #import "OTRManagedBuddy.h"
+#import "OTRUtilities.h"
 
 @implementation OTRCodec
 
@@ -37,7 +38,7 @@
     
     NSString *decodedMessageString = [[OTRKit sharedInstance] decodeMessage:message recipient:friendAccount accountName:myAccountName protocol:protocol];
     if(decodedMessageString) {
-        theMessage.message = decodedMessageString;
+        theMessage.message = [OTRUtilities stripHTML:decodedMessageString];
         [theMessage setIsEncryptedValue:NO];
     } else {
         [theMessage setIsEncryptedValue:YES];

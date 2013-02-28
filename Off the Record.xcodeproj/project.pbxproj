@@ -49,6 +49,7 @@
 		63B43C2E166D93D5004A4C54 /* Lock_Locked_Verified@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63B43C2A166D93D5004A4C54 /* Lock_Locked_Verified@2x.png */; };
 		63B43C2F166D93D5004A4C54 /* Lock_Locked@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63B43C2B166D93D5004A4C54 /* Lock_Locked@2x.png */; };
 		63B43C30166D93D5004A4C54 /* Lock_Unlocked@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63B43C2C166D93D5004A4C54 /* Lock_Unlocked@2x.png */; };
+		63B9422E16DEEEE300D6934F /* OTRUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B9422D16DEEEE300D6934F /* OTRUtilities.m */; };
 		63CC9F1C16D2D18100BDA7D1 /* DAKeyboardControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CC9F1B16D2D18100BDA7D1 /* DAKeyboardControl.m */; };
 		63CC9F2116D2E93500BDA7D1 /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CC9F2016D2E93500BDA7D1 /* TTTAttributedLabel.m */; };
 		63DF97741623A3310043E295 /* pencil@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63DF97731623A3310043E295 /* pencil@2x.png */; };
@@ -521,6 +522,8 @@
 		63B43C2A166D93D5004A4C54 /* Lock_Locked_Verified@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Lock_Locked_Verified@2x.png"; sourceTree = "<group>"; };
 		63B43C2B166D93D5004A4C54 /* Lock_Locked@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Lock_Locked@2x.png"; sourceTree = "<group>"; };
 		63B43C2C166D93D5004A4C54 /* Lock_Unlocked@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Lock_Unlocked@2x.png"; sourceTree = "<group>"; };
+		63B9422C16DEEEE300D6934F /* OTRUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRUtilities.h; sourceTree = "<group>"; };
+		63B9422D16DEEEE300D6934F /* OTRUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRUtilities.m; sourceTree = "<group>"; };
 		63CC9F1A16D2D18100BDA7D1 /* DAKeyboardControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DAKeyboardControl.h; sourceTree = "<group>"; };
 		63CC9F1B16D2D18100BDA7D1 /* DAKeyboardControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DAKeyboardControl.m; sourceTree = "<group>"; };
 		63CC9F1F16D2E93500BDA7D1 /* TTTAttributedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTAttributedLabel.h; sourceTree = "<group>"; };
@@ -2458,6 +2461,8 @@
 				D9D3717F169D40600086F358 /* Managers */,
 				D96495CC15363C1F009A8C33 /* Settings */,
 				634CBFDB159CEAC70046FB3B /* OTRConstants.h */,
+				63B9422C16DEEEE300D6934F /* OTRUtilities.h */,
+				63B9422D16DEEEE300D6934F /* OTRUtilities.m */,
 				D9D3717C169D404F0086F358 /* ChatSecure.xcdatamodeld */,
 				D902D31C141E930C00AA3479 /* OTROldBuddy.h */,
 				D902D31D141E930C00AA3479 /* OTROldBuddy.m */,
@@ -3201,6 +3206,7 @@
 				639BE6B916DC3B4A004B7257 /* OTRManagedStatus.m in Sources */,
 				63F8A52F16DD995400374551 /* OTRIntSetting.m in Sources */,
 				63F8A53316DD9B6F00374551 /* OTRIntSettingViewController.m in Sources */,
+				63B9422E16DEEEE300D6934F /* OTRUtilities.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
