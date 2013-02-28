@@ -18,6 +18,7 @@ const struct OTRManagedBuddyAttributes OTRManagedBuddyAttributes = {
 
 const struct OTRManagedBuddyRelationships OTRManagedBuddyRelationships = {
 	.account = @"account",
+	.encryptionStatusMessages = @"encryptionStatusMessages",
 	.messages = @"messages",
 	.messagesandstatuses = @"messagesandstatuses",
 	.statuses = @"statuses",
@@ -251,6 +252,19 @@ const struct OTRManagedBuddyFetchedProperties OTRManagedBuddyFetchedProperties =
 
 @dynamic account;
 
+	
+
+@dynamic encryptionStatusMessages;
+
+	
+- (NSMutableSet*)encryptionStatusMessagesSet {
+	[self willAccessValueForKey:@"encryptionStatusMessages"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"encryptionStatusMessages"];
+  
+	[self didAccessValueForKey:@"encryptionStatusMessages"];
+	return result;
+}
 	
 
 @dynamic messages;

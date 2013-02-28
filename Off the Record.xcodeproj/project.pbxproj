@@ -50,6 +50,8 @@
 		63B43C2F166D93D5004A4C54 /* Lock_Locked@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63B43C2B166D93D5004A4C54 /* Lock_Locked@2x.png */; };
 		63B43C30166D93D5004A4C54 /* Lock_Unlocked@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63B43C2C166D93D5004A4C54 /* Lock_Unlocked@2x.png */; };
 		63B9422E16DEEEE300D6934F /* OTRUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B9422D16DEEEE300D6934F /* OTRUtilities.m */; };
+		63B9423216DEFFB900D6934F /* _OTRManagedEncryptionStatusMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B9423116DEFFB900D6934F /* _OTRManagedEncryptionStatusMessage.m */; };
+		63B9423516DEFFE200D6934F /* OTRManagedEncryptionStatusMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B9423416DEFFE200D6934F /* OTRManagedEncryptionStatusMessage.m */; };
 		63CC9F1C16D2D18100BDA7D1 /* DAKeyboardControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CC9F1B16D2D18100BDA7D1 /* DAKeyboardControl.m */; };
 		63CC9F2116D2E93500BDA7D1 /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CC9F2016D2E93500BDA7D1 /* TTTAttributedLabel.m */; };
 		63DF97741623A3310043E295 /* pencil@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63DF97731623A3310043E295 /* pencil@2x.png */; };
@@ -524,6 +526,10 @@
 		63B43C2C166D93D5004A4C54 /* Lock_Unlocked@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Lock_Unlocked@2x.png"; sourceTree = "<group>"; };
 		63B9422C16DEEEE300D6934F /* OTRUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRUtilities.h; sourceTree = "<group>"; };
 		63B9422D16DEEEE300D6934F /* OTRUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRUtilities.m; sourceTree = "<group>"; };
+		63B9423016DEFFB900D6934F /* _OTRManagedEncryptionStatusMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _OTRManagedEncryptionStatusMessage.h; sourceTree = "<group>"; };
+		63B9423116DEFFB900D6934F /* _OTRManagedEncryptionStatusMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _OTRManagedEncryptionStatusMessage.m; sourceTree = "<group>"; };
+		63B9423316DEFFE200D6934F /* OTRManagedEncryptionStatusMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRManagedEncryptionStatusMessage.h; sourceTree = "<group>"; };
+		63B9423416DEFFE200D6934F /* OTRManagedEncryptionStatusMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRManagedEncryptionStatusMessage.m; sourceTree = "<group>"; };
 		63CC9F1A16D2D18100BDA7D1 /* DAKeyboardControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DAKeyboardControl.h; sourceTree = "<group>"; };
 		63CC9F1B16D2D18100BDA7D1 /* DAKeyboardControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DAKeyboardControl.m; sourceTree = "<group>"; };
 		63CC9F1F16D2E93500BDA7D1 /* TTTAttributedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTAttributedLabel.h; sourceTree = "<group>"; };
@@ -1406,6 +1412,8 @@
 		63E72BA216CB11EE00B6F389 /* mogen */ = {
 			isa = PBXGroup;
 			children = (
+				63B9423016DEFFB900D6934F /* _OTRManagedEncryptionStatusMessage.h */,
+				63B9423116DEFFB900D6934F /* _OTRManagedEncryptionStatusMessage.m */,
 				639BE6AD16DC3B2B004B7257 /* _OTRManagedMessageAndStatus.h */,
 				639BE6AE16DC3B2B004B7257 /* _OTRManagedMessageAndStatus.m */,
 				639BE6AF16DC3B2B004B7257 /* _OTRManagedStatus.h */,
@@ -2458,6 +2466,8 @@
 				639BE6B516DC3B4A004B7257 /* OTRManagedMessageAndStatus.m */,
 				639BE6B616DC3B4A004B7257 /* OTRManagedStatus.h */,
 				639BE6B716DC3B4A004B7257 /* OTRManagedStatus.m */,
+				63B9423316DEFFE200D6934F /* OTRManagedEncryptionStatusMessage.h */,
+				63B9423416DEFFE200D6934F /* OTRManagedEncryptionStatusMessage.m */,
 				D9D3717F169D40600086F358 /* Managers */,
 				D96495CC15363C1F009A8C33 /* Settings */,
 				634CBFDB159CEAC70046FB3B /* OTRConstants.h */,
@@ -3207,6 +3217,8 @@
 				63F8A52F16DD995400374551 /* OTRIntSetting.m in Sources */,
 				63F8A53316DD9B6F00374551 /* OTRIntSettingViewController.m in Sources */,
 				63B9422E16DEEEE300D6934F /* OTRUtilities.m in Sources */,
+				63B9423216DEFFB900D6934F /* _OTRManagedEncryptionStatusMessage.m in Sources */,
+				63B9423516DEFFE200D6934F /* OTRManagedEncryptionStatusMessage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

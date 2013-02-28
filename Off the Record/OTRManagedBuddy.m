@@ -29,6 +29,7 @@
 #import "OTRConstants.h"
 #import "OTRXMPPManager.h"
 #import "OTRManagedStatus.h"
+#import "OTRManagedEncryptionStatusMessage.h"
 
 @interface OTRManagedBuddy()
 @end
@@ -184,7 +185,7 @@
 -(void)receiveEncryptionMessage:(NSString *)message
 {
     //TODO add type of message for encryption warnings
-    
+    [OTRManagedEncryptionStatusMessage newEncryptionStatusMessageWithMessage:message buddy:self];
     
     //[chatHistory appendFormat:@"<p><strong>%@</strong></p>",message];
     //[[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];

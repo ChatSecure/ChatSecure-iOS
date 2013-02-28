@@ -19,6 +19,7 @@ extern const struct OTRManagedBuddyAttributes {
 
 extern const struct OTRManagedBuddyRelationships {
 	__unsafe_unretained NSString *account;
+	__unsafe_unretained NSString *encryptionStatusMessages;
 	__unsafe_unretained NSString *messages;
 	__unsafe_unretained NSString *messagesandstatuses;
 	__unsafe_unretained NSString *statuses;
@@ -28,6 +29,7 @@ extern const struct OTRManagedBuddyFetchedProperties {
 } OTRManagedBuddyFetchedProperties;
 
 @class OTRManagedAccount;
+@class OTRManagedEncryptionStatusMessage;
 @class OTRManagedMessage;
 @class OTRManagedMessageAndStatus;
 @class OTRManagedStatus;
@@ -183,6 +185,13 @@ extern const struct OTRManagedBuddyFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSSet *encryptionStatusMessages;
+
+- (NSMutableSet*)encryptionStatusMessagesSet;
+
+
+
+
 @property (nonatomic, strong) NSSet *messages;
 
 - (NSMutableSet*)messagesSet;
@@ -208,6 +217,11 @@ extern const struct OTRManagedBuddyFetchedProperties {
 @end
 
 @interface _OTRManagedBuddy (CoreDataGeneratedAccessors)
+
+- (void)addEncryptionStatusMessages:(NSSet*)value_;
+- (void)removeEncryptionStatusMessages:(NSSet*)value_;
+- (void)addEncryptionStatusMessagesObject:(OTRManagedEncryptionStatusMessage*)value_;
+- (void)removeEncryptionStatusMessagesObject:(OTRManagedEncryptionStatusMessage*)value_;
 
 - (void)addMessages:(NSSet*)value_;
 - (void)removeMessages:(NSSet*)value_;
@@ -307,6 +321,11 @@ extern const struct OTRManagedBuddyFetchedProperties {
 
 - (OTRManagedAccount*)primitiveAccount;
 - (void)setPrimitiveAccount:(OTRManagedAccount*)value;
+
+
+
+- (NSMutableSet*)primitiveEncryptionStatusMessages;
+- (void)setPrimitiveEncryptionStatusMessages:(NSMutableSet*)value;
 
 
 
