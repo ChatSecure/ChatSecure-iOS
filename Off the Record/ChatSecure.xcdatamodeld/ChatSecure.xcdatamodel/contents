@@ -55,7 +55,7 @@
     <elements>
         <element name="OTRManagedAccount" positionX="340" positionY="153" width="128" height="135"/>
         <element name="OTRManagedBuddy" positionX="106" positionY="-0" width="128" height="253"/>
-        <element name="OTRManagedMessage" positionX="-252" positionY="239" width="128" height="103"/>
+        <element name="OTRManagedMessage" positionX="-182" positionY="239" width="128" height="103"/>
         <element name="OTRManagedMessageAndStatus" positionX="-153" positionY="9" width="189" height="118"/>
         <element name="OTRManagedOscarAccount" positionX="529" positionY="72" width="128" height="43"/>
         <element name="OTRManagedStatus" positionX="-306" positionY="143" width="128" height="73"/>

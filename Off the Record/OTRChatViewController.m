@@ -166,11 +166,11 @@
 -(void)refreshLockButton
 {
     BOOL trusted = [[OTRKit sharedInstance] finerprintIsVerifiedForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
-    if(buddy.encryptionStatus.intValue == kOTRKitMessageStateEncrypted && trusted)
+    if(buddy.encryptionStatusValue == kOTRKitMessageStateEncrypted && trusted)
     {
         self.navigationItem.rightBarButtonItem = lockVerifiedButton;
     }
-    else if(buddy.encryptionStatus.intValue == kOTRKitMessageStateEncrypted)
+    else if(buddy.encryptionStatusValue == kOTRKitMessageStateEncrypted)
     {
         self.navigationItem.rightBarButtonItem = lockButton;
     }
@@ -343,15 +343,16 @@
 
 - (void) setBuddy:(OTRManagedBuddy *)newBuddy {
     if(buddy) {
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:kOTREncryptionStateNotification object:buddy];
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:MESSAGE_PROCESSED_NOTIFICATION object:buddy];
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:kOTRProtocolDiconnect object:nil];
+        //[[NSNotificationCenter defaultCenter] removeObserver:self name:kOTREncryptionStateNotification object:buddy];
+        //[[NSNotificationCenter defaultCenter] removeObserver:self name:MESSAGE_PROCESSED_NOTIFICATION object:buddy];
+        //[[NSNotificationCenter defaultCenter] removeObserver:self name:kOTRProtocolDiconnect object:nil];
     }
     [self saveCurrentMessageText];
     
     buddy = newBuddy;
     self.title = newBuddy.displayName;
     
+    /*
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(encryptionStateChangeNotification:) name:kOTREncryptionStateNotification object:buddy];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messageProcessedNotification:) name:MESSAGE_PROCESSED_NOTIFICATION object:buddy];
     [[NSNotificationCenter defaultCenter]
@@ -359,6 +360,7 @@
      selector:@selector(showDisconnectionAlert:)
      name:kOTRProtocolDiconnect
      object:nil];
+     */
     
     [self refreshLockButton];
     [self refreshView];
@@ -368,7 +370,7 @@
 
      
 - (void) messageProcessedNotification:(NSNotification*)notification {
-    [self updateChatState:YES];
+    //[self updateChatState:YES];
 }
 
 -(BOOL)isComposingVisible
@@ -405,32 +407,32 @@
 
 - (void)updateChatState:(BOOL)animated
 {
-    if(self.buddy.chatState.intValue == kOTRChatStateComposing)
-    {
-        if (![self isComposingVisible]) {
-            [self addComposing];
-        }
-        
+    switch (self.buddy.chatStateValue) {
+        case kOTRChatStateComposing:
+            {
+                if (![self isComposingVisible]) {
+                    [self addComposing];
+                }
+            }
+        break;
+        case kOTRChatStatePaused:
+            {
+                if (![self isComposingVisible]) {
+                [self addComposing];
+                }
+            }
+            break;
+        case kOTRChatStateActive:
+            if ([self isComposingVisible]) {
+                [self removeComposing];
+            }
+            break;
+        default:
+            if ([self isComposingVisible]) {
+                [self removeComposing];
+            }
+            break;
     }
-    else if(self.buddy.chatState.intValue == kOTRChatStatePaused)
-    {
-        if (![self isComposingVisible]) {
-            [self addComposing];
-        }
-
-        
-    }
-    else if(self.buddy.chatState.intValue == kOTRChatStateActive)
-    {
-        if ([self isComposingVisible]) {
-            [self removeComposing];
-        }
-
-    }
-    else if(self.buddy.chatState.intValue == kOTRChatStateInactive)
-        return;
-    else if(self.buddy.chatState.intValue == kOTRChatStateGone)
-        return;
 }
 - (void)textViewDidBeginEditing:(UITextView *)textView
 {
@@ -628,6 +630,7 @@
         }
         _messagesFetchedResultsController = nil;
         _buddyFetchedResultsController = nil;
+        [self buddyFetchedResultsController];
         _heightForRow = nil;
         [self.buddy allMessagesRead];
         [self.chatHistoryTableView reloadData];
@@ -906,10 +909,10 @@
         return _buddyFetchedResultsController;
     
     NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"self == %@",self.buddy];
-    NSPredicate * chatStateFilter = [NSPredicate predicateWithFormat:@"chatState == %d OR chatState == %d",kOTRChatStateComposing,kOTRChatStatePaused];
-    NSPredicate *predicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[buddyFilter,chatStateFilter]];
+    //NSPredicate * chatStateFilter = [NSPredicate predicateWithFormat:@"chatState == %d OR chatState == %d",kOTRChatStateComposing,kOTRChatStatePaused];
+    //NSPredicate *predicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[buddyFilter,chatStateFilter]];
     
-    _buddyFetchedResultsController = [OTRManagedBuddy MR_fetchAllGroupedBy:nil withPredicate:predicate sortedBy:nil ascending:YES delegate:nil];
+    _buddyFetchedResultsController = [OTRManagedBuddy MR_fetchAllGroupedBy:nil withPredicate:buddyFilter sortedBy:nil ascending:YES delegate:self];
     
     return _buddyFetchedResultsController;
 }
@@ -950,8 +953,13 @@
             case NSFetchedResultsChangeInsert:
             {
                 [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationBottom];
-                OTRManagedMessage * newMessage = [controller objectAtIndexPath:newIndexPath];
-                newMessage.isReadValue = YES;
+                
+                
+                id possibleMessage = [controller objectAtIndexPath:newIndexPath];
+                if ([possibleMessage isKindOfClass:[OTRManagedMessage class]]) {
+                    ((OTRManagedMessage *)possibleMessage).isReadValue = YES;
+                }
+                
             }
                 break;
             case NSFetchedResultsChangeUpdate:
@@ -965,7 +973,11 @@
             }
                 break;
         }
-
+    }
+    else if ([controller isEqual:self.buddyFetchedResultsController])
+    {
+        [self updateChatState:YES];
+        [self refreshLockButton];
     }
 }
 

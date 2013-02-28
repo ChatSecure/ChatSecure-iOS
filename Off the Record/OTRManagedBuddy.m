@@ -129,7 +129,7 @@
         // TODO: fix this so it doesn't break some cyrillic encodings
         NSString *rawMessage = [[[message stringByConvertingHTMLToPlainText]stringByEncodingHTMLEntities] stringByLinkifyingURLs];
                 
-        [[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];
+        //[[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];
         
         if (![[UIApplication sharedApplication] applicationState] == UIApplicationStateActive)
         {
@@ -151,17 +151,12 @@
     }
 }
 
--(void)receiveStatusMessage:(NSString *)message
-{
-    if (message) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];
-    }
-}
-
 -(void)receiveChatStateMessage:(OTRChatState) newChatState
 {
     self.chatStateValue = newChatState;
-    [[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];
+    //NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
+    //[context MR_saveToPersistentStoreAndWait];
+    //[[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];
 }
 
 -(void)receiveReceiptResonse:(NSString *)responseID
@@ -172,7 +167,7 @@
     
     //NSString * ReceiptResonseScript = [NSString stringWithFormat:@"<script>x=document.getElementById('%@');x.innerHTML = x.innerHTML+\" (delivered)\";</script>",responseID];
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];
+    //[[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];
 }
 
 -(void) protocolDisconnected:(id)sender
@@ -180,7 +175,7 @@
     if([self.messages count]!=0 && !self.lastMessageDisconnected)
     {
         //[chatHistory appendFormat:@"<p><strong style=\"color:blue\"> You </strong> Disconnected </p>"];
-        [[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];
+        //[[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];
         self.lastMessageDisconnectedValue = YES;
         [self newStatusMessage:nil status:kOTRBuddyStatusOffline incoming:NO];
     }
@@ -188,8 +183,11 @@
 
 -(void)receiveEncryptionMessage:(NSString *)message
 {
+    //TODO add type of message for encryption warnings
+    
+    
     //[chatHistory appendFormat:@"<p><strong>%@</strong></p>",message];
-    [[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];
+    //[[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];
     
 }
 
@@ -222,7 +220,8 @@
     }
     self.encryptionStatusValue = newEncryptionStatus;
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:kOTREncryptionStateNotification object:self];
+    //NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
+    //[context MR_saveToPersistentStoreAndWait];
 }
 
 -(void) newStatusMessage:(NSString *)newStatusMessage status:(OTRBuddyStatus)newStatus incoming:(BOOL)isIncoming

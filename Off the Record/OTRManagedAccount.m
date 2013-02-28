@@ -143,6 +143,9 @@
     for (OTRManagedBuddy * buddy in self.buddies)
     {
         [buddy newStatusMessage:nil status:status incoming:NO];
+        if (status == kOTRBuddyStatusOffline) {
+            buddy.encryptionStatusValue = kOTRKitMessageStatePlaintext;
+        }
     }
     [self save];
 }
