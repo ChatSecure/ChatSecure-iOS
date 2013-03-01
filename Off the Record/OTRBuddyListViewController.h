@@ -22,10 +22,11 @@
 
 #import <UIKit/UIKit.h>
 #import "OTRProtocolManager.h"
+#import "OTRBuddyListGroupManager.h"
 
 @class OTRChatViewController;
 
-@interface OTRBuddyListViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate, NSFetchedResultsControllerDelegate, UISearchDisplayDelegate>
+@interface OTRBuddyListViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate, NSFetchedResultsControllerDelegate, UISearchDisplayDelegate, OTRBuddyListGroupManagerDelegate>
 
 @property (nonatomic, retain) UITableView *buddyListTableView;
 @property (nonatomic, retain) OTRChatViewController *chatViewController;
@@ -35,16 +36,14 @@
 @property (nonatomic, strong) NSFetchedResultsController * searchBuddyFetchedResultsController;
 @property (nonatomic, strong) NSFetchedResultsController * recentBuddiesFetchedResultsController;
 @property (nonatomic, strong) NSFetchedResultsController * unreadMessagesFetchedResultsContrller;
-@property (nonatomic, strong) NSFetchedResultsController * groupFetchedResultsController;
 @property (nonatomic, strong) NSFetchedResultsController * offlineBuddiesFetchedResultsController;
 
-@property (nonatomic, strong) NSMutableArray * buddyFetchedResultsControllerArray;
+@property (nonatomic, strong) OTRBuddyListGroupManager * groupManager;
 
 @property (nonatomic, strong) UISearchDisplayController * searchDisplayController;
 
 @property (nonatomic, retain) OTRProtocolManager *protocolManager;
 
 -(void)enterConversationWithBuddy:(OTRManagedBuddy*)buddy;
--(void)messageReceived:(NSNotification*)notification;
 
 @end
