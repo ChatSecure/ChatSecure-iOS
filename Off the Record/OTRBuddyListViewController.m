@@ -158,8 +158,9 @@
     {
         NSLog(@"Fetched: %@",managedGroup.name);
         NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"accountName != nil OR displayName != nil"];
+        NSPredicate * onlineFilter = [NSPredicate predicateWithFormat:@"%K != %d",OTRManagedBuddyAttributes.currentStatus,kOTRBuddyStatusOffline];
         NSPredicate * groupFilter = [NSPredicate predicateWithFormat:@"%@ IN %K",managedGroup,OTRManagedBuddyRelationships.groups];
-        NSPredicate * compoundFilter = [NSCompoundPredicate andPredicateWithSubpredicates:@[buddyFilter,groupFilter]];
+        NSPredicate * compoundFilter = [NSCompoundPredicate andPredicateWithSubpredicates:@[buddyFilter,groupFilter,onlineFilter]];
         
         NSFetchedResultsController * buddyFetchController = [OTRManagedBuddy MR_fetchAllGroupedBy:nil withPredicate:compoundFilter sortedBy:@"currentStatus,displayName" ascending:YES delegate:self];
         [buddyFetchedResultsControllerArray addObject:buddyFetchController];
@@ -170,7 +171,8 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     if ([tableView isEqual:self.buddyListTableView]) {
-        return [[self.groupFetchedResultsController fetchedObjects] count]+1;
+        //+2 one for recent conversations the other for offline buddies
+        return [[self.groupFetchedResultsController fetchedObjects] count]+2;
     }
     return 1;
 }
@@ -179,9 +181,13 @@
     if ([tableView isEqual:self.buddyListTableView]) {
         if (section == RECENTS_SECTION_INDEX) {
             return RECENT_STRING;
-        } else {
+        } else if ([self.buddyFetchedResultsControllerArray count] >= section) {
             OTRManagedGroup * managedGroup = [self.groupFetchedResultsController objectAtIndexPath:[NSIndexPath indexPathForItem:section-1 inSection:0]];
             return managedGroup.name;
+        }
+        else
+        {
+            return @"Offline";
         }
     }
     return @"";
@@ -193,10 +199,13 @@
     if ([tableView isEqual:self.buddyListTableView]) {
         if (sectionIndex == RECENTS_SECTION_INDEX) {
             return [[self.recentBuddiesFetchedResultsController sections][sectionIndex] numberOfObjects];
-        } else{
+        } else if ([self.buddyFetchedResultsControllerArray count] >= sectionIndex){
             NSFetchedResultsController* resultsController = [buddyFetchedResultsControllerArray objectAtIndex:sectionIndex-1];
             return [[resultsController fetchedObjects] count];
-            
+        }
+        else
+        {
+            return [[self.offlineBuddiesFetchedResultsController sections][0] numberOfObjects];
         }
         return 0;
     }
@@ -226,7 +235,14 @@
         buddy = [self.recentBuddiesFetchedResultsController objectAtIndexPath:indexPath];
         [self configureRecentCell:cell withBuddy:buddy];
     } else{
-        NSFetchedResultsController* resultsController = [buddyFetchedResultsControllerArray objectAtIndex:indexPath.section-1];
+        NSFetchedResultsController* resultsController = nil;
+        if ([self.buddyFetchedResultsControllerArray count] >= indexPath.section) {
+            resultsController = [buddyFetchedResultsControllerArray objectAtIndex:indexPath.section-1];
+        }
+        else{
+            resultsController = self.offlineBuddiesFetchedResultsController;
+        }
+        
         buddy = [resultsController objectAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row inSection:0]];
         [self configureCell:cell withBuddy:buddy];
         //OTRManagedGroup * managedGroup = [self.groupFetchedResultsController objectAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row inSection:0]];
@@ -380,10 +396,25 @@
     NSPredicate * onlineBuddiesFilter = [NSPredicate predicateWithFormat:@"ANY %K.%K != %d",OTRManagedGroupRelationships.buddies,OTRManagedBuddyAttributes.currentStatus,kOTRBuddyStatusOffline];
     NSPredicate * buddyFilter = [NSCompoundPredicate andPredicateWithSubpredicates:@[hasBuddiesFilter, onlineBuddiesFilter]];
     
-    _groupFetchedResultsController = [OTRManagedGroup MR_fetchAllGroupedBy:nil withPredicate:nil sortedBy:OTRManagedGroupAttributes.name ascending:YES delegate:self];
+    _groupFetchedResultsController = [OTRManagedGroup MR_fetchAllGroupedBy:nil withPredicate:onlineBuddiesFilter sortedBy:OTRManagedGroupAttributes.name ascending:YES delegate:self];
     
     return _groupFetchedResultsController;
+}
+
+-(NSFetchedResultsController *) offlineBuddiesFetchedResultsController
+{
+    if(_offlineBuddiesFetchedResultsController)
+    {
+        return _offlineBuddiesFetchedResultsController;
+    }
     
+    NSPredicate * offlineBuddyFilter = [NSPredicate predicateWithFormat:@"%K == %d",OTRManagedBuddyAttributes.currentStatus,kOTRBuddyStatusOffline];
+    
+    NSString * sortByString = [NSString stringWithFormat:@"%@,%@",OTRManagedBuddyAttributes.displayName,OTRManagedBuddyAttributes.accountName];
+    
+    _offlineBuddiesFetchedResultsController = [OTRManagedBuddy MR_fetchAllGroupedBy:nil withPredicate:offlineBuddyFilter sortedBy:sortByString ascending:YES delegate:self];
+    
+    return _offlineBuddiesFetchedResultsController;
 }
 
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
@@ -413,10 +444,11 @@
     
     BOOL isRecentBuddiesFetchedResultsController = [controller isEqual:self.recentBuddiesFetchedResultsController];
     
-    if ([controller isEqual:self.buddyFetchedResultsController]) {
+    if ([self.buddyFetchedResultsControllerArray containsObject:controller]) {
         tableView = self.buddyListTableView;
-        modifiedNewIndexPath = [NSIndexPath indexPathForRow:newIndexPath.row inSection:1];
-        modifiedIndexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:1];
+        NSInteger section = [self.buddyFetchedResultsControllerArray indexOfObject:controller]+1;
+        modifiedNewIndexPath = [NSIndexPath indexPathForRow:newIndexPath.row inSection:section];
+        modifiedIndexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:section];
     }
     else if (isRecentBuddiesFetchedResultsController)
     {
@@ -434,6 +466,13 @@
     {
         OTRManagedGroup * group = [self.groupFetchedResultsController objectAtIndexPath:indexPath];
         NSLog(@"Group Update");
+    }
+    else if([controller isEqual:self.offlineBuddiesFetchedResultsController])
+    {
+        tableView = self.buddyListTableView;
+        NSInteger section = tableView.numberOfSections-1;
+        modifiedNewIndexPath = [NSIndexPath indexPathForRow:newIndexPath.row inSection:section];
+        modifiedIndexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:section];
     }
     
     if (tableView) {

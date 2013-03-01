@@ -249,10 +249,20 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
             buddy.displayName = user.displayName;
             buddy.accountName = [[user jid] full];
             buddy.account = self.account;
-            for(XMPPGroupCoreDataStorageObject * xmppGroup in user.groups)
-            {
-                [buddy addToGroup:xmppGroup.name];
+            
+            [buddy removeGroups:buddy.groups];
+            
+            if (![user.groups count]) {
+                [buddy addToGroup:@"Buddies"];
             }
+            else{
+                for(XMPPGroupCoreDataStorageObject * xmppGroup in user.groups)
+                {
+                    [buddy addToGroup:xmppGroup.name];
+                }
+            }
+            
+            
             
             
             OTRBuddyStatus buddyStatus;
