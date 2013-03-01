@@ -1,5 +1,8 @@
 #import "_OTRManagedGroup.h"
 
 @interface OTRManagedGroup : _OTRManagedGroup {}
-// Custom logic goes here.
+
++(OTRManagedGroup *)fetchOrCreateWithName:(NSString *)name;
+
+
 @end

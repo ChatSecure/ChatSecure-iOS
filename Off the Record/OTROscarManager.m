@@ -97,7 +97,7 @@ BOOL loginFailed;
     otrBuddy.displayName = buddy.username;
     [otrBuddy newStatusMessage:buddy.status.statusMessage status:buddyStatus incoming:YES];
     
-    otrBuddy.groupName = buddy.group.name;
+    [otrBuddy addToGroup:buddy.group.name];
     otrBuddy.account = self.account;
     NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
     [context MR_saveToPersistentStoreAndWait];

@@ -30,6 +30,7 @@
 #import "OTRXMPPManager.h"
 #import "OTRManagedStatus.h"
 #import "OTRManagedEncryptionStatusMessage.h"
+#import "OTRManagedGroup.h"
 
 @interface OTRManagedBuddy()
 @end
@@ -268,6 +269,12 @@
     [context MR_saveToPersistentStoreAndWait];
 }
 
+-(void)addToGroup:(NSString *)groupName
+{
+    OTRManagedGroup * managedGroup = [OTRManagedGroup fetchOrCreateWithName:groupName];
+    [self addGroupsObject:managedGroup];
+    
+}
 
 
 +(OTRManagedBuddy *)fetchOrCreateWithName:(NSString *)name account:(OTRManagedAccount *)account

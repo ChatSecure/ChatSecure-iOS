@@ -35,6 +35,9 @@
 @property (nonatomic, strong) NSFetchedResultsController * searchBuddyFetchedResultsController;
 @property (nonatomic, strong) NSFetchedResultsController * recentBuddiesFetchedResultsController;
 @property (nonatomic, strong) NSFetchedResultsController * unreadMessagesFetchedResultsContrller;
+@property (nonatomic, strong) NSFetchedResultsController * groupFetchedResultsController;
+
+@property (nonatomic, strong) NSMutableArray * buddyFetchedResultsControllerArray;
 
 @property (nonatomic, strong) UISearchDisplayController * searchDisplayController;
 

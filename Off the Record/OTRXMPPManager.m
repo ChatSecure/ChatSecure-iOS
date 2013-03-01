@@ -249,6 +249,12 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
             buddy.displayName = user.displayName;
             buddy.accountName = [[user jid] full];
             buddy.account = self.account;
+            for(XMPPGroupCoreDataStorageObject * xmppGroup in user.groups)
+            {
+                [buddy addToGroup:xmppGroup.name];
+            }
+            
+            
             OTRBuddyStatus buddyStatus;
             switch (user.section)
             {
@@ -270,7 +276,6 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
             }
             [buddy newStatusMessage:user.primaryResource.status status:buddyStatus incoming:YES];
             
-            buddy.groupName = user.sectionName;
             NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
             [context MR_saveToPersistentStoreAndWait];
         }
