@@ -219,16 +219,15 @@
         buddy = [self.recentBuddiesFetchedResultsController objectAtIndexPath:indexPath];
         [self configureRecentCell:cell withBuddy:buddy];
     } else{
-        NSFetchedResultsController* resultsController = nil;
         if ([self.groupManager numberOfGroups] >= indexPath.section) {
             buddy = [self.groupManager buddyAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row inSection:indexPath.section-1]];
-            [self configureCell:cell withBuddy:buddy];
         }
         else{
-            resultsController = self.offlineBuddiesFetchedResultsController;
+            NSFetchedResultsController* resultsController = self.offlineBuddiesFetchedResultsController;
             buddy = [resultsController objectAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row inSection:0]];
-            [self configureCell:cell withBuddy:buddy];
+            
         }
+        [self configureCell:cell withBuddy:buddy];
         
        
         //OTRManagedGroup * managedGroup = [self.groupFetchedResultsController objectAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row inSection:0]];
@@ -247,28 +246,39 @@
 {
     if (indexPath.section == RECENTS_SECTION_INDEX) {
         return UITableViewCellEditingStyleDelete;
-    } else if (indexPath.section == BUDDIES_SECTION_INDEX) {
+    } else{
         return UITableViewCellEditingStyleNone;
     }
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    OTRManagedBuddy * managedBuddy = nil;
     if ([tableView isEqual:self.searchDisplayController.searchResultsTableView]) {
         [self.searchDisplayController   setActive:NO];
-        OTRManagedBuddy * managedBuddy = [self.searchBuddyFetchedResultsController objectAtIndexPath:indexPath];
+        managedBuddy = [self.searchBuddyFetchedResultsController objectAtIndexPath:indexPath];
         [self enterConversationWithBuddy:managedBuddy];
     }
     
     if ([tableView isEqual:self.buddyListTableView]) {
+        
         if (indexPath.section == RECENTS_SECTION_INDEX) {
-            OTRManagedBuddy * managedBuddy = [self.recentBuddiesFetchedResultsController objectAtIndexPath:indexPath];
-            [self enterConversationWithBuddy:managedBuddy];
+            managedBuddy = [self.recentBuddiesFetchedResultsController objectAtIndexPath:indexPath];
+            
         }
-        else if (indexPath.section == BUDDIES_SECTION_INDEX) {
-            //OTRManagedBuddy * managedBuddy = [self.buddyFetchedResultsController objectAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section-1]];
-            //[self enterConversationWithBuddy:managedBuddy];
+        else{
+            if ([self.groupManager numberOfGroups] >= indexPath.section) {
+                managedBuddy = [self.groupManager buddyAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row inSection:indexPath.section-1]];
+            }
+            else{
+                NSFetchedResultsController* resultsController = self.offlineBuddiesFetchedResultsController;
+                managedBuddy = [resultsController objectAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row inSection:0]];
+            }
         }
+    }
+    
+    if (managedBuddy) {
+        [self enterConversationWithBuddy:managedBuddy];
     }
     
 
