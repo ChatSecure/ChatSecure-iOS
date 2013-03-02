@@ -360,7 +360,7 @@
 
 -(BOOL)isComposingVisible
 {
-    if ([self.chatHistoryTableView numberOfRowsInSection:0] == [[self.messagesFetchedResultsController sections][0] numberOfObjects]) {
+    if ([self.chatHistoryTableView numberOfRowsInSection:0] >= [[self.messagesFetchedResultsController sections][0] numberOfObjects]) {
         return NO;
     }
     return YES;
@@ -601,6 +601,8 @@
 
 
 - (void) refreshView {
+    _messagesFetchedResultsController = nil;
+    _buddyFetchedResultsController = nil;
     if (!buddy) {
         if (!instructionsLabel) {
             int labelWidth = 500;
@@ -617,8 +619,6 @@
             [self.instructionsLabel removeFromSuperview];
             self.instructionsLabel = nil;
         }
-        _messagesFetchedResultsController = nil;
-        _buddyFetchedResultsController = nil;
         [self buddyFetchedResultsController];
         _heightForRow = nil;
         [self.buddy allMessagesRead];
@@ -644,13 +644,21 @@
         [self scrollToBottomAnimated:NO];
         [self refreshLockButton];
     }
+    
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
 
     [self.buddy allMessagesRead];
+    
     [super viewWillDisappear:animated];
+}
+
+-(void)viewDidDisappear:(BOOL)animated
+{
+    [self setBuddy:nil];
+    [super viewDidDisappear:animated];
 }
 
 -(void)viewWillAppear:(BOOL)animated

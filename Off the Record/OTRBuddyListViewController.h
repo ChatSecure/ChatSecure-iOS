@@ -23,14 +23,16 @@
 #import <UIKit/UIKit.h>
 #import "OTRProtocolManager.h"
 #import "OTRBuddyListGroupManager.h"
+#import "OTRSectionHeaderView.h"
 
 @class OTRChatViewController;
 
-@interface OTRBuddyListViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate, NSFetchedResultsControllerDelegate, UISearchDisplayDelegate, OTRBuddyListGroupManagerDelegate>
+@interface OTRBuddyListViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate, NSFetchedResultsControllerDelegate, UISearchDisplayDelegate, OTRBuddyListGroupManagerDelegate, OTRSectionHeaderViewDelegate>
 
 @property (nonatomic, retain) UITableView *buddyListTableView;
 @property (nonatomic, retain) OTRChatViewController *chatViewController;
 @property (nonatomic, retain) OTRManagedBuddy *selectedBuddy;
+@property (nonatomic, strong) NSMutableArray * sectionInfoArray;
 
 @property (nonatomic, strong) NSFetchedResultsController * buddyFetchedResultsController;
 @property (nonatomic, strong) NSFetchedResultsController * searchBuddyFetchedResultsController;
@@ -41,8 +43,6 @@
 @property (nonatomic, strong) OTRBuddyListGroupManager * groupManager;
 
 @property (nonatomic, strong) UISearchDisplayController * searchDisplayController;
-
-@property (nonatomic, retain) OTRProtocolManager *protocolManager;
 
 -(void)enterConversationWithBuddy:(OTRManagedBuddy*)buddy;
 
