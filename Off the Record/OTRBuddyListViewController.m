@@ -184,7 +184,7 @@
         }
         else
         {
-            title = @"Offline";
+            title = OFFLINE_STRING;
         }
     }
 
