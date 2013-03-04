@@ -52,6 +52,8 @@
         [managagedXmppAccount setRememberPasswordValue:xmppAccount.rememberPassword];
         managagedXmppAccount.password = xmppAccount.password;
         [managagedXmppAccount setIsConnected:NO];
+        managagedXmppAccount.requireTLSValue = xmppAccount.requireTLS;
+        managagedXmppAccount.allowPlainTextAuthenticationValue = xmppAccount.allowPlainTextAuthentication;
         
         
         [managagedXmppAccount save];
