@@ -599,4 +599,17 @@ BOOL loginFailed;
     return [self loggedIn];
 }
 
+- (void) addBuddy:(OTRManagedBuddy *)newBuddy
+{
+    AIMBlistGroup * group = [theSession.session.buddyList groupWithName:@"Buddies"];
+    if(!group)
+    {
+        [self addGroup:@"Buddies"];
+    }
+    [newBuddy addToGroup:@"Buddies"];
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    [context MR_saveToPersistentStoreAndWait];
+    [self addBuddy:newBuddy.accountName toGroup:@"Buddies"];
+}
+
 @end

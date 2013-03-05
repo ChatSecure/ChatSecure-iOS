@@ -30,4 +30,7 @@
 
 - (OTRManagedAccount *) accountForProtocol:(NSString *)protocol accountName: (NSString *) accountName;
 
++ (NSUInteger)numberOfAccountsLoggedIn;
++ (NSArray *)allLoggedInAccounts;
+
 @end

@@ -160,12 +160,15 @@
 
 -(void)prepareBuddiesandMessagesForDeletion
 {
-    for(OTRManagedBuddy * buddy in self.buddies)
+    NSSet *buddySet = [self.buddies copy];
+    for(OTRManagedBuddy * buddy in buddySet)
     {
         NSPredicate * messageFilter = [NSPredicate predicateWithFormat:@"buddy == %@",self];
         [OTRManagedMessageAndStatus MR_deleteAllMatchingPredicate:messageFilter];
         [buddy MR_deleteEntity];
     }
+    
+    
     NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
     [context MR_saveToPersistentStoreAndWait];
 }

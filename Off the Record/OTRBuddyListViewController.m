@@ -31,6 +31,7 @@
 #import "OTRManagedGroup.h"
 #import <QuartzCore/QuartzCore.h>
 #import "OTRBuddyListSectionInfo.h"
+#import "OTRNewBuddyViewController.h"
 
 //#define kSignoffTime 500
 
@@ -99,6 +100,8 @@
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"14-gear.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(showSettingsView:)];
     [self.view addSubview:buddyListTableView];
     
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addButtonPressed:)];
+    
     UISearchBar * searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, self.buddyListTableView.frame.size.width, 44)];
     //searchBar.delegate = self;
     self.buddyListTableView.tableHeaderView = searchBar;
@@ -137,6 +140,24 @@
 
 - (void) showSettingsView:(id)sender {
     [self.navigationController pushViewController:[OTR_APP_DELEGATE settingsViewController] animated:YES];
+}
+
+-(void) addButtonPressed:(id)sender {
+    NSUInteger numAccountsLoggedIn = [OTRAccountsManager numberOfAccountsLoggedIn];
+    if (numAccountsLoggedIn == 1) {
+        //only one account logged in choose that account to add buddy to
+        NSManagedObject * object = [[OTRAccountsManager allLoggedInAccounts] lastObject];
+        OTRNewBuddyViewController * newBuddyViewController =  [[OTRNewBuddyViewController alloc] initWithAccountObjectID:[object objectID]];
+        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:newBuddyViewController];
+        
+        navController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+        [self.navigationController presentModalViewController:navController animated:YES];
+    }
+    else if (numAccountsLoggedIn > 1)
+    {
+        //have to choose which account to add buddy to
+        
+    }
 }
 
 - (void)viewDidUnload

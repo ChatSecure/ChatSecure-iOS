@@ -29,6 +29,7 @@
 - (void) sendMessage:(OTRManagedMessage*)message;
 - (void) connectWithPassword:(NSString *)password;
 - (void) disconnect;
+- (void) addBuddy:(OTRManagedBuddy *)newBuddy;
 - (BOOL) isConnected;
 
 @end

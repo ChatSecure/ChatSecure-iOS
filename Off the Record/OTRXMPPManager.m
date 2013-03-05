@@ -262,9 +262,6 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
                 }
             }
             
-            
-            
-            
             OTRBuddyStatus buddyStatus;
             switch (user.section)
             {
@@ -284,7 +281,13 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
                     buddyStatus = kOTRBuddyStatusOffline;
                     break;
             }
-            [buddy newStatusMessage:user.primaryResource.status status:buddyStatus incoming:YES];
+            
+            if (user.isPendingApproval) {
+                [buddy newStatusMessage:@"Pending Approval" status:kOTRBuddyStatusOffline incoming:YES];
+            }
+            else {
+                [buddy newStatusMessage:user.primaryResource.status status:buddyStatus incoming:YES];
+            }
             
             NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
             [context MR_saveToPersistentStoreAndWait];
@@ -833,9 +836,9 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 #pragma mark XMPPRosterDelegate
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (void)xmppRoster:(XMPPRoster *)sender didReceiveBuddyRequest:(XMPPPresence *)presence
+-(void)xmppRoster:(XMPPRoster *)sender didReceivePresenceSubscriptionRequest:(XMPPPresence *)presence
 {
-	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
+    DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
 	
 	XMPPUserCoreDataStorageObject *user = [xmppRosterStorage userForJID:[presence from]
 	                                                         xmppStream:xmppStream
@@ -964,10 +967,16 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
         [context MR_saveToPersistentStoreAndWait];
         [xmppStream sendElement:message];
     }
-    
-    
 }
 
+- (void) addBuddy:(OTRManagedBuddy *)newBuddy
+{
+    [newBuddy addToGroup:@"Buddies"];
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    [context MR_saveToPersistentStoreAndWait];
+    XMPPJID * newJID = [XMPPJID jidWithString:newBuddy.accountName];
+    [xmppRoster addUser:newJID withNickname:newBuddy.displayName];
+}
 //Chat State
 -(OTRManagedBuddy *)managedBuddyWithObjectID:(NSManagedObjectID *)managedBuddyObjectID
 {
