@@ -262,29 +262,45 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
                 }
             }
             
-            
-            
-            
+            XMPPResourceCoreDataStorageObject * primaryResource = user.primaryResource;
             OTRBuddyStatus buddyStatus;
-            switch (user.section)
-            {
-                case 0  :
-                    buddyStatus = kOTRBuddyStatusAvailable;
-                    break;
-                case 1  :
-                    buddyStatus = kOTRBuddyStatusAway;
-                    break;
-                case 2  :
-                    buddyStatus = kOTRBuddyStatusXa;
-                    break;
-                case 3  :
-                    buddyStatus = kOTRBUddyStatusDnd;
-                    break;
-                default :
-                    buddyStatus = kOTRBuddyStatusOffline;
-                    break;
+            
+            if (primaryResource) {
+                switch (primaryResource.intShow)
+                {
+                    case 0  :
+                        buddyStatus = kOTRBUddyStatusDnd;
+                        break;
+                    case 1  :
+                        buddyStatus = kOTRBuddyStatusXa;
+                        break;
+                    case 2  :
+                        buddyStatus = kOTRBuddyStatusAway;
+                        break;
+                    case 3  :
+                        buddyStatus = kOTRBuddyStatusAvailable;
+                        break;
+                    case 4  :
+                        buddyStatus = kOTRBuddyStatusAvailable;
+                        break;
+                    default :
+                        buddyStatus = kOTRBuddyStatusOffline;
+                        break;
+                }
             }
-            [buddy newStatusMessage:user.primaryResource.status status:buddyStatus incoming:YES];
+            else
+            {
+                buddyStatus = kOTRBuddyStatusOffline;
+            }
+            
+            if (user.isPendingApproval) {
+                [buddy newStatusMessage:@"Pending Approval" status:buddyStatus incoming:YES];
+            }
+            else{
+                [buddy newStatusMessage:user.primaryResource.status status:buddyStatus incoming:YES];
+            }
+          
+            
             
             NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
             [context MR_saveToPersistentStoreAndWait];
