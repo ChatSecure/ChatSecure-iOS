@@ -143,7 +143,7 @@
         [buddy newStatusMessage:nil status:status incoming:NO];
         if (status == kOTRBuddyStatusOffline) {
             [buddy setNewEncryptionStatus:kOTRKitMessageStatePlaintext];
-            buddy.chatStateValue = kOTRChatStateGone;
+            buddy.chatStateValue = kOTRChatStateActive;
         }
     }
     [self save];
