@@ -16,11 +16,13 @@ extern const struct OTRManagedXMPPAccountAttributes {
 } OTRManagedXMPPAccountAttributes;
 
 extern const struct OTRManagedXMPPAccountRelationships {
+	__unsafe_unretained NSString *subscriptionRequests;
 } OTRManagedXMPPAccountRelationships;
 
 extern const struct OTRManagedXMPPAccountFetchedProperties {
 } OTRManagedXMPPAccountFetchedProperties;
 
+@class OTRXMPPManagedPresenceSubscriptionRequest;
 
 
 
@@ -152,10 +154,22 @@ extern const struct OTRManagedXMPPAccountFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSSet *subscriptionRequests;
+
+- (NSMutableSet*)subscriptionRequestsSet;
+
+
+
+
 
 @end
 
 @interface _OTRManagedXMPPAccount (CoreDataGeneratedAccessors)
+
+- (void)addSubscriptionRequests:(NSSet*)value_;
+- (void)removeSubscriptionRequests:(NSSet*)value_;
+- (void)addSubscriptionRequestsObject:(OTRXMPPManagedPresenceSubscriptionRequest*)value_;
+- (void)removeSubscriptionRequestsObject:(OTRXMPPManagedPresenceSubscriptionRequest*)value_;
 
 @end
 
@@ -229,6 +243,11 @@ extern const struct OTRManagedXMPPAccountFetchedProperties {
 - (void)setPrimitiveSendTypingNotificationsValue:(BOOL)value_;
 
 
+
+
+
+- (NSMutableSet*)primitiveSubscriptionRequests;
+- (void)setPrimitiveSubscriptionRequests:(NSMutableSet*)value;
 
 
 @end

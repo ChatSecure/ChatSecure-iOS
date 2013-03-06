@@ -15,6 +15,7 @@ const struct OTRManagedXMPPAccountAttributes OTRManagedXMPPAccountAttributes = {
 };
 
 const struct OTRManagedXMPPAccountRelationships OTRManagedXMPPAccountRelationships = {
+	.subscriptionRequests = @"subscriptionRequests",
 };
 
 const struct OTRManagedXMPPAccountFetchedProperties OTRManagedXMPPAccountFetchedProperties = {
@@ -276,6 +277,19 @@ const struct OTRManagedXMPPAccountFetchedProperties OTRManagedXMPPAccountFetched
 
 
 
+
+@dynamic subscriptionRequests;
+
+	
+- (NSMutableSet*)subscriptionRequestsSet {
+	[self willAccessValueForKey:@"subscriptionRequests"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"subscriptionRequests"];
+  
+	[self didAccessValueForKey:@"subscriptionRequests"];
+	return result;
+}
+	
 
 
 
