@@ -32,6 +32,8 @@
 #import <QuartzCore/QuartzCore.h>
 #import "OTRBuddyListSectionInfo.h"
 #import "OTRNewBuddyViewController.h"
+#import "OTRXMPPManagedPresenceSubscriptionRequest.h"
+#import "OTRSubscriptionRequestsViewController.h"
 
 //#define kSignoffTime 500
 
@@ -115,7 +117,8 @@
     //[buddyListTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
     
     self.buddyListTableView.contentOffset = CGPointMake(0, self.searchDisplayController.searchBar.frame.size.height);
-
+    
+    [self refreshLeftBarItems];
     
     [self updateTitleWithUnreadCount:[[self.unreadMessagesFetchedResultsContrller sections][0] numberOfObjects]];
     // uncomment to see a LOT of console output
@@ -130,6 +133,7 @@
     buddyListTableView.frame = self.view.bounds;
     buddyListTableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleRightMargin;
     [buddyListTableView reloadData];
+    [self refreshLeftBarItems];
 }
 
 
@@ -140,6 +144,42 @@
 
 - (void) showSettingsView:(id)sender {
     [self.navigationController pushViewController:[OTR_APP_DELEGATE settingsViewController] animated:YES];
+}
+
+-(void)refreshLeftBarItems
+{
+    [self subscriptionRequestsFetchedResultsController];
+    UIBarButtonItem * addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addButtonPressed:)];
+    addButton.enabled = NO;
+    
+    NSUInteger numAccountsLoggedIn = [OTRAccountsManager numberOfAccountsLoggedIn];
+    
+    if (numAccountsLoggedIn) {
+        addButton.enabled = YES;
+    }
+    
+    NSPredicate * predicate = [NSPredicate predicateWithFormat:@"self.xmppAccount.isConnected == YES"];
+    NSArray * allRequests = [OTRXMPPManagedPresenceSubscriptionRequest MR_findAllWithPredicate:predicate];
+    
+    if([allRequests count])
+    {
+        UIImage * buttonImage = [UIImage imageNamed:@"inbox"];
+        UIBarButtonItem * requestButton = [[UIBarButtonItem alloc] initWithImage:buttonImage style:UIBarButtonItemStyleBordered target:self action:@selector(requestButtonPressed:)];
+        
+        self.navigationItem.leftBarButtonItems = @[addButton,requestButton];
+    }
+    else{
+        self.navigationItem.leftBarButtonItems = @[addButton];
+    }
+        
+}
+
+-(void)requestButtonPressed:(id)sender
+{
+    OTRSubscriptionRequestsViewController * requestViewController = [[OTRSubscriptionRequestsViewController alloc] initWithStyle:UITableViewStylePlain];
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:requestViewController];
+    navController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+    [self.navigationController presentModalViewController:navController animated:YES];
 }
 
 -(void) addButtonPressed:(id)sender {
@@ -430,6 +470,21 @@
     return _offlineBuddiesFetchedResultsController;
 }
 
+-(NSFetchedResultsController *)subscriptionRequestsFetchedResultsController
+{
+    if(_subscriptionRequestsFetchedResultsController)
+    {
+        return _subscriptionRequestsFetchedResultsController;
+    }
+    
+    NSPredicate * accountPredicate = [NSPredicate predicateWithFormat:@"self.xmppAccount.isConnected == YES"];
+    
+    
+    _subscriptionRequestsFetchedResultsController = [OTRXMPPManagedPresenceSubscriptionRequest MR_fetchAllGroupedBy:nil withPredicate:accountPredicate sortedBy:nil ascending:NO delegate:self];
+    
+    return _subscriptionRequestsFetchedResultsController;
+}
+
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
     
     UITableView * tableView = nil;
@@ -446,6 +501,11 @@
 - (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject
        atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
       newIndexPath:(NSIndexPath *)newIndexPath {
+    
+    if ([controller isEqual:_subscriptionRequestsFetchedResultsController]) {
+        [self refreshLeftBarItems];
+        return;
+    }
     
     UITableView *tableView = nil;
     OTRManagedBuddy * buddy = anObject;

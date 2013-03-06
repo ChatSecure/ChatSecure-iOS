@@ -41,7 +41,7 @@
     
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelButtonPressed:)];
     
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneButtonePressed:)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneButtonPressed:)];
     
     
     accountNameTextField = [[UITextField alloc] initWithFrame:CGRectZero];
@@ -135,7 +135,7 @@
 -(BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     if (textField.returnKeyType == UIReturnKeyDone ) {
-        [self doneButtonePressed:textField];
+        [self doneButtonPressed:textField];
     }
     else{
         [textField resignFirstResponder];
@@ -154,7 +154,7 @@
 {
     [self.navigationController dismissModalViewControllerAnimated:YES];
 }
--(void)doneButtonePressed:(id)sender
+-(void)doneButtonPressed:(id)sender
 {
     if ([self checkFields]) {
         NSString * newBuddyAccountName = [[self.accountNameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] lowercaseString];

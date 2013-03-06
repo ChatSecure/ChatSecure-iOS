@@ -32,6 +32,7 @@
 #import "XMPPMessage+XEP_0184.h"
 #import "XMPPMessage+XEP_0085.h"
 #import "Strings.h"
+#import "OTRXMPPManagedPresenceSubscriptionRequest.h"
 
 #import "DDLog.h"
 #import "DDTTYLogger.h"
@@ -860,15 +861,22 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	NSString *displayName = [user displayName];
 	NSString *jidStrBare = [presence fromStr];
 	NSString *body = nil;
+    
+    OTRXMPPManagedPresenceSubscriptionRequest * subRequest = [OTRXMPPManagedPresenceSubscriptionRequest fetchOrCreateWith:jidStrBare account:self.account];
 	
-	if (![displayName isEqualToString:jidStrBare])
+	if (![displayName isEqualToString:jidStrBare] && [displayName length])
 	{
+        subRequest.displayName = displayName;
 		body = [NSString stringWithFormat:@"Buddy request from %@ <%@>", displayName, jidStrBare];
 	}
 	else
 	{
 		body = [NSString stringWithFormat:@"Buddy request from %@", displayName];
 	}
+    
+    [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
+
+    
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
