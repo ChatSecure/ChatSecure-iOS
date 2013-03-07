@@ -31,7 +31,7 @@
 }
 -(NSUInteger)numberOfGroups
 {
-    return [[self.groupFetchedResultsController sections][0] numberOfObjects];
+    return [[[self groupFetchedResultsController] fetchedObjects] count];
 }
 
 -(NSString *)groupNameAtIndex:(NSUInteger)index

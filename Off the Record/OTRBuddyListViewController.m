@@ -35,6 +35,7 @@
 #import "OTRXMPPManagedPresenceSubscriptionRequest.h"
 #import "OTRSubscriptionRequestsViewController.h"
 #import "OTRBuddyViewController.h"
+#import "OTRChooseAccountViewController.h"
 
 //#define kSignoffTime 500
 
@@ -88,7 +89,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
-    [self setupBuddyFetchedResultsControllers];
+    
     
     OTRBuddyListSectionInfo * recentSectionInfo = [[OTRBuddyListSectionInfo alloc] init];
     OTRBuddyListSectionInfo * offlineSectionInfo = [[OTRBuddyListSectionInfo alloc] init];
@@ -96,6 +97,8 @@
     offlineSectionInfo.open = NO;
     
     sectionInfoArray = [@[recentSectionInfo,offlineSectionInfo] mutableCopy];
+    
+    [self setupBuddyFetchedResultsControllers];
     
     self.buddyListTableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     buddyListTableView.dataSource = self;
@@ -196,8 +199,11 @@
     }
     else if (numAccountsLoggedIn > 1)
     {
-        //have to choose which account to add buddy to
+        OTRChooseAccountViewController * chooseAccountViewController = [[OTRChooseAccountViewController alloc] init];
+        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:chooseAccountViewController];
         
+        navController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+        [self.navigationController presentModalViewController:navController animated:YES];
     }
 }
 
@@ -262,8 +268,8 @@
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)sectionIndex {
-    OTRBuddyListSectionInfo * sectionInfo = [self.sectionInfoArray objectAtIndex:sectionIndex];
-    if (!sectionInfo.open) {
+    OTRBuddyListSectionInfo * sectionInfo = sectionInfo = [self.sectionInfoArray objectAtIndex:sectionIndex];
+    if (![sectionInfo open]) {
         return 0;
     }
     

@@ -195,15 +195,16 @@
 {
     OTRManagedStatus * currentManagedStatus = [self currentStatusMessage];
     
-    NSPredicate * messageDateFilter = [NSPredicate predicateWithFormat:@"(date >= %@) AND (date <= %@)",currentManagedStatus.date,[NSDate date]];
-    NSArray * managedMessages = [OTRManagedMessage MR_findAllWithPredicate:messageDateFilter];
-    
     if (![newStatusMessage length]) {
         newStatusMessage = [OTRManagedStatus statusMessageWithStatus:newStatus];
     }
     
     //Make sure the status message is unique compared to the last status message
     if (newStatus != currentManagedStatus.statusValue || ![newStatusMessage isEqualToString:currentManagedStatus.message]) {
+        
+        NSPredicate * messageDateFilter = [NSPredicate predicateWithFormat:@"(date >= %@) AND (date <= %@)",currentManagedStatus.date,[NSDate date]];
+        NSArray * managedMessages = [OTRManagedMessage MR_findAllWithPredicate:messageDateFilter];
+        
         //if no new messages since last status update just change the most recent status
         if (![managedMessages count]) {
             [currentManagedStatus updateStatus:newStatus withMessage:newStatusMessage incoming:isIncoming];
@@ -214,6 +215,10 @@
             [OTRManagedStatus newStatus:newStatus withMessage:newStatusMessage withBuddy:self incoming:isIncoming];
         }
         self.currentStatusValue = newStatus;
+    }
+    else
+    {
+        self.currentStatusValue = currentManagedStatus.statusValue;
     }
 }
 

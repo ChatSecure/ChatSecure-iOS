@@ -41,7 +41,7 @@
     
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelButtonPressed:)];
     
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneButtonPressed:)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(doneButtonPressed:)];
     
     
     accountNameTextField = [[UITextField alloc] initWithFrame:CGRectZero];
@@ -59,6 +59,7 @@
     tableView.dataSource = self;
     tableView.delegate = self;
     tableView.scrollEnabled = NO;
+    tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     
     [self.view addSubview:tableView];
     
