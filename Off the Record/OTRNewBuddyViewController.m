@@ -10,7 +10,7 @@
 #import "OTRManagedAccount.h"
 #import "OTRInLineTextEditTableViewCell.h"
 #import "OTRProtocolManager.h"
-#import "OTRManagedBuddy.h";
+#import "OTRManagedBuddy.h"
 
 @interface OTRNewBuddyViewController ()
 

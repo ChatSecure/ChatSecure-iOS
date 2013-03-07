@@ -12,6 +12,7 @@ const struct OTRManagedBuddyAttributes OTRManagedBuddyAttributes = {
 	.lastMessageDate = @"lastMessageDate",
 	.lastMessageDisconnected = @"lastMessageDisconnected",
 	.lastSentChatState = @"lastSentChatState",
+	.photo = @"photo",
 };
 
 const struct OTRManagedBuddyRelationships OTRManagedBuddyRelationships = {
@@ -206,6 +207,13 @@ const struct OTRManagedBuddyFetchedProperties OTRManagedBuddyFetchedProperties =
 - (void)setPrimitiveLastSentChatStateValue:(int16_t)value_ {
 	[self setPrimitiveLastSentChatState:[NSNumber numberWithShort:value_]];
 }
+
+
+
+
+
+@dynamic photo;
+
 
 
 

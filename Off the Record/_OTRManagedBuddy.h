@@ -13,6 +13,7 @@ extern const struct OTRManagedBuddyAttributes {
 	__unsafe_unretained NSString *lastMessageDate;
 	__unsafe_unretained NSString *lastMessageDisconnected;
 	__unsafe_unretained NSString *lastSentChatState;
+	__unsafe_unretained NSString *photo;
 } OTRManagedBuddyAttributes;
 
 extern const struct OTRManagedBuddyRelationships {
@@ -42,6 +43,7 @@ extern const struct OTRManagedBuddyFetchedProperties {
 
 
 
+@class NSObject;
 
 @interface OTRManagedBuddyID : NSManagedObjectID {}
 @end
@@ -147,6 +149,16 @@ extern const struct OTRManagedBuddyFetchedProperties {
 - (void)setLastSentChatStateValue:(int16_t)value_;
 
 //- (BOOL)validateLastSentChatState:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) id photo;
+
+
+
+//- (BOOL)validatePhoto:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -285,6 +297,12 @@ extern const struct OTRManagedBuddyFetchedProperties {
 
 - (int16_t)primitiveLastSentChatStateValue;
 - (void)setPrimitiveLastSentChatStateValue:(int16_t)value_;
+
+
+
+
+- (id)primitivePhoto;
+- (void)setPrimitivePhoto:(id)value;
 
 
 

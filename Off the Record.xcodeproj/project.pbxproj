@@ -65,6 +65,9 @@
 		63B9422E16DEEEE300D6934F /* OTRUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B9422D16DEEEE300D6934F /* OTRUtilities.m */; };
 		63B9423216DEFFB900D6934F /* _OTRManagedEncryptionStatusMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B9423116DEFFB900D6934F /* _OTRManagedEncryptionStatusMessage.m */; };
 		63B9423516DEFFE200D6934F /* OTRManagedEncryptionStatusMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B9423416DEFFE200D6934F /* OTRManagedEncryptionStatusMessage.m */; };
+		63BFDB6516E81CD900C608D6 /* OTRBuddyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BFDB6416E81CD900C608D6 /* OTRBuddyViewController.m */; };
+		63BFDB6916E8294300C608D6 /* person.png in Resources */ = {isa = PBXBuildFile; fileRef = 63BFDB6716E8294300C608D6 /* person.png */; };
+		63BFDB6A16E8294300C608D6 /* person@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63BFDB6816E8294300C608D6 /* person@2x.png */; };
 		63CC9F1C16D2D18100BDA7D1 /* DAKeyboardControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CC9F1B16D2D18100BDA7D1 /* DAKeyboardControl.m */; };
 		63CC9F2116D2E93500BDA7D1 /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CC9F2016D2E93500BDA7D1 /* TTTAttributedLabel.m */; };
 		63DF97741623A3310043E295 /* pencil@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63DF97731623A3310043E295 /* pencil@2x.png */; };
@@ -565,6 +568,10 @@
 		63B9423116DEFFB900D6934F /* _OTRManagedEncryptionStatusMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _OTRManagedEncryptionStatusMessage.m; sourceTree = "<group>"; };
 		63B9423316DEFFE200D6934F /* OTRManagedEncryptionStatusMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRManagedEncryptionStatusMessage.h; sourceTree = "<group>"; };
 		63B9423416DEFFE200D6934F /* OTRManagedEncryptionStatusMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRManagedEncryptionStatusMessage.m; sourceTree = "<group>"; };
+		63BFDB6316E81CD900C608D6 /* OTRBuddyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBuddyViewController.h; sourceTree = "<group>"; };
+		63BFDB6416E81CD900C608D6 /* OTRBuddyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBuddyViewController.m; sourceTree = "<group>"; };
+		63BFDB6716E8294300C608D6 /* person.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = person.png; sourceTree = "<group>"; };
+		63BFDB6816E8294300C608D6 /* person@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "person@2x.png"; sourceTree = "<group>"; };
 		63CC9F1A16D2D18100BDA7D1 /* DAKeyboardControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DAKeyboardControl.h; sourceTree = "<group>"; };
 		63CC9F1B16D2D18100BDA7D1 /* DAKeyboardControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DAKeyboardControl.m; sourceTree = "<group>"; };
 		63CC9F1F16D2E93500BDA7D1 /* TTTAttributedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTAttributedLabel.h; sourceTree = "<group>"; };
@@ -2628,6 +2635,8 @@
 				63188CBC16E55B230000DD40 /* OTRNewBuddyViewController.m */,
 				6300F16516E6CF8400D3C1AA /* OTRSubscriptionRequestsViewController.h */,
 				6300F16616E6CF8400D3C1AA /* OTRSubscriptionRequestsViewController.m */,
+				63BFDB6316E81CD900C608D6 /* OTRBuddyViewController.h */,
+				63BFDB6416E81CD900C608D6 /* OTRBuddyViewController.m */,
 				D953117D16C6FFF000AAB1D2 /* OTRSecrets.h */,
 				D9CEF0A81684253B00B236B5 /* XMPPFramework.h */,
 				D9D8D1F61531056300F9E8D3 /* Resources */,
@@ -2664,6 +2673,8 @@
 		D9FCA7291533A37F009AD599 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				63BFDB6716E8294300C608D6 /* person.png */,
+				63BFDB6816E8294300C608D6 /* person@2x.png */,
 				6300F16116E6CCD400D3C1AA /* inbox.png */,
 				6300F16216E6CCD400D3C1AA /* inbox@2x.png */,
 				633E71FE16E1743300495B45 /* carat-open.png */,
@@ -2953,6 +2964,8 @@
 				633E720116E1743300495B45 /* carat.png in Resources */,
 				6300F16316E6CCD400D3C1AA /* inbox.png in Resources */,
 				6300F16416E6CCD400D3C1AA /* inbox@2x.png in Resources */,
+				63BFDB6916E8294300C608D6 /* person.png in Resources */,
+				63BFDB6A16E8294300C608D6 /* person@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3289,6 +3302,7 @@
 				6300F15A16E6C30200D3C1AA /* OTRXMPPManagedPresenceSubscriptionRequest.m in Sources */,
 				6300F15C16E6C30800D3C1AA /* _OTRXMPPManagedPresenceSubscriptionRequest.m in Sources */,
 				6300F16716E6CF8400D3C1AA /* OTRSubscriptionRequestsViewController.m in Sources */,
+				63BFDB6516E81CD900C608D6 /* OTRBuddyViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

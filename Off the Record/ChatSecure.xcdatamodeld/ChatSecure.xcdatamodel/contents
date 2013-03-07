@@ -17,6 +17,7 @@
         <attribute name="lastMessageDate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="lastMessageDisconnected" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="lastSentChatState" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="photo" optional="YES" attributeType="Transformable" valueTransformerName="RFImageToDataTransformer" syncable="YES"/>
         <relationship name="account" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="OTRManagedAccount" inverseName="buddies" inverseEntity="OTRManagedAccount" syncable="YES"/>
         <relationship name="encryptionStatusMessages" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="OTRManagedEncryptionStatusMessage" inverseName="encryptionstatusbuddy" inverseEntity="OTRManagedEncryptionStatusMessage" syncable="YES"/>
         <relationship name="groups" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="OTRManagedGroup" inverseName="buddies" inverseEntity="OTRManagedGroup" syncable="YES"/>
@@ -69,7 +70,7 @@
     </entity>
     <elements>
         <element name="OTRManagedAccount" positionX="340" positionY="153" width="128" height="133"/>
-        <element name="OTRManagedBuddy" positionX="106" positionY="-0" width="128" height="253"/>
+        <element name="OTRManagedBuddy" positionX="106" positionY="-0" width="128" height="268"/>
         <element name="OTRManagedEncryptionStatusMessage" positionX="-414" positionY="252" width="243" height="73"/>
         <element name="OTRManagedGroup" positionX="313" positionY="-19" width="128" height="73"/>
         <element name="OTRManagedMessage" positionX="-101" positionY="239" width="128" height="103"/>

@@ -251,6 +251,11 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
             buddy.accountName = [[user jid] full];
             buddy.account = self.account;
             
+            if (user.photo) {
+                buddy.photo = user.photo;
+            }
+        
+            
             [buddy removeGroups:buddy.groups];
             
             if (![user.groups count]) {

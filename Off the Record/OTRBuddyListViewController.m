@@ -34,6 +34,7 @@
 #import "OTRNewBuddyViewController.h"
 #import "OTRXMPPManagedPresenceSubscriptionRequest.h"
 #import "OTRSubscriptionRequestsViewController.h"
+#import "OTRBuddyViewController.h"
 
 //#define kSignoffTime 500
 
@@ -297,7 +298,7 @@
     
     if ([tableView isEqual:self.searchDisplayController.searchResultsTableView]) {
         buddy = [self.searchBuddyFetchedResultsController objectAtIndexPath:indexPath];
-        [self configureCell:cell withBuddy:buddy];
+        [self configureBuddyCell:cell withBuddy:buddy];
     }
     else if (indexPath.section == RECENTS_SECTION_INDEX) {
         buddy = [self.recentBuddiesFetchedResultsController objectAtIndexPath:indexPath];
@@ -311,7 +312,7 @@
             buddy = [resultsController objectAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row inSection:0]];
             
         }
-        [self configureCell:cell withBuddy:buddy];
+        [self configureBuddyCell:cell withBuddy:buddy];
     }
     return cell;
 }
@@ -327,29 +328,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    OTRManagedBuddy * managedBuddy = nil;
-    if ([tableView isEqual:self.searchDisplayController.searchResultsTableView]) {
-        [self.searchDisplayController   setActive:NO];
-        managedBuddy = [self.searchBuddyFetchedResultsController objectAtIndexPath:indexPath];
-        [self enterConversationWithBuddy:managedBuddy];
-    }
-    
-    if ([tableView isEqual:self.buddyListTableView]) {
-        
-        if (indexPath.section == RECENTS_SECTION_INDEX) {
-            managedBuddy = [self.recentBuddiesFetchedResultsController objectAtIndexPath:indexPath];
-            
-        }
-        else{
-            if ([self.groupManager numberOfGroups] >= indexPath.section) {
-                managedBuddy = [self.groupManager buddyAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row inSection:indexPath.section-1]];
-            }
-            else{
-                NSFetchedResultsController* resultsController = self.offlineBuddiesFetchedResultsController;
-                managedBuddy = [resultsController objectAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row inSection:0]];
-            }
-        }
-    }
+    OTRManagedBuddy * managedBuddy = [self buddyWithTableView:tableView atIndexPath:indexPath];
     
     if (managedBuddy) {
         [self enterConversationWithBuddy:managedBuddy];
@@ -385,12 +364,51 @@
     }
 }
 
-- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
+-(void)longPressOnCell:(UILongPressGestureRecognizer *)gesture
 {
-    if(buttonIndex == 1) // Reply
-    {
-        //[self enterConversationWithBuddy:buddy];
+    if (gesture.state != UIGestureRecognizerStateBegan)
+        return;
+    
+    UITableViewCell *cell = (UITableViewCell *)gesture.view;
+    UITableView * tableView = (UITableView *)cell.superview;
+    
+    NSIndexPath * indexPath = [tableView indexPathForCell:cell];
+    
+    OTRManagedBuddy * buddy = [self buddyWithTableView:tableView atIndexPath:indexPath];
+    
+    OTRBuddyViewController * buddyViewController = [[OTRBuddyViewController alloc] initWithBuddyID:buddy.objectID];
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:buddyViewController];
+    navController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+    [self.navigationController presentModalViewController:navController animated:YES];
+    
+}
+
+-(OTRManagedBuddy *)buddyWithTableView:(UITableView *)tableView atIndexPath:(NSIndexPath *)indexPath
+{
+    OTRManagedBuddy * managedBuddy = nil;
+    if ([tableView isEqual:self.searchDisplayController.searchResultsTableView]) {
+        [self.searchDisplayController   setActive:NO];
+        managedBuddy = [self.searchBuddyFetchedResultsController objectAtIndexPath:indexPath];
+        [self enterConversationWithBuddy:managedBuddy];
     }
+    
+    if ([tableView isEqual:self.buddyListTableView]) {
+        
+        if (indexPath.section == RECENTS_SECTION_INDEX) {
+            managedBuddy = [self.recentBuddiesFetchedResultsController objectAtIndexPath:indexPath];
+            
+        }
+        else{
+            if ([self.groupManager numberOfGroups] >= indexPath.section) {
+                managedBuddy = [self.groupManager buddyAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row inSection:indexPath.section-1]];
+            }
+            else{
+                NSFetchedResultsController* resultsController = self.offlineBuddiesFetchedResultsController;
+                managedBuddy = [resultsController objectAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row inSection:0]];
+            }
+        }
+    }
+    return managedBuddy;
 }
 
 #pragma mark - NSFetchedReusltsControllerDelegate
@@ -560,7 +578,7 @@
                     [self configureRecentCell:[tableView cellForRowAtIndexPath:modifiedIndexPath] withBuddy:buddy];
                 }
                 else{
-                    [self configureCell:[tableView cellForRowAtIndexPath:modifiedIndexPath] withBuddy:buddy];
+                    [self configureBuddyCell:[tableView cellForRowAtIndexPath:modifiedIndexPath] withBuddy:buddy];
                 }
                 break;
                 
@@ -569,7 +587,7 @@
                     [self configureRecentCell:[tableView cellForRowAtIndexPath:modifiedIndexPath] withBuddy:buddy];
                 }
                 else{
-                    [self configureCell:[tableView cellForRowAtIndexPath:modifiedIndexPath] withBuddy:buddy];
+                    [self configureBuddyCell:[tableView cellForRowAtIndexPath:modifiedIndexPath] withBuddy:buddy];
                 }
                 [tableView moveRowAtIndexPath:modifiedIndexPath toIndexPath:modifiedNewIndexPath];
                 break;
@@ -785,6 +803,14 @@
             cell.textLabel.textColor = [UIColor lightGrayColor];
             cell.imageView.image = [UIImage imageNamed:@"offline.png"];
     }
+}
+
+-(void)configureBuddyCell:(UITableViewCell *)cell withBuddy:(OTRManagedBuddy *)buddy
+{
+    [self configureCell:cell withBuddy:buddy];
+    UILongPressGestureRecognizer *gesture = [[UILongPressGestureRecognizer alloc]
+                                              initWithTarget:self action:@selector(longPressOnCell:)];
+    [cell addGestureRecognizer:gesture];
 }
 
 
