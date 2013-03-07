@@ -38,3 +38,6 @@
 [submodule "Submodules/TTTAttributedLabel"]
 	path = Submodules/TTTAttributedLabel
 	url = git@github.com:mattt/TTTAttributedLabel.git
+[submodule "Submodules/googleChromeOpenInChrome"]
+	path = Submodules/googleChromeOpenInChrome
+	url = git@github.com:GoogleChrome/OpenInChrome.git

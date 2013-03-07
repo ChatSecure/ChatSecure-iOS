@@ -8,6 +8,7 @@
 
 #import "OTRSafariActionSheet.h"
 #import "Strings.h"
+#import "OpenInChromeController.h"
 
 @implementation OTRSafariActionSheet
 
@@ -22,10 +23,16 @@
 
 -(id)initWithUrl:(NSURL *)newUrl
 {
-    self = [self initWithTitle:[[newUrl absoluteURL] description] delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:OPEN_IN_SAFARI_STRING, nil];
+    
+    if([[[OpenInChromeController alloc]init] isChromeInstalled])
     {
-        url = newUrl;
+        self = [self initWithTitle:[[newUrl absoluteURL] description] delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:OPEN_IN_SAFARI_STRING,@"Open in Chrome", nil];
     }
+    else{
+        self = [self initWithTitle:[[newUrl absoluteURL] description] delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:OPEN_IN_SAFARI_STRING, nil];
+    }
+    
+    url = newUrl;
    
     
     return self;
@@ -36,7 +43,13 @@
 {
     if (buttonIndex != actionSheet.cancelButtonIndex)
     {
-        [[UIApplication sharedApplication] openURL:[url absoluteURL]];
+        if (buttonIndex == 0) {
+            [[UIApplication sharedApplication] openURL:[url absoluteURL]];
+        }
+        else
+        {
+            [[[OpenInChromeController alloc]init] openInChrome:url];
+        }
     }
 }
 /*

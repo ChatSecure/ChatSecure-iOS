@@ -27,6 +27,7 @@
 		6300F16416E6CCD400D3C1AA /* inbox@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6300F16216E6CCD400D3C1AA /* inbox@2x.png */; };
 		6300F16716E6CF8400D3C1AA /* OTRSubscriptionRequestsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6300F16616E6CF8400D3C1AA /* OTRSubscriptionRequestsViewController.m */; };
 		6301D87D16E94778008F67A6 /* OTRChooseAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6301D87C16E94778008F67A6 /* OTRChooseAccountViewController.m */; };
+		6301D88216E95A36008F67A6 /* OpenInChromeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6301D88116E95A36008F67A6 /* OpenInChromeController.m */; };
 		630FF21316E0267200CC20AD /* _OTRManagedGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 630FF21216E0267200CC20AD /* _OTRManagedGroup.m */; };
 		630FF21716E0269100CC20AD /* OTRManagedGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 630FF21616E0269000CC20AD /* OTRManagedGroup.m */; };
 		63188CBD16E55B230000DD40 /* OTRNewBuddyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63188CBC16E55B230000DD40 /* OTRNewBuddyViewController.m */; };
@@ -487,6 +488,8 @@
 		6300F16616E6CF8400D3C1AA /* OTRSubscriptionRequestsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRSubscriptionRequestsViewController.m; sourceTree = "<group>"; };
 		6301D87B16E94778008F67A6 /* OTRChooseAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRChooseAccountViewController.h; sourceTree = "<group>"; };
 		6301D87C16E94778008F67A6 /* OTRChooseAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRChooseAccountViewController.m; sourceTree = "<group>"; };
+		6301D88016E95A36008F67A6 /* OpenInChromeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OpenInChromeController.h; path = Submodules/googleChromeOpenInChrome/OpenInChromeController.h; sourceTree = "<group>"; };
+		6301D88116E95A36008F67A6 /* OpenInChromeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OpenInChromeController.m; path = Submodules/googleChromeOpenInChrome/OpenInChromeController.m; sourceTree = "<group>"; };
 		63022BB416CDAD4C00F764F1 /* OTRChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRChatViewController.h; sourceTree = "<group>"; };
 		63022BB516CDAD4C00F764F1 /* OTRChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRChatViewController.m; sourceTree = "<group>"; };
 		63022BB716CDAD5E00F764F1 /* ACPlaceholderTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACPlaceholderTextView.h; sourceTree = "<group>"; };
@@ -1314,6 +1317,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6301D87F16E95A23008F67A6 /* OpenInChrome */ = {
+			isa = PBXGroup;
+			children = (
+				6301D88016E95A36008F67A6 /* OpenInChromeController.h */,
+				6301D88116E95A36008F67A6 /* OpenInChromeController.m */,
+			);
+			name = OpenInChrome;
+			sourceTree = "<group>";
+		};
 		636FE4BD161B7733002B28EF /* Login */ = {
 			isa = PBXGroup;
 			children = (
@@ -2182,6 +2194,7 @@
 		D9CEED611684234D00B236B5 /* Submodules */ = {
 			isa = PBXGroup;
 			children = (
+				6301D87F16E95A23008F67A6 /* OpenInChrome */,
 				63CC9F1E16D2E93500BDA7D1 /* TTTAttributedLabel */,
 				63CC9F1916D2D18100BDA7D1 /* DAKeyboardControl */,
 				63E5E7AC16D1D5BC006E2B01 /* MagicalRecord */,
@@ -3315,6 +3328,7 @@
 				63BFDB6516E81CD900C608D6 /* OTRBuddyViewController.m in Sources */,
 				63BFDB6D16E83A3F00C608D6 /* OTRSafariActionSheet.m in Sources */,
 				6301D87D16E94778008F67A6 /* OTRChooseAccountViewController.m in Sources */,
+				6301D88216E95A36008F67A6 /* OpenInChromeController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
