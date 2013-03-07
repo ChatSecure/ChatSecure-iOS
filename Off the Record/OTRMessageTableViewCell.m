@@ -11,6 +11,8 @@
 #import "OTRMessageTableViewCell.h"
 #import "OTRConstants.h"
 #import "OTRSettingsManager.h"
+#import "OTRSafariActionSheet.h"
+#import "OTRAppDelegate.h"
 
 
 #define kOTRRightImageName                   @"MessageBubbleBlue"
@@ -195,7 +197,8 @@
 - (void)attributedLabel:(TTTAttributedLabel *)label
    didSelectLinkWithURL:(NSURL *)url
 {
-    [[UIApplication sharedApplication] openURL:url];
+    OTRSafariActionSheet * action = [[OTRSafariActionSheet alloc] initWithUrl:url];
+    [action showInView:self.superview.superview];
 }
 
 -(void)attributedLabelDidSelectDelete:(TTTAttributedLabel *)label

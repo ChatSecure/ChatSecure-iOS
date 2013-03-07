@@ -576,13 +576,6 @@
             
         }
     }
-    else if (actionSheet.tag == ACTIONSHEET_SAFARI_TAG)
-    {
-        if (buttonIndex != actionSheet.cancelButtonIndex)
-        {
-            [[UIApplication sharedApplication] openURL:[lastActionLink absoluteURL]];
-        }
-    }
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -708,28 +701,6 @@
   invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem
 {
     self.navigationItem.leftBarButtonItem = nil;
-}
-
-
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
-    if ([request.URL.absoluteString isEqualToString:@"file:///"]) {
-        return YES;
-    }
-    if ([[UIApplication sharedApplication] canOpenURL:request.URL])
-    {
-        self.lastActionLink = request.URL;
-        UIActionSheet *action = [[UIActionSheet alloc] initWithTitle:[[request.URL absoluteURL] description] delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:OPEN_IN_SAFARI_STRING, nil];
-        [action setTag:ACTIONSHEET_SAFARI_TAG];
-        [OTR_APP_DELEGATE presentActionSheet:action inView:self.view];
-    }
-    return NO;
-}
-
-
-- (void)webViewDidFinishLoad:(UIWebView *)webView {
-    NSInteger height = [[webView stringByEvaluatingJavaScriptFromString:@"document.body.offsetHeight;"] intValue];
-    NSString* javascript = [NSString stringWithFormat:@"window.scrollBy(0, %d);", height];   
-    [webView stringByEvaluatingJavaScriptFromString:javascript];
 }
 
 - (void)scrollToBottomAnimated:(BOOL)animated {

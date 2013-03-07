@@ -8,7 +8,7 @@
 
 #import "OTRBuddyViewController.h"
 #import <QuartzCore/QuartzCore.h>
-
+#import "OTRSafariActionSheet.h"
 
 @interface OTRBuddyViewController ()
 
@@ -118,7 +118,8 @@
 
 -(void)attributedLabel:(TTTAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url
 {
-    
+    OTRSafariActionSheet * actionSheet = [[OTRSafariActionSheet alloc] initWithUrl:url];
+    [actionSheet showInView:self.view];
 }
 
 @end

@@ -68,6 +68,7 @@
 		63BFDB6516E81CD900C608D6 /* OTRBuddyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BFDB6416E81CD900C608D6 /* OTRBuddyViewController.m */; };
 		63BFDB6916E8294300C608D6 /* person.png in Resources */ = {isa = PBXBuildFile; fileRef = 63BFDB6716E8294300C608D6 /* person.png */; };
 		63BFDB6A16E8294300C608D6 /* person@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63BFDB6816E8294300C608D6 /* person@2x.png */; };
+		63BFDB6D16E83A3F00C608D6 /* OTRSafariActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BFDB6C16E83A3F00C608D6 /* OTRSafariActionSheet.m */; };
 		63CC9F1C16D2D18100BDA7D1 /* DAKeyboardControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CC9F1B16D2D18100BDA7D1 /* DAKeyboardControl.m */; };
 		63CC9F2116D2E93500BDA7D1 /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CC9F2016D2E93500BDA7D1 /* TTTAttributedLabel.m */; };
 		63DF97741623A3310043E295 /* pencil@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63DF97731623A3310043E295 /* pencil@2x.png */; };
@@ -572,6 +573,8 @@
 		63BFDB6416E81CD900C608D6 /* OTRBuddyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBuddyViewController.m; sourceTree = "<group>"; };
 		63BFDB6716E8294300C608D6 /* person.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = person.png; sourceTree = "<group>"; };
 		63BFDB6816E8294300C608D6 /* person@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "person@2x.png"; sourceTree = "<group>"; };
+		63BFDB6B16E83A3F00C608D6 /* OTRSafariActionSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRSafariActionSheet.h; sourceTree = "<group>"; };
+		63BFDB6C16E83A3F00C608D6 /* OTRSafariActionSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRSafariActionSheet.m; sourceTree = "<group>"; };
 		63CC9F1A16D2D18100BDA7D1 /* DAKeyboardControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DAKeyboardControl.h; sourceTree = "<group>"; };
 		63CC9F1B16D2D18100BDA7D1 /* DAKeyboardControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DAKeyboardControl.m; sourceTree = "<group>"; };
 		63CC9F1F16D2E93500BDA7D1 /* TTTAttributedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTAttributedLabel.h; sourceTree = "<group>"; };
@@ -2619,6 +2622,8 @@
 				D9D3717A169D34630086F358 /* OTRDatabaseUtils.m */,
 				63022BB716CDAD5E00F764F1 /* ACPlaceholderTextView.h */,
 				63022BB816CDAD5E00F764F1 /* ACPlaceholderTextView.m */,
+				63BFDB6B16E83A3F00C608D6 /* OTRSafariActionSheet.h */,
+				63BFDB6C16E83A3F00C608D6 /* OTRSafariActionSheet.m */,
 				632E5C8416D1A2A90037E37C /* OTRMessageTableViewCell.h */,
 				632E5C8516D1A2A90037E37C /* OTRMessageTableViewCell.m */,
 				63022BB416CDAD4C00F764F1 /* OTRChatViewController.h */,
@@ -3303,6 +3308,7 @@
 				6300F15C16E6C30800D3C1AA /* _OTRXMPPManagedPresenceSubscriptionRequest.m in Sources */,
 				6300F16716E6CF8400D3C1AA /* OTRSubscriptionRequestsViewController.m in Sources */,
 				63BFDB6516E81CD900C608D6 /* OTRBuddyViewController.m in Sources */,
+				63BFDB6D16E83A3F00C608D6 /* OTRSafariActionSheet.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
