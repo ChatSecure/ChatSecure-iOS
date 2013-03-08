@@ -125,7 +125,7 @@
 
     [context MR_saveToPersistentStoreAndWait];
     
-    OTRLoginViewController *loginViewController = [OTRLoginViewController loginViewControllerWithAcccount:cellAccount];
+    OTRLoginViewController *loginViewController = [OTRLoginViewController loginViewControllerWithAcccountID:cellAccount.objectID];
     loginViewController.isNewAccount = YES;
     [self.navigationController pushViewController:loginViewController animated:YES];
     [tableView deselectRowAtIndexPath:indexPath animated:YES];    

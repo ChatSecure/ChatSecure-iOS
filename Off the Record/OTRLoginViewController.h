@@ -38,7 +38,7 @@
     UIView *padding;
 }
 
-- (id) initWithAccount:(OTRManagedAccount*)newAccount;
+- (id) initWithAccountID:(NSManagedObjectID *)newAccountID;
 
 @property (nonatomic, retain) OTRManagedAccount *account;
 
@@ -67,6 +67,6 @@
 -(void)addCellinfoWithSection:(NSInteger)section row:(NSInteger)row labelText:(id)text cellType:(NSString *)type userInputView:(UIView *)inputView;
 -(void)readInFields;
 
-+(OTRLoginViewController *)loginViewControllerWithAcccount:(OTRManagedAccount *)account;
++(OTRLoginViewController *)loginViewControllerWithAcccountID:(NSManagedObjectID *)accountID;
 
 @end

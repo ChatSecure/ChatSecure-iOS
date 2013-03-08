@@ -224,7 +224,7 @@
 }
 
 - (void) showLoginControllerForAccount:(OTRManagedAccount*)account {
-    OTRLoginViewController *loginViewController = [OTRLoginViewController loginViewControllerWithAcccount:account];
+    OTRLoginViewController *loginViewController = [OTRLoginViewController loginViewControllerWithAcccountID:account.objectID];
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:loginViewController];
     nav.modalPresentationStyle = UIModalPresentationFormSheet;
     [self presentModalViewController:nav animated:YES];
