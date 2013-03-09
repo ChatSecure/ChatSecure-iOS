@@ -67,6 +67,10 @@
     
     CGRect textFieldFrame = CGRectMake(labelWidth, self.textLabel.frame.origin.y, self.contentView.frame.size.width-labelWidth-5, self.contentView.frame.size.height-20);
     textFieldFrame.origin.y = self.contentView.frame.size.height/2-textFieldFrame.size.height/2;
+    if (isStyle2) {
+        textFieldFrame.origin.y +=2;
+    }
+    
     self.textField.frame = textFieldFrame;
     self.textField.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
     self.textField.tag = 999;

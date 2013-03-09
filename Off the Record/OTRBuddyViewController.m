@@ -40,6 +40,7 @@
     UITableView * tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
     tableView.delegate = self;
     tableView.dataSource = self;
+    tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     
     [self.view addSubview:tableView];
     
@@ -51,8 +52,15 @@
         displayNameTextField.text = buddy.displayName;
     }
     
-    UIButton * removeBuddyButton = [[UIButton alloc] init];
-    UIButton * blockBuddyButton = [[UIButton alloc] init];
+    removeBuddyButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [removeBuddyButton setTitle:@"Remove" forState:UIControlStateNormal];
+    
+    blockBuddyButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [blockBuddyButton setTitle:@"Block" forState:UIControlStateNormal];
+    
+    
+    removeBuddyButton.autoresizingMask  = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleLeftMargin ;
+    blockBuddyButton.autoresizingMask =UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
     
 }
 
@@ -65,7 +73,7 @@
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 3;
+    return 4;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -154,17 +162,29 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
+    if (indexPath.section == 2 && indexPath.row == 0) {
+        //go to edit groups view
+    }
 }
 
 -(void)setupButtonsCell:(UITableViewCell *)cell
 {
+    cell.backgroundView = cell.backgroundView = [[UIView alloc] initWithFrame:CGRectZero];
+    CGSize cellSize = cell.contentView.frame.size;
+    CGFloat buttonWidth = 150;
+    
+    removeBuddyButton.frame = CGRectMake(0, 0, buttonWidth, cellSize.height);
+    blockBuddyButton.frame = CGRectMake(cellSize.width-buttonWidth, 0, buttonWidth, cellSize.height);
+    
+    [cell.contentView addSubview:removeBuddyButton];
+    [cell.contentView addSubview:blockBuddyButton];
+    
     
 }
 
 -(void)setupPhotoCell:(UITableViewCell *)cell
 {
-    //cell.backgroundView = cell.backgroundView = [[UIView alloc] initWithFrame:CGRectZero];
+    cell.backgroundView = cell.backgroundView = [[UIView alloc] initWithFrame:CGRectZero];
     UIImageView * buddyImageView = [[UIImageView alloc] initWithFrame:CGRectMake(5.0, 5.0, 70.0, 70.0)];
     buddyImageView.backgroundColor = [UIColor lightGrayColor];
     

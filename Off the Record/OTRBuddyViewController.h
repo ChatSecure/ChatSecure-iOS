@@ -13,6 +13,8 @@
 @interface OTRBuddyViewController : UIViewController <TTTAttributedLabelDelegate, UITableViewDataSource, UITableViewDelegate>
 {
     UITextField * displayNameTextField;
+    UIButton * removeBuddyButton;
+    UIButton * blockBuddyButton;
 }
 
 @property (nonatomic, strong) OTRManagedBuddy * buddy;
