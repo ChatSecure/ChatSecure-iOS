@@ -10,7 +10,10 @@
 #import "OTRManagedBuddy.h"
 #import "TTTAttributedLabel.h"
 
-@interface OTRBuddyViewController : UIViewController <TTTAttributedLabelDelegate>
+@interface OTRBuddyViewController : UIViewController <TTTAttributedLabelDelegate, UITableViewDataSource, UITableViewDelegate>
+{
+    UITextField * displayNameTextField;
+}
 
 @property (nonatomic, strong) OTRManagedBuddy * buddy;
 

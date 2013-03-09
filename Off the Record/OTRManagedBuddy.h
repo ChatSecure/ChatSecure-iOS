@@ -50,6 +50,7 @@
 - (OTRManagedEncryptionStatusMessage *)currentEncryptionStatus;
 
 -(void)addToGroup:(NSString *)groupName;
+-(NSArray *)groupNames;
 
 - (NSInteger) numberOfUnreadMessages;
 - (void) allMessagesRead;

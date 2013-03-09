@@ -23,6 +23,9 @@
 #import <UIKit/UIKit.h>
 
 @interface OTRInLineTextEditTableViewCell : UITableViewCell
+{
+    BOOL isStyle2;
+}
 
 @property (nonatomic, strong) UITextField *textField;
 
