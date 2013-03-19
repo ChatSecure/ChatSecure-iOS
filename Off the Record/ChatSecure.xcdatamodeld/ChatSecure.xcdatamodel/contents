@@ -64,11 +64,11 @@
         <element name="OTRManagedAccount" positionX="340" positionY="153" width="128" height="135"/>
         <element name="OTRManagedBuddy" positionX="106" positionY="-0" width="128" height="253"/>
         <element name="OTRManagedEncryptionStatusMessage" positionX="-414" positionY="252" width="243" height="73"/>
+        <element name="OTRManagedGroup" positionX="322" positionY="-19" width="128" height="73"/>
         <element name="OTRManagedMessage" positionX="-101" positionY="239" width="128" height="103"/>
         <element name="OTRManagedMessageAndStatus" positionX="-153" positionY="9" width="189" height="118"/>
         <element name="OTRManagedOscarAccount" positionX="529" positionY="72" width="128" height="43"/>
         <element name="OTRManagedStatus" positionX="-290" positionY="161" width="128" height="73"/>
         <element name="OTRManagedXMPPAccount" positionX="520" positionY="198" width="128" height="163"/>
-        <element name="OTRManagedGroup" positionX="313" positionY="-19" width="128" height="73"/>
     </elements>
 </model>

@@ -31,6 +31,7 @@
 #import "OTRManagedGroup.h"
 #import <QuartzCore/QuartzCore.h>
 #import "OTRBuddyListSectionInfo.h"
+#import "OTRStatusImage.h"
 
 //#define kSignoffTime 500
 
@@ -704,6 +705,8 @@
             cell.textLabel.textColor = [UIColor lightGrayColor];
             cell.imageView.image = [UIImage imageNamed:@"offline.png"];
     }
+    
+    cell.imageView.image = [OTRStatusImage statusImageWithStatus:buddyStatus];
 }
 
 

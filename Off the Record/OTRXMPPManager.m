@@ -238,7 +238,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
                 user = [controller objectAtIndexPath:indexPath];
                 break;
             case NSFetchedResultsChangeDelete:
-                user = [controller objectAtIndexPath:indexPath];
+                //user = [controller objectAtIndexPath:indexPath];
                 break;
             default:
                 break;
@@ -587,9 +587,10 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     }
     
     
-    [protocolManager.protocolManagers removeObjectForKey:self.account.uniqueIdentifier];
     
     [self.xmppRosterStorage clearAllUsersAndResourcesForXMPPStream:self.xmppStream];
+    
+    //[protocolManager.protocolManagers removeObjectForKey:self.account.uniqueIdentifier];
     
     /*
     self.protocolBuddyList = nil;
