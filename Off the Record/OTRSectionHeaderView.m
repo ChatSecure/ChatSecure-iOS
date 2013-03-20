@@ -39,7 +39,9 @@
         
         CGRect titleLabelFrame = self.bounds;
         titleLabelFrame.origin.x += 10.0;
-        titleLabelFrame.size.width -= 5.0;
+        titleLabelFrame.size.width -= 30.0;
+        titleLabelFrame.size.height -= 4;
+        titleLabelFrame.origin.y = roundf((self.bounds.size.height - titleLabelFrame.size.height)/2.0)-2;
         CGRectInset(titleLabelFrame, 0.0, 5.0);
         UILabel *label = [[UILabel alloc] initWithFrame:titleLabelFrame];
         label.text = title;
@@ -54,8 +56,7 @@
         self.backgroundColor = [UIColor lightGrayColor];
         
         // Create and configure the disclosure button.
-        CGFloat viewHeight = self.bounds.size.height;
-        CGFloat viewY = viewHeight/2-10.0;
+        CGFloat viewY = self.center.y-10;
         CGFloat viewX = self.bounds.size.width - 20 - viewY;
         
         
@@ -65,6 +66,7 @@
         [button setImage:[OTRImages openCaratImage] forState:UIControlStateSelected];
         [button addTarget:self action:@selector(toggle:) forControlEvents:UIControlEventTouchUpInside];
         button.userInteractionEnabled = NO;
+        button.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
         [self addSubview:button];
         _disclosureButton = button;
         
