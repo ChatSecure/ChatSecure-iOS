@@ -32,6 +32,7 @@
 #import "OTRConstants.h"
 #import "OTRLanguageManager.h"
 #import "OTRConvertAccount.h"
+#import "OTRUtilities.h"
 
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
@@ -85,13 +86,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     }
 #endif
     
-    //Delete all stored buddies
-    //[OTRManagedBuddy MR_deleteAllMatchingPredicate:nil];
-    //Delete all stored messages
-    //[OTRManagedMessageAndStatus MR_deleteAllMatchingPredicate:nil];
-    
-    //NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
-    //[context MR_saveToPersistentStoreAndWait];
+    [OTRUtilities deleteAllBuddiesAndMessages];
     
     [OTRManagedAccount resetAccountsConnectionStatus];
 
@@ -196,6 +191,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
      Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
      */
     NSLog(@"Application became active");
+    
     if (self.backgroundTimer) 
     {
         [self.backgroundTimer invalidate];
@@ -206,7 +202,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
         [application endBackgroundTask:self.backgroundTask];
         self.backgroundTask = UIBackgroundTaskInvalid;
     }
-    
+    [OTRManagedAccount resetAccountsConnectionStatus];
     application.applicationIconBadgeNumber = 0;
 }
 
@@ -226,7 +222,9 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
         id <OTRProtocol> protocol = [protocolManager.protocolManagers objectForKey:key];
         [protocol disconnect];
     }
-
+    [OTRManagedAccount resetAccountsConnectionStatus];
+    [OTRUtilities deleteAllBuddiesAndMessages];
+    
     [MagicalRecord cleanUp];
 }
 

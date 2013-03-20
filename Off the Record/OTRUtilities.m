@@ -7,6 +7,8 @@
 //
 
 #import "OTRUtilities.h"
+#import "OTRManagedBuddy.h"
+#import "OTRManagedGroup.h"
 
 @implementation OTRUtilities
 
@@ -32,6 +34,19 @@
 	}
 	
 	return result;
+}
+
++(void)deleteAllBuddiesAndMessages
+{
+    //Delete all stored buddies
+    [OTRManagedBuddy MR_deleteAllMatchingPredicate:nil];
+    //Delete all stored messages
+    [OTRManagedMessageAndStatus MR_deleteAllMatchingPredicate:nil];
+    //Delete all Groups
+    [OTRManagedGroup MR_deleteAllMatchingPredicate:nil];
+    
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    [context MR_saveToPersistentStoreAndWait];
 }
 
 @end

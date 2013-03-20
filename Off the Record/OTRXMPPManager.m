@@ -576,8 +576,6 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     
     [xmppStream disconnect];
     
-    OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
-    
     [self.account setAllBuddiesStatuts:kOTRBuddyStatusOffline];
     self.account.isConnectedValue = NO;
     

@@ -14,4 +14,6 @@
 +(NSString *)stripHTML:(NSString *)string;
 +(NSString *)uniqueString;
 
++(void)deleteAllBuddiesAndMessages;
+
 @end

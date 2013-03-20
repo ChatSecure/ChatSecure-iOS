@@ -8,6 +8,7 @@
 
 #import "OTRSectionHeaderView.h"
 #import <QuartzCore/QuartzCore.h>
+#import "OTRImages.h"
 
 @implementation OTRSectionHeaderView
 
@@ -59,9 +60,10 @@
         
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
         button.frame = CGRectMake(viewX, viewY, 20.0, 20.0);
-        [button setImage:[UIImage imageNamed:@"carat.png"] forState:UIControlStateNormal];
-        [button setImage:[UIImage imageNamed:@"carat-open.png"] forState:UIControlStateSelected];
+        [button setImage:[OTRImages closeCaratImage] forState:UIControlStateNormal];
+        [button setImage:[OTRImages openCaratImage] forState:UIControlStateSelected];
         [button addTarget:self action:@selector(toggle:) forControlEvents:UIControlEventTouchUpInside];
+        button.userInteractionEnabled = NO;
         [self addSubview:button];
         _disclosureButton = button;
         

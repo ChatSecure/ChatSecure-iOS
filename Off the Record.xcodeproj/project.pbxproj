@@ -31,8 +31,6 @@
 		6336CDE0165C4E9E00C8CBA8 /* OTRLanguageListSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6336CDDF165C4E9E00C8CBA8 /* OTRLanguageListSettingViewController.m */; };
 		633E71F916E169C100495B45 /* OTRBuddyListSectionInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 633E71F816E169C100495B45 /* OTRBuddyListSectionInfo.m */; };
 		633E71FD16E170AA00495B45 /* OTRSectionHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 633E71FC16E170AA00495B45 /* OTRSectionHeaderView.m */; };
-		633E720016E1743300495B45 /* carat-open.png in Resources */ = {isa = PBXBuildFile; fileRef = 633E71FE16E1743300495B45 /* carat-open.png */; };
-		633E720116E1743300495B45 /* carat.png in Resources */ = {isa = PBXBuildFile; fileRef = 633E71FF16E1743300495B45 /* carat.png */; };
 		6352DC8815AF9F16007AD0B4 /* OTRNewAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6352DC8715AF9F16007AD0B4 /* OTRNewAccountViewController.m */; };
 		6352DC8C15AFB252007AD0B4 /* xmpp.png in Resources */ = {isa = PBXBuildFile; fileRef = 6352DC8A15AFB252007AD0B4 /* xmpp.png */; };
 		6352DC8D15AFB252007AD0B4 /* xmpp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6352DC8B15AFB252007AD0B4 /* xmpp@2x.png */; };
@@ -59,8 +57,6 @@
 		63B9423516DEFFE200D6934F /* OTRManagedEncryptionStatusMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B9423416DEFFE200D6934F /* OTRManagedEncryptionStatusMessage.m */; };
 		63CC9F1C16D2D18100BDA7D1 /* DAKeyboardControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CC9F1B16D2D18100BDA7D1 /* DAKeyboardControl.m */; };
 		63CC9F2116D2E93500BDA7D1 /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CC9F2016D2E93500BDA7D1 /* TTTAttributedLabel.m */; };
-		63DF97741623A3310043E295 /* pencil@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63DF97731623A3310043E295 /* pencil@2x.png */; };
-		63DF97761623A3F30043E295 /* pencil.png in Resources */ = {isa = PBXBuildFile; fileRef = 63DF97751623A3F30043E295 /* pencil.png */; };
 		63E5E7E816D1D5BC006E2B01 /* MagicalImportFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E5E7B016D1D5BC006E2B01 /* MagicalImportFunctions.m */; };
 		63E5E7E916D1D5BC006E2B01 /* NSAttributeDescription+MagicalDataImport.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E5E7B216D1D5BC006E2B01 /* NSAttributeDescription+MagicalDataImport.m */; };
 		63E5E7EA16D1D5BC006E2B01 /* NSEntityDescription+MagicalDataImport.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E5E7B416D1D5BC006E2B01 /* NSEntityDescription+MagicalDataImport.m */; };
@@ -129,7 +125,7 @@
 		63F6E854164E000C00F67BDB /* OTRFeedbackSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F6E853164E000B00F67BDB /* OTRFeedbackSetting.m */; };
 		63F8A52F16DD995400374551 /* OTRIntSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F8A52E16DD995400374551 /* OTRIntSetting.m */; };
 		63F8A53316DD9B6F00374551 /* OTRIntSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F8A53216DD9B6F00374551 /* OTRIntSettingViewController.m */; };
-		63FA108316F9290A00D9EE45 /* OTRStatusImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FA108216F9290900D9EE45 /* OTRStatusImage.m */; };
+		63FA108316F9290A00D9EE45 /* OTRImages.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FA108216F9290900D9EE45 /* OTRImages.m */; };
 		D90B80AC13FC719B006EFF3D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D90B80AB13FC719B006EFF3D /* CoreGraphics.framework */; };
 		D90B80AF13FC7E5F006EFF3D /* OTRCodec.m in Sources */ = {isa = PBXBuildFile; fileRef = D90B80AE13FC7E5F006EFF3D /* OTRCodec.m */; };
 		D90FAF2914A0624B00DA7C56 /* OTRBuddyList.m in Sources */ = {isa = PBXBuildFile; fileRef = D90FAF2814A0624B00DA7C56 /* OTRBuddyList.m */; };
@@ -492,8 +488,6 @@
 		633E71F816E169C100495B45 /* OTRBuddyListSectionInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBuddyListSectionInfo.m; sourceTree = "<group>"; };
 		633E71FB16E170AA00495B45 /* OTRSectionHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRSectionHeaderView.h; sourceTree = "<group>"; };
 		633E71FC16E170AA00495B45 /* OTRSectionHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRSectionHeaderView.m; sourceTree = "<group>"; };
-		633E71FE16E1743300495B45 /* carat-open.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "carat-open.png"; sourceTree = "<group>"; };
-		633E71FF16E1743300495B45 /* carat.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = carat.png; sourceTree = "<group>"; };
 		63488BBE167BE2480017594D /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = "Off the Record/ar.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
 		63488BBF167BE2F00017594D /* ca */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ca; path = "Off the Record/ca.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
 		63488BC0167BE2F80017594D /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = "Off the Record/de.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
@@ -547,8 +541,6 @@
 		63CC9F1B16D2D18100BDA7D1 /* DAKeyboardControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DAKeyboardControl.m; sourceTree = "<group>"; };
 		63CC9F1F16D2E93500BDA7D1 /* TTTAttributedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTAttributedLabel.h; sourceTree = "<group>"; };
 		63CC9F2016D2E93500BDA7D1 /* TTTAttributedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTAttributedLabel.m; sourceTree = "<group>"; };
-		63DF97731623A3310043E295 /* pencil@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pencil@2x.png"; sourceTree = "<group>"; };
-		63DF97751623A3F30043E295 /* pencil.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pencil.png; sourceTree = "<group>"; };
 		63E5E7AF16D1D5BC006E2B01 /* MagicalImportFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MagicalImportFunctions.h; sourceTree = "<group>"; };
 		63E5E7B016D1D5BC006E2B01 /* MagicalImportFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MagicalImportFunctions.m; sourceTree = "<group>"; };
 		63E5E7B116D1D5BC006E2B01 /* NSAttributeDescription+MagicalDataImport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSAttributeDescription+MagicalDataImport.h"; sourceTree = "<group>"; };
@@ -639,8 +631,8 @@
 		63F8A52E16DD995400374551 /* OTRIntSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRIntSetting.m; sourceTree = "<group>"; };
 		63F8A53116DD9B6E00374551 /* OTRIntSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRIntSettingViewController.h; sourceTree = "<group>"; };
 		63F8A53216DD9B6F00374551 /* OTRIntSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRIntSettingViewController.m; sourceTree = "<group>"; };
-		63FA108116F9290900D9EE45 /* OTRStatusImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRStatusImage.h; sourceTree = "<group>"; };
-		63FA108216F9290900D9EE45 /* OTRStatusImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRStatusImage.m; sourceTree = "<group>"; };
+		63FA108116F9290900D9EE45 /* OTRImages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRImages.h; sourceTree = "<group>"; };
+		63FA108216F9290900D9EE45 /* OTRImages.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRImages.m; sourceTree = "<group>"; };
 		63FAEED916B7553D004F1205 /* OTRXMPPBudyTimers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPBudyTimers.h; sourceTree = "<group>"; };
 		63FAEEDA16B7553E004F1205 /* OTRXMPPBudyTimers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPBudyTimers.m; sourceTree = "<group>"; };
 		D902D31C141E930C00AA3479 /* OTROldBuddy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTROldBuddy.h; sourceTree = "<group>"; };
@@ -2579,8 +2571,8 @@
 				D9E068F013F44D2900AC10A3 /* OTRBuddyListViewController.m */,
 				633E71FB16E170AA00495B45 /* OTRSectionHeaderView.h */,
 				633E71FC16E170AA00495B45 /* OTRSectionHeaderView.m */,
-				63FA108116F9290900D9EE45 /* OTRStatusImage.h */,
-				63FA108216F9290900D9EE45 /* OTRStatusImage.m */,
+				63FA108116F9290900D9EE45 /* OTRImages.h */,
+				63FA108216F9290900D9EE45 /* OTRImages.m */,
 				63E5E81016D1D860006E2B01 /* OTRConvertAccount.h */,
 				63E5E81116D1D860006E2B01 /* OTRConvertAccount.m */,
 				D9D37179169D34630086F358 /* OTRDatabaseUtils.h */,
@@ -2635,8 +2627,6 @@
 		D9FCA7291533A37F009AD599 /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				633E71FE16E1743300495B45 /* carat-open.png */,
-				633E71FF16E1743300495B45 /* carat.png */,
 				63E5E81F16D1DEB9006E2B01 /* checkmark.png */,
 				63E5E82016D1DEB9006E2B01 /* checkmark@2x.png */,
 				63E5E82316D1DF14006E2B01 /* MessageBubbleBlue.png */,
@@ -2663,8 +2653,6 @@
 				D9BE44A4166F2F5B00A628C7 /* 18-envelope.png */,
 				D9BE449F166F2E7D00A628C7 /* 29-heart.png */,
 				D9BE44A0166F2E7D00A628C7 /* 29-heart@2x.png */,
-				63DF97731623A3310043E295 /* pencil@2x.png */,
-				63DF97751623A3F30043E295 /* pencil.png */,
 				D9FC986E15588F230039518D /* chatsecure_qrcode.png */,
 				D9FC986F15588F230039518D /* chatsecure_qrcode@2x.png */,
 				D9A7E0AC15242D9000EEDDB5 /* Default-Landscape@2x~ipad.png */,
@@ -2872,8 +2860,6 @@
 				D93E34F315E48FE600D587B2 /* 14-gear.png in Resources */,
 				D93E34F415E48FE600D587B2 /* 14-gear@2x.png in Resources */,
 				D97BF53B160150CF00DA91F9 /* Default-568h@2x.png in Resources */,
-				63DF97741623A3310043E295 /* pencil@2x.png in Resources */,
-				63DF97761623A3F30043E295 /* pencil.png in Resources */,
 				63B43C2D166D93D5004A4C54 /* Lock_Locked_Verified.png in Resources */,
 				63B43C2E166D93D5004A4C54 /* Lock_Locked_Verified@2x.png in Resources */,
 				63B43C2F166D93D5004A4C54 /* Lock_Locked@2x.png in Resources */,
@@ -2908,8 +2894,6 @@
 				63E5E84016D1DF14006E2B01 /* SendButton@2x.png in Resources */,
 				63E5E84116D1DF14006E2B01 /* SendButtonHighlighted.png in Resources */,
 				63E5E84216D1DF14006E2B01 /* SendButtonHighlighted@2x.png in Resources */,
-				633E720016E1743300495B45 /* carat-open.png in Resources */,
-				633E720116E1743300495B45 /* carat.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3242,7 +3226,7 @@
 				63813C1216E14E5D00909670 /* OTRBuddyListGroupManager.m in Sources */,
 				633E71F916E169C100495B45 /* OTRBuddyListSectionInfo.m in Sources */,
 				633E71FD16E170AA00495B45 /* OTRSectionHeaderView.m in Sources */,
-				63FA108316F9290A00D9EE45 /* OTRStatusImage.m in Sources */,
+				63FA108316F9290A00D9EE45 /* OTRImages.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -6,10 +6,10 @@
 //  Copyright (c) 2013 Chris Ballinger. All rights reserved.
 //
 
-#import "OTRStatusImage.h"
+#import "OTRImages.h"
 
 
-@implementation OTRStatusImage
+@implementation OTRImages
 
 +(UIColor *)colorWithStatus:(OTRBuddyStatus)status
 {
@@ -45,7 +45,7 @@
     CGContextRef context = UIGraphicsGetCurrentContext();
     
     //// Color Declarations
-    UIColor* bubbleColor = [OTRStatusImage colorWithStatus:status];
+    UIColor* bubbleColor = [OTRImages colorWithStatus:status];
     CGFloat bubbleColorRGBA[4];
     [bubbleColor getRed: &bubbleColorRGBA[0] green: &bubbleColorRGBA[1] blue: &bubbleColorRGBA[2] alpha: &bubbleColorRGBA[3]];
     
@@ -73,6 +73,37 @@
     
     return dotImage;
 
+}
+
++(UIImage *)openCaratImage
+{
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(12, 12), NO, 0);
+    //// Color Declarations
+    UIColor* strokeColor = [UIColor colorWithRed: 0 green: 0 blue: 0 alpha: 1];
+    
+    //// Polygon Drawing
+    UIBezierPath* polygonPath = [UIBezierPath bezierPath];
+    [polygonPath moveToPoint: CGPointMake(6, 8)];
+    [polygonPath addLineToPoint: CGPointMake(0.8, 2)];
+    [polygonPath addLineToPoint: CGPointMake(11.2, 2)];
+    [polygonPath closePath];
+    [strokeColor setFill];
+    [polygonPath fill];
+    
+    UIImage *carat = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return carat;
+    
+    
+}
++(UIImage *)closeCaratImage
+{
+    UIImage * carat = [OTRImages openCaratImage];
+    return [[UIImage alloc] initWithCGImage: carat.CGImage
+                               scale: 1.0
+                         orientation: UIImageOrientationLeft];
+    
 }
 
 @end

@@ -31,7 +31,7 @@
 #import "OTRManagedGroup.h"
 #import <QuartzCore/QuartzCore.h>
 #import "OTRBuddyListSectionInfo.h"
-#import "OTRStatusImage.h"
+#import "OTRImages.h"
 
 //#define kSignoffTime 500
 
@@ -683,30 +683,25 @@
     {
         case kOTRBuddyStatusOffline:
             cell.textLabel.textColor = [UIColor lightGrayColor];
-            cell.imageView.image = [UIImage imageNamed:@"offline.png"];
             break;
         case kOTRBuddyStatusAway:
             cell.textLabel.textColor = [UIColor darkGrayColor];
-            cell.imageView.image = [UIImage imageNamed:@"idle.png"];
             break;
         case kOTRBuddyStatusXa:
             cell.textLabel.textColor = [UIColor darkGrayColor];
-            cell.imageView.image = [UIImage imageNamed:@"away.png"];
             break;
         case kOTRBUddyStatusDnd:
             cell.textLabel.textColor = [UIColor darkGrayColor];
-            cell.imageView.image = [UIImage imageNamed:@"away.png"];
             break;
         case kOTRBuddyStatusAvailable:
             cell.textLabel.textColor = [UIColor darkTextColor];
-            cell.imageView.image = [UIImage imageNamed:@"available.png"];
             break;
         default:
             cell.textLabel.textColor = [UIColor lightGrayColor];
-            cell.imageView.image = [UIImage imageNamed:@"offline.png"];
+            break;
     }
     
-    cell.imageView.image = [OTRStatusImage statusImageWithStatus:buddyStatus];
+    cell.imageView.image = [OTRImages statusImageWithStatus:buddyStatus];
 }
 
 

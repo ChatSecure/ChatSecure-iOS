@@ -9,9 +9,12 @@
 #import <Foundation/Foundation.h>
 #import "OTRConstants.h"
 
-@interface OTRStatusImage : NSObject
+@interface OTRImages : NSObject
 
 
 +(UIImage *)statusImageWithStatus:(OTRBuddyStatus)status;
+
++(UIImage *)openCaratImage;
++(UIImage *)closeCaratImage;
 
 @end
