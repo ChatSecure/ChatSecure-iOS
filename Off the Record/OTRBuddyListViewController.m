@@ -270,9 +270,9 @@
 {
     OTRManagedBuddy * managedBuddy = nil;
     if ([tableView isEqual:self.searchDisplayController.searchResultsTableView]) {
-        [self.searchDisplayController   setActive:NO];
         managedBuddy = [self.searchBuddyFetchedResultsController objectAtIndexPath:indexPath];
         [self enterConversationWithBuddy:managedBuddy];
+        [self.searchDisplayController   setActive:NO];
     }
     
     if ([tableView isEqual:self.buddyListTableView]) {
@@ -510,6 +510,11 @@
     [tableView endUpdates];
     
 }
+-(void)searchDisplayController:(UISearchDisplayController *)controller willUnloadSearchResultsTableView:(UITableView *)tableView
+{
+    self.searchBuddyFetchedResultsController.delegate = nil;
+    self.searchBuddyFetchedResultsController = nil;
+}
 
 -(void)manager:(OTRBuddyListGroupManager *)manager didChangeSectionAtIndex:(NSUInteger)section newSectionIndex:(NSUInteger)newSection forChangeType:(NSFetchedResultsChangeType)type
 {
@@ -716,17 +721,16 @@
 - (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope
 {
     NSFetchRequest * searchRequest = [[self searchBuddyFetchedResultsController] fetchRequest];
+    _searchBuddyFetchedResultsController.delegate = nil;
+    _searchBuddyFetchedResultsController = nil;
     
-    NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"accountName contains[cd] %@ OR displayName contains[cd] %@",searchText ,searchText];
+    NSPredicate * buddyNameFilter = [NSPredicate predicateWithFormat:@"accountName contains[cd] %@ OR displayName contains[cd] %@",searchText ,searchText];
+    NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"accountName != nil OR displayName != nil"];
+    NSPredicate * predicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[buddyNameFilter,buddyFilter]];
+    _searchBuddyFetchedResultsController = [OTRManagedBuddy MR_fetchAllGroupedBy:nil withPredicate:predicate sortedBy:@"currentStatus,displayName" ascending:YES delegate:self];
     
-    [searchRequest setPredicate:buddyFilter];
+    //[searchRequest setPredicate:buddyFilter];
     
-    NSError *error = nil;
-    if (![[self searchBuddyFetchedResultsController] performFetch:&error]) {
-        // Handle error
-        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-        abort();
-    }
 }
 
 - (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
