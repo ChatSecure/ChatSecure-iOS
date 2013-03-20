@@ -352,20 +352,18 @@
     
     buddy = newBuddy;
     
-    
+    [self refreshView];
     if (buddy) {
         self.title = newBuddy.displayName;
         [self refreshLockButton];
-        [self refreshView];
         [self updateChatState:NO];
     }
+    
     
 }
 
 -(BOOL)isComposingVisible
 {
-    NSInteger rows = [self.chatHistoryTableView numberOfRowsInSection:0];
-    NSInteger messages = [[self.messagesFetchedResultsController fetchedObjects] count];
     if ([self.chatHistoryTableView numberOfRowsInSection:0] == [[self.messagesFetchedResultsController fetchedObjects] count]) {
         return NO;
     }

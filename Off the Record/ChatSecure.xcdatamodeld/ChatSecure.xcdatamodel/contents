@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2057" systemVersion="12C60" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2061" systemVersion="12D78" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="OTRManagedAccount" representedClassName="OTRManagedAccount" syncable="YES">
         <attribute name="isConnected" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="protocol" optional="YES" attributeType="String" syncable="YES"/>
@@ -21,7 +21,7 @@
         <relationship name="encryptionStatusMessages" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="OTRManagedEncryptionStatusMessage" inverseName="encryptionstatusbuddy" inverseEntity="OTRManagedEncryptionStatusMessage" syncable="YES"/>
         <relationship name="groups" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="OTRManagedGroup" inverseName="buddies" inverseEntity="OTRManagedGroup" syncable="YES"/>
         <relationship name="messages" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="OTRManagedMessage" inverseName="messagebuddy" inverseEntity="OTRManagedMessage" syncable="YES"/>
-        <relationship name="messagesandstatuses" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="OTRManagedMessageAndStatus" inverseName="buddy" inverseEntity="OTRManagedMessageAndStatus" syncable="YES"/>
+        <relationship name="messagesandstatuses" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="OTRManagedMessageAndStatus" inverseName="buddy" inverseEntity="OTRManagedMessageAndStatus" syncable="YES"/>
         <relationship name="statuses" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="OTRManagedStatus" inverseName="statusbuddy" inverseEntity="OTRManagedStatus" syncable="YES"/>
     </entity>
     <entity name="OTRManagedEncryptionStatusMessage" representedClassName="OTRManagedEncryptionStatusMessage" parentEntity="OTRManagedMessageAndStatus" syncable="YES">

@@ -66,6 +66,7 @@
 - (id)init {
     if (self = [super init]) {
         self.title = BUDDY_LIST_STRING;
+        buddyStatusImageDictionary = [NSMutableDictionary dictionaryWithCapacity:5];
     }
     return self;
 }
@@ -702,7 +703,12 @@
             break;
     }
     
-    cell.imageView.image = [OTRImages statusImageWithStatus:buddyStatus];
+    UIImage * image = [buddyStatusImageDictionary objectForKey:[NSNumber numberWithInteger:buddyStatus]];
+    if (!image) {
+        image = [OTRImages statusImageWithStatus:buddyStatus];
+        [buddyStatusImageDictionary setObject:image forKey:[NSNumber numberWithInteger:buddyStatus]];
+    }
+    cell.imageView.image = image;
 }
 
 
