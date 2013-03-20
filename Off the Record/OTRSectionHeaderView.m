@@ -44,9 +44,10 @@
         UILabel *label = [[UILabel alloc] initWithFrame:titleLabelFrame];
         label.text = title;
         label.font = [UIFont boldSystemFontOfSize:15.0];
-        label.textColor = [UIColor whiteColor];
+        label.textColor = [UIColor blackColor];
         label.backgroundColor = [UIColor clearColor];
-        [label setShadowOffset:CGSizeMake(0, -2)];
+        [label setShadowOffset:CGSizeMake(0, 1)];
+        [label setShadowColor:[UIColor whiteColor]];
         [self addSubview:label];
         _titleLabel = label;
         
@@ -67,23 +68,17 @@
         [self addSubview:button];
         _disclosureButton = button;
         
-        
-        static NSMutableArray *colors = nil;
-        if (colors == nil) {
-            colors = [[NSMutableArray alloc] initWithCapacity:3];
-            UIColor *color = nil;
-            //color = [UIColor colorWithRed:0.82 green:0.84 blue:0.87 alpha:1.0];
-            color = [UIColor colorWithWhite:.7 alpha:1.0];
-            [colors addObject:(id)[color CGColor]];
-            //color = [UIColor colorWithRed:0.41 green:0.41 blue:0.59 alpha:1.0];
-            color = [UIColor colorWithWhite:.4 alpha:1.0];
-            [colors addObject:(id)[color CGColor]];
-            //color = [UIColor colorWithRed:0.41 green:0.41 blue:0.59 alpha:1.0];
-            color = [UIColor colorWithWhite:.2 alpha:1.0];
-            [colors addObject:(id)[color CGColor]];
-        }
-        [(CAGradientLayer *)self.layer setColors:colors];
-        [(CAGradientLayer *)self.layer setLocations:[NSArray arrayWithObjects:[NSNumber numberWithFloat:0.0], [NSNumber numberWithFloat:0.4], [NSNumber numberWithFloat:1.0], nil]];
+        UIColor* fillColor = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 1];
+        UIColor* strokeColor = [UIColor colorWithRed: 0 green: 0 blue: 0 alpha: 1];
+        UIColor* fillColor2 = [UIColor colorWithRed: 0.769 green: 0.769 blue: 0.769 alpha: 1];
+        NSArray* gradientColors = [NSArray arrayWithObjects:
+                                   (id)fillColor.CGColor,
+                                   (id)[UIColor colorWithRed: 0.884 green: 0.884 blue: 0.884 alpha: 1].CGColor,
+                                   (id)fillColor2.CGColor,
+                                   (id)[UIColor colorWithRed: 0.384 green: 0.384 blue: 0.384 alpha: 1].CGColor,
+                                   (id)strokeColor.CGColor, nil];
+        [(CAGradientLayer *)self.layer setColors:gradientColors];
+        [(CAGradientLayer *)self.layer setLocations:@[[NSNumber numberWithFloat:0.03],[NSNumber numberWithFloat:0.03],[NSNumber numberWithFloat:0.97],[NSNumber numberWithFloat:0.97],[NSNumber numberWithFloat:0.99]]];
         
     }
     return self;
