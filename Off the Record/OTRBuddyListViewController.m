@@ -208,7 +208,7 @@
     
     if ([tableView isEqual:self.buddyListTableView]) {
         if (sectionIndex == RECENTS_SECTION_INDEX) {
-            return [[self.recentBuddiesFetchedResultsController sections][sectionIndex] numberOfObjects];
+            return [[self.recentBuddiesFetchedResultsController fetchedObjects] count];
         } else if ([self.groupManager numberOfGroups] >= sectionIndex){
             NSUInteger num =  [self.groupManager numberOfBuddiesAtIndex:sectionIndex-1];
             return num;
@@ -369,7 +369,8 @@
         return _recentBuddiesFetchedResultsController;
     }
     
-    NSPredicate * predicate = [NSPredicate predicateWithFormat:@"messages.@count != 0"];
+     //predicate = [NSPredicate predicateWithFormat:@"messages.@count != 0"];
+    NSPredicate * predicate = [NSPredicate predicateWithFormat:@"(SUBQUERY(messages, $message, $message.isEncrypted == NO).@count != 0)"];
     NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"accountName != nil OR displayName != nil"];
     NSPredicate * compoundPredicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[predicate,buddyFilter]];
     
