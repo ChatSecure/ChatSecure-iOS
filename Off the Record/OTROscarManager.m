@@ -296,10 +296,10 @@ BOOL loginFailed;
     
     [OTRCodec decodeMessage:otrMessage];
     
-    if(otrMessage)
+    if(otrMessage && otrMessage.isEncryptedValue == NO)
     {
         [messageBuddy receiveMessage:otrMessage.message];
-    
+        
     }
 	
 	NSArray * tokens = [CommandTokenizer tokensOfCommand:msgTxt];

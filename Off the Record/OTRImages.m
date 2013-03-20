@@ -75,7 +75,7 @@
 
 }
 
-+(UIImage *)openCaratImage
++(UIImage *)caratImage
 {
     UIGraphicsBeginImageContextWithOptions(CGSizeMake(12, 12), NO, 0);
     //// Color Declarations
@@ -95,14 +95,36 @@
     
     return carat;
     
+}
+
++(CGFloat)scale
+{
+    CGFloat scale = 1.0;
+    if([[UIScreen mainScreen]respondsToSelector:@selector(scale)]) {
+        CGFloat tmp = [[UIScreen mainScreen]scale];
+        if (tmp > 1.5) {
+            scale = 2.0;
+        }
+    }
+    
+    return scale;
+}
+
++(UIImage *)openCaratImage
+{
+    
+    
+    UIImage * carat = [OTRImages caratImage];
+    return [[UIImage alloc] initWithCGImage:carat.CGImage scale:[OTRImages scale] orientation:UIImageOrientationLeft];
+    return carat;
     
 }
 +(UIImage *)closeCaratImage
 {
-    UIImage * carat = [OTRImages openCaratImage];
+    UIImage * carat = [OTRImages caratImage];
     return [[UIImage alloc] initWithCGImage: carat.CGImage
-                               scale: 1.0
-                         orientation: UIImageOrientationLeft];
+                               scale: [OTRImages scale] 
+                         orientation: UIImageOrientationUp];
     
 }
 

@@ -806,7 +806,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
         OTRManagedMessage *otrMessage = [OTRManagedMessage newMessageFromBuddy:messageBuddy message:body encrypted:YES];
         [OTRCodec decodeMessage:otrMessage];
         
-        if(otrMessage)
+        if(otrMessage && otrMessage.isEncryptedValue == NO)
         {
             [messageBuddy receiveMessage:otrMessage.message];
             
