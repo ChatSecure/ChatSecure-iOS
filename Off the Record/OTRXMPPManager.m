@@ -303,7 +303,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
             
             
             NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
-            [context MR_saveToPersistentStoreAndWait];
+            [context MR_saveToPersistentStoreWithCompletion:nil];
         }
     }
 }
@@ -806,7 +806,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
         OTRManagedMessage *otrMessage = [OTRManagedMessage newMessageFromBuddy:messageBuddy message:body encrypted:YES];
         [OTRCodec decodeMessage:otrMessage];
         
-        if(otrMessage && otrMessage.isEncryptedValue == NO)
+        if(otrMessage && otrMessage.isEncryptedValue)
         {
             [messageBuddy receiveMessage:otrMessage.message];
             

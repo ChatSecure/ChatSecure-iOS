@@ -26,12 +26,12 @@
 -(NSUInteger)numberOfBuddiesAtIndex:(NSUInteger)index
 {
     NSFetchedResultsController * controller = [self resultsControllerAtIndex:index];
-    return [[controller sections][0] numberOfObjects];
+    return [[controller fetchedObjects] count];
     
 }
 -(NSUInteger)numberOfGroups
 {
-    return [[self.groupFetchedResultsController sections][0] numberOfObjects];
+    return [[self.groupFetchedResultsController fetchedObjects] count];
 }
 
 -(NSString *)groupNameAtIndex:(NSUInteger)index
@@ -108,7 +108,7 @@
     }
     
     //NSPredicate * hasBuddiesFilter = [NSPredicate predicateWithFormat:@"%K.@count != 0",OTRManagedGroupRelationships.buddies];
-    NSPredicate * onlineBuddiesFilter = [NSPredicate predicateWithFormat:@"ANY %K.%K != %d",OTRManagedGroupRelationships.buddies,OTRManagedBuddyAttributes.currentStatus,kOTRBuddyStatusOffline];
+    NSPredicate * onlineBuddiesFilter = [NSPredicate predicateWithFormat:@"(SUBQUERY(buddies, $buddy, $buddy.currentStatus != %d).@count != 0)",kOTRBuddyStatusOffline];
     //NSPredicate * buddyFilter = [NSCompoundPredicate andPredicateWithSubpredicates:@[hasBuddiesFilter, onlineBuddiesFilter]];
     
     _groupFetchedResultsController = [OTRManagedGroup MR_fetchAllGroupedBy:nil withPredicate:onlineBuddiesFilter sortedBy:OTRManagedGroupAttributes.name ascending:YES delegate:self];
