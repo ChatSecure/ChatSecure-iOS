@@ -59,7 +59,17 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // DATABASE TESTS
-    [MagicalRecord setupCoreDataStackWithStoreNamed:@"db.sqlite"];
+    NSString * storeFileName = @"db.sqlite";
+    [MagicalRecord setupCoreDataStackWithStoreNamed:storeFileName];
+    NSURL * fileURL = [NSPersistentStore MR_urlForStoreName:storeFileName];
+    
+    NSDictionary *fileAttributes = [NSDictionary dictionaryWithObject:NSFileProtectionCompleteUnlessOpen forKey:NSFileProtectionKey];
+    NSError * error = nil;
+    
+    if (![[NSFileManager defaultManager] setAttributes:fileAttributes ofItemAtPath:[fileURL path] error:&error])
+    {
+        NSLog(@"error setting store");
+    }
     
     //NSPersistentStoreCoordinator *storeCoordinator = [OTRDatabaseUtils persistentStoreCoordinatorWithDBName:@"db.sqlite" passphrase:@"test"];
     
