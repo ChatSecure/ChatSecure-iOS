@@ -49,6 +49,24 @@
     [context MR_saveToPersistentStoreAndWait];
 }
 
++(BOOL)dateInLast24Hours:(NSDate *)date
+{
+    if([date timeIntervalSinceNow] < (24*60*60))
+    {
+        return YES;
+    }
+    return NO;
+    
+}
++(BOOL)dateInLast7Days:(NSDate *)date
+{
+    if([date timeIntervalSinceNow] < (7*24*60*60))
+    {
+        return YES;
+    }
+    return NO;
+}
+
 @end
 
 

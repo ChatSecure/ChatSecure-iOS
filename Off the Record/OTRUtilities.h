@@ -16,4 +16,7 @@
 
 +(void)deleteAllBuddiesAndMessages;
 
++(BOOL)dateInLast24Hours:(NSDate *)date;
++(BOOL)dateInLast7Days:(NSDate *)date;
+
 @end

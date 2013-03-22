@@ -32,6 +32,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "OTRBuddyListSectionInfo.h"
 #import "OTRImages.h"
+#import "OTRUtilities.h"
 
 //#define kSignoffTime 500
 
@@ -630,12 +631,25 @@
     [self configureCell:cell withBuddy:buddy];
     NSInteger numberOfUnreadMessages = [buddy numberOfUnreadMessages];
     
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:@"yyyy-MM-dd h:mm"];
     
-    formatter.timeZone = [NSTimeZone localTimeZone];
+    NSDate * date = buddy.lastMessageDate;
+    NSString *stringFromDate = nil;
     
-    NSString *stringFromDate = [formatter stringFromDate:buddy.lastMessageDate];
+    if([OTRUtilities dateInLast24Hours:date])
+    {
+        stringFromDate = [NSDateFormatter localizedStringFromDate:buddy.lastMessageDate dateStyle:NSDateFormatterNoStyle timeStyle:NSDateFormatterShortStyle];
+    }
+    else if ([OTRUtilities dateInLast7Days:date])
+    {
+        //show day of week
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        [formatter setDateFormat:@"EEEE"];
+        stringFromDate = [formatter stringFromDate:date];
+    }
+    else{
+        stringFromDate= [NSDateFormatter localizedStringFromDate:buddy.lastMessageDate dateStyle:NSDateFormatterShortStyle timeStyle:NSDateFormatterNoStyle];
+    }
+     
     
     
     cell.detailTextLabel.text = stringFromDate;
