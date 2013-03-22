@@ -649,8 +649,6 @@
     else{
         stringFromDate= [NSDateFormatter localizedStringFromDate:buddy.lastMessageDate dateStyle:NSDateFormatterShortStyle timeStyle:NSDateFormatterNoStyle];
     }
-     
-    
     
     cell.detailTextLabel.text = stringFromDate;
     
@@ -734,7 +732,6 @@
 
 - (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope
 {
-    NSFetchRequest * searchRequest = [[self searchBuddyFetchedResultsController] fetchRequest];
     _searchBuddyFetchedResultsController.delegate = nil;
     _searchBuddyFetchedResultsController = nil;
     
