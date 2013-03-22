@@ -68,7 +68,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     
     if (![[NSFileManager defaultManager] setAttributes:fileAttributes ofItemAtPath:[fileURL path] error:&error])
     {
-        NSLog(@"error setting store");
+        NSLog(@"error encrypting store");
     }
     
     //NSPersistentStoreCoordinator *storeCoordinator = [OTRDatabaseUtils persistentStoreCoordinatorWithDBName:@"db.sqlite" passphrase:@"test"];
