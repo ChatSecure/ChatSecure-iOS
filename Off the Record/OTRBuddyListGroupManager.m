@@ -26,12 +26,12 @@
 -(NSUInteger)numberOfBuddiesAtIndex:(NSUInteger)index
 {
     NSFetchedResultsController * controller = [self resultsControllerAtIndex:index];
-    return [[controller sections][0] numberOfObjects];
+    return [[controller fetchedObjects] count];
     
 }
 -(NSUInteger)numberOfGroups
 {
-    return [[[self groupFetchedResultsController] fetchedObjects] count];
+    return [[self.groupFetchedResultsController fetchedObjects] count];
 }
 
 -(NSString *)groupNameAtIndex:(NSUInteger)index

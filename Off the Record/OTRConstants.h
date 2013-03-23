@@ -55,8 +55,8 @@
 #define kOTRChatStatePausedTimeout 5
 #define kOTRChatStateInactiveTimeout 120
 
-typedef int16_t OTRBuddyStatus;
-typedef int16_t OTRChatState;
+//typedef int16_t OTRBuddyStatus;
+//typedef int16_t OTRChatState;
 
 #define MESSAGE_PROCESSED_NOTIFICATION @"MessageProcessedNotification"
 #define kOTREncryptionStateNotification @"kOTREncryptionStateNotification"
@@ -69,21 +69,21 @@ typedef int16_t OTRChatState;
 #define kOTRSettingKeyLanguage @"userSelectedSetting"
 
 
-enum OTRBuddyStatus {
+typedef enum {
     kOTRBuddyStatusOffline = 4,
     kOTRBuddyStatusXa = 3,
     kOTRBUddyStatusDnd = 2,
     kOTRBuddyStatusAway = 1,
     kOTRBuddyStatusAvailable = 0
-};
+} OTRBuddyStatus;
 
-enum OTRChatState {
+typedef enum {
     kOTRChatStateUnknown =0,
     kOTRChatStateActive = 1,
     kOTRChatStateComposing = 2,
     kOTRChatStatePaused = 3,
     kOTRChatStateInactive = 4,
     kOTRChatStateGone =5
-};
+} OTRChatState;
 
 

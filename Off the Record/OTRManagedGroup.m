@@ -19,6 +19,7 @@
     if (!group) {
         group = [OTRManagedGroup MR_createEntity];
         group.name = name;
+        
     }
     
     return group;

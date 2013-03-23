@@ -351,16 +351,20 @@
     [self saveCurrentMessageText];
     
     buddy = newBuddy;
-    self.title = newBuddy.displayName;
     
-    [self refreshLockButton];
     [self refreshView];
-    [self updateChatState:NO];
+    if (buddy) {
+        self.title = newBuddy.displayName;
+        [self refreshLockButton];
+        [self updateChatState:NO];
+    }
+    
+    
 }
 
 -(BOOL)isComposingVisible
 {
-    if ([self.chatHistoryTableView numberOfRowsInSection:0] >= [[self.messagesFetchedResultsController sections][0] numberOfObjects]) {
+    if ([self.chatHistoryTableView numberOfRowsInSection:0] == [[self.messagesFetchedResultsController fetchedObjects] count]) {
         return NO;
     }
     return YES;
@@ -910,6 +914,8 @@
 }
 
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
+    [self updateChatState:YES];
+    [self refreshLockButton];
     if ([controller isEqual:self.messagesFetchedResultsController])
     {
         [self.chatHistoryTableView beginUpdates];
@@ -921,7 +927,7 @@
       newIndexPath:(NSIndexPath *)newIndexPath {
     UITableView *tableView = nil;
     
-    if ([controller isEqual:self.messagesFetchedResultsController])
+    if ([controller isEqual:_messagesFetchedResultsController])
     {
         tableView = self.chatHistoryTableView;
         
@@ -950,11 +956,6 @@
             }
                 break;
         }
-    }
-    else if ([controller isEqual:self.buddyFetchedResultsController])
-    {
-        [self updateChatState:YES];
-        [self refreshLockButton];
     }
 }
 

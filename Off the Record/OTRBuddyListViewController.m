@@ -36,6 +36,8 @@
 #import "OTRSubscriptionRequestsViewController.h"
 #import "OTRBuddyViewController.h"
 #import "OTRChooseAccountViewController.h"
+#import "OTRImages.h"
+#import "OTRUtilities.h"
 
 //#define kSignoffTime 500
 
@@ -70,6 +72,7 @@
 - (id)init {
     if (self = [super init]) {
         self.title = BUDDY_LIST_STRING;
+        buddyStatusImageDictionary = [NSMutableDictionary dictionaryWithCapacity:5];
     }
     return self;
 }
@@ -275,7 +278,7 @@
     
     if ([tableView isEqual:self.buddyListTableView]) {
         if (sectionIndex == RECENTS_SECTION_INDEX) {
-            return [[self.recentBuddiesFetchedResultsController sections][sectionIndex] numberOfObjects];
+            return [[self.recentBuddiesFetchedResultsController fetchedObjects] count];
         } else if ([self.groupManager numberOfGroups] >= sectionIndex){
             NSUInteger num =  [self.groupManager numberOfBuddiesAtIndex:sectionIndex-1];
             return num;
@@ -334,7 +337,12 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    OTRManagedBuddy * managedBuddy = [self buddyWithTableView:tableView atIndexPath:indexPath];
+    OTRManagedBuddy * managedBuddy = nil;
+    if ([tableView isEqual:self.searchDisplayController.searchResultsTableView]) {
+        managedBuddy = [self.searchBuddyFetchedResultsController objectAtIndexPath:indexPath];
+        [self enterConversationWithBuddy:managedBuddy];
+        [self.searchDisplayController   setActive:NO];
+    }
     
     if (managedBuddy) {
         [self enterConversationWithBuddy:managedBuddy];
@@ -453,7 +461,8 @@
         return _recentBuddiesFetchedResultsController;
     }
     
-    NSPredicate * predicate = [NSPredicate predicateWithFormat:@"messages.@count != 0"];
+     //predicate = [NSPredicate predicateWithFormat:@"messages.@count != 0"];
+    NSPredicate * predicate = [NSPredicate predicateWithFormat:@"(SUBQUERY(messages, $message, $message.isEncrypted == NO).@count != 0)"];
     NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"accountName != nil OR displayName != nil"];
     NSPredicate * compoundPredicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[predicate,buddyFilter]];
     
@@ -612,6 +621,11 @@
     [tableView endUpdates];
     
 }
+-(void)searchDisplayController:(UISearchDisplayController *)controller willUnloadSearchResultsTableView:(UITableView *)tableView
+{
+    self.searchBuddyFetchedResultsController.delegate = nil;
+    self.searchBuddyFetchedResultsController = nil;
+}
 
 -(void)manager:(OTRBuddyListGroupManager *)manager didChangeSectionAtIndex:(NSUInteger)section newSectionIndex:(NSUInteger)newSection forChangeType:(NSFetchedResultsChangeType)type
 {
@@ -727,13 +741,24 @@
     [self configureCell:cell withBuddy:buddy];
     NSInteger numberOfUnreadMessages = [buddy numberOfUnreadMessages];
     
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:@"yyyy-MM-dd h:mm"];
     
-    formatter.timeZone = [NSTimeZone localTimeZone];
+    NSDate * date = buddy.lastMessageDate;
+    NSString *stringFromDate = nil;
     
-    NSString *stringFromDate = [formatter stringFromDate:buddy.lastMessageDate];
-    
+    if([OTRUtilities dateInLast24Hours:date])
+    {
+        stringFromDate = [NSDateFormatter localizedStringFromDate:buddy.lastMessageDate dateStyle:NSDateFormatterNoStyle timeStyle:NSDateFormatterShortStyle];
+    }
+    else if ([OTRUtilities dateInLast7Days:date])
+    {
+        //show day of week
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        [formatter setDateFormat:@"EEEE"];
+        stringFromDate = [formatter stringFromDate:date];
+    }
+    else{
+        stringFromDate= [NSDateFormatter localizedStringFromDate:buddy.lastMessageDate dateStyle:NSDateFormatterShortStyle timeStyle:NSDateFormatterNoStyle];
+    }
     
     cell.detailTextLabel.text = stringFromDate;
     
@@ -787,28 +812,30 @@
     {
         case kOTRBuddyStatusOffline:
             cell.textLabel.textColor = [UIColor lightGrayColor];
-            cell.imageView.image = [UIImage imageNamed:@"offline.png"];
             break;
         case kOTRBuddyStatusAway:
             cell.textLabel.textColor = [UIColor darkGrayColor];
-            cell.imageView.image = [UIImage imageNamed:@"idle.png"];
             break;
         case kOTRBuddyStatusXa:
             cell.textLabel.textColor = [UIColor darkGrayColor];
-            cell.imageView.image = [UIImage imageNamed:@"away.png"];
             break;
         case kOTRBUddyStatusDnd:
             cell.textLabel.textColor = [UIColor darkGrayColor];
-            cell.imageView.image = [UIImage imageNamed:@"away.png"];
             break;
         case kOTRBuddyStatusAvailable:
             cell.textLabel.textColor = [UIColor darkTextColor];
-            cell.imageView.image = [UIImage imageNamed:@"available.png"];
             break;
         default:
             cell.textLabel.textColor = [UIColor lightGrayColor];
-            cell.imageView.image = [UIImage imageNamed:@"offline.png"];
+            break;
     }
+    
+    UIImage * image = [buddyStatusImageDictionary objectForKey:[NSNumber numberWithInteger:buddyStatus]];
+    if (!image) {
+        image = [OTRImages statusImageWithStatus:buddyStatus];
+        [buddyStatusImageDictionary setObject:image forKey:[NSNumber numberWithInteger:buddyStatus]];
+    }
+    cell.imageView.image = image;
 }
 
 -(void)configureBuddyCell:(UITableViewCell *)cell withBuddy:(OTRManagedBuddy *)buddy
@@ -823,18 +850,16 @@
 
 - (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope
 {
-    NSFetchRequest * searchRequest = [[self searchBuddyFetchedResultsController] fetchRequest];
+    _searchBuddyFetchedResultsController.delegate = nil;
+    _searchBuddyFetchedResultsController = nil;
     
-    NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"accountName contains[cd] %@ OR displayName contains[cd] %@",searchText ,searchText];
+    NSPredicate * buddyNameFilter = [NSPredicate predicateWithFormat:@"accountName contains[cd] %@ OR displayName contains[cd] %@",searchText ,searchText];
+    NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"accountName != nil OR displayName != nil"];
+    NSPredicate * predicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[buddyNameFilter,buddyFilter]];
+    _searchBuddyFetchedResultsController = [OTRManagedBuddy MR_fetchAllGroupedBy:nil withPredicate:predicate sortedBy:@"currentStatus,displayName" ascending:YES delegate:self];
     
-    [searchRequest setPredicate:buddyFilter];
+    //[searchRequest setPredicate:buddyFilter];
     
-    NSError *error = nil;
-    if (![[self searchBuddyFetchedResultsController] performFetch:&error]) {
-        // Handle error
-        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-        abort();
-    }
 }
 
 - (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString

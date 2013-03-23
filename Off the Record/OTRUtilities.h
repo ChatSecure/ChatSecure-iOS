@@ -14,4 +14,9 @@
 +(NSString *)stripHTML:(NSString *)string;
 +(NSString *)uniqueString;
 
++(void)deleteAllBuddiesAndMessages;
+
++(BOOL)dateInLast24Hours:(NSDate *)date;
++(BOOL)dateInLast7Days:(NSDate *)date;
+
 @end

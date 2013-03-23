@@ -239,7 +239,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
                 user = [controller objectAtIndexPath:indexPath];
                 break;
             case NSFetchedResultsChangeDelete:
-                user = [controller objectAtIndexPath:indexPath];
+                //user = [controller objectAtIndexPath:indexPath];
                 break;
             default:
                 break;
@@ -309,7 +309,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
             
             
             NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
-            [context MR_saveToPersistentStoreAndWait];
+            [context MR_saveToPersistentStoreWithCompletion:nil];
         }
     }
 }
@@ -582,8 +582,6 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     
     [xmppStream disconnect];
     
-    OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
-    
     [self.account setAllBuddiesStatuts:kOTRBuddyStatusOffline];
     self.account.isConnectedValue = NO;
     
@@ -593,9 +591,10 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     }
     
     
-    [protocolManager.protocolManagers removeObjectForKey:self.account.uniqueIdentifier];
     
     [self.xmppRosterStorage clearAllUsersAndResourcesForXMPPStream:self.xmppStream];
+    
+    //[protocolManager.protocolManagers removeObjectForKey:self.account.uniqueIdentifier];
     
     /*
     self.protocolBuddyList = nil;
@@ -813,7 +812,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
         OTRManagedMessage *otrMessage = [OTRManagedMessage newMessageFromBuddy:messageBuddy message:body encrypted:YES];
         [OTRCodec decodeMessage:otrMessage];
         
-        if(otrMessage)
+        if(otrMessage && otrMessage.isEncryptedValue)
         {
             [messageBuddy receiveMessage:otrMessage.message];
             
