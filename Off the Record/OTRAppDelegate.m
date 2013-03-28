@@ -60,7 +60,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 {
     // DATABASE TESTS
     NSString * storeFileName = @"db.sqlite";
-    [MagicalRecord setupCoreDataStackWithStoreNamed:storeFileName];
+    [MagicalRecord setupCoreDataStackWithAutoMigratingSqliteStoreNamed:storeFileName];
     NSURL * fileURL = [NSPersistentStore MR_urlForStoreName:storeFileName];
     
     NSDictionary *fileAttributes = [NSDictionary dictionaryWithObject:NSFileProtectionCompleteUnlessOpen forKey:NSFileProtectionKey];
