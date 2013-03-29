@@ -121,8 +121,6 @@
     searchDisplayController.searchResultsDataSource = self;
     searchDisplayController.searchResultsDelegate = self;
     
-    //[buddyListTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
-    
     self.buddyListTableView.contentOffset = CGPointMake(0, self.searchDisplayController.searchBar.frame.size.height);
     
     [self refreshLeftBarItems];
@@ -285,7 +283,7 @@
         }
         else
         {
-            return [[self.offlineBuddiesFetchedResultsController sections][0] numberOfObjects];
+            return [[self.offlineBuddiesFetchedResultsController fetchedObjects] count];
         }
         return 0;
     }
@@ -342,6 +340,19 @@
         managedBuddy = [self.searchBuddyFetchedResultsController objectAtIndexPath:indexPath];
         [self enterConversationWithBuddy:managedBuddy];
         [self.searchDisplayController   setActive:NO];
+    }
+    else if (indexPath.section == RECENTS_SECTION_INDEX)
+    {
+        managedBuddy = [self.recentBuddiesFetchedResultsController objectAtIndexPath:indexPath];
+    }
+    else{
+        if ([self.groupManager numberOfGroups] >= indexPath.section) {
+            managedBuddy = [self.groupManager buddyAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row inSection:indexPath.section-1]];
+        }
+        else{
+            NSFetchedResultsController* resultsController = self.offlineBuddiesFetchedResultsController;
+            //buddy = [resultsController objectAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row inSection:0]];
+        }
     }
     
     if (managedBuddy) {
@@ -526,6 +537,9 @@
     {
         tableView = self.searchDisplayController.searchResultsTableView;
     }
+    else if ([self.groupManager isControllerOnline:controller] || [controller isEqual:_recentBuddiesFetchedResultsController] || [controller isEqual:_offlineBuddiesFetchedResultsController]) {
+        tableView = self.buddyListTableView;
+    }
     
     [tableView beginUpdates];
     
@@ -539,6 +553,11 @@
         [self refreshLeftBarItems];
         return;
     }
+    else if([controller isEqual:_unreadMessagesFetchedResultsContrller])
+    {
+        [self updateTitleWithUnreadCount:[[controller sections][indexPath.section] numberOfObjects]];
+        return;
+    }
     
     UITableView *tableView = nil;
     OTRManagedBuddy * buddy = anObject;
@@ -547,11 +566,13 @@
     
     BOOL isRecentBuddiesFetchedResultsController = [controller isEqual:_recentBuddiesFetchedResultsController];
     
-    if ([self.groupManager.buddyFetchedResultsControllerArray containsObject:controller]) {
+    if ([self.groupManager isControllerOnline:controller]) {
         tableView = self.buddyListTableView;
-        NSInteger section = [self.groupManager.buddyFetchedResultsControllerArray indexOfObject:controller]+1;
-        modifiedNewIndexPath = [NSIndexPath indexPathForRow:newIndexPath.row inSection:section];
-        modifiedIndexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:section];
+        
+        
+        modifiedNewIndexPath = [NSIndexPath indexPathForRow:newIndexPath.row inSection:newIndexPath.section+1];
+        modifiedIndexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section+1];
+        //[tableView beginUpdates];
     }
     else if (isRecentBuddiesFetchedResultsController)
     {
@@ -560,10 +581,6 @@
     else if([controller isEqual:_searchBuddyFetchedResultsController])
     {
         tableView = self.searchDisplayController.searchResultsTableView;
-    }
-    else if([controller isEqual:_unreadMessagesFetchedResultsContrller])
-    {
-        [self updateTitleWithUnreadCount:[[controller sections][indexPath.section] numberOfObjects]];
     }
     else if([controller isEqual:_offlineBuddiesFetchedResultsController])
     {
@@ -617,6 +634,9 @@
     {
         tableView = self.searchDisplayController.searchResultsTableView;
     }
+    else if ([self.groupManager isControllerOnline:controller] || [controller isEqual:_recentBuddiesFetchedResultsController] || [controller isEqual:_offlineBuddiesFetchedResultsController]) {
+        tableView = self.buddyListTableView;
+    }
     
     [tableView endUpdates];
     
@@ -631,7 +651,7 @@
 {
     NSUInteger sectionModified = section+1;
     NSUInteger newSectionModified = newSection +1;
-    [self.buddyListTableView beginUpdates];
+    //[self.buddyListTableView beginUpdates];
     switch (type) {
         case NSFetchedResultsChangeInsert:
         {
@@ -648,22 +668,8 @@
         }
             break;
         case NSFetchedResultsChangeUpdate:
-            [self.buddyListTableView reloadSections:[NSIndexSet indexSetWithIndex:newSectionModified] withRowAnimation:UITableViewRowAnimationNone];
             break;
         case NSFetchedResultsChangeMove:
-        {
-            if (newSectionModified != sectionModified) {
-                OTRBuddyListSectionInfo * obj = [self.sectionInfoArray objectAtIndex:sectionModified];
-                [self.sectionInfoArray removeObjectAtIndex:sectionModified];
-                obj.sectionHeaderView.section = newSectionModified;
-                if (newSectionModified >= [self.sectionInfoArray count]) {
-                    [self.sectionInfoArray addObject:obj];
-                } else {
-                    [self.sectionInfoArray insertObject:obj atIndex:newSectionModified];
-                }
-            }
-            [self.buddyListTableView moveSection:sectionModified toSection:newSectionModified];
-        }
             break;
         case NSFetchedResultsChangeDelete:
         {
@@ -675,21 +681,21 @@
         default:
             break;
     }
-    [self.buddyListTableView endUpdates];
+    //[self.buddyListTableView endUpdates];
 }
 
 -(void)sectionHeaderView:(OTRSectionHeaderView *)sectionHeaderView section:(NSUInteger)section opened:(BOOL)opened
 {
     NSUInteger numRows = 0;
     if (section == RECENTS_SECTION_INDEX) {
-        numRows = [[self.recentBuddiesFetchedResultsController sections][section] numberOfObjects];
+        numRows = [[self.recentBuddiesFetchedResultsController fetchedObjects] count];
     }
     else if([self.groupManager numberOfGroups] >= section)
     {
         numRows = [self.groupManager numberOfBuddiesAtIndex:section-1];
     }
     else{
-        numRows = [[self.offlineBuddiesFetchedResultsController sections][0] numberOfObjects];
+        numRows = [[self.offlineBuddiesFetchedResultsController fetchedObjects] count];
     }
     
     if (numRows == 0) {

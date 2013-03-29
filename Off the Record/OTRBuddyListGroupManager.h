@@ -12,7 +12,7 @@
 
 @class OTRBuddyListGroupManager;
 
-@protocol OTRBuddyListGroupManagerDelegate <NSObject>
+@protocol OTRBuddyListGroupManagerDelegate <NSFetchedResultsControllerDelegate>
 -(void)manager:(OTRBuddyListGroupManager *)manager didChangeSectionAtIndex:(NSUInteger)section newSectionIndex:(NSUInteger)newSecion forChangeType:(NSFetchedResultsChangeType)type;
 
 @end
@@ -20,22 +20,21 @@
 
 @interface OTRBuddyListGroupManager : NSObject <NSFetchedResultsControllerDelegate>
 
-@property (nonatomic, strong) NSMutableArray * buddyFetchedResultsControllerArray;
+@property (nonatomic, strong) NSMutableArray * onlineBuddyGroups;
+@property (nonatomic, strong) NSMutableArray * offlineBuddyGroups;
 @property (nonatomic, strong) NSFetchedResultsController * groupFetchedResultsController;
 @property (nonatomic, weak) id <NSFetchedResultsControllerDelegate, OTRBuddyListGroupManagerDelegate> delegate;
 
 
 -(id)initWithFetchedResultsDelegete:(id) delegate;
+-(NSInteger)onlineIndexWithController:(NSFetchedResultsController *)controller;
+-(BOOL)isControllerOffline:(NSFetchedResultsController *)controller;
+-(BOOL)isControllerOnline:(NSFetchedResultsController *)controller;
 
 -(NSUInteger)numberOfGroups;
 -(NSUInteger)numberOfBuddiesAtIndex:(NSUInteger)index;
 -(NSString *)groupNameAtIndex:(NSUInteger)index;
 -(OTRManagedBuddy *)buddyAtIndexPath:(NSIndexPath *)indexPath;
-
--(void)addGroup:(OTRManagedGroup *)managedGroup atIndex:(NSUInteger) index;
--(void)removeGroupAtIndex:(NSUInteger)index;
--(void)updateGroup:(OTRManagedGroup *)managedGroup atIndex:(NSUInteger) index;
--(void)moveGroupfromIndex:(NSUInteger)index toIndex:(NSUInteger)newIndex;
 
 @end
 
