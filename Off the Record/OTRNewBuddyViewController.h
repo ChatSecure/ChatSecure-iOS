@@ -10,6 +10,9 @@
 @class OTRManagedAccount;
 
 @interface OTRNewBuddyViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate>
+{
+    BOOL isXMPPaccount;
+}
 
 @property (nonatomic, strong)OTRManagedAccount * account;
 @property (nonatomic, strong)UITextField * accountNameTextField;

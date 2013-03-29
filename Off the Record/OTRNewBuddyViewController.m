@@ -18,7 +18,7 @@
 
 @implementation OTRNewBuddyViewController
 
-@synthesize account;
+@synthesize account =_account;
 @synthesize accountNameTextField;
 @synthesize displayNameTextField;
 
@@ -26,10 +26,17 @@
     
     if (self = [super init]) {
         NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
-        account = (OTRManagedAccount *)[context existingObjectWithID:accountObjectID error:nil];
+        self.account = (OTRManagedAccount *)[context existingObjectWithID:accountObjectID error:nil];
 
     }
     return self;
+    
+}
+
+-(void)setAccount:(OTRManagedAccount *)account
+{
+    isXMPPaccount = [[account protocolClass] isSubclassOfClass:[OTRXMPPManager class]];
+    _account = account;
     
 }
 
@@ -47,12 +54,15 @@
     accountNameTextField = [[UITextField alloc] initWithFrame:CGRectZero];
     accountNameTextField.placeholder = @"Required";
     
-    displayNameTextField = [[UITextField alloc] initWithFrame:CGRectZero];
-    displayNameTextField.placeholder = @"Optional";
-    accountNameTextField.delegate= displayNameTextField.delegate = self;
+    if (isXMPPaccount) {
+        displayNameTextField = [[UITextField alloc] initWithFrame:CGRectZero];
+        displayNameTextField.placeholder = @"Optional";
+        accountNameTextField.delegate= displayNameTextField.delegate = self;
+        
+        self.displayNameTextField.autocapitalizationType = self.accountNameTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+        self.displayNameTextField.autocorrectionType = self.accountNameTextField.autocorrectionType = UITextAutocorrectionTypeNo;
+    }
     
-    self.displayNameTextField.autocapitalizationType = self.accountNameTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-    self.displayNameTextField.autocorrectionType = self.accountNameTextField.autocorrectionType = UITextAutocorrectionTypeNo;
     
     
     UITableView * tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
@@ -69,7 +79,10 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 2;
+    if (isXMPPaccount) {
+        return 2;
+    }
+    return 1;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
