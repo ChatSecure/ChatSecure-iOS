@@ -29,6 +29,7 @@
 -(id)initWithFetchedResultsDelegete:(id) delegate;
 -(NSInteger)onlineIndexWithController:(NSFetchedResultsController *)controller;
 -(BOOL)isControllerOffline:(NSFetchedResultsController *)controller;
+-(BOOL)isControllerOnline:(NSFetchedResultsController *)controller;
 
 -(NSUInteger)numberOfGroups;
 -(NSUInteger)numberOfBuddiesAtIndex:(NSUInteger)index;

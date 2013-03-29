@@ -341,6 +341,19 @@
         [self enterConversationWithBuddy:managedBuddy];
         [self.searchDisplayController   setActive:NO];
     }
+    else if (indexPath.section == RECENTS_SECTION_INDEX)
+    {
+        managedBuddy = [self.recentBuddiesFetchedResultsController objectAtIndexPath:indexPath];
+    }
+    else{
+        if ([self.groupManager numberOfGroups] >= indexPath.section) {
+            managedBuddy = [self.groupManager buddyAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row inSection:indexPath.section-1]];
+        }
+        else{
+            NSFetchedResultsController* resultsController = self.offlineBuddiesFetchedResultsController;
+            //buddy = [resultsController objectAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row inSection:0]];
+        }
+    }
     
     if (managedBuddy) {
         [self enterConversationWithBuddy:managedBuddy];
@@ -524,7 +537,7 @@
     {
         tableView = self.searchDisplayController.searchResultsTableView;
     }
-    else if (![self.groupManager isControllerOffline:controller]) {
+    else if ([self.groupManager isControllerOnline:controller] || [controller isEqual:_recentBuddiesFetchedResultsController] || [controller isEqual:_offlineBuddiesFetchedResultsController]) {
         tableView = self.buddyListTableView;
     }
     
@@ -540,6 +553,11 @@
         [self refreshLeftBarItems];
         return;
     }
+    else if([controller isEqual:_unreadMessagesFetchedResultsContrller])
+    {
+        [self updateTitleWithUnreadCount:[[controller sections][indexPath.section] numberOfObjects]];
+        return;
+    }
     
     UITableView *tableView = nil;
     OTRManagedBuddy * buddy = anObject;
@@ -548,7 +566,7 @@
     
     BOOL isRecentBuddiesFetchedResultsController = [controller isEqual:_recentBuddiesFetchedResultsController];
     
-    if (![self.groupManager isControllerOffline:controller]) {
+    if ([self.groupManager isControllerOnline:controller]) {
         tableView = self.buddyListTableView;
         
         
@@ -563,10 +581,6 @@
     else if([controller isEqual:_searchBuddyFetchedResultsController])
     {
         tableView = self.searchDisplayController.searchResultsTableView;
-    }
-    else if([controller isEqual:_unreadMessagesFetchedResultsContrller])
-    {
-        [self updateTitleWithUnreadCount:[[controller sections][indexPath.section] numberOfObjects]];
     }
     else if([controller isEqual:_offlineBuddiesFetchedResultsController])
     {
@@ -620,7 +634,7 @@
     {
         tableView = self.searchDisplayController.searchResultsTableView;
     }
-    else if (![self.groupManager isControllerOffline:controller]) {
+    else if ([self.groupManager isControllerOnline:controller] || [controller isEqual:_recentBuddiesFetchedResultsController] || [controller isEqual:_offlineBuddiesFetchedResultsController]) {
         tableView = self.buddyListTableView;
     }
     
