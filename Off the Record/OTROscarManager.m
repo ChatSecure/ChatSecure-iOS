@@ -97,6 +97,9 @@ BOOL loginFailed;
     otrBuddy.displayName = buddy.username;
     [otrBuddy newStatusMessage:buddy.status.statusMessage status:buddyStatus incoming:YES];
     
+    UIImage * photo = [UIImage imageWithData:[buddy.buddyIcon iconData]];
+    otrBuddy.photo = photo;
+    
     [otrBuddy addToGroup:buddy.group.name];
     otrBuddy.account = self.account;
     NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
@@ -214,6 +217,12 @@ BOOL loginFailed;
 - (void)aimFeedbagHandler:(AIMFeedbagHandler *)sender buddyDeleted:(AIMBlistBuddy *)oldBuddy {
 	[self checkThreading];
 	//NSLog(@"Buddy removed: %@", oldBuddy);
+    
+    OTRManagedBuddy * buddy = [OTRManagedBuddy fetchOrCreateWithName:oldBuddy.username account:self.account];
+    [buddy MR_deleteEntity];
+    
+    NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
+    [context MR_saveToPersistentStoreAndWait];
     
     [[NSNotificationCenter defaultCenter]
      postNotificationName:kOTRBuddyListUpdate
@@ -419,8 +428,12 @@ BOOL loginFailed;
 - (void)aimStatusHandler:(AIMStatusHandler *)handler buddyIconChanged:(AIMBlistBuddy *)theBuddy {
 	[self checkThreading];
     
+    [self updateManagedBuddyWith:theBuddy];
+    
+    /*
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *dirPath = [paths objectAtIndex:0];
+    
     
 	if ([[NSFileManager defaultManager] fileExistsAtPath:dirPath]) {
 		NSString * path = nil;
@@ -442,6 +455,7 @@ BOOL loginFailed;
 			[[[theBuddy buddyIcon] iconData] writeToFile:path atomically:YES];
 		}
 	}
+    */
 }
 
 - (void)aimStatusHandler:(AIMStatusHandler *)handler setIconFailed:(AIMIconUploadErrorType)reason {
@@ -601,6 +615,7 @@ BOOL loginFailed;
 
 - (void) addBuddy:(OTRManagedBuddy *)newBuddy
 {
+    [self undenyUser:newBuddy.accountName];
     AIMBlistGroup * group = [theSession.session.buddyList groupWithName:@"Buddies"];
     if(!group)
     {

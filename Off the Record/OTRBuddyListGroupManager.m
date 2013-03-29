@@ -37,6 +37,7 @@
     for ( OTRManagedGroup * group in groups)
     {
         [self addOfflineBuddyController:[self buddyFetchedResultsControllerWithManagedGroup:group] groupName:group.name];
+        
     }
 }
 
@@ -64,7 +65,10 @@
 
 -(void)addOfflineBuddyController:(NSFetchedResultsController *)controller groupName:(NSString *)groupName
 {
-    [self.offlineBuddyGroups addObject:@{kGroupNameKey: groupName,kBuddyControllerKey:controller}];
+    if (controller && [groupName length]) {
+        [self.offlineBuddyGroups addObject:@{kGroupNameKey: groupName,kBuddyControllerKey:controller}];
+    }
+    
     
     
 }
