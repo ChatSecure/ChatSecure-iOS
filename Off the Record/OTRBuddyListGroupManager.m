@@ -40,12 +40,6 @@
     }
 }
 
--(void)updateGroups
-{
-    
-    
-}
-
 -(NSUInteger)numberOfBuddiesAtIndex:(NSUInteger)index
 {
     NSFetchedResultsController * controller = [self resultsControllerAtIndex:index];
@@ -142,7 +136,7 @@
 {
     NSString * groupName = [self groupNameWithController:controller];
     NSInteger index = [self onlineIndexWithController:controller];
-    if (index > 0) {
+    if (index > -1) {
         [self.onlineBuddyGroups removeObjectAtIndex:index];
 
     }
@@ -157,7 +151,7 @@
 {
     NSString * groupName = [self groupNameWithController:controller];
     NSInteger index =  [self offlineIndexWithController:controller];
-    if (index>0) {
+    if (index>-1) {
         [self.offlineBuddyGroups removeObjectAtIndex:index];
 
     }
@@ -175,6 +169,34 @@
     }
     return NO;
 }
+-(BOOL)isControllerOnline:(NSFetchedResultsController *)controller
+{
+    NSPredicate *filter = [NSPredicate predicateWithFormat:@"%K = %@",kBuddyControllerKey,controller];
+    NSArray * filteredArray = [self.onlineBuddyGroups filteredArrayUsingPredicate:filter];
+    if ([filteredArray count]) {
+        return YES;
+    }
+    return NO;
+}
+
+-(NSFetchedResultsController *)controllerWithBuddyGroupName:(NSString *)groupName
+{
+    NSFetchedResultsController * controller = nil;
+    NSPredicate *filter = [NSPredicate predicateWithFormat:@"%K = %@",kGroupNameKey,groupName];
+    NSArray * filteredArray = [self.onlineBuddyGroups filteredArrayUsingPredicate:filter];
+    if ([filteredArray count]) {
+        controller = [[filteredArray lastObject] objectForKey:kBuddyControllerKey];
+    }
+    
+    filteredArray = [self.offlineBuddyGroups filteredArrayUsingPredicate:filter];
+    if ([filteredArray count]) {
+        controller =[[filteredArray lastObject] objectForKey:kBuddyControllerKey];
+    }
+    
+    return controller;
+    
+}
+
 -(NSFetchedResultsController *)groupFetchedResultsController
 {
     if (_groupFetchedResultsController) {
@@ -187,7 +209,9 @@
 
 -(void)controllerWillChangeContent:(NSFetchedResultsController *)controller
 {
-    [delegate controllerWillChangeContent:controller];
+    if (![self isControllerOffline:controller]) {
+        [delegate controllerWillChangeContent:controller];
+    }
 }
 
 - (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject
@@ -196,9 +220,28 @@
 {
     if ([controller isEqual:_groupFetchedResultsController]) {
         if (type == NSFetchedResultsChangeInsert) {
-            [self addOfflineBuddyController:[self buddyFetchedResultsControllerWithManagedGroup:((OTRManagedGroup *)anObject)] groupName:((OTRManagedGroup *)anObject).name];
+            OTRManagedGroup * managedGroup = (OTRManagedGroup *)anObject;
+            if(![self controllerWithBuddyGroupName:managedGroup.name])
+            {
+                [self addOfflineBuddyController:[self buddyFetchedResultsControllerWithManagedGroup:managedGroup] groupName:managedGroup.name];
+            }
         }
         return;
+    }
+    
+    if (![self isControllerOffline:controller]) {
+        NSInteger section = [self onlineIndexWithController:controller];
+        
+        if (indexPath) {
+            indexPath = [NSIndexPath indexPathForItem:indexPath.row inSection:section];
+        }
+        
+        if (newIndexPath) {
+            newIndexPath = [NSIndexPath indexPathForItem:indexPath.row inSection:section];
+        }
+        
+        
+        [self.delegate controller:controller didChangeObject:anObject atIndexPath:indexPath forChangeType:type newIndexPath:newIndexPath];
     }
     
     switch (type) {
@@ -211,7 +254,7 @@
             break;
         case NSFetchedResultsChangeDelete:
         {
-            if (![self isControllerOffline:controller] && [[controller fetchedObjects] count] == 1) {
+            if (![self isControllerOffline:controller] && [[controller fetchedObjects] count] == 0) {
                 [self controllerWentOffline:controller];
             }
             
@@ -223,17 +266,14 @@
             break;
     }
     
-    if (![self isControllerOffline:controller]) {
-        [self.delegate controller:controller didChangeObject:anObject atIndexPath:indexPath forChangeType:type newIndexPath:newIndexPath];
-    }
-    
     
 }
 
 -(void)controllerDidChangeContent:(NSFetchedResultsController *)controller
 {
-    [delegate controllerDidChangeContent:controller];
+    if (![self isControllerOffline:controller]) {
+        [delegate controllerDidChangeContent:controller];
+    }
 }
-
 
 @end
