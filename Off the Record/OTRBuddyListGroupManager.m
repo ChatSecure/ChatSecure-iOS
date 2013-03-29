@@ -108,7 +108,8 @@
     }
     
     //NSPredicate * hasBuddiesFilter = [NSPredicate predicateWithFormat:@"%K.@count != 0",OTRManagedGroupRelationships.buddies];
-    NSPredicate * onlineBuddiesFilter = [NSPredicate predicateWithFormat:@"ANY %K.%K != %d",OTRManagedGroupRelationships.buddies,OTRManagedBuddyAttributes.currentStatus,kOTRBuddyStatusOffline];
+    //NSPredicate * onlineBuddiesFilter = [NSPredicate predicateWithFormat:@"ANY %K.%K != %d",OTRManagedGroupRelationships.buddies,OTRManagedBuddyAttributes.currentStatus,kOTRBuddyStatusOffline];
+    NSPredicate * onlineBuddiesFilter = [NSPredicate predicateWithFormat:@"(SUBQUERY(buddies, $buddy, $buddy.currentStatus != %d).@count > 0)",kOTRBuddyStatusOffline];
     //NSPredicate * buddyFilter = [NSCompoundPredicate andPredicateWithSubpredicates:@[hasBuddiesFilter, onlineBuddiesFilter]];
     
     _groupFetchedResultsController = [OTRManagedGroup MR_fetchAllGroupedBy:nil withPredicate:onlineBuddiesFilter sortedBy:OTRManagedGroupAttributes.name ascending:YES delegate:self];
@@ -133,7 +134,7 @@
         case NSFetchedResultsChangeUpdate:
         {
             OTRManagedGroup * group = [controller objectAtIndexPath:indexPath];
-            [self updateGroup:group atIndex:indexPath.row];
+            //[self updateGroup:group atIndex:indexPath.row];
         }
             break;
         case NSFetchedResultsChangeMove:
