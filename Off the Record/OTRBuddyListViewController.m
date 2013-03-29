@@ -547,11 +547,14 @@
     
     BOOL isRecentBuddiesFetchedResultsController = [controller isEqual:_recentBuddiesFetchedResultsController];
     
-    if ([self.groupManager.buddyFetchedResultsControllerArray containsObject:controller]) {
+    if (![self.groupManager isControllerOffline:controller]) {
         tableView = self.buddyListTableView;
-        NSInteger section = [self.groupManager.buddyFetchedResultsControllerArray indexOfObject:controller]+1;
+        
+        NSInteger section = [self.groupManager onlineIndexWithController:controller]+1;
+        
         modifiedNewIndexPath = [NSIndexPath indexPathForRow:newIndexPath.row inSection:section];
         modifiedIndexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:section];
+        [tableView beginUpdates];
     }
     else if (isRecentBuddiesFetchedResultsController)
     {
