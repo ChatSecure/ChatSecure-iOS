@@ -32,8 +32,12 @@
 - (void) addBuddy:(OTRManagedBuddy *)newBuddy;
 - (BOOL) isConnected;
 
+-(void) removeBuddies:(NSArray *)buddies;
+-(void) blockBuddies:(NSArray *)buddies;
+
 @end
 
 @protocol OTRXMPPProtocol <OTRProtocol>
 - (void)sendChatState:(int)chatState withBuddy:(OTRManagedBuddy *)buddy;
+- (void) setDisplayName:(NSString *) newDisplayName forBuddy:(OTRManagedBuddy *)buddy;
 @end

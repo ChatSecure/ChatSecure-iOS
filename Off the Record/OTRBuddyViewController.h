@@ -15,6 +15,7 @@
     UITextField * displayNameTextField;
     UIButton * removeBuddyButton;
     UIButton * blockBuddyButton;
+    BOOL isXMPPAccount;
 }
 
 @property (nonatomic, strong) OTRManagedBuddy * buddy;

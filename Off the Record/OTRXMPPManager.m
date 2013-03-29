@@ -226,27 +226,26 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 -(void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath
 {
     if ([controller isEqual:self.fetchedResultsController]) {
-        XMPPUserCoreDataStorageObject * user = nil;
+        XMPPUserCoreDataStorageObject * user = (XMPPUserCoreDataStorageObject *)anObject;
+        OTRManagedBuddy * buddy = nil;
+        if ([[user jid] full]) {
+            buddy =[OTRManagedBuddy fetchOrCreateWithName:[[user jid] full] account:self.account];
+        }
         
         switch (type) {
-            case NSFetchedResultsChangeInsert:
-                user = [controller objectAtIndexPath:newIndexPath];
-                break;
-            case NSFetchedResultsChangeMove:
-                user = [controller objectAtIndexPath:newIndexPath];
-                break;
-            case NSFetchedResultsChangeUpdate:
-                user = [controller objectAtIndexPath:indexPath];
-                break;
             case NSFetchedResultsChangeDelete:
+                NSLog(@"deleted roster");
+                
+                [buddy MR_deleteEntity];
+                buddy = nil;
+                
                 //user = [controller objectAtIndexPath:indexPath];
                 break;
             default:
                 break;
         }
         
-        if ([[user jid] full]) {
-            OTRManagedBuddy * buddy = [OTRManagedBuddy fetchOrCreateWithName:[[user jid] full] account:self.account];
+        if (buddy) {
             buddy.displayName = user.displayName;
             buddy.accountName = [[user jid] full];
             buddy.account = self.account;
@@ -308,10 +307,11 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
           
             
             
-            NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
-            [context MR_saveToPersistentStoreWithCompletion:nil];
+            
         }
     }
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    [context MR_saveToPersistentStoreWithCompletion:nil];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -593,53 +593,6 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     
     
     [self.xmppRosterStorage clearAllUsersAndResourcesForXMPPStream:self.xmppStream];
-    
-    //[protocolManager.protocolManagers removeObjectForKey:self.account.uniqueIdentifier];
-    
-    /*
-    self.protocolBuddyList = nil;
-    
-    NSString * entityDescription;
-    
-    
-    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-    NSEntityDescription *entity = [NSEntityDescription entityForName:entityDescription inManagedObjectContext:managedObjectContext_roster];
-    [fetchRequest setEntity:entity];
-    
-    NSError *error;
-    NSArray *items = [managedObjectContext_roster executeFetchRequest:fetchRequest error:&error];
-    
-    
-    for (NSManagedObject *managedObject in items) {
-        [managedObjectContext_roster deleteObject:managedObject];
-        NSLog(@"%@ object deleted",entityDescription);
-    }
-    if (![managedObjectContext_roster save:&error]) {
-        NSLog(@"Error deleting %@ - error:%@",entityDescription,error);
-    }
-
-    
-    
-    
-    
-    
-    
-    NSPersistentStoreCoordinator * storeCoordinator = self.xmppRosterStorage.persistentStoreCoordinator;
-    NSArray *stores = storeCoordinator.persistentStores;
-    
-    for(NSPersistentStore *store in stores)
-    {
-        NSError * error = nil;
-        NSURL *storeURL = store.URL;
-        [storeCoordinator removePersistentStore:store error:&error];
-        [[NSFileManager defaultManager] removeItemAtPath:storeURL.path error:&error];
-        if(error)
-            NSLog(@"%@",[error description]);
-    }
-    */
-    
-    
-    
     
 }
 
@@ -1002,6 +955,29 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     XMPPJID * newJID = [XMPPJID jidWithString:newBuddy.accountName];
     [xmppRoster addUser:newJID withNickname:newBuddy.displayName];
 }
+- (void) setDisplayName:(NSString *) newDisplayName forBuddy:(OTRManagedBuddy *)buddy
+{
+    XMPPJID * jid = [XMPPJID jidWithString:buddy.accountName];
+    [xmppRoster setNickname:newDisplayName forUser:jid];
+    
+}
+-(void)removeBuddies:(NSArray *)buddies
+{
+    for (OTRManagedBuddy * buddy in buddies){
+        XMPPJID * jid = [XMPPJID jidWithString:buddy.accountName];
+        [xmppRoster removeUser:jid];
+    }
+    
+    
+}
+-(void)blockBuddies:(NSArray *)buddies
+{
+    for (OTRManagedBuddy * buddy in buddies){
+        XMPPJID * jid = [XMPPJID jidWithString:buddy.accountName];
+        [xmppRoster revokePresencePermissionFromUser:jid];
+    }
+}
+
 //Chat State
 -(OTRManagedBuddy *)managedBuddyWithObjectID:(NSManagedObjectID *)managedBuddyObjectID
 {

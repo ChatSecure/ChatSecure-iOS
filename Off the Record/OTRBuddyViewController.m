@@ -11,6 +11,7 @@
 #import "OTRSafariActionSheet.h"
 #import "OTRInLineTextEditTableViewCell.h"
 #import "Strings.h"
+#import "OTRProtocolManager.h"
 
 @interface OTRBuddyViewController ()
 
@@ -27,6 +28,7 @@
     {
         self.buddy = (OTRManagedBuddy *)[[NSManagedObjectContext MR_contextForCurrentThread] existingObjectWithID:buddyID error:nil];
         self.title = @"Buddy Info";
+        isXMPPAccount = [[buddy.account protocolClass] isSubclassOfClass:[OTRXMPPManager class]];
     }
     return self;
 }
@@ -54,18 +56,20 @@
     
     removeBuddyButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [removeBuddyButton setTitle:@"Remove" forState:UIControlStateNormal];
+    [removeBuddyButton addTarget:self action:@selector(removeBuddyButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     
     blockBuddyButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [blockBuddyButton setTitle:@"Block" forState:UIControlStateNormal];
+    [blockBuddyButton addTarget:self action:@selector(blockBuddyButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     
     
-    removeBuddyButton.autoresizingMask  = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleLeftMargin ;
-    blockBuddyButton.autoresizingMask =UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
+    removeBuddyButton.autoresizingMask  = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin  ;
+    blockBuddyButton.autoresizingMask =UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleLeftMargin ;
     
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    if (section == 1) {
+    if (section == 1 && isXMPPAccount) {
         return 2;
     }
     return 1;
@@ -142,7 +146,7 @@
         }
         
         cell.detailTextLabel.text = [[buddy groupNames] componentsJoinedByString:@", "];
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        //cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         
     }
     else if(indexPath.section == 3 && indexPath.row == 0)
@@ -189,8 +193,6 @@
     buddyImageView.backgroundColor = [UIColor lightGrayColor];
     
     if (self.buddy.photo) {
-        UIImage * image = self.buddy.photo;
-        CGSize size = image.size;
         buddyImageView.image = buddy.photo;
     }
     else
@@ -259,6 +261,27 @@
 
 -(void)doneButtonPressed:(id)sender
 {
+    NSString * newDisplayName = [displayNameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    if ([newDisplayName length] && ![newDisplayName isEqualToString:self.buddy.displayName]) {
+        self.buddy.displayName = newDisplayName;
+        
+        id<OTRXMPPProtocol> protocol = (id<OTRXMPPProtocol>)[[OTRProtocolManager sharedInstance] protocolForAccount:self.buddy.account];
+        [protocol setDisplayName:newDisplayName forBuddy:self.buddy];
+        
+        
+    }
+    
+    [self.navigationController dismissModalViewControllerAnimated:YES];
+}
+
+-(void)removeBuddyButtonPressed:(id)sender
+{
+    [[[OTRProtocolManager sharedInstance] protocolForAccount:self.buddy.account] removeBuddies:@[buddy]];
+    [self.navigationController dismissModalViewControllerAnimated:YES];
+}
+-(void)blockBuddyButtonPressed:(id)sender
+{
+    [[[OTRProtocolManager sharedInstance] protocolForAccount:self.buddy.account] blockBuddies:@[buddy]];
     [self.navigationController dismissModalViewControllerAnimated:YES];
 }
 

@@ -612,4 +612,20 @@ BOOL loginFailed;
     [self addBuddy:newBuddy.accountName toGroup:@"Buddies"];
 }
 
+-(void)removeBuddies:(NSArray *)buddies
+{
+    for (OTRManagedBuddy * buddy in buddies)
+    {
+        [self removeBuddy:buddy.accountName];
+    }
+        
+}
+-(void)blockBuddies:(NSArray *)buddies
+{
+    for (OTRManagedBuddy * buddy in buddies){
+        [self denyUser:buddy.accountName];
+    }
+    
+}
+
 @end
