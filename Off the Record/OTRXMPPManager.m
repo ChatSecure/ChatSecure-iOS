@@ -229,8 +229,6 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
             case NSFetchedResultsChangeDelete:
                 NSLog(@"deleted roster");
                 
-                [buddy MR_deleteEntity];
-                buddy = nil;
                 
                 //user = [controller objectAtIndexPath:indexPath];
                 break;
@@ -959,9 +957,14 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     for (OTRManagedBuddy * buddy in buddies){
         XMPPJID * jid = [XMPPJID jidWithString:buddy.accountName];
         [xmppRoster removeUser:jid];
+        [buddy MR_deleteEntity];
     }
     
-    
+    NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
+    [context MR_saveToPersistentStoreAndWait];
+
+
+
 }
 -(void)blockBuddies:(NSArray *)buddies
 {
