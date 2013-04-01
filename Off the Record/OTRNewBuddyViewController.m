@@ -11,6 +11,7 @@
 #import "OTRInLineTextEditTableViewCell.h"
 #import "OTRProtocolManager.h"
 #import "OTRManagedBuddy.h"
+#import <QuartzCore/QuartzCore.h>
 
 @interface OTRNewBuddyViewController ()
 
@@ -182,6 +183,18 @@
         [protocol addBuddy:newBuddy];
         
         [self.navigationController dismissModalViewControllerAnimated:YES];
+    }
+    else
+    {
+        
+        [UIView animateWithDuration:.3 animations:^{
+            accountNameTextField.backgroundColor = [UIColor colorWithRed: 0.734 green: 0.124 blue: 0.124 alpha: .8];
+        } completion:^(BOOL finished) {
+            [UIView animateWithDuration:.3 animations:^{
+                accountNameTextField.backgroundColor = [UIColor clearColor];
+            } completion:NULL];
+        }];
+        
     }
     
 }
