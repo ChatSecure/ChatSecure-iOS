@@ -49,6 +49,7 @@
     displayNameTextField = [[UITextField alloc]init];
     displayNameTextField.placeholder = OPTIONAL_STRING;
     displayNameTextField.font = [UIFont boldSystemFontOfSize:15];
+    displayNameTextField.delegate = self;
     
     if ([buddy.displayName length] && ![buddy.displayName isEqualToString:buddy.accountName]) {
         displayNameTextField.text = buddy.displayName;
@@ -61,8 +62,15 @@
     blockBuddyButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     
     [blockBuddyButton setTitle:@"Block" forState:UIControlStateNormal];
+    
     if (!isXMPPAccount) {
         [blockBuddyButton setTitle:@"Block & Remove" forState:UIControlStateNormal];
+    }
+    
+    if (!buddy.account.isConnectedValue) {
+        removeBuddyButton.enabled = NO;
+        blockBuddyButton.enabled = NO;
+        displayNameTextField.enabled = NO;
     }
     
     
@@ -248,7 +256,8 @@
     statusMessageLabel.delegate = self;
     statusMessageLabel.dataDetectorTypes = UIDataDetectorTypeLink;
     statusMessageLabel.numberOfLines = 0;
-    statusMessageLabel.lineBreakMode = UILineBreakModeWordWrap;
+    statusMessageLabel.lineBreakMode = UILineBreakModeTailTruncation;
+    statusMessageLabel.adjustsFontSizeToFitWidth = YES;
     statusMessageLabel.backgroundColor = [UIColor clearColor];
     statusMessageLabel.shadowOffset = CGSizeMake(1, 1);
     statusMessageLabel.textColor = [UIColor blackColor];
@@ -260,22 +269,27 @@
     
     
     tempFrame = statusMessageLabel.frame;
-    tempFrame.size.width = cell.contentView.frame.size.width -xPos;
-    tempFrame.origin = CGPointMake(xPos, nameLabel.frame.origin.y+nameLabel.frame.size.height+5.0);
+    tempFrame.size.width = cell.contentView.frame.size.width -xPos - 5.0;
+    double yPos = nameLabel.frame.origin.y+nameLabel.frame.size.height+5.0;
+    tempFrame.size.height = (buddyImageView.frame.origin.y+buddyImageView.frame.size.height)-yPos;
+    tempFrame.origin = CGPointMake(xPos, yPos);
     statusMessageLabel.frame = tempFrame;
 }
 
 -(void)doneButtonPressed:(id)sender
 {
-    NSString * newDisplayName = [displayNameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    if ([newDisplayName length] && ![newDisplayName isEqualToString:self.buddy.displayName]) {
-        self.buddy.displayName = newDisplayName;
-        
-        id<OTRXMPPProtocol> protocol = (id<OTRXMPPProtocol>)[[OTRProtocolManager sharedInstance] protocolForAccount:self.buddy.account];
-        [protocol setDisplayName:newDisplayName forBuddy:self.buddy];
-        
-        
+    if (buddy.account.isConnectedValue) {
+        NSString * newDisplayName = [displayNameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        if ([newDisplayName length] && ![newDisplayName isEqualToString:self.buddy.displayName]) {
+            self.buddy.displayName = newDisplayName;
+            
+            id<OTRXMPPProtocol> protocol = (id<OTRXMPPProtocol>)[[OTRProtocolManager sharedInstance] protocolForAccount:self.buddy.account];
+            [protocol setDisplayName:newDisplayName forBuddy:self.buddy];
+            
+            
+        }
     }
+    
     
     [self.navigationController dismissModalViewControllerAnimated:YES];
 }
@@ -289,6 +303,13 @@
 {
     [[[OTRProtocolManager sharedInstance] protocolForAccount:self.buddy.account] blockBuddies:@[buddy]];
     [self.navigationController dismissModalViewControllerAnimated:YES];
+}
+
+-(BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [displayNameTextField resignFirstResponder];
+    
+    return NO;
 }
 
 -(void)attributedLabel:(TTTAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url

@@ -10,7 +10,7 @@
 #import "OTRManagedBuddy.h"
 #import "TTTAttributedLabel.h"
 
-@interface OTRBuddyViewController : UIViewController <TTTAttributedLabelDelegate, UITableViewDataSource, UITableViewDelegate>
+@interface OTRBuddyViewController : UIViewController <TTTAttributedLabelDelegate, UITableViewDataSource, UITableViewDelegate,UITextFieldDelegate>
 {
     UITextField * displayNameTextField;
     UIButton * removeBuddyButton;
