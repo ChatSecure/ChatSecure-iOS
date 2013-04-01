@@ -59,7 +59,13 @@
     [removeBuddyButton addTarget:self action:@selector(removeBuddyButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     
     blockBuddyButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    
     [blockBuddyButton setTitle:@"Block" forState:UIControlStateNormal];
+    if (!isXMPPAccount) {
+        [blockBuddyButton setTitle:@"Block & Remove" forState:UIControlStateNormal];
+    }
+    
+    
     [blockBuddyButton addTarget:self action:@selector(blockBuddyButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     
     
