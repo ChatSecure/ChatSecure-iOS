@@ -229,7 +229,6 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
             case NSFetchedResultsChangeDelete:
                 NSLog(@"deleted roster");
                 
-                
                 //user = [controller objectAtIndexPath:indexPath];
                 break;
             default:

@@ -261,10 +261,11 @@
     statusMessageLabel.backgroundColor = [UIColor clearColor];
     statusMessageLabel.shadowOffset = CGSizeMake(1, 1);
     statusMessageLabel.textColor = [UIColor blackColor];
+    statusMessageLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     [cell.contentView addSubview:statusMessageLabel];
     statusMessageLabel.text = self.buddy.currentStatusMessage.message;
     
-    [statusMessageLabel sizeToFit];
+    //[statusMessageLabel sizeToFit];
     
     
     
