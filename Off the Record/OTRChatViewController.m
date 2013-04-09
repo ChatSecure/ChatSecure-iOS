@@ -617,7 +617,7 @@
             self.instructionsLabel = nil;
         }
         [self buddyFetchedResultsController];
-        _heightForRow = nil;
+        _heightForRow = [NSMutableArray array];
         [self.buddy allMessagesRead];
         [self.chatHistoryTableView reloadData];
         [self.textView resignFirstResponder];
