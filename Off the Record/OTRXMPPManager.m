@@ -219,6 +219,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 -(void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath
 {
     if ([controller isEqual:self.fetchedResultsController]) {
+        
         XMPPUserCoreDataStorageObject * user = (XMPPUserCoreDataStorageObject *)anObject;
         OTRManagedBuddy * buddy = nil;
         if ([[user jid] full]) {
@@ -248,7 +249,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
             [buddy removeGroups:buddy.groups];
             
             if (![user.groups count]) {
-                [buddy addToGroup:@"Buddies"];
+                [buddy addToGroup:DEFAULT_BUDDY_GROUP_STRING];
             }
             else{
                 for(XMPPGroupCoreDataStorageObject * xmppGroup in user.groups)
@@ -289,7 +290,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
             }
             
             if (user.isPendingApproval) {
-                [buddy newStatusMessage:@"Pending Approval" status:buddyStatus incoming:YES];
+                [buddy newStatusMessage:PENDING_APPROVAL_STRING status:buddyStatus incoming:YES];
             }
             else{
                 [buddy newStatusMessage:user.primaryResource.status status:buddyStatus incoming:YES];
@@ -755,7 +756,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
         OTRManagedMessage *otrMessage = [OTRManagedMessage newMessageFromBuddy:messageBuddy message:body encrypted:YES];
         [OTRCodec decodeMessage:otrMessage];
         
-        if(otrMessage && otrMessage.isEncryptedValue)
+        if(otrMessage && !otrMessage.isEncryptedValue)
         {
             [messageBuddy receiveMessage:otrMessage.message];
             

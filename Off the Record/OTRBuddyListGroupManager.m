@@ -78,7 +78,7 @@
     NSDictionary * controllerDictionary = @{kGroupNameKey: groupName,kBuddyControllerKey:controller};
     [self.onlineBuddyGroups addObject:controllerDictionary];
     NSSortDescriptor * sortDescriptor = [[NSSortDescriptor alloc] initWithKey:kGroupNameKey ascending:YES];
-    [self.onlineBuddyGroups sortedArrayUsingDescriptors:@[sortDescriptor]];
+    [self.onlineBuddyGroups sortUsingDescriptors:@[sortDescriptor]];
     
     return  [self.onlineBuddyGroups indexOfObject:controllerDictionary];
 }

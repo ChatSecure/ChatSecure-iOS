@@ -148,6 +148,8 @@
 #define EN_DELIVERED_STRING @"Deliverd"
 #define EN_EXTENDED_AWAY_STRING @"Extended Away"
 #define EN_DO_NOT_DISTURB_STRING @"Do Not Disturb"
+#define EN_PENDING_APPROVAL_STRING @"Pending Approval"
+#define EN_DEFAULT_BUDDY_GROUP_STRING @"Buddies"
 
 
 
@@ -272,6 +274,8 @@
 #define DONATE_MESSAGE_STRING [OTRLanguageManager translatedString: EN_DONATE_MESSAGE_STRING]
 #define EXTENDED_AWAY_STRING [OTRLanguageManager translatedString: EN_EXTENDED_AWAY_STRING]
 #define DO_NOT_DISTURB_STRING [OTRLanguageManager translatedString: EN_DO_NOT_DISTURB_STRING]
+#define PENDING_APPROVAL_STRING [OTRLanguageManager translatedString: EN_PENDING_APPROVAL_STRING]
+#define DEFAULT_BUDDY_GROUP_STRING [OTRLanguageManager translatedString: EN_DEFAULT_BUDDY_GROUP_STRING]
 
 #define LOC_BUDDY_LIST_STRING NSLocalizedString(EN_BUDDY_LIST_STRING , @"Title for the buddy list tab")
 #define LOC_CONVERSATIONS_STRING NSLocalizedString(EN_CONVERSATIONS_STRING , @"Title for the conversations tab")
@@ -396,4 +400,8 @@
 #define LOC_DONATE_MESSAGE_STRING NSLocalizedString(EN_DONATE_MESSAGE_STRING, @"Message shown when about to donate")
 #define LOC_DO_NOT_DISTURB_STRING NSLocalizedString(EN_DO_NOT_DISTURB_STRING, @"Default message when a user status is set to do not disturb")
 #define LOC_EXTENDED_AWAY_STRING NSLocalizedString(EN_EXTENDED_AWAY_STRING, @"Default message when a user status is set to extended away")
+#define LOC_PENDING_APPROVAL_STRING NSLocalizedString(EN_PENDING_APPROVAL_STRING, @"String for xmpp buddies when adding buddy is pedning")
+#define LOC_DEFAULT_BUDDY_GROUP_STRING NSLocalizedString(EN_DEFAULT_BUDDY_GROUP_STRING, @"Name for default buddy group")
+
+
 
