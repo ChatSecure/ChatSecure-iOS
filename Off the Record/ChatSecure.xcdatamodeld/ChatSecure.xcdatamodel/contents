@@ -36,7 +36,7 @@
     <entity name="OTRManagedMessage" representedClassName="OTRManagedMessage" parentEntity="OTRManagedMessageAndStatus" syncable="YES">
         <attribute name="isDelivered" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="isRead" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
-        <attribute name="uniqueID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="uniqueID" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <relationship name="messagebuddy" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="OTRManagedBuddy" inverseName="messages" inverseEntity="OTRManagedBuddy" syncable="YES"/>
     </entity>
     <entity name="OTRManagedMessageAndStatus" representedClassName="OTRManagedMessageAndStatus" syncable="YES">

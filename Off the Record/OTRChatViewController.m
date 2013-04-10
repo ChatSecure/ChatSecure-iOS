@@ -618,6 +618,7 @@
         }
         [self buddyFetchedResultsController];
         _heightForRow = [NSMutableArray array];
+        _previousShownSentDate = nil;
         [self.buddy allMessagesRead];
         [self.chatHistoryTableView reloadData];
         [self.textView resignFirstResponder];

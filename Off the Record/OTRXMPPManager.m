@@ -705,7 +705,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
     
 	// A simple example of inbound message handling.
-    if([message hasChatState])
+    if([message hasChatState] && ![message isErrorMessage])
     {
         OTRManagedBuddy * messageBuddy = [self buddyWithMessage:message];
         if([message isComposingChatState])
@@ -721,13 +721,13 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     }
     
     //Posible needs a setting to turn on and off
-    if([message hasReceiptRequest] && self.account.sendDeliveryReceipts)
+    if([message hasReceiptRequest] && self.account.sendDeliveryReceipts && ![message isErrorMessage])
     {
         XMPPMessage * responseMessage = [message generateReceiptResponse];
         [xmppStream sendElement:responseMessage];
     }
     
-    if ([message hasReceiptResponse]) {
+    if ([message hasReceiptResponse] && ![message isErrorMessage]) {
         
         XMPPUserCoreDataStorageObject *user = [xmppRosterStorage userForJID:[message from]
                                                                  xmppStream:xmppStream

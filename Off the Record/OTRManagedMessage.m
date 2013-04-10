@@ -107,17 +107,12 @@
 
 +(void)receiveMessage:(NSString *)objectIDString
 {
-    NSArray * messageArray = [OTRManagedMessage MR_findByAttribute:@"uniqueID" withValue:objectIDString];
     
-    for(OTRManagedMessage * message in messageArray)
-    {
-        message.isDeliveredValue = YES;
-    }
+    OTRManagedMessage * message = [OTRManagedMessage MR_findFirstByAttribute:OTRManagedAccountAttributes.uniqueIdentifier withValue:objectIDString];
+    message.isDeliveredValue = YES;
 
     NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
     [context MR_saveToPersistentStoreAndWait];
-
-
 
 }
 
