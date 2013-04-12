@@ -27,7 +27,7 @@
     if(self = [self init])
     {
         self.buddy = (OTRManagedBuddy *)[[NSManagedObjectContext MR_contextForCurrentThread] existingObjectWithID:buddyID error:nil];
-        self.title = @"Buddy Info";
+        self.title = BUDDY_INFO_STRING;
         isXMPPAccount = [[buddy.account protocolClass] isSubclassOfClass:[OTRXMPPManager class]];
     }
     return self;
@@ -56,15 +56,15 @@
     }
     
     removeBuddyButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [removeBuddyButton setTitle:@"Remove" forState:UIControlStateNormal];
+    [removeBuddyButton setTitle:REMOVE_STRING forState:UIControlStateNormal];
     [removeBuddyButton addTarget:self action:@selector(removeBuddyButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     
     blockBuddyButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     
-    [blockBuddyButton setTitle:@"Block" forState:UIControlStateNormal];
+    [blockBuddyButton setTitle:BLOCK_STRING forState:UIControlStateNormal];
     
     if (!isXMPPAccount) {
-        [blockBuddyButton setTitle:@"Block & Remove" forState:UIControlStateNormal];
+        [blockBuddyButton setTitle:BLOCK_AND_REMOVE_STRING forState:UIControlStateNormal];
     }
     
     if (!buddy.account.isConnectedValue) {
@@ -128,7 +128,7 @@
         if(!cell)
         {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:cellIdentifierLabel];
-            cell.textLabel.text = @"Email";
+            cell.textLabel.text = EMAIL_STRING;
             cell.detailTextLabel.text = buddy.accountName;
         }
         
@@ -139,7 +139,7 @@
         if (!cell) {
             cell =[[OTRInLineTextEditTableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:cellIdentifierText];
         }
-        cell.textLabel.text = @"Name";
+        cell.textLabel.text = NAME_STRING;
         [cell layoutIfNeeded];
         ((OTRInLineTextEditTableViewCell *)cell).textField = displayNameTextField;
     }
@@ -153,16 +153,16 @@
         }
         
         if (indexPath.row == 0) {
-            cell.textLabel.text = @"Account";
+            cell.textLabel.text = ACCOUNT_STRING;
             cell.detailTextLabel.text = buddy.account.username;
         }
         else{
             if ([buddy.groups count] > 1) {
-                cell.textLabel.text = @"Groups";
+                cell.textLabel.text = GROUPS_STRING;
             }
             else
             {
-                cell.textLabel.text = @"Group";
+                cell.textLabel.text = GROUP_STRING;
             }
             cell.detailTextLabel.text = [[buddy groupNames] componentsJoinedByString:@", "];
         }

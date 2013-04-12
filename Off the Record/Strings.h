@@ -150,6 +150,16 @@
 #define EN_DO_NOT_DISTURB_STRING @"Do Not Disturb"
 #define EN_PENDING_APPROVAL_STRING @"Pending Approval"
 #define EN_DEFAULT_BUDDY_GROUP_STRING @"Buddies"
+#define EN_EMAIL_STRING @"Email"
+#define EN_NAME_STRING @"Name"
+#define EN_ACCOUNT_STRING @"Account"
+#define EN_GROUP_STRING @"Group"
+#define EN_GROUPS_STRING @"Groups"
+#define EN_REMOVE_STRING @"Remove"
+#define EN_BLOCK_STRING @"Block"
+#define EN_BLOCK_AND_REMOVE_STRING @"Block & Remove"
+#define EN_ADD_BUDDY_STRING @"Add Buddy"
+#define EN_BUDDY_INFO_STRING @"Buddy Info"
 
 
 
@@ -276,6 +286,16 @@
 #define DO_NOT_DISTURB_STRING [OTRLanguageManager translatedString: EN_DO_NOT_DISTURB_STRING]
 #define PENDING_APPROVAL_STRING [OTRLanguageManager translatedString: EN_PENDING_APPROVAL_STRING]
 #define DEFAULT_BUDDY_GROUP_STRING [OTRLanguageManager translatedString: EN_DEFAULT_BUDDY_GROUP_STRING]
+#define EMAIL_STRING [OTRLanguageManager translatedString: EN_EMAIL_STRING]
+#define NAME_STRING [OTRLanguageManager translatedString: EN_NAME_STRING]
+#define ACCOUNT_STRING [OTRLanguageManager translatedString: EN_ACCOUNT_STRING]
+#define GROUP_STRING [OTRLanguageManager translatedString: EN_GROUP_STRING]
+#define GROUPS_STRING [OTRLanguageManager translatedString: EN_GROUPS_STRING]
+#define REMOVE_STRING [OTRLanguageManager translatedString: EN_REMOVE_STRING]
+#define BLOCK_STRING [OTRLanguageManager translatedString: EN_BLOCK_STRING]
+#define BLOCK_AND_REMOVE_STRING [OTRLanguageManager translatedString: EN_BLOCK_AND_REMOVE_STRING]
+#define ADD_BUDDY_STRING [OTRLanguageManager translatedString: EN_ADD_BUDDY_STRING]
+#define BUDDY_INFO_STRING [OTRLanguageManager translatedString: EN_BUDDY_INFO_STRING]
 
 #define LOC_BUDDY_LIST_STRING NSLocalizedString(EN_BUDDY_LIST_STRING , @"Title for the buddy list tab")
 #define LOC_CONVERSATIONS_STRING NSLocalizedString(EN_CONVERSATIONS_STRING , @"Title for the conversations tab")
@@ -402,6 +422,17 @@
 #define LOC_EXTENDED_AWAY_STRING NSLocalizedString(EN_EXTENDED_AWAY_STRING, @"Default message when a user status is set to extended away")
 #define LOC_PENDING_APPROVAL_STRING NSLocalizedString(EN_PENDING_APPROVAL_STRING, @"String for xmpp buddies when adding buddy is pedning")
 #define LOC_DEFAULT_BUDDY_GROUP_STRING NSLocalizedString(EN_DEFAULT_BUDDY_GROUP_STRING, @"Name for default buddy group")
+#define LOC_EMAIL_STRING NSLocalizedString(EN_EMAIL_STRING,@"The string describing account name or email address for a buddy")
+#define LOC_NAME_STRING NSLocalizedString(EN_NAME_STRING,@"The string describing a buddy's dispaly name")
+#define LOC_ACCOUNT_STRING NSLocalizedString(EN_ACCOUNT_STRING,@"The string describing a buddy's account")
+#define LOC_GROUP_STRING NSLocalizedString(EN_GROUP_STRING,@"The string describing a buddy's group")
+#define LOC_GROUPS_STRING NSLocalizedString(EN_GROUPS_STRING,@"The string describing a buddy's groups ... plural")
+#define LOC_REMOVE_STRING NSLocalizedString(EN_REMOVE_STRING,@"The String for a button to remove a buddy from the buddy list")
+#define LOC_BLOCK_STRING NSLocalizedString(EN_BLOCK_STRING,@"The String for a button to block a buddy")
+#define LOC_BLOCK_AND_REMOVE_STRING NSLocalizedString(EN_BLOCK_AND_REMOVE_STRING,@"The String for a buddy to block and remove a buddy from the buddy list")
+#define LOC_ADD_BUDDY_STRING NSLocalizedString(EN_ADD_BUDDY_STRING,@"The title for the view to add a buddy")
+#define LOC_BUDDY_INFO_STRING NSLocalizedString(EN_BUDDY_INFO_STRING,@"The title for the view that shows detailed buddy info")
+
 
 
 

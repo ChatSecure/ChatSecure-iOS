@@ -22,7 +22,7 @@
 {
     [super viewDidLoad];
     
-    self.title = @"Account";
+    self.title = ACCOUNT_STRING;
 	
     tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
     tableView.dataSource = self;

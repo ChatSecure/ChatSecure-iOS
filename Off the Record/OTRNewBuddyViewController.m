@@ -12,6 +12,7 @@
 #import "OTRProtocolManager.h"
 #import "OTRManagedBuddy.h"
 #import <QuartzCore/QuartzCore.h>
+#import "Strings.h"
 
 @interface OTRNewBuddyViewController ()
 
@@ -45,7 +46,7 @@
 {
     [super viewDidLoad];
     
-    self.title = @"Add Buddy";
+    self.title = ADD_BUDDY_STRING;
     
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelButtonPressed:)];
     
@@ -53,11 +54,11 @@
     
     
     accountNameTextField = [[UITextField alloc] initWithFrame:CGRectZero];
-    accountNameTextField.placeholder = @"Required";
+    accountNameTextField.placeholder = REQUIRED_STRING;
     
     if (isXMPPaccount) {
         displayNameTextField = [[UITextField alloc] initWithFrame:CGRectZero];
-        displayNameTextField.placeholder = @"Optional";
+        displayNameTextField.placeholder = OPTIONAL_STRING;
         accountNameTextField.delegate= displayNameTextField.delegate = self;
         
         self.displayNameTextField.autocapitalizationType = self.accountNameTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
@@ -94,11 +95,11 @@
     
     if (indexPath.row == 0) {
         textField = self.accountNameTextField;
-        cellText = @"Email";
+        cellText = EMAIL_STRING;
     }
     else if(indexPath.row == 1) {
         textField = self.displayNameTextField;
-        cellText = @"Nickname";
+        cellText = NAME_STRING;
     }
     
     OTRInLineTextEditTableViewCell * cell = [tableView dequeueReusableCellWithIdentifier:cellType];
