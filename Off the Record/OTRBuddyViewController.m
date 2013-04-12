@@ -83,7 +83,7 @@
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    if (section == 1 && isXMPPAccount) {
+    if ((section == 1 && isXMPPAccount) || section == 2) {
         return 2;
     }
     return 1;
@@ -143,7 +143,7 @@
         [cell layoutIfNeeded];
         ((OTRInLineTextEditTableViewCell *)cell).textField = displayNameTextField;
     }
-    else if(indexPath.section == 2 && indexPath.row == 0)
+    else if(indexPath.section == 2)
     {
         //Groups
         cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifierGroups];
@@ -151,15 +151,24 @@
         {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIdentifierGroups];
         }
-        if ([buddy.groups count] > 1) {
-            cell.textLabel.text = @"Groups";
-        }
-        else
-        {
-            cell.textLabel.text = @"Group";
-        }
         
-        cell.detailTextLabel.text = [[buddy groupNames] componentsJoinedByString:@", "];
+        if (indexPath.row == 0) {
+            cell.textLabel.text = @"Account";
+            cell.detailTextLabel.text = buddy.account.username;
+        }
+        else{
+            if ([buddy.groups count] > 1) {
+                cell.textLabel.text = @"Groups";
+            }
+            else
+            {
+                cell.textLabel.text = @"Group";
+            }
+            cell.detailTextLabel.text = [[buddy groupNames] componentsJoinedByString:@", "];
+        }
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        
+        
         //cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         
     }
