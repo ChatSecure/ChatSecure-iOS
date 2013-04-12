@@ -243,7 +243,7 @@
         }
         
         if (newIndexPath) {
-            newIndexPath = [NSIndexPath indexPathForItem:indexPath.row inSection:section];
+            newIndexPath = [NSIndexPath indexPathForItem:newIndexPath.row inSection:section];
         }
         
         
