@@ -180,11 +180,21 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
         }
         self.didShowDisconnectionWarning = YES;
     }
-    if ([application backgroundTimeRemaining] < 10) 
+    if ([application backgroundTimeRemaining] < 10)
     {
         // Clean up here
         [self.backgroundTimer invalidate];
         self.backgroundTimer = nil;
+        
+        OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
+        for(id key in protocolManager.protocolManagers)
+        {
+            id <OTRProtocol> protocol = [protocolManager.protocolManagers objectForKey:key];
+            [protocol disconnect];
+        }
+        [OTRManagedAccount resetAccountsConnectionStatus];
+        
+        
         [application endBackgroundTask:self.backgroundTask];
         self.backgroundTask = UIBackgroundTaskInvalid;
     }
