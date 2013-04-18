@@ -143,8 +143,9 @@
 
 
 -(void)viewDidAppear:(BOOL)animated {
-    [self.buddyListTableView reloadData];
     [super viewDidAppear:animated];
+    [self.buddyListTableView reloadData];
+    
 }
 
 - (void) showSettingsView:(id)sender {
@@ -403,8 +404,8 @@
     
     OTRBuddyViewController * buddyViewController = [[OTRBuddyViewController alloc] initWithBuddyID:buddy.objectID];
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:buddyViewController];
-    navController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-    [self.navigationController presentModalViewController:navController animated:YES];
+    navController.modalPresentationStyle = UIModalPresentationFormSheet;
+    [self presentModalViewController:navController animated:YES];
     
 }
 
