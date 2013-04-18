@@ -302,7 +302,11 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
         }
     }
     NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
-    [context MR_saveToPersistentStoreWithCompletion:nil];
+    [context MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+        if (success) {
+            NSLog(@"Saved Buddy");
+        }
+    }];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

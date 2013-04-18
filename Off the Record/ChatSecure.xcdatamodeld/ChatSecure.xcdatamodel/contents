@@ -73,7 +73,7 @@
         <element name="OTRManagedBuddy" positionX="106" positionY="-0" width="128" height="268"/>
         <element name="OTRManagedEncryptionStatusMessage" positionX="-414" positionY="252" width="243" height="73"/>
         <element name="OTRManagedGroup" positionX="313" positionY="-19" width="128" height="73"/>
-        <element name="OTRManagedMessage" positionX="-101" positionY="239" width="128" height="103"/>
+        <element name="OTRManagedMessage" positionX="-108" positionY="266" width="128" height="103"/>
         <element name="OTRManagedMessageAndStatus" positionX="-153" positionY="9" width="189" height="118"/>
         <element name="OTRManagedOscarAccount" positionX="504" positionY="74" width="128" height="43"/>
         <element name="OTRManagedStatus" positionX="-290" positionY="161" width="128" height="73"/>
