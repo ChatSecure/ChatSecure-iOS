@@ -98,6 +98,7 @@
     NSString * sortByStirng = [NSString stringWithFormat:@"%@,%@,%@",OTRManagedBuddyAttributes.currentStatus,OTRManagedBuddyAttributes.displayName,OTRManagedBuddyAttributes.accountName];
     
     NSFetchedResultsController * buddyFetchController = [OTRManagedBuddy MR_fetchAllGroupedBy:nil withPredicate:compoundFilter sortedBy:sortByStirng ascending:YES delegate:self];
+    [buddyFetchController.fetchRequest setShouldRefreshRefetchedObjects:YES];
     return buddyFetchController;
 }
 
