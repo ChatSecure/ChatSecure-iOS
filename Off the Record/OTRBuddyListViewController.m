@@ -507,10 +507,12 @@
     }
     
     NSPredicate * offlineBuddyFilter = [NSPredicate predicateWithFormat:@"%K == %d",OTRManagedBuddyAttributes.currentStatus,kOTRBuddyStatusOffline];
+    NSPredicate * selfBuddyFilter = [NSPredicate predicateWithFormat:@"accountName != account.username"];
+    NSPredicate * compoundPredicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[offlineBuddyFilter,selfBuddyFilter]];
     
     NSString * sortByString = [NSString stringWithFormat:@"%@,%@",OTRManagedBuddyAttributes.displayName,OTRManagedBuddyAttributes.accountName];
     
-    _offlineBuddiesFetchedResultsController = [OTRManagedBuddy MR_fetchAllGroupedBy:nil withPredicate:offlineBuddyFilter sortedBy:sortByString ascending:YES delegate:self];
+    _offlineBuddiesFetchedResultsController = [OTRManagedBuddy MR_fetchAllGroupedBy:nil withPredicate:compoundPredicate sortedBy:sortByString ascending:YES delegate:self];
     
     return _offlineBuddiesFetchedResultsController;
 }
@@ -863,7 +865,8 @@
     
     NSPredicate * buddyNameFilter = [NSPredicate predicateWithFormat:@"accountName contains[cd] %@ OR displayName contains[cd] %@",searchText ,searchText];
     NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"accountName != nil OR displayName != nil"];
-    NSPredicate * predicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[buddyNameFilter,buddyFilter]];
+    NSPredicate * selfBuddyFilter = [NSPredicate predicateWithFormat:@"accountName != account.username"];
+    NSPredicate * predicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[buddyNameFilter,buddyFilter,selfBuddyFilter]];
     _searchBuddyFetchedResultsController = [OTRManagedBuddy MR_fetchAllGroupedBy:nil withPredicate:predicate sortedBy:@"currentStatus,displayName" ascending:YES delegate:self];
     
     //[searchRequest setPredicate:buddyFilter];

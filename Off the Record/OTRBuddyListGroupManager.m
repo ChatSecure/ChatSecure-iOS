@@ -7,6 +7,7 @@
 //
 
 #import "OTRBuddyListGroupManager.h"
+#import "OTRManagedAccount.h"
 
 #define kGroupNameKey @"groupNameKey"
 #define kBuddyControllerKey @"groupControllerKey"
@@ -90,10 +91,12 @@
 -(NSFetchedResultsController *)buddyFetchedResultsControllerWithManagedGroup:(OTRManagedGroup *)managedGroup
 {
     NSLog(@"Fetched: %@",managedGroup.name);
-    NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"accountName != nil OR displayName != nil"];
+    NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"%@ != nil OR %@ != nil",OTRManagedBuddyAttributes.accountName,OTRManagedBuddyAttributes.displayName];
     NSPredicate * onlineFilter = [NSPredicate predicateWithFormat:@"%K != %d",OTRManagedBuddyAttributes.currentStatus,kOTRBuddyStatusOffline];
     NSPredicate * groupFilter = [NSPredicate predicateWithFormat:@"%@ IN %K",managedGroup,OTRManagedBuddyRelationships.groups];
-    NSPredicate * compoundFilter = [NSCompoundPredicate andPredicateWithSubpredicates:@[buddyFilter,groupFilter,onlineFilter]];
+    NSPredicate * selfBuddyFilter = [NSPredicate predicateWithFormat:@"accountName != account.username"];
+    NSPredicate * compoundFilter = [NSCompoundPredicate andPredicateWithSubpredicates:@[buddyFilter,groupFilter,onlineFilter,selfBuddyFilter]];
+
     
     NSString * sortByStirng = [NSString stringWithFormat:@"%@,%@,%@",OTRManagedBuddyAttributes.currentStatus,OTRManagedBuddyAttributes.displayName,OTRManagedBuddyAttributes.accountName];
     
