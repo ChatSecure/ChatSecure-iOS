@@ -809,6 +809,7 @@
     OTRBuddyStatus buddyStatus = [buddy currentStatusMessage].statusValue;
     
     cell.textLabel.text = buddyUsername;
+    cell.accessibilityLabel = buddyUsername;
     
     cell.accessoryView = nil;
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;

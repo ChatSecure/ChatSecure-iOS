@@ -153,6 +153,7 @@
     {
         self.navigationItem.rightBarButtonItem = unlockedButton;
     }
+    self.navigationItem.rightBarButtonItem.accessibilityLabel = @"lock";
 }
 
 -(void)lockButtonPressed
@@ -210,8 +211,37 @@
     
     _messageFontSize = [OTRSettingsManager floatForOTRSettingKey:kOTRSettingKeyFontSize];
     _previousTextViewContentHeight = MessageFontSize+20;
-    CGFloat textViewWidth = messageInputBar.frame.size.width-TEXT_VIEW_X-65;
+        
     
+    
+    
+    
+    
+    // Create sendButton.
+    self.sendButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    //sendButton.frame = CGRectMake(messageInputBar.frame.size.width-65, 8, 59, 26);
+    sendButton.autoresizingMask = (UIViewAutoresizingFlexibleTopMargin /* multiline input */ | UIViewAutoresizingFlexibleLeftMargin /* landscape */);
+    UIEdgeInsets sendButtonEdgeInsets = UIEdgeInsetsMake(0, 13, 0, 13); // 27 x 27
+    UIImage *sendButtonBackgroundImage = [[UIImage imageNamed:@"SendButton"] resizableImageWithCapInsets:sendButtonEdgeInsets];
+    [sendButton setBackgroundImage:sendButtonBackgroundImage forState:UIControlStateNormal];
+    [sendButton setBackgroundImage:sendButtonBackgroundImage forState:UIControlStateDisabled];
+    [sendButton setBackgroundImage:[[UIImage imageNamed:@"SendButtonHighlighted"] resizableImageWithCapInsets:sendButtonEdgeInsets] forState:UIControlStateHighlighted];
+    sendButton.titleLabel.font = [UIFont boldSystemFontOfSize:16];
+    CGFloat buttonWidth = [SEND_STRING sizeWithFont:[UIFont systemFontOfSize:16]].width+20;
+    CGRect buttonFrame = CGRectMake(messageInputBar.frame.size.width-(buttonWidth+6), 8, buttonWidth, 26);
+    sendButton.frame = buttonFrame;
+    
+    
+    
+    sendButton.titleLabel.shadowOffset = CGSizeMake(0.0, -1.0);
+    [sendButton setTitle:SEND_STRING forState:UIControlStateNormal];
+    [sendButton setTitleShadowColor:[UIColor colorWithRed:0.325f green:0.463f blue:0.675f alpha:1] forState:UIControlStateNormal];
+    [sendButton addTarget:self action:@selector(sendButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [messageInputBar addSubview:sendButton];
+    
+    //[sendButton sizeToFit];
+    
+    CGFloat textViewWidth = messageInputBar.frame.size.width-TEXT_VIEW_X-(buttonWidth+6);
     
     // Create messageInputBarBackgroundImageView as subview of messageInputBar.
     UIImageView *messageInputBarBackgroundImageView = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"MessageInputFieldBackground"] resizableImageWithCapInsets:UIEdgeInsetsMake(20, 12, 18, 18)]]; // 32 x 40
@@ -220,26 +250,7 @@
     messageInputBarBackgroundImageView.backgroundColor = [UIColor colorWithWhite:245/255.0f alpha:1];
     
     [messageInputBar addSubview:messageInputBarBackgroundImageView];
-    
-    
-    
-    // Create sendButton.
-    self.sendButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    sendButton.frame = CGRectMake(messageInputBar.frame.size.width-65, 8, 59, 26);
-    sendButton.autoresizingMask = (UIViewAutoresizingFlexibleTopMargin /* multiline input */ | UIViewAutoresizingFlexibleLeftMargin /* landscape */);
-    UIEdgeInsets sendButtonEdgeInsets = UIEdgeInsetsMake(0, 13, 0, 13); // 27 x 27
-    UIImage *sendButtonBackgroundImage = [[UIImage imageNamed:@"SendButton"] resizableImageWithCapInsets:sendButtonEdgeInsets];
-    [sendButton setBackgroundImage:sendButtonBackgroundImage forState:UIControlStateNormal];
-    [sendButton setBackgroundImage:sendButtonBackgroundImage forState:UIControlStateDisabled];
-    [sendButton setBackgroundImage:[[UIImage imageNamed:@"SendButtonHighlighted"] resizableImageWithCapInsets:sendButtonEdgeInsets] forState:UIControlStateHighlighted];
-    sendButton.titleLabel.font = [UIFont boldSystemFontOfSize:16];
-    sendButton.titleLabel.shadowOffset = CGSizeMake(0.0, -1.0);
-    [sendButton setTitle:SEND_STRING forState:UIControlStateNormal];
-    [sendButton setTitleShadowColor:[UIColor colorWithRed:0.325f green:0.463f blue:0.675f alpha:1] forState:UIControlStateNormal];
-    [sendButton addTarget:self action:@selector(sendButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-    [messageInputBar addSubview:sendButton];
-    
-    
+
     
     // Create textView to compose messages.
     // TODO: Shrink cursor height by 1 px on top & 1 px on bottom.
