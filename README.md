@@ -16,14 +16,16 @@ However, developing and supporting this project is hard work and costs real mone
 Localization
 =========
 
+![transifex localization](https://www.transifex.com/projects/p/chatsecure/resource/strings/chart/image_png)
+
 If you would like to contribute/improve a translation:
 
  1. Visit our [Transifex project page](https://www.transifex.net/projects/p/chatsecure/) and make an account if you don't have one already.
  2. Go to the resources subsites [AppStore.strings](https://www.transifex.net/projects/p/chatsecure/resource/appstorestrings/) & [Localizable.strings](https://www.transifex.net/projects/p/chatsecure/resource/strings/) to add a new language or improve an existing translation. 
  3. [Open an issue on Github](https://github.com/chrisballinger/Off-the-Record-iOS/issues) notifying us of your translation.
- 
 
- 
+
+
 Compatibility
 =========
 
