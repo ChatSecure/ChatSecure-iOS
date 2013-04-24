@@ -139,6 +139,7 @@
 		63F8A52F16DD995400374551 /* OTRIntSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F8A52E16DD995400374551 /* OTRIntSetting.m */; };
 		63F8A53316DD9B6F00374551 /* OTRIntSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F8A53216DD9B6F00374551 /* OTRIntSettingViewController.m */; };
 		63FA108316F9290A00D9EE45 /* OTRImages.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FA108216F9290900D9EE45 /* OTRImages.m */; };
+		63FE64C61727535700876D15 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63FE64C51727535700876D15 /* StoreKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		D90B80AC13FC719B006EFF3D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D90B80AB13FC719B006EFF3D /* CoreGraphics.framework */; };
 		D90B80AF13FC7E5F006EFF3D /* OTRCodec.m in Sources */ = {isa = PBXBuildFile; fileRef = D90B80AE13FC7E5F006EFF3D /* OTRCodec.m */; };
 		D90FAF2914A0624B00DA7C56 /* OTRBuddyList.m in Sources */ = {isa = PBXBuildFile; fileRef = D90FAF2814A0624B00DA7C56 /* OTRBuddyList.m */; };
@@ -674,6 +675,7 @@
 		63FAEED916B7553D004F1205 /* OTRXMPPBudyTimers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPBudyTimers.h; sourceTree = "<group>"; };
 		63FAEEDA16B7553E004F1205 /* OTRXMPPBudyTimers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPBudyTimers.m; sourceTree = "<group>"; };
 		63FE64C3172750C700876D15 /* he */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = he; path = he.lproj/AppiraterLocalizable.strings; sourceTree = "<group>"; };
+		63FE64C51727535700876D15 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		D902D31C141E930C00AA3479 /* OTROldBuddy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTROldBuddy.h; sourceTree = "<group>"; };
 		D902D31D141E930C00AA3479 /* OTROldBuddy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTROldBuddy.m; sourceTree = "<group>"; };
 		D9042E2C153168BE000D264C /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_CN; path = "Off the Record/zh_CN.lproj/InfoPlist.strings"; sourceTree = SOURCE_ROOT; };
@@ -1282,6 +1284,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				63FE64C61727535700876D15 /* StoreKit.framework in Frameworks */,
 				D953117C16C6FF3400AAB1D2 /* libUserVoice.a in Frameworks */,
 				D9CEF0AB1684268500B236B5 /* libOTRKit.a in Frameworks */,
 				D989E88E15D4F92E0081DFD1 /* Twitter.framework in Frameworks */,
@@ -2575,6 +2578,7 @@
 		D9F9376D13F44BD3009A3D84 = {
 			isa = PBXGroup;
 			children = (
+				63FE64C51727535700876D15 /* StoreKit.framework */,
 				D97BF53A160150CE00DA91F9 /* Default-568h@2x.png */,
 				D9F9378013F44BD3009A3D84 /* Off the Record */,
 				D9CEED611684234D00B236B5 /* Submodules */,
