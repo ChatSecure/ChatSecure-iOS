@@ -108,7 +108,7 @@
 +(void)receiveMessage:(NSString *)objectIDString
 {
     
-    OTRManagedMessage * message = [OTRManagedMessage MR_findFirstByAttribute:OTRManagedAccountAttributes.uniqueIdentifier withValue:objectIDString];
+    OTRManagedMessage * message = [OTRManagedMessage MR_findFirstByAttribute:OTRManagedMessageAttributes.uniqueID withValue:objectIDString];
     message.isDeliveredValue = YES;
 
     NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
