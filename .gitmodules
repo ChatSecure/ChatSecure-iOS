@@ -37,7 +37,7 @@
 	url = git@github.com:danielamitay/DAKeyboardControl.git
 [submodule "Submodules/TTTAttributedLabel"]
 	path = Submodules/TTTAttributedLabel
-	url = git@github.com:mattt/TTTAttributedLabel.git
+	url = git@github.com:ChatSecure/TTTAttributedLabel.git
 [submodule "Submodules/googleChromeOpenInChrome"]
 	path = Submodules/googleChromeOpenInChrome
-	url = git@github.com:GoogleChrome/OpenInChrome.git
+	url = git@github.com:ChatSecure/OpenInChrome.git
