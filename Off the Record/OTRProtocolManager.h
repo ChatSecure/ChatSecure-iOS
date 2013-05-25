@@ -32,7 +32,6 @@
 
 @interface OTRProtocolManager : NSObject
 
-@property (nonatomic, retain) OTRBuddyList *buddyList;
 @property (nonatomic, retain) OTREncryptionManager *encryptionManager;
 @property (nonatomic, retain) OTRSettingsManager *settingsManager;
 @property (nonatomic, retain) OTRAccountsManager *accountsManager;
@@ -42,10 +41,10 @@
 
 -(void)sendMessage:(NSNotification*)notification;
 
--(void)buddyListUpdate;
-
 -(OTRManagedBuddy *)buddyForUserName:(NSString *)buddyUserName accountName:(NSString *)accountName protocol:(NSString *)protocol;
 
 -(id <OTRProtocol>) protocolForAccount:(OTRManagedAccount *)account;
+
+-(BOOL)isAccountConnected:(OTRManagedAccount *)account;
 
 @end

@@ -16,6 +16,8 @@
 @property (nonatomic, strong) UITextField *domainTextField;
 @property (nonatomic, strong) UISwitch *sslMismatchSwitch;
 @property (nonatomic, strong) UISwitch *selfSignedSwitch;
+@property (nonatomic, strong) UISwitch *allowPlaintextAuthentication;
+@property (nonatomic, strong) UISwitch *requireTLS;
 @property (nonatomic, strong) UITextField *portTextField;
 
 @end

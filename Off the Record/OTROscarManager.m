@@ -32,7 +32,7 @@
 @synthesize login;
 @synthesize loginFailed;
 @synthesize loggedIn;
-@synthesize protocolBuddyList,account;
+@synthesize account;
 
 BOOL loginFailed;
 
@@ -42,7 +42,7 @@ BOOL loginFailed;
     if(self)
     {
         mainThread = [NSThread currentThread];
-        protocolBuddyList = [[NSMutableDictionary alloc] init];
+        loggedIn = NO;
     }
     return self;
 }
@@ -68,6 +68,52 @@ BOOL loginFailed;
 	}
 }
 
+-(OTRBuddyStatus)convertAimStatus:(AIMBuddyStatus *)status
+{
+    OTRBuddyStatus buddyStatus;
+    
+    switch (status.statusType)
+    {
+        case AIMBuddyStatusAvailable:
+            buddyStatus = kOTRBuddyStatusAvailable;
+            break;
+        case AIMBuddyStatusAway:
+            buddyStatus = kOTRBuddyStatusAway;
+            break;
+        default:
+            buddyStatus = kOTRBuddyStatusOffline;
+            break;
+    }
+    
+    return buddyStatus;
+}
+
+-(OTRManagedBuddy *)updateManagedBuddyWith:(AIMBlistBuddy *)buddy
+{
+    OTRBuddyStatus buddyStatus = [self convertAimStatus:buddy.status];
+    
+    OTRManagedBuddy *otrBuddy = [OTRManagedBuddy fetchOrCreateWithName:buddy.username account:self.account];
+    
+    otrBuddy.displayName = buddy.username;
+    [otrBuddy newStatusMessage:buddy.status.statusMessage status:buddyStatus incoming:YES];
+    
+    UIImage * photo = [UIImage imageWithData:[buddy.buddyIcon iconData]];
+    otrBuddy.photo = photo;
+    
+    [otrBuddy addToGroup:buddy.group.name];
+    otrBuddy.account = self.account;
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    [context MR_saveToPersistentStoreAndWait];
+    return otrBuddy;
+}
+
+-(void)updateMangedBuddyWith:(AIMBlistBuddy *)buddy withStatus:(AIMBuddyStatus *)status
+{
+    OTRBuddyStatus buddyStatus = [self convertAimStatus:status];
+    OTRManagedBuddy *otrBuddy = [self updateManagedBuddyWith:buddy];
+    [otrBuddy newStatusMessage:status.statusMessage status:buddyStatus incoming:YES];
+}
+
 
 #pragma mark Login Delegate
 
@@ -80,6 +126,7 @@ BOOL loginFailed;
     [[NSNotificationCenter defaultCenter] postNotificationName:kOTRProtocolLoginFail object:self];
     //NSLog(@"login error: %@",[error description]);
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Login Error" message:@"AIM login failed. Please check your username and password and try again." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+    loggedIn = NO;
     [alert show];
 }
 
@@ -88,6 +135,7 @@ BOOL loginFailed;
 	[session setDelegate:self];
 	login = nil;
 	theSession = session;
+    loggedIn = YES;
     //s_AIMSession = theSession;
 	
 	/* Set handler delegates */
@@ -120,15 +168,25 @@ BOOL loginFailed;
 #pragma mark Session Delegate
 
 - (void)aimSessionManagerSignedOff:(AIMSessionManager *)sender {
+    [self.account setAllBuddiesStatuts:kOTRBuddyStatusOffline];
+    self.account.isConnectedValue = NO;
+    
+    if([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyDeleteOnDisconnect])
+    {
+        [self.account deleteAllConversationsForAccount];
+    }
+    
 	[self checkThreading];
-    [[[OTRProtocolManager sharedInstance] buddyList] removeBuddiesforAccount:self.account];
+    loggedIn = NO;
+    OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
+    [protocolManager.protocolManagers removeObjectForKey:self.account.uniqueIdentifier];
     aimBuddyList = nil;
 	theSession = nil;
+    
 	///NSLog(@"Session signed off");
     
-    [[NSNotificationCenter defaultCenter]
-     postNotificationName:kOTRProtocolLogout
-     object:self];
+    
+    
 }
 
 #pragma mark Buddy List Methods
@@ -140,23 +198,31 @@ BOOL loginFailed;
     
     aimBuddyList = [theSession.session buddyList];
     
-    [[NSNotificationCenter defaultCenter]
-     postNotificationName:kOTRBuddyListUpdate
-     object:self];
+    for(AIMBlistGroup *group in aimBuddyList.groups)
+    {
+        for(AIMBlistBuddy *buddy in group.buddies)
+        {
+            [self updateManagedBuddyWith:buddy];
+        }
+    }
 }
 
 - (void)aimFeedbagHandler:(AIMFeedbagHandler *)sender buddyAdded:(AIMBlistBuddy *)newBuddy {
 	[self checkThreading];
 	//NSLog(@"Buddy added: %@", newBuddy);
+    [self updateManagedBuddyWith:newBuddy];
     
-    [[NSNotificationCenter defaultCenter]
-     postNotificationName:kOTRBuddyListUpdate
-     object:self];
 }
 
 - (void)aimFeedbagHandler:(AIMFeedbagHandler *)sender buddyDeleted:(AIMBlistBuddy *)oldBuddy {
 	[self checkThreading];
 	//NSLog(@"Buddy removed: %@", oldBuddy);
+    
+    OTRManagedBuddy * buddy = [OTRManagedBuddy fetchOrCreateWithName:oldBuddy.username account:self.account];
+    [buddy MR_deleteEntity];
+    
+    NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
+    [context MR_saveToPersistentStoreAndWait];
     
     [[NSNotificationCenter defaultCenter]
      postNotificationName:kOTRBuddyListUpdate
@@ -166,10 +232,6 @@ BOOL loginFailed;
 - (void)aimFeedbagHandler:(AIMFeedbagHandler *)sender groupAdded:(AIMBlistGroup *)newGroup {
 	[self checkThreading];
 	//NSLog(@"Group added: %@", [newGroup name]);
-    
-    [[NSNotificationCenter defaultCenter]
-     postNotificationName:kOTRBuddyListUpdate
-     object:self];
 }
 
 - (void)aimFeedbagHandler:(AIMFeedbagHandler *)sender groupDeleted:(AIMBlistGroup *)oldGroup {
@@ -237,22 +299,15 @@ BOOL loginFailed;
 	//NSString * autoresp = [message isAutoresponse] ? @" (Auto-Response)" : @"";
 	//NSLog(@"(%@) %@%@: %@", [NSDate date], [[message buddy] username], autoresp, [message plainTextMessage]);
     
-    OTRManagedBuddy * messageBuddy = [protocolBuddyList objectForKey:message.buddy.username];
+    OTRManagedBuddy * messageBuddy = [OTRManagedBuddy fetchOrCreateWithName:message.buddy.username account:self.account];
     
-    OTRManagedMessage *otrMessage = [OTRManagedMessage newMessageFromBuddy:messageBuddy message:msgTxt];
-    otrMessage.isEncrypted = YES;
+    OTRManagedMessage *otrMessage = [OTRManagedMessage newMessageFromBuddy:messageBuddy message:msgTxt encrypted:YES];
     
     [OTRCodec decodeMessage:otrMessage];
     
-    if(otrMessage)
+    if(otrMessage && otrMessage.isEncryptedValue == NO)
     {
         [messageBuddy receiveMessage:otrMessage.message];
-
-        NSDictionary *messageInfo = [NSDictionary dictionaryWithObject:otrMessage.objectID forKey:@"message"];
-        
-        [[NSNotificationCenter defaultCenter]
-         postNotificationName:kOTRMessageReceived
-         object:self userInfo:messageInfo];
         
     }
 	
@@ -316,7 +371,7 @@ BOOL loginFailed;
 				}
 			}
 			if (canTransfer) {
-				NSString * tempPath = [NSTemporaryDirectory() stringByAppendingFormat:@"/%d%d.txt", arc4random(), time(NULL)];
+				NSString * tempPath = [NSTemporaryDirectory() stringByAppendingFormat:@"/%d%ld.txt", arc4random(), time(NULL)];
 				[messagestr writeToFile:tempPath atomically:NO encoding:NSUTF8StringEncoding error:nil];
 				if (![theSession.rendezvousHandler sendFile:tempPath toUser:message.buddy]) {
 					[[NSFileManager defaultManager] removeItemAtPath:tempPath error:nil];
@@ -360,10 +415,7 @@ BOOL loginFailed;
 - (void)aimStatusHandler:(AIMStatusHandler *)handler buddy:(AIMBlistBuddy *)theBuddy statusChanged:(AIMBuddyStatus *)status {
 	[self checkThreading];
 	//NSLog(@"\"%@\"%s%@", theBuddy, ".status = ", status);
-    
-    [[NSNotificationCenter defaultCenter]
-     postNotificationName:kOTRBuddyListUpdate
-     object:self];
+    [self updateMangedBuddyWith:theBuddy withStatus:status];
     
 }
 
@@ -371,17 +423,17 @@ BOOL loginFailed;
 	[self checkThreading];
 	//NSLog(@"user.status = %@", [handler userStatus]);
     
-    [[NSNotificationCenter defaultCenter]
-     postNotificationName:kOTRBuddyListUpdate
-     object:self];
-    
 }
 
 - (void)aimStatusHandler:(AIMStatusHandler *)handler buddyIconChanged:(AIMBlistBuddy *)theBuddy {
 	[self checkThreading];
     
+    [self updateManagedBuddyWith:theBuddy];
+    
+    /*
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *dirPath = [paths objectAtIndex:0];
+    
     
 	if ([[NSFileManager defaultManager] fileExistsAtPath:dirPath]) {
 		NSString * path = nil;
@@ -403,6 +455,7 @@ BOOL loginFailed;
 			[[[theBuddy buddyIcon] iconData] writeToFile:path atomically:YES];
 		}
 	}
+    */
 }
 
 - (void)aimStatusHandler:(AIMStatusHandler *)handler setIconFailed:(AIMIconUploadErrorType)reason {
@@ -543,61 +596,6 @@ BOOL loginFailed;
 	[theSession.messageHandler sendMessage:msg];
 }
 
-- (NSArray*) buddyList
-{ 
-    NSMutableSet *otrBuddyListSet = [NSMutableSet set];
-    AIMBlist *blist = self.aimBuddyList;
-    
-    for(AIMBlistGroup *group in blist.groups)
-    {
-        for(AIMBlistBuddy *buddy in group.buddies)
-        {
-            OTRBuddyStatus buddyStatus;
-            
-            switch (buddy.status.statusType) 
-            {
-                case AIMBuddyStatusAvailable:
-                    buddyStatus = kOTRBuddyStatusAvailable;
-                    break;
-                case AIMBuddyStatusAway:
-                    buddyStatus = kOTRBuddyStatusAway;
-                    break;
-                default:
-                    buddyStatus = kOTRBuddyStatusOffline;
-                    break;
-            }
-            
-            OTRManagedBuddy *otrBuddy = [protocolBuddyList objectForKey:buddy.username];
-            
-            if(otrBuddy)
-            {
-                [otrBuddy setNewStatus:buddyStatus];
-                otrBuddy.groupName = group.name;
-            }
-            else
-            {
-                otrBuddy = [OTRManagedBuddy MR_createEntity];
-                otrBuddy.displayName = buddy.username;
-                otrBuddy.accountName = buddy.username;
-                [otrBuddy setNewStatus:buddyStatus];
-                otrBuddy.groupName = group.name;
-                otrBuddy.account = self.account;
-                NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
-                [context MR_save];
-                [protocolBuddyList setObject:otrBuddy forKey:buddy.username];
-            }
-            [otrBuddyListSet addObject:otrBuddy];
-        }
-    }
-    return [otrBuddyListSet allObjects];
-}
-
-- (OTRManagedBuddy *) getBuddyByAccountName:(NSString *)buddyAccountName
-{
-    if (protocolBuddyList)
-        return [protocolBuddyList objectForKey:buddyAccountName];
-}
-
 -(void)connectWithPassword:(NSString *)myPassword
 {
     self.login = [[AIMLogin alloc] initWithUsername:account.username password:myPassword];
@@ -607,9 +605,41 @@ BOOL loginFailed;
 -(void)disconnect
 {
     [[self theSession].session closeConnection];
-    OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
-    [protocolManager.protocolManagers removeObjectForKey:self.account.uniqueIdentifier];
-    self.protocolBuddyList = nil;
+   
+    
+}
+-(BOOL)isConnected
+{
+    return [self loggedIn];
+}
+
+- (void) addBuddy:(OTRManagedBuddy *)newBuddy
+{
+    [self undenyUser:newBuddy.accountName];
+    AIMBlistGroup * group = [theSession.session.buddyList groupWithName:@"Buddies"];
+    if(!group)
+    {
+        [self addGroup:@"Buddies"];
+    }
+    [newBuddy addToGroup:@"Buddies"];
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    [context MR_saveToPersistentStoreAndWait];
+    [self addBuddy:newBuddy.accountName toGroup:@"Buddies"];
+}
+
+-(void)removeBuddies:(NSArray *)buddies
+{
+    for (OTRManagedBuddy * buddy in buddies)
+    {
+        [self removeBuddy:buddy.accountName];
+    }
+        
+}
+-(void)blockBuddies:(NSArray *)buddies
+{
+    for (OTRManagedBuddy * buddy in buddies){
+        [self denyUser:buddy.accountName];
+    }
     
 }
 

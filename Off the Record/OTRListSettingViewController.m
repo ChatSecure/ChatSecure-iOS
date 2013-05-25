@@ -84,7 +84,6 @@
     } else {
         cell.accessoryType = UITableViewCellAccessoryNone;
     }
-    //cell.selectionStyle = UITableViewCellSelectionStyleNone;
     return cell;
 }
 

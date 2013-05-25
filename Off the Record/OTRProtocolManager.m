@@ -29,7 +29,6 @@ static OTRProtocolManager *sharedManager = nil;
 @implementation OTRProtocolManager
 
 @synthesize encryptionManager;
-@synthesize buddyList;
 @synthesize settingsManager;
 @synthesize accountsManager;
 @synthesize protocolManagers;
@@ -37,13 +36,11 @@ static OTRProtocolManager *sharedManager = nil;
 - (void) dealloc 
 {
     self.encryptionManager = nil;
-    self.buddyList = nil;
     self.settingsManager = nil;
     self.accountsManager = nil;
     self.protocolManagers = nil;
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kOTRSendMessage object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kOTRBuddyListUpdate object:nil];
 }
 
 -(id)init
@@ -54,7 +51,6 @@ static OTRProtocolManager *sharedManager = nil;
         self.accountsManager = [[OTRAccountsManager alloc] init];
         self.encryptionManager = [[OTREncryptionManager alloc] init];
         self.settingsManager = [[OTRSettingsManager alloc] init];
-        self.buddyList = [[OTRBuddyList alloc] init];
         self.protocolManagers = [[NSMutableDictionary alloc] init];
 
         [[NSNotificationCenter defaultCenter]
@@ -63,11 +59,6 @@ static OTRProtocolManager *sharedManager = nil;
          name:kOTRSendMessage
          object:nil ];
         
-        [[NSNotificationCenter defaultCenter]
-         addObserver:self
-         selector:@selector(buddyListUpdate)
-         name:kOTRBuddyListUpdate
-         object:nil ];
     }
     return self;
 }
@@ -108,22 +99,10 @@ static OTRProtocolManager *sharedManager = nil;
     }        
 }
 
-
--(void)buddyListUpdate
-{
-    //NSLog(@"Protocols: %@",[protocolManagers allKeys]);
-    for (id key in protocolManagers) {
-        [self.buddyList updateBuddies:[[protocolManagers objectForKey:key] buddyList]];
-    }
-    
-    
-}
-
 -(OTRManagedBuddy *)buddyForUserName:(NSString *)buddyUserName accountName:(NSString *)accountName protocol:(NSString *)protocol
 {
-    return [self.buddyList getBuddyForUserName:buddyUserName accountUniqueIdentifier:[self.accountsManager accountForProtocol:protocol accountName:accountName].uniqueIdentifier];
-    
-    
+    OTRManagedAccount * account = [self.accountsManager accountForProtocol:protocol accountName:accountName];
+    return [OTRManagedBuddy fetchOrCreateWithName:buddyUserName account:account];
 }
 
 - (id <OTRProtocol>)protocolForAccount:(OTRManagedAccount *)account
@@ -136,6 +115,16 @@ static OTRProtocolManager *sharedManager = nil;
         [protocolManagers setObject:protocol forKey:account.uniqueIdentifier];
     }
     return protocol;
+}
+
+-(BOOL)isAccountConnected:(OTRManagedAccount *)account;
+{
+    id <OTRProtocol> protocol = [protocolManagers objectForKey:account.uniqueIdentifier];
+    if (protocol) {
+        return [protocol isConnected];
+    }
+    return NO;
+    
 }
 
 @end

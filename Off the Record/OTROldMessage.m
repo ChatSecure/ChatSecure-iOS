@@ -20,8 +20,7 @@
 //  You should have received a copy of the GNU General Public License
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
-#import "OTRManagedMessage.h"
-#import "OTRManagedBuddy.h"
+#import "OTROldMessage.h"
 #import "OTRConstants.h"
 
 @implementation OTRMessage
@@ -57,11 +56,12 @@
 
 -(void)send
 {
-    [self.buddy.protocol sendMessage:self];
+    //[self.buddy.protocol sendMessage:self];
 }
 
 +(void)sendMessage:(OTRMessage *)message
-{    
+{
+    /*
     NSDictionary *messageInfo = [NSDictionary dictionaryWithObject:message forKey:@"message"];
     [message.buddy restartInactiveChatStateTimer];
     
@@ -69,6 +69,7 @@
     
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kOTRSendMessage object:self userInfo:messageInfo];
+     */
 }
 
 @end

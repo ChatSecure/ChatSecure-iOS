@@ -18,6 +18,7 @@
 @synthesize sslMismatchSwitch;
 @synthesize selfSignedSwitch;
 @synthesize portTextField;
+@synthesize allowPlaintextAuthentication, requireTLS;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -32,8 +33,11 @@
 {
     [super viewDidLoad];
     NSString * accountDomainString = self.account.domain;
-    BOOL sslMismatchSwitchSatus = self.account.shouldAllowSSLHostNameMismatch;
-    BOOL selfSignedSwithStatus = self.account.shouldAllowSelfSignedSSL;
+    BOOL sslMismatchSwitchSatus = self.account.allowSSLHostNameMismatchValue;
+    BOOL selfSignedSwithStatus = self.account.allowSSLHostNameMismatchValue;
+    BOOL allowPlaintextAuthenticationStatus = self.account.allowPlainTextAuthenticationValue; 
+    BOOL requireTLSStatus = self.account.requireTLSValue;
+	
     self.usernameTextField.placeholder = @"user@example.com";
     self.usernameTextField.keyboardType = UIKeyboardTypeEmailAddress;
     
@@ -54,20 +58,31 @@
     self.selfSignedSwitch = [[UISwitch alloc] init];
     self.selfSignedSwitch.on = selfSignedSwithStatus;
     
+    self.allowPlaintextAuthentication = [[UISwitch alloc] init];
+    self.allowPlaintextAuthentication.on = allowPlaintextAuthenticationStatus;
+    
+    self.requireTLS = [[UISwitch alloc] init];
+    self.requireTLS.on = requireTLSStatus;
+    
+    
     self.portTextField = [[UITextField alloc] init];
     self.portTextField.delegate = self;
     self.portTextField.autocorrectionType = UITextAutocorrectionTypeNo;
     self.portTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     //self.portTextField.borderStyle = UITextBorderStyleRoundedRect;
-    self.portTextField.placeholder = [NSString stringWithFormat:@"%i",self.account.port];
+    self.portTextField.placeholder = [NSString stringWithFormat:@"%@",self.account.port];
     self.portTextField.returnKeyType = UIReturnKeyDone;
     self.portTextField.keyboardType = UIKeyboardTypeNumberPad;
     self.portTextField.textColor = self.textFieldTextColor;
     
-    [self addCellinfoWithSection:1 row:2 labelText:DOMAIN_STRING cellType:kCellTypeTextField userInputView:self.domainTextField];
-    [self addCellinfoWithSection:1 row:3 labelText:SSL_MISMATCH_STRING cellType:kCellTypeSwitch userInputView:self.sslMismatchSwitch];
-    [self addCellinfoWithSection:1 row:4 labelText:SELF_SIGNED_SSL_STRING cellType:kCellTypeSwitch userInputView:self.selfSignedSwitch];
-    [self addCellinfoWithSection:1 row:5 labelText:PORT_STRING cellType:kCellTypeTextField userInputView:self.portTextField];
+    [self addCellinfoWithSection:1 row:0 labelText:DOMAIN_STRING cellType:kCellTypeTextField userInputView:self.domainTextField];
+    [self addCellinfoWithSection:1 row:1 labelText:PORT_STRING cellType:kCellTypeTextField userInputView:self.portTextField];
+    [self addCellinfoWithSection:1 row:4 labelText:SSL_MISMATCH_STRING cellType:kCellTypeSwitch userInputView:self.sslMismatchSwitch];
+    [self addCellinfoWithSection:1 row:5 labelText:SELF_SIGNED_SSL_STRING cellType:kCellTypeSwitch userInputView:self.selfSignedSwitch];
+    [self addCellinfoWithSection:1 row:6 labelText:ALLOW_PLAIN_TEXT_AUTHENTICATION_STRING cellType:kCellTypeSwitch userInputView:self.allowPlaintextAuthentication];
+    [self addCellinfoWithSection:1 row:7 labelText:REQUIRE_TLS_STRING cellType:kCellTypeSwitch userInputView:self.requireTLS];
+    
+    
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHideOrShow:) name:UIKeyboardWillHideNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHideOrShow:) name:UIKeyboardWillShowNotification object:nil];
@@ -92,8 +107,10 @@
 {
     [super readInFields];
 
-    self.account.shouldAllowSelfSignedSSL = selfSignedSwitch.on;
-    self.account.shouldAllowSSLHostNameMismatch = sslMismatchSwitch.on;
+    self.account.allowSelfSignedSSLValue = selfSignedSwitch.on;
+    self.account.allowSSLHostNameMismatchValue = sslMismatchSwitch.on;
+    self.account.allowPlainTextAuthenticationValue = allowPlaintextAuthentication.on;
+    self.account.requireTLSValue = requireTLS.on;
         
     NSString * domainText = [domainTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     self.account.domain = domainText;
@@ -102,7 +119,7 @@
     {
         int portNumber = [self.portTextField.text intValue];
         if (portNumber > 0 && portNumber <= 65535) {
-            self.account.port = portNumber;
+            self.account.port = @(portNumber);
         } else {
             self.account.port = [OTRManagedXMPPAccount defaultPortNumber];
         }
@@ -113,11 +130,11 @@
 -(void)loginButtonPressed:(id)sender
 {
     //If custom port set than a domain needs to be set to work with XMPPframework
-    if([self.portTextField.text length] || self.account.port != [OTRManagedXMPPAccount defaultPortNumber])
+    if([self.portTextField.text length] || self.account.portValue != [OTRManagedXMPPAccount defaultPortNumber].intValue)
     {
         int portNumber = [self.portTextField.text intValue];
         NSString * domainText = [domainTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-        if (portNumber == [OTRManagedXMPPAccount defaultPortNumber] || [domainText length])
+        if (portNumber == [OTRManagedXMPPAccount defaultPortNumber].intValue || [domainText length])
         {
             [super loginButtonPressed:sender];
         }

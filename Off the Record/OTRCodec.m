@@ -24,6 +24,7 @@
 #import "OTRBuddyListViewController.h"
 #import "OTRProtocolManager.h"
 #import "OTRManagedBuddy.h"
+#import "OTRUtilities.h"
 
 @implementation OTRCodec
 
@@ -36,7 +37,17 @@
     NSString *myAccountName = theMessage.buddy.account.username;
     
     NSString *decodedMessageString = [[OTRKit sharedInstance] decodeMessage:message recipient:friendAccount accountName:myAccountName protocol:protocol];
-    theMessage.message = decodedMessageString;
+    if(decodedMessageString) {
+        theMessage.message = [OTRUtilities stripHTML:decodedMessageString];
+        [theMessage setIsEncryptedValue:NO];
+    } else {
+        [theMessage setIsEncryptedValue:YES];
+    }
+        
+    
+    
+    NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
+    [context MR_saveToPersistentStoreAndWait];
 
     OTRKitMessageState messageState = [[OTRKit sharedInstance] messageStateForUsername:friendAccount accountName:myAccountName protocol:protocol];
     [theMessage.buddy setNewEncryptionStatus:messageState];
@@ -49,12 +60,16 @@
     NSString *recipientAccount = theMessage.buddy.accountName;
     NSString *protocol = theMessage.buddy.account.protocol;
     NSString *sendingAccount = theMessage.buddy.account.username;
+    //theMessage.isEncryptedValue = NO;
     
     NSString *encodedMessageString = [[OTRKit sharedInstance] encodeMessage:message recipient:recipientAccount accountName:sendingAccount protocol:protocol];
     
-    OTRManagedMessage *newOTRMessage = [OTRManagedMessage newMessageToBuddy:theMessage.buddy message:encodedMessageString];
+    OTRManagedMessage *newOTRMessage = [OTRManagedMessage newMessageToBuddy:theMessage.buddy message:encodedMessageString encrypted:YES];
     newOTRMessage.date = theMessage.date;
-    newOTRMessage.isEncrypted = YES;
+    newOTRMessage.uniqueID = theMessage.uniqueID;
+    
+    NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
+    [context MR_saveToPersistentStoreAndWait];
     
     return newOTRMessage;
 }

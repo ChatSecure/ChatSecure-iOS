@@ -42,6 +42,9 @@
 #define EN_REQUEST_PAT_STRING @"Request PAT"
 
 
+#define EN_DONATE_STRING @"Donate"
+#define EN_DONATE_MESSAGE_STRING @"Your donation will help fund the continued development of ChatSecure."
+
 //Used in OTRChatViewController
 #define EN_RECENT_STRING @"Recent"
 #define EN_YOUR_FINGERPRINT_STRING @"Fingerprint for you"
@@ -75,9 +78,6 @@
 #define EN_SECURITY_WARNING_STRING @"Security Warning"
 #define EN_AGREE_STRING @"Agree"
 #define EN_DISAGREE_STRING @"Disagree"
-#define EN_EULA_WARNING_STRING @"If you require true security, meet in person. This software, its dependencies, or the underlying OTR protocol could contain security issues. The full source code is available on Github but has not yet been audited by an independent security expert. Use at your own risk."
-#define EN_EULA_BSD_STRING @"Modified BSD License:\nTHIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
-
 #define EN_ERROR_STRING @"Error!"
 #define EN_OSCAR_FAIL_STRING @"Failed to start authenticating. Please try again."
 #define EN_XMPP_FAIL_STRING @"Failed to connect to XMPP server. Please check your login credentials and internet connection and try again."
@@ -88,6 +88,8 @@
 #define EN_ADVANCED_STRING @"Advanced"
 #define EN_SSL_MISMATCH_STRING @"SSL Hostname Mismatch"
 #define EN_SELF_SIGNED_SSL_STRING @"Self Signed SSL"
+#define EN_ALLOW_PLAIN_TEXT_AUTHENTICATION_STRING @"Allow Plaintext Authentication"
+#define EN_REQUIRE_TLS_STRING @"Require TLS"
 #define EN_PORT_STRING @"Port"
 #define EN_GOOGLE_TALK_EXAMPLE_STRING @"user@gmail.com"
 #define EN_REQUIRED_STRING @"Required"
@@ -147,6 +149,23 @@
 #define EN_GOOGLE_TALK_STRING @"Google Talk"
 #define EN_FACEBOOK_STRING @"Facebook"
 #define EN_JABBER_STRING @"Jabber (XMPP)"
+#define EN_MESSAGE_PLACEHOLDER_STRING @"Message"
+#define EN_DELIVERED_STRING @"Deliverd"
+#define EN_EXTENDED_AWAY_STRING @"Extended Away"
+#define EN_DO_NOT_DISTURB_STRING @"Do Not Disturb"
+#define EN_PENDING_APPROVAL_STRING @"Pending Approval"
+#define EN_DEFAULT_BUDDY_GROUP_STRING @"Buddies"
+#define EN_EMAIL_STRING @"Email"
+#define EN_NAME_STRING @"Name"
+#define EN_ACCOUNT_STRING @"Account"
+#define EN_GROUP_STRING @"Group"
+#define EN_GROUPS_STRING @"Groups"
+#define EN_REMOVE_STRING @"Remove"
+#define EN_BLOCK_STRING @"Block"
+#define EN_BLOCK_AND_REMOVE_STRING @"Block & Remove"
+#define EN_ADD_BUDDY_STRING @"Add Buddy"
+#define EN_BUDDY_INFO_STRING @"Buddy Info"
+
 
 
 #define BUDDY_LIST_STRING [OTRLanguageManager translatedString: EN_BUDDY_LIST_STRING]
@@ -194,8 +213,6 @@
 #define SECURITY_WARNING_STRING [OTRLanguageManager translatedString: EN_SECURITY_WARNING_STRING]
 #define AGREE_STRING [OTRLanguageManager translatedString: EN_AGREE_STRING]
 #define DISAGREE_STRING [OTRLanguageManager translatedString: EN_DISAGREE_STRING]
-#define EULA_WARNING_STRING [OTRLanguageManager translatedString: EN_EULA_WARNING_STRING]
-#define EULA_BSD_STRING [OTRLanguageManager translatedString: EN_EULA_BSD_STRING]
 #define ERROR_STRING [OTRLanguageManager translatedString: EN_ERROR_STRING]
 #define OSCAR_FAIL_STRING [OTRLanguageManager translatedString: EN_OSCAR_FAIL_STRING]
 #define XMPP_FAIL_STRING [OTRLanguageManager translatedString: EN_XMPP_FAIL_STRING]
@@ -206,6 +223,8 @@
 #define ADVANCED_STRING [OTRLanguageManager translatedString: EN_ADVANCED_STRING]
 #define SSL_MISMATCH_STRING [OTRLanguageManager translatedString: EN_SSL_MISMATCH_STRING]
 #define SELF_SIGNED_SSL_STRING [OTRLanguageManager translatedString: EN_SELF_SIGNED_SSL_STRING]
+#define ALLOW_PLAIN_TEXT_AUTHENTICATION_STRING [OTRLanguageManager translatedString: EN_ALLOW_PLAIN_TEXT_AUTHENTICATION_STRING]
+#define REQUIRE_TLS_STRING [OTRLanguageManager translatedString: EN_REQUIRE_TLS_STRING]
 #define PORT_STRING [OTRLanguageManager translatedString: EN_PORT_STRING]
 #define GOOGLE_TALK_EXAMPLE_STRING [OTRLanguageManager translatedString: EN_GOOGLE_TALK_EXAMPLE_STRING]
 #define REQUIRED_STRING [OTRLanguageManager translatedString: EN_REQUIRED_STRING]
@@ -264,6 +283,24 @@
 #define GOOGLE_TALK_STRING [OTRLanguageManager translatedString: EN_GOOGLE_TALK_STRING]
 #define FACEBOOK_STRING [OTRLanguageManager translatedString: EN_FACEBOOK_STRING]
 #define JABBER_STRING [OTRLanguageManager translatedString: EN_JABBER_STRING]
+#define MESSAGE_PLACEHOLDER_STRING [OTRLanguageManager translatedString: EN_MESSAGE_PLACEHOLDER_STRING]
+#define DELIVERED_STRING [OTRLanguageManager translatedString: EN_DELIVERED_STRING]
+#define DONATE_STRING [OTRLanguageManager translatedString: EN_DONATE_STRING]
+#define DONATE_MESSAGE_STRING [OTRLanguageManager translatedString: EN_DONATE_MESSAGE_STRING]
+#define EXTENDED_AWAY_STRING [OTRLanguageManager translatedString: EN_EXTENDED_AWAY_STRING]
+#define DO_NOT_DISTURB_STRING [OTRLanguageManager translatedString: EN_DO_NOT_DISTURB_STRING]
+#define PENDING_APPROVAL_STRING [OTRLanguageManager translatedString: EN_PENDING_APPROVAL_STRING]
+#define DEFAULT_BUDDY_GROUP_STRING [OTRLanguageManager translatedString: EN_DEFAULT_BUDDY_GROUP_STRING]
+#define EMAIL_STRING [OTRLanguageManager translatedString: EN_EMAIL_STRING]
+#define NAME_STRING [OTRLanguageManager translatedString: EN_NAME_STRING]
+#define ACCOUNT_STRING [OTRLanguageManager translatedString: EN_ACCOUNT_STRING]
+#define GROUP_STRING [OTRLanguageManager translatedString: EN_GROUP_STRING]
+#define GROUPS_STRING [OTRLanguageManager translatedString: EN_GROUPS_STRING]
+#define REMOVE_STRING [OTRLanguageManager translatedString: EN_REMOVE_STRING]
+#define BLOCK_STRING [OTRLanguageManager translatedString: EN_BLOCK_STRING]
+#define BLOCK_AND_REMOVE_STRING [OTRLanguageManager translatedString: EN_BLOCK_AND_REMOVE_STRING]
+#define ADD_BUDDY_STRING [OTRLanguageManager translatedString: EN_ADD_BUDDY_STRING]
+#define BUDDY_INFO_STRING [OTRLanguageManager translatedString: EN_BUDDY_INFO_STRING]
 
 #define STORE_STRING [OTRLanguageManager translatedString: EN_STORE_STRING]
 #define REQUEST_PAT_STRING [OTRLanguageManager translatedString: EN_REQUEST_PAT_STRING]
@@ -327,7 +364,6 @@
 #define LOC_SECURITY_WARNING_STRING NSLocalizedString(EN_SECURITY_WARNING_STRING , @"Title of alert box warning about security issues")
 #define LOC_AGREE_STRING NSLocalizedString(EN_AGREE_STRING , @"Agree to EULA")
 #define LOC_DISAGREE_STRING NSLocalizedString(EN_DISAGREE_STRING , @"Disagree with EULA")
-#define LOC_EULA_WARNING_STRING NSLocalizedString(EN_EULA_WARNING_STRING , @"Text describing possible security risks")
 #define LOC_ERROR_STRING NSLocalizedString(EN_ERROR_STRING , @"Title of error message popup box")
 #define LOC_OSCAR_FAIL_STRING NSLocalizedString(EN_OSCAR_FAIL_STRING , @"Authentication failed, tell user to try again")
 #define LOC_XMPP_FAIL_STRING NSLocalizedString(EN_XMPP_FAIL_STRING , @"Message when cannot connect to XMPP server")
@@ -398,3 +434,27 @@
 #define LOC_GOOGLE_TALK_STRING NSLocalizedString(EN_GOOGLE_TALK_STRING , @"the name for google talk")
 #define LOC_FACEBOOK_STRING NSLocalizedString(EN_FACEBOOK_STRING , @"the name for facebook")
 #define LOC_JABBER_STRING NSLocalizedString(EN_JABBER_STRING , @"the name for jabber, also include (XMPP) at the end")
+#define LOC_MESSAGE_PLACEHOLDER_STRING NSLocalizedString(EN_MESSAGE_PLACEHOLDER_STRING , @"just the word as a placeholder for the message text field") 
+#define LOC_DELIVERED_STRING NSLocalizedString(EN_DELIVERED_STRING , @"Shows in the chat view when a message has been delivered")
+#define LOC_ALLOW_PLAIN_TEXT_AUTHENTICATION_STRING NSLocalizedString(EN_ALLOW_PLAIN_TEXT_AUTHENTICATION_STRING , @"Setting name for allowing authentication to happen in plain text or in the clear")
+#define LOC_REQUIRE_TLS_STRING NSLocalizedString(EN_REQUIRE_TLS_STRING , @"Setting name for requiring a TLS connection")
+#define LOC_DONATE_STRING NSLocalizedString(EN_DONATE_STRING, @"Title for donation link")
+#define LOC_DONATE_MESSAGE_STRING NSLocalizedString(EN_DONATE_MESSAGE_STRING, @"Message shown when about to donate")
+#define LOC_DO_NOT_DISTURB_STRING NSLocalizedString(EN_DO_NOT_DISTURB_STRING, @"Default message when a user status is set to do not disturb")
+#define LOC_EXTENDED_AWAY_STRING NSLocalizedString(EN_EXTENDED_AWAY_STRING, @"Default message when a user status is set to extended away")
+#define LOC_PENDING_APPROVAL_STRING NSLocalizedString(EN_PENDING_APPROVAL_STRING, @"String for xmpp buddies when adding buddy is pedning")
+#define LOC_DEFAULT_BUDDY_GROUP_STRING NSLocalizedString(EN_DEFAULT_BUDDY_GROUP_STRING, @"Name for default buddy group")
+#define LOC_EMAIL_STRING NSLocalizedString(EN_EMAIL_STRING,@"The string describing account name or email address for a buddy")
+#define LOC_NAME_STRING NSLocalizedString(EN_NAME_STRING,@"The string describing a buddy's dispaly name")
+#define LOC_ACCOUNT_STRING NSLocalizedString(EN_ACCOUNT_STRING,@"The string describing a buddy's account")
+#define LOC_GROUP_STRING NSLocalizedString(EN_GROUP_STRING,@"The string describing a buddy's group")
+#define LOC_GROUPS_STRING NSLocalizedString(EN_GROUPS_STRING,@"The string describing a buddy's groups ... plural")
+#define LOC_REMOVE_STRING NSLocalizedString(EN_REMOVE_STRING,@"The String for a button to remove a buddy from the buddy list")
+#define LOC_BLOCK_STRING NSLocalizedString(EN_BLOCK_STRING,@"The String for a button to block a buddy")
+#define LOC_BLOCK_AND_REMOVE_STRING NSLocalizedString(EN_BLOCK_AND_REMOVE_STRING,@"The String for a buddy to block and remove a buddy from the buddy list")
+#define LOC_ADD_BUDDY_STRING NSLocalizedString(EN_ADD_BUDDY_STRING,@"The title for the view to add a buddy")
+#define LOC_BUDDY_INFO_STRING NSLocalizedString(EN_BUDDY_INFO_STRING,@"The title for the view that shows detailed buddy info")
+
+
+
+

@@ -22,22 +22,32 @@
 
 #import <UIKit/UIKit.h>
 #import "OTRProtocolManager.h"
+#import "OTRBuddyListGroupManager.h"
+#import "OTRSectionHeaderView.h"
 
 @class OTRChatViewController;
 
-@interface OTRBuddyListViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate>
+@interface OTRBuddyListViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate, NSFetchedResultsControllerDelegate, UISearchDisplayDelegate, OTRBuddyListGroupManagerDelegate, OTRSectionHeaderViewDelegate>
+{
+    NSMutableDictionary * buddyStatusImageDictionary;
+}
 
-@property (nonatomic, retain) NSArray *sortedBuddies;
-@property (nonatomic, retain) NSMutableDictionary *buddyDictionary;
-@property (nonatomic, retain) NSMutableArray *activeConversations;
 @property (nonatomic, retain) UITableView *buddyListTableView;
 @property (nonatomic, retain) OTRChatViewController *chatViewController;
 @property (nonatomic, retain) OTRManagedBuddy *selectedBuddy;
+@property (nonatomic, strong) NSMutableArray * sectionInfoArray;
 
-@property (nonatomic, retain) OTRProtocolManager *protocolManager;
+@property (nonatomic, strong) NSFetchedResultsController * buddyFetchedResultsController;
+@property (nonatomic, strong) NSFetchedResultsController * searchBuddyFetchedResultsController;
+@property (nonatomic, strong) NSFetchedResultsController * recentBuddiesFetchedResultsController;
+@property (nonatomic, strong) NSFetchedResultsController * unreadMessagesFetchedResultsContrller;
+@property (nonatomic, strong) NSFetchedResultsController * offlineBuddiesFetchedResultsController;
+@property (nonatomic, strong) NSFetchedResultsController * subscriptionRequestsFetchedResultsController;
+
+@property (nonatomic, strong) OTRBuddyListGroupManager * groupManager;
+
+@property (nonatomic, strong) UISearchDisplayController * searchDisplayController;
 
 -(void)enterConversationWithBuddy:(OTRManagedBuddy*)buddy;
--(void)buddyListUpdate;
--(void)messageReceived:(NSNotification*)notification;
 
 @end

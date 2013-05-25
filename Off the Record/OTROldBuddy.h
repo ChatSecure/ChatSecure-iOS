@@ -22,29 +22,13 @@
 
 #import <Foundation/Foundation.h>
 #import "OTRProtocol.h"
+#import "OTRManagedBuddy.h"
 #import "OTRKit.h"
 
-typedef unsigned int OTRBuddyStatus;
-typedef unsigned int OTRChatState;
 
 #define MESSAGE_PROCESSED_NOTIFICATION @"MessageProcessedNotification"
 #define kOTREncryptionStateNotification @"kOTREncryptionStateNotification"
 
-
-enum OTRBuddyStatus {
-    kOTRBuddyStatusOffline = 0,
-    kOTRBuddyStatusAway = 1,
-    kOTRBuddyStatusAvailable = 2
-};
-
-enum OTRChatState {
-    kOTRChatStateUnknown =0,
-    kOTRChatStateActive = 1,
-    kOTRChatStateComposing = 2,
-    kOTRChatStatePaused = 3,
-    kOTRChatStateInactive = 4,
-    kOTRChatStateGone =5
-};
 
 @interface OTRBuddy : NSObject
 
@@ -74,9 +58,6 @@ enum OTRChatState {
 -(void)receiveChatStateMessage:(OTRChatState) chatState;
 -(void)receiveReceiptResonse:(NSString *)responseID;
 -(void)sendMessage:(NSString *)message secure:(BOOL)secure;
--(void)sendChatState:(OTRChatState)chatState;
--(void)restartPausedChatStateTimer;
--(void)restartInactiveChatStateTimer;
 -(void)sendPausedChatState;
 -(void)sendActiveChatState;
 -(void)sendInactiveChatState;

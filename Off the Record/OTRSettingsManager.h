@@ -22,17 +22,11 @@
 
 #import <Foundation/Foundation.h>
 #import "OTRSetting.h"
+#import "OTRConstants.h"
 
 #ifdef CRITTERCISM_ENABLED
 #define kOTRSettingKeyCrittercismOptIn @"kOTRSettingKeyCrittercismOptIn"
 #endif
-
-#define kOTRSettingKeyFontSize @"kOTRSettingKeyFontSize"
-#define kOTRSettingKeyDeleteOnDisconnect @"kOTRSettingKeyDeleteOnDisconnect"
-#define kOTRSettingKeyShowDisconnectionWarning @"kOTRSettingKeyShowDisconnectionWarning"
-#define kOTRSettingUserAgreedToEULA @"kOTRSettingUserAgreedToEULA"
-#define kOTRSettingAccountsKey @"kOTRSettingAccountsKey"
-#define kOTRSettingKeyLanguage @"userSelectedSetting"
 
 @interface OTRSettingsManager : NSObject
 
@@ -46,5 +40,7 @@
 
 + (BOOL) boolForOTRSettingKey:(NSString*)key;
 + (double) doubleForOTRSettingKey:(NSString*)key;
++ (NSInteger) intForOTRSettingKey:(NSString *)key;
++ (float) floatForOTRSettingKey:(NSString *)key;
 
 @end

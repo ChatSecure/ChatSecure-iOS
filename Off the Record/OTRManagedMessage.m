@@ -23,59 +23,97 @@
 #import "OTRManagedMessage.h"
 #import "OTRManagedBuddy.h"
 #import "OTRConstants.h"
+#import "OTRProtocolManager.h"
+#import "OTRUtilities.h"
 
 @implementation OTRManagedMessage
 
-@dynamic date;
-@dynamic message;
-@dynamic buddy;
-@dynamic isEncrypted;
-@dynamic isIncoming;
+
 
 +(OTRManagedMessage*)newMessageToBuddy:(OTRManagedBuddy *)theBuddy message:(NSString *)theMessage {
     OTRManagedMessage *message = [OTRManagedMessage newMessageWithBuddy:theBuddy message:theMessage];
     message.isIncoming = NO;
-    NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
-    [context MR_save];
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    [context MR_saveToPersistentStoreAndWait];
     return message;
 }
+
 +(OTRManagedMessage*)newMessageFromBuddy:(OTRManagedBuddy *)theBuddy message:(NSString *)theMessage {
     OTRManagedMessage *message = [OTRManagedMessage newMessageWithBuddy:theBuddy message:theMessage];
-    message.isIncoming = YES;
-    NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
-    [context MR_save];
+    [message setIsIncomingValue:YES];
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    [context MR_saveToPersistentStoreAndWait];
     return message;
+}
+
++(OTRManagedMessage*)newMessageFromBuddy:(OTRManagedBuddy *)theBuddy message:(NSString *)theMessage encrypted:(BOOL)encryptionStatus
+{
+    OTRManagedMessage *message = [OTRManagedMessage newMessageWithBuddy:theBuddy message:theMessage];
+    message.isEncryptedValue = encryptionStatus;
+    [message setIsIncomingValue:YES];
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    [context MR_saveToPersistentStoreAndWait];
+    return message;
+    
+}
+
++(OTRManagedMessage *)newMessageToBuddy:(OTRManagedBuddy *)theBuddy message:(NSString *)theMessage encrypted:(BOOL)encryptionStatus
+{
+    OTRManagedMessage *message = [OTRManagedMessage newMessageWithBuddy:theBuddy message:theMessage];
+    message.isIncomingValue = NO;
+    message.isReadValue = YES;
+    message.isEncryptedValue = encryptionStatus;
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    [context MR_saveToPersistentStoreAndWait];
+    return message;
+    
 }
 
 +(OTRManagedMessage*)newMessageWithBuddy:(OTRManagedBuddy *)theBuddy message:(NSString *)theMessage
 {
     OTRManagedMessage *managedMessage = [OTRManagedMessage MR_createEntity];
+    managedMessage.uniqueID = [OTRUtilities uniqueString];
     managedMessage.buddy = theBuddy;
-    managedMessage.message = theMessage;
+    managedMessage.messagebuddy = theBuddy;
+    managedMessage.message = [OTRUtilities stripHTML:theMessage];
     managedMessage.date = [NSDate date];
-    managedMessage.isEncrypted = NO;
+    managedMessage.isDeliveredValue = NO;
+    theBuddy.lastMessageDate = managedMessage.date;
 
     return managedMessage;
 }
 
 -(void)send
 {
-    // TODO: fix this!!
-    assert("fix this!");
-    //[self.buddy.protocol sendMessage:self];
+    OTRProtocolManager * protocolManager =[OTRProtocolManager sharedInstance];
+    id<OTRProtocol> protocol = [protocolManager protocolForAccount:self.buddy.account];
+    [protocol sendMessage:self];
 }
 
 +(void)sendMessage:(OTRManagedMessage *)message
 {
-    NSDictionary *messageInfo = [NSDictionary dictionaryWithObject:message.objectID forKey:@"message"];
-    [message.buddy restartInactiveChatStateTimer];
+    //NSDictionary *messageInfo = [NSDictionary dictionaryWithObject:message.objectID forKey:@"message"];
     
-    // TODO: fix this!!
-    assert("fix this!");
-    //[message.buddy.protocol sendMessage:message];
+    [message.buddy invalidatePausedChatStateTimer];
     
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:kOTRSendMessage object:self userInfo:messageInfo];
+    OTRProtocolManager * protocolManager =[OTRProtocolManager sharedInstance];
+    id<OTRProtocol> protocol = [protocolManager protocolForAccount:message.buddy.account];
+    [protocol sendMessage:message];
+    
+    
+    //[[NSNotificationCenter defaultCenter] postNotificationName:kOTRSendMessage object:self userInfo:messageInfo];
+}
+
++(void)receiveMessage:(NSString *)objectIDString
+{
+    
+    OTRManagedMessage * message = [OTRManagedMessage MR_findFirstByAttribute:OTRManagedMessageAttributes.uniqueID withValue:objectIDString];
+    message.isDeliveredValue = YES;
+
+    NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
+    [context MR_saveToPersistentStoreAndWait];
+
 }
 
 @end

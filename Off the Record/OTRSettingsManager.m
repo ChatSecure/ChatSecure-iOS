@@ -32,6 +32,8 @@
 #import "OTRConstants.h"
 #import "OTRShareSetting.h"
 #import "OTRLanguageSetting.h"
+#import "OTRDonateSetting.h"
+#import "OTRIntSetting.h"
 
 @interface OTRSettingsManager(Private)
 - (void) populateSettings;
@@ -64,13 +66,20 @@
     OTRSettingsGroup *accountsGroup = [[OTRSettingsGroup alloc] initWithTitle:ACCOUNTS_STRING settings:[NSArray arrayWithObject:accountsViewSetting]];
     [settingsGroups addObject:accountsGroup];
     
-    
+    /*
     OTRDoubleSetting *fontSizeSetting = [[OTRDoubleSetting alloc] initWithTitle:FONT_SIZE_STRING description:FONT_SIZE_DESCRIPTION_STRING settingsKey:kOTRSettingKeyFontSize];
-    fontSizeSetting.maxValue = 2.5;
-    fontSizeSetting.minValue = 0.5;
+    fontSizeSetting.maxValue = 20;
+    fontSizeSetting.minValue = 12;
     fontSizeSetting.numValues = 4;
-    fontSizeSetting.defaultValue = [NSNumber numberWithDouble:1.0];
-    fontSizeSetting.isPercentage = YES;
+    fontSizeSetting.defaultValue = [NSNumber numberWithInt:16];
+    fontSizeSetting.isPercentage = NO;
+    */
+    
+    OTRIntSetting * fontSizeSetting = [[OTRIntSetting alloc] initWithTitle:FONT_SIZE_STRING description:FONT_SIZE_DESCRIPTION_STRING settingsKey:kOTRSettingKeyFontSize];
+    fontSizeSetting.maxValue = 20;
+    fontSizeSetting.minValue = 12;
+    fontSizeSetting.numValues = 4;
+    fontSizeSetting.defaultValue = [NSNumber numberWithInt:16];
 
     [newSettingsDictionary setObject:fontSizeSetting forKey:kOTRSettingKeyFontSize];
     OTRBoolSetting *deletedDisconnectedConversations = [[OTRBoolSetting alloc] initWithTitle:DELETE_CONVERSATIONS_ON_DISCONNECT_TITLE_STRING description:DELETE_CONVERSATIONS_ON_DISCONNECT_DESCRIPTION_STRING settingsKey:kOTRSettingKeyDeleteOnDisconnect];
@@ -83,27 +92,26 @@
     
     
     OTRFeedbackSetting * feedbackViewSetting = [[OTRFeedbackSetting alloc] initWithTitle:SEND_FEEDBACK_STRING description:nil];
-    feedbackViewSetting.mailToRecipients = [NSArray arrayWithObject:kOTRFeedbackEmail];
-    feedbackViewSetting.mailSubject = [NSString stringWithFormat:@"Feedback for %@ iOS V%@ ChatSecure V%@",[[UIDevice currentDevice] model],[[UIDevice currentDevice] systemVersion],[[[NSBundle mainBundle] infoDictionary] valueForKey:@"CFBundleVersion"]];
     feedbackViewSetting.imageName = @"18-envelope.png";
     
     OTRShareSetting * shareViewSetting = [[OTRShareSetting alloc] initWithTitle:SHARE_STRING description:nil];
-    shareViewSetting.imageName = @"29-heart.png";
+    shareViewSetting.imageName = @"275-broadcast.png";
     
     OTRLanguageSetting * languageSetting = [[OTRLanguageSetting alloc]initWithTitle:LANGUAGE_STRING description:nil settingsKey:kOTRSettingKeyLanguage];
     languageSetting.imageName = @"globe.png";
     
+    OTRDonateSetting *donateSetting = [[OTRDonateSetting alloc] initWithTitle:DONATE_STRING description:nil];
+    donateSetting.imageName = @"29-heart.png";
     
+    NSMutableArray *otherSettings = [NSMutableArray arrayWithCapacity:5];
+    [otherSettings addObjectsFromArray:@[languageSetting,donateSetting, shareViewSetting,feedbackViewSetting]];
 #ifdef CRITTERCISM_ENABLED
     OTRBoolSetting *crittercismSetting = [[OTRBoolSetting alloc] initWithTitle:CRITTERCISM_TITLE_STRING description:CRITTERCISM_DESCRIPTION_STRING settingsKey:kOTRSettingKeyCrittercismOptIn];
-    OTRSettingsGroup *otherGroup = [[OTRSettingsGroup alloc] initWithTitle:OTHER_STRING settings:[NSArray arrayWithObjects:languageSetting, shareViewSetting,feedbackViewSetting,crittercismSetting,nil]];
     [newSettingsDictionary setObject:crittercismSetting forKey:kOTRSettingKeyCrittercismOptIn];
-    [settingsGroups addObject:otherGroup];
-#else
-    OTRSettingsGroup *otherGroup = [[OTRSettingsGroup alloc] initWithTitle:OTHER_STRING settings:[NSArray arrayWithObjects:languageSetting,shareViewSetting,feedbackViewSetting,nil]];
-    [settingsGroups addObject:otherGroup];
-    
+    [otherSettings addObject:crittercismSetting];
 #endif
+    OTRSettingsGroup *otherGroup = [[OTRSettingsGroup alloc] initWithTitle:OTHER_STRING settings:otherSettings];
+    [settingsGroups addObject:otherGroup];
     settingsDictionary = newSettingsDictionary;
 }
 
@@ -135,6 +143,18 @@
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     return [defaults doubleForKey:key];
+}
+
++ (NSInteger) intForOTRSettingKey:(NSString *)key
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    return [defaults integerForKey:key];
+}
+
++ (float) floatForOTRSettingKey:(NSString *)key
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    return [defaults floatForKey:key];
 }
 
 - (OTRSetting*) settingForOTRSettingKey:(NSString*)key {

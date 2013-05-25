@@ -27,25 +27,15 @@
 #import "NSString+HTML.h"
 #import "Strings.h"
 #import "OTRConstants.h"
+#import "OTRXMPPManager.h"
+#import "OTRManagedStatus.h"
+#import "OTRManagedEncryptionStatusMessage.h"
+#import "OTRManagedGroup.h"
 
 @interface OTRManagedBuddy()
-@property (nonatomic) OTRBuddyStatus status;
-@property (nonatomic) OTRKitMessageState encryptionStatus;
 @end
 
 @implementation OTRManagedBuddy
-
-@dynamic accountName;
-@dynamic chatState;
-@dynamic displayName;
-@dynamic encryptionStatus;
-@dynamic lastSentChatState;
-@dynamic status;
-@dynamic groupName;
-@dynamic lastMessageDisconnected;
-@dynamic messages;
-@dynamic composingMessageString;
-@dynamic account;
 
 -(void)sendMessage:(NSString *)message secure:(BOOL)secure
 {
@@ -54,7 +44,7 @@
         OTRManagedBuddy* theBuddy = self;
         message = [message stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         //NSLog(@"message to be sent: %@",message);
-        OTRManagedMessage *newMessage = [OTRManagedMessage newMessageToBuddy:theBuddy message:message];
+        OTRManagedMessage *newMessage = [OTRManagedMessage newMessageToBuddy:theBuddy message:message encrypted:NO];
         //NSLog(@"newMessagge: %@",newMessage.message);
         OTRManagedMessage *encodedMessage;
         if(secure)
@@ -68,74 +58,68 @@
         //NSLog(@"encoded message: %@",encodedMessage.message);
         [OTRManagedMessage sendMessage:encodedMessage];
 
-        self.lastSentChatState=kOTRChatStateActive;
+        self.lastSentChatStateValue=kOTRChatStateActive;
     }
 }
 
--(void)setupWithDisplayName:(NSString*)buddyName accountName:(NSString*) buddyAccountName status:(OTRBuddyStatus)buddyStatus groupName:(NSString*)buddyGroupName
+-(BOOL)protocolIsXMPP
 {
-    self.displayName = buddyName;
-    self.accountName = buddyAccountName;
-    self.status = buddyStatus;
-    self.groupName = buddyGroupName;
-    self.lastMessageDisconnected = NO;
-    self.encryptionStatus = kOTRKitMessageStatePlaintext;
-    self.chatState = kOTRChatStateUnknown;
-    self.lastSentChatState = kOTRChatStateUnknown;
-}
-
--(void)sendChatState:(OTRChatState) sendingChatState
-{
-    /*
-    if([self.protocol respondsToSelector:@selector(sendChatState:withBuddy:)])
-    {
-        lastSentChatState = sendingChatState;
-        [self.protocol sendChatState:sendingChatState withBuddy:self];
+    OTRProtocolManager * protocolManager = [OTRProtocolManager sharedInstance];
+    id<OTRProtocol> protocol = [protocolManager protocolForAccount:self.account];
+    if ([protocol isKindOfClass:[OTRXMPPManager class]]) {
+        return YES;
     }
-    */
+    return NO;
 }
 
 -(void)sendComposingChatState
 {
-    if(self.lastSentChatState != kOTRChatStateComposing)
+    if([self protocolIsXMPP])
     {
-        [self sendChatState:kOTRChatStateComposing];
+        OTRProtocolManager * protocolManager = [OTRProtocolManager sharedInstance];
+        OTRXMPPManager * protocol = (OTRXMPPManager *)[protocolManager protocolForAccount:self.account];
+        [protocol sendChatState:kOTRChatStateComposing withBuddyID:self.objectID];
     }
-    [self restartPausedChatStateTimer];
-    //[self.inactiveChatStateTimer invalidate];
-}
--(void)sendPausedChatState
-{
-    [self sendChatState:kOTRChatStatePaused];
-    //[self.inactiveChatStateTimer invalidate];
 }
 
 -(void)sendActiveChatState
 {
-    //[pausedChatStateTimer invalidate];
-    [self restartInactiveChatStateTimer];
-    [self sendChatState:kOTRChatStateActive];
+    if([self protocolIsXMPP])
+    {
+        OTRProtocolManager * protocolManager = [OTRProtocolManager sharedInstance];
+        OTRXMPPManager * protocol = (OTRXMPPManager *)[protocolManager protocolForAccount:self.account];
+        [protocol sendChatState:kOTRChatStateActive withBuddyID:self.objectID];
+    }
 }
 -(void)sendInactiveChatState
 {
-    //[self.inactiveChatStateTimer invalidate];
-    if(self.lastSentChatState != kOTRChatStateInactive)
-        [self sendChatState:kOTRChatStateInactive];
+    if([self protocolIsXMPP])
+    {
+        OTRProtocolManager * protocolManager = [OTRProtocolManager sharedInstance];
+        OTRXMPPManager * protocol = (OTRXMPPManager *)[protocolManager protocolForAccount:self.account];
+        [protocol sendChatState:kOTRChatStateInactive withBuddyID:self.objectID];
+    }
 }
-
--(void)restartPausedChatStateTimer
+-(void)invalidatePausedChatStateTimer
 {
-    /*
-    [pausedChatStateTimer invalidate];
-    pausedChatStateTimer = [NSTimer scheduledTimerWithTimeInterval:kOTRChatStatePausedTimeout target:self selector:@selector(sendPausedChatState) userInfo:nil repeats:NO];
-     */
+    if([self protocolIsXMPP])
+    {
+        OTRProtocolManager * protocolManager = [OTRProtocolManager sharedInstance];
+        OTRXMPPManager * protocol = (OTRXMPPManager *)[protocolManager protocolForAccount:self.account];
+        [[protocol pausedChatStateTimerForBuddyObjectID:self.objectID] invalidate];
+        
+    }
+    
 }
--(void)restartInactiveChatStateTimer
+-(void)invalidateInactiveChatStateTimer
 {
-    /*
-    [inactiveChatStateTimer invalidate];
-    inactiveChatStateTimer = [NSTimer scheduledTimerWithTimeInterval:kOTRChatStateInactiveTimeout target:self selector:@selector(sendInactiveChatState) userInfo:nil repeats:NO];
-     */
+    if([self protocolIsXMPP])
+    {
+        OTRProtocolManager * protocolManager = [OTRProtocolManager sharedInstance];
+        OTRXMPPManager * protocol = (OTRXMPPManager *)[protocolManager protocolForAccount:self.account];
+        [[protocol inactiveChatStateTimerForBuddyObjectID:self.objectID] invalidate];
+    }
+    
 }
 
 -(void)receiveMessage:(NSString *)message
@@ -147,7 +131,7 @@
         // TODO: fix this so it doesn't break some cyrillic encodings
         NSString *rawMessage = [[[message stringByConvertingHTMLToPlainText]stringByEncodingHTMLEntities] stringByLinkifyingURLs];
                 
-        [[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];
+        //[[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];
         
         if (![[UIApplication sharedApplication] applicationState] == UIApplicationStateActive)
         {
@@ -169,93 +153,163 @@
     }
 }
 
--(void)receiveStatusMessage:(NSString *)message
-{
-    if (message) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];
-    }
-}
-
 -(void)receiveChatStateMessage:(OTRChatState) newChatState
 {
-    self.chatState = newChatState;
-    [[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];
+    self.chatStateValue = newChatState;
+    //NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
+    //[context MR_saveToPersistentStoreAndWait];
+    //[[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];
 }
 
 -(void)receiveReceiptResonse:(NSString *)responseID
 {
     NSLog(@"Receipt Resonse: %@",responseID);
     
+    [OTRManagedMessage receiveMessage:responseID];
+    
     //NSString * ReceiptResonseScript = [NSString stringWithFormat:@"<script>x=document.getElementById('%@');x.innerHTML = x.innerHTML+\" (delivered)\";</script>",responseID];
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];
-}
-
-- (void) setNewStatus:(OTRBuddyStatus)newStatus {
-    if([self.account.protocol isEqualToString:kOTRProtocolTypeXMPP])
-    {
-        if ([self.messages count]!=0 && newStatus!=self.status)
-        {
-            if( newStatus == 0)
-                [self receiveStatusMessage:OFFLINE_MESSAGE_STRING];
-            else if (newStatus == 1)
-                [self receiveStatusMessage:AWAY_MESSAGE_STRING];
-            else if( newStatus == 2)
-                [self receiveStatusMessage:AVAILABLE_MESSAGE_STRING];
-            
-        }
-    }
-    self.status = (int16_t)newStatus;
-}
-
--(void) protocolDisconnected:(id)sender
-{
-    if([self.messages count]!=0 && !self.lastMessageDisconnected)
-    {
-        //[chatHistory appendFormat:@"<p><strong style=\"color:blue\"> You </strong> Disconnected </p>"];
-        [[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];
-        self.lastMessageDisconnected = YES;
-        self.status = kOTRBuddyStatusOffline;
-    }
-}
-
--(void)receiveEncryptionMessage:(NSString *)message
-{
-    //[chatHistory appendFormat:@"<p><strong>%@</strong></p>",message];
-    [[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];
-    
+    //[[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];
 }
 
 -(void)setNewEncryptionStatus:(OTRKitMessageState)newEncryptionStatus
 {
+    OTRManagedEncryptionStatusMessage * currentEncryptionStatus = [self currentEncryptionStatus];
+    
+    /*
     if([self.messages count] > 0 && newEncryptionStatus != kOTRKitMessageStateEncrypted)
     {
         [self receiveEncryptionMessage:CONVERSATION_NOT_SECURE_WARNING_STRING];
     }
-    else if(newEncryptionStatus != self.encryptionStatus)
+    */
+    if(newEncryptionStatus != currentEncryptionStatus.statusValue)
     {
-        if (newEncryptionStatus != kOTRKitMessageStateEncrypted && self.encryptionStatus == kOTRKitMessageStateEncrypted) {
+        if (newEncryptionStatus != kOTRKitMessageStateEncrypted && currentEncryptionStatus.statusValue == kOTRKitMessageStateEncrypted) {
             [[[UIAlertView alloc] initWithTitle:SECURITY_WARNING_STRING message:[NSString stringWithFormat:CONVERSATION_NO_LONGER_SECURE_STRING, self.displayName] delegate:nil cancelButtonTitle:OK_STRING otherButtonTitles:nil] show];
         }
-        switch (newEncryptionStatus) {
-            case kOTRKitMessageStatePlaintext:
-                [self receiveEncryptionMessage:CONVERSATION_NOT_SECURE_WARNING_STRING];
-                break;
-            case kOTRKitMessageStateEncrypted:
-                [self receiveEncryptionMessage:CONVERSATION_SECURE_WARNING_STRING];
-                break;
-            case kOTRKitMessageStateFinished:
-                [self receiveEncryptionMessage:CONVERSATION_NOT_SECURE_WARNING_STRING];
-                break;
-            default:
-                NSLog(@"Unknown Encryption State");
-                break;
-        }
-        
+        [OTRManagedEncryptionStatusMessage newEncryptionStatus:newEncryptionStatus buddy:self];
     }
-    self.encryptionStatus = newEncryptionStatus;
+}
+
+-(void) newStatusMessage:(NSString *)newStatusMessage status:(OTRBuddyStatus)newStatus incoming:(BOOL)isIncoming
+{
+    OTRManagedStatus * currentManagedStatus = [self currentStatusMessage];
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:kOTREncryptionStateNotification object:self];
+    if (![newStatusMessage length]) {
+        newStatusMessage = [OTRManagedStatus statusMessageWithStatus:newStatus];
+    }
+    
+    //Make sure the status message is unique compared to the last status message
+    if (newStatus != currentManagedStatus.statusValue || ![newStatusMessage isEqualToString:currentManagedStatus.message]) {
+        
+        NSPredicate * messageDateFilter = [NSPredicate predicateWithFormat:@"(date >= %@) AND (date <= %@)",currentManagedStatus.date,[NSDate date]];
+        NSArray * managedMessages = [OTRManagedMessage MR_findAllWithPredicate:messageDateFilter];
+        
+        //if no new messages since last status update just change the most recent status
+        if (![managedMessages count]) {
+            [currentManagedStatus updateStatus:newStatus withMessage:newStatusMessage incoming:isIncoming];
+            self.currentStatusValue = newStatus;
+        }
+        else
+        {
+            [OTRManagedStatus newStatus:newStatus withMessage:newStatusMessage withBuddy:self incoming:isIncoming];
+        }
+        self.currentStatusValue = newStatus;
+    }
+    else
+    {
+        self.currentStatusValue = currentManagedStatus.statusValue;
+    }
+}
+
+-(OTRManagedStatus *)currentStatusMessage
+{
+    NSSortDescriptor * dateSort = [NSSortDescriptor sortDescriptorWithKey:@"date" ascending:NO];
+    NSArray * sortedStatuses = [self.statuses sortedArrayUsingDescriptors:@[dateSort]];
+    
+    if ([sortedStatuses count]) {
+        return sortedStatuses[0];
+    }
+    return [OTRManagedStatus newStatus:kOTRBuddyStatusOffline withMessage:nil withBuddy:self incoming:NO];
+
+    
+}
+
+-(OTRManagedEncryptionStatusMessage *)currentEncryptionStatus
+{
+    NSSortDescriptor * dateSort = [NSSortDescriptor sortDescriptorWithKey:@"date" ascending:NO];
+    NSArray * sortedStatuses = [self.encryptionStatusMessages sortedArrayUsingDescriptors:@[dateSort]];
+    
+    if ([sortedStatuses count]) {
+        return sortedStatuses[0];
+    }
+    return [OTRManagedEncryptionStatusMessage newEncryptionStatus:kOTRKitMessageStatePlaintext buddy:self];
+
+    
+}
+
+-(NSInteger) numberOfUnreadMessages
+{
+    NSPredicate * messageFilter = [NSPredicate predicateWithFormat:@"isRead == NO AND isEncrypted == NO AND isIncoming == YES"];
+    NSSet * finalSet = [self.messages filteredSetUsingPredicate:messageFilter];
+    return [finalSet count];
+}
+
+- (void) allMessagesRead
+{
+    [self.messages setValue:[NSNumber numberWithBool:YES] forKey:@"isRead"];
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    [context MR_saveToPersistentStoreAndWait];
+    //[context MR_saveOnlySelfWithCompletion:^(BOOL success, NSError * error){NSLog(@"Saving buddy"); }];
+}
+
+- (void) deleteAllMessages
+{
+    NSPredicate * messageFilter = [NSPredicate predicateWithFormat:@"buddy == %@",self];
+    NSPredicate * notLastStatusFilter = [NSPredicate predicateWithFormat:@"self != %@",[self currentStatusMessage]];
+    NSPredicate * compoundPredicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[messageFilter,notLastStatusFilter]];
+    
+    [OTRManagedMessageAndStatus MR_deleteAllMatchingPredicate:compoundPredicate];
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    [context MR_saveToPersistentStoreAndWait];
+}
+
+-(void)addToGroup:(NSString *)groupName
+{
+    OTRManagedGroup * managedGroup = [OTRManagedGroup fetchOrCreateWithName:groupName];
+    [self addGroupsObject:managedGroup];
+    
+}
+
+-(NSArray *)groupNames
+{
+    NSSortDescriptor * descriptor = [[NSSortDescriptor alloc] initWithKey:OTRManagedGroupAttributes.name ascending:YES];
+    return [[self.groups sortedArrayUsingDescriptors:@[descriptor]] valueForKey:OTRManagedGroupAttributes.name];
+}
+
+
++(OTRManagedBuddy *)fetchOrCreateWithName:(NSString *)name account:(OTRManagedAccount *)account
+{
+    OTRManagedBuddy * buddy = nil;
+    buddy = [OTRManagedBuddy buddyWithAccountName:name account:account];
+    if (!buddy) {
+        buddy = [OTRManagedBuddy MR_createEntity];
+        buddy.accountName = name;
+        buddy.account = account;
+    }
+    return buddy;
+}
+
++(OTRManagedBuddy *)buddyWithAccountName:(NSString *)name account:(OTRManagedAccount *)account
+{
+    NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"accountName == %@",name];
+    NSSet * filteredArray = [account.buddies filteredSetUsingPredicate:buddyFilter];
+    
+    if([filteredArray count])
+    {
+        return [filteredArray anyObject];
+    }
+    return nil;
 }
 
 @end

@@ -25,13 +25,12 @@
 
 @interface OTRAccountsManager : NSObject
 
-@property (nonatomic, retain) NSMutableDictionary *accountsDictionary;
-@property (nonatomic, retain) NSMutableDictionary *reverseLookupDictionary;
-@property (nonatomic, retain) NSArray *accountsArray;
-
 - (void) addAccount:(OTRManagedAccount*)account;
 - (void) removeAccount:(OTRManagedAccount*)account;
 
 - (OTRManagedAccount *) accountForProtocol:(NSString *)protocol accountName: (NSString *) accountName;
+
++ (NSUInteger)numberOfAccountsLoggedIn;
++ (NSArray *)allLoggedInAccounts;
 
 @end

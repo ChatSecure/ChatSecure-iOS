@@ -20,7 +20,7 @@
 //  You should have received a copy of the GNU General Public License
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
-#import "OTRXMPPAccount.h"
+#import "OTROldXMPPAccount.h"
 #import "OTRProtocol.h"
 #import "OTRConstants.h"
 #import "Strings.h"
@@ -30,25 +30,53 @@
 
 @implementation OTRXMPPAccount
 @synthesize allowSelfSignedSSL, allowSSLHostNameMismatch, domain, port, sendDeliveryReceipts, sendTypingNotifications;
+@synthesize allowPlainTextAuthentication, requireTLS;
 
 - (id) initWithDomain:(NSString *)newDomain {
     if (self = [super initWithProtocol:kOTRProtocolTypeXMPP]) {
         self.domain = newDomain;
-        self.allowSelfSignedSSL = NO;
-        self.allowSSLHostNameMismatch = NO;
-        self.port = DEFAULT_PORT_NUMBER; // Default XMPP port number
-        self.sendDeliveryReceipts = NO;
-        self.sendTypingNotifications = YES; // Default typing notifications to yes
+        [self setDefaluts];
     }
     return self;
+}
+
+-(void)setDefaluts
+{
+    self.allowSelfSignedSSL = NO;
+    self.allowSSLHostNameMismatch = NO;
+    self.port = DEFAULT_PORT_NUMBER; // Default XMPP port number
+    self.sendDeliveryReceipts = NO;
+    self.sendTypingNotifications = YES; // Default typing notifications to yes
+    self.allowPlainTextAuthentication = NO; //Default require Secure Authentication
+    if([domain isEqualToString:kOTRFacebookDomain])
+         self.requireTLS = YES;
+    else
+        self.requireTLS = NO;
+
+   
 }
 
 - (id) initWithSettingsDictionary:(NSDictionary *)dictionary uniqueIdentifier:(NSString*) uniqueID {
     if (self = [super initWithSettingsDictionary:dictionary uniqueIdentifier:uniqueID]) {
         self.domain = [dictionary objectForKey:kOTRAccountDomainKey];
-        self.allowSelfSignedSSL = [[dictionary objectForKey:kOTRXMPPAccountAllowSelfSignedSSLKey] boolValue];
-        self.allowSSLHostNameMismatch = [[dictionary objectForKey:kOTRXMPPAccountAllowSSLHostNameMismatch] boolValue];
-        self.sendDeliveryReceipts = [[dictionary objectForKey:kOTRXMPPAccountSendDeliveryReceiptsKey] boolValue];
+        
+        [self setDefaluts];
+
+        
+        if([dictionary objectForKey:kOTRXMPPAccountAllowSelfSignedSSLKey])
+            self.allowSelfSignedSSL = [[dictionary objectForKey:kOTRXMPPAccountAllowSelfSignedSSLKey] boolValue];
+        
+        if([dictionary objectForKey:kOTRXMPPAccountAllowSSLHostNameMismatch])
+            self.allowSSLHostNameMismatch = [[dictionary objectForKey:kOTRXMPPAccountAllowSSLHostNameMismatch] boolValue];
+        
+        if ([dictionary objectForKey:kOTRXMPPAccountSendDeliveryReceiptsKey]) 
+            self.sendDeliveryReceipts = [[dictionary objectForKey:kOTRXMPPAccountSendDeliveryReceiptsKey] boolValue];
+        
+        if([dictionary objectForKey:kOTRXMPPAllowPlaintextAuthenticationKey])
+            self.allowPlainTextAuthentication = [[dictionary objectForKey:kOTRXMPPAllowPlaintextAuthenticationKey]boolValue];
+        if ([dictionary objectForKey:kOTRXMPPRequireTLSKey]) 
+            self.requireTLS = [[dictionary objectForKey:kOTRXMPPRequireTLSKey] boolValue];
+        
         NSNumber *sendTypingNotificationsNumber = [dictionary objectForKey:kOTRXMPPAccountSendTypingNotificationsKey];
         BOOL shouldSendTypingNotifications = YES;
         if (sendTypingNotificationsNumber) {
@@ -120,6 +148,8 @@
     [accountDictionary setObject:[NSNumber numberWithInt:self.port] forKey:kOTRXMPPAccountPortNumber];
     [accountDictionary setObject:[NSNumber numberWithBool:self.sendDeliveryReceipts] forKey:kOTRXMPPAccountSendDeliveryReceiptsKey];
     [accountDictionary setObject:[NSNumber numberWithBool:self.sendTypingNotifications] forKey:kOTRXMPPAccountSendTypingNotificationsKey];
+    [accountDictionary setObject:[NSNumber numberWithBool:self.allowPlainTextAuthentication] forKey:kOTRXMPPAllowPlaintextAuthenticationKey];
+    [accountDictionary setObject:[NSNumber numberWithBool:self.requireTLS] forKey:kOTRXMPPRequireTLSKey];
     return accountDictionary;
 }
 

@@ -20,7 +20,7 @@
 //  You should have received a copy of the GNU General Public License
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
-#import "OTRAccount.h"
+#import "OTROldAccount.h"
 #import "OTRSettingsManager.h"
 #import "SSKeychain.h"
 #import "OTRProtocol.h"

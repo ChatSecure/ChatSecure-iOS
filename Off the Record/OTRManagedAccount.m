@@ -28,32 +28,22 @@
 #import "OTROscarManager.h"
 #import "OTRConstants.h"
 #import "Strings.h"
+#import "OTRProtocolManager.h"
+#import "OTRUtilities.h"
 
 #define kOTRServiceName @"org.chatsecure.ChatSecure"
 
 @interface OTRManagedAccount()
-@property (nonatomic, retain) NSString *username;
-@property (nonatomic) BOOL rememberPassword;
 @end
 
 @implementation OTRManagedAccount
-
-@dynamic isConnected;
-@dynamic protocol;
-@dynamic rememberPassword;
-@dynamic uniqueIdentifier;
-@dynamic username;
-@dynamic buddies;
 
 - (void) setDefaultsWithProtocol:(NSString*)newProtocol {
     self.username = @"";
     self.protocol = newProtocol;
     self.rememberPassword = NO;
     self.isConnected = NO;
-    CFUUIDRef theUUID = CFUUIDCreate(NULL);
-    NSString* uuidString = (__bridge_transfer NSString*)CFUUIDCreateString(NULL, theUUID);
-    CFRelease(theUUID);
-    self.uniqueIdentifier = uuidString;
+    self.uniqueIdentifier = [OTRUtilities uniqueString];
 }
 
 // Default, this will be overridden in subclasses
@@ -89,11 +79,13 @@
     }
     return password;
 }
-
-- (void) setNewUsername:(NSString *)newUsername {
+-(void)setNewUsername:(NSString *)newUsername
+{
     NSString *oldUsername = [self.username copy];
+    
     self.username = newUsername;
-    if ([self.username isEqualToString:newUsername]) {
+    
+    if ([self.username isEqualToString:oldUsername]) {
         return;
     }
     if (!self.rememberPassword) {
@@ -110,10 +102,11 @@
         }
         self.password = tempPassword;
     }
+    
 }
 
-- (void) setShouldRememberPassword:(BOOL)remember {
-    self.rememberPassword = remember;
+- (void) setRememberPasswordValue:(BOOL)remember {
+    [super setRememberPasswordValue: remember];
     if (!self.rememberPassword) {
         self.password = nil;
     }
@@ -121,7 +114,7 @@
 
 - (void) save {
     NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
-    [context MR_saveNestedContexts];
+    [context MR_saveToPersistentStoreAndWait];
 }
 
 
@@ -134,6 +127,67 @@
 - (NSString *)providerName
 {
     return @"";
+}
+
+-(NSNumber *)isConnected
+{
+    
+    
+    return [NSNumber numberWithBool:[[OTRProtocolManager sharedInstance] isAccountConnected:self]];
+}
+
+-(void)setAllBuddiesStatuts:(OTRBuddyStatus)status
+{
+    for (OTRManagedBuddy * buddy in self.buddies)
+    {
+        [buddy newStatusMessage:nil status:status incoming:NO];
+        if (status == kOTRBuddyStatusOffline) {
+            [buddy setNewEncryptionStatus:kOTRKitMessageStatePlaintext];
+            buddy.chatStateValue = kOTRChatStateActive;
+        }
+    }
+    [self save];
+}
+
+-(void)deleteAllConversationsForAccount
+{
+    for (OTRManagedBuddy * buddy in self.buddies)
+    {
+        [buddy deleteAllMessages];
+    }
+    [self save];
+}
+
+-(void)prepareBuddiesandMessagesForDeletion
+{
+    NSSet *buddySet = [self.buddies copy];
+    for(OTRManagedBuddy * buddy in buddySet)
+    {
+        NSPredicate * messageFilter = [NSPredicate predicateWithFormat:@"buddy == %@",self];
+        [OTRManagedMessageAndStatus MR_deleteAllMatchingPredicate:messageFilter];
+        [buddy MR_deleteEntity];
+    }
+    
+    
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    [context MR_saveToPersistentStoreAndWait];
+}
+
++(void)resetAccountsConnectionStatus
+{
+    NSArray * allAccountsArray = [OTRManagedAccount MR_findAll];
+    
+    for (OTRManagedAccount * managedAccount in allAccountsArray)
+    {
+        managedAccount.isConnectedValue = [[OTRProtocolManager sharedInstance] isAccountConnected:managedAccount];
+        if (!managedAccount.isConnectedValue) {
+            [managedAccount setAllBuddiesStatuts:kOTRBuddyStatusOffline];
+        }
+        
+    }
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    [context MR_saveToPersistentStoreAndWait];
+    
 }
 
 @end

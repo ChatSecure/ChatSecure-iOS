@@ -24,6 +24,7 @@
 #import "OTRBoolSetting.h"
 #import "OTRViewSetting.h"
 #import "OTRDoubleSetting.h"
+#import "OTRIntSetting.h"
 
 @implementation OTRSettingTableViewCell
 @synthesize otrSetting;
@@ -70,6 +71,14 @@
         UILabel *valueLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 50, 30)];
         valueLabel.backgroundColor = [UIColor clearColor];
         valueLabel.text = doubleSetting.stringValue;
+        accessoryView = valueLabel;
+    }
+    else if ([setting isKindOfClass:[OTRIntSetting class]])
+    {
+        OTRIntSetting * intSetting = (OTRIntSetting*)setting;
+        UILabel *valueLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 50, 30)];
+        valueLabel.backgroundColor = [UIColor clearColor];
+        valueLabel.text = intSetting.stringValue;
         accessoryView = valueLabel;
     }
     self.accessoryView = accessoryView;

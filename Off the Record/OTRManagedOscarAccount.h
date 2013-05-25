@@ -22,10 +22,10 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
-#import "OTRManagedAccount.h"
+#import "_OTRManagedOscarAccount.h"
 
 
-@interface OTRManagedOscarAccount : OTRManagedAccount
+@interface OTRManagedOscarAccount : _OTRManagedOscarAccount
 
 
 @end

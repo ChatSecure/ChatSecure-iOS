@@ -23,60 +23,41 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 #import "OTRKit.h"
+#import "_OTRManagedBuddy.h"
+#import "OTRConstants.h"
+#import "OTRManagedStatus.h"
 
 @class OTRManagedAccount;
 
-typedef int16_t OTRBuddyStatus;
-typedef int16_t OTRChatState;
-
-#define MESSAGE_PROCESSED_NOTIFICATION @"MessageProcessedNotification"
-#define kOTREncryptionStateNotification @"kOTREncryptionStateNotification"
-
-
-enum OTRBuddyStatus {
-    kOTRBuddyStatusOffline = 0,
-    kOTRBuddyStatusAway = 1,
-    kOTRBuddyStatusAvailable = 2
-};
-
-enum OTRChatState {
-    kOTRChatStateUnknown =0,
-    kOTRChatStateActive = 1,
-    kOTRChatStateComposing = 2,
-    kOTRChatStatePaused = 3,
-    kOTRChatStateInactive = 4,
-    kOTRChatStateGone =5
-};
-
-
-@interface OTRManagedBuddy : NSManagedObject
-
-@property (nonatomic, retain) NSString * accountName;
-@property (nonatomic) OTRChatState chatState;
-@property (nonatomic, retain) NSString * displayName;
-@property (nonatomic, readonly) OTRKitMessageState encryptionStatus;
-@property (nonatomic) OTRChatState lastSentChatState;
-@property (nonatomic, readonly) OTRBuddyStatus status;
-@property (nonatomic, retain) NSString * groupName;
-@property (nonatomic, retain) NSString * composingMessageString;
-@property (nonatomic) BOOL lastMessageDisconnected;
-@property (nonatomic, retain) NSSet *messages;
-@property (nonatomic, retain) OTRManagedAccount *account;
+@interface OTRManagedBuddy : _OTRManagedBuddy
 
 -(void)receiveMessage:(NSString *)message;
 -(void)receiveChatStateMessage:(OTRChatState) chatState;
 -(void)receiveReceiptResonse:(NSString *)responseID;
 -(void)sendMessage:(NSString *)message secure:(BOOL)secure;
--(void)sendChatState:(OTRChatState)chatState;
--(void)restartPausedChatStateTimer;
--(void)restartInactiveChatStateTimer;
--(void)sendPausedChatState;
+
+-(BOOL)protocolIsXMPP;
+
 -(void)sendActiveChatState;
 -(void)sendInactiveChatState;
 -(void)sendComposingChatState;
+-(void)invalidatePausedChatStateTimer;
+-(void)invalidateInactiveChatStateTimer;
 
-- (void) setNewStatus:(OTRBuddyStatus)newStatus;
+-(void) newStatusMessage:(NSString *)newStatusMessage status:(OTRBuddyStatus)newStatus incoming:(BOOL)isIncoming;
 - (void) setNewEncryptionStatus:(OTRKitMessageState)newEncryptionStatus;
+- (OTRManagedStatus *)currentStatusMessage;
+- (OTRManagedEncryptionStatusMessage *)currentEncryptionStatus;
+
+-(void)addToGroup:(NSString *)groupName;
+-(NSArray *)groupNames;
+
+- (NSInteger) numberOfUnreadMessages;
+- (void) allMessagesRead;
+
+- (void) deleteAllMessages;
+
++(OTRManagedBuddy *)fetchOrCreateWithName:(NSString *)name account:(OTRManagedAccount *)account;
 
 @end
 

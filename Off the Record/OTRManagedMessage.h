@@ -23,21 +23,17 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 //#import "OTRProtocol.h"
+#import "_OTRManagedMessage.h"
 
 @class OTRManagedBuddy;
 
-@interface OTRManagedMessage : NSManagedObject
-
-@property (nonatomic, strong) NSDate *date;
-@property (nonatomic, retain) NSString * message;
-@property (nonatomic, retain) OTRManagedBuddy *buddy;
-@property (nonatomic) BOOL isEncrypted;
-@property (nonatomic) BOOL isIncoming; // YES if a message received from this buddy, NO if its a message we sent to them
+@interface OTRManagedMessage : _OTRManagedMessage
 
 - (void) send;
 
-+(OTRManagedMessage*)newMessageToBuddy:(OTRManagedBuddy *)theBuddy message:(NSString *)theMessage;
-+(OTRManagedMessage*)newMessageFromBuddy:(OTRManagedBuddy *)theBuddy message:(NSString *)theMessage;
++(OTRManagedMessage*)newMessageFromBuddy:(OTRManagedBuddy *)theBuddy message:(NSString *)theMessage encrypted:(BOOL)encryptionStatus;
++(OTRManagedMessage *)newMessageToBuddy:(OTRManagedBuddy *)theBuddy message:(NSString *)theMessage encrypted:(BOOL)encryptionStatus;
 +(void)sendMessage:(OTRManagedMessage *)message;
++(void)receiveMessage:(NSString *)objectIDString;
 
 @end

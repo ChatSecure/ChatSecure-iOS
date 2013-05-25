@@ -25,15 +25,19 @@
 @protocol OTRProtocol <NSObject>
 
 @property (nonatomic, strong) OTRManagedAccount * account;
-@property (nonatomic, strong) NSMutableDictionary * protocolBuddyList;
 
 - (void) sendMessage:(OTRManagedMessage*)message;
-- (NSArray*) buddyList;
 - (void) connectWithPassword:(NSString *)password;
 - (void) disconnect;
+- (void) addBuddy:(OTRManagedBuddy *)newBuddy;
+- (BOOL) isConnected;
+
+-(void) removeBuddies:(NSArray *)buddies;
+-(void) blockBuddies:(NSArray *)buddies;
 
 @end
 
 @protocol OTRXMPPProtocol <OTRProtocol>
 - (void)sendChatState:(int)chatState withBuddy:(OTRManagedBuddy *)buddy;
+- (void) setDisplayName:(NSString *) newDisplayName forBuddy:(OTRManagedBuddy *)buddy;
 @end

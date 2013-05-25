@@ -20,8 +20,8 @@
 //  You should have received a copy of the GNU General Public License
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
-#import "OTRBuddy.h"
-#import "OTRMessage.h"
+#import "OTROldBuddy.h"
+#import "OTROldMessage.h"
 #import "OTRCodec.h"
 #import "OTRProtocolManager.h"
 #import "NSString+HTML.h"
@@ -101,7 +101,7 @@
         OTRMessage *encodedMessage;
         if(secure)
         {
-            encodedMessage = [OTRCodec encodeMessage:newMessage];
+            //encodedMessage = [OTRCodec encodeMessage:newMessage];
         }
         else
         {
@@ -122,7 +122,7 @@
     if([self.protocol respondsToSelector:@selector(sendChatState:withBuddy:)])
     {
         lastSentChatState = sendingChatState;
-        [self.protocol sendChatState:sendingChatState withBuddy:self];
+        //[self.protocol sendChatState:sendingChatState withBuddy:self];
     }
     
 }
@@ -133,7 +133,7 @@
     {
         [self sendChatState:kOTRChatStateComposing];
     }
-    [self restartPausedChatStateTimer];
+    //[self restartPausedChatStateTimer];
     [self.inactiveChatStateTimer invalidate];
 }
 -(void)sendPausedChatState
@@ -145,7 +145,7 @@
 -(void)sendActiveChatState
 {
     [pausedChatStateTimer invalidate];
-    [self restartInactiveChatStateTimer];
+    //[self restartInactiveChatStateTimer];
     [self sendChatState:kOTRChatStateActive];
 }
 -(void)sendInactiveChatState
@@ -155,25 +155,14 @@
         [self sendChatState:kOTRChatStateInactive];
 }
 
--(void)restartPausedChatStateTimer
-{
-    [pausedChatStateTimer invalidate];
-    pausedChatStateTimer = [NSTimer scheduledTimerWithTimeInterval:kOTRChatStatePausedTimeout target:self selector:@selector(sendPausedChatState) userInfo:nil repeats:NO];
-}
--(void)restartInactiveChatStateTimer
-{
-    [inactiveChatStateTimer invalidate];
-    inactiveChatStateTimer = [NSTimer scheduledTimerWithTimeInterval:kOTRChatStateInactiveTimeout target:self selector:@selector(sendInactiveChatState) userInfo:nil repeats:NO];
-}
-
 -(void)receiveMessage:(NSString *)message
 {
     //NSLog(@"received: %@",message);
     if (message) {
         lastMessageDisconnected = NO;
         // Strip the shit out of it, but hopefully you're talking with someone who is trusted in the first place
-        // TODO: fix this so it doesn't break some cyrillic encodings
-        NSString *rawMessage = [[[message stringByConvertingHTMLToPlainText]stringByEncodingHTMLEntities] stringByLinkifyingURLs];
+        NSString *rawMessage = [[[message stringByConvertingHTMLToPlainText] stringByEncodingHTMLEntities] stringByLinkifyingURLs];
+        NSString *decodedMessage = [[message stringByConvertingHTMLToPlainText] stringByLinkifyingURLs];
         self.lastMessage = rawMessage;
         
         NSString *username = [NSString stringWithFormat:@"<p><strong style=\"color:red\">%@:</strong>",self.displayName];
@@ -188,7 +177,7 @@
             localNotification.alertAction = REPLY_STRING;
             localNotification.soundName = UILocalNotificationDefaultSoundName;
             localNotification.applicationIconBadgeNumber = [UIApplication sharedApplication].applicationIconBadgeNumber + 1;
-            localNotification.alertBody = [NSString stringWithFormat:@"%@: %@",self.displayName,self.lastMessage];
+            localNotification.alertBody = [NSString stringWithFormat:@"%@: %@",self.displayName, decodedMessage];
           
             NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithCapacity:3];
             [userInfo setObject:accountName forKey:kOTRNotificationUserNameKey];
