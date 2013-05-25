@@ -86,8 +86,12 @@
     
     // Release any cached data, images, etc that aren't in use.
 }
-
+- (void) showStoreView:(id)sender {
+    OTRStoreViewController *storeView = [[OTRStoreViewController alloc] init];
+    [self.navigationController pushViewController:storeView animated:YES];
+}
 #pragma mark - View lifecycle
+
 
 - (void)viewDidLoad
 {
@@ -112,18 +116,7 @@
     self.navigationItem.rightBarButtonItem.accessibilityLabel = @"settings";
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:STORE_STRING style:UIBarButtonItemStyleBordered target:self action:@selector(showStoreView:)];
     [self.view addSubview:buddyListTableView];
-}
 
-- (void) showStoreView:(id)sender {
-    OTRStoreViewController *storeView = [[OTRStoreViewController alloc] init];
-    [self.navigationController pushViewController:storeView animated:YES];
-}
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
-    
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addButtonPressed:)];
     
     UISearchBar * searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, self.buddyListTableView.frame.size.width, 44)];
