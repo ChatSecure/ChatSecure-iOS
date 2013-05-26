@@ -222,6 +222,37 @@
     }
 }
 
+-(void) newStatusMessage:(NSString *)newStatusMessage status:(OTRBuddyStatus)newStatus incoming:(BOOL)isIncoming inContext:(NSManagedObjectContext *)context
+{
+    OTRManagedStatus * currentManagedStatus = [self currentStatusMessageInContext:context];
+    
+    if (![newStatusMessage length]) {
+        newStatusMessage = [OTRManagedStatus statusMessageWithStatus:newStatus];
+    }
+    
+    //Make sure the status message is unique compared to the last status message
+    if (newStatus != currentManagedStatus.statusValue || ![newStatusMessage isEqualToString:currentManagedStatus.message]) {
+        
+        NSPredicate * messageDateFilter = [NSPredicate predicateWithFormat:@"(date >= %@) AND (date <= %@)",currentManagedStatus.date,[NSDate date]];
+        NSArray * managedMessages = [OTRManagedMessage MR_findAllWithPredicate:messageDateFilter];
+        
+        //if no new messages since last status update just change the most recent status
+        if (![managedMessages count]) {
+            [currentManagedStatus updateStatus:newStatus withMessage:newStatusMessage incoming:isIncoming];
+            self.currentStatusValue = newStatus;
+        }
+        else
+        {
+            [OTRManagedStatus newStatus:newStatus withMessage:newStatusMessage withBuddy:self incoming:isIncoming];
+        }
+        self.currentStatusValue = newStatus;
+    }
+    else
+    {
+        self.currentStatusValue = currentManagedStatus.statusValue;
+    }
+}
+
 -(OTRManagedStatus *)currentStatusMessage
 {
     NSSortDescriptor * dateSort = [NSSortDescriptor sortDescriptorWithKey:@"date" ascending:NO];
@@ -232,6 +263,18 @@
     }
     return [OTRManagedStatus newStatus:kOTRBuddyStatusOffline withMessage:nil withBuddy:self incoming:NO];
 
+    
+}
+
+-(OTRManagedStatus *)currentStatusMessageInContext:(NSManagedObjectContext *)context
+{
+    NSSortDescriptor * dateSort = [NSSortDescriptor sortDescriptorWithKey:@"date" ascending:NO];
+    NSArray * sortedStatuses = [self.statuses sortedArrayUsingDescriptors:@[dateSort]];
+    
+    if ([sortedStatuses count]) {
+        return sortedStatuses[0];
+    }
+    return [OTRManagedStatus newStatus:kOTRBuddyStatusOffline withMessage:nil withBuddy:self incoming:NO inContext:context];
     
 }
 
@@ -274,9 +317,9 @@
     [context MR_saveToPersistentStoreAndWait];
 }
 
--(void)addToGroup:(NSString *)groupName
+-(void)addToGroup:(NSString *)groupName inContext:(NSManagedObjectContext *)context
 {
-    OTRManagedGroup * managedGroup = [OTRManagedGroup fetchOrCreateWithName:groupName];
+    OTRManagedGroup * managedGroup = [OTRManagedGroup fetchOrCreateWithName:groupName inContext:context];
     [self addGroupsObject:managedGroup];
     
 }
@@ -299,7 +342,18 @@
     }
     return buddy;
 }
-
++(OTRManagedBuddy *)fetchOrCreateWithName:(NSString *)name account:(OTRManagedAccount *)account inContext:(NSManagedObjectContext *)context
+{
+    OTRManagedBuddy * buddy = nil;
+    buddy = [OTRManagedBuddy buddyWithAccountName:name account:account];
+    if (!buddy) {
+        buddy = [OTRManagedBuddy MR_createInContext:context];
+        [context obtainPermanentIDsForObjects:@[buddy] error:nil];
+        buddy.accountName = name;
+        buddy.account = account;
+    }
+    return buddy;
+}
 +(OTRManagedBuddy *)buddyWithAccountName:(NSString *)name account:(OTRManagedAccount *)account
 {
     NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"accountName == %@",name];

@@ -438,6 +438,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		639F08B21752AEF5005C408D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D9F9376F13F44BD3009A3D84 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 63C1062316CB108A00D2C860;
+			remoteInfo = Mogenerator;
+		};
 		D953117816C6FF1A00AAB1D2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D953117416C6FF1A00AAB1D2 /* UserVoice.xcodeproj */;
@@ -2786,6 +2793,7 @@
 			dependencies = (
 				D953117B16C6FF2F00AAB1D2 /* PBXTargetDependency */,
 				D9CEF0AA1684267E00B236B5 /* PBXTargetDependency */,
+				639F08B31752AEF5005C408D /* PBXTargetDependency */,
 			);
 			name = "Off the Record";
 			productName = "Off the Record";
@@ -3318,6 +3326,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		639F08B31752AEF5005C408D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 63C1062316CB108A00D2C860 /* Mogenerator */;
+			targetProxy = 639F08B21752AEF5005C408D /* PBXContainerItemProxy */;
+		};
 		D953117B16C6FF2F00AAB1D2 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = UserVoice;

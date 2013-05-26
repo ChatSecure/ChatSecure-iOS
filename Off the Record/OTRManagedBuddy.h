@@ -45,10 +45,12 @@
 -(void)invalidateInactiveChatStateTimer;
 
 -(void) newStatusMessage:(NSString *)newStatusMessage status:(OTRBuddyStatus)newStatus incoming:(BOOL)isIncoming;
+-(void) newStatusMessage:(NSString *)newStatusMessage status:(OTRBuddyStatus)newStatus incoming:(BOOL)isIncoming inContext:(NSManagedObjectContext *)context;
 - (void) setNewEncryptionStatus:(OTRKitMessageState)newEncryptionStatus;
 - (OTRManagedStatus *)currentStatusMessage;
 - (OTRManagedEncryptionStatusMessage *)currentEncryptionStatus;
 
+-(void)addToGroup:(NSString *)groupName inContext:(NSManagedObjectContext *)context;
 -(void)addToGroup:(NSString *)groupName;
 -(NSArray *)groupNames;
 
@@ -58,6 +60,7 @@
 - (void) deleteAllMessages;
 
 +(OTRManagedBuddy *)fetchOrCreateWithName:(NSString *)name account:(OTRManagedAccount *)account;
++(OTRManagedBuddy *)fetchOrCreateWithName:(NSString *)name account:(OTRManagedAccount *)account inContext:(NSManagedObjectContext *)context;
 
 @end
 

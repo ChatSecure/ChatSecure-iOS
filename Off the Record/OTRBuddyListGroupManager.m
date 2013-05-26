@@ -22,6 +22,12 @@
 {
     if(self = [self init])
     {
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(managedObjectContextDidSave:)
+                                                     name:NSManagedObjectContextDidSaveNotification
+                                                   object:nil];
+         
+        
         self.onlineBuddyGroups = [NSMutableArray array];
         self.offlineBuddyGroups = [NSMutableArray array];
         [self groupFetchedResultsController];
@@ -42,6 +48,16 @@
     }
 }
 
+- (void)managedObjectContextDidSave:(NSNotification *)notification {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSManagedObjectContext *theContext = notification.object;
+        
+        //NSLog(@"Notification: %@",notification.userInfo);
+        if ([[theContext persistentStoreCoordinator] isEqual:[[NSManagedObjectContext MR_contextForCurrentThread] persistentStoreCoordinator]]) {
+            [[NSManagedObjectContext MR_contextForCurrentThread] mergeChangesFromContextDidSaveNotification:notification];
+        }
+    });
+}
 -(NSUInteger)numberOfBuddiesAtIndex:(NSUInteger)index
 {
     NSFetchedResultsController * controller = [self resultsControllerAtIndex:index];
