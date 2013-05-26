@@ -347,14 +347,8 @@
     {
         managedBuddy = [self.recentBuddiesFetchedResultsController objectAtIndexPath:indexPath];
     }
-    else{
-        if ([self.groupManager numberOfGroups] >= indexPath.section) {
-            managedBuddy = [self.groupManager buddyAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row inSection:indexPath.section-1]];
-        }
-        else{
-            NSFetchedResultsController* resultsController = self.offlineBuddiesFetchedResultsController;
-            //buddy = [resultsController objectAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row inSection:0]];
-        }
+    else if([self.groupManager numberOfGroups] >= indexPath.section){
+        managedBuddy = [self.groupManager buddyAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row inSection:indexPath.section-1]];
     }
     
     if (managedBuddy) {
