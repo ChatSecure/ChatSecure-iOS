@@ -41,3 +41,6 @@
 [submodule "Submodules/googleChromeOpenInChrome"]
 	path = Submodules/googleChromeOpenInChrome
 	url = git@github.com:ChatSecure/OpenInChrome.git
+[submodule "Submodules/iOS-Screenshot-Automater"]
+	path = Submodules/iOS-Screenshot-Automater
+	url = git@github.com:ChatSecure/iOS-Screenshot-Automator.git
