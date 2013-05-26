@@ -563,7 +563,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	password = myPassword;
     
 	NSError *error = nil;
-	if (![xmppStream connect:&error])
+	if (![xmppStream connectWithTimeout:XMPPStreamTimeoutNone error:&error])
 	{
 		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error connecting" 
 		                                                    message:@"See console for error details." 
@@ -747,7 +747,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
         
         OTRManagedBuddy * messageBuddy = [OTRManagedBuddy fetchOrCreateWithName:[user.jid full] account:self.account];
         
-        [messageBuddy receiveReceiptResonse:[message extractReceiptResponseID]];
+        [messageBuddy receiveReceiptResonse:[message receiptResponseID]];
     }
     
 	if ([message isChatMessageWithBody])
