@@ -28,6 +28,7 @@
 #import "QuartzCore/QuartzCore.h"
 #import "OTRManagedXMPPAccount.h"
 #import "OTRManagedOscarAccount.h"
+#import "OTRPushAccount.h"
 
 #define rowHeight 70
 #define kDisplayNameKey @"displayNameKey"
@@ -70,7 +71,11 @@
     [aimAccount setObject:AIM_STRING forKey:kDisplayNameKey];
     [aimAccount setObject:kAIMImageName forKey:kProviderImageKey];
     
-    accounts = [NSMutableArray arrayWithObjects:facebookAccount,googleAccount,jabberAccount,aimAccount, nil];    
+    NSMutableDictionary *pushAccount = [NSMutableDictionary dictionary];
+    [pushAccount setObject:CHATSECURE_PUSH_STRING forKey:kDisplayNameKey];
+    [pushAccount setObject:@"ipad.png" forKey:kProviderImageKey];
+    
+    accounts = [NSMutableArray arrayWithObjects:facebookAccount,googleAccount,jabberAccount,aimAccount, pushAccount, nil];
     
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:CANCEL_STRING style:UIBarButtonItemStyleBordered target:self action:@selector(cancelPressed:)];
     
@@ -176,6 +181,10 @@
         OTRManagedOscarAccount * aimAccount = [OTRManagedOscarAccount MR_createEntity];
         [aimAccount setDefaultsWithProtocol:kOTRProtocolTypeAIM];
         newAccount = aimAccount;
+    } else if ([name isEqualToString:CHATSECURE_PUSH_STRING]) {
+        OTRPushAccount *pushAccount = [OTRPushAccount MR_createEntity];
+        [pushAccount setDefaultsWithProtocol:kOTRProtocolTypePush];
+        newAccount = pushAccount;
     }
     return newAccount;
     

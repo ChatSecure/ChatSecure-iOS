@@ -293,6 +293,11 @@
 		D974577715BE34E7002B9192 /* 31-circle-plus.png in Resources */ = {isa = PBXBuildFile; fileRef = D974577515BE34E7002B9192 /* 31-circle-plus.png */; };
 		D974577815BE34E7002B9192 /* 31-circle-plus@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D974577615BE34E7002B9192 /* 31-circle-plus@2x.png */; };
 		D974DABD15021E540028B2F4 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D974DABC15021E540028B2F4 /* libiconv.dylib */; };
+		D97B1D3C1752AD33009FB693 /* OTRPushAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D97B1D3B1752AD33009FB693 /* OTRPushAccountViewController.m */; };
+		D97B1D3F1752AE7B009FB693 /* OTRPushAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = D97B1D3E1752AE7B009FB693 /* OTRPushAccount.m */; };
+		D97B1D441752AEFD009FB693 /* _OTRPushAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = D97B1D431752AEFD009FB693 /* _OTRPushAccount.m */; };
+		D97B1D471752B5A5009FB693 /* OTRPushManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D97B1D461752B5A5009FB693 /* OTRPushManager.m */; };
+		D97B1D4A1752BDD3009FB693 /* OTRPushLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D97B1D491752BDD3009FB693 /* OTRPushLoginViewController.m */; };
 		D97BF53B160150CF00DA91F9 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D97BF53A160150CE00DA91F9 /* Default-568h@2x.png */; };
 		D989E88E15D4F92E0081DFD1 /* Twitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D989E88D15D4F92E0081DFD1 /* Twitter.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		D99071B2151EB5C6002CECC9 /* 08-chat@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D99071AF151EB5C5002CECC9 /* 08-chat@2x.png */; };
@@ -468,6 +473,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = D2AAC07D0554694100DB518D;
 			remoteInfo = UserVoice;
+		};
+		D97B1D401752AEDE009FB693 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D9F9376F13F44BD3009A3D84 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 63C1062316CB108A00D2C860;
+			remoteInfo = Mogenerator;
 		};
 		D9CEED691684235C00B236B5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -720,6 +732,7 @@
 		D91DAE8515473EB5009D0B74 /* OTRSettingDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRSettingDetailViewController.m; sourceTree = "<group>"; };
 		D91DAE87154740CD009D0B74 /* OTRDoubleSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRDoubleSettingViewController.h; sourceTree = "<group>"; };
 		D91DAE88154740CE009D0B74 /* OTRDoubleSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRDoubleSettingViewController.m; sourceTree = "<group>"; };
+		D92B47B51752A83D0093E7B2 /* ChatSecure.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = ChatSecure.entitlements; sourceTree = "<group>"; };
 		D92B775314142F150058A789 /* OTREncryptionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTREncryptionManager.h; sourceTree = "<group>"; };
 		D92B775414142F150058A789 /* OTREncryptionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTREncryptionManager.m; sourceTree = "<group>"; };
 		D9360A2317516B6000081B1E /* OTRStoreTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OTRStoreTableViewCell.h; path = "Off the Record/OTRStoreTableViewCell.h"; sourceTree = "<group>"; };
@@ -1011,6 +1024,16 @@
 		D974577515BE34E7002B9192 /* 31-circle-plus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "31-circle-plus.png"; sourceTree = "<group>"; };
 		D974577615BE34E7002B9192 /* 31-circle-plus@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "31-circle-plus@2x.png"; sourceTree = "<group>"; };
 		D974DABC15021E540028B2F4 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
+		D97B1D3A1752AD33009FB693 /* OTRPushAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OTRPushAccountViewController.h; path = "Off the Record/OTRPushAccountViewController.h"; sourceTree = "<group>"; };
+		D97B1D3B1752AD33009FB693 /* OTRPushAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OTRPushAccountViewController.m; path = "Off the Record/OTRPushAccountViewController.m"; sourceTree = "<group>"; };
+		D97B1D3D1752AE7B009FB693 /* OTRPushAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRPushAccount.h; sourceTree = "<group>"; };
+		D97B1D3E1752AE7B009FB693 /* OTRPushAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRPushAccount.m; sourceTree = "<group>"; };
+		D97B1D421752AEFD009FB693 /* _OTRPushAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _OTRPushAccount.h; sourceTree = "<group>"; };
+		D97B1D431752AEFD009FB693 /* _OTRPushAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _OTRPushAccount.m; sourceTree = "<group>"; };
+		D97B1D451752B5A4009FB693 /* OTRPushManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OTRPushManager.h; path = "Off the Record/OTRPushManager.h"; sourceTree = "<group>"; };
+		D97B1D461752B5A5009FB693 /* OTRPushManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OTRPushManager.m; path = "Off the Record/OTRPushManager.m"; sourceTree = "<group>"; };
+		D97B1D481752BDD2009FB693 /* OTRPushLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRPushLoginViewController.h; sourceTree = "<group>"; };
+		D97B1D491752BDD3009FB693 /* OTRPushLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRPushLoginViewController.m; sourceTree = "<group>"; };
 		D97BF53A160150CE00DA91F9 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		D989E88D15D4F92E0081DFD1 /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
 		D99071AF151EB5C5002CECC9 /* 08-chat@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "08-chat@2x.png"; sourceTree = "<group>"; };
@@ -1377,6 +1400,8 @@
 			children = (
 				D9DE274913F4F0A400E335CA /* OTRLoginViewController.h */,
 				D9DE274A13F4F0A400E335CA /* OTRLoginViewController.m */,
+				D97B1D481752BDD2009FB693 /* OTRPushLoginViewController.h */,
+				D97B1D491752BDD3009FB693 /* OTRPushLoginViewController.m */,
 				636FE4B7161B7701002B28EF /* OTRXMPPLoginViewController.h */,
 				636FE4B8161B7701002B28EF /* OTRXMPPLoginViewController.m */,
 				639FDE4516334FA500387666 /* OTRJabberLoginViewController.h */,
@@ -1518,6 +1543,8 @@
 		63E72BA216CB11EE00B6F389 /* mogen */ = {
 			isa = PBXGroup;
 			children = (
+				D97B1D421752AEFD009FB693 /* _OTRPushAccount.h */,
+				D97B1D431752AEFD009FB693 /* _OTRPushAccount.m */,
 				6321870816E6C21100CB4D3C /* _OTRXMPPManagedPresenceSubscriptionRequest.h */,
 				6321870916E6C21100CB4D3C /* _OTRXMPPManagedPresenceSubscriptionRequest.m */,
 				630FF21116E0267200CC20AD /* _OTRManagedGroup.h */,
@@ -1562,6 +1589,10 @@
 		D9360A3617516B8E00081B1E /* Push */ = {
 			isa = PBXGroup;
 			children = (
+				D97B1D451752B5A4009FB693 /* OTRPushManager.h */,
+				D97B1D461752B5A5009FB693 /* OTRPushManager.m */,
+				D97B1D3A1752AD33009FB693 /* OTRPushAccountViewController.h */,
+				D97B1D3B1752AD33009FB693 /* OTRPushAccountViewController.m */,
 				D9360A3717516BDD00081B1E /* OTRPurchaseController.h */,
 				D9360A3817516BDD00081B1E /* OTRPurchaseController.m */,
 				D9360A2A17516B8A00081B1E /* OTRPushAccessTableViewCell.h */,
@@ -2640,6 +2671,8 @@
 				63B9422C16DEEEE300D6934F /* OTRUtilities.h */,
 				63B9422D16DEEEE300D6934F /* OTRUtilities.m */,
 				D9D3717C169D404F0086F358 /* ChatSecure.xcdatamodeld */,
+				D97B1D3D1752AE7B009FB693 /* OTRPushAccount.h */,
+				D97B1D3E1752AE7B009FB693 /* OTRPushAccount.m */,
 				633E71F716E169C100495B45 /* OTRBuddyListSectionInfo.h */,
 				633E71F816E169C100495B45 /* OTRBuddyListSectionInfo.m */,
 				D902D31C141E930C00AA3479 /* OTROldBuddy.h */,
@@ -2725,6 +2758,7 @@
 		D9F9378013F44BD3009A3D84 /* Off the Record */ = {
 			isa = PBXGroup;
 			children = (
+				D92B47B51752A83D0093E7B2 /* ChatSecure.entitlements */,
 				D9D69B07141806BB0056FB9E /* Model */,
 				D9E068EF13F44D2900AC10A3 /* OTRBuddyListViewController.h */,
 				D9E068F013F44D2900AC10A3 /* OTRBuddyListViewController.m */,
@@ -2889,6 +2923,7 @@
 			dependencies = (
 				D953117B16C6FF2F00AAB1D2 /* PBXTargetDependency */,
 				D9CEF0AA1684267E00B236B5 /* PBXTargetDependency */,
+				D97B1D411752AEDE009FB693 /* PBXTargetDependency */,
 			);
 			name = "Off the Record";
 			productName = "Off the Record";
@@ -3431,6 +3466,11 @@
 				D9360A5417516C0A00081B1E /* AFURLConnectionOperation.m in Sources */,
 				D9360A5517516C0A00081B1E /* AFXMLRequestOperation.m in Sources */,
 				D9360A5617516C0A00081B1E /* UIImageView+AFNetworking.m in Sources */,
+				D97B1D3C1752AD33009FB693 /* OTRPushAccountViewController.m in Sources */,
+				D97B1D3F1752AE7B009FB693 /* OTRPushAccount.m in Sources */,
+				D97B1D441752AEFD009FB693 /* _OTRPushAccount.m in Sources */,
+				D97B1D471752B5A5009FB693 /* OTRPushManager.m in Sources */,
+				D97B1D4A1752BDD3009FB693 /* OTRPushLoginViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3441,6 +3481,11 @@
 			isa = PBXTargetDependency;
 			name = UserVoice;
 			targetProxy = D953117A16C6FF2F00AAB1D2 /* PBXContainerItemProxy */;
+		};
+		D97B1D411752AEDE009FB693 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 63C1062316CB108A00D2C860 /* Mogenerator */;
+			targetProxy = D97B1D401752AEDE009FB693 /* PBXContainerItemProxy */;
 		};
 		D9CEF0AA1684267E00B236B5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -3578,7 +3623,8 @@
 		D9F937A313F44BD3009A3D84 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Chris Ballinger (9P62QGET7G)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Chris Ballinger (9P62QGET7G)";
 				COPY_PHASE_STRIP = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Off the Record/Off the Record-Prefix.pch";
@@ -3601,7 +3647,8 @@
 				OTHER_CFLAGS = "-DSQLITE_HAS_CODEC";
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = ChatSecure;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "84054800-7AA8-413A-B181-63B0536FC255";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "84054800-7AA8-413A-B181-63B0536FC255";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
@@ -3610,7 +3657,7 @@
 		D9F937A413F44BD3009A3D84 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Chris Ballinger (9P62QGET7G)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Chris Ballinger";
 				COPY_PHASE_STRIP = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -3638,7 +3685,7 @@
 				);
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = ChatSecure;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "84054800-7AA8-413A-B181-63B0536FC255";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "501FCDE0-D40A-4056-9C6A-B68E99F4F2B8";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;

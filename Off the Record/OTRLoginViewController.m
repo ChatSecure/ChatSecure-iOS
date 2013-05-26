@@ -24,7 +24,7 @@
 #import "OTRConstants.h"
 #import "OTRManagedXMPPAccount.h"
 #import "OTRManagedOscarAccount.h"
-
+#import "OTRPushAccount.h"
 
 #import "OTRXMPPLoginViewController.h"
 #import "OTRJabberLoginViewController.h"
@@ -93,7 +93,6 @@
     self.usernameTextField.returnKeyType = UIReturnKeyDone;
     self.usernameTextField.textColor = self.textFieldTextColor;
     
-    [self addCellinfoWithSection:0 row:0 labelText:USERNAME_STRING cellType:kCellTypeTextField userInputView:self.usernameTextField];
     
     
     self.passwordTextField = [[UITextField alloc] init];
@@ -104,12 +103,10 @@
     self.passwordTextField.textColor = self.textFieldTextColor;
     self.passwordTextField.placeholder = REQUIRED_STRING;
     
-    [self addCellinfoWithSection:0 row:1 labelText:PASSWORD_STRING cellType:kCellTypeTextField userInputView:self.passwordTextField];
     
     self.rememberPasswordSwitch = [[UISwitch alloc] init];
     
     
-    [self addCellinfoWithSection:0 row:2 labelText:REMEMBER_PASSWORD_STRING cellType:kCellTypeSwitch userInputView:self.rememberPasswordSwitch];
     
     
     NSString *loginButtonString = LOGIN_STRING;
@@ -122,7 +119,13 @@
         self.cancelButton = [[UIBarButtonItem alloc] initWithTitle:CANCEL_STRING style:UIBarButtonItemStyleBordered target:self action:@selector(cancelPressed:)];
         self.navigationItem.leftBarButtonItem = cancelButton;
     }
-    
+    [self setupCells];
+}
+
+- (void) setupCells {
+    [self addCellinfoWithSection:0 row:0 labelText:USERNAME_STRING cellType:kCellTypeTextField userInputView:self.usernameTextField];
+    [self addCellinfoWithSection:0 row:1 labelText:PASSWORD_STRING cellType:kCellTypeTextField userInputView:self.passwordTextField];
+    [self addCellinfoWithSection:0 row:2 labelText:REMEMBER_PASSWORD_STRING cellType:kCellTypeSwitch userInputView:self.rememberPasswordSwitch];
 }
 
 -(void)addCellinfoWithSection:(NSInteger)section row:(NSInteger)row labelText:(id)text cellType:(NSString *)type userInputView:(UIView *)inputView;
@@ -424,6 +427,10 @@
 
 +(OTRLoginViewController *)loginViewControllerWithAcccountID:(NSManagedObjectID *)accountID
 {
+    if (!accountID) {
+        NSLog(@"accountID is nil!");
+        return nil;
+    }
     NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
     OTRManagedAccount * account = (OTRManagedAccount *)[context existingObjectWithID:accountID error:nil];
     if ([account isKindOfClass:[OTRManagedXMPPAccount class]]) {
@@ -448,6 +455,8 @@
     {
         //Aim Protocol
         return [[OTROscarLoginViewController alloc] initWithAccountID:accountID];
+    } else if ([account isKindOfClass:[OTRPushAccount class]]) {
+        return [[OTRLoginViewController alloc] initWithAccountID:accountID];
     }
 
 }

@@ -166,7 +166,9 @@
 #define EN_ADD_BUDDY_STRING @"Add Buddy"
 #define EN_BUDDY_INFO_STRING @"Buddy Info"
 
-
+#define EN_CHATSECURE_PUSH_STRING @"ChatSecure Push"
+#define LOC_CHATSECURE_PUSH_STRING NSLocalizedString(EN_CHATSECURE_PUSH_STRING, @"Title for ChatSecure Push service");
+#define CHATSECURE_PUSH_STRING [OTRLanguageManager translatedString: EN_CHATSECURE_PUSH_STRING]
 
 #define BUDDY_LIST_STRING [OTRLanguageManager translatedString: EN_BUDDY_LIST_STRING]
 #define CONVERSATIONS_STRING [OTRLanguageManager translatedString: EN_CONVERSATIONS_STRING]

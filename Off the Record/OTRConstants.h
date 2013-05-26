@@ -33,6 +33,7 @@
 #define kOTRGoogleTalkDomain @"talk.google.com"
 #define kOTRProtocolTypeXMPP @"xmpp"
 #define kOTRProtocolTypeAIM @"prpl-oscar"
+#define kOTRProtocolTypePush @"push"
 
 #define kOTRNotificationAccountNameKey @"kOTRNotificationAccountNameKey"
 #define kOTRNotificationUserNameKey @"kOTRNotificationUserNameKey"

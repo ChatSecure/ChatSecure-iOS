@@ -66,6 +66,10 @@
     OTRSettingsGroup *accountsGroup = [[OTRSettingsGroup alloc] initWithTitle:ACCOUNTS_STRING settings:[NSArray arrayWithObject:accountsViewSetting]];
     [settingsGroups addObject:accountsGroup];
     
+    OTRSettingsGroup *pushGroup = [[OTRSettingsGroup alloc] initWithTitle:CHATSECURE_PUSH_STRING settings:@[]];
+    
+    [settingsGroups addObject:pushGroup];
+    
     /*
     OTRDoubleSetting *fontSizeSetting = [[OTRDoubleSetting alloc] initWithTitle:FONT_SIZE_STRING description:FONT_SIZE_DESCRIPTION_STRING settingsKey:kOTRSettingKeyFontSize];
     fontSizeSetting.maxValue = 20;
