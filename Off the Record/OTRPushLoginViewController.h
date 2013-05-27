@@ -7,7 +7,10 @@
 //
 
 #import "OTRLoginViewController.h"
+#import "OTRPushAccount.h"
 
 @interface OTRPushLoginViewController : OTRLoginViewController
+
+@property (nonatomic, strong) OTRPushAccount *account;
 
 @end

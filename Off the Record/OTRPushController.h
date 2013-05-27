@@ -45,7 +45,6 @@
 + (void) registerForPushNotifications;
 
 + (OTRPushController*) sharedInstance;
-+ (NSURL*) baseURL;
 
 // For getting human-readable names for recieved PATs in push messages
 - (NSString*) nameForLocalPAT:(NSString*)pat;

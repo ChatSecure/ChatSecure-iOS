@@ -64,7 +64,7 @@
 
 - (void) requestProductIdentifiers {
     // Code to request product identifiers here
-    NSURLRequest *productsRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:REQUEST_PRODUCT_IDENTIFIERS relativeToURL:[OTRPushController baseURL]]];
+    NSURLRequest *productsRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:REQUEST_PRODUCT_IDENTIFIERS relativeToURL:[OTRPushAPIClient sharedClient].baseURL]];
     AFJSONRequestOperation *request = [AFJSONRequestOperation JSONRequestOperationWithRequest:productsRequest success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
         [self fetchProductsWithIdentifiers:[NSSet setWithArray:[JSON objectForKey:PRODUCT_IDENTIFIERS_KEY]]];
     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {

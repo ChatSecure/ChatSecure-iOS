@@ -63,6 +63,7 @@
 - (void)cancelPressed:(id)sender;
 
 -(BOOL)checkFields;
+-(void)setUpFields;
 
 -(void)addCellinfoWithSection:(NSInteger)section row:(NSInteger)row labelText:(id)text cellType:(NSString *)type userInputView:(UIView *)inputView;
 -(void)readInFields;

@@ -27,7 +27,6 @@
 #import "OTRConstants.h"
 #import "OTRProtocolManager.h"
 
-#define SERVER_URL @"http://192.168.1.44:5000/"
 
 #define REGISTER_PATH @"register"
 #define ADD_DPT_PATH @"add_dpt"
@@ -77,9 +76,6 @@
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
 }
 
-+ (NSURL*) baseURL {
-    return [NSURL URLWithString:SERVER_URL];
-}
 
 - (void) registerWithReceipt:(NSData*)receipt resetAccount:(BOOL)resetAccount {
     NSString *receiptString = [receipt base64Encoded];

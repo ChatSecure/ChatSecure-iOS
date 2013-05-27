@@ -8,7 +8,10 @@
 
 #import <Foundation/Foundation.h>
 #import "OTRProtocol.h"
+#import "OTRPushAccount.h"
 
 @interface OTRPushManager : NSObject <OTRProtocol>
+
+@property (nonatomic, strong) OTRPushAccount *account;
 
 @end

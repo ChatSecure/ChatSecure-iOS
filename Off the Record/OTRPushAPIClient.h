@@ -7,9 +7,12 @@
 //
 
 #import "AFHTTPClient.h"
+#import "OTRPushAccount.h"
 
 @interface OTRPushAPIClient : AFHTTPClient
 
 + (OTRPushAPIClient*) sharedClient;
+
+- (void) connectAccount:(OTRPushAccount*)account callback:(void (^)(BOOL success))callback;
 
 @end

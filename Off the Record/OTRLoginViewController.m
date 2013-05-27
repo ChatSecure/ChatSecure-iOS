@@ -26,6 +26,7 @@
 #import "OTRManagedOscarAccount.h"
 #import "OTRPushAccount.h"
 
+#import "OTRPushLoginViewController.h"
 #import "OTRXMPPLoginViewController.h"
 #import "OTRJabberLoginViewController.h"
 #import "OTRFacebookLoginViewController.h"
@@ -110,6 +111,8 @@
     
     
     NSString *loginButtonString = LOGIN_STRING;
+    NSLog(@"provider: %@", [account providerName]);
+    NSLog(@"account: %@", account);
     self.title = [account providerName];
     
     self.loginButton = [[UIBarButtonItem alloc] initWithTitle:loginButtonString style:UIBarButtonItemStyleDone target:self action:@selector(loginButtonPressed:)];
@@ -456,7 +459,7 @@
         //Aim Protocol
         return [[OTROscarLoginViewController alloc] initWithAccountID:accountID];
     } else if ([account isKindOfClass:[OTRPushAccount class]]) {
-        return [[OTRLoginViewController alloc] initWithAccountID:accountID];
+        return [[OTRPushLoginViewController alloc] initWithAccountID:accountID];
     }
 
 }

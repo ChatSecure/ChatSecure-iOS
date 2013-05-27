@@ -293,7 +293,6 @@
 		D974577715BE34E7002B9192 /* 31-circle-plus.png in Resources */ = {isa = PBXBuildFile; fileRef = D974577515BE34E7002B9192 /* 31-circle-plus.png */; };
 		D974577815BE34E7002B9192 /* 31-circle-plus@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D974577615BE34E7002B9192 /* 31-circle-plus@2x.png */; };
 		D974DABD15021E540028B2F4 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D974DABC15021E540028B2F4 /* libiconv.dylib */; };
-		D97B1D3C1752AD33009FB693 /* OTRPushAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D97B1D3B1752AD33009FB693 /* OTRPushAccountViewController.m */; };
 		D97B1D3F1752AE7B009FB693 /* OTRPushAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = D97B1D3E1752AE7B009FB693 /* OTRPushAccount.m */; };
 		D97B1D441752AEFD009FB693 /* _OTRPushAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = D97B1D431752AEFD009FB693 /* _OTRPushAccount.m */; };
 		D97B1D471752B5A5009FB693 /* OTRPushManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D97B1D461752B5A5009FB693 /* OTRPushManager.m */; };
@@ -1024,8 +1023,6 @@
 		D974577515BE34E7002B9192 /* 31-circle-plus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "31-circle-plus.png"; sourceTree = "<group>"; };
 		D974577615BE34E7002B9192 /* 31-circle-plus@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "31-circle-plus@2x.png"; sourceTree = "<group>"; };
 		D974DABC15021E540028B2F4 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
-		D97B1D3A1752AD33009FB693 /* OTRPushAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OTRPushAccountViewController.h; path = "Off the Record/OTRPushAccountViewController.h"; sourceTree = "<group>"; };
-		D97B1D3B1752AD33009FB693 /* OTRPushAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OTRPushAccountViewController.m; path = "Off the Record/OTRPushAccountViewController.m"; sourceTree = "<group>"; };
 		D97B1D3D1752AE7B009FB693 /* OTRPushAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRPushAccount.h; sourceTree = "<group>"; };
 		D97B1D3E1752AE7B009FB693 /* OTRPushAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRPushAccount.m; sourceTree = "<group>"; };
 		D97B1D421752AEFD009FB693 /* _OTRPushAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _OTRPushAccount.h; sourceTree = "<group>"; };
@@ -1591,8 +1588,6 @@
 			children = (
 				D97B1D451752B5A4009FB693 /* OTRPushManager.h */,
 				D97B1D461752B5A5009FB693 /* OTRPushManager.m */,
-				D97B1D3A1752AD33009FB693 /* OTRPushAccountViewController.h */,
-				D97B1D3B1752AD33009FB693 /* OTRPushAccountViewController.m */,
 				D9360A3717516BDD00081B1E /* OTRPurchaseController.h */,
 				D9360A3817516BDD00081B1E /* OTRPurchaseController.m */,
 				D9360A2A17516B8A00081B1E /* OTRPushAccessTableViewCell.h */,
@@ -3466,7 +3461,6 @@
 				D9360A5417516C0A00081B1E /* AFURLConnectionOperation.m in Sources */,
 				D9360A5517516C0A00081B1E /* AFXMLRequestOperation.m in Sources */,
 				D9360A5617516C0A00081B1E /* UIImageView+AFNetworking.m in Sources */,
-				D97B1D3C1752AD33009FB693 /* OTRPushAccountViewController.m in Sources */,
 				D97B1D3F1752AE7B009FB693 /* OTRPushAccount.m in Sources */,
 				D97B1D441752AEFD009FB693 /* _OTRPushAccount.m in Sources */,
 				D97B1D471752B5A5009FB693 /* OTRPushManager.m in Sources */,
