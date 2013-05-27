@@ -925,6 +925,7 @@
 		63E5E83016D1DF14006E2B01 /* SendButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SendButton@2x.png"; sourceTree = "<group>"; };
 		63E5E83116D1DF14006E2B01 /* SendButtonHighlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SendButtonHighlighted.png; sourceTree = "<group>"; };
 		63E5E83216D1DF14006E2B01 /* SendButtonHighlighted@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SendButtonHighlighted@2x.png"; sourceTree = "<group>"; };
+		63E6BB741752D92F0070EC47 /* no */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = no; path = "Off the Record/no.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
 		63E72B9316CB11E800B6F389 /* _OTRManagedAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _OTRManagedAccount.h; sourceTree = "<group>"; };
 		63E72B9416CB11E800B6F389 /* _OTRManagedAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _OTRManagedAccount.m; sourceTree = "<group>"; };
 		63E72B9516CB11E800B6F389 /* _OTRManagedBuddy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _OTRManagedBuddy.h; sourceTree = "<group>"; };
@@ -2993,6 +2994,7 @@
 				sk,
 				zh_TW,
 				pt_BR,
+				no,
 			);
 			mainGroup = D9F9376D13F44BD3009A3D84;
 			productRefGroup = D9F9377913F44BD3009A3D84 /* Products */;
@@ -3563,6 +3565,7 @@
 				63EB09491727484D000FACDC /* he */,
 				63EB094A17274AA2000FACDC /* es */,
 				63EB094B17274B24000FACDC /* sv */,
+				63E6BB741752D92F0070EC47 /* no */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
