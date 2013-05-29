@@ -155,13 +155,10 @@
 		63483FF01752CED100779257 /* DDTTYLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 63483F161752CED100779257 /* DDTTYLogger.m */; };
 		63483FF11752CED100779257 /* ContextFilterLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 63483F191752CED100779257 /* ContextFilterLogFormatter.m */; };
 		63483FF21752CED100779257 /* DispatchQueueLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 63483F1B1752CED100779257 /* DispatchQueueLogFormatter.m */; };
-		63483FF31752CED100779257 /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = 63483F1C1752CED100779257 /* README.txt */; };
 		634840191752CED100779257 /* NSString+DDXML.m in Sources */ = {isa = PBXBuildFile; fileRef = 63483F711752CED100779257 /* NSString+DDXML.m */; };
 		6348401A1752CED100779257 /* DDXMLDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 63483F741752CED100779257 /* DDXMLDocument.m */; };
 		6348401B1752CED100779257 /* DDXMLElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 63483F761752CED100779257 /* DDXMLElement.m */; };
 		6348401C1752CED100779257 /* DDXMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 63483F781752CED100779257 /* DDXMLNode.m */; };
-		6348401D1752CED100779257 /* build-libidn.sh in Resources */ = {isa = PBXBuildFile; fileRef = 63483F7C1752CED100779257 /* build-libidn.sh */; };
-		6348401E1752CED100779257 /* libidn.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 63483F7E1752CED100779257 /* libidn.a */; };
 		6352DC8815AF9F16007AD0B4 /* OTRNewAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6352DC8715AF9F16007AD0B4 /* OTRNewAccountViewController.m */; };
 		6352DC8C15AFB252007AD0B4 /* xmpp.png in Resources */ = {isa = PBXBuildFile; fileRef = 6352DC8A15AFB252007AD0B4 /* xmpp.png */; };
 		6352DC8D15AFB252007AD0B4 /* xmpp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6352DC8B15AFB252007AD0B4 /* xmpp@2x.png */; };
@@ -299,6 +296,7 @@
 		D96271031755DEB100F0A958 /* uv_x.png in Resources */ = {isa = PBXBuildFile; fileRef = D96270F31755DEB100F0A958 /* uv_x.png */; };
 		D96271041755DEB100F0A958 /* uv_x@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D96270F41755DEB100F0A958 /* uv_x@2x.png */; };
 		D96271061755DF0000F0A958 /* libCrittercism.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D96271051755DF0000F0A958 /* libCrittercism.a */; };
+		D962710A1755E16200F0A958 /* libidn.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 63483F7E1752CED100779257 /* libidn.a */; };
 		D96495C4153629FE009A8C33 /* OTRSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = D96495C3153629FE009A8C33 /* OTRSetting.m */; };
 		D96495C8153635A9009A8C33 /* OTRBoolSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = D96495C7153635A8009A8C33 /* OTRBoolSetting.m */; };
 		D96495CB15363C0F009A8C33 /* OTRViewSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = D96495CA15363C0F009A8C33 /* OTRViewSetting.m */; };
@@ -1391,7 +1389,7 @@
 				D90B80AC13FC719B006EFF3D /* CoreGraphics.framework in Frameworks */,
 				D9F9377D13F44BD3009A3D84 /* UIKit.framework in Frameworks */,
 				D9F9377F13F44BD3009A3D84 /* Foundation.framework in Frameworks */,
-				D93C99EB16BF953600344386 /* libidn.a in Frameworks */,
+				D962710A1755E16200F0A958 /* libidn.a in Frameworks */,
 				D96271061755DF0000F0A958 /* libCrittercism.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
