@@ -25,7 +25,7 @@
 	url = git@github.com:ChatSecure/XMPPFramework.git
 [submodule "Submodules/UserVoice"]
 	path = Submodules/UserVoice
-	url = git@github.com:ChatSecure/uservoice-iphone-sdk.git
+	url = https://github.com/uservoice/uservoice-ios-sdk.git
 [submodule "Submodules/encrypted-core-data"]
 	path = Submodules/encrypted-core-data
 	url = git@github.com:ChatSecure/encrypted-core-data.git

@@ -321,7 +321,11 @@
 {
     OTRManagedGroup * managedGroup = [OTRManagedGroup fetchOrCreateWithName:groupName inContext:context];
     [self addGroupsObject:managedGroup];
-    
+}
+
+- (void) addToGroup:(NSString *)groupName {
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    [self addToGroup:groupName inContext:context];
 }
 
 -(NSArray *)groupNames
