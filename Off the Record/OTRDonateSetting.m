@@ -15,22 +15,13 @@
 {
     self = [super initWithTitle:newTitle description:newDescription];
     if (self) {
-        self.action = @selector(showAlertView);
+        self.action = @selector(openPaypal);
     }
     return self;
 }
 
--(void)showAlertView
-{
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:DONATE_STRING message:DONATE_MESSAGE_STRING delegate:self cancelButtonTitle:CANCEL_STRING otherButtonTitles:DONATE_STRING, nil];
-    alert.delegate = self;
-    [alert show];
-}
-
-- (void) alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
-    if (buttonIndex != alertView.cancelButtonIndex) {
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=6YFSLLQGDZFXY"]];
-    }
+- (void) openPaypal {
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=6YFSLLQGDZFXY"]];
 }
 
 
