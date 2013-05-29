@@ -779,10 +779,11 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 - (void)xmppStream:(XMPPStream *)sender didReceivePresence:(XMPPPresence *)presence
 {
 	DDLogVerbose(@"%@: %@ - %@\nType: %@\nShow: %@\nStatus: %@", THIS_FILE, THIS_METHOD, [presence from], [presence type], [presence show],[presence status]);
-    
+    /*
     [[NSNotificationCenter defaultCenter]
      postNotificationName:kOTRStatusUpdate
      object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys: [[presence from]bare] ,@"user", nil]];
+     */
 }
 
 - (void)xmppStream:(XMPPStream *)sender didReceiveError:(id)error
