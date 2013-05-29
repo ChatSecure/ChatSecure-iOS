@@ -77,7 +77,7 @@
 -(OTRManagedBuddy *)buddyAtIndexPath:(NSIndexPath *)indexPath
 {
      NSFetchedResultsController * controller = [self resultsControllerAtIndex: indexPath.section];
-    return [controller objectAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row inSection:0]];
+    return [controller objectAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:0]];
 }
 
 -(void)addOfflineBuddyController:(NSFetchedResultsController *)controller groupName:(NSString *)groupName
@@ -259,11 +259,11 @@
         NSInteger section = [self onlineIndexWithController:controller];
         
         if (indexPath) {
-            indexPath = [NSIndexPath indexPathForItem:indexPath.row inSection:section];
+            indexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:section];
         }
         
         if (newIndexPath) {
-            newIndexPath = [NSIndexPath indexPathForItem:newIndexPath.row inSection:section];
+            newIndexPath = [NSIndexPath indexPathForRow:newIndexPath.row inSection:section];
         }
         
         
