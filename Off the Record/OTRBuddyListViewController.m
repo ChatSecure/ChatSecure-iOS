@@ -314,11 +314,12 @@
         [self configureRecentCell:cell withBuddy:buddy];
     } else{
         if ([self.groupManager numberOfGroups] >= indexPath.section) {
-            buddy = [self.groupManager buddyAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row inSection:indexPath.section-1]];
+            
+            buddy = [self.groupManager buddyAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section-1]];
         }
         else{
             NSFetchedResultsController* resultsController = self.offlineBuddiesFetchedResultsController;
-            buddy = [resultsController objectAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row inSection:0]];
+            buddy = [resultsController objectAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:0]];
             
         }
         [self configureBuddyCell:cell withBuddy:buddy];
@@ -347,14 +348,8 @@
     {
         managedBuddy = [self.recentBuddiesFetchedResultsController objectAtIndexPath:indexPath];
     }
-    else{
-        if ([self.groupManager numberOfGroups] >= indexPath.section) {
-            managedBuddy = [self.groupManager buddyAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row inSection:indexPath.section-1]];
-        }
-        else{
-            NSFetchedResultsController* resultsController = self.offlineBuddiesFetchedResultsController;
-            //buddy = [resultsController objectAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row inSection:0]];
-        }
+    else if([self.groupManager numberOfGroups] >= indexPath.section){
+        managedBuddy = [self.groupManager buddyAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section-1]];
     }
     
     if (managedBuddy) {
@@ -427,11 +422,11 @@
         }
         else{
             if ([self.groupManager numberOfGroups] >= indexPath.section) {
-                managedBuddy = [self.groupManager buddyAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row inSection:indexPath.section-1]];
+                managedBuddy = [self.groupManager buddyAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section-1]];
             }
             else{
                 NSFetchedResultsController* resultsController = self.offlineBuddiesFetchedResultsController;
-                managedBuddy = [resultsController objectAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row inSection:0]];
+                managedBuddy = [resultsController objectAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:0]];
             }
         }
     }

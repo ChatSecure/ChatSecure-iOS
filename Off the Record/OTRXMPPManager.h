@@ -60,6 +60,8 @@
 	BOOL allowSSLHostNameMismatch;
 	
 	BOOL isXmppConnected;
+    
+    dispatch_queue_t backgroundQueue;
 	
     NSFetchedResultsController *fetchedResultsController;
 }

@@ -54,6 +54,31 @@
     
     return managedStatus;
 }
++(OTRManagedStatus *)newStatus:(OTRBuddyStatus)newStatus withMessage:(NSString *)newMessage withBuddy:(OTRManagedBuddy *)newBuddy incoming:(BOOL)newIsIncoming inContext:(NSManagedObjectContext *)context
+{
+    OTRManagedStatus * managedStatus = [OTRManagedStatus MR_createInContext:context];
+    [context obtainPermanentIDsForObjects:@[managedStatus] error:nil];
+    managedStatus.statusValue = newStatus;
+    
+    if (![newMessage length]) {
+        managedStatus.message = [OTRManagedStatus statusMessageWithStatus:newStatus];
+    }
+    else
+    {
+        managedStatus.message = newMessage;
+    }
+    
+    
+    managedStatus.buddy = newBuddy;
+    managedStatus.statusbuddy = newBuddy;
+    managedStatus.isIncomingValue = newIsIncoming;
+    managedStatus.date = [NSDate date];
+    managedStatus.isEncryptedValue = NO;
+    
+    //[context MR_saveToPersistentStoreAndWait];
+    
+    return managedStatus;
+}
 
 +(NSString *)statusMessageWithStatus:(OTRBuddyStatus)status
 {

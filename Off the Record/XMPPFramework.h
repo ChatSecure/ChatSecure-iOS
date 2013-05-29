@@ -76,4 +76,4 @@
 #import "XMPPTime.h"
 #import "XMPPAutoTime.h"
 //
-#import "XMPPElement+Delay.h"
+//#import "XMPPElement+Delay.h"
