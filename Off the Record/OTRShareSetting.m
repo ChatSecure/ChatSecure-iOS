@@ -63,7 +63,7 @@
     [titleArray addObject:@"SMS"];
     [titleArray addObject:@"E-mail"];
     [titleArray addObject:@"QR Code"];
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 5.0)
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"5.0"))
     {
         [titleArray addObject:@"Twitter"];
     }
