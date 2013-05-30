@@ -189,6 +189,7 @@
 		63BFDB6D16E83A3F00C608D6 /* OTRSafariActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BFDB6C16E83A3F00C608D6 /* OTRSafariActionSheet.m */; };
 		63CC9F1C16D2D18100BDA7D1 /* DAKeyboardControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CC9F1B16D2D18100BDA7D1 /* DAKeyboardControl.m */; };
 		63CC9F2116D2E93500BDA7D1 /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CC9F2016D2E93500BDA7D1 /* TTTAttributedLabel.m */; };
+		63D1FF281756DB670026915E /* libCrittercism_v3_4_6.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 63D1FF271756DB670026915E /* libCrittercism_v3_4_6.a */; };
 		63E5E7E816D1D5BC006E2B01 /* MagicalImportFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E5E7B016D1D5BC006E2B01 /* MagicalImportFunctions.m */; };
 		63E5E7E916D1D5BC006E2B01 /* NSAttributeDescription+MagicalDataImport.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E5E7B216D1D5BC006E2B01 /* NSAttributeDescription+MagicalDataImport.m */; };
 		63E5E7EA16D1D5BC006E2B01 /* NSEntityDescription+MagicalDataImport.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E5E7B416D1D5BC006E2B01 /* NSEntityDescription+MagicalDataImport.m */; };
@@ -295,7 +296,6 @@
 		D96271021755DEB100F0A958 /* uv_vote_chicklet_empty@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D96270F21755DEB100F0A958 /* uv_vote_chicklet_empty@2x.png */; };
 		D96271031755DEB100F0A958 /* uv_x.png in Resources */ = {isa = PBXBuildFile; fileRef = D96270F31755DEB100F0A958 /* uv_x.png */; };
 		D96271041755DEB100F0A958 /* uv_x@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D96270F41755DEB100F0A958 /* uv_x@2x.png */; };
-		D96271061755DF0000F0A958 /* libCrittercism.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D96271051755DF0000F0A958 /* libCrittercism.a */; };
 		D962710A1755E16200F0A958 /* libidn.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 63483F7E1752CED100779257 /* libidn.a */; };
 		D96495C4153629FE009A8C33 /* OTRSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = D96495C3153629FE009A8C33 /* OTRSetting.m */; };
 		D96495C8153635A9009A8C33 /* OTRBoolSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = D96495C7153635A8009A8C33 /* OTRBoolSetting.m */; };
@@ -864,6 +864,7 @@
 		63CC9F1B16D2D18100BDA7D1 /* DAKeyboardControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DAKeyboardControl.m; sourceTree = "<group>"; };
 		63CC9F1F16D2E93500BDA7D1 /* TTTAttributedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTAttributedLabel.h; sourceTree = "<group>"; };
 		63CC9F2016D2E93500BDA7D1 /* TTTAttributedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTAttributedLabel.m; sourceTree = "<group>"; };
+		63D1FF271756DB670026915E /* libCrittercism_v3_4_6.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libCrittercism_v3_4_6.a; sourceTree = "<group>"; };
 		63E5E7AF16D1D5BC006E2B01 /* MagicalImportFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MagicalImportFunctions.h; sourceTree = "<group>"; };
 		63E5E7B016D1D5BC006E2B01 /* MagicalImportFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MagicalImportFunctions.m; sourceTree = "<group>"; };
 		63E5E7B116D1D5BC006E2B01 /* NSAttributeDescription+MagicalDataImport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSAttributeDescription+MagicalDataImport.h"; sourceTree = "<group>"; };
@@ -1013,7 +1014,6 @@
 		D95F8E931419C3E00094A634 /* chatsecure_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "chatsecure_icon@2x.png"; path = "../chatsecure_icon@2x.png"; sourceTree = "<group>"; };
 		D95F8E951419C58D0094A634 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = ../Default.png; sourceTree = "<group>"; };
 		D95F8E971419C5900094A634 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default@2x.png"; path = "../Default@2x.png"; sourceTree = "<group>"; };
-		D96270E21755DEB100F0A958 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/UserVoice.strings; sourceTree = "<group>"; };
 		D96270E31755DEB100F0A958 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/UserVoice.strings; sourceTree = "<group>"; };
 		D96270E41755DEB100F0A958 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/UserVoice.strings; sourceTree = "<group>"; };
 		D96270E51755DEB100F0A958 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/UserVoice.strings; sourceTree = "<group>"; };
@@ -1033,7 +1033,6 @@
 		D96270F31755DEB100F0A958 /* uv_x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = uv_x.png; sourceTree = "<group>"; };
 		D96270F41755DEB100F0A958 /* uv_x@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "uv_x@2x.png"; sourceTree = "<group>"; };
 		D96270F51755DEB100F0A958 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/UserVoice.strings"; sourceTree = "<group>"; };
-		D96271051755DF0000F0A958 /* libCrittercism.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libCrittercism.a; sourceTree = "<group>"; };
 		D96495C2153629FE009A8C33 /* OTRSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRSetting.h; sourceTree = "<group>"; };
 		D96495C3153629FE009A8C33 /* OTRSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRSetting.m; sourceTree = "<group>"; };
 		D96495C6153635A8009A8C33 /* OTRBoolSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBoolSetting.h; sourceTree = "<group>"; };
@@ -1390,7 +1389,7 @@
 				D9F9377D13F44BD3009A3D84 /* UIKit.framework in Frameworks */,
 				D9F9377F13F44BD3009A3D84 /* Foundation.framework in Frameworks */,
 				D962710A1755E16200F0A958 /* libidn.a in Frameworks */,
-				D96271061755DF0000F0A958 /* libCrittercism.a in Frameworks */,
+				63D1FF281756DB670026915E /* libCrittercism_v3_4_6.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2449,7 +2448,7 @@
 		D9CEED8C1684238D00B236B5 /* Crittercism */ = {
 			isa = PBXGroup;
 			children = (
-				D96271051755DF0000F0A958 /* libCrittercism.a */,
+				63D1FF271756DB670026915E /* libCrittercism_v3_4_6.a */,
 				D9CEED8E1684238D00B236B5 /* Crittercism.h */,
 				D9CEED8F1684238D00B236B5 /* CrittercismDelegate.h */,
 			);
@@ -3589,7 +3588,6 @@
 		D96270E11755DEB100F0A958 /* UserVoice.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				D96270E21755DEB100F0A958 /* de */,
 				D96270E31755DEB100F0A958 /* en */,
 				D96270E41755DEB100F0A958 /* fr */,
 				D96270E51755DEB100F0A958 /* it */,
