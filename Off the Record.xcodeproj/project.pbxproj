@@ -171,7 +171,7 @@
 		636FE4C0161B7C68002B28EF /* OTRInLineTextEditTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 636FE4BF161B7C68002B28EF /* OTRInLineTextEditTableViewCell.m */; };
 		63813C1216E14E5D00909670 /* OTRBuddyListGroupManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 63813C1116E14E5D00909670 /* OTRBuddyListGroupManager.m */; };
 		63871264175808DA006C3A4E /* OTRActivityItemProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 63871263175808DA006C3A4E /* OTRActivityItemProvider.m */; };
-		6387126817580D93006C3A4E /* QRCodeActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 6387126717580D93006C3A4E /* QRCodeActivity.m */; };
+		6387126817580D93006C3A4E /* OTRQRCodeActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 6387126717580D93006C3A4E /* OTRQRCodeActivity.m */; };
 		639B9A71164F21D900C021A9 /* OTRShareSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 639B9A70164F21D900C021A9 /* OTRShareSetting.m */; };
 		639BE6B116DC3B2B004B7257 /* _OTRManagedMessageAndStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 639BE6AE16DC3B2B004B7257 /* _OTRManagedMessageAndStatus.m */; };
 		639BE6B216DC3B2B004B7257 /* _OTRManagedStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 639BE6B016DC3B2B004B7257 /* _OTRManagedStatus.m */; };
@@ -836,8 +836,8 @@
 		63813C1116E14E5D00909670 /* OTRBuddyListGroupManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBuddyListGroupManager.m; sourceTree = "<group>"; };
 		63871262175808DA006C3A4E /* OTRActivityItemProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRActivityItemProvider.h; sourceTree = "<group>"; };
 		63871263175808DA006C3A4E /* OTRActivityItemProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRActivityItemProvider.m; sourceTree = "<group>"; };
-		6387126617580D92006C3A4E /* QRCodeActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QRCodeActivity.h; sourceTree = "<group>"; };
-		6387126717580D93006C3A4E /* QRCodeActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QRCodeActivity.m; sourceTree = "<group>"; };
+		6387126617580D92006C3A4E /* OTRQRCodeActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRQRCodeActivity.h; sourceTree = "<group>"; };
+		6387126717580D93006C3A4E /* OTRQRCodeActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRQRCodeActivity.m; sourceTree = "<group>"; };
 		639B9A6F164F21D900C021A9 /* OTRShareSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRShareSetting.h; sourceTree = "<group>"; };
 		639B9A70164F21D900C021A9 /* OTRShareSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRShareSetting.m; sourceTree = "<group>"; };
 		639BE6AD16DC3B2B004B7257 /* _OTRManagedMessageAndStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _OTRManagedMessageAndStatus.h; sourceTree = "<group>"; };
@@ -2386,8 +2386,8 @@
 				639B9A70164F21D900C021A9 /* OTRShareSetting.m */,
 				63871262175808DA006C3A4E /* OTRActivityItemProvider.h */,
 				63871263175808DA006C3A4E /* OTRActivityItemProvider.m */,
-				6387126617580D92006C3A4E /* QRCodeActivity.h */,
-				6387126717580D93006C3A4E /* QRCodeActivity.m */,
+				6387126617580D92006C3A4E /* OTRQRCodeActivity.h */,
+				6387126717580D93006C3A4E /* OTRQRCodeActivity.m */,
 				D953118416C70DD200AAB1D2 /* OTRDonateSetting.h */,
 				D953118516C70DD200AAB1D2 /* OTRDonateSetting.m */,
 				D96495D315366004009A8C33 /* Value */,
@@ -3572,7 +3572,7 @@
 				6348401B1752CED100779257 /* DDXMLElement.m in Sources */,
 				6348401C1752CED100779257 /* DDXMLNode.m in Sources */,
 				63871264175808DA006C3A4E /* OTRActivityItemProvider.m in Sources */,
-				6387126817580D93006C3A4E /* QRCodeActivity.m in Sources */,
+				6387126817580D93006C3A4E /* OTRQRCodeActivity.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

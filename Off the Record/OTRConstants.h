@@ -68,6 +68,8 @@
 #define kOTRSettingAccountsKey @"kOTRSettingAccountsKey"
 #define kOTRSettingKeyLanguage @"userSelectedSetting"
 
+#define OTRActivityTypeQRCode @"OTRActivityTypeQRCode"
+
 
 typedef enum {
     kOTRBuddyStatusOffline = 4,

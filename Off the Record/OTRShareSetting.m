@@ -12,6 +12,7 @@
 #import "OTRQRCodeViewController.h"
 #import "OTRUtilities.h"
 #import "OTRActivityItemProvider.h"
+#import "OTRQRCodeActivity.h"
 
 #define ACTIONSHEET_SHARE_TAG 2
 #define ACTIONSHEET_LINK_TAG 1
@@ -36,10 +37,10 @@
 {
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"6.0")) {
         OTRActivityItemProvider * itemProvider = [[OTRActivityItemProvider alloc] init];
+        OTRQRCodeActivity * qrCodeActivity = [[OTRQRCodeActivity alloc] init];
         
         
-        
-        UIActivityViewController * activityViewController = [[UIActivityViewController alloc] initWithActivityItems:@[itemProvider] applicationActivities:nil];
+        UIActivityViewController * activityViewController = [[UIActivityViewController alloc] initWithActivityItems:@[itemProvider] applicationActivities:@[qrCodeActivity]];
         activityViewController.excludedActivityTypes = @[UIActivityTypePrint, UIActivityTypeAssignToContact, UIActivityTypeSaveToCameraRoll];
         
         [delegate presentViewController:activityViewController animated:YES completion:nil];

@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "OTRQRCodeViewController.h"
 
-@interface QRCodeActivity : UIActivity
+@interface OTRQRCodeActivity : UIActivity <OTRQRCodeViewControllerDelegate>
 
 @end

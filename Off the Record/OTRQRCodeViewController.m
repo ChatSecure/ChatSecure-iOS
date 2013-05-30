@@ -24,7 +24,7 @@
 #import "Strings.h"
 
 @implementation OTRQRCodeViewController
-@synthesize imageView, instructionsLabel;
+@synthesize imageView, instructionsLabel,delegate;
 
 - (id) init 
 {
@@ -44,7 +44,6 @@
     self.instructionsLabel.text = QR_CODE_INSTRUCTIONS_STRING;
     self.instructionsLabel.numberOfLines = 3;
     [self.view addSubview:instructionsLabel];
-    
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:DONE_STRING style:UIBarButtonItemStyleDone target:self action:@selector(doneButtonPressed:)];
 }
 
@@ -65,7 +64,13 @@
 
 - (void) doneButtonPressed:(id)sender
 {
-    [self dismissModalViewControllerAnimated:YES];
+    if ([delegate respondsToSelector:@selector(didDismiss)]) {
+        [delegate didDismiss];
+    }
+    else{
+        [self dismissModalViewControllerAnimated:YES];
+    }
+    
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
