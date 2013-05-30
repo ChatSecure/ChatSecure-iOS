@@ -10,6 +10,8 @@
 #import "Strings.h"
 #import "OTRAppDelegate.h"
 #import "OTRQRCodeViewController.h"
+#import "OTRUtilities.h"
+#import "OTRActivityItemProvider.h"
 
 #define ACTIONSHEET_SHARE_TAG 2
 #define ACTIONSHEET_LINK_TAG 1
@@ -32,16 +34,27 @@
 
 -(void)showActionSheet
 {
-    UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:SHARE_STRING delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil];
-    NSArray *buttonTitles = [self buttonTitlesForShareButton];
-    for (NSString *title in buttonTitles) {
-        [sheet addButtonWithTitle:title];
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"6.0")) {
+        OTRActivityItemProvider * itemProvider = [[OTRActivityItemProvider alloc] init];
+        
+        
+        
+        UIActivityViewController * activityViewController = [[UIActivityViewController alloc] initWithActivityItems:@[itemProvider] applicationActivities:nil];
+        activityViewController.excludedActivityTypes = @[UIActivityTypePrint, UIActivityTypeAssignToContact, UIActivityTypeSaveToCameraRoll];
+        
+        [delegate presentViewController:activityViewController animated:YES completion:nil];
     }
-    sheet.tag = ACTIONSHEET_SHARE_TAG;
-    sheet.cancelButtonIndex = [buttonTitles count] - 1;
-    
-    [OTR_APP_DELEGATE presentActionSheet:sheet inView:[delegate view]];
-    
+    else{
+        UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:SHARE_STRING delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil];
+        NSArray *buttonTitles = [self buttonTitlesForShareButton];
+        for (NSString *title in buttonTitles) {
+            [sheet addButtonWithTitle:title];
+        }
+        sheet.tag = ACTIONSHEET_SHARE_TAG;
+        sheet.cancelButtonIndex = [buttonTitles count] - 1;
+        
+        [OTR_APP_DELEGATE presentActionSheet:sheet inView:[delegate view]];
+    }
 }
 
 - (NSArray*) buttonTitlesForShareButton {
