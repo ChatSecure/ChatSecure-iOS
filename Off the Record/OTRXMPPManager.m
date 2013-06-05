@@ -218,16 +218,14 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 
 -(void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath
 {
-    __block NSManagedObjectContext * mainThreadContext = [NSManagedObjectContext MR_contextForCurrentThread];
     dispatch_async(backgroundQueue, ^{
         if ([controller isEqual:self.fetchedResultsController]) {
-            NSManagedObjectContext *localContext = [NSManagedObjectContext MR_contextWithParent:mainThreadContext];
             XMPPUserCoreDataStorageObject * user = (XMPPUserCoreDataStorageObject *)anObject;
-            OTRManagedXMPPAccount * localAccount = [self.account MR_inContext:localContext];
+            OTRManagedXMPPAccount * localAccount = [self.account MR_inThreadContext];
             
             OTRManagedBuddy * buddy = nil;
             if ([[user jid] full]) {
-                buddy =[OTRManagedBuddy fetchOrCreateWithName:[[user jid] full] account:localAccount inContext:localContext];
+                buddy =[OTRManagedBuddy fetchOrCreateWithName:[[user jid] full] account:localAccount];
             }
             
             switch (type) {
@@ -253,12 +251,12 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
                 [buddy removeGroups:buddy.groups];
                 
                 if (![user.groups count]) {
-                    [buddy addToGroup:DEFAULT_BUDDY_GROUP_STRING inContext:localContext];
+                    [buddy addToGroup:DEFAULT_BUDDY_GROUP_STRING];
                 }
                 else{
                     for(XMPPGroupCoreDataStorageObject * xmppGroup in user.groups)
                     {
-                        [buddy addToGroup:xmppGroup.name inContext:localContext];
+                        [buddy addToGroup:xmppGroup.name];
                     }
                 }
                 
@@ -294,17 +292,17 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
                 }
                 
                 if (user.isPendingApproval) {
-                    [buddy newStatusMessage:PENDING_APPROVAL_STRING status:buddyStatus incoming:YES inContext:localContext];
+                    [buddy newStatusMessage:PENDING_APPROVAL_STRING status:buddyStatus incoming:YES];
                 }
                 else{
-                    [buddy newStatusMessage:user.primaryResource.status status:buddyStatus incoming:YES inContext:localContext];
+                    [buddy newStatusMessage:user.primaryResource.status status:buddyStatus incoming:YES];
                 }
                 
                 
                 
                 
             }
-            [localContext MR_saveOnlySelfAndWait];
+            [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveOnlySelfAndWait];
             /*[localContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
                 if (error) {
                     NSLog(@"Error saving to disk: %@", error.userInfo);
