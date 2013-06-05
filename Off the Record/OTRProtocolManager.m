@@ -108,7 +108,7 @@ static OTRProtocolManager *sharedManager = nil;
 - (id <OTRProtocol>)protocolForAccount:(OTRManagedAccount *)account
 {
     id <OTRProtocol> protocol = [protocolManagers objectForKey:account.uniqueIdentifier];
-    if(!protocol)
+    if(!protocol && account)
     {
         protocol = [[[account protocolClass] alloc] init];
         protocol.account = account;
