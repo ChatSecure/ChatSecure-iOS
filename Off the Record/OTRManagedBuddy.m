@@ -129,7 +129,8 @@
         self.lastMessageDisconnected = NO;
         // Strip the shit out of it, but hopefully you're talking with someone who is trusted in the first place
         // TODO: fix this so it doesn't break some cyrillic encodings
-        NSString *rawMessage = [[[message stringByConvertingHTMLToPlainText]stringByEncodingHTMLEntities] stringByLinkifyingURLs];
+        //NSString *rawMessage = [[[message stringByConvertingHTMLToPlainText]stringByEncodingHTMLEntities] stringByLinkifyingURLs];
+        NSString * rawMessage = [message stringByConvertingHTMLToPlainText];
                 
         //[[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];
         
@@ -274,11 +275,15 @@
     [context MR_saveToPersistentStoreAndWait];
 }
 
--(void)addToGroup:(NSString *)groupName
+-(void)addToGroup:(NSString *)groupName inContext:(NSManagedObjectContext *)context
 {
-    OTRManagedGroup * managedGroup = [OTRManagedGroup fetchOrCreateWithName:groupName];
+    OTRManagedGroup * managedGroup = [OTRManagedGroup fetchOrCreateWithName:groupName inContext:context];
     [self addGroupsObject:managedGroup];
-    
+}
+
+- (void) addToGroup:(NSString *)groupName {
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    [self addToGroup:groupName inContext:context];
 }
 
 -(NSArray *)groupNames
@@ -299,7 +304,6 @@
     }
     return buddy;
 }
-
 +(OTRManagedBuddy *)buddyWithAccountName:(NSString *)name account:(OTRManagedAccount *)account
 {
     NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"accountName == %@",name];

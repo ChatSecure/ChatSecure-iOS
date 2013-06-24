@@ -29,9 +29,7 @@
 #define MESSAGE_MARGIN_TOP                   7
 #define MESSAGE_MARGIN_BOTTOM                10
 #define TEXT_VIEW_X                          7   // 40  (with CameraButton)
-#define TEXT_VIEW_Y                          2
 #define TEXT_VIEW_WIDTH                      249 // 216 (with CameraButton)
-#define TEXT_VIEW_HEIGHT_MIN                 90
 #define ContentHeightMax                     80
 #define MESSAGE_SENT_DATE_LABEL_TAG          100
 #define MESSAGE_BACKGROUND_IMAGE_VIEW_TAG    101

@@ -274,12 +274,14 @@
     
     self.view.keyboardTriggerOffset = messageInputBar.frame.size.height;
     
+    
+    __weak OTRChatViewController * chatViewController = self;
     [self.view addKeyboardPanningWithActionHandler:^(CGRect keyboardFrameInView) {
         CGRect messageInputBarFrame = messageInputBar.frame;
         messageInputBarFrame.origin.y = keyboardFrameInView.origin.y - messageInputBarFrame.size.height;
         messageInputBar.frame = messageInputBarFrame;
         
-        chatHistoryTableView.contentInset = chatHistoryTableView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, self.view.frame.size.height-keyboardFrameInView.origin.y, 0);
+        chatViewController.chatHistoryTableView.contentInset = chatViewController.chatHistoryTableView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, chatViewController.view.frame.size.height-keyboardFrameInView.origin.y, 0);
     }];
     
     swipeGestureRecognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(handleSwipeFrom)];

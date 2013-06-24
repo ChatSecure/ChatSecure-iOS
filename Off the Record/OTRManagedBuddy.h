@@ -49,6 +49,7 @@
 - (OTRManagedStatus *)currentStatusMessage;
 - (OTRManagedEncryptionStatusMessage *)currentEncryptionStatus;
 
+-(void)addToGroup:(NSString *)groupName inContext:(NSManagedObjectContext *)context;
 -(void)addToGroup:(NSString *)groupName;
 -(NSArray *)groupNames;
 

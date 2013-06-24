@@ -22,6 +22,12 @@
 {
     if(self = [self init])
     {
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(managedObjectContextDidSave:)
+                                                     name:NSManagedObjectContextDidSaveNotification
+                                                   object:nil];
+         
+        
         self.onlineBuddyGroups = [NSMutableArray array];
         self.offlineBuddyGroups = [NSMutableArray array];
         [self groupFetchedResultsController];
@@ -42,6 +48,16 @@
     }
 }
 
+- (void)managedObjectContextDidSave:(NSNotification *)notification {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSManagedObjectContext *theContext = notification.object;
+        
+        //NSLog(@"Notification: %@",notification.userInfo);
+        if ([[theContext persistentStoreCoordinator] isEqual:[[NSManagedObjectContext MR_contextForCurrentThread] persistentStoreCoordinator]]) {
+            [[NSManagedObjectContext MR_contextForCurrentThread] mergeChangesFromContextDidSaveNotification:notification];
+        }
+    });
+}
 -(NSUInteger)numberOfBuddiesAtIndex:(NSUInteger)index
 {
     NSFetchedResultsController * controller = [self resultsControllerAtIndex:index];
@@ -61,7 +77,7 @@
 -(OTRManagedBuddy *)buddyAtIndexPath:(NSIndexPath *)indexPath
 {
      NSFetchedResultsController * controller = [self resultsControllerAtIndex: indexPath.section];
-    return [controller objectAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row inSection:0]];
+    return [controller objectAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:0]];
 }
 
 -(void)addOfflineBuddyController:(NSFetchedResultsController *)controller groupName:(NSString *)groupName
@@ -243,11 +259,11 @@
         NSInteger section = [self onlineIndexWithController:controller];
         
         if (indexPath) {
-            indexPath = [NSIndexPath indexPathForItem:indexPath.row inSection:section];
+            indexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:section];
         }
         
         if (newIndexPath) {
-            newIndexPath = [NSIndexPath indexPathForItem:newIndexPath.row inSection:section];
+            newIndexPath = [NSIndexPath indexPathForRow:newIndexPath.row inSection:section];
         }
         
         

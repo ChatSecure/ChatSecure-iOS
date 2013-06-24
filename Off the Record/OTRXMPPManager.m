@@ -84,7 +84,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     if(self)
     {
         // Configure logging framework
-        
+        backgroundQueue = dispatch_queue_create("buddy.background", NULL);
         [DDLog addLogger:[DDTTYLogger sharedInstance]];
         
         // Setup the XMPP stream
@@ -218,95 +218,101 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 
 -(void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath
 {
-    if ([controller isEqual:self.fetchedResultsController]) {
-        
-        XMPPUserCoreDataStorageObject * user = (XMPPUserCoreDataStorageObject *)anObject;
-        OTRManagedBuddy * buddy = nil;
-        if ([[user jid] full]) {
-            buddy =[OTRManagedBuddy fetchOrCreateWithName:[[user jid] full] account:self.account];
-        }
-        
-        switch (type) {
-            case NSFetchedResultsChangeDelete:
-                NSLog(@"deleted roster");
+    dispatch_async(backgroundQueue, ^{
+        if ([controller isEqual:self.fetchedResultsController]) {
+            XMPPUserCoreDataStorageObject * user = (XMPPUserCoreDataStorageObject *)anObject;
+            OTRManagedXMPPAccount * localAccount = [self.account MR_inThreadContext];
+            
+            OTRManagedBuddy * buddy = nil;
+            if ([[user jid] full]) {
+                buddy =[OTRManagedBuddy fetchOrCreateWithName:[[user jid] full] account:localAccount];
+            }
+            
+            switch (type) {
+                case NSFetchedResultsChangeDelete:
+                    NSLog(@"deleted roster");
+                    
+                    //user = [controller objectAtIndexPath:indexPath];
+                    break;
+                default:
+                    break;
+            }
+            
+            if (buddy) {
+                buddy.displayName = user.displayName;
+                buddy.accountName = [[user jid] full];
+                buddy.account = localAccount;
                 
-                //user = [controller objectAtIndexPath:indexPath];
-                break;
-            default:
-                break;
-        }
-        
-        if (buddy) {
-            buddy.displayName = user.displayName;
-            buddy.accountName = [[user jid] full];
-            buddy.account = self.account;
-            
-            if (user.photo) {
-                buddy.photo = user.photo;
-            }
-        
-            
-            [buddy removeGroups:buddy.groups];
-            
-            if (![user.groups count]) {
-                [buddy addToGroup:DEFAULT_BUDDY_GROUP_STRING];
-            }
-            else{
-                for(XMPPGroupCoreDataStorageObject * xmppGroup in user.groups)
-                {
-                    [buddy addToGroup:xmppGroup.name];
+                if (user.photo) {
+                    buddy.photo = user.photo;
                 }
-            }
-            
-            XMPPResourceCoreDataStorageObject * primaryResource = user.primaryResource;
-            OTRBuddyStatus buddyStatus;
-            
-            if (primaryResource) {
-                switch (primaryResource.intShow)
-                {
-                    case 0  :
-                        buddyStatus = kOTRBUddyStatusDnd;
-                        break;
-                    case 1  :
-                        buddyStatus = kOTRBuddyStatusXa;
-                        break;
-                    case 2  :
-                        buddyStatus = kOTRBuddyStatusAway;
-                        break;
-                    case 3  :
-                        buddyStatus = kOTRBuddyStatusAvailable;
-                        break;
-                    case 4  :
-                        buddyStatus = kOTRBuddyStatusAvailable;
-                        break;
-                    default :
-                        buddyStatus = kOTRBuddyStatusOffline;
-                        break;
+                
+                
+                [buddy removeGroups:buddy.groups];
+                
+                if (![user.groups count]) {
+                    [buddy addToGroup:DEFAULT_BUDDY_GROUP_STRING];
                 }
+                else{
+                    for(XMPPGroupCoreDataStorageObject * xmppGroup in user.groups)
+                    {
+                        [buddy addToGroup:xmppGroup.name];
+                    }
+                }
+                
+                XMPPResourceCoreDataStorageObject * primaryResource = user.primaryResource;
+                OTRBuddyStatus buddyStatus;
+                
+                if (primaryResource) {
+                    switch (primaryResource.intShow)
+                    {
+                        case 0  :
+                            buddyStatus = kOTRBUddyStatusDnd;
+                            break;
+                        case 1  :
+                            buddyStatus = kOTRBuddyStatusXa;
+                            break;
+                        case 2  :
+                            buddyStatus = kOTRBuddyStatusAway;
+                            break;
+                        case 3  :
+                            buddyStatus = kOTRBuddyStatusAvailable;
+                            break;
+                        case 4  :
+                            buddyStatus = kOTRBuddyStatusAvailable;
+                            break;
+                        default :
+                            buddyStatus = kOTRBuddyStatusOffline;
+                            break;
+                    }
+                }
+                else
+                {
+                    buddyStatus = kOTRBuddyStatusOffline;
+                }
+                
+                if (user.isPendingApproval) {
+                    [buddy newStatusMessage:PENDING_APPROVAL_STRING status:buddyStatus incoming:YES];
+                }
+                else{
+                    [buddy newStatusMessage:user.primaryResource.status status:buddyStatus incoming:YES];
+                }
+                
+                
+                
+                
             }
-            else
-            {
-                buddyStatus = kOTRBuddyStatusOffline;
-            }
-            
-            if (user.isPendingApproval) {
-                [buddy newStatusMessage:PENDING_APPROVAL_STRING status:buddyStatus incoming:YES];
-            }
-            else{
-                [buddy newStatusMessage:user.primaryResource.status status:buddyStatus incoming:YES];
-            }
-          
-            
-            
-            
+            [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveOnlySelfAndWait];
+            /*[localContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+                if (error) {
+                    NSLog(@"Error saving to disk: %@", error.userInfo);
+                }
+            }];
+             */
+
         }
-    }
-    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
-    [context MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-        if (success) {
-            NSLog(@"Saved Buddy");
-        }
-    }];
+    });
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -555,7 +561,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	password = myPassword;
     
 	NSError *error = nil;
-	if (![xmppStream connect:&error])
+	if (![xmppStream connectWithTimeout:XMPPStreamTimeoutNone error:&error])
 	{
 		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error connecting" 
 		                                                    message:@"See console for error details." 
@@ -739,7 +745,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
         
         OTRManagedBuddy * messageBuddy = [OTRManagedBuddy fetchOrCreateWithName:[user.jid full] account:self.account];
         
-        [messageBuddy receiveReceiptResonse:[message extractReceiptResponseID]];
+        [messageBuddy receiveReceiptResonse:[message receiptResponseID]];
     }
     
 	if ([message isChatMessageWithBody])
@@ -771,10 +777,11 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 - (void)xmppStream:(XMPPStream *)sender didReceivePresence:(XMPPPresence *)presence
 {
 	DDLogVerbose(@"%@: %@ - %@\nType: %@\nShow: %@\nStatus: %@", THIS_FILE, THIS_METHOD, [presence from], [presence type], [presence show],[presence status]);
-    
+    /*
     [[NSNotificationCenter defaultCenter]
      postNotificationName:kOTRStatusUpdate
      object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys: [[presence from]bare] ,@"user", nil]];
+     */
 }
 
 - (void)xmppStream:(XMPPStream *)sender didReceiveError:(id)error
