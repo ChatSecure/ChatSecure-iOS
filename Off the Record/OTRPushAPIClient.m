@@ -10,7 +10,7 @@
 #import "AFJSONRequestOperation.h"
 #import "OTRPushController.h"
 
-#define SERVER_URL @"http://192.168.1.44:5000/"
+#define SERVER_URL @"http://192.168.1.46:5000/"
 
 
 @implementation OTRPushAPIClient
