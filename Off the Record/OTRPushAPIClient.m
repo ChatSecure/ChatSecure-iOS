@@ -9,8 +9,9 @@
 #import "OTRPushAPIClient.h"
 #import "AFJSONRequestOperation.h"
 #import "OTRPushController.h"
+#import "OTRPushAccount.h"
 
-#define SERVER_URL @"http://192.168.1.46:5000/"
+#define SERVER_URL @"http://192.168.1.115:8000/api/"
 
 
 @implementation OTRPushAPIClient
@@ -46,16 +47,53 @@
     return request;
 }
 
-- (void) connectAccount:(OTRPushAccount *)account callback:(void (^)(BOOL success))callback {
-    NSDictionary *paramters = @{@"email": account.username, @"password": account.password};
-    
-    [self postPath:@"account/" parameters:paramters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+- (void) processAccount:(OTRPushAccount*)account parameters:(NSDictionary*)parameters successBlock:(void (^)(OTRPushAccount* loggedInAccount))successBlock failureBlock:(void (^)(NSError *error))failureBlock {    
+    [self postPath:@"account/" parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSLog(@"%@", responseObject);
-        callback(YES);
+        NSError *error = nil;
+        if ([responseObject isKindOfClass:[NSDictionary class]]) {
+            BOOL success = [[responseObject objectForKey:@"success"] boolValue];
+            if (success) {
+                [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+                    OTRPushAccount *localAccount = [account MR_inContext:localContext];
+                    localAccount.isConnected = @(YES);
+                } completion:^(BOOL success, NSError *error) {
+                    if (success) {
+                        if (successBlock) {
+                            NSManagedObjectContext *localContext = [NSManagedObjectContext MR_contextForCurrentThread];
+                            OTRPushAccount *localAccount = [account MR_inContext:localContext];
+                            successBlock(localAccount);
+                        }
+                    } else {
+                        if (failureBlock) {
+                            failureBlock(error);
+                        }
+                    }
+                }];
+            } else {
+                error = [NSError errorWithDomain:@"OTRPushAPIClientError" code:100 userInfo:@{NSLocalizedDescriptionKey: @"Success is false.", @"data": responseObject}];
+            }
+        } else {
+            error = [NSError errorWithDomain:@"OTRPushAPIClientError" code:100 userInfo:@{NSLocalizedDescriptionKey: @"Response object not dictionary.", @"data": responseObject}];
+        }
+        if (error && failureBlock) {
+            failureBlock(error);
+        }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"Login error: %@", error.userInfo);
-        callback(NO);
+        if (error && failureBlock) {
+            failureBlock(error);
+        }
     }];
 }
+
+- (void) connectAccount:(OTRPushAccount*)account successBlock:(void (^)(OTRPushAccount* loggedInAccount))successBlock failureBlock:(void (^)(NSError *error))failureBlock {
+    [self processAccount:account parameters:@{@"email": account.username, @"password": account.password} successBlock:successBlock failureBlock:failureBlock];
+}
+
+- (void) createAccount:(OTRPushAccount*)account successBlock:(void (^)(OTRPushAccount* loggedInAccount))successBlock failureBlock:(void (^)(NSError *error))failureBlock {
+    [self processAccount:account parameters:@{@"email": account.username, @"password": account.password, @"create": @(YES)} successBlock:successBlock failureBlock:failureBlock];
+}
+
+
 
 @end

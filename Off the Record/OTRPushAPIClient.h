@@ -13,6 +13,9 @@
 
 + (OTRPushAPIClient*) sharedClient;
 
-- (void) connectAccount:(OTRPushAccount*)account callback:(void (^)(BOOL success))callback;
+- (void) connectAccount:(OTRPushAccount*)account successBlock:(void (^)(OTRPushAccount* loggedInAccount))successBlock failureBlock:(void (^)(NSError *error))failureBlock;
+
+- (void) createAccount:(OTRPushAccount*)account successBlock:(void (^)(OTRPushAccount* loggedInAccount))successBlock failureBlock:(void (^)(NSError *error))failureBlock;
+
 
 @end
