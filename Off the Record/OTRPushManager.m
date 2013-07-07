@@ -37,7 +37,7 @@
 
 }
 - (void) addBuddy:(OTRManagedBuddy *)newBuddy {
-    
+    NSLog(@"buddy add: %@", newBuddy);
 }
 
 -(void) removeBuddies:(NSArray *)buddies {

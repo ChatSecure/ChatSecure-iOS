@@ -171,7 +171,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 - (void) timerUpdate:(NSTimer*)timer {
     UIApplication *application = [UIApplication sharedApplication];
 
-    NSLog(@"Timer update, background time left: %f", application.backgroundTimeRemaining);
+    //NSLog(@"Timer update, background time left: %f", application.backgroundTimeRemaining);
     
     if ([application backgroundTimeRemaining] < 60 && !self.didShowDisconnectionWarning && [OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyShowDisconnectionWarning]) 
     {
@@ -298,9 +298,14 @@ didReceiveRemoteNotification:(NSDictionary *)userInfo {
 
 // Delegation methods
 - (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)devToken {
-    [[OTRPushController sharedInstance] updateDevicePushToken:devToken];
-    //[[OTRPushController sharedInstance] requestPushAccessTokenForBuddy:nil];
-    //[[OTRPushController sharedInstance] knockWithAccountID:@"9846905" pat:@"1975460"];
+    NSArray *accounts = [OTRPushAccount MR_findAll];
+    for (OTRPushAccount *account in accounts) {
+        [[OTRPushAPIClient sharedClient] updatePushTokenForAccount:account token:devToken  successBlock:^(OTRPushAccount *loggedInAccount) {
+            NSLog(@"Device token updated for (%@): %@", loggedInAccount.username, devToken.description);
+        } failureBlock:^(NSError *error) {
+            NSLog(@"Error updating push token: %@", error.userInfo);
+        }];
+    }
 }
 
 - (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {

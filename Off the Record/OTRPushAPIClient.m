@@ -10,6 +10,9 @@
 #import "AFJSONRequestOperation.h"
 #import "OTRPushController.h"
 #import "OTRPushAccount.h"
+#import "NSData+XMPP.h"
+
+#define NSERROR_DOMAIN @"OTRPushAPIClientError"
 
 #define SERVER_URL @"http://192.168.1.115:8000/api/"
 
@@ -63,6 +66,7 @@
                             NSManagedObjectContext *localContext = [NSManagedObjectContext MR_contextForCurrentThread];
                             OTRPushAccount *localAccount = [account MR_inContext:localContext];
                             successBlock(localAccount);
+                            [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
                         }
                     } else {
                         if (failureBlock) {
@@ -71,10 +75,10 @@
                     }
                 }];
             } else {
-                error = [NSError errorWithDomain:@"OTRPushAPIClientError" code:100 userInfo:@{NSLocalizedDescriptionKey: @"Success is false.", @"data": responseObject}];
+                error = [NSError errorWithDomain:NSERROR_DOMAIN code:100 userInfo:@{NSLocalizedDescriptionKey: @"Success is false.", @"data": responseObject}];
             }
         } else {
-            error = [NSError errorWithDomain:@"OTRPushAPIClientError" code:100 userInfo:@{NSLocalizedDescriptionKey: @"Response object not dictionary.", @"data": responseObject}];
+            error = [NSError errorWithDomain:NSERROR_DOMAIN code:102 userInfo:@{NSLocalizedDescriptionKey: @"Response object not dictionary.", @"data": responseObject}];
         }
         if (error && failureBlock) {
             failureBlock(error);
@@ -94,6 +98,34 @@
     [self processAccount:account parameters:@{@"email": account.username, @"password": password, @"create": @(YES)} successBlock:successBlock failureBlock:failureBlock];
 }
 
+- (void) sendPushFromAccount:(OTRPushAccount*)account toBuddy:(OTRManagedBuddy*)buddy successBlock:(void (^)(void))successBlock failureBlock:(void (^)(NSError *error))failureBlock {
+    
+}
 
+- (void) updatePushTokenForAccount:(OTRPushAccount*)account token:(NSData *)devicePushToken successBlock:(void (^)(OTRPushAccount* loggedInAccount))successBlock failureBlock:(void (^)(NSError *error))failureBlock {
+    if (!account.isConnectedValue) {
+        [self connectAccount:account password:account.password successBlock:successBlock failureBlock:failureBlock];
+        return;
+    }
+    NSDictionary *parameters = @{@"device_type": @"iPhone", @"operating_system": @"iOS", @"apple_push_token": [devicePushToken hexStringValue]};
+    [self postPath:@"device/" parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        if ([responseObject isKindOfClass:[NSDictionary class]]) {
+            BOOL success = [[responseObject objectForKey:@"success"] boolValue];
+            if (success) {
+                NSManagedObjectContext *localContext = [NSManagedObjectContext MR_contextForCurrentThread];
+                OTRPushAccount *localAccount = [account MR_inContext:localContext];
+                successBlock(localAccount);
+                return;
+            }
+        }
+        if (failureBlock) {
+            failureBlock([NSError errorWithDomain:NSERROR_DOMAIN code:101 userInfo:@{NSLocalizedDescriptionKey: @"Data is not good!", @"data": responseObject}]);
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        if (failureBlock) {
+            failureBlock(error);
+        }
+    }];
+}
 
 @end
