@@ -50,21 +50,27 @@
     return request;
 }
 
-- (void) processAccount:(OTRPushAccount*)account parameters:(NSDictionary*)parameters successBlock:(void (^)(OTRPushAccount* loggedInAccount))successBlock failureBlock:(void (^)(NSError *error))failureBlock {    
+- (void) processAccount:(OTRPushAccount*)account parameters:(NSDictionary*)parameters successBlock:(void (^)(OTRPushAccount* loggedInAccount))successBlock failureBlock:(void (^)(NSError *error))failureBlock {
+    if (account.isConnectedValue) {
+        if (failureBlock) {
+            failureBlock([NSError errorWithDomain:NSERROR_DOMAIN code:123 userInfo:@{NSLocalizedDescriptionKey: @"Account already connected."}]);
+        }
+        return;
+    }
     [self postPath:@"account/" parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSLog(@"%@", responseObject);
         NSError *error = nil;
         if ([responseObject isKindOfClass:[NSDictionary class]]) {
             BOOL success = [[responseObject objectForKey:@"success"] boolValue];
             if (success) {
-                [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
-                    OTRPushAccount *localAccount = [account MR_inContext:localContext];
-                    localAccount.isConnected = @(YES);
-                } completion:^(BOOL success, NSError *error) {
-                    if (success) {
+                NSManagedObjectContext *localContext = [NSManagedObjectContext MR_contextForCurrentThread];
+                OTRPushAccount *localAccount = (OTRPushAccount*)[localContext existingObjectWithID:account.objectID error:nil];
+                localAccount.isConnected = @(YES);
+                [localContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error){
+                    if (!error) {
                         if (successBlock) {
                             NSManagedObjectContext *localContext = [NSManagedObjectContext MR_contextForCurrentThread];
-                            OTRPushAccount *localAccount = [account MR_inContext:localContext];
+                            OTRPushAccount *localAccount = (OTRPushAccount*)[localContext existingObjectWithID:account.objectID error:nil];
                             successBlock(localAccount);
                             [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
                         }

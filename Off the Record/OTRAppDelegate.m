@@ -240,6 +240,8 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
      */
     
     
+    
+    
     OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
     
     for(id key in [protocolManager.protocolManagers allKeys])
