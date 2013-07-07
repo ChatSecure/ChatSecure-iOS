@@ -22,14 +22,13 @@
 }
 - (void) connectWithPassword:(NSString *)password {
     
-    [[OTRPushAPIClient sharedClient] connectAccount:self.account callback:^(BOOL success) {
-        if (success) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:kOTRProtocolLoginSuccess object:nil];
-            self.isConnected = YES;
-        } else {
-            [[NSNotificationCenter defaultCenter] postNotificationName:kOTRProtocolLoginFail object:nil];
-            self.isConnected = NO;
-        }
+    [[OTRPushAPIClient sharedClient] connectAccount:self.account password:password successBlock:^(OTRPushAccount *loggedInAccount) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:kOTRProtocolLoginSuccess object:nil];
+        self.isConnected = YES;
+    } failureBlock:^(NSError *error) {
+        NSLog(@"Error connecting: %@", error.userInfo);
+        [[NSNotificationCenter defaultCenter] postNotificationName:kOTRProtocolLoginFail object:nil];
+        self.isConnected = NO;
     }];
 }
 - (void) disconnect {

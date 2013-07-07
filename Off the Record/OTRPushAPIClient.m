@@ -33,7 +33,7 @@
     }
     
     [self registerHTTPOperationClass:[AFJSONRequestOperation class]];
-    self.parameterEncoding = AFJSONParameterEncoding;
+    //self.parameterEncoding = AFJSONParameterEncoding;
     
     // Accept HTTP Header; see http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.1
 	[self setDefaultHeader:@"Accept" value:@"application/json"];
@@ -86,12 +86,12 @@
     }];
 }
 
-- (void) connectAccount:(OTRPushAccount*)account successBlock:(void (^)(OTRPushAccount* loggedInAccount))successBlock failureBlock:(void (^)(NSError *error))failureBlock {
-    [self processAccount:account parameters:@{@"email": account.username, @"password": account.password} successBlock:successBlock failureBlock:failureBlock];
+- (void) connectAccount:(OTRPushAccount*)account password:(NSString*)password successBlock:(void (^)(OTRPushAccount* loggedInAccount))successBlock failureBlock:(void (^)(NSError *error))failureBlock {
+    [self processAccount:account parameters:@{@"email": account.username, @"password": password} successBlock:successBlock failureBlock:failureBlock];
 }
 
-- (void) createAccount:(OTRPushAccount*)account successBlock:(void (^)(OTRPushAccount* loggedInAccount))successBlock failureBlock:(void (^)(NSError *error))failureBlock {
-    [self processAccount:account parameters:@{@"email": account.username, @"password": account.password, @"create": @(YES)} successBlock:successBlock failureBlock:failureBlock];
+- (void) createAccount:(OTRPushAccount*)account password:(NSString*)password successBlock:(void (^)(OTRPushAccount* loggedInAccount))successBlock failureBlock:(void (^)(NSError *error))failureBlock {
+    [self processAccount:account parameters:@{@"email": account.username, @"password": password, @"create": @(YES)} successBlock:successBlock failureBlock:failureBlock];
 }
 
 

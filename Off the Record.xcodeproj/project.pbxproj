@@ -1129,6 +1129,7 @@
 		D9A7E0A815242D6800EEDDB5 /* Default-Portrait@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-Portrait@2x~ipad.png"; path = "../Default-Portrait@2x~ipad.png"; sourceTree = "<group>"; };
 		D9A7E0AA15242D8C00EEDDB5 /* Default-Landscape~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-Landscape~ipad.png"; path = "../Default-Landscape~ipad.png"; sourceTree = "<group>"; };
 		D9A7E0AC15242D9000EEDDB5 /* Default-Landscape@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-Landscape@2x~ipad.png"; path = "../Default-Landscape@2x~ipad.png"; sourceTree = "<group>"; };
+		D9AB63511788DDC400E35B17 /* ChatSecure 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ChatSecure 2.xcdatamodel"; sourceTree = "<group>"; };
 		D9ABC98E15D48B7E00AAB730 /* OTROldXMPPAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTROldXMPPAccount.h; sourceTree = "<group>"; };
 		D9ABC98F15D48B7E00AAB730 /* OTROldXMPPAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTROldXMPPAccount.m; sourceTree = "<group>"; };
 		D9ABC99115D48C4E00AAB730 /* OTROldOscarAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTROldOscarAccount.h; sourceTree = "<group>"; };
@@ -3342,7 +3343,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd \"Off the Record\"\nmogenerator --template-var arc=true -m ChatSecure.xcdatamodeld/ChatSecure.xcdatamodel/";
+			shellScript = "cd \"Off the Record\"\nmogenerator --template-var arc=true -m \"ChatSecure.xcdatamodeld/ChatSecure 2.xcdatamodel/\"";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -4012,9 +4013,10 @@
 		D9D3717C169D404F0086F358 /* ChatSecure.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				D9AB63511788DDC400E35B17 /* ChatSecure 2.xcdatamodel */,
 				D9D3717D169D40500086F358 /* ChatSecure.xcdatamodel */,
 			);
-			currentVersion = D9D3717D169D40500086F358 /* ChatSecure.xcdatamodel */;
+			currentVersion = D9AB63511788DDC400E35B17 /* ChatSecure 2.xcdatamodel */;
 			path = ChatSecure.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
