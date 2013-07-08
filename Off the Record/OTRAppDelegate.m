@@ -274,6 +274,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 - (void)application:(UIApplication *)application
 didReceiveRemoteNotification:(NSDictionary *)userInfo {
     NSLog(@"Push received! %@", [userInfo description]);
+    [[[UIAlertView alloc] initWithTitle:@"ChatSecure Push" message:[[userInfo objectForKey:@"aps"] objectForKey:@"alert"] delegate:nil cancelButtonTitle:OK_STRING otherButtonTitles:nil] show];
 }
 
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {

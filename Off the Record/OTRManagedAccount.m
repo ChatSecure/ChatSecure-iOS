@@ -30,6 +30,7 @@
 #import "Strings.h"
 #import "OTRProtocolManager.h"
 #import "OTRUtilities.h"
+#import "OTRPushAccount.h"
 
 #define kOTRServiceName @"org.chatsecure.ChatSecure"
 
@@ -178,7 +179,7 @@
     for (OTRManagedAccount * managedAccount in allAccountsArray)
     {
         managedAccount.isConnectedValue = [[OTRProtocolManager sharedInstance] isAccountConnected:managedAccount];
-        if (!managedAccount.isConnectedValue) {
+        if (!managedAccount.isConnectedValue && ![managedAccount isKindOfClass:[OTRPushAccount class]]) {
             [managedAccount setAllBuddiesStatuts:kOTRBuddyStatusOffline];
         }
         
