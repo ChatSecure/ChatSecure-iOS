@@ -22,8 +22,8 @@
 - (void) connectWithPassword:(NSString *)password {
     
     [[OTRPushAPIClient sharedClient] connectAccount:self.account password:password successBlock:^(OTRPushAccount *loggedInAccount) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:kOTRProtocolLoginSuccess object:nil];
         self.isConnected = YES;
+        [[NSNotificationCenter defaultCenter] postNotificationName:kOTRProtocolLoginSuccess object:nil];
     } failureBlock:^(NSError *error) {
         NSLog(@"Error connecting: %@", error.userInfo);
         [[NSNotificationCenter defaultCenter] postNotificationName:kOTRProtocolLoginFail object:nil];

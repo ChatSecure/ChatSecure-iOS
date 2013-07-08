@@ -66,9 +66,11 @@
             if (success) {
                 OTRPushManager *pushManager = [[OTRProtocolManager sharedInstance] protocolForAccount:account];
                 pushManager.isConnected = YES;
+                NSManagedObjectContext *localContext = [NSManagedObjectContext MR_contextForCurrentThread];
+                OTRPushAccount *localAccount = (OTRPushAccount*)[localContext existingObjectWithID:account.objectID error:nil];
+                localAccount.isConnected = @(YES);
+                [localContext MR_saveToPersistentStoreAndWait];
                 if (successBlock) {
-                    NSManagedObjectContext *localContext = [NSManagedObjectContext MR_contextForCurrentThread];
-                    OTRPushAccount *localAccount = (OTRPushAccount*)[localContext existingObjectWithID:account.objectID error:nil];
                     successBlock(localAccount);
                 }
                 [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];

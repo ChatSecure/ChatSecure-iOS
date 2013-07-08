@@ -13,6 +13,7 @@
 #import "OTRManagedBuddy.h"
 #import <QuartzCore/QuartzCore.h>
 #import "Strings.h"
+#import "OTRPushAccount.h"
 
 @interface OTRNewBuddyViewController ()
 
@@ -176,9 +177,15 @@
         NSString * newBuddyAccountName = [[self.accountNameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] lowercaseString];
         NSString * newBuddyDisplayName = [self.displayNameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
         OTRManagedBuddy * newBuddy = [OTRManagedBuddy fetchOrCreateWithName:newBuddyAccountName account:self.account];
+        NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+        if ([self.account isKindOfClass:[OTRPushAccount class]]) {
+            [newBuddy newStatusMessage:@"Push" status:kOTRBuddyStatusAvailable incoming:NO];
+            [newBuddy addToGroup:@"ChatSecure Push" inContext:context];
+        }
         if (newBuddy && [newBuddyDisplayName length]) {
             newBuddy.displayName = newBuddyDisplayName;
         }
+        [context MR_saveToPersistentStoreAndWait];
         
         id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
         [protocol addBuddy:newBuddy];
