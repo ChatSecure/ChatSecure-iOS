@@ -11,7 +11,6 @@
 #import "OTRPushAPIClient.h"
 
 @interface OTRPushManager()
-@property (nonatomic) BOOL isConnected;
 @end
 
 @implementation OTRPushManager

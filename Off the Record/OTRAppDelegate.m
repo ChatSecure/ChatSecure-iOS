@@ -214,6 +214,8 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     /*
      Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
      */
+    [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookieAcceptPolicy:NSHTTPCookieAcceptPolicyAlways];
+
     
     NSLog(@"Application became active");
     
@@ -302,8 +304,9 @@ didReceiveRemoteNotification:(NSDictionary *)userInfo {
 - (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)devToken {
     NSArray *accounts = [OTRPushAccount MR_findAll];
     for (OTRPushAccount *account in accounts) {
-        [[OTRPushAPIClient sharedClient] updatePushTokenForAccount:account token:devToken  successBlock:^(OTRPushAccount *loggedInAccount) {
-            NSLog(@"Device token updated for (%@): %@", loggedInAccount.username, devToken.description);
+        NSString *username = account.username;
+        [[OTRPushAPIClient sharedClient] updatePushTokenForAccount:account token:devToken  successBlock:^(void) {
+            NSLog(@"Device token updated for (%@): %@", username, devToken.description);
         } failureBlock:^(NSError *error) {
             NSLog(@"Error updating push token: %@", error.userInfo);
         }];

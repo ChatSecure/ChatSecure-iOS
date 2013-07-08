@@ -131,8 +131,6 @@
 
 -(NSNumber *)isConnected
 {
-    
-    
     return [NSNumber numberWithBool:[[OTRProtocolManager sharedInstance] isAccountConnected:self]];
 }
 

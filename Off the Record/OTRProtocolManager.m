@@ -119,9 +119,11 @@ static OTRProtocolManager *sharedManager = nil;
 
 -(BOOL)isAccountConnected:(OTRManagedAccount *)account;
 {
-    id <OTRProtocol> protocol = [protocolManagers objectForKey:account.uniqueIdentifier];
+    id <OTRProtocol> protocol = [self protocolForAccount:account];
     if (protocol) {
         return [protocol isConnected];
+    } else {
+        NSLog(@"No protocol found for account!");
     }
     return NO;
     

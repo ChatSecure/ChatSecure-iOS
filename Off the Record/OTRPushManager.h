@@ -12,6 +12,7 @@
 
 @interface OTRPushManager : NSObject <OTRProtocol>
 
+@property (nonatomic) BOOL isConnected;
 @property (nonatomic, strong) OTRPushAccount *account;
 
 @end

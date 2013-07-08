@@ -11,6 +11,8 @@
 #import "OTRPushController.h"
 #import "OTRPushAccount.h"
 #import "NSData+XMPP.h"
+#import "OTRProtocolManager.h"
+#import "OTRPushManager.h"
 
 #define NSERROR_DOMAIN @"OTRPushAPIClientError"
 
@@ -51,35 +53,25 @@
 }
 
 - (void) processAccount:(OTRPushAccount*)account parameters:(NSDictionary*)parameters successBlock:(void (^)(OTRPushAccount* loggedInAccount))successBlock failureBlock:(void (^)(NSError *error))failureBlock {
-    if (account.isConnectedValue) {
+    if (account.isConnected.boolValue) {
         if (failureBlock) {
             failureBlock([NSError errorWithDomain:NSERROR_DOMAIN code:123 userInfo:@{NSLocalizedDescriptionKey: @"Account already connected."}]);
         }
         return;
     }
     [self postPath:@"account/" parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSLog(@"%@", responseObject);
         NSError *error = nil;
         if ([responseObject isKindOfClass:[NSDictionary class]]) {
             BOOL success = [[responseObject objectForKey:@"success"] boolValue];
             if (success) {
-                NSManagedObjectContext *localContext = [NSManagedObjectContext MR_contextForCurrentThread];
-                OTRPushAccount *localAccount = (OTRPushAccount*)[localContext existingObjectWithID:account.objectID error:nil];
-                localAccount.isConnected = @(YES);
-                [localContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error){
-                    if (!error) {
-                        if (successBlock) {
-                            NSManagedObjectContext *localContext = [NSManagedObjectContext MR_contextForCurrentThread];
-                            OTRPushAccount *localAccount = (OTRPushAccount*)[localContext existingObjectWithID:account.objectID error:nil];
-                            successBlock(localAccount);
-                            [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
-                        }
-                    } else {
-                        if (failureBlock) {
-                            failureBlock(error);
-                        }
-                    }
-                }];
+                OTRPushManager *pushManager = [[OTRProtocolManager sharedInstance] protocolForAccount:account];
+                pushManager.isConnected = YES;
+                if (successBlock) {
+                    NSManagedObjectContext *localContext = [NSManagedObjectContext MR_contextForCurrentThread];
+                    OTRPushAccount *localAccount = (OTRPushAccount*)[localContext existingObjectWithID:account.objectID error:nil];
+                    successBlock(localAccount);
+                }
+                [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
             } else {
                 error = [NSError errorWithDomain:NSERROR_DOMAIN code:100 userInfo:@{NSLocalizedDescriptionKey: @"Success is false.", @"data": responseObject}];
             }
@@ -108,19 +100,24 @@
     
 }
 
-- (void) updatePushTokenForAccount:(OTRPushAccount*)account token:(NSData *)devicePushToken successBlock:(void (^)(OTRPushAccount* loggedInAccount))successBlock failureBlock:(void (^)(NSError *error))failureBlock {
-    if (!account.isConnectedValue) {
-        [self connectAccount:account password:account.password successBlock:successBlock failureBlock:failureBlock];
+- (void) updatePushTokenForAccount:(OTRPushAccount*)account token:(NSData *)devicePushToken successBlock:(void (^)(void))successBlock failureBlock:(void (^)(NSError *error))failureBlock {
+    NSDictionary *parameters = @{@"device_type": @"iPhone", @"operating_system": @"iOS", @"apple_push_token": [devicePushToken hexStringValue]};
+
+    if (!account.isConnected.boolValue) {
+        [self connectAccount:account password:account.password successBlock:^(OTRPushAccount *loggedInAccount) {
+            NSLog(@"Account logged in: %@, updating push token...", loggedInAccount.username);
+            [self updatePushTokenForAccount:loggedInAccount token:devicePushToken successBlock:successBlock failureBlock:failureBlock];
+        } failureBlock:failureBlock];
         return;
     }
-    NSDictionary *parameters = @{@"device_type": @"iPhone", @"operating_system": @"iOS", @"apple_push_token": [devicePushToken hexStringValue]};
     [self postPath:@"device/" parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"Token updated: %@", responseObject);
         if ([responseObject isKindOfClass:[NSDictionary class]]) {
             BOOL success = [[responseObject objectForKey:@"success"] boolValue];
             if (success) {
-                NSManagedObjectContext *localContext = [NSManagedObjectContext MR_contextForCurrentThread];
-                OTRPushAccount *localAccount = [account MR_inContext:localContext];
-                successBlock(localAccount);
+                if (successBlock) {
+                    successBlock();
+                }
                 return;
             }
         }
