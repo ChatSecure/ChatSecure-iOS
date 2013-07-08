@@ -98,9 +98,31 @@
     [self processAccount:account parameters:@{@"email": account.username, @"password": password, @"create": @(YES)} successBlock:successBlock failureBlock:failureBlock];
 }
 
-- (void) sendPushFromAccount:(OTRPushAccount*)account toBuddy:(OTRManagedBuddy*)buddy successBlock:(void (^)(void))successBlock failureBlock:(void (^)(NSError *error))failureBlock {
-    
+- (void) sendPushToBuddy:(OTRManagedBuddy*)buddy successBlock:(void (^)(void))successBlock failureBlock:(void (^)(NSError *error))failureBlock {
+    [self postPath:@"knock/" parameters:@{@"email": buddy.accountName} success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSError *error = nil;
+        if ([responseObject isKindOfClass:[NSDictionary class]]) {
+            BOOL success = [[responseObject objectForKey:@"success"] boolValue];
+            if (success) {
+                if (successBlock) {
+                    successBlock();
+                }
+            } else {
+                error = [NSError errorWithDomain:NSERROR_DOMAIN code:100 userInfo:@{NSLocalizedDescriptionKey: @"Success is false.", @"data": responseObject}];
+            }
+        } else {
+            error = [NSError errorWithDomain:NSERROR_DOMAIN code:102 userInfo:@{NSLocalizedDescriptionKey: @"Response object not dictionary.", @"data": responseObject}];
+        }
+        if (error && failureBlock) {
+            failureBlock(error);
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        if (failureBlock) {
+            failureBlock(error);
+        }
+    }];
 }
+
 
 - (void) updatePushTokenForAccount:(OTRPushAccount*)account token:(NSData *)devicePushToken successBlock:(void (^)(void))successBlock failureBlock:(void (^)(NSError *error))failureBlock {
     NSDictionary *parameters = @{@"device_type": @"iPhone", @"operating_system": @"iOS", @"apple_push_token": [devicePushToken hexStringValue]};

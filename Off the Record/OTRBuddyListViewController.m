@@ -40,6 +40,7 @@
 #import "OTRUtilities.h"
 #import "OTRStoreViewController.h"
 #import "OTRDatabaseUtils.h"
+#import "OTRPushAPIClient.h"
 
 //#define kSignoffTime 500
 
@@ -345,6 +346,9 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    }
     OTRManagedBuddy * managedBuddy = nil;
     if ([tableView isEqual:self.searchDisplayController.searchResultsTableView]) {
         managedBuddy = [self.searchBuddyFetchedResultsController objectAtIndexPath:indexPath];
@@ -359,14 +363,20 @@
         managedBuddy = [self.groupManager buddyAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section-1]];
     }
     
+    if ([managedBuddy.account isKindOfClass:[OTRPushAccount class]]) {
+        [[OTRPushAPIClient sharedClient] sendPushToBuddy:managedBuddy successBlock:^{
+            NSLog(@"Push sent!");
+        } failureBlock:^(NSError *error) {
+            NSLog(@"Error sending push: %@", error.userInfo);
+        }];
+        return;
+    }
+    
     if (managedBuddy) {
         [self enterConversationWithBuddy:managedBuddy];
     }
     
 
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-        [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    }
 }
 
 - (void) tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
