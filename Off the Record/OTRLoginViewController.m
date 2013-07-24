@@ -291,7 +291,7 @@
     [account setNewUsername:[usernameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
     [account setRememberPasswordValue:rememberPasswordSwitch.on];
     
-    if (account.rememberPassword) {
+    if (account.rememberPasswordValue) {
         account.password = self.passwordTextField.text;
     } else {
         account.password = nil;

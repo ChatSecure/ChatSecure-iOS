@@ -107,7 +107,7 @@
 
 - (void) setRememberPasswordValue:(BOOL)remember {
     [super setRememberPasswordValue: remember];
-    if (!self.rememberPassword) {
+    if (!self.rememberPasswordValue) {
         self.password = nil;
     }
 }
