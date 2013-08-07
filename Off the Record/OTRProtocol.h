@@ -35,6 +35,8 @@
 -(void) removeBuddies:(NSArray *)buddies;
 -(void) blockBuddies:(NSArray *)buddies;
 
+- (id) initWithAccount:(OTRManagedAccount*)account;
+
 @end
 
 @protocol OTRXMPPProtocol <OTRProtocol>

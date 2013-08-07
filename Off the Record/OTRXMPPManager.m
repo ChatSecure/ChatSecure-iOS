@@ -77,12 +77,13 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 @synthesize account;
 @synthesize buddyTimers;
 
--(id)init
-{
+- (id) initWithAccount:(OTRManagedAccount *)newAccount {
     self = [super init];
     
     if(self)
     {
+        self.account = (OTRManagedXMPPAccount*)newAccount;
+
         // Configure logging framework
         backgroundQueue = dispatch_queue_create("buddy.background", NULL);
         [DDLog addLogger:[DDTTYLogger sharedInstance]];
@@ -94,7 +95,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
         buddyTimers = [NSMutableDictionary dictionary];
         
     }
-
+    
     return self;
 }
 

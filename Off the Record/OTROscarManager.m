@@ -36,11 +36,12 @@
 
 BOOL loginFailed;
 
--(id)init
+-(id)initWithAccount:(OTRManagedAccount *)newAccount
 {
     self = [super init];
     if(self)
     {
+        self.account = newAccount;
         mainThread = [NSThread currentThread];
         loggedIn = NO;
     }

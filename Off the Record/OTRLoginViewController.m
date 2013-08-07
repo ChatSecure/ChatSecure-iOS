@@ -369,8 +369,6 @@
 
         self.account.password = passwordTextField.text;
         
-
-        
         id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
         [protocol connectWithPassword:self.passwordTextField.text];
     }
