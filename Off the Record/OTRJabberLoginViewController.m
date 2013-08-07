@@ -33,8 +33,8 @@
 {
     [super viewDidLoad];
     NSString * accountDomainString = self.account.domain;
-    BOOL sslMismatchSwitchSatus = self.account.allowSSLHostNameMismatchValue;
-    BOOL selfSignedSwithStatus = self.account.allowSSLHostNameMismatchValue;
+    BOOL sslMismatchSwitchStatus = self.account.allowSSLHostNameMismatchValue;
+    BOOL selfSignedSwitchStatus = self.account.shouldAllowSelfSignedSSL;
     BOOL allowPlaintextAuthenticationStatus = self.account.allowPlainTextAuthenticationValue; 
     BOOL requireTLSStatus = self.account.requireTLSValue;
 	
@@ -53,10 +53,10 @@
     self.domainTextField.textColor = self.textFieldTextColor;
     
     self.sslMismatchSwitch = [[UISwitch alloc]init];
-    self.sslMismatchSwitch.on = sslMismatchSwitchSatus;
+    self.sslMismatchSwitch.on = sslMismatchSwitchStatus;
     
     self.selfSignedSwitch = [[UISwitch alloc] init];
-    self.selfSignedSwitch.on = selfSignedSwithStatus;
+    self.selfSignedSwitch.on = selfSignedSwitchStatus;
     
     self.allowPlaintextAuthentication = [[UISwitch alloc] init];
     self.allowPlaintextAuthentication.on = allowPlaintextAuthenticationStatus;
