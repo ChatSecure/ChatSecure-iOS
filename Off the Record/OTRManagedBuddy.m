@@ -37,6 +37,7 @@
 
 @implementation OTRManagedBuddy
 
+
 -(void)sendMessage:(NSString *)message secure:(BOOL)secure
 {
     if (message) {
@@ -50,17 +51,23 @@
         if(secure)
         {
             encodedMessage = [OTRCodec encodeMessage:newMessage];
+            [OTRCodec encodeMessage:newMessage completion:^(OTRManagedMessage *message) {
+                [OTRManagedMessage sendMessage:message];
+                self.lastSentChatStateValue=kOTRChatStateActive;
+            }];
         }
         else
         {
             encodedMessage = newMessage;
+            [OTRManagedMessage sendMessage:encodedMessage];
         }
         //NSLog(@"encoded message: %@",encodedMessage.message);
-        [OTRManagedMessage sendMessage:encodedMessage];
+        
 
-        self.lastSentChatStateValue=kOTRChatStateActive;
+        
     }
 }
+ 
 
 -(BOOL)protocolIsXMPP
 {

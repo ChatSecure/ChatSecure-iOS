@@ -554,8 +554,11 @@
             } else {
                 OTRManagedBuddy* theBuddy = buddy;
                 OTRManagedMessage * newMessage = [OTRManagedMessage newMessageToBuddy:theBuddy message:@"" encrypted:YES];
-                OTRManagedMessage *encodedMessage = [OTRCodec encodeMessage:newMessage];
-                [OTRManagedMessage sendMessage:encodedMessage];
+                //OTRManagedMessage *encodedMessage = [OTRCodec encodeMessage:newMessage];
+                [OTRCodec encodeMessage:newMessage completion:^(OTRManagedMessage *message) {
+                    [OTRManagedMessage sendMessage:message];
+                }];
+                
             }
         }
         else if (buttonIndex == 2) { // Clear Chat History
