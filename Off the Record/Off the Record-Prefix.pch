@@ -11,5 +11,6 @@
 #ifdef __OBJC__
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
+    #define MR_ENABLE_ACTIVE_RECORD_LOGGING 0
     #import "CoreData+MagicalRecord.h"
 #endif

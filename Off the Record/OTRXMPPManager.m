@@ -443,8 +443,8 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	
     
 	// You may need to alter these settings depending on the server you're connecting to
-	allowSelfSignedCertificates = account.shouldAllowSSLHostNameMismatch;
-	allowSSLHostNameMismatch = account.shouldAllowSelfSignedSSL;
+	allowSelfSignedCertificates = account.shouldAllowSelfSignedSSL;
+	allowSSLHostNameMismatch = account.shouldAllowSSLHostNameMismatch;
 }
 
 - (void)teardownStream
