@@ -303,7 +303,7 @@
 +(OTRManagedBuddy *)fetchOrCreateWithName:(NSString *)name account:(OTRManagedAccount *)account
 {
     OTRManagedBuddy * buddy = nil;
-    buddy = [OTRManagedBuddy buddyWithAccountName:name account:account];
+    buddy = [OTRManagedBuddy fetchWithName:name account:account];
     if (!buddy) {
         buddy = [OTRManagedBuddy MR_createEntity];
         buddy.accountName = name;
@@ -311,7 +311,7 @@
     }
     return buddy;
 }
-+(OTRManagedBuddy *)buddyWithAccountName:(NSString *)name account:(OTRManagedAccount *)account
++(OTRManagedBuddy *)fetchWithName:(NSString *)name account:(OTRManagedAccount *)account;
 {
     NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"accountName == %@",name];
     NSSet * filteredArray = [account.buddies filteredSetUsingPredicate:buddyFilter];

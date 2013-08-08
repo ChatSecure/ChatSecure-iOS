@@ -44,7 +44,7 @@
 -(void)invalidatePausedChatStateTimer;
 -(void)invalidateInactiveChatStateTimer;
 
--(void) newStatusMessage:(NSString *)newStatusMessage status:(OTRBuddyStatus)newStatus incoming:(BOOL)isIncoming;
+- (void) newStatusMessage:(NSString *)newStatusMessage status:(OTRBuddyStatus)newStatus incoming:(BOOL)isIncoming;
 - (void) setNewEncryptionStatus:(OTRKitMessageState)newEncryptionStatus;
 - (OTRManagedStatus *)currentStatusMessage;
 - (OTRManagedEncryptionStatusMessage *)currentEncryptionStatus;

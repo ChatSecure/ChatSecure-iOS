@@ -49,6 +49,18 @@
     [newMessage send];
 }
 
+-(BOOL)recipientIsLoggedIn:(NSString *)recipient accountName:(NSString *)accountName protocol:(NSString *)protocol
+{
+    OTRManagedBuddy * buddy = [[OTRProtocolManager sharedInstance] buddyForUserName:recipient accountName:accountName protocol:protocol];
+    if(buddy.currentStatusValue == kOTRBuddyStatusOffline)
+    {
+        return NO;
+    }
+    else{
+        return YES;
+    }
+}
+
 + (void) protectFileWithPath:(NSString*)path {
     NSError *error = nil;
     NSFileManager *fileManager = [NSFileManager defaultManager];
