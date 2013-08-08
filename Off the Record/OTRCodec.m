@@ -37,7 +37,7 @@
     NSString *myAccountName = theMessage.buddy.account.username;
     
     NSString *decodedMessageString = [[OTRKit sharedInstance] decodeMessage:message recipient:friendAccount accountName:myAccountName protocol:protocol];
-    if(decodedMessageString) {
+    if([decodedMessageString length]) {
         theMessage.message = [OTRUtilities stripHTML:decodedMessageString];
         [theMessage setIsEncryptedValue:NO];
     } else {
