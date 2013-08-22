@@ -160,7 +160,8 @@
 #define EN_BLOCK_AND_REMOVE_STRING @"Block & Remove"
 #define EN_ADD_BUDDY_STRING @"Add Buddy"
 #define EN_BUDDY_INFO_STRING @"Buddy Info"
-
+#define EN_INCOMING_STATUS_MESSAGE @"New Status Message: %@"
+#define EN_YOUR_STATUS_MESSAGE @"You are: %@"
 
 
 #define BUDDY_LIST_STRING [OTRLanguageManager translatedString: EN_BUDDY_LIST_STRING]
@@ -296,6 +297,9 @@
 #define BLOCK_AND_REMOVE_STRING [OTRLanguageManager translatedString: EN_BLOCK_AND_REMOVE_STRING]
 #define ADD_BUDDY_STRING [OTRLanguageManager translatedString: EN_ADD_BUDDY_STRING]
 #define BUDDY_INFO_STRING [OTRLanguageManager translatedString: EN_BUDDY_INFO_STRING]
+
+#define YOUR_STATUS_MESSAGE [OTRLanguageManager translatedString: EN_YOUR_STATUS_MESSAGE]
+#define INCOMING_STATUS_MESSAGE [OTRLanguageManager translatedString: EN_INCOMING_STATUS_MESSAGE]
 
 #define LOC_BUDDY_LIST_STRING NSLocalizedString(EN_BUDDY_LIST_STRING , @"Title for the buddy list tab")
 #define LOC_CONVERSATIONS_STRING NSLocalizedString(EN_CONVERSATIONS_STRING , @"Title for the conversations tab")
@@ -433,6 +437,7 @@
 #define LOC_ADD_BUDDY_STRING NSLocalizedString(EN_ADD_BUDDY_STRING,@"The title for the view to add a buddy")
 #define LOC_BUDDY_INFO_STRING NSLocalizedString(EN_BUDDY_INFO_STRING,@"The title for the view that shows detailed buddy info")
 
-
+#define LOC_INCOMING_STATUS_MESSAGE NSLocalizedString(EN_INCOMING_STATUS_MESSAGE,@"prefix to show buddies status message inline on chatview")
+#define LOC_YOUR_STATUS_MESSAGE NSLocalizedString(EN_YOUR_STATUS_MESSAGE,@"prefix to show your status message inline on chatview")
 
 

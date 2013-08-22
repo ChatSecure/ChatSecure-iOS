@@ -843,10 +843,10 @@
             
             if ([messageOrStatus isKindOfClass:[OTRManagedStatus class]]) {
                 if (managedStatus.isIncomingValue) {
-                    cellText = [NSString stringWithFormat:@"New Status Message: %@",managedStatus.message];
+                    cellText = [NSString stringWithFormat:INCOMING_STATUS_MESSAGE,managedStatus.message];
                 }
                 else{
-                    cellText = [NSString stringWithFormat:@"You are: %@",managedStatus.message];
+                    cellText = [NSString stringWithFormat:YOUR_STATUS_MESSAGE,managedStatus.message];
                 }
             }
             else{

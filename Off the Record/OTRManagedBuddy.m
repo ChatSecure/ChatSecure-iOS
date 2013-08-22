@@ -238,7 +238,7 @@
     if ([sortedStatuses count]) {
         return sortedStatuses[0];
     }
-    return [OTRManagedStatus newStatus:kOTRBuddyStatusOffline withMessage:nil withBuddy:self incoming:NO];
+    return [OTRManagedStatus newStatus:kOTRBuddyStatusOffline withMessage:nil withBuddy:self incoming:YES];
 
     
 }
