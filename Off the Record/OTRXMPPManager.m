@@ -753,30 +753,23 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     
 	if ([message isMessageWithBody] && ![message isErrorMessage])
 	{
-        [self managedMessageForMessage:message];
+        NSString *body = [[message elementForName:@"body"] stringValue];
+        
+        OTRManagedBuddy * messageBuddy = [self buddyWithMessage:message];
+        
+        NSDate * date = [message delayedDeliveryDate];
+        
+        OTRManagedMessage *otrMessage = [OTRManagedMessage newMessageFromBuddy:messageBuddy message:body encrypted:YES delayedDate:date];
+        [OTRCodec decodeMessage:otrMessage];
+        
+        if(otrMessage && !otrMessage.isEncryptedValue)
+        {
+            [messageBuddy receiveMessage:otrMessage.message];
+            
+        }
 	}
     
 }
-
--(OTRManagedMessage *)managedMessageForMessage:(XMPPMessage *)xmppMessage
-{
-    NSString *body = [[xmppMessage elementForName:@"body"] stringValue];
-    //NSString *displayName = [user displayName];
-    
-    OTRManagedBuddy * messageBuddy = [self buddyWithMessage:xmppMessage];
-    
-    NSDate * date = [xmppMessage delayedDeliveryDate];
-    
-    OTRManagedMessage *otrMessage = [OTRManagedMessage newMessageFromBuddy:messageBuddy message:body encrypted:YES delayedDate:date];
-    [OTRCodec decodeMessage:otrMessage];
-    
-    if(otrMessage && !otrMessage.isEncryptedValue)
-    {
-        [messageBuddy receiveMessage:otrMessage.message];
-        
-    }
-}
-
 - (void)xmppStream:(XMPPStream *)sender didReceivePresence:(XMPPPresence *)presence
 {
 	DDLogVerbose(@"%@: %@ - %@\nType: %@\nShow: %@\nStatus: %@", THIS_FILE, THIS_METHOD, [presence from], [presence type], [presence show],[presence status]);
