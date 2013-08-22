@@ -31,6 +31,7 @@
 #import "XMPPvCardCoreDataStorage.h"
 #import "XMPPMessage+XEP_0184.h"
 #import "XMPPMessage+XEP_0085.h"
+#import "NSXMLElement+XEP_0203.h"
 #import "Strings.h"
 #import "OTRXMPPManagedPresenceSubscriptionRequest.h"
 
@@ -711,6 +712,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     return [OTRManagedBuddy fetchOrCreateWithName:[user.jid full] account:self.account];
 }
 
+
 - (void)xmppStream:(XMPPStream *)sender didReceiveMessage:(XMPPMessage *)message
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
@@ -749,7 +751,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
         [messageBuddy receiveReceiptResonse:[message receiptResponseID]];
     }
     
-	if ([message isChatMessageWithBody])
+	if ([message isMessageWithBody])
 	{
         
         
@@ -764,7 +766,9 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
         
         OTRManagedBuddy * messageBuddy = [self buddyWithMessage:message];
         
-        OTRManagedMessage *otrMessage = [OTRManagedMessage newMessageFromBuddy:messageBuddy message:body encrypted:YES];
+        NSDate * date = [message delayedDeliveryDate];
+        
+        OTRManagedMessage *otrMessage = [OTRManagedMessage newMessageFromBuddy:messageBuddy message:body encrypted:YES delayedDate:date];
         [OTRCodec decodeMessage:otrMessage];
         
         if(otrMessage && !otrMessage.isEncryptedValue)
@@ -772,7 +776,10 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
             [messageBuddy receiveMessage:otrMessage.message];
             
         }
+        
+    
 	}
+    
 }
 
 - (void)xmppStream:(XMPPStream *)sender didReceivePresence:(XMPPPresence *)presence

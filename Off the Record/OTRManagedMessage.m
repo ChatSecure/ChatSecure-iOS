@@ -51,6 +51,16 @@
     OTRManagedMessage *message = [OTRManagedMessage newMessageWithBuddy:theBuddy message:theMessage];
     message.isEncryptedValue = encryptionStatus;
     [message setIsIncomingValue:YES];
+    return message;
+    
+}
+
++(OTRManagedMessage*)newMessageFromBuddy:(OTRManagedBuddy *)theBuddy message:(NSString *)theMessage encrypted:(BOOL)encryptionStatus delayedDate:(NSDate *)date
+{
+    OTRManagedMessage * message = [self newMessageFromBuddy:theBuddy message:theMessage encrypted:encryptionStatus];
+    if (date) {
+        message.date = date;
+    }
     NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
     [context MR_saveToPersistentStoreAndWait];
     return message;
