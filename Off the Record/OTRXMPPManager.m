@@ -751,35 +751,30 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
         [messageBuddy receiveReceiptResonse:[message receiptResponseID]];
     }
     
-	if ([message isMessageWithBody])
+	if ([message isMessageWithBody] && ![message isErrorMessage])
 	{
-        
-        
-        
-        /*XMPPUserCoreDataStorageObject *user = [xmppRosterStorage userForJID:[message from]
-                                                                 xmppStream:xmppStream
-                                                       managedObjectContext:[self managedObjectContext_roster]];
-         */
-        
-        NSString *body = [[message elementForName:@"body"] stringValue];
-        //NSString *displayName = [user displayName];
-        
-        OTRManagedBuddy * messageBuddy = [self buddyWithMessage:message];
-        
-        NSDate * date = [message delayedDeliveryDate];
-        
-        OTRManagedMessage *otrMessage = [OTRManagedMessage newMessageFromBuddy:messageBuddy message:body encrypted:YES delayedDate:date];
-        [OTRCodec decodeMessage:otrMessage];
-        
-        if(otrMessage && !otrMessage.isEncryptedValue)
-        {
-            [messageBuddy receiveMessage:otrMessage.message];
-            
-        }
-        
-    
+        [self managedMessageForMessage:message];
 	}
     
+}
+
+-(OTRManagedMessage *)managedMessageForMessage:(XMPPMessage *)xmppMessage
+{
+    NSString *body = [[xmppMessage elementForName:@"body"] stringValue];
+    //NSString *displayName = [user displayName];
+    
+    OTRManagedBuddy * messageBuddy = [self buddyWithMessage:xmppMessage];
+    
+    NSDate * date = [xmppMessage delayedDeliveryDate];
+    
+    OTRManagedMessage *otrMessage = [OTRManagedMessage newMessageFromBuddy:messageBuddy message:body encrypted:YES delayedDate:date];
+    [OTRCodec decodeMessage:otrMessage];
+    
+    if(otrMessage && !otrMessage.isEncryptedValue)
+    {
+        [messageBuddy receiveMessage:otrMessage.message];
+        
+    }
 }
 
 - (void)xmppStream:(XMPPStream *)sender didReceivePresence:(XMPPPresence *)presence

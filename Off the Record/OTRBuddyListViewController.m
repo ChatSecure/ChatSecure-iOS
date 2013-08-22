@@ -351,11 +351,13 @@
     else if([self.groupManager numberOfGroups] >= indexPath.section){
         managedBuddy = [self.groupManager buddyAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section-1]];
     }
+    else {
+        managedBuddy = [self.offlineBuddiesFetchedResultsController objectAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row inSection:0]];
+    }
     
     if (managedBuddy) {
         [self enterConversationWithBuddy:managedBuddy];
     }
-    
 
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
