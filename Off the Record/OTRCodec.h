@@ -27,7 +27,7 @@
 @interface OTRCodec : NSObject
 
 +(void) decodeMessage:(OTRManagedMessage*)theMessage;
-+(void) encodeMessage:(OTRManagedMessage*)theMessage completion:(void (^)(OTRManagedMessage * message))completionBlock;
++(void)encodeMessage:(OTRManagedMessage *)theMessage startGeneratingKeysBlock:(void (^)(void))generatingKeysBlock  completion:(void (^)(OTRManagedMessage * message))completionBlock;
 +(OTRManagedMessage*) encodeMessage:(OTRManagedMessage*)theMessage;
 
 @end

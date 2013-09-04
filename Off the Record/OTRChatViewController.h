@@ -33,6 +33,7 @@
     UIImage *_messageBubbleComposing;
     CGFloat _previousTextViewContentHeight;
     CGFloat _messageFontSize;
+    int currentEncryptionStatus;
 }
 
 

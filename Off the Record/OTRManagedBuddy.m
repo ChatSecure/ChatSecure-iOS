@@ -51,7 +51,7 @@
         if(secure)
         {
             encodedMessage = [OTRCodec encodeMessage:newMessage];
-            [OTRCodec encodeMessage:newMessage completion:^(OTRManagedMessage *message) {
+            [OTRCodec encodeMessage:newMessage startGeneratingKeysBlock:nil completion:^(OTRManagedMessage *message) {
                 [OTRManagedMessage sendMessage:message];
                 self.lastSentChatStateValue=kOTRChatStateActive;
             }];

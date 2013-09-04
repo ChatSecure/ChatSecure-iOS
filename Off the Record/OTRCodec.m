@@ -53,7 +53,9 @@
     [theMessage.buddy setNewEncryptionStatus:messageState];
 }
 
-+(void) encodeMessage:(OTRManagedMessage*)theMessage completion:(void (^)(OTRManagedMessage * message))completionBlock
+
+
++(void)encodeMessage:(OTRManagedMessage *)theMessage startGeneratingKeysBlock:(void (^)(void))generatingKeysBlock  completion:(void (^)(OTRManagedMessage *))completionBlock
 {
     NSString *message = theMessage.message;
     NSString *recipientAccount = theMessage.buddy.accountName;
@@ -62,7 +64,7 @@
     //theMessage.isEncryptedValue = NO;
     
     //NSString *encodedMessageString = [[OTRKit sharedInstance] encodeMessage:message recipient:recipientAccount accountName:sendingAccount protocol:protocol];
-    [[OTRKit sharedInstance] encodeMessage:message recipient:recipientAccount accountName:sendingAccount protocol:protocol success:^(NSString *message) {
+    [[OTRKit sharedInstance] encodeMessage:message recipient:recipientAccount accountName:sendingAccount protocol:protocol startGeneratingKeysBlock:generatingKeysBlock success:^(NSString *message) {
         OTRManagedMessage *newOTRMessage = [OTRManagedMessage newMessageToBuddy:theMessage.buddy message:message encrypted:YES];
         newOTRMessage.date = theMessage.date;
         newOTRMessage.uniqueID = theMessage.uniqueID;
@@ -76,8 +78,6 @@
         }
         
     }];
-    
-    
 }
 
 
