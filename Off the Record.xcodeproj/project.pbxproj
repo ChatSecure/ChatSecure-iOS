@@ -818,6 +818,12 @@
 		6352DC8B15AFB252007AD0B4 /* xmpp@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "xmpp@2x.png"; sourceTree = "<group>"; };
 		6352DC8E15AFB3D2007AD0B4 /* facebook.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = facebook.png; sourceTree = "<group>"; };
 		6352DC8F15AFB3D2007AD0B4 /* facebook@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "facebook@2x.png"; sourceTree = "<group>"; };
+		636BDD6917D929FE00861A9A /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = "Off the Record/cs.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
+		636BDD6B17D92A1700861A9A /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = "Off the Record/el.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
+		636BDD6C17D92A2500861A9A /* id */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = id; path = "Off the Record/id.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
+		636BDD6D17D92A3B00861A9A /* nl_NL */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl_NL; path = "Off the Record/nl_NL.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
+		636BDD6E17D92A4F00861A9A /* pt_PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt_PT; path = "Off the Record/pt_PT.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
+		636BDD6F17D92A5C00861A9A /* ro_RO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ro_RO; path = "Off the Record/ro_RO.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
 		636FE4B1161B76CF002B28EF /* OTRFacebookLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRFacebookLoginViewController.h; sourceTree = "<group>"; };
 		636FE4B2161B76CF002B28EF /* OTRFacebookLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRFacebookLoginViewController.m; sourceTree = "<group>"; };
 		636FE4B4161B76EA002B28EF /* OTRGoogleTalkLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRGoogleTalkLoginViewController.h; sourceTree = "<group>"; };
@@ -3059,6 +3065,15 @@
 				zh_TW,
 				pt_BR,
 				no,
+				el,
+				id,
+				nl_NL,
+				pt_PT,
+				ro_RO,
+				"ro-RO",
+				"pt-PT",
+				"nl-NL",
+				"pt-BR",
 			);
 			mainGroup = D9F9376D13F44BD3009A3D84;
 			productRefGroup = D9F9377913F44BD3009A3D84 /* Products */;
@@ -3655,6 +3670,12 @@
 				63EB094A17274AA2000FACDC /* es */,
 				63EB094B17274B24000FACDC /* sv */,
 				63E6BB741752D92F0070EC47 /* no */,
+				636BDD6917D929FE00861A9A /* cs */,
+				636BDD6B17D92A1700861A9A /* el */,
+				636BDD6C17D92A2500861A9A /* id */,
+				636BDD6D17D92A3B00861A9A /* nl_NL */,
+				636BDD6E17D92A4F00861A9A /* pt_PT */,
+				636BDD6F17D92A5C00861A9A /* ro_RO */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
