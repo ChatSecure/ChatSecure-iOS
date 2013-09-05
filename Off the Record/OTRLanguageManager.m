@@ -67,6 +67,8 @@
 {
     NSMutableArray *languages = [[NSMutableArray alloc] init];
     
+    
+    
     NSString * resourcePath = [[NSBundle mainBundle] pathForResource:@"supportedLanguages" ofType:@"plist" inDirectory:nil forLocalization:nil];
     NSArray * twoLetterLanguages = [NSArray arrayWithContentsOfFile:resourcePath];
     

@@ -1,0 +1,12 @@
+[main]
+host = https://www.transifex.com
+
+[chatsecure.strings]
+source_lang = en_US
+source_file = en/Localizable.strings
+file_filter = <lang>.lproj/Localizable.strings
+
+[chatsecure.appstorestrings]
+source_lang = en_US
+source_file = en/AppStore.strings
+file_filter = <lang>.lproj/AppStore.strings

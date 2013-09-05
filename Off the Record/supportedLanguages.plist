@@ -3,6 +3,11 @@
 <plist version="1.0">
 <array>
 	<string>en</string>
+	<string>nl_NL</string>
+	<string>pt_PT</string>
+	<string>el</string>
+	<string>ro_RO</string>
+	<string>id</string>
 	<string>ar</string>
 	<string>bo</string>
 	<string>ca</string>
