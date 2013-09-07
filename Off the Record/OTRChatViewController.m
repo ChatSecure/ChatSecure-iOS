@@ -100,6 +100,7 @@
 
 -(void)setupLockButton
 {
+    currentEncryptionStatus = -1;
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     UIImage *buttonImage = [UIImage imageNamed:@"Lock_Locked.png"];
     [button setBackgroundImage:buttonImage forState:UIControlStateNormal];
@@ -139,21 +140,23 @@
 -(void)refreshLockButton
 {
     BOOL trusted = [[OTRKit sharedInstance] finerprintIsVerifiedForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
-    int16_t currentEncryptionStatus = [self.buddy currentEncryptionStatus].statusValue;
-    
-    if(currentEncryptionStatus == kOTRKitMessageStateEncrypted && trusted)
-    {
-        self.navigationItem.rightBarButtonItem = lockVerifiedButton;
+    if (currentEncryptionStatus != [self.buddy currentEncryptionStatus].statusValue) {
+        currentEncryptionStatus = [self.buddy currentEncryptionStatus].statusValue;
+        
+        if(currentEncryptionStatus == kOTRKitMessageStateEncrypted && trusted)
+        {
+            self.navigationItem.rightBarButtonItem = lockVerifiedButton;
+        }
+        else if(currentEncryptionStatus == kOTRKitMessageStateEncrypted)
+        {
+            self.navigationItem.rightBarButtonItem = lockButton;
+        }
+        else
+        {
+            self.navigationItem.rightBarButtonItem = unlockedButton;
+        }
+        self.navigationItem.rightBarButtonItem.accessibilityLabel = @"lock";
     }
-    else if(currentEncryptionStatus == kOTRKitMessageStateEncrypted)
-    {
-        self.navigationItem.rightBarButtonItem = lockButton;
-    }
-    else
-    {
-        self.navigationItem.rightBarButtonItem = unlockedButton;
-    }
-    self.navigationItem.rightBarButtonItem.accessibilityLabel = @"lock";
 }
 
 -(void)lockButtonPressed
@@ -161,7 +164,7 @@
     NSString *encryptionString = INITIATE_ENCRYPTED_CHAT_STRING;
     NSString * verifiedString = VERIFY_STRING;
     
-    int16_t currentEncryptionStatus = [self.buddy currentEncryptionStatus].statusValue;
+    currentEncryptionStatus = [self.buddy currentEncryptionStatus].statusValue;
     
     if (currentEncryptionStatus == kOTRKitMessageStateEncrypted) {
         encryptionString = CANCEL_ENCRYPTED_CHAT_STRING;
@@ -555,8 +558,18 @@
                 OTRManagedBuddy* theBuddy = buddy;
                 OTRManagedMessage * newMessage = [OTRManagedMessage newMessageToBuddy:theBuddy message:@"" encrypted:YES];
                 //OTRManagedMessage *encodedMessage = [OTRCodec encodeMessage:newMessage];
-                [OTRCodec encodeMessage:newMessage completion:^(OTRManagedMessage *message) {
-                    [OTRManagedMessage sendMessage:message];
+                [OTRCodec encodeMessage:newMessage startGeneratingKeysBlock:^{
+                    //display activity
+                    NSLog(@"Generating key");
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self addLockSpinner];
+                    });
+                } completion:^(OTRManagedMessage *message) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self removeLockSpinner];
+                        [OTRManagedMessage sendMessage:message];
+                    });
+                    
                 }];
                 
             }
@@ -569,6 +582,18 @@
             
         }
     }
+}
+
+-(void)addLockSpinner {
+    UIActivityIndicatorView * activityIndicatorView = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 25, 25)];
+    [activityIndicatorView sizeToFit];
+    [activityIndicatorView setAutoresizingMask:(UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin)];
+    UIBarButtonItem * activityBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:activityIndicatorView];
+    [activityIndicatorView startAnimating];
+    self.navigationItem.rightBarButtonItem = activityBarButtonItem;
+}
+-(void)removeLockSpinner {
+    //[self refreshLockButton];
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -629,6 +654,7 @@
         [self textViewDidChange:textView];
         
         [self scrollToBottomAnimated:NO];
+        currentEncryptionStatus = [self.buddy currentEncryptionStatus].statusValue;
         [self refreshLockButton];
     }
     
@@ -843,10 +869,10 @@
             
             if ([messageOrStatus isKindOfClass:[OTRManagedStatus class]]) {
                 if (managedStatus.isIncomingValue) {
-                    cellText = [NSString stringWithFormat:@"New Status Message: %@",managedStatus.message];
+                    cellText = [NSString stringWithFormat:INCOMING_STATUS_MESSAGE,managedStatus.message];
                 }
                 else{
-                    cellText = [NSString stringWithFormat:@"You are: %@",managedStatus.message];
+                    cellText = [NSString stringWithFormat:YOUR_STATUS_MESSAGE,managedStatus.message];
                 }
             }
             else{

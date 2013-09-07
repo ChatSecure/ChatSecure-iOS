@@ -51,7 +51,7 @@
         if(secure)
         {
             encodedMessage = [OTRCodec encodeMessage:newMessage];
-            [OTRCodec encodeMessage:newMessage completion:^(OTRManagedMessage *message) {
+            [OTRCodec encodeMessage:newMessage startGeneratingKeysBlock:nil completion:^(OTRManagedMessage *message) {
                 [OTRManagedMessage sendMessage:message];
                 self.lastSentChatStateValue=kOTRChatStateActive;
             }];
@@ -238,7 +238,7 @@
     if ([sortedStatuses count]) {
         return sortedStatuses[0];
     }
-    return [OTRManagedStatus newStatus:kOTRBuddyStatusOffline withMessage:nil withBuddy:self incoming:NO];
+    return [OTRManagedStatus newStatus:kOTRBuddyStatusOffline withMessage:nil withBuddy:self incoming:YES];
 
     
 }

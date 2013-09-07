@@ -31,6 +31,7 @@
 #import "XMPPvCardCoreDataStorage.h"
 #import "XMPPMessage+XEP_0184.h"
 #import "XMPPMessage+XEP_0085.h"
+#import "NSXMLElement+XEP_0203.h"
 #import "Strings.h"
 #import "OTRXMPPManagedPresenceSubscriptionRequest.h"
 
@@ -711,6 +712,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     return [OTRManagedBuddy fetchOrCreateWithName:[user.jid full] account:self.account];
 }
 
+
 - (void)xmppStream:(XMPPStream *)sender didReceiveMessage:(XMPPMessage *)message
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
@@ -749,22 +751,15 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
         [messageBuddy receiveReceiptResonse:[message receiptResponseID]];
     }
     
-	if ([message isChatMessageWithBody])
+	if ([message isMessageWithBody] && ![message isErrorMessage])
 	{
-        
-        
-        
-        /*XMPPUserCoreDataStorageObject *user = [xmppRosterStorage userForJID:[message from]
-                                                                 xmppStream:xmppStream
-                                                       managedObjectContext:[self managedObjectContext_roster]];
-         */
-        
         NSString *body = [[message elementForName:@"body"] stringValue];
-        //NSString *displayName = [user displayName];
         
         OTRManagedBuddy * messageBuddy = [self buddyWithMessage:message];
         
-        OTRManagedMessage *otrMessage = [OTRManagedMessage newMessageFromBuddy:messageBuddy message:body encrypted:YES];
+        NSDate * date = [message delayedDeliveryDate];
+        
+        OTRManagedMessage *otrMessage = [OTRManagedMessage newMessageFromBuddy:messageBuddy message:body encrypted:YES delayedDate:date];
         [OTRCodec decodeMessage:otrMessage];
         
         if(otrMessage && !otrMessage.isEncryptedValue)
@@ -773,8 +768,8 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
             
         }
 	}
+    
 }
-
 - (void)xmppStream:(XMPPStream *)sender didReceivePresence:(XMPPPresence *)presence
 {
 	DDLogVerbose(@"%@: %@ - %@\nType: %@\nShow: %@\nStatus: %@", THIS_FILE, THIS_METHOD, [presence from], [presence type], [presence show],[presence status]);
