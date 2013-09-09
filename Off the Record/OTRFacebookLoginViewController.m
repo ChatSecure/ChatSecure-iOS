@@ -23,6 +23,8 @@
 #import "OTRFacebookLoginViewController.h"
 #import "Strings.h"
 #import "OTRAppDelegate.h"
+#import <FacebookSDK/FacebookSDK.h>
+#import "OTRSecrets.h"
 
 @interface OTRFacebookLoginViewController ()
 
@@ -87,10 +89,50 @@
 
 -(void)readInFields
 {
-    [super readInFields];
-    NSString * usernameText = [self.usernameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-    usernameText = [NSString stringWithFormat:@"%@@%@",usernameText,kOTRFacebookDomain];
-    [self.account setNewUsername:usernameText];
+    //[super readInFields];
+    //NSString * usernameText = [self.usernameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    //usernameText = [NSString stringWithFormat:@"%@@%@",usernameText,kOTRFacebookDomain];
+    //[self.account setNewUsername:usernameText];
+}
+
+-(void)loginButtonPressed:(id)sender
+{
+    if([self.account.password length])
+    {
+        [super loginButtonPressed:sender];
+    }
+    else{
+        [FBSettings setDefaultAppID:FACEBOOK_APP_ID];
+        FBSession * session = [[FBSession alloc] initWithAppID:FACEBOOK_APP_ID permissions:@[@"xmpp_login"] urlSchemeSuffix:nil tokenCacheStrategy:[FBSessionTokenCachingStrategy nullCacheInstance]];
+        [FBSession setActiveSession:session];
+        [session openWithBehavior:FBSessionLoginBehaviorForcingWebView completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+            if ([session isOpen]) {
+                self.account.password = session.accessTokenData.accessToken;
+                NSLog(@"Session: %@",session);
+                FBRequest * request = [[FBRequest alloc] initWithSession:session graphPath:@"me"];
+                [request startWithCompletionHandler:^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *user, NSError *error) {
+                    if (!error) {
+                        self.account.username =  user.username;
+                        [super loginButtonPressed:sender];
+                    }
+                }];
+            }
+        }];
+    }
+    
+    /*
+    [FBSession openActiveSessionWithReadPermissions:@[@"xmpp_login"] allowLoginUI:YES completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+        if ([session isOpen]) {
+            NSLog(@"Session: %@",session);
+            FBRequest * request = [[FBRequest alloc] initWithSession:session graphPath:@"me"];
+            [request startWithCompletionHandler:^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *user, NSError *error) {
+                if (!error) {
+                    NSString * name =  user.name;
+                }
+            }];
+        }
+    }];
+     */
 }
 
 - (void)didReceiveMemoryWarning

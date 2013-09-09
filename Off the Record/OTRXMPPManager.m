@@ -44,6 +44,8 @@
 #import "OTRConstants.h"
 #import "OTRProtocolManager.h"
 #include <stdlib.h>
+#import "XMPPXFacebookPlatformAuthentication.h"
+#import "OTRSecrets.h"
 
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
@@ -330,7 +332,14 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	// The XMPPStream is the base class for all activity.
 	// Everything else plugs into the xmppStream, such as modules/extensions and delegates.
     
-	xmppStream = [[XMPPStream alloc] init];
+	if ([[self.account providerName] isEqualToString:FACEBOOK_STRING]) {
+        xmppStream = [[XMPPStream alloc] initWithFacebookAppId:FACEBOOK_APP_ID];
+    }
+    else{
+        xmppStream = [[XMPPStream alloc] init];
+    }
+    
+    
     
     //Makes sure not allow any sending of password in plain text
     
@@ -672,13 +681,18 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	
 	
 	NSError *error = nil;
-	
-	if (![[self xmppStream] authenticateWithPassword:password error:&error])
+    
+    if ([sender supportsXFacebookPlatformAuthentication]) {
+        
+        isXmppConnected = [sender authenticateWithFacebookAccessToken:password error:&error];
+        return;
+    }
+	else if (![[self xmppStream] authenticateWithPassword:password error:&error])
 	{
-		DDLogError(@"Error authenticating: %@", error);
         isXmppConnected = NO;
         return;
 	}
+    
     isXmppConnected = YES;
 }
 
