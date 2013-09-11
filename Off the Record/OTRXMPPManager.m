@@ -46,6 +46,7 @@
 #include <stdlib.h>
 #import "XMPPXFacebookPlatformAuthentication.h"
 #import "OTRConstants.h"
+#import "OTRUtilities.h"
 
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
@@ -621,7 +622,9 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 - (void)xmppStream:(XMPPStream *)sender willSecureWithSettings:(NSMutableDictionary *)settings
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
-	
+    
+    [settings setObject:[OTRUtilities cipherSuites] forKey:GCDAsyncSocketSSLCipherSuites];
+
 	if (allowSelfSignedCertificates)
 	{
 		[settings setObject:[NSNumber numberWithBool:YES] forKey:(NSString *)kCFStreamSSLAllowsAnyRoot];
