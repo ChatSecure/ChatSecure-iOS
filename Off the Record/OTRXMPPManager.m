@@ -45,7 +45,7 @@
 #import "OTRProtocolManager.h"
 #include <stdlib.h>
 #import "XMPPXFacebookPlatformAuthentication.h"
-#import "OTRSecrets.h"
+#import "OTRConstants.h"
 
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
@@ -699,7 +699,6 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 - (void)xmppStreamDidAuthenticate:(XMPPStream *)sender
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
-	XMPPJID * jid = [sender myJID];
 	[self goOnline];
 }
 

@@ -118,3 +118,5 @@ typedef enum {
 #define MESSAGE_DELIVERED_LABEL_TAG          103
 #define STATUS_MESSAGE_LABEL_TAG             104
 
+#define FACEBOOK_APP_ID @"447241325394334"
+
