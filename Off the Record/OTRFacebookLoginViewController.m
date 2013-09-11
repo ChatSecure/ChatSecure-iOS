@@ -32,9 +32,22 @@
 
 @implementation OTRFacebookLoginViewController
 
+@synthesize facebookButton;
+
 -(void)viewDidLoad {
     [super viewDidLoad];
     [FBSettings setDefaultAppID:FACEBOOK_APP_ID];
+    self.facebookButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.facebookButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+    self.facebookButton.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+
+    UIEdgeInsets imageInsets = UIEdgeInsetsMake(4.0, 40.0, 4.0, 4.0);
+    
+    UIImage *image = [[UIImage imageNamed:@"FBLoginViewButton"] resizableImageWithCapInsets:imageInsets];
+    [self.facebookButton setBackgroundImage:image forState:UIControlStateNormal];
+    
+    image = [[UIImage imageNamed:@"FBLoginViewButtonPressed"] resizableImageWithCapInsets:imageInsets];
+    [self.facebookButton setBackgroundImage:image forState:UIControlStateHighlighted];
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
@@ -61,16 +74,15 @@
     UIView * view = [[UIView alloc] initWithFrame:CGRectZero];
     if (section == 0) {
         view.frame = CGRectMake(0, 0, tableView.frame.size.width, 55);
-        UIButton * facebookButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        facebookButton.frame = CGRectMake(8, 8, tableView.frame.size.width-16, 45);
+        self.facebookButton.frame = CGRectMake(8, 8, tableView.frame.size.width-16, 45);
         
         if ([self.account.password length] && [self.account.username length]) {
             //disconnect button
-            [facebookButton setTitle:@"Disconnect Facebook" forState:UIControlStateNormal];
+            [facebookButton setTitle:DISCONNECT_FACEBOOK_STRING forState:UIControlStateNormal];
             [facebookButton addTarget:self action:@selector(disconnectFacebook:) forControlEvents:UIControlEventTouchUpInside];
         }
         else {
-            [facebookButton setTitle:@"Connect Facebook" forState:UIControlStateNormal];
+            [facebookButton setTitle:CONNECT_FACEBOOK_STRING forState:UIControlStateNormal];
             [facebookButton addTarget:self action:@selector(loginButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
             
         }
