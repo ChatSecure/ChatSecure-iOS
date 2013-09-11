@@ -358,12 +358,7 @@
     BOOL fields = [self checkFields];
     if(fields)
     {
-        [self.view endEditing:YES];
-        HUD = [[MBProgressHUD alloc] initWithView:self.view];
-        [self.view addSubview:HUD];
-        HUD.delegate = self;
-        HUD.labelText = LOGGING_IN_STRING;
-        [HUD show:YES];
+        [self showLoginProgress];
         
         [self readInFields];
 
@@ -374,6 +369,16 @@
     }
     self.timeoutTimer = [NSTimer scheduledTimerWithTimeInterval:45.0 target:self selector:@selector(timeout:) userInfo:nil repeats:NO];
     //[[[OTRProtocolManager sharedInstance] accountsManager] addAccount:account];
+}
+-(void)showLoginProgress
+{
+    [self.view endEditing:YES];
+    HUD = [[MBProgressHUD alloc] initWithView:self.view];
+    [self.view addSubview:HUD];
+    HUD.delegate = self;
+    HUD.labelText = LOGGING_IN_STRING;
+    [HUD show:YES];
+    self.timeoutTimer = [NSTimer scheduledTimerWithTimeInterval:45.0 target:self selector:@selector(timeout:) userInfo:nil repeats:NO];
 }
 
 - (void)cancelPressed:(id)sender {

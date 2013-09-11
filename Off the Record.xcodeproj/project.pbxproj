@@ -835,6 +835,7 @@
 		636FE4BB161B771E002B28EF /* OTROscarLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTROscarLoginViewController.m; sourceTree = "<group>"; };
 		636FE4BE161B7C68002B28EF /* OTRInLineTextEditTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRInLineTextEditTableViewCell.h; sourceTree = "<group>"; };
 		636FE4BF161B7C68002B28EF /* OTRInLineTextEditTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRInLineTextEditTableViewCell.m; sourceTree = "<group>"; };
+		637FF13417DEB8910012AA1B /* ChatSecure 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ChatSecure 2.xcdatamodel"; sourceTree = "<group>"; };
 		63813C1016E14E5D00909670 /* OTRBuddyListGroupManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBuddyListGroupManager.h; sourceTree = "<group>"; };
 		63813C1116E14E5D00909670 /* OTRBuddyListGroupManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBuddyListGroupManager.m; sourceTree = "<group>"; };
 		639B0B6717DE74F7009B50FC /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = "Submodules/facebook-ios-sdk/build/FacebookSDK.framework"; sourceTree = "<group>"; };
@@ -3902,9 +3903,10 @@
 		D9D3717C169D404F0086F358 /* ChatSecure.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				637FF13417DEB8910012AA1B /* ChatSecure 2.xcdatamodel */,
 				D9D3717D169D40500086F358 /* ChatSecure.xcdatamodel */,
 			);
-			currentVersion = D9D3717D169D40500086F358 /* ChatSecure.xcdatamodel */;
+			currentVersion = 637FF13417DEB8910012AA1B /* ChatSecure 2.xcdatamodel */;
 			path = ChatSecure.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

@@ -699,7 +699,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 - (void)xmppStreamDidAuthenticate:(XMPPStream *)sender
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
-	
+	XMPPJID * jid = [sender myJID];
 	[self goOnline];
 }
 

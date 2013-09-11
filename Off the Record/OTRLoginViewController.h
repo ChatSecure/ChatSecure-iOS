@@ -66,6 +66,7 @@
 
 -(void)addCellinfoWithSection:(NSInteger)section row:(NSInteger)row labelText:(id)text cellType:(NSString *)type userInputView:(UIView *)inputView;
 -(void)readInFields;
+-(void)showLoginProgress;
 
 +(OTRLoginViewController *)loginViewControllerWithAcccountID:(NSManagedObjectID *)accountID;
 
