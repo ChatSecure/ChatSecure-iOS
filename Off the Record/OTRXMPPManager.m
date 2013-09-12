@@ -544,8 +544,6 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 		return YES;
 	}
     xmppStream.autoStartTLS = YES;
-    //xmppStream.requireTLS = self.account.shouldRequireTLS;
-    //xmppStream.allowPlaintextAuthentication = self.account.shouldAllowPlainTextAuthentication;
     
 	//
 	// If you don't want to use the Settings view to set the JID, 
