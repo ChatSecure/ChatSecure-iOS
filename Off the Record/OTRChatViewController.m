@@ -100,7 +100,6 @@
 
 -(void)setupLockButton
 {
-    currentEncryptionStatus = -1;
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     UIImage *buttonImage = [UIImage imageNamed:@"Lock_Locked.png"];
     [button setBackgroundImage:buttonImage forState:UIControlStateNormal];
@@ -139,9 +138,11 @@
 
 -(void)refreshLockButton
 {
-    BOOL trusted = [[OTRKit sharedInstance] finerprintIsVerifiedForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
-    if (currentEncryptionStatus != [self.buddy currentEncryptionStatus].statusValue) {
-        currentEncryptionStatus = [self.buddy currentEncryptionStatus].statusValue;
+    UIBarButtonItem * rightBarItem = self.navigationItem.rightBarButtonItem;
+    if ([rightBarItem isEqual:lockButton] || [rightBarItem isEqual:lockVerifiedButton] || [rightBarItem isEqual:unlockedButton] || !rightBarItem) {
+        BOOL trusted = [[OTRKit sharedInstance] finerprintIsVerifiedForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
+        
+        int16_t currentEncryptionStatus = [self.buddy currentEncryptionStatus].statusValue;
         
         if(currentEncryptionStatus == kOTRKitMessageStateEncrypted && trusted)
         {
@@ -157,6 +158,7 @@
         }
         self.navigationItem.rightBarButtonItem.accessibilityLabel = @"lock";
     }
+    
 }
 
 -(void)lockButtonPressed
@@ -164,9 +166,7 @@
     NSString *encryptionString = INITIATE_ENCRYPTED_CHAT_STRING;
     NSString * verifiedString = VERIFY_STRING;
     
-    currentEncryptionStatus = [self.buddy currentEncryptionStatus].statusValue;
-    
-    if (currentEncryptionStatus == kOTRKitMessageStateEncrypted) {
+    if ([self.buddy currentEncryptionStatus].statusValue == kOTRKitMessageStateEncrypted) {
         encryptionString = CANCEL_ENCRYPTED_CHAT_STRING;
     }
     UIActionSheet *popupQuery = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:encryptionString, verifiedString, CLEAR_CHAT_HISTORY_STRING, nil];
@@ -503,8 +503,7 @@
 
 
 - (void)sendButtonPressed:(id)sender {
-    int16_t currentEncryptionStatus = [self.buddy currentEncryptionStatus].statusValue;
-    BOOL secure = currentEncryptionStatus == kOTRKitMessageStateEncrypted;
+    BOOL secure = [self.buddy currentEncryptionStatus].statusValue == kOTRKitMessageStateEncrypted;
     [buddy sendMessage:textView.text secure:secure];
     textView.text = nil;
     [self textViewDidChange:textView];
@@ -550,8 +549,7 @@
         }
         else if (buttonIndex == 0) // Initiate/cancel encryption
         {
-            int16_t currentEncryptionStatus = [self.buddy currentEncryptionStatus].statusValue;
-            if(currentEncryptionStatus == kOTRKitMessageStateEncrypted)
+            if([self.buddy currentEncryptionStatus].statusValue == kOTRKitMessageStateEncrypted)
             {
                 [[OTRKit sharedInstance]disableEncryptionForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
             } else {
@@ -593,17 +591,18 @@
     self.navigationItem.rightBarButtonItem = activityBarButtonItem;
 }
 -(void)removeLockSpinner {
-    //[self refreshLockButton];
+    self.navigationItem.rightBarButtonItem = nil;
+    [self refreshLockButton];
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if(buttonIndex == 1 && alertView.tag == ALERTVIEW_NOT_VERIFIED_TAG)
+    if(alertView.cancelButtonIndex != buttonIndex && alertView.tag == ALERTVIEW_NOT_VERIFIED_TAG)
     {
         [[OTRKit sharedInstance] changeVerifyFingerprintForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol verrified:YES];
         [self refreshLockButton];
     }
-    else if(buttonIndex == 1 && alertView.tag == ALERTVIEW_VERIFIED_TAG)
+    else if(alertView.cancelButtonIndex != buttonIndex && alertView.tag == ALERTVIEW_VERIFIED_TAG)
     {
         [[OTRKit sharedInstance] changeVerifyFingerprintForUsername:buddy.accountName accountName:buddy.account.username  protocol:buddy.account.protocol verrified:NO];
         [self refreshLockButton];
@@ -654,7 +653,6 @@
         [self textViewDidChange:textView];
         
         [self scrollToBottomAnimated:NO];
-        currentEncryptionStatus = [self.buddy currentEncryptionStatus].statusValue;
         [self refreshLockButton];
     }
     
