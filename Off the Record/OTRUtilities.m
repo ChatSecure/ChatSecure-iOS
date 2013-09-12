@@ -105,7 +105,7 @@
 
 +(BOOL)useCipher:(SSLCipherSuite)cipherSuite {
     switch (cipherSuite) {
-        case SSL_RSA_WITH_RC2_CBC_MD5:
+        //case SSL_RSA_WITH_RC2_CBC_MD5:
         case SSL_RSA_WITH_3DES_EDE_CBC_SHA:
         case SSL_DH_DSS_WITH_3DES_EDE_CBC_SHA:
         case SSL_DH_RSA_WITH_3DES_EDE_CBC_SHA:
@@ -115,12 +115,12 @@
         case TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA:
         case TLS_ECDH_RSA_WITH_3DES_EDE_CBC_SHA:
         case TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA:
-        case SSL_RSA_WITH_RC4_128_MD5:
-        case SSL_RSA_WITH_RC4_128_SHA:
-        case TLS_ECDH_ECDSA_WITH_RC4_128_SHA:
-        case TLS_ECDHE_ECDSA_WITH_RC4_128_SHA:
-        case TLS_ECDH_RSA_WITH_RC4_128_SHA:
-        case TLS_ECDHE_RSA_WITH_RC4_128_SHA:
+        //case SSL_RSA_WITH_RC4_128_MD5:
+        //case SSL_RSA_WITH_RC4_128_SHA:
+        //case TLS_ECDH_ECDSA_WITH_RC4_128_SHA:
+        //case TLS_ECDHE_ECDSA_WITH_RC4_128_SHA:
+        //case TLS_ECDH_RSA_WITH_RC4_128_SHA:
+        //case TLS_ECDHE_RSA_WITH_RC4_128_SHA:
         case TLS_RSA_WITH_AES_128_CBC_SHA:
         case TLS_DH_DSS_WITH_AES_128_CBC_SHA:
         case TLS_DH_RSA_WITH_AES_128_CBC_SHA:
@@ -165,6 +165,8 @@
         case TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384:
         case TLS_ECDH_RSA_WITH_AES_128_GCM_SHA256:
         case TLS_ECDH_RSA_WITH_AES_256_GCM_SHA384:
+        case TLS_DHE_RSA_WITH_AES_128_CBC_SHA256:
+        case TLS_DHE_RSA_WITH_AES_256_CBC_SHA256:
             return YES;
             
         default:
