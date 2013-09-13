@@ -1,0 +1,132 @@
+GTM OAuth 2 Release Notes
+
+Project site:     http://code.google.com/p/gtm-oauth2/
+Discussion group: http://groups.google.com/group/gtm-oauth2
+
+7-August-2012
+
+Replaced initial html delay fix with a pending request mechanism.
+
+26-July-2012
+
+Added popViewBlock property to GTMOAuth2ViewControllerTouch to allow
+dismissing the view when it lacks a navigation controller.
+
+
+13-April-2012
+
+Support setting keychain accessibility for iOS.
+
+
+4-April-2012
+
+Add scope to persistenceResponseString so applications can inspect
+the prior scope after loading the token from the keychain.
+
+
+3-April-2012
+
+Now pulls version 2.3.2 of SBJSON sources from github.
+
+
+14-March-2012
+
+Added notification on access token refresh.
+
+
+7-October-2011
+
+Added notifications for starting and stopping loads of UIWebView.
+
+
+30-September-2011
+
+Add brief delay to view controller to allow initial html to load.
+
+
+21-September-2011
+
+Added additionalTokenRequestParameters property to the authorization object.
+
+Updated the domain for clearing cookies when signing into Google services.
+
+
+7-September-2011
+
+Add support for token servers providing url-encoded responses (thanks ivo)
+
+
+25-August-2011
+
+Added convenience methods for creating autoreleased controllers.
+
+
+24-August-2011
+
+Fixed sign-in when Mac window controller displays as a standalone
+modal window (thanks mirko)
+
+
+2-August-2011
+
+Projects may now define GTM_OAUTH2_SKIP_GOOGLE_SUPPORT to exclude
+Google-specific code. The GTMOAuth2 project file also now includes
+"non-Google" targets for building without Google-specific code.
+
+
+18-July-2011
+
+The authorization header now uses the "Bearer" prefix.
+
+
+12-July-2011
+
+Added an additionalAuthorizationParameters property to the SignIn class, used
+by the sample apps to specify a display language for the sign-in pages.
+
+
+20-June-2011
+
+To avoid accidental leakage of tokens, the authentication object now
+returns kGTMOAuth2ErrorUnauthorizableRequest when attempting to authorize
+requests with schemes other than https. The property
+shouldAuthorizeAllRequests can be set to override this and allow any
+request to be authorized.
+
+
+1-June-2011
+
+Added Mac window controller property shouldAllowApplicationTermination
+
+Added user properties to window & view controllers.
+
+Fetchers may now optionally be created by a GTMHTTPFetcherService instance.
+
+
+24-May-2011
+
+Mac window controller now opens pop-up window links in an external browser
+by default, and provides an externalRequestSelector property to let
+the client provide custom handling.
+
+
+4-May-2011
+
+Addded support for services which provide access tokens, but no
+refresh tokens.
+
+
+Release 1.0.0
+6-April-2011
+
+Initial public release.
+
+
+JSON notes:
+
+This library currently relies on version 2.1.1 of SBJSON:
+
+http://json-framework.googlecode.com/svn/tags/2.1.1/Source/
+
+The latest version of SBJSON is avaiilable at http://stig.github.com/json-framework/
+
