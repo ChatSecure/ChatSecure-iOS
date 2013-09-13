@@ -33,6 +33,7 @@
 #import "OTRLanguageManager.h"
 #import "OTRConvertAccount.h"
 #import "OTRUtilities.h"
+#import "OTRAccountsManager.h"
 #import <FacebookSDK/FacebookSDK.h>
 
 // Log levels: off, error, warn, info, verbose
@@ -59,6 +60,8 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    
+    
     // DATABASE TESTS
     NSString * storeFileName = @"db.sqlite";
     [MagicalRecord setupCoreDataStackWithAutoMigratingSqliteStoreNamed:storeFileName];
@@ -71,6 +74,8 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     {
         NSLog(@"error encrypting store");
     }
+    
+    
     
     //NSPersistentStoreCoordinator *storeCoordinator = [OTRDatabaseUtils persistentStoreCoordinatorWithDBName:@"db.sqlite" passphrase:@"test"];
     
@@ -96,6 +101,11 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
         [Crittercism setOptOutStatus:YES];
     }
 #endif
+    
+    if([OTRUtilities isFirstLaunchOnCurrentVersion])
+    {
+        [OTRAccountsManager removeAllPasswordsForAccountType:OTRAccountTypeFacebook];
+    }
     
     [OTRUtilities deleteAllBuddiesAndMessages];
     

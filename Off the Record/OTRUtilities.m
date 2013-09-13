@@ -13,6 +13,31 @@
 
 @implementation OTRUtilities
 
++(NSString *)currentAppVersionString {
+    NSString * version = [NSString stringWithFormat:@"%@", [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"]];
+    return version;
+}
+
++(void)saveCurrentAppVersion
+{
+    NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObject:[self currentAppVersionString] forKey:kOTRAppVersionKey];
+    [defaults synchronize];
+}
+
++(NSString *)lastLaunchVersion {
+    NSString * version = [[NSUserDefaults standardUserDefaults] objectForKey:kOTRAppVersionKey];
+    return version;
+}
+
++(BOOL)isFirstLaunchOnCurrentVersion
+{
+    if (![[self currentAppVersionString] isEqualToString:[self lastLaunchVersion]]) {
+        [self saveCurrentAppVersion];
+        return YES;
+    }
+    return NO;
+}
 
 +(NSString *)stripHTML:(NSString *)string
 {

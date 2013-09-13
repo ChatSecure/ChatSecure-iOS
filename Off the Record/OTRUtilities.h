@@ -21,4 +21,8 @@
 
 +(NSArray *)cipherSuites;
 
++(NSString *)currentAppVersionString;
++(NSString *)lastLaunchVersion;
++(BOOL)isFirstLaunchOnCurrentVersion;
+
 @end

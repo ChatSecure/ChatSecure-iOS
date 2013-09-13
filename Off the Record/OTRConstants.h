@@ -68,6 +68,8 @@
 #define kOTRSettingAccountsKey @"kOTRSettingAccountsKey"
 #define kOTRSettingKeyLanguage @"userSelectedSetting"
 
+#define kOTRAppVersionKey @"kOTRAppVersionKey"
+
 
 typedef enum {
     kOTRBuddyStatusOffline = 4,
@@ -85,6 +87,11 @@ typedef enum {
     kOTRChatStateInactive = 4,
     kOTRChatStateGone =5
 } OTRChatState;
+
+typedef enum {
+    OTRAccountTypeFacebook,
+    OTRAccountTypeGoogleTalk
+}OTRAccountType;
 
 //Chatview
 #define kTabBarHeight 0
