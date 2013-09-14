@@ -45,6 +45,7 @@
 #import "OTRProtocolManager.h"
 #include <stdlib.h>
 #import "XMPPXFacebookPlatformAuthentication.h"
+#import "XMPPXOATH2Google.h"
 #import "OTRConstants.h"
 #import "OTRUtilities.h"
 
@@ -644,7 +645,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 		NSString *serverDomain = xmppStream.hostName;
 		NSString *virtualDomain = [xmppStream.myJID domain];
 		
-		if ([serverDomain isEqualToString:@"talk.google.com"])
+		if ([serverDomain isEqualToString:kOTRGoogleTalkDomain])
 		{
 			if ([virtualDomain isEqualToString:@"gmail.com"])
 			{
@@ -686,6 +687,10 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     if ([sender supportsXFacebookPlatformAuthentication]) {
         
         isXmppConnected = [sender authenticateWithFacebookAccessToken:password error:&error];
+        return;
+    }
+    else if ([sender supportsXOAUTH2GoogleAuthentication] && [sender.hostName isEqualToString:kOTRGoogleTalkDomain]) {
+        isXmppConnected = [sender authenticateWithGoogleAccessToken:password error:&error];
         return;
     }
 	else if (![[self xmppStream] authenticateWithPassword:password error:&error])

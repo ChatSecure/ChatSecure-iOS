@@ -74,7 +74,11 @@
             [self.account setUsername:auth.userEmail];
             [self.account setPassword:auth.accessToken];
             [self.loginViewTableView reloadData];
-            //[self loginButtonPressed:sender];
+            [self showLoginProgress];
+            NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
+            [context MR_saveOnlySelfAndWait];
+            id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
+            [protocol connectWithPassword:self.account.password];
         }
     }];
     
