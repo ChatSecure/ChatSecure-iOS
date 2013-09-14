@@ -32,22 +32,32 @@
 
 @implementation OTRFacebookLoginViewController
 
-@synthesize facebookButton;
-
 -(void)viewDidLoad {
     [super viewDidLoad];
     [FBSettings setDefaultAppID:FACEBOOK_APP_ID];
-    self.facebookButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.facebookButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
-    self.facebookButton.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-
+    self.connectButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.connectButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+    self.connectButton.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    
     UIEdgeInsets imageInsets = UIEdgeInsetsMake(4.0, 40.0, 4.0, 4.0);
     
-    UIImage *image = [[UIImage imageNamed:@"FBLoginViewButton"] resizableImageWithCapInsets:imageInsets];
-    [self.facebookButton setBackgroundImage:image forState:UIControlStateNormal];
+    UIImage *buttonImage = [[UIImage imageNamed:@"FBLoginViewButton"] resizableImageWithCapInsets:imageInsets];
+    [self.connectButton setBackgroundImage:buttonImage forState:UIControlStateNormal];
     
-    image = [[UIImage imageNamed:@"FBLoginViewButtonPressed"] resizableImageWithCapInsets:imageInsets];
-    [self.facebookButton setBackgroundImage:image forState:UIControlStateHighlighted];
+    UIImage * pressedButtonImage = [[UIImage imageNamed:@"FBLoginViewButtonPressed"] resizableImageWithCapInsets:imageInsets];
+    [self.connectButton setBackgroundImage:pressedButtonImage forState:UIControlStateHighlighted];
+    
+    self.disconnectButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.disconnectButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+    self.disconnectButton.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    [self.disconnectButton setBackgroundImage:buttonImage forState:UIControlStateNormal];
+    [self.disconnectButton setBackgroundImage:pressedButtonImage forState:UIControlStateHighlighted];
+    
+    [self.disconnectButton setTitle:DISCONNECT_FACEBOOK_STRING forState:UIControlStateNormal];
+    [self.disconnectButton addTarget:self action:@selector(disconnectFacebook:) forControlEvents:UIControlEventTouchUpInside];
+
+    [self.connectButton setTitle:CONNECT_FACEBOOK_STRING forState:UIControlStateNormal];
+    [self.connectButton addTarget:self action:@selector(loginButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
@@ -59,7 +69,6 @@
     }
     
     return [super tableView:tableView numberOfRowsInSection:section];
-    
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
@@ -68,66 +77,6 @@
         return 55;
     }
     
-}
--(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
-{
-    UIView * view = [[UIView alloc] initWithFrame:CGRectZero];
-    if (section == 0) {
-        view.frame = CGRectMake(0, 0, tableView.frame.size.width, 55);
-        self.facebookButton.frame = CGRectMake(8, 8, tableView.frame.size.width-16, 45);
-        
-        if ([self.account.password length] && [self.account.username length]) {
-            //disconnect button
-            [facebookButton setTitle:DISCONNECT_FACEBOOK_STRING forState:UIControlStateNormal];
-            [facebookButton addTarget:self action:@selector(disconnectFacebook:) forControlEvents:UIControlEventTouchUpInside];
-        }
-        else {
-            [facebookButton setTitle:CONNECT_FACEBOOK_STRING forState:UIControlStateNormal];
-            [facebookButton addTarget:self action:@selector(loginButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-            
-        }
-        [view addSubview:facebookButton];
-    }
-    return view;
-}
-
--(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    UITableViewCell * cell = nil;
-    if (indexPath.section == 0) {
-        if ([self.account.password length] && [self.account.username length]) {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@""];
-            cell.textLabel.text = USERNAME_STRING;
-            cell.detailTextLabel.text = self.account.username;
-            cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        }
-    }
-    else {
-        cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
-    }
-    return cell;
-    
-}
-
--(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    [self loginButtonPressed:[tableView cellForRowAtIndexPath:indexPath]];
-}
-
-- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
-{
-    if (buttonIndex == 0) {
-        
-        NSURL *url = [ [ NSURL alloc ] initWithString: kOTRFacebookUsernameLink ];
-        [[UIApplication sharedApplication] openURL:url];
-        
-    }
-}
-
--(void)disconnectFacebook:(id)sender {
-    [self.account setPassword:nil];
-    [self.loginViewTableView reloadData];
 }
 
 -(void)loginButtonPressed:(id)sender

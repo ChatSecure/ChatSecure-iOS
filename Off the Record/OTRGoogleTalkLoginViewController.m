@@ -22,6 +22,15 @@
 
 #import "OTRGoogleTalkLoginViewController.h"
 #import "Strings.h"
+#import "GTMOAuth2ViewControllerTouch.h"
+#import "OTRSecrets.h"
+/*
+#ifdef CRITTERCISM_ENABLED
+#import "OTRSecrets.h"
+#else
+#define GOOGLE_APP_SECRET @"YOUR GOOGLE APP SECRET"
+#endif
+ */
 
 @interface OTRGoogleTalkLoginViewController ()
 
@@ -42,14 +51,37 @@
 {
     [super viewDidLoad];
 	
-    self.usernameTextField.placeholder = GOOGLE_TALK_EXAMPLE_STRING;
-    self.usernameTextField.keyboardType = UIKeyboardTypeEmailAddress;
+    self.connectButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [self.connectButton setTitle:@"Connect Google Talk" forState:UIControlStateNormal];
+    [self.connectButton addTarget:self action:@selector(connectButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    
+    self.disconnectButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [self.disconnectButton setTitle:@"Disconnect Google Talk" forState:UIControlStateNormal];
+    [self.disconnectButton addTarget:self action:@selector(disconnectButton:) forControlEvents:UIControlEventTouchUpInside];
+    
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+-(void)connectButtonPressed:(id)sender {
+    GTMOAuth2ViewControllerTouch * oauthViewController = [GTMOAuth2ViewControllerTouch controllerWithScope:GOOGLE_APP_SCOPE clientID:GOOGLE_APP_ID clientSecret:GOOGLE_APP_SECRET keychainItemName:nil completionHandler:^(GTMOAuth2ViewControllerTouch *viewController, GTMOAuth2Authentication *auth, NSError *error) {
+        //[viewController dismissModalViewControllerAnimated:YES];
+        if (!error) {
+            [self.account setUsername:auth.userEmail];
+            [self.account setPassword:auth.accessToken];
+            [self.loginViewTableView reloadData];
+            //[self loginButtonPressed:sender];
+        }
+    }];
+    
+    [self.navigationController pushViewController:oauthViewController animated:YES];
+    
+    
+    
 }
 
 @end

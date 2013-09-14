@@ -70,6 +70,10 @@
 
 #define kOTRAppVersionKey @"kOTRAppVersionKey"
 
+#define FACEBOOK_APP_ID @"447241325394334"
+#define GOOGLE_APP_ID @"719137339288.apps.googleusercontent.com"
+#define GOOGLE_APP_SCOPE @"https://www.googleapis.com/auth/googletalk"
+
 
 typedef enum {
     kOTRBuddyStatusOffline = 4,
@@ -125,5 +129,5 @@ typedef enum {
 #define MESSAGE_DELIVERED_LABEL_TAG          103
 #define STATUS_MESSAGE_LABEL_TAG             104
 
-#define FACEBOOK_APP_ID @"447241325394334"
+
 
