@@ -13,7 +13,7 @@
 @property (nonatomic,strong) UIButton * connectButton;
 @property (nonatomic,strong) UIButton * disconnectButton;
 
-
+-(void)connectAccount:(id)sender;
 -(void)disconnectAccount:(id)sender;
 
 @end

@@ -53,11 +53,11 @@
 	
     self.connectButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [self.connectButton setTitle:@"Connect Google Talk" forState:UIControlStateNormal];
-    [self.connectButton addTarget:self action:@selector(connectButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [self.connectButton addTarget:self action:@selector(connectAccount:) forControlEvents:UIControlEventTouchUpInside];
     
     self.disconnectButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [self.disconnectButton setTitle:@"Disconnect Google Talk" forState:UIControlStateNormal];
-    [self.disconnectButton addTarget:self action:@selector(disconnectButton:) forControlEvents:UIControlEventTouchUpInside];
+    [self.disconnectButton addTarget:self action:@selector(disconnectAccount:) forControlEvents:UIControlEventTouchUpInside];
     
 }
 
@@ -66,26 +66,20 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
--(void)connectButtonPressed:(id)sender {
+-(void)connectAccount:(id)sender
+{
     GTMOAuth2ViewControllerTouch * oauthViewController = [GTMOAuth2ViewControllerTouch controllerWithScope:GOOGLE_APP_SCOPE clientID:GOOGLE_APP_ID clientSecret:GOOGLE_APP_SECRET keychainItemName:nil completionHandler:^(GTMOAuth2ViewControllerTouch *viewController, GTMOAuth2Authentication *auth, NSError *error) {
         //[viewController dismissModalViewControllerAnimated:YES];
         if (!error) {
             [self.account setUsername:auth.userEmail];
-            [self.account setPassword:auth.accessToken];
-            [self.loginViewTableView reloadData];
-            [self showLoginProgress];
             NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
             [context MR_saveOnlySelfAndWait];
-            id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
-            [protocol connectWithPassword:self.account.password];
+            [self.account setPassword:auth.accessToken];
+            [self.loginViewTableView reloadData];
+            [self loginButtonPressed:sender];
         }
     }];
-    
     [self.navigationController pushViewController:oauthViewController animated:YES];
-    
-    
-    
 }
 
 @end

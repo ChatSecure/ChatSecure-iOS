@@ -60,58 +60,30 @@
     [self.connectButton addTarget:self action:@selector(loginButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
 }
 
--(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    if (section == 0) {
-        if ([self.account.password length] && [self.account.username length]) {
-            return 1;
+-(void)connectAccount:(id)sender
+{
+    //[FBSettings setDefaultAppID:FACEBOOK_APP_ID];
+    FBSession * session = [[FBSession alloc] initWithAppID:FACEBOOK_APP_ID permissions:@[@"xmpp_login"] urlSchemeSuffix:nil tokenCacheStrategy:[FBSessionTokenCachingStrategy nullCacheInstance]];
+    [FBSession setActiveSession:session];
+    [session openWithBehavior:FBSessionLoginBehaviorWithFallbackToWebView completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+        if ([session isOpen]) {
+            
+            NSLog(@"Session: %@",session);
+            FBRequest * request = [[FBRequest alloc] initWithSession:session graphPath:@"me"];
+            [request startWithCompletionHandler:^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *user, NSError *error) {
+                if (!error) {
+                    [self didConnectUser:user];
+                    self.account.password = session.accessTokenData.accessToken;
+                    [self.loginViewTableView reloadData];
+                    [self showLoginProgress];
+                    NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
+                    [context MR_saveOnlySelfAndWait];
+                    id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
+                    [protocol connectWithPassword:self.account.password];
+                }
+            }];
         }
-        return 0;
-    }
-    
-    return [super tableView:tableView numberOfRowsInSection:section];
-}
-
--(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
-{
-    if (section == 0) {
-        return 55;
-    }
-    
-}
-
--(void)loginButtonPressed:(id)sender
-{
-    self.account.rememberPasswordValue = YES;
-    if([self.account.password length])
-    {
-        [self showLoginProgress];
-        id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
-        [protocol connectWithPassword:self.account.password];
-    }
-    else{
-        //[FBSettings setDefaultAppID:FACEBOOK_APP_ID];
-        FBSession * session = [[FBSession alloc] initWithAppID:FACEBOOK_APP_ID permissions:@[@"xmpp_login"] urlSchemeSuffix:nil tokenCacheStrategy:[FBSessionTokenCachingStrategy nullCacheInstance]];
-        [FBSession setActiveSession:session];
-        [session openWithBehavior:FBSessionLoginBehaviorWithFallbackToWebView completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
-            if ([session isOpen]) {
-                
-                NSLog(@"Session: %@",session);
-                FBRequest * request = [[FBRequest alloc] initWithSession:session graphPath:@"me"];
-                [request startWithCompletionHandler:^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *user, NSError *error) {
-                    if (!error) {
-                        [self didConnectUser:user];
-                        self.account.password = session.accessTokenData.accessToken;
-                        [self.loginViewTableView reloadData];
-                        [self showLoginProgress];
-                        NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
-                        [context MR_saveOnlySelfAndWait];
-                        id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
-                        [protocol connectWithPassword:self.account.password];
-                    }
-                }];
-            }
-        }];
-    }
+    }];
 }
 
 -(void)didConnectUser:(id<FBGraphUser>)user

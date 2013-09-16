@@ -898,7 +898,6 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 
 -(void)connectWithPassword:(NSString *)myPassword
 {
-    
     [self connectWithJID:self.account.username password:myPassword];
 }
 

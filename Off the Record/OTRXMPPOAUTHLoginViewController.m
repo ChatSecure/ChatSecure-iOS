@@ -95,6 +95,25 @@
     [self.loginViewTableView reloadData];
 }
 
+-(void)loginButtonPressed:(id)sender
+{
+    self.account.rememberPasswordValue = YES;
+    if ([self.account.password length]) {
+        [self showLoginProgress];
+        id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
+        [protocol connectWithPassword:self.account.password];
+        self.timeoutTimer = [NSTimer scheduledTimerWithTimeInterval:45.0 target:self selector:@selector(timeout:) userInfo:nil repeats:NO];
+    }
+    else {
+        [self connectAccount:sender];
+    }
+    
+}
+
+
+-(void)connectAccount:(id)sender {
+    NSLog(@"Needs to be implemented in sublcasses");
+}
 
 
 @end
