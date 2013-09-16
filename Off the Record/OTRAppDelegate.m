@@ -105,6 +105,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     if([OTRUtilities isFirstLaunchOnCurrentVersion])
     {
         [OTRAccountsManager removeAllPasswordsForAccountType:OTRAccountTypeFacebook];
+        [OTRAccountsManager removeAllPasswordsForAccountType:OTRAccountTypeGoogleTalk];
     }
     
     [OTRUtilities deleteAllBuddiesAndMessages];
