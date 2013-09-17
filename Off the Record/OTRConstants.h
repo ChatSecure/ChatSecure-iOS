@@ -22,6 +22,7 @@
 
 #define kOTRProtocolLoginSuccess @"LoginSuccessNotification"
 #define kOTRProtocolLoginFail @"LoginFailedNotification"
+#define KOTRProtocolLoginFailErrorKey @"ProtocolLoginFailErrorKey"
 #define kOTRBuddyListUpdate @"BuddyListUpdateNotification"
 #define kOTRMessageReceived @"MessageReceivedNotification"
 #define kOTRMessageReceiptResonseReceived @"MessageReceiptResponseNotification"

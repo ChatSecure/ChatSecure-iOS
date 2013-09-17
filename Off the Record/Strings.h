@@ -196,6 +196,7 @@
 #define EN_YOUR_STATUS_MESSAGE @"You are: %@"
 #define EN_CONNECT_FACEBOOK_STRING @"Connect Facebook"
 #define EN_DISCONNECT_FACEBOOK_STRING @"Disconnect Facebook"
+#define EN_INFO_STRING @"Info"
 
 
 #define BUDDY_LIST_STRING [OTRLanguageManager translatedString: EN_BUDDY_LIST_STRING]
@@ -337,6 +338,12 @@
 
 #define CONNECT_FACEBOOK_STRING [OTRLanguageManager translatedString: EN_CONNECT_FACEBOOK_STRING]
 #define DISCONNECT_FACEBOOK_STRING [OTRLanguageManager translatedString: EN_DISCONNECT_FACEBOOK_STRING]
+#define INFO_STRING [OTRLanguageManager translatedString: EN_INFO_STRING]
+
+
+
+
+
 
 #define LOC_BUDDY_LIST_STRING NSLocalizedString(EN_BUDDY_LIST_STRING , @"Title for the buddy list tab")
 #define LOC_CONVERSATIONS_STRING NSLocalizedString(EN_CONVERSATIONS_STRING , @"Title for the conversations tab")
@@ -479,6 +486,7 @@
 
 #define LOC_CONNECT_FACEBOOK_STRING NSLocalizedString(EN_CONNECT_FACEBOOK_STRING,@"Button label for connecting a facebook account")
 #define LOC_DISCONNECT_FACEBOOK_STRING NSLocalizedString(EN_DISCONNECT_FACEBOOK_STRING,@"button label for disconnecting facebook account")
+#define LOC_INFO_STRING NSLocalizedString(EN_INFO_STRING,@"Short for information, button title to get more information")
 
 
 

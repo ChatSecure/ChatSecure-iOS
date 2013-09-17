@@ -62,7 +62,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 
 - (void)goOnline;
 - (void)goOffline;
-- (void)failedToConnect;
+- (void)failedToConnect:(id)error;
 
 @end
 
@@ -511,10 +511,17 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	[[self xmppStream] sendElement:presence];
 }
 
-- (void)failedToConnect
+- (void)failedToConnect:(id)error
 {
-    [[NSNotificationCenter defaultCenter]
-     postNotificationName:kOTRProtocolLoginFail object:self];    
+    if (error) {
+        [[NSNotificationCenter defaultCenter]
+         postNotificationName:kOTRProtocolLoginFail object:self userInfo:@{KOTRProtocolLoginFailErrorKey:error}];
+    }
+    else {
+        [[NSNotificationCenter defaultCenter]
+         postNotificationName:kOTRProtocolLoginFail object:self];
+    }
+    
 }
 
 ///////////////////////////////
@@ -707,7 +714,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 {
     
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
-    [self failedToConnect];
+    [self failedToConnect:error];
 }
 
 - (BOOL)xmppStream:(XMPPStream *)sender didReceiveIQ:(XMPPIQ *)iq
@@ -808,7 +815,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	if (!isXmppConnected)
 	{
 		DDLogError(@"Unable to connect to server. Check xmppStream.hostName");
-        [self failedToConnect];
+        [self failedToConnect:error];
 	}
     else {
         //Lost connection
