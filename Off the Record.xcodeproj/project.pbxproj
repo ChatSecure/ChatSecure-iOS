@@ -40,6 +40,13 @@
 		6336CDE0165C4E9E00C8CBA8 /* OTRLanguageListSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6336CDDF165C4E9E00C8CBA8 /* OTRLanguageListSettingViewController.m */; };
 		633E71F916E169C100495B45 /* OTRBuddyListSectionInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 633E71F816E169C100495B45 /* OTRBuddyListSectionInfo.m */; };
 		633E71FD16E170AA00495B45 /* OTRSectionHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 633E71FC16E170AA00495B45 /* OTRSectionHeaderView.m */; };
+		6348184217E3D4C8004E0146 /* GTMOAuth2Authentication.m in Sources */ = {isa = PBXBuildFile; fileRef = 6348183B17E3D4C8004E0146 /* GTMOAuth2Authentication.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		6348184317E3D4C8004E0146 /* GTMOAuth2SignIn.m in Sources */ = {isa = PBXBuildFile; fileRef = 6348183D17E3D4C8004E0146 /* GTMOAuth2SignIn.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		6348184417E3D4C8004E0146 /* GTMOAuth2ViewControllerTouch.m in Sources */ = {isa = PBXBuildFile; fileRef = 6348184017E3D4C8004E0146 /* GTMOAuth2ViewControllerTouch.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		6348184517E3D4C8004E0146 /* GTMOAuth2ViewTouch.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6348184117E3D4C8004E0146 /* GTMOAuth2ViewTouch.xib */; };
+		6348184917E3D600004E0146 /* XMPPXOATH2Google.m in Sources */ = {isa = PBXBuildFile; fileRef = 6348184817E3D600004E0146 /* XMPPXOATH2Google.m */; };
+		6348184C17E3D6B9004E0146 /* OTRXMPPOAUTHLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6348184B17E3D6B8004E0146 /* OTRXMPPOAUTHLoginViewController.m */; };
+		6348189417E3DB06004E0146 /* GTMHTTPFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 6348189317E3DB06004E0146 /* GTMHTTPFetcher.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		63483F801752CED100779257 /* XMPPAnonymousAuthentication.m in Sources */ = {isa = PBXBuildFile; fileRef = 63483DF81752CED100779257 /* XMPPAnonymousAuthentication.m */; };
 		63483F811752CED100779257 /* XMPPDeprecatedDigestAuthentication.m in Sources */ = {isa = PBXBuildFile; fileRef = 63483DFB1752CED100779257 /* XMPPDeprecatedDigestAuthentication.m */; };
 		63483F821752CED100779257 /* XMPPDeprecatedPlainAuthentication.m in Sources */ = {isa = PBXBuildFile; fileRef = 63483DFE1752CED100779257 /* XMPPDeprecatedPlainAuthentication.m */; };
@@ -558,6 +565,20 @@
 		633E71F816E169C100495B45 /* OTRBuddyListSectionInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBuddyListSectionInfo.m; sourceTree = "<group>"; };
 		633E71FB16E170AA00495B45 /* OTRSectionHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRSectionHeaderView.h; sourceTree = "<group>"; };
 		633E71FC16E170AA00495B45 /* OTRSectionHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRSectionHeaderView.m; sourceTree = "<group>"; };
+		6348183A17E3D4C8004E0146 /* GTMOAuth2Authentication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GTMOAuth2Authentication.h; path = "lib/gtm-oauth2-read-only/Source/GTMOAuth2Authentication.h"; sourceTree = "<group>"; };
+		6348183B17E3D4C8004E0146 /* GTMOAuth2Authentication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GTMOAuth2Authentication.m; path = "lib/gtm-oauth2-read-only/Source/GTMOAuth2Authentication.m"; sourceTree = "<group>"; };
+		6348183C17E3D4C8004E0146 /* GTMOAuth2SignIn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GTMOAuth2SignIn.h; path = "lib/gtm-oauth2-read-only/Source/GTMOAuth2SignIn.h"; sourceTree = "<group>"; };
+		6348183D17E3D4C8004E0146 /* GTMOAuth2SignIn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GTMOAuth2SignIn.m; path = "lib/gtm-oauth2-read-only/Source/GTMOAuth2SignIn.m"; sourceTree = "<group>"; };
+		6348183F17E3D4C8004E0146 /* GTMOAuth2ViewControllerTouch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMOAuth2ViewControllerTouch.h; sourceTree = "<group>"; };
+		6348184017E3D4C8004E0146 /* GTMOAuth2ViewControllerTouch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMOAuth2ViewControllerTouch.m; sourceTree = "<group>"; };
+		6348184117E3D4C8004E0146 /* GTMOAuth2ViewTouch.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GTMOAuth2ViewTouch.xib; sourceTree = "<group>"; };
+		6348184717E3D600004E0146 /* XMPPXOATH2Google.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPXOATH2Google.h; sourceTree = "<group>"; };
+		6348184817E3D600004E0146 /* XMPPXOATH2Google.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPXOATH2Google.m; sourceTree = "<group>"; };
+		6348184A17E3D6B8004E0146 /* OTRXMPPOAUTHLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPOAUTHLoginViewController.h; sourceTree = "<group>"; };
+		6348184B17E3D6B8004E0146 /* OTRXMPPOAUTHLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPOAUTHLoginViewController.m; sourceTree = "<group>"; };
+		6348189217E3DB06004E0146 /* GTMHTTPFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GTMHTTPFetcher.h; path = "lib/gtm-oauth2-read-only/HTTPFetcher/GTMHTTPFetcher.h"; sourceTree = "<group>"; };
+		6348189317E3DB06004E0146 /* GTMHTTPFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GTMHTTPFetcher.m; path = "lib/gtm-oauth2-read-only/HTTPFetcher/GTMHTTPFetcher.m"; sourceTree = "<group>"; };
+		6348189517E3E09C004E0146 /* OTRSecrets.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRSecrets.h; sourceTree = "<group>"; };
 		63483DF71752CED100779257 /* XMPPAnonymousAuthentication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPAnonymousAuthentication.h; sourceTree = "<group>"; };
 		63483DF81752CED100779257 /* XMPPAnonymousAuthentication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPAnonymousAuthentication.m; sourceTree = "<group>"; };
 		63483DFA1752CED100779257 /* XMPPDeprecatedDigestAuthentication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPDeprecatedDigestAuthentication.h; sourceTree = "<group>"; };
@@ -1019,7 +1040,6 @@
 		D93E34F215E48FE600D587B2 /* 14-gear@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "14-gear@2x.png"; sourceTree = "<group>"; };
 		D940EA7915992A0800E5527A /* OTRProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRProtocol.h; sourceTree = "<group>"; };
 		D953117416C6FF1A00AAB1D2 /* UserVoice.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = UserVoice.xcodeproj; path = Submodules/UserVoice/UserVoice.xcodeproj; sourceTree = "<group>"; };
-		D953117D16C6FFF000AAB1D2 /* OTRSecrets.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OTRSecrets.h; sourceTree = "<group>"; };
 		D953118016C70D2F00AAB1D2 /* 275-broadcast.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "275-broadcast.png"; sourceTree = "<group>"; };
 		D953118116C70D2F00AAB1D2 /* 275-broadcast@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "275-broadcast@2x.png"; sourceTree = "<group>"; };
 		D953118416C70DD200AAB1D2 /* OTRDonateSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRDonateSetting.h; sourceTree = "<group>"; };
@@ -1423,6 +1443,65 @@
 			name = OpenInChrome;
 			sourceTree = "<group>";
 		};
+		6348183917E3D475004E0146 /* GTMOAUTH2 */ = {
+			isa = PBXGroup;
+			children = (
+				6348189217E3DB06004E0146 /* GTMHTTPFetcher.h */,
+				6348189317E3DB06004E0146 /* GTMHTTPFetcher.m */,
+				6348183A17E3D4C8004E0146 /* GTMOAuth2Authentication.h */,
+				6348183B17E3D4C8004E0146 /* GTMOAuth2Authentication.m */,
+				6348183C17E3D4C8004E0146 /* GTMOAuth2SignIn.h */,
+				6348183D17E3D4C8004E0146 /* GTMOAuth2SignIn.m */,
+				6348183E17E3D4C8004E0146 /* Touch */,
+			);
+			name = GTMOAUTH2;
+			sourceTree = "<group>";
+		};
+		6348183E17E3D4C8004E0146 /* Touch */ = {
+			isa = PBXGroup;
+			children = (
+				6348183F17E3D4C8004E0146 /* GTMOAuth2ViewControllerTouch.h */,
+				6348184017E3D4C8004E0146 /* GTMOAuth2ViewControllerTouch.m */,
+				6348184117E3D4C8004E0146 /* GTMOAuth2ViewTouch.xib */,
+			);
+			name = Touch;
+			path = "lib/gtm-oauth2-read-only/Source/Touch";
+			sourceTree = "<group>";
+		};
+		6348184617E3D600004E0146 /* X-OAUTH2-google */ = {
+			isa = PBXGroup;
+			children = (
+				6348184717E3D600004E0146 /* XMPPXOATH2Google.h */,
+				6348184817E3D600004E0146 /* XMPPXOATH2Google.m */,
+			);
+			path = "X-OAUTH2-google";
+			sourceTree = "<group>";
+		};
+		6348184D17E3D6C8004E0146 /* XMPP Login */ = {
+			isa = PBXGroup;
+			children = (
+				636FE4B7161B7701002B28EF /* OTRXMPPLoginViewController.h */,
+				636FE4B8161B7701002B28EF /* OTRXMPPLoginViewController.m */,
+				639FDE4516334FA500387666 /* OTRJabberLoginViewController.h */,
+				639FDE4616334FA500387666 /* OTRJabberLoginViewController.m */,
+				6348184E17E3D6EB004E0146 /* OAUTH Login */,
+			);
+			name = "XMPP Login";
+			sourceTree = "<group>";
+		};
+		6348184E17E3D6EB004E0146 /* OAUTH Login */ = {
+			isa = PBXGroup;
+			children = (
+				6348184A17E3D6B8004E0146 /* OTRXMPPOAUTHLoginViewController.h */,
+				6348184B17E3D6B8004E0146 /* OTRXMPPOAUTHLoginViewController.m */,
+				636FE4B4161B76EA002B28EF /* OTRGoogleTalkLoginViewController.h */,
+				636FE4B5161B76EA002B28EF /* OTRGoogleTalkLoginViewController.m */,
+				636FE4B1161B76CF002B28EF /* OTRFacebookLoginViewController.h */,
+				636FE4B2161B76CF002B28EF /* OTRFacebookLoginViewController.m */,
+			);
+			name = "OAUTH Login";
+			sourceTree = "<group>";
+		};
 		63483DF41752CEB700779257 /* XMPPFramework */ = {
 			isa = PBXGroup;
 			children = (
@@ -1439,6 +1518,7 @@
 		63483DF51752CED100779257 /* Authentication */ = {
 			isa = PBXGroup;
 			children = (
+				6348184617E3D600004E0146 /* X-OAUTH2-google */,
 				63483DF61752CED100779257 /* Anonymous */,
 				63483DF91752CED100779257 /* Deprecated-Digest */,
 				63483DFC1752CED100779257 /* Deprecated-Plain */,
@@ -2157,16 +2237,9 @@
 			children = (
 				D9DE274913F4F0A400E335CA /* OTRLoginViewController.h */,
 				D9DE274A13F4F0A400E335CA /* OTRLoginViewController.m */,
-				636FE4B7161B7701002B28EF /* OTRXMPPLoginViewController.h */,
-				636FE4B8161B7701002B28EF /* OTRXMPPLoginViewController.m */,
-				639FDE4516334FA500387666 /* OTRJabberLoginViewController.h */,
-				639FDE4616334FA500387666 /* OTRJabberLoginViewController.m */,
+				6348184D17E3D6C8004E0146 /* XMPP Login */,
 				636FE4BA161B771E002B28EF /* OTROscarLoginViewController.h */,
 				636FE4BB161B771E002B28EF /* OTROscarLoginViewController.m */,
-				636FE4B4161B76EA002B28EF /* OTRGoogleTalkLoginViewController.h */,
-				636FE4B5161B76EA002B28EF /* OTRGoogleTalkLoginViewController.m */,
-				636FE4B1161B76CF002B28EF /* OTRFacebookLoginViewController.h */,
-				636FE4B2161B76CF002B28EF /* OTRFacebookLoginViewController.m */,
 				636FE4BE161B7C68002B28EF /* OTRInLineTextEditTableViewCell.h */,
 				636FE4BF161B7C68002B28EF /* OTRInLineTextEditTableViewCell.m */,
 			);
@@ -2425,6 +2498,7 @@
 		D9CEED611684234D00B236B5 /* Submodules */ = {
 			isa = PBXGroup;
 			children = (
+				6348183917E3D475004E0146 /* GTMOAUTH2 */,
 				63483DF41752CEB700779257 /* XMPPFramework */,
 				6301D87F16E95A23008F67A6 /* OpenInChrome */,
 				63CC9F1E16D2E93500BDA7D1 /* TTTAttributedLabel */,
@@ -2897,7 +2971,7 @@
 				6300F16616E6CF8400D3C1AA /* OTRSubscriptionRequestsViewController.m */,
 				63BFDB6316E81CD900C608D6 /* OTRBuddyViewController.h */,
 				63BFDB6416E81CD900C608D6 /* OTRBuddyViewController.m */,
-				D953117D16C6FFF000AAB1D2 /* OTRSecrets.h */,
+				6348189517E3E09C004E0146 /* OTRSecrets.h */,
 				D9CEF0A81684253B00B236B5 /* XMPPFramework.h */,
 				D9D8D1F61531056300F9E8D3 /* Resources */,
 				D9F9378113F44BD3009A3D84 /* Supporting Files */,
@@ -3240,6 +3314,7 @@
 				639C75D917E127A600530423 /* FBLoginViewButton@2x.png in Resources */,
 				639C75DA17E127A600530423 /* FBLoginViewButtonPressed.png in Resources */,
 				639C75DB17E127A600530423 /* FBLoginViewButtonPressed@2x.png in Resources */,
+				6348184517E3D4C8004E0146 /* GTMOAuth2ViewTouch.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3597,6 +3672,12 @@
 				6348401B1752CED100779257 /* DDXMLElement.m in Sources */,
 				6348401C1752CED100779257 /* DDXMLNode.m in Sources */,
 				63FEE8EB17C596B1009C9030 /* XMPPStringPrep.m in Sources */,
+				6348184217E3D4C8004E0146 /* GTMOAuth2Authentication.m in Sources */,
+				6348184317E3D4C8004E0146 /* GTMOAuth2SignIn.m in Sources */,
+				6348184417E3D4C8004E0146 /* GTMOAuth2ViewControllerTouch.m in Sources */,
+				6348184917E3D600004E0146 /* XMPPXOATH2Google.m in Sources */,
+				6348184C17E3D6B9004E0146 /* OTRXMPPOAUTHLoginViewController.m in Sources */,
+				6348189417E3DB06004E0146 /* GTMHTTPFetcher.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
