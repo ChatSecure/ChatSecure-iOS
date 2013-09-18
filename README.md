@@ -64,6 +64,14 @@ Phone apps
 
 [Full List](http://en.wikipedia.org/wiki/Off-the-Record_Messaging#Client_support)
 
+Build Instructions
+========
+- Install [mogenerator](http://rentzsch.github.io/mogenerator/) `brew install mogenerator`
+- Dowload `git clone git@github.com:chrisballinger/Off-the-Record-iOS.git --recursive`
+- `cd Off-the-Record-iOS/`
+- Build Facebook framework `./Submodules/facebook-ios-sdk/scripts/build_framework.sh`
+- Open `Off the Record.xcodeproj` in Xcode and build
+
 License
 =========
 

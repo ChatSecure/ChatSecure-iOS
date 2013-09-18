@@ -24,8 +24,8 @@
 
 @interface OTRFacebookLoginViewController : OTRXMPPLoginViewController
 
+@property (nonatomic,strong) UIButton * facebookButton;
 
-@property (nonatomic,strong) UILabel * facebookHelpLabel;
-@property (nonatomic,strong) UIButton * facebookInfoButton;
+
 
 @end

@@ -35,6 +35,9 @@
 
 #define kFieldBuffer 20;
 
+#define kErrorAlertViewTag 131
+#define kErrorInfoAlertViewTag 132
+
 @interface OTRLoginViewController(Private)
 - (float) getMidpointOffsetforHUD;
 @end
@@ -331,7 +334,23 @@
         [HUD hide:YES];
     if([account.protocol isEqualToString:kOTRProtocolTypeXMPP])
     {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:XMPP_FAIL_STRING delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
+        UIAlertView *alert = nil;
+        NSDictionary * userInfo = notification.userInfo;
+        id error = userInfo[KOTRProtocolLoginFailErrorKey];
+        if ([error isKindOfClass:[NSError class]]) {
+            recentError = (NSError *)error;
+            alert = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:XMPP_FAIL_STRING delegate:self cancelButtonTitle:nil otherButtonTitles:OK_STRING,INFO_STRING, nil];
+        }
+        else if (error)
+        {
+            //could not authenicate
+            alert = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:XMPP_FAIL_STRING delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
+            
+        }
+        else {
+            alert = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:XMPP_FAIL_STRING delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
+        }
+        alert.tag = kErrorAlertViewTag;
         [alert show];
     }
 }
@@ -341,15 +360,6 @@
     if(HUD)
         [HUD hide:YES];
     [self dismissModalViewControllerAnimated:YES];
-    /* not sure why this was ever needed
-    if([account.protocol isEqualToString:kOTRProtocolTypeXMPP])
-    {
-        [[NSNotificationCenter defaultCenter]
-         postNotificationName:@"XMPPLoginNotification"
-         object:self];
-        [timeoutTimer invalidate];
-    }
-     */
 }  
 
 
@@ -358,12 +368,7 @@
     BOOL fields = [self checkFields];
     if(fields)
     {
-        [self.view endEditing:YES];
-        HUD = [[MBProgressHUD alloc] initWithView:self.view];
-        [self.view addSubview:HUD];
-        HUD.delegate = self;
-        HUD.labelText = LOGGING_IN_STRING;
-        [HUD show:YES];
+        [self showLoginProgress];
         
         [self readInFields];
 
@@ -374,6 +379,16 @@
     }
     self.timeoutTimer = [NSTimer scheduledTimerWithTimeInterval:45.0 target:self selector:@selector(timeout:) userInfo:nil repeats:NO];
     //[[[OTRProtocolManager sharedInstance] accountsManager] addAccount:account];
+}
+-(void)showLoginProgress
+{
+    [self.view endEditing:YES];
+    HUD = [[MBProgressHUD alloc] initWithView:self.view];
+    [self.view addSubview:HUD];
+    HUD.delegate = self;
+    HUD.labelText = LOGGING_IN_STRING;
+    [HUD show:YES];
+    self.timeoutTimer = [NSTimer scheduledTimerWithTimeInterval:45.0 target:self selector:@selector(timeout:) userInfo:nil repeats:NO];
 }
 
 - (void)cancelPressed:(id)sender {
@@ -409,6 +424,24 @@
     if(!parent)
     {
         [[OTRProtocolManager sharedInstance].accountsManager removeAccount:self.account];
+    }
+}
+
+-(void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
+    if (alertView.tag == kErrorAlertViewTag) {
+        if(alertView.numberOfButtons > 1 && buttonIndex == 1) {
+            NSString * errorDescriptionString = [NSString stringWithFormat:@"%@ : %@",[recentError domain],[recentError localizedDescription]];
+            UIAlertView * alert = [[UIAlertView alloc] initWithTitle:INFO_STRING message:errorDescriptionString delegate:self cancelButtonTitle:nil otherButtonTitles:OK_STRING,@"Copy", nil];
+            alert.tag = kErrorInfoAlertViewTag;
+            [alert show];
+        }
+    }
+    else if (alertView.tag == kErrorInfoAlertViewTag) {
+        if (buttonIndex == 1) {
+            NSString * errorDescriptionString = [NSString stringWithFormat:@"Domain: %@\nCode: %d\nUserInfo: %@",[recentError domain],[recentError code],[recentError userInfo]];
+            UIPasteboard *pasteBoard = [UIPasteboard generalPasteboard];
+            [pasteBoard setString:errorDescriptionString];
+        }
     }
 }
 

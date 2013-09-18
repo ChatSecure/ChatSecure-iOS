@@ -19,4 +19,10 @@
 +(BOOL)dateInLast24Hours:(NSDate *)date;
 +(BOOL)dateInLast7Days:(NSDate *)date;
 
++(NSArray *)cipherSuites;
+
++(NSString *)currentAppVersionString;
++(NSString *)lastLaunchVersion;
++(BOOL)isFirstLaunchOnCurrentVersion;
+
 @end

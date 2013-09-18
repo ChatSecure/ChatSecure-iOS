@@ -33,6 +33,8 @@
 #import "OTRLanguageManager.h"
 #import "OTRConvertAccount.h"
 #import "OTRUtilities.h"
+#import "OTRAccountsManager.h"
+#import <FacebookSDK/FacebookSDK.h>
 
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
@@ -58,6 +60,8 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    
+    
     // DATABASE TESTS
     NSString * storeFileName = @"db.sqlite";
     [MagicalRecord setupCoreDataStackWithAutoMigratingSqliteStoreNamed:storeFileName];
@@ -70,6 +74,8 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     {
         NSLog(@"error encrypting store");
     }
+    
+    
     
     //NSPersistentStoreCoordinator *storeCoordinator = [OTRDatabaseUtils persistentStoreCoordinatorWithDBName:@"db.sqlite" passphrase:@"test"];
     
@@ -95,6 +101,11 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
         [Crittercism setOptOutStatus:YES];
     }
 #endif
+    
+    if([OTRUtilities isFirstLaunchOnCurrentVersion])
+    {
+        [OTRAccountsManager removeAllPasswordsForAccountType:OTRAccountTypeFacebook];
+    }
     
     [OTRUtilities deleteAllBuddiesAndMessages];
     
@@ -248,7 +259,6 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     
     [MagicalRecord cleanUp];
 }
-
 /*
 // Optional UITabBarControllerDelegate method.
 - (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController
@@ -285,6 +295,15 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     } else if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         [sheet showInView:self.window];
     }
+}
+
+- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
+    return [[FBSession activeSession] handleOpenURL:url];
+}
+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+    return [[FBSession activeSession] handleOpenURL:url];
 }
 
 @end

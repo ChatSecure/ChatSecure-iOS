@@ -22,6 +22,7 @@
 
 #import <Foundation/Foundation.h>
 #import "OTRManagedAccount.h"
+#import "OTRConstants.h"
 
 @interface OTRAccountsManager : NSObject
 
@@ -32,5 +33,7 @@
 
 + (NSUInteger)numberOfAccountsLoggedIn;
 + (NSArray *)allLoggedInAccounts;
+
++ (void)removeAllPasswordsForAccountType:(OTRAccountType)accountType;
 
 @end

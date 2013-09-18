@@ -22,6 +22,7 @@
 
 #define kOTRProtocolLoginSuccess @"LoginSuccessNotification"
 #define kOTRProtocolLoginFail @"LoginFailedNotification"
+#define KOTRProtocolLoginFailErrorKey @"ProtocolLoginFailErrorKey"
 #define kOTRBuddyListUpdate @"BuddyListUpdateNotification"
 #define kOTRMessageReceived @"MessageReceivedNotification"
 #define kOTRMessageReceiptResonseReceived @"MessageReceiptResponseNotification"
@@ -68,6 +69,8 @@
 #define kOTRSettingAccountsKey @"kOTRSettingAccountsKey"
 #define kOTRSettingKeyLanguage @"userSelectedSetting"
 
+#define kOTRAppVersionKey @"kOTRAppVersionKey"
+
 
 typedef enum {
     kOTRBuddyStatusOffline = 4,
@@ -85,6 +88,11 @@ typedef enum {
     kOTRChatStateInactive = 4,
     kOTRChatStateGone =5
 } OTRChatState;
+
+typedef enum {
+    OTRAccountTypeFacebook,
+    OTRAccountTypeGoogleTalk
+}OTRAccountType;
 
 //Chatview
 #define kTabBarHeight 0
@@ -117,4 +125,6 @@ typedef enum {
 #define MESSAGE_TEXT_LABEL_TAG               102
 #define MESSAGE_DELIVERED_LABEL_TAG          103
 #define STATUS_MESSAGE_LABEL_TAG             104
+
+#define FACEBOOK_APP_ID @"447241325394334"
 

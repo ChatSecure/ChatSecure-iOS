@@ -19,6 +19,38 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
+
+
+/*** How to Updated Localizable.strings using Tranifex **************
+ 
+ Update en.lproj/Localizable.strings
+ 
+ - `cd Off\ the\ Record`
+ - `python StringsConverter.py`
+ - `genstrings tempStrings.h`
+ - `mv ./Localizable.strings en.lproj/Localizable.strings`
+ - To send new strings to Transifex `tx push -s`
+ 
+ To get any updated translations
+ 
+ - `tx pull -a`
+ - Use `git status` to spot any new languages
+ - Be catious of languages that have been added to Transifex but there are no translations yet
+ - Any new <LANGUAGE>.lproj/Localizable.strings need to be dragged and dropped onto Localizable.strings in Xcode
+ - Then the Language code needs to be added to supportedLanguages.plist
+
+ */
+
+/*** How to add new string for localization *********
+ 
+ - Add '#define EN_NAME_OF_STRING @"I am a String"' (make sure to use EN prefix)
+ - Add #define NAME_OF_STRING [OTRLanguageManager translatedString: EN_NAME_OF_STRING] (This is the macro that will be used anywhere else in the project)
+ - Add #define LOC_NAME_OF_STRING NSLocalizedString(EN_NAME_OF_STRING,@"Short description of string for translators")
+ 
+ */
+
+
+
 #import "OTRLanguageManager.h"
 
 #define EN_BUDDY_LIST_STRING @"Buddy List"
@@ -162,6 +194,9 @@
 #define EN_BUDDY_INFO_STRING @"Buddy Info"
 #define EN_INCOMING_STATUS_MESSAGE @"New Status Message: %@"
 #define EN_YOUR_STATUS_MESSAGE @"You are: %@"
+#define EN_CONNECT_FACEBOOK_STRING @"Connect Facebook"
+#define EN_DISCONNECT_FACEBOOK_STRING @"Disconnect Facebook"
+#define EN_INFO_STRING @"Info"
 
 
 #define BUDDY_LIST_STRING [OTRLanguageManager translatedString: EN_BUDDY_LIST_STRING]
@@ -301,6 +336,15 @@
 #define YOUR_STATUS_MESSAGE [OTRLanguageManager translatedString: EN_YOUR_STATUS_MESSAGE]
 #define INCOMING_STATUS_MESSAGE [OTRLanguageManager translatedString: EN_INCOMING_STATUS_MESSAGE]
 
+#define CONNECT_FACEBOOK_STRING [OTRLanguageManager translatedString: EN_CONNECT_FACEBOOK_STRING]
+#define DISCONNECT_FACEBOOK_STRING [OTRLanguageManager translatedString: EN_DISCONNECT_FACEBOOK_STRING]
+#define INFO_STRING [OTRLanguageManager translatedString: EN_INFO_STRING]
+
+
+
+
+
+
 #define LOC_BUDDY_LIST_STRING NSLocalizedString(EN_BUDDY_LIST_STRING , @"Title for the buddy list tab")
 #define LOC_CONVERSATIONS_STRING NSLocalizedString(EN_CONVERSATIONS_STRING , @"Title for the conversations tab")
 #define LOC_ACCOUNTS_STRING NSLocalizedString(EN_ACCOUNTS_STRING , @"Title for the accounts tab")
@@ -439,5 +483,10 @@
 
 #define LOC_INCOMING_STATUS_MESSAGE NSLocalizedString(EN_INCOMING_STATUS_MESSAGE,@"prefix to show buddies status message inline on chatview")
 #define LOC_YOUR_STATUS_MESSAGE NSLocalizedString(EN_YOUR_STATUS_MESSAGE,@"prefix to show your status message inline on chatview")
+
+#define LOC_CONNECT_FACEBOOK_STRING NSLocalizedString(EN_CONNECT_FACEBOOK_STRING,@"Button label for connecting a facebook account")
+#define LOC_DISCONNECT_FACEBOOK_STRING NSLocalizedString(EN_DISCONNECT_FACEBOOK_STRING,@"button label for disconnecting facebook account")
+#define LOC_INFO_STRING NSLocalizedString(EN_INFO_STRING,@"Short for information, button title to get more information")
+
 
 

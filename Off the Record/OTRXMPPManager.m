@@ -44,6 +44,9 @@
 #import "OTRConstants.h"
 #import "OTRProtocolManager.h"
 #include <stdlib.h>
+#import "XMPPXFacebookPlatformAuthentication.h"
+#import "OTRConstants.h"
+#import "OTRUtilities.h"
 
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
@@ -59,7 +62,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 
 - (void)goOnline;
 - (void)goOffline;
-- (void)failedToConnect;
+- (void)failedToConnect:(id)error;
 
 @end
 
@@ -330,7 +333,14 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	// The XMPPStream is the base class for all activity.
 	// Everything else plugs into the xmppStream, such as modules/extensions and delegates.
     
-	xmppStream = [[XMPPStream alloc] init];
+	if ([[self.account providerName] isEqualToString:FACEBOOK_STRING]) {
+        xmppStream = [[XMPPStream alloc] initWithFacebookAppId:FACEBOOK_APP_ID];
+    }
+    else{
+        xmppStream = [[XMPPStream alloc] init];
+    }
+    
+    
     
     //Makes sure not allow any sending of password in plain text
     
@@ -501,10 +511,17 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	[[self xmppStream] sendElement:presence];
 }
 
-- (void)failedToConnect
+- (void)failedToConnect:(id)error
 {
-    [[NSNotificationCenter defaultCenter]
-     postNotificationName:kOTRProtocolLoginFail object:self];    
+    if (error) {
+        [[NSNotificationCenter defaultCenter]
+         postNotificationName:kOTRProtocolLoginFail object:self userInfo:@{KOTRProtocolLoginFailErrorKey:error}];
+    }
+    else {
+        [[NSNotificationCenter defaultCenter]
+         postNotificationName:kOTRProtocolLoginFail object:self];
+    }
+    
 }
 
 ///////////////////////////////
@@ -533,9 +550,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	if (![xmppStream isDisconnected]) {
 		return YES;
 	}
-    
-    xmppStream.requireTLS = self.account.shouldRequireTLS;
-    xmppStream.allowPlaintextAuthentication = self.account.shouldAllowPlainTextAuthentication;
+    xmppStream.autoStartTLS = YES;
     
 	//
 	// If you don't want to use the Settings view to set the JID, 
@@ -612,7 +627,9 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 - (void)xmppStream:(XMPPStream *)sender willSecureWithSettings:(NSMutableDictionary *)settings
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
-	
+    
+    [settings setObject:[OTRUtilities cipherSuites] forKey:GCDAsyncSocketSSLCipherSuites];
+
 	if (allowSelfSignedCertificates)
 	{
 		[settings setObject:[NSNumber numberWithBool:YES] forKey:(NSString *)kCFStreamSSLAllowsAnyRoot];
@@ -672,20 +689,24 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	
 	
 	NSError *error = nil;
-	
-	if (![[self xmppStream] authenticateWithPassword:password error:&error])
+    
+    if ([sender supportsXFacebookPlatformAuthentication]) {
+        
+        isXmppConnected = [sender authenticateWithFacebookAccessToken:password error:&error];
+        return;
+    }
+	else if (![[self xmppStream] authenticateWithPassword:password error:&error])
 	{
-		DDLogError(@"Error authenticating: %@", error);
         isXmppConnected = NO;
         return;
 	}
+    
     isXmppConnected = YES;
 }
 
 - (void)xmppStreamDidAuthenticate:(XMPPStream *)sender
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
-	
 	[self goOnline];
 }
 
@@ -693,7 +714,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 {
     
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
-    [self failedToConnect];
+    [self failedToConnect:error];
 }
 
 - (BOOL)xmppStream:(XMPPStream *)sender didReceiveIQ:(XMPPIQ *)iq
@@ -794,7 +815,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	if (!isXmppConnected)
 	{
 		DDLogError(@"Unable to connect to server. Check xmppStream.hostName");
-        [self failedToConnect];
+        [self failedToConnect:error];
 	}
     else {
         //Lost connection
