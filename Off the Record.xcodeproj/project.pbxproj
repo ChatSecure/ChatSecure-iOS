@@ -28,6 +28,11 @@
 		6300F16716E6CF8400D3C1AA /* OTRSubscriptionRequestsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6300F16616E6CF8400D3C1AA /* OTRSubscriptionRequestsViewController.m */; };
 		6301D87D16E94778008F67A6 /* OTRChooseAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6301D87C16E94778008F67A6 /* OTRChooseAccountViewController.m */; };
 		6301D88216E95A36008F67A6 /* OpenInChromeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6301D88116E95A36008F67A6 /* OpenInChromeController.m */; };
+		6307ED8117E8FA9400485358 /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 6307ED8017E8FA9400485358 /* GCDAsyncSocket.m */; };
+		6307ED8917E90AC600485358 /* XMPPCertificatePinning.m in Sources */ = {isa = PBXBuildFile; fileRef = 6307ED8817E90AC600485358 /* XMPPCertificatePinning.m */; };
+		6307ED8C17E914E200485358 /* AFSecurityPolicy.m in Sources */ = {isa = PBXBuildFile; fileRef = 6307ED8B17E914E200485358 /* AFSecurityPolicy.m */; };
+		6307ED8F17E91EB500485358 /* facebook.cer in Resources */ = {isa = PBXBuildFile; fileRef = 6307ED8E17E91EB500485358 /* facebook.cer */; };
+		6307ED9117E91F2900485358 /* google.cer in Resources */ = {isa = PBXBuildFile; fileRef = 6307ED9017E91F2900485358 /* google.cer */; };
 		630FF21316E0267200CC20AD /* _OTRManagedGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 630FF21216E0267200CC20AD /* _OTRManagedGroup.m */; };
 		630FF21716E0269100CC20AD /* OTRManagedGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 630FF21616E0269000CC20AD /* OTRManagedGroup.m */; };
 		63188CBD16E55B230000DD40 /* OTRNewBuddyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63188CBC16E55B230000DD40 /* OTRNewBuddyViewController.m */; };
@@ -146,7 +151,6 @@
 		63483FE81752CED100779257 /* RFImageToDataTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 63483F031752CED100779257 /* RFImageToDataTransformer.m */; };
 		63483FE91752CED100779257 /* XMPPIDTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = 63483F051752CED100779257 /* XMPPIDTracker.m */; };
 		63483FEA1752CED100779257 /* XMPPSRVResolver.m in Sources */ = {isa = PBXBuildFile; fileRef = 63483F071752CED100779257 /* XMPPSRVResolver.m */; };
-		63483FEB1752CED100779257 /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 63483F0B1752CED100779257 /* GCDAsyncSocket.m */; };
 		63483FEC1752CED100779257 /* DDAbstractDatabaseLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 63483F0E1752CED100779257 /* DDAbstractDatabaseLogger.m */; };
 		63483FED1752CED100779257 /* DDASLLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 63483F101752CED100779257 /* DDASLLogger.m */; };
 		63483FEE1752CED100779257 /* DDFileLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 63483F121752CED100779257 /* DDFileLogger.m */; };
@@ -528,6 +532,14 @@
 		63022BB516CDAD4C00F764F1 /* OTRChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRChatViewController.m; sourceTree = "<group>"; };
 		63022BB716CDAD5E00F764F1 /* ACPlaceholderTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACPlaceholderTextView.h; sourceTree = "<group>"; };
 		63022BB816CDAD5E00F764F1 /* ACPlaceholderTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACPlaceholderTextView.m; sourceTree = "<group>"; };
+		6307ED7F17E8FA9400485358 /* GCDAsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GCDAsyncSocket.h; path = GCD/GCDAsyncSocket.h; sourceTree = "<group>"; };
+		6307ED8017E8FA9400485358 /* GCDAsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GCDAsyncSocket.m; path = GCD/GCDAsyncSocket.m; sourceTree = "<group>"; };
+		6307ED8717E90AC600485358 /* XMPPCertificatePinning.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPCertificatePinning.h; sourceTree = "<group>"; };
+		6307ED8817E90AC600485358 /* XMPPCertificatePinning.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPCertificatePinning.m; sourceTree = "<group>"; };
+		6307ED8A17E914E200485358 /* AFSecurityPolicy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFSecurityPolicy.h; path = Submodules/XMPPFramework/Vendor/AFNetworking/AFNetworking/AFSecurityPolicy.h; sourceTree = SOURCE_ROOT; };
+		6307ED8B17E914E200485358 /* AFSecurityPolicy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFSecurityPolicy.m; path = Submodules/XMPPFramework/Vendor/AFNetworking/AFNetworking/AFSecurityPolicy.m; sourceTree = SOURCE_ROOT; };
+		6307ED8E17E91EB500485358 /* facebook.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = facebook.cer; sourceTree = "<group>"; };
+		6307ED9017E91F2900485358 /* google.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = google.cer; sourceTree = "<group>"; };
 		630FF21116E0267200CC20AD /* _OTRManagedGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _OTRManagedGroup.h; sourceTree = "<group>"; };
 		630FF21216E0267200CC20AD /* _OTRManagedGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _OTRManagedGroup.m; sourceTree = "<group>"; };
 		630FF21516E0269000CC20AD /* OTRManagedGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRManagedGroup.h; sourceTree = "<group>"; };
@@ -777,8 +789,6 @@
 		63483F051752CED100779257 /* XMPPIDTracker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPIDTracker.m; sourceTree = "<group>"; };
 		63483F061752CED100779257 /* XMPPSRVResolver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPSRVResolver.h; sourceTree = "<group>"; };
 		63483F071752CED100779257 /* XMPPSRVResolver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPSRVResolver.m; sourceTree = "<group>"; };
-		63483F0A1752CED100779257 /* GCDAsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDAsyncSocket.h; sourceTree = "<group>"; };
-		63483F0B1752CED100779257 /* GCDAsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDAsyncSocket.m; sourceTree = "<group>"; };
 		63483F0D1752CED100779257 /* DDAbstractDatabaseLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDAbstractDatabaseLogger.h; sourceTree = "<group>"; };
 		63483F0E1752CED100779257 /* DDAbstractDatabaseLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDAbstractDatabaseLogger.m; sourceTree = "<group>"; };
 		63483F0F1752CED100779257 /* DDASLLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDASLLogger.h; sourceTree = "<group>"; };
@@ -1423,6 +1433,26 @@
 			name = OpenInChrome;
 			sourceTree = "<group>";
 		};
+		6307ED8617E90AA300485358 /* CertificatePinning */ = {
+			isa = PBXGroup;
+			children = (
+				6307ED8717E90AC600485358 /* XMPPCertificatePinning.h */,
+				6307ED8817E90AC600485358 /* XMPPCertificatePinning.m */,
+				6307ED8A17E914E200485358 /* AFSecurityPolicy.h */,
+				6307ED8B17E914E200485358 /* AFSecurityPolicy.m */,
+			);
+			path = CertificatePinning;
+			sourceTree = "<group>";
+		};
+		6307ED8D17E91EB500485358 /* Certificates */ = {
+			isa = PBXGroup;
+			children = (
+				6307ED9017E91F2900485358 /* google.cer */,
+				6307ED8E17E91EB500485358 /* facebook.cer */,
+			);
+			path = Certificates;
+			sourceTree = SOURCE_ROOT;
+		};
 		63483DF41752CEB700779257 /* XMPPFramework */ = {
 			isa = PBXGroup;
 			children = (
@@ -1549,6 +1579,7 @@
 		63483E241752CED100779257 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				6307ED8617E90AA300485358 /* CertificatePinning */,
 				63483E251752CED100779257 /* BandwidthMonitor */,
 				63483E281752CED100779257 /* CoreDataStorage */,
 				63483E2C1752CED100779257 /* GoogleSharedStatus */,
@@ -2072,8 +2103,8 @@
 		63483F091752CED100779257 /* CocoaAsyncSocket */ = {
 			isa = PBXGroup;
 			children = (
-				63483F0A1752CED100779257 /* GCDAsyncSocket.h */,
-				63483F0B1752CED100779257 /* GCDAsyncSocket.m */,
+				6307ED7F17E8FA9400485358 /* GCDAsyncSocket.h */,
+				6307ED8017E8FA9400485358 /* GCDAsyncSocket.m */,
 			);
 			path = CocoaAsyncSocket;
 			sourceTree = "<group>";
@@ -2802,6 +2833,7 @@
 		D9D8D1F61531056300F9E8D3 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				6307ED8D17E91EB500485358 /* Certificates */,
 				D9D8D20C153107E600F9E8D3 /* Strings.h */,
 				6319F695165EAB1F0063AC93 /* supportedLanguages.plist */,
 				D9D8D1F71531056300F9E8D3 /* InfoPlist.strings */,
@@ -3240,6 +3272,8 @@
 				639C75D917E127A600530423 /* FBLoginViewButton@2x.png in Resources */,
 				639C75DA17E127A600530423 /* FBLoginViewButtonPressed.png in Resources */,
 				639C75DB17E127A600530423 /* FBLoginViewButtonPressed@2x.png in Resources */,
+				6307ED8F17E91EB500485358 /* facebook.cer in Resources */,
+				6307ED9117E91F2900485358 /* google.cer in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3584,7 +3618,6 @@
 				63483FE81752CED100779257 /* RFImageToDataTransformer.m in Sources */,
 				63483FE91752CED100779257 /* XMPPIDTracker.m in Sources */,
 				63483FEA1752CED100779257 /* XMPPSRVResolver.m in Sources */,
-				63483FEB1752CED100779257 /* GCDAsyncSocket.m in Sources */,
 				63483FEC1752CED100779257 /* DDAbstractDatabaseLogger.m in Sources */,
 				63483FED1752CED100779257 /* DDASLLogger.m in Sources */,
 				63483FEE1752CED100779257 /* DDFileLogger.m in Sources */,
@@ -3597,6 +3630,9 @@
 				6348401B1752CED100779257 /* DDXMLElement.m in Sources */,
 				6348401C1752CED100779257 /* DDXMLNode.m in Sources */,
 				63FEE8EB17C596B1009C9030 /* XMPPStringPrep.m in Sources */,
+				6307ED8117E8FA9400485358 /* GCDAsyncSocket.m in Sources */,
+				6307ED8917E90AC600485358 /* XMPPCertificatePinning.m in Sources */,
+				6307ED8C17E914E200485358 /* AFSecurityPolicy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

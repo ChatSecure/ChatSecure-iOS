@@ -34,6 +34,7 @@
 #import "NSXMLElement+XEP_0203.h"
 #import "Strings.h"
 #import "OTRXMPPManagedPresenceSubscriptionRequest.h"
+#import "XMPPCertificatePinning.h"
 
 #import "DDLog.h"
 #import "DDTTYLogger.h"
@@ -339,6 +340,8 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
         xmppStream = [[XMPPStream alloc] init];
     }
     
+    xmppStream.autoStartTLS = YES;
+    
     
     
     //Makes sure not allow any sending of password in plain text
@@ -423,6 +426,12 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     
     xmppCapabilities.autoFetchHashedCapabilities = YES;
     xmppCapabilities.autoFetchNonHashedCapabilities = NO;
+    
+    if ([[self.account providerName] isEqualToString:FACEBOOK_STRING] || [[self.account providerName] isEqualToString:GOOGLE_TALK_STRING]) {
+        xmppStream.manuallyEvaluateTrust = YES;
+        XMPPCertificatePinning * certificatePinningModule = [XMPPCertificatePinning defaultCertificates];
+        [certificatePinningModule activate:xmppStream];
+    }
     
 	// Activate xmpp modules
     
@@ -542,7 +551,6 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	if (![xmppStream isDisconnected]) {
 		return YES;
 	}
-    xmppStream.autoStartTLS = YES;
     
 	//
 	// If you don't want to use the Settings view to set the JID, 
