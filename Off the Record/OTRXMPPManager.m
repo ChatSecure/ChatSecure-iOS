@@ -621,25 +621,6 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 
 - (void)xmppStream:(XMPPStream *)sender socketDidConnect:(GCDAsyncSocket *)socket 
 {
-    [socket performBlock:^{
-        CFReadStreamRef readStream = [socket readStream];
-        if (readStream == NULL)
-            return;
-        
-        //CFArrayRef certs = CFReadStreamCopyProperty(readStream, kCFStreamPropertySSLPeerCertificates);
-        CFArrayRef certs = CFReadStreamCopyProperty(readStream, kCFStreamSSLCertificates);
-        if (certs && (CFArrayGetCount(certs) > 0))
-        {
-            // The first cert in the chain is the subject cert
-            SecCertificateRef cert = (SecCertificateRef)CFArrayGetValueAtIndex(certs, 0);
-            
-            //NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-            
-            //result = [[self extractCertDictFromCert:cert] retain];
-            
-            //[pool release];
-        }
-    }];
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
 }
 
