@@ -7,8 +7,11 @@
 //
 
 #import "OTRXMPPLoginViewController.h"
+#import "OTRManagedOAuthAccount.h"
 
 @interface OTRXMPPOAUTHLoginViewController : OTRXMPPLoginViewController
+
+@property (nonatomic,strong)  OTRManagedOAuthAccount * account;
 
 @property (nonatomic,strong) UIButton * connectButton;
 @property (nonatomic,strong) UIButton * disconnectButton;

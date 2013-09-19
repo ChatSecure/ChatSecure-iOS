@@ -30,8 +30,9 @@
 #import "Strings.h"
 #import "OTRProtocolManager.h"
 #import "OTRUtilities.h"
+#import "OTRConstants.h"
 
-#define kOTRServiceName @"org.chatsecure.ChatSecure"
+
 
 @interface OTRManagedAccount()
 @end

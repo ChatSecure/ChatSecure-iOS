@@ -24,7 +24,7 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     if (section == 0) {
-        if ([self.account.password length] && [self.account.username length]) {
+        if ([self.account.accessTokenString length] && [self.account.username length]) {
             return 1;
         }
         return 0;
@@ -70,7 +70,7 @@
 {
     UITableViewCell * cell = nil;
     if (indexPath.section == 0) {
-        if ([self.account.password length] && [self.account.username length]) {
+        if ([self.account.accessTokenString length] && [self.account.username length]) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@""];
             cell.textLabel.text = USERNAME_STRING;
             cell.detailTextLabel.text = self.account.username;
@@ -98,15 +98,20 @@
 -(void)loginButtonPressed:(id)sender
 {
     self.account.rememberPasswordValue = YES;
-    if ([self.account.password length]) {
-        [self showLoginProgress];
-        id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
-        [protocol connectWithPassword:self.account.password];
-        self.timeoutTimer = [NSTimer scheduledTimerWithTimeInterval:45.0 target:self selector:@selector(timeout:) userInfo:nil repeats:NO];
-    }
-    else {
-        [self connectAccount:sender];
-    }
+    [self.account refreshTokenIfNeeded:^(NSError * error) {
+        if (!error) {
+            if ([self.account.accessTokenString length]) {
+                [self showLoginProgress];
+                id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
+                [protocol connectWithPassword:self.account.accessTokenString];
+                self.timeoutTimer = [NSTimer scheduledTimerWithTimeInterval:45.0 target:self selector:@selector(timeout:) userInfo:nil repeats:NO];
+            }
+            else {
+                [self connectAccount:sender];
+            }
+        }
+    }];
+    
     
 }
 

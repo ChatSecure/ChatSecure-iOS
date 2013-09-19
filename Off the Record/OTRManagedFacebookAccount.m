@@ -1,14 +1,14 @@
 #import "OTRmanagedFacebookAccount.h"
 
 
-@interface OTRmanagedFacebookAccount ()
+@interface OTRManagedFacebookAccount ()
 
 // Private interface goes here.
 
 @end
 
 
-@implementation OTRmanagedFacebookAccount
+@implementation OTRManagedFacebookAccount
 
 // Custom logic goes here.
 

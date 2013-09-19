@@ -29,7 +29,7 @@
         <attribute name="status" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <relationship name="encryptionstatusbuddy" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="OTRManagedBuddy" inverseName="encryptionStatusMessages" inverseEntity="OTRManagedBuddy" syncable="YES"/>
     </entity>
-    <entity name="OTRmanagedFacebookAccount" representedClassName="OTRmanagedFacebookAccount" parentEntity="OTRManagedOAuthAccount" syncable="YES"/>
+    <entity name="OTRManagedFacebookAccount" representedClassName="OTRManagedFacebookAccount" parentEntity="OTRManagedOAuthAccount" syncable="YES"/>
     <entity name="OTRManagedGoogleAccount" representedClassName="OTRManagedGoogleAccount" parentEntity="OTRManagedOAuthAccount" syncable="YES"/>
     <entity name="OTRManagedGroup" representedClassName="OTRManagedGroup" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String" defaultValueString="Buddies" syncable="YES"/>
@@ -75,15 +75,15 @@
         <element name="OTRManagedAccount" positionX="340" positionY="153" width="128" height="133"/>
         <element name="OTRManagedBuddy" positionX="106" positionY="-0" width="128" height="268"/>
         <element name="OTRManagedEncryptionStatusMessage" positionX="-414" positionY="252" width="243" height="73"/>
+        <element name="OTRManagedFacebookAccount" positionX="754" positionY="459" width="128" height="43"/>
+        <element name="OTRManagedGoogleAccount" positionX="619" positionY="459" width="128" height="43"/>
         <element name="OTRManagedGroup" positionX="313" positionY="-19" width="128" height="73"/>
         <element name="OTRManagedMessage" positionX="-108" positionY="266" width="128" height="103"/>
         <element name="OTRManagedMessageAndStatus" positionX="-153" positionY="9" width="189" height="118"/>
+        <element name="OTRManagedOAuthAccount" positionX="666" positionY="353" width="128" height="43"/>
         <element name="OTRManagedOscarAccount" positionX="504" positionY="74" width="128" height="43"/>
         <element name="OTRManagedStatus" positionX="-290" positionY="161" width="128" height="73"/>
         <element name="OTRManagedXMPPAccount" positionX="520" positionY="198" width="128" height="178"/>
         <element name="OTRXMPPManagedPresenceSubscriptionRequest" positionX="324" positionY="320" width="153" height="103"/>
-        <element name="OTRManagedGoogleAccount" positionX="619" positionY="459" width="128" height="43"/>
-        <element name="OTRmanagedFacebookAccount" positionX="754" positionY="459" width="128" height="43"/>
-        <element name="OTRManagedOAuthAccount" positionX="666" positionY="353" width="128" height="43"/>
     </elements>
 </model>

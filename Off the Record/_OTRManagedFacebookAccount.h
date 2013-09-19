@@ -1,28 +1,28 @@
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to OTRmanagedFacebookAccount.h instead.
+// Make changes to OTRManagedFacebookAccount.h instead.
 
 #import <CoreData/CoreData.h>
 #import "OTRManagedOAuthAccount.h"
 
-extern const struct OTRmanagedFacebookAccountAttributes {
-} OTRmanagedFacebookAccountAttributes;
+extern const struct OTRManagedFacebookAccountAttributes {
+} OTRManagedFacebookAccountAttributes;
 
-extern const struct OTRmanagedFacebookAccountRelationships {
-} OTRmanagedFacebookAccountRelationships;
+extern const struct OTRManagedFacebookAccountRelationships {
+} OTRManagedFacebookAccountRelationships;
 
-extern const struct OTRmanagedFacebookAccountFetchedProperties {
-} OTRmanagedFacebookAccountFetchedProperties;
+extern const struct OTRManagedFacebookAccountFetchedProperties {
+} OTRManagedFacebookAccountFetchedProperties;
 
 
 
-@interface OTRmanagedFacebookAccountID : NSManagedObjectID {}
+@interface OTRManagedFacebookAccountID : NSManagedObjectID {}
 @end
 
-@interface _OTRmanagedFacebookAccount : OTRManagedOAuthAccount {}
+@interface _OTRManagedFacebookAccount : OTRManagedOAuthAccount {}
 + (id)insertInManagedObjectContext:(NSManagedObjectContext*)moc_;
 + (NSString*)entityName;
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_;
-- (OTRmanagedFacebookAccountID*)objectID;
+- (OTRManagedFacebookAccountID*)objectID;
 
 
 
@@ -31,11 +31,11 @@ extern const struct OTRmanagedFacebookAccountFetchedProperties {
 
 @end
 
-@interface _OTRmanagedFacebookAccount (CoreDataGeneratedAccessors)
+@interface _OTRManagedFacebookAccount (CoreDataGeneratedAccessors)
 
 @end
 
-@interface _OTRmanagedFacebookAccount (CoreDataGeneratedPrimitiveAccessors)
+@interface _OTRManagedFacebookAccount (CoreDataGeneratedPrimitiveAccessors)
 
 
 @end

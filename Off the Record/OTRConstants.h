@@ -53,6 +53,8 @@
 
 #define kOTRFeedbackEmail @"support@chatsecure.org"
 
+#define kOTRServiceName @"org.chatsecure.ChatSecure"
+
 #define kOTRChatStatePausedTimeout 5
 #define kOTRChatStateInactiveTimeout 120
 
@@ -77,26 +79,28 @@
 
 
 typedef enum {
-    kOTRBuddyStatusOffline = 4,
-    kOTRBuddyStatusXa = 3,
-    kOTRBUddyStatusDnd = 2,
-    kOTRBuddyStatusAway = 1,
+    kOTRBuddyStatusOffline   = 4,
+    kOTRBuddyStatusXa        = 3,
+    kOTRBUddyStatusDnd       = 2,
+    kOTRBuddyStatusAway      = 1,
     kOTRBuddyStatusAvailable = 0
 } OTRBuddyStatus;
 
 typedef enum {
-    kOTRChatStateUnknown =0,
-    kOTRChatStateActive = 1,
+    kOTRChatStateUnknown   = 0,
+    kOTRChatStateActive    = 1,
     kOTRChatStateComposing = 2,
-    kOTRChatStatePaused = 3,
-    kOTRChatStateInactive = 4,
-    kOTRChatStateGone =5
+    kOTRChatStatePaused    = 3,
+    kOTRChatStateInactive  = 4,
+    kOTRChatStateGone      = 5
 } OTRChatState;
 
-typedef enum {
-    OTRAccountTypeFacebook,
-    OTRAccountTypeGoogleTalk
-}OTRAccountType;
+typedef NS_ENUM(NSUInteger, OTRAccountType) {
+    OTRAccountTypeFacebook    = 1,
+    OTRAccountTypeGoogleTalk  = 2,
+    OTRAccountTypeJabber      = 3,
+    OTRAccountTypeAIM         = 4
+};
 
 //Chatview
 #define kTabBarHeight 0

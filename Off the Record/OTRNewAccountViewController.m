@@ -27,11 +27,14 @@
 #import "OTRLoginViewController.h"
 #import "QuartzCore/QuartzCore.h"
 #import "OTRManagedXMPPAccount.h"
+#import "OTRManagedFacebookAccount.h"
+#import "OTRManagedGoogleAccount.h"
 #import "OTRManagedOscarAccount.h"
 
 #define rowHeight 70
 #define kDisplayNameKey @"displayNameKey"
 #define kProviderImageKey @"providerImageKey"
+#define kAccountTypeKey @"kAccountTypeKey"
 
 @interface OTRNewAccountViewController ()
 
@@ -52,25 +55,30 @@
     
     //Facebook
     NSMutableDictionary * facebookAccount = [NSMutableDictionary dictionary];
-    [facebookAccount setObject:FACEBOOK_STRING forKey:kDisplayNameKey];
-    [facebookAccount setObject:kFacebookImageName forKey:kProviderImageKey];
+    facebookAccount[kDisplayNameKey] = FACEBOOK_STRING;
+    facebookAccount[kProviderImageKey] = kFacebookImageName;
+    facebookAccount[kAccountTypeKey] = @(OTRAccountTypeFacebook);
+    
     
     //Google Chat
      NSMutableDictionary * googleAccount = [NSMutableDictionary dictionary];
-    [googleAccount setObject:GOOGLE_TALK_STRING forKey:kDisplayNameKey];
-    [googleAccount setObject:kGTalkImageName forKey:kProviderImageKey];
+    googleAccount[kDisplayNameKey] = GOOGLE_TALK_STRING;
+    googleAccount[kProviderImageKey] =  kGTalkImageName;
+    googleAccount[kAccountTypeKey] = @(OTRAccountTypeGoogleTalk);
     
     //Jabber
      NSMutableDictionary * jabberAccount = [NSMutableDictionary dictionary];
-    [jabberAccount setObject:JABBER_STRING forKey:kDisplayNameKey];
-    [jabberAccount setObject:kXMPPImageName forKey:kProviderImageKey];
+    jabberAccount[kDisplayNameKey ] = JABBER_STRING;
+    jabberAccount[kProviderImageKey] = kXMPPImageName;
+    jabberAccount[kAccountTypeKey] = @(OTRAccountTypeJabber);
     
     //Aim
      NSMutableDictionary * aimAccount = [NSMutableDictionary dictionary];
-    [aimAccount setObject:AIM_STRING forKey:kDisplayNameKey];
-    [aimAccount setObject:kAIMImageName forKey:kProviderImageKey];
+    aimAccount[kDisplayNameKey] = AIM_STRING;
+    aimAccount[kProviderImageKey] = kAIMImageName;
+    aimAccount[kAccountTypeKey] = @(OTRAccountTypeAIM);
     
-    accounts = [NSMutableArray arrayWithObjects:facebookAccount,googleAccount,jabberAccount,aimAccount, nil];    
+    accounts = @[facebookAccount,googleAccount,jabberAccount,aimAccount];
     
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:CANCEL_STRING style:UIBarButtonItemStyleBordered target:self action:@selector(cancelPressed:)];
     
@@ -102,12 +110,12 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     NSDictionary * cellAccount = [accounts objectAtIndex:indexPath.row];
-    cell.textLabel.text = [cellAccount objectForKey:kDisplayNameKey];
+    cell.textLabel.text = cellAccount[kDisplayNameKey];
     cell.textLabel.font = [UIFont boldSystemFontOfSize:19];
-    cell.imageView.image = [UIImage imageNamed:[cellAccount objectForKey:kProviderImageKey]];
+    cell.imageView.image = [UIImage imageNamed:cellAccount[kProviderImageKey]];
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
-    if( [[cellAccount objectForKey:kDisplayNameKey] isEqualToString:FACEBOOK_STRING])
+    if( [cellAccount[kAccountTypeKey] isEqual:@(OTRAccountTypeFacebook)])
     {
         cell.imageView.layer.masksToBounds = YES;
         cell.imageView.layer.cornerRadius = 10.0;
@@ -120,15 +128,17 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    OTRManagedAccount * cellAccount = [self accountForName:[[accounts objectAtIndex:indexPath.row] objectForKey:kDisplayNameKey]];
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    OTRAccountType accountType = [accounts[indexPath.row][kAccountTypeKey] unsignedIntegerValue];
+    OTRManagedAccount * cellAccount = [self accountForAccountType:accountType];
+    
     NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
-
     [context MR_saveToPersistentStoreAndWait];
     
     OTRLoginViewController *loginViewController = [OTRLoginViewController loginViewControllerWithAcccountID:cellAccount.objectID];
     loginViewController.isNewAccount = YES;
     [self.navigationController pushViewController:loginViewController animated:YES];
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];    
 }
 
 - (void)cancelPressed:(id)sender {
@@ -146,44 +156,38 @@
     }
 }
 
--(OTRManagedAccount *)accountForName:(NSString *)name
+-(OTRManagedAccount *)accountForAccountType:(OTRAccountType)accountType
 {
     //Facebook
     OTRManagedAccount * newAccount;
-    if([name isEqualToString:FACEBOOK_STRING])
+    if(accountType == OTRAccountTypeFacebook)
     {
-        OTRManagedXMPPAccount * facebookAccount = [OTRManagedXMPPAccount MR_createEntity];
+        OTRManagedFacebookAccount * facebookAccount = [OTRManagedFacebookAccount MR_createEntity];
         [facebookAccount setDefaultsWithDomain:kOTRFacebookDomain];
         newAccount = facebookAccount;
     }
-    else if([name isEqualToString:GOOGLE_TALK_STRING])
+    else if(accountType == OTRAccountTypeGoogleTalk)
     {
         //Google Chat
-        OTRManagedXMPPAccount * googleAccount = [OTRManagedXMPPAccount MR_createEntity];
+        OTRManagedGoogleAccount * googleAccount = [OTRManagedGoogleAccount MR_createEntity];
         [googleAccount setDefaultsWithDomain:kOTRGoogleTalkDomain];
         newAccount = googleAccount;
     }
-    else if([name isEqualToString:JABBER_STRING])
+    else if(accountType == OTRAccountTypeJabber)
     {
         //Jabber
         OTRManagedXMPPAccount * jabberAccount = [OTRManagedXMPPAccount MR_createEntity];
         [jabberAccount setDefaultsWithDomain:@""];
         newAccount = jabberAccount;
     }
-    else if([name isEqualToString:AIM_STRING])
+    else if(accountType == OTRAccountTypeAIM)
     {
         //Aim
         OTRManagedOscarAccount * aimAccount = [OTRManagedOscarAccount MR_createEntity];
         [aimAccount setDefaultsWithProtocol:kOTRProtocolTypeAIM];
         newAccount = aimAccount;
     }
-    return newAccount;
-    
-    
-    
-    
-    
-        
+    return newAccount;     
 }
 
 @end

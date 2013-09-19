@@ -1,38 +1,38 @@
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to OTRmanagedFacebookAccount.m instead.
+// Make changes to OTRManagedFacebookAccount.m instead.
 
-#import "_OTRmanagedFacebookAccount.h"
+#import "_OTRManagedFacebookAccount.h"
 
-const struct OTRmanagedFacebookAccountAttributes OTRmanagedFacebookAccountAttributes = {
+const struct OTRManagedFacebookAccountAttributes OTRManagedFacebookAccountAttributes = {
 };
 
-const struct OTRmanagedFacebookAccountRelationships OTRmanagedFacebookAccountRelationships = {
+const struct OTRManagedFacebookAccountRelationships OTRManagedFacebookAccountRelationships = {
 };
 
-const struct OTRmanagedFacebookAccountFetchedProperties OTRmanagedFacebookAccountFetchedProperties = {
+const struct OTRManagedFacebookAccountFetchedProperties OTRManagedFacebookAccountFetchedProperties = {
 };
 
-@implementation OTRmanagedFacebookAccountID
+@implementation OTRManagedFacebookAccountID
 @end
 
-@implementation _OTRmanagedFacebookAccount
+@implementation _OTRManagedFacebookAccount
 
 + (id)insertInManagedObjectContext:(NSManagedObjectContext*)moc_ {
 	NSParameterAssert(moc_);
-	return [NSEntityDescription insertNewObjectForEntityForName:@"OTRmanagedFacebookAccount" inManagedObjectContext:moc_];
+	return [NSEntityDescription insertNewObjectForEntityForName:@"OTRManagedFacebookAccount" inManagedObjectContext:moc_];
 }
 
 + (NSString*)entityName {
-	return @"OTRmanagedFacebookAccount";
+	return @"OTRManagedFacebookAccount";
 }
 
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_ {
 	NSParameterAssert(moc_);
-	return [NSEntityDescription entityForName:@"OTRmanagedFacebookAccount" inManagedObjectContext:moc_];
+	return [NSEntityDescription entityForName:@"OTRManagedFacebookAccount" inManagedObjectContext:moc_];
 }
 
-- (OTRmanagedFacebookAccountID*)objectID {
-	return (OTRmanagedFacebookAccountID*)[super objectID];
+- (OTRManagedFacebookAccountID*)objectID {
+	return (OTRManagedFacebookAccountID*)[super objectID];
 }
 
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {

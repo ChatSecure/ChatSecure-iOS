@@ -21,7 +21,11 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "OTRXMPPOAUTHLoginViewController.h"
+#import "OTRManagedGoogleAccount.h"
 
 @interface OTRGoogleTalkLoginViewController : OTRXMPPOAUTHLoginViewController
+
+
+@property (nonatomic,strong) OTRManagedGoogleAccount * account;
 
 @end

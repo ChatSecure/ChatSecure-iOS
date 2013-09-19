@@ -1,9 +1,19 @@
 #import "_OTRManagedOAuthAccount.h"
 
-@interface OTRManagedOAuthAccount : _OTRManagedOAuthAccount {}
+@protocol OTRManagedOAuthAccountProtocol <NSObject>
+
+@optional
+-(void)refreshToken:(void (^)(NSError *error))completionBlock;
+-(void)refreshTokenIfNeeded:(void (^)(NSError *error))completion;
+-(NSString *)accessTokenString;
+
+@end
+
+@interface OTRManagedOAuthAccount : _OTRManagedOAuthAccount <OTRManagedOAuthAccountProtocol>
 
 
-@property (nonatomic,strong) NSDictionary * accessTokenDictionary;
+@property (nonatomic,strong) NSDictionary * tokenDictionary;
+
 
 
 @end
