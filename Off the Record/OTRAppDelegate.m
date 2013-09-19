@@ -34,7 +34,7 @@
 #import "OTRConvertAccount.h"
 #import "OTRUtilities.h"
 #import "OTRAccountsManager.h"
-#import <FacebookSDK/FacebookSDK.h>
+#import "FacebookSDK.h"
 
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
@@ -105,6 +105,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     if([OTRUtilities isFirstLaunchOnCurrentVersion])
     {
         [OTRAccountsManager removeAllPasswordsForAccountType:OTRAccountTypeFacebook];
+        [OTRAccountsManager removeAllPasswordsForAccountType:OTRAccountTypeGoogleTalk];
     }
     
     [OTRUtilities deleteAllBuddiesAndMessages];

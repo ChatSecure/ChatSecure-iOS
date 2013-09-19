@@ -40,6 +40,8 @@
 		6336CDE0165C4E9E00C8CBA8 /* OTRLanguageListSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6336CDDF165C4E9E00C8CBA8 /* OTRLanguageListSettingViewController.m */; };
 		633E71F916E169C100495B45 /* OTRBuddyListSectionInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 633E71F816E169C100495B45 /* OTRBuddyListSectionInfo.m */; };
 		633E71FD16E170AA00495B45 /* OTRSectionHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 633E71FC16E170AA00495B45 /* OTRSectionHeaderView.m */; };
+		6348184917E3D600004E0146 /* XMPPXOATH2Google.m in Sources */ = {isa = PBXBuildFile; fileRef = 6348184817E3D600004E0146 /* XMPPXOATH2Google.m */; };
+		6348184C17E3D6B9004E0146 /* OTRXMPPOAUTHLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6348184B17E3D6B8004E0146 /* OTRXMPPOAUTHLoginViewController.m */; };
 		63483F801752CED100779257 /* XMPPAnonymousAuthentication.m in Sources */ = {isa = PBXBuildFile; fileRef = 63483DF81752CED100779257 /* XMPPAnonymousAuthentication.m */; };
 		63483F811752CED100779257 /* XMPPDeprecatedDigestAuthentication.m in Sources */ = {isa = PBXBuildFile; fileRef = 63483DFB1752CED100779257 /* XMPPDeprecatedDigestAuthentication.m */; };
 		63483F821752CED100779257 /* XMPPDeprecatedPlainAuthentication.m in Sources */ = {isa = PBXBuildFile; fileRef = 63483DFE1752CED100779257 /* XMPPDeprecatedPlainAuthentication.m */; };
@@ -175,7 +177,6 @@
 		636FE4BC161B771E002B28EF /* OTROscarLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 636FE4BB161B771E002B28EF /* OTROscarLoginViewController.m */; };
 		636FE4C0161B7C68002B28EF /* OTRInLineTextEditTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 636FE4BF161B7C68002B28EF /* OTRInLineTextEditTableViewCell.m */; };
 		63813C1216E14E5D00909670 /* OTRBuddyListGroupManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 63813C1116E14E5D00909670 /* OTRBuddyListGroupManager.m */; };
-		639B0B6817DE74F7009B50FC /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 639B0B6717DE74F7009B50FC /* FacebookSDK.framework */; };
 		639B9A71164F21D900C021A9 /* OTRShareSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 639B9A70164F21D900C021A9 /* OTRShareSetting.m */; };
 		639BE6B116DC3B2B004B7257 /* _OTRManagedMessageAndStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 639BE6AE16DC3B2B004B7257 /* _OTRManagedMessageAndStatus.m */; };
 		639BE6B216DC3B2B004B7257 /* _OTRManagedStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 639BE6B016DC3B2B004B7257 /* _OTRManagedStatus.m */; };
@@ -270,6 +271,8 @@
 		63FA108316F9290A00D9EE45 /* OTRImages.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FA108216F9290900D9EE45 /* OTRImages.m */; };
 		63FE64C61727535700876D15 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63FE64C51727535700876D15 /* StoreKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		63FEE8EB17C596B1009C9030 /* XMPPStringPrep.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FEE8EA17C596B1009C9030 /* XMPPStringPrep.m */; };
+		D909664F17EA67D600440833 /* libfacebook_ios_sdk.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D909664617EA67BD00440833 /* libfacebook_ios_sdk.a */; };
+		D90966FB17EA73C900440833 /* libOAuthTouch2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D909663717EA55B900440833 /* libOAuthTouch2.a */; };
 		D90B80AC13FC719B006EFF3D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D90B80AB13FC719B006EFF3D /* CoreGraphics.framework */; };
 		D90B80AF13FC7E5F006EFF3D /* OTRCodec.m in Sources */ = {isa = PBXBuildFile; fileRef = D90B80AE13FC7E5F006EFF3D /* OTRCodec.m */; };
 		D90FAF2914A0624B00DA7C56 /* OTRBuddyList.m in Sources */ = {isa = PBXBuildFile; fileRef = D90FAF2814A0624B00DA7C56 /* OTRBuddyList.m */; };
@@ -484,6 +487,55 @@
 			remoteGlobalIDString = 63C1062316CB108A00D2C860;
 			remoteInfo = Mogenerator;
 		};
+		D909663617EA55B900440833 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D909662F17EA55B800440833 /* GTMOAuth2.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D2AAC07E0554694100DB518D;
+			remoteInfo = OAuthTouchStaticLib;
+		};
+		D909663817EA55B900440833 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D909662F17EA55B800440833 /* GTMOAuth2.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4FC754FA13E77E25006A0C26;
+			remoteInfo = OAuthTouchNonGoogleStaticLib;
+		};
+		D909664517EA67BD00440833 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D909663D17EA67BD00440833 /* facebook-ios-sdk.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D2AAC07E0554694100DB518D;
+			remoteInfo = "facebook-ios-sdk";
+		};
+		D909664717EA67BD00440833 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D909663D17EA67BD00440833 /* facebook-ios-sdk.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = B9CBC519152537270036AA71;
+			remoteInfo = FacebookSDKTests;
+		};
+		D909664917EA67BD00440833 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D909663D17EA67BD00440833 /* facebook-ios-sdk.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 85A44B9F16A8CE05007BE80E;
+			remoteInfo = FacebookSDKIntegrationTests;
+		};
+		D909664D17EA67CC00440833 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D909663D17EA67BD00440833 /* facebook-ios-sdk.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC07D0554694100DB518D;
+			remoteInfo = "facebook-ios-sdk";
+		};
+		D909671017EA7ADF00440833 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D909662F17EA55B800440833 /* GTMOAuth2.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D2AAC07D0554694100DB518D;
+			remoteInfo = OAuthTouchStaticLib;
+		};
 		D953117816C6FF1A00AAB1D2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D953117416C6FF1A00AAB1D2 /* UserVoice.xcodeproj */;
@@ -564,6 +616,11 @@
 		633E71F816E169C100495B45 /* OTRBuddyListSectionInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBuddyListSectionInfo.m; sourceTree = "<group>"; };
 		633E71FB16E170AA00495B45 /* OTRSectionHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRSectionHeaderView.h; sourceTree = "<group>"; };
 		633E71FC16E170AA00495B45 /* OTRSectionHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRSectionHeaderView.m; sourceTree = "<group>"; };
+		6348184717E3D600004E0146 /* XMPPXOATH2Google.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPXOATH2Google.h; sourceTree = "<group>"; };
+		6348184817E3D600004E0146 /* XMPPXOATH2Google.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPXOATH2Google.m; sourceTree = "<group>"; };
+		6348184A17E3D6B8004E0146 /* OTRXMPPOAUTHLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPOAUTHLoginViewController.h; sourceTree = "<group>"; };
+		6348184B17E3D6B8004E0146 /* OTRXMPPOAUTHLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPOAUTHLoginViewController.m; sourceTree = "<group>"; };
+		6348189517E3E09C004E0146 /* OTRSecrets.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRSecrets.h; sourceTree = "<group>"; };
 		63483DF71752CED100779257 /* XMPPAnonymousAuthentication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPAnonymousAuthentication.h; sourceTree = "<group>"; };
 		63483DF81752CED100779257 /* XMPPAnonymousAuthentication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPAnonymousAuthentication.m; sourceTree = "<group>"; };
 		63483DFA1752CED100779257 /* XMPPDeprecatedDigestAuthentication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPDeprecatedDigestAuthentication.h; sourceTree = "<group>"; };
@@ -1003,6 +1060,8 @@
 		D902D31D141E930C00AA3479 /* OTROldBuddy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTROldBuddy.m; sourceTree = "<group>"; };
 		D9042E2C153168BE000D264C /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_CN; path = "Off the Record/zh_CN.lproj/InfoPlist.strings"; sourceTree = SOURCE_ROOT; };
 		D9042E2D153168BE000D264C /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_CN; path = "Off the Record/zh_CN.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
+		D909662F17EA55B800440833 /* GTMOAuth2.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GTMOAuth2.xcodeproj; path = "Submodules/gtm-oauth2/Source/GTMOAuth2.xcodeproj"; sourceTree = "<group>"; };
+		D909663D17EA67BD00440833 /* facebook-ios-sdk.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "facebook-ios-sdk.xcodeproj"; path = "Submodules/facebook-ios-sdk/src/facebook-ios-sdk.xcodeproj"; sourceTree = "<group>"; };
 		D90B80AB13FC719B006EFF3D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		D90B80AD13FC7E5E006EFF3D /* OTRCodec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRCodec.h; sourceTree = "<group>"; };
 		D90B80AE13FC7E5F006EFF3D /* OTRCodec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRCodec.m; sourceTree = "<group>"; };
@@ -1037,7 +1096,6 @@
 		D93E34F215E48FE600D587B2 /* 14-gear@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "14-gear@2x.png"; sourceTree = "<group>"; };
 		D940EA7915992A0800E5527A /* OTRProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRProtocol.h; sourceTree = "<group>"; };
 		D953117416C6FF1A00AAB1D2 /* UserVoice.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = UserVoice.xcodeproj; path = Submodules/UserVoice/UserVoice.xcodeproj; sourceTree = "<group>"; };
-		D953117D16C6FFF000AAB1D2 /* OTRSecrets.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OTRSecrets.h; sourceTree = "<group>"; };
 		D953118016C70D2F00AAB1D2 /* 275-broadcast.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "275-broadcast.png"; sourceTree = "<group>"; };
 		D953118116C70D2F00AAB1D2 /* 275-broadcast@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "275-broadcast@2x.png"; sourceTree = "<group>"; };
 		D953118416C70DD200AAB1D2 /* OTRDonateSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRDonateSetting.h; sourceTree = "<group>"; };
@@ -1404,6 +1462,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D90966FB17EA73C900440833 /* libOAuthTouch2.a in Frameworks */,
+				D909664F17EA67D600440833 /* libfacebook_ios_sdk.a in Frameworks */,
 				63FE64C61727535700876D15 /* StoreKit.framework in Frameworks */,
 				D953117C16C6FF3400AAB1D2 /* libUserVoice.a in Frameworks */,
 				D9CEF0AB1684268500B236B5 /* libOTRKit.a in Frameworks */,
@@ -1425,7 +1485,6 @@
 				D9F9377F13F44BD3009A3D84 /* Foundation.framework in Frameworks */,
 				D962710A1755E16200F0A958 /* libidn.a in Frameworks */,
 				D964257017572B9B00C95395 /* libCrittercism.a in Frameworks */,
-				639B0B6817DE74F7009B50FC /* FacebookSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1439,6 +1498,40 @@
 				6301D88116E95A36008F67A6 /* OpenInChromeController.m */,
 			);
 			name = OpenInChrome;
+			sourceTree = "<group>";
+		};
+		6348184617E3D600004E0146 /* X-OAUTH2-google */ = {
+			isa = PBXGroup;
+			children = (
+				6348184717E3D600004E0146 /* XMPPXOATH2Google.h */,
+				6348184817E3D600004E0146 /* XMPPXOATH2Google.m */,
+			);
+			path = "X-OAUTH2-google";
+			sourceTree = "<group>";
+		};
+		6348184D17E3D6C8004E0146 /* XMPP Login */ = {
+			isa = PBXGroup;
+			children = (
+				636FE4B7161B7701002B28EF /* OTRXMPPLoginViewController.h */,
+				636FE4B8161B7701002B28EF /* OTRXMPPLoginViewController.m */,
+				639FDE4516334FA500387666 /* OTRJabberLoginViewController.h */,
+				639FDE4616334FA500387666 /* OTRJabberLoginViewController.m */,
+				6348184E17E3D6EB004E0146 /* OAUTH Login */,
+			);
+			name = "XMPP Login";
+			sourceTree = "<group>";
+		};
+		6348184E17E3D6EB004E0146 /* OAUTH Login */ = {
+			isa = PBXGroup;
+			children = (
+				6348184A17E3D6B8004E0146 /* OTRXMPPOAUTHLoginViewController.h */,
+				6348184B17E3D6B8004E0146 /* OTRXMPPOAUTHLoginViewController.m */,
+				636FE4B4161B76EA002B28EF /* OTRGoogleTalkLoginViewController.h */,
+				636FE4B5161B76EA002B28EF /* OTRGoogleTalkLoginViewController.m */,
+				636FE4B1161B76CF002B28EF /* OTRFacebookLoginViewController.h */,
+				636FE4B2161B76CF002B28EF /* OTRFacebookLoginViewController.m */,
+			);
+			name = "OAUTH Login";
 			sourceTree = "<group>";
 		};
 		63483DF41752CEB700779257 /* XMPPFramework */ = {
@@ -1457,6 +1550,7 @@
 		63483DF51752CED100779257 /* Authentication */ = {
 			isa = PBXGroup;
 			children = (
+				6348184617E3D600004E0146 /* X-OAUTH2-google */,
 				63483DF61752CED100779257 /* Anonymous */,
 				63483DF91752CED100779257 /* Deprecated-Digest */,
 				63483DFC1752CED100779257 /* Deprecated-Plain */,
@@ -2194,16 +2288,9 @@
 			children = (
 				D9DE274913F4F0A400E335CA /* OTRLoginViewController.h */,
 				D9DE274A13F4F0A400E335CA /* OTRLoginViewController.m */,
-				636FE4B7161B7701002B28EF /* OTRXMPPLoginViewController.h */,
-				636FE4B8161B7701002B28EF /* OTRXMPPLoginViewController.m */,
-				639FDE4516334FA500387666 /* OTRJabberLoginViewController.h */,
-				639FDE4616334FA500387666 /* OTRJabberLoginViewController.m */,
+				6348184D17E3D6C8004E0146 /* XMPP Login */,
 				636FE4BA161B771E002B28EF /* OTROscarLoginViewController.h */,
 				636FE4BB161B771E002B28EF /* OTROscarLoginViewController.m */,
-				636FE4B4161B76EA002B28EF /* OTRGoogleTalkLoginViewController.h */,
-				636FE4B5161B76EA002B28EF /* OTRGoogleTalkLoginViewController.m */,
-				636FE4B1161B76CF002B28EF /* OTRFacebookLoginViewController.h */,
-				636FE4B2161B76CF002B28EF /* OTRFacebookLoginViewController.m */,
 				636FE4BE161B7C68002B28EF /* OTRInLineTextEditTableViewCell.h */,
 				636FE4BF161B7C68002B28EF /* OTRInLineTextEditTableViewCell.m */,
 			);
@@ -2365,6 +2452,25 @@
 			name = mogen;
 			sourceTree = "<group>";
 		};
+		D909663017EA55B800440833 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D909663717EA55B900440833 /* libOAuthTouch2.a */,
+				D909663917EA55B900440833 /* libOAuthTouch2NG.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D909663E17EA67BD00440833 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D909664617EA67BD00440833 /* libfacebook_ios_sdk.a */,
+				D909664817EA67BD00440833 /* FacebookSDKTests.octest */,
+				D909664A17EA67BD00440833 /* FacebookSDKIntegrationTests.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		D91DAE8A154740D5009D0B74 /* Detail Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -2468,6 +2574,8 @@
 		D9CEED611684234D00B236B5 /* Submodules */ = {
 			isa = PBXGroup;
 			children = (
+				D909663D17EA67BD00440833 /* facebook-ios-sdk.xcodeproj */,
+				D909662F17EA55B800440833 /* GTMOAuth2.xcodeproj */,
 				63483DF41752CEB700779257 /* XMPPFramework */,
 				6301D87F16E95A23008F67A6 /* OpenInChrome */,
 				63CC9F1E16D2E93500BDA7D1 /* TTTAttributedLabel */,
@@ -2935,7 +3043,7 @@
 				6300F16616E6CF8400D3C1AA /* OTRSubscriptionRequestsViewController.m */,
 				63BFDB6316E81CD900C608D6 /* OTRBuddyViewController.h */,
 				63BFDB6416E81CD900C608D6 /* OTRBuddyViewController.m */,
-				D953117D16C6FFF000AAB1D2 /* OTRSecrets.h */,
+				6348189517E3E09C004E0146 /* OTRSecrets.h */,
 				D9CEF0A81684253B00B236B5 /* XMPPFramework.h */,
 				D9D8D1F61531056300F9E8D3 /* Resources */,
 				D9F9378113F44BD3009A3D84 /* Supporting Files */,
@@ -3064,6 +3172,8 @@
 			buildRules = (
 			);
 			dependencies = (
+				D909671117EA7ADF00440833 /* PBXTargetDependency */,
+				D909664E17EA67CC00440833 /* PBXTargetDependency */,
 				D953117B16C6FF2F00AAB1D2 /* PBXTargetDependency */,
 				D9CEF0AA1684267E00B236B5 /* PBXTargetDependency */,
 				639F08B31752AEF5005C408D /* PBXTargetDependency */,
@@ -3079,7 +3189,7 @@
 		D9F9376F13F44BD3009A3D84 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0430;
+				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "Chris Ballinger";
 			};
 			buildConfigurationList = D9F9377213F44BD3009A3D84 /* Build configuration list for PBXProject "Off the Record" */;
@@ -3135,6 +3245,14 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
+					ProductGroup = D909663E17EA67BD00440833 /* Products */;
+					ProjectRef = D909663D17EA67BD00440833 /* facebook-ios-sdk.xcodeproj */;
+				},
+				{
+					ProductGroup = D909663017EA55B800440833 /* Products */;
+					ProjectRef = D909662F17EA55B800440833 /* GTMOAuth2.xcodeproj */;
+				},
+				{
 					ProductGroup = D9D370E1169D20C20086F358 /* Products */;
 					ProjectRef = D9D370E0169D20C20086F358 /* openssl.xcodeproj */;
 				},
@@ -3156,6 +3274,41 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		D909663717EA55B900440833 /* libOAuthTouch2.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libOAuthTouch2.a;
+			remoteRef = D909663617EA55B900440833 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D909663917EA55B900440833 /* libOAuthTouch2NG.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libOAuthTouch2NG.a;
+			remoteRef = D909663817EA55B900440833 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D909664617EA67BD00440833 /* libfacebook_ios_sdk.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libfacebook_ios_sdk.a;
+			remoteRef = D909664517EA67BD00440833 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D909664817EA67BD00440833 /* FacebookSDKTests.octest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = FacebookSDKTests.octest;
+			remoteRef = D909664717EA67BD00440833 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D909664A17EA67BD00440833 /* FacebookSDKIntegrationTests.octest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = FacebookSDKIntegrationTests.octest;
+			remoteRef = D909664917EA67BD00440833 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		D953117916C6FF1A00AAB1D2 /* libUserVoice.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -3635,6 +3788,8 @@
 				6348401B1752CED100779257 /* DDXMLElement.m in Sources */,
 				6348401C1752CED100779257 /* DDXMLNode.m in Sources */,
 				63FEE8EB17C596B1009C9030 /* XMPPStringPrep.m in Sources */,
+				6348184917E3D600004E0146 /* XMPPXOATH2Google.m in Sources */,
+				6348184C17E3D6B9004E0146 /* OTRXMPPOAUTHLoginViewController.m in Sources */,
 				635C169B17EA785F0050E53E /* _OTRmanagedFacebookAccount.m in Sources */,
 				635C169E17EA78690050E53E /* _OTRManagedGoogleAccount.m in Sources */,
 				635C16A117EA78DA0050E53E /* _OTRManagedOAuthAccount.m in Sources */,
@@ -3651,6 +3806,16 @@
 			isa = PBXTargetDependency;
 			target = 63C1062316CB108A00D2C860 /* Mogenerator */;
 			targetProxy = 639F08B21752AEF5005C408D /* PBXContainerItemProxy */;
+		};
+		D909664E17EA67CC00440833 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "facebook-ios-sdk";
+			targetProxy = D909664D17EA67CC00440833 /* PBXContainerItemProxy */;
+		};
+		D909671117EA7ADF00440833 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = OAuthTouchStaticLib;
+			targetProxy = D909671017EA7ADF00440833 /* PBXContainerItemProxy */;
 		};
 		D953117B16C6FF2F00AAB1D2 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -3788,6 +3953,7 @@
 				GCC_THUMB_SUPPORT = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
