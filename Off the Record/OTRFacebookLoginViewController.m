@@ -24,7 +24,7 @@
 #import "Strings.h"
 #import "OTRAppDelegate.h"
 #import "OTRConstants.h"
-#import <FacebookSDK/FacebookSDK.h>
+#import "FacebookSDK.h"
 
 @interface OTRFacebookLoginViewController ()
 

@@ -34,7 +34,7 @@
 #import "OTRConvertAccount.h"
 #import "OTRUtilities.h"
 #import "OTRAccountsManager.h"
-#import <FacebookSDK/FacebookSDK.h>
+#import "FacebookSDK.h"
 
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
