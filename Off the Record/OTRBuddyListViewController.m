@@ -394,11 +394,10 @@
         return;
     
     UITableViewCell *cell = (UITableViewCell *)gesture.view;
-    UITableView * tableView = (UITableView *)cell.superview;
     
-    NSIndexPath * indexPath = [tableView indexPathForCell:cell];
+    NSIndexPath * indexPath = [buddyListTableView indexPathForCell:cell];
     
-    OTRManagedBuddy * buddy = [self buddyWithTableView:tableView atIndexPath:indexPath];
+    OTRManagedBuddy * buddy = [self buddyWithTableView:buddyListTableView atIndexPath:indexPath];
     
     OTRBuddyViewController * buddyViewController = [[OTRBuddyViewController alloc] initWithBuddyID:buddy.objectID];
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:buddyViewController];
