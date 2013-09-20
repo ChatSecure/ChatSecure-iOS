@@ -38,6 +38,10 @@
 		633406411652D50F00A54C52 /* OTRLanguageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 633406401652D50F00A54C52 /* OTRLanguageManager.m */; };
 		633406451652E44600A54C52 /* OTRLanguageSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 633406441652E44500A54C52 /* OTRLanguageSetting.m */; };
 		6336CDE0165C4E9E00C8CBA8 /* OTRLanguageListSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6336CDDF165C4E9E00C8CBA8 /* OTRLanguageListSettingViewController.m */; };
+		633B6CFF17ECF4F7002DA152 /* googleTalkButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 633B6CFB17ECF4F7002DA152 /* googleTalkButton.png */; };
+		633B6D0017ECF4F7002DA152 /* googleTalkButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 633B6CFC17ECF4F7002DA152 /* googleTalkButton@2x.png */; };
+		633B6D0117ECF4F7002DA152 /* googleTalkButtonPressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 633B6CFD17ECF4F7002DA152 /* googleTalkButtonPressed.png */; };
+		633B6D0217ECF4F7002DA152 /* googleTalkButtonPressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 633B6CFE17ECF4F7002DA152 /* googleTalkButtonPressed@2x.png */; };
 		633E71F916E169C100495B45 /* OTRBuddyListSectionInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 633E71F816E169C100495B45 /* OTRBuddyListSectionInfo.m */; };
 		633E71FD16E170AA00495B45 /* OTRSectionHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 633E71FC16E170AA00495B45 /* OTRSectionHeaderView.m */; };
 		6348184917E3D600004E0146 /* XMPPXOATH2Google.m in Sources */ = {isa = PBXBuildFile; fileRef = 6348184817E3D600004E0146 /* XMPPXOATH2Google.m */; };
@@ -615,6 +619,10 @@
 		6334222E167BE1E400BF0491 /* bo */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = bo; path = "Off the Record/bo.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
 		6336CDDE165C4E9E00C8CBA8 /* OTRLanguageListSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRLanguageListSettingViewController.h; sourceTree = "<group>"; };
 		6336CDDF165C4E9E00C8CBA8 /* OTRLanguageListSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRLanguageListSettingViewController.m; sourceTree = "<group>"; };
+		633B6CFB17ECF4F7002DA152 /* googleTalkButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = googleTalkButton.png; sourceTree = "<group>"; };
+		633B6CFC17ECF4F7002DA152 /* googleTalkButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "googleTalkButton@2x.png"; sourceTree = "<group>"; };
+		633B6CFD17ECF4F7002DA152 /* googleTalkButtonPressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = googleTalkButtonPressed.png; sourceTree = "<group>"; };
+		633B6CFE17ECF4F7002DA152 /* googleTalkButtonPressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "googleTalkButtonPressed@2x.png"; sourceTree = "<group>"; };
 		633E71F716E169C100495B45 /* OTRBuddyListSectionInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBuddyListSectionInfo.h; sourceTree = "<group>"; };
 		633E71F816E169C100495B45 /* OTRBuddyListSectionInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBuddyListSectionInfo.m; sourceTree = "<group>"; };
 		633E71FB16E170AA00495B45 /* OTRSectionHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRSectionHeaderView.h; sourceTree = "<group>"; };
@@ -3158,6 +3166,10 @@
 				D99071B1151EB5C5002CECC9 /* 112-group@2x.png */,
 				D99550B7141AE07D00A82FAC /* gtalk.png */,
 				D99550B8141AE07D00A82FAC /* gtalk@2x.png */,
+				633B6CFB17ECF4F7002DA152 /* googleTalkButton.png */,
+				633B6CFC17ECF4F7002DA152 /* googleTalkButton@2x.png */,
+				633B6CFD17ECF4F7002DA152 /* googleTalkButtonPressed.png */,
+				633B6CFE17ECF4F7002DA152 /* googleTalkButtonPressed@2x.png */,
 				D99550B9141AE07D00A82FAC /* aim.png */,
 				D99550BA141AE07D00A82FAC /* aim@2x.png */,
 				6352DC8A15AFB252007AD0B4 /* xmpp.png */,
@@ -3380,6 +3392,7 @@
 				D9A7E0A715242D6400EEDDB5 /* Default-Portrait~ipad.png in Resources */,
 				D9A7E0A915242D6800EEDDB5 /* Default-Portrait@2x~ipad.png in Resources */,
 				D9A7E0AB15242D8C00EEDDB5 /* Default-Landscape~ipad.png in Resources */,
+				633B6D0217ECF4F7002DA152 /* googleTalkButtonPressed@2x.png in Resources */,
 				D9A7E0AD15242D9000EEDDB5 /* Default-Landscape@2x~ipad.png in Resources */,
 				D9D8D2061531056300F9E8D3 /* Localizable.strings in Resources */,
 				D9FC987015588F230039518D /* chatsecure_qrcode.png in Resources */,
@@ -3397,6 +3410,7 @@
 				63B43C2E166D93D5004A4C54 /* Lock_Locked_Verified@2x.png in Resources */,
 				63B43C2F166D93D5004A4C54 /* Lock_Locked@2x.png in Resources */,
 				63B43C30166D93D5004A4C54 /* Lock_Unlocked@2x.png in Resources */,
+				633B6CFF17ECF4F7002DA152 /* googleTalkButton.png in Resources */,
 				6319F696165EAB1F0063AC93 /* supportedLanguages.plist in Resources */,
 				D9BE44A1166F2E7D00A628C7 /* 29-heart.png in Resources */,
 				D9BE44A2166F2E7D00A628C7 /* 29-heart@2x.png in Resources */,
@@ -3421,6 +3435,7 @@
 				63E5E83C16D1DF14006E2B01 /* MessageInputBarBackground@2x.png in Resources */,
 				63E5E83D16D1DF14006E2B01 /* MessageInputFieldBackground.png in Resources */,
 				63E5E83E16D1DF14006E2B01 /* MessageInputFieldBackground@2x.png in Resources */,
+				633B6D0117ECF4F7002DA152 /* googleTalkButtonPressed.png in Resources */,
 				63E5E83F16D1DF14006E2B01 /* SendButton.png in Resources */,
 				63E5E84016D1DF14006E2B01 /* SendButton@2x.png in Resources */,
 				63E5E84116D1DF14006E2B01 /* SendButtonHighlighted.png in Resources */,
@@ -3448,6 +3463,7 @@
 				639C75D917E127A600530423 /* FBLoginViewButton@2x.png in Resources */,
 				639C75DA17E127A600530423 /* FBLoginViewButtonPressed.png in Resources */,
 				639C75DB17E127A600530423 /* FBLoginViewButtonPressed@2x.png in Resources */,
+				633B6D0017ECF4F7002DA152 /* googleTalkButton@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

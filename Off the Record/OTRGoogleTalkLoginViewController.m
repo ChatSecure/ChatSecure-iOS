@@ -42,11 +42,26 @@
 {
     [super viewDidLoad];
 	
-    self.connectButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    self.connectButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    
+    
+    UIEdgeInsets imageInsets = UIEdgeInsetsMake(10.0, 37.0, 10.0, 10.0);
+    
+    UIImage *buttonImage = [[UIImage imageNamed:@"googleTalkButton"] resizableImageWithCapInsets:imageInsets];
+    [self.connectButton setBackgroundImage:buttonImage forState:UIControlStateNormal];
+    
+    UIImage * pressedButtonImage = [[UIImage imageNamed:@"googleTalkButtonPressed"] resizableImageWithCapInsets:imageInsets];
+    [self.connectButton setBackgroundImage:pressedButtonImage forState:UIControlStateHighlighted];
+    
+    
     [self.connectButton setTitle:@"Connect Google Talk" forState:UIControlStateNormal];
+    [self.connectButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [self.connectButton addTarget:self action:@selector(connectAccount:) forControlEvents:UIControlEventTouchUpInside];
     
-    self.disconnectButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    self.disconnectButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.disconnectButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [self.disconnectButton setBackgroundImage:pressedButtonImage forState:UIControlStateHighlighted];
+    [self.disconnectButton setBackgroundImage:buttonImage forState:UIControlStateNormal];
     [self.disconnectButton setTitle:@"Disconnect Google Talk" forState:UIControlStateNormal];
     [self.disconnectButton addTarget:self action:@selector(disconnectAccount:) forControlEvents:UIControlEventTouchUpInside];
     
