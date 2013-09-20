@@ -32,6 +32,7 @@
 #import "OTRManagedStatus.h"
 #import "OTRManagedEncryptionStatusMessage.h"
 #import "OTRStatusMessageCell.h"
+#import "OTRChatInputBar.h"
 
 
 
@@ -216,8 +217,11 @@
     _messageFontSize = [OTRSettingsManager floatForOTRSettingKey:kOTRSettingKeyFontSize];
     _previousTextViewContentHeight = MessageFontSize+20;
         
-    
-    
+    CGRect barRect = CGRectMake(0, self.view.frame.size.height-kChatBarHeight1, self.view.frame.size.width, kChatBarHeight1);
+    OTRChatInputBar * chatInputBar = [[OTRChatInputBar alloc] initWithFrame:barRect withSendButtonPressedBlock:^(NSString *text) {
+        NSLog(@"Send: %@",text);
+    }];
+    [self.view addSubview:chatInputBar];
     
     
     
@@ -272,16 +276,16 @@
     
     [messageInputBar addSubview:textView];
     
-    [self.view addSubview:messageInputBar];
+    //[self.view addSubview:messageInputBar];
     
     self.view.keyboardTriggerOffset = messageInputBar.frame.size.height;
     
     
     __weak OTRChatViewController * chatViewController = self;
     [self.view addKeyboardPanningWithActionHandler:^(CGRect keyboardFrameInView) {
-        CGRect messageInputBarFrame = messageInputBar.frame;
+        CGRect messageInputBarFrame = chatInputBar.frame;
         messageInputBarFrame.origin.y = keyboardFrameInView.origin.y - messageInputBarFrame.size.height;
-        messageInputBar.frame = messageInputBarFrame;
+        chatInputBar.frame = messageInputBarFrame;
         
         chatViewController.chatHistoryTableView.contentInset = chatViewController.chatHistoryTableView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, chatViewController.view.frame.size.height-keyboardFrameInView.origin.y, 0);
     }];
@@ -584,6 +588,7 @@
 
 -(void)addLockSpinner {
     UIActivityIndicatorView * activityIndicatorView = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 25, 25)];
+    activityIndicatorView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
     [activityIndicatorView sizeToFit];
     [activityIndicatorView setAutoresizingMask:(UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin)];
     UIBarButtonItem * activityBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:activityIndicatorView];
