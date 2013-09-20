@@ -3197,6 +3197,11 @@
 			attributes = {
 				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "Chris Ballinger";
+				TargetAttributes = {
+					D9F9377713F44BD3009A3D84 = {
+						DevelopmentTeam = 4T8JLQR6GR;
+					};
+				};
 			};
 			buildConfigurationList = D9F9377213F44BD3009A3D84 /* Build configuration list for PBXProject "Off the Record" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -3986,7 +3991,9 @@
 		D9F937A313F44BD3009A3D84 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4004,7 +4011,7 @@
 					"\"$(SRCROOT)/Submodules/**",
 				);
 				INFOPLIST_FILE = "Off the Record/Off the Record-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/Submodules/Crittercism\"",
@@ -4022,8 +4029,9 @@
 		D9F937A413F44BD3009A3D84 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Chris Ballinger";
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4042,7 +4050,7 @@
 					"\"$(SRCROOT)/Submodules/**",
 				);
 				INFOPLIST_FILE = "Off the Record/Off the Record-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/Submodules/Crittercism\"",
@@ -4055,7 +4063,6 @@
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = ChatSecure;
 				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "501FCDE0-D40A-4056-9C6A-B68E99F4F2B8";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
