@@ -14,6 +14,6 @@
 
 @property (nonatomic,strong) NSDictionary * tokenDictionary;
 
-
++ (id)createWithXmppAccount:(OTRManagedXMPPAccount *)xmppAccount;
 
 @end

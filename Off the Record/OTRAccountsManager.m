@@ -92,24 +92,6 @@
     return [[OTRAccountsManager allLoggedInAccounts] count];
 }
 
-+ (void)removeAllPasswordsForAccountType:(OTRAccountType)accountType
-{
-    NSString * domain = nil;
-    if (accountType == OTRAccountTypeFacebook) {
-        domain = kOTRFacebookDomain;
-    }
-    else if (accountType == OTRAccountTypeGoogleTalk) {
-        domain = kOTRGoogleTalkDomain;
-    }
-    
-    if ([domain length]) {
-        NSPredicate * predicate = [NSPredicate predicateWithFormat:@"%@ CONTAINS[cd] %@",OTRManagedXMPPAccountAttributes.domain,domain];
-        NSArray * accounts = [OTRManagedXMPPAccount MR_findAllWithPredicate:predicate];
-        [accounts enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            OTRManagedAccount * account = obj;
-            [account setPassword:nil];
-        }];
-    }
-}
+
 
 @end

@@ -10,6 +10,8 @@
 
 @implementation OTRManagedOAuthAccount
 
+
+
 -(void)setPassword:(NSString *)password
 {
     if(![password length])
@@ -68,5 +70,32 @@
 -(void)refreshToken:(void (^)(NSError *))completionBlock
 {
     completionBlock(nil);
+}
+
++(id)createWithXmppAccount:(OTRManagedXMPPAccount *)xmppAccount
+{
+    xmppAccount = [xmppAccount MR_inThreadContext];
+    OTRManagedOAuthAccount * oAuthAccount = [self MR_createEntity];
+    NSEntityDescription *description = [OTRManagedXMPPAccount MR_entityDescription];
+    NSDictionary * attributes = [description attributesByName];
+    
+    oAuthAccount.username = xmppAccount.username;
+    oAuthAccount.protocol = xmppAccount.protocol;
+    oAuthAccount.rememberPassword = xmppAccount.rememberPassword;
+    oAuthAccount.uniqueIdentifier = xmppAccount.uniqueIdentifier;
+    oAuthAccount.allowPlainTextAuthentication = xmppAccount.allowPlainTextAuthentication;
+    oAuthAccount.allowSelfSignedSSL = xmppAccount.allowSelfSignedSSL;
+    oAuthAccount.allowSSLHostNameMismatch = xmppAccount.allowSSLHostNameMismatch;
+    oAuthAccount.domain =xmppAccount.domain;
+    oAuthAccount.port = xmppAccount.port;
+    oAuthAccount.requireTLS = xmppAccount.requireTLS;
+    oAuthAccount.sendDeliveryReceipts = xmppAccount.sendDeliveryReceipts;
+    oAuthAccount.sendTypingNotifications = xmppAccount.sendTypingNotifications;
+    
+    [xmppAccount.subscriptionRequests enumerateObjectsUsingBlock:^(id obj, BOOL *stop) {
+        [oAuthAccount addSubscriptionRequestsObject:obj];
+    }];
+    
+    return oAuthAccount;
 }
 @end

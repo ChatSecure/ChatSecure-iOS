@@ -35,6 +35,7 @@
 #import "OTRUtilities.h"
 #import "OTRAccountsManager.h"
 #import "FacebookSDK.h"
+#import "OTRAppVersionManager.h"
 
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
@@ -102,15 +103,11 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     }
 #endif
     
-    if([OTRUtilities isFirstLaunchOnCurrentVersion])
-    {
-        [OTRAccountsManager removeAllPasswordsForAccountType:OTRAccountTypeFacebook];
-        [OTRAccountsManager removeAllPasswordsForAccountType:OTRAccountTypeGoogleTalk];
-    }
-    
     [OTRUtilities deleteAllBuddiesAndMessages];
     
     [OTRManagedAccount resetAccountsConnectionStatus];
+    
+    [OTRAppVersionManager applyAppUpdatesForCurrentAppVersion];
 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     

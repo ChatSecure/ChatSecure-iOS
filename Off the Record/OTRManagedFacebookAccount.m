@@ -1,6 +1,7 @@
 #import "OTRmanagedFacebookAccount.h"
 #import "FBAccessTokenData.h"
 #import "OTRFacebookSessionCachingStrategy.h"
+#import "Strings.h"
 
 
 @interface OTRManagedFacebookAccount ()
@@ -11,6 +12,37 @@
 
 
 @implementation OTRManagedFacebookAccount
+
+-(OTRAccountType)accountType
+{
+    return OTRAccountTypeFacebook;
+}
+-(NSString *)imageName
+{
+    return kFacebookImageName;
+}
+-(NSString *)providerName
+{
+    return FACEBOOK_STRING;
+}
+-(BOOL)shouldAllowSSLHostNameMismatch
+{
+    return NO;
+}
+
+-(BOOL)shouldAllowPlainTextAuthentication
+{
+    return NO;
+}
+
+-(BOOL)shouldAllowSelfSignedSSL
+{
+    return NO;
+}
+- (BOOL) shouldRequireTLS
+{
+    return NO;
+}
 
 -(void)refreshToken:(void (^)(NSError * error))completionBlock
 {

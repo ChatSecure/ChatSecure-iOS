@@ -201,6 +201,7 @@
 		63CC9F1C16D2D18100BDA7D1 /* DAKeyboardControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CC9F1B16D2D18100BDA7D1 /* DAKeyboardControl.m */; };
 		63CC9F2116D2E93500BDA7D1 /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CC9F2016D2E93500BDA7D1 /* TTTAttributedLabel.m */; };
 		63D511B017EBA122000D927B /* OTRFacebookSessionCachingStrategy.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D511AF17EBA122000D927B /* OTRFacebookSessionCachingStrategy.m */; };
+		63D511C117EBDD31000D927B /* OTRAppVersionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D511C017EBDD31000D927B /* OTRAppVersionManager.m */; };
 		63E5E7E816D1D5BC006E2B01 /* MagicalImportFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E5E7B016D1D5BC006E2B01 /* MagicalImportFunctions.m */; };
 		63E5E7E916D1D5BC006E2B01 /* NSAttributeDescription+MagicalDataImport.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E5E7B216D1D5BC006E2B01 /* NSAttributeDescription+MagicalDataImport.m */; };
 		63E5E7EA16D1D5BC006E2B01 /* NSEntityDescription+MagicalDataImport.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E5E7B416D1D5BC006E2B01 /* NSEntityDescription+MagicalDataImport.m */; };
@@ -957,6 +958,8 @@
 		63CC9F2016D2E93500BDA7D1 /* TTTAttributedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTAttributedLabel.m; sourceTree = "<group>"; };
 		63D511AE17EBA122000D927B /* OTRFacebookSessionCachingStrategy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRFacebookSessionCachingStrategy.h; sourceTree = "<group>"; };
 		63D511AF17EBA122000D927B /* OTRFacebookSessionCachingStrategy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRFacebookSessionCachingStrategy.m; sourceTree = "<group>"; };
+		63D511BF17EBDD31000D927B /* OTRAppVersionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAppVersionManager.h; sourceTree = "<group>"; };
+		63D511C017EBDD31000D927B /* OTRAppVersionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAppVersionManager.m; sourceTree = "<group>"; };
 		63E5E7AF16D1D5BC006E2B01 /* MagicalImportFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MagicalImportFunctions.h; sourceTree = "<group>"; };
 		63E5E7B016D1D5BC006E2B01 /* MagicalImportFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MagicalImportFunctions.m; sourceTree = "<group>"; };
 		63E5E7B116D1D5BC006E2B01 /* NSAttributeDescription+MagicalDataImport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSAttributeDescription+MagicalDataImport.h"; sourceTree = "<group>"; };
@@ -2928,6 +2931,8 @@
 				634CBFDB159CEAC70046FB3B /* OTRConstants.h */,
 				63B9422C16DEEEE300D6934F /* OTRUtilities.h */,
 				63B9422D16DEEEE300D6934F /* OTRUtilities.m */,
+				63D511BF17EBDD31000D927B /* OTRAppVersionManager.h */,
+				63D511C017EBDD31000D927B /* OTRAppVersionManager.m */,
 				633E71F716E169C100495B45 /* OTRBuddyListSectionInfo.h */,
 				633E71F816E169C100495B45 /* OTRBuddyListSectionInfo.m */,
 				D902D31C141E930C00AA3479 /* OTROldBuddy.h */,
@@ -3809,6 +3814,7 @@
 				6356236717EA794300068231 /* OTRManagedGoogleAccount.m in Sources */,
 				6356236B17EA79FB00068231 /* OTRManagedOAuthAccount.m in Sources */,
 				63D511B017EBA122000D927B /* OTRFacebookSessionCachingStrategy.m in Sources */,
+				63D511C117EBDD31000D927B /* OTRAppVersionManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -457,30 +457,22 @@
 {
     NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
     OTRManagedAccount * account = (OTRManagedAccount *)[context existingObjectWithID:accountID error:nil];
-    if ([account isKindOfClass:[OTRManagedXMPPAccount class]]) {
-        OTRManagedXMPPAccount *xmppAccount = (OTRManagedXMPPAccount*)account;
-        if([xmppAccount.domain isEqualToString:kOTRFacebookDomain])
-        {
-            //FacebookLoginViewController
-            return [[OTRFacebookLoginViewController alloc] initWithAccountID:accountID];
-        }
-        else if ([xmppAccount.domain isEqualToString:kOTRGoogleTalkDomain])
-        {
-            //GoogleTalkLoginViewController
-            return [[OTRGoogleTalkLoginViewController alloc] initWithAccountID:accountID];
-        }
-        else
-        {
-            //XMPP account addvanced
+    switch (account.accountType) {
+        case OTRAccountTypeAIM:
+            return [[OTROscarLoginViewController alloc] initWithAccountID:accountID];
+            break;
+        case OTRAccountTypeJabber:
             return [[OTRJabberLoginViewController alloc] initWithAccountID:accountID];
-        }
+            break;
+        case OTRAccountTypeFacebook:
+            return [[OTRFacebookLoginViewController alloc] initWithAccountID:accountID];
+            break;
+        case OTRAccountTypeGoogleTalk:
+            return [[OTRGoogleTalkLoginViewController alloc] initWithAccountID:accountID];
+            break;
+        default:
+            break;
     }
-    else if ([account isKindOfClass:[OTRManagedOscarAccount class]])
-    {
-        //Aim Protocol
-        return [[OTROscarLoginViewController alloc] initWithAccountID:accountID];
-    }
-
 }
 
 @end

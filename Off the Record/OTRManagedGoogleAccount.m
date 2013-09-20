@@ -1,5 +1,6 @@
 #import "OTRManagedGoogleAccount.h"
 #import "GTMOAuth2Authentication.h"
+#import "Strings.h"
 
 #define kExpirationDateKey @"kExpirationDateKey"
 #define kExpiresInKey @"expires_in"
@@ -12,6 +13,39 @@
 
 
 @implementation OTRManagedGoogleAccount
+
+-(OTRAccountType)accountType
+{
+    return OTRAccountTypeGoogleTalk;
+}
+
+-(NSString *)imageName
+{
+    return kGTalkImageName;
+}
+-(BOOL)shouldAllowSSLHostNameMismatch
+{
+    return NO;
+}
+
+-(NSString *)providerName
+{
+    return GOOGLE_TALK_STRING;
+}
+
+-(BOOL)shouldAllowPlainTextAuthentication
+{
+    return NO;
+}
+
+-(BOOL)shouldAllowSelfSignedSSL
+{
+    return NO;
+}
+- (BOOL) shouldRequireTLS
+{
+    return NO;
+}
 
 -(void)refreshToken:(void (^)(NSError *error))completionBlock
 {

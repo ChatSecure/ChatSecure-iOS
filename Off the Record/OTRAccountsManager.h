@@ -34,6 +34,4 @@
 + (NSUInteger)numberOfAccountsLoggedIn;
 + (NSArray *)allLoggedInAccounts;
 
-+ (void)removeAllPasswordsForAccountType:(OTRAccountType)accountType;
-
 @end

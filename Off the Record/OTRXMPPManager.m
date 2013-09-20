@@ -334,7 +334,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	// The XMPPStream is the base class for all activity.
 	// Everything else plugs into the xmppStream, such as modules/extensions and delegates.
     
-	if ([[self.account providerName] isEqualToString:FACEBOOK_STRING]) {
+	if (self.account.accountType == OTRAccountTypeFacebook) {
         xmppStream = [[XMPPStream alloc] initWithFacebookAppId:FACEBOOK_APP_ID];
     }
     else{
@@ -696,7 +696,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
         isXmppConnected = [sender authenticateWithFacebookAccessToken:password error:&error];
         return;
     }
-    else if ([sender supportsXOAUTH2GoogleAuthentication] && [sender.hostName isEqualToString:kOTRGoogleTalkDomain]) {
+    else if ([sender supportsXOAUTH2GoogleAuthentication] && self.account.accountType == OTRAccountTypeGoogleTalk) {
         isXmppConnected = [sender authenticateWithGoogleAccessToken:password error:&error];
         return;
     }
