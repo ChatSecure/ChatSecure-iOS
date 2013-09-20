@@ -1,6 +1,9 @@
 #import "OTRManagedGoogleAccount.h"
 #import "GTMOAuth2Authentication.h"
 
+#define kExpirationDateKey @"kExpirationDateKey"
+#define kExpiresInKey @"expires_in"
+
 @interface OTRManagedGoogleAccount ()
 
 // Private interface goes here.
@@ -53,6 +56,35 @@
         }
     }
     return shouldRefresh;
+}
+
+-(void)setTokenDictionary:(NSDictionary *)tokenDictionary
+{
+    if ([tokenDictionary count]) {
+        NSMutableDictionary * mutableTokenDictionary = [tokenDictionary mutableCopy];
+        NSNumber * expiresIn = [mutableTokenDictionary objectForKey:kExpiresInKey];
+        [mutableTokenDictionary removeObjectForKey:kExpiresInKey];
+        NSDate *date = nil;
+        if (expiresIn) {
+            unsigned long deltaSeconds = [expiresIn unsignedLongValue];
+            if (deltaSeconds > 0) {
+                date = [NSDate dateWithTimeIntervalSinceNow:deltaSeconds];
+            }
+        }
+        [mutableTokenDictionary setObject:date forKey:kExpirationDateKey];
+        tokenDictionary = mutableTokenDictionary;
+    }
+    [super setTokenDictionary:tokenDictionary];
+}
+
+-(NSDictionary *)tokenDictionary
+{
+    NSMutableDictionary * mutableTokenDictionary = [[super tokenDictionary] mutableCopy];
+    NSDate * expirationDate = [mutableTokenDictionary objectForKey:kExpirationDateKey];
+    
+    NSTimeInterval timeInterval  = [expirationDate timeIntervalSinceDate:[NSDate date]];
+    mutableTokenDictionary[kExpiresInKey] = @(timeInterval);
+    return mutableTokenDictionary;
 }
 
 -(GTMOAuth2Authentication *)authToken

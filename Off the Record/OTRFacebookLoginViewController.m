@@ -25,6 +25,7 @@
 #import "OTRAppDelegate.h"
 #import "OTRConstants.h"
 #import "FacebookSDK.h"
+#import "OTRFacebookSessionCachingStrategy.h"
 
 @interface OTRFacebookLoginViewController ()
 
@@ -73,13 +74,12 @@
             [request startWithCompletionHandler:^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *user, NSError *error) {
                 if (!error) {
                     [self didConnectUser:user];
-                    self.account.password = session.accessTokenData.accessToken;
-                    [self.loginViewTableView reloadData];
-                    [self showLoginProgress];
                     NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
                     [context MR_saveOnlySelfAndWait];
-                    id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
-                    [protocol connectWithPassword:self.account.password];
+                    self.account.tokenDictionary = [session.accessTokenData dictionary];
+                    //self.account.password = session.accessTokenData.accessToken;
+                    [self.loginViewTableView reloadData];
+                    [self loginButtonPressed:sender];
                 }
             }];
         }
@@ -94,7 +94,6 @@
     else {
         self.account.username =  user.name;
     }
-    [self.loginViewTableView reloadData];
 }
 
 @end

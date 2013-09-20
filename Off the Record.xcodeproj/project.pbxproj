@@ -200,6 +200,7 @@
 		63BFDB6D16E83A3F00C608D6 /* OTRSafariActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BFDB6C16E83A3F00C608D6 /* OTRSafariActionSheet.m */; };
 		63CC9F1C16D2D18100BDA7D1 /* DAKeyboardControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CC9F1B16D2D18100BDA7D1 /* DAKeyboardControl.m */; };
 		63CC9F2116D2E93500BDA7D1 /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CC9F2016D2E93500BDA7D1 /* TTTAttributedLabel.m */; };
+		63D511B017EBA122000D927B /* OTRFacebookSessionCachingStrategy.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D511AF17EBA122000D927B /* OTRFacebookSessionCachingStrategy.m */; };
 		63E5E7E816D1D5BC006E2B01 /* MagicalImportFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E5E7B016D1D5BC006E2B01 /* MagicalImportFunctions.m */; };
 		63E5E7E916D1D5BC006E2B01 /* NSAttributeDescription+MagicalDataImport.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E5E7B216D1D5BC006E2B01 /* NSAttributeDescription+MagicalDataImport.m */; };
 		63E5E7EA16D1D5BC006E2B01 /* NSEntityDescription+MagicalDataImport.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E5E7B416D1D5BC006E2B01 /* NSEntityDescription+MagicalDataImport.m */; };
@@ -918,7 +919,6 @@
 		637FF13417DEB8910012AA1B /* ChatSecure 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "ChatSecure 2.xcdatamodel"; sourceTree = "<group>"; };
 		63813C1016E14E5D00909670 /* OTRBuddyListGroupManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBuddyListGroupManager.h; sourceTree = "<group>"; };
 		63813C1116E14E5D00909670 /* OTRBuddyListGroupManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBuddyListGroupManager.m; sourceTree = "<group>"; };
-		639B0B6717DE74F7009B50FC /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = "Submodules/facebook-ios-sdk/build/FacebookSDK.framework"; sourceTree = "<group>"; };
 		639B9A6F164F21D900C021A9 /* OTRShareSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRShareSetting.h; sourceTree = "<group>"; };
 		639B9A70164F21D900C021A9 /* OTRShareSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRShareSetting.m; sourceTree = "<group>"; };
 		639BE6AD16DC3B2B004B7257 /* _OTRManagedMessageAndStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _OTRManagedMessageAndStatus.h; sourceTree = "<group>"; };
@@ -955,6 +955,8 @@
 		63CC9F1B16D2D18100BDA7D1 /* DAKeyboardControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DAKeyboardControl.m; sourceTree = "<group>"; };
 		63CC9F1F16D2E93500BDA7D1 /* TTTAttributedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTAttributedLabel.h; sourceTree = "<group>"; };
 		63CC9F2016D2E93500BDA7D1 /* TTTAttributedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTAttributedLabel.m; sourceTree = "<group>"; };
+		63D511AE17EBA122000D927B /* OTRFacebookSessionCachingStrategy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRFacebookSessionCachingStrategy.h; sourceTree = "<group>"; };
+		63D511AF17EBA122000D927B /* OTRFacebookSessionCachingStrategy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRFacebookSessionCachingStrategy.m; sourceTree = "<group>"; };
 		63E5E7AF16D1D5BC006E2B01 /* MagicalImportFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MagicalImportFunctions.h; sourceTree = "<group>"; };
 		63E5E7B016D1D5BC006E2B01 /* MagicalImportFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MagicalImportFunctions.m; sourceTree = "<group>"; };
 		63E5E7B116D1D5BC006E2B01 /* NSAttributeDescription+MagicalDataImport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSAttributeDescription+MagicalDataImport.h"; sourceTree = "<group>"; };
@@ -2281,6 +2283,8 @@
 				6356236317EA794300068231 /* OTRManagedGoogleAccount.m */,
 				6356236517EA794300068231 /* OTRManagedOAuthAccount.h */,
 				6356236A17EA79FB00068231 /* OTRManagedOAuthAccount.m */,
+				63D511AE17EBA122000D927B /* OTRFacebookSessionCachingStrategy.h */,
+				63D511AF17EBA122000D927B /* OTRFacebookSessionCachingStrategy.m */,
 			);
 			name = Accounts;
 			sourceTree = "<group>";
@@ -2984,7 +2988,6 @@
 		D9F9377B13F44BD3009A3D84 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				639B0B6717DE74F7009B50FC /* FacebookSDK.framework */,
 				D989E88D15D4F92E0081DFD1 /* Twitter.framework */,
 				D93C31B6159A8B4F006316C7 /* Security.framework */,
 				D9FC985F155881700039518D /* MessageUI.framework */,
@@ -3800,6 +3803,7 @@
 				6356236617EA794300068231 /* OTRManagedFacebookAccount.m in Sources */,
 				6356236717EA794300068231 /* OTRManagedGoogleAccount.m in Sources */,
 				6356236B17EA79FB00068231 /* OTRManagedOAuthAccount.m in Sources */,
+				63D511B017EBA122000D927B /* OTRFacebookSessionCachingStrategy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

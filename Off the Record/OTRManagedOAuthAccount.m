@@ -8,13 +8,14 @@
 
 @end
 
-#define OTRArchiverKey @"OTRArchiverKey"
-
 @implementation OTRManagedOAuthAccount
 
 -(void)setPassword:(NSString *)password
 {
-    return;
+    if(![password length])
+    {
+        [self setTokenDictionary:nil];
+    }
 }
 -(NSString *)password
 {

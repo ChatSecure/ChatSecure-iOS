@@ -73,6 +73,8 @@
 
 #define kOTRAppVersionKey @"kOTRAppVersionKey"
 
+#define OTRArchiverKey @"OTRArchiverKey"
+
 #define FACEBOOK_APP_ID @"447241325394334"
 #define GOOGLE_APP_ID @"719137339288.apps.googleusercontent.com"
 #define GOOGLE_APP_SCOPE @"https://www.googleapis.com/auth/googletalk"

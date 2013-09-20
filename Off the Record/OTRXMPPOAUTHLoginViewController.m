@@ -16,12 +16,6 @@
 
 @synthesize connectButton,disconnectButton;
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-	// Do any additional setup after loading the view.
-}
-
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     if (section == 0) {
         if ([self.account.accessTokenString length] && [self.account.username length]) {
@@ -88,6 +82,12 @@
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     [self loginButtonPressed:[tableView cellForRowAtIndexPath:indexPath]];
+}
+
+-(void)readInFields
+{
+    self.account.sendDeliveryReceipts = @(self.deliveryReceiptSwitch.on);
+    self.account.sendTypingNotifications = @(self.typingNotificatoinSwitch.on);
 }
 
 -(void)disconnectAccount:(id)sender {
