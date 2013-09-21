@@ -26,11 +26,14 @@
         self.buttonBlock = block;
         self.opaque = YES;
         self.userInteractionEnabled = YES;
+        self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
         
         [self addSubview:self.backgroundImageview];
+        
+        [self addSubview:self.textView];
         [self addSubview:self.textViewBackgroundImageView];
         [self addSubview:self.sendButton];
-        [self addSubview:self.textView];
+        
         //self.translatesAutoresizingMaskIntoConstraints = NO;
         
         [self setNeedsUpdateConstraints];
@@ -51,7 +54,8 @@
 {
     if (!_sendButton) {
         _sendButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        _sendButton.translatesAutoresizingMaskIntoConstraints = NO;
+        _sendButton.frame = CGRectMake(self.frame.size.width - 69, 8, 63, 27);
+        _sendButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin;
         UIEdgeInsets sendButtonEdgeInsets = UIEdgeInsetsMake(0, 13, 0, 13); // 27 x 27
         UIImage *sendButtonBackgroundImage = [[UIImage imageNamed:@"SendButton"] resizableImageWithCapInsets:sendButtonEdgeInsets];
         [_sendButton setBackgroundImage:sendButtonBackgroundImage forState:UIControlStateNormal];
@@ -68,16 +72,26 @@
     return _sendButton;
 }
 
--(UITextView *)textView
+-(HPGrowingTextView *)textView
 {
     if(!_textView) {
-        _textView = [[ACPlaceholderTextView alloc] init];
-        _textView.translatesAutoresizingMaskIntoConstraints = NO;
+        _textView = [[HPGrowingTextView alloc] initWithFrame:CGRectMake(6, 6, 240, 34)];
+        _textView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        //_textView = [[HPGrowingTextView alloc] initWithFrame:CGRectZero];
+        _textView.isScrollable = NO;
         _textView.delegate = self;
-        _textView.backgroundColor = [UIColor clearColor]; //[UIColor colorWithWhite:245/255.0f alpha:1];
-        _textView.scrollIndicatorInsets = UIEdgeInsetsMake(13, 0, 8, 6);
-        _textView.contentInset = UIEdgeInsetsMake(4, 4, 0, 0);
-        _textView.scrollsToTop = NO;
+        _textView.contentInset = UIEdgeInsetsMake(0, 5, 0, 5);
+        _textView.internalTextView.scrollIndicatorInsets = UIEdgeInsetsMake(5, 0, 5, 0);
+        
+        _textView.minNumberOfLines = 1;
+        _textView.maxNumberOfLines = 2;
+        _textView.animateHeightChange = YES;
+        _textView.animationDuration = 0.1;
+        //_textView.translatesAutoresizingMaskIntoConstraints = NO;
+        //_textView.delegate = self;
+        _textView.backgroundColor = [UIColor whiteColor];
+        //_textView.contentInset = UIEdgeInsetsMake(-4, -4, -4, 0);
+        //_textView.scrollsToTop = NO;
         _textView.font = [UIFont systemFontOfSize:MessageFontSize];
         _textView.placeholder = MESSAGE_PLACEHOLDER_STRING;
         
@@ -90,8 +104,9 @@
 {
     if (!_backgroundImageview) {
         _backgroundImageview = [[UIImageView alloc] init];
-        _backgroundImageview.translatesAutoresizingMaskIntoConstraints = NO;
         _backgroundImageview.image = [[UIImage imageNamed:@"MessageInputBarBackground"] resizableImageWithCapInsets:UIEdgeInsetsMake(19, 3, 19, 3)];
+        _backgroundImageview.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
+        _backgroundImageview.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     }
     return _backgroundImageview;
 }
@@ -100,9 +115,17 @@
 {
     if(!_textViewBackgroundImageView)
     {
+        UIImage *rawEntryBackground = [UIImage imageNamed:@"MessageInputFieldBackground"];
+        UIImage *entryBackground = [rawEntryBackground stretchableImageWithLeftCapWidth:13 topCapHeight:22];
+        _textViewBackgroundImageView = [[UIImageView alloc] initWithImage:entryBackground];
+        _textViewBackgroundImageView.frame = CGRectMake(5, 0, 248, 40);
+        _textViewBackgroundImageView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        /*
         _textViewBackgroundImageView = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"MessageInputFieldBackground"] resizableImageWithCapInsets:UIEdgeInsetsMake(20, 12, 18, 18)]];
-        _textViewBackgroundImageView.translatesAutoresizingMaskIntoConstraints = NO;
         _textViewBackgroundImageView.backgroundColor = [UIColor colorWithWhite:245/255.0f alpha:1];
+        _textViewBackgroundImageView.frame = CGRectMake(5, 0, 248, 40);
+        _textViewBackgroundImageView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+         */
         
     }
     return _textViewBackgroundImageView;
@@ -116,47 +139,30 @@
 }
 
 #pragma mark UITextViewDelegate
-- (void)textViewDidChange:(UITextView *)textView
+- (void)growingTextView:(HPGrowingTextView *)growingTextView willChangeHeight:(float)height
 {
-    CGFloat textViewContentHeight = textView.contentSize.height;
-    CGFloat changeInHeight = textViewContentHeight - previousTextViewContentHeight;
+    float diff = (growingTextView.frame.size.height - height);
     
-    if (textViewContentHeight+changeInHeight > kChatBarHeight4+2) {
-        changeInHeight = kChatBarHeight4+2-previousTextViewContentHeight;
-    }
+	CGRect rect = self.frame;
+    rect.size.height -= diff;
+    rect.origin.y += diff;
+    self.frame = rect;
     
-    float duration = 0.2f;
-    
-    
-    if (changeInHeight) {
-        [textViewHeightConstraint setConstant:MIN(textViewContentHeight, ContentHeightMax)];
-        /*
-        [UIView animateWithDuration:duration animations:^{
-            
-            
-            //self.chatHistoryTableView.contentInset = self.chatHistoryTableView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, self.chatHistoryTableView.contentInset.bottom+changeInHeight, 0);
-            //[self scrollToBottomAnimated:NO];
-            
-            
-            //self.view.keyboardTriggerOffset = messageInputBar.frame.size.height;
-        } completion:^(BOOL finished) {
-            
-        }];
-         */
-        self.frame = CGRectMake(0, self.frame.origin.y-changeInHeight, self.frame.size.width, self.frame.size.height+changeInHeight);
-        [self needsUpdateConstraints];
-        [self.textView updateShouldDrawPlaceholder];
-        previousTextViewContentHeight = MIN(textViewContentHeight, kChatBarHeight4+2);
-        
-    }
+    [self setNeedsUpdateConstraints];
+    [self updateConstraintsIfNeeded];
+	
 }
 
+-(void)growingTextView:(HPGrowingTextView *)growingTextView didChangeHeight:(float)height
+{
+    
+}
 
 
 -(void)updateConstraints
 {
     [super updateConstraints];
-    
+     /*
     //SEND BUTTON
     NSLayoutConstraint * constraint = [NSLayoutConstraint constraintWithItem:self.sendButton
                                                                    attribute:NSLayoutAttributeBottom
@@ -230,74 +236,77 @@
     [self addConstraint:constraint];
     
     //TEXT VIEW
+   
     constraint = [NSLayoutConstraint constraintWithItem:self.textView
                                               attribute:NSLayoutAttributeLeft
                                               relatedBy:NSLayoutRelationEqual
-                                                 toItem:self
+                                                 toItem:self.textViewBackgroundImageView
                                               attribute:NSLayoutAttributeLeft
                                              multiplier:1.0
-                                               constant:TEXT_VIEW_X];
+                                               constant:6.0];
     [self addConstraint:constraint];
     constraint = [NSLayoutConstraint constraintWithItem:self.textView
                                               attribute:NSLayoutAttributeRight
                                               relatedBy:NSLayoutRelationEqual
-                                                 toItem:self.sendButton
-                                              attribute:NSLayoutAttributeLeft
+                                                 toItem:self.textViewBackgroundImageView
+                                              attribute:NSLayoutAttributeRight
                                              multiplier:1.0
-                                               constant:-4.0];
+                                               constant:-6.0];
     [self addConstraint:constraint];
     constraint = [NSLayoutConstraint constraintWithItem:self.textView
                                               attribute:NSLayoutAttributeBottom
                                               relatedBy:NSLayoutRelationEqual
-                                                 toItem:self
+                                                 toItem:self.textViewBackgroundImageView
                                               attribute:NSLayoutAttributeBottom
                                              multiplier:1.0
-                                               constant:-4.0];
+                                               constant:-6.0];
     [self addConstraint:constraint];
     textViewHeightConstraint = [NSLayoutConstraint constraintWithItem:self.textView
-                                              attribute:NSLayoutAttributeHeight
+                                              attribute:NSLayoutAttributeTop
                                               relatedBy:NSLayoutRelationEqual
-                                                 toItem:nil
-                                              attribute:NSLayoutAttributeHeight
+                                                 toItem:self.textViewBackgroundImageView
+                                              attribute:NSLayoutAttributeTop
                                              multiplier:1.0
-                                               constant:TEXT_VIEW_HEIGHT_MIN];
+                                               constant:8.0];
     [self addConstraint:textViewHeightConstraint];
+    
+    
     
     //TEXT VIEW BACKGROUND IMAGE VIEW
     constraint = [NSLayoutConstraint constraintWithItem:self.textViewBackgroundImageView
                                               attribute:NSLayoutAttributeLeft
                                               relatedBy:NSLayoutRelationEqual
-                                                 toItem:self.textView
+                                                 toItem:self
                                               attribute:NSLayoutAttributeLeft
                                              multiplier:1.0
-                                               constant:-2.0];
+                                               constant:5.0];
     [self addConstraint:constraint];
     constraint = [NSLayoutConstraint constraintWithItem:self.textViewBackgroundImageView
                                               attribute:NSLayoutAttributeTop
                                               relatedBy:NSLayoutRelationEqual
-                                                 toItem:self.textView
+                                                 toItem:self
                                               attribute:NSLayoutAttributeTop
                                              multiplier:1.0
                                                constant:0.0];
     [self addConstraint:constraint];
     constraint = [NSLayoutConstraint constraintWithItem:self.textViewBackgroundImageView
-                                              attribute:NSLayoutAttributeWidth
+                                              attribute:NSLayoutAttributeRight
                                               relatedBy:NSLayoutRelationEqual
-                                                 toItem:self.textView
-                                              attribute:NSLayoutAttributeWidth
+                                                 toItem:self.sendButton
+                                              attribute:NSLayoutAttributeLeft
                                              multiplier:1.0
-                                               constant:9.0];
+                                               constant:-4];
     [self addConstraint:constraint];
     constraint = [NSLayoutConstraint constraintWithItem:self.textViewBackgroundImageView
-                                              attribute:NSLayoutAttributeHeight
+                                              attribute:NSLayoutAttributeBottom
                                               relatedBy:NSLayoutRelationEqual
-                                                 toItem:self.textView
-                                              attribute:NSLayoutAttributeHeight
+                                                 toItem:self
+                                              attribute:NSLayoutAttributeBottom
                                              multiplier:1.0
                                                constant:0.0];
     [self addConstraint:constraint];
     
-    
+    */
     
     
 }

@@ -50,3 +50,6 @@
 [submodule "Submodules/gtm-oauth2"]
 	path = Submodules/gtm-oauth2
 	url = git@github.com:ChatSecure/gtm-oauth2.git
+[submodule "Submodules/GrowingTextView"]
+	path = Submodules/GrowingTextView
+	url = git@github.com:HansPinckaers/GrowingTextView.git
