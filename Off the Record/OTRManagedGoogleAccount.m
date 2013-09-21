@@ -105,7 +105,9 @@
                 date = [NSDate dateWithTimeIntervalSinceNow:deltaSeconds];
             }
         }
-        [mutableTokenDictionary setObject:date forKey:kExpirationDateKey];
+        if(date) {
+            [mutableTokenDictionary setObject:date forKey:kExpirationDateKey];
+        }
         tokenDictionary = mutableTokenDictionary;
     }
     [super setTokenDictionary:tokenDictionary];
