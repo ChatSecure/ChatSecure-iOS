@@ -26,7 +26,7 @@
 #import "OTRManagedBuddy.h"
 #import "OTRChatInputBar.h"
 
-@interface OTRChatViewController : UIViewController <UIWebViewDelegate, UIActionSheetDelegate, UISplitViewControllerDelegate,UIAlertViewDelegate,UITableViewDataSource,UITableViewDelegate,NSFetchedResultsControllerDelegate, UITextViewDelegate>
+@interface OTRChatViewController : UIViewController <UIActionSheetDelegate, UISplitViewControllerDelegate,UIAlertViewDelegate,UITableViewDataSource,UITableViewDelegate,NSFetchedResultsControllerDelegate,OTRChatInputBarDelegate>
 {
     NSMutableArray * _heightForRow;
     NSDate *_previousShownSentDate;

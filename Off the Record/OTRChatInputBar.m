@@ -23,13 +23,13 @@
 @synthesize backgroundImageview = _backgroundImageview;
 @synthesize textViewBackgroundImageView = _textViewBackgroundImageView;
 @synthesize sendButton =_sendButton;
-@synthesize buttonBlock;
+@synthesize delegate;
 
-- (id)initWithFrame:(CGRect)frame withSendButtonPressedBlock:(sendButtonBlock)block
+- (id)initWithFrame:(CGRect)frame withDelegate:(id<OTRChatInputBarDelegate>)newDelegate;
 {
     if (self = [self initWithFrame:frame])
     {
-        self.buttonBlock = block;
+        self.delegate = newDelegate;
         self.opaque = YES;
         self.userInteractionEnabled = YES;
         self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
@@ -45,15 +45,6 @@
         //self.translatesAutoresizingMaskIntoConstraints = NO;
         
         [self setNeedsUpdateConstraints];
-    }
-    return self;
-}
-
-- (id)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        // Initialization code
     }
     return self;
 }
@@ -157,8 +148,8 @@
 
 - (void)sendButtonPressed:(id)sender
 {
-    if (self.buttonBlock) {
-        self.buttonBlock(self.textView.text);
+    if ([self.delegate respondsToSelector:@selector(sendButtonPressedForInputBar:)]) {
+        [self.delegate sendButtonPressedForInputBar:self];
     }
 }
 
@@ -174,14 +165,20 @@
     
     [self setNeedsUpdateConstraints];
     [self updateConstraintsIfNeeded];
+    
+    if ([self.delegate respondsToSelector:@selector(didChangeFrameForInputBur:)]) {
+        [self.delegate didChangeFrameForInputBur:self];
+    }
 	
 }
 
--(void)growingTextView:(HPGrowingTextView *)growingTextView didChangeHeight:(float)height
+-(BOOL)growingTextView:(HPGrowingTextView *)growingTextView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
 {
-    
+    if ([self.delegate respondsToSelector:@selector(inputBar:shouldChangeTextInRange:replacementText:)]) {
+        return [self.delegate inputBar:self shouldChangeTextInRange:range replacementText:text];
+    }
+    return YES;
 }
-
 
 -(void)updateConstraints
 {

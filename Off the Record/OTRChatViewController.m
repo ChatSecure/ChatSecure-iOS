@@ -212,12 +212,8 @@
         
     CGRect barRect = CGRectMake(0, self.view.frame.size.height-kChatBarHeight1, self.view.frame.size.width, kChatBarHeight1);
     
-    chatInputBar = [[OTRChatInputBar alloc] initWithFrame:barRect withSendButtonPressedBlock:^(NSString *text) {
-        NSLog(@"Send: %@",text);
-        BOOL secure = [self.buddy currentEncryptionStatus].statusValue == kOTRKitMessageStateEncrypted;
-        [buddy sendMessage:text secure:secure];
-        chatInputBar.textView.text = nil;
-    }];
+    chatInputBar = [[OTRChatInputBar alloc] initWithFrame:barRect withDelegate:self];
+   
     [self.view addSubview:chatInputBar];
     
     self.view.keyboardTriggerOffset = chatInputBar.frame.size.height;
@@ -804,6 +800,41 @@
         [self.chatHistoryTableView endUpdates];
         [self scrollToBottomAnimated:YES];
     }
+}
+
+#pragma mark OTRChatInputBarDelegate
+
+- (void)sendButtonPressedForInputBar:(OTRChatInputBar *)inputBar
+{
+    NSString * text = inputBar.textView.text;
+    if ([text length]) {
+        NSLog(@"Send: %@",text);
+        BOOL secure = [self.buddy currentEncryptionStatus].statusValue == kOTRKitMessageStateEncrypted;
+        [buddy sendMessage:text secure:secure];
+        chatInputBar.textView.text = nil;
+    }
+}
+
+-(BOOL)inputBar:(OTRChatInputBar *)inputBar shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
+{
+     NSRange textFieldRange = NSMakeRange(0, [inputBar.textView.text length]);
+     
+     [buddy sendComposingChatState];
+     
+     if (NSEqualRanges(range, textFieldRange) && [text length] == 0)
+     {
+          [buddy sendActiveChatState];
+     }
+     
+     return YES;
+}
+
+-(void)didChangeFrameForInputBur:(OTRChatInputBar *)inputBar
+{
+    UIEdgeInsets tableViewInsets = self.chatHistoryTableView.contentInset;
+    tableViewInsets.bottom = inputBar.frame.origin.y;
+    self.chatHistoryTableView.contentInset = tableViewInsets;
+    self.view.keyboardTriggerOffset = inputBar.frame.size.height;
 }
 
 
