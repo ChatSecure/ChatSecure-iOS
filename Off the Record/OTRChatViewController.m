@@ -190,14 +190,16 @@
     _heightForRow = [NSMutableArray array];
     _messageBubbleComposing = [UIImage imageNamed:@"MessageBubbleTyping"];
     
-    self.chatHistoryTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height-kChatBarHeight1)];
+    self.chatHistoryTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
     
+    
+    UIEdgeInsets insets = self.chatHistoryTableView.contentInset;
+    insets.bottom = kChatBarHeight1;
     if(SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
-        //THIs is weird
-        UIEdgeInsets insets = self.chatHistoryTableView.contentInset;
-        self.chatHistoryTableView.contentInset = insets;
+        //insets.top = [self.navigationController navigationBar].frame.size.height;
     }
     
+    self.chatHistoryTableView.contentInset = self.chatHistoryTableView.scrollIndicatorInsets = insets;
     
     self.chatHistoryTableView.dataSource = self;
     self.chatHistoryTableView.delegate = self;
@@ -205,6 +207,8 @@
     self.chatHistoryTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.chatHistoryTableView.backgroundColor = [UIColor colorWithWhite:245/255.0f alpha:1];
     [self.view addSubview:self.chatHistoryTableView];
+    
+    [self.chatHistoryTableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
     
     
     _messageFontSize = [OTRSettingsManager floatForOTRSettingKey:kOTRSettingKeyFontSize];
@@ -220,12 +224,15 @@
     
     
     __weak OTRChatViewController * chatViewController = self;
+    __weak OTRChatInputBar * weakChatInputbar = chatInputBar;
     [self.view addKeyboardPanningWithActionHandler:^(CGRect keyboardFrameInView) {
-        CGRect messageInputBarFrame = chatInputBar.frame;
+        CGRect messageInputBarFrame = weakChatInputbar.frame;
         messageInputBarFrame.origin.y = keyboardFrameInView.origin.y - messageInputBarFrame.size.height;
-        chatInputBar.frame = messageInputBarFrame;
+        weakChatInputbar.frame = messageInputBarFrame;
         
-        chatViewController.chatHistoryTableView.contentInset = chatViewController.chatHistoryTableView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, chatViewController.view.frame.size.height-keyboardFrameInView.origin.y, 0);
+        UIEdgeInsets tableViewContentInset = chatViewController.chatHistoryTableView.contentInset;
+        tableViewContentInset.bottom = chatViewController.view.frame.size.height-weakChatInputbar.frame.origin.y;
+        chatViewController.chatHistoryTableView.contentInset = chatViewController.chatHistoryTableView.scrollIndicatorInsets = tableViewContentInset;
     }];
     
     swipeGestureRecognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(handleSwipeFrom)];
@@ -832,8 +839,8 @@
 -(void)didChangeFrameForInputBur:(OTRChatInputBar *)inputBar
 {
     UIEdgeInsets tableViewInsets = self.chatHistoryTableView.contentInset;
-    tableViewInsets.bottom = inputBar.frame.origin.y;
-    self.chatHistoryTableView.contentInset = tableViewInsets;
+    tableViewInsets.bottom = self.view.frame.size.height - inputBar.frame.origin.y;
+    self.chatHistoryTableView.contentInset = self.chatHistoryTableView.scrollIndicatorInsets = tableViewInsets;
     self.view.keyboardTriggerOffset = inputBar.frame.size.height;
 }
 
