@@ -205,7 +205,7 @@
     self.chatHistoryTableView.delegate = self;
     self.chatHistoryTableView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);;
     self.chatHistoryTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    self.chatHistoryTableView.backgroundColor = [UIColor colorWithWhite:245/255.0f alpha:1];
+    self.chatHistoryTableView.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:self.chatHistoryTableView];
     
     [self.chatHistoryTableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
