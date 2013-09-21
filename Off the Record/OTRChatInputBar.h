@@ -17,6 +17,7 @@
 - (void)sendButtonPressedForInputBar:(OTRChatInputBar *)inputBar;
 - (void)didChangeFrameForInputBur:(OTRChatInputBar *)inputBar;
 - (BOOL)inputBar:(OTRChatInputBar *)inputBar shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text;
+- (void)inputBarDidBeginEditing:(OTRChatInputBar *)inputBar;
 
 @end
 

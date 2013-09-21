@@ -844,5 +844,10 @@
     self.view.keyboardTriggerOffset = inputBar.frame.size.height;
 }
 
+- (void)inputBarDidBeginEditing:(OTRChatInputBar *)inputBar
+{
+    [self scrollToBottomAnimated:YES];
+}
+
 
 @end

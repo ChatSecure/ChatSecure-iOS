@@ -180,6 +180,13 @@
     return YES;
 }
 
+-(void)growingTextViewDidBeginEditing:(HPGrowingTextView *)growingTextView
+{
+    if ([self.delegate respondsToSelector:@selector(inputBarDidBeginEditing:)]) {
+        [self.delegate inputBarDidBeginEditing:self];
+    }
+}
+
 -(void)updateConstraints
 {
     [super updateConstraints];
