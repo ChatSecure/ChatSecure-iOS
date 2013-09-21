@@ -32,6 +32,7 @@
 #import "OTRManagedStatus.h"
 #import "OTRManagedEncryptionStatusMessage.h"
 #import "OTRStatusMessageCell.h"
+#import "OTRUtilities.h"
 
 
 
@@ -189,7 +190,15 @@
     _heightForRow = [NSMutableArray array];
     _messageBubbleComposing = [UIImage imageNamed:@"MessageBubbleTyping"];
     
-    self.chatHistoryTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-kChatBarHeight1)];
+    self.chatHistoryTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height-kChatBarHeight1)];
+    
+    if(SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
+        //THIs is weird
+        UIEdgeInsets insets = self.chatHistoryTableView.contentInset;
+        self.chatHistoryTableView.contentInset = insets;
+    }
+    
+    
     self.chatHistoryTableView.dataSource = self;
     self.chatHistoryTableView.delegate = self;
     self.chatHistoryTableView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);;
