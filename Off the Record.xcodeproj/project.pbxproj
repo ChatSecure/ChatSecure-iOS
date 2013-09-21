@@ -236,7 +236,6 @@
 		63E5E80016D1D5BC006E2B01 /* MagicalRecord+ShorthandSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E5E7E316D1D5BC006E2B01 /* MagicalRecord+ShorthandSupport.m */; };
 		63E5E80116D1D5BC006E2B01 /* MagicalRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E5E7E516D1D5BC006E2B01 /* MagicalRecord.m */; };
 		63E5E80216D1D729006E2B01 /* OTRChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63022BB516CDAD4C00F764F1 /* OTRChatViewController.m */; };
-		63E5E80316D1D738006E2B01 /* ACPlaceholderTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63022BB816CDAD5E00F764F1 /* ACPlaceholderTextView.m */; };
 		63E5E80416D1D787006E2B01 /* OTRManagedXMPPAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = D90B9FAF169FF4FB00A923EF /* OTRManagedXMPPAccount.m */; };
 		63E5E80516D1D787006E2B01 /* OTRManagedOscarAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = D90B9FAC169FF4EE00A923EF /* OTRManagedOscarAccount.m */; };
 		63E5E80616D1D787006E2B01 /* OTRManagedMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = D90B9FA9169FF4D500A923EF /* OTRManagedMessage.m */; };
@@ -594,8 +593,6 @@
 		6301D88116E95A36008F67A6 /* OpenInChromeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OpenInChromeController.m; path = Submodules/googleChromeOpenInChrome/OpenInChromeController.m; sourceTree = "<group>"; };
 		63022BB416CDAD4C00F764F1 /* OTRChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRChatViewController.h; sourceTree = "<group>"; };
 		63022BB516CDAD4C00F764F1 /* OTRChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRChatViewController.m; sourceTree = "<group>"; };
-		63022BB716CDAD5E00F764F1 /* ACPlaceholderTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACPlaceholderTextView.h; sourceTree = "<group>"; };
-		63022BB816CDAD5E00F764F1 /* ACPlaceholderTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACPlaceholderTextView.m; sourceTree = "<group>"; };
 		630FF21116E0267200CC20AD /* _OTRManagedGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _OTRManagedGroup.h; sourceTree = "<group>"; };
 		630FF21216E0267200CC20AD /* _OTRManagedGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _OTRManagedGroup.m; sourceTree = "<group>"; };
 		630FF21516E0269000CC20AD /* OTRManagedGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRManagedGroup.h; sourceTree = "<group>"; };
@@ -3057,8 +3054,6 @@
 				63E5E81116D1D860006E2B01 /* OTRConvertAccount.m */,
 				D9D37179169D34630086F358 /* OTRDatabaseUtils.h */,
 				D9D3717A169D34630086F358 /* OTRDatabaseUtils.m */,
-				63022BB716CDAD5E00F764F1 /* ACPlaceholderTextView.h */,
-				63022BB816CDAD5E00F764F1 /* ACPlaceholderTextView.m */,
 				63BFDB6B16E83A3F00C608D6 /* OTRSafariActionSheet.h */,
 				63BFDB6C16E83A3F00C608D6 /* OTRSafariActionSheet.m */,
 				631FE8831720951400AEA107 /* OTRStatusMessageCell.h */,
@@ -3679,7 +3674,6 @@
 				63E5E80016D1D5BC006E2B01 /* MagicalRecord+ShorthandSupport.m in Sources */,
 				63E5E80116D1D5BC006E2B01 /* MagicalRecord.m in Sources */,
 				63E5E80216D1D729006E2B01 /* OTRChatViewController.m in Sources */,
-				63E5E80316D1D738006E2B01 /* ACPlaceholderTextView.m in Sources */,
 				63E5E80416D1D787006E2B01 /* OTRManagedXMPPAccount.m in Sources */,
 				63E5E80516D1D787006E2B01 /* OTRManagedOscarAccount.m in Sources */,
 				63E5E80616D1D787006E2B01 /* OTRManagedMessage.m in Sources */,

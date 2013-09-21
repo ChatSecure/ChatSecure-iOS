@@ -6,6 +6,12 @@
 //  Copyright (c) 2013 Chris Ballinger. All rights reserved.
 //
 
+/**
+ *Delegate call back for when size changes
+ *Delegate call back for when typing and text for sending typing notifications
+ 
+ */
+
 #import "OTRChatInputBar.h"
 #import "Strings.h"
 #import "OTRConstants.h"
@@ -33,6 +39,8 @@
         [self addSubview:self.textView];
         [self addSubview:self.textViewBackgroundImageView];
         [self addSubview:self.sendButton];
+        
+        [self checkSaveButton];
         
         //self.translatesAutoresizingMaskIntoConstraints = NO;
         
@@ -98,6 +106,22 @@
         _textView.clipsToBounds = YES;
     }
     return _textView;
+}
+
+-(void)growingTextViewDidChange:(HPGrowingTextView *)textView
+{
+    [self checkSaveButton];
+}
+
+-(void)checkSaveButton
+{
+    if ([self.textView.text length]) {
+        self.sendButton.enabled = YES;
+        self.sendButton.titleLabel.alpha = 1;
+    } else {
+        self.sendButton.enabled = NO;
+        self.sendButton.titleLabel.alpha = 0.5f;
+    }
 }
 
 - (UIImageView *)backgroundImageview

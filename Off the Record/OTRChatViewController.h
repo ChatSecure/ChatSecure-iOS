@@ -24,7 +24,7 @@
 #import "OTRBuddyListViewController.h"
 #import "OTRProtocolManager.h"
 #import "OTRManagedBuddy.h"
-#import "ACPlaceholderTextView.h"
+#import "OTRChatInputBar.h"
 
 @interface OTRChatViewController : UIViewController <UIWebViewDelegate, UIActionSheetDelegate, UISplitViewControllerDelegate,UIAlertViewDelegate,UITableViewDataSource,UITableViewDelegate,NSFetchedResultsControllerDelegate, UITextViewDelegate>
 {
@@ -33,12 +33,11 @@
     UIImage *_messageBubbleComposing;
     CGFloat _previousTextViewContentHeight;
     CGFloat _messageFontSize;
+    OTRChatInputBar * chatInputBar;
 }
 
 
 @property (nonatomic, retain) UIBarButtonItem *lockButton, *unlockedButton, *lockVerifiedButton;
-@property (nonatomic, retain) ACPlaceholderTextView * textView;
-@property (nonatomic, retain) UIButton *sendButton;
 @property (nonatomic, retain) UILabel *instructionsLabel;
 
 @property (nonatomic, strong) UITableView * chatHistoryTableView;
@@ -52,9 +51,6 @@
 @property (nonatomic, retain) NSURL *lastActionLink;
 
 @property (nonatomic, retain) UISwipeGestureRecognizer * swipeGestureRecognizer;
-
-
-- (void)sendButtonPressed:(id)sender;
 
 - (void)setupLockButton;
 - (void)refreshLockButton;
