@@ -202,6 +202,8 @@
 		63B9423216DEFFB900D6934F /* _OTRManagedEncryptionStatusMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B9423116DEFFB900D6934F /* _OTRManagedEncryptionStatusMessage.m */; };
 		63B9423516DEFFE200D6934F /* OTRManagedEncryptionStatusMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B9423416DEFFE200D6934F /* OTRManagedEncryptionStatusMessage.m */; };
 		63BE44CF17EE580D00F60670 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63BE44CE17EE580D00F60670 /* Social.framework */; };
+		63BE44D817EE5AB300F60670 /* 31-circle-plus-large.png in Resources */ = {isa = PBXBuildFile; fileRef = 63BE44D617EE5AB300F60670 /* 31-circle-plus-large.png */; };
+		63BE44D917EE5AB300F60670 /* 31-circle-plus-large@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63BE44D717EE5AB300F60670 /* 31-circle-plus-large@2x.png */; };
 		63BFDB6516E81CD900C608D6 /* OTRBuddyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BFDB6416E81CD900C608D6 /* OTRBuddyViewController.m */; };
 		63BFDB6916E8294300C608D6 /* person.png in Resources */ = {isa = PBXBuildFile; fileRef = 63BFDB6716E8294300C608D6 /* person.png */; };
 		63BFDB6A16E8294300C608D6 /* person@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63BFDB6816E8294300C608D6 /* person@2x.png */; };
@@ -962,6 +964,8 @@
 		63B9423316DEFFE200D6934F /* OTRManagedEncryptionStatusMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRManagedEncryptionStatusMessage.h; sourceTree = "<group>"; };
 		63B9423416DEFFE200D6934F /* OTRManagedEncryptionStatusMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRManagedEncryptionStatusMessage.m; sourceTree = "<group>"; };
 		63BE44CE17EE580D00F60670 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
+		63BE44D617EE5AB300F60670 /* 31-circle-plus-large.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "31-circle-plus-large.png"; sourceTree = "<group>"; };
+		63BE44D717EE5AB300F60670 /* 31-circle-plus-large@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "31-circle-plus-large@2x.png"; sourceTree = "<group>"; };
 		63BFDB6316E81CD900C608D6 /* OTRBuddyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBuddyViewController.h; sourceTree = "<group>"; };
 		63BFDB6416E81CD900C608D6 /* OTRBuddyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBuddyViewController.m; sourceTree = "<group>"; };
 		63BFDB6716E8294300C608D6 /* person.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = person.png; sourceTree = "<group>"; };
@@ -3178,6 +3182,8 @@
 				D9CE42C213FDCBDD003EC27C /* Lock_Unlocked.png */,
 				D974577515BE34E7002B9192 /* 31-circle-plus.png */,
 				D974577615BE34E7002B9192 /* 31-circle-plus@2x.png */,
+				63BE44D617EE5AB300F60670 /* 31-circle-plus-large.png */,
+				63BE44D717EE5AB300F60670 /* 31-circle-plus-large@2x.png */,
 				D9CE423113FDCA0F003EC27C /* 112-group.png */,
 				D9BBCD3A1491F7AB00AF1B9F /* 19-gear.png */,
 				D9CE422E13FDC9EF003EC27C /* 08-chat.png */,
@@ -3390,6 +3396,7 @@
 				D94F771C17EA86EC007768A6 /* GTMOAuth2ViewTouch.xib in Resources */,
 				D9F9378513F44BD3009A3D84 /* InfoPlist.strings in Resources */,
 				D9CE422F13FDC9EF003EC27C /* 08-chat.png in Resources */,
+				63BE44D817EE5AB300F60670 /* 31-circle-plus-large.png in Resources */,
 				D9CE423213FDCA0F003EC27C /* 112-group.png in Resources */,
 				D9CE42C313FDCBDD003EC27C /* Lock_Locked.png in Resources */,
 				D9CE42C413FDCBDD003EC27C /* Lock_Unlocked.png in Resources */,
@@ -3437,6 +3444,7 @@
 				D9BE44A1166F2E7D00A628C7 /* 29-heart.png in Resources */,
 				D9BE44A2166F2E7D00A628C7 /* 29-heart@2x.png in Resources */,
 				D9BE44A5166F2F5B00A628C7 /* 18-envelope@2x.png in Resources */,
+				63BE44D917EE5AB300F60670 /* 31-circle-plus-large@2x.png in Resources */,
 				D9BE44A6166F2F5B00A628C7 /* 18-envelope.png in Resources */,
 				D9BE44A9166F330A00A628C7 /* globe.png in Resources */,
 				D9BE44AA166F330A00A628C7 /* globe@2x.png in Resources */,

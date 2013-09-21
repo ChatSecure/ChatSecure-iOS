@@ -136,7 +136,7 @@
         }
         if (indexPath.row == [self.accountsFetchedResultsController.sections[0] numberOfObjects]) {
             cell.textLabel.text = NEW_ACCOUNT_STRING;
-            cell.imageView.image = [UIImage imageNamed:@"31-circle-plus.png"];
+            cell.imageView.image = [UIImage imageNamed:@"31-circle-plus-large.png"];
             cell.detailTextLabel.text = @"";
         } else {
             [self configureCell:cell atIndexPath:indexPath];
