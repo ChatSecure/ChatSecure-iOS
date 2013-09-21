@@ -174,6 +174,11 @@
     [context MR_saveToPersistentStoreAndWait];
 }
 
+-(OTRAccountType)accountType
+{
+    return OTRAccountTypeNone;
+}
+
 +(void)resetAccountsConnectionStatus
 {
     NSArray * allAccountsArray = [OTRManagedAccount MR_findAll];

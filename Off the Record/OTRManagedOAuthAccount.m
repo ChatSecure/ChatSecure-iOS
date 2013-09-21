@@ -76,8 +76,6 @@
 {
     xmppAccount = [xmppAccount MR_inThreadContext];
     OTRManagedOAuthAccount * oAuthAccount = [self MR_createEntity];
-    NSEntityDescription *description = [OTRManagedXMPPAccount MR_entityDescription];
-    NSDictionary * attributes = [description attributesByName];
     
     oAuthAccount.username = xmppAccount.username;
     oAuthAccount.protocol = xmppAccount.protocol;

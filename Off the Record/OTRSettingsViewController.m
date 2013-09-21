@@ -227,7 +227,7 @@
     OTRLoginViewController *loginViewController = [OTRLoginViewController loginViewControllerWithAcccountID:account.objectID];
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:loginViewController];
     nav.modalPresentationStyle = UIModalPresentationFormSheet;
-    [self presentModalViewController:nav animated:YES];
+    [self presentViewController:nav animated:YES completion:nil];
     
     self.loginController = loginViewController;
 }
@@ -244,7 +244,7 @@
     
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:newAccountView];
     nav.modalPresentationStyle = UIModalPresentationFormSheet;
-    [self presentModalViewController:nav animated:YES];
+    [self presentViewController:nav animated:YES completion:nil];
     
 }
 
@@ -265,7 +265,7 @@
         detailSettingViewController.otrSetting = setting;
         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:detailSettingViewController];
         navController.modalPresentationStyle = UIModalPresentationFormSheet;
-        [self presentModalViewController:navController animated:YES];
+        [self presentViewController:navController animated:YES completion:nil];
     } else {
         [self.navigationController pushViewController:viewController animated:YES];
     }
@@ -297,7 +297,7 @@
 -(void)accountLoggedIn
 {
     [settingsTableView reloadData];
-    [loginController dismissModalViewControllerAnimated:YES];
+    [loginController dismissViewControllerAnimated:YES completion:nil];
 }
 
 -(void)protocolLoggedInSuccessfully:(NSNotification *)notification

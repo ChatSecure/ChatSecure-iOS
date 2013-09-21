@@ -22,7 +22,7 @@
         
         statusMessageLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         statusMessageLabel.textColor = [UIColor grayColor];
-        statusMessageLabel.textAlignment = UITextAlignmentCenter;
+        statusMessageLabel.textAlignment = NSTextAlignmentCenter;
         statusMessageLabel.font = [UIFont boldSystemFontOfSize:SentDateFontSize];
         statusMessageLabel.backgroundColor = [UIColor clearColor];
         statusMessageLabel.tag = STATUS_MESSAGE_LABEL_TAG;

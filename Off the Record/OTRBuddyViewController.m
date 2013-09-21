@@ -265,7 +265,7 @@
     statusMessageLabel.delegate = self;
     statusMessageLabel.dataDetectorTypes = UIDataDetectorTypeLink;
     statusMessageLabel.numberOfLines = 0;
-    statusMessageLabel.lineBreakMode = UILineBreakModeTailTruncation;
+    statusMessageLabel.lineBreakMode = NSLineBreakByTruncatingTail;
     statusMessageLabel.adjustsFontSizeToFitWidth = YES;
     statusMessageLabel.backgroundColor = [UIColor clearColor];
     statusMessageLabel.shadowOffset = CGSizeMake(1, 1);
@@ -301,18 +301,18 @@
     }
     
     
-    [self.navigationController dismissModalViewControllerAnimated:YES];
+    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
 
 -(void)removeBuddyButtonPressed:(id)sender
 {
     [[[OTRProtocolManager sharedInstance] protocolForAccount:self.buddy.account] removeBuddies:@[buddy]];
-    [self.navigationController dismissModalViewControllerAnimated:YES];
+    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
 -(void)blockBuddyButtonPressed:(id)sender
 {
     [[[OTRProtocolManager sharedInstance] protocolForAccount:self.buddy.account] blockBuddies:@[buddy]];
-    [self.navigationController dismissModalViewControllerAnimated:YES];
+    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField

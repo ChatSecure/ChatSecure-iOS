@@ -98,6 +98,7 @@ typedef enum {
 } OTRChatState;
 
 typedef NS_ENUM(NSUInteger, OTRAccountType) {
+    OTRAccountTypeNone        = 0,
     OTRAccountTypeFacebook    = 1,
     OTRAccountTypeGoogleTalk  = 2,
     OTRAccountTypeJabber      = 3,

@@ -108,10 +108,9 @@
             [delegate presentModalViewController:nav animated:YES];
         } else if (buttonIndex == [[self buttonTitlesForShareButton] count] - 2 && [[[UIDevice currentDevice] systemVersion] floatValue] >= 5.0)
         {
-            TWTweetComposeViewController *tweetSheet =
-            [[TWTweetComposeViewController alloc] init];
-            [tweetSheet setInitialText:[self twitterShareString]];
-            [delegate presentModalViewController:tweetSheet animated:YES];
+            SLComposeViewController * tweetComposeViewController = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeTwitter];
+            [tweetComposeViewController setInitialText:[self twitterShareString]];
+            [delegate presentModalViewController:tweetComposeViewController animated:YES];
         }
     }
 }
