@@ -12,6 +12,7 @@
 #import "OTRInLineTextEditTableViewCell.h"
 #import "Strings.h"
 #import "OTRProtocolManager.h"
+#import "OTRConstants.h"
 
 @interface OTRBuddyViewController ()
 
@@ -48,7 +49,14 @@
     
     displayNameTextField = [[UITextField alloc]init];
     displayNameTextField.placeholder = OPTIONAL_STRING;
-    displayNameTextField.font = [UIFont boldSystemFontOfSize:15];
+    
+    if (SYSTEM_VERSION_LESS_THAN(@"7.0")) {
+        displayNameTextField.font = [UIFont boldSystemFontOfSize:15];
+    }
+    else {
+        displayNameTextField.font = [UIFont systemFontOfSize:15];
+    }
+    
     displayNameTextField.delegate = self;
     
     if ([buddy.displayName length] && ![buddy.displayName isEqualToString:buddy.accountName]) {
