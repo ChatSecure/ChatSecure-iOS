@@ -136,6 +136,11 @@
 
 -(void)refreshLockButton
 {
+    [OTRCodec isGeneratingKeyForBuddy:self.buddy completion:^(BOOL isGeneratingKey) {
+        if (isGeneratingKey) {
+            [self addLockSpinner];
+        }
+    }];
     UIBarButtonItem * rightBarItem = self.navigationItem.rightBarButtonItem;
     if ([rightBarItem isEqual:lockButton] || [rightBarItem isEqual:lockVerifiedButton] || [rightBarItem isEqual:unlockedButton] || !rightBarItem) {
         BOOL trusted = [[OTRKit sharedInstance] finerprintIsVerifiedForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
@@ -404,7 +409,9 @@
                     });
                 } completion:^(OTRManagedMessage *message) {
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        [self removeLockSpinner];
+                        if ([self.buddy isEqual:message.buddy]) {
+                            [self removeLockSpinner];
+                        }
                         [OTRManagedMessage sendMessage:message];
                     });
                     
