@@ -31,7 +31,7 @@
     [OTRAppVersionManager saveCurrentAppVersion];
 }
 
--(void)updatesToVersion202
+-(void)updatesToVersion21
 {
     [OTRAppVersionManager removeAllPasswordsForAccountType:OTRAccountTypeFacebook];
     [OTRAppVersionManager removeAllPasswordsForAccountType:OTRAccountTypeGoogleTalk];
@@ -64,7 +64,7 @@
 
 -(void)applyAll
 {
-    [self updatesToVersion202];
+    [self updatesToVersion21];
 }
 
 +(NSString *)currentAppVersionString {
@@ -87,7 +87,6 @@
 {
     NSString * currentVersionString = [OTRAppVersionManager currentAppVersionString];
     [[[self alloc] init] applyUpdatesForAppVersion:currentVersionString];
-    //[[[self alloc] init] applyAll];
 }
 
 
