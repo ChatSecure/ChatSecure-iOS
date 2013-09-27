@@ -103,7 +103,14 @@
 
 + (void)isGeneratingKeyForBuddy:(OTRManagedBuddy *)buddy completion:(void (^)(BOOL isGeneratingKey))completion;
 {
-    [[OTRKit sharedInstance] checkIfGeneratingKeyForAccountName:buddy.account.username protocol:buddy.account.protocol completion:completion];
+    if(buddy)
+    {
+        [[OTRKit sharedInstance] checkIfGeneratingKeyForAccountName:buddy.account.username protocol:buddy.account.protocol completion:completion];
+    }
+    else if (completion){
+        completion(NO);
+    }
+    
 }
 
 
