@@ -1,6 +1,8 @@
 #import "OTRManagedGoogleAccount.h"
 #import "GTMOAuth2Authentication.h"
 #import "Strings.h"
+#import "OTRSecrets.h"
+#import "GTMOAuth2SignIn.h"
 
 #define kExpirationDateKey @"kExpirationDateKey"
 #define kExpiresInKey @"expires_in"
@@ -49,7 +51,17 @@
 
 -(void)refreshToken:(void (^)(NSError *error))completionBlock
 {
-    [[self authToken] authorizeRequest:nil completionHandler:completionBlock];
+    GTMOAuth2Authentication * auth = [self authToken];
+    [auth authorizeRequest:nil completionHandler:^(NSError *error) {
+        if (!error) {
+            [self setTokenDictionary:auth.parameters];
+        }
+        
+        if (completionBlock) {
+            completionBlock(error);
+        }
+    }];
+    //[[self authToken] authorizeRequest:nil completionHandler:completionBlock];
 }
 
 -(void)refreshTokenIfNeeded:(void (^)(NSError *error))completion
@@ -78,12 +90,12 @@
             // or earlier
             
             /////Dumb google needs to refesh expirationDate
-            [auth setExpiresIn:auth.expiresIn];
+            //[auth setExpiresIn:auth.expiresIn];
             /////////
             
             NSDate *expirationDate = auth.expirationDate;
             NSTimeInterval timeToExpire = [expirationDate timeIntervalSinceNow];
-            if (expirationDate == nil || timeToExpire < 60.0) {
+            if ([auth.expiresIn doubleValue] < 60.0) {
                 // access token has expired, or will in a few seconds
                 shouldRefresh = YES;
             }
@@ -131,6 +143,10 @@
         auth = [[GTMOAuth2Authentication alloc] init];
         [auth setParameters:[tokenDictionary mutableCopy]];
     }
+    auth.clientID = GOOGLE_APP_ID;
+    auth.clientSecret = GOOGLE_APP_SECRET;
+    auth.scope = GOOGLE_APP_SCOPE;
+    auth.tokenURL = [GTMOAuth2SignIn googleTokenURL];
     return auth;
 }
 
