@@ -36,9 +36,10 @@
         
         [self addSubview:self.backgroundImageview];
         
+        [self addSubview:self.sendButton];
         [self addSubview:self.textView];
         [self addSubview:self.textViewBackgroundImageView];
-        [self addSubview:self.sendButton];
+        
         
         [self checkSaveButton];
         
@@ -74,7 +75,8 @@
 -(HPGrowingTextView *)textView
 {
     if(!_textView) {
-        _textView = [[HPGrowingTextView alloc] initWithFrame:CGRectMake(6, 6, 240, 34)];
+        CGFloat rightEdge = self.sendButton.frame.origin.x - 8;
+        _textView = [[HPGrowingTextView alloc] initWithFrame:CGRectMake(6, 6, rightEdge-6, 34)];
         _textView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         //_textView = [[HPGrowingTextView alloc] initWithFrame:CGRectZero];
         _textView.isScrollable = NO;
@@ -133,7 +135,12 @@
         UIImage *rawEntryBackground = [UIImage imageNamed:@"MessageInputFieldBackground"];
         UIImage *entryBackground = [rawEntryBackground stretchableImageWithLeftCapWidth:13 topCapHeight:22];
         _textViewBackgroundImageView = [[UIImageView alloc] initWithImage:entryBackground];
-        _textViewBackgroundImageView.frame = CGRectMake(5, 0, 248, 40);
+        CGRect frame = self.textView.frame;
+        frame.origin.x = 5;
+        frame.origin.y = 0;
+        frame.size.height = 40;
+        frame.size.width = frame.size.width +8;
+        _textViewBackgroundImageView.frame = frame;
         _textViewBackgroundImageView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         /*
         _textViewBackgroundImageView = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"MessageInputFieldBackground"] resizableImageWithCapInsets:UIEdgeInsetsMake(20, 12, 18, 18)]];
