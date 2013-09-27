@@ -50,6 +50,7 @@
     OTRFacebookSessionCachingStrategy * tokenCaching = [OTRFacebookSessionCachingStrategy createWithTokenDictionary:[auth dictionary]];
     FBSession * session = [[FBSession alloc] initWithAppID:FACEBOOK_APP_ID permissions:@[@"xmpp_login"] urlSchemeSuffix:nil tokenCacheStrategy:tokenCaching];
     if (session) {
+        [self setTokenDictionary:[session.accessTokenData dictionary]];
         completionBlock(nil);
     }
     else {
