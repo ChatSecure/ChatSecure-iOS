@@ -2615,6 +2615,7 @@
 		D9CEED611684234D00B236B5 /* Submodules */ = {
 			isa = PBXGroup;
 			children = (
+				D94F771B17EA86EC007768A6 /* GTMOAuth2ViewTouch.xib */,
 				633B6D0E17ED28A7002DA152 /* HPGrowingTextView */,
 				D909663D17EA67BD00440833 /* facebook-ios-sdk.xcodeproj */,
 				D909662F17EA55B800440833 /* GTMOAuth2.xcodeproj */,
@@ -3005,8 +3006,6 @@
 		D9F9376D13F44BD3009A3D84 = {
 			isa = PBXGroup;
 			children = (
-				D94F771B17EA86EC007768A6 /* GTMOAuth2ViewTouch.xib */,
-				63FE64C51727535700876D15 /* StoreKit.framework */,
 				D97BF53A160150CE00DA91F9 /* Default-568h@2x.png */,
 				D9F9378013F44BD3009A3D84 /* Off the Record */,
 				D9CEED611684234D00B236B5 /* Submodules */,
@@ -3026,6 +3025,7 @@
 		D9F9377B13F44BD3009A3D84 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				63FE64C51727535700876D15 /* StoreKit.framework */,
 				63BE44CE17EE580D00F60670 /* Social.framework */,
 				D989E88D15D4F92E0081DFD1 /* Twitter.framework */,
 				D93C31B6159A8B4F006316C7 /* Security.framework */,
@@ -3244,7 +3244,7 @@
 				ORGANIZATIONNAME = "Chris Ballinger";
 				TargetAttributes = {
 					D9F9377713F44BD3009A3D84 = {
-						DevelopmentTeam = SF3NXKQQ64;
+						DevelopmentTeam = 4T8JLQR6GR;
 					};
 				};
 			};
@@ -3511,7 +3511,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd \"Off the Record\"\nmogenerator --template-var arc=true -m ChatSecure.xcdatamodeld/ChatSecure\\ 2.xcdatamodel/";
+			shellScript = "cd \"Off the Record\"\nmogenerator --template-var arc=true -m \"ChatSecure.xcdatamodeld/ChatSecure 2.xcdatamodel/\"";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -4045,8 +4045,8 @@
 		D9F937A313F44BD3009A3D84 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ARCHS = "$(ARCHS_STANDARD)";
+				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -4074,7 +4074,7 @@
 				OTHER_CFLAGS = "-DSQLITE_HAS_CODEC";
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = ChatSecure;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "37F98F71-B501-4C9E-AEA4-8BC5E008394B";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
@@ -4083,8 +4083,8 @@
 		D9F937A413F44BD3009A3D84 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ARCHS = "$(ARCHS_STANDARD)";
+				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -4116,7 +4116,7 @@
 				);
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = ChatSecure;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "0D2AB468-6B98-4756-8611-2A2C619F4D10";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
