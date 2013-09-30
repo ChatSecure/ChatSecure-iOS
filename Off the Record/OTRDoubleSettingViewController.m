@@ -56,14 +56,14 @@
     self.valueTable.backgroundColor = [UIColor clearColor];
     self.valueTable.backgroundView = nil;
     self.valueTable.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    self.valueLabel.textAlignment = UITextAlignmentCenter;
+    self.valueLabel.textAlignment = NSTextAlignmentCenter;
     self.valueLabel.backgroundColor = [UIColor clearColor];
     self.valueLabel.font = [UIFont boldSystemFontOfSize:18.0];
     self.valueLabel.shadowColor = [UIColor whiteColor];
     self.valueLabel.shadowOffset = CGSizeMake(0, -1);
     self.valueTable.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin;
     
-    self.descriptionLabel.textAlignment = UITextAlignmentCenter;
+    self.descriptionLabel.textAlignment = NSTextAlignmentCenter;
     self.descriptionLabel.backgroundColor = [UIColor clearColor];
     self.descriptionLabel.textColor = [UIColor darkGrayColor];
     self.descriptionLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin;

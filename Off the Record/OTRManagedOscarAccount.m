@@ -43,4 +43,8 @@
     return [OTROscarManager class];
 }
 
+-(OTRAccountType)accountType{
+    return OTRAccountTypeAIM;
+}
+
 @end

@@ -33,7 +33,9 @@
 #import "OTRLanguageManager.h"
 #import "OTRConvertAccount.h"
 #import "OTRUtilities.h"
-#import <FacebookSDK/FacebookSDK.h>
+#import "OTRAccountsManager.h"
+#import "FacebookSDK.h"
+#import "OTRAppVersionManager.h"
 
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
@@ -59,6 +61,8 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    
+    
     // DATABASE TESTS
     NSString * storeFileName = @"db.sqlite";
     [MagicalRecord setupCoreDataStackWithAutoMigratingSqliteStoreNamed:storeFileName];
@@ -71,6 +75,8 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     {
         NSLog(@"error encrypting store");
     }
+    
+    
     
     //NSPersistentStoreCoordinator *storeCoordinator = [OTRDatabaseUtils persistentStoreCoordinatorWithDBName:@"db.sqlite" passphrase:@"test"];
     
@@ -100,6 +106,8 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     [OTRUtilities deleteAllBuddiesAndMessages];
     
     [OTRManagedAccount resetAccountsConnectionStatus];
+    
+    [OTRAppVersionManager applyAppUpdatesForCurrentAppVersion];
 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     

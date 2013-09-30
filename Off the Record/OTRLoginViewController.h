@@ -33,9 +33,10 @@
 #define kCellTypeSwitch @"cellTypeSwitch"
 #define KCellTypeHelp @"cellTypeHelp"
 
-@interface OTRLoginViewController : UIViewController <UITextFieldDelegate, MBProgressHUDDelegate, UIActionSheetDelegate, UITableViewDataSource,UITableViewDelegate> {
+@interface OTRLoginViewController : UIViewController <UITextFieldDelegate, MBProgressHUDDelegate, UIActionSheetDelegate, UITableViewDataSource,UITableViewDelegate, UIAlertViewDelegate> {
     MBProgressHUD *HUD;
     UIView *padding;
+    NSError * recentError;
 }
 
 - (id) initWithAccountID:(NSManagedObjectID *)newAccountID;

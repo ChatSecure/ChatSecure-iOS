@@ -73,7 +73,7 @@
         messageSentDateLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         messageSentDateLabel.tag = MESSAGE_SENT_DATE_LABEL_TAG;
         messageSentDateLabel.textColor = [UIColor grayColor];
-        messageSentDateLabel.textAlignment = UITextAlignmentCenter;
+        messageSentDateLabel.textAlignment = NSTextAlignmentCenter;
         messageSentDateLabel.font = [UIFont boldSystemFontOfSize:SentDateFontSize];
         messageSentDateLabel.backgroundColor = [UIColor clearColor];
         [self.contentView addSubview:messageSentDateLabel];
@@ -183,7 +183,7 @@
     messageTextLabel.backgroundColor = [UIColor clearColor];
     messageTextLabel.numberOfLines = 0;
     messageTextLabel.dataDetectorTypes = UIDataDetectorTypeLink;
-    messageTextLabel.lineBreakMode = UILineBreakModeWordWrap;
+    messageTextLabel.lineBreakMode = NSLineBreakByWordWrapping;
     CGFloat messageTextSize = [OTRSettingsManager floatForOTRSettingKey:kOTRSettingKeyFontSize];
     messageTextLabel.font = [UIFont systemFontOfSize:messageTextSize];
     

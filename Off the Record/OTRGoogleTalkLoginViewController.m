@@ -22,6 +22,15 @@
 
 #import "OTRGoogleTalkLoginViewController.h"
 #import "Strings.h"
+#import "GTMOAuth2ViewControllerTouch.h"
+#import "OTRSecrets.h"
+/*
+#ifdef CRITTERCISM_ENABLED
+#import "OTRSecrets.h"
+#else
+#define GOOGLE_APP_SECRET @"YOUR GOOGLE APP SECRET"
+#endif
+ */
 
 @interface OTRGoogleTalkLoginViewController ()
 
@@ -29,27 +38,49 @@
 
 @implementation OTRGoogleTalkLoginViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	
-    self.usernameTextField.placeholder = GOOGLE_TALK_EXAMPLE_STRING;
-    self.usernameTextField.keyboardType = UIKeyboardTypeEmailAddress;
+    self.connectButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    
+    
+    UIEdgeInsets imageInsets = UIEdgeInsetsMake(10.0, 37.0, 10.0, 10.0);
+    
+    UIImage *buttonImage = [[UIImage imageNamed:@"googleTalkButton"] resizableImageWithCapInsets:imageInsets];
+    [self.connectButton setBackgroundImage:buttonImage forState:UIControlStateNormal];
+    
+    UIImage * pressedButtonImage = [[UIImage imageNamed:@"googleTalkButtonPressed"] resizableImageWithCapInsets:imageInsets];
+    [self.connectButton setBackgroundImage:pressedButtonImage forState:UIControlStateHighlighted];
+    
+    
+    [self.connectButton setTitle:@"Connect Google Talk" forState:UIControlStateNormal];
+    [self.connectButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [self.connectButton addTarget:self action:@selector(connectAccount:) forControlEvents:UIControlEventTouchUpInside];
+    
+    self.disconnectButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.disconnectButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [self.disconnectButton setBackgroundImage:pressedButtonImage forState:UIControlStateHighlighted];
+    [self.disconnectButton setBackgroundImage:buttonImage forState:UIControlStateNormal];
+    [self.disconnectButton setTitle:@"Disconnect Google Talk" forState:UIControlStateNormal];
+    [self.disconnectButton addTarget:self action:@selector(disconnectAccount:) forControlEvents:UIControlEventTouchUpInside];
+    
 }
 
-- (void)didReceiveMemoryWarning
+-(void)connectAccount:(id)sender
 {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    GTMOAuth2ViewControllerTouch * oauthViewController = [GTMOAuth2ViewControllerTouch controllerWithScope:GOOGLE_APP_SCOPE clientID:GOOGLE_APP_ID clientSecret:GOOGLE_APP_SECRET keychainItemName:nil completionHandler:^(GTMOAuth2ViewControllerTouch *viewController, GTMOAuth2Authentication *auth, NSError *error) {
+        //[viewController dismissModalViewControllerAnimated:YES];
+        if (!error) {
+            [self.account setUsername:auth.userEmail];
+            NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
+            [context MR_saveOnlySelfAndWait];
+            self.account.tokenDictionary = auth.parameters;
+            [self.loginViewTableView reloadData];
+            [self loginButtonPressed:sender];
+        }
+    }];
+    [self.navigationController pushViewController:oauthViewController animated:YES];
 }
 
 @end

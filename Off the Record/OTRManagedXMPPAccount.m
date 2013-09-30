@@ -51,23 +51,16 @@
 }
 
 - (NSString *) imageName {
-    NSString *imageName = kXMPPImageName;
-    if([self.domain isEqualToString:kOTRFacebookDomain])
-    {
-        imageName = kFacebookImageName;
-    }
-    else if ([self.domain isEqualToString:kOTRGoogleTalkDomain] )
-    {
-        imageName = kGTalkImageName;
-    }
-    return imageName;
+    return kXMPPImageName;
+}
+
+-(NSString *)providerName
+{
+    return JABBER_STRING;
 }
 
 // Don't allow self-signed SSL for Facebook and Google Talk
 - (BOOL) shouldAllowSelfSignedSSL {
-    if ([self.domain isEqualToString:kOTRFacebookDomain] || [self.domain isEqualToString:kOTRGoogleTalkDomain]) {
-        return NO;
-    }
     return self.allowSelfSignedSSLValue;
 }
 
@@ -76,9 +69,7 @@
 }
 
 - (BOOL) shouldAllowSSLHostNameMismatch {
-    if ([self.domain isEqualToString:kOTRFacebookDomain] || [self.domain isEqualToString:kOTRGoogleTalkDomain]) {
-        return NO;
-    }
+    
     return self.allowSSLHostNameMismatchValue;
 }
 
@@ -88,31 +79,16 @@
 
 - (BOOL) shouldAllowPlainTextAuthentication
 {
-    if ([self.domain isEqualToString:kOTRFacebookDomain] || [self.domain isEqualToString:kOTRGoogleTalkDomain]) {
-        return NO;
-    }
     return self.allowPlainTextAuthenticationValue;
 }
 - (BOOL) shouldRequireTLS
 {
-    if ([self.domain isEqualToString:kOTRFacebookDomain] || [self.domain isEqualToString:kOTRGoogleTalkDomain]) {
-        return NO;
-    }
     return self.requireTLSValue;
-    
 }
 
-- (NSString *)providerName {
-    if ([self.domain isEqualToString:kOTRFacebookDomain]) {
-        return FACEBOOK_STRING;
-    }
-    else if ([self.domain isEqualToString:kOTRGoogleTalkDomain])
-    {
-        return GOOGLE_TALK_STRING;
-    }
-    else {
-        return JABBER_STRING;
-    }
+-(OTRAccountType)accountType
+{
+    return OTRAccountTypeJabber;
 }
 
 - (Class)protocolClass {

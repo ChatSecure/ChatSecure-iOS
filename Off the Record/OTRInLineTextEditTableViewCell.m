@@ -21,6 +21,7 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "OTRInLineTextEditTableViewCell.h"
+#import "OTRConstants.h"
 
 #define textLeftFieldBuffer 100
 
@@ -56,29 +57,64 @@
 {
     [[self.contentView viewWithTag:999] removeFromSuperview];
     _textField = newTextField;
-    [self layoutIfNeeded];
-    CGFloat labelWidth = self.textLabel.frame.size.width+self.textLabel.frame.origin.x;
-    if(labelWidth < textLeftFieldBuffer)
-        labelWidth = textLeftFieldBuffer;
-    
-    if (isStyle2) {
-        labelWidth = 77.0f+6.0f;
-    }
-    
-    CGRect textFieldFrame = CGRectMake(labelWidth, self.textLabel.frame.origin.y, self.contentView.frame.size.width-labelWidth-5, self.contentView.frame.size.height-20);
-    textFieldFrame.origin.y = self.contentView.frame.size.height/2-textFieldFrame.size.height/2;
-    if (isStyle2) {
-        textFieldFrame.origin.y +=2;
-    }
-    
-    self.textField.frame = textFieldFrame;
-    self.textField.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+    _textField.translatesAutoresizingMaskIntoConstraints = NO;
+
     self.textField.tag = 999;
     [self.contentView addSubview:self.textField];
+    [self setNeedsUpdateConstraints];
+    [self updateConstraintsIfNeeded];
 }
 
--(void)dealloc {
-    self.textField = nil;
+-(void)updateConstraints{
+    [super updateConstraints];
+    
+    NSLayoutConstraint * constraint;
+    if (SYSTEM_VERSION_LESS_THAN(@"7.0")) {
+        CGFloat labelWidth = self.textLabel.frame.size.width+self.textLabel.frame.origin.x;
+        if(labelWidth < textLeftFieldBuffer)
+            labelWidth = textLeftFieldBuffer;
+        
+        if (isStyle2) {
+            labelWidth = 77.0f+6.0f;
+        }
+        constraint = [NSLayoutConstraint constraintWithItem:self.textField
+                                                  attribute:NSLayoutAttributeLeading
+                                                  relatedBy:NSLayoutRelationEqual
+                                                     toItem:nil
+                                                  attribute:NSLayoutAttributeTrailing
+                                                 multiplier:1.0
+                                                   constant:labelWidth];
+    }
+    else {
+        constraint = [NSLayoutConstraint constraintWithItem:self.textField
+                                                  attribute:NSLayoutAttributeLeading
+                                                  relatedBy:NSLayoutRelationEqual
+                                                     toItem:self.textLabel
+                                                  attribute:NSLayoutAttributeTrailing
+                                                 multiplier:1.0
+                                                   constant:6.0];
+
+    }
+    
+    [self.contentView addConstraint:constraint];
+    
+    constraint = [NSLayoutConstraint constraintWithItem:self.textField
+                                              attribute:NSLayoutAttributeTrailing
+                                              relatedBy:NSLayoutRelationEqual
+                                                 toItem:self.contentView
+                                              attribute:NSLayoutAttributeTrailing
+                                             multiplier:1.0
+                                               constant:-5.0];
+    [self.contentView addConstraint:constraint];
+    
+    constraint = [NSLayoutConstraint constraintWithItem:self.textField
+                                              attribute:NSLayoutAttributeCenterY
+                                              relatedBy:NSLayoutRelationEqual
+                                                 toItem:self.contentView
+                                              attribute:NSLayoutAttributeCenterY
+                                             multiplier:1.0
+                                               constant:0];
+    [self.contentView addConstraint:constraint];
 }
 
 @end

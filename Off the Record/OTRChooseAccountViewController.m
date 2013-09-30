@@ -132,7 +132,7 @@
     cell.imageView.image = [UIImage imageNamed:account.imageName];
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
-    if( [[account providerName] isEqualToString:FACEBOOK_STRING])
+    if( account.accountType == OTRAccountTypeFacebook)
     {
         cell.imageView.layer.masksToBounds = YES;
         cell.imageView.layer.cornerRadius = 10.0;
@@ -141,7 +141,7 @@
 
 -(void)doneButtonPressed:(id)sender
 {
-    [self.navigationController dismissModalViewControllerAnimated:YES];
+    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end

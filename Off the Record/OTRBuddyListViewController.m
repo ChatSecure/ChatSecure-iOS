@@ -186,7 +186,7 @@
     OTRSubscriptionRequestsViewController * requestViewController = [[OTRSubscriptionRequestsViewController alloc] initWithStyle:UITableViewStylePlain];
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:requestViewController];
     navController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-    [self.navigationController presentModalViewController:navController animated:YES];
+    [self.navigationController presentViewController:navController animated:YES completion:nil];
 }
 
 -(void) addButtonPressed:(id)sender {
@@ -198,7 +198,7 @@
         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:newBuddyViewController];
         
         navController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-        [self.navigationController presentModalViewController:navController animated:YES];
+        [self.navigationController presentViewController:navController animated:YES completion:nil];
     }
     else if (numAccountsLoggedIn > 1)
     {
@@ -206,7 +206,7 @@
         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:chooseAccountViewController];
         
         navController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-        [self.navigationController presentModalViewController:navController animated:YES];
+        [self.navigationController presentViewController:navController animated:YES completion:nil];
     }
 }
 
@@ -394,16 +394,15 @@
         return;
     
     UITableViewCell *cell = (UITableViewCell *)gesture.view;
-    UITableView * tableView = (UITableView *)cell.superview;
     
-    NSIndexPath * indexPath = [tableView indexPathForCell:cell];
+    NSIndexPath * indexPath = [buddyListTableView indexPathForCell:cell];
     
-    OTRManagedBuddy * buddy = [self buddyWithTableView:tableView atIndexPath:indexPath];
+    OTRManagedBuddy * buddy = [self buddyWithTableView:buddyListTableView atIndexPath:indexPath];
     
     OTRBuddyViewController * buddyViewController = [[OTRBuddyViewController alloc] initWithBuddyID:buddy.objectID];
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:buddyViewController];
     navController.modalPresentationStyle = UIModalPresentationFormSheet;
-    [self presentModalViewController:navController animated:YES];
+    [self presentViewController:navController animated:YES completion:nil];
     
 }
 
@@ -782,7 +781,7 @@
             messageCountLabel.layer.cornerRadius = 14;
             messageCountLabel.numberOfLines = 0;
             messageCountLabel.lineBreakMode = NSLineBreakByWordWrapping;
-            messageCountLabel.textAlignment = UITextAlignmentCenter;
+            messageCountLabel.textAlignment = NSTextAlignmentCenter;
         }
         if (numberOfUnreadMessages > 99) {
             messageCountLabel.text = [NSString stringWithFormat:@"%d+",99];

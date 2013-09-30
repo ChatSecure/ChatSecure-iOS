@@ -8,6 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
+#import "OTRConstants.h"
+
+/*
+ *  System Versioning Preprocessor Macros
+ */
 @interface OTRUtilities : NSObject
 
 
@@ -18,5 +23,11 @@
 
 +(BOOL)dateInLast24Hours:(NSDate *)date;
 +(BOOL)dateInLast7Days:(NSDate *)date;
+
++(NSArray *)cipherSuites;
+
++(NSString *)currentAppVersionString;
++(NSString *)lastLaunchVersion;
++(BOOL)isFirstLaunchOnCurrentVersion;
 
 @end

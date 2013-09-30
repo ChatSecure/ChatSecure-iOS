@@ -24,6 +24,7 @@
 #import <CoreData/CoreData.h>
 #import "_OTRManagedAccount.h"
 #import "OTRManagedBuddy.h"
+#import "OTRConstants.h"
 
 #define kOTRAccountUsernameKey @"kOTRAccountUsernameKey"
 #define kOTRAccountProtocolKey @"kOTRAccountProtocolKey"
@@ -43,6 +44,7 @@
 - (void) save;
 - (Class) protocolClass;
 - (NSString *) providerName;
+- (OTRAccountType)accountType;
 - (NSString *) imageName;
 
 -(void)setNewUsername:(NSString *)newUsername;

@@ -22,6 +22,7 @@
 
 #import <Foundation/Foundation.h>
 #import "OTRManagedAccount.h"
+#import "OTRConstants.h"
 
 @interface OTRAccountsManager : NSObject
 

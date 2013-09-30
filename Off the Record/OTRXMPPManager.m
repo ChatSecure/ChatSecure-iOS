@@ -46,7 +46,9 @@
 #import "OTRProtocolManager.h"
 #include <stdlib.h>
 #import "XMPPXFacebookPlatformAuthentication.h"
+#import "XMPPXOATH2Google.h"
 #import "OTRConstants.h"
+#import "OTRUtilities.h"
 
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
@@ -62,7 +64,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 
 - (void)goOnline;
 - (void)goOffline;
-- (void)failedToConnect;
+- (void)failedToConnect:(id)error;
 
 @end
 
@@ -333,7 +335,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	// The XMPPStream is the base class for all activity.
 	// Everything else plugs into the xmppStream, such as modules/extensions and delegates.
     
-	if ([[self.account providerName] isEqualToString:FACEBOOK_STRING]) {
+	if (self.account.accountType == OTRAccountTypeFacebook) {
         xmppStream = [[XMPPStream alloc] initWithFacebookAppId:FACEBOOK_APP_ID];
     }
     else{
@@ -519,10 +521,17 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	[[self xmppStream] sendElement:presence];
 }
 
-- (void)failedToConnect
+- (void)failedToConnect:(id)error
 {
-    [[NSNotificationCenter defaultCenter]
-     postNotificationName:kOTRProtocolLoginFail object:self];    
+    if (error) {
+        [[NSNotificationCenter defaultCenter]
+         postNotificationName:kOTRProtocolLoginFail object:self userInfo:@{KOTRProtocolLoginFailErrorKey:error}];
+    }
+    else {
+        [[NSNotificationCenter defaultCenter]
+         postNotificationName:kOTRProtocolLoginFail object:self];
+    }
+    
 }
 
 ///////////////////////////////
@@ -627,7 +636,9 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 - (void)xmppStream:(XMPPStream *)sender willSecureWithSettings:(NSMutableDictionary *)settings
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
-	
+    
+    [settings setObject:[OTRUtilities cipherSuites] forKey:GCDAsyncSocketSSLCipherSuites];
+
 	if (allowSelfSignedCertificates)
 	{
 		[settings setObject:[NSNumber numberWithBool:YES] forKey:(NSString *)kCFStreamSSLAllowsAnyRoot];
@@ -649,7 +660,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 		NSString *serverDomain = xmppStream.hostName;
 		NSString *virtualDomain = [xmppStream.myJID domain];
 		
-		if ([serverDomain isEqualToString:@"talk.google.com"])
+		if ([serverDomain isEqualToString:kOTRGoogleTalkDomain])
 		{
 			if ([virtualDomain isEqualToString:@"gmail.com"])
 			{
@@ -693,6 +704,10 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
         isXmppConnected = [sender authenticateWithFacebookAccessToken:password error:&error];
         return;
     }
+    else if ([sender supportsXOAUTH2GoogleAuthentication] && self.account.accountType == OTRAccountTypeGoogleTalk) {
+        isXmppConnected = [sender authenticateWithGoogleAccessToken:password error:&error];
+        return;
+    }
 	else if (![[self xmppStream] authenticateWithPassword:password error:&error])
 	{
         isXmppConnected = NO;
@@ -712,7 +727,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 {
     
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
-    [self failedToConnect];
+    [self failedToConnect:error];
 }
 
 - (BOOL)xmppStream:(XMPPStream *)sender didReceiveIQ:(XMPPIQ *)iq
@@ -813,7 +828,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	if (!isXmppConnected)
 	{
 		DDLogError(@"Unable to connect to server. Check xmppStream.hostName");
-        [self failedToConnect];
+        [self failedToConnect:error];
 	}
     else {
         //Lost connection
@@ -898,7 +913,6 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 
 -(void)connectWithPassword:(NSString *)myPassword
 {
-    
     [self connectWithJID:self.account.username password:myPassword];
 }
 
