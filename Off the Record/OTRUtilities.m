@@ -112,17 +112,19 @@
     status =  SSLGetSupportedCiphers(sslContext, ciphers, &numCiphers);
     
     
-    NSMutableArray * discardedCiphers = [NSMutableArray array];
+    //NSMutableArray * discardedCiphers = [NSMutableArray array];
     for (int index = 0; index < numCiphers; index++) {
         if ([self useCipher:ciphers[index]]) {
             NSNumber * cipher = [NSNumber numberWithUnsignedShort: ciphers[index]];
             [cipherSuitesArray addObject:cipher];
-        }
+        }/**
+          * Used to detect discarded ciphers
         else {
+            
             NSNumber * cipher = [NSNumber numberWithUnsignedShort: ciphers[index]];
             NSLog(@"Hex value is 0x%02x", (unsigned int) ciphers[index]);
             [discardedCiphers addObject:cipher];
-        }
+        }*/
     }
     
     return cipherSuitesArray;

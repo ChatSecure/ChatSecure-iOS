@@ -34,7 +34,6 @@
 #import "NSXMLElement+XEP_0203.h"
 #import "Strings.h"
 #import "OTRXMPPManagedPresenceSubscriptionRequest.h"
-#import "XMPPCertificatePinning.h"
 
 #import "DDLog.h"
 #import "DDTTYLogger.h"
@@ -82,6 +81,8 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 @synthesize isXmppConnected;
 @synthesize account;
 @synthesize buddyTimers;
+@synthesize manualyEvaluateTrust = _manualyEvaluateTrust;
+@synthesize certificatePinningModule = _certificatePinningModule;
 
 - (id) initWithAccount:(OTRManagedAccount *)newAccount {
     self = [super init];
@@ -431,9 +432,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     
     
     if ([self.account.domain isEqualToString:kOTRFacebookDomain] || [self.account.domain isEqualToString:kOTRGoogleTalkDomain]) {
-        xmppStream.manuallyEvaluateTrust = YES;
-        XMPPCertificatePinning * certificatePinningModule = [XMPPCertificatePinning defaultCertificates];
-        [certificatePinningModule activate:xmppStream];
+        self.manualyEvaluateTrust = YES;
     }
     
 	// Activate xmpp modules
@@ -1088,6 +1087,27 @@ managedBuddyObjectID
 		return YES;
 	}
     return NO;
+}
+
+- (XMPPCertificatePinning *)certificatePinningModule
+{
+    if(!_certificatePinningModule){
+        _certificatePinningModule = [XMPPCertificatePinning defaultCertificates];
+    }
+    return _certificatePinningModule;
+}
+
+- (void)setManualyEvaluateTrust:(BOOL)manualyEvaluateTrust
+{
+    _manualyEvaluateTrust = manualyEvaluateTrust;
+    if (_manualyEvaluateTrust) {
+        xmppStream.manuallyEvaluateTrust = YES;
+        [self.certificatePinningModule activate:self.xmppStream];
+    }
+    else {
+        xmppStream.manuallyEvaluateTrust = NO;
+        [self.certificatePinningModule deactivate];
+    }
 }
 
 @end

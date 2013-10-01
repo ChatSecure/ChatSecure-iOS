@@ -106,9 +106,11 @@
 #define EN_AGREE_STRING @"Agree"
 #define EN_DISAGREE_STRING @"Disagree"
 #define EN_ERROR_STRING @"Error!"
+#define EN_DISMISS_STRING @"Dismiss"
+#define EN_CONNECT_ANYWAY_STRING @"Connect Anyway"
 #define EN_OSCAR_FAIL_STRING @"Failed to start authenticating. Please try again."
 #define EN_XMPP_FAIL_STRING @"Failed to connect to XMPP server. Please check your login credentials and internet connection and try again."
-#define EN_XMPP_CERT_FAIL_STRING @"Failed to verify certificate"
+#define EN_XMPP_CERT_FAIL_STRING @"There was an error validating the certificate for %@. This may indicate that someone is trying to intercept your communications."
 #define EN_XMPP_PORT_FAIL_STRING @"Domain needs to be set manually when specifying a custom port"
 #define EN_LOGGING_IN_STRING @"Logging in..."
 #define EN_USER_PASS_BLANK_STRING @"You must enter a username and a password to login."
@@ -341,6 +343,8 @@
 #define CONNECT_FACEBOOK_STRING [OTRLanguageManager translatedString: EN_CONNECT_FACEBOOK_STRING]
 #define DISCONNECT_FACEBOOK_STRING [OTRLanguageManager translatedString: EN_DISCONNECT_FACEBOOK_STRING]
 #define INFO_STRING [OTRLanguageManager translatedString: EN_INFO_STRING]
+#define CONNECT_ANYWAY_STRING [OTRLanguageManager translatedString: EN_CONNECT_ANYWAY_STRING]
+#define DISMISS_STRING [OTRLanguageManager translatedString: EN_DISMISS_STRING]
 
 
 
@@ -490,6 +494,8 @@
 #define LOC_CONNECT_FACEBOOK_STRING NSLocalizedString(EN_CONNECT_FACEBOOK_STRING,@"Button label for connecting a facebook account")
 #define LOC_DISCONNECT_FACEBOOK_STRING NSLocalizedString(EN_DISCONNECT_FACEBOOK_STRING,@"button label for disconnecting facebook account")
 #define LOC_INFO_STRING NSLocalizedString(EN_INFO_STRING,@"Short for information, button title to get more information")
+#define LOC_DISMISS_STRING NSLocalizedString(EN_DISMISS_STRING,@"Text for button to dismiss alert view")
+#define LOC_CONNECT_ANYWAY_STRING NSLocalizedString(EN_CONNECT_ANYWAY_STRING,@"Text for button to connect anyway even if certain error")
 
 
 

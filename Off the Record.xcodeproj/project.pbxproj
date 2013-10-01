@@ -29,7 +29,6 @@
 		6301D87D16E94778008F67A6 /* OTRChooseAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6301D87C16E94778008F67A6 /* OTRChooseAccountViewController.m */; };
 		6301D88216E95A36008F67A6 /* OpenInChromeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6301D88116E95A36008F67A6 /* OpenInChromeController.m */; };
 		630606E217FA1C9A00CEB7D3 /* facebook.cer in Resources */ = {isa = PBXBuildFile; fileRef = 630606E017FA1C9A00CEB7D3 /* facebook.cer */; };
-		630606E317FA1C9A00CEB7D3 /* google.cer in Resources */ = {isa = PBXBuildFile; fileRef = 630606E117FA1C9A00CEB7D3 /* google.cer */; };
 		630FF21316E0267200CC20AD /* _OTRManagedGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 630FF21216E0267200CC20AD /* _OTRManagedGroup.m */; };
 		630FF21716E0269100CC20AD /* OTRManagedGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 630FF21616E0269000CC20AD /* OTRManagedGroup.m */; };
 		63188CBD16E55B230000DD40 /* OTRNewBuddyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63188CBC16E55B230000DD40 /* OTRNewBuddyViewController.m */; };
@@ -295,6 +294,7 @@
 		63E5E84016D1DF14006E2B01 /* SendButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63E5E83016D1DF14006E2B01 /* SendButton@2x.png */; };
 		63E5E84116D1DF14006E2B01 /* SendButtonHighlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = 63E5E83116D1DF14006E2B01 /* SendButtonHighlighted.png */; };
 		63E5E84216D1DF14006E2B01 /* SendButtonHighlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63E5E83216D1DF14006E2B01 /* SendButtonHighlighted@2x.png */; };
+		63F2585717FB51C2007A7565 /* google.cer in Resources */ = {isa = PBXBuildFile; fileRef = 63F2585617FB51C2007A7565 /* google.cer */; };
 		63F6E854164E000C00F67BDB /* OTRFeedbackSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F6E853164E000B00F67BDB /* OTRFeedbackSetting.m */; };
 		63F8A52F16DD995400374551 /* OTRIntSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F8A52E16DD995400374551 /* OTRIntSetting.m */; };
 		63F8A53316DD9B6F00374551 /* OTRIntSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F8A53216DD9B6F00374551 /* OTRIntSettingViewController.m */; };
@@ -616,7 +616,6 @@
 		63022BB416CDAD4C00F764F1 /* OTRChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRChatViewController.h; sourceTree = "<group>"; };
 		63022BB516CDAD4C00F764F1 /* OTRChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRChatViewController.m; sourceTree = "<group>"; };
 		630606E017FA1C9A00CEB7D3 /* facebook.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = facebook.cer; sourceTree = "<group>"; };
-		630606E117FA1C9A00CEB7D3 /* google.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = google.cer; sourceTree = "<group>"; };
 		630FF21116E0267200CC20AD /* _OTRManagedGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _OTRManagedGroup.h; sourceTree = "<group>"; };
 		630FF21216E0267200CC20AD /* _OTRManagedGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _OTRManagedGroup.m; sourceTree = "<group>"; };
 		630FF21516E0269000CC20AD /* OTRManagedGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRManagedGroup.h; sourceTree = "<group>"; };
@@ -1125,6 +1124,7 @@
 		63EB09491727484D000FACDC /* he */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = he; path = "Off the Record/he.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
 		63EB094A17274AA2000FACDC /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = "Off the Record/es.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
 		63EB094B17274B24000FACDC /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = "Off the Record/sv.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
+		63F2585617FB51C2007A7565 /* google.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = google.cer; sourceTree = "<group>"; };
 		63F6E852164E000B00F67BDB /* OTRFeedbackSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRFeedbackSetting.h; sourceTree = "<group>"; };
 		63F6E853164E000B00F67BDB /* OTRFeedbackSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRFeedbackSetting.m; sourceTree = "<group>"; };
 		63F8A52D16DD995400374551 /* OTRIntSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRIntSetting.h; sourceTree = "<group>"; };
@@ -1588,8 +1588,8 @@
 		630606DF17FA1C9A00CEB7D3 /* Certificates */ = {
 			isa = PBXGroup;
 			children = (
+				63F2585617FB51C2007A7565 /* google.cer */,
 				630606E017FA1C9A00CEB7D3 /* facebook.cer */,
-				630606E117FA1C9A00CEB7D3 /* google.cer */,
 			);
 			path = Certificates;
 			sourceTree = SOURCE_ROOT;
@@ -3565,7 +3565,7 @@
 				D9BE44A2166F2E7D00A628C7 /* 29-heart@2x.png in Resources */,
 				D9BE44A5166F2F5B00A628C7 /* 18-envelope@2x.png in Resources */,
 				63BE44D917EE5AB300F60670 /* 31-circle-plus-large@2x.png in Resources */,
-				630606E317FA1C9A00CEB7D3 /* google.cer in Resources */,
+				63F2585717FB51C2007A7565 /* google.cer in Resources */,
 				D9BE44A6166F2F5B00A628C7 /* 18-envelope.png in Resources */,
 				D9BE44A9166F330A00A628C7 /* globe.png in Resources */,
 				D9BE44AA166F330A00A628C7 /* globe@2x.png in Resources */,

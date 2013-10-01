@@ -37,6 +37,7 @@
 
 #define kErrorAlertViewTag 131
 #define kErrorInfoAlertViewTag 132
+#define kErrorCertAlertViewTag 133
 
 @interface OTRLoginViewController(Private)
 - (float) getMidpointOffsetforHUD;
@@ -343,14 +344,21 @@
         UIAlertView *alert = nil;
         NSDictionary * userInfo = notification.userInfo;
         id error = userInfo[KOTRProtocolLoginFailErrorKey];
+        NSInteger tag = kErrorAlertViewTag;
         if ([error isKindOfClass:[NSError class]]) {
             recentError = (NSError *)error;
             NSString * msg = XMPP_FAIL_STRING;
+            
             if([recentError.domain isEqualToString:@"kCFStreamErrorDomainSSL"] && recentError.code == errSSLPeerBadCert) {
                 //cert matching error
-                msg = XMPP_CERT_FAIL_STRING;
+                msg = [NSString stringWithFormat:XMPP_CERT_FAIL_STRING,((OTRManagedXMPPAccount *)account).domain];
+                tag = kErrorCertAlertViewTag;
+                alert = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:msg delegate:self cancelButtonTitle:nil otherButtonTitles:DISMISS_STRING,CONNECT_ANYWAY_STRING, nil];
             }
-            alert = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:XMPP_FAIL_STRING delegate:self cancelButtonTitle:nil otherButtonTitles:OK_STRING,INFO_STRING, nil];
+            else {
+                alert = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:XMPP_FAIL_STRING delegate:self cancelButtonTitle:nil otherButtonTitles:OK_STRING,INFO_STRING, nil];
+            }
+            
         }
         else if (error)
         {
@@ -361,7 +369,7 @@
         else {
             alert = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:XMPP_FAIL_STRING delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
         }
-        alert.tag = kErrorAlertViewTag;
+        alert.tag = tag;
         [alert show];
     }
 }
@@ -453,6 +461,15 @@
             UIPasteboard *pasteBoard = [UIPasteboard generalPasteboard];
             [pasteBoard setString:errorDescriptionString];
         }
+    }
+    else if (alertView.tag == kErrorCertAlertViewTag && buttonIndex == 1)
+    {
+        id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
+        if ([protocol isKindOfClass:[OTRXMPPManager class]]) {
+            [((OTRXMPPManager *)protocol) setManualyEvaluateTrust:NO];
+            [self loginButtonPressed:nil];
+        }
+        
     }
 }
 
