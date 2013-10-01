@@ -238,6 +238,7 @@
         UIEdgeInsets tableViewContentInset = chatViewController.chatHistoryTableView.contentInset;
         tableViewContentInset.bottom = chatViewController.view.frame.size.height-weakChatInputbar.frame.origin.y;
         chatViewController.chatHistoryTableView.contentInset = chatViewController.chatHistoryTableView.scrollIndicatorInsets = tableViewContentInset;
+        [chatViewController scrollToBottomAnimated:NO];
     }];
     
     swipeGestureRecognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(handleSwipeFrom)];
