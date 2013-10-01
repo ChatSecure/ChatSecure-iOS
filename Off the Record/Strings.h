@@ -108,6 +108,7 @@
 #define EN_ERROR_STRING @"Error!"
 #define EN_OSCAR_FAIL_STRING @"Failed to start authenticating. Please try again."
 #define EN_XMPP_FAIL_STRING @"Failed to connect to XMPP server. Please check your login credentials and internet connection and try again."
+#define EN_XMPP_CERT_FAIL_STRING @"Failed to verify certificate"
 #define EN_XMPP_PORT_FAIL_STRING @"Domain needs to be set manually when specifying a custom port"
 #define EN_LOGGING_IN_STRING @"Logging in..."
 #define EN_USER_PASS_BLANK_STRING @"You must enter a username and a password to login."
@@ -247,6 +248,7 @@
 #define ERROR_STRING [OTRLanguageManager translatedString: EN_ERROR_STRING]
 #define OSCAR_FAIL_STRING [OTRLanguageManager translatedString: EN_OSCAR_FAIL_STRING]
 #define XMPP_FAIL_STRING [OTRLanguageManager translatedString: EN_XMPP_FAIL_STRING]
+#define XMPP_CERT_FAIL_STRING [OTRLanguageManager translatedString: EN_XMPP_CERT_FAIL_STRING]
 #define XMPP_PORT_FAIL_STRING [OTRLanguageManager translatedString: EN_XMPP_PORT_FAIL_STRING]
 #define LOGGING_IN_STRING [OTRLanguageManager translatedString: EN_LOGGING_IN_STRING]
 #define USER_PASS_BLANK_STRING [OTRLanguageManager translatedString: EN_USER_PASS_BLANK_STRING]
@@ -393,6 +395,7 @@
 #define LOC_ERROR_STRING NSLocalizedString(EN_ERROR_STRING , @"Title of error message popup box")
 #define LOC_OSCAR_FAIL_STRING NSLocalizedString(EN_OSCAR_FAIL_STRING , @"Authentication failed, tell user to try again")
 #define LOC_XMPP_FAIL_STRING NSLocalizedString(EN_XMPP_FAIL_STRING , @"Message when cannot connect to XMPP server")
+#define LOC_XMPP_CERT_FAIL_STRING NSLocalizedString(EN_XMPP_CERT_FAIL_STRING, @"Alert message when ssl certificate doesn't matched pinned certificate")
 #define LOC_XMPP_PORT_FAIL_STRING NSLocalizedString(EN_XMPP_PORT_FAIL_STRING , @"Message when port is changed but domain not set")
 #define LOC_LOGGING_IN_STRING NSLocalizedString(EN_LOGGING_IN_STRING , @"shown during the login proceess")
 #define LOC_USER_PASS_BLANK_STRING NSLocalizedString(EN_USER_PASS_BLANK_STRING , @"error message shown when user doesnt fill in a username or password")

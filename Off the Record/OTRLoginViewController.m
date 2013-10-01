@@ -345,6 +345,11 @@
         id error = userInfo[KOTRProtocolLoginFailErrorKey];
         if ([error isKindOfClass:[NSError class]]) {
             recentError = (NSError *)error;
+            NSString * msg = XMPP_FAIL_STRING;
+            if([recentError.domain isEqualToString:@"kCFStreamErrorDomainSSL"] && recentError.code == errSSLPeerBadCert) {
+                //cert matching error
+                msg = XMPP_CERT_FAIL_STRING;
+            }
             alert = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:XMPP_FAIL_STRING delegate:self cancelButtonTitle:nil otherButtonTitles:OK_STRING,INFO_STRING, nil];
         }
         else if (error)

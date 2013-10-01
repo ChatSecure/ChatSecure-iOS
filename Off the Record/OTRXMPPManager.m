@@ -429,7 +429,8 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     xmppCapabilities.autoFetchHashedCapabilities = YES;
     xmppCapabilities.autoFetchNonHashedCapabilities = NO;
     
-    if ([[self.account providerName] isEqualToString:FACEBOOK_STRING] || [[self.account providerName] isEqualToString:GOOGLE_TALK_STRING]) {
+    
+    if ([self.account.domain isEqualToString:kOTRFacebookDomain] || [self.account.domain isEqualToString:kOTRGoogleTalkDomain]) {
         xmppStream.manuallyEvaluateTrust = YES;
         XMPPCertificatePinning * certificatePinningModule = [XMPPCertificatePinning defaultCertificates];
         [certificatePinningModule activate:xmppStream];
