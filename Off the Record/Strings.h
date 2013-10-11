@@ -121,7 +121,7 @@
 #define EN_GOOGLE_TALK_EXAMPLE_STRING @"user@gmail.com"
 #define EN_REQUIRED_STRING @"Required"
 #define EN_SEND_DELIVERY_RECEIPT_STRING @"Send Delivery Receipts"
-#define EN_SEND_TYPING_NOTIFICATION_STRING @"Send Typing Notificaction"
+#define EN_SEND_TYPING_NOTIFICATION_STRING @"Send Typing Notification"
 #define EN_LOGOUT_STRING @"Log Out"
 #define EN_LOGIN_STRING @"Log In"
 #define EN_LOGOUT_FROM_AIM_STRING @"Logout from OSCAR?"
