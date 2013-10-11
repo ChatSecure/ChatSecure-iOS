@@ -14,9 +14,6 @@
 [submodule "Submodules/OTRKit"]
 	path = Submodules/OTRKit
 	url = git@github.com:ChatSecure/OTRKit.git
-[submodule "Submodules/Crittercism"]
-	path = Submodules/Crittercism
-	url = git@github.com:ChatSecure/Crittercism-SDK.git
 [submodule "Submodules/LibOrange"]
 	path = Submodules/LibOrange
 	url = git@github.com:ChatSecure/LibOrange.git
@@ -53,3 +50,6 @@
 [submodule "Submodules/GrowingTextView"]
 	path = Submodules/GrowingTextView
 	url = git@github.com:HansPinckaers/GrowingTextView.git
+[submodule "Submodules/HockeySDK-iOS"]
+	path = Submodules/HockeySDK-iOS
+	url = git@github.com:bitstadium/HockeySDK-iOS.git

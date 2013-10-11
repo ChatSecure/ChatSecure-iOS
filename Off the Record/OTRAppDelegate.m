@@ -36,6 +36,8 @@
 #import "OTRAccountsManager.h"
 #import "FacebookSDK.h"
 #import "OTRAppVersionManager.h"
+#import "OTRSettingsManager.h"
+#import "OTRSecrets.h"
 
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
@@ -91,17 +93,13 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     }
     
     
-#ifdef CRITTERCISM_ENABLED
-    if([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyCrittercismOptIn])
+    if([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyCrashReportingOptIn])
     {
-        [Crittercism enableWithAppID:CRITTERCISM_APP_ID];
-        [Crittercism setOptOutStatus:NO];
-    } 
-    else 
-    {
-        [Crittercism setOptOutStatus:YES];
+        [[BITHockeyManager sharedHockeyManager] configureWithBetaIdentifier:HOCKEY_BETA_IDENTIFIER
+                                                             liveIdentifier:HOCKEY_LIVE_IDENTIFIER
+                                                                   delegate:self];
+        [[BITHockeyManager sharedHockeyManager] startManager];
     }
-#endif
     
     [OTRUtilities deleteAllBuddiesAndMessages];
     

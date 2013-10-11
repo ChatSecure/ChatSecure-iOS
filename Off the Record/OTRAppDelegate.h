@@ -21,12 +21,13 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 #import <UIKit/UIKit.h>
+#import "HockeySDK.h"
 
 @class OTRSettingsViewController, OTRBuddyListViewController;
 
 #define OTR_APP_DELEGATE (OTRAppDelegate *)[[UIApplication sharedApplication] delegate]
 
-@interface OTRAppDelegate : UIResponder <UIApplicationDelegate>
+@interface OTRAppDelegate : UIResponder <UIApplicationDelegate, BITHockeyManagerDelegate>
 
 @property (nonatomic, retain) UIWindow *window;
 @property (nonatomic, retain) OTRSettingsViewController *settingsViewController;

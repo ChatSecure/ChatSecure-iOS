@@ -322,7 +322,6 @@
 		D96271031755DEB100F0A958 /* uv_x.png in Resources */ = {isa = PBXBuildFile; fileRef = D96270F31755DEB100F0A958 /* uv_x.png */; };
 		D96271041755DEB100F0A958 /* uv_x@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D96270F41755DEB100F0A958 /* uv_x@2x.png */; };
 		D962710A1755E16200F0A958 /* libidn.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 63483F7E1752CED100779257 /* libidn.a */; };
-		D964257017572B9B00C95395 /* libCrittercism.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D964256F17572B9B00C95395 /* libCrittercism.a */; };
 		D96495C4153629FE009A8C33 /* OTRSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = D96495C3153629FE009A8C33 /* OTRSetting.m */; };
 		D96495C8153635A9009A8C33 /* OTRBoolSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = D96495C7153635A8009A8C33 /* OTRBoolSetting.m */; };
 		D96495CB15363C0F009A8C33 /* OTRViewSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = D96495CA15363C0F009A8C33 /* OTRViewSetting.m */; };
@@ -348,6 +347,8 @@
 		D9A7E0A915242D6800EEDDB5 /* Default-Portrait@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = D9A7E0A815242D6800EEDDB5 /* Default-Portrait@2x~ipad.png */; };
 		D9A7E0AB15242D8C00EEDDB5 /* Default-Landscape~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = D9A7E0AA15242D8C00EEDDB5 /* Default-Landscape~ipad.png */; };
 		D9A7E0AD15242D9000EEDDB5 /* Default-Landscape@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = D9A7E0AC15242D9000EEDDB5 /* Default-Landscape@2x~ipad.png */; };
+		D9B24F221808A061005174C5 /* libHockeySDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D9B24F1A1808A04E005174C5 /* libHockeySDK.a */; };
+		D9B24F251808A100005174C5 /* HockeySDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D9B24F1C1808A04E005174C5 /* HockeySDKResources.bundle */; };
 		D9BBCD3B1491F7AB00AF1B9F /* 19-gear.png in Resources */ = {isa = PBXBuildFile; fileRef = D9BBCD3A1491F7AB00AF1B9F /* 19-gear.png */; };
 		D9BBCD3F1491F8B400AF1B9F /* OTRAboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9BBCD3D1491F8B400AF1B9F /* OTRAboutViewController.m */; };
 		D9BBCD431491FFC800AF1B9F /* about_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = D9BBCD411491FFC800AF1B9F /* about_icon.png */; };
@@ -476,6 +477,7 @@
 		D9D69B7E14180A330056FB9E /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D69B7D14180A330056FB9E /* CoreData.framework */; };
 		D9D69B8014180A3A0056FB9E /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D69B7F14180A3A0056FB9E /* SystemConfiguration.framework */; };
 		D9D8D2061531056300F9E8D3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = D9D8D1F91531056300F9E8D3 /* Localizable.strings */; };
+		D9DA74611808AFD6000B4B96 /* CrashReporter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9DA74601808AFD6000B4B96 /* CrashReporter.framework */; };
 		D9DE274C13F4F0A500E335CA /* OTRLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9DE274A13F4F0A400E335CA /* OTRLoginViewController.m */; };
 		D9E068F213F44D2900AC10A3 /* OTRBuddyListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9E068F013F44D2900AC10A3 /* OTRBuddyListViewController.m */; };
 		D9F9377D13F44BD3009A3D84 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9F9377C13F44BD3009A3D84 /* UIKit.framework */; };
@@ -561,6 +563,34 @@
 			proxyType = 1;
 			remoteGlobalIDString = D2AAC07D0554694100DB518D;
 			remoteInfo = UserVoice;
+		};
+		D9B24F191808A04E005174C5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D9B24F0C1808A04E005174C5 /* HockeySDK.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1E5954F215B6F24A00A03429;
+			remoteInfo = HockeySDK;
+		};
+		D9B24F1B1808A04E005174C5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D9B24F0C1808A04E005174C5 /* HockeySDK.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1E59550A15B6F45800A03429;
+			remoteInfo = HockeySDKResources;
+		};
+		D9B24F1D1808A04E005174C5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D9B24F0C1808A04E005174C5 /* HockeySDK.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1E5A459016F0DFC200B55C04;
+			remoteInfo = HockeySDKTests;
+		};
+		D9B24F201808A05B005174C5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D9B24F0C1808A04E005174C5 /* HockeySDK.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 1E5954CB15B6F24A00A03429;
+			remoteInfo = HockeySDK;
 		};
 		D9CEED691684235C00B236B5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1191,6 +1221,7 @@
 		D9ABC98F15D48B7E00AAB730 /* OTROldXMPPAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTROldXMPPAccount.m; sourceTree = "<group>"; };
 		D9ABC99115D48C4E00AAB730 /* OTROldOscarAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTROldOscarAccount.h; sourceTree = "<group>"; };
 		D9ABC99215D48C4F00AAB730 /* OTROldOscarAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTROldOscarAccount.m; sourceTree = "<group>"; };
+		D9B24F0C1808A04E005174C5 /* HockeySDK.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = HockeySDK.xcodeproj; path = "Submodules/HockeySDK-iOS/Support/HockeySDK.xcodeproj"; sourceTree = "<group>"; };
 		D9BBCD3A1491F7AB00AF1B9F /* 19-gear.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "19-gear.png"; sourceTree = "<group>"; };
 		D9BBCD3C1491F8B400AF1B9F /* OTRAboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAboutViewController.h; sourceTree = "<group>"; };
 		D9BBCD3D1491F8B400AF1B9F /* OTRAboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAboutViewController.m; sourceTree = "<group>"; };
@@ -1460,6 +1491,7 @@
 		D9D8D1F81531056300F9E8D3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = InfoPlist.strings; sourceTree = "<group>"; };
 		D9D8D1FA1531056300F9E8D3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Localizable.strings; sourceTree = "<group>"; };
 		D9D8D20C153107E600F9E8D3 /* Strings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Strings.h; path = ../Strings.h; sourceTree = "<group>"; };
+		D9DA74601808AFD6000B4B96 /* CrashReporter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CrashReporter.framework; path = "Submodules/HockeySDK-iOS/Vendor/CrashReporter.framework"; sourceTree = "<group>"; };
 		D9DE274913F4F0A400E335CA /* OTRLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRLoginViewController.h; sourceTree = "<group>"; };
 		D9DE274A13F4F0A400E335CA /* OTRLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRLoginViewController.m; sourceTree = "<group>"; };
 		D9E068EF13F44D2900AC10A3 /* OTRBuddyListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBuddyListViewController.h; sourceTree = "<group>"; };
@@ -1489,10 +1521,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D9B24F221808A061005174C5 /* libHockeySDK.a in Frameworks */,
 				63BE44CF17EE580D00F60670 /* Social.framework in Frameworks */,
 				D90966FB17EA73C900440833 /* libOAuthTouch2.a in Frameworks */,
 				D909664F17EA67D600440833 /* libfacebook_ios_sdk.a in Frameworks */,
 				63FE64C61727535700876D15 /* StoreKit.framework in Frameworks */,
+				D9DA74611808AFD6000B4B96 /* CrashReporter.framework in Frameworks */,
 				D953117C16C6FF3400AAB1D2 /* libUserVoice.a in Frameworks */,
 				D9CEF0AB1684268500B236B5 /* libOTRKit.a in Frameworks */,
 				D989E88E15D4F92E0081DFD1 /* Twitter.framework in Frameworks */,
@@ -1512,7 +1546,6 @@
 				D9F9377D13F44BD3009A3D84 /* UIKit.framework in Frameworks */,
 				D9F9377F13F44BD3009A3D84 /* Foundation.framework in Frameworks */,
 				D962710A1755E16200F0A958 /* libidn.a in Frameworks */,
-				D964257017572B9B00C95395 /* libCrittercism.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2612,9 +2645,21 @@
 			name = Value;
 			sourceTree = "<group>";
 		};
+		D9B24F0D1808A04E005174C5 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D9B24F1A1808A04E005174C5 /* libHockeySDK.a */,
+				D9B24F1C1808A04E005174C5 /* HockeySDKResources.bundle */,
+				D9B24F1E1808A04E005174C5 /* HockeySDKTests.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		D9CEED611684234D00B236B5 /* Submodules */ = {
 			isa = PBXGroup;
 			children = (
+				D9DA74601808AFD6000B4B96 /* CrashReporter.framework */,
+				D9B24F0C1808A04E005174C5 /* HockeySDK.xcodeproj */,
 				D94F771B17EA86EC007768A6 /* GTMOAuth2ViewTouch.xib */,
 				633B6D0E17ED28A7002DA152 /* HPGrowingTextView */,
 				D909663D17EA67BD00440833 /* facebook-ios-sdk.xcodeproj */,
@@ -3223,6 +3268,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				D9B24F211808A05B005174C5 /* PBXTargetDependency */,
 				D909671117EA7ADF00440833 /* PBXTargetDependency */,
 				D909664E17EA67CC00440833 /* PBXTargetDependency */,
 				D953117B16C6FF2F00AAB1D2 /* PBXTargetDependency */,
@@ -3309,6 +3355,10 @@
 					ProjectRef = D909662F17EA55B800440833 /* GTMOAuth2.xcodeproj */;
 				},
 				{
+					ProductGroup = D9B24F0D1808A04E005174C5 /* Products */;
+					ProjectRef = D9B24F0C1808A04E005174C5 /* HockeySDK.xcodeproj */;
+				},
+				{
 					ProductGroup = D9D370E1169D20C20086F358 /* Products */;
 					ProjectRef = D9D370E0169D20C20086F358 /* openssl.xcodeproj */;
 				},
@@ -3370,6 +3420,27 @@
 			fileType = archive.ar;
 			path = libUserVoice.a;
 			remoteRef = D953117816C6FF1A00AAB1D2 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D9B24F1A1808A04E005174C5 /* libHockeySDK.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libHockeySDK.a;
+			remoteRef = D9B24F191808A04E005174C5 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D9B24F1C1808A04E005174C5 /* HockeySDKResources.bundle */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = HockeySDKResources.bundle;
+			remoteRef = D9B24F1B1808A04E005174C5 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D9B24F1E1808A04E005174C5 /* HockeySDKTests.octest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = HockeySDKTests.octest;
+			remoteRef = D9B24F1D1808A04E005174C5 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		D9CEED6A1684235C00B236B5 /* libOTRKit.a */ = {
@@ -3488,6 +3559,7 @@
 				D96271011755DEB100F0A958 /* uv_vote_chicklet_empty.png in Resources */,
 				D96271021755DEB100F0A958 /* uv_vote_chicklet_empty@2x.png in Resources */,
 				D96271031755DEB100F0A958 /* uv_x.png in Resources */,
+				D9B24F251808A100005174C5 /* HockeySDKResources.bundle in Resources */,
 				D96271041755DEB100F0A958 /* uv_x@2x.png in Resources */,
 				639C75D817E127A600530423 /* FBLoginViewButton.png in Resources */,
 				639C75D917E127A600530423 /* FBLoginViewButton@2x.png in Resources */,
@@ -3889,6 +3961,11 @@
 			name = UserVoice;
 			targetProxy = D953117A16C6FF2F00AAB1D2 /* PBXContainerItemProxy */;
 		};
+		D9B24F211808A05B005174C5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = HockeySDK;
+			targetProxy = D9B24F201808A05B005174C5 /* PBXContainerItemProxy */;
+		};
 		D9CEF0AA1684267E00B236B5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = OTRKit;
@@ -4051,30 +4128,28 @@
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/Submodules/facebook-ios-sdk/build\"",
+					"\\\"$(SRCROOT)/Submodules/facebook-ios-sdk/build\\\"",
+					"/Users/chrisbal/Documents/ChatSecure/Off-the-Record-iOS/Submodules/HockeySDK-iOS/Vendor",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Off the Record/Off the Record-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					_GCRYPT_IN_LIBGCRYPT,
-					"DEBUG=1",
-				);
+				GCC_PREPROCESSOR_DEFINITIONS = _GCRYPT_IN_LIBGCRYPT;
 				GCC_THUMB_SUPPORT = NO;
 				HEADER_SEARCH_PATHS = (
 					/usr/include/libxml2,
-					"\"$(SRCROOT)/Submodules/**",
+					"$(SRCROOT)/Submodules/**",
+					"$(SRCROOT)/Vendor/HockeySDK/Classes",
 				);
 				INFOPLIST_FILE = "Off the Record/Off the Record-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/Submodules/Crittercism\"",
 					"\"$(SRCROOT)/Submodules/XMPPFramework/Vendor/libidn\"",
 				);
 				OTHER_CFLAGS = "-DSQLITE_HAS_CODEC";
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = ChatSecure;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "37F98F71-B501-4C9E-AEA4-8BC5E008394B";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
@@ -4084,30 +4159,30 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD)";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Chris Ballinger (4T8JLQR6GR)";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/Submodules/facebook-ios-sdk/build\"",
+					"\\\"$(SRCROOT)/Submodules/facebook-ios-sdk/build\\\"",
+					"/Users/chrisbal/Documents/ChatSecure/Off-the-Record-iOS/Submodules/HockeySDK-iOS/Vendor",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Off the Record/Off the Record-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					_GCRYPT_IN_LIBGCRYPT,
-					CRITTERCISM_ENABLED,
 					USERVOICE_ENABLED,
 				);
 				GCC_THUMB_SUPPORT = NO;
 				HEADER_SEARCH_PATHS = (
 					/usr/include/libxml2,
-					"\"$(SRCROOT)/Submodules/**",
+					"$(SRCROOT)/Submodules/**",
+					"$(SRCROOT)/Vendor/HockeySDK/Classes",
 				);
 				INFOPLIST_FILE = "Off the Record/Off the Record-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/Submodules/Crittercism\"",
 					"\"$(SRCROOT)/Submodules/XMPPFramework/Vendor/libidn\"",
 				);
 				OTHER_CFLAGS = (
@@ -4116,7 +4191,7 @@
 				);
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = ChatSecure;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "A7202B3D-1FF4-4302-B044-E174CD0F62FC";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
