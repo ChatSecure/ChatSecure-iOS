@@ -38,6 +38,7 @@
 #import "OTRAppVersionManager.h"
 #import "OTRSettingsManager.h"
 #import "OTRSecrets.h"
+#import "OTRMigrationManager.h"
 
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
@@ -63,22 +64,76 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    NSURL *testDBURL = [[NSBundle mainBundle] URLForResource:@"db-201" withExtension:@"sqlite"];
+    NSFileManager *defaultManager = [NSFileManager defaultManager];
+    NSURL *destinationDirectoryURL = [[[defaultManager URLsForDirectory:NSApplicationSupportDirectory inDomains:NSUserDomainMask] lastObject] URLByAppendingPathComponent:@"ChatSecure/db-201.sqlite"];
     
+    NSError *error = nil;
+    [defaultManager copyItemAtURL:testDBURL toURL:destinationDirectoryURL error:&error];
+    if (error) {
+        NSLog(@"error: %@", error.userInfo);
+    }
+    
+    NSString * storeFileName = @"db-201.sqlite";
+    NSURL * fileURL = [NSPersistentStore MR_urlForStoreName:storeFileName];
+
+    NSString *outputStoreName = @"test.sqlite";
+    NSURL *outputStoreURL = [NSPersistentStore MR_urlForStoreName:outputStoreName];
+    
+    NSURL *mom1 = [[NSBundle mainBundle] URLForResource:@"ChatSecure" withExtension:@"mom" subdirectory:@"ChatSecure.momd"];
+    NSURL *mom2 = [[NSBundle mainBundle] URLForResource:@"ChatSecure 2" withExtension:@"mom" subdirectory:@"ChatSecure.momd"];
+    NSManagedObjectModel *sourceModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:mom1];
+    NSManagedObjectModel *destModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:mom2];
+    
+    NSURL *xmppRosterURL = [[NSBundle mainBundle] URLForResource:@"XMPPRoster" withExtension:@"mom"];
+    NSURL *xmppCapsURL = [[NSBundle mainBundle] URLForResource:@"XMPPCapabilities" withExtension:@"mom"];
+    NSURL *xmppRoomURL = [[NSBundle mainBundle] URLForResource:@"XMPPRoom" withExtension:@"mom" subdirectory:@"XMPPRoom.momd"];
+    NSURL *xmppRoomHybridURL = [[NSBundle mainBundle] URLForResource:@"XMPPRoomHybrid" withExtension:@"mom" subdirectory:@"XMPPRoomHybrid.momd"];
+    NSURL *xmppvCardURL = [[NSBundle mainBundle] URLForResource:@"XMPPvCard" withExtension:@"mom" subdirectory:@"XMPPvCard.momd"];
+    NSURL *xmppMessageArchivingURL = [[NSBundle mainBundle] URLForResource:@"XMPPMessageArchiving" withExtension:@"mom" subdirectory:@"XMPPMessageArchiving.momd"];
+    NSArray *momUrls = @[xmppRosterURL, xmppCapsURL, xmppRoomURL, xmppRoomHybridURL, xmppvCardURL, xmppMessageArchivingURL];
+    NSMutableArray *xmppMoms = [NSMutableArray arrayWithCapacity:momUrls.count];
+    for (NSURL *url in momUrls) {
+        NSManagedObjectModel *model = [[NSManagedObjectModel alloc] initWithContentsOfURL:url];
+        [xmppMoms addObject:model];
+    }
+    NSUInteger modelCount = xmppMoms.count + 1;
+    NSMutableArray *inputModels = [NSMutableArray arrayWithCapacity:modelCount];
+    NSMutableArray *outputModels = [NSMutableArray arrayWithCapacity:modelCount];
+    [inputModels addObjectsFromArray:xmppMoms];
+    [outputModels addObjectsFromArray:xmppMoms];
+    [inputModels addObject:sourceModel];
+    [outputModels addObject:destModel];
+    
+    NSManagedObjectModel *inputModel = [NSManagedObjectModel modelByMergingModels:inputModels];
+    NSManagedObjectModel *outputModel = [NSManagedObjectModel modelByMergingModels:outputModels];
+    
+    NSManagedObjectModel *defaultModel = [NSManagedObjectModel mergedModelFromBundles:nil];
+    
+    
+
+    //[OTRMigrationManager compareManagedObjectModel:inputModel withStoreURL:fileURL];
+    //[OTRMigrationManager compareManagedObjectModel:outputModel withStoreURL:fileURL];
+    
+    [OTRMigrationManager migrateStore:fileURL toVersionTwoStore:outputStoreURL sourceModel:inputModel destinationModel:outputModel error:&error];
     
     // DATABASE TESTS
-    NSString * storeFileName = @"db.sqlite";
-    [MagicalRecord setupCoreDataStackWithAutoMigratingSqliteStoreNamed:storeFileName];
-    NSURL * fileURL = [NSPersistentStore MR_urlForStoreName:storeFileName];
+    [MagicalRecord setupCoreDataStackWithStoreNamed:outputStoreName];
+    NSURL * protectFileURL = [NSPersistentStore MR_urlForStoreName:outputStoreName];
     
     NSDictionary *fileAttributes = [NSDictionary dictionaryWithObject:NSFileProtectionCompleteUnlessOpen forKey:NSFileProtectionKey];
-    NSError * error = nil;
+    //NSError * error = nil;
     
-    if (![[NSFileManager defaultManager] setAttributes:fileAttributes ofItemAtPath:[fileURL path] error:&error])
+    if (![[NSFileManager defaultManager] setAttributes:fileAttributes ofItemAtPath:[protectFileURL path] error:&error])
     {
         NSLog(@"error encrypting store");
     }
     
     
+    NSArray *accounts = [OTRManagedAccount MR_findAll];
+    for (OTRManagedAccount *account in accounts) {
+        NSLog(@"account: %@", account.username);
+    }
     
     //NSPersistentStoreCoordinator *storeCoordinator = [OTRDatabaseUtils persistentStoreCoordinatorWithDBName:@"db.sqlite" passphrase:@"test"];
     
