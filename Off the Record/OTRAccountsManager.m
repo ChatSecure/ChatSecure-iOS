@@ -87,6 +87,21 @@
     //return [[reverseLookupDictionary objectForKey:protocol] objectForKey:accountName];
 }
 
++(OTRManagedAccount *)accountForProtocol:(NSString *)protocol accountName:(NSString *)accountName
+{
+    NSPredicate * accountFilter = [NSPredicate predicateWithFormat:@"protocol== %@ AND username==%@",protocol,accountName];
+    NSArray * results = [OTRManagedAccount MR_findAllWithPredicate:accountFilter];
+    
+    
+    OTRManagedAccount * fetchedAccount = nil;
+    if (results) {
+        fetchedAccount = [results lastObject];
+    }
+    return fetchedAccount;
+    
+    //return [[reverseLookupDictionary objectForKey:protocol] objectForKey:accountName];
+}
+
 + (NSUInteger)numberOfAccountsLoggedIn
 {
     return [[OTRAccountsManager allLoggedInAccounts] count];

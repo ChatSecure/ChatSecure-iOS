@@ -142,7 +142,7 @@
     for (OTRManagedBuddy * buddy in self.buddies)
     {
         [buddy newStatusMessage:nil status:status incoming:NO];
-        if (status == kOTRBuddyStatusOffline) {
+        if (status == OTRBuddyStatusOffline) {
             [buddy setNewEncryptionStatus:kOTRKitMessageStatePlaintext];
             buddy.chatStateValue = kOTRChatStateActive;
         }
@@ -187,7 +187,7 @@
     {
         managedAccount.isConnectedValue = [[OTRProtocolManager sharedInstance] isAccountConnected:managedAccount];
         if (!managedAccount.isConnectedValue) {
-            [managedAccount setAllBuddiesStatuts:kOTRBuddyStatusOffline];
+            [managedAccount setAllBuddiesStatuts:OTRBuddyStatusOffline];
         }
         
     }

@@ -81,14 +81,6 @@
 
 
 typedef enum {
-    kOTRBuddyStatusOffline   = 4,
-    kOTRBuddyStatusXa        = 3,
-    kOTRBUddyStatusDnd       = 2,
-    kOTRBuddyStatusAway      = 1,
-    kOTRBuddyStatusAvailable = 0
-} OTRBuddyStatus;
-
-typedef enum {
     kOTRChatStateUnknown   = 0,
     kOTRChatStateActive    = 1,
     kOTRChatStateComposing = 2,
@@ -105,6 +97,19 @@ typedef NS_ENUM(NSUInteger, OTRAccountType) {
     OTRAccountTypeAIM         = 4
 };
 
+typedef NS_ENUM(NSUInteger, OTRProtocolType) {
+    OTRProtocolTypeNone        = 0,
+    OTRProtocolTypeXMPP        = 1,
+    OTRProtocolTypeOscar       = 2
+};
+
+typedef NS_ENUM(NSUInteger, OTRBuddyStatus) {
+    OTRBuddyStatusOffline   = 4,
+    OTRBuddyStatusXa        = 3,
+    OTRBUddyStatusDnd       = 2,
+    OTRBuddyStatusAway      = 1,
+    OTRBuddyStatusAvailable = 0
+};
 //Chatview
 #define kTabBarHeight 0
 #define kSendButtonWidth 60

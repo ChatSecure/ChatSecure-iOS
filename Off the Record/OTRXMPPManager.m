@@ -34,6 +34,7 @@
 #import "NSXMLElement+XEP_0203.h"
 #import "Strings.h"
 #import "OTRXMPPManagedPresenceSubscriptionRequest.h"
+#import "OTRRosterStorage.h"
 
 #import "DDLog.h"
 #import "DDTTYLogger.h"
@@ -273,28 +274,28 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
                     switch (primaryResource.intShow)
                     {
                         case 0  :
-                            buddyStatus = kOTRBUddyStatusDnd;
+                            buddyStatus = OTRBUddyStatusDnd;
                             break;
                         case 1  :
-                            buddyStatus = kOTRBuddyStatusXa;
+                            buddyStatus = OTRBuddyStatusXa;
                             break;
                         case 2  :
-                            buddyStatus = kOTRBuddyStatusAway;
+                            buddyStatus = OTRBuddyStatusAway;
                             break;
                         case 3  :
-                            buddyStatus = kOTRBuddyStatusAvailable;
+                            buddyStatus = OTRBuddyStatusAvailable;
                             break;
                         case 4  :
-                            buddyStatus = kOTRBuddyStatusAvailable;
+                            buddyStatus = OTRBuddyStatusAvailable;
                             break;
                         default :
-                            buddyStatus = kOTRBuddyStatusOffline;
+                            buddyStatus = OTRBuddyStatusOffline;
                             break;
                     }
                 }
                 else
                 {
-                    buddyStatus = kOTRBuddyStatusOffline;
+                    buddyStatus = OTRBuddyStatusOffline;
                 }
                 
                 if (user.isPendingApproval) {
@@ -384,9 +385,10 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	
     //xmppRosterStorage = [[XMPPRosterCoreDataStorage alloc] initWithDatabaseFilename:self.account.uniqueIdentifier];
     //  xmppRosterStorage = [[XMPPRosterCoreDataStorage alloc] init];
-    	xmppRosterStorage = [[XMPPRosterCoreDataStorage alloc] initWithInMemoryStore];
+    //	xmppRosterStorage = [[XMPPRosterCoreDataStorage alloc] initWithInMemoryStore];
+    OTRRosterStorage * rosterStorage = [[OTRRosterStorage alloc] init];
 	
-	xmppRoster = [[XMPPRoster alloc] initWithRosterStorage:xmppRosterStorage];
+	xmppRoster = [[XMPPRoster alloc] initWithRosterStorage:rosterStorage];
 	
 	xmppRoster.autoFetchRoster = YES;
 	xmppRoster.autoAcceptKnownPresenceSubscriptionRequests = YES;
@@ -502,7 +504,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	XMPPPresence *presence = [XMPPPresence presence]; // type="available" is implicit
 	
 	[[self xmppStream] sendElement:presence];
-    [self fetchedResultsController];
+    //[self fetchedResultsController];
 }
 
 - (void)goOffline
@@ -601,7 +603,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     
     [xmppStream disconnect];
     
-    [self.account setAllBuddiesStatuts:kOTRBuddyStatusOffline];
+    [self.account setAllBuddiesStatuts:OTRBuddyStatusOffline];
     self.account.isConnectedValue = NO;
     
     if([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyDeleteOnDisconnect])

@@ -76,13 +76,13 @@ BOOL loginFailed;
     switch (status.statusType)
     {
         case AIMBuddyStatusAvailable:
-            buddyStatus = kOTRBuddyStatusAvailable;
+            buddyStatus = OTRBuddyStatusAvailable;
             break;
         case AIMBuddyStatusAway:
-            buddyStatus = kOTRBuddyStatusAway;
+            buddyStatus = OTRBuddyStatusAway;
             break;
         default:
-            buddyStatus = kOTRBuddyStatusOffline;
+            buddyStatus = OTRBuddyStatusOffline;
             break;
     }
     
@@ -169,7 +169,7 @@ BOOL loginFailed;
 #pragma mark Session Delegate
 
 - (void)aimSessionManagerSignedOff:(AIMSessionManager *)sender {
-    [self.account setAllBuddiesStatuts:kOTRBuddyStatusOffline];
+    [self.account setAllBuddiesStatuts:OTRBuddyStatusOffline];
     self.account.isConnectedValue = NO;
     
     if([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyDeleteOnDisconnect])
