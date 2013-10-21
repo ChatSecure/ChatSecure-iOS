@@ -39,6 +39,8 @@
 #import "OTRSettingsManager.h"
 #import "OTRSecrets.h"
 
+#import "OTRDemoChatViewController.h"
+
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
 static const int ddLogLevel = LOG_LEVEL_VERBOSE;
@@ -110,7 +112,8 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
     self.buddyListViewController = [[OTRBuddyListViewController alloc] init];
-    OTRChatViewController *chatViewController = [[OTRChatViewController alloc] init];
+    OTRChatViewController *chatViewController = [[OTRDemoChatViewController alloc] init];
+    //OTRChatViewController *chatViewController = [[OTRChatViewController alloc] init];
     buddyListViewController.chatViewController = chatViewController;
     self.settingsViewController = [[OTRSettingsViewController alloc] init];
 
