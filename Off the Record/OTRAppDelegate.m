@@ -135,7 +135,9 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     
     application.applicationIconBadgeNumber = 0;
   
+    [Appirater setAppId:@"464200063"];
     [Appirater appLaunched:YES];
+    [Appirater setOpenInAppStore:NO];
     
     
     
