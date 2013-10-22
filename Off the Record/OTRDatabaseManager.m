@@ -41,7 +41,7 @@
     NSString *legacyDatabaseName = @"db.sqlite";
     NSURL * legacyDatabaseURL = [NSPersistentStore MR_urlForStoreName:legacyDatabaseName];
     
-    [self copyTestDatabaseToDestination:legacyDatabaseURL];
+    //[self copyTestDatabaseToDestination:legacyDatabaseURL];
     
     NSURL * databaseURL = [NSPersistentStore MR_urlForStoreName:databaseName];
     NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -52,6 +52,8 @@
         }
     }
     
+    [MagicalRecord setShouldAutoCreateManagedObjectModel:NO];
+    [MagicalRecord setDefaultModelNamed:@"ChatSecure.momd"];
     [MagicalRecord setupCoreDataStackWithStoreNamed:databaseName];
     
     [self setFileProtection:NSFileProtectionCompleteUnlessOpen path:databaseURL.path];
@@ -84,9 +86,8 @@
     [outputModels addObject:version2Model];
     
     NSManagedObjectModel *inputModel = [NSManagedObjectModel modelByMergingModels:inputModels];
-    NSManagedObjectModel *outputModel = [NSManagedObjectModel modelByMergingModels:outputModels];
     
-    return [self migrateLegacyStore:storeURL destinationStore:destinationURL sourceModel:inputModel destinationModel:outputModel error:NULL];
+    return [self migrateLegacyStore:storeURL destinationStore:destinationURL sourceModel:inputModel destinationModel:version2Model error:NULL];
 }
 
 + (NSArray*) legacyXMPPModels {
