@@ -481,7 +481,6 @@
 		D9DA74611808AFD6000B4B96 /* CrashReporter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9DA74601808AFD6000B4B96 /* CrashReporter.framework */; };
 		D9DE274C13F4F0A500E335CA /* OTRLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9DE274A13F4F0A400E335CA /* OTRLoginViewController.m */; };
 		D9E068F213F44D2900AC10A3 /* OTRBuddyListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9E068F013F44D2900AC10A3 /* OTRBuddyListViewController.m */; };
-		D9E44FCE1815DAC600A1C879 /* test.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = D9E44FCD1815DAC600A1C879 /* test.sqlite */; };
 		D9F9377D13F44BD3009A3D84 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9F9377C13F44BD3009A3D84 /* UIKit.framework */; };
 		D9F9377F13F44BD3009A3D84 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9F9377E13F44BD3009A3D84 /* Foundation.framework */; };
 		D9F9378513F44BD3009A3D84 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D9F9378313F44BD3009A3D84 /* InfoPlist.strings */; };
@@ -1500,7 +1499,6 @@
 		D9DE274A13F4F0A400E335CA /* OTRLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRLoginViewController.m; sourceTree = "<group>"; };
 		D9E068EF13F44D2900AC10A3 /* OTRBuddyListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBuddyListViewController.h; sourceTree = "<group>"; };
 		D9E068F013F44D2900AC10A3 /* OTRBuddyListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBuddyListViewController.m; sourceTree = "<group>"; };
-		D9E44FCD1815DAC600A1C879 /* test.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; name = test.sqlite; path = ../../../Desktop/test.sqlite; sourceTree = "<group>"; };
 		D9F9377813F44BD3009A3D84 /* ChatSecure.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatSecure.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D9F9377C13F44BD3009A3D84 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		D9F9377E13F44BD3009A3D84 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -3056,7 +3054,6 @@
 		D9F9376D13F44BD3009A3D84 = {
 			isa = PBXGroup;
 			children = (
-				D9E44FCD1815DAC600A1C879 /* test.sqlite */,
 				D97BF53A160150CE00DA91F9 /* Default-568h@2x.png */,
 				D9F9378013F44BD3009A3D84 /* Off the Record */,
 				D9CEED611684234D00B236B5 /* Submodules */,
@@ -3508,7 +3505,6 @@
 				6352DC8C15AFB252007AD0B4 /* xmpp.png in Resources */,
 				6352DC8D15AFB252007AD0B4 /* xmpp@2x.png in Resources */,
 				6352DC9015AFB3D2007AD0B4 /* facebook.png in Resources */,
-				D9E44FCE1815DAC600A1C879 /* test.sqlite in Resources */,
 				6352DC9115AFB3D2007AD0B4 /* facebook@2x.png in Resources */,
 				D974577715BE34E7002B9192 /* 31-circle-plus.png in Resources */,
 				D974577815BE34E7002B9192 /* 31-circle-plus@2x.png in Resources */,
