@@ -37,7 +37,7 @@
  
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-    self.title = @"Subscription Requests";
+    self.title = SUBSCRIPTION_REQUEST_TITLE;
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneButtonPressed:)];
     
 }
@@ -89,7 +89,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     currentlySelectedRequest = [self.subscriptionRequestsFetchedResultsController objectAtIndexPath:indexPath];
-    UIActionSheet * requestActionSheet = [[UIActionSheet alloc] initWithTitle:currentlySelectedRequest.jid delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:@"Reject" otherButtonTitles:@"Add", nil];
+    UIActionSheet * requestActionSheet = [[UIActionSheet alloc] initWithTitle:currentlySelectedRequest.jid delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:REJECT_STRING otherButtonTitles:ADD_STRING, nil];
     [requestActionSheet showInView:self.view];
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
