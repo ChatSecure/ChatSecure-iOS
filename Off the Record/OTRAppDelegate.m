@@ -38,6 +38,7 @@
 #import "OTRAppVersionManager.h"
 #import "OTRSettingsManager.h"
 #import "OTRSecrets.h"
+#import "OTRDatabaseManager.h"
 
 #import "OTRDemoChatViewController.h"
 
@@ -65,28 +66,9 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    NSString *outputStoreName = @"ChatSecure.sqlite";
     
-    
-    // DATABASE TESTS
-    NSString * storeFileName = @"db.sqlite";
-    [MagicalRecord setupCoreDataStackWithAutoMigratingSqliteStoreNamed:storeFileName];
-    NSURL * fileURL = [NSPersistentStore MR_urlForStoreName:storeFileName];
-    
-    NSDictionary *fileAttributes = [NSDictionary dictionaryWithObject:NSFileProtectionCompleteUnlessOpen forKey:NSFileProtectionKey];
-    NSError * error = nil;
-    
-    if (![[NSFileManager defaultManager] setAttributes:fileAttributes ofItemAtPath:[fileURL path] error:&error])
-    {
-        NSLog(@"error encrypting store");
-    }
-    
-    
-    
-    //NSPersistentStoreCoordinator *storeCoordinator = [OTRDatabaseUtils persistentStoreCoordinatorWithDBName:@"db.sqlite" passphrase:@"test"];
-    
-    //[NSPersistentStoreCoordinator MR_setDefaultStoreCoordinator:storeCoordinator];
-    
-    
+    [OTRDatabaseManager setupDatabaseWithName:outputStoreName];
     
     //CONVERT LEGACY ACCOUNT DICTIONARIES
     OTRConvertAccount * accountConverter = [[OTRConvertAccount alloc] init];
