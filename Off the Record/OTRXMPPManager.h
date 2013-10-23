@@ -43,14 +43,12 @@
 	XMPPStream *xmppStream;
 	XMPPReconnect *xmppReconnect;
     XMPPRoster *xmppRoster;
-	XMPPRosterCoreDataStorage *xmppRosterStorage;
     XMPPvCardCoreDataStorage *xmppvCardStorage;
 	XMPPvCardTempModule *xmppvCardTempModule;
 	XMPPvCardAvatarModule *xmppvCardAvatarModule;
 	XMPPCapabilities *xmppCapabilities;
 	XMPPCapabilitiesCoreDataStorage *xmppCapabilitiesStorage;
 	
-	NSManagedObjectContext *managedObjectContext_roster;
 	NSManagedObjectContext *managedObjectContext_capabilities;
 	
 	NSString *password;
@@ -77,7 +75,6 @@
 @property 	BOOL isXmppConnected;
 @property (nonatomic, strong)NSMutableDictionary * buddyTimers;
 
-- (NSManagedObjectContext *)managedObjectContext_roster;
 - (NSManagedObjectContext *)managedObjectContext_capabilities;
 
 - (BOOL)connectWithJID:(NSString*) myJID password:(NSString*)myPassword;
