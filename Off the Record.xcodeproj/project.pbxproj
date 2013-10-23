@@ -185,7 +185,6 @@
 		636FE4BC161B771E002B28EF /* OTROscarLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 636FE4BB161B771E002B28EF /* OTROscarLoginViewController.m */; };
 		636FE4C0161B7C68002B28EF /* OTRInLineTextEditTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 636FE4BF161B7C68002B28EF /* OTRInLineTextEditTableViewCell.m */; };
 		6375D2531811FCD2006CDA8A /* OTRRosterStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 6375D2521811FCD2006CDA8A /* OTRRosterStorage.m */; };
-		6375D25F181207D8006CDA8A /* CrashReporter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6375D25E181207D8006CDA8A /* CrashReporter.framework */; };
 		63813C1216E14E5D00909670 /* OTRBuddyListGroupManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 63813C1116E14E5D00909670 /* OTRBuddyListGroupManager.m */; };
 		638940CE1815CAF8005F651E /* CrashReporter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 638940CD1815CAF8005F651E /* CrashReporter.framework */; };
 		638940D11815E339005F651E /* OTRDemoChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 638940D01815E339005F651E /* OTRDemoChatViewController.m */; };
@@ -972,7 +971,6 @@
 		636FE4BF161B7C68002B28EF /* OTRInLineTextEditTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRInLineTextEditTableViewCell.m; sourceTree = "<group>"; };
 		6375D2511811FCD2006CDA8A /* OTRRosterStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRRosterStorage.h; sourceTree = "<group>"; };
 		6375D2521811FCD2006CDA8A /* OTRRosterStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRRosterStorage.m; sourceTree = "<group>"; };
-		6375D25E181207D8006CDA8A /* CrashReporter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CrashReporter.framework; path = "Submodules/HockeySDK-iOS/Vendor/CrashReporter.framework"; sourceTree = "<group>"; };
 		637FF13417DEB8910012AA1B /* ChatSecure 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "ChatSecure 2.xcdatamodel"; sourceTree = "<group>"; };
 		63813C1016E14E5D00909670 /* OTRBuddyListGroupManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBuddyListGroupManager.h; sourceTree = "<group>"; };
 		63813C1116E14E5D00909670 /* OTRBuddyListGroupManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBuddyListGroupManager.m; sourceTree = "<group>"; };
@@ -1583,6 +1581,15 @@
 				633B6D0B17ED289F002DA152 /* HPTextViewInternal.m */,
 			);
 			name = HPGrowingTextView;
+			sourceTree = "<group>";
+		};
+		634671631818710C00515463 /* XMPP - Storage */ = {
+			isa = PBXGroup;
+			children = (
+				6375D2511811FCD2006CDA8A /* OTRRosterStorage.h */,
+				6375D2521811FCD2006CDA8A /* OTRRosterStorage.m */,
+			);
+			name = "XMPP - Storage";
 			sourceTree = "<group>";
 		};
 		6348184617E3D600004E0146 /* X-OAUTH2-google */ = {
@@ -3135,8 +3142,7 @@
 				638940D01815E339005F651E /* OTRDemoChatViewController.m */,
 				633B6D0317ECFB0C002DA152 /* OTRChatInputBar.h */,
 				633B6D0417ECFB0C002DA152 /* OTRChatInputBar.m */,
-				6375D2511811FCD2006CDA8A /* OTRRosterStorage.h */,
-				6375D2521811FCD2006CDA8A /* OTRRosterStorage.m */,
+				634671631818710C00515463 /* XMPP - Storage */,
 				D9F9378913F44BD3009A3D84 /* OTRAppDelegate.h */,
 				D9F9378A13F44BD3009A3D84 /* OTRAppDelegate.m */,
 				D9FBD71915472FB400126568 /* Settings */,
@@ -3618,7 +3624,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd \"Off the Record\"\nmogenerator --template-var arc=true -m \"ChatSecure.xcdatamodeld/ChatSecure 2.xcdatamodel/\"";
+			shellScript = "cd \"Off the Record\"";
 		};
 /* End PBXShellScriptBuildPhase section */
 

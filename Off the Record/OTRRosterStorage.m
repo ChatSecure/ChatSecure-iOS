@@ -16,6 +16,8 @@
 
 #import "OTRConstants.h"
 
+#import "Strings.h"
+
 @implementation OTRRosterStorage
 
 
@@ -51,15 +53,9 @@
                 [user MR_deleteEntity];
             }
         }
-        else
+        else if(user)
         {
-            if (user)
-            {
-                user.displayName = [item attributeStringValueForName:@"name"];
-                OTRManagedGroup * group = [OTRManagedGroup fetchOrCreateWithName:@"buddy test"];
-                [group addBuddiesObject:user];
-                
-            }
+            [self updateUser:user updateWithItem:item];
         }
     }];
 }
@@ -137,6 +133,49 @@
         OTRManagedBuddy * user = [self buddyWithJID:jid xmppStream:stream];
         [user setPhoto:image];
     }];
+}
+
+-(void)updateUser:(OTRManagedBuddy *)user updateWithItem: (NSXMLElement *)item
+{
+    user.displayName = [item attributeStringValueForName:@"name"];
+    
+    NSArray *groupItems = [item elementsForName:@"group"];
+	__block NSString *groupName = nil;
+    
+    [user removeGroups:user.groups];
+    
+    if ([groupItems count]) {
+        [groupItems enumerateObjectsUsingBlock:^(NSXMLElement *groupElement, NSUInteger idx, BOOL *stop) {
+            groupName = [groupElement stringValue];
+            [user addToGroup:groupName];
+        }];
+    }
+    else{
+        [user addToGroup:DEFAULT_BUDDY_GROUP_STRING];
+    }
+    
+    if ([self isPendingApprovalElement:item]) {
+        [user newStatusMessage:PENDING_APPROVAL_STRING status:OTRBuddyStatusOffline incoming:YES];
+    }
+    else{
+        NSLog(@"");
+    }
+    
+}
+
+-(BOOL)isPendingApprovalElement:(NSXMLElement *)item
+{
+    NSString *subscription = [item attributeStringValueForName:@"subscription"];
+	NSString *ask = [item attributeStringValueForName:@"ask"];
+	
+	if ([subscription isEqualToString:@"none"] || [subscription isEqualToString:@"from"])
+    {
+        if([ask isEqualToString:@"subscribe"])
+        {
+            return YES;
+        }
+    }
+    return NO;
 }
 
 -(OTRManagedBuddy *)buddyWithJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream
