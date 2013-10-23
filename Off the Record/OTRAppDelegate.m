@@ -66,23 +66,21 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    NSString *outputStoreName = @"ChatSecure.sqlite";
-    
-    [OTRDatabaseManager setupDatabaseWithName:outputStoreName];
-    
-    //CONVERT LEGACY ACCOUNT DICTIONARIES
-    OTRConvertAccount * accountConverter = [[OTRConvertAccount alloc] init];
-    if ([accountConverter hasLegacyAccountSettings]) {
-        [accountConverter convertAllLegacyAcountSettings];
-    }
-    
-    
     if([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyCrashReportingOptIn])
     {
         [[BITHockeyManager sharedHockeyManager] configureWithBetaIdentifier:HOCKEY_BETA_IDENTIFIER
                                                              liveIdentifier:HOCKEY_LIVE_IDENTIFIER
                                                                    delegate:self];
         [[BITHockeyManager sharedHockeyManager] startManager];
+    }
+
+    NSString *outputStoreName = @"ChatSecure.sqlite";
+    [OTRDatabaseManager setupDatabaseWithName:outputStoreName];
+    
+    //CONVERT LEGACY ACCOUNT DICTIONARIES
+    OTRConvertAccount * accountConverter = [[OTRConvertAccount alloc] init];
+    if ([accountConverter hasLegacyAccountSettings]) {
+        [accountConverter convertAllLegacyAcountSettings];
     }
     
     [OTRUtilities deleteAllBuddiesAndMessages];

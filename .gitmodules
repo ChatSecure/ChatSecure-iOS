@@ -53,3 +53,6 @@
 [submodule "Submodules/HockeySDK-iOS"]
 	path = Submodules/HockeySDK-iOS
 	url = git@github.com:bitstadium/HockeySDK-iOS.git
+[submodule "Submodules/ChatSecure-Metadata"]
+	path = Submodules/ChatSecure-Metadata
+	url = git@github.com:ChatSecure/ChatSecure-Metadata.git
