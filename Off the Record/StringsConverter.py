@@ -1,6 +1,5 @@
 import json
 from subprocess import call
-import os
 
 def strip_obj_c(string):
 	return string.rstrip("\"\n").lstrip("@\"")
