@@ -49,15 +49,6 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 static const int ddLogLevel = LOG_LEVEL_WARN;
 #endif
 
-// If you downloaded this source from Github delete the
-// CRITTERCISM_ENABLED key in the Preprocessor Macros
-// section of the project file to compile the project without
-// error reporting support.
-#ifdef CRITTERCISM_ENABLED
-#import "Crittercism.h"
-#import "OTRSecrets.h"
-#endif
-
 @implementation OTRAppDelegate
 
 @synthesize window = _window;
