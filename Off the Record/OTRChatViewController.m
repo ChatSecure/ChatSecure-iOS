@@ -107,7 +107,7 @@
     [button setFrame:buttonFrame];
     [button addTarget:self action:@selector(lockButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     
-    lockButton = [[UIBarButtonItem alloc] initWithCustomView:button];
+    self.lockButton = [[UIBarButtonItem alloc] initWithCustomView:button];
     
     button = [UIButton buttonWithType:UIButtonTypeCustom];
     buttonImage = [UIImage imageNamed:@"Lock_Unlocked.png"];
@@ -118,7 +118,7 @@
     [button setFrame:buttonFrame];
     [button addTarget:self action:@selector(lockButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     
-    unlockedButton = [[UIBarButtonItem alloc] initWithCustomView:button];
+    self.unlockedButton = [[UIBarButtonItem alloc] initWithCustomView:button];
     
     button = [UIButton buttonWithType:UIButtonTypeCustom];
     buttonImage = [UIImage imageNamed:@"Lock_Locked_Verified.png"];
@@ -129,7 +129,7 @@
     [button setFrame:buttonFrame];
     [button addTarget:self action:@selector(lockButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     
-    lockVerifiedButton = [[UIBarButtonItem alloc] initWithCustomView:button];
+    self.lockVerifiedButton = [[UIBarButtonItem alloc] initWithCustomView:button];
     
     [self refreshLockButton];
 }
@@ -149,15 +149,15 @@
         
         if(currentEncryptionStatus == kOTRKitMessageStateEncrypted && trusted)
         {
-            self.navigationItem.rightBarButtonItem = lockVerifiedButton;
+            self.navigationItem.rightBarButtonItem = self.lockVerifiedButton;
         }
         else if(currentEncryptionStatus == kOTRKitMessageStateEncrypted)
         {
-            self.navigationItem.rightBarButtonItem = lockButton;
+            self.navigationItem.rightBarButtonItem = self.lockButton;
         }
         else
         {
-            self.navigationItem.rightBarButtonItem = unlockedButton;
+            self.navigationItem.rightBarButtonItem = self.unlockedButton;
         }
         self.navigationItem.rightBarButtonItem.accessibilityLabel = @"lock";
     }

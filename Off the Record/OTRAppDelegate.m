@@ -38,21 +38,15 @@
 #import "OTRAppVersionManager.h"
 #import "OTRSettingsManager.h"
 #import "OTRSecrets.h"
+#import "OTRDatabaseManager.h"
+
+#import "OTRDemoChatViewController.h"
 
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
 static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 #else
 static const int ddLogLevel = LOG_LEVEL_WARN;
-#endif
-
-// If you downloaded this source from Github delete the
-// CRITTERCISM_ENABLED key in the Preprocessor Macros
-// section of the project file to compile the project without
-// error reporting support.
-#ifdef CRITTERCISM_ENABLED
-#import "Crittercism.h"
-#import "OTRSecrets.h"
 #endif
 
 @implementation OTRAppDelegate
@@ -63,42 +57,21 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    
-    
-    // DATABASE TESTS
-    NSString * storeFileName = @"db.sqlite";
-    [MagicalRecord setupCoreDataStackWithAutoMigratingSqliteStoreNamed:storeFileName];
-    NSURL * fileURL = [NSPersistentStore MR_urlForStoreName:storeFileName];
-    
-    NSDictionary *fileAttributes = [NSDictionary dictionaryWithObject:NSFileProtectionCompleteUnlessOpen forKey:NSFileProtectionKey];
-    NSError * error = nil;
-    
-    if (![[NSFileManager defaultManager] setAttributes:fileAttributes ofItemAtPath:[fileURL path] error:&error])
-    {
-        NSLog(@"error encrypting store");
-    }
-    
-    
-    
-    //NSPersistentStoreCoordinator *storeCoordinator = [OTRDatabaseUtils persistentStoreCoordinatorWithDBName:@"db.sqlite" passphrase:@"test"];
-    
-    //[NSPersistentStoreCoordinator MR_setDefaultStoreCoordinator:storeCoordinator];
-    
-    
-    
-    //CONVERT LEGACY ACCOUNT DICTIONARIES
-    OTRConvertAccount * accountConverter = [[OTRConvertAccount alloc] init];
-    if ([accountConverter hasLegacyAccountSettings]) {
-        [accountConverter convertAllLegacyAcountSettings];
-    }
-    
-    
     if([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyCrashReportingOptIn])
     {
         [[BITHockeyManager sharedHockeyManager] configureWithBetaIdentifier:HOCKEY_BETA_IDENTIFIER
                                                              liveIdentifier:HOCKEY_LIVE_IDENTIFIER
                                                                    delegate:self];
         [[BITHockeyManager sharedHockeyManager] startManager];
+    }
+
+    NSString *outputStoreName = @"ChatSecure.sqlite";
+    [OTRDatabaseManager setupDatabaseWithName:outputStoreName];
+    
+    //CONVERT LEGACY ACCOUNT DICTIONARIES
+    OTRConvertAccount * accountConverter = [[OTRConvertAccount alloc] init];
+    if ([accountConverter hasLegacyAccountSettings]) {
+        [accountConverter convertAllLegacyAcountSettings];
     }
     
     [OTRUtilities deleteAllBuddiesAndMessages];
@@ -110,7 +83,8 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
     self.buddyListViewController = [[OTRBuddyListViewController alloc] init];
-    OTRChatViewController *chatViewController = [[OTRChatViewController alloc] init];
+    OTRChatViewController *chatViewController = [[OTRDemoChatViewController alloc] init];
+    //OTRChatViewController *chatViewController = [[OTRChatViewController alloc] init];
     buddyListViewController.chatViewController = chatViewController;
     self.settingsViewController = [[OTRSettingsViewController alloc] init];
 
@@ -132,7 +106,9 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     
     application.applicationIconBadgeNumber = 0;
   
-    [Appirater appLaunched:YES];
+    [Appirater setAppId:@"464200063"];
+    //[Appirater appLaunched:YES];
+    [Appirater setOpenInAppStore:NO];
     
     
     
