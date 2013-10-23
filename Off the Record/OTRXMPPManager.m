@@ -837,29 +837,10 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 {
     DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
 	
-	XMPPUserCoreDataStorageObject *user = [xmppRosterStorage userForJID:[presence from]
-	                                                         xmppStream:xmppStream
-	                                               managedObjectContext:[self managedObjectContext_roster]];
-	
-	NSString *displayName = [user displayName];
 	NSString *jidStrBare = [presence fromStr];
-	NSString *body = nil;
     
-    OTRXMPPManagedPresenceSubscriptionRequest * subRequest = [OTRXMPPManagedPresenceSubscriptionRequest fetchOrCreateWith:jidStrBare account:self.account];
-	
-	if (![displayName isEqualToString:jidStrBare] && [displayName length])
-	{
-        subRequest.displayName = displayName;
-		body = [NSString stringWithFormat:@"Buddy request from %@ <%@>", displayName, jidStrBare];
-	}
-	else
-	{
-		body = [NSString stringWithFormat:@"Buddy request from %@", displayName];
-	}
-    
+    [OTRXMPPManagedPresenceSubscriptionRequest fetchOrCreateWith:jidStrBare account:self.account];
     [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
-
-    
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
