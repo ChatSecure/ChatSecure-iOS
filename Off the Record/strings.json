@@ -1,0 +1,554 @@
+{
+    "ABOUT_STRING": {
+        "comment": "Title for the about page", 
+        "string": "About"
+    }, 
+    "ACCOUNTS_STRING": {
+        "comment": "Title for the accounts tab", 
+        "string": "Accounts"
+    }, 
+    "ACCOUNT_STRING": {
+        "comment": "The string describing a buddy's account", 
+        "string": "Account"
+    }, 
+    "ADD_BUDDY_STRING": {
+        "comment": "The title for the view to add a buddy", 
+        "string": "Add Buddy"
+    }, 
+    "ADVANCED_STRING": {
+        "comment": "stirng to describe advanced set of settings", 
+        "string": "Advanced"
+    }, 
+    "AGREE_STRING": {
+        "comment": "Agree to EULA", 
+        "string": "Agree"
+    }, 
+    "AIM_STRING": {
+        "comment": "the name for AIM", 
+        "string": "OSCAR Instant Messenger"
+    }, 
+    "ALLOW_PLAIN_TEXT_AUTHENTICATION_STRING": {
+        "comment": "Setting name for allowing authentication to happen in plain text or in the clear", 
+        "string": "Allow Plaintext Authentication"
+    }, 
+    "ALLOW_SELF_SIGNED_CERTIFICATES_STRING": {
+        "comment": "Title for settings cell on whether or not the XMPP library should allow self-signed SSL certificates", 
+        "string": "Self-Signed SSL"
+    }, 
+    "ALLOW_SSL_HOSTNAME_MISMATCH_STRING": {
+        "comment": "Title for settings cell on whether or not the XMPP library should allow SSL hostname mismatch", 
+        "string": "Hostname Mismatch"
+    }, 
+    "ATTRIBUTION_STRING": {
+        "comment": "for attribution of other projects", 
+        "string": "ChatSecure is brought to you by many open source projects"
+    }, 
+    "AVAILABLE_MESSAGE_STRING": {
+        "comment": "Message shown inline for users that are available", 
+        "string": "is now available"
+    }, 
+    "AVAILABLE_STRING": {
+        "comment": "Label in buddylist for users that are available", 
+        "string": "Available"
+    }, 
+    "AWAY_MESSAGE_STRING": {
+        "comment": "Message shown inline for users that are away", 
+        "string": "is now away"
+    }, 
+    "AWAY_STRING": {
+        "comment": "Label in buddylist for users that are away", 
+        "string": "Away"
+    }, 
+    "BASIC_STRING": {
+        "comment": "string to describe basic set of settings", 
+        "string": "Basic"
+    }, 
+    "BLOCK_AND_REMOVE_STRING": {
+        "comment": "The String for a buddy to block and remove a buddy from the buddy list", 
+        "string": "Block & Remove"
+    }, 
+    "BLOCK_STRING": {
+        "comment": "The String for a button to block a buddy", 
+        "string": "Block"
+    }, 
+    "BUDDY_INFO_STRING": {
+        "comment": "The title for the view that shows detailed buddy info", 
+        "string": "Buddy Info"
+    }, 
+    "BUDDY_LIST_STRING": {
+        "comment": "Title for the buddy list tab", 
+        "string": "Buddy List"
+    }, 
+    "CANCEL_ENCRYPTED_CHAT_STRING": {
+        "comment": "Shown when ending an encrypted chat session", 
+        "string": "Cancel Encrypted Chat"
+    }, 
+    "CANCEL_STRING": {
+        "comment": "Cancel an alert window", 
+        "string": "Cancel"
+    }, 
+    "CHAT_INSTRUCTIONS_LABEL_STRING": {
+        "comment": "Instructions on how to start using the program", 
+        "string": "Log in on the Settings page (found on top right corner of buddy list) and then select a buddy from the Buddy List to start chatting."
+    }, 
+    "CHAT_STATE_ACTIVE_STRING": {
+        "comment": "String to be displayed when a buddy is Active", 
+        "string": "Active"
+    }, 
+    "CHAT_STATE_COMPOSING_STRING": {
+        "comment": "String to be displayed when a buddy is currently composing a message", 
+        "string": "Typing"
+    }, 
+    "CHAT_STATE_GONE_STRING": {
+        "comment": "String to be displayed when a buddy is inactive for an extended period of time", 
+        "string": "Gone"
+    }, 
+    "CHAT_STATE_INACTVIE_STRING": {
+        "comment": "String to be displayed when a budy has become inactive", 
+        "string": "Inactive"
+    }, 
+    "CHAT_STATE_PAUSED_STRING": {
+        "comment": "String to be displayed when a buddy has stopped composing and text has been entered", 
+        "string": "Entered Text"
+    }, 
+    "CHAT_STRING": {
+        "comment": "Title for chat view", 
+        "string": "Chat"
+    }, 
+    "CLEAR_CHAT_HISTORY_STRING": {
+        "comment": "String shown in dialog for removing chat history", 
+        "string": "Clear Chat History"
+    }, 
+    "CONNECTED_STRING": {
+        "comment": "Whether or not account is logged in", 
+        "string": "Connected"
+    }, 
+    "CONNECT_FACEBOOK_STRING": {
+        "comment": "Button label for connecting a facebook account", 
+        "string": "Connect Facebook"
+    }, 
+    "CONTRIBUTE_TRANSLATION_STRING": {
+        "comment": "label for a link to contribute a new translation", 
+        "string": "Contribute a translation"
+    }, 
+    "CONVERSATIONS_STRING": {
+        "comment": "Title for the conversations tab", 
+        "string": "Conversations"
+    }, 
+    "CONVERSATION_NOT_SECURE_WARNING_STRING": {
+        "comment": "Warn user that the current chat is not secure", 
+        "string": "Warning: This chat is not encrypted"
+    }, 
+    "CONVERSATION_NO_LONGER_SECURE_STRING": {
+        "comment": "Warn user that the current chat is no longer secure", 
+        "string": "The conversation with %@ is no longer secure."
+    }, 
+    "CONVERSATION_SECURE_AND_VERIFIED_WARNING_STRING": {
+        "comment": "Warns user that the current chat is secure and verified", 
+        "string": "This chat is secured and verified"
+    }, 
+    "CONVERSATION_SECURE_WARNING_STRING": {
+        "comment": "Warns user that the current chat is secure", 
+        "string": "This chat is secured"
+    }, 
+    "CRITTERCISM_DESCRIPTION_STRING": {
+        "comment": "Description for crash reports settings switch", 
+        "string": "Automatically send anonymous crash logs (opt-in)"
+    }, 
+    "CRITTERCISM_TITLE_STRING": {
+        "comment": "Title for crash reports settings switch", 
+        "string": "Send Crash Reports"
+    }, 
+    "DEFAULT_BUDDY_GROUP_STRING": {
+        "comment": "Name for default buddy group", 
+        "string": "Buddies"
+    }, 
+    "DELETE_ACCOUNT_MESSAGE_STRING": {
+        "comment": "Ask user if they want to delete the stored account information", 
+        "string": "Permanently delete"
+    }, 
+    "DELETE_ACCOUNT_TITLE_STRING": {
+        "comment": "Ask user if they want to delete the stored account information", 
+        "string": "Delete Account?"
+    }, 
+    "DELETE_CONVERSATIONS_ON_DISCONNECT_DESCRIPTION_STRING": {
+        "comment": "Description for automatic conversation deletion", 
+        "string": "Delete chats on disconnect"
+    }, 
+    "DELETE_CONVERSATIONS_ON_DISCONNECT_TITLE_STRING": {
+        "comment": "Title for automatic conversation deletion setting", 
+        "string": "Auto-delete"
+    }, 
+    "DELIVERED_STRING": {
+        "comment": "Shows in the chat view when a message has been delivered", 
+        "string": "Deliverd"
+    }, 
+    "DISAGREE_STRING": {
+        "comment": "Disagree with EULA", 
+        "string": "Disagree"
+    }, 
+    "DISCONNECTED_MESSAGE_STRING": {
+        "comment": "Message shown when user is disconnected", 
+        "string": "You (%@) have disconnected."
+    }, 
+    "DISCONNECTED_TITLE_STRING": {
+        "comment": "Title of alert when user is disconnected from protocol", 
+        "string": "Disconnected"
+    }, 
+    "DISCONNECTION_WARNING_DESC_STRING": {
+        "comment": "Description for disconnection warning setting", 
+        "string": "1 Minute Alert Before Disconnection"
+    }, 
+    "DISCONNECTION_WARNING_STRING": {
+        "comment": "Warn user that conversation will be deleted after leaving it", 
+        "string": "When you leave this conversation it will be deleted forever."
+    }, 
+    "DISCONNECTION_WARNING_TITLE_STRING": {
+        "comment": "Title for setting about showing a warning before disconnection", 
+        "string": "Signout Warning"
+    }, 
+    "DISCONNECT_FACEBOOK_STRING": {
+        "comment": "button label for disconnecting facebook account", 
+        "string": "Disconnect Facebook"
+    }, 
+    "DOMAIN_STRING": {
+        "comment": "Label text for domain field on login scree", 
+        "string": "Domain"
+    }, 
+    "DONATE_MESSAGE_STRING": {
+        "comment": "Message shown when about to donate", 
+        "string": "Your donation will help fund the continued development of ChatSecure."
+    }, 
+    "DONATE_STRING": {
+        "comment": "Title for donation link", 
+        "string": "Donate"
+    }, 
+    "DONE_STRING": {
+        "comment": "Title for button to press when user is finished", 
+        "string": "Done"
+    }, 
+    "DO_NOT_DISTURB_STRING": {
+        "comment": "Default message when a user status is set to do not disturb", 
+        "string": "Do Not Disturb"
+    }, 
+    "EMAIL_STRING": {
+        "comment": "The string describing account name or email address for a buddy", 
+        "string": "Email"
+    }, 
+    "ERROR_STRING": {
+        "comment": "Title of error message popup box", 
+        "string": "Error!"
+    }, 
+    "EXPIRATION_STRING": {
+        "comment": "Message displayed in Notification Manager when session will expire in one minute", 
+        "string": "Background session will expire in one minute."
+    }, 
+    "EXTENDED_AWAY_STRING": {
+        "comment": "Default message when a user status is set to extended away", 
+        "string": "Extended Away"
+    }, 
+    "FACEBOOK_HELP_STRING": {
+        "comment": "Text that makes it clear which username to use", 
+        "string": "Your Facebook username is not the email address that you use to login to Facebook"
+    }, 
+    "FACEBOOK_STRING": {
+        "comment": "the name for facebook", 
+        "string": "Facebook"
+    }, 
+    "FONT_SIZE_DESCRIPTION_STRING": {
+        "comment": "description for what the font size setting affects", 
+        "string": "Size for font in chat view"
+    }, 
+    "FONT_SIZE_STRING": {
+        "comment": "Size for the font in the chat screen", 
+        "string": "Font Size"
+    }, 
+    "GOOGLE_TALK_EXAMPLE_STRING": {
+        "comment": "example of a google talk account", 
+        "string": "user@gmail.com"
+    }, 
+    "GOOGLE_TALK_STRING": {
+        "comment": "the name for google talk", 
+        "string": "Google Talk"
+    }, 
+    "GROUPS_STRING": {
+        "comment": "The string describing a buddy's groups ... plural", 
+        "string": "Groups"
+    }, 
+    "GROUP_STRING": {
+        "comment": "The string describing a buddy's group", 
+        "string": "Group"
+    }, 
+    "IGNORE_STRING": {
+        "comment": "Ignore an incoming message", 
+        "string": "Ignore"
+    }, 
+    "INCOMING_STATUS_MESSAGE": {
+        "comment": "prefix to show buddies status message inline on chatview", 
+        "string": "New Status Message: %@"
+    }, 
+    "INFO_STRING": {
+        "comment": "Short for information, button title to get more information", 
+        "string": "Info"
+    }, 
+    "INITIATE_ENCRYPTED_CHAT_STRING": {
+        "comment": "Shown when starting an encrypted chat session", 
+        "string": "Initiate Encrypted Chat"
+    }, 
+    "JABBER_STRING": {
+        "comment": "the name for jabber, also include (XMPP) at the end", 
+        "string": "Jabber (XMPP)"
+    }, 
+    "LANGUAGE_ALERT_MESSAGE_STRING": {
+        "comment": "Message alerting user that they need to return to the home screen and force close ChatSecure", 
+        "string": "In order to change langugages return to the home screen and remove ChatSecure from the recently used apps"
+    }, 
+    "LANGUAGE_ALERT_TITLE_STRING": {
+        "comment": "Stirng of title to alert user langague is change", 
+        "string": "Language Change"
+    }, 
+    "LANGUAGE_STRING": {
+        "comment": "string to bring up language selector", 
+        "string": "Language"
+    }, 
+    "LOGGING_IN_STRING": {
+        "comment": "shown during the login proceess", 
+        "string": "Logging in..."
+    }, 
+    "LOGIN_STRING": {
+        "comment": "log in to account", 
+        "string": "Log In"
+    }, 
+    "LOGIN_TO_STRING": {
+        "comment": "Label for button describing which protocol you're logging into, will be followed by a protocol such as XMPP or AIM during layout", 
+        "string": "Login to"
+    }, 
+    "LOGOUT_FROM_AIM_STRING": {
+        "comment": "Ask user if they want to logout of OSCAR", 
+        "string": "Logout from OSCAR?"
+    }, 
+    "LOGOUT_FROM_XMPP_STRING": {
+        "comment": "ask user if they want to log out of xmpp", 
+        "string": "Logout from XMPP?"
+    }, 
+    "LOGOUT_STRING": {
+        "comment": "log out from account", 
+        "string": "Log Out"
+    }, 
+    "MESSAGE_PLACEHOLDER_STRING": {
+        "comment": "just the word as a placeholder for the message text field\") ", 
+        "string": "Message"
+    }, 
+    "NAME_STRING": {
+        "comment": "The string describing a buddy's dispaly name", 
+        "string": "Name"
+    }, 
+    "NEW_ACCOUNT_STRING": {
+        "comment": "Title for New Account View", 
+        "string": "New Account"
+    }, 
+    "NEW_STRING": {
+        "comment": "For a new settings value", 
+        "string": "New"
+    }, 
+    "NOT_AVAILABLE_STRING": {
+        "comment": "Shown when a feature is not available, for example SMS", 
+        "string": "Not Available"
+    }, 
+    "NOT_VERIFIED_STRING": {
+        "comment": "Not Verfied or cancle verified", 
+        "string": "Not Verified"
+    }, 
+    "NO_ACCOUNT_SAVED_STRING": {
+        "comment": "Message infomring user that there are no accounts currently saved", 
+        "string": "No Saved Accounts"
+    }, 
+    "OFFLINE_MESSAGE_STRING": {
+        "comment": "Message shown inline for users that are offline", 
+        "string": "is now offline"
+    }, 
+    "OFFLINE_STRING": {
+        "comment": "Label in buddylist for users that are offline", 
+        "string": "Offline"
+    }, 
+    "OK_STRING": {
+        "comment": "Accept the dialog", 
+        "string": "OK"
+    }, 
+    "OLD_STRING": {
+        "comment": "For an old settings value", 
+        "string": "Old"
+    }, 
+    "OPEN_IN_SAFARI_STRING": {
+        "comment": "Shown when trying to open a link, asking if they want to switch to Safari to view it", 
+        "string": "Open in Safari"
+    }, 
+    "OPTIONAL_STRING": {
+        "comment": "Hint text for domain field telling user this field is not required", 
+        "string": "Optional"
+    }, 
+    "OSCAR_FAIL_STRING": {
+        "comment": "Authentication failed, tell user to try again", 
+        "string": "Failed to start authenticating. Please try again."
+    }, 
+    "OTHER_STRING": {
+        "comment": "Title for other miscellaneous settings group", 
+        "string": "Other"
+    }, 
+    "PASSWORD_STRING": {
+        "comment": "Label text for password field on login screen", 
+        "string": "Password"
+    }, 
+    "PENDING_APPROVAL_STRING": {
+        "comment": "String for xmpp buddies when adding buddy is pedning", 
+        "string": "Pending Approval"
+    }, 
+    "PORT_STRING": {
+        "comment": "Label for port number field for connecting to service", 
+        "string": "Port"
+    }, 
+    "PROJECT_HOMEPAGE_STRING": {
+        "comment": "label for link to ChatSecure project website", 
+        "string": "Project Homepage"
+    }, 
+    "QR_CODE_INSTRUCTIONS_STRING": {
+        "comment": "Instructions label text underneath QR code", 
+        "string": "This QR Code contains a link to http://omniqrcode.com/q/chatsecure and will redirect to the App Store."
+    }, 
+    "READ_STRING": {
+        "comment": "Title for action button on alert dialog, used as a verb in the present tense", 
+        "string": "Read"
+    }, 
+    "RECENT_STRING": {
+        "comment": "Title for header of Buddy list view with Recent Buddies", 
+        "string": "Recent"
+    }, 
+    "REMEMBER_PASSWORD_STRING": {
+        "comment": "label for switch for whether or not we should save their password between launches", 
+        "string": "Remember password"
+    }, 
+    "REMEMBER_USERNAME_STRING": {
+        "comment": "label for switch for whether or not we should save their username between launches", 
+        "string": "Remember username"
+    }, 
+    "REMOVE_STRING": {
+        "comment": "The String for a button to remove a buddy from the buddy list", 
+        "string": "Remove"
+    }, 
+    "REPLY_STRING": {
+        "comment": "Reply to an incoming message", 
+        "string": "Reply"
+    }, 
+    "REQUIRED_STRING": {
+        "comment": "String to let user know a certain field like a password is required to create an account", 
+        "string": "Required"
+    }, 
+    "REQUIRE_TLS_STRING": {
+        "comment": "Setting name for requiring a TLS connection", 
+        "string": "Require TLS"
+    }, 
+    "SAVE_STRING": {
+        "comment": "Title for button for saving a setting", 
+        "string": "Save"
+    }, 
+    "SECURE_CONVERSATION_STRING": {
+        "comment": "Inform user that they must be secure their conversation before doing that action", 
+        "string": "You must be in a secure conversation first."
+    }, 
+    "SECURITY_WARNING_DESCRIPTION_STRING": {
+        "comment": "Cell description text that warns users that enabling that option may reduce their security.", 
+        "string": "Warning: Use with caution! This may reduce your security."
+    }, 
+    "SECURITY_WARNING_STRING": {
+        "comment": "Title of alert box warning about security issues", 
+        "string": "Security Warning"
+    }, 
+    "SELF_SIGNED_SSL_STRING": {
+        "comment": "string for settings to allow self signed ssl stirng", 
+        "string": "Self Signed SSL"
+    }, 
+    "SEND_DELIVERY_RECEIPT_STRING": {
+        "comment": "String in login settings asking to send delivery receipts", 
+        "string": "Send Delivery Receipts"
+    }, 
+    "SEND_FEEDBACK_STRING": {
+        "comment": "String on button to email feedback", 
+        "string": "Send Feedback"
+    }, 
+    "SEND_STRING": {
+        "comment": "For sending a message", 
+        "string": "Send"
+    }, 
+    "SEND_TYPING_NOTIFICATION_STRING": {
+        "comment": "Stirng in login settings asking to send typing notification", 
+        "string": "Send Typing Notification"
+    }, 
+    "SETTINGS_STRING": {
+        "comment": "Title for the Settings screen", 
+        "string": "Settings"
+    }, 
+    "SHARE_MESSAGE_STRING": {
+        "comment": "Body of SMS or email when sharing a link to the app", 
+        "string": "Chat with me securely"
+    }, 
+    "SHARE_STRING": {
+        "comment": "Title for sharing a link to the app", 
+        "string": "Share"
+    }, 
+    "SOURCE_STRING": {
+        "comment": "let users know source is on Github", 
+        "string": "Check out the source here on Github"
+    }, 
+    "SSL_MISMATCH_STRING": {
+        "comment": "stirng for settings to allow ssl mismatch", 
+        "string": "SSL Hostname Mismatch"
+    }, 
+    "THEIR_FINGERPRINT_STRING": {
+        "comment": "the alleged fingerprint of their other person", 
+        "string": "Purported fingerprint for"
+    }, 
+    "USERNAME_STRING": {
+        "comment": "Label text for username field on login screen", 
+        "string": "Username"
+    }, 
+    "USER_PASS_BLANK_STRING": {
+        "comment": "error message shown when user doesnt fill in a username or password", 
+        "string": "You must enter a username and a password to login."
+    }, 
+    "VERIFIED_STRING": {
+        "comment": "Shown when verifying fingerprints", 
+        "string": "Verified"
+    }, 
+    "VERIFY_FINGERPRINT_STRING": {
+        "comment": "Title of the dialog for fingerprint verification", 
+        "string": "Verify Fingerprint"
+    }, 
+    "VERIFY_LATER_STRING": {
+        "comment": "Shown when verifying fingerprings", 
+        "string": "Verify Later"
+    }, 
+    "VERIFY_STRING": {
+        "comment": "Shown when verifying fingerprints", 
+        "string": "Verify"
+    }, 
+    "VERSION_STRING": {
+        "comment": "when displaying version numbers such as 1.0.0", 
+        "string": "Version"
+    }, 
+    "XMPP_FAIL_STRING": {
+        "comment": "Message when cannot connect to XMPP server", 
+        "string": "Failed to connect to XMPP server. Please check your login credentials and internet connection and try again."
+    }, 
+    "XMPP_PORT_FAIL_STRING": {
+        "comment": "Message when port is changed but domain not set", 
+        "string": "Domain needs to be set manually when specifying a custom port"
+    }, 
+    "YOUR_FINGERPRINT_STRING": {
+        "comment": "your fingerprint", 
+        "string": "Fingerprint for you"
+    }, 
+    "YOUR_STATUS_MESSAGE": {
+        "comment": "prefix to show your status message inline on chatview", 
+        "string": "You are: %@"
+    }
+}

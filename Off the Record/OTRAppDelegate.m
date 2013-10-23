@@ -112,8 +112,8 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
     self.buddyListViewController = [[OTRBuddyListViewController alloc] init];
-    //OTRChatViewController *chatViewController = [[OTRDemoChatViewController alloc] init];
-    OTRChatViewController *chatViewController = [[OTRChatViewController alloc] init];
+    OTRChatViewController *chatViewController = [[OTRDemoChatViewController alloc] init];
+    //OTRChatViewController *chatViewController = [[OTRChatViewController alloc] init];
     buddyListViewController.chatViewController = chatViewController;
     self.settingsViewController = [[OTRSettingsViewController alloc] init];
 
@@ -136,7 +136,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     application.applicationIconBadgeNumber = 0;
   
     [Appirater setAppId:@"464200063"];
-    [Appirater appLaunched:YES];
+    //[Appirater appLaunched:YES];
     [Appirater setOpenInAppStore:NO];
     
     
