@@ -214,6 +214,7 @@
 		63BFDB6D16E83A3F00C608D6 /* OTRSafariActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BFDB6C16E83A3F00C608D6 /* OTRSafariActionSheet.m */; };
 		63CC9F1C16D2D18100BDA7D1 /* DAKeyboardControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CC9F1B16D2D18100BDA7D1 /* DAKeyboardControl.m */; };
 		63CC9F2116D2E93500BDA7D1 /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CC9F2016D2E93500BDA7D1 /* TTTAttributedLabel.m */; };
+		63D0E4791819D41E003ACA13 /* OTRCapabilitiesInMemoryCoreDataStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D0E4781819D41E003ACA13 /* OTRCapabilitiesInMemoryCoreDataStorage.m */; };
 		63D511B017EBA122000D927B /* OTRFacebookSessionCachingStrategy.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D511AF17EBA122000D927B /* OTRFacebookSessionCachingStrategy.m */; };
 		63D511C117EBDD31000D927B /* OTRAppVersionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D511C017EBDD31000D927B /* OTRAppVersionManager.m */; };
 		63E5E7E816D1D5BC006E2B01 /* MagicalImportFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E5E7B016D1D5BC006E2B01 /* MagicalImportFunctions.m */; };
@@ -1016,6 +1017,8 @@
 		63CC9F1B16D2D18100BDA7D1 /* DAKeyboardControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DAKeyboardControl.m; sourceTree = "<group>"; };
 		63CC9F1F16D2E93500BDA7D1 /* TTTAttributedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTAttributedLabel.h; sourceTree = "<group>"; };
 		63CC9F2016D2E93500BDA7D1 /* TTTAttributedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTAttributedLabel.m; sourceTree = "<group>"; };
+		63D0E4771819D41E003ACA13 /* OTRCapabilitiesInMemoryCoreDataStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRCapabilitiesInMemoryCoreDataStorage.h; sourceTree = "<group>"; };
+		63D0E4781819D41E003ACA13 /* OTRCapabilitiesInMemoryCoreDataStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRCapabilitiesInMemoryCoreDataStorage.m; sourceTree = "<group>"; };
 		63D511AE17EBA122000D927B /* OTRFacebookSessionCachingStrategy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRFacebookSessionCachingStrategy.h; sourceTree = "<group>"; };
 		63D511AF17EBA122000D927B /* OTRFacebookSessionCachingStrategy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRFacebookSessionCachingStrategy.m; sourceTree = "<group>"; };
 		63D511BF17EBDD31000D927B /* OTRAppVersionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAppVersionManager.h; sourceTree = "<group>"; };
@@ -1588,6 +1591,8 @@
 			children = (
 				6375D2511811FCD2006CDA8A /* OTRRosterStorage.h */,
 				6375D2521811FCD2006CDA8A /* OTRRosterStorage.m */,
+				63D0E4771819D41E003ACA13 /* OTRCapabilitiesInMemoryCoreDataStorage.h */,
+				63D0E4781819D41E003ACA13 /* OTRCapabilitiesInMemoryCoreDataStorage.m */,
 			);
 			name = "XMPP - Storage";
 			sourceTree = "<group>";
@@ -3624,7 +3629,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd \"Off the Record\"";
+			shellScript = "cd \"Off the Record\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -3955,6 +3960,7 @@
 				63483FE61752CED100779257 /* GCDMulticastDelegate.m in Sources */,
 				63483FE81752CED100779257 /* RFImageToDataTransformer.m in Sources */,
 				63483FE91752CED100779257 /* XMPPIDTracker.m in Sources */,
+				63D0E4791819D41E003ACA13 /* OTRCapabilitiesInMemoryCoreDataStorage.m in Sources */,
 				63483FEA1752CED100779257 /* XMPPSRVResolver.m in Sources */,
 				63483FEB1752CED100779257 /* GCDAsyncSocket.m in Sources */,
 				63483FEC1752CED100779257 /* DDAbstractDatabaseLogger.m in Sources */,

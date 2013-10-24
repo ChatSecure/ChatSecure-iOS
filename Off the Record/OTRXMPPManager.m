@@ -35,6 +35,7 @@
 #import "Strings.h"
 #import "OTRXMPPManagedPresenceSubscriptionRequest.h"
 #import "OTRRosterStorage.h"
+#import "OTRCapabilitiesInMemoryCoreDataStorage.h"
 
 #import "DDLog.h"
 #import "DDTTYLogger.h"
@@ -210,7 +211,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	// The XMPPCapabilitiesCoreDataStorage is an ideal solution.
 	// It can also be shared amongst multiple streams to further reduce hash lookups.
 	
-	xmppCapabilitiesStorage = [XMPPCapabilitiesCoreDataStorage sharedInstance];
+	xmppCapabilitiesStorage = [OTRCapabilitiesInMemoryCoreDataStorage sharedInstance];
     xmppCapabilities = [[XMPPCapabilities alloc] initWithCapabilitiesStorage:xmppCapabilitiesStorage];
     
     xmppCapabilities.autoFetchHashedCapabilities = YES;

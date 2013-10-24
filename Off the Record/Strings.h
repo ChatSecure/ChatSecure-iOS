@@ -56,7 +56,7 @@
 #define OPEN_IN_SAFARI_STRING [OTRLanguageManager translatedString: @"Open in Safari"]
 #define AWAY_STRING [OTRLanguageManager translatedString: @"Away"]
 #define DONATE_MESSAGE_STRING [OTRLanguageManager translatedString: @"Your donation will help fund the continued development of ChatSecure."]
-#define LANGUAGE_ALERT_MESSAGE_STRING [OTRLanguageManager translatedString: @"In order to change langugages return to the home screen and remove ChatSecure from the recently used apps"]
+#define LANGUAGE_ALERT_MESSAGE_STRING [OTRLanguageManager translatedString: @"In order to change languages return to the home screen and remove ChatSecure from the recently used apps"]
 #define SOURCE_STRING [OTRLanguageManager translatedString: @"Check out the source here on Github"]
 #define AIM_STRING [OTRLanguageManager translatedString: @"OSCAR Instant Messenger"]
 #define DISCONNECTION_WARNING_DESC_STRING [OTRLanguageManager translatedString: @"1 Minute Alert Before Disconnection"]

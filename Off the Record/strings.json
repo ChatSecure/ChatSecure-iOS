@@ -301,7 +301,7 @@
     }, 
     "LANGUAGE_ALERT_MESSAGE_STRING": {
         "comment": "Message alerting user that they need to return to the home screen and force close ChatSecure", 
-        "string": "In order to change langugages return to the home screen and remove ChatSecure from the recently used apps"
+        "string": "In order to change languages return to the home screen and remove ChatSecure from the recently used apps"
     }, 
     "LANGUAGE_ALERT_TITLE_STRING": {
         "comment": "Stirng of title to alert user langague is change", 
