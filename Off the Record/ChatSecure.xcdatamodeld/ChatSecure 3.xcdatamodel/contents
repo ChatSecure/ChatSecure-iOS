@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="3400" systemVersion="13A603" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="OTRManagedAccount" representedClassName="OTRManagedAccount" syncable="YES">
+        <attribute name="isConnected" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="protocol" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="rememberPassword" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="uniqueIdentifier" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="username" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="buddies" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="OTRManagedBuddy" inverseName="account" inverseEntity="OTRManagedBuddy" syncable="YES"/>
+    </entity>
+    <entity name="OTRManagedBuddy" representedClassName="OTRManagedBuddy" syncable="YES">
+        <attribute name="accountName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="chatState" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="composingMessageString" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="currentStatus" optional="YES" attributeType="Integer 16" defaultValueString="4" syncable="YES"/>
+        <attribute name="displayName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lastMessageDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="lastMessageDisconnected" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="lastSentChatState" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="photo" optional="YES" attributeType="Transformable" valueTransformerName="" syncable="YES"/>
+        <relationship name="account" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="OTRManagedAccount" inverseName="buddies" inverseEntity="OTRManagedAccount" syncable="YES"/>
+        <relationship name="encryptionStatusMessages" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="OTRManagedEncryptionStatusMessage" inverseName="encryptionstatusbuddy" inverseEntity="OTRManagedEncryptionStatusMessage" syncable="YES"/>
+        <relationship name="groups" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="OTRManagedGroup" inverseName="buddies" inverseEntity="OTRManagedGroup" syncable="YES"/>
+        <relationship name="messages" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="OTRManagedMessage" inverseName="messagebuddy" inverseEntity="OTRManagedMessage" syncable="YES"/>
+        <relationship name="messagesandstatuses" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="OTRManagedMessageAndStatus" inverseName="buddy" inverseEntity="OTRManagedMessageAndStatus" syncable="YES"/>
+        <relationship name="statuses" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="OTRManagedStatus" inverseName="statusbuddy" inverseEntity="OTRManagedStatus" syncable="YES"/>
+    </entity>
+    <entity name="OTRManagedEncryptionStatusMessage" representedClassName="OTRManagedEncryptionStatusMessage" parentEntity="OTRManagedMessageAndStatus" syncable="YES">
+        <attribute name="status" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <relationship name="encryptionstatusbuddy" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="OTRManagedBuddy" inverseName="encryptionStatusMessages" inverseEntity="OTRManagedBuddy" syncable="YES"/>
+    </entity>
+    <entity name="OTRManagedFacebookAccount" representedClassName="OTRManagedFacebookAccount" parentEntity="OTRManagedOAuthAccount" syncable="YES"/>
+    <entity name="OTRManagedGoogleAccount" representedClassName="OTRManagedGoogleAccount" parentEntity="OTRManagedOAuthAccount" syncable="YES"/>
+    <entity name="OTRManagedGroup" representedClassName="OTRManagedGroup" syncable="YES">
+        <attribute name="name" optional="YES" attributeType="String" defaultValueString="Buddies" syncable="YES"/>
+        <relationship name="buddies" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="OTRManagedBuddy" inverseName="groups" inverseEntity="OTRManagedBuddy" syncable="YES"/>
+    </entity>
+    <entity name="OTRManagedMessage" representedClassName="OTRManagedMessage" parentEntity="OTRManagedMessageAndStatus" syncable="YES">
+        <attribute name="isDelivered" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="isRead" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="uniqueID" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <relationship name="messagebuddy" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="OTRManagedBuddy" inverseName="messages" inverseEntity="OTRManagedBuddy" syncable="YES"/>
+    </entity>
+    <entity name="OTRManagedMessageAndStatus" representedClassName="OTRManagedMessageAndStatus" syncable="YES">
+        <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="isEncrypted" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="isIncoming" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="message" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="buddy" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="OTRManagedBuddy" inverseName="messagesandstatuses" inverseEntity="OTRManagedBuddy" syncable="YES"/>
+    </entity>
+    <entity name="OTRManagedOAuthAccount" representedClassName="OTRManagedOAuthAccount" parentEntity="OTRManagedXMPPAccount" syncable="YES"/>
+    <entity name="OTRManagedOscarAccount" representedClassName="OTRManagedOscarAccount" parentEntity="OTRManagedAccount" syncable="YES"/>
+    <entity name="OTRManagedStatus" representedClassName="OTRManagedStatus" parentEntity="OTRManagedMessageAndStatus" syncable="YES">
+        <attribute name="status" optional="YES" attributeType="Integer 16" defaultValueString="4" syncable="YES"/>
+        <relationship name="statusbuddy" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="OTRManagedBuddy" inverseName="statuses" inverseEntity="OTRManagedBuddy" syncable="YES"/>
+    </entity>
+    <entity name="OTRManagedXMPPAccount" representedClassName="OTRManagedXMPPAccount" parentEntity="OTRManagedAccount" syncable="YES">
+        <attribute name="allowPlainTextAuthentication" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="allowSelfSignedSSL" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="allowSSLHostNameMismatch" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="domain" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="port" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="requireTLS" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="sendDeliveryReceipts" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="sendTypingNotifications" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <relationship name="subscriptionRequests" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="OTRXMPPManagedPresenceSubscriptionRequest" inverseName="xmppAccount" inverseEntity="OTRXMPPManagedPresenceSubscriptionRequest" syncable="YES"/>
+    </entity>
+    <entity name="OTRvCard" representedClassName="OTRvCard" syncable="YES">
+        <attribute name="jidString" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lastUpdated" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="photoHash" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="waitingForFetch" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <relationship name="vCardAvatarRelationship" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="OTRvCardAvatar" inverseName="vCard" inverseEntity="OTRvCardAvatar" syncable="YES"/>
+        <relationship name="vCardTempRelationship" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="OTRvCardTemp" inverseName="vCard" inverseEntity="OTRvCardTemp" syncable="YES"/>
+    </entity>
+    <entity name="OTRvCardAvatar" representedClassName="OTRvCardAvatar" syncable="YES">
+        <attribute name="photoData" optional="YES" attributeType="Binary" syncable="YES"/>
+        <relationship name="vCard" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="OTRvCard" inverseName="vCardAvatarRelationship" inverseEntity="OTRvCard" syncable="YES"/>
+    </entity>
+    <entity name="OTRvCardTemp" representedClassName="OTRvCardTemp" syncable="YES">
+        <attribute name="vCardTemp" optional="YES" attributeType="Transformable" syncable="YES"/>
+        <relationship name="vCard" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="OTRvCard" inverseName="vCardTempRelationship" inverseEntity="OTRvCard" syncable="YES"/>
+    </entity>
+    <entity name="OTRXMPPManagedPresenceSubscriptionRequest" representedClassName="OTRXMPPManagedPresenceSubscriptionRequest" syncable="YES">
+        <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="displayName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="jid" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="xmppAccount" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="OTRManagedXMPPAccount" inverseName="subscriptionRequests" inverseEntity="OTRManagedXMPPAccount" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="OTRManagedAccount" positionX="331" positionY="162" width="128" height="133"/>
+        <element name="OTRManagedBuddy" positionX="97" positionY="9" width="128" height="268"/>
+        <element name="OTRManagedEncryptionStatusMessage" positionX="-414" positionY="252" width="243" height="73"/>
+        <element name="OTRManagedFacebookAccount" positionX="754" positionY="459" width="128" height="45"/>
+        <element name="OTRManagedGoogleAccount" positionX="619" positionY="459" width="128" height="45"/>
+        <element name="OTRManagedGroup" positionX="313" positionY="-19" width="128" height="73"/>
+        <element name="OTRManagedMessage" positionX="-108" positionY="266" width="128" height="103"/>
+        <element name="OTRManagedMessageAndStatus" positionX="-153" positionY="9" width="189" height="118"/>
+        <element name="OTRManagedOAuthAccount" positionX="666" positionY="353" width="128" height="45"/>
+        <element name="OTRManagedOscarAccount" positionX="504" positionY="74" width="128" height="43"/>
+        <element name="OTRManagedStatus" positionX="-290" positionY="161" width="128" height="73"/>
+        <element name="OTRManagedXMPPAccount" positionX="520" positionY="198" width="128" height="178"/>
+        <element name="OTRvCard" positionX="106" positionY="320" width="128" height="133"/>
+        <element name="OTRvCardAvatar" positionX="-63" positionY="423" width="128" height="73"/>
+        <element name="OTRvCardTemp" positionX="268" positionY="450" width="128" height="73"/>
+        <element name="OTRXMPPManagedPresenceSubscriptionRequest" positionX="324" positionY="320" width="153" height="103"/>
+    </elements>
+</model>

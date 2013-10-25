@@ -215,6 +215,13 @@
 		63CC9F1C16D2D18100BDA7D1 /* DAKeyboardControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CC9F1B16D2D18100BDA7D1 /* DAKeyboardControl.m */; };
 		63CC9F2116D2E93500BDA7D1 /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CC9F2016D2E93500BDA7D1 /* TTTAttributedLabel.m */; };
 		63D0E4791819D41E003ACA13 /* OTRCapabilitiesInMemoryCoreDataStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D0E4781819D41E003ACA13 /* OTRCapabilitiesInMemoryCoreDataStorage.m */; };
+		63D0E47C1819D71A003ACA13 /* OTRvCardCoreDataStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D0E47B1819D71A003ACA13 /* OTRvCardCoreDataStorage.m */; };
+		63D0E4841819DEC6003ACA13 /* _OTRvCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D0E47F1819DEC6003ACA13 /* _OTRvCard.m */; };
+		63D0E4851819DEC6003ACA13 /* _OTRvCardAvatar.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D0E4811819DEC6003ACA13 /* _OTRvCardAvatar.m */; };
+		63D0E4861819DEC6003ACA13 /* _OTRvCardTemp.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D0E4831819DEC6003ACA13 /* _OTRvCardTemp.m */; };
+		63D0E48D1819DEF1003ACA13 /* OTRvCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D0E4881819DEF1003ACA13 /* OTRvCard.m */; };
+		63D0E48E1819DEF1003ACA13 /* OTRvCardAvatar.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D0E48A1819DEF1003ACA13 /* OTRvCardAvatar.m */; };
+		63D0E48F1819DEF1003ACA13 /* OTRvCardTemp.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D0E48C1819DEF1003ACA13 /* OTRvCardTemp.m */; };
 		63D511B017EBA122000D927B /* OTRFacebookSessionCachingStrategy.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D511AF17EBA122000D927B /* OTRFacebookSessionCachingStrategy.m */; };
 		63D511C117EBDD31000D927B /* OTRAppVersionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D511C017EBDD31000D927B /* OTRAppVersionManager.m */; };
 		63E5E7E816D1D5BC006E2B01 /* MagicalImportFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E5E7B016D1D5BC006E2B01 /* MagicalImportFunctions.m */; };
@@ -1019,6 +1026,21 @@
 		63CC9F2016D2E93500BDA7D1 /* TTTAttributedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTAttributedLabel.m; sourceTree = "<group>"; };
 		63D0E4771819D41E003ACA13 /* OTRCapabilitiesInMemoryCoreDataStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRCapabilitiesInMemoryCoreDataStorage.h; sourceTree = "<group>"; };
 		63D0E4781819D41E003ACA13 /* OTRCapabilitiesInMemoryCoreDataStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRCapabilitiesInMemoryCoreDataStorage.m; sourceTree = "<group>"; };
+		63D0E47A1819D71A003ACA13 /* OTRvCardCoreDataStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRvCardCoreDataStorage.h; sourceTree = "<group>"; };
+		63D0E47B1819D71A003ACA13 /* OTRvCardCoreDataStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRvCardCoreDataStorage.m; sourceTree = "<group>"; };
+		63D0E47D1819D962003ACA13 /* ChatSecure 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ChatSecure 3.xcdatamodel"; sourceTree = "<group>"; };
+		63D0E47E1819DEC6003ACA13 /* _OTRvCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _OTRvCard.h; sourceTree = "<group>"; };
+		63D0E47F1819DEC6003ACA13 /* _OTRvCard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _OTRvCard.m; sourceTree = "<group>"; };
+		63D0E4801819DEC6003ACA13 /* _OTRvCardAvatar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _OTRvCardAvatar.h; sourceTree = "<group>"; };
+		63D0E4811819DEC6003ACA13 /* _OTRvCardAvatar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _OTRvCardAvatar.m; sourceTree = "<group>"; };
+		63D0E4821819DEC6003ACA13 /* _OTRvCardTemp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _OTRvCardTemp.h; sourceTree = "<group>"; };
+		63D0E4831819DEC6003ACA13 /* _OTRvCardTemp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _OTRvCardTemp.m; sourceTree = "<group>"; };
+		63D0E4871819DEF1003ACA13 /* OTRvCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRvCard.h; sourceTree = "<group>"; };
+		63D0E4881819DEF1003ACA13 /* OTRvCard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRvCard.m; sourceTree = "<group>"; };
+		63D0E4891819DEF1003ACA13 /* OTRvCardAvatar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRvCardAvatar.h; sourceTree = "<group>"; };
+		63D0E48A1819DEF1003ACA13 /* OTRvCardAvatar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRvCardAvatar.m; sourceTree = "<group>"; };
+		63D0E48B1819DEF1003ACA13 /* OTRvCardTemp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRvCardTemp.h; sourceTree = "<group>"; };
+		63D0E48C1819DEF1003ACA13 /* OTRvCardTemp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRvCardTemp.m; sourceTree = "<group>"; };
 		63D511AE17EBA122000D927B /* OTRFacebookSessionCachingStrategy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRFacebookSessionCachingStrategy.h; sourceTree = "<group>"; };
 		63D511AF17EBA122000D927B /* OTRFacebookSessionCachingStrategy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRFacebookSessionCachingStrategy.m; sourceTree = "<group>"; };
 		63D511BF17EBDD31000D927B /* OTRAppVersionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAppVersionManager.h; sourceTree = "<group>"; };
@@ -1593,6 +1615,8 @@
 				6375D2521811FCD2006CDA8A /* OTRRosterStorage.m */,
 				63D0E4771819D41E003ACA13 /* OTRCapabilitiesInMemoryCoreDataStorage.h */,
 				63D0E4781819D41E003ACA13 /* OTRCapabilitiesInMemoryCoreDataStorage.m */,
+				63D0E47A1819D71A003ACA13 /* OTRvCardCoreDataStorage.h */,
+				63D0E47B1819D71A003ACA13 /* OTRvCardCoreDataStorage.m */,
 			);
 			name = "XMPP - Storage";
 			sourceTree = "<group>";
@@ -2416,6 +2440,19 @@
 			path = Submodules/TTTAttributedLabel/TTTAttributedLabel;
 			sourceTree = "<group>";
 		};
+		63D0E4901819DEF7003ACA13 /* vCard */ = {
+			isa = PBXGroup;
+			children = (
+				63D0E4871819DEF1003ACA13 /* OTRvCard.h */,
+				63D0E4881819DEF1003ACA13 /* OTRvCard.m */,
+				63D0E4891819DEF1003ACA13 /* OTRvCardAvatar.h */,
+				63D0E48A1819DEF1003ACA13 /* OTRvCardAvatar.m */,
+				63D0E48B1819DEF1003ACA13 /* OTRvCardTemp.h */,
+				63D0E48C1819DEF1003ACA13 /* OTRvCardTemp.m */,
+			);
+			name = vCard;
+			sourceTree = "<group>";
+		};
 		63E5E7AC16D1D5BC006E2B01 /* MagicalRecord */ = {
 			isa = PBXGroup;
 			children = (
@@ -2547,6 +2584,12 @@
 				63E72B9A16CB11E800B6F389 /* _OTRManagedOscarAccount.m */,
 				63E72B9B16CB11E800B6F389 /* _OTRManagedXMPPAccount.h */,
 				63E72B9C16CB11E800B6F389 /* _OTRManagedXMPPAccount.m */,
+				63D0E47E1819DEC6003ACA13 /* _OTRvCard.h */,
+				63D0E47F1819DEC6003ACA13 /* _OTRvCard.m */,
+				63D0E4801819DEC6003ACA13 /* _OTRvCardAvatar.h */,
+				63D0E4811819DEC6003ACA13 /* _OTRvCardAvatar.m */,
+				63D0E4821819DEC6003ACA13 /* _OTRvCardTemp.h */,
+				63D0E4831819DEC6003ACA13 /* _OTRvCardTemp.m */,
 			);
 			name = mogen;
 			sourceTree = "<group>";
@@ -3030,6 +3073,7 @@
 				630FF21616E0269000CC20AD /* OTRManagedGroup.m */,
 				6321870A16E6C23200CB4D3C /* OTRXMPPManagedPresenceSubscriptionRequest.h */,
 				6321870B16E6C23200CB4D3C /* OTRXMPPManagedPresenceSubscriptionRequest.m */,
+				63D0E4901819DEF7003ACA13 /* vCard */,
 				D9D3717F169D40600086F358 /* Managers */,
 				D96495CC15363C1F009A8C33 /* Settings */,
 				634CBFDB159CEAC70046FB3B /* OTRConstants.h */,
@@ -3629,7 +3673,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd \"Off the Record\"\n";
+			shellScript = "cd \"Off the Record\"\n/usr/local/bin/mogenerator --template-var arc=true -m \"ChatSecure.xcdatamodeld/ChatSecure 3.xcdatamodel/\"";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -3675,6 +3719,7 @@
 				6334063C1652C33300A54C52 /* OTRListSettingViewController.m in Sources */,
 				633406411652D50F00A54C52 /* OTRLanguageManager.m in Sources */,
 				633406451652E44600A54C52 /* OTRLanguageSetting.m in Sources */,
+				63D0E4851819DEC6003ACA13 /* _OTRvCardAvatar.m in Sources */,
 				6336CDE0165C4E9E00C8CBA8 /* OTRLanguageListSettingViewController.m in Sources */,
 				D9CEED891684237700B236B5 /* Appirater.m in Sources */,
 				D9CEEE60168423CA00B236B5 /* AIMBArtDownloadReply.m in Sources */,
@@ -3743,6 +3788,7 @@
 				D9CEEE9F168423CA00B236B5 /* FTDelPermit.m in Sources */,
 				D9CEEEA0168423CA00B236B5 /* FTRemoveBuddy.m in Sources */,
 				D9CEEEA1168423CA00B236B5 /* FTRemoveGroup.m in Sources */,
+				63D0E48D1819DEF1003ACA13 /* OTRvCard.m in Sources */,
 				D9CEEEA2168423CA00B236B5 /* FTSetBArtItem.m in Sources */,
 				D9ADF9E518109D420096B07A /* OTRDatabaseManager.m in Sources */,
 				D9CEEEA3168423CA00B236B5 /* FTSetPDMode.m in Sources */,
@@ -3794,6 +3840,7 @@
 				63E5E7F516D1D5BC006E2B01 /* NSManagedObjectContext+MagicalRecord.m in Sources */,
 				63E5E7F616D1D5BC006E2B01 /* NSManagedObjectContext+MagicalSaves.m in Sources */,
 				63E5E7F716D1D5BC006E2B01 /* NSManagedObjectContext+MagicalThreading.m in Sources */,
+				63D0E48F1819DEF1003ACA13 /* OTRvCardTemp.m in Sources */,
 				63E5E7F816D1D5BC006E2B01 /* NSManagedObjectModel+MagicalRecord.m in Sources */,
 				63E5E7F916D1D5BC006E2B01 /* NSPersistentStore+MagicalRecord.m in Sources */,
 				63E5E7FA16D1D5BC006E2B01 /* NSPersistentStoreCoordinator+MagicalRecord.m in Sources */,
@@ -3815,12 +3862,14 @@
 				63E5E80B16D1D7D3006E2B01 /* _OTRManagedAccount.m in Sources */,
 				63E5E80C16D1D7D3006E2B01 /* _OTRManagedBuddy.m in Sources */,
 				63E5E80D16D1D7D3006E2B01 /* _OTRManagedMessage.m in Sources */,
+				63D0E48E1819DEF1003ACA13 /* OTRvCardAvatar.m in Sources */,
 				63E5E80E16D1D7D3006E2B01 /* _OTRManagedOscarAccount.m in Sources */,
 				63E5E80F16D1D7D3006E2B01 /* _OTRManagedXMPPAccount.m in Sources */,
 				63E5E81216D1D860006E2B01 /* OTRConvertAccount.m in Sources */,
 				63E5E81316D1D888006E2B01 /* OTROldBuddy.m in Sources */,
 				63E5E81416D1D888006E2B01 /* OTROldMessage.m in Sources */,
 				63E5E81516D1D888006E2B01 /* OTROldAccount.m in Sources */,
+				63D0E4861819DEC6003ACA13 /* _OTRvCardTemp.m in Sources */,
 				63E5E81616D1D888006E2B01 /* OTROldOscarAccount.m in Sources */,
 				63E5E81716D1D888006E2B01 /* OTROldXMPPAccount.m in Sources */,
 				63E5E81E16D1DE66006E2B01 /* ChatSecure.xcdatamodeld in Sources */,
@@ -3891,6 +3940,7 @@
 				63483FA41752CED100779257 /* XMPPLastActivity.m in Sources */,
 				63483FA51752CED100779257 /* XMPPPrivacy.m in Sources */,
 				63483FA61752CED100779257 /* XMPPRoom.xcdatamodeld in Sources */,
+				63D0E47C1819D71A003ACA13 /* OTRvCardCoreDataStorage.m in Sources */,
 				63483FA71752CED100779257 /* XMPPRoomCoreDataStorage.m in Sources */,
 				63483FA81752CED100779257 /* XMPPRoomMessageCoreDataStorageObject.m in Sources */,
 				63483FA91752CED100779257 /* XMPPRoomOccupantCoreDataStorageObject.m in Sources */,
@@ -3925,6 +3975,7 @@
 				63483FC61752CED100779257 /* XMPPIQ+XEP_0066.m in Sources */,
 				63483FC71752CED100779257 /* XMPPMessage+XEP_0066.m in Sources */,
 				63483FC81752CED100779257 /* NSDate+XMPPDateTimeProfiles.m in Sources */,
+				63D0E4841819DEC6003ACA13 /* _OTRvCard.m in Sources */,
 				63483FC91752CED100779257 /* XMPPDateTimeProfiles.m in Sources */,
 				63483FCA1752CED100779257 /* XMPPMessage+XEP_0085.m in Sources */,
 				63483FCB1752CED100779257 /* XMPPTransports.m in Sources */,
@@ -4326,9 +4377,10 @@
 			isa = XCVersionGroup;
 			children = (
 				637FF13417DEB8910012AA1B /* ChatSecure 2.xcdatamodel */,
+				63D0E47D1819D962003ACA13 /* ChatSecure 3.xcdatamodel */,
 				D9D3717D169D40500086F358 /* ChatSecure.xcdatamodel */,
 			);
-			currentVersion = 637FF13417DEB8910012AA1B /* ChatSecure 2.xcdatamodel */;
+			currentVersion = 63D0E47D1819D962003ACA13 /* ChatSecure 3.xcdatamodel */;
 			path = ChatSecure.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

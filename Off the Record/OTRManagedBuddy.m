@@ -299,7 +299,6 @@
     return [[self.groups sortedArrayUsingDescriptors:@[descriptor]] valueForKey:OTRManagedGroupAttributes.name];
 }
 
-
 +(OTRManagedBuddy *)fetchOrCreateWithName:(NSString *)name account:(OTRManagedAccount *)account
 {
     OTRManagedBuddy * buddy = nil;

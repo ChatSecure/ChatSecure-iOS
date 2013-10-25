@@ -131,7 +131,7 @@
 {
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
         OTRManagedBuddy * user = [self buddyWithJID:jid xmppStream:stream];
-        [user setPhoto:image];
+        user.photo = image;
     }];
 }
 

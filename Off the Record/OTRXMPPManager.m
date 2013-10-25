@@ -36,6 +36,7 @@
 #import "OTRXMPPManagedPresenceSubscriptionRequest.h"
 #import "OTRRosterStorage.h"
 #import "OTRCapabilitiesInMemoryCoreDataStorage.h"
+#import "OTRvCardCoreDataStorage.h"
 
 #import "DDLog.h"
 #import "DDTTYLogger.h"
@@ -187,8 +188,9 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	// The vCard Avatar module works in conjuction with the standard vCard Temp module to download user avatars.
 	// The XMPPRoster will automatically integrate with XMPPvCardAvatarModule to cache roster photos in the roster.
 	
-	xmppvCardStorage = [XMPPvCardCoreDataStorage sharedInstance];
-	xmppvCardTempModule = [[XMPPvCardTempModule alloc] initWithvCardStorage:xmppvCardStorage];
+	//xmppvCardStorage = [XMPPvCardCoreDataStorage sharedInstance];
+    OTRvCardCoreDataStorage * vCardCoreDataStorage  = [[OTRvCardCoreDataStorage alloc] init];
+	xmppvCardTempModule = [[XMPPvCardTempModule alloc] initWithvCardStorage:vCardCoreDataStorage];
 	
 	xmppvCardAvatarModule = [[XMPPvCardAvatarModule alloc] initWithvCardTempModule:xmppvCardTempModule];
 	
