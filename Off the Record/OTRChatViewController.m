@@ -400,7 +400,7 @@
                 [[OTRKit sharedInstance]disableEncryptionForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
             } else {
                 OTRManagedBuddy* theBuddy = buddy;
-                OTRManagedMessage * newMessage = [OTRManagedMessage newMessageToBuddy:theBuddy message:@"" encrypted:YES];
+                OTRManagedMessage * newMessage = [OTRManagedMessage newMessageToBuddy:theBuddy message:@"?OTR?" encrypted:YES];
                 //OTRManagedMessage *encodedMessage = [OTRCodec encodeMessage:newMessage];
                 [OTRCodec encodeMessage:newMessage startGeneratingKeysBlock:^{
                     //display activity
