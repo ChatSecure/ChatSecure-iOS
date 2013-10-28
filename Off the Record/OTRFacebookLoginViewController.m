@@ -55,7 +55,7 @@
     [self.disconnectButton setBackgroundImage:pressedButtonImage forState:UIControlStateHighlighted];
     
     [self.disconnectButton setTitle:DISCONNECT_FACEBOOK_STRING forState:UIControlStateNormal];
-    [self.disconnectButton addTarget:self action:@selector(disconnectFacebook:) forControlEvents:UIControlEventTouchUpInside];
+    [self.disconnectButton addTarget:self action:@selector(disconnectAccount:) forControlEvents:UIControlEventTouchUpInside];
 
     [self.connectButton setTitle:CONNECT_FACEBOOK_STRING forState:UIControlStateNormal];
     [self.connectButton addTarget:self action:@selector(loginButtonPressed:) forControlEvents:UIControlEventTouchUpInside];

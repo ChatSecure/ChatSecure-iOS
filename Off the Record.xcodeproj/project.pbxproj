@@ -3611,7 +3611,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd \"Off the Record\"\nmogenerator --template-var arc=true -m \"ChatSecure.xcdatamodeld/ChatSecure 2.xcdatamodel/\"";
+			shellScript = "cd \"Off the Record\"\n/usr/local/bin/mogenerator --template-var arc=true -m \"ChatSecure.xcdatamodeld/ChatSecure 2.xcdatamodel/\"";
 		};
 /* End PBXShellScriptBuildPhase section */
 
