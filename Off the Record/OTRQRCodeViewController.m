@@ -24,7 +24,7 @@
 #import "Strings.h"
 
 @implementation OTRQRCodeViewController
-@synthesize imageView, instructionsLabel;
+@synthesize imageView, instructionsLabel,delegate;
 
 - (id) init 
 {
@@ -104,7 +104,13 @@
 
 - (void) doneButtonPressed:(id)sender
 {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    if ([delegate respondsToSelector:@selector(didDismiss)]) {
+        [delegate didDismiss];
+    }
+    else{
+        [self dismissModalViewControllerAnimated:YES];
+    }
+    
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

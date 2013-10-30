@@ -9,10 +9,11 @@
 #import <UIKit/UIKit.h>
 #import <Twitter/Twitter.h>
 #import <MessageUI/MessageUI.h>
+#import "OTRViewSetting.h"
 
 #import "OTRSetting.h"
 
-@interface OTRShareSetting : OTRSetting <UIWebViewDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate,MFMessageComposeViewControllerDelegate>
+@interface OTRShareSetting : OTRViewSetting <UIWebViewDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate,MFMessageComposeViewControllerDelegate>
 
 @property (nonatomic,weak) id delegate;
 @property (nonatomic, retain) NSURL *lastActionLink;

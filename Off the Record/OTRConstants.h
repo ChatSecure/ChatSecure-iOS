@@ -72,6 +72,7 @@
 #define kOTRSettingKeyLanguage @"userSelectedSetting"
 
 #define kOTRAppVersionKey @"kOTRAppVersionKey"
+#define OTRActivityTypeQRCode @"OTRActivityTypeQRCode"
 
 #define OTRArchiverKey @"OTRArchiverKey"
 

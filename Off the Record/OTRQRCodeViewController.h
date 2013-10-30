@@ -21,10 +21,14 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 #import <UIKit/UIKit.h>
+@protocol OTRQRCodeViewControllerDelegate <NSObject>
+-(void)didDismiss;
+@end
 
 @interface OTRQRCodeViewController : UIViewController
 
 @property (nonatomic, retain) UIImageView *imageView;
 @property (nonatomic, retain) UILabel *instructionsLabel;
+@property (nonatomic, weak) id delegate;
 
 @end
