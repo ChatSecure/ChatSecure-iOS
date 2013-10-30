@@ -35,15 +35,18 @@
     return self;
 }
 
-- (void) loadView {
-    [super loadView];
+- (void) viewDidLoad {
+    [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
     self.imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"chatsecure_qrcode.png"]];
+    self.imageView.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view addSubview:imageView];
     self.instructionsLabel = [[UILabel alloc] init];
     self.instructionsLabel.text = QR_CODE_INSTRUCTIONS_STRING;
     self.instructionsLabel.numberOfLines = 3;
     [self.view addSubview:instructionsLabel];
+    
+    [self applyConstraints];
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:DONE_STRING style:UIBarButtonItemStyleDone target:self action:@selector(doneButtonPressed:)];
 }
@@ -58,9 +61,45 @@
 - (void) viewWillAppear:(BOOL)animated 
 {
     [super viewWillAppear:animated];
-    CGFloat width = 300;
-    self.imageView.frame = CGRectMake(self.view.frame.size.width/2 - width/2, 11, width, width);
+    //CGFloat width = 300;
+    //self.imageView.frame = CGRectMake(self.view.frame.size.width/2 - width/2, 11, width, width);
+    
     self.instructionsLabel.frame = CGRectMake(10, self.view.frame.size.height - 100, self.view.frame.size.width - 20, 100);
+}
+
+- (void)applyConstraints {
+    NSLayoutConstraint * contraint = [NSLayoutConstraint constraintWithItem:self.imageView
+                                                                  attribute:NSLayoutAttributeWidth
+                                                                  relatedBy:NSLayoutRelationEqual
+                                                                     toItem:nil
+                                                                  attribute:NSLayoutAttributeNotAnAttribute
+                                                                 multiplier:1.0
+                                                                   constant:300];
+    [self.imageView addConstraint:contraint];
+    contraint = [NSLayoutConstraint constraintWithItem:self.imageView
+                                             attribute:NSLayoutAttributeHeight
+                                             relatedBy:NSLayoutRelationEqual
+                                                toItem:nil
+                                             attribute:NSLayoutAttributeNotAnAttribute
+                                            multiplier:1.0
+                                              constant:300];
+    [self.imageView addConstraint:contraint];
+    contraint = [NSLayoutConstraint constraintWithItem:self.imageView
+                                             attribute:NSLayoutAttributeTop
+                                             relatedBy:NSLayoutRelationEqual
+                                                toItem:self.view
+                                             attribute:NSLayoutAttributeTop
+                                            multiplier:1.0
+                                              constant:70];
+    [self.view addConstraint:contraint];
+    contraint = [NSLayoutConstraint constraintWithItem:self.imageView
+                                             attribute:NSLayoutAttributeCenterX
+                                             relatedBy:NSLayoutRelationEqual
+                                                toItem:self.view
+                                             attribute:NSLayoutAttributeCenterX
+                                            multiplier:1.0
+                                              constant:0.0];
+    [self.view addConstraint:contraint];
 }
 
 - (void) doneButtonPressed:(id)sender
