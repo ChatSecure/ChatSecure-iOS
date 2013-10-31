@@ -129,7 +129,7 @@
     [self updateTitleWithUnreadCount:[[self.unreadMessagesFetchedResultsContrller sections][0] numberOfObjects]];
     // uncomment to see a LOT of console output
 	// [Debug setDebuggingEnabled:YES];
-	NSLog(@"LibOrange (v: %@): -beginTest\n", @lib_orange_version_string);
+	//DDLogInfo(@"LibOrange (v: %@): -beginTest\n", @lib_orange_version_string);
 }
 
 -(void)viewWillAppear:(BOOL)animated

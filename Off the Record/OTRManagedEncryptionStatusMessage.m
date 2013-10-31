@@ -31,7 +31,7 @@
             message = CONVERSATION_NOT_SECURE_WARNING_STRING;
             break;
         default:
-            NSLog(@"Unknown Encryption State");
+            DDLogWarn(@"Unknown Encryption State");
             break;
     }
 

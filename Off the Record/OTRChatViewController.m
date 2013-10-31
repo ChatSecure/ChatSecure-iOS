@@ -362,7 +362,7 @@
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    NSLog(@"buttonIndex: %d",buttonIndex);
+    //DDLogInfo(@"buttonIndex: %d",buttonIndex);
     if(actionSheet.tag == ACTIONSHEET_ENCRYPTION_OPTIONS_TAG)
     {
         if (buttonIndex == 1) // Verify
@@ -562,7 +562,7 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    //    NSLog(@"heightForRowAtIndexPath: %@", indexPath);
+    //    DDLogInfo(@"heightForRowAtIndexPath: %@", indexPath);
     
     if (indexPath.row < [[self.messagesFetchedResultsController sections][indexPath.section] numberOfObjects])
     {

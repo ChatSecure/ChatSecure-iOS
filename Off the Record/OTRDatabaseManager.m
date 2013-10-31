@@ -20,20 +20,20 @@
     if (![fileManager fileExistsAtPath:containingDirectory]) {
         [fileManager createDirectoryAtPath:containingDirectory withIntermediateDirectories:YES attributes:nil error:&error];
         if (error) {
-            NSLog(@"Error creating folder for test DB %@", error.userInfo);
+            DDLogError(@"Error creating folder for test DB %@", error.userInfo);
         }
     }
     
     if ([fileManager fileExistsAtPath:destinationPath]) {
         [fileManager removeItemAtPath:destinationPath error:&error];
         if (error) {
-            NSLog(@"Error removing old test db: %@", error.userInfo);
+            DDLogError(@"Error removing old test db: %@", error.userInfo);
         }
     }
     
     [fileManager copyItemAtURL:testDBURL toURL:destinationURL error:&error];
     if (error) {
-        NSLog(@"error copying test database: %@", error.userInfo);
+        DDLogError(@"error copying test database: %@", error.userInfo);
     }
 }
 
@@ -67,7 +67,7 @@
     
     if (![[NSFileManager defaultManager] setAttributes:fileAttributes ofItemAtPath:path error:&error])
     {
-        NSLog(@"error encrypting store: %@", error.userInfo);
+        DDLogError(@"error encrypting store: %@", error.userInfo);
     }
 }
 

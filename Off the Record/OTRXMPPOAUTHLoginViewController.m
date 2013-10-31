@@ -117,7 +117,7 @@
 
 
 -(void)connectAccount:(id)sender {
-    NSLog(@"Needs to be implemented in sublcasses");
+    DDLogError(@"Needs to be implemented in sublcasses");
 }
 
 

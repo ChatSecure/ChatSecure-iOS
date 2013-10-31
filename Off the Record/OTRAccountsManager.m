@@ -35,7 +35,7 @@
 
 - (void) addAccount:(OTRManagedAccount*)account {
     if (!account) {
-        NSLog(@"Account is nil!");
+        DDLogWarn(@"Account is nil!");
         return;
     }
     NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
@@ -45,7 +45,7 @@
 
 - (void) removeAccount:(OTRManagedAccount*)account {
     if (!account) {
-        NSLog(@"Account is nil!");
+        DDLogWarn(@"Account is nil!");
         return;
     }
     account.password = nil;

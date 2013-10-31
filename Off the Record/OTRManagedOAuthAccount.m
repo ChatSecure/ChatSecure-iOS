@@ -37,7 +37,7 @@
         [archiver finishEncoding];
         [SSKeychain setPasswordData:data forService:kOTRServiceName account:self.username error:&error];
         if (error) {
-            NSLog(@"Error saving password to keychain: %@%@", [error localizedDescription], [error userInfo]);
+            DDLogError(@"Error saving password to keychain: %@%@", [error localizedDescription], [error userInfo]);
         }
     }
 }
@@ -48,7 +48,7 @@
     NSDictionary *dictionary = nil;
     NSData * data = [SSKeychain passwordDataForService:kOTRServiceName account:self.username error:&error];
     if (error) {
-        NSLog(@"Error retreiving password from keychain: %@%@", [error localizedDescription], [error userInfo]);
+        DDLogError(@"Error retreiving password from keychain: %@%@", [error localizedDescription], [error userInfo]);
         error = nil;
     }
     else {

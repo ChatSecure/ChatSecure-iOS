@@ -27,7 +27,7 @@
 #import "Strings.h"
 #import "OTRSettingsViewController.h"
 #import "OTRSettingsManager.h"
-#import "DDLog.h"
+
 #import "Appirater.h"
 #import "OTRConstants.h"
 #import "OTRLanguageManager.h"
@@ -41,13 +41,6 @@
 #import "OTRDatabaseManager.h"
 
 #import "OTRDemoChatViewController.h"
-
-// Log levels: off, error, warn, info, verbose
-#if DEBUG
-static const int ddLogLevel = LOG_LEVEL_VERBOSE;
-#else
-static const int ddLogLevel = LOG_LEVEL_WARN;
-#endif
 
 @implementation OTRAppDelegate
 
@@ -124,13 +117,13 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-    NSLog(@"Application entered background state.");
+    DDLogInfo(@"Application entered background state.");
     NSAssert(self.backgroundTask == UIBackgroundTaskInvalid, nil);
     self.didShowDisconnectionWarning = NO;
     
     self.backgroundTask = [application beginBackgroundTaskWithExpirationHandler: ^{
         dispatch_async(dispatch_get_main_queue(), ^{
-            NSLog(@"Background task expired");
+            DDLogInfo(@"Background task expired");
             if (self.backgroundTimer) 
             {
                 [self.backgroundTimer invalidate];
@@ -149,7 +142,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 - (void) timerUpdate:(NSTimer*)timer {
     UIApplication *application = [UIApplication sharedApplication];
 
-    NSLog(@"Timer update, background time left: %f", application.backgroundTimeRemaining);
+    DDLogInfo(@"Timer update, background time left: %f", application.backgroundTimeRemaining);
     
     if ([application backgroundTimeRemaining] < 60 && !self.didShowDisconnectionWarning && [OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyShowDisconnectionWarning]) 
     {
@@ -193,7 +186,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
      Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
      */
     
-    NSLog(@"Application became active");
+    DDLogInfo(@"Application became active");
     
     if (self.backgroundTimer) 
     {
@@ -245,8 +238,8 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 */
 
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
-    //NSLog(@"Notification Body: %@", notification.alertBody);
-    //NSLog(@"User Info: %@", notification.userInfo);
+    //DDLogInfo(@"Notification Body: %@", notification.alertBody);
+    //DDLogInfo(@"User Info: %@", notification.userInfo);
     
     NSDictionary *userInfo = notification.userInfo;
     NSString *accountName = [userInfo objectForKey:kOTRNotificationAccountNameKey];

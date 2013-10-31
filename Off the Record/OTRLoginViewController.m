@@ -76,7 +76,7 @@
         NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
         self.account = (OTRManagedAccount *)[context existingObjectWithID:newAccountID error:nil];
         
-        //NSLog(@"Account Dictionary: %@",[account accountDictionary]);
+        //DDLogInfo(@"Account Dictionary: %@",[account accountDictionary]);
         if (SYSTEM_VERSION_LESS_THAN(@"7.0")) {
             self.textFieldTextColor = [UIColor colorWithRed:0.22 green:0.33 blue:0.53 alpha:1.0];
         }

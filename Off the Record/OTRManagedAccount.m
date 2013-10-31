@@ -57,14 +57,14 @@
         NSError *error = nil;
         [SSKeychain deletePasswordForService:kOTRServiceName account:self.username error:&error];
         if (error) {
-            NSLog(@"Error deleting password from keychain: %@%@", [error localizedDescription], [error userInfo]);
+            DDLogError(@"Error deleting password from keychain: %@%@", [error localizedDescription], [error userInfo]);
         }
         return;
     }
     NSError *error = nil;
     [SSKeychain setPassword:newPassword forService:kOTRServiceName account:self.username error:&error];
     if (error) {
-        NSLog(@"Error saving password to keychain: %@%@", [error localizedDescription], [error userInfo]);
+        DDLogError(@"Error saving password to keychain: %@%@", [error localizedDescription], [error userInfo]);
     }
 }
 
@@ -75,7 +75,7 @@
     NSError *error = nil;
     NSString *password = [SSKeychain passwordForService:kOTRServiceName account:self.username error:&error];
     if (error) {
-        NSLog(@"Error retreiving password from keychain: %@%@", [error localizedDescription], [error userInfo]);
+        DDLogError(@"Error retreiving password from keychain: %@%@", [error localizedDescription], [error userInfo]);
         error = nil;
     }
     return password;
@@ -99,7 +99,7 @@
         NSError *error = nil;
         [SSKeychain deletePasswordForService:oldUsername account:kOTRServiceName error:&error];
         if (error) {
-            NSLog(@"Error deleting old password from keychain: %@%@", [error localizedDescription], [error userInfo]);
+            DDLogError(@"Error deleting old password from keychain: %@%@", [error localizedDescription], [error userInfo]);
         }
         self.password = tempPassword;
     }

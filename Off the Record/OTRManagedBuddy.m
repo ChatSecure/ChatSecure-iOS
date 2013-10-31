@@ -44,9 +44,9 @@
         self.lastMessageDisconnected = NO;
         OTRManagedBuddy* theBuddy = self;
         message = [message stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        //NSLog(@"message to be sent: %@",message);
+        //DDLogVerbose(@"message to be sent: %@",message);
         OTRManagedMessage *newMessage = [OTRManagedMessage newMessageToBuddy:theBuddy message:message encrypted:NO];
-        //NSLog(@"newMessagge: %@",newMessage.message);
+        //DDLogVerbose(@"newMessagge: %@",newMessage.message);
         OTRManagedMessage *encodedMessage;
         if(secure)
         {
@@ -61,7 +61,7 @@
             encodedMessage = newMessage;
             [OTRManagedMessage sendMessage:encodedMessage];
         }
-        //NSLog(@"encoded message: %@",encodedMessage.message);
+        //DDLogVerbose(@"encoded message: %@",encodedMessage.message);
         
 
         
@@ -131,7 +131,7 @@
 
 -(void)receiveMessage:(NSString *)message
 {
-    //NSLog(@"received: %@",message);
+    //DDLogVerbose(@"received: %@",message);
     if (message) {
         self.lastMessageDisconnected = NO;
         // Strip the shit out of it, but hopefully you're talking with someone who is trusted in the first place
@@ -171,7 +171,7 @@
 
 -(void)receiveReceiptResonse:(NSString *)responseID
 {
-    NSLog(@"Receipt Resonse: %@",responseID);
+    DDLogInfo(@"Receipt Resonse: %@",responseID);
     
     [OTRManagedMessage receiveMessage:responseID];
     
@@ -268,7 +268,7 @@
     [self.messages setValue:[NSNumber numberWithBool:YES] forKey:@"isRead"];
     NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
     [context MR_saveToPersistentStoreAndWait];
-    //[context MR_saveOnlySelfWithCompletion:^(BOOL success, NSError * error){NSLog(@"Saving buddy"); }];
+    //[context MR_saveOnlySelfWithCompletion:^(BOOL success, NSError * error){DDLogVerbose(@"Saving buddy"); }];
 }
 
 - (void) deleteAllMessages

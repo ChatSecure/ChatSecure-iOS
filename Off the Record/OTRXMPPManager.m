@@ -49,13 +49,6 @@
 #import "OTRConstants.h"
 #import "OTRUtilities.h"
 
-// Log levels: off, error, warn, info, verbose
-#if DEBUG
-static const int ddLogLevel = LOG_LEVEL_VERBOSE;
-#else
-static const int ddLogLevel = LOG_LEVEL_WARN;
-#endif
-
 @interface OTRXMPPManager()
 
 - (void)setupStream;
@@ -141,7 +134,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 		NSError *error = nil;
 		if (![fetchedResultsController performFetch:&error])
 		{
-			NSLog(@"Error performing fetch: %@", error);
+			DDLogError(@"Error performing fetch: %@", error);
 		}
         
 	}
@@ -236,7 +229,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
             
             switch (type) {
                 case NSFetchedResultsChangeDelete:
-                    NSLog(@"deleted roster");
+                    DDLogInfo(@"deleted roster");
                     
                     //user = [controller objectAtIndexPath:indexPath];
                     break;
@@ -311,7 +304,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
             [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveOnlySelfAndWait];
             /*[localContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
                 if (error) {
-                    NSLog(@"Error saving to disk: %@", error.userInfo);
+                    DDLogError(@"Error saving to disk: %@", error.userInfo);
                 }
             }];
              */
@@ -380,7 +373,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	// You can do it however you like! It's your application.
 	// But you do need to provide the roster with some storage facility.
     
-    //NSLog(@"Unique Identifier: %@",self.account.uniqueIdentifier);
+    //DDLogInfo(@"Unique Identifier: %@",self.account.uniqueIdentifier);
 	
     //xmppRosterStorage = [[XMPPRosterCoreDataStorage alloc] initWithDatabaseFilename:self.account.uniqueIdentifier];
     //  xmppRosterStorage = [[XMPPRosterCoreDataStorage alloc] init];
@@ -547,7 +540,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 
 - (BOOL)connectWithJID:(NSString*) myJID password:(NSString*)myPassword;
 {
-    //NSLog(@"myJID %@",myJID);
+    //DDLogInfo(@"myJID %@",myJID);
 	if (![xmppStream isDisconnected]) {
 		return YES;
 	}
@@ -1013,7 +1006,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     NSError * error = nil;
     OTRManagedBuddy * managedBuddy = (OTRManagedBuddy *)[context existingObjectWithID:managedBuddyObjectID error:&error];
     if (error) {
-        NSLog(@"Error Fetching Buddy: %@",error);
+        DDLogError(@"Error Fetching Buddy: %@",error);
     }
     return managedBuddy;
     
