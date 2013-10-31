@@ -809,8 +809,7 @@
 {
     NSString * text = inputBar.textView.text;
     if ([text length]) {
-        NSLog(@"Send: %@",text);
-        BOOL secure = [self.buddy currentEncryptionStatus].statusValue == kOTRKitMessageStateEncrypted;
+        BOOL secure = [self.buddy currentEncryptionStatus].statusValue == kOTRKitMessageStateEncrypted || [OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyOpportunisticOtr];
         [buddy sendMessage:text secure:secure];
         chatInputBar.textView.text = nil;
     }

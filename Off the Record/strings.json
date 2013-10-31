@@ -550,5 +550,13 @@
     "YOUR_STATUS_MESSAGE": {
         "comment": "prefix to show your status message inline on chatview", 
         "string": "You are: %@"
+    },
+    "OPPORTUNISTIC_OTR_SETTING_TITLE": {
+        "comment": "string for title yes/no setting for allowing opportunistic otr",
+        "string" : "Auto-start Encryption"
+    },
+    "OPPORTUNISTIC_OTR_SETTING_DESCRIPTION": {
+        "comment": "string for decription yes/no setting for allowing opportunistic otr",
+        "string" : "Enables opportunistic OTR"
     }
 }

@@ -82,12 +82,19 @@
     fontSizeSetting.defaultValue = [NSNumber numberWithInt:16];
 
     [newSettingsDictionary setObject:fontSizeSetting forKey:kOTRSettingKeyFontSize];
+    
     OTRBoolSetting *deletedDisconnectedConversations = [[OTRBoolSetting alloc] initWithTitle:DELETE_CONVERSATIONS_ON_DISCONNECT_TITLE_STRING description:DELETE_CONVERSATIONS_ON_DISCONNECT_DESCRIPTION_STRING settingsKey:kOTRSettingKeyDeleteOnDisconnect];
     [newSettingsDictionary setObject:deletedDisconnectedConversations forKey:kOTRSettingKeyDeleteOnDisconnect];
+    
     OTRBoolSetting *showDisconnectionWarning = [[OTRBoolSetting alloc] initWithTitle:DISCONNECTION_WARNING_TITLE_STRING description:DISCONNECTION_WARNING_DESC_STRING settingsKey:kOTRSettingKeyShowDisconnectionWarning];
-    showDisconnectionWarning.defaultValue = [NSNumber numberWithBool:YES];
+    showDisconnectionWarning.defaultValue = @(NO);
     [newSettingsDictionary setObject:showDisconnectionWarning forKey:kOTRSettingKeyShowDisconnectionWarning];
-    OTRSettingsGroup *chatSettingsGroup = [[OTRSettingsGroup alloc] initWithTitle:CHAT_STRING settings:[NSArray arrayWithObjects:fontSizeSetting, deletedDisconnectedConversations, showDisconnectionWarning, nil]];
+    
+    OTRBoolSetting *opportunisticOtrSetting = [[OTRBoolSetting alloc] initWithTitle:OPPORTUNISTIC_OTR_SETTING_TITLE description:OPPORTUNISTIC_OTR_SETTING_DESCRIPTION settingsKey:kOTRSettingKeyOpportunisticOtr];
+    opportunisticOtrSetting.defaultValue = @(YES);
+    [newSettingsDictionary setObject:opportunisticOtrSetting forKey:kOTRSettingKeyOpportunisticOtr];
+    
+    OTRSettingsGroup *chatSettingsGroup = [[OTRSettingsGroup alloc] initWithTitle:CHAT_STRING settings:[NSArray arrayWithObjects:fontSizeSetting,opportunisticOtrSetting,deletedDisconnectedConversations, showDisconnectionWarning, nil]];
     [settingsGroups addObject:chatSettingsGroup];
     
     
