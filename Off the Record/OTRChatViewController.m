@@ -399,24 +399,15 @@
             {
                 [[OTRKit sharedInstance]disableEncryptionForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
             } else {
-                OTRManagedBuddy* theBuddy = buddy;
-                OTRManagedMessage * newMessage = [OTRManagedMessage newMessageToBuddy:theBuddy message:@"?OTR?" encrypted:YES];
+                //OTRManagedBuddy* theBuddy = buddy;
+                //OTRManagedMessage * newMessage = [OTRManagedMessage newMessageToBuddy:theBuddy message:@"?OTR?" encrypted:YES];
                 //OTRManagedMessage *encodedMessage = [OTRCodec encodeMessage:newMessage];
-                [OTRCodec encodeMessage:newMessage startGeneratingKeysBlock:^{
-                    //display activity
-                    NSLog(@"Generating key");
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [self addLockSpinner];
-                    });
-                } completion:^(OTRManagedMessage *message) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        if ([self.buddy isEqual:message.buddy]) {
-                            [self removeLockSpinner];
-                        }
-                        [OTRManagedMessage sendMessage:message];
-                    });
-                    
+                [OTRCodec sendOtrInitiateOrRefreshMessageTobuddy:self.buddy startGeneratingKeysBlock:^{
+                    [self addLockSpinner];
+                } completion:^{
+                    [self removeLockSpinner];
                 }];
+
                 
             }
         }
