@@ -143,7 +143,7 @@
     }];
     UIBarButtonItem * rightBarItem = self.navigationItem.rightBarButtonItem;
     if ([rightBarItem isEqual:lockButton] || [rightBarItem isEqual:lockVerifiedButton] || [rightBarItem isEqual:unlockedButton] || !rightBarItem) {
-        BOOL trusted = [[OTRKit sharedInstance] finerprintIsVerifiedForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
+        BOOL trusted = [[OTRKit sharedInstance] fingerprintIsVerifiedForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
         
         int16_t currentEncryptionStatus = [self.buddy currentEncryptionStatus].statusValue;
         
@@ -370,7 +370,7 @@
             NSString *msg = nil;
             NSString *ourFingerprintString = [[OTRKit sharedInstance] fingerprintForAccountName:buddy.account.username protocol:buddy.account.protocol];
             NSString *theirFingerprintString = [[OTRKit sharedInstance] fingerprintForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
-            BOOL trusted = [[OTRKit sharedInstance] finerprintIsVerifiedForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
+            BOOL trusted = [[OTRKit sharedInstance] fingerprintIsVerifiedForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
             
             
             UIAlertView * alert;
@@ -397,18 +397,13 @@
         {
             if([self.buddy currentEncryptionStatus].statusValue == kOTRKitMessageStateEncrypted)
             {
-                [[OTRKit sharedInstance]disableEncryptionForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
+                [[OTRKit sharedInstance] disableEncryptionForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
             } else {
-                //OTRManagedBuddy* theBuddy = buddy;
-                //OTRManagedMessage * newMessage = [OTRManagedMessage newMessageToBuddy:theBuddy message:@"?OTR?" encrypted:YES];
-                //OTRManagedMessage *encodedMessage = [OTRCodec encodeMessage:newMessage];
                 [OTRCodec sendOtrInitiateOrRefreshMessageTobuddy:self.buddy startGeneratingKeysBlock:^{
                     [self addLockSpinner];
                 } completion:^{
                     [self removeLockSpinner];
                 }];
-
-                
             }
         }
         else if (buttonIndex == 2) { // Clear Chat History

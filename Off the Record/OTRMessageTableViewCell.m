@@ -110,6 +110,7 @@
     CGFloat imageX = (messageBackgroundImageView.frame.origin.x - 20.0);
     CGFloat imageY = messageBackgroundImageView.frame.origin.y + (messageBackgroundImageView.frame.size.height/2) - (imageHeight/2);
     messageDeliverdImageView.frame = CGRectMake(imageX, imageY, imageWidth, imageWidth);
+    messageDeliverdImageView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
 }
 
 -(void)setMessage:(OTRManagedMessage *)newMessage
