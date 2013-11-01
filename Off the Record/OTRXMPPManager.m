@@ -32,6 +32,7 @@
 #import "XMPPMessage+XEP_0184.h"
 #import "XMPPMessage+XEP_0085.h"
 #import "NSXMLElement+XEP_0203.h"
+#import "XMPPMessageDeliveryReceipts.h"
 #import "Strings.h"
 #import "OTRXMPPManagedPresenceSubscriptionRequest.h"
 
@@ -433,6 +434,11 @@
 	[xmppRoster addDelegate:self delegateQueue:dispatch_get_main_queue()];
     [xmppCapabilities addDelegate:self delegateQueue:dispatch_get_main_queue()];
     
+    XMPPMessageDeliveryReceipts * deliveryReceiptsModule = [[XMPPMessageDeliveryReceipts alloc] init];
+    deliveryReceiptsModule.autoSendMessageDeliveryRequests = YES;
+    
+    [deliveryReceiptsModule activate:xmppStream];
+    
 	// Optional:
 	// 
 	// Replace me with the proper domain and port.
@@ -520,6 +526,7 @@
 
 ///////////////////////////////
 #pragma mark Capabilities Collected
+/*
 - (void)xmppCapabilities:(XMPPCapabilities *)sender collectingMyCapabilities:(NSXMLElement *)query
 {
     if(account.sendDeliveryReceipts)
@@ -532,6 +539,16 @@
     NSXMLElement * chatStateFeature = [NSXMLElement elementWithName:@"feature"];
 	[chatStateFeature addAttributeWithName:@"var" stringValue:@"http://jabber.org/protocol/chatstates"];
     [query addChild:chatStateFeature];
+}
+ */
+
+- (NSArray *)myFeaturesForXMPPCapabilities:(XMPPCapabilities *)sender
+{
+    NSMutableArray * array = [@[@"http://jabber.org/protocol/chatstates"] mutableCopy];
+    if (account.sendDeliveryReceipts) {
+        [array addObject:@"urn:xmpp:receipts"];
+    }
+    return array;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -753,7 +770,7 @@
     }
     
     //Posible needs a setting to turn on and off
-    if([message hasReceiptRequest] && self.account.sendDeliveryReceipts && ![message isErrorMessage])
+    if([message hasReceiptRequest] && self.account.sendDeliveryReceiptsValue && ![message isErrorMessage])
     {
         XMPPMessage * responseMessage = [message generateReceiptResponse];
         [xmppStream sendElement:responseMessage];
@@ -863,26 +880,13 @@
     
     if ([messageStr length] >0) 
     {
-        NSXMLElement *body = [NSXMLElement elementWithName:@"body"];
-		[body setStringValue:messageStr];
-		
-		NSXMLElement *message = [NSXMLElement elementWithName:@"message"];
-		[message addAttributeWithName:@"type" stringValue:@"chat"];
-		[message addAttributeWithName:@"to" stringValue:theMessage.buddy.accountName];
         NSString * messageID = [NSString stringWithFormat:@"%@",theMessage.uniqueID];
-        [message addAttributeWithName:@"id" stringValue:messageID];
-        
-        NSXMLElement * receiptRequest = [NSXMLElement elementWithName:@"request"];
-        [receiptRequest addAttributeWithName:@"xmlns" stringValue:@"urn:xmpp:receipts"];
-        [message addChild:receiptRequest];
-        
-		[message addChild:body];
-        
-        XMPPMessage * xMessage = [XMPPMessage messageFromElement:message];
-        [xMessage addActiveChatState];
+        XMPPMessage * xmppMessage = [XMPPMessage messageWithType:@"chat" to:[XMPPJID jidWithString:theMessage.buddy.accountName] elementID:messageID];
+        [xmppMessage addBody:theMessage.message];
+
+        [xmppMessage addActiveChatState];
 		
-		[xmppStream sendElement:message];
-       
+		[xmppStream sendElement:xmppMessage];
     }
 }
 
