@@ -197,7 +197,7 @@
         OTRNewBuddyViewController * newBuddyViewController =  [[OTRNewBuddyViewController alloc] initWithAccountObjectID:[object objectID]];
         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:newBuddyViewController];
         
-        navController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+        navController.modalPresentationStyle = UIModalPresentationPageSheet;
         [self.navigationController presentViewController:navController animated:YES completion:nil];
     }
     else if (numAccountsLoggedIn > 1)
@@ -205,7 +205,7 @@
         OTRChooseAccountViewController * chooseAccountViewController = [[OTRChooseAccountViewController alloc] init];
         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:chooseAccountViewController];
         
-        navController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+        navController.modalPresentationStyle = UIModalPresentationFormSheet;
         [self.navigationController presentViewController:navController animated:YES completion:nil];
     }
 }

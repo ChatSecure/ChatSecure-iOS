@@ -448,7 +448,7 @@
 - (void) refreshView {
     _messagesFetchedResultsController = nil;
     _buddyFetchedResultsController = nil;
-    if (!buddy) {
+    if (!self.buddy) {
         if (!instructionsLabel) {
             int labelWidth = 500;
             int labelHeight = 100;
@@ -460,11 +460,12 @@
             self.navigationItem.rightBarButtonItem = nil;
         }
     } else {
-        if (instructionsLabel) {
+        if (self.instructionsLabel) {
             [self.instructionsLabel removeFromSuperview];
             self.instructionsLabel = nil;
         }
         [self buddyFetchedResultsController];
+        [self messagesFetchedResultsController];
         _heightForRow = [NSMutableArray array];
         _previousShownSentDate = nil;
         [self.buddy allMessagesRead];
