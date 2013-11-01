@@ -25,6 +25,7 @@
 @interface OTRInLineTextEditTableViewCell : UITableViewCell
 {
     BOOL isStyle2;
+    NSLayoutConstraint * centerConstraint;
 }
 
 @property (nonatomic, strong) UITextField *textField;
