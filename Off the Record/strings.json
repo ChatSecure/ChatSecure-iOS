@@ -16,7 +16,7 @@
         "string": "Add Buddy"
     }, 
     "ADVANCED_STRING": {
-        "comment": "stirng to describe advanced set of settings", 
+        "comment": "String to describe advanced set of settings", 
         "string": "Advanced"
     }, 
     "AGREE_STRING": {
@@ -44,19 +44,19 @@
         "string": "ChatSecure is brought to you by many open source projects"
     }, 
     "AVAILABLE_MESSAGE_STRING": {
-        "comment": "Message shown inline for users that are available", 
+        "comment": "Message shown in line for users that are available", 
         "string": "is now available"
     }, 
     "AVAILABLE_STRING": {
-        "comment": "Label in buddylist for users that are available", 
+        "comment": "Label in buddy list for users that are available", 
         "string": "Available"
     }, 
     "AWAY_MESSAGE_STRING": {
-        "comment": "Message shown inline for users that are away", 
+        "comment": "Message shown in line for users that are away", 
         "string": "is now away"
     }, 
     "AWAY_STRING": {
-        "comment": "Label in buddylist for users that are away", 
+        "comment": "Label in buddy list for users that are away", 
         "string": "Away"
     }, 
     "BASIC_STRING": {
@@ -104,7 +104,7 @@
         "string": "Gone"
     }, 
     "CHAT_STATE_INACTVIE_STRING": {
-        "comment": "String to be displayed when a budy has become inactive", 
+        "comment": "String to be displayed when a buddy has become inactive", 
         "string": "Inactive"
     }, 
     "CHAT_STATE_PAUSED_STRING": {
@@ -124,7 +124,7 @@
         "string": "Connected"
     }, 
     "CONNECT_FACEBOOK_STRING": {
-        "comment": "Button label for connecting a facebook account", 
+        "comment": "Button label for connecting a Facebook account", 
         "string": "Connect Facebook"
     }, 
     "CONTRIBUTE_TRANSLATION_STRING": {
@@ -181,7 +181,7 @@
     }, 
     "DELIVERED_STRING": {
         "comment": "Shows in the chat view when a message has been delivered", 
-        "string": "Deliverd"
+        "string": "Delivered"
     }, 
     "DISAGREE_STRING": {
         "comment": "Disagree with EULA", 
@@ -205,10 +205,10 @@
     }, 
     "DISCONNECTION_WARNING_TITLE_STRING": {
         "comment": "Title for setting about showing a warning before disconnection", 
-        "string": "Signout Warning"
+        "string": "Sign out Warning"
     }, 
     "DISCONNECT_FACEBOOK_STRING": {
-        "comment": "button label for disconnecting facebook account", 
+        "comment": "button label for disconnecting Facebook account", 
         "string": "Disconnect Facebook"
     }, 
     "DOMAIN_STRING": {
@@ -236,7 +236,7 @@
         "string": "Email"
     }, 
     "ERROR_STRING": {
-        "comment": "Title of error message popup box", 
+        "comment": "Title of error message pop-up box", 
         "string": "Error!"
     }, 
     "EXPIRATION_STRING": {
@@ -264,11 +264,11 @@
         "string": "Font Size"
     }, 
     "GOOGLE_TALK_EXAMPLE_STRING": {
-        "comment": "example of a google talk account", 
+        "comment": "example of a Google talk account", 
         "string": "user@gmail.com"
     }, 
     "GOOGLE_TALK_STRING": {
-        "comment": "the name for google talk", 
+        "comment": "the name for Google talk", 
         "string": "Google Talk"
     }, 
     "GROUPS_STRING": {
@@ -284,7 +284,7 @@
         "string": "Ignore"
     }, 
     "INCOMING_STATUS_MESSAGE": {
-        "comment": "prefix to show buddies status message inline on chatview", 
+        "comment": "prefix to show buddies status message in line on chat view", 
         "string": "New Status Message: %@"
     }, 
     "INFO_STRING": {
@@ -301,10 +301,10 @@
     }, 
     "LANGUAGE_ALERT_MESSAGE_STRING": {
         "comment": "Message alerting user that they need to return to the home screen and force close ChatSecure", 
-        "string": "In order to change langugages return to the home screen and remove ChatSecure from the recently used apps"
+        "string": "In order to change languages return to the home screen and remove ChatSecure from the recently used apps"
     }, 
     "LANGUAGE_ALERT_TITLE_STRING": {
-        "comment": "Stirng of title to alert user langague is change", 
+        "comment": "String of title to alert user language is change", 
         "string": "Language Change"
     }, 
     "LANGUAGE_STRING": {
@@ -312,7 +312,7 @@
         "string": "Language"
     }, 
     "LOGGING_IN_STRING": {
-        "comment": "shown during the login proceess", 
+        "comment": "shown during the login process", 
         "string": "Logging in..."
     }, 
     "LOGIN_STRING": {
@@ -328,7 +328,7 @@
         "string": "Logout from OSCAR?"
     }, 
     "LOGOUT_FROM_XMPP_STRING": {
-        "comment": "ask user if they want to log out of xmpp", 
+        "comment": "ask user if they want to log out of XMPP", 
         "string": "Logout from XMPP?"
     }, 
     "LOGOUT_STRING": {
@@ -340,7 +340,7 @@
         "string": "Message"
     }, 
     "NAME_STRING": {
-        "comment": "The string describing a buddy's dispaly name", 
+        "comment": "The string describing a buddy's display name", 
         "string": "Name"
     }, 
     "NEW_ACCOUNT_STRING": {
@@ -356,19 +356,19 @@
         "string": "Not Available"
     }, 
     "NOT_VERIFIED_STRING": {
-        "comment": "Not Verfied or cancle verified", 
+        "comment": "Not Verified or cancel verified", 
         "string": "Not Verified"
     }, 
     "NO_ACCOUNT_SAVED_STRING": {
-        "comment": "Message infomring user that there are no accounts currently saved", 
+        "comment": "Message informing user that there are no accounts currently saved", 
         "string": "No Saved Accounts"
     }, 
     "OFFLINE_MESSAGE_STRING": {
-        "comment": "Message shown inline for users that are offline", 
+        "comment": "Message shown in line for users that are offline", 
         "string": "is now offline"
     }, 
     "OFFLINE_STRING": {
-        "comment": "Label in buddylist for users that are offline", 
+        "comment": "Label in buddy list for users that are offline", 
         "string": "Offline"
     }, 
     "OK_STRING": {
@@ -400,7 +400,7 @@
         "string": "Password"
     }, 
     "PENDING_APPROVAL_STRING": {
-        "comment": "String for xmpp buddies when adding buddy is pedning", 
+        "comment": "String for XMPP buddies when adding buddy is pending", 
         "string": "Pending Approval"
     }, 
     "PORT_STRING": {
@@ -464,7 +464,7 @@
         "string": "Security Warning"
     }, 
     "SELF_SIGNED_SSL_STRING": {
-        "comment": "string for settings to allow self signed ssl stirng", 
+        "comment": "string for settings to allow self signed SSL string", 
         "string": "Self Signed SSL"
     }, 
     "SEND_DELIVERY_RECEIPT_STRING": {
@@ -480,7 +480,7 @@
         "string": "Send"
     }, 
     "SEND_TYPING_NOTIFICATION_STRING": {
-        "comment": "Stirng in login settings asking to send typing notification", 
+        "comment": "String in login settings asking to send typing notification", 
         "string": "Send Typing Notification"
     }, 
     "SETTINGS_STRING": {
@@ -500,7 +500,7 @@
         "string": "Check out the source here on Github"
     }, 
     "SSL_MISMATCH_STRING": {
-        "comment": "stirng for settings to allow ssl mismatch", 
+        "comment": "string for settings to allow SSL mismatch", 
         "string": "SSL Hostname Mismatch"
     }, 
     "THEIR_FINGERPRINT_STRING": {
@@ -512,7 +512,7 @@
         "string": "Username"
     }, 
     "USER_PASS_BLANK_STRING": {
-        "comment": "error message shown when user doesnt fill in a username or password", 
+        "comment": "error message shown when user doesn't fill in a username or password", 
         "string": "You must enter a username and a password to login."
     }, 
     "VERIFIED_STRING": {
@@ -524,7 +524,7 @@
         "string": "Verify Fingerprint"
     }, 
     "VERIFY_LATER_STRING": {
-        "comment": "Shown when verifying fingerprings", 
+        "comment": "Shown when verifying fingerprints", 
         "string": "Verify Later"
     }, 
     "VERIFY_STRING": {
