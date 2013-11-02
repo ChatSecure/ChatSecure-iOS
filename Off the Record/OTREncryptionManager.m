@@ -67,7 +67,7 @@
     [fileManager setAttributes:[NSDictionary dictionaryWithObject:NSFileProtectionComplete forKey:NSFileProtectionKey] ofItemAtPath:path error:&error];
     if (error) 
     {
-        NSLog(@"Error setting file protection key for %@: %@%@",path,[error localizedDescription], [error userInfo]);
+        //DDLogError(@"Error setting file protection key for %@: %@%@",path,[error localizedDescription], [error userInfo]);
         error = nil;
     }
 }

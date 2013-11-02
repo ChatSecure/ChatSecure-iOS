@@ -120,7 +120,7 @@
         }
         else {
             NSNumber * cipher = [NSNumber numberWithUnsignedShort: ciphers[index]];
-            NSLog(@"Hex value is 0x%02x", (unsigned int) ciphers[index]);
+            DDLogVerbose(@"Hex value is 0x%02x", (unsigned int) ciphers[index]);
             [discardedCiphers addObject:cipher];
         }
     }

@@ -101,6 +101,13 @@
     return newOTRMessage;
 }
 
++ (void)sendOtrInitiateOrRefreshMessageTobuddy:(OTRManagedBuddy*)buddy
+                      startGeneratingKeysBlock:(void (^)(void))generatingKeysBlock
+                                    completion:(void (^)(void))completionBlock {
+    
+    [[OTRKit sharedInstance] sendOtrInitiateOrRefreshMessageToRecipient:buddy.accountName accountName:buddy.account.username protocol:[buddy.account protocol] startGeneratingKeysBlock:generatingKeysBlock completion:completionBlock];
+}
+
 + (void)isGeneratingKeyForBuddy:(OTRManagedBuddy *)buddy completion:(void (^)(BOOL isGeneratingKey))completion;
 {
     if(buddy)

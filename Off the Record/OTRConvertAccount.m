@@ -33,7 +33,7 @@
 
 -(void)saveDictionary:(NSDictionary *)accountDictionary withUniqueId:(NSString *)uniqueId;
 {
-    NSLog(@"Converting: %@",accountDictionary);
+    //DDLogVerbose(@"Converting: %@",accountDictionary);
     NSString * protocol = [accountDictionary objectForKey:kOTRAccountProtocolKey];
     if ([protocol isEqualToString:kOTRProtocolTypeXMPP]) {
         OTRXMPPAccount * xmppAccount = [[OTRXMPPAccount alloc] initWithSettingsDictionary:accountDictionary uniqueIdentifier:uniqueId];

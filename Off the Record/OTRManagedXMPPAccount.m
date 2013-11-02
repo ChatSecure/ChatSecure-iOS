@@ -37,13 +37,13 @@
 - (void) setDefaultsWithDomain:(NSString *)newDomain {
     [super setDefaultsWithProtocol:kOTRProtocolTypeXMPP];
     self.domain = newDomain;
-    [self setAllowSelfSignedSSLValue: NO];
-    [self setAllowSSLHostNameMismatchValue: NO];
+    self.allowSelfSignedSSLValue = NO;
+    self.allowSSLHostNameMismatchValue = NO;
     self.port = @(DEFAULT_PORT_NUMBER); // Default XMPP port number
-    [self setSendDeliveryReceiptsValue: NO];
-    [self setSendTypingNotificationsValue: YES]; // Default typing notifications to yes
-    [self setAllowPlainTextAuthenticationValue:NO];
-    [self setRequireTLSValue:NO];
+    self.sendDeliveryReceiptsValue = YES;
+    self.sendTypingNotificationsValue = YES; // Default typing notifications to yes
+    self.allowPlainTextAuthenticationValue = NO;
+    self.requireTLSValue = NO;
 }
 
 +(NSNumber *)defaultPortNumber {

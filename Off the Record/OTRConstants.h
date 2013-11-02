@@ -66,6 +66,7 @@
 
 #define kOTRSettingKeyFontSize @"kOTRSettingKeyFontSize"
 #define kOTRSettingKeyDeleteOnDisconnect @"kOTRSettingKeyDeleteOnDisconnect"
+#define kOTRSettingKeyOpportunisticOtr @"kOTRSettingKeyOpportunisticOtr"
 #define kOTRSettingKeyShowDisconnectionWarning @"kOTRSettingKeyShowDisconnectionWarning"
 #define kOTRSettingUserAgreedToEULA @"kOTRSettingUserAgreedToEULA"
 #define kOTRSettingAccountsKey @"kOTRSettingAccountsKey"

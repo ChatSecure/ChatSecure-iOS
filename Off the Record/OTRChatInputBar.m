@@ -43,8 +43,6 @@
         
         [self checkSaveButton];
         
-        //self.translatesAutoresizingMaskIntoConstraints = NO;
-        
         [self setNeedsUpdateConstraints];
     }
     return self;
@@ -54,7 +52,8 @@
 {
     if (!_sendButton) {
         _sendButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        _sendButton.frame = CGRectMake(self.frame.size.width - 69, 8, 63, 27);
+        CGFloat buttonWidth = [SEND_STRING sizeWithFont:[UIFont systemFontOfSize:16]].width+20;
+        _sendButton.frame = CGRectMake(self.frame.size.width - (buttonWidth+6), 8, buttonWidth, 27);
         _sendButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin;
         UIEdgeInsets sendButtonEdgeInsets = UIEdgeInsetsMake(0, 13, 0, 13); // 27 x 27
         UIImage *sendButtonBackgroundImage = [[UIImage imageNamed:@"SendButton"] resizableImageWithCapInsets:sendButtonEdgeInsets];
@@ -66,7 +65,7 @@
         [_sendButton setTitle:SEND_STRING forState:UIControlStateNormal];
         [_sendButton setTitleShadowColor:[UIColor colorWithRed:0.325f green:0.463f blue:0.675f alpha:1] forState:UIControlStateNormal];
         [_sendButton addTarget:self action:@selector(sendButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-        //CGFloat buttonWidth = [SEND_STRING sizeWithFont:[UIFont systemFontOfSize:16]].width+20;
+        //
         previousTextViewContentHeight = MessageFontSize+20;
     }
     return _sendButton;

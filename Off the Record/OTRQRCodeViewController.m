@@ -108,7 +108,7 @@
         [delegate didDismiss];
     }
     else{
-        [self dismissModalViewControllerAnimated:YES];
+        [self dismissViewControllerAnimated:YES completion:nil];
     }
     
 }

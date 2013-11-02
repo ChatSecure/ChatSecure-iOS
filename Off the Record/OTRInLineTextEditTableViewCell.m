@@ -65,9 +65,7 @@
     [self updateConstraintsIfNeeded];
 }
 
--(void)updateConstraints{
-    [super updateConstraints];
-    
+-(void)applyConstraints {
     NSLayoutConstraint * constraint;
     if (SYSTEM_VERSION_LESS_THAN(@"7.0")) {
         CGFloat labelWidth = self.textLabel.frame.size.width+self.textLabel.frame.origin.x;
@@ -93,7 +91,7 @@
                                                   attribute:NSLayoutAttributeTrailing
                                                  multiplier:1.0
                                                    constant:6.0];
-
+        
     }
     
     [self.contentView addConstraint:constraint];
@@ -107,14 +105,21 @@
                                                constant:-5.0];
     [self.contentView addConstraint:constraint];
     
-    constraint = [NSLayoutConstraint constraintWithItem:self.textField
+    [self.contentView removeConstraint:centerConstraint];
+    centerConstraint = [NSLayoutConstraint constraintWithItem:self.textField
                                               attribute:NSLayoutAttributeCenterY
                                               relatedBy:NSLayoutRelationEqual
                                                  toItem:self.contentView
                                               attribute:NSLayoutAttributeCenterY
                                              multiplier:1.0
-                                               constant:0];
-    [self.contentView addConstraint:constraint];
+                                               constant:0.0];
+    [self.contentView addConstraint:centerConstraint];
 }
+
+-(void)updateConstraints{
+    [super updateConstraints];
+    [self applyConstraints];
+}
+
 
 @end

@@ -32,6 +32,7 @@
 #import "XMPPMessage+XEP_0184.h"
 #import "XMPPMessage+XEP_0085.h"
 #import "NSXMLElement+XEP_0203.h"
+#import "XMPPMessageDeliveryReceipts.h"
 #import "Strings.h"
 #import "OTRXMPPManagedPresenceSubscriptionRequest.h"
 
@@ -48,13 +49,6 @@
 #import "XMPPXOATH2Google.h"
 #import "OTRConstants.h"
 #import "OTRUtilities.h"
-
-// Log levels: off, error, warn, info, verbose
-#if DEBUG
-static const int ddLogLevel = LOG_LEVEL_VERBOSE;
-#else
-static const int ddLogLevel = LOG_LEVEL_WARN;
-#endif
 
 @interface OTRXMPPManager()
 
@@ -141,7 +135,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 		NSError *error = nil;
 		if (![fetchedResultsController performFetch:&error])
 		{
-			NSLog(@"Error performing fetch: %@", error);
+			DDLogError(@"Error performing fetch: %@", error);
 		}
         
 	}
@@ -236,7 +230,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
             
             switch (type) {
                 case NSFetchedResultsChangeDelete:
-                    NSLog(@"deleted roster");
+                    DDLogInfo(@"deleted roster");
                     
                     //user = [controller objectAtIndexPath:indexPath];
                     break;
@@ -311,7 +305,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
             [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveOnlySelfAndWait];
             /*[localContext MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
                 if (error) {
-                    NSLog(@"Error saving to disk: %@", error.userInfo);
+                    DDLogError(@"Error saving to disk: %@", error.userInfo);
                 }
             }];
              */
@@ -380,7 +374,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	// You can do it however you like! It's your application.
 	// But you do need to provide the roster with some storage facility.
     
-    //NSLog(@"Unique Identifier: %@",self.account.uniqueIdentifier);
+    //DDLogInfo(@"Unique Identifier: %@",self.account.uniqueIdentifier);
 	
     //xmppRosterStorage = [[XMPPRosterCoreDataStorage alloc] initWithDatabaseFilename:self.account.uniqueIdentifier];
     //  xmppRosterStorage = [[XMPPRosterCoreDataStorage alloc] init];
@@ -439,6 +433,11 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	[xmppStream addDelegate:self delegateQueue:dispatch_get_main_queue()];
 	[xmppRoster addDelegate:self delegateQueue:dispatch_get_main_queue()];
     [xmppCapabilities addDelegate:self delegateQueue:dispatch_get_main_queue()];
+    
+    XMPPMessageDeliveryReceipts * deliveryReceiptsModule = [[XMPPMessageDeliveryReceipts alloc] init];
+    deliveryReceiptsModule.autoSendMessageDeliveryRequests = YES;
+    
+    [deliveryReceiptsModule activate:xmppStream];
     
 	// Optional:
 	// 
@@ -527,6 +526,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 
 ///////////////////////////////
 #pragma mark Capabilities Collected
+/*
 - (void)xmppCapabilities:(XMPPCapabilities *)sender collectingMyCapabilities:(NSXMLElement *)query
 {
     if(account.sendDeliveryReceipts)
@@ -540,6 +540,16 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	[chatStateFeature addAttributeWithName:@"var" stringValue:@"http://jabber.org/protocol/chatstates"];
     [query addChild:chatStateFeature];
 }
+ */
+
+- (NSArray *)myFeaturesForXMPPCapabilities:(XMPPCapabilities *)sender
+{
+    NSMutableArray * array = [@[@"http://jabber.org/protocol/chatstates"] mutableCopy];
+    if (account.sendDeliveryReceipts) {
+        [array addObject:@"urn:xmpp:receipts"];
+    }
+    return array;
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark Connect/disconnect
@@ -547,7 +557,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 
 - (BOOL)connectWithJID:(NSString*) myJID password:(NSString*)myPassword;
 {
-    //NSLog(@"myJID %@",myJID);
+    //DDLogInfo(@"myJID %@",myJID);
 	if (![xmppStream isDisconnected]) {
 		return YES;
 	}
@@ -764,7 +774,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     }
     
     //Posible needs a setting to turn on and off
-    if([message hasReceiptRequest] && self.account.sendDeliveryReceipts && ![message isErrorMessage])
+    if([message hasReceiptRequest] && self.account.sendDeliveryReceiptsValue && ![message isErrorMessage])
     {
         XMPPMessage * responseMessage = [message generateReceiptResponse];
         [xmppStream sendElement:responseMessage];
@@ -874,26 +884,13 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     
     if ([messageStr length] >0) 
     {
-        NSXMLElement *body = [NSXMLElement elementWithName:@"body"];
-		[body setStringValue:messageStr];
-		
-		NSXMLElement *message = [NSXMLElement elementWithName:@"message"];
-		[message addAttributeWithName:@"type" stringValue:@"chat"];
-		[message addAttributeWithName:@"to" stringValue:theMessage.buddy.accountName];
         NSString * messageID = [NSString stringWithFormat:@"%@",theMessage.uniqueID];
-        [message addAttributeWithName:@"id" stringValue:messageID];
-        
-        NSXMLElement * receiptRequest = [NSXMLElement elementWithName:@"request"];
-        [receiptRequest addAttributeWithName:@"xmlns" stringValue:@"urn:xmpp:receipts"];
-        [message addChild:receiptRequest];
-        
-		[message addChild:body];
-        
-        XMPPMessage * xMessage = [XMPPMessage messageFromElement:message];
-        [xMessage addActiveChatState];
+        XMPPMessage * xmppMessage = [XMPPMessage messageWithType:@"chat" to:[XMPPJID jidWithString:theMessage.buddy.accountName] elementID:messageID];
+        [xmppMessage addBody:theMessage.message];
+
+        [xmppMessage addActiveChatState];
 		
-		[xmppStream sendElement:message];
-       
+		[xmppStream sendElement:xmppMessage];
     }
 }
 
@@ -1017,7 +1014,7 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     NSError * error = nil;
     OTRManagedBuddy * managedBuddy = (OTRManagedBuddy *)[context existingObjectWithID:managedBuddyObjectID error:&error];
     if (error) {
-        NSLog(@"Error Fetching Buddy: %@",error);
+        DDLogError(@"Error Fetching Buddy: %@",error);
     }
     return managedBuddy;
     

@@ -129,7 +129,7 @@
     [self updateTitleWithUnreadCount:[[self.unreadMessagesFetchedResultsContrller sections][0] numberOfObjects]];
     // uncomment to see a LOT of console output
 	// [Debug setDebuggingEnabled:YES];
-	NSLog(@"LibOrange (v: %@): -beginTest\n", @lib_orange_version_string);
+	//DDLogInfo(@"LibOrange (v: %@): -beginTest\n", @lib_orange_version_string);
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -197,7 +197,7 @@
         OTRNewBuddyViewController * newBuddyViewController =  [[OTRNewBuddyViewController alloc] initWithAccountObjectID:[object objectID]];
         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:newBuddyViewController];
         
-        navController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+        navController.modalPresentationStyle = UIModalPresentationPageSheet;
         [self.navigationController presentViewController:navController animated:YES completion:nil];
     }
     else if (numAccountsLoggedIn > 1)
@@ -205,7 +205,7 @@
         OTRChooseAccountViewController * chooseAccountViewController = [[OTRChooseAccountViewController alloc] init];
         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:chooseAccountViewController];
         
-        navController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+        navController.modalPresentationStyle = UIModalPresentationFormSheet;
         [self.navigationController presentViewController:navController animated:YES completion:nil];
     }
 }

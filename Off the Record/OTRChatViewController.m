@@ -143,7 +143,7 @@
     }];
     UIBarButtonItem * rightBarItem = self.navigationItem.rightBarButtonItem;
     if ([rightBarItem isEqual:lockButton] || [rightBarItem isEqual:lockVerifiedButton] || [rightBarItem isEqual:unlockedButton] || !rightBarItem) {
-        BOOL trusted = [[OTRKit sharedInstance] finerprintIsVerifiedForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
+        BOOL trusted = [[OTRKit sharedInstance] fingerprintIsVerifiedForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
         
         int16_t currentEncryptionStatus = [self.buddy currentEncryptionStatus].statusValue;
         
@@ -362,7 +362,7 @@
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    NSLog(@"buttonIndex: %d",buttonIndex);
+    //DDLogInfo(@"buttonIndex: %d",buttonIndex);
     if(actionSheet.tag == ACTIONSHEET_ENCRYPTION_OPTIONS_TAG)
     {
         if (buttonIndex == 1) // Verify
@@ -370,7 +370,7 @@
             NSString *msg = nil;
             NSString *ourFingerprintString = [[OTRKit sharedInstance] fingerprintForAccountName:buddy.account.username protocol:buddy.account.protocol];
             NSString *theirFingerprintString = [[OTRKit sharedInstance] fingerprintForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
-            BOOL trusted = [[OTRKit sharedInstance] finerprintIsVerifiedForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
+            BOOL trusted = [[OTRKit sharedInstance] fingerprintIsVerifiedForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
             
             
             UIAlertView * alert;
@@ -397,27 +397,13 @@
         {
             if([self.buddy currentEncryptionStatus].statusValue == kOTRKitMessageStateEncrypted)
             {
-                [[OTRKit sharedInstance]disableEncryptionForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
+                [[OTRKit sharedInstance] disableEncryptionForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
             } else {
-                OTRManagedBuddy* theBuddy = buddy;
-                OTRManagedMessage * newMessage = [OTRManagedMessage newMessageToBuddy:theBuddy message:@"?OTR?" encrypted:YES];
-                //OTRManagedMessage *encodedMessage = [OTRCodec encodeMessage:newMessage];
-                [OTRCodec encodeMessage:newMessage startGeneratingKeysBlock:^{
-                    //display activity
-                    NSLog(@"Generating key");
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [self addLockSpinner];
-                    });
-                } completion:^(OTRManagedMessage *message) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        if ([self.buddy isEqual:message.buddy]) {
-                            [self removeLockSpinner];
-                        }
-                        [OTRManagedMessage sendMessage:message];
-                    });
-                    
+                [OTRCodec sendOtrInitiateOrRefreshMessageTobuddy:self.buddy startGeneratingKeysBlock:^{
+                    [self addLockSpinner];
+                } completion:^{
+                    [self removeLockSpinner];
                 }];
-                
             }
         }
         else if (buttonIndex == 2) { // Clear Chat History
@@ -462,7 +448,7 @@
 - (void) refreshView {
     _messagesFetchedResultsController = nil;
     _buddyFetchedResultsController = nil;
-    if (!buddy) {
+    if (!self.buddy) {
         if (!instructionsLabel) {
             int labelWidth = 500;
             int labelHeight = 100;
@@ -474,11 +460,12 @@
             self.navigationItem.rightBarButtonItem = nil;
         }
     } else {
-        if (instructionsLabel) {
+        if (self.instructionsLabel) {
             [self.instructionsLabel removeFromSuperview];
             self.instructionsLabel = nil;
         }
         [self buddyFetchedResultsController];
+        [self messagesFetchedResultsController];
         _heightForRow = [NSMutableArray array];
         _previousShownSentDate = nil;
         [self.buddy allMessagesRead];
@@ -576,7 +563,7 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    //    NSLog(@"heightForRowAtIndexPath: %@", indexPath);
+    //    DDLogInfo(@"heightForRowAtIndexPath: %@", indexPath);
     
     if (indexPath.row < [[self.messagesFetchedResultsController sections][indexPath.section] numberOfObjects])
     {
@@ -823,8 +810,7 @@
 {
     NSString * text = inputBar.textView.text;
     if ([text length]) {
-        NSLog(@"Send: %@",text);
-        BOOL secure = [self.buddy currentEncryptionStatus].statusValue == kOTRKitMessageStateEncrypted;
+        BOOL secure = [self.buddy currentEncryptionStatus].statusValue == kOTRKitMessageStateEncrypted || [OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyOpportunisticOtr];
         [buddy sendMessage:text secure:secure];
         chatInputBar.textView.text = nil;
     }

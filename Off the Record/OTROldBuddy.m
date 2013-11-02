@@ -95,9 +95,9 @@
         lastMessageDisconnected = NO;
         OTRBuddy* theBuddy = self;
         message = [message stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        //NSLog(@"message to be sent: %@",message);
+        //DDLogVerbose(@"message to be sent: %@",message);
         OTRMessage *newMessage = [OTRMessage messageWithBuddy:theBuddy message:message];
-        //NSLog(@"newMessagge: %@",newMessage.message);
+        //DDLogVerbose(@"newMessagge: %@",newMessage.message);
         OTRMessage *encodedMessage;
         if(secure)
         {
@@ -107,7 +107,7 @@
         {
             encodedMessage = newMessage;
         }
-        //NSLog(@"encoded message: %@",encodedMessage.message);
+        //DDLogVerbose(@"encoded message: %@",encodedMessage.message);
         [OTRMessage sendMessage:encodedMessage];    
         
         NSString *username = [NSString stringWithFormat:@"<p id=\"%d\"><strong style=\"color:blue\">Me:</strong>",self.numberOfMessagesSent];
@@ -157,7 +157,7 @@
 
 -(void)receiveMessage:(NSString *)message
 {
-    //NSLog(@"received: %@",message);
+    //DDLogVerbose(@"received: %@",message);
     if (message) {
         lastMessageDisconnected = NO;
         // Strip the shit out of it, but hopefully you're talking with someone who is trusted in the first place
@@ -207,7 +207,7 @@
 
 -(void)receiveReceiptResonse:(NSString *)responseID
 {
-    NSLog(@"Receipt Resonse: %@",responseID);
+    DDLogVerbose(@"Receipt Resonse: %@",responseID);
     
     NSString * ReceiptResonseScript = [NSString stringWithFormat:@"<script>x=document.getElementById('%@');x.innerHTML = x.innerHTML+\" (delivered)\";</script>",responseID];
     
@@ -281,7 +281,7 @@
                 [self receiveEncryptionMessage:CONVERSATION_NOT_SECURE_WARNING_STRING];
                 break;
             default:
-                NSLog(@"Unknown Encryption State");
+                DDLogWarn(@"Unknown Encryption State");
                 break;
         }
         

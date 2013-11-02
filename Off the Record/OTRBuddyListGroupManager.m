@@ -52,7 +52,7 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         NSManagedObjectContext *theContext = notification.object;
         
-        //NSLog(@"Notification: %@",notification.userInfo);
+        //DDLogInfo(@"Notification: %@",notification.userInfo);
         if ([[theContext persistentStoreCoordinator] isEqual:[[NSManagedObjectContext MR_contextForCurrentThread] persistentStoreCoordinator]]) {
             [[NSManagedObjectContext MR_contextForCurrentThread] mergeChangesFromContextDidSaveNotification:notification];
         }
@@ -106,7 +106,7 @@
 
 -(NSFetchedResultsController *)buddyFetchedResultsControllerWithManagedGroup:(OTRManagedGroup *)managedGroup
 {
-    NSLog(@"Fetched: %@",managedGroup.name);
+    //DDLogInfo(@"Fetched: %@",managedGroup.name);
     NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"%@ != nil OR %@ != nil",OTRManagedBuddyAttributes.accountName,OTRManagedBuddyAttributes.displayName];
     NSPredicate * onlineFilter = [NSPredicate predicateWithFormat:@"%K != %d",OTRManagedBuddyAttributes.currentStatus,kOTRBuddyStatusOffline];
     NSPredicate * groupFilter = [NSPredicate predicateWithFormat:@"%@ IN %K",managedGroup,OTRManagedBuddyRelationships.groups];

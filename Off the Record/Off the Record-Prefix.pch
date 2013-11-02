@@ -13,4 +13,11 @@
     #import <Foundation/Foundation.h>
     #define MR_ENABLE_ACTIVE_RECORD_LOGGING 0
     #import "CoreData+MagicalRecord.h"
+    #import "DDLog.h"
+    #import "DDTTYLogger.h"
+    #if DEBUG
+        static const int ddLogLevel = LOG_LEVEL_VERBOSE;
+    #else
+        static const int ddLogLevel = LOG_LEVEL_OFF;
+    #endif
 #endif

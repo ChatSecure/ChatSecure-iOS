@@ -69,7 +69,7 @@
     [session openWithBehavior:FBSessionLoginBehaviorUseSystemAccountIfPresent completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
         if ([session isOpen]) {
             
-            NSLog(@"Session: %@",session);
+            //DDLogInfo(@"Session: %@",session);
             FBRequest * request = [[FBRequest alloc] initWithSession:session graphPath:@"me"];
             [request startWithCompletionHandler:^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *user, NSError *error) {
                 if (!error) {
