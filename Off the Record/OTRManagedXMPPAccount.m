@@ -59,33 +59,6 @@
     return JABBER_STRING;
 }
 
-// Don't allow self-signed SSL for Facebook and Google Talk
-- (BOOL) shouldAllowSelfSignedSSL {
-    return self.allowSelfSignedSSLValue;
-}
-
-- (void) setShouldAllowSelfSignedSSL:(BOOL)shouldAllowSelfSignedSSL {
-    self.allowSelfSignedSSL = @(shouldAllowSelfSignedSSL);
-}
-
-- (BOOL) shouldAllowSSLHostNameMismatch {
-    
-    return self.allowSSLHostNameMismatchValue;
-}
-
-- (void) setShouldAllowSSLHostNameMismatch:(BOOL)shouldAllowSSLHostNameMismatch {
-    self.allowSSLHostNameMismatchValue = @(shouldAllowSSLHostNameMismatch);
-}
-
-- (BOOL) shouldAllowPlainTextAuthentication
-{
-    return self.allowPlainTextAuthenticationValue;
-}
-- (BOOL) shouldRequireTLS
-{
-    return self.requireTLSValue;
-}
-
 -(OTRAccountType)accountType
 {
     return OTRAccountTypeJabber;

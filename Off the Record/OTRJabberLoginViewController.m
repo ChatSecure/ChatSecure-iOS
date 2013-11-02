@@ -33,7 +33,7 @@
     [super viewDidLoad];
     NSString * accountDomainString = self.account.domain;
     BOOL sslMismatchSwitchStatus = self.account.allowSSLHostNameMismatchValue;
-    BOOL selfSignedSwitchStatus = self.account.shouldAllowSelfSignedSSL;
+    BOOL selfSignedSwitchStatus = self.account.allowSelfSignedSSLValue;
 	
     self.usernameTextField.placeholder = @"user@example.com";
     self.usernameTextField.keyboardType = UIKeyboardTypeEmailAddress;

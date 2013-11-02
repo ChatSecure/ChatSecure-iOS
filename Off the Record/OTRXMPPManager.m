@@ -456,8 +456,8 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 	
     
 	// You may need to alter these settings depending on the server you're connecting to
-	allowSelfSignedCertificates = account.shouldAllowSelfSignedSSL;
-	allowSSLHostNameMismatch = account.shouldAllowSSLHostNameMismatch;
+	allowSelfSignedCertificates = account.allowSelfSignedSSLValue;
+	allowSSLHostNameMismatch = account.allowSSLHostNameMismatchValue;
 }
 
 - (void)teardownStream
@@ -574,7 +574,10 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
     JID = [XMPPJID jidWithString:myJID resource:resource];
     
 	[xmppStream setMyJID:JID];
-    [xmppStream setHostName:self.account.domain];
+    if (self.account.domain.length > 0) {
+        [xmppStream setHostName:self.account.domain];
+    }
+    
     [xmppStream setHostPort:self.account.portValue];
 	password = myPassword;
     
@@ -663,15 +666,16 @@ static const int ddLogLevel = LOG_LEVEL_WARN;
 				expectedCertName = serverDomain;
 			}
 		}
-		else if (serverDomain == nil)
-		{
-			expectedCertName = virtualDomain;
-		}
-		else
+		else if (serverDomain.length)
 		{
 			expectedCertName = serverDomain;
 		}
+		else
+		{
+			expectedCertName = virtualDomain;
+		}
 		
+        expectedCertName = [xmppStream.myJID domain];
 		if (expectedCertName)
 		{
 			[settings setObject:expectedCertName forKey:(NSString *)kCFStreamSSLPeerName];
