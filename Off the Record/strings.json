@@ -570,5 +570,17 @@
     "ADD_STRING": {
         "comment": "Button title to add someone as a buddy",
         "string": "Add"
+    },
+    "DISMISS_STRING": {
+        "comment": "Text for button to dismiss alert view",
+        "string": "Dismiss"
+    },
+    "XMPP_CERT_FAIL_STRING": {
+        "comment": "Alert message when ssl certificate doesn't matched pinned certificate",
+        "string": "There was an error validating the certificate for %@. This may indicate that someone is trying to intercept your communications."
+    },
+    "CONNECT_ANYWAY_STRING": {
+        "comment": "Label for button when user wants to overide cautious security settings",
+        "string": "Connect anyway"
     }
 }
