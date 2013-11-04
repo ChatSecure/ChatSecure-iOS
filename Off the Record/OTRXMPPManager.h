@@ -37,6 +37,7 @@
 #import "OTRManagedXMPPAccount.h"
 #import "OTRManagedBuddy.h"
 #import "OTRXMPPBudyTimers.h"
+#import "XMPPCertificatePinning.h"
 
 @interface OTRXMPPManager : NSObject <XMPPRosterDelegate, NSFetchedResultsControllerDelegate, OTRProtocol>
 {
@@ -74,8 +75,10 @@
 @property (nonatomic, readonly) XMPPvCardAvatarModule *xmppvCardAvatarModule;
 @property (nonatomic, readonly) XMPPCapabilities *xmppCapabilities;
 @property (nonatomic, readonly) XMPPCapabilitiesCoreDataStorage *xmppCapabilitiesStorage;
+@property (nonatomic, readonly) XMPPCertificatePinning * certificatePinningModule;
 @property 	BOOL isXmppConnected;
-@property (nonatomic, strong)NSMutableDictionary * buddyTimers;
+@property (nonatomic, strong) NSMutableDictionary * buddyTimers;
+@property (nonatomic) BOOL manualyEvaluateTrust;
 
 - (NSManagedObjectContext *)managedObjectContext_roster;
 - (NSManagedObjectContext *)managedObjectContext_capabilities;

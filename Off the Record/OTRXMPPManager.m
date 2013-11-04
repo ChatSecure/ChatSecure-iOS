@@ -75,6 +75,8 @@
 @synthesize isXmppConnected;
 @synthesize account;
 @synthesize buddyTimers;
+@synthesize manualyEvaluateTrust = _manualyEvaluateTrust;
+@synthesize certificatePinningModule = _certificatePinningModule;
 
 - (id) initWithAccount:(OTRManagedAccount *)newAccount {
     self = [super init];
@@ -335,6 +337,8 @@
         xmppStream = [[XMPPStream alloc] init];
     }
     
+    xmppStream.autoStartTLS = YES;
+    
     
     
     //Makes sure not allow any sending of password in plain text
@@ -419,6 +423,11 @@
     
     xmppCapabilities.autoFetchHashedCapabilities = YES;
     xmppCapabilities.autoFetchNonHashedCapabilities = NO;
+    
+    
+    if ([self.account.domain isEqualToString:kOTRFacebookDomain] || [self.account.domain isEqualToString:kOTRGoogleTalkDomain]) {
+        self.manualyEvaluateTrust = YES;
+    }
     
 	// Activate xmpp modules
     
@@ -561,7 +570,6 @@
 	if (![xmppStream isDisconnected]) {
 		return YES;
 	}
-    xmppStream.autoStartTLS = YES;
     
 	//
 	// If you don't want to use the Settings view to set the JID, 
@@ -1080,6 +1088,27 @@ managedBuddyObjectID
 		return YES;
 	}
     return NO;
+}
+
+- (XMPPCertificatePinning *)certificatePinningModule
+{
+    if(!_certificatePinningModule){
+        _certificatePinningModule = [XMPPCertificatePinning defaultCertificates];
+    }
+    return _certificatePinningModule;
+}
+
+- (void)setManualyEvaluateTrust:(BOOL)manualyEvaluateTrust
+{
+    _manualyEvaluateTrust = manualyEvaluateTrust;
+    if (_manualyEvaluateTrust) {
+        xmppStream.manuallyEvaluateTrust = YES;
+        [self.certificatePinningModule activate:self.xmppStream];
+    }
+    else {
+        xmppStream.manuallyEvaluateTrust = NO;
+        [self.certificatePinningModule deactivate];
+    }
 }
 
 @end
