@@ -559,15 +559,15 @@
     if([message hasChatState] && ![message isErrorMessage])
     {
         OTRManagedBuddy * messageBuddy = [self buddyWithMessage:message];
-        if([message isComposingChatState])
+        if([message hasComposingChatState])
             [messageBuddy receiveChatStateMessage:kOTRChatStateComposing];
-        else if([message isPausedChatState])
+        else if([message hasPausedChatState])
             [messageBuddy receiveChatStateMessage:kOTRChatStatePaused];
-        else if([message isActiveChatState])
+        else if([message hasActiveChatState])
             [messageBuddy receiveChatStateMessage:kOTRChatStateActive];
-        else if([message isInactiveChatState])
+        else if([message hasInactiveChatState])
             [messageBuddy receiveChatStateMessage:kOTRChatStateInactive];
-        else if([message isGoneChatState])
+        else if([message hasGoneChatState])
             [messageBuddy receiveChatStateMessage:kOTRChatStateGone];
     }
     
