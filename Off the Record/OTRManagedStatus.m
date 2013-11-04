@@ -83,16 +83,16 @@
 +(NSString *)statusMessageWithStatus:(OTRBuddyStatus)status
 {
     switch (status) {
-        case kOTRBuddyStatusXa:
+        case OTRBuddyStatusXa:
             return EXTENDED_AWAY_STRING;
             break;
-        case kOTRBUddyStatusDnd:
+        case OTRBUddyStatusDnd:
             return DO_NOT_DISTURB_STRING;
             break;
-        case kOTRBuddyStatusAway:
+        case OTRBuddyStatusAway:
             return AWAY_STRING;
             break;
-        case kOTRBuddyStatusAvailable:
+        case OTRBuddyStatusAvailable:
             return AVAILABLE_STRING;
             break;
         default:

@@ -35,6 +35,9 @@
 #import "XMPPMessageDeliveryReceipts.h"
 #import "Strings.h"
 #import "OTRXMPPManagedPresenceSubscriptionRequest.h"
+#import "OTRRosterStorage.h"
+#import "OTRCapabilitiesInMemoryCoreDataStorage.h"
+#import "OTRvCardCoreDataStorage.h"
 
 #import "DDLog.h"
 #import "DDTTYLogger.h"
@@ -106,6 +109,7 @@
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+<<<<<<< HEAD
 #pragma mark NSFetchedResultsController
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -318,6 +322,8 @@
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+=======
+>>>>>>> xmpp-buddies
 #pragma mark Private
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -382,9 +388,10 @@
 	
     //xmppRosterStorage = [[XMPPRosterCoreDataStorage alloc] initWithDatabaseFilename:self.account.uniqueIdentifier];
     //  xmppRosterStorage = [[XMPPRosterCoreDataStorage alloc] init];
-    	xmppRosterStorage = [[XMPPRosterCoreDataStorage alloc] initWithInMemoryStore];
+    //	xmppRosterStorage = [[XMPPRosterCoreDataStorage alloc] initWithInMemoryStore];
+    OTRRosterStorage * rosterStorage = [[OTRRosterStorage alloc] init];
 	
-	xmppRoster = [[XMPPRoster alloc] initWithRosterStorage:xmppRosterStorage];
+	xmppRoster = [[XMPPRoster alloc] initWithRosterStorage:rosterStorage];
 	
 	xmppRoster.autoFetchRoster = YES;
 	xmppRoster.autoAcceptKnownPresenceSubscriptionRequests = YES;
@@ -394,8 +401,9 @@
 	// The vCard Avatar module works in conjuction with the standard vCard Temp module to download user avatars.
 	// The XMPPRoster will automatically integrate with XMPPvCardAvatarModule to cache roster photos in the roster.
 	
-	xmppvCardStorage = [XMPPvCardCoreDataStorage sharedInstance];
-	xmppvCardTempModule = [[XMPPvCardTempModule alloc] initWithvCardStorage:xmppvCardStorage];
+	//xmppvCardStorage = [XMPPvCardCoreDataStorage sharedInstance];
+    OTRvCardCoreDataStorage * vCardCoreDataStorage  = [[OTRvCardCoreDataStorage alloc] init];
+	xmppvCardTempModule = [[XMPPvCardTempModule alloc] initWithvCardStorage:vCardCoreDataStorage];
 	
 	xmppvCardAvatarModule = [[XMPPvCardAvatarModule alloc] initWithvCardTempModule:xmppvCardTempModule];
 	
@@ -418,7 +426,7 @@
 	// The XMPPCapabilitiesCoreDataStorage is an ideal solution.
 	// It can also be shared amongst multiple streams to further reduce hash lookups.
 	
-	xmppCapabilitiesStorage = [XMPPCapabilitiesCoreDataStorage sharedInstance];
+	xmppCapabilitiesStorage = [OTRCapabilitiesInMemoryCoreDataStorage sharedInstance];
     xmppCapabilities = [[XMPPCapabilities alloc] initWithCapabilitiesStorage:xmppCapabilitiesStorage];
     
     xmppCapabilities.autoFetchHashedCapabilities = YES;
@@ -510,7 +518,7 @@
 	XMPPPresence *presence = [XMPPPresence presence]; // type="available" is implicit
 	
 	[[self xmppStream] sendElement:presence];
-    [self fetchedResultsController];
+    //[self fetchedResultsController];
 }
 
 - (void)goOffline
@@ -622,7 +630,7 @@
     
     [xmppStream disconnect];
     
-    [self.account setAllBuddiesStatuts:kOTRBuddyStatusOffline];
+    [self.account setAllBuddiesStatuts:OTRBuddyStatusOffline];
     self.account.isConnectedValue = NO;
     
     if([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyDeleteOnDisconnect])
@@ -753,11 +761,7 @@
 
 -(OTRManagedBuddy *)buddyWithMessage:(XMPPMessage *)message
 {
-    XMPPUserCoreDataStorageObject *user = [xmppRosterStorage userForJID:[message from]
-                                                             xmppStream:xmppStream
-                                                   managedObjectContext:[self managedObjectContext_roster]];
-    
-    return [OTRManagedBuddy fetchOrCreateWithName:[user.jid full] account:self.account];
+    return [OTRManagedBuddy fetchOrCreateWithName:[[message from] bare] account:self.account];
 }
 
 
@@ -790,11 +794,7 @@
     
     if ([message hasReceiptResponse] && ![message isErrorMessage]) {
         
-        XMPPUserCoreDataStorageObject *user = [xmppRosterStorage userForJID:[message from]
-                                                                 xmppStream:xmppStream
-                                                       managedObjectContext:[self managedObjectContext_roster]];
-        
-        OTRManagedBuddy * messageBuddy = [OTRManagedBuddy fetchOrCreateWithName:[user.jid full] account:self.account];
+        OTRManagedBuddy * messageBuddy = [self buddyWithMessage:message];
         
         [messageBuddy receiveReceiptResonse:[message receiptResponseID]];
     }
@@ -857,29 +857,10 @@
 {
     DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
 	
-	XMPPUserCoreDataStorageObject *user = [xmppRosterStorage userForJID:[presence from]
-	                                                         xmppStream:xmppStream
-	                                               managedObjectContext:[self managedObjectContext_roster]];
-	
-	NSString *displayName = [user displayName];
 	NSString *jidStrBare = [presence fromStr];
-	NSString *body = nil;
     
-    OTRXMPPManagedPresenceSubscriptionRequest * subRequest = [OTRXMPPManagedPresenceSubscriptionRequest fetchOrCreateWith:jidStrBare account:self.account];
-	
-	if (![displayName isEqualToString:jidStrBare] && [displayName length])
-	{
-        subRequest.displayName = displayName;
-		body = [NSString stringWithFormat:@"Buddy request from %@ <%@>", displayName, jidStrBare];
-	}
-	else
-	{
-		body = [NSString stringWithFormat:@"Buddy request from %@", displayName];
-	}
-    
+    [OTRXMPPManagedPresenceSubscriptionRequest fetchOrCreateWith:jidStrBare account:self.account];
     [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
-
-    
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -34,4 +34,6 @@
 + (NSUInteger)numberOfAccountsLoggedIn;
 + (NSArray *)allLoggedInAccounts;
 
++ (OTRManagedAccount *)accountForProtocol:(NSString *)protocol accountName: (NSString *) accountName;
+
 @end

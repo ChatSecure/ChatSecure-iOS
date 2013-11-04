@@ -503,7 +503,7 @@
         return _offlineBuddiesFetchedResultsController;
     }
     
-    NSPredicate * offlineBuddyFilter = [NSPredicate predicateWithFormat:@"%K == %d",OTRManagedBuddyAttributes.currentStatus,kOTRBuddyStatusOffline];
+    NSPredicate * offlineBuddyFilter = [NSPredicate predicateWithFormat:@"%K == %d",OTRManagedBuddyAttributes.currentStatus,OTRBuddyStatusOffline];
     NSPredicate * selfBuddyFilter = [NSPredicate predicateWithFormat:@"accountName != account.username"];
     NSPredicate * compoundPredicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[offlineBuddyFilter,selfBuddyFilter]];
     
@@ -817,19 +817,19 @@
     
     switch(buddyStatus)
     {
-        case kOTRBuddyStatusOffline:
+        case OTRBuddyStatusOffline:
             cell.textLabel.textColor = [UIColor lightGrayColor];
             break;
-        case kOTRBuddyStatusAway:
+        case OTRBuddyStatusAway:
             cell.textLabel.textColor = [UIColor darkGrayColor];
             break;
-        case kOTRBuddyStatusXa:
+        case OTRBuddyStatusXa:
             cell.textLabel.textColor = [UIColor darkGrayColor];
             break;
-        case kOTRBUddyStatusDnd:
+        case OTRBUddyStatusDnd:
             cell.textLabel.textColor = [UIColor darkGrayColor];
             break;
-        case kOTRBuddyStatusAvailable:
+        case OTRBuddyStatusAvailable:
             cell.textLabel.textColor = [UIColor darkTextColor];
             break;
         default:

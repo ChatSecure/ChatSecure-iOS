@@ -52,7 +52,7 @@
 -(BOOL)recipientIsLoggedIn:(NSString *)recipient accountName:(NSString *)accountName protocol:(NSString *)protocol
 {
     OTRManagedBuddy * buddy = [[OTRProtocolManager sharedInstance] buddyForUserName:recipient accountName:accountName protocol:protocol];
-    if(buddy.currentStatusValue == kOTRBuddyStatusOffline)
+    if(buddy.currentStatusValue == OTRBuddyStatusOffline)
     {
         return NO;
     }

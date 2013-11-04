@@ -238,7 +238,7 @@
     if ([sortedStatuses count]) {
         return sortedStatuses[0];
     }
-    return [OTRManagedStatus newStatus:kOTRBuddyStatusOffline withMessage:nil withBuddy:self incoming:YES];
+    return [OTRManagedStatus newStatus:OTRBuddyStatusOffline withMessage:nil withBuddy:self incoming:YES];
 
     
 }
@@ -298,7 +298,6 @@
     NSSortDescriptor * descriptor = [[NSSortDescriptor alloc] initWithKey:OTRManagedGroupAttributes.name ascending:YES];
     return [[self.groups sortedArrayUsingDescriptors:@[descriptor]] valueForKey:OTRManagedGroupAttributes.name];
 }
-
 
 +(OTRManagedBuddy *)fetchOrCreateWithName:(NSString *)name account:(OTRManagedAccount *)account
 {

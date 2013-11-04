@@ -558,5 +558,17 @@
     "OPPORTUNISTIC_OTR_SETTING_DESCRIPTION": {
         "comment": "string for decription yes/no setting for allowing opportunistic otr",
         "string" : "Enables opportunistic OTR"
+    },
+    "SUBSCRIPTION_REQUEST_TITLE": {
+        "comment": "Title of view where you can mange buddy or subscription requests",
+        "string": "Subscription Requests"
+    },
+    "REJECT_STRING": {
+        "comment": "Button title to reject a request such as a buddy request",
+        "string": "Reject"
+    },
+    "ADD_STRING": {
+        "comment": "Button title to add someone as a buddy",
+        "string": "Add"
     }
 }

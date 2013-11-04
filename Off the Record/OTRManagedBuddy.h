@@ -59,6 +59,7 @@
 - (void) deleteAllMessages;
 
 +(OTRManagedBuddy *)fetchOrCreateWithName:(NSString *)name account:(OTRManagedAccount *)account;
++(OTRManagedBuddy *)fetchWithName:(NSString *)name account:(OTRManagedAccount *)account;
 
 @end
 
