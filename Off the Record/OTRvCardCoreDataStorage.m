@@ -54,7 +54,7 @@
         
         vCard.lastUpdated = [NSDate date];
     } completion:^(BOOL success, NSError *error) {
-        NSLog(@"Saved vCard: %hhd",success);
+        DDLogInfo(@"Saved vCard: %hhd",success);
     }];
     
 }

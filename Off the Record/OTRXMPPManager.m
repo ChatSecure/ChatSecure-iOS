@@ -460,7 +460,7 @@
 		// Because so many people ask questions about this (assume xmpp framework is broken),
 		// I've explicitly added code that shows how other xmpp clients "do the right thing"
 		// when connecting to a google server (gmail, or google apps for domains).
-		
+		/*
 		NSString *expectedCertName = nil;
 		
 		NSString *serverDomain = xmppStream.hostName;
@@ -491,6 +491,7 @@
 		{
 			[settings setObject:expectedCertName forKey:(NSString *)kCFStreamSSLPeerName];
 		}
+         */
 	}
 }
 

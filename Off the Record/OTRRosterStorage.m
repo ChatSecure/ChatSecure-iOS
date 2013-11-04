@@ -38,7 +38,7 @@
 
 - (void)handleRosterItem:(NSXMLElement *)item xmppStream:(XMPPStream *)stream
 {
-    NSLog(@"Item: %@",item);
+    DDLogInfo(@"Item: %@",item);
     [MagicalRecord saveUsingCurrentThreadContextWithBlockAndWait:^(NSManagedObjectContext *localContext) {
         NSString *jidStr = [item attributeStringValueForName:@"jid"];
         XMPPJID *jid = [[XMPPJID jidWithString:jidStr] bareJID];
@@ -64,7 +64,11 @@
 {
     [MagicalRecord saveUsingCurrentThreadContextWithBlockAndWait:^(NSManagedObjectContext *localContext) {
         OTRManagedBuddy * user = [self buddyWithJID:[presence from] xmppStream:stream];
-        if (user && ![presence isErrorPresence]) {
+        
+        if ([[presence type] isEqualToString:@"unavailable"] || [presence isErrorPresence]) {
+            [user newStatusMessage:OFFLINE_STRING status:OTRBuddyStatusOffline incoming:YES];
+        }
+        else if (user) {
             OTRBuddyStatus buddyStatus;
             switch (presence.intShow)
             {
@@ -158,7 +162,7 @@
         [user newStatusMessage:PENDING_APPROVAL_STRING status:OTRBuddyStatusOffline incoming:YES];
     }
     else{
-        NSLog(@"");
+        DDLogWarn(@"Unhandled type: %@",item);
     }
     
 }
