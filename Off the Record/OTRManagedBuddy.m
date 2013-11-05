@@ -37,30 +37,6 @@
 
 @implementation OTRManagedBuddy
 
-
--(void)sendMessage:(NSString *)message secure:(BOOL)secure
-{
-    if (message) {
-        self.lastMessageDisconnected = NO;
-        OTRManagedBuddy* theBuddy = self;
-        message = [message stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        OTRManagedMessage *newMessage = [OTRManagedMessage newMessageToBuddy:theBuddy message:message encrypted:NO];
-        if(secure)
-        {
-            [OTRCodec encodeMessage:newMessage completionBlock:^(OTRManagedMessage *encodedMessage) {
-                [OTRManagedMessage sendMessage:encodedMessage];
-                self.lastSentChatStateValue=kOTRChatStateActive;
-            }];
-        }
-        else
-        {
-            [OTRManagedMessage sendMessage:newMessage];
-            self.lastSentChatStateValue=kOTRChatStateActive;
-        }
-    }
-}
- 
-
 -(BOOL)protocolIsXMPP
 {
     OTRProtocolManager * protocolManager = [OTRProtocolManager sharedInstance];
@@ -158,17 +134,6 @@
     self.chatStateValue = newChatState;
     //NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
     //[context MR_saveToPersistentStoreAndWait];
-    //[[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];
-}
-
--(void)receiveReceiptResonse:(NSString *)responseID
-{
-    DDLogInfo(@"Receipt Resonse: %@",responseID);
-    
-    [OTRManagedMessage receiveMessage:responseID];
-    
-    //NSString * ReceiptResonseScript = [NSString stringWithFormat:@"<script>x=document.getElementById('%@');x.innerHTML = x.innerHTML+\" (delivered)\";</script>",responseID];
-    
     //[[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];
 }
 

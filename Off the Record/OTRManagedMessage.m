@@ -93,23 +93,14 @@
     return managedMessage;
 }
 
-+(void)sendMessage:(OTRManagedMessage *)message
++(void)receivedDeliveryReceiptForMessageID:(NSString *)objectIDString
 {
-    //NSDictionary *messageInfo = [NSDictionary dictionaryWithObject:message.objectID forKey:@"message"];
+    NSArray * messages = [OTRManagedMessage MR_findByAttribute:OTRManagedMessageAttributes.uniqueID withValue:objectIDString];
+    [messages enumerateObjectsUsingBlock:^(OTRManagedMessage * message, NSUInteger idx, BOOL *stop) {
+        message.isDeliveredValue = YES;
+    }];
     
-    [message.buddy invalidatePausedChatStateTimer];
     
-    
-    OTRProtocolManager * protocolManager =[OTRProtocolManager sharedInstance];
-    id<OTRProtocol> protocol = [protocolManager protocolForAccount:message.buddy.account];
-    [protocol sendMessage:message];
-}
-
-+(void)receiveMessage:(NSString *)objectIDString
-{
-    
-    OTRManagedMessage * message = [OTRManagedMessage MR_findFirstByAttribute:OTRManagedMessageAttributes.uniqueID withValue:objectIDString];
-    message.isDeliveredValue = YES;
 
     NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
     [context MR_saveToPersistentStoreAndWait];

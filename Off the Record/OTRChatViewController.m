@@ -271,7 +271,13 @@
     
     [self refreshView];
     if (buddy) {
-        self.title = newBuddy.displayName;
+        if ([newBuddy.displayName length]) {
+            self.title = newBuddy.displayName;
+        }
+        else {
+            self.title = newBuddy.accountName;
+        }
+        
         [self refreshLockButton];
         [self updateChatState:NO];
     }
@@ -401,7 +407,7 @@
             } else {
                 void (^sendInitateOTRMessage)(void) = ^void (void) {
                     [OTRCodec generateOtrInitiateOrRefreshMessageTobuddy:self.buddy completionBlock:^(OTRManagedMessage *message) {
-                        [OTRManagedMessage sendMessage:message];
+                        [OTRProtocolManager sendMessage:message];
                     }];
                 };
                 [OTRCodec hasGeneratedKeyForAccount:self.buddy.account completionBlock:^(BOOL hasGeneratedKey) {
@@ -822,8 +828,34 @@
 {
     NSString * text = inputBar.textView.text;
     if ([text length]) {
+        OTRManagedMessage * message = [OTRManagedMessage newMessageToBuddy:self.buddy message:text encrypted:NO];
+        
+        [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveOnlySelfAndWait];
+        
         BOOL secure = [self.buddy currentEncryptionStatus].statusValue == kOTRKitMessageStateEncrypted || [OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyOpportunisticOtr];
-        [buddy sendMessage:text secure:secure];
+        if(secure)
+        {
+            //check if need to generate keys
+            [OTRCodec hasGeneratedKeyForAccount:self.buddy.account completionBlock:^(BOOL hasGeneratedKey) {
+                if (!hasGeneratedKey) {
+                    [self addLockSpinner];
+                    [OTRCodec generatePrivateKeyFor:self.buddy.account completionBlock:^(BOOL generatedKey) {
+                        [self removeLockSpinner];
+                        [OTRCodec encodeMessage:message completionBlock:^(OTRManagedMessage *message) {
+                            [OTRProtocolManager sendMessage:message];
+                        }];
+                    }];
+                }
+                else {
+                    [OTRCodec encodeMessage:message completionBlock:^(OTRManagedMessage *message) {
+                        [OTRProtocolManager sendMessage:message];
+                    }];
+                }
+            }];
+        }
+        else {
+            [OTRProtocolManager sendMessage:message];
+        }
         chatInputBar.textView.text = nil;
     }
 }

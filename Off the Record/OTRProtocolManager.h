@@ -47,4 +47,6 @@
 
 -(BOOL)isAccountConnected:(OTRManagedAccount *)account;
 
++ (void)sendMessage:(OTRManagedMessage *)message;
+
 @end

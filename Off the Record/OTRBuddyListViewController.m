@@ -621,7 +621,9 @@
                 else{
                     [self configureBuddyCell:[tableView cellForRowAtIndexPath:modifiedIndexPath] withBuddy:buddy];
                 }
-                [tableView moveRowAtIndexPath:modifiedIndexPath toIndexPath:modifiedNewIndexPath];
+                //[tableView moveRowAtIndexPath:modifiedIndexPath toIndexPath:modifiedNewIndexPath];
+                [tableView deleteRowsAtIndexPaths:@[modifiedIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+                [tableView insertRowsAtIndexPaths:@[modifiedNewIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
                 break;
         }
     }

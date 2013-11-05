@@ -37,6 +37,7 @@
               completionBlock:(void (^)(BOOL generatedKey))completionBlock;
 + (void)isGeneratingKeyForBuddy:(OTRManagedBuddy *)buddy
                      completion:(void (^)(BOOL isGeneratingKey))completion;
+
 + (void)hasGeneratedKeyForAccount:(OTRManagedAccount *)account
                 completionBlock:(void (^)(BOOL hasGeneratedKey))completionBlock;
 

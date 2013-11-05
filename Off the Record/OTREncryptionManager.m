@@ -46,7 +46,7 @@
 
 - (void) injectMessage:(NSString*)message recipient:(NSString*)recipient accountName:(NSString*)accountName protocol:(NSString*)protocol {
     OTRManagedMessage *newMessage = [OTRManagedMessage newMessageToBuddy:[[OTRProtocolManager sharedInstance] buddyForUserName:recipient accountName:accountName protocol:protocol] message:message encrypted:YES];
-    [OTRManagedMessage sendMessage:newMessage];
+    [OTRProtocolManager sendMessage:newMessage];
 }
 
 -(BOOL)recipientIsLoggedIn:(NSString *)recipient accountName:(NSString *)accountName protocol:(NSString *)protocol

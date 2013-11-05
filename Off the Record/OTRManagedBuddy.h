@@ -33,8 +33,6 @@
 
 -(void)receiveMessage:(NSString *)message;
 -(void)receiveChatStateMessage:(OTRChatState) chatState;
--(void)receiveReceiptResonse:(NSString *)responseID;
--(void)sendMessage:(NSString *)message secure:(BOOL)secure;
 
 -(BOOL)protocolIsXMPP;
 

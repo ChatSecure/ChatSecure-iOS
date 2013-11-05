@@ -110,4 +110,15 @@ static OTRProtocolManager *sharedManager = nil;
     
 }
 
++ (void)sendMessage:(OTRManagedMessage *)message {
+    message.buddy.lastMessageDisconnected = NO;
+    message.buddy.lastSentChatStateValue=kOTRChatStateActive;
+    [message.buddy invalidatePausedChatStateTimer];
+    
+    
+    OTRProtocolManager * protocolManager = [OTRProtocolManager sharedInstance];
+    id<OTRProtocol> protocol = [protocolManager protocolForAccount:message.buddy.account];
+    [protocol sendMessage:message];
+}
+
 @end

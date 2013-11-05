@@ -580,9 +580,7 @@
     
     if ([message hasReceiptResponse] && ![message isErrorMessage]) {
         
-        OTRManagedBuddy * messageBuddy = [self buddyWithMessage:message];
-        
-        [messageBuddy receiveReceiptResonse:[message receiptResponseID]];
+        [OTRManagedMessage receivedDeliveryReceiptForMessageID:[message receiptResponseID]];
     }
     
 	if ([message isMessageWithBody] && ![message isErrorMessage])
