@@ -93,13 +93,6 @@
     return managedMessage;
 }
 
--(void)send
-{
-    OTRProtocolManager * protocolManager =[OTRProtocolManager sharedInstance];
-    id<OTRProtocol> protocol = [protocolManager protocolForAccount:self.buddy.account];
-    [protocol sendMessage:self];
-}
-
 +(void)sendMessage:(OTRManagedMessage *)message
 {
     //NSDictionary *messageInfo = [NSDictionary dictionaryWithObject:message.objectID forKey:@"message"];
@@ -110,9 +103,6 @@
     OTRProtocolManager * protocolManager =[OTRProtocolManager sharedInstance];
     id<OTRProtocol> protocol = [protocolManager protocolForAccount:message.buddy.account];
     [protocol sendMessage:message];
-    
-    
-    //[[NSNotificationCenter defaultCenter] postNotificationName:kOTRSendMessage object:self userInfo:messageInfo];
 }
 
 +(void)receiveMessage:(NSString *)objectIDString

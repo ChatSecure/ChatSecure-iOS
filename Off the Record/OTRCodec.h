@@ -22,20 +22,22 @@
 
 #import <Foundation/Foundation.h>
 #import "OTRManagedMessage.h"
+#import "OTRManagedAccount.h"
 #import "OTRKit.h"
 
 @interface OTRCodec : NSObject
 
 + (void)decodeMessage:(OTRManagedMessage*)theMessage;
++ (void)encodeMessage:(OTRManagedMessage*)theMessage completionBlock:(void (^)(OTRManagedMessage * message))completionBlock;
 
-+ (void)encodeMessage:(OTRManagedMessage *)theMessage startGeneratingKeysBlock:(void (^)(void))generatingKeysBlock completion:(void (^)(OTRManagedMessage * message))completionBlock;
++ (void)generateOtrInitiateOrRefreshMessageTobuddy:(OTRManagedBuddy*)buddy
+                                   completionBlock:(void (^)(OTRManagedMessage * message))completionBlock;
 
-+ (OTRManagedMessage*)encodeMessage:(OTRManagedMessage*)theMessage;
-
-+ (void)sendOtrInitiateOrRefreshMessageTobuddy:(OTRManagedBuddy*)buddy
-                      startGeneratingKeysBlock:(void (^)(void))generatingKeysBlock
-                                    completion:(void (^)(void))completionBlock;
-
-+ (void)isGeneratingKeyForBuddy:(OTRManagedBuddy *)buddy completion:(void (^)(BOOL isGeneratingKey))completion;
++ (void)generatePrivateKeyFor:(OTRManagedAccount *)account
+              completionBlock:(void (^)(BOOL generatedKey))completionBlock;
++ (void)isGeneratingKeyForBuddy:(OTRManagedBuddy *)buddy
+                     completion:(void (^)(BOOL isGeneratingKey))completion;
++ (void)hasGeneratedKeyForAccount:(OTRManagedAccount *)account
+                completionBlock:(void (^)(BOOL hasGeneratedKey))completionBlock;
 
 @end

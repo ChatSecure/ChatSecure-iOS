@@ -44,27 +44,19 @@
         self.lastMessageDisconnected = NO;
         OTRManagedBuddy* theBuddy = self;
         message = [message stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        //DDLogVerbose(@"message to be sent: %@",message);
         OTRManagedMessage *newMessage = [OTRManagedMessage newMessageToBuddy:theBuddy message:message encrypted:NO];
-        //DDLogVerbose(@"newMessagge: %@",newMessage.message);
-        OTRManagedMessage *encodedMessage;
         if(secure)
         {
-            encodedMessage = [OTRCodec encodeMessage:newMessage];
-            [OTRCodec encodeMessage:newMessage startGeneratingKeysBlock:nil completion:^(OTRManagedMessage *message) {
-                [OTRManagedMessage sendMessage:message];
+            [OTRCodec encodeMessage:newMessage completionBlock:^(OTRManagedMessage *encodedMessage) {
+                [OTRManagedMessage sendMessage:encodedMessage];
                 self.lastSentChatStateValue=kOTRChatStateActive;
             }];
         }
         else
         {
-            encodedMessage = newMessage;
-            [OTRManagedMessage sendMessage:encodedMessage];
+            [OTRManagedMessage sendMessage:newMessage];
+            self.lastSentChatStateValue=kOTRChatStateActive;
         }
-        //DDLogVerbose(@"encoded message: %@",encodedMessage.message);
-        
-
-        
     }
 }
  

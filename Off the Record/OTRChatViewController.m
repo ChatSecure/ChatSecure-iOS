@@ -399,10 +399,22 @@
             {
                 [[OTRKit sharedInstance] disableEncryptionForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
             } else {
-                [OTRCodec sendOtrInitiateOrRefreshMessageTobuddy:self.buddy startGeneratingKeysBlock:^{
-                    [self addLockSpinner];
-                } completion:^{
-                    [self removeLockSpinner];
+                void (^sendInitateOTRMessage)(void) = ^void (void) {
+                    [OTRCodec generateOtrInitiateOrRefreshMessageTobuddy:self.buddy completionBlock:^(OTRManagedMessage *message) {
+                        [OTRManagedMessage sendMessage:message];
+                    }];
+                };
+                [OTRCodec hasGeneratedKeyForAccount:self.buddy.account completionBlock:^(BOOL hasGeneratedKey) {
+                    if (!hasGeneratedKey) {
+                        [self addLockSpinner];
+                        [OTRCodec generatePrivateKeyFor:self.buddy.account completionBlock:^(BOOL generatedKey) {
+                            [self removeLockSpinner];
+                            sendInitateOTRMessage();
+                        }];
+                    }
+                    else {
+                        sendInitateOTRMessage();
+                    }
                 }];
             }
         }
