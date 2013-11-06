@@ -3314,7 +3314,7 @@
 				ORGANIZATIONNAME = "Chris Ballinger";
 				TargetAttributes = {
 					D9F9377713F44BD3009A3D84 = {
-						DevelopmentTeam = SF3NXKQQ64;
+						DevelopmentTeam = 4T8JLQR6GR;
 					};
 				};
 			};
@@ -4165,8 +4165,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD)";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Chris Ballinger (9P62QGET7G)";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4202,8 +4201,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD)";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Chris Ballinger (4T8JLQR6GR)";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4235,7 +4233,7 @@
 				);
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = ChatSecure;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "B2E22905-8D68-404E-B6BA-AA9674B3AD7D";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
