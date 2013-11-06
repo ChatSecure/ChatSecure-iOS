@@ -12,6 +12,7 @@
 #import "OTRManagedXMPPAccount.h"
 #import "OTRManagedFacebookAccount.h"
 #import "OTRManagedGoogleAccount.h"
+#import "SSKeychain.h"
 
 @implementation OTRAppVersionManager
 
@@ -27,8 +28,34 @@
     if (![lastVersionString length]) {
         [self applyAll];
     }
+    else if ([lastVersionString isEqualToString:@"2.1"] || [lastVersionString isEqualToString:@"2.1.1"])
+    {
+        [self updatesToVersion22];
+    }
     
     [OTRAppVersionManager saveCurrentAppVersion];
+}
+
+-(void)updatesToVersion22
+{
+    //use old method for retrieving oauth dict then save it with new method
+    NSArray * oAuthAccounts = [OTRManagedOAuthAccount MR_findAll];
+    __block SSKeychainQuery * keychainQuery = [[SSKeychainQuery alloc] init];
+    [oAuthAccounts enumerateObjectsUsingBlock:^(OTRManagedOAuthAccount * account, NSUInteger idx, BOOL *stop) {
+        if (account.username) {
+            NSError * error = nil;
+            keychainQuery.service = kOTRServiceName;
+            keychainQuery.account = account.username;
+            if([keychainQuery fetch:&error])
+            {
+                NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:keychainQuery.passwordData];
+                NSDictionary * dictionary = [unarchiver decodeObjectForKey:OTRArchiverKey];
+                [unarchiver finishDecoding];
+                keychainQuery.passwordObject = dictionary;
+                [account setTokenDictionary:dictionary];
+            }
+        }
+    }];
 }
 
 -(void)updatesToVersion21

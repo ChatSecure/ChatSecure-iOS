@@ -24,6 +24,14 @@
     return [self accessTokenString];
 }
 
+-(SSKeychainQuery *)baseKeychainQuery
+{
+    SSKeychainQuery * keychainQuery = [[SSKeychainQuery alloc] init];
+    keychainQuery.service = kOTRServiceName;
+    keychainQuery.account = self.username;
+    return keychainQuery;
+}
+
 -(void)setTokenDictionary:(NSDictionary *)accessTokenDictionary
 {
     if (![accessTokenDictionary count]) {
@@ -31,30 +39,35 @@
     }
     else {
         NSError *error = nil;
-        NSMutableData *data = [[NSMutableData alloc] init];
-        NSKeyedArchiver *archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];
-        [archiver encodeObject:accessTokenDictionary forKey:OTRArchiverKey];
-        [archiver finishEncoding];
-        [SSKeychain setPasswordData:data forService:kOTRServiceName account:self.username error:&error];
+        
+        SSKeychainQuery * keychainQuery = [self baseKeychainQuery];
+        
+        keychainQuery.passwordObject = accessTokenDictionary;
+        
+        [keychainQuery save:&error];
+        
         if (error) {
             DDLogError(@"Error saving password to keychain: %@%@", [error localizedDescription], [error userInfo]);
         }
     }
 }
 
+
+
 - (NSDictionary *)tokenDictionary
 {
     NSError * error = nil;
     NSDictionary *dictionary = nil;
-    NSData * data = [SSKeychain passwordDataForService:kOTRServiceName account:self.username error:&error];
+    
+    SSKeychainQuery * keychainQuery = [self baseKeychainQuery];
+    [keychainQuery fetch:&error];
+    
     if (error) {
         DDLogError(@"Error retreiving password from keychain: %@%@", [error localizedDescription], [error userInfo]);
         error = nil;
     }
     else {
-        NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
-        dictionary = [unarchiver decodeObjectForKey:OTRArchiverKey];
-        [unarchiver finishDecoding];
+        dictionary = (NSDictionary *)keychainQuery.passwordObject;
     }
     return dictionary;
 }
