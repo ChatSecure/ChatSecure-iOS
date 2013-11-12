@@ -484,10 +484,6 @@
         _previousShownSentDate = nil;
         [self.buddy allMessagesRead];
         
-        if (buddy.chatStateValue == kOTRChatStateComposing || buddy.chatStateValue == kOTRChatStatePaused) {
-            self.isComposingVisible = YES;
-        }
-        
         [self.chatHistoryTableView reloadData];
         
         _messageFontSize = [OTRSettingsManager floatForOTRSettingKey:kOTRSettingKeyFontSize];
