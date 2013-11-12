@@ -530,7 +530,12 @@
     [self refreshView];
     [self updateChatState:NO];
     
-    
+    // Work around keyboard visibility bug
+    if (chatInputBar.frame.origin.y > self.view.frame.size.height - chatInputBar.frame.size.height) {
+        CGRect newFrame = chatInputBar.frame;
+        newFrame.origin.y = self.view.frame.size.height - chatInputBar.frame.size.height;
+        chatInputBar.frame = newFrame;
+    }
 }
 
 -(void)saveCurrentMessageText

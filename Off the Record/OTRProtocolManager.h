@@ -39,8 +39,6 @@
 
 + (OTRProtocolManager*)sharedInstance; // Singleton method
 
--(void)sendMessage:(NSNotification*)notification;
-
 -(OTRManagedBuddy *)buddyForUserName:(NSString *)buddyUserName accountName:(NSString *)accountName protocol:(NSString *)protocol;
 
 -(id <OTRProtocol>) protocolForAccount:(OTRManagedAccount *)account;
