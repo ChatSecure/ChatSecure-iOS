@@ -224,8 +224,11 @@
 {
     [self.messages setValue:[NSNumber numberWithBool:YES] forKey:@"isRead"];
     NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
-    [context MR_saveToPersistentStoreAndWait];
-    //[context MR_saveOnlySelfWithCompletion:^(BOOL success, NSError * error){DDLogVerbose(@"Saving buddy"); }];
+    [context MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
+        if (error) {
+            DDLogError(@"Error saving all messages read to persistent store %@", error.userInfo);
+        }
+    }];
 }
 
 - (void) deleteAllMessages
