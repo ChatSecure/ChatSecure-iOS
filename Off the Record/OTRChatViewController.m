@@ -526,7 +526,11 @@
     [self refreshView];
     [self updateChatState:NO];
     
-    // Work around keyboard visibility bug
+    // KLUDGE: Work around keyboard visibility bug where chat input view is visible but keyboard is not
+    if (self.view.keyboardFrameInView.size.height == 0 && chatInputBar.frame.origin.y < self.view.frame.size.height - chatInputBar.frame.size.height) {
+        [chatInputBar.textView becomeFirstResponder];
+    }
+    // KLUDGE: If chatInputBar is beyond the bounds of the screen for some unknown reason, force it back into place
     if (chatInputBar.frame.origin.y > self.view.frame.size.height - chatInputBar.frame.size.height) {
         CGRect newFrame = chatInputBar.frame;
         newFrame.origin.y = self.view.frame.size.height - chatInputBar.frame.size.height;
