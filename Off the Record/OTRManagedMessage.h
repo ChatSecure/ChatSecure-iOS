@@ -29,11 +29,9 @@
 
 @interface OTRManagedMessage : _OTRManagedMessage
 
-- (void) send;
-
 +(OTRManagedMessage*)newMessageFromBuddy:(OTRManagedBuddy *)theBuddy message:(NSString *)theMessage encrypted:(BOOL)encryptionStatus delayedDate:(NSDate *)date;
 +(OTRManagedMessage *)newMessageToBuddy:(OTRManagedBuddy *)theBuddy message:(NSString *)theMessage encrypted:(BOOL)encryptionStatus;
-+(void)sendMessage:(OTRManagedMessage *)message;
-+(void)receiveMessage:(NSString *)objectIDString;
+
++(void)receivedDeliveryReceiptForMessageID:(NSString *)objectIDString;
 
 @end

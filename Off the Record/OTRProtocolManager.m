@@ -39,8 +39,6 @@ static OTRProtocolManager *sharedManager = nil;
     self.settingsManager = nil;
     self.accountsManager = nil;
     self.protocolManagers = nil;
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kOTRSendMessage object:nil];
 }
 
 -(id)init
@@ -52,13 +50,6 @@ static OTRProtocolManager *sharedManager = nil;
         self.encryptionManager = [[OTREncryptionManager alloc] init];
         self.settingsManager = [[OTRSettingsManager alloc] init];
         self.protocolManagers = [[NSMutableDictionary alloc] init];
-
-        [[NSNotificationCenter defaultCenter]
-         addObserver:self
-         selector:@selector(sendMessage:)
-         name:kOTRSendMessage
-         object:nil ];
-        
     }
     return self;
 }
@@ -90,15 +81,6 @@ static OTRProtocolManager *sharedManager = nil;
     return self;
 }
 
--(void)sendMessage:(NSNotification *)notification
-{
-    NSObject *messageObject = [notification object];
-    if ([messageObject isKindOfClass:[OTRManagedMessage class]]) {
-        OTRManagedMessage *message = (OTRManagedMessage *)messageObject;
-        [message send];
-    }        
-}
-
 -(OTRManagedBuddy *)buddyForUserName:(NSString *)buddyUserName accountName:(NSString *)accountName protocol:(NSString *)protocol
 {
     OTRManagedAccount * account = [self.accountsManager accountForProtocol:protocol accountName:accountName];
@@ -126,6 +108,17 @@ static OTRProtocolManager *sharedManager = nil;
     }
     return NO;
     
+}
+
++ (void)sendMessage:(OTRManagedMessage *)message {
+    message.buddy.lastMessageDisconnected = NO;
+    message.buddy.lastSentChatStateValue=kOTRChatStateActive;
+    [message.buddy invalidatePausedChatStateTimer];
+    
+    
+    OTRProtocolManager * protocolManager = [OTRProtocolManager sharedInstance];
+    id<OTRProtocol> protocol = [protocolManager protocolForAccount:message.buddy.account];
+    [protocol sendMessage:message];
 }
 
 @end

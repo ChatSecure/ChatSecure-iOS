@@ -744,13 +744,7 @@
     
     if ([message hasReceiptResponse] && ![message isErrorMessage]) {
         
-        XMPPUserCoreDataStorageObject *user = [xmppRosterStorage userForJID:[message from]
-                                                                 xmppStream:xmppStream
-                                                       managedObjectContext:[self managedObjectContext_roster]];
-        
-        OTRManagedBuddy * messageBuddy = [OTRManagedBuddy fetchOrCreateWithName:[user.jid full] account:self.account];
-        
-        [messageBuddy receiveReceiptResonse:[message receiptResponseID]];
+        [OTRManagedMessage receivedDeliveryReceiptForMessageID:[message receiptResponseID]];
     }
     
 	if ([message isMessageWithBody] && ![message isErrorMessage])

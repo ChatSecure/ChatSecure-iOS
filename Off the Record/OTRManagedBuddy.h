@@ -33,8 +33,6 @@
 
 -(void)receiveMessage:(NSString *)message;
 -(void)receiveChatStateMessage:(OTRChatState) chatState;
--(void)receiveReceiptResonse:(NSString *)responseID;
--(void)sendMessage:(NSString *)message secure:(BOOL)secure;
 
 -(BOOL)protocolIsXMPP;
 
@@ -59,6 +57,7 @@
 - (void) deleteAllMessages;
 
 +(OTRManagedBuddy *)fetchOrCreateWithName:(NSString *)name account:(OTRManagedAccount *)account;
++(OTRManagedBuddy *)fetchWithName:(NSString *)name account:(OTRManagedAccount *)account;
 
 @end
 

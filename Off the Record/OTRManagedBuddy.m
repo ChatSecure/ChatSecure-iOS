@@ -37,38 +37,6 @@
 
 @implementation OTRManagedBuddy
 
-
--(void)sendMessage:(NSString *)message secure:(BOOL)secure
-{
-    if (message) {
-        self.lastMessageDisconnected = NO;
-        OTRManagedBuddy* theBuddy = self;
-        message = [message stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        //DDLogVerbose(@"message to be sent: %@",message);
-        OTRManagedMessage *newMessage = [OTRManagedMessage newMessageToBuddy:theBuddy message:message encrypted:NO];
-        //DDLogVerbose(@"newMessagge: %@",newMessage.message);
-        OTRManagedMessage *encodedMessage;
-        if(secure)
-        {
-            encodedMessage = [OTRCodec encodeMessage:newMessage];
-            [OTRCodec encodeMessage:newMessage startGeneratingKeysBlock:nil completion:^(OTRManagedMessage *message) {
-                [OTRManagedMessage sendMessage:message];
-                self.lastSentChatStateValue=kOTRChatStateActive;
-            }];
-        }
-        else
-        {
-            encodedMessage = newMessage;
-            [OTRManagedMessage sendMessage:encodedMessage];
-        }
-        //DDLogVerbose(@"encoded message: %@",encodedMessage.message);
-        
-
-        
-    }
-}
- 
-
 -(BOOL)protocolIsXMPP
 {
     OTRProtocolManager * protocolManager = [OTRProtocolManager sharedInstance];
@@ -166,17 +134,6 @@
     self.chatStateValue = newChatState;
     //NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
     //[context MR_saveToPersistentStoreAndWait];
-    //[[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];
-}
-
--(void)receiveReceiptResonse:(NSString *)responseID
-{
-    DDLogInfo(@"Receipt Resonse: %@",responseID);
-    
-    [OTRManagedMessage receiveMessage:responseID];
-    
-    //NSString * ReceiptResonseScript = [NSString stringWithFormat:@"<script>x=document.getElementById('%@');x.innerHTML = x.innerHTML+\" (delivered)\";</script>",responseID];
-    
     //[[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];
 }
 
@@ -298,7 +255,6 @@
     NSSortDescriptor * descriptor = [[NSSortDescriptor alloc] initWithKey:OTRManagedGroupAttributes.name ascending:YES];
     return [[self.groups sortedArrayUsingDescriptors:@[descriptor]] valueForKey:OTRManagedGroupAttributes.name];
 }
-
 
 +(OTRManagedBuddy *)fetchOrCreateWithName:(NSString *)name account:(OTRManagedAccount *)account
 {
