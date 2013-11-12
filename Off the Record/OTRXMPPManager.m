@@ -640,7 +640,7 @@
 -(void)xmppRoster:(XMPPRoster *)sender didReceivePresenceSubscriptionRequest:(XMPPPresence *)presence
 {
     DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
-	
+    
 	NSString *jidStrBare = [presence fromStr];
     
     [OTRXMPPManagedPresenceSubscriptionRequest fetchOrCreateWith:jidStrBare account:self.account];

@@ -48,9 +48,9 @@
 	XMPPvCardTempModule *xmppvCardTempModule;
 	XMPPvCardAvatarModule *xmppvCardAvatarModule;
 	XMPPCapabilities *xmppCapabilities;
-	XMPPCapabilitiesCoreDataStorage *xmppCapabilitiesStorage;
+	//XMPPCapabilitiesCoreDataStorage *xmppCapabilitiesStorage;
 	
-	NSManagedObjectContext *managedObjectContext_capabilities;
+	//NSManagedObjectContext *managedObjectContext_capabilities;
 	
 	NSString *password;
     XMPPJID *JID;
@@ -78,12 +78,12 @@
 @property (nonatomic, strong) NSMutableDictionary * buddyTimers;
 @property (nonatomic) BOOL manualyEvaluateTrust;
 
-- (NSManagedObjectContext *)managedObjectContext_capabilities;
+//- (NSManagedObjectContext *)managedObjectContext_capabilities;
 
 - (BOOL)connectWithJID:(NSString*) myJID password:(NSString*)myPassword;
 - (void)disconnect;
 
-- (NSFetchedResultsController *)fetchedResultsController;
+//- (NSFetchedResultsController *)fetchedResultsController;
 
 - (NSString*)accountName;
 

@@ -94,7 +94,7 @@
             /////////
             
             NSDate *expirationDate = auth.expirationDate;
-            NSTimeInterval timeToExpire = [expirationDate timeIntervalSinceNow];
+            //NSTimeInterval timeToExpire = [expirationDate timeIntervalSinceNow];
             if ([auth.expiresIn doubleValue] < 60.0) {
                 // access token has expired, or will in a few seconds
                 shouldRefresh = YES;

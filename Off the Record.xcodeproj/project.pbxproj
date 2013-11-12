@@ -34,6 +34,7 @@
 		63188CBD16E55B230000DD40 /* OTRNewBuddyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63188CBC16E55B230000DD40 /* OTRNewBuddyViewController.m */; };
 		6319F696165EAB1F0063AC93 /* supportedLanguages.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6319F695165EAB1F0063AC93 /* supportedLanguages.plist */; };
 		631FE8851720951400AEA107 /* OTRStatusMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 631FE8841720951400AEA107 /* OTRStatusMessageCell.m */; };
+		6325F243182DA917005F1018 /* ChatSecure.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 6325F242182DA917005F1018 /* ChatSecure.sqlite */; };
 		633406391652C31300A54C52 /* OTRListSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 633406381652C31300A54C52 /* OTRListSetting.m */; };
 		6334063C1652C33300A54C52 /* OTRListSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6334063B1652C33300A54C52 /* OTRListSettingViewController.m */; };
 		633406411652D50F00A54C52 /* OTRLanguageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 633406401652D50F00A54C52 /* OTRLanguageManager.m */; };
@@ -675,6 +676,7 @@
 		6321870916E6C21100CB4D3C /* _OTRXMPPManagedPresenceSubscriptionRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _OTRXMPPManagedPresenceSubscriptionRequest.m; sourceTree = "<group>"; };
 		6321870A16E6C23200CB4D3C /* OTRXMPPManagedPresenceSubscriptionRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPManagedPresenceSubscriptionRequest.h; sourceTree = "<group>"; };
 		6321870B16E6C23200CB4D3C /* OTRXMPPManagedPresenceSubscriptionRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPManagedPresenceSubscriptionRequest.m; sourceTree = "<group>"; };
+		6325F242182DA917005F1018 /* ChatSecure.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = ChatSecure.sqlite; sourceTree = "<group>"; };
 		632E5C8416D1A2A90037E37C /* OTRMessageTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRMessageTableViewCell.h; sourceTree = "<group>"; };
 		632E5C8516D1A2A90037E37C /* OTRMessageTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRMessageTableViewCell.m; sourceTree = "<group>"; };
 		633406371652C31300A54C52 /* OTRListSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRListSetting.h; sourceTree = "<group>"; };
@@ -3304,6 +3306,7 @@
 		D9F9378013F44BD3009A3D84 /* Off the Record */ = {
 			isa = PBXGroup;
 			children = (
+				6325F242182DA917005F1018 /* ChatSecure.sqlite */,
 				D9ADF9E318109D410096B07A /* OTRDatabaseManager.h */,
 				D9ADF9E418109D410096B07A /* OTRDatabaseManager.m */,
 				D9D69B07141806BB0056FB9E /* Model */,
@@ -3782,6 +3785,7 @@
 				639C75D817E127A600530423 /* FBLoginViewButton.png in Resources */,
 				639C75D917E127A600530423 /* FBLoginViewButton@2x.png in Resources */,
 				639C75DA17E127A600530423 /* FBLoginViewButtonPressed.png in Resources */,
+				6325F243182DA917005F1018 /* ChatSecure.sqlite in Resources */,
 				639C75DB17E127A600530423 /* FBLoginViewButtonPressed@2x.png in Resources */,
 				633B6D0017ECF4F7002DA152 /* googleTalkButton@2x.png in Resources */,
 			);

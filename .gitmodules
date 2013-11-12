@@ -28,7 +28,7 @@
 	url = git@github.com:ChatSecure/encrypted-core-data.git
 [submodule "Submodules/MagicalRecord"]
 	path = Submodules/MagicalRecord
-	url = git@github.com:ChatSecure/MagicalRecord.git
+	url = git@github.com:magicalpanda/MagicalRecord.git
 [submodule "Submodules/DAKeyboardControl"]
 	path = Submodules/DAKeyboardControl
 	url = git@github.com:danielamitay/DAKeyboardControl.git

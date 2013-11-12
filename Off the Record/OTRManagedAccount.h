@@ -55,17 +55,11 @@
 
 -(void)prepareBuddiesandMessagesForDeletion;
 
+- (NSDictionary *)dictionaryRepresentation;
++ (instancetype)createWithDictionary:(NSDictionary *)dictionary;
+
 
 //Goes through all accounts checks if it's connected againgst ProtocolManager and adjusts buddy status
 +(void)resetAccountsConnectionStatus;
-
-@end
-
-@interface OTRManagedAccount (CoreDataGeneratedAccessors)
-
-- (void)addBuddiesObject:(NSManagedObject *)value;
-- (void)removeBuddiesObject:(NSManagedObject *)value;
-- (void)addBuddies:(NSSet *)values;
-- (void)removeBuddies:(NSSet *)values;
 
 @end

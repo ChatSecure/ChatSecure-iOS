@@ -65,11 +65,17 @@
 +(void)deleteAllBuddiesAndMessages
 {
     //Delete all stored buddies
+    NSArray * buddyArray = [OTRManagedBuddy MR_findAll];
+    [buddyArray enumerateObjectsUsingBlock:^(OTRManagedBuddy * buddy, NSUInteger idx, BOOL *stop) {
+        [buddy MR_deleteEntity];
+    }];
+    /*
     [OTRManagedBuddy MR_deleteAllMatchingPredicate:nil];
     //Delete all stored messages
     [OTRManagedMessageAndStatus MR_deleteAllMatchingPredicate:nil];
     //Delete all Groups
     [OTRManagedGroup MR_deleteAllMatchingPredicate:nil];
+    */
     
     NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
     [context MR_saveToPersistentStoreAndWait];

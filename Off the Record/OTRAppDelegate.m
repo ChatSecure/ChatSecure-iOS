@@ -71,7 +71,7 @@
     
     [OTRManagedAccount resetAccountsConnectionStatus];
     
-    [OTRAppVersionManager applyAppUpdatesForCurrentAppVersion];
+    //[OTRAppVersionManager applyAppUpdatesForCurrentAppVersion];
 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
