@@ -50,6 +50,8 @@
 
 @property (nonatomic, retain) NSURL *lastActionLink;
 
+@property (nonatomic) BOOL isComposingVisible;
+
 @property (nonatomic, retain) UISwipeGestureRecognizer * swipeGestureRecognizer;
 
 - (void)setupLockButton;
