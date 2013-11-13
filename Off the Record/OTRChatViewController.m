@@ -52,6 +52,7 @@
 @synthesize instructionsLabel;
 @synthesize chatHistoryTableView;
 @synthesize swipeGestureRecognizer;
+@synthesize isComposingVisible;
 
 - (void) dealloc {
     self.lastActionLink = nil;
@@ -285,13 +286,6 @@
     
 }
 
--(BOOL)isComposingVisible
-{
-    if ([self.chatHistoryTableView numberOfRowsInSection:0] == [[self.messagesFetchedResultsController fetchedObjects] count]) {
-        return NO;
-    }
-    return YES;
-}
 -(NSIndexPath *)lastIndexPath
 {
     return [NSIndexPath indexPathForRow:([self.chatHistoryTableView numberOfRowsInSection:0] - 1) inSection:0];
@@ -300,6 +294,7 @@
 
 -(void)removeComposing
 {
+    self.isComposingVisible = NO;
     [self.chatHistoryTableView beginUpdates];
     [self.chatHistoryTableView deleteRowsAtIndexPaths:@[[self lastIndexPath]] withRowAnimation:UITableViewRowAnimationAutomatic];
     [self.chatHistoryTableView endUpdates];
@@ -308,6 +303,7 @@
 }
 -(void)addComposing
 {
+    self.isComposingVisible = YES;
     NSIndexPath * lastIndexPath = [self lastIndexPath];
     NSInteger newLast = [lastIndexPath indexAtPosition:lastIndexPath.length-1]+1;
     lastIndexPath = [[lastIndexPath indexPathByRemovingLastIndex] indexPathByAddingIndex:newLast];
@@ -322,25 +318,25 @@
     switch (self.buddy.chatStateValue) {
         case kOTRChatStateComposing:
             {
-                if (![self isComposingVisible]) {
+                if (!self.isComposingVisible) {
                     [self addComposing];
                 }
             }
         break;
         case kOTRChatStatePaused:
             {
-                if (![self isComposingVisible]) {
+                if (!self.isComposingVisible) {
                 [self addComposing];
                 }
             }
             break;
         case kOTRChatStateActive:
-            if ([self isComposingVisible]) {
+            if (self.isComposingVisible) {
                 [self removeComposing];
             }
             break;
         default:
-            if ([self isComposingVisible]) {
+            if (self.isComposingVisible) {
                 [self removeComposing];
             }
             break;
@@ -487,9 +483,8 @@
         _heightForRow = [NSMutableArray array];
         _previousShownSentDate = nil;
         [self.buddy allMessagesRead];
+        
         [self.chatHistoryTableView reloadData];
-        //[self.textView resignFirstResponder];
-        //[self moveMessageBarBottom];
         
         _messageFontSize = [OTRSettingsManager floatForOTRSettingKey:kOTRSettingKeyFontSize];
         
@@ -531,7 +526,16 @@
     [self refreshView];
     [self updateChatState:NO];
     
-    
+    // KLUDGE: Work around keyboard visibility bug where chat input view is visible but keyboard is not
+    if (self.view.keyboardFrameInView.size.height == 0 && chatInputBar.frame.origin.y < self.view.frame.size.height - chatInputBar.frame.size.height) {
+        [chatInputBar.textView becomeFirstResponder];
+    }
+    // KLUDGE: If chatInputBar is beyond the bounds of the screen for some unknown reason, force it back into place
+    if (chatInputBar.frame.origin.y > self.view.frame.size.height - chatInputBar.frame.size.height) {
+        CGRect newFrame = chatInputBar.frame;
+        newFrame.origin.y = self.view.frame.size.height - chatInputBar.frame.size.height;
+        chatInputBar.frame = newFrame;
+    }
 }
 
 -(void)saveCurrentMessageText
@@ -649,7 +653,7 @@
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     NSInteger numMessages = [[self.messagesFetchedResultsController sections][section] numberOfObjects];
-    if (buddy.chatStateValue == kOTRChatStateComposing || buddy.chatStateValue == kOTRChatStatePaused) {
+    if (self.isComposingVisible) {
         numMessages +=1;
     }
     return numMessages;
