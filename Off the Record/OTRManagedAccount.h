@@ -35,9 +35,9 @@
 #define kFacebookImageName @"facebook.png"
 #define kXMPPImageName @"xmpp.png"
 
+#define kClassKey @"classKey"
 
 @interface OTRManagedAccount : _OTRManagedAccount
-
 
 @property (nonatomic, retain) NSString *password; // nil if rememberPassword = NO, not stored in memory
 
@@ -50,10 +50,10 @@
 - (void)setNewUsername:(NSString *)newUsername;
 - (void)setDefaultsWithProtocol:(NSString*)newProtocol;
 
--(void)setAllBuddiesStatuts:(OTRBuddyStatus)status;
--(void)deleteAllConversationsForAccount;
+- (void)setAllBuddiesStatuts:(OTRBuddyStatus)status;
+- (void)deleteAllConversationsForAccount;
 
--(void)prepareBuddiesandMessagesForDeletion;
+- (void)prepareBuddiesandMessagesForDeletion;
 
 - (NSDictionary *)dictionaryRepresentation;
 + (instancetype)createWithDictionary:(NSDictionary *)dictionary;

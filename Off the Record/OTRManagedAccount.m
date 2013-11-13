@@ -42,9 +42,26 @@
 - (void) setDefaultsWithProtocol:(NSString*)newProtocol {
     self.username = @"";
     self.protocol = newProtocol;
-    self.rememberPassword = NO;
-    self.isConnected = NO;
+    self.rememberPasswordValue = NO;
+    self.isConnectedValue = NO;
     self.uniqueIdentifier = [OTRUtilities uniqueString];
+}
+
+- (NSDictionary *)dictionaryRepresentation
+{
+    NSMutableDictionary * dictionary = [NSMutableDictionary dictionary];
+    
+    NSArray * attributes = [self.entity.attributesByName allKeys];
+    
+    dictionary[kClassKey] = NSStringFromClass([self class]);
+    
+    [attributes enumerateObjectsUsingBlock:^(NSString * attributeName, NSUInteger idx, BOOL *stop) {
+        
+        NSObject* attributeValue = [self valueForKey:attributeName];
+        if (attributeValue) {
+            dictionary[attributeName] = attributeValue;
+        }
+    }];
 }
 
 // Default, this will be overridden in subclasses
@@ -194,6 +211,21 @@
     NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
     [context MR_saveToPersistentStoreAndWait];
     
+}
+
++ (instancetype)createWithDictionary:(NSDictionary *)dictionary
+{
+    NSString * className = dictionary[kClassKey];
+    OTRManagedAccount * account = nil;
+    if (className) {
+        account = [NSClassFromString(className) MR_createEntity];
+        NSMutableDictionary * attributesDict = [dictionary mutableCopy];
+        [attributesDict removeObjectForKey:kClassKey];
+        [attributesDict enumerateKeysAndObjectsUsingBlock:^(NSString * key, id obj, BOOL *stop) {
+            [account setValue:obj forKey:key];
+        }];
+    }
+    return account;
 }
 
 @end
