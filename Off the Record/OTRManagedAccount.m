@@ -215,12 +215,13 @@
     
 }
 
-+ (instancetype)createWithDictionary:(NSDictionary *)dictionary
++ (instancetype)createWithDictionary:(NSDictionary *)dictionary forContext:(NSManagedObjectContext *)context
 {
     NSString * className = dictionary[kClassKey];
     OTRManagedAccount * account = nil;
     if (className) {
-        account = [NSClassFromString(className) MR_createEntity];
+        account = [NSClassFromString(className) insertInManagedObjectContext:context];
+        
         NSMutableDictionary * attributesDict = [dictionary mutableCopy];
         [attributesDict removeObjectForKey:kClassKey];
         [attributesDict enumerateKeysAndObjectsUsingBlock:^(NSString * key, id obj, BOOL *stop) {

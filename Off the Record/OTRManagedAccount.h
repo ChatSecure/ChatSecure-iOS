@@ -56,7 +56,7 @@
 - (void)prepareBuddiesandMessagesForDeletion;
 
 - (NSDictionary *)dictionaryRepresentation;
-+ (instancetype)createWithDictionary:(NSDictionary *)dictionary;
++ (instancetype)createWithDictionary:(NSDictionary *)dictionary forContext:(NSManagedObjectContext *)context;
 
 
 //Goes through all accounts checks if it's connected againgst ProtocolManager and adjusts buddy status

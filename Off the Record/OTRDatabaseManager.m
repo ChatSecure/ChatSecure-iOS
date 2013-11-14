@@ -119,8 +119,8 @@
     
     __block NSArray * results;
     [context performBlockAndWait:^{
-        NSEntityDescription *entityDescription = [NSEntityDescription
-                                                  entityForName:@"OTRManagedAccount" inManagedObjectContext:context];
+        NSEntityDescription *entityDescription = [NSEntityDescription entityForName:@"OTRManagedAccount"
+                                                             inManagedObjectContext:context];
         NSFetchRequest *request = [[NSFetchRequest alloc] init];
         [request setEntity:entityDescription];
         results = [context executeFetchRequest:request error:nil];
@@ -133,25 +133,24 @@
         [allAccountDictionaries addObject:[account dictionaryRepresentation]];
     }];
     
-    [NSPersistentStore MR_setDefaultPersistentStore:nil];
-    [NSManagedObjectContext MR_resetDefaultContext];
     
     [[NSFileManager defaultManager] removeItemAtURL:storeUrl error:&error];
     
     
     storeCoordinator =[[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:finalObjectModel];
     [storeCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeUrl options:options error:&error];
+    
+    context = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+    [context setPersistentStoreCoordinator:storeCoordinator];
+    
     [NSPersistentStoreCoordinator MR_setDefaultStoreCoordinator:storeCoordinator];
     [NSManagedObjectContext MR_initializeDefaultContextWithCoordinator:storeCoordinator];
     
     [allAccountDictionaries enumerateObjectsUsingBlock:^(NSDictionary * accountDictionary, NSUInteger idx, BOOL *stop) {
-        [OTRManagedAccount createWithDictionary:accountDictionary];
+        [OTRManagedAccount createWithDictionary:accountDictionary forContext:context];
     }];
     
-    [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveOnlySelfAndWait];
-    
-    [NSPersistentStoreCoordinator MR_setDefaultStoreCoordinator:nil];
-    [NSManagedObjectContext MR_resetDefaultContext];
+    [context save:&error];
 }
 
 + (BOOL)isManagedObjectModel:(NSManagedObjectModel *)managedObjectModel compatibleWithStoreAtUrl:(NSURL *)storeUrl {
