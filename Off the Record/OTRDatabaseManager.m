@@ -7,6 +7,7 @@
 //
 
 #import "OTRDatabaseManager.h"
+
 #import "OTRManagedAccount.h"
 
 @implementation OTRDatabaseManager
@@ -45,7 +46,9 @@
     
     
     NSURL * databaseURL = [NSPersistentStore MR_urlForStoreName:databaseName];
+    
     [self copyTestDatabaseToDestination:databaseURL];
+    
     NSFileManager *fileManager = [NSFileManager defaultManager];
     if ([fileManager fileExistsAtPath:legacyDatabaseURL.path]) {
         // migrate store
@@ -53,72 +56,23 @@
             [fileManager removeItemAtURL:legacyDatabaseURL error:nil];
         }
     }
+    
+    NSURL *mom2 = [[NSBundle mainBundle] URLForResource:@"ChatSecure 2" withExtension:@"mom" subdirectory:@"ChatSecure.momd"];
+    NSURL *mom3 = [[NSBundle mainBundle] URLForResource:@"ChatSecure 3" withExtension:@"mom" subdirectory:@"ChatSecure.momd"];
+    NSManagedObjectModel *version2Model = [[NSManagedObjectModel alloc] initWithContentsOfURL:mom2];
+    NSManagedObjectModel *version3Model = [[NSManagedObjectModel alloc] initWithContentsOfURL:mom3];
+    
+    //if ([self isManagedObjectModel:version2Model compatibleWithStoreAtUrl:databaseURL]) {
+        [self migrateAccountsForManagedObjectModel:version2Model toManagedObjectModel:version3Model withStoreUrl:databaseURL];
+    //}
+    
     [MagicalRecord setShouldAutoCreateManagedObjectModel:NO];
     [MagicalRecord setDefaultModelNamed:@"ChatSecure.momd"];
     [MagicalRecord setupCoreDataStackWithAutoMigratingSqliteStoreNamed:databaseName];
-    /*
-    NSPersistentStoreCoordinator * persistentStoreCoordinator = [self persistentStoreCoordinatorWithDatabaseName:databaseName];
-    [NSPersistentStoreCoordinator MR_setDefaultStoreCoordinator:persistentStoreCoordinator];
-    [NSManagedObjectContext MR_initializeDefaultContextWithCoordinator:persistentStoreCoordinator];
-    */
-    OTRManagedAccount *test = [OTRManagedAccount MR_createEntity];
-    test.username = @"fart";
-    [[NSManagedObjectContext MR_defaultContext] MR_saveToPersistentStoreAndWait];
     
-    NSArray *accounts = [OTRManagedAccount MR_findAll];
-    for (OTRManagedAccount *account in accounts) {
-        NSLog(@"account: %@", account.username);
-    }
-    //[self setFileProtection:NSFileProtectionCompleteUnlessOpen path:databaseURL.path];
-    
+    [self setFileProtection:NSFileProtectionCompleteUnlessOpen path:databaseURL.path];
     
     return YES;
-}
-
-+ (NSPersistentStoreCoordinator *)persistentStoreCoordinatorWithDatabaseName:(NSString *)databaseName
-{
-    NSPersistentStoreCoordinator * persistentStoreCoordinator = nil;
-    
-    NSURL *storeURL = [NSPersistentStore MR_urlForStoreName:databaseName];
-    
-    NSError *error = nil;
-    persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[NSManagedObjectModel MR_managedObjectModelNamed:@"ChatSecure.momd"]];
-    
-    NSDictionary *options = @{NSMigratePersistentStoresAutomaticallyOption:@YES,
-                              NSInferMappingModelAutomaticallyOption:@YES,
-                              NSSQLitePragmasOption: @{@"journal_mode": @"WAL"}
-                              };
-    
-    // Check if we need a migration
-    NSDictionary *sourceMetadata = [NSPersistentStoreCoordinator metadataForPersistentStoreOfType:NSSQLiteStoreType URL:storeURL error:&error];
-    NSManagedObjectModel *destinationModel = [persistentStoreCoordinator managedObjectModel];
-    BOOL isModelCompatible = (sourceMetadata == nil) || [destinationModel isConfiguration:nil compatibleWithStoreMetadata:sourceMetadata];
-    if (! isModelCompatible) {
-        // We need a migration, so we set the journal_mode to DELETE
-        options = @{NSMigratePersistentStoresAutomaticallyOption:@YES,
-                    NSInferMappingModelAutomaticallyOption:@YES,
-                    NSSQLitePragmasOption: @{@"journal_mode": @"DELETE"}
-                    };
-    }
-    
-    NSPersistentStore *persistentStore = [persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:options error:&error];
-    if (! persistentStore) {
-        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-        abort();
-    }
-    
-    // Reinstate the WAL journal_mode
-    if (! isModelCompatible) {
-        [persistentStoreCoordinator removePersistentStore:persistentStore error:NULL];
-        options = @{NSMigratePersistentStoresAutomaticallyOption:@YES,
-                    NSInferMappingModelAutomaticallyOption:@YES,
-                    NSSQLitePragmasOption: @{@"journal_mode": @"WAL"}
-                    };
-        [persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:options error:&error];
-    }
-    
-    
-    return persistentStoreCoordinator;
 }
 
 + (void) setFileProtection:(NSString*)fileProtection path:(NSString*)path {
@@ -129,22 +83,6 @@
     {
         DDLogError(@"error encrypting store: %@", error.userInfo);
     }
-}
-
-+ (BOOL)migrateStore:(NSURL *)storeURL destinationStore:(NSURL*)destinationURL {
-    NSURL *mom1 = [[NSBundle mainBundle] URLForResource:@"ChatSecure 2" withExtension:@"mom" subdirectory:@"ChatSecure.momd"];
-    NSURL *mom2 = [[NSBundle mainBundle] URLForResource:@"ChatSecure 3" withExtension:@"mom" subdirectory:@"ChatSecure.momd"];
-    NSManagedObjectModel *version1Model = [[NSManagedObjectModel alloc] initWithContentsOfURL:mom1];
-    NSManagedObjectModel *version2Model = [[NSManagedObjectModel alloc] initWithContentsOfURL:mom2];
-    NSUInteger modelCount = 1;
-    NSMutableArray *inputModels = [NSMutableArray arrayWithCapacity:modelCount];
-    NSMutableArray *outputModels = [NSMutableArray arrayWithCapacity:modelCount];
-    [inputModels addObject:version1Model];
-    [outputModels addObject:version2Model];
-    
-    NSManagedObjectModel *inputModel = [NSManagedObjectModel modelByMergingModels:inputModels];
-    
-    return [self migrateLegacyStore:storeURL destinationStore:destinationURL sourceModel:inputModel destinationModel:version2Model error:NULL];
 }
 
 + (BOOL)migrateLegacyStore:(NSURL *)storeURL destinationStore:(NSURL*)destinationURL {
@@ -164,6 +102,66 @@
     NSManagedObjectModel *inputModel = [NSManagedObjectModel modelByMergingModels:inputModels];
     
     return [self migrateLegacyStore:storeURL destinationStore:destinationURL sourceModel:inputModel destinationModel:version2Model error:NULL];
+}
+
++ (void)migrateAccountsForManagedObjectModel:(NSManagedObjectModel *)originalModel toManagedObjectModel:(NSManagedObjectModel *)finalObjectModel withStoreUrl:(NSURL *)storeUrl {
+    
+    NSError * error = nil;
+    NSDictionary * options = @{NSMigratePersistentStoresAutomaticallyOption:@YES,
+                              NSInferMappingModelAutomaticallyOption:@YES,
+                              NSSQLitePragmasOption: @{@"journal_mode": @"DELETE"}
+                              };
+    NSPersistentStoreCoordinator * storeCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:originalModel];
+    [storeCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeUrl options:options error:&error];
+    
+    NSManagedObjectContext *context = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+    [context setPersistentStoreCoordinator:storeCoordinator];
+    
+    __block NSArray * results;
+    [context performBlockAndWait:^{
+        NSEntityDescription *entityDescription = [NSEntityDescription
+                                                  entityForName:@"OTRManagedAccount" inManagedObjectContext:context];
+        NSFetchRequest *request = [[NSFetchRequest alloc] init];
+        [request setEntity:entityDescription];
+        results = [context executeFetchRequest:request error:nil];
+    }];
+    
+    
+    NSMutableArray * allAccountDictionaries = [NSMutableArray array];
+    
+    [results enumerateObjectsUsingBlock:^(OTRManagedAccount * account, NSUInteger idx, BOOL *stop) {
+        [allAccountDictionaries addObject:[account dictionaryRepresentation]];
+    }];
+    
+    [NSPersistentStore MR_setDefaultPersistentStore:nil];
+    [NSManagedObjectContext MR_resetDefaultContext];
+    
+    [[NSFileManager defaultManager] removeItemAtURL:storeUrl error:&error];
+    
+    
+    storeCoordinator =[[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:finalObjectModel];
+    [storeCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeUrl options:options error:&error];
+    [NSPersistentStoreCoordinator MR_setDefaultStoreCoordinator:storeCoordinator];
+    [NSManagedObjectContext MR_initializeDefaultContextWithCoordinator:storeCoordinator];
+    
+    [allAccountDictionaries enumerateObjectsUsingBlock:^(NSDictionary * accountDictionary, NSUInteger idx, BOOL *stop) {
+        [OTRManagedAccount createWithDictionary:accountDictionary];
+    }];
+    
+    [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveOnlySelfAndWait];
+    
+    [NSPersistentStoreCoordinator MR_setDefaultStoreCoordinator:nil];
+    [NSManagedObjectContext MR_resetDefaultContext];
+}
+
++ (BOOL)isManagedObjectModel:(NSManagedObjectModel *)managedObjectModel compatibleWithStoreAtUrl:(NSURL *)storeUrl {
+    
+    NSError * error = nil;
+    NSDictionary *sourceMetadata = [NSPersistentStoreCoordinator metadataForPersistentStoreOfType:NSSQLiteStoreType URL:storeUrl error:&error];
+    if (!sourceMetadata) {
+        return NO;
+    }
+    return [managedObjectModel isConfiguration:nil compatibleWithStoreMetadata:sourceMetadata];
 }
 
 + (NSArray*) legacyXMPPModels {

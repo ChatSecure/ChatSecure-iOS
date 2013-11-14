@@ -62,6 +62,8 @@
             dictionary[attributeName] = attributeValue;
         }
     }];
+    
+    return dictionary;
 }
 
 // Default, this will be overridden in subclasses

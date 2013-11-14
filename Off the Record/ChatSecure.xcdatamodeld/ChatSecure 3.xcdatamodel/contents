@@ -88,21 +88,21 @@
         <relationship name="xmppAccount" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="OTRManagedXMPPAccount" inverseName="subscriptionRequests" inverseEntity="OTRManagedXMPPAccount" syncable="YES"/>
     </entity>
     <elements>
-        <element name="OTRManagedAccount" positionX="331" positionY="162" width="128" height="133"/>
-        <element name="OTRManagedBuddy" positionX="97" positionY="9" width="128" height="268"/>
-        <element name="OTRManagedEncryptionStatusMessage" positionX="-414" positionY="252" width="243" height="73"/>
-        <element name="OTRManagedFacebookAccount" positionX="754" positionY="459" width="128" height="45"/>
-        <element name="OTRManagedGoogleAccount" positionX="619" positionY="459" width="128" height="45"/>
-        <element name="OTRManagedGroup" positionX="313" positionY="-19" width="128" height="73"/>
-        <element name="OTRManagedMessage" positionX="-108" positionY="266" width="128" height="103"/>
-        <element name="OTRManagedMessageAndStatus" positionX="-153" positionY="9" width="189" height="118"/>
-        <element name="OTRManagedOAuthAccount" positionX="666" positionY="353" width="128" height="45"/>
-        <element name="OTRManagedOscarAccount" positionX="504" positionY="74" width="128" height="43"/>
-        <element name="OTRManagedStatus" positionX="-290" positionY="161" width="128" height="73"/>
-        <element name="OTRManagedXMPPAccount" positionX="520" positionY="198" width="128" height="178"/>
-        <element name="OTRvCard" positionX="106" positionY="320" width="128" height="133"/>
-        <element name="OTRvCardAvatar" positionX="-63" positionY="423" width="128" height="73"/>
-        <element name="OTRvCardTemp" positionX="268" positionY="450" width="128" height="73"/>
-        <element name="OTRXMPPManagedPresenceSubscriptionRequest" positionX="324" positionY="320" width="153" height="103"/>
+        <element name="OTRManagedAccount" positionX="225" positionY="45" width="128" height="135"/>
+        <element name="OTRManagedBuddy" positionX="9" positionY="9" width="128" height="270"/>
+        <element name="OTRManagedEncryptionStatusMessage" positionX="-225" positionY="150" width="128" height="75"/>
+        <element name="OTRManagedFacebookAccount" positionX="837" positionY="317" width="128" height="43"/>
+        <element name="OTRManagedGoogleAccount" positionX="835" positionY="261" width="128" height="43"/>
+        <element name="OTRManagedGroup" positionX="486" positionY="306" width="128" height="75"/>
+        <element name="OTRManagedMessage" positionX="-369" positionY="144" width="128" height="105"/>
+        <element name="OTRManagedMessageAndStatus" positionX="-290" positionY="9" width="128" height="120"/>
+        <element name="OTRManagedOAuthAccount" positionX="637" positionY="288" width="128" height="43"/>
+        <element name="OTRManagedOscarAccount" positionX="484" positionY="63" width="128" height="43"/>
+        <element name="OTRManagedStatus" positionX="-506" positionY="150" width="128" height="75"/>
+        <element name="OTRManagedXMPPAccount" positionX="486" positionY="117" width="128" height="180"/>
+        <element name="OTRvCard" positionX="63" positionY="324" width="128" height="135"/>
+        <element name="OTRvCardAvatar" positionX="241" positionY="474" width="128" height="75"/>
+        <element name="OTRvCardTemp" positionX="16" positionY="510" width="128" height="75"/>
+        <element name="OTRXMPPManagedPresenceSubscriptionRequest" positionX="637" positionY="36" width="128" height="105"/>
     </elements>
 </model>
