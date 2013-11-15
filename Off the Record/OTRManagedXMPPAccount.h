@@ -31,5 +31,6 @@
 +(NSNumber *)defaultPortNumber;
 
 - (void) setDefaultsWithDomain:(NSString *)newDomain;
+- (NSString *)accountDomain;
 
 @end

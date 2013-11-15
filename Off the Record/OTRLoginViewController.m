@@ -351,7 +351,7 @@
             
             if([recentError.domain isEqualToString:@"kCFStreamErrorDomainSSL"] && recentError.code == errSSLPeerBadCert) {
                 //cert matching error
-                msg = [NSString stringWithFormat:XMPP_CERT_FAIL_STRING,((OTRManagedXMPPAccount *)account).domain];
+                msg = [NSString stringWithFormat:XMPP_CERT_FAIL_STRING,((OTRManagedXMPPAccount *)account).accountDomain];
                 tag = kErrorCertAlertViewTag;
                 alert = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:msg delegate:self cancelButtonTitle:nil otherButtonTitles:DISMISS_STRING,CONNECT_ANYWAY_STRING, nil];
             }

@@ -25,6 +25,7 @@
 #import "OTRConstants.h"
 #import "Strings.h"
 #import "OTRXMPPManager.h"
+#import "XMPPJID.h"
 
 #define DEFAULT_PORT_NUMBER 5222
 
@@ -66,6 +67,14 @@
 
 - (Class)protocolClass {
     return [OTRXMPPManager class];
+}
+
+-(NSString *)accountDomain{
+    if(![[self domain] length])
+    {
+        return [XMPPJID jidWithString:self.username].domain;
+    }
+    return [self domain];
 }
 
 @end

@@ -217,11 +217,11 @@
     xmppCapabilities.autoFetchHashedCapabilities = YES;
     xmppCapabilities.autoFetchNonHashedCapabilities = NO;
     
+    NSArray * certDomains = @[kOTRGoogleTalkDomain,kOTRFacebookDomain,@"jabber.ccc.de"];
     
-    if ([self.account.domain isEqualToString:kOTRFacebookDomain] || [self.account.domain isEqualToString:kOTRGoogleTalkDomain]) {
+    if ([certDomains containsObject:self.account.accountDomain]) {
         self.manualyEvaluateTrust = YES;
     }
-    
 	// Activate xmpp modules
     
 	[xmppReconnect         activate:xmppStream];

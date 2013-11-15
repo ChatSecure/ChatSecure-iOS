@@ -31,6 +31,7 @@
 		630606E217FA1C9A00CEB7D3 /* facebook.cer in Resources */ = {isa = PBXBuildFile; fileRef = 630606E017FA1C9A00CEB7D3 /* facebook.cer */; };
 		630FF21316E0267200CC20AD /* _OTRManagedGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 630FF21216E0267200CC20AD /* _OTRManagedGroup.m */; };
 		630FF21716E0269100CC20AD /* OTRManagedGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 630FF21616E0269000CC20AD /* OTRManagedGroup.m */; };
+		63168A361835A02000E120E0 /* ccc.cer in Resources */ = {isa = PBXBuildFile; fileRef = 63168A2B18359DAA00E120E0 /* ccc.cer */; };
 		63188CBD16E55B230000DD40 /* OTRNewBuddyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63188CBC16E55B230000DD40 /* OTRNewBuddyViewController.m */; };
 		6319F696165EAB1F0063AC93 /* supportedLanguages.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6319F695165EAB1F0063AC93 /* supportedLanguages.plist */; };
 		631FE8851720951400AEA107 /* OTRStatusMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 631FE8841720951400AEA107 /* OTRStatusMessageCell.m */; };
@@ -667,6 +668,7 @@
 		630FF21216E0267200CC20AD /* _OTRManagedGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _OTRManagedGroup.m; sourceTree = "<group>"; };
 		630FF21516E0269000CC20AD /* OTRManagedGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRManagedGroup.h; sourceTree = "<group>"; };
 		630FF21616E0269000CC20AD /* OTRManagedGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRManagedGroup.m; sourceTree = "<group>"; };
+		63168A2B18359DAA00E120E0 /* ccc.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = ccc.cer; sourceTree = "<group>"; };
 		63188CBB16E55B220000DD40 /* OTRNewBuddyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRNewBuddyViewController.h; sourceTree = "<group>"; };
 		63188CBC16E55B230000DD40 /* OTRNewBuddyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRNewBuddyViewController.m; sourceTree = "<group>"; };
 		6319F695165EAB1F0063AC93 /* supportedLanguages.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = supportedLanguages.plist; path = "Off the Record/supportedLanguages.plist"; sourceTree = SOURCE_ROOT; };
@@ -1670,6 +1672,7 @@
 		630606DF17FA1C9A00CEB7D3 /* Certificates */ = {
 			isa = PBXGroup;
 			children = (
+				63168A2B18359DAA00E120E0 /* ccc.cer */,
 				63F2585617FB51C2007A7565 /* google.cer */,
 				630606E017FA1C9A00CEB7D3 /* facebook.cer */,
 			);
@@ -3753,6 +3756,7 @@
 				63E5E83916D1DF14006E2B01 /* MessageBubbleTyping.png in Resources */,
 				63E5E83A16D1DF14006E2B01 /* MessageBubbleTyping@2x.png in Resources */,
 				63E5E83B16D1DF14006E2B01 /* MessageInputBarBackground.png in Resources */,
+				63168A361835A02000E120E0 /* ccc.cer in Resources */,
 				63E5E83C16D1DF14006E2B01 /* MessageInputBarBackground@2x.png in Resources */,
 				63E5E83D16D1DF14006E2B01 /* MessageInputFieldBackground.png in Resources */,
 				63E5E83E16D1DF14006E2B01 /* MessageInputFieldBackground@2x.png in Resources */,
