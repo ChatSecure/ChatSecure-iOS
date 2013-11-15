@@ -47,7 +47,7 @@
     
     NSURL * databaseURL = [NSPersistentStore MR_urlForStoreName:databaseName];
     
-    [self copyTestDatabaseToDestination:databaseURL];
+    //[self copyTestDatabaseToDestination:databaseURL];
     
     NSFileManager *fileManager = [NSFileManager defaultManager];
     if ([fileManager fileExistsAtPath:legacyDatabaseURL.path]) {
@@ -62,9 +62,7 @@
     NSManagedObjectModel *version2Model = [[NSManagedObjectModel alloc] initWithContentsOfURL:mom2];
     NSManagedObjectModel *version3Model = [[NSManagedObjectModel alloc] initWithContentsOfURL:mom3];
     
-    //if ([self isManagedObjectModel:version2Model compatibleWithStoreAtUrl:databaseURL]) {
-        [self migrateAccountsForManagedObjectModel:version2Model toManagedObjectModel:version3Model withStoreUrl:databaseURL];
-    //}
+    [self migrateAccountsForManagedObjectModel:version2Model toManagedObjectModel:version3Model withStoreUrl:databaseURL];
     
     [MagicalRecord setShouldAutoCreateManagedObjectModel:NO];
     [MagicalRecord setDefaultModelNamed:@"ChatSecure.momd"];
@@ -106,6 +104,9 @@
 
 + (void)migrateAccountsForManagedObjectModel:(NSManagedObjectModel *)originalModel toManagedObjectModel:(NSManagedObjectModel *)finalObjectModel withStoreUrl:(NSURL *)storeUrl {
     
+   
+    
+    
     NSError * error = nil;
     NSDictionary * options = @{NSMigratePersistentStoresAutomaticallyOption:@YES,
                               NSInferMappingModelAutomaticallyOption:@YES,
@@ -113,6 +114,13 @@
                               };
     NSPersistentStoreCoordinator * storeCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:originalModel];
     [storeCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeUrl options:options error:&error];
+    
+    //check if really matches (not sure if it really works
+    //doesn't seem to fail if done here
+    if (![self isManagedObjectModel:originalModel compatibleWithStoreAtUrl:storeUrl]) {
+        return;
+    }
+    
     
     NSManagedObjectContext *context = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
     [context setPersistentStoreCoordinator:storeCoordinator];
