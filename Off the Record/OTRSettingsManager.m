@@ -74,15 +74,17 @@
     fontSizeSetting.defaultValue = [NSNumber numberWithInt:16];
     fontSizeSetting.isPercentage = NO;
     */
+    OTRIntSetting *fontSizeSetting;
     
-    OTRIntSetting * fontSizeSetting = [[OTRIntSetting alloc] initWithTitle:FONT_SIZE_STRING description:FONT_SIZE_DESCRIPTION_STRING settingsKey:kOTRSettingKeyFontSize];
-    fontSizeSetting.maxValue = 20;
-    fontSizeSetting.minValue = 12;
-    fontSizeSetting.numValues = 4;
-    fontSizeSetting.defaultValue = [NSNumber numberWithInt:16];
+    if (SYSTEM_VERSION_LESS_THAN(@"7.0")) {
+        fontSizeSetting = [[OTRIntSetting alloc] initWithTitle:FONT_SIZE_STRING description:FONT_SIZE_DESCRIPTION_STRING settingsKey:kOTRSettingKeyFontSize];
+        fontSizeSetting.maxValue = 20;
+        fontSizeSetting.minValue = 12;
+        fontSizeSetting.numValues = 4;
+        fontSizeSetting.defaultValue = [NSNumber numberWithInt:16];
 
-    [newSettingsDictionary setObject:fontSizeSetting forKey:kOTRSettingKeyFontSize];
-    
+        [newSettingsDictionary setObject:fontSizeSetting forKey:kOTRSettingKeyFontSize];
+    }
     OTRBoolSetting *deletedDisconnectedConversations = [[OTRBoolSetting alloc] initWithTitle:DELETE_CONVERSATIONS_ON_DISCONNECT_TITLE_STRING description:DELETE_CONVERSATIONS_ON_DISCONNECT_DESCRIPTION_STRING settingsKey:kOTRSettingKeyDeleteOnDisconnect];
     [newSettingsDictionary setObject:deletedDisconnectedConversations forKey:kOTRSettingKeyDeleteOnDisconnect];
     
@@ -94,7 +96,14 @@
     opportunisticOtrSetting.defaultValue = @(YES);
     [newSettingsDictionary setObject:opportunisticOtrSetting forKey:kOTRSettingKeyOpportunisticOtr];
     
-    OTRSettingsGroup *chatSettingsGroup = [[OTRSettingsGroup alloc] initWithTitle:CHAT_STRING settings:[NSArray arrayWithObjects:fontSizeSetting,opportunisticOtrSetting,deletedDisconnectedConversations, showDisconnectionWarning, nil]];
+    NSArray *chatSettings;
+    
+    if (SYSTEM_VERSION_LESS_THAN(@"7.0")) {
+        chatSettings = [NSArray arrayWithObjects:fontSizeSetting,opportunisticOtrSetting,deletedDisconnectedConversations, showDisconnectionWarning, nil];
+    } else {
+        chatSettings = [NSArray arrayWithObjects:opportunisticOtrSetting,deletedDisconnectedConversations, showDisconnectionWarning, nil];
+    }
+    OTRSettingsGroup *chatSettingsGroup = [[OTRSettingsGroup alloc] initWithTitle:CHAT_STRING settings:chatSettings];
     [settingsGroups addObject:chatSettingsGroup];
     
     

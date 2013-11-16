@@ -135,24 +135,28 @@
     }
     
     messageTextLabel.text = message.message;
-    messageTextLabel.font = [UIFont systemFontOfSize:messageFontSize];
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
+        messageTextLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
+    } else {
+        messageTextLabel.font = [UIFont systemFontOfSize:messageFontSize];
+    }
     CGSize messageTextLabelSize = [messageTextLabel sizeThatFits:CGSizeMake(MESSAGE_TEXT_WIDTH_MAX, CGFLOAT_MAX)];
     
     if (!message.isIncomingValue) { // right message
         UIImage * _messageBubbleBlue = [[UIImage imageNamed:kOTRRightImageName]stretchableImageWithLeftCapWidth:15 topCapHeight:13];
-        messageBackgroundImageView.frame = CGRectMake(width-messageTextLabelSize.width-34, messageSentDateLabelHeight+messageFontSize-13, messageTextLabelSize.width+34, messageTextLabelSize.height+12);
+        messageBackgroundImageView.frame = CGRectMake(width-messageTextLabelSize.width-34, messageSentDateLabelHeight+messageTextLabelSize.height-13, messageTextLabelSize.width+34, messageTextLabelSize.height+12);
         messageBackgroundImageView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
         messageBackgroundImageView.image = _messageBubbleBlue;
         
-        messageTextLabel.frame = CGRectMake(width-messageTextLabelSize.width-22, messageSentDateLabelHeight+messageFontSize-9, messageTextLabelSize.width+5, messageTextLabelSize.height);
+        messageTextLabel.frame = CGRectMake(width-messageTextLabelSize.width-22, messageSentDateLabelHeight+messageTextLabelSize.height-9, messageTextLabelSize.width+5, messageTextLabelSize.height);
         messageTextLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     } else {
         UIImage * _messageBubbleGray = [[UIImage imageNamed:kOTRLeftImageName] stretchableImageWithLeftCapWidth:23 topCapHeight:15];
-        messageBackgroundImageView.frame = CGRectMake(0, messageSentDateLabelHeight+messageFontSize-13, messageTextLabelSize.width+34, messageTextLabelSize.height+12);
+        messageBackgroundImageView.frame = CGRectMake(0, messageSentDateLabelHeight+messageTextLabelSize.height-13, messageTextLabelSize.width+34, messageTextLabelSize.height+12);
         messageBackgroundImageView.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
         messageBackgroundImageView.image = _messageBubbleGray;
         
-        messageTextLabel.frame = CGRectMake(22, messageSentDateLabelHeight+messageFontSize-9, messageTextLabelSize.width+5, messageTextLabelSize.height);
+        messageTextLabel.frame = CGRectMake(22, messageSentDateLabelHeight+messageTextLabelSize.height-9, messageTextLabelSize.width+5, messageTextLabelSize.height);
         messageTextLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
     }
     
@@ -185,9 +189,13 @@
     messageTextLabel.numberOfLines = 0;
     messageTextLabel.dataDetectorTypes = UIDataDetectorTypeLink;
     messageTextLabel.lineBreakMode = NSLineBreakByWordWrapping;
-    CGFloat messageTextSize = [OTRSettingsManager floatForOTRSettingKey:kOTRSettingKeyFontSize];
-    messageTextLabel.font = [UIFont systemFontOfSize:messageTextSize];
     
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
+        messageTextLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
+    } else {
+        CGFloat messageTextSize = [OTRSettingsManager floatForOTRSettingKey:kOTRSettingKeyFontSize];
+        messageTextLabel.font = [UIFont systemFontOfSize:messageTextSize];
+    }
     return messageTextLabel;
     
 }
