@@ -66,7 +66,7 @@
     self.portTextField.keyboardType = UIKeyboardTypeNumberPad;
     self.portTextField.textColor = self.textFieldTextColor;
     
-    [self addCellinfoWithSection:1 row:0 labelText:DOMAIN_STRING cellType:kCellTypeTextField userInputView:self.domainTextField];
+    [self addCellinfoWithSection:1 row:0 labelText:HOSTNAME_STRING cellType:kCellTypeTextField userInputView:self.domainTextField];
     [self addCellinfoWithSection:1 row:1 labelText:PORT_STRING cellType:kCellTypeTextField userInputView:self.portTextField];
     [self addCellinfoWithSection:1 row:4 labelText:SSL_MISMATCH_STRING cellType:kCellTypeSwitch userInputView:self.sslMismatchSwitch];
     [self addCellinfoWithSection:1 row:5 labelText:SELF_SIGNED_SSL_STRING cellType:kCellTypeSwitch userInputView:self.selfSignedSwitch];
