@@ -1,13 +1,13 @@
 ChatSecure
 =========
 
-ChatSecure is an instant messaging client for iOS that integrates encrypted "Off the Record" messaging support from the [libotr](http://www.cypherpunks.ca/otr/) library. It uses the [LibOrange](https://github.com/unixpickle/LibOrange) library to handle all of the AIM (OSCAR) functionality and the [XMPPFramework](https://github.com/robbiehanson/XMPPFramework/) to handle Jabber/GTalk (XMPP).
+ChatSecure is a free and open source instant messaging client for iOS that integrates encrypted [OTR](http://en.wikipedia.org/wiki/Off-the-Record_Messaging) ("Off the Record") messaging support from the [libotr](http://www.cypherpunks.ca/otr/) library. It uses the [LibOrange](https://github.com/unixpickle/LibOrange) library to handle all of the AIM (OSCAR) functionality and the [XMPPFramework](https://github.com/robbiehanson/XMPPFramework/) to handle Jabber/GTalk (XMPP).
 
 
 Cost
 =========
 
-This project is \***100% free**\* because it is important that all people around the world have unrestricted access to privacy tools.
+This project is **100% free** because it is important that all people around the world have unrestricted access to privacy tools.
 However, developing and supporting this project is hard work and costs real money. Please help support the development of this project! We now also accept Bitcoin via Coinbase! :)
 
 [![bitcoin](https://coinbase.com/assets/buttons/donation_large-6ec72b1a9eec516944e50a22aca7db35.png)](https://coinbase.com/checkouts/1cf35f00d722205726f50b940786c413) [![donation](https://chatsecure.org/static/images/paypal_donate.png)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=XRBHJ9AX5VWNA) 
@@ -34,32 +34,15 @@ Compatibility
 Native
 ------
 * **[Adium](http://adium.im/) (Mac OS X) - OTR works over both XMPP and Oscar.**
-* climm (Unix-like), since (mICQ) 0.5.4.
-* MCabber (Unix-like), since 0.9.4
-* CenterIM (Unix-like), since 4.22.2
-* Phoenix Viewer (successor of Emerald Viewer), a Second Life client (Cross-platform)
-* Vacuum IM (Cross-platform)
 * Jitsi (Cross-platform)
-* BitlBee (Cross-platform), since 3.0 (optional at compile-time)
 
 Plug-in
 ------
 * [Pidgin](http://pidgin.im/) (cross-platform), with [pidgin-otr](http://www.cypherpunks.ca/otr/index.php#downloads) plugin.
-* Kopete (Unix-like), either with a third-party plugin or, since the addition of Kopete-OTR on 12th of March 2008, with the version of Kopete shipped with KDE 4.1.0 and later releases.
-* Miranda IM (Microsoft Windows), with a third-party plugin
-* Psi (Cross-platform), with a third-party plugin and build, in Psi+ native usable
-* Trillian (Microsoft Windows), with a third-party plugin
-* irssi, with a third-party plugin
-
-Proxy (download [here](http://www.cypherpunks.ca/otr/index.php#downloads))
-------
-* AOL Instant Messenger (Mac OS X, Microsoft Windows)
-* iChat (Mac OS X)
-* Proteus (Mac OS X)
 
 Phone apps
 ------
-* [Gibberbot](https://guardianproject.info/apps/gibber/) (formerly OtRChat), a free and open source Android application (still in early development) produced by The Guardian Project, provides OTR protocol compatible over XMPP chat.
+* **[ChatSecure Android](https://guardianproject.info/apps/gibber/) (formerly known as Gibberbot)**, a free and open source Android application produced by The Guardian Project, provides OTR protocol compatible over XMPP chat.
 * [BEEM](http://beem-project.com/projects/beem) - Android XMPP client (compatibility unknown)
 
 [Full List](http://en.wikipedia.org/wiki/Off-the-Record_Messaging#Client_support)
@@ -69,8 +52,8 @@ Build Instructions
 - Install [mogenerator](http://rentzsch.github.io/mogenerator/) `brew install mogenerator`
 - Dowload `git clone git@github.com:chrisballinger/Off-the-Record-iOS.git --recursive`
 - `cd Off-the-Record-iOS/`
-- Build Facebook framework `./Submodules/facebook-ios-sdk/scripts/build_framework.sh`
-- Open `Off the Record.xcodeproj` in Xcode and build
+- Create `/Off the Record/OTRSecrets.h` and fill in blank strings for the missing API keys: `USERVOICE_KEY`, `USERVOICE_SECRET`, `GOOGLE_APP_SECRET`, `HOCKEY_LIVE_IDENTIFIER`, and `HOCKEY_BETA_IDENTIFIER`.
+- Open `Off the Record.xcodeproj` in Xcode and build.
 
 License
 =========
@@ -92,15 +75,26 @@ License
 	You should have received a copy of the GNU General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-If you would like to relicense this code to sell it on the App Store, 
+If you would like to relicense this code to distribute it on the App Store, 
 please contact me at [chris@chatsecure.org](mailto:chris@chatsecure.org).
+
+Contributing
+------------
+
+Thank you for your interest in contributing to ChatSecure! To avoid potential legal headaches and to allow distribution on Apple's App Store please sign our CLA (Contributors License Agreement). For contributing translations, please check out our [Transifex](https://www.transifex.com/projects/p/chatsecure/) page.
+
+1. Sign the CLA ([odt](https://github.com/chrisballinger/Off-the-Record-iOS/blob/master/media/CLA.odt), [pdf](https://github.com/chrisballinger/Off-the-Record-iOS/blob/master/media/CLA.pdf)) and email it to [chris@chatsecure.org](mailto:chris@chatsecure.org).
+2. [Fork](https://github.com/chrisballinger/Off-the-Record-iOS/fork) the project and (preferably) work in a feature branch.
+3. Open a [pull request](https://github.com/chrisballinger/off-the-record-ios/pulls) on GitHub.
+4. Thank you!
+
+
+Third-party Libraries
+=========
 
 This software additionally references or incorporates the following sources
 of intellectual property, the license terms for which are set forth
 in the sources themselves:
-
-Third-party Libraries
-=========
 
 The following dependencies are bundled with the ChatSecure, but are under
 terms of a separate license:
@@ -124,6 +118,8 @@ terms of a separate license:
 Acknowledgements
 =========
 
+Thank you to everyone who helped this project become a reality! This project is also supported by the fine folks from [The Guardian Project](https://guardianproject.info) and [OpenITP](https://openitp.org).
+
 * [Nick Hum](http://nickhum.com/) - awesome icon.
 * [Glyphish](http://glyphish.com/) - icons used on the tab bar.
 * [Adium](http://adium.im/) - lock/unlock icon used in chat window, status gems.
@@ -137,3 +133,4 @@ Acknowledgements
 	* [vitalyster](https://github.com/vitalyster) (Russian)
 	* [burhan teoman](https://www.transifex.net/accounts/profile/burhanteoman/) (Turkish)
 	* [shikibiomernok](https://www.transifex.net/accounts/profile/shikibiomernok/) (Hungarian)
+* Many many more!
