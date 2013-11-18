@@ -90,8 +90,6 @@
     [scrollView addSubview:imageView];
     [scrollView addSubview:versionLabel];
     
-    
-    
     [self.view addSubview:scrollView];
 }
 
@@ -103,9 +101,8 @@
     imageView.frame = CGRectMake(self.view.frame.size.width/2 - imageViewFrameWidth/2, 20, imageViewFrameWidth, imageViewFrameHeight);
     imageView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;
     
-    CGFloat versionLabelFrameWidth = 101;
-    CGFloat versionLabelFrameHeight = 21;
-    versionLabel.frame = CGRectMake(floorf(self.view.frame.size.width/2 - versionLabelFrameWidth/2), self.view.frame.size.height-versionLabelFrameHeight-20, versionLabelFrameWidth, versionLabelFrameHeight);
+    CGSize versionLabelSize = [[versionLabel text]sizeWithFont:[versionLabel font]];
+    versionLabel.frame = CGRectMake(floorf(self.view.frame.size.width/2 - versionLabelSize.width/2), self.view.frame.size.height-versionLabelSize.height-20, versionLabelSize.width, versionLabelSize.height);
     versionLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;
     
     CGFloat aboutTextViewFrameWidth = self.view.frame.size.width-40;
@@ -113,7 +110,7 @@
     aboutTextView.frame = CGRectMake(self.view.frame.size.width/2-aboutTextViewFrameWidth/2, aboutTextViewFrameYOrigin, aboutTextViewFrameWidth, versionLabel.frame.origin.y - aboutTextViewFrameYOrigin);
     aboutTextView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
     
-    scrollView.contentSize = CGSizeMake(self.view.frame.size.width, versionLabel.frame.origin.y+versionLabelFrameHeight);
+    scrollView.contentSize = CGSizeMake(self.view.frame.size.width, versionLabel.frame.origin.y+versionLabelSize.height);
 }
 
 - (void)viewDidUnload
