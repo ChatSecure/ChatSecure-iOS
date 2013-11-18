@@ -217,7 +217,6 @@
     [self.chatHistoryTableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
     
     
-    _messageFontSize = [OTRSettingsManager floatForOTRSettingKey:kOTRSettingKeyFontSize];
     _previousTextViewContentHeight = MessageFontSize+20;
         
     CGRect barRect = CGRectMake(0, self.view.frame.size.height-kChatBarHeight1, self.view.frame.size.width, kChatBarHeight1);
@@ -247,6 +246,9 @@
     
     [self setupLockButton];
     
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshView) name:UIContentSizeCategoryDidChangeNotification object:nil];
+    }
 }
 
 -(void)handleSwipeFrom
@@ -485,9 +487,7 @@
         [self.buddy allMessagesRead];
         
         [self.chatHistoryTableView reloadData];
-        
-        _messageFontSize = [OTRSettingsManager floatForOTRSettingKey:kOTRSettingKeyFontSize];
-        
+               
         
         
         if(![self.buddy.composingMessageString length])
@@ -536,6 +536,7 @@
         newFrame.origin.y = self.view.frame.size.height - chatInputBar.frame.size.height;
         chatInputBar.frame = newFrame;
     }
+
 }
 
 -(void)saveCurrentMessageText
