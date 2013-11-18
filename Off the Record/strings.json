@@ -211,9 +211,9 @@
         "comment": "button label for disconnecting Facebook account", 
         "string": "Disconnect Facebook"
     }, 
-    "DOMAIN_STRING": {
-        "comment": "Label text for domain field on login scree", 
-        "string": "Domain"
+    "HOSTNAME_STRING": {
+        "comment": "Label text for hostname field on login scree",
+        "string": "Hostname"
     }, 
     "DONATE_MESSAGE_STRING": {
         "comment": "Message shown when about to donate", 
