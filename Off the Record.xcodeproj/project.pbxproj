@@ -4406,8 +4406,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\\\\\\\"$(SRCROOT)/Submodules/facebook-ios-sdk/build\\\\\\\"",
-					"/Users/chrisbal/Documents/ChatSecure/Off-the-Record-iOS/Submodules/HockeySDK-iOS/Vendor",
-					"/Users/david/Documents/chatsecure/Off-the-Record-iOS/Submodules/HockeySDK-iOS/Vendor",
+					"$(SRCROOT)/Submodules/HockeySDK-iOS/Vendor",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Off the Record/Off the Record-Prefix.pch";
