@@ -56,3 +56,6 @@
 [submodule "Submodules/ChatSecure-Metadata"]
 	path = Submodules/ChatSecure-Metadata
 	url = git@github.com:ChatSecure/ChatSecure-Metadata.git
+[submodule "Submodules/CocoaLumberjack"]
+	path = Submodules/CocoaLumberjack
+	url = git@github.com:robbiehanson/CocoaLumberjack.git
