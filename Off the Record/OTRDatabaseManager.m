@@ -62,7 +62,10 @@
     NSManagedObjectModel *version2Model = [[NSManagedObjectModel alloc] initWithContentsOfURL:mom2];
     NSManagedObjectModel *version3Model = [[NSManagedObjectModel alloc] initWithContentsOfURL:mom3];
     
-    [self migrateAccountsForManagedObjectModel:version2Model toManagedObjectModel:version3Model withStoreUrl:databaseURL];
+    if (![self isManagedObjectModel:version3Model compatibleWithStoreAtUrl:databaseURL]) {
+        [self migrateAccountsForManagedObjectModel:version2Model toManagedObjectModel:version3Model withStoreUrl:databaseURL];
+    }
+    
     
     [MagicalRecord setShouldAutoCreateManagedObjectModel:NO];
     [MagicalRecord setDefaultModelNamed:@"ChatSecure.momd"];
