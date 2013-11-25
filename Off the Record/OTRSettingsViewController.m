@@ -187,7 +187,7 @@
         } else {
             OTRManagedAccount *account = [self.accountsFetchedResultsController objectAtIndexPath:indexPath];
             
-            if (!account.isConnectedValue) {
+            if (!account.isConnected) {
                 [self showLoginControllerForAccount:account];
             } else {
                 UIActionSheet *logoutSheet = [[UIActionSheet alloc] initWithTitle:LOGOUT_STRING delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:LOGOUT_STRING otherButtonTitles: nil];
@@ -302,8 +302,6 @@
 
 -(void)protocolLoggedInSuccessfully:(NSNotification *)notification
 {
-    id <OTRProtocol> protocol = notification.object;
-    [protocol.account setIsConnectedValue:YES];
     [self accountLoggedIn];
 }
 
@@ -376,7 +374,7 @@
 {
     OTRManagedAccount *account = [self.accountsFetchedResultsController objectAtIndexPath:indexPath];
     cell.textLabel.text = account.username;
-    if (account.isConnectedValue) {
+    if (account.isConnected) {
         cell.detailTextLabel.text = CONNECTED_STRING;
     } else {
         cell.detailTextLabel.text = nil;

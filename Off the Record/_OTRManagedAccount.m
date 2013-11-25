@@ -4,7 +4,6 @@
 #import "_OTRManagedAccount.h"
 
 const struct OTRManagedAccountAttributes OTRManagedAccountAttributes = {
-	.isConnected = @"isConnected",
 	.protocol = @"protocol",
 	.rememberPassword = @"rememberPassword",
 	.uniqueIdentifier = @"uniqueIdentifier",
@@ -44,11 +43,6 @@ const struct OTRManagedAccountFetchedProperties OTRManagedAccountFetchedProperti
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
 	
-	if ([key isEqualToString:@"isConnectedValue"]) {
-		NSSet *affectingKey = [NSSet setWithObject:@"isConnected"];
-		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
-		return keyPaths;
-	}
 	if ([key isEqualToString:@"rememberPasswordValue"]) {
 		NSSet *affectingKey = [NSSet setWithObject:@"rememberPassword"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
@@ -57,32 +51,6 @@ const struct OTRManagedAccountFetchedProperties OTRManagedAccountFetchedProperti
 
 	return keyPaths;
 }
-
-
-
-
-@dynamic isConnected;
-
-
-
-- (BOOL)isConnectedValue {
-	NSNumber *result = [self isConnected];
-	return [result boolValue];
-}
-
-- (void)setIsConnectedValue:(BOOL)value_ {
-	[self setIsConnected:[NSNumber numberWithBool:value_]];
-}
-
-- (BOOL)primitiveIsConnectedValue {
-	NSNumber *result = [self primitiveIsConnected];
-	return [result boolValue];
-}
-
-- (void)setPrimitiveIsConnectedValue:(BOOL)value_ {
-	[self setPrimitiveIsConnected:[NSNumber numberWithBool:value_]];
-}
-
 
 
 

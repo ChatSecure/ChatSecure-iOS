@@ -290,7 +290,7 @@
     {
         
         [[[OTRProtocolManager sharedInstance] accountsManager] addAccount:account];
-        [self.account save];
+        [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveOnlySelfAndWait];
     }
     [self.view resignFirstResponder];
 

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="3400" systemVersion="13A603" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="3401" systemVersion="13A603" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="OTRManagedAccount" representedClassName="OTRManagedAccount" syncable="YES">
-        <attribute name="isConnected" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="protocol" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="rememberPassword" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="uniqueIdentifier" optional="YES" attributeType="String" syncable="YES"/>
@@ -88,15 +87,15 @@
         <relationship name="xmppAccount" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="OTRManagedXMPPAccount" inverseName="subscriptionRequests" inverseEntity="OTRManagedXMPPAccount" syncable="YES"/>
     </entity>
     <elements>
-        <element name="OTRManagedAccount" positionX="225" positionY="45" width="128" height="135"/>
+        <element name="OTRManagedAccount" positionX="225" positionY="45" width="128" height="118"/>
         <element name="OTRManagedBuddy" positionX="9" positionY="9" width="128" height="270"/>
         <element name="OTRManagedEncryptionStatusMessage" positionX="-225" positionY="150" width="128" height="75"/>
-        <element name="OTRManagedFacebookAccount" positionX="837" positionY="317" width="128" height="43"/>
-        <element name="OTRManagedGoogleAccount" positionX="835" positionY="261" width="128" height="43"/>
+        <element name="OTRManagedFacebookAccount" positionX="837" positionY="317" width="128" height="45"/>
+        <element name="OTRManagedGoogleAccount" positionX="835" positionY="261" width="128" height="45"/>
         <element name="OTRManagedGroup" positionX="486" positionY="306" width="128" height="75"/>
         <element name="OTRManagedMessage" positionX="-369" positionY="144" width="128" height="105"/>
         <element name="OTRManagedMessageAndStatus" positionX="-290" positionY="9" width="128" height="120"/>
-        <element name="OTRManagedOAuthAccount" positionX="637" positionY="288" width="128" height="43"/>
+        <element name="OTRManagedOAuthAccount" positionX="637" positionY="288" width="128" height="45"/>
         <element name="OTRManagedOscarAccount" positionX="484" positionY="63" width="128" height="43"/>
         <element name="OTRManagedStatus" positionX="-506" positionY="150" width="128" height="75"/>
         <element name="OTRManagedXMPPAccount" positionX="486" positionY="117" width="128" height="180"/>

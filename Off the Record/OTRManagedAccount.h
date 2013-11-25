@@ -40,8 +40,8 @@
 @interface OTRManagedAccount : _OTRManagedAccount
 
 @property (nonatomic, retain) NSString *password; // nil if rememberPassword = NO, not stored in memory
+@property (nonatomic,readonly) BOOL isConnected;
 
-- (void) save;
 - (Class) protocolClass;
 - (NSString *) providerName;
 - (OTRAccountType)accountType;

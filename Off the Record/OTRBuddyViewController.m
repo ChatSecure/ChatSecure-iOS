@@ -75,7 +75,7 @@
         [blockBuddyButton setTitle:BLOCK_AND_REMOVE_STRING forState:UIControlStateNormal];
     }
     
-    if (!buddy.account.isConnectedValue) {
+    if (!buddy.account.isConnected) {
         removeBuddyButton.enabled = NO;
         blockBuddyButton.enabled = NO;
         displayNameTextField.enabled = NO;
@@ -296,7 +296,7 @@
 
 -(void)doneButtonPressed:(id)sender
 {
-    if (buddy.account.isConnectedValue) {
+    if (buddy.account.isConnected) {
         NSString * newDisplayName = [displayNameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         if ([newDisplayName length] && ![newDisplayName isEqualToString:self.buddy.displayName]) {
             self.buddy.displayName = newDisplayName;

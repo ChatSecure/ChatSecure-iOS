@@ -51,12 +51,12 @@
         managagedXmppAccount.protocol = xmppAccount.protocol;
         [managagedXmppAccount setRememberPasswordValue:xmppAccount.rememberPassword];
         managagedXmppAccount.password = xmppAccount.password;
-        [managagedXmppAccount setIsConnected:NO];
         managagedXmppAccount.requireTLSValue = xmppAccount.requireTLS;
         managagedXmppAccount.allowPlainTextAuthenticationValue = xmppAccount.allowPlainTextAuthentication;
         
         
-        [managagedXmppAccount save];
+        NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+        [context MR_saveToPersistentStoreAndWait];
         
         
         
@@ -72,9 +72,9 @@
         managedOscarAccount.uniqueIdentifier = managedOscarAccount.uniqueIdentifier;
         [managedOscarAccount setNewUsername:oscarAccount.username];
         [managedOscarAccount setRememberPasswordValue:oscarAccount.rememberPassword];
-        managedOscarAccount.isConnected = NO;
         
-        [managedOscarAccount save];
+        NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+        [context MR_saveToPersistentStoreAndWait];
         
         
         

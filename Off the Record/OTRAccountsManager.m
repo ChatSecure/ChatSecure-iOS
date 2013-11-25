@@ -40,7 +40,7 @@
     }
     NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
     OTRManagedAccount * acct = (OTRManagedAccount *)[context existingObjectWithID :account.objectID error:nil];
-    [acct save];
+    [context MR_saveToPersistentStoreAndWait];
 }
 
 - (void) removeAccount:(OTRManagedAccount*)account {
@@ -61,15 +61,16 @@
    
 }
 
--(NSArray *)allAccounts
++(NSArray *)allAccounts
 {
     return [OTRManagedAccount MR_findAllSortedBy:@"username" ascending:YES];
 }
 
 +(NSArray *)allLoggedInAccounts
 {
-    NSPredicate * accountFilter = [NSPredicate predicateWithFormat:@"%K == YES",OTRManagedAccountAttributes.isConnected];
-    return [OTRManagedAccount MR_findAllWithPredicate:accountFilter];
+    NSArray * accountsArray = [self allAccounts];
+    NSPredicate * accountFilter = [NSPredicate predicateWithFormat:@"%K == YES",@"isConnected"];
+    return [accountsArray filteredArrayUsingPredicate:accountFilter];
 }
 
 -(OTRManagedAccount *)accountForProtocol:(NSString *)protocol accountName:(NSString *)accountName

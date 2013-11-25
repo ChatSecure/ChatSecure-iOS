@@ -43,7 +43,6 @@
     self.username = @"";
     self.protocol = newProtocol;
     self.rememberPasswordValue = NO;
-    self.isConnectedValue = NO;
     self.uniqueIdentifier = [OTRUtilities uniqueString];
 }
 
@@ -132,11 +131,6 @@
     }
 }
 
-- (void) save {
-    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
-    [context MR_saveToPersistentStoreAndWait];
-}
-
 
 // Overridden by subclasses
 - (Class)protocolClass {
@@ -149,11 +143,9 @@
     return @"";
 }
 
--(NSNumber *)isConnected
+- (BOOL)isConnected
 {
-    
-    
-    return [NSNumber numberWithBool:[[OTRProtocolManager sharedInstance] isAccountConnected:self]];
+    return [[OTRProtocolManager sharedInstance] isAccountConnected:self];
 }
 
 -(void)setAllBuddiesStatuts:(OTRBuddyStatus)status
@@ -166,7 +158,8 @@
             buddy.chatStateValue = kOTRChatStateActive;
         }
     }
-    [self save];
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    [context MR_saveToPersistentStoreAndWait];
 }
 
 -(void)deleteAllConversationsForAccount
@@ -175,7 +168,8 @@
     {
         [buddy deleteAllMessages];
     }
-    [self save];
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    [context MR_saveToPersistentStoreAndWait];
 }
 
 -(void)prepareBuddiesandMessagesForDeletion
@@ -204,8 +198,7 @@
     
     for (OTRManagedAccount * managedAccount in allAccountsArray)
     {
-        managedAccount.isConnectedValue = [[OTRProtocolManager sharedInstance] isAccountConnected:managedAccount];
-        if (!managedAccount.isConnectedValue) {
+        if (!managedAccount.isConnected) {
             [managedAccount setAllBuddiesStatuts:OTRBuddyStatusOffline];
         }
         
@@ -225,7 +218,13 @@
         NSMutableDictionary * attributesDict = [dictionary mutableCopy];
         [attributesDict removeObjectForKey:kClassKey];
         [attributesDict enumerateKeysAndObjectsUsingBlock:^(NSString * key, id obj, BOOL *stop) {
-            [account setValue:obj forKey:key];
+            @try {
+                [account setValue:obj forKey:key];
+            }
+            @catch (NSException *exception) {
+                DDLogWarn(@"Could not set Key: %@ Value: %@ on Account",key,obj);
+            }
+            
         }];
     }
     return account;

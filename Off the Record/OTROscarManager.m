@@ -170,7 +170,6 @@ BOOL loginFailed;
 
 - (void)aimSessionManagerSignedOff:(AIMSessionManager *)sender {
     [self.account setAllBuddiesStatuts:OTRBuddyStatusOffline];
-    self.account.isConnectedValue = NO;
     
     if([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyDeleteOnDisconnect])
     {

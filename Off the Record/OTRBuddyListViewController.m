@@ -166,7 +166,8 @@
     }
     
     NSPredicate * predicate = [NSPredicate predicateWithFormat:@"self.xmppAccount.isConnected == YES"];
-    NSArray * allRequests = [OTRXMPPManagedPresenceSubscriptionRequest MR_findAllWithPredicate:predicate];
+    NSArray * allRequests = [OTRXMPPManagedPresenceSubscriptionRequest MR_findAll];
+    allRequests = [allRequests filteredArrayUsingPredicate:predicate];
     
     if([allRequests count])
     {
@@ -521,10 +522,7 @@
         return _subscriptionRequestsFetchedResultsController;
     }
     
-    NSPredicate * accountPredicate = [NSPredicate predicateWithFormat:@"self.xmppAccount.isConnected == YES"];
-    
-    
-    _subscriptionRequestsFetchedResultsController = [OTRXMPPManagedPresenceSubscriptionRequest MR_fetchAllGroupedBy:nil withPredicate:accountPredicate sortedBy:nil ascending:NO delegate:self];
+    _subscriptionRequestsFetchedResultsController = [OTRXMPPManagedPresenceSubscriptionRequest MR_fetchAllGroupedBy:nil withPredicate:nil sortedBy:nil ascending:NO delegate:self];
     
     return _subscriptionRequestsFetchedResultsController;
 }

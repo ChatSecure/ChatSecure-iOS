@@ -416,7 +416,6 @@
     [xmppStream disconnect];
     
     [self.account setAllBuddiesStatuts:OTRBuddyStatusOffline];
-    self.account.isConnectedValue = NO;
     
     if([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyDeleteOnDisconnect])
     {
