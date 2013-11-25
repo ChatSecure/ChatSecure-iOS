@@ -82,6 +82,11 @@
 +(OTRManagedMessage*)newMessageWithBuddy:(OTRManagedBuddy *)theBuddy message:(NSString *)theMessage
 {
     OTRManagedMessage *managedMessage = [OTRManagedMessage MR_createEntity];
+    NSError * error = nil;
+    [[NSManagedObjectContext MR_contextForCurrentThread] obtainPermanentIDsForObjects:@[managedMessage] error:&error];
+    if (error) {
+        DDLogError(@"Error obtaining permanent ID for Message: %@",error);
+    }
     managedMessage.uniqueID = [OTRUtilities uniqueString];
     managedMessage.buddy = theBuddy;
     managedMessage.messagebuddy = theBuddy;
@@ -89,6 +94,8 @@
     managedMessage.date = [NSDate date];
     managedMessage.isDeliveredValue = NO;
     theBuddy.lastMessageDate = managedMessage.date;
+    
+    
 
     return managedMessage;
 }

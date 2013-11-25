@@ -24,7 +24,7 @@
         case OTRBuddyStatusXa:
             return [UIColor colorWithRed: 0.734 green: 0.124 blue: 0.124 alpha: 1];
             break;
-        case OTRBUddyStatusDnd:
+        case OTRBuddyStatusDnd:
             return [UIColor colorWithRed: 0.734 green: 0.124 blue: 0.124 alpha: 1];
             break;
         case OTRBuddyStatusAvailable:

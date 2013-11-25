@@ -828,7 +828,7 @@
         case OTRBuddyStatusXa:
             cell.textLabel.textColor = [UIColor darkGrayColor];
             break;
-        case OTRBUddyStatusDnd:
+        case OTRBuddyStatusDnd:
             cell.textLabel.textColor = [UIColor darkGrayColor];
             break;
         case OTRBuddyStatusAvailable:

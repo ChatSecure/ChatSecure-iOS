@@ -187,7 +187,15 @@
         [aimAccount setDefaultsWithProtocol:kOTRProtocolTypeAIM];
         newAccount = aimAccount;
     }
-    return newAccount;     
+    if(newAccount)
+    {
+        NSError * error = nil;
+        [[NSManagedObjectContext MR_contextForCurrentThread] obtainPermanentIDsForObjects:@[newAccount] error:&error];
+        if (error) {
+            DDLogError(@"Error obtaining permanent ID for newAccount: %@",error);
+        }
+    }
+    return newAccount;
 }
 
 @end

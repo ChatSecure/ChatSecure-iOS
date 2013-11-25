@@ -73,7 +73,7 @@
             switch (presence.intShow)
             {
                 case 0  :
-                    buddyStatus = OTRBUddyStatusDnd;
+                    buddyStatus = OTRBuddyStatusDnd;
                     break;
                 case 1  :
                     buddyStatus = OTRBuddyStatusXa;

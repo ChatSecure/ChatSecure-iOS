@@ -32,6 +32,11 @@
 +(OTRManagedStatus *)newStatus:(OTRBuddyStatus)newStatus withMessage:(NSString *)newMessage withBuddy:(OTRManagedBuddy *)newBuddy incoming:(BOOL)newIsIncoming
 {
     OTRManagedStatus * managedStatus = [OTRManagedStatus MR_createEntity];
+    NSError * error = nil;
+    [[NSManagedObjectContext MR_contextForCurrentThread] obtainPermanentIDsForObjects:@[managedStatus] error:&error];
+    if (error) {
+        DDLogError(@"Error obtaining permanent ID for Status: %@",error);
+    }
     managedStatus.statusValue = newStatus;
     
     if (![newMessage length]) {
@@ -57,7 +62,11 @@
 +(OTRManagedStatus *)newStatus:(OTRBuddyStatus)newStatus withMessage:(NSString *)newMessage withBuddy:(OTRManagedBuddy *)newBuddy incoming:(BOOL)newIsIncoming inContext:(NSManagedObjectContext *)context
 {
     OTRManagedStatus * managedStatus = [OTRManagedStatus MR_createInContext:context];
-    [context obtainPermanentIDsForObjects:@[managedStatus] error:nil];
+    NSError * error = nil;
+    [context obtainPermanentIDsForObjects:@[managedStatus] error:&error];
+    if (error) {
+        DDLogError(@"Error obtaining permanent ID for Status: %@",error);
+    }
     managedStatus.statusValue = newStatus;
     
     if (![newMessage length]) {
@@ -86,7 +95,7 @@
         case OTRBuddyStatusXa:
             return EXTENDED_AWAY_STRING;
             break;
-        case OTRBUddyStatusDnd:
+        case OTRBuddyStatusDnd:
             return DO_NOT_DISTURB_STRING;
             break;
         case OTRBuddyStatusAway:

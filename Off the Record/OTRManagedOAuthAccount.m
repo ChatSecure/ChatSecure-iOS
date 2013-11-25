@@ -89,6 +89,11 @@
 {
     xmppAccount = [xmppAccount MR_inThreadContext];
     OTRManagedOAuthAccount * oAuthAccount = [self MR_createEntity];
+    NSError * error = nil;
+    [[NSManagedObjectContext MR_contextForCurrentThread] obtainPermanentIDsForObjects:@[oAuthAccount] error:&error];
+    if (error) {
+        DDLogError(@"Error obtaining permanent ID for oAuthAccount: %@",error);
+    }
     
     oAuthAccount.username = xmppAccount.username;
     oAuthAccount.protocol = xmppAccount.protocol;

@@ -26,6 +26,11 @@
     }
     else {
         vCard = [OTRvCard MR_createEntity];
+        NSError * error = nil;
+        [[NSManagedObjectContext MR_contextForCurrentThread] obtainPermanentIDsForObjects:@[vCard] error:&error];
+        if (error) {
+            DDLogError(@"Error obtaining permanent ID for vCard: %@",error);
+        }
         vCard.jidString = jidString;
     }
     return vCard;
@@ -38,6 +43,11 @@
     }
     else {
         OTRvCardTemp * newvCardTemp = [OTRvCardTemp MR_createEntity];
+        NSError * error = nil;
+        [[NSManagedObjectContext MR_contextForCurrentThread] obtainPermanentIDsForObjects:@[newvCardTemp] error:&error];
+        if (error) {
+            DDLogError(@"Error obtaining permanent ID for vCardTemp: %@",error);
+        }
         newvCardTemp.vCardTemp = vCardTemp;
         self.vCardTempRelationship = newvCardTemp;
     }
@@ -57,6 +67,11 @@
     }
     else {
         OTRvCardAvatar * vCardAvatar = [OTRvCardAvatar MR_createEntity];
+        NSError * error = nil;
+        [[NSManagedObjectContext MR_contextForCurrentThread] obtainPermanentIDsForObjects:@[vCardAvatar] error:&error];
+        if (error) {
+            DDLogError(@"Error obtaining permanent ID for vCardAvatar: %@",error);
+        }
         vCardAvatar.photoData = photoData;
         self.vCardAvatarRelationship = vCardAvatar;
         

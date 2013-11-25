@@ -23,6 +23,11 @@
     }
     else{
         OTRXMPPManagedPresenceSubscriptionRequest * newRequest = [OTRXMPPManagedPresenceSubscriptionRequest MR_createEntity];
+        NSError * error = nil;
+        [[NSManagedObjectContext MR_contextForCurrentThread] obtainPermanentIDsForObjects:@[newRequest] error:&error];
+        if (error) {
+            DDLogError(@"Error obtaining permanent ID for SubRequest: %@",error);
+        }
         newRequest.jid = jid;
         newRequest.xmppAccount = account;
         return newRequest;
