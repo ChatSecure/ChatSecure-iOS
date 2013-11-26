@@ -217,7 +217,7 @@
     xmppCapabilities.autoFetchHashedCapabilities = YES;
     xmppCapabilities.autoFetchNonHashedCapabilities = NO;
     
-    NSArray * certDomains = @[kOTRGoogleTalkDomain,kOTRFacebookDomain,@"jabber.ccc.de"];
+    NSArray * certDomains = @[kOTRGoogleTalkDomain,kOTRFacebookDomain,@"jabber.ccc.de",@"jabber.systemli.org"];
     
     if ([certDomains containsObject:self.account.accountDomain]) {
         self.manualyEvaluateTrust = YES;

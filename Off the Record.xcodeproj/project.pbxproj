@@ -302,6 +302,7 @@
 		63E717E6182AF391004398AD /* SSKeychain.strings in Resources */ = {isa = PBXBuildFile; fileRef = 63E717E0182AF391004398AD /* SSKeychain.strings */; };
 		63E717E7182AF391004398AD /* SSKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E717E3182AF391004398AD /* SSKeychain.m */; };
 		63E717E8182AF391004398AD /* SSKeychainQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E717E5182AF391004398AD /* SSKeychainQuery.m */; };
+		63EE775D18442255004990FE /* systemli.cer in Resources */ = {isa = PBXBuildFile; fileRef = 63EE775C18442255004990FE /* systemli.cer */; };
 		63F2585717FB51C2007A7565 /* google.cer in Resources */ = {isa = PBXBuildFile; fileRef = 63F2585617FB51C2007A7565 /* google.cer */; };
 		63F637BE183D93DB004A7AC5 /* DDAbstractDatabaseLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F637B5183D93DB004A7AC5 /* DDAbstractDatabaseLogger.m */; };
 		63F637BF183D93DB004A7AC5 /* DDASLLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F637B7183D93DB004A7AC5 /* DDASLLogger.m */; };
@@ -1182,6 +1183,7 @@
 		63EB09491727484D000FACDC /* he */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = he; path = "Off the Record/he.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
 		63EB094A17274AA2000FACDC /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = "Off the Record/es.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
 		63EB094B17274B24000FACDC /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = "Off the Record/sv.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
+		63EE775C18442255004990FE /* systemli.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = systemli.cer; sourceTree = "<group>"; };
 		63F2585617FB51C2007A7565 /* google.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = google.cer; sourceTree = "<group>"; };
 		63F637B4183D93DB004A7AC5 /* DDAbstractDatabaseLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DDAbstractDatabaseLogger.h; path = Submodules/CocoaLumberjack/Lumberjack/DDAbstractDatabaseLogger.h; sourceTree = SOURCE_ROOT; };
 		63F637B5183D93DB004A7AC5 /* DDAbstractDatabaseLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DDAbstractDatabaseLogger.m; path = Submodules/CocoaLumberjack/Lumberjack/DDAbstractDatabaseLogger.m; sourceTree = SOURCE_ROOT; };
@@ -1691,6 +1693,7 @@
 		630606DF17FA1C9A00CEB7D3 /* Certificates */ = {
 			isa = PBXGroup;
 			children = (
+				63EE775C18442255004990FE /* systemli.cer */,
 				63168A2B18359DAA00E120E0 /* ccc.cer */,
 				63F2585617FB51C2007A7565 /* google.cer */,
 				630606E017FA1C9A00CEB7D3 /* facebook.cer */,
@@ -3796,6 +3799,7 @@
 				63BFDB6916E8294300C608D6 /* person.png in Resources */,
 				63BFDB6A16E8294300C608D6 /* person@2x.png in Resources */,
 				D96270F61755DEB100F0A958 /* UserVoice.strings in Resources */,
+				63EE775D18442255004990FE /* systemli.cer in Resources */,
 				D96270F71755DEB100F0A958 /* uv_article.png in Resources */,
 				D96270F81755DEB100F0A958 /* uv_article@2x.png in Resources */,
 				D96270F91755DEB100F0A958 /* uv_default_avatar.png in Resources */,
