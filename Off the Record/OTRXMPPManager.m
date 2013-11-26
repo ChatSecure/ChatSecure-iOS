@@ -127,10 +127,8 @@
     else{
         xmppStream = [[XMPPStream alloc] init];
     }
-    
+    [xmppStream setProxyHost:@"127.0.0.1" port:9050 version:GCDAsyncSocketSOCKSVersion5];
     xmppStream.autoStartTLS = YES;
-    
-    
     
     //Makes sure not allow any sending of password in plain text
     

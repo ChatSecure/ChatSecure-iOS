@@ -264,10 +264,18 @@
     OTRManagedBuddy * buddy = nil;
     buddy = [OTRManagedBuddy fetchWithName:name account:account];
     if (!buddy) {
+        NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
         buddy = [OTRManagedBuddy MR_createEntity];
         buddy.accountName = name;
         buddy.account = account;
+        NSError *error = nil;
+        [context obtainPermanentIDsForObjects:@[buddy] error:&error];
+        if (error) {
+            DDLogError(@"Error obtaining permanent ID for buddy: %@ %@", buddy, error);
+        }
+        [context MR_saveToPersistentStoreAndWait];
     }
+    
     return buddy;
 }
 +(OTRManagedBuddy *)fetchWithName:(NSString *)name account:(OTRManagedAccount *)account;
