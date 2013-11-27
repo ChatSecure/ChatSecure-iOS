@@ -265,11 +265,7 @@
     }
     if(newAccount)
     {
-        NSError * error = nil;
-        [[NSManagedObjectContext MR_contextForCurrentThread] obtainPermanentIDsForObjects:@[newAccount] error:&error];
-        if (error) {
-            DDLogError(@"Error obtaining permanent ID for newAccount: %@",error);
-        }
+        [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
     }
     return newAccount;
 }

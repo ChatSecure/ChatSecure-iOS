@@ -80,7 +80,7 @@
                     }
                 }
             }];
-            [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveOnlySelfAndWait];
+            [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
         }
     };
         

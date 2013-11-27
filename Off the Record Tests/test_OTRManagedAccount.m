@@ -37,7 +37,7 @@
     XCTAssertNil(account, @"");
     
     account = [OTRManagedAccount accountForAccountType:OTRAccountTypeAIM];
-    XCTAssertTrue([account isKindOfClass:[OTRManagedOscarAccount class]], @"");
+    XCTAssertTrue([account isKindOfClass:[OTRManagedOscarAccount class]], @"Testing Aim account creation");
     
     account = [OTRManagedAccount accountForAccountType:OTRAccountTypeJabber];
     XCTAssertTrue([account isKindOfClass:[OTRManagedXMPPAccount class]], @"");

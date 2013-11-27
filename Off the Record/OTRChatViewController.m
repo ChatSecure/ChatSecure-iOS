@@ -835,7 +835,7 @@
     if ([text length]) {
         OTRManagedMessage * message = [OTRManagedMessage newMessageToBuddy:self.buddy message:text encrypted:NO];
         
-        [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveOnlySelfAndWait];
+        [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
         
         BOOL secure = [self.buddy currentEncryptionStatus].statusValue == kOTRKitMessageStateEncrypted || [OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyOpportunisticOtr];
         if(secure)

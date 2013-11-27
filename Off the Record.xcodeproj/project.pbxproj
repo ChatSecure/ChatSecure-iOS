@@ -4818,6 +4818,7 @@
 				63C08571184574BE00B9C984 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		63C1062416CB108A00D2C860 /* Build configuration list for PBXAggregateTarget "Mogenerator" */ = {
 			isa = XCConfigurationList;

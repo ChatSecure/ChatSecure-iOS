@@ -56,7 +56,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [[self.subscriptionRequestsFetchedResultsController sections][0] numberOfObjects];
+    return [[self subscriptionRequests] count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -67,7 +67,7 @@
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
     }
-    OTRXMPPManagedPresenceSubscriptionRequest * subRequest = [self.subscriptionRequestsFetchedResultsController objectAtIndexPath:indexPath];
+    OTRXMPPManagedPresenceSubscriptionRequest * subRequest = [[self subscriptionRequests] objectAtIndex:indexPath.row];
     
     cell.textLabel.text = subRequest.jid;
     cell.detailTextLabel.text = subRequest.xmppAccount.username;
@@ -88,7 +88,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    currentlySelectedRequest = [self.subscriptionRequestsFetchedResultsController objectAtIndexPath:indexPath];
+    currentlySelectedRequest = [[self subscriptionRequests] objectAtIndex:indexPath.row];
     UIActionSheet * requestActionSheet = [[UIActionSheet alloc] initWithTitle:currentlySelectedRequest.jid delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:REJECT_STRING otherButtonTitles:ADD_STRING, nil];
     [requestActionSheet showInView:self.view];
     
@@ -102,14 +102,16 @@
         return _subscriptionRequestsFetchedResultsController;
     }
     
-    NSPredicate * accountPredicate = [NSPredicate predicateWithFormat:@"self.xmppAccount.isConnected == YES"];
-    
-    
-    _subscriptionRequestsFetchedResultsController = [OTRXMPPManagedPresenceSubscriptionRequest MR_fetchAllGroupedBy:nil withPredicate:accountPredicate sortedBy:OTRXMPPManagedPresenceSubscriptionRequestAttributes.jid ascending:YES delegate:self];
+    _subscriptionRequestsFetchedResultsController = [OTRXMPPManagedPresenceSubscriptionRequest MR_fetchAllGroupedBy:nil withPredicate:nil sortedBy:OTRXMPPManagedPresenceSubscriptionRequestAttributes.jid ascending:YES delegate:self];
     
     return _subscriptionRequestsFetchedResultsController;
 }
 
+-(NSArray* )subscriptionRequests {
+    NSPredicate * accountPredicate = [NSPredicate predicateWithFormat:@"self.xmppAccount.isConnected == YES"];
+    return [[self.subscriptionRequestsFetchedResultsController fetchedObjects] filteredArrayUsingPredicate:accountPredicate];
+}
+/*
 -(void)controllerWillChangeContent:(NSFetchedResultsController *)controller
 {
     [self.tableView beginUpdates];
@@ -134,10 +136,10 @@
             break;
     }
 }
-
+*/
 -(void)controllerDidChangeContent:(NSFetchedResultsController *)controller
 {
-    [self.tableView endUpdates];
+    [self.tableView reloadData];
 }
 
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex

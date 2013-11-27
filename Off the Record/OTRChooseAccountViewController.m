@@ -49,7 +49,7 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [[self.onlineAccountsFetchedResultsController fetchedObjects] count];
+    return [[self onlineAccounts] count];
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -66,7 +66,7 @@
 
 -(void)tableView:(UITableView *)tView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    OTRManagedAccount * account = [self.onlineAccountsFetchedResultsController objectAtIndexPath:indexPath];
+    OTRManagedAccount * account = [[self onlineAccounts] objectAtIndex:indexPath.row];
     OTRNewBuddyViewController * buddyViewController = [[OTRNewBuddyViewController alloc] initWithAccountObjectID:account.objectID];
     [self.navigationController pushViewController:buddyViewController animated:YES];
     
@@ -74,20 +74,26 @@
     [tView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
--(NSFetchedResultsController *)onlineAccountsFetchedResultsController
+-(NSFetchedResultsController *)accountsFetchedResultsController
 {
-    if(_onlineAccountsFetchedResultsController)
+    if(_accountsFetchedResultsController)
     {
-        return _onlineAccountsFetchedResultsController;
+        return _accountsFetchedResultsController;
     }
     
-    NSPredicate * predicate = [NSPredicate predicateWithFormat:@"isConnected == YES"];
+    _accountsFetchedResultsController = [OTRManagedAccount MR_fetchAllSortedBy:OTRManagedAccountAttributes.username ascending:YES withPredicate:nil groupBy:nil delegate:self];
     
-    _onlineAccountsFetchedResultsController = [OTRManagedAccount MR_fetchAllSortedBy:@"username" ascending:YES withPredicate:predicate groupBy:nil delegate:self];
-    
-    return _onlineAccountsFetchedResultsController;
+    return _accountsFetchedResultsController;
     
 }
+
+-(NSArray *)onlineAccounts
+{
+    NSPredicate * predicate = [NSPredicate predicateWithFormat:@"isConnected == YES"];
+    return [[self.accountsFetchedResultsController fetchedObjects] filteredArrayUsingPredicate:predicate];
+}
+
+/*
 -(void)controllerWillChangeContent:(NSFetchedResultsController *)controller
 {
     [tableView beginUpdates];
@@ -112,10 +118,10 @@
             break;
     }
 }
-
+*/
 -(void)controllerDidChangeContent:(NSFetchedResultsController *)controller
 {
-    [tableView endUpdates];
+    [tableView reloadData];
     tableView.scrollEnabled =  [self tableView:tableView numberOfRowsInSection:0] * 50.0 > tableView.frame.size.height;
 }
 
@@ -126,7 +132,7 @@
 
 -(void) configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
-    OTRManagedAccount *account = [self.onlineAccountsFetchedResultsController objectAtIndexPath:indexPath];
+    OTRManagedAccount *account = [[self onlineAccounts] objectAtIndex:indexPath.row];
     cell.textLabel.text = account.username;
     cell.detailTextLabel.text = nil;
     cell.imageView.image = [UIImage imageNamed:account.imageName];

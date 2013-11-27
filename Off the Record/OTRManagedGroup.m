@@ -18,12 +18,10 @@
     
     if (!group) {
         group = [OTRManagedGroup MR_createEntity];
-        NSError * error = nil;
-        [[NSManagedObjectContext MR_contextForCurrentThread] obtainPermanentIDsForObjects:@[group] error:&error];
-        if (error) {
-            DDLogError(@"Error obtaining permanent ID for Group: %@",error);
-        }
+        
         group.name = name;
+        
+        [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
         
     }
     
@@ -37,13 +35,10 @@
     
     if (!group) {
         group = [OTRManagedGroup MR_createInContext:context];
-        NSError * error = nil;
-        [[NSManagedObjectContext MR_contextForCurrentThread] obtainPermanentIDsForObjects:@[group] error:&error];
-        if (error) {
-            DDLogError(@"Error obtaining permanent ID for Group: %@",error);
-        }
+    
         group.name = name;
         
+        [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
     }
     
     return group;

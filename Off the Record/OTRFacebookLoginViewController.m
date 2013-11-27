@@ -75,7 +75,7 @@
                 if (!error) {
                     [self didConnectUser:user];
                     NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
-                    [context MR_saveOnlySelfAndWait];
+                    [context MR_saveToPersistentStoreAndWait];
                     self.account.tokenDictionary = [session.accessTokenData dictionary];
                     //self.account.password = session.accessTokenData.accessToken;
                     [self.loginViewTableView reloadData];

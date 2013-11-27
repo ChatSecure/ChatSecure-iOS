@@ -74,7 +74,7 @@
         if (!error) {
             [self.account setUsername:auth.userEmail];
             NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
-            [context MR_saveOnlySelfAndWait];
+            [context MR_saveToPersistentStoreAndWait];
             self.account.tokenDictionary = auth.parameters;
             [self.loginViewTableView reloadData];
             [self loginButtonPressed:sender];
