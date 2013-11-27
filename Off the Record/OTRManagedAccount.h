@@ -62,4 +62,6 @@
 //Goes through all accounts checks if it's connected againgst ProtocolManager and adjusts buddy status
 +(void)resetAccountsConnectionStatus;
 
++(OTRManagedAccount *)accountForAccountType:(OTRAccountType)accountType;
+
 @end

@@ -131,7 +131,7 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     OTRAccountType accountType = [accounts[indexPath.row][kAccountTypeKey] unsignedIntegerValue];
-    OTRManagedAccount * cellAccount = [self accountForAccountType:accountType];
+    OTRManagedAccount * cellAccount = [OTRManagedAccount accountForAccountType:accountType];
     
     NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
     [context MR_saveToPersistentStoreAndWait];
@@ -154,48 +154,6 @@
     } else {
         return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
     }
-}
-
--(OTRManagedAccount *)accountForAccountType:(OTRAccountType)accountType
-{
-    //Facebook
-    OTRManagedAccount * newAccount;
-    if(accountType == OTRAccountTypeFacebook)
-    {
-        OTRManagedFacebookAccount * facebookAccount = [OTRManagedFacebookAccount MR_createEntity];
-        [facebookAccount setDefaultsWithDomain:kOTRFacebookDomain];
-        newAccount = facebookAccount;
-    }
-    else if(accountType == OTRAccountTypeGoogleTalk)
-    {
-        //Google Chat
-        OTRManagedGoogleAccount * googleAccount = [OTRManagedGoogleAccount MR_createEntity];
-        [googleAccount setDefaultsWithDomain:kOTRGoogleTalkDomain];
-        newAccount = googleAccount;
-    }
-    else if(accountType == OTRAccountTypeJabber)
-    {
-        //Jabber
-        OTRManagedXMPPAccount * jabberAccount = [OTRManagedXMPPAccount MR_createEntity];
-        [jabberAccount setDefaultsWithDomain:@""];
-        newAccount = jabberAccount;
-    }
-    else if(accountType == OTRAccountTypeAIM)
-    {
-        //Aim
-        OTRManagedOscarAccount * aimAccount = [OTRManagedOscarAccount MR_createEntity];
-        [aimAccount setDefaultsWithProtocol:kOTRProtocolTypeAIM];
-        newAccount = aimAccount;
-    }
-    if(newAccount)
-    {
-        NSError * error = nil;
-        [[NSManagedObjectContext MR_contextForCurrentThread] obtainPermanentIDsForObjects:@[newAccount] error:&error];
-        if (error) {
-            DDLogError(@"Error obtaining permanent ID for newAccount: %@",error);
-        }
-    }
-    return newAccount;
 }
 
 @end

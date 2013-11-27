@@ -30,8 +30,10 @@
 #import "Strings.h"
 #import "OTRProtocolManager.h"
 #import "OTRUtilities.h"
-#import "OTRConstants.h"
 
+#import "OTRManagedFacebookAccount.h"
+#import "OTRManagedGoogleAccount.h"
+#import "OTRManagedOscarAccount.h"
 
 
 @interface OTRManagedAccount()
@@ -228,6 +230,48 @@
         }];
     }
     return account;
+}
+
++(OTRManagedAccount *)accountForAccountType:(OTRAccountType)accountType
+{
+    //Facebook
+    OTRManagedAccount * newAccount;
+    if(accountType == OTRAccountTypeFacebook)
+    {
+        OTRManagedFacebookAccount * facebookAccount = [OTRManagedFacebookAccount MR_createEntity];
+        [facebookAccount setDefaultsWithDomain:kOTRFacebookDomain];
+        newAccount = facebookAccount;
+    }
+    else if(accountType == OTRAccountTypeGoogleTalk)
+    {
+        //Google Chat
+        OTRManagedGoogleAccount * googleAccount = [OTRManagedGoogleAccount MR_createEntity];
+        [googleAccount setDefaultsWithDomain:kOTRGoogleTalkDomain];
+        newAccount = googleAccount;
+    }
+    else if(accountType == OTRAccountTypeJabber)
+    {
+        //Jabber
+        OTRManagedXMPPAccount * jabberAccount = [OTRManagedXMPPAccount MR_createEntity];
+        [jabberAccount setDefaultsWithDomain:@""];
+        newAccount = jabberAccount;
+    }
+    else if(accountType == OTRAccountTypeAIM)
+    {
+        //Aim
+        OTRManagedOscarAccount * aimAccount = [OTRManagedOscarAccount MR_createEntity];
+        [aimAccount setDefaultsWithProtocol:kOTRProtocolTypeAIM];
+        newAccount = aimAccount;
+    }
+    if(newAccount)
+    {
+        NSError * error = nil;
+        [[NSManagedObjectContext MR_contextForCurrentThread] obtainPermanentIDsForObjects:@[newAccount] error:&error];
+        if (error) {
+            DDLogError(@"Error obtaining permanent ID for newAccount: %@",error);
+        }
+    }
+    return newAccount;
 }
 
 @end

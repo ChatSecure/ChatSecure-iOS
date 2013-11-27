@@ -21,6 +21,7 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "OTRProtocolManager.h"
+#import "OTROscarManager.h"
 #import "OTRManagedBuddy.h"
 #import "OTRConstants.h"
 

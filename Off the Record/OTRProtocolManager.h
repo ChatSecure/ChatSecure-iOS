@@ -21,7 +21,6 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 #import <Foundation/Foundation.h>
-#import "OTROscarManager.h"
 #import "OTRXMPPManager.h"
 #import "OTREncryptionManager.h"
 #import "OTRCodec.h"
@@ -29,6 +28,8 @@
 #import "OTRSettingsManager.h"
 #import "OTRProtocol.h"
 #import "OTRAccountsManager.h"
+
+@class OTROscarManager;
 
 @interface OTRProtocolManager : NSObject
 
