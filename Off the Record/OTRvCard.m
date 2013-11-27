@@ -26,12 +26,8 @@
     }
     else {
         vCard = [OTRvCard MR_createEntity];
-        NSError * error = nil;
-        [[NSManagedObjectContext MR_contextForCurrentThread] obtainPermanentIDsForObjects:@[vCard] error:&error];
-        if (error) {
-            DDLogError(@"Error obtaining permanent ID for vCard: %@",error);
-        }
         vCard.jidString = jidString;
+        [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
     }
     return vCard;
 }
@@ -43,14 +39,10 @@
     }
     else {
         OTRvCardTemp * newvCardTemp = [OTRvCardTemp MR_createEntity];
-        NSError * error = nil;
-        [[NSManagedObjectContext MR_contextForCurrentThread] obtainPermanentIDsForObjects:@[newvCardTemp] error:&error];
-        if (error) {
-            DDLogError(@"Error obtaining permanent ID for vCardTemp: %@",error);
-        }
         newvCardTemp.vCardTemp = vCardTemp;
         self.vCardTempRelationship = newvCardTemp;
     }
+    [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
     
 }
 
@@ -67,16 +59,12 @@
     }
     else {
         OTRvCardAvatar * vCardAvatar = [OTRvCardAvatar MR_createEntity];
-        NSError * error = nil;
-        [[NSManagedObjectContext MR_contextForCurrentThread] obtainPermanentIDsForObjects:@[vCardAvatar] error:&error];
-        if (error) {
-            DDLogError(@"Error obtaining permanent ID for vCardAvatar: %@",error);
-        }
         vCardAvatar.photoData = photoData;
         self.vCardAvatarRelationship = vCardAvatar;
         
         self.photoHash = [[photoData xmpp_sha1Digest] xmpp_hexStringValue];
     }
+    [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
 }
 
 -(NSData *)photoData {

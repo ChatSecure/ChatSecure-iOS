@@ -85,9 +85,6 @@
     if (controller && [groupName length]) {
         [self.offlineBuddyGroups addObject:@{kGroupNameKey: groupName,kBuddyControllerKey:controller}];
     }
-    
-    
-    
 }
 
 -(NSInteger)addOnlineBuddyController:(NSFetchedResultsController *)controller groupName:(NSString *)groupName

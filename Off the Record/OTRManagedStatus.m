@@ -32,11 +32,6 @@
 +(OTRManagedStatus *)newStatus:(OTRBuddyStatus)newStatus withMessage:(NSString *)newMessage withBuddy:(OTRManagedBuddy *)newBuddy incoming:(BOOL)newIsIncoming
 {
     OTRManagedStatus * managedStatus = [OTRManagedStatus MR_createEntity];
-    NSError * error = nil;
-    [[NSManagedObjectContext MR_contextForCurrentThread] obtainPermanentIDsForObjects:@[managedStatus] error:&error];
-    if (error) {
-        DDLogError(@"Error obtaining permanent ID for Status: %@",error);
-    }
     managedStatus.statusValue = newStatus;
     
     if (![newMessage length]) {
@@ -62,11 +57,7 @@
 +(OTRManagedStatus *)newStatus:(OTRBuddyStatus)newStatus withMessage:(NSString *)newMessage withBuddy:(OTRManagedBuddy *)newBuddy incoming:(BOOL)newIsIncoming inContext:(NSManagedObjectContext *)context
 {
     OTRManagedStatus * managedStatus = [OTRManagedStatus MR_createInContext:context];
-    NSError * error = nil;
-    [context obtainPermanentIDsForObjects:@[managedStatus] error:&error];
-    if (error) {
-        DDLogError(@"Error obtaining permanent ID for Status: %@",error);
-    }
+  
     managedStatus.statusValue = newStatus;
     
     if (![newMessage length]) {
@@ -84,7 +75,7 @@
     managedStatus.date = [NSDate date];
     managedStatus.isEncryptedValue = NO;
     
-    //[context MR_saveToPersistentStoreAndWait];
+    [context MR_saveToPersistentStoreAndWait];
     
     return managedStatus;
 }
