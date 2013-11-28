@@ -31,8 +31,8 @@
 @synthesize theSession;
 @synthesize login;
 @synthesize loginFailed;
-@synthesize loggedIn;
 @synthesize account;
+@synthesize isConnected;
 
 BOOL loginFailed;
 
@@ -43,7 +43,7 @@ BOOL loginFailed;
     {
         self.account = newAccount;
         mainThread = [NSThread currentThread];
-        loggedIn = NO;
+        self.isConnected = NO;
     }
     return self;
 }
@@ -127,7 +127,7 @@ BOOL loginFailed;
     [[NSNotificationCenter defaultCenter] postNotificationName:kOTRProtocolLoginFail object:self];
     //DDLogError(@"login error: %@",[error description]);
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Login Error" message:@"AIM login failed. Please check your username and password and try again." delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
-    loggedIn = NO;
+    self.isConnected = NO;
     [alert show];
 }
 
@@ -136,7 +136,7 @@ BOOL loginFailed;
 	[session setDelegate:self];
 	login = nil;
 	theSession = session;
-    loggedIn = YES;
+    self.isConnected = YES;
     //s_AIMSession = theSession;
 	
 	/* Set handler delegates */
@@ -177,7 +177,7 @@ BOOL loginFailed;
     }
     
 	[self checkThreading];
-    loggedIn = NO;
+    self.isConnected = NO;
     OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
     [protocolManager.protocolManagers removeObjectForKey:self.account.uniqueIdentifier];
     aimBuddyList = nil;
@@ -607,10 +607,6 @@ BOOL loginFailed;
     [[self theSession].session closeConnection];
    
     
-}
--(BOOL)isConnected
-{
-    return [self loggedIn];
 }
 
 - (void) addBuddy:(OTRManagedBuddy *)newBuddy

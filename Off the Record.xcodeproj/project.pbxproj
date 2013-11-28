@@ -183,6 +183,7 @@
 		636FE4C0161B7C68002B28EF /* OTRInLineTextEditTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 636FE4BF161B7C68002B28EF /* OTRInLineTextEditTableViewCell.m */; };
 		6375D2531811FCD2006CDA8A /* OTRRosterStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 6375D2521811FCD2006CDA8A /* OTRRosterStorage.m */; };
 		63813C1216E14E5D00909670 /* OTRBuddyListGroupManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 63813C1116E14E5D00909670 /* OTRBuddyListGroupManager.m */; };
+		638286E01846911C00F127C2 /* OTRAccountTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 638286DF1846911C00F127C2 /* OTRAccountTableViewCell.m */; };
 		63871264175808DA006C3A4E /* OTRActivityItemProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 63871263175808DA006C3A4E /* OTRActivityItemProvider.m */; };
 		6387126817580D93006C3A4E /* OTRQRCodeActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 6387126717580D93006C3A4E /* OTRQRCodeActivity.m */; };
 		638940CE1815CAF8005F651E /* CrashReporter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 638940CD1815CAF8005F651E /* CrashReporter.framework */; };
@@ -1011,6 +1012,8 @@
 		637FF13417DEB8910012AA1B /* ChatSecure 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "ChatSecure 2.xcdatamodel"; sourceTree = "<group>"; };
 		63813C1016E14E5D00909670 /* OTRBuddyListGroupManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBuddyListGroupManager.h; sourceTree = "<group>"; };
 		63813C1116E14E5D00909670 /* OTRBuddyListGroupManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBuddyListGroupManager.m; sourceTree = "<group>"; };
+		638286DE1846911C00F127C2 /* OTRAccountTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAccountTableViewCell.h; sourceTree = "<group>"; };
+		638286DF1846911C00F127C2 /* OTRAccountTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAccountTableViewCell.m; sourceTree = "<group>"; };
 		63871262175808DA006C3A4E /* OTRActivityItemProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRActivityItemProvider.h; sourceTree = "<group>"; };
 		63871263175808DA006C3A4E /* OTRActivityItemProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRActivityItemProvider.m; sourceTree = "<group>"; };
 		6387126617580D92006C3A4E /* OTRQRCodeActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRQRCodeActivity.h; sourceTree = "<group>"; };
@@ -3429,6 +3432,8 @@
 			children = (
 				D9C7463B15350F62003445ED /* OTRSettingsViewController.h */,
 				D9C7463C15350F62003445ED /* OTRSettingsViewController.m */,
+				638286DE1846911C00F127C2 /* OTRAccountTableViewCell.h */,
+				638286DF1846911C00F127C2 /* OTRAccountTableViewCell.m */,
 				D9FC986A15588E300039518D /* OTRQRCodeViewController.h */,
 				D9FC986B15588E300039518D /* OTRQRCodeViewController.m */,
 				D9FBD71615472FA700126568 /* OTRSettingTableViewCell.h */,
@@ -4093,6 +4098,7 @@
 				D9CEEEB3168423CA00B236B5 /* RVServiceData.m in Sources */,
 				D9CEEEBC168423CA00B236B5 /* SNAC.m in Sources */,
 				D9CEEEBD168423CA00B236B5 /* TLV.m in Sources */,
+				638286E01846911C00F127C2 /* OTRAccountTableViewCell.m in Sources */,
 				D9CEEEFA1684240900B236B5 /* MBProgressHUD.m in Sources */,
 				D9CEF0C616842A5B00B236B5 /* NSObject+SBJson.m in Sources */,
 				D9CEF0C716842A5B00B236B5 /* SBJsonParser.m in Sources */,

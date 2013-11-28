@@ -80,12 +80,14 @@
 @synthesize buddyTimers;
 @synthesize manualyEvaluateTrust = _manualyEvaluateTrust;
 @synthesize certificatePinningModule = _certificatePinningModule;
+@synthesize isConnected;
 
 - (id) initWithAccount:(OTRManagedAccount *)newAccount {
     self = [super init];
     
     if(self)
     {
+        self.isConnected = NO;
         self.account = (OTRManagedXMPPAccount*)newAccount;
 
         // Configure logging framework
@@ -217,11 +219,7 @@
     xmppCapabilities.autoFetchHashedCapabilities = YES;
     xmppCapabilities.autoFetchNonHashedCapabilities = NO;
     
-    NSArray * certDomains = @[kOTRGoogleTalkDomain,kOTRFacebookDomain,@"jabber.ccc.de",@"jabber.systemli.org"];
     
-    if ([certDomains containsObject:self.account.accountDomain]) {
-        self.manualyEvaluateTrust = YES;
-    }
 	// Activate xmpp modules
     
 	[xmppReconnect         activate:xmppStream];
@@ -378,6 +376,17 @@
 		return NO;
 	}
     
+    NSArray * certDomains = @[kOTRGoogleTalkDomain,kOTRFacebookDomain,@"jabber.ccc.de",@"jabber.systemli.org"];
+    
+    if ([certDomains containsObject:self.account.accountDomain]) {
+        self.manualyEvaluateTrust = YES;
+    }
+    else
+    {
+        self.manualyEvaluateTrust = NO;
+    }
+    
+    
     int r = arc4random() % 99999;
     
     NSString * resource = [NSString stringWithFormat:@"%@%d",kOTRXMPPResource,r];
@@ -464,7 +473,8 @@
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
 	
-	
+	self.isConnected = YES;
+    
 	NSError *error = nil;
     
     if ([sender supportsXFacebookPlatformAuthentication]) {
@@ -581,7 +591,9 @@
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
     [[NSNotificationCenter defaultCenter]
-     postNotificationName:kOTRProtocolDiconnect object:self]; 
+     postNotificationName:kOTRProtocolDiconnect object:self];
+    
+    self.isConnected = NO;
 	
 	if (!isXmppConnected)
 	{
@@ -807,6 +819,7 @@ managedBuddyObjectID
     [self sendChatState:kOTRChatStateInactive withBuddyID:managedBuddyObjectID];
     
 }
+/*
 -(BOOL)isConnected
 {
     if (![xmppStream isDisconnected]) {
@@ -814,6 +827,7 @@ managedBuddyObjectID
 	}
     return NO;
 }
+ */
 
 - (XMPPCertificatePinning *)certificatePinningModule
 {
