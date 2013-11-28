@@ -587,14 +587,15 @@ BOOL loginFailed;
 {
     NSString *recipient = theMessage.buddy.accountName;
     NSString *message = theMessage.message;
-    
-    AIMMessage * msg = [AIMMessage messageWithBuddy:[theSession.session.buddyList buddyWithUsername:recipient] message:message];
-    
-    // use delay to prevent OSCAR rate-limiting problem
-    //NSDate *future = [NSDate dateWithTimeIntervalSinceNow: delay ];
-    //[NSThread sleepUntilDate:future];
-    
-	[theSession.messageHandler sendMessage:msg];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        AIMMessage * msg = [AIMMessage messageWithBuddy:[theSession.session.buddyList buddyWithUsername:recipient] message:message];
+        
+        // use delay to prevent OSCAR rate-limiting problem
+        //NSDate *future = [NSDate dateWithTimeIntervalSinceNow: delay ];
+        //[NSThread sleepUntilDate:future];
+        
+        [theSession.messageHandler sendMessage:msg];
+    });
 }
 
 -(void)connectWithPassword:(NSString *)myPassword
