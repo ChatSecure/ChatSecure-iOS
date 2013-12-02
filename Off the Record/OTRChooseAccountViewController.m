@@ -11,6 +11,7 @@
 #import "OTRNewBuddyViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import "Strings.h"
+#import "OTRAccountsManager.h"
 
 @interface OTRChooseAccountViewController ()
 
@@ -89,8 +90,7 @@
 
 -(NSArray *)onlineAccounts
 {
-    NSPredicate * predicate = [NSPredicate predicateWithFormat:@"isConnected == YES"];
-    return [[self.accountsFetchedResultsController fetchedObjects] filteredArrayUsingPredicate:predicate];
+    return [OTRAccountsManager allAccountsAbleToAddBuddies];
 }
 
 /*

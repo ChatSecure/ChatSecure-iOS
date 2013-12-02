@@ -29,11 +29,11 @@
 - (void) addAccount:(OTRManagedAccount*)account;
 - (void) removeAccount:(OTRManagedAccount*)account;
 
-- (OTRManagedAccount *) accountForProtocol:(NSString *)protocol accountName: (NSString *) accountName;
-
 + (NSUInteger)numberOfAccountsLoggedIn;
 + (NSArray *)allLoggedInAccounts;
++ (NSArray *)allAccountsAbleToAddBuddies;
 
 + (OTRManagedAccount *)accountForProtocol:(NSString *)protocol accountName: (NSString *) accountName;
+
 
 @end

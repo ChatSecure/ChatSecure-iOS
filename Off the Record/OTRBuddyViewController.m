@@ -14,6 +14,8 @@
 #import "OTRProtocolManager.h"
 #import "OTRConstants.h"
 
+#import "OTRManagedAccount.h"
+
 @interface OTRBuddyViewController ()
 
 @end
@@ -99,6 +101,9 @@
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
+    if (self.buddy.account.accountType == OTRAccountTypeFacebook) {
+        return 3;
+    }
     return 4;
 }
 

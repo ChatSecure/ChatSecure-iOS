@@ -84,7 +84,7 @@ static OTRProtocolManager *sharedManager = nil;
 
 -(OTRManagedBuddy *)buddyForUserName:(NSString *)buddyUserName accountName:(NSString *)accountName protocol:(NSString *)protocol
 {
-    OTRManagedAccount * account = [self.accountsManager accountForProtocol:protocol accountName:accountName];
+    OTRManagedAccount * account = [OTRAccountsManager accountForProtocol:protocol accountName:accountName];
     return [OTRManagedBuddy fetchOrCreateWithName:buddyUserName account:account];
 }
 

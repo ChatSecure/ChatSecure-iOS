@@ -157,13 +157,8 @@
 {
     [self subscriptionRequestsFetchedResultsController];
     UIBarButtonItem * addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addButtonPressed:)];
-    addButton.enabled = NO;
     
-    NSUInteger numAccountsLoggedIn = [OTRAccountsManager numberOfAccountsLoggedIn];
-    
-    if (numAccountsLoggedIn) {
-        addButton.enabled = YES;
-    }
+    addButton.enabled = [self shouldEnableAddButton];
     
     NSPredicate * predicate = [NSPredicate predicateWithFormat:@"self.xmppAccount.isConnected == YES"];
     NSArray * allRequests = [OTRXMPPManagedPresenceSubscriptionRequest MR_findAll];
@@ -182,6 +177,10 @@
         
 }
 
+- (BOOL)shouldEnableAddButton {
+    return ([[OTRAccountsManager allAccountsAbleToAddBuddies] count] > 0);
+}
+
 -(void)requestButtonPressed:(id)sender
 {
     OTRSubscriptionRequestsViewController * requestViewController = [[OTRSubscriptionRequestsViewController alloc] initWithStyle:UITableViewStylePlain];
@@ -191,10 +190,11 @@
 }
 
 -(void) addButtonPressed:(id)sender {
-    NSUInteger numAccountsLoggedIn = [OTRAccountsManager numberOfAccountsLoggedIn];
+    NSArray * allAccounts = [OTRAccountsManager allAccountsAbleToAddBuddies];
+    NSUInteger numAccountsLoggedIn = [allAccounts count];
     if (numAccountsLoggedIn == 1) {
         //only one account logged in choose that account to add buddy to
-        NSManagedObject * object = [[OTRAccountsManager allLoggedInAccounts] lastObject];
+        NSManagedObject * object = [allAccounts lastObject];
         OTRNewBuddyViewController * newBuddyViewController =  [[OTRNewBuddyViewController alloc] initWithAccountObjectID:[object objectID]];
         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:newBuddyViewController];
         

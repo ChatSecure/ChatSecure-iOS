@@ -132,6 +132,15 @@
     
     xmppStream.autoStartTLS = YES;
     
+    NSArray * certDomains = @[kOTRGoogleTalkDomain,kOTRFacebookDomain,@"jabber.ccc.de",@"jabber.systemli.org"];
+    
+    if ([certDomains containsObject:self.account.accountDomain]) {
+        self.manualyEvaluateTrust = YES;
+    }
+    else
+    {
+        self.manualyEvaluateTrust = NO;
+    }
     
     
     //Makes sure not allow any sending of password in plain text
@@ -376,15 +385,7 @@
 		return NO;
 	}
     
-    NSArray * certDomains = @[kOTRGoogleTalkDomain,kOTRFacebookDomain,@"jabber.ccc.de",@"jabber.systemli.org"];
     
-    if ([certDomains containsObject:self.account.accountDomain]) {
-        self.manualyEvaluateTrust = YES;
-    }
-    else
-    {
-        self.manualyEvaluateTrust = NO;
-    }
     
     
     int r = arc4random() % 99999;
