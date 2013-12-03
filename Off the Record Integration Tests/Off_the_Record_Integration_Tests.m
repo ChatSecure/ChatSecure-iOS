@@ -68,17 +68,17 @@
     [googleAccount MR_deleteEntity];
     [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveOnlySelfAndWait];
     
-    XCTAssertTrue(didConnect,@"");
+    XCTAssertTrue(didConnect,@"Gogole Account Test");
 }
 
 - (void)test_FacebookAccount {
-    OTRManagedFacebookAccount * googleAccount = (OTRManagedFacebookAccount *)[OTRManagedAccount accountForAccountType:OTRAccountTypeFacebook];
-    googleAccount.username = @"";
-    [googleAccount setTokenDictionary:FacebookToken];
+    OTRManagedFacebookAccount * facebookAccount = (OTRManagedFacebookAccount *)[OTRManagedAccount accountForAccountType:OTRAccountTypeFacebook];
+    facebookAccount.username = @"david@chatsecure.org";
+    [facebookAccount setTokenDictionary:FacebookToken];
     
-    [self connectAccountAndWait:googleAccount];
+    [self connectAccountAndWait:facebookAccount];
     
-    [googleAccount MR_deleteEntity];
+    [facebookAccount MR_deleteEntity];
     [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveOnlySelfAndWait];
     
     XCTAssertTrue(didConnect,@"");
@@ -101,7 +101,7 @@
         [account MR_deleteEntity];
         [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveOnlySelfAndWait];
         
-        XCTAssertTrue(didConnect,@"");
+        XCTAssertTrue(didConnect,@"Did Connect XPPP Account: %@",key);
     }];
 }
 
