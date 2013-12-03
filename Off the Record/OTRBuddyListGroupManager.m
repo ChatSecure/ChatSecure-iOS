@@ -242,7 +242,7 @@
       newIndexPath:(NSIndexPath *)newIndexPath
 {
     if ([controller isEqual:_groupFetchedResultsController]) {
-        if (type == NSFetchedResultsChangeInsert) {
+        if (type == NSFetchedResultsChangeInsert || type == NSFetchedResultsChangeUpdate) {
             OTRManagedGroup * managedGroup = (OTRManagedGroup *)anObject;
             if(![self controllerWithBuddyGroupName:managedGroup.name])
             {

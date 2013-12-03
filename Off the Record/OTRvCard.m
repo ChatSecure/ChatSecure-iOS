@@ -16,18 +16,22 @@
 @implementation OTRvCard
 
 +(OTRvCard *)fetchOrCreateWithJidString:(NSString *)jidString {
+    return [self fetchOrCreateWithJidString:jidString inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+}
+
++(OTRvCard *)fetchOrCreateWithJidString:(NSString *)jidString inContext:(NSManagedObjectContext *)context{
     
     OTRvCard * vCard = nil;
-    NSPredicate * searchPredicate = [NSPredicate predicateWithFormat:@"%@ == %@",OTRvCardAttributes.jidString,jidString];
-    NSArray * allvCardsArray = [OTRvCard MR_findAllWithPredicate:searchPredicate];
+    NSPredicate * searchPredicate = [NSPredicate predicateWithFormat:@"%K == %@",OTRvCardAttributes.jidString,jidString];
+    NSArray * allvCardsArray = [OTRvCard MR_findAllWithPredicate:searchPredicate inContext:context];
     
     if ([allvCardsArray count]) {
         vCard = [allvCardsArray lastObject];
     }
     else {
-        vCard = [OTRvCard MR_createEntity];
+        vCard = [OTRvCard MR_createInContext:context];
         vCard.jidString = jidString;
-        [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
+        [context MR_saveToPersistentStoreAndWait];
     }
     return vCard;
 }
@@ -38,6 +42,7 @@
         return;
     }
     else {
+        
         OTRvCardTemp * newvCardTemp = [OTRvCardTemp MR_createEntity];
         newvCardTemp.vCardTemp = vCardTemp;
         self.vCardTempRelationship = newvCardTemp;

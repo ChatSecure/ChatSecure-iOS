@@ -9,6 +9,7 @@
 
 
 +(OTRvCard *)fetchOrCreateWithJidString:(NSString *)jidString;
++(OTRvCard *)fetchOrCreateWithJidString:(NSString *)jidString inContext:(NSManagedObjectContext *)context;
 
 
 

@@ -43,14 +43,14 @@
         NSString *jidStr = [item attributeStringValueForName:@"jid"];
         XMPPJID *jid = [[XMPPJID jidWithString:jidStr] bareJID];
         
-        OTRManagedBuddy * user = [self buddyWithJID:jid xmppStream:stream];
+        OTRManagedBuddy * user = [self buddyWithJID:jid xmppStream:stream inContext:localContext];
         
         NSString *subscription = [item attributeStringValueForName:@"subscription"];
         if ([subscription isEqualToString:@"remove"])
         {
             if (user)
             {
-                [user MR_deleteEntity];
+                [user MR_deleteInContext:localContext];
             }
         }
         else if(user)
@@ -63,7 +63,7 @@
 - (void)handlePresence:(XMPPPresence *)presence xmppStream:(XMPPStream *)stream
 {
     [MagicalRecord saveUsingCurrentThreadContextWithBlockAndWait:^(NSManagedObjectContext *localContext) {
-        OTRManagedBuddy * user = [self buddyWithJID:[presence from] xmppStream:stream];
+        OTRManagedBuddy * user = [self buddyWithJID:[presence from] xmppStream:stream inContext:localContext];
         
         if ([[presence type] isEqualToString:@"unavailable"] || [presence isErrorPresence]) {
             [user newStatusMessage:OFFLINE_STRING status:OTRBuddyStatusOffline incoming:YES];
@@ -134,7 +134,7 @@
 - (void)setPhoto:(UIImage *)image forUserWithJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream
 {
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
-        OTRManagedBuddy * user = [self buddyWithJID:jid xmppStream:stream];
+        OTRManagedBuddy * user = [self buddyWithJID:jid xmppStream:stream inContext:localContext];
         user.photo = image;
     }];
 }
@@ -182,9 +182,9 @@
     return NO;
 }
 
--(OTRManagedBuddy *)buddyWithJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream
+-(OTRManagedBuddy *)buddyWithJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream inContext:(NSManagedObjectContext *)context
 {
-    return [OTRManagedBuddy fetchOrCreateWithName:[jid bare] account:[self accountForStrem:stream]];
+    return [OTRManagedBuddy fetchOrCreateWithName:[jid bare] account:[self accountForStrem:stream] inContext:context];
 }
 
 -(OTRManagedAccount *)accountForStrem:(XMPPStream *)stream
