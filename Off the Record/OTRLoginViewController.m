@@ -33,11 +33,14 @@
 #import "OTRGoogleTalkLoginViewController.h"
 #import "OTRInLineTextEditTableViewCell.h"
 
+#import "OTRCertificatePinning.h"
+
 #define kFieldBuffer 20;
 
 #define kErrorAlertViewTag 131
 #define kErrorInfoAlertViewTag 132
 #define kErrorCertAlertViewTag 133
+#define kNewCertAlertViewTag 134
 
 @interface OTRLoginViewController(Private)
 - (float) getMidpointOffsetforHUD;
@@ -343,9 +346,14 @@
     {
         UIAlertView *alert = nil;
         NSDictionary * userInfo = notification.userInfo;
-        id error = userInfo[KOTRProtocolLoginFailErrorKey];
+        id error = userInfo[kOTRProtocolLoginFailErrorKey];
+        NSData * certData = userInfo[kOTRProtocolLoginFailSSLCertificateDataKey];
+        NSNumber * statusNumber = userInfo[kOTRProtocolLoginFailSSLStatusKey];
         NSInteger tag = kErrorAlertViewTag;
-        if ([error isKindOfClass:[NSError class]]) {
+        if (certData) {
+            [self showCertWarningForData:certData withStatus:[statusNumber longValue]];
+        }
+        else if ([error isKindOfClass:[NSError class]]) {
             recentError = (NSError *)error;
             NSString * msg = XMPP_FAIL_STRING;
             
@@ -353,7 +361,7 @@
                 //cert matching error
                 msg = [NSString stringWithFormat:XMPP_CERT_FAIL_STRING,((OTRManagedXMPPAccount *)account).accountDomain];
                 tag = kErrorCertAlertViewTag;
-                alert = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:msg delegate:self cancelButtonTitle:nil otherButtonTitles:DISMISS_STRING,CONNECT_ANYWAY_STRING, nil];
+                //alert = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:msg delegate:self cancelButtonTitle:nil otherButtonTitles:DISMISS_STRING,CONNECT_ANYWAY_STRING, nil];
             }
             else {
                 alert = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:XMPP_FAIL_STRING delegate:self cancelButtonTitle:nil otherButtonTitles:OK_STRING,INFO_STRING, nil];
@@ -372,6 +380,18 @@
         alert.tag = tag;
         [alert show];
     }
+}
+             
+- (void)showCertWarningForData:(NSData *)certData withStatus:(OSStatus)status {
+    lastCertData = certData;
+    lastStatus = status;
+    SecCertificateRef certificate = [OTRCertificatePinning certForData:certData];
+    NSString * fingerprint = [OTRCertificatePinning sha1FingerprintForCertificate:certificate];
+    NSString * message = [NSString stringWithFormat:@"SHA1: %@\nInternal Error:%d",fingerprint,(int)status];
+    UIAlertView * alertview = [[UIAlertView alloc] initWithTitle:@"New Cert" message:message delegate:self cancelButtonTitle:@"Bad Cert" otherButtonTitles:@"Good Cert", nil];
+    alertview.tag = kNewCertAlertViewTag;
+    
+    [alertview show];
 }
 
 -(void)protocolLoginSuccess:(NSNotification*)notification
@@ -470,6 +490,12 @@
             [self loginButtonPressed:nil];
         }
         
+    }
+    else if (alertView.tag == kNewCertAlertViewTag) {
+        if (buttonIndex != alertView.cancelButtonIndex) {
+            //add new cert
+            [OTRCertificatePinning addCertificate:[OTRCertificatePinning certForData:lastCertData]];
+        }
     }
 }
 

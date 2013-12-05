@@ -37,6 +37,8 @@
     MBProgressHUD *HUD;
     UIView *padding;
     NSError * recentError;
+    NSData * lastCertData;
+    OSStatus lastStatus;
 }
 
 - (id) initWithAccountID:(NSManagedObjectID *)newAccountID;

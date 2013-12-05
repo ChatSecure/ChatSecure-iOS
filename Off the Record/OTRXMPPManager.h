@@ -37,9 +37,9 @@
 #import "OTRManagedXMPPAccount.h"
 #import "OTRManagedBuddy.h"
 #import "OTRXMPPBudyTimers.h"
-#import "XMPPCertificatePinning.h"
+#import "OTRCertificatePinning.h"
 
-@interface OTRXMPPManager : NSObject <XMPPRosterDelegate, NSFetchedResultsControllerDelegate, OTRProtocol>
+@interface OTRXMPPManager : NSObject <XMPPRosterDelegate, NSFetchedResultsControllerDelegate, OTRProtocol, OTRCertificatePinningDelegate>
 {
 	XMPPStream *xmppStream;
 	XMPPReconnect *xmppReconnect;
@@ -73,7 +73,7 @@
 @property (nonatomic, readonly) XMPPvCardAvatarModule *xmppvCardAvatarModule;
 @property (nonatomic, readonly) XMPPCapabilities *xmppCapabilities;
 @property (nonatomic, readonly) XMPPCapabilitiesCoreDataStorage *xmppCapabilitiesStorage;
-@property (nonatomic, readonly) XMPPCertificatePinning * certificatePinningModule;
+@property (nonatomic, readonly) OTRCertificatePinning * certificatePinningModule;
 @property 	BOOL isXmppConnected;
 @property (nonatomic, strong) NSMutableDictionary * buddyTimers;
 @property (nonatomic) BOOL manualyEvaluateTrust;

@@ -132,6 +132,8 @@
     
     xmppStream.autoStartTLS = YES;
     
+    [self.certificatePinningModule activate:self.xmppStream];
+    
     NSArray * certDomains = @[kOTRGoogleTalkDomain,kOTRFacebookDomain,@"jabber.ccc.de",@"jabber.systemli.org"];
     
     if ([certDomains containsObject:self.account.accountDomain]) {
@@ -324,7 +326,7 @@
 {
     if (error) {
         [[NSNotificationCenter defaultCenter]
-         postNotificationName:kOTRProtocolLoginFail object:self userInfo:@{KOTRProtocolLoginFailErrorKey:error}];
+         postNotificationName:kOTRProtocolLoginFail object:self userInfo:@{kOTRProtocolLoginFailErrorKey:error}];
     }
     else {
         [[NSNotificationCenter defaultCenter]
@@ -820,20 +822,12 @@ managedBuddyObjectID
     [self sendChatState:kOTRChatStateInactive withBuddyID:managedBuddyObjectID];
     
 }
-/*
--(BOOL)isConnected
-{
-    if (![xmppStream isDisconnected]) {
-		return YES;
-	}
-    return NO;
-}
- */
 
-- (XMPPCertificatePinning *)certificatePinningModule
+- (OTRCertificatePinning *)certificatePinningModule
 {
     if(!_certificatePinningModule){
-        _certificatePinningModule = [XMPPCertificatePinning defaultCertificates];
+        _certificatePinningModule = [OTRCertificatePinning defaultCertificates];
+        _certificatePinningModule.delegate = self;
     }
     return _certificatePinningModule;
 }
@@ -843,12 +837,21 @@ managedBuddyObjectID
     _manualyEvaluateTrust = manualyEvaluateTrust;
     if (_manualyEvaluateTrust) {
         xmppStream.manuallyEvaluateTrust = YES;
-        [self.certificatePinningModule activate:self.xmppStream];
     }
     else {
         xmppStream.manuallyEvaluateTrust = NO;
-        [self.certificatePinningModule deactivate];
     }
+}
+
+- (void)newTrust:(SecTrustRef)trust withStatus:(OSStatus)status {
+    DDLogVerbose(@"New trust found");
+    
+    NSData * certifcateData = [OTRCertificatePinning dataForCertificate:[OTRCertificatePinning certForTrust:trust]];
+    
+    [[NSNotificationCenter defaultCenter]
+     postNotificationName:kOTRProtocolLoginFail object:self userInfo:@{kOTRProtocolLoginFailSSLStatusKey:[NSNumber numberWithLong:status],kOTRProtocolLoginFailSSLCertificateDataKey:certifcateData}];
+    
+    
 }
 
 @end
