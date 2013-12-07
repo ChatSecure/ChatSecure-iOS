@@ -24,6 +24,7 @@
 #define kOTRProtocolLoginFail @"LoginFailedNotification"
 #define kOTRProtocolLoginFailErrorKey @"ProtocolLoginFailErrorKey"
 #define kOTRProtocolLoginFailSSLStatusKey @"kOTRProtocolLoginFailSSLStatusKey"
+#define kOTRProtocolLoginFailHostnameKey @"kOTRProtocolLoginFailHostnameKey"
 #define kOTRProtocolLoginFailSSLCertificateDataKey @"kOTRProtocolLoginFailSSLCertificateData"
 #define kOTRBuddyListUpdate @"BuddyListUpdateNotification"
 #define kOTRMessageReceived @"MessageReceivedNotification"
@@ -56,6 +57,7 @@
 #define kOTRFeedbackEmail @"support@chatsecure.org"
 
 #define kOTRServiceName @"org.chatsecure.ChatSecure"
+#define kOTRCertificateServiceName @"org.chatsecure.ChatSecure.Certificate"
 
 #define KOTRCertificatesUsername @"KOTRCertificatesUsername"
 

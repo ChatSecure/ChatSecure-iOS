@@ -78,7 +78,6 @@
 @synthesize isXmppConnected;
 @synthesize account;
 @synthesize buddyTimers;
-@synthesize manualyEvaluateTrust = _manualyEvaluateTrust;
 @synthesize certificatePinningModule = _certificatePinningModule;
 @synthesize isConnected;
 
@@ -133,16 +132,6 @@
     xmppStream.autoStartTLS = YES;
     
     [self.certificatePinningModule activate:self.xmppStream];
-    
-    NSArray * certDomains = @[kOTRGoogleTalkDomain,kOTRFacebookDomain,@"jabber.ccc.de",@"jabber.systemli.org"];
-    
-    if ([certDomains containsObject:self.account.accountDomain]) {
-        self.manualyEvaluateTrust = YES;
-    }
-    else
-    {
-        self.manualyEvaluateTrust = NO;
-    }
     
     
     //Makes sure not allow any sending of password in plain text
@@ -386,8 +375,6 @@
         
 		return NO;
 	}
-    
-    
     
     
     int r = arc4random() % 99999;
@@ -832,24 +819,16 @@ managedBuddyObjectID
     return _certificatePinningModule;
 }
 
-- (void)setManualyEvaluateTrust:(BOOL)manualyEvaluateTrust
-{
-    _manualyEvaluateTrust = manualyEvaluateTrust;
-    if (_manualyEvaluateTrust) {
-        xmppStream.manuallyEvaluateTrust = YES;
-    }
-    else {
-        xmppStream.manuallyEvaluateTrust = NO;
-    }
-}
-
-- (void)newTrust:(SecTrustRef)trust withStatus:(OSStatus)status {
+- (void)newTrust:(SecTrustRef)trust withHostName:(NSString *)hostname withStatus:(OSStatus)status; {
     DDLogVerbose(@"New trust found");
     
     NSData * certifcateData = [OTRCertificatePinning dataForCertificate:[OTRCertificatePinning certForTrust:trust]];
     
-    [[NSNotificationCenter defaultCenter]
-     postNotificationName:kOTRProtocolLoginFail object:self userInfo:@{kOTRProtocolLoginFailSSLStatusKey:[NSNumber numberWithLong:status],kOTRProtocolLoginFailSSLCertificateDataKey:certifcateData}];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter]
+         postNotificationName:kOTRProtocolLoginFail object:self userInfo:@{kOTRProtocolLoginFailSSLStatusKey:[NSNumber numberWithLong:status],kOTRProtocolLoginFailSSLCertificateDataKey:certifcateData,kOTRProtocolLoginFailHostnameKey:hostname}];
+    });
+    
     
     
 }

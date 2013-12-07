@@ -10,7 +10,7 @@
 
 @protocol OTRCertificatePinningDelegate <NSObject>
 
-- (void)newTrust:(SecTrustRef)trust withStatus:(OSStatus)status;
+- (void)newTrust:(SecTrustRef)trust withHostName:(NSString *)hostname withStatus:(OSStatus)status;
 
 @end
 
@@ -21,8 +21,8 @@
 + (SecCertificateRef)certForTrust:(SecTrustRef)trust;
 + (NSData *)dataForCertificate:(SecCertificateRef)certificate;
 + (SecCertificateRef)certForData:(NSData *)data;
-+ (void)addCertificate:(SecCertificateRef)cert;
-+ (NSString *)publicKeyFor:(SecCertificateRef)cert;
+- (NSSet *)storedCertificatesWithHostName:(NSString *)hostname;
+- (void)addCertificate:(SecCertificateRef)cert withHostName:(NSString *)hostname;
 + (NSString*)sha1FingerprintForCertificate:(SecCertificateRef)certificate;
 
 @end

@@ -38,6 +38,7 @@
     UIView *padding;
     NSError * recentError;
     NSData * lastCertData;
+    NSString * lastHostname;
     OSStatus lastStatus;
 }
 

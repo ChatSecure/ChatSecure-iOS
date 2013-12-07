@@ -76,7 +76,6 @@
 @property (nonatomic, readonly) OTRCertificatePinning * certificatePinningModule;
 @property 	BOOL isXmppConnected;
 @property (nonatomic, strong) NSMutableDictionary * buddyTimers;
-@property (nonatomic) BOOL manualyEvaluateTrust;
 
 //- (NSManagedObjectContext *)managedObjectContext_capabilities;
 

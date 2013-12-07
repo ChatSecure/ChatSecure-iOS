@@ -348,10 +348,12 @@
         NSDictionary * userInfo = notification.userInfo;
         id error = userInfo[kOTRProtocolLoginFailErrorKey];
         NSData * certData = userInfo[kOTRProtocolLoginFailSSLCertificateDataKey];
+        NSString * hostname = userInfo[kOTRProtocolLoginFailHostnameKey];
         NSNumber * statusNumber = userInfo[kOTRProtocolLoginFailSSLStatusKey];
+        
         NSInteger tag = kErrorAlertViewTag;
         if (certData) {
-            [self showCertWarningForData:certData withStatus:[statusNumber longValue]];
+            [self showCertWarningForData:certData withHostName:hostname withStatus:[statusNumber longValue]];
         }
         else if ([error isKindOfClass:[NSError class]]) {
             recentError = (NSError *)error;
@@ -382,13 +384,14 @@
     }
 }
              
-- (void)showCertWarningForData:(NSData *)certData withStatus:(OSStatus)status {
+- (void)showCertWarningForData:(NSData *)certData withHostName:(NSString *)hostname withStatus:(OSStatus)status {
     lastCertData = certData;
     lastStatus = status;
+    lastHostname = hostname;
     SecCertificateRef certificate = [OTRCertificatePinning certForData:certData];
     NSString * fingerprint = [OTRCertificatePinning sha1FingerprintForCertificate:certificate];
     NSString * message = [NSString stringWithFormat:@"SHA1: %@\nInternal Error:%d",fingerprint,(int)status];
-    UIAlertView * alertview = [[UIAlertView alloc] initWithTitle:@"New Cert" message:message delegate:self cancelButtonTitle:@"Bad Cert" otherButtonTitles:@"Good Cert", nil];
+    UIAlertView * alertview = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"New Cert: %@",hostname] message:message delegate:self cancelButtonTitle:@"Bad Cert" otherButtonTitles:@"Good Cert", nil];
     alertview.tag = kNewCertAlertViewTag;
     
     [alertview show];
@@ -486,7 +489,7 @@
     {
         id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
         if ([protocol isKindOfClass:[OTRXMPPManager class]]) {
-            [((OTRXMPPManager *)protocol) setManualyEvaluateTrust:NO];
+            //[((OTRXMPPManager *)protocol) setManualyEvaluateTrust:NO];
             [self loginButtonPressed:nil];
         }
         
@@ -494,7 +497,10 @@
     else if (alertView.tag == kNewCertAlertViewTag) {
         if (buttonIndex != alertView.cancelButtonIndex) {
             //add new cert
-            [OTRCertificatePinning addCertificate:[OTRCertificatePinning certForData:lastCertData]];
+            id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
+            if ([protocol isKindOfClass:[OTRXMPPManager class]]) {
+                [((OTRXMPPManager *)protocol).certificatePinningModule addCertificate:[OTRCertificatePinning certForData:lastCertData] withHostName:lastHostname];
+            }
         }
     }
 }
