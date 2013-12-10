@@ -582,5 +582,209 @@
     "CONNECT_ANYWAY_STRING": {
         "comment": "Label for button when user wants to overide cautious security settings",
         "string": "Connect anyway"
+    },
+        "noErrString": {
+        "comment": "SSL error message",
+        "string": "No Error"
+    },
+    "errSSLProtocolString": {
+        "comment": "SSL error message",
+        "string": "SSL protocol error"
+    },
+    "errSSLNegotiationString": {
+        "comment": "SSL error message",
+        "string": "Cipher Suite negotiation failure"
+    },
+    "errSSLFatalAlertString": {
+        "comment": "SSL error message",
+        "string": "Fatal alert"
+    },
+    "errSSLWouldBlockString": {
+        "comment": "SSL error message",
+        "string": "I/O would block (not fatal)"
+    },
+    "errSSLSessionNotFoundString": {
+        "comment": "SSL error message",
+        "string": "Attempt to restore an unknown session"
+    },
+    "errSSLClosedGracefulString": {
+        "comment": "SSL error message",
+        "string": "Connection closed gracefully"
+    },
+    "errSSLClosedAbortString": {
+        "comment": "SSL error message",
+        "string": "Connection closed via error"
+    },
+    "errSSLXCertChainInvalidString": {
+        "comment": "SSL error message",
+        "string": "Invalid certificate chain"
+    },
+    "errSSLBadCertString": {
+        "comment": "SSL error message",
+        "string": "Bad certificate format"
+    },
+    "errSSLCryptoString": {
+        "comment": "SSL error message",
+        "string": "Underlying cryptographic error"
+    },
+    "errSSLInternalString": {
+        "comment": "SSL error message",
+        "string": "Internal error"
+    },
+    "errSSLModuleAttachString": {
+        "comment": "SSL error message",
+        "string": "Module attach failure"
+    },
+    "errSSLUnknownRootCertString": {
+        "comment": "SSL error message",
+        "string": "Valid cert chain, untrusted root"
+    },
+    "errSSLNoRootCertString": {
+        "comment": "SSL error message",
+        "string": "Cert chain not verified by root"
+    },
+    "errSSLCertExpiredString": {
+        "comment": "SSL error message",
+        "string": "Chain had an expired cert"
+    },
+    "errSSLCertNotYetValidString": {
+        "comment": "SSL error message",
+        "string": "Chain had a cert not yet valid"
+    },
+    "errSSLClosedNoNotifyString": {
+        "comment": "SSL error message",
+        "string": "Server closed session with no notification"
+    },
+    "errSSLBufferOverflowString": {
+        "comment": "SSL error message",
+        "string": "Insufficient buffer provided"
+    },
+    "errSSLBadCipherSuiteString": {
+        "comment": "SSL error message",
+        "string": "Bad SSLCipherSuite"
+    },
+    "errSSLPeerUnexpectedMsgString": {
+        "comment": "SSL error message",
+        "string": "Unexpected message received"
+    },
+    "errSSLPeerBadRecordMacString": {
+        "comment": "SSL error message",
+        "string": "Bad MAC"
+    },
+    "errSSLPeerDecryptionFailString": {
+        "comment": "SSL error message",
+        "string": "Decryption failed"
+    },
+    "errSSLPeerRecordOverflowString": {
+        "comment": "SSL error message",
+        "string": "Record overflow"
+    },
+    "errSSLPeerDecompressFailString": {
+        "comment": "SSL error message",
+        "string": "Decompression failure"
+    },
+    "errSSLPeerHandshakeFailString": {
+        "comment": "SSL error message",
+        "string": "Handshake failure"
+    },
+    "errSSLPeerBadCertString": {
+        "comment": "SSL error message",
+        "string": "Miscellaneous bad certificate"
+    },
+    "errSSLPeerUnsupportedCertString": {
+        "comment": "SSL error message",
+        "string": "Bad unsupported cert format"
+    },
+    "errSSLPeerCertRevokedString": {
+        "comment": "SSL error message",
+        "string": "Certificate revoked"
+    },
+    "errSSLPeerCertExpiredString": {
+        "comment": "SSL error message",
+        "string": "Certificate expired"
+    },
+    "errSSLPeerCertUnknownString": {
+        "comment": "SSL error message",
+        "string": "Unknown certificate"
+    },
+    "errSSLIllegalParamString": {
+        "comment": "SSL error message",
+        "string": "Illegal parameter"
+    },
+    "errSSLPeerUnknownCAString": {
+        "comment": "SSL error message",
+        "string": "Unknown Cert Authority"
+    },
+    "errSSLPeerAccessDeniedString": {
+        "comment": "SSL error message",
+        "string": "Access denied"
+    },
+    "errSSLPeerDecodeErrorString": {
+        "comment": "SSL error message",
+        "string": "Decoding error"
+    },
+    "errSSLPeerDecryptErrorString": {
+        "comment": "SSL error message",
+        "string": "Decryption error"
+    },
+    "errSSLPeerExportRestrictionString": {
+        "comment": "SSL error message",
+        "string": "Export restriction"
+    },
+    "errSSLPeerProtocolVersionString": {
+        "comment": "SSL error message",
+        "string": "Bad protocol version"
+    },
+    "errSSLPeerInsufficientSecurityString": {
+        "comment": "SSL error message",
+        "string": "Insufficient security"
+    },
+    "errSSLPeerInternalErrorString": {
+        "comment": "SSL error message",
+        "string": "Internal error"
+    },
+    "errSSLPeerUserCancelledString": {
+        "comment": "SSL error message",
+        "string": "User canceled"
+    },
+    "errSSLPeerNoRenegotiationString": {
+        "comment": "SSL error message",
+        "string": "No renegotiation allowed"
+    },
+    "errSSLPeerAuthCompletedString": {
+        "comment": "SSL error message",
+        "string": "Peer cert is valid, or was ignored if verification disabled"
+    },
+    "errSSLClientCertRequestedString": {
+        "comment": "SSL error message",
+        "string": "Server has requested a client cert"
+    },
+    "errSSLHostNameMismatchString": {
+        "comment": "SSL error message",
+        "string": "Peer host name mismatch"
+    },
+    "errSSLConnectionRefusedString": {
+        "comment": "SSL error message",
+        "string": "Peer dropped connection before responding"
+    },
+    "errSSLDecryptionFailString": {
+        "comment": "SSL error message",
+        "string": "Decryption failure"
+    },
+    "errSSLBadRecordMacString": {
+        "comment": "SSL error message",
+        "string": "Bad MAC"
+    },
+    "errSSLRecordOverflowString": {
+        "comment": "SSL error message",
+        "string": "Record overflow"
+    },
+    "errSSLBadConfigurationString": {
+        "comment": "SSL error message",
+        "string": "Configuration error"
+    },
+    "errSSLUnexpectedRecordString": {
+        "comment": "SSL error message",
+        "string": "Unexpected (skipped) record in DTLS"
     }
 }

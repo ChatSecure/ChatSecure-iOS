@@ -32,6 +32,7 @@
 #import "OTROscarLoginViewController.h"
 #import "OTRGoogleTalkLoginViewController.h"
 #import "OTRInLineTextEditTableViewCell.h"
+#import "OTRErrorManager.h"
 
 #import "OTRCertificatePinning.h"
 
@@ -390,7 +391,8 @@
     lastHostname = hostname;
     SecCertificateRef certificate = [OTRCertificatePinning certForData:certData];
     NSString * fingerprint = [OTRCertificatePinning sha1FingerprintForCertificate:certificate];
-    NSString * message = [NSString stringWithFormat:@"SHA1: %@\nInternal Error:%d",fingerprint,(int)status];
+    NSString * message = [NSString stringWithFormat:@"SHA1: %@\n",fingerprint];
+    message = [message stringByAppendingString:[OTRErrorManager errorStringWithSSLStatus:status]];
     UIAlertView * alertview = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"New Cert: %@",hostname] message:message delegate:self cancelButtonTitle:@"Bad Cert" otherButtonTitles:@"Good Cert", nil];
     alertview.tag = kNewCertAlertViewTag;
     

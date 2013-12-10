@@ -135,6 +135,13 @@
     return [fingerprint stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 }
 
++ (NSDictionary *)allCertificates {
+    
+}
+
+/**
+ * GCDAsyncSocket Delegates
+**/
 - (BOOL)socket:(GCDAsyncSocket *)sock shouldFinishConnectionWithTrust:(SecTrustRef)trust status:(OSStatus)status {
     
     BOOL hasSeenCertificate = [self isValidPinnedTrust:trust withHostName:xmppStream.connectedHostName];
