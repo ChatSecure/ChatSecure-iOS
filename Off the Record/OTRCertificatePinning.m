@@ -36,7 +36,7 @@
 }
 
 - (void)loadKeychainCertificatesWithHostName:(NSString *)hostname {
-    
+    self.securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeCertificate];
     NSArray * allCertificatesArray = [self.securityPolicy.pinnedCertificates arrayByAddingObjectsFromArray:[self storedCertificatesWithHostName:hostname]];
     
     self.securityPolicy.pinnedCertificates = allCertificatesArray;
