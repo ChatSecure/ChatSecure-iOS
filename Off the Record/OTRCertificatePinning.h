@@ -8,6 +8,7 @@
 
 #import "XMPPCertificatePinning.h"
 
+
 @protocol OTRCertificatePinningDelegate <NSObject>
 
 - (void)newTrust:(SecTrustRef)trust withHostName:(NSString *)hostname withStatus:(OSStatus)status;
@@ -18,11 +19,18 @@
 
 @property (nonatomic, weak) id<OTRCertificatePinningDelegate> delegate;
 
+
+- (NSArray *)storedCertificatesWithHostName:(NSString *)hostname;
+- (void)addCertificate:(SecCertificateRef)cert withHostName:(NSString *)hostname;
+
++ (NSString*)sha1FingerprintForCertificate:(SecCertificateRef)certificate;
++ (NSDictionary *)allCertificates;
++ (NSArray *)storedCertificatesWithHostName:(NSString *)hostname;
 + (SecCertificateRef)certForTrust:(SecTrustRef)trust;
 + (NSData *)dataForCertificate:(SecCertificateRef)certificate;
 + (SecCertificateRef)certForData:(NSData *)data;
-- (NSSet *)storedCertificatesWithHostName:(NSString *)hostname;
-- (void)addCertificate:(SecCertificateRef)cert withHostName:(NSString *)hostname;
-+ (NSString*)sha1FingerprintForCertificate:(SecCertificateRef)certificate;
++ (void)deleteAllCertificatesWithHostName:(NSString *)hostname;
++ (void)deleteCertificate:(SecCertificateRef)cert withHostName:(NSString *)hostname;
++ (NSDictionary *)bundledCertificates;
 
 @end

@@ -24,6 +24,8 @@
 
 @synthesize delegate;
 
+
+
 - (id)initWithDefaultCertificates
 {
     if (self = [super init]) {
@@ -36,9 +38,9 @@
 
 - (void)loadKeychainCertificatesWithHostName:(NSString *)hostname {
     
-    NSSet * allCertificatesSet = [[NSSet setWithArray:self.securityPolicy.pinnedCertificates] setByAddingObjectsFromSet:[self storedCertificatesWithHostName:hostname]];
+    NSArray * allCertificatesArray = [self.securityPolicy.pinnedCertificates arrayByAddingObjectsFromArray:[self storedCertificatesWithHostName:hostname]];
     
-    self.securityPolicy.pinnedCertificates = [allCertificatesSet allObjects];
+    self.securityPolicy.pinnedCertificates = allCertificatesArray;
 }
 
 - (BOOL)isValidPinnedTrust:(SecTrustRef)trust withHostName:(NSString *)hostname {
@@ -60,12 +62,12 @@
         keychainQuery.service = kOTRCertificateServiceName;
         keychainQuery.account = hostname;
         
-        NSSet * exisisting = [self storedCertificatesWithHostName:hostname];
+        NSArray * exisisting = [self storedCertificatesWithHostName:hostname];
         if (![exisisting count]) {
-            exisisting = [NSSet set];
+            exisisting = [NSArray array];
         }
         
-        keychainQuery.passwordObject = [exisisting setByAddingObject:certData];
+        keychainQuery.passwordObject = [exisisting arrayByAddingObject:certData];
         
         NSError * error = nil;
         
@@ -78,12 +80,18 @@
     }
 }
 
--(NSSet *)storedCertificatesWithHostName:(NSString *)hostname {
-    NSSet * certificateSet = nil;
+-(NSArray *)storedCertificatesWithHostName:(NSString *)hostname {
+    return [OTRCertificatePinning storedCertificatesWithHostName:hostname];
+}
+
++(NSDictionary *)bundledCertificateFileNames {
+    return @{@"talk.google.com":@"google",@"chat.facebook.com":@"facebook"};
+}
+
++ (NSArray *)storedCertificatesWithHostName:(NSString *)hostname {
+    NSArray * certificateArray = nil;
     
-    SSKeychainQuery * keychainQuery = [[SSKeychainQuery alloc] init];
-    keychainQuery.service = kOTRCertificateServiceName;
-    keychainQuery.account = hostname;
+    SSKeychainQuery * keychainQuery = [self keychainQueryForHostName:hostname];
     
     NSError * error =nil;
     [keychainQuery fetch:&error];
@@ -93,11 +101,11 @@
     }
     
     id passwordObject = keychainQuery.passwordObject;
-    if ([passwordObject isKindOfClass:[NSSet class]]) {
-        certificateSet = (NSSet *)passwordObject;
+    if ([passwordObject isKindOfClass:[NSArray class]]) {
+        certificateArray = (NSArray *)passwordObject;
     }
     
-    return certificateSet;
+    return certificateArray;
 }
 
 + (NSData *)dataForCertificate:(SecCertificateRef)certificate {
@@ -136,7 +144,76 @@
 }
 
 + (NSDictionary *)allCertificates {
+    NSMutableDictionary * resultsDictionary = [NSMutableDictionary dictionary];
+
+    NSArray * allCertificatesArray = [SSKeychain accountsForService:kOTRCertificateServiceName];
     
+    
+    if ([allCertificatesArray count]) {
+        [allCertificatesArray enumerateObjectsUsingBlock:^(NSDictionary * keychainProperties, NSUInteger idx, BOOL *stop) {
+            
+            NSString * domain = keychainProperties[kSSKeychainAccountKey];
+            NSArray * certs = [self storedCertificatesWithHostName:domain];
+            resultsDictionary[domain] = certs;
+        }];
+    }
+    
+    
+    return resultsDictionary;
+
+}
+
++ (NSDictionary *)bundledCertificates {
+    NSMutableDictionary * certDict = [NSMutableDictionary dictionary];
+    [[self bundledCertificateFileNames] enumerateKeysAndObjectsUsingBlock:^(NSString * domain, NSString * filename, BOOL *stop) {
+        NSString * path = [[NSBundle mainBundle] pathForResource:filename ofType:@"cer"];
+        NSData * certData = [NSData dataWithContentsOfFile:path];
+        certDict[domain] = @[certData];
+    }];
+    return certDict;
+}
+
++ (SSKeychainQuery *)keychainQueryForHostName:(NSString *)hostname {
+    SSKeychainQuery * keychainQuery = [[SSKeychainQuery alloc] init];
+    keychainQuery.service = kOTRCertificateServiceName;
+    keychainQuery.account = hostname;
+    
+    return keychainQuery;
+}
+
++ (void)deleteAllCertificatesWithHostName:(NSString *)hostname {
+    NSError * error = nil;
+    [SSKeychain deletePasswordForService:kOTRCertificateServiceName account:hostname error:&error];
+    if (error) {
+        DDLogError(@"Error deleting all certificates");
+    }
+}
++ (void)deleteCertificate:(SecCertificateRef)cert withHostName:(NSString *)hostname {
+    SSKeychainQuery * keychainQuery = [self keychainQueryForHostName:hostname];
+    
+    NSError * error = nil;
+    
+    [keychainQuery fetch:&error];
+    
+    NSArray * certArray = nil;
+    id passwordObject = keychainQuery.passwordObject;
+    if ([passwordObject isKindOfClass:[NSArray class]]) {
+        certArray = (NSArray *)passwordObject;
+    }
+    
+    NSMutableArray * result = [NSMutableArray array];
+    [certArray enumerateObjectsUsingBlock:^(NSData * certData, NSUInteger idx, BOOL *stop) {
+        if (![certData isEqualToData:[OTRCertificatePinning dataForCertificate:cert]]) {
+            [result addObject:certData];
+        }
+    }];
+    keychainQuery.passwordObject = [NSArray arrayWithArray:result];
+    error = nil;
+    [keychainQuery save:&error];
+    
+    if (error) {
+        DDLogError(@"Error saving cert to keychain");
+    }
 }
 
 /**

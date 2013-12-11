@@ -243,6 +243,8 @@
 		63D2BB0D18568A3500FFE4B7 /* OTRErrorManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D2BB0C18568A3500FFE4B7 /* OTRErrorManager.m */; };
 		63D2BB1918568C6700FFE4B7 /* test_OTRErrorManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D2BB1818568C6700FFE4B7 /* test_OTRErrorManager.m */; };
 		63D2BB1D1856A0D200FFE4B7 /* OTRCertificateDomainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D2BB1C1856A0D200FFE4B7 /* OTRCertificateDomainViewController.m */; };
+		63D2BB201856A3D300FFE4B7 /* OTRCertificateSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D2BB1F1856A3D300FFE4B7 /* OTRCertificateSetting.m */; };
+		63D2BB231856B04500FFE4B7 /* OTRCertificatesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D2BB221856B04500FFE4B7 /* OTRCertificatesViewController.m */; };
 		63D511B017EBA122000D927B /* OTRFacebookSessionCachingStrategy.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D511AF17EBA122000D927B /* OTRFacebookSessionCachingStrategy.m */; };
 		63D511C117EBDD31000D927B /* OTRAppVersionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D511C017EBDD31000D927B /* OTRAppVersionManager.m */; };
 		63E5E7E816D1D5BC006E2B01 /* MagicalImportFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E5E7B016D1D5BC006E2B01 /* MagicalImportFunctions.m */; };
@@ -1117,6 +1119,10 @@
 		63D2BB1818568C6700FFE4B7 /* test_OTRErrorManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = test_OTRErrorManager.m; sourceTree = "<group>"; };
 		63D2BB1B1856A0D200FFE4B7 /* OTRCertificateDomainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRCertificateDomainViewController.h; sourceTree = "<group>"; };
 		63D2BB1C1856A0D200FFE4B7 /* OTRCertificateDomainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRCertificateDomainViewController.m; sourceTree = "<group>"; };
+		63D2BB1E1856A3D300FFE4B7 /* OTRCertificateSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRCertificateSetting.h; sourceTree = "<group>"; };
+		63D2BB1F1856A3D300FFE4B7 /* OTRCertificateSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRCertificateSetting.m; sourceTree = "<group>"; };
+		63D2BB211856B04500FFE4B7 /* OTRCertificatesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRCertificatesViewController.h; sourceTree = "<group>"; };
+		63D2BB221856B04500FFE4B7 /* OTRCertificatesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRCertificatesViewController.m; sourceTree = "<group>"; };
 		63D511AE17EBA122000D927B /* OTRFacebookSessionCachingStrategy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRFacebookSessionCachingStrategy.h; sourceTree = "<group>"; };
 		63D511AF17EBA122000D927B /* OTRFacebookSessionCachingStrategy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRFacebookSessionCachingStrategy.m; sourceTree = "<group>"; };
 		63D511BF17EBDD31000D927B /* OTRAppVersionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAppVersionManager.h; sourceTree = "<group>"; };
@@ -2659,6 +2665,10 @@
 			children = (
 				63D2BB1B1856A0D200FFE4B7 /* OTRCertificateDomainViewController.h */,
 				63D2BB1C1856A0D200FFE4B7 /* OTRCertificateDomainViewController.m */,
+				63D2BB211856B04500FFE4B7 /* OTRCertificatesViewController.h */,
+				63D2BB221856B04500FFE4B7 /* OTRCertificatesViewController.m */,
+				63D2BB1E1856A3D300FFE4B7 /* OTRCertificateSetting.h */,
+				63D2BB1F1856A3D300FFE4B7 /* OTRCertificateSetting.m */,
 			);
 			name = "Certificate Settings";
 			sourceTree = "<group>";
@@ -3992,6 +4002,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				63D2BB231856B04500FFE4B7 /* OTRCertificatesViewController.m in Sources */,
 				D9F9378713F44BD3009A3D84 /* main.m in Sources */,
 				6398CDC317FA20EC009389F8 /* AFSecurityPolicy.m in Sources */,
 				D9F9378B13F44BD3009A3D84 /* OTRAppDelegate.m in Sources */,
@@ -4203,6 +4214,7 @@
 				639BE6B216DC3B2B004B7257 /* _OTRManagedStatus.m in Sources */,
 				639BE6B816DC3B4A004B7257 /* OTRManagedMessageAndStatus.m in Sources */,
 				639BE6B916DC3B4A004B7257 /* OTRManagedStatus.m in Sources */,
+				63D2BB201856A3D300FFE4B7 /* OTRCertificateSetting.m in Sources */,
 				63F8A52F16DD995400374551 /* OTRIntSetting.m in Sources */,
 				63F8A53316DD9B6F00374551 /* OTRIntSettingViewController.m in Sources */,
 				63B9422E16DEEEE300D6934F /* OTRUtilities.m in Sources */,

@@ -270,6 +270,7 @@
 - (void) otrSetting:(OTRSetting*)setting showDetailViewControllerClass:(Class)viewControllerClass
 {
     UIViewController *viewController = [[viewControllerClass alloc] init];
+    viewController.title = setting.title;
     if ([viewController isKindOfClass:[OTRSettingDetailViewController class]]) 
     {
         OTRSettingDetailViewController *detailSettingViewController = (OTRSettingDetailViewController*)viewController;

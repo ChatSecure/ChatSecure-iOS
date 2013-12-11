@@ -34,6 +34,7 @@
 #import "OTRLanguageSetting.h"
 #import "OTRDonateSetting.h"
 #import "OTRIntSetting.h"
+#import "OTRCertificateSetting.h"
 
 @interface OTRSettingsManager(Private)
 - (void) populateSettings;
@@ -96,6 +97,8 @@
     opportunisticOtrSetting.defaultValue = @(YES);
     [newSettingsDictionary setObject:opportunisticOtrSetting forKey:kOTRSettingKeyOpportunisticOtr];
     
+    OTRCertificateSetting * certSetting = [[OTRCertificateSetting alloc] initWithTitle:PINNED_CERTIFICATES_STRING description:nil];
+    
     NSArray *chatSettings;
     
     if (SYSTEM_VERSION_LESS_THAN(@"7.0")) {
@@ -103,6 +106,7 @@
     } else {
         chatSettings = [NSArray arrayWithObjects:opportunisticOtrSetting,deletedDisconnectedConversations, showDisconnectionWarning, nil];
     }
+    chatSettings = [chatSettings arrayByAddingObject:certSetting];
     OTRSettingsGroup *chatSettingsGroup = [[OTRSettingsGroup alloc] initWithTitle:CHAT_STRING settings:chatSettings];
     [settingsGroups addObject:chatSettingsGroup];
     
@@ -115,6 +119,8 @@
     
     OTRLanguageSetting * languageSetting = [[OTRLanguageSetting alloc]initWithTitle:LANGUAGE_STRING description:nil settingsKey:kOTRSettingKeyLanguage];
     languageSetting.imageName = @"globe.png";
+    
+    
     
     OTRDonateSetting *donateSetting = [[OTRDonateSetting alloc] initWithTitle:DONATE_STRING description:nil];
     donateSetting.imageName = @"29-heart.png";

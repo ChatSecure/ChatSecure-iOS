@@ -786,5 +786,17 @@
     "errSSLUnexpectedRecordString": {
         "comment": "SSL error message",
         "string": "Unexpected (skipped) record in DTLS"
+    },
+    "BUNDLED_CERTIFICATES_STRING": {
+        "comment": "Title for listing the bundled SSL certificates",
+        "string" : "Bundled Certificates"
+    },
+    "SAVED_CERTIFICATES_STRING": {
+        "comment": "Title for listing the user saved SSL certificates",
+        "string" : "Saved Certificates"
+    },
+    "PINNED_CERTIFICATES_STRING": {
+        "comment": "Button Lable to show all pinned SSL certificates",
+        "string" : "Pinned Certificates"
     }
 }
