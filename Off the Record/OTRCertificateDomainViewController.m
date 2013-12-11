@@ -33,9 +33,7 @@
 {
     [self refreshData];
     
-    if ([certificateDomains count]) {
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(toggleEditing:)];
-    }
+    
     
     [self.tableView reloadData];
 }
@@ -47,6 +45,13 @@
     
     bundledCertificatesDictioanry = [OTRCertificatePinning bundledCertificates];
     bundledCertificatesDomains = [[bundledCertificatesDictioanry allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+    
+    if ([certificateDomains count]) {
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(toggleEditing:)];
+    }
+    else {
+        self.navigationItem.rightBarButtonItem = nil;
+    }
 }
 
 - (void)toggleEditing:(id)sender {
@@ -160,9 +165,17 @@
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         [OTRCertificatePinning deleteAllCertificatesWithHostName:certificateDomains[indexPath.row]];
+        
+        [self refreshData];
+        if ([self.tableView numberOfRowsInSection:indexPath.section] == 1) {
+            [tableView deleteSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationAutomatic];
+        }
+        else {
+            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+            
+        }
     }
-    [self refreshData];
-    [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+    
 }
 
 @end

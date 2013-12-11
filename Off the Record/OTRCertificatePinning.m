@@ -24,12 +24,11 @@
 
 @synthesize delegate;
 
-
-
 - (id)initWithDefaultCertificates
 {
     if (self = [super init]) {
         self.securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeCertificate];
+        self.doNotManuallyEvaluateOverride = NO;
         //[self loadKeychainCertificates];
     }
     return self;
@@ -233,6 +232,11 @@
 }
 
 - (BOOL)socketShouldManuallyEvaluateTrust:(GCDAsyncSocket *)sock {
+    if (self.doNotManuallyEvaluateOverride) {
+        self.doNotManuallyEvaluateOverride = NO;
+        return NO;
+    }
+    
     NSArray * certDomains = @[kOTRGoogleTalkDomain,kOTRFacebookDomain];
     NSString * hostname = xmppStream.connectedHostName;
     if ([hostname length]) {

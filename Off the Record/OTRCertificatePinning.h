@@ -18,7 +18,7 @@
 @interface OTRCertificatePinning : XMPPCertificatePinning
 
 @property (nonatomic, weak) id<OTRCertificatePinningDelegate> delegate;
-
+@property (nonatomic) BOOL doNotManuallyEvaluateOverride;
 
 - (NSArray *)storedCertificatesWithHostName:(NSString *)hostname;
 - (void)addCertificate:(SecCertificateRef)cert withHostName:(NSString *)hostname;

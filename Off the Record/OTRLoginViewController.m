@@ -364,6 +364,10 @@
                 //cert matching error
                 msg = [NSString stringWithFormat:XMPP_CERT_FAIL_STRING,((OTRManagedXMPPAccount *)account).accountDomain];
                 tag = kErrorCertAlertViewTag;
+                //The Cert has changed
+                OTRXMPPManager * protocol = (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
+                protocol.certificatePinningModule.doNotManuallyEvaluateOverride = YES;
+                [self loginButtonPressed:nil];
                 //alert = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:msg delegate:self cancelButtonTitle:nil otherButtonTitles:DISMISS_STRING,CONNECT_ANYWAY_STRING, nil];
             }
             else {
