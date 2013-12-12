@@ -108,6 +108,7 @@
 #define errSSLUnexpectedRecordString [OTRLanguageManager translatedString: @"Unexpected (skipped) record in DTLS"]
 #define PORT_STRING [OTRLanguageManager translatedString: @"Port"]
 #define errSSLClosedAbortString [OTRLanguageManager translatedString: @"Connection closed via error"]
+#define SECURITY_STRING [OTRLanguageManager translatedString: @"Security"]
 #define SUBSCRIPTION_REQUEST_TITLE [OTRLanguageManager translatedString: @"Subscription Requests"]
 #define VERIFY_FINGERPRINT_STRING [OTRLanguageManager translatedString: @"Verify Fingerprint"]
 #define DELETE_ACCOUNT_TITLE_STRING [OTRLanguageManager translatedString: @"Delete Account?"]
@@ -202,4 +203,5 @@
 #define SELF_SIGNED_SSL_STRING [OTRLanguageManager translatedString: @"Self Signed SSL"]
 #define CANCEL_STRING [OTRLanguageManager translatedString: @"Cancel"]
 #define errSSLClosedGracefulString [OTRLanguageManager translatedString: @"Connection closed gracefully"]
+#define PINNED_CERTIFICATES_DESCRIPTION_STRING [OTRLanguageManager translatedString: @"Manage saved SSL certificates"]
 #define DEFAULT_LANGUAGE_STRING NSLocalizedString(@"Default", @"default string to revert to normal language behaviour")

@@ -798,5 +798,13 @@
     "PINNED_CERTIFICATES_STRING": {
         "comment": "Button Lable to show all pinned SSL certificates",
         "string" : "Pinned Certificates"
+    },
+    "PINNED_CERTIFICATES_DESCRIPTION_STRING": {
+        "comment": "subtitle for the certificate pinned setting",
+        "string": "Manage saved SSL certificates"
+    },
+    "SECURITY_STRING": {
+        "comment": "Title heading in settings",
+        "string": "Security"
     }
 }

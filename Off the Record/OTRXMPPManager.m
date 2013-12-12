@@ -822,9 +822,8 @@ managedBuddyObjectID
 - (void)newTrust:(SecTrustRef)trust withHostName:(NSString *)hostname withStatus:(OSStatus)status; {
     DDLogVerbose(@"New trust found");
     
-    NSData * certifcateData = [OTRCertificatePinning dataForCertificate:[OTRCertificatePinning certForTrust:trust]];
-    
     dispatch_async(dispatch_get_main_queue(), ^{
+        NSData * certifcateData = [OTRCertificatePinning dataForCertificate:[OTRCertificatePinning certForTrust:trust]];
         [[NSNotificationCenter defaultCenter]
          postNotificationName:kOTRProtocolLoginFail object:self userInfo:@{kOTRProtocolLoginFailSSLStatusKey:[NSNumber numberWithLong:status],kOTRProtocolLoginFailSSLCertificateDataKey:certifcateData,kOTRProtocolLoginFailHostnameKey:hostname}];
     });
