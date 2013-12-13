@@ -137,6 +137,7 @@
 #define SHARE_MESSAGE_STRING [OTRLanguageManager translatedString: @"Chat with me securely"]
 #define XMPP_FAIL_STRING [OTRLanguageManager translatedString: @"Failed to connect to XMPP server. Please check your login credentials and internet connection and try again."]
 #define XMPP_PORT_FAIL_STRING [OTRLanguageManager translatedString: @"Domain needs to be set manually when specifying a custom port"]
+#define VALID_CERTIFICATE_STRING [OTRLanguageManager translatedString: @"Valid certificate"]
 #define errSSLPeerUnexpectedMsgString [OTRLanguageManager translatedString: @"Unexpected message received"]
 #define DELETE_CONVERSATIONS_ON_DISCONNECT_DESCRIPTION_STRING [OTRLanguageManager translatedString: @"Delete chats on disconnect"]
 #define SECURITY_WARNING_DESCRIPTION_STRING [OTRLanguageManager translatedString: @"Warning: Use with caution! This may reduce your security."]

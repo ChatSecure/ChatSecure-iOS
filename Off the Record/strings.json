@@ -806,5 +806,9 @@
     "SECURITY_STRING": {
         "comment": "Title heading in settings",
         "string": "Security"
+    },
+    "VALID_CERTIFICATE_STRING": {
+        "comment": "shown to show that the certificate was valid to the system",
+        "string": "Valid certificate"
     }
 }

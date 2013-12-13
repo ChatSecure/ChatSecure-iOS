@@ -34,6 +34,8 @@
 #import "OTRInLineTextEditTableViewCell.h"
 #import "OTRErrorManager.h"
 
+#import "SIAlertView.h"
+
 #import "OTRCertificatePinning.h"
 
 #define kFieldBuffer 20;
@@ -390,17 +392,49 @@
 }
              
 - (void)showCertWarningForData:(NSData *)certData withHostName:(NSString *)hostname withStatus:(OSStatus)status {
-    lastCertData = certData;
-    lastStatus = status;
-    lastHostname = hostname;
+    
     SecCertificateRef certificate = [OTRCertificatePinning certForData:certData];
     NSString * fingerprint = [OTRCertificatePinning sha1FingerprintForCertificate:certificate];
-    NSString * message = [NSString stringWithFormat:@"SHA1: %@\n",fingerprint];
-    message = [message stringByAppendingString:[OTRErrorManager errorStringWithSSLStatus:status]];
-    UIAlertView * alertview = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"New Cert: %@",hostname] message:message delegate:self cancelButtonTitle:@"Bad Cert" otherButtonTitles:@"Good Cert", nil];
-    alertview.tag = kNewCertAlertViewTag;
+    NSString * message = [NSString stringWithFormat:@"%@\nSHA1: %@\n",hostname,fingerprint];
+    NSUInteger length = [message length];
     
-    [alertview show];
+    
+    UIColor * sslMessageColor;
+    
+    if (status == noErr) {
+        sslMessageColor = [UIColor colorWithRed:0.32f green:0.64f blue:0.32f alpha:1.00f];
+        message = [message stringByAppendingString:[NSString stringWithFormat:@"✓ %@",VALID_CERTIFICATE_STRING]];
+    }
+    else {
+        NSString * sslErrorMessage = [OTRErrorManager errorStringWithSSLStatus:status];
+        sslMessageColor = [UIColor colorWithRed:0.89f green:0.42f blue:0.36f alpha:1.00f];;
+        message = [message stringByAppendingString:[NSString stringWithFormat:@"X %@",sslErrorMessage]];
+    }
+    NSRange errorMessageRange = NSMakeRange(length, message.length-length);
+    
+    SIAlertView * alertView = [[SIAlertView alloc] initWithTitle:@"New SSL Certificate" andMessage:nil];
+    
+    NSMutableAttributedString * attributedString = [[NSMutableAttributedString alloc] initWithString:message];
+    
+    [attributedString addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:16] range:NSMakeRange(0, message.length)];
+    [attributedString addAttribute:NSForegroundColorAttributeName value:sslMessageColor range:errorMessageRange];
+    
+    alertView.messageAttributedString = attributedString;
+    
+    
+    alertView.buttonColor = [UIColor greenColor];
+    [alertView addButtonWithTitle:REJECT_STRING type:SIAlertViewButtonTypeDestructive handler:^(SIAlertView *alertView) {
+        [alertView dismissAnimated:YES];
+    }];
+    [alertView addButtonWithTitle:SAVE_STRING type:SIAlertViewButtonTypeDefault handler:^(SIAlertView *alertView) {
+        id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
+        if ([protocol isKindOfClass:[OTRXMPPManager class]]) {
+            [((OTRXMPPManager *)protocol).certificatePinningModule addCertificate:[OTRCertificatePinning certForData:certData] withHostName:hostname];
+        }
+    }];
+    
+    
+    [alertView show];
 }
 
 -(void)protocolLoginSuccess:(NSNotification*)notification
@@ -499,15 +533,6 @@
             [self loginButtonPressed:nil];
         }
         
-    }
-    else if (alertView.tag == kNewCertAlertViewTag) {
-        if (buttonIndex != alertView.cancelButtonIndex) {
-            //add new cert
-            id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
-            if ([protocol isKindOfClass:[OTRXMPPManager class]]) {
-                [((OTRXMPPManager *)protocol).certificatePinningModule addCertificate:[OTRCertificatePinning certForData:lastCertData] withHostName:lastHostname];
-            }
-        }
     }
 }
 

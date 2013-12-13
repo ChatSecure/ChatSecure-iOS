@@ -38,6 +38,9 @@
 		6319F696165EAB1F0063AC93 /* supportedLanguages.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6319F695165EAB1F0063AC93 /* supportedLanguages.plist */; };
 		631FE8851720951400AEA107 /* OTRStatusMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 631FE8841720951400AEA107 /* OTRStatusMessageCell.m */; };
 		6326F63A184D5249008B6B01 /* facebook.cer in Resources */ = {isa = PBXBuildFile; fileRef = 6326F639184D5249008B6B01 /* facebook.cer */; };
+		632E911D185A88F600F7FBC8 /* SIAlertView.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 632E9118185A88F600F7FBC8 /* SIAlertView.bundle */; };
+		632E911E185A88F600F7FBC8 /* SIAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 632E911A185A88F600F7FBC8 /* SIAlertView.m */; };
+		632E911F185A88F600F7FBC8 /* UIWindow+SIUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 632E911C185A88F600F7FBC8 /* UIWindow+SIUtils.m */; };
 		633406391652C31300A54C52 /* OTRListSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 633406381652C31300A54C52 /* OTRListSetting.m */; };
 		6334063C1652C33300A54C52 /* OTRListSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6334063B1652C33300A54C52 /* OTRListSettingViewController.m */; };
 		633406411652D50F00A54C52 /* OTRLanguageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 633406401652D50F00A54C52 /* OTRLanguageManager.m */; };
@@ -706,6 +709,11 @@
 		6326F639184D5249008B6B01 /* facebook.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = facebook.cer; sourceTree = "<group>"; };
 		632E5C8416D1A2A90037E37C /* OTRMessageTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRMessageTableViewCell.h; sourceTree = "<group>"; };
 		632E5C8516D1A2A90037E37C /* OTRMessageTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRMessageTableViewCell.m; sourceTree = "<group>"; };
+		632E9118185A88F600F7FBC8 /* SIAlertView.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = SIAlertView.bundle; sourceTree = "<group>"; };
+		632E9119185A88F600F7FBC8 /* SIAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SIAlertView.h; sourceTree = "<group>"; };
+		632E911A185A88F600F7FBC8 /* SIAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SIAlertView.m; sourceTree = "<group>"; };
+		632E911B185A88F600F7FBC8 /* UIWindow+SIUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIWindow+SIUtils.h"; sourceTree = "<group>"; };
+		632E911C185A88F600F7FBC8 /* UIWindow+SIUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIWindow+SIUtils.m"; sourceTree = "<group>"; };
 		633406371652C31300A54C52 /* OTRListSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRListSetting.h; sourceTree = "<group>"; };
 		633406381652C31300A54C52 /* OTRListSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRListSetting.m; sourceTree = "<group>"; };
 		6334063A1652C33300A54C52 /* OTRListSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRListSettingViewController.h; sourceTree = "<group>"; };
@@ -1746,6 +1754,19 @@
 			);
 			path = Certificates;
 			sourceTree = SOURCE_ROOT;
+		};
+		632E9117185A88F600F7FBC8 /* SIAlertView */ = {
+			isa = PBXGroup;
+			children = (
+				632E9118185A88F600F7FBC8 /* SIAlertView.bundle */,
+				632E9119185A88F600F7FBC8 /* SIAlertView.h */,
+				632E911A185A88F600F7FBC8 /* SIAlertView.m */,
+				632E911B185A88F600F7FBC8 /* UIWindow+SIUtils.h */,
+				632E911C185A88F600F7FBC8 /* UIWindow+SIUtils.m */,
+			);
+			name = SIAlertView;
+			path = Submodules/SIAlertView/SIAlertView;
+			sourceTree = "<group>";
 		};
 		633B6D0E17ED28A7002DA152 /* HPGrowingTextView */ = {
 			isa = PBXGroup;
@@ -2964,6 +2985,7 @@
 		D9CEED611684234D00B236B5 /* Submodules */ = {
 			isa = PBXGroup;
 			children = (
+				632E9117185A88F600F7FBC8 /* SIAlertView */,
 				63E717DF182AF391004398AD /* SSKeychain */,
 				638940CD1815CAF8005F651E /* CrashReporter.framework */,
 				D9B24F0C1808A04E005174C5 /* HockeySDK.xcodeproj */,
@@ -3913,6 +3935,7 @@
 				63E5E83916D1DF14006E2B01 /* MessageBubbleTyping.png in Resources */,
 				63E5E83A16D1DF14006E2B01 /* MessageBubbleTyping@2x.png in Resources */,
 				63E5E83B16D1DF14006E2B01 /* MessageInputBarBackground.png in Resources */,
+				632E911D185A88F600F7FBC8 /* SIAlertView.bundle in Resources */,
 				63E5E83C16D1DF14006E2B01 /* MessageInputBarBackground@2x.png in Resources */,
 				63E5E83D16D1DF14006E2B01 /* MessageInputFieldBackground.png in Resources */,
 				63E5E83E16D1DF14006E2B01 /* MessageInputFieldBackground@2x.png in Resources */,
@@ -4117,6 +4140,7 @@
 				D9CEEE9F168423CA00B236B5 /* FTDelPermit.m in Sources */,
 				D9CEEEA0168423CA00B236B5 /* FTRemoveBuddy.m in Sources */,
 				D9CEEEA1168423CA00B236B5 /* FTRemoveGroup.m in Sources */,
+				632E911F185A88F600F7FBC8 /* UIWindow+SIUtils.m in Sources */,
 				63D0E48D1819DEF1003ACA13 /* OTRvCard.m in Sources */,
 				D9CEEEA2168423CA00B236B5 /* FTSetBArtItem.m in Sources */,
 				D9ADF9E518109D420096B07A /* OTRDatabaseManager.m in Sources */,
@@ -4189,6 +4213,7 @@
 				63E5E80416D1D787006E2B01 /* OTRManagedXMPPAccount.m in Sources */,
 				63E5E80516D1D787006E2B01 /* OTRManagedOscarAccount.m in Sources */,
 				63E5E80616D1D787006E2B01 /* OTRManagedMessage.m in Sources */,
+				632E911E185A88F600F7FBC8 /* SIAlertView.m in Sources */,
 				63E5E80716D1D787006E2B01 /* OTRManagedBuddy.m in Sources */,
 				63E5E80816D1D787006E2B01 /* OTRManagedAccount.m in Sources */,
 				63E5E80916D1D7B2006E2B01 /* OTRXMPPBudyTimers.m in Sources */,
