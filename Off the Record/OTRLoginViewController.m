@@ -64,8 +64,6 @@
 @synthesize tableViewArray;
 
 - (void) dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kOTRProtocolLoginFail object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kOTRProtocolLoginSuccess object:nil];
     self.logoView = nil;
     self.rememberPasswordSwitch = nil;
     self.usernameTextField = nil;
@@ -162,18 +160,6 @@
 {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
-    
-    [[NSNotificationCenter defaultCenter]
-     addObserver:self
-     selector:@selector(protocolLoginFailed:)
-     name:kOTRProtocolLoginFail
-     object:nil ];
-    
-    [[NSNotificationCenter defaultCenter]
-     addObserver:self
-     selector:@selector(protocolLoginSuccess:)
-     name:kOTRProtocolLoginSuccess
-     object:nil ];
     
     [self setUpFields];
     
@@ -272,6 +258,18 @@
 {
     [super viewWillAppear:animated];
     
+    [[NSNotificationCenter defaultCenter]
+     addObserver:self
+     selector:@selector(protocolLoginFailed:)
+     name:kOTRProtocolLoginFail
+     object:nil ];
+    
+    [[NSNotificationCenter defaultCenter]
+     addObserver:self
+     selector:@selector(protocolLoginSuccess:)
+     name:kOTRProtocolLoginSuccess
+     object:nil ];
+    
     if(!self.usernameTextField.text || [self.usernameTextField.text isEqualToString:@""])
     {
         [self.usernameTextField becomeFirstResponder];
@@ -290,6 +288,7 @@
 }
 - (void) viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+    
     [self readInFields];
     
     if([account.username length] && [account.password length] )
@@ -299,6 +298,8 @@
         [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
     }
     [self.view resignFirstResponder];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kOTRProtocolLoginFail object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kOTRProtocolLoginSuccess object:nil];
 
 }
 
@@ -363,14 +364,7 @@
             NSString * msg = XMPP_FAIL_STRING;
             
             if([recentError.domain isEqualToString:@"kCFStreamErrorDomainSSL"] && recentError.code == errSSLPeerBadCert) {
-                //cert matching error
-                msg = [NSString stringWithFormat:XMPP_CERT_FAIL_STRING,((OTRManagedXMPPAccount *)account).accountDomain];
-                tag = kErrorCertAlertViewTag;
-                //The Cert has changed
-                OTRXMPPManager * protocol = (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
-                protocol.certificatePinningModule.doNotManuallyEvaluateOverride = YES;
-                //[self loginButtonPressed:nil];
-                //alert = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:msg delegate:self cancelButtonTitle:nil otherButtonTitles:DISMISS_STRING,CONNECT_ANYWAY_STRING, nil];
+                return;
             }
             else {
                 alert = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:XMPP_FAIL_STRING delegate:self cancelButtonTitle:nil otherButtonTitles:OK_STRING,INFO_STRING, nil];
