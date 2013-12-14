@@ -5,12 +5,8 @@
 #import "OTRManagedAccount.h"
 
 extern const struct OTRManagedXMPPAccountAttributes {
-	__unsafe_unretained NSString *allowPlainTextAuthentication;
-	__unsafe_unretained NSString *allowSSLHostNameMismatch;
-	__unsafe_unretained NSString *allowSelfSignedSSL;
 	__unsafe_unretained NSString *domain;
 	__unsafe_unretained NSString *port;
-	__unsafe_unretained NSString *requireTLS;
 	__unsafe_unretained NSString *sendDeliveryReceipts;
 	__unsafe_unretained NSString *sendTypingNotifications;
 } OTRManagedXMPPAccountAttributes;
@@ -29,10 +25,6 @@ extern const struct OTRManagedXMPPAccountFetchedProperties {
 
 
 
-
-
-
-
 @interface OTRManagedXMPPAccountID : NSManagedObjectID {}
 @end
 
@@ -41,48 +33,6 @@ extern const struct OTRManagedXMPPAccountFetchedProperties {
 + (NSString*)entityName;
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_;
 - (OTRManagedXMPPAccountID*)objectID;
-
-
-
-
-
-@property (nonatomic, strong) NSNumber* allowPlainTextAuthentication;
-
-
-
-@property BOOL allowPlainTextAuthenticationValue;
-- (BOOL)allowPlainTextAuthenticationValue;
-- (void)setAllowPlainTextAuthenticationValue:(BOOL)value_;
-
-//- (BOOL)validateAllowPlainTextAuthentication:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSNumber* allowSSLHostNameMismatch;
-
-
-
-@property BOOL allowSSLHostNameMismatchValue;
-- (BOOL)allowSSLHostNameMismatchValue;
-- (void)setAllowSSLHostNameMismatchValue:(BOOL)value_;
-
-//- (BOOL)validateAllowSSLHostNameMismatch:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSNumber* allowSelfSignedSSL;
-
-
-
-@property BOOL allowSelfSignedSSLValue;
-- (BOOL)allowSelfSignedSSLValue;
-- (void)setAllowSelfSignedSSLValue:(BOOL)value_;
-
-//- (BOOL)validateAllowSelfSignedSSL:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -107,20 +57,6 @@ extern const struct OTRManagedXMPPAccountFetchedProperties {
 - (void)setPortValue:(int16_t)value_;
 
 //- (BOOL)validatePort:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSNumber* requireTLS;
-
-
-
-@property BOOL requireTLSValue;
-- (BOOL)requireTLSValue;
-- (void)setRequireTLSValue:(BOOL)value_;
-
-//- (BOOL)validateRequireTLS:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -176,33 +112,6 @@ extern const struct OTRManagedXMPPAccountFetchedProperties {
 @interface _OTRManagedXMPPAccount (CoreDataGeneratedPrimitiveAccessors)
 
 
-- (NSNumber*)primitiveAllowPlainTextAuthentication;
-- (void)setPrimitiveAllowPlainTextAuthentication:(NSNumber*)value;
-
-- (BOOL)primitiveAllowPlainTextAuthenticationValue;
-- (void)setPrimitiveAllowPlainTextAuthenticationValue:(BOOL)value_;
-
-
-
-
-- (NSNumber*)primitiveAllowSSLHostNameMismatch;
-- (void)setPrimitiveAllowSSLHostNameMismatch:(NSNumber*)value;
-
-- (BOOL)primitiveAllowSSLHostNameMismatchValue;
-- (void)setPrimitiveAllowSSLHostNameMismatchValue:(BOOL)value_;
-
-
-
-
-- (NSNumber*)primitiveAllowSelfSignedSSL;
-- (void)setPrimitiveAllowSelfSignedSSL:(NSNumber*)value;
-
-- (BOOL)primitiveAllowSelfSignedSSLValue;
-- (void)setPrimitiveAllowSelfSignedSSLValue:(BOOL)value_;
-
-
-
-
 - (NSString*)primitiveDomain;
 - (void)setPrimitiveDomain:(NSString*)value;
 
@@ -214,15 +123,6 @@ extern const struct OTRManagedXMPPAccountFetchedProperties {
 
 - (int16_t)primitivePortValue;
 - (void)setPrimitivePortValue:(int16_t)value_;
-
-
-
-
-- (NSNumber*)primitiveRequireTLS;
-- (void)setPrimitiveRequireTLS:(NSNumber*)value;
-
-- (BOOL)primitiveRequireTLSValue;
-- (void)setPrimitiveRequireTLSValue:(BOOL)value_;
 
 
 

@@ -25,24 +25,6 @@
 {
     return FACEBOOK_STRING;
 }
--(BOOL)shouldAllowSSLHostNameMismatch
-{
-    return NO;
-}
-
--(BOOL)shouldAllowPlainTextAuthentication
-{
-    return NO;
-}
-
--(BOOL)shouldAllowSelfSignedSSL
-{
-    return NO;
-}
-- (BOOL) shouldRequireTLS
-{
-    return NO;
-}
 
 -(void)refreshToken:(void (^)(NSError * error))completionBlock
 {

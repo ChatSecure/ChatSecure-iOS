@@ -54,12 +54,8 @@
         <relationship name="statusbuddy" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="OTRManagedBuddy" inverseName="statuses" inverseEntity="OTRManagedBuddy" syncable="YES"/>
     </entity>
     <entity name="OTRManagedXMPPAccount" representedClassName="OTRManagedXMPPAccount" parentEntity="OTRManagedAccount" syncable="YES">
-        <attribute name="allowPlainTextAuthentication" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="allowSelfSignedSSL" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="allowSSLHostNameMismatch" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="domain" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="port" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="requireTLS" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="sendDeliveryReceipts" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="sendTypingNotifications" optional="YES" attributeType="Boolean" syncable="YES"/>
         <relationship name="subscriptionRequests" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="OTRXMPPManagedPresenceSubscriptionRequest" inverseName="xmppAccount" inverseEntity="OTRXMPPManagedPresenceSubscriptionRequest" syncable="YES"/>
@@ -98,7 +94,7 @@
         <element name="OTRManagedOAuthAccount" positionX="637" positionY="288" width="128" height="45"/>
         <element name="OTRManagedOscarAccount" positionX="484" positionY="63" width="128" height="43"/>
         <element name="OTRManagedStatus" positionX="-506" positionY="150" width="128" height="75"/>
-        <element name="OTRManagedXMPPAccount" positionX="486" positionY="117" width="128" height="180"/>
+        <element name="OTRManagedXMPPAccount" positionX="486" positionY="117" width="128" height="118"/>
         <element name="OTRvCard" positionX="63" positionY="324" width="128" height="135"/>
         <element name="OTRvCardAvatar" positionX="241" positionY="474" width="128" height="75"/>
         <element name="OTRvCardTemp" positionX="16" positionY="510" width="128" height="75"/>

@@ -94,12 +94,8 @@
     oAuthAccount.protocol = xmppAccount.protocol;
     oAuthAccount.rememberPassword = xmppAccount.rememberPassword;
     oAuthAccount.uniqueIdentifier = xmppAccount.uniqueIdentifier;
-    oAuthAccount.allowPlainTextAuthentication = xmppAccount.allowPlainTextAuthentication;
-    oAuthAccount.allowSelfSignedSSL = xmppAccount.allowSelfSignedSSL;
-    oAuthAccount.allowSSLHostNameMismatch = xmppAccount.allowSSLHostNameMismatch;
     oAuthAccount.domain =xmppAccount.domain;
     oAuthAccount.port = xmppAccount.port;
-    oAuthAccount.requireTLS = xmppAccount.requireTLS;
     oAuthAccount.sendDeliveryReceipts = xmppAccount.sendDeliveryReceipts;
     oAuthAccount.sendTypingNotifications = xmppAccount.sendTypingNotifications;
     

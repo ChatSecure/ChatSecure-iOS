@@ -189,7 +189,6 @@
 #define errSSLPeerBadRecordMacString [OTRLanguageManager translatedString: @"Bad MAC"]
 #define BLOCK_AND_REMOVE_STRING [OTRLanguageManager translatedString: @"Block & Remove"]
 #define errSSLIllegalParamString [OTRLanguageManager translatedString: @"Illegal parameter"]
-#define ALLOW_SELF_SIGNED_CERTIFICATES_STRING [OTRLanguageManager translatedString: @"Self-Signed SSL"]
 #define DISCONNECTION_WARNING_TITLE_STRING [OTRLanguageManager translatedString: @"Sign out Warning"]
 #define CHAT_STATE_ACTIVE_STRING [OTRLanguageManager translatedString: @"Active"]
 #define BUDDY_LIST_STRING [OTRLanguageManager translatedString: @"Buddy List"]

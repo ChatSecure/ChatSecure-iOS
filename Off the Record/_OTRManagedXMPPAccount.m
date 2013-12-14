@@ -4,12 +4,8 @@
 #import "_OTRManagedXMPPAccount.h"
 
 const struct OTRManagedXMPPAccountAttributes OTRManagedXMPPAccountAttributes = {
-	.allowPlainTextAuthentication = @"allowPlainTextAuthentication",
-	.allowSSLHostNameMismatch = @"allowSSLHostNameMismatch",
-	.allowSelfSignedSSL = @"allowSelfSignedSSL",
 	.domain = @"domain",
 	.port = @"port",
-	.requireTLS = @"requireTLS",
 	.sendDeliveryReceipts = @"sendDeliveryReceipts",
 	.sendTypingNotifications = @"sendTypingNotifications",
 };
@@ -47,28 +43,8 @@ const struct OTRManagedXMPPAccountFetchedProperties OTRManagedXMPPAccountFetched
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
 	
-	if ([key isEqualToString:@"allowPlainTextAuthenticationValue"]) {
-		NSSet *affectingKey = [NSSet setWithObject:@"allowPlainTextAuthentication"];
-		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
-		return keyPaths;
-	}
-	if ([key isEqualToString:@"allowSSLHostNameMismatchValue"]) {
-		NSSet *affectingKey = [NSSet setWithObject:@"allowSSLHostNameMismatch"];
-		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
-		return keyPaths;
-	}
-	if ([key isEqualToString:@"allowSelfSignedSSLValue"]) {
-		NSSet *affectingKey = [NSSet setWithObject:@"allowSelfSignedSSL"];
-		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
-		return keyPaths;
-	}
 	if ([key isEqualToString:@"portValue"]) {
 		NSSet *affectingKey = [NSSet setWithObject:@"port"];
-		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
-		return keyPaths;
-	}
-	if ([key isEqualToString:@"requireTLSValue"]) {
-		NSSet *affectingKey = [NSSet setWithObject:@"requireTLS"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
 		return keyPaths;
 	}
@@ -85,84 +61,6 @@ const struct OTRManagedXMPPAccountFetchedProperties OTRManagedXMPPAccountFetched
 
 	return keyPaths;
 }
-
-
-
-
-@dynamic allowPlainTextAuthentication;
-
-
-
-- (BOOL)allowPlainTextAuthenticationValue {
-	NSNumber *result = [self allowPlainTextAuthentication];
-	return [result boolValue];
-}
-
-- (void)setAllowPlainTextAuthenticationValue:(BOOL)value_ {
-	[self setAllowPlainTextAuthentication:[NSNumber numberWithBool:value_]];
-}
-
-- (BOOL)primitiveAllowPlainTextAuthenticationValue {
-	NSNumber *result = [self primitiveAllowPlainTextAuthentication];
-	return [result boolValue];
-}
-
-- (void)setPrimitiveAllowPlainTextAuthenticationValue:(BOOL)value_ {
-	[self setPrimitiveAllowPlainTextAuthentication:[NSNumber numberWithBool:value_]];
-}
-
-
-
-
-
-@dynamic allowSSLHostNameMismatch;
-
-
-
-- (BOOL)allowSSLHostNameMismatchValue {
-	NSNumber *result = [self allowSSLHostNameMismatch];
-	return [result boolValue];
-}
-
-- (void)setAllowSSLHostNameMismatchValue:(BOOL)value_ {
-	[self setAllowSSLHostNameMismatch:[NSNumber numberWithBool:value_]];
-}
-
-- (BOOL)primitiveAllowSSLHostNameMismatchValue {
-	NSNumber *result = [self primitiveAllowSSLHostNameMismatch];
-	return [result boolValue];
-}
-
-- (void)setPrimitiveAllowSSLHostNameMismatchValue:(BOOL)value_ {
-	[self setPrimitiveAllowSSLHostNameMismatch:[NSNumber numberWithBool:value_]];
-}
-
-
-
-
-
-@dynamic allowSelfSignedSSL;
-
-
-
-- (BOOL)allowSelfSignedSSLValue {
-	NSNumber *result = [self allowSelfSignedSSL];
-	return [result boolValue];
-}
-
-- (void)setAllowSelfSignedSSLValue:(BOOL)value_ {
-	[self setAllowSelfSignedSSL:[NSNumber numberWithBool:value_]];
-}
-
-- (BOOL)primitiveAllowSelfSignedSSLValue {
-	NSNumber *result = [self primitiveAllowSelfSignedSSL];
-	return [result boolValue];
-}
-
-- (void)setPrimitiveAllowSelfSignedSSLValue:(BOOL)value_ {
-	[self setPrimitiveAllowSelfSignedSSL:[NSNumber numberWithBool:value_]];
-}
-
 
 
 
@@ -194,32 +92,6 @@ const struct OTRManagedXMPPAccountFetchedProperties OTRManagedXMPPAccountFetched
 
 - (void)setPrimitivePortValue:(int16_t)value_ {
 	[self setPrimitivePort:[NSNumber numberWithShort:value_]];
-}
-
-
-
-
-
-@dynamic requireTLS;
-
-
-
-- (BOOL)requireTLSValue {
-	NSNumber *result = [self requireTLS];
-	return [result boolValue];
-}
-
-- (void)setRequireTLSValue:(BOOL)value_ {
-	[self setRequireTLS:[NSNumber numberWithBool:value_]];
-}
-
-- (BOOL)primitiveRequireTLSValue {
-	NSNumber *result = [self primitiveRequireTLS];
-	return [result boolValue];
-}
-
-- (void)setPrimitiveRequireTLSValue:(BOOL)value_ {
-	[self setPrimitiveRequireTLS:[NSNumber numberWithBool:value_]];
 }
 
 

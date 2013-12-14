@@ -31,10 +31,6 @@
         "comment": "Setting name for allowing authentication to happen in plain text or in the clear", 
         "string": "Allow Plaintext Authentication"
     }, 
-    "ALLOW_SELF_SIGNED_CERTIFICATES_STRING": {
-        "comment": "Title for settings cell on whether or not the XMPP library should allow self-signed SSL certificates", 
-        "string": "Self-Signed SSL"
-    }, 
     "ALLOW_SSL_HOSTNAME_MISMATCH_STRING": {
         "comment": "Title for settings cell on whether or not the XMPP library should allow SSL hostname mismatch", 
         "string": "Hostname Mismatch"

@@ -46,13 +46,9 @@
         [managagedXmppAccount setPortValue:xmppAccount.port];
         [managagedXmppAccount setSendDeliveryReceiptsValue:xmppAccount.sendDeliveryReceipts];
         [managagedXmppAccount setSendTypingNotificationsValue:xmppAccount.sendTypingNotifications];
-        [managagedXmppAccount setAllowSelfSignedSSLValue:xmppAccount.allowSelfSignedSSL ];
-         managagedXmppAccount.allowSSLHostNameMismatchValue = xmppAccount.allowSSLHostNameMismatch;
         managagedXmppAccount.protocol = xmppAccount.protocol;
         [managagedXmppAccount setRememberPasswordValue:xmppAccount.rememberPassword];
         managagedXmppAccount.password = xmppAccount.password;
-        managagedXmppAccount.requireTLSValue = xmppAccount.requireTLS;
-        managagedXmppAccount.allowPlainTextAuthenticationValue = xmppAccount.allowPlainTextAuthentication;
         
         
         NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];

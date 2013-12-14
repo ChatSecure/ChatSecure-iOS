@@ -55,9 +55,6 @@
 	NSString *password;
     XMPPJID *JID;
 	
-	BOOL allowSelfSignedCertificates;
-	BOOL allowSSLHostNameMismatch;
-	
 	BOOL isXmppConnected;
     
     dispatch_queue_t backgroundQueue;

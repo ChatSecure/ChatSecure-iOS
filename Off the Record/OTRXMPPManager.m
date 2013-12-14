@@ -252,11 +252,6 @@
 	
     //	[xmppStream setHostName:@"talk.google.com"];
     //	[xmppStream setHostPort:5222];	
-	
-    
-	// You may need to alter these settings depending on the server you're connecting to
-	allowSelfSignedCertificates = account.allowSelfSignedSSLValue;
-	allowSSLHostNameMismatch = account.allowSSLHostNameMismatchValue;
 }
 
 - (void)teardownStream
@@ -442,16 +437,6 @@
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
     
     [settings setObject:[OTRUtilities cipherSuites] forKey:GCDAsyncSocketSSLCipherSuites];
-
-	if (allowSelfSignedCertificates)
-	{
-		[settings setObject:[NSNumber numberWithBool:YES] forKey:(NSString *)kCFStreamSSLAllowsAnyRoot];
-	}
-	
-	if (allowSSLHostNameMismatch)
-	{
-		[settings setObject:[NSNull null] forKey:(NSString *)kCFStreamSSLPeerName];
-	}
 }
 
 - (void)xmppStreamDidSecure:(XMPPStream *)sender
