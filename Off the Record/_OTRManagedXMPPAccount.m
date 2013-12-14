@@ -6,7 +6,6 @@
 const struct OTRManagedXMPPAccountAttributes OTRManagedXMPPAccountAttributes = {
 	.domain = @"domain",
 	.port = @"port",
-	.sendTypingNotifications = @"sendTypingNotifications",
 };
 
 const struct OTRManagedXMPPAccountRelationships OTRManagedXMPPAccountRelationships = {
@@ -47,11 +46,6 @@ const struct OTRManagedXMPPAccountFetchedProperties OTRManagedXMPPAccountFetched
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
 		return keyPaths;
 	}
-	if ([key isEqualToString:@"sendTypingNotificationsValue"]) {
-		NSSet *affectingKey = [NSSet setWithObject:@"sendTypingNotifications"];
-		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
-		return keyPaths;
-	}
 
 	return keyPaths;
 }
@@ -86,32 +80,6 @@ const struct OTRManagedXMPPAccountFetchedProperties OTRManagedXMPPAccountFetched
 
 - (void)setPrimitivePortValue:(int16_t)value_ {
 	[self setPrimitivePort:[NSNumber numberWithShort:value_]];
-}
-
-
-
-
-
-@dynamic sendTypingNotifications;
-
-
-
-- (BOOL)sendTypingNotificationsValue {
-	NSNumber *result = [self sendTypingNotifications];
-	return [result boolValue];
-}
-
-- (void)setSendTypingNotificationsValue:(BOOL)value_ {
-	[self setSendTypingNotifications:[NSNumber numberWithBool:value_]];
-}
-
-- (BOOL)primitiveSendTypingNotificationsValue {
-	NSNumber *result = [self primitiveSendTypingNotifications];
-	return [result boolValue];
-}
-
-- (void)setPrimitiveSendTypingNotificationsValue:(BOOL)value_ {
-	[self setPrimitiveSendTypingNotifications:[NSNumber numberWithBool:value_]];
 }
 
 

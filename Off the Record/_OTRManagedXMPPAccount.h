@@ -7,7 +7,6 @@
 extern const struct OTRManagedXMPPAccountAttributes {
 	__unsafe_unretained NSString *domain;
 	__unsafe_unretained NSString *port;
-	__unsafe_unretained NSString *sendTypingNotifications;
 } OTRManagedXMPPAccountAttributes;
 
 extern const struct OTRManagedXMPPAccountRelationships {
@@ -18,7 +17,6 @@ extern const struct OTRManagedXMPPAccountFetchedProperties {
 } OTRManagedXMPPAccountFetchedProperties;
 
 @class OTRXMPPManagedPresenceSubscriptionRequest;
-
 
 
 
@@ -60,20 +58,6 @@ extern const struct OTRManagedXMPPAccountFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSNumber* sendTypingNotifications;
-
-
-
-@property BOOL sendTypingNotificationsValue;
-- (BOOL)sendTypingNotificationsValue;
-- (void)setSendTypingNotificationsValue:(BOOL)value_;
-
-//- (BOOL)validateSendTypingNotifications:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
 @property (nonatomic, strong) NSSet *subscriptionRequests;
 
 - (NSMutableSet*)subscriptionRequestsSet;
@@ -107,15 +91,6 @@ extern const struct OTRManagedXMPPAccountFetchedProperties {
 
 - (int16_t)primitivePortValue;
 - (void)setPrimitivePortValue:(int16_t)value_;
-
-
-
-
-- (NSNumber*)primitiveSendTypingNotifications;
-- (void)setPrimitiveSendTypingNotifications:(NSNumber*)value;
-
-- (BOOL)primitiveSendTypingNotificationsValue;
-- (void)setPrimitiveSendTypingNotificationsValue:(BOOL)value_;
 
 
 

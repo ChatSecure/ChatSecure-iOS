@@ -44,7 +44,6 @@
         [managagedXmppAccount setNewUsername:xmppAccount.username];
         managagedXmppAccount.domain = xmppAccount.domain;
         [managagedXmppAccount setPortValue:xmppAccount.port];
-        [managagedXmppAccount setSendTypingNotificationsValue:xmppAccount.sendTypingNotifications];
         managagedXmppAccount.protocol = xmppAccount.protocol;
         [managagedXmppAccount setRememberPasswordValue:xmppAccount.rememberPassword];
         managagedXmppAccount.password = xmppAccount.password;

@@ -26,6 +26,4 @@
 
 @property (nonatomic,strong) OTRManagedXMPPAccount * account;
 
-@property (nonatomic, strong) UISwitch *typingNotificatoinSwitch;
-
 @end

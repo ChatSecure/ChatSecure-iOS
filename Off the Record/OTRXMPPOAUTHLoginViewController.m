@@ -86,7 +86,7 @@
 
 -(void)readInFields
 {
-    self.account.sendTypingNotifications = @(self.typingNotificatoinSwitch.on);
+    DDLogVerbose(@"Red in no fields");
 }
 
 -(void)disconnectAccount:(id)sender {
