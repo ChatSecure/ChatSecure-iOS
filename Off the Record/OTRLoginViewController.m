@@ -42,7 +42,6 @@
 
 #define kErrorAlertViewTag 131
 #define kErrorInfoAlertViewTag 132
-#define kErrorCertAlertViewTag 133
 #define kNewCertAlertViewTag 134
 
 @interface OTRLoginViewController(Private)
@@ -357,11 +356,19 @@
         
         NSInteger tag = kErrorAlertViewTag;
         if (certData) {
-            [self showCertWarningForData:certData withHostName:hostname withStatus:[statusNumber longValue]];
+            if ([statusNumber longLongValue] == errSSLPeerAuthCompleted) {
+                //The cert was manually evaluated but did not anything that is saved so we have to recheck system and get interal validation status
+                //((OTRXMPPManager *)protocol).certificatePinningModulesss
+                id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
+                ((OTRXMPPManager *)protocol).certificatePinningModule.doNotManuallyEvaluateOverride = YES;
+                [self loginButtonPressed:nil];
+            }
+            else {
+                [self showCertWarningForData:certData withHostName:hostname withStatus:[statusNumber longValue]];
+            }
         }
         else if ([error isKindOfClass:[NSError class]]) {
             recentError = (NSError *)error;
-            NSString * msg = XMPP_FAIL_STRING;
             
             if([recentError.domain isEqualToString:@"kCFStreamErrorDomainSSL"] && recentError.code == errSSLPeerBadCert) {
                 return;
@@ -392,10 +399,10 @@
     NSString * message = [NSString stringWithFormat:@"%@\nSHA1: %@\n",hostname,fingerprint];
     NSUInteger length = [message length];
     
-    
     UIColor * sslMessageColor;
     
     if (status == noErr) {
+        //#52A352
         sslMessageColor = [UIColor colorWithRed:0.32f green:0.64f blue:0.32f alpha:1.00f];
         message = [message stringByAppendingString:[NSString stringWithFormat:@"✓ %@",VALID_CERTIFICATE_STRING]];
     }
@@ -406,17 +413,15 @@
     }
     NSRange errorMessageRange = NSMakeRange(length, message.length-length);
     
-    SIAlertView * alertView = [[SIAlertView alloc] initWithTitle:@"New SSL Certificate" andMessage:nil];
-    
     NSMutableAttributedString * attributedString = [[NSMutableAttributedString alloc] initWithString:message];
     
+    SIAlertView * alertView = [[SIAlertView alloc] initWithTitle:NEW_CERTIFICATE_STRING andMessage:nil];
     [attributedString addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:16] range:NSMakeRange(0, message.length)];
     [attributedString addAttribute:NSForegroundColorAttributeName value:sslMessageColor range:errorMessageRange];
     
     alertView.messageAttributedString = attributedString;
+    alertView.buttonColor = [UIColor whiteColor];
     
-    
-    alertView.buttonColor = [UIColor greenColor];
     [alertView addButtonWithTitle:REJECT_STRING type:SIAlertViewButtonTypeDestructive handler:^(SIAlertView *alertView) {
         [alertView dismissAnimated:YES];
     }];
@@ -424,11 +429,20 @@
         id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
         if ([protocol isKindOfClass:[OTRXMPPManager class]]) {
             [((OTRXMPPManager *)protocol).certificatePinningModule addCertificate:[OTRCertificatePinning certForData:certData] withHostName:hostname];
+            [self loginButtonPressed:alertView];
         }
     }];
-    
-    
+
     [alertView show];
+    
+    UIImage * normalImage = [UIImage imageNamed:@"button-green"];
+    CGFloat hInset = floorf(normalImage.size.width / 2);
+	CGFloat vInset = floorf(normalImage.size.height / 2);
+	UIEdgeInsets insets = UIEdgeInsetsMake(vInset, hInset, vInset, hInset);
+	UIImage * buttonImage = [normalImage resizableImageWithCapInsets:insets];
+    
+    [alertView setDefaultButtonImage:buttonImage forState:UIControlStateNormal];
+    [alertView setDefaultButtonImage:buttonImage forState:UIControlStateHighlighted];
 }
 
 -(void)protocolLoginSuccess:(NSNotification*)notification
@@ -518,15 +532,6 @@
             UIPasteboard *pasteBoard = [UIPasteboard generalPasteboard];
             [pasteBoard setString:errorDescriptionString];
         }
-    }
-    else if (alertView.tag == kErrorCertAlertViewTag && buttonIndex == 1)
-    {
-        id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
-        if ([protocol isKindOfClass:[OTRXMPPManager class]]) {
-            //[((OTRXMPPManager *)protocol) setManualyEvaluateTrust:NO];
-            [self loginButtonPressed:nil];
-        }
-        
     }
 }
 

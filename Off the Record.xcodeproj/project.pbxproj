@@ -213,6 +213,8 @@
 		639C75DA17E127A600530423 /* FBLoginViewButtonPressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 639C75D617E127A600530423 /* FBLoginViewButtonPressed.png */; };
 		639C75DB17E127A600530423 /* FBLoginViewButtonPressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 639C75D717E127A600530423 /* FBLoginViewButtonPressed@2x.png */; };
 		639FDE4716334FA500387666 /* OTRJabberLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 639FDE4616334FA500387666 /* OTRJabberLoginViewController.m */; };
+		63B046E3185BD2780066C8E5 /* button-green.png in Resources */ = {isa = PBXBuildFile; fileRef = 63B046E1185BD2780066C8E5 /* button-green.png */; };
+		63B046E4185BD2780066C8E5 /* button-green@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63B046E2185BD2780066C8E5 /* button-green@2x.png */; };
 		63B43C2D166D93D5004A4C54 /* Lock_Locked_Verified.png in Resources */ = {isa = PBXBuildFile; fileRef = 63B43C29166D93D5004A4C54 /* Lock_Locked_Verified.png */; };
 		63B43C2E166D93D5004A4C54 /* Lock_Locked_Verified@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63B43C2A166D93D5004A4C54 /* Lock_Locked_Verified@2x.png */; };
 		63B43C2F166D93D5004A4C54 /* Lock_Locked@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63B43C2B166D93D5004A4C54 /* Lock_Locked@2x.png */; };
@@ -1075,6 +1077,8 @@
 		639C75D717E127A600530423 /* FBLoginViewButtonPressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "FBLoginViewButtonPressed@2x.png"; path = "Submodules/facebook-ios-sdk/src/ImageResources/FBLoginView/FBLoginViewButtonPressed@2x.png"; sourceTree = SOURCE_ROOT; };
 		639FDE4516334FA500387666 /* OTRJabberLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRJabberLoginViewController.h; sourceTree = "<group>"; };
 		639FDE4616334FA500387666 /* OTRJabberLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRJabberLoginViewController.m; sourceTree = "<group>"; };
+		63B046E1185BD2780066C8E5 /* button-green.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "button-green.png"; path = "media/app-images/button-green.png"; sourceTree = SOURCE_ROOT; };
+		63B046E2185BD2780066C8E5 /* button-green@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "button-green@2x.png"; path = "media/app-images/button-green@2x.png"; sourceTree = SOURCE_ROOT; };
 		63B43C29166D93D5004A4C54 /* Lock_Locked_Verified.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Lock_Locked_Verified.png; sourceTree = "<group>"; };
 		63B43C2A166D93D5004A4C54 /* Lock_Locked_Verified@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Lock_Locked_Verified@2x.png"; sourceTree = "<group>"; };
 		63B43C2B166D93D5004A4C54 /* Lock_Locked@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Lock_Locked@2x.png"; sourceTree = "<group>"; };
@@ -3506,6 +3510,8 @@
 		D9FCA7291533A37F009AD599 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				63B046E1185BD2780066C8E5 /* button-green.png */,
+				63B046E2185BD2780066C8E5 /* button-green@2x.png */,
 				639C75D417E127A600530423 /* FBLoginViewButton.png */,
 				639C75D517E127A600530423 /* FBLoginViewButton@2x.png */,
 				639C75D617E127A600530423 /* FBLoginViewButtonPressed.png */,
@@ -3881,8 +3887,10 @@
 				D99550BD141AE07D00A82FAC /* aim.png in Resources */,
 				D99550BE141AE07D00A82FAC /* aim@2x.png in Resources */,
 				D9BBCD3B1491F7AB00AF1B9F /* 19-gear.png in Resources */,
+				63B046E4185BD2780066C8E5 /* button-green@2x.png in Resources */,
 				D9BBCD431491FFC800AF1B9F /* about_icon.png in Resources */,
 				D9BBCD441491FFC800AF1B9F /* about_icon@2x.png in Resources */,
+				63B046E3185BD2780066C8E5 /* button-green.png in Resources */,
 				D99071B2151EB5C6002CECC9 /* 08-chat@2x.png in Resources */,
 				D99071B3151EB5C6002CECC9 /* 19-gear@2x.png in Resources */,
 				D99071B4151EB5C6002CECC9 /* 112-group@2x.png in Resources */,

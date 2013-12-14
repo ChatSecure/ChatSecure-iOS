@@ -30,6 +30,7 @@
 #define NO_ACCOUNT_SAVED_STRING [OTRLanguageManager translatedString: @"No Saved Accounts"]
 #define errSSLClosedNoNotifyString [OTRLanguageManager translatedString: @"Server closed session with no notification"]
 #define GROUPS_STRING [OTRLanguageManager translatedString: @"Groups"]
+#define NEW_CERTIFICATE_STRING [OTRLanguageManager translatedString: @"New SSL Certificate"]
 #define LOGIN_STRING [OTRLanguageManager translatedString: @"Log In"]
 #define CHAT_STATE_PAUSED_STRING [OTRLanguageManager translatedString: @"Entered Text"]
 #define REMOVE_STRING [OTRLanguageManager translatedString: @"Remove"]

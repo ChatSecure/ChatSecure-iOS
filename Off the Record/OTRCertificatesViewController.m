@@ -111,7 +111,7 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        [OTRCertificatePinning deleteAllCertificatesWithHostName:hostname];
+        [OTRCertificatePinning deleteCertificate:[OTRCertificatePinning certForData:certificatesDictionary[certificateHashes[indexPath.row]]] withHostName:hostname];
     }
     [self reloadCerts:nil];
     [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];

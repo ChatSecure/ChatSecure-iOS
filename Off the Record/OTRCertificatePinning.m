@@ -65,16 +65,27 @@
         if (![exisisting count]) {
             exisisting = [NSArray array];
         }
+        __block BOOL alreadySaved = NO;
+        [exisisting enumerateObjectsUsingBlock:^(NSData * obj, NSUInteger idx, BOOL *stop) {
+            if ([obj isEqualToData:certData]) {
+                alreadySaved = YES;
+                stop = YES;
+            }
+        }];
         
-        keychainQuery.passwordObject = [exisisting arrayByAddingObject:certData];
-        
-        NSError * error = nil;
-        
-        [keychainQuery save:&error];
-        
-        if (error) {
-            DDLogError(@"Error saving new certificate to keychain");
+        if (!alreadySaved) {
+            keychainQuery.passwordObject = [exisisting arrayByAddingObject:certData];
+            NSError * error = nil;
+            
+            [keychainQuery save:&error];
+            
+            if (error) {
+                DDLogError(@"Error saving new certificate to keychain");
+            }
         }
+        
+        
+        
 
     }
 }
@@ -220,15 +231,15 @@
 **/
 - (BOOL)socket:(GCDAsyncSocket *)sock shouldFinishConnectionWithTrust:(SecTrustRef)trust status:(OSStatus)status {
     
-    BOOL hasSeenCertificate = [self isValidPinnedTrust:trust withHostName:xmppStream.connectedHostName];
-    if (!hasSeenCertificate) {
+    BOOL trusted = [self isValidPinnedTrust:trust withHostName:xmppStream.connectedHostName];
+    if (!trusted) {
         //Delegate firing off for user to verify with status
         if ([self.delegate respondsToSelector:@selector(newTrust:withHostName:withStatus:)]) {
             [self.delegate newTrust:trust withHostName:xmppStream.connectedHostName withStatus:status];
         }
     }
     
-    return hasSeenCertificate;
+    return trusted;
 }
 
 - (BOOL)socketShouldManuallyEvaluateTrust:(GCDAsyncSocket *)sock {
@@ -251,8 +262,13 @@
 - (BOOL)socket:(GCDAsyncSocket *)sock shouldTrustPeer:(SecTrustRef)trust
 {
     //[self writeCertToDisk:trust withFileName:@"google.cer"];
-    [self loadKeychainCertificatesWithHostName:xmppStream.connectedHostName];
-    BOOL trusted = [self.securityPolicy evaluateServerTrust:trust];
+    BOOL trusted = [self isValidPinnedTrust:trust withHostName:xmppStream.connectedHostName];
+    if (!trusted) {
+        //Delegate firing off for user to verify with status
+        if ([self.delegate respondsToSelector:@selector(newTrust:withHostName:withStatus:)]) {
+            [self.delegate newTrust:trust withHostName:xmppStream.connectedHostName withStatus:errSSLPeerAuthCompleted];
+        }
+    }
     return trusted;
 }
 
