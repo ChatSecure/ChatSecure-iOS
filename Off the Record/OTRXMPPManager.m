@@ -133,9 +133,10 @@
     
     [self.certificatePinningModule activate:self.xmppStream];
     
-    
-    //Makes sure not allow any sending of password in plain text
-    
+    XMPPMessageDeliveryReceipts * deliveryReceiptsMoodule = [[XMPPMessageDeliveryReceipts alloc] init];
+    deliveryReceiptsMoodule.autoSendMessageDeliveryReceipts = YES;
+    deliveryReceiptsMoodule.autoSendMessageDeliveryRequests = YES;
+    [deliveryReceiptsMoodule activate:self.xmppStream];
 	
 #if !TARGET_IPHONE_SIMULATOR
 	{
@@ -321,29 +322,10 @@
 
 ///////////////////////////////
 #pragma mark Capabilities Collected
-/*
-- (void)xmppCapabilities:(XMPPCapabilities *)sender collectingMyCapabilities:(NSXMLElement *)query
-{
-    if(account.sendDeliveryReceipts)
-    {
-        NSXMLElement * deliveryReceiptsFeature = [NSXMLElement elementWithName:@"feature"];
-        [deliveryReceiptsFeature addAttributeWithName:@"var" stringValue:@"urn:xmpp:receipts"];
-        [query addChild:deliveryReceiptsFeature];
-    }
-    
-    NSXMLElement * chatStateFeature = [NSXMLElement elementWithName:@"feature"];
-	[chatStateFeature addAttributeWithName:@"var" stringValue:@"http://jabber.org/protocol/chatstates"];
-    [query addChild:chatStateFeature];
-}
- */
 
 - (NSArray *)myFeaturesForXMPPCapabilities:(XMPPCapabilities *)sender
 {
-    NSMutableArray * array = [@[@"http://jabber.org/protocol/chatstates"] mutableCopy];
-    if (account.sendDeliveryReceipts) {
-        [array addObject:@"urn:xmpp:receipts"];
-    }
-    return array;
+    return @[@"http://jabber.org/protocol/chatstates"];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -516,15 +498,7 @@
             [messageBuddy receiveChatStateMessage:kOTRChatStateGone];
     }
     
-    //Posible needs a setting to turn on and off
-    if([message hasReceiptRequest] && self.account.sendDeliveryReceiptsValue && ![message isErrorMessage])
-    {
-        XMPPMessage * responseMessage = [message generateReceiptResponse];
-        [xmppStream sendElement:responseMessage];
-    }
-    
     if ([message hasReceiptResponse] && ![message isErrorMessage]) {
-        
         [OTRManagedMessage receivedDeliveryReceiptForMessageID:[message receiptResponseID]];
     }
     

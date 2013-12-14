@@ -39,7 +39,6 @@
     [super setDefaultsWithProtocol:kOTRProtocolTypeXMPP];
     self.domain = newDomain;
     self.port = @(DEFAULT_PORT_NUMBER); // Default XMPP port number
-    self.sendDeliveryReceiptsValue = YES;
     self.sendTypingNotificationsValue = YES; // Default typing notifications to yes
 }
 

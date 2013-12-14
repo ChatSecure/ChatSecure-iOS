@@ -6,7 +6,6 @@
 const struct OTRManagedXMPPAccountAttributes OTRManagedXMPPAccountAttributes = {
 	.domain = @"domain",
 	.port = @"port",
-	.sendDeliveryReceipts = @"sendDeliveryReceipts",
 	.sendTypingNotifications = @"sendTypingNotifications",
 };
 
@@ -45,11 +44,6 @@ const struct OTRManagedXMPPAccountFetchedProperties OTRManagedXMPPAccountFetched
 	
 	if ([key isEqualToString:@"portValue"]) {
 		NSSet *affectingKey = [NSSet setWithObject:@"port"];
-		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
-		return keyPaths;
-	}
-	if ([key isEqualToString:@"sendDeliveryReceiptsValue"]) {
-		NSSet *affectingKey = [NSSet setWithObject:@"sendDeliveryReceipts"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
 		return keyPaths;
 	}
@@ -92,32 +86,6 @@ const struct OTRManagedXMPPAccountFetchedProperties OTRManagedXMPPAccountFetched
 
 - (void)setPrimitivePortValue:(int16_t)value_ {
 	[self setPrimitivePort:[NSNumber numberWithShort:value_]];
-}
-
-
-
-
-
-@dynamic sendDeliveryReceipts;
-
-
-
-- (BOOL)sendDeliveryReceiptsValue {
-	NSNumber *result = [self sendDeliveryReceipts];
-	return [result boolValue];
-}
-
-- (void)setSendDeliveryReceiptsValue:(BOOL)value_ {
-	[self setSendDeliveryReceipts:[NSNumber numberWithBool:value_]];
-}
-
-- (BOOL)primitiveSendDeliveryReceiptsValue {
-	NSNumber *result = [self primitiveSendDeliveryReceipts];
-	return [result boolValue];
-}
-
-- (void)setPrimitiveSendDeliveryReceiptsValue:(BOOL)value_ {
-	[self setPrimitiveSendDeliveryReceipts:[NSNumber numberWithBool:value_]];
 }
 
 

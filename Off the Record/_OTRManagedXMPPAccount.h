@@ -7,7 +7,6 @@
 extern const struct OTRManagedXMPPAccountAttributes {
 	__unsafe_unretained NSString *domain;
 	__unsafe_unretained NSString *port;
-	__unsafe_unretained NSString *sendDeliveryReceipts;
 	__unsafe_unretained NSString *sendTypingNotifications;
 } OTRManagedXMPPAccountAttributes;
 
@@ -19,7 +18,6 @@ extern const struct OTRManagedXMPPAccountFetchedProperties {
 } OTRManagedXMPPAccountFetchedProperties;
 
 @class OTRXMPPManagedPresenceSubscriptionRequest;
-
 
 
 
@@ -57,20 +55,6 @@ extern const struct OTRManagedXMPPAccountFetchedProperties {
 - (void)setPortValue:(int16_t)value_;
 
 //- (BOOL)validatePort:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSNumber* sendDeliveryReceipts;
-
-
-
-@property BOOL sendDeliveryReceiptsValue;
-- (BOOL)sendDeliveryReceiptsValue;
-- (void)setSendDeliveryReceiptsValue:(BOOL)value_;
-
-//- (BOOL)validateSendDeliveryReceipts:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -123,15 +107,6 @@ extern const struct OTRManagedXMPPAccountFetchedProperties {
 
 - (int16_t)primitivePortValue;
 - (void)setPrimitivePortValue:(int16_t)value_;
-
-
-
-
-- (NSNumber*)primitiveSendDeliveryReceipts;
-- (void)setPrimitiveSendDeliveryReceipts:(NSNumber*)value;
-
-- (BOOL)primitiveSendDeliveryReceiptsValue;
-- (void)setPrimitiveSendDeliveryReceiptsValue:(BOOL)value_;
 
 
 

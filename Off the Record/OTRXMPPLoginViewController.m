@@ -30,7 +30,6 @@
 
 @implementation OTRXMPPLoginViewController
 
-@synthesize deliveryReceiptSwitch;
 @synthesize typingNotificatoinSwitch;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -46,13 +45,10 @@
 {
     [super viewDidLoad];
     
-    self.deliveryReceiptSwitch = [[UISwitch alloc] init];
-    self.deliveryReceiptSwitch.on = self.account.sendDeliveryReceiptsValue;
     self.typingNotificatoinSwitch = [[UISwitch alloc] init];
     self.typingNotificatoinSwitch.on = self.account.sendTypingNotificationsValue;
     
-    [self addCellinfoWithSection:1 row:0 labelText:SEND_DELIVERY_RECEIPT_STRING cellType:kCellTypeSwitch userInputView:self.deliveryReceiptSwitch];
-    [self addCellinfoWithSection:1 row:1 labelText:SEND_TYPING_NOTIFICATION_STRING cellType:kCellTypeSwitch userInputView:self.typingNotificatoinSwitch];
+    [self addCellinfoWithSection:1 row:0 labelText:SEND_TYPING_NOTIFICATION_STRING cellType:kCellTypeSwitch userInputView:self.typingNotificatoinSwitch];
     
     
     
@@ -71,7 +67,6 @@
 {
     [super readInFields];
     
-    self.account.sendDeliveryReceipts = @(self.deliveryReceiptSwitch.on);
     self.account.sendTypingNotifications = @(self.typingNotificatoinSwitch.on);
 }
 
@@ -103,7 +98,6 @@
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    self.deliveryReceiptSwitch = nil;
     self.typingNotificatoinSwitch = nil;
 }
 

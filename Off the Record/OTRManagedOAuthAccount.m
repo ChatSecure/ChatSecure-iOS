@@ -96,7 +96,6 @@
     oAuthAccount.uniqueIdentifier = xmppAccount.uniqueIdentifier;
     oAuthAccount.domain =xmppAccount.domain;
     oAuthAccount.port = xmppAccount.port;
-    oAuthAccount.sendDeliveryReceipts = xmppAccount.sendDeliveryReceipts;
     oAuthAccount.sendTypingNotifications = xmppAccount.sendTypingNotifications;
     
     [xmppAccount.subscriptionRequests enumerateObjectsUsingBlock:^(id obj, BOOL *stop) {

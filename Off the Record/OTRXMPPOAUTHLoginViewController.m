@@ -86,7 +86,6 @@
 
 -(void)readInFields
 {
-    self.account.sendDeliveryReceipts = @(self.deliveryReceiptSwitch.on);
     self.account.sendTypingNotifications = @(self.typingNotificatoinSwitch.on);
 }
 
