@@ -217,10 +217,16 @@
             [result addObject:certData];
         }
     }];
-    keychainQuery.passwordObject = [NSArray arrayWithArray:result];
-    error = nil;
-    [keychainQuery save:&error];
-    
+    if ([result count]) {
+        keychainQuery.passwordObject = [NSArray arrayWithArray:result];
+        error = nil;
+        [keychainQuery save:&error];
+        
+        
+    }
+    else {
+        [keychainQuery deleteItem:&error];
+    }
     if (error) {
         DDLogError(@"Error saving cert to keychain");
     }
