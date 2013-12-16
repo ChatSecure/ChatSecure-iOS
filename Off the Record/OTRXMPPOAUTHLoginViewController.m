@@ -53,6 +53,7 @@
         }
         
         if (button) {
+            button.autoresizingMask = UIViewAutoresizingFlexibleWidth;
             [view addSubview:button];
         }
         
