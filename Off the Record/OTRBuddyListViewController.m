@@ -39,6 +39,9 @@
 #import "OTRImages.h"
 #import "OTRUtilities.h"
 
+#import "OTRBuddyCell.h"
+#import "OTRRecentBuddyCell.h"
+
 //#define kSignoffTime 500
 
 #define RECENTS_SECTION_INDEX 0
@@ -298,34 +301,60 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
-	if (cell == nil)
-	{
-		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"Cell"];
-	}
+    static NSString * const buddyCell = @"buddyCell";
+    static NSString * const conversationCell = @"conversationCell";
+    OTRBuddyCell * cell = nil;
     
-    OTRManagedBuddy *buddy = nil;
+    OTRManagedBuddy *buddy = [self tableView:tableView buddyforRowAtIndexPath:indexPath];
+    
+    if ([tableView isEqual:self.searchDisplayController.searchResultsTableView] || ([tableView isEqual:self.buddyListTableView] && indexPath.section != RECENTS_SECTION_INDEX)) {
+        cell = [tableView dequeueReusableCellWithIdentifier:buddyCell];
+        if (!cell)
+        {
+            cell = [[OTRBuddyCell alloc] initWithReuseIdentifier:buddyCell];
+            if ([tableView isEqual:self.buddyListTableView]) {
+                UILongPressGestureRecognizer *gesture = [[UILongPressGestureRecognizer alloc]
+                                                         initWithTarget:self action:@selector(longPressOnCell:)];
+                [cell addGestureRecognizer:gesture];
+            }
+            
+        }
+    }
+    else {
+        cell = [tableView dequeueReusableCellWithIdentifier:conversationCell];
+        if (!cell)
+        {
+            cell = [[OTRRecentBuddyCell alloc] initWithReuseIdentifier:conversationCell];
+            UILongPressGestureRecognizer *gesture = [[UILongPressGestureRecognizer alloc]
+                                                     initWithTarget:self action:@selector(longPressOnCell:)];
+            [cell addGestureRecognizer:gesture];
+        }
+    }
+    cell.buddy = buddy;
+    return cell;
+}
+
+- (OTRManagedBuddy *)tableView:(UITableView *)tableView buddyforRowAtIndexPath:(NSIndexPath *)indexPath {
+    OTRManagedBuddy * managedBuddy = nil;
     
     if ([tableView isEqual:self.searchDisplayController.searchResultsTableView]) {
-        buddy = [self.searchBuddyFetchedResultsController objectAtIndexPath:indexPath];
-        [self configureBuddyCell:cell withBuddy:buddy];
+        managedBuddy = [self.searchBuddyFetchedResultsController objectAtIndexPath:indexPath];
     }
-    else if (indexPath.section == RECENTS_SECTION_INDEX) {
-        buddy = [self.recentBuddiesFetchedResultsController objectAtIndexPath:indexPath];
-        [self configureRecentCell:cell withBuddy:buddy];
-    } else{
-        if ([self.groupManager numberOfGroups] >= indexPath.section) {
-            
-            buddy = [self.groupManager buddyAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section-1]];
+    else if ([tableView isEqual:self.buddyListTableView])
+    {
+        if (indexPath.section == RECENTS_SECTION_INDEX)
+        {
+            managedBuddy = [self.recentBuddiesFetchedResultsController objectAtIndexPath:indexPath];
         }
-        else{
-            NSFetchedResultsController* resultsController = self.offlineBuddiesFetchedResultsController;
-            buddy = [resultsController objectAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:0]];
-            
+        else if([self.groupManager numberOfGroups] >= indexPath.section){
+            managedBuddy = [self.groupManager buddyAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section-1]];
         }
-        [self configureBuddyCell:cell withBuddy:buddy];
+        else {
+            managedBuddy = [self.offlineBuddiesFetchedResultsController objectAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row inSection:0]];
+        }
     }
-    return cell;
+
+    return managedBuddy;
 }
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -339,40 +368,25 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    OTRManagedBuddy * managedBuddy = nil;
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    }
+    OTRManagedBuddy * managedBuddy = [self tableView:tableView buddyforRowAtIndexPath:indexPath];
     if ([tableView isEqual:self.searchDisplayController.searchResultsTableView]) {
-        managedBuddy = [self.searchBuddyFetchedResultsController objectAtIndexPath:indexPath];
-        [self enterConversationWithBuddy:managedBuddy];
         [self.searchDisplayController   setActive:NO];
-    }
-    else if (indexPath.section == RECENTS_SECTION_INDEX)
-    {
-        managedBuddy = [self.recentBuddiesFetchedResultsController objectAtIndexPath:indexPath];
-    }
-    else if([self.groupManager numberOfGroups] >= indexPath.section){
-        managedBuddy = [self.groupManager buddyAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section-1]];
-    }
-    else {
-        managedBuddy = [self.offlineBuddiesFetchedResultsController objectAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row inSection:0]];
     }
     
     if (managedBuddy) {
         [self enterConversationWithBuddy:managedBuddy];
     }
 
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-        [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    }
+    
 }
 
 - (void) tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == RECENTS_SECTION_INDEX && editingStyle == UITableViewCellEditingStyleDelete) {
         [[self.recentBuddiesFetchedResultsController objectAtIndexPath:indexPath] deleteAllMessages];
     }
-}
-
-- (void) deleteBuddy:(OTRManagedBuddy*)buddy {
-    //TODO best way to delete buddy
 }
 
 -(void)enterConversationWithBuddy:(OTRManagedBuddy*)buddy
@@ -398,41 +412,12 @@
     
     NSIndexPath * indexPath = [buddyListTableView indexPathForCell:cell];
     
-    OTRManagedBuddy * buddy = [self buddyWithTableView:buddyListTableView atIndexPath:indexPath];
+    OTRManagedBuddy * buddy = [self tableView:self.buddyListTableView buddyforRowAtIndexPath:indexPath];
     
     OTRBuddyViewController * buddyViewController = [[OTRBuddyViewController alloc] initWithBuddyID:buddy.objectID];
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:buddyViewController];
     navController.modalPresentationStyle = UIModalPresentationFormSheet;
     [self presentViewController:navController animated:YES completion:nil];
-    
-}
-
--(OTRManagedBuddy *)buddyWithTableView:(UITableView *)tableView atIndexPath:(NSIndexPath *)indexPath
-{
-    OTRManagedBuddy * managedBuddy = nil;
-    if ([tableView isEqual:self.searchDisplayController.searchResultsTableView]) {
-        [self.searchDisplayController   setActive:NO];
-        managedBuddy = [self.searchBuddyFetchedResultsController objectAtIndexPath:indexPath];
-        [self enterConversationWithBuddy:managedBuddy];
-    }
-    
-    if ([tableView isEqual:self.buddyListTableView]) {
-        
-        if (indexPath.section == RECENTS_SECTION_INDEX) {
-            managedBuddy = [self.recentBuddiesFetchedResultsController objectAtIndexPath:indexPath];
-            
-        }
-        else{
-            if ([self.groupManager numberOfGroups] >= indexPath.section) {
-                managedBuddy = [self.groupManager buddyAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section-1]];
-            }
-            else{
-                NSFetchedResultsController* resultsController = self.offlineBuddiesFetchedResultsController;
-                managedBuddy = [resultsController objectAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:0]];
-            }
-        }
-    }
-    return managedBuddy;
 }
 
 #pragma mark - NSFetchedReusltsControllerDelegate
@@ -558,7 +543,6 @@
     }
     
     UITableView *tableView = nil;
-    OTRManagedBuddy * buddy = anObject;
     NSIndexPath * modifiedIndexPath = indexPath;
     NSIndexPath * modifiedNewIndexPath = newIndexPath;
     
@@ -604,24 +588,12 @@
                 break;
                 
             case NSFetchedResultsChangeUpdate:
-                if ([controller isEqual:_recentBuddiesFetchedResultsController]) {
-                    [self configureRecentCell:[tableView cellForRowAtIndexPath:modifiedIndexPath] withBuddy:buddy];
-                }
-                else{
-                    [self configureBuddyCell:[tableView cellForRowAtIndexPath:modifiedIndexPath] withBuddy:buddy];
-                }
+                [tableView reloadRowsAtIndexPaths:@[modifiedIndexPath] withRowAnimation:UITableViewRowAnimationNone];
                 break;
                 
             case NSFetchedResultsChangeMove:
-                if ([controller isEqual:_recentBuddiesFetchedResultsController]) {
-                    [self configureRecentCell:[tableView cellForRowAtIndexPath:modifiedIndexPath] withBuddy:buddy];
-                }
-                else{
-                    [self configureBuddyCell:[tableView cellForRowAtIndexPath:modifiedIndexPath] withBuddy:buddy];
-                }
+                [tableView reloadRowsAtIndexPaths:@[modifiedIndexPath] withRowAnimation:UITableViewRowAnimationNone];
                 [tableView moveRowAtIndexPath:modifiedIndexPath toIndexPath:modifiedNewIndexPath];
-                //[tableView deleteRowsAtIndexPaths:@[modifiedIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-                //[tableView insertRowsAtIndexPaths:@[modifiedNewIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
                 break;
         }
     }
@@ -741,7 +713,7 @@
     self.title = title;
 }
 
-
+/*
 -(void) configureRecentCell:(UITableViewCell *)cell withBuddy:(OTRManagedBuddy *) buddy
 {
     [self configureCell:cell withBuddy:buddy];
@@ -853,7 +825,7 @@
     [cell addGestureRecognizer:gesture];
 }
 
-
+*/
 
 - (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope
 {

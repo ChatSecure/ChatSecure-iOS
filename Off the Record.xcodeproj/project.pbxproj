@@ -185,6 +185,8 @@
 		636FE4BC161B771E002B28EF /* OTROscarLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 636FE4BB161B771E002B28EF /* OTROscarLoginViewController.m */; };
 		636FE4C0161B7C68002B28EF /* OTRInLineTextEditTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 636FE4BF161B7C68002B28EF /* OTRInLineTextEditTableViewCell.m */; };
 		6370C976185FC58C00CB6786 /* OTRTitleSubtitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6370C975185FC58C00CB6786 /* OTRTitleSubtitleView.m */; };
+		6370C985185FD18E00CB6786 /* OTRBuddyCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6370C984185FD18E00CB6786 /* OTRBuddyCell.m */; };
+		6370C988185FD9B900CB6786 /* OTRRecentBuddyCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6370C987185FD9B900CB6786 /* OTRRecentBuddyCell.m */; };
 		6375D2531811FCD2006CDA8A /* OTRRosterStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 6375D2521811FCD2006CDA8A /* OTRRosterStorage.m */; };
 		63813C1216E14E5D00909670 /* OTRBuddyListGroupManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 63813C1116E14E5D00909670 /* OTRBuddyListGroupManager.m */; };
 		638286E01846911C00F127C2 /* OTRAccountTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 638286DF1846911C00F127C2 /* OTRAccountTableViewCell.m */; };
@@ -1024,6 +1026,10 @@
 		636FE4BF161B7C68002B28EF /* OTRInLineTextEditTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRInLineTextEditTableViewCell.m; sourceTree = "<group>"; };
 		6370C974185FC58C00CB6786 /* OTRTitleSubtitleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRTitleSubtitleView.h; sourceTree = "<group>"; };
 		6370C975185FC58C00CB6786 /* OTRTitleSubtitleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRTitleSubtitleView.m; sourceTree = "<group>"; };
+		6370C983185FD18E00CB6786 /* OTRBuddyCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBuddyCell.h; sourceTree = "<group>"; };
+		6370C984185FD18E00CB6786 /* OTRBuddyCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBuddyCell.m; sourceTree = "<group>"; };
+		6370C986185FD9B900CB6786 /* OTRRecentBuddyCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRRecentBuddyCell.h; sourceTree = "<group>"; };
+		6370C987185FD9B900CB6786 /* OTRRecentBuddyCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRRecentBuddyCell.m; sourceTree = "<group>"; };
 		6375D2511811FCD2006CDA8A /* OTRRosterStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRRosterStorage.h; sourceTree = "<group>"; };
 		6375D2521811FCD2006CDA8A /* OTRRosterStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRRosterStorage.m; sourceTree = "<group>"; };
 		637B55F3183F08D10012F1C9 /* test_OTRManagedAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = test_OTRManagedAccount.m; sourceTree = "<group>"; };
@@ -3458,6 +3464,10 @@
 				633B6D0417ECFB0C002DA152 /* OTRChatInputBar.m */,
 				6370C974185FC58C00CB6786 /* OTRTitleSubtitleView.h */,
 				6370C975185FC58C00CB6786 /* OTRTitleSubtitleView.m */,
+				6370C983185FD18E00CB6786 /* OTRBuddyCell.h */,
+				6370C984185FD18E00CB6786 /* OTRBuddyCell.m */,
+				6370C986185FD9B900CB6786 /* OTRRecentBuddyCell.h */,
+				6370C987185FD9B900CB6786 /* OTRRecentBuddyCell.m */,
 				63D2BB0B18568A3500FFE4B7 /* OTRErrorManager.h */,
 				63D2BB0C18568A3500FFE4B7 /* OTRErrorManager.m */,
 				63591479184FE2AF00B311A1 /* XMPPModules */,
@@ -4081,6 +4091,7 @@
 				633406451652E44600A54C52 /* OTRLanguageSetting.m in Sources */,
 				63D0E4851819DEC6003ACA13 /* _OTRvCardAvatar.m in Sources */,
 				6336CDE0165C4E9E00C8CBA8 /* OTRLanguageListSettingViewController.m in Sources */,
+				6370C988185FD9B900CB6786 /* OTRRecentBuddyCell.m in Sources */,
 				D9CEED891684237700B236B5 /* Appirater.m in Sources */,
 				D9CEEE60168423CA00B236B5 /* AIMBArtDownloadReply.m in Sources */,
 				D9CEEE61168423CA00B236B5 /* AIMBArtHandler.m in Sources */,
@@ -4204,6 +4215,7 @@
 				63E5E7EE16D1D5BC006E2B01 /* NSString+MagicalDataImport.m in Sources */,
 				63E5E7EF16D1D5BC006E2B01 /* NSManagedObject+MagicalAggregation.m in Sources */,
 				63E5E7F016D1D5BC006E2B01 /* NSManagedObject+MagicalDataImport.m in Sources */,
+				6370C985185FD18E00CB6786 /* OTRBuddyCell.m in Sources */,
 				63E5E7F116D1D5BC006E2B01 /* NSManagedObject+MagicalFinders.m in Sources */,
 				63E5E7F216D1D5BC006E2B01 /* NSManagedObject+MagicalRecord.m in Sources */,
 				63E5E7F316D1D5BC006E2B01 /* NSManagedObject+MagicalRequests.m in Sources */,
