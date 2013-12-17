@@ -111,6 +111,18 @@ static OTRProtocolManager *sharedManager = nil;
     
 }
 
+-(NSUInteger)numberOfConnectedAccounts
+{
+    __block NSUInteger num = 0;
+    NSDictionary * protocolDict = [NSDictionary dictionaryWithDictionary:self.protocolManagers];
+    [protocolDict enumerateKeysAndObjectsUsingBlock:^(id key, id<OTRProtocol> obj, BOOL *stop) {
+        if ([obj isConnected]) {
+            num+=1;
+        }
+    }];
+    return num;
+}
+
 + (void)sendMessage:(OTRManagedMessage *)message {
     message.buddy.lastMessageDisconnected = NO;
     message.buddy.lastSentChatStateValue=kOTRChatStateActive;

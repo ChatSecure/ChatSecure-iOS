@@ -30,6 +30,7 @@
 @interface OTRBuddyListViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate, NSFetchedResultsControllerDelegate, UISearchDisplayDelegate, OTRBuddyListGroupManagerDelegate, OTRSectionHeaderViewDelegate>
 {
     NSMutableDictionary * buddyStatusImageDictionary;
+    BOOL shouldShowStatus;
 }
 
 @property (nonatomic, retain) UITableView *buddyListTableView;

@@ -10,6 +10,7 @@
 
 #import "OTRManagedBuddy.h"
 #import "OTRImages.h"
+#import "OTRManagedAccount.h"
 
 @implementation OTRBuddyCell
 
@@ -45,6 +46,8 @@
             buddyUsername = _buddy.accountName;
         }
         
+        
+        
         OTRBuddyStatus buddyStatus = [_buddy currentStatusMessage].statusValue;
         
         self.textLabel.text = buddyUsername;
@@ -53,7 +56,14 @@
         self.accessoryView = nil;
         self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         self.detailTextLabel.textColor = [UIColor lightGrayColor];
-        self.detailTextLabel.text = [buddy currentStatusMessage].message;
+        
+        
+        if (self.showStatus) {
+            self.detailTextLabel.text = [buddy currentStatusMessage].message;
+        }
+        else {
+            self.detailTextLabel.text = buddy.account.username;
+        }
         
         switch(buddyStatus)
         {

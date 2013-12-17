@@ -17,4 +17,6 @@
 
 @property (nonatomic,weak) OTRManagedBuddy * buddy;
 
+@property (nonatomic) BOOL showStatus;
+
 @end

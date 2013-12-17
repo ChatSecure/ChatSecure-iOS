@@ -76,6 +76,7 @@
     if (self = [super init]) {
         self.title = BUDDY_LIST_STRING;
         buddyStatusImageDictionary = [NSMutableDictionary dictionaryWithCapacity:5];
+        shouldShowStatus = YES;
     }
     return self;
 }
@@ -135,9 +136,29 @@
 	//DDLogInfo(@"LibOrange (v: %@): -beginTest\n", @lib_orange_version_string);
 }
 
+- (void)didUpdateNumberOfConnectedAccounts {
+    
+    OTRProtocolManager * protocolManger = [OTRProtocolManager sharedInstance];
+    NSUInteger numConnectedAccounts = [protocolManger numberOfConnectedAccounts];
+    if(numConnectedAccounts > 1 && shouldShowStatus == YES) {
+        shouldShowStatus = NO;
+        [self.buddyListTableView reloadData];
+    }
+    else if (numConnectedAccounts <= 1 && shouldShowStatus == NO)
+    {
+        shouldShowStatus = YES;
+        [self.buddyListTableView reloadData];
+    }
+}
+
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    [self didUpdateNumberOfConnectedAccounts];
+    
+    OTRProtocolManager * protocolManger = [OTRProtocolManager sharedInstance];
+    [protocolManger addObserver:self forKeyPath:NSStringFromSelector(@selector(protocolManagers)) options:NSKeyValueObservingOptionNew context:NULL];
     
     buddyListTableView.frame = self.view.bounds;
     buddyListTableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleRightMargin;
@@ -145,11 +166,24 @@
     [self refreshLeftBarItems];
 }
 
+-(void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    OTRProtocolManager * protocolManger = [OTRProtocolManager sharedInstance];
+    [protocolManger removeObserver:self forKeyPath:NSStringFromSelector(@selector(protocolManagers)) context:NULL];
+    
+}
+
 
 -(void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self.buddyListTableView reloadData];
     
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    [self didUpdateNumberOfConnectedAccounts];
 }
 
 - (void) showSettingsView:(id)sender {
@@ -330,6 +364,7 @@
             [cell addGestureRecognizer:gesture];
         }
     }
+    cell.showStatus = shouldShowStatus;
     cell.buddy = buddy;
     return cell;
 }
@@ -712,120 +747,6 @@
     
     self.title = title;
 }
-
-/*
--(void) configureRecentCell:(UITableViewCell *)cell withBuddy:(OTRManagedBuddy *) buddy
-{
-    [self configureCell:cell withBuddy:buddy];
-    NSInteger numberOfUnreadMessages = [buddy numberOfUnreadMessages];
-    
-    
-    NSDate * date = buddy.lastMessageDate;
-    NSString *stringFromDate = nil;
-    
-    if([OTRUtilities dateInLast24Hours:date])
-    {
-        stringFromDate = [NSDateFormatter localizedStringFromDate:buddy.lastMessageDate dateStyle:NSDateFormatterNoStyle timeStyle:NSDateFormatterShortStyle];
-    }
-    else if ([OTRUtilities dateInLast7Days:date])
-    {
-        //show day of week
-        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-        [formatter setDateFormat:@"EEEE"];
-        stringFromDate = [formatter stringFromDate:date];
-    }
-    else{
-        stringFromDate= [NSDateFormatter localizedStringFromDate:buddy.lastMessageDate dateStyle:NSDateFormatterShortStyle timeStyle:NSDateFormatterNoStyle];
-    }
-    
-    cell.detailTextLabel.text = stringFromDate;
-    
-    if (numberOfUnreadMessages>0) {
-        UILabel * messageCountLabel = nil;
-        if (cell.accessoryView) {
-            messageCountLabel = (UILabel *)cell.accessoryView;
-        }
-        else
-        {
-            messageCountLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 42.0, 28.0)];
-            messageCountLabel.backgroundColor = [UIColor darkGrayColor];
-            messageCountLabel.textColor = [UIColor whiteColor];
-            messageCountLabel.layer.cornerRadius = 14;
-            messageCountLabel.numberOfLines = 0;
-            messageCountLabel.lineBreakMode = NSLineBreakByWordWrapping;
-            messageCountLabel.textAlignment = NSTextAlignmentCenter;
-        }
-        if (numberOfUnreadMessages > 99) {
-            messageCountLabel.text = [NSString stringWithFormat:@"%d+",99];
-        }
-        else
-        {
-            messageCountLabel.text = [NSString stringWithFormat:@"%d",[buddy numberOfUnreadMessages]];
-        }
-        cell.accessoryView = messageCountLabel;
-    }
-    else
-    {
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    }
-}
-
--(void) configureCell:(UITableViewCell *)cell withBuddy:(OTRManagedBuddy *)buddy
-{
-    NSString *buddyUsername = buddy.displayName;
-    if (![buddy.displayName length]) {
-        buddyUsername = buddy.accountName;
-    }
-    
-    OTRBuddyStatus buddyStatus = [buddy currentStatusMessage].statusValue;
-    
-    cell.textLabel.text = buddyUsername;
-    cell.accessibilityLabel = buddyUsername;
-    
-    cell.accessoryView = nil;
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    cell.detailTextLabel.textColor = [UIColor lightGrayColor];
-    cell.detailTextLabel.text = [buddy currentStatusMessage].message;
-    
-    switch(buddyStatus)
-    {
-        case OTRBuddyStatusOffline:
-            cell.textLabel.textColor = [UIColor lightGrayColor];
-            break;
-        case OTRBuddyStatusAway:
-            cell.textLabel.textColor = [UIColor darkGrayColor];
-            break;
-        case OTRBuddyStatusXa:
-            cell.textLabel.textColor = [UIColor darkGrayColor];
-            break;
-        case OTRBuddyStatusDnd:
-            cell.textLabel.textColor = [UIColor darkGrayColor];
-            break;
-        case OTRBuddyStatusAvailable:
-            cell.textLabel.textColor = [UIColor darkTextColor];
-            break;
-        default:
-            cell.textLabel.textColor = [UIColor lightGrayColor];
-            break;
-    }
-    
-    UIImage * image = [buddyStatusImageDictionary objectForKey:[NSNumber numberWithInteger:buddyStatus]];
-    if (!image) {
-        image = [OTRImages statusImageWithStatus:buddyStatus];
-        [buddyStatusImageDictionary setObject:image forKey:[NSNumber numberWithInteger:buddyStatus]];
-    }
-    cell.imageView.image = image;
-}
-
--(void)configureBuddyCell:(UITableViewCell *)cell withBuddy:(OTRManagedBuddy *)buddy
-{
-    [self configureCell:cell withBuddy:buddy];
-    UILongPressGestureRecognizer *gesture = [[UILongPressGestureRecognizer alloc]
-                                              initWithTarget:self action:@selector(longPressOnCell:)];
-    [cell addGestureRecognizer:gesture];
-}
-
-*/
 
 - (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope
 {

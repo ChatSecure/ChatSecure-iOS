@@ -38,13 +38,13 @@
 @property (nonatomic, retain) OTRAccountsManager *accountsManager;
 @property (nonatomic, strong) NSMutableDictionary * protocolManagers;
 
-+ (OTRProtocolManager*)sharedInstance; // Singleton method
 
 -(OTRManagedBuddy *)buddyForUserName:(NSString *)buddyUserName accountName:(NSString *)accountName protocol:(NSString *)protocol;
-
 -(id <OTRProtocol>) protocolForAccount:(OTRManagedAccount *)account;
-
 -(BOOL)isAccountConnected:(OTRManagedAccount *)account;
+-(NSUInteger)numberOfConnectedAccounts;
+
++ (OTRProtocolManager*)sharedInstance; // Singleton method
 
 + (void)sendMessage:(OTRManagedMessage *)message;
 
