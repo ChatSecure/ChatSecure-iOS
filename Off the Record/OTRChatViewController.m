@@ -59,23 +59,22 @@
     self.buddyListController = nil;
     self.buddy = nil;
     self.chatHistoryTableView = nil;
-}
-
-- (void)viewDidUnload {
-    [super viewDidUnload];
     self.lockButton = nil;
     self.unlockedButton = nil;
     self.instructionsLabel = nil;
     self.chatHistoryTableView = nil;
     _messagesFetchedResultsController = nil;
     _buddyFetchedResultsController = nil;
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
 }
 
 - (id)init {
     if (self = [super init]) {
         //set notification for when keyboard shows/hides
         self.title = CHAT_STRING;
+        titleView = [[OTRTitleSubtitleView alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
+        titleView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+        self.navigationItem.titleView = titleView;
     }
     return self;
 }
@@ -87,15 +86,6 @@
         return 44.0;
     }
 }
-
-- (void)didReceiveMemoryWarning
-{
-    // Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-    
-    // Release any cached data, images, etc that aren't in use.
-}
-
 
 -(void)setupLockButton
 {
@@ -184,14 +174,11 @@
 
 #pragma mark - View lifecycle
 
-- (void) loadView {
-    [super loadView];
-    self.view.backgroundColor = [UIColor whiteColor];
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.view.backgroundColor = [UIColor whiteColor];
     
     _heightForRow = [NSMutableArray array];
     _messageBubbleComposing = [UIImage imageNamed:@"MessageBubbleTyping"];
@@ -246,11 +233,8 @@
     
     [self setupLockButton];
     
-    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshView) name:UIContentSizeCategoryDidChangeNotification object:nil];
-    }
+    
 }
-
 -(void)handleSwipeFrom
 {
     if (swipeGestureRecognizer.direction == UISwipeGestureRecognizerDirectionRight && UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad) {
@@ -275,11 +259,14 @@
     [self refreshView];
     if (buddy) {
         if ([newBuddy.displayName length]) {
-            self.title = newBuddy.displayName;
+            //self.title = newBuddy.displayName;
+            titleView.titleLabel.text = newBuddy.displayName;
         }
         else {
-            self.title = newBuddy.accountName;
+            //self.title = newBuddy.accountName;
+            titleView.titleLabel.text = newBuddy.accountName;
         }
+        titleView.subtitleLabel.text = newBuddy.account.username;
         
         [self refreshLockButton];
         [self updateChatState:NO];
@@ -508,15 +495,14 @@
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-
     [self.buddy allMessagesRead];
-    
     [super viewWillDisappear:animated];
 }
 
 -(void)viewDidDisappear:(BOOL)animated
 {
     [self setBuddy:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [super viewDidDisappear:animated];
 }
 
@@ -525,6 +511,10 @@
     [super viewWillAppear:animated];
     [self refreshView];
     [self updateChatState:NO];
+    
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshView) name:UIContentSizeCategoryDidChangeNotification object:nil];
+    }
     
     // KLUDGE: Work around keyboard visibility bug where chat input view is visible but keyboard is not
     if (self.view.keyboardFrameInView.size.height == 0 && chatInputBar.frame.origin.y < self.view.frame.size.height - chatInputBar.frame.size.height) {

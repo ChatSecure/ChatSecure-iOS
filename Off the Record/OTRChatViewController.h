@@ -25,6 +25,7 @@
 #import "OTRProtocolManager.h"
 #import "OTRManagedBuddy.h"
 #import "OTRChatInputBar.h"
+#import "OTRTitleSubtitleView.h"
 
 @interface OTRChatViewController : UIViewController <UIActionSheetDelegate, UISplitViewControllerDelegate,UIAlertViewDelegate,UITableViewDataSource,UITableViewDelegate,NSFetchedResultsControllerDelegate,OTRChatInputBarDelegate>
 {
@@ -33,6 +34,7 @@
     UIImage *_messageBubbleComposing;
     CGFloat _previousTextViewContentHeight;
     OTRChatInputBar * chatInputBar;
+    OTRTitleSubtitleView * titleView;
 }
 
 
