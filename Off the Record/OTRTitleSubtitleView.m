@@ -19,9 +19,6 @@
         self.backgroundColor = [UIColor clearColor];
         self.autoresizesSubviews = YES;
         
-        CGRect titleFrame = CGRectMake(0, 2, 200, 24);
-        CGRect subtitleFrame = CGRectMake(0, 24, 200, 44-24);
-        
         self.titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         self.titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
         
@@ -91,6 +88,7 @@
                                               attribute:NSLayoutAttributeNotAnAttribute
                                              multiplier:1.0
                                                constant:24.0];
+    [self addConstraint:constraint];
     ///////////// SUBTITLE LABEL /////////////
     
     constraint = [NSLayoutConstraint constraintWithItem:self.subtitleLabel
