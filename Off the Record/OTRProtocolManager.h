@@ -33,16 +33,15 @@
 
 @interface OTRProtocolManager : NSObject
 
+@property (nonatomic,readonly) NSUInteger numberOfConnectedProtocols;
+
 @property (nonatomic, retain) OTREncryptionManager *encryptionManager;
-@property (nonatomic, retain) OTRSettingsManager *settingsManager;
-@property (nonatomic, retain) OTRAccountsManager *accountsManager;
 @property (nonatomic, strong) NSMutableDictionary * protocolManagers;
 
 
 -(OTRManagedBuddy *)buddyForUserName:(NSString *)buddyUserName accountName:(NSString *)accountName protocol:(NSString *)protocol;
 -(id <OTRProtocol>) protocolForAccount:(OTRManagedAccount *)account;
 -(BOOL)isAccountConnected:(OTRManagedAccount *)account;
--(NSUInteger)numberOfConnectedAccounts;
 
 + (OTRProtocolManager*)sharedInstance; // Singleton method
 

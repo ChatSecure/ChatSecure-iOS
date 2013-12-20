@@ -30,15 +30,11 @@ static OTRProtocolManager *sharedManager = nil;
 @implementation OTRProtocolManager
 
 @synthesize encryptionManager;
-@synthesize settingsManager;
-@synthesize accountsManager;
 @synthesize protocolManagers;
 
 - (void) dealloc 
 {
     self.encryptionManager = nil;
-    self.settingsManager = nil;
-    self.accountsManager = nil;
     self.protocolManagers = nil;
 }
 
@@ -47,9 +43,8 @@ static OTRProtocolManager *sharedManager = nil;
     self = [super init];
     if(self)
     {
-        self.accountsManager = [[OTRAccountsManager alloc] init];
+        _numberOfConnectedProtocols = 0;
         self.encryptionManager = [[OTREncryptionManager alloc] init];
-        self.settingsManager = [[OTRSettingsManager alloc] init];
         self.protocolManagers = [[NSMutableDictionary alloc] init];
     }
     return self;
@@ -90,15 +85,37 @@ static OTRProtocolManager *sharedManager = nil;
 
 - (id <OTRProtocol>)protocolForAccount:(OTRManagedAccount *)account
 {
-    id <OTRProtocol> protocol = [protocolManagers objectForKey:account.uniqueIdentifier];
+    NSObject <OTRProtocol> * protocol = [protocolManagers objectForKey:account.uniqueIdentifier];
     if(!protocol)
     {
         protocol = [[[account protocolClass] alloc] initWithAccount:account];
         if (protocol && account.uniqueIdentifier) {
             [protocolManagers setObject:protocol forKey:account.uniqueIdentifier];
+            [protocol addObserver:self forKeyPath:NSStringFromSelector(@selector(isConnected)) options:NSKeyValueObservingOptionNew context:NULL];
         }
     }
     return protocol;
+}
+
+-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    if ([keyPath isEqualToString:NSStringFromSelector(@selector(isConnected))]) {
+        BOOL isConnected = [[change objectForKey:NSKeyValueChangeNewKey] boolValue];
+        NSInteger changeInt = 0;
+        if (isConnected) {
+            changeInt = 1;
+        }
+        else if(self.numberOfConnectedProtocols > 0) {
+           changeInt = -1;
+        }
+        
+        if (change != 0) {
+            [self willChangeValueForKey:NSStringFromSelector(@selector(numberOfConnectedProtocols))];
+            _numberOfConnectedProtocols += changeInt;
+            [self didChangeValueForKey:NSStringFromSelector(@selector(numberOfConnectedProtocols))];
+        }
+    }
+
 }
 
 -(BOOL)isAccountConnected:(OTRManagedAccount *)account;
@@ -109,18 +126,6 @@ static OTRProtocolManager *sharedManager = nil;
     }
     return NO;
     
-}
-
--(NSUInteger)numberOfConnectedAccounts
-{
-    __block NSUInteger num = 0;
-    NSDictionary * protocolDict = [NSDictionary dictionaryWithDictionary:self.protocolManagers];
-    [protocolDict enumerateKeysAndObjectsUsingBlock:^(id key, id<OTRProtocol> obj, BOOL *stop) {
-        if ([obj isConnected]) {
-            num+=1;
-        }
-    }];
-    return num;
 }
 
 + (void)sendMessage:(OTRManagedMessage *)message {

@@ -292,8 +292,6 @@
     
     if([account.username length] && [account.password length] )
     {
-        
-        [[[OTRProtocolManager sharedInstance] accountsManager] addAccount:account];
         [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
     }
     [self.view resignFirstResponder];
@@ -468,7 +466,6 @@
         [protocol connectWithPassword:self.passwordTextField.text];
     }
     self.timeoutTimer = [NSTimer scheduledTimerWithTimeInterval:45.0 target:self selector:@selector(timeout:) userInfo:nil repeats:NO];
-    //[[[OTRProtocolManager sharedInstance] accountsManager] addAccount:account];
 }
 -(void)showLoginProgress
 {
@@ -513,7 +510,7 @@
     //Delete Account because user went back to choose different account type
     if(!parent)
     {
-        [[OTRProtocolManager sharedInstance].accountsManager removeAccount:self.account];
+        [OTRAccountsManager removeAccount:self.account];
     }
 }
 

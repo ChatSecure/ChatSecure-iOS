@@ -21,7 +21,6 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "OTRChatViewController.h"
-#import "OTREncryptionManager.h"
 #import <QuartzCore/QuartzCore.h>
 #import "Strings.h"
 #import "OTRDoubleSetting.h"

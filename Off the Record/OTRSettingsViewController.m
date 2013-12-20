@@ -61,7 +61,7 @@
     if (self = [super init])
     {
         self.title = SETTINGS_STRING;
-        self.settingsManager = [OTRProtocolManager sharedInstance].settingsManager;
+        self.settingsManager = [[OTRSettingsManager alloc] init];;
         [[NSNotificationCenter defaultCenter]
          addObserver:self
          selector:@selector(protocolLoggedInSuccessfully:)
@@ -325,8 +325,7 @@
                 id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:selectedAccount];
                 [protocol disconnect];
             }
-            OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
-            [protocolManager.accountsManager removeAccount:selectedAccount];
+            [OTRAccountsManager removeAccount:selectedAccount];
             
             
         }

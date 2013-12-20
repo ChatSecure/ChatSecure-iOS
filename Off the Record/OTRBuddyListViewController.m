@@ -136,15 +136,12 @@
 	//DDLogInfo(@"LibOrange (v: %@): -beginTest\n", @lib_orange_version_string);
 }
 
-- (void)didUpdateNumberOfConnectedAccounts {
-    
-    OTRProtocolManager * protocolManger = [OTRProtocolManager sharedInstance];
-    NSUInteger numConnectedAccounts = [protocolManger numberOfConnectedAccounts];
-    if(numConnectedAccounts > 1 && shouldShowStatus == YES) {
+- (void)didUpdateNumberOfConnectedAccounts:(NSUInteger)numberOfConnectedAccounts {
+    if(numberOfConnectedAccounts > 1 && shouldShowStatus == YES) {
         shouldShowStatus = NO;
         [self.buddyListTableView reloadData];
     }
-    else if (numConnectedAccounts <= 1 && shouldShowStatus == NO)
+    else if (numberOfConnectedAccounts <= 1 && shouldShowStatus == NO)
     {
         shouldShowStatus = YES;
         [self.buddyListTableView reloadData];
@@ -155,10 +152,9 @@
 {
     [super viewWillAppear:animated];
     
-    [self didUpdateNumberOfConnectedAccounts];
+    [self didUpdateNumberOfConnectedAccounts:[OTRProtocolManager sharedInstance].numberOfConnectedProtocols];
     
-    OTRProtocolManager * protocolManger = [OTRProtocolManager sharedInstance];
-    [protocolManger addObserver:self forKeyPath:NSStringFromSelector(@selector(protocolManagers)) options:NSKeyValueObservingOptionNew context:NULL];
+    [[OTRProtocolManager sharedInstance] addObserver:self forKeyPath:NSStringFromSelector(@selector(numberOfConnectedProtocols)) options:NSKeyValueObservingOptionNew context:NULL];
     
     buddyListTableView.frame = self.view.bounds;
     buddyListTableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleRightMargin;
@@ -169,8 +165,7 @@
 -(void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
-    OTRProtocolManager * protocolManger = [OTRProtocolManager sharedInstance];
-    [protocolManger removeObserver:self forKeyPath:NSStringFromSelector(@selector(protocolManagers)) context:NULL];
+    [[OTRProtocolManager sharedInstance] removeObserver:self forKeyPath:NSStringFromSelector(@selector(numberOfConnectedProtocols))];
     
 }
 
@@ -183,7 +178,7 @@
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    [self didUpdateNumberOfConnectedAccounts];
+    [self didUpdateNumberOfConnectedAccounts:[[change objectForKey:NSKeyValueChangeNewKey] unsignedIntegerValue]];
 }
 
 - (void) showSettingsView:(id)sender {

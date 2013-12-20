@@ -33,17 +33,7 @@
 
 @implementation OTRAccountsManager
 
-- (void) addAccount:(OTRManagedAccount*)account {
-    if (!account) {
-        DDLogWarn(@"Account is nil!");
-        return;
-    }
-    NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
-    OTRManagedAccount * acct = (OTRManagedAccount *)[context existingObjectWithID :account.objectID error:nil];
-    [context MR_saveToPersistentStoreAndWait];
-}
-
-- (void) removeAccount:(OTRManagedAccount*)account {
++ (void) removeAccount:(OTRManagedAccount*)account {
     if (!account) {
         DDLogWarn(@"Account is nil!");
         return;
@@ -61,20 +51,8 @@
    
 }
 
-+(NSArray *)allAccounts
-{
-    return [OTRManagedAccount MR_findAllSortedBy:OTRManagedAccountAttributes.username ascending:YES];
-}
-
-+ (NSArray *)allLoggedInAccounts
-{
-    NSArray * accountsArray = [self allAccounts];
-    NSPredicate * accountFilter = [NSPredicate predicateWithFormat:@"%K == YES",@"isConnected"];
-    return [accountsArray filteredArrayUsingPredicate:accountFilter];
-}
-
 + (NSArray *)allAccountsAbleToAddBuddies  {
-    NSArray * allAccountsArray = [self allAccounts];
+    NSArray * allAccountsArray = [OTRManagedAccount MR_findAllSortedBy:OTRManagedAccountAttributes.username ascending:YES];
     NSPredicate * connectedFilter = [NSPredicate predicateWithFormat:@"%K == YES",@"isConnected"];
     NSPredicate * facebookFilter = [NSPredicate predicateWithFormat:@"%K != %d",NSStringFromSelector(@selector(accountType)),OTRAccountTypeFacebook];
     NSPredicate * predicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[connectedFilter,facebookFilter]];
@@ -92,11 +70,6 @@
         fetchedAccount = [results lastObject];
     }
     return fetchedAccount;
-}
-
-+ (NSUInteger)numberOfAccountsLoggedIn
-{
-    return [[OTRAccountsManager allLoggedInAccounts] count];
 }
 
 
