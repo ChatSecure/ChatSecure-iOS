@@ -56,6 +56,7 @@
 #define errSSLBadConfigurationString [OTRLanguageManager translatedString: @"Configuration error"]
 #define ADD_BUDDY_STRING [OTRLanguageManager translatedString: @"Add Buddy"]
 #define errSSLPeerDecompressFailString [OTRLanguageManager translatedString: @"Decompression failure"]
+#define XMPP_TOR_STRING [OTRLanguageManager translatedString: @"XMPP + Tor"]
 #define FONT_SIZE_DESCRIPTION_STRING [OTRLanguageManager translatedString: @"Size for font in chat view"]
 #define errSSLPeerProtocolVersionString [OTRLanguageManager translatedString: @"Bad protocol version"]
 #define RECENT_STRING [OTRLanguageManager translatedString: @"Recent"]

@@ -53,35 +53,21 @@
     tableView.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleHeight;
     [self.view addSubview:tableView];
     
-    //Facebook
-    NSMutableDictionary * facebookAccount = [NSMutableDictionary dictionary];
-    facebookAccount[kDisplayNameKey] = FACEBOOK_STRING;
-    facebookAccount[kProviderImageKey] = kFacebookImageName;
-    facebookAccount[kAccountTypeKey] = @(OTRAccountTypeFacebook);
     
     
-    //Google Chat
-     NSMutableDictionary * googleAccount = [NSMutableDictionary dictionary];
-    googleAccount[kDisplayNameKey] = GOOGLE_TALK_STRING;
-    googleAccount[kProviderImageKey] =  kGTalkImageName;
-    googleAccount[kAccountTypeKey] = @(OTRAccountTypeGoogleTalk);
-    
-    //Jabber
-     NSMutableDictionary * jabberAccount = [NSMutableDictionary dictionary];
-    jabberAccount[kDisplayNameKey ] = JABBER_STRING;
-    jabberAccount[kProviderImageKey] = kXMPPImageName;
-    jabberAccount[kAccountTypeKey] = @(OTRAccountTypeJabber);
-    
-    //Aim
-     NSMutableDictionary * aimAccount = [NSMutableDictionary dictionary];
-    aimAccount[kDisplayNameKey] = AIM_STRING;
-    aimAccount[kProviderImageKey] = kAIMImageName;
-    aimAccount[kAccountTypeKey] = @(OTRAccountTypeAIM);
-    
-    accounts = @[facebookAccount,googleAccount,jabberAccount,aimAccount];
+    accountsCellArray = [self accounts];
     
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:CANCEL_STRING style:UIBarButtonItemStyleBordered target:self action:@selector(cancelPressed:)];
     
+}
+
+- (NSArray*)accounts
+{
+    return @[[OTRNewAccountViewController facebookCellDictionary],
+             [OTRNewAccountViewController googleCellDictionary],
+             [OTRNewAccountViewController XMPPCellDictionary],
+             [OTRNewAccountViewController XMPPTorCellDictionary],
+             [OTRNewAccountViewController aimCellDictionary]];
 }
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -91,7 +77,7 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [accounts count];
+    return [accountsCellArray count];
     
 }
 
@@ -109,7 +95,7 @@
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
-    NSDictionary * cellAccount = [accounts objectAtIndex:indexPath.row];
+    NSDictionary * cellAccount = [accountsCellArray objectAtIndex:indexPath.row];
     cell.textLabel.text = cellAccount[kDisplayNameKey];
     cell.textLabel.font = [UIFont boldSystemFontOfSize:19];
     cell.imageView.image = [UIImage imageNamed:cellAccount[kProviderImageKey]];
@@ -130,7 +116,16 @@
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    OTRAccountType accountType = [accounts[indexPath.row][kAccountTypeKey] unsignedIntegerValue];
+    
+    OTRAccountType accountType = [accountsCellArray[indexPath.row][kAccountTypeKey] unsignedIntegerValue];
+    [self didSelectAccountType:accountType];
+}
+
+- (void)cancelPressed:(id)sender {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)didSelectAccountType:(OTRAccountType)accountType {
     OTRManagedAccount * cellAccount = [OTRManagedAccount accountForAccountType:accountType];
     
     NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
@@ -139,10 +134,6 @@
     OTRLoginViewController *loginViewController = [OTRLoginViewController loginViewControllerWithAcccountID:cellAccount.objectID];
     loginViewController.isNewAccount = YES;
     [self.navigationController pushViewController:loginViewController animated:YES];
-}
-
-- (void)cancelPressed:(id)sender {
-    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 
@@ -154,6 +145,32 @@
     } else {
         return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
     }
+}
+
++(NSDictionary *)googleCellDictionary {
+    return @{kDisplayNameKey:GOOGLE_TALK_STRING,
+             kProviderImageKey: kGTalkImageName,
+             kAccountTypeKey: @(OTRAccountTypeGoogleTalk)};
+}
++(NSDictionary *)facebookCellDictionary {
+    return @{kDisplayNameKey:FACEBOOK_STRING,
+             kProviderImageKey: kFacebookImageName,
+             kAccountTypeKey: @(OTRAccountTypeFacebook)};
+}
++(NSDictionary *)XMPPCellDictionary {
+    return @{kDisplayNameKey: JABBER_STRING,
+             kProviderImageKey: kXMPPImageName,
+             kAccountTypeKey: @(OTRAccountTypeJabber)};
+}
++(NSDictionary *)XMPPTorCellDictionary {
+    return @{kDisplayNameKey: XMPP_TOR_STRING,
+             kProviderImageKey: kXMPPImageName,
+             kAccountTypeKey: @(OTRAccountTypeXMPPTor)};
+}
++(NSDictionary *)aimCellDictionary {
+    return @{kDisplayNameKey: AIM_STRING,
+             kProviderImageKey: kAIMImageName,
+             kAccountTypeKey: @(OTRAccountTypeAIM)};
 }
 
 @end

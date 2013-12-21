@@ -32,6 +32,7 @@
 #import "OTROscarLoginViewController.h"
 #import "OTRGoogleTalkLoginViewController.h"
 #import "OTRInLineTextEditTableViewCell.h"
+#import "OTRManagedXMPPTorAccount.h"
 #import "OTRErrorManager.h"
 
 #import "SIAlertView.h"
@@ -557,6 +558,8 @@
         case OTRAccountTypeGoogleTalk:
             return [[OTRGoogleTalkLoginViewController alloc] initWithAccountID:accountID];
             break;
+        case OTRAccountTypeXMPPTor:
+            return [[[OTRJabberLoginViewController alloc] init] initWithAccountID:accountID];
         default:
             break;
     }

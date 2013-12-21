@@ -34,6 +34,7 @@
 #import "OTRManagedFacebookAccount.h"
 #import "OTRManagedGoogleAccount.h"
 #import "OTRManagedOscarAccount.h"
+#import "OTRManagedXMPPTorAccount.h"
 
 
 @interface OTRManagedAccount()
@@ -262,6 +263,13 @@
         OTRManagedOscarAccount * aimAccount = [OTRManagedOscarAccount MR_createEntity];
         [aimAccount setDefaultsWithProtocol:kOTRProtocolTypeAIM];
         newAccount = aimAccount;
+    }
+    else if (accountType == OTRAccountTypeXMPPTor)
+    {
+        //TOR + XMPP
+        OTRManagedXMPPAccount * torAccount = [OTRManagedXMPPTorAccount MR_createEntity];
+        [torAccount setDefaultsWithDomain:@""];
+        newAccount = torAccount;
     }
     if(newAccount)
     {

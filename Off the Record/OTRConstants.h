@@ -102,7 +102,8 @@ typedef NS_ENUM(NSUInteger, OTRAccountType) {
     OTRAccountTypeFacebook    = 1,
     OTRAccountTypeGoogleTalk  = 2,
     OTRAccountTypeJabber      = 3,
-    OTRAccountTypeAIM         = 4
+    OTRAccountTypeAIM         = 4,
+    OTRAccountTypeXMPPTor     = 5
 };
 
 typedef NS_ENUM(NSUInteger, OTRProtocolType) {

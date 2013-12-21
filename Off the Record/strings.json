@@ -810,5 +810,9 @@
     "NEW_CERTIFICATE_STRING": {
         "comment": "Title for alert when a new SSL certificate is encountered",
         "string": "New SSL Certificate"
+    },
+    "XMPP_TOR_STRING": {
+        "comment": "Title for xmpp accounts that connect through the Tor network",
+        "string": "XMPP + Tor"
     }
 }
