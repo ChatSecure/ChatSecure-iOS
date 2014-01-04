@@ -84,10 +84,10 @@
     constraint = [NSLayoutConstraint constraintWithItem:self.titleLabel
                                               attribute:NSLayoutAttributeHeight
                                               relatedBy:NSLayoutRelationEqual
-                                                 toItem:nil
-                                              attribute:NSLayoutAttributeNotAnAttribute
-                                             multiplier:1.0
-                                               constant:24.0];
+                                                 toItem:self
+                                              attribute:NSLayoutAttributeHeight
+                                             multiplier:0.6
+                                               constant:0.0];
     [self addConstraint:constraint];
     ///////////// SUBTITLE LABEL /////////////
     

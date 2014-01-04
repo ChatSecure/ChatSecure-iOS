@@ -39,7 +39,6 @@
 -(void)setVCardTemp:(XMPPvCardTemp *)vCardTemp {
     if (!vCardTemp && self.vCardAvatarRelationship) {
         [self.vCardTempRelationship MR_deleteEntity];
-        return;
     }
     else {
         

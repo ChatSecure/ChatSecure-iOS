@@ -3691,7 +3691,7 @@
 						TestTargetID = D9F9377713F44BD3009A3D84;
 					};
 					D9F9377713F44BD3009A3D84 = {
-						DevelopmentTeam = 4T8JLQR6GR;
+						DevelopmentTeam = SF3NXKQQ64;
 					};
 				};
 			};
@@ -4786,6 +4786,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -4809,6 +4810,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -4824,8 +4826,9 @@
 		D9F937A313F44BD3009A3D84 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD)";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4849,7 +4852,7 @@
 				OTHER_CFLAGS = "-DSQLITE_HAS_CODEC";
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = ChatSecure;
-				PROVISIONING_PROFILE = "2B7F5305-53CC-45CD-AC29-4E1887DF0DA9";
+				PROVISIONING_PROFILE = "8982714E-0702-4FE9-B2AD-39F2E346EFA7";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
@@ -4858,8 +4861,9 @@
 		D9F937A413F44BD3009A3D84 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				ARCHS = "$(ARCHS_STANDARD)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4889,7 +4893,7 @@
 				);
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = ChatSecure;
-				PROVISIONING_PROFILE = "B1F37C5D-E889-405C-9144-76C4F1780A95";
+				PROVISIONING_PROFILE = "8982714E-0702-4FE9-B2AD-39F2E346EFA7";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
