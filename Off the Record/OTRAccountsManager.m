@@ -72,6 +72,15 @@
     return fetchedAccount;
 }
 
++ (NSArray *)allAutoLoginAccounts
+{
+    NSPredicate * autoLoginPredicate = [NSPredicate predicateWithFormat:@"%K == YES",OTRManagedAccountAttributes.autologin];
+    
+    NSArray * accounts = [OTRManagedAccount MR_findAllWithPredicate:autoLoginPredicate];
+    
+    return accounts;
+}
+
 
 
 @end

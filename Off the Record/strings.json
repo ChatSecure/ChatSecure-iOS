@@ -810,5 +810,9 @@
     "NEW_CERTIFICATE_STRING": {
         "comment": "Title for alert when a new SSL certificate is encountered",
         "string": "New SSL Certificate"
+    },
+    "LOGIN_AUTOMATICALLY_STRING": {
+        "comment": "Label for account setting that autologins on launch",
+        "string": "Login Automatically"
     }
 }

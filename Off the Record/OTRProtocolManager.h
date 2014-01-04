@@ -43,6 +43,9 @@
 -(id <OTRProtocol>) protocolForAccount:(OTRManagedAccount *)account;
 -(BOOL)isAccountConnected:(OTRManagedAccount *)account;
 
+- (void)loginAccount:(OTRManagedAccount *)account;
+- (void)loginAccounts:(NSArray *)accounts;
+
 + (OTRProtocolManager*)sharedInstance; // Singleton method
 
 + (void)sendMessage:(OTRManagedMessage *)message;

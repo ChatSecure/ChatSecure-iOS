@@ -95,8 +95,7 @@
 -(void)setUpFields
 {
     //tableViewArray = [[NSMutableArray alloc] init];
-    
-    
+        
     self.usernameTextField = [[UITextField alloc] init];
     self.usernameTextField.delegate = self;
     //self.usernameTextField.borderStyle = UITextBorderStyleRoundedRect;
@@ -120,9 +119,13 @@
     [self addCellinfoWithSection:0 row:1 labelText:PASSWORD_STRING cellType:kCellTypeTextField userInputView:self.passwordTextField];
     
     self.rememberPasswordSwitch = [[UISwitch alloc] init];
-    
-    
+    [self.rememberPasswordSwitch addTarget:self action:@selector(switchDidChange:) forControlEvents:UIControlEventValueChanged];
     [self addCellinfoWithSection:0 row:2 labelText:REMEMBER_PASSWORD_STRING cellType:kCellTypeSwitch userInputView:self.rememberPasswordSwitch];
+    
+    [self createAutoLoginSwitch];
+    [self addCellinfoWithSection:0 row:3 labelText:LOGIN_AUTOMATICALLY_STRING cellType:kCellTypeSwitch userInputView:self.autoLoginSwitch];
+
+    
     
     
     NSString *loginButtonString = LOGIN_STRING;
@@ -138,13 +141,33 @@
     
 }
 
+- (void)createAutoLoginSwitch
+{
+    self.autoLoginSwitch = [[UISwitch alloc] init];
+    [self.autoLoginSwitch addTarget:self action:@selector(switchDidChange:) forControlEvents:UIControlEventValueChanged];
+}
+
+- (void)switchDidChange:(id)sender
+{
+    if ([sender isEqual:self.autoLoginSwitch]) {
+        if (self.autoLoginSwitch.on) {
+            [self.rememberPasswordSwitch setOn:YES animated:YES];
+        }
+    }
+    else if ([sender isEqual:self.rememberPasswordSwitch]) {
+        if (!self.rememberPasswordSwitch.on) {
+            [self.autoLoginSwitch setOn:NO animated:YES];
+        }
+    }
+    
+}
+
 -(void)addCellinfoWithSection:(NSInteger)section row:(NSInteger)row labelText:(id)text cellType:(NSString *)type userInputView:(UIView *)inputView;
 {
     if (!tableViewArray) {
         self.tableViewArray = [[NSMutableArray alloc] init];
-        //[self.tableViewArray setObject:[[NSMutableArray alloc] init] atIndexedSubscript:section];
-        
     }
+    
     if ([self.tableViewArray count]<(section+1)) {
         [self.tableViewArray setObject:[[NSMutableArray alloc] init] atIndexedSubscript:section];
     }
@@ -277,7 +300,7 @@
         [self.passwordTextField becomeFirstResponder];
     }
     
-    
+    self.autoLoginSwitch.on = self.account.autologinValue;
     self.rememberPasswordSwitch.on = self.account.rememberPasswordValue;
     if (account.rememberPassword) {
         self.passwordTextField.text = account.password;
@@ -304,6 +327,8 @@
 {
     [account setNewUsername:[usernameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
     [account setRememberPasswordValue:rememberPasswordSwitch.on];
+    
+    self.account.autologinValue = self.autoLoginSwitch.on;
     
     if (account.rememberPasswordValue) {
         account.password = self.passwordTextField.text;

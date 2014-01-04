@@ -103,6 +103,8 @@
     [Appirater setOpenInAppStore:NO];
     [Appirater appLaunched:YES];
     
+    [self autoLogin];
+    
     
     return YES;
 }
@@ -175,9 +177,18 @@
     }
 }
 
+- (void)autoLogin
+{
+    //Auto Login
+    if (![BITHockeyManager sharedHockeyManager].crashManager.didCrashInLastSession) {
+        [[OTRProtocolManager sharedInstance] loginAccounts:[OTRAccountsManager allAutoLoginAccounts]];
+    }
+}
+
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     [Appirater appEnteredForeground:YES];
+    [self autoLogin];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application

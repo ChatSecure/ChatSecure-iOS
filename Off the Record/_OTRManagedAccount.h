@@ -5,6 +5,7 @@
 
 
 extern const struct OTRManagedAccountAttributes {
+	__unsafe_unretained NSString *autologin;
 	__unsafe_unretained NSString *protocol;
 	__unsafe_unretained NSString *rememberPassword;
 	__unsafe_unretained NSString *uniqueIdentifier;
@@ -25,6 +26,7 @@ extern const struct OTRManagedAccountFetchedProperties {
 
 
 
+
 @interface OTRManagedAccountID : NSManagedObjectID {}
 @end
 
@@ -33,6 +35,20 @@ extern const struct OTRManagedAccountFetchedProperties {
 + (NSString*)entityName;
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_;
 - (OTRManagedAccountID*)objectID;
+
+
+
+
+
+@property (nonatomic, strong) NSNumber* autologin;
+
+
+
+@property BOOL autologinValue;
+- (BOOL)autologinValue;
+- (void)setAutologinValue:(BOOL)value_;
+
+//- (BOOL)validateAutologin:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -102,6 +118,15 @@ extern const struct OTRManagedAccountFetchedProperties {
 @end
 
 @interface _OTRManagedAccount (CoreDataGeneratedPrimitiveAccessors)
+
+
+- (NSNumber*)primitiveAutologin;
+- (void)setPrimitiveAutologin:(NSNumber*)value;
+
+- (BOOL)primitiveAutologinValue;
+- (void)setPrimitiveAutologinValue:(BOOL)value_;
+
+
 
 
 - (NSString*)primitiveProtocol;

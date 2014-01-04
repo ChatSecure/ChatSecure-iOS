@@ -44,6 +44,7 @@
 @property (nonatomic, retain) OTRManagedAccount *account;
 
 @property (nonatomic, retain) UISwitch *rememberPasswordSwitch;
+@property (nonatomic, strong) UISwitch * autoLoginSwitch;
 @property (nonatomic, retain) UIImageView *logoView;
 @property (nonatomic, retain) UITextField *usernameTextField;
 @property (nonatomic, retain) UITextField *passwordTextField;
@@ -63,11 +64,17 @@
 - (void)loginButtonPressed:(id)sender;
 - (void)cancelPressed:(id)sender;
 
--(BOOL)checkFields;
+- (BOOL)checkFields;
+- (void)createAutoLoginSwitch;
 
--(void)addCellinfoWithSection:(NSInteger)section row:(NSInteger)row labelText:(id)text cellType:(NSString *)type userInputView:(UIView *)inputView;
--(void)readInFields;
--(void)showLoginProgress;
+- (void)addCellinfoWithSection:(NSInteger)section
+                           row:(NSInteger)row
+                     labelText:(id)text
+                      cellType:(NSString *)type
+                 userInputView:(UIView *)inputView;
+
+- (void)readInFields;
+- (void)showLoginProgress;
 
 +(OTRLoginViewController *)loginViewControllerWithAcccountID:(NSManagedObjectID *)accountID;
 
