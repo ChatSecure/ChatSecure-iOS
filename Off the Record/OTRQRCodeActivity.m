@@ -22,7 +22,7 @@
 }
 -(UIImage *)activityImage
 {
-    CGSize size;
+    CGSize size = CGSizeZero;
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
         size = CGSizeMake(43, 43);
     } else if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {

@@ -69,7 +69,7 @@
         [exisisting enumerateObjectsUsingBlock:^(NSData * obj, NSUInteger idx, BOOL *stop) {
             if ([obj isEqualToData:certData]) {
                 alreadySaved = YES;
-                stop = YES;
+                *stop = YES;
             }
         }];
         
