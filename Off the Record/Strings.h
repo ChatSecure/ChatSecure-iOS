@@ -206,4 +206,5 @@
 #define CANCEL_STRING [OTRLanguageManager translatedString: @"Cancel"]
 #define errSSLClosedGracefulString [OTRLanguageManager translatedString: @"Connection closed gracefully"]
 #define PINNED_CERTIFICATES_DESCRIPTION_STRING [OTRLanguageManager translatedString: @"Manage saved SSL certificates"]
+#define LOGIN_AUTOMATICALLY_STRING [OTRLanguageManager translatedString: @"Login Automatically"]
 #define DEFAULT_LANGUAGE_STRING NSLocalizedString(@"Default", @"default string to revert to normal language behaviour")

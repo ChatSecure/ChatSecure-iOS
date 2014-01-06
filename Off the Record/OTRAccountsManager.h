@@ -30,5 +30,7 @@
 + (NSArray *)allAccountsAbleToAddBuddies;
 + (OTRManagedAccount *)accountForProtocol:(NSString *)protocol accountName: (NSString *) accountName;
 
++ (NSArray *)allAutoLoginAccounts;
+
 
 @end

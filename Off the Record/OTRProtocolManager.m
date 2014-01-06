@@ -23,6 +23,7 @@
 #import "OTRProtocolManager.h"
 #import "OTROscarManager.h"
 #import "OTRManagedBuddy.h"
+#import "OTRManagedOAuthAccount.h"
 #import "OTRConstants.h"
 
 static OTRProtocolManager *sharedManager = nil;
@@ -95,6 +96,32 @@ static OTRProtocolManager *sharedManager = nil;
         }
     }
     return protocol;
+}
+
+- (void)loginAccount:(OTRManagedAccount *)account
+{
+    id <OTRProtocol> protocol = [self protocolForAccount:account];
+    if( [account conformsToProtocol:@protocol(OTRManagedOAuthAccountProtocol)])
+    {
+        [((OTRManagedAccount <OTRManagedOAuthAccountProtocol> *) account) refreshToken:^(NSError *error) {
+            if (!error) {
+                [protocol connectWithPassword:((OTRManagedAccount <OTRManagedOAuthAccountProtocol> *) account).accessTokenString];
+            }
+            else {
+                DDLogError(@"Error Refreshing Token");
+            }
+        }];
+    }
+    else
+    {
+        [protocol connectWithPassword:account.password];
+    }
+}
+- (void)loginAccounts:(NSArray *)accounts
+{
+    [accounts enumerateObjectsUsingBlock:^(OTRManagedAccount * account, NSUInteger idx, BOOL *stop) {
+        [self loginAccount:account];
+    }];
 }
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context

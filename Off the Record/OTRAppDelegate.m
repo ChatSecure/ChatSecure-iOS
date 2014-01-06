@@ -71,7 +71,7 @@
     
     [OTRManagedAccount resetAccountsConnectionStatus];
     
-    //[OTRAppVersionManager applyAppUpdatesForCurrentAppVersion];
+    [OTRAppVersionManager applyAppUpdatesForCurrentAppVersion];
 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
@@ -102,6 +102,8 @@
     [Appirater setAppId:@"464200063"];
     [Appirater setOpenInAppStore:NO];
     [Appirater appLaunched:YES];
+    
+    [self autoLogin];
     
     
     return YES;
@@ -175,9 +177,18 @@
     }
 }
 
+- (void)autoLogin
+{
+    //Auto Login
+    if (![BITHockeyManager sharedHockeyManager].crashManager.didCrashInLastSession) {
+        [[OTRProtocolManager sharedInstance] loginAccounts:[OTRAccountsManager allAutoLoginAccounts]];
+    }
+}
+
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     [Appirater appEnteredForeground:YES];
+    [self autoLogin];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application

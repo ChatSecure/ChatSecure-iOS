@@ -4,6 +4,7 @@
 #import "_OTRManagedAccount.h"
 
 const struct OTRManagedAccountAttributes OTRManagedAccountAttributes = {
+	.autologin = @"autologin",
 	.protocol = @"protocol",
 	.rememberPassword = @"rememberPassword",
 	.uniqueIdentifier = @"uniqueIdentifier",
@@ -43,6 +44,11 @@ const struct OTRManagedAccountFetchedProperties OTRManagedAccountFetchedProperti
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
 	
+	if ([key isEqualToString:@"autologinValue"]) {
+		NSSet *affectingKey = [NSSet setWithObject:@"autologin"];
+		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
+		return keyPaths;
+	}
 	if ([key isEqualToString:@"rememberPasswordValue"]) {
 		NSSet *affectingKey = [NSSet setWithObject:@"rememberPassword"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
@@ -51,6 +57,32 @@ const struct OTRManagedAccountFetchedProperties OTRManagedAccountFetchedProperti
 
 	return keyPaths;
 }
+
+
+
+
+@dynamic autologin;
+
+
+
+- (BOOL)autologinValue {
+	NSNumber *result = [self autologin];
+	return [result boolValue];
+}
+
+- (void)setAutologinValue:(BOOL)value_ {
+	[self setAutologin:[NSNumber numberWithBool:value_]];
+}
+
+- (BOOL)primitiveAutologinValue {
+	NSNumber *result = [self primitiveAutologin];
+	return [result boolValue];
+}
+
+- (void)setPrimitiveAutologinValue:(BOOL)value_ {
+	[self setPrimitiveAutologin:[NSNumber numberWithBool:value_]];
+}
+
 
 
 

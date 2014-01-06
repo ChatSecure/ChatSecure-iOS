@@ -235,11 +235,6 @@
 	[xmppRoster addDelegate:self delegateQueue:dispatch_get_main_queue()];
     [xmppCapabilities addDelegate:self delegateQueue:dispatch_get_main_queue()];
     
-    XMPPMessageDeliveryReceipts * deliveryReceiptsModule = [[XMPPMessageDeliveryReceipts alloc] init];
-    deliveryReceiptsModule.autoSendMessageDeliveryRequests = YES;
-    
-    [deliveryReceiptsModule activate:xmppStream];
-    
 	// Optional:
 	// 
 	// Replace me with the proper domain and port.
