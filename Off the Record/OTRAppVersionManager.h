@@ -11,7 +11,7 @@
 @interface OTRAppVersionManager : NSObject
 
 
-- (void)applyUpdatesForAppVersion:(NSString *)appVersionString;
++ (void)applyUpdatesForAppVersion:(NSString *)appVersionString;
 
 
 + (void)applyAppUpdatesForCurrentAppVersion;
