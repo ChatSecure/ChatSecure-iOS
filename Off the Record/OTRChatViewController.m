@@ -213,20 +213,6 @@
     
     self.view.keyboardTriggerOffset = chatInputBar.frame.size.height;
     
-    
-    __weak OTRChatViewController * chatViewController = self;
-    __weak OTRChatInputBar * weakChatInputbar = chatInputBar;
-    [self.view addKeyboardPanningWithActionHandler:^(CGRect keyboardFrameInView) {
-        CGRect messageInputBarFrame = weakChatInputbar.frame;
-        messageInputBarFrame.origin.y = keyboardFrameInView.origin.y - messageInputBarFrame.size.height;
-        weakChatInputbar.frame = messageInputBarFrame;
-        
-        UIEdgeInsets tableViewContentInset = chatViewController.chatHistoryTableView.contentInset;
-        tableViewContentInset.bottom = chatViewController.view.frame.size.height-weakChatInputbar.frame.origin.y;
-        chatViewController.chatHistoryTableView.contentInset = chatViewController.chatHistoryTableView.scrollIndicatorInsets = tableViewContentInset;
-        [chatViewController scrollToBottomAnimated:NO];
-    }];
-    
     swipeGestureRecognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(handleSwipeFrom)];
     [self.view addGestureRecognizer:swipeGestureRecognizer];
     
@@ -500,14 +486,29 @@
 
 -(void)viewDidDisappear:(BOOL)animated
 {
+    [super viewDidDisappear:animated];
+    [self.view removeKeyboardControl];
     [self setBuddy:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [super viewDidDisappear:animated];
 }
 
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    __weak OTRChatViewController * chatViewController = self;
+    __weak OTRChatInputBar * weakChatInputbar = chatInputBar;
+    [self.view addKeyboardPanningWithActionHandler:^(CGRect keyboardFrameInView) {
+        CGRect messageInputBarFrame = weakChatInputbar.frame;
+        messageInputBarFrame.origin.y = keyboardFrameInView.origin.y - messageInputBarFrame.size.height;
+        weakChatInputbar.frame = messageInputBarFrame;
+        
+        UIEdgeInsets tableViewContentInset = chatViewController.chatHistoryTableView.contentInset;
+        tableViewContentInset.bottom = chatViewController.view.frame.size.height-weakChatInputbar.frame.origin.y;
+        chatViewController.chatHistoryTableView.contentInset = chatViewController.chatHistoryTableView.scrollIndicatorInsets = tableViewContentInset;
+        [chatViewController scrollToBottomAnimated:NO];
+    }];
+    
     [self refreshView];
     [self updateChatState:NO];
     
