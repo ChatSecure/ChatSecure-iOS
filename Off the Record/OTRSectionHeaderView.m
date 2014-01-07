@@ -16,10 +16,11 @@
 - (id) initWithReuseIdentifier:(NSString *)reuseIdentifier {
     if (self = [super initWithReuseIdentifier:reuseIdentifier]) {
         UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toggle:)];
-        [self addGestureRecognizer:tapGesture];
+        tapGesture.delaysTouchesEnded = NO;
+        //[self addGestureRecognizer:tapGesture];
         self.userInteractionEnabled = YES;
         
-        self.contentView.backgroundColor = [UIColor lightGrayColor];
+        self.contentView.backgroundColor = [UIColor colorWithWhite:0.85 alpha:1.0];
         
         
         self.disclosureButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -41,6 +42,26 @@
     _sectionInfo = sectionInfo;
     self.textLabel.text = sectionInfo.title;
     self.disclosureButton.selected = !sectionInfo.isOpen;
+}
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    [super touchesBegan:touches withEvent:event];
+    self.contentView.backgroundColor = [UIColor colorWithWhite:0.75 alpha:1.0];
+}
+
+-(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    [super touchesEnded:touches withEvent:event];
+    [self toggle:self];
+    
+    [UIView animateWithDuration:.5
+                          delay:0.0
+                        options:UIViewAnimationOptionAllowUserInteraction
+                     animations:^{
+                         self.contentView.backgroundColor = [UIColor colorWithWhite:0.85 alpha:1.0];}
+                     completion:nil];
+    
 }
 
 - (void)toggle:(id)sender

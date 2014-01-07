@@ -276,6 +276,11 @@
     return 1;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 35.0;
+}
+
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
     if ([tableView isEqual:self.searchDisplayController.searchResultsTableView]) {
@@ -364,6 +369,7 @@
     }
     cell.showStatus = shouldShowStatus;
     cell.buddy = buddy;
+    cell.backgroundColor = [UIColor whiteColor];
     return cell;
 }
 
@@ -646,6 +652,12 @@
     
     [tableView endUpdates];
     
+}
+
+- (void)searchDisplayController:(UISearchDisplayController *)controller didHideSearchResultsTableView:(UITableView *)tableView
+{
+    self.searchBuddyFetchedResultsController.delegate = nil;
+    self.searchBuddyFetchedResultsController = nil;
 }
 -(void)searchDisplayController:(UISearchDisplayController *)controller willUnloadSearchResultsTableView:(UITableView *)tableView
 {
