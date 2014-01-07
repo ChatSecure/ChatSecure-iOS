@@ -106,7 +106,7 @@
                                                                       toItem:self
                                                                    attribute:NSLayoutAttributeRight
                                                                   multiplier:1.0
-                                                                    constant:-10.0];
+                                                                    constant:-12.0];
     [self addConstraint:constraint];
     
     constraint = [NSLayoutConstraint constraintWithItem:self.discolureImageView
