@@ -14,7 +14,7 @@
 
 @interface OTRSectionHeaderView : UITableViewHeaderFooterView
 
-@property (nonatomic, strong) UIButton *disclosureButton;
+@property (nonatomic, strong) UIImageView * discolureImageView;
 @property (nonatomic, weak) id <OTRSectionHeaderViewDelegate> delegate;
 @property (nonatomic, weak) OTRBuddyListSectionInfo *sectionInfo;
 
