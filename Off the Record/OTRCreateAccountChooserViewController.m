@@ -23,7 +23,11 @@
 
 - (void)didSelectAccountType:(OTRAccountType)accountType
 {
+    if (!(accountType == OTRAccountTypeJabber || accountType == OTRAccountTypeXMPPTor)) {
+        return;
+    }
     NSArray * hostnamesArray = nil;
+    OTRManagedXMPPAccount * newAccount = (OTRManagedXMPPAccount *)[OTRManagedAccount accountForAccountType:accountType];
     if(accountType == OTRAccountTypeJabber)
     {
         hostnamesArray = @[@"normalXmpp.biz",@"jabber.ccc.de"];
@@ -35,6 +39,7 @@
     
     if ([hostnamesArray count]) {
         OTRXMPPCreateViewController * createViewController = [OTRXMPPCreateViewController createViewControllerWithHostnames:hostnamesArray];
+        createViewController.account = newAccount;
         [self.navigationController pushViewController:createViewController animated:YES];
     }
 }

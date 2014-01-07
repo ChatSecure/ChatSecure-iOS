@@ -13,7 +13,7 @@
     NSArray * hostnameArray;
 }
 
-
+@property (nonatomic,strong) OTRManagedXMPPAccount * account;
 @property (nonatomic,strong) NSString * selectedHostname;
 
 - (instancetype)initWithHostnames:(NSArray *)hostnames;

@@ -267,7 +267,7 @@
     else if (accountType == OTRAccountTypeXMPPTor)
     {
         //TOR + XMPP
-        OTRManagedXMPPAccount * torAccount = [OTRManagedXMPPTorAccount MR_createEntity];
+        OTRManagedXMPPTorAccount * torAccount = [OTRManagedXMPPTorAccount MR_createEntity];
         [torAccount setDefaultsWithDomain:@""];
         newAccount = torAccount;
     }

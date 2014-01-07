@@ -86,6 +86,7 @@
     
     if(self)
     {
+        isRegisteringNewAccount = NO;
         self.isConnected = NO;
         self.account = (OTRManagedXMPPAccount*)newAccount;
 
@@ -399,6 +400,12 @@
     
 }
 
+- (void)registerNewAccountWithPassword:(NSString *)newPassword
+{
+    isRegisteringNewAccount = YES;
+    [self connectWithJID:self.account.username password:newPassword];
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark XMPPStream Delegate
@@ -429,22 +436,27 @@
     
 	NSError *error = nil;
     
-    if ([sender supportsXFacebookPlatformAuthentication]) {
+    if (isRegisteringNewAccount && [sender supportsInBandRegistration]) {
+        [sender registerWithPassword:password error:&error];
+    }
+    else{
+        if ([sender supportsXFacebookPlatformAuthentication]) {
+            
+            isXmppConnected = [sender authenticateWithFacebookAccessToken:password error:&error];
+            return;
+        }
+        else if ([sender supportsXOAUTH2GoogleAuthentication] && self.account.accountType == OTRAccountTypeGoogleTalk) {
+            isXmppConnected = [sender authenticateWithGoogleAccessToken:password error:&error];
+            return;
+        }
+        else if (![[self xmppStream] authenticateWithPassword:password error:&error])
+        {
+            isXmppConnected = NO;
+            return;
+        }
         
-        isXmppConnected = [sender authenticateWithFacebookAccessToken:password error:&error];
-        return;
+        isXmppConnected = YES;
     }
-    else if ([sender supportsXOAUTH2GoogleAuthentication] && self.account.accountType == OTRAccountTypeGoogleTalk) {
-        isXmppConnected = [sender authenticateWithGoogleAccessToken:password error:&error];
-        return;
-    }
-	else if (![[self xmppStream] authenticateWithPassword:password error:&error])
-	{
-        isXmppConnected = NO;
-        return;
-	}
-    
-    isXmppConnected = YES;
 }
 
 - (void)xmppStreamDidAuthenticate:(XMPPStream *)sender
@@ -467,8 +479,19 @@
 	return NO;
 }
 
+- (void)xmppStreamDidRegister:(XMPPStream *)sender {
+    isRegisteringNewAccount = NO;
+}
+
+- (void)xmppStream:(XMPPStream *)sender didNotRegister:(NSXMLElement *)error {
+    
+    isRegisteringNewAccount = NO;
+    [self failedToConnect:error];
+}
+
 -(OTRManagedBuddy *)buddyWithMessage:(XMPPMessage *)message
 {
+    
     return [OTRManagedBuddy fetchOrCreateWithName:[[message from] bare] account:self.account];
 }
 

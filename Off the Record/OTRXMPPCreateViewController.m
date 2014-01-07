@@ -111,6 +111,15 @@
 
 -(void) loginButtonPressed:(id)sender
 {
+    id protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
+    OTRXMPPManager * xmppManager = nil;
+    if ([protocol isKindOfClass:[OTRXMPPManager class]]) {
+        self.account.username = self.usernameTextField.text;
+        self.account.domain = self.selectedHostname;
+        xmppManager = (OTRXMPPManager *)protocol;
+        [xmppManager registerNewAccountWithPassword:self.passwordTextField.text];
+    }
+    
     
 }
 

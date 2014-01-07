@@ -56,6 +56,7 @@
     XMPPJID *JID;
 	
 	BOOL isXmppConnected;
+    BOOL isRegisteringNewAccount;
     
     dispatch_queue_t backgroundQueue;
 	
@@ -82,6 +83,8 @@
 //- (NSFetchedResultsController *)fetchedResultsController;
 
 - (NSString*)accountName;
+
+- (void)registerNewAccountWithPassword:(NSString *)password;
 
 
 //Chat State
