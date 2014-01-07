@@ -39,25 +39,25 @@
 - (void)handleRosterItem:(NSXMLElement *)item xmppStream:(XMPPStream *)stream
 {
     DDLogInfo(@"Item: %@",item);
-    [MagicalRecord saveUsingCurrentThreadContextWithBlockAndWait:^(NSManagedObjectContext *localContext) {
-        NSString *jidStr = [item attributeStringValueForName:@"jid"];
-        XMPPJID *jid = [[XMPPJID jidWithString:jidStr] bareJID];
-        
-        OTRManagedBuddy * user = [self buddyWithJID:jid xmppStream:stream inContext:localContext];
-        
-        NSString *subscription = [item attributeStringValueForName:@"subscription"];
-        if ([subscription isEqualToString:@"remove"])
+    NSManagedObjectContext *localContext = [NSManagedObjectContext MR_contextForCurrentThread];
+    NSString *jidStr = [item attributeStringValueForName:@"jid"];
+    XMPPJID *jid = [[XMPPJID jidWithString:jidStr] bareJID];
+    
+    OTRManagedBuddy * user = [self buddyWithJID:jid xmppStream:stream inContext:localContext];
+    
+    NSString *subscription = [item attributeStringValueForName:@"subscription"];
+    if ([subscription isEqualToString:@"remove"])
+    {
+        if (user)
         {
-            if (user)
-            {
-                [user MR_deleteInContext:localContext];
-            }
+            [user MR_deleteInContext:localContext];
         }
-        else if(user)
-        {
-            [self updateUser:user updateWithItem:item];
-        }
-    }];
+    }
+    else if(user)
+    {
+        [self updateUser:user updateWithItem:item];
+    }
+    [localContext MR_saveToPersistentStoreAndWait];
 }
 
 - (void)handlePresence:(XMPPPresence *)presence xmppStream:(XMPPStream *)stream
