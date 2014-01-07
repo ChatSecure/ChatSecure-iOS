@@ -15,23 +15,15 @@
 
 - (id) initWithReuseIdentifier:(NSString *)reuseIdentifier {
     if (self = [super initWithReuseIdentifier:reuseIdentifier]) {
-        UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toggle:)];
-        tapGesture.delaysTouchesEnded = NO;
-        //[self addGestureRecognizer:tapGesture];
+
         self.userInteractionEnabled = YES;
         
         self.contentView.backgroundColor = [UIColor colorWithWhite:0.85 alpha:1.0];
         
-        
-        self.disclosureButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        self.disclosureButton.frame = CGRectMake(0, 0, 20.0, 20.0);
-        [self.disclosureButton setImage:[OTRImages closeCaratImage] forState:UIControlStateNormal];
-        [self.disclosureButton setImage:[OTRImages openCaratImage] forState:UIControlStateSelected];
-        [self.disclosureButton addTarget:self action:@selector(toggle:) forControlEvents:UIControlEventTouchUpInside];
-        self.disclosureButton.userInteractionEnabled = NO;
-        self.disclosureButton.translatesAutoresizingMaskIntoConstraints = NO;
-        self.disclosureButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-        [self.contentView addSubview:self.disclosureButton];
+        self.discolureImageView = [[UIImageView alloc] initWithImage:[OTRSectionHeaderView caratImage]];
+        self.frame = CGRectMake(0,0,20,20);
+        self.discolureImageView.translatesAutoresizingMaskIntoConstraints = NO;
+        [self.contentView addSubview:self.discolureImageView];
         
         [self setupContraints];
     }
@@ -41,7 +33,7 @@
 - (void) setSectionInfo:(OTRBuddyListSectionInfo *)sectionInfo {
     _sectionInfo = sectionInfo;
     self.textLabel.text = sectionInfo.title;
-    self.disclosureButton.selected = !sectionInfo.isOpen;
+    [self refreshDiscolureImageViewWithAnimation:NO];
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
@@ -54,20 +46,45 @@
 {
     [super touchesEnded:touches withEvent:event];
     [self toggle:self];
+}
+
+- (void)refreshDiscolureImageViewWithAnimation:(BOOL)animation
+{
+    __weak OTRSectionHeaderView * weakSelf = self;
+    NSTimeInterval interval = 0;
+    if (animation) {
+        interval = .2;
+    }
     
-    [UIView animateWithDuration:.5
+    [UIView animateWithDuration:interval
                           delay:0.0
                         options:UIViewAnimationOptionAllowUserInteraction
                      animations:^{
-                         self.contentView.backgroundColor = [UIColor colorWithWhite:0.85 alpha:1.0];}
+                         if (weakSelf.sectionInfo.isOpen) {
+                             weakSelf.discolureImageView.transform = CGAffineTransformMakeRotation(0);
+                         }
+                         else {
+                             weakSelf.discolureImageView.transform = CGAffineTransformMakeRotation(-M_PI_2);
+                         }
+                     }
                      completion:nil];
-    
 }
 
 - (void)toggle:(id)sender
 {
     _sectionInfo.isOpen = !_sectionInfo.isOpen;
-    self.disclosureButton.selected = !_sectionInfo.isOpen;
+    
+    [self refreshDiscolureImageViewWithAnimation:YES];
+    
+    __weak OTRSectionHeaderView * weakSelf = self;
+    [UIView animateWithDuration:.2
+                          delay:0.0
+                        options:UIViewAnimationOptionAllowUserInteraction
+                     animations:^{
+                         weakSelf.contentView.backgroundColor = [UIColor colorWithWhite:0.85 alpha:1.0];
+                         
+                     }
+                     completion:nil];
     
     if ([self.delegate respondsToSelector:@selector(sectionHeaderViewChanged:)]) {
         [self.delegate sectionHeaderViewChanged:self];
@@ -77,7 +94,7 @@
 - (void)setupContraints
 {
     ////////// DISCLOSURE BUTTON ///////////
-    NSLayoutConstraint * constraint = [NSLayoutConstraint constraintWithItem:self.disclosureButton
+    NSLayoutConstraint * constraint = [NSLayoutConstraint constraintWithItem:self.discolureImageView
                                                                    attribute:NSLayoutAttributeRight
                                                                    relatedBy:NSLayoutRelationEqual
                                                                       toItem:self
@@ -86,7 +103,7 @@
                                                                     constant:-5.0];
     [self addConstraint:constraint];
     
-    constraint = [NSLayoutConstraint constraintWithItem:self.disclosureButton
+    constraint = [NSLayoutConstraint constraintWithItem:self.discolureImageView
                                               attribute:NSLayoutAttributeCenterY
                                               relatedBy:NSLayoutRelationEqual
                                                  toItem:self
@@ -103,6 +120,15 @@
 
 + (NSString*) reuseIdentifier {
     return NSStringFromClass([self class]);
+}
+
++ (UIImage*) caratImage {
+    static UIImage *caratImage = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        caratImage = [OTRImages closeCaratImage];
+    });
+    return caratImage;
 }
 
 @end
