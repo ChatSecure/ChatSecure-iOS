@@ -9,24 +9,21 @@
 #import <UIKit/UIKit.h>
 
 @protocol OTRSectionHeaderViewDelegate;
+@class OTRBuddyListSectionInfo;
 
 
+@interface OTRSectionHeaderView : UITableViewHeaderFooterView
 
-@interface OTRSectionHeaderView : UIView
-
-@property (nonatomic, weak) UILabel *titleLabel;
-@property (nonatomic, weak) UIButton *disclosureButton;
-@property (nonatomic, assign) NSUInteger section;
+@property (nonatomic, strong) UIButton *disclosureButton;
 @property (nonatomic, weak) id <OTRSectionHeaderViewDelegate> delegate;
+@property (nonatomic, weak) OTRBuddyListSectionInfo *sectionInfo;
 
--(id)initWithFrame:(CGRect)frame title:(NSString*)title section:(NSUInteger)sectionNumber delegate:(id <OTRSectionHeaderViewDelegate>)delegate;
++ (NSString*) reuseIdentifier;
 
 @end
 
 
 @protocol OTRSectionHeaderViewDelegate <NSObject>
-
 @optional
--(void)sectionHeaderView:(OTRSectionHeaderView*)sectionHeaderView section:(NSUInteger)section opened:(BOOL)opened;
-
+-(void)sectionHeaderViewChanged:(OTRSectionHeaderView*)sectionHeaderView;
 @end

@@ -62,39 +62,39 @@
 
 - (void)handlePresence:(XMPPPresence *)presence xmppStream:(XMPPStream *)stream
 {
-    [MagicalRecord saveUsingCurrentThreadContextWithBlockAndWait:^(NSManagedObjectContext *localContext) {
-        OTRManagedBuddy * user = [self buddyWithJID:[presence from] xmppStream:stream inContext:localContext];
-        
-        if ([[presence type] isEqualToString:@"unavailable"] || [presence isErrorPresence]) {
-            [user newStatusMessage:OFFLINE_STRING status:OTRBuddyStatusOffline incoming:YES];
-        }
-        else if (user) {
-            OTRBuddyStatus buddyStatus;
-            switch (presence.intShow)
-            {
-                case 0  :
-                    buddyStatus = OTRBuddyStatusDnd;
-                    break;
-                case 1  :
-                    buddyStatus = OTRBuddyStatusXa;
-                    break;
-                case 2  :
-                    buddyStatus = OTRBuddyStatusAway;
-                    break;
-                case 3  :
-                    buddyStatus = OTRBuddyStatusAvailable;
-                    break;
-                case 4  :
-                    buddyStatus = OTRBuddyStatusAvailable;
-                    break;
-                default :
-                    buddyStatus = OTRBuddyStatusOffline;
-                    break;
-            }
-            [user newStatusMessage:[presence status] status:buddyStatus incoming:YES];
-        }
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
 
-    }];
+    OTRManagedBuddy * user = [self buddyWithJID:[presence from] xmppStream:stream inContext:context];
+    
+    if ([[presence type] isEqualToString:@"unavailable"] || [presence isErrorPresence]) {
+        [user newStatusMessage:OFFLINE_STRING status:OTRBuddyStatusOffline incoming:YES];
+    }
+    else if (user) {
+        OTRBuddyStatus buddyStatus;
+        switch (presence.intShow)
+        {
+            case 0  :
+                buddyStatus = OTRBuddyStatusDnd;
+                break;
+            case 1  :
+                buddyStatus = OTRBuddyStatusXa;
+                break;
+            case 2  :
+                buddyStatus = OTRBuddyStatusAway;
+                break;
+            case 3  :
+                buddyStatus = OTRBuddyStatusAvailable;
+                break;
+            case 4  :
+                buddyStatus = OTRBuddyStatusAvailable;
+                break;
+            default :
+                buddyStatus = OTRBuddyStatusOffline;
+                break;
+        }
+        [user newStatusMessage:[presence status] status:buddyStatus incoming:YES];
+    }
+    [context MR_saveToPersistentStoreAndWait];
 }
 
 - (BOOL)userExistsWithJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream
