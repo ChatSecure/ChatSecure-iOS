@@ -11,14 +11,16 @@
 #ifdef __OBJC__
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
-    #import "CoreData+MagicalRecord.h"
     #import "DDLog.h"
     #import "DDTTYLogger.h"
+
+
     #if DEBUG
-        static const int ddLogLevel = LOG_LEVEL_VERBOSE;
+        static int ddLogLevel = LOG_LEVEL_VERBOSE;
         #define MR_ENABLE_ACTIVE_RECORD_LOGGING 0
     #else
-        static const int ddLogLevel = LOG_LEVEL_OFF;
-        #define MR_ENABLE_ACTIVE_RECORD_LOGGING 0
+        static int ddLogLevel = LOG_LEVEL_OFF;
     #endif
+
+    #import "CoreData+MagicalRecord.h"
 #endif

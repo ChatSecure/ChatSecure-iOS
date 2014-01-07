@@ -22,9 +22,6 @@
 
 #import "OTRXMPPManager.h"
 
-#import "XMPPLogging.h"
-static const int xmppLogLevel = XMPP_LOG_LEVEL_VERBOSE;
-
 #import "GCDAsyncSocket.h"
 #import "XMPP.h"
 #import "XMPPReconnect.h"
