@@ -19,50 +19,20 @@
         [self addGestureRecognizer:tapGesture];
         self.userInteractionEnabled = YES;
         
-        /*CGRect titleLabelFrame = self.bounds;
-        titleLabelFrame.origin.x += 10.0;
-        titleLabelFrame.size.width -= 30.0;
-        titleLabelFrame.size.height -= 4;
-        titleLabelFrame.origin.y = roundf((self.bounds.size.height - titleLabelFrame.size.height)/2.0)-2;
-        CGRectInset(titleLabelFrame, 0.0, 5.0);
-        UILabel *label = [[UILabel alloc] initWithFrame:titleLabelFrame];
-        label.font = [UIFont boldSystemFontOfSize:15.0];
-        label.textColor = [UIColor blackColor];
-        label.backgroundColor = [UIColor clearColor];
-        [label setShadowOffset:CGSizeMake(0, 1)];
-        [label setShadowColor:[UIColor whiteColor]];
-        [self addSubview:label];
-         */
-        
         self.contentView.backgroundColor = [UIColor lightGrayColor];
         
-        // Create and configure the disclosure button.
-        CGFloat viewY = self.contentView.center.y-10;
-        CGFloat viewX = self.contentView.bounds.size.width - 20 - viewY;
         
+        self.disclosureButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        self.disclosureButton.frame = CGRectMake(0, 0, 20.0, 20.0);
+        [self.disclosureButton setImage:[OTRImages closeCaratImage] forState:UIControlStateNormal];
+        [self.disclosureButton setImage:[OTRImages openCaratImage] forState:UIControlStateSelected];
+        [self.disclosureButton addTarget:self action:@selector(toggle:) forControlEvents:UIControlEventTouchUpInside];
+        self.disclosureButton.userInteractionEnabled = NO;
+        self.disclosureButton.translatesAutoresizingMaskIntoConstraints = NO;
+        self.disclosureButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+        [self.contentView addSubview:self.disclosureButton];
         
-        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-        button.frame = CGRectMake(viewX, viewY, 20.0, 20.0);
-        [button setImage:[OTRImages closeCaratImage] forState:UIControlStateNormal];
-        [button setImage:[OTRImages openCaratImage] forState:UIControlStateSelected];
-        [button addTarget:self action:@selector(toggle:) forControlEvents:UIControlEventTouchUpInside];
-        button.userInteractionEnabled = NO;
-        button.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-        [self.contentView addSubview:button];
-        self.disclosureButton = button;
-        
-        /*UIColor* fillColor = [UIColor colorWithRed: 1 green: 1 blue: 1 alpha: 1];
-        UIColor* strokeColor = [UIColor colorWithRed: 0 green: 0 blue: 0 alpha: 1];
-        UIColor* fillColor2 = [UIColor colorWithRed: 0.769 green: 0.769 blue: 0.769 alpha: 1];
-        NSArray* gradientColors = [NSArray arrayWithObjects:
-                                   (id)fillColor.CGColor,
-                                   (id)[UIColor colorWithRed: 0.884 green: 0.884 blue: 0.884 alpha: 1].CGColor,
-                                   (id)fillColor2.CGColor,
-                                   (id)[UIColor colorWithRed: 0.384 green: 0.384 blue: 0.384 alpha: 1].CGColor,
-                                   (id)strokeColor.CGColor, nil];
-        [(CAGradientLayer *)self.contentView.layer setColors:gradientColors];
-        [(CAGradientLayer *)self.contentView.layer setLocations:@[[NSNumber numberWithFloat:0.03],[NSNumber numberWithFloat:0.03],[NSNumber numberWithFloat:0.97],[NSNumber numberWithFloat:0.97],[NSNumber numberWithFloat:0.99]]];
-        */
+        [self setupContraints];
     }
     return self;
 }
@@ -76,11 +46,34 @@
 - (void)toggle:(id)sender
 {
     _sectionInfo.isOpen = !_sectionInfo.isOpen;
-    self.disclosureButton.selected = _sectionInfo.isOpen;
+    self.disclosureButton.selected = !_sectionInfo.isOpen;
     
     if ([self.delegate respondsToSelector:@selector(sectionHeaderViewChanged:)]) {
         [self.delegate sectionHeaderViewChanged:self];
     }
+}
+
+- (void)setupContraints
+{
+    ////////// DISCLOSURE BUTTON ///////////
+    NSLayoutConstraint * constraint = [NSLayoutConstraint constraintWithItem:self.disclosureButton
+                                                                   attribute:NSLayoutAttributeRight
+                                                                   relatedBy:NSLayoutRelationEqual
+                                                                      toItem:self
+                                                                   attribute:NSLayoutAttributeRight
+                                                                  multiplier:1.0
+                                                                    constant:-5.0];
+    [self addConstraint:constraint];
+    
+    constraint = [NSLayoutConstraint constraintWithItem:self.disclosureButton
+                                              attribute:NSLayoutAttributeCenterY
+                                              relatedBy:NSLayoutRelationEqual
+                                                 toItem:self
+                                              attribute:NSLayoutAttributeCenterY
+                                             multiplier:1.0
+                                               constant:0.0];
+    [self addConstraint:constraint];
+    
 }
 
 + (Class)layerClass {
