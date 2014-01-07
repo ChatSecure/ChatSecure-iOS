@@ -21,7 +21,7 @@
         self.contentView.backgroundColor = [UIColor colorWithWhite:0.85 alpha:1.0];
         
         self.discolureImageView = [[UIImageView alloc] initWithImage:[OTRSectionHeaderView caratImage]];
-        self.frame = CGRectMake(0,0,20,20);
+        self.frame = CGRectMake(0,0,12,12);
         self.discolureImageView.translatesAutoresizingMaskIntoConstraints = NO;
         [self.contentView addSubview:self.discolureImageView];
         
@@ -46,6 +46,12 @@
 {
     [super touchesEnded:touches withEvent:event];
     [self toggle:self];
+}
+
+-(void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    [super touchesCancelled:touches withEvent:event];
+    self.contentView.backgroundColor = [UIColor colorWithWhite:0.85 alpha:1.0];
 }
 
 - (void)refreshDiscolureImageViewWithAnimation:(BOOL)animation
@@ -100,7 +106,7 @@
                                                                       toItem:self
                                                                    attribute:NSLayoutAttributeRight
                                                                   multiplier:1.0
-                                                                    constant:-5.0];
+                                                                    constant:-10.0];
     [self addConstraint:constraint];
     
     constraint = [NSLayoutConstraint constraintWithItem:self.discolureImageView
