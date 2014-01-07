@@ -20,6 +20,11 @@
 
 @implementation OTRRosterStorage
 
+-(id)init {
+    if (self = [super init]) {
+        isPopulatingRoster  = NO;
+    }
+}
 
 - (BOOL)configureWithParent:(XMPPRoster *)aParent queue:(dispatch_queue_t)queue
 {
@@ -28,12 +33,13 @@
 
 - (void)beginRosterPopulationForXMPPStream:(XMPPStream *)stream
 {
-    
+    isPopulatingRoster = YES;
 }
 
 - (void)endRosterPopulationForXMPPStream:(XMPPStream *)stream
 {
-    
+    isPopulatingRoster = NO;
+    [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
 }
 
 - (void)handleRosterItem:(NSXMLElement *)item xmppStream:(XMPPStream *)stream
@@ -57,7 +63,10 @@
     {
         [self updateUser:user updateWithItem:item];
     }
-    [localContext MR_saveToPersistentStoreAndWait];
+    
+    if (!isPopulatingRoster) {
+        [localContext MR_saveToPersistentStoreAndWait];
+    }
 }
 
 - (void)handlePresence:(XMPPPresence *)presence xmppStream:(XMPPStream *)stream
