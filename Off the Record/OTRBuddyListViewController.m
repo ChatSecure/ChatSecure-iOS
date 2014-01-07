@@ -555,7 +555,6 @@
     }
     
     [tableView beginUpdates];
-    
 }
 
 - (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject
@@ -584,7 +583,6 @@
         
         modifiedNewIndexPath = [NSIndexPath indexPathForRow:newIndexPath.row inSection:newIndexPath.section+1];
         modifiedIndexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section+1];
-        //[tableView beginUpdates];
     }
     else if (isRecentBuddiesFetchedResultsController)
     {
@@ -607,7 +605,6 @@
         if ([tableView isEqual:self.buddyListTableView] && !sectionInfo.open ) {
             return;
         }
-        
         
         switch (type) {
             case NSFetchedResultsChangeInsert:

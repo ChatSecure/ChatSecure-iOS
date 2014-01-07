@@ -46,9 +46,11 @@
             buddyUsername = _buddy.accountName;
         }
         
-        
-        
-        OTRBuddyStatus buddyStatus = [_buddy currentStatusMessage].statusValue;
+        OTRBuddyStatus buddyStatus = OTRBuddyStatusOffline;
+        OTRManagedStatus * status = [_buddy currentStatusMessage];
+        if (status) {
+            buddyStatus = status.statusValue;
+        }
         
         self.textLabel.text = buddyUsername;
         self.accessibilityLabel = buddyUsername;
@@ -59,7 +61,7 @@
         
         
         if (self.showStatus) {
-            self.detailTextLabel.text = [buddy currentStatusMessage].message;
+            self.detailTextLabel.text = [OTRManagedStatus statusMessageWithStatus:buddyStatus];
         }
         else {
             self.detailTextLabel.text = buddy.account.username;
