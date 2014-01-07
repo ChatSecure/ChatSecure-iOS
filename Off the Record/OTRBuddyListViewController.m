@@ -149,6 +149,7 @@
         shouldShowStatus = YES;
         [self.buddyListTableView reloadData];
     }
+    [self refreshLeftBarItems];
 }
 
 -(void)viewWillAppear:(BOOL)animated
