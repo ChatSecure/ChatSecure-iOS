@@ -251,7 +251,13 @@
             //self.title = newBuddy.accountName;
             titleView.titleLabel.text = newBuddy.accountName;
         }
-        titleView.subtitleLabel.text = newBuddy.account.username;
+        
+        if(newBuddy.account.displayName.length) {
+            titleView.subtitleLabel.text = newBuddy.account.displayName;
+        }
+        else {
+            titleView.subtitleLabel.text = newBuddy.account.username;
+        }
         
         [self refreshLockButton];
         [self updateChatState:NO];

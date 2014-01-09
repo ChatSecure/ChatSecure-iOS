@@ -290,12 +290,14 @@
 +(OTRManagedBuddy *)fetchWithName:(NSString *)name account:(OTRManagedAccount *)account inContext:(NSManagedObjectContext *)context
 {
     OTRManagedAccount * contextAccount = [account MR_inContext:context];
-    NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"accountName == %@",name];
-    NSSet * filteredArray = [contextAccount.buddies filteredSetUsingPredicate:buddyFilter];
+    NSPredicate * accountPredicate = [NSPredicate predicateWithFormat:@"%K == %@",OTRManagedBuddyRelationships.account,contextAccount];
+    NSPredicate * usernamePredicate = [NSPredicate predicateWithFormat:@"%K == %@",OTRManagedBuddyAttributes.accountName,name];
+    
+    NSArray * filteredArray = [OTRManagedBuddy MR_findAllWithPredicate:[NSCompoundPredicate andPredicateWithSubpredicates:@[usernamePredicate,accountPredicate]]];
     
     if([filteredArray count])
     {
-        OTRManagedBuddy * buddy =  [filteredArray anyObject];
+        OTRManagedBuddy * buddy =  [filteredArray firstObject];
         return [buddy MR_inContext:context];
     }
     return nil;

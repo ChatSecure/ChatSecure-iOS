@@ -26,7 +26,7 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     if (section == 0) {
-        if ([self.account.accessTokenString length] && [self.account.username length]) {
+        if ([self.account.accessTokenString length] && ([self.account.username length] || [self.account.displayName length])) {
             return 2;
         }
         return 1;
@@ -49,7 +49,7 @@
         CGRect buttonFrame = CGRectMake(8, 8, tableView.frame.size.width-16, 45);
         UIButton * button = nil;
         
-        if ([self.account.password length] && [self.account.username length]) {
+        if ([self.account.password length] && ([self.account.username length] || [self.account.displayName length])) {
             //disconnect button
             self.disconnectButton.frame = buttonFrame;
             button = self.disconnectButton;
@@ -77,6 +77,9 @@
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@""];
             cell.textLabel.text = USERNAME_STRING;
             cell.detailTextLabel.text = self.account.username;
+            if ([self.account.displayName length]) {
+                cell.detailTextLabel.text = self.account.displayName;
+            }
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
         }
     }

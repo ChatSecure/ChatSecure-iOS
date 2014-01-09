@@ -63,8 +63,12 @@
         if (self.showStatus) {
             self.detailTextLabel.text = [OTRManagedStatus statusMessageWithStatus:buddyStatus];
         }
+        else if (buddy.account.displayName.length) {
+            self.detailTextLabel.text = buddy.account.displayName;
+        }
         else {
             self.detailTextLabel.text = buddy.account.username;
+
         }
         
         switch(buddyStatus)

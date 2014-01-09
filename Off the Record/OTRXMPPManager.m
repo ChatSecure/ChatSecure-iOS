@@ -404,6 +404,17 @@
 #pragma mark XMPPStream Delegate
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+- (void)xmppStreamDidChangeMyJID:(XMPPStream *)stream
+{
+    if (![[stream.myJID bare] isEqualToString:self.account.username])
+    {
+        //new JID coming in
+        id passwordObject = [self.account passwordObject];
+        self.account.username = [stream.myJID bare];
+        [self.account setPasswordObject:passwordObject];
+    }
+}
+
 - (void)xmppStream:(XMPPStream *)sender socketDidConnect:(GCDAsyncSocket *)socket 
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);

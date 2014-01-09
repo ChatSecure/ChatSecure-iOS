@@ -34,11 +34,13 @@
 
 - (void)beginRosterPopulationForXMPPStream:(XMPPStream *)stream
 {
+    DDLogInfo(@"Begin Roster Population: %@",stream);
     isPopulatingRoster = YES;
 }
 
 - (void)endRosterPopulationForXMPPStream:(XMPPStream *)stream
 {
+    DDLogInfo(@"End Roster Population: %@",stream);
     isPopulatingRoster = NO;
     [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
 }
@@ -72,6 +74,7 @@
 
 - (void)handlePresence:(XMPPPresence *)presence xmppStream:(XMPPStream *)stream
 {
+    DDLogInfo(@"Handle Presence: %@",presence);
     NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
 
     OTRManagedBuddy * user = [self buddyWithJID:[presence from] xmppStream:stream inContext:context];
@@ -109,7 +112,7 @@
 
 - (BOOL)userExistsWithJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream
 {
-    OTRManagedBuddy * user = [OTRManagedBuddy fetchWithName:[jid bare] account:[self accountForStrem:stream]];
+    OTRManagedBuddy * user = [OTRManagedBuddy fetchWithName:[jid bare] account:[self accountForStream:stream]];
     if (user) {
         return YES;
     }
@@ -124,7 +127,7 @@
 - (void)clearAllUsersAndResourcesForXMPPStream:(XMPPStream *)stream
 {
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
-        OTRManagedAccount * account = [self accountForStrem:stream];
+        OTRManagedAccount * account = [self accountForStream:stream];
         [account.buddies enumerateObjectsUsingBlock:^(OTRManagedBuddy * buddy, BOOL *stop) {
             [buddy MR_deleteEntity];
         }];
@@ -134,7 +137,7 @@
 - (NSArray *)jidsForXMPPStream:(XMPPStream *)stream
 {
     NSMutableArray * jidArray = [NSMutableArray array];
-    OTRManagedAccount * account = [self accountForStrem:stream];
+    OTRManagedAccount * account = [self accountForStream:stream];
     [account.buddies enumerateObjectsUsingBlock:^(OTRManagedBuddy * buddy, BOOL *stop) {
         [jidArray addObject:[XMPPJID jidWithString:buddy.accountName]];
     }];
@@ -171,9 +174,6 @@
     if ([self isPendingApprovalElement:item]) {
         [user newStatusMessage:PENDING_APPROVAL_STRING status:OTRBuddyStatusOffline incoming:YES];
     }
-    else{
-        DDLogWarn(@"Unhandled type: %@",item);
-    }
     
 }
 
@@ -194,10 +194,10 @@
 
 -(OTRManagedBuddy *)buddyWithJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream inContext:(NSManagedObjectContext *)context
 {
-    return [OTRManagedBuddy fetchOrCreateWithName:[jid bare] account:[self accountForStrem:stream] inContext:context];
+    return [OTRManagedBuddy fetchOrCreateWithName:[jid bare] account:[self accountForStream:stream] inContext:context];
 }
 
--(OTRManagedAccount *)accountForStrem:(XMPPStream *)stream
+-(OTRManagedAccount *)accountForStream:(XMPPStream *)stream
 {
     //fixme to new constants of finding account
     return [OTRAccountsManager accountForProtocol:@"xmpp" accountName:[stream.myJID bare]];

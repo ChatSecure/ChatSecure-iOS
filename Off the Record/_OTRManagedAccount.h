@@ -6,6 +6,7 @@
 
 extern const struct OTRManagedAccountAttributes {
 	__unsafe_unretained NSString *autologin;
+	__unsafe_unretained NSString *displayName;
 	__unsafe_unretained NSString *protocol;
 	__unsafe_unretained NSString *rememberPassword;
 	__unsafe_unretained NSString *uniqueIdentifier;
@@ -20,6 +21,7 @@ extern const struct OTRManagedAccountFetchedProperties {
 } OTRManagedAccountFetchedProperties;
 
 @class OTRManagedBuddy;
+
 
 
 
@@ -49,6 +51,16 @@ extern const struct OTRManagedAccountFetchedProperties {
 - (void)setAutologinValue:(BOOL)value_;
 
 //- (BOOL)validateAutologin:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSString* displayName;
+
+
+
+//- (BOOL)validateDisplayName:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -125,6 +137,12 @@ extern const struct OTRManagedAccountFetchedProperties {
 
 - (BOOL)primitiveAutologinValue;
 - (void)setPrimitiveAutologinValue:(BOOL)value_;
+
+
+
+
+- (NSString*)primitiveDisplayName;
+- (void)setPrimitiveDisplayName:(NSString*)value;
 
 
 

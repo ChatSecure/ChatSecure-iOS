@@ -5,6 +5,7 @@
 
 const struct OTRManagedAccountAttributes OTRManagedAccountAttributes = {
 	.autologin = @"autologin",
+	.displayName = @"displayName",
 	.protocol = @"protocol",
 	.rememberPassword = @"rememberPassword",
 	.uniqueIdentifier = @"uniqueIdentifier",
@@ -82,6 +83,13 @@ const struct OTRManagedAccountFetchedProperties OTRManagedAccountFetchedProperti
 - (void)setPrimitiveAutologinValue:(BOOL)value_ {
 	[self setPrimitiveAutologin:[NSNumber numberWithBool:value_]];
 }
+
+
+
+
+
+@dynamic displayName;
+
 
 
 

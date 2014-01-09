@@ -32,7 +32,11 @@
 {
     [protocol removeObserver:self forKeyPath:NSStringFromSelector(@selector(isConnected))];
     accountUniqueIdentifier = account.uniqueIdentifier;
+    
     self.textLabel.text = account.username;
+    if (account.displayName.length){
+        self.textLabel.text = account.displayName;
+    }
     [self setConnectedText:account.isConnected];
     
     self.imageView.image = [UIImage imageNamed:account.imageName];
