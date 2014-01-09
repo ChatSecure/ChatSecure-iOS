@@ -73,16 +73,16 @@
 }
 
 - (void) setPassword:(NSString *)newPassword {
-    if (!newPassword || [newPassword isEqualToString:@""] || !self.rememberPassword) {
+    if (!newPassword || [newPassword isEqualToString:@""] || !self.rememberPasswordValue) {
         NSError *error = nil;
-        [SSKeychain deletePasswordForService:kOTRServiceName account:self.username error:&error];
+        [SSKeychain deletePasswordForService:kOTRServiceName account:self.uniqueIdentifier error:&error];
         if (error) {
             DDLogError(@"Error deleting password from keychain: %@%@", [error localizedDescription], [error userInfo]);
         }
         return;
     }
     NSError *error = nil;
-    [SSKeychain setPassword:newPassword forService:kOTRServiceName account:self.username error:&error];
+    [SSKeychain setPassword:newPassword forService:kOTRServiceName account:self.uniqueIdentifier error:&error];
     if (error) {
         DDLogError(@"Error saving password to keychain: %@%@", [error localizedDescription], [error userInfo]);
     }
@@ -93,37 +93,12 @@
         return nil;
     }
     NSError *error = nil;
-    NSString *password = [SSKeychain passwordForService:kOTRServiceName account:self.username error:&error];
+    NSString *password = [SSKeychain passwordForService:kOTRServiceName account:self.uniqueIdentifier error:&error];
     if (error) {
         DDLogError(@"Error retreiving password from keychain: %@%@", [error localizedDescription], [error userInfo]);
         error = nil;
     }
     return password;
-}
--(void)setNewUsername:(NSString *)newUsername
-{
-    NSString *oldUsername = [self.username copy];
-    
-    self.username = newUsername;
-    
-    if ([self.username isEqualToString:oldUsername]) {
-        return;
-    }
-    if (!self.rememberPassword) {
-        self.username = newUsername;
-        self.password = nil;
-        return;
-    }
-    if (oldUsername && ![oldUsername isEqualToString:newUsername]) {
-        NSString *tempPassword = self.password;
-        NSError *error = nil;
-        [SSKeychain deletePasswordForService:oldUsername account:kOTRServiceName error:&error];
-        if (error) {
-            DDLogError(@"Error deleting old password from keychain: %@%@", [error localizedDescription], [error userInfo]);
-        }
-        self.password = tempPassword;
-    }
-    
 }
 
 - (void) setRememberPasswordValue:(BOOL)remember {

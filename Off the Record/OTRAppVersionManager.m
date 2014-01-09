@@ -51,10 +51,20 @@
                 NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:keychainQuery.passwordData];
                 NSDictionary * dictionary = [unarchiver decodeObjectForKey:OTRArchiverKey];
                 [unarchiver finishDecoding];
+                [keychainQuery deleteItem:&error];
                 keychainQuery.passwordObject = dictionary;
                 [account setTokenDictionary:dictionary];
             }
         }
+    }];
+    NSArray * allAccounts = [OTRManagedAccount MR_findAll];
+    [allAccounts enumerateObjectsUsingBlock:^(OTRManagedAccount * account, NSUInteger idx, BOOL *stop) {
+        if (![account isKindOfClass:[OTRManagedOAuthAccount class]]) {
+            NSString * password = [SSKeychain passwordForService:kOTRServiceName account:account.username];
+            [SSKeychain deletePasswordForService:kOTRServiceName account:account.username];
+            [account setPassword:password];
+        }
+        
     }];
 }
 

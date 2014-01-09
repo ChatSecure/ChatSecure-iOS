@@ -33,7 +33,4 @@
 - (void) setDefaultsWithDomain:(NSString *)newDomain;
 - (NSString *)accountDomain;
 
-- (id)passwordObject;
-- (void)setPasswordObject:(id)object;
-
 @end

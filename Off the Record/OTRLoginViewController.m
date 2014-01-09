@@ -325,7 +325,7 @@
 
 -(void)readInFields
 {
-    [account setNewUsername:[usernameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
+    [account setUsername:[usernameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
     [account setRememberPasswordValue:rememberPasswordSwitch.on];
     
     self.account.autologinValue = self.autoLoginSwitch.on;

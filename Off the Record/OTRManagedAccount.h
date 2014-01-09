@@ -47,7 +47,6 @@
 - (OTRAccountType)accountType;
 - (NSString *) imageName;
 
-- (void)setNewUsername:(NSString *)newUsername;
 - (void)setDefaultsWithProtocol:(NSString*)newProtocol;
 
 - (void)setAllBuddiesStatuts:(OTRBuddyStatus)status;

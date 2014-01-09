@@ -41,7 +41,7 @@
         OTRManagedXMPPAccount * managagedXmppAccount = [OTRManagedXMPPAccount MR_createEntity];
         
         managagedXmppAccount.uniqueIdentifier = xmppAccount.uniqueIdentifier;
-        [managagedXmppAccount setNewUsername:xmppAccount.username];
+        [managagedXmppAccount setUsername:xmppAccount.username];
         managagedXmppAccount.domain = xmppAccount.domain;
         [managagedXmppAccount setPortValue:xmppAccount.port];
         managagedXmppAccount.protocol = xmppAccount.protocol;
@@ -64,7 +64,7 @@
         managedOscarAccount.protocol = oscarAccount.protocol;
         managedOscarAccount.password = oscarAccount.password;
         managedOscarAccount.uniqueIdentifier = managedOscarAccount.uniqueIdentifier;
-        [managedOscarAccount setNewUsername:oscarAccount.username];
+        [managedOscarAccount setUsername:oscarAccount.username];
         [managedOscarAccount setRememberPasswordValue:oscarAccount.rememberPassword];
         
         NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];

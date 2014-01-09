@@ -71,14 +71,4 @@
     return [self domain];
 }
 
-- (id)passwordObject
-{
-    return [self password];
-}
-
-- (void)setPasswordObject:(id)object
-{
-    [self setPassword:object];
-}
-
 @end

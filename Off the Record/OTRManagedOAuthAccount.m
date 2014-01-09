@@ -28,7 +28,7 @@
 {
     SSKeychainQuery * keychainQuery = [[SSKeychainQuery alloc] init];
     keychainQuery.service = kOTRServiceName;
-    keychainQuery.account = self.username;
+    keychainQuery.account = self.uniqueIdentifier;
     return keychainQuery;
 }
 
