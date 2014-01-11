@@ -27,6 +27,4 @@
 
 - (void)setIsDelivered:(BOOL)isDelivered animated:(BOOL)animated;
 
-+ (void)heightForString:(NSString *)string;
-
 @end

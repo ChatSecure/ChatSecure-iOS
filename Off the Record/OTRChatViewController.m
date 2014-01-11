@@ -597,22 +597,11 @@
         if([messageOrStatus isKindOfClass:[OTRManagedMessage class]]) {
             //only OTRManagedMessage get dates
             
-            __block BOOL anyTrue = NO;
             OTRManagedMessage * currentMessage = (OTRManagedMessage *)messageOrStatus;
-            [showDateForRowArray enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(NSNumber * obj, NSUInteger idx, BOOL *stop) {
-                if ([obj boolValue]) {
-                    anyTrue = YES;
-                    
-                    OTRManagedMessage * lastMessageWithDate = (OTRManagedMessage *)[self.messagesFetchedResultsController objectAtIndexPath:[NSIndexPath indexPathForItem:idx inSection:indexPath.section]];
-                    if ([currentMessage.date timeIntervalSinceDate:lastMessageWithDate.date] > MESSAGE_SENT_DATE_SHOW_TIME_INTERVAL) {
-                        showDate = YES;
-                    }
-                    *stop = YES;
-                }
-            }];
-            if (!anyTrue) {
-                //No dates shown so this would be the first
-                showDate=YES;
+            
+            if (!_previousShownSentDate || [currentMessage.date timeIntervalSinceDate:_previousShownSentDate] > MESSAGE_SENT_DATE_SHOW_TIME_INTERVAL) {
+                _previousShownSentDate = currentMessage.date;
+                showDate = YES;
             }
         }
     }
@@ -690,7 +679,7 @@
     else if( [[self.messagesFetchedResultsController sections][indexPath.section] numberOfObjects] > indexPath.row) {
         
         id messageOrStatus = [self.messagesFetchedResultsController objectAtIndexPath:indexPath];
-        BOOL showDate = [showDateForRowArray[indexPath.row] boolValue];
+        BOOL showDate = [self showDateForMessageAtIndexPath:indexPath];
 
         if ([messageOrStatus isKindOfClass:[OTRManagedMessage class]]) {
             OTRManagedMessage * message = (OTRManagedMessage *)messageOrStatus;
