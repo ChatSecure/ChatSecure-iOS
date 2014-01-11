@@ -75,9 +75,9 @@
 {
     if(!_textView) {
         CGFloat rightEdge = self.sendButton.frame.origin.x - 8;
-        _textView = [[HPGrowingTextView alloc] initWithFrame:CGRectMake(6, 6, rightEdge-6, 34)];
+        _textView = [[HPGrowingTextView alloc] initWithFrame:CGRectMake(6, 4, rightEdge-6, 34)];
         _textView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        //_textView = [[HPGrowingTextView alloc] initWithFrame:CGRectZero];
+        
         _textView.isScrollable = NO;
         _textView.delegate = self;
         _textView.contentInset = UIEdgeInsetsMake(0, 5, 0, 5);
@@ -87,11 +87,7 @@
         _textView.maxNumberOfLines = 2;
         _textView.animateHeightChange = YES;
         _textView.animationDuration = 0.1;
-        //_textView.translatesAutoresizingMaskIntoConstraints = NO;
-        //_textView.delegate = self;
         _textView.backgroundColor = [UIColor whiteColor];
-        //_textView.contentInset = UIEdgeInsetsMake(-4, -4, -4, 0);
-        //_textView.scrollsToTop = NO;
         _textView.font = [UIFont systemFontOfSize:MessageFontSize];
         _textView.placeholder = MESSAGE_PLACEHOLDER_STRING;
         
@@ -141,13 +137,6 @@
         frame.size.width = frame.size.width +8;
         _textViewBackgroundImageView.frame = frame;
         _textViewBackgroundImageView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-        /*
-        _textViewBackgroundImageView = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"MessageInputFieldBackground"] resizableImageWithCapInsets:UIEdgeInsetsMake(20, 12, 18, 18)]];
-        _textViewBackgroundImageView.backgroundColor = [UIColor colorWithWhite:245/255.0f alpha:1];
-        _textViewBackgroundImageView.frame = CGRectMake(5, 0, 248, 40);
-        _textViewBackgroundImageView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-         */
-        
     }
     return _textViewBackgroundImageView;
 }
@@ -191,158 +180,6 @@
     if ([self.delegate respondsToSelector:@selector(inputBarDidBeginEditing:)]) {
         [self.delegate inputBarDidBeginEditing:self];
     }
-}
-
--(void)updateConstraints
-{
-    [super updateConstraints];
-     /*
-    //SEND BUTTON
-    NSLayoutConstraint * constraint = [NSLayoutConstraint constraintWithItem:self.sendButton
-                                                                   attribute:NSLayoutAttributeBottom
-                                                                   relatedBy:NSLayoutRelationEqual
-                                                                      toItem:self
-                                                                   attribute:NSLayoutAttributeBottom
-                                                                  multiplier:1.0
-                                                                    constant:-7];
-    [self addConstraint:constraint];
-    
-    constraint = [NSLayoutConstraint constraintWithItem:self.sendButton
-                                              attribute:NSLayoutAttributeRight
-                                              relatedBy:NSLayoutRelationEqual
-                                                 toItem:self
-                                              attribute:NSLayoutAttributeRight
-                                             multiplier:1.0
-                                               constant:-6];
-    [self addConstraint:constraint];
-    
-    CGFloat buttonWidth = [SEND_STRING sizeWithFont:[UIFont systemFontOfSize:16]].width+20;
-    constraint = [NSLayoutConstraint constraintWithItem:self.sendButton
-                                              attribute:NSLayoutAttributeWidth
-                                              relatedBy:NSLayoutRelationEqual
-                                                 toItem:nil
-                                              attribute:NSLayoutAttributeWidth
-                                             multiplier:1.0
-                                               constant:buttonWidth];
-    [self addConstraint:constraint];
-    constraint = [NSLayoutConstraint constraintWithItem:self.sendButton
-                                              attribute:NSLayoutAttributeHeight
-                                              relatedBy:NSLayoutRelationEqual
-                                                 toItem:nil
-                                              attribute:NSLayoutAttributeHeight
-                                             multiplier:1.0
-                                               constant:26.0];
-    [self addConstraint:constraint];
-    
-    //BACKGROUND VIEW
-    constraint = [NSLayoutConstraint constraintWithItem:self.backgroundImageview
-                                              attribute:NSLayoutAttributeCenterX
-                                              relatedBy:NSLayoutRelationEqual
-                                                 toItem:self
-                                              attribute:NSLayoutAttributeCenterX
-                                             multiplier:1.0
-                                               constant:0.0];
-    [self addConstraint:constraint];
-    
-    constraint = [NSLayoutConstraint constraintWithItem:self.backgroundImageview
-                                              attribute:NSLayoutAttributeCenterY
-                                              relatedBy:NSLayoutRelationEqual
-                                                 toItem:self
-                                              attribute:NSLayoutAttributeCenterY
-                                             multiplier:1.0
-                                               constant:0.0];
-    [self addConstraint:constraint];
-    constraint = [NSLayoutConstraint constraintWithItem:self.backgroundImageview
-                                              attribute:NSLayoutAttributeWidth
-                                              relatedBy:NSLayoutRelationEqual
-                                                 toItem:self
-                                              attribute:NSLayoutAttributeWidth
-                                             multiplier:1.0
-                                               constant:0.0];
-    [self addConstraint:constraint];
-    constraint = [NSLayoutConstraint constraintWithItem:self.backgroundImageview
-                                              attribute:NSLayoutAttributeHeight
-                                              relatedBy:NSLayoutRelationEqual
-                                                 toItem:self
-                                              attribute:NSLayoutAttributeHeight
-                                             multiplier:1.0
-                                               constant:0.0];
-    [self addConstraint:constraint];
-    
-    //TEXT VIEW
-   
-    constraint = [NSLayoutConstraint constraintWithItem:self.textView
-                                              attribute:NSLayoutAttributeLeft
-                                              relatedBy:NSLayoutRelationEqual
-                                                 toItem:self.textViewBackgroundImageView
-                                              attribute:NSLayoutAttributeLeft
-                                             multiplier:1.0
-                                               constant:6.0];
-    [self addConstraint:constraint];
-    constraint = [NSLayoutConstraint constraintWithItem:self.textView
-                                              attribute:NSLayoutAttributeRight
-                                              relatedBy:NSLayoutRelationEqual
-                                                 toItem:self.textViewBackgroundImageView
-                                              attribute:NSLayoutAttributeRight
-                                             multiplier:1.0
-                                               constant:-6.0];
-    [self addConstraint:constraint];
-    constraint = [NSLayoutConstraint constraintWithItem:self.textView
-                                              attribute:NSLayoutAttributeBottom
-                                              relatedBy:NSLayoutRelationEqual
-                                                 toItem:self.textViewBackgroundImageView
-                                              attribute:NSLayoutAttributeBottom
-                                             multiplier:1.0
-                                               constant:-6.0];
-    [self addConstraint:constraint];
-    textViewHeightConstraint = [NSLayoutConstraint constraintWithItem:self.textView
-                                              attribute:NSLayoutAttributeTop
-                                              relatedBy:NSLayoutRelationEqual
-                                                 toItem:self.textViewBackgroundImageView
-                                              attribute:NSLayoutAttributeTop
-                                             multiplier:1.0
-                                               constant:8.0];
-    [self addConstraint:textViewHeightConstraint];
-    
-    
-    
-    //TEXT VIEW BACKGROUND IMAGE VIEW
-    constraint = [NSLayoutConstraint constraintWithItem:self.textViewBackgroundImageView
-                                              attribute:NSLayoutAttributeLeft
-                                              relatedBy:NSLayoutRelationEqual
-                                                 toItem:self
-                                              attribute:NSLayoutAttributeLeft
-                                             multiplier:1.0
-                                               constant:5.0];
-    [self addConstraint:constraint];
-    constraint = [NSLayoutConstraint constraintWithItem:self.textViewBackgroundImageView
-                                              attribute:NSLayoutAttributeTop
-                                              relatedBy:NSLayoutRelationEqual
-                                                 toItem:self
-                                              attribute:NSLayoutAttributeTop
-                                             multiplier:1.0
-                                               constant:0.0];
-    [self addConstraint:constraint];
-    constraint = [NSLayoutConstraint constraintWithItem:self.textViewBackgroundImageView
-                                              attribute:NSLayoutAttributeRight
-                                              relatedBy:NSLayoutRelationEqual
-                                                 toItem:self.sendButton
-                                              attribute:NSLayoutAttributeLeft
-                                             multiplier:1.0
-                                               constant:-4];
-    [self addConstraint:constraint];
-    constraint = [NSLayoutConstraint constraintWithItem:self.textViewBackgroundImageView
-                                              attribute:NSLayoutAttributeBottom
-                                              relatedBy:NSLayoutRelationEqual
-                                                 toItem:self
-                                              attribute:NSLayoutAttributeBottom
-                                             multiplier:1.0
-                                               constant:0.0];
-    [self addConstraint:constraint];
-    
-    */
-    
-    
 }
 
 @end
