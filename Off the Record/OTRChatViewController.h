@@ -29,7 +29,7 @@
 
 @interface OTRChatViewController : UIViewController <UIActionSheetDelegate, UISplitViewControllerDelegate,UIAlertViewDelegate,UITableViewDataSource,UITableViewDelegate,NSFetchedResultsControllerDelegate,OTRChatInputBarDelegate>
 {
-    NSMutableArray * _heightForRow;
+    NSMutableArray * showDateForRowArray;
     NSDate *_previousShownSentDate;
     UIImage *_messageBubbleComposing;
     CGFloat _previousTextViewContentHeight;

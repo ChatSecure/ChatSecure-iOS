@@ -172,6 +172,7 @@
 		6352DC8D15AFB252007AD0B4 /* xmpp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6352DC8B15AFB252007AD0B4 /* xmpp@2x.png */; };
 		6352DC9015AFB3D2007AD0B4 /* facebook.png in Resources */ = {isa = PBXBuildFile; fileRef = 6352DC8E15AFB3D2007AD0B4 /* facebook.png */; };
 		6352DC9115AFB3D2007AD0B4 /* facebook@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6352DC8F15AFB3D2007AD0B4 /* facebook@2x.png */; };
+		63534AAF187F5A1400061776 /* OTRChatBubbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63534AAE187F5A1400061776 /* OTRChatBubbleView.m */; };
 		6356236617EA794300068231 /* OTRManagedFacebookAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 6356236117EA794300068231 /* OTRManagedFacebookAccount.m */; };
 		6356236717EA794300068231 /* OTRManagedGoogleAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 6356236317EA794300068231 /* OTRManagedGoogleAccount.m */; };
 		6356236B17EA79FB00068231 /* OTRManagedOAuthAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 6356236A17EA79FB00068231 /* OTRManagedOAuthAccount.m */; };
@@ -994,6 +995,8 @@
 		6352DC8B15AFB252007AD0B4 /* xmpp@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "xmpp@2x.png"; sourceTree = "<group>"; };
 		6352DC8E15AFB3D2007AD0B4 /* facebook.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = facebook.png; sourceTree = "<group>"; };
 		6352DC8F15AFB3D2007AD0B4 /* facebook@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "facebook@2x.png"; sourceTree = "<group>"; };
+		63534AAD187F5A1400061776 /* OTRChatBubbleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRChatBubbleView.h; sourceTree = "<group>"; };
+		63534AAE187F5A1400061776 /* OTRChatBubbleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRChatBubbleView.m; sourceTree = "<group>"; };
 		6356236017EA794300068231 /* OTRManagedFacebookAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRManagedFacebookAccount.h; sourceTree = "<group>"; };
 		6356236117EA794300068231 /* OTRManagedFacebookAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRManagedFacebookAccount.m; sourceTree = "<group>"; };
 		6356236217EA794300068231 /* OTRManagedGoogleAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRManagedGoogleAccount.h; sourceTree = "<group>"; };
@@ -3456,6 +3459,8 @@
 				631FE8841720951400AEA107 /* OTRStatusMessageCell.m */,
 				632E5C8416D1A2A90037E37C /* OTRMessageTableViewCell.h */,
 				632E5C8516D1A2A90037E37C /* OTRMessageTableViewCell.m */,
+				63534AAD187F5A1400061776 /* OTRChatBubbleView.h */,
+				63534AAE187F5A1400061776 /* OTRChatBubbleView.m */,
 				63022BB416CDAD4C00F764F1 /* OTRChatViewController.h */,
 				63022BB516CDAD4C00F764F1 /* OTRChatViewController.m */,
 				638940CF1815E339005F651E /* OTRDemoChatViewController.h */,
@@ -4128,6 +4133,7 @@
 				D9CEEE7D168423CA00B236B5 /* AIMMessageParser.m in Sources */,
 				D9CEEE7E168423CA00B236B5 /* AIMMissedCall.m in Sources */,
 				D9CEEE7F168423CA00B236B5 /* AIMNickWInfo+BArt.m in Sources */,
+				63534AAF187F5A1400061776 /* OTRChatBubbleView.m in Sources */,
 				D9CEEE80168423CA00B236B5 /* AIMNickWInfo+Caps.m in Sources */,
 				D9CEEE81168423CA00B236B5 /* AIMNickWInfo+Update.m in Sources */,
 				D9CEEE82168423CA00B236B5 /* AIMNickWInfo.m in Sources */,

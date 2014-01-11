@@ -9,22 +9,24 @@
 #import <UIKit/UIKit.h>
 #import "OTRManagedMessage.h"
 #import "TTTAttributedLabel.h"
+#import "OTRChatBubbleView.h"
 
 @interface OTRMessageTableViewCell : UITableViewCell <TTTAttributedLabelDelegate>
+{
+    NSLayoutConstraint * dateHeightConstraint;
+}
 
 @property (nonatomic, strong) OTRManagedMessage * message;
-@property (nonatomic, strong) UILabel * messageSentDateLabel;
-@property (nonatomic, strong) UIImageView *messageBackgroundImageView;
-@property (nonatomic, strong) TTTAttributedLabel *messageTextLabel;
-@property (nonatomic, strong) UIImageView * messageDeliverdImageView;
+@property (nonatomic, strong) UILabel * dateLabel;
 @property (nonatomic) BOOL showDate;
 
+@property (nonatomic, strong) OTRChatBubbleView * bubbleView;
 
 
 -(id)initWithMessage:(OTRManagedMessage *)message withDate:(BOOL)showDate reuseIdentifier:(NSString*)identifier;
 
--(void)showDeliveredAnimated:(BOOL)animated;
++ (CGSize)messageTextLabelSize:(NSString *)message;
 
-+(CGSize)messageTextLabelSize:(NSString *)message;
++ (CGFloat)heightForMesssage:(NSString *)message showDate:(BOOL)showDate;
 
 @end
