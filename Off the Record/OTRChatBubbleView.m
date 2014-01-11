@@ -30,8 +30,6 @@
         [self addSubview:self.messageTextLabel];
         
         [self needsUpdateConstraints];
-        
-        [self setupConstraints];
     }
     return self;
 }
@@ -119,23 +117,13 @@
                                                constant:10];
     [self addConstraint:constraint];
     
-    
-    
-    
-    [self setNeedsUpdateConstraints];
-}
-
--(void) updateConstraints
-{
-    [super updateConstraints];
-    
-    NSLayoutConstraint * constraint = [NSLayoutConstraint constraintWithItem:self.messageBackgroundImageView
-                                                                   attribute:NSLayoutAttributeWidth
-                                                                   relatedBy:NSLayoutRelationEqual
-                                                                      toItem:self.messageTextLabel
-                                                                   attribute:NSLayoutAttributeWidth
-                                                                  multiplier:1.0
-                                                                    constant:34];
+    constraint = [NSLayoutConstraint constraintWithItem:self.messageBackgroundImageView
+                                              attribute:NSLayoutAttributeWidth
+                                              relatedBy:NSLayoutRelationEqual
+                                                 toItem:self.messageTextLabel
+                                              attribute:NSLayoutAttributeWidth
+                                             multiplier:1.0
+                                               constant:34];
     [self addConstraint:constraint];
     
     constraint = [NSLayoutConstraint constraintWithItem:self.messageBackgroundImageView
@@ -156,19 +144,57 @@
                                                constant:0.0];
     [self addConstraint:constraint];
     
-    
-    
-    
     //Text Label
-    CGSize messageTextLabelSize = [_messageTextLabel sizeThatFits:CGSizeMake(180, CGFLOAT_MAX)];
     constraint = [NSLayoutConstraint constraintWithItem:self.messageTextLabel
                                               attribute:NSLayoutAttributeCenterY
                                               relatedBy:NSLayoutRelationEqual
-                                                  toItem:self.messageBackgroundImageView
-                                               attribute:NSLayoutAttributeCenterY
-                                              multiplier:1.0
-                                                constant:-2.0];
+                                                 toItem:self.messageBackgroundImageView
+                                              attribute:NSLayoutAttributeCenterY
+                                             multiplier:1.0
+                                               constant:-2.0];
     [self addConstraint:constraint];
+    
+    
+    
+    
+    
+    //self
+    constraint = [NSLayoutConstraint constraintWithItem:self
+                                              attribute:NSLayoutAttributeHeight
+                                              relatedBy:NSLayoutRelationEqual
+                                                 toItem:self.messageBackgroundImageView
+                                              attribute:NSLayoutAttributeHeight
+                                             multiplier:1.0
+                                               constant:0.0];
+    [self addConstraint:constraint];
+}
+
+-(void) updateConstraints
+{
+    [super updateConstraints];
+    
+    [self setupConstraints];
+    
+    CGSize messageTextLabelSize = [self.messageTextLabel sizeThatFits:CGSizeMake(180, CGFLOAT_MAX)];
+    [self removeConstraint:textWidthConstraint];
+    textWidthConstraint = [NSLayoutConstraint constraintWithItem:self.messageTextLabel
+                                                       attribute:NSLayoutAttributeWidth
+                                                       relatedBy:NSLayoutRelationEqual
+                                                          toItem:nil
+                                                       attribute:NSLayoutAttributeNotAnAttribute
+                                                      multiplier:1.0
+                                                        constant:messageTextLabelSize.width];
+    [self addConstraint:textWidthConstraint];
+    
+    [self removeConstraint:textHeightConstraint];
+    textHeightConstraint = [NSLayoutConstraint constraintWithItem:self.messageTextLabel
+                                                        attribute:NSLayoutAttributeHeight
+                                                        relatedBy:NSLayoutRelationEqual
+                                                           toItem:nil
+                                                        attribute:NSLayoutAttributeNotAnAttribute
+                                                       multiplier:1.0
+                                                         constant:messageTextLabelSize.height];
+    [self addConstraint:textHeightConstraint];
     
     [self removeConstraint:labelSideConstraint];
     [self removeConstraint:imageViewSideConstraint];
@@ -226,38 +252,6 @@
     [self addConstraint:deliveredSideConstraint];
     [self addConstraint:imageViewSideConstraint];
     [self addConstraint:labelSideConstraint];
-    
-    [self removeConstraint:textWidthConstraint];
-    textWidthConstraint = [NSLayoutConstraint constraintWithItem:self.messageTextLabel
-                                              attribute:NSLayoutAttributeWidth
-                                              relatedBy:NSLayoutRelationEqual
-                                                 toItem:nil
-                                              attribute:NSLayoutAttributeNotAnAttribute
-                                             multiplier:1.0
-                                               constant:messageTextLabelSize.width];
-    [self addConstraint:textWidthConstraint];
-    
-    [self removeConstraint:textHeightConstraint];
-    textHeightConstraint = [NSLayoutConstraint constraintWithItem:self.messageTextLabel
-                                              attribute:NSLayoutAttributeHeight
-                                              relatedBy:NSLayoutRelationEqual
-                                                 toItem:nil
-                                              attribute:NSLayoutAttributeNotAnAttribute
-                                             multiplier:1.0
-                                               constant:messageTextLabelSize.height];
-    [self addConstraint:textHeightConstraint];
-    
-    
-    
-    //self
-    constraint = [NSLayoutConstraint constraintWithItem:self
-                                              attribute:NSLayoutAttributeHeight
-                                              relatedBy:NSLayoutRelationEqual
-                                                 toItem:self.messageBackgroundImageView
-                                              attribute:NSLayoutAttributeHeight
-                                             multiplier:1.0
-                                               constant:0.0];
-    [self addConstraint:constraint];
 }
 
 @end

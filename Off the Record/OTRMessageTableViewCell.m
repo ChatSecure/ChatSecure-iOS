@@ -51,6 +51,7 @@
         self.bubbleView.messageTextLabel = label;
         
         [self.contentView addSubview:self.bubbleView];
+        [self setupConstraints];
         
         [self setMessage:newMessage];
     }
@@ -84,10 +85,8 @@
     [self layoutIfNeeded];
 }
 
-- (void)updateConstraints
+-(void)setupConstraints
 {
-    [super updateConstraints];
-    
     ///bubble View
     NSLayoutConstraint * constraint = [NSLayoutConstraint constraintWithItem:self.bubbleView
                                                                    attribute:NSLayoutAttributeTop
@@ -143,6 +142,11 @@
                                              multiplier:1.0
                                                constant:0.0];
     [self addConstraint:constraint];
+}
+
+- (void)updateConstraints
+{
+    [super updateConstraints];
     
     [self removeConstraint:dateHeightConstraint];
     CGFloat dateheight = 0.0;
