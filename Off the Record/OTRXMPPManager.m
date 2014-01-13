@@ -612,7 +612,7 @@
         OTRManagedBuddy * buddy = [self managedBuddyWithObjectID:managedBuddyObjectID];
         
         
-        if (buddy.lastSentChatState.intValue == chatState) {
+        if (buddy.lastSentChatStateValue == chatState) {
             return;
         }
         
@@ -624,8 +624,12 @@
         BOOL shouldSend = YES;
         
         if (chatState == kOTRChatStateActive) {
-            [[self pausedChatStateTimerForBuddyObjectID:managedBuddyObjectID] invalidate];
-            [self restartInactiveChatStateTimerForBuddyObjectID:managedBuddyObjectID];
+            //Timers
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[self pausedChatStateTimerForBuddyObjectID:managedBuddyObjectID] invalidate];
+                [self restartInactiveChatStateTimerForBuddyObjectID:managedBuddyObjectID];
+            });
+            
             [xMessage addActiveChatState];
         }
         else if (chatState == kOTRChatStateComposing)
@@ -635,9 +639,11 @@
             else
                 shouldSend = NO;
             
-            [self restartPausedChatStateTimerForBuddyObjectID:managedBuddyObjectID];
-            [[self inactiveChatStateTimerForBuddyObjectID:managedBuddyObjectID] invalidate];
-            
+            //Timers
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self restartPausedChatStateTimerForBuddyObjectID:managedBuddyObjectID];
+                [[self inactiveChatStateTimerForBuddyObjectID:managedBuddyObjectID] invalidate];
+            });
         }
         else if(chatState == kOTRChatStateInactive)
         {
@@ -771,7 +777,6 @@ managedBuddyObjectID
     NSManagedObjectID * managedBuddyObjectID= (NSManagedObjectID *)timer.userInfo;
     [timer invalidate];
     [self sendChatState:kOTRChatStateInactive withBuddyID:managedBuddyObjectID];
-    
 }
 
 - (OTRCertificatePinning *)certificatePinningModule
