@@ -49,9 +49,9 @@
     managedStatus.date = [NSDate date];
     managedStatus.isEncryptedValue = NO;
     
-    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    /*NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
     [context MR_saveToPersistentStoreAndWait];
-    
+    */
     return managedStatus;
 }
 +(OTRManagedStatus *)newStatus:(OTRBuddyStatus)newStatus withMessage:(NSString *)newMessage withBuddy:(OTRManagedBuddy *)newBuddy incoming:(BOOL)newIsIncoming inContext:(NSManagedObjectContext *)context

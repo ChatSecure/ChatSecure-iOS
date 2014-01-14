@@ -46,9 +46,11 @@
             buddyUsername = _buddy.accountName;
         }
         
-        
-        
-        OTRBuddyStatus buddyStatus = [_buddy currentStatusMessage].statusValue;
+        OTRBuddyStatus buddyStatus = OTRBuddyStatusOffline;
+        OTRManagedStatus * status = [_buddy currentStatusMessage];
+        if (status) {
+            buddyStatus = status.statusValue;
+        }
         
         self.textLabel.text = buddyUsername;
         self.accessibilityLabel = buddyUsername;
@@ -59,10 +61,14 @@
         
         
         if (self.showStatus) {
-            self.detailTextLabel.text = [buddy currentStatusMessage].message;
+            self.detailTextLabel.text = [OTRManagedStatus statusMessageWithStatus:buddyStatus];
+        }
+        else if (buddy.account.displayName.length) {
+            self.detailTextLabel.text = buddy.account.displayName;
         }
         else {
             self.detailTextLabel.text = buddy.account.username;
+
         }
         
         switch(buddyStatus)
@@ -94,5 +100,8 @@
 
     // Configure the view for the selected state
 }
+
+
+
 
 @end

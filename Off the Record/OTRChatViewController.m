@@ -179,7 +179,7 @@
     
     self.view.backgroundColor = [UIColor whiteColor];
     
-    _heightForRow = [NSMutableArray array];
+    showDateForRowArray = [NSMutableArray array];
     _messageBubbleComposing = [UIImage imageNamed:@"MessageBubbleTyping"];
     
     self.chatHistoryTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
@@ -212,20 +212,6 @@
     [self.view addSubview:chatInputBar];
     
     self.view.keyboardTriggerOffset = chatInputBar.frame.size.height;
-    
-    
-    __weak OTRChatViewController * chatViewController = self;
-    __weak OTRChatInputBar * weakChatInputbar = chatInputBar;
-    [self.view addKeyboardPanningWithActionHandler:^(CGRect keyboardFrameInView) {
-        CGRect messageInputBarFrame = weakChatInputbar.frame;
-        messageInputBarFrame.origin.y = keyboardFrameInView.origin.y - messageInputBarFrame.size.height;
-        weakChatInputbar.frame = messageInputBarFrame;
-        
-        UIEdgeInsets tableViewContentInset = chatViewController.chatHistoryTableView.contentInset;
-        tableViewContentInset.bottom = chatViewController.view.frame.size.height-weakChatInputbar.frame.origin.y;
-        chatViewController.chatHistoryTableView.contentInset = chatViewController.chatHistoryTableView.scrollIndicatorInsets = tableViewContentInset;
-        [chatViewController scrollToBottomAnimated:NO];
-    }];
     
     swipeGestureRecognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(handleSwipeFrom)];
     [self.view addGestureRecognizer:swipeGestureRecognizer];
@@ -265,7 +251,13 @@
             //self.title = newBuddy.accountName;
             titleView.titleLabel.text = newBuddy.accountName;
         }
-        titleView.subtitleLabel.text = newBuddy.account.username;
+        
+        if(newBuddy.account.displayName.length) {
+            titleView.subtitleLabel.text = newBuddy.account.displayName;
+        }
+        else {
+            titleView.subtitleLabel.text = newBuddy.account.username;
+        }
         
         [self refreshLockButton];
         [self updateChatState:NO];
@@ -468,7 +460,7 @@
         }
         [self buddyFetchedResultsController];
         [self messagesFetchedResultsController];
-        _heightForRow = [NSMutableArray array];
+        showDateForRowArray = [NSMutableArray array];
         _previousShownSentDate = nil;
         [self.buddy allMessagesRead];
         
@@ -500,14 +492,29 @@
 
 -(void)viewDidDisappear:(BOOL)animated
 {
+    [super viewDidDisappear:animated];
+    [self.view removeKeyboardControl];
     [self setBuddy:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [super viewDidDisappear:animated];
 }
 
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    __weak OTRChatViewController * chatViewController = self;
+    __weak OTRChatInputBar * weakChatInputbar = chatInputBar;
+    [self.view addKeyboardPanningWithActionHandler:^(CGRect keyboardFrameInView) {
+        CGRect messageInputBarFrame = weakChatInputbar.frame;
+        messageInputBarFrame.origin.y = keyboardFrameInView.origin.y - messageInputBarFrame.size.height;
+        weakChatInputbar.frame = messageInputBarFrame;
+        
+        UIEdgeInsets tableViewContentInset = chatViewController.chatHistoryTableView.contentInset;
+        tableViewContentInset.bottom = chatViewController.view.frame.size.height-weakChatInputbar.frame.origin.y;
+        chatViewController.chatHistoryTableView.contentInset = chatViewController.chatHistoryTableView.scrollIndicatorInsets = tableViewContentInset;
+        [chatViewController scrollToBottomAnimated:NO];
+    }];
+    
     [self refreshView];
     [self updateChatState:NO];
     
@@ -574,70 +581,61 @@
     }
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    //    DDLogInfo(@"heightForRowAtIndexPath: %@", indexPath);
+- (BOOL)showDateForMessageAtIndexPath:(NSIndexPath *)indexPath {
     
+    if (indexPath.row < [showDateForRowArray count]) {
+        return [showDateForRowArray[indexPath.row] boolValue];
+    }
+    else if (indexPath.row - [showDateForRowArray count] > 0)
+    {
+        [self showDateForMessageAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row-1 inSection:indexPath.section]];
+    }
+    
+    __block BOOL showDate = NO;
+    if (indexPath.row < [[self.messagesFetchedResultsController sections][indexPath.section] numberOfObjects]) {
+        id messageOrStatus = [self.messagesFetchedResultsController objectAtIndexPath:indexPath];
+        if([messageOrStatus isKindOfClass:[OTRManagedMessage class]]) {
+            //only OTRManagedMessage get dates
+            
+            OTRManagedMessage * currentMessage = (OTRManagedMessage *)messageOrStatus;
+            
+            if (!_previousShownSentDate || [currentMessage.date timeIntervalSinceDate:_previousShownSentDate] > MESSAGE_SENT_DATE_SHOW_TIME_INTERVAL) {
+                _previousShownSentDate = currentMessage.date;
+                showDate = YES;
+            }
+        }
+    }
+    
+    
+    [showDateForRowArray addObject:[NSNumber numberWithBool:showDate]];
+    
+    return showDate;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    CGFloat height = 0;
     if (indexPath.row < [[self.messagesFetchedResultsController sections][indexPath.section] numberOfObjects])
     {
-        NSArray *messageDetails = nil;
-        if ([_heightForRow count] > indexPath.row) {
-            messageDetails = _heightForRow[indexPath.row];
-        }
-        
-        CGFloat messageSentDateLabelHeight = 0;
-        CGFloat messageDeliveredLabelHeight = 0;
-        CGFloat messageTextLabelHeight = 0;
-        
-        if (messageDetails) {
-            messageSentDateLabelHeight = [messageDetails[0] floatValue];
-            messageTextLabelHeight = [messageDetails[1] CGSizeValue].height;
-            messageDeliveredLabelHeight = [messageDetails[2] floatValue];
-        }
-        
+        BOOL showDate = [self showDateForMessageAtIndexPath:indexPath];
         id messageOrStatus = [self.messagesFetchedResultsController objectAtIndexPath:indexPath];
-        if([messageOrStatus isKindOfClass:[OTRManagedMessage class]])
-        {
+        if([messageOrStatus isKindOfClass:[OTRManagedMessage class]]) {
+
             OTRManagedMessage * message = (OTRManagedMessage *)messageOrStatus;
+            height = [OTRMessageTableViewCell heightForMesssage:message.message showDate:showDate];
             
-            
-            if (!messageDetails)
-            {
-                if ((!_previousShownSentDate || [message.date timeIntervalSinceDate:_previousShownSentDate] > MESSAGE_SENT_DATE_SHOW_TIME_INTERVAL)) {
-                    _previousShownSentDate = message.date;
-                    messageSentDateLabelHeight = MESSAGE_SENT_DATE_LABEL_HEIGHT;
-                }
-                CGSize messageTextLabelSize = [OTRMessageTableViewCell messageTextLabelSize:message.message];
-                messageTextLabelHeight = messageTextLabelSize.height;
-                
-                
-                //messageTextLabelHeight = MESSAGE_DELIVERED_LABEL_HEIGHT;
-                
-                
-                _heightForRow[indexPath.row] = @[@(messageSentDateLabelHeight), [NSValue valueWithCGSize:messageTextLabelSize], @(messageDeliveredLabelHeight)];
-            }
-            
-            return messageSentDateLabelHeight+messageTextLabelHeight+messageDeliveredLabelHeight+MESSAGE_MARGIN_TOP+MESSAGE_MARGIN_BOTTOM;
         }
-        else
-        {
-            if(!messageDetails)
-            {
-                _heightForRow[indexPath.row] = @[@(MESSAGE_SENT_DATE_LABEL_HEIGHT), [NSValue valueWithCGSize:CGSizeZero], @(messageDeliveredLabelHeight)];
-            }
-            
-            return MESSAGE_SENT_DATE_LABEL_HEIGHT;
+        else {
+            height = MESSAGE_SENT_DATE_LABEL_HEIGHT;
         }
-        
-        
     }
     else
     {
         //Composing messsage height
         CGSize messageTextLabelSize =[OTRMessageTableViewCell messageTextLabelSize:@"T"];
-        return messageTextLabelSize.height+MESSAGE_MARGIN_TOP+MESSAGE_MARGIN_BOTTOM;
+        height = messageTextLabelSize.height+MESSAGE_MARGIN_TOP+MESSAGE_MARGIN_BOTTOM;
     }
-    
-    
+    return height;
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -681,30 +679,28 @@
     else if( [[self.messagesFetchedResultsController sections][indexPath.section] numberOfObjects] > indexPath.row) {
         
         id messageOrStatus = [self.messagesFetchedResultsController objectAtIndexPath:indexPath];
-        NSArray *messageDetails = _heightForRow[indexPath.row];
-        BOOL showDate = [messageDetails[0] boolValue];
+        BOOL showDate = [self showDateForMessageAtIndexPath:indexPath];
 
         if ([messageOrStatus isKindOfClass:[OTRManagedMessage class]]) {
             OTRManagedMessage * message = (OTRManagedMessage *)messageOrStatus;
-            static NSString *CellIdentifier = @"Cell";
+            static NSString *messageCellIdentifier = @"messageCell";
             OTRMessageTableViewCell * cell;
-            cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+            cell = [tableView dequeueReusableCellWithIdentifier:messageCellIdentifier];
             if (!cell) {
-                cell = [[OTRMessageTableViewCell alloc] initWithMessage:message withDate:showDate reuseIdentifier:CellIdentifier];
+                cell = [[OTRMessageTableViewCell alloc] initWithMessage:message withDate:showDate reuseIdentifier:messageCellIdentifier];
             } else {
                 cell.showDate = showDate;
                 cell.message = message;
-                
             }
             return cell;
         }
         else if ([messageOrStatus isKindOfClass:[OTRManagedStatus class]] || [messageOrStatus isKindOfClass:[OTRManagedEncryptionStatusMessage class]])
         {
-            static NSString *CellIdentifier = @"statusCell";
+            static NSString *statusCellIdentifier = @"statusCell";
             UITableViewCell * cell;
-            cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+            cell = [tableView dequeueReusableCellWithIdentifier:statusCellIdentifier];
             if (!cell) {
-                cell = [[OTRStatusMessageCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
+                cell = [[OTRStatusMessageCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:statusCellIdentifier];
             }
             
             
@@ -796,12 +792,12 @@
                 break;
             case NSFetchedResultsChangeUpdate:
             {
-                [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+                [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
             }
                 break;
             case NSFetchedResultsChangeDelete:
             {
-                [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+                [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationRight];
             }
                 break;
         }

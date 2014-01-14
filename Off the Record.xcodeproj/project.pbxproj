@@ -176,6 +176,7 @@
 		63534A57187B6FBB00061776 /* _OTRManagedXMPPTorAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 63534A56187B6FBB00061776 /* _OTRManagedXMPPTorAccount.m */; };
 		63534A5A187B6FCD00061776 /* OTRManagedXMPPTorAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 63534A59187B6FCD00061776 /* OTRManagedXMPPTorAccount.m */; };
 		63534A5D187B700200061776 /* OTRXMPPCreateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63534A5C187B700200061776 /* OTRXMPPCreateViewController.m */; };
+		63534AAF187F5A1400061776 /* OTRChatBubbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63534AAE187F5A1400061776 /* OTRChatBubbleView.m */; };
 		6356236617EA794300068231 /* OTRManagedFacebookAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 6356236117EA794300068231 /* OTRManagedFacebookAccount.m */; };
 		6356236717EA794300068231 /* OTRManagedGoogleAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 6356236317EA794300068231 /* OTRManagedGoogleAccount.m */; };
 		6356236B17EA79FB00068231 /* OTRManagedOAuthAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 6356236A17EA79FB00068231 /* OTRManagedOAuthAccount.m */; };
@@ -998,6 +999,8 @@
 		6352DC8B15AFB252007AD0B4 /* xmpp@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "xmpp@2x.png"; sourceTree = "<group>"; };
 		6352DC8E15AFB3D2007AD0B4 /* facebook.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = facebook.png; sourceTree = "<group>"; };
 		6352DC8F15AFB3D2007AD0B4 /* facebook@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "facebook@2x.png"; sourceTree = "<group>"; };
+		63534AAD187F5A1400061776 /* OTRChatBubbleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRChatBubbleView.h; sourceTree = "<group>"; };
+		63534AAE187F5A1400061776 /* OTRChatBubbleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRChatBubbleView.m; sourceTree = "<group>"; };
 		63534A51187B6EB300061776 /* OTRCreateAccountChooserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRCreateAccountChooserViewController.h; sourceTree = "<group>"; };
 		63534A52187B6EB300061776 /* OTRCreateAccountChooserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRCreateAccountChooserViewController.m; sourceTree = "<group>"; };
 		63534A54187B6F7F00061776 /* ChatSecure 4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ChatSecure 4.xcdatamodel"; sourceTree = "<group>"; };
@@ -3473,6 +3476,8 @@
 				631FE8841720951400AEA107 /* OTRStatusMessageCell.m */,
 				632E5C8416D1A2A90037E37C /* OTRMessageTableViewCell.h */,
 				632E5C8516D1A2A90037E37C /* OTRMessageTableViewCell.m */,
+				63534AAD187F5A1400061776 /* OTRChatBubbleView.h */,
+				63534AAE187F5A1400061776 /* OTRChatBubbleView.m */,
 				63022BB416CDAD4C00F764F1 /* OTRChatViewController.h */,
 				63022BB516CDAD4C00F764F1 /* OTRChatViewController.m */,
 				638940CF1815E339005F651E /* OTRDemoChatViewController.h */,
@@ -4151,6 +4156,7 @@
 				D9CEEE7D168423CA00B236B5 /* AIMMessageParser.m in Sources */,
 				D9CEEE7E168423CA00B236B5 /* AIMMissedCall.m in Sources */,
 				D9CEEE7F168423CA00B236B5 /* AIMNickWInfo+BArt.m in Sources */,
+				63534AAF187F5A1400061776 /* OTRChatBubbleView.m in Sources */,
 				D9CEEE80168423CA00B236B5 /* AIMNickWInfo+Caps.m in Sources */,
 				D9CEEE81168423CA00B236B5 /* AIMNickWInfo+Update.m in Sources */,
 				D9CEEE82168423CA00B236B5 /* AIMNickWInfo.m in Sources */,
@@ -4617,7 +4623,6 @@
 		63058651183F02D4009ADB6B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/ChatSecure.app/ChatSecure";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -4663,7 +4668,6 @@
 		63058652183F02D4009ADB6B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/ChatSecure.app/ChatSecure";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -4706,7 +4710,6 @@
 		63C08570184574BE00B9C984 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/ChatSecure.app/ChatSecure";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -4752,7 +4755,6 @@
 		63C08571184574BE00B9C984 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/ChatSecure.app/ChatSecure";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -4851,9 +4853,8 @@
 		D9F937A313F44BD3009A3D84 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD)";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4861,7 +4862,10 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Off the Record/Off the Record-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = _GCRYPT_IN_LIBGCRYPT;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_GCRYPT_IN_LIBGCRYPT,
+					DEBUG,
+				);
 				GCC_THUMB_SUPPORT = NO;
 				HEADER_SEARCH_PATHS = (
 					/usr/include/libxml2,
@@ -4886,9 +4890,8 @@
 		D9F937A413F44BD3009A3D84 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD)";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4918,7 +4921,7 @@
 				);
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = ChatSecure;
-				PROVISIONING_PROFILE = "8982714E-0702-4FE9-B2AD-39F2E346EFA7";
+				PROVISIONING_PROFILE = "B1F37C5D-E889-405C-9144-76C4F1780A95";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};

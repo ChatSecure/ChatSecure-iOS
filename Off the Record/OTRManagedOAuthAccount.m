@@ -28,8 +28,18 @@
 {
     SSKeychainQuery * keychainQuery = [[SSKeychainQuery alloc] init];
     keychainQuery.service = kOTRServiceName;
-    keychainQuery.account = self.username;
+    keychainQuery.account = self.uniqueIdentifier;
     return keychainQuery;
+}
+
+- (void)setPasswordObject:(id)object
+{
+    [self setTokenDictionary:object];
+}
+
+- (id)passwordObject
+{
+    return [self tokenDictionary];
 }
 
 -(void)setTokenDictionary:(NSDictionary *)accessTokenDictionary

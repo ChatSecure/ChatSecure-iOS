@@ -89,6 +89,16 @@
                                              multiplier:0.6
                                                constant:0.0];
     [self addConstraint:constraint];
+    
+    constraint = [NSLayoutConstraint constraintWithItem:self.titleLabel
+                                              attribute:NSLayoutAttributeWidth
+                                              relatedBy:NSLayoutRelationLessThanOrEqual
+                                                 toItem:self
+                                              attribute:NSLayoutAttributeWidth
+                                             multiplier:0.9
+                                               constant:0.0];
+    [self addConstraint:constraint];
+    
     ///////////// SUBTITLE LABEL /////////////
     
     constraint = [NSLayoutConstraint constraintWithItem:self.subtitleLabel

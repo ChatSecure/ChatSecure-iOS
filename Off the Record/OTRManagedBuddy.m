@@ -160,6 +160,12 @@
 {
     OTRManagedStatus * currentManagedStatus = [self currentStatusMessage];
     
+    if (!currentManagedStatus) {
+        [OTRManagedStatus newStatus:newStatus withMessage:newStatusMessage withBuddy:self incoming:isIncoming];
+        self.currentStatusValue = newStatus;
+        return;
+    }
+    
     if (![newStatusMessage length]) {
         newStatusMessage = [OTRManagedStatus statusMessageWithStatus:newStatus];
     }
@@ -193,11 +199,9 @@
     NSArray * sortedStatuses = [self.statuses sortedArrayUsingDescriptors:@[dateSort]];
     
     if ([sortedStatuses count]) {
-        return sortedStatuses[0];
+        return [sortedStatuses firstObject];
     }
-    return [OTRManagedStatus newStatus:OTRBuddyStatusOffline withMessage:nil withBuddy:self incoming:YES];
-
-    
+    return nil;    
 }
 
 -(OTRManagedEncryptionStatusMessage *)currentEncryptionStatus
@@ -286,12 +290,14 @@
 +(OTRManagedBuddy *)fetchWithName:(NSString *)name account:(OTRManagedAccount *)account inContext:(NSManagedObjectContext *)context
 {
     OTRManagedAccount * contextAccount = [account MR_inContext:context];
-    NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"accountName == %@",name];
-    NSSet * filteredArray = [contextAccount.buddies filteredSetUsingPredicate:buddyFilter];
+    NSPredicate * accountPredicate = [NSPredicate predicateWithFormat:@"%K == %@",OTRManagedBuddyRelationships.account,contextAccount];
+    NSPredicate * usernamePredicate = [NSPredicate predicateWithFormat:@"%K == %@",OTRManagedBuddyAttributes.accountName,name];
+    
+    NSArray * filteredArray = [OTRManagedBuddy MR_findAllWithPredicate:[NSCompoundPredicate andPredicateWithSubpredicates:@[usernamePredicate,accountPredicate]]];
     
     if([filteredArray count])
     {
-        OTRManagedBuddy * buddy =  [filteredArray anyObject];
+        OTRManagedBuddy * buddy =  [filteredArray firstObject];
         return [buddy MR_inContext:context];
     }
     return nil;

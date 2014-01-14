@@ -411,6 +411,14 @@
 #pragma mark XMPPStream Delegate
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+- (void)xmppStreamDidChangeMyJID:(XMPPStream *)stream
+{
+    if (![[stream.myJID bare] isEqualToString:self.account.username])
+    {
+        self.account.username = [stream.myJID bare];
+    }
+}
+
 - (void)xmppStream:(XMPPStream *)sender socketDidConnect:(GCDAsyncSocket *)socket 
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
@@ -623,64 +631,72 @@
 
 -(void)sendChatState:(OTRChatState)chatState withBuddyID:(NSManagedObjectID *)managedBuddyObjectID
 {
-    
-    OTRManagedBuddy * buddy = [self managedBuddyWithObjectID:managedBuddyObjectID];
-    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        OTRManagedBuddy * buddy = [self managedBuddyWithObjectID:managedBuddyObjectID];
+        
+        
+        if (buddy.lastSentChatStateValue == chatState) {
+            return;
+        }
+        
+        NSXMLElement *message = [NSXMLElement elementWithName:@"message"];
+        [message addAttributeWithName:@"type" stringValue:@"chat"];
+        [message addAttributeWithName:@"to" stringValue:buddy.accountName];
+        XMPPMessage * xMessage = [XMPPMessage messageFromElement:message];
+        
+        BOOL shouldSend = YES;
+        
+        if (chatState == kOTRChatStateActive) {
+            //Timers
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[self pausedChatStateTimerForBuddyObjectID:managedBuddyObjectID] invalidate];
+                [self restartInactiveChatStateTimerForBuddyObjectID:managedBuddyObjectID];
+            });
+            
+            [xMessage addActiveChatState];
+        }
+        else if (chatState == kOTRChatStateComposing)
+        {
+            if(buddy.lastSentChatState.intValue !=kOTRChatStateComposing)
+                [xMessage addComposingChatState];
+            else
+                shouldSend = NO;
+            
+            //Timers
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self restartPausedChatStateTimerForBuddyObjectID:managedBuddyObjectID];
+                [[self inactiveChatStateTimerForBuddyObjectID:managedBuddyObjectID] invalidate];
+            });
+        }
+        else if(chatState == kOTRChatStateInactive)
+        {
+            if(buddy.lastSentChatState.intValue != kOTRChatStateInactive)
+                [xMessage addInactiveChatState];
+            else
+                shouldSend = NO;
+        }
+        else if (chatState == kOTRChatStatePaused)
+        {
+            [xMessage addPausedChatState];
+        }
+        else if (chatState == kOTRChatStateGone)
+        {
+            [xMessage addGoneChatState];
+        }
+        else
+        {
+            shouldSend = NO;
+        }
+        
+        if(shouldSend)
+        {
+            [buddy setLastSentChatStateValue:chatState];
+            NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+            [context MR_saveToPersistentStoreAndWait];
+            [xmppStream sendElement:message];
+        }
 
-    if (buddy.lastSentChatState.intValue == chatState) {
-        return;
-    }
-    
-    NSXMLElement *message = [NSXMLElement elementWithName:@"message"];
-    [message addAttributeWithName:@"type" stringValue:@"chat"];
-    [message addAttributeWithName:@"to" stringValue:buddy.accountName];
-    XMPPMessage * xMessage = [XMPPMessage messageFromElement:message];
-    
-    BOOL shouldSend = YES;
-    
-    if (chatState == kOTRChatStateActive) {
-        [[self pausedChatStateTimerForBuddyObjectID:managedBuddyObjectID] invalidate];
-        [self restartInactiveChatStateTimerForBuddyObjectID:managedBuddyObjectID];
-        [xMessage addActiveChatState];
-    }
-    else if (chatState == kOTRChatStateComposing)
-    {
-        if(buddy.lastSentChatState.intValue !=kOTRChatStateComposing)
-            [xMessage addComposingChatState];
-        else
-            shouldSend = NO;
-        
-        [self restartPausedChatStateTimerForBuddyObjectID:managedBuddyObjectID];
-        [[self inactiveChatStateTimerForBuddyObjectID:managedBuddyObjectID] invalidate];
-        
-    }
-    else if(chatState == kOTRChatStateInactive)
-    {
-        if(buddy.lastSentChatState.intValue != kOTRChatStateInactive)
-            [xMessage addInactiveChatState];
-        else
-            shouldSend = NO;
-    }
-    else if (chatState == kOTRChatStatePaused)
-    {
-        [xMessage addPausedChatState];
-    }
-    else if (chatState == kOTRChatStateGone)
-    {
-        [xMessage addGoneChatState];
-    }
-    else
-    {
-        shouldSend = NO;
-    }
-    
-    if(shouldSend)
-    {
-        [buddy setLastSentChatStateValue:chatState];
-        NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
-        [context MR_saveToPersistentStoreAndWait];
-        [xmppStream sendElement:message];
-    }
+    });
 }
 
 - (void) addBuddy:(OTRManagedBuddy *)newBuddy
@@ -784,7 +800,6 @@ managedBuddyObjectID
     NSManagedObjectID * managedBuddyObjectID= (NSManagedObjectID *)timer.userInfo;
     [timer invalidate];
     [self sendChatState:kOTRChatStateInactive withBuddyID:managedBuddyObjectID];
-    
 }
 
 - (OTRCertificatePinning *)certificatePinningModule

@@ -8,11 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-@class OTRSectionHeaderView;
-
 @interface OTRBuddyListSectionInfo : NSObject
 
-@property (nonatomic) BOOL open;
-@property (nonatomic,strong) OTRSectionHeaderView * sectionHeaderView;
+@property (nonatomic) BOOL isOpen;
+@property (nonatomic, copy) NSString * title;
 
 @end
