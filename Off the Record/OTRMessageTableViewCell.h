@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "OTRManagedMessage.h"
+#import "OTRManagedChatMessage.h"
 #import "TTTAttributedLabel.h"
 #import "OTRChatBubbleView.h"
 
@@ -16,14 +16,14 @@
     NSLayoutConstraint * dateHeightConstraint;
 }
 
-@property (nonatomic, strong) OTRManagedMessage * message;
+@property (nonatomic, strong) OTRManagedChatMessage * message;
 @property (nonatomic, strong) UILabel * dateLabel;
 @property (nonatomic) BOOL showDate;
 
 @property (nonatomic, strong) OTRChatBubbleView * bubbleView;
 
 
--(id)initWithMessage:(OTRManagedMessage *)message withDate:(BOOL)showDate reuseIdentifier:(NSString*)identifier;
+-(id)initWithMessage:(OTRManagedChatMessage *)message withDate:(BOOL)showDate reuseIdentifier:(NSString*)identifier;
 
 + (CGSize)messageTextLabelSize:(NSString *)message;
 

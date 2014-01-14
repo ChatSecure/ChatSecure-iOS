@@ -32,16 +32,6 @@
     return keychainQuery;
 }
 
-- (void)setPasswordObject:(id)object
-{
-    [self setTokenDictionary:object];
-}
-
-- (id)passwordObject
-{
-    return [self tokenDictionary];
-}
-
 -(void)setTokenDictionary:(NSDictionary *)accessTokenDictionary
 {
     if (![accessTokenDictionary count]) {
@@ -61,8 +51,6 @@
         }
     }
 }
-
-
 
 - (NSDictionary *)tokenDictionary
 {

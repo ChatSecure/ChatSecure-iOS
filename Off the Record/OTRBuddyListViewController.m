@@ -27,7 +27,7 @@
 #import "OTRConstants.h"
 #import "OTRAppDelegate.h"
 #import "OTRSettingsViewController.h"
-#import "OTRManagedStatus.h"
+#import "OTRManagedStatusMessage.h"
 #import "OTRManagedGroup.h"
 #import <QuartzCore/QuartzCore.h>
 #import "OTRBuddyListSectionInfo.h"
@@ -495,13 +495,13 @@
     {
         return _recentBuddiesFetchedResultsController;
     }
-    
-     //predicate = [NSPredicate predicateWithFormat:@"messages.@count != 0"];
-    NSPredicate * predicate = [NSPredicate predicateWithFormat:@"(SUBQUERY(messages, $message, $message.isEncrypted == NO).@count != 0)"];
-    NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"accountName != nil OR displayName != nil"];
+    /// Maybe instead do a fetch on OTRManagedChatMessage and group by buddy sections -> rows in table
+    NSPredicate * predicate = [NSPredicate predicateWithFormat:@"(SUBQUERY(%K, $message, $message.isEncrypted == NO).@count != 0)",OTRManagedBuddyRelationships.chatMessages];
+    NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"%K != nil OR %K != nil",OTRManagedBuddyAttributes.accountName,OTRManagedBuddyAttributes.displayName];
     NSPredicate * compoundPredicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[predicate,buddyFilter]];
+     
     
-    _recentBuddiesFetchedResultsController = [OTRManagedBuddy MR_fetchAllSortedBy:@"lastMessageDate" ascending:NO withPredicate:compoundPredicate groupBy:nil delegate:self];
+    _recentBuddiesFetchedResultsController = [OTRManagedBuddy MR_fetchAllSortedBy:OTRManagedBuddyAttributes.lastMessageDate ascending:NO withPredicate:compoundPredicate groupBy:nil delegate:self];
  
     return _recentBuddiesFetchedResultsController;
 }
@@ -513,11 +513,11 @@
         return _unreadMessagesFetchedResultsContrller;
     }
     
-    NSPredicate * encryptionFilter = [NSPredicate predicateWithFormat:@"self.isEncrypted == NO"];
-    NSPredicate * unreadFilter = [NSPredicate predicateWithFormat:@"isRead == NO"];
+    NSPredicate * encryptionFilter = [NSPredicate predicateWithFormat:@"%K == NO",OTRManagedMessageAttributes.isEncrypted];
+    NSPredicate * unreadFilter = [NSPredicate predicateWithFormat:@"%K == NO",OTRManagedChatMessageAttributes.isRead];
     NSPredicate * unreadMessagePredicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[encryptionFilter, unreadFilter]];
     
-    _unreadMessagesFetchedResultsContrller = [OTRManagedMessage MR_fetchAllGroupedBy:nil withPredicate:unreadMessagePredicate sortedBy:nil ascending:YES delegate:self];
+    _unreadMessagesFetchedResultsContrller = [OTRManagedChatMessage MR_fetchAllGroupedBy:nil withPredicate:unreadMessagePredicate sortedBy:nil ascending:YES delegate:self];
     
     return _unreadMessagesFetchedResultsContrller;
 }

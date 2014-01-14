@@ -301,7 +301,7 @@ BOOL loginFailed;
     
     OTRManagedBuddy * messageBuddy = [OTRManagedBuddy fetchOrCreateWithName:message.buddy.username account:self.account];
     
-    OTRManagedMessage *otrMessage = [OTRManagedMessage newMessageFromBuddy:messageBuddy message:msgTxt encrypted:YES delayedDate:nil];
+    OTRManagedChatMessage *otrMessage = [OTRManagedChatMessage newMessageFromBuddy:messageBuddy message:msgTxt encrypted:YES delayedDate:nil];
     
     [OTRCodec decodeMessage:otrMessage];
     
@@ -582,7 +582,7 @@ BOOL loginFailed;
     return s_AIMSession;
 }*/
 
--(void)sendMessage:(OTRManagedMessage *)theMessage
+-(void)sendMessage:(OTRManagedChatMessage *)theMessage
 {
     NSString *recipient = theMessage.buddy.accountName;
     NSString *message = theMessage.message;

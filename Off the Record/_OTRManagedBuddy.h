@@ -18,22 +18,18 @@ extern const struct OTRManagedBuddyAttributes {
 
 extern const struct OTRManagedBuddyRelationships {
 	__unsafe_unretained NSString *account;
-	__unsafe_unretained NSString *encryptionStatusMessages;
+	__unsafe_unretained NSString *chatMessages;
 	__unsafe_unretained NSString *groups;
 	__unsafe_unretained NSString *messages;
-	__unsafe_unretained NSString *messagesandstatuses;
-	__unsafe_unretained NSString *statuses;
 } OTRManagedBuddyRelationships;
 
 extern const struct OTRManagedBuddyFetchedProperties {
 } OTRManagedBuddyFetchedProperties;
 
 @class OTRManagedAccount;
-@class OTRManagedEncryptionStatusMessage;
+@class OTRManagedChatMessage;
 @class OTRManagedGroup;
 @class OTRManagedMessage;
-@class OTRManagedMessageAndStatus;
-@class OTRManagedStatus;
 
 
 
@@ -171,9 +167,9 @@ extern const struct OTRManagedBuddyFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSSet *encryptionStatusMessages;
+@property (nonatomic, strong) NSSet *chatMessages;
 
-- (NSMutableSet*)encryptionStatusMessagesSet;
+- (NSMutableSet*)chatMessagesSet;
 
 
 
@@ -192,29 +188,15 @@ extern const struct OTRManagedBuddyFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSSet *messagesandstatuses;
-
-- (NSMutableSet*)messagesandstatusesSet;
-
-
-
-
-@property (nonatomic, strong) NSSet *statuses;
-
-- (NSMutableSet*)statusesSet;
-
-
-
-
 
 @end
 
 @interface _OTRManagedBuddy (CoreDataGeneratedAccessors)
 
-- (void)addEncryptionStatusMessages:(NSSet*)value_;
-- (void)removeEncryptionStatusMessages:(NSSet*)value_;
-- (void)addEncryptionStatusMessagesObject:(OTRManagedEncryptionStatusMessage*)value_;
-- (void)removeEncryptionStatusMessagesObject:(OTRManagedEncryptionStatusMessage*)value_;
+- (void)addChatMessages:(NSSet*)value_;
+- (void)removeChatMessages:(NSSet*)value_;
+- (void)addChatMessagesObject:(OTRManagedChatMessage*)value_;
+- (void)removeChatMessagesObject:(OTRManagedChatMessage*)value_;
 
 - (void)addGroups:(NSSet*)value_;
 - (void)removeGroups:(NSSet*)value_;
@@ -225,16 +207,6 @@ extern const struct OTRManagedBuddyFetchedProperties {
 - (void)removeMessages:(NSSet*)value_;
 - (void)addMessagesObject:(OTRManagedMessage*)value_;
 - (void)removeMessagesObject:(OTRManagedMessage*)value_;
-
-- (void)addMessagesandstatuses:(NSSet*)value_;
-- (void)removeMessagesandstatuses:(NSSet*)value_;
-- (void)addMessagesandstatusesObject:(OTRManagedMessageAndStatus*)value_;
-- (void)removeMessagesandstatusesObject:(OTRManagedMessageAndStatus*)value_;
-
-- (void)addStatuses:(NSSet*)value_;
-- (void)removeStatuses:(NSSet*)value_;
-- (void)addStatusesObject:(OTRManagedStatus*)value_;
-- (void)removeStatusesObject:(OTRManagedStatus*)value_;
 
 @end
 
@@ -313,8 +285,8 @@ extern const struct OTRManagedBuddyFetchedProperties {
 
 
 
-- (NSMutableSet*)primitiveEncryptionStatusMessages;
-- (void)setPrimitiveEncryptionStatusMessages:(NSMutableSet*)value;
+- (NSMutableSet*)primitiveChatMessages;
+- (void)setPrimitiveChatMessages:(NSMutableSet*)value;
 
 
 
@@ -325,16 +297,6 @@ extern const struct OTRManagedBuddyFetchedProperties {
 
 - (NSMutableSet*)primitiveMessages;
 - (void)setPrimitiveMessages:(NSMutableSet*)value;
-
-
-
-- (NSMutableSet*)primitiveMessagesandstatuses;
-- (void)setPrimitiveMessagesandstatuses:(NSMutableSet*)value;
-
-
-
-- (NSMutableSet*)primitiveStatuses;
-- (void)setPrimitiveStatuses:(NSMutableSet*)value;
 
 
 @end

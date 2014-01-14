@@ -155,8 +155,8 @@
     NSSet *buddySet = [self.buddies copy];
     for(OTRManagedBuddy * buddy in buddySet)
     {
-        NSPredicate * messageFilter = [NSPredicate predicateWithFormat:@"buddy == %@",self];
-        [OTRManagedMessageAndStatus MR_deleteAllMatchingPredicate:messageFilter];
+        NSPredicate * messageFilter = [NSPredicate predicateWithFormat:@"%K == %@",OTRManagedMessageRelationships.buddy,self];
+        [OTRManagedMessage MR_deleteAllMatchingPredicate:messageFilter];
         [buddy MR_deleteEntity];
     }
     

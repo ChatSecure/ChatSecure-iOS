@@ -525,7 +525,7 @@
     }
     
     if ([message hasReceiptResponse] && ![message isErrorMessage]) {
-        [OTRManagedMessage receivedDeliveryReceiptForMessageID:[message receiptResponseID]];
+        [OTRManagedChatMessage receivedDeliveryReceiptForMessageID:[message receiptResponseID]];
     }
     
 	if ([message isMessageWithBody] && ![message isErrorMessage])
@@ -536,7 +536,7 @@
         
         NSDate * date = [message delayedDeliveryDate];
         
-        OTRManagedMessage *otrMessage = [OTRManagedMessage newMessageFromBuddy:messageBuddy message:body encrypted:YES delayedDate:date];
+        OTRManagedChatMessage *otrMessage = [OTRManagedChatMessage newMessageFromBuddy:messageBuddy message:body encrypted:YES delayedDate:date];
         [OTRCodec decodeMessage:otrMessage];
         
         if(otrMessage && !otrMessage.isEncryptedValue)
@@ -598,7 +598,7 @@
 #pragma mark OTRProtocol 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (void) sendMessage:(OTRManagedMessage*)theMessage
+- (void) sendMessage:(OTRManagedChatMessage*)theMessage
 {
     NSString *messageStr = theMessage.message;
     

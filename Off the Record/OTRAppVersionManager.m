@@ -41,6 +41,7 @@
     //use old method for retrieving oauth dict then save it with new method
     NSArray * oAuthAccounts = [OTRManagedOAuthAccount MR_findAll];
     __block SSKeychainQuery * keychainQuery = [[SSKeychainQuery alloc] init];
+    NSArray * allKeychainAccounts = [SSKeychain allAccounts];
     [oAuthAccounts enumerateObjectsUsingBlock:^(OTRManagedOAuthAccount * account, NSUInteger idx, BOOL *stop) {
         if (account.username) {
             NSError * error = nil;

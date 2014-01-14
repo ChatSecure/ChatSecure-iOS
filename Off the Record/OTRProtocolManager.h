@@ -48,6 +48,6 @@
 
 + (OTRProtocolManager*)sharedInstance; // Singleton method
 
-+ (void)sendMessage:(OTRManagedMessage *)message;
++ (void)sendMessage:(OTRManagedChatMessage *)message;
 
 @end
