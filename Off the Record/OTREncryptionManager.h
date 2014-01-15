@@ -25,6 +25,6 @@
 
 @interface OTREncryptionManager : NSObject <OTRKitDelegate>
 
-+ (void) protectFileWithPath:(NSString*)path;
++ (void) setFileProtection:(NSString*)fileProtection path:(NSString*)path;
 
 @end

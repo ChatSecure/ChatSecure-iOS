@@ -29,8 +29,12 @@
 
 - (id) init {
     if (self = [super init]) {
-        [OTRKit sharedInstance].delegate = self;
-        
+        OTRKit *otrKit = [OTRKit sharedInstance];
+        otrKit.delegate = self;
+        NSArray *protectPaths = @[otrKit.privateKeyPath, otrKit.fingerprintsPath, otrKit.instanceTagsPath];
+        for (NSString *path in protectPaths) {
+            [OTREncryptionManager setFileProtection:NSFileProtectionCompleteUntilFirstUserAuthentication path:path];
+        }
     }
     return self;
 }
@@ -61,14 +65,13 @@
     }
 }
 
-+ (void) protectFileWithPath:(NSString*)path {
-    NSError *error = nil;
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    [fileManager setAttributes:[NSDictionary dictionaryWithObject:NSFileProtectionComplete forKey:NSFileProtectionKey] ofItemAtPath:path error:&error];
-    if (error) 
++ (void) setFileProtection:(NSString*)fileProtection path:(NSString*)path {
+    NSDictionary *fileAttributes = [NSDictionary dictionaryWithObject:fileProtection forKey:NSFileProtectionKey];
+    NSError * error = nil;
+    
+    if (![[NSFileManager defaultManager] setAttributes:fileAttributes ofItemAtPath:path error:&error])
     {
-        //DDLogError(@"Error setting file protection key for %@: %@%@",path,[error localizedDescription], [error userInfo]);
-        error = nil;
+        DDLogError(@"error encrypting store: %@", error.userInfo);
     }
 }
 

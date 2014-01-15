@@ -41,6 +41,7 @@
 #import "OTRDatabaseManager.h"
 
 #import "OTRDemoChatViewController.h"
+#import "SSKeychain.h"
 
 @implementation OTRAppDelegate
 
@@ -57,6 +58,7 @@
                                                                    delegate:self];
         [[BITHockeyManager sharedHockeyManager] startManager];
     }
+    [SSKeychain setAccessibilityType:kSecAttrAccessibleAfterFirstUnlock];
 
     NSString *outputStoreName = @"ChatSecure.sqlite";
     [OTRDatabaseManager setupDatabaseWithName:outputStoreName];
