@@ -24,8 +24,6 @@
 #import "OTRSetting.h"
 #import "OTRConstants.h"
 
-#define kOTRSettingKeyCrashReportingOptIn @"kOTRSettingKeyCrashReportingOptIn"
-
 @interface OTRSettingsManager : NSObject
 
 @property (nonatomic, strong, readonly) NSMutableArray *settingsGroups;

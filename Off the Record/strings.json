@@ -146,15 +146,7 @@
     "CONVERSATION_SECURE_WARNING_STRING": {
         "comment": "Warns user that the current chat is secure", 
         "string": "This chat is secured"
-    }, 
-    "CRITTERCISM_DESCRIPTION_STRING": {
-        "comment": "Description for crash reports settings switch", 
-        "string": "Automatically send anonymous crash logs (opt-in)"
-    }, 
-    "CRITTERCISM_TITLE_STRING": {
-        "comment": "Title for crash reports settings switch", 
-        "string": "Send Crash Reports"
-    }, 
+    },
     "DEFAULT_BUDDY_GROUP_STRING": {
         "comment": "Name for default buddy group", 
         "string": "Buddies"

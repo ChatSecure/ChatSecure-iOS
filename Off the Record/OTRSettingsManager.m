@@ -131,9 +131,6 @@
     
     NSMutableArray *otherSettings = [NSMutableArray arrayWithCapacity:5];
     [otherSettings addObjectsFromArray:@[languageSetting,donateSetting, shareViewSetting,feedbackViewSetting]];
-    OTRBoolSetting *crashReportingSetting = [[OTRBoolSetting alloc] initWithTitle:CRITTERCISM_TITLE_STRING description:CRITTERCISM_DESCRIPTION_STRING settingsKey:kOTRSettingKeyCrashReportingOptIn];
-    [newSettingsDictionary setObject:crashReportingSetting forKey:kOTRSettingKeyCrashReportingOptIn];
-    [otherSettings addObject:crashReportingSetting];
     OTRSettingsGroup *otherGroup = [[OTRSettingsGroup alloc] initWithTitle:OTHER_STRING settings:otherSettings];
     [settingsGroups addObject:otherGroup];
     settingsDictionary = newSettingsDictionary;
