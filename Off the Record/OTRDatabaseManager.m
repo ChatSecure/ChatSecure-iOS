@@ -73,8 +73,31 @@
     [MagicalRecord setupCoreDataStackWithAutoMigratingSqliteStoreNamed:databaseName];
     
     [OTREncryptionManager setFileProtection:NSFileProtectionCompleteUntilFirstUserAuthentication path:databaseURL.path];
+    [OTREncryptionManager addSkipBackupAttributeToItemAtURL:databaseURL];
+    
+    [self deleteLegacyXMPPFiles];
     
     return YES;
+}
+
++ (void) deleteLegacyXMPPFiles {
+    NSString *xmppCapabilities = @"XMPPCapabilities";
+    NSString *xmppvCard = @"XMPPvCard";
+    NSString *applicationSupportDirectory = [NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES) lastObject];
+    NSError *error = nil;
+    NSArray *paths = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:applicationSupportDirectory error:&error];
+    if (error) {
+        DDLogError(@"Error listing app support contents: %@", error);
+    }
+    for (NSString *path in paths) {
+        if ([path rangeOfString:xmppCapabilities].location != NSNotFound || [path rangeOfString:xmppvCard].location != NSNotFound) {
+            NSError *error = nil;
+            [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
+            if (error) {
+                DDLogError(@"Error deleting legacy store: %@", error);
+            }
+        }
+    }
 }
 
 + (BOOL)migrateLegacyStore:(NSURL *)storeURL destinationStore:(NSURL*)destinationURL {

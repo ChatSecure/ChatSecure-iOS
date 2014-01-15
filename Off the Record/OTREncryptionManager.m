@@ -33,7 +33,11 @@
         otrKit.delegate = self;
         NSArray *protectPaths = @[otrKit.privateKeyPath, otrKit.fingerprintsPath, otrKit.instanceTagsPath];
         for (NSString *path in protectPaths) {
+            if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
+                [@"" writeToFile:path atomically:YES encoding:NSUTF8StringEncoding error:nil];
+            }
             [OTREncryptionManager setFileProtection:NSFileProtectionCompleteUntilFirstUserAuthentication path:path];
+            [OTREncryptionManager addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:path]];
         }
     }
     return self;
@@ -65,14 +69,28 @@
     }
 }
 
-+ (void) setFileProtection:(NSString*)fileProtection path:(NSString*)path {
++ (BOOL) setFileProtection:(NSString*)fileProtection path:(NSString*)path {
     NSDictionary *fileAttributes = [NSDictionary dictionaryWithObject:fileProtection forKey:NSFileProtectionKey];
     NSError * error = nil;
-    
-    if (![[NSFileManager defaultManager] setAttributes:fileAttributes ofItemAtPath:path error:&error])
+    BOOL success = [[NSFileManager defaultManager] setAttributes:fileAttributes ofItemAtPath:path error:&error];
+    if (!success)
     {
         DDLogError(@"error encrypting store: %@", error.userInfo);
     }
+    return success;
+}
+
++ (BOOL)addSkipBackupAttributeToItemAtURL:(NSURL *)URL
+{
+    assert([[NSFileManager defaultManager] fileExistsAtPath: [URL path]]);
+    
+    NSError *error = nil;
+    BOOL success = [URL setResourceValue: [NSNumber numberWithBool: YES]
+                                  forKey: NSURLIsExcludedFromBackupKey error: &error];
+    if(!success){
+        DDLogError(@"Error excluding %@ from backup %@", [URL lastPathComponent], error);
+    }
+    return success;
 }
 
 @end
