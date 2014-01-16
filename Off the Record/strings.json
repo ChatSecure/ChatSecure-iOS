@@ -818,5 +818,9 @@
     "LOGIN_AUTOMATICALLY_STRING": {
         "comment": "Label for account setting that autologins on launch",
         "string": "Login Automatically"
+    },
+    "COPY_STRING": {
+        "comment": "Label for button to copy text to pastboard",
+        "string": "Copy"
     }
 }

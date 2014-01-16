@@ -113,7 +113,7 @@
     [self.account refreshTokenIfNeeded:^(NSError * error) {
         if (!error) {
             if ([self.account.accessTokenString length]) {
-                [self showLoginProgress];
+                [self showHUDWithText:LOGGING_IN_STRING];
                 id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
                 [protocol connectWithPassword:self.account.accessTokenString];
                 self.timeoutTimer = [NSTimer scheduledTimerWithTimeInterval:45.0 target:self selector:@selector(timeout:) userInfo:nil repeats:NO];

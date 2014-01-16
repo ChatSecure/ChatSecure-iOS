@@ -43,6 +43,25 @@
     [super viewWillAppear:animated];
     [self.usernameTextField resignFirstResponder];
     [self.passwordTextField resignFirstResponder];
+    
+    [[NSNotificationCenter defaultCenter]
+     addObserver:self
+     selector:@selector(didReceiveRegistrationSucceededNotification:)
+     name:OTRXMPPRegisterSucceededNotificationName
+     object:nil ];
+    
+    [[NSNotificationCenter defaultCenter]
+     addObserver:self
+     selector:@selector(didReceiveRegistrationFailedNotification:)
+     name:OTRXMPPRegisterFailedNotificationName
+     object:nil ];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
+    [super viewWillDisappear:animated];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -111,16 +130,55 @@
 
 -(void) loginButtonPressed:(id)sender
 {
+    OTRXMPPManager * xmppManager = [self xmppManager];
+    if (xmppManager) {
+        self.account.username = self.usernameTextField.text;
+        self.account.domain = self.selectedHostname;
+        [self showHUDWithText:@"Creating Account"];
+        [xmppManager registerNewAccountWithPassword:self.passwordTextField.text];
+    }
+}
+
+- (void)didReceiveRegistrationSucceededNotification:(NSNotification *)notification
+{
+    OTRXMPPManager * xmppMananger = [self xmppManager];
+    if (xmppMananger) {
+        self.HUD.labelText = LOGGING_IN_STRING;
+        [xmppMananger connectWithPassword:self.passwordTextField.text];
+    }
+}
+
+- (void)didReceiveRegistrationFailedNotification:(NSNotification *)notification
+{
+    [self hideHUD];
+    NSError * error = [[notification userInfo] objectForKey:kOTRNotificationErrorKey];
+    DDLogWarn(@"Registration Failed: %@",error);
+    NSString * errorString = @"Error Registering Username";
+    if (error) {
+        self.recentError = error;
+        if ([error.domain isEqualToString:OTRXMPPErrorDomain]) {
+            if (error.code == OTRXMPPUnsupportedAction) {
+                errorString = @"The domain does not support in band registration";
+            }
+            else if (error.code == OTRXMPPXMLError) {
+                if ([error.localizedDescription length]) {
+                    errorString = error.localizedDescription;
+                }
+            }
+        }
+    }
+    
+    [self showAlertViewWithTitle:ERROR_STRING message:errorString error:error];
+}
+
+- (OTRXMPPManager *)xmppManager
+{
     id protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
     OTRXMPPManager * xmppManager = nil;
     if ([protocol isKindOfClass:[OTRXMPPManager class]]) {
-        self.account.username = self.usernameTextField.text;
-        self.account.domain = self.selectedHostname;
         xmppManager = (OTRXMPPManager *)protocol;
-        [xmppManager registerNewAccountWithPassword:self.passwordTextField.text];
     }
-    
-    
+    return xmppManager;
 }
 
 + (instancetype)createViewControllerWithHostnames:(NSArray *)hostNames

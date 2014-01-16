@@ -6,14 +6,13 @@
 //  Copyright (c) 2013 Chris Ballinger. All rights reserved.
 //
 
-#import "OTRLoginViewController.h"
+#import "OTRXMPPLoginViewController.h"
 
-@interface OTRXMPPCreateViewController : OTRLoginViewController
+@interface OTRXMPPCreateViewController : OTRXMPPLoginViewController
 {
     NSArray * hostnameArray;
 }
 
-@property (nonatomic,strong) OTRManagedXMPPAccount * account;
 @property (nonatomic,strong) NSString * selectedHostname;
 
 - (instancetype)initWithHostnames:(NSArray *)hostnames;

@@ -53,6 +53,10 @@
 #import "OTRConstants.h"
 #import "OTRUtilities.h"
 
+NSString *const OTRXMPPRegisterSucceededNotificationName = @"OTRXMPPRegisterSucceededNotificationName";
+NSString *const OTRXMPPRegisterFailedNotificationName    = @"OTRXMPPRegisterFailedNotificationName";
+
+
 @interface OTRXMPPManager()
 
 - (void)setupStream;
@@ -60,7 +64,7 @@
 
 - (void)goOnline;
 - (void)goOffline;
-- (void)failedToConnect:(id)error;
+- (void)failedToConnect:(NSError *)error;
 
 @end
 
@@ -303,17 +307,38 @@
 	[[self xmppStream] sendElement:presence];
 }
 
-- (void)failedToConnect:(id)error
+- (void)failedToConnect:(NSError *)error
 {
     if (error) {
         [[NSNotificationCenter defaultCenter]
-         postNotificationName:kOTRProtocolLoginFail object:self userInfo:@{kOTRProtocolLoginFailErrorKey:error}];
+         postNotificationName:kOTRProtocolLoginFail object:self userInfo:@{kOTRNotificationErrorKey:error}];
     }
     else {
         [[NSNotificationCenter defaultCenter]
          postNotificationName:kOTRProtocolLoginFail object:self];
     }
+}
+
+- (void)failedToAuthenticate:(id)error
+{
     
+}
+
+- (void)didRegisterNewAccount
+{
+    isRegisteringNewAccount = NO;
+    [[NSNotificationCenter defaultCenter] postNotificationName:OTRXMPPRegisterSucceededNotificationName object:self];
+}
+- (void)failedToRegisterNewAccount:(NSError *)error
+{
+    if (error) {
+        [[NSNotificationCenter defaultCenter]
+         postNotificationName:OTRXMPPRegisterFailedNotificationName object:self userInfo:@{kOTRNotificationErrorKey:error}];
+    }
+    else {
+        [[NSNotificationCenter defaultCenter]
+         postNotificationName:OTRXMPPRegisterFailedNotificationName object:self];
+    }
 }
 
 ///////////////////////////////
@@ -446,6 +471,14 @@
     
     if (isRegisteringNewAccount && [sender supportsInBandRegistration]) {
         [sender registerWithPassword:password error:&error];
+        if(error)
+        {
+            [self failedToRegisterNewAccount:error];
+        }
+    }
+    else if (isRegisteringNewAccount){
+        error = [NSError errorWithDomain:OTRXMPPErrorDomain code:OTRXMPPUnsupportedAction userInfo:nil];
+        [self failedToRegisterNewAccount:error];
     }
     else{
         if ([sender supportsXFacebookPlatformAuthentication]) {
@@ -477,7 +510,8 @@
 {
     
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
-    [self failedToConnect:error];
+    [self.xmppStream disconnect];
+    [self failedToConnect:[OTRXMPPError errorForXMLElement:error]];
 }
 
 - (BOOL)xmppStream:(XMPPStream *)sender didReceiveIQ:(XMPPIQ *)iq
@@ -488,13 +522,14 @@
 }
 
 - (void)xmppStreamDidRegister:(XMPPStream *)sender {
-    isRegisteringNewAccount = NO;
+    [self didRegisterNewAccount];
 }
 
-- (void)xmppStream:(XMPPStream *)sender didNotRegister:(NSXMLElement *)error {
+- (void)xmppStream:(XMPPStream *)sender didNotRegister:(NSXMLElement *)xmlError {
     
     isRegisteringNewAccount = NO;
-    [self failedToConnect:error];
+    NSError * error = [OTRXMPPError errorForXMLElement:xmlError];
+    [self failedToRegisterNewAccount:error];
 }
 
 -(OTRManagedBuddy *)buddyWithMessage:(XMPPMessage *)message
@@ -816,7 +851,7 @@ managedBuddyObjectID
     
     dispatch_async(dispatch_get_main_queue(), ^{
         NSData * certifcateData = [OTRCertificatePinning dataForCertificate:[OTRCertificatePinning certForTrust:trust]];
-        [[NSNotificationCenter defaultCenter] postNotificationName:kOTRProtocolLoginFail object:self userInfo:@{kOTRProtocolLoginFailSSLStatusKey:[NSNumber numberWithLong:status],kOTRProtocolLoginFailSSLCertificateDataKey:certifcateData,kOTRProtocolLoginFailHostnameKey:hostname}];
+        [self failedToConnect:[OTRXMPPError errorForSSLSatus:status withCertData:certifcateData hostname:hostname]];
     });
     
     

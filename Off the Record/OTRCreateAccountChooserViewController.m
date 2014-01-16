@@ -11,9 +11,19 @@
 
 @interface OTRCreateAccountChooserViewController ()
 
+@property (nonatomic,strong) NSArray * defaultDomains;
+
 @end
 
 @implementation OTRCreateAccountChooserViewController
+
+- (id)init
+{
+    if (self = [super init]) {
+        self.defaultDomains = @[@"dukgo.com",@"jabber.ccc.de",@"jabberpl.org",@"neko.im",@"rkquery.de",@"xmpp.jp"];
+    }
+    return self;
+}
 
 - (NSArray*)accounts
 {
@@ -30,11 +40,11 @@
     OTRManagedXMPPAccount * newAccount = (OTRManagedXMPPAccount *)[OTRManagedAccount accountForAccountType:accountType];
     if(accountType == OTRAccountTypeJabber)
     {
-        hostnamesArray = @[@"normalXmpp.biz",@"jabber.ccc.de"];
+        hostnamesArray = self.defaultDomains;
     }
     else if (accountType == OTRAccountTypeXMPPTor)
     {
-        hostnamesArray = @[@"tor+XMPP.biz",@"jabber.ccc.de"];
+        hostnamesArray = self.defaultDomains;
     }
     
     if ([hostnamesArray count]) {

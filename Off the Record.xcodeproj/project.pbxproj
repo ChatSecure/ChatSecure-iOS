@@ -31,6 +31,7 @@
 		6304F4AF1885FFCB00365824 /* _OTRManagedStatusMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 6304F4AE1885FFCB00365824 /* _OTRManagedStatusMessage.m */; };
 		6304F4BB1885FFD200365824 /* _OTRManagedMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 6304F4BA1885FFD200365824 /* _OTRManagedMessage.m */; };
 		6304F4C61886004500365824 /* _OTRManagedEncryptionMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 6304F4C51886004500365824 /* _OTRManagedEncryptionMessage.m */; };
+		6304F4D318861C4300365824 /* OTRXMPPError.m in Sources */ = {isa = PBXBuildFile; fileRef = 6304F4D218861C4300365824 /* OTRXMPPError.m */; };
 		63058643183F02D4009ADB6B /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63058642183F02D4009ADB6B /* XCTest.framework */; };
 		63058644183F02D4009ADB6B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9F9377E13F44BD3009A3D84 /* Foundation.framework */; };
 		63058645183F02D4009ADB6B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9F9377C13F44BD3009A3D84 /* UIKit.framework */; };
@@ -255,7 +256,6 @@
 		63D0E48D1819DEF1003ACA13 /* OTRvCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D0E4881819DEF1003ACA13 /* OTRvCard.m */; };
 		63D0E48E1819DEF1003ACA13 /* OTRvCardAvatar.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D0E48A1819DEF1003ACA13 /* OTRvCardAvatar.m */; };
 		63D0E48F1819DEF1003ACA13 /* OTRvCardTemp.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D0E48C1819DEF1003ACA13 /* OTRvCardTemp.m */; };
-		63D2BB0D18568A3500FFE4B7 /* OTRErrorManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D2BB0C18568A3500FFE4B7 /* OTRErrorManager.m */; };
 		63D2BB1918568C6700FFE4B7 /* test_OTRErrorManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D2BB1818568C6700FFE4B7 /* test_OTRErrorManager.m */; };
 		63D2BB1D1856A0D200FFE4B7 /* OTRCertificateDomainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D2BB1C1856A0D200FFE4B7 /* OTRCertificateDomainViewController.m */; };
 		63D2BB201856A3D300FFE4B7 /* OTRCertificateSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D2BB1F1856A3D300FFE4B7 /* OTRCertificateSetting.m */; };
@@ -701,6 +701,8 @@
 		6304F4AE1885FFCB00365824 /* _OTRManagedStatusMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _OTRManagedStatusMessage.m; sourceTree = "<group>"; };
 		6304F4BA1885FFD200365824 /* _OTRManagedMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _OTRManagedMessage.m; sourceTree = "<group>"; };
 		6304F4C51886004500365824 /* _OTRManagedEncryptionMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _OTRManagedEncryptionMessage.m; sourceTree = "<group>"; };
+		6304F4D118861C4300365824 /* OTRXMPPError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPError.h; sourceTree = "<group>"; };
+		6304F4D218861C4300365824 /* OTRXMPPError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPError.m; sourceTree = "<group>"; };
 		63058641183F02D4009ADB6B /* Off the Record Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Off the Record Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		63058642183F02D4009ADB6B /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		63058648183F02D4009ADB6B /* Off the Record Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Off the Record Tests-Info.plist"; sourceTree = "<group>"; };
@@ -1155,8 +1157,6 @@
 		63D0E48A1819DEF1003ACA13 /* OTRvCardAvatar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRvCardAvatar.m; sourceTree = "<group>"; };
 		63D0E48B1819DEF1003ACA13 /* OTRvCardTemp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRvCardTemp.h; sourceTree = "<group>"; };
 		63D0E48C1819DEF1003ACA13 /* OTRvCardTemp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRvCardTemp.m; sourceTree = "<group>"; };
-		63D2BB0B18568A3500FFE4B7 /* OTRErrorManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRErrorManager.h; sourceTree = "<group>"; };
-		63D2BB0C18568A3500FFE4B7 /* OTRErrorManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRErrorManager.m; sourceTree = "<group>"; };
 		63D2BB1818568C6700FFE4B7 /* test_OTRErrorManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = test_OTRErrorManager.m; sourceTree = "<group>"; };
 		63D2BB1B1856A0D200FFE4B7 /* OTRCertificateDomainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRCertificateDomainViewController.h; sourceTree = "<group>"; };
 		63D2BB1C1856A0D200FFE4B7 /* OTRCertificateDomainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRCertificateDomainViewController.m; sourceTree = "<group>"; };
@@ -3371,6 +3371,8 @@
 				634CBFDB159CEAC70046FB3B /* OTRConstants.h */,
 				63B9422C16DEEEE300D6934F /* OTRUtilities.h */,
 				63B9422D16DEEEE300D6934F /* OTRUtilities.m */,
+				6304F4D118861C4300365824 /* OTRXMPPError.h */,
+				6304F4D218861C4300365824 /* OTRXMPPError.m */,
 				63D511BF17EBDD31000D927B /* OTRAppVersionManager.h */,
 				63D511C017EBDD31000D927B /* OTRAppVersionManager.m */,
 				633E71F716E169C100495B45 /* OTRBuddyListSectionInfo.h */,
@@ -3498,8 +3500,6 @@
 				6370C984185FD18E00CB6786 /* OTRBuddyCell.m */,
 				6370C986185FD9B900CB6786 /* OTRRecentBuddyCell.h */,
 				6370C987185FD9B900CB6786 /* OTRRecentBuddyCell.m */,
-				63D2BB0B18568A3500FFE4B7 /* OTRErrorManager.h */,
-				63D2BB0C18568A3500FFE4B7 /* OTRErrorManager.m */,
 				63591479184FE2AF00B311A1 /* XMPPModules */,
 				D9F9378913F44BD3009A3D84 /* OTRAppDelegate.h */,
 				D9F9378A13F44BD3009A3D84 /* OTRAppDelegate.m */,
@@ -4097,6 +4097,7 @@
 				D90FAF2914A0624B00DA7C56 /* OTRBuddyList.m in Sources */,
 				6398CDC517FA20EC009389F8 /* AFURLRequestSerialization.m in Sources */,
 				D9C7463D15350F62003445ED /* OTRSettingsViewController.m in Sources */,
+				6304F4D318861C4300365824 /* OTRXMPPError.m in Sources */,
 				D9C74640153512DE003445ED /* OTRSettingsManager.m in Sources */,
 				D96495C4153629FE009A8C33 /* OTRSetting.m in Sources */,
 				D96495C8153635A9009A8C33 /* OTRBoolSetting.m in Sources */,
@@ -4254,7 +4255,6 @@
 				63E5E7EB16D1D5BC006E2B01 /* NSNumber+MagicalDataImport.m in Sources */,
 				63E5E7EC16D1D5BC006E2B01 /* NSObject+MagicalDataImport.m in Sources */,
 				63E5E7ED16D1D5BC006E2B01 /* NSRelationshipDescription+MagicalDataImport.m in Sources */,
-				63D2BB0D18568A3500FFE4B7 /* OTRErrorManager.m in Sources */,
 				63E5E7EE16D1D5BC006E2B01 /* NSString+MagicalDataImport.m in Sources */,
 				63E5E7EF16D1D5BC006E2B01 /* NSManagedObject+MagicalAggregation.m in Sources */,
 				63E5E7F016D1D5BC006E2B01 /* NSManagedObject+MagicalDataImport.m in Sources */,

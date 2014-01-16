@@ -61,6 +61,7 @@
 #define errSSLPeerProtocolVersionString [OTRLanguageManager translatedString: @"Bad protocol version"]
 #define RECENT_STRING [OTRLanguageManager translatedString: @"Recent"]
 #define errSSLBufferOverflowString [OTRLanguageManager translatedString: @"Insufficient buffer provided"]
+#define COPY_STRING [OTRLanguageManager translatedString: @"Copy"]
 #define CONVERSATION_SECURE_AND_VERIFIED_WARNING_STRING [OTRLanguageManager translatedString: @"This chat is secured and verified"]
 #define AGREE_STRING [OTRLanguageManager translatedString: @"Agree"]
 #define BASIC_STRING [OTRLanguageManager translatedString: @"Basic"]

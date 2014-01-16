@@ -38,6 +38,11 @@
 #import "OTRManagedBuddy.h"
 #import "OTRXMPPBudyTimers.h"
 #import "OTRCertificatePinning.h"
+#import "OTRXMPPError.h"
+
+extern NSString *const OTRXMPPRegisterSucceededNotificationName;
+extern NSString *const OTRXMPPRegisterFailedNotificationName;
+
 
 @interface OTRXMPPManager : NSObject <XMPPRosterDelegate, NSFetchedResultsControllerDelegate, OTRProtocol, OTRCertificatePinningDelegate>
 {
