@@ -34,8 +34,10 @@
 #import "OTRAppDelegate.h"
 #import "UserVoice.h"
 #import "OTRAccountTableViewCell.h"
+#import "OTRCreateAccountChooserViewController.h"
 
 #define ACTIONSHEET_DISCONNECT_TAG 1
+#define ACTIONSHEET_ACCOUNT_PICK_TYPE_TAG 2
 #define ALERTVIEW_DELETE_TAG 1
 
 @interface OTRSettingsViewController(Private)
@@ -194,7 +196,7 @@
 {
     if (indexPath.section == 0) { // Accounts
         if (indexPath.row == [self.accountsFetchedResultsController.sections[0] numberOfObjects]) {
-            [self addAccount:nil];
+            [self addAccount:[tableView cellForRowAtIndexPath:indexPath]];
         } else {
             OTRManagedAccount *account = [self.accountsFetchedResultsController objectAtIndexPath:indexPath];
             
@@ -251,12 +253,9 @@
 
 - (void) addAccount:(id)sender {
     
-    OTRNewAccountViewController * newAccountView = [[OTRNewAccountViewController alloc] init];
-    
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:newAccountView];
-    nav.modalPresentationStyle = UIModalPresentationFormSheet;
-    [self presentViewController:nav animated:YES completion:nil];
-    
+    UIActionSheet * actionSheet = [[UIActionSheet alloc] initWithTitle:@"New or Create Account" delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:@"Create New Account",@"Login to Existing Account", nil];
+    actionSheet.tag = ACTIONSHEET_ACCOUNT_PICK_TYPE_TAG;
+    [actionSheet showInView:self.view];
 }
 
 #pragma mark OTRSettingDelegate method
@@ -303,6 +302,24 @@
         {
             [protocol disconnect];
         }
+    }
+    else if (actionSheet.tag == ACTIONSHEET_ACCOUNT_PICK_TYPE_TAG)
+    {
+        if (buttonIndex == 0) {
+            OTRCreateAccountChooserViewController * createAccountChooser = [[OTRCreateAccountChooserViewController alloc] init];
+            UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:createAccountChooser];
+            nav.modalPresentationStyle = UIModalPresentationFormSheet;
+            [self presentViewController:nav animated:YES completion:nil];
+        }
+        else if (buttonIndex == 1)
+        {
+            OTRNewAccountViewController * newAccountView = [[OTRNewAccountViewController alloc] init];
+            
+            UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:newAccountView];
+            nav.modalPresentationStyle = UIModalPresentationFormSheet;
+            [self presentViewController:nav animated:YES completion:nil];
+        }
+        
     }
 }
 

@@ -1,40 +1,39 @@
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to OTRManagedStatus.m instead.
+// Make changes to OTRManagedStatusMessage.m instead.
 
-#import "_OTRManagedStatus.h"
+#import "_OTRManagedStatusMessage.h"
 
-const struct OTRManagedStatusAttributes OTRManagedStatusAttributes = {
+const struct OTRManagedStatusMessageAttributes OTRManagedStatusMessageAttributes = {
 	.status = @"status",
 };
 
-const struct OTRManagedStatusRelationships OTRManagedStatusRelationships = {
-	.statusbuddy = @"statusbuddy",
+const struct OTRManagedStatusMessageRelationships OTRManagedStatusMessageRelationships = {
 };
 
-const struct OTRManagedStatusFetchedProperties OTRManagedStatusFetchedProperties = {
+const struct OTRManagedStatusMessageFetchedProperties OTRManagedStatusMessageFetchedProperties = {
 };
 
-@implementation OTRManagedStatusID
+@implementation OTRManagedStatusMessageID
 @end
 
-@implementation _OTRManagedStatus
+@implementation _OTRManagedStatusMessage
 
 + (id)insertInManagedObjectContext:(NSManagedObjectContext*)moc_ {
 	NSParameterAssert(moc_);
-	return [NSEntityDescription insertNewObjectForEntityForName:@"OTRManagedStatus" inManagedObjectContext:moc_];
+	return [NSEntityDescription insertNewObjectForEntityForName:@"OTRManagedStatusMessage" inManagedObjectContext:moc_];
 }
 
 + (NSString*)entityName {
-	return @"OTRManagedStatus";
+	return @"OTRManagedStatusMessage";
 }
 
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_ {
 	NSParameterAssert(moc_);
-	return [NSEntityDescription entityForName:@"OTRManagedStatus" inManagedObjectContext:moc_];
+	return [NSEntityDescription entityForName:@"OTRManagedStatusMessage" inManagedObjectContext:moc_];
 }
 
-- (OTRManagedStatusID*)objectID {
-	return (OTRManagedStatusID*)[super objectID];
+- (OTRManagedStatusMessageID*)objectID {
+	return (OTRManagedStatusMessageID*)[super objectID];
 }
 
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
@@ -77,10 +76,6 @@ const struct OTRManagedStatusFetchedProperties OTRManagedStatusFetchedProperties
 
 
 
-
-@dynamic statusbuddy;
-
-	
 
 
 

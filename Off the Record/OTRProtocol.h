@@ -20,14 +20,14 @@
 //  You should have received a copy of the GNU General Public License
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
-@class OTRManagedMessage, OTRManagedBuddy, OTRManagedAccount;
+@class OTRManagedChatMessage, OTRManagedBuddy, OTRManagedAccount;
 
 @protocol OTRProtocol <NSObject>
 
 @property (nonatomic, strong) OTRManagedAccount * account;
 @property (nonatomic) BOOL isConnected;
 
-- (void) sendMessage:(OTRManagedMessage*)message;
+- (void) sendMessage:(OTRManagedChatMessage*)message;
 - (void) connectWithPassword:(NSString *)password;
 - (void) disconnect;
 - (void) addBuddy:(OTRManagedBuddy *)newBuddy;

@@ -27,7 +27,7 @@
 #import "OTRConstants.h"
 #import "OTRAppDelegate.h"
 #import "OTRSettingsViewController.h"
-#import "OTRManagedStatus.h"
+#import "OTRManagedStatusMessage.h"
 #import "OTRManagedGroup.h"
 #import <QuartzCore/QuartzCore.h>
 #import "OTRBuddyListSectionInfo.h"
@@ -113,7 +113,7 @@
     buddyListTableView.dataSource = self;
     buddyListTableView.delegate = self;
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"14-gear.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(showSettingsView:)];
-    self.navigationItem.rightBarButtonItem.accessibilityLabel = @"settings";
+    self.navigationItem.rightBarButtonItem.accessibilityLabel = SETTINGS_STRING;
     [self.view addSubview:buddyListTableView];
     [self.buddyListTableView registerClass:[OTRSectionHeaderView class] forHeaderFooterViewReuseIdentifier:[OTRSectionHeaderView reuseIdentifier]];
     
@@ -468,9 +468,9 @@
         return _buddyFetchedResultsController;
     }
     
-    NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"accountName != nil OR displayName != nil"];
-    
-    _buddyFetchedResultsController = [OTRManagedBuddy MR_fetchAllGroupedBy:nil withPredicate:buddyFilter sortedBy:@"currentStatus,displayName" ascending:YES delegate:self];
+    NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"%K != nil OR %K != nil",OTRManagedBuddyAttributes.accountName,OTRManagedBuddyAttributes.displayName];
+    NSString * sortString = [NSString stringWithFormat:@"%@,%@",OTRManagedBuddyAttributes.currentStatus,OTRManagedBuddyAttributes.displayName];
+    _buddyFetchedResultsController = [OTRManagedBuddy MR_fetchAllGroupedBy:nil withPredicate:buddyFilter sortedBy:sortString ascending:YES delegate:self];
     
     return _buddyFetchedResultsController;
 }
@@ -482,8 +482,9 @@
         return _searchBuddyFetchedResultsController;
     }
     
-    NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"accountName != nil OR displayName != nil"];
-    _searchBuddyFetchedResultsController = [OTRManagedBuddy MR_fetchAllGroupedBy:nil withPredicate:buddyFilter sortedBy:@"currentStatus,displayName" ascending:YES delegate:self];
+    NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"%K != nil OR %K != nil",OTRManagedBuddyAttributes.accountName,OTRManagedBuddyAttributes.displayName];
+    NSString * sortString = [NSString stringWithFormat:@"%@,%@",OTRManagedBuddyAttributes.currentStatus,OTRManagedBuddyAttributes.displayName];
+    _searchBuddyFetchedResultsController = [OTRManagedBuddy MR_fetchAllGroupedBy:nil withPredicate:buddyFilter sortedBy:sortString ascending:YES delegate:self];
     
     return _searchBuddyFetchedResultsController;
     
@@ -495,13 +496,13 @@
     {
         return _recentBuddiesFetchedResultsController;
     }
-    
-     //predicate = [NSPredicate predicateWithFormat:@"messages.@count != 0"];
-    NSPredicate * predicate = [NSPredicate predicateWithFormat:@"(SUBQUERY(messages, $message, $message.isEncrypted == NO).@count != 0)"];
-    NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"accountName != nil OR displayName != nil"];
+    /// Maybe instead do a fetch on OTRManagedChatMessage and group by buddy sections -> rows in table
+    NSPredicate * predicate = [NSPredicate predicateWithFormat:@"(SUBQUERY(%K, $message, $message.isEncrypted == NO).@count != 0)",OTRManagedBuddyRelationships.chatMessages];
+    NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"%K != nil OR %K != nil",OTRManagedBuddyAttributes.accountName,OTRManagedBuddyAttributes.displayName];
     NSPredicate * compoundPredicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[predicate,buddyFilter]];
+     
     
-    _recentBuddiesFetchedResultsController = [OTRManagedBuddy MR_fetchAllSortedBy:@"lastMessageDate" ascending:NO withPredicate:compoundPredicate groupBy:nil delegate:self];
+    _recentBuddiesFetchedResultsController = [OTRManagedBuddy MR_fetchAllSortedBy:OTRManagedBuddyAttributes.lastMessageDate ascending:NO withPredicate:compoundPredicate groupBy:nil delegate:self];
  
     return _recentBuddiesFetchedResultsController;
 }
@@ -513,11 +514,11 @@
         return _unreadMessagesFetchedResultsContrller;
     }
     
-    NSPredicate * encryptionFilter = [NSPredicate predicateWithFormat:@"self.isEncrypted == NO"];
-    NSPredicate * unreadFilter = [NSPredicate predicateWithFormat:@"isRead == NO"];
+    NSPredicate * encryptionFilter = [NSPredicate predicateWithFormat:@"%K == NO",OTRManagedMessageAttributes.isEncrypted];
+    NSPredicate * unreadFilter = [NSPredicate predicateWithFormat:@"%K == NO",OTRManagedChatMessageAttributes.isRead];
     NSPredicate * unreadMessagePredicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[encryptionFilter, unreadFilter]];
     
-    _unreadMessagesFetchedResultsContrller = [OTRManagedMessage MR_fetchAllGroupedBy:nil withPredicate:unreadMessagePredicate sortedBy:nil ascending:YES delegate:self];
+    _unreadMessagesFetchedResultsContrller = [OTRManagedChatMessage MR_fetchAllGroupedBy:nil withPredicate:unreadMessagePredicate sortedBy:nil ascending:YES delegate:self];
     
     return _unreadMessagesFetchedResultsContrller;
 }
@@ -530,7 +531,7 @@
     }
     
     NSPredicate * offlineBuddyFilter = [NSPredicate predicateWithFormat:@"%K == %d",OTRManagedBuddyAttributes.currentStatus,OTRBuddyStatusOffline];
-    NSPredicate * selfBuddyFilter = [NSPredicate predicateWithFormat:@"accountName != account.username"];
+    NSPredicate * selfBuddyFilter = [NSPredicate predicateWithFormat:@"%K != account.username",OTRManagedBuddyAttributes.accountName];
     NSPredicate * compoundPredicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[offlineBuddyFilter,selfBuddyFilter]];
     
     NSString * sortByString = [NSString stringWithFormat:@"%@,%@",OTRManagedBuddyAttributes.displayName,OTRManagedBuddyAttributes.accountName];
@@ -760,14 +761,12 @@
     _searchBuddyFetchedResultsController.delegate = nil;
     _searchBuddyFetchedResultsController = nil;
     
-    NSPredicate * buddyNameFilter = [NSPredicate predicateWithFormat:@"accountName contains[cd] %@ OR displayName contains[cd] %@",searchText ,searchText];
-    NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"accountName != nil OR displayName != nil"];
-    NSPredicate * selfBuddyFilter = [NSPredicate predicateWithFormat:@"accountName != account.username"];
+    NSPredicate * buddyNameFilter = [NSPredicate predicateWithFormat:@"%K contains[cd] %@ OR %K contains[cd] %@",OTRManagedBuddyAttributes.accountName,searchText,OTRManagedBuddyAttributes.displayName ,searchText];
+    NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"%K != nil OR %K != nil",OTRManagedBuddyAttributes.accountName,OTRManagedBuddyAttributes.displayName];
+    NSPredicate * selfBuddyFilter = [NSPredicate predicateWithFormat:@"%K != account.username",OTRManagedBuddyAttributes.accountName];
     NSPredicate * predicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[buddyNameFilter,buddyFilter,selfBuddyFilter]];
-    _searchBuddyFetchedResultsController = [OTRManagedBuddy MR_fetchAllGroupedBy:nil withPredicate:predicate sortedBy:@"currentStatus,displayName" ascending:YES delegate:self];
-    
-    //[searchRequest setPredicate:buddyFilter];
-    
+    NSString * sortString = [NSString stringWithFormat:@"%@,%@",OTRManagedBuddyAttributes.currentStatus,OTRManagedBuddyAttributes.displayName];
+    _searchBuddyFetchedResultsController = [OTRManagedBuddy MR_fetchAllGroupedBy:nil withPredicate:predicate sortedBy:sortString ascending:YES delegate:self];
 }
 
 - (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString

@@ -1,24 +1,23 @@
-#import "OTRManagedStatus.h"
+#import "OTRManagedStatusMessage.h"
 #import "Strings.h"
 
 
-@interface OTRManagedStatus ()
+@interface OTRManagedStatusMessage ()
 
 // Private interface goes here.
 
 @end
 
 
-@implementation OTRManagedStatus
+@implementation OTRManagedStatusMessage
 
--(void)updateStatus:(OTRBuddyStatus)newStatus withMessage:(NSString *)newMessage incoming:(BOOL)newIsIncoming
+- (void)updateStatus:(OTRBuddyStatus)newStatus withMessage:(NSString *)newMessage incoming:(BOOL)newIsIncoming
 {
     self.date = [NSDate date];
     self.statusValue = newStatus;
     self.isIncomingValue = newIsIncoming;
-    self.isEncryptedValue = NO;
     if (![newMessage length]) {
-        self.message = [OTRManagedStatus statusMessageWithStatus:newStatus];
+        self.message = [OTRManagedStatusMessage statusMessageWithStatus:newStatus];
     }
     else
     {
@@ -29,39 +28,36 @@
     [context MR_saveToPersistentStoreAndWait];
 }
 
-+(OTRManagedStatus *)newStatus:(OTRBuddyStatus)newStatus withMessage:(NSString *)newMessage withBuddy:(OTRManagedBuddy *)newBuddy incoming:(BOOL)newIsIncoming
++ (OTRManagedStatusMessage *)newStatus:(OTRBuddyStatus)newStatus withMessage:(NSString *)newMessage withBuddy:(OTRManagedBuddy *)newBuddy incoming:(BOOL)newIsIncoming
 {
-    OTRManagedStatus * managedStatus = [OTRManagedStatus MR_createEntity];
+    OTRManagedStatusMessage * managedStatus = [OTRManagedStatusMessage MR_createEntity];
     managedStatus.statusValue = newStatus;
     
     if (![newMessage length]) {
-        managedStatus.message = [OTRManagedStatus statusMessageWithStatus:newStatus];
+        managedStatus.message = [OTRManagedStatusMessage statusMessageWithStatus:newStatus];
     }
     else
     {
         managedStatus.message = newMessage;
     }
     
-    
     managedStatus.buddy = newBuddy;
-    managedStatus.statusbuddy = newBuddy;
     managedStatus.isIncomingValue = newIsIncoming;
     managedStatus.date = [NSDate date];
-    managedStatus.isEncryptedValue = NO;
     
     /*NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
-    [context MR_saveToPersistentStoreAndWait];
-    */
+     [context MR_saveToPersistentStoreAndWait];
+     */
     return managedStatus;
 }
-+(OTRManagedStatus *)newStatus:(OTRBuddyStatus)newStatus withMessage:(NSString *)newMessage withBuddy:(OTRManagedBuddy *)newBuddy incoming:(BOOL)newIsIncoming inContext:(NSManagedObjectContext *)context
++ (OTRManagedStatusMessage *)newStatus:(OTRBuddyStatus)newStatus withMessage:(NSString *)newMessage withBuddy:(OTRManagedBuddy *)newBuddy incoming:(BOOL)newIsIncoming inContext:(NSManagedObjectContext *)context
 {
-    OTRManagedStatus * managedStatus = [OTRManagedStatus MR_createInContext:context];
-  
+    OTRManagedStatusMessage * managedStatus = [OTRManagedStatusMessage MR_createInContext:context];
+    
     managedStatus.statusValue = newStatus;
     
     if (![newMessage length]) {
-        managedStatus.message = [OTRManagedStatus statusMessageWithStatus:newStatus];
+        managedStatus.message = [OTRManagedStatusMessage statusMessageWithStatus:newStatus];
     }
     else
     {
@@ -70,17 +66,15 @@
     
     
     managedStatus.buddy = newBuddy;
-    managedStatus.statusbuddy = newBuddy;
     managedStatus.isIncomingValue = newIsIncoming;
     managedStatus.date = [NSDate date];
-    managedStatus.isEncryptedValue = NO;
     
     [context MR_saveToPersistentStoreAndWait];
     
     return managedStatus;
 }
 
-+(NSString *)statusMessageWithStatus:(OTRBuddyStatus)status
++ (NSString *)statusMessageWithStatus:(OTRBuddyStatus)status
 {
     switch (status) {
         case OTRBuddyStatusXa:

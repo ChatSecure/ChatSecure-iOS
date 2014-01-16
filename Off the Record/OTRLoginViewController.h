@@ -26,6 +26,7 @@
 #import "Strings.h"
 #import "OTRConstants.h"
 
+
 #define kTextLabelTextKey @"textLabelTextKey"
 #define kCellTypeKey @"cellTypeKey"
 #define kUserInputViewKey @"userInputViewKey"
@@ -33,24 +34,28 @@
 #define kCellTypeSwitch @"cellTypeSwitch"
 #define KCellTypeHelp @"cellTypeHelp"
 
+#define kErrorAlertViewTag 131
+#define kErrorInfoAlertViewTag 132
+#define kNewCertAlertViewTag 134
+
 @interface OTRLoginViewController : UIViewController <UITextFieldDelegate, MBProgressHUDDelegate, UIActionSheetDelegate, UITableViewDataSource,UITableViewDelegate, UIAlertViewDelegate> {
-    MBProgressHUD *HUD;
     UIView *padding;
-    NSError * recentError;
 }
 
 - (id) initWithAccountID:(NSManagedObjectID *)newAccountID;
 
-@property (nonatomic, retain) OTRManagedAccount *account;
+@property (nonatomic, strong) OTRManagedAccount *account;
+@property (nonatomic, strong) MBProgressHUD * HUD;
+@property (nonatomic, strong) NSError * recentError;
 
-@property (nonatomic, retain) UISwitch *rememberPasswordSwitch;
+@property (nonatomic, strong) UISwitch *rememberPasswordSwitch;
 @property (nonatomic, strong) UISwitch * autoLoginSwitch;
-@property (nonatomic, retain) UIImageView *logoView;
-@property (nonatomic, retain) UITextField *usernameTextField;
-@property (nonatomic, retain) UITextField *passwordTextField;
+@property (nonatomic, strong) UIImageView *logoView;
+@property (nonatomic, strong) UITextField *usernameTextField;
+@property (nonatomic, strong) UITextField *passwordTextField;
 
-@property (nonatomic, retain) UIBarButtonItem *loginButton;
-@property (nonatomic, retain) UIBarButtonItem *cancelButton;
+@property (nonatomic, strong) UIBarButtonItem *loginButton;
+@property (nonatomic, strong) UIBarButtonItem *cancelButton;
 
 @property (nonatomic, strong) NSTimer * timeoutTimer;
 
@@ -65,6 +70,7 @@
 - (void)cancelPressed:(id)sender;
 
 - (BOOL)checkFields;
+- (void)showHUDWithText:(NSString *)text;
 - (void)createAutoLoginSwitch;
 
 - (void)addCellinfoWithSection:(NSInteger)section
@@ -74,7 +80,12 @@
                  userInputView:(UIView *)inputView;
 
 - (void)readInFields;
-- (void)showLoginProgress;
+- (void)hideHUD;
+
+- (void)protocolLoginFailed:(NSNotification*)notification;
+- (void)protocolLoginSuccess:(NSNotification*)notification;
+
+- (void)showAlertViewWithTitle:(NSString *)title message:(NSString *)message error:(NSError *)error;
 
 +(OTRLoginViewController *)loginViewControllerWithAcccountID:(NSManagedObjectID *)accountID;
 

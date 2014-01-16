@@ -22,6 +22,8 @@
 
 #import "OTRXMPPLoginViewController.h"
 #import "OTRConstants.h"
+#import "OTRXMPPError.h"
+#import "SIAlertView.h"
 
 
 @interface OTRXMPPLoginViewController ()
@@ -42,12 +44,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHideOrShow:) name:UIKeyboardWillHideNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHideOrShow:) name:UIKeyboardWillShowNotification object:nil];
-
 }
 
 - (void)didReceiveMemoryWarning
@@ -77,8 +73,88 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHideOrShow:) name:UIKeyboardWillHideNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHideOrShow:) name:UIKeyboardWillShowNotification object:nil];
     [self.usernameTextField resignFirstResponder];
     [self.passwordTextField resignFirstResponder];
+}
+
+- (void)protocolLoginFailed:(NSNotification *)notification {
+    [self hideHUD];
+    NSError * error = notification.userInfo[kOTRNotificationErrorKey];
+    
+    if (error.code == OTRXMPPSSLError) {
+        NSData * certData = error.userInfo[OTRXMPPSSLCertificateDataKey];
+        NSString * hostname = error.userInfo[OTRXMPPSSLHostnameKey];
+        NSNumber * statusNumber = error.userInfo[OTRXMPPSSLStatusKey];
+        
+        if ([statusNumber longLongValue] == errSSLPeerAuthCompleted) {
+            //The cert was manually evaluated but did not anything that is saved so we have to recheck system and get interal validation status
+            //((OTRXMPPManager *)protocol).certificatePinningModulesss
+            id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
+            ((OTRXMPPManager *)protocol).certificatePinningModule.doNotManuallyEvaluateOverride = YES;
+            [self loginButtonPressed:nil];
+        }
+        else {
+            [self showCertWarningForData:certData withHostName:hostname withStatus:[statusNumber longValue]];
+        }
+    }
+    else{
+        [super protocolLoginFailed:notification];
+    }
+}
+
+- (void)showCertWarningForData:(NSData *)certData withHostName:(NSString *)hostname withStatus:(OSStatus)status {
+    
+    SecCertificateRef certificate = [OTRCertificatePinning certForData:certData];
+    NSString * fingerprint = [OTRCertificatePinning sha1FingerprintForCertificate:certificate];
+    NSString * message = [NSString stringWithFormat:@"%@\nSHA1: %@\n",hostname,fingerprint];
+    NSUInteger length = [message length];
+    
+    UIColor * sslMessageColor;
+    
+    if (status == noErr) {
+        //#52A352
+        sslMessageColor = [UIColor colorWithRed:0.32f green:0.64f blue:0.32f alpha:1.00f];
+        message = [message stringByAppendingString:[NSString stringWithFormat:@"✓ %@",VALID_CERTIFICATE_STRING]];
+    }
+    else {
+        NSString * sslErrorMessage = [OTRXMPPError errorStringWithSSLStatus:status];
+        sslMessageColor = [UIColor colorWithRed:0.89f green:0.42f blue:0.36f alpha:1.00f];;
+        message = [message stringByAppendingString:[NSString stringWithFormat:@"X %@",sslErrorMessage]];
+    }
+    NSRange errorMessageRange = NSMakeRange(length, message.length-length);
+    
+    NSMutableAttributedString * attributedString = [[NSMutableAttributedString alloc] initWithString:message];
+    
+    SIAlertView * alertView = [[SIAlertView alloc] initWithTitle:NEW_CERTIFICATE_STRING andMessage:nil];
+    [attributedString addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:16] range:NSMakeRange(0, message.length)];
+    [attributedString addAttribute:NSForegroundColorAttributeName value:sslMessageColor range:errorMessageRange];
+    
+    alertView.messageAttributedString = attributedString;
+    alertView.buttonColor = [UIColor whiteColor];
+    
+    [alertView addButtonWithTitle:REJECT_STRING type:SIAlertViewButtonTypeDestructive handler:^(SIAlertView *alertView) {
+        [alertView dismissAnimated:YES];
+    }];
+    [alertView addButtonWithTitle:SAVE_STRING type:SIAlertViewButtonTypeDefault handler:^(SIAlertView *alertView) {
+        id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
+        if ([protocol isKindOfClass:[OTRXMPPManager class]]) {
+            [((OTRXMPPManager *)protocol).certificatePinningModule addCertificate:[OTRCertificatePinning certForData:certData] withHostName:hostname];
+            [self loginButtonPressed:alertView];
+        }
+    }];
+    
+    [alertView show];
+    
+    UIImage * normalImage = [UIImage imageNamed:@"button-green"];
+    CGFloat hInset = floorf(normalImage.size.width / 2);
+	CGFloat vInset = floorf(normalImage.size.height / 2);
+	UIEdgeInsets insets = UIEdgeInsetsMake(vInset, hInset, vInset, hInset);
+	UIImage * buttonImage = [normalImage resizableImageWithCapInsets:insets];
+    
+    [alertView setDefaultButtonImage:buttonImage forState:UIControlStateNormal];
+    [alertView setDefaultButtonImage:buttonImage forState:UIControlStateHighlighted];
 }
 
 - (void)dealloc

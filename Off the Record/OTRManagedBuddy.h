@@ -25,7 +25,9 @@
 #import "OTRKit.h"
 #import "_OTRManagedBuddy.h"
 #import "OTRConstants.h"
-#import "OTRManagedStatus.h"
+
+@class OTRManagedEncryptionMessage;
+@class OTRManagedStatusMessage;
 
 @class OTRManagedAccount;
 
@@ -36,29 +38,29 @@
 
 -(BOOL)protocolIsXMPP;
 
--(void)sendActiveChatState;
--(void)sendInactiveChatState;
--(void)sendComposingChatState;
--(void)invalidatePausedChatStateTimer;
--(void)invalidateInactiveChatStateTimer;
+- (void)sendActiveChatState;
+- (void)sendInactiveChatState;
+- (void)sendComposingChatState;
+- (void)invalidatePausedChatStateTimer;
+- (void)invalidateInactiveChatStateTimer;
 
 - (void) newStatusMessage:(NSString *)newStatusMessage status:(OTRBuddyStatus)newStatus incoming:(BOOL)isIncoming;
 - (void) setNewEncryptionStatus:(OTRKitMessageState)newEncryptionStatus;
-- (OTRManagedStatus *)currentStatusMessage;
-- (OTRManagedEncryptionStatusMessage *)currentEncryptionStatus;
+- (OTRManagedStatusMessage *)currentStatusMessage;
+- (OTRManagedEncryptionMessage *)currentEncryptionStatus;
 
--(void)addToGroup:(NSString *)groupName inContext:(NSManagedObjectContext *)context;
--(void)addToGroup:(NSString *)groupName;
--(NSArray *)groupNames;
+- (void)addToGroup:(NSString *)groupName inContext:(NSManagedObjectContext *)context;
+- (void)addToGroup:(NSString *)groupName;
+- (NSArray *)groupNames;
 
 - (NSInteger) numberOfUnreadMessages;
 - (void) allMessagesRead;
 
 - (void) deleteAllMessages;
 
-+(OTRManagedBuddy *)fetchOrCreateWithName:(NSString *)name account:(OTRManagedAccount *)account;
-+(OTRManagedBuddy *)fetchOrCreateWithName:(NSString *)name account:(OTRManagedAccount *)account inContext:(NSManagedObjectContext *)context;
-+(OTRManagedBuddy *)fetchWithName:(NSString *)name account:(OTRManagedAccount *)account;
++ (OTRManagedBuddy *)fetchOrCreateWithName:(NSString *)name account:(OTRManagedAccount *)account;
++ (OTRManagedBuddy *)fetchOrCreateWithName:(NSString *)name account:(OTRManagedAccount *)account inContext:(NSManagedObjectContext *)context;
++ (OTRManagedBuddy *)fetchWithName:(NSString *)name account:(OTRManagedAccount *)account;
 
 @end
 

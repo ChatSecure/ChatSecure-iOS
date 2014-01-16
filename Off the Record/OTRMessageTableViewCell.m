@@ -23,7 +23,7 @@
 
 @implementation OTRMessageTableViewCell
 
--(id)initWithMessage:(OTRManagedMessage *)newMessage withDate:(BOOL)newShowDate reuseIdentifier:(NSString*)identifier
+-(id)initWithMessage:(OTRManagedChatMessage *)newMessage withDate:(BOOL)newShowDate reuseIdentifier:(NSString*)identifier
 {
     self = [super initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:identifier];
     if (self) {
@@ -60,7 +60,7 @@
     
 }
 
--(void)setMessage:(OTRManagedMessage *)newMessage
+-(void)setMessage:(OTRManagedChatMessage *)newMessage
 {
     [self willChangeValueForKey:NSStringFromSelector(@selector(message))];
     _message = newMessage;

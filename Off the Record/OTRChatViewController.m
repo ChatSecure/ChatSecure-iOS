@@ -28,8 +28,8 @@
 #import "OTRAppDelegate.h"
 #import "OTRMessageTableViewCell.h"
 #import "DAKeyboardControl.h"
-#import "OTRManagedStatus.h"
-#import "OTRManagedEncryptionStatusMessage.h"
+#import "OTRManagedStatusMessage.h"
+#import "OTRManagedEncryptionMessage.h"
 #import "OTRStatusMessageCell.h"
 #import "OTRUtilities.h"
 
@@ -382,7 +382,7 @@
                 [[OTRKit sharedInstance] disableEncryptionForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
             } else {
                 void (^sendInitateOTRMessage)(void) = ^void (void) {
-                    [OTRCodec generateOtrInitiateOrRefreshMessageTobuddy:self.buddy completionBlock:^(OTRManagedMessage *message) {
+                    [OTRCodec generateOtrInitiateOrRefreshMessageTobuddy:self.buddy completionBlock:^(OTRManagedChatMessage *message) {
                         [OTRProtocolManager sendMessage:message];
                     }];
                 };
@@ -594,10 +594,10 @@
     __block BOOL showDate = NO;
     if (indexPath.row < [[self.messagesFetchedResultsController sections][indexPath.section] numberOfObjects]) {
         id messageOrStatus = [self.messagesFetchedResultsController objectAtIndexPath:indexPath];
-        if([messageOrStatus isKindOfClass:[OTRManagedMessage class]]) {
+        if([messageOrStatus isKindOfClass:[OTRManagedChatMessage class]]) {
             //only OTRManagedMessage get dates
             
-            OTRManagedMessage * currentMessage = (OTRManagedMessage *)messageOrStatus;
+            OTRManagedChatMessage * currentMessage = (OTRManagedChatMessage *)messageOrStatus;
             
             if (!_previousShownSentDate || [currentMessage.date timeIntervalSinceDate:_previousShownSentDate] > MESSAGE_SENT_DATE_SHOW_TIME_INTERVAL) {
                 _previousShownSentDate = currentMessage.date;
@@ -619,9 +619,9 @@
     {
         BOOL showDate = [self showDateForMessageAtIndexPath:indexPath];
         id messageOrStatus = [self.messagesFetchedResultsController objectAtIndexPath:indexPath];
-        if([messageOrStatus isKindOfClass:[OTRManagedMessage class]]) {
+        if([messageOrStatus isKindOfClass:[OTRManagedChatMessage class]]) {
 
-            OTRManagedMessage * message = (OTRManagedMessage *)messageOrStatus;
+            OTRManagedChatMessage * message = (OTRManagedChatMessage *)messageOrStatus;
             height = [OTRMessageTableViewCell heightForMesssage:message.message showDate:showDate];
             
         }
@@ -681,8 +681,8 @@
         id messageOrStatus = [self.messagesFetchedResultsController objectAtIndexPath:indexPath];
         BOOL showDate = [self showDateForMessageAtIndexPath:indexPath];
 
-        if ([messageOrStatus isKindOfClass:[OTRManagedMessage class]]) {
-            OTRManagedMessage * message = (OTRManagedMessage *)messageOrStatus;
+        if ([messageOrStatus isKindOfClass:[OTRManagedChatMessage class]]) {
+            OTRManagedChatMessage * message = (OTRManagedChatMessage *)messageOrStatus;
             static NSString *messageCellIdentifier = @"messageCell";
             OTRMessageTableViewCell * cell;
             cell = [tableView dequeueReusableCellWithIdentifier:messageCellIdentifier];
@@ -694,7 +694,7 @@
             }
             return cell;
         }
-        else if ([messageOrStatus isKindOfClass:[OTRManagedStatus class]] || [messageOrStatus isKindOfClass:[OTRManagedEncryptionStatusMessage class]])
+        else if ([messageOrStatus isKindOfClass:[OTRManagedStatusMessage class]] || [messageOrStatus isKindOfClass:[OTRManagedEncryptionMessage class]])
         {
             static NSString *statusCellIdentifier = @"statusCell";
             UITableViewCell * cell;
@@ -705,9 +705,9 @@
             
             
             NSString * cellText = nil;
-            OTRManagedMessageAndStatus * managedStatus = (OTRManagedMessageAndStatus *)messageOrStatus;
+            OTRManagedMessage * managedStatus = (OTRManagedMessage *)messageOrStatus;
             
-            if ([messageOrStatus isKindOfClass:[OTRManagedStatus class]]) {
+            if ([messageOrStatus isKindOfClass:[OTRManagedStatusMessage class]]) {
                 if (managedStatus.isIncomingValue) {
                     cellText = [NSString stringWithFormat:INCOMING_STATUS_MESSAGE,managedStatus.message];
                 }
@@ -735,8 +735,6 @@
         return _buddyFetchedResultsController;
     
     NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"self == %@",self.buddy];
-    //NSPredicate * chatStateFilter = [NSPredicate predicateWithFormat:@"chatState == %d OR chatState == %d",kOTRChatStateComposing,kOTRChatStatePaused];
-    //NSPredicate *predicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[buddyFilter,chatStateFilter]];
     
     _buddyFetchedResultsController = [OTRManagedBuddy MR_fetchAllGroupedBy:nil withPredicate:buddyFilter sortedBy:nil ascending:YES delegate:self];
     
@@ -749,11 +747,11 @@
         return _messagesFetchedResultsController;
     }
     
-    NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"self.buddy == %@",self.buddy];
-    NSPredicate * encryptionFilter = [NSPredicate predicateWithFormat:@"isEncrypted == NO"];
+    NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"%K == %@",OTRManagedMessageRelationships.buddy,self.buddy];
+    NSPredicate * encryptionFilter = [NSPredicate predicateWithFormat:@"%K == NO",OTRManagedMessageAttributes.isEncrypted];
     NSPredicate * messagePredicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[buddyFilter,encryptionFilter]];
 
-    _messagesFetchedResultsController = [OTRManagedMessageAndStatus MR_fetchAllGroupedBy:nil withPredicate:messagePredicate sortedBy:@"date" ascending:YES delegate:self];
+    _messagesFetchedResultsController = [OTRManagedMessage MR_fetchAllGroupedBy:nil withPredicate:messagePredicate sortedBy:OTRManagedMessageAttributes.date ascending:YES delegate:self];
 
     return _messagesFetchedResultsController;
 }
@@ -784,8 +782,8 @@
                 
                 
                 id possibleMessage = [controller objectAtIndexPath:newIndexPath];
-                if ([possibleMessage isKindOfClass:[OTRManagedMessage class]]) {
-                    ((OTRManagedMessage *)possibleMessage).isReadValue = YES;
+                if ([possibleMessage isKindOfClass:[OTRManagedChatMessage class]]) {
+                    ((OTRManagedChatMessage *)possibleMessage).isReadValue = YES;
                 }
                 
             }
@@ -818,7 +816,7 @@
 {
     NSString * text = inputBar.textView.text;
     if ([text length]) {
-        OTRManagedMessage * message = [OTRManagedMessage newMessageToBuddy:self.buddy message:text encrypted:NO];
+        OTRManagedChatMessage * message = [OTRManagedChatMessage newMessageToBuddy:self.buddy message:text encrypted:NO];
         
         [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
         
@@ -831,13 +829,13 @@
                     [self addLockSpinner];
                     [OTRCodec generatePrivateKeyFor:self.buddy.account completionBlock:^(BOOL generatedKey) {
                         [self removeLockSpinner];
-                        [OTRCodec encodeMessage:message completionBlock:^(OTRManagedMessage *message) {
+                        [OTRCodec encodeMessage:message completionBlock:^(OTRManagedChatMessage *message) {
                             [OTRProtocolManager sendMessage:message];
                         }];
                     }];
                 }
                 else {
-                    [OTRCodec encodeMessage:message completionBlock:^(OTRManagedMessage *message) {
+                    [OTRCodec encodeMessage:message completionBlock:^(OTRManagedChatMessage *message) {
                         [OTRProtocolManager sendMessage:message];
                     }];
                 }

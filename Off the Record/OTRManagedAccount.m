@@ -34,6 +34,7 @@
 #import "OTRManagedFacebookAccount.h"
 #import "OTRManagedGoogleAccount.h"
 #import "OTRManagedOscarAccount.h"
+#import "OTRManagedXMPPTorAccount.h"
 
 
 @interface OTRManagedAccount()
@@ -154,8 +155,8 @@
     NSSet *buddySet = [self.buddies copy];
     for(OTRManagedBuddy * buddy in buddySet)
     {
-        NSPredicate * messageFilter = [NSPredicate predicateWithFormat:@"buddy == %@",self];
-        [OTRManagedMessageAndStatus MR_deleteAllMatchingPredicate:messageFilter];
+        NSPredicate * messageFilter = [NSPredicate predicateWithFormat:@"%K == %@",OTRManagedMessageRelationships.buddy,self];
+        [OTRManagedMessage MR_deleteAllMatchingPredicate:messageFilter];
         [buddy MR_deleteEntity];
     }
     
@@ -237,6 +238,13 @@
         OTRManagedOscarAccount * aimAccount = [OTRManagedOscarAccount MR_createEntity];
         [aimAccount setDefaultsWithProtocol:kOTRProtocolTypeAIM];
         newAccount = aimAccount;
+    }
+    else if (accountType == OTRAccountTypeXMPPTor)
+    {
+        //TOR + XMPP
+        OTRManagedXMPPTorAccount * torAccount = [OTRManagedXMPPTorAccount MR_createEntity];
+        [torAccount setDefaultsWithDomain:@""];
+        newAccount = torAccount;
     }
     if(newAccount)
     {

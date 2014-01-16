@@ -21,7 +21,7 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "OTREncryptionManager.h"
-#import "OTRManagedMessage.h"
+#import "OTRManagedChatMessage.h"
 #import "OTRProtocolManager.h"
 
 @implementation OTREncryptionManager
@@ -53,7 +53,7 @@
 }
 
 - (void) injectMessage:(NSString*)message recipient:(NSString*)recipient accountName:(NSString*)accountName protocol:(NSString*)protocol {
-    OTRManagedMessage *newMessage = [OTRManagedMessage newMessageToBuddy:[[OTRProtocolManager sharedInstance] buddyForUserName:recipient accountName:accountName protocol:protocol] message:message encrypted:YES];
+    OTRManagedChatMessage *newMessage = [OTRManagedChatMessage newMessageToBuddy:[[OTRProtocolManager sharedInstance] buddyForUserName:recipient accountName:accountName protocol:protocol] message:message encrypted:YES];
     [OTRProtocolManager sendMessage:newMessage];
 }
 

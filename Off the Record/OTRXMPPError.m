@@ -1,15 +1,68 @@
 //
-//  OTRErrorManager.m
+//  OTRXMPPError.m
 //  Off the Record
 //
-//  Created by David Chiles on 12/9/13.
-//  Copyright (c) 2013 Chris Ballinger. All rights reserved.
+//  Created by David Chiles on 1/14/14.
+//  Copyright (c) 2014 Chris Ballinger. All rights reserved.
 //
 
-#import "OTRErrorManager.h"
+#import "OTRXMPPError.h"
+
+#import "NSXMLElement+XMPP.h"
 #import "Strings.h"
 
-@implementation OTRErrorManager
+NSString *const OTRXMPPErrorDomain                = @"OTRXMPPErrorDomain";
+NSString *const OTRXMPPXMLErrorKey                = @"OTRXMPPXMLErrorKey";
+NSString *const OTRXMPPSSLStatusKey               = @"OTRXMPPSSLStatusKey";
+NSString *const OTRXMPPSSLCertificateDataKey      = @"OTRXMPPSSLCertificateDataKey";
+NSString *const OTRXMPPSSLHostnameKey             = @"OTRXMPPSSLHostnameKey";
+
+@implementation OTRXMPPError
+
++ (NSError *)errorForSSLSatus:(OSStatus)status withCertData:(NSData *)certData hostname:(NSString *)hostName
+{
+    NSMutableDictionary * userInfo = [NSMutableDictionary dictionary];
+    userInfo[OTRXMPPXMLErrorKey] = [NSNumber numberWithLong:status];
+    if (certData) {
+        userInfo[OTRXMPPSSLCertificateDataKey] = certData;
+    }
+    if (hostName.length) {
+        userInfo[OTRXMPPSSLHostnameKey] = hostName;
+    }
+    
+    NSError * error = [NSError errorWithDomain:OTRXMPPErrorDomain code:OTRXMPPSSLError userInfo:userInfo];
+    return error;
+}
++ (NSError *)errorForXMLElement:(NSXMLElement *)xmlError
+{
+    NSString * errorString = [self errorStringForXMLElement:xmlError];
+    
+    NSMutableDictionary * userInfo = [NSMutableDictionary dictionary];
+    if (errorString) {
+        [userInfo setObject:errorString forKey:NSLocalizedDescriptionKey];
+    }
+    
+    if(xmlError)
+    {
+        [userInfo setObject:xmlError forKey:OTRXMPPXMLErrorKey];
+    }
+    
+    NSError * error = [NSError errorWithDomain:OTRXMPPErrorDomain code:OTRXMPPXMLError userInfo:userInfo];
+    return error;
+}
+
++ (NSString *)errorStringForXMLElement:(NSXMLElement *)xmlError
+{
+    NSString * errorString = nil;
+    NSArray * elements = [xmlError elementsForName:@"error"];
+    if ([elements count]) {
+        elements = [[elements firstObject] elementsForName:@"text"];
+        if ([elements count]) {
+            errorString = [[elements firstObject] stringValue];
+        }
+    }
+    return errorString;
+}
 
 + (NSString *)errorStringWithSSLStatus:(OSStatus)status {
     
@@ -67,6 +120,5 @@
         case errSSLUnexpectedRecord : return errSSLUnexpectedRecordString;
     }
 }
-
 
 @end

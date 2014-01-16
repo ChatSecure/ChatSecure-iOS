@@ -1,22 +1,21 @@
-#import "OTRManagedEncryptionStatusMessage.h"
+#import "OTRManagedEncryptionMessage.h"
 #import "Strings.h"
 
 
-@interface OTRManagedEncryptionStatusMessage ()
+@interface OTRManagedEncryptionMessage ()
 
 // Private interface goes here.
 
 @end
 
 
-@implementation OTRManagedEncryptionStatusMessage
+@implementation OTRManagedEncryptionMessage
 
-+(OTRManagedEncryptionStatusMessage *)newEncryptionStatus:(OTRKitMessageState)newEncryptionStatus buddy:(OTRManagedBuddy *)buddy
++(OTRManagedEncryptionMessage *)newEncryptionStatus:(OTRKitMessageState)newEncryptionStatus buddy:(OTRManagedBuddy *)buddy
 {
-    OTRManagedEncryptionStatusMessage * encryptionStatusMessage = [OTRManagedEncryptionStatusMessage MR_createEntity];
+    OTRManagedEncryptionMessage * encryptionStatusMessage = [OTRManagedEncryptionMessage MR_createEntity];
     
     encryptionStatusMessage.date = [NSDate date];
-    encryptionStatusMessage.isEncryptedValue = NO;
     encryptionStatusMessage.isIncoming = NO;
     
     NSString * message = nil;
@@ -35,19 +34,19 @@
             DDLogWarn(@"Unknown Encryption State");
             break;
     }
-
+    
     
     
     
     encryptionStatusMessage.message = message;
     encryptionStatusMessage.statusValue = newEncryptionStatus;
     encryptionStatusMessage.buddy = buddy;
-    encryptionStatusMessage.encryptionstatusbuddy = buddy;
     
     NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
     [context MR_saveToPersistentStoreAndWait];
     
     return encryptionStatusMessage;
 }
+
 
 @end
