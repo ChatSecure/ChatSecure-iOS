@@ -134,6 +134,8 @@
     if (xmppManager) {
         self.account.username = self.usernameTextField.text;
         self.account.domain = self.selectedHostname;
+        self.account.rememberPasswordValue = self.rememberPasswordSwitch.on;
+        self.account.autologinValue = self.autoLoginSwitch.on;
         [self showHUDWithText:@"Creating Account"];
         [xmppManager registerNewAccountWithPassword:self.passwordTextField.text];
     }

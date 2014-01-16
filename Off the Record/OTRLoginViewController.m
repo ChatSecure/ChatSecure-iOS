@@ -331,8 +331,6 @@
     } else {
         account.password = nil;
     }
-    
-    
 }
 
 -(void)viewDidDisappear:(BOOL)animated
@@ -379,6 +377,12 @@
     [self showAlertViewWithTitle:ERROR_STRING message:errorMessage error:error];
 }
 
+-(void)protocolLoginSuccess:(NSNotification*)notification
+{
+    [self hideHUD];
+    [self dismissViewControllerAnimated:YES completion:nil];
+}  
+
 - (void)showAlertViewWithTitle:(NSString *)title message:(NSString *)message error:(NSError *)error
 {
     UIAlertView * alertView = nil;
@@ -396,14 +400,6 @@
         [alertView show];
     }
 }
-
-
-
--(void)protocolLoginSuccess:(NSNotification*)notification
-{
-    [self hideHUD];
-    [self dismissViewControllerAnimated:YES completion:nil];
-}  
 
 
 

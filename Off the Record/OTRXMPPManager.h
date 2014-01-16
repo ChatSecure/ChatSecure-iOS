@@ -60,7 +60,6 @@ extern NSString *const OTRXMPPRegisterFailedNotificationName;
 	NSString *password;
     XMPPJID *JID;
 	
-	BOOL isXmppConnected;
     BOOL isRegisteringNewAccount;
     
     dispatch_queue_t backgroundQueue;
@@ -77,7 +76,7 @@ extern NSString *const OTRXMPPRegisterFailedNotificationName;
 @property (nonatomic, readonly) XMPPCapabilities *xmppCapabilities;
 @property (nonatomic, readonly) XMPPCapabilitiesCoreDataStorage *xmppCapabilitiesStorage;
 @property (nonatomic, readonly) OTRCertificatePinning * certificatePinningModule;
-@property 	BOOL isXmppConnected;
+@property BOOL didSecure;
 @property (nonatomic, strong) NSMutableDictionary * buddyTimers;
 
 //- (NSManagedObjectContext *)managedObjectContext_capabilities;
