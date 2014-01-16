@@ -45,18 +45,15 @@
  **/
 - (void)setvCardTemp:(XMPPvCardTemp *)vCardTemp forJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream {
     
-    [MagicalRecord saveUsingCurrentThreadContextWithBlock:^(NSManagedObjectContext *localContext) {
-        OTRvCard * vCard = [OTRvCard fetchOrCreateWithJidString:[jid bare]];
-        vCard.vCardTemp = vCardTemp;
-        
-        NSData * photoData = vCardTemp.photo;
-        vCard.photoData = photoData;
-        
-        vCard.lastUpdated = [NSDate date];
-    } completion:^(BOOL success, NSError *error) {
-        DDLogInfo(@"Saved vCard: %hhd",success);
-    }];
+    OTRvCard * vCard = [OTRvCard fetchOrCreateWithJidString:[jid bare]];
+    vCard.vCardTemp = vCardTemp ;
     
+    NSData * photoData = vCardTemp.photo;
+    vCard.photoData = photoData;
+    
+    vCard.lastUpdated = [NSDate date];
+    
+    [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
 }
 
 /**

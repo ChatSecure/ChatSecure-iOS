@@ -41,22 +41,16 @@
         OTRManagedXMPPAccount * managagedXmppAccount = [OTRManagedXMPPAccount MR_createEntity];
         
         managagedXmppAccount.uniqueIdentifier = xmppAccount.uniqueIdentifier;
-        [managagedXmppAccount setNewUsername:xmppAccount.username];
+        [managagedXmppAccount setUsername:xmppAccount.username];
         managagedXmppAccount.domain = xmppAccount.domain;
         [managagedXmppAccount setPortValue:xmppAccount.port];
-        [managagedXmppAccount setSendDeliveryReceiptsValue:xmppAccount.sendDeliveryReceipts];
-        [managagedXmppAccount setSendTypingNotificationsValue:xmppAccount.sendTypingNotifications];
-        [managagedXmppAccount setAllowSelfSignedSSLValue:xmppAccount.allowSelfSignedSSL ];
-         managagedXmppAccount.allowSSLHostNameMismatchValue = xmppAccount.allowSSLHostNameMismatch;
         managagedXmppAccount.protocol = xmppAccount.protocol;
         [managagedXmppAccount setRememberPasswordValue:xmppAccount.rememberPassword];
         managagedXmppAccount.password = xmppAccount.password;
-        [managagedXmppAccount setIsConnected:NO];
-        managagedXmppAccount.requireTLSValue = xmppAccount.requireTLS;
-        managagedXmppAccount.allowPlainTextAuthenticationValue = xmppAccount.allowPlainTextAuthentication;
         
         
-        [managagedXmppAccount save];
+        NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+        [context MR_saveToPersistentStoreAndWait];
         
         
         
@@ -70,11 +64,11 @@
         managedOscarAccount.protocol = oscarAccount.protocol;
         managedOscarAccount.password = oscarAccount.password;
         managedOscarAccount.uniqueIdentifier = managedOscarAccount.uniqueIdentifier;
-        [managedOscarAccount setNewUsername:oscarAccount.username];
+        [managedOscarAccount setUsername:oscarAccount.username];
         [managedOscarAccount setRememberPasswordValue:oscarAccount.rememberPassword];
-        managedOscarAccount.isConnected = NO;
         
-        [managedOscarAccount save];
+        NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+        [context MR_saveToPersistentStoreAndWait];
         
         
         

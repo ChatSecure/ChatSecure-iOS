@@ -26,6 +26,7 @@
 @interface OTRViewSetting : OTRSetting
 
 @property (nonatomic, retain, readonly) Class viewControllerClass;
+@property (nonatomic) UITableViewCellAccessoryType accessoryType;
 
 - (id) initWithTitle:(NSString*)newTitle description:(NSString*)newDescription viewControllerClass:(Class)newViewControllerClass;
 

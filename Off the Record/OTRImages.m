@@ -24,7 +24,7 @@
         case OTRBuddyStatusXa:
             return [UIColor colorWithRed: 0.734 green: 0.124 blue: 0.124 alpha: 1];
             break;
-        case OTRBUddyStatusDnd:
+        case OTRBuddyStatusDnd:
             return [UIColor colorWithRed: 0.734 green: 0.124 blue: 0.124 alpha: 1];
             break;
         case OTRBuddyStatusAvailable:
@@ -37,7 +37,7 @@
     
 }
 
-+(UIImage *)statusImageWithStatus:(OTRBuddyStatus)status
++(UIImage *)rawStatusImageWithStatus:(OTRBuddyStatus)status
 {
     UIGraphicsBeginImageContextWithOptions(CGSizeMake(18, 18), NO, 0);
     
@@ -75,6 +75,73 @@
 
 }
 
++ (UIImage *)statusImageWithStatus:(OTRBuddyStatus)status
+{
+    switch (status) {
+        case OTRBuddyStatusDnd:
+            return [OTRImages dndImage];
+            break;
+        case OTRBuddyStatusXa:
+            return [OTRImages xaImage];
+            break;
+        case OTRBuddyStatusAvailable:
+            return [OTRImages availableImage];
+            break;
+        case OTRBuddyStatusAway:
+            return [OTRImages awayImage];
+            break;
+        default:
+            return [OTRImages offlineImage];
+            break;
+    }
+    
+}
+
++ (UIImage*) offlineImage {
+    static UIImage *offlineImage = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        offlineImage = [OTRImages rawStatusImageWithStatus:OTRBuddyStatusOffline];
+    });
+    return offlineImage;
+}
+
++ (UIImage*) awayImage {
+    static UIImage *awayImage = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        awayImage = [OTRImages rawStatusImageWithStatus:OTRBuddyStatusAway];
+    });
+    return awayImage;
+}
+
++ (UIImage*) availableImage {
+    static UIImage *availableImage = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        availableImage = [OTRImages rawStatusImageWithStatus:OTRBuddyStatusAvailable];
+    });
+    return availableImage;
+}
+
++ (UIImage*) xaImage {
+    static UIImage *xaImage = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        xaImage = [OTRImages rawStatusImageWithStatus:OTRBuddyStatusXa];
+    });
+    return xaImage;
+}
+
++ (UIImage*) dndImage {
+    static UIImage *dndImage = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        dndImage = [OTRImages rawStatusImageWithStatus:OTRBuddyStatusDnd];
+    });
+    return dndImage;
+}
+
 +(UIImage *)caratImage
 {
     UIGraphicsBeginImageContextWithOptions(CGSizeMake(12, 12), NO, 0);
@@ -83,9 +150,9 @@
     
     //// Polygon Drawing
     UIBezierPath* polygonPath = [UIBezierPath bezierPath];
-    [polygonPath moveToPoint: CGPointMake(6, 8)];
-    [polygonPath addLineToPoint: CGPointMake(0.8, 2)];
-    [polygonPath addLineToPoint: CGPointMake(11.2, 2)];
+    [polygonPath moveToPoint: CGPointMake(6, 10.39)];
+    [polygonPath addLineToPoint: CGPointMake(0.8, 2.6)];
+    [polygonPath addLineToPoint: CGPointMake(11.2, 2.6)];
     [polygonPath closePath];
     [strokeColor setFill];
     [polygonPath fill];
@@ -127,5 +194,7 @@
                          orientation: UIImageOrientationUp];
     
 }
+
+
 
 @end

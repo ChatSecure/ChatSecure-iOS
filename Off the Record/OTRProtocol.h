@@ -25,12 +25,12 @@
 @protocol OTRProtocol <NSObject>
 
 @property (nonatomic, strong) OTRManagedAccount * account;
+@property (nonatomic) BOOL isConnected;
 
 - (void) sendMessage:(OTRManagedMessage*)message;
 - (void) connectWithPassword:(NSString *)password;
 - (void) disconnect;
 - (void) addBuddy:(OTRManagedBuddy *)newBuddy;
-- (BOOL) isConnected;
 
 -(void) removeBuddies:(NSArray *)buddies;
 -(void) blockBuddies:(NSArray *)buddies;

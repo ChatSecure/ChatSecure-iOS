@@ -15,8 +15,6 @@
 @implementation OTRJabberLoginViewController
 
 @synthesize domainTextField;
-@synthesize sslMismatchSwitch;
-@synthesize selfSignedSwitch;
 @synthesize portTextField;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -32,8 +30,6 @@
 {
     [super viewDidLoad];
     NSString * accountDomainString = self.account.domain;
-    BOOL sslMismatchSwitchStatus = self.account.allowSSLHostNameMismatchValue;
-    BOOL selfSignedSwitchStatus = self.account.allowSelfSignedSSLValue;
 	
     self.usernameTextField.placeholder = @"user@example.com";
     self.usernameTextField.keyboardType = UIKeyboardTypeEmailAddress;
@@ -49,12 +45,6 @@
     self.domainTextField.keyboardType = UIKeyboardTypeURL;
     self.domainTextField.textColor = self.textFieldTextColor;
     
-    self.sslMismatchSwitch = [[UISwitch alloc]init];
-    self.sslMismatchSwitch.on = sslMismatchSwitchStatus;
-    
-    self.selfSignedSwitch = [[UISwitch alloc] init];
-    self.selfSignedSwitch.on = selfSignedSwitchStatus;
-    
     
     self.portTextField = [[UITextField alloc] init];
     self.portTextField.delegate = self;
@@ -68,8 +58,6 @@
     
     [self addCellinfoWithSection:1 row:0 labelText:HOSTNAME_STRING cellType:kCellTypeTextField userInputView:self.domainTextField];
     [self addCellinfoWithSection:1 row:1 labelText:PORT_STRING cellType:kCellTypeTextField userInputView:self.portTextField];
-    [self addCellinfoWithSection:1 row:4 labelText:SSL_MISMATCH_STRING cellType:kCellTypeSwitch userInputView:self.sslMismatchSwitch];
-    [self addCellinfoWithSection:1 row:5 labelText:SELF_SIGNED_SSL_STRING cellType:kCellTypeSwitch userInputView:self.selfSignedSwitch];
     
     
     
@@ -95,9 +83,6 @@
 -(void)readInFields
 {
     [super readInFields];
-
-    self.account.allowSelfSignedSSLValue = selfSignedSwitch.on;
-    self.account.allowSSLHostNameMismatchValue = sslMismatchSwitch.on;
         
     NSString * domainText = [domainTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     self.account.domain = domainText;
@@ -178,8 +163,6 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     self.domainTextField = nil;
-    self.sslMismatchSwitch = nil;
-    self.selfSignedSwitch = nil;
     self.portTextField = nil;
     selectedCell = nil;
 }

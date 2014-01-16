@@ -33,17 +33,7 @@
 
 @implementation OTRAccountsManager
 
-- (void) addAccount:(OTRManagedAccount*)account {
-    if (!account) {
-        DDLogWarn(@"Account is nil!");
-        return;
-    }
-    NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
-    OTRManagedAccount * acct = (OTRManagedAccount *)[context existingObjectWithID :account.objectID error:nil];
-    [acct save];
-}
-
-- (void) removeAccount:(OTRManagedAccount*)account {
++ (void) removeAccount:(OTRManagedAccount*)account {
     if (!account) {
         DDLogWarn(@"Account is nil!");
         return;
@@ -61,35 +51,17 @@
    
 }
 
--(NSArray *)allAccounts
-{
-    return [OTRManagedAccount MR_findAllSortedBy:@"username" ascending:YES];
-}
-
-+(NSArray *)allLoggedInAccounts
-{
-    NSPredicate * accountFilter = [NSPredicate predicateWithFormat:@"%K == YES",OTRManagedAccountAttributes.isConnected];
-    return [OTRManagedAccount MR_findAllWithPredicate:accountFilter];
-}
-
--(OTRManagedAccount *)accountForProtocol:(NSString *)protocol accountName:(NSString *)accountName
-{
-    NSPredicate * accountFilter = [NSPredicate predicateWithFormat:@"protocol== %@ AND username==%@",protocol,accountName];
-    NSArray * results = [OTRManagedAccount MR_findAllWithPredicate:accountFilter];
-    
-     
-    OTRManagedAccount * fetchedAccount = nil;
-    if (results) {
-        fetchedAccount = [results lastObject];
-    }
-    return fetchedAccount;
-    
-    //return [[reverseLookupDictionary objectForKey:protocol] objectForKey:accountName];
++ (NSArray *)allAccountsAbleToAddBuddies  {
+    NSArray * allAccountsArray = [OTRManagedAccount MR_findAllSortedBy:OTRManagedAccountAttributes.username ascending:YES];
+    NSPredicate * connectedFilter = [NSPredicate predicateWithFormat:@"%K == YES",@"isConnected"];
+    NSPredicate * facebookFilter = [NSPredicate predicateWithFormat:@"%K != %d",NSStringFromSelector(@selector(accountType)),OTRAccountTypeFacebook];
+    NSPredicate * predicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[connectedFilter,facebookFilter]];
+    return [allAccountsArray filteredArrayUsingPredicate:predicate];
 }
 
 +(OTRManagedAccount *)accountForProtocol:(NSString *)protocol accountName:(NSString *)accountName
 {
-    NSPredicate * accountFilter = [NSPredicate predicateWithFormat:@"protocol== %@ AND username==%@",protocol,accountName];
+    NSPredicate * accountFilter = [NSPredicate predicateWithFormat:@"%K == %@ AND %K == %@",OTRManagedAccountAttributes.protocol,protocol,OTRManagedAccountAttributes.username,accountName];
     NSArray * results = [OTRManagedAccount MR_findAllWithPredicate:accountFilter];
     
     
@@ -98,13 +70,15 @@
         fetchedAccount = [results lastObject];
     }
     return fetchedAccount;
-    
-    //return [[reverseLookupDictionary objectForKey:protocol] objectForKey:accountName];
 }
 
-+ (NSUInteger)numberOfAccountsLoggedIn
++ (NSArray *)allAutoLoginAccounts
 {
-    return [[OTRAccountsManager allLoggedInAccounts] count];
+    NSPredicate * autoLoginPredicate = [NSPredicate predicateWithFormat:@"%K == YES",OTRManagedAccountAttributes.autologin];
+    
+    NSArray * accounts = [OTRManagedAccount MR_findAllWithPredicate:autoLoginPredicate];
+    
+    return accounts;
 }
 
 

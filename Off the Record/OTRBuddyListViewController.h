@@ -30,12 +30,13 @@
 @interface OTRBuddyListViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate, NSFetchedResultsControllerDelegate, UISearchDisplayDelegate, OTRBuddyListGroupManagerDelegate, OTRSectionHeaderViewDelegate>
 {
     NSMutableDictionary * buddyStatusImageDictionary;
+    BOOL shouldShowStatus;
 }
 
 @property (nonatomic, retain) UITableView *buddyListTableView;
 @property (nonatomic, retain) OTRChatViewController *chatViewController;
 @property (nonatomic, retain) OTRManagedBuddy *selectedBuddy;
-@property (nonatomic, strong) NSMutableArray * sectionInfoArray;
+@property (nonatomic, strong) NSMutableOrderedSet * sectionInfoSet;
 
 @property (nonatomic, strong) NSFetchedResultsController * buddyFetchedResultsController;
 @property (nonatomic, strong) NSFetchedResultsController * searchBuddyFetchedResultsController;

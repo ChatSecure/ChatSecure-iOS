@@ -17,7 +17,7 @@
 @implementation OTRAppVersionManager
 
 
--(void)applyUpdatesForAppVersion:(NSString *)appVersionString
++(void)applyUpdatesForAppVersion:(NSString *)appVersionString
 {
     NSString * lastVersionString = [OTRAppVersionManager lastLaunchVersion];
     
@@ -28,7 +28,7 @@
     if (![lastVersionString length]) {
         [self applyAll];
     }
-    else if ([lastVersionString isEqualToString:@"2.1"] || [lastVersionString isEqualToString:@"2.1.1"])
+    else if ([lastVersionString isEqualToString:@"2.1"] || [lastVersionString isEqualToString:@"2.1.1"] || [lastVersionString isEqualToString:@"2.1.2"])
     {
         [self updatesToVersion22];
     }
@@ -36,7 +36,7 @@
     [OTRAppVersionManager saveCurrentAppVersion];
 }
 
--(void)updatesToVersion22
++(void)updatesToVersion22
 {
     //use old method for retrieving oauth dict then save it with new method
     NSArray * oAuthAccounts = [OTRManagedOAuthAccount MR_findAll];
@@ -51,14 +51,24 @@
                 NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:keychainQuery.passwordData];
                 NSDictionary * dictionary = [unarchiver decodeObjectForKey:OTRArchiverKey];
                 [unarchiver finishDecoding];
+                [keychainQuery deleteItem:&error];
                 keychainQuery.passwordObject = dictionary;
                 [account setTokenDictionary:dictionary];
             }
         }
     }];
+    NSArray * allAccounts = [OTRManagedAccount MR_findAll];
+    [allAccounts enumerateObjectsUsingBlock:^(OTRManagedAccount * account, NSUInteger idx, BOOL *stop) {
+        if (![account isKindOfClass:[OTRManagedOAuthAccount class]]) {
+            NSString * password = [SSKeychain passwordForService:kOTRServiceName account:account.username];
+            [SSKeychain deletePasswordForService:kOTRServiceName account:account.username];
+            [account setPassword:password];
+        }
+        
+    }];
 }
 
--(void)updatesToVersion21
++(void)updatesToVersion21
 {
     [OTRAppVersionManager removeAllPasswordsForAccountType:OTRAccountTypeFacebook];
     [OTRAppVersionManager removeAllPasswordsForAccountType:OTRAccountTypeGoogleTalk];
@@ -80,7 +90,7 @@
                     }
                 }
             }];
-            [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveOnlySelfAndWait];
+            [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
         }
     };
         
@@ -89,7 +99,7 @@
     
 }
 
--(void)applyAll
++(void)applyAll
 {
     [self updatesToVersion21];
 }
@@ -110,10 +120,11 @@
     NSString * version = [[NSUserDefaults standardUserDefaults] objectForKey:kOTRAppVersionKey];
     return version;
 }
+
 +(void)applyAppUpdatesForCurrentAppVersion
 {
     NSString * currentVersionString = [OTRAppVersionManager currentAppVersionString];
-    [[[self alloc] init] applyUpdatesForAppVersion:currentVersionString];
+    [self applyUpdatesForAppVersion:currentVersionString];
 }
 
 

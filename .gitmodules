@@ -59,6 +59,9 @@
 [submodule "Submodules/CocoaLumberjack"]
 	path = Submodules/CocoaLumberjack
 	url = git@github.com:robbiehanson/CocoaLumberjack.git
+[submodule "Submodules/SIAlertView"]
+	path = Submodules/SIAlertView
+	url = git@github.com:ChatSecure/SIAlertView.git
 [submodule "Submodules/OnionKit"]
 	path = Submodules/OnionKit
 	url = git@github.com:ChatSecure/OnionKit.git

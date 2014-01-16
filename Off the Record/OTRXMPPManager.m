@@ -78,14 +78,15 @@
 @synthesize isXmppConnected;
 @synthesize account;
 @synthesize buddyTimers;
-@synthesize manualyEvaluateTrust = _manualyEvaluateTrust;
 @synthesize certificatePinningModule = _certificatePinningModule;
+@synthesize isConnected;
 
 - (id) initWithAccount:(OTRManagedAccount *)newAccount {
     self = [super init];
     
     if(self)
     {
+        self.isConnected = NO;
         self.account = (OTRManagedXMPPAccount*)newAccount;
 
         // Configure logging framework
@@ -130,8 +131,17 @@
     [xmppStream setProxyHost:@"127.0.0.1" port:9050 version:GCDAsyncSocketSOCKSVersion5];
     xmppStream.autoStartTLS = YES;
     
+<<<<<<< HEAD
     //Makes sure not allow any sending of password in plain text
     
+=======
+    [self.certificatePinningModule activate:self.xmppStream];
+    
+    XMPPMessageDeliveryReceipts * deliveryReceiptsMoodule = [[XMPPMessageDeliveryReceipts alloc] init];
+    deliveryReceiptsMoodule.autoSendMessageDeliveryReceipts = YES;
+    deliveryReceiptsMoodule.autoSendMessageDeliveryRequests = YES;
+    [deliveryReceiptsMoodule activate:self.xmppStream];
+>>>>>>> 2.2
 	
 #if !TARGET_IPHONE_SIMULATOR
 	{
@@ -215,11 +225,7 @@
     xmppCapabilities.autoFetchHashedCapabilities = YES;
     xmppCapabilities.autoFetchNonHashedCapabilities = NO;
     
-    NSArray * certDomains = @[kOTRGoogleTalkDomain,kOTRFacebookDomain,@"jabber.ccc.de"];
     
-    if ([certDomains containsObject:self.account.accountDomain]) {
-        self.manualyEvaluateTrust = YES;
-    }
 	// Activate xmpp modules
     
 	[xmppReconnect         activate:xmppStream];
@@ -234,11 +240,6 @@
 	[xmppRoster addDelegate:self delegateQueue:dispatch_get_main_queue()];
     [xmppCapabilities addDelegate:self delegateQueue:dispatch_get_main_queue()];
     
-    XMPPMessageDeliveryReceipts * deliveryReceiptsModule = [[XMPPMessageDeliveryReceipts alloc] init];
-    deliveryReceiptsModule.autoSendMessageDeliveryRequests = YES;
-    
-    [deliveryReceiptsModule activate:xmppStream];
-    
 	// Optional:
 	// 
 	// Replace me with the proper domain and port.
@@ -252,11 +253,6 @@
 	
     //	[xmppStream setHostName:@"talk.google.com"];
     //	[xmppStream setHostPort:5222];	
-	
-    
-	// You may need to alter these settings depending on the server you're connecting to
-	allowSelfSignedCertificates = account.allowSelfSignedSSLValue;
-	allowSSLHostNameMismatch = account.allowSSLHostNameMismatchValue;
 }
 
 - (void)teardownStream
@@ -315,7 +311,7 @@
 {
     if (error) {
         [[NSNotificationCenter defaultCenter]
-         postNotificationName:kOTRProtocolLoginFail object:self userInfo:@{KOTRProtocolLoginFailErrorKey:error}];
+         postNotificationName:kOTRProtocolLoginFail object:self userInfo:@{kOTRProtocolLoginFailErrorKey:error}];
     }
     else {
         [[NSNotificationCenter defaultCenter]
@@ -326,29 +322,10 @@
 
 ///////////////////////////////
 #pragma mark Capabilities Collected
-/*
-- (void)xmppCapabilities:(XMPPCapabilities *)sender collectingMyCapabilities:(NSXMLElement *)query
-{
-    if(account.sendDeliveryReceipts)
-    {
-        NSXMLElement * deliveryReceiptsFeature = [NSXMLElement elementWithName:@"feature"];
-        [deliveryReceiptsFeature addAttributeWithName:@"var" stringValue:@"urn:xmpp:receipts"];
-        [query addChild:deliveryReceiptsFeature];
-    }
-    
-    NSXMLElement * chatStateFeature = [NSXMLElement elementWithName:@"feature"];
-	[chatStateFeature addAttributeWithName:@"var" stringValue:@"http://jabber.org/protocol/chatstates"];
-    [query addChild:chatStateFeature];
-}
- */
 
 - (NSArray *)myFeaturesForXMPPCapabilities:(XMPPCapabilities *)sender
 {
-    NSMutableArray * array = [@[@"http://jabber.org/protocol/chatstates"] mutableCopy];
-    if (account.sendDeliveryReceipts) {
-        [array addObject:@"urn:xmpp:receipts"];
-    }
-    return array;
+    return @[@"http://jabber.org/protocol/chatstates"];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -375,6 +352,7 @@
         
 		return NO;
 	}
+    
     
     int r = arc4random() % 99999;
     
@@ -414,7 +392,6 @@
     [xmppStream disconnect];
     
     [self.account setAllBuddiesStatuts:OTRBuddyStatusOffline];
-    self.account.isConnectedValue = NO;
     
     if([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyDeleteOnDisconnect])
     {
@@ -432,6 +409,14 @@
 #pragma mark XMPPStream Delegate
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+- (void)xmppStreamDidChangeMyJID:(XMPPStream *)stream
+{
+    if (![[stream.myJID bare] isEqualToString:self.account.username])
+    {
+        self.account.username = [stream.myJID bare];
+    }
+}
+
 - (void)xmppStream:(XMPPStream *)sender socketDidConnect:(GCDAsyncSocket *)socket 
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
@@ -442,16 +427,6 @@
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
     
     [settings setObject:[OTRUtilities cipherSuites] forKey:GCDAsyncSocketSSLCipherSuites];
-
-	if (allowSelfSignedCertificates)
-	{
-		[settings setObject:[NSNumber numberWithBool:YES] forKey:(NSString *)kCFStreamSSLAllowsAnyRoot];
-	}
-	
-	if (allowSSLHostNameMismatch)
-	{
-		[settings setObject:[NSNull null] forKey:(NSString *)kCFStreamSSLPeerName];
-	}
 }
 
 - (void)xmppStreamDidSecure:(XMPPStream *)sender
@@ -463,7 +438,8 @@
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
 	
-	
+	self.isConnected = YES;
+    
 	NSError *error = nil;
     
     if ([sender supportsXFacebookPlatformAuthentication]) {
@@ -530,15 +506,7 @@
             [messageBuddy receiveChatStateMessage:kOTRChatStateGone];
     }
     
-    //Posible needs a setting to turn on and off
-    if([message hasReceiptRequest] && self.account.sendDeliveryReceiptsValue && ![message isErrorMessage])
-    {
-        XMPPMessage * responseMessage = [message generateReceiptResponse];
-        [xmppStream sendElement:responseMessage];
-    }
-    
     if ([message hasReceiptResponse] && ![message isErrorMessage]) {
-        
         [OTRManagedMessage receivedDeliveryReceiptForMessageID:[message receiptResponseID]];
     }
     
@@ -580,7 +548,9 @@
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
     [[NSNotificationCenter defaultCenter]
-     postNotificationName:kOTRProtocolDiconnect object:self]; 
+     postNotificationName:kOTRProtocolDiconnect object:self];
+    
+    self.isConnected = NO;
 	
 	if (!isXmppConnected)
 	{
@@ -643,64 +613,72 @@
 
 -(void)sendChatState:(OTRChatState)chatState withBuddyID:(NSManagedObjectID *)managedBuddyObjectID
 {
-    
-    OTRManagedBuddy * buddy = [self managedBuddyWithObjectID:managedBuddyObjectID];
-    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        OTRManagedBuddy * buddy = [self managedBuddyWithObjectID:managedBuddyObjectID];
+        
+        
+        if (buddy.lastSentChatStateValue == chatState) {
+            return;
+        }
+        
+        NSXMLElement *message = [NSXMLElement elementWithName:@"message"];
+        [message addAttributeWithName:@"type" stringValue:@"chat"];
+        [message addAttributeWithName:@"to" stringValue:buddy.accountName];
+        XMPPMessage * xMessage = [XMPPMessage messageFromElement:message];
+        
+        BOOL shouldSend = YES;
+        
+        if (chatState == kOTRChatStateActive) {
+            //Timers
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[self pausedChatStateTimerForBuddyObjectID:managedBuddyObjectID] invalidate];
+                [self restartInactiveChatStateTimerForBuddyObjectID:managedBuddyObjectID];
+            });
+            
+            [xMessage addActiveChatState];
+        }
+        else if (chatState == kOTRChatStateComposing)
+        {
+            if(buddy.lastSentChatState.intValue !=kOTRChatStateComposing)
+                [xMessage addComposingChatState];
+            else
+                shouldSend = NO;
+            
+            //Timers
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self restartPausedChatStateTimerForBuddyObjectID:managedBuddyObjectID];
+                [[self inactiveChatStateTimerForBuddyObjectID:managedBuddyObjectID] invalidate];
+            });
+        }
+        else if(chatState == kOTRChatStateInactive)
+        {
+            if(buddy.lastSentChatState.intValue != kOTRChatStateInactive)
+                [xMessage addInactiveChatState];
+            else
+                shouldSend = NO;
+        }
+        else if (chatState == kOTRChatStatePaused)
+        {
+            [xMessage addPausedChatState];
+        }
+        else if (chatState == kOTRChatStateGone)
+        {
+            [xMessage addGoneChatState];
+        }
+        else
+        {
+            shouldSend = NO;
+        }
+        
+        if(shouldSend)
+        {
+            [buddy setLastSentChatStateValue:chatState];
+            NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+            [context MR_saveToPersistentStoreAndWait];
+            [xmppStream sendElement:message];
+        }
 
-    if (buddy.lastSentChatState.intValue == chatState) {
-        return;
-    }
-    
-    NSXMLElement *message = [NSXMLElement elementWithName:@"message"];
-    [message addAttributeWithName:@"type" stringValue:@"chat"];
-    [message addAttributeWithName:@"to" stringValue:buddy.accountName];
-    XMPPMessage * xMessage = [XMPPMessage messageFromElement:message];
-    
-    BOOL shouldSend = YES;
-    
-    if (chatState == kOTRChatStateActive) {
-        [[self pausedChatStateTimerForBuddyObjectID:managedBuddyObjectID] invalidate];
-        [self restartInactiveChatStateTimerForBuddyObjectID:managedBuddyObjectID];
-        [xMessage addActiveChatState];
-    }
-    else if (chatState == kOTRChatStateComposing)
-    {
-        if(buddy.lastSentChatState.intValue !=kOTRChatStateComposing)
-            [xMessage addComposingChatState];
-        else
-            shouldSend = NO;
-        
-        [self restartPausedChatStateTimerForBuddyObjectID:managedBuddyObjectID];
-        [[self inactiveChatStateTimerForBuddyObjectID:managedBuddyObjectID] invalidate];
-        
-    }
-    else if(chatState == kOTRChatStateInactive)
-    {
-        if(buddy.lastSentChatState.intValue != kOTRChatStateInactive)
-            [xMessage addInactiveChatState];
-        else
-            shouldSend = NO;
-    }
-    else if (chatState == kOTRChatStatePaused)
-    {
-        [xMessage addPausedChatState];
-    }
-    else if (chatState == kOTRChatStateGone)
-    {
-        [xMessage addGoneChatState];
-    }
-    else
-    {
-        shouldSend = NO;
-    }
-    
-    if(shouldSend)
-    {
-        [buddy setLastSentChatStateValue:chatState];
-        NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
-        [context MR_saveToPersistentStoreAndWait];
-        [xmppStream sendElement:message];
-    }
+    });
 }
 
 - (void) addBuddy:(OTRManagedBuddy *)newBuddy
@@ -804,35 +782,27 @@ managedBuddyObjectID
     NSManagedObjectID * managedBuddyObjectID= (NSManagedObjectID *)timer.userInfo;
     [timer invalidate];
     [self sendChatState:kOTRChatStateInactive withBuddyID:managedBuddyObjectID];
-    
-}
--(BOOL)isConnected
-{
-    if (![xmppStream isDisconnected]) {
-		return YES;
-	}
-    return NO;
 }
 
-- (XMPPCertificatePinning *)certificatePinningModule
+- (OTRCertificatePinning *)certificatePinningModule
 {
     if(!_certificatePinningModule){
-        _certificatePinningModule = [XMPPCertificatePinning defaultCertificates];
+        _certificatePinningModule = [OTRCertificatePinning defaultCertificates];
+        _certificatePinningModule.delegate = self;
     }
     return _certificatePinningModule;
 }
 
-- (void)setManualyEvaluateTrust:(BOOL)manualyEvaluateTrust
-{
-    _manualyEvaluateTrust = manualyEvaluateTrust;
-    if (_manualyEvaluateTrust) {
-        xmppStream.manuallyEvaluateTrust = YES;
-        [self.certificatePinningModule activate:self.xmppStream];
-    }
-    else {
-        xmppStream.manuallyEvaluateTrust = NO;
-        [self.certificatePinningModule deactivate];
-    }
+- (void)newTrust:(SecTrustRef)trust withHostName:(NSString *)hostname withStatus:(OSStatus)status; {
+    DDLogVerbose(@"New trust found");
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSData * certifcateData = [OTRCertificatePinning dataForCertificate:[OTRCertificatePinning certForTrust:trust]];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kOTRProtocolLoginFail object:self userInfo:@{kOTRProtocolLoginFailSSLStatusKey:[NSNumber numberWithLong:status],kOTRProtocolLoginFailSSLCertificateDataKey:certifcateData,kOTRProtocolLoginFailHostnameKey:hostname}];
+    });
+    
+    
+    
 }
 
 @end

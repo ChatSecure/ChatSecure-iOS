@@ -20,6 +20,12 @@
 
 @implementation OTRRosterStorage
 
+-(id)init {
+    if (self = [super init]) {
+        isPopulatingRoster  = NO;
+    }
+    return self;
+}
 
 - (BOOL)configureWithParent:(XMPPRoster *)aParent queue:(dispatch_queue_t)queue
 {
@@ -28,78 +34,85 @@
 
 - (void)beginRosterPopulationForXMPPStream:(XMPPStream *)stream
 {
-    
+    DDLogInfo(@"Begin Roster Population: %@",stream);
+    isPopulatingRoster = YES;
 }
 
 - (void)endRosterPopulationForXMPPStream:(XMPPStream *)stream
 {
-    
+    DDLogInfo(@"End Roster Population: %@",stream);
+    isPopulatingRoster = NO;
+    [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
 }
 
 - (void)handleRosterItem:(NSXMLElement *)item xmppStream:(XMPPStream *)stream
 {
     DDLogInfo(@"Item: %@",item);
-    [MagicalRecord saveUsingCurrentThreadContextWithBlockAndWait:^(NSManagedObjectContext *localContext) {
-        NSString *jidStr = [item attributeStringValueForName:@"jid"];
-        XMPPJID *jid = [[XMPPJID jidWithString:jidStr] bareJID];
-        
-        OTRManagedBuddy * user = [self buddyWithJID:jid xmppStream:stream];
-        
-        NSString *subscription = [item attributeStringValueForName:@"subscription"];
-        if ([subscription isEqualToString:@"remove"])
+    NSManagedObjectContext *localContext = [NSManagedObjectContext MR_contextForCurrentThread];
+    NSString *jidStr = [item attributeStringValueForName:@"jid"];
+    XMPPJID *jid = [[XMPPJID jidWithString:jidStr] bareJID];
+    
+    OTRManagedBuddy * user = [self buddyWithJID:jid xmppStream:stream inContext:localContext];
+    
+    NSString *subscription = [item attributeStringValueForName:@"subscription"];
+    if ([subscription isEqualToString:@"remove"])
+    {
+        if (user)
         {
-            if (user)
-            {
-                [user MR_deleteEntity];
-            }
+            [user MR_deleteInContext:localContext];
         }
-        else if(user)
-        {
-            [self updateUser:user updateWithItem:item];
-        }
-    }];
+    }
+    else if(user)
+    {
+        [self updateUser:user updateWithItem:item];
+    }
+    
+    if (!isPopulatingRoster) {
+        [localContext MR_saveToPersistentStoreAndWait];
+    }
 }
 
 - (void)handlePresence:(XMPPPresence *)presence xmppStream:(XMPPStream *)stream
 {
-    [MagicalRecord saveUsingCurrentThreadContextWithBlockAndWait:^(NSManagedObjectContext *localContext) {
-        OTRManagedBuddy * user = [self buddyWithJID:[presence from] xmppStream:stream];
-        
-        if ([[presence type] isEqualToString:@"unavailable"] || [presence isErrorPresence]) {
-            [user newStatusMessage:OFFLINE_STRING status:OTRBuddyStatusOffline incoming:YES];
-        }
-        else if (user) {
-            OTRBuddyStatus buddyStatus;
-            switch (presence.intShow)
-            {
-                case 0  :
-                    buddyStatus = OTRBUddyStatusDnd;
-                    break;
-                case 1  :
-                    buddyStatus = OTRBuddyStatusXa;
-                    break;
-                case 2  :
-                    buddyStatus = OTRBuddyStatusAway;
-                    break;
-                case 3  :
-                    buddyStatus = OTRBuddyStatusAvailable;
-                    break;
-                case 4  :
-                    buddyStatus = OTRBuddyStatusAvailable;
-                    break;
-                default :
-                    buddyStatus = OTRBuddyStatusOffline;
-                    break;
-            }
-            [user newStatusMessage:[presence status] status:buddyStatus incoming:YES];
-        }
+    DDLogInfo(@"Handle Presence: %@",presence);
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
 
-    }];
+    OTRManagedBuddy * user = [self buddyWithJID:[presence from] xmppStream:stream inContext:context];
+    
+    if ([[presence type] isEqualToString:@"unavailable"] || [presence isErrorPresence]) {
+        [user newStatusMessage:OFFLINE_STRING status:OTRBuddyStatusOffline incoming:YES];
+    }
+    else if (user) {
+        OTRBuddyStatus buddyStatus;
+        switch (presence.intShow)
+        {
+            case 0  :
+                buddyStatus = OTRBuddyStatusDnd;
+                break;
+            case 1  :
+                buddyStatus = OTRBuddyStatusXa;
+                break;
+            case 2  :
+                buddyStatus = OTRBuddyStatusAway;
+                break;
+            case 3  :
+                buddyStatus = OTRBuddyStatusAvailable;
+                break;
+            case 4  :
+                buddyStatus = OTRBuddyStatusAvailable;
+                break;
+            default :
+                buddyStatus = OTRBuddyStatusOffline;
+                break;
+        }
+        [user newStatusMessage:[presence status] status:buddyStatus incoming:YES];
+    }
+    [context MR_saveToPersistentStoreAndWait];
 }
 
 - (BOOL)userExistsWithJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream
 {
-    OTRManagedBuddy * user = [OTRManagedBuddy fetchWithName:[jid bare] account:[self accountForStrem:stream]];
+    OTRManagedBuddy * user = [OTRManagedBuddy fetchWithName:[jid bare] account:[self accountForStream:stream]];
     if (user) {
         return YES;
     }
@@ -114,7 +127,7 @@
 - (void)clearAllUsersAndResourcesForXMPPStream:(XMPPStream *)stream
 {
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
-        OTRManagedAccount * account = [self accountForStrem:stream];
+        OTRManagedAccount * account = [self accountForStream:stream];
         [account.buddies enumerateObjectsUsingBlock:^(OTRManagedBuddy * buddy, BOOL *stop) {
             [buddy MR_deleteEntity];
         }];
@@ -124,7 +137,7 @@
 - (NSArray *)jidsForXMPPStream:(XMPPStream *)stream
 {
     NSMutableArray * jidArray = [NSMutableArray array];
-    OTRManagedAccount * account = [self accountForStrem:stream];
+    OTRManagedAccount * account = [self accountForStream:stream];
     [account.buddies enumerateObjectsUsingBlock:^(OTRManagedBuddy * buddy, BOOL *stop) {
         [jidArray addObject:[XMPPJID jidWithString:buddy.accountName]];
     }];
@@ -134,7 +147,7 @@
 - (void)setPhoto:(UIImage *)image forUserWithJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream
 {
     [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
-        OTRManagedBuddy * user = [self buddyWithJID:jid xmppStream:stream];
+        OTRManagedBuddy * user = [self buddyWithJID:jid xmppStream:stream inContext:localContext];
         user.photo = image;
     }];
 }
@@ -161,9 +174,6 @@
     if ([self isPendingApprovalElement:item]) {
         [user newStatusMessage:PENDING_APPROVAL_STRING status:OTRBuddyStatusOffline incoming:YES];
     }
-    else{
-        DDLogWarn(@"Unhandled type: %@",item);
-    }
     
 }
 
@@ -182,12 +192,12 @@
     return NO;
 }
 
--(OTRManagedBuddy *)buddyWithJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream
+-(OTRManagedBuddy *)buddyWithJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream inContext:(NSManagedObjectContext *)context
 {
-    return [OTRManagedBuddy fetchOrCreateWithName:[jid bare] account:[self accountForStrem:stream]];
+    return [OTRManagedBuddy fetchOrCreateWithName:[jid bare] account:[self accountForStream:stream] inContext:context];
 }
 
--(OTRManagedAccount *)accountForStrem:(XMPPStream *)stream
+-(OTRManagedAccount *)accountForStream:(XMPPStream *)stream
 {
     //fixme to new constants of finding account
     return [OTRAccountsManager accountForProtocol:@"xmpp" accountName:[stream.myJID bare]];

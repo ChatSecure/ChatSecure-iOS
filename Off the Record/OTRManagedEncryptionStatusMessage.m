@@ -14,6 +14,7 @@
 +(OTRManagedEncryptionStatusMessage *)newEncryptionStatus:(OTRKitMessageState)newEncryptionStatus buddy:(OTRManagedBuddy *)buddy
 {
     OTRManagedEncryptionStatusMessage * encryptionStatusMessage = [OTRManagedEncryptionStatusMessage MR_createEntity];
+    
     encryptionStatusMessage.date = [NSDate date];
     encryptionStatusMessage.isEncryptedValue = NO;
     encryptionStatusMessage.isIncoming = NO;

@@ -30,8 +30,10 @@
 #import "Strings.h"
 #import "OTRProtocolManager.h"
 #import "OTRUtilities.h"
-#import "OTRConstants.h"
 
+#import "OTRManagedFacebookAccount.h"
+#import "OTRManagedGoogleAccount.h"
+#import "OTRManagedOscarAccount.h"
 
 
 @interface OTRManagedAccount()
@@ -43,7 +45,6 @@
     self.username = @"";
     self.protocol = newProtocol;
     self.rememberPasswordValue = NO;
-    self.isConnectedValue = NO;
     self.uniqueIdentifier = [OTRUtilities uniqueString];
 }
 
@@ -72,16 +73,16 @@
 }
 
 - (void) setPassword:(NSString *)newPassword {
-    if (!newPassword || [newPassword isEqualToString:@""] || !self.rememberPassword) {
+    if (!newPassword || [newPassword isEqualToString:@""] || !self.rememberPasswordValue) {
         NSError *error = nil;
-        [SSKeychain deletePasswordForService:kOTRServiceName account:self.username error:&error];
+        [SSKeychain deletePasswordForService:kOTRServiceName account:self.uniqueIdentifier error:&error];
         if (error) {
             DDLogError(@"Error deleting password from keychain: %@%@", [error localizedDescription], [error userInfo]);
         }
         return;
     }
     NSError *error = nil;
-    [SSKeychain setPassword:newPassword forService:kOTRServiceName account:self.username error:&error];
+    [SSKeychain setPassword:newPassword forService:kOTRServiceName account:self.uniqueIdentifier error:&error];
     if (error) {
         DDLogError(@"Error saving password to keychain: %@%@", [error localizedDescription], [error userInfo]);
     }
@@ -92,37 +93,12 @@
         return nil;
     }
     NSError *error = nil;
-    NSString *password = [SSKeychain passwordForService:kOTRServiceName account:self.username error:&error];
+    NSString *password = [SSKeychain passwordForService:kOTRServiceName account:self.uniqueIdentifier error:&error];
     if (error) {
         DDLogError(@"Error retreiving password from keychain: %@%@", [error localizedDescription], [error userInfo]);
         error = nil;
     }
     return password;
-}
--(void)setNewUsername:(NSString *)newUsername
-{
-    NSString *oldUsername = [self.username copy];
-    
-    self.username = newUsername;
-    
-    if ([self.username isEqualToString:oldUsername]) {
-        return;
-    }
-    if (!self.rememberPassword) {
-        self.username = newUsername;
-        self.password = nil;
-        return;
-    }
-    if (oldUsername && ![oldUsername isEqualToString:newUsername]) {
-        NSString *tempPassword = self.password;
-        NSError *error = nil;
-        [SSKeychain deletePasswordForService:oldUsername account:kOTRServiceName error:&error];
-        if (error) {
-            DDLogError(@"Error deleting old password from keychain: %@%@", [error localizedDescription], [error userInfo]);
-        }
-        self.password = tempPassword;
-    }
-    
 }
 
 - (void) setRememberPasswordValue:(BOOL)remember {
@@ -130,11 +106,6 @@
     if (!self.rememberPasswordValue) {
         self.password = nil;
     }
-}
-
-- (void) save {
-    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
-    [context MR_saveToPersistentStoreAndWait];
 }
 
 
@@ -149,11 +120,9 @@
     return @"";
 }
 
--(NSNumber *)isConnected
+- (BOOL)isConnected
 {
-    
-    
-    return [NSNumber numberWithBool:[[OTRProtocolManager sharedInstance] isAccountConnected:self]];
+    return [[OTRProtocolManager sharedInstance] isAccountConnected:self];
 }
 
 -(void)setAllBuddiesStatuts:(OTRBuddyStatus)status
@@ -166,7 +135,8 @@
             buddy.chatStateValue = kOTRChatStateActive;
         }
     }
-    [self save];
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    [context MR_saveToPersistentStoreAndWait];
 }
 
 -(void)deleteAllConversationsForAccount
@@ -175,7 +145,8 @@
     {
         [buddy deleteAllMessages];
     }
-    [self save];
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    [context MR_saveToPersistentStoreAndWait];
 }
 
 -(void)prepareBuddiesandMessagesForDeletion
@@ -204,8 +175,7 @@
     
     for (OTRManagedAccount * managedAccount in allAccountsArray)
     {
-        managedAccount.isConnectedValue = [[OTRProtocolManager sharedInstance] isAccountConnected:managedAccount];
-        if (!managedAccount.isConnectedValue) {
+        if (!managedAccount.isConnected) {
             [managedAccount setAllBuddiesStatuts:OTRBuddyStatusOffline];
         }
         
@@ -225,10 +195,54 @@
         NSMutableDictionary * attributesDict = [dictionary mutableCopy];
         [attributesDict removeObjectForKey:kClassKey];
         [attributesDict enumerateKeysAndObjectsUsingBlock:^(NSString * key, id obj, BOOL *stop) {
-            [account setValue:obj forKey:key];
+            @try {
+                [account setValue:obj forKey:key];
+            }
+            @catch (NSException *exception) {
+                DDLogWarn(@"Could not set Key: %@ Value: %@ on Account",key,obj);
+            }
+            
         }];
     }
     return account;
+}
+
++(OTRManagedAccount *)accountForAccountType:(OTRAccountType)accountType
+{
+    //Facebook
+    OTRManagedAccount * newAccount;
+    if(accountType == OTRAccountTypeFacebook)
+    {
+        OTRManagedFacebookAccount * facebookAccount = [OTRManagedFacebookAccount MR_createEntity];
+        [facebookAccount setDefaultsWithDomain:kOTRFacebookDomain];
+        newAccount = facebookAccount;
+    }
+    else if(accountType == OTRAccountTypeGoogleTalk)
+    {
+        //Google Chat
+        OTRManagedGoogleAccount * googleAccount = [OTRManagedGoogleAccount MR_createEntity];
+        [googleAccount setDefaultsWithDomain:kOTRGoogleTalkDomain];
+        newAccount = googleAccount;
+    }
+    else if(accountType == OTRAccountTypeJabber)
+    {
+        //Jabber
+        OTRManagedXMPPAccount * jabberAccount = [OTRManagedXMPPAccount MR_createEntity];
+        [jabberAccount setDefaultsWithDomain:@""];
+        newAccount = jabberAccount;
+    }
+    else if(accountType == OTRAccountTypeAIM)
+    {
+        //Aim
+        OTRManagedOscarAccount * aimAccount = [OTRManagedOscarAccount MR_createEntity];
+        [aimAccount setDefaultsWithProtocol:kOTRProtocolTypeAIM];
+        newAccount = aimAccount;
+    }
+    if(newAccount)
+    {
+        [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
+    }
+    return newAccount;
 }
 
 @end

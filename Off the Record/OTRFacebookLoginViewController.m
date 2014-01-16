@@ -75,7 +75,7 @@
                 if (!error) {
                     [self didConnectUser:user];
                     NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
-                    [context MR_saveOnlySelfAndWait];
+                    [context MR_saveToPersistentStoreAndWait];
                     self.account.tokenDictionary = [session.accessTokenData dictionary];
                     //self.account.password = session.accessTokenData.accessToken;
                     [self.loginViewTableView reloadData];
@@ -88,12 +88,14 @@
 
 -(void)didConnectUser:(id<FBGraphUser>)user
 {
-    if ([user.username length]) {
-        self.account.username =  user.username;
+    if ([user.name length]) {
+        self.account.displayName = user.name;
     }
-    else {
-        self.account.username =  user.name;
+    else if ([user.username length]) {
+        self.account.displayName =  user.username;
     }
+    
+    self.account.username = [NSString stringWithFormat:@"-%@@%@",user.id,kOTRFacebookDomain];
 }
 
 @end

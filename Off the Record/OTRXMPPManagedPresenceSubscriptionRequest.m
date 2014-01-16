@@ -25,6 +25,7 @@
         OTRXMPPManagedPresenceSubscriptionRequest * newRequest = [OTRXMPPManagedPresenceSubscriptionRequest MR_createEntity];
         newRequest.jid = jid;
         newRequest.xmppAccount = account;
+        [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
         return newRequest;
     }
 }

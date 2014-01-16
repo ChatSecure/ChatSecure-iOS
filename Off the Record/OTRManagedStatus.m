@@ -49,15 +49,15 @@
     managedStatus.date = [NSDate date];
     managedStatus.isEncryptedValue = NO;
     
-    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    /*NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
     [context MR_saveToPersistentStoreAndWait];
-    
+    */
     return managedStatus;
 }
 +(OTRManagedStatus *)newStatus:(OTRBuddyStatus)newStatus withMessage:(NSString *)newMessage withBuddy:(OTRManagedBuddy *)newBuddy incoming:(BOOL)newIsIncoming inContext:(NSManagedObjectContext *)context
 {
     OTRManagedStatus * managedStatus = [OTRManagedStatus MR_createInContext:context];
-    [context obtainPermanentIDsForObjects:@[managedStatus] error:nil];
+  
     managedStatus.statusValue = newStatus;
     
     if (![newMessage length]) {
@@ -75,7 +75,7 @@
     managedStatus.date = [NSDate date];
     managedStatus.isEncryptedValue = NO;
     
-    //[context MR_saveToPersistentStoreAndWait];
+    [context MR_saveToPersistentStoreAndWait];
     
     return managedStatus;
 }
@@ -86,7 +86,7 @@
         case OTRBuddyStatusXa:
             return EXTENDED_AWAY_STRING;
             break;
-        case OTRBUddyStatusDnd:
+        case OTRBuddyStatusDnd:
             return DO_NOT_DISTURB_STRING;
             break;
         case OTRBuddyStatusAway:

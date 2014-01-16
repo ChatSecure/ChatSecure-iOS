@@ -9,6 +9,5 @@
 #import "OTRBuddyListSectionInfo.h"
 
 @implementation OTRBuddyListSectionInfo
-@synthesize open, sectionHeaderView;
 
 @end

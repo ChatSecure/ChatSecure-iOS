@@ -21,7 +21,9 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "OTRProtocolManager.h"
+#import "OTROscarManager.h"
 #import "OTRManagedBuddy.h"
+#import "OTRManagedOAuthAccount.h"
 #import "OTRConstants.h"
 
 static OTRProtocolManager *sharedManager = nil;
@@ -29,15 +31,11 @@ static OTRProtocolManager *sharedManager = nil;
 @implementation OTRProtocolManager
 
 @synthesize encryptionManager;
-@synthesize settingsManager;
-@synthesize accountsManager;
 @synthesize protocolManagers;
 
 - (void) dealloc 
 {
     self.encryptionManager = nil;
-    self.settingsManager = nil;
-    self.accountsManager = nil;
     self.protocolManagers = nil;
 }
 
@@ -46,9 +44,8 @@ static OTRProtocolManager *sharedManager = nil;
     self = [super init];
     if(self)
     {
-        self.accountsManager = [[OTRAccountsManager alloc] init];
+        _numberOfConnectedProtocols = 0;
         self.encryptionManager = [[OTREncryptionManager alloc] init];
-        self.settingsManager = [[OTRSettingsManager alloc] init];
         self.protocolManagers = [[NSMutableDictionary alloc] init];
     }
     return self;
@@ -83,21 +80,69 @@ static OTRProtocolManager *sharedManager = nil;
 
 -(OTRManagedBuddy *)buddyForUserName:(NSString *)buddyUserName accountName:(NSString *)accountName protocol:(NSString *)protocol
 {
-    OTRManagedAccount * account = [self.accountsManager accountForProtocol:protocol accountName:accountName];
+    OTRManagedAccount * account = [OTRAccountsManager accountForProtocol:protocol accountName:accountName];
     return [OTRManagedBuddy fetchOrCreateWithName:buddyUserName account:account];
 }
 
 - (id <OTRProtocol>)protocolForAccount:(OTRManagedAccount *)account
 {
-    id <OTRProtocol> protocol = [protocolManagers objectForKey:account.uniqueIdentifier];
+    NSObject <OTRProtocol> * protocol = [protocolManagers objectForKey:account.uniqueIdentifier];
     if(!protocol)
     {
         protocol = [[[account protocolClass] alloc] initWithAccount:account];
         if (protocol && account.uniqueIdentifier) {
             [protocolManagers setObject:protocol forKey:account.uniqueIdentifier];
+            [protocol addObserver:self forKeyPath:NSStringFromSelector(@selector(isConnected)) options:NSKeyValueObservingOptionNew context:NULL];
         }
     }
     return protocol;
+}
+
+- (void)loginAccount:(OTRManagedAccount *)account
+{
+    id <OTRProtocol> protocol = [self protocolForAccount:account];
+    if( [account conformsToProtocol:@protocol(OTRManagedOAuthAccountProtocol)])
+    {
+        [((OTRManagedAccount <OTRManagedOAuthAccountProtocol> *) account) refreshToken:^(NSError *error) {
+            if (!error) {
+                [protocol connectWithPassword:((OTRManagedAccount <OTRManagedOAuthAccountProtocol> *) account).accessTokenString];
+            }
+            else {
+                DDLogError(@"Error Refreshing Token");
+            }
+        }];
+    }
+    else
+    {
+        [protocol connectWithPassword:account.password];
+    }
+}
+- (void)loginAccounts:(NSArray *)accounts
+{
+    [accounts enumerateObjectsUsingBlock:^(OTRManagedAccount * account, NSUInteger idx, BOOL *stop) {
+        [self loginAccount:account];
+    }];
+}
+
+-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    if ([keyPath isEqualToString:NSStringFromSelector(@selector(isConnected))]) {
+        BOOL isConnected = [[change objectForKey:NSKeyValueChangeNewKey] boolValue];
+        NSInteger changeInt = 0;
+        if (isConnected) {
+            changeInt = 1;
+        }
+        else if(self.numberOfConnectedProtocols > 0) {
+           changeInt = -1;
+        }
+        
+        if (change != 0) {
+            [self willChangeValueForKey:NSStringFromSelector(@selector(numberOfConnectedProtocols))];
+            _numberOfConnectedProtocols += changeInt;
+            [self didChangeValueForKey:NSStringFromSelector(@selector(numberOfConnectedProtocols))];
+        }
+    }
+
 }
 
 -(BOOL)isAccountConnected:(OTRManagedAccount *)account;

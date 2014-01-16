@@ -62,7 +62,7 @@
     } 
     else if ([setting isKindOfClass:[OTRViewSetting class]])
     {
-        //self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        self.accessoryType = ((OTRViewSetting *)setting).accessoryType;
         self.selectionStyle = UITableViewCellSelectionStyleBlue;
     }
     else if ([setting isKindOfClass:[OTRDoubleSetting class]]) 

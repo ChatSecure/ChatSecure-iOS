@@ -30,9 +30,6 @@
 
 @implementation OTRXMPPLoginViewController
 
-@synthesize deliveryReceiptSwitch;
-@synthesize typingNotificatoinSwitch;
-
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -46,14 +43,6 @@
 {
     [super viewDidLoad];
     
-    self.deliveryReceiptSwitch = [[UISwitch alloc] init];
-    self.deliveryReceiptSwitch.on = self.account.sendDeliveryReceiptsValue;
-    self.typingNotificatoinSwitch = [[UISwitch alloc] init];
-    self.typingNotificatoinSwitch.on = self.account.sendTypingNotificationsValue;
-    
-    [self addCellinfoWithSection:1 row:0 labelText:SEND_DELIVERY_RECEIPT_STRING cellType:kCellTypeSwitch userInputView:self.deliveryReceiptSwitch];
-    [self addCellinfoWithSection:1 row:1 labelText:SEND_TYPING_NOTIFICATION_STRING cellType:kCellTypeSwitch userInputView:self.typingNotificatoinSwitch];
-    
     
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHideOrShow:) name:UIKeyboardWillHideNotification object:nil];
@@ -65,14 +54,6 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
--(void)readInFields
-{
-    [super readInFields];
-    
-    self.account.sendDeliveryReceipts = @(self.deliveryReceiptSwitch.on);
-    self.account.sendTypingNotifications = @(self.typingNotificatoinSwitch.on);
 }
 
 -(void)keyboardWillHideOrShow:(NSNotification *)note
@@ -103,8 +84,6 @@
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    self.deliveryReceiptSwitch = nil;
-    self.typingNotificatoinSwitch = nil;
 }
 
 

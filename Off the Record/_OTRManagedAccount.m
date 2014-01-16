@@ -4,7 +4,8 @@
 #import "_OTRManagedAccount.h"
 
 const struct OTRManagedAccountAttributes OTRManagedAccountAttributes = {
-	.isConnected = @"isConnected",
+	.autologin = @"autologin",
+	.displayName = @"displayName",
 	.protocol = @"protocol",
 	.rememberPassword = @"rememberPassword",
 	.uniqueIdentifier = @"uniqueIdentifier",
@@ -44,8 +45,8 @@ const struct OTRManagedAccountFetchedProperties OTRManagedAccountFetchedProperti
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
 	
-	if ([key isEqualToString:@"isConnectedValue"]) {
-		NSSet *affectingKey = [NSSet setWithObject:@"isConnected"];
+	if ([key isEqualToString:@"autologinValue"]) {
+		NSSet *affectingKey = [NSSet setWithObject:@"autologin"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
 		return keyPaths;
 	}
@@ -61,27 +62,34 @@ const struct OTRManagedAccountFetchedProperties OTRManagedAccountFetchedProperti
 
 
 
-@dynamic isConnected;
+@dynamic autologin;
 
 
 
-- (BOOL)isConnectedValue {
-	NSNumber *result = [self isConnected];
+- (BOOL)autologinValue {
+	NSNumber *result = [self autologin];
 	return [result boolValue];
 }
 
-- (void)setIsConnectedValue:(BOOL)value_ {
-	[self setIsConnected:[NSNumber numberWithBool:value_]];
+- (void)setAutologinValue:(BOOL)value_ {
+	[self setAutologin:[NSNumber numberWithBool:value_]];
 }
 
-- (BOOL)primitiveIsConnectedValue {
-	NSNumber *result = [self primitiveIsConnected];
+- (BOOL)primitiveAutologinValue {
+	NSNumber *result = [self primitiveAutologin];
 	return [result boolValue];
 }
 
-- (void)setPrimitiveIsConnectedValue:(BOOL)value_ {
-	[self setPrimitiveIsConnected:[NSNumber numberWithBool:value_]];
+- (void)setPrimitiveAutologinValue:(BOOL)value_ {
+	[self setPrimitiveAutologin:[NSNumber numberWithBool:value_]];
 }
+
+
+
+
+
+@dynamic displayName;
+
 
 
 

@@ -43,7 +43,7 @@
 @property (nonatomic, retain) AIMSessionManager *theSession;
 @property (nonatomic, retain) NSString *accountName;
 @property (nonatomic, assign) BOOL loginFailed;
-@property (nonatomic) BOOL loggedIn;
+//@property (nonatomic) BOOL loggedIn;
 
 
 

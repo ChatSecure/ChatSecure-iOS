@@ -5,7 +5,8 @@
 
 
 extern const struct OTRManagedAccountAttributes {
-	__unsafe_unretained NSString *isConnected;
+	__unsafe_unretained NSString *autologin;
+	__unsafe_unretained NSString *displayName;
 	__unsafe_unretained NSString *protocol;
 	__unsafe_unretained NSString *rememberPassword;
 	__unsafe_unretained NSString *uniqueIdentifier;
@@ -27,6 +28,7 @@ extern const struct OTRManagedAccountFetchedProperties {
 
 
 
+
 @interface OTRManagedAccountID : NSManagedObjectID {}
 @end
 
@@ -40,15 +42,25 @@ extern const struct OTRManagedAccountFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSNumber* isConnected;
+@property (nonatomic, strong) NSNumber* autologin;
 
 
 
-@property BOOL isConnectedValue;
-- (BOOL)isConnectedValue;
-- (void)setIsConnectedValue:(BOOL)value_;
+@property BOOL autologinValue;
+- (BOOL)autologinValue;
+- (void)setAutologinValue:(BOOL)value_;
 
-//- (BOOL)validateIsConnected:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateAutologin:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
+@property (nonatomic, strong) NSString* displayName;
+
+
+
+//- (BOOL)validateDisplayName:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -120,11 +132,17 @@ extern const struct OTRManagedAccountFetchedProperties {
 @interface _OTRManagedAccount (CoreDataGeneratedPrimitiveAccessors)
 
 
-- (NSNumber*)primitiveIsConnected;
-- (void)setPrimitiveIsConnected:(NSNumber*)value;
+- (NSNumber*)primitiveAutologin;
+- (void)setPrimitiveAutologin:(NSNumber*)value;
 
-- (BOOL)primitiveIsConnectedValue;
-- (void)setPrimitiveIsConnectedValue:(BOOL)value_;
+- (BOOL)primitiveAutologinValue;
+- (void)setPrimitiveAutologinValue:(BOOL)value_;
+
+
+
+
+- (NSString*)primitiveDisplayName;
+- (void)setPrimitiveDisplayName:(NSString*)value;
 
 
 

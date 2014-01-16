@@ -82,6 +82,7 @@
 +(OTRManagedMessage*)newMessageWithBuddy:(OTRManagedBuddy *)theBuddy message:(NSString *)theMessage
 {
     OTRManagedMessage *managedMessage = [OTRManagedMessage MR_createEntity];
+
     managedMessage.uniqueID = [OTRUtilities uniqueString];
     managedMessage.buddy = theBuddy;
     managedMessage.messagebuddy = theBuddy;
@@ -89,6 +90,8 @@
     managedMessage.date = [NSDate date];
     managedMessage.isDeliveredValue = NO;
     theBuddy.lastMessageDate = managedMessage.date;
+    
+    [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
 
     return managedMessage;
 }

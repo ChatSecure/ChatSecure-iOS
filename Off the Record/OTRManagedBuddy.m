@@ -160,6 +160,12 @@
 {
     OTRManagedStatus * currentManagedStatus = [self currentStatusMessage];
     
+    if (!currentManagedStatus) {
+        [OTRManagedStatus newStatus:newStatus withMessage:newStatusMessage withBuddy:self incoming:isIncoming];
+        self.currentStatusValue = newStatus;
+        return;
+    }
+    
     if (![newStatusMessage length]) {
         newStatusMessage = [OTRManagedStatus statusMessageWithStatus:newStatus];
     }
@@ -193,11 +199,9 @@
     NSArray * sortedStatuses = [self.statuses sortedArrayUsingDescriptors:@[dateSort]];
     
     if ([sortedStatuses count]) {
-        return sortedStatuses[0];
+        return [sortedStatuses firstObject];
     }
-    return [OTRManagedStatus newStatus:OTRBuddyStatusOffline withMessage:nil withBuddy:self incoming:YES];
-
-    
+    return nil;    
 }
 
 -(OTRManagedEncryptionStatusMessage *)currentEncryptionStatus
@@ -261,31 +265,41 @@
 
 +(OTRManagedBuddy *)fetchOrCreateWithName:(NSString *)name account:(OTRManagedAccount *)account
 {
+    return [self fetchOrCreateWithName:name account:account inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+}
+
++(OTRManagedBuddy *)fetchOrCreateWithName:(NSString *)name account:(OTRManagedAccount *)account inContext:(NSManagedObjectContext *)context
+{
     OTRManagedBuddy * buddy = nil;
-    buddy = [OTRManagedBuddy fetchWithName:name account:account];
+    OTRManagedAccount * contextAccount = [account MR_inContext:context];
+    buddy = [OTRManagedBuddy fetchWithName:name account:account inContext:context];
     if (!buddy) {
-        NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
-        buddy = [OTRManagedBuddy MR_createEntity];
+        buddy = [OTRManagedBuddy MR_createInContext:context];
         buddy.accountName = name;
-        buddy.account = account;
-        NSError *error = nil;
-        [context obtainPermanentIDsForObjects:@[buddy] error:&error];
-        if (error) {
-            DDLogError(@"Error obtaining permanent ID for buddy: %@ %@", buddy, error);
-        }
+        buddy.account = contextAccount;
         [context MR_saveToPersistentStoreAndWait];
     }
     
     return buddy;
 }
+
 +(OTRManagedBuddy *)fetchWithName:(NSString *)name account:(OTRManagedAccount *)account;
 {
-    NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"accountName == %@",name];
-    NSSet * filteredArray = [account.buddies filteredSetUsingPredicate:buddyFilter];
+    [self fetchWithName:name account:account inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
+}
+
++(OTRManagedBuddy *)fetchWithName:(NSString *)name account:(OTRManagedAccount *)account inContext:(NSManagedObjectContext *)context
+{
+    OTRManagedAccount * contextAccount = [account MR_inContext:context];
+    NSPredicate * accountPredicate = [NSPredicate predicateWithFormat:@"%K == %@",OTRManagedBuddyRelationships.account,contextAccount];
+    NSPredicate * usernamePredicate = [NSPredicate predicateWithFormat:@"%K == %@",OTRManagedBuddyAttributes.accountName,name];
+    
+    NSArray * filteredArray = [OTRManagedBuddy MR_findAllWithPredicate:[NSCompoundPredicate andPredicateWithSubpredicates:@[usernamePredicate,accountPredicate]]];
     
     if([filteredArray count])
     {
-        return [filteredArray anyObject];
+        OTRManagedBuddy * buddy =  [filteredArray firstObject];
+        return [buddy MR_inContext:context];
     }
     return nil;
 }

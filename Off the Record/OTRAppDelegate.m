@@ -41,6 +41,7 @@
 #import "OTRDatabaseManager.h"
 
 #import "OTRDemoChatViewController.h"
+#import "SSKeychain.h"
 
 @implementation OTRAppDelegate
 
@@ -50,13 +51,12 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    if([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyCrashReportingOptIn])
-    {
-        [[BITHockeyManager sharedHockeyManager] configureWithBetaIdentifier:HOCKEY_BETA_IDENTIFIER
-                                                             liveIdentifier:HOCKEY_LIVE_IDENTIFIER
-                                                                   delegate:self];
-        [[BITHockeyManager sharedHockeyManager] startManager];
-    }
+    [[BITHockeyManager sharedHockeyManager] configureWithBetaIdentifier:HOCKEY_BETA_IDENTIFIER
+                                                         liveIdentifier:HOCKEY_LIVE_IDENTIFIER
+                                                               delegate:self];
+    [[BITHockeyManager sharedHockeyManager] startManager];
+    
+    [SSKeychain setAccessibilityType:kSecAttrAccessibleAfterFirstUnlock];
 
     NSString *outputStoreName = @"ChatSecure.sqlite";
     [OTRDatabaseManager setupDatabaseWithName:outputStoreName];
@@ -71,7 +71,7 @@
     
     [OTRManagedAccount resetAccountsConnectionStatus];
     
-    //[OTRAppVersionManager applyAppUpdatesForCurrentAppVersion];
+    [OTRAppVersionManager applyAppUpdatesForCurrentAppVersion];
 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
@@ -102,6 +102,8 @@
     [Appirater setAppId:@"464200063"];
     [Appirater setOpenInAppStore:NO];
     [Appirater appLaunched:YES];
+    
+    [self autoLogin];
     
     
     return YES;
@@ -175,9 +177,18 @@
     }
 }
 
+- (void)autoLogin
+{
+    //Auto Login
+    if (![BITHockeyManager sharedHockeyManager].crashManager.didCrashInLastSession) {
+        [[OTRProtocolManager sharedInstance] loginAccounts:[OTRAccountsManager allAutoLoginAccounts]];
+    }
+}
+
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     [Appirater appEnteredForeground:YES];
+    [self autoLogin];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application

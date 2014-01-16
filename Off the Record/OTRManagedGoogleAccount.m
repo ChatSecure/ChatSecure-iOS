@@ -35,20 +35,6 @@
     return GOOGLE_TALK_STRING;
 }
 
--(BOOL)shouldAllowPlainTextAuthentication
-{
-    return NO;
-}
-
--(BOOL)shouldAllowSelfSignedSSL
-{
-    return NO;
-}
-- (BOOL) shouldRequireTLS
-{
-    return NO;
-}
-
 -(void)refreshToken:(void (^)(NSError *error))completionBlock
 {
     GTMOAuth2Authentication * auth = [self authToken];

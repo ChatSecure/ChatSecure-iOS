@@ -42,6 +42,14 @@
     
 }
 
+-(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    if (section == 0) {
+        return self.account.username;
+    }
+    return @"";
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];

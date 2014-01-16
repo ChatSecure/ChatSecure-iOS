@@ -32,12 +32,17 @@
 #import "OTROscarLoginViewController.h"
 #import "OTRGoogleTalkLoginViewController.h"
 #import "OTRInLineTextEditTableViewCell.h"
+#import "OTRErrorManager.h"
+
+#import "SIAlertView.h"
+
+#import "OTRCertificatePinning.h"
 
 #define kFieldBuffer 20;
 
 #define kErrorAlertViewTag 131
 #define kErrorInfoAlertViewTag 132
-#define kErrorCertAlertViewTag 133
+#define kNewCertAlertViewTag 134
 
 @interface OTRLoginViewController(Private)
 - (float) getMidpointOffsetforHUD;
@@ -58,8 +63,6 @@
 @synthesize tableViewArray;
 
 - (void) dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kOTRProtocolLoginFail object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kOTRProtocolLoginSuccess object:nil];
     self.logoView = nil;
     self.rememberPasswordSwitch = nil;
     self.usernameTextField = nil;
@@ -92,8 +95,7 @@
 -(void)setUpFields
 {
     //tableViewArray = [[NSMutableArray alloc] init];
-    
-    
+        
     self.usernameTextField = [[UITextField alloc] init];
     self.usernameTextField.delegate = self;
     //self.usernameTextField.borderStyle = UITextBorderStyleRoundedRect;
@@ -117,9 +119,13 @@
     [self addCellinfoWithSection:0 row:1 labelText:PASSWORD_STRING cellType:kCellTypeTextField userInputView:self.passwordTextField];
     
     self.rememberPasswordSwitch = [[UISwitch alloc] init];
-    
-    
+    [self.rememberPasswordSwitch addTarget:self action:@selector(switchDidChange:) forControlEvents:UIControlEventValueChanged];
     [self addCellinfoWithSection:0 row:2 labelText:REMEMBER_PASSWORD_STRING cellType:kCellTypeSwitch userInputView:self.rememberPasswordSwitch];
+    
+    [self createAutoLoginSwitch];
+    [self addCellinfoWithSection:0 row:3 labelText:LOGIN_AUTOMATICALLY_STRING cellType:kCellTypeSwitch userInputView:self.autoLoginSwitch];
+
+    
     
     
     NSString *loginButtonString = LOGIN_STRING;
@@ -135,13 +141,33 @@
     
 }
 
+- (void)createAutoLoginSwitch
+{
+    self.autoLoginSwitch = [[UISwitch alloc] init];
+    [self.autoLoginSwitch addTarget:self action:@selector(switchDidChange:) forControlEvents:UIControlEventValueChanged];
+}
+
+- (void)switchDidChange:(id)sender
+{
+    if ([sender isEqual:self.autoLoginSwitch]) {
+        if (self.autoLoginSwitch.on) {
+            [self.rememberPasswordSwitch setOn:YES animated:YES];
+        }
+    }
+    else if ([sender isEqual:self.rememberPasswordSwitch]) {
+        if (!self.rememberPasswordSwitch.on) {
+            [self.autoLoginSwitch setOn:NO animated:YES];
+        }
+    }
+    
+}
+
 -(void)addCellinfoWithSection:(NSInteger)section row:(NSInteger)row labelText:(id)text cellType:(NSString *)type userInputView:(UIView *)inputView;
 {
     if (!tableViewArray) {
         self.tableViewArray = [[NSMutableArray alloc] init];
-        //[self.tableViewArray setObject:[[NSMutableArray alloc] init] atIndexedSubscript:section];
-        
     }
+    
     if ([self.tableViewArray count]<(section+1)) {
         [self.tableViewArray setObject:[[NSMutableArray alloc] init] atIndexedSubscript:section];
     }
@@ -156,18 +182,6 @@
 {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
-    
-    [[NSNotificationCenter defaultCenter]
-     addObserver:self
-     selector:@selector(protocolLoginFailed:)
-     name:kOTRProtocolLoginFail
-     object:nil ];
-    
-    [[NSNotificationCenter defaultCenter]
-     addObserver:self
-     selector:@selector(protocolLoginSuccess:)
-     name:kOTRProtocolLoginSuccess
-     object:nil ];
     
     [self setUpFields];
     
@@ -266,6 +280,18 @@
 {
     [super viewWillAppear:animated];
     
+    [[NSNotificationCenter defaultCenter]
+     addObserver:self
+     selector:@selector(protocolLoginFailed:)
+     name:kOTRProtocolLoginFail
+     object:nil ];
+    
+    [[NSNotificationCenter defaultCenter]
+     addObserver:self
+     selector:@selector(protocolLoginSuccess:)
+     name:kOTRProtocolLoginSuccess
+     object:nil ];
+    
     if(!self.usernameTextField.text || [self.usernameTextField.text isEqualToString:@""])
     {
         [self.usernameTextField becomeFirstResponder];
@@ -274,7 +300,7 @@
         [self.passwordTextField becomeFirstResponder];
     }
     
-    
+    self.autoLoginSwitch.on = self.account.autologinValue;
     self.rememberPasswordSwitch.on = self.account.rememberPasswordValue;
     if (account.rememberPassword) {
         self.passwordTextField.text = account.password;
@@ -284,22 +310,25 @@
 }
 - (void) viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+    
     [self readInFields];
     
     if([account.username length] && [account.password length] )
     {
-        
-        [[[OTRProtocolManager sharedInstance] accountsManager] addAccount:account];
-        [self.account save];
+        [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
     }
     [self.view resignFirstResponder];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kOTRProtocolLoginFail object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kOTRProtocolLoginSuccess object:nil];
 
 }
 
 -(void)readInFields
 {
-    [account setNewUsername:[usernameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
+    [account setUsername:[usernameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
     [account setRememberPasswordValue:rememberPasswordSwitch.on];
+    
+    self.account.autologinValue = self.autoLoginSwitch.on;
     
     if (account.rememberPasswordValue) {
         account.password = self.passwordTextField.text;
@@ -343,17 +372,29 @@
     {
         UIAlertView *alert = nil;
         NSDictionary * userInfo = notification.userInfo;
-        id error = userInfo[KOTRProtocolLoginFailErrorKey];
+        id error = userInfo[kOTRProtocolLoginFailErrorKey];
+        NSData * certData = userInfo[kOTRProtocolLoginFailSSLCertificateDataKey];
+        NSString * hostname = userInfo[kOTRProtocolLoginFailHostnameKey];
+        NSNumber * statusNumber = userInfo[kOTRProtocolLoginFailSSLStatusKey];
+        
         NSInteger tag = kErrorAlertViewTag;
-        if ([error isKindOfClass:[NSError class]]) {
+        if (certData) {
+            if ([statusNumber longLongValue] == errSSLPeerAuthCompleted) {
+                //The cert was manually evaluated but did not anything that is saved so we have to recheck system and get interal validation status
+                //((OTRXMPPManager *)protocol).certificatePinningModulesss
+                id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
+                ((OTRXMPPManager *)protocol).certificatePinningModule.doNotManuallyEvaluateOverride = YES;
+                [self loginButtonPressed:nil];
+            }
+            else {
+                [self showCertWarningForData:certData withHostName:hostname withStatus:[statusNumber longValue]];
+            }
+        }
+        else if ([error isKindOfClass:[NSError class]]) {
             recentError = (NSError *)error;
-            NSString * msg = XMPP_FAIL_STRING;
             
             if([recentError.domain isEqualToString:@"kCFStreamErrorDomainSSL"] && recentError.code == errSSLPeerBadCert) {
-                //cert matching error
-                msg = [NSString stringWithFormat:XMPP_CERT_FAIL_STRING,((OTRManagedXMPPAccount *)account).accountDomain];
-                tag = kErrorCertAlertViewTag;
-                alert = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:msg delegate:self cancelButtonTitle:nil otherButtonTitles:DISMISS_STRING,CONNECT_ANYWAY_STRING, nil];
+                return;
             }
             else {
                 alert = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:XMPP_FAIL_STRING delegate:self cancelButtonTitle:nil otherButtonTitles:OK_STRING,INFO_STRING, nil];
@@ -372,6 +413,59 @@
         alert.tag = tag;
         [alert show];
     }
+}
+             
+- (void)showCertWarningForData:(NSData *)certData withHostName:(NSString *)hostname withStatus:(OSStatus)status {
+    
+    SecCertificateRef certificate = [OTRCertificatePinning certForData:certData];
+    NSString * fingerprint = [OTRCertificatePinning sha1FingerprintForCertificate:certificate];
+    NSString * message = [NSString stringWithFormat:@"%@\nSHA1: %@\n",hostname,fingerprint];
+    NSUInteger length = [message length];
+    
+    UIColor * sslMessageColor;
+    
+    if (status == noErr) {
+        //#52A352
+        sslMessageColor = [UIColor colorWithRed:0.32f green:0.64f blue:0.32f alpha:1.00f];
+        message = [message stringByAppendingString:[NSString stringWithFormat:@"✓ %@",VALID_CERTIFICATE_STRING]];
+    }
+    else {
+        NSString * sslErrorMessage = [OTRErrorManager errorStringWithSSLStatus:status];
+        sslMessageColor = [UIColor colorWithRed:0.89f green:0.42f blue:0.36f alpha:1.00f];;
+        message = [message stringByAppendingString:[NSString stringWithFormat:@"X %@",sslErrorMessage]];
+    }
+    NSRange errorMessageRange = NSMakeRange(length, message.length-length);
+    
+    NSMutableAttributedString * attributedString = [[NSMutableAttributedString alloc] initWithString:message];
+    
+    SIAlertView * alertView = [[SIAlertView alloc] initWithTitle:NEW_CERTIFICATE_STRING andMessage:nil];
+    [attributedString addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:16] range:NSMakeRange(0, message.length)];
+    [attributedString addAttribute:NSForegroundColorAttributeName value:sslMessageColor range:errorMessageRange];
+    
+    alertView.messageAttributedString = attributedString;
+    alertView.buttonColor = [UIColor whiteColor];
+    
+    [alertView addButtonWithTitle:REJECT_STRING type:SIAlertViewButtonTypeDestructive handler:^(SIAlertView *alertView) {
+        [alertView dismissAnimated:YES];
+    }];
+    [alertView addButtonWithTitle:SAVE_STRING type:SIAlertViewButtonTypeDefault handler:^(SIAlertView *alertView) {
+        id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
+        if ([protocol isKindOfClass:[OTRXMPPManager class]]) {
+            [((OTRXMPPManager *)protocol).certificatePinningModule addCertificate:[OTRCertificatePinning certForData:certData] withHostName:hostname];
+            [self loginButtonPressed:alertView];
+        }
+    }];
+
+    [alertView show];
+    
+    UIImage * normalImage = [UIImage imageNamed:@"button-green"];
+    CGFloat hInset = floorf(normalImage.size.width / 2);
+	CGFloat vInset = floorf(normalImage.size.height / 2);
+	UIEdgeInsets insets = UIEdgeInsetsMake(vInset, hInset, vInset, hInset);
+	UIImage * buttonImage = [normalImage resizableImageWithCapInsets:insets];
+    
+    [alertView setDefaultButtonImage:buttonImage forState:UIControlStateNormal];
+    [alertView setDefaultButtonImage:buttonImage forState:UIControlStateHighlighted];
 }
 
 -(void)protocolLoginSuccess:(NSNotification*)notification
@@ -397,7 +491,6 @@
         [protocol connectWithPassword:self.passwordTextField.text];
     }
     self.timeoutTimer = [NSTimer scheduledTimerWithTimeInterval:45.0 target:self selector:@selector(timeout:) userInfo:nil repeats:NO];
-    //[[[OTRProtocolManager sharedInstance] accountsManager] addAccount:account];
 }
 -(void)showLoginProgress
 {
@@ -442,7 +535,7 @@
     //Delete Account because user went back to choose different account type
     if(!parent)
     {
-        [[OTRProtocolManager sharedInstance].accountsManager removeAccount:self.account];
+        [OTRAccountsManager removeAccount:self.account];
     }
 }
 
@@ -461,15 +554,6 @@
             UIPasteboard *pasteBoard = [UIPasteboard generalPasteboard];
             [pasteBoard setString:errorDescriptionString];
         }
-    }
-    else if (alertView.tag == kErrorCertAlertViewTag && buttonIndex == 1)
-    {
-        id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
-        if ([protocol isKindOfClass:[OTRXMPPManager class]]) {
-            [((OTRXMPPManager *)protocol) setManualyEvaluateTrust:NO];
-            [self loginButtonPressed:nil];
-        }
-        
     }
 }
 

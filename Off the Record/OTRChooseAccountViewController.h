@@ -13,6 +13,6 @@
     UITableView * tableView;
 }
 
-@property (nonatomic, strong) NSFetchedResultsController * onlineAccountsFetchedResultsController;
+@property (nonatomic, strong) NSFetchedResultsController * accountsFetchedResultsController;
 
 @end

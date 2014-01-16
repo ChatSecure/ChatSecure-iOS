@@ -40,14 +40,13 @@
 @interface OTRManagedAccount : _OTRManagedAccount
 
 @property (nonatomic, retain) NSString *password; // nil if rememberPassword = NO, not stored in memory
+@property (nonatomic,readonly) BOOL isConnected;
 
-- (void) save;
 - (Class) protocolClass;
 - (NSString *) providerName;
 - (OTRAccountType)accountType;
 - (NSString *) imageName;
 
-- (void)setNewUsername:(NSString *)newUsername;
 - (void)setDefaultsWithProtocol:(NSString*)newProtocol;
 
 - (void)setAllBuddiesStatuts:(OTRBuddyStatus)status;
@@ -61,5 +60,7 @@
 
 //Goes through all accounts checks if it's connected againgst ProtocolManager and adjusts buddy status
 +(void)resetAccountsConnectionStatus;
+
++(OTRManagedAccount *)accountForAccountType:(OTRAccountType)accountType;
 
 @end

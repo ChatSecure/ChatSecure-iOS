@@ -11,7 +11,6 @@
 
 @interface OTRImages : NSObject
 
-
 +(UIImage *)statusImageWithStatus:(OTRBuddyStatus)status;
 
 +(UIImage *)openCaratImage;

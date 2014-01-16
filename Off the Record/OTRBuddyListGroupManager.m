@@ -85,9 +85,6 @@
     if (controller && [groupName length]) {
         [self.offlineBuddyGroups addObject:@{kGroupNameKey: groupName,kBuddyControllerKey:controller}];
     }
-    
-    
-    
 }
 
 -(NSInteger)addOnlineBuddyController:(NSFetchedResultsController *)controller groupName:(NSString *)groupName
@@ -110,9 +107,8 @@
     NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"%@ != nil OR %@ != nil",OTRManagedBuddyAttributes.accountName,OTRManagedBuddyAttributes.displayName];
     NSPredicate * onlineFilter = [NSPredicate predicateWithFormat:@"%K != %d",OTRManagedBuddyAttributes.currentStatus,OTRBuddyStatusOffline];
     NSPredicate * groupFilter = [NSPredicate predicateWithFormat:@"%@ IN %K",managedGroup,OTRManagedBuddyRelationships.groups];
-    NSPredicate * selfBuddyFilter = [NSPredicate predicateWithFormat:@"accountName != account.username"];
+    NSPredicate * selfBuddyFilter = [NSPredicate predicateWithFormat:@"%K != account.username",OTRManagedBuddyAttributes.accountName];
     NSPredicate * compoundFilter = [NSCompoundPredicate andPredicateWithSubpredicates:@[buddyFilter,groupFilter,onlineFilter,selfBuddyFilter]];
-
     
     NSString * sortByStirng = [NSString stringWithFormat:@"%@,%@,%@",OTRManagedBuddyAttributes.currentStatus,OTRManagedBuddyAttributes.displayName,OTRManagedBuddyAttributes.accountName];
     
@@ -245,7 +241,7 @@
       newIndexPath:(NSIndexPath *)newIndexPath
 {
     if ([controller isEqual:_groupFetchedResultsController]) {
-        if (type == NSFetchedResultsChangeInsert) {
+        if (type == NSFetchedResultsChangeInsert || type == NSFetchedResultsChangeUpdate) {
             OTRManagedGroup * managedGroup = (OTRManagedGroup *)anObject;
             if(![self controllerWithBuddyGroupName:managedGroup.name])
             {

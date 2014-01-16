@@ -14,6 +14,8 @@
 #import "OTRProtocolManager.h"
 #import "OTRConstants.h"
 
+#import "OTRManagedAccount.h"
+
 @interface OTRBuddyViewController ()
 
 @end
@@ -75,7 +77,7 @@
         [blockBuddyButton setTitle:BLOCK_AND_REMOVE_STRING forState:UIControlStateNormal];
     }
     
-    if (!buddy.account.isConnectedValue) {
+    if (!buddy.account.isConnected) {
         removeBuddyButton.enabled = NO;
         blockBuddyButton.enabled = NO;
         displayNameTextField.enabled = NO;
@@ -99,6 +101,9 @@
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
+    if (self.buddy.account.accountType == OTRAccountTypeFacebook) {
+        return 3;
+    }
     return 4;
 }
 
@@ -296,7 +301,7 @@
 
 -(void)doneButtonPressed:(id)sender
 {
-    if (buddy.account.isConnectedValue) {
+    if (buddy.account.isConnected) {
         NSString * newDisplayName = [displayNameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         if ([newDisplayName length] && ![newDisplayName isEqualToString:self.buddy.displayName]) {
             self.buddy.displayName = newDisplayName;

@@ -39,6 +39,9 @@
 #import "OTRImages.h"
 #import "OTRUtilities.h"
 
+#import "OTRBuddyCell.h"
+#import "OTRRecentBuddyCell.h"
+
 //#define kSignoffTime 500
 
 #define RECENTS_SECTION_INDEX 0
@@ -57,7 +60,6 @@
 @synthesize selectedBuddy;
 @synthesize searchDisplayController;
 @synthesize groupManager;
-@synthesize sectionInfoArray;
 
 - (void) dealloc {
     self.buddyListTableView = nil;
@@ -73,6 +75,7 @@
     if (self = [super init]) {
         self.title = BUDDY_LIST_STRING;
         buddyStatusImageDictionary = [NSMutableDictionary dictionaryWithCapacity:5];
+        shouldShowStatus = YES;
     }
     return self;
 }
@@ -95,11 +98,14 @@
     
     
     OTRBuddyListSectionInfo * recentSectionInfo = [[OTRBuddyListSectionInfo alloc] init];
+    recentSectionInfo.isOpen = YES;
+    recentSectionInfo.title = RECENT_STRING;
+
     OTRBuddyListSectionInfo * offlineSectionInfo = [[OTRBuddyListSectionInfo alloc] init];
-    recentSectionInfo.open = YES;
-    offlineSectionInfo.open = NO;
+    offlineSectionInfo.isOpen = NO;
+    offlineSectionInfo.title = OFFLINE_STRING;
     
-    sectionInfoArray = [@[recentSectionInfo,offlineSectionInfo] mutableCopy];
+    self.sectionInfoSet = [NSMutableOrderedSet orderedSetWithObjects:recentSectionInfo, offlineSectionInfo, nil];
     
     [self setupBuddyFetchedResultsControllers];
     
@@ -109,6 +115,7 @@
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"14-gear.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(showSettingsView:)];
     self.navigationItem.rightBarButtonItem.accessibilityLabel = @"settings";
     [self.view addSubview:buddyListTableView];
+    [self.buddyListTableView registerClass:[OTRSectionHeaderView class] forHeaderFooterViewReuseIdentifier:[OTRSectionHeaderView reuseIdentifier]];
     
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addButtonPressed:)];
     
@@ -132,9 +139,26 @@
 	//DDLogInfo(@"LibOrange (v: %@): -beginTest\n", @lib_orange_version_string);
 }
 
+- (void)didUpdateNumberOfConnectedAccounts:(NSUInteger)numberOfConnectedAccounts {
+    if(numberOfConnectedAccounts > 1 && shouldShowStatus == YES) {
+        shouldShowStatus = NO;
+        [self.buddyListTableView reloadData];
+    }
+    else if (numberOfConnectedAccounts <= 1 && shouldShowStatus == NO)
+    {
+        shouldShowStatus = YES;
+        [self.buddyListTableView reloadData];
+    }
+    [self refreshLeftBarItems];
+}
+
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    [self didUpdateNumberOfConnectedAccounts:[OTRProtocolManager sharedInstance].numberOfConnectedProtocols];
+    
+    [[OTRProtocolManager sharedInstance] addObserver:self forKeyPath:NSStringFromSelector(@selector(numberOfConnectedProtocols)) options:NSKeyValueObservingOptionNew context:NULL];
     
     buddyListTableView.frame = self.view.bounds;
     buddyListTableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleRightMargin;
@@ -142,11 +166,23 @@
     [self refreshLeftBarItems];
 }
 
+-(void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    [[OTRProtocolManager sharedInstance] removeObserver:self forKeyPath:NSStringFromSelector(@selector(numberOfConnectedProtocols))];
+    
+}
+
 
 -(void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self.buddyListTableView reloadData];
     
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    [self didUpdateNumberOfConnectedAccounts:[[change objectForKey:NSKeyValueChangeNewKey] unsignedIntegerValue]];
 }
 
 - (void) showSettingsView:(id)sender {
@@ -157,16 +193,12 @@
 {
     [self subscriptionRequestsFetchedResultsController];
     UIBarButtonItem * addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addButtonPressed:)];
-    addButton.enabled = NO;
     
-    NSUInteger numAccountsLoggedIn = [OTRAccountsManager numberOfAccountsLoggedIn];
-    
-    if (numAccountsLoggedIn) {
-        addButton.enabled = YES;
-    }
+    addButton.enabled = [self shouldEnableAddButton];
     
     NSPredicate * predicate = [NSPredicate predicateWithFormat:@"self.xmppAccount.isConnected == YES"];
-    NSArray * allRequests = [OTRXMPPManagedPresenceSubscriptionRequest MR_findAllWithPredicate:predicate];
+    NSArray * allRequests = [OTRXMPPManagedPresenceSubscriptionRequest MR_findAll];
+    allRequests = [allRequests filteredArrayUsingPredicate:predicate];
     
     if([allRequests count])
     {
@@ -181,6 +213,10 @@
         
 }
 
+- (BOOL)shouldEnableAddButton {
+    return ([[OTRAccountsManager allAccountsAbleToAddBuddies] count] > 0);
+}
+
 -(void)requestButtonPressed:(id)sender
 {
     OTRSubscriptionRequestsViewController * requestViewController = [[OTRSubscriptionRequestsViewController alloc] initWithStyle:UITableViewStylePlain];
@@ -190,10 +226,11 @@
 }
 
 -(void) addButtonPressed:(id)sender {
-    NSUInteger numAccountsLoggedIn = [OTRAccountsManager numberOfAccountsLoggedIn];
+    NSArray * allAccounts = [OTRAccountsManager allAccountsAbleToAddBuddies];
+    NSUInteger numAccountsLoggedIn = [allAccounts count];
     if (numAccountsLoggedIn == 1) {
         //only one account logged in choose that account to add buddy to
-        NSManagedObject * object = [[OTRAccountsManager allLoggedInAccounts] lastObject];
+        NSManagedObject * object = [allAccounts lastObject];
         OTRNewBuddyViewController * newBuddyViewController =  [[OTRNewBuddyViewController alloc] initWithAccountObjectID:[object objectID]];
         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:newBuddyViewController];
         
@@ -240,6 +277,11 @@
     return 1;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 36.0;
+}
+
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
     if ([tableView isEqual:self.searchDisplayController.searchResultsTableView]) {
@@ -258,21 +300,21 @@
             title = OFFLINE_STRING;
         }
     }
-
-    OTRBuddyListSectionInfo *sectionInfo = [self.sectionInfoArray objectAtIndex:section];
-    if (!sectionInfo.sectionHeaderView) {
-        sectionInfo.sectionHeaderView = [[OTRSectionHeaderView alloc] initWithFrame:CGRectMake(0.0, 0.0, tableView.bounds.size.width, HEADER_HEIGHT) title:title section:section delegate:self];
-    }
-    sectionInfo.sectionHeaderView.disclosureButton.selected = !sectionInfo.open;
-    sectionInfo.sectionHeaderView.section = section;
     
-    return sectionInfo.sectionHeaderView;
+    OTRSectionHeaderView *headerView = [tableView dequeueReusableHeaderFooterViewWithIdentifier:[OTRSectionHeaderView reuseIdentifier]];
+
+    OTRBuddyListSectionInfo *sectionInfo = [self.sectionInfoSet objectAtIndex:section];
+    
+    headerView.sectionInfo = sectionInfo;
+    headerView.delegate = self;
+    
+    return headerView;
 }
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)sectionIndex {
-    OTRBuddyListSectionInfo * sectionInfo = sectionInfo = [self.sectionInfoArray objectAtIndex:sectionIndex];
-    if (![sectionInfo open]) {
+    OTRBuddyListSectionInfo * sectionInfo = sectionInfo = [self.sectionInfoSet objectAtIndex:sectionIndex];
+    if (![sectionInfo isOpen]) {
         return 0;
     }
     
@@ -297,34 +339,62 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
-	if (cell == nil)
-	{
-		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"Cell"];
-	}
+    static NSString * const buddyCell = @"buddyCell";
+    static NSString * const conversationCell = @"conversationCell";
+    OTRBuddyCell * cell = nil;
     
-    OTRManagedBuddy *buddy = nil;
+    OTRManagedBuddy *buddy = [self tableView:tableView buddyforRowAtIndexPath:indexPath];
+    
+    if ([tableView isEqual:self.searchDisplayController.searchResultsTableView] || ([tableView isEqual:self.buddyListTableView] && indexPath.section != RECENTS_SECTION_INDEX)) {
+        cell = [tableView dequeueReusableCellWithIdentifier:buddyCell];
+        if (!cell)
+        {
+            cell = [[OTRBuddyCell alloc] initWithReuseIdentifier:buddyCell];
+            if ([tableView isEqual:self.buddyListTableView]) {
+                UILongPressGestureRecognizer *gesture = [[UILongPressGestureRecognizer alloc]
+                                                         initWithTarget:self action:@selector(longPressOnCell:)];
+                [cell addGestureRecognizer:gesture];
+            }
+            
+        }
+    }
+    else {
+        cell = [tableView dequeueReusableCellWithIdentifier:conversationCell];
+        if (!cell)
+        {
+            cell = [[OTRRecentBuddyCell alloc] initWithReuseIdentifier:conversationCell];
+            UILongPressGestureRecognizer *gesture = [[UILongPressGestureRecognizer alloc]
+                                                     initWithTarget:self action:@selector(longPressOnCell:)];
+            [cell addGestureRecognizer:gesture];
+        }
+    }
+    cell.showStatus = shouldShowStatus;
+    cell.buddy = buddy;
+    cell.backgroundColor = [UIColor whiteColor];
+    return cell;
+}
+
+- (OTRManagedBuddy *)tableView:(UITableView *)tableView buddyforRowAtIndexPath:(NSIndexPath *)indexPath {
+    OTRManagedBuddy * managedBuddy = nil;
     
     if ([tableView isEqual:self.searchDisplayController.searchResultsTableView]) {
-        buddy = [self.searchBuddyFetchedResultsController objectAtIndexPath:indexPath];
-        [self configureBuddyCell:cell withBuddy:buddy];
+        managedBuddy = [self.searchBuddyFetchedResultsController objectAtIndexPath:indexPath];
     }
-    else if (indexPath.section == RECENTS_SECTION_INDEX) {
-        buddy = [self.recentBuddiesFetchedResultsController objectAtIndexPath:indexPath];
-        [self configureRecentCell:cell withBuddy:buddy];
-    } else{
-        if ([self.groupManager numberOfGroups] >= indexPath.section) {
-            
-            buddy = [self.groupManager buddyAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section-1]];
+    else if ([tableView isEqual:self.buddyListTableView])
+    {
+        if (indexPath.section == RECENTS_SECTION_INDEX)
+        {
+            managedBuddy = [self.recentBuddiesFetchedResultsController objectAtIndexPath:indexPath];
         }
-        else{
-            NSFetchedResultsController* resultsController = self.offlineBuddiesFetchedResultsController;
-            buddy = [resultsController objectAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:0]];
-            
+        else if([self.groupManager numberOfGroups] >= indexPath.section){
+            managedBuddy = [self.groupManager buddyAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section-1]];
         }
-        [self configureBuddyCell:cell withBuddy:buddy];
+        else {
+            managedBuddy = [self.offlineBuddiesFetchedResultsController objectAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row inSection:0]];
+        }
     }
-    return cell;
+
+    return managedBuddy;
 }
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -338,40 +408,25 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    OTRManagedBuddy * managedBuddy = nil;
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    }
+    OTRManagedBuddy * managedBuddy = [self tableView:tableView buddyforRowAtIndexPath:indexPath];
     if ([tableView isEqual:self.searchDisplayController.searchResultsTableView]) {
-        managedBuddy = [self.searchBuddyFetchedResultsController objectAtIndexPath:indexPath];
-        [self enterConversationWithBuddy:managedBuddy];
         [self.searchDisplayController   setActive:NO];
-    }
-    else if (indexPath.section == RECENTS_SECTION_INDEX)
-    {
-        managedBuddy = [self.recentBuddiesFetchedResultsController objectAtIndexPath:indexPath];
-    }
-    else if([self.groupManager numberOfGroups] >= indexPath.section){
-        managedBuddy = [self.groupManager buddyAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section-1]];
-    }
-    else {
-        managedBuddy = [self.offlineBuddiesFetchedResultsController objectAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row inSection:0]];
     }
     
     if (managedBuddy) {
         [self enterConversationWithBuddy:managedBuddy];
     }
 
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-        [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    }
+    
 }
 
 - (void) tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == RECENTS_SECTION_INDEX && editingStyle == UITableViewCellEditingStyleDelete) {
         [[self.recentBuddiesFetchedResultsController objectAtIndexPath:indexPath] deleteAllMessages];
     }
-}
-
-- (void) deleteBuddy:(OTRManagedBuddy*)buddy {
-    //TODO best way to delete buddy
 }
 
 -(void)enterConversationWithBuddy:(OTRManagedBuddy*)buddy
@@ -397,41 +452,12 @@
     
     NSIndexPath * indexPath = [buddyListTableView indexPathForCell:cell];
     
-    OTRManagedBuddy * buddy = [self buddyWithTableView:buddyListTableView atIndexPath:indexPath];
+    OTRManagedBuddy * buddy = [self tableView:self.buddyListTableView buddyforRowAtIndexPath:indexPath];
     
     OTRBuddyViewController * buddyViewController = [[OTRBuddyViewController alloc] initWithBuddyID:buddy.objectID];
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:buddyViewController];
     navController.modalPresentationStyle = UIModalPresentationFormSheet;
     [self presentViewController:navController animated:YES completion:nil];
-    
-}
-
--(OTRManagedBuddy *)buddyWithTableView:(UITableView *)tableView atIndexPath:(NSIndexPath *)indexPath
-{
-    OTRManagedBuddy * managedBuddy = nil;
-    if ([tableView isEqual:self.searchDisplayController.searchResultsTableView]) {
-        [self.searchDisplayController   setActive:NO];
-        managedBuddy = [self.searchBuddyFetchedResultsController objectAtIndexPath:indexPath];
-        [self enterConversationWithBuddy:managedBuddy];
-    }
-    
-    if ([tableView isEqual:self.buddyListTableView]) {
-        
-        if (indexPath.section == RECENTS_SECTION_INDEX) {
-            managedBuddy = [self.recentBuddiesFetchedResultsController objectAtIndexPath:indexPath];
-            
-        }
-        else{
-            if ([self.groupManager numberOfGroups] >= indexPath.section) {
-                managedBuddy = [self.groupManager buddyAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section-1]];
-            }
-            else{
-                NSFetchedResultsController* resultsController = self.offlineBuddiesFetchedResultsController;
-                managedBuddy = [resultsController objectAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:0]];
-            }
-        }
-    }
-    return managedBuddy;
 }
 
 #pragma mark - NSFetchedReusltsControllerDelegate
@@ -521,10 +547,7 @@
         return _subscriptionRequestsFetchedResultsController;
     }
     
-    NSPredicate * accountPredicate = [NSPredicate predicateWithFormat:@"self.xmppAccount.isConnected == YES"];
-    
-    
-    _subscriptionRequestsFetchedResultsController = [OTRXMPPManagedPresenceSubscriptionRequest MR_fetchAllGroupedBy:nil withPredicate:accountPredicate sortedBy:nil ascending:NO delegate:self];
+    _subscriptionRequestsFetchedResultsController = [OTRXMPPManagedPresenceSubscriptionRequest MR_fetchAllGroupedBy:nil withPredicate:nil sortedBy:nil ascending:NO delegate:self];
     
     return _subscriptionRequestsFetchedResultsController;
 }
@@ -542,7 +565,6 @@
     }
     
     [tableView beginUpdates];
-    
 }
 
 - (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject
@@ -560,7 +582,6 @@
     }
     
     UITableView *tableView = nil;
-    OTRManagedBuddy * buddy = anObject;
     NSIndexPath * modifiedIndexPath = indexPath;
     NSIndexPath * modifiedNewIndexPath = newIndexPath;
     
@@ -572,7 +593,6 @@
         
         modifiedNewIndexPath = [NSIndexPath indexPathForRow:newIndexPath.row inSection:newIndexPath.section+1];
         modifiedIndexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section+1];
-        //[tableView beginUpdates];
     }
     else if (isRecentBuddiesFetchedResultsController)
     {
@@ -591,11 +611,14 @@
     }
     
     if (tableView) {
-        OTRBuddyListSectionInfo * sectionInfo = [self.sectionInfoArray objectAtIndex:modifiedIndexPath.section];
-        if ([tableView isEqual:self.buddyListTableView] && !sectionInfo.open ) {
-            return;
+        OTRBuddyListSectionInfo * sectionInfo = [self.sectionInfoSet objectAtIndex:modifiedIndexPath.section];
+        if (type == NSFetchedResultsChangeInsert) {
+            sectionInfo = [self.sectionInfoSet objectAtIndex:modifiedNewIndexPath.section];
         }
         
+        if ([tableView isEqual:self.buddyListTableView] && !sectionInfo.isOpen) {
+            return;
+        }
         
         switch (type) {
             case NSFetchedResultsChangeInsert:
@@ -606,24 +629,12 @@
                 break;
                 
             case NSFetchedResultsChangeUpdate:
-                if ([controller isEqual:_recentBuddiesFetchedResultsController]) {
-                    [self configureRecentCell:[tableView cellForRowAtIndexPath:modifiedIndexPath] withBuddy:buddy];
-                }
-                else{
-                    [self configureBuddyCell:[tableView cellForRowAtIndexPath:modifiedIndexPath] withBuddy:buddy];
-                }
+                [tableView reloadRowsAtIndexPaths:@[modifiedIndexPath] withRowAnimation:UITableViewRowAnimationNone];
                 break;
                 
             case NSFetchedResultsChangeMove:
-                if ([controller isEqual:_recentBuddiesFetchedResultsController]) {
-                    [self configureRecentCell:[tableView cellForRowAtIndexPath:modifiedIndexPath] withBuddy:buddy];
-                }
-                else{
-                    [self configureBuddyCell:[tableView cellForRowAtIndexPath:modifiedIndexPath] withBuddy:buddy];
-                }
+                [tableView reloadRowsAtIndexPaths:@[modifiedIndexPath] withRowAnimation:UITableViewRowAnimationNone];
                 [tableView moveRowAtIndexPath:modifiedIndexPath toIndexPath:modifiedNewIndexPath];
-                //[tableView deleteRowsAtIndexPaths:@[modifiedIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-                //[tableView insertRowsAtIndexPaths:@[modifiedNewIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
                 break;
         }
     }
@@ -643,6 +654,12 @@
     [tableView endUpdates];
     
 }
+
+- (void)searchDisplayController:(UISearchDisplayController *)controller didHideSearchResultsTableView:(UITableView *)tableView
+{
+    self.searchBuddyFetchedResultsController.delegate = nil;
+    self.searchBuddyFetchedResultsController = nil;
+}
 -(void)searchDisplayController:(UISearchDisplayController *)controller willUnloadSearchResultsTableView:(UITableView *)tableView
 {
     self.searchBuddyFetchedResultsController.delegate = nil;
@@ -658,12 +675,12 @@
         case NSFetchedResultsChangeInsert:
         {
             OTRBuddyListSectionInfo * secInfo = [[OTRBuddyListSectionInfo alloc] init];
-            secInfo.open = YES;
-            secInfo.sectionHeaderView.section = newSectionModified;
-            if (newSectionModified >= [self.sectionInfoArray count]) {
-                [self.sectionInfoArray addObject:secInfo];
+            secInfo.isOpen = YES;
+            secInfo.title = [manager groupNameAtIndex:newSection];
+            if (newSectionModified >= [self.sectionInfoSet count]) {
+                [self.sectionInfoSet addObject:secInfo];
             } else {
-                [self.sectionInfoArray insertObject:secInfo atIndex:newSectionModified];
+                [self.sectionInfoSet insertObject:secInfo atIndex:newSectionModified];
             }
 
             [self.buddyListTableView insertSections:[NSIndexSet indexSetWithIndex:newSectionModified] withRowAnimation:UITableViewRowAnimationAutomatic];
@@ -675,7 +692,7 @@
             break;
         case NSFetchedResultsChangeDelete:
         {
-            [self.sectionInfoArray removeObjectAtIndex:sectionModified];
+            [self.sectionInfoSet removeObjectAtIndex:sectionModified];
             [self.buddyListTableView deleteSections:[NSIndexSet indexSetWithIndex:sectionModified] withRowAnimation:UITableViewRowAnimationAutomatic];
         }
             break;
@@ -686,8 +703,10 @@
     //[self.buddyListTableView endUpdates];
 }
 
--(void)sectionHeaderView:(OTRSectionHeaderView *)sectionHeaderView section:(NSUInteger)section opened:(BOOL)opened
+- (void) sectionHeaderViewChanged:(OTRSectionHeaderView *)sectionHeaderView
 {
+    OTRBuddyListSectionInfo *sectionInfo = sectionHeaderView.sectionInfo;
+    NSUInteger section = [self.sectionInfoSet indexOfObject:sectionInfo];
     NSUInteger numRows = 0;
     if (section == RECENTS_SECTION_INDEX) {
         numRows = [[self.recentBuddiesFetchedResultsController fetchedObjects] count];
@@ -703,12 +722,7 @@
     if (numRows == 0) {
         return;
     }
-    
-    
-    OTRBuddyListSectionInfo *sectionInfo = [self.sectionInfoArray objectAtIndex:section];
-	sectionInfo.open = opened;
-    
-    
+        
     NSMutableArray * rowsToChange = [NSMutableArray array];
     
     for (NSInteger i = 0; i < numRows; i++) {
@@ -716,7 +730,7 @@
     }
     
     [self.buddyListTableView beginUpdates];
-    if (opened) {
+    if (sectionInfo.isOpen) {
         [self.buddyListTableView insertRowsAtIndexPaths:rowsToChange withRowAnimation:UITableViewRowAnimationTop];
     }
     else
@@ -724,8 +738,6 @@
         [self.buddyListTableView deleteRowsAtIndexPaths:rowsToChange withRowAnimation:UITableViewRowAnimationTop];
     }
     [self.buddyListTableView endUpdates];
-    
-    
 }
 
 -(void)updateTitleWithUnreadCount:(NSInteger) unreadMessagesCount
@@ -742,120 +754,6 @@
     
     self.title = title;
 }
-
-
--(void) configureRecentCell:(UITableViewCell *)cell withBuddy:(OTRManagedBuddy *) buddy
-{
-    [self configureCell:cell withBuddy:buddy];
-    NSInteger numberOfUnreadMessages = [buddy numberOfUnreadMessages];
-    
-    
-    NSDate * date = buddy.lastMessageDate;
-    NSString *stringFromDate = nil;
-    
-    if([OTRUtilities dateInLast24Hours:date])
-    {
-        stringFromDate = [NSDateFormatter localizedStringFromDate:buddy.lastMessageDate dateStyle:NSDateFormatterNoStyle timeStyle:NSDateFormatterShortStyle];
-    }
-    else if ([OTRUtilities dateInLast7Days:date])
-    {
-        //show day of week
-        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-        [formatter setDateFormat:@"EEEE"];
-        stringFromDate = [formatter stringFromDate:date];
-    }
-    else{
-        stringFromDate= [NSDateFormatter localizedStringFromDate:buddy.lastMessageDate dateStyle:NSDateFormatterShortStyle timeStyle:NSDateFormatterNoStyle];
-    }
-    
-    cell.detailTextLabel.text = stringFromDate;
-    
-    if (numberOfUnreadMessages>0) {
-        UILabel * messageCountLabel = nil;
-        if (cell.accessoryView) {
-            messageCountLabel = (UILabel *)cell.accessoryView;
-        }
-        else
-        {
-            messageCountLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 42.0, 28.0)];
-            messageCountLabel.backgroundColor = [UIColor darkGrayColor];
-            messageCountLabel.textColor = [UIColor whiteColor];
-            messageCountLabel.layer.cornerRadius = 14;
-            messageCountLabel.numberOfLines = 0;
-            messageCountLabel.lineBreakMode = NSLineBreakByWordWrapping;
-            messageCountLabel.textAlignment = NSTextAlignmentCenter;
-        }
-        if (numberOfUnreadMessages > 99) {
-            messageCountLabel.text = [NSString stringWithFormat:@"%d+",99];
-        }
-        else
-        {
-            messageCountLabel.text = [NSString stringWithFormat:@"%d",[buddy numberOfUnreadMessages]];
-        }
-        cell.accessoryView = messageCountLabel;
-    }
-    else
-    {
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    }
-}
-
--(void) configureCell:(UITableViewCell *)cell withBuddy:(OTRManagedBuddy *)buddy
-{
-    NSString *buddyUsername = buddy.displayName;
-    if (![buddy.displayName length]) {
-        buddyUsername = buddy.accountName;
-    }
-    
-    OTRBuddyStatus buddyStatus = [buddy currentStatusMessage].statusValue;
-    
-    cell.textLabel.text = buddyUsername;
-    cell.accessibilityLabel = buddyUsername;
-    
-    cell.accessoryView = nil;
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    cell.detailTextLabel.textColor = [UIColor lightGrayColor];
-    cell.detailTextLabel.text = [buddy currentStatusMessage].message;
-    
-    switch(buddyStatus)
-    {
-        case OTRBuddyStatusOffline:
-            cell.textLabel.textColor = [UIColor lightGrayColor];
-            break;
-        case OTRBuddyStatusAway:
-            cell.textLabel.textColor = [UIColor darkGrayColor];
-            break;
-        case OTRBuddyStatusXa:
-            cell.textLabel.textColor = [UIColor darkGrayColor];
-            break;
-        case OTRBUddyStatusDnd:
-            cell.textLabel.textColor = [UIColor darkGrayColor];
-            break;
-        case OTRBuddyStatusAvailable:
-            cell.textLabel.textColor = [UIColor darkTextColor];
-            break;
-        default:
-            cell.textLabel.textColor = [UIColor lightGrayColor];
-            break;
-    }
-    
-    UIImage * image = [buddyStatusImageDictionary objectForKey:[NSNumber numberWithInteger:buddyStatus]];
-    if (!image) {
-        image = [OTRImages statusImageWithStatus:buddyStatus];
-        [buddyStatusImageDictionary setObject:image forKey:[NSNumber numberWithInteger:buddyStatus]];
-    }
-    cell.imageView.image = image;
-}
-
--(void)configureBuddyCell:(UITableViewCell *)cell withBuddy:(OTRManagedBuddy *)buddy
-{
-    [self configureCell:cell withBuddy:buddy];
-    UILongPressGestureRecognizer *gesture = [[UILongPressGestureRecognizer alloc]
-                                              initWithTarget:self action:@selector(longPressOnCell:)];
-    [cell addGestureRecognizer:gesture];
-}
-
-
 
 - (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope
 {

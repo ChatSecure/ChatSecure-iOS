@@ -69,13 +69,13 @@
     [buddyArray enumerateObjectsUsingBlock:^(OTRManagedBuddy * buddy, NSUInteger idx, BOOL *stop) {
         [buddy MR_deleteEntity];
     }];
-    /*
+    
     [OTRManagedBuddy MR_deleteAllMatchingPredicate:nil];
     //Delete all stored messages
     [OTRManagedMessageAndStatus MR_deleteAllMatchingPredicate:nil];
     //Delete all Groups
     [OTRManagedGroup MR_deleteAllMatchingPredicate:nil];
-    */
+    
     
     NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
     [context MR_saveToPersistentStoreAndWait];
@@ -111,11 +111,12 @@
     
     //GEt number of Supported Ciphers
     status = SSLGetNumberSupportedCiphers(sslContext, &numCiphers);
-    
+    DDLogVerbose(@"Get Number Supported Ciphers: %d",(int)status);
     SSLCipherSuite ciphers[numCiphers];
     
     //Get list of Supported Ciphers
     status =  SSLGetSupportedCiphers(sslContext, ciphers, &numCiphers);
+    DDLogVerbose(@"Get Supported Ciphers: %d",(int)status);
     
     
     //NSMutableArray * discardedCiphers = [NSMutableArray array];

@@ -26,14 +26,11 @@
 
 @interface OTRAccountsManager : NSObject
 
-- (void) addAccount:(OTRManagedAccount*)account;
-- (void) removeAccount:(OTRManagedAccount*)account;
-
-- (OTRManagedAccount *) accountForProtocol:(NSString *)protocol accountName: (NSString *) accountName;
-
-+ (NSUInteger)numberOfAccountsLoggedIn;
-+ (NSArray *)allLoggedInAccounts;
-
++ (void) removeAccount:(OTRManagedAccount*)account;
++ (NSArray *)allAccountsAbleToAddBuddies;
 + (OTRManagedAccount *)accountForProtocol:(NSString *)protocol accountName: (NSString *) accountName;
+
++ (NSArray *)allAutoLoginAccounts;
+
 
 @end

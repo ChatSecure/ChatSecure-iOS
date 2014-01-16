@@ -31,6 +31,7 @@
     {
         viewControllerClass = newViewControllerClass;
         self.action = @selector(showView);
+        self.accessoryType = UITableViewCellAccessoryNone;
     }
     return self;
 }

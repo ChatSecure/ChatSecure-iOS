@@ -33,6 +33,7 @@
 #import "OTRConstants.h"
 #import "OTRAppDelegate.h"
 #import "UserVoice.h"
+#import "OTRAccountTableViewCell.h"
 
 #define ACTIONSHEET_DISCONNECT_TAG 1
 #define ALERTVIEW_DELETE_TAG 1
@@ -60,7 +61,7 @@
     if (self = [super init])
     {
         self.title = SETTINGS_STRING;
-        self.settingsManager = [OTRProtocolManager sharedInstance].settingsManager;
+        self.settingsManager = [[OTRSettingsManager alloc] init];;
         [[NSNotificationCenter defaultCenter]
          addObserver:self
          selector:@selector(protocolLoggedInSuccessfully:)
@@ -128,18 +129,28 @@
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section == 0) { // Accounts 
-        static NSString *accountCellIdentifier = @"AccountCell";
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:accountCellIdentifier];
-        if (cell == nil)
-        {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:accountCellIdentifier];
-        }
+        static NSString *accountCellIdentifier = @"accountCellIdentifier";
+        static NSString *addAccountCellIdentifier = @"addAccountCellIdentifier";
+        UITableViewCell * cell = nil;
         if (indexPath.row == [self.accountsFetchedResultsController.sections[0] numberOfObjects]) {
-            cell.textLabel.text = NEW_ACCOUNT_STRING;
-            cell.imageView.image = [UIImage imageNamed:@"31-circle-plus-large.png"];
-            cell.detailTextLabel.text = @"";
-        } else {
-            [self configureCell:cell atIndexPath:indexPath];
+            cell = [tableView dequeueReusableCellWithIdentifier:addAccountCellIdentifier];
+            if (cell == nil) {
+                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:addAccountCellIdentifier];
+                cell.textLabel.text = NEW_ACCOUNT_STRING;
+                cell.imageView.image = [UIImage imageNamed:@"31-circle-plus-large.png"];
+                cell.detailTextLabel.text = nil;
+            }
+        }
+        else {
+            OTRManagedAccount *account = [self.accountsFetchedResultsController objectAtIndexPath:indexPath];
+            OTRAccountTableViewCell *accountCell = (OTRAccountTableViewCell*)[tableView dequeueReusableCellWithIdentifier:accountCellIdentifier];
+            if (accountCell == nil) {
+                accountCell = [[OTRAccountTableViewCell alloc] initWithAccount:account reuseIdentifier:accountCellIdentifier];
+            }
+            else {
+                [accountCell setAccount:account];
+            }
+            cell = accountCell;
         }
         return cell;
     }
@@ -187,7 +198,7 @@
         } else {
             OTRManagedAccount *account = [self.accountsFetchedResultsController objectAtIndexPath:indexPath];
             
-            if (!account.isConnectedValue) {
+            if (!account.isConnected) {
                 [self showLoginControllerForAccount:account];
             } else {
                 UIActionSheet *logoutSheet = [[UIActionSheet alloc] initWithTitle:LOGOUT_STRING delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:LOGOUT_STRING otherButtonTitles: nil];
@@ -259,6 +270,7 @@
 - (void) otrSetting:(OTRSetting*)setting showDetailViewControllerClass:(Class)viewControllerClass
 {
     UIViewController *viewController = [[viewControllerClass alloc] init];
+    viewController.title = setting.title;
     if ([viewController isKindOfClass:[OTRSettingDetailViewController class]]) 
     {
         OTRSettingDetailViewController *detailSettingViewController = (OTRSettingDetailViewController*)viewController;
@@ -302,8 +314,6 @@
 
 -(void)protocolLoggedInSuccessfully:(NSNotification *)notification
 {
-    id <OTRProtocol> protocol = notification.object;
-    [protocol.account setIsConnectedValue:YES];
     [self accountLoggedIn];
 }
 
@@ -315,8 +325,7 @@
                 id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:selectedAccount];
                 [protocol disconnect];
             }
-            OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
-            [protocolManager.accountsManager removeAccount:selectedAccount];
+            [OTRAccountsManager removeAccount:selectedAccount];
             
             
         }
@@ -357,9 +366,11 @@
             break;
             
         case NSFetchedResultsChangeUpdate:
-            [self configureCell:[tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
+        {
+            OTRManagedAccount *account = [self.accountsFetchedResultsController objectAtIndexPath:indexPath];
+            [((OTRAccountTableViewCell *)[tableView cellForRowAtIndexPath:indexPath]) setAccount:account];
             break;
-            
+        }
         case NSFetchedResultsChangeMove:
             [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
             [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
@@ -370,24 +381,6 @@
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
 {
     [self.settingsTableView endUpdates];
-}
-
--(void) configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
-{
-    OTRManagedAccount *account = [self.accountsFetchedResultsController objectAtIndexPath:indexPath];
-    cell.textLabel.text = account.username;
-    if (account.isConnectedValue) {
-        cell.detailTextLabel.text = CONNECTED_STRING;
-    } else {
-        cell.detailTextLabel.text = nil;
-    }
-    cell.imageView.image = [UIImage imageNamed:account.imageName];
-    
-    if( account.accountType == OTRAccountTypeFacebook)
-    {
-        cell.imageView.layer.masksToBounds = YES;
-        cell.imageView.layer.cornerRadius = 10.0;
-    }
 }
 
 @end

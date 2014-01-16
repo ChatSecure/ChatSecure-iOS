@@ -28,8 +28,18 @@
 {
     SSKeychainQuery * keychainQuery = [[SSKeychainQuery alloc] init];
     keychainQuery.service = kOTRServiceName;
-    keychainQuery.account = self.username;
+    keychainQuery.account = self.uniqueIdentifier;
     return keychainQuery;
+}
+
+- (void)setPasswordObject:(id)object
+{
+    [self setTokenDictionary:object];
+}
+
+- (id)passwordObject
+{
+    return [self tokenDictionary];
 }
 
 -(void)setTokenDictionary:(NSDictionary *)accessTokenDictionary
@@ -94,18 +104,14 @@
     oAuthAccount.protocol = xmppAccount.protocol;
     oAuthAccount.rememberPassword = xmppAccount.rememberPassword;
     oAuthAccount.uniqueIdentifier = xmppAccount.uniqueIdentifier;
-    oAuthAccount.allowPlainTextAuthentication = xmppAccount.allowPlainTextAuthentication;
-    oAuthAccount.allowSelfSignedSSL = xmppAccount.allowSelfSignedSSL;
-    oAuthAccount.allowSSLHostNameMismatch = xmppAccount.allowSSLHostNameMismatch;
     oAuthAccount.domain =xmppAccount.domain;
     oAuthAccount.port = xmppAccount.port;
-    oAuthAccount.requireTLS = xmppAccount.requireTLS;
-    oAuthAccount.sendDeliveryReceipts = xmppAccount.sendDeliveryReceipts;
-    oAuthAccount.sendTypingNotifications = xmppAccount.sendTypingNotifications;
     
     [xmppAccount.subscriptionRequests enumerateObjectsUsingBlock:^(id obj, BOOL *stop) {
         [oAuthAccount addSubscriptionRequestsObject:obj];
     }];
+    
+    [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
     
     return oAuthAccount;
 }

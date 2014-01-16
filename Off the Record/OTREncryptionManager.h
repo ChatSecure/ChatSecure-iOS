@@ -25,6 +25,7 @@
 
 @interface OTREncryptionManager : NSObject <OTRKitDelegate>
 
-+ (void) protectFileWithPath:(NSString*)path;
++ (BOOL) setFileProtection:(NSString*)fileProtection path:(NSString*)path;
++ (BOOL)addSkipBackupAttributeToItemAtURL:(NSURL *)URL;
 
 @end

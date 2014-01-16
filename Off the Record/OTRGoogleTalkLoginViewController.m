@@ -24,13 +24,6 @@
 #import "Strings.h"
 #import "GTMOAuth2ViewControllerTouch.h"
 #import "OTRSecrets.h"
-/*
-#ifdef CRITTERCISM_ENABLED
-#import "OTRSecrets.h"
-#else
-#define GOOGLE_APP_SECRET @"YOUR GOOGLE APP SECRET"
-#endif
- */
 
 @interface OTRGoogleTalkLoginViewController ()
 
@@ -74,7 +67,7 @@
         if (!error) {
             [self.account setUsername:auth.userEmail];
             NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
-            [context MR_saveOnlySelfAndWait];
+            [context MR_saveToPersistentStoreAndWait];
             self.account.tokenDictionary = auth.parameters;
             [self.loginViewTableView reloadData];
             [self loginButtonPressed:sender];

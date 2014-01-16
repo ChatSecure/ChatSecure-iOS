@@ -18,7 +18,10 @@
     
     if (!group) {
         group = [OTRManagedGroup MR_createEntity];
+        
         group.name = name;
+        
+        [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
         
     }
     
@@ -32,9 +35,10 @@
     
     if (!group) {
         group = [OTRManagedGroup MR_createInContext:context];
-        [context obtainPermanentIDsForObjects:@[group] error:nil];
+    
         group.name = name;
         
+        [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
     }
     
     return group;

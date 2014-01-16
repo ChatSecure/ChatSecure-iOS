@@ -34,6 +34,7 @@
 #import "OTRLanguageSetting.h"
 #import "OTRDonateSetting.h"
 #import "OTRIntSetting.h"
+#import "OTRCertificateSetting.h"
 
 @interface OTRSettingsManager(Private)
 - (void) populateSettings;
@@ -96,16 +97,23 @@
     opportunisticOtrSetting.defaultValue = @(YES);
     [newSettingsDictionary setObject:opportunisticOtrSetting forKey:kOTRSettingKeyOpportunisticOtr];
     
+    OTRCertificateSetting * certSetting = [[OTRCertificateSetting alloc] initWithTitle:PINNED_CERTIFICATES_STRING description:PINNED_CERTIFICATES_DESCRIPTION_STRING];
+    certSetting.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    
     NSArray *chatSettings;
+    NSArray * securitySettings;
     
     if (SYSTEM_VERSION_LESS_THAN(@"7.0")) {
-        chatSettings = [NSArray arrayWithObjects:fontSizeSetting,opportunisticOtrSetting,deletedDisconnectedConversations, showDisconnectionWarning, nil];
+        chatSettings = [NSArray arrayWithObjects:fontSizeSetting,deletedDisconnectedConversations, showDisconnectionWarning, nil];
     } else {
-        chatSettings = [NSArray arrayWithObjects:opportunisticOtrSetting,deletedDisconnectedConversations, showDisconnectionWarning, nil];
+        chatSettings = [NSArray arrayWithObjects:deletedDisconnectedConversations, showDisconnectionWarning, nil];
     }
     OTRSettingsGroup *chatSettingsGroup = [[OTRSettingsGroup alloc] initWithTitle:CHAT_STRING settings:chatSettings];
     [settingsGroups addObject:chatSettingsGroup];
     
+    securitySettings = @[opportunisticOtrSetting,certSetting];
+    OTRSettingsGroup *securitySettingsGroup = [[OTRSettingsGroup alloc] initWithTitle:SECURITY_STRING settings:securitySettings];
+    [settingsGroups addObject:securitySettingsGroup];
     
     OTRFeedbackSetting * feedbackViewSetting = [[OTRFeedbackSetting alloc] initWithTitle:SEND_FEEDBACK_STRING description:nil];
     feedbackViewSetting.imageName = @"18-envelope.png";
@@ -116,14 +124,13 @@
     OTRLanguageSetting * languageSetting = [[OTRLanguageSetting alloc]initWithTitle:LANGUAGE_STRING description:nil settingsKey:kOTRSettingKeyLanguage];
     languageSetting.imageName = @"globe.png";
     
+    
+    
     OTRDonateSetting *donateSetting = [[OTRDonateSetting alloc] initWithTitle:DONATE_STRING description:nil];
     donateSetting.imageName = @"29-heart.png";
     
     NSMutableArray *otherSettings = [NSMutableArray arrayWithCapacity:5];
     [otherSettings addObjectsFromArray:@[languageSetting,donateSetting, shareViewSetting,feedbackViewSetting]];
-    OTRBoolSetting *crashReportingSetting = [[OTRBoolSetting alloc] initWithTitle:CRITTERCISM_TITLE_STRING description:CRITTERCISM_DESCRIPTION_STRING settingsKey:kOTRSettingKeyCrashReportingOptIn];
-    [newSettingsDictionary setObject:crashReportingSetting forKey:kOTRSettingKeyCrashReportingOptIn];
-    [otherSettings addObject:crashReportingSetting];
     OTRSettingsGroup *otherGroup = [[OTRSettingsGroup alloc] initWithTitle:OTHER_STRING settings:otherSettings];
     [settingsGroups addObject:otherGroup];
     settingsDictionary = newSettingsDictionary;
