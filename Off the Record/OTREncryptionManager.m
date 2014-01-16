@@ -29,8 +29,16 @@
 
 - (id) init {
     if (self = [super init]) {
-        [OTRKit sharedInstance].delegate = self;
-        
+        OTRKit *otrKit = [OTRKit sharedInstance];
+        otrKit.delegate = self;
+        NSArray *protectPaths = @[otrKit.privateKeyPath, otrKit.fingerprintsPath, otrKit.instanceTagsPath];
+        for (NSString *path in protectPaths) {
+            if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
+                [@"" writeToFile:path atomically:YES encoding:NSUTF8StringEncoding error:nil];
+            }
+            [OTREncryptionManager setFileProtection:NSFileProtectionCompleteUntilFirstUserAuthentication path:path];
+            [OTREncryptionManager addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:path]];
+        }
     }
     return self;
 }
@@ -61,15 +69,28 @@
     }
 }
 
-+ (void) protectFileWithPath:(NSString*)path {
-    NSError *error = nil;
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    [fileManager setAttributes:[NSDictionary dictionaryWithObject:NSFileProtectionComplete forKey:NSFileProtectionKey] ofItemAtPath:path error:&error];
-    if (error) 
++ (BOOL) setFileProtection:(NSString*)fileProtection path:(NSString*)path {
+    NSDictionary *fileAttributes = [NSDictionary dictionaryWithObject:fileProtection forKey:NSFileProtectionKey];
+    NSError * error = nil;
+    BOOL success = [[NSFileManager defaultManager] setAttributes:fileAttributes ofItemAtPath:path error:&error];
+    if (!success)
     {
-        //DDLogError(@"Error setting file protection key for %@: %@%@",path,[error localizedDescription], [error userInfo]);
-        error = nil;
+        DDLogError(@"error encrypting store: %@", error.userInfo);
     }
+    return success;
+}
+
++ (BOOL)addSkipBackupAttributeToItemAtURL:(NSURL *)URL
+{
+    assert([[NSFileManager defaultManager] fileExistsAtPath: [URL path]]);
+    
+    NSError *error = nil;
+    BOOL success = [URL setResourceValue: [NSNumber numberWithBool: YES]
+                                  forKey: NSURLIsExcludedFromBackupKey error: &error];
+    if(!success){
+        DDLogError(@"Error excluding %@ from backup %@", [URL lastPathComponent], error);
+    }
+    return success;
 }
 
 @end

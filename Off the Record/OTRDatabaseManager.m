@@ -9,6 +9,7 @@
 #import "OTRDatabaseManager.h"
 
 #import "OTRManagedAccount.h"
+#import "OTREncryptionManager.h"
 
 @implementation OTRDatabaseManager
 
@@ -71,18 +72,31 @@
     [MagicalRecord setDefaultModelNamed:@"ChatSecure.momd"];
     [MagicalRecord setupCoreDataStackWithAutoMigratingSqliteStoreNamed:databaseName];
     
-    [self setFileProtection:NSFileProtectionCompleteUnlessOpen path:databaseURL.path];
+    [OTREncryptionManager setFileProtection:NSFileProtectionCompleteUntilFirstUserAuthentication path:databaseURL.path];
+    [OTREncryptionManager addSkipBackupAttributeToItemAtURL:databaseURL];
+    
+    [self deleteLegacyXMPPFiles];
     
     return YES;
 }
 
-+ (void) setFileProtection:(NSString*)fileProtection path:(NSString*)path {
-    NSDictionary *fileAttributes = [NSDictionary dictionaryWithObject:fileProtection forKey:NSFileProtectionKey];
-    NSError * error = nil;
-    
-    if (![[NSFileManager defaultManager] setAttributes:fileAttributes ofItemAtPath:path error:&error])
-    {
-        DDLogError(@"error encrypting store: %@", error.userInfo);
++ (void) deleteLegacyXMPPFiles {
+    NSString *xmppCapabilities = @"XMPPCapabilities";
+    NSString *xmppvCard = @"XMPPvCard";
+    NSString *applicationSupportDirectory = [NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES) lastObject];
+    NSError *error = nil;
+    NSArray *paths = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:applicationSupportDirectory error:&error];
+    if (error) {
+        DDLogError(@"Error listing app support contents: %@", error);
+    }
+    for (NSString *path in paths) {
+        if ([path rangeOfString:xmppCapabilities].location != NSNotFound || [path rangeOfString:xmppvCard].location != NSNotFound) {
+            NSError *error = nil;
+            [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
+            if (error) {
+                DDLogError(@"Error deleting legacy store: %@", error);
+            }
+        }
     }
 }
 
