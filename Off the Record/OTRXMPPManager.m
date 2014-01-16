@@ -135,17 +135,12 @@ NSString *const OTRXMPPRegisterFailedNotificationName    = @"OTRXMPPRegisterFail
     [xmppStream setProxyHost:@"127.0.0.1" port:9050 version:GCDAsyncSocketSOCKSVersion5];
     xmppStream.autoStartTLS = YES;
     
-<<<<<<< HEAD
-    //Makes sure not allow any sending of password in plain text
-    
-=======
     [self.certificatePinningModule activate:self.xmppStream];
     
     XMPPMessageDeliveryReceipts * deliveryReceiptsMoodule = [[XMPPMessageDeliveryReceipts alloc] init];
     deliveryReceiptsMoodule.autoSendMessageDeliveryReceipts = YES;
     deliveryReceiptsMoodule.autoSendMessageDeliveryRequests = YES;
     [deliveryReceiptsMoodule activate:self.xmppStream];
->>>>>>> 2.2
 	
 #if !TARGET_IPHONE_SIMULATOR
 	{
