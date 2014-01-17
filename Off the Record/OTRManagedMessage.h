@@ -29,6 +29,8 @@
 
 @interface OTRManagedMessage : _OTRManagedMessage
 
++ (void) showLocalNotificationForMessage:(OTRManagedMessage*)message;
+
 +(OTRManagedMessage*)newMessageFromBuddy:(OTRManagedBuddy *)theBuddy message:(NSString *)theMessage encrypted:(BOOL)encryptionStatus delayedDate:(NSDate *)date;
 +(OTRManagedMessage *)newMessageToBuddy:(OTRManagedBuddy *)theBuddy message:(NSString *)theMessage encrypted:(BOOL)encryptionStatus;
 

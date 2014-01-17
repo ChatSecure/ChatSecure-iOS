@@ -26,7 +26,6 @@
 #define kOTRProtocolLoginFailSSLStatusKey @"kOTRProtocolLoginFailSSLStatusKey"
 #define kOTRProtocolLoginFailHostnameKey @"kOTRProtocolLoginFailHostnameKey"
 #define kOTRProtocolLoginFailSSLCertificateDataKey @"kOTRProtocolLoginFailSSLCertificateData"
-#define kOTRBuddyListUpdate @"BuddyListUpdateNotification"
 #define kOTRMessageReceived @"MessageReceivedNotification"
 #define kOTRMessageReceiptResonseReceived @"MessageReceiptResponseNotification"
 #define kOTRStatusUpdate @"StatusUpdatedNotification" 

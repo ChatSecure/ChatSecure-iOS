@@ -20,6 +20,7 @@
         #define MR_ENABLE_ACTIVE_RECORD_LOGGING 0
     #else
         static int ddLogLevel = LOG_LEVEL_OFF;
+        #define MR_ENABLE_ACTIVE_RECORD_LOGGING 0
     #endif
 
     #import "CoreData+MagicalRecord.h"

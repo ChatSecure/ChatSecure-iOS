@@ -514,13 +514,9 @@
         NSDate * date = [message delayedDeliveryDate];
         
         OTRManagedMessage *otrMessage = [OTRManagedMessage newMessageFromBuddy:messageBuddy message:body encrypted:YES delayedDate:date];
-        [OTRCodec decodeMessage:otrMessage];
-        
-        if(otrMessage && !otrMessage.isEncryptedValue)
-        {
-            [messageBuddy receiveMessage:otrMessage.message];
-            
-        }
+        [OTRCodec decodeMessage:otrMessage completionBlock:^(OTRManagedMessage *message) {
+            [OTRManagedMessage showLocalNotificationForMessage:message];
+        }];
 	}
     
 }
