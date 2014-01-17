@@ -358,7 +358,6 @@
 		D92D57851844278E00670832 /* ASIAuthenticationDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = D92D57721844278D00670832 /* ASIAuthenticationDialog.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		D92D57861844278E00670832 /* ASIDataCompressor.m in Sources */ = {isa = PBXBuildFile; fileRef = D92D57751844278D00670832 /* ASIDataCompressor.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		D92D57871844278E00670832 /* ASIDataDecompressor.m in Sources */ = {isa = PBXBuildFile; fileRef = D92D57771844278D00670832 /* ASIDataDecompressor.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		D92D57881844278E00670832 /* ASIDownloadCache.m in Sources */ = {isa = PBXBuildFile; fileRef = D92D57791844278E00670832 /* ASIDownloadCache.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		D92D57891844278E00670832 /* ASIFormDataRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = D92D577B1844278E00670832 /* ASIFormDataRequest.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		D92D578A1844278E00670832 /* ASIHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = D92D577D1844278E00670832 /* ASIHTTPRequest.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		D92D578B1844278E00670832 /* ASIInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = D92D57811844278E00670832 /* ASIInputStream.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -1780,41 +1779,41 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D9A3EFCA18442C3B00C9283F /* MobileCoreServices.framework in Frameworks */,
-				D9D69B8014180A3A0056FB9E /* SystemConfiguration.framework in Frameworks */,
-				D92D579318442A3F00670832 /* libz.dylib in Frameworks */,
 				D9B24F221808A061005174C5 /* libHockeySDK.a in Frameworks */,
-				63BE44CF17EE580D00F60670 /* Social.framework in Frameworks */,
 				D90966FB17EA73C900440833 /* libOAuthTouch2.a in Frameworks */,
 				D909664F17EA67D600440833 /* libfacebook_ios_sdk.a in Frameworks */,
-				D92D57A118442A6800670832 /* libcurve25519_donna.a in Frameworks */,
-				D92D57A918442A6800670832 /* libor.a in Frameworks */,
-				63FE64C61727535700876D15 /* StoreKit.framework in Frameworks */,
-				638940CE1815CAF8005F651E /* CrashReporter.framework in Frameworks */,
 				D953117C16C6FF3400AAB1D2 /* libUserVoice.a in Frameworks */,
-				D92D57A018442A6800670832 /* libcrypto.a in Frameworks */,
 				D9CEF0AB1684268500B236B5 /* libOTRKit.a in Frameworks */,
-				D989E88E15D4F92E0081DFD1 /* Twitter.framework in Frameworks */,
-				D93C31B7159A8B4F006316C7 /* Security.framework in Frameworks */,
+				D92D57A118442A6800670832 /* libcurve25519_donna.a in Frameworks */,
+				D92D57AB18442A6800670832 /* libtor.a in Frameworks */,
+				D92D57A918442A6800670832 /* libor.a in Frameworks */,
+				D92D57A018442A6800670832 /* libcrypto.a in Frameworks */,
 				D92D57A718442A6800670832 /* libor-crypto.a in Frameworks */,
-				D9FC9860155881710039518D /* MessageUI.framework in Frameworks */,
 				D92D57A818442A6800670832 /* libor-event.a in Frameworks */,
+				D962710A1755E16200F0A958 /* libidn.a in Frameworks */,
+				D92D57A618442A6800670832 /* libevent.a in Frameworks */,
+				D92D57AA18442A6800670832 /* libssl.a in Frameworks */,
+				D92D579318442A3F00670832 /* libz.dylib in Frameworks */,
 				D974DABD15021E540028B2F4 /* libiconv.dylib in Frameworks */,
 				D9D69ABC1417FDF90056FB9E /* libxml2.dylib in Frameworks */,
+				D9D69B021417FF450056FB9E /* libresolv.dylib in Frameworks */,
+				D9A3EFCA18442C3B00C9283F /* MobileCoreServices.framework in Frameworks */,
+				D9D69B8014180A3A0056FB9E /* SystemConfiguration.framework in Frameworks */,
+				63BE44CF17EE580D00F60670 /* Social.framework in Frameworks */,
+				63FE64C61727535700876D15 /* StoreKit.framework in Frameworks */,
+				638940CE1815CAF8005F651E /* CrashReporter.framework in Frameworks */,
+				D989E88E15D4F92E0081DFD1 /* Twitter.framework in Frameworks */,
+				D93C31B7159A8B4F006316C7 /* Security.framework in Frameworks */,
+				D9FC9860155881710039518D /* MessageUI.framework in Frameworks */,
 				D9D69B7E14180A330056FB9E /* CoreData.framework in Frameworks */,
 				D9D69B7C14180A230056FB9E /* CoreLocation.framework in Frameworks */,
-				D9D69B021417FF450056FB9E /* libresolv.dylib in Frameworks */,
-				D92D57AB18442A6800670832 /* libtor.a in Frameworks */,
 				D9D69AA91417FDBA0056FB9E /* CFNetwork.framework in Frameworks */,
 				D913A70A13FCA9C200C97C1C /* ImageIO.framework in Frameworks */,
 				D913A70813FCA9AB00C97C1C /* QuartzCore.framework in Frameworks */,
 				D913A70413FCA95700C97C1C /* CoreText.framework in Frameworks */,
-				D92D57AA18442A6800670832 /* libssl.a in Frameworks */,
 				D90B80AC13FC719B006EFF3D /* CoreGraphics.framework in Frameworks */,
 				D9F9377D13F44BD3009A3D84 /* UIKit.framework in Frameworks */,
 				D9F9377F13F44BD3009A3D84 /* Foundation.framework in Frameworks */,
-				D962710A1755E16200F0A958 /* libidn.a in Frameworks */,
-				D92D57A618442A6800670832 /* libevent.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5009,11 +5008,8 @@
 				GCC_PREFIX_HEADER = "Off the Record/Off the Record-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					_GCRYPT_IN_LIBGCRYPT,
-					USE_BUFFEREVENTS,
-				);
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					_GCRYPT_IN_LIBGCRYPT,
 					DEBUG,
+					USE_BUFFEREVENTS,
 				);
 				GCC_THUMB_SUPPORT = NO;
 				HEADER_SEARCH_PATHS = (
@@ -5034,6 +5030,8 @@
 					"$(inherited)",
 					"$(SRCROOT)/Submodules/XMPPFramework/Vendor/libidn",
 					"/Users/chrisbal/Documents/ChatSecure/Off-the-Record-iOS/Submodules/OnionKit/dependencies/lib",
+					"/Users/david/Documents/chatsecure/Off-the-Record-iOS/Submodules/OnionKit/dependencies/lib",
+					"/Users/david/Documents/chatsecure/Off-the-Record-iOS/Submodules/XMPPFramework/Vendor/libidn",
 				);
 				OTHER_CFLAGS = "-DSQLITE_HAS_CODEC";
 				OTHER_LDFLAGS = "-all_load";
@@ -5059,6 +5057,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					_GCRYPT_IN_LIBGCRYPT,
 					USERVOICE_ENABLED,
+					USE_BUFFEREVENTS,
 				);
 				GCC_THUMB_SUPPORT = NO;
 				HEADER_SEARCH_PATHS = (
@@ -5079,6 +5078,8 @@
 					"$(inherited)",
 					"$(SRCROOT)/Submodules/XMPPFramework/Vendor/libidn",
 					"/Users/chrisbal/Documents/ChatSecure/Off-the-Record-iOS/Submodules/OnionKit/dependencies/lib",
+					"/Users/david/Documents/chatsecure/Off-the-Record-iOS/Submodules/OnionKit/dependencies/lib",
+					"/Users/david/Documents/chatsecure/Off-the-Record-iOS/Submodules/XMPPFramework/Vendor/libidn",
 				);
 				OTHER_CFLAGS = (
 					"-DNS_BLOCK_ASSERTIONS=1",
@@ -5191,7 +5192,6 @@
 				63D0E47D1819D962003ACA13 /* ChatSecure 3.xcdatamodel */,
 				D9D3717D169D40500086F358 /* ChatSecure.xcdatamodel */,
 			);
-			currentVersion = 63D0E47D1819D962003ACA13 /* ChatSecure 3.xcdatamodel */;
 			currentVersion = 63534A54187B6F7F00061776 /* ChatSecure 4.xcdatamodel */;
 			path = ChatSecure.xcdatamodeld;
 			sourceTree = "<group>";

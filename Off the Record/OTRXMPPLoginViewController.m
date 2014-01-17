@@ -24,6 +24,8 @@
 #import "OTRConstants.h"
 #import "OTRXMPPError.h"
 #import "SIAlertView.h"
+#import "OTRManagedXMPPTorAccount.h"
+#import "HITorManager.h"
 
 
 @interface OTRXMPPLoginViewController ()
@@ -155,6 +157,18 @@
     
     [alertView setDefaultButtonImage:buttonImage forState:UIControlStateNormal];
     [alertView setDefaultButtonImage:buttonImage forState:UIControlStateHighlighted];
+}
+
+- (void)loginButtonPressed:(id)sender
+{
+    if( [self.account isKindOfClass:[OTRManagedXMPPTorAccount class]] || YES){
+        if(![HITorManager defaultManager].isRunning) {
+            [[HITorManager defaultManager] start];
+        }
+        else{
+            [super loginButtonPressed:sender];
+        }
+    }
 }
 
 - (void)dealloc
