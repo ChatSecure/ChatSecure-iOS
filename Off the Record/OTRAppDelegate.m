@@ -56,7 +56,7 @@
                                                                delegate:self];
     [[BITHockeyManager sharedHockeyManager] startManager];
     
-    [SSKeychain setAccessibilityType:kSecAttrAccessibleAfterFirstUnlock];
+    [SSKeychain setAccessibilityType:kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly];
 
     NSString *outputStoreName = @"ChatSecure.sqlite";
     [OTRDatabaseManager setupDatabaseWithName:outputStoreName];
