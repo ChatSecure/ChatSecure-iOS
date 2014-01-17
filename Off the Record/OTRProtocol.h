@@ -32,8 +32,8 @@
 - (void) disconnect;
 - (void) addBuddy:(OTRManagedBuddy *)newBuddy;
 
--(void) removeBuddies:(NSArray *)buddies;
--(void) blockBuddies:(NSArray *)buddies;
+- (void) removeBuddies:(NSArray *)buddies;
+- (void) blockBuddies:(NSArray *)buddies;
 
 - (id) initWithAccount:(OTRManagedAccount*)account;
 

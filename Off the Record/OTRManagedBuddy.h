@@ -33,7 +33,6 @@
 
 @interface OTRManagedBuddy : _OTRManagedBuddy
 
--(void)receiveMessage:(NSString *)message;
 -(void)receiveChatStateMessage:(OTRChatState) chatState;
 
 -(BOOL)protocolIsXMPP;

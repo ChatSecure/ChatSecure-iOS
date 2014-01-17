@@ -27,8 +27,8 @@
 
 @interface OTRCodec : NSObject
 
-+ (void)decodeMessage:(OTRManagedChatMessage*)theMessage;
-+ (void)encodeMessage:(OTRManagedChatMessage*)theMessage completionBlock:(void (^)(OTRManagedChatMessage * message))completionBlock;
++ (void)decodeMessage:(OTRManagedChatMessage *)theMessage completionBlock:(void (^)(OTRManagedChatMessage * message))completionBlock;
++ (void)encodeMessage:(OTRManagedChatMessage *)theMessage completionBlock:(void (^)(OTRManagedChatMessage * message))completionBlock;
 
 + (void)generateOtrInitiateOrRefreshMessageTobuddy:(OTRManagedBuddy*)buddy
                                    completionBlock:(void (^)(OTRManagedChatMessage * message))completionBlock;

@@ -96,39 +96,6 @@
         OTRXMPPManager * protocol = (OTRXMPPManager *)[protocolManager protocolForAccount:self.account];
         [[protocol inactiveChatStateTimerForBuddyObjectID:self.objectID] invalidate];
     }
-    
-}
-
--(void)receiveMessage:(NSString *)message
-{
-    //DDLogVerbose(@"received: %@",message);
-    if (message) {
-        self.lastMessageDisconnected = NO;
-        // Strip the shit out of it, but hopefully you're talking with someone who is trusted in the first place
-        // TODO: fix this so it doesn't break some cyrillic encodings
-        //NSString *rawMessage = [[[message stringByConvertingHTMLToPlainText]stringByEncodingHTMLEntities] stringByLinkifyingURLs];
-        NSString * rawMessage = [message stringByConvertingHTMLToPlainText];
-                
-        //[[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];
-        
-        if (![[UIApplication sharedApplication] applicationState] == UIApplicationStateActive)
-        {
-            // We are not active, so use a local notification instead
-            UILocalNotification *localNotification = [[UILocalNotification alloc] init];
-            localNotification.alertAction = REPLY_STRING;
-            localNotification.soundName = UILocalNotificationDefaultSoundName;
-            localNotification.applicationIconBadgeNumber = [UIApplication sharedApplication].applicationIconBadgeNumber + 1;
-            localNotification.alertBody = [NSString stringWithFormat:@"%@: %@",self.displayName,rawMessage];
-            
-            NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithCapacity:3];
-            [userInfo setObject:self.accountName forKey:kOTRNotificationUserNameKey];
-            [userInfo setObject:self.account.username forKey:kOTRNotificationAccountNameKey];
-            [userInfo setObject:self.account.protocol forKey:kOTRNotificationProtocolKey];
-            localNotification.userInfo = userInfo;
-            
-            [[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
-        }
-    }
 }
 
 -(void)receiveChatStateMessage:(OTRChatState) newChatState

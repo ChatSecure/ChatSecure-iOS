@@ -92,6 +92,7 @@ BOOL loginFailed;
 -(OTRManagedBuddy *)updateManagedBuddyWith:(AIMBlistBuddy *)buddy
 {
     OTRBuddyStatus buddyStatus = [self convertAimStatus:buddy.status];
+    OTRManagedAccount *localAccount = [self.account MR_inThreadContext];
     
     OTRManagedBuddy *otrBuddy = [OTRManagedBuddy fetchOrCreateWithName:buddy.username account:self.account];
     
@@ -102,7 +103,7 @@ BOOL loginFailed;
     otrBuddy.photo = photo;
     
     [otrBuddy addToGroup:buddy.group.name];
-    otrBuddy.account = self.account;
+    otrBuddy.account = localAccount;
     NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
     [context MR_saveToPersistentStoreAndWait];
     return otrBuddy;
@@ -110,9 +111,11 @@ BOOL loginFailed;
 
 -(void)updateMangedBuddyWith:(AIMBlistBuddy *)buddy withStatus:(AIMBuddyStatus *)status
 {
-    OTRBuddyStatus buddyStatus = [self convertAimStatus:status];
-    OTRManagedBuddy *otrBuddy = [self updateManagedBuddyWith:buddy];
-    [otrBuddy newStatusMessage:status.statusMessage status:buddyStatus incoming:YES];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, NULL), ^{
+        OTRBuddyStatus buddyStatus = [self convertAimStatus:status];
+        OTRManagedBuddy *otrBuddy = [self updateManagedBuddyWith:buddy];
+        [otrBuddy newStatusMessage:status.statusMessage status:buddyStatus incoming:YES];
+    });
 }
 
 
@@ -198,13 +201,15 @@ BOOL loginFailed;
     
     aimBuddyList = [theSession.session buddyList];
     
-    for(AIMBlistGroup *group in aimBuddyList.groups)
-    {
-        for(AIMBlistBuddy *buddy in group.buddies)
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, NULL), ^{
+        for(AIMBlistGroup *group in aimBuddyList.groups)
         {
-            [self updateManagedBuddyWith:buddy];
+            for(AIMBlistBuddy *buddy in group.buddies)
+            {
+                [self updateManagedBuddyWith:buddy];
+            }
         }
-    }
+    });
 }
 
 - (void)aimFeedbagHandler:(AIMFeedbagHandler *)sender buddyAdded:(AIMBlistBuddy *)newBuddy {
@@ -223,10 +228,6 @@ BOOL loginFailed;
     
     NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
     [context MR_saveToPersistentStoreAndWait];
-    
-    [[NSNotificationCenter defaultCenter]
-     postNotificationName:kOTRBuddyListUpdate
-     object:self];
 }
 
 - (void)aimFeedbagHandler:(AIMFeedbagHandler *)sender groupAdded:(AIMBlistGroup *)newGroup {
@@ -237,10 +238,6 @@ BOOL loginFailed;
 - (void)aimFeedbagHandler:(AIMFeedbagHandler *)sender groupDeleted:(AIMBlistGroup *)oldGroup {
 	[self checkThreading];
 	//DDLogInfo(@"Group removed: %@", [oldGroup name]);
-    
-    [[NSNotificationCenter defaultCenter]
-     postNotificationName:kOTRBuddyListUpdate
-     object:self];
 }
 
 - (void)aimFeedbagHandler:(AIMFeedbagHandler *)sender groupRenamed:(AIMBlistGroup *)theGroup {
@@ -248,40 +245,28 @@ BOOL loginFailed;
 	//DDLogInfo(@"Group renamed: %@", [theGroup name]);
 	//DDLogInfo(@"Blist: %@", theSession.session.buddyList);
     
-    [[NSNotificationCenter defaultCenter]
-     postNotificationName:kOTRBuddyListUpdate
-     object:self];
 }
 
 - (void)aimFeedbagHandler:(AIMFeedbagHandler *)sender buddyDenied:(NSString *)username {
 	//DDLogInfo(@"User blocked: %@", username);
     
-    [[NSNotificationCenter defaultCenter]
-     postNotificationName:kOTRBuddyListUpdate
-     object:self];
+    
 }
 
 - (void)aimFeedbagHandler:(AIMFeedbagHandler *)sender buddyPermitted:(NSString *)username {
 	//DDLogInfo(@"User permitted: %@", username);
     
-    [[NSNotificationCenter defaultCenter]
-     postNotificationName:kOTRBuddyListUpdate
-     object:self];
+    
 }
 
 - (void)aimFeedbagHandler:(AIMFeedbagHandler *)sender buddyUndenied:(NSString *)username {
 	//DDLogInfo(@"User un-blocked: %@", username);
     
-    [[NSNotificationCenter defaultCenter]
-     postNotificationName:kOTRBuddyListUpdate
-     object:self];
+    
 }
 - (void)aimFeedbagHandler:(AIMFeedbagHandler *)sender buddyUnpermitted:(NSString *)username {
 	//DDLogInfo(@"User un-permitted: %@", username);
     
-    [[NSNotificationCenter defaultCenter]
-     postNotificationName:kOTRBuddyListUpdate
-     object:self];
 }
 
 - (void)aimFeedbagHandler:(AIMFeedbagHandler *)sender transactionFailed:(id<FeedbagTransaction>)transaction {
@@ -303,14 +288,11 @@ BOOL loginFailed;
     
     OTRManagedChatMessage *otrMessage = [OTRManagedChatMessage newMessageFromBuddy:messageBuddy message:msgTxt encrypted:YES delayedDate:nil];
     
-    [OTRCodec decodeMessage:otrMessage];
+    [OTRCodec decodeMessage:otrMessage completionBlock:^(OTRManagedMessage *message) {
+        [OTRManagedMessage showLocalNotificationForMessage:message];
+    }];
     
-    if(otrMessage && otrMessage.isEncryptedValue == NO)
-    {
-        [messageBuddy receiveMessage:otrMessage.message];
-        
-    }
-	
+
 	NSArray * tokens = [CommandTokenizer tokensOfCommand:msgTxt];
 	if ([tokens count] == 1) {
 		if ([[tokens objectAtIndex:0] isEqual:@"blist"]) {

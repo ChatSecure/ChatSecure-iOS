@@ -581,14 +581,11 @@ NSString *const OTRXMPPRegisterFailedNotificationName    = @"OTRXMPPRegisterFail
         
         NSDate * date = [message delayedDeliveryDate];
         
-        OTRManagedChatMessage *otrMessage = [OTRManagedChatMessage newMessageFromBuddy:messageBuddy message:body encrypted:YES delayedDate:date];
-        [OTRCodec decodeMessage:otrMessage];
         
-        if(otrMessage && !otrMessage.isEncryptedValue)
-        {
-            [messageBuddy receiveMessage:otrMessage.message];
-            
-        }
+        OTRManagedChatMessage *otrMessage = [OTRManagedChatMessage newMessageFromBuddy:messageBuddy message:body encrypted:YES delayedDate:date];
+        [OTRCodec decodeMessage:otrMessage completionBlock:^(OTRManagedMessage *message) {
+            [OTRManagedMessage showLocalNotificationForMessage:message];
+        }];
 	}
     
 }
