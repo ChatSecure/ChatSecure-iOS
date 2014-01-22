@@ -25,5 +25,8 @@
 @interface OTRXMPPLoginViewController : OTRLoginViewController
 
 @property (nonatomic,strong) OTRManagedXMPPAccount * account;
+@property (nonatomic) BOOL loginButtonPressed;
+
+- (BOOL)isTorAccount;
 
 @end

@@ -1,5 +1,7 @@
 #import "OTRManagedXMPPTorAccount.h"
 
+#import "OTRXMPPTorManager.h"
+
 
 @interface OTRManagedXMPPTorAccount ()
 
@@ -12,6 +14,16 @@
 
 - (OTRAccountType)accountType {
     return OTRAccountTypeXMPPTor;
+}
+
+-(Class)protocolClass
+{
+    return [OTRXMPPTorManager class];
+}
+
+-(NSString *)imageName
+{
+    return OTRXMPPTorImageName;
 }
 
 @end

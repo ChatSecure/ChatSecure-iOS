@@ -24,11 +24,14 @@
 #import "OTRConstants.h"
 #import "OTRXMPPError.h"
 #import "SIAlertView.h"
-#import "OTRManagedXMPPTorAccount.h"
 #import "HITorManager.h"
+#import "OTRManagedXMPPTorAccount.h"
+
 
 
 @interface OTRXMPPLoginViewController ()
+
+
 
 @end
 
@@ -72,13 +75,43 @@
     } completion:nil];
 }
 
--(void)viewWillAppear:(BOOL)animated
+- (BOOL)isTorAccount{
+    if ([self.account isKindOfClass:[OTRManagedXMPPTorAccount class]]) {
+        return YES;
+    }
+    return NO;
+}
+
+- (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHideOrShow:) name:UIKeyboardWillHideNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHideOrShow:) name:UIKeyboardWillShowNotification object:nil];
     [self.usernameTextField resignFirstResponder];
     [self.passwordTextField resignFirstResponder];
+    if ([self isTorAccount]) {
+        self.loginButtonPressed = NO;
+        [[HITorManager defaultManager] addObserver:self forKeyPath:NSStringFromSelector(@selector(isRunning)) options:NSKeyValueObservingOptionNew context:NULL];
+    }
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    if([self isTorAccount])
+    {
+        [[HITorManager defaultManager] removeObserver:self forKeyPath:NSStringFromSelector(@selector(isRunning))];
+    }
+    [super viewWillDisappear:animated];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    if ([keyPath isEqualToString:NSStringFromSelector(@selector(isRunning))] && [object isEqual:[HITorManager defaultManager]]) {
+        BOOL isRunning = [[change objectForKey:NSKeyValueChangeNewKey] boolValue];
+        if (isRunning && self.loginButtonPressed) {
+            [self loginButtonPressed:nil];
+        }
+    }
 }
 
 - (void)protocolLoginFailed:(NSNotification *)notification {
@@ -161,13 +194,18 @@
 
 - (void)loginButtonPressed:(id)sender
 {
-    if( [self.account isKindOfClass:[OTRManagedXMPPTorAccount class]] || YES){
+    self.loginButtonPressed = YES;
+    if( [self.account isKindOfClass:[OTRManagedXMPPTorAccount class]]){
         if(![HITorManager defaultManager].isRunning) {
+            [self showHUDWithText:@"Connecting to Tor"];
             [[HITorManager defaultManager] start];
         }
         else{
             [super loginButtonPressed:sender];
         }
+    }
+    else {
+        [super loginButtonPressed:sender];
     }
 }
 

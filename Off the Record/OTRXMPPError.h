@@ -19,7 +19,9 @@ extern NSString *const OTRXMPPSSLHostnameKey;
 typedef NS_ENUM(NSUInteger, OTRXMPPErrorCode) {
     OTRXMPPUnsupportedAction,
     OTRXMPPXMLError,
-    OTRXMPPSSLError
+    OTRXMPPSSLError,
+    OTRXMPPDomainError,
+    OTRXMPPTorError
 };
 
 @interface OTRXMPPError : NSObject

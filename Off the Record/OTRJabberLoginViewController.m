@@ -152,12 +152,14 @@
     }
 }
 
--(void)viewWillAppear:(BOOL)animated
+- (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     [self.usernameTextField resignFirstResponder];
     [self.passwordTextField resignFirstResponder];
 }
+
+
 
 - (void)dealloc
 {

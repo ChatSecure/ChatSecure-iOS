@@ -23,7 +23,7 @@
 
 -(NSString *)imageName
 {
-    return kGTalkImageName;
+    return OTRGoogleTalkImageName;
 }
 -(BOOL)shouldAllowSSLHostNameMismatch
 {

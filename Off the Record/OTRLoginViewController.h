@@ -26,17 +26,16 @@
 #import "Strings.h"
 #import "OTRConstants.h"
 
+extern NSString *const kTextLabelTextKey;
+extern NSString *const kCellTypeKey;
+extern NSString *const kUserInputViewKey;
+extern NSString *const kCellTypeTextField;
+extern NSString *const kCellTypeSwitch;
+extern NSString *const KCellTypeHelp;
 
-#define kTextLabelTextKey @"textLabelTextKey"
-#define kCellTypeKey @"cellTypeKey"
-#define kUserInputViewKey @"userInputViewKey"
-#define kCellTypeTextField @"cellTypeTextField"
-#define kCellTypeSwitch @"cellTypeSwitch"
-#define KCellTypeHelp @"cellTypeHelp"
-
-#define kErrorAlertViewTag 131
-#define kErrorInfoAlertViewTag 132
-#define kNewCertAlertViewTag 134
+extern NSUInteger const kErrorAlertViewTag;
+extern NSUInteger const kErrorInfoAlertViewTag;
+extern NSUInteger const kNewCertAlertViewTag;
 
 @interface OTRLoginViewController : UIViewController <UITextFieldDelegate, MBProgressHUDDelegate, UIActionSheetDelegate, UITableViewDataSource,UITableViewDelegate, UIAlertViewDelegate> {
     UIView *padding;

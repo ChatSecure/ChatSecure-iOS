@@ -9,6 +9,8 @@
 #import "OTRXMPPCreateViewController.h"
 #import "Strings.h"
 
+#import "HITorManager.h"
+
 @interface OTRXMPPCreateViewController ()
 
 @end
@@ -67,7 +69,7 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     if ([hostnameArray count]) {
-        return [super numberOfSectionsInTableView:tableView]+1;
+        return 2;
     }
     return [super numberOfSectionsInTableView:tableView];
 }
@@ -130,14 +132,22 @@
 
 -(void) loginButtonPressed:(id)sender
 {
-    OTRXMPPManager * xmppManager = [self xmppManager];
-    if (xmppManager) {
-        self.account.username = self.usernameTextField.text;
-        self.account.domain = self.selectedHostname;
-        self.account.rememberPasswordValue = self.rememberPasswordSwitch.on;
-        self.account.autologinValue = self.autoLoginSwitch.on;
-        [self showHUDWithText:@"Creating Account"];
-        [xmppManager registerNewAccountWithPassword:self.passwordTextField.text];
+    self.loginButtonPressed = YES;
+    if([self isTorAccount] && ![HITorManager defaultManager].isRunning)
+    {
+        [self showHUDWithText:@"Connecting to Tor"];
+        [[HITorManager defaultManager] start];
+    }
+    else {
+        OTRXMPPManager * xmppManager = [self xmppManager];
+        if (xmppManager) {
+            self.account.username = self.usernameTextField.text;
+            self.account.domain = self.selectedHostname;
+            self.account.rememberPasswordValue = self.rememberPasswordSwitch.on;
+            self.account.autologinValue = self.autoLoginSwitch.on;
+            [self showHUDWithText:@"Creating Account"];
+            [xmppManager registerNewAccountWithPassword:self.passwordTextField.text];
+        }
     }
 }
 

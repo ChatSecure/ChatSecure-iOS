@@ -36,6 +36,15 @@
 #import "OTRManagedOscarAccount.h"
 #import "OTRManagedXMPPTorAccount.h"
 
+NSString *const OTRAccountUernameKey          = @"kOTRAccountUsernameKey";
+NSString *const OTRAccountProtocolKey         = @"kOTRAccountProtocolKey";
+NSString *const OTRAccountRememberPasswordKey = @"kOTRAccountRememberPasswordKey";
+
+NSString *const OTRAimImageName               = @"aim.png";
+NSString *const OTRGoogleTalkImageName        = @"gtalk.png";
+NSString *const OTRFacebookImageName          = @"facebook.png";
+NSString *const OTRXMPPImageName              = @"xmpp.png";
+NSString *const OTRXMPPTorImageName           = @"xmpp_tor.png";
 
 @interface OTRManagedAccount()
 @end
@@ -70,7 +79,7 @@
 
 // Default, this will be overridden in subclasses
 - (NSString *) imageName {
-    return kXMPPImageName;
+    return OTRXMPPImageName;
 }
 
 - (void) setPassword:(NSString *)newPassword {

@@ -149,27 +149,27 @@
 
 +(NSDictionary *)googleCellDictionary {
     return @{kDisplayNameKey:GOOGLE_TALK_STRING,
-             kProviderImageKey: kGTalkImageName,
+             kProviderImageKey: OTRGoogleTalkImageName,
              kAccountTypeKey: @(OTRAccountTypeGoogleTalk)};
 }
 +(NSDictionary *)facebookCellDictionary {
     return @{kDisplayNameKey:FACEBOOK_STRING,
-             kProviderImageKey: kFacebookImageName,
+             kProviderImageKey: OTRFacebookImageName,
              kAccountTypeKey: @(OTRAccountTypeFacebook)};
 }
 +(NSDictionary *)XMPPCellDictionary {
     return @{kDisplayNameKey: JABBER_STRING,
-             kProviderImageKey: kXMPPImageName,
+             kProviderImageKey: OTRXMPPImageName,
              kAccountTypeKey: @(OTRAccountTypeJabber)};
 }
 +(NSDictionary *)XMPPTorCellDictionary {
     return @{kDisplayNameKey: XMPP_TOR_STRING,
-             kProviderImageKey: kXMPPImageName,
+             kProviderImageKey: OTRXMPPTorImageName,
              kAccountTypeKey: @(OTRAccountTypeXMPPTor)};
 }
 +(NSDictionary *)aimCellDictionary {
     return @{kDisplayNameKey: AIM_STRING,
-             kProviderImageKey: kAIMImageName,
+             kProviderImageKey: OTRAimImageName,
              kAccountTypeKey: @(OTRAccountTypeAIM)};
 }
 

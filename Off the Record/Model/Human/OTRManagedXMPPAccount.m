@@ -46,7 +46,7 @@
 }
 
 - (NSString *) imageName {
-    return kXMPPImageName;
+    return OTRXMPPImageName;
 }
 
 -(NSString *)providerName

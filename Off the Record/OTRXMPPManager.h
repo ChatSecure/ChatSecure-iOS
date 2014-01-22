@@ -46,7 +46,6 @@ extern NSString *const OTRXMPPRegisterFailedNotificationName;
 
 @interface OTRXMPPManager : NSObject <XMPPRosterDelegate, NSFetchedResultsControllerDelegate, OTRProtocol, OTRCertificatePinningDelegate>
 {
-	XMPPStream *xmppStream;
 	XMPPReconnect *xmppReconnect;
     XMPPRoster *xmppRoster;
     XMPPvCardCoreDataStorage *xmppvCardStorage;
@@ -79,16 +78,13 @@ extern NSString *const OTRXMPPRegisterFailedNotificationName;
 @property BOOL didSecure;
 @property (nonatomic, strong) NSMutableDictionary * buddyTimers;
 
-//- (NSManagedObjectContext *)managedObjectContext_capabilities;
-
 - (BOOL)connectWithJID:(NSString*) myJID password:(NSString*)myPassword;
 - (void)disconnect;
 
-//- (NSFetchedResultsController *)fetchedResultsController;
-
-- (NSString*)accountName;
-
+- (NSString *)accountName;
+- (NSString *)accountDomainWithError:(NSError**)error;
 - (void)registerNewAccountWithPassword:(NSString *)password;
+- (void)failedToConnect:(NSError *)error;
 
 
 //Chat State

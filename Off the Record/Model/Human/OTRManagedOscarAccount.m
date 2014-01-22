@@ -31,7 +31,7 @@
 
 
 - (NSString *) imageName {
-    return kAIMImageName;
+    return OTRAimImageName;
 }
 
 - (NSString *)providerName

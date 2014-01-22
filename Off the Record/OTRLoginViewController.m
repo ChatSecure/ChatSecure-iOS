@@ -40,6 +40,17 @@
 
 #define kFieldBuffer 20;
 
+NSString *const kTextLabelTextKey       = @"kTextLabelTextKey";
+NSString *const kCellTypeKey            = @"kCellTypeKey";
+NSString *const kUserInputViewKey       = @"kUserInputViewKey";
+NSString *const kCellTypeTextField      = @"kCellTypeTextField";
+NSString *const kCellTypeSwitch         = @"kCellTypeSwitch";
+NSString *const KCellTypeHelp           = @"KCellTypeHelp";
+
+NSUInteger const kErrorAlertViewTag     = 130;
+NSUInteger const kErrorInfoAlertViewTag = 131;
+NSUInteger const kNewCertAlertViewTag   = 132;
+
 
 
 @interface OTRLoginViewController(Private)
@@ -57,8 +68,6 @@
 @synthesize isNewAccount;
 @synthesize loginViewTableView;
 @synthesize textFieldTextColor;
-
-@synthesize tableViewArray;
 
 - (void) dealloc {
     self.logoView = nil;
@@ -162,7 +171,7 @@
 
 -(void)addCellinfoWithSection:(NSInteger)section row:(NSInteger)row labelText:(id)text cellType:(NSString *)type userInputView:(UIView *)inputView;
 {
-    if (!tableViewArray) {
+    if (!self.tableViewArray) {
         self.tableViewArray = [[NSMutableArray alloc] init];
     }
     
@@ -172,7 +181,7 @@
     
     NSDictionary * cellDictionary = [NSDictionary dictionaryWithObjectsAndKeys:text,kTextLabelTextKey,type,kCellTypeKey,inputView,kUserInputViewKey, nil];
     
-    [[tableViewArray objectAtIndex:section] insertObject:cellDictionary atIndex:row];
+    [[self.tableViewArray objectAtIndex:section] insertObject:cellDictionary atIndex:row];
     
 }
 
@@ -193,19 +202,19 @@
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return [tableViewArray count];
+    return self.tableViewArray.count;
     
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-        return [[tableViewArray objectAtIndex:section] count];
+        return [[self.tableViewArray objectAtIndex:section] count];
     
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    if([tableViewArray count] > 1)
+    if(self.tableViewArray.count > 1)
     {
         if(section == 0)
             return BASIC_STRING;
@@ -217,9 +226,9 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if([[[[tableViewArray objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] objectForKey:kCellTypeKey] isEqualToString:KCellTypeHelp])
+    if([[[[self.tableViewArray objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] objectForKey:kCellTypeKey] isEqualToString:KCellTypeHelp])
     {
-        CGFloat height = ((UILabel *)[[[tableViewArray objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] objectForKey:kTextLabelTextKey]).frame.size.height+10;
+        CGFloat height = ((UILabel *)[[[self.tableViewArray objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] objectForKey:kTextLabelTextKey]).frame.size.height+10;
         return height;
     }
     return 44.0f;
@@ -229,7 +238,7 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
-    NSDictionary * cellDictionary = [[tableViewArray objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+    NSDictionary * cellDictionary = [[self.tableViewArray objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
     NSString * cellType = [cellDictionary objectForKey:kCellTypeKey];
     
     UITableViewCell * cell = [tableView dequeueReusableCellWithIdentifier:cellType];
@@ -420,7 +429,9 @@
 - (void)showHUDWithText:(NSString *)text
 {
     [self.view endEditing:YES];
-    self.HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    if ([self.HUD isHidden] || !self.HUD) {
+        self.HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    }
     self.HUD.delegate = self;
     self.HUD.labelText = text;
     self.timeoutTimer = [NSTimer scheduledTimerWithTimeInterval:45.0 target:self selector:@selector(timeout:) userInfo:nil repeats:NO];
@@ -497,6 +508,7 @@
         case OTRAccountTypeAIM:
             return [[OTROscarLoginViewController alloc] initWithAccountID:accountID];
             break;
+        case OTRAccountTypeXMPPTor:
         case OTRAccountTypeJabber:
             return [[OTRJabberLoginViewController alloc] initWithAccountID:accountID];
             break;
@@ -506,8 +518,6 @@
         case OTRAccountTypeGoogleTalk:
             return [[OTRGoogleTalkLoginViewController alloc] initWithAccountID:accountID];
             break;
-        case OTRAccountTypeXMPPTor:
-            return [[[OTRJabberLoginViewController alloc] init] initWithAccountID:accountID];
         default:
             break;
     }

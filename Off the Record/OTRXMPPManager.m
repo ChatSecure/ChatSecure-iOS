@@ -71,7 +71,7 @@ NSString *const OTRXMPPRegisterFailedNotificationName    = @"OTRXMPPRegisterFail
 
 @implementation OTRXMPPManager
 
-@synthesize xmppStream;
+@synthesize xmppStream = _xmppStream;
 @synthesize xmppReconnect;
 @synthesize xmppRoster;
 @synthesize xmppRosterStorage;
@@ -100,9 +100,7 @@ NSString *const OTRXMPPRegisterFailedNotificationName    = @"OTRXMPPRegisterFail
         // Setup the XMPP stream
         [self setupStream];
         
-        //[self setupStream];
         buddyTimers = [NSMutableDictionary dictionary];
-        
     }
     
     return self;
@@ -119,22 +117,8 @@ NSString *const OTRXMPPRegisterFailedNotificationName    = @"OTRXMPPRegisterFail
 
 - (void)setupStream
 {
-	NSAssert(xmppStream == nil, @"Method setupStream invoked multiple times");
-	
-	// Setup xmpp stream
-	// 
-	// The XMPPStream is the base class for all activity.
-	// Everything else plugs into the xmppStream, such as modules/extensions and delegates.
-    
-	if (self.account.accountType == OTRAccountTypeFacebook) {
-        xmppStream = [[XMPPStream alloc] initWithFacebookAppId:FACEBOOK_APP_ID];
-    }
-    else{
-        xmppStream = [[XMPPStream alloc] init];
-    }
-    [xmppStream setProxyHost:@"127.0.0.1" port:9050 version:GCDAsyncSocketSOCKSVersion5];
-    xmppStream.autoStartTLS = YES;
-    
+	NSAssert(_xmppStream == nil, @"Method setupStream invoked multiple times");
+
     [self.certificatePinningModule activate:self.xmppStream];
     
     XMPPMessageDeliveryReceipts * deliveryReceiptsMoodule = [[XMPPMessageDeliveryReceipts alloc] init];
@@ -227,15 +211,15 @@ NSString *const OTRXMPPRegisterFailedNotificationName    = @"OTRXMPPRegisterFail
     
 	// Activate xmpp modules
     
-	[xmppReconnect         activate:xmppStream];
-	[xmppRoster            activate:xmppStream];
-	[xmppvCardTempModule   activate:xmppStream];
-	[xmppvCardAvatarModule activate:xmppStream];
-	[xmppCapabilities      activate:xmppStream];
+	[xmppReconnect         activate:self.xmppStream];
+	[xmppRoster            activate:self.xmppStream];
+	[xmppvCardTempModule   activate:self.xmppStream];
+	[xmppvCardAvatarModule activate:self.xmppStream];
+	[xmppCapabilities      activate:self.xmppStream];
     
 	// Add ourself as a delegate to anything we may be interested in
     
-	[xmppStream addDelegate:self delegateQueue:dispatch_get_main_queue()];
+	[self.xmppStream addDelegate:self delegateQueue:dispatch_get_main_queue()];
 	[xmppRoster addDelegate:self delegateQueue:dispatch_get_main_queue()];
     [xmppCapabilities addDelegate:self delegateQueue:dispatch_get_main_queue()];
     
@@ -256,7 +240,7 @@ NSString *const OTRXMPPRegisterFailedNotificationName    = @"OTRXMPPRegisterFail
 
 - (void)teardownStream
 {
-	[xmppStream removeDelegate:self];
+	[self.xmppStream removeDelegate:self];
 	[xmppRoster removeDelegate:self];
 	
 	[xmppReconnect         deactivate];
@@ -265,9 +249,9 @@ NSString *const OTRXMPPRegisterFailedNotificationName    = @"OTRXMPPRegisterFail
 	[xmppvCardAvatarModule deactivate];
 	[xmppCapabilities      deactivate];
 	
-	[xmppStream disconnect];
+	[self.xmppStream disconnect];
 	
-	xmppStream = nil;
+	_xmppStream = nil;
 	xmppReconnect = nil;
     xmppRoster = nil;
 	xmppRosterStorage = nil;
@@ -289,6 +273,21 @@ NSString *const OTRXMPPRegisterFailedNotificationName    = @"OTRXMPPRegisterFail
 // For more information on working with XML elements, see the Wiki article:
 // http://code.google.com/p/xmppframework/wiki/WorkingWithElements
 
+- (XMPPStream *)xmppStream
+{
+    if(!_xmppStream)
+    {
+        if (self.account.accountType == OTRAccountTypeFacebook) {
+            _xmppStream = [[XMPPStream alloc] initWithFacebookAppId:FACEBOOK_APP_ID];
+        }
+        else{
+            _xmppStream = [[XMPPStream alloc] init];
+        }
+        _xmppStream.autoStartTLS = YES;
+    }
+    return _xmppStream;
+}
+
 - (void)goOnline
 {
     [[NSNotificationCenter defaultCenter]
@@ -303,6 +302,11 @@ NSString *const OTRXMPPRegisterFailedNotificationName    = @"OTRXMPPRegisterFail
 	XMPPPresence *presence = [XMPPPresence presenceWithType:@"unavailable"];
 	
 	[[self xmppStream] sendElement:presence];
+}
+
+- (NSString *)accountDomainWithError:(NSError**)error;
+{
+    return self.account.domain;
 }
 
 - (void)failedToConnect:(NSError *)error
@@ -342,7 +346,7 @@ NSString *const OTRXMPPRegisterFailedNotificationName    = @"OTRXMPPRegisterFail
     
     JID = [XMPPJID jidWithString:myJID resource:resource];
     
-	[xmppStream setMyJID:JID];
+	[self.xmppStream setMyJID:JID];
     
     password = myPassword;
 
@@ -384,7 +388,7 @@ NSString *const OTRXMPPRegisterFailedNotificationName    = @"OTRXMPPRegisterFail
     [self refreshStreamJID:myJID withPassword:myPassword];
     
     //DDLogInfo(@"myJID %@",myJID);
-	if (![xmppStream isDisconnected]) {
+	if (![self.xmppStream isDisconnected]) {
         [self authenticateWithStream:self.xmppStream];
 		return YES;
 	}
@@ -400,17 +404,21 @@ NSString *const OTRXMPPRegisterFailedNotificationName    = @"OTRXMPPRegisterFail
 	
     
     
-    
-    
-    if (self.account.domain.length > 0) {
-        [xmppStream setHostName:self.account.domain];
+    NSError * error = nil;
+    NSString * domainString = [self accountDomainWithError:&error];
+    if (error) {
+        [self failedToConnect:error];
+        return;
+    }
+    if (domainString.length) {
+        [self.xmppStream setHostName:domainString];
     }
     
-    [xmppStream setHostPort:self.account.portValue];
+    [self.xmppStream setHostPort:self.account.portValue];
 	
     
-	NSError *error = nil;
-	if (![xmppStream connectWithTimeout:XMPPStreamTimeoutNone error:&error])
+	error = nil;
+	if (![self.xmppStream connectWithTimeout:XMPPStreamTimeoutNone error:&error])
 	{
 		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error connecting" 
 		                                                    message:@"See console for error details." 
@@ -430,7 +438,7 @@ NSString *const OTRXMPPRegisterFailedNotificationName    = @"OTRXMPPRegisterFail
 - (void)disconnect {
     [self goOffline];
     
-    [xmppStream disconnect];
+    [self.xmppStream disconnect];
     
     [self.account setAllBuddiesStatuts:OTRBuddyStatusOffline];
     
@@ -645,7 +653,7 @@ NSString *const OTRXMPPRegisterFailedNotificationName    = @"OTRXMPPRegisterFail
 
         [xmppMessage addActiveChatState];
 		
-		[xmppStream sendElement:xmppMessage];
+		[self.xmppStream sendElement:xmppMessage];
     }
 }
 
@@ -728,7 +736,7 @@ NSString *const OTRXMPPRegisterFailedNotificationName    = @"OTRXMPPRegisterFail
             [buddy setLastSentChatStateValue:chatState];
             NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
             [context MR_saveToPersistentStoreAndWait];
-            [xmppStream sendElement:message];
+            [self.xmppStream sendElement:message];
         }
 
     });

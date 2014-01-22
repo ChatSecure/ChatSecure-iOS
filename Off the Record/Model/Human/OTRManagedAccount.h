@@ -26,14 +26,16 @@
 #import "OTRManagedBuddy.h"
 #import "OTRConstants.h"
 
-#define kOTRAccountUsernameKey @"kOTRAccountUsernameKey"
-#define kOTRAccountProtocolKey @"kOTRAccountProtocolKey"
-#define kOTRAccountRememberPasswordKey @"kOTRAccountRememberPasswordKey"
 
-#define kAIMImageName @"aim.png"
-#define kGTalkImageName @"gtalk.png"
-#define kFacebookImageName @"facebook.png"
-#define kXMPPImageName @"xmpp.png"
+extern NSString *const OTRAccountUernameKey;
+extern NSString *const OTRAccountProtocolKey;
+extern NSString *const OTRAccountRememberPasswordKey;
+
+extern NSString *const OTRAimImageName;
+extern NSString *const OTRGoogleTalkImageName;
+extern NSString *const OTRFacebookImageName;
+extern NSString *const OTRXMPPImageName;
+extern NSString *const OTRXMPPTorImageName;
 
 #define kClassKey @"classKey"
 

@@ -19,7 +19,7 @@
 }
 -(NSString *)imageName
 {
-    return kFacebookImageName;
+    return OTRFacebookImageName;
 }
 -(NSString *)providerName
 {
