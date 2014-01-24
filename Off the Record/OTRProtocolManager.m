@@ -26,6 +26,8 @@
 #import "OTRManagedOAuthAccount.h"
 #import "OTRConstants.h"
 
+#import "OTRLog.h"
+
 static OTRProtocolManager *sharedManager = nil;
 
 @implementation OTRProtocolManager

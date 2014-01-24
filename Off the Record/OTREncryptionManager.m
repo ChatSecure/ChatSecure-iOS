@@ -24,6 +24,8 @@
 #import "OTRManagedMessage.h"
 #import "OTRProtocolManager.h"
 
+#import "OTRLog.h"
+
 @implementation OTREncryptionManager
 
 

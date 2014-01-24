@@ -43,6 +43,9 @@
 #import "OTRDemoChatViewController.h"
 #import "SSKeychain.h"
 
+#import "OTRLog.h"
+#import "DDTTYLogger.h"
+
 @implementation OTRAppDelegate
 
 @synthesize window = _window;
@@ -51,6 +54,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [DDLog addLogger:[DDTTYLogger sharedInstance]];
+    
     [[BITHockeyManager sharedHockeyManager] configureWithBetaIdentifier:HOCKEY_BETA_IDENTIFIER
                                                          liveIdentifier:HOCKEY_LIVE_IDENTIFIER
                                                                delegate:self];
@@ -104,8 +109,7 @@
     [Appirater appLaunched:YES];
     
     [self autoLogin];
-    
-    
+        
     return YES;
 }
 

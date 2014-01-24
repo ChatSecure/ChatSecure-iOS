@@ -27,6 +27,7 @@
 #import "OTRUtilities.h"
 #import "NSString+HTML.h"
 #import "Strings.h"
+#import "OTRLog.h"
 
 
 @implementation OTRManagedMessage
