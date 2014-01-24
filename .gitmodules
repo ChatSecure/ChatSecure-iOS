@@ -65,3 +65,9 @@
 [submodule "Submodules/OnionKit"]
 	path = Submodules/OnionKit
 	url = git@github.com:ChatSecure/OnionKit.git
+[submodule "Submodules/CocoaAsyncSocket"]
+	path = Submodules/CocoaAsyncSocket
+	url = git@github.com:ChatSecure/CocoaAsyncSocket.git
+[submodule "Submodules/ProxyKit"]
+	path = Submodules/ProxyKit
+	url = git@github.com:chrisballinger/ProxyKit.git
