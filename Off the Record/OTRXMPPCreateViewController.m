@@ -13,6 +13,8 @@
 
 @interface OTRXMPPCreateViewController ()
 
+@property (nonatomic,strong) NSArray * hostnameArray;
+
 @end
 
 @implementation OTRXMPPCreateViewController
@@ -21,8 +23,8 @@
 {
     self = [super init];
     if (self) {
-        hostnameArray = newHostnames;
-        self.selectedHostname = [hostnameArray firstObject];
+        self.hostnameArray = newHostnames;
+        self.selectedHostname = [self.hostnameArray firstObject];
     }
     return self;
 }
@@ -43,8 +45,6 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self.usernameTextField resignFirstResponder];
-    [self.passwordTextField resignFirstResponder];
     
     [[NSNotificationCenter defaultCenter]
      addObserver:self
@@ -61,14 +61,19 @@
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    
     [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:OTRXMPPRegisterFailedNotificationName
+                                                  object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:OTRXMPPRegisterSucceededNotificationName
+                                                  object:nil];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    if ([hostnameArray count]) {
+    if (self.hostnameArray.count) {
         return 2;
     }
     return [super numberOfSectionsInTableView:tableView];
@@ -77,7 +82,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (section == 1) {
-        return [hostnameArray count];
+        return self.hostnameArray.count;
     }
     return [super tableView:tableView numberOfRowsInSection:section];
 }
@@ -107,7 +112,7 @@
         if (!cell) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:domainCellIdentifier];
         }
-        NSString * hostName = hostnameArray[indexPath.row];
+        NSString * hostName = self.hostnameArray[indexPath.row];
         cell.textLabel.text = hostName;
         if ([hostName isEqualToString:self.selectedHostname]) {
             cell.accessoryType = UITableViewCellAccessoryCheckmark;
@@ -125,7 +130,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (indexPath.section == 1) {
-        self.selectedHostname = hostnameArray[indexPath.row];
+        self.selectedHostname = self.hostnameArray[indexPath.row];
         [tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationAutomatic];
     }
 }
@@ -133,7 +138,7 @@
 -(void) loginButtonPressed:(id)sender
 {
     self.loginButtonPressed = YES;
-    if([self isTorAccount] && ![HITorManager defaultManager].isRunning)
+    if(self.isTorAccount && ![HITorManager defaultManager].isRunning)
     {
         [self showHUDWithText:@"Connecting to Tor"];
         [[HITorManager defaultManager] start];
@@ -170,7 +175,7 @@
         self.recentError = error;
         if ([error.domain isEqualToString:OTRXMPPErrorDomain]) {
             if (error.code == OTRXMPPUnsupportedAction) {
-                errorString = @"The domain does not support in band registration";
+                errorString = @"The XMPP server does not support in-band registration";
             }
             else if (error.code == OTRXMPPXMLError) {
                 if ([error.localizedDescription length]) {

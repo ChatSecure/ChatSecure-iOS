@@ -27,7 +27,7 @@
 #import "OTRXMPPManager.h"
 #import "XMPPJID.h"
 
-#define DEFAULT_PORT_NUMBER 5222
+static NSUInteger const OTRDefaultPortNumber = 5222;
 
 @interface OTRManagedXMPPAccount()
 @end
@@ -38,11 +38,11 @@
 - (void) setDefaultsWithDomain:(NSString *)newDomain {
     [super setDefaultsWithProtocol:kOTRProtocolTypeXMPP];
     self.domain = newDomain;
-    self.port = @(DEFAULT_PORT_NUMBER); // Default XMPP port number
+    self.port = @(OTRDefaultPortNumber); // Default XMPP port number
 }
 
 +(NSNumber *)defaultPortNumber {
-    return @(DEFAULT_PORT_NUMBER);
+    return @(OTRDefaultPortNumber);
 }
 
 - (NSString *) imageName {
@@ -64,11 +64,11 @@
 }
 
 -(NSString *)accountDomain{
-    if(![[self domain] length])
+    if(!self.domain.length)
     {
         return [XMPPJID jidWithString:self.username].domain;
     }
-    return [self domain];
+    return self.domain;
 }
 
 @end

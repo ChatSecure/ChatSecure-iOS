@@ -64,7 +64,6 @@ NSUInteger const kNewCertAlertViewTag   = 132;
 @synthesize rememberPasswordSwitch;
 @synthesize logoView;
 @synthesize timeoutTimer;
-@synthesize account;
 @synthesize isNewAccount;
 @synthesize loginViewTableView;
 @synthesize textFieldTextColor;
@@ -105,19 +104,16 @@ NSUInteger const kNewCertAlertViewTag   = 132;
         
     self.usernameTextField = [[UITextField alloc] init];
     self.usernameTextField.delegate = self;
-    //self.usernameTextField.borderStyle = UITextBorderStyleRoundedRect;
     self.usernameTextField.autocorrectionType = UITextAutocorrectionTypeNo;
     self.usernameTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-    self.usernameTextField.text = account.username;
+    self.usernameTextField.text = self.account.username;
     self.usernameTextField.returnKeyType = UIReturnKeyDone;
     self.usernameTextField.textColor = self.textFieldTextColor;
     
     [self addCellinfoWithSection:0 row:0 labelText:USERNAME_STRING cellType:kCellTypeTextField userInputView:self.usernameTextField];
     
-    
     self.passwordTextField = [[UITextField alloc] init];
     self.passwordTextField.delegate = self;
-    //self.passwordTextField.borderStyle = UITextBorderStyleRoundedRect;
     self.passwordTextField.secureTextEntry = YES;
     self.passwordTextField.returnKeyType = UIReturnKeyDone;
     self.passwordTextField.textColor = self.textFieldTextColor;
@@ -136,7 +132,8 @@ NSUInteger const kNewCertAlertViewTag   = 132;
     
     
     NSString *loginButtonString = LOGIN_STRING;
-    self.title = [account providerName];
+    
+    self.title = self.account.providerName;
     
     self.loginButton = [[UIBarButtonItem alloc] initWithTitle:loginButtonString style:UIBarButtonItemStyleDone target:self action:@selector(loginButtonPressed:)];
     self.navigationItem.rightBarButtonItem = loginButton;
@@ -245,7 +242,7 @@ NSUInteger const kNewCertAlertViewTag   = 132;
     
     if( [cellType isEqualToString:kCellTypeSwitch])
     {
-        if(cell==nil)
+        if(!cell)
         {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellType];
         }
@@ -255,7 +252,7 @@ NSUInteger const kNewCertAlertViewTag   = 132;
     }
     else if( [cellType isEqualToString:KCellTypeHelp])
     {
-        if(cell==nil)
+        if(!cell)
         {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellType];
             
@@ -266,7 +263,7 @@ NSUInteger const kNewCertAlertViewTag   = 132;
     }
     else if([cellType isEqualToString:kCellTypeTextField])
     {
-        if(cell == nil)
+        if(!cell)
         {
             cell = [[OTRInLineTextEditTableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellType];
         }
@@ -287,19 +284,17 @@ NSUInteger const kNewCertAlertViewTag   = 132;
 {
     [super viewWillAppear:animated];
     
-    [[NSNotificationCenter defaultCenter]
-     addObserver:self
-     selector:@selector(protocolLoginFailed:)
-     name:kOTRProtocolLoginFail
-     object:nil ];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(protocolLoginFailed:)
+                                                 name:kOTRProtocolLoginFail
+                                               object:nil ];
     
-    [[NSNotificationCenter defaultCenter]
-     addObserver:self
-     selector:@selector(protocolLoginSuccess:)
-     name:kOTRProtocolLoginSuccess
-     object:nil ];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(protocolLoginSuccess:)
+                                                 name:kOTRProtocolLoginSuccess
+                                               object:nil ];
     
-    if(!self.usernameTextField.text || [self.usernameTextField.text isEqualToString:@""])
+    if(!self.usernameTextField.text.length)
     {
         [self.usernameTextField becomeFirstResponder];
     }
@@ -309,8 +304,8 @@ NSUInteger const kNewCertAlertViewTag   = 132;
     
     self.autoLoginSwitch.on = self.account.autologinValue;
     self.rememberPasswordSwitch.on = self.account.rememberPasswordValue;
-    if (account.rememberPassword) {
-        self.passwordTextField.text = account.password;
+    if (self.account.rememberPasswordValue) {
+        self.passwordTextField.text = self.account.password;
     } else {
         self.passwordTextField.text = @"";
     }
@@ -320,25 +315,31 @@ NSUInteger const kNewCertAlertViewTag   = 132;
     
     [self readInFields];
     
-    if([account.username length])
+    if(self.account.username.length)
     {
         [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
     }
     [self.view resignFirstResponder];
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:kOTRProtocolLoginFail
+                                                  object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                              name:kOTRProtocolLoginSuccess
+                                                  object:nil];
 }
 
 -(void)readInFields
 {
-    [account setUsername:[usernameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
-    [account setRememberPasswordValue:rememberPasswordSwitch.on];
+    self.account.username = [usernameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    self.account.rememberPasswordValue = self.rememberPasswordSwitch.on;
     
     self.account.autologinValue = self.autoLoginSwitch.on;
     
-    if (account.rememberPasswordValue) {
-        account.password = self.passwordTextField.text;
+    if (self.account.rememberPasswordValue) {
+        self.account.password = self.passwordTextField.text;
     } else {
-        account.password = nil;
+        self.account.password = nil;
     }
 }
 
@@ -373,7 +374,7 @@ NSUInteger const kNewCertAlertViewTag   = 132;
 {
     [self hideHUD];
     NSString * errorMessage = @"";
-    if([account.protocol isEqualToString:kOTRProtocolTypeXMPP])
+    if([self.account.protocol isEqualToString:kOTRProtocolTypeXMPP])
     {
         errorMessage = XMPP_FAIL_STRING;
         
@@ -429,11 +430,14 @@ NSUInteger const kNewCertAlertViewTag   = 132;
 - (void)showHUDWithText:(NSString *)text
 {
     [self.view endEditing:YES];
-    if ([self.HUD isHidden] || !self.HUD) {
-        self.HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    if (!self.HUD) {
+        self.HUD = [[MBProgressHUD alloc] initWithView:self.view];
+        [self.view addSubview:self.HUD];
     }
-    self.HUD.delegate = self;
+    
     self.HUD.labelText = text;
+    [self.HUD show:YES];
+    
     self.timeoutTimer = [NSTimer scheduledTimerWithTimeInterval:45.0 target:self selector:@selector(timeout:) userInfo:nil repeats:NO];
 }
 
@@ -447,13 +451,12 @@ NSUInteger const kNewCertAlertViewTag   = 132;
 
 -(BOOL)checkFields
 {
-    BOOL fields = usernameTextField.text && ![usernameTextField.text isEqualToString:@""] && passwordTextField.text && ![passwordTextField.text isEqualToString:@""];
+    BOOL fields = usernameTextField.text.length && passwordTextField.text.length;
     
     if(!fields)
     {
         [self showAlertViewWithTitle:ERROR_STRING message:USER_PASS_BLANK_STRING error:nil];
     }
-    
     return fields;
 }
 
@@ -488,16 +491,6 @@ NSUInteger const kNewCertAlertViewTag   = 132;
             [pasteBoard setString:errorDescriptionString];
         }
     }
-}
-
-
-
-#pragma mark -
-#pragma mark MBProgressHUDDelegate methods
-
-- (void)hudWasHidden:(MBProgressHUD *)hud {
-    // Remove HUD from screen when the HUD was hidded
-    [self.HUD removeFromSuperview];
 }
 
 +(OTRLoginViewController *)loginViewControllerWithAcccountID:(NSManagedObjectID *)accountID

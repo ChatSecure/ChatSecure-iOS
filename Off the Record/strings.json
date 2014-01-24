@@ -814,5 +814,9 @@
     "COPY_STRING": {
         "comment": "Label for button to copy text to pastboard",
         "string": "Copy"
+    },
+    "XMPP_USERNAME_EXAMPLE_STRING": {
+        "comment": "Example of a username using the words user and example",
+        "string": "user@example.com"
     }
 }

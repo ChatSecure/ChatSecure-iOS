@@ -31,31 +31,11 @@
 
 @interface OTRXMPPLoginViewController ()
 
-
+@property (nonatomic,strong) SIAlertView * certAlertView;
 
 @end
 
 @implementation OTRXMPPLoginViewController
-
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
 
 -(void)keyboardWillHideOrShow:(NSNotification *)note
 {
@@ -67,8 +47,6 @@
     CGRect keyboardFrameForTableView = [self.loginViewTableView.superview convertRect:keyboardFrame fromView:nil];
     
     CGRect newTableViewFrame = CGRectMake(0, 0, self.loginViewTableView.frame.size.width, keyboardFrameForTableView.origin.y);
-    
-    //keyboardFrameForTextField.origin.y - newTextFieldFrame.size.height;
     
     [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionBeginFromCurrentState | curve animations:^{
         self.loginViewTableView.frame = newTableViewFrame;
@@ -85,22 +63,36 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHideOrShow:) name:UIKeyboardWillHideNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHideOrShow:) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillHideOrShow:)
+                                                 name:UIKeyboardWillHideNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillHideOrShow:)
+                                                 name:UIKeyboardWillShowNotification
+                                               object:nil];
+    
     [self.usernameTextField resignFirstResponder];
     [self.passwordTextField resignFirstResponder];
-    if ([self isTorAccount]) {
-        self.loginButtonPressed = NO;
+    self.loginButtonPressed = NO;
+    if (self.isTorAccount) {
         [[HITorManager defaultManager] addObserver:self forKeyPath:NSStringFromSelector(@selector(isRunning)) options:NSKeyValueObservingOptionNew context:NULL];
     }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-    if([self isTorAccount])
+    if(self.isTorAccount)
     {
         [[HITorManager defaultManager] removeObserver:self forKeyPath:NSStringFromSelector(@selector(isRunning))];
     }
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                              name:UIKeyboardWillHideNotification
+                                                  object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                              name:UIKeyboardWillShowNotification
+                                                  object:nil];
     [super viewWillDisappear:animated];
 }
 
@@ -125,21 +117,20 @@
         
         if ([statusNumber longLongValue] == errSSLPeerAuthCompleted) {
             //The cert was manually evaluated but did not anything that is saved so we have to recheck system and get interal validation status
-            //((OTRXMPPManager *)protocol).certificatePinningModulesss
             id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
             ((OTRXMPPManager *)protocol).certificatePinningModule.doNotManuallyEvaluateOverride = YES;
             [self loginButtonPressed:nil];
         }
         else {
-            [self showCertWarningForData:certData withHostName:hostname withStatus:[statusNumber longValue]];
+            [self showCertWarningForCertificateData:certData withHostname:hostname withStatus:[statusNumber longValue]];
         }
     }
-    else{
+    else if(!self.certAlertView.isVisible){
         [super protocolLoginFailed:notification];
     }
 }
 
-- (void)showCertWarningForData:(NSData *)certData withHostName:(NSString *)hostname withStatus:(OSStatus)status {
+- (void)showCertWarningForCertificateData:(NSData *)certData withHostname:(NSString *)hostname withStatus:(OSStatus)status {
     
     SecCertificateRef certificate = [OTRCertificatePinning certForData:certData];
     NSString * fingerprint = [OTRCertificatePinning sha1FingerprintForCertificate:certificate];
@@ -162,25 +153,26 @@
     
     NSMutableAttributedString * attributedString = [[NSMutableAttributedString alloc] initWithString:message];
     
-    SIAlertView * alertView = [[SIAlertView alloc] initWithTitle:NEW_CERTIFICATE_STRING andMessage:nil];
+    self.certAlertView = [[SIAlertView alloc] initWithTitle:NEW_CERTIFICATE_STRING andMessage:nil];
     [attributedString addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:16] range:NSMakeRange(0, message.length)];
     [attributedString addAttribute:NSForegroundColorAttributeName value:sslMessageColor range:errorMessageRange];
     
-    alertView.messageAttributedString = attributedString;
-    alertView.buttonColor = [UIColor whiteColor];
+    self.certAlertView.messageAttributedString = attributedString;
+    self.certAlertView.buttonColor = [UIColor whiteColor];
     
-    [alertView addButtonWithTitle:REJECT_STRING type:SIAlertViewButtonTypeDestructive handler:^(SIAlertView *alertView) {
+    [self.certAlertView addButtonWithTitle:REJECT_STRING type:SIAlertViewButtonTypeDestructive handler:^(SIAlertView *alertView) {
         [alertView dismissAnimated:YES];
     }];
-    [alertView addButtonWithTitle:SAVE_STRING type:SIAlertViewButtonTypeDefault handler:^(SIAlertView *alertView) {
-        id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
+    __weak OTRXMPPLoginViewController * weakSelf = self;
+    [self.certAlertView addButtonWithTitle:SAVE_STRING type:SIAlertViewButtonTypeDefault handler:^(SIAlertView *alertView) {
+        id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:weakSelf.account];
         if ([protocol isKindOfClass:[OTRXMPPManager class]]) {
             [((OTRXMPPManager *)protocol).certificatePinningModule addCertificate:[OTRCertificatePinning certForData:certData] withHostName:hostname];
-            [self loginButtonPressed:alertView];
+            [weakSelf loginButtonPressed:alertView];
         }
     }];
     
-    [alertView show];
+    [self.certAlertView show];
     
     UIImage * normalImage = [UIImage imageNamed:@"button-green"];
     CGFloat hInset = floorf(normalImage.size.width / 2);
@@ -188,8 +180,8 @@
 	UIEdgeInsets insets = UIEdgeInsetsMake(vInset, hInset, vInset, hInset);
 	UIImage * buttonImage = [normalImage resizableImageWithCapInsets:insets];
     
-    [alertView setDefaultButtonImage:buttonImage forState:UIControlStateNormal];
-    [alertView setDefaultButtonImage:buttonImage forState:UIControlStateHighlighted];
+    [self.certAlertView setDefaultButtonImage:buttonImage forState:UIControlStateNormal];
+    [self.certAlertView setDefaultButtonImage:buttonImage forState:UIControlStateHighlighted];
 }
 
 - (void)loginButtonPressed:(id)sender

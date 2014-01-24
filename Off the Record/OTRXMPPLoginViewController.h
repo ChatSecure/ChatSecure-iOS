@@ -27,6 +27,8 @@
 @property (nonatomic,strong) OTRManagedXMPPAccount * account;
 @property (nonatomic) BOOL loginButtonPressed;
 
-- (BOOL)isTorAccount;
+@property (nonatomic,readonly,getter = isTorAccount) BOOL torAccount;
+
+-(void)keyboardWillHideOrShow:(NSNotification *)notification;
 
 @end

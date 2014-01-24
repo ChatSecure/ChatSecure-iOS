@@ -141,6 +141,7 @@
 #define VALID_CERTIFICATE_STRING [OTRLanguageManager translatedString: @"Valid certificate"]
 #define errSSLPeerUnexpectedMsgString [OTRLanguageManager translatedString: @"Unexpected message received"]
 #define DELETE_CONVERSATIONS_ON_DISCONNECT_DESCRIPTION_STRING [OTRLanguageManager translatedString: @"Delete chats on disconnect"]
+#define XMPP_USERNAME_EXAMPLE_STRING [OTRLanguageManager translatedString: @"user@example.com"]
 #define SECURITY_WARNING_DESCRIPTION_STRING [OTRLanguageManager translatedString: @"Warning: Use with caution! This may reduce your security."]
 #define NOT_VERIFIED_STRING [OTRLanguageManager translatedString: @"Not Verified"]
 #define INCOMING_STATUS_MESSAGE [OTRLanguageManager translatedString: @"New Status Message: %@"]

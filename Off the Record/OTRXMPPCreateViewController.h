@@ -6,12 +6,10 @@
 //  Copyright (c) 2013 Chris Ballinger. All rights reserved.
 //
 
-#import "OTRJabberLoginViewController.h"
+#import "OTRXMPPLoginViewController.h"
 
-@interface OTRXMPPCreateViewController : OTRJabberLoginViewController
-{
-    NSArray * hostnameArray;
-}
+@interface OTRXMPPCreateViewController : OTRXMPPLoginViewController
+
 
 @property (nonatomic,strong) NSString * selectedHostname;
 
