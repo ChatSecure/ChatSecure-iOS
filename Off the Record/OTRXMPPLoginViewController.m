@@ -37,6 +37,21 @@
 
 @implementation OTRXMPPLoginViewController
 
+
+-(void)setupFields
+{
+    [self addCellinfoWithSection:0 row:0 labelText:USERNAME_STRING cellType:kCellTypeTextField userInputView:self.usernameTextField];
+    
+    [self addCellinfoWithSection:0 row:1 labelText:PASSWORD_STRING cellType:kCellTypeTextField userInputView:self.passwordTextField];
+    
+    [self addCellinfoWithSection:0 row:2 labelText:REMEMBER_PASSWORD_STRING cellType:kCellTypeSwitch userInputView:self.rememberPasswordSwitch];
+    
+    if (![self isTorAccount]) {
+        [self addCellinfoWithSection:0 row:3 labelText:LOGIN_AUTOMATICALLY_STRING cellType:kCellTypeSwitch userInputView:self.autoLoginSwitch];
+    }
+    
+}
+
 -(void)keyboardWillHideOrShow:(NSNotification *)note
 {
     NSDictionary *userInfo = note.userInfo;

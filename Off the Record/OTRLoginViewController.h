@@ -70,7 +70,8 @@ extern NSUInteger const kNewCertAlertViewTag;
 
 - (BOOL)checkFields;
 - (void)showHUDWithText:(NSString *)text;
-- (void)createAutoLoginSwitch;
+
+- (void)setupFields;
 
 - (void)addCellinfoWithSection:(NSInteger)section
                            row:(NSInteger)row

@@ -58,15 +58,6 @@ NSUInteger const kNewCertAlertViewTag   = 132;
 @end
 
 @implementation OTRLoginViewController
-@synthesize usernameTextField;
-@synthesize passwordTextField;
-@synthesize loginButton, cancelButton;
-@synthesize rememberPasswordSwitch;
-@synthesize logoView;
-@synthesize timeoutTimer;
-@synthesize isNewAccount;
-@synthesize loginViewTableView;
-@synthesize textFieldTextColor;
 
 - (void) dealloc {
     self.logoView = nil;
@@ -75,7 +66,7 @@ NSUInteger const kNewCertAlertViewTag   = 132;
     self.passwordTextField = nil;
     self.loginButton = nil;
     self.cancelButton = nil;
-    [timeoutTimer invalidate];
+    [self.timeoutTimer invalidate];
     self.timeoutTimer = nil;
     self.account = nil;
     self.textFieldTextColor = nil;
@@ -98,57 +89,80 @@ NSUInteger const kNewCertAlertViewTag   = 132;
     return self;
 }
 
--(void)setUpFields
+-(void)setupFields
 {
-    //tableViewArray = [[NSMutableArray alloc] init];
-        
-    self.usernameTextField = [[UITextField alloc] init];
-    self.usernameTextField.delegate = self;
-    self.usernameTextField.autocorrectionType = UITextAutocorrectionTypeNo;
-    self.usernameTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-    self.usernameTextField.text = self.account.username;
-    self.usernameTextField.returnKeyType = UIReturnKeyDone;
-    self.usernameTextField.textColor = self.textFieldTextColor;
-    
     [self addCellinfoWithSection:0 row:0 labelText:USERNAME_STRING cellType:kCellTypeTextField userInputView:self.usernameTextField];
-    
-    self.passwordTextField = [[UITextField alloc] init];
-    self.passwordTextField.delegate = self;
-    self.passwordTextField.secureTextEntry = YES;
-    self.passwordTextField.returnKeyType = UIReturnKeyDone;
-    self.passwordTextField.textColor = self.textFieldTextColor;
-    self.passwordTextField.placeholder = REQUIRED_STRING;
-    
+
     [self addCellinfoWithSection:0 row:1 labelText:PASSWORD_STRING cellType:kCellTypeTextField userInputView:self.passwordTextField];
     
-    self.rememberPasswordSwitch = [[UISwitch alloc] init];
-    [self.rememberPasswordSwitch addTarget:self action:@selector(switchDidChange:) forControlEvents:UIControlEventValueChanged];
     [self addCellinfoWithSection:0 row:2 labelText:REMEMBER_PASSWORD_STRING cellType:kCellTypeSwitch userInputView:self.rememberPasswordSwitch];
     
-    [self createAutoLoginSwitch];
     [self addCellinfoWithSection:0 row:3 labelText:LOGIN_AUTOMATICALLY_STRING cellType:kCellTypeSwitch userInputView:self.autoLoginSwitch];
-
-    
-    
-    
-    NSString *loginButtonString = LOGIN_STRING;
-    
-    self.title = self.account.providerName;
-    
-    self.loginButton = [[UIBarButtonItem alloc] initWithTitle:loginButtonString style:UIBarButtonItemStyleDone target:self action:@selector(loginButtonPressed:)];
-    self.navigationItem.rightBarButtonItem = loginButton;
-    
-    if (!isNewAccount) {
-        self.cancelButton = [[UIBarButtonItem alloc] initWithTitle:CANCEL_STRING style:UIBarButtonItemStyleBordered target:self action:@selector(cancelPressed:)];
-        self.navigationItem.leftBarButtonItem = cancelButton;
-    }
-    
 }
 
-- (void)createAutoLoginSwitch
+-(UITextField *)usernameTextField
 {
-    self.autoLoginSwitch = [[UISwitch alloc] init];
-    [self.autoLoginSwitch addTarget:self action:@selector(switchDidChange:) forControlEvents:UIControlEventValueChanged];
+    if (!_usernameTextField) {
+        _usernameTextField = [[UITextField alloc] init];
+        _usernameTextField.delegate = self;
+        _usernameTextField.autocorrectionType = UITextAutocorrectionTypeNo;
+        _usernameTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+        _usernameTextField.text = self.account.username;
+        _usernameTextField.returnKeyType = UIReturnKeyDone;
+        _usernameTextField.textColor = self.textFieldTextColor;
+    }
+    return  _usernameTextField;
+}
+
+-(UITextField *)passwordTextField
+{
+    if(!_passwordTextField) {
+        _passwordTextField = [[UITextField alloc] init];
+        _passwordTextField.delegate = self;
+        _passwordTextField.secureTextEntry = YES;
+        _passwordTextField.returnKeyType = UIReturnKeyDone;
+        _passwordTextField.textColor = self.textFieldTextColor;
+        _passwordTextField.placeholder = REQUIRED_STRING;
+    }
+    return _passwordTextField;
+}
+
+- (UISwitch *)rememberPasswordSwitch
+{
+    if (!_rememberPasswordSwitch) {
+        _rememberPasswordSwitch = [[UISwitch alloc] init];
+        [_rememberPasswordSwitch addTarget:self action:@selector(switchDidChange:) forControlEvents:UIControlEventValueChanged];
+    }
+    return _rememberPasswordSwitch;
+}
+
+- (UISwitch *)autoLoginSwitch
+{
+    if (!_autoLoginSwitch) {
+        _autoLoginSwitch = [[UISwitch alloc] init];
+        [_autoLoginSwitch addTarget:self action:@selector(switchDidChange:) forControlEvents:UIControlEventValueChanged];
+    }
+    return _autoLoginSwitch;
+}
+
+- (UITableView *)loginViewTableView
+{
+    if (!_loginViewTableView) {
+        _loginViewTableView= [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
+        _loginViewTableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        [_loginViewTableView setDelegate:self];
+        [_loginViewTableView setDataSource:self];
+    }
+    return _loginViewTableView;
+}
+
+- (NSMutableArray *)tableViewArray
+{
+    if(!_tableViewArray)
+    {
+        _tableViewArray = [[NSMutableArray alloc] init];
+    }
+    return _tableViewArray;
 }
 
 - (void)switchDidChange:(id)sender
@@ -167,11 +181,7 @@ NSUInteger const kNewCertAlertViewTag   = 132;
 }
 
 -(void)addCellinfoWithSection:(NSInteger)section row:(NSInteger)row labelText:(id)text cellType:(NSString *)type userInputView:(UIView *)inputView;
-{
-    if (!self.tableViewArray) {
-        self.tableViewArray = [[NSMutableArray alloc] init];
-    }
-    
+{    
     if ([self.tableViewArray count]<(section+1)) {
         [self.tableViewArray setObject:[[NSMutableArray alloc] init] atIndexedSubscript:section];
     }
@@ -187,14 +197,21 @@ NSUInteger const kNewCertAlertViewTag   = 132;
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
     
-    [self setUpFields];
+    [self setupFields];
+    
+    self.title = self.account.providerName;
+    
+    self.loginButton = [[UIBarButtonItem alloc] initWithTitle:LOGIN_STRING style:UIBarButtonItemStyleDone target:self action:@selector(loginButtonPressed:)];
+    self.navigationItem.rightBarButtonItem = self.loginButton;
+    
+    if (!self.isNewAccount) {
+        self.cancelButton = [[UIBarButtonItem alloc] initWithTitle:CANCEL_STRING style:UIBarButtonItemStyleBordered target:self action:@selector(cancelPressed:)];
+        self.navigationItem.leftBarButtonItem = self.cancelButton;
+    }
     
     
-    loginViewTableView= [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
-    loginViewTableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-    [loginViewTableView setDelegate:self];
-    [loginViewTableView setDataSource:self];
-    [self.view addSubview:loginViewTableView];
+    
+    [self.view addSubview:self.loginViewTableView];
 }
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -205,8 +222,7 @@ NSUInteger const kNewCertAlertViewTag   = 132;
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-        return [[self.tableViewArray objectAtIndex:section] count];
-    
+    return [[self.tableViewArray objectAtIndex:section] count];
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -331,7 +347,7 @@ NSUInteger const kNewCertAlertViewTag   = 132;
 
 -(void)readInFields
 {
-    self.account.username = [usernameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    self.account.username = [self.usernameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     self.account.rememberPasswordValue = self.rememberPasswordSwitch.on;
     
     self.account.autologinValue = self.autoLoginSwitch.on;
@@ -451,7 +467,7 @@ NSUInteger const kNewCertAlertViewTag   = 132;
 
 -(BOOL)checkFields
 {
-    BOOL fields = usernameTextField.text.length && passwordTextField.text.length;
+    BOOL fields = self.usernameTextField.text.length && self.passwordTextField.text.length;
     
     if(!fields)
     {
