@@ -49,7 +49,7 @@
 #import "OTRProtocolManager.h"
 #include <stdlib.h>
 #import "XMPPXFacebookPlatformAuthentication.h"
-#import "XMPPXOATH2Google.h"
+#import "XMPPXOAuth2Google.h"
 #import "OTRConstants.h"
 #import "OTRUtilities.h"
 
@@ -273,15 +273,19 @@ NSString *const OTRXMPPRegisterFailedNotificationName    = @"OTRXMPPRegisterFail
 // For more information on working with XML elements, see the Wiki article:
 // http://code.google.com/p/xmppframework/wiki/WorkingWithElements
 
+- (Class) xmppStreamClass {
+    return [XMPPStream class];
+}
+
 - (XMPPStream *)xmppStream
 {
     if(!_xmppStream)
     {
         if (self.account.accountType == OTRAccountTypeFacebook) {
-            _xmppStream = [[XMPPStream alloc] initWithFacebookAppId:FACEBOOK_APP_ID];
+            _xmppStream = [[[self xmppStreamClass] alloc] initWithFacebookAppId:FACEBOOK_APP_ID];
         }
         else{
-            _xmppStream = [[XMPPStream alloc] init];
+            _xmppStream = [[[self xmppStreamClass] alloc] init];
         }
         _xmppStream.autoStartTLS = YES;
     }
@@ -358,7 +362,7 @@ NSString *const OTRXMPPRegisterFailedNotificationName    = @"OTRXMPPRegisterFail
     if ([stream supportsXFacebookPlatformAuthentication]) {
         status = [stream authenticateWithFacebookAccessToken:password error:&error];
     }
-    else if ([stream supportsXOAUTH2GoogleAuthentication] && self.account.accountType == OTRAccountTypeGoogleTalk) {
+    else if ([stream supportsXOAuth2GoogleAuthentication] && self.account.accountType == OTRAccountTypeGoogleTalk) {
         status = [stream authenticateWithGoogleAccessToken:password error:&error];
     }
     else {
