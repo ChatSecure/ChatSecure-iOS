@@ -34,6 +34,8 @@
 #import "OTRXMPPManager.h"
 #import "OTRManagedGroup.h"
 
+#import "OTRLog.h"
+
 @interface OTRManagedBuddy()
 @end
 

@@ -8,6 +8,8 @@
 
 #import "OTRXMPPOAUTHLoginViewController.h"
 
+#import "OTRLog.h"
+
 @interface OTRXMPPOAUTHLoginViewController ()
 
 @end

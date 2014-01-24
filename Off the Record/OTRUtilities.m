@@ -12,6 +12,8 @@
 #import "OTRManagedGroup.h"
 #import <Security/SecureTransport.h>
 
+#import "OTRLog.h"
+
 @implementation OTRUtilities
 
 +(NSString *)currentAppVersionString {

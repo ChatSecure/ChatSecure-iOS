@@ -1,6 +1,8 @@
 #import "OTRManagedEncryptionMessage.h"
 #import "Strings.h"
 
+#import "OTRLog.h"
+
 
 @interface OTRManagedEncryptionMessage ()
 

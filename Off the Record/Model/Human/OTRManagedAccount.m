@@ -36,6 +36,8 @@
 #import "OTRManagedOscarAccount.h"
 #import "OTRManagedXMPPTorAccount.h"
 
+#import "OTRLog.h"
+
 NSString *const OTRAccountUernameKey          = @"kOTRAccountUsernameKey";
 NSString *const OTRAccountProtocolKey         = @"kOTRAccountProtocolKey";
 NSString *const OTRAccountRememberPasswordKey = @"kOTRAccountRememberPasswordKey";

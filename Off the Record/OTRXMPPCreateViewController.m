@@ -11,6 +11,8 @@
 
 #import "HITorManager.h"
 
+#import "OTRLog.h"
+
 @interface OTRXMPPCreateViewController ()
 
 @property (nonatomic,strong) NSArray * hostnameArray;

@@ -28,6 +28,8 @@
 #import "OTRManagedXMPPAccount.h"
 #import "OTRManagedXMPPTorAccount.h"
 
+#import "OTRLog.h"
+
 @interface OTRAccountsManager(Private)
 - (void) refreshAccountsArray;
 @end

@@ -26,6 +26,8 @@
 #import "OTRManagedBuddy.h"
 #import "OTRUtilities.h"
 
+#import "OTRLog.h"
+
 @implementation OTRCodec
 
 

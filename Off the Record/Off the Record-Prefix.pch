@@ -11,15 +11,10 @@
 #ifdef __OBJC__
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
-    #import "DDLog.h"
-    #import "DDTTYLogger.h"
-
 
     #if DEBUG
-        static int ddLogLevel = LOG_LEVEL_VERBOSE;
         #define MR_ENABLE_ACTIVE_RECORD_LOGGING 0
     #else
-        static int ddLogLevel = LOG_LEVEL_OFF;
         #define MR_ENABLE_ACTIVE_RECORD_LOGGING 0
     #endif
 

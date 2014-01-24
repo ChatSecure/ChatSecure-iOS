@@ -4,6 +4,8 @@
 #import "NSString+HTML.h"
 #import "Strings.h"
 
+#import "OTRLog.h"
+
 
 @interface OTRManagedMessage ()
 

@@ -1265,6 +1265,7 @@
 		63E717E3182AF391004398AD /* SSKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSKeychain.m; sourceTree = "<group>"; };
 		63E717E4182AF391004398AD /* SSKeychainQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSKeychainQuery.h; sourceTree = "<group>"; };
 		63E717E5182AF391004398AD /* SSKeychainQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSKeychainQuery.m; sourceTree = "<group>"; };
+		63EAD8B21893312200AE0821 /* OTRLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRLog.h; sourceTree = "<group>"; };
 		63EB09491727484D000FACDC /* he */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = he; path = "Off the Record/he.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
 		63EB094A17274AA2000FACDC /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = "Off the Record/es.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
 		63EB094B17274B24000FACDC /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = "Off the Record/sv.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
@@ -3702,6 +3703,7 @@
 				63FA108116F9290900D9EE45 /* OTRImages.h */,
 				63FA108216F9290900D9EE45 /* OTRImages.m */,
 				6348189517E3E09C004E0146 /* OTRSecrets.h */,
+				63EAD8B21893312200AE0821 /* OTRLog.h */,
 				D9CEF0A81684253B00B236B5 /* XMPPFramework.h */,
 				D9D8D1F61531056300F9E8D3 /* Resources */,
 				D9F9378113F44BD3009A3D84 /* Supporting Files */,
