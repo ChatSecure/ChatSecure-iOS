@@ -344,6 +344,8 @@
 		D910BF0D1891E651000F80B0 /* XMPPXOAuth2Google.m in Sources */ = {isa = PBXBuildFile; fileRef = D910BF0C1891E651000F80B0 /* XMPPXOAuth2Google.m */; };
 		D910BF101891E686000F80B0 /* AFSecurityPolicy.m in Sources */ = {isa = PBXBuildFile; fileRef = D910BF0F1891E686000F80B0 /* AFSecurityPolicy.m */; };
 		D910BF141891E79A000F80B0 /* XMPPProxyStream.m in Sources */ = {isa = PBXBuildFile; fileRef = D910BF131891E79A000F80B0 /* XMPPProxyStream.m */; };
+		D910BF351891F3F3000F80B0 /* CMDEncryptedSQLiteStore.m in Sources */ = {isa = PBXBuildFile; fileRef = D910BF341891F3F3000F80B0 /* CMDEncryptedSQLiteStore.m */; };
+		D910BF391891F584000F80B0 /* libsqlcipher.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D910BF381891F584000F80B0 /* libsqlcipher.a */; };
 		D913A70413FCA95700C97C1C /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D913A70313FCA95700C97C1C /* CoreText.framework */; };
 		D913A70813FCA9AB00C97C1C /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D913A70713FCA9AB00C97C1C /* QuartzCore.framework */; };
 		D913A70A13FCA9C200C97C1C /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D913A70913FCA9C200C97C1C /* ImageIO.framework */; };
@@ -1318,6 +1320,11 @@
 		D910BF0F1891E686000F80B0 /* AFSecurityPolicy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFSecurityPolicy.m; path = Submodules/XMPPFramework/Vendor/AFNetworking/AFNetworking/AFSecurityPolicy.m; sourceTree = "<group>"; };
 		D910BF121891E79A000F80B0 /* XMPPProxyStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPProxyStream.h; sourceTree = "<group>"; };
 		D910BF131891E79A000F80B0 /* XMPPProxyStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPProxyStream.m; sourceTree = "<group>"; };
+		D910BF1E1891F371000F80B0 /* sqlcipher.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = sqlcipher.xcodeproj; path = ../vendor/sqlcipher/sqlcipher.xcodeproj; sourceTree = "<group>"; };
+		D910BF331891F3F3000F80B0 /* CMDEncryptedSQLiteStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMDEncryptedSQLiteStore.h; sourceTree = "<group>"; };
+		D910BF341891F3F3000F80B0 /* CMDEncryptedSQLiteStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMDEncryptedSQLiteStore.m; sourceTree = "<group>"; };
+		D910BF361891F50E000F80B0 /* libsqlcipher.a */ = {isa = PBXFileReference; lastKnownFileType = file; name = libsqlcipher.a; path = "Submodules/encrypted-core-data/vendor/sqlcipher/build/Debug/libsqlcipher.a"; sourceTree = "<group>"; };
+		D910BF381891F584000F80B0 /* libsqlcipher.a */ = {isa = PBXFileReference; lastKnownFileType = file; name = libsqlcipher.a; path = "Submodules/encrypted-core-data/vendor/sqlcipher/build/Debug/libsqlcipher.a"; sourceTree = "<group>"; };
 		D913A70313FCA95700C97C1C /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		D913A70513FCA96B00C97C1C /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
 		D913A70713FCA9AB00C97C1C /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -1767,6 +1774,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D910BF391891F584000F80B0 /* libsqlcipher.a in Frameworks */,
 				D9B24F221808A061005174C5 /* libHockeySDK.a in Frameworks */,
 				D90966FB17EA73C900440833 /* libOAuthTouch2.a in Frameworks */,
 				D909664F17EA67D600440833 /* libfacebook_ios_sdk.a in Frameworks */,
@@ -3125,6 +3133,17 @@
 			name = AFNetworking;
 			sourceTree = "<group>";
 		};
+		D910BF321891F3F3000F80B0 /* encrypted-core-data */ = {
+			isa = PBXGroup;
+			children = (
+				D910BF1E1891F371000F80B0 /* sqlcipher.xcodeproj */,
+				D910BF331891F3F3000F80B0 /* CMDEncryptedSQLiteStore.h */,
+				D910BF341891F3F3000F80B0 /* CMDEncryptedSQLiteStore.m */,
+			);
+			name = "encrypted-core-data";
+			path = "Submodules/encrypted-core-data/Incremental Store";
+			sourceTree = "<group>";
+		};
 		D91DAE8A154740D5009D0B74 /* Detail Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -3272,6 +3291,7 @@
 		D9CEED611684234D00B236B5 /* Submodules */ = {
 			isa = PBXGroup;
 			children = (
+				D910BF321891F3F3000F80B0 /* encrypted-core-data */,
 				D910BF111891E689000F80B0 /* AFNetworking */,
 				D910BF091891E588000F80B0 /* ProxyKit */,
 				D910BF051891E564000F80B0 /* GCDAsyncSocket */,
@@ -3660,6 +3680,8 @@
 		D9F9377B13F44BD3009A3D84 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D910BF381891F584000F80B0 /* libsqlcipher.a */,
+				D910BF361891F50E000F80B0 /* libsqlcipher.a */,
 				D92D579218442A3F00670832 /* libz.dylib */,
 				D9D69B011417FF450056FB9E /* libresolv.dylib */,
 				D9D69ABB1417FDF90056FB9E /* libxml2.dylib */,
@@ -4352,6 +4374,7 @@
 				D92D57861844278E00670832 /* ASIDataCompressor.m in Sources */,
 				D9CEEE7B168423CA00B236B5 /* AIMLoginHostInfo.m in Sources */,
 				D9CEEE7C168423CA00B236B5 /* AIMMessage.m in Sources */,
+				D910BF351891F3F3000F80B0 /* CMDEncryptedSQLiteStore.m in Sources */,
 				6370C976185FC58C00CB6786 /* OTRTitleSubtitleView.m in Sources */,
 				D9CEEE7D168423CA00B236B5 /* AIMMessageParser.m in Sources */,
 				D9CEEE7E168423CA00B236B5 /* AIMMissedCall.m in Sources */,
@@ -5065,6 +5088,7 @@
 					_GCRYPT_IN_LIBGCRYPT,
 					DEBUG,
 					USE_BUFFEREVENTS,
+					SQLITE_HAS_CODEC,
 				);
 				GCC_THUMB_SUPPORT = NO;
 				HEADER_SEARCH_PATHS = (
@@ -5113,6 +5137,7 @@
 					_GCRYPT_IN_LIBGCRYPT,
 					USERVOICE_ENABLED,
 					USE_BUFFEREVENTS,
+					SQLITE_HAS_CODEC,
 				);
 				GCC_THUMB_SUPPORT = NO;
 				HEADER_SEARCH_PATHS = (

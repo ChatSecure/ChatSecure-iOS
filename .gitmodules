@@ -25,7 +25,7 @@
 	url = https://github.com/uservoice/uservoice-ios-sdk.git
 [submodule "Submodules/encrypted-core-data"]
 	path = Submodules/encrypted-core-data
-	url = git@github.com:ChatSecure/encrypted-core-data.git
+	url = git@github.com:project-imas/encrypted-core-data.git
 [submodule "Submodules/MagicalRecord"]
 	path = Submodules/MagicalRecord
 	url = git@github.com:magicalpanda/MagicalRecord.git
