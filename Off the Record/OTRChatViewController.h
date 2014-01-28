@@ -31,7 +31,6 @@
 {
     NSMutableArray * showDateForRowArray;
     NSDate *_previousShownSentDate;
-    UIImage *_messageBubbleComposing;
     CGFloat _previousTextViewContentHeight;
     OTRChatInputBar * chatInputBar;
     OTRTitleSubtitleView * titleView;

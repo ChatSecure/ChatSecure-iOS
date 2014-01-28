@@ -69,9 +69,11 @@
     [self didChangeValueForKey:NSStringFromSelector(@selector(isIncoming))];
     if (_isIncoming) {
         self.messageBackgroundImageView = [OTRImages bubbleImageViewForMessageType:OTRBubbleMessageTypeIncoming];
+        self.messageTextLabel.textColor = [UIColor blackColor];
     }
     else {
         self.messageBackgroundImageView = [OTRImages bubbleImageViewForMessageType:OTRBubbleMessageTypeOutgoing];
+        self.messageTextLabel.textColor = [UIColor whiteColor];
     }
     [self setNeedsUpdateConstraints];
 }

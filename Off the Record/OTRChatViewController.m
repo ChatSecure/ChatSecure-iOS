@@ -33,6 +33,10 @@
 #import "OTRStatusMessageCell.h"
 #import "OTRUtilities.h"
 
+#import "OTRImages.h"
+
+#import "OTRComposingImageView.h"
+
 
 
 @interface OTRChatViewController(Private)
@@ -180,7 +184,6 @@
     self.view.backgroundColor = [UIColor whiteColor];
     
     showDateForRowArray = [NSMutableArray array];
-    _messageBubbleComposing = [UIImage imageNamed:@"MessageBubbleTyping"];
     
     self.chatHistoryTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
     
@@ -634,6 +637,7 @@
         //Composing messsage height
         CGSize messageTextLabelSize =[OTRMessageTableViewCell messageTextLabelSize:@"T"];
         height = messageTextLabelSize.height+MESSAGE_MARGIN_TOP+MESSAGE_MARGIN_BOTTOM;
+        height = 35.0;
     }
     return height;
 }
@@ -662,17 +666,14 @@
         if (!cell) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:ComposingCellIdentifier];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            UIImageView *messageBackgroundImageView;
-            messageBackgroundImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
-            messageBackgroundImageView.tag = MESSAGE_BACKGROUND_IMAGE_VIEW_TAG;
+            OTRComposingImageView *messageBackgroundImageView = [OTRImages typingBubbleImageView];
+            [messageBackgroundImageView startBlinking];
             messageBackgroundImageView.backgroundColor = tableView.backgroundColor; // speeds scrolling
             [cell.contentView addSubview:messageBackgroundImageView];
+            [messageBackgroundImageView startBlinking];
             
-            messageBackgroundImageView.frame = CGRectMake(0, 0, _messageBubbleComposing.size.width, _messageBubbleComposing.size.height);
-            messageBackgroundImageView.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
-            messageBackgroundImageView.image = _messageBubbleComposing;
-            
-
+            //messageBackgroundImageView.frame = CGRectMake(0, 0, _messageBubbleComposing.size.width, _messageBubbleComposing.size.height);
+            //messageBackgroundImageView.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
         }
         return cell;
     }

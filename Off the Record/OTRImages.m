@@ -10,6 +10,8 @@
 
 #import "OTRColors.h"
 
+#import "OTRComposingImageView.h"
+
 
 
 @implementation OTRImages
@@ -267,18 +269,45 @@
     return bubbleImageView;
 }
 
-+(UIImageView *)typingBubbleImageView
++ (UIImage *)circleWithRadius:(CGFloat)radius
+{
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(radius*2, radius*2), NO, 0);
+    //// Color Declarations
+    UIColor* fillColor = [UIColor blackColor];
+    
+    //// Polygon Drawing
+    UIBezierPath* ovalPath = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(0, 0, radius*2, radius*2)];
+    [fillColor setFill];
+    [ovalPath fill];
+    
+    UIImage *circle = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return circle;
+}
+
++ (OTRComposingImageView *)typingBubbleImageView
 {
     UIImageView * bubbleImageView = nil;
     UIImage * bubbleImage = nil;
     if (SYSTEM_VERSION_GREATER_THAN(@"7.0")) {
+        bubbleImage = [UIImage imageNamed:@"bubble-min-tailless"];
+        CGPoint center = CGPointMake(bubbleImage.size.width / 2.0f, bubbleImage.size.height / 2.0f);
+        UIEdgeInsets capInsets = UIEdgeInsetsMake(center.y, center.x, center.y, center.x);
         
+        bubbleImage = [bubbleImage resizableImageWithCapInsets:capInsets
+                                                    resizingMode:UIImageResizingModeStretch];
+        bubbleImage = [self image:bubbleImage maskWithColor:[OTRColors bubbleLightGrayColor]];
+        bubbleImage = [self mirrorImage:bubbleImage];
+        bubbleImageView = [[OTRComposingImageView alloc] initWithImage:bubbleImage];
+        CGRect rect = bubbleImageView.frame;
+        rect.size.width = rect.size.width+20.0;
+        bubbleImageView.frame = rect;
     }
     else {
-        bubbleImage = [UIImage imageNamed:@"MessageBubbleTyping"];
+        bubbleImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"MessageBubbleTyping"]];
     }
     return bubbleImageView;
-
 }
 
 

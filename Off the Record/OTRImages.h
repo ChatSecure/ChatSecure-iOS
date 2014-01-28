@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import "OTRConstants.h"
 
+@class OTRComposingImageView;
+
 typedef NS_ENUM(NSUInteger, OTRBubbleMessageType) {
     OTRBubbleMessageTypeIncoming,
     OTRBubbleMessageTypeOutgoing
@@ -16,13 +18,15 @@ typedef NS_ENUM(NSUInteger, OTRBubbleMessageType) {
 
 @interface OTRImages : NSObject
 
-+(UIImage *)statusImageWithStatus:(OTRBuddyStatus)status;
++ (UIImage *)statusImageWithStatus:(OTRBuddyStatus)status;
 
-+(UIImage *)openCaratImage;
-+(UIImage *)closeCaratImage;
++ (UIImage *)openCaratImage;
++ (UIImage *)closeCaratImage;
 
 
-+(UIImageView *)bubbleImageViewForMessageType:(OTRBubbleMessageType)bubbleMessageType;
-+(UIImageView *)typingBubbleImageView;
++ (UIImageView *)bubbleImageViewForMessageType:(OTRBubbleMessageType)bubbleMessageType;
++ (OTRComposingImageView *)typingBubbleImageView;
+
++ (UIImage *)circleWithRadius:(CGFloat)radius;
 
 @end

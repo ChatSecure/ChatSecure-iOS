@@ -20,12 +20,6 @@
 
 @implementation OTRChatInputBar
 
-@synthesize textView = _textView;
-@synthesize backgroundImageview = _backgroundImageview;
-@synthesize textViewBackgroundImageView = _textViewBackgroundImageView;
-@synthesize sendButton =_sendButton;
-@synthesize delegate;
-
 - (id)initWithFrame:(CGRect)frame withDelegate:(id<OTRChatInputBarDelegate>)newDelegate;
 {
     if (self = [self initWithFrame:frame])
@@ -39,7 +33,10 @@
         
         [self addSubview:self.sendButton];
         [self addSubview:self.textView];
-        [self addSubview:self.textViewBackgroundImageView];
+        if (SYSTEM_VERSION_LESS_THAN(@"7.0")) {
+            [self addSubview:self.textViewBackgroundImageView];
+        }
+        
         
         
         [self checkSaveButton];
@@ -112,7 +109,18 @@
 {
     if(!_textView) {
         CGFloat rightEdge = self.sendButton.frame.origin.x - 8;
-        _textView = [[HPGrowingTextView alloc] initWithFrame:CGRectMake(6, 4, rightEdge-6, 34)];
+        if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
+            _textView = [[HPGrowingTextView alloc] initWithFrame:CGRectMake(6, 4, rightEdge-6, 32)];
+            _textView.backgroundColor = [UIColor clearColor];
+            _textView.layer.borderColor = [UIColor colorWithWhite:0.8f alpha:1.0f].CGColor;
+            _textView.layer.borderWidth = 0.65f;
+            _textView.layer.cornerRadius = 6.0f;
+        }
+        else {
+            _textView = [[HPGrowingTextView alloc] initWithFrame:CGRectMake(6, 4, rightEdge-6, 34)];
+            _textView.backgroundColor = [UIColor whiteColor];
+        }
+        
         _textView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         
         _textView.isScrollable = NO;
@@ -124,11 +132,13 @@
         _textView.maxNumberOfLines = 2;
         _textView.animateHeightChange = YES;
         _textView.animationDuration = 0.1;
-        _textView.backgroundColor = [UIColor whiteColor];
+        
         _textView.font = [UIFont systemFontOfSize:MessageFontSize];
         _textView.placeholder = MESSAGE_PLACEHOLDER_STRING;
         
         _textView.clipsToBounds = YES;
+        
+        
     }
     return _textView;
 }
@@ -153,7 +163,15 @@
 {
     if (!_backgroundImageview) {
         _backgroundImageview = [[UIImageView alloc] init];
-        _backgroundImageview.image = [[UIImage imageNamed:@"MessageInputBarBackground"] resizableImageWithCapInsets:UIEdgeInsetsMake(19, 3, 19, 3)];
+        
+        if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
+            _backgroundImageview.image = [[UIImage imageNamed:@"input-bar-flat"] resizableImageWithCapInsets:UIEdgeInsetsMake(19, 3, 19, 3)];
+        }
+        else {
+            _backgroundImageview.image = [[UIImage imageNamed:@"MessageInputBarBackground"] resizableImageWithCapInsets:UIEdgeInsetsMake(2.0, 0.0, 0.0, 0.0)];
+        }
+        
+        
         _backgroundImageview.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
         _backgroundImageview.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     }
@@ -164,9 +182,10 @@
 {
     if(!_textViewBackgroundImageView)
     {
-        UIImage *rawEntryBackground = [UIImage imageNamed:@"MessageInputFieldBackground"];
-        UIImage *entryBackground = [rawEntryBackground stretchableImageWithLeftCapWidth:13 topCapHeight:22];
-        _textViewBackgroundImageView = [[UIImageView alloc] initWithImage:entryBackground];
+        UIImage * backgroundImage;
+        backgroundImage = [UIImage imageNamed:@"MessageInputFieldBackground"];
+        backgroundImage = [backgroundImage stretchableImageWithLeftCapWidth:13 topCapHeight:22];
+        _textViewBackgroundImageView = [[UIImageView alloc] initWithImage:backgroundImage];
         CGRect frame = self.textView.frame;
         frame.origin.x = 5;
         frame.origin.y = 0;
