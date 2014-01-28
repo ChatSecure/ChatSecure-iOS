@@ -8,35 +8,11 @@
 
 #import "OTRImages.h"
 
+#import "OTRColors.h"
+
 
 
 @implementation OTRImages
-
-+(UIColor *)colorWithStatus:(OTRBuddyStatus)status
-{
-    switch(status)
-    {
-        case OTRBuddyStatusOffline:
-            return [UIColor colorWithRed: 0.763 green: 0.763 blue: 0.763 alpha: 1];
-            break;
-        case OTRBuddyStatusAway:
-            return [UIColor colorWithRed: 0.901 green: 0.527 blue: 0.23 alpha: 1];
-            break;
-        case OTRBuddyStatusXa:
-            return [UIColor colorWithRed: 0.734 green: 0.124 blue: 0.124 alpha: 1];
-            break;
-        case OTRBuddyStatusDnd:
-            return [UIColor colorWithRed: 0.734 green: 0.124 blue: 0.124 alpha: 1];
-            break;
-        case OTRBuddyStatusAvailable:
-            return [UIColor colorWithRed: 0.083 green: 0.767 blue: 0.194 alpha: 1];
-            break;
-        default:
-            return [UIColor colorWithRed: 0.763 green: 0.763 blue: 0.763 alpha: 1];
-            break;
-    }
-    
-}
 
 +(UIImage *)rawStatusImageWithStatus:(OTRBuddyStatus)status
 {
@@ -46,7 +22,7 @@
     CGContextRef context = UIGraphicsGetCurrentContext();
     
     //// Color Declarations
-    UIColor* bubbleColor = [OTRImages colorWithStatus:status];
+    UIColor* bubbleColor = [OTRColors colorWithStatus:status];
     CGFloat bubbleColorRGBA[4];
     [bubbleColor getRed: &bubbleColorRGBA[0] green: &bubbleColorRGBA[1] blue: &bubbleColorRGBA[2] alpha: &bubbleColorRGBA[3]];
     
@@ -196,11 +172,19 @@
     
 }
 
+
+
++ (UIImage *)mirrorImage:(UIImage *)image {
+    return [UIImage imageWithCGImage:image.CGImage
+                               scale:image.scale
+                         orientation:UIImageOrientationUpMirrored];
+}
+
 + (UIImage *)image:(UIImage *)image maskWithColor:(UIColor *)maskColor
 {
     CGRect imageRect = CGRectMake(0.0f, 0.0f, image.size.width, image.size.height);
     
-    UIGraphicsBeginImageContextWithOptions(imageRect.size, NO, self.scale);
+    UIGraphicsBeginImageContextWithOptions(imageRect.size, NO, image.scale);
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     
     CGContextScaleCTM(ctx, 1.0f, -1.0f);
@@ -216,59 +200,6 @@
     return newImage;
 }
 
-+ (UIColor *)darkenColor:(UIColor *)color withValue:(CGFloat)value
-{
-    NSUInteger totalComponents = CGColorGetNumberOfComponents(color.CGColor);
-    BOOL isGreyscale = (totalComponents == 2) ? YES : NO;
-    
-    CGFloat *oldComponents = (CGFloat *)CGColorGetComponents(color.CGColor);
-    CGFloat newComponents[4];
-    
-    if (isGreyscale) {
-        newComponents[0] = oldComponents[0] - value < 0.0f ? 0.0f : oldComponents[0] - value;
-        newComponents[1] = oldComponents[0] - value < 0.0f ? 0.0f : oldComponents[0] - value;
-        newComponents[2] = oldComponents[0] - value < 0.0f ? 0.0f : oldComponents[0] - value;
-        newComponents[3] = oldComponents[1];
-    }
-    else {
-        newComponents[0] = oldComponents[0] - value < 0.0f ? 0.0f : oldComponents[0] - value;
-        newComponents[1] = oldComponents[1] - value < 0.0f ? 0.0f : oldComponents[1] - value;
-        newComponents[2] = oldComponents[2] - value < 0.0f ? 0.0f : oldComponents[2] - value;
-        newComponents[3] = oldComponents[3];
-    }
-    
-    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-	CGColorRef newColor = CGColorCreate(colorSpace, newComponents);
-	CGColorSpaceRelease(colorSpace);
-    
-	UIColor *retColor = [UIColor colorWithCGColor:newColor];
-	CGColorRelease(newColor);
-    
-    return retColor;
-}
-
-+ (UIColor *)bubbleBlueColor
-{
-    return [UIColor colorWithHue:210.0f / 360.0f
-                      saturation:0.94f
-                      brightness:1.0f
-                           alpha:1.0f];
-}
-
-+ (UIColor *)bubbleLightGrayColor
-{
-    return [UIColor colorWithHue:240.0f / 360.0f
-                      saturation:0.02f
-                      brightness:0.92f
-                           alpha:1.0f];
-}
-
-+ (UIImage *)mirrorImage:(UIImage *)image {
-    return [UIImage imageWithCGImage:image.CGImage
-                               scale:image.scale
-                         orientation:UIImageOrientationUpMirrored];
-}
-
 + (UIImageView *)bubbleImageViewForType:(OTRBubbleMessageType)type
                                   color:(UIColor *)color
 {
@@ -276,7 +207,7 @@
     
     
     UIImage *normalBubble = [self image:bubble maskWithColor:color];
-    UIImage *highlightedBubble = [self image:bubble maskWithColor:[self darkenColor:color withValue:0.12f]];
+    UIImage *highlightedBubble = [self image:bubble maskWithColor:[OTRColors darkenColor:color withValue:0.12f]];
     
     if (type == OTRBubbleMessageTypeIncoming) {
         normalBubble = [self mirrorImage:normalBubble];
@@ -323,10 +254,10 @@
     if (SYSTEM_VERSION_GREATER_THAN(@"7.0")) {
         UIColor * color = nil;
         if (bubbleMessageType == OTRBubbleMessageTypeIncoming ) {
-            color = [self bubbleLightGrayColor];
+            color = [OTRColors bubbleLightGrayColor];
         }
         else {
-            color = [self bubbleBlueColor];
+            color = [OTRColors bubbleBlueColor];
         }
         bubbleImageView = [self bubbleImageViewForType:bubbleMessageType color:color];
     }

@@ -15,6 +15,7 @@
 #import "OTRChatInputBar.h"
 #import "Strings.h"
 #import "OTRConstants.h"
+#import "OTRColors.h"
 
 
 @implementation OTRChatInputBar
@@ -62,15 +63,24 @@
     [button setBackgroundImage:[[UIImage imageNamed:@"SendButtonHighlighted"] resizableImageWithCapInsets:sendButtonEdgeInsets] forState:UIControlStateHighlighted];
     button.titleLabel.font = [UIFont boldSystemFontOfSize:16];
     button.titleLabel.shadowOffset = CGSizeMake(0.0, -1.0);
-    [button setTitle:SEND_STRING forState:UIControlStateNormal];
     [button setTitleShadowColor:[UIColor colorWithRed:0.325f green:0.463f blue:0.675f alpha:1] forState:UIControlStateNormal];
-    [button addTarget:self action:@selector(sendButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-
+    
+    return button;
 }
 
 - (UIButton *)flatButton
 {
+    UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];
+    CGFloat buttonWidth = [SEND_STRING sizeWithFont:[UIFont systemFontOfSize:16]].width+20;
+    button.frame = CGRectMake(self.frame.size.width - (buttonWidth+6), 8, buttonWidth, 27);
+    button.backgroundColor = [UIColor clearColor];
     
+    [button setTitleColor:[OTRColors bubbleBlueColor] forState:UIControlStateNormal];
+    [button setTitleColor:[OTRColors bubbleBlueColor] forState:UIControlStateHighlighted];
+    [button setTitleColor:[OTRColors bubbleLightGrayColor] forState:UIControlStateDisabled];
+    
+    button.titleLabel.font = [UIFont boldSystemFontOfSize:18.0f];
+    return button;
 }
 
 - (UIButton *)sendButton
@@ -82,21 +92,17 @@
         else{
             _sendButton = [self classicButton];
         }
-        _sendButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        CGFloat buttonWidth = [SEND_STRING sizeWithFont:[UIFont systemFontOfSize:16]].width+20;
-        _sendButton.frame = CGRectMake(self.frame.size.width - (buttonWidth+6), 8, buttonWidth, 27);
-        _sendButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin;
-        UIEdgeInsets sendButtonEdgeInsets = UIEdgeInsetsMake(0, 13, 0, 13); // 27 x 27
-        UIImage *sendButtonBackgroundImage = [[UIImage imageNamed:@"SendButton"] resizableImageWithCapInsets:sendButtonEdgeInsets];
-        [_sendButton setBackgroundImage:sendButtonBackgroundImage forState:UIControlStateNormal];
-        [_sendButton setBackgroundImage:sendButtonBackgroundImage forState:UIControlStateDisabled];
-        [_sendButton setBackgroundImage:[[UIImage imageNamed:@"SendButtonHighlighted"] resizableImageWithCapInsets:sendButtonEdgeInsets] forState:UIControlStateHighlighted];
-        _sendButton.titleLabel.font = [UIFont boldSystemFontOfSize:16];
-        _sendButton.titleLabel.shadowOffset = CGSizeMake(0.0, -1.0);
-        [_sendButton setTitle:SEND_STRING forState:UIControlStateNormal];
-        [_sendButton setTitleShadowColor:[UIColor colorWithRed:0.325f green:0.463f blue:0.675f alpha:1] forState:UIControlStateNormal];
+        
+        NSString *title = SEND_STRING;
+        [_sendButton setTitle:title forState:UIControlStateNormal];
+        [_sendButton setTitle:title forState:UIControlStateHighlighted];
+        [_sendButton setTitle:title forState:UIControlStateDisabled];
+        
+        _sendButton.autoresizingMask = (UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin);
+        
         [_sendButton addTarget:self action:@selector(sendButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-        //
+        
+        
         previousTextViewContentHeight = MessageFontSize+20;
     }
     return _sendButton;
