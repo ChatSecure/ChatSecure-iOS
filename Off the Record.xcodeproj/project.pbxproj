@@ -189,6 +189,8 @@
 		6370C985185FD18E00CB6786 /* OTRBuddyCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6370C984185FD18E00CB6786 /* OTRBuddyCell.m */; };
 		6370C988185FD9B900CB6786 /* OTRRecentBuddyCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6370C987185FD9B900CB6786 /* OTRRecentBuddyCell.m */; };
 		6375D2531811FCD2006CDA8A /* OTRRosterStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 6375D2521811FCD2006CDA8A /* OTRRosterStorage.m */; };
+		637A7DD918972CD9004EF5A2 /* bubble-min.png in Resources */ = {isa = PBXBuildFile; fileRef = 637A7DD718972CD9004EF5A2 /* bubble-min.png */; };
+		637A7DDA18972CD9004EF5A2 /* bubble-min@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 637A7DD818972CD9004EF5A2 /* bubble-min@2x.png */; };
 		63813C1216E14E5D00909670 /* OTRBuddyListGroupManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 63813C1116E14E5D00909670 /* OTRBuddyListGroupManager.m */; };
 		638286E01846911C00F127C2 /* OTRAccountTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 638286DF1846911C00F127C2 /* OTRAccountTableViewCell.m */; };
 		63871264175808DA006C3A4E /* OTRActivityItemProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 63871263175808DA006C3A4E /* OTRActivityItemProvider.m */; };
@@ -1035,6 +1037,8 @@
 		6370C987185FD9B900CB6786 /* OTRRecentBuddyCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRRecentBuddyCell.m; sourceTree = "<group>"; };
 		6375D2511811FCD2006CDA8A /* OTRRosterStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRRosterStorage.h; sourceTree = "<group>"; };
 		6375D2521811FCD2006CDA8A /* OTRRosterStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRRosterStorage.m; sourceTree = "<group>"; };
+		637A7DD718972CD9004EF5A2 /* bubble-min.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "bubble-min.png"; path = "Resources/Images/bubble-min.png"; sourceTree = "<group>"; };
+		637A7DD818972CD9004EF5A2 /* bubble-min@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "bubble-min@2x.png"; path = "Resources/Images/bubble-min@2x.png"; sourceTree = "<group>"; };
 		637B55F3183F08D10012F1C9 /* test_OTRManagedAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = test_OTRManagedAccount.m; sourceTree = "<group>"; };
 		637FF13417DEB8910012AA1B /* ChatSecure 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "ChatSecure 2.xcdatamodel"; sourceTree = "<group>"; };
 		63813C1016E14E5D00909670 /* OTRBuddyListGroupManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBuddyListGroupManager.h; sourceTree = "<group>"; };
@@ -2599,6 +2603,23 @@
 			name = Login;
 			sourceTree = "<group>";
 		};
+		637A7DCC18972B69004EF5A2 /* Bubbles */ = {
+			isa = PBXGroup;
+			children = (
+				637A7DD718972CD9004EF5A2 /* bubble-min.png */,
+				637A7DD818972CD9004EF5A2 /* bubble-min@2x.png */,
+				63E5E82316D1DF14006E2B01 /* MessageBubbleBlue.png */,
+				63E5E82416D1DF14006E2B01 /* MessageBubbleBlue@2x.png */,
+				63E5E82516D1DF14006E2B01 /* MessageBubbleGray.png */,
+				63E5E82616D1DF14006E2B01 /* MessageBubbleGray@2x.png */,
+				63E5E82716D1DF14006E2B01 /* MessageBubbleHighlighted.png */,
+				63E5E82816D1DF14006E2B01 /* MessageBubbleHighlighted@2x.png */,
+				63E5E82916D1DF14006E2B01 /* MessageBubbleTyping.png */,
+				63E5E82A16D1DF14006E2B01 /* MessageBubbleTyping@2x.png */,
+			);
+			name = Bubbles;
+			sourceTree = "<group>";
+		};
 		6398CD8517FA1EF8009389F8 /* X-OAUTH2-google */ = {
 			isa = PBXGroup;
 			children = (
@@ -3542,14 +3563,7 @@
 				6300F16216E6CCD400D3C1AA /* inbox@2x.png */,
 				63E5E81F16D1DEB9006E2B01 /* checkmark.png */,
 				63E5E82016D1DEB9006E2B01 /* checkmark@2x.png */,
-				63E5E82316D1DF14006E2B01 /* MessageBubbleBlue.png */,
-				63E5E82416D1DF14006E2B01 /* MessageBubbleBlue@2x.png */,
-				63E5E82516D1DF14006E2B01 /* MessageBubbleGray.png */,
-				63E5E82616D1DF14006E2B01 /* MessageBubbleGray@2x.png */,
-				63E5E82716D1DF14006E2B01 /* MessageBubbleHighlighted.png */,
-				63E5E82816D1DF14006E2B01 /* MessageBubbleHighlighted@2x.png */,
-				63E5E82916D1DF14006E2B01 /* MessageBubbleTyping.png */,
-				63E5E82A16D1DF14006E2B01 /* MessageBubbleTyping@2x.png */,
+				637A7DCC18972B69004EF5A2 /* Bubbles */,
 				63E5E82B16D1DF14006E2B01 /* MessageInputBarBackground.png */,
 				63E5E82C16D1DF14006E2B01 /* MessageInputBarBackground@2x.png */,
 				63E5E82D16D1DF14006E2B01 /* MessageInputFieldBackground.png */,
@@ -3894,6 +3908,7 @@
 				63BE44D817EE5AB300F60670 /* 31-circle-plus-large.png in Resources */,
 				D9CE423213FDCA0F003EC27C /* 112-group.png in Resources */,
 				D9CE42C313FDCBDD003EC27C /* Lock_Locked.png in Resources */,
+				637A7DDA18972CD9004EF5A2 /* bubble-min@2x.png in Resources */,
 				D9CE42C413FDCBDD003EC27C /* Lock_Unlocked.png in Resources */,
 				D95F8E921419C3D00094A634 /* chatsecure_icon.png in Resources */,
 				D95F8E941419C3E10094A634 /* chatsecure_icon@2x.png in Resources */,
@@ -3926,6 +3941,7 @@
 				D9FC987115588F230039518D /* chatsecure_qrcode@2x.png in Resources */,
 				6352DC8C15AFB252007AD0B4 /* xmpp.png in Resources */,
 				6352DC8D15AFB252007AD0B4 /* xmpp@2x.png in Resources */,
+				637A7DD918972CD9004EF5A2 /* bubble-min.png in Resources */,
 				6352DC9015AFB3D2007AD0B4 /* facebook.png in Resources */,
 				6352DC9115AFB3D2007AD0B4 /* facebook@2x.png in Resources */,
 				D974577715BE34E7002B9192 /* 31-circle-plus.png in Resources */,

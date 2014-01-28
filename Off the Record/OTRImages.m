@@ -9,6 +9,7 @@
 #import "OTRImages.h"
 
 
+
 @implementation OTRImages
 
 +(UIColor *)colorWithStatus:(OTRBuddyStatus)status
@@ -195,6 +196,159 @@
     
 }
 
++ (UIImage *)image:(UIImage *)image maskWithColor:(UIColor *)maskColor
+{
+    CGRect imageRect = CGRectMake(0.0f, 0.0f, image.size.width, image.size.height);
+    
+    UIGraphicsBeginImageContextWithOptions(imageRect.size, NO, self.scale);
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    
+    CGContextScaleCTM(ctx, 1.0f, -1.0f);
+    CGContextTranslateCTM(ctx, 0.0f, -(imageRect.size.height));
+    
+    CGContextClipToMask(ctx, imageRect, image.CGImage);
+    CGContextSetFillColorWithColor(ctx, maskColor.CGColor);
+    CGContextFillRect(ctx, imageRect);
+    
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return newImage;
+}
+
++ (UIColor *)darkenColor:(UIColor *)color withValue:(CGFloat)value
+{
+    NSUInteger totalComponents = CGColorGetNumberOfComponents(color.CGColor);
+    BOOL isGreyscale = (totalComponents == 2) ? YES : NO;
+    
+    CGFloat *oldComponents = (CGFloat *)CGColorGetComponents(color.CGColor);
+    CGFloat newComponents[4];
+    
+    if (isGreyscale) {
+        newComponents[0] = oldComponents[0] - value < 0.0f ? 0.0f : oldComponents[0] - value;
+        newComponents[1] = oldComponents[0] - value < 0.0f ? 0.0f : oldComponents[0] - value;
+        newComponents[2] = oldComponents[0] - value < 0.0f ? 0.0f : oldComponents[0] - value;
+        newComponents[3] = oldComponents[1];
+    }
+    else {
+        newComponents[0] = oldComponents[0] - value < 0.0f ? 0.0f : oldComponents[0] - value;
+        newComponents[1] = oldComponents[1] - value < 0.0f ? 0.0f : oldComponents[1] - value;
+        newComponents[2] = oldComponents[2] - value < 0.0f ? 0.0f : oldComponents[2] - value;
+        newComponents[3] = oldComponents[3];
+    }
+    
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+	CGColorRef newColor = CGColorCreate(colorSpace, newComponents);
+	CGColorSpaceRelease(colorSpace);
+    
+	UIColor *retColor = [UIColor colorWithCGColor:newColor];
+	CGColorRelease(newColor);
+    
+    return retColor;
+}
+
++ (UIColor *)bubbleBlueColor
+{
+    return [UIColor colorWithHue:210.0f / 360.0f
+                      saturation:0.94f
+                      brightness:1.0f
+                           alpha:1.0f];
+}
+
++ (UIColor *)bubbleLightGrayColor
+{
+    return [UIColor colorWithHue:240.0f / 360.0f
+                      saturation:0.02f
+                      brightness:0.92f
+                           alpha:1.0f];
+}
+
++ (UIImage *)mirrorImage:(UIImage *)image {
+    return [UIImage imageWithCGImage:image.CGImage
+                               scale:image.scale
+                         orientation:UIImageOrientationUpMirrored];
+}
+
++ (UIImageView *)bubbleImageViewForType:(OTRBubbleMessageType)type
+                                  color:(UIColor *)color
+{
+    UIImage *bubble = [UIImage imageNamed:@"bubble-min"];
+    
+    
+    UIImage *normalBubble = [self image:bubble maskWithColor:color];
+    UIImage *highlightedBubble = [self image:bubble maskWithColor:[self darkenColor:color withValue:0.12f]];
+    
+    if (type == OTRBubbleMessageTypeIncoming) {
+        normalBubble = [self mirrorImage:normalBubble];
+        highlightedBubble = [self mirrorImage:normalBubble];
+    }
+    
+    // make image stretchable from center point
+    CGPoint center = CGPointMake(bubble.size.width / 2.0f, bubble.size.height / 2.0f);
+    UIEdgeInsets capInsets = UIEdgeInsetsMake(center.y, center.x, center.y, center.x);
+    
+    normalBubble = [normalBubble resizableImageWithCapInsets:capInsets
+                                                resizingMode:UIImageResizingModeStretch];
+    highlightedBubble = [highlightedBubble resizableImageWithCapInsets:capInsets
+                                                          resizingMode:UIImageResizingModeStretch];
+    
+    return [[UIImageView alloc] initWithImage:normalBubble
+                             highlightedImage:highlightedBubble];
+}
+
++ (UIImageView *)classicBubbleImageViewForType:(OTRBubbleMessageType)type
+{
+    UIImage * bubbleImage;
+    UIImage * highlightedBubble = [UIImage imageNamed:@"MessageBubbleBlue"];
+    if (type == OTRBubbleMessageTypeIncoming) {
+        bubbleImage = [UIImage imageNamed:@"MessageBubbleGrey"];
+        highlightedBubble = [self mirrorImage:highlightedBubble];
+    }
+    else if (type == OTRBubbleMessageTypeOutgoing) {
+        bubbleImage = [UIImage imageNamed:@"MessageBubbleBlue"];
+    }
+    UIEdgeInsets insets = UIEdgeInsetsMake(15.0f, 20.0f, 15.0f, 20.0f);
+    bubbleImage = [bubbleImage resizableImageWithCapInsets:insets
+                                              resizingMode:UIImageResizingModeStretch];
+    highlightedBubble = [highlightedBubble resizableImageWithCapInsets:insets resizingMode:UIImageResizingModeStretch];
+    
+    return [[UIImageView alloc] initWithImage:bubbleImage
+                             highlightedImage:highlightedBubble];
+    
+}
+
++(UIImageView *)bubbleImageViewForMessageType:(OTRBubbleMessageType)bubbleMessageType
+{
+    UIImageView * bubbleImageView = nil;
+    if (SYSTEM_VERSION_GREATER_THAN(@"7.0")) {
+        UIColor * color = nil;
+        if (bubbleMessageType == OTRBubbleMessageTypeIncoming ) {
+            color = [self bubbleLightGrayColor];
+        }
+        else {
+            color = [self bubbleBlueColor];
+        }
+        bubbleImageView = [self bubbleImageViewForType:bubbleMessageType color:color];
+    }
+    else {
+        bubbleImageView = [self classicBubbleImageViewForType:bubbleMessageType];
+    }
+    return bubbleImageView;
+}
+
++(UIImageView *)typingBubbleImageView
+{
+    UIImageView * bubbleImageView = nil;
+    UIImage * bubbleImage = nil;
+    if (SYSTEM_VERSION_GREATER_THAN(@"7.0")) {
+        
+    }
+    else {
+        bubbleImage = [UIImage imageNamed:@"MessageBubbleTyping"];
+    }
+    return bubbleImageView;
+
+}
 
 
 @end

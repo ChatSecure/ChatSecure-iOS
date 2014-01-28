@@ -9,11 +9,20 @@
 #import <Foundation/Foundation.h>
 #import "OTRConstants.h"
 
+typedef NS_ENUM(NSUInteger, OTRBubbleMessageType) {
+    OTRBubbleMessageTypeIncoming,
+    OTRBubbleMessageTypeOutgoing
+};
+
 @interface OTRImages : NSObject
 
 +(UIImage *)statusImageWithStatus:(OTRBuddyStatus)status;
 
 +(UIImage *)openCaratImage;
 +(UIImage *)closeCaratImage;
+
+
++(UIImageView *)bubbleImageViewForMessageType:(OTRBubbleMessageType)bubbleMessageType;
++(UIImageView *)typingBubbleImageView;
 
 @end

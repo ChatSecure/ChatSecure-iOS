@@ -48,9 +48,40 @@
     return self;
 }
 
+- (UIButton *)classicButton
+{
+    
+    UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];
+    CGFloat buttonWidth = [SEND_STRING sizeWithFont:[UIFont systemFontOfSize:16]].width+20;
+    button.frame = CGRectMake(self.frame.size.width - (buttonWidth+6), 8, buttonWidth, 27);
+    button.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin;
+    UIEdgeInsets sendButtonEdgeInsets = UIEdgeInsetsMake(0, 13, 0, 13); // 27 x 27
+    UIImage *sendButtonBackgroundImage = [[UIImage imageNamed:@"SendButton"] resizableImageWithCapInsets:sendButtonEdgeInsets];
+    [button setBackgroundImage:sendButtonBackgroundImage forState:UIControlStateNormal];
+    [button setBackgroundImage:sendButtonBackgroundImage forState:UIControlStateDisabled];
+    [button setBackgroundImage:[[UIImage imageNamed:@"SendButtonHighlighted"] resizableImageWithCapInsets:sendButtonEdgeInsets] forState:UIControlStateHighlighted];
+    button.titleLabel.font = [UIFont boldSystemFontOfSize:16];
+    button.titleLabel.shadowOffset = CGSizeMake(0.0, -1.0);
+    [button setTitle:SEND_STRING forState:UIControlStateNormal];
+    [button setTitleShadowColor:[UIColor colorWithRed:0.325f green:0.463f blue:0.675f alpha:1] forState:UIControlStateNormal];
+    [button addTarget:self action:@selector(sendButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+
+}
+
+- (UIButton *)flatButton
+{
+    
+}
+
 - (UIButton *)sendButton
 {
     if (!_sendButton) {
+        if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
+            _sendButton = [self flatButton];
+        }
+        else{
+            _sendButton = [self classicButton];
+        }
         _sendButton = [UIButton buttonWithType:UIButtonTypeCustom];
         CGFloat buttonWidth = [SEND_STRING sizeWithFont:[UIFont systemFontOfSize:16]].width+20;
         _sendButton.frame = CGRectMake(self.frame.size.width - (buttonWidth+6), 8, buttonWidth, 27);

@@ -219,7 +219,13 @@
     TTTAttributedLabel * label = [self defaultLabel];
     label.text = message;
     CGSize labelSize = [label sizeThatFits:CGSizeMake(180, CGFLOAT_MAX)];
-    return labelSize.height + 12.0 + dateHeight;
+    
+    CGFloat padding = 12.0;
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
+        padding = 16.0;
+    }
+    
+    return labelSize.height + padding + dateHeight;
 }
 
 + (NSDateFormatter *)defaultDateFormatter
