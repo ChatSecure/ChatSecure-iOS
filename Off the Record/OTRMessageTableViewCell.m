@@ -14,12 +14,10 @@
 #import "OTRSafariActionSheet.h"
 #import "OTRAppDelegate.h"
 
-#define MESSAGE_DELIVERED_LABEL_HEIGHT       (DeliveredFontSize +7)
-#define MESSAGE_SENT_DATE_LABEL_HEIGHT       (SentDateFontSize+7)
-#define MESSAGE_SENT_DATE_LABEL_TAG          100
-#define MESSAGE_BACKGROUND_IMAGE_VIEW_TAG    101
-#define MESSAGE_TEXT_LABEL_TAG               102
-#define MESSAGE_DELIVERED_LABEL_TAG          103
+#import "OTRUtilities.h"
+
+
+static CGFloat const messageTextWidthMax = 180;
 
 @implementation OTRMessageTableViewCell
 
@@ -33,10 +31,9 @@
         //CreateMessageSentDateLabel
         self.dateLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         self.dateLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        self.dateLabel.tag = MESSAGE_SENT_DATE_LABEL_TAG;
         self.dateLabel.textColor = [UIColor grayColor];
         self.dateLabel.textAlignment = NSTextAlignmentCenter;
-        self.dateLabel.font = [UIFont boldSystemFontOfSize:SentDateFontSize];
+        self.dateLabel.font = [UIFont boldSystemFontOfSize:sentDateFontSize];
         self.dateLabel.backgroundColor = [UIColor clearColor];
         self.dateLabel.translatesAutoresizingMaskIntoConstraints = NO;
         [self.contentView addSubview:self.dateLabel];
@@ -76,7 +73,7 @@
     if (self.showDate) {
         self.dateLabel.text = [[OTRMessageTableViewCell defaultDateFormatter] stringFromDate:newMessage.date];
         
-        messageSentDateLabelHeight = MESSAGE_SENT_DATE_LABEL_HEIGHT;
+        messageSentDateLabelHeight = messageSentDateLabelHeight;
     } else {
         self.dateLabel.text = nil;
     }
@@ -151,7 +148,7 @@
     [self removeConstraint:dateHeightConstraint];
     CGFloat dateheight = 0.0;
     if (self.showDate) {
-        dateheight = SentDateFontSize+5;
+        dateheight = sentDateFontSize+5;
     }
     
     dateHeightConstraint = [NSLayoutConstraint constraintWithItem:self.dateLabel
@@ -169,14 +166,13 @@
 {
     TTTAttributedLabel * label = [OTRMessageTableViewCell defaultLabel];
     label.text = message;
-    return  [label sizeThatFits:CGSizeMake(MESSAGE_TEXT_WIDTH_MAX, CGFLOAT_MAX)];
+    return  [label sizeThatFits:CGSizeMake(messageTextWidthMax, CGFLOAT_MAX)];
 }
 
 
 +(TTTAttributedLabel *)defaultLabel
 {
     TTTAttributedLabel * messageTextLabel = [[TTTAttributedLabel alloc] initWithFrame:CGRectZero];
-    messageTextLabel.tag = MESSAGE_TEXT_LABEL_TAG;
     messageTextLabel.backgroundColor = [UIColor clearColor];
     messageTextLabel.numberOfLines = 0;
     messageTextLabel.dataDetectorTypes = UIDataDetectorTypeLink;
@@ -214,7 +210,7 @@
 {
     CGFloat dateHeight = 0;
     if (showDate) {
-        dateHeight = SentDateFontSize+5;
+        dateHeight = sentDateFontSize+5;
     }
     TTTAttributedLabel * label = [self defaultLabel];
     label.text = message;

@@ -7,7 +7,7 @@
 //
 
 #import "OTRImages.h"
-
+#import "OTRUtilities.h"
 #import "OTRColors.h"
 
 #import "OTRComposingImageView.h"
@@ -234,7 +234,7 @@
     UIImage * bubbleImage;
     UIImage * highlightedBubble = [UIImage imageNamed:@"MessageBubbleBlue"];
     if (type == OTRBubbleMessageTypeIncoming) {
-        bubbleImage = [UIImage imageNamed:@"MessageBubbleGrey"];
+        bubbleImage = [UIImage imageNamed:@"MessageBubbleGray"];
         highlightedBubble = [self mirrorImage:highlightedBubble];
     }
     else if (type == OTRBubbleMessageTypeOutgoing) {
@@ -253,7 +253,7 @@
 +(UIImageView *)bubbleImageViewForMessageType:(OTRBubbleMessageType)bubbleMessageType
 {
     UIImageView * bubbleImageView = nil;
-    if (SYSTEM_VERSION_GREATER_THAN(@"7.0")) {
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
         UIColor * color = nil;
         if (bubbleMessageType == OTRBubbleMessageTypeIncoming ) {
             color = [OTRColors bubbleLightGrayColor];
@@ -290,7 +290,7 @@
 {
     UIImageView * bubbleImageView = nil;
     UIImage * bubbleImage = nil;
-    if (SYSTEM_VERSION_GREATER_THAN(@"7.0")) {
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
         bubbleImage = [UIImage imageNamed:@"bubble-min-tailless"];
         
         bubbleImage = [self image:bubbleImage maskWithColor:[OTRColors bubbleLightGrayColor]];

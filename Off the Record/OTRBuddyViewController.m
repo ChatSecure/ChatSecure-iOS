@@ -13,6 +13,7 @@
 #import "Strings.h"
 #import "OTRProtocolManager.h"
 #import "OTRConstants.h"
+#import "OTRUtilities.h"
 
 #import "OTRManagedAccount.h"
 

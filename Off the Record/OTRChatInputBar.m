@@ -16,6 +16,7 @@
 #import "Strings.h"
 #import "OTRConstants.h"
 #import "OTRColors.h"
+#import "OTRUtilities.h"
 
 
 @implementation OTRChatInputBar
@@ -100,7 +101,7 @@
         [_sendButton addTarget:self action:@selector(sendButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         
         
-        previousTextViewContentHeight = MessageFontSize+20;
+        previousTextViewContentHeight = messageFontSize+20;
     }
     return _sendButton;
 }
@@ -133,7 +134,7 @@
         _textView.animateHeightChange = YES;
         _textView.animationDuration = 0.1;
         
-        _textView.font = [UIFont systemFontOfSize:MessageFontSize];
+        _textView.font = [UIFont systemFontOfSize:messageFontSize];
         _textView.placeholder = MESSAGE_PLACEHOLDER_STRING;
         
         _textView.clipsToBounds = YES;

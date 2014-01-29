@@ -9,7 +9,7 @@
 #import "OTRChatBubbleView.h"
 #import "OTRConstants.h"
 #import "OTRImages.h"
-
+#import "OTRUtilities.h"
 #import "OTRMessageTableViewCell.h"
 
 @implementation OTRChatBubbleView
@@ -73,7 +73,12 @@
     }
     else {
         self.messageBackgroundImageView = [OTRImages bubbleImageViewForMessageType:OTRBubbleMessageTypeOutgoing];
-        self.messageTextLabel.textColor = [UIColor whiteColor];
+        if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
+            self.messageTextLabel.textColor = [UIColor whiteColor];
+        }
+        else {
+            self.messageTextLabel.textColor = [UIColor blackColor];
+        }
     }
     [self setNeedsUpdateConstraints];
 }

@@ -37,11 +37,20 @@
 
 #import "OTRComposingImageView.h"
 
+static CGFloat const messageMarginTop = 7;
+static CGFloat const messageMarginBottom = 10;
+static NSTimeInterval const messageSentDateShowTimeInterval = 5*60; // 5 minutes
 
+typedef NS_ENUM(NSInteger, OTRChatViewTags) {
+    OTRChatViewAlertViewVerifiedTag            = 200,
+    OTRChatViewAlertViewNotVerifiedTag         = 201,
+    OTRChatViewActionSheetEncryptionOptionsTag = 202
+};
 
 @interface OTRChatViewController ()
 
 @property (nonatomic,strong) UIView * composingImageView;
+@property (nonatomic,readonly) CGFloat initialBarChatBarHeight;
 - (void) refreshView;
 
 
@@ -74,11 +83,13 @@
     return self;
 }
 
-- (CGFloat) chatBoxViewHeight {
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-        return 50.0;
-    } else {
-        return 44.0;
+- (CGFloat)initialBarChatBarHeight
+{
+    if (SYSTEM_VERSION_LESS_THAN(@"7.0")) {
+        return 40;
+    }
+    else{
+        return 42;
     }
 }
 
@@ -161,7 +172,7 @@
     UIActionSheet *popupQuery = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:encryptionString, verifiedString, CLEAR_CHAT_HISTORY_STRING, nil];
     popupQuery.accessibilityLabel = @"secure";
     popupQuery.actionSheetStyle = UIActionSheetStyleBlackOpaque;
-    popupQuery.tag = ACTIONSHEET_ENCRYPTION_OPTIONS_TAG;
+    popupQuery.tag = OTRChatViewActionSheetEncryptionOptionsTag;
     [OTR_APP_DELEGATE presentActionSheet:popupQuery inView:self.view];
 }
 
@@ -181,7 +192,7 @@
     
     
     UIEdgeInsets insets = self.chatHistoryTableView.contentInset;
-    insets.bottom = kChatBarHeight1;
+    insets.bottom = self.initialBarChatBarHeight;
     if(SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
         //insets.top = [self.navigationController navigationBar].frame.size.height;
     }
@@ -198,9 +209,9 @@
     [self.chatHistoryTableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
     
     
-    _previousTextViewContentHeight = MessageFontSize+20;
+    _previousTextViewContentHeight = messageFontSize+20;
         
-    CGRect barRect = CGRectMake(0, self.view.frame.size.height-kChatBarHeight1, self.view.frame.size.width, kChatBarHeight1);
+    CGRect barRect = CGRectMake(0, self.view.frame.size.height-self.initialBarChatBarHeight, self.view.frame.size.width, self.initialBarChatBarHeight);
     
     chatInputBar = [[OTRChatInputBar alloc] initWithFrame:barRect withDelegate:self];
    
@@ -361,7 +372,7 @@
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     //DDLogInfo(@"buttonIndex: %d",buttonIndex);
-    if(actionSheet.tag == ACTIONSHEET_ENCRYPTION_OPTIONS_TAG)
+    if(actionSheet.tag == OTRChatViewActionSheetEncryptionOptionsTag)
     {
         if (buttonIndex == 1) // Verify
         {
@@ -377,12 +388,12 @@
                 if(trusted)
                 {
                     alert = [[UIAlertView alloc] initWithTitle:VERIFY_FINGERPRINT_STRING message:msg delegate:self cancelButtonTitle:VERIFIED_STRING otherButtonTitles:NOT_VERIFIED_STRING, nil];
-                    alert.tag = ALERTVIEW_VERIFIED_TAG;
+                    alert.tag = OTRChatViewAlertViewVerifiedTag;
                 }
                 else
                 {
                     alert = [[UIAlertView alloc] initWithTitle:VERIFY_FINGERPRINT_STRING message:msg delegate:self cancelButtonTitle:VERIFY_LATER_STRING otherButtonTitles:VERIFIED_STRING, nil];
-                    alert.tag = ALERTVIEW_NOT_VERIFIED_TAG;
+                    alert.tag = OTRChatViewAlertViewNotVerifiedTag;
                 }
             } else {
                 msg = SECURE_CONVERSATION_STRING;
@@ -442,12 +453,12 @@
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if(alertView.cancelButtonIndex != buttonIndex && alertView.tag == ALERTVIEW_NOT_VERIFIED_TAG)
+    if(alertView.cancelButtonIndex != buttonIndex && alertView.tag == OTRChatViewAlertViewNotVerifiedTag)
     {
         [[OTRKit sharedInstance] changeVerifyFingerprintForUsername:self.buddy.accountName accountName:self.buddy.account.username protocol:self.buddy.account.protocol verrified:YES];
         [self refreshLockButton];
     }
-    else if(alertView.cancelButtonIndex != buttonIndex && alertView.tag == ALERTVIEW_VERIFIED_TAG)
+    else if(alertView.cancelButtonIndex != buttonIndex && alertView.tag == OTRChatViewAlertViewVerifiedTag)
     {
         [[OTRKit sharedInstance] changeVerifyFingerprintForUsername:self.buddy.accountName accountName:self.buddy.account.username  protocol:self.buddy.account.protocol verrified:NO];
         [self refreshLockButton];
@@ -608,7 +619,7 @@
             
             OTRManagedMessage * currentMessage = (OTRManagedMessage *)messageOrStatus;
             
-            if (!_previousShownSentDate || [currentMessage.date timeIntervalSinceDate:_previousShownSentDate] > MESSAGE_SENT_DATE_SHOW_TIME_INTERVAL) {
+            if (!_previousShownSentDate || [currentMessage.date timeIntervalSinceDate:_previousShownSentDate] > messageSentDateShowTimeInterval) {
                 _previousShownSentDate = currentMessage.date;
                 showDate = YES;
             }
@@ -635,14 +646,14 @@
             
         }
         else {
-            height = MESSAGE_SENT_DATE_LABEL_HEIGHT;
+            height = messageSentDateLabelHeight;
         }
     }
     else
     {
         //Composing messsage height
         CGSize messageTextLabelSize =[OTRMessageTableViewCell messageTextLabelSize:@"T"];
-        height = messageTextLabelSize.height+MESSAGE_MARGIN_TOP+MESSAGE_MARGIN_BOTTOM;
+        height = messageTextLabelSize.height+messageMarginTop+messageMarginBottom;
         height = 35.0;
     }
     return height;
