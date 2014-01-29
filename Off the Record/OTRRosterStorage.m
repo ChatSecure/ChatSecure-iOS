@@ -18,6 +18,8 @@
 
 #import "Strings.h"
 
+#import "OTRLog.h"
+
 @implementation OTRRosterStorage
 
 -(id)init {

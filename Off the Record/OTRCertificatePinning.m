@@ -16,6 +16,7 @@
 #import <CommonCrypto/CommonDigest.h>
 
 #import "OTRConstants.h"
+#import "OTRLog.h"
 
 #define keychainKeyPrefix @"sslcert."
 #define keychainDictionaryKey @"keychainDictionaryKey"

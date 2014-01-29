@@ -34,7 +34,7 @@
 #import "OTRManagedFacebookAccount.h"
 #import "OTRManagedGoogleAccount.h"
 #import "OTRManagedOscarAccount.h"
-
+#import "OTRLog.h"
 
 @interface OTRManagedAccount()
 @end

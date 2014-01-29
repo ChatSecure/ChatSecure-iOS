@@ -27,6 +27,8 @@
 #import "OTRManagedOscarAccount.h"
 #import "OTRManagedXMPPAccount.h"
 
+#import "OTRLog.h"
+
 @interface OTRAccountsManager(Private)
 - (void) refreshAccountsArray;
 @end

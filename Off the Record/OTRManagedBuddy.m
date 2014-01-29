@@ -32,6 +32,8 @@
 #import "OTRManagedEncryptionStatusMessage.h"
 #import "OTRManagedGroup.h"
 
+#import "OTRLog.h"
+
 @interface OTRManagedBuddy()
 @end
 
