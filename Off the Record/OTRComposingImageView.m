@@ -26,16 +26,17 @@
 - (id)initWithImage:(UIImage *)image
 {
     if (self = [super initWithImage:image]) {
-        CGFloat radius = 6.0;
+        CGFloat radius = 4.0;
         NSInteger numDots = 3;
-        UIColor * startColor = [UIColor redColor];
-        UIColor * endColor = [UIColor orangeColor];
+        NSTimeInterval animationDuration = .5;
+        UIColor * startColor = [UIColor colorWithRed:0.75 green:0.75 blue:0.75 alpha:1];
+        UIColor * endColor = [UIColor colorWithRed:0.59 green:0.59 blue:0.59 alpha:1];
         
         NSMutableArray * tempArray = [NSMutableArray array];
         for (NSInteger index = 0; index < numDots; index++) {
             OTRColorFadingDotView * dot = [[OTRColorFadingDotView alloc] initWithColor:startColor radius:radius];
             dot.animateToColor = endColor;
-            dot.animationDuration = .5;
+            dot.animationDuration = animationDuration;
             dot.translatesAutoresizingMaskIntoConstraints = NO;
             [self addSubview:dot];
             [tempArray addObject:dot];
@@ -88,8 +89,8 @@
 
 - (void)setupConstraints
 {
-    CGFloat rightSideBuffer = 12.0;
-    CGFloat leftSideBuffer = rightSideBuffer +6.0;
+    CGFloat rightSideBuffer = 12;
+    CGFloat leftSideBuffer = rightSideBuffer + 6.0;
     
     NSLayoutConstraint * constraint;
     if (self.dots.count > 1 && self.spaces.count == self.dots.count-1) {

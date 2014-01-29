@@ -53,6 +53,15 @@
 - (void)stopColorAnimation
 {
     [self.layer removeAllAnimations];
+    [UIView animateWithDuration:self.animationDuration
+                          delay:0.0
+                        options:UIViewAnimationOptionBeginFromCurrentState
+                     animations:^
+     {
+         self.backgroundColor = self.originalColor;
+     }
+                     completion:nil
+     ];
 }
 
 -(void)updateConstraints

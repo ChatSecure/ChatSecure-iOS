@@ -25,7 +25,7 @@ typedef NS_ENUM(NSUInteger, OTRBubbleMessageType) {
 
 
 + (UIImageView *)bubbleImageViewForMessageType:(OTRBubbleMessageType)bubbleMessageType;
-+ (OTRComposingImageView *)typingBubbleImageView;
++ (UIView *)typingBubbleView;
 
 + (UIImage *)circleWithRadius:(CGFloat)radius;
 
