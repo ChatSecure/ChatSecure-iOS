@@ -197,8 +197,6 @@
 		637A7DE7189745FD004EF5A2 /* bubble-min-tailless.png in Resources */ = {isa = PBXBuildFile; fileRef = 637A7DE5189745FD004EF5A2 /* bubble-min-tailless.png */; };
 		637A7DE8189745FD004EF5A2 /* bubble-min-tailless@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 637A7DE6189745FD004EF5A2 /* bubble-min-tailless@2x.png */; };
 		637A7DEB18974A06004EF5A2 /* OTRComposingImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 637A7DEA18974A06004EF5A2 /* OTRComposingImageView.m */; };
-		637A7DEE18975304004EF5A2 /* bubble-tailless.png in Resources */ = {isa = PBXBuildFile; fileRef = 637A7DEC18975304004EF5A2 /* bubble-tailless.png */; };
-		637A7DEF18975304004EF5A2 /* bubble-tailless@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 637A7DED18975304004EF5A2 /* bubble-tailless@2x.png */; };
 		637BC43018985BAC006EC18C /* OTRColorFadingDotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 637BC42F18985BAC006EC18C /* OTRColorFadingDotView.m */; };
 		63813C1216E14E5D00909670 /* OTRBuddyListGroupManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 63813C1116E14E5D00909670 /* OTRBuddyListGroupManager.m */; };
 		638286E01846911C00F127C2 /* OTRAccountTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 638286DF1846911C00F127C2 /* OTRAccountTableViewCell.m */; };
@@ -1056,8 +1054,6 @@
 		637A7DE6189745FD004EF5A2 /* bubble-min-tailless@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "bubble-min-tailless@2x.png"; path = "Resources/Images/bubble-min-tailless@2x.png"; sourceTree = "<group>"; };
 		637A7DE918974A06004EF5A2 /* OTRComposingImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRComposingImageView.h; sourceTree = "<group>"; };
 		637A7DEA18974A06004EF5A2 /* OTRComposingImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRComposingImageView.m; sourceTree = "<group>"; };
-		637A7DEC18975304004EF5A2 /* bubble-tailless.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "bubble-tailless.png"; path = "Resources/Images/bubble-tailless.png"; sourceTree = "<group>"; };
-		637A7DED18975304004EF5A2 /* bubble-tailless@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "bubble-tailless@2x.png"; path = "Resources/Images/bubble-tailless@2x.png"; sourceTree = "<group>"; };
 		637B55F3183F08D10012F1C9 /* test_OTRManagedAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = test_OTRManagedAccount.m; sourceTree = "<group>"; };
 		637BC42E18985BAC006EC18C /* OTRColorFadingDotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRColorFadingDotView.h; sourceTree = "<group>"; };
 		637BC42F18985BAC006EC18C /* OTRColorFadingDotView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRColorFadingDotView.m; sourceTree = "<group>"; };
@@ -2627,8 +2623,6 @@
 		637A7DCC18972B69004EF5A2 /* Bubbles */ = {
 			isa = PBXGroup;
 			children = (
-				637A7DEC18975304004EF5A2 /* bubble-tailless.png */,
-				637A7DED18975304004EF5A2 /* bubble-tailless@2x.png */,
 				637A7DE5189745FD004EF5A2 /* bubble-min-tailless.png */,
 				637A7DE6189745FD004EF5A2 /* bubble-min-tailless@2x.png */,
 				637A7DD718972CD9004EF5A2 /* bubble-min.png */,
@@ -4046,9 +4040,7 @@
 				D96271041755DEB100F0A958 /* uv_x@2x.png in Resources */,
 				637A7DE8189745FD004EF5A2 /* bubble-min-tailless@2x.png in Resources */,
 				639C75D817E127A600530423 /* FBLoginViewButton.png in Resources */,
-				637A7DEF18975304004EF5A2 /* bubble-tailless@2x.png in Resources */,
 				639C75D917E127A600530423 /* FBLoginViewButton@2x.png in Resources */,
-				637A7DEE18975304004EF5A2 /* bubble-tailless.png in Resources */,
 				639C75DA17E127A600530423 /* FBLoginViewButtonPressed.png in Resources */,
 				639C75DB17E127A600530423 /* FBLoginViewButtonPressed@2x.png in Resources */,
 				633B6D0017ECF4F7002DA152 /* googleTalkButton@2x.png in Resources */,
