@@ -126,7 +126,7 @@ typedef NS_ENUM(NSUInteger, OTRBuddyStatus) {
 #define ALERTVIEW_NOT_VERIFIED_TAG 0
 #define ALERTVIEW_VERIFIED_TAG 1
 
-#define kChatBarHeight1                      40
+#define kChatBarHeight1                      42
 #define kChatBarHeight4                      94
 #define SentDateFontSize                     13
 #define DeliveredFontSize                    13

@@ -74,7 +74,7 @@
     
     [button setTitleColor:[OTRColors bubbleBlueColor] forState:UIControlStateNormal];
     [button setTitleColor:[OTRColors bubbleBlueColor] forState:UIControlStateHighlighted];
-    [button setTitleColor:[OTRColors bubbleLightGrayColor] forState:UIControlStateDisabled];
+    [button setTitleColor:[UIColor colorWithRed:0.56 green:0.56 blue:0.56 alpha:1] forState:UIControlStateDisabled];
     
     button.titleLabel.font = [UIFont boldSystemFontOfSize:18.0f];
     return button;
@@ -110,7 +110,7 @@
     if(!_textView) {
         CGFloat rightEdge = self.sendButton.frame.origin.x - 8;
         if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
-            _textView = [[HPGrowingTextView alloc] initWithFrame:CGRectMake(6, 4, rightEdge-6, 32)];
+            _textView = [[HPGrowingTextView alloc] initWithFrame:CGRectMake(6, 4, rightEdge-6, 34)];
             _textView.backgroundColor = [UIColor clearColor];
             _textView.layer.borderColor = [UIColor colorWithWhite:0.8f alpha:1.0f].CGColor;
             _textView.layer.borderWidth = 0.65f;
@@ -155,7 +155,10 @@
         self.sendButton.titleLabel.alpha = 1;
     } else {
         self.sendButton.enabled = NO;
-        self.sendButton.titleLabel.alpha = 0.5f;
+        if(SYSTEM_VERSION_LESS_THAN(@"7.0"))
+        {
+            self.sendButton.titleLabel.alpha = 0.5f;
+        }
     }
 }
 
