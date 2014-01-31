@@ -55,6 +55,9 @@
 NSString *const OTRXMPPRegisterSucceededNotificationName = @"OTRXMPPRegisterSucceededNotificationName";
 NSString *const OTRXMPPRegisterFailedNotificationName    = @"OTRXMPPRegisterFailedNotificationName";
 
+NSTimeInterval const kOTRChatStatePausedTimeout   = 5;
+NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
+
 
 @interface OTRXMPPManager()
 

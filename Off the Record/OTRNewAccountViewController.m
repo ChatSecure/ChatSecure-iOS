@@ -31,10 +31,10 @@
 #import "OTRManagedGoogleAccount.h"
 #import "OTRManagedOscarAccount.h"
 
-#define rowHeight 70
-#define kDisplayNameKey @"displayNameKey"
-#define kProviderImageKey @"providerImageKey"
-#define kAccountTypeKey @"kAccountTypeKey"
+static CGFloat const kOTRRowHeight   = 70;
+NSString *const kOTRDisplayNameKey   = @"kOTRDisplayNameKey";
+NSString *const kOTRProviderImageKey = @"kOTRProviderImageKey";
+NSString *const kOTRAccountTypeKey   = @"kOTRAccountTypeKey";
 
 @interface OTRNewAccountViewController ()
 
@@ -83,7 +83,7 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return rowHeight;
+    return kOTRRowHeight;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -96,12 +96,12 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     NSDictionary * cellAccount = [accountsCellArray objectAtIndex:indexPath.row];
-    cell.textLabel.text = cellAccount[kDisplayNameKey];
+    cell.textLabel.text = cellAccount[kOTRDisplayNameKey];
     cell.textLabel.font = [UIFont boldSystemFontOfSize:19];
-    cell.imageView.image = [UIImage imageNamed:cellAccount[kProviderImageKey]];
+    cell.imageView.image = [UIImage imageNamed:cellAccount[kOTRProviderImageKey]];
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
-    if( [cellAccount[kAccountTypeKey] isEqual:@(OTRAccountTypeFacebook)])
+    if( [cellAccount[kOTRAccountTypeKey] isEqual:@(OTRAccountTypeFacebook)])
     {
         cell.imageView.layer.masksToBounds = YES;
         cell.imageView.layer.cornerRadius = 10.0;
@@ -117,7 +117,7 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     
-    OTRAccountType accountType = [accountsCellArray[indexPath.row][kAccountTypeKey] unsignedIntegerValue];
+    OTRAccountType accountType = [accountsCellArray[indexPath.row][kOTRAccountTypeKey] unsignedIntegerValue];
     [self didSelectAccountType:accountType];
 }
 
@@ -148,29 +148,29 @@
 }
 
 +(NSDictionary *)googleCellDictionary {
-    return @{kDisplayNameKey:GOOGLE_TALK_STRING,
-             kProviderImageKey: OTRGoogleTalkImageName,
-             kAccountTypeKey: @(OTRAccountTypeGoogleTalk)};
+    return @{kOTRDisplayNameKey:GOOGLE_TALK_STRING,
+             kOTRProviderImageKey: OTRGoogleTalkImageName,
+             kOTRAccountTypeKey: @(OTRAccountTypeGoogleTalk)};
 }
 +(NSDictionary *)facebookCellDictionary {
-    return @{kDisplayNameKey:FACEBOOK_STRING,
-             kProviderImageKey: OTRFacebookImageName,
-             kAccountTypeKey: @(OTRAccountTypeFacebook)};
+    return @{kOTRDisplayNameKey:FACEBOOK_STRING,
+             kOTRProviderImageKey: OTRFacebookImageName,
+             kOTRAccountTypeKey: @(OTRAccountTypeFacebook)};
 }
 +(NSDictionary *)XMPPCellDictionary {
-    return @{kDisplayNameKey: JABBER_STRING,
-             kProviderImageKey: OTRXMPPImageName,
-             kAccountTypeKey: @(OTRAccountTypeJabber)};
+    return @{kOTRDisplayNameKey: JABBER_STRING,
+             kOTRProviderImageKey: OTRXMPPImageName,
+             kOTRAccountTypeKey: @(OTRAccountTypeJabber)};
 }
 +(NSDictionary *)XMPPTorCellDictionary {
-    return @{kDisplayNameKey: XMPP_TOR_STRING,
-             kProviderImageKey: OTRXMPPTorImageName,
-             kAccountTypeKey: @(OTRAccountTypeXMPPTor)};
+    return @{kOTRDisplayNameKey: XMPP_TOR_STRING,
+             kOTRProviderImageKey: OTRXMPPTorImageName,
+             kOTRAccountTypeKey: @(OTRAccountTypeXMPPTor)};
 }
 +(NSDictionary *)aimCellDictionary {
-    return @{kDisplayNameKey: AIM_STRING,
-             kProviderImageKey: OTRAimImageName,
-             kAccountTypeKey: @(OTRAccountTypeAIM)};
+    return @{kOTRDisplayNameKey: AIM_STRING,
+             kOTRProviderImageKey: OTRAimImageName,
+             kOTRAccountTypeKey: @(OTRAccountTypeAIM)};
 }
 
 @end

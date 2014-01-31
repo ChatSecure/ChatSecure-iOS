@@ -38,7 +38,6 @@
 
 #import "OTRLog.h"
 
-NSString *const OTRAccountUernameKey          = @"kOTRAccountUsernameKey";
 NSString *const OTRAccountProtocolKey         = @"kOTRAccountProtocolKey";
 NSString *const OTRAccountRememberPasswordKey = @"kOTRAccountRememberPasswordKey";
 
@@ -47,6 +46,8 @@ NSString *const OTRGoogleTalkImageName        = @"gtalk.png";
 NSString *const OTRFacebookImageName          = @"facebook.png";
 NSString *const OTRXMPPImageName              = @"xmpp.png";
 NSString *const OTRXMPPTorImageName           = @"xmpp_tor.png";
+
+NSString *const kOTRClassKey                     = @"classKey";
 
 @interface OTRManagedAccount()
 @end
@@ -66,7 +67,7 @@ NSString *const OTRXMPPTorImageName           = @"xmpp_tor.png";
     
     NSArray * attributes = [self.entity.attributesByName allKeys];
     
-    dictionary[kClassKey] = NSStringFromClass([self class]);
+    dictionary[kOTRClassKey] = NSStringFromClass([self class]);
     
     [attributes enumerateObjectsUsingBlock:^(NSString * attributeName, NSUInteger idx, BOOL *stop) {
         
@@ -199,13 +200,13 @@ NSString *const OTRXMPPTorImageName           = @"xmpp_tor.png";
 
 + (instancetype)createWithDictionary:(NSDictionary *)dictionary forContext:(NSManagedObjectContext *)context
 {
-    NSString * className = dictionary[kClassKey];
+    NSString * className = dictionary[kOTRClassKey];
     OTRManagedAccount * account = nil;
     if (className) {
         account = [NSClassFromString(className) insertInManagedObjectContext:context];
         
         NSMutableDictionary * attributesDict = [dictionary mutableCopy];
-        [attributesDict removeObjectForKey:kClassKey];
+        [attributesDict removeObjectForKey:kOTRClassKey];
         [attributesDict enumerateKeysAndObjectsUsingBlock:^(NSString * key, id obj, BOOL *stop) {
             @try {
                 [account setValue:obj forKey:key];

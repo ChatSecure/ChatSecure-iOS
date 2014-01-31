@@ -27,7 +27,6 @@
 #import "OTRConstants.h"
 
 
-extern NSString *const OTRAccountUernameKey;
 extern NSString *const OTRAccountProtocolKey;
 extern NSString *const OTRAccountRememberPasswordKey;
 
@@ -37,7 +36,7 @@ extern NSString *const OTRFacebookImageName;
 extern NSString *const OTRXMPPImageName;
 extern NSString *const OTRXMPPTorImageName;
 
-#define kClassKey @"classKey"
+
 
 @interface OTRManagedAccount : _OTRManagedAccount
 

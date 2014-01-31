@@ -36,9 +36,9 @@
 #import "OTRAccountTableViewCell.h"
 #import "OTRCreateAccountChooserViewController.h"
 
-#define ACTIONSHEET_DISCONNECT_TAG 1
-#define ACTIONSHEET_ACCOUNT_PICK_TYPE_TAG 2
-#define ALERTVIEW_DELETE_TAG 1
+NSUInteger const kOTRActionSheetDisconnectTag = 1;
+NSUInteger const kOTRActionSheetPickTypeTag = 2;
+NSUInteger const kOTRAlertViewDeleteTag = 3;
 
 @interface OTRSettingsViewController(Private)
 - (void) addAccount:(id)sender;
@@ -206,7 +206,7 @@
                 UIActionSheet *logoutSheet = [[UIActionSheet alloc] initWithTitle:LOGOUT_STRING delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:LOGOUT_STRING otherButtonTitles: nil];
                 self.selectedAccount = account;
                 self.selectedIndexPath = indexPath;
-                logoutSheet.tag = ACTIONSHEET_DISCONNECT_TAG;
+                logoutSheet.tag = kOTRActionSheetDisconnectTag;
                 [OTR_APP_DELEGATE presentActionSheet:logoutSheet inView:self.view];
             }
         }
@@ -229,7 +229,7 @@
     {
         OTRManagedAccount *account = [self.accountsFetchedResultsController objectAtIndexPath:indexPath];
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:DELETE_ACCOUNT_TITLE_STRING message:[NSString stringWithFormat:@"%@ %@?", DELETE_ACCOUNT_MESSAGE_STRING, account.username] delegate:self cancelButtonTitle:CANCEL_STRING otherButtonTitles:OK_STRING, nil];
-        alert.tag = ALERTVIEW_DELETE_TAG;
+        alert.tag = kOTRAlertViewDeleteTag;
         self.selectedIndexPath = indexPath;
         self.selectedAccount = account;
         [alert show];
@@ -254,7 +254,7 @@
 - (void) addAccount:(id)sender {
     
     UIActionSheet * actionSheet = [[UIActionSheet alloc] initWithTitle:@"New or Create Account" delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:@"Create New Account",@"Login to Existing Account", nil];
-    actionSheet.tag = ACTIONSHEET_ACCOUNT_PICK_TYPE_TAG;
+    actionSheet.tag = kOTRActionSheetPickTypeTag;
     [actionSheet showInView:self.view];
 }
 
@@ -294,7 +294,7 @@
 
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex 
 {
-    if (actionSheet.tag == ACTIONSHEET_DISCONNECT_TAG) {
+    if (actionSheet.tag == kOTRActionSheetDisconnectTag) {
         
         id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:selectedAccount];
         
@@ -303,7 +303,7 @@
             [protocol disconnect];
         }
     }
-    else if (actionSheet.tag == ACTIONSHEET_ACCOUNT_PICK_TYPE_TAG)
+    else if (actionSheet.tag == kOTRActionSheetPickTypeTag)
     {
         if (buttonIndex == 0) {
             OTRCreateAccountChooserViewController * createAccountChooser = [[OTRCreateAccountChooserViewController alloc] init];
@@ -335,7 +335,7 @@
 }
 
 - (void) alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
-    if (alertView.tag == ALERTVIEW_DELETE_TAG) {
+    if (alertView.tag == kOTRAlertViewDeleteTag) {
         if (buttonIndex != alertView.cancelButtonIndex) {
             if([selectedAccount isConnected])
             {

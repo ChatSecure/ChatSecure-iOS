@@ -42,12 +42,8 @@
 #import "OTRBuddyCell.h"
 #import "OTRRecentBuddyCell.h"
 
-//#define kSignoffTime 500
-
 #define RECENTS_SECTION_INDEX 0
 #define BUDDIES_SECTION_INDEX 1
-
-#define HEADER_HEIGHT 24
 
 @interface OTRBuddyListViewController(Private)
 - (void) selectActiveConversation;

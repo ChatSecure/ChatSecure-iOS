@@ -9,6 +9,8 @@
 #import "OTRLanguageManager.h"
 #import "Strings.h"
 
+NSString *const kOTRAppleLanguagesKey  = @"AppleLanguages";
+NSString *const kOTRUserSetLanguageKey = @"userSetLanguageKey";
 
 
 @implementation OTRLanguageManager
