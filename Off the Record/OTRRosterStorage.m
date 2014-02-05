@@ -128,12 +128,12 @@
 
 - (void)clearAllUsersAndResourcesForXMPPStream:(XMPPStream *)stream
 {
-    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
-        OTRManagedAccount * account = [self accountForStream:stream];
-        [account.buddies enumerateObjectsUsingBlock:^(OTRManagedBuddy * buddy, BOOL *stop) {
-            [buddy MR_deleteEntity];
-        }];
+    NSManagedObjectContext *localContext = [NSManagedObjectContext MR_contextForCurrentThread];
+    OTRManagedAccount * account = [self accountForStream:stream];
+    [account.buddies enumerateObjectsUsingBlock:^(OTRManagedBuddy * buddy, BOOL *stop) {
+        [buddy MR_deleteEntity];
     }];
+    [localContext MR_saveToPersistentStoreAndWait];
 }
 
 - (NSArray *)jidsForXMPPStream:(XMPPStream *)stream
@@ -148,10 +148,10 @@
 
 - (void)setPhoto:(UIImage *)image forUserWithJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream
 {
-    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
-        OTRManagedBuddy * user = [self buddyWithJID:jid xmppStream:stream inContext:localContext];
-        user.photo = image;
-    }];
+    NSManagedObjectContext *localContext = [NSManagedObjectContext MR_contextForCurrentThread];
+    OTRManagedBuddy * user = [self buddyWithJID:jid xmppStream:stream inContext:localContext];
+    user.photo = image;
+    [localContext MR_saveToPersistentStoreAndWait];
 }
 
 -(void)updateUser:(OTRManagedBuddy *)user updateWithItem: (NSXMLElement *)item

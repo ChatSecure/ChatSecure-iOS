@@ -117,12 +117,11 @@
  * This is used so we can clear any cached vCardTemp's for the JID.
  **/
 - (void)clearvCardTempForJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream{
-    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
-        OTRvCard * vCard = [OTRvCard fetchOrCreateWithJidString:[jid bare]];
-        vCard.vCardTemp = nil;
-        vCard.lastUpdated = [NSDate date];
-    }];
-    
+    NSManagedObjectContext *localContext = [NSManagedObjectContext MR_contextForCurrentThread];
+    OTRvCard * vCard = [OTRvCard fetchOrCreateWithJidString:[jid bare]];
+    vCard.vCardTemp = nil;
+    vCard.lastUpdated = [NSDate date];
+    [localContext MR_saveToPersistentStoreAndWait];
 }
 
 @end
