@@ -396,7 +396,7 @@
     
     if([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyDeleteOnDisconnect])
     {
-        NSManagedObjectContext * context = [NSManagedObjectContext MR_contextWithParent:[NSManagedObjectContext MR_defaultContext]];
+        NSManagedObjectContext * context = [NSManagedObjectContext MR_context];
         [self.account deleteAllAccountMessagesInContext:context];
         [context MR_saveToPersistentStoreAndWait];
     }
@@ -615,7 +615,8 @@
 -(void)sendChatState:(OTRChatState)chatState withBuddyID:(NSManagedObjectID *)managedBuddyObjectID
 {
     dispatch_async(self.workQueue, ^{
-        NSManagedObjectContext * localContext = [NSManagedObjectContext MR_contextWithParent:[NSManagedObjectContext MR_defaultContext]];
+        NSManagedObjectContext * localContext = [NSManagedObjectContext MR_context];
+        
         OTRManagedBuddy * buddy = [self managedBuddyWithObjectID:managedBuddyObjectID inContext:localContext];
         
         

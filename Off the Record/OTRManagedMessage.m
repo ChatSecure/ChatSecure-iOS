@@ -119,7 +119,7 @@
 
 +(void)receivedDeliveryReceiptForMessageID:(NSString *)objectIDString
 {
-    NSManagedObjectContext * context = [NSManagedObjectContext MR_contextWithParent:[NSManagedObjectContext MR_defaultContext]];
+    NSManagedObjectContext * context = [NSManagedObjectContext MR_context];
     NSArray * messages = [OTRManagedMessage MR_findByAttribute:OTRManagedMessageAttributes.uniqueID withValue:objectIDString inContext:context];
     [messages enumerateObjectsUsingBlock:^(OTRManagedMessage * message, NSUInteger idx, BOOL *stop) {
         message.isDeliveredValue = YES;
