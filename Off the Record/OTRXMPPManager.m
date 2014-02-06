@@ -380,22 +380,19 @@
 	return YES;
 }
 
-- (void)disconnect {
+- (void)disconnect
+{
     [self goOffline];
     
     [xmppStream disconnect];
     
-    [self.account setAllBuddiesStatuts:OTRBuddyStatusOffline];
     
     if([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyDeleteOnDisconnect])
     {
-        [self.account deleteAllConversationsForAccount];
+        NSManagedObjectContext * context = [NSManagedObjectContext MR_contextWithParent:[NSManagedObjectContext MR_defaultContext]];
+        [self.account deleteAllAccountMessagesInContext:context];
+        [context MR_saveToPersistentStoreAndWait];
     }
-    
-    
-    
-    [self.xmppRosterStorage clearAllUsersAndResourcesForXMPPStream:self.xmppStream];
-    
 }
 
 
@@ -474,20 +471,23 @@
 	return NO;
 }
 
--(OTRManagedBuddy *)buddyWithMessage:(XMPPMessage *)message
+-(OTRManagedBuddy *)buddyWithMessage:(XMPPMessage *)message inContext:(NSManagedObjectContext *)context
 {
-    return [OTRManagedBuddy fetchOrCreateWithName:[[message from] bare] account:self.account];
+    OTRManagedBuddy * buddy = [OTRManagedBuddy fetchOrCreateWithName:[[message from] bare] account:self.account inContext:context];
+    return buddy;
 }
 
 
 - (void)xmppStream:(XMPPStream *)sender didReceiveMessage:(XMPPMessage *)message
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
+    NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
+
     
 	// A simple example of inbound message handling.
     if([message hasChatState] && ![message isErrorMessage])
     {
-        OTRManagedBuddy * messageBuddy = [self buddyWithMessage:message];
+        OTRManagedBuddy * messageBuddy = [self buddyWithMessage:message inContext:context];
         if([message hasComposingChatState])
             [messageBuddy receiveChatStateMessage:kOTRChatStateComposing];
         else if([message hasPausedChatState])
@@ -508,25 +508,23 @@
 	{
         NSString *body = [[message elementForName:@"body"] stringValue];
         
-        OTRManagedBuddy * messageBuddy = [self buddyWithMessage:message];
+        OTRManagedBuddy * messageBuddy = [self buddyWithMessage:message inContext:context];
         
         NSDate * date = [message delayedDeliveryDate];
         
-        OTRManagedMessage *otrMessage = [OTRManagedMessage newMessageFromBuddy:messageBuddy message:body encrypted:YES delayedDate:date];
+        OTRManagedMessage *otrMessage = [OTRManagedMessage newMessageFromBuddy:messageBuddy message:body encrypted:YES delayedDate:date inContext:context];
+        [context MR_saveToPersistentStoreAndWait];
+        
         [OTRCodec decodeMessage:otrMessage completionBlock:^(OTRManagedMessage *message) {
             [OTRManagedMessage showLocalNotificationForMessage:message];
         }];
 	}
+    [context MR_saveToPersistentStoreAndWait];
     
 }
 - (void)xmppStream:(XMPPStream *)sender didReceivePresence:(XMPPPresence *)presence
 {
 	DDLogVerbose(@"%@: %@ - %@\nType: %@\nShow: %@\nStatus: %@", THIS_FILE, THIS_METHOD, [presence from], [presence type], [presence show],[presence status]);
-    /*
-    [[NSNotificationCenter defaultCenter]
-     postNotificationName:kOTRStatusUpdate
-     object:self userInfo:[NSDictionary dictionaryWithObjectsAndKeys: [[presence from]bare] ,@"user", nil]];
-     */
 }
 
 - (void)xmppStream:(XMPPStream *)sender didReceiveError:(id)error
@@ -548,8 +546,13 @@
         [self failedToConnect:error];
 	}
     else {
+        NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
+        [self.account setAllBuddiesStatuts:OTRBuddyStatusOffline inContext:context];
+  
+        [context MR_saveToPersistentStoreAndWait];
         //Lost connection
     }
+    isXmppConnected = NO;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -561,9 +564,10 @@
     DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
     
 	NSString *jidStrBare = [presence fromStr];
+    NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
     
-    [OTRXMPPManagedPresenceSubscriptionRequest fetchOrCreateWith:jidStrBare account:self.account];
-    [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
+    [OTRXMPPManagedPresenceSubscriptionRequest fetchOrCreateWith:jidStrBare account:self.account inContext:context];
+    [context MR_saveToPersistentStoreAndWait];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -673,8 +677,8 @@
 
 - (void) addBuddy:(OTRManagedBuddy *)newBuddy
 {
-    [newBuddy addToGroup:@"Buddies"];
-    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
+    [newBuddy addToGroup:@"Buddies" inContext:context];
     [context MR_saveToPersistentStoreAndWait];
     XMPPJID * newJID = [XMPPJID jidWithString:newBuddy.accountName];
     [xmppRoster addUser:newJID withNickname:newBuddy.displayName];

@@ -181,12 +181,15 @@
 -(void)doneButtonPressed:(id)sender
 {
     if ([self checkFields]) {
+        NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
         NSString * newBuddyAccountName = [[self.accountNameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] lowercaseString];
         NSString * newBuddyDisplayName = [self.displayNameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-        OTRManagedBuddy * newBuddy = [OTRManagedBuddy fetchOrCreateWithName:newBuddyAccountName account:self.account];
+        OTRManagedBuddy * newBuddy = [OTRManagedBuddy fetchOrCreateWithName:newBuddyAccountName account:self.account inContext:context];
         if (newBuddy && [newBuddyDisplayName length]) {
             newBuddy.displayName = newBuddyDisplayName;
         }
+        
+        [context MR_saveToPersistentStoreAndWait];
         
         id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
         [protocol addBuddy:newBuddy];

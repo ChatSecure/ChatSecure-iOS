@@ -101,36 +101,27 @@
 -(void)receiveChatStateMessage:(OTRChatState) newChatState
 {
     self.chatStateValue = newChatState;
-    //NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
-    //[context MR_saveToPersistentStoreAndWait];
-    //[[NSNotificationCenter defaultCenter] postNotificationName:MESSAGE_PROCESSED_NOTIFICATION object:self];
 }
 
--(void)setNewEncryptionStatus:(OTRKitMessageState)newEncryptionStatus
+-(void)setNewEncryptionStatus:(OTRKitMessageState)newEncryptionStatus inContext:(NSManagedObjectContext *)context
 {
-    OTRManagedEncryptionStatusMessage * currentEncryptionStatus = [self currentEncryptionStatus];
+    OTRManagedEncryptionStatusMessage * currentEncryptionStatus = [self currentEncryptionStatusInContext:context];
     
-    /*
-    if([self.messages count] > 0 && newEncryptionStatus != kOTRKitMessageStateEncrypted)
-    {
-        [self receiveEncryptionMessage:CONVERSATION_NOT_SECURE_WARNING_STRING];
-    }
-    */
     if(newEncryptionStatus != currentEncryptionStatus.statusValue)
     {
         if (newEncryptionStatus != kOTRKitMessageStateEncrypted && currentEncryptionStatus.statusValue == kOTRKitMessageStateEncrypted) {
             [[[UIAlertView alloc] initWithTitle:SECURITY_WARNING_STRING message:[NSString stringWithFormat:CONVERSATION_NO_LONGER_SECURE_STRING, self.displayName] delegate:nil cancelButtonTitle:OK_STRING otherButtonTitles:nil] show];
         }
-        [OTRManagedEncryptionStatusMessage newEncryptionStatus:newEncryptionStatus buddy:self];
+        [OTRManagedEncryptionStatusMessage newEncryptionStatus:newEncryptionStatus buddy:self inContext:context];
     }
 }
 
--(void) newStatusMessage:(NSString *)newStatusMessage status:(OTRBuddyStatus)newStatus incoming:(BOOL)isIncoming
+- (void)newStatusMessage:(NSString *)newStatusMessage status:(OTRBuddyStatus)newStatus incoming:(BOOL)isIncoming inContext:(NSManagedObjectContext *)context
 {
     OTRManagedStatus * currentManagedStatus = [self currentStatusMessage];
     
     if (!currentManagedStatus) {
-        [OTRManagedStatus newStatus:newStatus withMessage:newStatusMessage withBuddy:self incoming:isIncoming];
+        [OTRManagedStatus newStatus:newStatus withMessage:newStatusMessage withBuddy:self incoming:isIncoming inContext:context];
         self.currentStatusValue = newStatus;
         return;
     }
@@ -143,7 +134,7 @@
     if (newStatus != currentManagedStatus.statusValue || ![newStatusMessage isEqualToString:currentManagedStatus.message]) {
         
         NSPredicate * messageDateFilter = [NSPredicate predicateWithFormat:@"(date >= %@) AND (date <= %@)",currentManagedStatus.date,[NSDate date]];
-        NSArray * managedMessages = [OTRManagedMessage MR_findAllWithPredicate:messageDateFilter];
+        NSArray * managedMessages = [OTRManagedMessage MR_findAllWithPredicate:messageDateFilter inContext:context];
         
         //if no new messages since last status update just change the most recent status
         if (![managedMessages count]) {
@@ -152,7 +143,7 @@
         }
         else
         {
-            [OTRManagedStatus newStatus:newStatus withMessage:newStatusMessage withBuddy:self incoming:isIncoming];
+            [OTRManagedStatus newStatus:newStatus withMessage:newStatusMessage withBuddy:self incoming:isIncoming inContext:context];
         }
         self.currentStatusValue = newStatus;
     }
@@ -164,7 +155,7 @@
 
 -(OTRManagedStatus *)currentStatusMessage
 {
-    NSSortDescriptor * dateSort = [NSSortDescriptor sortDescriptorWithKey:@"date" ascending:NO];
+    NSSortDescriptor * dateSort = [NSSortDescriptor sortDescriptorWithKey:OTRManagedMessageAndStatusAttributes.date ascending:NO];
     NSArray * sortedStatuses = [self.statuses sortedArrayUsingDescriptors:@[dateSort]];
     
     if ([sortedStatuses count]) {
@@ -173,17 +164,33 @@
     return nil;    
 }
 
--(OTRManagedEncryptionStatusMessage *)currentEncryptionStatus
+- (OTRManagedEncryptionStatusMessage *)fetchLastEncryptionStatusMessage
 {
     NSSortDescriptor * dateSort = [NSSortDescriptor sortDescriptorWithKey:@"date" ascending:NO];
     NSArray * sortedStatuses = [self.encryptionStatusMessages sortedArrayUsingDescriptors:@[dateSort]];
     
     if ([sortedStatuses count]) {
-        return sortedStatuses[0];
+        return [sortedStatuses firstObject];
     }
-    return [OTRManagedEncryptionStatusMessage newEncryptionStatus:kOTRKitMessageStatePlaintext buddy:self];
+    return nil;
+}
 
-    
+-(OTRManagedEncryptionStatusMessage *)currentEncryptionStatusInContext:(NSManagedObjectContext *)context
+{
+    OTRManagedEncryptionStatusMessage * encryptionStatusMessage = [self fetchLastEncryptionStatusMessage];
+    if (!encryptionStatusMessage) {
+        encryptionStatusMessage = [OTRManagedEncryptionStatusMessage newEncryptionStatus:kOTRKitMessageStatePlaintext buddy:self inContext:context];
+    }
+    return encryptionStatusMessage;
+}
+
+- (OTRKitMessageState)currentEncryptionStatus
+{
+    OTRManagedEncryptionStatusMessage * encryptionStatusMessage = [self fetchLastEncryptionStatusMessage];
+    if (encryptionStatusMessage) {
+        return encryptionStatusMessage.statusValue;
+    }
+    return kOTRKitMessageStatePlaintext;
 }
 
 -(NSInteger) numberOfUnreadMessages
@@ -204,15 +211,13 @@
     }];
 }
 
-- (void) deleteAllMessages
+- (void) deleteAllMessagesInContext:(NSManagedObjectContext *)context
 {
-    NSPredicate * messageFilter = [NSPredicate predicateWithFormat:@"buddy == %@",self];
+    NSPredicate * messageFilter = [NSPredicate predicateWithFormat:@"%K == %@",OTRManagedMessageAndStatusRelationships.buddy,self];
     NSPredicate * notLastStatusFilter = [NSPredicate predicateWithFormat:@"self != %@",[self currentStatusMessage]];
     NSPredicate * compoundPredicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[messageFilter,notLastStatusFilter]];
     
-    [OTRManagedMessageAndStatus MR_deleteAllMatchingPredicate:compoundPredicate];
-    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
-    [context MR_saveToPersistentStoreAndWait];
+    [OTRManagedMessageAndStatus MR_deleteAllMatchingPredicate:compoundPredicate inContext:context];
 }
 
 -(void)addToGroup:(NSString *)groupName inContext:(NSManagedObjectContext *)context
@@ -221,48 +226,32 @@
     [self addGroupsObject:managedGroup];
 }
 
-- (void) addToGroup:(NSString *)groupName {
-    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
-    [self addToGroup:groupName inContext:context];
-}
-
 -(NSArray *)groupNames
 {
     NSSortDescriptor * descriptor = [[NSSortDescriptor alloc] initWithKey:OTRManagedGroupAttributes.name ascending:YES];
     return [[self.groups sortedArrayUsingDescriptors:@[descriptor]] valueForKey:OTRManagedGroupAttributes.name];
 }
 
-+(OTRManagedBuddy *)fetchOrCreateWithName:(NSString *)name account:(OTRManagedAccount *)account
-{
-    return [self fetchOrCreateWithName:name account:account inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
-}
-
-+(OTRManagedBuddy *)fetchOrCreateWithName:(NSString *)name account:(OTRManagedAccount *)account inContext:(NSManagedObjectContext *)context
++(instancetype)fetchOrCreateWithName:(NSString *)name account:(OTRManagedAccount *)account inContext:(NSManagedObjectContext *)context
 {
     OTRManagedBuddy * buddy = nil;
     OTRManagedAccount * contextAccount = [account MR_inContext:context];
-    buddy = [OTRManagedBuddy fetchWithName:name account:account inContext:context];
+    buddy = [self fetchWithName:name account:account inContext:context];
     if (!buddy) {
-        buddy = [OTRManagedBuddy MR_createInContext:context];
+        buddy = [self MR_createInContext:context];
         buddy.accountName = name;
         buddy.account = contextAccount;
-        [context MR_saveToPersistentStoreAndWait];
     }
     return buddy;
 }
 
-+(OTRManagedBuddy *)fetchWithName:(NSString *)name account:(OTRManagedAccount *)account;
-{
-    [self fetchWithName:name account:account inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
-}
-
-+(OTRManagedBuddy *)fetchWithName:(NSString *)name account:(OTRManagedAccount *)account inContext:(NSManagedObjectContext *)context
++(instancetype)fetchWithName:(NSString *)name account:(OTRManagedAccount *)account inContext:(NSManagedObjectContext *)context;
 {
     OTRManagedAccount * contextAccount = [account MR_inContext:context];
     NSPredicate * accountPredicate = [NSPredicate predicateWithFormat:@"%K == %@",OTRManagedBuddyRelationships.account,contextAccount];
     NSPredicate * usernamePredicate = [NSPredicate predicateWithFormat:@"%K == %@",OTRManagedBuddyAttributes.accountName,name];
     
-    NSArray * filteredArray = [OTRManagedBuddy MR_findAllWithPredicate:[NSCompoundPredicate andPredicateWithSubpredicates:@[usernamePredicate,accountPredicate]]];
+    NSArray * filteredArray = [self MR_findAllWithPredicate:[NSCompoundPredicate andPredicateWithSubpredicates:@[usernamePredicate,accountPredicate]]];
     
     if([filteredArray count])
     {

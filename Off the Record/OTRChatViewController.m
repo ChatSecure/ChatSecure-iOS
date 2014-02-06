@@ -135,7 +135,7 @@
     if ([rightBarItem isEqual:lockButton] || [rightBarItem isEqual:lockVerifiedButton] || [rightBarItem isEqual:unlockedButton] || !rightBarItem) {
         BOOL trusted = [[OTRKit sharedInstance] fingerprintIsVerifiedForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
         
-        int16_t currentEncryptionStatus = [self.buddy currentEncryptionStatus].statusValue;
+        int16_t currentEncryptionStatus = [self.buddy currentEncryptionStatus];
         
         if(currentEncryptionStatus == kOTRKitMessageStateEncrypted && trusted)
         {
@@ -159,7 +159,7 @@
     NSString *encryptionString = INITIATE_ENCRYPTED_CHAT_STRING;
     NSString * verifiedString = VERIFY_STRING;
     
-    if ([self.buddy currentEncryptionStatus].statusValue == kOTRKitMessageStateEncrypted) {
+    if ([self.buddy currentEncryptionStatus] == kOTRKitMessageStateEncrypted) {
         encryptionString = CANCEL_ENCRYPTED_CHAT_STRING;
     }
     UIActionSheet *popupQuery = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:encryptionString, verifiedString, CLEAR_CHAT_HISTORY_STRING, nil];
@@ -377,7 +377,7 @@
         }
         else if (buttonIndex == 0) // Initiate/cancel encryption
         {
-            if([self.buddy currentEncryptionStatus].statusValue == kOTRKitMessageStateEncrypted)
+            if([self.buddy currentEncryptionStatus] == kOTRKitMessageStateEncrypted)
             {
                 [[OTRKit sharedInstance] disableEncryptionForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
             } else {
@@ -401,7 +401,9 @@
             }
         }
         else if (buttonIndex == 2) { // Clear Chat History
-            [buddy deleteAllMessages];
+            NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
+            [buddy deleteAllMessagesInContext:context];
+            [context MR_saveToPersistentStoreAndWait];
         }
         else if (buttonIndex == actionSheet.cancelButtonIndex) // Cancel
         {
@@ -818,11 +820,12 @@
 {
     NSString * text = inputBar.textView.text;
     if ([text length]) {
-        OTRManagedMessage * message = [OTRManagedMessage newMessageToBuddy:self.buddy message:text encrypted:NO];
+        NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
+        OTRManagedMessage * message = [OTRManagedMessage newMessageToBuddy:self.buddy message:text encrypted:NO inContext:context];
         
-        [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
+        [context MR_saveToPersistentStoreAndWait];
         
-        BOOL secure = [self.buddy currentEncryptionStatus].statusValue == kOTRKitMessageStateEncrypted || [OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyOpportunisticOtr];
+        BOOL secure = [self.buddy currentEncryptionStatus] == kOTRKitMessageStateEncrypted || [OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyOpportunisticOtr];
         if(secure)
         {
             //check if need to generate keys

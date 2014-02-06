@@ -425,7 +425,9 @@
 
 - (void) tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == RECENTS_SECTION_INDEX && editingStyle == UITableViewCellEditingStyleDelete) {
-        [[self.recentBuddiesFetchedResultsController objectAtIndexPath:indexPath] deleteAllMessages];
+        NSManagedObjectContext * context = [NSManagedObjectContext MR_contextWithParent:[NSManagedObjectContext MR_defaultContext]];
+        [[self.recentBuddiesFetchedResultsController objectAtIndexPath:indexPath] deleteAllMessagesInContext:context];
+        [context MR_saveToPersistentStoreAndWait];
     }
 }
 

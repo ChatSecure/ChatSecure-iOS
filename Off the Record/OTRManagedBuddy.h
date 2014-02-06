@@ -41,23 +41,22 @@
 -(void)invalidatePausedChatStateTimer;
 -(void)invalidateInactiveChatStateTimer;
 
-- (void) newStatusMessage:(NSString *)newStatusMessage status:(OTRBuddyStatus)newStatus incoming:(BOOL)isIncoming;
-- (void) setNewEncryptionStatus:(OTRKitMessageState)newEncryptionStatus;
+- (void)newStatusMessage:(NSString *)newStatusMessage status:(OTRBuddyStatus)newStatus incoming:(BOOL)isIncoming inContext:(NSManagedObjectContext *)context;
+- (void)setNewEncryptionStatus:(OTRKitMessageState)newEncryptionStatus inContext:(NSManagedObjectContext *)context;
 - (OTRManagedStatus *)currentStatusMessage;
-- (OTRManagedEncryptionStatusMessage *)currentEncryptionStatus;
+- (OTRManagedEncryptionStatusMessage *)currentEncryptionStatusInContext:(NSManagedObjectContext *)context;
+- (OTRKitMessageState)currentEncryptionStatus;
 
--(void)addToGroup:(NSString *)groupName inContext:(NSManagedObjectContext *)context;
--(void)addToGroup:(NSString *)groupName;
--(NSArray *)groupNames;
+- (void)addToGroup:(NSString *)groupName inContext:(NSManagedObjectContext *)context;
+- (NSArray *)groupNames;
 
 - (NSInteger) numberOfUnreadMessages;
 - (void) allMessagesRead;
 
-- (void) deleteAllMessages;
+- (void) deleteAllMessagesInContext:(NSManagedObjectContext *)context;
 
-+(OTRManagedBuddy *)fetchOrCreateWithName:(NSString *)name account:(OTRManagedAccount *)account;
-+(OTRManagedBuddy *)fetchOrCreateWithName:(NSString *)name account:(OTRManagedAccount *)account inContext:(NSManagedObjectContext *)context;
-+(OTRManagedBuddy *)fetchWithName:(NSString *)name account:(OTRManagedAccount *)account;
++ (instancetype)fetchOrCreateWithName:(NSString *)name account:(OTRManagedAccount *)account inContext:(NSManagedObjectContext *)context;
++ (instancetype)fetchWithName:(NSString *)name account:(OTRManagedAccount *)account inContext:(NSManagedObjectContext *)context;
 
 @end
 

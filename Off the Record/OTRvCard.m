@@ -15,10 +15,6 @@
 
 @implementation OTRvCard
 
-+(OTRvCard *)fetchOrCreateWithJidString:(NSString *)jidString {
-    return [self fetchOrCreateWithJidString:jidString inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
-}
-
 +(OTRvCard *)fetchOrCreateWithJidString:(NSString *)jidString inContext:(NSManagedObjectContext *)context{
     
     OTRvCard * vCard = nil;
@@ -31,7 +27,6 @@
     else {
         vCard = [OTRvCard MR_createInContext:context];
         vCard.jidString = jidString;
-        [context MR_saveToPersistentStoreAndWait];
     }
     return vCard;
 }
@@ -57,18 +52,18 @@
 
 -(void)setPhotoData:(NSData *)photoData
 {
+    NSManagedObjectContext * context = [self managedObjectContext];
     if (!photoData && self.vCardAvatarRelationship) {
-        [self.vCardAvatarRelationship MR_deleteEntity];
+        [self.vCardAvatarRelationship MR_deleteInContext:context];
         self.photoHash = nil;
     }
     else {
-        OTRvCardAvatar * vCardAvatar = [OTRvCardAvatar MR_createEntity];
+        OTRvCardAvatar * vCardAvatar = [OTRvCardAvatar MR_createInContext:context];
         vCardAvatar.photoData = photoData;
         self.vCardAvatarRelationship = vCardAvatar;
         
         self.photoHash = [[photoData xmpp_sha1Digest] xmpp_hexStringValue];
     }
-    [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
 }
 
 -(NSData *)photoData {

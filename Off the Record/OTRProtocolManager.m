@@ -80,10 +80,12 @@ static OTRProtocolManager *sharedManager = nil;
     return self;
 }
 
--(OTRManagedBuddy *)buddyForUserName:(NSString *)buddyUserName accountName:(NSString *)accountName protocol:(NSString *)protocol
+-(OTRManagedBuddy *)buddyForUserName:(NSString *)buddyUserName accountName:(NSString *)accountName protocol:(NSString *)protocol inContext:(NSManagedObjectContext *)context
 {
-    OTRManagedAccount * account = [OTRAccountsManager accountForProtocol:protocol accountName:accountName];
-    return [OTRManagedBuddy fetchOrCreateWithName:buddyUserName account:account];
+    OTRManagedAccount * account = [OTRAccountsManager accountForProtocol:protocol accountName:accountName inContext:context];
+    OTRManagedBuddy * buddy = [OTRManagedBuddy fetchOrCreateWithName:buddyUserName account:account inContext:context];
+    [context MR_saveToPersistentStoreAndWait];
+    return buddy;
 }
 
 - (id <OTRProtocol>)protocolForAccount:(OTRManagedAccount *)account
@@ -158,10 +160,11 @@ static OTRProtocolManager *sharedManager = nil;
 }
 
 + (void)sendMessage:(OTRManagedMessage *)message {
-    message.buddy.lastMessageDisconnected = NO;
+    message.buddy.lastMessageDisconnectedValue = NO;
     message.buddy.lastSentChatStateValue=kOTRChatStateActive;
+    [[message managedObjectContext] MR_saveToPersistentStoreAndWait];
     [message.buddy invalidatePausedChatStateTimer];
-    
+    //FIXME
     
     OTRProtocolManager * protocolManager = [OTRProtocolManager sharedInstance];
     id<OTRProtocol> protocol = [protocolManager protocolForAccount:message.buddy.account];

@@ -41,7 +41,8 @@
     
     [[OTRKit sharedInstance] decodeMessage:message recipient:friendAccount accountName:myAccountName protocol:protocol completionBlock:^(NSString *decodedMessageString) {
         NSError *error = nil;
-        OTRManagedMessage *localMessage = (OTRManagedMessage*)[[NSManagedObjectContext MR_contextForCurrentThread] existingObjectWithID:messageObjectID error:&error];
+        NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
+        OTRManagedMessage *localMessage = (OTRManagedMessage*)[context existingObjectWithID:messageObjectID error:&error];
         if (error) {
             DDLogError(@"Error fetching message: %@", error);
             error = nil;
@@ -54,9 +55,9 @@
         }
         
         OTRKitMessageState messageState = [[OTRKit sharedInstance] messageStateForUsername:friendAccount accountName:myAccountName protocol:protocol];
-        [localMessage.buddy setNewEncryptionStatus:messageState];
+        [localMessage.buddy setNewEncryptionStatus:messageState inContext:context];
         
-        NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
+        
         [context MR_saveToPersistentStoreAndWait];
         
         if (completionBlock) {
@@ -88,11 +89,12 @@
             DDLogError(@"Error fetching message: %@", error);
             error = nil;
         }
-        OTRManagedMessage *newOTRMessage = [OTRManagedMessage newMessageToBuddy:localBuddy message:message encrypted:YES];
+        NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
+        OTRManagedMessage *newOTRMessage = [OTRManagedMessage newMessageToBuddy:localBuddy message:message encrypted:YES inContext:context];
         newOTRMessage.date = localMessage.date;
         newOTRMessage.uniqueID = localMessage.uniqueID;
         
-        NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
+        
         [context MR_saveToPersistentStoreAndWait];
         
         //return newOTRMessage;
@@ -107,9 +109,9 @@
     
     [[OTRKit sharedInstance] generateInitiateOrRefreshMessageToRecipient:buddy.accountName accountName:buddy.account.username protocol:[buddy.account protocol] completionBlock:^(NSString *message) {
         
-        OTRManagedMessage *newOTRMessage = [OTRManagedMessage newMessageToBuddy:buddy message:message encrypted:YES];
-        
         NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
+        OTRManagedMessage *newOTRMessage = [OTRManagedMessage newMessageToBuddy:buddy message:message encrypted:YES inContext:context];
+        
         [context MR_saveToPersistentStoreAndWait];
         
         //return newOTRMessage;

@@ -264,7 +264,9 @@
         return;
     }
     OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
-    OTRManagedBuddy *buddy = [protocolManager buddyForUserName:userName accountName:accountName protocol:protocol];
+    NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
+    OTRManagedBuddy *buddy = [protocolManager buddyForUserName:userName accountName:accountName protocol:protocol inContext:context];
+    [context MR_saveToPersistentStoreAndWait];
     [buddyListViewController enterConversationWithBuddy:buddy];
 }
 

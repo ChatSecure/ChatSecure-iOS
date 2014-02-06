@@ -61,15 +61,15 @@
     return [allAccountsArray filteredArrayUsingPredicate:predicate];
 }
 
-+(OTRManagedAccount *)accountForProtocol:(NSString *)protocol accountName:(NSString *)accountName
++(OTRManagedAccount *)accountForProtocol:(NSString *)protocol accountName:(NSString *)accountName inContext:(NSManagedObjectContext *)context
 {
     NSPredicate * accountFilter = [NSPredicate predicateWithFormat:@"%K == %@ AND %K == %@",OTRManagedAccountAttributes.protocol,protocol,OTRManagedAccountAttributes.username,accountName];
-    NSArray * results = [OTRManagedAccount MR_findAllWithPredicate:accountFilter];
+    NSArray * results = [OTRManagedAccount MR_findAllWithPredicate:accountFilter inContext:context];
     
     
     OTRManagedAccount * fetchedAccount = nil;
     if (results) {
-        fetchedAccount = [results lastObject];
+        fetchedAccount = [results firstObject];
     }
     return fetchedAccount;
 }

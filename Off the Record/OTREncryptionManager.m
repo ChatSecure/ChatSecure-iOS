@@ -49,19 +49,25 @@
 #pragma mark OTRKitDelegate methods
 
 - (void) updateMessageStateForUsername:(NSString*)username accountName:(NSString*)accountName protocol:(NSString*)protocol messageState:(OTRKitMessageState)messageState {
-
-    OTRManagedBuddy *buddy = [[OTRProtocolManager sharedInstance] buddyForUserName:username accountName:accountName protocol:protocol];
-    [buddy setNewEncryptionStatus:messageState];
+    
+    NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
+    OTRManagedBuddy *buddy = [[OTRProtocolManager sharedInstance] buddyForUserName:username accountName:accountName protocol:protocol inContext:context];
+    [buddy setNewEncryptionStatus:messageState inContext:context];
+    [context MR_saveToPersistentStoreAndWait];
 }
 
 - (void) injectMessage:(NSString*)message recipient:(NSString*)recipient accountName:(NSString*)accountName protocol:(NSString*)protocol {
-    OTRManagedMessage *newMessage = [OTRManagedMessage newMessageToBuddy:[[OTRProtocolManager sharedInstance] buddyForUserName:recipient accountName:accountName protocol:protocol] message:message encrypted:YES];
+    NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
+    OTRManagedMessage *newMessage = [OTRManagedMessage newMessageToBuddy:[[OTRProtocolManager sharedInstance] buddyForUserName:recipient accountName:accountName protocol:protocol inContext:context] message:message encrypted:YES inContext:context];
+    [context MR_saveToPersistentStoreAndWait];
     [OTRProtocolManager sendMessage:newMessage];
 }
 
 -(BOOL)recipientIsLoggedIn:(NSString *)recipient accountName:(NSString *)accountName protocol:(NSString *)protocol
 {
-    OTRManagedBuddy * buddy = [[OTRProtocolManager sharedInstance] buddyForUserName:recipient accountName:accountName protocol:protocol];
+    NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
+    OTRManagedBuddy * buddy = [[OTRProtocolManager sharedInstance] buddyForUserName:recipient accountName:accountName protocol:protocol inContext:context];
+    [context MR_saveToPersistentStoreAndWait];
     if(buddy.currentStatusValue == OTRBuddyStatusOffline)
     {
         return NO;
