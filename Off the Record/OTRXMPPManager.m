@@ -54,6 +54,8 @@
 
 @interface OTRXMPPManager()
 
+@property (nonatomic) dispatch_queue_t workQueue;
+
 - (void)setupStream;
 - (void)teardownStream;
 
@@ -80,24 +82,25 @@
 @synthesize certificatePinningModule = _certificatePinningModule;
 @synthesize isConnected;
 
-- (id) initWithAccount:(OTRManagedAccount *)newAccount {
-    self = [super init];
-    
-    if(self)
-    {
+- (id)init
+{
+    if (self = [super init]) {
+        NSString * queueLabel = [NSString stringWithFormat:@"%@.work.%@",[self class],self];
+        self.workQueue = dispatch_queue_create([queueLabel UTF8String], 0);
         self.isConnected = NO;
-        self.account = (OTRManagedXMPPAccount*)newAccount;
+        buddyTimers = [NSMutableDictionary dictionary];
+    }
+    return self;
+}
 
-        // Configure logging framework
-        backgroundQueue = dispatch_queue_create("buddy.background", NULL);
-        //[DDLog addLogger:[DDTTYLogger sharedInstance]];
+- (id) initWithAccount:(OTRManagedAccount *)newAccount {
+    if(self = [self init])
+    {
+        NSAssert([newAccount isKindOfClass:[OTRManagedXMPPAccount class]], @"Must have XMPP account");
+        self.account = (OTRManagedXMPPAccount*)newAccount;
         
         // Setup the XMPP stream
         [self setupStream];
-        
-        //[self setupStream];
-        buddyTimers = [NSMutableDictionary dictionary];
-        
     }
     
     return self;
@@ -314,8 +317,9 @@
     
 }
 
-///////////////////////////////
+////////////////////////////////////////////
 #pragma mark Capabilities Collected
+////////////////////////////////////////////
 
 - (NSArray *)myFeaturesForXMPPCapabilities:(XMPPCapabilities *)sender
 {
@@ -607,18 +611,16 @@
 
 -(void)sendChatState:(OTRChatState)chatState withBuddyID:(NSManagedObjectID *)managedBuddyObjectID
 {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        OTRManagedBuddy * buddy = [self managedBuddyWithObjectID:managedBuddyObjectID];
+    dispatch_async(self.workQueue, ^{
+        NSManagedObjectContext * localContext = [NSManagedObjectContext MR_contextWithParent:[NSManagedObjectContext MR_defaultContext]];
+        OTRManagedBuddy * buddy = [self managedBuddyWithObjectID:managedBuddyObjectID inContext:localContext];
         
         
         if (buddy.lastSentChatStateValue == chatState) {
             return;
         }
         
-        NSXMLElement *message = [NSXMLElement elementWithName:@"message"];
-        [message addAttributeWithName:@"type" stringValue:@"chat"];
-        [message addAttributeWithName:@"to" stringValue:buddy.accountName];
-        XMPPMessage * xMessage = [XMPPMessage messageFromElement:message];
+        XMPPMessage * xMessage = [[XMPPMessage alloc] initWithType:@"chat" to:[XMPPJID jidWithString:buddy.accountName]];
         
         BOOL shouldSend = YES;
         
@@ -667,11 +669,9 @@
         if(shouldSend)
         {
             [buddy setLastSentChatStateValue:chatState];
-            NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
-            [context MR_saveToPersistentStoreAndWait];
-            [xmppStream sendElement:message];
+            [xmppStream sendElement:xMessage];
         }
-
+        [localContext MR_saveToPersistentStoreAndWait];
     });
 }
 
@@ -712,9 +712,8 @@
 }
 
 //Chat State
--(OTRManagedBuddy *)managedBuddyWithObjectID:(NSManagedObjectID *)managedBuddyObjectID
+-(OTRManagedBuddy *)managedBuddyWithObjectID:(NSManagedObjectID *)managedBuddyObjectID inContext:(NSManagedObjectContext *)context
 {
-    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
     NSError * error = nil;
     OTRManagedBuddy * managedBuddy = (OTRManagedBuddy *)[context existingObjectWithID:managedBuddyObjectID error:&error];
     if (error) {

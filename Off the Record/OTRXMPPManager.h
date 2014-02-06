@@ -56,8 +56,6 @@
     XMPPJID *JID;
 	
 	BOOL isXmppConnected;
-    
-    dispatch_queue_t backgroundQueue;
 	
     NSFetchedResultsController *fetchedResultsController;
 }
@@ -73,6 +71,7 @@
 @property (nonatomic, readonly) OTRCertificatePinning * certificatePinningModule;
 @property 	BOOL isXmppConnected;
 @property (nonatomic, strong) NSMutableDictionary * buddyTimers;
+
 
 //- (NSManagedObjectContext *)managedObjectContext_capabilities;
 
