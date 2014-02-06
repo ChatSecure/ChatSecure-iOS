@@ -23,8 +23,6 @@
 
 @implementation OTRCertificatePinning
 
-@synthesize delegate;
-
 - (id)initWithDefaultCertificates
 {
     if (self = [super init]) {

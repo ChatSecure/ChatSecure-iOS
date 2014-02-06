@@ -39,61 +39,36 @@
 #import "OTRXMPPBudyTimers.h"
 #import "OTRCertificatePinning.h"
 
+@class OTRRosterStorage;
+
 @interface OTRXMPPManager : NSObject <XMPPRosterDelegate, NSFetchedResultsControllerDelegate, OTRProtocol, OTRCertificatePinningDelegate>
-{
-	XMPPStream *xmppStream;
-	XMPPReconnect *xmppReconnect;
-    XMPPRoster *xmppRoster;
-    XMPPvCardCoreDataStorage *xmppvCardStorage;
-	XMPPvCardTempModule *xmppvCardTempModule;
-	XMPPvCardAvatarModule *xmppvCardAvatarModule;
-	XMPPCapabilities *xmppCapabilities;
-	//XMPPCapabilitiesCoreDataStorage *xmppCapabilitiesStorage;
-	
-	//NSManagedObjectContext *managedObjectContext_capabilities;
-	
-	NSString *password;
-    XMPPJID *JID;
-	
-	BOOL isXmppConnected;
-	
-    NSFetchedResultsController *fetchedResultsController;
-}
+
+@property (nonatomic, strong) OTRManagedXMPPAccount *account;
 
 @property (nonatomic, readonly) XMPPStream *xmppStream;
 @property (nonatomic, readonly) XMPPReconnect *xmppReconnect;
 @property (nonatomic, readonly) XMPPRoster *xmppRoster;
-@property (nonatomic, readonly) XMPPRosterCoreDataStorage *xmppRosterStorage;
+@property (nonatomic, readonly) OTRRosterStorage *xmppRosterStorage;
 @property (nonatomic, readonly) XMPPvCardTempModule *xmppvCardTempModule;
 @property (nonatomic, readonly) XMPPvCardAvatarModule *xmppvCardAvatarModule;
 @property (nonatomic, readonly) XMPPCapabilities *xmppCapabilities;
 @property (nonatomic, readonly) XMPPCapabilitiesCoreDataStorage *xmppCapabilitiesStorage;
 @property (nonatomic, readonly) OTRCertificatePinning * certificatePinningModule;
-@property 	BOOL isXmppConnected;
-@property (nonatomic, strong) NSMutableDictionary * buddyTimers;
-
-
-//- (NSManagedObjectContext *)managedObjectContext_capabilities;
+@property (nonatomic, readonly) BOOL isXmppConnected;
 
 - (BOOL)connectWithJID:(NSString*) myJID password:(NSString*)myPassword;
 - (void)disconnect;
-
-//- (NSFetchedResultsController *)fetchedResultsController;
 
 - (NSString*)accountName;
 
 
 //Chat State
--(void)sendChatState:(OTRChatState)chatState withBuddyID:(NSManagedObjectID *)managedBuddyObjectID;
--(void)restartPausedChatStateTimerForBuddyObjectID:(NSManagedObjectID *)managedBuddyObjectID;
--(void)restartInactiveChatStateTimerForBuddyObjectID:(NSManagedObjectID *)managedBuddyObjectID;
--(void)sendPausedChatState:(NSTimer *)timer;
--(void)sendInactiveChatState:(NSTimer *)timer;
--(NSTimer *)inactiveChatStateTimerForBuddyObjectID:(NSManagedObjectID *)managedBuddyObjectID;
--(NSTimer *)pausedChatStateTimerForBuddyObjectID:(NSManagedObjectID *)managedBuddyObjectID;
-
-@property (nonatomic, retain) OTRManagedXMPPAccount *account;
-
-
+- (void)sendChatState:(OTRChatState)chatState withBuddyID:(NSManagedObjectID *)managedBuddyObjectID;
+- (void)restartPausedChatStateTimerForBuddyObjectID:(NSManagedObjectID *)managedBuddyObjectID;
+- (void)restartInactiveChatStateTimerForBuddyObjectID:(NSManagedObjectID *)managedBuddyObjectID;
+- (void)sendPausedChatState:(NSTimer *)timer;
+- (void)sendInactiveChatState:(NSTimer *)timer;
+- (NSTimer *)inactiveChatStateTimerForBuddyObjectID:(NSManagedObjectID *)managedBuddyObjectID;
+- (NSTimer *)pausedChatStateTimerForBuddyObjectID:(NSManagedObjectID *)managedBuddyObjectID;
 
 @end

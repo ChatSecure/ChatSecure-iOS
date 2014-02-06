@@ -54,6 +54,20 @@
 
 @interface OTRXMPPManager()
 
+@property (nonatomic, strong) XMPPStream *xmppStream;
+@property (nonatomic, strong) XMPPReconnect *xmppReconnect;
+@property (nonatomic, strong) XMPPRoster *xmppRoster;
+@property (nonatomic, strong) XMPPvCardCoreDataStorage *xmppvCardStorage;
+@property (nonatomic, strong) XMPPvCardTempModule *xmppvCardTempModule;
+@property (nonatomic, strong) XMPPvCardAvatarModule *xmppvCardAvatarModule;
+@property (nonatomic, strong) XMPPCapabilities *xmppCapabilities;
+@property (nonatomic, strong) NSString *password;
+@property (nonatomic, strong) XMPPJID *JID;
+@property (nonatomic, strong) XMPPCapabilitiesCoreDataStorage *xmppCapabilitiesStorage;
+@property (nonatomic, strong) OTRRosterStorage * xmppRosterStorage;
+@property (nonatomic, strong) OTRCertificatePinning * certificatePinningModule;
+@property (nonatomic, readwrite) BOOL isXmppConnected;
+@property (nonatomic, strong) NSMutableDictionary * buddyTimers;
 @property (nonatomic) dispatch_queue_t workQueue;
 
 - (void)setupStream;
@@ -68,18 +82,6 @@
 
 @implementation OTRXMPPManager
 
-@synthesize xmppStream;
-@synthesize xmppReconnect;
-@synthesize xmppRoster;
-@synthesize xmppRosterStorage;
-@synthesize xmppvCardTempModule;
-@synthesize xmppvCardAvatarModule;
-@synthesize xmppCapabilities;
-@synthesize xmppCapabilitiesStorage;
-@synthesize isXmppConnected;
-@synthesize account;
-@synthesize buddyTimers;
-@synthesize certificatePinningModule = _certificatePinningModule;
 @synthesize isConnected;
 
 - (id)init
@@ -88,7 +90,7 @@
         NSString * queueLabel = [NSString stringWithFormat:@"%@.work.%@",[self class],self];
         self.workQueue = dispatch_queue_create([queueLabel UTF8String], 0);
         self.isConnected = NO;
-        buddyTimers = [NSMutableDictionary dictionary];
+        self.buddyTimers = [NSMutableDictionary dictionary];
     }
     return self;
 }
@@ -117,7 +119,7 @@
 
 - (void)setupStream
 {
-	NSAssert(xmppStream == nil, @"Method setupStream invoked multiple times");
+	NSAssert(self.xmppStream == nil, @"Method setupStream invoked multiple times");
 	
 	// Setup xmpp stream
 	// 
@@ -125,13 +127,13 @@
 	// Everything else plugs into the xmppStream, such as modules/extensions and delegates.
     
 	if (self.account.accountType == OTRAccountTypeFacebook) {
-        xmppStream = [[XMPPStream alloc] initWithFacebookAppId:FACEBOOK_APP_ID];
+        self.xmppStream = [[XMPPStream alloc] initWithFacebookAppId:FACEBOOK_APP_ID];
     }
     else{
-        xmppStream = [[XMPPStream alloc] init];
+        self.xmppStream = [[XMPPStream alloc] init];
     }
     
-    xmppStream.autoStartTLS = YES;
+    self.xmppStream.autoStartTLS = YES;
     
     [self.certificatePinningModule activate:self.xmppStream];
     
@@ -162,7 +164,7 @@
 	// automatically reconnects the stream for you.
 	// There's a bunch more information in the XMPPReconnect header file.
 	
-	xmppReconnect = [[XMPPReconnect alloc] init];
+	self.xmppReconnect = [[XMPPReconnect alloc] init];
 	
 	// Setup roster
 	// 
@@ -181,10 +183,10 @@
     //	xmppRosterStorage = [[XMPPRosterCoreDataStorage alloc] initWithInMemoryStore];
     OTRRosterStorage * rosterStorage = [[OTRRosterStorage alloc] init];
 	
-	xmppRoster = [[XMPPRoster alloc] initWithRosterStorage:rosterStorage];
+	self.xmppRoster = [[XMPPRoster alloc] initWithRosterStorage:rosterStorage];
 	
-	xmppRoster.autoFetchRoster = YES;
-	xmppRoster.autoAcceptKnownPresenceSubscriptionRequests = YES;
+	self.xmppRoster.autoFetchRoster = YES;
+	self.xmppRoster.autoAcceptKnownPresenceSubscriptionRequests = YES;
 	
 	// Setup vCard support
 	// 
@@ -193,9 +195,9 @@
 	
 	//xmppvCardStorage = [XMPPvCardCoreDataStorage sharedInstance];
     OTRvCardCoreDataStorage * vCardCoreDataStorage  = [[OTRvCardCoreDataStorage alloc] init];
-	xmppvCardTempModule = [[XMPPvCardTempModule alloc] initWithvCardStorage:vCardCoreDataStorage];
+	self.xmppvCardTempModule = [[XMPPvCardTempModule alloc] initWithvCardStorage:vCardCoreDataStorage];
 	
-	xmppvCardAvatarModule = [[XMPPvCardAvatarModule alloc] initWithvCardTempModule:xmppvCardTempModule];
+	self.xmppvCardAvatarModule = [[XMPPvCardAvatarModule alloc] initWithvCardTempModule:self.xmppvCardTempModule];
 	
 	// Setup capabilities
 	// 
@@ -216,26 +218,26 @@
 	// The XMPPCapabilitiesCoreDataStorage is an ideal solution.
 	// It can also be shared amongst multiple streams to further reduce hash lookups.
 	
-	xmppCapabilitiesStorage = [OTRCapabilitiesInMemoryCoreDataStorage sharedInstance];
-    xmppCapabilities = [[XMPPCapabilities alloc] initWithCapabilitiesStorage:xmppCapabilitiesStorage];
+	self.xmppCapabilitiesStorage = [OTRCapabilitiesInMemoryCoreDataStorage sharedInstance];
+    self.xmppCapabilities = [[XMPPCapabilities alloc] initWithCapabilitiesStorage:self.xmppCapabilitiesStorage];
     
-    xmppCapabilities.autoFetchHashedCapabilities = YES;
-    xmppCapabilities.autoFetchNonHashedCapabilities = NO;
+    self.xmppCapabilities.autoFetchHashedCapabilities = YES;
+    self.xmppCapabilities.autoFetchNonHashedCapabilities = NO;
     
     
 	// Activate xmpp modules
     
-	[xmppReconnect         activate:xmppStream];
-	[xmppRoster            activate:xmppStream];
-	[xmppvCardTempModule   activate:xmppStream];
-	[xmppvCardAvatarModule activate:xmppStream];
-	[xmppCapabilities      activate:xmppStream];
+	[self.xmppReconnect         activate:self.xmppStream];
+	[self.xmppRoster            activate:self.xmppStream];
+	[self.xmppvCardTempModule   activate:self.xmppStream];
+	[self.xmppvCardAvatarModule activate:self.xmppStream];
+	[self.xmppCapabilities      activate:self.xmppStream];
     
 	// Add ourself as a delegate to anything we may be interested in
     
-	[xmppStream addDelegate:self delegateQueue:dispatch_get_main_queue()];
-	[xmppRoster addDelegate:self delegateQueue:dispatch_get_main_queue()];
-    [xmppCapabilities addDelegate:self delegateQueue:dispatch_get_main_queue()];
+	[self.xmppStream addDelegate:self delegateQueue:dispatch_get_main_queue()];
+	[self.xmppRoster addDelegate:self delegateQueue:dispatch_get_main_queue()];
+    [self.xmppCapabilities addDelegate:self delegateQueue:dispatch_get_main_queue()];
     
 	// Optional:
 	// 
@@ -254,26 +256,27 @@
 
 - (void)teardownStream
 {
-	[xmppStream removeDelegate:self];
-	[xmppRoster removeDelegate:self];
-	
-	[xmppReconnect         deactivate];
-	[xmppRoster            deactivate];
-	[xmppvCardTempModule   deactivate];
-	[xmppvCardAvatarModule deactivate];
-	[xmppCapabilities      deactivate];
-	
-	[xmppStream disconnect];
-	
-	xmppStream = nil;
-	xmppReconnect = nil;
-    xmppRoster = nil;
-	xmppRosterStorage = nil;
-	xmppvCardStorage = nil;
-    xmppvCardTempModule = nil;
-	xmppvCardAvatarModule = nil;
-	xmppCapabilities = nil;
-	xmppCapabilitiesStorage = nil;
+    [_xmppStream removeDelegate:self];
+    [_xmppRoster removeDelegate:self];
+
+    [_xmppReconnect         deactivate];
+    [_xmppRoster            deactivate];
+    [_xmppvCardTempModule   deactivate];
+    [_xmppvCardAvatarModule deactivate];
+    [_xmppCapabilities      deactivate];
+
+    [_xmppStream disconnect];
+
+    _xmppStream = nil;
+    _xmppReconnect = nil;
+    _xmppRoster = nil;
+    _xmppRosterStorage = nil;
+    _xmppvCardStorage = nil;
+    _xmppvCardTempModule = nil;
+    _xmppvCardAvatarModule = nil;
+    _xmppCapabilities = nil;
+    _xmppCapabilitiesStorage = nil;
+    _certificatePinningModule = nil;
 }
 
 // It's easy to create XML elments to send and to read received XML elements.
@@ -333,7 +336,7 @@
 - (BOOL)connectWithJID:(NSString*) myJID password:(NSString*)myPassword;
 {
     //DDLogInfo(@"myJID %@",myJID);
-	if (![xmppStream isDisconnected]) {
+	if (![self.xmppStream isDisconnected]) {
 		return YES;
 	}
     
@@ -356,18 +359,18 @@
     
     NSString * resource = [NSString stringWithFormat:@"%@%d",kOTRXMPPResource,r];
     
-    JID = [XMPPJID jidWithString:myJID resource:resource];
+    self.JID = [XMPPJID jidWithString:myJID resource:resource];
     
-	[xmppStream setMyJID:JID];
+	[self.xmppStream setMyJID:self.JID];
     if (self.account.domain.length > 0) {
-        [xmppStream setHostName:self.account.domain];
+        [self.xmppStream setHostName:self.account.domain];
     }
     
-    [xmppStream setHostPort:self.account.portValue];
-	password = myPassword;
+    [self.xmppStream setHostPort:self.account.portValue];
+	self.password = myPassword;
     
 	NSError *error = nil;
-	if (![xmppStream connectWithTimeout:XMPPStreamTimeoutNone error:&error])
+	if (![self.xmppStream connectWithTimeout:XMPPStreamTimeoutNone error:&error])
 	{
 		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error connecting" 
 		                                                    message:@"See console for error details." 
@@ -388,7 +391,7 @@
 {
     [self goOffline];
     
-    [xmppStream disconnect];
+    [self.xmppStream disconnect];
     
     
     if([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyDeleteOnDisconnect])
@@ -439,20 +442,20 @@
     
     if ([sender supportsXFacebookPlatformAuthentication]) {
         
-        isXmppConnected = [sender authenticateWithFacebookAccessToken:password error:&error];
+        self.isXmppConnected = [sender authenticateWithFacebookAccessToken:self.password error:&error];
         return;
     }
     else if ([sender supportsXOAUTH2GoogleAuthentication] && self.account.accountType == OTRAccountTypeGoogleTalk) {
-        isXmppConnected = [sender authenticateWithGoogleAccessToken:password error:&error];
+        self.isXmppConnected = [sender authenticateWithGoogleAccessToken:self.password error:&error];
         return;
     }
-	else if (![[self xmppStream] authenticateWithPassword:password error:&error])
+	else if (![[self xmppStream] authenticateWithPassword:self.password error:&error])
 	{
-        isXmppConnected = NO;
+        self.isXmppConnected = NO;
         return;
 	}
     
-    isXmppConnected = YES;
+    self.isXmppConnected = YES;
 }
 
 - (void)xmppStreamDidAuthenticate:(XMPPStream *)sender
@@ -544,7 +547,7 @@
     
     self.isConnected = NO;
 	
-	if (!isXmppConnected)
+	if (!self.isXmppConnected)
 	{
 		DDLogError(@"Unable to connect to server. Check xmppStream.hostName");
         [self failedToConnect:error];
@@ -556,7 +559,7 @@
         [context MR_saveToPersistentStoreAndWait];
         //Lost connection
     }
-    isXmppConnected = NO;
+    self.isXmppConnected = NO;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -590,13 +593,13 @@
 
         [xmppMessage addActiveChatState];
 		
-		[xmppStream sendElement:xmppMessage];
+		[self.xmppStream sendElement:xmppMessage];
     }
 }
 
 - (NSString*) accountName
 {
-    return [JID full];
+    return [self.JID full];
     
 }
 
@@ -669,7 +672,7 @@
         if(shouldSend)
         {
             [buddy setLastSentChatStateValue:chatState];
-            [xmppStream sendElement:xMessage];
+            [self.xmppStream sendElement:xMessage];
         }
         [localContext MR_saveToPersistentStoreAndWait];
     });
@@ -681,19 +684,19 @@
     [newBuddy addToGroup:@"Buddies" inContext:context];
     [context MR_saveToPersistentStoreAndWait];
     XMPPJID * newJID = [XMPPJID jidWithString:newBuddy.accountName];
-    [xmppRoster addUser:newJID withNickname:newBuddy.displayName];
+    [self.xmppRoster addUser:newJID withNickname:newBuddy.displayName];
 }
 - (void) setDisplayName:(NSString *) newDisplayName forBuddy:(OTRManagedBuddy *)buddy
 {
     XMPPJID * jid = [XMPPJID jidWithString:buddy.accountName];
-    [xmppRoster setNickname:newDisplayName forUser:jid];
+    [self.xmppRoster setNickname:newDisplayName forUser:jid];
     
 }
 -(void)removeBuddies:(NSArray *)buddies
 {
     for (OTRManagedBuddy * buddy in buddies){
         XMPPJID * jid = [XMPPJID jidWithString:buddy.accountName];
-        [xmppRoster removeUser:jid];
+        [self.xmppRoster removeUser:jid];
         [buddy MR_deleteEntity];
     }
     
@@ -707,7 +710,7 @@
 {
     for (OTRManagedBuddy * buddy in buddies){
         XMPPJID * jid = [XMPPJID jidWithString:buddy.accountName];
-        [xmppRoster revokePresencePermissionFromUser:jid];
+        [self.xmppRoster revokePresencePermissionFromUser:jid];
     }
 }
 
@@ -725,7 +728,7 @@
 -(OTRXMPPBudyTimers *)buddyTimersForBuddyObjectID:(NSManagedObjectID *)
 managedBuddyObjectID
 {
-    OTRXMPPBudyTimers * timers = (OTRXMPPBudyTimers *)[buddyTimers objectForKey:managedBuddyObjectID];
+    OTRXMPPBudyTimers * timers = (OTRXMPPBudyTimers *)[self.buddyTimers objectForKey:managedBuddyObjectID];
     return timers;
 }
 
@@ -743,25 +746,25 @@ managedBuddyObjectID
 
 -(void)restartPausedChatStateTimerForBuddyObjectID:(NSManagedObjectID *)managedBuddyObjectID
 {
-    OTRXMPPBudyTimers * timer = (OTRXMPPBudyTimers *)[buddyTimers objectForKey:managedBuddyObjectID];
+    OTRXMPPBudyTimers * timer = (OTRXMPPBudyTimers *)[self.buddyTimers objectForKey:managedBuddyObjectID];
     if(!timer)
     {
         timer = [[OTRXMPPBudyTimers alloc] init];
     }
     [timer.pausedChatStateTimer invalidate];
     timer.pausedChatStateTimer = [NSTimer scheduledTimerWithTimeInterval:kOTRChatStatePausedTimeout target:self selector:@selector(sendPausedChatState:) userInfo:managedBuddyObjectID repeats:NO];
-    [buddyTimers setObject:timer forKey:managedBuddyObjectID];
+    [self.buddyTimers setObject:timer forKey:managedBuddyObjectID];
 }
 -(void)restartInactiveChatStateTimerForBuddyObjectID:(NSManagedObjectID *)managedBuddyObjectID
 {
-    OTRXMPPBudyTimers * timer = (OTRXMPPBudyTimers *)[buddyTimers objectForKey:managedBuddyObjectID];
+    OTRXMPPBudyTimers * timer = (OTRXMPPBudyTimers *)[self.buddyTimers objectForKey:managedBuddyObjectID];
     if(!timer)
     {
         timer = [[OTRXMPPBudyTimers alloc] init];
     }
     [timer.inactiveChatStateTimer invalidate];
     timer.inactiveChatStateTimer = [NSTimer scheduledTimerWithTimeInterval:kOTRChatStateInactiveTimeout target:self selector:@selector(sendInactiveChatState:) userInfo:managedBuddyObjectID repeats:NO];
-    [buddyTimers setObject:timer forKey:managedBuddyObjectID];
+    [self.buddyTimers setObject:timer forKey:managedBuddyObjectID];
     
 }
 -(void)sendPausedChatState:(NSTimer *)timer
