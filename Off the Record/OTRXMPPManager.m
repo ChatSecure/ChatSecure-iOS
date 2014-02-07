@@ -292,6 +292,7 @@
 
 - (void)goOnline
 {
+    self.isConnected = YES;
     [[NSNotificationCenter defaultCenter]
      postNotificationName:kOTRProtocolLoginSuccess object:self];
 	XMPPPresence *presence = [XMPPPresence presence]; // type="available" is implicit
@@ -335,8 +336,17 @@
 
 - (BOOL)connectWithJID:(NSString*) myJID password:(NSString*)myPassword;
 {
+    self.password = myPassword;
+    int r = arc4random() % 99999;
+    
+    NSString * resource = [NSString stringWithFormat:@"%@%d",kOTRXMPPResource,r];
+    
+    self.JID = [XMPPJID jidWithString:myJID resource:resource];
+    
+	[self.xmppStream setMyJID:self.JID];
     //DDLogInfo(@"myJID %@",myJID);
 	if (![self.xmppStream isDisconnected]) {
+        [self xmppStreamDidConnect:self.xmppStream];
 		return YES;
 	}
     
@@ -354,20 +364,12 @@
 		return NO;
 	}
     
-    
-    int r = arc4random() % 99999;
-    
-    NSString * resource = [NSString stringWithFormat:@"%@%d",kOTRXMPPResource,r];
-    
-    self.JID = [XMPPJID jidWithString:myJID resource:resource];
-    
-	[self.xmppStream setMyJID:self.JID];
     if (self.account.domain.length > 0) {
         [self.xmppStream setHostName:self.account.domain];
     }
     
     [self.xmppStream setHostPort:self.account.portValue];
-	self.password = myPassword;
+	
     
 	NSError *error = nil;
 	if (![self.xmppStream connectWithTimeout:XMPPStreamTimeoutNone error:&error])
@@ -436,7 +438,7 @@
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
 	
-	self.isConnected = YES;
+	
     
 	NSError *error = nil;
     
@@ -466,7 +468,7 @@
 
 - (void)xmppStream:(XMPPStream *)sender didNotAuthenticate:(NSXMLElement *)error
 {
-    
+    self.isConnected = NO;
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
     [self failedToConnect:error];
 }
@@ -553,7 +555,7 @@
         [self failedToConnect:error];
 	}
     else {
-        NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
+        NSManagedObjectContext * context = [NSManagedObjectContext MR_context];
         [self.account setAllBuddiesStatuts:OTRBuddyStatusOffline inContext:context];
   
         [context MR_saveToPersistentStoreAndWait];
