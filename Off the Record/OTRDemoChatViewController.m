@@ -14,7 +14,7 @@
 
 @implementation OTRDemoChatViewController
 
-@synthesize lockVerifiedButton;
+//@synthesize lockVerifiedButton;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -27,12 +27,12 @@
 
 -(void)refreshLockButton
 {
-    self.navigationItem.rightBarButtonItem = self.lockVerifiedButton;
+    //self.navigationItem.rightBarButtonItem = self.lockVerifiedButton;
 }
 
 - (void)viewDidLoad
 {
-    NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
+    NSManagedObjectContext * context = [NSManagedObjectContext MR_context];
     [super viewDidLoad];
 	[OTRManagedMessage newMessageFromBuddy:self.buddy message:@"Hello" encrypted:NO delayedDate:nil inContext:context];
     [OTRManagedMessage newMessageToBuddy:self.buddy message:@"Bonjour" encrypted:NO inContext:context];

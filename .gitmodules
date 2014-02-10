@@ -62,3 +62,6 @@
 [submodule "Submodules/SIAlertView"]
 	path = Submodules/SIAlertView
 	url = git@github.com:ChatSecure/SIAlertView.git
+[submodule "Submodules/JTTargetActionBlock"]
+	path = Submodules/JTTargetActionBlock
+	url = https://gist.github.com/2205564.git

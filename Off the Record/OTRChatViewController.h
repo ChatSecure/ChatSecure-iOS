@@ -38,7 +38,6 @@
 }
 
 
-@property (nonatomic, retain) UIBarButtonItem *lockButton, *unlockedButton, *lockVerifiedButton;
 @property (nonatomic, retain) UILabel *instructionsLabel;
 
 @property (nonatomic, strong) UITableView * chatHistoryTableView;
@@ -57,6 +56,5 @@
 
 - (void)setupLockButton;
 - (void)refreshLockButton;
-- (void)lockButtonPressed;
 
 @end

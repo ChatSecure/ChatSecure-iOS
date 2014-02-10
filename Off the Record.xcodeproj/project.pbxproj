@@ -195,6 +195,8 @@
 		6387126817580D93006C3A4E /* OTRQRCodeActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 6387126717580D93006C3A4E /* OTRQRCodeActivity.m */; };
 		638940CE1815CAF8005F651E /* CrashReporter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 638940CD1815CAF8005F651E /* CrashReporter.framework */; };
 		638940D11815E339005F651E /* OTRDemoChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 638940D01815E339005F651E /* OTRDemoChatViewController.m */; };
+		6391CAF718A99003003EC838 /* OTRLockButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6391CAF618A99003003EC838 /* OTRLockButton.m */; };
+		6391CB0818A992E7003EC838 /* UIControl-JTTargetActionBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = 6391CB0518A992E7003EC838 /* UIControl-JTTargetActionBlock.m */; };
 		6398CD8817FA1EF8009389F8 /* XMPPXOATH2Google.m in Sources */ = {isa = PBXBuildFile; fileRef = 6398CD8717FA1EF8009389F8 /* XMPPXOATH2Google.m */; };
 		6398CD9117FA1F61009389F8 /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 6398CD9017FA1F61009389F8 /* GCDAsyncSocket.m */; };
 		6398CD9517FA209A009389F8 /* XMPPCertificatePinning.m in Sources */ = {isa = PBXBuildFile; fileRef = 6398CD9417FA209A009389F8 /* XMPPCertificatePinning.m */; };
@@ -1048,6 +1050,10 @@
 		638940CD1815CAF8005F651E /* CrashReporter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CrashReporter.framework; path = "Submodules/HockeySDK-iOS/Vendor/CrashReporter.framework"; sourceTree = "<group>"; };
 		638940CF1815E339005F651E /* OTRDemoChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRDemoChatViewController.h; sourceTree = "<group>"; };
 		638940D01815E339005F651E /* OTRDemoChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRDemoChatViewController.m; sourceTree = "<group>"; };
+		6391CAF518A99003003EC838 /* OTRLockButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRLockButton.h; sourceTree = "<group>"; };
+		6391CAF618A99003003EC838 /* OTRLockButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRLockButton.m; sourceTree = "<group>"; };
+		6391CB0418A992E7003EC838 /* UIControl-JTTargetActionBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIControl-JTTargetActionBlock.h"; sourceTree = "<group>"; };
+		6391CB0518A992E7003EC838 /* UIControl-JTTargetActionBlock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIControl-JTTargetActionBlock.m"; sourceTree = "<group>"; };
 		6398CD8617FA1EF8009389F8 /* XMPPXOATH2Google.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPXOATH2Google.h; sourceTree = "<group>"; };
 		6398CD8717FA1EF8009389F8 /* XMPPXOATH2Google.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPXOATH2Google.m; sourceTree = "<group>"; };
 		6398CD8F17FA1F61009389F8 /* GCDAsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GCDAsyncSocket.h; path = GCD/GCDAsyncSocket.h; sourceTree = "<group>"; };
@@ -2599,6 +2605,16 @@
 			name = Login;
 			sourceTree = "<group>";
 		};
+		6391CB0218A992E7003EC838 /* JTTargetActionBlock */ = {
+			isa = PBXGroup;
+			children = (
+				6391CB0418A992E7003EC838 /* UIControl-JTTargetActionBlock.h */,
+				6391CB0518A992E7003EC838 /* UIControl-JTTargetActionBlock.m */,
+			);
+			name = JTTargetActionBlock;
+			path = Submodules/JTTargetActionBlock;
+			sourceTree = "<group>";
+		};
 		6398CD8517FA1EF8009389F8 /* X-OAUTH2-google */ = {
 			isa = PBXGroup;
 			children = (
@@ -3001,6 +3017,7 @@
 		D9CEED611684234D00B236B5 /* Submodules */ = {
 			isa = PBXGroup;
 			children = (
+				6391CB0218A992E7003EC838 /* JTTargetActionBlock */,
 				632E9117185A88F600F7FBC8 /* SIAlertView */,
 				63E717DF182AF391004398AD /* SSKeychain */,
 				638940CD1815CAF8005F651E /* CrashReporter.framework */,
@@ -3473,6 +3490,8 @@
 				6370C984185FD18E00CB6786 /* OTRBuddyCell.m */,
 				6370C986185FD9B900CB6786 /* OTRRecentBuddyCell.h */,
 				6370C987185FD9B900CB6786 /* OTRRecentBuddyCell.m */,
+				6391CAF518A99003003EC838 /* OTRLockButton.h */,
+				6391CAF618A99003003EC838 /* OTRLockButton.m */,
 				63D2BB0B18568A3500FFE4B7 /* OTRErrorManager.h */,
 				63D2BB0C18568A3500FFE4B7 /* OTRErrorManager.m */,
 				63591479184FE2AF00B311A1 /* XMPPModules */,
@@ -3493,7 +3512,6 @@
 				63BFDB6316E81CD900C608D6 /* OTRBuddyViewController.h */,
 				63BFDB6416E81CD900C608D6 /* OTRBuddyViewController.m */,
 				6348189517E3E09C004E0146 /* OTRSecrets.h */,
-				63EAD8B21893312200AE0821 /* OTRLog.h */,
 				D9CEF0A81684253B00B236B5 /* XMPPFramework.h */,
 				D9D8D1F61531056300F9E8D3 /* Resources */,
 				D9F9378113F44BD3009A3D84 /* Supporting Files */,
@@ -4099,6 +4117,7 @@
 				6336CDE0165C4E9E00C8CBA8 /* OTRLanguageListSettingViewController.m in Sources */,
 				6370C988185FD9B900CB6786 /* OTRRecentBuddyCell.m in Sources */,
 				D9CEED891684237700B236B5 /* Appirater.m in Sources */,
+				6391CAF718A99003003EC838 /* OTRLockButton.m in Sources */,
 				D9CEEE60168423CA00B236B5 /* AIMBArtDownloadReply.m in Sources */,
 				D9CEEE61168423CA00B236B5 /* AIMBArtHandler.m in Sources */,
 				D9CEEE62168423CA00B236B5 /* AIMBArtID.m in Sources */,
@@ -4253,6 +4272,7 @@
 				63E5E80A16D1D7C9006E2B01 /* OTRMessageTableViewCell.m in Sources */,
 				63E5E80B16D1D7D3006E2B01 /* _OTRManagedAccount.m in Sources */,
 				63E5E80C16D1D7D3006E2B01 /* _OTRManagedBuddy.m in Sources */,
+				6391CB0818A992E7003EC838 /* UIControl-JTTargetActionBlock.m in Sources */,
 				63E5E80D16D1D7D3006E2B01 /* _OTRManagedMessage.m in Sources */,
 				63D0E48E1819DEF1003ACA13 /* OTRvCardAvatar.m in Sources */,
 				63E5E80E16D1D7D3006E2B01 /* _OTRManagedOscarAccount.m in Sources */,

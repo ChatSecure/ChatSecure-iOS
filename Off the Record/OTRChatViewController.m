@@ -32,20 +32,21 @@
 #import "OTRManagedEncryptionStatusMessage.h"
 #import "OTRStatusMessageCell.h"
 #import "OTRUtilities.h"
+#import "OTRLockButton.h"
 
 
 
-@interface OTRChatViewController(Private)
+@interface OTRChatViewController()
+
+@property (nonatomic, strong) OTRLockButton * lockButton;
+@property (nonatomic, strong) UIBarButtonItem * lockBarButtonItem;
 
 - (void) refreshView;
-
-
 
 @end
 
 @implementation OTRChatViewController
 @synthesize buddyListController;
-@synthesize lockButton, unlockedButton,lockVerifiedButton;
 @synthesize lastActionLink;
 @synthesize buddy;
 @synthesize instructionsLabel;
@@ -59,7 +60,6 @@
     self.buddy = nil;
     self.chatHistoryTableView = nil;
     self.lockButton = nil;
-    self.unlockedButton = nil;
     self.instructionsLabel = nil;
     self.chatHistoryTableView = nil;
     _messagesFetchedResultsController = nil;
@@ -88,38 +88,23 @@
 
 -(void)setupLockButton
 {
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    UIImage *buttonImage = [UIImage imageNamed:@"Lock_Locked.png"];
-    [button setBackgroundImage:buttonImage forState:UIControlStateNormal];
-    CGRect buttonFrame = [button frame];
-    buttonFrame.size.width = buttonImage.size.width;
-    buttonFrame.size.height = buttonImage.size.height;
-    [button setFrame:buttonFrame];
-    [button addTarget:self action:@selector(lockButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    __weak OTRChatViewController * weakSelf = self;
+    self.lockButton = [OTRLockButton lockButtonWithInitailLockStatus:OTRLockStatusUnlocked withBlock:^{
+        NSString *encryptionString = INITIATE_ENCRYPTED_CHAT_STRING;
+        NSString * verifiedString = VERIFY_STRING;
+        
+        if ([self.buddy currentEncryptionStatus] == kOTRKitMessageStateEncrypted) {
+            encryptionString = CANCEL_ENCRYPTED_CHAT_STRING;
+        }
+        UIActionSheet *popupQuery = [[UIActionSheet alloc] initWithTitle:nil delegate:weakSelf cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:encryptionString, verifiedString, CLEAR_CHAT_HISTORY_STRING, nil];
+        popupQuery.accessibilityLabel = @"secure";
+        popupQuery.actionSheetStyle = UIActionSheetStyleBlackOpaque;
+        popupQuery.tag = ACTIONSHEET_ENCRYPTION_OPTIONS_TAG;
+        [OTR_APP_DELEGATE presentActionSheet:popupQuery inView:weakSelf.view];
+    }];
     
-    self.lockButton = [[UIBarButtonItem alloc] initWithCustomView:button];
-    
-    button = [UIButton buttonWithType:UIButtonTypeCustom];
-    buttonImage = [UIImage imageNamed:@"Lock_Unlocked.png"];
-    [button setBackgroundImage:buttonImage forState:UIControlStateNormal];
-    buttonFrame = [button frame];
-    buttonFrame.size.width = buttonImage.size.width;
-    buttonFrame.size.height = buttonImage.size.height;
-    [button setFrame:buttonFrame];
-    [button addTarget:self action:@selector(lockButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-    
-    self.unlockedButton = [[UIBarButtonItem alloc] initWithCustomView:button];
-    
-    button = [UIButton buttonWithType:UIButtonTypeCustom];
-    buttonImage = [UIImage imageNamed:@"Lock_Locked_Verified.png"];
-    [button setBackgroundImage:buttonImage forState:UIControlStateNormal];
-    buttonFrame = [button frame];
-    buttonFrame.size.width = buttonImage.size.width;
-    buttonFrame.size.height = buttonImage.size.height;
-    [button setFrame:buttonFrame];
-    [button addTarget:self action:@selector(lockButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-    
-    self.lockVerifiedButton = [[UIBarButtonItem alloc] initWithCustomView:button];
+    self.lockBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.lockButton];
+    [self.navigationItem setRightBarButtonItem:self.lockBarButtonItem];
     
     [self refreshLockButton];
 }
@@ -132,43 +117,22 @@
         }
     }];
     UIBarButtonItem * rightBarItem = self.navigationItem.rightBarButtonItem;
-    if ([rightBarItem isEqual:lockButton] || [rightBarItem isEqual:lockVerifiedButton] || [rightBarItem isEqual:unlockedButton] || !rightBarItem) {
-        BOOL trusted = [[OTRKit sharedInstance] fingerprintIsVerifiedForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
+    if ([rightBarItem isEqual:self.lockBarButtonItem]) {
+        BOOL isTrusted = [[OTRKit sharedInstance] fingerprintIsVerifiedForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
+        BOOL isEncrypted = [[OTRKit sharedInstance] isConversationEncryptedForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
         
-        int16_t currentEncryptionStatus = [self.buddy currentEncryptionStatus];
-        
-        if(currentEncryptionStatus == kOTRKitMessageStateEncrypted && trusted)
-        {
-            self.navigationItem.rightBarButtonItem = self.lockVerifiedButton;
+        if (isEncrypted && isTrusted) {
+            self.lockButton.lockStatus = OTRLockStatusLockAndVerified;
         }
-        else if(currentEncryptionStatus == kOTRKitMessageStateEncrypted)
-        {
-            self.navigationItem.rightBarButtonItem = self.lockButton;
+        else if (isEncrypted) {
+            self.lockButton.lockStatus = OTRLockStatusLocked;
         }
-        else
-        {
-            self.navigationItem.rightBarButtonItem = self.unlockedButton;
+        else {
+            self.lockButton.lockStatus = OTRLockStatusUnlocked;
         }
-        self.navigationItem.rightBarButtonItem.accessibilityLabel = @"lock";
     }
     
 }
-
--(void)lockButtonPressed
-{
-    NSString *encryptionString = INITIATE_ENCRYPTED_CHAT_STRING;
-    NSString * verifiedString = VERIFY_STRING;
-    
-    if ([self.buddy currentEncryptionStatus] == kOTRKitMessageStateEncrypted) {
-        encryptionString = CANCEL_ENCRYPTED_CHAT_STRING;
-    }
-    UIActionSheet *popupQuery = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:encryptionString, verifiedString, CLEAR_CHAT_HISTORY_STRING, nil];
-    popupQuery.accessibilityLabel = @"secure";
-    popupQuery.actionSheetStyle = UIActionSheetStyleBlackOpaque;
-    popupQuery.tag = ACTIONSHEET_ENCRYPTION_OPTIONS_TAG;
-    [OTR_APP_DELEGATE presentActionSheet:popupQuery inView:self.view];
-}
-
 
 
 #pragma mark - View lifecycle
@@ -422,7 +386,7 @@
     self.navigationItem.rightBarButtonItem = activityBarButtonItem;
 }
 -(void)removeLockSpinner {
-    self.navigationItem.rightBarButtonItem = nil;
+    self.navigationItem.rightBarButtonItem = self.lockBarButtonItem;
     [self refreshLockButton];
 }
 
