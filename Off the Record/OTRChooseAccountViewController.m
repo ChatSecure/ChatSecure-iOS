@@ -135,7 +135,7 @@
     OTRManagedAccount *account = [[self onlineAccounts] objectAtIndex:indexPath.row];
     cell.textLabel.text = account.username;
     cell.detailTextLabel.text = nil;
-    cell.imageView.image = [UIImage imageNamed:account.imageName];
+    cell.imageView.image = [account accountImage];
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
     if( account.accountType == OTRAccountTypeFacebook)

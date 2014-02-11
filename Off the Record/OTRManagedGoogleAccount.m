@@ -21,9 +21,9 @@
     return OTRAccountTypeGoogleTalk;
 }
 
--(NSString *)imageName
+-(UIImage *)accountImage
 {
-    return kGTalkImageName;
+    return [UIImage imageNamed:kGTalkImageName];
 }
 -(BOOL)shouldAllowSSLHostNameMismatch
 {

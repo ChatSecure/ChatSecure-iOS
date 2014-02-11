@@ -31,6 +31,8 @@
 #import "OTRManagedGoogleAccount.h"
 #import "OTRManagedOscarAccount.h"
 
+#import "OTRImages.h"
+
 #define rowHeight 70
 #define kDisplayNameKey @"displayNameKey"
 #define kProviderImageKey @"providerImageKey"
@@ -56,7 +58,6 @@
     //Facebook
     NSMutableDictionary * facebookAccount = [NSMutableDictionary dictionary];
     facebookAccount[kDisplayNameKey] = FACEBOOK_STRING;
-    facebookAccount[kProviderImageKey] = kFacebookImageName;
     facebookAccount[kAccountTypeKey] = @(OTRAccountTypeFacebook);
     
     
@@ -112,13 +113,16 @@
     NSDictionary * cellAccount = [accounts objectAtIndex:indexPath.row];
     cell.textLabel.text = cellAccount[kDisplayNameKey];
     cell.textLabel.font = [UIFont boldSystemFontOfSize:19];
-    cell.imageView.image = [UIImage imageNamed:cellAccount[kProviderImageKey]];
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
     if( [cellAccount[kAccountTypeKey] isEqual:@(OTRAccountTypeFacebook)])
     {
+        cell.imageView.image = [OTRImages facebookImage];
         cell.imageView.layer.masksToBounds = YES;
         cell.imageView.layer.cornerRadius = 10.0;
+    }
+    else {
+        cell.imageView.image = [UIImage imageNamed:cellAccount[kProviderImageKey]];
     }
     
     

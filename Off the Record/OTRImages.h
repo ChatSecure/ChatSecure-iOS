@@ -16,4 +16,6 @@
 +(UIImage *)openCaratImage;
 +(UIImage *)closeCaratImage;
 
++ (UIImage *)facebookImage;
+
 @end

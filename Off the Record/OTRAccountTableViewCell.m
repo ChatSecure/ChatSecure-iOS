@@ -14,6 +14,8 @@
 
 #import "Strings.h"
 
+#import "OTRImages.h"
+
 @implementation OTRAccountTableViewCell {
     NSString * accountUniqueIdentifier;
     NSObject<OTRProtocol> * protocol;
@@ -39,7 +41,7 @@
     }
     [self setConnectedText:account.isConnected];
     
-    self.imageView.image = [UIImage imageNamed:account.imageName];
+    self.imageView.image = [account accountImage];
     
     if( account.accountType == OTRAccountTypeFacebook)
     {
