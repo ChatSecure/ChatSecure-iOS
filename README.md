@@ -1,7 +1,7 @@
 ChatSecure
 =========
 
-ChatSecure is a free and open source instant messaging client for iOS that integrates encrypted [OTR](http://en.wikipedia.org/wiki/Off-the-Record_Messaging) ("Off the Record") messaging support from the [libotr](http://www.cypherpunks.ca/otr/) library. It uses the [LibOrange](https://github.com/unixpickle/LibOrange) library to handle all of the AIM (OSCAR) functionality and the [XMPPFramework](https://github.com/robbiehanson/XMPPFramework/) to handle Jabber/GTalk (XMPP).
+ChatSecure is a free and open source instant messaging client for iOS that integrates encrypted [OTR](https://en.wikipedia.org/wiki/Off-the-Record_Messaging) ("Off the Record") messaging support from the [libotr](https://otr.cypherpunks.ca/) library. It uses the [LibOrange](https://github.com/unixpickle/LibOrange) library to handle all of the AIM (OSCAR) functionality and the [XMPPFramework](https://github.com/robbiehanson/XMPPFramework) to handle Jabber/GTalk (XMPP).
 
 
 Cost
@@ -33,19 +33,19 @@ Compatibility
 
 Native
 ------
-* **[Adium](http://adium.im/) (Mac OS X) - OTR works over both XMPP and Oscar.**
+* **[Adium](https://adium.im/) (Mac OS X) - OTR works over both XMPP and Oscar.**
 * Jitsi (Cross-platform)
 
 Plug-in
 ------
-* [Pidgin](http://pidgin.im/) (cross-platform), with [pidgin-otr](http://www.cypherpunks.ca/otr/index.php#downloads) plugin.
+* [Pidgin](https://pidgin.im/) (cross-platform), with [pidgin-otr](https://otr.cypherpunks.ca/index.php#downloads) plugin.
 
 Phone apps
 ------
-* **[ChatSecure Android](https://guardianproject.info/apps/gibber/) (formerly known as Gibberbot)**, a free and open source Android application produced by The Guardian Project, provides OTR protocol compatible over XMPP chat.
+* **[ChatSecure Android](https://guardianproject.info/apps/chatsecure/) (formerly known as Gibberbot)**, a free and open source Android application produced by The Guardian Project, provides OTR protocol compatible over XMPP chat.
 * [BEEM](http://beem-project.com/projects/beem) - Android XMPP client (compatibility unknown)
 
-[Full List](http://en.wikipedia.org/wiki/Off-the-Record_Messaging#Client_support)
+[Full List](https://en.wikipedia.org/wiki/Off-the-Record_Messaging#Client_support)
 
 Build Instructions
 ========
@@ -99,19 +99,19 @@ in the sources themselves:
 The following dependencies are bundled with the ChatSecure, but are under
 terms of a separate license:
 
-* [libotr](http://www.cypherpunks.ca/otr/) - provides the core message encryption capabilities
-	* [libgcrypt](http://www.gnu.org/software/libgcrypt/) - handles core libotr encryption routines
-	* [libgpg-error](http://www.gnupg.org/related_software/libgpg-error/) - error codes used by libotr
+* [libotr](https://otr.cypherpunks.ca/) - provides the core message encryption capabilities
+* [libgcrypt](https://www.gnu.org/software/libgcrypt/) - handles core libotr encryption routines
+* [libgpg-error](http://www.gnupg.org/related_software/libgpg-error/) - error codes used by libotr
 * [LibOrange](https://github.com/unixpickle/LibOrange) - handles all of the OSCAR (AIM) functionality
 * [XMPPFramework](https://github.com/robbiehanson/XMPPFramework) - XMPP support
 * [MBProgressHUD](https://github.com/jdg/MBProgressHUD) - a nice looking progress HUD
 * [MWFeedParser](https://github.com/mwaterfall/MWFeedParser) - Methods for escaping HTML strings
-* [Crittercism](http://www.crittercism.com/) - crash reports, only submitted via opt-in
+* [Crittercism](https://www.crittercism.com/) - crash reports, only submitted via opt-in
 * [SSKeychain](https://github.com/soffes/sskeychain) - Utilities to store passwords securely in the iOS keychain
 * [Appirater](https://github.com/arashpayan/appirater) - nags people to give reviews
 * [MagicalRecord](https://github.com/magicalpanda/MagicalRecord) - Core Data convenience methods
 * [encrypted-core-data](https://github.com/project-imas/encrypted-core-data) - Core Data + SQLCipher
-* [UserVoice](http://www.uservoice.com) - in-app support forum
+* [UserVoice](https://www.uservoice.com/) - in-app support forum
 * [mogenerator](https://github.com/rentzsch/mogenerator) - creates class files for core data model
 * [DAKeyboardControl](https://github.com/danielamitay/DAKeyboardControl) - support for swiping down keyboard in chat view
 
@@ -122,9 +122,9 @@ Thank you to everyone who helped this project become a reality! This project is 
 
 * [Nick Hum](http://nickhum.com/) - awesome icon.
 * [Glyphish](http://glyphish.com/) - icons used on the tab bar.
-* [Adium](http://adium.im/) - lock/unlock icon used in chat window, status gems.
-* [Sergio Sánchez López](http://www.iconfinder.com/icondetails/7043/128/aim_icon) - AIM protocol icon.
-* [Mateo Zlatar](http://thenounproject.com/mateozlatar/#) - [World Icon](http://thenounproject.com/noun/world/#icon-No6502)
+* [Adium](https://adium.im/) - lock/unlock icon used in chat window, status gems.
+* [Sergio Sánchez López](https://www.iconfinder.com/icons/7043/aim_icon) - AIM protocol icon.
+* [Mateo Zlatar](http://thenounproject.com/mateozlatar/) - [World Icon](http://thenounproject.com/term/world/6502/)
 * [Goxxy](http://rocketdock.com/addon/icons/3462) - Google Talk icon.
 * [AcaniChat](https://github.com/acani/AcaniChat) - help on setting up chat view input box
 * [Localizations](https://www.transifex.com/projects/p/chatsecure/)
