@@ -10,9 +10,11 @@
 
 typedef NS_ENUM(NSUInteger, OTRLockStatus) {
     OTRLockStatusLocked,
-    OTRLockStatusLockAndVerified,
+    OTRLockStatusLockedAndVerified,
+    OTRLockStatusLockedAndWarn,
+    OTRLockStatusLockedAndError,
     OTRLockStatusUnlocked,
-    OTRLockStatusUnlockedAndError
+    
 };
 
 @interface OTRLockButton : UIButton

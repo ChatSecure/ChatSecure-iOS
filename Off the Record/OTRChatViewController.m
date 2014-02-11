@@ -118,20 +118,24 @@
     }];
     UIBarButtonItem * rightBarItem = self.navigationItem.rightBarButtonItem;
     if ([rightBarItem isEqual:self.lockBarButtonItem]) {
-        BOOL isTrusted = [[OTRKit sharedInstance] fingerprintIsVerifiedForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
+        BOOL isTrusted = [[OTRKit sharedInstance] activeFingerprintIsVerifiedForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
         BOOL isEncrypted = [[OTRKit sharedInstance] isConversationEncryptedForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
+        BOOL  hasVerifiedFingerprints = [[OTRKit sharedInstance] hasVerifiedFingerprintsForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
         
         if (isEncrypted && isTrusted) {
-            self.lockButton.lockStatus = OTRLockStatusLockAndVerified;
+            self.lockButton.lockStatus = OTRLockStatusLockedAndVerified;
+        }
+        else if (isEncrypted && hasVerifiedFingerprints)
+        {
+            self.lockButton.lockStatus = OTRLockStatusLockedAndError;
         }
         else if (isEncrypted) {
-            self.lockButton.lockStatus = OTRLockStatusLocked;
+            self.lockButton.lockStatus = OTRLockStatusLockedAndWarn;
         }
         else {
             self.lockButton.lockStatus = OTRLockStatusUnlocked;
         }
     }
-    
 }
 
 
@@ -316,7 +320,7 @@
             NSString *msg = nil;
             NSString *ourFingerprintString = [[OTRKit sharedInstance] fingerprintForAccountName:buddy.account.username protocol:buddy.account.protocol];
             NSString *theirFingerprintString = [[OTRKit sharedInstance] fingerprintForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
-            BOOL trusted = [[OTRKit sharedInstance] fingerprintIsVerifiedForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
+            BOOL trusted = [[OTRKit sharedInstance] activeFingerprintIsVerifiedForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
             
             
             UIAlertView * alert;
@@ -417,7 +421,7 @@
             instructionsLabel.numberOfLines = 2;
             instructionsLabel.backgroundColor = self.chatHistoryTableView.backgroundColor;
             [self.view addSubview:instructionsLabel];
-            self.navigationItem.rightBarButtonItem = nil;
+            //self.navigationItem.rightBarButtonItem = nil;
         }
     } else {
         if (self.instructionsLabel) {

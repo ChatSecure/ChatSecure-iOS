@@ -11,8 +11,10 @@
 
 static NSString *const kOTRLockImageName            = @"Lock_Locked";
 static NSString *const kOTRLockAndVerifiedImageName = @"Lock_Locked_Verified";
+static NSString *const kOTRLockedAndErrorImageName  = @"Lock_Locked";
+static NSString *const kOTRLockedAndWarnImageName   = @"Lock_Locked";
 static NSString *const kOTRUnlockImageName          = @"Lock_Unlocked";
-static NSString *const kOTRUnlockAndErrorImageName  = @"Lock_Unlocked";
+
 
 
 @implementation OTRLockButton
@@ -25,16 +27,18 @@ static NSString *const kOTRUnlockAndErrorImageName  = @"Lock_Unlocked";
         case OTRLockStatusUnlocked:
             backgroundImage = [UIImage imageNamed:kOTRUnlockImageName];
             break;
-        case OTRLockStatusLockAndVerified:
+        case OTRLockStatusLockedAndVerified:
             backgroundImage = [UIImage imageNamed:kOTRLockAndVerifiedImageName];
+            break;
+        case OTRLockStatusLockedAndError:
+            backgroundImage = [UIImage imageNamed:kOTRLockedAndErrorImageName];
+            break;
+        case OTRLockStatusLockedAndWarn:
+            backgroundImage = [UIImage imageNamed:kOTRLockedAndWarnImageName];
             break;
         case OTRLockStatusLocked:
             backgroundImage = [UIImage imageNamed:kOTRLockImageName];
             break;
-        case OTRLockStatusUnlockedAndError:
-            backgroundImage = [UIImage imageNamed:kOTRUnlockAndErrorImageName];
-            break;
-            
         default:
             backgroundImage = [UIImage imageNamed:kOTRUnlockImageName];
             break;
