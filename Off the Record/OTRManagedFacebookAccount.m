@@ -2,6 +2,7 @@
 #import "FBAccessTokenData.h"
 #import "OTRFacebookSessionCachingStrategy.h"
 #import "Strings.h"
+#import "OTRImages.h"
 
 
 @interface OTRManagedFacebookAccount ()
@@ -17,9 +18,9 @@
 {
     return OTRAccountTypeFacebook;
 }
--(NSString *)imageName
+-(UIImage *)accountImage
 {
-    return kFacebookImageName;
+    return [OTRImages facebookImage];
 }
 -(NSString *)providerName
 {

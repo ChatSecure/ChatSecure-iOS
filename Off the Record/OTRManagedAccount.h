@@ -32,7 +32,6 @@
 
 #define kAIMImageName @"aim.png"
 #define kGTalkImageName @"gtalk.png"
-#define kFacebookImageName @"facebook.png"
 #define kXMPPImageName @"xmpp.png"
 
 #define kClassKey @"classKey"
@@ -45,7 +44,7 @@
 - (Class) protocolClass;
 - (NSString *) providerName;
 - (OTRAccountType)accountType;
-- (NSString *) imageName;
+- (UIImage *)accountImage;
 
 - (void)setDefaultsWithProtocol:(NSString*)newProtocol;
 

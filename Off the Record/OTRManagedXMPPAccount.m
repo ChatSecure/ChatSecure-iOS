@@ -45,8 +45,8 @@
     return @(DEFAULT_PORT_NUMBER);
 }
 
-- (NSString *) imageName {
-    return kXMPPImageName;
+- (UIImage *)accountImage {
+    return [UIImage imageNamed:kXMPPImageName];
 }
 
 -(NSString *)providerName
