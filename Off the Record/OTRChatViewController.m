@@ -89,14 +89,32 @@
 -(void)setupLockButton
 {
     __weak OTRChatViewController * weakSelf = self;
-    self.lockButton = [OTRLockButton lockButtonWithInitailLockStatus:OTRLockStatusUnlocked withBlock:^{
+    self.lockButton = [OTRLockButton lockButtonWithInitailLockStatus:OTRLockStatusUnlocked withBlock:^(OTRLockStatus currentStatus){
         NSString *encryptionString = INITIATE_ENCRYPTED_CHAT_STRING;
         NSString * verifiedString = VERIFY_STRING;
         
-        if ([self.buddy currentEncryptionStatus] == kOTRKitMessageStateEncrypted) {
+        if ([[OTRKit sharedInstance] isConversationEncryptedForUsername:weakSelf.buddy.accountName accountName:weakSelf.buddy.account.username protocol:weakSelf.buddy.account.protocol]) {
             encryptionString = CANCEL_ENCRYPTED_CHAT_STRING;
         }
-        UIActionSheet *popupQuery = [[UIActionSheet alloc] initWithTitle:nil delegate:weakSelf cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:encryptionString, verifiedString, CLEAR_CHAT_HISTORY_STRING, nil];
+        
+         NSString * title = nil;
+        if (currentStatus == OTRLockStatusLockedAndError) {
+            title = LOCKED_ERROR_STRING;
+        }
+        else if (currentStatus == OTRLockStatusLockedAndWarn) {
+            title = LOCKED_WARN_STRING;
+        }
+        else if (currentStatus == OTRLockStatusLockedAndVerified){
+            title = LOCKED_SECURE_STRING;
+        }
+        else if (currentStatus == OTRLockStatusUnlocked){
+            title = UNLOCKED_ALERT_STRING;
+        }
+        
+        
+       
+        
+        UIActionSheet *popupQuery = [[UIActionSheet alloc] initWithTitle:title delegate:weakSelf cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:encryptionString, verifiedString, CLEAR_CHAT_HISTORY_STRING, nil];
         popupQuery.accessibilityLabel = @"secure";
         popupQuery.actionSheetStyle = UIActionSheetStyleBlackOpaque;
         popupQuery.tag = ACTIONSHEET_ENCRYPTION_OPTIONS_TAG;

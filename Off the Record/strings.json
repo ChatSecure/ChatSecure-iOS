@@ -806,5 +806,22 @@
     "LOGIN_AUTOMATICALLY_STRING": {
         "comment": "Label for account setting that autologins on launch",
         "string": "Login Automatically"
+    },
+    "UNLOCKED_ALERT_STRING": {
+        "comment": "Title to let user know that encryption is not currently enabled",
+        "string": "The conversation is not secure"
+    },
+    "LOCKED_WARN_STRING": {
+        "comment": "Title to let user know that the OTR fingerprint has not been checked",
+        "string": "The fingerprint has not been verified"
+    },
+    "LOCKED_ERROR_STRING": {
+        "comment": "Title to let user know that the OTR fingerprint has not been checked",
+        "string": "The fingerprint has has changed and needs to be verified"
+    },
+    "LOCKED_SECURE_STRING": {
+        "comment": "Title to let user know that the OTR fingerprint has not been checked",
+        "string": "The conversation is secure and the fingerprint is verfied"
     }
+
 }

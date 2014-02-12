@@ -11,8 +11,8 @@
 
 static NSString *const kOTRLockImageName            = @"Lock_Locked";
 static NSString *const kOTRLockAndVerifiedImageName = @"Lock_Locked_Verified";
-static NSString *const kOTRLockedAndErrorImageName  = @"Lock_Locked";
-static NSString *const kOTRLockedAndWarnImageName   = @"Lock_Locked";
+static NSString *const kOTRLockedAndErrorImageName  = @"Lock_Locked_red";
+static NSString *const kOTRLockedAndWarnImageName   = @"Lock_Locked_yellow";
 static NSString *const kOTRUnlockImageName          = @"Lock_Unlocked";
 
 
@@ -57,13 +57,18 @@ static NSString *const kOTRUnlockImageName          = @"Lock_Unlocked";
     [self didChangeValueForKey:NSStringFromSelector(@selector(lockStatus))];
 }
 
-+(instancetype)lockButtonWithInitailLockStatus:(OTRLockStatus)lockStatus withBlock:(void(^)())block
++(instancetype)lockButtonWithInitailLockStatus:(OTRLockStatus)lockStatus withBlock:(void(^)(OTRLockStatus currentStatus))block
 {
     OTRLockButton * lockButton = [self buttonWithType:UIButtonTypeCustom];
     lockButton.lockStatus = lockStatus;
     [lockButton addEventHandler:^(id sender, UIEvent *event) {
+        OTRLockStatus status = OTRLockStatusUnknown;
+        if ([sender isKindOfClass:[OTRLockButton class]]) {
+            status = ((OTRLockButton *)sender).lockStatus;
+        }
+        
         if (block) {
-            block();
+            block(status);
         }
     } forControlEvent:UIControlEventTouchUpInside];
     return lockButton;

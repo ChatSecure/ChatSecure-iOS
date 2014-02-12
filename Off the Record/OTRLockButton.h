@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 typedef NS_ENUM(NSUInteger, OTRLockStatus) {
+    OTRLockStatusUnknown,
     OTRLockStatusLocked,
     OTRLockStatusLockedAndVerified,
     OTRLockStatusLockedAndWarn,
@@ -21,6 +22,6 @@ typedef NS_ENUM(NSUInteger, OTRLockStatus) {
 
 @property (nonatomic) OTRLockStatus lockStatus;
 
-+(instancetype)lockButtonWithInitailLockStatus:(OTRLockStatus)lockStatus withBlock:(void(^)())block;
++(instancetype)lockButtonWithInitailLockStatus:(OTRLockStatus)lockStatus withBlock:(void(^)(OTRLockStatus currentStatus))block;
 
 @end
