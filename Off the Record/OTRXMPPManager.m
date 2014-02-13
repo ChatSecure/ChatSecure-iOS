@@ -48,7 +48,7 @@
 #import "OTRProtocolManager.h"
 #include <stdlib.h>
 #import "XMPPXFacebookPlatformAuthentication.h"
-#import "XMPPXOATH2Google.h"
+#import "XMPPXOAuth2Google.h"
 #import "OTRConstants.h"
 #import "OTRUtilities.h"
 
@@ -447,7 +447,7 @@
         self.isXmppConnected = [sender authenticateWithFacebookAccessToken:self.password error:&error];
         return;
     }
-    else if ([sender supportsXOAUTH2GoogleAuthentication] && self.account.accountType == OTRAccountTypeGoogleTalk) {
+    else if ([sender supportsXOAuth2GoogleAuthentication] && self.account.accountType == OTRAccountTypeGoogleTalk) {
         self.isXmppConnected = [sender authenticateWithGoogleAccessToken:self.password error:&error];
         return;
     }
