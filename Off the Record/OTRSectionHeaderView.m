@@ -101,10 +101,10 @@
 {
     ////////// DISCLOSURE BUTTON ///////////
     NSLayoutConstraint * constraint = [NSLayoutConstraint constraintWithItem:self.discolureImageView
-                                                                   attribute:NSLayoutAttributeRight
+                                                                   attribute:NSLayoutAttributeTrailing
                                                                    relatedBy:NSLayoutRelationEqual
                                                                       toItem:self
-                                                                   attribute:NSLayoutAttributeRight
+                                                                   attribute:NSLayoutAttributeTrailing
                                                                   multiplier:1.0
                                                                     constant:-12.0];
     [self addConstraint:constraint];
