@@ -817,7 +817,7 @@
     },
     "LOCKED_ERROR_STRING": {
         "comment": "Title to let user know that the OTR fingerprint has not been checked",
-        "string": "The fingerprint has has changed and needs to be verified"
+        "string": "The fingerprint has changed and needs to be verified"
     },
     "LOCKED_SECURE_STRING": {
         "comment": "Title to let user know that the OTR fingerprint has not been checked",

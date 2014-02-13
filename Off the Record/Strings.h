@@ -111,7 +111,7 @@
 #define errSSLClosedAbortString [OTRLanguageManager translatedString: @"Connection closed via error"]
 #define SECURITY_STRING [OTRLanguageManager translatedString: @"Security"]
 #define SUBSCRIPTION_REQUEST_TITLE [OTRLanguageManager translatedString: @"Subscription Requests"]
-#define LOCKED_ERROR_STRING [OTRLanguageManager translatedString: @"The fingerprint has has changed and needs to be verified"]
+#define LOCKED_ERROR_STRING [OTRLanguageManager translatedString: @"The fingerprint has changed and needs to be verified"]
 #define VERIFY_FINGERPRINT_STRING [OTRLanguageManager translatedString: @"Verify Fingerprint"]
 #define DELETE_ACCOUNT_TITLE_STRING [OTRLanguageManager translatedString: @"Delete Account?"]
 #define errSSLPeerUnsupportedCertString [OTRLanguageManager translatedString: @"Bad unsupported cert format"]
