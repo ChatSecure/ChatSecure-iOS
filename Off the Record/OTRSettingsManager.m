@@ -93,7 +93,7 @@
     OTRCertificateSetting * certSetting = [[OTRCertificateSetting alloc] initWithTitle:PINNED_CERTIFICATES_STRING description:PINNED_CERTIFICATES_DESCRIPTION_STRING];
     certSetting.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
-    OTRFingerprintSetting * fingerprintSetting = [[OTRFingerprintSetting alloc] initWithTitle:@"OTR Fingerprints" description:@"OTR Fingers"];
+    OTRFingerprintSetting * fingerprintSetting = [[OTRFingerprintSetting alloc] initWithTitle:OTR_FINGERPRINTS_STRING description:OTR_FINGERPRINTS_SUBTITLE_STRING];
     fingerprintSetting.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
     NSArray *chatSettings;

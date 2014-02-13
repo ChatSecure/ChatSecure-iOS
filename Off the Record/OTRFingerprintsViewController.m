@@ -98,9 +98,9 @@
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
     if (section == 0) {
-        return @"Account Fingerprints";
+        return ACCOUNT_FINGERPRINTS_STRING;
     }
-    return @"Buddy Fingerprints";
+    return BUDDY_FINGERPRINTS_STRING;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -164,7 +164,16 @@
     else if (indexPath.section == 1) {
         NSDictionary * dict = self.buddyFingerprintsArray[indexPath.row];
         title = dict[OTRUsernameKey];
-        body = dict[OTRFingerprintKey];
+        NSString * fingerprint = dict[OTRFingerprintKey];
+        BOOL verified = [dict[OTRTrustKey] boolValue];
+        NSString * verifiedString = nil;
+        if (verified) {
+            verifiedString = VERIFIED_STRING;
+        }
+        else {
+            verifiedString = NOT_VERIFIED_STRING;
+        }
+        body = [NSString stringWithFormat:@"%@\n%@",fingerprint,verifiedString];
     }
     
     self.alertView = [[UIAlertView alloc] initWithTitle:title message:body delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
