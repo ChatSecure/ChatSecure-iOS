@@ -331,6 +331,8 @@
 		63F637C7183D9410004A7AC5 /* ContextFilterLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F637C4183D9410004A7AC5 /* ContextFilterLogFormatter.m */; };
 		63F637C8183D9410004A7AC5 /* DispatchQueueLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F637C6183D9410004A7AC5 /* DispatchQueueLogFormatter.m */; };
 		63F6E854164E000C00F67BDB /* OTRFeedbackSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F6E853164E000B00F67BDB /* OTRFeedbackSetting.m */; };
+		63F77ED618B41D0700E11D5A /* OTRSSLCertificate.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F77ED518B41D0700E11D5A /* OTRSSLCertificate.m */; };
+		63F77EE318B4356C00E11D5A /* OTRSSLCertificateDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F77EE218B4356C00E11D5A /* OTRSSLCertificateDetailViewController.m */; };
 		63F8A52F16DD995400374551 /* OTRIntSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F8A52E16DD995400374551 /* OTRIntSetting.m */; };
 		63F8A53316DD9B6F00374551 /* OTRIntSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F8A53216DD9B6F00374551 /* OTRIntSettingViewController.m */; };
 		63FA108316F9290A00D9EE45 /* OTRImages.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FA108216F9290900D9EE45 /* OTRImages.m */; };
@@ -1290,6 +1292,10 @@
 		63F637C6183D9410004A7AC5 /* DispatchQueueLogFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DispatchQueueLogFormatter.m; path = Submodules/CocoaLumberjack/Lumberjack/Extensions/DispatchQueueLogFormatter.m; sourceTree = SOURCE_ROOT; };
 		63F6E852164E000B00F67BDB /* OTRFeedbackSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRFeedbackSetting.h; sourceTree = "<group>"; };
 		63F6E853164E000B00F67BDB /* OTRFeedbackSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRFeedbackSetting.m; sourceTree = "<group>"; };
+		63F77ED418B41D0700E11D5A /* OTRSSLCertificate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRSSLCertificate.h; sourceTree = "<group>"; };
+		63F77ED518B41D0700E11D5A /* OTRSSLCertificate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRSSLCertificate.m; sourceTree = "<group>"; };
+		63F77EE118B4356C00E11D5A /* OTRSSLCertificateDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRSSLCertificateDetailViewController.h; sourceTree = "<group>"; };
+		63F77EE218B4356C00E11D5A /* OTRSSLCertificateDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRSSLCertificateDetailViewController.m; sourceTree = "<group>"; };
 		63F8A52D16DD995400374551 /* OTRIntSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRIntSetting.h; sourceTree = "<group>"; };
 		63F8A52E16DD995400374551 /* OTRIntSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRIntSetting.m; sourceTree = "<group>"; };
 		63F8A53116DD9B6E00374551 /* OTRIntSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRIntSettingViewController.h; sourceTree = "<group>"; };
@@ -1985,6 +1991,8 @@
 				6300F16616E6CF8400D3C1AA /* OTRSubscriptionRequestsViewController.m */,
 				63BFDB6316E81CD900C608D6 /* OTRBuddyViewController.h */,
 				63BFDB6416E81CD900C608D6 /* OTRBuddyViewController.m */,
+				63F77EE118B4356C00E11D5A /* OTRSSLCertificateDetailViewController.h */,
+				63F77EE218B4356C00E11D5A /* OTRSSLCertificateDetailViewController.m */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -2038,6 +2046,8 @@
 			children = (
 				63464F791889EE8A00526358 /* Old Models */,
 				D96495CC15363C1F009A8C33 /* Settings */,
+				63F77ED418B41D0700E11D5A /* OTRSSLCertificate.h */,
+				63F77ED518B41D0700E11D5A /* OTRSSLCertificate.m */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -4398,6 +4408,7 @@
 				63F637C0183D93DB004A7AC5 /* DDFileLogger.m in Sources */,
 				63464F341889EC9200526358 /* _OTRManagedMessage.m in Sources */,
 				D9CEEE97168423CA00B236B5 /* FLAPFrame.m in Sources */,
+				63F77ED618B41D0700E11D5A /* OTRSSLCertificate.m in Sources */,
 				D9CEEE98168423CA00B236B5 /* flipbit.m in Sources */,
 				D9CEEE99168423CA00B236B5 /* FTAddBuddy.m in Sources */,
 				D9CEEE9A168423CA00B236B5 /* FTAddDeny.m in Sources */,
@@ -4424,6 +4435,7 @@
 				D9CEEEB0168423CA00B236B5 /* OFTProxyConnection.m in Sources */,
 				D9CEEEB1168423CA00B236B5 /* OFTServer.m in Sources */,
 				D9CEEEB2168423CA00B236B5 /* OSCARConnection.m in Sources */,
+				63F77EE318B4356C00E11D5A /* OTRSSLCertificateDetailViewController.m in Sources */,
 				63464F651889ECC200526358 /* OTRManagedFacebookAccount.m in Sources */,
 				63D2BB1D1856A0D200FFE4B7 /* OTRCertificateDomainViewController.m in Sources */,
 				D9CEEEB3168423CA00B236B5 /* RVServiceData.m in Sources */,

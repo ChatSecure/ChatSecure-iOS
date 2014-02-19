@@ -7,24 +7,25 @@
 //
 
 #import "OTRCertificatesViewController.h"
+
 #import "OTRCertificatePinning.h"
+#import "OTRSSLCertificate.h"
+#import "OTRSSLCertificateDetailViewController.h"
 
 @interface OTRCertificatesViewController ()
+
+@property (nonatomic, strong) NSArray * certificates;
+@property (nonatomic, strong) NSString * hostname;
 
 @end
 
 @implementation OTRCertificatesViewController
-{
-    NSDictionary * certificatesDictionary;
-    NSArray * certificateHashes;
-    NSString * hostname;
-}
 
 - (id)initWithHostName:(NSString *)newHostname withCertificates:(NSArray *)certificates {
     
     if (self = [self init]) {
         self.title = newHostname;
-        hostname = newHostname;
+        self.hostname = newHostname;
         self.canEdit = YES;
         [self reloadCerts:certificates];
     }
@@ -44,17 +45,16 @@
 
 - (void)reloadCerts:(NSArray *)newCerts {
     if (![newCerts count]) {
-        newCerts = [OTRCertificatePinning storedCertificatesWithHostName:hostname];
+        newCerts = [OTRCertificatePinning storedCertificatesWithHostName:self.hostname];
     }
-    NSMutableArray * tempHashes = [NSMutableArray array];
-    NSMutableDictionary * tempDict = [NSMutableDictionary dictionary];
+    NSMutableArray * tempCertificates = [NSMutableArray array];
     [newCerts enumerateObjectsUsingBlock:^(NSData * certData, NSUInteger idx, BOOL *stop) {
-        NSString * fingerPrint = [OTRCertificatePinning sha1FingerprintForCertificate:[OTRCertificatePinning certForData:certData]];
-        [tempHashes addObject:fingerPrint];
-        tempDict[fingerPrint] = certData;
+        
+        OTRSSLCertificate * sslCertificate = [OTRSSLCertificate SSLCertifcateWithData:certData];
+        [tempCertificates addObject:sslCertificate];
+        
     }];
-    certificateHashes = tempHashes;
-    certificatesDictionary = tempDict;
+    self.certificates = tempCertificates;
 }
 
 - (void)toggleEditing:(id)sender
@@ -79,7 +79,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [certificateHashes count];
+    return [self.certificates count];
 }
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -98,12 +98,13 @@
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:tableViewCellIdentifier];
     }
+    OTRSSLCertificate * sslCertificate = self.certificates[indexPath.row];
     
-    cell.textLabel.text = [certificateHashes[indexPath.row] stringByReplacingOccurrencesOfString:@" " withString:@":"];
-    cell.textLabel.font = [UIFont systemFontOfSize:10.0];
-    cell.detailTextLabel.text = @"SHA1";
+    cell.textLabel.text = sslCertificate.subjectCommonName;
+    cell.detailTextLabel.text = [sslCertificate.SHA1fingerprint stringByReplacingOccurrencesOfString:@" " withString:@":"];
+    cell.detailTextLabel.font = [UIFont systemFontOfSize:10.0];
     
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
     return cell;
 }
@@ -111,10 +112,20 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        [OTRCertificatePinning deleteCertificate:[OTRCertificatePinning certForData:certificatesDictionary[certificateHashes[indexPath.row]]] withHostName:hostname];
+        OTRSSLCertificate * sslCertificate = self.certificates[indexPath.row];
+        [OTRCertificatePinning deleteCertificate:[OTRCertificatePinning certForData:sslCertificate.data] withHostName:self.hostname];
     }
     [self reloadCerts:nil];
     [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    OTRSSLCertificate * certificate = self.certificates[indexPath.row];
+    
+    OTRSSLCertificateDetailViewController * detailViewController = [[OTRSSLCertificateDetailViewController alloc] initWithSSLCertificate:certificate];
+    [self.navigationController pushViewController:detailViewController animated:YES];
 }
 
 @end
