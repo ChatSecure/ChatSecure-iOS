@@ -84,7 +84,7 @@
         if (!displayName.length) {
             displayName = localMessage.buddy.accountName;
         }
-        localNotification.alertBody = [NSString stringWithFormat:@"%@: %@",localMessage.buddy.displayName,rawMessage];
+        localNotification.alertBody = [NSString stringWithFormat:@"%@: %@",displayName,rawMessage];
         
         NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithCapacity:3];
         [userInfo setObject:localMessage.buddy.accountName forKey:kOTRNotificationUserNameKey];
