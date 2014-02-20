@@ -818,6 +818,11 @@
 
 - (void)sendButtonPressedForInputBar:(OTRChatInputBar *)inputBar
 {
+    if ([inputBar.textView isFirstResponder]) {
+        //trick to include last auto correct suggestion
+        [inputBar.textView resignFirstResponder];
+        [inputBar.textView becomeFirstResponder];
+    }
     NSString * text = inputBar.textView.text;
     if ([text length]) {
         NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
