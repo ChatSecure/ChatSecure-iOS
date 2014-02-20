@@ -109,8 +109,14 @@
     
     if(newEncryptionStatus != currentEncryptionStatus.statusValue)
     {
+        __block NSString * displayName = self.displayName;
+        if (!displayName.length) {
+            displayName = self.accountName;
+        }
         if (newEncryptionStatus != kOTRKitMessageStateEncrypted && currentEncryptionStatus.statusValue == kOTRKitMessageStateEncrypted) {
-            [[[UIAlertView alloc] initWithTitle:SECURITY_WARNING_STRING message:[NSString stringWithFormat:CONVERSATION_NO_LONGER_SECURE_STRING, self.displayName] delegate:nil cancelButtonTitle:OK_STRING otherButtonTitles:nil] show];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[[UIAlertView alloc] initWithTitle:SECURITY_WARNING_STRING message:[NSString stringWithFormat:CONVERSATION_NO_LONGER_SECURE_STRING, displayName] delegate:nil cancelButtonTitle:OK_STRING otherButtonTitles:nil] show];
+            });
         }
         [OTRManagedEncryptionStatusMessage newEncryptionStatus:newEncryptionStatus buddy:self inContext:context];
     }
