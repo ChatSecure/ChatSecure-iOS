@@ -451,13 +451,18 @@
         self.isXmppConnected = [sender authenticateWithGoogleAccessToken:self.password error:&error];
         return;
     }
-	else if (![[self xmppStream] authenticateWithPassword:self.password error:&error])
+	else if ([[self xmppStream] authenticateWithPassword:self.password error:&error])
 	{
-        self.isXmppConnected = NO;
+        self.isXmppConnected = YES;
         return;
 	}
     
-    self.isXmppConnected = YES;
+    self.isXmppConnected = NO;
+    if(error){
+        [self failedToConnect:error];
+    }
+    
+    
 }
 
 - (void)xmppStreamDidAuthenticate:(XMPPStream *)sender

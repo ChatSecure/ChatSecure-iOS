@@ -23,6 +23,7 @@
 #import "OTRGoogleTalkLoginViewController.h"
 #import "Strings.h"
 #import "GTMOAuth2ViewControllerTouch.h"
+#import "OTRManagedGoogleAccount.h"
 #import "OTRSecrets.h"
 
 @interface OTRGoogleTalkLoginViewController ()
