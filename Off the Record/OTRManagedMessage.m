@@ -79,6 +79,11 @@
         localNotification.alertAction = REPLY_STRING;
         localNotification.soundName = UILocalNotificationDefaultSoundName;
         localNotification.applicationIconBadgeNumber = [UIApplication sharedApplication].applicationIconBadgeNumber + 1;
+        
+        NSString * displayName = localMessage.buddy.displayName;
+        if (!displayName.length) {
+            displayName = localMessage.buddy.accountName;
+        }
         localNotification.alertBody = [NSString stringWithFormat:@"%@: %@",localMessage.buddy.displayName,rawMessage];
         
         NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithCapacity:3];

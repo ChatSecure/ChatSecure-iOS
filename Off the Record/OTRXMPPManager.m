@@ -154,7 +154,7 @@
 		//        If you do enableBackgroundingOnSocket on the simulator,
 		//        you will simply see an error message from the xmpp stack when it fails to set the property.
 		
-		xmppStream.enableBackgroundingOnSocket = YES;
+		self.xmppStream.enableBackgroundingOnSocket = YES;
 	}
 #endif
 	
