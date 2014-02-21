@@ -1,6 +1,6 @@
 [main]
 host = https://www.transifex.com
-minimum_perc = 25
+minimum_perc = 1
 
 [chatsecure.strings]
 source_lang = en_US
