@@ -135,7 +135,7 @@
     if ([rightBarItem isEqual:lockButton] || [rightBarItem isEqual:lockVerifiedButton] || [rightBarItem isEqual:unlockedButton] || !rightBarItem) {
         BOOL trusted = [[OTRKit sharedInstance] fingerprintIsVerifiedForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
         
-        int16_t currentEncryptionStatus = [self.buddy currentEncryptionStatus];
+        OTRKitMessageState currentEncryptionStatus = [self.buddy currentEncryptionStatus];
         
         if(currentEncryptionStatus == kOTRKitMessageStateEncrypted && trusted)
         {
