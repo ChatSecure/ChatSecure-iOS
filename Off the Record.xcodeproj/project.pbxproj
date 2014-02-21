@@ -1277,6 +1277,8 @@
 		D902D31D141E930C00AA3479 /* OTROldBuddy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = OTROldBuddy.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		D9042E2C153168BE000D264C /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_CN; path = "Off the Record/zh_CN.lproj/InfoPlist.strings"; sourceTree = SOURCE_ROOT; };
 		D9042E2D153168BE000D264C /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_CN; path = "Off the Record/zh_CN.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
+		D9077CFA18B7FEEC00AEE665 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = "Off the Record/fr.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
+		D9077CFB18B7FF0500AEE665 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = "Off the Record/pl.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
 		D909662F17EA55B800440833 /* GTMOAuth2.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GTMOAuth2.xcodeproj; path = "Submodules/gtm-oauth2/Source/GTMOAuth2.xcodeproj"; sourceTree = "<group>"; };
 		D909663D17EA67BD00440833 /* facebook-ios-sdk.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "facebook-ios-sdk.xcodeproj"; path = "Submodules/facebook-ios-sdk/src/facebook-ios-sdk.xcodeproj"; sourceTree = "<group>"; };
 		D90B80AB13FC719B006EFF3D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -4580,6 +4582,8 @@
 				636BDD6D17D92A3B00861A9A /* nl_NL */,
 				636BDD6E17D92A4F00861A9A /* pt_PT */,
 				636BDD6F17D92A5C00861A9A /* ro_RO */,
+				D9077CFA18B7FEEC00AEE665 /* fr */,
+				D9077CFB18B7FF0500AEE665 /* pl */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -4856,7 +4860,7 @@
 				OTHER_CFLAGS = "-DSQLITE_HAS_CODEC";
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = ChatSecure;
-				PROVISIONING_PROFILE = "8982714E-0702-4FE9-B2AD-39F2E346EFA7";
+				PROVISIONING_PROFILE = "42356564-01E8-41F6-A6B5-8B2A1B7773E4";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
@@ -4896,7 +4900,7 @@
 				);
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = ChatSecure;
-				PROVISIONING_PROFILE = "8982714E-0702-4FE9-B2AD-39F2E346EFA7";
+				PROVISIONING_PROFILE = "42356564-01E8-41F6-A6B5-8B2A1B7773E4";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};

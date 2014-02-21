@@ -14,8 +14,10 @@
 
     #if DEBUG
         #define MR_ENABLE_ACTIVE_RECORD_LOGGING 0
+        #define XMPP_LOGGING_ENABLED 1
     #else
         #define MR_ENABLE_ACTIVE_RECORD_LOGGING 0
+        #define XMPP_LOGGING_ENABLED 0
     #endif
 
     #import "CoreData+MagicalRecord.h"
