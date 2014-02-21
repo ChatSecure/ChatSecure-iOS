@@ -23,6 +23,7 @@
 #import "OTROscarManager.h"
 #import "OTRProtocolManager.h"
 #import "OTRConstants.h"
+#import "Strings.h"
 
 @implementation OTROscarManager
 
@@ -590,9 +591,18 @@ BOOL loginFailed;
 
 -(void)connectWithPassword:(NSString *)myPassword
 {
+    // LibOrange has security problems, sorry!
+    NSDictionary *userInfo = @{NSLocalizedDescriptionKey: AIM_REMOVED_TITLE_STRING,
+                               NSLocalizedFailureReasonErrorKey: AIM_REMOVED_MESSAGE_STRING};
+    NSError *error = [NSError errorWithDomain:@"org.chatsecure.ChatSecure" code:500 userInfo:userInfo];
+    [[NSNotificationCenter defaultCenter]
+     postNotificationName:kOTRProtocolLoginFail object:self userInfo:@{kOTRProtocolLoginFailErrorKey:error}];
+    
+    /*** WARNING LibOrange has security problems. ***
     self.login = [[AIMLogin alloc] initWithUsername:account.username password:myPassword];
     [self.login setDelegate:self];
     [self.login beginAuthorization];
+    */
 }
 -(void)disconnect
 {

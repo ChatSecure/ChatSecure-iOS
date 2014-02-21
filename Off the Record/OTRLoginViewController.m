@@ -405,6 +405,17 @@
         }
         self.alertView.tag = tag;
         [self.alertView show];
+    } else if ([self.account.protocol isEqualToString:kOTRProtocolTypeAIM]) {
+        NSDictionary * userInfo = notification.userInfo;
+        NSError *error = userInfo[kOTRProtocolLoginFailErrorKey];
+        NSString *errorTitle = nil;
+        NSString *errorMessage = nil;
+        if (error) {
+            errorTitle = error.localizedDescription;
+            errorMessage = error.localizedFailureReason;
+        }
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:errorTitle message:errorMessage delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
+        [alert show];
     }
 }
              
