@@ -24,6 +24,13 @@
 #import "OTRProtocolManager.h"
 #import "OTRConstants.h"
 
+@interface OTROscarManager ()
+
+@property (nonatomic, strong) OTRManagedAccount * account;
+@property (nonatomic) BOOL isConnected;
+
+@end
+
 @implementation OTROscarManager
 
 @synthesize accountName;
@@ -31,8 +38,6 @@
 @synthesize theSession;
 @synthesize login;
 @synthesize loginFailed;
-@synthesize account;
-@synthesize isConnected;
 
 BOOL loginFailed;
 
@@ -46,6 +51,16 @@ BOOL loginFailed;
         self.isConnected = NO;
     }
     return self;
+}
+
+- (BOOL)isConnected
+{
+    return _isConnected;
+}
+
+- (OTRManagedAccount *)account
+{
+    return _account;
 }
 
 - (void)blockingCheck {
@@ -590,7 +605,7 @@ BOOL loginFailed;
 
 -(void)connectWithPassword:(NSString *)myPassword
 {
-    self.login = [[AIMLogin alloc] initWithUsername:account.username password:myPassword];
+    self.login = [[AIMLogin alloc] initWithUsername:self.account.username password:myPassword];
     [self.login setDelegate:self];
     [self.login beginAuthorization];
 }

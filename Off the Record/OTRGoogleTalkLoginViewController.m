@@ -28,6 +28,8 @@
 
 @interface OTRGoogleTalkLoginViewController ()
 
+@property (nonatomic,strong) OTRManagedGoogleAccount * account;
+
 @end
 
 @implementation OTRGoogleTalkLoginViewController

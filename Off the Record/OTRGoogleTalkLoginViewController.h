@@ -27,6 +27,6 @@
 @interface OTRGoogleTalkLoginViewController : OTRXMPPOAUTHLoginViewController
 
 
-@property (nonatomic,strong) OTRManagedGoogleAccount * account;
+
 
 @end

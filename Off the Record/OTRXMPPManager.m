@@ -54,6 +54,9 @@
 
 @interface OTRXMPPManager()
 
+@property (nonatomic, strong) OTRManagedXMPPAccount * account;
+@property (nonatomic) BOOL isConnected;
+
 @property (nonatomic, strong) XMPPStream *xmppStream;
 @property (nonatomic, strong) XMPPReconnect *xmppReconnect;
 @property (nonatomic, strong) XMPPRoster *xmppRoster;
@@ -82,8 +85,6 @@
 
 @implementation OTRXMPPManager
 
-@synthesize isConnected;
-
 - (id)init
 {
     if (self = [super init]) {
@@ -106,6 +107,16 @@
     }
     
     return self;
+}
+
+- (OTRManagedAccount *)account
+{
+    return _account;
+}
+
+- (BOOL)isConnected
+{
+    return _isConnected;
 }
 
 - (void)dealloc
