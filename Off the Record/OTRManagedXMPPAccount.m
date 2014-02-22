@@ -39,7 +39,7 @@
     [super setDefaultsWithProtocol:kOTRProtocolTypeXMPP];
     self.domain = newDomain;
     self.port = @(DEFAULT_PORT_NUMBER); // Default XMPP port number
-    self.resource = [[self class] generateResource];  //Default resource chatsecure12345
+    self.resource = [[self class] newResource];  //Default resource chatsecure12345
 }
 
 - (NSString *) imageName {
@@ -72,7 +72,7 @@
     return @(DEFAULT_PORT_NUMBER);
 }
 
-+ (NSString * )generateResource
++ (NSString * )newResource
 {
     int r = arc4random() % 99999;
     return [NSString stringWithFormat:@"%@%d",kOTRXMPPResource,r];

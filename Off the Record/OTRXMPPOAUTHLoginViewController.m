@@ -16,8 +16,6 @@
 
 @implementation OTRXMPPOAUTHLoginViewController
 
-@synthesize connectButton,disconnectButton;
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -85,8 +83,11 @@
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
         }
     }
-    else {
+    else if(indexPath.section == 0) {
         cell = [super tableView:tableView cellForRowAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+    }
+    else if (indexPath.section == 1) {
+        cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
     }
     return cell;
     
@@ -102,6 +103,12 @@
 {
     self.account.autologinValue = self.autoLoginSwitch.on;
     self.account.rememberPasswordValue = YES;
+    if (self.resourceTextField.text.length) {
+        self.account.resource = self.resourceTextField.text;
+    }
+    else {
+        self.account.resource = [OTRManagedXMPPAccount newResource];
+    }
 }
 
 -(void)disconnectAccount:(id)sender {

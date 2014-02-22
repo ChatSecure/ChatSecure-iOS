@@ -34,7 +34,7 @@
 - (NSString *)accountDomain;
 
 + (NSNumber *)defaultPortNumber;
-+ (NSString * )generateResource;
++ (NSString * )newResource;
 
 
 @end

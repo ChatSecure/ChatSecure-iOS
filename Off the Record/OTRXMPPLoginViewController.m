@@ -26,7 +26,7 @@
 
 @interface OTRXMPPLoginViewController ()
 
-@property (nonatomic, strong) UITextField * resourceTextField;
+
 
 @end
 
@@ -74,7 +74,7 @@
         self.account.resource = self.resourceTextField.text;
     }
     else {
-        self.account.resource = [OTRManagedXMPPAccount generateResource];
+        self.account.resource = [OTRManagedXMPPAccount newResource];
     }
     
 }

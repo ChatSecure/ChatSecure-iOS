@@ -26,4 +26,6 @@
 
 @property (nonatomic,strong) OTRManagedXMPPAccount * account;
 
+@property (nonatomic, strong) UITextField * resourceTextField;
+
 @end
