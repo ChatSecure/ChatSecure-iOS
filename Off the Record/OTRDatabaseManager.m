@@ -65,7 +65,7 @@
     NSManagedObjectModel *version2Model = [[NSManagedObjectModel alloc] initWithContentsOfURL:mom2];
     NSManagedObjectModel *version3Model = [[NSManagedObjectModel alloc] initWithContentsOfURL:mom3];
     
-    if (![self isManagedObjectModel:version3Model compatibleWithStoreAtUrl:databaseURL]) {
+    if ([self isManagedObjectModel:version2Model compatibleWithStoreAtUrl:databaseURL]) {
         [self migrateAccountsForManagedObjectModel:version2Model toManagedObjectModel:version3Model withStoreUrl:databaseURL];
     }
     
