@@ -133,9 +133,10 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     OTRAccountType accountType = [accounts[indexPath.row][kAccountTypeKey] unsignedIntegerValue];
-    OTRManagedAccount * cellAccount = [OTRManagedAccount accountForAccountType:accountType];
     
-    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    NSManagedObjectContext * context = [NSManagedObjectContext MR_context];
+    OTRManagedAccount * cellAccount = [OTRManagedAccount accountForAccountType:accountType inContext:context];
+    [context obtainPermanentIDsForObjects:@[cellAccount] error:nil];
     [context MR_saveToPersistentStoreAndWait];
     
     OTRLoginViewController *loginViewController = [OTRLoginViewController loginViewControllerWithAcccountID:cellAccount.objectID];

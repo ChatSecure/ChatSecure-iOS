@@ -1037,6 +1037,7 @@
 		6375D2521811FCD2006CDA8A /* OTRRosterStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRRosterStorage.m; sourceTree = "<group>"; };
 		637A6C1618B6EBB7007DE155 /* xmpp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = xmpp.png; path = "media/app-images/xmpp-logo/xmpp.png"; sourceTree = SOURCE_ROOT; };
 		637A6C1718B6EBB7007DE155 /* xmpp@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "xmpp@2x.png"; path = "media/app-images/xmpp-logo/xmpp@2x.png"; sourceTree = SOURCE_ROOT; };
+		637A6C3618B83387007DE155 /* ChatSecure 4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ChatSecure 4.xcdatamodel"; sourceTree = "<group>"; };
 		637B55F3183F08D10012F1C9 /* test_OTRManagedAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = test_OTRManagedAccount.m; sourceTree = "<group>"; };
 		637FF13417DEB8910012AA1B /* ChatSecure 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "ChatSecure 2.xcdatamodel"; sourceTree = "<group>"; };
 		63813C1016E14E5D00909670 /* OTRBuddyListGroupManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBuddyListGroupManager.h; sourceTree = "<group>"; };
@@ -4029,7 +4030,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd \"Off the Record\"\n/usr/local/bin/mogenerator --template-var arc=true -m \"ChatSecure.xcdatamodeld/ChatSecure 3.xcdatamodel/\"";
+			shellScript = "cd \"Off the Record\"\n/usr/local/bin/mogenerator --template-var arc=true -m \"ChatSecure.xcdatamodeld/ChatSecure 4.xcdatamodel/\"";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -5000,11 +5001,12 @@
 		D9D3717C169D404F0086F358 /* ChatSecure.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				637A6C3618B83387007DE155 /* ChatSecure 4.xcdatamodel */,
 				637FF13417DEB8910012AA1B /* ChatSecure 2.xcdatamodel */,
 				63D0E47D1819D962003ACA13 /* ChatSecure 3.xcdatamodel */,
 				D9D3717D169D40500086F358 /* ChatSecure.xcdatamodel */,
 			);
-			currentVersion = 63D0E47D1819D962003ACA13 /* ChatSecure 3.xcdatamodel */;
+			currentVersion = 637A6C3618B83387007DE155 /* ChatSecure 4.xcdatamodel */;
 			path = ChatSecure.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

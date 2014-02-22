@@ -6,6 +6,7 @@
 const struct OTRManagedXMPPAccountAttributes OTRManagedXMPPAccountAttributes = {
 	.domain = @"domain",
 	.port = @"port",
+	.resource = @"resource",
 };
 
 const struct OTRManagedXMPPAccountRelationships OTRManagedXMPPAccountRelationships = {
@@ -81,6 +82,13 @@ const struct OTRManagedXMPPAccountFetchedProperties OTRManagedXMPPAccountFetched
 - (void)setPrimitivePortValue:(int16_t)value_ {
 	[self setPrimitivePort:[NSNumber numberWithShort:value_]];
 }
+
+
+
+
+
+@dynamic resource;
+
 
 
 

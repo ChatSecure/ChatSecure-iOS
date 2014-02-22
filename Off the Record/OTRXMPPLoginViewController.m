@@ -26,34 +26,29 @@
 
 @interface OTRXMPPLoginViewController ()
 
+@property (nonatomic, strong) UITextField * resourceTextField;
+
 @end
 
 @implementation OTRXMPPLoginViewController
-
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
+    self.resourceTextField = [[UITextField alloc] init];
+    self.resourceTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+    self.resourceTextField.autocorrectionType = UITextAutocorrectionTypeNo;
+    self.resourceTextField.returnKeyType = UIReturnKeyDone;
+    self.resourceTextField.textColor = self.textFieldTextColor;
+    self.resourceTextField.text = self.account.resource;
+    
+    [self addCellinfoWithSection:1 row:0 labelText:@"Resource" cellType:kCellTypeTextField userInputView:self.resourceTextField];
     
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHideOrShow:) name:UIKeyboardWillHideNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHideOrShow:) name:UIKeyboardWillShowNotification object:nil];
 
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 -(void)keyboardWillHideOrShow:(NSNotification *)note
@@ -67,11 +62,21 @@
     
     CGRect newTableViewFrame = CGRectMake(0, 0, self.loginViewTableView.frame.size.width, keyboardFrameForTableView.origin.y);
     
-    //keyboardFrameForTextField.origin.y - newTextFieldFrame.size.height;
-    
     [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionBeginFromCurrentState | curve animations:^{
         self.loginViewTableView.frame = newTableViewFrame;
     } completion:nil];
+}
+
+- (void)readInFields
+{
+    [super readInFields];
+    if (self.resourceTextField.text.length) {
+        self.account.resource = self.resourceTextField.text;
+    }
+    else {
+        self.account.resource = [OTRManagedXMPPAccount generateResource];
+    }
+    
 }
 
 -(void)viewWillAppear:(BOOL)animated
