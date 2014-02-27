@@ -35,6 +35,7 @@
 #import "OTRDonateSetting.h"
 #import "OTRIntSetting.h"
 #import "OTRCertificateSetting.h"
+#import "OTRUtilities.h"
 
 @interface OTRSettingsManager(Private)
 - (void) populateSettings;

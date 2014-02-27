@@ -52,6 +52,9 @@
 #import "OTRConstants.h"
 #import "OTRUtilities.h"
 
+static NSTimeInterval const kOTRChatStatePausedTimeout   = 5;
+static NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
+
 @interface OTRXMPPManager()
 
 @property (nonatomic, strong) OTRManagedXMPPAccount * account;

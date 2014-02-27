@@ -22,8 +22,9 @@
 
 #import "OTRInLineTextEditTableViewCell.h"
 #import "OTRConstants.h"
+#import "OTRUtilities.h"
 
-#define textLeftFieldBuffer 100
+static CGFloat const textLeftFieldBuffer = 100;
 
 @implementation OTRInLineTextEditTableViewCell
 

@@ -20,71 +20,70 @@
 //  You should have received a copy of the GNU General Public License
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
-#define kOTRProtocolLoginSuccess @"LoginSuccessNotification"
-#define kOTRProtocolLoginFail @"LoginFailedNotification"
-#define kOTRProtocolLoginFailErrorKey @"ProtocolLoginFailErrorKey"
-#define kOTRProtocolLoginFailSSLStatusKey @"kOTRProtocolLoginFailSSLStatusKey"
-#define kOTRProtocolLoginFailHostnameKey @"kOTRProtocolLoginFailHostnameKey"
-#define kOTRProtocolLoginFailSSLCertificateDataKey @"kOTRProtocolLoginFailSSLCertificateData"
-#define kOTRMessageReceived @"MessageReceivedNotification"
-#define kOTRMessageReceiptResonseReceived @"MessageReceiptResponseNotification"
-#define kOTRStatusUpdate @"StatusUpdatedNotification" 
-#define kOTRProtocolDiconnect @"DisconnectedNotification"
-#define kOTRSendMessage @"SendMessageNotification"
+static NSString *const kOTRProtocolLoginSuccess                   = @"LoginSuccessNotification";
+static NSString *const kOTRProtocolLoginFail                      = @"LoginFailedNotification";
+static NSString *const kOTRProtocolLoginFailErrorKey              = @"ProtocolLoginFailErrorKey";
+static NSString *const kOTRProtocolLoginFailSSLStatusKey          = @"kOTRProtocolLoginFailSSLStatusKey";
+static NSString *const kOTRProtocolLoginFailHostnameKey           = @"kOTRProtocolLoginFailHostnameKey";
+static NSString *const kOTRProtocolLoginFailSSLCertificateDataKey = @"kOTRProtocolLoginFailSSLCertificateData";
+static NSString *const kOTRMessageReceived                        = @"MessageReceivedNotification";
+static NSString *const kOTRMessageReceiptResonseReceived          = @"MessageReceiptResponseNotification";
+static NSString *const kOTRStatusUpdate                           = @"StatusUpdatedNotification";
+static NSString *const kOTRProtocolDiconnect                      = @"DisconnectedNotification";
+static NSString *const kOTRSendMessage                            = @"SendMessageNotification";
 
-#define kOTRFacebookDomain @"chat.facebook.com"
-#define kOTRGoogleTalkDomain @"talk.google.com"
-#define kOTRProtocolTypeXMPP @"xmpp"
-#define kOTRProtocolTypeAIM @"prpl-oscar"
+static NSString *const kOTRFacebookDomain   = @"chat.facebook.com";
+static NSString *const kOTRGoogleTalkDomain = @"talk.google.com";
+static NSString *const kOTRProtocolTypeXMPP = @"xmpp";
+static NSString *const kOTRProtocolTypeAIM  = @"prpl-oscar";
 
-#define kOTRNotificationAccountNameKey @"kOTRNotificationAccountNameKey"
-#define kOTRNotificationUserNameKey @"kOTRNotificationUserNameKey"
-#define kOTRNotificationProtocolKey @"kOTRNotificationProtocolKey"
+static NSString *const kOTRNotificationAccountNameKey = @"kOTRNotificationAccountNameKey";
+static NSString *const kOTRNotificationUserNameKey    = @"kOTRNotificationUserNameKey";
+static NSString *const kOTRNotificationProtocolKey    = @"kOTRNotificationProtocolKey";
 
-#define kOTRXMPPAccountAllowSelfSignedSSLKey @"kOTRXMPPAccountAllowSelfSignedSSLKey"
-#define kOTRXMPPAccountSendDeliveryReceiptsKey @"kOTRXMPPAccountSendDeliveryReceiptsKey"
-#define kOTRXMPPAccountSendTypingNotificationsKey @"kOTRXMPPAccountSendTypingNotificationsKey"
-#define kOTRXMPPAccountAllowSSLHostNameMismatch @"kOTRXMPPAccountAllowSSLHostNameMismatch"
-#define kOTRXMPPAccountPortNumber @"kOTRXMPPAccountPortNumber"
-#define kOTRXMPPAllowPlaintextAuthenticationKey @"kOTRXMPPAllowPlaintextAuthenticationKey"
-#define kOTRXMPPRequireTLSKey @"kOTRXMPPRequireTLSKey"
+static NSString *const kOTRXMPPAccountAllowSelfSignedSSLKey      = @"kOTRXMPPAccountAllowSelfSignedSSLKey";
+static NSString *const kOTRXMPPAccountSendDeliveryReceiptsKey    = @"kOTRXMPPAccountSendDeliveryReceiptsKey";
+static NSString *const kOTRXMPPAccountSendTypingNotificationsKey = @"kOTRXMPPAccountSendTypingNotificationsKey";
+static NSString *const kOTRXMPPAccountAllowSSLHostNameMismatch   = @"kOTRXMPPAccountAllowSSLHostNameMismatch";
+static NSString *const kOTRXMPPAccountPortNumber                 = @"kOTRXMPPAccountPortNumber";
+static NSString *const kOTRXMPPAllowPlaintextAuthenticationKey   = @"kOTRXMPPAllowPlaintextAuthenticationKey";
+static NSString *const kOTRXMPPRequireTLSKey                     = @"kOTRXMPPRequireTLSKey";
 
-#define kOTRXMPPResource @"chatsecure"
+static NSString *const kOTRXMPPResource = @"chatsecure";
 
-#define kOTRFacebookUsernameLink @"http://www.facebook.com/help/?faq=211813265517027#What-are-usernames?"
+static NSString *const kOTRFacebookUsernameLink = @"http://www.facebook.com/help/?faq=211813265517027#What-are-usernames?";
 
-#define kOTRFeedbackEmail @"support@chatsecure.org"
+static NSString *const kOTRFeedbackEmail = @"support@chatsecure.org";
 
-#define kOTRServiceName @"org.chatsecure.ChatSecure"
-#define kOTRCertificateServiceName @"org.chatsecure.ChatSecure.Certificate"
+static NSString *const kOTRServiceName            = @"org.chatsecure.ChatSecure";
+static NSString *const kOTRCertificateServiceName = @"org.chatsecure.ChatSecure.Certificate";
 
-#define KOTRCertificatesUsername @"KOTRCertificatesUsername"
+static NSString *const MESSAGE_PROCESSED_NOTIFICATION  = @"MessageProcessedNotification";
+static NSString *const kOTREncryptionStateNotification = @"kOTREncryptionStateNotification";
 
-#define kOTRChatStatePausedTimeout 5
-#define kOTRChatStateInactiveTimeout 120
+static NSString *const kOTRSettingKeyFontSize                 = @"kOTRSettingKeyFontSize";
+static NSString *const kOTRSettingKeyDeleteOnDisconnect       = @"kOTRSettingKeyDeleteOnDisconnect";
+static NSString *const kOTRSettingKeyOpportunisticOtr         = @"kOTRSettingKeyOpportunisticOtr";
+static NSString *const kOTRSettingKeyShowDisconnectionWarning = @"kOTRSettingKeyShowDisconnectionWarning";
+static NSString *const kOTRSettingUserAgreedToEULA            = @"kOTRSettingUserAgreedToEULA";
+static NSString *const kOTRSettingAccountsKey                 = @"kOTRSettingAccountsKey";
+static NSString *const kOTRSettingKeyLanguage                 = @"userSelectedSetting";
 
-//typedef int16_t OTRBuddyStatus;
-//typedef int16_t OTRChatState;
+static NSString *const kOTRAppVersionKey     = @"kOTRAppVersionKey";
+static NSString *const OTRActivityTypeQRCode = @"OTRActivityTypeQRCode";
 
-#define MESSAGE_PROCESSED_NOTIFICATION @"MessageProcessedNotification"
-#define kOTREncryptionStateNotification @"kOTREncryptionStateNotification"
+static NSString *const OTRArchiverKey = @"OTRArchiverKey";
 
-#define kOTRSettingKeyFontSize @"kOTRSettingKeyFontSize"
-#define kOTRSettingKeyDeleteOnDisconnect @"kOTRSettingKeyDeleteOnDisconnect"
-#define kOTRSettingKeyOpportunisticOtr @"kOTRSettingKeyOpportunisticOtr"
-#define kOTRSettingKeyShowDisconnectionWarning @"kOTRSettingKeyShowDisconnectionWarning"
-#define kOTRSettingUserAgreedToEULA @"kOTRSettingUserAgreedToEULA"
-#define kOTRSettingAccountsKey @"kOTRSettingAccountsKey"
-#define kOTRSettingKeyLanguage @"userSelectedSetting"
+static NSString *const FACEBOOK_APP_ID  = @"447241325394334";
+static NSString *const GOOGLE_APP_ID    = @"719137339288.apps.googleusercontent.com";
+static NSString *const GOOGLE_APP_SCOPE = @"https://www.googleapis.com/auth/googletalk";
 
-#define kOTRAppVersionKey @"kOTRAppVersionKey"
-#define OTRActivityTypeQRCode @"OTRActivityTypeQRCode"
-
-#define OTRArchiverKey @"OTRArchiverKey"
-
-#define FACEBOOK_APP_ID @"447241325394334"
-#define GOOGLE_APP_ID @"719137339288.apps.googleusercontent.com"
-#define GOOGLE_APP_SCOPE @"https://www.googleapis.com/auth/googletalk"
+//Chatview
+static CGFloat const sentDateFontSize            = 13;
+static CGFloat const deliveredFontSize           = 13;
+static CGFloat const messageFontSize             = 16;
+static CGFloat const messageSentDateLabelHeight  = sentDateFontSize + 7;
+static CGFloat const messageDeliveredLabelHeight = deliveredFontSize + 7;
 
 
 typedef enum {
@@ -117,42 +116,7 @@ typedef NS_ENUM(NSUInteger, OTRBuddyStatus) {
     OTRBuddyStatusAway      = 1,
     OTRBuddyStatusAvailable = 0
 };
-//Chatview
-#define kTabBarHeight 0
-#define kSendButtonWidth 60
-#define ACTIONSHEET_SAFARI_TAG 0
-#define ACTIONSHEET_ENCRYPTION_OPTIONS_TAG 1
 
-#define ALERTVIEW_NOT_VERIFIED_TAG 0
-#define ALERTVIEW_VERIFIED_TAG 1
 
-#define kChatBarHeight1                      40
-#define kChatBarHeight4                      94
-#define SentDateFontSize                     13
-#define DeliveredFontSize                    13
-#define MESSAGE_DELIVERED_LABEL_HEIGHT       (DeliveredFontSize +7)
-#define MESSAGE_SENT_DATE_LABEL_HEIGHT       (SentDateFontSize+7)
-#define MessageFontSize                      16
-#define MESSAGE_TEXT_WIDTH_MAX               180
-#define MESSAGE_MARGIN_TOP                   7
-#define MESSAGE_MARGIN_BOTTOM                10
-#define TEXT_VIEW_X                          7   // 40  (with CameraButton)
-#define TEXT_VIEW_Y                          9
-#define TEXT_VIEW_WIDTH                      249 // 216 (with CameraButton)
-#define TEXT_VIEW_HEIGHT_MIN                 36
-#define ContentHeightMax                     80
-#define MESSAGE_COUNT_LIMIT                  50
-#define MESSAGE_SENT_DATE_SHOW_TIME_INTERVAL 5*60 // 5 minutes
-#define MESSAGE_SENT_DATE_LABEL_TAG          100
-#define MESSAGE_BACKGROUND_IMAGE_VIEW_TAG    101
-#define MESSAGE_TEXT_LABEL_TAG               102
-#define MESSAGE_DELIVERED_LABEL_TAG          103
-#define STATUS_MESSAGE_LABEL_TAG             104
-
-#define SYSTEM_VERSION_EQUAL_TO(v)                  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedSame)
-#define SYSTEM_VERSION_GREATER_THAN(v)              ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedDescending)
-#define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
-#define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
-#define SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(v)     ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedDescending)
 
 

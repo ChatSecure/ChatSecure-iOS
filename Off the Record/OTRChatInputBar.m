@@ -15,15 +15,11 @@
 #import "OTRChatInputBar.h"
 #import "Strings.h"
 #import "OTRConstants.h"
+#import "OTRColors.h"
+#import "OTRUtilities.h"
 
 
 @implementation OTRChatInputBar
-
-@synthesize textView = _textView;
-@synthesize backgroundImageview = _backgroundImageview;
-@synthesize textViewBackgroundImageView = _textViewBackgroundImageView;
-@synthesize sendButton =_sendButton;
-@synthesize delegate;
 
 - (id)initWithFrame:(CGRect)frame withDelegate:(id<OTRChatInputBarDelegate>)newDelegate;
 {
@@ -38,7 +34,10 @@
         
         [self addSubview:self.sendButton];
         [self addSubview:self.textView];
-        [self addSubview:self.textViewBackgroundImageView];
+        if (SYSTEM_VERSION_LESS_THAN(@"7.0")) {
+            [self addSubview:self.textViewBackgroundImageView];
+        }
+        
         
         
         [self checkSaveButton];
@@ -48,25 +47,61 @@
     return self;
 }
 
+- (UIButton *)classicButton
+{
+    
+    UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];
+    CGFloat buttonWidth = [SEND_STRING sizeWithFont:[UIFont systemFontOfSize:16]].width+20;
+    button.frame = CGRectMake(self.frame.size.width - (buttonWidth+6), 8, buttonWidth, 27);
+    button.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin;
+    UIEdgeInsets sendButtonEdgeInsets = UIEdgeInsetsMake(0, 13, 0, 13); // 27 x 27
+    UIImage *sendButtonBackgroundImage = [[UIImage imageNamed:@"SendButton"] resizableImageWithCapInsets:sendButtonEdgeInsets];
+    [button setBackgroundImage:sendButtonBackgroundImage forState:UIControlStateNormal];
+    [button setBackgroundImage:sendButtonBackgroundImage forState:UIControlStateDisabled];
+    [button setBackgroundImage:[[UIImage imageNamed:@"SendButtonHighlighted"] resizableImageWithCapInsets:sendButtonEdgeInsets] forState:UIControlStateHighlighted];
+    button.titleLabel.font = [UIFont boldSystemFontOfSize:16];
+    button.titleLabel.shadowOffset = CGSizeMake(0.0, -1.0);
+    [button setTitleShadowColor:[UIColor colorWithRed:0.325f green:0.463f blue:0.675f alpha:1] forState:UIControlStateNormal];
+    
+    return button;
+}
+
+- (UIButton *)flatButton
+{
+    UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];
+    CGFloat buttonWidth = [SEND_STRING sizeWithFont:[UIFont systemFontOfSize:16]].width+20;
+    button.frame = CGRectMake(self.frame.size.width - (buttonWidth+6), 8, buttonWidth, 27);
+    button.backgroundColor = [UIColor clearColor];
+    
+    [button setTitleColor:[OTRColors bubbleBlueColor] forState:UIControlStateNormal];
+    [button setTitleColor:[OTRColors bubbleBlueColor] forState:UIControlStateHighlighted];
+    [button setTitleColor:[UIColor colorWithRed:0.56 green:0.56 blue:0.56 alpha:1] forState:UIControlStateDisabled];
+    
+    button.titleLabel.font = [UIFont boldSystemFontOfSize:18.0f];
+    return button;
+}
+
 - (UIButton *)sendButton
 {
     if (!_sendButton) {
-        _sendButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        CGFloat buttonWidth = [SEND_STRING sizeWithFont:[UIFont systemFontOfSize:16]].width+20;
-        _sendButton.frame = CGRectMake(self.frame.size.width - (buttonWidth+6), 8, buttonWidth, 27);
-        _sendButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin;
-        UIEdgeInsets sendButtonEdgeInsets = UIEdgeInsetsMake(0, 13, 0, 13); // 27 x 27
-        UIImage *sendButtonBackgroundImage = [[UIImage imageNamed:@"SendButton"] resizableImageWithCapInsets:sendButtonEdgeInsets];
-        [_sendButton setBackgroundImage:sendButtonBackgroundImage forState:UIControlStateNormal];
-        [_sendButton setBackgroundImage:sendButtonBackgroundImage forState:UIControlStateDisabled];
-        [_sendButton setBackgroundImage:[[UIImage imageNamed:@"SendButtonHighlighted"] resizableImageWithCapInsets:sendButtonEdgeInsets] forState:UIControlStateHighlighted];
-        _sendButton.titleLabel.font = [UIFont boldSystemFontOfSize:16];
-        _sendButton.titleLabel.shadowOffset = CGSizeMake(0.0, -1.0);
-        [_sendButton setTitle:SEND_STRING forState:UIControlStateNormal];
-        [_sendButton setTitleShadowColor:[UIColor colorWithRed:0.325f green:0.463f blue:0.675f alpha:1] forState:UIControlStateNormal];
+        if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
+            _sendButton = [self flatButton];
+        }
+        else{
+            _sendButton = [self classicButton];
+        }
+        
+        NSString *title = SEND_STRING;
+        [_sendButton setTitle:title forState:UIControlStateNormal];
+        [_sendButton setTitle:title forState:UIControlStateHighlighted];
+        [_sendButton setTitle:title forState:UIControlStateDisabled];
+        
+        _sendButton.autoresizingMask = (UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin);
+        
         [_sendButton addTarget:self action:@selector(sendButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-        //
-        previousTextViewContentHeight = MessageFontSize+20;
+        
+        
+        previousTextViewContentHeight = messageFontSize+20;
     }
     return _sendButton;
 }
@@ -75,7 +110,18 @@
 {
     if(!_textView) {
         CGFloat rightEdge = self.sendButton.frame.origin.x - 8;
-        _textView = [[HPGrowingTextView alloc] initWithFrame:CGRectMake(6, 4, rightEdge-6, 34)];
+        if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
+            _textView = [[HPGrowingTextView alloc] initWithFrame:CGRectMake(6, 4, rightEdge-6, 34)];
+            _textView.backgroundColor = [UIColor clearColor];
+            _textView.layer.borderColor = [UIColor colorWithWhite:0.8f alpha:1.0f].CGColor;
+            _textView.layer.borderWidth = 0.65f;
+            _textView.layer.cornerRadius = 6.0f;
+        }
+        else {
+            _textView = [[HPGrowingTextView alloc] initWithFrame:CGRectMake(6, 4, rightEdge-6, 34)];
+            _textView.backgroundColor = [UIColor whiteColor];
+        }
+        
         _textView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         
         _textView.isScrollable = NO;
@@ -87,11 +133,13 @@
         _textView.maxNumberOfLines = 2;
         _textView.animateHeightChange = YES;
         _textView.animationDuration = 0.1;
-        _textView.backgroundColor = [UIColor whiteColor];
-        _textView.font = [UIFont systemFontOfSize:MessageFontSize];
+        
+        _textView.font = [UIFont systemFontOfSize:messageFontSize];
         _textView.placeholder = MESSAGE_PLACEHOLDER_STRING;
         
         _textView.clipsToBounds = YES;
+        
+        
     }
     return _textView;
 }
@@ -108,7 +156,10 @@
         self.sendButton.titleLabel.alpha = 1;
     } else {
         self.sendButton.enabled = NO;
-        self.sendButton.titleLabel.alpha = 0.5f;
+        if(SYSTEM_VERSION_LESS_THAN(@"7.0"))
+        {
+            self.sendButton.titleLabel.alpha = 0.5f;
+        }
     }
 }
 
@@ -116,7 +167,15 @@
 {
     if (!_backgroundImageview) {
         _backgroundImageview = [[UIImageView alloc] init];
-        _backgroundImageview.image = [[UIImage imageNamed:@"MessageInputBarBackground"] resizableImageWithCapInsets:UIEdgeInsetsMake(19, 3, 19, 3)];
+        
+        if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
+            _backgroundImageview.image = [[UIImage imageNamed:@"input-bar-flat"] resizableImageWithCapInsets:UIEdgeInsetsMake(19, 3, 19, 3)];
+        }
+        else {
+            _backgroundImageview.image = [[UIImage imageNamed:@"MessageInputBarBackground"] resizableImageWithCapInsets:UIEdgeInsetsMake(2.0, 0.0, 0.0, 0.0)];
+        }
+        
+        
         _backgroundImageview.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
         _backgroundImageview.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     }
@@ -127,9 +186,10 @@
 {
     if(!_textViewBackgroundImageView)
     {
-        UIImage *rawEntryBackground = [UIImage imageNamed:@"MessageInputFieldBackground"];
-        UIImage *entryBackground = [rawEntryBackground stretchableImageWithLeftCapWidth:13 topCapHeight:22];
-        _textViewBackgroundImageView = [[UIImageView alloc] initWithImage:entryBackground];
+        UIImage * backgroundImage;
+        backgroundImage = [UIImage imageNamed:@"MessageInputFieldBackground"];
+        backgroundImage = [backgroundImage stretchableImageWithLeftCapWidth:13 topCapHeight:22];
+        _textViewBackgroundImageView = [[UIImageView alloc] initWithImage:backgroundImage];
         CGRect frame = self.textView.frame;
         frame.origin.x = 5;
         frame.origin.y = 0;

@@ -8,7 +8,8 @@
 
 #import "OTRChatBubbleView.h"
 #import "OTRConstants.h"
-
+#import "OTRImages.h"
+#import "OTRUtilities.h"
 #import "OTRMessageTableViewCell.h"
 
 @implementation OTRChatBubbleView
@@ -21,13 +22,13 @@
         self.messageTextLabel = [[TTTAttributedLabel alloc] initWithFrame:CGRectZero];
         self.messageTextLabel.textAlignment = NSTextAlignmentNatural;
         self.messageBackgroundImageView = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"MessageBubbleBlue"] stretchableImageWithLeftCapWidth:23 topCapHeight:15]];
+        self.messageBackgroundImageView = [OTRImages bubbleImageViewForMessageType:OTRBubbleMessageTypeOutgoing];
         self.messageBackgroundImageView.translatesAutoresizingMaskIntoConstraints = NO;
         
         self.deliveredImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
         self.deliveredImageView.translatesAutoresizingMaskIntoConstraints = NO;
         
         [self addSubview:self.deliveredImageView];
-        [self addSubview:self.messageBackgroundImageView];
         [self addSubview:self.messageTextLabel];
         
         [self needsUpdateConstraints];
@@ -69,12 +70,31 @@
     _isIncoming = isIncoming;
     [self didChangeValueForKey:NSStringFromSelector(@selector(isIncoming))];
     if (_isIncoming) {
-        self.messageBackgroundImageView.image = [[UIImage imageNamed:@"MessageBubbleGray"]stretchableImageWithLeftCapWidth:23 topCapHeight:15];
+        self.messageBackgroundImageView = [OTRImages bubbleImageViewForMessageType:OTRBubbleMessageTypeIncoming];
+        self.messageTextLabel.textColor = [UIColor blackColor];
     }
     else {
-        self.messageBackgroundImageView.image = [[UIImage imageNamed:@"MessageBubbleBlue"]stretchableImageWithLeftCapWidth:15 topCapHeight:15];
+        self.messageBackgroundImageView = [OTRImages bubbleImageViewForMessageType:OTRBubbleMessageTypeOutgoing];
+        if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
+            self.messageTextLabel.textColor = [UIColor whiteColor];
+        }
+        else {
+            self.messageTextLabel.textColor = [UIColor blackColor];
+        }
     }
     [self setNeedsUpdateConstraints];
+}
+
+- (void)setMessageBackgroundImageView:(UIImageView *)messageBackgroundImageView
+{
+    if ([_messageBackgroundImageView isEqual:messageBackgroundImageView]) {
+        return;
+    }
+    [_messageBackgroundImageView removeFromSuperview];
+    _messageBackgroundImageView = messageBackgroundImageView;
+    _messageBackgroundImageView.translatesAutoresizingMaskIntoConstraints = NO;
+    [self addSubview:_messageBackgroundImageView];
+    [self sendSubviewToBack:_messageBackgroundImageView];
 }
 
 - (void)setMessageTextLabel:(TTTAttributedLabel *)messageTextLabel
@@ -146,13 +166,17 @@
     [self addConstraint:constraint];
     
     //Text Label
+    CGFloat yCenterConstant = -2.0;
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
+        yCenterConstant = 0;
+    }
     constraint = [NSLayoutConstraint constraintWithItem:self.messageTextLabel
                                               attribute:NSLayoutAttributeCenterY
                                               relatedBy:NSLayoutRelationEqual
                                                  toItem:self.messageBackgroundImageView
                                               attribute:NSLayoutAttributeCenterY
                                              multiplier:1.0
-                                               constant:-2.0];
+                                               constant:yCenterConstant];
     [self addConstraint:constraint];
     
     

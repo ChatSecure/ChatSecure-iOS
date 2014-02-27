@@ -33,8 +33,7 @@
 #import "OTRGoogleTalkLoginViewController.h"
 #import "OTRInLineTextEditTableViewCell.h"
 #import "OTRErrorManager.h"
-#import "OTRProtocolManager.h"
-
+#import "OTRUtilities.h"
 #import "SIAlertView.h"
 
 #import "OTRCertificatePinning.h"
