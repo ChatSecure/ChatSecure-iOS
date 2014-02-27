@@ -8,9 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-#define kOTRAppleLanguagesKey @"AppleLanguages"
-#define kOTRUserSetLanguageKey @"userSetLanguageKey"
-
 @interface OTRLanguageManager : NSObject
 
 @property (nonatomic,strong) NSDictionary * languageLookupDictionary;

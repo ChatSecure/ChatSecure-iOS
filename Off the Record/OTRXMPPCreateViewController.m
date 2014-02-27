@@ -10,10 +10,14 @@
 #import "Strings.h"
 
 #import "HITorManager.h"
+#import "OTRAccountsManager.h"
+#import "OTRLog.h"
 
 @interface OTRXMPPCreateViewController ()
 
 @property (nonatomic,strong) NSArray * hostnameArray;
+
+@property (nonatomic) BOOL wasAbleToCreateAccount;
 
 @end
 
@@ -46,6 +50,8 @@
 {
     [super viewWillAppear:animated];
     
+    self.wasAbleToCreateAccount = NO;
+    
     [[NSNotificationCenter defaultCenter]
      addObserver:self
      selector:@selector(didReceiveRegistrationSucceededNotification:)
@@ -69,6 +75,9 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:OTRXMPPRegisterSucceededNotificationName
                                                   object:nil];
+    if (!self.wasAbleToCreateAccount) {
+        [OTRAccountsManager removeAccount:self.account];
+    }
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -158,6 +167,7 @@
 
 - (void)didReceiveRegistrationSucceededNotification:(NSNotification *)notification
 {
+    self.wasAbleToCreateAccount = YES;
     OTRXMPPManager * xmppMananger = [self xmppManager];
     if (xmppMananger) {
         self.HUD.labelText = LOGGING_IN_STRING;
@@ -168,6 +178,7 @@
 - (void)didReceiveRegistrationFailedNotification:(NSNotification *)notification
 {
     [self hideHUD];
+    self.wasAbleToCreateAccount = NO;
     NSError * error = [[notification userInfo] objectForKey:kOTRNotificationErrorKey];
     DDLogWarn(@"Registration Failed: %@",error);
     NSString * errorString = @"Error Registering Username";

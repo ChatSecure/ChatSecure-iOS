@@ -26,10 +26,12 @@
 #import "OTRManagedBuddy.h"
 #import "OTRUtilities.h"
 
+#import "OTRLog.h"
+
 @implementation OTRCodec
 
 
-+(void) decodeMessage:(OTRManagedMessage*)theMessage completionBlock:(void (^)(OTRManagedMessage *))completionBlock
++(void) decodeMessage:(OTRManagedChatMessage*)theMessage completionBlock:(void (^)(OTRManagedChatMessage *))completionBlock
 {
     NSString *message = theMessage.message;
     NSString *friendAccount = theMessage.buddy.accountName;
@@ -39,7 +41,7 @@
     
     [[OTRKit sharedInstance] decodeMessage:message recipient:friendAccount accountName:myAccountName protocol:protocol completionBlock:^(NSString *decodedMessageString) {
         NSError *error = nil;
-        OTRManagedMessage *localMessage = (OTRManagedMessage*)[[NSManagedObjectContext MR_contextForCurrentThread] existingObjectWithID:messageObjectID error:&error];
+        OTRManagedChatMessage *localMessage = (OTRManagedChatMessage*)[[NSManagedObjectContext MR_contextForCurrentThread] existingObjectWithID:messageObjectID error:&error];
         if (error) {
             DDLogError(@"Error fetching message: %@", error);
             error = nil;

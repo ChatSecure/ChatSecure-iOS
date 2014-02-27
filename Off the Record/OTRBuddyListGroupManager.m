@@ -9,8 +9,8 @@
 #import "OTRBuddyListGroupManager.h"
 #import "OTRManagedAccount.h"
 
-#define kGroupNameKey @"groupNameKey"
-#define kBuddyControllerKey @"groupControllerKey"
+NSString *const kOTRGroupNameKey = @"kOTRGroupNameKey";
+NSString *const kOTRBuddyControllerKey = @"kOTRBuddyControllerKey";
 
 @implementation OTRBuddyListGroupManager
 
@@ -71,7 +71,7 @@
 
 -(NSString *)groupNameAtIndex:(NSUInteger)index
 {
-    return [[self.onlineBuddyGroups objectAtIndex:index] objectForKey:kGroupNameKey];
+    return [[self.onlineBuddyGroups objectAtIndex:index] objectForKey:kOTRGroupNameKey];
 }
 
 -(OTRManagedBuddy *)buddyAtIndexPath:(NSIndexPath *)indexPath
@@ -83,22 +83,22 @@
 -(void)addOfflineBuddyController:(NSFetchedResultsController *)controller groupName:(NSString *)groupName
 {
     if (controller && [groupName length]) {
-        [self.offlineBuddyGroups addObject:@{kGroupNameKey: groupName,kBuddyControllerKey:controller}];
+        [self.offlineBuddyGroups addObject:@{kOTRGroupNameKey: groupName,kOTRBuddyControllerKey:controller}];
     }
 }
 
 -(NSInteger)addOnlineBuddyController:(NSFetchedResultsController *)controller groupName:(NSString *)groupName
 {
-    NSDictionary * controllerDictionary = @{kGroupNameKey: groupName,kBuddyControllerKey:controller};
+    NSDictionary * controllerDictionary = @{kOTRGroupNameKey: groupName,kOTRBuddyControllerKey:controller};
     [self.onlineBuddyGroups addObject:controllerDictionary];
-    NSSortDescriptor * sortDescriptor = [[NSSortDescriptor alloc] initWithKey:kGroupNameKey ascending:YES];
+    NSSortDescriptor * sortDescriptor = [[NSSortDescriptor alloc] initWithKey:kOTRGroupNameKey ascending:YES];
     [self.onlineBuddyGroups sortUsingDescriptors:@[sortDescriptor]];
     
     return  [self.onlineBuddyGroups indexOfObject:controllerDictionary];
 }
 -(NSFetchedResultsController *)resultsControllerAtIndex:(NSInteger)index
 {
-    return [[self.onlineBuddyGroups objectAtIndex:index] objectForKey:kBuddyControllerKey];
+    return [[self.onlineBuddyGroups objectAtIndex:index] objectForKey:kOTRBuddyControllerKey];
 }
 
 -(NSFetchedResultsController *)buddyFetchedResultsControllerWithManagedGroup:(OTRManagedGroup *)managedGroup
@@ -119,16 +119,16 @@
 
 -(NSString *)groupNameWithController:(NSFetchedResultsController *)controller
 {
-    NSPredicate *filter = [NSPredicate predicateWithFormat:@"%K = %@",kBuddyControllerKey,controller];
+    NSPredicate *filter = [NSPredicate predicateWithFormat:@"%K = %@",kOTRBuddyControllerKey,controller];
     NSArray * filteredArray = [self.onlineBuddyGroups filteredArrayUsingPredicate:filter];
     if ([filteredArray count]) {
-        return [[filteredArray lastObject] objectForKey:kGroupNameKey];
+        return [[filteredArray lastObject] objectForKey:kOTRGroupNameKey];
     }
     
     filteredArray = [self.offlineBuddyGroups filteredArrayUsingPredicate:filter];
     if ([filteredArray count])
     {
-        return [[filteredArray lastObject] objectForKey:kGroupNameKey];
+        return [[filteredArray lastObject] objectForKey:kOTRGroupNameKey];
     }
     
     return @"";
@@ -137,7 +137,7 @@
 
 -(NSInteger)offlineIndexWithController:(NSFetchedResultsController *)controller
 {
-    NSPredicate *filter = [NSPredicate predicateWithFormat:@"%K = %@",kBuddyControllerKey,controller];
+    NSPredicate *filter = [NSPredicate predicateWithFormat:@"%K = %@",kOTRBuddyControllerKey,controller];
     NSArray * filteredArray = [self.offlineBuddyGroups filteredArrayUsingPredicate:filter];
     if ([filteredArray count]) {
         return [self.offlineBuddyGroups indexOfObject:[filteredArray lastObject]];
@@ -147,7 +147,7 @@
 }
 -(NSInteger)onlineIndexWithController:(NSFetchedResultsController *)controller
 {
-    NSPredicate *filter = [NSPredicate predicateWithFormat:@"%K = %@",kBuddyControllerKey,controller];
+    NSPredicate *filter = [NSPredicate predicateWithFormat:@"%K = %@",kOTRBuddyControllerKey,controller];
     NSArray * filteredArray = [self.onlineBuddyGroups filteredArrayUsingPredicate:filter];
     if ([filteredArray count]) {
         return [self.onlineBuddyGroups indexOfObject:[filteredArray lastObject]];
@@ -184,7 +184,7 @@
 
 -(BOOL)isControllerOffline:(NSFetchedResultsController *)controller
 {
-    NSPredicate *filter = [NSPredicate predicateWithFormat:@"%K = %@",kBuddyControllerKey,controller];
+    NSPredicate *filter = [NSPredicate predicateWithFormat:@"%K = %@",kOTRBuddyControllerKey,controller];
     NSArray * filteredArray = [self.offlineBuddyGroups filteredArrayUsingPredicate:filter];
     if ([filteredArray count]) {
         return YES;
@@ -193,7 +193,7 @@
 }
 -(BOOL)isControllerOnline:(NSFetchedResultsController *)controller
 {
-    NSPredicate *filter = [NSPredicate predicateWithFormat:@"%K = %@",kBuddyControllerKey,controller];
+    NSPredicate *filter = [NSPredicate predicateWithFormat:@"%K = %@",kOTRBuddyControllerKey,controller];
     NSArray * filteredArray = [self.onlineBuddyGroups filteredArrayUsingPredicate:filter];
     if ([filteredArray count]) {
         return YES;
@@ -204,15 +204,15 @@
 -(NSFetchedResultsController *)controllerWithBuddyGroupName:(NSString *)groupName
 {
     NSFetchedResultsController * controller = nil;
-    NSPredicate *filter = [NSPredicate predicateWithFormat:@"%K = %@",kGroupNameKey,groupName];
+    NSPredicate *filter = [NSPredicate predicateWithFormat:@"%K = %@",kOTRGroupNameKey,groupName];
     NSArray * filteredArray = [self.onlineBuddyGroups filteredArrayUsingPredicate:filter];
     if ([filteredArray count]) {
-        controller = [[filteredArray lastObject] objectForKey:kBuddyControllerKey];
+        controller = [[filteredArray lastObject] objectForKey:kOTRBuddyControllerKey];
     }
     
     filteredArray = [self.offlineBuddyGroups filteredArrayUsingPredicate:filter];
     if ([filteredArray count]) {
-        controller =[[filteredArray lastObject] objectForKey:kBuddyControllerKey];
+        controller =[[filteredArray lastObject] objectForKey:kOTRBuddyControllerKey];
     }
     
     return controller;

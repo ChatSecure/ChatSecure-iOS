@@ -24,8 +24,6 @@
 #import <CoreData/CoreData.h>
 #import "_OTRManagedXMPPAccount.h"
 
-#define kOTRAccountDomainKey @"domain"
-
 @interface OTRManagedXMPPAccount : _OTRManagedXMPPAccount
 
 +(NSNumber *)defaultPortNumber;

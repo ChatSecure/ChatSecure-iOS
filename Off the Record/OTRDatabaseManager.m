@@ -11,6 +11,8 @@
 #import "OTRManagedAccount.h"
 #import "OTREncryptionManager.h"
 
+#import "OTRLog.h"
+
 @implementation OTRDatabaseManager
 
 + (void) copyTestDatabaseToDestination:(NSURL*)destinationURL {

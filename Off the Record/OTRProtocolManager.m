@@ -26,7 +26,15 @@
 #import "OTRManagedOAuthAccount.h"
 #import "OTRConstants.h"
 
+#import "OTRLog.h"
+
 static OTRProtocolManager *sharedManager = nil;
+
+@interface OTRProtocolManager ()
+
+@property (nonatomic) NSUInteger numberOfConnectedProtocols;
+
+@end
 
 @implementation OTRProtocolManager
 
@@ -44,11 +52,18 @@ static OTRProtocolManager *sharedManager = nil;
     self = [super init];
     if(self)
     {
-        _numberOfConnectedProtocols = 0;
+        self.numberOfConnectedProtocols = 0;
         self.encryptionManager = [[OTREncryptionManager alloc] init];
         self.protocolManagers = [[NSMutableDictionary alloc] init];
     }
     return self;
+}
+
+- (void)removeProtocolManagerForAccount:(OTRManagedAccount *)account
+{
+    if ([self.protocolManagers objectForKey:account.uniqueIdentifier]) {
+        [self.protocolManagers removeObjectForKey:account.uniqueIdentifier];
+    }
 }
 
 #pragma mark -
@@ -136,11 +151,7 @@ static OTRProtocolManager *sharedManager = nil;
            changeInt = -1;
         }
         
-        if (change != 0) {
-            [self willChangeValueForKey:NSStringFromSelector(@selector(numberOfConnectedProtocols))];
-            _numberOfConnectedProtocols += changeInt;
-            [self didChangeValueForKey:NSStringFromSelector(@selector(numberOfConnectedProtocols))];
-        }
+        self.numberOfConnectedProtocols += changeInt;
     }
 
 }

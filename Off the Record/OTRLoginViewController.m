@@ -33,12 +33,11 @@
 #import "OTRGoogleTalkLoginViewController.h"
 #import "OTRInLineTextEditTableViewCell.h"
 #import "OTRManagedXMPPTorAccount.h"
+#import "OTRUtilities.h"
 
 #import "SIAlertView.h"
 
 #import "OTRCertificatePinning.h"
-
-#define kFieldBuffer 20;
 
 NSString *const kTextLabelTextKey       = @"kTextLabelTextKey";
 NSString *const kCellTypeKey            = @"kCellTypeKey";

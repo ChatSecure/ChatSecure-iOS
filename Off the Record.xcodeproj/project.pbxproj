@@ -222,6 +222,8 @@
 		6375D2531811FCD2006CDA8A /* OTRRosterStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 6375D2521811FCD2006CDA8A /* OTRRosterStorage.m */; };
 		63813C1216E14E5D00909670 /* OTRBuddyListGroupManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 63813C1116E14E5D00909670 /* OTRBuddyListGroupManager.m */; };
 		638286E01846911C00F127C2 /* OTRAccountTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 638286DF1846911C00F127C2 /* OTRAccountTableViewCell.m */; };
+		63861244189C4DCE00D78757 /* OTRConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 63861243189C4DCE00D78757 /* OTRConstants.m */; };
+		63861246189C560E00D78757 /* OTRSecrets.m in Sources */ = {isa = PBXBuildFile; fileRef = 63861245189C560E00D78757 /* OTRSecrets.m */; };
 		63871264175808DA006C3A4E /* OTRActivityItemProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 63871263175808DA006C3A4E /* OTRActivityItemProvider.m */; };
 		6387126817580D93006C3A4E /* OTRQRCodeActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 6387126717580D93006C3A4E /* OTRQRCodeActivity.m */; };
 		638940CE1815CAF8005F651E /* CrashReporter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 638940CD1815CAF8005F651E /* CrashReporter.framework */; };
@@ -1126,6 +1128,8 @@
 		63813C1116E14E5D00909670 /* OTRBuddyListGroupManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBuddyListGroupManager.m; sourceTree = "<group>"; };
 		638286DE1846911C00F127C2 /* OTRAccountTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAccountTableViewCell.h; sourceTree = "<group>"; };
 		638286DF1846911C00F127C2 /* OTRAccountTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAccountTableViewCell.m; sourceTree = "<group>"; };
+		63861243189C4DCE00D78757 /* OTRConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRConstants.m; sourceTree = "<group>"; };
+		63861245189C560E00D78757 /* OTRSecrets.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRSecrets.m; sourceTree = "<group>"; };
 		63871262175808DA006C3A4E /* OTRActivityItemProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRActivityItemProvider.h; sourceTree = "<group>"; };
 		63871263175808DA006C3A4E /* OTRActivityItemProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRActivityItemProvider.m; sourceTree = "<group>"; };
 		6387126617580D92006C3A4E /* OTRQRCodeActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRQRCodeActivity.h; sourceTree = "<group>"; };
@@ -1267,6 +1271,7 @@
 		63E717E3182AF391004398AD /* SSKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSKeychain.m; sourceTree = "<group>"; };
 		63E717E4182AF391004398AD /* SSKeychainQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSKeychainQuery.h; sourceTree = "<group>"; };
 		63E717E5182AF391004398AD /* SSKeychainQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSKeychainQuery.m; sourceTree = "<group>"; };
+		63EAD8B21893312200AE0821 /* OTRLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRLog.h; sourceTree = "<group>"; };
 		63EB09491727484D000FACDC /* he */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = he; path = "Off the Record/he.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
 		63EB094A17274AA2000FACDC /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = "Off the Record/es.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
 		63EB094B17274B24000FACDC /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = "Off the Record/sv.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
@@ -3627,7 +3632,6 @@
 				D9D3717C169D404F0086F358 /* ChatSecure.xcdatamodeld */,
 				63E72BA216CB11EE00B6F389 /* mogen */,
 				63464F3E1889ECA000526358 /* Model */,
-				634CBFDB159CEAC70046FB3B /* OTRConstants.h */,
 				63B9422C16DEEEE300D6934F /* OTRUtilities.h */,
 				63B9422D16DEEEE300D6934F /* OTRUtilities.m */,
 				6304F4D118861C4300365824 /* OTRXMPPError.h */,
@@ -3723,7 +3727,11 @@
 				63464F781889EE1E00526358 /* Views */,
 				63FA108116F9290900D9EE45 /* OTRImages.h */,
 				63FA108216F9290900D9EE45 /* OTRImages.m */,
+				634CBFDB159CEAC70046FB3B /* OTRConstants.h */,
+				63861243189C4DCE00D78757 /* OTRConstants.m */,
 				6348189517E3E09C004E0146 /* OTRSecrets.h */,
+				63861245189C560E00D78757 /* OTRSecrets.m */,
+				63EAD8B21893312200AE0821 /* OTRLog.h */,
 				D9CEF0A81684253B00B236B5 /* XMPPFramework.h */,
 				D9D8D1F61531056300F9E8D3 /* Resources */,
 				D9F9378113F44BD3009A3D84 /* Supporting Files */,
@@ -4380,6 +4388,7 @@
 				D9CEEE7E168423CA00B236B5 /* AIMMissedCall.m in Sources */,
 				63464F831889F70D00526358 /* OTRXMPPProxyStream.m in Sources */,
 				D9CEEE7F168423CA00B236B5 /* AIMNickWInfo+BArt.m in Sources */,
+				63861244189C4DCE00D78757 /* OTRConstants.m in Sources */,
 				63534AAF187F5A1400061776 /* OTRChatBubbleView.m in Sources */,
 				D9CEEE80168423CA00B236B5 /* AIMNickWInfo+Caps.m in Sources */,
 				D9CEEE81168423CA00B236B5 /* AIMNickWInfo+Update.m in Sources */,
@@ -4554,6 +4563,7 @@
 				63483F901752CED100779257 /* XMPPStream.m in Sources */,
 				63483F911752CED100779257 /* XMPPBandwidthMonitor.m in Sources */,
 				63483F921752CED100779257 /* XMPPCoreDataStorage.m in Sources */,
+				63861246189C560E00D78757 /* OTRSecrets.m in Sources */,
 				D92D576F1844277500670832 /* HITorManager.m in Sources */,
 				63483F931752CED100779257 /* XMPPGoogleSharedStatus.m in Sources */,
 				63483F941752CED100779257 /* XMPPProcessOne.m in Sources */,
@@ -5108,9 +5118,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/Submodules/XMPPFramework/Vendor/libidn",
-					"/Users/chrisbal/Documents/ChatSecure/Off-the-Record-iOS/Submodules/OnionKit/dependencies/lib",
-					"/Users/david/Documents/chatsecure/Off-the-Record-iOS/Submodules/OnionKit/dependencies/lib",
-					"/Users/david/Documents/chatsecure/Off-the-Record-iOS/Submodules/XMPPFramework/Vendor/libidn",
+					"$(SRCROOT)/Submodules/OnionKit/dependencies/lib",
 				);
 				OTHER_CFLAGS = "-DSQLITE_HAS_CODEC";
 				OTHER_LDFLAGS = "-all_load";
@@ -5157,9 +5165,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/Submodules/XMPPFramework/Vendor/libidn",
-					"/Users/chrisbal/Documents/ChatSecure/Off-the-Record-iOS/Submodules/OnionKit/dependencies/lib",
-					"/Users/david/Documents/chatsecure/Off-the-Record-iOS/Submodules/OnionKit/dependencies/lib",
-					"/Users/david/Documents/chatsecure/Off-the-Record-iOS/Submodules/XMPPFramework/Vendor/libidn",
+					"$(SRCROOT)/Submodules/OnionKit/dependencies/lib",
 				);
 				OTHER_CFLAGS = (
 					"-DNS_BLOCK_ASSERTIONS=1",

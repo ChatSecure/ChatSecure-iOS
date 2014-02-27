@@ -4,8 +4,8 @@
 #import "OTRSecrets.h"
 #import "GTMOAuth2SignIn.h"
 
-#define kExpirationDateKey @"kExpirationDateKey"
-#define kExpiresInKey @"expires_in"
+NSString *const kOTRExpirationDateKey = @"kOTRExpirationDateKey";
+NSString *const kOTRExpiresInKey      = @"expires_in";
 
 @interface OTRManagedGoogleAccount ()
 
@@ -94,8 +94,8 @@
 {
     if ([tokenDictionary count]) {
         NSMutableDictionary * mutableTokenDictionary = [tokenDictionary mutableCopy];
-        NSNumber * expiresIn = [mutableTokenDictionary objectForKey:kExpiresInKey];
-        [mutableTokenDictionary removeObjectForKey:kExpiresInKey];
+        NSNumber * expiresIn = [mutableTokenDictionary objectForKey:kOTRExpiresInKey];
+        [mutableTokenDictionary removeObjectForKey:kOTRExpiresInKey];
         NSDate *date = nil;
         if (expiresIn) {
             unsigned long deltaSeconds = [expiresIn unsignedLongValue];
@@ -104,7 +104,7 @@
             }
         }
         if(date) {
-            [mutableTokenDictionary setObject:date forKey:kExpirationDateKey];
+            [mutableTokenDictionary setObject:date forKey:kOTRExpirationDateKey];
         }
         tokenDictionary = mutableTokenDictionary;
     }
@@ -114,10 +114,10 @@
 -(NSDictionary *)tokenDictionary
 {
     NSMutableDictionary * mutableTokenDictionary = [[super tokenDictionary] mutableCopy];
-    NSDate * expirationDate = [mutableTokenDictionary objectForKey:kExpirationDateKey];
+    NSDate * expirationDate = [mutableTokenDictionary objectForKey:kOTRExpirationDateKey];
     
     NSTimeInterval timeInterval  = [expirationDate timeIntervalSinceDate:[NSDate date]];
-    mutableTokenDictionary[kExpiresInKey] = @(timeInterval);
+    mutableTokenDictionary[kOTRExpiresInKey] = @(timeInterval);
     return mutableTokenDictionary;
 }
 
@@ -130,7 +130,7 @@
         [auth setParameters:[tokenDictionary mutableCopy]];
     }
     auth.clientID = GOOGLE_APP_ID;
-    auth.clientSecret = GOOGLE_APP_SECRET;
+    auth.clientSecret = kOTRGoogleAppSecret;
     auth.scope = GOOGLE_APP_SCOPE;
     auth.tokenURL = [GTMOAuth2SignIn googleTokenURL];
     return auth;

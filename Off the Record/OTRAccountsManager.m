@@ -27,6 +27,9 @@
 #import "OTRManagedOscarAccount.h"
 #import "OTRManagedXMPPAccount.h"
 #import "OTRManagedXMPPTorAccount.h"
+#import "OTRProtocolManager.h"
+
+#import "OTRLog.h"
 
 @interface OTRAccountsManager(Private)
 - (void) refreshAccountsArray;
@@ -44,12 +47,12 @@
     NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
     OTRManagedAccount * acct = (OTRManagedAccount *)[context existingObjectWithID:account.objectID error:nil];
     
+    [[OTRProtocolManager sharedInstance] removeProtocolManagerForAccount:acct];
+    
     [acct prepareBuddiesandMessagesForDeletion];
     [acct MR_deleteEntity];
     
     [context MR_saveToPersistentStoreAndWait];
-    
-   
 }
 
 + (NSArray *)allAccountsAbleToAddBuddies  {

@@ -66,7 +66,7 @@
         [_sendButton setTitleShadowColor:[UIColor colorWithRed:0.325f green:0.463f blue:0.675f alpha:1] forState:UIControlStateNormal];
         [_sendButton addTarget:self action:@selector(sendButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         //
-        previousTextViewContentHeight = MessageFontSize+20;
+        previousTextViewContentHeight = kOTRMessageFontSize+20;
     }
     return _sendButton;
 }
@@ -88,7 +88,7 @@
         _textView.animateHeightChange = YES;
         _textView.animationDuration = 0.1;
         _textView.backgroundColor = [UIColor whiteColor];
-        _textView.font = [UIFont systemFontOfSize:MessageFontSize];
+        _textView.font = [UIFont systemFontOfSize:kOTRMessageFontSize];
         _textView.placeholder = MESSAGE_PLACEHOLDER_STRING;
         
         _textView.clipsToBounds = YES;

@@ -16,13 +16,9 @@
 #import <CommonCrypto/CommonDigest.h>
 
 #import "OTRConstants.h"
-
-#define keychainKeyPrefix @"sslcert."
-#define keychainDictionaryKey @"keychainDictionaryKey"
+#import "OTRLog.h"
 
 @implementation OTRCertificatePinning
-
-@synthesize delegate;
 
 - (id)initWithDefaultCertificates
 {

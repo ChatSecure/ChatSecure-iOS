@@ -39,8 +39,7 @@
 #import "OTRCapabilitiesInMemoryCoreDataStorage.h"
 #import "OTRvCardCoreDataStorage.h"
 
-#import "DDLog.h"
-#import "DDTTYLogger.h"
+#import "OTRLog.h"
 
 #import <CFNetwork/CFNetwork.h>
 
@@ -55,6 +54,9 @@
 
 NSString *const OTRXMPPRegisterSucceededNotificationName = @"OTRXMPPRegisterSucceededNotificationName";
 NSString *const OTRXMPPRegisterFailedNotificationName    = @"OTRXMPPRegisterFailedNotificationName";
+
+NSTimeInterval const kOTRChatStatePausedTimeout   = 5;
+NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 
 
 @interface OTRXMPPManager()
@@ -95,7 +97,7 @@ NSString *const OTRXMPPRegisterFailedNotificationName    = @"OTRXMPPRegisterFail
 
         // Configure logging framework
         backgroundQueue = dispatch_queue_create("buddy.background", NULL);
-        [DDLog addLogger:[DDTTYLogger sharedInstance]];
+        //[DDLog addLogger:[DDTTYLogger sharedInstance]];
         
         // Setup the XMPP stream
         [self setupStream];

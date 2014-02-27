@@ -29,6 +29,8 @@
 #import "OTRConstants.h"
 #import "Strings.h"
 
+#import "OTRLog.h"
+
 #define kOTRServiceName @"org.chatsecure.ChatSecure"
 
 
