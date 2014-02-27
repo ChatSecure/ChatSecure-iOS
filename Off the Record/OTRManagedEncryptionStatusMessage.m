@@ -1,6 +1,8 @@
 #import "OTRManagedEncryptionStatusMessage.h"
 #import "Strings.h"
 
+#import "OTRLog.h"
+
 
 @interface OTRManagedEncryptionStatusMessage ()
 
@@ -11,9 +13,9 @@
 
 @implementation OTRManagedEncryptionStatusMessage
 
-+(OTRManagedEncryptionStatusMessage *)newEncryptionStatus:(OTRKitMessageState)newEncryptionStatus buddy:(OTRManagedBuddy *)buddy
++(OTRManagedEncryptionStatusMessage *)newEncryptionStatus:(OTRKitMessageState)newEncryptionStatus buddy:(OTRManagedBuddy *)buddy inContext:(NSManagedObjectContext *)context
 {
-    OTRManagedEncryptionStatusMessage * encryptionStatusMessage = [OTRManagedEncryptionStatusMessage MR_createEntity];
+    OTRManagedEncryptionStatusMessage * encryptionStatusMessage = [OTRManagedEncryptionStatusMessage MR_createInContext:context];
     
     encryptionStatusMessage.date = [NSDate date];
     encryptionStatusMessage.isEncryptedValue = NO;
@@ -43,9 +45,6 @@
     encryptionStatusMessage.statusValue = newEncryptionStatus;
     encryptionStatusMessage.buddy = buddy;
     encryptionStatusMessage.encryptionstatusbuddy = buddy;
-    
-    NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
-    [context MR_saveToPersistentStoreAndWait];
     
     return encryptionStatusMessage;
 }

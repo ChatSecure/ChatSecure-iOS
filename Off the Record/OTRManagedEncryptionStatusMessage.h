@@ -4,6 +4,6 @@
 
 @interface OTRManagedEncryptionStatusMessage : _OTRManagedEncryptionStatusMessage {}
 
-+(OTRManagedEncryptionStatusMessage *)newEncryptionStatus:(OTRKitMessageState)messageState buddy:(OTRManagedBuddy *)buddy;
++ (OTRManagedEncryptionStatusMessage *)newEncryptionStatus:(OTRKitMessageState)messageState buddy:(OTRManagedBuddy *)buddy inContext:(NSManagedObjectContext *)context;
 
 @end

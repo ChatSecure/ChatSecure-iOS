@@ -24,36 +24,8 @@
     {
         self.message = newMessage;
     }
-    
-    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
-    [context MR_saveToPersistentStoreAndWait];
 }
 
-+(OTRManagedStatus *)newStatus:(OTRBuddyStatus)newStatus withMessage:(NSString *)newMessage withBuddy:(OTRManagedBuddy *)newBuddy incoming:(BOOL)newIsIncoming
-{
-    OTRManagedStatus * managedStatus = [OTRManagedStatus MR_createEntity];
-    managedStatus.statusValue = newStatus;
-    
-    if (![newMessage length]) {
-        managedStatus.message = [OTRManagedStatus statusMessageWithStatus:newStatus];
-    }
-    else
-    {
-        managedStatus.message = newMessage;
-    }
-    
-    
-    managedStatus.buddy = newBuddy;
-    managedStatus.statusbuddy = newBuddy;
-    managedStatus.isIncomingValue = newIsIncoming;
-    managedStatus.date = [NSDate date];
-    managedStatus.isEncryptedValue = NO;
-    
-    /*NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
-    [context MR_saveToPersistentStoreAndWait];
-    */
-    return managedStatus;
-}
 +(OTRManagedStatus *)newStatus:(OTRBuddyStatus)newStatus withMessage:(NSString *)newMessage withBuddy:(OTRManagedBuddy *)newBuddy incoming:(BOOL)newIsIncoming inContext:(NSManagedObjectContext *)context
 {
     OTRManagedStatus * managedStatus = [OTRManagedStatus MR_createInContext:context];
@@ -74,8 +46,6 @@
     managedStatus.isIncomingValue = newIsIncoming;
     managedStatus.date = [NSDate date];
     managedStatus.isEncryptedValue = NO;
-    
-    [context MR_saveToPersistentStoreAndWait];
     
     return managedStatus;
 }

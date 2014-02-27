@@ -2,7 +2,15 @@
     "ABOUT_STRING": {
         "comment": "Title for the about page", 
         "string": "About"
-    }, 
+    },
+    "AIM_REMOVED_TITLE_STRING": {
+        "comment": "title for alert view",
+        "string": "AIM Support Removed"
+    },
+    "AIM_REMOVED_MESSAGE_STRING": {
+        "comment": "title for alert view",
+        "string": "AIM support has been removed because our AIM library is no longer maintained and contains flaws. Please remove your account. Sorry!"
+    },
     "ACCOUNTS_STRING": {
         "comment": "Title for the accounts tab", 
         "string": "Accounts"

@@ -23,6 +23,14 @@
 #import "OTROscarManager.h"
 #import "OTRProtocolManager.h"
 #import "OTRConstants.h"
+#import "Strings.h"
+
+@interface OTROscarManager ()
+
+@property (nonatomic, strong) OTRManagedAccount * account;
+@property (nonatomic) BOOL isConnected;
+
+@end
 
 @implementation OTROscarManager
 
@@ -31,8 +39,6 @@
 @synthesize theSession;
 @synthesize login;
 @synthesize loginFailed;
-@synthesize account;
-@synthesize isConnected;
 
 BOOL loginFailed;
 
@@ -46,6 +52,16 @@ BOOL loginFailed;
         self.isConnected = NO;
     }
     return self;
+}
+
+- (BOOL)isConnected
+{
+    return _isConnected;
+}
+
+- (OTRManagedAccount *)account
+{
+    return _account;
 }
 
 - (void)blockingCheck {
@@ -91,20 +107,21 @@ BOOL loginFailed;
 
 -(OTRManagedBuddy *)updateManagedBuddyWith:(AIMBlistBuddy *)buddy
 {
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
     OTRBuddyStatus buddyStatus = [self convertAimStatus:buddy.status];
-    OTRManagedAccount *localAccount = [self.account MR_inThreadContext];
+    OTRManagedAccount *localAccount = [self.account MR_inContext:context];
     
-    OTRManagedBuddy *otrBuddy = [OTRManagedBuddy fetchOrCreateWithName:buddy.username account:self.account];
+    OTRManagedBuddy *otrBuddy = [OTRManagedBuddy fetchOrCreateWithName:buddy.username account:self.account inContext:context];
     
     otrBuddy.displayName = buddy.username;
-    [otrBuddy newStatusMessage:buddy.status.statusMessage status:buddyStatus incoming:YES];
+    [otrBuddy newStatusMessage:buddy.status.statusMessage status:buddyStatus incoming:YES inContext:context];
     
     UIImage * photo = [UIImage imageWithData:[buddy.buddyIcon iconData]];
     otrBuddy.photo = photo;
     
-    [otrBuddy addToGroup:buddy.group.name];
+    [otrBuddy addToGroup:buddy.group.name inContext:context];
     otrBuddy.account = localAccount;
-    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    
     [context MR_saveToPersistentStoreAndWait];
     return otrBuddy;
 }
@@ -112,9 +129,11 @@ BOOL loginFailed;
 -(void)updateMangedBuddyWith:(AIMBlistBuddy *)buddy withStatus:(AIMBuddyStatus *)status
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, NULL), ^{
+        NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
         OTRBuddyStatus buddyStatus = [self convertAimStatus:status];
         OTRManagedBuddy *otrBuddy = [self updateManagedBuddyWith:buddy];
-        [otrBuddy newStatusMessage:status.statusMessage status:buddyStatus incoming:YES];
+        [otrBuddy newStatusMessage:status.statusMessage status:buddyStatus incoming:YES inContext:context];
+        [context MR_saveToPersistentStoreAndWait];
     });
 }
 
@@ -172,12 +191,15 @@ BOOL loginFailed;
 #pragma mark Session Delegate
 
 - (void)aimSessionManagerSignedOff:(AIMSessionManager *)sender {
-    [self.account setAllBuddiesStatuts:OTRBuddyStatusOffline];
+    NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
+    [self.account setAllBuddiesStatuts:OTRBuddyStatusOffline inContext:context];
     
     if([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyDeleteOnDisconnect])
     {
-        [self.account deleteAllConversationsForAccount];
+        [self.account deleteAllAccountMessagesInContext:context];
     }
+    
+    [context MR_saveToPersistentStoreAndWait];
     
 	[self checkThreading];
     self.isConnected = NO;
@@ -222,11 +244,11 @@ BOOL loginFailed;
 - (void)aimFeedbagHandler:(AIMFeedbagHandler *)sender buddyDeleted:(AIMBlistBuddy *)oldBuddy {
 	[self checkThreading];
 	//DDLogInfo(@"Buddy removed: %@", oldBuddy);
-    
-    OTRManagedBuddy * buddy = [OTRManagedBuddy fetchOrCreateWithName:oldBuddy.username account:self.account];
-    [buddy MR_deleteEntity];
-    
     NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
+    
+    OTRManagedBuddy * buddy = [OTRManagedBuddy fetchOrCreateWithName:oldBuddy.username account:self.account inContext:context];
+    [buddy MR_deleteInContext:context];
+    
     [context MR_saveToPersistentStoreAndWait];
 }
 
@@ -283,10 +305,13 @@ BOOL loginFailed;
 	
 	//NSString * autoresp = [message isAutoresponse] ? @" (Auto-Response)" : @"";
 	//DDLogInfo(@"(%@) %@%@: %@", [NSDate date], [[message buddy] username], autoresp, [message plainTextMessage]);
+    NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
     
-    OTRManagedBuddy * messageBuddy = [OTRManagedBuddy fetchOrCreateWithName:message.buddy.username account:self.account];
+    OTRManagedBuddy * messageBuddy = [OTRManagedBuddy fetchOrCreateWithName:message.buddy.username account:self.account inContext:context];
     
-    OTRManagedMessage *otrMessage = [OTRManagedMessage newMessageFromBuddy:messageBuddy message:msgTxt encrypted:YES delayedDate:nil];
+    OTRManagedMessage *otrMessage = [OTRManagedMessage newMessageFromBuddy:messageBuddy message:msgTxt encrypted:YES delayedDate:nil inContext:context];
+    
+    [context MR_saveToPersistentStoreAndWait];
     
     [OTRCodec decodeMessage:otrMessage completionBlock:^(OTRManagedMessage *message) {
         [OTRManagedMessage showLocalNotificationForMessage:message];
@@ -581,9 +606,18 @@ BOOL loginFailed;
 
 -(void)connectWithPassword:(NSString *)myPassword
 {
+    // LibOrange has security problems, sorry!
+    NSDictionary *userInfo = @{NSLocalizedDescriptionKey: AIM_REMOVED_TITLE_STRING,
+                               NSLocalizedFailureReasonErrorKey: AIM_REMOVED_MESSAGE_STRING};
+    NSError *error = [NSError errorWithDomain:@"org.chatsecure.ChatSecure" code:500 userInfo:userInfo];
+    [[NSNotificationCenter defaultCenter]
+     postNotificationName:kOTRProtocolLoginFail object:self userInfo:@{kOTRProtocolLoginFailErrorKey:error}];
+    
+    /*** WARNING LibOrange has security problems. ***
     self.login = [[AIMLogin alloc] initWithUsername:account.username password:myPassword];
     [self.login setDelegate:self];
     [self.login beginAuthorization];
+    */
 }
 -(void)disconnect
 {
@@ -594,14 +628,15 @@ BOOL loginFailed;
 
 - (void) addBuddy:(OTRManagedBuddy *)newBuddy
 {
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
     [self undenyUser:newBuddy.accountName];
     AIMBlistGroup * group = [theSession.session.buddyList groupWithName:@"Buddies"];
     if(!group)
     {
         [self addGroup:@"Buddies"];
     }
-    [newBuddy addToGroup:@"Buddies"];
-    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    [newBuddy addToGroup:@"Buddies" inContext:context];
+    
     [context MR_saveToPersistentStoreAndWait];
     [self addBuddy:newBuddy.accountName toGroup:@"Buddies"];
 }

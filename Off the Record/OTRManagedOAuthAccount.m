@@ -2,6 +2,8 @@
 #import "SSKeychain.h"
 #import "OTRConstants.h"
 
+#import "OTRLog.h"
+
 @interface OTRManagedOAuthAccount ()
 
 // Private interface goes here.

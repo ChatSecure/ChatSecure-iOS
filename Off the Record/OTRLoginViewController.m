@@ -33,6 +33,7 @@
 #import "OTRGoogleTalkLoginViewController.h"
 #import "OTRInLineTextEditTableViewCell.h"
 #import "OTRErrorManager.h"
+#import "OTRProtocolManager.h"
 
 #import "SIAlertView.h"
 
@@ -44,35 +45,27 @@
 #define kErrorInfoAlertViewTag 132
 #define kNewCertAlertViewTag 134
 
-@interface OTRLoginViewController(Private)
-- (float) getMidpointOffsetforHUD;
+@interface OTRLoginViewController()
+
+@property (nonatomic,strong) UIAlertView * alertView;
+
 @end
 
 @implementation OTRLoginViewController
-@synthesize usernameTextField;
-@synthesize passwordTextField;
-@synthesize loginButton, cancelButton;
-@synthesize rememberPasswordSwitch;
-@synthesize logoView;
-@synthesize timeoutTimer;
-@synthesize account;
-@synthesize isNewAccount;
-@synthesize loginViewTableView;
-@synthesize textFieldTextColor;
-
-@synthesize tableViewArray;
 
 - (void) dealloc {
-    self.logoView = nil;
-    self.rememberPasswordSwitch = nil;
-    self.usernameTextField = nil;
-    self.passwordTextField = nil;
-    self.loginButton = nil;
-    self.cancelButton = nil;
-    [timeoutTimer invalidate];
-    self.timeoutTimer = nil;
-    self.account = nil;
-    self.textFieldTextColor = nil;
+    _alertView.delegate = nil;
+    _alertView = nil;
+    _logoView = nil;
+    _rememberPasswordSwitch = nil;
+    _usernameTextField = nil;
+    _passwordTextField = nil;
+    _loginButton = nil;
+    _cancelButton = nil;
+    [_timeoutTimer invalidate];
+    _timeoutTimer = nil;
+    _account = nil;
+    _textFieldTextColor = nil;
 }
 
 - (id) initWithAccountID:(NSManagedObjectID *)newAccountID {
@@ -101,7 +94,7 @@
     //self.usernameTextField.borderStyle = UITextBorderStyleRoundedRect;
     self.usernameTextField.autocorrectionType = UITextAutocorrectionTypeNo;
     self.usernameTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-    self.usernameTextField.text = account.username;
+    self.usernameTextField.text = self.account.username;
     self.usernameTextField.returnKeyType = UIReturnKeyDone;
     self.usernameTextField.textColor = self.textFieldTextColor;
     
@@ -129,14 +122,14 @@
     
     
     NSString *loginButtonString = LOGIN_STRING;
-    self.title = [account providerName];
+    self.title = [self.account providerName];
     
     self.loginButton = [[UIBarButtonItem alloc] initWithTitle:loginButtonString style:UIBarButtonItemStyleDone target:self action:@selector(loginButtonPressed:)];
-    self.navigationItem.rightBarButtonItem = loginButton;
+    self.navigationItem.rightBarButtonItem = self.loginButton;
     
-    if (!isNewAccount) {
+    if (!self.isNewAccount) {
         self.cancelButton = [[UIBarButtonItem alloc] initWithTitle:CANCEL_STRING style:UIBarButtonItemStyleBordered target:self action:@selector(cancelPressed:)];
-        self.navigationItem.leftBarButtonItem = cancelButton;
+        self.navigationItem.leftBarButtonItem = self.cancelButton;
     }
     
 }
@@ -164,7 +157,7 @@
 
 -(void)addCellinfoWithSection:(NSInteger)section row:(NSInteger)row labelText:(id)text cellType:(NSString *)type userInputView:(UIView *)inputView;
 {
-    if (!tableViewArray) {
+    if (!self.tableViewArray) {
         self.tableViewArray = [[NSMutableArray alloc] init];
     }
     
@@ -174,7 +167,7 @@
     
     NSDictionary * cellDictionary = [NSDictionary dictionaryWithObjectsAndKeys:text,kTextLabelTextKey,type,kCellTypeKey,inputView,kUserInputViewKey, nil];
     
-    [[tableViewArray objectAtIndex:section] insertObject:cellDictionary atIndex:row];
+    [[self.tableViewArray objectAtIndex:section] insertObject:cellDictionary atIndex:row];
     
 }
 
@@ -186,28 +179,28 @@
     [self setUpFields];
     
     
-    loginViewTableView= [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
-    loginViewTableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-    [loginViewTableView setDelegate:self];
-    [loginViewTableView setDataSource:self];
-    [self.view addSubview:loginViewTableView];
+    self.loginViewTableView= [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
+    self.loginViewTableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+    [self.loginViewTableView setDelegate:self];
+    [self.loginViewTableView setDataSource:self];
+    [self.view addSubview:self.loginViewTableView];
 }
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return [tableViewArray count];
+    return [self.tableViewArray count];
     
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-        return [[tableViewArray objectAtIndex:section] count];
+        return [[self.tableViewArray objectAtIndex:section] count];
     
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    if([tableViewArray count] > 1)
+    if([self.tableViewArray count] > 1)
     {
         if(section == 0)
             return BASIC_STRING;
@@ -219,9 +212,9 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if([[[[tableViewArray objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] objectForKey:kCellTypeKey] isEqualToString:KCellTypeHelp])
+    if([[[[self.tableViewArray objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] objectForKey:kCellTypeKey] isEqualToString:KCellTypeHelp])
     {
-        CGFloat height = ((UILabel *)[[[tableViewArray objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] objectForKey:kTextLabelTextKey]).frame.size.height+10;
+        CGFloat height = ((UILabel *)[[[self.tableViewArray objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] objectForKey:kTextLabelTextKey]).frame.size.height+10;
         return height;
     }
     return 44.0f;
@@ -231,7 +224,7 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
-    NSDictionary * cellDictionary = [[tableViewArray objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+    NSDictionary * cellDictionary = [[self.tableViewArray objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
     NSString * cellType = [cellDictionary objectForKey:kCellTypeKey];
     
     UITableViewCell * cell = [tableView dequeueReusableCellWithIdentifier:cellType];
@@ -284,13 +277,13 @@
      addObserver:self
      selector:@selector(protocolLoginFailed:)
      name:kOTRProtocolLoginFail
-     object:nil ];
+     object:[[OTRProtocolManager sharedInstance] protocolForAccount:self.account]];
     
     [[NSNotificationCenter defaultCenter]
      addObserver:self
      selector:@selector(protocolLoginSuccess:)
      name:kOTRProtocolLoginSuccess
-     object:nil ];
+     object:[[OTRProtocolManager sharedInstance] protocolForAccount:self.account]];
     
     if(!self.usernameTextField.text || [self.usernameTextField.text isEqualToString:@""])
     {
@@ -302,8 +295,8 @@
     
     self.autoLoginSwitch.on = self.account.autologinValue;
     self.rememberPasswordSwitch.on = self.account.rememberPasswordValue;
-    if (account.rememberPassword) {
-        self.passwordTextField.text = account.password;
+    if (self.account.rememberPassword) {
+        self.passwordTextField.text = self.account.password;
     } else {
         self.passwordTextField.text = @"";
     }
@@ -313,27 +306,27 @@
     
     [self readInFields];
     
-    if([account.username length] && [account.password length] )
+    if([self.account.username length] && [self.account.password length] )
     {
         [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
     }
     [self.view resignFirstResponder];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kOTRProtocolLoginFail object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kOTRProtocolLoginSuccess object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kOTRProtocolLoginFail object:[[OTRProtocolManager sharedInstance] protocolForAccount:self.account]];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kOTRProtocolLoginSuccess object:[[OTRProtocolManager sharedInstance] protocolForAccount:self.account]];
 
 }
 
 -(void)readInFields
 {
-    [account setUsername:[usernameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
-    [account setRememberPasswordValue:rememberPasswordSwitch.on];
+    [self.account setUsername:[self.usernameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
+    [self.account setRememberPasswordValue:self.rememberPasswordSwitch.on];
     
     self.account.autologinValue = self.autoLoginSwitch.on;
     
-    if (account.rememberPasswordValue) {
-        account.password = self.passwordTextField.text;
+    if (self.account.rememberPasswordValue) {
+        self.account.password = self.passwordTextField.text;
     } else {
-        account.password = nil;
+        self.account.password = nil;
     }
     
     
@@ -368,9 +361,9 @@
 {
     if(HUD)
         [HUD hide:YES];
-    if([account.protocol isEqualToString:kOTRProtocolTypeXMPP])
+    if([self.account.protocol isEqualToString:kOTRProtocolTypeXMPP])
     {
-        UIAlertView *alert = nil;
+        self.alertView=nil;
         NSDictionary * userInfo = notification.userInfo;
         id error = userInfo[kOTRProtocolLoginFailErrorKey];
         NSData * certData = userInfo[kOTRProtocolLoginFailSSLCertificateDataKey];
@@ -397,20 +390,31 @@
                 return;
             }
             else {
-                alert = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:XMPP_FAIL_STRING delegate:self cancelButtonTitle:nil otherButtonTitles:OK_STRING,INFO_STRING, nil];
+                self.alertView = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:XMPP_FAIL_STRING delegate:self cancelButtonTitle:nil otherButtonTitles:OK_STRING,INFO_STRING, nil];
             }
             
         }
         else if (error)
         {
             //could not authenicate
-            alert = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:XMPP_FAIL_STRING delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
+            self.alertView = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:XMPP_FAIL_STRING delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
             
         }
         else {
-            alert = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:XMPP_FAIL_STRING delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
+            self.alertView = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:XMPP_FAIL_STRING delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
         }
-        alert.tag = tag;
+        self.alertView.tag = tag;
+        [self.alertView show];
+    } else if ([self.account.protocol isEqualToString:kOTRProtocolTypeAIM]) {
+        NSDictionary * userInfo = notification.userInfo;
+        NSError *error = userInfo[kOTRProtocolLoginFailErrorKey];
+        NSString *errorTitle = nil;
+        NSString *errorMessage = nil;
+        if (error) {
+            errorTitle = error.localizedDescription;
+            errorMessage = error.localizedFailureReason;
+        }
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:errorTitle message:errorMessage delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
         [alert show];
     }
 }
@@ -485,7 +489,7 @@
         
         [self readInFields];
 
-        self.account.password = passwordTextField.text;
+        self.account.password = self.passwordTextField.text;
         
         id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
         [protocol connectWithPassword:self.passwordTextField.text];
@@ -513,7 +517,7 @@
 
 -(BOOL)checkFields
 {
-    BOOL fields = usernameTextField.text && ![usernameTextField.text isEqualToString:@""] && passwordTextField.text && ![passwordTextField.text isEqualToString:@""];
+    BOOL fields = self.usernameTextField.text && ![self.usernameTextField.text isEqualToString:@""] && self.passwordTextField.text && ![self.passwordTextField.text isEqualToString:@""];
     
     if(!fields)
     {

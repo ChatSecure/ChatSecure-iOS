@@ -73,12 +73,14 @@
     jabberAccount[kAccountTypeKey] = @(OTRAccountTypeJabber);
     
     //Aim
+    /* AIM Support removed due to security issue
      NSMutableDictionary * aimAccount = [NSMutableDictionary dictionary];
     aimAccount[kDisplayNameKey] = AIM_STRING;
     aimAccount[kProviderImageKey] = kAIMImageName;
     aimAccount[kAccountTypeKey] = @(OTRAccountTypeAIM);
+     */
     
-    accounts = @[facebookAccount,googleAccount,jabberAccount,aimAccount];
+    accounts = @[facebookAccount,googleAccount,jabberAccount];
     
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:CANCEL_STRING style:UIBarButtonItemStyleBordered target:self action:@selector(cancelPressed:)];
     

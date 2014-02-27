@@ -24,8 +24,8 @@
 
 @protocol OTRProtocol <NSObject>
 
-@property (nonatomic, strong) OTRManagedAccount * account;
-@property (nonatomic) BOOL isConnected;
+- (OTRManagedAccount *)account;
+- (BOOL)isConnected;
 
 - (void) sendMessage:(OTRManagedMessage*)message;
 - (void) connectWithPassword:(NSString *)password;

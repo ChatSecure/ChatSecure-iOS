@@ -49,8 +49,8 @@
 
 - (void)setDefaultsWithProtocol:(NSString*)newProtocol;
 
-- (void)setAllBuddiesStatuts:(OTRBuddyStatus)status;
-- (void)deleteAllConversationsForAccount;
+- (void)setAllBuddiesStatuts:(OTRBuddyStatus)status inContext:(NSManagedObjectContext *)context;
+- (void)deleteAllAccountMessagesInContext:(NSManagedObjectContext *)context;
 
 - (void)prepareBuddiesandMessagesForDeletion;
 

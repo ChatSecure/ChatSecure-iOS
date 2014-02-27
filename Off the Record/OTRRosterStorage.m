@@ -18,6 +18,8 @@
 
 #import "Strings.h"
 
+#import "OTRLog.h"
+
 @implementation OTRRosterStorage
 
 -(id)init {
@@ -80,7 +82,7 @@
     OTRManagedBuddy * user = [self buddyWithJID:[presence from] xmppStream:stream inContext:context];
     
     if ([[presence type] isEqualToString:@"unavailable"] || [presence isErrorPresence]) {
-        [user newStatusMessage:OFFLINE_STRING status:OTRBuddyStatusOffline incoming:YES];
+        [user newStatusMessage:OFFLINE_STRING status:OTRBuddyStatusOffline incoming:YES inContext:context];
     }
     else if (user) {
         OTRBuddyStatus buddyStatus;
@@ -105,14 +107,15 @@
                 buddyStatus = OTRBuddyStatusOffline;
                 break;
         }
-        [user newStatusMessage:[presence status] status:buddyStatus incoming:YES];
+        [user newStatusMessage:[presence status] status:buddyStatus incoming:YES inContext:context];
     }
     [context MR_saveToPersistentStoreAndWait];
 }
 
 - (BOOL)userExistsWithJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream
 {
-    OTRManagedBuddy * user = [OTRManagedBuddy fetchWithName:[jid bare] account:[self accountForStream:stream]];
+    NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
+    OTRManagedBuddy * user = [OTRManagedBuddy fetchWithName:[jid bare] account:[self accountForStream:stream inContext:context] inContext:[NSManagedObjectContext MR_contextForCurrentThread]];
     if (user) {
         return YES;
     }
@@ -126,18 +129,23 @@
 
 - (void)clearAllUsersAndResourcesForXMPPStream:(XMPPStream *)stream
 {
-    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
-        OTRManagedAccount * account = [self accountForStream:stream];
-        [account.buddies enumerateObjectsUsingBlock:^(OTRManagedBuddy * buddy, BOOL *stop) {
-            [buddy MR_deleteEntity];
-        }];
+    /*
+     I don't think we want to delete buddies because this would also delete any conversations
+     
+    NSManagedObjectContext *localContext = [NSManagedObjectContext MR_contextForCurrentThread];
+    OTRManagedAccount * account = [self accountForStream:stream inContext:localContext];
+    [account.buddies enumerateObjectsUsingBlock:^(OTRManagedBuddy * buddy, BOOL *stop) {
+        [buddy MR_deleteInContext:localContext];
     }];
+    [localContext MR_saveToPersistentStoreAndWait];
+    */
 }
 
 - (NSArray *)jidsForXMPPStream:(XMPPStream *)stream
 {
+    NSManagedObjectContext *localContext = [NSManagedObjectContext MR_contextForCurrentThread];
     NSMutableArray * jidArray = [NSMutableArray array];
-    OTRManagedAccount * account = [self accountForStream:stream];
+    OTRManagedAccount * account = [self accountForStream:stream inContext:localContext];
     [account.buddies enumerateObjectsUsingBlock:^(OTRManagedBuddy * buddy, BOOL *stop) {
         [jidArray addObject:[XMPPJID jidWithString:buddy.accountName]];
     }];
@@ -146,14 +154,15 @@
 
 - (void)setPhoto:(UIImage *)image forUserWithJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream
 {
-    [MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
-        OTRManagedBuddy * user = [self buddyWithJID:jid xmppStream:stream inContext:localContext];
-        user.photo = image;
-    }];
+    NSManagedObjectContext *localContext = [NSManagedObjectContext MR_contextForCurrentThread];
+    OTRManagedBuddy * user = [self buddyWithJID:jid xmppStream:stream inContext:localContext];
+    user.photo = image;
+    [localContext MR_saveToPersistentStoreAndWait];
 }
 
 -(void)updateUser:(OTRManagedBuddy *)user updateWithItem: (NSXMLElement *)item
 {
+    NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
     user.displayName = [item attributeStringValueForName:@"name"];
     
     NSArray *groupItems = [item elementsForName:@"group"];
@@ -164,16 +173,18 @@
     if ([groupItems count]) {
         [groupItems enumerateObjectsUsingBlock:^(NSXMLElement *groupElement, NSUInteger idx, BOOL *stop) {
             groupName = [groupElement stringValue];
-            [user addToGroup:groupName];
+            [user addToGroup:groupName inContext:context];
         }];
     }
     else{
-        [user addToGroup:DEFAULT_BUDDY_GROUP_STRING];
+        [user addToGroup:DEFAULT_BUDDY_GROUP_STRING inContext:context];
     }
     
     if ([self isPendingApprovalElement:item]) {
-        [user newStatusMessage:PENDING_APPROVAL_STRING status:OTRBuddyStatusOffline incoming:YES];
+        [user newStatusMessage:PENDING_APPROVAL_STRING status:OTRBuddyStatusOffline incoming:YES inContext:context];
     }
+    
+    [context MR_saveToPersistentStoreAndWait];
     
 }
 
@@ -194,13 +205,13 @@
 
 -(OTRManagedBuddy *)buddyWithJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream inContext:(NSManagedObjectContext *)context
 {
-    return [OTRManagedBuddy fetchOrCreateWithName:[jid bare] account:[self accountForStream:stream] inContext:context];
+    return [OTRManagedBuddy fetchOrCreateWithName:[jid bare] account:[self accountForStream:stream inContext:context] inContext:context];
 }
 
--(OTRManagedAccount *)accountForStream:(XMPPStream *)stream
+-(OTRManagedAccount *)accountForStream:(XMPPStream *)stream inContext:(NSManagedObjectContext *)context
 {
     //fixme to new constants of finding account
-    return [OTRAccountsManager accountForProtocol:@"xmpp" accountName:[stream.myJID bare]];
+    return [OTRAccountsManager accountForProtocol:@"xmpp" accountName:[stream.myJID bare] inContext:context];
 }
 
 @end

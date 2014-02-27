@@ -28,7 +28,7 @@
 
 + (void) removeAccount:(OTRManagedAccount*)account;
 + (NSArray *)allAccountsAbleToAddBuddies;
-+ (OTRManagedAccount *)accountForProtocol:(NSString *)protocol accountName: (NSString *) accountName;
++ (OTRManagedAccount *)accountForProtocol:(NSString *)protocol accountName: (NSString *) accountName inContext:(NSManagedObjectContext *)context;
 
 + (NSArray *)allAutoLoginAccounts;
 

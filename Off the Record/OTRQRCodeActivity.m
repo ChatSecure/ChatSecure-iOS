@@ -41,6 +41,9 @@
     OTRQRCodeViewController * QRCodeViewController = [[OTRQRCodeViewController alloc] init];
     QRCodeViewController.delegate = self;
     UINavigationController * navController = [[UINavigationController alloc] initWithRootViewController:QRCodeViewController];
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        navController.modalPresentationStyle = UIModalPresentationFormSheet;
+    }
     
     return navController;
 }

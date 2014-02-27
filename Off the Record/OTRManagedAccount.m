@@ -34,7 +34,7 @@
 #import "OTRManagedFacebookAccount.h"
 #import "OTRManagedGoogleAccount.h"
 #import "OTRManagedOscarAccount.h"
-
+#import "OTRLog.h"
 
 @interface OTRManagedAccount()
 @end
@@ -125,28 +125,28 @@
     return [[OTRProtocolManager sharedInstance] isAccountConnected:self];
 }
 
--(void)setAllBuddiesStatuts:(OTRBuddyStatus)status
+-(void)setAllBuddiesStatuts:(OTRBuddyStatus)status inContext:(NSManagedObjectContext *)context
 {
-    for (OTRManagedBuddy * buddy in self.buddies)
+    OTRManagedAccount * localAccount = [self MR_inContext:context];
+    for (OTRManagedBuddy * buddy in localAccount.buddies)
     {
-        [buddy newStatusMessage:nil status:status incoming:NO];
-        if (status == OTRBuddyStatusOffline) {
-            [buddy setNewEncryptionStatus:kOTRKitMessageStatePlaintext];
-            buddy.chatStateValue = kOTRChatStateActive;
+        if(buddy.currentStatusValue != status) {
+            [buddy newStatusMessage:nil status:status incoming:NO inContext:context];
+            if (status == OTRBuddyStatusOffline) {
+                [buddy setNewEncryptionStatus:kOTRKitMessageStatePlaintext inContext:context];
+                buddy.chatStateValue = kOTRChatStateActive;
+            }
         }
+        [context MR_saveToPersistentStoreAndWait];
     }
-    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
-    [context MR_saveToPersistentStoreAndWait];
 }
 
--(void)deleteAllConversationsForAccount
+-(void)deleteAllAccountMessagesInContext:(NSManagedObjectContext *)context
 {
     for (OTRManagedBuddy * buddy in self.buddies)
     {
-        [buddy deleteAllMessages];
+        [buddy deleteAllMessagesInContext:context];
     }
-    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
-    [context MR_saveToPersistentStoreAndWait];
 }
 
 -(void)prepareBuddiesandMessagesForDeletion
@@ -171,16 +171,16 @@
 
 +(void)resetAccountsConnectionStatus
 {
-    NSArray * allAccountsArray = [OTRManagedAccount MR_findAll];
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    NSArray * allAccountsArray = [OTRManagedAccount MR_findAllInContext:context];
     
     for (OTRManagedAccount * managedAccount in allAccountsArray)
     {
         if (!managedAccount.isConnected) {
-            [managedAccount setAllBuddiesStatuts:OTRBuddyStatusOffline];
+            [managedAccount setAllBuddiesStatuts:OTRBuddyStatusOffline inContext:context];
         }
-        
     }
-    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    
     [context MR_saveToPersistentStoreAndWait];
     
 }

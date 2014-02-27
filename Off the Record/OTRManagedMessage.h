@@ -31,9 +31,9 @@
 
 + (void) showLocalNotificationForMessage:(OTRManagedMessage*)message;
 
-+(OTRManagedMessage*)newMessageFromBuddy:(OTRManagedBuddy *)theBuddy message:(NSString *)theMessage encrypted:(BOOL)encryptionStatus delayedDate:(NSDate *)date;
-+(OTRManagedMessage *)newMessageToBuddy:(OTRManagedBuddy *)theBuddy message:(NSString *)theMessage encrypted:(BOOL)encryptionStatus;
++ (OTRManagedMessage*)newMessageFromBuddy:(OTRManagedBuddy *)theBuddy message:(NSString *)theMessage encrypted:(BOOL)encryptionStatus delayedDate:(NSDate *)date inContext:(NSManagedObjectContext *)context;
++ (OTRManagedMessage *)newMessageToBuddy:(OTRManagedBuddy *)theBuddy message:(NSString *)theMessage encrypted:(BOOL)encryptionStatus inContext:(NSManagedObjectContext *)context;
 
-+(void)receivedDeliveryReceiptForMessageID:(NSString *)objectIDString;
++ (void)receivedDeliveryReceiptForMessageID:(NSString *)objectIDString;
 
 @end

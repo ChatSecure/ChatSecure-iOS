@@ -27,47 +27,40 @@
 #import "OTRUtilities.h"
 #import "NSString+HTML.h"
 #import "Strings.h"
+#import "OTRLog.h"
 
 
 @implementation OTRManagedMessage
 
 
 
-+(OTRManagedMessage*)newMessageToBuddy:(OTRManagedBuddy *)theBuddy message:(NSString *)theMessage {
-    OTRManagedMessage *message = [OTRManagedMessage newMessageWithBuddy:theBuddy message:theMessage];
++(OTRManagedMessage*)newMessageToBuddy:(OTRManagedBuddy *)theBuddy message:(NSString *)theMessage inContext:(NSManagedObjectContext *)context {
+    OTRManagedMessage *message = [OTRManagedMessage newMessageWithBuddy:theBuddy message:theMessage inContext:context];
     message.isIncoming = NO;
-    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
-    [context MR_saveToPersistentStoreAndWait];
     return message;
 }
 
-+(OTRManagedMessage*)newMessageFromBuddy:(OTRManagedBuddy *)theBuddy message:(NSString *)theMessage {
-    OTRManagedMessage *message = [OTRManagedMessage newMessageWithBuddy:theBuddy message:theMessage];
-    [message setIsIncomingValue:YES];
-    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
-    [context MR_saveToPersistentStoreAndWait];
++(OTRManagedMessage*)newMessageFromBuddy:(OTRManagedBuddy *)theBuddy message:(NSString *)theMessage inContext:(NSManagedObjectContext *)context {
+    OTRManagedMessage *message = [OTRManagedMessage newMessageWithBuddy:theBuddy message:theMessage inContext:context];
+    message.isIncomingValue = YES;
     return message;
 }
 
-+(OTRManagedMessage*)newMessageFromBuddy:(OTRManagedBuddy *)theBuddy message:(NSString *)theMessage encrypted:(BOOL)encryptionStatus
++(OTRManagedMessage*)newMessageFromBuddy:(OTRManagedBuddy *)theBuddy message:(NSString *)theMessage encrypted:(BOOL)encryptionStatus inContext:(NSManagedObjectContext *)context
 {
-    OTRManagedMessage *message = [OTRManagedMessage newMessageWithBuddy:theBuddy message:theMessage];
+    OTRManagedMessage *message = [OTRManagedMessage newMessageWithBuddy:theBuddy message:theMessage inContext:context];
     message.isEncryptedValue = encryptionStatus;
-    [message setIsIncomingValue:YES];
+    message.isIncomingValue = YES;
     return message;
-    
 }
 
-+(OTRManagedMessage*)newMessageFromBuddy:(OTRManagedBuddy *)theBuddy message:(NSString *)theMessage encrypted:(BOOL)encryptionStatus delayedDate:(NSDate *)date
++(OTRManagedMessage*)newMessageFromBuddy:(OTRManagedBuddy *)theBuddy message:(NSString *)theMessage encrypted:(BOOL)encryptionStatus delayedDate:(NSDate *)date inContext:(NSManagedObjectContext *)context
 {
-    OTRManagedMessage * message = [self newMessageFromBuddy:theBuddy message:theMessage encrypted:encryptionStatus];
+    OTRManagedMessage * message = [self newMessageFromBuddy:theBuddy message:theMessage encrypted:encryptionStatus inContext:context];
     if (date) {
         message.date = date;
     }
-    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
-    [context MR_saveToPersistentStoreAndWait];
     return message;
-    
 }
 
 + (void) showLocalNotificationForMessage:(OTRManagedMessage*)message {
@@ -86,7 +79,12 @@
         localNotification.alertAction = REPLY_STRING;
         localNotification.soundName = UILocalNotificationDefaultSoundName;
         localNotification.applicationIconBadgeNumber = [UIApplication sharedApplication].applicationIconBadgeNumber + 1;
-        localNotification.alertBody = [NSString stringWithFormat:@"%@: %@",localMessage.buddy.displayName,rawMessage];
+        
+        NSString * displayName = localMessage.buddy.displayName;
+        if (!displayName.length) {
+            displayName = localMessage.buddy.accountName;
+        }
+        localNotification.alertBody = [NSString stringWithFormat:@"%@: %@",displayName,rawMessage];
         
         NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithCapacity:3];
         [userInfo setObject:localMessage.buddy.accountName forKey:kOTRNotificationUserNameKey];
@@ -99,47 +97,40 @@
     }
 }
 
-+(OTRManagedMessage *)newMessageToBuddy:(OTRManagedBuddy *)theBuddy message:(NSString *)theMessage encrypted:(BOOL)encryptionStatus
++(OTRManagedMessage *)newMessageToBuddy:(OTRManagedBuddy *)theBuddy message:(NSString *)theMessage encrypted:(BOOL)encryptionStatus inContext:(NSManagedObjectContext *)context
 {
-    OTRManagedMessage *message = [OTRManagedMessage newMessageWithBuddy:theBuddy message:theMessage];
+    OTRManagedMessage *message = [OTRManagedMessage newMessageWithBuddy:theBuddy message:theMessage inContext:context];
     message.isIncomingValue = NO;
     message.isReadValue = YES;
     message.isEncryptedValue = encryptionStatus;
-    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
-    [context MR_saveToPersistentStoreAndWait];
     return message;
-    
 }
 
-+(OTRManagedMessage*)newMessageWithBuddy:(OTRManagedBuddy *)theBuddy message:(NSString *)theMessage
++(OTRManagedMessage*)newMessageWithBuddy:(OTRManagedBuddy *)theBuddy message:(NSString *)theMessage inContext:(NSManagedObjectContext *)context
 {
-    OTRManagedMessage *managedMessage = [OTRManagedMessage MR_createEntity];
+    OTRManagedBuddy *localBuddy = [theBuddy MR_inContext:context];
+    OTRManagedMessage *managedMessage = [OTRManagedMessage MR_createInContext:context];
 
     managedMessage.uniqueID = [OTRUtilities uniqueString];
-    managedMessage.buddy = theBuddy;
-    managedMessage.messagebuddy = theBuddy;
+    managedMessage.buddy = localBuddy;
+    managedMessage.messagebuddy = localBuddy;
     managedMessage.message = [OTRUtilities stripHTML:theMessage];
     managedMessage.date = [NSDate date];
     managedMessage.isDeliveredValue = NO;
     theBuddy.lastMessageDate = managedMessage.date;
-    
-    [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
 
     return managedMessage;
 }
 
 +(void)receivedDeliveryReceiptForMessageID:(NSString *)objectIDString
 {
-    NSArray * messages = [OTRManagedMessage MR_findByAttribute:OTRManagedMessageAttributes.uniqueID withValue:objectIDString];
+    NSManagedObjectContext * context = [NSManagedObjectContext MR_context];
+    NSArray * messages = [OTRManagedMessage MR_findByAttribute:OTRManagedMessageAttributes.uniqueID withValue:objectIDString inContext:context];
     [messages enumerateObjectsUsingBlock:^(OTRManagedMessage * message, NSUInteger idx, BOOL *stop) {
         message.isDeliveredValue = YES;
     }];
     
-    
-
-    NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
     [context MR_saveToPersistentStoreAndWait];
-
 }
 
 @end

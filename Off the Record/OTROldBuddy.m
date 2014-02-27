@@ -28,6 +28,8 @@
 #import "Strings.h"
 #import "OTRConstants.h"
 
+#import "OTRLog.h"
+
 @implementation OTRBuddy
 
 @synthesize accountName;
