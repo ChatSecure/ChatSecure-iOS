@@ -21,10 +21,12 @@
 
 @property (nonatomic, strong) UIImageView * messageBackgroundImageView;
 @property (nonatomic, strong) UIImageView * deliveredImageView;
-@property (nonatomic, strong) TTTAttributedLabel * messageTextLabel;
+@property (nonatomic, strong, readonly) TTTAttributedLabel * messageTextLabel;
 @property (nonatomic, getter = isIncoming) BOOL incoming;
 @property (nonatomic, getter = isDelivierd) BOOL delivered;
 
-- (void)setDelivered:(BOOL)delivered animated:(BOOL)animated;
+- (void)updateLayout;
+
++(TTTAttributedLabel *)defaultLabel;
 
 @end

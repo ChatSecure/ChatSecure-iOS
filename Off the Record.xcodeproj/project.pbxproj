@@ -38,6 +38,8 @@
 		6319F696165EAB1F0063AC93 /* supportedLanguages.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6319F695165EAB1F0063AC93 /* supportedLanguages.plist */; };
 		631F4AD518BFE1D200AE6E8A /* xmpp.png in Resources */ = {isa = PBXBuildFile; fileRef = 631F4AD318BFE1D200AE6E8A /* xmpp.png */; };
 		631F4AD618BFE1D200AE6E8A /* xmpp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 631F4AD418BFE1D200AE6E8A /* xmpp@2x.png */; };
+		631F4AE318BFF98D00AE6E8A /* OTRIncomingMessageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 631F4AE218BFF98D00AE6E8A /* OTRIncomingMessageTableViewCell.m */; };
+		631F4AE618BFF9BC00AE6E8A /* OTROutgoingMessageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 631F4AE518BFF9BC00AE6E8A /* OTROutgoingMessageTableViewCell.m */; };
 		631FE8851720951400AEA107 /* OTRStatusMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 631FE8841720951400AEA107 /* OTRStatusMessageCell.m */; };
 		6326F63A184D5249008B6B01 /* facebook.cer in Resources */ = {isa = PBXBuildFile; fileRef = 6326F639184D5249008B6B01 /* facebook.cer */; };
 		632E911D185A88F600F7FBC8 /* SIAlertView.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 632E9118185A88F600F7FBC8 /* SIAlertView.bundle */; };
@@ -725,6 +727,10 @@
 		6319F695165EAB1F0063AC93 /* supportedLanguages.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = supportedLanguages.plist; path = "Off the Record/supportedLanguages.plist"; sourceTree = SOURCE_ROOT; };
 		631F4AD318BFE1D200AE6E8A /* xmpp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = xmpp.png; path = "media/app-images/xmpp-logo/xmpp.png"; sourceTree = SOURCE_ROOT; };
 		631F4AD418BFE1D200AE6E8A /* xmpp@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "xmpp@2x.png"; path = "media/app-images/xmpp-logo/xmpp@2x.png"; sourceTree = SOURCE_ROOT; };
+		631F4AE118BFF98D00AE6E8A /* OTRIncomingMessageTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRIncomingMessageTableViewCell.h; sourceTree = "<group>"; };
+		631F4AE218BFF98D00AE6E8A /* OTRIncomingMessageTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRIncomingMessageTableViewCell.m; sourceTree = "<group>"; };
+		631F4AE418BFF9BC00AE6E8A /* OTROutgoingMessageTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTROutgoingMessageTableViewCell.h; sourceTree = "<group>"; };
+		631F4AE518BFF9BC00AE6E8A /* OTROutgoingMessageTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTROutgoingMessageTableViewCell.m; sourceTree = "<group>"; };
 		631FE8831720951400AEA107 /* OTRStatusMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRStatusMessageCell.h; sourceTree = "<group>"; };
 		631FE8841720951400AEA107 /* OTRStatusMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRStatusMessageCell.m; sourceTree = "<group>"; };
 		6321870816E6C21100CB4D3C /* _OTRXMPPManagedPresenceSubscriptionRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _OTRXMPPManagedPresenceSubscriptionRequest.h; sourceTree = "<group>"; };
@@ -3563,6 +3569,10 @@
 				631FE8841720951400AEA107 /* OTRStatusMessageCell.m */,
 				632E5C8416D1A2A90037E37C /* OTRMessageTableViewCell.h */,
 				632E5C8516D1A2A90037E37C /* OTRMessageTableViewCell.m */,
+				631F4AE118BFF98D00AE6E8A /* OTRIncomingMessageTableViewCell.h */,
+				631F4AE218BFF98D00AE6E8A /* OTRIncomingMessageTableViewCell.m */,
+				631F4AE418BFF9BC00AE6E8A /* OTROutgoingMessageTableViewCell.h */,
+				631F4AE518BFF9BC00AE6E8A /* OTROutgoingMessageTableViewCell.m */,
 				63534AAD187F5A1400061776 /* OTRChatBubbleView.h */,
 				63534AAE187F5A1400061776 /* OTRChatBubbleView.m */,
 				63022BB416CDAD4C00F764F1 /* OTRChatViewController.h */,
@@ -4241,6 +4251,7 @@
 				D9CEEE7C168423CA00B236B5 /* AIMMessage.m in Sources */,
 				6370C976185FC58C00CB6786 /* OTRTitleSubtitleView.m in Sources */,
 				D9CEEE7D168423CA00B236B5 /* AIMMessageParser.m in Sources */,
+				631F4AE618BFF9BC00AE6E8A /* OTROutgoingMessageTableViewCell.m in Sources */,
 				D9CEEE7E168423CA00B236B5 /* AIMMissedCall.m in Sources */,
 				D9CEEE7F168423CA00B236B5 /* AIMNickWInfo+BArt.m in Sources */,
 				63534AAF187F5A1400061776 /* OTRChatBubbleView.m in Sources */,
@@ -4276,6 +4287,7 @@
 				D9CEEE9A168423CA00B236B5 /* FTAddDeny.m in Sources */,
 				D9CEEE9B168423CA00B236B5 /* FTAddGroup.m in Sources */,
 				D9CEEE9C168423CA00B236B5 /* FTAddPermit.m in Sources */,
+				631F4AE318BFF98D00AE6E8A /* OTRIncomingMessageTableViewCell.m in Sources */,
 				6398CDC117FA20EC009389F8 /* AFNetworkReachabilityManager.m in Sources */,
 				D9CEEE9D168423CA00B236B5 /* FTCreateRootGroup.m in Sources */,
 				D9CEEE9E168423CA00B236B5 /* FTDelDeny.m in Sources */,

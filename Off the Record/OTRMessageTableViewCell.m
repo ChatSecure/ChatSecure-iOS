@@ -21,11 +21,11 @@ static CGFloat const messageTextWidthMax = 180;
 
 @implementation OTRMessageTableViewCell
 
--(id)initWithMessage:(OTRManagedMessage *)newMessage withDate:(BOOL)newShowDate reuseIdentifier:(NSString*)identifier
+-(id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
-    self = [super initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:identifier];
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        self.showDate = newShowDate;
+        self.showDate = NO;
         self.selectionStyle = UITableViewCellSelectionStyleNone;
         
         //CreateMessageSentDateLabel
@@ -41,45 +41,36 @@ static CGFloat const messageTextWidthMax = 180;
         
         //Create bubbleView
         self.bubbleView = [[OTRChatBubbleView alloc] initWithFrame:CGRectZero];
-        self.bubbleView.incoming = newMessage.isIncomingValue;
-        TTTAttributedLabel * label = [OTRMessageTableViewCell defaultLabel];
-        label.text = newMessage.message;
-        label.delegate = self;
-        self.bubbleView.messageTextLabel = label;
+        self.bubbleView.messageTextLabel.delegate = self;
+        self.bubbleView.incoming = NO;
+        
+        [self.bubbleView updateLayout];
         
         [self.contentView addSubview:self.bubbleView];
-        [self setupConstraints];
         
-        [self setMessage:newMessage];
+        [self setupConstraints];
     }
     
     return self;
     
 }
 
--(void)setMessage:(OTRManagedMessage *)newMessage
+- (void)setMessage:(OTRManagedMessage *)message
 {
-    [self willChangeValueForKey:NSStringFromSelector(@selector(message))];
-    _message = newMessage;
-    [self didChangeValueForKey:NSStringFromSelector(@selector(message))];
-    
-    self.bubbleView.messageTextLabel.text = self.message.message;
-    self.bubbleView.incoming = self.message.isIncomingValue;
-    
-    [self.bubbleView setDelivered:self.message.isDeliveredValue animated:NO];
-    
-    CGFloat messageSentDateLabelHeight = 0;
+    _message = message;
+    self.bubbleView.messageTextLabel.text = message.message;
+    self.bubbleView.delivered = message.isDeliveredValue;
     
     if (self.showDate) {
-        self.dateLabel.text = [[OTRMessageTableViewCell defaultDateFormatter] stringFromDate:newMessage.date];
-        
-        messageSentDateLabelHeight = messageSentDateLabelHeight;
+        self.dateLabel.text = [[OTRMessageTableViewCell defaultDateFormatter] stringFromDate:message.date];
     } else {
         self.dateLabel.text = nil;
     }
     
+    [self.bubbleView updateLayout];
+    
     [self setNeedsUpdateConstraints];
-    [self layoutIfNeeded];
+    //[self layoutIfNeeded];
 }
 
 -(void)setupConstraints
@@ -164,27 +155,9 @@ static CGFloat const messageTextWidthMax = 180;
 
 +(CGSize)messageTextLabelSize:(NSString *)message
 {
-    TTTAttributedLabel * label = [OTRMessageTableViewCell defaultLabel];
+    TTTAttributedLabel * label = [OTRChatBubbleView defaultLabel];
     label.text = message;
     return  [label sizeThatFits:CGSizeMake(messageTextWidthMax, CGFLOAT_MAX)];
-}
-
-
-+(TTTAttributedLabel *)defaultLabel
-{
-    TTTAttributedLabel * messageTextLabel = [[TTTAttributedLabel alloc] initWithFrame:CGRectZero];
-    messageTextLabel.backgroundColor = [UIColor clearColor];
-    messageTextLabel.numberOfLines = 0;
-    messageTextLabel.dataDetectorTypes = UIDataDetectorTypeLink;
-    messageTextLabel.lineBreakMode = NSLineBreakByWordWrapping;
-    
-    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
-        messageTextLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
-    } else {
-        CGFloat messageTextSize = [OTRSettingsManager floatForOTRSettingKey:kOTRSettingKeyFontSize];
-        messageTextLabel.font = [UIFont systemFontOfSize:messageTextSize];
-    }
-    return messageTextLabel;
 }
 
 
@@ -212,7 +185,7 @@ static CGFloat const messageTextWidthMax = 180;
     if (showDate) {
         dateHeight = sentDateFontSize+5;
     }
-    TTTAttributedLabel * label = [self defaultLabel];
+    TTTAttributedLabel * label = [OTRChatBubbleView defaultLabel];
     label.text = message;
     CGSize labelSize = [label sizeThatFits:CGSizeMake(180, CGFLOAT_MAX)];
     
@@ -233,6 +206,11 @@ static CGFloat const messageTextWidthMax = 180;
         [dateFormatter setDateFormat:@"MMM dd, YYYY h:mm a"];
     });
     return dateFormatter;
+}
+
++ (NSString *)reuseIdentifier
+{
+    return NSStringFromClass([self class]);
 }
 
 
