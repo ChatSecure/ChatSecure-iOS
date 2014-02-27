@@ -7,6 +7,7 @@
 extern const struct OTRManagedXMPPAccountAttributes {
 	__unsafe_unretained NSString *domain;
 	__unsafe_unretained NSString *port;
+	__unsafe_unretained NSString *resource;
 } OTRManagedXMPPAccountAttributes;
 
 extern const struct OTRManagedXMPPAccountRelationships {
@@ -17,6 +18,7 @@ extern const struct OTRManagedXMPPAccountFetchedProperties {
 } OTRManagedXMPPAccountFetchedProperties;
 
 @class OTRXMPPManagedPresenceSubscriptionRequest;
+
 
 
 
@@ -58,6 +60,16 @@ extern const struct OTRManagedXMPPAccountFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSString* resource;
+
+
+
+//- (BOOL)validateResource:(id*)value_ error:(NSError**)error_;
+
+
+
+
+
 @property (nonatomic, strong) NSSet *subscriptionRequests;
 
 - (NSMutableSet*)subscriptionRequestsSet;
@@ -91,6 +103,12 @@ extern const struct OTRManagedXMPPAccountFetchedProperties {
 
 - (int16_t)primitivePortValue;
 - (void)setPrimitivePortValue:(int16_t)value_;
+
+
+
+
+- (NSString*)primitiveResource;
+- (void)setPrimitiveResource:(NSString*)value;
 
 
 

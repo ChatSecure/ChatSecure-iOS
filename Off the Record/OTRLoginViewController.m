@@ -570,7 +570,7 @@
 
 +(OTRLoginViewController *)loginViewControllerWithAcccountID:(NSManagedObjectID *)accountID
 {
-    NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
+    NSManagedObjectContext * context = [NSManagedObjectContext MR_context];
     OTRManagedAccount * account = (OTRManagedAccount *)[context existingObjectWithID:accountID error:nil];
     switch (account.accountType) {
         case OTRAccountTypeAIM:

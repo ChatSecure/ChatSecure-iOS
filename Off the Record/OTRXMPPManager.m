@@ -351,11 +351,9 @@ static NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 - (BOOL)connectWithJID:(NSString*) myJID password:(NSString*)myPassword;
 {
     self.password = myPassword;
-    int r = arc4random() % 99999;
     
-    NSString * resource = [NSString stringWithFormat:@"%@%d",kOTRXMPPResource,r];
     
-    self.JID = [XMPPJID jidWithString:myJID resource:resource];
+    self.JID = [XMPPJID jidWithString:myJID resource:self.account.resource];
     
 	[self.xmppStream setMyJID:self.JID];
     //DDLogInfo(@"myJID %@",myJID);
