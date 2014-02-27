@@ -36,6 +36,7 @@
 #import "OTRIntSetting.h"
 #import "OTRCertificateSetting.h"
 #import "OTRUtilities.h"
+#import "OTRFingerprintSetting.h"
 
 @interface OTRSettingsManager(Private)
 - (void) populateSettings;
@@ -68,14 +69,6 @@
     OTRSettingsGroup *accountsGroup = [[OTRSettingsGroup alloc] initWithTitle:ACCOUNTS_STRING settings:[NSArray arrayWithObject:accountsViewSetting]];
     [settingsGroups addObject:accountsGroup];
     
-    /*
-    OTRDoubleSetting *fontSizeSetting = [[OTRDoubleSetting alloc] initWithTitle:FONT_SIZE_STRING description:FONT_SIZE_DESCRIPTION_STRING settingsKey:kOTRSettingKeyFontSize];
-    fontSizeSetting.maxValue = 20;
-    fontSizeSetting.minValue = 12;
-    fontSizeSetting.numValues = 4;
-    fontSizeSetting.defaultValue = [NSNumber numberWithInt:16];
-    fontSizeSetting.isPercentage = NO;
-    */
     OTRIntSetting *fontSizeSetting;
     
     if (SYSTEM_VERSION_LESS_THAN(@"7.0")) {
@@ -101,6 +94,9 @@
     OTRCertificateSetting * certSetting = [[OTRCertificateSetting alloc] initWithTitle:PINNED_CERTIFICATES_STRING description:PINNED_CERTIFICATES_DESCRIPTION_STRING];
     certSetting.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
+    OTRFingerprintSetting * fingerprintSetting = [[OTRFingerprintSetting alloc] initWithTitle:OTR_FINGERPRINTS_STRING description:OTR_FINGERPRINTS_SUBTITLE_STRING];
+    fingerprintSetting.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    
     NSArray *chatSettings;
     NSArray * securitySettings;
     
@@ -112,7 +108,7 @@
     OTRSettingsGroup *chatSettingsGroup = [[OTRSettingsGroup alloc] initWithTitle:CHAT_STRING settings:chatSettings];
     [settingsGroups addObject:chatSettingsGroup];
     
-    securitySettings = @[opportunisticOtrSetting,certSetting];
+    securitySettings = @[opportunisticOtrSetting,certSetting,fingerprintSetting];
     OTRSettingsGroup *securitySettingsGroup = [[OTRSettingsGroup alloc] initWithTitle:SECURITY_STRING settings:securitySettings];
     [settingsGroups addObject:securitySettingsGroup];
     

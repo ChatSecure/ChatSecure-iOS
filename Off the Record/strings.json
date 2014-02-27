@@ -814,5 +814,45 @@
     "LOGIN_AUTOMATICALLY_STRING": {
         "comment": "Label for account setting that autologins on launch",
         "string": "Login Automatically"
+    },
+    "UNLOCKED_ALERT_STRING": {
+        "comment": "Title to let user know that encryption is not currently enabled",
+        "string": "The conversation is not secure"
+    },
+    "LOCKED_WARN_STRING": {
+        "comment": "Title to let user know that the OTR fingerprint has not been checked",
+        "string": "The fingerprint has not been verified"
+    },
+    "LOCKED_ERROR_STRING": {
+        "comment": "Title to let user know that the OTR fingerprint has not been checked",
+        "string": "The fingerprint has changed and needs to be verified"
+    },
+    "LOCKED_SECURE_STRING": {
+        "comment": "Title to let user know that the OTR fingerprint has not been checked",
+        "string": "The conversation is secure and the fingerprint is verfied"
+    },
+    "ACCOUNT_FINGERPRINTS_STRING": {
+        "comment": "Title for showing the users account otr fingerprints",
+        "string": "Account Fingerprints"
+    },
+    "BUDDY_FINGERPRINTS_STRING": {
+        "comment": "Title for showing the users buddies otr fingerprints",
+        "string": "Buddy Fingerprints"
+    },
+    "VERIFIED_STRING": {
+        "comment": "To let the user know the fingerprint as been checked",
+        "string": "Verified"
+    },
+    "NOT_VERIFIED_STRING": {
+        "comment": "To let the user know the fingerprint as not been checked",
+        "string": "Not Verified"
+    },
+    "OTR_FINGERPRINTS_STRING": {
+        "comment": "Lable for button to show saved fingerprints",
+        "string": "OTR Fingerprints"
+    },
+    "OTR_FINGERPRINTS_SUBTITLE_STRING": {
+        "comment": "Subtitle lable for button to show saved fingerprints",
+        "string": "Manage OTR fingerprints"
     }
 }

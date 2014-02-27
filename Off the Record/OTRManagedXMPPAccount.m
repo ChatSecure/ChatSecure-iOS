@@ -42,8 +42,8 @@
     self.resource = [[self class] newResource];  //Default resource chatsecure12345
 }
 
-- (NSString *) imageName {
-    return kXMPPImageName;
+- (UIImage *)accountImage {
+    return [UIImage imageNamed:kXMPPImageName];
 }
 
 -(NSString *)providerName

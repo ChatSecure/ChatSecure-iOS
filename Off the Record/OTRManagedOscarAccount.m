@@ -30,8 +30,8 @@
 @implementation OTRManagedOscarAccount
 
 
-- (NSString *) imageName {
-    return kAIMImageName;
+- (UIImage *)accountImage {
+    return [UIImage imageNamed:kAIMImageName];
 }
 
 - (NSString *)providerName

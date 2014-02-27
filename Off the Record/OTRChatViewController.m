@@ -32,6 +32,7 @@
 #import "OTRManagedEncryptionStatusMessage.h"
 #import "OTRStatusMessageCell.h"
 #import "OTRUtilities.h"
+#import "OTRLockButton.h"
 
 #import "OTRImages.h"
 
@@ -40,6 +41,7 @@
 static CGFloat const messageMarginTop = 7;
 static CGFloat const messageMarginBottom = 10;
 static NSTimeInterval const messageSentDateShowTimeInterval = 5*60; // 5 minutes
+@interface OTRChatViewController()
 
 typedef NS_ENUM(NSInteger, OTRChatViewTags) {
     OTRChatViewAlertViewVerifiedTag            = 200,
@@ -51,8 +53,10 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
 
 @property (nonatomic,strong) UIView * composingImageView;
 @property (nonatomic,readonly) CGFloat initialBarChatBarHeight;
-- (void) refreshView;
+@property (nonatomic, strong) OTRLockButton * lockButton;
+@property (nonatomic, strong) UIBarButtonItem * lockBarButtonItem;
 
+- (void) refreshView;
 
 @end
 
@@ -64,7 +68,6 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
     self.buddy = nil;
     self.chatHistoryTableView = nil;
     self.lockButton = nil;
-    self.unlockedButton = nil;
     self.instructionsLabel = nil;
     self.chatHistoryTableView = nil;
     _messagesFetchedResultsController = nil;
@@ -95,38 +98,41 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
 
 -(void)setupLockButton
 {
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    UIImage *buttonImage = [UIImage imageNamed:@"Lock_Locked.png"];
-    [button setBackgroundImage:buttonImage forState:UIControlStateNormal];
-    CGRect buttonFrame = [button frame];
-    buttonFrame.size.width = buttonImage.size.width;
-    buttonFrame.size.height = buttonImage.size.height;
-    [button setFrame:buttonFrame];
-    [button addTarget:self action:@selector(lockButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    __weak OTRChatViewController * weakSelf = self;
+    self.lockButton = [OTRLockButton lockButtonWithInitailLockStatus:OTRLockStatusUnlocked withBlock:^(OTRLockStatus currentStatus){
+        NSString *encryptionString = INITIATE_ENCRYPTED_CHAT_STRING;
+        NSString * verifiedString = VERIFY_STRING;
+        
+        if ([[OTRKit sharedInstance] isConversationEncryptedForUsername:weakSelf.buddy.accountName accountName:weakSelf.buddy.account.username protocol:weakSelf.buddy.account.protocol]) {
+            encryptionString = CANCEL_ENCRYPTED_CHAT_STRING;
+        }
+        
+         NSString * title = nil;
+        if (currentStatus == OTRLockStatusLockedAndError) {
+            title = LOCKED_ERROR_STRING;
+        }
+        else if (currentStatus == OTRLockStatusLockedAndWarn) {
+            title = LOCKED_WARN_STRING;
+        }
+        else if (currentStatus == OTRLockStatusLockedAndVerified){
+            title = LOCKED_SECURE_STRING;
+        }
+        else if (currentStatus == OTRLockStatusUnlocked){
+            title = UNLOCKED_ALERT_STRING;
+        }
+        
+        
+       
+        
+        UIActionSheet *popupQuery = [[UIActionSheet alloc] initWithTitle:title delegate:weakSelf cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:encryptionString, verifiedString, CLEAR_CHAT_HISTORY_STRING, nil];
+        popupQuery.accessibilityLabel = @"secure";
+        popupQuery.actionSheetStyle = UIActionSheetStyleBlackOpaque;
+        popupQuery.tag = ACTIONSHEET_ENCRYPTION_OPTIONS_TAG;
+        [OTR_APP_DELEGATE presentActionSheet:popupQuery inView:weakSelf.view];
+    }];
     
-    self.lockButton = [[UIBarButtonItem alloc] initWithCustomView:button];
-    
-    button = [UIButton buttonWithType:UIButtonTypeCustom];
-    buttonImage = [UIImage imageNamed:@"Lock_Unlocked.png"];
-    [button setBackgroundImage:buttonImage forState:UIControlStateNormal];
-    buttonFrame = [button frame];
-    buttonFrame.size.width = buttonImage.size.width;
-    buttonFrame.size.height = buttonImage.size.height;
-    [button setFrame:buttonFrame];
-    [button addTarget:self action:@selector(lockButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-    
-    self.unlockedButton = [[UIBarButtonItem alloc] initWithCustomView:button];
-    
-    button = [UIButton buttonWithType:UIButtonTypeCustom];
-    buttonImage = [UIImage imageNamed:@"Lock_Locked_Verified.png"];
-    [button setBackgroundImage:buttonImage forState:UIControlStateNormal];
-    buttonFrame = [button frame];
-    buttonFrame.size.width = buttonImage.size.width;
-    buttonFrame.size.height = buttonImage.size.height;
-    [button setFrame:buttonFrame];
-    [button addTarget:self action:@selector(lockButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-    
-    self.lockVerifiedButton = [[UIBarButtonItem alloc] initWithCustomView:button];
+    self.lockBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.lockButton];
+    [self.navigationItem setRightBarButtonItem:self.lockBarButtonItem];
     
     [self refreshLockButton];
 }
@@ -139,43 +145,26 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
         }
     }];
     UIBarButtonItem * rightBarItem = self.navigationItem.rightBarButtonItem;
-    if ([rightBarItem isEqual:self.lockButton] || [rightBarItem isEqual:self.lockVerifiedButton] || [rightBarItem isEqual:self.unlockedButton] || !rightBarItem) {
-        BOOL trusted = [[OTRKit sharedInstance] fingerprintIsVerifiedForUsername:self.buddy.accountName accountName:self.buddy.account.username protocol:self.buddy.account.protocol];
+    if ([rightBarItem isEqual:self.lockBarButtonItem]) {
+        BOOL isTrusted = [[OTRKit sharedInstance] activeFingerprintIsVerifiedForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
+        BOOL isEncrypted = [[OTRKit sharedInstance] isConversationEncryptedForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
+        BOOL  hasVerifiedFingerprints = [[OTRKit sharedInstance] hasVerifiedFingerprintsForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
         
-        OTRKitMessageState currentEncryptionStatus = [self.buddy currentEncryptionStatus];
-        
-        if(currentEncryptionStatus == kOTRKitMessageStateEncrypted && trusted)
-        {
-            self.navigationItem.rightBarButtonItem = self.lockVerifiedButton;
+        if (isEncrypted && isTrusted) {
+            self.lockButton.lockStatus = OTRLockStatusLockedAndVerified;
         }
-        else if(currentEncryptionStatus == kOTRKitMessageStateEncrypted)
+        else if (isEncrypted && hasVerifiedFingerprints)
         {
-            self.navigationItem.rightBarButtonItem = self.lockButton;
+            self.lockButton.lockStatus = OTRLockStatusLockedAndError;
         }
-        else
-        {
-            self.navigationItem.rightBarButtonItem = self.unlockedButton;
+        else if (isEncrypted) {
+            self.lockButton.lockStatus = OTRLockStatusLockedAndWarn;
         }
-        self.navigationItem.rightBarButtonItem.accessibilityLabel = @"lock";
+        else {
+            self.lockButton.lockStatus = OTRLockStatusUnlocked;
+        }
     }
-    
 }
-
--(void)lockButtonPressed
-{
-    NSString *encryptionString = INITIATE_ENCRYPTED_CHAT_STRING;
-    NSString * verifiedString = VERIFY_STRING;
-    
-    if ([self.buddy currentEncryptionStatus] == kOTRKitMessageStateEncrypted) {
-        encryptionString = CANCEL_ENCRYPTED_CHAT_STRING;
-    }
-    UIActionSheet *popupQuery = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:encryptionString, verifiedString, CLEAR_CHAT_HISTORY_STRING, nil];
-    popupQuery.accessibilityLabel = @"secure";
-    popupQuery.actionSheetStyle = UIActionSheetStyleBlackOpaque;
-    popupQuery.tag = OTRChatViewActionSheetEncryptionOptionsTag;
-    [OTR_APP_DELEGATE presentActionSheet:popupQuery inView:self.view];
-}
-
 
 
 #pragma mark - View lifecycle
@@ -377,9 +366,9 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
         if (buttonIndex == 1) // Verify
         {
             NSString *msg = nil;
-            NSString *ourFingerprintString = [[OTRKit sharedInstance] fingerprintForAccountName:self.buddy.account.username protocol:self.buddy.account.protocol];
-            NSString *theirFingerprintString = [[OTRKit sharedInstance] fingerprintForUsername:self.buddy.accountName accountName:self.buddy.account.username protocol:self.buddy.account.protocol];
-            BOOL trusted = [[OTRKit sharedInstance] fingerprintIsVerifiedForUsername:self.buddy.accountName accountName:self.buddy.account.username protocol:self.buddy.account.protocol];
+            NSString *ourFingerprintString = [[OTRKit sharedInstance] fingerprintForAccountName:buddy.account.username protocol:buddy.account.protocol];
+            NSString *theirFingerprintString = [[OTRKit sharedInstance] fingerprintForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
+            BOOL trusted = [[OTRKit sharedInstance] activeFingerprintIsVerifiedForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
             
             
             UIAlertView * alert;
@@ -449,7 +438,7 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
     self.navigationItem.rightBarButtonItem = activityBarButtonItem;
 }
 -(void)removeLockSpinner {
-    self.navigationItem.rightBarButtonItem = nil;
+    self.navigationItem.rightBarButtonItem = self.lockBarButtonItem;
     [self refreshLockButton];
 }
 
@@ -476,11 +465,11 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
             int labelWidth = 500;
             int labelHeight = 100;
             self.instructionsLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.view.frame.size.width/2-labelWidth/2, self.view.frame.size.height/2-labelHeight/2, labelWidth, labelHeight)];
-            self.instructionsLabel.text = CHAT_INSTRUCTIONS_LABEL_STRING;
-            self.instructionsLabel.numberOfLines = 2;
-            self.instructionsLabel.backgroundColor = self.chatHistoryTableView.backgroundColor;
-            [self.view addSubview:self.instructionsLabel];
-            self.navigationItem.rightBarButtonItem = nil;
+            instructionsLabel.text = CHAT_INSTRUCTIONS_LABEL_STRING;
+            instructionsLabel.numberOfLines = 2;
+            instructionsLabel.backgroundColor = self.chatHistoryTableView.backgroundColor;
+            [self.view addSubview:instructionsLabel];
+            //self.navigationItem.rightBarButtonItem = nil;
         }
     } else {
         if (self.instructionsLabel) {
