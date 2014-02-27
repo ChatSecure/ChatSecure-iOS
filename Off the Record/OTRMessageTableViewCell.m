@@ -41,7 +41,7 @@ static CGFloat const messageTextWidthMax = 180;
         
         //Create bubbleView
         self.bubbleView = [[OTRChatBubbleView alloc] initWithFrame:CGRectZero];
-        self.bubbleView.isIncoming = newMessage.isIncomingValue;
+        self.bubbleView.incoming = newMessage.isIncomingValue;
         TTTAttributedLabel * label = [OTRMessageTableViewCell defaultLabel];
         label.text = newMessage.message;
         label.delegate = self;
@@ -64,9 +64,9 @@ static CGFloat const messageTextWidthMax = 180;
     [self didChangeValueForKey:NSStringFromSelector(@selector(message))];
     
     self.bubbleView.messageTextLabel.text = self.message.message;
-    self.bubbleView.isIncoming = self.message.isIncomingValue;
+    self.bubbleView.incoming = self.message.isIncomingValue;
     
-    [self.bubbleView setIsDelivered:self.message.isDeliveredValue animated:NO];
+    [self.bubbleView setDelivered:self.message.isDeliveredValue animated:NO];
     
     CGFloat messageSentDateLabelHeight = 0;
     

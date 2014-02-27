@@ -41,7 +41,6 @@
 static CGFloat const messageMarginTop = 7;
 static CGFloat const messageMarginBottom = 10;
 static NSTimeInterval const messageSentDateShowTimeInterval = 5*60; // 5 minutes
-@interface OTRChatViewController()
 
 typedef NS_ENUM(NSInteger, OTRChatViewTags) {
     OTRChatViewAlertViewVerifiedTag            = 200,
@@ -51,8 +50,8 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
 
 @interface OTRChatViewController ()
 
-@property (nonatomic,strong) UIView * composingImageView;
-@property (nonatomic,readonly) CGFloat initialBarChatBarHeight;
+@property (nonatomic, strong) UIView * composingImageView;
+@property (nonatomic, readonly) CGFloat initialBarChatBarHeight;
 @property (nonatomic, strong) OTRLockButton * lockButton;
 @property (nonatomic, strong) UIBarButtonItem * lockBarButtonItem;
 
@@ -63,13 +62,6 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
 @implementation OTRChatViewController
 
 - (void) dealloc {
-    self.lastActionLink = nil;
-    self.buddyListController = nil;
-    self.buddy = nil;
-    self.chatHistoryTableView = nil;
-    self.lockButton = nil;
-    self.instructionsLabel = nil;
-    self.chatHistoryTableView = nil;
     _messagesFetchedResultsController = nil;
     _buddyFetchedResultsController = nil;
     
@@ -121,13 +113,10 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
             title = UNLOCKED_ALERT_STRING;
         }
         
-        
-       
-        
         UIActionSheet *popupQuery = [[UIActionSheet alloc] initWithTitle:title delegate:weakSelf cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:encryptionString, verifiedString, CLEAR_CHAT_HISTORY_STRING, nil];
         popupQuery.accessibilityLabel = @"secure";
         popupQuery.actionSheetStyle = UIActionSheetStyleBlackOpaque;
-        popupQuery.tag = ACTIONSHEET_ENCRYPTION_OPTIONS_TAG;
+        popupQuery.tag = OTRChatViewActionSheetEncryptionOptionsTag;
         [OTR_APP_DELEGATE presentActionSheet:popupQuery inView:weakSelf.view];
     }];
     
@@ -146,9 +135,9 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
     }];
     UIBarButtonItem * rightBarItem = self.navigationItem.rightBarButtonItem;
     if ([rightBarItem isEqual:self.lockBarButtonItem]) {
-        BOOL isTrusted = [[OTRKit sharedInstance] activeFingerprintIsVerifiedForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
-        BOOL isEncrypted = [[OTRKit sharedInstance] isConversationEncryptedForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
-        BOOL  hasVerifiedFingerprints = [[OTRKit sharedInstance] hasVerifiedFingerprintsForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
+        BOOL isTrusted = [[OTRKit sharedInstance] activeFingerprintIsVerifiedForUsername:self.buddy.accountName accountName:self.buddy.account.username protocol:self.buddy.account.protocol];
+        BOOL isEncrypted = [[OTRKit sharedInstance] isConversationEncryptedForUsername:self.buddy.accountName accountName:self.buddy.account.username protocol:self.buddy.account.protocol];
+        BOOL  hasVerifiedFingerprints = [[OTRKit sharedInstance] hasVerifiedFingerprintsForUsername:self.buddy.accountName accountName:self.buddy.account.username protocol:self.buddy.account.protocol];
         
         if (isEncrypted && isTrusted) {
             self.lockButton.lockStatus = OTRLockStatusLockedAndVerified;
@@ -366,9 +355,9 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
         if (buttonIndex == 1) // Verify
         {
             NSString *msg = nil;
-            NSString *ourFingerprintString = [[OTRKit sharedInstance] fingerprintForAccountName:buddy.account.username protocol:buddy.account.protocol];
-            NSString *theirFingerprintString = [[OTRKit sharedInstance] fingerprintForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
-            BOOL trusted = [[OTRKit sharedInstance] activeFingerprintIsVerifiedForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
+            NSString *ourFingerprintString = [[OTRKit sharedInstance] fingerprintForAccountName:self.buddy.account.username protocol:self.buddy.account.protocol];
+            NSString *theirFingerprintString = [[OTRKit sharedInstance] fingerprintForUsername:self.buddy.accountName accountName:self.buddy.account.username protocol:self.buddy.account.protocol];
+            BOOL trusted = [[OTRKit sharedInstance] activeFingerprintIsVerifiedForUsername:self.buddy.accountName accountName:self.buddy.account.username protocol:self.buddy.account.protocol];
             
             
             UIAlertView * alert;
@@ -418,7 +407,7 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
         }
         else if (buttonIndex == 2) { // Clear Chat History
             NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
-            [buddy deleteAllMessagesInContext:context];
+            [self.buddy deleteAllMessagesInContext:context];
             [context MR_saveToPersistentStoreAndWait];
         }
         else if (buttonIndex == actionSheet.cancelButtonIndex) // Cancel
@@ -465,10 +454,10 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
             int labelWidth = 500;
             int labelHeight = 100;
             self.instructionsLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.view.frame.size.width/2-labelWidth/2, self.view.frame.size.height/2-labelHeight/2, labelWidth, labelHeight)];
-            instructionsLabel.text = CHAT_INSTRUCTIONS_LABEL_STRING;
-            instructionsLabel.numberOfLines = 2;
-            instructionsLabel.backgroundColor = self.chatHistoryTableView.backgroundColor;
-            [self.view addSubview:instructionsLabel];
+            self.instructionsLabel.text = CHAT_INSTRUCTIONS_LABEL_STRING;
+            self.instructionsLabel.numberOfLines = 2;
+            self.instructionsLabel.backgroundColor = self.chatHistoryTableView.backgroundColor;
+            [self.view addSubview:self.instructionsLabel];
             //self.navigationItem.rightBarButtonItem = nil;
         }
     } else {

@@ -21,7 +21,6 @@
         self.translatesAutoresizingMaskIntoConstraints = NO;
         self.messageTextLabel = [[TTTAttributedLabel alloc] initWithFrame:CGRectZero];
         self.messageTextLabel.textAlignment = NSTextAlignmentNatural;
-        self.messageBackgroundImageView = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"MessageBubbleBlue"] stretchableImageWithLeftCapWidth:23 topCapHeight:15]];
         self.messageBackgroundImageView = [OTRImages bubbleImageViewForMessageType:OTRBubbleMessageTypeOutgoing];
         self.messageBackgroundImageView.translatesAutoresizingMaskIntoConstraints = NO;
         
@@ -36,13 +35,13 @@
     return self;
 }
 
-- (void)setIsDelivered:(BOOL)isDelivered
+- (void)setDelivered:(BOOL)delivered
 {
     [self willChangeValueForKey:NSStringFromSelector(@selector(isDelivered))];
-    _isDelivered = isDelivered;
+    _delivered = delivered;
     [self didChangeValueForKey:NSStringFromSelector(@selector(isDelivered))];
     
-    if (self.isDelivered) {
+    if (self.isDelivierd) {
         self.deliveredImageView.image = [UIImage imageNamed:@"checkmark"];
     }
     else {
@@ -52,24 +51,22 @@
 }
 
 
-- (void)setIsDelivered:(BOOL)isDelivered animated:(BOOL)animated
+- (void)setDelivered:(BOOL)delivered animated:(BOOL)animated
 {
     NSTimeInterval duration = 0;
     if (animated) {
         duration = .5;
     }
     [UIView animateWithDuration:duration animations:^{
-        [self setIsDelivered:isDelivered];
+        self.delivered = delivered;
         [self layoutIfNeeded];
     }];
 }
 
-- (void)setIsIncoming:(BOOL)isIncoming
+- (void)setIncoming:(BOOL)incoming
 {
-    [self willChangeValueForKey:NSStringFromSelector(@selector(isIncoming))];
-    _isIncoming = isIncoming;
-    [self didChangeValueForKey:NSStringFromSelector(@selector(isIncoming))];
-    if (_isIncoming) {
+    _incoming = incoming;
+    if (_incoming) {
         self.messageBackgroundImageView = [OTRImages bubbleImageViewForMessageType:OTRBubbleMessageTypeIncoming];
         self.messageTextLabel.textColor = [UIColor blackColor];
     }

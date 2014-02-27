@@ -210,7 +210,7 @@
 #define FONT_SIZE_STRING [OTRLanguageManager translatedString: @"Font Size"]
 #define SELF_SIGNED_SSL_STRING [OTRLanguageManager translatedString: @"Self Signed SSL"]
 #define UNLOCKED_ALERT_STRING [OTRLanguageManager translatedString: @"The conversation is not secure"]
-#define CANCEL_STRING [OTRLanguageManager translatedString: @"Cancel"]
+#define CHAT_STATE_PAUSED_STRING [OTRLanguageManager translatedString: @"Entered Text"]
 #define errSSLClosedGracefulString [OTRLanguageManager translatedString: @"Connection closed gracefully"]
 #define PINNED_CERTIFICATES_DESCRIPTION_STRING [OTRLanguageManager translatedString: @"Manage saved SSL certificates"]
 #define LOGIN_AUTOMATICALLY_STRING [OTRLanguageManager translatedString: @"Login Automatically"]
