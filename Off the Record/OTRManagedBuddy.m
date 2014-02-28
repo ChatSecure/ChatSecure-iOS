@@ -245,6 +245,11 @@
     buddy = [self fetchWithName:name account:account inContext:context];
     if (!buddy) {
         buddy = [self MR_createInContext:context];
+        NSError *error = nil;
+        [context obtainPermanentIDsForObjects:@[buddy] error:&error];
+        if (error) {
+            DDLogError(@"Error obtaining permanent ID for buddy: %@", error);
+        }
         buddy.accountName = name;
         buddy.account = contextAccount;
     }
