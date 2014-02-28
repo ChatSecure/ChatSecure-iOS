@@ -111,10 +111,6 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
         self.isRegisteringNewAccount = NO;
         self.isConnected = NO;
         self.account = (OTRManagedXMPPAccount*)newAccount;
-
-        // Configure logging framework
-        self.workQueue = dispatch_queue_create("buddy.background", NULL);
-        //[DDLog addLogger:[DDTTYLogger sharedInstance]];
         
         // Setup the XMPP stream
         [self setupStream];
@@ -146,21 +142,7 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 
 - (void)setupStream
 {
-	NSAssert(self.xmppStream == nil, @"Method setupStream invoked multiple times");
-	
-	// Setup xmpp stream
-	// 
-	// The XMPPStream is the base class for all activity.
-	// Everything else plugs into the xmppStream, such as modules/extensions and delegates.
-    
-	if (self.account.accountType == OTRAccountTypeFacebook) {
-        self.xmppStream = [[XMPPStream alloc] initWithFacebookAppId:FACEBOOK_APP_ID];
-    }
-    else{
-        self.xmppStream = [[XMPPStream alloc] init];
-    }
-    
-    self.xmppStream.autoStartTLS = YES;
+	NSAssert(_xmppStream == nil, @"Method setupStream invoked multiple times");
     
     [self.certificatePinningModule activate:self.xmppStream];
     
@@ -317,19 +299,15 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 // For more information on working with XML elements, see the Wiki article:
 // http://code.google.com/p/xmppframework/wiki/WorkingWithElements
 
-- (Class) xmppStreamClass {
-    return [XMPPStream class];
-}
-
 - (XMPPStream *)xmppStream
 {
     if(!_xmppStream)
     {
         if (self.account.accountType == OTRAccountTypeFacebook) {
-            _xmppStream = [[[self xmppStreamClass] alloc] initWithFacebookAppId:FACEBOOK_APP_ID];
+            _xmppStream = [[XMPPStream alloc] initWithFacebookAppId:FACEBOOK_APP_ID];
         }
         else{
-            _xmppStream = [[[self xmppStreamClass] alloc] init];
+            _xmppStream = [[XMPPStream alloc] init];
         }
         _xmppStream.autoStartTLS = YES;
     }

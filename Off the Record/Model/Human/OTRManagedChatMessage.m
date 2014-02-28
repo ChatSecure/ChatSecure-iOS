@@ -54,11 +54,11 @@
 
 +(OTRManagedChatMessage*)newMessageWithBuddy:(OTRManagedBuddy *)theBuddy message:(NSString *)theMessage inContext:(NSManagedObjectContext *)context
 {
-    OTRManagedChatMessage *managedMessage = [OTRManagedChatMessage MR_createEntity];
-    
+    OTRManagedChatMessage *managedMessage = [OTRManagedChatMessage MR_createInContext:context];
+    OTRManagedBuddy *localBuddy = [theBuddy MR_inContext:context];
     managedMessage.uniqueID = [OTRUtilities uniqueString];
-    managedMessage.buddy = theBuddy;
-    managedMessage.chatBuddy = theBuddy;
+    managedMessage.buddy = localBuddy;
+    managedMessage.chatBuddy = localBuddy;
     managedMessage.message = [OTRUtilities stripHTML:theMessage];
     managedMessage.date = [NSDate date];
     managedMessage.isEncryptedValue = YES;

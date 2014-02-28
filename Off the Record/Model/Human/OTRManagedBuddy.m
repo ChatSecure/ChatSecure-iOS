@@ -182,13 +182,13 @@
 -(NSInteger) numberOfUnreadMessages
 {
     NSPredicate * messageFilter = [NSPredicate predicateWithFormat:@"isRead == NO AND isEncrypted == NO AND isIncoming == YES"];
-    NSSet * finalSet = [self.messages filteredSetUsingPredicate:messageFilter];
+    NSSet * finalSet = [self.chatMessages filteredSetUsingPredicate:messageFilter];
     return [finalSet count];
 }
 
 - (void) allMessagesRead
 {
-    [self.messages setValue:[NSNumber numberWithBool:YES] forKey:@"isRead"];
+    [self.chatMessages setValue:[NSNumber numberWithBool:YES] forKey:@"isRead"];
     NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
     [context MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
         if (error) {

@@ -256,13 +256,13 @@ NSString *const kOTRClassKey                     = @"classKey";
     else if (accountType == OTRAccountTypeXMPPTor)
     {
         //TOR + XMPP
-        OTRManagedXMPPTorAccount * torAccount = [OTRManagedXMPPTorAccount MR_createEntity];
+        OTRManagedXMPPTorAccount * torAccount = [OTRManagedXMPPTorAccount MR_createInContext:context];
         [torAccount setDefaultsWithDomain:@""];
         newAccount = torAccount;
     }
     if(newAccount)
     {
-        [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
+        [context MR_saveToPersistentStoreAndWait];
     }
     return newAccount;
 }
