@@ -42,6 +42,8 @@
 #import "OTRBuddyCell.h"
 #import "OTRRecentBuddyCell.h"
 
+static void * OTRBuddyListViewControllerKVOContext = &OTRBuddyListViewControllerKVOContext;
+
 //#define kSignoffTime 500
 
 #define RECENTS_SECTION_INDEX 0
@@ -158,7 +160,7 @@
     
     [self didUpdateNumberOfConnectedAccounts:[OTRProtocolManager sharedInstance].numberOfConnectedProtocols];
     
-    [[OTRProtocolManager sharedInstance] addObserver:self forKeyPath:NSStringFromSelector(@selector(numberOfConnectedProtocols)) options:NSKeyValueObservingOptionNew context:NULL];
+    [[OTRProtocolManager sharedInstance] addObserver:self forKeyPath:NSStringFromSelector(@selector(numberOfConnectedProtocols)) options:NSKeyValueObservingOptionNew context:OTRBuddyListViewControllerKVOContext];
     
     buddyListTableView.frame = self.view.bounds;
     buddyListTableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleRightMargin;
@@ -169,8 +171,11 @@
 -(void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
-    [[OTRProtocolManager sharedInstance] removeObserver:self forKeyPath:NSStringFromSelector(@selector(numberOfConnectedProtocols))];
-    
+    // Try to fix crash when removing KVO
+    @try {
+        [[OTRProtocolManager sharedInstance] removeObserver:self forKeyPath:NSStringFromSelector(@selector(numberOfConnectedProtocols)) context:OTRBuddyListViewControllerKVOContext];
+    }
+    @catch (NSException * __unused exception) {}
 }
 
 
@@ -182,7 +187,9 @@
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    [self didUpdateNumberOfConnectedAccounts:[[change objectForKey:NSKeyValueChangeNewKey] unsignedIntegerValue]];
+    if (context == OTRBuddyListViewControllerKVOContext) {
+        [self didUpdateNumberOfConnectedAccounts:[[change objectForKey:NSKeyValueChangeNewKey] unsignedIntegerValue]];
+    }
 }
 
 - (void) showSettingsView:(id)sender {
