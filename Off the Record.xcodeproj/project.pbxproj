@@ -256,6 +256,7 @@
 		63D2BB231856B04500FFE4B7 /* OTRCertificatesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D2BB221856B04500FFE4B7 /* OTRCertificatesViewController.m */; };
 		63D511B017EBA122000D927B /* OTRFacebookSessionCachingStrategy.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D511AF17EBA122000D927B /* OTRFacebookSessionCachingStrategy.m */; };
 		63D511C117EBDD31000D927B /* OTRAppVersionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D511C017EBDD31000D927B /* OTRAppVersionManager.m */; };
+		63E1D7C718C14231003A60FC /* UIActionSheet+Blocks.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E1D7C618C14231003A60FC /* UIActionSheet+Blocks.m */; };
 		63E5E7E816D1D5BC006E2B01 /* MagicalImportFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E5E7B016D1D5BC006E2B01 /* MagicalImportFunctions.m */; };
 		63E5E7E916D1D5BC006E2B01 /* NSAttributeDescription+MagicalDataImport.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E5E7B216D1D5BC006E2B01 /* NSAttributeDescription+MagicalDataImport.m */; };
 		63E5E7EA16D1D5BC006E2B01 /* NSEntityDescription+MagicalDataImport.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E5E7B416D1D5BC006E2B01 /* NSEntityDescription+MagicalDataImport.m */; };
@@ -1153,6 +1154,8 @@
 		63D511AF17EBA122000D927B /* OTRFacebookSessionCachingStrategy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRFacebookSessionCachingStrategy.m; sourceTree = "<group>"; };
 		63D511BF17EBDD31000D927B /* OTRAppVersionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAppVersionManager.h; sourceTree = "<group>"; };
 		63D511C017EBDD31000D927B /* OTRAppVersionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAppVersionManager.m; sourceTree = "<group>"; };
+		63E1D7C518C14231003A60FC /* UIActionSheet+Blocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIActionSheet+Blocks.h"; path = "Submodules/UIAlertView-Blocks/UIActionSheet+Blocks.h"; sourceTree = "<group>"; };
+		63E1D7C618C14231003A60FC /* UIActionSheet+Blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIActionSheet+Blocks.m"; path = "Submodules/UIAlertView-Blocks/UIActionSheet+Blocks.m"; sourceTree = "<group>"; };
 		63E5E7AF16D1D5BC006E2B01 /* MagicalImportFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MagicalImportFunctions.h; sourceTree = "<group>"; };
 		63E5E7B016D1D5BC006E2B01 /* MagicalImportFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MagicalImportFunctions.m; sourceTree = "<group>"; };
 		63E5E7B116D1D5BC006E2B01 /* NSAttributeDescription+MagicalDataImport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSAttributeDescription+MagicalDataImport.h"; sourceTree = "<group>"; };
@@ -3001,6 +3004,8 @@
 			children = (
 				D968472218C13AA3008FDC46 /* RIButtonItem.h */,
 				D968472318C13AA3008FDC46 /* RIButtonItem.m */,
+				63E1D7C518C14231003A60FC /* UIActionSheet+Blocks.h */,
+				63E1D7C618C14231003A60FC /* UIActionSheet+Blocks.m */,
 				D968472418C13AA3008FDC46 /* UIAlertView+Blocks.h */,
 				D968472518C13AA3008FDC46 /* UIAlertView+Blocks.m */,
 			);
@@ -4206,6 +4211,7 @@
 				D9CEEEAE168423CA00B236B5 /* OFTHeader.m in Sources */,
 				D9CEEEAF168423CA00B236B5 /* OFTProxyCommand.m in Sources */,
 				D9CEEEB0168423CA00B236B5 /* OFTProxyConnection.m in Sources */,
+				63E1D7C718C14231003A60FC /* UIActionSheet+Blocks.m in Sources */,
 				D9CEEEB1168423CA00B236B5 /* OFTServer.m in Sources */,
 				D9CEEEB2168423CA00B236B5 /* OSCARConnection.m in Sources */,
 				63D2BB1D1856A0D200FFE4B7 /* OTRCertificateDomainViewController.m in Sources */,

@@ -27,7 +27,7 @@
 #import "OTRChatInputBar.h"
 #import "OTRTitleSubtitleView.h"
 
-@interface OTRChatViewController : UIViewController <UIActionSheetDelegate, UISplitViewControllerDelegate,UIAlertViewDelegate,UITableViewDataSource,UITableViewDelegate,NSFetchedResultsControllerDelegate,OTRChatInputBarDelegate>
+@interface OTRChatViewController : UIViewController <UIActionSheetDelegate, UISplitViewControllerDelegate,UITableViewDataSource,UITableViewDelegate,NSFetchedResultsControllerDelegate,OTRChatInputBarDelegate>
 {
     NSMutableArray * showDateForRowArray;
     NSDate *_previousShownSentDate;

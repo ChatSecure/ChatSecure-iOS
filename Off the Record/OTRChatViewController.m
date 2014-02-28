@@ -33,6 +33,8 @@
 #import "OTRStatusMessageCell.h"
 #import "OTRUtilities.h"
 
+#import "UIAlertView+Blocks.h"
+
 
 
 @interface OTRChatViewController(Private)
@@ -356,21 +358,33 @@
             
             
             UIAlertView * alert;
+            __weak OTRChatViewController * weakSelf = self;
+            RIButtonItem * verifiedButtonItem = [RIButtonItem itemWithLabel:VERIFIED_STRING action:^{
+                [[OTRKit sharedInstance] changeVerifyFingerprintForUsername:weakSelf.buddy.accountName accountName:weakSelf.buddy.account.username protocol:weakSelf.buddy.account.protocol verrified:YES];
+                [weakSelf refreshLockButton];
+            }];
+            RIButtonItem * notVerifiedButtonItem = [RIButtonItem itemWithLabel:NOT_VERIFIED_STRING action:^{
+                [[OTRKit sharedInstance] changeVerifyFingerprintForUsername:weakSelf.buddy.accountName accountName:weakSelf.buddy.account.username protocol:weakSelf.buddy.account.protocol verrified:NO];
+                [weakSelf refreshLockButton];
+            }];
+            RIButtonItem * verifyLaterButtonItem = [RIButtonItem itemWithLabel:VERIFY_LATER_STRING action:^{
+                [[OTRKit sharedInstance] changeVerifyFingerprintForUsername:weakSelf.buddy.accountName accountName:weakSelf.buddy.account.username protocol:weakSelf.buddy.account.protocol verrified:NO];
+                [weakSelf refreshLockButton];
+            }];
+
             if(ourFingerprintString && theirFingerprintString) {
                 msg = [NSString stringWithFormat:@"%@, %@:\n%@\n\n%@ %@:\n%@\n", YOUR_FINGERPRINT_STRING, buddy.account.username, ourFingerprintString, THEIR_FINGERPRINT_STRING, buddy.accountName, theirFingerprintString];
                 if(trusted)
                 {
-                    alert = [[UIAlertView alloc] initWithTitle:VERIFY_FINGERPRINT_STRING message:msg delegate:self cancelButtonTitle:VERIFIED_STRING otherButtonTitles:NOT_VERIFIED_STRING, nil];
-                    alert.tag = ALERTVIEW_VERIFIED_TAG;
+                    alert = [[UIAlertView alloc] initWithTitle:VERIFY_FINGERPRINT_STRING message:msg cancelButtonItem:verifiedButtonItem otherButtonItems:notVerifiedButtonItem, nil];
                 }
                 else
                 {
-                    alert = [[UIAlertView alloc] initWithTitle:VERIFY_FINGERPRINT_STRING message:msg delegate:self cancelButtonTitle:VERIFY_LATER_STRING otherButtonTitles:VERIFIED_STRING, nil];
-                    alert.tag = ALERTVIEW_NOT_VERIFIED_TAG;
+                    alert = [[UIAlertView alloc] initWithTitle:VERIFY_FINGERPRINT_STRING message:msg cancelButtonItem:verifyLaterButtonItem otherButtonItems:verifiedButtonItem, nil];
                 }
             } else {
                 msg = SECURE_CONVERSATION_STRING;
-               alert = [[UIAlertView alloc] initWithTitle:nil message:msg delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
+                alert = [[UIAlertView alloc] initWithTitle:nil message:msg delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
             }
                             
             [alert show];
@@ -425,21 +439,6 @@
     self.navigationItem.rightBarButtonItem = nil;
     [self refreshLockButton];
 }
-
--(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if(alertView.cancelButtonIndex != buttonIndex && alertView.tag == ALERTVIEW_NOT_VERIFIED_TAG)
-    {
-        [[OTRKit sharedInstance] changeVerifyFingerprintForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol verrified:YES];
-        [self refreshLockButton];
-    }
-    else if(alertView.cancelButtonIndex != buttonIndex && alertView.tag == ALERTVIEW_VERIFIED_TAG)
-    {
-        [[OTRKit sharedInstance] changeVerifyFingerprintForUsername:buddy.accountName accountName:buddy.account.username  protocol:buddy.account.protocol verrified:NO];
-        [self refreshLockButton];
-    }
-}
-
 
 - (void) refreshView {
     _messagesFetchedResultsController = nil;
