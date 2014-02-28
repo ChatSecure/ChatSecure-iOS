@@ -1,6 +1,6 @@
 #import "OTRManagedStatus.h"
 #import "Strings.h"
-
+#import "OTRLog.h"
 
 @interface OTRManagedStatus ()
 
@@ -29,6 +29,11 @@
 +(OTRManagedStatus *)newStatus:(OTRBuddyStatus)newStatus withMessage:(NSString *)newMessage withBuddy:(OTRManagedBuddy *)newBuddy incoming:(BOOL)newIsIncoming inContext:(NSManagedObjectContext *)context
 {
     OTRManagedStatus * managedStatus = [OTRManagedStatus MR_createInContext:context];
+    NSError *error = nil;
+    [context obtainPermanentIDsForObjects:@[managedStatus] error:&error];
+    if (error) {
+        DDLogError(@"Error obtaining permanent ID for managedStatus: %@", error);
+    }
   
     managedStatus.statusValue = newStatus;
     
