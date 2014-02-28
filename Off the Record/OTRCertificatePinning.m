@@ -18,9 +18,6 @@
 #import "OTRConstants.h"
 #import "OTRLog.h"
 
-#define keychainKeyPrefix @"sslcert."
-#define keychainDictionaryKey @"keychainDictionaryKey"
-
 @implementation OTRCertificatePinning
 
 - (id)initWithDefaultCertificates

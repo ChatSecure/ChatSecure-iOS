@@ -11,6 +11,7 @@
 #import "OTRManagedBuddy.h"
 #import "OTRImages.h"
 #import "OTRManagedAccount.h"
+#import "OTRManagedStatusMessage.h"
 
 @implementation OTRBuddyCell
 
@@ -47,7 +48,7 @@
         }
         
         OTRBuddyStatus buddyStatus = OTRBuddyStatusOffline;
-        OTRManagedStatus * status = [_buddy currentStatusMessage];
+        OTRManagedStatusMessage * status = [_buddy currentStatusMessage];
         if (status) {
             buddyStatus = status.statusValue;
         }
@@ -61,7 +62,7 @@
         
         
         if (self.showStatus) {
-            self.detailTextLabel.text = [OTRManagedStatus statusMessageWithStatus:buddyStatus];
+            self.detailTextLabel.text = [OTRManagedStatusMessage statusMessageWithStatus:buddyStatus];
         }
         else if (buddy.account.displayName.length) {
             self.detailTextLabel.text = buddy.account.displayName;
@@ -92,13 +93,6 @@
         self.textLabel.text = nil;
         self.imageView.image = nil;
     }
-}
-
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated
-{
-    [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
 }
 
 

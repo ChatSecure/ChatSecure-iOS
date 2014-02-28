@@ -26,6 +26,10 @@
 #import "OTRConstants.h"
 #import "OTRManagedOscarAccount.h"
 #import "OTRManagedXMPPAccount.h"
+#import "OTRManagedXMPPTorAccount.h"
+#import "OTRProtocolManager.h"
+
+#import "OTRLog.h"
 
 #import "OTRLog.h"
 
@@ -45,12 +49,12 @@
     NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
     OTRManagedAccount * acct = (OTRManagedAccount *)[context existingObjectWithID:account.objectID error:nil];
     
+    [[OTRProtocolManager sharedInstance] removeProtocolManagerForAccount:acct];
+    
     [acct prepareBuddiesandMessagesForDeletion];
     [acct MR_deleteEntity];
     
     [context MR_saveToPersistentStoreAndWait];
-    
-   
 }
 
 + (NSArray *)allAccountsAbleToAddBuddies  {
@@ -80,7 +84,15 @@
     
     NSArray * accounts = [OTRManagedAccount MR_findAllWithPredicate:autoLoginPredicate];
     
-    return accounts;
+    //remove all tor accounts from auto login
+    NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+        if ([evaluatedObject isKindOfClass:[OTRManagedXMPPTorAccount class]]) {
+            return NO;
+        }
+        return YES;
+    }];
+    
+    return [accounts filteredArrayUsingPredicate:predicate];
 }
 
 

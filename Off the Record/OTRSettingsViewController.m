@@ -34,9 +34,11 @@
 #import "OTRAppDelegate.h"
 #import "UserVoice.h"
 #import "OTRAccountTableViewCell.h"
+#import "OTRCreateAccountChooserViewController.h"
 
-#define ACTIONSHEET_DISCONNECT_TAG 1
-#define ALERTVIEW_DELETE_TAG 1
+NSUInteger const kOTRActionSheetDisconnectTag = 1;
+NSUInteger const kOTRActionSheetPickTypeTag = 2;
+NSUInteger const kOTRAlertViewDeleteTag = 3;
 
 @interface OTRSettingsViewController(Private)
 - (void) addAccount:(id)sender;
@@ -194,7 +196,7 @@
 {
     if (indexPath.section == 0) { // Accounts
         if (indexPath.row == [self.accountsFetchedResultsController.sections[0] numberOfObjects]) {
-            [self addAccount:nil];
+            [self addAccount:[tableView cellForRowAtIndexPath:indexPath]];
         } else {
             OTRManagedAccount *account = [self.accountsFetchedResultsController objectAtIndexPath:indexPath];
             
@@ -204,7 +206,7 @@
                 UIActionSheet *logoutSheet = [[UIActionSheet alloc] initWithTitle:LOGOUT_STRING delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:LOGOUT_STRING otherButtonTitles: nil];
                 self.selectedAccount = account;
                 self.selectedIndexPath = indexPath;
-                logoutSheet.tag = ACTIONSHEET_DISCONNECT_TAG;
+                logoutSheet.tag = kOTRActionSheetDisconnectTag;
                 [OTR_APP_DELEGATE presentActionSheet:logoutSheet inView:self.view];
             }
         }
@@ -227,7 +229,7 @@
     {
         OTRManagedAccount *account = [self.accountsFetchedResultsController objectAtIndexPath:indexPath];
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:DELETE_ACCOUNT_TITLE_STRING message:[NSString stringWithFormat:@"%@ %@?", DELETE_ACCOUNT_MESSAGE_STRING, account.username] delegate:self cancelButtonTitle:CANCEL_STRING otherButtonTitles:OK_STRING, nil];
-        alert.tag = ALERTVIEW_DELETE_TAG;
+        alert.tag = kOTRAlertViewDeleteTag;
         self.selectedIndexPath = indexPath;
         self.selectedAccount = account;
         [alert show];
@@ -251,12 +253,9 @@
 
 - (void) addAccount:(id)sender {
     
-    OTRNewAccountViewController * newAccountView = [[OTRNewAccountViewController alloc] init];
-    
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:newAccountView];
-    nav.modalPresentationStyle = UIModalPresentationFormSheet;
-    [self presentViewController:nav animated:YES completion:nil];
-    
+    UIActionSheet * actionSheet = [[UIActionSheet alloc] initWithTitle:@"New or Create Account" delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:@"Create New Account",@"Login to Existing Account", nil];
+    actionSheet.tag = kOTRActionSheetPickTypeTag;
+    [actionSheet showInView:self.view];
 }
 
 #pragma mark OTRSettingDelegate method
@@ -295,7 +294,7 @@
 
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex 
 {
-    if (actionSheet.tag == ACTIONSHEET_DISCONNECT_TAG) {
+    if (actionSheet.tag == kOTRActionSheetDisconnectTag) {
         
         id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:selectedAccount];
         
@@ -303,6 +302,24 @@
         {
             [protocol disconnect];
         }
+    }
+    else if (actionSheet.tag == kOTRActionSheetPickTypeTag)
+    {
+        if (buttonIndex == 0) {
+            OTRCreateAccountChooserViewController * createAccountChooser = [[OTRCreateAccountChooserViewController alloc] init];
+            UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:createAccountChooser];
+            nav.modalPresentationStyle = UIModalPresentationFormSheet;
+            [self presentViewController:nav animated:YES completion:nil];
+        }
+        else if (buttonIndex == 1)
+        {
+            OTRNewAccountViewController * newAccountView = [[OTRNewAccountViewController alloc] init];
+            
+            UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:newAccountView];
+            nav.modalPresentationStyle = UIModalPresentationFormSheet;
+            [self presentViewController:nav animated:YES completion:nil];
+        }
+        
     }
 }
 
@@ -318,7 +335,7 @@
 }
 
 - (void) alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
-    if (alertView.tag == ALERTVIEW_DELETE_TAG) {
+    if (alertView.tag == kOTRAlertViewDeleteTag) {
         if (buttonIndex != alertView.cancelButtonIndex) {
             if([selectedAccount isConnected])
             {

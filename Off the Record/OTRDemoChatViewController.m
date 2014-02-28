@@ -14,7 +14,6 @@
 
 @implementation OTRDemoChatViewController
 
-//@synthesize lockVerifiedButton;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {

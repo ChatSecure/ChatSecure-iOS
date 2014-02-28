@@ -29,10 +29,8 @@
 {
 #ifdef USERVOICE_ENABLED
     UVConfig *config = [UVConfig configWithSite:@"chatsecure.uservoice.com"
-                                         andKey:USERVOICE_KEY
-                                      andSecret:USERVOICE_SECRET];
-    //config.customFields = @{@"device_model": [[UIDevice currentDevice] model],@"ios_version":[[UIDevice currentDevice] systemVersion],@"chatsecure_version":[[[NSBundle mainBundle] infoDictionary] valueForKey:@"CFBundleVersion"]};
-    
+                                         andKey:kOTRUservoiceKey
+                                      andSecret:kOTRUservoiceSecret];
     [self.delegate presentUserVoiceWithConfig:config];
 #endif
 }

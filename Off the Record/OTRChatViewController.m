@@ -33,14 +33,17 @@
 #import "OTRStatusMessageCell.h"
 #import "OTRUtilities.h"
 #import "OTRLockButton.h"
-
 #import "OTRImages.h"
-
 #import "OTRComposingImageView.h"
 
-static CGFloat const messageMarginTop = 7;
-static CGFloat const messageMarginBottom = 10;
-static NSTimeInterval const messageSentDateShowTimeInterval = 5*60; // 5 minutes
+static NSUInteger const kOTRActionSheetEncryptionOptionsTag = 201;
+static NSUInteger const kOTRAlertViewVerifiedTag = 202;
+static NSUInteger const kOTRAlertViewNotVerifiedTag = 203;
+static CGFloat const kOTRChatBarHeight = 40;
+static CGFloat const kOTRMessageMarginBottom = 10;
+static CGFloat const kOTRMessageMarginTop = 7;
+static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
+
 
 typedef NS_ENUM(NSInteger, OTRChatViewTags) {
     OTRChatViewAlertViewVerifiedTag            = 200,
@@ -187,7 +190,7 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
     [self.chatHistoryTableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
     
     
-    _previousTextViewContentHeight = messageFontSize+20;
+    _previousTextViewContentHeight = kOTRMessageFontSize+20;
         
     CGRect barRect = CGRectMake(0, self.view.frame.size.height-self.initialBarChatBarHeight, self.view.frame.size.width, self.initialBarChatBarHeight);
     
@@ -387,7 +390,7 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
                 [[OTRKit sharedInstance] disableEncryptionForUsername:self.buddy.accountName accountName:self.buddy.account.username protocol:self.buddy.account.protocol];
             } else {
                 void (^sendInitateOTRMessage)(void) = ^void (void) {
-                    [OTRCodec generateOtrInitiateOrRefreshMessageTobuddy:self.buddy completionBlock:^(OTRManagedMessage *message) {
+                    [OTRCodec generateOtrInitiateOrRefreshMessageTobuddy:self.buddy completionBlock:^(OTRManagedChatMessage *message) {
                         [OTRProtocolManager sendMessage:message];
                     }];
                 };
@@ -594,12 +597,12 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
     __block BOOL showDate = NO;
     if (indexPath.row < [[self.messagesFetchedResultsController sections][indexPath.section] numberOfObjects]) {
         id messageOrStatus = [self.messagesFetchedResultsController objectAtIndexPath:indexPath];
-        if([messageOrStatus isKindOfClass:[OTRManagedMessage class]]) {
+        if([messageOrStatus isKindOfClass:[OTRManagedChatMessage class]]) {
             //only OTRManagedMessage get dates
             
-            OTRManagedMessage * currentMessage = (OTRManagedMessage *)messageOrStatus;
+            OTRManagedChatMessage * currentMessage = (OTRManagedChatMessage *)messageOrStatus;
             
-            if (!_previousShownSentDate || [currentMessage.date timeIntervalSinceDate:_previousShownSentDate] > messageSentDateShowTimeInterval) {
+            if (!_previousShownSentDate || [currentMessage.date timeIntervalSinceDate:_previousShownSentDate] > kOTRMessageSentDateShowTimeInterval) {
                 _previousShownSentDate = currentMessage.date;
                 showDate = YES;
             }
@@ -619,22 +622,21 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
     {
         BOOL showDate = [self showDateForMessageAtIndexPath:indexPath];
         id messageOrStatus = [self.messagesFetchedResultsController objectAtIndexPath:indexPath];
-        if([messageOrStatus isKindOfClass:[OTRManagedMessage class]]) {
+        if([messageOrStatus isKindOfClass:[OTRManagedChatMessage class]]) {
 
-            OTRManagedMessage * message = (OTRManagedMessage *)messageOrStatus;
+            OTRManagedChatMessage * message = (OTRManagedChatMessage *)messageOrStatus;
             height = [OTRMessageTableViewCell heightForMesssage:message.message showDate:showDate];
             
         }
         else {
-            height = messageSentDateLabelHeight;
+            height = kOTRMessageSentDateLabelHeight;
         }
     }
     else
     {
         //Composing messsage height
         CGSize messageTextLabelSize =[OTRMessageTableViewCell messageTextLabelSize:@"T"];
-        height = messageTextLabelSize.height+messageMarginTop+messageMarginBottom;
-        height = 35.0;
+        height = messageTextLabelSize.height+kOTRMessageMarginTop+kOTRMessageMarginBottom;
     }
     return height;
 }
@@ -676,8 +678,8 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
         id messageOrStatus = [self.messagesFetchedResultsController objectAtIndexPath:indexPath];
         BOOL showDate = [self showDateForMessageAtIndexPath:indexPath];
 
-        if ([messageOrStatus isKindOfClass:[OTRManagedMessage class]]) {
-            OTRManagedMessage * message = (OTRManagedMessage *)messageOrStatus;
+        if ([messageOrStatus isKindOfClass:[OTRManagedChatMessage class]]) {
+            OTRManagedChatMessage * message = (OTRManagedChatMessage *)messageOrStatus;
             static NSString *messageCellIdentifier = @"messageCell";
             OTRMessageTableViewCell * cell;
             cell = [tableView dequeueReusableCellWithIdentifier:messageCellIdentifier];
@@ -689,7 +691,7 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
             }
             return cell;
         }
-        else if ([messageOrStatus isKindOfClass:[OTRManagedStatus class]] || [messageOrStatus isKindOfClass:[OTRManagedEncryptionStatusMessage class]])
+        else if ([messageOrStatus isKindOfClass:[OTRManagedStatusMessage class]] || [messageOrStatus isKindOfClass:[OTRManagedEncryptionMessage class]])
         {
             static NSString *statusCellIdentifier = @"statusCell";
             UITableViewCell * cell;
@@ -700,9 +702,9 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
             
             
             NSString * cellText = nil;
-            OTRManagedMessageAndStatus * managedStatus = (OTRManagedMessageAndStatus *)messageOrStatus;
+            OTRManagedMessage * managedStatus = (OTRManagedMessage *)messageOrStatus;
             
-            if ([messageOrStatus isKindOfClass:[OTRManagedStatus class]]) {
+            if ([messageOrStatus isKindOfClass:[OTRManagedStatusMessage class]]) {
                 if (managedStatus.isIncomingValue) {
                     cellText = [NSString stringWithFormat:INCOMING_STATUS_MESSAGE,managedStatus.message];
                 }
@@ -730,8 +732,6 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
         return _buddyFetchedResultsController;
     
     NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"self == %@",self.buddy];
-    //NSPredicate * chatStateFilter = [NSPredicate predicateWithFormat:@"chatState == %d OR chatState == %d",kOTRChatStateComposing,kOTRChatStatePaused];
-    //NSPredicate *predicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[buddyFilter,chatStateFilter]];
     
     _buddyFetchedResultsController = [OTRManagedBuddy MR_fetchAllGroupedBy:nil withPredicate:buddyFilter sortedBy:nil ascending:YES delegate:self];
     
@@ -744,11 +744,11 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
         return _messagesFetchedResultsController;
     }
     
-    NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"self.buddy == %@",self.buddy];
-    NSPredicate * encryptionFilter = [NSPredicate predicateWithFormat:@"isEncrypted == NO"];
+    NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"%K == %@",OTRManagedMessageRelationships.buddy,self.buddy];
+    NSPredicate * encryptionFilter = [NSPredicate predicateWithFormat:@"%K == NO",OTRManagedMessageAttributes.isEncrypted];
     NSPredicate * messagePredicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[buddyFilter,encryptionFilter]];
 
-    _messagesFetchedResultsController = [OTRManagedMessageAndStatus MR_fetchAllGroupedBy:nil withPredicate:messagePredicate sortedBy:@"date" ascending:YES delegate:self];
+    _messagesFetchedResultsController = [OTRManagedMessage MR_fetchAllGroupedBy:nil withPredicate:messagePredicate sortedBy:OTRManagedMessageAttributes.date ascending:YES delegate:self];
 
     return _messagesFetchedResultsController;
 }
@@ -779,8 +779,8 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
                 
                 
                 id possibleMessage = [controller objectAtIndexPath:newIndexPath];
-                if ([possibleMessage isKindOfClass:[OTRManagedMessage class]]) {
-                    ((OTRManagedMessage *)possibleMessage).isReadValue = YES;
+                if ([possibleMessage isKindOfClass:[OTRManagedChatMessage class]]) {
+                    ((OTRManagedChatMessage *)possibleMessage).isReadValue = YES;
                 }
                 
             }
@@ -818,8 +818,7 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
     }
     NSString * text = inputBar.textView.text;
     if ([text length]) {
-        NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
-        OTRManagedMessage * message = [OTRManagedMessage newMessageToBuddy:self.buddy message:text encrypted:NO inContext:context];
+        OTRManagedChatMessage * message = [OTRManagedChatMessage newMessageToBuddy:self.buddy message:text encrypted:NO];
         
         [context MR_saveToPersistentStoreAndWait];
         
@@ -832,13 +831,13 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
                     [self addLockSpinner];
                     [OTRCodec generatePrivateKeyFor:self.buddy.account completionBlock:^(BOOL generatedKey) {
                         [self removeLockSpinner];
-                        [OTRCodec encodeMessage:message completionBlock:^(OTRManagedMessage *message) {
+                        [OTRCodec encodeMessage:message completionBlock:^(OTRManagedChatMessage *message) {
                             [OTRProtocolManager sendMessage:message];
                         }];
                     }];
                 }
                 else {
-                    [OTRCodec encodeMessage:message completionBlock:^(OTRManagedMessage *message) {
+                    [OTRCodec encodeMessage:message completionBlock:^(OTRManagedChatMessage *message) {
                         [OTRProtocolManager sendMessage:message];
                     }];
                 }

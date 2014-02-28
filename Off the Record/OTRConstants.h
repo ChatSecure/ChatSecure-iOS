@@ -20,87 +20,92 @@
 //  You should have received a copy of the GNU General Public License
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
-static NSString *const kOTRProtocolLoginSuccess                   = @"LoginSuccessNotification";
-static NSString *const kOTRProtocolLoginFail                      = @"LoginFailedNotification";
-static NSString *const kOTRProtocolLoginFailErrorKey              = @"ProtocolLoginFailErrorKey";
-static NSString *const kOTRProtocolLoginFailSSLStatusKey          = @"kOTRProtocolLoginFailSSLStatusKey";
-static NSString *const kOTRProtocolLoginFailHostnameKey           = @"kOTRProtocolLoginFailHostnameKey";
-static NSString *const kOTRProtocolLoginFailSSLCertificateDataKey = @"kOTRProtocolLoginFailSSLCertificateData";
-static NSString *const kOTRMessageReceived                        = @"MessageReceivedNotification";
-static NSString *const kOTRMessageReceiptResonseReceived          = @"MessageReceiptResponseNotification";
-static NSString *const kOTRStatusUpdate                           = @"StatusUpdatedNotification";
-static NSString *const kOTRProtocolDiconnect                      = @"DisconnectedNotification";
-static NSString *const kOTRSendMessage                            = @"SendMessageNotification";
+extern NSString *const kOTRProtocolLoginSuccess;
+extern NSString *const kOTRProtocolLoginFail;
+extern NSString *const kOTRProtocolLoginFailErrorKey;
+extern NSString *const kOTRProtocolLoginFailSSLStatusKey;
+extern NSString *const kOTRProtocolLoginFailHostnameKey;
+extern NSString *const kOTRProtocolLoginFailSSLCertificateDataKey;
+extern NSString *const kOTRMessageReceived;
+extern NSString *const kOTRMessageReceiptResonseReceived;
+extern NSString *const kOTRStatusUpdate;
+extern NSString *const kOTRProtocolDiconnect;
+extern NSString *const kOTRSendMessage;
+extern NSString *const kOTRNotificationErrorKey;
 
-static NSString *const kOTRFacebookDomain   = @"chat.facebook.com";
-static NSString *const kOTRGoogleTalkDomain = @"talk.google.com";
-static NSString *const kOTRProtocolTypeXMPP = @"xmpp";
-static NSString *const kOTRProtocolTypeAIM  = @"prpl-oscar";
+extern NSString *const kOTRFacebookDomain;
+extern NSString *const kOTRGoogleTalkDomain;
+extern NSString *const kOTRProtocolTypeXMPP;
+extern NSString *const kOTRProtocolTypeAIM;
 
-static NSString *const kOTRNotificationAccountNameKey = @"kOTRNotificationAccountNameKey";
-static NSString *const kOTRNotificationUserNameKey    = @"kOTRNotificationUserNameKey";
-static NSString *const kOTRNotificationProtocolKey    = @"kOTRNotificationProtocolKey";
+extern NSString *const kOTRNotificationAccountNameKey;
+extern NSString *const kOTRNotificationUserNameKey;
+extern NSString *const kOTRNotificationProtocolKey;
 
-static NSString *const kOTRXMPPAccountAllowSelfSignedSSLKey      = @"kOTRXMPPAccountAllowSelfSignedSSLKey";
-static NSString *const kOTRXMPPAccountSendDeliveryReceiptsKey    = @"kOTRXMPPAccountSendDeliveryReceiptsKey";
-static NSString *const kOTRXMPPAccountSendTypingNotificationsKey = @"kOTRXMPPAccountSendTypingNotificationsKey";
-static NSString *const kOTRXMPPAccountAllowSSLHostNameMismatch   = @"kOTRXMPPAccountAllowSSLHostNameMismatch";
-static NSString *const kOTRXMPPAccountPortNumber                 = @"kOTRXMPPAccountPortNumber";
-static NSString *const kOTRXMPPAllowPlaintextAuthenticationKey   = @"kOTRXMPPAllowPlaintextAuthenticationKey";
-static NSString *const kOTRXMPPRequireTLSKey                     = @"kOTRXMPPRequireTLSKey";
+extern NSString *const kOTRXMPPAccountAllowSelfSignedSSLKey;
+extern NSString *const kOTRXMPPAccountSendDeliveryReceiptsKey;
+extern NSString *const kOTRXMPPAccountSendTypingNotificationsKey;
+extern NSString *const kOTRXMPPAccountAllowSSLHostNameMismatch;
+extern NSString *const kOTRXMPPAccountPortNumber;
+extern NSString *const kOTRXMPPAllowPlaintextAuthenticationKey;
+extern NSString *const kOTRXMPPRequireTLSKey;
 
-static NSString *const kOTRXMPPResource = @"chatsecure";
+extern NSString *const kOTRXMPPResource;
 
-static NSString *const kOTRFacebookUsernameLink = @"http://www.facebook.com/help/?faq=211813265517027#What-are-usernames?";
+extern NSString *const kOTRFacebookUsernameLink;
 
-static NSString *const kOTRFeedbackEmail = @"support@chatsecure.org";
+extern NSString *const kOTRFeedbackEmail;
 
-static NSString *const kOTRServiceName            = @"org.chatsecure.ChatSecure";
-static NSString *const kOTRCertificateServiceName = @"org.chatsecure.ChatSecure.Certificate";
+extern NSString *const kOTRServiceName;
+extern NSString *const kOTRCertificateServiceName;
 
-static NSString *const MESSAGE_PROCESSED_NOTIFICATION  = @"MessageProcessedNotification";
-static NSString *const kOTREncryptionStateNotification = @"kOTREncryptionStateNotification";
+extern NSString *const MESSAGE_PROCESSED_NOTIFICATION;
+extern NSString *const kOTREncryptionStateNotification;
 
-static NSString *const kOTRSettingKeyFontSize                 = @"kOTRSettingKeyFontSize";
-static NSString *const kOTRSettingKeyDeleteOnDisconnect       = @"kOTRSettingKeyDeleteOnDisconnect";
-static NSString *const kOTRSettingKeyOpportunisticOtr         = @"kOTRSettingKeyOpportunisticOtr";
-static NSString *const kOTRSettingKeyShowDisconnectionWarning = @"kOTRSettingKeyShowDisconnectionWarning";
-static NSString *const kOTRSettingUserAgreedToEULA            = @"kOTRSettingUserAgreedToEULA";
-static NSString *const kOTRSettingAccountsKey                 = @"kOTRSettingAccountsKey";
-static NSString *const kOTRSettingKeyLanguage                 = @"userSelectedSetting";
+extern NSString *const kOTRSettingKeyFontSize;
+extern NSString *const kOTRSettingKeyDeleteOnDisconnect;
+extern NSString *const kOTRSettingKeyOpportunisticOtr;
+extern NSString *const kOTRSettingKeyShowDisconnectionWarning;
+extern NSString *const kOTRSettingUserAgreedToEULA;
+extern NSString *const kOTRSettingAccountsKey;
+extern NSString *const kOTRSettingKeyLanguage;
 
-static NSString *const kOTRAppVersionKey     = @"kOTRAppVersionKey";
-static NSString *const OTRActivityTypeQRCode = @"OTRActivityTypeQRCode";
+extern NSString *const kOTRAppVersionKey;
+extern NSString *const OTRActivityTypeQRCode;
 
-static NSString *const OTRArchiverKey = @"OTRArchiverKey";
+extern NSString *const OTRArchiverKey;
 
-static NSString *const FACEBOOK_APP_ID  = @"447241325394334";
-static NSString *const GOOGLE_APP_ID    = @"719137339288.apps.googleusercontent.com";
-static NSString *const GOOGLE_APP_SCOPE = @"https://www.googleapis.com/auth/googletalk";
+extern NSString *const FACEBOOK_APP_ID;
+extern NSString *const GOOGLE_APP_ID;
+extern NSString *const GOOGLE_APP_SCOPE;
+
+extern NSUInteger const kOTRActionSheetLinkTag;
+extern NSString *const kOTRAccountDomainKey;
 
 //Chatview
-static CGFloat const sentDateFontSize            = 13;
-static CGFloat const deliveredFontSize           = 13;
-static CGFloat const messageFontSize             = 16;
-static CGFloat const messageSentDateLabelHeight  = sentDateFontSize + 7;
-static CGFloat const messageDeliveredLabelHeight = deliveredFontSize + 7;
+extern CGFloat const kOTRSentDateFontSize;
+extern CGFloat const kOTRDeliveredFontSize;
+extern CGFloat const kOTRMessageFontSize;
+extern CGFloat const kOTRMessageSentDateLabelHeight;
+extern CGFloat const kOTRMessageDeliveredLabelHeight;
 
 
-typedef enum {
+typedef NS_ENUM(NSUInteger, OTRChatState) {
     kOTRChatStateUnknown   = 0,
     kOTRChatStateActive    = 1,
     kOTRChatStateComposing = 2,
     kOTRChatStatePaused    = 3,
     kOTRChatStateInactive  = 4,
     kOTRChatStateGone      = 5
-} OTRChatState;
+};
 
 typedef NS_ENUM(NSUInteger, OTRAccountType) {
     OTRAccountTypeNone        = 0,
     OTRAccountTypeFacebook    = 1,
     OTRAccountTypeGoogleTalk  = 2,
     OTRAccountTypeJabber      = 3,
-    OTRAccountTypeAIM         = 4
+    OTRAccountTypeAIM         = 4,
+    OTRAccountTypeXMPPTor     = 5
 };
 
 typedef NS_ENUM(NSUInteger, OTRProtocolType) {
@@ -116,7 +121,3 @@ typedef NS_ENUM(NSUInteger, OTRBuddyStatus) {
     OTRBuddyStatusAway      = 1,
     OTRBuddyStatusAvailable = 0
 };
-
-
-
-

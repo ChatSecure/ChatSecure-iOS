@@ -22,10 +22,8 @@
 
 #import "OTRAboutViewController.h"
 #import "Strings.h"
+#import "OTRConstants.h"
 #import "OTRAppDelegate.h"
-
-#define ACTIONSHEET_SHARE_TAG 2
-#define ACTIONSHEET_LINK_TAG 1
 
 @interface OTRAboutViewController(Private)
 - (NSArray*) buttonTitlesForShareButton;
@@ -141,7 +139,7 @@
     {
         self.lastActionLink = request.URL;
         UIActionSheet *action = [[UIActionSheet alloc] initWithTitle:[[request.URL absoluteURL] description] delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:OPEN_IN_SAFARI_STRING, nil];
-        action.tag = ACTIONSHEET_LINK_TAG;
+        action.tag = kOTRActionSheetLinkTag;
         [OTR_APP_DELEGATE presentActionSheet:action inView:self.view];
     }
     return NO;
@@ -149,7 +147,7 @@
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if (actionSheet.tag == ACTIONSHEET_LINK_TAG) {
+    if (actionSheet.tag == kOTRActionSheetLinkTag) {
         if (buttonIndex != actionSheet.cancelButtonIndex)
         {
             [[UIApplication sharedApplication] openURL:[lastActionLink absoluteURL]];

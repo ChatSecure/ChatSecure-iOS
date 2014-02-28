@@ -19,7 +19,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self createAutoLoginSwitch];
     [self addCellinfoWithSection:0 row:0 labelText:LOGIN_AUTOMATICALLY_STRING cellType:kCellTypeSwitch userInputView:self.autoLoginSwitch];
 
 }
@@ -122,7 +121,7 @@
     [self.account refreshTokenIfNeeded:^(NSError * error) {
         if (!error) {
             if ([self.account.accessTokenString length]) {
-                [self showLoginProgress];
+                [self showHUDWithText:LOGGING_IN_STRING];
                 id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
                 [protocol connectWithPassword:self.account.accessTokenString];
                 self.timeoutTimer = [NSTimer scheduledTimerWithTimeInterval:45.0 target:self selector:@selector(timeout:) userInfo:nil repeats:NO];

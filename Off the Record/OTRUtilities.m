@@ -8,6 +8,7 @@
 
 #import "OTRUtilities.h"
 #import "OTRManagedBuddy.h"
+#import "OTRManagedMessage.h"
 #import "OTRManagedGroup.h"
 #import <Security/SecureTransport.h>
 
@@ -74,7 +75,7 @@
     
     [OTRManagedBuddy MR_deleteAllMatchingPredicate:nil];
     //Delete all stored messages
-    [OTRManagedMessageAndStatus MR_deleteAllMatchingPredicate:nil];
+    [OTRManagedMessage MR_deleteAllMatchingPredicate:nil];
     //Delete all Groups
     [OTRManagedGroup MR_deleteAllMatchingPredicate:nil];
     

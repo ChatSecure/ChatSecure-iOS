@@ -38,6 +38,8 @@
 #import "OTRUtilities.h"
 #import "OTRFingerprintSetting.h"
 
+#import "OTRUtilities.h"
+
 @interface OTRSettingsManager(Private)
 - (void) populateSettings;
 @end

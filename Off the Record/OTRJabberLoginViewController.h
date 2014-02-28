@@ -9,9 +9,6 @@
 #import "OTRXMPPLoginViewController.h"
 
 @interface OTRJabberLoginViewController : OTRXMPPLoginViewController
-{
-    UITableViewCell * selectedCell;
-}
 
 @property (nonatomic, strong) UITextField *domainTextField;
 @property (nonatomic, strong) UITextField *portTextField;
