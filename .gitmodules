@@ -62,3 +62,6 @@
 [submodule "Submodules/SIAlertView"]
 	path = Submodules/SIAlertView
 	url = git@github.com:ChatSecure/SIAlertView.git
+[submodule "Submodules/UIAlertView-Blocks"]
+	path = Submodules/UIAlertView-Blocks
+	url = git@github.com:jivadevoe/UIAlertView-Blocks.git

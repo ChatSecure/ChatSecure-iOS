@@ -382,6 +382,8 @@
 		D96495CB15363C0F009A8C33 /* OTRViewSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = D96495CA15363C0F009A8C33 /* OTRViewSetting.m */; };
 		D96495CF15365B3F009A8C33 /* OTRValueSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = D96495CE15365B3F009A8C33 /* OTRValueSetting.m */; };
 		D96495D7153668D2009A8C33 /* OTRSettingsGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = D96495D6153668D2009A8C33 /* OTRSettingsGroup.m */; };
+		D968472618C13AA3008FDC46 /* RIButtonItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D968472318C13AA3008FDC46 /* RIButtonItem.m */; };
+		D968472718C13AA3008FDC46 /* UIAlertView+Blocks.m in Sources */ = {isa = PBXBuildFile; fileRef = D968472518C13AA3008FDC46 /* UIAlertView+Blocks.m */; };
 		D974577715BE34E7002B9192 /* 31-circle-plus.png in Resources */ = {isa = PBXBuildFile; fileRef = D974577515BE34E7002B9192 /* 31-circle-plus.png */; };
 		D974577815BE34E7002B9192 /* 31-circle-plus@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D974577615BE34E7002B9192 /* 31-circle-plus@2x.png */; };
 		D974DABD15021E540028B2F4 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D974DABC15021E540028B2F4 /* libiconv.dylib */; };
@@ -1356,6 +1358,10 @@
 		D96495CE15365B3F009A8C33 /* OTRValueSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRValueSetting.m; sourceTree = "<group>"; };
 		D96495D5153668D2009A8C33 /* OTRSettingsGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRSettingsGroup.h; sourceTree = "<group>"; };
 		D96495D6153668D2009A8C33 /* OTRSettingsGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRSettingsGroup.m; sourceTree = "<group>"; };
+		D968472218C13AA3008FDC46 /* RIButtonItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RIButtonItem.h; path = "Submodules/UIAlertView-Blocks/RIButtonItem.h"; sourceTree = "<group>"; };
+		D968472318C13AA3008FDC46 /* RIButtonItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RIButtonItem.m; path = "Submodules/UIAlertView-Blocks/RIButtonItem.m"; sourceTree = "<group>"; };
+		D968472418C13AA3008FDC46 /* UIAlertView+Blocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIAlertView+Blocks.h"; path = "Submodules/UIAlertView-Blocks/UIAlertView+Blocks.h"; sourceTree = "<group>"; };
+		D968472518C13AA3008FDC46 /* UIAlertView+Blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIAlertView+Blocks.m"; path = "Submodules/UIAlertView-Blocks/UIAlertView+Blocks.m"; sourceTree = "<group>"; };
 		D974577515BE34E7002B9192 /* 31-circle-plus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "31-circle-plus.png"; sourceTree = "<group>"; };
 		D974577615BE34E7002B9192 /* 31-circle-plus@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "31-circle-plus@2x.png"; sourceTree = "<group>"; };
 		D974DABC15021E540028B2F4 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
@@ -2990,6 +2996,17 @@
 			name = Value;
 			sourceTree = "<group>";
 		};
+		D968473218C13AA6008FDC46 /* UIAlertView+Blocks */ = {
+			isa = PBXGroup;
+			children = (
+				D968472218C13AA3008FDC46 /* RIButtonItem.h */,
+				D968472318C13AA3008FDC46 /* RIButtonItem.m */,
+				D968472418C13AA3008FDC46 /* UIAlertView+Blocks.h */,
+				D968472518C13AA3008FDC46 /* UIAlertView+Blocks.m */,
+			);
+			name = "UIAlertView+Blocks";
+			sourceTree = "<group>";
+		};
 		D9B24F0D1808A04E005174C5 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -3003,6 +3020,7 @@
 		D9CEED611684234D00B236B5 /* Submodules */ = {
 			isa = PBXGroup;
 			children = (
+				D968473218C13AA6008FDC46 /* UIAlertView+Blocks */,
 				632E9117185A88F600F7FBC8 /* SIAlertView */,
 				63E717DF182AF391004398AD /* SSKeychain */,
 				638940CD1815CAF8005F651E /* CrashReporter.framework */,
@@ -4352,9 +4370,11 @@
 				63483FB11752CED100779257 /* XMPPMessage+XEP0045.m in Sources */,
 				63483FB21752CED100779257 /* XMPPMUC.m in Sources */,
 				63483FB31752CED100779257 /* XMPPRoom.m in Sources */,
+				D968472718C13AA3008FDC46 /* UIAlertView+Blocks.m in Sources */,
 				63483FB41752CED100779257 /* XMPPvCard.xcdatamodeld in Sources */,
 				63483FB51752CED100779257 /* XMPPvCardAvatarCoreDataStorageObject.m in Sources */,
 				63483FB61752CED100779257 /* XMPPvCardCoreDataStorage.m in Sources */,
+				D968472618C13AA3008FDC46 /* RIButtonItem.m in Sources */,
 				63483FB71752CED100779257 /* XMPPvCardCoreDataStorageObject.m in Sources */,
 				63483FB81752CED100779257 /* XMPPvCardTempCoreDataStorageObject.m in Sources */,
 				63483FB91752CED100779257 /* XMPPvCardTemp.m in Sources */,
