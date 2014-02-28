@@ -34,7 +34,7 @@
 #import "OTRInLineTextEditTableViewCell.h"
 #import "OTRManagedXMPPTorAccount.h"
 #import "OTRUtilities.h"
-#import "OTRErrorManager.h"
+#import "OTRXMPPError.h"
 
 #import "SIAlertView.h"
 
@@ -392,8 +392,8 @@ NSUInteger const kNewCertAlertViewTag   = 132;
 
 - (void)protocolLoginFailed:(NSNotification*)notification
 {
-    if(HUD)
-        [HUD hide:YES];
+    if(self.HUD)
+        [self.HUD hide:YES];
     if([self.account.protocol isEqualToString:kOTRProtocolTypeXMPP])
     {
         self.alertView=nil;
@@ -417,9 +417,9 @@ NSUInteger const kNewCertAlertViewTag   = 132;
             }
         }
         else if ([error isKindOfClass:[NSError class]]) {
-            recentError = (NSError *)error;
+            self.recentError = (NSError *)error;
             
-            if([recentError.domain isEqualToString:@"kCFStreamErrorDomainSSL"] && recentError.code == errSSLPeerBadCert) {
+            if([self.recentError.domain isEqualToString:@"kCFStreamErrorDomainSSL"] && self.recentError.code == errSSLPeerBadCert) {
                 return;
             }
             else {
@@ -467,7 +467,7 @@ NSUInteger const kNewCertAlertViewTag   = 132;
         message = [message stringByAppendingString:[NSString stringWithFormat:@"✓ %@",VALID_CERTIFICATE_STRING]];
     }
     else {
-        NSString * sslErrorMessage = [OTRErrorManager errorStringWithSSLStatus:status];
+        NSString * sslErrorMessage = [OTRXMPPError errorStringWithSSLStatus:status];
         sslMessageColor = [UIColor colorWithRed:0.89f green:0.42f blue:0.36f alpha:1.00f];;
         message = [message stringByAppendingString:[NSString stringWithFormat:@"X %@",sslErrorMessage]];
     }
@@ -573,6 +573,21 @@ NSUInteger const kNewCertAlertViewTag   = 132;
     if(!parent)
     {
         [OTRAccountsManager removeAccount:self.account];
+    }
+}
+
+- (void)showAlertViewWithTitle:(NSString *)title message:(NSString *)message error:(NSError *)error {
+    UIAlertView * alertView = nil;
+    if (error) {
+        self.recentError = error;
+        alertView = [[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:nil otherButtonTitles:OK_STRING,INFO_STRING, nil];
+    }
+    else {
+        alertView = [[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
+    }
+    if (alertView) {
+        alertView.tag = kErrorAlertViewTag;
+        [alertView show];
     }
 }
 

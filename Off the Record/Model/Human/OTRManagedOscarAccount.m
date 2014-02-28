@@ -25,13 +25,13 @@
 #import "Strings.h"
 #import "OTROscarManager.h"
 #import "OTRConstants.h"
-
+#import "OTRImages.h"
 
 @implementation OTRManagedOscarAccount
 
 
 - (UIImage *)accountImage {
-    return [UIImage imageNamed:kAIMImageName];
+    return [UIImage imageNamed:OTRAimImageName];
 }
 
 - (NSString *)providerName

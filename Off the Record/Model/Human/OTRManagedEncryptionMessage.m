@@ -1,21 +1,21 @@
-#import "OTRManagedEncryptionStatusMessage.h"
+#import "OTRManagedEncryptionMessage.h"
 #import "Strings.h"
 
 #import "OTRLog.h"
 
 
-@interface OTRManagedEncryptionStatusMessage ()
+@interface OTRManagedEncryptionMessage ()
 
 // Private interface goes here.
 
 @end
 
 
-@implementation OTRManagedEncryptionStatusMessage
+@implementation OTRManagedEncryptionMessage
 
-+(OTRManagedEncryptionStatusMessage *)newEncryptionStatus:(OTRKitMessageState)newEncryptionStatus buddy:(OTRManagedBuddy *)buddy inContext:(NSManagedObjectContext *)context
++(OTRManagedEncryptionMessage *)newEncryptionStatus:(OTRKitMessageState)newEncryptionStatus buddy:(OTRManagedBuddy *)buddy inContext:(NSManagedObjectContext *)context
 {
-    OTRManagedEncryptionStatusMessage * encryptionStatusMessage = [OTRManagedEncryptionStatusMessage MR_createInContext:context];
+    OTRManagedEncryptionMessage * encryptionStatusMessage = [OTRManagedEncryptionMessage MR_createInContext:context];
     
     encryptionStatusMessage.date = [NSDate date];
     encryptionStatusMessage.isEncryptedValue = NO;
@@ -37,14 +37,10 @@
             DDLogWarn(@"Unknown Encryption State");
             break;
     }
-
-    
-    
     
     encryptionStatusMessage.message = message;
     encryptionStatusMessage.statusValue = newEncryptionStatus;
     encryptionStatusMessage.buddy = buddy;
-    encryptionStatusMessage.encryptionstatusbuddy = buddy;
     
     return encryptionStatusMessage;
 }

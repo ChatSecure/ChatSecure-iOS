@@ -46,13 +46,13 @@
     }
     account.password = nil;
     
-    NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
-    OTRManagedAccount * acct = (OTRManagedAccount *)[context existingObjectWithID:account.objectID error:nil];
+    NSManagedObjectContext * context = [NSManagedObjectContext MR_context];
+    OTRManagedAccount * acct = [account MR_inContext:context];
     
     [[OTRProtocolManager sharedInstance] removeProtocolManagerForAccount:acct];
     
-    [acct prepareBuddiesandMessagesForDeletion];
-    [acct MR_deleteEntity];
+    [acct prepareBuddiesandMessagesForDeletionInContext:context];
+    [acct MR_deleteInContext:context];
     
     [context MR_saveToPersistentStoreAndWait];
 }

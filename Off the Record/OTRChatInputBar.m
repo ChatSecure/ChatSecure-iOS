@@ -101,7 +101,7 @@
         [_sendButton addTarget:self action:@selector(sendButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         
         
-        previousTextViewContentHeight = messageFontSize+20;
+        previousTextViewContentHeight = kOTRMessageFontSize+20;
     }
     return _sendButton;
 }
@@ -134,7 +134,7 @@
         _textView.animateHeightChange = YES;
         _textView.animationDuration = 0.1;
         
-        _textView.font = [UIFont systemFontOfSize:messageFontSize];
+        _textView.font = [UIFont systemFontOfSize:kOTRMessageFontSize];
         _textView.placeholder = MESSAGE_PLACEHOLDER_STRING;
         
         _textView.clipsToBounds = YES;

@@ -28,8 +28,8 @@
 #import "OTRAppDelegate.h"
 #import "OTRMessageTableViewCell.h"
 #import "DAKeyboardControl.h"
-#import "OTRManagedStatus.h"
-#import "OTRManagedEncryptionStatusMessage.h"
+#import "OTRManagedStatusMessage.h"
+#import "OTRManagedEncryptionMessage.h"
 #import "OTRStatusMessageCell.h"
 #import "OTRUtilities.h"
 #import "OTRLockButton.h"
@@ -385,7 +385,8 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
         }
         else if (buttonIndex == 0) // Initiate/cancel encryption
         {
-            if([self.buddy currentEncryptionStatus] == kOTRKitMessageStateEncrypted)
+#warning Ask OTRKit for current status
+            if([self.buddy currentEncryptionStatusInContext:self.buddy.managedObjectContext].statusValue == kOTRKitMessageStateEncrypted)
             {
                 [[OTRKit sharedInstance] disableEncryptionForUsername:self.buddy.accountName accountName:self.buddy.account.username protocol:self.buddy.account.protocol];
             } else {
@@ -818,11 +819,13 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
     }
     NSString * text = inputBar.textView.text;
     if ([text length]) {
-        OTRManagedChatMessage * message = [OTRManagedChatMessage newMessageToBuddy:self.buddy message:text encrypted:NO];
+        NSManagedObjectContext *context = [NSManagedObjectContext MR_context];
+        OTRManagedChatMessage * message = [OTRManagedChatMessage newMessageToBuddy:self.buddy message:text encrypted:NO inContext:context];
         
         [context MR_saveToPersistentStoreAndWait];
         
-        BOOL secure = [self.buddy currentEncryptionStatus] == kOTRKitMessageStateEncrypted || [OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyOpportunisticOtr];
+#warning Ask OTRKit for current status
+        BOOL secure = [self.buddy currentEncryptionStatusInContext:self.buddy.managedObjectContext].statusValue == kOTRKitMessageStateEncrypted || [OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyOpportunisticOtr];
         if(secure)
         {
             //check if need to generate keys

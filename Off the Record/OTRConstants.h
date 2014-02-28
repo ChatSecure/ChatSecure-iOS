@@ -59,9 +59,6 @@ extern NSString *const kOTRFeedbackEmail;
 extern NSString *const kOTRServiceName;
 extern NSString *const kOTRCertificateServiceName;
 
-extern NSString *const MESSAGE_PROCESSED_NOTIFICATION;
-extern NSString *const kOTREncryptionStateNotification;
-
 extern NSString *const kOTRSettingKeyFontSize;
 extern NSString *const kOTRSettingKeyDeleteOnDisconnect;
 extern NSString *const kOTRSettingKeyOpportunisticOtr;

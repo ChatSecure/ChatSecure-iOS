@@ -48,7 +48,7 @@
         }
         
         OTRBuddyStatus buddyStatus = OTRBuddyStatusOffline;
-        OTRManagedStatusMessage * status = [_buddy currentStatusMessage];
+        OTRManagedStatusMessage * status = [_buddy currentStatusMessageInContext:buddy.managedObjectContext];
         if (status) {
             buddyStatus = status.statusValue;
         }

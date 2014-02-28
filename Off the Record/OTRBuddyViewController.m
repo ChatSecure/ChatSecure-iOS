@@ -14,6 +14,7 @@
 #import "OTRProtocolManager.h"
 #import "OTRConstants.h"
 #import "OTRUtilities.h"
+#import "OTRManagedStatusMessage.h"
 
 #import "OTRManagedAccount.h"
 
@@ -286,11 +287,7 @@
     statusMessageLabel.textColor = [UIColor blackColor];
     statusMessageLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     [cell.contentView addSubview:statusMessageLabel];
-    statusMessageLabel.text = self.buddy.currentStatusMessage.message;
-    
-    //[statusMessageLabel sizeToFit];
-    
-    
+    statusMessageLabel.text = [self.buddy currentStatusMessageInContext:self.buddy.managedObjectContext].message;
     
     tempFrame = statusMessageLabel.frame;
     tempFrame.size.width = cell.contentView.frame.size.width -xPos - 5.0;

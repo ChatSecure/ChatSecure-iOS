@@ -309,7 +309,7 @@ BOOL loginFailed;
     
     OTRManagedBuddy * messageBuddy = [OTRManagedBuddy fetchOrCreateWithName:message.buddy.username account:self.account inContext:context];
     
-    OTRManagedChatMessage *otrMessage = [OTRManagedChatMessage newMessageFromBuddy:messageBuddy message:msgTxt encrypted:YES delayedDate:nil];
+    OTRManagedChatMessage *otrMessage = [OTRManagedChatMessage newMessageFromBuddy:messageBuddy message:msgTxt encrypted:YES delayedDate:nil inContext:context];
     
     [context MR_saveToPersistentStoreAndWait];
     

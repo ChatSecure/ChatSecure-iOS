@@ -21,7 +21,7 @@ static CGFloat const messageTextWidthMax = 180;
 
 @implementation OTRMessageTableViewCell
 
--(id)initWithMessage:(OTRManagedMessage *)newMessage withDate:(BOOL)newShowDate reuseIdentifier:(NSString*)identifier
+-(id)initWithMessage:(OTRManagedChatMessage *)newMessage withDate:(BOOL)newShowDate reuseIdentifier:(NSString*)identifier
 {
     self = [super initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:identifier];
     if (self) {
@@ -33,7 +33,7 @@ static CGFloat const messageTextWidthMax = 180;
         self.dateLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         self.dateLabel.textColor = [UIColor grayColor];
         self.dateLabel.textAlignment = NSTextAlignmentCenter;
-        self.dateLabel.font = [UIFont boldSystemFontOfSize:sentDateFontSize];
+        self.dateLabel.font = [UIFont boldSystemFontOfSize:kOTRSentDateFontSize];
         self.dateLabel.backgroundColor = [UIColor clearColor];
         self.dateLabel.translatesAutoresizingMaskIntoConstraints = NO;
         [self.contentView addSubview:self.dateLabel];
@@ -57,7 +57,7 @@ static CGFloat const messageTextWidthMax = 180;
     
 }
 
--(void)setMessage:(OTRManagedMessage *)newMessage
+-(void)setMessage:(OTRManagedChatMessage *)newMessage
 {
     [self willChangeValueForKey:NSStringFromSelector(@selector(message))];
     _message = newMessage;
@@ -148,7 +148,7 @@ static CGFloat const messageTextWidthMax = 180;
     [self removeConstraint:dateHeightConstraint];
     CGFloat dateheight = 0.0;
     if (self.showDate) {
-        dateheight = sentDateFontSize+5;
+        dateheight = kOTRSentDateFontSize+5;
     }
     
     dateHeightConstraint = [NSLayoutConstraint constraintWithItem:self.dateLabel
@@ -210,7 +210,7 @@ static CGFloat const messageTextWidthMax = 180;
 {
     CGFloat dateHeight = 0;
     if (showDate) {
-        dateHeight = sentDateFontSize+5;
+        dateHeight = kOTRSentDateFontSize+5;
     }
     TTTAttributedLabel * label = [self defaultLabel];
     label.text = message;

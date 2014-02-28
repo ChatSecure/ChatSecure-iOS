@@ -108,7 +108,7 @@ NSString *const kOTRAccountTypeKey   = @"kOTRAccountTypeKey";
         cell.imageView.layer.cornerRadius = 10.0;
     }
     else {
-        cell.imageView.image = [UIImage imageNamed:cellAccount[kProviderImageKey]];
+        cell.imageView.image = [UIImage imageNamed:cellAccount[kOTRProviderImageKey]];
     }
     
     
@@ -130,8 +130,6 @@ NSString *const kOTRAccountTypeKey   = @"kOTRAccountTypeKey";
 }
 
 - (void)didSelectAccountType:(OTRAccountType)accountType {
-    OTRManagedAccount * cellAccount = [OTRManagedAccount accountForAccountType:accountType];
-    
     NSManagedObjectContext * context = [NSManagedObjectContext MR_context];
     OTRManagedAccount * cellAccount = [OTRManagedAccount accountForAccountType:accountType inContext:context];
     [context obtainPermanentIDsForObjects:@[cellAccount] error:nil];

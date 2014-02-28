@@ -39,6 +39,7 @@
 #import "OTRXMPPBudyTimers.h"
 #import "OTRCertificatePinning.h"
 #import "OTRXMPPError.h"
+#import "OTRConstants.h"
 
 extern NSString *const OTRXMPPRegisterSucceededNotificationName;
 extern NSString *const OTRXMPPRegisterFailedNotificationName;
@@ -58,7 +59,6 @@ extern NSString *const OTRXMPPRegisterFailedNotificationName;
 @property (nonatomic, readonly) OTRCertificatePinning * certificatePinningModule;
 @property (nonatomic, readonly) BOOL isXmppConnected;
 @property BOOL didSecure;
-@property (nonatomic, strong) NSMutableDictionary * buddyTimers;
 
 - (BOOL)connectWithJID:(NSString*) myJID password:(NSString*)myPassword;
 - (void)disconnect;

@@ -53,7 +53,7 @@ extern NSString *const OTRXMPPTorImageName;
 - (void)setAllBuddiesStatuts:(OTRBuddyStatus)status inContext:(NSManagedObjectContext *)context;
 - (void)deleteAllAccountMessagesInContext:(NSManagedObjectContext *)context;
 
-- (void)prepareBuddiesandMessagesForDeletion;
+- (void)prepareBuddiesandMessagesForDeletionInContext:(NSManagedObjectContext*)context;
 
 - (NSDictionary *)dictionaryRepresentation;
 + (instancetype)createWithDictionary:(NSDictionary *)dictionary forContext:(NSManagedObjectContext *)context;

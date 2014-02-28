@@ -28,8 +28,8 @@
 #import "Strings.h"
 #import "OTRConstants.h"
 #import "OTRXMPPManager.h"
-#import "OTRManagedStatus.h"
-#import "OTRManagedEncryptionStatusMessage.h"
+#import "OTRManagedStatusMessage.h"
+#import "OTRManagedEncryptionMessage.h"
 #import "OTRManagedGroup.h"
 
 #import "OTRLog.h"
@@ -105,7 +105,7 @@
 
 -(void)setNewEncryptionStatus:(OTRKitMessageState)newEncryptionStatus inContext:(NSManagedObjectContext *)context
 {
-    OTRManagedEncryptionStatusMessage * currentEncryptionStatus = [self currentEncryptionStatusInContext:context];
+    OTRManagedEncryptionMessage * currentEncryptionStatus = [self currentEncryptionStatusInContext:context];
     
     if(newEncryptionStatus != currentEncryptionStatus.statusValue)
     {
@@ -118,22 +118,22 @@
                 [[[UIAlertView alloc] initWithTitle:SECURITY_WARNING_STRING message:[NSString stringWithFormat:CONVERSATION_NO_LONGER_SECURE_STRING, displayName] delegate:nil cancelButtonTitle:OK_STRING otherButtonTitles:nil] show];
             });
         }
-        [OTRManagedEncryptionStatusMessage newEncryptionStatus:newEncryptionStatus buddy:self inContext:context];
+        [OTRManagedEncryptionMessage newEncryptionStatus:newEncryptionStatus buddy:self inContext:context];
     }
 }
 
 - (void)newStatusMessage:(NSString *)newStatusMessage status:(OTRBuddyStatus)newStatus incoming:(BOOL)isIncoming inContext:(NSManagedObjectContext *)context
 {
-    OTRManagedStatus * currentManagedStatus = [self currentStatusMessage];
+    OTRManagedStatusMessage * currentManagedStatus = [self currentStatusMessageInContext:context];
     
     if (!currentManagedStatus) {
-        [OTRManagedStatus newStatus:newStatus withMessage:newStatusMessage withBuddy:self incoming:isIncoming inContext:context];
+        [OTRManagedStatusMessage newStatus:newStatus withMessage:newStatusMessage withBuddy:self incoming:isIncoming inContext:context];
         self.currentStatusValue = newStatus;
         return;
     }
     
     if (![newStatusMessage length]) {
-        newStatusMessage = [OTRManagedStatus statusMessageWithStatus:newStatus];
+        newStatusMessage = [OTRManagedStatusMessage statusMessageWithStatus:newStatus];
     }
     
     //Make sure the status message is unique compared to the last status message
@@ -149,7 +149,7 @@
         }
         else
         {
-            [OTRManagedStatus newStatus:newStatus withMessage:newStatusMessage withBuddy:self incoming:isIncoming inContext:context];
+            [OTRManagedStatusMessage newStatus:newStatus withMessage:newStatusMessage withBuddy:self incoming:isIncoming inContext:context];
         }
         self.currentStatusValue = newStatus;
     }
@@ -159,44 +159,24 @@
     }
 }
 
--(OTRManagedStatus *)currentStatusMessage
+-(OTRManagedStatusMessage *)currentStatusMessageInContext:(NSManagedObjectContext *)context
 {
-    NSSortDescriptor * dateSort = [NSSortDescriptor sortDescriptorWithKey:OTRManagedMessageAndStatusAttributes.date ascending:NO];
-    NSArray * sortedStatuses = [self.statuses sortedArrayUsingDescriptors:@[dateSort]];
+    NSPredicate * buddyPredicate = [NSPredicate predicateWithFormat:@"%K == %@",OTRManagedMessageRelationships.buddy,self];
+    OTRManagedStatusMessage * currentStatusMessage = [OTRManagedStatusMessage MR_findFirstWithPredicate:buddyPredicate sortedBy:OTRManagedMessageAttributes.date  ascending:NO inContext:context];
     
-    if ([sortedStatuses count]) {
-        return [sortedStatuses firstObject];
-    }
-    return nil;    
+    return currentStatusMessage;
 }
 
-- (OTRManagedEncryptionStatusMessage *)fetchLastEncryptionStatusMessage
+-(OTRManagedEncryptionMessage *)currentEncryptionStatusInContext:(NSManagedObjectContext *)context
 {
-    NSSortDescriptor * dateSort = [NSSortDescriptor sortDescriptorWithKey:@"date" ascending:NO];
-    NSArray * sortedStatuses = [self.encryptionStatusMessages sortedArrayUsingDescriptors:@[dateSort]];
+    NSPredicate * buddyPredicate = [NSPredicate predicateWithFormat:@"%K == %@",OTRManagedMessageRelationships.buddy,self];
+    OTRManagedEncryptionMessage * currentEncryptionMessage = [OTRManagedEncryptionMessage MR_findFirstWithPredicate:buddyPredicate sortedBy:OTRManagedMessageAttributes.date  ascending:NO inContext:context];
     
-    if ([sortedStatuses count]) {
-        return [sortedStatuses firstObject];
+    if(!currentEncryptionMessage) {
+        currentEncryptionMessage = [OTRManagedEncryptionMessage newEncryptionStatus:kOTRKitMessageStatePlaintext buddy:self inContext:context];
     }
-    return nil;
-}
-
--(OTRManagedEncryptionStatusMessage *)currentEncryptionStatusInContext:(NSManagedObjectContext *)context
-{
-    OTRManagedEncryptionStatusMessage * encryptionStatusMessage = [self fetchLastEncryptionStatusMessage];
-    if (!encryptionStatusMessage) {
-        encryptionStatusMessage = [OTRManagedEncryptionStatusMessage newEncryptionStatus:kOTRKitMessageStatePlaintext buddy:self inContext:context];
-    }
-    return encryptionStatusMessage;
-}
-
-- (OTRKitMessageState)currentEncryptionStatus
-{
-    OTRManagedEncryptionStatusMessage * encryptionStatusMessage = [self fetchLastEncryptionStatusMessage];
-    if (encryptionStatusMessage) {
-        return encryptionStatusMessage.statusValue;
-    }
-    return kOTRKitMessageStatePlaintext;
+    
+    return currentEncryptionMessage;
 }
 
 -(NSInteger) numberOfUnreadMessages
@@ -219,11 +199,11 @@
 
 - (void) deleteAllMessagesInContext:(NSManagedObjectContext *)context
 {
-    NSPredicate * messageFilter = [NSPredicate predicateWithFormat:@"%K == %@",OTRManagedMessageAndStatusRelationships.buddy,self];
-    NSPredicate * notLastStatusFilter = [NSPredicate predicateWithFormat:@"self != %@",[self currentStatusMessage]];
+    NSPredicate * messageFilter = [NSPredicate predicateWithFormat:@"%K == %@",OTRManagedMessageRelationships.buddy,self];
+    NSPredicate * notLastStatusFilter = [NSPredicate predicateWithFormat:@"self != %@",[self currentStatusMessageInContext:context]];
     NSPredicate * compoundPredicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[messageFilter,notLastStatusFilter]];
     
-    [OTRManagedMessageAndStatus MR_deleteAllMatchingPredicate:compoundPredicate inContext:context];
+    [OTRManagedMessage MR_deleteAllMatchingPredicate:compoundPredicate inContext:context];
 }
 
 -(void)addToGroup:(NSString *)groupName inContext:(NSManagedObjectContext *)context

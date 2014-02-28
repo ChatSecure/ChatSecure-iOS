@@ -23,7 +23,7 @@ NSString *const kOTRExpiresInKey      = @"expires_in";
 
 -(UIImage *)accountImage
 {
-    return [UIImage imageNamed:kGTalkImageName];
+    return [UIImage imageNamed:OTRGoogleTalkImageName];
 }
 -(BOOL)shouldAllowSSLHostNameMismatch
 {

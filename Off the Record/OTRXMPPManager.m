@@ -79,6 +79,7 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 @property (nonatomic, readwrite) BOOL isXmppConnected;
 @property (nonatomic, strong) NSMutableDictionary * buddyTimers;
 @property (nonatomic) dispatch_queue_t workQueue;
+@property (nonatomic) BOOL isRegisteringNewAccount;
 
 - (void)setupStream;
 - (void)teardownStream;
@@ -107,18 +108,18 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
     if(self = [self init])
     {
         NSAssert([newAccount isKindOfClass:[OTRManagedXMPPAccount class]], @"Must have XMPP account");
-        isRegisteringNewAccount = NO;
+        self.isRegisteringNewAccount = NO;
         self.isConnected = NO;
         self.account = (OTRManagedXMPPAccount*)newAccount;
 
         // Configure logging framework
-        backgroundQueue = dispatch_queue_create("buddy.background", NULL);
+        self.workQueue = dispatch_queue_create("buddy.background", NULL);
         //[DDLog addLogger:[DDTTYLogger sharedInstance]];
         
         // Setup the XMPP stream
         [self setupStream];
         
-        buddyTimers = [NSMutableDictionary dictionary];
+        self.buddyTimers = [NSMutableDictionary dictionary];
     }
     
     return self;
@@ -371,7 +372,7 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 
 - (void)didRegisterNewAccount
 {
-    isRegisteringNewAccount = NO;
+    self.isRegisteringNewAccount = NO;
     [[NSNotificationCenter defaultCenter] postNotificationName:OTRXMPPRegisterSucceededNotificationName object:self];
 }
 - (void)failedToRegisterNewAccount:(NSError *)error
@@ -392,25 +393,24 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
     
     NSString * resource = [NSString stringWithFormat:@"%@%d",kOTRXMPPResource,r];
     
-    JID = [XMPPJID jidWithString:myJID resource:resource];
+    self.JID = [XMPPJID jidWithString:myJID resource:resource];
     
-	[self.xmppStream setMyJID:JID];
+	[self.xmppStream setMyJID:self.JID];
     
-    password = myPassword;
-
+    self.password = myPassword;
 }
 
 - (void)authenticateWithStream:(XMPPStream *)stream {
     NSError * error = nil;
     BOOL status = YES;
     if ([stream supportsXFacebookPlatformAuthentication]) {
-        status = [stream authenticateWithFacebookAccessToken:password error:&error];
+        status = [stream authenticateWithFacebookAccessToken:self.password error:&error];
     }
     else if ([stream supportsXOAuth2GoogleAuthentication] && self.account.accountType == OTRAccountTypeGoogleTalk) {
-        status = [stream authenticateWithGoogleAccessToken:password error:&error];
+        status = [stream authenticateWithGoogleAccessToken:self.password error:&error];
     }
     else {
-        status = [stream authenticateWithPassword:password error:&error];
+        status = [stream authenticateWithPassword:self.password error:&error];
     }
 }
 
@@ -500,7 +500,7 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 
 - (void)registerNewAccountWithPassword:(NSString *)newPassword
 {
-    isRegisteringNewAccount = YES;
+    self.isRegisteringNewAccount = YES;
     if (self.xmppStream.isConnected) {
         [self registerNewAccountWithPassword:newPassword stream:self.xmppStream];
     }
@@ -513,7 +513,7 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 {
     NSError * error = nil;
     if ([stream supportsInBandRegistration]) {
-        [stream registerWithPassword:password error:&error];
+        [stream registerWithPassword:self.password error:&error];
         if(error)
         {
             [self failedToRegisterNewAccount:error];
@@ -559,8 +559,8 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
     
-    if (isRegisteringNewAccount) {
-        [self registerNewAccountWithPassword:password stream:sender];
+    if (self.isRegisteringNewAccount) {
+        [self registerNewAccountWithPassword:self.password stream:sender];
     }
     else{
         [self authenticateWithStream:sender];
@@ -593,7 +593,7 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 
 - (void)xmppStream:(XMPPStream *)sender didNotRegister:(NSXMLElement *)xmlError {
     
-    isRegisteringNewAccount = NO;
+    self.isRegisteringNewAccount = NO;
     NSError * error = [OTRXMPPError errorForXMLElement:xmlError];
     [self failedToRegisterNewAccount:error];
 }
@@ -639,7 +639,7 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
         
         NSDate * date = [message delayedDeliveryDate];
         
-        OTRManagedMessage *otrMessage = [OTRManagedMessage newMessageFromBuddy:messageBuddy message:body encrypted:YES delayedDate:date inContext:context];
+        OTRManagedChatMessage *otrMessage = [OTRManagedChatMessage newMessageFromBuddy:messageBuddy message:body encrypted:YES delayedDate:date inContext:context];
         [context MR_saveToPersistentStoreAndWait];
         
         [OTRCodec decodeMessage:otrMessage completionBlock:^(OTRManagedMessage *message) {

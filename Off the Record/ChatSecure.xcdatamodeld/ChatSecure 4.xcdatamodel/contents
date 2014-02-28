@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="3401" systemVersion="13B42" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="3401" systemVersion="13C64" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="OTRManagedAccount" representedClassName="OTRManagedAccount" syncable="YES">
         <attribute name="autologin" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="displayName" optional="YES" attributeType="String" syncable="YES"/>
@@ -54,6 +54,7 @@
     <entity name="OTRManagedXMPPAccount" representedClassName="OTRManagedXMPPAccount" parentEntity="OTRManagedAccount" syncable="YES">
         <attribute name="domain" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="port" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="resource" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="subscriptionRequests" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="OTRXMPPManagedPresenceSubscriptionRequest" inverseName="xmppAccount" inverseEntity="OTRXMPPManagedPresenceSubscriptionRequest" syncable="YES"/>
     </entity>
     <entity name="OTRManagedXMPPTorAccount" representedClassName="OTRManagedXMPPTorAccount" parentEntity="OTRManagedXMPPAccount" syncable="YES"/>
@@ -82,20 +83,20 @@
     <elements>
         <element name="OTRManagedAccount" positionX="225" positionY="45" width="128" height="148"/>
         <element name="OTRManagedBuddy" positionX="9" positionY="9" width="128" height="238"/>
+        <element name="OTRManagedChatMessage" positionX="-243" positionY="185" width="128" height="103"/>
         <element name="OTRManagedEncryptionMessage" positionX="-504" positionY="131" width="191" height="58"/>
         <element name="OTRManagedFacebookAccount" positionX="837" positionY="317" width="128" height="45"/>
         <element name="OTRManagedGoogleAccount" positionX="835" positionY="261" width="128" height="45"/>
         <element name="OTRManagedGroup" positionX="486" positionY="306" width="128" height="75"/>
-        <element name="OTRManagedChatMessage" positionX="-243" positionY="185" width="128" height="103"/>
         <element name="OTRManagedMessage" positionX="-290" positionY="9" width="128" height="118"/>
         <element name="OTRManagedOAuthAccount" positionX="637" positionY="288" width="128" height="45"/>
-        <element name="OTRManagedOscarAccount" positionX="484" positionY="63" width="128" height="43"/>
+        <element name="OTRManagedOscarAccount" positionX="484" positionY="63" width="128" height="45"/>
         <element name="OTRManagedStatusMessage" positionX="-389" positionY="203" width="128" height="58"/>
-        <element name="OTRManagedXMPPAccount" positionX="486" positionY="117" width="128" height="88"/>
+        <element name="OTRManagedXMPPAccount" positionX="486" positionY="117" width="128" height="103"/>
+        <element name="OTRManagedXMPPTorAccount" positionX="486" positionY="227" width="128" height="45"/>
         <element name="OTRvCard" positionX="63" positionY="324" width="128" height="135"/>
         <element name="OTRvCardAvatar" positionX="241" positionY="474" width="128" height="75"/>
         <element name="OTRvCardTemp" positionX="16" positionY="510" width="128" height="75"/>
         <element name="OTRXMPPManagedPresenceSubscriptionRequest" positionX="637" positionY="36" width="128" height="105"/>
-        <element name="OTRManagedXMPPTorAccount" positionX="486" positionY="227" width="128" height="43"/>
     </elements>
 </model>

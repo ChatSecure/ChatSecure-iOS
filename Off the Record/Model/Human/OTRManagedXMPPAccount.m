@@ -43,7 +43,7 @@ static NSUInteger const OTRDefaultPortNumber = 5222;
 }
 
 - (UIImage *)accountImage {
-    return [UIImage imageNamed:kXMPPImageName];
+    return [UIImage imageNamed:OTRXMPPImageName];
 }
 
 +(NSNumber *)defaultPortNumber {
@@ -70,10 +70,6 @@ static NSUInteger const OTRDefaultPortNumber = 5222;
         return [XMPPJID jidWithString:self.username].domain;
     }
     return self.domain;
-}
-
-+(NSNumber *)defaultPortNumber {
-    return @(DEFAULT_PORT_NUMBER);
 }
 
 + (NSString * )newResource

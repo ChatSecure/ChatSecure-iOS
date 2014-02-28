@@ -37,7 +37,9 @@
         return;
     }
     NSArray * hostnamesArray = nil;
-    OTRManagedXMPPAccount * newAccount = (OTRManagedXMPPAccount *)[OTRManagedAccount accountForAccountType:accountType];
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_context];
+    OTRManagedXMPPAccount * newAccount = (OTRManagedXMPPAccount *)[OTRManagedAccount accountForAccountType:accountType inContext:context];
+    [context MR_saveToPersistentStoreAndWait];
     if(accountType == OTRAccountTypeJabber)
     {
         hostnamesArray = self.defaultDomains;

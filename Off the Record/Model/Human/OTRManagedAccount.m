@@ -54,6 +54,10 @@ NSString *const kOTRClassKey                     = @"classKey";
 
 @implementation OTRManagedAccount
 
+- (UIImage*) accountImage {
+    return nil;
+}
+
 - (void) setDefaultsWithProtocol:(NSString*)newProtocol {
     self.username = @"";
     self.protocol = newProtocol;
@@ -162,19 +166,16 @@ NSString *const kOTRClassKey                     = @"classKey";
     }
 }
 
--(void)prepareBuddiesandMessagesForDeletion
+- (void)prepareBuddiesandMessagesForDeletionInContext:(NSManagedObjectContext*)context
 {
     NSSet *buddySet = [self.buddies copy];
     for(OTRManagedBuddy * buddy in buddySet)
     {
+        OTRManagedBuddy *localBuddy = [buddy MR_inContext:context];
         NSPredicate * messageFilter = [NSPredicate predicateWithFormat:@"%K == %@",OTRManagedMessageRelationships.buddy,self];
-        [OTRManagedMessage MR_deleteAllMatchingPredicate:messageFilter];
-        [buddy MR_deleteEntity];
+        [OTRManagedMessage MR_deleteAllMatchingPredicate:messageFilter inContext:context];
+        [localBuddy MR_deleteInContext:context];
     }
-    
-    
-    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
-    [context MR_saveToPersistentStoreAndWait];
 }
 
 -(OTRAccountType)accountType

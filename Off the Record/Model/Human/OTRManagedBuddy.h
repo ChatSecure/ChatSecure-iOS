@@ -45,9 +45,8 @@
 
 - (void)newStatusMessage:(NSString *)newStatusMessage status:(OTRBuddyStatus)newStatus incoming:(BOOL)isIncoming inContext:(NSManagedObjectContext *)context;
 - (void)setNewEncryptionStatus:(OTRKitMessageState)newEncryptionStatus inContext:(NSManagedObjectContext *)context;
-- (OTRManagedStatus *)currentStatusMessage;
-- (OTRManagedEncryptionStatusMessage *)currentEncryptionStatusInContext:(NSManagedObjectContext *)context;
-- (OTRKitMessageState)currentEncryptionStatus;
+-(OTRManagedStatusMessage *)currentStatusMessageInContext:(NSManagedObjectContext *)context;
+- (OTRManagedEncryptionMessage *)currentEncryptionStatusInContext:(NSManagedObjectContext *)context;
 
 - (void)addToGroup:(NSString *)groupName inContext:(NSManagedObjectContext *)context;
 - (NSArray *)groupNames;

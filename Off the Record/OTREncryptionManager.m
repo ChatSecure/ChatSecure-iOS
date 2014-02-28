@@ -58,7 +58,7 @@
 
 - (void) injectMessage:(NSString*)message recipient:(NSString*)recipient accountName:(NSString*)accountName protocol:(NSString*)protocol {
     NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
-    OTRManagedMessage *newMessage = [OTRManagedMessage newMessageToBuddy:[[OTRProtocolManager sharedInstance] buddyForUserName:recipient accountName:accountName protocol:protocol inContext:context] message:message encrypted:YES inContext:context];
+    OTRManagedChatMessage *newMessage = [OTRManagedChatMessage newMessageToBuddy:[[OTRProtocolManager sharedInstance] buddyForUserName:recipient accountName:accountName protocol:protocol inContext:context] message:message encrypted:YES inContext:context];
     [context MR_saveToPersistentStoreAndWait];
     [OTRProtocolManager sendMessage:newMessage];
 }

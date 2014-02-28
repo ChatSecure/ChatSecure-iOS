@@ -8,10 +8,14 @@
 
 #import "OTRXMPPTorManager.h"
 #import "HITorManager.h"
-#import "XMPPProxyStream.h"
+#import "XMPPStream.h"
 
 NSString *const proxyAdress = @"127.0.0.1";
 uint16_t const proxyPort = 9050;
+
+@interface OTRXMPPTorManager()
+@property (nonatomic, strong) OTRManagedXMPPAccount * account;
+@end
 
 @implementation OTRXMPPTorManager
 
@@ -28,16 +32,11 @@ uint16_t const proxyPort = 9050;
     }
 }
 
-- (Class) xmppStreamClass {
-    return [XMPPProxyStream class];
-}
-
 -(XMPPStream *)xmppStream
 {
     if (!_xmppStream) {
         _xmppStream = [super xmppStream];
-        XMPPProxyStream *proxyStream = (XMPPProxyStream*)_xmppStream;
-        [proxyStream setProxyHost:proxyAdress port:proxyPort version:GCDAsyncSocketSOCKSVersion5];
+        [_xmppStream setProxyHost:proxyAdress port:proxyPort version:GCDAsyncSocketSOCKSVersion5];
     }
     return _xmppStream;
 }
