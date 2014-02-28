@@ -1,7 +1,7 @@
 ChatSecure
 =========
 
-ChatSecure is a free and open source instant messaging client for iOS that integrates encrypted [OTR](http://en.wikipedia.org/wiki/Off-the-Record_Messaging) ("Off the Record") messaging support from the [libotr](http://www.cypherpunks.ca/otr/) library. It uses the [LibOrange](https://github.com/unixpickle/LibOrange) library to handle all of the AIM (OSCAR) functionality and the [XMPPFramework](https://github.com/robbiehanson/XMPPFramework/) to handle Jabber/GTalk (XMPP).
+ChatSecure is a free and open source instant messaging client for [iOS](https://itunes.apple.com/us/app/chatsecure/id464200063) and [Android](https://play.google.com/store/apps/details?id=info.guardianproject.otr.app.im&hl=en) that integrates encrypted [OTR](http://en.wikipedia.org/wiki/Off-the-Record_Messaging) ("Off the Record") messaging support from the [libotr](http://www.cypherpunks.ca/otr/) library and the [XMPPFramework](https://github.com/robbiehanson/XMPPFramework/) to handle Jabber/GTalk (XMPP).
 
 
 Cost
@@ -10,7 +10,7 @@ Cost
 This project is **100% free** because it is important that all people around the world have unrestricted access to privacy tools.
 However, developing and supporting this project is hard work and costs real money. Please help support the development of this project! We now also accept Bitcoin via Coinbase! :)
 
-[![bitcoin](https://coinbase.com/assets/buttons/donation_large-6ec72b1a9eec516944e50a22aca7db35.png)](https://coinbase.com/checkouts/1cf35f00d722205726f50b940786c413) [![donation](https://chatsecure.org/static/images/paypal_donate.png)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=XRBHJ9AX5VWNA) 
+[![bitcoin](https://chatsecure.org/images/bitcoin_donate.png)](https://coinbase.com/checkouts/1cf35f00d722205726f50b940786c413) [![donation](https://chatsecure.org/images/paypal_donate.png)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=XRBHJ9AX5VWNA) 
 
 
 Localization
@@ -42,18 +42,28 @@ Plug-in
 
 Phone apps
 ------
-* **[ChatSecure Android](https://guardianproject.info/apps/gibber/) (formerly known as Gibberbot)**, a free and open source Android application produced by The Guardian Project, provides OTR protocol compatible over XMPP chat.
+* **[ChatSecure Android](https://guardianproject.info/apps/chatsecure/) (formerly known as Gibberbot)**, a free and open source Android application produced by The Guardian Project, provides OTR protocol compatible over XMPP chat.
 * [BEEM](http://beem-project.com/projects/beem) - Android XMPP client (compatibility unknown)
 
 [Full List](http://en.wikipedia.org/wiki/Off-the-Record_Messaging#Client_support)
 
 Build Instructions
 ========
-- Install [mogenerator](http://rentzsch.github.io/mogenerator/) `brew install mogenerator`
-- Dowload `git clone git@github.com:chrisballinger/Off-the-Record-iOS.git --recursive`
-- `cd Off-the-Record-iOS/`
-- Create `/Off the Record/OTRSecrets.h` and fill in blank strings for the missing API keys: `USERVOICE_KEY`, `USERVOICE_SECRET`, `GOOGLE_APP_SECRET`, `HOCKEY_LIVE_IDENTIFIER`, and `HOCKEY_BETA_IDENTIFIER`.
-- Open `Off the Record.xcodeproj` in Xcode and build.
+Install [mogenerator](http://rentzsch.github.io/mogenerator/) in order to regenerate the Core Data model files.
+    
+    $ brew install mogenerator
+    
+Download the source code and **don't forget** to pull down all of the submodules as well.
+
+    $ git clone git@github.com:chrisballinger/Off-the-Record-iOS.git
+    $ cd Off-the-Record-iOS/
+    $ git submodule update --init --recursive
+    
+Copy over a dummy `OTRSecrets.m` file with blank API keys.  
+
+    $ cp "Off the Record/OTRSecrets-Template.m" "Off the Record/OTRSecrets.m"
+    
+Open `Off the Record.xcodeproj` in Xcode and build.
 
 License
 =========

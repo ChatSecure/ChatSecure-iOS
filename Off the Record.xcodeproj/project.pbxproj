@@ -384,6 +384,7 @@
 		D96495D7153668D2009A8C33 /* OTRSettingsGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = D96495D6153668D2009A8C33 /* OTRSettingsGroup.m */; };
 		D968472618C13AA3008FDC46 /* RIButtonItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D968472318C13AA3008FDC46 /* RIButtonItem.m */; };
 		D968472718C13AA3008FDC46 /* UIAlertView+Blocks.m in Sources */ = {isa = PBXBuildFile; fileRef = D968472518C13AA3008FDC46 /* UIAlertView+Blocks.m */; };
+		D968473418C13B90008FDC46 /* OTRSecrets.m in Sources */ = {isa = PBXBuildFile; fileRef = D968473318C13B90008FDC46 /* OTRSecrets.m */; };
 		D974577715BE34E7002B9192 /* 31-circle-plus.png in Resources */ = {isa = PBXBuildFile; fileRef = D974577515BE34E7002B9192 /* 31-circle-plus.png */; };
 		D974577815BE34E7002B9192 /* 31-circle-plus@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D974577615BE34E7002B9192 /* 31-circle-plus@2x.png */; };
 		D974DABD15021E540028B2F4 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D974DABC15021E540028B2F4 /* libiconv.dylib */; };
@@ -1362,6 +1363,7 @@
 		D968472318C13AA3008FDC46 /* RIButtonItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RIButtonItem.m; path = "Submodules/UIAlertView-Blocks/RIButtonItem.m"; sourceTree = "<group>"; };
 		D968472418C13AA3008FDC46 /* UIAlertView+Blocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIAlertView+Blocks.h"; path = "Submodules/UIAlertView-Blocks/UIAlertView+Blocks.h"; sourceTree = "<group>"; };
 		D968472518C13AA3008FDC46 /* UIAlertView+Blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIAlertView+Blocks.m"; path = "Submodules/UIAlertView-Blocks/UIAlertView+Blocks.m"; sourceTree = "<group>"; };
+		D968473318C13B90008FDC46 /* OTRSecrets.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRSecrets.m; sourceTree = "<group>"; };
 		D974577515BE34E7002B9192 /* 31-circle-plus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "31-circle-plus.png"; sourceTree = "<group>"; };
 		D974577615BE34E7002B9192 /* 31-circle-plus@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "31-circle-plus@2x.png"; sourceTree = "<group>"; };
 		D974DABC15021E540028B2F4 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
@@ -3513,6 +3515,7 @@
 				63BFDB6316E81CD900C608D6 /* OTRBuddyViewController.h */,
 				63BFDB6416E81CD900C608D6 /* OTRBuddyViewController.m */,
 				6348189517E3E09C004E0146 /* OTRSecrets.h */,
+				D968473318C13B90008FDC46 /* OTRSecrets.m */,
 				D9CEF0A81684253B00B236B5 /* XMPPFramework.h */,
 				D9D8D1F61531056300F9E8D3 /* Resources */,
 				D9F9378113F44BD3009A3D84 /* Supporting Files */,
@@ -4398,6 +4401,7 @@
 				63483FC91752CED100779257 /* XMPPDateTimeProfiles.m in Sources */,
 				63483FCA1752CED100779257 /* XMPPMessage+XEP_0085.m in Sources */,
 				63483FCB1752CED100779257 /* XMPPTransports.m in Sources */,
+				D968473418C13B90008FDC46 /* OTRSecrets.m in Sources */,
 				63483FCC1752CED100779257 /* XMPPCapabilities.xcdatamodel in Sources */,
 				63483FCD1752CED100779257 /* XMPPCapabilitiesCoreDataStorage.m in Sources */,
 				63483FCE1752CED100779257 /* XMPPCapsCoreDataStorageObject.m in Sources */,
@@ -4898,10 +4902,7 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Off the Record/Off the Record-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					_GCRYPT_IN_LIBGCRYPT,
-					USERVOICE_ENABLED,
-				);
+				GCC_PREPROCESSOR_DEFINITIONS = _GCRYPT_IN_LIBGCRYPT;
 				GCC_THUMB_SUPPORT = NO;
 				HEADER_SEARCH_PATHS = (
 					/usr/include/libxml2,
