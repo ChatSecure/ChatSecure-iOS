@@ -97,7 +97,12 @@ static void * OTRBuddyListViewControllerKVOContext = &OTRBuddyListViewController
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
-    
+    if ([OTRUtilities currentiOSVersionHasSSLVulnerability]) {
+        NSString * part1String = [NSString stringWithFormat:iOS_SSL_ERROR_PART1_STRING,[[UIDevice currentDevice] systemVersion]];
+        NSString * messageString = [NSString stringWithFormat:@"%@\n\n%@",part1String,iOS_SSL_ERROR_PART2_STRING];
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:iOS_SSL_ERROR_TITLE_STRING message:messageString delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
+        [alertView show];
+    }
     
     OTRBuddyListSectionInfo * recentSectionInfo = [[OTRBuddyListSectionInfo alloc] init];
     recentSectionInfo.isOpen = YES;

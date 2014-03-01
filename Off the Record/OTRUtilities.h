@@ -37,4 +37,6 @@
 +(NSString *)lastLaunchVersion;
 +(BOOL)isFirstLaunchOnCurrentVersion;
 
++ (BOOL)currentiOSVersionHasSSLVulnerability;
+
 @end
