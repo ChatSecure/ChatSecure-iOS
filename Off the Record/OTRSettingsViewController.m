@@ -209,10 +209,10 @@
         }
     } else {
         OTRSetting *setting = [self.settingsManager settingAtIndexPath:indexPath];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-        [setting performSelector:setting.action];
-#pragma clang diagnostic pop
+        OTRSettingActionBlock actionBlock = setting.actionBlock;
+        if (actionBlock) {
+            actionBlock();
+        }
     }
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
@@ -291,6 +291,19 @@
         [self.navigationController pushViewController:viewController animated:YES];
     }
 }
+
+- (void) donateSettingPressed:(OTRDonateSetting *)setting {
+    RIButtonItem *paypalItem = [RIButtonItem itemWithLabel:@"PayPal" action:^{
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=6YFSLLQGDZFXY"]];
+    }];
+    RIButtonItem *bitcoinItem = [RIButtonItem itemWithLabel:@"Bitcoin" action:^{
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://coinbase.com/checkouts/0a35048913df24e0ec3d586734d456d7"]];
+    }];
+    RIButtonItem *cancelItem = [RIButtonItem itemWithLabel:CANCEL_STRING];
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:DONATE_MESSAGE_STRING cancelButtonItem:cancelItem destructiveButtonItem:nil otherButtonItems:paypalItem, bitcoinItem, nil];
+    [OTR_APP_DELEGATE presentActionSheet:actionSheet inView:self.view];
+}
+
 
 #pragma mark OTRFeedbackSettingDelegate method
 

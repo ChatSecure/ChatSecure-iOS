@@ -25,8 +25,9 @@
 #import "OTRSettingsManager.h"
 #import <MessageUI/MessageUI.h>
 #import "OTRLoginViewController.h"
+#import "OTRDonateSetting.h"
 
-@interface OTRSettingsViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, OTRSettingDelegate, MFMailComposeViewControllerDelegate, NSFetchedResultsControllerDelegate>
+@interface OTRSettingsViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, OTRSettingDelegate, MFMailComposeViewControllerDelegate, NSFetchedResultsControllerDelegate, OTRDonateSettingDelegate>
 
 @property (nonatomic, retain) UITableView *settingsTableView;
 @property (nonatomic, retain) OTRSettingsManager *settingsManager;

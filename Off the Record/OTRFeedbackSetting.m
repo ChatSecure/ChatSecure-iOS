@@ -15,7 +15,10 @@
 {
     if (self = [super initWithTitle:newTitle description:newDescription])
     {
-        self.action = @selector(showView);
+        __weak typeof (self) weakSelf = self;
+        self.actionBlock = ^{
+            [weakSelf showView];
+        };
     }
     return self;
 }

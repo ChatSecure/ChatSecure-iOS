@@ -52,7 +52,7 @@
             animated = YES;
         } else {
             boolSwitch = [[UISwitch alloc] init];
-            [boolSwitch addTarget:boolSetting action:boolSetting.action forControlEvents:UIControlEventValueChanged];
+            [boolSwitch addTarget:boolSetting action:@selector(toggle) forControlEvents:UIControlEventValueChanged];
             animated = NO;
         }
         [boolSwitch setOn:[boolSetting enabled] animated:animated];

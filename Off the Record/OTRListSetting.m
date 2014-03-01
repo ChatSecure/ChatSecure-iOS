@@ -25,7 +25,10 @@
 {
     if (self = [super initWithTitle:newTitle description:newDescription settingsKey:newSettingsKey])
     {
-        self.action = @selector(editValue);
+        __weak typeof (self) weakSelf = self;
+        self.actionBlock = ^{
+            [weakSelf editValue];
+        };
     }
     return self;
 }
