@@ -21,6 +21,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		6300827018C160E400CEA680 /* OTRSecrets.m in Sources */ = {isa = PBXBuildFile; fileRef = 6300826F18C160E400CEA680 /* OTRSecrets.m */; };
 		6300F15A16E6C30200D3C1AA /* OTRXMPPManagedPresenceSubscriptionRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 6321870B16E6C23200CB4D3C /* OTRXMPPManagedPresenceSubscriptionRequest.m */; };
 		6300F15C16E6C30800D3C1AA /* _OTRXMPPManagedPresenceSubscriptionRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 6321870916E6C21100CB4D3C /* _OTRXMPPManagedPresenceSubscriptionRequest.m */; };
 		6300F16316E6CCD400D3C1AA /* inbox.png in Resources */ = {isa = PBXBuildFile; fileRef = 6300F16116E6CCD400D3C1AA /* inbox.png */; };
@@ -703,6 +704,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		6300826F18C160E400CEA680 /* OTRSecrets.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRSecrets.m; sourceTree = "<group>"; };
 		6300F16116E6CCD400D3C1AA /* inbox.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = inbox.png; sourceTree = "<group>"; };
 		6300F16216E6CCD400D3C1AA /* inbox@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "inbox@2x.png"; sourceTree = "<group>"; };
 		6300F16516E6CF8400D3C1AA /* OTRSubscriptionRequestsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRSubscriptionRequestsViewController.h; sourceTree = "<group>"; };
@@ -3613,6 +3615,7 @@
 				63BFDB6316E81CD900C608D6 /* OTRBuddyViewController.h */,
 				63BFDB6416E81CD900C608D6 /* OTRBuddyViewController.m */,
 				6348189517E3E09C004E0146 /* OTRSecrets.h */,
+				6300826F18C160E400CEA680 /* OTRSecrets.m */,
 				D9CEF0A81684253B00B236B5 /* XMPPFramework.h */,
 				D9D8D1F61531056300F9E8D3 /* Resources */,
 				D9F9378113F44BD3009A3D84 /* Supporting Files */,
@@ -4228,6 +4231,7 @@
 				D9CEEE66168423CA00B236B5 /* AIMBlistBuddy.m in Sources */,
 				D9CEEE67168423CA00B236B5 /* AIMBlistGroup.m in Sources */,
 				D9CEEE68168423CA00B236B5 /* AIMBuddyIcon.m in Sources */,
+				6300827018C160E400CEA680 /* OTRSecrets.m in Sources */,
 				D9CEEE69168423CA00B236B5 /* AIMBuddyStatus.m in Sources */,
 				D9CEEE6A168423CA00B236B5 /* AIMCapability.m in Sources */,
 				6398CDBC17FA20EC009389F8 /* AFHTTPRequestOperationManager.m in Sources */,
