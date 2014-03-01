@@ -205,6 +205,7 @@
 #define EMAIL_STRING [OTRLanguageManager translatedString: @"Email"]
 #define BUNDLED_CERTIFICATES_STRING [OTRLanguageManager translatedString: @"Bundled Certificates"]
 #define FONT_SIZE_STRING [OTRLanguageManager translatedString: @"Font Size"]
+#define SHOW_USERVOICE_STRING [OTRLanguageManager translatedString: @"Would you like to connect to UserVoice to send feedback?"]
 #define SELF_SIGNED_SSL_STRING [OTRLanguageManager translatedString: @"Self Signed SSL"]
 #define CHAT_STATE_PAUSED_STRING [OTRLanguageManager translatedString: @"Entered Text"]
 #define errSSLClosedGracefulString [OTRLanguageManager translatedString: @"Connection closed gracefully"]

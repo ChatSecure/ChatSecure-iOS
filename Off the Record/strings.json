@@ -830,5 +830,9 @@
     "iOS_SSL_ERROR_TITLE_STRING": {
         "comment": "Directions to the system software update",
         "string": "iOS Vulnerability"
+    },
+    "SHOW_USERVOICE_STRING": {
+        "comment": "actionsheet for showing uservoice feedback service",
+        "string": "Would you like to connect to UserVoice to send feedback?"
     }
 }

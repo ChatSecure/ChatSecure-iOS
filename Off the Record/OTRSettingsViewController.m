@@ -36,6 +36,7 @@
 #import "OTRAccountTableViewCell.h"
 #import "UIAlertView+Blocks.h"
 #import "UIActionSheet+Blocks.h"
+#import "OTRSecrets.h"
 
 @interface OTRSettingsViewController(Private)
 - (void) addAccount:(id)sender;
@@ -293,8 +294,14 @@
 
 #pragma mark OTRFeedbackSettingDelegate method
 
-- (void) presentUserVoiceWithConfig:(UVConfig*)config {
-    [UserVoice presentUserVoiceInterfaceForParentViewController:self andConfig:config];
+- (void) presentUserVoiceView {
+    RIButtonItem *cancelItem = [RIButtonItem itemWithLabel:CANCEL_STRING];
+    RIButtonItem *showUVItem = [RIButtonItem itemWithLabel:OK_STRING action:^{
+        UVConfig *config = [UVConfig configWithSite:@"chatsecure.uservoice.com"];
+        [UserVoice presentUserVoiceInterfaceForParentViewController:self andConfig:config];
+    }];
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:SHOW_USERVOICE_STRING cancelButtonItem:cancelItem destructiveButtonItem:nil otherButtonItems:showUVItem, nil];
+    [OTR_APP_DELEGATE presentActionSheet:actionSheet inView:self.view];
 }
 
 -(void)accountLoggedIn

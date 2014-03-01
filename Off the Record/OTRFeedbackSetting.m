@@ -7,12 +7,9 @@
 //
 
 #import "OTRFeedbackSetting.h"
-#import "OTRConstants.h"
-#import "OTRSecrets.h"
 
 @implementation OTRFeedbackSetting
 @synthesize delegate;
-
 
 - (id) initWithTitle:(NSString*)newTitle description:(NSString*)newDescription
 {
@@ -25,12 +22,7 @@
 
 - (void) showView
 {
-    UVConfig *config = [UVConfig configWithSite:@"chatsecure.uservoice.com"
-                                         andKey:kOTRUservoiceKey
-                                      andSecret:kOTRUservoiceSecret];    
-    [self.delegate presentUserVoiceWithConfig:config];
+    [self.delegate presentUserVoiceView];
 }
-
-
 
 @end
