@@ -818,5 +818,17 @@
     "COPY_STRING": {
         "comment": "Copy string to clipboard as in copy and paste",
         "string": "Copy"
+    },
+    "iOS_SSL_ERROR_PART1_STRING": {
+        "comment": "Alert to system issues, leave in the %@",
+        "string": "Your current iOS system version (%@) contains a serious security vulnerability. Please update to the latest version as soon as possible."
+    },
+    "iOS_SSL_ERROR_PART2_STRING": {
+        "comment": "Directions to the system software update",
+        "string": "Settings -> General -> Software Update"
+    },
+    "iOS_SSL_ERROR_TITLE_STRING": {
+        "comment": "Directions to the system software update",
+        "string": "iOS Vulnerability"
     }
 }
