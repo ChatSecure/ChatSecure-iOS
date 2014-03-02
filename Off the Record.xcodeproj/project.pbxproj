@@ -453,7 +453,6 @@
 		D9CEEEB3168423CA00B236B5 /* RVServiceData.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CEEE40168423CA00B236B5 /* RVServiceData.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		D9CEEEBC168423CA00B236B5 /* SNAC.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CEEE52168423CA00B236B5 /* SNAC.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		D9CEEEBD168423CA00B236B5 /* TLV.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CEEE55168423CA00B236B5 /* TLV.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		D9CEEEFA1684240900B236B5 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CEEEDE1684240900B236B5 /* MBProgressHUD.m */; };
 		D9CEF0AB1684268500B236B5 /* libOTRKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D9CEED6A1684235C00B236B5 /* libOTRKit.a */; };
 		D9CEF0C616842A5B00B236B5 /* NSObject+SBJson.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CEF0AE16842A5B00B236B5 /* NSObject+SBJson.m */; };
 		D9CEF0C716842A5B00B236B5 /* SBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CEF0B116842A5B00B236B5 /* SBJsonParser.m */; };
@@ -1431,8 +1430,6 @@
 		D9CEEE54168423CA00B236B5 /* TLV.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLV.h; sourceTree = "<group>"; };
 		D9CEEE55168423CA00B236B5 /* TLV.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLV.m; sourceTree = "<group>"; };
 		D9CEEE56168423CA00B236B5 /* TLV_Types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLV_Types.h; sourceTree = "<group>"; };
-		D9CEEEDD1684240900B236B5 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
-		D9CEEEDE1684240900B236B5 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
 		D9CEF0A81684253B00B236B5 /* XMPPFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPFramework.h; sourceTree = "<group>"; };
 		D9CEF0AD16842A5B00B236B5 /* NSObject+SBJson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+SBJson.h"; sourceTree = "<group>"; };
 		D9CEF0AE16842A5B00B236B5 /* NSObject+SBJson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+SBJson.m"; sourceTree = "<group>"; };
@@ -2691,7 +2688,6 @@
 				63CC9F1E16D2E93500BDA7D1 /* TTTAttributedLabel */,
 				D9CEF0D216842AC700B236B5 /* MWFeedParser */,
 				D9CEF0AC16842A5B00B236B5 /* SBJson */,
-				D9CEEEC21684240900B236B5 /* MBProgressHUD */,
 				D9CEED95168423CA00B236B5 /* LibOrange */,
 				D96270DC1755DE8E00F0A958 /* UserVoice */,
 				D9CEED8C1684238D00B236B5 /* Crittercism */,
@@ -2897,16 +2893,6 @@
 			);
 			name = LibOrange;
 			path = Submodules/LibOrange/LibOrange;
-			sourceTree = "<group>";
-		};
-		D9CEEEC21684240900B236B5 /* MBProgressHUD */ = {
-			isa = PBXGroup;
-			children = (
-				D9CEEEDD1684240900B236B5 /* MBProgressHUD.h */,
-				D9CEEEDE1684240900B236B5 /* MBProgressHUD.m */,
-			);
-			name = MBProgressHUD;
-			path = Submodules/MBProgressHUD;
 			sourceTree = "<group>";
 		};
 		D9CEF0AC16842A5B00B236B5 /* SBJson */ = {
@@ -3827,7 +3813,6 @@
 				D9CEEEBC168423CA00B236B5 /* SNAC.m in Sources */,
 				D9CEEEBD168423CA00B236B5 /* TLV.m in Sources */,
 				638286E01846911C00F127C2 /* OTRAccountTableViewCell.m in Sources */,
-				D9CEEEFA1684240900B236B5 /* MBProgressHUD.m in Sources */,
 				D9CEF0C616842A5B00B236B5 /* NSObject+SBJson.m in Sources */,
 				D9CEF0C716842A5B00B236B5 /* SBJsonParser.m in Sources */,
 				D9CEF0C816842A5B00B236B5 /* SBJsonStreamParser.m in Sources */,

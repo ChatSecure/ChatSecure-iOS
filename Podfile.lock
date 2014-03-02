@@ -31,6 +31,7 @@ PODS:
   - MagicalRecord (2.2):
     - MagicalRecord/Core
   - MagicalRecord/Core (2.2)
+  - MBProgressHUD (0.8)
   - SSKeychain (1.2.1)
 
 DEPENDENCIES:
@@ -42,6 +43,7 @@ DEPENDENCIES:
   - Facebook-iOS-SDK
   - HockeySDK
   - MagicalRecord
+  - MBProgressHUD (~> 0.8)
   - SSKeychain
 
 EXTERNAL SOURCES:
@@ -57,6 +59,7 @@ SPEC CHECKSUMS:
   Facebook-iOS-SDK: c09f7d80db5c48170ff834bc03ebe774c49d1f5b
   HockeySDK: 4f7f7e15c1f594e8ca1e16a09f04e7418289de7a
   MagicalRecord: 95d49d74ef752cd52f6ad87bcb474817fc3978cf
+  MBProgressHUD: 2bbc6f470111daf7f3eaa4eb12b8cbf01c4c0622
   SSKeychain: d18926838c2e7cd342e2a49e9f869858e49f035a
 
 COCOAPODS: 0.29.0

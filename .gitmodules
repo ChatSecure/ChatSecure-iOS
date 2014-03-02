@@ -1,7 +1,4 @@
 
-[submodule "Submodules/MBProgressHUD"]
-	path = Submodules/MBProgressHUD
-	url = git://github.com/jdg/MBProgressHUD.git
 [submodule "Submodules/MWFeedParser"]
 	path = Submodules/MWFeedParser
 	url = git@github.com:ChatSecure/MWFeedParser.git
