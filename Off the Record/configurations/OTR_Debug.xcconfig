@@ -1,0 +1,4 @@
+#include "OTR_Global.xcconfig"
+#include "OTR_Codesigning.xcconfig"
+
+OTHER_CFLAGS = $(inherited) $OTR_CFLAGS
