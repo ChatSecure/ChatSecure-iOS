@@ -684,6 +684,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1AE5185118C3B3DA00946594 /* ChatSecure_Global.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = ChatSecure_Global.xcconfig; path = "Off the Record/configurations/ChatSecure_Global.xcconfig"; sourceTree = SOURCE_ROOT; };
+		1AE5185718C3B3F000946594 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = en; path = ChatSecure_Debug.xcconfig; sourceTree = "<group>"; };
+		1AE5185918C3B45900946594 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = en; path = ChatSecure_Codesigning.xcconfig; sourceTree = "<group>"; };
+		1AE5186518C3B53C00946594 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = en; path = ChatSecure_Release.xcconfig; sourceTree = "<group>"; };
 		6300F16116E6CCD400D3C1AA /* inbox.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = inbox.png; sourceTree = "<group>"; };
 		6300F16216E6CCD400D3C1AA /* inbox@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "inbox@2x.png"; sourceTree = "<group>"; };
 		6300F16516E6CF8400D3C1AA /* OTRSubscriptionRequestsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRSubscriptionRequestsViewController.h; sourceTree = "<group>"; };
@@ -1735,6 +1739,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1AE5186618C3B67500946594 /* Configurations */ = {
+			isa = PBXGroup;
+			children = (
+				1AE5185118C3B3DA00946594 /* ChatSecure_Global.xcconfig */,
+				1AE5185818C3B45900946594 /* ChatSecure_Codesigning.xcconfig */,
+				1AE5185618C3B3F000946594 /* ChatSecure_Debug.xcconfig */,
+				1AE5186418C3B53C00946594 /* ChatSecure_Release.xcconfig */,
+			);
+			name = Configurations;
+			path = "Off the Record/configurations";
+			sourceTree = SOURCE_ROOT;
+		};
 		6301D87F16E95A23008F67A6 /* OpenInChrome */ = {
 			isa = PBXGroup;
 			children = (
@@ -3383,6 +3399,7 @@
 				D9D8D1F71531056300F9E8D3 /* InfoPlist.strings */,
 				D9D8D1F91531056300F9E8D3 /* Localizable.strings */,
 				D9FCA7291533A37F009AD599 /* Images */,
+				1AE5186618C3B67500946594 /* Configurations */,
 			);
 			name = Resources;
 			path = en.lproj;
@@ -4482,6 +4499,30 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		1AE5185618C3B3F000946594 /* ChatSecure_Debug.xcconfig */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1AE5185718C3B3F000946594 /* en */,
+			);
+			name = ChatSecure_Debug.xcconfig;
+			sourceTree = "<group>";
+		};
+		1AE5185818C3B45900946594 /* ChatSecure_Codesigning.xcconfig */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1AE5185918C3B45900946594 /* en */,
+			);
+			name = ChatSecure_Codesigning.xcconfig;
+			sourceTree = "<group>";
+		};
+		1AE5186418C3B53C00946594 /* ChatSecure_Release.xcconfig */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1AE5186518C3B53C00946594 /* en */,
+			);
+			name = ChatSecure_Release.xcconfig;
+			sourceTree = "<group>";
+		};
 		63058649183F02D4009ADB6B /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -4792,8 +4833,6 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -4816,8 +4855,6 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_THUMB_SUPPORT = NO;
@@ -4831,9 +4868,8 @@
 		};
 		D9F937A313F44BD3009A3D84 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1AE5185718C3B3F000946594 /* en */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4857,10 +4893,12 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/Submodules/XMPPFramework/Vendor/libidn\"",
 				);
-				OTHER_CFLAGS = "-DSQLITE_HAS_CODEC";
+				OTHER_CFLAGS = (
+					"-DSQLITE_HAS_CODEC",
+					"$(inherited)",
+				);
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = ChatSecure;
-				PROVISIONING_PROFILE = "352F9BA4-6D28-4E67-975B-FF030BCF2C00";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
@@ -4868,9 +4906,8 @@
 		};
 		D9F937A413F44BD3009A3D84 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1AE5186518C3B53C00946594 /* en */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4895,12 +4932,11 @@
 					"\"$(SRCROOT)/Submodules/XMPPFramework/Vendor/libidn\"",
 				);
 				OTHER_CFLAGS = (
-					"-DNS_BLOCK_ASSERTIONS=1",
 					"-DSQLITE_HAS_CODEC",
+					"$(inherited)",
 				);
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_NAME = ChatSecure;
-				PROVISIONING_PROFILE = "352F9BA4-6D28-4E67-975B-FF030BCF2C00";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};

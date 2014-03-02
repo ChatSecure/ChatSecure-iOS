@@ -53,6 +53,7 @@ Build Instructions
 - Dowload `git clone git@github.com:chrisballinger/Off-the-Record-iOS.git --recursive`
 - `cd Off-the-Record-iOS/`
 - Create `/Off the Record/OTRSecrets.h` and fill in blank strings for the missing API keys: `USERVOICE_KEY`, `USERVOICE_SECRET`, `GOOGLE_APP_SECRET`, `HOCKEY_LIVE_IDENTIFIER`, and `HOCKEY_BETA_IDENTIFIER`.
+- `$ cp Off\ the\ Record/configurations/ChatSecure_Codesigning.xcconfig.sample Off\ the\ Recordconfigurations/ChatSecure_Codesigning.xcconfig` and set your provisioning profile ID.
 - Open `Off the Record.xcodeproj` in Xcode and build.
 
 License

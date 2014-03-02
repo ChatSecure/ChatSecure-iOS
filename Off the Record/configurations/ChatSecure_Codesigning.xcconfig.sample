@@ -1,0 +1,15 @@
+//
+//  ChatSecure_Codesigning.xcconfig
+//  Off the Record
+//
+//  Created by James Moore on 3/2/14.
+//  Copyright (c) 2014 Chris Ballinger. All rights reserved.
+//
+
+//:configuration = Debug
+CODE_SIGN_IDENTITY = iPhone Developer
+PROVISIONING_PROFILE = 352F9BA4-6D28-4E67-975B-FF030BCF2C00
+
+//:configuration = Release
+CODE_SIGN_IDENTITY = iPhone Developer
+PROVISIONING_PROFILE = 352F9BA4-6D28-4E67-975B-FF030BCF2C00
