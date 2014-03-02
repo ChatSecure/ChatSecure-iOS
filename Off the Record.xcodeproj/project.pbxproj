@@ -684,10 +684,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		1AE5185118C3B3DA00946594 /* ChatSecure_Global.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = ChatSecure_Global.xcconfig; path = "Off the Record/configurations/ChatSecure_Global.xcconfig"; sourceTree = SOURCE_ROOT; };
-		1AE5185718C3B3F000946594 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = en; path = ChatSecure_Debug.xcconfig; sourceTree = "<group>"; };
-		1AE5185918C3B45900946594 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = en; path = ChatSecure_Codesigning.xcconfig; sourceTree = "<group>"; };
-		1AE5186518C3B53C00946594 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = en; path = ChatSecure_Release.xcconfig; sourceTree = "<group>"; };
+		1AE5185118C3B3DA00946594 /* OTR_Global.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = OTR_Global.xcconfig; path = "Off the Record/configurations/OTR_Global.xcconfig"; sourceTree = SOURCE_ROOT; };
+		1AE5185718C3B3F000946594 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = en; path = OTR_Debug.xcconfig; sourceTree = "<group>"; };
+		1AE5185918C3B45900946594 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = en; path = OTR_Codesigning.xcconfig; sourceTree = "<group>"; };
+		1AE5186518C3B53C00946594 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = en; path = OTR_Release.xcconfig; sourceTree = "<group>"; };
+		1AE5189718C3CA1000946594 /* OTR_Codesigning.xcconfig.sample */ = {isa = PBXFileReference; lastKnownFileType = text; path = OTR_Codesigning.xcconfig.sample; sourceTree = "<group>"; };
 		6300F16116E6CCD400D3C1AA /* inbox.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = inbox.png; sourceTree = "<group>"; };
 		6300F16216E6CCD400D3C1AA /* inbox@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "inbox@2x.png"; sourceTree = "<group>"; };
 		6300F16516E6CF8400D3C1AA /* OTRSubscriptionRequestsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRSubscriptionRequestsViewController.h; sourceTree = "<group>"; };
@@ -1742,10 +1743,11 @@
 		1AE5186618C3B67500946594 /* Configurations */ = {
 			isa = PBXGroup;
 			children = (
-				1AE5185118C3B3DA00946594 /* ChatSecure_Global.xcconfig */,
-				1AE5185818C3B45900946594 /* ChatSecure_Codesigning.xcconfig */,
-				1AE5185618C3B3F000946594 /* ChatSecure_Debug.xcconfig */,
-				1AE5186418C3B53C00946594 /* ChatSecure_Release.xcconfig */,
+				1AE5185118C3B3DA00946594 /* OTR_Global.xcconfig */,
+				1AE5185818C3B45900946594 /* OTR_Codesigning.xcconfig */,
+				1AE5185618C3B3F000946594 /* OTR_Debug.xcconfig */,
+				1AE5186418C3B53C00946594 /* OTR_Release.xcconfig */,
+				1AE5189718C3CA1000946594 /* OTR_Codesigning.xcconfig.sample */,
 			);
 			name = Configurations;
 			path = "Off the Record/configurations";
@@ -4499,28 +4501,28 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		1AE5185618C3B3F000946594 /* ChatSecure_Debug.xcconfig */ = {
+		1AE5185618C3B3F000946594 /* OTR_Debug.xcconfig */ = {
 			isa = PBXVariantGroup;
 			children = (
 				1AE5185718C3B3F000946594 /* en */,
 			);
-			name = ChatSecure_Debug.xcconfig;
+			name = OTR_Debug.xcconfig;
 			sourceTree = "<group>";
 		};
-		1AE5185818C3B45900946594 /* ChatSecure_Codesigning.xcconfig */ = {
+		1AE5185818C3B45900946594 /* OTR_Codesigning.xcconfig */ = {
 			isa = PBXVariantGroup;
 			children = (
 				1AE5185918C3B45900946594 /* en */,
 			);
-			name = ChatSecure_Codesigning.xcconfig;
+			name = OTR_Codesigning.xcconfig;
 			sourceTree = "<group>";
 		};
-		1AE5186418C3B53C00946594 /* ChatSecure_Release.xcconfig */ = {
+		1AE5186418C3B53C00946594 /* OTR_Release.xcconfig */ = {
 			isa = PBXVariantGroup;
 			children = (
 				1AE5186518C3B53C00946594 /* en */,
 			);
-			name = ChatSecure_Release.xcconfig;
+			name = OTR_Release.xcconfig;
 			sourceTree = "<group>";
 		};
 		63058649183F02D4009ADB6B /* InfoPlist.strings */ = {
