@@ -38,7 +38,7 @@
 #import "OTROutgoingMessageTableViewCell.h"
 
 #import "OTRImages.h"
-
+#import "OTRButtonView.h"
 #import "OTRComposingImageView.h"
 
 static CGFloat const messageMarginTop = 7;
@@ -95,6 +95,25 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
 {
     __weak OTRChatViewController * weakSelf = self;
     self.lockButton = [OTRLockButton lockButtonWithInitailLockStatus:OTRLockStatusUnlocked withBlock:^(OTRLockStatus currentStatus){
+        
+        UIButton *encryptionButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        [encryptionButton setTitle:@"Encryption" forState:UIControlStateNormal];
+        
+        UIButton *fingerprintButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        [fingerprintButton setTitle:@"Fingerprint" forState:UIControlStateNormal];
+        
+        UIView * buttonView = [[OTRButtonView alloc] initWithTitile:@"You are kinda encrypted" buttons:@[encryptionButton,fingerprintButton]];
+        buttonView.frame = CGRectMake(0, self.navigationController.navigationBar.frame.size.height+self.navigationController.navigationBar.frame.origin.y, self.view.bounds.size.width, 44);
+        
+        UIToolbar * backgroundToolbar = [[UIToolbar alloc] initWithFrame:buttonView.frame];
+        backgroundToolbar.barStyle = UIBarStyleDefault;
+        [self.view addSubview:buttonView];
+        [self.view insertSubview:backgroundToolbar belowSubview:buttonView];
+        
+        
+        
+        
+        
         NSString *encryptionString = INITIATE_ENCRYPTED_CHAT_STRING;
         NSString * verifiedString = VERIFY_STRING;
         

@@ -41,6 +41,7 @@
 		631F4AD618BFE1D200AE6E8A /* xmpp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 631F4AD418BFE1D200AE6E8A /* xmpp@2x.png */; };
 		631F4AE318BFF98D00AE6E8A /* OTRIncomingMessageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 631F4AE218BFF98D00AE6E8A /* OTRIncomingMessageTableViewCell.m */; };
 		631F4AE618BFF9BC00AE6E8A /* OTROutgoingMessageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 631F4AE518BFF9BC00AE6E8A /* OTROutgoingMessageTableViewCell.m */; };
+		631F4AE918C0004200AE6E8A /* OTRButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = 631F4AE818C0004200AE6E8A /* OTRButtonView.m */; };
 		631FE8851720951400AEA107 /* OTRStatusMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 631FE8841720951400AEA107 /* OTRStatusMessageCell.m */; };
 		6326F63A184D5249008B6B01 /* facebook.cer in Resources */ = {isa = PBXBuildFile; fileRef = 6326F639184D5249008B6B01 /* facebook.cer */; };
 		632E911D185A88F600F7FBC8 /* SIAlertView.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 632E9118185A88F600F7FBC8 /* SIAlertView.bundle */; };
@@ -733,6 +734,8 @@
 		631F4AE218BFF98D00AE6E8A /* OTRIncomingMessageTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRIncomingMessageTableViewCell.m; sourceTree = "<group>"; };
 		631F4AE418BFF9BC00AE6E8A /* OTROutgoingMessageTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTROutgoingMessageTableViewCell.h; sourceTree = "<group>"; };
 		631F4AE518BFF9BC00AE6E8A /* OTROutgoingMessageTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTROutgoingMessageTableViewCell.m; sourceTree = "<group>"; };
+		631F4AE718C0004200AE6E8A /* OTRButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRButtonView.h; sourceTree = "<group>"; };
+		631F4AE818C0004200AE6E8A /* OTRButtonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRButtonView.m; sourceTree = "<group>"; };
 		631FE8831720951400AEA107 /* OTRStatusMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRStatusMessageCell.h; sourceTree = "<group>"; };
 		631FE8841720951400AEA107 /* OTRStatusMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRStatusMessageCell.m; sourceTree = "<group>"; };
 		6321870816E6C21100CB4D3C /* _OTRXMPPManagedPresenceSubscriptionRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _OTRXMPPManagedPresenceSubscriptionRequest.h; sourceTree = "<group>"; };
@@ -3579,6 +3582,8 @@
 				63534AAE187F5A1400061776 /* OTRChatBubbleView.m */,
 				63022BB416CDAD4C00F764F1 /* OTRChatViewController.h */,
 				63022BB516CDAD4C00F764F1 /* OTRChatViewController.m */,
+				631F4AE718C0004200AE6E8A /* OTRButtonView.h */,
+				631F4AE818C0004200AE6E8A /* OTRButtonView.m */,
 				638940CF1815E339005F651E /* OTRDemoChatViewController.h */,
 				638940D01815E339005F651E /* OTRDemoChatViewController.m */,
 				633B6D0317ECFB0C002DA152 /* OTRChatInputBar.h */,
@@ -4225,6 +4230,7 @@
 				D9CEEE61168423CA00B236B5 /* AIMBArtHandler.m in Sources */,
 				D9CEEE62168423CA00B236B5 /* AIMBArtID.m in Sources */,
 				D9CEEE63168423CA00B236B5 /* AIMBArtIDWName.m in Sources */,
+				631F4AE918C0004200AE6E8A /* OTRButtonView.m in Sources */,
 				D9CEEE64168423CA00B236B5 /* AIMBArtQueryReplyID.m in Sources */,
 				6398CDC617FA20EC009389F8 /* AFURLResponseSerialization.m in Sources */,
 				D9CEEE65168423CA00B236B5 /* AIMBlist.m in Sources */,
