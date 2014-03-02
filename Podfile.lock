@@ -25,6 +25,7 @@ PODS:
   - CocoaLumberjack/Core (1.8.1)
   - CocoaLumberjack/Extensions (1.8.1):
     - CocoaLumberjack/Core
+  - DAKeyboardControl (2.3.0)
   - Facebook-iOS-SDK (3.12.0)
   - HockeySDK (3.5.4)
   - MagicalRecord (2.2):
@@ -37,6 +38,7 @@ DEPENDENCIES:
   - Appirater
   - CocoaAsyncSocket (from `git@github.com:ChatSecure/CocoaAsyncSocket.git`)
   - CocoaLumberjack
+  - DAKeyboardControl (~> 2.3)
   - Facebook-iOS-SDK
   - HockeySDK
   - MagicalRecord
@@ -51,6 +53,7 @@ SPEC CHECKSUMS:
   Appirater: 32fb9089615b5e542c7ad7b5749741a8aed55290
   CocoaAsyncSocket: 50a73b79fb77f0dbb57cdc5c247c8f19e9cb3b33
   CocoaLumberjack: 020378ec400d658923bf5887178394f65f052c90
+  DAKeyboardControl: 219d6e32b9343eb85151255c43b1f238d8f0bbf7
   Facebook-iOS-SDK: c09f7d80db5c48170ff834bc03ebe774c49d1f5b
   HockeySDK: 4f7f7e15c1f594e8ca1e16a09f04e7418289de7a
   MagicalRecord: 95d49d74ef752cd52f6ad87bcb474817fc3978cf

@@ -229,7 +229,6 @@
 		63C0856A184574BE00B9C984 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 63C08568184574BE00B9C984 /* InfoPlist.strings */; };
 		63C0856C184574BE00B9C984 /* Off_the_Record_Integration_Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C0856B184574BE00B9C984 /* Off_the_Record_Integration_Tests.m */; };
 		63C0857F1845863900B9C984 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63C0857E1845863900B9C984 /* SenTestingKit.framework */; };
-		63CC9F1C16D2D18100BDA7D1 /* DAKeyboardControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CC9F1B16D2D18100BDA7D1 /* DAKeyboardControl.m */; };
 		63CC9F2116D2E93500BDA7D1 /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CC9F2016D2E93500BDA7D1 /* TTTAttributedLabel.m */; };
 		63D0E4791819D41E003ACA13 /* OTRCapabilitiesInMemoryCoreDataStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D0E4781819D41E003ACA13 /* OTRCapabilitiesInMemoryCoreDataStorage.m */; };
 		63D0E47C1819D71A003ACA13 /* OTRvCardCoreDataStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D0E47B1819D71A003ACA13 /* OTRvCardCoreDataStorage.m */; };
@@ -1012,8 +1011,6 @@
 		63C0856D184574BE00B9C984 /* Off the Record Integration Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Off the Record Integration Tests-Prefix.pch"; sourceTree = "<group>"; };
 		63C0857D1845763100B9C984 /* OTRTestSecrets.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRTestSecrets.h; sourceTree = "<group>"; };
 		63C0857E1845863900B9C984 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
-		63CC9F1A16D2D18100BDA7D1 /* DAKeyboardControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DAKeyboardControl.h; sourceTree = "<group>"; };
-		63CC9F1B16D2D18100BDA7D1 /* DAKeyboardControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DAKeyboardControl.m; sourceTree = "<group>"; };
 		63CC9F1F16D2E93500BDA7D1 /* TTTAttributedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTAttributedLabel.h; sourceTree = "<group>"; };
 		63CC9F2016D2E93500BDA7D1 /* TTTAttributedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTAttributedLabel.m; sourceTree = "<group>"; };
 		63D0E4771819D41E003ACA13 /* OTRCapabilitiesInMemoryCoreDataStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRCapabilitiesInMemoryCoreDataStorage.h; sourceTree = "<group>"; };
@@ -2474,16 +2471,6 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		63CC9F1916D2D18100BDA7D1 /* DAKeyboardControl */ = {
-			isa = PBXGroup;
-			children = (
-				63CC9F1A16D2D18100BDA7D1 /* DAKeyboardControl.h */,
-				63CC9F1B16D2D18100BDA7D1 /* DAKeyboardControl.m */,
-			);
-			name = DAKeyboardControl;
-			path = Submodules/DAKeyboardControl/DAKeyboardControl;
-			sourceTree = "<group>";
-		};
 		63CC9F1E16D2E93500BDA7D1 /* TTTAttributedLabel */ = {
 			isa = PBXGroup;
 			children = (
@@ -2702,7 +2689,6 @@
 				63483DF41752CEB700779257 /* XMPPFramework */,
 				6301D87F16E95A23008F67A6 /* OpenInChrome */,
 				63CC9F1E16D2E93500BDA7D1 /* TTTAttributedLabel */,
-				63CC9F1916D2D18100BDA7D1 /* DAKeyboardControl */,
 				D9CEF0D216842AC700B236B5 /* MWFeedParser */,
 				D9CEF0AC16842A5B00B236B5 /* SBJson */,
 				D9CEEEC21684240900B236B5 /* MBProgressHUD */,
@@ -3884,7 +3870,6 @@
 				63E5E81616D1D888006E2B01 /* OTROldOscarAccount.m in Sources */,
 				63E5E81716D1D888006E2B01 /* OTROldXMPPAccount.m in Sources */,
 				63E5E81E16D1DE66006E2B01 /* ChatSecure.xcdatamodeld in Sources */,
-				63CC9F1C16D2D18100BDA7D1 /* DAKeyboardControl.m in Sources */,
 				63CC9F2116D2E93500BDA7D1 /* TTTAttributedLabel.m in Sources */,
 				639BE6B116DC3B2B004B7257 /* _OTRManagedMessageAndStatus.m in Sources */,
 				639BE6B216DC3B2B004B7257 /* _OTRManagedStatus.m in Sources */,

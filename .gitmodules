@@ -20,9 +20,6 @@
 [submodule "Submodules/encrypted-core-data"]
 	path = Submodules/encrypted-core-data
 	url = git@github.com:ChatSecure/encrypted-core-data.git
-[submodule "Submodules/DAKeyboardControl"]
-	path = Submodules/DAKeyboardControl
-	url = git@github.com:danielamitay/DAKeyboardControl.git
 [submodule "Submodules/TTTAttributedLabel"]
 	path = Submodules/TTTAttributedLabel
 	url = git@github.com:ChatSecure/TTTAttributedLabel.git
