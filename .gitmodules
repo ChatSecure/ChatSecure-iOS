@@ -1,7 +1,4 @@
 
-[submodule "Submodules/SSKeychain"]
-	path = Submodules/SSKeychain
-	url = git://github.com/soffes/sskeychain.git
 [submodule "Submodules/MBProgressHUD"]
 	path = Submodules/MBProgressHUD
 	url = git://github.com/jdg/MBProgressHUD.git
@@ -44,15 +41,9 @@
 [submodule "Submodules/GrowingTextView"]
 	path = Submodules/GrowingTextView
 	url = git@github.com:HansPinckaers/GrowingTextView.git
-[submodule "Submodules/HockeySDK-iOS"]
-	path = Submodules/HockeySDK-iOS
-	url = git@github.com:bitstadium/HockeySDK-iOS.git
 [submodule "Submodules/ChatSecure-Metadata"]
 	path = Submodules/ChatSecure-Metadata
 	url = git@github.com:ChatSecure/ChatSecure-Metadata.git
-[submodule "Submodules/CocoaLumberjack"]
-	path = Submodules/CocoaLumberjack
-	url = git@github.com:robbiehanson/CocoaLumberjack.git
 [submodule "Submodules/SIAlertView"]
 	path = Submodules/SIAlertView
 	url = git@github.com:ChatSecure/SIAlertView.git

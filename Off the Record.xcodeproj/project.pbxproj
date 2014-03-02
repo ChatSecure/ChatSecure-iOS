@@ -195,19 +195,8 @@
 		638286E01846911C00F127C2 /* OTRAccountTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 638286DF1846911C00F127C2 /* OTRAccountTableViewCell.m */; };
 		63871264175808DA006C3A4E /* OTRActivityItemProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 63871263175808DA006C3A4E /* OTRActivityItemProvider.m */; };
 		6387126817580D93006C3A4E /* OTRQRCodeActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 6387126717580D93006C3A4E /* OTRQRCodeActivity.m */; };
-		638940CE1815CAF8005F651E /* CrashReporter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 638940CD1815CAF8005F651E /* CrashReporter.framework */; };
 		638940D11815E339005F651E /* OTRDemoChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 638940D01815E339005F651E /* OTRDemoChatViewController.m */; };
-		6398CD9117FA1F61009389F8 /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 6398CD9017FA1F61009389F8 /* GCDAsyncSocket.m */; };
 		6398CD9517FA209A009389F8 /* XMPPCertificatePinning.m in Sources */ = {isa = PBXBuildFile; fileRef = 6398CD9417FA209A009389F8 /* XMPPCertificatePinning.m */; };
-		6398CDBB17FA20EC009389F8 /* AFHTTPRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 6398CD9C17FA20EC009389F8 /* AFHTTPRequestOperation.m */; };
-		6398CDBC17FA20EC009389F8 /* AFHTTPRequestOperationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6398CD9E17FA20EC009389F8 /* AFHTTPRequestOperationManager.m */; };
-		6398CDBD17FA20EC009389F8 /* AFHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6398CDA017FA20EC009389F8 /* AFHTTPSessionManager.m */; };
-		6398CDC117FA20EC009389F8 /* AFNetworkReachabilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6398CDA917FA20EC009389F8 /* AFNetworkReachabilityManager.m */; };
-		6398CDC317FA20EC009389F8 /* AFSecurityPolicy.m in Sources */ = {isa = PBXBuildFile; fileRef = 6398CDAD17FA20EC009389F8 /* AFSecurityPolicy.m */; };
-		6398CDC417FA20EC009389F8 /* AFURLConnectionOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 6398CDB017FA20EC009389F8 /* AFURLConnectionOperation.m */; };
-		6398CDC517FA20EC009389F8 /* AFURLRequestSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 6398CDB217FA20EC009389F8 /* AFURLRequestSerialization.m */; };
-		6398CDC617FA20EC009389F8 /* AFURLResponseSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 6398CDB417FA20EC009389F8 /* AFURLResponseSerialization.m */; };
-		6398CDC717FA20EC009389F8 /* AFURLSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6398CDB617FA20EC009389F8 /* AFURLSessionManager.m */; };
 		639B9A71164F21D900C021A9 /* OTRShareSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 639B9A70164F21D900C021A9 /* OTRShareSetting.m */; };
 		639BE6B116DC3B2B004B7257 /* _OTRManagedMessageAndStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 639BE6AE16DC3B2B004B7257 /* _OTRManagedMessageAndStatus.m */; };
 		639BE6B216DC3B2B004B7257 /* _OTRManagedStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 639BE6B016DC3B2B004B7257 /* _OTRManagedStatus.m */; };
@@ -296,17 +285,7 @@
 		63E5E84016D1DF14006E2B01 /* SendButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63E5E83016D1DF14006E2B01 /* SendButton@2x.png */; };
 		63E5E84116D1DF14006E2B01 /* SendButtonHighlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = 63E5E83116D1DF14006E2B01 /* SendButtonHighlighted.png */; };
 		63E5E84216D1DF14006E2B01 /* SendButtonHighlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63E5E83216D1DF14006E2B01 /* SendButtonHighlighted@2x.png */; };
-		63E717E6182AF391004398AD /* SSKeychain.strings in Resources */ = {isa = PBXBuildFile; fileRef = 63E717E0182AF391004398AD /* SSKeychain.strings */; };
-		63E717E7182AF391004398AD /* SSKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E717E3182AF391004398AD /* SSKeychain.m */; };
-		63E717E8182AF391004398AD /* SSKeychainQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E717E5182AF391004398AD /* SSKeychainQuery.m */; };
 		63F2585717FB51C2007A7565 /* google.cer in Resources */ = {isa = PBXBuildFile; fileRef = 63F2585617FB51C2007A7565 /* google.cer */; };
-		63F637BE183D93DB004A7AC5 /* DDAbstractDatabaseLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F637B5183D93DB004A7AC5 /* DDAbstractDatabaseLogger.m */; };
-		63F637BF183D93DB004A7AC5 /* DDASLLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F637B7183D93DB004A7AC5 /* DDASLLogger.m */; };
-		63F637C0183D93DB004A7AC5 /* DDFileLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F637B9183D93DB004A7AC5 /* DDFileLogger.m */; };
-		63F637C1183D93DB004A7AC5 /* DDLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F637BB183D93DB004A7AC5 /* DDLog.m */; };
-		63F637C2183D93DB004A7AC5 /* DDTTYLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F637BD183D93DB004A7AC5 /* DDTTYLogger.m */; };
-		63F637C7183D9410004A7AC5 /* ContextFilterLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F637C4183D9410004A7AC5 /* ContextFilterLogFormatter.m */; };
-		63F637C8183D9410004A7AC5 /* DispatchQueueLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F637C6183D9410004A7AC5 /* DispatchQueueLogFormatter.m */; };
 		63F6E854164E000C00F67BDB /* OTRFeedbackSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F6E853164E000B00F67BDB /* OTRFeedbackSetting.m */; };
 		63F8A52F16DD995400374551 /* OTRIntSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F8A52E16DD995400374551 /* OTRIntSetting.m */; };
 		63F8A53316DD9B6F00374551 /* OTRIntSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F8A53216DD9B6F00374551 /* OTRIntSettingViewController.m */; };
@@ -314,7 +293,6 @@
 		63FE64C61727535700876D15 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63FE64C51727535700876D15 /* StoreKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		63FEE8EB17C596B1009C9030 /* XMPPStringPrep.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FEE8EA17C596B1009C9030 /* XMPPStringPrep.m */; };
 		D6547628B04B43DEB35EC9D3 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CE38008CD82242658DB86DEE /* libPods.a */; };
-		D909664F17EA67D600440833 /* libfacebook_ios_sdk.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D909664617EA67BD00440833 /* libfacebook_ios_sdk.a */; };
 		D90966FB17EA73C900440833 /* libOAuthTouch2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D909663717EA55B900440833 /* libOAuthTouch2.a */; };
 		D90B80AC13FC719B006EFF3D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D90B80AB13FC719B006EFF3D /* CoreGraphics.framework */; };
 		D90B80AF13FC7E5F006EFF3D /* OTRCodec.m in Sources */ = {isa = PBXBuildFile; fileRef = D90B80AE13FC7E5F006EFF3D /* OTRCodec.m */; };
@@ -375,8 +353,6 @@
 		D9A7E0AB15242D8C00EEDDB5 /* Default-Landscape~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = D9A7E0AA15242D8C00EEDDB5 /* Default-Landscape~ipad.png */; };
 		D9A7E0AD15242D9000EEDDB5 /* Default-Landscape@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = D9A7E0AC15242D9000EEDDB5 /* Default-Landscape@2x~ipad.png */; };
 		D9ADF9E518109D420096B07A /* OTRDatabaseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D9ADF9E418109D410096B07A /* OTRDatabaseManager.m */; };
-		D9B24F221808A061005174C5 /* libHockeySDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D9B24F1A1808A04E005174C5 /* libHockeySDK.a */; };
-		D9B24F251808A100005174C5 /* HockeySDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D9B24F1C1808A04E005174C5 /* HockeySDKResources.bundle */; };
 		D9BBCD3B1491F7AB00AF1B9F /* 19-gear.png in Resources */ = {isa = PBXBuildFile; fileRef = D9BBCD3A1491F7AB00AF1B9F /* 19-gear.png */; };
 		D9BBCD3F1491F8B400AF1B9F /* OTRAboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9BBCD3D1491F8B400AF1B9F /* OTRAboutViewController.m */; };
 		D9BBCD431491FFC800AF1B9F /* about_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = D9BBCD411491FFC800AF1B9F /* about_icon.png */; };
@@ -553,34 +529,6 @@
 			remoteGlobalIDString = 4FC754FA13E77E25006A0C26;
 			remoteInfo = OAuthTouchNonGoogleStaticLib;
 		};
-		D909664517EA67BD00440833 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D909663D17EA67BD00440833 /* facebook-ios-sdk.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D2AAC07E0554694100DB518D;
-			remoteInfo = "facebook-ios-sdk";
-		};
-		D909664717EA67BD00440833 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D909663D17EA67BD00440833 /* facebook-ios-sdk.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = B9CBC519152537270036AA71;
-			remoteInfo = FacebookSDKTests;
-		};
-		D909664917EA67BD00440833 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D909663D17EA67BD00440833 /* facebook-ios-sdk.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 85A44B9F16A8CE05007BE80E;
-			remoteInfo = FacebookSDKIntegrationTests;
-		};
-		D909664D17EA67CC00440833 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D909663D17EA67BD00440833 /* facebook-ios-sdk.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = D2AAC07D0554694100DB518D;
-			remoteInfo = "facebook-ios-sdk";
-		};
 		D909671017EA7ADF00440833 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D909662F17EA55B800440833 /* GTMOAuth2.xcodeproj */;
@@ -601,34 +549,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = D2AAC07D0554694100DB518D;
 			remoteInfo = UserVoice;
-		};
-		D9B24F191808A04E005174C5 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D9B24F0C1808A04E005174C5 /* HockeySDK.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 1E5954F215B6F24A00A03429;
-			remoteInfo = HockeySDK;
-		};
-		D9B24F1B1808A04E005174C5 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D9B24F0C1808A04E005174C5 /* HockeySDK.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 1E59550A15B6F45800A03429;
-			remoteInfo = HockeySDKResources;
-		};
-		D9B24F1D1808A04E005174C5 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D9B24F0C1808A04E005174C5 /* HockeySDK.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 1E5A459016F0DFC200B55C04;
-			remoteInfo = HockeySDKTests;
-		};
-		D9B24F201808A05B005174C5 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D9B24F0C1808A04E005174C5 /* HockeySDK.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 1E5954CB15B6F24A00A03429;
-			remoteInfo = HockeySDK;
 		};
 		D9CEED691684235C00B236B5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1023,7 +943,6 @@
 		63871263175808DA006C3A4E /* OTRActivityItemProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRActivityItemProvider.m; sourceTree = "<group>"; };
 		6387126617580D92006C3A4E /* OTRQRCodeActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRQRCodeActivity.h; sourceTree = "<group>"; };
 		6387126717580D93006C3A4E /* OTRQRCodeActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRQRCodeActivity.m; sourceTree = "<group>"; };
-		638940CD1815CAF8005F651E /* CrashReporter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CrashReporter.framework; path = "Submodules/HockeySDK-iOS/Vendor/CrashReporter.framework"; sourceTree = "<group>"; };
 		638940CF1815E339005F651E /* OTRDemoChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRDemoChatViewController.h; sourceTree = "<group>"; };
 		638940D01815E339005F651E /* OTRDemoChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRDemoChatViewController.m; sourceTree = "<group>"; };
 		6398CD8F17FA1F61009389F8 /* GCDAsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GCDAsyncSocket.h; path = GCD/GCDAsyncSocket.h; sourceTree = "<group>"; };
@@ -1150,11 +1069,6 @@
 		63E5E83116D1DF14006E2B01 /* SendButtonHighlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SendButtonHighlighted.png; sourceTree = "<group>"; };
 		63E5E83216D1DF14006E2B01 /* SendButtonHighlighted@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SendButtonHighlighted@2x.png"; sourceTree = "<group>"; };
 		63E6BB741752D92F0070EC47 /* no */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = no; path = "Off the Record/no.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
-		63E717E1182AF391004398AD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/SSKeychain.strings; sourceTree = "<group>"; };
-		63E717E2182AF391004398AD /* SSKeychain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSKeychain.h; sourceTree = "<group>"; };
-		63E717E3182AF391004398AD /* SSKeychain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSKeychain.m; sourceTree = "<group>"; };
-		63E717E4182AF391004398AD /* SSKeychainQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSKeychainQuery.h; sourceTree = "<group>"; };
-		63E717E5182AF391004398AD /* SSKeychainQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSKeychainQuery.m; sourceTree = "<group>"; };
 		63E72B9316CB11E800B6F389 /* _OTRManagedAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _OTRManagedAccount.h; sourceTree = "<group>"; };
 		63E72B9416CB11E800B6F389 /* _OTRManagedAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _OTRManagedAccount.m; sourceTree = "<group>"; };
 		63E72B9516CB11E800B6F389 /* _OTRManagedBuddy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _OTRManagedBuddy.h; sourceTree = "<group>"; };
@@ -1169,20 +1083,6 @@
 		63EB094A17274AA2000FACDC /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = "Off the Record/es.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
 		63EB094B17274B24000FACDC /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = "Off the Record/sv.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
 		63F2585617FB51C2007A7565 /* google.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = google.cer; sourceTree = "<group>"; };
-		63F637B4183D93DB004A7AC5 /* DDAbstractDatabaseLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DDAbstractDatabaseLogger.h; path = Submodules/CocoaLumberjack/Lumberjack/DDAbstractDatabaseLogger.h; sourceTree = SOURCE_ROOT; };
-		63F637B5183D93DB004A7AC5 /* DDAbstractDatabaseLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DDAbstractDatabaseLogger.m; path = Submodules/CocoaLumberjack/Lumberjack/DDAbstractDatabaseLogger.m; sourceTree = SOURCE_ROOT; };
-		63F637B6183D93DB004A7AC5 /* DDASLLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DDASLLogger.h; path = Submodules/CocoaLumberjack/Lumberjack/DDASLLogger.h; sourceTree = SOURCE_ROOT; };
-		63F637B7183D93DB004A7AC5 /* DDASLLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DDASLLogger.m; path = Submodules/CocoaLumberjack/Lumberjack/DDASLLogger.m; sourceTree = SOURCE_ROOT; };
-		63F637B8183D93DB004A7AC5 /* DDFileLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DDFileLogger.h; path = Submodules/CocoaLumberjack/Lumberjack/DDFileLogger.h; sourceTree = SOURCE_ROOT; };
-		63F637B9183D93DB004A7AC5 /* DDFileLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DDFileLogger.m; path = Submodules/CocoaLumberjack/Lumberjack/DDFileLogger.m; sourceTree = SOURCE_ROOT; };
-		63F637BA183D93DB004A7AC5 /* DDLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DDLog.h; path = Submodules/CocoaLumberjack/Lumberjack/DDLog.h; sourceTree = SOURCE_ROOT; };
-		63F637BB183D93DB004A7AC5 /* DDLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DDLog.m; path = Submodules/CocoaLumberjack/Lumberjack/DDLog.m; sourceTree = SOURCE_ROOT; };
-		63F637BC183D93DB004A7AC5 /* DDTTYLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DDTTYLogger.h; path = Submodules/CocoaLumberjack/Lumberjack/DDTTYLogger.h; sourceTree = SOURCE_ROOT; };
-		63F637BD183D93DB004A7AC5 /* DDTTYLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DDTTYLogger.m; path = Submodules/CocoaLumberjack/Lumberjack/DDTTYLogger.m; sourceTree = SOURCE_ROOT; };
-		63F637C3183D9410004A7AC5 /* ContextFilterLogFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContextFilterLogFormatter.h; path = Submodules/CocoaLumberjack/Lumberjack/Extensions/ContextFilterLogFormatter.h; sourceTree = SOURCE_ROOT; };
-		63F637C4183D9410004A7AC5 /* ContextFilterLogFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ContextFilterLogFormatter.m; path = Submodules/CocoaLumberjack/Lumberjack/Extensions/ContextFilterLogFormatter.m; sourceTree = SOURCE_ROOT; };
-		63F637C5183D9410004A7AC5 /* DispatchQueueLogFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DispatchQueueLogFormatter.h; path = Submodules/CocoaLumberjack/Lumberjack/Extensions/DispatchQueueLogFormatter.h; sourceTree = SOURCE_ROOT; };
-		63F637C6183D9410004A7AC5 /* DispatchQueueLogFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DispatchQueueLogFormatter.m; path = Submodules/CocoaLumberjack/Lumberjack/Extensions/DispatchQueueLogFormatter.m; sourceTree = SOURCE_ROOT; };
 		63F6E852164E000B00F67BDB /* OTRFeedbackSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRFeedbackSetting.h; sourceTree = "<group>"; };
 		63F6E853164E000B00F67BDB /* OTRFeedbackSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRFeedbackSetting.m; sourceTree = "<group>"; };
 		63F8A52D16DD995400374551 /* OTRIntSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRIntSetting.h; sourceTree = "<group>"; };
@@ -1205,7 +1105,6 @@
 		D9077CFA18B7FEEC00AEE665 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = "Off the Record/fr.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
 		D9077CFB18B7FF0500AEE665 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = "Off the Record/pl.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
 		D909662F17EA55B800440833 /* GTMOAuth2.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GTMOAuth2.xcodeproj; path = "Submodules/gtm-oauth2/Source/GTMOAuth2.xcodeproj"; sourceTree = "<group>"; };
-		D909663D17EA67BD00440833 /* facebook-ios-sdk.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "facebook-ios-sdk.xcodeproj"; path = "Submodules/facebook-ios-sdk/src/facebook-ios-sdk.xcodeproj"; sourceTree = "<group>"; };
 		D90B80AB13FC719B006EFF3D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		D90B80AD13FC7E5E006EFF3D /* OTRCodec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRCodec.h; sourceTree = "<group>"; };
 		D90B80AE13FC7E5F006EFF3D /* OTRCodec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRCodec.m; sourceTree = "<group>"; };
@@ -1339,7 +1238,6 @@
 		D9ABC99215D48C4F00AAB730 /* OTROldOscarAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTROldOscarAccount.m; sourceTree = "<group>"; };
 		D9ADF9E318109D410096B07A /* OTRDatabaseManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRDatabaseManager.h; sourceTree = "<group>"; };
 		D9ADF9E418109D410096B07A /* OTRDatabaseManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRDatabaseManager.m; sourceTree = "<group>"; };
-		D9B24F0C1808A04E005174C5 /* HockeySDK.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = HockeySDK.xcodeproj; path = "Submodules/HockeySDK-iOS/Support/HockeySDK.xcodeproj"; sourceTree = "<group>"; };
 		D9BBCD3A1491F7AB00AF1B9F /* 19-gear.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "19-gear.png"; sourceTree = "<group>"; };
 		D9BBCD3C1491F8B400AF1B9F /* OTRAboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAboutViewController.h; sourceTree = "<group>"; };
 		D9BBCD3D1491F8B400AF1B9F /* OTRAboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAboutViewController.m; sourceTree = "<group>"; };
@@ -1633,12 +1531,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D9B24F221808A061005174C5 /* libHockeySDK.a in Frameworks */,
 				63BE44CF17EE580D00F60670 /* Social.framework in Frameworks */,
 				D90966FB17EA73C900440833 /* libOAuthTouch2.a in Frameworks */,
-				D909664F17EA67D600440833 /* libfacebook_ios_sdk.a in Frameworks */,
 				63FE64C61727535700876D15 /* StoreKit.framework in Frameworks */,
-				638940CE1815CAF8005F651E /* CrashReporter.framework in Frameworks */,
 				D953117C16C6FF3400AAB1D2 /* libUserVoice.a in Frameworks */,
 				D9CEF0AB1684268500B236B5 /* libOTRKit.a in Frameworks */,
 				D989E88E15D4F92E0081DFD1 /* Twitter.framework in Frameworks */,
@@ -2425,36 +2320,6 @@
 			path = CocoaAsyncSocket;
 			sourceTree = "<group>";
 		};
-		63483F0C1752CED100779257 /* CocoaLumberjack */ = {
-			isa = PBXGroup;
-			children = (
-				63F637B4183D93DB004A7AC5 /* DDAbstractDatabaseLogger.h */,
-				63F637B5183D93DB004A7AC5 /* DDAbstractDatabaseLogger.m */,
-				63F637B6183D93DB004A7AC5 /* DDASLLogger.h */,
-				63F637B7183D93DB004A7AC5 /* DDASLLogger.m */,
-				63F637B8183D93DB004A7AC5 /* DDFileLogger.h */,
-				63F637B9183D93DB004A7AC5 /* DDFileLogger.m */,
-				63F637BA183D93DB004A7AC5 /* DDLog.h */,
-				63F637BB183D93DB004A7AC5 /* DDLog.m */,
-				63F637BC183D93DB004A7AC5 /* DDTTYLogger.h */,
-				63F637BD183D93DB004A7AC5 /* DDTTYLogger.m */,
-				63483F171752CED100779257 /* Extensions */,
-			);
-			name = CocoaLumberjack;
-			path = Submodules/XMPPFramework/Vendor/CocoaLumberjack;
-			sourceTree = "<group>";
-		};
-		63483F171752CED100779257 /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-				63F637C3183D9410004A7AC5 /* ContextFilterLogFormatter.h */,
-				63F637C4183D9410004A7AC5 /* ContextFilterLogFormatter.m */,
-				63F637C5183D9410004A7AC5 /* DispatchQueueLogFormatter.h */,
-				63F637C6183D9410004A7AC5 /* DispatchQueueLogFormatter.m */,
-			);
-			path = Extensions;
-			sourceTree = "<group>";
-		};
 		63483F6E1752CED100779257 /* KissXML */ = {
 			isa = PBXGroup;
 			children = (
@@ -2655,19 +2520,6 @@
 			name = "Certificate Settings";
 			sourceTree = "<group>";
 		};
-		63E717DF182AF391004398AD /* SSKeychain */ = {
-			isa = PBXGroup;
-			children = (
-				63E717E0182AF391004398AD /* SSKeychain.strings */,
-				63E717E2182AF391004398AD /* SSKeychain.h */,
-				63E717E3182AF391004398AD /* SSKeychain.m */,
-				63E717E4182AF391004398AD /* SSKeychainQuery.h */,
-				63E717E5182AF391004398AD /* SSKeychainQuery.m */,
-			);
-			name = SSKeychain;
-			path = Submodules/SSKeychain/SSKeychain;
-			sourceTree = "<group>";
-		};
 		63E72BA216CB11EE00B6F389 /* mogen */ = {
 			isa = PBXGroup;
 			children = (
@@ -2712,16 +2564,6 @@
 			children = (
 				D909663717EA55B900440833 /* libOAuthTouch2.a */,
 				D909663917EA55B900440833 /* libOAuthTouch2NG.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		D909663E17EA67BD00440833 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				D909664617EA67BD00440833 /* libfacebook_ios_sdk.a */,
-				D909664817EA67BD00440833 /* FacebookSDKTests.octest */,
-				D909664A17EA67BD00440833 /* FacebookSDKIntegrationTests.octest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2849,29 +2691,14 @@
 			path = Submodules/UserVoice/Resources;
 			sourceTree = "<group>";
 		};
-		D9B24F0D1808A04E005174C5 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				D9B24F1A1808A04E005174C5 /* libHockeySDK.a */,
-				D9B24F1C1808A04E005174C5 /* HockeySDKResources.bundle */,
-				D9B24F1E1808A04E005174C5 /* HockeySDKTests.octest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		D9CEED611684234D00B236B5 /* Submodules */ = {
 			isa = PBXGroup;
 			children = (
 				D968473218C13AA6008FDC46 /* UIAlertView+Blocks */,
 				632E9117185A88F600F7FBC8 /* SIAlertView */,
-				63E717DF182AF391004398AD /* SSKeychain */,
-				638940CD1815CAF8005F651E /* CrashReporter.framework */,
-				D9B24F0C1808A04E005174C5 /* HockeySDK.xcodeproj */,
 				D94F771B17EA86EC007768A6 /* GTMOAuth2ViewTouch.xib */,
 				633B6D0E17ED28A7002DA152 /* HPGrowingTextView */,
-				D909663D17EA67BD00440833 /* facebook-ios-sdk.xcodeproj */,
 				D909662F17EA55B800440833 /* GTMOAuth2.xcodeproj */,
-				63483F0C1752CED100779257 /* CocoaLumberjack */,
 				63483DF41752CEB700779257 /* XMPPFramework */,
 				6301D87F16E95A23008F67A6 /* OpenInChrome */,
 				63CC9F1E16D2E93500BDA7D1 /* TTTAttributedLabel */,
@@ -3523,9 +3350,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				D9B24F211808A05B005174C5 /* PBXTargetDependency */,
 				D909671117EA7ADF00440833 /* PBXTargetDependency */,
-				D909664E17EA67CC00440833 /* PBXTargetDependency */,
 				D953117B16C6FF2F00AAB1D2 /* PBXTargetDependency */,
 				D9CEF0AA1684267E00B236B5 /* PBXTargetDependency */,
 				639F08B31752AEF5005C408D /* PBXTargetDependency */,
@@ -3614,16 +3439,8 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = D909663E17EA67BD00440833 /* Products */;
-					ProjectRef = D909663D17EA67BD00440833 /* facebook-ios-sdk.xcodeproj */;
-				},
-				{
 					ProductGroup = D909663017EA55B800440833 /* Products */;
 					ProjectRef = D909662F17EA55B800440833 /* GTMOAuth2.xcodeproj */;
-				},
-				{
-					ProductGroup = D9B24F0D1808A04E005174C5 /* Products */;
-					ProjectRef = D9B24F0C1808A04E005174C5 /* HockeySDK.xcodeproj */;
 				},
 				{
 					ProductGroup = D9D370E1169D20C20086F358 /* Products */;
@@ -3663,53 +3480,11 @@
 			remoteRef = D909663817EA55B900440833 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		D909664617EA67BD00440833 /* libfacebook_ios_sdk.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libfacebook_ios_sdk.a;
-			remoteRef = D909664517EA67BD00440833 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D909664817EA67BD00440833 /* FacebookSDKTests.octest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = FacebookSDKTests.octest;
-			remoteRef = D909664717EA67BD00440833 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D909664A17EA67BD00440833 /* FacebookSDKIntegrationTests.octest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = FacebookSDKIntegrationTests.octest;
-			remoteRef = D909664917EA67BD00440833 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		D953117916C6FF1A00AAB1D2 /* libUserVoice.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libUserVoice.a;
 			remoteRef = D953117816C6FF1A00AAB1D2 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D9B24F1A1808A04E005174C5 /* libHockeySDK.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libHockeySDK.a;
-			remoteRef = D9B24F191808A04E005174C5 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D9B24F1C1808A04E005174C5 /* HockeySDKResources.bundle */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = HockeySDKResources.bundle;
-			remoteRef = D9B24F1B1808A04E005174C5 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D9B24F1E1808A04E005174C5 /* HockeySDKTests.octest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = HockeySDKTests.octest;
-			remoteRef = D9B24F1D1808A04E005174C5 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		D9CEED6A1684235C00B236B5 /* libOTRKit.a */ = {
@@ -3805,7 +3580,6 @@
 				D9BE44A1166F2E7D00A628C7 /* 29-heart.png in Resources */,
 				D9BE44A2166F2E7D00A628C7 /* 29-heart@2x.png in Resources */,
 				D9BE44A5166F2F5B00A628C7 /* 18-envelope@2x.png in Resources */,
-				63E717E6182AF391004398AD /* SSKeychain.strings in Resources */,
 				637A6C1818B6EBB7007DE155 /* xmpp.png in Resources */,
 				63BE44D917EE5AB300F60670 /* 31-circle-plus-large@2x.png in Resources */,
 				63F2585717FB51C2007A7565 /* google.cer in Resources */,
@@ -3842,7 +3616,6 @@
 				63BFDB6916E8294300C608D6 /* person.png in Resources */,
 				63BFDB6A16E8294300C608D6 /* person@2x.png in Resources */,
 				637A6C1918B6EBB7007DE155 /* xmpp@2x.png in Resources */,
-				D9B24F251808A100005174C5 /* HockeySDKResources.bundle in Resources */,
 				D968479D18C158EE008FDC46 /* uv_heart.png in Resources */,
 				639C75D817E127A600530423 /* FBLoginViewButton.png in Resources */,
 				D968479A18C158EE008FDC46 /* UserVoice.strings in Resources */,
@@ -3938,7 +3711,6 @@
 			files = (
 				63D2BB231856B04500FFE4B7 /* OTRCertificatesViewController.m in Sources */,
 				D9F9378713F44BD3009A3D84 /* main.m in Sources */,
-				6398CDC317FA20EC009389F8 /* AFSecurityPolicy.m in Sources */,
 				D9F9378B13F44BD3009A3D84 /* OTRAppDelegate.m in Sources */,
 				D9E068F213F44D2900AC10A3 /* OTRBuddyListViewController.m in Sources */,
 				D9DE274C13F4F0A500E335CA /* OTRLoginViewController.m in Sources */,
@@ -3949,7 +3721,6 @@
 				D9D69B061418069F0056FB9E /* OTRXMPPManager.m in Sources */,
 				D9BBCD3F1491F8B400AF1B9F /* OTRAboutViewController.m in Sources */,
 				D90FAF2914A0624B00DA7C56 /* OTRBuddyList.m in Sources */,
-				6398CDC517FA20EC009389F8 /* AFURLRequestSerialization.m in Sources */,
 				D9C7463D15350F62003445ED /* OTRSettingsViewController.m in Sources */,
 				D9C74640153512DE003445ED /* OTRSettingsManager.m in Sources */,
 				D96495C4153629FE009A8C33 /* OTRSetting.m in Sources */,
@@ -3972,7 +3743,6 @@
 				639FDE4716334FA500387666 /* OTRJabberLoginViewController.m in Sources */,
 				63F6E854164E000C00F67BDB /* OTRFeedbackSetting.m in Sources */,
 				639B9A71164F21D900C021A9 /* OTRShareSetting.m in Sources */,
-				63F637C7183D9410004A7AC5 /* ContextFilterLogFormatter.m in Sources */,
 				633406391652C31300A54C52 /* OTRListSetting.m in Sources */,
 				6334063C1652C33300A54C52 /* OTRListSettingViewController.m in Sources */,
 				633406411652D50F00A54C52 /* OTRLanguageManager.m in Sources */,
@@ -3985,14 +3755,12 @@
 				D9CEEE62168423CA00B236B5 /* AIMBArtID.m in Sources */,
 				D9CEEE63168423CA00B236B5 /* AIMBArtIDWName.m in Sources */,
 				D9CEEE64168423CA00B236B5 /* AIMBArtQueryReplyID.m in Sources */,
-				6398CDC617FA20EC009389F8 /* AFURLResponseSerialization.m in Sources */,
 				D9CEEE65168423CA00B236B5 /* AIMBlist.m in Sources */,
 				D9CEEE66168423CA00B236B5 /* AIMBlistBuddy.m in Sources */,
 				D9CEEE67168423CA00B236B5 /* AIMBlistGroup.m in Sources */,
 				D9CEEE68168423CA00B236B5 /* AIMBuddyIcon.m in Sources */,
 				D9CEEE69168423CA00B236B5 /* AIMBuddyStatus.m in Sources */,
 				D9CEEE6A168423CA00B236B5 /* AIMCapability.m in Sources */,
-				6398CDBC17FA20EC009389F8 /* AFHTTPRequestOperationManager.m in Sources */,
 				D9CEEE6B168423CA00B236B5 /* AIMFeedbag+Search.m in Sources */,
 				D9CEEE6C168423CA00B236B5 /* AIMFeedbag.m in Sources */,
 				D9CEEE6D168423CA00B236B5 /* AIMFeedbagHandler.m in Sources */,
@@ -4027,7 +3795,6 @@
 				D9CEEE88168423CA00B236B5 /* AIMRateParamsReply.m in Sources */,
 				D9CEEE89168423CA00B236B5 /* AIMReceivingFileTransfer.m in Sources */,
 				D9CEEE8A168423CA00B236B5 /* AIMRendezvousHandler.m in Sources */,
-				63F637C8183D9410004A7AC5 /* DispatchQueueLogFormatter.m in Sources */,
 				D9CEEE8B168423CA00B236B5 /* AIMSendingFileTransfer.m in Sources */,
 				D9CEEE8C168423CA00B236B5 /* AIMSession.m in Sources */,
 				D9CEEE8D168423CA00B236B5 /* AIMSessionManager.m in Sources */,
@@ -4040,14 +3807,12 @@
 				D9CEEE94168423CA00B236B5 /* CommandTokenizer.m in Sources */,
 				D9CEEE95168423CA00B236B5 /* Debug.m in Sources */,
 				D9CEEE96168423CA00B236B5 /* FileDescriptors.m in Sources */,
-				63F637C0183D93DB004A7AC5 /* DDFileLogger.m in Sources */,
 				D9CEEE97168423CA00B236B5 /* FLAPFrame.m in Sources */,
 				D9CEEE98168423CA00B236B5 /* flipbit.m in Sources */,
 				D9CEEE99168423CA00B236B5 /* FTAddBuddy.m in Sources */,
 				D9CEEE9A168423CA00B236B5 /* FTAddDeny.m in Sources */,
 				D9CEEE9B168423CA00B236B5 /* FTAddGroup.m in Sources */,
 				D9CEEE9C168423CA00B236B5 /* FTAddPermit.m in Sources */,
-				6398CDC117FA20EC009389F8 /* AFNetworkReachabilityManager.m in Sources */,
 				D9CEEE9D168423CA00B236B5 /* FTCreateRootGroup.m in Sources */,
 				D9CEEE9E168423CA00B236B5 /* FTDelDeny.m in Sources */,
 				D9CEEE9F168423CA00B236B5 /* FTDelPermit.m in Sources */,
@@ -4084,7 +3849,6 @@
 				D9CEF0CA16842A5B00B236B5 /* SBJsonStreamParserAdapter.m in Sources */,
 				D9CEF0CB16842A5B00B236B5 /* SBJsonStreamParserState.m in Sources */,
 				D9CEF0CC16842A5B00B236B5 /* SBJsonStreamWriter.m in Sources */,
-				63F637C1183D93DB004A7AC5 /* DDLog.m in Sources */,
 				D9CEF0CD16842A5B00B236B5 /* SBJsonStreamWriterAccumulator.m in Sources */,
 				D9CEF0CE16842A5B00B236B5 /* SBJsonStreamWriterState.m in Sources */,
 				D9CEF0CF16842A5B00B236B5 /* SBJsonTokeniser.m in Sources */,
@@ -4093,10 +3857,8 @@
 				D9CEF0E916842AC700B236B5 /* GTMNSString+HTML.m in Sources */,
 				D9CEF0EF16842AC700B236B5 /* NSString+HTML.m in Sources */,
 				D953118616C70DD200AAB1D2 /* OTRDonateSetting.m in Sources */,
-				6398CDBD17FA20EC009389F8 /* AFHTTPSessionManager.m in Sources */,
 				63D2BB0D18568A3500FFE4B7 /* OTRErrorManager.m in Sources */,
 				6370C985185FD18E00CB6786 /* OTRBuddyCell.m in Sources */,
-				63E717E8182AF391004398AD /* SSKeychainQuery.m in Sources */,
 				63D0E48F1819DEF1003ACA13 /* OTRvCardTemp.m in Sources */,
 				63E5E80216D1D729006E2B01 /* OTRChatViewController.m in Sources */,
 				63E5E80416D1D787006E2B01 /* OTRManagedXMPPAccount.m in Sources */,
@@ -4123,7 +3885,6 @@
 				63E5E81716D1D888006E2B01 /* OTROldXMPPAccount.m in Sources */,
 				63E5E81E16D1DE66006E2B01 /* ChatSecure.xcdatamodeld in Sources */,
 				63CC9F1C16D2D18100BDA7D1 /* DAKeyboardControl.m in Sources */,
-				6398CDC417FA20EC009389F8 /* AFURLConnectionOperation.m in Sources */,
 				63CC9F2116D2E93500BDA7D1 /* TTTAttributedLabel.m in Sources */,
 				639BE6B116DC3B2B004B7257 /* _OTRManagedMessageAndStatus.m in Sources */,
 				639BE6B216DC3B2B004B7257 /* _OTRManagedStatus.m in Sources */,
@@ -4138,7 +3899,6 @@
 				630FF21316E0267200CC20AD /* _OTRManagedGroup.m in Sources */,
 				630FF21716E0269100CC20AD /* OTRManagedGroup.m in Sources */,
 				63813C1216E14E5D00909670 /* OTRBuddyListGroupManager.m in Sources */,
-				63F637BE183D93DB004A7AC5 /* DDAbstractDatabaseLogger.m in Sources */,
 				638940D11815E339005F651E /* OTRDemoChatViewController.m in Sources */,
 				633E71F916E169C100495B45 /* OTRBuddyListSectionInfo.m in Sources */,
 				633E71FD16E170AA00495B45 /* OTRSectionHeaderView.m in Sources */,
@@ -4186,7 +3946,6 @@
 				63483F9E1752CED100779257 /* XMPPRoster.m in Sources */,
 				633B6D0D17ED289F002DA152 /* HPTextViewInternal.m in Sources */,
 				63483FA01752CED100779257 /* XMPPIQ+JabberRPC.m in Sources */,
-				6398CDC717FA20EC009389F8 /* AFURLSessionManager.m in Sources */,
 				63483FA11752CED100779257 /* XMPPIQ+JabberRPCResonse.m in Sources */,
 				63483FA21752CED100779257 /* XMPPJabberRPCModule.m in Sources */,
 				63483FA31752CED100779257 /* XMPPIQ+LastActivity.m in Sources */,
@@ -4246,7 +4005,6 @@
 				63483FD31752CED100779257 /* XMPPMessageArchiving_Message_CoreDataObject.m in Sources */,
 				633B6D0C17ED289F002DA152 /* HPGrowingTextView.m in Sources */,
 				63483FD41752CED100779257 /* XMPPMessageArchivingCoreDataStorage.m in Sources */,
-				6398CDBB17FA20EC009389F8 /* AFHTTPRequestOperation.m in Sources */,
 				63483FD51752CED100779257 /* XMPPMessageArchiving.m in Sources */,
 				63483FD61752CED100779257 /* XMPPvCardAvatarModule.m in Sources */,
 				63483FD71752CED100779257 /* XMPPMessage+XEP_0172.m in Sources */,
@@ -4254,7 +4012,6 @@
 				6375D2531811FCD2006CDA8A /* OTRRosterStorage.m in Sources */,
 				63483FD91752CED100779257 /* XMPPMessage+XEP_0184.m in Sources */,
 				63483FDA1752CED100779257 /* XMPPMessageDeliveryReceipts.m in Sources */,
-				63F637BF183D93DB004A7AC5 /* DDASLLogger.m in Sources */,
 				63483FDB1752CED100779257 /* XMPPAutoPing.m in Sources */,
 				63483FDC1752CED100779257 /* XMPPPing.m in Sources */,
 				63483FDD1752CED100779257 /* XMPPAutoTime.m in Sources */,
@@ -4262,7 +4019,6 @@
 				63483FDF1752CED100779257 /* NSXMLElement+XEP_0203.m in Sources */,
 				63483FE01752CED100779257 /* XEP_0223.m in Sources */,
 				63483FE11752CED100779257 /* XMPPAttentionModule.m in Sources */,
-				6398CD9117FA1F61009389F8 /* GCDAsyncSocket.m in Sources */,
 				63483FE21752CED100779257 /* XMPPMessage+XEP_0224.m in Sources */,
 				63483FE31752CED100779257 /* NSXMLElement+XEP_0297.m in Sources */,
 				63483FE41752CED100779257 /* XMPPMessage+XEP_0308.m in Sources */,
@@ -4287,8 +4043,6 @@
 				6356236B17EA79FB00068231 /* OTRManagedOAuthAccount.m in Sources */,
 				63D511B017EBA122000D927B /* OTRFacebookSessionCachingStrategy.m in Sources */,
 				63D511C117EBDD31000D927B /* OTRAppVersionManager.m in Sources */,
-				63E717E7182AF391004398AD /* SSKeychain.m in Sources */,
-				63F637C2183D93DB004A7AC5 /* DDTTYLogger.m in Sources */,
 				63871264175808DA006C3A4E /* OTRActivityItemProvider.m in Sources */,
 				6387126817580D93006C3A4E /* OTRQRCodeActivity.m in Sources */,
 			);
@@ -4312,11 +4066,6 @@
 			target = D9F9377713F44BD3009A3D84 /* Off the Record */;
 			targetProxy = 63C0856E184574BE00B9C984 /* PBXContainerItemProxy */;
 		};
-		D909664E17EA67CC00440833 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "facebook-ios-sdk";
-			targetProxy = D909664D17EA67CC00440833 /* PBXContainerItemProxy */;
-		};
 		D909671117EA7ADF00440833 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = OAuthTouchStaticLib;
@@ -4326,11 +4075,6 @@
 			isa = PBXTargetDependency;
 			name = UserVoice;
 			targetProxy = D953117A16C6FF2F00AAB1D2 /* PBXContainerItemProxy */;
-		};
-		D9B24F211808A05B005174C5 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = HockeySDK;
-			targetProxy = D9B24F201808A05B005174C5 /* PBXContainerItemProxy */;
 		};
 		D9CEF0AA1684267E00B236B5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -4378,14 +4122,6 @@
 				63C08569184574BE00B9C984 /* en */,
 			);
 			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		63E717E0182AF391004398AD /* SSKeychain.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				63E717E1182AF391004398AD /* en */,
-			);
-			name = SSKeychain.strings;
 			sourceTree = "<group>";
 		};
 		D968477318C158EE008FDC46 /* UserVoice.strings */ = {
@@ -4725,9 +4461,10 @@
 				GCC_THUMB_SUPPORT = NO;
 				HEADER_SEARCH_PATHS = (
 					/usr/include/libxml2,
-					"$(SRCROOT)/Submodules/**",
-					"$(SRCROOT)/Vendor/HockeySDK/Classes",
+					"$(SRCROOT)/Submodules",
+					"$(SRCROOT)/Submodules/OTRKit/OTRKit",
 					"$(inherited)",
+					"$(SRCROOT)/Submodules/gtm-oauth2/**",
 				);
 				INFOPLIST_FILE = "Off the Record/Off the Record-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
@@ -4763,9 +4500,10 @@
 				GCC_THUMB_SUPPORT = NO;
 				HEADER_SEARCH_PATHS = (
 					/usr/include/libxml2,
-					"$(SRCROOT)/Submodules/**",
-					"$(SRCROOT)/Vendor/HockeySDK/Classes",
+					"$(SRCROOT)/Submodules",
+					"$(SRCROOT)/Submodules/OTRKit/OTRKit",
 					"$(inherited)",
+					"$(SRCROOT)/Submodules/gtm-oauth2/**",
 				);
 				INFOPLIST_FILE = "Off the Record/Off the Record-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;

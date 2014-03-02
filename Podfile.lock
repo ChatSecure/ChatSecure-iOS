@@ -1,15 +1,59 @@
 PODS:
+  - AFNetworking (2.2.0):
+    - AFNetworking/NSURLConnection
+    - AFNetworking/NSURLSession
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+    - AFNetworking/UIKit
+  - AFNetworking/NSURLConnection (2.2.0):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/NSURLSession (2.2.0):
+    - AFNetworking/NSURLConnection
+  - AFNetworking/Reachability (2.2.0)
+  - AFNetworking/Security (2.2.0)
+  - AFNetworking/Serialization (2.2.0)
+  - AFNetworking/UIKit (2.2.0):
+    - AFNetworking/NSURLConnection
+    - AFNetworking/NSURLSession
   - Appirater (2.0.2)
+  - CocoaAsyncSocket (7.3.3)
+  - CocoaLumberjack (1.8.1):
+    - CocoaLumberjack/Extensions
+  - CocoaLumberjack/Core (1.8.1)
+  - CocoaLumberjack/Extensions (1.8.1):
+    - CocoaLumberjack/Core
+  - Facebook-iOS-SDK (3.12.0)
+  - HockeySDK (3.5.4)
   - MagicalRecord (2.2):
     - MagicalRecord/Core
   - MagicalRecord/Core (2.2)
+  - SSKeychain (1.2.1)
 
 DEPENDENCIES:
+  - AFNetworking
   - Appirater
+  - CocoaAsyncSocket (from `git@github.com:ChatSecure/CocoaAsyncSocket.git`)
+  - CocoaLumberjack
+  - Facebook-iOS-SDK
+  - HockeySDK
   - MagicalRecord
+  - SSKeychain
+
+EXTERNAL SOURCES:
+  CocoaAsyncSocket:
+    :git: git@github.com:ChatSecure/CocoaAsyncSocket.git
 
 SPEC CHECKSUMS:
+  AFNetworking: e8cfd8f3fe3bfe19124a0cc63f4d45752d892a56
   Appirater: 32fb9089615b5e542c7ad7b5749741a8aed55290
+  CocoaAsyncSocket: 50a73b79fb77f0dbb57cdc5c247c8f19e9cb3b33
+  CocoaLumberjack: 020378ec400d658923bf5887178394f65f052c90
+  Facebook-iOS-SDK: c09f7d80db5c48170ff834bc03ebe774c49d1f5b
+  HockeySDK: 4f7f7e15c1f594e8ca1e16a09f04e7418289de7a
   MagicalRecord: 95d49d74ef752cd52f6ad87bcb474817fc3978cf
+  SSKeychain: d18926838c2e7cd342e2a49e9f869858e49f035a
 
 COCOAPODS: 0.29.0
