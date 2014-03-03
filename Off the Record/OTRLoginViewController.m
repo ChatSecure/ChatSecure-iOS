@@ -554,16 +554,12 @@
     switch (account.accountType) {
         case OTRAccountTypeAIM:
             return [[OTROscarLoginViewController alloc] initWithAccountID:accountID];
-            break;
         case OTRAccountTypeJabber:
             return [[OTRJabberLoginViewController alloc] initWithAccountID:accountID];
-            break;
         case OTRAccountTypeFacebook:
             return [[OTRFacebookLoginViewController alloc] initWithAccountID:accountID];
-            break;
         case OTRAccountTypeGoogleTalk:
             return [[OTRGoogleTalkLoginViewController alloc] initWithAccountID:accountID];
-            break;
         default:
             break;
     }

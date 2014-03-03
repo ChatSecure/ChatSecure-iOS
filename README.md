@@ -49,15 +49,17 @@ Phone apps
 
 Build Instructions
 ========
-Install [mogenerator](http://rentzsch.github.io/mogenerator/) in order to regenerate the Core Data model files.
+Install [mogenerator](http://rentzsch.github.io/mogenerator/) in order to regenerate the Core Data model files. You'll also need [Cocoapods](http://cocoapods.org) for some of our dependencies.
     
     $ brew install mogenerator
+    $ gem install cocoapods
     
 Download the source code and **don't forget** to pull down all of the submodules as well.
 
     $ git clone git@github.com:chrisballinger/Off-the-Record-iOS.git
     $ cd Off-the-Record-iOS/
     $ git submodule update --init --recursive
+    $ pod
     
 Make your own version of environment-specific data. Make `OTRSecrets.m` file with blank API keys, and set your provisioning profile ID in `OTR_Codesigning.xcconfig`. To find the provisioning profile ID, go to Project Settings -> Build Settings -> Code Signing -> Select Provisiong Profile -> Select Other -> Copy Profile's UUID into `OTR_Codesigning.xcconfig`.
 
@@ -65,7 +67,7 @@ Make your own version of environment-specific data. Make `OTRSecrets.m` file wit
     $ cp "Off the Record/configurations/OTR_Codesigning.xcconfig.sample" "Off the Record/configurations/OTR_Codesigning.xcconfig"
 
     
-Open `Off the Record.xcodeproj` in Xcode and build.
+Open `Off the Record.xcworkspace` in Xcode and build. Note that you don't open the .xcodeproj anymore because we 
 
 License
 =========
