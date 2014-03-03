@@ -67,7 +67,7 @@ Make your own version of environment-specific data. Make `OTRSecrets.m` file wit
     $ cp "Off the Record/configurations/OTR_Codesigning.xcconfig.sample" "Off the Record/configurations/OTR_Codesigning.xcconfig"
 
     
-Open `Off the Record.xcworkspace` in Xcode and build. Note that you don't open the .xcodeproj anymore because we 
+Open `Off the Record.xcworkspace` in Xcode and build. Note that you don't open the .xcodeproj anymore because we use Cocoapods now.
 
 License
 =========
