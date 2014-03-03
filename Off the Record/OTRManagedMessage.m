@@ -110,7 +110,11 @@
 {
     OTRManagedBuddy *localBuddy = [theBuddy MR_inContext:context];
     OTRManagedMessage *managedMessage = [OTRManagedMessage MR_createInContext:context];
-
+    NSError *error = nil;
+    [context obtainPermanentIDsForObjects:@[managedMessage] error:&error];
+    if (error) {
+        DDLogError(@"Error obtaining permanent ID for message: %@", error);
+    }
     managedMessage.uniqueID = [OTRUtilities uniqueString];
     managedMessage.buddy = localBuddy;
     managedMessage.messagebuddy = localBuddy;

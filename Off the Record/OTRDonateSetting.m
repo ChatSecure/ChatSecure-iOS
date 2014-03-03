@@ -15,13 +15,18 @@
 {
     self = [super initWithTitle:newTitle description:newDescription];
     if (self) {
-        self.action = @selector(openPaypal);
+        __weak typeof (self) weakSelf = self;
+        self.actionBlock = ^{
+            [weakSelf openDonationDialog];
+        };
     }
     return self;
 }
 
-- (void) openPaypal {
-    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=6YFSLLQGDZFXY"]];
+- (void) openDonationDialog {
+    if (self.delegate) {
+        [self.delegate donateSettingPressed:self];
+    }
 }
 
 

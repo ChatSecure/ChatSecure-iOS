@@ -25,14 +25,13 @@
 #import "OTRSettingsManager.h"
 #import <MessageUI/MessageUI.h>
 #import "OTRLoginViewController.h"
+#import "OTRDonateSetting.h"
 
-@interface OTRSettingsViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, OTRSettingDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate, NSFetchedResultsControllerDelegate>
+@interface OTRSettingsViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, OTRSettingDelegate, MFMailComposeViewControllerDelegate, NSFetchedResultsControllerDelegate, OTRDonateSettingDelegate>
 
 @property (nonatomic, retain) UITableView *settingsTableView;
 @property (nonatomic, retain) OTRSettingsManager *settingsManager;
 @property (nonatomic, retain) OTRLoginViewController *loginController;
-@property (nonatomic, retain) OTRManagedAccount *selectedAccount;
-@property (nonatomic, retain) NSIndexPath *selectedIndexPath;
 @property (nonatomic, retain) NSFetchedResultsController * accountsFetchedResultsController;
 
 @end

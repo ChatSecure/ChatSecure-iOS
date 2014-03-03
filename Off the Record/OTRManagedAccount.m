@@ -209,39 +209,37 @@
 
 +(OTRManagedAccount *)accountForAccountType:(OTRAccountType)accountType
 {
-    //Facebook
-    OTRManagedAccount * newAccount;
+    NSManagedObjectContext *localContext = [NSManagedObjectContext MR_contextForCurrentThread];
+    OTRManagedAccount * newAccount = nil;
     if(accountType == OTRAccountTypeFacebook)
     {
-        OTRManagedFacebookAccount * facebookAccount = [OTRManagedFacebookAccount MR_createEntity];
+        //Facebook
+        OTRManagedFacebookAccount * facebookAccount = [OTRManagedFacebookAccount MR_createInContext:localContext];
         [facebookAccount setDefaultsWithDomain:kOTRFacebookDomain];
         newAccount = facebookAccount;
     }
     else if(accountType == OTRAccountTypeGoogleTalk)
     {
         //Google Chat
-        OTRManagedGoogleAccount * googleAccount = [OTRManagedGoogleAccount MR_createEntity];
+        OTRManagedGoogleAccount * googleAccount = [OTRManagedGoogleAccount MR_createInContext:localContext];
         [googleAccount setDefaultsWithDomain:kOTRGoogleTalkDomain];
         newAccount = googleAccount;
     }
     else if(accountType == OTRAccountTypeJabber)
     {
         //Jabber
-        OTRManagedXMPPAccount * jabberAccount = [OTRManagedXMPPAccount MR_createEntity];
+        OTRManagedXMPPAccount * jabberAccount = [OTRManagedXMPPAccount MR_createInContext:localContext];
         [jabberAccount setDefaultsWithDomain:@""];
         newAccount = jabberAccount;
     }
     else if(accountType == OTRAccountTypeAIM)
     {
         //Aim
-        OTRManagedOscarAccount * aimAccount = [OTRManagedOscarAccount MR_createEntity];
+        OTRManagedOscarAccount * aimAccount = [OTRManagedOscarAccount MR_createInContext:localContext];
         [aimAccount setDefaultsWithProtocol:kOTRProtocolTypeAIM];
         newAccount = aimAccount;
     }
-    if(newAccount)
-    {
-        [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
-    }
+    [localContext MR_saveToPersistentStoreAndWait];
     return newAccount;
 }
 

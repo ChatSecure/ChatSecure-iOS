@@ -41,6 +41,9 @@
 
 #import "OTRBuddyCell.h"
 #import "OTRRecentBuddyCell.h"
+#import "UIAlertView+Blocks.h"
+
+static void * OTRBuddyListViewControllerKVOContext = &OTRBuddyListViewControllerKVOContext;
 
 //#define kSignoffTime 500
 
@@ -95,7 +98,16 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
-    
+    if ([OTRUtilities currentiOSVersionHasSSLVulnerability]) {
+        NSString * part1String = [NSString stringWithFormat:iOS_SSL_ERROR_PART1_STRING,[[UIDevice currentDevice] systemVersion]];
+        NSString * messageString = [NSString stringWithFormat:@"%@\n\n%@",part1String,iOS_SSL_ERROR_PART2_STRING];
+        RIButtonItem *infoItem = [RIButtonItem itemWithLabel:INFO_STRING action:^{
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://chatsecure.org/blog/importance-of-ssl-pinning/"]];
+        }];
+        RIButtonItem *cancelItem = [RIButtonItem itemWithLabel:OK_STRING];
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:iOS_SSL_ERROR_TITLE_STRING message:messageString cancelButtonItem:cancelItem otherButtonItems:infoItem, nil];
+        [alertView show];
+    }
     
     OTRBuddyListSectionInfo * recentSectionInfo = [[OTRBuddyListSectionInfo alloc] init];
     recentSectionInfo.isOpen = YES;
@@ -158,7 +170,7 @@
     
     [self didUpdateNumberOfConnectedAccounts:[OTRProtocolManager sharedInstance].numberOfConnectedProtocols];
     
-    [[OTRProtocolManager sharedInstance] addObserver:self forKeyPath:NSStringFromSelector(@selector(numberOfConnectedProtocols)) options:NSKeyValueObservingOptionNew context:NULL];
+    [[OTRProtocolManager sharedInstance] addObserver:self forKeyPath:NSStringFromSelector(@selector(numberOfConnectedProtocols)) options:NSKeyValueObservingOptionNew context:OTRBuddyListViewControllerKVOContext];
     
     buddyListTableView.frame = self.view.bounds;
     buddyListTableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleRightMargin;
@@ -169,8 +181,11 @@
 -(void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
-    [[OTRProtocolManager sharedInstance] removeObserver:self forKeyPath:NSStringFromSelector(@selector(numberOfConnectedProtocols))];
-    
+    // Try to fix crash when removing KVO
+    @try {
+        [[OTRProtocolManager sharedInstance] removeObserver:self forKeyPath:NSStringFromSelector(@selector(numberOfConnectedProtocols)) context:OTRBuddyListViewControllerKVOContext];
+    }
+    @catch (NSException * __unused exception) {}
 }
 
 
@@ -182,7 +197,9 @@
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    [self didUpdateNumberOfConnectedAccounts:[[change objectForKey:NSKeyValueChangeNewKey] unsignedIntegerValue]];
+    if (context == OTRBuddyListViewControllerKVOContext) {
+        [self didUpdateNumberOfConnectedAccounts:[[change objectForKey:NSKeyValueChangeNewKey] unsignedIntegerValue]];
+    }
 }
 
 - (void) showSettingsView:(id)sender {

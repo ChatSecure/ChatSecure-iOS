@@ -21,7 +21,7 @@
 {
     if(![oldValue isEqualToString:newValue])
     {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle: LANGUAGE_ALERT_TITLE_STRING message:LANGUAGE_ALERT_MESSAGE_STRING delegate:self cancelButtonTitle:OK_STRING otherButtonTitles:nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle: LANGUAGE_ALERT_TITLE_STRING message:LANGUAGE_ALERT_MESSAGE_STRING delegate:nil cancelButtonTitle:OK_STRING otherButtonTitles:nil];
         [alert show];
     }
     [super save:sender];

@@ -385,12 +385,7 @@
 	NSError *error = nil;
 	if (![self.xmppStream connectWithTimeout:XMPPStreamTimeoutNone error:&error])
 	{
-		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error connecting" 
-		                                                    message:@"See console for error details." 
-		                                                   delegate:nil 
-		                                          cancelButtonTitle:@"Ok" 
-		                                          otherButtonTitles:nil];
-		[alertView show];
+		[self failedToConnect:error];
         
 		DDLogError(@"Error connecting: %@", error);
         

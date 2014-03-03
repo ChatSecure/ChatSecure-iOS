@@ -6,6 +6,8 @@ project.xcworkspace
 xcuserdata
 .svn
 DerivedData
-OTRSecrets.h
+OTRSecrets.m
 *.orig
 
+
+/Pods/

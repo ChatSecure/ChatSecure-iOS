@@ -1,0 +1,3 @@
+#include "../../Pods/Pods.xcconfig"
+
+OTR_CFLAGS = -Wunreachable-code

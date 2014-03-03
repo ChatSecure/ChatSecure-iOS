@@ -16,6 +16,11 @@
 +(OTRManagedEncryptionStatusMessage *)newEncryptionStatus:(OTRKitMessageState)newEncryptionStatus buddy:(OTRManagedBuddy *)buddy inContext:(NSManagedObjectContext *)context
 {
     OTRManagedEncryptionStatusMessage * encryptionStatusMessage = [OTRManagedEncryptionStatusMessage MR_createInContext:context];
+    NSError *error = nil;
+    [context obtainPermanentIDsForObjects:@[encryptionStatusMessage] error:&error];
+    if (error) {
+        DDLogError(@"Error obtaining permanent ID for OTRManagedEncryptionStatusMessage: %@", error);
+    }
     
     encryptionStatusMessage.date = [NSDate date];
     encryptionStatusMessage.isEncryptedValue = NO;
@@ -38,9 +43,6 @@
             break;
     }
 
-    
-    
-    
     encryptionStatusMessage.message = message;
     encryptionStatusMessage.statusValue = newEncryptionStatus;
     encryptionStatusMessage.buddy = buddy;

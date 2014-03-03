@@ -34,9 +34,9 @@
 #import "OTRAppDelegate.h"
 #import "UserVoice.h"
 #import "OTRAccountTableViewCell.h"
-
-#define ACTIONSHEET_DISCONNECT_TAG 1
-#define ALERTVIEW_DELETE_TAG 1
+#import "UIAlertView+Blocks.h"
+#import "UIActionSheet+Blocks.h"
+#import "OTRSecrets.h"
 
 @interface OTRSettingsViewController(Private)
 - (void) addAccount:(id)sender;
@@ -44,15 +44,10 @@
 @end
 
 @implementation OTRSettingsViewController
-@synthesize settingsTableView, settingsManager, loginController, selectedAccount, selectedIndexPath;
+@synthesize settingsTableView, settingsManager, loginController;
 
 - (void) dealloc
 {
-    self.settingsManager = nil;
-    self.settingsTableView = nil;
-    self.loginController = nil;
-    self.selectedAccount = nil;
-    self.selectedIndexPath = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -201,19 +196,23 @@
             if (!account.isConnected) {
                 [self showLoginControllerForAccount:account];
             } else {
-                UIActionSheet *logoutSheet = [[UIActionSheet alloc] initWithTitle:LOGOUT_STRING delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:LOGOUT_STRING otherButtonTitles: nil];
-                self.selectedAccount = account;
-                self.selectedIndexPath = indexPath;
-                logoutSheet.tag = ACTIONSHEET_DISCONNECT_TAG;
-                [OTR_APP_DELEGATE presentActionSheet:logoutSheet inView:self.view];
+                RIButtonItem * cancelButtonItem = [RIButtonItem itemWithLabel:CANCEL_STRING];
+                RIButtonItem * logoutButtonItem = [RIButtonItem itemWithLabel:LOGOUT_STRING action:^{
+                    id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:account];
+                    [protocol disconnect];
+                }];
+
+                UIActionSheet * logoutActionSheet = [[UIActionSheet alloc] initWithTitle:LOGOUT_STRING cancelButtonItem:cancelButtonItem destructiveButtonItem:logoutButtonItem otherButtonItems:nil];
+                
+                [OTR_APP_DELEGATE presentActionSheet:logoutActionSheet inView:self.view];
             }
         }
     } else {
         OTRSetting *setting = [self.settingsManager settingAtIndexPath:indexPath];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-        [setting performSelector:setting.action];
-#pragma clang diagnostic pop
+        OTRSettingActionBlock actionBlock = setting.actionBlock;
+        if (actionBlock) {
+            actionBlock();
+        }
     }
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
@@ -226,11 +225,21 @@
     if (editingStyle == UITableViewCellEditingStyleDelete) 
     {
         OTRManagedAccount *account = [self.accountsFetchedResultsController objectAtIndexPath:indexPath];
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:DELETE_ACCOUNT_TITLE_STRING message:[NSString stringWithFormat:@"%@ %@?", DELETE_ACCOUNT_MESSAGE_STRING, account.username] delegate:self cancelButtonTitle:CANCEL_STRING otherButtonTitles:OK_STRING, nil];
-        alert.tag = ALERTVIEW_DELETE_TAG;
-        self.selectedIndexPath = indexPath;
-        self.selectedAccount = account;
-        [alert show];
+        
+        RIButtonItem * cancelButtonItem = [RIButtonItem itemWithLabel:CANCEL_STRING];
+        RIButtonItem * okButtonItem = [RIButtonItem itemWithLabel:OK_STRING action:^{
+            if([account isConnected])
+            {
+                id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:account];
+                [protocol disconnect];
+            }
+            [OTRAccountsManager removeAccount:account];
+        }];
+        
+        NSString * message = [NSString stringWithFormat:@"%@ %@?", DELETE_ACCOUNT_MESSAGE_STRING, account.username];
+        UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:DELETE_ACCOUNT_TITLE_STRING message:message cancelButtonItem:cancelButtonItem otherButtonItems:okButtonItem, nil];
+        
+        [alertView show];
     }
 }
 
@@ -283,27 +292,29 @@
     }
 }
 
-#pragma mark OTRFeedbackSettingDelegate method
-
-- (void) presentUserVoiceWithConfig:(UVConfig*)config {
-    [UserVoice presentUserVoiceInterfaceForParentViewController:self andConfig:config];
+- (void) donateSettingPressed:(OTRDonateSetting *)setting {
+    RIButtonItem *paypalItem = [RIButtonItem itemWithLabel:@"PayPal" action:^{
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=6YFSLLQGDZFXY"]];
+    }];
+    RIButtonItem *bitcoinItem = [RIButtonItem itemWithLabel:@"Bitcoin" action:^{
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://coinbase.com/checkouts/0a35048913df24e0ec3d586734d456d7"]];
+    }];
+    RIButtonItem *cancelItem = [RIButtonItem itemWithLabel:CANCEL_STRING];
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:DONATE_MESSAGE_STRING cancelButtonItem:cancelItem destructiveButtonItem:nil otherButtonItems:paypalItem, bitcoinItem, nil];
+    [OTR_APP_DELEGATE presentActionSheet:actionSheet inView:self.view];
 }
 
 
+#pragma mark OTRFeedbackSettingDelegate method
 
-#pragma mark UIActionSheetDelegate methods
-
-- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex 
-{
-    if (actionSheet.tag == ACTIONSHEET_DISCONNECT_TAG) {
-        
-        id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:selectedAccount];
-        
-        if(buttonIndex == 0) //logout
-        {
-            [protocol disconnect];
-        }
-    }
+- (void) presentUserVoiceView {
+    RIButtonItem *cancelItem = [RIButtonItem itemWithLabel:CANCEL_STRING];
+    RIButtonItem *showUVItem = [RIButtonItem itemWithLabel:OK_STRING action:^{
+        UVConfig *config = [UVConfig configWithSite:@"chatsecure.uservoice.com"];
+        [UserVoice presentUserVoiceInterfaceForParentViewController:self andConfig:config];
+    }];
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:SHOW_USERVOICE_STRING cancelButtonItem:cancelItem destructiveButtonItem:nil otherButtonItems:showUVItem, nil];
+    [OTR_APP_DELEGATE presentActionSheet:actionSheet inView:self.view];
 }
 
 -(void)accountLoggedIn
@@ -315,24 +326,6 @@
 -(void)protocolLoggedInSuccessfully:(NSNotification *)notification
 {
     [self accountLoggedIn];
-}
-
-- (void) alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
-    if (alertView.tag == ALERTVIEW_DELETE_TAG) {
-        if (buttonIndex != alertView.cancelButtonIndex) {
-            if([selectedAccount isConnected])
-            {
-                id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:selectedAccount];
-                [protocol disconnect];
-            }
-            [OTRAccountsManager removeAccount:selectedAccount];
-            
-            
-        }
-        self.selectedIndexPath = nil;
-        self.selectedAccount = nil;
-    }
-
 }
 
 -(NSFetchedResultsController *)accountsFetchedResultsController

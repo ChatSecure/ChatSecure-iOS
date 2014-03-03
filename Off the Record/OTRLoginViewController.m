@@ -36,26 +36,14 @@
 #import "OTRProtocolManager.h"
 
 #import "SIAlertView.h"
-
+#import "UIAlertView+Blocks.h"
 #import "OTRCertificatePinning.h"
 
 #define kFieldBuffer 20;
 
-#define kErrorAlertViewTag 131
-#define kErrorInfoAlertViewTag 132
-#define kNewCertAlertViewTag 134
-
-@interface OTRLoginViewController()
-
-@property (nonatomic,strong) UIAlertView * alertView;
-
-@end
-
 @implementation OTRLoginViewController
 
 - (void) dealloc {
-    _alertView.delegate = nil;
-    _alertView = nil;
     _logoView = nil;
     _rememberPasswordSwitch = nil;
     _usernameTextField = nil;
@@ -363,18 +351,17 @@
         [HUD hide:YES];
     if([self.account.protocol isEqualToString:kOTRProtocolTypeXMPP])
     {
-        self.alertView=nil;
         NSDictionary * userInfo = notification.userInfo;
         id error = userInfo[kOTRProtocolLoginFailErrorKey];
         NSData * certData = userInfo[kOTRProtocolLoginFailSSLCertificateDataKey];
         NSString * hostname = userInfo[kOTRProtocolLoginFailHostnameKey];
         NSNumber * statusNumber = userInfo[kOTRProtocolLoginFailSSLStatusKey];
         
-        NSInteger tag = kErrorAlertViewTag;
+        
+        RIButtonItem * okButtonItem = [RIButtonItem itemWithLabel:OK_STRING];
         if (certData) {
             if ([statusNumber longLongValue] == errSSLPeerAuthCompleted) {
-                //The cert was manually evaluated but did not anything that is saved so we have to recheck system and get interal validation status
-                //((OTRXMPPManager *)protocol).certificatePinningModulesss
+                
                 id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
                 ((OTRXMPPManager *)protocol).certificatePinningModule.doNotManuallyEvaluateOverride = YES;
                 [self loginButtonPressed:nil];
@@ -390,22 +377,31 @@
                 return;
             }
             else {
-                self.alertView = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:XMPP_FAIL_STRING delegate:self cancelButtonTitle:nil otherButtonTitles:OK_STRING,INFO_STRING, nil];
+                RIButtonItem * infoButton = [RIButtonItem itemWithLabel:INFO_STRING action:^{
+                    NSString * errorDescriptionString = [NSString stringWithFormat:@"%@ : %@",[recentError domain],[recentError localizedDescription]];
+                    
+                    RIButtonItem * copyButtonItem = [RIButtonItem itemWithLabel:COPY_STRING action:^{
+                        NSString * errorDescriptionString = [NSString stringWithFormat:@"Domain: %@\nCode: %d\nUserInfo: %@",[recentError domain],[recentError code],[recentError userInfo]];
+                        UIPasteboard *pasteBoard = [UIPasteboard generalPasteboard];
+                        [pasteBoard setString:errorDescriptionString];
+                    }];
+                    
+                    UIAlertView * alert = [[UIAlertView alloc] initWithTitle:INFO_STRING message:errorDescriptionString cancelButtonItem:nil otherButtonItems:okButtonItem,copyButtonItem, nil];
+                    
+                    [alert show];
+                }];
+                
+                UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:XMPP_FAIL_STRING cancelButtonItem:nil otherButtonItems:okButtonItem,infoButton, nil];
+                [alertView show];
             }
             
         }
-        else if (error)
-        {
-            //could not authenicate
-            self.alertView = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:XMPP_FAIL_STRING delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
-            
-        }
         else {
-            self.alertView = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:XMPP_FAIL_STRING delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
+            UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:XMPP_FAIL_STRING cancelButtonItem:nil otherButtonItems:okButtonItem, nil];
+            [alertView show];
         }
-        self.alertView.tag = tag;
-        [self.alertView show];
-    } else if ([self.account.protocol isEqualToString:kOTRProtocolTypeAIM]) {
+    }
+    else if ([self.account.protocol isEqualToString:kOTRProtocolTypeAIM]) {
         NSDictionary * userInfo = notification.userInfo;
         NSError *error = userInfo[kOTRProtocolLoginFailErrorKey];
         NSString *errorTitle = nil;
@@ -540,24 +536,6 @@
     if(!parent)
     {
         [OTRAccountsManager removeAccount:self.account];
-    }
-}
-
--(void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
-    if (alertView.tag == kErrorAlertViewTag) {
-        if(alertView.numberOfButtons > 1 && buttonIndex == 1) {
-            NSString * errorDescriptionString = [NSString stringWithFormat:@"%@ : %@",[recentError domain],[recentError localizedDescription]];
-            UIAlertView * alert = [[UIAlertView alloc] initWithTitle:INFO_STRING message:errorDescriptionString delegate:self cancelButtonTitle:nil otherButtonTitles:OK_STRING,@"Copy", nil];
-            alert.tag = kErrorInfoAlertViewTag;
-            [alert show];
-        }
-    }
-    else if (alertView.tag == kErrorInfoAlertViewTag) {
-        if (buttonIndex == 1) {
-            NSString * errorDescriptionString = [NSString stringWithFormat:@"Domain: %@\nCode: %d\nUserInfo: %@",[recentError domain],[recentError code],[recentError userInfo]];
-            UIPasteboard *pasteBoard = [UIPasteboard generalPasteboard];
-            [pasteBoard setString:errorDescriptionString];
-        }
     }
 }
 
