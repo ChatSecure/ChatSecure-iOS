@@ -43,10 +43,6 @@
         "comment": "Title for settings cell on whether or not the XMPP library should allow SSL hostname mismatch", 
         "string": "Hostname Mismatch"
     }, 
-    "ATTRIBUTION_STRING": {
-        "comment": "for attribution of other projects", 
-        "string": "ChatSecure is brought to you by many open source projects"
-    }, 
     "AVAILABLE_MESSAGE_STRING": {
         "comment": "Message shown in line for users that are available", 
         "string": "is now available"
