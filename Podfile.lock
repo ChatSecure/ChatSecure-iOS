@@ -28,6 +28,7 @@ PODS:
   - DAKeyboardControl (2.3.0)
   - Facebook-iOS-SDK (3.12.0)
   - HockeySDK (3.5.4)
+  - HPGrowingTextView (1.1)
   - MagicalRecord (2.2):
     - MagicalRecord/Core
   - MagicalRecord/Core (2.2)
@@ -43,6 +44,7 @@ DEPENDENCIES:
   - DAKeyboardControl (~> 2.3)
   - Facebook-iOS-SDK
   - HockeySDK
+  - HPGrowingTextView (~> 1.1)
   - MagicalRecord
   - MBProgressHUD (~> 0.8)
   - SIAlertView (from `PodSpecs/SIAlertView.podspec`)
@@ -62,6 +64,7 @@ SPEC CHECKSUMS:
   DAKeyboardControl: 219d6e32b9343eb85151255c43b1f238d8f0bbf7
   Facebook-iOS-SDK: c09f7d80db5c48170ff834bc03ebe774c49d1f5b
   HockeySDK: 4f7f7e15c1f594e8ca1e16a09f04e7418289de7a
+  HPGrowingTextView: 4318f557b33c19def1c53ec275d6e2a2d6589cd0
   MagicalRecord: 95d49d74ef752cd52f6ad87bcb474817fc3978cf
   MBProgressHUD: 2bbc6f470111daf7f3eaa4eb12b8cbf01c4c0622
   SIAlertView: 522351a8870be07fb49053fa054c83da3ea17dbe

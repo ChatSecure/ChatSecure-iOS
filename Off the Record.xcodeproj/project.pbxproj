@@ -49,8 +49,6 @@
 		633B6D0117ECF4F7002DA152 /* googleTalkButtonPressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 633B6CFD17ECF4F7002DA152 /* googleTalkButtonPressed.png */; };
 		633B6D0217ECF4F7002DA152 /* googleTalkButtonPressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 633B6CFE17ECF4F7002DA152 /* googleTalkButtonPressed@2x.png */; };
 		633B6D0517ECFB0C002DA152 /* OTRChatInputBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 633B6D0417ECFB0C002DA152 /* OTRChatInputBar.m */; };
-		633B6D0C17ED289F002DA152 /* HPGrowingTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 633B6D0917ED289F002DA152 /* HPGrowingTextView.m */; };
-		633B6D0D17ED289F002DA152 /* HPTextViewInternal.m in Sources */ = {isa = PBXBuildFile; fileRef = 633B6D0B17ED289F002DA152 /* HPTextViewInternal.m */; };
 		633E71F916E169C100495B45 /* OTRBuddyListSectionInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 633E71F816E169C100495B45 /* OTRBuddyListSectionInfo.m */; };
 		633E71FD16E170AA00495B45 /* OTRSectionHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 633E71FC16E170AA00495B45 /* OTRSectionHeaderView.m */; };
 		633FA548183F0D8C0064497C /* test_OTRManagedAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 637B55F3183F08D10012F1C9 /* test_OTRManagedAccount.m */; };
@@ -623,10 +621,6 @@
 		633B6CFE17ECF4F7002DA152 /* googleTalkButtonPressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "googleTalkButtonPressed@2x.png"; sourceTree = "<group>"; };
 		633B6D0317ECFB0C002DA152 /* OTRChatInputBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRChatInputBar.h; sourceTree = "<group>"; };
 		633B6D0417ECFB0C002DA152 /* OTRChatInputBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRChatInputBar.m; sourceTree = "<group>"; };
-		633B6D0817ED289F002DA152 /* HPGrowingTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HPGrowingTextView.h; path = Submodules/GrowingTextView/class/HPGrowingTextView.h; sourceTree = "<group>"; };
-		633B6D0917ED289F002DA152 /* HPGrowingTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HPGrowingTextView.m; path = Submodules/GrowingTextView/class/HPGrowingTextView.m; sourceTree = "<group>"; };
-		633B6D0A17ED289F002DA152 /* HPTextViewInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HPTextViewInternal.h; path = Submodules/GrowingTextView/class/HPTextViewInternal.h; sourceTree = "<group>"; };
-		633B6D0B17ED289F002DA152 /* HPTextViewInternal.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HPTextViewInternal.m; path = Submodules/GrowingTextView/class/HPTextViewInternal.m; sourceTree = "<group>"; };
 		633E71F716E169C100495B45 /* OTRBuddyListSectionInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBuddyListSectionInfo.h; sourceTree = "<group>"; };
 		633E71F816E169C100495B45 /* OTRBuddyListSectionInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBuddyListSectionInfo.m; sourceTree = "<group>"; };
 		633E71FB16E170AA00495B45 /* OTRSectionHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRSectionHeaderView.h; sourceTree = "<group>"; };
@@ -1596,17 +1590,6 @@
 			);
 			path = Certificates;
 			sourceTree = SOURCE_ROOT;
-		};
-		633B6D0E17ED28A7002DA152 /* HPGrowingTextView */ = {
-			isa = PBXGroup;
-			children = (
-				633B6D0817ED289F002DA152 /* HPGrowingTextView.h */,
-				633B6D0917ED289F002DA152 /* HPGrowingTextView.m */,
-				633B6D0A17ED289F002DA152 /* HPTextViewInternal.h */,
-				633B6D0B17ED289F002DA152 /* HPTextViewInternal.m */,
-			);
-			name = HPGrowingTextView;
-			sourceTree = "<group>";
 		};
 		634671631818710C00515463 /* XMPP - Storage */ = {
 			isa = PBXGroup;
@@ -2659,7 +2642,6 @@
 			children = (
 				D968473218C13AA6008FDC46 /* UIAlertView+Blocks */,
 				D94F771B17EA86EC007768A6 /* GTMOAuth2ViewTouch.xib */,
-				633B6D0E17ED28A7002DA152 /* HPGrowingTextView */,
 				D909662F17EA55B800440833 /* GTMOAuth2.xcodeproj */,
 				63483DF41752CEB700779257 /* XMPPFramework */,
 				6301D87F16E95A23008F67A6 /* OpenInChrome */,
@@ -3889,7 +3871,6 @@
 				63483F9C1752CED100779257 /* XMPPRosterMemoryStorage.m in Sources */,
 				63483F9D1752CED100779257 /* XMPPUserMemoryStorageObject.m in Sources */,
 				63483F9E1752CED100779257 /* XMPPRoster.m in Sources */,
-				633B6D0D17ED289F002DA152 /* HPTextViewInternal.m in Sources */,
 				63483FA01752CED100779257 /* XMPPIQ+JabberRPC.m in Sources */,
 				63483FA11752CED100779257 /* XMPPIQ+JabberRPCResonse.m in Sources */,
 				63483FA21752CED100779257 /* XMPPJabberRPCModule.m in Sources */,
@@ -3948,7 +3929,6 @@
 				63483FD11752CED100779257 /* XMPPMessageArchiving.xcdatamodeld in Sources */,
 				63483FD21752CED100779257 /* XMPPMessageArchiving_Contact_CoreDataObject.m in Sources */,
 				63483FD31752CED100779257 /* XMPPMessageArchiving_Message_CoreDataObject.m in Sources */,
-				633B6D0C17ED289F002DA152 /* HPGrowingTextView.m in Sources */,
 				63483FD41752CED100779257 /* XMPPMessageArchivingCoreDataStorage.m in Sources */,
 				63483FD51752CED100779257 /* XMPPMessageArchiving.m in Sources */,
 				63483FD61752CED100779257 /* XMPPvCardAvatarModule.m in Sources */,
