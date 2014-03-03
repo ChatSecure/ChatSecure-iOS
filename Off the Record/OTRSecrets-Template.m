@@ -7,8 +7,5 @@
 //
 
 NSString *const kOTRGoogleAppSecret = @"";
-NSString *const kOTRUservoiceKey = @"";
-NSString *const kOTRUservoiceSecret = @"";
-
 NSString *const kOTRHockeyLiveIdentifier = @"";
 NSString *const kOTRHockeyBetaIdentifier = @"";

@@ -321,9 +321,18 @@
 
 - (void)failedToConnect:(id)error
 {
-    if (error) {
+    NSError *localError = nil;
+    if ([error isKindOfClass:[NSError class]]) {
+        localError = error;
+    }
+    if ([error isKindOfClass:[NSXMLElement class]]) {
+        NSXMLElement *errorElement = error;
+        NSString *errorString = [errorElement prettyXMLString];
+        localError = [NSError errorWithDomain:kChatSecureErrorDomain code:-123 userInfo:@{NSLocalizedDescriptionKey: errorString}];
+    }
+    if (localError) {
         [[NSNotificationCenter defaultCenter]
-         postNotificationName:kOTRProtocolLoginFail object:self userInfo:@{kOTRProtocolLoginFailErrorKey:error}];
+         postNotificationName:kOTRProtocolLoginFail object:self userInfo:@{kOTRProtocolLoginFailErrorKey:localError}];
     }
     else {
         [[NSNotificationCenter defaultCenter]
