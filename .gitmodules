@@ -38,9 +38,6 @@
 [submodule "Submodules/ChatSecure-Metadata"]
 	path = Submodules/ChatSecure-Metadata
 	url = git@github.com:ChatSecure/ChatSecure-Metadata.git
-[submodule "Submodules/SIAlertView"]
-	path = Submodules/SIAlertView
-	url = git@github.com:ChatSecure/SIAlertView.git
 [submodule "Submodules/UIAlertView-Blocks"]
 	path = Submodules/UIAlertView-Blocks
 	url = git@github.com:jivadevoe/UIAlertView-Blocks.git

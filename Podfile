@@ -9,4 +9,5 @@ pod "Facebook-iOS-SDK"
 pod "HockeySDK"
 pod "MagicalRecord", :inhibit_warnings => true
 pod 'MBProgressHUD', '~> 0.8'
+pod 'SIAlertView', :podspec => 'PodSpecs/SIAlertView.podspec'
 pod "SSKeychain"
