@@ -35,6 +35,7 @@ PODS:
   - MBProgressHUD (0.8)
   - SIAlertView (1.3)
   - SSKeychain (1.2.1)
+  - UIAlertView-Blocks (1.0)
 
 DEPENDENCIES:
   - AFNetworking
@@ -49,6 +50,7 @@ DEPENDENCIES:
   - MBProgressHUD (~> 0.8)
   - SIAlertView (from `PodSpecs/SIAlertView.podspec`)
   - SSKeychain
+  - UIAlertView-Blocks
 
 EXTERNAL SOURCES:
   CocoaAsyncSocket:
@@ -69,5 +71,6 @@ SPEC CHECKSUMS:
   MBProgressHUD: 2bbc6f470111daf7f3eaa4eb12b8cbf01c4c0622
   SIAlertView: 522351a8870be07fb49053fa054c83da3ea17dbe
   SSKeychain: d18926838c2e7cd342e2a49e9f869858e49f035a
+  UIAlertView-Blocks: f7be28a08e85ec21143951ec6797ca6474faf563
 
 COCOAPODS: 0.29.0

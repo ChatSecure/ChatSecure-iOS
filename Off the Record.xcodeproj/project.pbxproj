@@ -240,7 +240,6 @@
 		63D2BB231856B04500FFE4B7 /* OTRCertificatesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D2BB221856B04500FFE4B7 /* OTRCertificatesViewController.m */; };
 		63D511B017EBA122000D927B /* OTRFacebookSessionCachingStrategy.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D511AF17EBA122000D927B /* OTRFacebookSessionCachingStrategy.m */; };
 		63D511C117EBDD31000D927B /* OTRAppVersionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D511C017EBDD31000D927B /* OTRAppVersionManager.m */; };
-		63E1D7C718C14231003A60FC /* UIActionSheet+Blocks.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E1D7C618C14231003A60FC /* UIActionSheet+Blocks.m */; };
 		63E5E80216D1D729006E2B01 /* OTRChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63022BB516CDAD4C00F764F1 /* OTRChatViewController.m */; };
 		63E5E80416D1D787006E2B01 /* OTRManagedXMPPAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = D90B9FAF169FF4FB00A923EF /* OTRManagedXMPPAccount.m */; };
 		63E5E80516D1D787006E2B01 /* OTRManagedOscarAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = D90B9FAC169FF4EE00A923EF /* OTRManagedOscarAccount.m */; };
@@ -316,8 +315,6 @@
 		D96495CB15363C0F009A8C33 /* OTRViewSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = D96495CA15363C0F009A8C33 /* OTRViewSetting.m */; };
 		D96495CF15365B3F009A8C33 /* OTRValueSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = D96495CE15365B3F009A8C33 /* OTRValueSetting.m */; };
 		D96495D7153668D2009A8C33 /* OTRSettingsGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = D96495D6153668D2009A8C33 /* OTRSettingsGroup.m */; };
-		D968472618C13AA3008FDC46 /* RIButtonItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D968472318C13AA3008FDC46 /* RIButtonItem.m */; };
-		D968472718C13AA3008FDC46 /* UIAlertView+Blocks.m in Sources */ = {isa = PBXBuildFile; fileRef = D968472518C13AA3008FDC46 /* UIAlertView+Blocks.m */; };
 		D968473418C13B90008FDC46 /* OTRSecrets.m in Sources */ = {isa = PBXBuildFile; fileRef = D968473318C13B90008FDC46 /* OTRSecrets.m */; };
 		D968479A18C158EE008FDC46 /* UserVoice.strings in Resources */ = {isa = PBXBuildFile; fileRef = D968477318C158EE008FDC46 /* UserVoice.strings */; };
 		D968479B18C158EE008FDC46 /* uv_article.png in Resources */ = {isa = PBXBuildFile; fileRef = D968479118C158EE008FDC46 /* uv_article.png */; };
@@ -1028,8 +1025,6 @@
 		63D511AF17EBA122000D927B /* OTRFacebookSessionCachingStrategy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRFacebookSessionCachingStrategy.m; sourceTree = "<group>"; };
 		63D511BF17EBDD31000D927B /* OTRAppVersionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAppVersionManager.h; sourceTree = "<group>"; };
 		63D511C017EBDD31000D927B /* OTRAppVersionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAppVersionManager.m; sourceTree = "<group>"; };
-		63E1D7C518C14231003A60FC /* UIActionSheet+Blocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIActionSheet+Blocks.h"; path = "Submodules/UIAlertView-Blocks/UIActionSheet+Blocks.h"; sourceTree = "<group>"; };
-		63E1D7C618C14231003A60FC /* UIActionSheet+Blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIActionSheet+Blocks.m"; path = "Submodules/UIAlertView-Blocks/UIActionSheet+Blocks.m"; sourceTree = "<group>"; };
 		63E5E81016D1D860006E2B01 /* OTRConvertAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRConvertAccount.h; sourceTree = "<group>"; };
 		63E5E81116D1D860006E2B01 /* OTRConvertAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRConvertAccount.m; sourceTree = "<group>"; };
 		63E5E81F16D1DEB9006E2B01 /* checkmark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = checkmark.png; sourceTree = "<group>"; };
@@ -1143,10 +1138,6 @@
 		D96495CE15365B3F009A8C33 /* OTRValueSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRValueSetting.m; sourceTree = "<group>"; };
 		D96495D5153668D2009A8C33 /* OTRSettingsGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRSettingsGroup.h; sourceTree = "<group>"; };
 		D96495D6153668D2009A8C33 /* OTRSettingsGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRSettingsGroup.m; sourceTree = "<group>"; };
-		D968472218C13AA3008FDC46 /* RIButtonItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RIButtonItem.h; path = "Submodules/UIAlertView-Blocks/RIButtonItem.h"; sourceTree = "<group>"; };
-		D968472318C13AA3008FDC46 /* RIButtonItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RIButtonItem.m; path = "Submodules/UIAlertView-Blocks/RIButtonItem.m"; sourceTree = "<group>"; };
-		D968472418C13AA3008FDC46 /* UIAlertView+Blocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIAlertView+Blocks.h"; path = "Submodules/UIAlertView-Blocks/UIAlertView+Blocks.h"; sourceTree = "<group>"; };
-		D968472518C13AA3008FDC46 /* UIAlertView+Blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIAlertView+Blocks.m"; path = "Submodules/UIAlertView-Blocks/UIAlertView+Blocks.m"; sourceTree = "<group>"; };
 		D968473318C13B90008FDC46 /* OTRSecrets.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRSecrets.m; sourceTree = "<group>"; };
 		D968476E18C158E6008FDC46 /* UserVoice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserVoice.h; sourceTree = "<group>"; };
 		D968476F18C158E6008FDC46 /* UVConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UVConfig.h; sourceTree = "<group>"; };
@@ -2597,19 +2588,6 @@
 			name = Value;
 			sourceTree = "<group>";
 		};
-		D968473218C13AA6008FDC46 /* UIAlertView+Blocks */ = {
-			isa = PBXGroup;
-			children = (
-				D968472218C13AA3008FDC46 /* RIButtonItem.h */,
-				D968472318C13AA3008FDC46 /* RIButtonItem.m */,
-				63E1D7C518C14231003A60FC /* UIActionSheet+Blocks.h */,
-				63E1D7C618C14231003A60FC /* UIActionSheet+Blocks.m */,
-				D968472418C13AA3008FDC46 /* UIAlertView+Blocks.h */,
-				D968472518C13AA3008FDC46 /* UIAlertView+Blocks.m */,
-			);
-			name = "UIAlertView+Blocks";
-			sourceTree = "<group>";
-		};
 		D968476D18C158E6008FDC46 /* Include */ = {
 			isa = PBXGroup;
 			children = (
@@ -2640,7 +2618,6 @@
 		D9CEED611684234D00B236B5 /* Submodules */ = {
 			isa = PBXGroup;
 			children = (
-				D968473218C13AA6008FDC46 /* UIAlertView+Blocks */,
 				D94F771B17EA86EC007768A6 /* GTMOAuth2ViewTouch.xib */,
 				D909662F17EA55B800440833 /* GTMOAuth2.xcodeproj */,
 				63483DF41752CEB700779257 /* XMPPFramework */,
@@ -3763,7 +3740,6 @@
 				D9CEEEAE168423CA00B236B5 /* OFTHeader.m in Sources */,
 				D9CEEEAF168423CA00B236B5 /* OFTProxyCommand.m in Sources */,
 				D9CEEEB0168423CA00B236B5 /* OFTProxyConnection.m in Sources */,
-				63E1D7C718C14231003A60FC /* UIActionSheet+Blocks.m in Sources */,
 				D9CEEEB1168423CA00B236B5 /* OFTServer.m in Sources */,
 				D9CEEEB2168423CA00B236B5 /* OSCARConnection.m in Sources */,
 				63D2BB1D1856A0D200FFE4B7 /* OTRCertificateDomainViewController.m in Sources */,
@@ -3892,11 +3868,9 @@
 				63483FB11752CED100779257 /* XMPPMessage+XEP0045.m in Sources */,
 				63483FB21752CED100779257 /* XMPPMUC.m in Sources */,
 				63483FB31752CED100779257 /* XMPPRoom.m in Sources */,
-				D968472718C13AA3008FDC46 /* UIAlertView+Blocks.m in Sources */,
 				63483FB41752CED100779257 /* XMPPvCard.xcdatamodeld in Sources */,
 				63483FB51752CED100779257 /* XMPPvCardAvatarCoreDataStorageObject.m in Sources */,
 				63483FB61752CED100779257 /* XMPPvCardCoreDataStorage.m in Sources */,
-				D968472618C13AA3008FDC46 /* RIButtonItem.m in Sources */,
 				63483FB71752CED100779257 /* XMPPvCardCoreDataStorageObject.m in Sources */,
 				63483FB81752CED100779257 /* XMPPvCardTempCoreDataStorageObject.m in Sources */,
 				63483FB91752CED100779257 /* XMPPvCardTemp.m in Sources */,
