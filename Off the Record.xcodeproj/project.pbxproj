@@ -32,6 +32,8 @@
 		63058644183F02D4009ADB6B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9F9377E13F44BD3009A3D84 /* Foundation.framework */; };
 		63058645183F02D4009ADB6B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9F9377C13F44BD3009A3D84 /* UIKit.framework */; };
 		6305864B183F02D4009ADB6B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 63058649183F02D4009ADB6B /* InfoPlist.strings */; };
+		630D51EB18C539C6007FD033 /* OTRBuddyImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 630D51EA18C539C6007FD033 /* OTRBuddyImageCell.m */; };
+		630D51F818C53D72007FD033 /* OTRConversationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 630D51F718C53D72007FD033 /* OTRConversationCell.m */; };
 		630FF21316E0267200CC20AD /* _OTRManagedGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 630FF21216E0267200CC20AD /* _OTRManagedGroup.m */; };
 		630FF21716E0269100CC20AD /* OTRManagedGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 630FF21616E0269000CC20AD /* OTRManagedGroup.m */; };
 		63188CBD16E55B230000DD40 /* OTRNewBuddyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63188CBC16E55B230000DD40 /* OTRNewBuddyViewController.m */; };
@@ -41,6 +43,7 @@
 		632E911D185A88F600F7FBC8 /* SIAlertView.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 632E9118185A88F600F7FBC8 /* SIAlertView.bundle */; };
 		632E911E185A88F600F7FBC8 /* SIAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 632E911A185A88F600F7FBC8 /* SIAlertView.m */; };
 		632E911F185A88F600F7FBC8 /* UIWindow+SIUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 632E911C185A88F600F7FBC8 /* UIWindow+SIUtils.m */; };
+		63323A9418C3DEFA00036302 /* OTRConversationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63323A9318C3DEFA00036302 /* OTRConversationViewController.m */; };
 		633406391652C31300A54C52 /* OTRListSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 633406381652C31300A54C52 /* OTRListSetting.m */; };
 		6334063C1652C33300A54C52 /* OTRListSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6334063B1652C33300A54C52 /* OTRListSettingViewController.m */; };
 		633406411652D50F00A54C52 /* OTRLanguageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 633406401652D50F00A54C52 /* OTRLanguageManager.m */; };
@@ -703,6 +706,10 @@
 		63058648183F02D4009ADB6B /* Off the Record Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Off the Record Tests-Info.plist"; sourceTree = "<group>"; };
 		6305864A183F02D4009ADB6B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		6305864E183F02D4009ADB6B /* Off the Record Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Off the Record Tests-Prefix.pch"; sourceTree = "<group>"; };
+		630D51E918C539C6007FD033 /* OTRBuddyImageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBuddyImageCell.h; sourceTree = "<group>"; };
+		630D51EA18C539C6007FD033 /* OTRBuddyImageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBuddyImageCell.m; sourceTree = "<group>"; };
+		630D51F618C53D72007FD033 /* OTRConversationCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRConversationCell.h; sourceTree = "<group>"; };
+		630D51F718C53D72007FD033 /* OTRConversationCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRConversationCell.m; sourceTree = "<group>"; };
 		630FF21116E0267200CC20AD /* _OTRManagedGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _OTRManagedGroup.h; sourceTree = "<group>"; };
 		630FF21216E0267200CC20AD /* _OTRManagedGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _OTRManagedGroup.m; sourceTree = "<group>"; };
 		630FF21516E0269000CC20AD /* OTRManagedGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRManagedGroup.h; sourceTree = "<group>"; };
@@ -724,6 +731,8 @@
 		632E911A185A88F600F7FBC8 /* SIAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SIAlertView.m; sourceTree = "<group>"; };
 		632E911B185A88F600F7FBC8 /* UIWindow+SIUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIWindow+SIUtils.h"; sourceTree = "<group>"; };
 		632E911C185A88F600F7FBC8 /* UIWindow+SIUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIWindow+SIUtils.m"; sourceTree = "<group>"; };
+		63323A9218C3DEF900036302 /* OTRConversationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRConversationViewController.h; sourceTree = "<group>"; };
+		63323A9318C3DEFA00036302 /* OTRConversationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRConversationViewController.m; sourceTree = "<group>"; };
 		633406371652C31300A54C52 /* OTRListSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRListSetting.h; sourceTree = "<group>"; };
 		633406381652C31300A54C52 /* OTRListSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRListSetting.m; sourceTree = "<group>"; };
 		6334063A1652C33300A54C52 /* OTRListSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRListSettingViewController.h; sourceTree = "<group>"; };
@@ -3519,6 +3528,12 @@
 				6300F16616E6CF8400D3C1AA /* OTRSubscriptionRequestsViewController.m */,
 				63BFDB6316E81CD900C608D6 /* OTRBuddyViewController.h */,
 				63BFDB6416E81CD900C608D6 /* OTRBuddyViewController.m */,
+				63323A9218C3DEF900036302 /* OTRConversationViewController.h */,
+				63323A9318C3DEFA00036302 /* OTRConversationViewController.m */,
+				630D51E918C539C6007FD033 /* OTRBuddyImageCell.h */,
+				630D51EA18C539C6007FD033 /* OTRBuddyImageCell.m */,
+				630D51F618C53D72007FD033 /* OTRConversationCell.h */,
+				630D51F718C53D72007FD033 /* OTRConversationCell.m */,
 				6348189517E3E09C004E0146 /* OTRSecrets.h */,
 				D968473318C13B90008FDC46 /* OTRSecrets.m */,
 				D9CEF0A81684253B00B236B5 /* XMPPFramework.h */,
@@ -4125,6 +4140,7 @@
 				63D0E4851819DEC6003ACA13 /* _OTRvCardAvatar.m in Sources */,
 				6336CDE0165C4E9E00C8CBA8 /* OTRLanguageListSettingViewController.m in Sources */,
 				6370C988185FD9B900CB6786 /* OTRRecentBuddyCell.m in Sources */,
+				630D51F818C53D72007FD033 /* OTRConversationCell.m in Sources */,
 				D9CEED891684237700B236B5 /* Appirater.m in Sources */,
 				D9CEEE60168423CA00B236B5 /* AIMBArtDownloadReply.m in Sources */,
 				D9CEEE61168423CA00B236B5 /* AIMBArtHandler.m in Sources */,
@@ -4224,6 +4240,7 @@
 				638286E01846911C00F127C2 /* OTRAccountTableViewCell.m in Sources */,
 				D9CEEEFA1684240900B236B5 /* MBProgressHUD.m in Sources */,
 				D9CEF0C616842A5B00B236B5 /* NSObject+SBJson.m in Sources */,
+				63323A9418C3DEFA00036302 /* OTRConversationViewController.m in Sources */,
 				D9CEF0C716842A5B00B236B5 /* SBJsonParser.m in Sources */,
 				D9CEF0C816842A5B00B236B5 /* SBJsonStreamParser.m in Sources */,
 				D9CEF0C916842A5B00B236B5 /* SBJsonStreamParserAccumulator.m in Sources */,
@@ -4334,6 +4351,7 @@
 				63483F861752CED100779257 /* NSData+XMPP.m in Sources */,
 				63483F871752CED100779257 /* NSNumber+XMPP.m in Sources */,
 				63483F881752CED100779257 /* NSXMLElement+XMPP.m in Sources */,
+				630D51EB18C539C6007FD033 /* OTRBuddyImageCell.m in Sources */,
 				63483F891752CED100779257 /* XMPPElement.m in Sources */,
 				63483F8A1752CED100779257 /* XMPPIQ.m in Sources */,
 				63483F8B1752CED100779257 /* XMPPJID.m in Sources */,

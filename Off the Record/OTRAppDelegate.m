@@ -22,6 +22,7 @@
 
 #import "OTRAppDelegate.h"
 
+#import "OTRConversationViewController.h"
 #import "OTRBuddyListViewController.h"
 #import "OTRChatViewController.h"
 #import "Strings.h"
@@ -85,8 +86,11 @@
     OTRChatViewController *chatViewController = [[OTRChatViewController alloc] init];
     buddyListViewController.chatViewController = chatViewController;
     self.settingsViewController = [[OTRSettingsViewController alloc] init];
+    
+    OTRConversationViewController * conversationViewController = [[OTRConversationViewController alloc] init];
 
-    UINavigationController *buddyListNavController = [[UINavigationController alloc] initWithRootViewController:buddyListViewController];
+    UINavigationController *buddyListNavController = [[UINavigationController alloc] initWithRootViewController:conversationViewController];
+    [buddyListNavController setNavigationBarHidden:NO];
     UIViewController *rootViewController = nil;
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
         rootViewController = buddyListNavController;

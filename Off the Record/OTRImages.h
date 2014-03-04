@@ -16,4 +16,7 @@
 +(UIImage *)openCaratImage;
 +(UIImage *)closeCaratImage;
 
+
++(UIColor *)colorWithStatus:(OTRBuddyStatus)status;
+
 @end
