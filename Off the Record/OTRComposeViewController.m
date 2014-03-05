@@ -177,7 +177,7 @@ static CGFloat cellHeight = 60.0;
     
     [cell setBuddy:buddy];
     
-    [cell.avatarImageView.layer setCornerRadius:(cellHeight-2.0*margin)/2.0];
+    [cell.avatarImageView.layer setCornerRadius:(cellHeight-2.0*OTRBuddyImageCellPadding)/2.0];
     
     return cell;
 }

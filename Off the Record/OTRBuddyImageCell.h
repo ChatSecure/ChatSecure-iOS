@@ -10,7 +10,7 @@
 
 @class OTRManagedBuddy;
 
-extern const CGFloat margin;
+extern const CGFloat OTRBuddyImageCellPadding;
 
 @interface OTRBuddyImageCell : UITableViewCell
 

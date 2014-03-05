@@ -30,13 +30,15 @@
 - (void) otrSetting:(OTRSetting*)setting showDetailViewControllerClass:(Class)viewControllerClass;
 @end
 
+typedef void (^OTRSettingActionBlock)(void);
+
 @interface OTRSetting : NSObject
 
 @property (nonatomic, strong, readonly) NSString *title;
 @property (nonatomic, strong, readonly) NSString *description;
 @property (nonatomic, strong) NSString *imageName;
-@property (nonatomic) SEL action;
 @property (nonatomic, weak) id<OTRSettingDelegate> delegate;
+@property (nonatomic, copy) OTRSettingActionBlock actionBlock;
 
 - (id) initWithTitle:(NSString *)newTitle description:(NSString *)newDescription;
 

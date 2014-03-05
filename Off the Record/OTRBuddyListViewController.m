@@ -41,6 +41,7 @@
 
 #import "OTRBuddyCell.h"
 #import "OTRRecentBuddyCell.h"
+#import "UIAlertView+Blocks.h"
 
 static void * OTRBuddyListViewControllerKVOContext = &OTRBuddyListViewControllerKVOContext;
 
@@ -100,7 +101,11 @@ static void * OTRBuddyListViewControllerKVOContext = &OTRBuddyListViewController
     if ([OTRUtilities currentiOSVersionHasSSLVulnerability]) {
         NSString * part1String = [NSString stringWithFormat:iOS_SSL_ERROR_PART1_STRING,[[UIDevice currentDevice] systemVersion]];
         NSString * messageString = [NSString stringWithFormat:@"%@\n\n%@",part1String,iOS_SSL_ERROR_PART2_STRING];
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:iOS_SSL_ERROR_TITLE_STRING message:messageString delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
+        RIButtonItem *infoItem = [RIButtonItem itemWithLabel:INFO_STRING action:^{
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://chatsecure.org/blog/importance-of-ssl-pinning/"]];
+        }];
+        RIButtonItem *cancelItem = [RIButtonItem itemWithLabel:OK_STRING];
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:iOS_SSL_ERROR_TITLE_STRING message:messageString cancelButtonItem:cancelItem otherButtonItems:infoItem, nil];
         [alertView show];
     }
     

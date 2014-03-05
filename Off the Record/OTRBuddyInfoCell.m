@@ -56,7 +56,7 @@
 - (void)updateConstraints
 {
 
-    NSDictionary *metrics = @{@"margin":@(margin)};
+    NSDictionary *metrics = @{@"margin":@(OTRBuddyImageCellPadding)};
     
     [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[imageView]-margin-[nameLabel]->=margin-|" options:0 metrics:metrics views:@{@"nameLabel":self.nameLabel,@"imageView":self.avatarImageView}]];
     

@@ -61,6 +61,7 @@
         [self.contentView addSubview:self.conversationLabel];
         
     }
+    NSLog(@"Self init Cell: %@",self);
     return self;
 }
 
@@ -78,6 +79,8 @@
 
 - (void)setBuddy:(OTRManagedBuddy *)buddy
 {
+    NSLog(@"Set Buddy: %@ - %@",buddy.displayName,buddy.accountName);
+    NSLog(@"Self setBuddy Cell: %@",self);
     [super setBuddy:buddy];
     NSString * nameString = nil;
     if (buddy.displayName.length) {
@@ -116,9 +119,12 @@
 
 - (void)updateDateString:(id)sender
 {
+    NSLog(@"Update Timer For: %@",self.nameLabel.text);
+    NSLog(@"Self updateDateString Cell: %@",self);
     NSTimeInterval timeInterval = fabs([self.displayDate timeIntervalSinceNow]);
     if (timeInterval <= 60*60*24 && !self.dateUpdateTimer) {
         //update every minute for the first 24 hours
+        [self.dateUpdateTimer invalidate];
         self.dateUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:60.0 target:self selector:@selector(updateDateString:) userInfo:nil repeats:YES];
     }
     else if (timeInterval > 60*60*24 && self.dateUpdateTimer) {
@@ -171,6 +177,14 @@
     return dateString;
 }
 
+- (void)prepareForReuse
+{
+    [super prepareForReuse];
+    [self.dateUpdateTimer invalidate];
+    self.dateUpdateTimer = nil;
+    NSLog(@"Prepare For Reuse: %@ %@",self.nameLabel.text,self);
+}
+
 - (void)updateConstraints
 {
     [super updateConstraints];
@@ -181,7 +195,7 @@
                             @"conversationLabel":self.conversationLabel,
                             @"accountLabel":self.accountLabel};
     
-    NSDictionary *metrics = @{@"margin":[NSNumber numberWithFloat:margin]};
+    NSDictionary *metrics = @{@"margin":[NSNumber numberWithFloat:OTRBuddyImageCellPadding]};
     
     [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[imageView]-margin-[nameLabel]->=0-[dateLabel]-margin-|"
                                                                              options:0

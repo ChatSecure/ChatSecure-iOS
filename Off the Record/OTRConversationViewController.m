@@ -140,9 +140,10 @@ static CGFloat cellHeight = 80.0;
     OTRConversationCell *cell = [tableView dequeueReusableCellWithIdentifier:[OTRConversationCell reuseIdentifier] forIndexPath:indexPath];
     OTRManagedBuddy * buddy = [self.buddyFetchedResultsController objectAtIndexPath:indexPath];
     
-    [cell.avatarImageView.layer setCornerRadius:(cellHeight-2.0*margin)/2.0];
+    [cell.avatarImageView.layer setCornerRadius:(cellHeight-2.0*OTRBuddyImageCellPadding)/2.0];
     
     [cell setBuddy:buddy];
+    NSLog(@"Index Path: %d",indexPath.row);
     
     return cell;
 }

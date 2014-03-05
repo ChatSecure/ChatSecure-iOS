@@ -7,11 +7,10 @@
 //
 
 #import "OTRSetting.h"
-#import "UserVoice.h"
 
 @protocol OTRFeedbackSettingDelegate <OTRSettingDelegate>
 @required
-- (void) presentUserVoiceWithConfig:(UVConfig*)config;
+- (void) presentUserVoiceView;
 @end
 
 @interface OTRFeedbackSetting : OTRSetting

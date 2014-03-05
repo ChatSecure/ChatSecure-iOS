@@ -130,7 +130,7 @@
         [auth setParameters:[tokenDictionary mutableCopy]];
     }
     auth.clientID = GOOGLE_APP_ID;
-    auth.clientSecret = kOTRUservoiceSecret;
+    auth.clientSecret = kOTRGoogleAppSecret;
     auth.scope = GOOGLE_APP_SCOPE;
     auth.tokenURL = [GTMOAuth2SignIn googleTokenURL];
     return auth;

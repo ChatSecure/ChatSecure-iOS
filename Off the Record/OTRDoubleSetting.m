@@ -30,7 +30,10 @@
 {
     if (self = [super initWithTitle:newTitle description:newDescription settingsKey:newSettingsKey])
     {
-        self.action = @selector(editValue);
+        __weak typeof (self) weakSelf = self;
+        self.actionBlock = ^{
+            [weakSelf editValue];
+        };
         self.defaultValue = [NSNumber numberWithDouble:0.0];
         self.isPercentage = NO;
     }

@@ -9,3 +9,5 @@ DerivedData
 OTRSecrets.m
 *.orig
 
+
+/Pods/

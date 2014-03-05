@@ -23,24 +23,13 @@
 #import "OTRSetting.h"
 
 @implementation OTRSetting
-@synthesize title, description, action, imageName, delegate;
-
-- (void) dealloc
-{
-    title = nil;
-    description = nil;
-    self.action = nil;
-    self.imageName = nil;
-    self.delegate = nil;
-}
 
 - (id) initWithTitle:(NSString*)newTitle description:(NSString*)newDescription
 {
     if (self = [super init])
     {
-        title = newTitle;
-        description = newDescription;
-        self.action = nil;
+        _title = newTitle;
+        _description = newDescription;
     }
     return self;
 }

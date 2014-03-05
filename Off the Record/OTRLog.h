@@ -7,8 +7,8 @@
 //
 
 #import "DDLog.h"
-#if DEBUG
-    static const int ddLogLevel = LOG_LEVEL_VERBOSE;
+#ifdef DEBUG
+    static const int ddLogLevel = LOG_LEVEL_OFF;
 #else
     static const int ddLogLevel = LOG_LEVEL_OFF;
 #endif

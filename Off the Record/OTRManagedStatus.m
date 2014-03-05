@@ -60,19 +60,14 @@
     switch (status) {
         case OTRBuddyStatusXa:
             return EXTENDED_AWAY_STRING;
-            break;
         case OTRBuddyStatusDnd:
             return DO_NOT_DISTURB_STRING;
-            break;
         case OTRBuddyStatusAway:
             return AWAY_STRING;
-            break;
         case OTRBuddyStatusAvailable:
             return AVAILABLE_STRING;
-            break;
         default:
             return OFFLINE_STRING;
-            break;
     }
 }
 

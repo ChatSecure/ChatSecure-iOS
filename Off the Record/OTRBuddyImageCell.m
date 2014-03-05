@@ -10,7 +10,7 @@
 #import "OTRManagedBuddy.h"
 #import "OTRImages.h"
 
-const CGFloat margin = 12.0;
+const CGFloat OTRBuddyImageCellPadding = 12.0;
 
 @interface OTRBuddyImageCell ()
 
@@ -70,7 +70,7 @@ const CGFloat margin = 12.0;
     [super updateConstraints];
     
     NSDictionary *views = @{@"imageView":self.avatarImageView};
-    NSDictionary *metrics = @{@"margin":[NSNumber numberWithFloat:margin]};
+    NSDictionary *metrics = @{@"margin":@(OTRBuddyImageCellPadding)};
     [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-margin-[imageView]" options:0 metrics:metrics views:views]];
     [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-margin-[imageView]-margin-|" options:0 metrics:metrics views:views]];
     

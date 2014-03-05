@@ -4,15 +4,15 @@
 
 #import <Availability.h>
 
-#ifndef __IPHONE_4_0
-#warning "This project uses features only available in iOS SDK 4.0 and later."
+#ifndef __IPHONE_6_0
+#warning "This project uses features only available in iOS SDK 6.0 and later."
 #endif
 
 #ifdef __OBJC__
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
 
-    #if DEBUG
+    #ifdef DEBUG
         #define MR_ENABLE_ACTIVE_RECORD_LOGGING 0
         #define XMPP_LOGGING_ENABLED 1
     #else

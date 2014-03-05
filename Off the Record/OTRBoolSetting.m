@@ -23,13 +23,15 @@
 #import "OTRBoolSetting.h"
 
 @implementation OTRBoolSetting
-@synthesize action;
 
 - (id) initWithTitle:(NSString *)newTitle description:(NSString *)newDescription settingsKey:(NSString *)newSettingsKey
 {
     if (self = [super initWithTitle:newTitle description:newDescription settingsKey:newSettingsKey])
     {
-        self.action = @selector(toggle);
+        __weak typeof (self) weakSelf = self;
+        self.actionBlock = ^{
+            [weakSelf toggle];
+        };
         self.defaultValue = [NSNumber numberWithBool:NO];
     }
     return self;

@@ -39,8 +39,8 @@
     
     NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
     OTRvCard * vCard = [OTRvCard fetchOrCreateWithJidString:[jid bare] inContext:context];
-    return vCard.vCardTemp;
     [context MR_saveToPersistentStoreAndWait];
+    return vCard.vCardTemp;
 }
 
 /**

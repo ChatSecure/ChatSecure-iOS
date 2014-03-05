@@ -23,6 +23,7 @@
 #define kOTRProtocolLoginSuccess @"LoginSuccessNotification"
 #define kOTRProtocolLoginFail @"LoginFailedNotification"
 #define kOTRProtocolLoginFailErrorKey @"ProtocolLoginFailErrorKey"
+#define kChatSecureErrorDomain @"org.chatsecure.ChatSecure"
 #define kOTRProtocolLoginFailSSLStatusKey @"kOTRProtocolLoginFailSSLStatusKey"
 #define kOTRProtocolLoginFailHostnameKey @"kOTRProtocolLoginFailHostnameKey"
 #define kOTRProtocolLoginFailSSLCertificateDataKey @"kOTRProtocolLoginFailSSLCertificateData"
