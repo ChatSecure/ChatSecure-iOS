@@ -90,7 +90,7 @@
     OTRConversationViewController * conversationViewController = [[OTRConversationViewController alloc] init];
 
     UINavigationController *buddyListNavController = [[UINavigationController alloc] initWithRootViewController:conversationViewController];
-    [buddyListNavController setNavigationBarHidden:NO];
+    //[buddyListNavController setNavigationBarHidden:NO];
     UIViewController *rootViewController = nil;
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
         rootViewController = buddyListNavController;

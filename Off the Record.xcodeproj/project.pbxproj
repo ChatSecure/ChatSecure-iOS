@@ -220,6 +220,8 @@
 		639C75DA17E127A600530423 /* FBLoginViewButtonPressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 639C75D617E127A600530423 /* FBLoginViewButtonPressed.png */; };
 		639C75DB17E127A600530423 /* FBLoginViewButtonPressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 639C75D717E127A600530423 /* FBLoginViewButtonPressed@2x.png */; };
 		639FDE4716334FA500387666 /* OTRJabberLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 639FDE4616334FA500387666 /* OTRJabberLoginViewController.m */; };
+		63AB887618C6A11400342E98 /* OTRComposeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AB887518C6A11400342E98 /* OTRComposeViewController.m */; };
+		63AB887918C6A6FE00342E98 /* OTRBuddyInfoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AB887818C6A6FE00342E98 /* OTRBuddyInfoCell.m */; };
 		63B046E3185BD2780066C8E5 /* button-green.png in Resources */ = {isa = PBXBuildFile; fileRef = 63B046E1185BD2780066C8E5 /* button-green.png */; };
 		63B046E4185BD2780066C8E5 /* button-green@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63B046E2185BD2780066C8E5 /* button-green@2x.png */; };
 		63B43C2D166D93D5004A4C54 /* Lock_Locked_Verified.png in Resources */ = {isa = PBXBuildFile; fileRef = 63B43C29166D93D5004A4C54 /* Lock_Locked_Verified.png */; };
@@ -1102,6 +1104,10 @@
 		639C75D717E127A600530423 /* FBLoginViewButtonPressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "FBLoginViewButtonPressed@2x.png"; path = "Submodules/facebook-ios-sdk/src/ImageResources/FBLoginView/FBLoginViewButtonPressed@2x.png"; sourceTree = SOURCE_ROOT; };
 		639FDE4516334FA500387666 /* OTRJabberLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRJabberLoginViewController.h; sourceTree = "<group>"; };
 		639FDE4616334FA500387666 /* OTRJabberLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRJabberLoginViewController.m; sourceTree = "<group>"; };
+		63AB887418C6A11400342E98 /* OTRComposeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRComposeViewController.h; sourceTree = "<group>"; };
+		63AB887518C6A11400342E98 /* OTRComposeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRComposeViewController.m; sourceTree = "<group>"; };
+		63AB887718C6A6FE00342E98 /* OTRBuddyInfoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBuddyInfoCell.h; sourceTree = "<group>"; };
+		63AB887818C6A6FE00342E98 /* OTRBuddyInfoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBuddyInfoCell.m; sourceTree = "<group>"; };
 		63B046E1185BD2780066C8E5 /* button-green.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "button-green.png"; path = "media/app-images/button-green.png"; sourceTree = SOURCE_ROOT; };
 		63B046E2185BD2780066C8E5 /* button-green@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "button-green@2x.png"; path = "media/app-images/button-green@2x.png"; sourceTree = SOURCE_ROOT; };
 		63B43C29166D93D5004A4C54 /* Lock_Locked_Verified.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Lock_Locked_Verified.png; sourceTree = "<group>"; };
@@ -3528,12 +3534,16 @@
 				6300F16616E6CF8400D3C1AA /* OTRSubscriptionRequestsViewController.m */,
 				63BFDB6316E81CD900C608D6 /* OTRBuddyViewController.h */,
 				63BFDB6416E81CD900C608D6 /* OTRBuddyViewController.m */,
+				63AB887418C6A11400342E98 /* OTRComposeViewController.h */,
+				63AB887518C6A11400342E98 /* OTRComposeViewController.m */,
 				63323A9218C3DEF900036302 /* OTRConversationViewController.h */,
 				63323A9318C3DEFA00036302 /* OTRConversationViewController.m */,
 				630D51E918C539C6007FD033 /* OTRBuddyImageCell.h */,
 				630D51EA18C539C6007FD033 /* OTRBuddyImageCell.m */,
 				630D51F618C53D72007FD033 /* OTRConversationCell.h */,
 				630D51F718C53D72007FD033 /* OTRConversationCell.m */,
+				63AB887718C6A6FE00342E98 /* OTRBuddyInfoCell.h */,
+				63AB887818C6A6FE00342E98 /* OTRBuddyInfoCell.m */,
 				6348189517E3E09C004E0146 /* OTRSecrets.h */,
 				D968473318C13B90008FDC46 /* OTRSecrets.m */,
 				D9CEF0A81684253B00B236B5 /* XMPPFramework.h */,
@@ -4132,6 +4142,7 @@
 				639FDE4716334FA500387666 /* OTRJabberLoginViewController.m in Sources */,
 				63F6E854164E000C00F67BDB /* OTRFeedbackSetting.m in Sources */,
 				639B9A71164F21D900C021A9 /* OTRShareSetting.m in Sources */,
+				63AB887918C6A6FE00342E98 /* OTRBuddyInfoCell.m in Sources */,
 				63F637C7183D9410004A7AC5 /* ContextFilterLogFormatter.m in Sources */,
 				633406391652C31300A54C52 /* OTRListSetting.m in Sources */,
 				6334063C1652C33300A54C52 /* OTRListSettingViewController.m in Sources */,
@@ -4173,6 +4184,7 @@
 				D9CEEE7A168423CA00B236B5 /* AIMLogin.m in Sources */,
 				D9CEEE7B168423CA00B236B5 /* AIMLoginHostInfo.m in Sources */,
 				D9CEEE7C168423CA00B236B5 /* AIMMessage.m in Sources */,
+				63AB887618C6A11400342E98 /* OTRComposeViewController.m in Sources */,
 				6370C976185FC58C00CB6786 /* OTRTitleSubtitleView.m in Sources */,
 				D9CEEE7D168423CA00B236B5 /* AIMMessageParser.m in Sources */,
 				D9CEEE7E168423CA00B236B5 /* AIMMissedCall.m in Sources */,

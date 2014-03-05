@@ -100,12 +100,13 @@
         //unread message
         self.nameLabel.font = [UIFont boldSystemFontOfSize:fontSize];
         self.nameLabel.textColor = [UIColor blackColor];
-        self.dateLabel.textColor = self.nameLabel.textColor;
+        
     }
     else {
         self.nameLabel.font = [UIFont systemFontOfSize:fontSize];
         self.nameLabel.textColor = [UIColor colorWithWhite:.45 alpha:1.0];
     }
+    self.dateLabel.textColor = self.nameLabel.textColor;
     
     self.displayDate = lastMessage.date;
     [self.dateUpdateTimer invalidate];

@@ -9,6 +9,8 @@
 #import "OTRConversationViewController.h"
 
 #import "OTRSettingsViewController.h"
+#import "OTRChatViewController.h"
+#import "OTRComposeViewController.h"
 
 #import "OTRConversationCell.h"
 
@@ -17,12 +19,13 @@
 
 #import "OTRLog.h"
 
-const CGFloat cellHeight = 80.0;
+static CGFloat cellHeight = 80.0;
 
-@interface OTRConversationViewController () <NSFetchedResultsControllerDelegate>
+@interface OTRConversationViewController () <NSFetchedResultsControllerDelegate, OTRComposeViewControllerDelegate>
 
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSFetchedResultsController *buddyFetchedResultsController;
+@property (nonatomic, strong) OTRChatViewController *chatViewController;
 
 @end
 
@@ -38,7 +41,7 @@ const CGFloat cellHeight = 80.0;
     UIBarButtonItem *settingsBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"14-gear.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(settingsButtonPressed:)];
     self.navigationItem.rightBarButtonItem = settingsBarButtonItem;
     
-    UIBarButtonItem *composeBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Compose" style:UIBarButtonSystemItemCompose target:self action:@selector(composeButtonPressed:)];
+    UIBarButtonItem *composeBarButtonItem =[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(composeButtonPressed:)];
     self.navigationItem.leftBarButtonItem = composeBarButtonItem;
     
     ////////// Create TableView /////////////////
@@ -75,7 +78,18 @@ const CGFloat cellHeight = 80.0;
 
 - (void)composeButtonPressed:(id)sender
 {
+    OTRComposeViewController * composeViewController = [[OTRComposeViewController alloc] init];
+    composeViewController.delegate = self;
+    UINavigationController * modalNavigationController = [[UINavigationController alloc] initWithRootViewController:composeViewController];
+    //modalNavigationController.modalPresentationStyle = UIModalTransitionStyleCoverVertical;
     
+    [self presentViewController:modalNavigationController animated:YES completion:nil];
+}
+
+- (void)enterConversationWithBuddy:(OTRManagedBuddy *)buddy
+{
+    [self.chatViewController setBuddy:buddy];
+    [self.navigationController pushViewController:self.chatViewController animated:YES];
 }
 
 - (NSFetchedResultsController *)buddyFetchedResultsController
@@ -95,6 +109,13 @@ const CGFloat cellHeight = 80.0;
     return _buddyFetchedResultsController;
 }
 
+- (OTRChatViewController *)chatViewController
+{
+    if (!_chatViewController) {
+        _chatViewController = [[OTRChatViewController alloc] init];
+    }
+    return _chatViewController;
+}
 
 
 #pragma - mark UITableViewDataSource Methods
@@ -140,7 +161,9 @@ const CGFloat cellHeight = 80.0;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     OTRManagedBuddy *buddy = [self.buddyFetchedResultsController objectAtIndexPath:indexPath];
+    [self enterConversationWithBuddy:buddy];
 }
 
 #pragma - mark NSFetchedResultsControllerDelegate Methods
@@ -196,6 +219,15 @@ const CGFloat cellHeight = 80.0;
         [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationNone];
     }
     
+}
+
+#pragma - mark OTRComposeViewController Method
+
+- (void)controller:(OTRComposeViewController *)viewController didSelectBuddy:(OTRManagedBuddy *)buddy
+{
+    [viewController dismissViewControllerAnimated:YES completion:^{
+        [self enterConversationWithBuddy:buddy];
+    }];
 }
 
 

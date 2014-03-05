@@ -8,8 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-extern CGFloat const cellHeight;
-
 @interface OTRConversationViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
 @end
