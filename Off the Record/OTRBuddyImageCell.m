@@ -61,7 +61,7 @@ const CGFloat OTRBuddyImageCellPadding = 12.0;
     else {
         self.avatarImageView.image = [self defaultImage];
     }
-    UIColor *statusColor =  [OTRImages colorWithStatus:[buddy currentStatusMessage].statusValue];
+    UIColor *statusColor =  [OTRImages colorWithStatus:buddy.currentStatusValue];
     self.imageViewBorderColor = statusColor;
     
     

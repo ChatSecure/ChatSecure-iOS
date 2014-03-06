@@ -85,7 +85,9 @@
     
     self.accountLabel.text = buddy.account.username;
     
-    OTRManagedMessage * lastMessage = [[buddy.messages sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:OTRManagedMessageAndStatusAttributes.date ascending:YES]]] lastObject];
+    NSPredicate * onlyPlainTextPredicate = [NSPredicate predicateWithFormat:@"%K == NO",OTRManagedMessageAndStatusAttributes.isEncrypted];
+    
+    OTRManagedMessage * lastMessage = [[[buddy.messages sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:OTRManagedMessageAndStatusAttributes.date ascending:NO]]] filteredArrayUsingPredicate:onlyPlainTextPredicate]firstObject];
     
     UIFont *currentFont = self.conversationLabel.font;
     CGFloat fontSize = currentFont.pointSize;

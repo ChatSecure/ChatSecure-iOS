@@ -9,6 +9,7 @@
 #import "OTRComposeViewController.h"
 
 #import "OTRManagedBuddy.h"
+#import "OTRManagedAccount.h"
 #import "OTRLog.h"
 
 #import "OTRBuddyInfoCell.h"
@@ -84,7 +85,9 @@ static CGFloat cellHeight = 60.0;
 - (NSFetchedResultsController *)buddySearchFetchedResultsController
 {
     if (!_buddySearchFetchedResultsController) {
-        _buddySearchFetchedResultsController = [OTRManagedBuddy MR_fetchAllGroupedBy:nil withPredicate:nil sortedBy:[NSString stringWithFormat:@"%@,%@,%@",OTRManagedBuddyAttributes.currentStatus,OTRManagedBuddyAttributes.displayName,OTRManagedBuddyAttributes.accountName] ascending:YES delegate:self];
+        NSArray * accountNames = [[OTRManagedAccount MR_findAll] valueForKey:OTRManagedAccountAttributes.username];
+        NSPredicate *notSelfPredicate = [NSPredicate predicateWithFormat:@"NOT (%K IN %@)",OTRManagedBuddyAttributes.accountName,accountNames];
+        _buddySearchFetchedResultsController = [OTRManagedBuddy MR_fetchAllGroupedBy:nil withPredicate:notSelfPredicate sortedBy:[NSString stringWithFormat:@"%@",OTRManagedBuddyAttributes.currentStatus] ascending:YES delegate:self];
     }
     return _buddySearchFetchedResultsController;
 }
