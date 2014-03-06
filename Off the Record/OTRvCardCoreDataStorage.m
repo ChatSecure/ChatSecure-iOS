@@ -1,3 +1,4 @@
+
 //
 //  OTRvCardCoreDataStorage.m
 //  Off the Record
@@ -18,17 +19,28 @@
 #import "OTRManagedBuddy.h"
 #import "OTRAccountsManager.h"
 
+@interface OTRvCardCoreDataStorage ()
+
+@property (nonatomic, strong) dispatch_queue_t storageQueue;
+
+@end
+
 @implementation OTRvCardCoreDataStorage
 
--(OTRManagedBuddy *)fetchBuddyWithJid:(XMPPJID *)JID withStram:(XMPPStream *)stream inContext:(NSManagedObjectContext *)context
+- (id)init
 {
-    OTRManagedBuddy * buddy =  [OTRManagedBuddy fetchWithName:[JID bare] account:[OTRAccountsManager accountForProtocol:@"xmpp" accountName:[stream.myJID bare] inContext:context] inContext:context];
-    return buddy;
+    if (self = [super init]) {
+        self.storageQueue = dispatch_queue_create("OTR.vCardCoreDataStorage", NULL);
+    }
+    return self;
 }
 
 //XMPPvCardTempModule.h
 
+#pragma - mark XMPPvCardTempModule Protocol Methods
+
 - (BOOL)configureWithParent:(XMPPvCardTempModule *)aParent queue:(dispatch_queue_t)queue {
+    
     return YES;
 }
 
@@ -37,7 +49,7 @@
  **/
 - (XMPPvCardTemp *)vCardTempForJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream {
     
-    NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
+    NSManagedObjectContext * context = [NSManagedObjectContext MR_context];
     OTRvCard * vCard = [OTRvCard fetchOrCreateWithJidString:[jid bare] inContext:context];
     [context MR_saveToPersistentStoreAndWait];
     return vCard.vCardTemp;
@@ -69,6 +81,8 @@
     [context MR_saveToPersistentStoreAndWait];
     return vCardTemp;
 }
+
+
 
 /**
  * Asks the backend if we should fetch the vCardTemp from the network.
@@ -111,15 +125,16 @@
     return result;
 }
 // XMPPvCardAvatarModule
+#pragma - mark XMPPvCardAvatarStorage Protocol Methods
 
 - (NSData *)photoDataForJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream {
-    NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
+    NSManagedObjectContext * context = [NSManagedObjectContext MR_context];
     OTRvCard * vCard = [OTRvCard fetchOrCreateWithJidString:[jid bare] inContext:context];
     [context MR_saveToPersistentStoreAndWait];
     return vCard.photoData;
 }
 - (NSString *)photoHashForJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream {
-    NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
+    NSManagedObjectContext * context = [NSManagedObjectContext MR_context];
     OTRvCard * vCard = [OTRvCard fetchOrCreateWithJidString:[jid bare] inContext:context];
     [context MR_saveToPersistentStoreAndWait];
     return vCard.photoHash;
@@ -130,11 +145,11 @@
  * This is used so we can clear any cached vCardTemp's for the JID.
  **/
 - (void)clearvCardTempForJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream{
-    NSManagedObjectContext *localContext = [NSManagedObjectContext MR_contextForCurrentThread];
-    OTRvCard * vCard = [OTRvCard fetchOrCreateWithJidString:[jid bare] inContext:localContext];
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_context];
+    OTRvCard * vCard = [OTRvCard fetchOrCreateWithJidString:[jid bare] inContext:context];
     vCard.vCardTemp = nil;
     vCard.lastUpdated = [NSDate date];
-    [localContext MR_saveToPersistentStoreAndWait];
+    [context MR_saveToPersistentStoreAndWait];
 }
 
 @end

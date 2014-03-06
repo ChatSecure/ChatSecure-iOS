@@ -26,7 +26,7 @@ const CGFloat OTRBuddyImageCellPadding = 12.0;
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
-        self.avatarImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"person"]];
+        self.avatarImageView = [[UIImageView alloc] initWithImage:[self defaultImage]];
         self.avatarImageView.translatesAutoresizingMaskIntoConstraints = NO;
         CALayer *cellImageLayer = self.avatarImageView.layer;
         [cellImageLayer setBorderWidth:1.0];
@@ -58,11 +58,19 @@ const CGFloat OTRBuddyImageCellPadding = 12.0;
     if(buddy.photo) {
         self.avatarImageView.image = buddy.photo;
     }
+    else {
+        self.avatarImageView.image = [self defaultImage];
+    }
     UIColor *statusColor =  [OTRImages colorWithStatus:[buddy currentStatusMessage].statusValue];
     self.imageViewBorderColor = statusColor;
     
     
     
+}
+
+- (UIImage *)defaultImage
+{
+    return [UIImage imageNamed:@"person"];
 }
 
 - (void)updateConstraints

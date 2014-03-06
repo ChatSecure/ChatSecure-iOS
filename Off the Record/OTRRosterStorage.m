@@ -20,11 +20,18 @@
 
 #import "OTRLog.h"
 
+@interface OTRRosterStorage ()
+
+@property (nonatomic,getter = isPopulatingRoster) BOOL populatingRoster;
+
+
+@end
+
 @implementation OTRRosterStorage
 
 -(id)init {
     if (self = [super init]) {
-        isPopulatingRoster  = NO;
+        self.populatingRoster  = NO;
     }
     return self;
 }
@@ -37,13 +44,13 @@
 - (void)beginRosterPopulationForXMPPStream:(XMPPStream *)stream
 {
     DDLogInfo(@"Begin Roster Population: %@",stream);
-    isPopulatingRoster = YES;
+    self.populatingRoster = YES;
 }
 
 - (void)endRosterPopulationForXMPPStream:(XMPPStream *)stream
 {
     DDLogInfo(@"End Roster Population: %@",stream);
-    isPopulatingRoster = NO;
+    self.populatingRoster = NO;
     [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
 }
 
@@ -69,7 +76,7 @@
         [self updateUser:user updateWithItem:item];
     }
     
-    if (!isPopulatingRoster) {
+    if (!self.isPopulatingRoster) {
         [localContext MR_saveToPersistentStoreAndWait];
     }
 }
@@ -154,7 +161,7 @@
 
 - (void)setPhoto:(UIImage *)image forUserWithJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream
 {
-    NSManagedObjectContext *localContext = [NSManagedObjectContext MR_contextForCurrentThread];
+    NSManagedObjectContext *localContext = [NSManagedObjectContext MR_context];
     OTRManagedBuddy * user = [self buddyWithJID:jid xmppStream:stream inContext:localContext];
     user.photo = image;
     [localContext MR_saveToPersistentStoreAndWait];

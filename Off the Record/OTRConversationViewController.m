@@ -26,6 +26,7 @@ static CGFloat cellHeight = 80.0;
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSFetchedResultsController *buddyFetchedResultsController;
 @property (nonatomic, strong) OTRChatViewController *chatViewController;
+@property (nonatomic, strong) NSTimer *cellUpdateTimer;
 
 @end
 
@@ -66,7 +67,17 @@ static CGFloat cellHeight = 80.0;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    [self.cellUpdateTimer invalidate];
+    [self updateVisibleCells:self];
+    self.cellUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:60.0 target:self selector:@selector(updateVisibleCells:) userInfo:nil repeats:YES];
     
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    [self.cellUpdateTimer invalidate];
+    self.cellUpdateTimer = nil;
 }
 
 - (void)settingsButtonPressed:(id)sender
@@ -90,6 +101,19 @@ static CGFloat cellHeight = 80.0;
 {
     [self.chatViewController setBuddy:buddy];
     [self.navigationController pushViewController:self.chatViewController animated:YES];
+}
+
+- (void)updateVisibleCells:(id)sender
+{
+    NSArray * indexPathsArray = [self.tableView indexPathsForVisibleRows];
+    for(NSIndexPath *indexPath in indexPathsArray)
+    {
+        OTRManagedBuddy * buddy = [self.buddyFetchedResultsController objectAtIndexPath:indexPath];
+        UITableViewCell * cell = [self.tableView cellForRowAtIndexPath:indexPath];
+        if ([cell isKindOfClass:[OTRConversationCell class]]) {
+            [(OTRConversationCell *)cell setBuddy:buddy];
+        }
+    }
 }
 
 - (NSFetchedResultsController *)buddyFetchedResultsController

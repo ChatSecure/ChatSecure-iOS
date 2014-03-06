@@ -17,4 +17,6 @@
 
 @property (nonatomic) BOOL showAccountLabel;
 
+- (void)updateDateString:(NSDate *)date;
+
 @end

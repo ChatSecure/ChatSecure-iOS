@@ -11,8 +11,5 @@
 #import "XMPPRoster.h"
 
 @interface OTRRosterStorage : NSObject <XMPPRosterStorage>
-{
-    BOOL isPopulatingRoster;
-}
 
 @end

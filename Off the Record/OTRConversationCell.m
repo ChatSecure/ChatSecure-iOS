@@ -15,18 +15,10 @@
 
 @property (nonatomic, strong) NSArray *verticalConstraints;
 @property (nonatomic, strong) NSArray *accountHorizontalConstraints;
-@property (nonatomic, strong) NSDate *displayDate;
-@property (nonatomic, strong) NSTimer * dateUpdateTimer;
 
 @end
 
 @implementation OTRConversationCell
-
-- (void)dealloc
-{
-    [_dateUpdateTimer invalidate];
-    _dateUpdateTimer = nil;
-}
 
 - (id) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -61,7 +53,6 @@
         [self.contentView addSubview:self.conversationLabel];
         
     }
-    NSLog(@"Self init Cell: %@",self);
     return self;
 }
 
@@ -111,27 +102,12 @@
     }
     self.dateLabel.textColor = self.nameLabel.textColor;
     
-    self.displayDate = lastMessage.date;
-    [self.dateUpdateTimer invalidate];
-    self.dateUpdateTimer = nil;
-    [self updateDateString:self];
+    [self updateDateString:lastMessage.date];
 }
 
-- (void)updateDateString:(id)sender
+- (void)updateDateString:(NSDate *)date
 {
-    NSLog(@"Update Timer For: %@",self.nameLabel.text);
-    NSLog(@"Self updateDateString Cell: %@",self);
-    NSTimeInterval timeInterval = fabs([self.displayDate timeIntervalSinceNow]);
-    if (timeInterval <= 60*60*24 && !self.dateUpdateTimer) {
-        //update every minute for the first 24 hours
-        [self.dateUpdateTimer invalidate];
-        self.dateUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:60.0 target:self selector:@selector(updateDateString:) userInfo:nil repeats:YES];
-    }
-    else if (timeInterval > 60*60*24 && self.dateUpdateTimer) {
-        [self.dateUpdateTimer invalidate];
-        self.dateUpdateTimer = nil;
-    }
-    self.dateLabel.text = [self dateString:self.displayDate];
+    self.dateLabel.text = [self dateString:date];
 }
 
 - (NSString *)dateString:(NSDate *)messageDate
@@ -175,14 +151,6 @@
     
     
     return dateString;
-}
-
-- (void)prepareForReuse
-{
-    [super prepareForReuse];
-    [self.dateUpdateTimer invalidate];
-    self.dateUpdateTimer = nil;
-    NSLog(@"Prepare For Reuse: %@ %@",self.nameLabel.text,self);
 }
 
 - (void)updateConstraints
@@ -234,7 +202,7 @@
     else {
         self.accountHorizontalConstraints = @[];
         
-        self.verticalConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-margin-[nameLabel(<=15)][conversationLabel]-margin-|"
+        self.verticalConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-margin-[nameLabel(15)][conversationLabel]-margin-|"
                                                                            options:0
                                                                            metrics:metrics
                                                                              views:views];

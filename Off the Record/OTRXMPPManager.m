@@ -131,7 +131,6 @@
 - (void)setupStream
 {
 	NSAssert(self.xmppStream == nil, @"Method setupStream invoked multiple times");
-	
 	// Setup xmpp stream
 	// 
 	// The XMPPStream is the base class for all activity.
@@ -197,6 +196,7 @@
 	self.xmppRoster = [[XMPPRoster alloc] initWithRosterStorage:rosterStorage];
 	
 	self.xmppRoster.autoFetchRoster = YES;
+    self.xmppRoster.autoClearAllUsersAndResources = NO;
 	self.xmppRoster.autoAcceptKnownPresenceSubscriptionRequests = YES;
 	
 	// Setup vCard support

@@ -13,6 +13,7 @@
 #import "OTRProtocol.h"
 
 #import "Strings.h"
+#import "OTRLog.h"
 
 @implementation OTRAccountTableViewCell {
     NSString * accountUniqueIdentifier;
@@ -92,7 +93,13 @@
 
 -(void)dealloc {
     [protocol removeObserver:self forKeyPath:NSStringFromSelector(@selector(isConnected))];
-    [[OTRProtocolManager sharedInstance] removeObserver:self forKeyPath:NSStringFromSelector(@selector(protocolManagers))];
+    @try {
+        [[OTRProtocolManager sharedInstance] removeObserver:self forKeyPath:NSStringFromSelector(@selector(protocolManagers))];
+    }
+    @catch (NSException *exception) {
+        DDLogError(@"Error removing Observer: %@",exception);
+    }
+    
 }
 
 @end
