@@ -45,27 +45,18 @@
 
 - (void)newStatusMessage:(NSString *)newStatusMessage status:(OTRBuddyStatus)newStatus incoming:(BOOL)isIncoming inContext:(NSManagedObjectContext *)context;
 - (void)setNewEncryptionStatus:(OTRKitMessageState)newEncryptionStatus inContext:(NSManagedObjectContext *)context;
--(OTRManagedStatusMessage *)currentStatusMessageInContext:(NSManagedObjectContext *)context;
+- (OTRManagedStatusMessage *)currentStatusMessageInContext:(NSManagedObjectContext *)context;
 - (OTRManagedEncryptionMessage *)currentEncryptionStatusInContext:(NSManagedObjectContext *)context;
 
 - (void)addToGroup:(NSString *)groupName inContext:(NSManagedObjectContext *)context;
 - (NSArray *)groupNames;
 
-- (NSInteger) numberOfUnreadMessages;
-- (void) allMessagesRead;
+- (NSInteger)numberOfUnreadMessages;
+- (void)setAllMessagesRead:(BOOL)isRead;
 
-- (void) deleteAllMessagesInContext:(NSManagedObjectContext *)context;
+- (void)deleteAllMessagesInContext:(NSManagedObjectContext *)context;
 
 + (instancetype)fetchOrCreateWithName:(NSString *)name account:(OTRManagedAccount *)account inContext:(NSManagedObjectContext *)context;
 + (instancetype)fetchWithName:(NSString *)name account:(OTRManagedAccount *)account inContext:(NSManagedObjectContext *)context;
-
-@end
-
-@interface OTRManagedBuddy (CoreDataGeneratedAccessors)
-
-- (void)addMessagesObject:(NSManagedObject *)value;
-- (void)removeMessagesObject:(NSManagedObject *)value;
-- (void)addMessages:(NSSet *)values;
-- (void)removeMessages:(NSSet *)values;
 
 @end

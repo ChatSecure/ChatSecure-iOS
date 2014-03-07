@@ -28,13 +28,6 @@
 #import "OTRTitleSubtitleView.h"
 
 @interface OTRChatViewController : UIViewController <UIActionSheetDelegate, UISplitViewControllerDelegate,UIAlertViewDelegate,UITableViewDataSource,UITableViewDelegate,NSFetchedResultsControllerDelegate,OTRChatInputBarDelegate>
-{
-    NSMutableArray * showDateForRowArray;
-    NSDate *_previousShownSentDate;
-    CGFloat _previousTextViewContentHeight;
-    OTRChatInputBar * chatInputBar;
-    OTRTitleSubtitleView * titleView;
-}
 
 
 @property (nonatomic, retain) UILabel *instructionsLabel;

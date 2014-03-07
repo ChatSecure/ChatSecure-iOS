@@ -28,7 +28,6 @@
 
 @interface OTRManagedMessage : _OTRManagedMessage
 
-+ (void) showLocalNotificationForMessage:(OTRManagedMessage*)message;
-
++ (void)showLocalNotificationForMessage:(OTRManagedMessage*)message;
 
 @end

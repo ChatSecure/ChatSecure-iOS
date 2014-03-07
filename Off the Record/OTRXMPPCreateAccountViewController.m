@@ -6,14 +6,14 @@
 //  Copyright (c) 2013 Chris Ballinger. All rights reserved.
 //
 
-#import "OTRXMPPCreateViewController.h"
+#import "OTRXMPPCreateAccountViewController.h"
 #import "Strings.h"
 
 #import "HITorManager.h"
 #import "OTRAccountsManager.h"
 #import "OTRLog.h"
 
-@interface OTRXMPPCreateViewController ()
+@interface OTRXMPPCreateAccountViewController ()
 
 @property (nonatomic,strong) NSArray * hostnameArray;
 
@@ -21,7 +21,7 @@
 
 @end
 
-@implementation OTRXMPPCreateViewController
+@implementation OTRXMPPCreateAccountViewController
 
 - (id)initWithHostnames:(NSArray *)newHostnames
 {
@@ -153,12 +153,12 @@
         [[HITorManager defaultManager] start];
     }
     else {
+        self.account.username = self.usernameTextField.text;
+        self.account.domain = self.selectedHostname;
+        self.account.rememberPasswordValue = self.rememberPasswordSwitch.on;
+        self.account.autologinValue = self.autoLoginSwitch.on;
         OTRXMPPManager * xmppManager = [self xmppManager];
         if (xmppManager) {
-            self.account.username = self.usernameTextField.text;
-            self.account.domain = self.selectedHostname;
-            self.account.rememberPasswordValue = self.rememberPasswordSwitch.on;
-            self.account.autologinValue = self.autoLoginSwitch.on;
             [self showHUDWithText:@"Creating Account"];
             [xmppManager registerNewAccountWithPassword:self.passwordTextField.text];
         }

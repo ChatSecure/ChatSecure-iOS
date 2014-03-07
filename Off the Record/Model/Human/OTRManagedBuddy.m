@@ -97,7 +97,7 @@
         [[protocol inactiveChatStateTimerForBuddyObjectID:self.objectID] invalidate];
     }
 }
-
+ 
 -(void)receiveChatStateMessage:(OTRChatState) newChatState
 {
     self.chatStateValue = newChatState;
@@ -181,20 +181,14 @@
 
 -(NSInteger) numberOfUnreadMessages
 {
-    NSPredicate * messageFilter = [NSPredicate predicateWithFormat:@"isRead == NO AND isEncrypted == NO AND isIncoming == YES"];
+    NSPredicate * messageFilter = [NSPredicate predicateWithFormat:@"%K == NO AND %K == NO AND %K == YES",OTRManagedChatMessageAttributes.isRead,OTRManagedMessageAttributes.isEncrypted,OTRManagedMessageAttributes.isIncoming];
     NSSet * finalSet = [self.chatMessages filteredSetUsingPredicate:messageFilter];
     return [finalSet count];
 }
 
-- (void) allMessagesRead
+- (void)setAllMessagesRead:(BOOL)isRead
 {
-    [self.chatMessages setValue:[NSNumber numberWithBool:YES] forKey:@"isRead"];
-    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
-    [context MR_saveToPersistentStoreWithCompletion:^(BOOL success, NSError *error) {
-        if (error) {
-            DDLogError(@"Error saving all messages read to persistent store %@", error.userInfo);
-        }
-    }];
+    [self.chatMessages setValue:@(isRead) forKey:OTRManagedChatMessageAttributes.isRead];
 }
 
 - (void) deleteAllMessagesInContext:(NSManagedObjectContext *)context
@@ -222,7 +216,7 @@
 {
     OTRManagedBuddy * buddy = nil;
     OTRManagedAccount * contextAccount = [account MR_inContext:context];
-    buddy = [self fetchWithName:name account:account inContext:context];
+    buddy = [self fetchWithName:name account:contextAccount inContext:context];
     if (!buddy) {
         buddy = [self MR_createInContext:context];
         buddy.accountName = name;

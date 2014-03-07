@@ -91,8 +91,6 @@
 		63464F711889ECC200526358 /* OTRXMPPManagedPresenceSubscriptionRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 63464F601889ECC200526358 /* OTRXMPPManagedPresenceSubscriptionRequest.m */; };
 		63464F801889F2FA00526358 /* OTRXMPPTorManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 63464F7F1889F2FA00526358 /* OTRXMPPTorManager.m */; };
 		63464F831889F70D00526358 /* OTRXMPPProxyStream.m in Sources */ = {isa = PBXBuildFile; fileRef = 63464F821889F70D00526358 /* OTRXMPPProxyStream.m */; };
-		63464F86188A076B00526358 /* xmpp_tor.png in Resources */ = {isa = PBXBuildFile; fileRef = 63464F84188A076B00526358 /* xmpp_tor.png */; };
-		63464F87188A076C00526358 /* xmpp_tor@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63464F85188A076B00526358 /* xmpp_tor@2x.png */; };
 		6348184C17E3D6B9004E0146 /* OTRXMPPOAUTHLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6348184B17E3D6B8004E0146 /* OTRXMPPOAUTHLoginViewController.m */; };
 		63483F801752CED100779257 /* XMPPAnonymousAuthentication.m in Sources */ = {isa = PBXBuildFile; fileRef = 63483DF81752CED100779257 /* XMPPAnonymousAuthentication.m */; };
 		63483F811752CED100779257 /* XMPPDeprecatedDigestAuthentication.m in Sources */ = {isa = PBXBuildFile; fileRef = 63483DFB1752CED100779257 /* XMPPDeprecatedDigestAuthentication.m */; };
@@ -205,7 +203,7 @@
 		6348401C1752CED100779257 /* DDXMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 63483F781752CED100779257 /* DDXMLNode.m */; };
 		6352DC8815AF9F16007AD0B4 /* OTRNewAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6352DC8715AF9F16007AD0B4 /* OTRNewAccountViewController.m */; };
 		63534A53187B6EB300061776 /* OTRCreateAccountChooserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63534A52187B6EB300061776 /* OTRCreateAccountChooserViewController.m */; };
-		63534A5D187B700200061776 /* OTRXMPPCreateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63534A5C187B700200061776 /* OTRXMPPCreateViewController.m */; };
+		63534A5D187B700200061776 /* OTRXMPPCreateAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63534A5C187B700200061776 /* OTRXMPPCreateAccountViewController.m */; };
 		63534AAF187F5A1400061776 /* OTRChatBubbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63534AAE187F5A1400061776 /* OTRChatBubbleView.m */; };
 		63591486184FE32F00B311A1 /* OTRCertificatePinning.m in Sources */ = {isa = PBXBuildFile; fileRef = 63591485184FE32F00B311A1 /* OTRCertificatePinning.m */; };
 		636FE4B3161B76CF002B28EF /* OTRFacebookLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 636FE4B2161B76CF002B28EF /* OTRFacebookLoginViewController.m */; };
@@ -233,6 +231,8 @@
 		6387126817580D93006C3A4E /* OTRQRCodeActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 6387126717580D93006C3A4E /* OTRQRCodeActivity.m */; };
 		638940CE1815CAF8005F651E /* CrashReporter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 638940CD1815CAF8005F651E /* CrashReporter.framework */; };
 		638940D11815E339005F651E /* OTRDemoChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 638940D01815E339005F651E /* OTRDemoChatViewController.m */; };
+		638B96BB18C94A9C00CACFD7 /* xmpp-tor-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 638B96B918C94A9C00CACFD7 /* xmpp-tor-logo.png */; };
+		638B96BC18C94A9C00CACFD7 /* xmpp-tor-logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 638B96BA18C94A9C00CACFD7 /* xmpp-tor-logo@2x.png */; };
 		6391CAF718A99003003EC838 /* OTRLockButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6391CAF618A99003003EC838 /* OTRLockButton.m */; };
 		6391CB0818A992E7003EC838 /* UIControl-JTTargetActionBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = 6391CB0518A992E7003EC838 /* UIControl-JTTargetActionBlock.m */; };
 		63926C8C18AAE8E10063B53D /* Lock_Locked_red.png in Resources */ = {isa = PBXBuildFile; fileRef = 63926C8818AAE8E10063B53D /* Lock_Locked_red.png */; };
@@ -355,7 +355,6 @@
 		D910BF081891E584000F80B0 /* GCDAsyncProxySocket.m in Sources */ = {isa = PBXBuildFile; fileRef = D910BF071891E584000F80B0 /* GCDAsyncProxySocket.m */; };
 		D910BF0D1891E651000F80B0 /* XMPPXOAuth2Google.m in Sources */ = {isa = PBXBuildFile; fileRef = D910BF0C1891E651000F80B0 /* XMPPXOAuth2Google.m */; };
 		D910BF101891E686000F80B0 /* AFSecurityPolicy.m in Sources */ = {isa = PBXBuildFile; fileRef = D910BF0F1891E686000F80B0 /* AFSecurityPolicy.m */; };
-		D910BF351891F3F3000F80B0 /* CMDEncryptedSQLiteStore.m in Sources */ = {isa = PBXBuildFile; fileRef = D910BF341891F3F3000F80B0 /* CMDEncryptedSQLiteStore.m */; };
 		D910BF391891F584000F80B0 /* libsqlcipher.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D910BF381891F584000F80B0 /* libsqlcipher.a */; };
 		D913A70413FCA95700C97C1C /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D913A70313FCA95700C97C1C /* CoreText.framework */; };
 		D913A70813FCA9AB00C97C1C /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D913A70713FCA9AB00C97C1C /* QuartzCore.framework */; };
@@ -672,13 +671,6 @@
 			remoteGlobalIDString = D2AAC07D0554694100DB518D;
 			remoteInfo = UserVoice;
 		};
-		D99B0AAF18C002E70017903C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D910BF1E1891F371000F80B0 /* sqlcipher.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D2AAC046055464E500DB518D;
-			remoteInfo = sqlcipher;
-		};
 		D9B24F191808A04E005174C5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D9B24F0C1808A04E005174C5 /* HockeySDK.xcodeproj */;
@@ -861,8 +853,6 @@
 		63464F7F1889F2FA00526358 /* OTRXMPPTorManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPTorManager.m; sourceTree = "<group>"; };
 		63464F811889F70D00526358 /* OTRXMPPProxyStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPProxyStream.h; sourceTree = "<group>"; };
 		63464F821889F70D00526358 /* OTRXMPPProxyStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPProxyStream.m; sourceTree = "<group>"; };
-		63464F84188A076B00526358 /* xmpp_tor.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = xmpp_tor.png; path = "media/app-images/xmpp_tor.png"; sourceTree = SOURCE_ROOT; };
-		63464F85188A076B00526358 /* xmpp_tor@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "xmpp_tor@2x.png"; path = "media/app-images/xmpp_tor@2x.png"; sourceTree = SOURCE_ROOT; };
 		6348184A17E3D6B8004E0146 /* OTRXMPPOAUTHLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPOAUTHLoginViewController.h; sourceTree = "<group>"; };
 		6348184B17E3D6B8004E0146 /* OTRXMPPOAUTHLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPOAUTHLoginViewController.m; sourceTree = "<group>"; };
 		6348189517E3E09C004E0146 /* OTRSecrets.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRSecrets.h; sourceTree = "<group>"; };
@@ -1110,8 +1100,8 @@
 		63534A51187B6EB300061776 /* OTRCreateAccountChooserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRCreateAccountChooserViewController.h; sourceTree = "<group>"; };
 		63534A52187B6EB300061776 /* OTRCreateAccountChooserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRCreateAccountChooserViewController.m; sourceTree = "<group>"; };
 		63534A54187B6F7F00061776 /* ChatSecure 4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "ChatSecure 4.xcdatamodel"; sourceTree = "<group>"; };
-		63534A5B187B700200061776 /* OTRXMPPCreateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPCreateViewController.h; sourceTree = "<group>"; };
-		63534A5C187B700200061776 /* OTRXMPPCreateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPCreateViewController.m; sourceTree = "<group>"; };
+		63534A5B187B700200061776 /* OTRXMPPCreateAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPCreateAccountViewController.h; sourceTree = "<group>"; };
+		63534A5C187B700200061776 /* OTRXMPPCreateAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPCreateAccountViewController.m; sourceTree = "<group>"; };
 		63534AAD187F5A1400061776 /* OTRChatBubbleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRChatBubbleView.h; sourceTree = "<group>"; };
 		63534AAE187F5A1400061776 /* OTRChatBubbleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRChatBubbleView.m; sourceTree = "<group>"; };
 		63591484184FE32F00B311A1 /* OTRCertificatePinning.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRCertificatePinning.h; sourceTree = "<group>"; };
@@ -1167,6 +1157,8 @@
 		638940CD1815CAF8005F651E /* CrashReporter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CrashReporter.framework; path = "Submodules/HockeySDK-iOS/Vendor/CrashReporter.framework"; sourceTree = "<group>"; };
 		638940CF1815E339005F651E /* OTRDemoChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRDemoChatViewController.h; sourceTree = "<group>"; };
 		638940D01815E339005F651E /* OTRDemoChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRDemoChatViewController.m; sourceTree = "<group>"; };
+		638B96B918C94A9C00CACFD7 /* xmpp-tor-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "xmpp-tor-logo.png"; path = "media/app-images/xmpp-logo/xmpp-tor-logo.png"; sourceTree = SOURCE_ROOT; };
+		638B96BA18C94A9C00CACFD7 /* xmpp-tor-logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "xmpp-tor-logo@2x.png"; path = "media/app-images/xmpp-logo/xmpp-tor-logo@2x.png"; sourceTree = SOURCE_ROOT; };
 		6391CAF518A99003003EC838 /* OTRLockButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRLockButton.h; sourceTree = "<group>"; };
 		6391CAF618A99003003EC838 /* OTRLockButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRLockButton.m; sourceTree = "<group>"; };
 		6391CB0418A992E7003EC838 /* UIControl-JTTargetActionBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIControl-JTTargetActionBlock.h"; sourceTree = "<group>"; };
@@ -1362,9 +1354,6 @@
 		D910BF0C1891E651000F80B0 /* XMPPXOAuth2Google.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPXOAuth2Google.m; sourceTree = "<group>"; };
 		D910BF0E1891E686000F80B0 /* AFSecurityPolicy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFSecurityPolicy.h; path = Submodules/XMPPFramework/Vendor/AFNetworking/AFNetworking/AFSecurityPolicy.h; sourceTree = "<group>"; };
 		D910BF0F1891E686000F80B0 /* AFSecurityPolicy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFSecurityPolicy.m; path = Submodules/XMPPFramework/Vendor/AFNetworking/AFNetworking/AFSecurityPolicy.m; sourceTree = "<group>"; };
-		D910BF1E1891F371000F80B0 /* sqlcipher.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = sqlcipher.xcodeproj; path = ../vendor/sqlcipher/sqlcipher.xcodeproj; sourceTree = "<group>"; };
-		D910BF331891F3F3000F80B0 /* CMDEncryptedSQLiteStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMDEncryptedSQLiteStore.h; sourceTree = "<group>"; };
-		D910BF341891F3F3000F80B0 /* CMDEncryptedSQLiteStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMDEncryptedSQLiteStore.m; sourceTree = "<group>"; };
 		D910BF361891F50E000F80B0 /* libsqlcipher.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libsqlcipher.a; path = "Submodules/encrypted-core-data/vendor/sqlcipher/build/Debug/libsqlcipher.a"; sourceTree = "<group>"; };
 		D910BF381891F584000F80B0 /* libsqlcipher.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libsqlcipher.a; path = "Submodules/encrypted-core-data/vendor/sqlcipher/build/Debug/libsqlcipher.a"; sourceTree = "<group>"; };
 		D913A70313FCA95700C97C1C /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
@@ -2023,8 +2012,8 @@
 				638940D01815E339005F651E /* OTRDemoChatViewController.m */,
 				6352DC8615AF9F16007AD0B4 /* OTRNewAccountViewController.h */,
 				6352DC8715AF9F16007AD0B4 /* OTRNewAccountViewController.m */,
-				63534A5B187B700200061776 /* OTRXMPPCreateViewController.h */,
-				63534A5C187B700200061776 /* OTRXMPPCreateViewController.m */,
+				63534A5B187B700200061776 /* OTRXMPPCreateAccountViewController.h */,
+				63534A5C187B700200061776 /* OTRXMPPCreateAccountViewController.m */,
 				63534A51187B6EB300061776 /* OTRCreateAccountChooserViewController.h */,
 				63534A52187B6EB300061776 /* OTRCreateAccountChooserViewController.m */,
 				6301D87B16E94778008F67A6 /* OTRChooseAccountViewController.h */,
@@ -3235,17 +3224,6 @@
 			name = AFNetworking;
 			sourceTree = "<group>";
 		};
-		D910BF321891F3F3000F80B0 /* encrypted-core-data */ = {
-			isa = PBXGroup;
-			children = (
-				D910BF1E1891F371000F80B0 /* sqlcipher.xcodeproj */,
-				D910BF331891F3F3000F80B0 /* CMDEncryptedSQLiteStore.h */,
-				D910BF341891F3F3000F80B0 /* CMDEncryptedSQLiteStore.m */,
-			);
-			name = "encrypted-core-data";
-			path = "Submodules/encrypted-core-data/Incremental Store";
-			sourceTree = "<group>";
-		};
 		D91DAE8A154740D5009D0B74 /* Detail Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -3381,14 +3359,6 @@
 			name = Value;
 			sourceTree = "<group>";
 		};
-		D99B0AA118C002E60017903C /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				D99B0AB018C002E70017903C /* libsqlcipher.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		D9B24F0D1808A04E005174C5 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -3403,7 +3373,6 @@
 			isa = PBXGroup;
 			children = (
 				6391CB0218A992E7003EC838 /* JTTargetActionBlock */,
-				D910BF321891F3F3000F80B0 /* encrypted-core-data */,
 				D910BF111891E689000F80B0 /* AFNetworking */,
 				D910BF091891E588000F80B0 /* ProxyKit */,
 				D910BF051891E564000F80B0 /* GCDAsyncSocket */,
@@ -3996,8 +3965,8 @@
 				D99550BA141AE07D00A82FAC /* aim@2x.png */,
 				D99B0AC818C019190017903C /* xmpp.png */,
 				D99B0AC918C019190017903C /* xmpp@2x.png */,
-				63464F84188A076B00526358 /* xmpp_tor.png */,
-				63464F85188A076B00526358 /* xmpp_tor@2x.png */,
+				638B96B918C94A9C00CACFD7 /* xmpp-tor-logo.png */,
+				638B96BA18C94A9C00CACFD7 /* xmpp-tor-logo@2x.png */,
 			);
 			name = Images;
 			path = ..;
@@ -4159,10 +4128,6 @@
 					ProjectRef = D9CEED621684235B00B236B5 /* OTRKit.xcodeproj */;
 				},
 				{
-					ProductGroup = D99B0AA118C002E60017903C /* Products */;
-					ProjectRef = D910BF1E1891F371000F80B0 /* sqlcipher.xcodeproj */;
-				},
-				{
 					ProductGroup = D953117516C6FF1A00AAB1D2 /* Products */;
 					ProjectRef = D953117416C6FF1A00AAB1D2 /* UserVoice.xcodeproj */;
 				},
@@ -4218,13 +4183,6 @@
 			fileType = archive.ar;
 			path = libUserVoice.a;
 			remoteRef = D953117816C6FF1A00AAB1D2 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D99B0AB018C002E70017903C /* libsqlcipher.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libsqlcipher.a;
-			remoteRef = D99B0AAF18C002E70017903C /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		D9B24F1A1808A04E005174C5 /* libHockeySDK.a */ = {
@@ -4313,7 +4271,6 @@
 				D9BBCD431491FFC800AF1B9F /* about_icon.png in Resources */,
 				631F4AD618BFE1D200AE6E8A /* xmpp@2x.png in Resources */,
 				D9BBCD441491FFC800AF1B9F /* about_icon@2x.png in Resources */,
-				63464F86188A076B00526358 /* xmpp_tor.png in Resources */,
 				63B046E3185BD2780066C8E5 /* button-green.png in Resources */,
 				D99071B2151EB5C6002CECC9 /* 08-chat@2x.png in Resources */,
 				D99071B3151EB5C6002CECC9 /* 19-gear@2x.png in Resources */,
@@ -4345,6 +4302,7 @@
 				D9BE44A1166F2E7D00A628C7 /* 29-heart.png in Resources */,
 				D9BE44A2166F2E7D00A628C7 /* 29-heart@2x.png in Resources */,
 				D9BE44A5166F2F5B00A628C7 /* 18-envelope@2x.png in Resources */,
+				638B96BB18C94A9C00CACFD7 /* xmpp-tor-logo.png in Resources */,
 				63E717E6182AF391004398AD /* SSKeychain.strings in Resources */,
 				63BE44D917EE5AB300F60670 /* 31-circle-plus-large@2x.png in Resources */,
 				63F2585717FB51C2007A7565 /* google.cer in Resources */,
@@ -4395,8 +4353,8 @@
 				D96271011755DEB100F0A958 /* uv_vote_chicklet_empty.png in Resources */,
 				D96271021755DEB100F0A958 /* uv_vote_chicklet_empty@2x.png in Resources */,
 				D96271031755DEB100F0A958 /* uv_x.png in Resources */,
+				638B96BC18C94A9C00CACFD7 /* xmpp-tor-logo@2x.png in Resources */,
 				D9B24F251808A100005174C5 /* HockeySDKResources.bundle in Resources */,
-				63464F87188A076C00526358 /* xmpp_tor@2x.png in Resources */,
 				D96271041755DEB100F0A958 /* uv_x@2x.png in Resources */,
 				637A7DE8189745FD004EF5A2 /* bubble-min-tailless@2x.png in Resources */,
 				639C75D817E127A600530423 /* FBLoginViewButton.png in Resources */,
@@ -4479,7 +4437,7 @@
 				D96495C4153629FE009A8C33 /* OTRSetting.m in Sources */,
 				D96495C8153635A9009A8C33 /* OTRBoolSetting.m in Sources */,
 				D96495CB15363C0F009A8C33 /* OTRViewSetting.m in Sources */,
-				63534A5D187B700200061776 /* OTRXMPPCreateViewController.m in Sources */,
+				63534A5D187B700200061776 /* OTRXMPPCreateAccountViewController.m in Sources */,
 				D96495CF15365B3F009A8C33 /* OTRValueSetting.m in Sources */,
 				D96495D7153668D2009A8C33 /* OTRSettingsGroup.m in Sources */,
 				D9FBD71415472A8400126568 /* OTRDoubleSetting.m in Sources */,
@@ -4546,7 +4504,6 @@
 				D92D57861844278E00670832 /* ASIDataCompressor.m in Sources */,
 				D9CEEE7B168423CA00B236B5 /* AIMLoginHostInfo.m in Sources */,
 				D9CEEE7C168423CA00B236B5 /* AIMMessage.m in Sources */,
-				D910BF351891F3F3000F80B0 /* CMDEncryptedSQLiteStore.m in Sources */,
 				6370C976185FC58C00CB6786 /* OTRTitleSubtitleView.m in Sources */,
 				D9CEEE7D168423CA00B236B5 /* AIMMessageParser.m in Sources */,
 				D9CEEE7E168423CA00B236B5 /* AIMMissedCall.m in Sources */,

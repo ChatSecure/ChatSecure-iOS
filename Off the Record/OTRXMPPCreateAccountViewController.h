@@ -8,7 +8,7 @@
 
 #import "OTRXMPPLoginViewController.h"
 
-@interface OTRXMPPCreateViewController : OTRXMPPLoginViewController
+@interface OTRXMPPCreateAccountViewController : OTRXMPPLoginViewController
 
 
 @property (nonatomic,strong) NSString * selectedHostname;

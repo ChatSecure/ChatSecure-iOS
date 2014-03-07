@@ -7,7 +7,7 @@
 //
 
 #import "OTRCreateAccountChooserViewController.h"
-#import "OTRXMPPCreateViewController.h"
+#import "OTRXMPPCreateAccountViewController.h"
 
 @interface OTRCreateAccountChooserViewController ()
 
@@ -37,7 +37,7 @@
         return;
     }
     NSArray * hostnamesArray = nil;
-    NSManagedObjectContext *context = [NSManagedObjectContext MR_context];
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
     OTRManagedXMPPAccount * newAccount = (OTRManagedXMPPAccount *)[OTRManagedAccount accountForAccountType:accountType inContext:context];
     [context MR_saveToPersistentStoreAndWait];
     if(accountType == OTRAccountTypeJabber)
@@ -50,7 +50,7 @@
     }
     
     if ([hostnamesArray count]) {
-        OTRXMPPCreateViewController * createViewController = [OTRXMPPCreateViewController createViewControllerWithHostnames:hostnamesArray];
+        OTRXMPPCreateAccountViewController * createViewController = [OTRXMPPCreateAccountViewController createViewControllerWithHostnames:hostnamesArray];
         createViewController.account = newAccount;
         [self.navigationController pushViewController:createViewController animated:YES];
     }

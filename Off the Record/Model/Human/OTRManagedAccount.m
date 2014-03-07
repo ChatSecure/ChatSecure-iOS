@@ -45,7 +45,7 @@ NSString *const OTRAimImageName               = @"aim.png";
 NSString *const OTRGoogleTalkImageName        = @"gtalk.png";
 NSString *const OTRFacebookImageName          = @"facebook.png";
 NSString *const OTRXMPPImageName              = @"xmpp.png";
-NSString *const OTRXMPPTorImageName           = @"xmpp_tor.png";
+NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
 
 NSString *const kOTRClassKey                     = @"classKey";
 

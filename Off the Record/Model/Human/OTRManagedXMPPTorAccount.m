@@ -21,9 +21,9 @@
     return [OTRXMPPTorManager class];
 }
 
--(NSString *)imageName
+-(UIImage *)accountImage
 {
-    return OTRXMPPTorImageName;
+    return [UIImage imageNamed:OTRXMPPTorImageName];
 }
 
 @end

@@ -53,12 +53,15 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
 
 @interface OTRChatViewController ()
 
-@property (nonatomic, strong) UIView * composingImageView;
+@property (nonatomic, strong) UIView *composingImageView;
 @property (nonatomic, readonly) CGFloat initialBarChatBarHeight;
-@property (nonatomic, strong) OTRLockButton * lockButton;
-@property (nonatomic, strong) UIBarButtonItem * lockBarButtonItem;
-
-- (void) refreshView;
+@property (nonatomic, strong) OTRLockButton *lockButton;
+@property (nonatomic, strong) UIBarButtonItem *lockBarButtonItem;
+@property (nonatomic, strong) NSMutableArray *showDateForRowArray;
+@property (nonatomic, strong) NSDate *previousShownSentDate;
+@property (nonatomic, strong) OTRChatInputBar *chatInputBar;
+@property (nonatomic, strong) OTRTitleSubtitleView *titleView;
+@property (nonatomic) CGFloat previousTextViewContentHeight;
 
 @end
 
@@ -74,9 +77,9 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
     if (self = [super init]) {
         //set notification for when keyboard shows/hides
         self.title = CHAT_STRING;
-        titleView = [[OTRTitleSubtitleView alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
-        titleView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
-        self.navigationItem.titleView = titleView;
+        self.titleView = [[OTRTitleSubtitleView alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
+        self.titleView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+        self.navigationItem.titleView = self.titleView;
     }
     return self;
 }
@@ -167,16 +170,13 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
     
     self.view.backgroundColor = [UIColor whiteColor];
     
-    showDateForRowArray = [NSMutableArray array];
+    self.showDateForRowArray = [NSMutableArray array];
     
     self.chatHistoryTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
     
     
     UIEdgeInsets insets = self.chatHistoryTableView.contentInset;
     insets.bottom = self.initialBarChatBarHeight;
-    if(SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
-        //insets.top = [self.navigationController navigationBar].frame.size.height;
-    }
     
     self.chatHistoryTableView.contentInset = self.chatHistoryTableView.scrollIndicatorInsets = insets;
     
@@ -190,15 +190,15 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
     [self.chatHistoryTableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
     
     
-    _previousTextViewContentHeight = kOTRMessageFontSize+20;
+    self.previousTextViewContentHeight = kOTRMessageFontSize+20;
         
     CGRect barRect = CGRectMake(0, self.view.frame.size.height-self.initialBarChatBarHeight, self.view.frame.size.width, self.initialBarChatBarHeight);
     
-    chatInputBar = [[OTRChatInputBar alloc] initWithFrame:barRect withDelegate:self];
+    self.chatInputBar = [[OTRChatInputBar alloc] initWithFrame:barRect withDelegate:self];
    
-    [self.view addSubview:chatInputBar];
+    [self.view addSubview:self.chatInputBar];
     
-    self.view.keyboardTriggerOffset = chatInputBar.frame.size.height;
+    self.view.keyboardTriggerOffset = self.chatInputBar.frame.size.height;
     
     self.swipeGestureRecognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(handleSwipeFrom)];
     [self.view addGestureRecognizer:self.swipeGestureRecognizer];
@@ -231,19 +231,17 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
     [self refreshView];
     if (self.buddy) {
         if ([newBuddy.displayName length]) {
-            //self.title = newBuddy.displayName;
-            titleView.titleLabel.text = newBuddy.displayName;
+            self.titleView.titleLabel.text = newBuddy.displayName;
         }
         else {
-            //self.title = newBuddy.accountName;
-            titleView.titleLabel.text = newBuddy.accountName;
+            self.titleView.titleLabel.text = newBuddy.accountName;
         }
         
         if(newBuddy.account.displayName.length) {
-            titleView.subtitleLabel.text = newBuddy.account.displayName;
+            self.titleView.subtitleLabel.text = newBuddy.account.displayName;
         }
         else {
-            titleView.subtitleLabel.text = newBuddy.account.username;
+            self.titleView.subtitleLabel.text = newBuddy.account.username;
         }
         
         [self refreshLockButton];
@@ -385,8 +383,7 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
         }
         else if (buttonIndex == 0) // Initiate/cancel encryption
         {
-#warning Ask OTRKit for current status
-            if([self.buddy currentEncryptionStatusInContext:self.buddy.managedObjectContext].statusValue == kOTRKitMessageStateEncrypted)
+            if([[OTRKit sharedInstance] isConversationEncryptedForUsername:self.buddy.accountName accountName:self.buddy.account.username protocol:self.buddy.account.protocol])
             {
                 [[OTRKit sharedInstance] disableEncryptionForUsername:self.buddy.accountName accountName:self.buddy.account.username protocol:self.buddy.account.protocol];
             } else {
@@ -471,9 +468,12 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
         }
         [self buddyFetchedResultsController];
         [self messagesFetchedResultsController];
-        showDateForRowArray = [NSMutableArray array];
-        _previousShownSentDate = nil;
-        [self.buddy allMessagesRead];
+        self.showDateForRowArray = [NSMutableArray array];
+        self.previousShownSentDate = nil;
+        
+        NSManagedObjectContext *context = self.buddy.managedObjectContext;
+        [self.buddy setAllMessagesRead:YES];
+        [context MR_saveToPersistentStoreAndWait];
         
         [self.chatHistoryTableView reloadData];
                
@@ -482,10 +482,10 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
         if(![self.buddy.composingMessageString length])
         {
             [self.buddy sendActiveChatState];
-            chatInputBar.textView.text = nil;
+            self.chatInputBar.textView.text = nil;
         }
         else{
-            chatInputBar.textView.text = self.buddy.composingMessageString;
+            self.chatInputBar.textView.text = self.buddy.composingMessageString;
             
         }
         
@@ -497,7 +497,10 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-    [self.buddy allMessagesRead];
+    NSManagedObjectContext * context = self.buddy.managedObjectContext;
+    [self.buddy setAllMessagesRead:YES];
+    [context MR_saveToPersistentStoreWithCompletion:nil];
+    
     [super viewWillDisappear:animated];
 }
 
@@ -514,7 +517,7 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
     [super viewWillAppear:animated];
     
     __weak OTRChatViewController * chatViewController = self;
-    __weak OTRChatInputBar * weakChatInputbar = chatInputBar;
+    __weak OTRChatInputBar * weakChatInputbar = self.chatInputBar;
     [self.view addKeyboardPanningWithActionHandler:^(CGRect keyboardFrameInView) {
         CGRect messageInputBarFrame = weakChatInputbar.frame;
         messageInputBarFrame.origin.y = keyboardFrameInView.origin.y - messageInputBarFrame.size.height;
@@ -534,26 +537,26 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
     }
     
     // KLUDGE: Work around keyboard visibility bug where chat input view is visible but keyboard is not
-    if (self.view.keyboardFrameInView.size.height == 0 && chatInputBar.frame.origin.y < self.view.frame.size.height - chatInputBar.frame.size.height) {
-        [chatInputBar.textView becomeFirstResponder];
+    if (self.view.keyboardFrameInView.size.height == 0 && self.chatInputBar.frame.origin.y < self.view.frame.size.height - self.chatInputBar.frame.size.height) {
+        [self.chatInputBar.textView becomeFirstResponder];
     }
     // KLUDGE: If chatInputBar is beyond the bounds of the screen for some unknown reason, force it back into place
-    if (chatInputBar.frame.origin.y > self.view.frame.size.height - chatInputBar.frame.size.height) {
-        CGRect newFrame = chatInputBar.frame;
-        newFrame.origin.y = self.view.frame.size.height - chatInputBar.frame.size.height;
-        chatInputBar.frame = newFrame;
+    if (self.chatInputBar.frame.origin.y > self.view.frame.size.height - self.chatInputBar.frame.size.height) {
+        CGRect newFrame = self.chatInputBar.frame;
+        newFrame.origin.y = self.view.frame.size.height - self.chatInputBar.frame.size.height;
+        self.chatInputBar.frame = newFrame;
     }
 
 }
 
 -(void)saveCurrentMessageText
 {
-    self.buddy.composingMessageString = chatInputBar.textView.text;
+    self.buddy.composingMessageString = self.chatInputBar.textView.text;
     if(![self.buddy.composingMessageString length])
     {
         [self.buddy sendInactiveChatState];
     }
-    chatInputBar.textView.text = nil;
+    self.chatInputBar.textView.text = nil;
 }
 
 
@@ -587,10 +590,10 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
 
 - (BOOL)showDateForMessageAtIndexPath:(NSIndexPath *)indexPath {
     
-    if (indexPath.row < [showDateForRowArray count]) {
-        return [showDateForRowArray[indexPath.row] boolValue];
+    if (indexPath.row < [self.showDateForRowArray count]) {
+        return [self.showDateForRowArray[indexPath.row] boolValue];
     }
-    else if (indexPath.row - [showDateForRowArray count] > 0)
+    else if (indexPath.row - [self.showDateForRowArray count] > 0)
     {
         [self showDateForMessageAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row-1 inSection:indexPath.section]];
     }
@@ -611,7 +614,7 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
     }
     
     
-    [showDateForRowArray addObject:[NSNumber numberWithBool:showDate]];
+    [self.showDateForRowArray addObject:[NSNumber numberWithBool:showDate]];
     
     return showDate;
 }
@@ -808,7 +811,7 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
     }
 }
 
-#pragma mark OTRChatInputBarDelegate
+#pragma mark OTRChatInputBarDelegate Methods
 
 - (void)sendButtonPressedForInputBar:(OTRChatInputBar *)inputBar
 {
@@ -824,8 +827,8 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
         
         [context MR_saveToPersistentStoreAndWait];
         
-#warning Ask OTRKit for current status
-        BOOL secure = [self.buddy currentEncryptionStatusInContext:self.buddy.managedObjectContext].statusValue == kOTRKitMessageStateEncrypted || [OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyOpportunisticOtr];
+        BOOL inSecureConversation = [[OTRKit sharedInstance] isConversationEncryptedForUsername:self.buddy.accountName accountName:self.buddy.account.username protocol:self.buddy.account.protocol];
+        BOOL secure = inSecureConversation || [OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyOpportunisticOtr];
         if(secure)
         {
             //check if need to generate keys
@@ -849,7 +852,7 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
         else {
             [OTRProtocolManager sendMessage:message];
         }
-        chatInputBar.textView.text = nil;
+        self.chatInputBar.textView.text = nil;
     }
 }
 
