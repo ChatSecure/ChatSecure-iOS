@@ -22,11 +22,12 @@
 
 @property (nonatomic, strong) OTRChatBubbleView * bubbleView;
 
-
--(id)initWithMessage:(OTRManagedChatMessage *)message withDate:(BOOL)showDate reuseIdentifier:(NSString*)identifier;
+- (void)setMessage:(OTRManagedMessage *)message;
 
 + (CGSize)messageTextLabelSize:(NSString *)message;
 
 + (CGFloat)heightForMesssage:(NSString *)message showDate:(BOOL)showDate;
+
++ (NSString *)reuseIdentifier;
 
 @end

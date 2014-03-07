@@ -11,6 +11,13 @@
 #import "OTRImages.h"
 #import "OTRUtilities.h"
 #import "OTRMessageTableViewCell.h"
+#import "OTRSettingsManager.h"
+
+@interface OTRChatBubbleView ()
+
+@property (nonatomic, strong) TTTAttributedLabel * messageTextLabel;
+
+@end
 
 @implementation OTRChatBubbleView
 
@@ -19,8 +26,9 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.translatesAutoresizingMaskIntoConstraints = NO;
-        self.messageTextLabel = [[TTTAttributedLabel alloc] initWithFrame:CGRectZero];
-        self.messageTextLabel.textAlignment = NSTextAlignmentNatural;
+        self.messageTextLabel = [OTRChatBubbleView defaultLabel];
+        self.messageTextLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        
         self.messageBackgroundImageView = [OTRImages bubbleImageViewForMessageType:OTRBubbleMessageTypeOutgoing];
         self.messageBackgroundImageView.translatesAutoresizingMaskIntoConstraints = NO;
         
@@ -35,38 +43,10 @@
     return self;
 }
 
-- (void)setDelivered:(BOOL)delivered
+- (void)updateLayout
 {
-    [self willChangeValueForKey:NSStringFromSelector(@selector(isDelivered))];
-    _delivered = delivered;
-    [self didChangeValueForKey:NSStringFromSelector(@selector(isDelivered))];
-    
-    if (self.isDelivierd) {
-        self.deliveredImageView.image = [UIImage imageNamed:@"checkmark"];
-    }
-    else {
-        self.deliveredImageView.image = nil;
-    }
-    [self setNeedsUpdateConstraints];
-}
-
-
-- (void)setDelivered:(BOOL)delivered animated:(BOOL)animated
-{
-    NSTimeInterval duration = 0;
-    if (animated) {
-        duration = .5;
-    }
-    [UIView animateWithDuration:duration animations:^{
-        self.delivered = delivered;
-        [self layoutIfNeeded];
-    }];
-}
-
-- (void)setIncoming:(BOOL)incoming
-{
-    _incoming = incoming;
-    if (_incoming) {
+    if(self.isIncoming)
+    {
         self.messageBackgroundImageView = [OTRImages bubbleImageViewForMessageType:OTRBubbleMessageTypeIncoming];
         self.messageTextLabel.textColor = [UIColor blackColor];
     }
@@ -79,6 +59,14 @@
             self.messageTextLabel.textColor = [UIColor blackColor];
         }
     }
+    
+    if (self.isDelivierd) {
+        self.deliveredImageView.image = [UIImage imageNamed:@"checkmark"];
+    }
+    else {
+        self.deliveredImageView.image = nil;
+    }
+    
     [self setNeedsUpdateConstraints];
 }
 
@@ -92,17 +80,6 @@
     _messageBackgroundImageView.translatesAutoresizingMaskIntoConstraints = NO;
     [self addSubview:_messageBackgroundImageView];
     [self sendSubviewToBack:_messageBackgroundImageView];
-}
-
-- (void)setMessageTextLabel:(TTTAttributedLabel *)messageTextLabel
-{
-    [_messageTextLabel removeFromSuperview];
-    [self willChangeValueForKey:NSStringFromSelector(@selector(messageTextLabel))];
-    _messageTextLabel = messageTextLabel;
-    [self didChangeValueForKey:NSStringFromSelector(@selector(messageTextLabel))];
-    _messageTextLabel.translatesAutoresizingMaskIntoConstraints = NO;
-    [self addSubview:_messageTextLabel];
-    [self setNeedsUpdateConstraints];
 }
 
 - (void)setupConstraints {
@@ -274,6 +251,24 @@
     [self addConstraint:deliveredSideConstraint];
     [self addConstraint:imageViewSideConstraint];
     [self addConstraint:labelSideConstraint];
+}
+
++(TTTAttributedLabel *)defaultLabel
+{
+    TTTAttributedLabel * messageTextLabel = [[TTTAttributedLabel alloc] initWithFrame:CGRectZero];
+    messageTextLabel.backgroundColor = [UIColor clearColor];
+    messageTextLabel.numberOfLines = 0;
+    messageTextLabel.textAlignment = NSTextAlignmentNatural;
+    messageTextLabel.dataDetectorTypes = UIDataDetectorTypeLink;
+    messageTextLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
+        messageTextLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
+    } else {
+        CGFloat messageTextSize = [OTRSettingsManager floatForOTRSettingKey:kOTRSettingKeyFontSize];
+        messageTextLabel.font = [UIFont systemFontOfSize:messageTextSize];
+    }
+    return messageTextLabel;
 }
 
 @end

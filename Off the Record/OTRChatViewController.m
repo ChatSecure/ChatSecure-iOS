@@ -26,13 +26,17 @@
 #import "OTRDoubleSetting.h"
 #import "OTRConstants.h"
 #import "OTRAppDelegate.h"
-#import "OTRMessageTableViewCell.h"
+
 #import "DAKeyboardControl.h"
 #import "OTRManagedStatusMessage.h"
 #import "OTRManagedEncryptionMessage.h"
 #import "OTRStatusMessageCell.h"
 #import "OTRUtilities.h"
 #import "OTRLockButton.h"
+
+#import "OTRIncomingMessageTableViewCell.h"
+#import "OTROutgoingMessageTableViewCell.h"
+
 #import "OTRImages.h"
 #import "OTRComposingImageView.h"
 
@@ -173,6 +177,11 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
     self.showDateForRowArray = [NSMutableArray array];
     
     self.chatHistoryTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
+    
+    [self.chatHistoryTableView registerClass:[OTRIncomingMessageTableViewCell class]
+                      forCellReuseIdentifier:[OTRIncomingMessageTableViewCell reuseIdentifier]];
+    [self.chatHistoryTableView registerClass:[OTROutgoingMessageTableViewCell class]
+                      forCellReuseIdentifier:[OTROutgoingMessageTableViewCell reuseIdentifier]];
     
     
     UIEdgeInsets insets = self.chatHistoryTableView.contentInset;
@@ -677,22 +686,26 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
         }
         return cell;
     }
-    else if( [[self.messagesFetchedResultsController sections][indexPath.section] numberOfObjects] > indexPath.row) {
+    else if([[self.messagesFetchedResultsController sections][indexPath.section] numberOfObjects] > indexPath.row) {
         
         id messageOrStatus = [self.messagesFetchedResultsController objectAtIndexPath:indexPath];
         BOOL showDate = [self showDateForMessageAtIndexPath:indexPath];
 
-        if ([messageOrStatus isKindOfClass:[OTRManagedChatMessage class]]) {
-            OTRManagedChatMessage * message = (OTRManagedChatMessage *)messageOrStatus;
-            static NSString *messageCellIdentifier = @"messageCell";
-            OTRMessageTableViewCell * cell;
-            cell = [tableView dequeueReusableCellWithIdentifier:messageCellIdentifier];
-            if (!cell) {
-                cell = [[OTRMessageTableViewCell alloc] initWithMessage:message withDate:showDate reuseIdentifier:messageCellIdentifier];
-            } else {
-                cell.showDate = showDate;
-                cell.message = message;
+        if ([messageOrStatus isKindOfClass:[OTRManagedMessage class]]) {
+            OTRManagedMessage * message = (OTRManagedMessage *)messageOrStatus;
+            NSString * reuseIdentifier = nil;
+            if (message.isIncomingValue) {
+                reuseIdentifier = [OTRIncomingMessageTableViewCell reuseIdentifier];
             }
+            else {
+                reuseIdentifier = [OTROutgoingMessageTableViewCell reuseIdentifier];
+            }
+            
+            OTRMessageTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier forIndexPath:indexPath];
+            
+            cell.showDate = showDate;
+            [cell setMessage:message];
+            
             return cell;
         }
         else if ([messageOrStatus isKindOfClass:[OTRManagedStatusMessage class]] || [messageOrStatus isKindOfClass:[OTRManagedEncryptionMessage class]])
