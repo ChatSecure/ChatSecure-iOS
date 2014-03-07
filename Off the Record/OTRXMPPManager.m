@@ -412,6 +412,10 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
     
     self.JID = [XMPPJID jidWithString:myJID resource:self.account.resource];
     
+    if (![self.JID.domain isEqualToString:self.xmppStream.myJID.domain]) {
+        [self.xmppStream disconnect];
+    }
+    
 	[self.xmppStream setMyJID:self.JID];
     //DDLogInfo(@"myJID %@",myJID);
 	if (![self.xmppStream isDisconnected]) {

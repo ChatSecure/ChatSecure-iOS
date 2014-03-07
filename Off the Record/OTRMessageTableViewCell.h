@@ -7,9 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "OTRManagedChatMessage.h"
 #import "TTTAttributedLabel.h"
-#import "OTRChatBubbleView.h"
+
+
+@class OTRManagedChatMessage;
+@class OTRChatBubbleView;
 
 @interface OTRMessageTableViewCell : UITableViewCell <TTTAttributedLabelDelegate>
 {
@@ -22,7 +24,7 @@
 
 @property (nonatomic, strong) OTRChatBubbleView * bubbleView;
 
-- (void)setMessage:(OTRManagedMessage *)message;
+- (void)setMessage:(OTRManagedChatMessage *)message;
 
 + (CGSize)messageTextLabelSize:(NSString *)message;
 

@@ -13,8 +13,9 @@
 #import "OTRSettingsManager.h"
 #import "OTRSafariActionSheet.h"
 #import "OTRAppDelegate.h"
-
+#import "OTRChatBubbleView.h"
 #import "OTRUtilities.h"
+#import "OTRManagedChatMessage.h"
 
 
 static CGFloat const messageTextWidthMax = 180;
@@ -55,7 +56,7 @@ static CGFloat const messageTextWidthMax = 180;
     
 }
 
--(void)setMessage:(OTRManagedChatMessage *)newMessage
+-(void)setMessage:(OTRManagedChatMessage *)message
 {
     _message = message;
     self.bubbleView.messageTextLabel.text = message.message;
@@ -70,7 +71,6 @@ static CGFloat const messageTextWidthMax = 180;
     [self.bubbleView updateLayout];
     
     [self setNeedsUpdateConstraints];
-    //[self layoutIfNeeded];
 }
 
 -(void)setupConstraints

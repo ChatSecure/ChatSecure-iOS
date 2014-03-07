@@ -7,6 +7,7 @@
 //
 
 #import "OTROutgoingMessageTableViewCell.h"
+#import "OTRChatBubbleView.h"
 
 @implementation OTROutgoingMessageTableViewCell
 
