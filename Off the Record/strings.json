@@ -43,10 +43,6 @@
         "comment": "Title for settings cell on whether or not the XMPP library should allow SSL hostname mismatch", 
         "string": "Hostname Mismatch"
     }, 
-    "ATTRIBUTION_STRING": {
-        "comment": "for attribution of other projects", 
-        "string": "ChatSecure is brought to you by many open source projects"
-    }, 
     "AVAILABLE_MESSAGE_STRING": {
         "comment": "Message shown in line for users that are available", 
         "string": "is now available"
@@ -866,5 +862,25 @@
     "XMPP_USERNAME_EXAMPLE_STRING": {
         "comment": "Example of a username using the words user and example",
         "string": "user@example.com"
+    },
+    "COPY_STRING": {
+        "comment": "Copy string to clipboard as in copy and paste",
+        "string": "Copy"
+    },
+    "iOS_SSL_ERROR_PART1_STRING": {
+        "comment": "Alert to system issues, leave in the %@",
+        "string": "Your current iOS system version (%@) contains a serious security vulnerability. Please update to the latest version as soon as possible."
+    },
+    "iOS_SSL_ERROR_PART2_STRING": {
+        "comment": "Directions to the system software update",
+        "string": "Settings -> General -> Software Update"
+    },
+    "iOS_SSL_ERROR_TITLE_STRING": {
+        "comment": "Directions to the system software update",
+        "string": "iOS Vulnerability"
+    },
+    "SHOW_USERVOICE_STRING": {
+        "comment": "actionsheet for showing uservoice feedback service",
+        "string": "Would you like to connect to UserVoice to send feedback?"
     }
 }

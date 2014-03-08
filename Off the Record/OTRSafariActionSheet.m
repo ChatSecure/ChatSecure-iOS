@@ -24,7 +24,7 @@
 -(id)initWithUrl:(NSURL *)newUrl
 {
     
-    if([[[OpenInChromeController alloc]init] isChromeInstalled])
+    if([[OpenInChromeController sharedInstance] isChromeInstalled])
     {
         self = [self initWithTitle:[[newUrl absoluteURL] description] delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:OPEN_IN_SAFARI_STRING,@"Open in Chrome", nil];
     }
@@ -48,7 +48,7 @@
         }
         else
         {
-            [[[OpenInChromeController alloc]init] openInChrome:url];
+            [[OpenInChromeController sharedInstance] openInChrome:url];
         }
     }
 }

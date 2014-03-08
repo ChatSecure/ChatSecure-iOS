@@ -30,7 +30,10 @@
     if (self = [super initWithTitle:newTitle description:newDescription])
     {
         viewControllerClass = newViewControllerClass;
-        self.action = @selector(showView);
+        __weak typeof (self) weakSelf = self;
+        self.actionBlock = ^{
+            [weakSelf showView];
+        };
         self.accessoryType = UITableViewCellAccessoryNone;
     }
     return self;

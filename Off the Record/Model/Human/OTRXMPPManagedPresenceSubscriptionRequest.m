@@ -1,6 +1,7 @@
 #import "OTRXMPPManagedPresenceSubscriptionRequest.h"
 
 #import "OTRManagedXMPPAccount.h"
+#import "OTRLog.h"
 
 @interface OTRXMPPManagedPresenceSubscriptionRequest ()
 
@@ -25,6 +26,11 @@
     }
     else{
         OTRXMPPManagedPresenceSubscriptionRequest * newRequest = [OTRXMPPManagedPresenceSubscriptionRequest MR_createInContext:context];
+        NSError *error = nil;
+        [context obtainPermanentIDsForObjects:@[newRequest] error:&error];
+        if (error) {
+            DDLogError(@"Error obtaining permanent ID for subscription request: %@", error);
+        }
         newRequest.jid = jid;
         newRequest.xmppAccount = localAccount;
         return newRequest;

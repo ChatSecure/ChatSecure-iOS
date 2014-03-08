@@ -8,6 +8,7 @@
 
 #import "OTRCertificatePinning.h"
 #import "SSKeychain.h"
+#import "SSKeychainQuery.h"
 #import "GCDAsyncSocket.h"
 #import "AFSecurityPolicy.h"
 #import "XMPPStream.h"

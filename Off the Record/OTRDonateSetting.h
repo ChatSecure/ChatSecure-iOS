@@ -8,6 +8,14 @@
 
 #import "OTRSetting.h"
 
-@interface OTRDonateSetting : OTRSetting <UIAlertViewDelegate>
+@class OTRDonateSetting;
+
+@protocol OTRDonateSettingDelegate <OTRSettingDelegate>
+- (void) donateSettingPressed:(OTRDonateSetting*)setting;
+@end
+
+@interface OTRDonateSetting : OTRSetting
+
+@property (nonatomic, weak) id<OTRDonateSettingDelegate> delegate;
 
 @end

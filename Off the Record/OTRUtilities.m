@@ -220,6 +220,14 @@
     return newImage;
 }
 
++ (BOOL)currentiOSVersionHasSSLVulnerability
+{
+    if ((SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"6.0") && SYSTEM_VERSION_LESS_THAN(@"6.1.6"))||(SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0") && SYSTEM_VERSION_LESS_THAN(@"7.0.6"))) {
+        return YES;
+    }
+    return NO;
+}
+
 @end
 
 

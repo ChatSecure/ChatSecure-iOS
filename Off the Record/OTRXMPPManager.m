@@ -55,6 +55,8 @@
 NSString *const OTRXMPPRegisterSucceededNotificationName = @"OTRXMPPRegisterSucceededNotificationName";
 NSString *const OTRXMPPRegisterFailedNotificationName    = @"OTRXMPPRegisterFailedNotificationName";
 
+static NSString *const kOTRXMPPErrorDomain = @"kOTRXMPPErrorDomain";
+
 NSTimeInterval const kOTRChatStatePausedTimeout   = 5;
 NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 
@@ -331,16 +333,20 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 	[[self xmppStream] sendElement:presence];
 }
 
-- (NSString *)accountDomainWithError:(NSError**)error;
+- (NSString *)accountDomainWithError:(id)error;
 {
-    return self.account.domain;
-}
-
-- (void)failedToConnect:(NSError *)error
-{
-    if (error) {
+    NSError *localError = nil;
+    if ([error isKindOfClass:[NSError class]]) {
+        localError = error;
+    }
+    if ([error isKindOfClass:[NSXMLElement class]]) {
+        NSXMLElement *errorElement = error;
+        NSString *errorString = [errorElement prettyXMLString];
+        localError = [NSError errorWithDomain:kOTRXMPPErrorDomain code:-123 userInfo:@{NSLocalizedDescriptionKey: errorString}];
+    }
+    if (localError) {
         [[NSNotificationCenter defaultCenter]
-         postNotificationName:kOTRProtocolLoginFail object:self userInfo:@{kOTRNotificationErrorKey:error}];
+         postNotificationName:kOTRProtocolLoginFail object:self userInfo:@{kOTRProtocolLoginFailErrorKey:localError}];
     }
     else {
         [[NSNotificationCenter defaultCenter]
@@ -435,7 +441,7 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
     
     
     NSError * error = nil;
-    NSString * domainString = [self accountDomainWithError:&error];
+    NSString * domainString = [self accountDomainWithError:error];
     if (error) {
         [self failedToConnect:error];
         return;
@@ -450,12 +456,7 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 	error = nil;
 	if (![self.xmppStream connectWithTimeout:XMPPStreamTimeoutNone error:&error])
 	{
-		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error connecting" 
-		                                                    message:@"See console for error details." 
-		                                                   delegate:nil 
-		                                          cancelButtonTitle:@"Ok" 
-		                                          otherButtonTitles:nil];
-		[alertView show];
+		[self failedToConnect:error];
         
 		DDLogError(@"Error connecting: %@", error);
         

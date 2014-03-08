@@ -1,13 +1,4 @@
 
-[submodule "Submodules/Appirater"]
-	path = Submodules/Appirater
-	url = git://github.com/arashpayan/appirater.git
-[submodule "Submodules/SSKeychain"]
-	path = Submodules/SSKeychain
-	url = git://github.com/soffes/sskeychain.git
-[submodule "Submodules/MBProgressHUD"]
-	path = Submodules/MBProgressHUD
-	url = git://github.com/jdg/MBProgressHUD.git
 [submodule "Submodules/MWFeedParser"]
 	path = Submodules/MWFeedParser
 	url = git@github.com:ChatSecure/MWFeedParser.git
@@ -22,16 +13,10 @@
 	url = git@github.com:ChatSecure/XMPPFramework.git
 [submodule "Submodules/UserVoice"]
 	path = Submodules/UserVoice
-	url = https://github.com/uservoice/uservoice-ios-sdk.git
+	url = git@github.com:ChatSecure/uservoice-iphone-sdk.git
 [submodule "Submodules/encrypted-core-data"]
 	path = Submodules/encrypted-core-data
-	url = git@github.com:project-imas/encrypted-core-data.git
-[submodule "Submodules/MagicalRecord"]
-	path = Submodules/MagicalRecord
-	url = git@github.com:magicalpanda/MagicalRecord.git
-[submodule "Submodules/DAKeyboardControl"]
-	path = Submodules/DAKeyboardControl
-	url = git@github.com:danielamitay/DAKeyboardControl.git
+	url = git@github.com:ChatSecure/encrypted-core-data.git
 [submodule "Submodules/TTTAttributedLabel"]
 	path = Submodules/TTTAttributedLabel
 	url = git@github.com:ChatSecure/TTTAttributedLabel.git
@@ -44,33 +29,6 @@
 [submodule "Submodules/facebook-ios-sdk"]
 	path = Submodules/facebook-ios-sdk
 	url = https://github.com/facebook/facebook-ios-sdk.git
-[submodule "Submodules/gtm-oauth2"]
-	path = Submodules/gtm-oauth2
-	url = git@github.com:ChatSecure/gtm-oauth2.git
-[submodule "Submodules/GrowingTextView"]
-	path = Submodules/GrowingTextView
-	url = git@github.com:HansPinckaers/GrowingTextView.git
-[submodule "Submodules/HockeySDK-iOS"]
-	path = Submodules/HockeySDK-iOS
-	url = git@github.com:bitstadium/HockeySDK-iOS.git
 [submodule "Submodules/ChatSecure-Metadata"]
 	path = Submodules/ChatSecure-Metadata
 	url = git@github.com:ChatSecure/ChatSecure-Metadata.git
-[submodule "Submodules/CocoaLumberjack"]
-	path = Submodules/CocoaLumberjack
-	url = git@github.com:robbiehanson/CocoaLumberjack.git
-[submodule "Submodules/SIAlertView"]
-	path = Submodules/SIAlertView
-	url = git@github.com:ChatSecure/SIAlertView.git
-[submodule "Submodules/JTTargetActionBlock"]
-	path = Submodules/JTTargetActionBlock
-	url = https://gist.github.com/2205564.git
-[submodule "Submodules/OnionKit"]
-	path = Submodules/OnionKit
-	url = git@github.com:ChatSecure/OnionKit.git
-[submodule "Submodules/CocoaAsyncSocket"]
-	path = Submodules/CocoaAsyncSocket
-	url = git@github.com:ChatSecure/CocoaAsyncSocket.git
-[submodule "Submodules/ProxyKit"]
-	path = Submodules/ProxyKit
-	url = git@github.com:chrisballinger/ProxyKit.git

@@ -24,15 +24,29 @@
 #import "Strings.h"
 #import "OTRConstants.h"
 #import "OTRAppDelegate.h"
+#import "UIActionSheet+Blocks.h"
 
-@interface OTRAboutViewController(Private)
-- (NSArray*) buttonTitlesForShareButton;
+static NSString *const kDefaultCellReuseIdentifier = @"kDefaultCellReuseIdentifier";
+
+@interface OTRAboutTableCellData : NSObject
+@property (nonatomic, strong) NSString *title;
+@property (nonatomic, strong) NSURL *url;
++ (instancetype) cellDataWithTitle:(NSString*)title url:(NSURL*)url;
+@end
+@implementation OTRAboutTableCellData
++ (instancetype) cellDataWithTitle:(NSString *)title url:(NSURL *)url {
+    OTRAboutTableCellData *cellData = [[OTRAboutTableCellData alloc] init];
+    cellData.title = title;
+    cellData.url = url;
+    return cellData;
+}
+@end
+
+@interface OTRAboutViewController()
+@property (nonatomic, strong) NSArray *cellData;
 @end
 
 @implementation OTRAboutViewController
-@synthesize versionLabel, aboutTextView,lastActionLink, imageView;
-@synthesize scrollView;
-
 
 - (id)init {
     if (self = [super init]) {
@@ -41,85 +55,62 @@
     return self;
 }
 
-- (void)didReceiveMemoryWarning
-{
-    // Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-    
-    // Release any cached data, images, etc that aren't in use.
-}
-
-
 #pragma mark - View lifecycle
 
-
-- (void) loadView 
-{
-    [super loadView];
+- (void) setupVersionLabel {
     self.versionLabel = [[UILabel alloc] init];
-    self.imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"chatsecure_banner.png"]];
-    
-
+    NSString *version = [[[NSBundle mainBundle] infoDictionary] valueForKey:@"CFBundleVersion"];
+    self.versionLabel.text = [NSString stringWithFormat:@"%@ %@", VERSION_STRING, version];
+    self.versionLabel.textAlignment = NSTextAlignmentCenter;
+    self.versionLabel.frame = CGRectMake(0, 0, self.view.frame.size.width, 30);
 }
+
+- (void) setupImageView {
+    self.imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"chatsecure_banner.png"]];
+    self.imageView.contentMode = UIViewContentModeScaleAspectFit;
+    self.imageView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
+    [self.view addSubview:self.imageView];
+}
+
+- (void) setupTableView {
+    self.aboutTableView = [[UITableView alloc] init];
+    self.aboutTableView.delegate = self;
+    self.aboutTableView.dataSource = self;
+    [self.aboutTableView registerClass:[UITableViewCell class] forCellReuseIdentifier:kDefaultCellReuseIdentifier];
+    self.aboutTableView.scrollEnabled = NO;
+    self.aboutTableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin;
+    
+    [self.view addSubview:self.aboutTableView];
+}
+
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor whiteColor];
-    // Do any additional setup after loading the view from its nib.
-    NSString *aboutString = [NSString stringWithFormat:@"%@: libotr, libgcrypt, libgpg-error, LibOrange, XMPPFramework, MBProgressHUD, Appirater, SSKeychain, AFNetowork, Hockey SDK, UserVoice.<br><a href=\"https://chatsecure.org/\">%@</a><br><a href=\"https://github.com/chrisballinger/Off-the-Record-iOS\">%@</a><br><a href=\"https://www.transifex.com/projects/p/chatsecure\">%@</a>", ATTRIBUTION_STRING, PROJECT_HOMEPAGE_STRING, SOURCE_STRING, CONTRIBUTE_TRANSLATION_STRING];
-    
-    self.scrollView = [[UIScrollView alloc] initWithFrame:self.view.bounds];
-    scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    
-    aboutTextView = [[UIWebView alloc] init];
-	aboutTextView.delegate = self;
-    [aboutTextView loadHTMLString:aboutString baseURL:[NSURL URLWithString:@"/"]];
-    
-    aboutTextView.userInteractionEnabled = YES;
-    if([aboutTextView respondsToSelector:@selector(scrollView)]) {
-        aboutTextView.scrollView.scrollEnabled = NO;
+    // Fixes frame problems on iOS 7
+    if ([self respondsToSelector:@selector(edgesForExtendedLayout)]) {
+        self.edgesForExtendedLayout = UIRectEdgeNone;
+        [self.navigationController.view setBackgroundColor:[UIColor whiteColor]];
     }
+    OTRAboutTableCellData *homepageData = [OTRAboutTableCellData cellDataWithTitle:PROJECT_HOMEPAGE_STRING url:[NSURL URLWithString:@"https://chatsecure.org"]];
+    OTRAboutTableCellData *sourceData = [OTRAboutTableCellData cellDataWithTitle:SOURCE_STRING url:[NSURL URLWithString:@"https://github.com/chrisballinger/Off-the-Record-iOS"]];
+    OTRAboutTableCellData *translateData = [OTRAboutTableCellData cellDataWithTitle:CONTRIBUTE_TRANSLATION_STRING url:[NSURL URLWithString:@"https://www.transifex.com/projects/p/chatsecure"]];
+    self.cellData = @[homepageData, sourceData, translateData];
+    self.view.backgroundColor = [UIColor whiteColor];
 
-    NSString *version = [[[NSBundle mainBundle] infoDictionary] valueForKey:@"CFBundleVersion"];
-    versionLabel.text = [NSString stringWithFormat:@"%@ %@", VERSION_STRING, version];
     
-    [scrollView addSubview:aboutTextView];
-    [scrollView addSubview:imageView];
-    [scrollView addSubview:versionLabel];
-    
-    [self.view addSubview:scrollView];
+    [self setupVersionLabel];
+    [self setupImageView];
+    [self setupTableView];
 }
 
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
-    CGFloat imageViewFrameWidth = imageView.image.size.width;
-    CGFloat imageViewFrameHeight = imageView.image.size.height;
-    imageView.frame = CGRectMake(self.view.frame.size.width/2 - imageViewFrameWidth/2, 20, imageViewFrameWidth, imageViewFrameHeight);
-    imageView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;
-    
-    CGSize versionLabelSize = [[versionLabel text]sizeWithFont:[versionLabel font]];
-    versionLabel.frame = CGRectMake(floorf(self.view.frame.size.width/2 - versionLabelSize.width/2), self.view.frame.size.height-versionLabelSize.height-20, versionLabelSize.width, versionLabelSize.height);
-    versionLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;
-    
-    CGFloat aboutTextViewFrameWidth = self.view.frame.size.width-40;
-    CGFloat aboutTextViewFrameYOrigin = imageView.frame.origin.y + imageViewFrameHeight + 10;
-    aboutTextView.frame = CGRectMake(self.view.frame.size.width/2-aboutTextViewFrameWidth/2, aboutTextViewFrameYOrigin, aboutTextViewFrameWidth, versionLabel.frame.origin.y - aboutTextViewFrameYOrigin);
-    aboutTextView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
-    
-    scrollView.contentSize = CGSizeMake(self.view.frame.size.width, versionLabel.frame.origin.y+versionLabelSize.height);
+    CGFloat padding = 10.0f;
+    self.imageView.frame = CGRectMake(padding, padding, self.view.frame.size.width - padding*2, 100);
+    self.aboutTableView.frame = CGRectMake(0, self.imageView.frame.origin.y + self.imageView.frame.size.height + padding, self.view.frame.size.width, self.view.frame.size.height - self.imageView.frame.size.height - padding * 2);
 }
 
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
-    self.versionLabel = nil;
-    self.aboutTextView = nil;
-    self.imageView = nil;
-}
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
@@ -131,28 +122,40 @@
     }
 }
 
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
-    if ([request.URL.absoluteString isEqualToString:@"file:///"]) {
-        return YES;
-    }
-    if ([[UIApplication sharedApplication] canOpenURL:request.URL])
-    {
-        self.lastActionLink = request.URL;
-        UIActionSheet *action = [[UIActionSheet alloc] initWithTitle:[[request.URL absoluteURL] description] delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:OPEN_IN_SAFARI_STRING, nil];
-        action.tag = kOTRActionSheetLinkTag;
-        [OTR_APP_DELEGATE presentActionSheet:action inView:self.view];
-    }
-    return NO;
+- (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return _cellData.count;
 }
 
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if (actionSheet.tag == kOTRActionSheetLinkTag) {
-        if (buttonIndex != actionSheet.cancelButtonIndex)
-        {
-            [[UIApplication sharedApplication] openURL:[lastActionLink absoluteURL]];
-        }
-    }
+- (UIView*) tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
+    return self.versionLabel;
+}
+
+- (CGFloat) tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
+    return self.versionLabel.frame.size.height;
+}
+
+- (NSInteger) numberOfSectionsInTableView:(UITableView *)tableView {
+    return 1;
+}
+
+- (UITableViewCell*) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kDefaultCellReuseIdentifier forIndexPath:indexPath];
+    OTRAboutTableCellData *cellData = [self.cellData objectAtIndex:indexPath.row];
+    cell.textLabel.text = cellData.title;
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    return cell;
+}
+
+- (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    OTRAboutTableCellData *cellData = [self.cellData objectAtIndex:indexPath.row];
+    NSURL *url = cellData.url;
+    RIButtonItem *cancelButton = [RIButtonItem itemWithLabel:CANCEL_STRING];
+    RIButtonItem *safariButton = [RIButtonItem itemWithLabel:OPEN_IN_SAFARI_STRING action:^{
+        [[UIApplication sharedApplication] openURL:url];
+    }];
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:url.absoluteString cancelButtonItem:cancelButton destructiveButtonItem:nil otherButtonItems:safariButton, nil];
+    [OTR_APP_DELEGATE presentActionSheet:actionSheet inView:self.view];
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 @end

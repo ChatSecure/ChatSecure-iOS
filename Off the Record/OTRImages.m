@@ -16,6 +16,26 @@
 
 @implementation OTRImages
 
++(UIColor *)colorWithStatus:(OTRBuddyStatus)status
+{
+    switch(status)
+    {
+        case OTRBuddyStatusOffline:
+            return [UIColor colorWithRed: 0.763 green: 0.763 blue: 0.763 alpha: 1];
+        case OTRBuddyStatusAway:
+            return [UIColor colorWithRed: 0.901 green: 0.527 blue: 0.23 alpha: 1];
+        case OTRBuddyStatusXa:
+            return [UIColor colorWithRed: 0.734 green: 0.124 blue: 0.124 alpha: 1];
+        case OTRBuddyStatusDnd:
+            return [UIColor colorWithRed: 0.734 green: 0.124 blue: 0.124 alpha: 1];
+        case OTRBuddyStatusAvailable:
+            return [UIColor colorWithRed: 0.083 green: 0.767 blue: 0.194 alpha: 1];
+        default:
+            return [UIColor colorWithRed: 0.763 green: 0.763 blue: 0.763 alpha: 1];
+    }
+    
+}
+
 +(UIImage *)rawStatusImageWithStatus:(OTRBuddyStatus)status
 {
     UIGraphicsBeginImageContextWithOptions(CGSizeMake(18, 18), NO, 0);
@@ -117,19 +137,14 @@
     switch (status) {
         case OTRBuddyStatusDnd:
             return [OTRImages dndImage];
-            break;
         case OTRBuddyStatusXa:
             return [OTRImages xaImage];
-            break;
         case OTRBuddyStatusAvailable:
             return [OTRImages availableImage];
-            break;
         case OTRBuddyStatusAway:
             return [OTRImages awayImage];
-            break;
         default:
             return [OTRImages offlineImage];
-            break;
     }
     
 }
@@ -216,20 +231,17 @@
 
 +(UIImage *)openCaratImage
 {
-    
-    
     UIImage * carat = [OTRImages caratImage];
     return [[UIImage alloc] initWithCGImage:carat.CGImage scale:[OTRImages scale] orientation:UIImageOrientationLeft];
-    return carat;
     
 }
+
 +(UIImage *)closeCaratImage
 {
     UIImage * carat = [OTRImages caratImage];
     return [[UIImage alloc] initWithCGImage: carat.CGImage
                                scale: [OTRImages scale] 
                          orientation: UIImageOrientationUp];
-    
 }
 
 

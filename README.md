@@ -1,7 +1,7 @@
 ChatSecure
 =========
 
-ChatSecure is a free and open source instant messaging client for iOS that integrates encrypted [OTR](https://en.wikipedia.org/wiki/Off-the-Record_Messaging) ("Off the Record") messaging support from the [libotr](https://otr.cypherpunks.ca/) library. It uses the [LibOrange](https://github.com/unixpickle/LibOrange) library to handle all of the AIM (OSCAR) functionality and the [XMPPFramework](https://github.com/robbiehanson/XMPPFramework) to handle Jabber/GTalk (XMPP).
+ChatSecure is a free and open source instant messaging client for [iOS](https://itunes.apple.com/us/app/chatsecure/id464200063) and [Android](https://play.google.com/store/apps/details?id=info.guardianproject.otr.app.im&hl=en) that integrates encrypted [OTR](https://en.wikipedia.org/wiki/Off-the-Record_Messaging) ("Off the Record") messaging support from the [libotr](https://otr.cypherpunks.ca/) library and the [XMPPFramework](https://github.com/robbiehanson/XMPPFramework/) to handle Jabber/GTalk (XMPP).
 
 
 Cost
@@ -10,7 +10,7 @@ Cost
 This project is **100% free** because it is important that all people around the world have unrestricted access to privacy tools.
 However, developing and supporting this project is hard work and costs real money. Please help support the development of this project! We now also accept Bitcoin via Coinbase! :)
 
-[![bitcoin](https://coinbase.com/assets/buttons/donation_large-6ec72b1a9eec516944e50a22aca7db35.png)](https://coinbase.com/checkouts/1cf35f00d722205726f50b940786c413) [![donation](https://chatsecure.org/static/images/paypal_donate.png)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=XRBHJ9AX5VWNA) 
+[![bitcoin](https://chatsecure.org/images/bitcoin_donate.png)](https://coinbase.com/checkouts/1cf35f00d722205726f50b940786c413) [![donation](https://chatsecure.org/images/paypal_donate.png)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=XRBHJ9AX5VWNA) 
 
 
 Localization
@@ -49,11 +49,25 @@ Phone apps
 
 Build Instructions
 ========
-- Install [mogenerator](http://rentzsch.github.io/mogenerator/) `brew install mogenerator`
-- Dowload `git clone git@github.com:chrisballinger/Off-the-Record-iOS.git --recursive`
-- `cd Off-the-Record-iOS/`
-- Create `/Off the Record/OTRSecrets.h` and fill in blank strings for the missing API keys: `USERVOICE_KEY`, `USERVOICE_SECRET`, `GOOGLE_APP_SECRET`, `HOCKEY_LIVE_IDENTIFIER`, and `HOCKEY_BETA_IDENTIFIER`.
-- Open `Off the Record.xcodeproj` in Xcode and build.
+Install [mogenerator](http://rentzsch.github.io/mogenerator/) in order to regenerate the Core Data model files. You'll also need [Cocoapods](http://cocoapods.org) for some of our dependencies.
+    
+    $ brew install mogenerator
+    $ gem install cocoapods
+    
+Download the source code and **don't forget** to pull down all of the submodules as well.
+
+    $ git clone git@github.com:chrisballinger/Off-the-Record-iOS.git
+    $ cd Off-the-Record-iOS/
+    $ git submodule update --init --recursive
+    $ pod
+    
+Make your own version of environment-specific data. Make `OTRSecrets.m` file with blank API keys, and set your provisioning profile ID in `OTR_Codesigning.xcconfig`. To find the provisioning profile ID, go to Project Settings -> Build Settings -> Code Signing -> Select Provisiong Profile -> Select Other -> Copy Profile's UUID into `OTR_Codesigning.xcconfig`.
+
+    $ cp "Off the Record/OTRSecrets-Template.m" "Off the Record/OTRSecrets.m"
+    $ cp "Off the Record/configurations/OTR_Codesigning.xcconfig.sample" "Off the Record/configurations/OTR_Codesigning.xcconfig"
+
+    
+Open `Off the Record.xcworkspace` in Xcode and build. Note that you don't open the .xcodeproj anymore because we use Cocoapods now.
 
 License
 =========

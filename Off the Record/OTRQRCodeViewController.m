@@ -51,13 +51,6 @@
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:DONE_STRING style:UIBarButtonItemStyleDone target:self action:@selector(doneButtonPressed:)];
 }
 
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    self.imageView = nil;
-    self.instructionsLabel = nil;
-}
-
 - (void) viewWillAppear:(BOOL)animated 
 {
     [super viewWillAppear:animated];

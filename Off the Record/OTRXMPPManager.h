@@ -64,7 +64,7 @@ extern NSString *const OTRXMPPRegisterFailedNotificationName;
 - (void)disconnect;
 
 - (NSString *)accountName;
-- (NSString *)accountDomainWithError:(NSError**)error;
+
 - (void)registerNewAccountWithPassword:(NSString *)password;
 - (void)failedToConnect:(NSError *)error;
 

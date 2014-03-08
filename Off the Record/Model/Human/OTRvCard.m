@@ -4,6 +4,7 @@
 #import "OTRvCardAvatar.h"
 
 #import "NSData+XMPP.h"
+#import "OTRLog.h"
 
 
 @interface OTRvCard ()
@@ -26,23 +27,33 @@
     }
     else {
         vCard = [OTRvCard MR_createInContext:context];
+        NSError *error = nil;
+        [context obtainPermanentIDsForObjects:@[vCard] error:&error];
+        if (error) {
+            DDLogError(@"Error obtaining permanent ID for vCard: %@", error);
+        }
         vCard.jidString = jidString;
     }
     return vCard;
 }
 
 -(void)setVCardTemp:(XMPPvCardTemp *)vCardTemp {
-    if (!vCardTemp && self.vCardAvatarRelationship) {
-        [self.vCardTempRelationship MR_deleteEntity];
+    NSManagedObjectContext *localContext = [NSManagedObjectContext MR_contextForCurrentThread];
+    OTRvCard *localSelf = [self MR_inContext:localContext];
+    if (!vCardTemp && localSelf.vCardAvatarRelationship) {
+        [localSelf.vCardTempRelationship MR_deleteInContext:localContext];
     }
     else {
-        
-        OTRvCardTemp * newvCardTemp = [OTRvCardTemp MR_createEntity];
+        OTRvCardTemp * newvCardTemp = [OTRvCardTemp MR_createInContext:localContext];
+        NSError *error = nil;
+        [localContext obtainPermanentIDsForObjects:@[newvCardTemp] error:&error];
+        if (error) {
+            DDLogError(@"Error obtaining permanent ID for OTRvCardTemp: %@", error);
+        }
         newvCardTemp.vCardTemp = vCardTemp;
-        self.vCardTempRelationship = newvCardTemp;
+        localSelf.vCardTempRelationship = newvCardTemp;
     }
-    [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
-    
+    [localContext MR_saveToPersistentStoreAndWait];
 }
 
 -(XMPPvCardTemp *)vCardTemp {
@@ -59,6 +70,11 @@
     }
     else {
         OTRvCardAvatar * vCardAvatar = [OTRvCardAvatar MR_createInContext:context];
+        NSError *error = nil;
+        [context obtainPermanentIDsForObjects:@[vCardAvatar] error:&error];
+        if (error) {
+            DDLogError(@"Error obtaining permanent ID for vCardAvatar: %@", error);
+        }
         vCardAvatar.photoData = photoData;
         self.vCardAvatarRelationship = vCardAvatar;
         

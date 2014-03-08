@@ -24,7 +24,6 @@
 #import "OTRXMPPManager.h"
 #import "OTREncryptionManager.h"
 #import "OTRCodec.h"
-#import "OTRBuddyList.h"
 #import "OTRSettingsManager.h"
 #import "OTRProtocol.h"
 #import "OTRAccountsManager.h"

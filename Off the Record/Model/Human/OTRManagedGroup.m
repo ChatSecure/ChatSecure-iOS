@@ -1,5 +1,5 @@
 #import "OTRManagedGroup.h"
-
+#import "OTRLog.h"
 
 @interface OTRManagedGroup ()
 
@@ -17,6 +17,11 @@
     
     if (!group) {
         group = [OTRManagedGroup MR_createInContext:context];
+        NSError *error = nil;
+        [context obtainPermanentIDsForObjects:@[group] error:&error];
+        if (error) {
+            DDLogError(@"Error obtaining permanent ID for OTRManagedGroup: %@", error);
+        }
         group.name = name;
     }
     return group;

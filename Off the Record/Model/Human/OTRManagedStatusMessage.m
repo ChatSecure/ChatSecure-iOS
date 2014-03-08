@@ -1,6 +1,6 @@
 #import "OTRManagedStatusMessage.h"
 #import "Strings.h"
-
+#import "OTRLog.h"
 
 @interface OTRManagedStatusMessage ()
 
@@ -29,6 +29,11 @@
 +(OTRManagedStatusMessage *)newStatus:(OTRBuddyStatus)newStatus withMessage:(NSString *)newMessage withBuddy:(OTRManagedBuddy *)newBuddy incoming:(BOOL)newIsIncoming inContext:(NSManagedObjectContext *)context
 {
     OTRManagedStatusMessage * managedStatus = [OTRManagedStatusMessage MR_createInContext:context];
+    NSError *error = nil;
+    [context obtainPermanentIDsForObjects:@[managedStatus] error:&error];
+    if (error) {
+        DDLogError(@"Error obtaining permanent ID for managedStatus: %@", error);
+    }
   
     managedStatus.statusValue = newStatus;
     
@@ -54,19 +59,14 @@
     switch (status) {
         case OTRBuddyStatusXa:
             return EXTENDED_AWAY_STRING;
-            break;
         case OTRBuddyStatusDnd:
             return DO_NOT_DISTURB_STRING;
-            break;
         case OTRBuddyStatusAway:
             return AWAY_STRING;
-            break;
         case OTRBuddyStatusAvailable:
             return AVAILABLE_STRING;
-            break;
         default:
             return OFFLINE_STRING;
-            break;
     }
 }
 

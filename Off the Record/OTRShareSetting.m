@@ -29,7 +29,10 @@ NSUInteger const kOTRActionSheetShareTag = 333;
 {
     self = [super initWithTitle:newTitle description:newDescription];
     if (self) {
-        self.action = @selector(showActionSheet);
+        __weak typeof (self) weakSelf = self;
+        self.actionBlock = ^{
+            [weakSelf showActionSheet];
+        };
     }
     return self;
 }
