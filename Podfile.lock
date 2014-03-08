@@ -1,25 +1,23 @@
 PODS:
-  - AFNetworking (2.2.0):
+  - AFNetworking (2.0.3):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
     - AFNetworking/UIKit
-  - AFNetworking/NSURLConnection (2.2.0):
+  - AFNetworking/NSURLConnection (2.0.3):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/NSURLSession (2.2.0):
+  - AFNetworking/NSURLSession (2.0.3):
     - AFNetworking/NSURLConnection
-  - AFNetworking/Reachability (2.2.0)
-  - AFNetworking/Security (2.2.0)
-  - AFNetworking/Serialization (2.2.0)
-  - AFNetworking/UIKit (2.2.0):
+  - AFNetworking/Reachability (2.0.3)
+  - AFNetworking/Security (2.0.3)
+  - AFNetworking/Serialization (2.0.3)
+  - AFNetworking/UIKit (2.0.3):
     - AFNetworking/NSURLConnection
-    - AFNetworking/NSURLSession
   - Appirater (2.0.2)
-  - CocoaAsyncSocket (7.3.3)
   - CocoaLumberjack (1.8.1):
     - CocoaLumberjack/Extensions
   - CocoaLumberjack/Core (1.8.1)
@@ -56,9 +54,8 @@ PODS:
   - UIAlertView-Blocks (1.0)
 
 DEPENDENCIES:
-  - AFNetworking
+  - AFNetworking (= 2.0.3)
   - Appirater
-  - CocoaAsyncSocket (from `git@github.com:ChatSecure/CocoaAsyncSocket.git`)
   - CocoaLumberjack
   - DAKeyboardControl (~> 2.3)
   - Facebook-iOS-SDK
@@ -72,15 +69,12 @@ DEPENDENCIES:
   - UIAlertView-Blocks
 
 EXTERNAL SOURCES:
-  CocoaAsyncSocket:
-    :git: git@github.com:ChatSecure/CocoaAsyncSocket.git
   SIAlertView:
     :podspec: PodSpecs/SIAlertView.podspec
 
 SPEC CHECKSUMS:
-  AFNetworking: e8cfd8f3fe3bfe19124a0cc63f4d45752d892a56
+  AFNetworking: e499052cbf3d743e9bb727bb37adb9dc2547ba15
   Appirater: 32fb9089615b5e542c7ad7b5749741a8aed55290
-  CocoaAsyncSocket: 50a73b79fb77f0dbb57cdc5c247c8f19e9cb3b33
   CocoaLumberjack: 020378ec400d658923bf5887178394f65f052c90
   DAKeyboardControl: 219d6e32b9343eb85151255c43b1f238d8f0bbf7
   Facebook-iOS-SDK: c09f7d80db5c48170ff834bc03ebe774c49d1f5b
