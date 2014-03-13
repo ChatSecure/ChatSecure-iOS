@@ -1,9 +1,8 @@
 platform :ios, "6.0"
 
-pod "AFNetworking"
+pod "AFNetworking", '2.0.3'
 pod "Appirater"
 pod "CocoaLumberjack"
-pod "CocoaAsyncSocket", :git => 'git@github.com:ChatSecure/CocoaAsyncSocket.git'
 pod 'DAKeyboardControl', '~> 2.3'
 pod "Facebook-iOS-SDK"
 pod 'HPGrowingTextView', '~> 1.1'

@@ -26,10 +26,10 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.translatesAutoresizingMaskIntoConstraints = NO;
-        self.messageTextLabel = [OTRChatBubbleView defaultLabel];
-        self.messageTextLabel.translatesAutoresizingMaskIntoConstraints = NO;
-        
-        self.messageBackgroundImageView = [OTRImages bubbleImageViewForMessageType:OTRBubbleMessageTypeOutgoing];
+        self.messageTextLabel = [[TTTAttributedLabel alloc] initWithFrame:CGRectZero];
+#warning The line below throws a silent exception on iOS 6.
+        //self.messageTextLabel.textAlignment = NSTextAlignmentNatural;
+        self.messageBackgroundImageView = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"MessageBubbleBlue"] stretchableImageWithLeftCapWidth:23 topCapHeight:15]];
         self.messageBackgroundImageView.translatesAutoresizingMaskIntoConstraints = NO;
         
         self.deliveredImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
