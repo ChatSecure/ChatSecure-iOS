@@ -1091,7 +1091,6 @@
 		D95F8E931419C3E00094A634 /* chatsecure_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "chatsecure_icon@2x.png"; path = "../chatsecure_icon@2x.png"; sourceTree = "<group>"; };
 		D95F8E951419C58D0094A634 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = ../Default.png; sourceTree = "<group>"; };
 		D95F8E971419C5900094A634 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default@2x.png"; path = "../Default@2x.png"; sourceTree = "<group>"; };
-		D964256F17572B9B00C95395 /* libCrittercism.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libCrittercism.a; sourceTree = "<group>"; };
 		D96495C2153629FE009A8C33 /* OTRSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRSetting.h; sourceTree = "<group>"; };
 		D96495C3153629FE009A8C33 /* OTRSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRSetting.m; sourceTree = "<group>"; };
 		D96495C6153635A8009A8C33 /* OTRBoolSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBoolSetting.h; sourceTree = "<group>"; };
@@ -1197,8 +1196,6 @@
 		D9CE42C113FDCBDD003EC27C /* Lock_Locked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Lock_Locked.png; sourceTree = "<group>"; };
 		D9CE42C213FDCBDD003EC27C /* Lock_Unlocked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Lock_Unlocked.png; sourceTree = "<group>"; };
 		D9CEED621684235B00B236B5 /* OTRKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OTRKit.xcodeproj; path = Submodules/OTRKit/OTRKit.xcodeproj; sourceTree = "<group>"; };
-		D9CEED8E1684238D00B236B5 /* Crittercism.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Crittercism.h; sourceTree = "<group>"; };
-		D9CEED8F1684238D00B236B5 /* CrittercismDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CrittercismDelegate.h; sourceTree = "<group>"; };
 		D9CEED96168423CA00B236B5 /* AIMBArtDownloadReply.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AIMBArtDownloadReply.h; sourceTree = "<group>"; };
 		D9CEED97168423CA00B236B5 /* AIMBArtDownloadReply.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AIMBArtDownloadReply.m; sourceTree = "<group>"; };
 		D9CEED98168423CA00B236B5 /* AIMBArtHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AIMBArtHandler.h; sourceTree = "<group>"; };
@@ -2553,7 +2550,6 @@
 				D9CEF0D216842AC700B236B5 /* MWFeedParser */,
 				D9CEED95168423CA00B236B5 /* LibOrange */,
 				D96270DC1755DE8E00F0A958 /* UserVoice */,
-				D9CEED8C1684238D00B236B5 /* Crittercism */,
 				D9CEED621684235B00B236B5 /* OTRKit.xcodeproj */,
 			);
 			name = Submodules;
@@ -2565,17 +2561,6 @@
 				D9CEED6A1684235C00B236B5 /* libOTRKit.a */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		D9CEED8C1684238D00B236B5 /* Crittercism */ = {
-			isa = PBXGroup;
-			children = (
-				D964256F17572B9B00C95395 /* libCrittercism.a */,
-				D9CEED8E1684238D00B236B5 /* Crittercism.h */,
-				D9CEED8F1684238D00B236B5 /* CrittercismDelegate.h */,
-			);
-			name = Crittercism;
-			path = Submodules/Crittercism;
 			sourceTree = "<group>";
 		};
 		D9CEED95168423CA00B236B5 /* LibOrange */ = {

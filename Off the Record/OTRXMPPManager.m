@@ -139,12 +139,12 @@
     
 	if (self.account.accountType == OTRAccountTypeFacebook) {
         self.xmppStream = [[XMPPStream alloc] initWithFacebookAppId:FACEBOOK_APP_ID];
-    }
-    else{
+    } else {
         self.xmppStream = [[XMPPStream alloc] init];
     }
     
     self.xmppStream.autoStartTLS = YES;
+    self.xmppStream.requireTLS = YES;
     
     [self.certificatePinningModule activate:self.xmppStream];
     
