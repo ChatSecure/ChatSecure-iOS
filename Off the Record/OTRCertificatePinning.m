@@ -26,7 +26,6 @@
     if (self = [super init]) {
         self.securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeCertificate];
         self.doNotManuallyEvaluateOverride = NO;
-        //[self loadKeychainCertificates];
     }
     return self;
     

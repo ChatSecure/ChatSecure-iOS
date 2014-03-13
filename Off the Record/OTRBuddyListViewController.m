@@ -342,7 +342,6 @@ static void * OTRBuddyListViewControllerKVOContext = &OTRBuddyListViewController
         {
             return [[self.offlineBuddiesFetchedResultsController fetchedObjects] count];
         }
-        return 0;
     }
     else if ([tableView isEqual:self.searchDisplayController.searchResultsTableView])
     {

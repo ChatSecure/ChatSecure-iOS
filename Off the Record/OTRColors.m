@@ -12,28 +12,26 @@
 
 +(UIColor *)colorWithStatus:(OTRBuddyStatus)status
 {
+    UIColor *color = nil;
     switch(status)
     {
         case OTRBuddyStatusOffline:
-            return [UIColor colorWithRed: 0.763 green: 0.763 blue: 0.763 alpha: 1];
+            color = [UIColor colorWithRed: 0.763 green: 0.763 blue: 0.763 alpha: 1];
             break;
         case OTRBuddyStatusAway:
-            return [UIColor colorWithRed: 0.901 green: 0.527 blue: 0.23 alpha: 1];
+            color = [UIColor colorWithRed: 0.901 green: 0.527 blue: 0.23 alpha: 1];
             break;
         case OTRBuddyStatusXa:
-            return [UIColor colorWithRed: 0.734 green: 0.124 blue: 0.124 alpha: 1];
+            color = [UIColor colorWithRed: 0.734 green: 0.124 blue: 0.124 alpha: 1];
             break;
         case OTRBuddyStatusDnd:
-            return [UIColor colorWithRed: 0.734 green: 0.124 blue: 0.124 alpha: 1];
+            color = [UIColor colorWithRed: 0.734 green: 0.124 blue: 0.124 alpha: 1];
             break;
         case OTRBuddyStatusAvailable:
-            return [UIColor colorWithRed: 0.083 green: 0.767 blue: 0.194 alpha: 1];
-            break;
-        default:
-            return [UIColor colorWithRed: 0.763 green: 0.763 blue: 0.763 alpha: 1];
+            color = [UIColor colorWithRed: 0.083 green: 0.767 blue: 0.194 alpha: 1];
             break;
     }
-    
+    return color;
 }
 
 

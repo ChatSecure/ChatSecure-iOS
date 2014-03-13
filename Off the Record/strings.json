@@ -882,5 +882,33 @@
     "SHOW_USERVOICE_STRING": {
         "comment": "actionsheet for showing uservoice feedback service",
         "string": "Would you like to connect to UserVoice to send feedback?"
+    },
+    "CREATE_NEW_ACCOUNT_STRING": {
+        "comment": "Label for button to create a new account via in band registration",
+        "string": "Create New Account"
+    },
+    "CONNECT_EXISTING_STRING": {
+        "comment": "Label for button to create account by logging into an existing account",
+        "string": "Connect to Existing Account"
+    },
+    "CREATE_STRING": {
+        "comment": "Title for button to create account",
+        "string": "Create"
+    },
+    "CONNECTING_TO_TOR_STRING": {
+        "comment": "Title for progress of connecting to Tor",
+        "string": "Connecting to Tor"
+    },
+    "CREATING_ACCOUNT_STRING": {
+        "comment": "Title for progress of creating a new account",
+        "string": "Creating Account"
+    },
+    "IN_BAND_ERROR_STRING": {
+        "comment": "Error message for when in band registration is not supported",
+        "string": "The XMPP server does not support in-band registration"
+    },
+    "REGISTER_ERROR_STRING": {
+        "comment": "Error message when registration fails",
+        "string": "Error Registering Username"
     }
 }

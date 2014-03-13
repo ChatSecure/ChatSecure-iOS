@@ -344,14 +344,7 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
         NSString *errorString = [errorElement prettyXMLString];
         localError = [NSError errorWithDomain:kOTRXMPPErrorDomain code:-123 userInfo:@{NSLocalizedDescriptionKey: errorString}];
     }
-    if (localError) {
-        [[NSNotificationCenter defaultCenter]
-         postNotificationName:kOTRProtocolLoginFail object:self userInfo:@{kOTRProtocolLoginFailErrorKey:localError}];
-    }
-    else {
-        [[NSNotificationCenter defaultCenter]
-         postNotificationName:kOTRProtocolLoginFail object:self];
-    }
+    [self failedToConnect:error];
 }
 
 - (void)didRegisterNewAccount
@@ -891,6 +884,18 @@ managedBuddyObjectID
     });
     
     [self sendChatState:kOTRChatStateInactive withBuddyID:managedBuddyObjectID];
+}
+
+- (void)failedToConnect:(NSError *)error
+{
+    if (error) {
+        [[NSNotificationCenter defaultCenter]
+         postNotificationName:kOTRProtocolLoginFail object:self userInfo:@{kOTRNotificationErrorKey:error}];
+    }
+    else {
+        [[NSNotificationCenter defaultCenter]
+         postNotificationName:kOTRProtocolLoginFail object:self];
+    }
 }
 
 - (OTRCertificatePinning *)certificatePinningModule

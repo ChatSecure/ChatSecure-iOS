@@ -33,17 +33,19 @@
     return self;
 }
 
+#pragma - mark View Lifecyle
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.title = @"Create Account";
+    self.title = CREATE_NEW_ACCOUNT_STRING;
 	self.usernameTextField.placeholder = USERNAME_STRING;
     self.usernameTextField.keyboardType = UIKeyboardTypeAlphabet;
     
     [self.usernameTextField resignFirstResponder];
     [self.passwordTextField resignFirstResponder];
     
-    self.loginButton.title = @"Create";
+    self.loginButton.title = CREATE_STRING;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -79,6 +81,8 @@
         [OTRAccountsManager removeAccount:self.account];
     }
 }
+
+#pragma - mark UITableViewDelegate Mehtods
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -149,7 +153,7 @@
     self.loginButtonPressed = YES;
     if(self.isTorAccount && ![HITorManager defaultManager].isRunning)
     {
-        [self showHUDWithText:@"Connecting to Tor"];
+        [self showHUDWithText:CONNECTING_TO_TOR_STRING];
         [[HITorManager defaultManager] start];
     }
     else {
@@ -159,7 +163,7 @@
         self.account.autologinValue = self.autoLoginSwitch.on;
         OTRXMPPManager * xmppManager = [self xmppManager];
         if (xmppManager) {
-            [self showHUDWithText:@"Creating Account"];
+            [self showHUDWithText:CREATING_ACCOUNT_STRING];
             [xmppManager registerNewAccountWithPassword:self.passwordTextField.text];
         }
     }
@@ -181,12 +185,11 @@
     self.wasAbleToCreateAccount = NO;
     NSError * error = [[notification userInfo] objectForKey:kOTRNotificationErrorKey];
     DDLogWarn(@"Registration Failed: %@",error);
-    NSString * errorString = @"Error Registering Username";
+    NSString * errorString = REGISTER_ERROR_STRING;
     if (error) {
-        self.recentError = error;
         if ([error.domain isEqualToString:OTRXMPPErrorDomain]) {
             if (error.code == OTRXMPPUnsupportedAction) {
-                errorString = @"The XMPP server does not support in-band registration";
+                errorString = IN_BAND_ERROR_STRING;
             }
             else if (error.code == OTRXMPPXMLError) {
                 if ([error.localizedDescription length]) {

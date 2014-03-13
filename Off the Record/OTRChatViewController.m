@@ -41,10 +41,6 @@
 #import "OTRImages.h"
 #import "OTRComposingImageView.h"
 
-static NSUInteger const kOTRActionSheetEncryptionOptionsTag = 201;
-static NSUInteger const kOTRAlertViewVerifiedTag = 202;
-static NSUInteger const kOTRAlertViewNotVerifiedTag = 203;
-static CGFloat const kOTRChatBarHeight = 40;
 static CGFloat const kOTRMessageMarginBottom = 10;
 static CGFloat const kOTRMessageMarginTop = 7;
 static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
@@ -689,10 +685,10 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
         id messageOrStatus = [self.messagesFetchedResultsController objectAtIndexPath:indexPath];
         BOOL showDate = [self showDateForMessageAtIndexPath:indexPath];
 
-        if ([messageOrStatus isKindOfClass:[OTRManagedMessage class]]) {
-            OTRManagedMessage * message = (OTRManagedMessage *)messageOrStatus;
+        if ([messageOrStatus isKindOfClass:[OTRManagedChatMessage class]]) {
+            OTRManagedChatMessage * chatMessage = (OTRManagedChatMessage *)messageOrStatus;
             NSString * reuseIdentifier = nil;
-            if (message.isIncomingValue) {
+            if (chatMessage.isIncomingValue) {
                 reuseIdentifier = [OTRIncomingMessageTableViewCell reuseIdentifier];
             }
             else {
@@ -702,7 +698,7 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
             OTRMessageTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier forIndexPath:indexPath];
             
             cell.showDate = showDate;
-            [cell setMessage:message];
+            [cell setMessage:chatMessage];
             
             return cell;
         }

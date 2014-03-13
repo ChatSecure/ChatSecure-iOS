@@ -47,16 +47,6 @@ NSString *const kCellTypeTextField      = @"kCellTypeTextField";
 NSString *const kCellTypeSwitch         = @"kCellTypeSwitch";
 NSString *const KCellTypeHelp           = @"KCellTypeHelp";
 
-NSUInteger const kErrorAlertViewTag     = 130;
-NSUInteger const kErrorInfoAlertViewTag = 131;
-NSUInteger const kNewCertAlertViewTag   = 132;
-
-@interface OTRLoginViewController()
-
-@property (nonatomic,strong) UIAlertView * alertView;
-
-@end
-
 @implementation OTRLoginViewController
 
 - (void) dealloc {
@@ -400,8 +390,6 @@ NSUInteger const kNewCertAlertViewTag   = 132;
         NSString * hostname = userInfo[kOTRProtocolLoginFailHostnameKey];
         NSNumber * statusNumber = userInfo[kOTRProtocolLoginFailSSLStatusKey];
         
-        
-        RIButtonItem * okButtonItem = [RIButtonItem itemWithLabel:OK_STRING];
         if (certData) {
             if ([statusNumber longLongValue] == errSSLPeerAuthCompleted) {
                 
@@ -414,34 +402,10 @@ NSUInteger const kNewCertAlertViewTag   = 132;
             }
         }
         else if ([error isKindOfClass:[NSError class]]) {
-            self.recentError = (NSError *)error;
-            
-            if([self.recentError.domain isEqualToString:@"kCFStreamErrorDomainSSL"] && self.recentError.code == errSSLPeerBadCert) {
-                return;
-            }
-            else {
-                RIButtonItem * infoButton = [RIButtonItem itemWithLabel:INFO_STRING action:^{
-                    NSString * errorDescriptionString = [NSString stringWithFormat:@"%@ : %@",[self.recentError domain],[self.recentError localizedDescription]];
-                    
-                    RIButtonItem * copyButtonItem = [RIButtonItem itemWithLabel:COPY_STRING action:^{
-                        NSString * errorDescriptionString = [NSString stringWithFormat:@"Domain: %@\nCode: %d\nUserInfo: %@",[self.recentError domain],[self.recentError code],[self.recentError userInfo]];
-                        UIPasteboard *pasteBoard = [UIPasteboard generalPasteboard];
-                        [pasteBoard setString:errorDescriptionString];
-                    }];
-                    
-                    UIAlertView * alert = [[UIAlertView alloc] initWithTitle:INFO_STRING message:errorDescriptionString cancelButtonItem:nil otherButtonItems:okButtonItem,copyButtonItem, nil];
-                    
-                    [alert show];
-                }];
-                
-                UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:XMPP_FAIL_STRING cancelButtonItem:nil otherButtonItems:okButtonItem,infoButton, nil];
-                [alertView show];
-            }
-            
+            [self showAlertViewWithTitle:ERROR_STRING message:XMPP_FAIL_STRING error:error];
         }
         else {
-            UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:XMPP_FAIL_STRING cancelButtonItem:nil otherButtonItems:okButtonItem, nil];
-            [alertView show];
+            [self showAlertViewWithTitle:ERROR_STRING message:XMPP_FAIL_STRING error:nil];
         }
     }
     else if ([self.account.protocol isEqualToString:kOTRProtocolTypeAIM]) {
@@ -453,8 +417,7 @@ NSUInteger const kNewCertAlertViewTag   = 132;
             errorTitle = error.localizedDescription;
             errorMessage = error.localizedFailureReason;
         }
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:errorTitle message:errorMessage delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
-        [alert show];
+        [self showAlertViewWithTitle:errorTitle message:errorMessage error:error];
     }
 }
              
@@ -511,7 +474,7 @@ NSUInteger const kNewCertAlertViewTag   = 132;
     [alertView setDefaultButtonImage:buttonImage forState:UIControlStateHighlighted];
 }
 
--(void)protocolLoginSuccess:(NSNotification*)notification
+- (void)protocolLoginSuccess:(NSNotification*)notification
 {
     [self hideHUD];
     [self dismissViewControllerAnimated:YES completion:nil];
@@ -556,7 +519,7 @@ NSUInteger const kNewCertAlertViewTag   = 132;
     return YES;
 }
 
--(BOOL)checkFields
+- (BOOL)checkFields
 {
     BOOL fields = self.usernameTextField.text.length && self.passwordTextField.text.length;
     
@@ -567,18 +530,58 @@ NSUInteger const kNewCertAlertViewTag   = 132;
     return fields;
 }
 
--(BOOL)textFieldShouldReturn:(UITextField *)textField
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [textField resignFirstResponder];
     return YES;
 }
 
--(void) didMoveToParentViewController:(UIViewController *)parent
+- (void)didMoveToParentViewController:(UIViewController *)parent
 {
     //Delete Account because user went back to choose different account type
     if(!parent)
     {
         [OTRAccountsManager removeAccount:self.account];
+    }
+}
+
+- (void)showAlertViewWithTitle:(NSString *)title message:(NSString *)message error:(NSError *)error
+{
+    RIButtonItem * okButtonItem = [RIButtonItem itemWithLabel:OK_STRING];
+    UIAlertView * alertView = nil;
+    if (error) {
+        RIButtonItem * infoButton = [RIButtonItem itemWithLabel:INFO_STRING action:^{
+            NSString * errorDescriptionString = [NSString stringWithFormat:@"%@ : %@",[error domain],[error localizedDescription]];
+            
+            RIButtonItem * copyButtonItem = [RIButtonItem itemWithLabel:COPY_STRING action:^{
+                NSString * errorDescriptionString = [NSString stringWithFormat:@"Domain: %@\nCode: %d\nUserInfo: %@",[error domain],[error code],[error userInfo]];
+                UIPasteboard *pasteBoard = [UIPasteboard generalPasteboard];
+                [pasteBoard setString:errorDescriptionString];
+            }];
+            
+            UIAlertView * alert = [[UIAlertView alloc] initWithTitle:INFO_STRING
+                                                             message:errorDescriptionString
+                                                    cancelButtonItem:nil
+                                                    otherButtonItems:okButtonItem,copyButtonItem, nil];
+            
+            [alert show];
+        }];
+        alertView = [[UIAlertView alloc] initWithTitle:title
+                                               message:message
+                                      cancelButtonItem:nil
+                                      otherButtonItems:okButtonItem,infoButton, nil];
+    }
+    else {
+        alertView = [[UIAlertView alloc] initWithTitle:title
+                                               message:message
+                                      cancelButtonItem:nil
+                                      otherButtonItems:okButtonItem, nil];
+    }
+   
+    
+    
+    if (alertView) {
+        [alertView show];
     }
 }
 

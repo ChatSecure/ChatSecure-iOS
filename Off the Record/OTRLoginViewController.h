@@ -45,7 +45,6 @@ extern NSUInteger const kNewCertAlertViewTag;
 
 @property (nonatomic, strong) OTRManagedAccount *account;
 @property (nonatomic, strong) MBProgressHUD * HUD;
-@property (nonatomic, strong) NSError * recentError;
 
 @property (nonatomic, strong) UISwitch *rememberPasswordSwitch;
 @property (nonatomic, strong) UISwitch * autoLoginSwitch;

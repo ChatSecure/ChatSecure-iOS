@@ -39,10 +39,6 @@
 #import "UIActionSheet+Blocks.h"
 #import "OTRSecrets.h"
 
-NSUInteger const kOTRActionSheetDisconnectTag = 1;
-NSUInteger const kOTRActionSheetPickTypeTag = 2;
-NSUInteger const kOTRAlertViewDeleteTag = 3;
-
 @interface OTRSettingsViewController(Private)
 - (void) addAccount:(id)sender;
 - (void) showLoginControllerForAccount:(OTRManagedAccount*)account;
@@ -264,9 +260,22 @@ NSUInteger const kOTRAlertViewDeleteTag = 3;
 }
 
 - (void) addAccount:(id)sender {
+    RIButtonItem *cancelButton = [RIButtonItem itemWithLabel:CANCEL_STRING];
+    RIButtonItem *createAccountButton = [RIButtonItem itemWithLabel:CREATE_NEW_ACCOUNT_STRING action:^{
+        OTRCreateAccountChooserViewController * createAccountChooser = [[OTRCreateAccountChooserViewController alloc] init];
+        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:createAccountChooser];
+        nav.modalPresentationStyle = UIModalPresentationFormSheet;
+        [self presentViewController:nav animated:YES completion:nil];
+    }];
+    RIButtonItem *loginAccountButton = [RIButtonItem itemWithLabel:CONNECT_EXISTING_STRING action:^{
+        OTRNewAccountViewController * newAccountView = [[OTRNewAccountViewController alloc] init];
+        
+        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:newAccountView];
+        nav.modalPresentationStyle = UIModalPresentationFormSheet;
+        [self presentViewController:nav animated:YES completion:nil];
+    }];
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:NEW_ACCOUNT_STRING cancelButtonItem:cancelButton destructiveButtonItem:nil otherButtonItems:createAccountButton,loginAccountButton, nil];
     
-    UIActionSheet * actionSheet = [[UIActionSheet alloc] initWithTitle:@"New or Create Account" delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:@"Create New Account",@"Login to Existing Account", nil];
-    actionSheet.tag = kOTRActionSheetPickTypeTag;
     [actionSheet showInView:self.view];
 }
 
