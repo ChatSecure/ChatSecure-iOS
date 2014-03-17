@@ -2751,6 +2751,7 @@
 				D9CEF0D216842AC700B236B5 /* MWFeedParser */,
 				D9CEED95168423CA00B236B5 /* LibOrange */,
 				D96270DC1755DE8E00F0A958 /* UserVoice */,
+				D9CEED621684235B00B236B5 /* OTRKit.xcodeproj */,
 			);
 			name = Submodules;
 			sourceTree = "<group>";
@@ -4409,7 +4410,6 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "42356564-01E8-41F6-A6B5-8B2A1B7773E4";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -4425,7 +4425,6 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PROVISIONING_PROFILE = "42356564-01E8-41F6-A6B5-8B2A1B7773E4";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -4435,6 +4434,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1AE5185718C3B3F000946594 /* en */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -4476,6 +4476,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1AE5186518C3B53C00946594 /* en */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;

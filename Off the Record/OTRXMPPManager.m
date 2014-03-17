@@ -146,6 +146,15 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 {
 	NSAssert(_xmppStream == nil, @"Method setupStream invoked multiple times");
     
+	if (self.account.accountType == OTRAccountTypeFacebook) {
+        self.xmppStream = [[XMPPStream alloc] initWithFacebookAppId:FACEBOOK_APP_ID];
+    } else {
+        self.xmppStream = [[XMPPStream alloc] init];
+    }
+    
+    self.xmppStream.autoStartTLS = YES;
+    self.xmppStream.requireTLS = YES;
+    
     [self.certificatePinningModule activate:self.xmppStream];
     
     XMPPMessageDeliveryReceipts * deliveryReceiptsMoodule = [[XMPPMessageDeliveryReceipts alloc] init];

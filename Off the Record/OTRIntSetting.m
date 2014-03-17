@@ -44,7 +44,7 @@
     {
         self.value = self.defaultValue;
     }
-    return [(NSNumber *)[self value] intValue];
+    return [(NSNumber*)[self value] intValue];
 }
 
 - (NSString*) stringValue {
