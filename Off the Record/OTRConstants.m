@@ -84,6 +84,8 @@ NSUInteger const kOTRActionSheetLinkTag  = 223;
 
 NSString *const kOTRAccountDomainKey = @"domain";
 
+NSString *const kOTRErrorDomain = @"com.chatsecure";
+
 //Chatview
 CGFloat const kOTRSentDateFontSize            = 13;
 CGFloat const kOTRDeliveredFontSize           = 13;

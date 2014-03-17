@@ -487,11 +487,10 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 {
     self.isRegisteringNewAccount = YES;
     if (self.xmppStream.isConnected) {
-        [self registerNewAccountWithPassword:newPassword stream:self.xmppStream];
+        [self.xmppStream disconnect];
     }
-    else {
-        [self connectWithJID:self.account.username password:newPassword];
-    }
+    
+    [self connectWithJID:self.account.username password:newPassword];
 }
 
 - (void)registerNewAccountWithPassword:(NSString *)newPassword stream:(XMPPStream *)stream

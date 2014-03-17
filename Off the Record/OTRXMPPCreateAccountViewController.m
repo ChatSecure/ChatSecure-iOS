@@ -12,6 +12,7 @@
 #import "HITorManager.h"
 #import "OTRAccountsManager.h"
 #import "OTRLog.h"
+#import "OTRConstants.h"
 
 @interface OTRXMPPCreateAccountViewController ()
 
@@ -148,8 +149,50 @@
     }
 }
 
+- (NSString *)fixUsername:(NSString *)username withDomain:(NSString *)domain;
+{
+    NSString * finalUsername = nil;
+    username = [username stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    if ([username length]) {
+        if ([username rangeOfString:@"@"].location != NSNotFound) {
+            // has @ symbol
+            NSRange range = [username rangeOfString:[NSString stringWithFormat:@"@%@",domain]];
+            if (range.location + range.length == [username length]) {
+                //propper ending of domain
+                finalUsername = username;
+            }
+            else {
+                //has @ symbol but incorrect domain
+                NSArray * components = [username componentsSeparatedByString:@"@"];
+                finalUsername = [NSString stringWithFormat:@"%@@%@",[components firstObject],domain];
+            }
+        }
+        else {
+            //append correct domain
+            finalUsername = [NSString stringWithFormat:@"%@@%@",username,domain];
+        }
+    }
+    return finalUsername;
+}
+
+- (BOOL)checkFields
+{
+    NSString *username = [self.usernameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    NSString *password = self.passwordTextField.text;
+    if ([username length] && [password length]) {
+        return YES;
+    }
+    return NO;
+}
+
 -(void) loginButtonPressed:(id)sender
 {
+    if (![self checkFields]) {
+        //Error er
+        [self showAlertViewWithTitle:@"" message:@"" error:nil];
+        return;
+    }
+    
     self.loginButtonPressed = YES;
     if(self.isTorAccount && ![HITorManager defaultManager].isRunning)
     {
@@ -157,7 +200,9 @@
         [[HITorManager defaultManager] start];
     }
     else {
-        self.account.username = self.usernameTextField.text;
+        NSString *newUsername = [self fixUsername:self.usernameTextField.text withDomain:self.selectedHostname];
+        self.usernameTextField.text = newUsername;
+        self.account.username = newUsername;
         self.account.domain = self.selectedHostname;
         self.account.rememberPasswordValue = self.rememberPasswordSwitch.on;
         self.account.autologinValue = self.autoLoginSwitch.on;

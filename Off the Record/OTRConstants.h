@@ -86,6 +86,8 @@ extern CGFloat const kOTRMessageFontSize;
 extern CGFloat const kOTRMessageSentDateLabelHeight;
 extern CGFloat const kOTRMessageDeliveredLabelHeight;
 
+extern NSString *const kOTRErrorDomain;
+
 
 typedef NS_ENUM(NSUInteger, OTRChatState) {
     kOTRChatStateUnknown   = 0,

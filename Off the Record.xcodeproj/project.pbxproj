@@ -175,6 +175,8 @@
 		6348401A1752CED100779257 /* DDXMLDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 63483F741752CED100779257 /* DDXMLDocument.m */; };
 		6348401B1752CED100779257 /* DDXMLElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 63483F761752CED100779257 /* DDXMLElement.m */; };
 		6348401C1752CED100779257 /* DDXMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 63483F781752CED100779257 /* DDXMLNode.m */; };
+		634FF43818D7AF4E00022993 /* xmpp-tor-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 638B96B918C94A9C00CACFD7 /* xmpp-tor-logo.png */; };
+		634FF43A18D7AF5100022993 /* xmpp-tor-logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 638B96BA18C94A9C00CACFD7 /* xmpp-tor-logo@2x.png */; };
 		6352DC8815AF9F16007AD0B4 /* OTRNewAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6352DC8715AF9F16007AD0B4 /* OTRNewAccountViewController.m */; };
 		63534AAF187F5A1400061776 /* OTRChatBubbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63534AAE187F5A1400061776 /* OTRChatBubbleView.m */; };
 		63591486184FE32F00B311A1 /* OTRCertificatePinning.m in Sources */ = {isa = PBXBuildFile; fileRef = 63591485184FE32F00B311A1 /* OTRCertificatePinning.m */; };
@@ -3590,11 +3592,13 @@
 				63E5E83916D1DF14006E2B01 /* MessageBubbleTyping.png in Resources */,
 				63E5E83A16D1DF14006E2B01 /* MessageBubbleTyping@2x.png in Resources */,
 				63E5E83B16D1DF14006E2B01 /* MessageInputBarBackground.png in Resources */,
+				634FF43818D7AF4E00022993 /* xmpp-tor-logo.png in Resources */,
 				63E5E83C16D1DF14006E2B01 /* MessageInputBarBackground@2x.png in Resources */,
 				63E5E83D16D1DF14006E2B01 /* MessageInputFieldBackground.png in Resources */,
 				63E5E83E16D1DF14006E2B01 /* MessageInputFieldBackground@2x.png in Resources */,
 				633B6D0117ECF4F7002DA152 /* googleTalkButtonPressed.png in Resources */,
 				D968479B18C158EE008FDC46 /* uv_article.png in Resources */,
+				634FF43A18D7AF5100022993 /* xmpp-tor-logo@2x.png in Resources */,
 				63E5E83F16D1DF14006E2B01 /* SendButton.png in Resources */,
 				63E5E84016D1DF14006E2B01 /* SendButton@2x.png in Resources */,
 				63E5E84116D1DF14006E2B01 /* SendButtonHighlighted.png in Resources */,
