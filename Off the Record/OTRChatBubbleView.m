@@ -26,7 +26,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.translatesAutoresizingMaskIntoConstraints = NO;
-        self.messageTextLabel = [[TTTAttributedLabel alloc] initWithFrame:CGRectZero];
+        self.messageTextLabel = [OTRChatBubbleView defaultLabel];
 #warning The line below throws a silent exception on iOS 6.
         //self.messageTextLabel.textAlignment = NSTextAlignmentNatural;
         self.messageBackgroundImageView = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"MessageBubbleBlue"] stretchableImageWithLeftCapWidth:23 topCapHeight:15]];
@@ -258,9 +258,10 @@
     TTTAttributedLabel * messageTextLabel = [[TTTAttributedLabel alloc] initWithFrame:CGRectZero];
     messageTextLabel.backgroundColor = [UIColor clearColor];
     messageTextLabel.numberOfLines = 0;
-    messageTextLabel.textAlignment = NSTextAlignmentNatural;
+    //messageTextLabel.textAlignment = NSTextAlignmentNatural;
     messageTextLabel.dataDetectorTypes = UIDataDetectorTypeLink;
     messageTextLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    messageTextLabel.translatesAutoresizingMaskIntoConstraints = NO;
     
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
         messageTextLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];

@@ -344,16 +344,7 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 
 - (NSString *)accountDomainWithError:(id)error;
 {
-    NSError *localError = nil;
-    if ([error isKindOfClass:[NSError class]]) {
-        localError = error;
-    }
-    if ([error isKindOfClass:[NSXMLElement class]]) {
-        NSXMLElement *errorElement = error;
-        NSString *errorString = [errorElement prettyXMLString];
-        localError = [NSError errorWithDomain:kOTRXMPPErrorDomain code:-123 userInfo:@{NSLocalizedDescriptionKey: errorString}];
-    }
-    [self failedToConnect:error];
+    return self.account.domain;
 }
 
 - (void)didRegisterNewAccount
@@ -448,7 +439,7 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
         [self failedToConnect:error];
         return;
     }
-    if (domainString.length) {
+    if ([domainString length]) {
         [self.xmppStream setHostName:domainString];
     }
     
