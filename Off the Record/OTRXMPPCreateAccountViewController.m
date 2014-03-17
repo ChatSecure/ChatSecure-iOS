@@ -79,7 +79,7 @@
                                                     name:OTRXMPPRegisterSucceededNotificationName
                                                   object:nil];
     if (!self.wasAbleToCreateAccount) {
-        [OTRAccountsManager removeAccount:self.account];
+        [OTRAccountsManager removeAccount:self.account inContext:self.account.managedObjectContext];
     }
 }
 
@@ -175,21 +175,9 @@
     return finalUsername;
 }
 
-- (BOOL)checkFields
-{
-    NSString *username = [self.usernameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    NSString *password = self.passwordTextField.text;
-    if ([username length] && [password length]) {
-        return YES;
-    }
-    return NO;
-}
-
 -(void) loginButtonPressed:(id)sender
 {
     if (![self checkFields]) {
-        //Error er
-        [self showAlertViewWithTitle:@"" message:@"" error:nil];
         return;
     }
     

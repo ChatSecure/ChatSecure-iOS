@@ -39,14 +39,13 @@
 
 @implementation OTRAccountsManager
 
-+ (void) removeAccount:(OTRManagedAccount*)account {
++ (void) removeAccount:(OTRManagedAccount*)account inContext:(NSManagedObjectContext *)context {
     if (!account) {
         DDLogWarn(@"Account is nil!");
         return;
     }
     account.password = nil;
     
-    NSManagedObjectContext * context = [NSManagedObjectContext MR_context];
     OTRManagedAccount * acct = [account MR_inContext:context];
     
     [[OTRProtocolManager sharedInstance] removeProtocolManagerForAccount:acct];

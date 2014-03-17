@@ -26,7 +26,7 @@
 
 @interface OTRAccountsManager : NSObject
 
-+ (void) removeAccount:(OTRManagedAccount*)account;
++ (void) removeAccount:(OTRManagedAccount*)account inContext:(NSManagedObjectContext *)context;
 + (NSArray *)allAccountsAbleToAddBuddies;
 + (OTRManagedAccount *)accountForProtocol:(NSString *)protocol accountName: (NSString *) accountName inContext:(NSManagedObjectContext *)context;
 

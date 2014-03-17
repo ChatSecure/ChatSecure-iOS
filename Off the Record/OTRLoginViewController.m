@@ -87,7 +87,10 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
     
     [self addCellinfoWithSection:0 row:2 labelText:REMEMBER_PASSWORD_STRING cellType:kCellTypeSwitch userInputView:self.rememberPasswordSwitch];
     
-    [self addCellinfoWithSection:0 row:3 labelText:LOGIN_AUTOMATICALLY_STRING cellType:kCellTypeSwitch userInputView:self.autoLoginSwitch];
+    if(![self.account isKindOfClass:[OTRManagedXMPPTorAccount class]])
+    {
+        [self addCellinfoWithSection:0 row:3 labelText:LOGIN_AUTOMATICALLY_STRING cellType:kCellTypeSwitch userInputView:self.autoLoginSwitch];
+    }
 }
 
 -(UITextField *)usernameTextField
@@ -541,7 +544,7 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
     //Delete Account because user went back to choose different account type
     if(!parent)
     {
-        [OTRAccountsManager removeAccount:self.account];
+        [OTRAccountsManager removeAccount:self.account inContext:self.account.managedObjectContext];
     }
 }
 

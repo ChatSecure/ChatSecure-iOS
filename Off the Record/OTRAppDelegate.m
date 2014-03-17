@@ -74,6 +74,7 @@
     }
     
     [OTRUtilities deleteAllBuddiesAndMessages];
+    [OTRUtilities deleteAccountsWithoutUsername];
     
     [OTRManagedAccount resetAccountsConnectionStatus];
     

@@ -10,6 +10,7 @@
 #import "OTRManagedBuddy.h"
 #import "OTRManagedMessage.h"
 #import "OTRManagedGroup.h"
+#import "OTRManagedAccount.h"
 #import <Security/SecureTransport.h>
 
 #import "OTRLog.h"
@@ -81,6 +82,19 @@
     
     
     NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    [context MR_saveToPersistentStoreAndWait];
+}
+
++ (void)deleteAccountsWithoutUsername
+{
+    NSManagedObjectContext *context = [NSManagedObjectContext MR_context];
+    NSArray * allAccounts = [OTRManagedAccount MR_findAllInContext:context];
+    for (OTRManagedAccount * account in allAccounts) {
+        if (![account.username length]) {
+            [account MR_deleteInContext:context];
+        }
+    }
+    
     [context MR_saveToPersistentStoreAndWait];
 }
 

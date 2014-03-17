@@ -234,7 +234,7 @@
                 id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:account];
                 [protocol disconnect];
             }
-            [OTRAccountsManager removeAccount:account];
+            [OTRAccountsManager removeAccount:account inContext:account.managedObjectContext];
         }];
         
         NSString * message = [NSString stringWithFormat:@"%@ %@?", DELETE_ACCOUNT_MESSAGE_STRING, account.username];
