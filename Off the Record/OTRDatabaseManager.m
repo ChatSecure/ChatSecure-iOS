@@ -62,11 +62,17 @@
     
     NSURL *mom2 = [[NSBundle mainBundle] URLForResource:@"ChatSecure 2" withExtension:@"mom" subdirectory:@"ChatSecure.momd"];
     NSURL *mom3 = [[NSBundle mainBundle] URLForResource:@"ChatSecure 3" withExtension:@"mom" subdirectory:@"ChatSecure.momd"];
+    NSURL *mom4 = [[NSBundle mainBundle] URLForResource:@"ChatSecure 4" withExtension:@"mom" subdirectory:@"ChatSecure.momd"];
     NSManagedObjectModel *version2Model = [[NSManagedObjectModel alloc] initWithContentsOfURL:mom2];
     NSManagedObjectModel *version3Model = [[NSManagedObjectModel alloc] initWithContentsOfURL:mom3];
+    NSManagedObjectModel *version4Model = [[NSManagedObjectModel alloc] initWithContentsOfURL:mom4];
     
     if ([self isManagedObjectModel:version2Model compatibleWithStoreAtUrl:databaseURL]) {
         [self migrateAccountsForManagedObjectModel:version2Model toManagedObjectModel:version3Model withStoreUrl:databaseURL];
+    }
+    
+    if ([self isManagedObjectModel:version3Model compatibleWithStoreAtUrl:databaseURL]) {
+        [self migrateAccountsForManagedObjectModel:version3Model toManagedObjectModel:version4Model withStoreUrl:databaseURL];
     }
     
     
