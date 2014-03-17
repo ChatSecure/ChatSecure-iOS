@@ -7,7 +7,8 @@
 //
 
 #import "OTRLockButton.h"
-#import "UIControl-JTTargetActionBlock.h"
+#import "UIControl+JTTargetActionBlock.h"
+
 
 static NSString *const kOTRLockImageName            = @"Lock_Locked";
 static NSString *const kOTRLockAndVerifiedImageName = @"Lock_Locked_Verified";

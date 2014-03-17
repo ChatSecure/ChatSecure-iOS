@@ -13,3 +13,4 @@ pod 'SIAlertView', :podspec => 'PodSpecs/SIAlertView.podspec'
 pod "SSKeychain"
 pod "UIAlertView-Blocks"
 pod 'gtm-oauth2', '~> 0.0.3'
+pod 'JTTargetActionBlock', '~> 1.0'

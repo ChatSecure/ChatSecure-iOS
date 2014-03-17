@@ -223,9 +223,6 @@
 		639753A018CA82A2005D6063 /* OTRLanguageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6397539F18CA82A2005D6063 /* OTRLanguageManager.m */; };
 		639753A618CA8500005D6063 /* OTRXMPPManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 639753A518CA8500005D6063 /* OTRXMPPManager.m */; };
 		639753AD18CA8550005D6063 /* OTRCertificateDomainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 639753AC18CA8550005D6063 /* OTRCertificateDomainViewController.m */; };
-		639753BD18CA85B3005D6063 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 639753B918CA85B3005D6063 /* LICENSE */; };
-		639753BE18CA85B3005D6063 /* UIControl-JTTargetActionBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = 639753BB18CA85B3005D6063 /* UIControl-JTTargetActionBlock.m */; };
-		639753BF18CA85B3005D6063 /* UIControl-JTTargetActionBlock.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 639753BC18CA85B3005D6063 /* UIControl-JTTargetActionBlock.podspec */; };
 		639753D918CA8961005D6063 /* OTRSecrets.m in Sources */ = {isa = PBXBuildFile; fileRef = 639753D818CA8961005D6063 /* OTRSecrets.m */; };
 		639753E318CA89E1005D6063 /* OTRXMPPTorManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 639753E218CA89E1005D6063 /* OTRXMPPTorManager.m */; };
 		6398CD9517FA209A009389F8 /* XMPPCertificatePinning.m in Sources */ = {isa = PBXBuildFile; fileRef = 6398CD9417FA209A009389F8 /* XMPPCertificatePinning.m */; };
@@ -1017,10 +1014,6 @@
 		639753A518CA8500005D6063 /* OTRXMPPManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPManager.m; sourceTree = "<group>"; };
 		639753AB18CA8550005D6063 /* OTRCertificateDomainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRCertificateDomainViewController.h; sourceTree = "<group>"; };
 		639753AC18CA8550005D6063 /* OTRCertificateDomainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRCertificateDomainViewController.m; sourceTree = "<group>"; };
-		639753B918CA85B3005D6063 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
-		639753BA18CA85B3005D6063 /* UIControl-JTTargetActionBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIControl-JTTargetActionBlock.h"; sourceTree = "<group>"; };
-		639753BB18CA85B3005D6063 /* UIControl-JTTargetActionBlock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIControl-JTTargetActionBlock.m"; sourceTree = "<group>"; };
-		639753BC18CA85B3005D6063 /* UIControl-JTTargetActionBlock.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "UIControl-JTTargetActionBlock.podspec"; sourceTree = "<group>"; };
 		639753D818CA8961005D6063 /* OTRSecrets.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRSecrets.m; sourceTree = "<group>"; };
 		639753DC18CA89A2005D6063 /* OTRSecrets.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OTRSecrets.h; sourceTree = "<group>"; };
 		639753E118CA89E1005D6063 /* OTRXMPPTorManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPTorManager.h; sourceTree = "<group>"; };
@@ -2429,18 +2422,6 @@
 			name = Model;
 			sourceTree = "<group>";
 		};
-		639753B818CA85B2005D6063 /* JTTargetActionBlock */ = {
-			isa = PBXGroup;
-			children = (
-				639753B918CA85B3005D6063 /* LICENSE */,
-				639753BA18CA85B3005D6063 /* UIControl-JTTargetActionBlock.h */,
-				639753BB18CA85B3005D6063 /* UIControl-JTTargetActionBlock.m */,
-				639753BC18CA85B3005D6063 /* UIControl-JTTargetActionBlock.podspec */,
-			);
-			name = JTTargetActionBlock;
-			path = Submodules/JTTargetActionBlock;
-			sourceTree = "<group>";
-		};
 		6398CD9217FA209A009389F8 /* CertificatePinning */ = {
 			isa = PBXGroup;
 			children = (
@@ -2762,7 +2743,6 @@
 			isa = PBXGroup;
 			children = (
 				63E5E71318CA938B00CF7E28 /* OnionKit */,
-				639753B818CA85B2005D6063 /* JTTargetActionBlock */,
 				D9CEED621684235B00B236B5 /* OTRKit.xcodeproj */,
 				63ACAFE318CA73F100448508 /* ProxyKit */,
 				63483DF41752CEB700779257 /* XMPPFramework */,
@@ -3544,7 +3524,6 @@
 				D95F8E941419C3E10094A634 /* chatsecure_icon@2x.png in Resources */,
 				D95F8E961419C58D0094A634 /* Default.png in Resources */,
 				637A7DDF18973D2F004EF5A2 /* input-bar-flat.png in Resources */,
-				639753BD18CA85B3005D6063 /* LICENSE in Resources */,
 				D95F8E981419C5900094A634 /* Default@2x.png in Resources */,
 				D9BEFD63141AB35D008064A7 /* chatsecure_banner@2x.png in Resources */,
 				D9BEFD64141AB35D008064A7 /* chatsecure_banner.png in Resources */,
@@ -3630,7 +3609,6 @@
 				639C75DA17E127A600530423 /* FBLoginViewButtonPressed.png in Resources */,
 				639C75DB17E127A600530423 /* FBLoginViewButtonPressed@2x.png in Resources */,
 				633B6D0017ECF4F7002DA152 /* googleTalkButton@2x.png in Resources */,
-				639753BF18CA85B3005D6063 /* UIControl-JTTargetActionBlock.podspec in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4052,7 +4030,6 @@
 				63464F3B1889EC9200526358 /* _OTRvCardAvatar.m in Sources */,
 				6348401B1752CED100779257 /* DDXMLElement.m in Sources */,
 				639C60BF18CA988400CC4DF4 /* OTRFingerprintSetting.m in Sources */,
-				639753BE18CA85B3005D6063 /* UIControl-JTTargetActionBlock.m in Sources */,
 				6348401C1752CED100779257 /* DDXMLNode.m in Sources */,
 				63E5E84C18CA962400CF7E28 /* ASIAuthenticationDialog.m in Sources */,
 				63FEE8EB17C596B1009C9030 /* XMPPStringPrep.m in Sources */,
