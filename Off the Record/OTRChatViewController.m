@@ -829,7 +829,7 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
     }
     NSString * text = inputBar.textView.text;
     if ([text length]) {
-        NSManagedObjectContext *context = [NSManagedObjectContext MR_context];
+        NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
         OTRManagedChatMessage * message = [OTRManagedChatMessage newMessageToBuddy:self.buddy message:text encrypted:NO inContext:context];
         
         [context MR_saveToPersistentStoreAndWait];
