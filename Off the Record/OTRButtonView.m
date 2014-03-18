@@ -14,6 +14,7 @@
 @property (nonatomic, strong) NSArray *spaces;
 @property (nonatomic, strong) UILabel *titleLabel;
 @property (nonatomic, strong) UIView * buttonView;
+@property (nonatomic, strong) UIToolbar *backgroundToolbar;
 
 @end
 
@@ -31,6 +32,11 @@
         self.titleLabel.textAlignment = NSTextAlignmentCenter;
         
         self.backgroundColor = [UIColor clearColor];
+        
+        self.backgroundToolbar = [[UIToolbar alloc] initWithFrame:CGRectZero];
+        self.backgroundToolbar.barStyle = UIBarStyleDefault;
+        self.backgroundToolbar.translatesAutoresizingMaskIntoConstraints = NO;
+        [self addSubview:self.backgroundToolbar];
         
         [self addSubview:self.titleLabel];
         self.buttonView = [self emptyView];
@@ -112,6 +118,9 @@
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_buttonView]|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_buttonView)]];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_titleLabel]|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_titleLabel)]];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|->=3-[_titleLabel][_buttonView]|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_buttonView,_titleLabel)]];
+    
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_backgroundToolbar]|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_backgroundToolbar)]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_backgroundToolbar]|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_backgroundToolbar)]];
 }
 
 

@@ -63,12 +63,12 @@ static NSString *const kOTRUnlockImageName          = @"Lock_Unlocked";
     OTRLockButton * lockButton = [self buttonWithType:UIButtonTypeCustom];
     lockButton.lockStatus = lockStatus;
     [lockButton addEventHandler:^(id sender, UIEvent *event) {
-        OTRLockStatus status = OTRLockStatusUnknown;
-        if ([sender isKindOfClass:[OTRLockButton class]]) {
-            status = ((OTRLockButton *)sender).lockStatus;
-        }
-        
         if (block) {
+            OTRLockStatus status = OTRLockStatusUnknown;
+            if ([sender isKindOfClass:[OTRLockButton class]]) {
+                status = ((OTRLockButton *)sender).lockStatus;
+            }
+        
             block(status);
         }
     } forControlEvent:UIControlEventTouchUpInside];
