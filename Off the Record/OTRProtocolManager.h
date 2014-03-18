@@ -24,7 +24,6 @@
 #import "OTRXMPPManager.h"
 #import "OTREncryptionManager.h"
 #import "OTRCodec.h"
-#import "OTRBuddyList.h"
 #import "OTRSettingsManager.h"
 #import "OTRProtocol.h"
 #import "OTRAccountsManager.h"
@@ -41,6 +40,7 @@
 
 -(OTRManagedBuddy *)buddyForUserName:(NSString *)buddyUserName accountName:(NSString *)accountName protocol:(NSString *)protocol inContext:(NSManagedObjectContext *)context;
 -(id <OTRProtocol>) protocolForAccount:(OTRManagedAccount *)account;
+- (void)removeProtocolManagerForAccount:(OTRManagedAccount *)account;
 -(BOOL)isAccountConnected:(OTRManagedAccount *)account;
 
 - (void)loginAccount:(OTRManagedAccount *)account;
@@ -48,6 +48,6 @@
 
 + (OTRProtocolManager*)sharedInstance; // Singleton method
 
-+ (void)sendMessage:(OTRManagedMessage *)message;
++ (void)sendMessage:(OTRManagedChatMessage *)message;
 
 @end

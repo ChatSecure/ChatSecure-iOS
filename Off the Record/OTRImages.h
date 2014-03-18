@@ -9,12 +9,27 @@
 #import <Foundation/Foundation.h>
 #import "OTRConstants.h"
 
+@class OTRComposingImageView;
+
+typedef NS_ENUM(NSUInteger, OTRBubbleMessageType) {
+    OTRBubbleMessageTypeIncoming,
+    OTRBubbleMessageTypeOutgoing
+};
+
 @interface OTRImages : NSObject
 
-+(UIImage *)statusImageWithStatus:(OTRBuddyStatus)status;
++ (UIImage *)statusImageWithStatus:(OTRBuddyStatus)status;
 
-+(UIImage *)openCaratImage;
-+(UIImage *)closeCaratImage;
++ (UIImage *)openCaratImage;
++ (UIImage *)closeCaratImage;
+
+
++ (UIImageView *)bubbleImageViewForMessageType:(OTRBubbleMessageType)bubbleMessageType;
++ (UIView *)typingBubbleView;
+
++ (UIImage *)circleWithRadius:(CGFloat)radius;
+
++ (UIImage *)facebookImage;
 
 
 +(UIColor *)colorWithStatus:(OTRBuddyStatus)status;

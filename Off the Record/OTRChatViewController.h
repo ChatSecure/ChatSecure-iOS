@@ -27,18 +27,9 @@
 #import "OTRChatInputBar.h"
 #import "OTRTitleSubtitleView.h"
 
-@interface OTRChatViewController : UIViewController <UIActionSheetDelegate, UISplitViewControllerDelegate,UITableViewDataSource,UITableViewDelegate,NSFetchedResultsControllerDelegate,OTRChatInputBarDelegate>
-{
-    NSMutableArray * showDateForRowArray;
-    NSDate *_previousShownSentDate;
-    UIImage *_messageBubbleComposing;
-    CGFloat _previousTextViewContentHeight;
-    OTRChatInputBar * chatInputBar;
-    OTRTitleSubtitleView * titleView;
-}
+@interface OTRChatViewController : UIViewController <UIActionSheetDelegate, UISplitViewControllerDelegate,UIAlertViewDelegate,UITableViewDataSource,UITableViewDelegate,NSFetchedResultsControllerDelegate,OTRChatInputBarDelegate>
 
 
-@property (nonatomic, retain) UIBarButtonItem *lockButton, *unlockedButton, *lockVerifiedButton;
 @property (nonatomic, retain) UILabel *instructionsLabel;
 
 @property (nonatomic, strong) UITableView * chatHistoryTableView;
@@ -57,6 +48,5 @@
 
 - (void)setupLockButton;
 - (void)refreshLockButton;
-- (void)lockButtonPressed;
 
 @end

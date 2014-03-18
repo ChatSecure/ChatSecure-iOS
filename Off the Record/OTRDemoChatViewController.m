@@ -14,7 +14,6 @@
 
 @implementation OTRDemoChatViewController
 
-@synthesize lockVerifiedButton;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -27,21 +26,21 @@
 
 -(void)refreshLockButton
 {
-    self.navigationItem.rightBarButtonItem = self.lockVerifiedButton;
+    //self.navigationItem.rightBarButtonItem = self.lockVerifiedButton;
 }
 
 - (void)viewDidLoad
 {
-    NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
+    NSManagedObjectContext * context = [NSManagedObjectContext MR_context];
     [super viewDidLoad];
-	[OTRManagedMessage newMessageFromBuddy:self.buddy message:@"Hello" encrypted:NO delayedDate:nil inContext:context];
-    [OTRManagedMessage newMessageToBuddy:self.buddy message:@"Bonjour" encrypted:NO inContext:context];
-    [OTRManagedMessage newMessageFromBuddy:self.buddy message:@"Hallo" encrypted:NO delayedDate:nil inContext:context];
-    [OTRManagedMessage newMessageToBuddy:self.buddy message:@"你好" encrypted:NO inContext:context];
-    [OTRManagedMessage newMessageFromBuddy:self.buddy message:@"привет" encrypted:NO delayedDate:nil inContext:context];
-    [OTRManagedMessage newMessageToBuddy:self.buddy message:@"Merhaba" encrypted:NO inContext:context];
-    [OTRManagedMessage newMessageFromBuddy:self.buddy message:@"مرحبا" encrypted:NO delayedDate:nil inContext:context];
-    [OTRManagedMessage newMessageToBuddy:self.buddy message:@"Olá" encrypted:NO inContext:context];
+	[OTRManagedChatMessage newMessageFromBuddy:self.buddy message:@"Hello" encrypted:NO delayedDate:nil inContext:context];
+    [OTRManagedChatMessage newMessageToBuddy:self.buddy message:@"Bonjour" encrypted:NO inContext:context];
+    [OTRManagedChatMessage newMessageFromBuddy:self.buddy message:@"Hallo" encrypted:NO delayedDate:nil inContext:context];
+    [OTRManagedChatMessage newMessageToBuddy:self.buddy message:@"你好" encrypted:NO inContext:context];
+    [OTRManagedChatMessage newMessageFromBuddy:self.buddy message:@"привет" encrypted:NO delayedDate:nil inContext:context];
+    [OTRManagedChatMessage newMessageToBuddy:self.buddy message:@"Merhaba" encrypted:NO inContext:context];
+    [OTRManagedChatMessage newMessageFromBuddy:self.buddy message:@"مرحبا" encrypted:NO delayedDate:nil inContext:context];
+    [OTRManagedChatMessage newMessageToBuddy:self.buddy message:@"Olá" encrypted:NO inContext:context];
     [context MR_saveToPersistentStoreAndWait];
     
 }

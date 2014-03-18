@@ -22,8 +22,6 @@
 
 #import "OTROldAccount.h"
 
-#define kOTRAccountDomainKey @"domain"
-
 @interface OTRXMPPAccount : OTRAccount
 
 @property (nonatomic) BOOL allowSelfSignedSSL;

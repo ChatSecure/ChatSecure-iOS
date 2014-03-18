@@ -46,6 +46,7 @@
 
 #import "OTRLog.h"
 #import "DDTTYLogger.h"
+#import "OTRManagedAccount.h"
 
 @implementation OTRAppDelegate
 
@@ -74,6 +75,7 @@
     }
     
     [OTRUtilities deleteAllBuddiesAndMessages];
+    [OTRUtilities deleteAccountsWithoutUsername];
     
     [OTRManagedAccount resetAccountsConnectionStatus];
     

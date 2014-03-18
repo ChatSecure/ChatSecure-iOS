@@ -16,12 +16,9 @@
 
 @implementation OTRXMPPOAUTHLoginViewController
 
-@synthesize connectButton,disconnectButton;
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self createAutoLoginSwitch];
     [self addCellinfoWithSection:0 row:0 labelText:LOGIN_AUTOMATICALLY_STRING cellType:kCellTypeSwitch userInputView:self.autoLoginSwitch];
 
 }
@@ -85,8 +82,11 @@
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
         }
     }
-    else {
+    else if(indexPath.section == 0) {
         cell = [super tableView:tableView cellForRowAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+    }
+    else if (indexPath.section == 1) {
+        cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
     }
     return cell;
     
@@ -102,6 +102,12 @@
 {
     self.account.autologinValue = self.autoLoginSwitch.on;
     self.account.rememberPasswordValue = YES;
+    if (self.resourceTextField.text.length) {
+        self.account.resource = self.resourceTextField.text;
+    }
+    else {
+        self.account.resource = [OTRManagedXMPPAccount newResource];
+    }
 }
 
 -(void)disconnectAccount:(id)sender {
@@ -115,7 +121,7 @@
     [self.account refreshTokenIfNeeded:^(NSError * error) {
         if (!error) {
             if ([self.account.accessTokenString length]) {
-                [self showLoginProgress];
+                [self showHUDWithText:LOGGING_IN_STRING];
                 id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
                 [protocol connectWithPassword:self.account.accessTokenString];
                 self.timeoutTimer = [NSTimer scheduledTimerWithTimeInterval:45.0 target:self selector:@selector(timeout:) userInfo:nil repeats:NO];

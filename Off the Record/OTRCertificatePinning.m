@@ -8,6 +8,7 @@
 
 #import "OTRCertificatePinning.h"
 #import "SSKeychain.h"
+#import "SSKeychainQuery.h"
 #import "GCDAsyncSocket.h"
 #import "AFSecurityPolicy.h"
 #import "XMPPStream.h"
@@ -18,9 +19,6 @@
 #import "OTRConstants.h"
 #import "OTRLog.h"
 
-#define keychainKeyPrefix @"sslcert."
-#define keychainDictionaryKey @"keychainDictionaryKey"
-
 @implementation OTRCertificatePinning
 
 - (id)initWithDefaultCertificates
@@ -28,7 +26,6 @@
     if (self = [super init]) {
         self.securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeCertificate];
         self.doNotManuallyEvaluateOverride = NO;
-        //[self loadKeychainCertificates];
     }
     return self;
     

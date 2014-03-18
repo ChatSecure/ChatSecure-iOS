@@ -21,17 +21,17 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 #import <Foundation/Foundation.h>
-#import "OTRManagedMessage.h"
+#import "OTRManagedChatMessage.h"
 #import "OTRManagedAccount.h"
 #import "OTRKit.h"
 
 @interface OTRCodec : NSObject
 
-+ (void)decodeMessage:(OTRManagedMessage*)theMessage completionBlock:(void (^)(OTRManagedMessage * message))completionBlock;
-+ (void)encodeMessage:(OTRManagedMessage*)theMessage completionBlock:(void (^)(OTRManagedMessage * message))completionBlock;
++ (void)decodeMessage:(OTRManagedChatMessage *)theMessage completionBlock:(void (^)(OTRManagedChatMessage * message))completionBlock;
++ (void)encodeMessage:(OTRManagedChatMessage *)theMessage completionBlock:(void (^)(OTRManagedChatMessage * message))completionBlock;
 
 + (void)generateOtrInitiateOrRefreshMessageTobuddy:(OTRManagedBuddy*)buddy
-                                   completionBlock:(void (^)(OTRManagedMessage * message))completionBlock;
+                                   completionBlock:(void (^)(OTRManagedChatMessage * message))completionBlock;
 
 + (void)generatePrivateKeyFor:(OTRManagedAccount *)account
               completionBlock:(void (^)(BOOL generatedKey))completionBlock;

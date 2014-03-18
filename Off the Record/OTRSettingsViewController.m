@@ -34,6 +34,7 @@
 #import "OTRAppDelegate.h"
 #import "UserVoice.h"
 #import "OTRAccountTableViewCell.h"
+#import "OTRCreateAccountChooserViewController.h"
 #import "UIAlertView+Blocks.h"
 #import "UIActionSheet+Blocks.h"
 #import "OTRSecrets.h"
@@ -189,7 +190,7 @@
 {
     if (indexPath.section == 0) { // Accounts
         if (indexPath.row == [self.accountsFetchedResultsController.sections[0] numberOfObjects]) {
-            [self addAccount:nil];
+            [self addAccount:[tableView cellForRowAtIndexPath:indexPath]];
         } else {
             OTRManagedAccount *account = [self.accountsFetchedResultsController objectAtIndexPath:indexPath];
             
@@ -233,7 +234,7 @@
                 id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:account];
                 [protocol disconnect];
             }
-            [OTRAccountsManager removeAccount:account];
+            [OTRAccountsManager removeAccount:account inContext:account.managedObjectContext];
         }];
         
         NSString * message = [NSString stringWithFormat:@"%@ %@?", DELETE_ACCOUNT_MESSAGE_STRING, account.username];
@@ -259,13 +260,23 @@
 }
 
 - (void) addAccount:(id)sender {
+    RIButtonItem *cancelButton = [RIButtonItem itemWithLabel:CANCEL_STRING];
+    RIButtonItem *createAccountButton = [RIButtonItem itemWithLabel:CREATE_NEW_ACCOUNT_STRING action:^{
+        OTRCreateAccountChooserViewController * createAccountChooser = [[OTRCreateAccountChooserViewController alloc] init];
+        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:createAccountChooser];
+        nav.modalPresentationStyle = UIModalPresentationFormSheet;
+        [self presentViewController:nav animated:YES completion:nil];
+    }];
+    RIButtonItem *loginAccountButton = [RIButtonItem itemWithLabel:CONNECT_EXISTING_STRING action:^{
+        OTRNewAccountViewController * newAccountView = [[OTRNewAccountViewController alloc] init];
+        
+        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:newAccountView];
+        nav.modalPresentationStyle = UIModalPresentationFormSheet;
+        [self presentViewController:nav animated:YES completion:nil];
+    }];
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:NEW_ACCOUNT_STRING cancelButtonItem:cancelButton destructiveButtonItem:nil otherButtonItems:createAccountButton,loginAccountButton, nil];
     
-    OTRNewAccountViewController * newAccountView = [[OTRNewAccountViewController alloc] init];
-    
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:newAccountView];
-    nav.modalPresentationStyle = UIModalPresentationFormSheet;
-    [self presentViewController:nav animated:YES completion:nil];
-    
+    [actionSheet showInView:self.view];
 }
 
 #pragma mark OTRSettingDelegate method

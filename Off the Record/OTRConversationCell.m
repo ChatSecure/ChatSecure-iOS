@@ -9,7 +9,7 @@
 #import "OTRConversationCell.h"
 #import "OTRManagedBuddy.h"
 #import "OTRManagedAccount.h"
-#import "OTRManagedMessage.h"
+#import "OTRManagedChatMessage.h"
 
 @interface OTRConversationCell ()
 
@@ -85,9 +85,9 @@
     
     self.accountLabel.text = buddy.account.username;
     
-    NSPredicate * onlyPlainTextPredicate = [NSPredicate predicateWithFormat:@"%K == NO",OTRManagedMessageAndStatusAttributes.isEncrypted];
+    NSPredicate * onlyPlainTextPredicate = [NSPredicate predicateWithFormat:@"%K == NO",OTRManagedMessageAttributes.isEncrypted];
     
-    OTRManagedMessage * lastMessage = [[[buddy.messages sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:OTRManagedMessageAndStatusAttributes.date ascending:NO]]] filteredArrayUsingPredicate:onlyPlainTextPredicate]firstObject];
+    OTRManagedChatMessage * lastMessage = [[[buddy.chatMessages sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:OTRManagedMessageAttributes.date ascending:NO]]] filteredArrayUsingPredicate:onlyPlainTextPredicate]firstObject];
     
     UIFont *currentFont = self.conversationLabel.font;
     CGFloat fontSize = currentFont.pointSize;

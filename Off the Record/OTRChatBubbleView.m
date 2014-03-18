@@ -8,8 +8,16 @@
 
 #import "OTRChatBubbleView.h"
 #import "OTRConstants.h"
-
+#import "OTRImages.h"
+#import "OTRUtilities.h"
 #import "OTRMessageTableViewCell.h"
+#import "OTRSettingsManager.h"
+
+@interface OTRChatBubbleView ()
+
+@property (nonatomic, strong) TTTAttributedLabel * messageTextLabel;
+
+@end
 
 @implementation OTRChatBubbleView
 
@@ -18,8 +26,9 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.translatesAutoresizingMaskIntoConstraints = NO;
-        self.messageTextLabel = [[TTTAttributedLabel alloc] initWithFrame:CGRectZero];
-        self.messageTextLabel.textAlignment = NSTextAlignmentNatural;
+        self.messageTextLabel = [OTRChatBubbleView defaultLabel];
+#warning The line below throws a silent exception on iOS 6.
+        //self.messageTextLabel.textAlignment = NSTextAlignmentNatural;
         self.messageBackgroundImageView = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"MessageBubbleBlue"] stretchableImageWithLeftCapWidth:23 topCapHeight:15]];
         self.messageBackgroundImageView.translatesAutoresizingMaskIntoConstraints = NO;
         
@@ -27,7 +36,6 @@
         self.deliveredImageView.translatesAutoresizingMaskIntoConstraints = NO;
         
         [self addSubview:self.deliveredImageView];
-        [self addSubview:self.messageBackgroundImageView];
         [self addSubview:self.messageTextLabel];
         
         [self needsUpdateConstraints];
@@ -35,57 +43,43 @@
     return self;
 }
 
-- (void)setIsDelivered:(BOOL)isDelivered
+- (void)updateLayout
 {
-    [self willChangeValueForKey:NSStringFromSelector(@selector(isDelivered))];
-    _isDelivered = isDelivered;
-    [self didChangeValueForKey:NSStringFromSelector(@selector(isDelivered))];
+    if(self.isIncoming)
+    {
+        self.messageBackgroundImageView = [OTRImages bubbleImageViewForMessageType:OTRBubbleMessageTypeIncoming];
+        self.messageTextLabel.textColor = [UIColor blackColor];
+    }
+    else {
+        self.messageBackgroundImageView = [OTRImages bubbleImageViewForMessageType:OTRBubbleMessageTypeOutgoing];
+        if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
+            self.messageTextLabel.textColor = [UIColor whiteColor];
+        }
+        else {
+            self.messageTextLabel.textColor = [UIColor blackColor];
+        }
+    }
     
-    if (self.isDelivered) {
+    if (self.isDelivierd) {
         self.deliveredImageView.image = [UIImage imageNamed:@"checkmark"];
     }
     else {
         self.deliveredImageView.image = nil;
     }
+    
     [self setNeedsUpdateConstraints];
 }
 
-
-- (void)setIsDelivered:(BOOL)isDelivered animated:(BOOL)animated
+- (void)setMessageBackgroundImageView:(UIImageView *)messageBackgroundImageView
 {
-    NSTimeInterval duration = 0;
-    if (animated) {
-        duration = .5;
+    if ([_messageBackgroundImageView isEqual:messageBackgroundImageView]) {
+        return;
     }
-    [UIView animateWithDuration:duration animations:^{
-        [self setIsDelivered:isDelivered];
-        [self layoutIfNeeded];
-    }];
-}
-
-- (void)setIsIncoming:(BOOL)isIncoming
-{
-    [self willChangeValueForKey:NSStringFromSelector(@selector(isIncoming))];
-    _isIncoming = isIncoming;
-    [self didChangeValueForKey:NSStringFromSelector(@selector(isIncoming))];
-    if (_isIncoming) {
-        self.messageBackgroundImageView.image = [[UIImage imageNamed:@"MessageBubbleGray"]stretchableImageWithLeftCapWidth:23 topCapHeight:15];
-    }
-    else {
-        self.messageBackgroundImageView.image = [[UIImage imageNamed:@"MessageBubbleBlue"]stretchableImageWithLeftCapWidth:15 topCapHeight:15];
-    }
-    [self setNeedsUpdateConstraints];
-}
-
-- (void)setMessageTextLabel:(TTTAttributedLabel *)messageTextLabel
-{
-    [_messageTextLabel removeFromSuperview];
-    [self willChangeValueForKey:NSStringFromSelector(@selector(messageTextLabel))];
-    _messageTextLabel = messageTextLabel;
-    [self didChangeValueForKey:NSStringFromSelector(@selector(messageTextLabel))];
-    _messageTextLabel.translatesAutoresizingMaskIntoConstraints = NO;
-    [self addSubview:_messageTextLabel];
-    [self setNeedsUpdateConstraints];
+    [_messageBackgroundImageView removeFromSuperview];
+    _messageBackgroundImageView = messageBackgroundImageView;
+    _messageBackgroundImageView.translatesAutoresizingMaskIntoConstraints = NO;
+    [self addSubview:_messageBackgroundImageView];
+    [self sendSubviewToBack:_messageBackgroundImageView];
 }
 
 - (void)setupConstraints {
@@ -146,13 +140,17 @@
     [self addConstraint:constraint];
     
     //Text Label
+    CGFloat yCenterConstant = -2.0;
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
+        yCenterConstant = 0;
+    }
     constraint = [NSLayoutConstraint constraintWithItem:self.messageTextLabel
                                               attribute:NSLayoutAttributeCenterY
                                               relatedBy:NSLayoutRelationEqual
                                                  toItem:self.messageBackgroundImageView
                                               attribute:NSLayoutAttributeCenterY
                                              multiplier:1.0
-                                               constant:-2.0];
+                                               constant:yCenterConstant];
     [self addConstraint:constraint];
     
     
@@ -253,6 +251,25 @@
     [self addConstraint:deliveredSideConstraint];
     [self addConstraint:imageViewSideConstraint];
     [self addConstraint:labelSideConstraint];
+}
+
++(TTTAttributedLabel *)defaultLabel
+{
+    TTTAttributedLabel * messageTextLabel = [[TTTAttributedLabel alloc] initWithFrame:CGRectZero];
+    messageTextLabel.backgroundColor = [UIColor clearColor];
+    messageTextLabel.numberOfLines = 0;
+    //messageTextLabel.textAlignment = NSTextAlignmentNatural;
+    messageTextLabel.dataDetectorTypes = UIDataDetectorTypeLink;
+    messageTextLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    messageTextLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
+        messageTextLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
+    } else {
+        CGFloat messageTextSize = [OTRSettingsManager floatForOTRSettingKey:kOTRSettingKeyFontSize];
+        messageTextLabel.font = [UIFont systemFontOfSize:messageTextSize];
+    }
+    return messageTextLabel;
 }
 
 @end

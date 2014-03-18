@@ -32,14 +32,20 @@
 #import "OTROscarLoginViewController.h"
 #import "OTRGoogleTalkLoginViewController.h"
 #import "OTRInLineTextEditTableViewCell.h"
-#import "OTRErrorManager.h"
-#import "OTRProtocolManager.h"
+#import "OTRManagedXMPPTorAccount.h"
+#import "OTRUtilities.h"
+#import "OTRXMPPError.h"
 
 #import "SIAlertView.h"
 #import "UIAlertView+Blocks.h"
 #import "OTRCertificatePinning.h"
 
-#define kFieldBuffer 20;
+NSString *const kTextLabelTextKey       = @"kTextLabelTextKey";
+NSString *const kCellTypeKey            = @"kCellTypeKey";
+NSString *const kUserInputViewKey       = @"kUserInputViewKey";
+NSString *const kCellTypeTextField      = @"kCellTypeTextField";
+NSString *const kCellTypeSwitch         = @"kCellTypeSwitch";
+NSString *const KCellTypeHelp           = @"KCellTypeHelp";
 
 @implementation OTRLoginViewController
 
@@ -73,59 +79,83 @@
     return self;
 }
 
--(void)setUpFields
+-(void)setupFields
 {
-    //tableViewArray = [[NSMutableArray alloc] init];
-        
-    self.usernameTextField = [[UITextField alloc] init];
-    self.usernameTextField.delegate = self;
-    //self.usernameTextField.borderStyle = UITextBorderStyleRoundedRect;
-    self.usernameTextField.autocorrectionType = UITextAutocorrectionTypeNo;
-    self.usernameTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-    self.usernameTextField.text = self.account.username;
-    self.usernameTextField.returnKeyType = UIReturnKeyDone;
-    self.usernameTextField.textColor = self.textFieldTextColor;
-    
     [self addCellinfoWithSection:0 row:0 labelText:USERNAME_STRING cellType:kCellTypeTextField userInputView:self.usernameTextField];
-    
-    
-    self.passwordTextField = [[UITextField alloc] init];
-    self.passwordTextField.delegate = self;
-    //self.passwordTextField.borderStyle = UITextBorderStyleRoundedRect;
-    self.passwordTextField.secureTextEntry = YES;
-    self.passwordTextField.returnKeyType = UIReturnKeyDone;
-    self.passwordTextField.textColor = self.textFieldTextColor;
-    self.passwordTextField.placeholder = REQUIRED_STRING;
-    
+
     [self addCellinfoWithSection:0 row:1 labelText:PASSWORD_STRING cellType:kCellTypeTextField userInputView:self.passwordTextField];
     
-    self.rememberPasswordSwitch = [[UISwitch alloc] init];
-    [self.rememberPasswordSwitch addTarget:self action:@selector(switchDidChange:) forControlEvents:UIControlEventValueChanged];
     [self addCellinfoWithSection:0 row:2 labelText:REMEMBER_PASSWORD_STRING cellType:kCellTypeSwitch userInputView:self.rememberPasswordSwitch];
     
-    [self createAutoLoginSwitch];
-    [self addCellinfoWithSection:0 row:3 labelText:LOGIN_AUTOMATICALLY_STRING cellType:kCellTypeSwitch userInputView:self.autoLoginSwitch];
-
-    
-    
-    
-    NSString *loginButtonString = LOGIN_STRING;
-    self.title = [self.account providerName];
-    
-    self.loginButton = [[UIBarButtonItem alloc] initWithTitle:loginButtonString style:UIBarButtonItemStyleDone target:self action:@selector(loginButtonPressed:)];
-    self.navigationItem.rightBarButtonItem = self.loginButton;
-    
-    if (!self.isNewAccount) {
-        self.cancelButton = [[UIBarButtonItem alloc] initWithTitle:CANCEL_STRING style:UIBarButtonItemStyleBordered target:self action:@selector(cancelPressed:)];
-        self.navigationItem.leftBarButtonItem = self.cancelButton;
+    if(![self.account isKindOfClass:[OTRManagedXMPPTorAccount class]])
+    {
+        [self addCellinfoWithSection:0 row:3 labelText:LOGIN_AUTOMATICALLY_STRING cellType:kCellTypeSwitch userInputView:self.autoLoginSwitch];
     }
-    
 }
 
-- (void)createAutoLoginSwitch
+-(UITextField *)usernameTextField
 {
-    self.autoLoginSwitch = [[UISwitch alloc] init];
-    [self.autoLoginSwitch addTarget:self action:@selector(switchDidChange:) forControlEvents:UIControlEventValueChanged];
+    if (!_usernameTextField) {
+        _usernameTextField = [[UITextField alloc] init];
+        _usernameTextField.delegate = self;
+        _usernameTextField.autocorrectionType = UITextAutocorrectionTypeNo;
+        _usernameTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+        _usernameTextField.text = self.account.username;
+        _usernameTextField.returnKeyType = UIReturnKeyDone;
+        _usernameTextField.textColor = self.textFieldTextColor;
+    }
+    return  _usernameTextField;
+}
+
+-(UITextField *)passwordTextField
+{
+    if(!_passwordTextField) {
+        _passwordTextField = [[UITextField alloc] init];
+        _passwordTextField.delegate = self;
+        _passwordTextField.secureTextEntry = YES;
+        _passwordTextField.returnKeyType = UIReturnKeyDone;
+        _passwordTextField.textColor = self.textFieldTextColor;
+        _passwordTextField.placeholder = REQUIRED_STRING;
+    }
+    return _passwordTextField;
+}
+
+- (UISwitch *)rememberPasswordSwitch
+{
+    if (!_rememberPasswordSwitch) {
+        _rememberPasswordSwitch = [[UISwitch alloc] init];
+        [_rememberPasswordSwitch addTarget:self action:@selector(switchDidChange:) forControlEvents:UIControlEventValueChanged];
+    }
+    return _rememberPasswordSwitch;
+}
+
+- (UISwitch *)autoLoginSwitch
+{
+    if (!_autoLoginSwitch) {
+        _autoLoginSwitch = [[UISwitch alloc] init];
+        [_autoLoginSwitch addTarget:self action:@selector(switchDidChange:) forControlEvents:UIControlEventValueChanged];
+    }
+    return _autoLoginSwitch;
+}
+
+- (UITableView *)loginViewTableView
+{
+    if (!_loginViewTableView) {
+        _loginViewTableView= [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
+        _loginViewTableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        [_loginViewTableView setDelegate:self];
+        [_loginViewTableView setDataSource:self];
+    }
+    return _loginViewTableView;
+}
+
+- (NSMutableArray *)tableViewArray
+{
+    if(!_tableViewArray)
+    {
+        _tableViewArray = [[NSMutableArray alloc] init];
+    }
+    return _tableViewArray;
 }
 
 - (void)switchDidChange:(id)sender
@@ -164,31 +194,37 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
     
-    [self setUpFields];
+    [self setupFields];
+    
+    self.title = self.account.providerName;
+    
+    self.loginButton = [[UIBarButtonItem alloc] initWithTitle:LOGIN_STRING style:UIBarButtonItemStyleDone target:self action:@selector(loginButtonPressed:)];
+    self.navigationItem.rightBarButtonItem = self.loginButton;
+    
+    if (!self.isNewAccount) {
+        self.cancelButton = [[UIBarButtonItem alloc] initWithTitle:CANCEL_STRING style:UIBarButtonItemStyleBordered target:self action:@selector(cancelPressed:)];
+        self.navigationItem.leftBarButtonItem = self.cancelButton;
+    }
     
     
-    self.loginViewTableView= [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
-    self.loginViewTableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-    [self.loginViewTableView setDelegate:self];
-    [self.loginViewTableView setDataSource:self];
+    
     [self.view addSubview:self.loginViewTableView];
 }
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return [self.tableViewArray count];
+    return self.tableViewArray.count;
     
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-        return [[self.tableViewArray objectAtIndex:section] count];
-    
+    return [[self.tableViewArray objectAtIndex:section] count];
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    if([self.tableViewArray count] > 1)
+    if(self.tableViewArray.count > 1)
     {
         if(section == 0)
             return BASIC_STRING;
@@ -219,7 +255,7 @@
     
     if( [cellType isEqualToString:kCellTypeSwitch])
     {
-        if(cell==nil)
+        if(!cell)
         {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellType];
         }
@@ -229,7 +265,7 @@
     }
     else if( [cellType isEqualToString:KCellTypeHelp])
     {
-        if(cell==nil)
+        if(!cell)
         {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellType];
             
@@ -240,7 +276,7 @@
     }
     else if([cellType isEqualToString:kCellTypeTextField])
     {
-        if(cell == nil)
+        if(!cell)
         {
             cell = [[OTRInLineTextEditTableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellType];
         }
@@ -273,7 +309,7 @@
      name:kOTRProtocolLoginSuccess
      object:[[OTRProtocolManager sharedInstance] protocolForAccount:self.account]];
     
-    if(!self.usernameTextField.text || [self.usernameTextField.text isEqualToString:@""])
+    if(!self.usernameTextField.text.length)
     {
         [self.usernameTextField becomeFirstResponder];
     }
@@ -283,18 +319,18 @@
     
     self.autoLoginSwitch.on = self.account.autologinValue;
     self.rememberPasswordSwitch.on = self.account.rememberPasswordValue;
-    if (self.account.rememberPassword) {
+    if (self.account.rememberPasswordValue) {
         self.passwordTextField.text = self.account.password;
     } else {
         self.passwordTextField.text = @"";
     }
 }
 - (void) viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
+    
     
     [self readInFields];
     
-    if([self.account.username length] && [self.account.password length] )
+    if(self.account.username.length)
     {
         [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
     }
@@ -306,8 +342,8 @@
 
 -(void)readInFields
 {
-    [self.account setUsername:[self.usernameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
-    [self.account setRememberPasswordValue:self.rememberPasswordSwitch.on];
+    self.account.username = [self.usernameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    self.account.rememberPasswordValue = self.rememberPasswordSwitch.on;
     
     self.account.autologinValue = self.autoLoginSwitch.on;
     
@@ -316,15 +352,12 @@
     } else {
         self.account.password = nil;
     }
-    
-    
 }
 
 -(void)viewDidDisappear:(BOOL)animated
 {
+    [self hideHUD];
     [super viewDidDisappear:animated];
-    if(HUD)
-        [HUD hide:YES];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -340,15 +373,18 @@
 -(void) timeout:(NSTimer *) timer
 {
     //[timeoutTimer invalidate];
-    if (HUD) {
-        [HUD hide:YES];
+    [self hideHUD];
+}
+- (void)hideHUD {
+    if (self.HUD) {
+        [self.HUD hide:YES];
     }
 }
 
--(void)protocolLoginFailed:(NSNotification*)notification
+- (void)protocolLoginFailed:(NSNotification*)notification
 {
-    if(HUD)
-        [HUD hide:YES];
+    if(self.HUD)
+        [self.HUD hide:YES];
     if([self.account.protocol isEqualToString:kOTRProtocolTypeXMPP])
     {
         NSDictionary * userInfo = notification.userInfo;
@@ -357,8 +393,6 @@
         NSString * hostname = userInfo[kOTRProtocolLoginFailHostnameKey];
         NSNumber * statusNumber = userInfo[kOTRProtocolLoginFailSSLStatusKey];
         
-        
-        RIButtonItem * okButtonItem = [RIButtonItem itemWithLabel:OK_STRING];
         if (certData) {
             if ([statusNumber longLongValue] == errSSLPeerAuthCompleted) {
                 
@@ -371,34 +405,10 @@
             }
         }
         else if ([error isKindOfClass:[NSError class]]) {
-            recentError = (NSError *)error;
-            
-            if([recentError.domain isEqualToString:@"kCFStreamErrorDomainSSL"] && recentError.code == errSSLPeerBadCert) {
-                return;
-            }
-            else {
-                RIButtonItem * infoButton = [RIButtonItem itemWithLabel:INFO_STRING action:^{
-                    NSString * errorDescriptionString = [NSString stringWithFormat:@"%@ : %@",[recentError domain],[recentError localizedDescription]];
-                    
-                    RIButtonItem * copyButtonItem = [RIButtonItem itemWithLabel:COPY_STRING action:^{
-                        NSString * errorDescriptionString = [NSString stringWithFormat:@"Domain: %@\nCode: %d\nUserInfo: %@",[recentError domain],[recentError code],[recentError userInfo]];
-                        UIPasteboard *pasteBoard = [UIPasteboard generalPasteboard];
-                        [pasteBoard setString:errorDescriptionString];
-                    }];
-                    
-                    UIAlertView * alert = [[UIAlertView alloc] initWithTitle:INFO_STRING message:errorDescriptionString cancelButtonItem:nil otherButtonItems:okButtonItem,copyButtonItem, nil];
-                    
-                    [alert show];
-                }];
-                
-                UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:XMPP_FAIL_STRING cancelButtonItem:nil otherButtonItems:okButtonItem,infoButton, nil];
-                [alertView show];
-            }
-            
+            [self showAlertViewWithTitle:ERROR_STRING message:XMPP_FAIL_STRING error:error];
         }
         else {
-            UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:XMPP_FAIL_STRING cancelButtonItem:nil otherButtonItems:okButtonItem, nil];
-            [alertView show];
+            [self showAlertViewWithTitle:ERROR_STRING message:XMPP_FAIL_STRING error:nil];
         }
     }
     else if ([self.account.protocol isEqualToString:kOTRProtocolTypeAIM]) {
@@ -410,8 +420,7 @@
             errorTitle = error.localizedDescription;
             errorMessage = error.localizedFailureReason;
         }
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:errorTitle message:errorMessage delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
-        [alert show];
+        [self showAlertViewWithTitle:errorTitle message:errorMessage error:error];
     }
 }
              
@@ -430,7 +439,7 @@
         message = [message stringByAppendingString:[NSString stringWithFormat:@"✓ %@",VALID_CERTIFICATE_STRING]];
     }
     else {
-        NSString * sslErrorMessage = [OTRErrorManager errorStringWithSSLStatus:status];
+        NSString * sslErrorMessage = [OTRXMPPError errorStringWithSSLStatus:status];
         sslMessageColor = [UIColor colorWithRed:0.89f green:0.42f blue:0.36f alpha:1.00f];;
         message = [message stringByAppendingString:[NSString stringWithFormat:@"X %@",sslErrorMessage]];
     }
@@ -468,12 +477,12 @@
     [alertView setDefaultButtonImage:buttonImage forState:UIControlStateHighlighted];
 }
 
--(void)protocolLoginSuccess:(NSNotification*)notification
+- (void)protocolLoginSuccess:(NSNotification*)notification
 {
-    if(HUD)
-        [HUD hide:YES];
+    [self hideHUD];
     [self dismissViewControllerAnimated:YES completion:nil];
 }  
+
 
 
 
@@ -481,25 +490,27 @@
     BOOL fields = [self checkFields];
     if(fields)
     {
-        [self showLoginProgress];
+        [self showHUDWithText:LOGGING_IN_STRING];
         
         [self readInFields];
-
-        self.account.password = self.passwordTextField.text;
         
         id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
         [protocol connectWithPassword:self.passwordTextField.text];
     }
     self.timeoutTimer = [NSTimer scheduledTimerWithTimeInterval:45.0 target:self selector:@selector(timeout:) userInfo:nil repeats:NO];
 }
--(void)showLoginProgress
+
+- (void)showHUDWithText:(NSString *)text
 {
     [self.view endEditing:YES];
-    HUD = [[MBProgressHUD alloc] initWithView:self.view];
-    [self.view addSubview:HUD];
-    HUD.delegate = self;
-    HUD.labelText = LOGGING_IN_STRING;
-    [HUD show:YES];
+    if (!self.HUD) {
+        self.HUD = [[MBProgressHUD alloc] initWithView:self.view];
+        [self.view addSubview:self.HUD];
+    }
+    
+    self.HUD.labelText = text;
+    [self.HUD show:YES];
+    
     self.timeoutTimer = [NSTimer scheduledTimerWithTimeInterval:45.0 target:self selector:@selector(timeout:) userInfo:nil repeats:NO];
 }
 
@@ -511,31 +522,69 @@
     return YES;
 }
 
--(BOOL)checkFields
+- (BOOL)checkFields
 {
-    BOOL fields = self.usernameTextField.text && ![self.usernameTextField.text isEqualToString:@""] && self.passwordTextField.text && ![self.passwordTextField.text isEqualToString:@""];
+    BOOL fields = self.usernameTextField.text.length && self.passwordTextField.text.length;
     
     if(!fields)
     {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:USER_PASS_BLANK_STRING delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
-        [alert show];
+        [self showAlertViewWithTitle:ERROR_STRING message:USER_PASS_BLANK_STRING error:nil];
     }
-    
     return fields;
 }
 
--(BOOL)textFieldShouldReturn:(UITextField *)textField
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [textField resignFirstResponder];
     return YES;
 }
 
--(void) didMoveToParentViewController:(UIViewController *)parent
+- (void)didMoveToParentViewController:(UIViewController *)parent
 {
     //Delete Account because user went back to choose different account type
     if(!parent)
     {
-        [OTRAccountsManager removeAccount:self.account];
+        [OTRAccountsManager removeAccount:self.account inContext:self.account.managedObjectContext];
+    }
+}
+
+- (void)showAlertViewWithTitle:(NSString *)title message:(NSString *)message error:(NSError *)error
+{
+    RIButtonItem * okButtonItem = [RIButtonItem itemWithLabel:OK_STRING];
+    UIAlertView * alertView = nil;
+    if (error) {
+        RIButtonItem * infoButton = [RIButtonItem itemWithLabel:INFO_STRING action:^{
+            NSString * errorDescriptionString = [NSString stringWithFormat:@"%@ : %@",[error domain],[error localizedDescription]];
+            
+            RIButtonItem * copyButtonItem = [RIButtonItem itemWithLabel:COPY_STRING action:^{
+                NSString * errorDescriptionString = [NSString stringWithFormat:@"Domain: %@\nCode: %d\nUserInfo: %@",[error domain],[error code],[error userInfo]];
+                UIPasteboard *pasteBoard = [UIPasteboard generalPasteboard];
+                [pasteBoard setString:errorDescriptionString];
+            }];
+            
+            UIAlertView * alert = [[UIAlertView alloc] initWithTitle:INFO_STRING
+                                                             message:errorDescriptionString
+                                                    cancelButtonItem:nil
+                                                    otherButtonItems:okButtonItem,copyButtonItem, nil];
+            
+            [alert show];
+        }];
+        alertView = [[UIAlertView alloc] initWithTitle:title
+                                               message:message
+                                      cancelButtonItem:nil
+                                      otherButtonItems:okButtonItem,infoButton, nil];
+    }
+    else {
+        alertView = [[UIAlertView alloc] initWithTitle:title
+                                               message:message
+                                      cancelButtonItem:nil
+                                      otherButtonItems:okButtonItem, nil];
+    }
+   
+    
+    
+    if (alertView) {
+        [alertView show];
     }
 }
 
@@ -544,16 +593,17 @@
 
 - (void)hudWasHidden:(MBProgressHUD *)hud {
     // Remove HUD from screen when the HUD was hidded
-    [HUD removeFromSuperview];
+    [self.HUD removeFromSuperview];
 }
 
 +(OTRLoginViewController *)loginViewControllerWithAcccountID:(NSManagedObjectID *)accountID
 {
-    NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
+    NSManagedObjectContext * context = [NSManagedObjectContext MR_context];
     OTRManagedAccount * account = (OTRManagedAccount *)[context existingObjectWithID:accountID error:nil];
     switch (account.accountType) {
         case OTRAccountTypeAIM:
             return [[OTROscarLoginViewController alloc] initWithAccountID:accountID];
+        case OTRAccountTypeXMPPTor:
         case OTRAccountTypeJabber:
             return [[OTRJabberLoginViewController alloc] initWithAccountID:accountID];
         case OTRAccountTypeFacebook:

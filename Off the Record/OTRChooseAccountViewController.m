@@ -93,32 +93,6 @@
     return [OTRAccountsManager allAccountsAbleToAddBuddies];
 }
 
-/*
--(void)controllerWillChangeContent:(NSFetchedResultsController *)controller
-{
-    [tableView beginUpdates];
-}
-
--(void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath
-{
-    switch (type) {
-        case NSFetchedResultsChangeInsert:
-            [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-            break;
-        case NSFetchedResultsChangeUpdate:
-            [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-            break;
-        case NSFetchedResultsChangeMove:
-            [tableView moveRowAtIndexPath:indexPath toIndexPath:newIndexPath];
-            break;
-        case NSFetchedResultsChangeDelete:
-            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-            break;
-        default:
-            break;
-    }
-}
-*/
 -(void)controllerDidChangeContent:(NSFetchedResultsController *)controller
 {
     [tableView reloadData];
@@ -135,7 +109,7 @@
     OTRManagedAccount *account = [[self onlineAccounts] objectAtIndex:indexPath.row];
     cell.textLabel.text = account.username;
     cell.detailTextLabel.text = nil;
-    cell.imageView.image = [UIImage imageNamed:account.imageName];
+    cell.imageView.image = [account accountImage];
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
     if( account.accountType == OTRAccountTypeFacebook)

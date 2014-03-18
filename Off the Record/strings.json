@@ -807,9 +807,61 @@
         "comment": "Title for alert when a new SSL certificate is encountered",
         "string": "New SSL Certificate"
     },
+    "XMPP_TOR_STRING": {
+        "comment": "Title for xmpp accounts that connect through the Tor network",
+        "string": "XMPP + Tor"
+    },
     "LOGIN_AUTOMATICALLY_STRING": {
         "comment": "Label for account setting that autologins on launch",
         "string": "Login Automatically"
+    },
+    "UNLOCKED_ALERT_STRING": {
+        "comment": "Title to let user know that encryption is not currently enabled",
+        "string": "The conversation is not secure"
+    },
+    "LOCKED_WARN_STRING": {
+        "comment": "Title to let user know that the OTR fingerprint has not been checked",
+        "string": "The fingerprint has not been verified"
+    },
+    "LOCKED_ERROR_STRING": {
+        "comment": "Title to let user know that the OTR fingerprint has not been checked",
+        "string": "The fingerprint has changed and needs to be verified"
+    },
+    "LOCKED_SECURE_STRING": {
+        "comment": "Title to let user know that the OTR fingerprint has not been checked",
+        "string": "The conversation is secure and the fingerprint is verfied"
+    },
+    "ACCOUNT_FINGERPRINTS_STRING": {
+        "comment": "Title for showing the users account otr fingerprints",
+        "string": "Account Fingerprints"
+    },
+    "BUDDY_FINGERPRINTS_STRING": {
+        "comment": "Title for showing the users buddies otr fingerprints",
+        "string": "Buddy Fingerprints"
+    },
+    "VERIFIED_STRING": {
+        "comment": "To let the user know the fingerprint as been checked",
+        "string": "Verified"
+    },
+    "NOT_VERIFIED_STRING": {
+        "comment": "To let the user know the fingerprint as not been checked",
+        "string": "Not Verified"
+    },
+    "OTR_FINGERPRINTS_STRING": {
+        "comment": "Lable for button to show saved fingerprints",
+        "string": "OTR Fingerprints"
+    },
+    "OTR_FINGERPRINTS_SUBTITLE_STRING": {
+        "comment": "Subtitle lable for button to show saved fingerprints",
+        "string": "Manage OTR fingerprints"
+    },
+    "COPY_STRING": {
+        "comment": "Label for button to copy text to pastboard",
+        "string": "Copy"
+    },
+    "XMPP_USERNAME_EXAMPLE_STRING": {
+        "comment": "Example of a username using the words user and example",
+        "string": "user@example.com"
     },
     "COPY_STRING": {
         "comment": "Copy string to clipboard as in copy and paste",
@@ -830,5 +882,33 @@
     "SHOW_USERVOICE_STRING": {
         "comment": "actionsheet for showing uservoice feedback service",
         "string": "Would you like to connect to UserVoice to send feedback?"
+    },
+    "CREATE_NEW_ACCOUNT_STRING": {
+        "comment": "Label for button to create a new account via in band registration",
+        "string": "Create New Account"
+    },
+    "CONNECT_EXISTING_STRING": {
+        "comment": "Label for button to create account by logging into an existing account",
+        "string": "Connect to Existing Account"
+    },
+    "CREATE_STRING": {
+        "comment": "Title for button to create account",
+        "string": "Create"
+    },
+    "CONNECTING_TO_TOR_STRING": {
+        "comment": "Title for progress of connecting to Tor",
+        "string": "Connecting to Tor"
+    },
+    "CREATING_ACCOUNT_STRING": {
+        "comment": "Title for progress of creating a new account",
+        "string": "Creating Account"
+    },
+    "IN_BAND_ERROR_STRING": {
+        "comment": "Error message for when in band registration is not supported",
+        "string": "The XMPP server does not support in-band registration"
+    },
+    "REGISTER_ERROR_STRING": {
+        "comment": "Error message when registration fails",
+        "string": "Error Registering Username"
     }
 }

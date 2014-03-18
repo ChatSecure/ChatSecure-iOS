@@ -38,8 +38,13 @@
 #import "OTRManagedBuddy.h"
 #import "OTRXMPPBudyTimers.h"
 #import "OTRCertificatePinning.h"
+#import "OTRXMPPError.h"
+#import "OTRConstants.h"
 
+extern NSString *const OTRXMPPRegisterSucceededNotificationName;
+extern NSString *const OTRXMPPRegisterFailedNotificationName;
 @class OTRRosterStorage;
+
 
 @interface OTRXMPPManager : NSObject <XMPPRosterDelegate, NSFetchedResultsControllerDelegate, OTRProtocol, OTRCertificatePinningDelegate>
 
@@ -53,11 +58,15 @@
 @property (nonatomic, readonly) XMPPCapabilitiesCoreDataStorage *xmppCapabilitiesStorage;
 @property (nonatomic, readonly) OTRCertificatePinning * certificatePinningModule;
 @property (nonatomic, readonly) BOOL isXmppConnected;
+@property BOOL didSecure;
 
 - (BOOL)connectWithJID:(NSString*) myJID password:(NSString*)myPassword;
 - (void)disconnect;
 
-- (NSString*)accountName;
+- (NSString *)accountName;
+
+- (void)registerNewAccountWithPassword:(NSString *)password;
+- (void)failedToConnect:(NSError *)error;
 
 
 //Chat State

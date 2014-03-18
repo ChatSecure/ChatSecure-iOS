@@ -22,6 +22,7 @@
 
 #import "OTRAboutViewController.h"
 #import "Strings.h"
+#import "OTRConstants.h"
 #import "OTRAppDelegate.h"
 #import "UIActionSheet+Blocks.h"
 

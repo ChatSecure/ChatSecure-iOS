@@ -1,25 +1,23 @@
 PODS:
-  - AFNetworking (2.2.0):
+  - AFNetworking (2.0.3):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
     - AFNetworking/UIKit
-  - AFNetworking/NSURLConnection (2.2.0):
+  - AFNetworking/NSURLConnection (2.0.3):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/NSURLSession (2.2.0):
+  - AFNetworking/NSURLSession (2.0.3):
     - AFNetworking/NSURLConnection
-  - AFNetworking/Reachability (2.2.0)
-  - AFNetworking/Security (2.2.0)
-  - AFNetworking/Serialization (2.2.0)
-  - AFNetworking/UIKit (2.2.0):
+  - AFNetworking/Reachability (2.0.3)
+  - AFNetworking/Security (2.0.3)
+  - AFNetworking/Serialization (2.0.3)
+  - AFNetworking/UIKit (2.0.3):
     - AFNetworking/NSURLConnection
-    - AFNetworking/NSURLSession
   - Appirater (2.0.2)
-  - CocoaAsyncSocket (7.3.3)
   - CocoaLumberjack (1.8.1):
     - CocoaLumberjack/Extensions
   - CocoaLumberjack/Core (1.8.1)
@@ -42,10 +40,10 @@ PODS:
   - gtm-oauth2/Core/Touch (0.0.3):
     - GTMHTTPFetcher
     - SBJson (~> 3.2)
-  - GTMHTTPFetcher (0.0.2):
-    - SBJson (~> 3.2)
+  - GTMHTTPFetcher (0.1.0)
   - HockeySDK (3.5.4)
   - HPGrowingTextView (1.1)
+  - JTTargetActionBlock (1.0.0)
   - MagicalRecord (2.2):
     - MagicalRecord/Core
   - MagicalRecord/Core (2.2)
@@ -56,15 +54,15 @@ PODS:
   - UIAlertView-Blocks (1.0)
 
 DEPENDENCIES:
-  - AFNetworking
+  - AFNetworking (= 2.0.3)
   - Appirater
-  - CocoaAsyncSocket (from `git@github.com:ChatSecure/CocoaAsyncSocket.git`)
   - CocoaLumberjack
   - DAKeyboardControl (~> 2.3)
   - Facebook-iOS-SDK
   - gtm-oauth2 (~> 0.0.3)
   - HockeySDK
   - HPGrowingTextView (~> 1.1)
+  - JTTargetActionBlock (~> 1.0)
   - MagicalRecord
   - MBProgressHUD (~> 0.8)
   - SIAlertView (from `PodSpecs/SIAlertView.podspec`)
@@ -72,22 +70,20 @@ DEPENDENCIES:
   - UIAlertView-Blocks
 
 EXTERNAL SOURCES:
-  CocoaAsyncSocket:
-    :git: git@github.com:ChatSecure/CocoaAsyncSocket.git
   SIAlertView:
     :podspec: PodSpecs/SIAlertView.podspec
 
 SPEC CHECKSUMS:
-  AFNetworking: e8cfd8f3fe3bfe19124a0cc63f4d45752d892a56
+  AFNetworking: e499052cbf3d743e9bb727bb37adb9dc2547ba15
   Appirater: 32fb9089615b5e542c7ad7b5749741a8aed55290
-  CocoaAsyncSocket: 50a73b79fb77f0dbb57cdc5c247c8f19e9cb3b33
   CocoaLumberjack: 020378ec400d658923bf5887178394f65f052c90
   DAKeyboardControl: 219d6e32b9343eb85151255c43b1f238d8f0bbf7
   Facebook-iOS-SDK: c09f7d80db5c48170ff834bc03ebe774c49d1f5b
   gtm-oauth2: 6528b10a61eb9b6710f6277341e2926371a12c15
-  GTMHTTPFetcher: df09cf49e95d471d9f321a8eea3d1c22bc45547e
+  GTMHTTPFetcher: 1ec07b08bc1df7bf37ad32b3c2adefa020a4b644
   HockeySDK: 4f7f7e15c1f594e8ca1e16a09f04e7418289de7a
   HPGrowingTextView: 4318f557b33c19def1c53ec275d6e2a2d6589cd0
+  JTTargetActionBlock: 3d6e5ecded7f8273ad006029444d285b58e016ea
   MagicalRecord: 95d49d74ef752cd52f6ad87bcb474817fc3978cf
   MBProgressHUD: 2bbc6f470111daf7f3eaa4eb12b8cbf01c4c0622
   SBJson: abc2bf2baef456d5dae213f9826fe2b6fdf19861

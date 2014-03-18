@@ -26,7 +26,16 @@
 
 @interface OTRNewAccountViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
 {
-    NSArray * accounts;
+    NSArray * accountsCellArray;
 }
+
+- (NSArray *)accounts;
+- (void)didSelectAccountType:(OTRAccountType)accountType;
+
++(NSDictionary *)googleCellDictionary;
++(NSDictionary *)facebookCellDictionary;
++(NSDictionary *)XMPPCellDictionary;
++(NSDictionary *)XMPPTorCellDictionary;
++(NSDictionary *)aimCellDictionary;
 
 @end

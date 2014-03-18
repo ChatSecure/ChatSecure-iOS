@@ -10,47 +10,34 @@
 
 @interface OTRJabberLoginViewController ()
 
+@property (nonatomic,strong) UITableViewCell * selectedCell;
+
 @end
 
 @implementation OTRJabberLoginViewController
-
-@synthesize domainTextField;
-@synthesize portTextField;
-
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     NSString * accountDomainString = self.account.domain;
 	
-    self.usernameTextField.placeholder = @"user@example.com";
+    self.usernameTextField.placeholder = XMPP_USERNAME_EXAMPLE_STRING;
     self.usernameTextField.keyboardType = UIKeyboardTypeEmailAddress;
     
     self.domainTextField = [[UITextField alloc] init];
     self.domainTextField.delegate = self;
     self.domainTextField.autocorrectionType = UITextAutocorrectionTypeNo;
     self.domainTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-    //self.domainTextField.borderStyle = UITextBorderStyleRoundedRect;
     self.domainTextField.placeholder = OPTIONAL_STRING;
     self.domainTextField.text = accountDomainString;
     self.domainTextField.returnKeyType = UIReturnKeyDone;
     self.domainTextField.keyboardType = UIKeyboardTypeURL;
     self.domainTextField.textColor = self.textFieldTextColor;
     
-    
     self.portTextField = [[UITextField alloc] init];
     self.portTextField.delegate = self;
     self.portTextField.autocorrectionType = UITextAutocorrectionTypeNo;
     self.portTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-    //self.portTextField.borderStyle = UITextBorderStyleRoundedRect;
     self.portTextField.placeholder = [NSString stringWithFormat:@"%@",self.account.port];
     self.portTextField.returnKeyType = UIReturnKeyDone;
     self.portTextField.keyboardType = UIKeyboardTypeNumberPad;
@@ -58,24 +45,12 @@
     
     [self addCellinfoWithSection:1 row:0 labelText:HOSTNAME_STRING cellType:kCellTypeTextField userInputView:self.domainTextField];
     [self addCellinfoWithSection:1 row:1 labelText:PORT_STRING cellType:kCellTypeTextField userInputView:self.portTextField];
-    
-    
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHideOrShow:) name:UIKeyboardWillHideNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHideOrShow:) name:UIKeyboardWillShowNotification object:nil];
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
-    if (textField == portTextField) {
+    if (textField == self.portTextField) {
         return [string isEqualToString:@""] ||
-        ([string stringByTrimmingCharactersInSet:
-          [[NSCharacterSet decimalDigitCharacterSet] invertedSet]].length > 0);
+        ([string stringByTrimmingCharactersInSet:[[NSCharacterSet decimalDigitCharacterSet] invertedSet]].length > 0);
     }
     return YES;
 }
@@ -84,7 +59,7 @@
 {
     [super readInFields];
         
-    NSString * domainText = [domainTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    NSString * domainText = [self.domainTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     self.account.domain = domainText;
         
     if([self.portTextField.text length])
@@ -96,7 +71,6 @@
             self.account.port = [OTRManagedXMPPAccount defaultPortNumber];
         }
     }
-    
 }
 
 -(void)loginButtonPressed:(id)sender
@@ -105,66 +79,43 @@
     if([self.portTextField.text length] || self.account.portValue != [OTRManagedXMPPAccount defaultPortNumber].intValue)
     {
         int portNumber = [self.portTextField.text intValue];
-        NSString * domainText = [domainTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-        if (portNumber == [OTRManagedXMPPAccount defaultPortNumber].intValue || [domainText length])
-        {
+        NSString * domainText = [self.domainTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+        if (portNumber == [OTRManagedXMPPAccount defaultPortNumber].intValue || [domainText length]) {
             [super loginButtonPressed:sender];
         }
-        else{
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:XMPP_PORT_FAIL_STRING delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
-            [alert show];
+        else {
+            [self showAlertViewWithTitle:ERROR_STRING message:XMPP_PORT_FAIL_STRING error:nil];
         }
     }
     else
     {
         [super loginButtonPressed:sender];
     }
-    
-    
 }
 
 -(void)textFieldDidBeginEditing:(UITextField *)textField
 {
-    selectedCell = (UITableViewCell*) [[textField superview] superview];
-    [self.loginViewTableView scrollToRowAtIndexPath:[self.loginViewTableView indexPathForCell:selectedCell] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+    self.selectedCell = (UITableViewCell*) [[textField superview] superview];
+    [self.loginViewTableView scrollToRowAtIndexPath:[self.loginViewTableView indexPathForCell:self.selectedCell] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
 }
 
 -(void)keyboardWillHideOrShow:(NSNotification *)note
 {
-    NSDictionary *userInfo = note.userInfo;
-    NSTimeInterval duration = [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
-    UIViewAnimationCurve curve = [[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue];
+    [super keyboardWillHideOrShow:note];
     
-    CGRect keyboardFrame = [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
-    CGRect keyboardFrameForTableView = [self.loginViewTableView.superview convertRect:keyboardFrame fromView:nil];
-    
-    CGRect newTableViewFrame = CGRectMake(0, 0, self.loginViewTableView.frame.size.width, keyboardFrameForTableView.origin.y);
-    
-    //keyboardFrameForTextField.origin.y - newTextFieldFrame.size.height;
-    
-    [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionBeginFromCurrentState | curve animations:^{
-        self.loginViewTableView.frame = newTableViewFrame;
-    } completion:nil];
-    
-    if(selectedCell)
+    if(self.selectedCell)
     {
-        [self.loginViewTableView scrollToRowAtIndexPath:[self.loginViewTableView indexPathForCell:selectedCell] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+        [self.loginViewTableView scrollToRowAtIndexPath:[self.loginViewTableView indexPathForCell:self.selectedCell] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
     }
 }
 
--(void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    [self.usernameTextField resignFirstResponder];
-    [self.passwordTextField resignFirstResponder];
-}
 
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     self.domainTextField = nil;
     self.portTextField = nil;
-    selectedCell = nil;
+    self.selectedCell = nil;
 }
 
 

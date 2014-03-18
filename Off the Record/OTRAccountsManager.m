@@ -26,6 +26,10 @@
 #import "OTRConstants.h"
 #import "OTRManagedOscarAccount.h"
 #import "OTRManagedXMPPAccount.h"
+#import "OTRManagedXMPPTorAccount.h"
+#import "OTRProtocolManager.h"
+
+#import "OTRLog.h"
 
 #import "OTRLog.h"
 
@@ -35,22 +39,21 @@
 
 @implementation OTRAccountsManager
 
-+ (void) removeAccount:(OTRManagedAccount*)account {
++ (void) removeAccount:(OTRManagedAccount*)account inContext:(NSManagedObjectContext *)context {
     if (!account) {
         DDLogWarn(@"Account is nil!");
         return;
     }
     account.password = nil;
     
-    NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
-    OTRManagedAccount * acct = (OTRManagedAccount *)[context existingObjectWithID:account.objectID error:nil];
+    OTRManagedAccount * acct = [account MR_inContext:context];
     
-    [acct prepareBuddiesandMessagesForDeletion];
-    [acct MR_deleteEntity];
+    [[OTRProtocolManager sharedInstance] removeProtocolManagerForAccount:acct];
+    
+    [acct prepareBuddiesandMessagesForDeletionInContext:context];
+    [acct MR_deleteInContext:context];
     
     [context MR_saveToPersistentStoreAndWait];
-    
-   
 }
 
 + (NSArray *)allAccountsAbleToAddBuddies  {
@@ -80,7 +83,15 @@
     
     NSArray * accounts = [OTRManagedAccount MR_findAllWithPredicate:autoLoginPredicate];
     
-    return accounts;
+    //remove all tor accounts from auto login
+    NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+        if ([evaluatedObject isKindOfClass:[OTRManagedXMPPTorAccount class]]) {
+            return NO;
+        }
+        return YES;
+    }];
+    
+    return [accounts filteredArrayUsingPredicate:predicate];
 }
 
 

@@ -30,11 +30,12 @@
 #import "OTRManagedFacebookAccount.h"
 #import "OTRManagedGoogleAccount.h"
 #import "OTRManagedOscarAccount.h"
+#import "OTRImages.h"
 
-#define rowHeight 70
-#define kDisplayNameKey @"displayNameKey"
-#define kProviderImageKey @"providerImageKey"
-#define kAccountTypeKey @"kAccountTypeKey"
+static CGFloat const kOTRRowHeight   = 70;
+NSString *const kOTRDisplayNameKey   = @"kOTRDisplayNameKey";
+NSString *const kOTRProviderImageKey = @"kOTRProviderImageKey";
+NSString *const kOTRAccountTypeKey   = @"kOTRAccountTypeKey";
 
 @interface OTRNewAccountViewController ()
 
@@ -53,37 +54,20 @@
     tableView.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleHeight;
     [self.view addSubview:tableView];
     
-    //Facebook
-    NSMutableDictionary * facebookAccount = [NSMutableDictionary dictionary];
-    facebookAccount[kDisplayNameKey] = FACEBOOK_STRING;
-    facebookAccount[kProviderImageKey] = kFacebookImageName;
-    facebookAccount[kAccountTypeKey] = @(OTRAccountTypeFacebook);
     
     
-    //Google Chat
-     NSMutableDictionary * googleAccount = [NSMutableDictionary dictionary];
-    googleAccount[kDisplayNameKey] = GOOGLE_TALK_STRING;
-    googleAccount[kProviderImageKey] =  kGTalkImageName;
-    googleAccount[kAccountTypeKey] = @(OTRAccountTypeGoogleTalk);
-    
-    //Jabber
-     NSMutableDictionary * jabberAccount = [NSMutableDictionary dictionary];
-    jabberAccount[kDisplayNameKey ] = JABBER_STRING;
-    jabberAccount[kProviderImageKey] = kXMPPImageName;
-    jabberAccount[kAccountTypeKey] = @(OTRAccountTypeJabber);
-    
-    //Aim
-    /* AIM Support removed due to security issue
-     NSMutableDictionary * aimAccount = [NSMutableDictionary dictionary];
-    aimAccount[kDisplayNameKey] = AIM_STRING;
-    aimAccount[kProviderImageKey] = kAIMImageName;
-    aimAccount[kAccountTypeKey] = @(OTRAccountTypeAIM);
-     */
-    
-    accounts = @[facebookAccount,googleAccount,jabberAccount];
+    accountsCellArray = [self accounts];
     
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:CANCEL_STRING style:UIBarButtonItemStyleBordered target:self action:@selector(cancelPressed:)];
     
+}
+
+- (NSArray*)accounts
+{
+    return @[[OTRNewAccountViewController facebookCellDictionary],
+             [OTRNewAccountViewController googleCellDictionary],
+             [OTRNewAccountViewController XMPPCellDictionary],
+             [OTRNewAccountViewController XMPPTorCellDictionary]];
 }
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -93,13 +77,13 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [accounts count];
+    return [accountsCellArray count];
     
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return rowHeight;
+    return kOTRRowHeight;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -111,16 +95,20 @@
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
-    NSDictionary * cellAccount = [accounts objectAtIndex:indexPath.row];
-    cell.textLabel.text = cellAccount[kDisplayNameKey];
+    NSDictionary * cellAccount = [accountsCellArray objectAtIndex:indexPath.row];
+    cell.textLabel.text = cellAccount[kOTRDisplayNameKey];
     cell.textLabel.font = [UIFont boldSystemFontOfSize:19];
-    cell.imageView.image = [UIImage imageNamed:cellAccount[kProviderImageKey]];
+    cell.imageView.image = [UIImage imageNamed:cellAccount[kOTRProviderImageKey]];
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
-    if( [cellAccount[kAccountTypeKey] isEqual:@(OTRAccountTypeFacebook)])
+    if( [cellAccount[kOTRAccountTypeKey] isEqual:@(OTRAccountTypeFacebook)])
     {
+        cell.imageView.image = [OTRImages facebookImage];
         cell.imageView.layer.masksToBounds = YES;
         cell.imageView.layer.cornerRadius = 10.0;
+    }
+    else {
+        cell.imageView.image = [UIImage imageNamed:cellAccount[kOTRProviderImageKey]];
     }
     
     
@@ -132,19 +120,24 @@
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    OTRAccountType accountType = [accounts[indexPath.row][kAccountTypeKey] unsignedIntegerValue];
-    OTRManagedAccount * cellAccount = [OTRManagedAccount accountForAccountType:accountType];
     
-    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
+    OTRAccountType accountType = [accountsCellArray[indexPath.row][kOTRAccountTypeKey] unsignedIntegerValue];
+    [self didSelectAccountType:accountType];
+}
+
+- (void)cancelPressed:(id)sender {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)didSelectAccountType:(OTRAccountType)accountType {
+    NSManagedObjectContext * context = [NSManagedObjectContext MR_context];
+    OTRManagedAccount * cellAccount = [OTRManagedAccount accountForAccountType:accountType inContext:context];
+    [context obtainPermanentIDsForObjects:@[cellAccount] error:nil];
     [context MR_saveToPersistentStoreAndWait];
     
     OTRLoginViewController *loginViewController = [OTRLoginViewController loginViewControllerWithAcccountID:cellAccount.objectID];
     loginViewController.isNewAccount = YES;
     [self.navigationController pushViewController:loginViewController animated:YES];
-}
-
-- (void)cancelPressed:(id)sender {
-    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 
@@ -156,6 +149,32 @@
     } else {
         return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
     }
+}
+
++(NSDictionary *)googleCellDictionary {
+    return @{kOTRDisplayNameKey:GOOGLE_TALK_STRING,
+             kOTRProviderImageKey: OTRGoogleTalkImageName,
+             kOTRAccountTypeKey: @(OTRAccountTypeGoogleTalk)};
+}
++(NSDictionary *)facebookCellDictionary {
+    return @{kOTRDisplayNameKey:FACEBOOK_STRING,
+             kOTRProviderImageKey: OTRFacebookImageName,
+             kOTRAccountTypeKey: @(OTRAccountTypeFacebook)};
+}
++(NSDictionary *)XMPPCellDictionary {
+    return @{kOTRDisplayNameKey: JABBER_STRING,
+             kOTRProviderImageKey: OTRXMPPImageName,
+             kOTRAccountTypeKey: @(OTRAccountTypeJabber)};
+}
++(NSDictionary *)XMPPTorCellDictionary {
+    return @{kOTRDisplayNameKey: XMPP_TOR_STRING,
+             kOTRProviderImageKey: OTRXMPPTorImageName,
+             kOTRAccountTypeKey: @(OTRAccountTypeXMPPTor)};
+}
++(NSDictionary *)aimCellDictionary {
+    return @{kOTRDisplayNameKey: AIM_STRING,
+             kOTRProviderImageKey: OTRAimImageName,
+             kOTRAccountTypeKey: @(OTRAccountTypeAIM)};
 }
 
 @end

@@ -31,7 +31,7 @@
 @implementation OTRCodec
 
 
-+(void) decodeMessage:(OTRManagedMessage*)theMessage completionBlock:(void (^)(OTRManagedMessage *))completionBlock
++(void) decodeMessage:(OTRManagedChatMessage*)theMessage completionBlock:(void (^)(OTRManagedChatMessage *))completionBlock
 {
     NSString *message = theMessage.message;
     NSString *friendAccount = theMessage.buddy.accountName;
@@ -40,7 +40,7 @@
     
     [[OTRKit sharedInstance] decodeMessage:message recipient:friendAccount accountName:myAccountName protocol:protocol completionBlock:^(NSString *decodedMessageString) {
         NSManagedObjectContext * localContext = [NSManagedObjectContext MR_contextForCurrentThread];
-        OTRManagedMessage *localMessage = [theMessage MR_inContext:localContext];
+        OTRManagedChatMessage *localMessage = [theMessage MR_inContext:localContext];
         if([decodedMessageString length]) {
             localMessage.message = [OTRUtilities stripHTML:decodedMessageString];
             [localMessage setIsEncryptedValue:NO];
@@ -59,7 +59,7 @@
     }];
 }
 
-+(void)encodeMessage:(OTRManagedMessage *)theMessage completionBlock:(void (^)(OTRManagedMessage *))completionBlock
++(void)encodeMessage:(OTRManagedChatMessage *)theMessage completionBlock:(void (^)(OTRManagedChatMessage *))completionBlock
 {
     NSString *unencryptedMessage = theMessage.message;
     NSString *recipientAccount = theMessage.buddy.accountName;
@@ -68,8 +68,8 @@
 
     [[OTRKit sharedInstance] encodeMessage:unencryptedMessage recipient:recipientAccount accountName:sendingAccount protocol:protocol completionBlock:^(NSString *message) {
         NSManagedObjectContext *localContext = [NSManagedObjectContext MR_contextForCurrentThread];
-        OTRManagedMessage *localMessage = [theMessage MR_inContext:localContext ];
-        OTRManagedMessage *newOTRMessage = [OTRManagedMessage newMessageToBuddy:localMessage.buddy message:message encrypted:YES inContext:localContext];
+        OTRManagedChatMessage *localMessage = [theMessage MR_inContext:localContext ];
+        OTRManagedChatMessage *newOTRMessage = [OTRManagedChatMessage newMessageToBuddy:localMessage.buddy message:message encrypted:YES inContext:localContext];
         newOTRMessage.date = localMessage.date;
         newOTRMessage.uniqueID = localMessage.uniqueID;
         [localContext MR_saveToPersistentStoreAndWait];
@@ -79,12 +79,12 @@
     }];
 }
 
-+ (void)generateOtrInitiateOrRefreshMessageTobuddy:(OTRManagedBuddy *)buddy completionBlock:(void (^)(OTRManagedMessage *))completionBlock {
++ (void)generateOtrInitiateOrRefreshMessageTobuddy:(OTRManagedBuddy *)buddy completionBlock:(void (^)(OTRManagedChatMessage *))completionBlock {
     
     [[OTRKit sharedInstance] generateInitiateOrRefreshMessageToRecipient:buddy.accountName accountName:buddy.account.username protocol:[buddy.account protocol] completionBlock:^(NSString *message) {
         
         NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
-        OTRManagedMessage *newOTRMessage = [OTRManagedMessage newMessageToBuddy:buddy message:message encrypted:YES inContext:context];
+        OTRManagedChatMessage *newOTRMessage = [OTRManagedChatMessage newMessageToBuddy:buddy message:message encrypted:YES inContext:context];
         
         [context MR_saveToPersistentStoreAndWait];
         

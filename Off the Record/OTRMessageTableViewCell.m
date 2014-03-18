@@ -13,30 +13,28 @@
 #import "OTRSettingsManager.h"
 #import "OTRSafariActionSheet.h"
 #import "OTRAppDelegate.h"
+#import "OTRChatBubbleView.h"
+#import "OTRUtilities.h"
+#import "OTRManagedChatMessage.h"
 
-#define MESSAGE_DELIVERED_LABEL_HEIGHT       (DeliveredFontSize +7)
-#define MESSAGE_SENT_DATE_LABEL_HEIGHT       (SentDateFontSize+7)
-#define MESSAGE_SENT_DATE_LABEL_TAG          100
-#define MESSAGE_BACKGROUND_IMAGE_VIEW_TAG    101
-#define MESSAGE_TEXT_LABEL_TAG               102
-#define MESSAGE_DELIVERED_LABEL_TAG          103
+
+static CGFloat const messageTextWidthMax = 180;
 
 @implementation OTRMessageTableViewCell
 
--(id)initWithMessage:(OTRManagedMessage *)newMessage withDate:(BOOL)newShowDate reuseIdentifier:(NSString*)identifier
+-(id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
-    self = [super initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:identifier];
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        self.showDate = newShowDate;
+        self.showDate = NO;
         self.selectionStyle = UITableViewCellSelectionStyleNone;
         
         //CreateMessageSentDateLabel
         self.dateLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         self.dateLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        self.dateLabel.tag = MESSAGE_SENT_DATE_LABEL_TAG;
         self.dateLabel.textColor = [UIColor grayColor];
         self.dateLabel.textAlignment = NSTextAlignmentCenter;
-        self.dateLabel.font = [UIFont boldSystemFontOfSize:SentDateFontSize];
+        self.dateLabel.font = [UIFont boldSystemFontOfSize:kOTRSentDateFontSize];
         self.dateLabel.backgroundColor = [UIColor clearColor];
         self.dateLabel.translatesAutoresizingMaskIntoConstraints = NO;
         [self.contentView addSubview:self.dateLabel];
@@ -44,45 +42,35 @@
         
         //Create bubbleView
         self.bubbleView = [[OTRChatBubbleView alloc] initWithFrame:CGRectZero];
-        self.bubbleView.isIncoming = newMessage.isIncomingValue;
-        TTTAttributedLabel * label = [OTRMessageTableViewCell defaultLabel];
-        label.text = newMessage.message;
-        label.delegate = self;
-        self.bubbleView.messageTextLabel = label;
+        self.bubbleView.messageTextLabel.delegate = self;
+        self.bubbleView.incoming = NO;
+        
+        [self.bubbleView updateLayout];
         
         [self.contentView addSubview:self.bubbleView];
-        [self setupConstraints];
         
-        [self setMessage:newMessage];
+        [self setupConstraints];
     }
     
     return self;
     
 }
 
--(void)setMessage:(OTRManagedMessage *)newMessage
+-(void)setMessage:(OTRManagedChatMessage *)message
 {
-    [self willChangeValueForKey:NSStringFromSelector(@selector(message))];
-    _message = newMessage;
-    [self didChangeValueForKey:NSStringFromSelector(@selector(message))];
-    
-    self.bubbleView.messageTextLabel.text = self.message.message;
-    self.bubbleView.isIncoming = self.message.isIncomingValue;
-    
-    [self.bubbleView setIsDelivered:self.message.isDeliveredValue animated:NO];
-    
-    CGFloat messageSentDateLabelHeight = 0;
+    _message = message;
+    self.bubbleView.messageTextLabel.text = message.message;
+    self.bubbleView.delivered = message.isDeliveredValue;
     
     if (self.showDate) {
-        self.dateLabel.text = [[OTRMessageTableViewCell defaultDateFormatter] stringFromDate:newMessage.date];
-        
-        messageSentDateLabelHeight = MESSAGE_SENT_DATE_LABEL_HEIGHT;
+        self.dateLabel.text = [[OTRMessageTableViewCell defaultDateFormatter] stringFromDate:message.date];
     } else {
         self.dateLabel.text = nil;
     }
     
+    [self.bubbleView updateLayout];
+    
     [self setNeedsUpdateConstraints];
-    [self layoutIfNeeded];
 }
 
 -(void)setupConstraints
@@ -151,7 +139,7 @@
     [self removeConstraint:dateHeightConstraint];
     CGFloat dateheight = 0.0;
     if (self.showDate) {
-        dateheight = SentDateFontSize+5;
+        dateheight = kOTRSentDateFontSize+5;
     }
     
     dateHeightConstraint = [NSLayoutConstraint constraintWithItem:self.dateLabel
@@ -167,28 +155,9 @@
 
 +(CGSize)messageTextLabelSize:(NSString *)message
 {
-    TTTAttributedLabel * label = [OTRMessageTableViewCell defaultLabel];
+    TTTAttributedLabel * label = [OTRChatBubbleView defaultLabel];
     label.text = message;
-    return  [label sizeThatFits:CGSizeMake(MESSAGE_TEXT_WIDTH_MAX, CGFLOAT_MAX)];
-}
-
-
-+(TTTAttributedLabel *)defaultLabel
-{
-    TTTAttributedLabel * messageTextLabel = [[TTTAttributedLabel alloc] initWithFrame:CGRectZero];
-    messageTextLabel.tag = MESSAGE_TEXT_LABEL_TAG;
-    messageTextLabel.backgroundColor = [UIColor clearColor];
-    messageTextLabel.numberOfLines = 0;
-    messageTextLabel.dataDetectorTypes = UIDataDetectorTypeLink;
-    messageTextLabel.lineBreakMode = NSLineBreakByWordWrapping;
-    
-    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
-        messageTextLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
-    } else {
-        CGFloat messageTextSize = [OTRSettingsManager floatForOTRSettingKey:kOTRSettingKeyFontSize];
-        messageTextLabel.font = [UIFont systemFontOfSize:messageTextSize];
-    }
-    return messageTextLabel;
+    return  [label sizeThatFits:CGSizeMake(messageTextWidthMax, CGFLOAT_MAX)];
 }
 
 
@@ -214,12 +183,18 @@
 {
     CGFloat dateHeight = 0;
     if (showDate) {
-        dateHeight = SentDateFontSize+5;
+        dateHeight = kOTRSentDateFontSize+5;
     }
-    TTTAttributedLabel * label = [self defaultLabel];
+    TTTAttributedLabel * label = [OTRChatBubbleView defaultLabel];
     label.text = message;
     CGSize labelSize = [label sizeThatFits:CGSizeMake(180, CGFLOAT_MAX)];
-    return labelSize.height + 12.0 + dateHeight;
+    
+    CGFloat padding = 12.0;
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
+        padding = 16.0;
+    }
+    
+    return labelSize.height + padding + dateHeight;
 }
 
 + (NSDateFormatter *)defaultDateFormatter
@@ -231,6 +206,11 @@
         [dateFormatter setDateFormat:@"MMM dd, YYYY h:mm a"];
     });
     return dateFormatter;
+}
+
++ (NSString *)reuseIdentifier
+{
+    return NSStringFromClass([self class]);
 }
 
 

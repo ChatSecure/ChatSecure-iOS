@@ -26,44 +26,49 @@
 #import "OTRDoubleSetting.h"
 #import "OTRConstants.h"
 #import "OTRAppDelegate.h"
-#import "OTRMessageTableViewCell.h"
+
 #import "DAKeyboardControl.h"
-#import "OTRManagedStatus.h"
-#import "OTRManagedEncryptionStatusMessage.h"
+#import "OTRManagedStatusMessage.h"
+#import "OTRManagedEncryptionMessage.h"
 #import "OTRStatusMessageCell.h"
 #import "OTRUtilities.h"
+#import "OTRLockButton.h"
 
+#import "OTRIncomingMessageTableViewCell.h"
+#import "OTROutgoingMessageTableViewCell.h"
 #import "UIAlertView+Blocks.h"
 
+#import "OTRImages.h"
+#import "OTRComposingImageView.h"
+
+static CGFloat const kOTRMessageMarginBottom = 10;
+static CGFloat const kOTRMessageMarginTop = 7;
+static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
 
 
-@interface OTRChatViewController(Private)
+typedef NS_ENUM(NSInteger, OTRChatViewTags) {
+    OTRChatViewAlertViewVerifiedTag            = 200,
+    OTRChatViewAlertViewNotVerifiedTag         = 201,
+    OTRChatViewActionSheetEncryptionOptionsTag = 202
+};
 
-- (void) refreshView;
+@interface OTRChatViewController ()
 
-
+@property (nonatomic, strong) UIView *composingImageView;
+@property (nonatomic, readonly) CGFloat initialBarChatBarHeight;
+@property (nonatomic, strong) OTRLockButton *lockButton;
+@property (nonatomic, strong) UIBarButtonItem *lockBarButtonItem;
+@property (nonatomic, strong) NSMutableArray *showDateForRowArray;
+@property (nonatomic, strong) NSDate *previousShownSentDate;
+@property (nonatomic, strong) OTRChatInputBar *chatInputBar;
+@property (nonatomic, strong) OTRTitleSubtitleView *titleView;
+@property (nonatomic) CGFloat previousTextViewContentHeight;
 
 @end
 
 @implementation OTRChatViewController
-@synthesize buddyListController;
-@synthesize lockButton, unlockedButton,lockVerifiedButton;
-@synthesize lastActionLink;
-@synthesize buddy;
-@synthesize instructionsLabel;
-@synthesize chatHistoryTableView;
-@synthesize swipeGestureRecognizer;
-@synthesize isComposingVisible;
 
 - (void) dealloc {
-    self.lastActionLink = nil;
-    self.buddyListController = nil;
-    self.buddy = nil;
-    self.chatHistoryTableView = nil;
-    self.lockButton = nil;
-    self.unlockedButton = nil;
-    self.instructionsLabel = nil;
-    self.chatHistoryTableView = nil;
     _messagesFetchedResultsController = nil;
     _buddyFetchedResultsController = nil;
     
@@ -73,55 +78,57 @@
     if (self = [super init]) {
         //set notification for when keyboard shows/hides
         self.title = CHAT_STRING;
-        titleView = [[OTRTitleSubtitleView alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
-        titleView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
-        self.navigationItem.titleView = titleView;
+        self.titleView = [[OTRTitleSubtitleView alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
+        self.titleView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+        self.navigationItem.titleView = self.titleView;
     }
     return self;
 }
 
-- (CGFloat) chatBoxViewHeight {
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-        return 50.0;
-    } else {
-        return 44.0;
+- (CGFloat)initialBarChatBarHeight
+{
+    if (SYSTEM_VERSION_LESS_THAN(@"7.0")) {
+        return 40;
+    }
+    else{
+        return 42;
     }
 }
 
 -(void)setupLockButton
 {
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    UIImage *buttonImage = [UIImage imageNamed:@"Lock_Locked.png"];
-    [button setBackgroundImage:buttonImage forState:UIControlStateNormal];
-    CGRect buttonFrame = [button frame];
-    buttonFrame.size.width = buttonImage.size.width;
-    buttonFrame.size.height = buttonImage.size.height;
-    [button setFrame:buttonFrame];
-    [button addTarget:self action:@selector(lockButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    __weak OTRChatViewController * weakSelf = self;
+    self.lockButton = [OTRLockButton lockButtonWithInitailLockStatus:OTRLockStatusUnlocked withBlock:^(OTRLockStatus currentStatus){
+        NSString *encryptionString = INITIATE_ENCRYPTED_CHAT_STRING;
+        NSString * verifiedString = VERIFY_STRING;
+        
+        if ([[OTRKit sharedInstance] isConversationEncryptedForUsername:weakSelf.buddy.accountName accountName:weakSelf.buddy.account.username protocol:weakSelf.buddy.account.protocol]) {
+            encryptionString = CANCEL_ENCRYPTED_CHAT_STRING;
+        }
+        
+         NSString * title = nil;
+        if (currentStatus == OTRLockStatusLockedAndError) {
+            title = LOCKED_ERROR_STRING;
+        }
+        else if (currentStatus == OTRLockStatusLockedAndWarn) {
+            title = LOCKED_WARN_STRING;
+        }
+        else if (currentStatus == OTRLockStatusLockedAndVerified){
+            title = LOCKED_SECURE_STRING;
+        }
+        else if (currentStatus == OTRLockStatusUnlocked){
+            title = UNLOCKED_ALERT_STRING;
+        }
+        
+        UIActionSheet *popupQuery = [[UIActionSheet alloc] initWithTitle:title delegate:weakSelf cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:encryptionString, verifiedString, CLEAR_CHAT_HISTORY_STRING, nil];
+        popupQuery.accessibilityLabel = @"secure";
+        popupQuery.actionSheetStyle = UIActionSheetStyleBlackOpaque;
+        popupQuery.tag = OTRChatViewActionSheetEncryptionOptionsTag;
+        [OTR_APP_DELEGATE presentActionSheet:popupQuery inView:weakSelf.view];
+    }];
     
-    self.lockButton = [[UIBarButtonItem alloc] initWithCustomView:button];
-    
-    button = [UIButton buttonWithType:UIButtonTypeCustom];
-    buttonImage = [UIImage imageNamed:@"Lock_Unlocked.png"];
-    [button setBackgroundImage:buttonImage forState:UIControlStateNormal];
-    buttonFrame = [button frame];
-    buttonFrame.size.width = buttonImage.size.width;
-    buttonFrame.size.height = buttonImage.size.height;
-    [button setFrame:buttonFrame];
-    [button addTarget:self action:@selector(lockButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-    
-    self.unlockedButton = [[UIBarButtonItem alloc] initWithCustomView:button];
-    
-    button = [UIButton buttonWithType:UIButtonTypeCustom];
-    buttonImage = [UIImage imageNamed:@"Lock_Locked_Verified.png"];
-    [button setBackgroundImage:buttonImage forState:UIControlStateNormal];
-    buttonFrame = [button frame];
-    buttonFrame.size.width = buttonImage.size.width;
-    buttonFrame.size.height = buttonImage.size.height;
-    [button setFrame:buttonFrame];
-    [button addTarget:self action:@selector(lockButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-    
-    self.lockVerifiedButton = [[UIBarButtonItem alloc] initWithCustomView:button];
+    self.lockBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.lockButton];
+    [self.navigationItem setRightBarButtonItem:self.lockBarButtonItem];
     
     [self refreshLockButton];
 }
@@ -134,43 +141,26 @@
         }
     }];
     UIBarButtonItem * rightBarItem = self.navigationItem.rightBarButtonItem;
-    if ([rightBarItem isEqual:lockButton] || [rightBarItem isEqual:lockVerifiedButton] || [rightBarItem isEqual:unlockedButton] || !rightBarItem) {
-        BOOL trusted = [[OTRKit sharedInstance] fingerprintIsVerifiedForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
+    if ([rightBarItem isEqual:self.lockBarButtonItem]) {
+        BOOL isTrusted = [[OTRKit sharedInstance] activeFingerprintIsVerifiedForUsername:self.buddy.accountName accountName:self.buddy.account.username protocol:self.buddy.account.protocol];
+        BOOL isEncrypted = [[OTRKit sharedInstance] isConversationEncryptedForUsername:self.buddy.accountName accountName:self.buddy.account.username protocol:self.buddy.account.protocol];
+        BOOL  hasVerifiedFingerprints = [[OTRKit sharedInstance] hasVerifiedFingerprintsForUsername:self.buddy.accountName accountName:self.buddy.account.username protocol:self.buddy.account.protocol];
         
-        OTRKitMessageState currentEncryptionStatus = [self.buddy currentEncryptionStatus];
-        
-        if(currentEncryptionStatus == kOTRKitMessageStateEncrypted && trusted)
-        {
-            self.navigationItem.rightBarButtonItem = self.lockVerifiedButton;
+        if (isEncrypted && isTrusted) {
+            self.lockButton.lockStatus = OTRLockStatusLockedAndVerified;
         }
-        else if(currentEncryptionStatus == kOTRKitMessageStateEncrypted)
+        else if (isEncrypted && hasVerifiedFingerprints)
         {
-            self.navigationItem.rightBarButtonItem = self.lockButton;
+            self.lockButton.lockStatus = OTRLockStatusLockedAndError;
         }
-        else
-        {
-            self.navigationItem.rightBarButtonItem = self.unlockedButton;
+        else if (isEncrypted) {
+            self.lockButton.lockStatus = OTRLockStatusLockedAndWarn;
         }
-        self.navigationItem.rightBarButtonItem.accessibilityLabel = @"lock";
+        else {
+            self.lockButton.lockStatus = OTRLockStatusUnlocked;
+        }
     }
-    
 }
-
--(void)lockButtonPressed
-{
-    NSString *encryptionString = INITIATE_ENCRYPTED_CHAT_STRING;
-    NSString * verifiedString = VERIFY_STRING;
-    
-    if ([self.buddy currentEncryptionStatus] == kOTRKitMessageStateEncrypted) {
-        encryptionString = CANCEL_ENCRYPTED_CHAT_STRING;
-    }
-    UIActionSheet *popupQuery = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:encryptionString, verifiedString, CLEAR_CHAT_HISTORY_STRING, nil];
-    popupQuery.accessibilityLabel = @"secure";
-    popupQuery.actionSheetStyle = UIActionSheetStyleBlackOpaque;
-    popupQuery.tag = ACTIONSHEET_ENCRYPTION_OPTIONS_TAG;
-    [OTR_APP_DELEGATE presentActionSheet:popupQuery inView:self.view];
-}
-
 
 
 #pragma mark - View lifecycle
@@ -181,17 +171,18 @@
     
     self.view.backgroundColor = [UIColor whiteColor];
     
-    showDateForRowArray = [NSMutableArray array];
-    _messageBubbleComposing = [UIImage imageNamed:@"MessageBubbleTyping"];
+    self.showDateForRowArray = [NSMutableArray array];
     
     self.chatHistoryTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
     
+    [self.chatHistoryTableView registerClass:[OTRIncomingMessageTableViewCell class]
+                      forCellReuseIdentifier:[OTRIncomingMessageTableViewCell reuseIdentifier]];
+    [self.chatHistoryTableView registerClass:[OTROutgoingMessageTableViewCell class]
+                      forCellReuseIdentifier:[OTROutgoingMessageTableViewCell reuseIdentifier]];
+    
     
     UIEdgeInsets insets = self.chatHistoryTableView.contentInset;
-    insets.bottom = kChatBarHeight1;
-    if(SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
-        //insets.top = [self.navigationController navigationBar].frame.size.height;
-    }
+    insets.bottom = self.initialBarChatBarHeight;
     
     self.chatHistoryTableView.contentInset = self.chatHistoryTableView.scrollIndicatorInsets = insets;
     
@@ -205,18 +196,18 @@
     [self.chatHistoryTableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
     
     
-    _previousTextViewContentHeight = MessageFontSize+20;
+    self.previousTextViewContentHeight = kOTRMessageFontSize+20;
         
-    CGRect barRect = CGRectMake(0, self.view.frame.size.height-kChatBarHeight1, self.view.frame.size.width, kChatBarHeight1);
+    CGRect barRect = CGRectMake(0, self.view.frame.size.height-self.initialBarChatBarHeight, self.view.frame.size.width, self.initialBarChatBarHeight);
     
-    chatInputBar = [[OTRChatInputBar alloc] initWithFrame:barRect withDelegate:self];
+    self.chatInputBar = [[OTRChatInputBar alloc] initWithFrame:barRect withDelegate:self];
    
-    [self.view addSubview:chatInputBar];
+    [self.view addSubview:self.chatInputBar];
     
-    self.view.keyboardTriggerOffset = chatInputBar.frame.size.height;
+    self.view.keyboardTriggerOffset = self.chatInputBar.frame.size.height;
     
-    swipeGestureRecognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(handleSwipeFrom)];
-    [self.view addGestureRecognizer:swipeGestureRecognizer];
+    self.swipeGestureRecognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(handleSwipeFrom)];
+    [self.view addGestureRecognizer:self.swipeGestureRecognizer];
     
     [self setupLockButton];
     
@@ -224,13 +215,13 @@
 }
 -(void)handleSwipeFrom
 {
-    if (swipeGestureRecognizer.direction == UISwipeGestureRecognizerDirectionRight && UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad) {
+    if (self.swipeGestureRecognizer.direction == UISwipeGestureRecognizerDirectionRight && UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad) {
         [self.navigationController popViewControllerAnimated:YES];
     }
 }
 
 - (void) showDisconnectionAlert:(NSNotification*)notification {
-    NSMutableString *message = [NSMutableString stringWithFormat:DISCONNECTED_MESSAGE_STRING, buddy.account.username];
+    NSMutableString *message = [NSMutableString stringWithFormat:DISCONNECTED_MESSAGE_STRING, self.buddy.account.username];
     if ([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyDeleteOnDisconnect]) {
         [message appendFormat:@" %@", DISCONNECTION_WARNING_STRING];
     }
@@ -241,24 +232,22 @@
 - (void) setBuddy:(OTRManagedBuddy *)newBuddy {
     [self saveCurrentMessageText];
     
-    buddy = newBuddy;
+    _buddy = newBuddy;
     
     [self refreshView];
-    if (buddy) {
+    if (self.buddy) {
         if ([newBuddy.displayName length]) {
-            //self.title = newBuddy.displayName;
-            titleView.titleLabel.text = newBuddy.displayName;
+            self.titleView.titleLabel.text = newBuddy.displayName;
         }
         else {
-            //self.title = newBuddy.accountName;
-            titleView.titleLabel.text = newBuddy.accountName;
+            self.titleView.titleLabel.text = newBuddy.accountName;
         }
         
         if(newBuddy.account.displayName.length) {
-            titleView.subtitleLabel.text = newBuddy.account.displayName;
+            self.titleView.subtitleLabel.text = newBuddy.account.displayName;
         }
         else {
-            titleView.subtitleLabel.text = newBuddy.account.username;
+            self.titleView.subtitleLabel.text = newBuddy.account.username;
         }
         
         [self refreshLockButton];
@@ -280,11 +269,19 @@
     [self.chatHistoryTableView beginUpdates];
     [self.chatHistoryTableView deleteRowsAtIndexPaths:@[[self lastIndexPath]] withRowAnimation:UITableViewRowAnimationAutomatic];
     [self.chatHistoryTableView endUpdates];
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
+        [(OTRComposingImageView *)self.composingImageView stopBlinking];
+    }
+    
     [self scrollToBottomAnimated:YES];
     
 }
 -(void)addComposing
 {
+    if (!self.composingImageView) {
+        self.composingImageView = [OTRImages typingBubbleView];
+    }
+    
     self.isComposingVisible = YES;
     NSIndexPath * lastIndexPath = [self lastIndexPath];
     NSInteger newLast = [lastIndexPath indexAtPosition:lastIndexPath.length-1]+1;
@@ -292,6 +289,9 @@
     [self.chatHistoryTableView beginUpdates];
     [self.chatHistoryTableView insertRowsAtIndexPaths:@[lastIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
     [self.chatHistoryTableView endUpdates];
+    
+    
+    
     [self scrollToBottomAnimated:YES];
 }
 
@@ -303,12 +303,22 @@
                 if (!self.isComposingVisible) {
                     [self addComposing];
                 }
+                if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
+                    if (!((OTRComposingImageView *)self.composingImageView).isBlinking) {
+                        [(OTRComposingImageView *)self.composingImageView startBlinking];
+                    }
+                }
+                
             }
         break;
         case kOTRChatStatePaused:
             {
                 if (!self.isComposingVisible) {
-                [self addComposing];
+                    [self addComposing];
+                }
+                
+                if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
+                    [(OTRComposingImageView *)self.composingImageView stopBlinking];
                 }
             }
             break;
@@ -347,14 +357,14 @@
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     //DDLogInfo(@"buttonIndex: %d",buttonIndex);
-    if(actionSheet.tag == ACTIONSHEET_ENCRYPTION_OPTIONS_TAG)
+    if(actionSheet.tag == OTRChatViewActionSheetEncryptionOptionsTag)
     {
         if (buttonIndex == 1) // Verify
         {
             NSString *msg = nil;
-            NSString *ourFingerprintString = [[OTRKit sharedInstance] fingerprintForAccountName:buddy.account.username protocol:buddy.account.protocol];
-            NSString *theirFingerprintString = [[OTRKit sharedInstance] fingerprintForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
-            BOOL trusted = [[OTRKit sharedInstance] fingerprintIsVerifiedForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
+            NSString *ourFingerprintString = [[OTRKit sharedInstance] fingerprintForAccountName:self.buddy.account.username protocol:self.buddy.account.protocol];
+            NSString *theirFingerprintString = [[OTRKit sharedInstance] fingerprintForUsername:self.buddy.accountName accountName:self.buddy.account.username protocol:self.buddy.account.protocol];
+            BOOL trusted = [[OTRKit sharedInstance] activeFingerprintIsVerifiedForUsername:self.buddy.accountName accountName:self.buddy.account.username protocol:self.buddy.account.protocol];
             
             
             UIAlertView * alert;
@@ -373,7 +383,7 @@
             }];
 
             if(ourFingerprintString && theirFingerprintString) {
-                msg = [NSString stringWithFormat:@"%@, %@:\n%@\n\n%@ %@:\n%@\n", YOUR_FINGERPRINT_STRING, buddy.account.username, ourFingerprintString, THEIR_FINGERPRINT_STRING, buddy.accountName, theirFingerprintString];
+                msg = [NSString stringWithFormat:@"%@, %@:\n%@\n\n%@ %@:\n%@\n", YOUR_FINGERPRINT_STRING, self.buddy.account.username, ourFingerprintString, THEIR_FINGERPRINT_STRING, self.buddy.accountName, theirFingerprintString];
                 if(trusted)
                 {
                     alert = [[UIAlertView alloc] initWithTitle:VERIFY_FINGERPRINT_STRING message:msg cancelButtonItem:verifiedButtonItem otherButtonItems:notVerifiedButtonItem, nil];
@@ -391,12 +401,12 @@
         }
         else if (buttonIndex == 0) // Initiate/cancel encryption
         {
-            if([self.buddy currentEncryptionStatus] == kOTRKitMessageStateEncrypted)
+            if([[OTRKit sharedInstance] isConversationEncryptedForUsername:self.buddy.accountName accountName:self.buddy.account.username protocol:self.buddy.account.protocol])
             {
-                [[OTRKit sharedInstance] disableEncryptionForUsername:buddy.accountName accountName:buddy.account.username protocol:buddy.account.protocol];
+                [[OTRKit sharedInstance] disableEncryptionForUsername:self.buddy.accountName accountName:self.buddy.account.username protocol:self.buddy.account.protocol];
             } else {
                 void (^sendInitateOTRMessage)(void) = ^void (void) {
-                    [OTRCodec generateOtrInitiateOrRefreshMessageTobuddy:self.buddy completionBlock:^(OTRManagedMessage *message) {
+                    [OTRCodec generateOtrInitiateOrRefreshMessageTobuddy:self.buddy completionBlock:^(OTRManagedChatMessage *message) {
                         [OTRProtocolManager sendMessage:message];
                     }];
                 };
@@ -416,7 +426,7 @@
         }
         else if (buttonIndex == 2) { // Clear Chat History
             NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
-            [buddy deleteAllMessagesInContext:context];
+            [self.buddy deleteAllMessagesInContext:context];
             [context MR_saveToPersistentStoreAndWait];
         }
         else if (buttonIndex == actionSheet.cancelButtonIndex) // Cancel
@@ -436,7 +446,7 @@
     self.navigationItem.rightBarButtonItem = activityBarButtonItem;
 }
 -(void)removeLockSpinner {
-    self.navigationItem.rightBarButtonItem = nil;
+    self.navigationItem.rightBarButtonItem = self.lockBarButtonItem;
     [self refreshLockButton];
 }
 
@@ -444,15 +454,15 @@
     _messagesFetchedResultsController = nil;
     _buddyFetchedResultsController = nil;
     if (!self.buddy) {
-        if (!instructionsLabel) {
+        if (!self.instructionsLabel) {
             int labelWidth = 500;
             int labelHeight = 100;
             self.instructionsLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.view.frame.size.width/2-labelWidth/2, self.view.frame.size.height/2-labelHeight/2, labelWidth, labelHeight)];
-            instructionsLabel.text = CHAT_INSTRUCTIONS_LABEL_STRING;
-            instructionsLabel.numberOfLines = 2;
-            instructionsLabel.backgroundColor = self.chatHistoryTableView.backgroundColor;
-            [self.view addSubview:instructionsLabel];
-            self.navigationItem.rightBarButtonItem = nil;
+            self.instructionsLabel.text = CHAT_INSTRUCTIONS_LABEL_STRING;
+            self.instructionsLabel.numberOfLines = 2;
+            self.instructionsLabel.backgroundColor = self.chatHistoryTableView.backgroundColor;
+            [self.view addSubview:self.instructionsLabel];
+            //self.navigationItem.rightBarButtonItem = nil;
         }
     } else {
         if (self.instructionsLabel) {
@@ -461,9 +471,12 @@
         }
         [self buddyFetchedResultsController];
         [self messagesFetchedResultsController];
-        showDateForRowArray = [NSMutableArray array];
-        _previousShownSentDate = nil;
-        [self.buddy allMessagesRead];
+        self.showDateForRowArray = [NSMutableArray array];
+        self.previousShownSentDate = nil;
+        
+        NSManagedObjectContext *context = self.buddy.managedObjectContext;
+        [self.buddy setAllMessagesRead:YES];
+        [context MR_saveToPersistentStoreAndWait];
         
         [self.chatHistoryTableView reloadData];
                
@@ -472,10 +485,10 @@
         if(![self.buddy.composingMessageString length])
         {
             [self.buddy sendActiveChatState];
-            chatInputBar.textView.text = nil;
+            self.chatInputBar.textView.text = nil;
         }
         else{
-            chatInputBar.textView.text = self.buddy.composingMessageString;
+            self.chatInputBar.textView.text = self.buddy.composingMessageString;
             
         }
         
@@ -487,7 +500,10 @@
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-    [self.buddy allMessagesRead];
+    NSManagedObjectContext * context = self.buddy.managedObjectContext;
+    [self.buddy setAllMessagesRead:YES];
+    [context MR_saveToPersistentStoreWithCompletion:nil];
+    
     [super viewWillDisappear:animated];
 }
 
@@ -504,7 +520,7 @@
     [super viewWillAppear:animated];
     
     __weak OTRChatViewController * chatViewController = self;
-    __weak OTRChatInputBar * weakChatInputbar = chatInputBar;
+    __weak OTRChatInputBar * weakChatInputbar = self.chatInputBar;
     [self.view addKeyboardPanningWithActionHandler:^(CGRect keyboardFrameInView) {
         CGRect messageInputBarFrame = weakChatInputbar.frame;
         messageInputBarFrame.origin.y = keyboardFrameInView.origin.y - messageInputBarFrame.size.height;
@@ -524,34 +540,27 @@
     }
     
     // KLUDGE: Work around keyboard visibility bug where chat input view is visible but keyboard is not
-    if (self.view.keyboardFrameInView.size.height == 0 && chatInputBar.frame.origin.y < self.view.frame.size.height - chatInputBar.frame.size.height) {
-        [chatInputBar.textView becomeFirstResponder];
+    if (self.view.keyboardFrameInView.size.height == 0 && self.chatInputBar.frame.origin.y < self.view.frame.size.height - self.chatInputBar.frame.size.height) {
+        [self.chatInputBar.textView becomeFirstResponder];
     }
     // KLUDGE: If chatInputBar is beyond the bounds of the screen for some unknown reason, force it back into place
-    if (chatInputBar.frame.origin.y > self.view.frame.size.height - chatInputBar.frame.size.height) {
-        CGRect newFrame = chatInputBar.frame;
-        newFrame.origin.y = self.view.frame.size.height - chatInputBar.frame.size.height;
-        chatInputBar.frame = newFrame;
+    if (self.chatInputBar.frame.origin.y > self.view.frame.size.height - self.chatInputBar.frame.size.height) {
+        CGRect newFrame = self.chatInputBar.frame;
+        newFrame.origin.y = self.view.frame.size.height - self.chatInputBar.frame.size.height;
+        self.chatInputBar.frame = newFrame;
     }
 
 }
 
 -(void)saveCurrentMessageText
 {
-    self.buddy.composingMessageString = chatInputBar.textView.text;
+    self.buddy.composingMessageString = self.chatInputBar.textView.text;
     if(![self.buddy.composingMessageString length])
     {
         [self.buddy sendInactiveChatState];
     }
-    chatInputBar.textView.text = nil;
+    self.chatInputBar.textView.text = nil;
 }
-
-/*- (void)debugButton:(UIBarButtonItem *)sender
-{
-	textView.contentView.drawDebugFrames = !textView.contentView.drawDebugFrames;
-	[DTCoreTextLayoutFrame setShouldDrawDebugFrames:textView.contentView.drawDebugFrames];
-	[self.view setNeedsDisplay];
-}*/
 
 
 //detailedView delegate methods
@@ -584,10 +593,10 @@
 
 - (BOOL)showDateForMessageAtIndexPath:(NSIndexPath *)indexPath {
     
-    if (indexPath.row < [showDateForRowArray count]) {
-        return [showDateForRowArray[indexPath.row] boolValue];
+    if (indexPath.row < [self.showDateForRowArray count]) {
+        return [self.showDateForRowArray[indexPath.row] boolValue];
     }
-    else if (indexPath.row - [showDateForRowArray count] > 0)
+    else if (indexPath.row - [self.showDateForRowArray count] > 0)
     {
         [self showDateForMessageAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row-1 inSection:indexPath.section]];
     }
@@ -595,12 +604,12 @@
     __block BOOL showDate = NO;
     if (indexPath.row < [[self.messagesFetchedResultsController sections][indexPath.section] numberOfObjects]) {
         id messageOrStatus = [self.messagesFetchedResultsController objectAtIndexPath:indexPath];
-        if([messageOrStatus isKindOfClass:[OTRManagedMessage class]]) {
+        if([messageOrStatus isKindOfClass:[OTRManagedChatMessage class]]) {
             //only OTRManagedMessage get dates
             
-            OTRManagedMessage * currentMessage = (OTRManagedMessage *)messageOrStatus;
+            OTRManagedChatMessage * currentMessage = (OTRManagedChatMessage *)messageOrStatus;
             
-            if (!_previousShownSentDate || [currentMessage.date timeIntervalSinceDate:_previousShownSentDate] > MESSAGE_SENT_DATE_SHOW_TIME_INTERVAL) {
+            if (!_previousShownSentDate || [currentMessage.date timeIntervalSinceDate:_previousShownSentDate] > kOTRMessageSentDateShowTimeInterval) {
                 _previousShownSentDate = currentMessage.date;
                 showDate = YES;
             }
@@ -608,7 +617,7 @@
     }
     
     
-    [showDateForRowArray addObject:[NSNumber numberWithBool:showDate]];
+    [self.showDateForRowArray addObject:[NSNumber numberWithBool:showDate]];
     
     return showDate;
 }
@@ -620,21 +629,21 @@
     {
         BOOL showDate = [self showDateForMessageAtIndexPath:indexPath];
         id messageOrStatus = [self.messagesFetchedResultsController objectAtIndexPath:indexPath];
-        if([messageOrStatus isKindOfClass:[OTRManagedMessage class]]) {
+        if([messageOrStatus isKindOfClass:[OTRManagedChatMessage class]]) {
 
-            OTRManagedMessage * message = (OTRManagedMessage *)messageOrStatus;
+            OTRManagedChatMessage * message = (OTRManagedChatMessage *)messageOrStatus;
             height = [OTRMessageTableViewCell heightForMesssage:message.message showDate:showDate];
             
         }
         else {
-            height = MESSAGE_SENT_DATE_LABEL_HEIGHT;
+            height = kOTRMessageSentDateLabelHeight;
         }
     }
     else
     {
         //Composing messsage height
         CGSize messageTextLabelSize =[OTRMessageTableViewCell messageTextLabelSize:@"T"];
-        height = messageTextLabelSize.height+MESSAGE_MARGIN_TOP+MESSAGE_MARGIN_BOTTOM;
+        height = messageTextLabelSize.height+kOTRMessageMarginTop+kOTRMessageMarginBottom;
     }
     return height;
 }
@@ -653,8 +662,8 @@
 {
     NSInteger lastIndex = ([[self.messagesFetchedResultsController sections][indexPath.section] numberOfObjects]-1);
     BOOL isLastRow = indexPath.row > lastIndex;
-    BOOL isComposing = buddy.chatStateValue == kOTRChatStateComposing;
-    BOOL isPaused = buddy.chatStateValue == kOTRChatStatePaused;
+    BOOL isComposing = self.buddy.chatStateValue == kOTRChatStateComposing;
+    BOOL isPaused = self.buddy.chatStateValue == kOTRChatStatePaused;
     BOOL isComposingRow = ((isComposing || isPaused) && isLastRow);
     if (isComposingRow){
         UITableViewCell * cell;
@@ -663,39 +672,37 @@
         if (!cell) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:ComposingCellIdentifier];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            UIImageView *messageBackgroundImageView;
-            messageBackgroundImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
-            messageBackgroundImageView.tag = MESSAGE_BACKGROUND_IMAGE_VIEW_TAG;
-            messageBackgroundImageView.backgroundColor = tableView.backgroundColor; // speeds scrolling
-            [cell.contentView addSubview:messageBackgroundImageView];
+            self.composingImageView.backgroundColor = tableView.backgroundColor; // speeds scrolling
+            [cell.contentView addSubview:self.composingImageView];
             
-            messageBackgroundImageView.frame = CGRectMake(0, 0, _messageBubbleComposing.size.width, _messageBubbleComposing.size.height);
-            messageBackgroundImageView.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
-            messageBackgroundImageView.image = _messageBubbleComposing;
-            
-
+            //messageBackgroundImageView.frame = CGRectMake(0, 0, _messageBubbleComposing.size.width, _messageBubbleComposing.size.height);
+            //messageBackgroundImageView.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
         }
         return cell;
     }
-    else if( [[self.messagesFetchedResultsController sections][indexPath.section] numberOfObjects] > indexPath.row) {
+    else if([[self.messagesFetchedResultsController sections][indexPath.section] numberOfObjects] > indexPath.row) {
         
         id messageOrStatus = [self.messagesFetchedResultsController objectAtIndexPath:indexPath];
         BOOL showDate = [self showDateForMessageAtIndexPath:indexPath];
 
-        if ([messageOrStatus isKindOfClass:[OTRManagedMessage class]]) {
-            OTRManagedMessage * message = (OTRManagedMessage *)messageOrStatus;
-            static NSString *messageCellIdentifier = @"messageCell";
-            OTRMessageTableViewCell * cell;
-            cell = [tableView dequeueReusableCellWithIdentifier:messageCellIdentifier];
-            if (!cell) {
-                cell = [[OTRMessageTableViewCell alloc] initWithMessage:message withDate:showDate reuseIdentifier:messageCellIdentifier];
-            } else {
-                cell.showDate = showDate;
-                cell.message = message;
+        if ([messageOrStatus isKindOfClass:[OTRManagedChatMessage class]]) {
+            OTRManagedChatMessage * chatMessage = (OTRManagedChatMessage *)messageOrStatus;
+            NSString * reuseIdentifier = nil;
+            if (chatMessage.isIncomingValue) {
+                reuseIdentifier = [OTRIncomingMessageTableViewCell reuseIdentifier];
             }
+            else {
+                reuseIdentifier = [OTROutgoingMessageTableViewCell reuseIdentifier];
+            }
+            
+            OTRMessageTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier forIndexPath:indexPath];
+            
+            cell.showDate = showDate;
+            [cell setMessage:chatMessage];
+            
             return cell;
         }
-        else if ([messageOrStatus isKindOfClass:[OTRManagedStatus class]] || [messageOrStatus isKindOfClass:[OTRManagedEncryptionStatusMessage class]])
+        else if ([messageOrStatus isKindOfClass:[OTRManagedStatusMessage class]] || [messageOrStatus isKindOfClass:[OTRManagedEncryptionMessage class]])
         {
             static NSString *statusCellIdentifier = @"statusCell";
             UITableViewCell * cell;
@@ -706,9 +713,9 @@
             
             
             NSString * cellText = nil;
-            OTRManagedMessageAndStatus * managedStatus = (OTRManagedMessageAndStatus *)messageOrStatus;
+            OTRManagedMessage * managedStatus = (OTRManagedMessage *)messageOrStatus;
             
-            if ([messageOrStatus isKindOfClass:[OTRManagedStatus class]]) {
+            if ([messageOrStatus isKindOfClass:[OTRManagedStatusMessage class]]) {
                 if (managedStatus.isIncomingValue) {
                     cellText = [NSString stringWithFormat:INCOMING_STATUS_MESSAGE,managedStatus.message];
                 }
@@ -736,8 +743,6 @@
         return _buddyFetchedResultsController;
     
     NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"self == %@",self.buddy];
-    //NSPredicate * chatStateFilter = [NSPredicate predicateWithFormat:@"chatState == %d OR chatState == %d",kOTRChatStateComposing,kOTRChatStatePaused];
-    //NSPredicate *predicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[buddyFilter,chatStateFilter]];
     
     _buddyFetchedResultsController = [OTRManagedBuddy MR_fetchAllGroupedBy:nil withPredicate:buddyFilter sortedBy:nil ascending:YES delegate:self];
     
@@ -750,11 +755,11 @@
         return _messagesFetchedResultsController;
     }
     
-    NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"self.buddy == %@",self.buddy];
-    NSPredicate * encryptionFilter = [NSPredicate predicateWithFormat:@"isEncrypted == NO"];
+    NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"%K == %@",OTRManagedMessageRelationships.buddy,self.buddy];
+    NSPredicate * encryptionFilter = [NSPredicate predicateWithFormat:@"%K == NO",OTRManagedMessageAttributes.isEncrypted];
     NSPredicate * messagePredicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[buddyFilter,encryptionFilter]];
 
-    _messagesFetchedResultsController = [OTRManagedMessageAndStatus MR_fetchAllGroupedBy:nil withPredicate:messagePredicate sortedBy:@"date" ascending:YES delegate:self];
+    _messagesFetchedResultsController = [OTRManagedMessage MR_fetchAllGroupedBy:nil withPredicate:messagePredicate sortedBy:OTRManagedMessageAttributes.date ascending:YES delegate:self];
 
     return _messagesFetchedResultsController;
 }
@@ -785,8 +790,8 @@
                 
                 
                 id possibleMessage = [controller objectAtIndexPath:newIndexPath];
-                if ([possibleMessage isKindOfClass:[OTRManagedMessage class]]) {
-                    ((OTRManagedMessage *)possibleMessage).isReadValue = YES;
+                if ([possibleMessage isKindOfClass:[OTRManagedChatMessage class]]) {
+                    ((OTRManagedChatMessage *)possibleMessage).isReadValue = YES;
                 }
                 
             }
@@ -813,7 +818,7 @@
     }
 }
 
-#pragma mark OTRChatInputBarDelegate
+#pragma mark OTRChatInputBarDelegate Methods
 
 - (void)sendButtonPressedForInputBar:(OTRChatInputBar *)inputBar
 {
@@ -824,12 +829,13 @@
     }
     NSString * text = inputBar.textView.text;
     if ([text length]) {
-        NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
-        OTRManagedMessage * message = [OTRManagedMessage newMessageToBuddy:self.buddy message:text encrypted:NO inContext:context];
+        NSManagedObjectContext *context = [NSManagedObjectContext MR_context];
+        OTRManagedChatMessage * message = [OTRManagedChatMessage newMessageToBuddy:self.buddy message:text encrypted:NO inContext:context];
         
         [context MR_saveToPersistentStoreAndWait];
         
-        BOOL secure = [self.buddy currentEncryptionStatus] == kOTRKitMessageStateEncrypted || [OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyOpportunisticOtr];
+        BOOL inSecureConversation = [[OTRKit sharedInstance] isConversationEncryptedForUsername:self.buddy.accountName accountName:self.buddy.account.username protocol:self.buddy.account.protocol];
+        BOOL secure = inSecureConversation || [OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyOpportunisticOtr];
         if(secure)
         {
             //check if need to generate keys
@@ -838,13 +844,13 @@
                     [self addLockSpinner];
                     [OTRCodec generatePrivateKeyFor:self.buddy.account completionBlock:^(BOOL generatedKey) {
                         [self removeLockSpinner];
-                        [OTRCodec encodeMessage:message completionBlock:^(OTRManagedMessage *message) {
+                        [OTRCodec encodeMessage:message completionBlock:^(OTRManagedChatMessage *message) {
                             [OTRProtocolManager sendMessage:message];
                         }];
                     }];
                 }
                 else {
-                    [OTRCodec encodeMessage:message completionBlock:^(OTRManagedMessage *message) {
+                    [OTRCodec encodeMessage:message completionBlock:^(OTRManagedChatMessage *message) {
                         [OTRProtocolManager sendMessage:message];
                     }];
                 }
@@ -853,7 +859,7 @@
         else {
             [OTRProtocolManager sendMessage:message];
         }
-        chatInputBar.textView.text = nil;
+        self.chatInputBar.textView.text = nil;
     }
 }
 
@@ -861,11 +867,11 @@
 {
      NSRange textFieldRange = NSMakeRange(0, [inputBar.textView.text length]);
      
-     [buddy sendComposingChatState];
+     [self.buddy sendComposingChatState];
      
      if (NSEqualRanges(range, textFieldRange) && [text length] == 0)
      {
-          [buddy sendActiveChatState];
+          [self.buddy sendActiveChatState];
      }
      
      return YES;

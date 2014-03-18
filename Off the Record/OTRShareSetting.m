@@ -13,9 +13,10 @@
 #import "OTRUtilities.h"
 #import "OTRActivityItemProvider.h"
 #import "OTRQRCodeActivity.h"
+#import "OTRConstants.h"
 
-#define ACTIONSHEET_SHARE_TAG 2
-#define ACTIONSHEET_LINK_TAG 1
+NSUInteger const kOTRActionSheetShareTag = 333;
+
 
 @implementation OTRShareSetting
 
@@ -54,7 +55,7 @@
         for (NSString *title in buttonTitles) {
             [sheet addButtonWithTitle:title];
         }
-        sheet.tag = ACTIONSHEET_SHARE_TAG;
+        sheet.tag = kOTRActionSheetShareTag;
         sheet.cancelButtonIndex = [buttonTitles count] - 1;
         
         [OTR_APP_DELEGATE presentActionSheet:sheet inView:[delegate view]];
@@ -85,7 +86,7 @@
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
 
-    if (actionSheet.tag == ACTIONSHEET_SHARE_TAG) {
+    if (actionSheet.tag == kOTRActionSheetShareTag) {
         if (buttonIndex == 0) // SMS
         {
             if (![MFMessageComposeViewController canSendText]) {
@@ -140,7 +141,7 @@
     {
         self.lastActionLink = request.URL;
         UIActionSheet *action = [[UIActionSheet alloc] initWithTitle:[[request.URL absoluteURL] description] delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:OPEN_IN_SAFARI_STRING, nil];
-        action.tag = ACTIONSHEET_LINK_TAG;
+        action.tag = kOTRActionSheetLinkTag;
         [OTR_APP_DELEGATE presentActionSheet:action inView:[delegate view]];
     }
     return NO;
