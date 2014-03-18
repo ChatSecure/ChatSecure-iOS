@@ -31,7 +31,4 @@ typedef NS_ENUM(NSUInteger, OTRBubbleMessageType) {
 
 + (UIImage *)facebookImage;
 
-
-+(UIColor *)colorWithStatus:(OTRBuddyStatus)status;
-
 @end

@@ -121,7 +121,7 @@ static CGFloat cellHeight = 80.0;
     if (!_buddyFetchedResultsController) {
         NSPredicate *buddyFilter = [NSPredicate predicateWithFormat:@"%@ != nil OR %@ != nil",OTRManagedBuddyAttributes.accountName,OTRManagedBuddyAttributes.displayName];
         
-        NSPredicate *hasMessagesPredicate = [NSPredicate predicateWithFormat:@"%K.@count > 0",OTRManagedBuddyRelationships.messages];
+        NSPredicate *hasMessagesPredicate = [NSPredicate predicateWithFormat:@"%K.@count > 0",OTRManagedBuddyRelationships.chatMessages];
         
         NSPredicate *selfBuddyFilter = [NSPredicate predicateWithFormat:@"%K != account.username",OTRManagedBuddyAttributes.accountName];
         
@@ -157,6 +157,16 @@ static CGFloat cellHeight = 80.0;
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     //Delete conversation
+    if(editingStyle == UITableViewCellEditingStyleDelete) {
+        OTRManagedBuddy *cellBuddy = [self.buddyFetchedResultsController objectAtIndexPath:indexPath];
+        NSPredicate *messagePredicate = [NSPredicate predicateWithFormat:@"%K == %@",OTRManagedMessageRelationships.buddy,cellBuddy];
+        NSPredicate *chatMessagePredicate = [NSPredicate predicateWithFormat:@"%K == %@",OTRManagedChatMessageRelationships.chatBuddy,cellBuddy];
+        NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
+        [OTRManagedMessage MR_deleteAllMatchingPredicate:messagePredicate inContext:context];
+        [OTRManagedChatMessage MR_deleteAllMatchingPredicate:chatMessagePredicate inContext:context];
+        [context MR_saveToPersistentStoreAndWait];
+    }
+    
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath

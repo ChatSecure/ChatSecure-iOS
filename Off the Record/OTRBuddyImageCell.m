@@ -9,6 +9,7 @@
 #import "OTRBuddyImageCell.h"
 #import "OTRManagedBuddy.h"
 #import "OTRImages.h"
+#import "OTRColors.h"
 
 const CGFloat OTRBuddyImageCellPadding = 12.0;
 
@@ -61,10 +62,8 @@ const CGFloat OTRBuddyImageCellPadding = 12.0;
     else {
         self.avatarImageView.image = [self defaultImage];
     }
-    UIColor *statusColor =  [OTRImages colorWithStatus:buddy.currentStatusValue];
+    UIColor *statusColor =  [OTRColors colorWithStatus:buddy.currentStatusValue];
     self.imageViewBorderColor = statusColor;
-    
-    
     
 }
 

@@ -147,9 +147,15 @@ static CGFloat cellHeight = 60.0;
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
 {
-    NSPredicate * predicate = nil;
+    NSPredicate *predicate = nil;
+    NSArray * accountNames = [[OTRManagedAccount MR_findAll] valueForKey:OTRManagedAccountAttributes.username];
+    NSPredicate *notSelfPredicate = [NSPredicate predicateWithFormat:@"NOT (%K IN %@)",OTRManagedBuddyAttributes.accountName,accountNames];
     if (searchText.length) {
-        predicate = [NSPredicate predicateWithFormat:@"%K contains[cd] %@ OR %K contains[cd] %@",OTRManagedBuddyAttributes.accountName, searchText,OTRManagedBuddyAttributes.displayName,searchText];
+        NSPredicate *textSearchPredicate = [NSPredicate predicateWithFormat:@"%K contains[cd] %@ OR %K contains[cd] %@",OTRManagedBuddyAttributes.accountName, searchText,OTRManagedBuddyAttributes.displayName,searchText];
+        predicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[textSearchPredicate,notSelfPredicate]];
+    }
+    else {
+        predicate = notSelfPredicate;
     }
     
     self.buddySearchFetchedResultsController.fetchRequest.predicate = predicate;
