@@ -38,6 +38,7 @@
 		63188CBD16E55B230000DD40 /* OTRNewBuddyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63188CBC16E55B230000DD40 /* OTRNewBuddyViewController.m */; };
 		6319F696165EAB1F0063AC93 /* supportedLanguages.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6319F695165EAB1F0063AC93 /* supportedLanguages.plist */; };
 		631F4AE618BFF9BC00AE6E8A /* OTROutgoingMessageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 631F4AE518BFF9BC00AE6E8A /* OTROutgoingMessageTableViewCell.m */; };
+		631F4AE918C0004200AE6E8A /* OTRButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = 631F4AE818C0004200AE6E8A /* OTRButtonView.m */; };
 		631FE8851720951400AEA107 /* OTRStatusMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 631FE8841720951400AEA107 /* OTRStatusMessageCell.m */; };
 		6326F63A184D5249008B6B01 /* facebook.cer in Resources */ = {isa = PBXBuildFile; fileRef = 6326F639184D5249008B6B01 /* facebook.cer */; };
 		6334063C1652C33300A54C52 /* OTRListSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6334063B1652C33300A54C52 /* OTRListSettingViewController.m */; };
@@ -610,6 +611,8 @@
 		631F4AE218BFF98D00AE6E8A /* OTRIncomingMessageTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRIncomingMessageTableViewCell.m; sourceTree = "<group>"; };
 		631F4AE418BFF9BC00AE6E8A /* OTROutgoingMessageTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTROutgoingMessageTableViewCell.h; sourceTree = "<group>"; };
 		631F4AE518BFF9BC00AE6E8A /* OTROutgoingMessageTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTROutgoingMessageTableViewCell.m; sourceTree = "<group>"; };
+		631F4AE718C0004200AE6E8A /* OTRButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRButtonView.h; sourceTree = "<group>"; };
+		631F4AE818C0004200AE6E8A /* OTRButtonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRButtonView.m; sourceTree = "<group>"; };
 		631FE8831720951400AEA107 /* OTRStatusMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRStatusMessageCell.h; sourceTree = "<group>"; };
 		631FE8841720951400AEA107 /* OTRStatusMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRStatusMessageCell.m; sourceTree = "<group>"; };
 		6326F639184D5249008B6B01 /* facebook.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = facebook.cer; sourceTree = "<group>"; };
@@ -3145,6 +3148,8 @@
 				63534AAE187F5A1400061776 /* OTRChatBubbleView.m */,
 				63022BB416CDAD4C00F764F1 /* OTRChatViewController.h */,
 				63022BB516CDAD4C00F764F1 /* OTRChatViewController.m */,
+				631F4AE718C0004200AE6E8A /* OTRButtonView.h */,
+				631F4AE818C0004200AE6E8A /* OTRButtonView.m */,
 				638940CF1815E339005F651E /* OTRDemoChatViewController.h */,
 				638940D01815E339005F651E /* OTRDemoChatViewController.m */,
 				633B6D0317ECFB0C002DA152 /* OTRChatInputBar.h */,
@@ -3762,6 +3767,7 @@
 				D9CEEE62168423CA00B236B5 /* AIMBArtID.m in Sources */,
 				D9CEEE63168423CA00B236B5 /* AIMBArtIDWName.m in Sources */,
 				639C60C518CA988400CC4DF4 /* OTRValueSetting.m in Sources */,
+				631F4AE918C0004200AE6E8A /* OTRButtonView.m in Sources */,
 				D9CEEE64168423CA00B236B5 /* AIMBArtQueryReplyID.m in Sources */,
 				D9CEEE65168423CA00B236B5 /* AIMBlist.m in Sources */,
 				D9CEEE66168423CA00B236B5 /* AIMBlistBuddy.m in Sources */,
@@ -3772,6 +3778,7 @@
 				D9CEEE68168423CA00B236B5 /* AIMBuddyIcon.m in Sources */,
 				639753A018CA82A2005D6063 /* OTRLanguageManager.m in Sources */,
 				639C60EE18CA9A0C00CC4DF4 /* _OTRManagedBuddy.m in Sources */,
+				6300827018C160E400CEA680 /* OTRSecrets.m in Sources */,
 				D9CEEE69168423CA00B236B5 /* AIMBuddyStatus.m in Sources */,
 				D9CEEE6A168423CA00B236B5 /* AIMCapability.m in Sources */,
 				639C60DA18CA995B00CC4DF4 /* OTRIncomingMessageTableViewCell.m in Sources */,
