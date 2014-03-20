@@ -31,6 +31,7 @@
 #define CHAT_STATE_INACTVIE_STRING [OTRLanguageManager translatedString: @"Inactive"]
 #define NO_ACCOUNT_SAVED_STRING [OTRLanguageManager translatedString: @"No Saved Accounts"]
 #define errSSLClosedNoNotifyString [OTRLanguageManager translatedString: @"Server closed session with no notification"]
+#define PUBLIC_KEY_ERROR_STRING [OTRLanguageManager translatedString: @"Could not retrieve public key from certificate"]
 #define GROUPS_STRING [OTRLanguageManager translatedString: @"Groups"]
 #define NEW_CERTIFICATE_STRING [OTRLanguageManager translatedString: @"New SSL Certificate"]
 #define LOGIN_STRING [OTRLanguageManager translatedString: @"Log In"]

@@ -19,6 +19,46 @@
 #import "OTRConstants.h"
 #import "OTRLog.h"
 
+
+///////////////////////////////////////////////
+//Coppied from AFSecurityPolicy.m
+///////////////////////////////////////////////
+static id AFPublicKeyForCertificate(NSData *certificate) {
+    SecCertificateRef allowedCertificate = SecCertificateCreateWithData(NULL, (__bridge CFDataRef)certificate);
+    NSCParameterAssert(allowedCertificate);
+    
+    SecCertificateRef allowedCertificates[] = {allowedCertificate};
+    CFArrayRef tempCertificates = CFArrayCreate(NULL, (const void **)allowedCertificates, 1, NULL);
+    
+    SecPolicyRef policy = SecPolicyCreateBasicX509();
+    SecTrustRef allowedTrust = NULL;
+#if defined(NS_BLOCK_ASSERTIONS)
+    SecTrustCreateWithCertificates(tempCertificates, policy, &allowedTrust);
+#else
+    OSStatus status = SecTrustCreateWithCertificates(tempCertificates, policy, &allowedTrust);
+    NSCAssert(status == errSecSuccess, @"SecTrustCreateWithCertificates error: %ld", (long int)status);
+#endif
+    
+    SecTrustResultType result = 0;
+    
+#if defined(NS_BLOCK_ASSERTIONS)
+    SecTrustEvaluate(allowedTrust, &result);
+#else
+    status = SecTrustEvaluate(allowedTrust, &result);
+    NSCAssert(status == errSecSuccess, @"SecTrustEvaluate error: %ld", (long int)status);
+#endif
+    
+    SecKeyRef allowedPublicKey = SecTrustCopyPublicKey(allowedTrust);
+    //NSCParameterAssert(allowedPublicKey);
+    
+    CFRelease(allowedTrust);
+    CFRelease(policy);
+    CFRelease(tempCertificates);
+    CFRelease(allowedCertificate);
+    
+    return (__bridge_transfer id)allowedPublicKey;
+}
+
 @implementation OTRCertificatePinning
 
 - (id)initWithDefaultCertificates
@@ -33,7 +73,18 @@
 
 - (void)loadKeychainCertificatesWithHostName:(NSString *)hostname {
     self.securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeCertificate];
-    NSArray * allCertificatesArray = [self.securityPolicy.pinnedCertificates arrayByAddingObjectsFromArray:[self storedCertificatesWithHostName:hostname]];
+    
+    NSMutableArray *allCertificatesArray = [NSMutableArray array];
+    NSArray * hostnameCertificatesArray = [self storedCertificatesWithHostName:hostname];
+    [hostnameCertificatesArray enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        if([obj isKindOfClass:[NSData class]])
+        {
+            id publicKey = AFPublicKeyForCertificate(obj);
+            if (publicKey) {
+                [allCertificatesArray addObject:obj];
+            }
+        }
+    }];
     
     self.securityPolicy.pinnedCertificates = allCertificatesArray;
 }
@@ -233,6 +284,8 @@
 **/
 - (BOOL)socket:(GCDAsyncSocket *)sock shouldFinishConnectionWithTrust:(SecTrustRef)trust status:(OSStatus)status {
     
+    //used for writing files to disk only for debugging
+    //[XMPPCertificatePinning writeCertToDisk:trust withFileName:[NSString stringWithFormat:@"%@.cer",xmppStream.connectedHostName]];
     BOOL trusted = [self isValidPinnedTrust:trust withHostName:xmppStream.connectedHostName];
     if (!trusted) {
         //Delegate firing off for user to verify with status
@@ -263,7 +316,6 @@
 
 - (BOOL)socket:(GCDAsyncSocket *)sock shouldTrustPeer:(SecTrustRef)trust
 {
-    //[self writeCertToDisk:trust withFileName:@"google.cer"];
     BOOL trusted = [self isValidPinnedTrust:trust withHostName:xmppStream.connectedHostName];
     if (!trusted) {
         //Delegate firing off for user to verify with status
@@ -272,6 +324,11 @@
         }
     }
     return trusted;
+}
+
++ (id)publicKeyWithCertData:(NSData *)certData
+{
+    return AFPublicKeyForCertificate(certData);
 }
 
 

@@ -384,34 +384,13 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
 - (void)protocolLoginFailed:(NSNotification*)notification
 {
     if(self.HUD)
-        [self.HUD hide:YES];
-    if([self.account.protocol isEqualToString:kOTRProtocolTypeXMPP])
     {
-        NSDictionary * userInfo = notification.userInfo;
-        id error = userInfo[kOTRProtocolLoginFailErrorKey];
-        NSData * certData = userInfo[kOTRProtocolLoginFailSSLCertificateDataKey];
-        NSString * hostname = userInfo[kOTRProtocolLoginFailHostnameKey];
-        NSNumber * statusNumber = userInfo[kOTRProtocolLoginFailSSLStatusKey];
-        
-        if (certData) {
-            if ([statusNumber longLongValue] == errSSLPeerAuthCompleted) {
-                
-                id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
-                ((OTRXMPPManager *)protocol).certificatePinningModule.doNotManuallyEvaluateOverride = YES;
-                [self loginButtonPressed:nil];
-            }
-            else {
-                [self showCertWarningForData:certData withHostName:hostname withStatus:[statusNumber longValue]];
-            }
-        }
-        else if ([error isKindOfClass:[NSError class]]) {
-            [self showAlertViewWithTitle:ERROR_STRING message:XMPP_FAIL_STRING error:error];
-        }
-        else {
-            [self showAlertViewWithTitle:ERROR_STRING message:XMPP_FAIL_STRING error:nil];
-        }
+        [self.HUD hide:YES];
     }
-    else if ([self.account.protocol isEqualToString:kOTRProtocolTypeAIM]) {
+    
+    
+    
+    if ([self.account.protocol isEqualToString:kOTRProtocolTypeAIM]) {
         NSDictionary * userInfo = notification.userInfo;
         NSError *error = userInfo[kOTRProtocolLoginFailErrorKey];
         NSString *errorTitle = nil;
@@ -421,6 +400,17 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
             errorMessage = error.localizedFailureReason;
         }
         [self showAlertViewWithTitle:errorTitle message:errorMessage error:error];
+    }
+    else {
+        NSDictionary * userInfo = notification.userInfo;
+        id error = userInfo[kOTRNotificationErrorKey];
+        
+        if ([error isKindOfClass:[NSError class]]) {
+            [self showAlertViewWithTitle:ERROR_STRING message:XMPP_FAIL_STRING error:error];
+        }
+        else {
+            [self showAlertViewWithTitle:ERROR_STRING message:XMPP_FAIL_STRING error:nil];
+        }
     }
 }
              
@@ -556,10 +546,19 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
         RIButtonItem * infoButton = [RIButtonItem itemWithLabel:INFO_STRING action:^{
             NSString * errorDescriptionString = [NSString stringWithFormat:@"%@ : %@",[error domain],[error localizedDescription]];
             
+            if ([[error domain] isEqualToString:@"kCFStreamErrorDomainSSL"]) {
+                NSString * sslString = [OTRXMPPError errorStringWithSSLStatus:(OSStatus)error.code];
+                if ([sslString length]) {
+                    errorDescriptionString = [errorDescriptionString stringByAppendingFormat:@"\n%@",sslString];
+                }
+            }
+            
+            
             RIButtonItem * copyButtonItem = [RIButtonItem itemWithLabel:COPY_STRING action:^{
-                NSString * errorDescriptionString = [NSString stringWithFormat:@"Domain: %@\nCode: %d\nUserInfo: %@",[error domain],[error code],[error userInfo]];
+                NSString * copyString = [NSString stringWithFormat:@"Domain: %@\nCode: %d\nUserInfo: %@",[error domain],[error code],[error userInfo]];
+                
                 UIPasteboard *pasteBoard = [UIPasteboard generalPasteboard];
-                [pasteBoard setString:errorDescriptionString];
+                [pasteBoard setString:copyString];
             }];
             
             UIAlertView * alert = [[UIAlertView alloc] initWithTitle:INFO_STRING
