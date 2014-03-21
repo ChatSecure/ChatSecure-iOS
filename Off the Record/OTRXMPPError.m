@@ -22,7 +22,7 @@ NSString *const OTRXMPPSSLHostnameKey             = @"OTRXMPPSSLHostnameKey";
 + (NSError *)errorForSSLSatus:(OSStatus)status withCertData:(NSData *)certData hostname:(NSString *)hostName
 {
     NSMutableDictionary * userInfo = [NSMutableDictionary dictionary];
-    userInfo[OTRXMPPXMLErrorKey] = [NSNumber numberWithLong:status];
+    userInfo[OTRXMPPSSLStatusKey] = [NSNumber numberWithLong:status];
     if (certData) {
         userInfo[OTRXMPPSSLCertificateDataKey] = certData;
     }

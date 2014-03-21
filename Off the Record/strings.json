@@ -910,5 +910,9 @@
     "REGISTER_ERROR_STRING": {
         "comment": "Error message when registration fails",
         "string": "Error Registering Username"
+    },
+    "PUBLIC_KEY_ERROR_STRING": {
+        "comment": "Error message when cannot get public key from SSL certificate",
+        "string": "Could not retrieve public key from certificate"
     }
 }

@@ -1,6 +1,7 @@
 #import "OTRManagedXMPPTorAccount.h"
 
 #import "OTRXMPPTorManager.h"
+#import "Strings.h"
 
 
 @interface OTRManagedXMPPTorAccount ()
@@ -14,6 +15,11 @@
 
 - (OTRAccountType)accountType {
     return OTRAccountTypeXMPPTor;
+}
+
+-(NSString *)providerName
+{
+    return XMPP_TOR_STRING;
 }
 
 -(Class)protocolClass

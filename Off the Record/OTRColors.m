@@ -84,4 +84,14 @@
                            alpha:1.0f];
 }
 
++ (UIColor *)redErrorColor
+{
+    return [UIColor colorWithRed:0.89f green:0.42f blue:0.36f alpha:1.00f];
+}
+
++ (UIColor *)greenNoErrorColor
+{
+    return [UIColor colorWithRed:0.32f green:0.64f blue:0.32f alpha:1.00f];
+}
+
 @end

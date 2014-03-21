@@ -29,7 +29,6 @@ extern NSString *const kOTRProtocolLoginFailSSLCertificateDataKey;
 extern NSString *const kOTRMessageReceived;
 extern NSString *const kOTRMessageReceiptResonseReceived;
 extern NSString *const kOTRStatusUpdate;
-extern NSString *const kOTRProtocolDiconnect;
 extern NSString *const kOTRSendMessage;
 extern NSString *const kOTRNotificationErrorKey;
 

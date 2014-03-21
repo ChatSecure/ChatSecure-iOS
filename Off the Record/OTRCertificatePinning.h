@@ -33,4 +33,6 @@
 + (void)deleteCertificate:(SecCertificateRef)cert withHostName:(NSString *)hostname;
 + (NSDictionary *)bundledCertificates;
 
++ (id)publicKeyWithCertData:(NSData *)certData;
+
 @end
