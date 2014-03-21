@@ -50,7 +50,7 @@
     self.resourceTextField.textColor = self.textFieldTextColor;
     self.resourceTextField.text = self.account.resource;
     
-    [self addCellinfoWithSection:1 row:0 labelText:@"Resource" cellType:kCellTypeTextField userInputView:self.resourceTextField];
+    [self addCellinfoWithSection:1 row:0 labelText:RESOURCE_STRING cellType:kCellTypeTextField userInputView:self.resourceTextField];
     
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHideOrShow:) name:UIKeyboardWillHideNotification object:nil];

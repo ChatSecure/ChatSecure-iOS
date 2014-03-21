@@ -75,6 +75,7 @@
 #define DONATE_STRING [OTRLanguageManager translatedString: @"Donate"]
 #define errSSLModuleAttachString [OTRLanguageManager translatedString: @"Module attach failure"]
 #define SEND_STRING [OTRLanguageManager translatedString: @"Send"]
+#define RESOURCE_STRING [OTRLanguageManager translatedString: @"Resource"]
 #define errSSLPeerAccessDeniedString [OTRLanguageManager translatedString: @"Access denied"]
 #define errSSLPeerInternalErrorString [OTRLanguageManager translatedString: @"Internal error"]
 #define LOGIN_TO_STRING [OTRLanguageManager translatedString: @"Login to"]

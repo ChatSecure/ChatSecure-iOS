@@ -173,7 +173,7 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
     
 }
 
--(void)addCellinfoWithSection:(NSInteger)section row:(NSInteger)row labelText:(id)text cellType:(NSString *)type userInputView:(UIView *)inputView;
+- (void)addCellinfoWithSection:(NSInteger)section row:(NSInteger)row labelText:(id)text cellType:(NSString *)type userInputView:(UIView *)inputView;
 {
     if (!self.tableViewArray) {
         self.tableViewArray = [[NSMutableArray alloc] init];
@@ -189,7 +189,7 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
     
 }
 
-- (void) viewDidLoad 
+- (void)viewDidLoad
 {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
@@ -293,7 +293,7 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
 
 #pragma mark - View lifecycle
 
-- (void) viewWillAppear:(BOOL)animated 
+- (void)viewWillAppear:(BOOL)animated 
 {
     [super viewWillAppear:animated];
     
@@ -325,9 +325,9 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
         self.passwordTextField.text = @"";
     }
 }
-- (void) viewWillDisappear:(BOOL)animated {
-    
-    
+- (void) viewWillDisappear:(BOOL)animated
+{    
+    [super viewWillDisappear:animated];
     [self readInFields];
     
     if(self.account.username.length)
@@ -337,7 +337,6 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
     [self.view resignFirstResponder];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kOTRProtocolLoginFail object:[[OTRProtocolManager sharedInstance] protocolForAccount:self.account]];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kOTRProtocolLoginSuccess object:[[OTRProtocolManager sharedInstance] protocolForAccount:self.account]];
-
 }
 
 -(void)readInFields
@@ -388,8 +387,6 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
         [self.HUD hide:YES];
     }
     
-    
-    
     if ([self.account.protocol isEqualToString:kOTRProtocolTypeAIM]) {
         NSDictionary * userInfo = notification.userInfo;
         NSError *error = userInfo[kOTRProtocolLoginFailErrorKey];
@@ -417,6 +414,15 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
 - (void)protocolLoginSuccess:(NSNotification*)notification
 {
     [self hideHUD];
+    //After successful login generate new private key if none exists
+    if([self.account.username length]) {
+        [[OTRKit sharedInstance] hasPrivateKeyForAccountName:self.account.username protocol:self.account.protocol completionBock:^(BOOL hasPrivateKey) {
+            if(!hasPrivateKey){
+                [[OTRKit sharedInstance] generatePrivateKeyForAccountName:self.account.username protocol:self.account.protocol completionBock:nil];
+            }
+        }];
+    }
+    
     [self dismissViewControllerAnimated:YES completion:nil];
 }  
 

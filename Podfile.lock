@@ -81,7 +81,7 @@ SPEC CHECKSUMS:
   Facebook-iOS-SDK: c09f7d80db5c48170ff834bc03ebe774c49d1f5b
   gtm-oauth2: 6528b10a61eb9b6710f6277341e2926371a12c15
   GTMHTTPFetcher: 1ec07b08bc1df7bf37ad32b3c2adefa020a4b644
-  HockeySDK: 4f7f7e15c1f594e8ca1e16a09f04e7418289de7a
+  HockeySDK: aa28abb106de7804d31acf515f2c9aa4e6481fd0
   HPGrowingTextView: 4318f557b33c19def1c53ec275d6e2a2d6589cd0
   JTTargetActionBlock: 3d6e5ecded7f8273ad006029444d285b58e016ea
   MagicalRecord: 95d49d74ef752cd52f6ad87bcb474817fc3978cf
