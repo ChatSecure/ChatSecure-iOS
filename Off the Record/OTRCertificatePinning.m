@@ -64,7 +64,8 @@ static id AFPublicKeyForCertificate(NSData *certificate) {
 - (id)initWithDefaultCertificates
 {
     if (self = [super init]) {
-        self.securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeCertificate];
+        self.securityPolicy = [AFSecurityPolicy defaultPolicy];
+        self.securityPolicy.SSLPinningMode = AFSSLPinningModeCertificate;
         self.doNotManuallyEvaluateOverride = NO;
     }
     return self;
@@ -72,10 +73,11 @@ static id AFPublicKeyForCertificate(NSData *certificate) {
 }
 
 - (void)loadKeychainCertificatesWithHostName:(NSString *)hostname {
-    self.securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeCertificate];
+    self.securityPolicy = [AFSecurityPolicy defaultPolicy];
+    self.securityPolicy.SSLPinningMode = AFSSLPinningModeCertificate;
     
     NSMutableArray *allCertificatesArray = [NSMutableArray array];
-    NSArray * hostnameCertificatesArray = [self storedCertificatesWithHostName:hostname];
+    NSArray * hostnameCertificatesArray = [OTRCertificatePinning storedCertificatesWithHostName:hostname];
     [hostnameCertificatesArray enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         if([obj isKindOfClass:[NSData class]])
         {
@@ -99,7 +101,7 @@ static id AFPublicKeyForCertificate(NSData *certificate) {
     return [self.securityPolicy evaluateServerTrust:trust];
 }
 
-- (void)addCertificate:(SecCertificateRef)cert withHostName:(NSString *)hostname {
++ (void)addCertificate:(SecCertificateRef)cert withHostName:(NSString *)hostname {
     
     NSData * certData = [OTRCertificatePinning dataForCertificate:cert];
     
@@ -130,19 +132,7 @@ static id AFPublicKeyForCertificate(NSData *certificate) {
                 DDLogError(@"Error saving new certificate to keychain");
             }
         }
-        
-        
-        
-
     }
-}
-
--(NSArray *)storedCertificatesWithHostName:(NSString *)hostname {
-    return [OTRCertificatePinning storedCertificatesWithHostName:hostname];
-}
-
-+(NSDictionary *)bundledCertificateFileNames {
-    return @{@"talk.google.com":@"google",@"chat.facebook.com":@"facebook"};
 }
 
 + (NSArray *)storedCertificatesWithHostName:(NSString *)hostname {
@@ -220,16 +210,6 @@ static id AFPublicKeyForCertificate(NSData *certificate) {
 
 }
 
-+ (NSDictionary *)bundledCertificates {
-    NSMutableDictionary * certDict = [NSMutableDictionary dictionary];
-    [[self bundledCertificateFileNames] enumerateKeysAndObjectsUsingBlock:^(NSString * domain, NSString * filename, BOOL *stop) {
-        NSString * path = [[NSBundle mainBundle] pathForResource:filename ofType:@"cer"];
-        NSData * certData = [NSData dataWithContentsOfFile:path];
-        certDict[domain] = @[certData];
-    }];
-    return certDict;
-}
-
 + (SSKeychainQuery *)keychainQueryForHostName:(NSString *)hostname {
     SSKeychainQuery * keychainQuery = [[SSKeychainQuery alloc] init];
     keychainQuery.service = kOTRCertificateServiceName;
@@ -279,9 +259,52 @@ static id AFPublicKeyForCertificate(NSData *certificate) {
     }
 }
 
++ (id)publicKeyWithCertData:(NSData *)certData
+{
+    return AFPublicKeyForCertificate(certData);
+}
+
++ (NSDictionary *)bundledCertHashes
+{
+    static NSDictionary *bundledCertHashes = nil;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        bundledCertHashes = @{@"talk.google.com":@"28 dd 89 d3 0a a6 f0 a2 b9 f8 77 fc 55 fc ab 85 18 de 13 ff",
+                              @"chat.facebook.com":@"6d 27 cf 4e 75 b3 40 ee e6 ad a8 ae 29 74 bd c7 64 22 11 87"};
+    });
+    return bundledCertHashes;
+}
+
++ (void)loadBundledCertificatesToKeychain
+{
+    NSBundle *bundle = [NSBundle bundleForClass:[self class]];
+    NSArray *paths = [bundle pathsForResourcesOfType:@"cer" inDirectory:@"."];
+    
+    NSMutableDictionary *certificates = [NSMutableDictionary dictionaryWithCapacity:[paths count]];
+    for (NSString *path in paths) {
+        NSData *certificateData = [NSData dataWithContentsOfFile:path];
+        [certificates setObject:certificateData forKey:[[path lastPathComponent] stringByDeletingPathExtension]];
+    }
+    
+    NSDictionary *bundledCertificatesDictionary = [NSDictionary dictionaryWithDictionary:certificates];
+    
+    [bundledCertificatesDictionary enumerateKeysAndObjectsUsingBlock:^(NSString *domain, NSData *bundledCertData, BOOL *stop) {
+        
+        NSString *hash = [self sha1FingerprintForCertificate:[self certForData:bundledCertData]];
+        if ([hash isEqualToString:[self bundledCertHashes][domain]]) {
+            [self addCertificate:[self certForData:bundledCertData] withHostName:domain];
+        }
+    }];
+    
+}
+
+
 /**
- * GCDAsyncSocket Delegates
+ * GCDAsyncSocket Delegate Methods
 **/
+#pragma - mark GCDAsyncSockeTDelegate Methods
+
 - (BOOL)socket:(GCDAsyncSocket *)sock shouldFinishConnectionWithTrust:(SecTrustRef)trust status:(OSStatus)status {
     
     //used for writing files to disk only for debugging
@@ -306,7 +329,7 @@ static id AFPublicKeyForCertificate(NSData *certificate) {
     NSArray * certDomains = @[kOTRGoogleTalkDomain,kOTRFacebookDomain];
     NSString * hostname = xmppStream.connectedHostName;
     if ([hostname length]) {
-        if([[self storedCertificatesWithHostName:hostname] count] || [certDomains containsObject:hostname])
+        if([[OTRCertificatePinning storedCertificatesWithHostName:hostname] count] || [certDomains containsObject:hostname])
         {
             return YES;
         }
@@ -326,10 +349,7 @@ static id AFPublicKeyForCertificate(NSData *certificate) {
     return trusted;
 }
 
-+ (id)publicKeyWithCertData:(NSData *)certData
-{
-    return AFPublicKeyForCertificate(certData);
-}
+
 
 
 @end
