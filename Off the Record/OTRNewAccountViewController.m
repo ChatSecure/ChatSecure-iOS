@@ -31,6 +31,7 @@
 #import "OTRManagedGoogleAccount.h"
 #import "OTRManagedOscarAccount.h"
 #import "OTRImages.h"
+#import "UIAlertView+Blocks.h"
 
 static CGFloat const kOTRRowHeight   = 70;
 NSString *const kOTRDisplayNameKey   = @"kOTRDisplayNameKey";
@@ -130,6 +131,25 @@ NSString *const kOTRAccountTypeKey   = @"kOTRAccountTypeKey";
 }
 
 - (void)didSelectAccountType:(OTRAccountType)accountType {
+    
+    if (accountType == OTRAccountTypeXMPPTor) {
+        
+        RIButtonItem *okButton = [RIButtonItem itemWithLabel:OK_STRING action:^{
+            [self pushLoginViewControllerWithType:accountType];
+        }];
+        
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:SECURITY_WARNING_STRING message:TOR_WARNING_MESSAGE_STRING cancelButtonItem:okButton otherButtonItems:nil];
+        [alertView show];
+        
+    }
+    else {
+        [self pushLoginViewControllerWithType:accountType];
+    }
+    
+}
+
+- (void)pushLoginViewControllerWithType:(OTRAccountType)accountType
+{
     NSManagedObjectContext * context = [NSManagedObjectContext MR_context];
     OTRManagedAccount * cellAccount = [OTRManagedAccount accountForAccountType:accountType inContext:context];
     [context obtainPermanentIDsForObjects:@[cellAccount] error:nil];
