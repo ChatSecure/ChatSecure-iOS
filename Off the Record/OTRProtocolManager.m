@@ -169,7 +169,6 @@ static OTRProtocolManager *sharedManager = nil;
 }
 
 + (void)sendMessage:(OTRManagedChatMessage *)message {
-    message.buddy.lastMessageDisconnected = NO;
     message.buddy.lastSentChatStateValue=kOTRChatStateActive;
     [[message managedObjectContext] MR_saveToPersistentStoreAndWait];
     [message.buddy invalidatePausedChatStateTimer];

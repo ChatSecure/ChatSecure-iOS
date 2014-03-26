@@ -50,16 +50,7 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
 @implementation OTRLoginViewController
 
 - (void) dealloc {
-    _logoView = nil;
-    _rememberPasswordSwitch = nil;
-    _usernameTextField = nil;
-    _passwordTextField = nil;
-    _loginButton = nil;
-    _cancelButton = nil;
     [_timeoutTimer invalidate];
-    _timeoutTimer = nil;
-    _account = nil;
-    _textFieldTextColor = nil;
 }
 
 - (id) initWithAccountID:(NSManagedObjectID *)newAccountID {

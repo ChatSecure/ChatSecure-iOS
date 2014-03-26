@@ -10,7 +10,6 @@ const struct OTRManagedBuddyAttributes OTRManagedBuddyAttributes = {
 	.currentStatus = @"currentStatus",
 	.displayName = @"displayName",
 	.lastMessageDate = @"lastMessageDate",
-	.lastMessageDisconnected = @"lastMessageDisconnected",
 	.lastSentChatState = @"lastSentChatState",
 	.photo = @"photo",
 };
@@ -58,11 +57,6 @@ const struct OTRManagedBuddyFetchedProperties OTRManagedBuddyFetchedProperties =
 	}
 	if ([key isEqualToString:@"currentStatusValue"]) {
 		NSSet *affectingKey = [NSSet setWithObject:@"currentStatus"];
-		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
-		return keyPaths;
-	}
-	if ([key isEqualToString:@"lastMessageDisconnectedValue"]) {
-		NSSet *affectingKey = [NSSet setWithObject:@"lastMessageDisconnected"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
 		return keyPaths;
 	}
@@ -153,32 +147,6 @@ const struct OTRManagedBuddyFetchedProperties OTRManagedBuddyFetchedProperties =
 
 @dynamic lastMessageDate;
 
-
-
-
-
-
-@dynamic lastMessageDisconnected;
-
-
-
-- (BOOL)lastMessageDisconnectedValue {
-	NSNumber *result = [self lastMessageDisconnected];
-	return [result boolValue];
-}
-
-- (void)setLastMessageDisconnectedValue:(BOOL)value_ {
-	[self setLastMessageDisconnected:[NSNumber numberWithBool:value_]];
-}
-
-- (BOOL)primitiveLastMessageDisconnectedValue {
-	NSNumber *result = [self primitiveLastMessageDisconnected];
-	return [result boolValue];
-}
-
-- (void)setPrimitiveLastMessageDisconnectedValue:(BOOL)value_ {
-	[self setPrimitiveLastMessageDisconnected:[NSNumber numberWithBool:value_]];
-}
 
 
 
