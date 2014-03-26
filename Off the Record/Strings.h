@@ -28,7 +28,7 @@
 #define SEND_TYPING_NOTIFICATION_STRING [OTRLanguageManager translatedString: @"Send Typing Notification"]
 #define CONNECTED_STRING [OTRLanguageManager translatedString: @"Connected"]
 #define errSSLClientCertRequestedString [OTRLanguageManager translatedString: @"Server has requested a client cert"]
-#define TOR_WARNING_MESSAGE_STRING [OTRLanguageManager translatedString: @"Tor is an experimental feature, please use with caution"]
+#define TOR_WARNING_MESSAGE_STRING [OTRLanguageManager translatedString: @"Tor is an experimental feature, please use with caution."]
 #define CHAT_STATE_INACTVIE_STRING [OTRLanguageManager translatedString: @"Inactive"]
 #define NO_ACCOUNT_SAVED_STRING [OTRLanguageManager translatedString: @"No Saved Accounts"]
 #define errSSLClosedNoNotifyString [OTRLanguageManager translatedString: @"Server closed session with no notification"]
