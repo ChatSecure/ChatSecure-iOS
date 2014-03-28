@@ -152,8 +152,7 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
         self.xmppStream = [[XMPPStream alloc] init];
     }
     
-    self.xmppStream.autoStartTLS = YES;
-    self.xmppStream.requireTLS = YES;
+    self.xmppStream.startTLSPolicy = XMPPStreamStartTLSPolicyRequired;
     
     [self.certificatePinningModule activate:self.xmppStream];
     
@@ -321,7 +320,7 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
         else{
             _xmppStream = [[XMPPStream alloc] init];
         }
-        _xmppStream.autoStartTLS = YES;
+        _xmppStream.startTLSPolicy = XMPPStreamStartTLSPolicyRequired;
     }
     return _xmppStream;
 }

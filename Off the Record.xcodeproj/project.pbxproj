@@ -35,6 +35,7 @@
 		63058644183F02D4009ADB6B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9F9377E13F44BD3009A3D84 /* Foundation.framework */; };
 		63058645183F02D4009ADB6B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9F9377C13F44BD3009A3D84 /* UIKit.framework */; };
 		6305864B183F02D4009ADB6B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 63058649183F02D4009ADB6B /* InfoPlist.strings */; };
+		6309679B18E617FC00217DCB /* XMPPSCRAMSHA1Authentication.m in Sources */ = {isa = PBXBuildFile; fileRef = 6309679A18E617FC00217DCB /* XMPPSCRAMSHA1Authentication.m */; };
 		63188CBD16E55B230000DD40 /* OTRNewBuddyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63188CBC16E55B230000DD40 /* OTRNewBuddyViewController.m */; };
 		6319F696165EAB1F0063AC93 /* supportedLanguages.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6319F695165EAB1F0063AC93 /* supportedLanguages.plist */; };
 		631F4AE618BFF9BC00AE6E8A /* OTROutgoingMessageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 631F4AE518BFF9BC00AE6E8A /* OTROutgoingMessageTableViewCell.m */; };
@@ -603,6 +604,8 @@
 		63058648183F02D4009ADB6B /* Off the Record Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Off the Record Tests-Info.plist"; sourceTree = "<group>"; };
 		6305864A183F02D4009ADB6B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		6305864E183F02D4009ADB6B /* Off the Record Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Off the Record Tests-Prefix.pch"; sourceTree = "<group>"; };
+		6309679918E617FC00217DCB /* XMPPSCRAMSHA1Authentication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPSCRAMSHA1Authentication.h; sourceTree = "<group>"; };
+		6309679A18E617FC00217DCB /* XMPPSCRAMSHA1Authentication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPSCRAMSHA1Authentication.m; sourceTree = "<group>"; };
 		63188CBB16E55B220000DD40 /* OTRNewBuddyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRNewBuddyViewController.h; sourceTree = "<group>"; };
 		63188CBC16E55B230000DD40 /* OTRNewBuddyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRNewBuddyViewController.m; sourceTree = "<group>"; };
 		6319F695165EAB1F0063AC93 /* supportedLanguages.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = supportedLanguages.plist; path = "Off the Record/supportedLanguages.plist"; sourceTree = SOURCE_ROOT; };
@@ -1653,6 +1656,15 @@
 			path = Certificates;
 			sourceTree = SOURCE_ROOT;
 		};
+		6309679818E617FC00217DCB /* SCRAM-SHA-1 */ = {
+			isa = PBXGroup;
+			children = (
+				6309679918E617FC00217DCB /* XMPPSCRAMSHA1Authentication.h */,
+				6309679A18E617FC00217DCB /* XMPPSCRAMSHA1Authentication.m */,
+			);
+			path = "SCRAM-SHA-1";
+			sourceTree = "<group>";
+		};
 		634671631818710C00515463 /* XMPP - Storage */ = {
 			isa = PBXGroup;
 			children = (
@@ -1707,6 +1719,7 @@
 		63483DF51752CED100779257 /* Authentication */ = {
 			isa = PBXGroup;
 			children = (
+				6309679818E617FC00217DCB /* SCRAM-SHA-1 */,
 				639C60A118CA974A00CC4DF4 /* X-OAUTH2-google */,
 				63483DF61752CED100779257 /* Anonymous */,
 				63483DF91752CED100779257 /* Deprecated-Digest */,
@@ -3726,6 +3739,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				639753E318CA89E1005D6063 /* OTRXMPPTorManager.m in Sources */,
+				6309679B18E617FC00217DCB /* XMPPSCRAMSHA1Authentication.m in Sources */,
 				D9F9378713F44BD3009A3D84 /* main.m in Sources */,
 				D9F9378B13F44BD3009A3D84 /* OTRAppDelegate.m in Sources */,
 				D9DE274C13F4F0A500E335CA /* OTRLoginViewController.m in Sources */,
@@ -3773,7 +3787,6 @@
 				D9CEEE68168423CA00B236B5 /* AIMBuddyIcon.m in Sources */,
 				639753A018CA82A2005D6063 /* OTRLanguageManager.m in Sources */,
 				639C60EE18CA9A0C00CC4DF4 /* _OTRManagedBuddy.m in Sources */,
-				6300827018C160E400CEA680 /* OTRSecrets.m in Sources */,
 				D9CEEE69168423CA00B236B5 /* AIMBuddyStatus.m in Sources */,
 				D9CEEE6A168423CA00B236B5 /* AIMCapability.m in Sources */,
 				639C60DA18CA995B00CC4DF4 /* OTRIncomingMessageTableViewCell.m in Sources */,
