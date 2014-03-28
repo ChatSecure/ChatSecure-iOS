@@ -29,7 +29,7 @@
 }
 
 - (NSString*) shareString {
-    return [NSString stringWithFormat:@"%@: http://get.chatsecure.org", SHARE_MESSAGE_STRING];
+    return [NSString stringWithFormat:@"%@: https://get.chatsecure.org", SHARE_MESSAGE_STRING];
 }
 
 - (NSString*) twitterShareString {

@@ -50,16 +50,7 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
 @implementation OTRLoginViewController
 
 - (void) dealloc {
-    _logoView = nil;
-    _rememberPasswordSwitch = nil;
-    _usernameTextField = nil;
-    _passwordTextField = nil;
-    _loginButton = nil;
-    _cancelButton = nil;
     [_timeoutTimer invalidate];
-    _timeoutTimer = nil;
-    _account = nil;
-    _textFieldTextColor = nil;
 }
 
 - (id) initWithAccountID:(NSManagedObjectID *)newAccountID {
@@ -173,7 +164,7 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
     
 }
 
--(void)addCellinfoWithSection:(NSInteger)section row:(NSInteger)row labelText:(id)text cellType:(NSString *)type userInputView:(UIView *)inputView;
+- (void)addCellinfoWithSection:(NSInteger)section row:(NSInteger)row labelText:(id)text cellType:(NSString *)type userInputView:(UIView *)inputView;
 {
     if (!self.tableViewArray) {
         self.tableViewArray = [[NSMutableArray alloc] init];
@@ -189,7 +180,7 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
     
 }
 
-- (void) viewDidLoad 
+- (void)viewDidLoad
 {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
@@ -293,7 +284,7 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
 
 #pragma mark - View lifecycle
 
-- (void) viewWillAppear:(BOOL)animated 
+- (void)viewWillAppear:(BOOL)animated 
 {
     [super viewWillAppear:animated];
     
@@ -325,9 +316,9 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
         self.passwordTextField.text = @"";
     }
 }
-- (void) viewWillDisappear:(BOOL)animated {
-    
-    
+- (void) viewWillDisappear:(BOOL)animated
+{    
+    [super viewWillDisappear:animated];
     [self readInFields];
     
     if(self.account.username.length)
@@ -337,7 +328,6 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
     [self.view resignFirstResponder];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kOTRProtocolLoginFail object:[[OTRProtocolManager sharedInstance] protocolForAccount:self.account]];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kOTRProtocolLoginSuccess object:[[OTRProtocolManager sharedInstance] protocolForAccount:self.account]];
-
 }
 
 -(void)readInFields
@@ -384,34 +374,11 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
 - (void)protocolLoginFailed:(NSNotification*)notification
 {
     if(self.HUD)
-        [self.HUD hide:YES];
-    if([self.account.protocol isEqualToString:kOTRProtocolTypeXMPP])
     {
-        NSDictionary * userInfo = notification.userInfo;
-        id error = userInfo[kOTRProtocolLoginFailErrorKey];
-        NSData * certData = userInfo[kOTRProtocolLoginFailSSLCertificateDataKey];
-        NSString * hostname = userInfo[kOTRProtocolLoginFailHostnameKey];
-        NSNumber * statusNumber = userInfo[kOTRProtocolLoginFailSSLStatusKey];
-        
-        if (certData) {
-            if ([statusNumber longLongValue] == errSSLPeerAuthCompleted) {
-                
-                id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
-                ((OTRXMPPManager *)protocol).certificatePinningModule.doNotManuallyEvaluateOverride = YES;
-                [self loginButtonPressed:nil];
-            }
-            else {
-                [self showCertWarningForData:certData withHostName:hostname withStatus:[statusNumber longValue]];
-            }
-        }
-        else if ([error isKindOfClass:[NSError class]]) {
-            [self showAlertViewWithTitle:ERROR_STRING message:XMPP_FAIL_STRING error:error];
-        }
-        else {
-            [self showAlertViewWithTitle:ERROR_STRING message:XMPP_FAIL_STRING error:nil];
-        }
+        [self.HUD hide:YES];
     }
-    else if ([self.account.protocol isEqualToString:kOTRProtocolTypeAIM]) {
+    
+    if ([self.account.protocol isEqualToString:kOTRProtocolTypeAIM]) {
         NSDictionary * userInfo = notification.userInfo;
         NSError *error = userInfo[kOTRProtocolLoginFailErrorKey];
         NSString *errorTitle = nil;
@@ -422,64 +389,31 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
         }
         [self showAlertViewWithTitle:errorTitle message:errorMessage error:error];
     }
-}
-             
-- (void)showCertWarningForData:(NSData *)certData withHostName:(NSString *)hostname withStatus:(OSStatus)status {
-    
-    SecCertificateRef certificate = [OTRCertificatePinning certForData:certData];
-    NSString * fingerprint = [OTRCertificatePinning sha1FingerprintForCertificate:certificate];
-    NSString * message = [NSString stringWithFormat:@"%@\nSHA1: %@\n",hostname,fingerprint];
-    NSUInteger length = [message length];
-    
-    UIColor * sslMessageColor;
-    
-    if (status == noErr) {
-        //#52A352
-        sslMessageColor = [UIColor colorWithRed:0.32f green:0.64f blue:0.32f alpha:1.00f];
-        message = [message stringByAppendingString:[NSString stringWithFormat:@"✓ %@",VALID_CERTIFICATE_STRING]];
-    }
     else {
-        NSString * sslErrorMessage = [OTRXMPPError errorStringWithSSLStatus:status];
-        sslMessageColor = [UIColor colorWithRed:0.89f green:0.42f blue:0.36f alpha:1.00f];;
-        message = [message stringByAppendingString:[NSString stringWithFormat:@"X %@",sslErrorMessage]];
-    }
-    NSRange errorMessageRange = NSMakeRange(length, message.length-length);
-    
-    NSMutableAttributedString * attributedString = [[NSMutableAttributedString alloc] initWithString:message];
-    
-    SIAlertView * alertView = [[SIAlertView alloc] initWithTitle:NEW_CERTIFICATE_STRING andMessage:nil];
-    [attributedString addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:16] range:NSMakeRange(0, message.length)];
-    [attributedString addAttribute:NSForegroundColorAttributeName value:sslMessageColor range:errorMessageRange];
-    
-    alertView.messageAttributedString = attributedString;
-    alertView.buttonColor = [UIColor whiteColor];
-    
-    [alertView addButtonWithTitle:REJECT_STRING type:SIAlertViewButtonTypeDestructive handler:^(SIAlertView *alertView) {
-        [alertView dismissAnimated:YES];
-    }];
-    [alertView addButtonWithTitle:SAVE_STRING type:SIAlertViewButtonTypeDefault handler:^(SIAlertView *alertView) {
-        id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
-        if ([protocol isKindOfClass:[OTRXMPPManager class]]) {
-            [((OTRXMPPManager *)protocol).certificatePinningModule addCertificate:[OTRCertificatePinning certForData:certData] withHostName:hostname];
-            [self loginButtonPressed:alertView];
+        NSDictionary * userInfo = notification.userInfo;
+        id error = userInfo[kOTRNotificationErrorKey];
+        
+        if ([error isKindOfClass:[NSError class]]) {
+            [self showAlertViewWithTitle:ERROR_STRING message:XMPP_FAIL_STRING error:error];
         }
-    }];
-
-    [alertView show];
-    
-    UIImage * normalImage = [UIImage imageNamed:@"button-green"];
-    CGFloat hInset = floorf(normalImage.size.width / 2);
-	CGFloat vInset = floorf(normalImage.size.height / 2);
-	UIEdgeInsets insets = UIEdgeInsetsMake(vInset, hInset, vInset, hInset);
-	UIImage * buttonImage = [normalImage resizableImageWithCapInsets:insets];
-    
-    [alertView setDefaultButtonImage:buttonImage forState:UIControlStateNormal];
-    [alertView setDefaultButtonImage:buttonImage forState:UIControlStateHighlighted];
+        else {
+            [self showAlertViewWithTitle:ERROR_STRING message:XMPP_FAIL_STRING error:nil];
+        }
+    }
 }
 
 - (void)protocolLoginSuccess:(NSNotification*)notification
 {
     [self hideHUD];
+    //After successful login generate new private key if none exists
+    if([self.account.username length]) {
+        [[OTRKit sharedInstance] hasPrivateKeyForAccountName:self.account.username protocol:self.account.protocol completionBock:^(BOOL hasPrivateKey) {
+            if(!hasPrivateKey){
+                [[OTRKit sharedInstance] generatePrivateKeyForAccountName:self.account.username protocol:self.account.protocol completionBock:nil];
+            }
+        }];
+    }
+    
     [self dismissViewControllerAnimated:YES completion:nil];
 }  
 
@@ -556,10 +490,19 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
         RIButtonItem * infoButton = [RIButtonItem itemWithLabel:INFO_STRING action:^{
             NSString * errorDescriptionString = [NSString stringWithFormat:@"%@ : %@",[error domain],[error localizedDescription]];
             
+            if ([[error domain] isEqualToString:@"kCFStreamErrorDomainSSL"]) {
+                NSString * sslString = [OTRXMPPError errorStringWithSSLStatus:(OSStatus)error.code];
+                if ([sslString length]) {
+                    errorDescriptionString = [errorDescriptionString stringByAppendingFormat:@"\n%@",sslString];
+                }
+            }
+            
+            
             RIButtonItem * copyButtonItem = [RIButtonItem itemWithLabel:COPY_STRING action:^{
-                NSString * errorDescriptionString = [NSString stringWithFormat:@"Domain: %@\nCode: %d\nUserInfo: %@",[error domain],[error code],[error userInfo]];
+                NSString * copyString = [NSString stringWithFormat:@"Domain: %@\nCode: %d\nUserInfo: %@",[error domain],[error code],[error userInfo]];
+                
                 UIPasteboard *pasteBoard = [UIPasteboard generalPasteboard];
-                [pasteBoard setString:errorDescriptionString];
+                [pasteBoard setString:copyString];
             }];
             
             UIAlertView * alert = [[UIAlertView alloc] initWithTitle:INFO_STRING

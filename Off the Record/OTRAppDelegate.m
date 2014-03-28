@@ -47,6 +47,7 @@
 #import "OTRLog.h"
 #import "DDTTYLogger.h"
 #import "OTRManagedAccount.h"
+#import "OTRCertificatePinning.h"
 
 @implementation OTRAppDelegate
 
@@ -80,6 +81,8 @@
     [OTRManagedAccount resetAccountsConnectionStatus];
     
     [OTRAppVersionManager applyAppUpdatesForCurrentAppVersion];
+    
+    [OTRCertificatePinning loadBundledCertificatesToKeychain];
 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     

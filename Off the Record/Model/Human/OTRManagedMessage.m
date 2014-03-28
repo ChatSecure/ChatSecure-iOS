@@ -24,7 +24,6 @@
         DDLogWarn(@"Message was unable to be decrypted, not showing local notification");
         return;
     }
-    localMessage.buddy.lastMessageDisconnected = NO;
     NSString * rawMessage = [localMessage.message stringByConvertingHTMLToPlainText];
     [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
     if (![[UIApplication sharedApplication] applicationState] == UIApplicationStateActive)

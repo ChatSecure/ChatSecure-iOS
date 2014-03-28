@@ -113,9 +113,6 @@
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    self.domainTextField = nil;
-    self.portTextField = nil;
-    self.selectedCell = nil;
 }
 
 

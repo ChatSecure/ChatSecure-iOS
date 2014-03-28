@@ -39,18 +39,14 @@
 #import "UIActionSheet+Blocks.h"
 #import "OTRSecrets.h"
 
+static NSString *const circleImageName = @"31-circle-plus-large.png";
+
 @interface OTRSettingsViewController(Private)
 - (void) addAccount:(id)sender;
 - (void) showLoginControllerForAccount:(OTRManagedAccount*)account;
 @end
 
 @implementation OTRSettingsViewController
-@synthesize settingsTableView, settingsManager, loginController;
-
-- (void) dealloc
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
 
 - (id) init
 {
@@ -58,12 +54,6 @@
     {
         self.title = SETTINGS_STRING;
         self.settingsManager = [[OTRSettingsManager alloc] init];;
-        [[NSNotificationCenter defaultCenter]
-         addObserver:self
-         selector:@selector(protocolLoggedInSuccessfully:)
-         name:kOTRProtocolLoginSuccess
-         object:nil ];
-        
     }
     return self;
 }
@@ -74,14 +64,14 @@
     self.settingsTableView = nil;
 }
 
-- (void)loadView
+- (void)viewDidLoad
 {
-    [super loadView];
+    [super viewDidLoad];
     self.settingsTableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
     self.settingsTableView.dataSource = self;
     self.settingsTableView.delegate = self;
     self.settingsTableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
-    [self.view addSubview:settingsTableView];
+    [self.view addSubview:self.settingsTableView];
     
     UIBarButtonItem *aboutButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"about_icon.png"] style:UIBarButtonItemStylePlain target:self action:@selector(showAboutScreen)];
 
@@ -93,7 +83,7 @@
 {
     [super viewWillAppear:animated];
     self.settingsTableView.frame = self.view.bounds;
-    [settingsTableView reloadData];
+    [self.settingsTableView reloadData];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -133,7 +123,7 @@
             if (cell == nil) {
                 cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:addAccountCellIdentifier];
                 cell.textLabel.text = NEW_ACCOUNT_STRING;
-                cell.imageView.image = [UIImage imageNamed:@"31-circle-plus-large.png"];
+                cell.imageView.image = [UIImage imageNamed:circleImageName];
                 cell.detailTextLabel.text = nil;
             }
         }
@@ -156,7 +146,7 @@
 	{
 		cell = [[OTRSettingTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
 	}
-    OTRSetting *setting = [settingsManager settingAtIndexPath:indexPath];
+    OTRSetting *setting = [self.settingsManager settingAtIndexPath:indexPath];
     setting.delegate = self;
     cell.otrSetting = setting;
     
@@ -328,24 +318,13 @@
     [OTR_APP_DELEGATE presentActionSheet:actionSheet inView:self.view];
 }
 
--(void)accountLoggedIn
-{
-    [settingsTableView reloadData];
-    [loginController dismissViewControllerAnimated:YES completion:nil];
-}
-
--(void)protocolLoggedInSuccessfully:(NSNotification *)notification
-{
-    [self accountLoggedIn];
-}
-
 -(NSFetchedResultsController *)accountsFetchedResultsController
 {
     if (_accountsFetchedResultsController) {
         return _accountsFetchedResultsController;
     }
     
-    _accountsFetchedResultsController = [OTRManagedAccount MR_fetchAllSortedBy:@"username" ascending:YES withPredicate:nil groupBy:nil delegate:self];
+    _accountsFetchedResultsController = [OTRManagedAccount MR_fetchAllSortedBy:OTRManagedAccountAttributes.username ascending:YES withPredicate:nil groupBy:nil delegate:self];
     
     return _accountsFetchedResultsController;
 }

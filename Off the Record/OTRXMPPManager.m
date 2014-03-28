@@ -638,8 +638,6 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 - (void)xmppStreamDidDisconnect:(XMPPStream *)sender withError:(NSError *)error
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
-    [[NSNotificationCenter defaultCenter]
-     postNotificationName:kOTRProtocolDiconnect object:self];
     
     self.isConnected = NO;
 	

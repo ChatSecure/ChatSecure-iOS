@@ -910,5 +910,18 @@
     "REGISTER_ERROR_STRING": {
         "comment": "Error message when registration fails",
         "string": "Error Registering Username"
+    },
+    "PUBLIC_KEY_ERROR_STRING": {
+        "comment": "Error message when cannot get public key from SSL certificate",
+        "string": "Could not retrieve public key from certificate"
+    },
+    "RESOURCE_STRING": {
+        "comment": "Label for text input for XMPP resource",
+        "string": "Resource"
+    },
+    "TOR_WARNING_MESSAGE_STRING": {
+        "comment": "Message for warning about using tor network",
+        "string": "Tor is an experimental feature, please use with caution."
     }
+
 }

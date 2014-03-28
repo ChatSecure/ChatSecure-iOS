@@ -13,15 +13,12 @@
 
 @interface OTRCertificateDomainViewController ()
 
+@property (nonatomic, strong) NSDictionary * certificateDictionary;
+@property (nonatomic, strong) NSArray * certificateDomains;
+
 @end
 
 @implementation OTRCertificateDomainViewController
-{
-    NSDictionary * certificateDictionary;
-    NSDictionary * bundledCertificatesDictioanry;
-    NSArray * certificateDomains;
-    NSArray * bundledCertificatesDomains;
-}
 
 - (void)viewDidLoad
 {
@@ -33,20 +30,15 @@
 {
     [self refreshData];
     
-    
-    
     [self.tableView reloadData];
 }
 
 -(void)refreshData
 {
-    certificateDictionary = [OTRCertificatePinning allCertificates];
-    certificateDomains = [[certificateDictionary allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+    self.certificateDictionary = [OTRCertificatePinning allCertificates];
+    self.certificateDomains = [[self.certificateDictionary allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
     
-    bundledCertificatesDictioanry = [OTRCertificatePinning bundledCertificates];
-    bundledCertificatesDomains = [[bundledCertificatesDictioanry allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
-    
-    if ([certificateDomains count]) {
+    if ([self.certificateDomains count]) {
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit target:self action:@selector(toggleEditing:)];
     }
     else {
@@ -70,7 +62,7 @@
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    if (indexPath.section == 1) {
+    if (indexPath.section == 0) {
         return UITableViewCellEditingStyleDelete;
     }
     return UITableViewCellEditingStyleNone;
@@ -78,7 +70,7 @@
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section == 1) {
+    if (indexPath.section == 0) {
         return YES;
     }
     return NO;
@@ -88,34 +80,21 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     NSInteger count = 0;
-    if ([certificateDomains count]) {
+    if ([self.certificateDomains count]) {
         count +=1;
     }
-    if ([bundledCertificatesDomains count]) {
-        count +=1;
-    }
-    return count    ;
+    
+    return count;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    if ([bundledCertificatesDomains count] && section == 0) {
-        return BUNDLED_CERTIFICATES_STRING;
-    }
-    else {
-        return SAVED_CERTIFICATES_STRING;
-    }
+    return SAVED_CERTIFICATES_STRING;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if ([bundledCertificatesDomains count] && section == 0) {
-        return [bundledCertificatesDomains count];
-    }
-    else {
-        return [certificateDomains count];
-    }
-    
+    return [self.certificateDomains count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -127,12 +106,7 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:tableViewCellIdentifier];
     }
     
-    if ([bundledCertificatesDomains count] && indexPath.section == 0) {
-        cell.textLabel.text = bundledCertificatesDomains[indexPath.row];
-    }
-    else {
-        cell.textLabel.text = certificateDomains[indexPath.row];
-    }
+    cell.textLabel.text = self.certificateDomains[indexPath.row];
     
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
@@ -144,16 +118,9 @@
     NSString * hostname = nil;
     NSArray * certArray = nil;
     BOOL canEdit = YES;
-    if ([bundledCertificatesDomains count] && indexPath.section == 0) {
-        hostname = bundledCertificatesDomains[indexPath.row];
-        certArray = bundledCertificatesDictioanry[hostname];
-        canEdit = NO;
-    }
-    else {
-        hostname = certificateDomains[indexPath.row];
-        certArray = certificateDictionary[hostname];
-    }
     
+    hostname = self.certificateDomains[indexPath.row];
+    certArray = self.certificateDictionary[hostname];
     
     OTRCertificatesViewController * viewController = [[OTRCertificatesViewController alloc] initWithHostName:hostname withCertificates:certArray];
     viewController.canEdit = canEdit;
@@ -164,7 +131,7 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        [OTRCertificatePinning deleteAllCertificatesWithHostName:certificateDomains[indexPath.row]];
+        [OTRCertificatePinning deleteAllCertificatesWithHostName:self.certificateDomains[indexPath.row]];
         
         [self refreshData];
         if ([self.tableView numberOfRowsInSection:indexPath.section] == 1) {
@@ -175,7 +142,6 @@
             
         }
     }
-    
 }
 
 @end

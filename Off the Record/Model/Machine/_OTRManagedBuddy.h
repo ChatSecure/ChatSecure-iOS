@@ -11,7 +11,6 @@ extern const struct OTRManagedBuddyAttributes {
 	__unsafe_unretained NSString *currentStatus;
 	__unsafe_unretained NSString *displayName;
 	__unsafe_unretained NSString *lastMessageDate;
-	__unsafe_unretained NSString *lastMessageDisconnected;
 	__unsafe_unretained NSString *lastSentChatState;
 	__unsafe_unretained NSString *photo;
 } OTRManagedBuddyAttributes;
@@ -30,7 +29,6 @@ extern const struct OTRManagedBuddyFetchedProperties {
 @class OTRManagedChatMessage;
 @class OTRManagedGroup;
 @class OTRManagedMessage;
-
 
 
 
@@ -117,20 +115,6 @@ extern const struct OTRManagedBuddyFetchedProperties {
 
 
 //- (BOOL)validateLastMessageDate:(id*)value_ error:(NSError**)error_;
-
-
-
-
-
-@property (nonatomic, strong) NSNumber* lastMessageDisconnected;
-
-
-
-@property BOOL lastMessageDisconnectedValue;
-- (BOOL)lastMessageDisconnectedValue;
-- (void)setLastMessageDisconnectedValue:(BOOL)value_;
-
-//- (BOOL)validateLastMessageDisconnected:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -251,15 +235,6 @@ extern const struct OTRManagedBuddyFetchedProperties {
 
 - (NSDate*)primitiveLastMessageDate;
 - (void)setPrimitiveLastMessageDate:(NSDate*)value;
-
-
-
-
-- (NSNumber*)primitiveLastMessageDisconnected;
-- (void)setPrimitiveLastMessageDisconnected:(NSNumber*)value;
-
-- (BOOL)primitiveLastMessageDisconnectedValue;
-- (void)setPrimitiveLastMessageDisconnectedValue:(BOOL)value_;
 
 
 

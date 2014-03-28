@@ -20,8 +20,7 @@
 @property (nonatomic, weak) id<OTRCertificatePinningDelegate> delegate;
 @property (nonatomic) BOOL doNotManuallyEvaluateOverride;
 
-- (NSArray *)storedCertificatesWithHostName:(NSString *)hostname;
-- (void)addCertificate:(SecCertificateRef)cert withHostName:(NSString *)hostname;
++ (void)addCertificate:(SecCertificateRef)cert withHostName:(NSString *)hostname;
 
 + (NSString*)sha1FingerprintForCertificate:(SecCertificateRef)certificate;
 + (NSDictionary *)allCertificates;
@@ -29,8 +28,12 @@
 + (SecCertificateRef)certForTrust:(SecTrustRef)trust;
 + (NSData *)dataForCertificate:(SecCertificateRef)certificate;
 + (SecCertificateRef)certForData:(NSData *)data;
+
 + (void)deleteAllCertificatesWithHostName:(NSString *)hostname;
 + (void)deleteCertificate:(SecCertificateRef)cert withHostName:(NSString *)hostname;
-+ (NSDictionary *)bundledCertificates;
+
++ (void)loadBundledCertificatesToKeychain;
+
++ (id)publicKeyWithCertData:(NSData *)certData;
 
 @end

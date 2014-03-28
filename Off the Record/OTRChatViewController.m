@@ -33,6 +33,7 @@
 #import "OTRStatusMessageCell.h"
 #import "OTRUtilities.h"
 #import "OTRLockButton.h"
+#import "OTRManagedXMPPTorAccount.h"
 
 #import "OTRIncomingMessageTableViewCell.h"
 #import "OTROutgoingMessageTableViewCell.h"
@@ -41,6 +42,7 @@
 #import "OTRImages.h"
 #import "OTRButtonView.h"
 #import "OTRComposingImageView.h"
+#import "OTRChatBubbleView.h"
 
 static CGFloat const kOTRMessageMarginBottom = 10;
 static CGFloat const kOTRMessageMarginTop = 7;
@@ -750,6 +752,13 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
             }
             
             OTRMessageTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier forIndexPath:indexPath];
+            
+            if ([self.buddy.account isKindOfClass:[OTRManagedXMPPTorAccount class]]) {
+                cell.bubbleView.messageTextLabel.dataDetectorTypes = UIDataDetectorTypeNone;
+            }
+            else {
+                cell.bubbleView.messageTextLabel.dataDetectorTypes = UIDataDetectorTypeLink;
+            }
             
             cell.showDate = showDate;
             [cell setMessage:chatMessage];

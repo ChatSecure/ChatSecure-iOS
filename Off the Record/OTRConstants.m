@@ -30,7 +30,6 @@ NSString *const kOTRProtocolLoginFailSSLCertificateDataKey = @"kOTRProtocolLogin
 NSString *const kOTRMessageReceived                        = @"MessageReceivedNotification";
 NSString *const kOTRMessageReceiptResonseReceived          = @"MessageReceiptResponseNotification";
 NSString *const kOTRStatusUpdate                           = @"StatusUpdatedNotification";
-NSString *const kOTRProtocolDiconnect                      = @"DisconnectedNotification";
 NSString *const kOTRSendMessage                            = @"SendMessageNotification";
 NSString *const kOTRNotificationErrorKey                   = @"kOTRNotificationErrorKey";
 
