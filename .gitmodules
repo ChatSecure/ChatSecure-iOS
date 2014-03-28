@@ -14,9 +14,6 @@
 [submodule "Submodules/UserVoice"]
 	path = Submodules/UserVoice
 	url = git@github.com:ChatSecure/uservoice-iphone-sdk.git
-[submodule "Submodules/encrypted-core-data"]
-	path = Submodules/encrypted-core-data
-	url = git@github.com:ChatSecure/encrypted-core-data.git
 [submodule "Submodules/TTTAttributedLabel"]
 	path = Submodules/TTTAttributedLabel
 	url = git@github.com:ChatSecure/TTTAttributedLabel.git
