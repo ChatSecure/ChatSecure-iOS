@@ -39,26 +39,27 @@
 {
     __block OTRBuddy *messageBuddy = nil;
     __block OTRAccount *messageAccount = nil;
+    OTRMessage *localMessage = [message copy];
     [[[OTRDatabaseManager sharedInstance] newConnection] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        messageBuddy = [message buddyWithTransaction:transaction];
+        messageBuddy = [localMessage buddyWithTransaction:transaction];
         messageAccount = [messageBuddy accountWithTransaction:transaction];
     }];
     
-    NSString *text = message.text;
+    NSString *text = localMessage.text;
     NSString *friendAccount = messageBuddy.username;
     NSString *protocol = [messageAccount protocolTypeString];
     NSString *myAccountName = messageAccount.username;
     
     [[OTRKit sharedInstance] decodeMessage:text recipient:friendAccount accountName:myAccountName protocol:protocol completionBlock:^(NSString *decodedMessageString) {
         if([decodedMessageString length]) {
-            message.text = [OTRUtilities stripHTML:decodedMessageString];
+            localMessage.text = [OTRUtilities stripHTML:decodedMessageString];
         }
         
         OTRKitMessageState messageState = [[OTRKit sharedInstance] messageStateForUsername:friendAccount accountName:myAccountName protocol:protocol];
         //fixme set buddy encryption state?
         
         if (completionBlock) {
-            completionBlock(message);
+            completionBlock(localMessage);
         }
     }];
 }

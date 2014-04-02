@@ -10,17 +10,17 @@
 
 @class YapDatabaseView;
 
-extern NSString const *OTRConversationGroup;
-extern NSString const *OTRConversationDatabaseViewExtensionName;
+extern NSString *OTRConversationGroup;
+extern NSString *OTRConversationDatabaseViewExtensionName;
 
-extern NSString const *OTRAllAccountGroup;
-extern NSString const *OTRAllAccountDatabaseViewExtensionName;
+extern NSString *OTRAllAccountGroup;
+extern NSString *OTRAllAccountDatabaseViewExtensionName;
 
 @interface OTRDatabaseView : NSObject
 
 
-+ (YapDatabaseView *)conversationDatabaseView;
++ (void)registerConversationDatabaseView;
 
-+ (YapDatabaseView *)allAccountsDatabaseView;
++ (void)registerAllAccountsDatabaseView;
 
 @end

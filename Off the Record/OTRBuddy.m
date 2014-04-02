@@ -33,6 +33,16 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
 
 @implementation OTRBuddy
 
+- (id)init
+{
+    if (self = [super init]) {
+        self.status = OTRBuddyStatusOffline;
+        self.chatState = kOTRChatStateUnknown;
+        self.lastSentChatState = kOTRChatStateUnknown;
+    }
+    return self;
+}
+
 
 - (BOOL)hasMessagesWithTransaction:(YapDatabaseReadTransaction *)transaction
 {
@@ -82,10 +92,11 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
 
 #pragma - mark Class Methods
 
-+ (OTRBuddy *)fetchBuddyWithUsername:(NSString *)username withAccountUniqueId:(NSString *)accountUniqueId transaction:(YapDatabaseReadTransaction *)transaction
++ (instancetype)fetchBuddyWithUsername:(NSString *)username withAccountUniqueId:(NSString *)accountUniqueId transaction:(YapDatabaseReadTransaction *)transaction
 {
     __block OTRBuddy *finalBuddy = nil;
-    [[transaction ext:OTRYapDatabaseRelationshipName] enumerateEdgesWithName:OTRBuddyEdges.account sourceKey:accountUniqueId collection:[OTRAccount collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
+    
+    [[transaction ext:OTRYapDatabaseRelationshipName] enumerateEdgesWithName:OTRBuddyEdges.account destinationKey:accountUniqueId collection:[OTRAccount collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
         OTRBuddy * buddy = [transaction objectForKey:edge.sourceKey inCollection:[OTRBuddy collection]];
         if ([buddy.username isEqualToString:username]) {
             *stop = YES;
@@ -100,12 +111,17 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
 
 - (NSArray *)yapDatabaseRelationshipEdges
 {
-    YapDatabaseRelationshipEdge *accountEdge = [YapDatabaseRelationshipEdge edgeWithName:OTRBuddyEdges.account
-                                                                          destinationKey:OTRYapDatabaseObjectAttributes.uniqueId
-                                                                              collection:[OTRAccount collection]
-                                                                         nodeDeleteRules:YDB_DeleteSourceIfDestinationDeleted];
+    NSArray *edges = nil;
+    if (self.accountUniqueId) {
+        YapDatabaseRelationshipEdge *accountEdge = [YapDatabaseRelationshipEdge edgeWithName:OTRBuddyEdges.account
+                                                                              destinationKey:self.accountUniqueId
+                                                                                  collection:[OTRAccount collection]
+                                                                             nodeDeleteRules:YDB_DeleteSourceIfDestinationDeleted];
+        edges = @[accountEdge];
+    }
     
-    return @[accountEdge];
+    
+    return edges;
 }
 
 #pragma mark NSCoding
@@ -141,6 +157,25 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
     
     
     [encoder encodeObject:self.accountUniqueId forKey:OTRBuddyRelationships.accountUniqueId];
+}
+
+#pragma - mark NSCopying
+
+- (id)copyWithZone:(NSZone *)zone
+{
+    OTRBuddy *copy = [super copyWithZone:zone];
+    copy.username = [self.username copyWithZone:zone];
+    copy.displayName = [self.displayName copyWithZone:zone];
+    copy.composingMessageString = [self.composingMessageString copyWithZone:zone];
+    copy.statusMessage = [self.statusMessage copyWithZone:zone];
+    copy.status = self.status;
+    copy.chatState = self.chatState;
+    copy.lastSentChatState = self.lastSentChatState;
+    copy.lastMessageDate = [self.lastMessageDate copyWithZone:zone];
+    
+    copy.accountUniqueId = [self.accountUniqueId copyWithZone:zone];
+    
+    return copy;
 }
 
 @end

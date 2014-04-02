@@ -63,4 +63,16 @@ const struct OTRXMPPPresenceSubscriptionRequestEdges OTRXMPPPresenceSubscription
     [encoder encodeObject:self.accountUniqueId forKey:OTRXMPPPresenceSubscriptionRequestRelationships.accountUniqueId];
 }
 
+#pragma - mark NSCopying
+
+- (id)copyWithZone:(NSZone *)zone
+{
+    OTRXMPPPresenceSubscriptionRequest *copy = [super copyWithZone:zone];
+    copy.date = [self.date copyWithZone:zone];
+    copy.jid = [self.jid copyWithZone:zone];
+    copy.displayName = [self.displayName copyWithZone:zone];
+    
+    return copy;
+}
+
 @end

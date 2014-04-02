@@ -49,7 +49,7 @@ extern const struct OTRBuddyEdges {
 - (OTRAccount*)accountWithTransaction:(YapDatabaseReadTransaction *)transaction;
 - (void)setAllMessagesRead:(YapDatabaseReadWriteTransaction *)transaction;
 
-+ (OTRBuddy *)fetchBuddyWithUsername:(NSString *)username withAccountUniqueId:(NSString *)accountUniqueId transaction:(YapDatabaseReadTransaction *)transaction;
++ (instancetype)fetchBuddyWithUsername:(NSString *)username withAccountUniqueId:(NSString *)accountUniqueId transaction:(YapDatabaseReadTransaction *)transaction;
 
 
 @end

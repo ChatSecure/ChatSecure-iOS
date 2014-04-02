@@ -71,7 +71,7 @@ static CGFloat cellHeight = 80.0;
     
     self.connection = [OTRDatabaseManager sharedInstance].mainThreadReadOnlyDatabaseConnection;
     
-    YapDatabaseView *view = [OTRDatabaseView conversationDatabaseView];
+    [OTRDatabaseView registerConversationDatabaseView];
     
     self.mappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[OTRConversationGroup] view:OTRConversationDatabaseViewExtensionName];
     
@@ -82,8 +82,8 @@ static CGFloat cellHeight = 80.0;
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(yapDatabaseModified:)
-                                                 name:YapDatabaseModifiedNotification
-                                               object:self.connection.database];
+                                                 name:OTRUIDatabaseConnectionDidUpdateNotification
+                                               object:nil];
     
     
     
@@ -122,7 +122,7 @@ static CGFloat cellHeight = 80.0;
     [self presentViewController:modalNavigationController animated:YES completion:nil];
 }
 
-- (void)enterConversationWithBuddy:(OTRManagedBuddy *)buddy
+- (void)enterConversationWithBuddy:(OTRBuddy *)buddy
 {
     //[self.chatViewController setBuddy:buddy];
     //[self.navigationController pushViewController:self.chatViewController animated:YES];
@@ -215,7 +215,7 @@ static CGFloat cellHeight = 80.0;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    OTRManagedBuddy *buddy = [self buddyForIndexPath:indexPath];
+    OTRBuddy *buddy = [self buddyForIndexPath:indexPath];
     [self enterConversationWithBuddy:buddy];
 }
 
@@ -223,10 +223,9 @@ static CGFloat cellHeight = 80.0;
 
 - (void)yapDatabaseModified:(NSNotification *)notification
 {
-    NSArray *notifications = [self.connection beginLongLivedReadTransaction];
-    
     // Process the notification(s),
     // and get the change-set(s) as applies to my view and mappings configuration.
+    NSArray *notifications = notification.userInfo[@"notifications"];
     
     NSArray *sectionChanges = nil;
     NSArray *rowChanges = nil;

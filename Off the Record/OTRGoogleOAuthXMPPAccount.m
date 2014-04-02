@@ -12,6 +12,7 @@
 #import "GTMOAuth2Authentication.h"
 #import "GTMOAuth2SignIn.h"
 #import "OTRSecrets.h"
+#import "OTRConstants.h"
 
 NSString *const kOTRExpirationDateKey = @"kOTRExpirationDateKey";
 NSString *const kOTRExpiresInKey      = @"expires_in";
@@ -23,7 +24,7 @@ NSString *const kOTRExpiresInKey      = @"expires_in";
 {
     if(self = [super init])
     {
-        
+        self.domain = kOTRGoogleTalkDomain;
     }
     return self;
 }

@@ -23,11 +23,11 @@ NSString *OTRAllAccountDatabaseViewExtensionName = @"OTRAllAccountDatabaseViewEx
 
 
 
-+ (YapDatabaseView *)conversationDatabaseView
++ (void)registerConversationDatabaseView
 {
     YapDatabaseView *conversationView = [[OTRDatabaseManager sharedInstance].database registeredExtension:OTRConversationDatabaseViewExtensionName];
     if (conversationView) {
-        return conversationView;
+        return;
     }
     
     
@@ -82,17 +82,16 @@ NSString *OTRAllAccountDatabaseViewExtensionName = @"OTRAllAccountDatabaseViewEx
                                         versionTag:@""
                                            options:options];
     [[OTRDatabaseManager sharedInstance].database registerExtension:databaseView withName:OTRConversationDatabaseViewExtensionName];
-    return databaseView;
 }
 
 
 
 
-+ (YapDatabaseView *)allAccountsDatabaseView
++ (void)registerAllAccountsDatabaseView
 {
     YapDatabaseView *accountView = [[OTRDatabaseManager sharedInstance].database registeredExtension:OTRAllAccountDatabaseViewExtensionName];
     if (accountView) {
-        return accountView;
+        return;
     }
     
     
@@ -139,7 +138,6 @@ NSString *OTRAllAccountDatabaseViewExtensionName = @"OTRAllAccountDatabaseViewEx
                                         versionTag:@""
                                            options:options];
     [[OTRDatabaseManager sharedInstance].database registerExtension:databaseView withName:OTRAllAccountDatabaseViewExtensionName];
-    return databaseView;
 }
 
 @end

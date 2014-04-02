@@ -39,7 +39,7 @@
 {
     __block OTRAccount *account = nil;
     [self.connection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        [OTRAccount fetchAccountWithUsername:[stream.myJID bare] protocolType:OTRProtocolTypeXMPP transaction:transaction];
+        account = [OTRAccount fetchAccountWithUsername:[stream.myJID bare] protocolType:OTRProtocolTypeXMPP transaction:transaction];
     }];
     return account;
 }
@@ -50,16 +50,19 @@
         OTRAccount *account = [self accountForStream:stream];
         self.accountUniqueId = account.uniqueId;
     }
-    __block OTRBuddy *buddy = nil;
+    __block OTRXMPPBuddy *buddy = nil;
     
     [self.connection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        buddy = [OTRBuddy fetchBuddyWithUsername:[jid bare] withAccountUniqueId:self.accountUniqueId transaction:transaction];
+        buddy = [OTRXMPPBuddy fetchBuddyWithUsername:[jid bare] withAccountUniqueId:self.accountUniqueId transaction:transaction];
     }];
     
-    if ([buddy isKindOfClass:[OTRXMPPBuddy class]]) {
-        return (OTRXMPPBuddy *)buddy;
+    if (!buddy) {
+        buddy = [[OTRXMPPBuddy alloc] init];
+        buddy.username = [jid bare];
+        buddy.accountUniqueId = self.accountUniqueId;
     }
-    return nil;
+    
+    return buddy;
 }
 
 -(BOOL)isPendingApprovalElement:(NSXMLElement *)item
@@ -90,7 +93,7 @@
     }
     
     [self.connection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        [transaction setObject:buddy forKey:buddy.uniqueId inCollection:[OTRBuddy collection]];
+        [transaction setObject:buddy forKey:buddy.uniqueId inCollection:[OTRXMPPBuddy collection]];
     }];
 }
 
@@ -123,7 +126,7 @@
         if (buddy)
         {
             [self.connection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-                [transaction setObject:nil forKey:buddy.uniqueId inCollection:[OTRBuddy collection]];
+                [transaction setObject:nil forKey:buddy.uniqueId inCollection:[OTRXMPPBuddy collection]];
             }];
         }
     }

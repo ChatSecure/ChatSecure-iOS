@@ -106,7 +106,7 @@ NSString *const OTRYapDatabaseRelationshipName = @"OTRYapDatabaseRelationshipNam
     NSString *applicationSupportDirectory = [NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES) lastObject];
     NSString *applicationName = [[[NSBundle mainBundle] infoDictionary] valueForKey:(NSString *)kCFBundleNameKey];
     NSString *directory = [applicationSupportDirectory stringByAppendingPathComponent:applicationName];
-    NSString *databasePath = [directory stringByAppendingPathComponent:databaseName];
+    NSString *databasePath = [directory stringByAppendingPathComponent:@"test.sqlite"];
     
     self.database = [[YapDatabase alloc] initWithPath:databasePath
                                 objectSerializer:NULL
@@ -133,13 +133,10 @@ NSString *const OTRYapDatabaseRelationshipName = @"OTRYapDatabaseRelationshipNam
     YapDatabaseRelationship *databaseRelationship = [[YapDatabaseRelationship alloc] init];
     [self.database registerExtension:databaseRelationship withName:OTRYapDatabaseRelationshipName];
     
-    [self.mainThreadReadOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        NSArray *allCollections = [transaction allCollections];
-        NSArray *allAccountKeys = [transaction allKeysInCollection:@"OTRAccount"];
-        
-        id account = [transaction objectForKey:[allAccountKeys firstObject] inCollection:@"OTRAccount"];
+    [self.readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        [transaction removeAllObjectsInCollection:@"OTRBuddy"];
+        [transaction removeAllObjectsInCollection:@"OTRMessage"];
     }];
-    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(yapDatabaseModified:)
                                                  name:YapDatabaseModifiedNotification
@@ -154,6 +151,11 @@ NSString *const OTRYapDatabaseRelationshipName = @"OTRYapDatabaseRelationshipNam
     else {
         return NO;
     }
+}
+
+- (YapDatabaseConnection *)newConnection
+{
+    return [self.database newConnection];
 }
 
 - (void)yapDatabaseModified:(NSNotification *)ignored

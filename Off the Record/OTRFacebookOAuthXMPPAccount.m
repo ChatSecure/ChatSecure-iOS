@@ -11,9 +11,18 @@
 #import "Strings.h"
 #import "FBAccessTokenData.h"
 #import "OTRFacebookSessionCachingStrategy.h"
+#import "OTRConstants.h"
 
 
 @implementation OTRFacebookOAuthXMPPAccount
+
+- (id)init
+{
+    if (self = [super init]) {
+        self.domain = kOTRFacebookDomain;
+    }
+    return self;
+}
 
 - (UIImage *)accountImage
 {

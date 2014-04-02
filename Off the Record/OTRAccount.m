@@ -108,6 +108,11 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
     return password;
 }
 
+- (NSString *)description
+{
+    return [NSString stringWithFormat:@"%@ - %@",NSStringFromClass([self class]), self.username];
+}
+
 
 #pragma mark NSCoding
 - (instancetype)initWithCoder:(NSCoder *)decoder // NSCoding deserialization
@@ -132,6 +137,20 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
     [encoder encodeObject:self.displayName forKey:OTRAccountAttributes.displayName];
     [encoder encodeObject:self.username forKey:OTRAccountAttributes.username];
     
+}
+
+#pragma - mark NSCopying
+
+- (id)copyWithZone:(NSZone *)zone
+{
+    OTRAccount *copy = [super copyWithZone:zone];
+    copy.autologin = self.autologin;
+    copy.rememberPassword = self.rememberPassword;
+    copy.accountType = self.accountType;
+    copy.displayName = [self.displayName copyWithZone:zone];
+    copy.username = [self.username copyWithZone:zone];
+    
+    return copy;
 }
 
 #pragma - mark Class Methods

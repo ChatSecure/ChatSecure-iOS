@@ -15,7 +15,7 @@ extern const struct OTRYapDatabaseObjectAttributes {
 	__unsafe_unretained NSString *uniqueId;
 } OTRYapDatabaseObjectAttributes;
 
-@interface OTRYapDatabaseObject : NSObject <NSCoding, NSCopying, YapDatabaseRelationshipNode>
+@interface OTRYapDatabaseObject : NSObject <NSCoding, NSCopying>
 
 @property (nonatomic, readonly) NSString *uniqueId;
 

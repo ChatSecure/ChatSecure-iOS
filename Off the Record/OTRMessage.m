@@ -8,7 +8,10 @@
 
 #import "OTRMessage.h"
 #import "OTRBuddy.h"
+#import "OTRAccount.h"
 #import "YapDatabaseTransaction.h"
+#import "OTRDatabaseManager.h"
+#import "YapDatabaseRelationshipTransaction.h"
 
 const struct OTRMessageAttributes OTRMessageAttributes = {
 	.date = @"date",
@@ -37,7 +40,7 @@ const struct OTRMessageEdges OTRMessageEdges = {
         self.delivered = NO;
         self.read = NO;
     }
-    
+    return self;
 }
 
 - (OTRBuddy *)buddyWithTransaction:(YapDatabaseReadTransaction *)readTransaction
@@ -49,12 +52,18 @@ const struct OTRMessageEdges OTRMessageEdges = {
 
 - (NSArray *)yapDatabaseRelationshipEdges
 {
-    YapDatabaseRelationshipEdge *buddyEdge = [YapDatabaseRelationshipEdge edgeWithName:OTRMessageEdges.buddy
-                                                                        destinationKey:OTRYapDatabaseObjectAttributes.uniqueId
-                                                                            collection:[OTRBuddy collection]
-                                                                       nodeDeleteRules:YDB_DeleteSourceIfDestinationDeleted];
+    NSArray *edges = nil;
+    if (self.buddyUniqueId) {
+        YapDatabaseRelationshipEdge *buddyEdge = [YapDatabaseRelationshipEdge edgeWithName:OTRMessageEdges.buddy
+                                                                            destinationKey:self.buddyUniqueId
+                                                                                collection:[OTRBuddy collection]
+                                                                           nodeDeleteRules:YDB_DeleteSourceIfDestinationDeleted];
+        
+        edges = @[buddyEdge];
+    }
     
-    return @[buddyEdge];
+    return edges;
+    
 }
 
 #pragma mark NSCoding
@@ -87,6 +96,22 @@ const struct OTRMessageEdges OTRMessageEdges = {
     [encoder encodeObject:self.buddyUniqueId forKey:OTRMessageRelationships.buddyUniqueId];
 }
 
+#pragma - mark NSCopying
+
+- (id)copyWithZone:(NSZone *)zone
+{
+    OTRMessage *copy = [super copyWithZone:zone];
+    copy.date = [self.date copyWithZone:zone];
+    copy.text = [self.text copyWithZone:zone];
+    copy.delivered = self.delivered;
+    copy.read = self.read;
+    copy.incoming = self.incoming;
+    copy.messageId = [self.messageId copyWithZone:zone];
+    copy.buddyUniqueId = [self.buddyUniqueId copyWithZone:zone];
+    
+    return copy;
+}
+
 #pragma - mark Class Methods
 
 + (NSInteger)numberOfUnreadMessagesWithTransaction:(YapDatabaseReadTransaction*)transaction
@@ -109,48 +134,16 @@ const struct OTRMessageEdges OTRMessageEdges = {
 
 + (void)deleteAllMessagesForBuddyId:(NSString *)uniqueBuddyId transaction:(YapDatabaseReadWriteTransaction*)transaction
 {
-    NSMutableArray *messageKeysToDelete = [NSMutableArray array];
-    [transaction enumerateKeysAndObjectsInCollection:[OTRMessage collection] usingBlock:^(NSString *key, OTRMessage *message, BOOL *stop) {
-        
-        if ([message isKindOfClass:[OTRMessage class]]) {
-            
-            if ([message.buddyUniqueId isEqualToString:uniqueBuddyId])
-            {
-                [messageKeysToDelete addObject:message.uniqueId];
-                
-            }
-        }
-        
+    [[transaction ext:OTRYapDatabaseRelationshipName] enumerateEdgesWithName:OTRMessageEdges.buddy destinationKey:uniqueBuddyId collection:[OTRBuddy collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
+        [transaction removeObjectForKey:edge.sourceKey inCollection:edge.sourceCollection];
     }];
-    
-    if ([messageKeysToDelete count]) {
-        [transaction removeObjectsForKeys:messageKeysToDelete inCollection:[OTRMessage collection]];
-    }
 }
 
 + (void)deleteAllMessagesForAccountId:(NSString *)uniqueAccountId transaction:(YapDatabaseReadWriteTransaction*)transaction
 {
-    NSMutableSet *accountBuddyIdSet = [NSMutableSet set];
-    [transaction enumerateKeysAndObjectsInCollection:[OTRBuddy collection] usingBlock:^(NSString *key, id object, BOOL *stop) {
-        if ([object isKindOfClass:[OTRBuddy class]]) {
-            OTRBuddy *buddy = (OTRBuddy *)object;
-            if ([buddy.accountUniqueId isEqualToString:uniqueAccountId]) {
-                [accountBuddyIdSet addObject:buddy.uniqueId];
-            }
-        }
+    [[transaction ext:OTRYapDatabaseRelationshipName] enumerateEdgesWithName:OTRBuddyEdges.account destinationKey:uniqueAccountId collection:[OTRAccount collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
+        [self deleteAllMessagesForBuddyId:edge.sourceKey transaction:transaction];
     }];
-    NSMutableArray *deleteMessageKeys = [NSMutableArray array];
-    [transaction enumerateKeysAndObjectsInCollection:[OTRMessage collection] usingBlock:^(NSString *key, id object, BOOL *stop) {
-        if ([object isKindOfClass:[OTRMessage class]]) {
-            OTRMessage *message = (OTRMessage *)object;
-            
-            if ([accountBuddyIdSet containsObject:message.buddyUniqueId]) {
-                [deleteMessageKeys addObject:message.uniqueId];
-            }
-        }
-    }];
-    
-    [transaction removeObjectsForKeys:deleteMessageKeys inCollection:[OTRMessage collection]];
 }
 
 + (void)receivedDeliveryReceiptForMessageId:(NSString *)messageId transaction:(YapDatabaseReadWriteTransaction*)transaction

@@ -51,6 +51,16 @@ const struct OTRYapDatabaseObjectAttributes OTRYapDatabaseObjectAttributes = {
     [encoder encodeObject:self.uniqueId forKey:OTRYapDatabaseObjectAttributes.uniqueId];
 }
 
+#pragma - mark NSCopying
+
+- (id)copyWithZone:(NSZone *)zone
+{
+    OTRYapDatabaseObject *copy = [[[self class] alloc] initWithUniqueId:[self.uniqueId copyWithZone:zone]];
+    return copy;
+}
+
+#pragma - mark Class Methods
+
 + (NSString *)collection
 {
     return NSStringFromClass([self class]);

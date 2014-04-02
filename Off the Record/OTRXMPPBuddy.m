@@ -15,6 +15,14 @@ const struct OTRXMPPBuddyAttributes OTRXMPPBuddyAttributes = {
 
 @implementation OTRXMPPBuddy
 
+- (id)init
+{
+    if (self = [super init]) {
+        self.pendingApproval = NO;
+    }
+    return self;
+}
+
 
 #pragma mark NSCoding
 - (instancetype)initWithCoder:(NSCoder *)decoder // NSCoding deserialization
@@ -32,11 +40,23 @@ const struct OTRXMPPBuddyAttributes OTRXMPPBuddyAttributes = {
     [encoder encodeBool:self.isPendingApproval forKey:OTRXMPPBuddyAttributes.pendingApproval];
 }
 
+#pragma - mark NSCopying
+
+- (id)copyWithZone:(NSZone *)zone
+{
+    OTRXMPPBuddy *copy = [super copyWithZone:zone];
+    copy.pendingApproval = self.pendingApproval;
+    
+    return copy;
+}
+
 #pragma - mark Class Methods
 
 + (NSString *)collection
 {
-    return NSStringFromClass([OTRBuddy class]);
+    return [OTRBuddy collection];
 }
+
+
 
 @end

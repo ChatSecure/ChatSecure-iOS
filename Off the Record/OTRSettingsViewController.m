@@ -74,10 +74,13 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 {
     [super viewDidLoad];
     
+    //Make sure allAccountsDatabaseView is registered
+    [OTRDatabaseView registerAllAccountsDatabaseView];
+    
+    //User main thread database connection
     self.databaseConnection = [[OTRDatabaseManager sharedInstance] mainThreadReadOnlyDatabaseConnection];
     
-    YapDatabaseView *allAccountsView = [OTRDatabaseView allAccountsDatabaseView];
-    
+    //Create mappings from allAccountsDatabaseView
     self.mappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[OTRAllAccountGroup] view:OTRAllAccountDatabaseViewExtensionName];
     
     [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction){
@@ -216,8 +219,8 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
         } else {
             OTRAccount *account = [self accountAtIndexPath:indexPath];
             
-            BOOL isConnected = [[OTRProtocolManager sharedInstance] isAccountConnected:account];
-            if (isConnected) {
+            BOOL connected = [[OTRProtocolManager sharedInstance] isAccountConnected:account];
+            if (!connected) {
                 [self showLoginControllerForAccount:account];
             } else {
                 RIButtonItem * cancelButtonItem = [RIButtonItem itemWithLabel:CANCEL_STRING];
@@ -374,7 +377,8 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     
     if ([sectionChanges count] == 0 & [rowChanges count] == 0)
     {
-        [self.tableView reloadData];
+        //FIXME why does this not work from the start why do I have to refresh here on first appearence
+        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationNone];
         // Nothing has changed that affects our tableView
         return;
     }

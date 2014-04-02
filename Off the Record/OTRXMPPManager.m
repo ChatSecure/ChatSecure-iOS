@@ -54,11 +54,10 @@
 
 #import "OTRDatabaseManager.h"
 #import "YapDatabaseConnection.h"
-#import "OTRBuddy.h"
+#import "OTRXMPPBuddy.h"
 #import "OTRXMPPAccount.h"
 #import "OTRMessage.h"
 #import "OTRAccount.h"
-#import "OTRBuddy.h"
 
 NSString *const OTRXMPPRegisterSucceededNotificationName = @"OTRXMPPRegisterSucceededNotificationName";
 NSString *const OTRXMPPRegisterFailedNotificationName    = @"OTRXMPPRegisterFailedNotificationName";
@@ -584,61 +583,65 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
     [self failedToRegisterNewAccount:error];
 }
 
--(OTRBuddy *)buddyWithMessage:(XMPPMessage *)message transaction:(YapDatabaseReadTransaction *)transaction
+-(OTRXMPPBuddy *)buddyWithMessage:(XMPPMessage *)message transaction:(YapDatabaseReadTransaction *)transaction
 {
-    OTRBuddy *buddy = [OTRBuddy fetchBuddyWithUsername:[[message from] bare] withAccountUniqueId:self.account.uniqueId transaction:transaction];
+    OTRXMPPBuddy *buddy = [OTRXMPPBuddy fetchBuddyWithUsername:[[message from] bare] withAccountUniqueId:self.account.uniqueId transaction:transaction];
     return buddy;
 }
 
 
-- (void)xmppStream:(XMPPStream *)sender didReceiveMessage:(XMPPMessage *)message
+- (void)xmppStream:(XMPPStream *)sender didReceiveMessage:(XMPPMessage *)xmppMessage
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
-    NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
-    
-    
 
     [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         
-        OTRBuddy *messageBuddy = [self buddyWithMessage:message transaction:transaction];
-        if([message hasChatState] && ![message isErrorMessage])
+        OTRXMPPBuddy *messageBuddy = [self buddyWithMessage:xmppMessage transaction:transaction];
+        if([xmppMessage hasChatState] && ![xmppMessage isErrorMessage])
         {
-            if([message hasComposingChatState])
+            if([xmppMessage hasComposingChatState])
                 messageBuddy.chatState = kOTRChatStateComposing;
-            else if([message hasPausedChatState])
+            else if([xmppMessage hasPausedChatState])
                  messageBuddy.chatState = kOTRChatStatePaused;
-            else if([message hasActiveChatState])
+            else if([xmppMessage hasActiveChatState])
                  messageBuddy.chatState = kOTRChatStateActive;
-            else if([message hasInactiveChatState])
+            else if([xmppMessage hasInactiveChatState])
                  messageBuddy.chatState = kOTRChatStateInactive;
-            else if([message hasGoneChatState])
+            else if([xmppMessage hasGoneChatState])
                  messageBuddy.chatState = kOTRChatStateGone;
+            //save to disk
         }
         
-        if ([message hasReceiptResponse] && ![message isErrorMessage]) {
-            [OTRMessage receivedDeliveryReceiptForMessageId:[message receiptResponseID] transaction:transaction];
+        if ([xmppMessage hasReceiptResponse] && ![xmppMessage isErrorMessage]) {
+            [OTRMessage receivedDeliveryReceiptForMessageId:[xmppMessage receiptResponseID] transaction:transaction];
         }
         
-        if ([message isMessageWithBody] && ![message isErrorMessage])
+        if ([xmppMessage isMessageWithBody] && ![xmppMessage isErrorMessage])
         {
-            NSString *body = [[message elementForName:@"body"] stringValue];
+            NSString *body = [[xmppMessage elementForName:@"body"] stringValue];
             
-            NSDate * date = [message delayedDeliveryDate];
+            NSDate * date = [xmppMessage delayedDeliveryDate];
             
             OTRMessage *message = [[OTRMessage alloc] init];
             message.incoming = YES;
             message.text = body;
             message.buddyUniqueId = messageBuddy.uniqueId;
-            message.date = date;
+            if (date) {
+                message.date = date;
+            }
             
-            [OTRCodec decodeMessage:message completionBlock:^(OTRMessage *message) {
-                [transaction setObject:message forKey:message.uniqueId inCollection:[OTRMessage collection]];
+            message.messageId = [xmppMessage elementID];
+            
+            [OTRCodec decodeMessage:message completionBlock:^(OTRMessage *decryptedMessage) {
+                [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+                    [transaction setObject:decryptedMessage forKey:message.uniqueId inCollection:[OTRMessage collection]];
+                }];
                 //FIXME [OTRManagedMessage showLocalNotificationForMessage:message];
             }];
         }
         
         if (messageBuddy) {
-            [transaction setObject:messageBuddy forKey:messageBuddy.uniqueId inCollection:[OTRBuddy collection]];
+            [transaction setObject:messageBuddy forKey:messageBuddy.uniqueId inCollection:[OTRXMPPBuddy collection]];
         }
     }];
 }
@@ -724,7 +727,7 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
     [self connectWithJID:self.account.username password:myPassword];
 }
 
--(void)sendBuddy:(OTRBuddy *)buddy chatState:(OTRChatState)chatState
+-(void)sendBuddy:(OTRXMPPBuddy *)buddy chatState:(OTRChatState)chatState
 {
     if (buddy.lastSentChatState == chatState) {
         return;
@@ -782,19 +785,19 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
         {
             buddy.lastSentChatState = chatState;
             [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-                [transaction setObject:buddy forKey:buddy.uniqueId inCollection:[OTRBuddy collection]];
+                [transaction setObject:buddy forKey:buddy.uniqueId inCollection:[OTRXMPPBuddy collection]];
             }];
             [self.xmppStream sendElement:xMessage];
         }
     });
 }
 
-- (void) addBuddy:(OTRBuddy *)newBuddy
+- (void) addBuddy:(OTRXMPPBuddy *)newBuddy
 {
     XMPPJID * newJID = [XMPPJID jidWithString:newBuddy.username];
     [self.xmppRoster addUser:newJID withNickname:newBuddy.displayName];
 }
-- (void) setDisplayName:(NSString *) newDisplayName forBuddy:(OTRBuddy *)buddy
+- (void) setDisplayName:(NSString *) newDisplayName forBuddy:(OTRXMPPBuddy *)buddy
 {
     XMPPJID * jid = [XMPPJID jidWithString:buddy.username];
     [self.xmppRoster setNickname:newDisplayName forUser:jid];
@@ -802,14 +805,14 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 }
 -(void)removeBuddies:(NSArray *)buddies
 {
-    for (OTRBuddy *buddy in buddies){
+    for (OTRXMPPBuddy *buddy in buddies){
         XMPPJID * jid = [XMPPJID jidWithString:buddy.username];
         [self.xmppRoster removeUser:jid];
     }
     
     
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        [transaction removeObjectsForKeys:[buddies valueForKey:OTRYapDatabaseObjectAttributes.uniqueId] inCollection:[OTRBuddy collection]];
+        [transaction removeObjectsForKeys:[buddies valueForKey:OTRYapDatabaseObjectAttributes.uniqueId] inCollection:[OTRXMPPBuddy collection]];
     }];
 
 
@@ -817,7 +820,7 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 }
 -(void)blockBuddies:(NSArray *)buddies
 {
-    for (OTRBuddy *buddy in buddies){
+    for (OTRXMPPBuddy *buddy in buddies){
         XMPPJID * jid = [XMPPJID jidWithString:buddy.username];
         [self.xmppRoster revokePresencePermissionFromUser:jid];
     }
