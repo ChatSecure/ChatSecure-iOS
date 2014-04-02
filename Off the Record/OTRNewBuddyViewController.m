@@ -7,37 +7,40 @@
 //
 
 #import "OTRNewBuddyViewController.h"
-#import "OTRManagedAccount.h"
 #import "OTRInLineTextEditTableViewCell.h"
 #import "OTRProtocolManager.h"
-#import "OTRManagedBuddy.h"
 #import <QuartzCore/QuartzCore.h>
 #import "Strings.h"
+#import "OTRXMPPManager.h"
+#import "OTRDatabaseManager.h"
+
+#import "OTRAccount.h"
+#import "OTRBuddy.h"
 
 @interface OTRNewBuddyViewController ()
+
+@property (nonatomic) BOOL isXMPPaccount;
 
 @end
 
 @implementation OTRNewBuddyViewController
 
-@synthesize account =_account;
-@synthesize accountNameTextField;
-@synthesize displayNameTextField;
-
--(id)initWithAccountObjectID:(NSManagedObjectID *)accountObjectID{
+-(id)initWithAccountId:(NSString *)accountId {
     
     if (self = [super init]) {
-        NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
-        self.account = (OTRManagedAccount *)[context existingObjectWithID:accountObjectID error:nil];
+        
+        [[OTRDatabaseManager sharedInstance].mainThreadReadOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+            self.account = [OTRAccount fetchObjectWithUniqueID:accountId transaction:transaction];
+        }];
 
     }
     return self;
     
 }
 
--(void)setAccount:(OTRManagedAccount *)account
+-(void)setAccount:(OTRAccount *)account
 {
-    isXMPPaccount = [[account protocolClass] isSubclassOfClass:[OTRXMPPManager class]];
+    self.isXMPPaccount = [[account protocolClass] isSubclassOfClass:[OTRXMPPManager class]];
     _account = account;
     
 }
@@ -61,13 +64,13 @@
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(doneButtonPressed:)];
     
     
-    accountNameTextField = [[UITextField alloc] initWithFrame:CGRectZero];
-    accountNameTextField.placeholder = REQUIRED_STRING;
+    self.accountNameTextField = [[UITextField alloc] initWithFrame:CGRectZero];
+    self.accountNameTextField.placeholder = REQUIRED_STRING;
     
-    if (isXMPPaccount) {
-        displayNameTextField = [[UITextField alloc] initWithFrame:CGRectZero];
-        displayNameTextField.placeholder = OPTIONAL_STRING;
-        accountNameTextField.delegate= displayNameTextField.delegate = self;
+    if (self.isXMPPaccount) {
+        self.displayNameTextField = [[UITextField alloc] initWithFrame:CGRectZero];
+        self.displayNameTextField.placeholder = OPTIONAL_STRING;
+        self.accountNameTextField.delegate= self.displayNameTextField.delegate = self;
         
         self.displayNameTextField.autocapitalizationType = self.accountNameTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
         self.displayNameTextField.autocorrectionType = self.accountNameTextField.autocorrectionType = UITextAutocorrectionTypeNo;
@@ -83,13 +86,13 @@
     
     [self.view addSubview:tableView];
     
-    [accountNameTextField becomeFirstResponder];
+    [self.accountNameTextField becomeFirstResponder];
 	// Do any additional setup after loading the view.
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if (isXMPPaccount) {
+    if (self.isXMPPaccount) {
         return 2;
     }
     return 1;
@@ -181,18 +184,23 @@
 -(void)doneButtonPressed:(id)sender
 {
     if ([self checkFields]) {
-        NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
         NSString * newBuddyAccountName = [[self.accountNameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] lowercaseString];
         NSString * newBuddyDisplayName = [self.displayNameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-        OTRManagedBuddy * newBuddy = [OTRManagedBuddy fetchOrCreateWithName:newBuddyAccountName account:self.account inContext:context];
-        if (newBuddy && [newBuddyDisplayName length]) {
-            newBuddy.displayName = newBuddyDisplayName;
-        }
-        
-        [context MR_saveToPersistentStoreAndWait];
+        __block OTRBuddy *buddy = nil;
+        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+            buddy = [OTRBuddy fetchBuddyWithUsername:newBuddyAccountName withAccountUniqueId:self.account.uniqueId transaction:transaction];
+            if (!buddy) {
+                buddy = [[OTRBuddy alloc] init];
+                buddy.username = newBuddyAccountName;
+                buddy.accountUniqueId = self.account.uniqueId;
+            }
+            
+            buddy.displayName = newBuddyDisplayName;
+            [transaction setObject:buddy forKey:buddy.uniqueId inCollection:[OTRBuddy collection]];
+        }];
         
         id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
-        [protocol addBuddy:newBuddy];
+        [protocol addBuddy:buddy];
         
         [self.navigationController dismissViewControllerAnimated:YES completion:nil];
     }
@@ -200,10 +208,10 @@
     {
         
         [UIView animateWithDuration:.3 animations:^{
-            accountNameTextField.backgroundColor = [UIColor colorWithRed: 0.734 green: 0.124 blue: 0.124 alpha: .8];
+            self.accountNameTextField.backgroundColor = [UIColor colorWithRed: 0.734 green: 0.124 blue: 0.124 alpha: .8];
         } completion:^(BOOL finished) {
             [UIView animateWithDuration:.3 animations:^{
-                accountNameTextField.backgroundColor = [UIColor clearColor];
+                self.accountNameTextField.backgroundColor = [UIColor clearColor];
             } completion:NULL];
         }];
         

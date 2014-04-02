@@ -39,6 +39,9 @@
 #import "SIAlertView.h"
 #import "UIAlertView+Blocks.h"
 #import "OTRCertificatePinning.h"
+#import "OTRDatabaseManager.h"
+
+#import "OTRXMPPTorAccount.h"
 
 NSString *const kTextLabelTextKey       = @"kTextLabelTextKey";
 NSString *const kCellTypeKey            = @"kCellTypeKey";
@@ -53,10 +56,9 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
     [_timeoutTimer invalidate];
 }
 
-- (id) initWithAccountID:(NSManagedObjectID *)newAccountID {
+- (id) initWithAccount:(OTRAccount *)account{
     if (self = [super init]) {
-        NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
-        self.account = (OTRManagedAccount *)[context existingObjectWithID:newAccountID error:nil];
+        self.account = account;
         
         //DDLogInfo(@"Account Dictionary: %@",[account accountDictionary]);
         if (SYSTEM_VERSION_LESS_THAN(@"7.0")) {
@@ -78,7 +80,7 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
     
     [self addCellinfoWithSection:0 row:2 labelText:REMEMBER_PASSWORD_STRING cellType:kCellTypeSwitch userInputView:self.rememberPasswordSwitch];
     
-    if(![self.account isKindOfClass:[OTRManagedXMPPTorAccount class]])
+    if(![self.account isKindOfClass:[OTRXMPPTorAccount class]])
     {
         [self addCellinfoWithSection:0 row:3 labelText:LOGIN_AUTOMATICALLY_STRING cellType:kCellTypeSwitch userInputView:self.autoLoginSwitch];
     }
@@ -187,7 +189,7 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
     
     [self setupFields];
     
-    self.title = self.account.providerName;
+    self.title = [self.account accountDisplayName];
     
     self.loginButton = [[UIBarButtonItem alloc] initWithTitle:LOGIN_STRING style:UIBarButtonItemStyleDone target:self action:@selector(loginButtonPressed:)];
     self.navigationItem.rightBarButtonItem = self.loginButton;
@@ -308,9 +310,9 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
         [self.passwordTextField becomeFirstResponder];
     }
     
-    self.autoLoginSwitch.on = self.account.autologinValue;
-    self.rememberPasswordSwitch.on = self.account.rememberPasswordValue;
-    if (self.account.rememberPasswordValue) {
+    self.autoLoginSwitch.on = self.account.autologin;
+    self.rememberPasswordSwitch.on = self.account.rememberPassword;
+    if (self.account.rememberPassword) {
         self.passwordTextField.text = self.account.password;
     } else {
         self.passwordTextField.text = @"";
@@ -333,11 +335,11 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
 -(void)readInFields
 {
     self.account.username = [self.usernameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-    self.account.rememberPasswordValue = self.rememberPasswordSwitch.on;
+    self.account.rememberPassword = self.rememberPasswordSwitch.on;
     
-    self.account.autologinValue = self.autoLoginSwitch.on;
+    self.account.autologin = self.autoLoginSwitch.on;
     
-    if (self.account.rememberPasswordValue) {
+    if (self.account.rememberPassword) {
         self.account.password = self.passwordTextField.text;
     } else {
         self.account.password = nil;
@@ -378,18 +380,7 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
         [self.HUD hide:YES];
     }
     
-    if ([self.account.protocol isEqualToString:kOTRProtocolTypeAIM]) {
-        NSDictionary * userInfo = notification.userInfo;
-        NSError *error = userInfo[kOTRProtocolLoginFailErrorKey];
-        NSString *errorTitle = nil;
-        NSString *errorMessage = nil;
-        if (error) {
-            errorTitle = error.localizedDescription;
-            errorMessage = error.localizedFailureReason;
-        }
-        [self showAlertViewWithTitle:errorTitle message:errorMessage error:error];
-    }
-    else {
+    if (self.account.protocolType == OTRProtocolTypeXMPP) {
         NSDictionary * userInfo = notification.userInfo;
         id error = userInfo[kOTRNotificationErrorKey];
         
@@ -407,10 +398,14 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
     [self hideHUD];
     //After successful login generate new private key if none exists
     if([self.account.username length]) {
-        [[OTRKit sharedInstance] hasPrivateKeyForAccountName:self.account.username protocol:self.account.protocol completionBock:^(BOOL hasPrivateKey) {
+        [[OTRKit sharedInstance] hasPrivateKeyForAccountName:self.account.username protocol:[self.account protocolTypeString] completionBock:^(BOOL hasPrivateKey) {
             if(!hasPrivateKey){
-                [[OTRKit sharedInstance] generatePrivateKeyForAccountName:self.account.username protocol:self.account.protocol completionBock:nil];
+                [[OTRKit sharedInstance] generatePrivateKeyForAccountName:self.account.username protocol:[self.account protocolTypeString] completionBock:nil];
             }
+        }];
+        
+        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+            [transaction setObject:self.account forKey:self.account.uniqueId inCollection:[OTRAccount collection]];
         }];
     }
     
@@ -478,7 +473,7 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
     //Delete Account because user went back to choose different account type
     if(!parent)
     {
-        [OTRAccountsManager removeAccount:self.account inContext:self.account.managedObjectContext];
+        [OTRAccountsManager removeAccount:self.account];
     }
 }
 
@@ -539,22 +534,18 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
     [self.HUD removeFromSuperview];
 }
 
-+(OTRLoginViewController *)loginViewControllerWithAcccountID:(NSManagedObjectID *)accountID
++(OTRLoginViewController *)loginViewControllerWithAcccount:(OTRAccount *)account
 {
-    NSManagedObjectContext * context = [NSManagedObjectContext MR_context];
-    OTRManagedAccount * account = (OTRManagedAccount *)[context existingObjectWithID:accountID error:nil];
     switch (account.accountType) {
-        case OTRAccountTypeAIM:
-            return [[OTROscarLoginViewController alloc] initWithAccountID:accountID];
         case OTRAccountTypeXMPPTor:
         case OTRAccountTypeJabber:
-            return [[OTRJabberLoginViewController alloc] initWithAccountID:accountID];
+            return [[OTRJabberLoginViewController alloc] initWithAccount:account];
         case OTRAccountTypeFacebook:
-            return [[OTRFacebookLoginViewController alloc] initWithAccountID:accountID];
+            return [[OTRFacebookLoginViewController alloc] initWithAccount:account];
         case OTRAccountTypeGoogleTalk:
-            return [[OTRGoogleTalkLoginViewController alloc] initWithAccountID:accountID];
+            return [[OTRGoogleTalkLoginViewController alloc] initWithAccount:account];
         default:
-            break;
+            return nil;
     }
 }
 

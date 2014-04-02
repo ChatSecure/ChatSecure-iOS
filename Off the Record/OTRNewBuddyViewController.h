@@ -7,18 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
-@class OTRManagedAccount;
+@class OTRAccount;
 
 @interface OTRNewBuddyViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate>
-{
-    BOOL isXMPPaccount;
-}
 
-@property (nonatomic, strong)OTRManagedAccount * account;
+@property (nonatomic, strong)OTRAccount * account;
 @property (nonatomic, strong)UITextField * accountNameTextField;
 @property (nonatomic, strong)UITextField * displayNameTextField;
 
 
--(id)initWithAccountObjectID:(NSManagedObjectID *)accountObjectID;
+-(id)initWithAccountId:(NSString *)accountId;
 
 @end

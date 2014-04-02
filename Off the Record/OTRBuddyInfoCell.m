@@ -8,7 +8,7 @@
 
 #import "OTRBuddyInfoCell.h"
 
-#import "OTRManagedBuddy.h"
+#import "OTRBuddy.h"
 
 @interface OTRBuddyInfoCell ()
 
@@ -36,12 +36,12 @@
     return self;
 }
 
-- (void)setBuddy:(OTRManagedBuddy *)buddy
+- (void)setBuddy:(OTRBuddy *)buddy
 {
     [super setBuddy:buddy];
     
     NSString * displayName = buddy.displayName;
-    NSString * accountName = buddy.accountName;
+    NSString * accountName = buddy.username;
     
     if ([displayName length]) {
         self.nameLabel.text = displayName;

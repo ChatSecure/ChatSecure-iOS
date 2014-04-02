@@ -12,8 +12,4 @@
 @interface OTRManagedOAuthAccount : _OTRManagedOAuthAccount <OTRManagedOAuthAccountProtocol>
 
 
-@property (nonatomic,strong) NSDictionary * tokenDictionary;
-
-+ (id)createWithXmppAccount:(OTRManagedXMPPAccount *)xmppAccount;
-
 @end

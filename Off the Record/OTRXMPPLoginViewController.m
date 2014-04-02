@@ -28,12 +28,15 @@
 #import "OTRColors.h"
 #import "OTRCertificatePinning.h"
 #import "OTRManagedXMPPTorAccount.h"
+#import "OTRXMPPAccount.h"
+#import "OTRXMPPManager.h"
 
 
 
 @interface OTRXMPPLoginViewController ()
 
 @property (nonatomic,strong) SIAlertView * certAlertView;
+@property (nonatomic, strong) OTRXMPPAccount *account;
 
 @end
 
@@ -88,7 +91,7 @@
         self.account.resource = self.resourceTextField.text;
     }
     else {
-        self.account.resource = [OTRManagedXMPPAccount newResource];
+        self.account.resource = [OTRXMPPAccount newResource];
     }
     
 }

@@ -13,10 +13,13 @@
 #import "OTRAccountsManager.h"
 #import "OTRLog.h"
 #import "OTRConstants.h"
+#import "OTRXMPPAccount.h"
+#import "OTRXMPPManager.h"
 
 @interface OTRXMPPCreateAccountViewController ()
 
-@property (nonatomic,strong) NSArray * hostnameArray;
+@property (nonatomic, strong) NSArray * hostnameArray;
+@property (nonatomic, strong) OTRXMPPAccount *account;
 
 @property (nonatomic) BOOL wasAbleToCreateAccount;
 
@@ -79,7 +82,7 @@
                                                     name:OTRXMPPRegisterSucceededNotificationName
                                                   object:nil];
     if (!self.wasAbleToCreateAccount) {
-        [OTRAccountsManager removeAccount:self.account inContext:self.account.managedObjectContext];
+        [OTRAccountsManager removeAccount:self.account];
     }
 }
 
@@ -192,8 +195,8 @@
         self.usernameTextField.text = newUsername;
         self.account.username = newUsername;
         self.account.domain = self.selectedHostname;
-        self.account.rememberPasswordValue = self.rememberPasswordSwitch.on;
-        self.account.autologinValue = self.autoLoginSwitch.on;
+        self.account.rememberPassword = self.rememberPasswordSwitch.on;
+        self.account.autologin = self.autoLoginSwitch.on;
         OTRXMPPManager * xmppManager = [self xmppManager];
         if (xmppManager) {
             [self showHUDWithText:CREATING_ACCOUNT_STRING];

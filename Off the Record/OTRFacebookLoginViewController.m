@@ -29,6 +29,8 @@
 
 @interface OTRFacebookLoginViewController ()
 
+@property (nonatomic,strong)  OTRFacebookOAuthXMPPAccount *account;
+
 @end
 
 @implementation OTRFacebookLoginViewController
@@ -76,7 +78,7 @@
                     [self didConnectUser:user];
                     NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
                     [context MR_saveToPersistentStoreAndWait];
-                    self.account.tokenDictionary = [session.accessTokenData dictionary];
+                    self.account.oAuthTokenDictionary = [session.accessTokenData dictionary];
                     //self.account.password = session.accessTokenData.accessToken;
                     [self.loginViewTableView reloadData];
                     [self loginButtonPressed:sender];

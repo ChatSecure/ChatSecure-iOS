@@ -8,7 +8,7 @@
 
 #import "OTRAccountTableViewCell.h"
 
-#import "OTRManagedAccount.h"
+#import "OTRAccount.h"
 #import "OTRProtocolManager.h"
 #import "OTRProtocol.h"
 
@@ -17,30 +17,29 @@
 
 #import "OTRImages.h"
 
-@implementation OTRAccountTableViewCell {
-    NSString * accountUniqueIdentifier;
-    NSObject<OTRProtocol> * protocol;
+@interface OTRAccountTableViewCell ()
+@property (nonatomic, strong) NSString *accountUniqueIdentifier;
+@property (nonatomic, strong) NSObject<OTRProtocol> *protocol;
+
+@end
+
+@implementation OTRAccountTableViewCell
+
+- (id)initWithReuseIdentifier:(NSString *)identifier
+{
+    return [self initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:identifier];
 }
 
-- (id)initWithAccount:(OTRManagedAccount *)account reuseIdentifier:(NSString *)identifier
+- (void)setAccount:(OTRAccount *)account
 {
-    if(self = [self initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:identifier])
-    {
-        [self setAccount:account];
-    }
-    return self;
-}
-
-- (void)setAccount:(OTRManagedAccount *)account
-{
-    [protocol removeObserver:self forKeyPath:NSStringFromSelector(@selector(isConnected))];
-    accountUniqueIdentifier = account.uniqueIdentifier;
+    [self.protocol removeObserver:self forKeyPath:NSStringFromSelector(@selector(isConnected))];
+    self.accountUniqueIdentifier = account.uniqueId;
     
     self.textLabel.text = account.username;
     if (account.displayName.length){
         self.textLabel.text = account.displayName;
     }
-    [self setConnectedText:account.isConnected];
+    
     
     self.imageView.image = [account accountImage];
     
@@ -51,9 +50,10 @@
     }
     
     OTRProtocolManager * protocolManager = [OTRProtocolManager sharedInstance];
-    protocol = [[OTRProtocolManager sharedInstance].protocolManagers objectForKey:accountUniqueIdentifier];
-    if (protocol) {
-        [protocol addObserver:self forKeyPath:NSStringFromSelector(@selector(isConnected)) options:NSKeyValueObservingOptionNew context:NULL];
+    self.protocol = [[OTRProtocolManager sharedInstance].protocolManagers objectForKey:account.uniqueId];
+    if (self.protocol) {
+        [self.protocol addObserver:self forKeyPath:NSStringFromSelector(@selector(isConnected)) options:NSKeyValueObservingOptionNew context:NULL];
+        [self setConnectedText:self.protocol.isConnected];
     }
     else {
         [protocolManager addObserver:self forKeyPath:NSStringFromSelector(@selector(protocolManagers)) options:NSKeyValueObservingOptionNew context:NULL];
@@ -67,10 +67,10 @@
         [self setConnectedText:isConnected];
     }
     else if ([keyPath isEqualToString:NSStringFromSelector(@selector(protocolManagers))]) {
-        protocol = [[OTRProtocolManager sharedInstance].protocolManagers objectForKey:accountUniqueIdentifier];
-        if (protocol) {
-            [self setConnectedText:protocol.isConnected];
-            [protocol addObserver:self forKeyPath:NSStringFromSelector(@selector(isConnected)) options:NSKeyValueObservingOptionNew context:NULL];
+        self.protocol = [[OTRProtocolManager sharedInstance].protocolManagers objectForKey:self.accountUniqueIdentifier];
+        if (self.protocol) {
+            [self setConnectedText:self.protocol.isConnected];
+            [self.protocol addObserver:self forKeyPath:NSStringFromSelector(@selector(isConnected)) options:NSKeyValueObservingOptionNew context:NULL];
             [[OTRProtocolManager sharedInstance] removeObserver:self forKeyPath:NSStringFromSelector(@selector(protocolManagers))];
         }
     }
@@ -94,7 +94,7 @@
 }
 
 -(void)dealloc {
-    [protocol removeObserver:self forKeyPath:NSStringFromSelector(@selector(isConnected))];
+    [self.protocol removeObserver:self forKeyPath:NSStringFromSelector(@selector(isConnected))];
     @try {
         [[OTRProtocolManager sharedInstance] removeObserver:self forKeyPath:NSStringFromSelector(@selector(protocolManagers))];
     }

@@ -8,9 +8,12 @@
 
 #import "OTRJabberLoginViewController.h"
 
+#import "OTRXMPPAccount.h"
+
 @interface OTRJabberLoginViewController ()
 
 @property (nonatomic,strong) UITableViewCell * selectedCell;
+@property (nonatomic, strong) OTRXMPPAccount *account;
 
 @end
 
@@ -38,7 +41,7 @@
     self.portTextField.delegate = self;
     self.portTextField.autocorrectionType = UITextAutocorrectionTypeNo;
     self.portTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-    self.portTextField.placeholder = [NSString stringWithFormat:@"%@",self.account.port];
+    self.portTextField.placeholder = [NSString stringWithFormat:@"%d",self.account.port];
     self.portTextField.returnKeyType = UIReturnKeyDone;
     self.portTextField.keyboardType = UIKeyboardTypeNumberPad;
     self.portTextField.textColor = self.textFieldTextColor;
@@ -68,7 +71,7 @@
         if (portNumber > 0 && portNumber <= 65535) {
             self.account.port = @(portNumber);
         } else {
-            self.account.port = [OTRManagedXMPPAccount defaultPortNumber];
+            self.account.port = [OTRXMPPAccount defaultPort];
         }
     }
 }
@@ -76,11 +79,11 @@
 -(void)loginButtonPressed:(id)sender
 {
     //If custom port set than a domain needs to be set to work with XMPPframework
-    if([self.portTextField.text length] || self.account.portValue != [OTRManagedXMPPAccount defaultPortNumber].intValue)
+    if([self.portTextField.text length] || self.account.port != [OTRXMPPAccount defaultPort])
     {
         int portNumber = [self.portTextField.text intValue];
         NSString * domainText = [self.domainTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-        if (portNumber == [OTRManagedXMPPAccount defaultPortNumber].intValue || [domainText length]) {
+        if (portNumber == [OTRXMPPAccount defaultPort] || [domainText length]) {
             [super loginButtonPressed:sender];
         }
         else {

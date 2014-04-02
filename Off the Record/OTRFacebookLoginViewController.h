@@ -21,11 +21,10 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "OTRXMPPOAUTHLoginViewController.h"
-#import "OTRManagedFacebookAccount.h"
+
+#import "OTRFacebookOAuthXMPPAccount.h"
 
 @interface OTRFacebookLoginViewController : OTRXMPPOAUTHLoginViewController
-
-@property (nonatomic,strong)  OTRManagedFacebookAccount * account;
 
 
 

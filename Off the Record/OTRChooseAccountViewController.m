@@ -7,11 +7,12 @@
 //
 
 #import "OTRChooseAccountViewController.h"
-#import "OTRManagedAccount.h"
+
 #import "OTRNewBuddyViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import "Strings.h"
 #import "OTRAccountsManager.h"
+#import "OTRAccount.h"
 
 @interface OTRChooseAccountViewController ()
 
@@ -67,14 +68,14 @@
 
 -(void)tableView:(UITableView *)tView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    OTRManagedAccount * account = [[self onlineAccounts] objectAtIndex:indexPath.row];
-    OTRNewBuddyViewController * buddyViewController = [[OTRNewBuddyViewController alloc] initWithAccountObjectID:account.objectID];
+    OTRAccount *account = [[self onlineAccounts] objectAtIndex:indexPath.row];
+    OTRNewBuddyViewController * buddyViewController = [[OTRNewBuddyViewController alloc] initWithAccountId:account.uniqueId];
     [self.navigationController pushViewController:buddyViewController animated:YES];
     
     
     [tView deselectRowAtIndexPath:indexPath animated:YES];
 }
-
+/*
 -(NSFetchedResultsController *)accountsFetchedResultsController
 {
     if(_accountsFetchedResultsController)
@@ -86,7 +87,7 @@
     
     return _accountsFetchedResultsController;
     
-}
+}*/
 
 -(NSArray *)onlineAccounts
 {
@@ -106,7 +107,7 @@
 
 -(void) configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
-    OTRManagedAccount *account = [[self onlineAccounts] objectAtIndex:indexPath.row];
+    OTRAccount *account = [[self onlineAccounts] objectAtIndex:indexPath.row];
     cell.textLabel.text = account.username;
     cell.detailTextLabel.text = nil;
     cell.imageView.image = [account accountImage];

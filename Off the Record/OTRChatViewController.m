@@ -43,6 +43,11 @@
 #import "OTRButtonView.h"
 #import "OTRComposingImageView.h"
 #import "OTRChatBubbleView.h"
+#import "OTRBuddy.h"
+#import "OTRAccount.h"
+#import "OTRDatabaseManager.h"
+#import "YapDatabaseConnection.h"
+#import "YapDatabaseTransaction.h"
 
 static CGFloat const kOTRMessageMarginBottom = 10;
 static CGFloat const kOTRMessageMarginTop = 7;
@@ -67,6 +72,8 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
 @property (nonatomic, strong) OTRTitleSubtitleView *titleView;
 @property (nonatomic) CGFloat previousTextViewContentHeight;
 @property (nonatomic, strong) OTRButtonView *buttonDropdownView;
+
+@property (nonatomic, strong) OTRAccount *account;
 
 @end
 
@@ -113,7 +120,7 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
         NSString *fingerprintString = VERIFY_STRING;
         NSArray * buttons = nil;
         
-        if ([[OTRKit sharedInstance] isConversationEncryptedForUsername:weakSelf.buddy.accountName accountName:weakSelf.buddy.account.username protocol:weakSelf.buddy.account.protocol]) {
+        if ([[OTRKit sharedInstance] isConversationEncryptedForUsername:weakSelf.buddy.username accountName:weakSelf.account.username protocol:weakSelf.account.protocol]) {
             encryptionString = CANCEL_ENCRYPTED_CHAT_STRING;
         }
         
@@ -163,9 +170,9 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
     }];
     UIBarButtonItem * rightBarItem = self.navigationItem.rightBarButtonItem;
     if ([rightBarItem isEqual:self.lockBarButtonItem]) {
-        BOOL isTrusted = [[OTRKit sharedInstance] activeFingerprintIsVerifiedForUsername:self.buddy.accountName accountName:self.buddy.account.username protocol:self.buddy.account.protocol];
-        BOOL isEncrypted = [[OTRKit sharedInstance] isConversationEncryptedForUsername:self.buddy.accountName accountName:self.buddy.account.username protocol:self.buddy.account.protocol];
-        BOOL  hasVerifiedFingerprints = [[OTRKit sharedInstance] hasVerifiedFingerprintsForUsername:self.buddy.accountName accountName:self.buddy.account.username protocol:self.buddy.account.protocol];
+        BOOL isTrusted = [[OTRKit sharedInstance] activeFingerprintIsVerifiedForUsername:self.buddy.username accountName:self.account.username protocol:[self.account protocolTypeString]];
+        BOOL isEncrypted = [[OTRKit sharedInstance] isConversationEncryptedForUsername:self.buddy.username accountName:self.account.username protocol:[self.account protocolTypeString]];
+        BOOL  hasVerifiedFingerprints = [[OTRKit sharedInstance] hasVerifiedFingerprintsForUsername:self.buddy.username accountName:self.account.username protocol:[self.account protocolTypeString]];
         
         if (isEncrypted && isTrusted) {
             self.lockButton.lockStatus = OTRLockStatusLockedAndVerified;
@@ -242,7 +249,7 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
 }
 
 - (void) showDisconnectionAlert:(NSNotification*)notification {
-    NSMutableString *message = [NSMutableString stringWithFormat:DISCONNECTED_MESSAGE_STRING, self.buddy.account.username];
+    NSMutableString *message = [NSMutableString stringWithFormat:DISCONNECTED_MESSAGE_STRING, self.account.username];
     if ([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyDeleteOnDisconnect]) {
         [message appendFormat:@" %@", DISCONNECTION_WARNING_STRING];
     }
@@ -250,10 +257,14 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
     [alert show];
 }
 
-- (void) setBuddy:(OTRManagedBuddy *)newBuddy {
+- (void) setBuddy:(OTRBuddy *)newBuddy {
     [self saveCurrentMessageText];
     
     _buddy = newBuddy;
+    
+    [[OTRDatabaseManager sharedInstance].mainThreadReadOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        self.account = [_buddy accountWithTransaction:transaction];
+    }];
     
     [self refreshView];
     if (self.buddy) {
@@ -261,14 +272,14 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
             self.titleView.titleLabel.text = newBuddy.displayName;
         }
         else {
-            self.titleView.titleLabel.text = newBuddy.accountName;
+            self.titleView.titleLabel.text = newBuddy.username;
         }
         
-        if(newBuddy.account.displayName.length) {
-            self.titleView.subtitleLabel.text = newBuddy.account.displayName;
+        if(self.account.displayName.length) {
+            self.titleView.subtitleLabel.text = self.account.displayName;
         }
         else {
-            self.titleView.subtitleLabel.text = newBuddy.account.username;
+            self.titleView.subtitleLabel.text = self.account.username;
         }
         
         [self refreshLockButton];
@@ -318,7 +329,7 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
 
 - (void)updateChatState:(BOOL)animated
 {
-    switch (self.buddy.chatStateValue) {
+    switch (self.buddy.chatState) {
         case kOTRChatStateComposing:
             {
                 if (!self.isComposingVisible) {
@@ -379,28 +390,28 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
 {
     [self hideDropdown:YES];
     NSString *msg = nil;
-    NSString *ourFingerprintString = [[OTRKit sharedInstance] fingerprintForAccountName:self.buddy.account.username protocol:self.buddy.account.protocol];
-    NSString *theirFingerprintString = [[OTRKit sharedInstance] fingerprintForUsername:self.buddy.accountName accountName:self.buddy.account.username protocol:self.buddy.account.protocol];
-    BOOL trusted = [[OTRKit sharedInstance] activeFingerprintIsVerifiedForUsername:self.buddy.accountName accountName:self.buddy.account.username protocol:self.buddy.account.protocol];
+    NSString *ourFingerprintString = [[OTRKit sharedInstance] fingerprintForAccountName:self.account.username protocol:[self.account protocolTypeString]];
+    NSString *theirFingerprintString = [[OTRKit sharedInstance] fingerprintForUsername:self.buddy.username accountName:self.account.username protocol:[self.account protocolTypeString]];
+    BOOL trusted = [[OTRKit sharedInstance] activeFingerprintIsVerifiedForUsername:self.buddy.username accountName:self.account.username protocol:[self.account protocolTypeString]];
     
     
     UIAlertView * alert;
     __weak OTRChatViewController * weakSelf = self;
     RIButtonItem * verifiedButtonItem = [RIButtonItem itemWithLabel:VERIFIED_STRING action:^{
-        [[OTRKit sharedInstance] changeVerifyFingerprintForUsername:weakSelf.buddy.accountName accountName:weakSelf.buddy.account.username protocol:weakSelf.buddy.account.protocol verrified:YES];
+        [[OTRKit sharedInstance] changeVerifyFingerprintForUsername:weakSelf.buddy.username accountName:weakSelf.account.username protocol:[weakSelf.account protocolTypeString] verrified:YES];
         [weakSelf refreshLockButton];
     }];
     RIButtonItem * notVerifiedButtonItem = [RIButtonItem itemWithLabel:NOT_VERIFIED_STRING action:^{
-        [[OTRKit sharedInstance] changeVerifyFingerprintForUsername:weakSelf.buddy.accountName accountName:weakSelf.buddy.account.username protocol:weakSelf.buddy.account.protocol verrified:NO];
+        [[OTRKit sharedInstance] changeVerifyFingerprintForUsername:weakSelf.buddy.username accountName:weakSelf.account.username protocol:[weakSelf.account protocolTypeString] verrified:NO];
         [weakSelf refreshLockButton];
     }];
     RIButtonItem * verifyLaterButtonItem = [RIButtonItem itemWithLabel:VERIFY_LATER_STRING action:^{
-        [[OTRKit sharedInstance] changeVerifyFingerprintForUsername:weakSelf.buddy.accountName accountName:weakSelf.buddy.account.username protocol:weakSelf.buddy.account.protocol verrified:NO];
+        [[OTRKit sharedInstance] changeVerifyFingerprintForUsername:weakSelf.buddy.username accountName:weakSelf.account.username protocol:[weakSelf.account protocolTypeString] verrified:NO];
         [weakSelf refreshLockButton];
     }];
     
     if(ourFingerprintString && theirFingerprintString) {
-        msg = [NSString stringWithFormat:@"%@, %@:\n%@\n\n%@ %@:\n%@\n", YOUR_FINGERPRINT_STRING, self.buddy.account.username, ourFingerprintString, THEIR_FINGERPRINT_STRING, self.buddy.accountName, theirFingerprintString];
+        msg = [NSString stringWithFormat:@"%@, %@:\n%@\n\n%@ %@:\n%@\n", YOUR_FINGERPRINT_STRING, self.account.username, ourFingerprintString, THEIR_FINGERPRINT_STRING, self.buddy.username, theirFingerprintString];
         if(trusted)
         {
             alert = [[UIAlertView alloc] initWithTitle:VERIFY_FINGERPRINT_STRING message:msg cancelButtonItem:verifiedButtonItem otherButtonItems:notVerifiedButtonItem, nil];
@@ -420,19 +431,19 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
 - (void)encryptionButtonPressed:(id)sender
 {
     [self hideDropdown:YES];
-    if([[OTRKit sharedInstance] isConversationEncryptedForUsername:self.buddy.accountName accountName:self.buddy.account.username protocol:self.buddy.account.protocol])
+    if([[OTRKit sharedInstance] isConversationEncryptedForUsername:self.buddy.username accountName:self.account.username protocol:[self.account protocolTypeString]])
     {
-        [[OTRKit sharedInstance] disableEncryptionForUsername:self.buddy.accountName accountName:self.buddy.account.username protocol:self.buddy.account.protocol];
+        [[OTRKit sharedInstance] disableEncryptionForUsername:self.buddy.username accountName:self.account.username protocol:[self.account protocolTypeString]];
     } else {
         void (^sendInitateOTRMessage)(void) = ^void (void) {
-            [OTRCodec generateOtrInitiateOrRefreshMessageTobuddy:self.buddy completionBlock:^(OTRManagedChatMessage *message) {
-                [OTRProtocolManager sendMessage:message];
+            [OTRCodec generateOtrInitiateOrRefreshMessageTobuddy:self.buddy completionBlock:^(OTRMessage *message) {
+                [[OTRProtocolManager sharedInstance] sendMessage:message];
             }];
         };
-        [OTRCodec hasGeneratedKeyForAccount:self.buddy.account completionBlock:^(BOOL hasGeneratedKey) {
+        [OTRCodec hasGeneratedKeyForAccount:self.account completionBlock:^(BOOL hasGeneratedKey) {
             if (!hasGeneratedKey) {
                 [self addLockSpinner];
-                [OTRCodec generatePrivateKeyFor:self.buddy.account completionBlock:^(BOOL generatedKey) {
+                [OTRCodec generatePrivateKeyFor:self.account completionBlock:^(BOOL generatedKey) {
                     [self removeLockSpinner];
                     sendInitateOTRMessage();
                 }];
@@ -533,17 +544,15 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
         self.showDateForRowArray = [NSMutableArray array];
         self.previousShownSentDate = nil;
         
-        NSManagedObjectContext *context = self.buddy.managedObjectContext;
-        [self.buddy setAllMessagesRead:YES];
-        [context MR_saveToPersistentStoreAndWait];
+        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+            [self.buddy setAllMessagesRead:transaction];
+        }];
         
         [self.chatHistoryTableView reloadData];
-               
-        
         
         if(![self.buddy.composingMessageString length])
         {
-            [self.buddy sendActiveChatState];
+            //FIXME [self.buddy sendActiveChatState];
             self.chatInputBar.textView.text = nil;
         }
         else{
@@ -559,9 +568,9 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-    NSManagedObjectContext * context = self.buddy.managedObjectContext;
-    [self.buddy setAllMessagesRead:YES];
-    [context MR_saveToPersistentStoreWithCompletion:nil];
+    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        [self.buddy setAllMessagesRead:transaction];
+    }];
     
     [super viewWillDisappear:animated];
 }
@@ -616,7 +625,7 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
     self.buddy.composingMessageString = self.chatInputBar.textView.text;
     if(![self.buddy.composingMessageString length])
     {
-        [self.buddy sendInactiveChatState];
+        //FIXME [self.buddy sendInactiveChatState];
     }
     self.chatInputBar.textView.text = nil;
 }
@@ -649,7 +658,6 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
         [self.chatHistoryTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:numberOfRows-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:animated];
     }
 }
-
 - (BOOL)showDateForMessageAtIndexPath:(NSIndexPath *)indexPath {
     
     if (indexPath.row < [self.showDateForRowArray count]) {
@@ -908,19 +916,19 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
                     [OTRCodec generatePrivateKeyFor:self.buddy.account completionBlock:^(BOOL generatedKey) {
                         [self removeLockSpinner];
                         [OTRCodec encodeMessage:message completionBlock:^(OTRManagedChatMessage *message) {
-                            [OTRProtocolManager sendMessage:message];
+                            [[OTRProtocolManager sharedInstance] sendMessage:message];
                         }];
                     }];
                 }
                 else {
                     [OTRCodec encodeMessage:message completionBlock:^(OTRManagedChatMessage *message) {
-                        [OTRProtocolManager sendMessage:message];
+                        [[OTRProtocolManager sharedInstance] sendMessage:message];
                     }];
                 }
             }];
         }
         else {
-            [OTRProtocolManager sendMessage:message];
+            [[OTRProtocolManager sharedInstance] sendMessage:message];
         }
         self.chatInputBar.textView.text = nil;
     }

@@ -7,9 +7,12 @@
 //
 
 #import "OTRConversationCell.h"
-#import "OTRManagedBuddy.h"
-#import "OTRManagedAccount.h"
-#import "OTRManagedChatMessage.h"
+#import "OTRBuddy.h"
+#import "OTRAccount.h"
+#import "OTRMessage.h"
+#import "OTRDatabaseManager.h"
+#import "YapDatabaseConnection.h"
+#import "YapDatabaseTransaction.h"
 
 @interface OTRConversationCell ()
 
@@ -68,31 +71,42 @@
     }
 }
 
-- (void)setBuddy:(OTRManagedBuddy *)buddy
+- (void)setBuddy:(OTRBuddy *)buddy
 {
-    NSLog(@"Set Buddy: %@ - %@",buddy.displayName,buddy.accountName);
-    NSLog(@"Self setBuddy Cell: %@",self);
     [super setBuddy:buddy];
     NSString * nameString = nil;
     if (buddy.displayName.length) {
         nameString = buddy.displayName;
     }
     else {
-        nameString = buddy.accountName;
+        nameString = buddy.username;
     }
     self.nameLabel.text = nameString;
     
+    __block OTRAccount *account = nil;
+    __block OTRMessage *lastMessage = nil;
     
-    self.accountLabel.text = buddy.account.username;
+    [[OTRDatabaseManager sharedInstance].mainThreadReadOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        account = [transaction objectForKey:buddy.accountUniqueId inCollection:[OTRAccount collection]];
+        
+        [transaction enumerateKeysAndObjectsInCollection:[OTRMessage collection] usingBlock:^(NSString *key, OTRMessage *message, BOOL *stop) {
+            if ([message isKindOfClass:[OTRMessage class]]) {
+                if ([message.buddyUniqueId isEqualToString:buddy.uniqueId]) {
+                    if (!lastMessage || [lastMessage.date compare:message.date] == NSOrderedDescending) {
+                        lastMessage = message;
+                    }
+                }
+            }
+        }];
+    }];
     
-    NSPredicate * onlyPlainTextPredicate = [NSPredicate predicateWithFormat:@"%K == NO",OTRManagedMessageAttributes.isEncrypted];
     
-    OTRManagedChatMessage * lastMessage = [[[buddy.chatMessages sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:OTRManagedMessageAttributes.date ascending:NO]]] filteredArrayUsingPredicate:onlyPlainTextPredicate]firstObject];
+    self.accountLabel.text = account.username;
     
     UIFont *currentFont = self.conversationLabel.font;
     CGFloat fontSize = currentFont.pointSize;
-    self.conversationLabel.text = lastMessage.message;
-    if (!lastMessage.isReadValue) {
+    self.conversationLabel.text = lastMessage.text;
+    if (!lastMessage.isRead) {
         //unread message
         self.nameLabel.font = [UIFont boldSystemFontOfSize:fontSize];
         self.nameLabel.textColor = [UIColor blackColor];

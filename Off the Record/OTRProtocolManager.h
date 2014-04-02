@@ -21,14 +21,13 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 #import <Foundation/Foundation.h>
-#import "OTRXMPPManager.h"
 #import "OTREncryptionManager.h"
 #import "OTRCodec.h"
 #import "OTRSettingsManager.h"
 #import "OTRProtocol.h"
 #import "OTRAccountsManager.h"
 
-@class OTROscarManager;
+@class OTRAccount,OTRBuddy;
 
 @interface OTRProtocolManager : NSObject
 
@@ -38,16 +37,16 @@
 @property (nonatomic, strong) NSMutableDictionary * protocolManagers;
 
 
--(OTRManagedBuddy *)buddyForUserName:(NSString *)buddyUserName accountName:(NSString *)accountName protocol:(NSString *)protocol inContext:(NSManagedObjectContext *)context;
--(id <OTRProtocol>) protocolForAccount:(OTRManagedAccount *)account;
-- (void)removeProtocolManagerForAccount:(OTRManagedAccount *)account;
--(BOOL)isAccountConnected:(OTRManagedAccount *)account;
+- (OTRBuddy *)buddyForUserName:(NSString *)buddyUserName accountName:(NSString *)accountName protocolType:(OTRProtocolType)protocolType;
+- (id <OTRProtocol>) protocolForAccount:(OTRAccount *)account;
+- (void)removeProtocolManagerForAccount:(OTRAccount *)account;
+- (BOOL)isAccountConnected:(OTRAccount *)account;
 
-- (void)loginAccount:(OTRManagedAccount *)account;
+- (void)loginAccount:(OTRAccount *)account;
 - (void)loginAccounts:(NSArray *)accounts;
 
-+ (OTRProtocolManager*)sharedInstance; // Singleton method
+- (void)sendMessage:(OTRMessage *)message;
 
-+ (void)sendMessage:(OTRManagedChatMessage *)message;
++ (OTRProtocolManager*)sharedInstance; // Singleton method
 
 @end

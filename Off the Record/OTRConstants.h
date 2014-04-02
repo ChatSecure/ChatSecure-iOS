@@ -88,7 +88,7 @@ extern CGFloat const kOTRMessageDeliveredLabelHeight;
 extern NSString *const kOTRErrorDomain;
 
 
-typedef NS_ENUM(NSUInteger, OTRChatState) {
+typedef NS_ENUM(int, OTRChatState) {
     kOTRChatStateUnknown   = 0,
     kOTRChatStateActive    = 1,
     kOTRChatStateComposing = 2,
@@ -97,7 +97,7 @@ typedef NS_ENUM(NSUInteger, OTRChatState) {
     kOTRChatStateGone      = 5
 };
 
-typedef NS_ENUM(NSUInteger, OTRAccountType) {
+typedef NS_ENUM(int, OTRAccountType) {
     OTRAccountTypeNone        = 0,
     OTRAccountTypeFacebook    = 1,
     OTRAccountTypeGoogleTalk  = 2,
@@ -106,13 +106,13 @@ typedef NS_ENUM(NSUInteger, OTRAccountType) {
     OTRAccountTypeXMPPTor     = 5
 };
 
-typedef NS_ENUM(NSUInteger, OTRProtocolType) {
+typedef NS_ENUM(int, OTRProtocolType) {
     OTRProtocolTypeNone        = 0,
     OTRProtocolTypeXMPP        = 1,
     OTRProtocolTypeOscar       = 2
 };
 
-typedef NS_ENUM(NSUInteger, OTRBuddyStatus) {
+typedef NS_ENUM(int, OTRBuddyStatus) {
     OTRBuddyStatusOffline   = 4,
     OTRBuddyStatusXa        = 3,
     OTRBuddyStatusDnd       = 2,

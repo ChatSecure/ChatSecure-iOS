@@ -26,12 +26,10 @@
 #import "OTRConstants.h"
 #import "OTRLoginViewController.h"
 #import "QuartzCore/QuartzCore.h"
-#import "OTRManagedXMPPAccount.h"
-#import "OTRManagedFacebookAccount.h"
-#import "OTRManagedGoogleAccount.h"
-#import "OTRManagedOscarAccount.h"
 #import "OTRImages.h"
 #import "UIAlertView+Blocks.h"
+
+#import "OTRAccount.h"
 
 static CGFloat const kOTRRowHeight   = 70;
 NSString *const kOTRDisplayNameKey   = @"kOTRDisplayNameKey";
@@ -99,19 +97,17 @@ NSString *const kOTRAccountTypeKey   = @"kOTRAccountTypeKey";
     NSDictionary * cellAccount = [accountsCellArray objectAtIndex:indexPath.row];
     cell.textLabel.text = cellAccount[kOTRDisplayNameKey];
     cell.textLabel.font = [UIFont boldSystemFontOfSize:19];
-    cell.imageView.image = [UIImage imageNamed:cellAccount[kOTRProviderImageKey]];
+    cell.imageView.image = cellAccount[kOTRProviderImageKey];
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
     if( [cellAccount[kOTRAccountTypeKey] isEqual:@(OTRAccountTypeFacebook)])
     {
-        cell.imageView.image = [OTRImages facebookImage];
         cell.imageView.layer.masksToBounds = YES;
         cell.imageView.layer.cornerRadius = 10.0;
     }
     else {
-        cell.imageView.image = [UIImage imageNamed:cellAccount[kOTRProviderImageKey]];
+        cell.imageView.layer.cornerRadius = 0.0;
     }
-    
     
     
     return cell;
@@ -150,12 +146,9 @@ NSString *const kOTRAccountTypeKey   = @"kOTRAccountTypeKey";
 
 - (void)pushLoginViewControllerWithType:(OTRAccountType)accountType
 {
-    NSManagedObjectContext * context = [NSManagedObjectContext MR_context];
-    OTRManagedAccount * cellAccount = [OTRManagedAccount accountForAccountType:accountType inContext:context];
-    [context obtainPermanentIDsForObjects:@[cellAccount] error:nil];
-    [context MR_saveToPersistentStoreAndWait];
+    OTRAccount *account = [OTRAccount accountForAccountType:accountType];
     
-    OTRLoginViewController *loginViewController = [OTRLoginViewController loginViewControllerWithAcccountID:cellAccount.objectID];
+    OTRLoginViewController *loginViewController = [OTRLoginViewController loginViewControllerWithAcccount:account];
     loginViewController.isNewAccount = YES;
     [self.navigationController pushViewController:loginViewController animated:YES];
 }
@@ -173,27 +166,27 @@ NSString *const kOTRAccountTypeKey   = @"kOTRAccountTypeKey";
 
 +(NSDictionary *)googleCellDictionary {
     return @{kOTRDisplayNameKey:GOOGLE_TALK_STRING,
-             kOTRProviderImageKey: OTRGoogleTalkImageName,
+             kOTRProviderImageKey: [UIImage imageNamed:OTRGoogleTalkImageName],
              kOTRAccountTypeKey: @(OTRAccountTypeGoogleTalk)};
 }
 +(NSDictionary *)facebookCellDictionary {
     return @{kOTRDisplayNameKey:FACEBOOK_STRING,
-             kOTRProviderImageKey: OTRFacebookImageName,
+             kOTRProviderImageKey: [OTRImages facebookImage],
              kOTRAccountTypeKey: @(OTRAccountTypeFacebook)};
 }
 +(NSDictionary *)XMPPCellDictionary {
     return @{kOTRDisplayNameKey: JABBER_STRING,
-             kOTRProviderImageKey: OTRXMPPImageName,
+             kOTRProviderImageKey: [UIImage imageNamed:OTRXMPPImageName],
              kOTRAccountTypeKey: @(OTRAccountTypeJabber)};
 }
 +(NSDictionary *)XMPPTorCellDictionary {
     return @{kOTRDisplayNameKey: XMPP_TOR_STRING,
-             kOTRProviderImageKey: OTRXMPPTorImageName,
+             kOTRProviderImageKey: [UIImage imageNamed:OTRXMPPTorImageName],
              kOTRAccountTypeKey: @(OTRAccountTypeXMPPTor)};
 }
 +(NSDictionary *)aimCellDictionary {
     return @{kOTRDisplayNameKey: AIM_STRING,
-             kOTRProviderImageKey: OTRAimImageName,
+             kOTRProviderImageKey: [UIImage imageNamed:OTRAimImageName],
              kOTRAccountTypeKey: @(OTRAccountTypeAIM)};
 }
 

@@ -8,13 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-@class OTRManagedAccount;
+@class OTRAccount;
 
 @interface OTRAccountTableViewCell : UITableViewCell
 
-
-- (void)setAccount:(OTRManagedAccount *)account;
-- (id)initWithAccount:(OTRManagedAccount *)account reuseIdentifier:(NSString *)identifier;
+- (id)initWithReuseIdentifier:(NSString *)identifier;
+- (void)setAccount:(OTRAccount *)account;
 
 
 @end

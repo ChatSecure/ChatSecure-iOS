@@ -27,11 +27,9 @@
 #import "OTRLoginViewController.h"
 #import "OTRDonateSetting.h"
 
-@interface OTRSettingsViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, OTRSettingDelegate, MFMailComposeViewControllerDelegate, NSFetchedResultsControllerDelegate, OTRDonateSettingDelegate>
+@interface OTRSettingsViewController : UIViewController <OTRSettingDelegate, MFMailComposeViewControllerDelegate, OTRDonateSettingDelegate>
 
-@property (nonatomic, retain) UITableView *settingsTableView;
 @property (nonatomic, retain) OTRSettingsManager *settingsManager;
 @property (nonatomic, retain) OTRLoginViewController *loginController;
-@property (nonatomic, retain) NSFetchedResultsController * accountsFetchedResultsController;
 
 @end

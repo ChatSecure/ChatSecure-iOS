@@ -38,12 +38,24 @@
 #import "UIAlertView+Blocks.h"
 #import "UIActionSheet+Blocks.h"
 #import "OTRSecrets.h"
+#import "YAPDatabaseViewMappings.h"
+#import "YAPDatabaseConnection.h"
+#import "OTRDatabaseManager.h"
+#import "OTRDatabaseView.h"
+#import "YapDatabase.h"
+#import "YapDatabaseView.h"
+#import "OTRAccount.h"
 
 static NSString *const circleImageName = @"31-circle-plus-large.png";
 
-@interface OTRSettingsViewController(Private)
+@interface OTRSettingsViewController () <UITableViewDataSource, UITableViewDelegate>
+
+@property (nonatomic, strong) YapDatabaseViewMappings *mappings;
+@property (nonatomic, strong) YapDatabaseConnection *databaseConnection;
+@property (nonatomic, strong) UITableView *tableView;
+
 - (void) addAccount:(id)sender;
-- (void) showLoginControllerForAccount:(OTRManagedAccount*)account;
+- (void) showLoginControllerForAccount:(OTRAccount*)account;
 @end
 
 @implementation OTRSettingsViewController
@@ -53,25 +65,36 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     if (self = [super init])
     {
         self.title = SETTINGS_STRING;
-        self.settingsManager = [[OTRSettingsManager alloc] init];;
+        self.settingsManager = [[OTRSettingsManager alloc] init];
     }
     return self;
-}
-
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    self.settingsTableView = nil;
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.settingsTableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
-    self.settingsTableView.dataSource = self;
-    self.settingsTableView.delegate = self;
-    self.settingsTableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
-    [self.view addSubview:self.settingsTableView];
+    
+    self.databaseConnection = [[OTRDatabaseManager sharedInstance] mainThreadReadOnlyDatabaseConnection];
+    
+    YapDatabaseView *allAccountsView = [OTRDatabaseView allAccountsDatabaseView];
+    
+    self.mappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[OTRAllAccountGroup] view:OTRAllAccountDatabaseViewExtensionName];
+    
+    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction){
+        [self.mappings updateWithTransaction:transaction];
+    }];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(yapDatabaseModified:)
+                                                 name:OTRUIDatabaseConnectionDidUpdateNotification
+                                               object:nil];
+    
+    
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
+    self.tableView.dataSource = self;
+    self.tableView.delegate = self;
+    self.tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
+    [self.view addSubview:self.tableView];
     
     UIBarButtonItem *aboutButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"about_icon.png"] style:UIBarButtonItemStylePlain target:self action:@selector(showAboutScreen)];
 
@@ -82,8 +105,8 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    self.settingsTableView.frame = self.view.bounds;
-    [self.settingsTableView reloadData];
+    self.tableView.frame = self.view.bounds;
+    [self.tableView reloadData];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -96,13 +119,22 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     }
 }
 
-
+- (OTRAccount *)accountAtIndexPath:(NSIndexPath *)indexPath
+{
+    __block OTRAccount *account = nil;
+    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        
+        account = [[transaction extension:OTRAllAccountDatabaseViewExtensionName] objectAtIndexPath:indexPath withMappings:self.mappings];
+    }];
+    
+    return account;
+}
 
 #pragma mark UITableViewDataSource methods
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section == 0 && indexPath.row != [self.accountsFetchedResultsController.sections[0] numberOfObjects])
+    if (indexPath.section == 0 && indexPath.row != [self.mappings numberOfItemsInSection:0])
     {
         return UITableViewCellEditingStyleDelete;
     }
@@ -118,7 +150,7 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
         static NSString *accountCellIdentifier = @"accountCellIdentifier";
         static NSString *addAccountCellIdentifier = @"addAccountCellIdentifier";
         UITableViewCell * cell = nil;
-        if (indexPath.row == [self.accountsFetchedResultsController.sections[0] numberOfObjects]) {
+        if (indexPath.row == [self.mappings numberOfItemsInSection:0]) {
             cell = [tableView dequeueReusableCellWithIdentifier:addAccountCellIdentifier];
             if (cell == nil) {
                 cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:addAccountCellIdentifier];
@@ -128,14 +160,14 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
             }
         }
         else {
-            OTRManagedAccount *account = [self.accountsFetchedResultsController objectAtIndexPath:indexPath];
+            OTRAccount *account = [self accountAtIndexPath:indexPath];
             OTRAccountTableViewCell *accountCell = (OTRAccountTableViewCell*)[tableView dequeueReusableCellWithIdentifier:accountCellIdentifier];
             if (accountCell == nil) {
-                accountCell = [[OTRAccountTableViewCell alloc] initWithAccount:account reuseIdentifier:accountCellIdentifier];
+                accountCell = [[OTRAccountTableViewCell alloc] initWithReuseIdentifier:accountCellIdentifier];
             }
-            else {
-                [accountCell setAccount:account];
-            }
+            
+            [accountCell setAccount:account];
+
             cell = accountCell;
         }
         return cell;
@@ -161,7 +193,7 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)sectionIndex
 {
     if (sectionIndex == 0) {
-        return [self.accountsFetchedResultsController.sections[0] numberOfObjects]+1;
+        return [self.mappings numberOfItemsInSection:0]+1;
     }
     return [self.settingsManager numberOfSettingsInSection:sectionIndex];
 }
@@ -179,12 +211,13 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section == 0) { // Accounts
-        if (indexPath.row == [self.accountsFetchedResultsController.sections[0] numberOfObjects]) {
+        if (indexPath.row == [self.mappings numberOfItemsInSection:0]) {
             [self addAccount:[tableView cellForRowAtIndexPath:indexPath]];
         } else {
-            OTRManagedAccount *account = [self.accountsFetchedResultsController objectAtIndexPath:indexPath];
+            OTRAccount *account = [self accountAtIndexPath:indexPath];
             
-            if (!account.isConnected) {
+            BOOL isConnected = [[OTRProtocolManager sharedInstance] isAccountConnected:account];
+            if (isConnected) {
                 [self showLoginControllerForAccount:account];
             } else {
                 RIButtonItem * cancelButtonItem = [RIButtonItem itemWithLabel:CANCEL_STRING];
@@ -215,16 +248,17 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     }
     if (editingStyle == UITableViewCellEditingStyleDelete) 
     {
-        OTRManagedAccount *account = [self.accountsFetchedResultsController objectAtIndexPath:indexPath];
+        OTRAccount *account = [self accountAtIndexPath:indexPath];
         
         RIButtonItem * cancelButtonItem = [RIButtonItem itemWithLabel:CANCEL_STRING];
         RIButtonItem * okButtonItem = [RIButtonItem itemWithLabel:OK_STRING action:^{
-            if([account isConnected])
+            
+            if( [[OTRProtocolManager sharedInstance] isAccountConnected:account])
             {
                 id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:account];
                 [protocol disconnect];
             }
-            [OTRAccountsManager removeAccount:account inContext:account.managedObjectContext];
+            [OTRAccountsManager removeAccount:account];
         }];
         
         NSString * message = [NSString stringWithFormat:@"%@ %@?", DELETE_ACCOUNT_MESSAGE_STRING, account.username];
@@ -234,8 +268,8 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     }
 }
 
-- (void) showLoginControllerForAccount:(OTRManagedAccount*)account {
-    OTRLoginViewController *loginViewController = [OTRLoginViewController loginViewControllerWithAcccountID:account.objectID];
+- (void) showLoginControllerForAccount:(OTRAccount *)account {
+    OTRLoginViewController *loginViewController = [OTRLoginViewController loginViewControllerWithAcccount:account];
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:loginViewController];
     nav.modalPresentationStyle = UIModalPresentationFormSheet;
     [self presentViewController:nav animated:YES completion:nil];
@@ -273,7 +307,7 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 
 - (void) refreshView 
 {
-    [self.settingsTableView reloadData];
+    [self.tableView reloadData];
 }
 
 #pragma mark OTRSettingViewDelegate method
@@ -318,52 +352,73 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     [OTR_APP_DELEGATE presentActionSheet:actionSheet inView:self.view];
 }
 
--(NSFetchedResultsController *)accountsFetchedResultsController
+#pragma - mark YapDatabse Methods
+
+- (void)yapDatabaseModified:(NSNotification *)notification
 {
-    if (_accountsFetchedResultsController) {
-        return _accountsFetchedResultsController;
+    NSArray *notifications = [notification.userInfo objectForKey:@"notifications"];
+    
+    // Process the notification(s),
+    // and get the change-set(s) as applies to my view and mappings configuration.
+    
+    NSArray *sectionChanges = nil;
+    NSArray *rowChanges = nil;
+    
+    [[self.databaseConnection ext:OTRAllAccountDatabaseViewExtensionName] getSectionChanges:&sectionChanges
+                                                                                 rowChanges:&rowChanges
+                                                                           forNotifications:notifications
+                                                                               withMappings:self.mappings];
+    
+    // No need to update mappings.
+    // The above method did it automatically.
+    
+    if ([sectionChanges count] == 0 & [rowChanges count] == 0)
+    {
+        [self.tableView reloadData];
+        // Nothing has changed that affects our tableView
+        return;
     }
     
-    _accountsFetchedResultsController = [OTRManagedAccount MR_fetchAllSortedBy:OTRManagedAccountAttributes.username ascending:YES withPredicate:nil groupBy:nil delegate:self];
+    // Familiar with NSFetchedResultsController?
+    // Then this should look pretty familiar
     
-    return _accountsFetchedResultsController;
-}
-
-- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller
-{
-    [self.settingsTableView beginUpdates];
-}
-
-- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject
-       atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
-      newIndexPath:(NSIndexPath *)newIndexPath {
+    [self.tableView beginUpdates];
     
-    UITableView* tableView = self.settingsTableView;
-    
-    switch (type) {
-        case NSFetchedResultsChangeInsert:
-            [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
-            break;
-        case NSFetchedResultsChangeDelete:
-            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-            break;
-            
-        case NSFetchedResultsChangeUpdate:
+    for (YapDatabaseViewRowChange *rowChange in rowChanges)
+    {
+        switch (rowChange.type)
         {
-            OTRManagedAccount *account = [self.accountsFetchedResultsController objectAtIndexPath:indexPath];
-            [((OTRAccountTableViewCell *)[tableView cellForRowAtIndexPath:indexPath]) setAccount:account];
-            break;
+            case YapDatabaseViewChangeDelete :
+            {
+                [self.tableView deleteRowsAtIndexPaths:@[ rowChange.indexPath ]
+                                      withRowAnimation:UITableViewRowAnimationAutomatic];
+                break;
+            }
+            case YapDatabaseViewChangeInsert :
+            {
+                [self.tableView insertRowsAtIndexPaths:@[ rowChange.newIndexPath ]
+                                      withRowAnimation:UITableViewRowAnimationAutomatic];
+                break;
+            }
+            case YapDatabaseViewChangeMove :
+            {
+                [self.tableView deleteRowsAtIndexPaths:@[ rowChange.indexPath ]
+                                      withRowAnimation:UITableViewRowAnimationAutomatic];
+                [self.tableView insertRowsAtIndexPaths:@[ rowChange.newIndexPath ]
+                                      withRowAnimation:UITableViewRowAnimationAutomatic];
+                break;
+            }
+            case YapDatabaseViewChangeUpdate :
+            {
+                [self.tableView reloadRowsAtIndexPaths:@[ rowChange.indexPath ]
+                                      withRowAnimation:UITableViewRowAnimationNone];
+                break;
+            }
         }
-        case NSFetchedResultsChangeMove:
-            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-            [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
-            break;
     }
+    
+    [self.tableView endUpdates];
 }
 
-- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
-{
-    [self.settingsTableView endUpdates];
-}
 
 @end

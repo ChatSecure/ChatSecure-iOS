@@ -5,9 +5,6 @@
 [submodule "Submodules/OTRKit"]
 	path = Submodules/OTRKit
 	url = git@github.com:ChatSecure/OTRKit.git
-[submodule "Submodules/LibOrange"]
-	path = Submodules/LibOrange
-	url = git@github.com:ChatSecure/LibOrange.git
 [submodule "Submodules/XMPPFramework"]
 	path = Submodules/XMPPFramework
 	url = git@github.com:ChatSecure/XMPPFramework.git
@@ -35,3 +32,6 @@
 [submodule "Submodules/ProxyKit"]
 	path = Submodules/ProxyKit
 	url = git@github.com:chrisballinger/ProxyKit.git
+[submodule "Submodules/YapDatabase"]
+	path = Submodules/YapDatabase
+	url = git@github.com:yaptv/YapDatabase.git

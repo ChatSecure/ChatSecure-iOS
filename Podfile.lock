@@ -24,23 +24,12 @@ PODS:
   - CocoaLumberjack/Extensions (1.8.1):
     - CocoaLumberjack/Core
   - DAKeyboardControl (2.3.0)
-  - Facebook-iOS-SDK (3.12.0)
-  - gtm-oauth2 (0.0.3):
-    - gtm-oauth2/Core
-    - GTMHTTPFetcher
+  - Facebook-iOS-SDK (3.13.0)
+  - gtm-oauth2 (0.0.4):
+    - GTMHTTPFetcher (~> 0.0.1)
     - SBJson (~> 3.2)
-  - gtm-oauth2/Core (0.0.3):
-    - gtm-oauth2/Core/Mac
-    - gtm-oauth2/Core/Touch
-    - GTMHTTPFetcher
+  - GTMHTTPFetcher (0.0.3):
     - SBJson (~> 3.2)
-  - gtm-oauth2/Core/Mac (0.0.3):
-    - GTMHTTPFetcher
-    - SBJson (~> 3.2)
-  - gtm-oauth2/Core/Touch (0.0.3):
-    - GTMHTTPFetcher
-    - SBJson (~> 3.2)
-  - GTMHTTPFetcher (0.1.0)
   - HockeySDK (3.5.4)
   - HPGrowingTextView (1.1)
   - JTTargetActionBlock (1.0.0)
@@ -52,6 +41,12 @@ PODS:
   - SIAlertView (1.3)
   - SSKeychain (1.2.1)
   - UIAlertView-Blocks (1.0)
+  - YapDatabase (2.4.1):
+    - YapDatabase/standard
+  - YapDatabase/common (2.4.1):
+    - CocoaLumberjack (~> 1.6.3)
+  - YapDatabase/standard (2.4.1):
+    - YapDatabase/common
 
 DEPENDENCIES:
   - AFNetworking (= 2.0.3)
@@ -68,19 +63,22 @@ DEPENDENCIES:
   - SIAlertView (from `PodSpecs/SIAlertView.podspec`)
   - SSKeychain
   - UIAlertView-Blocks
+  - YapDatabase (from `Submodules/YapDatabase`)
 
 EXTERNAL SOURCES:
   SIAlertView:
     :podspec: PodSpecs/SIAlertView.podspec
+  YapDatabase:
+    :path: Submodules/YapDatabase
 
 SPEC CHECKSUMS:
   AFNetworking: e499052cbf3d743e9bb727bb37adb9dc2547ba15
   Appirater: 32fb9089615b5e542c7ad7b5749741a8aed55290
   CocoaLumberjack: 020378ec400d658923bf5887178394f65f052c90
   DAKeyboardControl: 219d6e32b9343eb85151255c43b1f238d8f0bbf7
-  Facebook-iOS-SDK: c09f7d80db5c48170ff834bc03ebe774c49d1f5b
-  gtm-oauth2: 6528b10a61eb9b6710f6277341e2926371a12c15
-  GTMHTTPFetcher: 1ec07b08bc1df7bf37ad32b3c2adefa020a4b644
+  Facebook-iOS-SDK: 5788541337dc88265bc940cb5ffb05915f9b64e3
+  gtm-oauth2: 30600f0033c359f31d0e7a0e31c074a90353ece0
+  GTMHTTPFetcher: bca306f50fec6a263d8de7493398657db255952a
   HockeySDK: aa28abb106de7804d31acf515f2c9aa4e6481fd0
   HPGrowingTextView: 4318f557b33c19def1c53ec275d6e2a2d6589cd0
   JTTargetActionBlock: 3d6e5ecded7f8273ad006029444d285b58e016ea
@@ -90,5 +88,6 @@ SPEC CHECKSUMS:
   SIAlertView: 522351a8870be07fb49053fa054c83da3ea17dbe
   SSKeychain: d18926838c2e7cd342e2a49e9f869858e49f035a
   UIAlertView-Blocks: f7be28a08e85ec21143951ec6797ca6474faf563
+  YapDatabase: a7286df03ef343ef802be084d4c36d0a042ac00e
 
-COCOAPODS: 0.29.0
+COCOAPODS: 0.31.0

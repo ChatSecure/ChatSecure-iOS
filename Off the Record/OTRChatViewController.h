@@ -21,11 +21,12 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 #import <UIKit/UIKit.h>
-#import "OTRBuddyListViewController.h"
+//#import "OTRBuddyListViewController.h"
 #import "OTRProtocolManager.h"
-#import "OTRManagedBuddy.h"
 #import "OTRChatInputBar.h"
 #import "OTRTitleSubtitleView.h"
+
+@class OTRBuddy;
 
 @interface OTRChatViewController : UIViewController <UIActionSheetDelegate, UISplitViewControllerDelegate,UIAlertViewDelegate,UITableViewDataSource,UITableViewDelegate,NSFetchedResultsControllerDelegate,OTRChatInputBarDelegate>
 
@@ -36,9 +37,9 @@
 @property (nonatomic, strong) NSFetchedResultsController *messagesFetchedResultsController;
 @property (nonatomic, strong) NSFetchedResultsController *buddyFetchedResultsController;
 
-@property (nonatomic, retain) OTRManagedBuddy *buddy;
+@property (nonatomic, retain) OTRBuddy *buddy;
 
-@property (nonatomic, retain) OTRBuddyListViewController *buddyListController;
+//@property (nonatomic, retain) OTRBuddyListViewController *buddyListController;
 
 @property (nonatomic, retain) NSURL *lastActionLink;
 

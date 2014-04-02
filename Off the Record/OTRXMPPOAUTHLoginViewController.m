@@ -7,10 +7,13 @@
 //
 
 #import "OTRXMPPOAUTHLoginViewController.h"
-
+#import "OTROAuthXMPPAccount.h"
 #import "OTRLog.h"
+#import "OTROAuthRefresher.h"
 
 @interface OTRXMPPOAUTHLoginViewController ()
+
+@property (nonatomic,strong)  OTROAuthXMPPAccount *account;
 
 @end
 
@@ -25,7 +28,7 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     if (section == 0) {
-        if ([self.account.accessTokenString length] && ([self.account.username length] || [self.account.displayName length])) {
+        if ([self.account.password length] && ([self.account.username length] || [self.account.displayName length])) {
             return 2;
         }
         return 1;
@@ -71,8 +74,8 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell * cell = nil;
-    if (indexPath.section == 0 && indexPath.row == 0 && [self.account.accessTokenString length] && [self.account.username length]) {
-        if ([self.account.accessTokenString length] && [self.account.username length]) {
+    if (indexPath.section == 0 && indexPath.row == 0 && [self.account.password length] && [self.account.username length]) {
+        if ([self.account.password length] && [self.account.username length]) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@""];
             cell.textLabel.text = USERNAME_STRING;
             cell.detailTextLabel.text = self.account.username;
@@ -100,13 +103,13 @@
 
 -(void)readInFields
 {
-    self.account.autologinValue = self.autoLoginSwitch.on;
-    self.account.rememberPasswordValue = YES;
+    self.account.autologin = self.autoLoginSwitch.on;
+    self.account.rememberPassword = YES;
     if (self.resourceTextField.text.length) {
         self.account.resource = self.resourceTextField.text;
     }
     else {
-        self.account.resource = [OTRManagedXMPPAccount newResource];
+        self.account.resource = [OTRXMPPAccount newResource];
     }
 }
 
@@ -118,12 +121,13 @@
 -(void)loginButtonPressed:(id)sender
 {
     [self readInFields];
-    [self.account refreshTokenIfNeeded:^(NSError * error) {
+    
+    [OTROAuthRefresher refreshAccount:self.account completion:^(id token, NSError *error) {
         if (!error) {
-            if ([self.account.accessTokenString length]) {
+            if ([self.account.password length]) {
                 [self showHUDWithText:LOGGING_IN_STRING];
                 id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
-                [protocol connectWithPassword:self.account.accessTokenString];
+                [protocol connectWithPassword:self.account.password];
                 self.timeoutTimer = [NSTimer scheduledTimerWithTimeInterval:45.0 target:self selector:@selector(timeout:) userInfo:nil repeats:NO];
             }
             else {
@@ -131,8 +135,6 @@
             }
         }
     }];
-    
-    
 }
 
 

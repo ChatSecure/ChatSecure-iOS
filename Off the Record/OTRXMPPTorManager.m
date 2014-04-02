@@ -9,12 +9,13 @@
 #import "OTRXMPPTorManager.h"
 #import "HITorManager.h"
 #import "XMPPStream.h"
+#import "OTRXMPPTorAccount.h"
 
 NSString *const proxyAdress = @"127.0.0.1";
 uint16_t const proxyPort = 9050;
 
 @interface OTRXMPPTorManager()
-@property (nonatomic, strong) OTRManagedXMPPAccount * account;
+@property (nonatomic, strong) OTRXMPPTorAccount *account;
 @end
 
 @implementation OTRXMPPTorManager

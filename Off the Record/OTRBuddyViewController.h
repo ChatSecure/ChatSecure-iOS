@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "OTRManagedBuddy.h"
 #import "TTTAttributedLabel.h"
+
+@class OTRBuddy;
 
 @interface OTRBuddyViewController : UIViewController <TTTAttributedLabelDelegate, UITableViewDataSource, UITableViewDelegate,UITextFieldDelegate>
 {
@@ -18,9 +19,9 @@
     BOOL isXMPPAccount;
 }
 
-@property (nonatomic, strong) OTRManagedBuddy * buddy;
+@property (nonatomic, strong) OTRBuddy *buddy;
 
 
--(id)initWithBuddyID:(NSManagedObjectID *)buddyID;
+-(id)initWithBuddyID:(NSString *)buddyID;
 
 @end

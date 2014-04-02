@@ -21,10 +21,15 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "OTRProtocolManager.h"
-#import "OTROscarManager.h"
-#import "OTRManagedBuddy.h"
-#import "OTRManagedOAuthAccount.h"
+#import "OTRAccount.h"
+#import "OTRBuddy.h"
+#import "OTRMessage.h"
 #import "OTRConstants.h"
+#import "OTROAuthRefresher.h"
+#import "OTROAuthXMPPAccount.h"
+#import "OTRDatabaseManager.h"
+#import "YapDatabaseConnection.h"
+#import "YapDatabaseTransaction.h"
 
 #import "OTRLog.h"
 
@@ -33,6 +38,7 @@ static OTRProtocolManager *sharedManager = nil;
 @interface OTRProtocolManager ()
 
 @property (nonatomic) NSUInteger numberOfConnectedProtocols;
+
 
 @end
 
@@ -59,11 +65,9 @@ static OTRProtocolManager *sharedManager = nil;
     return self;
 }
 
-- (void)removeProtocolManagerForAccount:(OTRManagedAccount *)account
+- (void)removeProtocolManagerForAccount:(OTRAccount *)account
 {
-    if ([self.protocolManagers objectForKey:account.uniqueIdentifier]) {
-        [self.protocolManagers removeObjectForKey:account.uniqueIdentifier];
-    }
+    [self.protocolManagers removeObjectForKey:account.uniqueId];
 }
 
 #pragma mark -
@@ -93,36 +97,41 @@ static OTRProtocolManager *sharedManager = nil;
     return self;
 }
 
--(OTRManagedBuddy *)buddyForUserName:(NSString *)buddyUserName accountName:(NSString *)accountName protocol:(NSString *)protocol inContext:(NSManagedObjectContext *)context
+-(OTRBuddy *)buddyForUserName:(NSString *)buddyUserName accountName:(NSString *)accountName protocolType:(OTRProtocolType)protocolType;
 {
-    OTRManagedAccount * account = [OTRAccountsManager accountForProtocol:protocol accountName:accountName inContext:context];
-    OTRManagedBuddy * buddy = [OTRManagedBuddy fetchOrCreateWithName:buddyUserName account:account inContext:context];
-    [context MR_saveToPersistentStoreAndWait];
+    __block OTRBuddy *buddy = nil;
+    [[OTRDatabaseManager sharedInstance].mainThreadReadOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        OTRAccount *account =  [OTRAccount fetchAccountWithUsername:accountName protocolType:protocolType transaction:transaction];
+        buddy = [OTRBuddy fetchBuddyWithUsername:buddyUserName withAccountUniqueId:account.uniqueId transaction:transaction];
+    }];
+   
     return buddy;
 }
 
-- (id <OTRProtocol>)protocolForAccount:(OTRManagedAccount *)account
+- (id <OTRProtocol>)protocolForAccount:(OTRAccount *)account
 {
-    NSObject <OTRProtocol> * protocol = [protocolManagers objectForKey:account.uniqueIdentifier];
+    NSObject <OTRProtocol> * protocol = [protocolManagers objectForKey:account.uniqueId];
     if(!protocol)
     {
         protocol = [[[account protocolClass] alloc] initWithAccount:account];
-        if (protocol && account.uniqueIdentifier) {
-            [protocolManagers setObject:protocol forKey:account.uniqueIdentifier];
+        if (protocol && account.uniqueId) {
+            [protocolManagers setObject:protocol forKey:account.uniqueId];
             [protocol addObserver:self forKeyPath:NSStringFromSelector(@selector(isConnected)) options:NSKeyValueObservingOptionNew context:NULL];
         }
     }
     return protocol;
 }
 
-- (void)loginAccount:(OTRManagedAccount *)account
+- (void)loginAccount:(OTRAccount *)account
 {
     id <OTRProtocol> protocol = [self protocolForAccount:account];
-    if( [account conformsToProtocol:@protocol(OTRManagedOAuthAccountProtocol)])
+    
+    if([account isKindOfClass:[OTROAuthXMPPAccount class]])
     {
-        [((OTRManagedAccount <OTRManagedOAuthAccountProtocol> *) account) refreshToken:^(NSError *error) {
+        [OTROAuthRefresher refreshAccount:(OTROAuthXMPPAccount *)account completion:^(id token, NSError *error) {
             if (!error) {
-                [protocol connectWithPassword:((OTRManagedAccount <OTRManagedOAuthAccountProtocol> *) account).accessTokenString];
+                ((OTROAuthXMPPAccount *)account).accountSpecificToken = token;
+                [protocol connectWithPassword:account.password];
             }
             else {
                 DDLogError(@"Error Refreshing Token");
@@ -136,7 +145,7 @@ static OTRProtocolManager *sharedManager = nil;
 }
 - (void)loginAccounts:(NSArray *)accounts
 {
-    [accounts enumerateObjectsUsingBlock:^(OTRManagedAccount * account, NSUInteger idx, BOOL *stop) {
+    [accounts enumerateObjectsUsingBlock:^(OTRAccount * account, NSUInteger idx, BOOL *stop) {
         [self loginAccount:account];
     }];
 }
@@ -158,9 +167,9 @@ static OTRProtocolManager *sharedManager = nil;
 
 }
 
--(BOOL)isAccountConnected:(OTRManagedAccount *)account;
+-(BOOL)isAccountConnected:(OTRAccount *)account;
 {
-    id <OTRProtocol> protocol = [protocolManagers objectForKey:account.uniqueIdentifier];
+    id <OTRProtocol> protocol = [protocolManagers objectForKey:account.uniqueId];
     if (protocol) {
         return [protocol isConnected];
     }
@@ -168,14 +177,22 @@ static OTRProtocolManager *sharedManager = nil;
     
 }
 
-+ (void)sendMessage:(OTRManagedChatMessage *)message {
-    message.buddy.lastSentChatStateValue=kOTRChatStateActive;
-    [[message managedObjectContext] MR_saveToPersistentStoreAndWait];
-    [message.buddy invalidatePausedChatStateTimer];
+
+- (void)sendMessage:(OTRMessage *)message {
+    //message.buddy.lastSentChatStateValue=kOTRChatStateActive;
+    //[message.buddy invalidatePausedChatStateTimer];
     //FIXME
     
+    __block OTRBuddy *buddy = nil;
+    __block OTRAccount *account = nil;
+    [[OTRDatabaseManager sharedInstance].mainThreadReadOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        buddy = [OTRBuddy fetchObjectWithUniqueID:message.buddyUniqueId transaction:transaction];
+        account = [OTRAccount fetchObjectWithUniqueID:buddy.accountUniqueId transaction:transaction];
+    }];
+    
+    
     OTRProtocolManager * protocolManager = [OTRProtocolManager sharedInstance];
-    id<OTRProtocol> protocol = [protocolManager protocolForAccount:message.buddy.account];
+    id<OTRProtocol> protocol = [protocolManager protocolForAccount:account];
     [protocol sendMessage:message];
 }
 

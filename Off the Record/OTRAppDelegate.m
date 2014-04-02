@@ -23,8 +23,8 @@
 #import "OTRAppDelegate.h"
 
 #import "OTRConversationViewController.h"
-#import "OTRBuddyListViewController.h"
-#import "OTRChatViewController.h"
+
+//#import "OTRChatViewController.h"
 #import "Strings.h"
 #import "OTRSettingsViewController.h"
 #import "OTRSettingsManager.h"
@@ -32,11 +32,10 @@
 #import "Appirater.h"
 #import "OTRConstants.h"
 #import "OTRLanguageManager.h"
-#import "OTRConvertAccount.h"
 #import "OTRUtilities.h"
 #import "OTRAccountsManager.h"
 #import "FacebookSDK.h"
-#import "OTRAppVersionManager.h"
+//#import "OTRAppVersionManager.h"
 #import "OTRSettingsManager.h"
 #import "OTRSecrets.h"
 #import "OTRDatabaseManager.h"
@@ -46,14 +45,17 @@
 
 #import "OTRLog.h"
 #import "DDTTYLogger.h"
-#import "OTRManagedAccount.h"
+#import "OTRAccount.h"
+#import "OTRBuddy.h"
+#import "YAPDatabaseTransaction.h"
+#import "YapDatabaseConnection.h"
 #import "OTRCertificatePinning.h"
 
 @implementation OTRAppDelegate
 
 @synthesize window = _window;
 @synthesize backgroundTask, backgroundTimer, didShowDisconnectionWarning;
-@synthesize settingsViewController, buddyListViewController;
+@synthesize settingsViewController;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -67,29 +69,38 @@
     [SSKeychain setAccessibilityType:kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly];
 
     NSString *outputStoreName = @"ChatSecure.sqlite";
-    [OTRDatabaseManager setupDatabaseWithName:outputStoreName];
+    [[OTRDatabaseManager sharedInstance] setupDatabaseWithName:outputStoreName];
     
-    //CONVERT LEGACY ACCOUNT DICTIONARIES
-    OTRConvertAccount * accountConverter = [[OTRConvertAccount alloc] init];
-    if ([accountConverter hasLegacyAccountSettings]) {
-        [accountConverter convertAllLegacyAcountSettings];
-    }
+    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        NSArray *allAccounts = [OTRAccount allAccountsWithTransaction:transaction];
+        NSArray *allAccountsToDelete = [allAccounts filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+            if ([evaluatedObject isKindOfClass:[OTRAccount class]]) {
+                OTRAccount *account = (OTRAccount *)evaluatedObject;
+                if (![account.username length]) {
+                    return YES;
+                }
+            }
+            return NO;
+        }]];
+        
+        [transaction removeObjectsForKeys:[allAccountsToDelete valueForKey:OTRYapDatabaseObjectAttributes.uniqueId] inCollection:[OTRAccount collection]];
+        //FIXME? [OTRManagedAccount resetAccountsConnectionStatus];
+    }];
+
     
-    [OTRUtilities deleteAllBuddiesAndMessages];
-    [OTRUtilities deleteAccountsWithoutUsername];
     
-    [OTRManagedAccount resetAccountsConnectionStatus];
     
-    [OTRAppVersionManager applyAppUpdatesForCurrentAppVersion];
+    //[OTRAppVersionManager applyAppUpdatesForCurrentAppVersion];
     
     [OTRCertificatePinning loadBundledCertificatesToKeychain];
 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
-    self.buddyListViewController = [[OTRBuddyListViewController alloc] init];
+    //self.buddyListViewController = [[OTRBuddyListViewController alloc] init];
     //OTRChatViewController *chatViewController = [[OTRDemoChatViewController alloc] init];
-    OTRChatViewController *chatViewController = [[OTRChatViewController alloc] init];
-    buddyListViewController.chatViewController = chatViewController;
+    //OTRChatViewController *chatViewController = [[OTRChatViewController alloc] init];
+    //buddyListViewController.chatViewController = chatViewController;
+    UIViewController *chatViewController = nil;
     self.settingsViewController = [[OTRSettingsViewController alloc] init];
     
     OTRConversationViewController * conversationViewController = [[OTRConversationViewController alloc] init];
@@ -182,7 +193,7 @@
             id <OTRProtocol> protocol = [protocolManager.protocolManagers objectForKey:key];
             [protocol disconnect];
         }
-        [OTRManagedAccount resetAccountsConnectionStatus];
+        //FIXME [OTRManagedAccount resetAccountsConnectionStatus];
         
         
         [application endBackgroundTask:self.backgroundTask];
@@ -222,7 +233,7 @@
         [application endBackgroundTask:self.backgroundTask];
         self.backgroundTask = UIBackgroundTaskInvalid;
     }
-    [OTRManagedAccount resetAccountsConnectionStatus];
+    //FIXME? [OTRManagedAccount resetAccountsConnectionStatus];
     application.applicationIconBadgeNumber = 0;
 }
 
@@ -242,7 +253,7 @@
         id <OTRProtocol> protocol = [protocolManager.protocolManagers objectForKey:key];
         [protocol disconnect];
     }
-    [OTRManagedAccount resetAccountsConnectionStatus];
+    //FIXME? [OTRManagedAccount resetAccountsConnectionStatus];
     [OTRUtilities deleteAllBuddiesAndMessages];
     
     [MagicalRecord cleanUp];
@@ -268,15 +279,14 @@
     NSDictionary *userInfo = notification.userInfo;
     NSString *accountName = [userInfo objectForKey:kOTRNotificationAccountNameKey];
     NSString *userName = [userInfo objectForKey:kOTRNotificationUserNameKey];
-    NSString *protocol = [userInfo objectForKey:kOTRNotificationProtocolKey];
+    NSNumber *protocol = [userInfo objectForKey:kOTRNotificationProtocolKey];
     if (!accountName || !userName || !protocol) {
         return;
     }
     OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
-    NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
-    OTRManagedBuddy *buddy = [protocolManager buddyForUserName:userName accountName:accountName protocol:protocol inContext:context];
-    [context MR_saveToPersistentStoreAndWait];
-    [buddyListViewController enterConversationWithBuddy:buddy];
+    OTRBuddy *buddy = [protocolManager buddyForUserName:userName accountName:accountName protocolType:[protocol intValue]];
+    //FIXME
+    //[buddyListViewController enterConversationWithBuddy:buddy];
 }
 
 - (void) presentActionSheet:(UIActionSheet*)sheet inView:(UIView*)view {

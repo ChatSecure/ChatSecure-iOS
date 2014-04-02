@@ -27,9 +27,4 @@
     return [OTRXMPPTorManager class];
 }
 
--(UIImage *)accountImage
-{
-    return [UIImage imageNamed:OTRXMPPTorImageName];
-}
-
 @end

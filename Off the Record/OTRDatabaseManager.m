@@ -10,8 +10,20 @@
 
 #import "OTRManagedAccount.h"
 #import "OTREncryptionManager.h"
-
 #import "OTRLog.h"
+#import "YapDatabaseRelationship.h"
+
+NSString *const OTRUIDatabaseConnectionDidUpdateNotification = @"OTRUIDatabaseConnectionDidUpdateNotification";
+NSString *const OTRUIDatabaseConnectionWillUpdateNotification = @"OTRUIDatabaseConnectionWillUpdateNotification";
+NSString *const OTRYapDatabaseRelationshipName = @"OTRYapDatabaseRelationshipName";
+
+@interface OTRDatabaseManager ()
+
+@property (nonatomic, strong) YapDatabase *database;
+@property (nonatomic, strong) YapDatabaseConnection *mainThreadReadOnlyDatabaseConnection;
+@property (nonatomic, strong) YapDatabaseConnection *readWriteDatabaseConnection;
+
+@end
 
 @implementation OTRDatabaseManager
 
@@ -42,20 +54,16 @@
     }
 }
 
-+ (BOOL) setupDatabaseWithName:(NSString*)databaseName {
+- (BOOL) setupDatabaseWithName:(NSString*)databaseName {
     NSString *legacyDatabaseName = @"db.sqlite";
     NSURL * legacyDatabaseURL = [NSPersistentStore MR_urlForStoreName:legacyDatabaseName];
-    
-    
-    
+
     NSURL * databaseURL = [NSPersistentStore MR_urlForStoreName:databaseName];
-    
-    //[self copyTestDatabaseToDestination:databaseURL];
     
     NSFileManager *fileManager = [NSFileManager defaultManager];
     if ([fileManager fileExistsAtPath:legacyDatabaseURL.path]) {
         // migrate store
-        if([self migrateLegacyStore:legacyDatabaseURL destinationStore:databaseURL]) {
+        if([OTRDatabaseManager migrateLegacyStore:legacyDatabaseURL destinationStore:databaseURL]) {
             [fileManager removeItemAtURL:legacyDatabaseURL error:nil];
         }
     }
@@ -67,12 +75,14 @@
     NSManagedObjectModel *version3Model = [[NSManagedObjectModel alloc] initWithContentsOfURL:mom3];
     NSManagedObjectModel *version4Model = [[NSManagedObjectModel alloc] initWithContentsOfURL:mom4];
     
-    if ([self isManagedObjectModel:version2Model compatibleWithStoreAtUrl:databaseURL]) {
-        [self migrateAccountsForManagedObjectModel:version2Model toManagedObjectModel:version3Model withStoreUrl:databaseURL];
+    if ([OTRDatabaseManager isManagedObjectModel:version2Model compatibleWithStoreAtUrl:databaseURL]) {
+        
     }
-    
-    if ([self isManagedObjectModel:version3Model compatibleWithStoreAtUrl:databaseURL]) {
-        [self migrateAccountsForManagedObjectModel:version3Model toManagedObjectModel:version4Model withStoreUrl:databaseURL];
+    else if ([OTRDatabaseManager isManagedObjectModel:version3Model compatibleWithStoreAtUrl:databaseURL]) {
+        
+    }
+    else if ([OTRDatabaseManager isManagedObjectModel:version4Model compatibleWithStoreAtUrl:databaseURL]) {
+        
     }
     
     
@@ -83,9 +93,86 @@
     [OTREncryptionManager setFileProtection:NSFileProtectionCompleteUntilFirstUserAuthentication path:databaseURL.path];
     [OTREncryptionManager addSkipBackupAttributeToItemAtURL:databaseURL];
     
-    [self deleteLegacyXMPPFiles];
+    [OTRDatabaseManager deleteLegacyXMPPFiles];
     
-    return YES;
+    YapDatabaseOptions *options = [[YapDatabaseOptions alloc] init];
+    options.corruptAction = YapDatabaseCorruptAction_Delete;
+    /*options.passphraseBlock = ^{
+        // You can also do things like fetch from the keychain in here
+        return @"not a secure password";
+    };*/
+    
+    
+    NSString *applicationSupportDirectory = [NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES) lastObject];
+    NSString *applicationName = [[[NSBundle mainBundle] infoDictionary] valueForKey:(NSString *)kCFBundleNameKey];
+    NSString *directory = [applicationSupportDirectory stringByAppendingPathComponent:applicationName];
+    NSString *databasePath = [directory stringByAppendingPathComponent:databaseName];
+    
+    self.database = [[YapDatabase alloc] initWithPath:databasePath
+                                objectSerializer:NULL
+                              objectDeserializer:NULL
+                              metadataSerializer:NULL
+                            metadataDeserializer:NULL
+                                 objectSanitizer:NULL
+                               metadataSanitizer:NULL
+                                         options:options];
+    
+    self.mainThreadReadOnlyDatabaseConnection = [self.database newConnection];
+    self.mainThreadReadOnlyDatabaseConnection.objectCacheLimit = 500;
+    self.mainThreadReadOnlyDatabaseConnection.metadataCacheLimit = 500;
+    self.mainThreadReadOnlyDatabaseConnection.name = @"mainThreadReadOnlyDatabaseConnection";
+    
+    self.readWriteDatabaseConnection = [self.database newConnection];
+    self.readWriteDatabaseConnection.objectCacheLimit = 200;
+    self.readWriteDatabaseConnection.metadataCacheLimit = 200;
+    self.readWriteDatabaseConnection.name = @"readWriteDatabaseConnection";
+    
+    [self.mainThreadReadOnlyDatabaseConnection enableExceptionsForImplicitlyEndingLongLivedReadTransaction];
+    [self.mainThreadReadOnlyDatabaseConnection beginLongLivedReadTransaction];
+    
+    YapDatabaseRelationship *databaseRelationship = [[YapDatabaseRelationship alloc] init];
+    [self.database registerExtension:databaseRelationship withName:OTRYapDatabaseRelationshipName];
+    
+    [self.mainThreadReadOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        NSArray *allCollections = [transaction allCollections];
+        NSArray *allAccountKeys = [transaction allKeysInCollection:@"OTRAccount"];
+        
+        id account = [transaction objectForKey:[allAccountKeys firstObject] inCollection:@"OTRAccount"];
+    }];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(yapDatabaseModified:)
+                                                 name:YapDatabaseModifiedNotification
+                                               object:self.database];
+    
+    
+    
+    
+    if (self.database) {
+        return YES;
+    }
+    else {
+        return NO;
+    }
+}
+
+- (void)yapDatabaseModified:(NSNotification *)ignored
+{
+    // Notify observers we're about to update the database connection
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:OTRUIDatabaseConnectionWillUpdateNotification object:self];
+    
+    // Move uiDatabaseConnection to the latest commit.
+    // Do so atomically, and fetch all the notifications for each commit we jump.
+    
+    NSArray *notifications = [self.mainThreadReadOnlyDatabaseConnection beginLongLivedReadTransaction];
+    
+    // Notify observers that the uiDatabaseConnection was updated
+    
+    NSDictionary *userInfo = @{ @"notifications": notifications };
+    [[NSNotificationCenter defaultCenter] postNotificationName:OTRUIDatabaseConnectionDidUpdateNotification
+                                                        object:self
+                                                      userInfo:userInfo];
 }
 
 + (void) deleteLegacyXMPPFiles {
@@ -126,66 +213,6 @@
     
     return [self migrateLegacyStore:storeURL destinationStore:destinationURL sourceModel:inputModel destinationModel:version2Model error:NULL];
 }
-
-+ (void)migrateAccountsForManagedObjectModel:(NSManagedObjectModel *)originalModel toManagedObjectModel:(NSManagedObjectModel *)finalObjectModel withStoreUrl:(NSURL *)storeUrl {
-    
-   
-    
-    
-    NSError * error = nil;
-    NSDictionary * options = @{NSMigratePersistentStoresAutomaticallyOption:@YES,
-                              NSInferMappingModelAutomaticallyOption:@YES,
-                              NSSQLitePragmasOption: @{@"journal_mode": @"DELETE"}
-                              };
-    NSPersistentStoreCoordinator * storeCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:originalModel];
-    [storeCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeUrl options:options error:&error];
-    
-    //check if really matches (not sure if it really works
-    //doesn't seem to fail if done here
-    if (![self isManagedObjectModel:originalModel compatibleWithStoreAtUrl:storeUrl]) {
-        return;
-    }
-    
-    
-    NSManagedObjectContext *context = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-    [context setPersistentStoreCoordinator:storeCoordinator];
-    
-    __block NSArray * results;
-    [context performBlockAndWait:^{
-        NSEntityDescription *entityDescription = [NSEntityDescription entityForName:@"OTRManagedAccount"
-                                                             inManagedObjectContext:context];
-        NSFetchRequest *request = [[NSFetchRequest alloc] init];
-        [request setEntity:entityDescription];
-        results = [context executeFetchRequest:request error:nil];
-    }];
-    
-    
-    NSMutableArray * allAccountDictionaries = [NSMutableArray array];
-    
-    [results enumerateObjectsUsingBlock:^(OTRManagedAccount * account, NSUInteger idx, BOOL *stop) {
-        [allAccountDictionaries addObject:[account dictionaryRepresentation]];
-    }];
-    
-    
-    [[NSFileManager defaultManager] removeItemAtURL:storeUrl error:&error];
-    
-    
-    storeCoordinator =[[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:finalObjectModel];
-    [storeCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeUrl options:options error:&error];
-    
-    context = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-    [context setPersistentStoreCoordinator:storeCoordinator];
-    
-    [NSPersistentStoreCoordinator MR_setDefaultStoreCoordinator:storeCoordinator];
-    [NSManagedObjectContext MR_initializeDefaultContextWithCoordinator:storeCoordinator];
-    
-    [allAccountDictionaries enumerateObjectsUsingBlock:^(NSDictionary * accountDictionary, NSUInteger idx, BOOL *stop) {
-        [OTRManagedAccount createWithDictionary:accountDictionary forContext:context];
-    }];
-    
-    [context save:&error];
-}
-
 + (BOOL)isManagedObjectModel:(NSManagedObjectModel *)managedObjectModel compatibleWithStoreAtUrl:(NSURL *)storeUrl {
     
     NSError * error = nil;
@@ -233,6 +260,19 @@
                                 destinationType:NSSQLiteStoreType destinationOptions:nil error:outError];
     
     return success;
+}
+
+#pragma - mark Singlton Methodd
+
++ (instancetype)sharedInstance
+{
+    static id databaseManager = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        databaseManager = [[self alloc] init];
+    });
+    
+    return databaseManager;
 }
 
 @end

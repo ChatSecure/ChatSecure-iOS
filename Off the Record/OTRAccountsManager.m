@@ -22,16 +22,13 @@
 
 #import "OTRAccountsManager.h"
 #import "OTRSettingsManager.h"
-#import "OTRManagedAccount.h"
 #import "OTRConstants.h"
-#import "OTRManagedOscarAccount.h"
-#import "OTRManagedXMPPAccount.h"
-#import "OTRManagedXMPPTorAccount.h"
 #import "OTRProtocolManager.h"
-
+#import "OTRDatabaseManager.h"
+#import "YapDatabaseConnection.h"
+#import "YapDatabaseTransaction.h"
 #import "OTRLog.h"
-
-#import "OTRLog.h"
+#import "OTRAccount.h"
 
 @interface OTRAccountsManager(Private)
 - (void) refreshAccountsArray;
@@ -39,56 +36,63 @@
 
 @implementation OTRAccountsManager
 
-+ (void) removeAccount:(OTRManagedAccount*)account inContext:(NSManagedObjectContext *)context {
-    if (!account) {
-        DDLogWarn(@"Account is nil!");
-        return;
-    }
-    account.password = nil;
-    
-    OTRManagedAccount * acct = [account MR_inContext:context];
-    
-    [[OTRProtocolManager sharedInstance] removeProtocolManagerForAccount:acct];
-    
-    [acct prepareBuddiesandMessagesForDeletionInContext:context];
-    [acct MR_deleteInContext:context];
-    
-    [context MR_saveToPersistentStoreAndWait];
++ (void)removeAccount:(OTRAccount*)account
+{
+    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        
+        [transaction setObject:nil forKey:account.uniqueId inCollection:[OTRAccount collection]];
+    }];
 }
 
 + (NSArray *)allAccountsAbleToAddBuddies  {
-    NSArray * allAccountsArray = [OTRManagedAccount MR_findAllSortedBy:OTRManagedAccountAttributes.username ascending:YES];
-    NSPredicate * connectedFilter = [NSPredicate predicateWithFormat:@"%K == YES",@"isConnected"];
-    NSPredicate * facebookFilter = [NSPredicate predicateWithFormat:@"%K != %d",NSStringFromSelector(@selector(accountType)),OTRAccountTypeFacebook];
-    NSPredicate * predicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[connectedFilter,facebookFilter]];
-    return [allAccountsArray filteredArrayUsingPredicate:predicate];
+    
+    __block NSArray *accounts = nil;
+    [[OTRDatabaseManager sharedInstance].mainThreadReadOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        accounts = [OTRAccount allAccountsWithTransaction:transaction];
+    }];
+    
+    NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+        
+        if ([evaluatedObject isKindOfClass:[OTRAccount class]]) {
+            OTRAccount *account = (OTRAccount *)evaluatedObject;
+            
+            if (account.accountType != OTRAccountTypeFacebook && [[OTRProtocolManager sharedInstance] isAccountConnected:account]) {
+                return YES;
+            }
+        }
+        return NO;
+    }];
+    
+    
+    return [accounts filteredArrayUsingPredicate:predicate];
 }
 
-+(OTRManagedAccount *)accountForProtocol:(NSString *)protocol accountName:(NSString *)accountName inContext:(NSManagedObjectContext *)context
++ (OTRAccount *)accountWithUsername:(NSString *)username protocolType:(OTRProtocolType)protocolType
 {
-    NSPredicate * accountFilter = [NSPredicate predicateWithFormat:@"%K == %@ AND %K == %@",OTRManagedAccountAttributes.protocol,protocol,OTRManagedAccountAttributes.username,accountName];
-    NSArray * results = [OTRManagedAccount MR_findAllWithPredicate:accountFilter inContext:context];
-    
-    
-    OTRManagedAccount * fetchedAccount = nil;
-    if (results) {
-        fetchedAccount = [results firstObject];
-    }
-    return fetchedAccount;
+    __block OTRAccount *account = nil;
+    [[OTRDatabaseManager sharedInstance].mainThreadReadOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        account = [OTRAccount fetchAccountWithUsername:username protocolType:protocolType transaction:transaction];
+    }];
+    return account;
 }
 
 + (NSArray *)allAutoLoginAccounts
 {
-    NSPredicate * autoLoginPredicate = [NSPredicate predicateWithFormat:@"%K == YES",OTRManagedAccountAttributes.autologin];
+    __block NSArray *accounts = nil;
+    [[OTRDatabaseManager sharedInstance].mainThreadReadOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        accounts = [OTRAccount allAccountsWithTransaction:transaction];
+    }];
+
     
-    NSArray * accounts = [OTRManagedAccount MR_findAllWithPredicate:autoLoginPredicate];
-    
-    //remove all tor accounts from auto login
     NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
-        if ([evaluatedObject isKindOfClass:[OTRManagedXMPPTorAccount class]]) {
-            return NO;
+        if ([evaluatedObject isKindOfClass:[OTRAccount class]]) {
+            OTRAccount *account = (OTRAccount *)evaluatedObject;
+            if (account.accountType != OTRAccountTypeXMPPTor && account.autologin) {
+                return YES;
+            }
+            
         }
-        return YES;
+        return NO;
     }];
     
     return [accounts filteredArrayUsingPredicate:predicate];

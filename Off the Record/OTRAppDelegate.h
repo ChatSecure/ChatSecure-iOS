@@ -23,7 +23,7 @@
 #import <UIKit/UIKit.h>
 #import "HockeySDK.h"
 
-@class OTRSettingsViewController, OTRBuddyListViewController;
+@class OTRSettingsViewController;
 
 #define OTR_APP_DELEGATE (OTRAppDelegate *)[[UIApplication sharedApplication] delegate]
 
@@ -31,7 +31,7 @@
 
 @property (nonatomic, retain) UIWindow *window;
 @property (nonatomic, retain) OTRSettingsViewController *settingsViewController;
-@property (nonatomic, retain) OTRBuddyListViewController *buddyListViewController;
+//@property (nonatomic, retain) OTRBuddyListViewController *buddyListViewController;
 @property (nonatomic, retain) NSTimer *backgroundTimer;
 @property (nonatomic) UIBackgroundTaskIdentifier backgroundTask;
 @property (nonatomic) BOOL didShowDisconnectionWarning;

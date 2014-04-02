@@ -23,12 +23,12 @@
 #import "OTRGoogleTalkLoginViewController.h"
 #import "Strings.h"
 #import "GTMOAuth2ViewControllerTouch.h"
-#import "OTRManagedGoogleAccount.h"
+#import "OTRGoogleOAuthXMPPAccount.h"
 #import "OTRSecrets.h"
 
 @interface OTRGoogleTalkLoginViewController ()
 
-@property (nonatomic,strong) OTRManagedGoogleAccount * account;
+@property (nonatomic,strong) OTRGoogleOAuthXMPPAccount *account;
 
 @end
 
@@ -71,7 +71,7 @@
             [self.account setUsername:auth.userEmail];
             NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
             [context MR_saveToPersistentStoreAndWait];
-            self.account.tokenDictionary = auth.parameters;
+            self.account.oAuthTokenDictionary = auth.parameters;
             [self.loginViewTableView reloadData];
             [self loginButtonPressed:sender];
         }

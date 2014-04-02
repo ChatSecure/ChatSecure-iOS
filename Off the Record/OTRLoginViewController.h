@@ -26,6 +26,8 @@
 #import "Strings.h"
 #import "OTRConstants.h"
 
+@class OTRAccount;
+
 extern NSString *const kTextLabelTextKey;
 extern NSString *const kCellTypeKey;
 extern NSString *const kUserInputViewKey;
@@ -41,9 +43,9 @@ extern NSUInteger const kNewCertAlertViewTag;
     UIView *padding;
 }
 
-- (id) initWithAccountID:(NSManagedObjectID *)newAccountID;
+- (id) initWithAccount:(OTRAccount *)account;
 
-@property (nonatomic, strong) OTRManagedAccount *account;
+@property (nonatomic, strong) OTRAccount *account;
 @property (nonatomic, strong) MBProgressHUD * HUD;
 
 @property (nonatomic, strong) UISwitch *rememberPasswordSwitch;
@@ -86,6 +88,6 @@ extern NSUInteger const kNewCertAlertViewTag;
 
 - (void)showAlertViewWithTitle:(NSString *)title message:(NSString *)message error:(NSError *)error;
 
-+(OTRLoginViewController *)loginViewControllerWithAcccountID:(NSManagedObjectID *)accountID;
++(OTRLoginViewController *)loginViewControllerWithAcccount:(OTRAccount *)account;
 
 @end

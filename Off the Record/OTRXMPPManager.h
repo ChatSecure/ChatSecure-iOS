@@ -34,8 +34,6 @@
 #import "XMPPCapabilitiesCoreDataStorage.h"
 #import "OTRCodec.h"
 #import "OTRProtocol.h"
-#import "OTRManagedXMPPAccount.h"
-#import "OTRManagedBuddy.h"
 #import "OTRXMPPBudyTimers.h"
 #import "OTRCertificatePinning.h"
 #import "OTRXMPPError.h"
@@ -43,7 +41,8 @@
 
 extern NSString *const OTRXMPPRegisterSucceededNotificationName;
 extern NSString *const OTRXMPPRegisterFailedNotificationName;
-@class OTRRosterStorage;
+@class OTRYapDatabaseRosterStorage;
+@class OTRXMPPAccount;
 
 
 @interface OTRXMPPManager : NSObject <XMPPRosterDelegate, NSFetchedResultsControllerDelegate, OTRProtocol, OTRCertificatePinningDelegate>
@@ -51,7 +50,7 @@ extern NSString *const OTRXMPPRegisterFailedNotificationName;
 @property (nonatomic, readonly) XMPPStream *xmppStream;
 @property (nonatomic, readonly) XMPPReconnect *xmppReconnect;
 @property (nonatomic, readonly) XMPPRoster *xmppRoster;
-@property (nonatomic, readonly) OTRRosterStorage *xmppRosterStorage;
+@property (nonatomic, readonly) OTRYapDatabaseRosterStorage *xmppRosterStorage;
 @property (nonatomic, readonly) XMPPvCardTempModule *xmppvCardTempModule;
 @property (nonatomic, readonly) XMPPvCardAvatarModule *xmppvCardAvatarModule;
 @property (nonatomic, readonly) XMPPCapabilities *xmppCapabilities;
@@ -70,12 +69,12 @@ extern NSString *const OTRXMPPRegisterFailedNotificationName;
 
 
 //Chat State
-- (void)sendChatState:(OTRChatState)chatState withBuddyID:(NSManagedObjectID *)managedBuddyObjectID;
-- (void)restartPausedChatStateTimerForBuddyObjectID:(NSManagedObjectID *)managedBuddyObjectID;
-- (void)restartInactiveChatStateTimerForBuddyObjectID:(NSManagedObjectID *)managedBuddyObjectID;
+- (void)sendChatState:(OTRChatState)chatState withBuddyID:(NSString *)managedBuddyObjectID;
+- (void)restartPausedChatStateTimerForBuddyObjectID:(NSString *)managedBuddyObjectID;
+- (void)restartInactiveChatStateTimerForBuddyObjectID:(NSString *)managedBuddyObjectID;
 - (void)sendPausedChatState:(NSTimer *)timer;
 - (void)sendInactiveChatState:(NSTimer *)timer;
-- (NSTimer *)inactiveChatStateTimerForBuddyObjectID:(NSManagedObjectID *)managedBuddyObjectID;
-- (NSTimer *)pausedChatStateTimerForBuddyObjectID:(NSManagedObjectID *)managedBuddyObjectID;
+- (NSTimer *)inactiveChatStateTimerForBuddyObjectID:(NSString *)managedBuddyObjectID;
+- (NSTimer *)pausedChatStateTimerForBuddyObjectID:(NSString *)managedBuddyObjectID;
 
 @end

@@ -7,7 +7,7 @@
 //
 
 #import "OTRBuddyImageCell.h"
-#import "OTRManagedBuddy.h"
+#import "OTRBuddy.h"
 #import "OTRImages.h"
 #import "OTRColors.h"
 
@@ -54,15 +54,15 @@ const CGFloat OTRBuddyImageCellPadding = 12.0;
     [self.avatarImageView.layer setBorderColor:[_imageViewBorderColor CGColor]];
 }
 
-- (void)setBuddy:(OTRManagedBuddy *)buddy
+- (void)setBuddy:(OTRBuddy *)buddy
 {
-    if(buddy.photo) {
-        self.avatarImageView.image = buddy.photo;
+    if(buddy.avatarImage) {
+        self.avatarImageView.image = buddy.avatarImage;
     }
     else {
         self.avatarImageView.image = [self defaultImage];
     }
-    UIColor *statusColor =  [OTRColors colorWithStatus:buddy.currentStatusValue];
+    UIColor *statusColor =  [OTRColors colorWithStatus:buddy.status];
     self.imageViewBorderColor = statusColor;
     
 }

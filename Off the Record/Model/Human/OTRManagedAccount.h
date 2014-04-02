@@ -30,38 +30,6 @@
 extern NSString *const OTRAccountProtocolKey;
 extern NSString *const OTRAccountRememberPasswordKey;
 
-extern NSString *const OTRAimImageName;
-extern NSString *const OTRGoogleTalkImageName;
-extern NSString *const OTRFacebookImageName;
-extern NSString *const OTRXMPPImageName;
-extern NSString *const OTRXMPPTorImageName;
-
-
-
 @interface OTRManagedAccount : _OTRManagedAccount
-
-@property (nonatomic, retain) NSString *password; // nil if rememberPassword = NO, not stored in memory
-@property (nonatomic,readonly) BOOL isConnected;
-
-- (Class) protocolClass;
-- (NSString *) providerName;
-- (OTRAccountType)accountType;
-- (UIImage *)accountImage;
-
-- (void)setDefaultsWithProtocol:(NSString*)newProtocol;
-
-- (void)setAllBuddiesStatuts:(OTRBuddyStatus)status inContext:(NSManagedObjectContext *)context;
-- (void)deleteAllAccountMessagesInContext:(NSManagedObjectContext *)context;
-
-- (void)prepareBuddiesandMessagesForDeletionInContext:(NSManagedObjectContext*)context;
-
-- (NSDictionary *)dictionaryRepresentation;
-+ (instancetype)createWithDictionary:(NSDictionary *)dictionary forContext:(NSManagedObjectContext *)context;
-
-
-//Goes through all accounts checks if it's connected againgst ProtocolManager and adjusts buddy status
-+(void)resetAccountsConnectionStatus;
-
-+(OTRManagedAccount *)accountForAccountType:(OTRAccountType)accountType inContext:(NSManagedObjectContext *)context;
 
 @end

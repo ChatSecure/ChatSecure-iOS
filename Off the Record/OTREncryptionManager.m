@@ -21,7 +21,8 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "OTREncryptionManager.h"
-#import "OTRManagedChatMessage.h"
+#import "OTRMessage.h"
+#import "OTRBuddy.h"
 #import "OTRProtocolManager.h"
 
 #import "OTRLog.h"
@@ -50,25 +51,28 @@
 
 - (void) updateMessageStateForUsername:(NSString*)username accountName:(NSString*)accountName protocol:(NSString*)protocol messageState:(OTRKitMessageState)messageState {
     
-    NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
-    OTRManagedBuddy *buddy = [[OTRProtocolManager sharedInstance] buddyForUserName:username accountName:accountName protocol:protocol inContext:context];
-    [buddy setNewEncryptionStatus:messageState inContext:context];
-    [context MR_saveToPersistentStoreAndWait];
+    OTRBuddy *buddy = [[OTRProtocolManager sharedInstance] buddyForUserName:username accountName:accountName protocolType:[self prototcolTypeForString:protocol]];
+    //FIXME
+    //[buddy setNewEncryptionStatus:messageState inContext:context];
 }
 
-- (void) injectMessage:(NSString*)message recipient:(NSString*)recipient accountName:(NSString*)accountName protocol:(NSString*)protocol {
-    NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
-    OTRManagedChatMessage *newMessage = [OTRManagedChatMessage newMessageToBuddy:[[OTRProtocolManager sharedInstance] buddyForUserName:recipient accountName:accountName protocol:protocol inContext:context] message:message encrypted:YES inContext:context];
-    [context MR_saveToPersistentStoreAndWait];
-    [OTRProtocolManager sendMessage:newMessage];
+- (void) injectMessage:(NSString*)text recipient:(NSString*)recipient accountName:(NSString*)accountName protocol:(NSString*)protocol {
+
+    OTRMessage *message = [[OTRMessage alloc] init];
+    message.text =text;
+    message.incoming = NO;
+    
+    OTRBuddy *buddy = [[OTRProtocolManager sharedInstance] buddyForUserName:recipient accountName:accountName protocolType:[self prototcolTypeForString:protocol]];
+    
+    message.buddyUniqueId = buddy.uniqueId;
+    
+    [[OTRProtocolManager sharedInstance] sendMessage:message];
 }
 
 -(BOOL)recipientIsLoggedIn:(NSString *)recipient accountName:(NSString *)accountName protocol:(NSString *)protocol
 {
-    NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
-    OTRManagedBuddy * buddy = [[OTRProtocolManager sharedInstance] buddyForUserName:recipient accountName:accountName protocol:protocol inContext:context];
-    [context MR_saveToPersistentStoreAndWait];
-    if(buddy.currentStatusValue == OTRBuddyStatusOffline)
+    OTRBuddy *buddy = [[OTRProtocolManager sharedInstance] buddyForUserName:recipient accountName:accountName protocolType:[self prototcolTypeForString:protocol]];
+    if(buddy.status == OTRBuddyStatusOffline)
     {
         return NO;
     }
@@ -99,6 +103,17 @@
         DDLogError(@"Error excluding %@ from backup %@", [URL lastPathComponent], error);
     }
     return success;
+}
+
+- (OTRProtocolType)prototcolTypeForString:(NSString *)typeString
+{
+    if ([typeString isEqualToString:@"xmpp"])
+    {
+        return OTRProtocolTypeXMPP;
+    }
+    else {
+        return OTRProtocolTypeNone;
+    }
 }
 
 @end

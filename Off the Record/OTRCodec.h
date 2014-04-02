@@ -21,24 +21,24 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 #import <Foundation/Foundation.h>
-#import "OTRManagedChatMessage.h"
-#import "OTRManagedAccount.h"
 #import "OTRKit.h"
+
+@class OTRMessage, OTRBuddy, OTRAccount;
 
 @interface OTRCodec : NSObject
 
-+ (void)decodeMessage:(OTRManagedChatMessage *)theMessage completionBlock:(void (^)(OTRManagedChatMessage * message))completionBlock;
-+ (void)encodeMessage:(OTRManagedChatMessage *)theMessage completionBlock:(void (^)(OTRManagedChatMessage * message))completionBlock;
++ (void)decodeMessage:(OTRMessage *)theMessage completionBlock:(void (^)(OTRMessage * message))completionBlock;
++ (void)encodeMessage:(OTRMessage *)theMessage completionBlock:(void (^)(OTRMessage * message))completionBlock;
 
-+ (void)generateOtrInitiateOrRefreshMessageTobuddy:(OTRManagedBuddy*)buddy
-                                   completionBlock:(void (^)(OTRManagedChatMessage * message))completionBlock;
++ (void)generateOtrInitiateOrRefreshMessageTobuddy:(OTRBuddy*)buddy
+                                   completionBlock:(void (^)(OTRMessage * message))completionBlock;
 
-+ (void)generatePrivateKeyFor:(OTRManagedAccount *)account
++ (void)generatePrivateKeyFor:(OTRAccount *)account
               completionBlock:(void (^)(BOOL generatedKey))completionBlock;
-+ (void)isGeneratingKeyForBuddy:(OTRManagedBuddy *)buddy
++ (void)isGeneratingKeyForBuddy:(OTRBuddy *)buddy
                      completion:(void (^)(BOOL isGeneratingKey))completion;
 
-+ (void)hasGeneratedKeyForAccount:(OTRManagedAccount *)account
++ (void)hasGeneratedKeyForAccount:(OTRAccount *)account
                 completionBlock:(void (^)(BOOL hasGeneratedKey))completionBlock;
 
 @end

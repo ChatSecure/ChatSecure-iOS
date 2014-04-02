@@ -36,14 +36,10 @@ static NSUInteger const OTRDefaultPortNumber = 5222;
 @implementation OTRManagedXMPPAccount
 
 - (void) setDefaultsWithDomain:(NSString *)newDomain {
-    [super setDefaultsWithProtocol:kOTRProtocolTypeXMPP];
+    //[super setDefaultsWithProtocol:kOTRProtocolTypeXMPP];
     self.domain = newDomain;
     self.port = @(OTRDefaultPortNumber); // Default XMPP port number
     self.resource = [[self class] newResource];  //Default resource chatsecure12345
-}
-
-- (UIImage *)accountImage {
-    return [UIImage imageNamed:OTRXMPPImageName];
 }
 
 +(NSNumber *)defaultPortNumber {
@@ -72,10 +68,6 @@ static NSUInteger const OTRDefaultPortNumber = 5222;
     return self.domain;
 }
 
-+ (NSString * )newResource
-{
-    int r = arc4random() % 99999;
-    return [NSString stringWithFormat:@"%@%d",kOTRXMPPResource,r];
-}
+
 
 @end

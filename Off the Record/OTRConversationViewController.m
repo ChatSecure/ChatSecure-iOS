@@ -9,25 +9,33 @@
 #import "OTRConversationViewController.h"
 
 #import "OTRSettingsViewController.h"
-#import "OTRChatViewController.h"
+//#import "OTRChatViewController.h"
 #import "OTRComposeViewController.h"
 
 #import "OTRConversationCell.h"
 
-#import "OTRManagedAccount.h"
-#import "OTRManagedBuddy.h"
+#import "OTRAccount.h"
+#import "OTRBuddy.h"
+#import "OTRMessage.h"
 
 #import "OTRLog.h"
+#import "YapDatabaseView.h"
+#import "YapDatabase.h"
+#import "OTRDatabaseManager.h"
+#import "YapDatabaseConnection.h"
+#import "OTRDatabaseView.h"
+#import "YapDatabaseViewMappings.h"
+
 
 static CGFloat cellHeight = 80.0;
 
 @interface OTRConversationViewController () <NSFetchedResultsControllerDelegate, OTRComposeViewControllerDelegate>
 
 @property (nonatomic, strong) UITableView *tableView;
-@property (nonatomic, strong) NSFetchedResultsController *buddyFetchedResultsController;
-@property (nonatomic, strong) OTRChatViewController *chatViewController;
+//@property (nonatomic, strong) OTRChatViewController *chatViewController;
 @property (nonatomic, strong) NSTimer *cellUpdateTimer;
-
+@property (nonatomic, strong) YapDatabaseConnection *connection;
+@property (nonatomic, strong) YapDatabaseViewMappings *mappings;
 @end
 
 @implementation OTRConversationViewController
@@ -59,6 +67,23 @@ static CGFloat cellHeight = 80.0;
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[tableView]|" options:0 metrics:0 views:@{@"tableView":self.tableView}]];
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[tableView]|" options:0 metrics:0 views:@{@"tableView":self.tableView}]];
     
+    ////////// Create YapDatabase View /////////////////
+    
+    self.connection = [OTRDatabaseManager sharedInstance].mainThreadReadOnlyDatabaseConnection;
+    
+    YapDatabaseView *view = [OTRDatabaseView conversationDatabaseView];
+    
+    self.mappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[OTRConversationGroup] view:OTRConversationDatabaseViewExtensionName];
+    
+    
+    [self.connection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        [self.mappings updateWithTransaction:transaction];
+    }];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(yapDatabaseModified:)
+                                                 name:YapDatabaseModifiedNotification
+                                               object:self.connection.database];
     
     
     
@@ -99,8 +124,8 @@ static CGFloat cellHeight = 80.0;
 
 - (void)enterConversationWithBuddy:(OTRManagedBuddy *)buddy
 {
-    [self.chatViewController setBuddy:buddy];
-    [self.navigationController pushViewController:self.chatViewController animated:YES];
+    //[self.chatViewController setBuddy:buddy];
+    //[self.navigationController pushViewController:self.chatViewController animated:YES];
 }
 
 - (void)updateVisibleCells:(id)sender
@@ -108,31 +133,14 @@ static CGFloat cellHeight = 80.0;
     NSArray * indexPathsArray = [self.tableView indexPathsForVisibleRows];
     for(NSIndexPath *indexPath in indexPathsArray)
     {
-        OTRManagedBuddy * buddy = [self.buddyFetchedResultsController objectAtIndexPath:indexPath];
+        OTRBuddy *buddy = [self buddyForIndexPath:indexPath];
         UITableViewCell * cell = [self.tableView cellForRowAtIndexPath:indexPath];
         if ([cell isKindOfClass:[OTRConversationCell class]]) {
             [(OTRConversationCell *)cell setBuddy:buddy];
         }
     }
 }
-
-- (NSFetchedResultsController *)buddyFetchedResultsController
-{
-    if (!_buddyFetchedResultsController) {
-        NSPredicate *buddyFilter = [NSPredicate predicateWithFormat:@"%@ != nil OR %@ != nil",OTRManagedBuddyAttributes.accountName,OTRManagedBuddyAttributes.displayName];
-        
-        NSPredicate *hasMessagesPredicate = [NSPredicate predicateWithFormat:@"%K.@count > 0",OTRManagedBuddyRelationships.chatMessages];
-        
-        NSPredicate *selfBuddyFilter = [NSPredicate predicateWithFormat:@"%K != account.username",OTRManagedBuddyAttributes.accountName];
-        
-        NSPredicate *predicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[buddyFilter,selfBuddyFilter,hasMessagesPredicate]];
-        
-        _buddyFetchedResultsController = [OTRManagedBuddy MR_fetchAllGroupedBy:nil withPredicate:predicate sortedBy:OTRManagedBuddyAttributes.lastMessageDate ascending:YES delegate:self];
-        
-    }
-    return _buddyFetchedResultsController;
-}
-
+/*
 - (OTRChatViewController *)chatViewController
 {
     if (!_chatViewController) {
@@ -140,31 +148,41 @@ static CGFloat cellHeight = 80.0;
     }
     return _chatViewController;
 }
+*/
+- (OTRBuddy *)buddyForIndexPath:(NSIndexPath *)indexPath
+{
+    
+    __block OTRBuddy *buddy = nil;
+    [self.connection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        
+        buddy = [[transaction extension:OTRConversationDatabaseViewExtensionName] objectAtIndexPath:indexPath withMappings:self.mappings];
+    }];
+    
+    return buddy;
+}
 
 
 #pragma - mark UITableViewDataSource Methods
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 1;
+    return [self.mappings numberOfSections];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [[self.buddyFetchedResultsController sections][section] numberOfObjects];
+    return [self.mappings numberOfItemsInSection:section];
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     //Delete conversation
     if(editingStyle == UITableViewCellEditingStyleDelete) {
-        OTRManagedBuddy *cellBuddy = [self.buddyFetchedResultsController objectAtIndexPath:indexPath];
-        NSPredicate *messagePredicate = [NSPredicate predicateWithFormat:@"%K == %@",OTRManagedMessageRelationships.buddy,cellBuddy];
-        NSPredicate *chatMessagePredicate = [NSPredicate predicateWithFormat:@"%K == %@",OTRManagedChatMessageRelationships.chatBuddy,cellBuddy];
-        NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
-        [OTRManagedMessage MR_deleteAllMatchingPredicate:messagePredicate inContext:context];
-        [OTRManagedChatMessage MR_deleteAllMatchingPredicate:chatMessagePredicate inContext:context];
-        [context MR_saveToPersistentStoreAndWait];
+        OTRBuddy *cellBuddy = [self buddyForIndexPath:indexPath];
+        
+        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+            [OTRMessage deleteAllMessagesForBuddyId:cellBuddy.uniqueId transaction:transaction];
+        }];
     }
     
 }
@@ -172,7 +190,7 @@ static CGFloat cellHeight = 80.0;
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     OTRConversationCell *cell = [tableView dequeueReusableCellWithIdentifier:[OTRConversationCell reuseIdentifier] forIndexPath:indexPath];
-    OTRManagedBuddy * buddy = [self.buddyFetchedResultsController objectAtIndexPath:indexPath];
+    OTRBuddy * buddy = [self buddyForIndexPath:indexPath];
     
     [cell.avatarImageView.layer setCornerRadius:(cellHeight-2.0*OTRBuddyImageCellPadding)/2.0];
     
@@ -197,63 +215,94 @@ static CGFloat cellHeight = 80.0;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    OTRManagedBuddy *buddy = [self.buddyFetchedResultsController objectAtIndexPath:indexPath];
+    OTRManagedBuddy *buddy = [self buddyForIndexPath:indexPath];
     [self enterConversationWithBuddy:buddy];
 }
 
-#pragma - mark NSFetchedResultsControllerDelegate Methods
+#pragma - mark YapDatabse Methods
 
-- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller
+- (void)yapDatabaseModified:(NSNotification *)notification
 {
-    if ([controller isEqual: _buddyFetchedResultsController]) {
-        [self.tableView beginUpdates];
-    }
-}
-
-- (void)controller:(NSFetchedResultsController *)controller
-   didChangeObject:(id)anObject
-       atIndexPath:(NSIndexPath *)indexPath
-     forChangeType:(NSFetchedResultsChangeType)type
-      newIndexPath:(NSIndexPath *)newIndexPath
-{
-    UITableView * tableView = nil;
-    if ([controller isEqual:_buddyFetchedResultsController]) {
-        tableView = self.tableView;
-        switch (type) {
-            case NSFetchedResultsChangeInsert:
-                [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationNone];
-                break;
-            case NSFetchedResultsChangeUpdate:
-                [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
-                break;
-            case NSFetchedResultsChangeMove:
-                [tableView moveRowAtIndexPath:indexPath toIndexPath:newIndexPath];
-                break;
-            case NSFetchedResultsChangeDelete:
-                [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
-                break;
-            default:
-                break;
-        }
-    }
-}
-
-- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
-{
-    if ([controller isEqual:_buddyFetchedResultsController]) {
-        [self.tableView endUpdates];
-    }
-}
-
-- (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id<NSFetchedResultsSectionInfo>)sectionInfo atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type
-{
-    if(type == NSFetchedResultsChangeInsert) {
-        [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationNone];
-    }
-    else if (type == NSFetchedResultsChangeDelete) {
-        [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationNone];
+    NSArray *notifications = [self.connection beginLongLivedReadTransaction];
+    
+    // Process the notification(s),
+    // and get the change-set(s) as applies to my view and mappings configuration.
+    
+    NSArray *sectionChanges = nil;
+    NSArray *rowChanges = nil;
+    
+    [[self.connection ext:OTRConversationDatabaseViewExtensionName] getSectionChanges:&sectionChanges
+                                                  rowChanges:&rowChanges
+                                            forNotifications:notifications
+                                                withMappings:self.mappings];
+    
+    // No need to update mappings.
+    // The above method did it automatically.
+    
+    if ([sectionChanges count] == 0 & [rowChanges count] == 0)
+    {
+        // Nothing has changed that affects our tableView
+        return;
     }
     
+    // Familiar with NSFetchedResultsController?
+    // Then this should look pretty familiar
+    
+    [self.tableView beginUpdates];
+    
+    for (YapDatabaseViewSectionChange *sectionChange in sectionChanges)
+    {
+        switch (sectionChange.type)
+        {
+            case YapDatabaseViewChangeDelete :
+            {
+                [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionChange.index]
+                              withRowAnimation:UITableViewRowAnimationAutomatic];
+                break;
+            }
+            case YapDatabaseViewChangeInsert :
+            {
+                [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionChange.index]
+                              withRowAnimation:UITableViewRowAnimationAutomatic];
+                break;
+            }
+        }
+    }
+    
+    for (YapDatabaseViewRowChange *rowChange in rowChanges)
+    {
+        switch (rowChange.type)
+        {
+            case YapDatabaseViewChangeDelete :
+            {
+                [self.tableView deleteRowsAtIndexPaths:@[ rowChange.indexPath ]
+                                      withRowAnimation:UITableViewRowAnimationAutomatic];
+                break;
+            }
+            case YapDatabaseViewChangeInsert :
+            {
+                [self.tableView insertRowsAtIndexPaths:@[ rowChange.newIndexPath ]
+                                      withRowAnimation:UITableViewRowAnimationAutomatic];
+                break;
+            }
+            case YapDatabaseViewChangeMove :
+            {
+                [self.tableView deleteRowsAtIndexPaths:@[ rowChange.indexPath ]
+                                      withRowAnimation:UITableViewRowAnimationAutomatic];
+                [self.tableView insertRowsAtIndexPaths:@[ rowChange.newIndexPath ]
+                                      withRowAnimation:UITableViewRowAnimationAutomatic];
+                break;
+            }
+            case YapDatabaseViewChangeUpdate :
+            {
+                [self.tableView reloadRowsAtIndexPaths:@[ rowChange.indexPath ]
+                                      withRowAnimation:UITableViewRowAnimationNone];
+                break;
+            }
+        }
+    }
+    
+    [self.tableView endUpdates];
 }
 
 #pragma - mark OTRComposeViewController Method

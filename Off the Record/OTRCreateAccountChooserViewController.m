@@ -9,6 +9,7 @@
 #import "OTRCreateAccountChooserViewController.h"
 #import "OTRXMPPCreateAccountViewController.h"
 #import "UIAlertView+Blocks.h"
+#import "OTRXMPPAccount.h"
 
 @interface OTRCreateAccountChooserViewController ()
 
@@ -54,7 +55,7 @@
 {
     NSArray * hostnamesArray = nil;
     NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
-    OTRManagedXMPPAccount * newAccount = (OTRManagedXMPPAccount *)[OTRManagedAccount accountForAccountType:accountType inContext:context];
+    OTRXMPPAccount * newAccount = (OTRXMPPAccount *)[OTRAccount accountForAccountType:accountType];
     [context MR_saveToPersistentStoreAndWait];
     if(accountType == OTRAccountTypeJabber)
     {

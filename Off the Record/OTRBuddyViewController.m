@@ -15,25 +15,34 @@
 #import "OTRConstants.h"
 #import "OTRUtilities.h"
 #import "OTRManagedStatusMessage.h"
+#import "OTRXMPPManager.h"
 
-#import "OTRManagedAccount.h"
+#import "OTRAccount.h"
+#import "OTRBuddy.h"
+#import "OTRDatabaseManager.h"
 
 @interface OTRBuddyViewController ()
+
+@property (nonatomic, strong) OTRAccount *account;
 
 @end
 
 @implementation OTRBuddyViewController
 
-@synthesize buddy;
 
 
--(id)initWithBuddyID:(NSManagedObjectID *)buddyID
+-(id)initWithBuddyID:(NSString *)buddyID
 {
     if(self = [self init])
     {
-        self.buddy = (OTRManagedBuddy *)[[NSManagedObjectContext MR_contextForCurrentThread] existingObjectWithID:buddyID error:nil];
+        [[OTRDatabaseManager sharedInstance].mainThreadReadOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+            self.buddy = [OTRBuddy fetchObjectWithUniqueID:buddyID transaction:transaction];
+            self.account = [self.buddy accountWithTransaction:transaction];
+            isXMPPAccount = [[self.account protocolClass] isSubclassOfClass:[OTRXMPPManager class]];
+        }];
+        
         self.title = BUDDY_INFO_STRING;
-        isXMPPAccount = [[buddy.account protocolClass] isSubclassOfClass:[OTRXMPPManager class]];
+        
     }
     return self;
 }
@@ -63,8 +72,8 @@
     
     displayNameTextField.delegate = self;
     
-    if ([buddy.displayName length] && ![buddy.displayName isEqualToString:buddy.accountName]) {
-        displayNameTextField.text = buddy.displayName;
+    if ([self.buddy.displayName length] && ![self.buddy.displayName isEqualToString:self.buddy.username]) {
+        displayNameTextField.text = self.buddy.displayName;
     }
     
     removeBuddyButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
@@ -79,11 +88,11 @@
         [blockBuddyButton setTitle:BLOCK_AND_REMOVE_STRING forState:UIControlStateNormal];
     }
     
-    if (!buddy.account.isConnected) {
+    /*FIXMEif (!self.account.isConnected) {
         removeBuddyButton.enabled = NO;
         blockBuddyButton.enabled = NO;
         displayNameTextField.enabled = NO;
-    }
+    }*/
     
     
     [blockBuddyButton addTarget:self action:@selector(blockBuddyButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
@@ -103,7 +112,7 @@
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    if (self.buddy.account.accountType == OTRAccountTypeFacebook) {
+    if (self.account.accountType == OTRAccountTypeFacebook) {
         return 3;
     }
     return 4;
@@ -144,7 +153,7 @@
         {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:cellIdentifierLabel];
             cell.textLabel.text = EMAIL_STRING;
-            cell.detailTextLabel.text = buddy.accountName;
+            cell.detailTextLabel.text = self.buddy.username;
         }
         
     }
@@ -169,17 +178,7 @@
         
         if (indexPath.row == 0) {
             cell.textLabel.text = ACCOUNT_STRING;
-            cell.detailTextLabel.text = buddy.account.username;
-        }
-        else{
-            if ([buddy.groups count] > 1) {
-                cell.textLabel.text = GROUPS_STRING;
-            }
-            else
-            {
-                cell.textLabel.text = GROUP_STRING;
-            }
-            cell.detailTextLabel.text = [[buddy groupNames] componentsJoinedByString:@", "];
+            cell.detailTextLabel.text = self.account.username;
         }
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         
@@ -230,8 +229,8 @@
     UIImageView * buddyImageView = [[UIImageView alloc] initWithFrame:CGRectMake(5.0, 5.0, 70.0, 70.0)];
     buddyImageView.backgroundColor = [UIColor lightGrayColor];
     
-    if (self.buddy.photo) {
-        buddyImageView.image = buddy.photo;
+    /*FIXMEif (self.buddy.photo) {
+        //FIXMEbuddyImageView.image = self.buddy.photo;
     }
     else
     {
@@ -240,7 +239,7 @@
     [buddyImageView.layer setCornerRadius:10.0];
     buddyImageView.layer.masksToBounds = YES;
     
-    [cell.contentView addSubview:buddyImageView];
+    [cell.contentView addSubview:buddyImageView];*/
     
     
     
@@ -253,12 +252,12 @@
     nameLabel.shadowOffset = CGSizeMake(1, 1);
     nameLabel.textColor = [UIColor blackColor];
     [cell.contentView addSubview:nameLabel];
-    if([buddy.displayName length])
+    if([self.buddy.displayName length])
     {
-        nameLabel.text = buddy.displayName;
+        nameLabel.text = self.buddy.displayName;
     }
     else{
-        nameLabel.text = buddy.accountName;
+        nameLabel.text = self.buddy.username;
     }
     
     [nameLabel sizeToFit];
@@ -287,7 +286,7 @@
     statusMessageLabel.textColor = [UIColor blackColor];
     statusMessageLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     [cell.contentView addSubview:statusMessageLabel];
-    statusMessageLabel.text = [self.buddy currentStatusMessageInContext:self.buddy.managedObjectContext].message;
+    statusMessageLabel.text = self.buddy.statusMessage;
     
     tempFrame = statusMessageLabel.frame;
     tempFrame.size.width = cell.contentView.frame.size.width -xPos - 5.0;
@@ -299,7 +298,7 @@
 
 -(void)doneButtonPressed:(id)sender
 {
-    if (buddy.account.isConnected) {
+    /*FIXMEif (self.account.isConnected) {
         NSString * newDisplayName = [displayNameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         if ([newDisplayName length] && ![newDisplayName isEqualToString:self.buddy.displayName]) {
             self.buddy.displayName = newDisplayName;
@@ -309,7 +308,7 @@
             
             
         }
-    }
+    }*/
     
     
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
@@ -317,12 +316,12 @@
 
 -(void)removeBuddyButtonPressed:(id)sender
 {
-    [[[OTRProtocolManager sharedInstance] protocolForAccount:self.buddy.account] removeBuddies:@[buddy]];
+    [[[OTRProtocolManager sharedInstance] protocolForAccount:self.account] removeBuddies:@[self.buddy]];
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
 -(void)blockBuddyButtonPressed:(id)sender
 {
-    [[[OTRProtocolManager sharedInstance] protocolForAccount:self.buddy.account] blockBuddies:@[buddy]];
+    [[[OTRProtocolManager sharedInstance] protocolForAccount:self.account] blockBuddies:@[self.buddy]];
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
 

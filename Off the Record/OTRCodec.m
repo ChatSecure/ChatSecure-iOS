@@ -21,84 +21,105 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "OTRCodec.h"
-#import "OTRBuddyListViewController.h"
 #import "OTRProtocolManager.h"
-#import "OTRManagedBuddy.h"
 #import "OTRUtilities.h"
+#import "OTRMessage.h"
+#import "OTRBuddy.h"
+#import "OTRAccount.h"
+#import "OTRDatabaseManager.h"
+#import "YapDatabaseConnection.h"
+#import "YapDatabaseTransaction.h"
 
 #import "OTRLog.h"
 
 @implementation OTRCodec
 
 
-+(void) decodeMessage:(OTRManagedChatMessage*)theMessage completionBlock:(void (^)(OTRManagedChatMessage *))completionBlock
++(void) decodeMessage:(OTRMessage*)message completionBlock:(void (^)(OTRMessage *))completionBlock
 {
-    NSString *message = theMessage.message;
-    NSString *friendAccount = theMessage.buddy.accountName;
-    NSString *protocol = theMessage.buddy.account.protocol;
-    NSString *myAccountName = theMessage.buddy.account.username;
+    __block OTRBuddy *messageBuddy = nil;
+    __block OTRAccount *messageAccount = nil;
+    [[[OTRDatabaseManager sharedInstance] newConnection] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        messageBuddy = [message buddyWithTransaction:transaction];
+        messageAccount = [messageBuddy accountWithTransaction:transaction];
+    }];
     
-    [[OTRKit sharedInstance] decodeMessage:message recipient:friendAccount accountName:myAccountName protocol:protocol completionBlock:^(NSString *decodedMessageString) {
-        NSManagedObjectContext * localContext = [NSManagedObjectContext MR_contextForCurrentThread];
-        OTRManagedChatMessage *localMessage = [theMessage MR_inContext:localContext];
+    NSString *text = message.text;
+    NSString *friendAccount = messageBuddy.username;
+    NSString *protocol = [messageAccount protocolTypeString];
+    NSString *myAccountName = messageAccount.username;
+    
+    [[OTRKit sharedInstance] decodeMessage:text recipient:friendAccount accountName:myAccountName protocol:protocol completionBlock:^(NSString *decodedMessageString) {
         if([decodedMessageString length]) {
-            localMessage.message = [OTRUtilities stripHTML:decodedMessageString];
-            [localMessage setIsEncryptedValue:NO];
-        } else {
-            [localMessage setIsEncryptedValue:YES];
+            message.text = [OTRUtilities stripHTML:decodedMessageString];
         }
         
         OTRKitMessageState messageState = [[OTRKit sharedInstance] messageStateForUsername:friendAccount accountName:myAccountName protocol:protocol];
-        [localMessage.buddy setNewEncryptionStatus:messageState inContext:localContext];
-        
-        [localContext MR_saveToPersistentStoreAndWait];
+        //fixme set buddy encryption state?
         
         if (completionBlock) {
-            completionBlock(localMessage);
+            completionBlock(message);
         }
     }];
 }
 
-+(void)encodeMessage:(OTRManagedChatMessage *)theMessage completionBlock:(void (^)(OTRManagedChatMessage *))completionBlock
++(void)encodeMessage:(OTRMessage *)message completionBlock:(void (^)(OTRMessage *))completionBlock
 {
-    NSString *unencryptedMessage = theMessage.message;
-    NSString *recipientAccount = theMessage.buddy.accountName;
-    NSString *protocol = theMessage.buddy.account.protocol;
-    NSString *sendingAccount = theMessage.buddy.account.username;
-
-    [[OTRKit sharedInstance] encodeMessage:unencryptedMessage recipient:recipientAccount accountName:sendingAccount protocol:protocol completionBlock:^(NSString *message) {
-        NSManagedObjectContext *localContext = [NSManagedObjectContext MR_contextForCurrentThread];
-        OTRManagedChatMessage *localMessage = [theMessage MR_inContext:localContext ];
-        OTRManagedChatMessage *newOTRMessage = [OTRManagedChatMessage newMessageToBuddy:localMessage.buddy message:message encrypted:YES inContext:localContext];
-        newOTRMessage.date = localMessage.date;
-        newOTRMessage.uniqueID = localMessage.uniqueID;
-        [localContext MR_saveToPersistentStoreAndWait];
-        if (completionBlock) {
-            completionBlock(newOTRMessage);
-        }
+    __block OTRBuddy *messageBuddy = nil;
+    __block OTRAccount *messageAccount = nil;
+    [[[OTRDatabaseManager sharedInstance] newConnection] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        messageBuddy = [message buddyWithTransaction:transaction];
+        messageAccount = [messageBuddy accountWithTransaction:transaction];
     }];
-}
 
-+ (void)generateOtrInitiateOrRefreshMessageTobuddy:(OTRManagedBuddy *)buddy completionBlock:(void (^)(OTRManagedChatMessage *))completionBlock {
     
-    [[OTRKit sharedInstance] generateInitiateOrRefreshMessageToRecipient:buddy.accountName accountName:buddy.account.username protocol:[buddy.account protocol] completionBlock:^(NSString *message) {
+    NSString *unencryptedMessage = message.text;
+    NSString *recipientAccount = messageBuddy.username;
+    NSString *protocol = [messageAccount protocolTypeString];
+    NSString *sendingAccount = messageAccount.username;
+
+    [[OTRKit sharedInstance] encodeMessage:unencryptedMessage recipient:recipientAccount accountName:sendingAccount protocol:protocol completionBlock:^(NSString *text) {
         
-        NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
-        OTRManagedChatMessage *newOTRMessage = [OTRManagedChatMessage newMessageToBuddy:buddy message:message encrypted:YES inContext:context];
-        
-        [context MR_saveToPersistentStoreAndWait];
+        OTRMessage *newEncryptedMessage = [message copy];
+        newEncryptedMessage.text = text;
         
         if (completionBlock) {
-            completionBlock(newOTRMessage);
+            completionBlock(newEncryptedMessage);
         }
     }];
 }
 
-+ (void)isGeneratingKeyForBuddy:(OTRManagedBuddy *)buddy completion:(void (^)(BOOL isGeneratingKey))completion;
++ (void)generateOtrInitiateOrRefreshMessageTobuddy:(OTRBuddy *)buddy completionBlock:(void (^)(OTRMessage *))completionBlock {
+    
+    __block OTRAccount *account = nil;
+    [[[OTRDatabaseManager sharedInstance] newConnection] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        account = [buddy accountWithTransaction:transaction];
+    }];
+    
+    [[OTRKit sharedInstance] generateInitiateOrRefreshMessageToRecipient:buddy.username accountName:account.username protocol:[account protocolTypeString] completionBlock:^(NSString *text) {
+        
+        OTRMessage *newEncryptedMessage = [[OTRMessage alloc] init];
+        newEncryptedMessage.text = text;
+        newEncryptedMessage.buddyUniqueId = buddy.uniqueId;
+        
+        
+        
+        if (completionBlock) {
+            completionBlock(newEncryptedMessage);
+        }
+    }];
+}
+
++ (void)isGeneratingKeyForBuddy:(OTRBuddy *)buddy completion:(void (^)(BOOL isGeneratingKey))completion;
 {
+    __block OTRAccount *account = nil;
+    [[[OTRDatabaseManager sharedInstance] newConnection] readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        account = [buddy accountWithTransaction:transaction];
+    }];
+    
     if(buddy)
     {
-        [[OTRKit sharedInstance] checkIfGeneratingKeyForAccountName:buddy.account.username protocol:buddy.account.protocol completion:completion];
+        [[OTRKit sharedInstance] checkIfGeneratingKeyForAccountName:account.username protocol:[account protocolTypeString] completion:completion];
     }
     else if (completion){
         completion(NO);
@@ -106,14 +127,14 @@
     
 }
 
-+ (void)generatePrivateKeyFor:(OTRManagedAccount *)account completionBlock:(void (^)(BOOL))completionBlock
++ (void)generatePrivateKeyFor:(OTRAccount *)account completionBlock:(void (^)(BOOL))completionBlock
 {
-    [[OTRKit sharedInstance] generatePrivateKeyForAccountName:account.username protocol:[account protocol] completionBock:completionBlock];
+    [[OTRKit sharedInstance] generatePrivateKeyForAccountName:account.username protocol:[account protocolTypeString] completionBock:completionBlock];
 }
 
-+ (void)hasGeneratedKeyForAccount:(OTRManagedAccount *)account completionBlock:(void (^)(BOOL))completionBlock {
++ (void)hasGeneratedKeyForAccount:(OTRAccount *)account completionBlock:(void (^)(BOOL))completionBlock {
     
-    [[OTRKit sharedInstance] hasPrivateKeyForAccountName:account.username protocol:[account protocol] completionBock:completionBlock];
+    [[OTRKit sharedInstance] hasPrivateKeyForAccountName:account.username protocol:[account protocolTypeString] completionBock:completionBlock];
 }
 
 @end
