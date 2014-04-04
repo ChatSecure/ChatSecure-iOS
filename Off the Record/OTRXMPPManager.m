@@ -634,10 +634,13 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
             message.messageId = [xmppMessage elementID];
             
             [OTRCodec decodeMessage:message completionBlock:^(OTRMessage *decryptedMessage) {
-                [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-                    [transaction setObject:decryptedMessage forKey:message.uniqueId inCollection:[OTRMessage collection]];
-                }];
-                [OTRMessage showLocalNotificationForMessage:message];
+                if (decryptedMessage)
+                {
+                    [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+                        [transaction setObject:decryptedMessage forKey:message.uniqueId inCollection:[OTRMessage collection]];
+                    }];
+                    [OTRMessage showLocalNotificationForMessage:message];
+                }
             }];
         }
         

@@ -12,6 +12,7 @@
 #import "OTREncryptionManager.h"
 #import "OTRLog.h"
 #import "YapDatabaseRelationship.h"
+#import "OTRDatabaseView.h"
 
 NSString *const OTRUIDatabaseConnectionDidUpdateNotification = @"OTRUIDatabaseConnectionDidUpdateNotification";
 NSString *const OTRUIDatabaseConnectionWillUpdateNotification = @"OTRUIDatabaseConnectionWillUpdateNotification";
@@ -130,14 +131,13 @@ NSString *const OTRYapDatabaseRelationshipName = @"OTRYapDatabaseRelationshipNam
     [self.mainThreadReadOnlyDatabaseConnection enableExceptionsForImplicitlyEndingLongLivedReadTransaction];
     [self.mainThreadReadOnlyDatabaseConnection beginLongLivedReadTransaction];
     
+    
+    ////// Register standard views////////
     YapDatabaseRelationship *databaseRelationship = [[YapDatabaseRelationship alloc] init];
     [self.database registerExtension:databaseRelationship withName:OTRYapDatabaseRelationshipName];
+    [OTRDatabaseView registerAllAccountsDatabaseView];
+    [OTRDatabaseView registerConversationDatabaseView];
     
-    /*
-    [self.readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        [transaction removeAllObjectsInCollection:@"OTRBuddy"];
-        [transaction removeAllObjectsInCollection:@"OTRMessage"];
-    }];*/
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(yapDatabaseModified:)
                                                  name:YapDatabaseModifiedNotification

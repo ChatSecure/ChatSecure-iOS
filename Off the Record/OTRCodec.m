@@ -59,7 +59,14 @@
         //fixme set buddy encryption state?
         
         if (completionBlock) {
-            completionBlock(localMessage);
+            if ([decodedMessageString length])
+            {
+                completionBlock(localMessage);
+            }
+            else {
+                completionBlock(nil);
+            }
+            
         }
     }];
 }
