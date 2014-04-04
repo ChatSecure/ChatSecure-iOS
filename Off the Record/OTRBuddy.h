@@ -19,6 +19,7 @@ extern const struct OTRBuddyAttributes {
     __unsafe_unretained NSString *lastSentChatState;
     __unsafe_unretained NSString *status;
     __unsafe_unretained NSString *lastMessageDate;
+    __unsafe_unretained NSString *avatarData;
 } OTRBuddyAttributes;
 
 extern const struct OTRBuddyRelationships {
@@ -39,7 +40,9 @@ extern const struct OTRBuddyEdges {
 @property (nonatomic) int chatState;
 @property (nonatomic) int lastSentChatState;
 @property (nonatomic) int status;
-@property (nonatomic, strong) UIImage *avatarImage;
+@property (nonatomic, strong) NSData *avatarData;
+@property (nonatomic, readonly) UIImage *avatarImage;
+
 
 @property (nonatomic, strong) NSString *accountUniqueId;
 

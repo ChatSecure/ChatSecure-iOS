@@ -39,13 +39,15 @@ PODS:
   - MBProgressHUD (0.8)
   - SBJson (3.2)
   - SIAlertView (1.3)
-  - SSKeychain (1.2.1)
+  - SQLCipher (3.0.1):
+    - SQLCipher/standard
+  - SQLCipher/standard (3.0.1)
+  - SSKeychain (1.2.2)
   - UIAlertView-Blocks (1.0)
-  - YapDatabase (2.4.1):
-    - YapDatabase/standard
   - YapDatabase/common (2.4.1):
     - CocoaLumberjack (~> 1.6.3)
-  - YapDatabase/standard (2.4.1):
+  - YapDatabase/SQLCipher (2.4.1):
+    - SQLCipher
     - YapDatabase/common
 
 DEPENDENCIES:
@@ -63,7 +65,7 @@ DEPENDENCIES:
   - SIAlertView (from `PodSpecs/SIAlertView.podspec`)
   - SSKeychain
   - UIAlertView-Blocks
-  - YapDatabase (from `Submodules/YapDatabase`)
+  - YapDatabase/SQLCipher (from `Submodules/YapDatabase`)
 
 EXTERNAL SOURCES:
   SIAlertView:
@@ -86,8 +88,9 @@ SPEC CHECKSUMS:
   MBProgressHUD: 2bbc6f470111daf7f3eaa4eb12b8cbf01c4c0622
   SBJson: abc2bf2baef456d5dae213f9826fe2b6fdf19861
   SIAlertView: 522351a8870be07fb49053fa054c83da3ea17dbe
-  SSKeychain: d18926838c2e7cd342e2a49e9f869858e49f035a
+  SQLCipher: 006f125d9b85e32ee6242b41adb68f0f5cbc4aa9
+  SSKeychain: 3d0b76c87e7b062a7ad1631a825fddec84367d44
   UIAlertView-Blocks: f7be28a08e85ec21143951ec6797ca6474faf563
   YapDatabase: a7286df03ef343ef802be084d4c36d0a042ac00e
 
-COCOAPODS: 0.31.0
+COCOAPODS: 0.31.1

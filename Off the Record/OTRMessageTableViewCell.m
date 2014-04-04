@@ -15,7 +15,8 @@
 #import "OTRAppDelegate.h"
 #import "OTRChatBubbleView.h"
 #import "OTRUtilities.h"
-#import "OTRManagedChatMessage.h"
+#import "OTRMessage.h"
+#import "OTRDatabaseManager.h"
 
 
 static CGFloat const messageTextWidthMax = 180;
@@ -56,11 +57,11 @@ static CGFloat const messageTextWidthMax = 180;
     
 }
 
--(void)setMessage:(OTRManagedChatMessage *)message
+-(void)setMessage:(OTRMessage *)message
 {
     _message = message;
-    self.bubbleView.messageTextLabel.text = message.message;
-    self.bubbleView.delivered = message.isDeliveredValue;
+    self.bubbleView.messageTextLabel.text = message.text;
+    self.bubbleView.delivered = message.isDelivered;
     
     if (self.showDate) {
         self.dateLabel.text = [[OTRMessageTableViewCell defaultDateFormatter] stringFromDate:message.date];
@@ -172,11 +173,9 @@ static CGFloat const messageTextWidthMax = 180;
 
 -(void)attributedLabelDidSelectDelete:(TTTAttributedLabel *)label
 {
-    [self.message MR_deleteEntity];
-    
-    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
-    [context MR_saveToPersistentStoreAndWait];
-    
+    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        [transaction removeObjectForKey:self.message.uniqueId inCollection:[OTRMessage collection]];
+    }];    
 }
 
 + (CGFloat)heightForMesssage:(NSString *)message showDate:(BOOL)showDate

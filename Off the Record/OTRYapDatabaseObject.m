@@ -37,6 +37,11 @@ const struct OTRYapDatabaseObjectAttributes OTRYapDatabaseObjectAttributes = {
     return self;
 }
 
+- (void)saveWithTransaction:(YapDatabaseReadWriteTransaction *)transaction
+{
+    [transaction setObject:self forKey:self.uniqueId inCollection:[[self class] collection]];
+}
+
 #pragma mark NSCoding
 - (instancetype)initWithCoder:(NSCoder *)decoder // NSCoding deserialization
 {

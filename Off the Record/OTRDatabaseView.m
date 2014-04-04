@@ -12,12 +12,15 @@
 #import "OTRDatabaseManager.h"
 #import "OTRBuddy.h"
 #import "OTRAccount.h"
+#import "OTRMessage.h"
 
 NSString *OTRConversationGroup = @"Conversation";
 NSString *OTRConversationDatabaseViewExtensionName = @"OTRConversationDatabaseViewExtensionName";
+NSString *OTRChatDatabaseViewExtensionName = @"OTRChatDatabaseViewExtensionName";
 
 NSString *OTRAllAccountGroup = @"All Accounts";
 NSString *OTRAllAccountDatabaseViewExtensionName = @"OTRAllAccountDatabaseViewExtensionName";
+NSString *OTRChatMessageGroup = @"Messages";
 
 @implementation OTRDatabaseView
 
@@ -138,6 +141,55 @@ NSString *OTRAllAccountDatabaseViewExtensionName = @"OTRAllAccountDatabaseViewEx
                                         versionTag:@""
                                            options:options];
     [[OTRDatabaseManager sharedInstance].database registerExtension:databaseView withName:OTRAllAccountDatabaseViewExtensionName];
+}
+
++ (void)registerChatDatabaseViewWithBuddyUniqueId:(NSString *)buddyUniqueId
+{
+    YapDatabaseViewBlockType groupingBlockType;
+    YapDatabaseViewGroupingWithObjectBlock groupingBlock;
+    
+    YapDatabaseViewBlockType sortingBlockType;
+    YapDatabaseViewSortingWithObjectBlock sortingBlock;
+    
+    groupingBlockType = YapDatabaseViewBlockTypeWithObject;
+    groupingBlock = ^NSString *(NSString *collection, NSString *key, id object){
+        
+        if ([object isKindOfClass:[OTRMessage class]])
+        {
+            OTRMessage *message = (OTRMessage *)object;
+            if ([message.buddyUniqueId isEqualToString:buddyUniqueId]) {
+                return OTRChatMessageGroup;
+            }
+        }
+        return nil;
+    };
+    
+    sortingBlockType = YapDatabaseViewBlockTypeWithObject;
+    sortingBlock = ^(NSString *group, NSString *collection1, NSString *key1, id obj1,
+                     NSString *collection2, NSString *key2, id obj2){
+        if ([group isEqualToString:OTRChatMessageGroup]) {
+            if ([obj1 isKindOfClass:[OTRMessage class]] && [obj1 isKindOfClass:[OTRMessage class]]) {
+                OTRMessage *message1 = (OTRMessage *)obj1;
+                OTRMessage *message2 = (OTRMessage *)obj2;
+                
+                return [message1.date compare:message2.date];
+            }
+        }
+        return NSOrderedSame;
+    };
+    
+    YapDatabaseViewOptions *options = [[YapDatabaseViewOptions alloc] init];
+    options.isPersistent = NO;
+    options.allowedCollections = [NSSet setWithObject:[OTRMessage collection]];
+    
+    YapDatabaseView *databaseView =
+    [[YapDatabaseView alloc] initWithGroupingBlock:groupingBlock
+                                 groupingBlockType:groupingBlockType
+                                      sortingBlock:sortingBlock
+                                  sortingBlockType:sortingBlockType
+                                        versionTag:@""
+                                           options:options];
+    [[OTRDatabaseManager sharedInstance].database registerExtension:databaseView withName:OTRChatDatabaseViewExtensionName];
 }
 
 @end

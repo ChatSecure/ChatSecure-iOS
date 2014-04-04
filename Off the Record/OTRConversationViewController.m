@@ -9,7 +9,7 @@
 #import "OTRConversationViewController.h"
 
 #import "OTRSettingsViewController.h"
-//#import "OTRChatViewController.h"
+#import "OTRChatViewController.h"
 #import "OTRComposeViewController.h"
 
 #import "OTRConversationCell.h"
@@ -32,7 +32,7 @@ static CGFloat cellHeight = 80.0;
 @interface OTRConversationViewController () <NSFetchedResultsControllerDelegate, OTRComposeViewControllerDelegate>
 
 @property (nonatomic, strong) UITableView *tableView;
-//@property (nonatomic, strong) OTRChatViewController *chatViewController;
+@property (nonatomic, strong) OTRChatViewController *chatViewController;
 @property (nonatomic, strong) NSTimer *cellUpdateTimer;
 @property (nonatomic, strong) YapDatabaseConnection *connection;
 @property (nonatomic, strong) YapDatabaseViewMappings *mappings;
@@ -93,7 +93,7 @@ static CGFloat cellHeight = 80.0;
 {
     [super viewWillAppear:animated];
     [self.cellUpdateTimer invalidate];
-    [self updateVisibleCells:self];
+    [self.tableView reloadData];
     self.cellUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:60.0 target:self selector:@selector(updateVisibleCells:) userInfo:nil repeats:YES];
     
 }
@@ -124,8 +124,8 @@ static CGFloat cellHeight = 80.0;
 
 - (void)enterConversationWithBuddy:(OTRBuddy *)buddy
 {
-    //[self.chatViewController setBuddy:buddy];
-    //[self.navigationController pushViewController:self.chatViewController animated:YES];
+    [self.chatViewController setBuddy:buddy];
+    [self.navigationController pushViewController:self.chatViewController animated:YES];
 }
 
 - (void)updateVisibleCells:(id)sender
@@ -140,7 +140,7 @@ static CGFloat cellHeight = 80.0;
         }
     }
 }
-/*
+
 - (OTRChatViewController *)chatViewController
 {
     if (!_chatViewController) {
@@ -148,7 +148,7 @@ static CGFloat cellHeight = 80.0;
     }
     return _chatViewController;
 }
-*/
+
 - (OTRBuddy *)buddyForIndexPath:(NSIndexPath *)indexPath
 {
     

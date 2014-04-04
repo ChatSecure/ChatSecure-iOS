@@ -7,14 +7,16 @@
 //
 
 #import <Foundation/Foundation.h>
-
-@class YapDatabaseView;
+#import "YapDatabaseViewMappings.h"
+#import "YapDatabaseView.h"
 
 extern NSString *OTRConversationGroup;
 extern NSString *OTRConversationDatabaseViewExtensionName;
+extern NSString *OTRChatDatabaseViewExtensionName;
 
 extern NSString *OTRAllAccountGroup;
 extern NSString *OTRAllAccountDatabaseViewExtensionName;
+extern NSString *OTRChatMessageGroup;
 
 @interface OTRDatabaseView : NSObject
 
@@ -22,5 +24,7 @@ extern NSString *OTRAllAccountDatabaseViewExtensionName;
 + (void)registerConversationDatabaseView;
 
 + (void)registerAllAccountsDatabaseView;
+
++ (void)registerChatDatabaseViewWithBuddyUniqueId:(NSString *)buddyUniqueId;
 
 @end

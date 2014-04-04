@@ -14,6 +14,9 @@
 #import "OTRXMPPTorAccount.h"
 #import "OTRGoogleOAuthXMPPAccount.h"
 #import "OTRFacebookOAuthXMPPAccount.h"
+#import "OTRDatabaseManager.h"
+#import "YapDatabaseRelationshipTransaction.h"
+#import "OTRBuddy.h"
 
 const struct OTRAccountAttributes OTRAccountAttributes = {
 	.autologin = @"autologin",
@@ -113,6 +116,16 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
     return [NSString stringWithFormat:@"%@ - %@",NSStringFromClass([self class]), self.username];
 }
 
+- (NSArray *)allBuddiesWithTransaction:(YapDatabaseReadTransaction *)transaction
+{
+    NSMutableArray *allBuddies = [NSMutableArray array];
+    [[transaction ext:OTRYapDatabaseRelationshipName] enumerateEdgesWithName:OTRBuddyEdges.account destinationKey:self.uniqueId collection:[OTRAccount collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
+        OTRBuddy *buddy = [OTRBuddy fetchObjectWithUniqueID:edge.sourceKey transaction:transaction];
+        [allBuddies addObject:buddy];
+    }];
+    return [allBuddies copy];
+}
+
 
 #pragma mark NSCoding
 - (instancetype)initWithCoder:(NSCoder *)decoder // NSCoding deserialization
@@ -174,7 +187,7 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
     return account;
 }
 
-+ (OTRAccount *)fetchAccountWithUsername:(NSString *)username protocolType:(OTRProtocolType)protocolType transaction:(YapDatabaseReadTransaction*)transaction
++ (instancetype)fetchAccountWithUsername:(NSString *)username protocolType:(OTRProtocolType)protocolType transaction:(YapDatabaseReadTransaction*)transaction
 {
     __block OTRAccount *finalAccount = nil;
     [transaction enumerateKeysAndObjectsInCollection:[OTRAccount collection] usingBlock:^(NSString *key, OTRAccount *account, BOOL *stop) {

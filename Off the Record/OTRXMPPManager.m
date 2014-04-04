@@ -37,7 +37,6 @@
 #import "OTRXMPPManagedPresenceSubscriptionRequest.h"
 #import "OTRYapDatabaseRosterStorage.h"
 #import "OTRCapabilitiesInMemoryCoreDataStorage.h"
-#import "OTRvCardCoreDataStorage.h"
 
 #import "OTRLog.h"
 
@@ -58,6 +57,8 @@
 #import "OTRXMPPAccount.h"
 #import "OTRMessage.h"
 #import "OTRAccount.h"
+#import "OTRXMPPPresenceSubscriptionRequest.h"
+#import "OTRvCardYapDatabaseStorage.h"
 
 NSString *const OTRXMPPRegisterSucceededNotificationName = @"OTRXMPPRegisterSucceededNotificationName";
 NSString *const OTRXMPPRegisterFailedNotificationName    = @"OTRXMPPRegisterFailedNotificationName";
@@ -224,8 +225,8 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 	// The XMPPRoster will automatically integrate with XMPPvCardAvatarModule to cache roster photos in the roster.
 	
 	//xmppvCardStorage = [XMPPvCardCoreDataStorage sharedInstance];
-    OTRvCardCoreDataStorage * vCardCoreDataStorage  = [[OTRvCardCoreDataStorage alloc] init];
-	self.xmppvCardTempModule = [[XMPPvCardTempModule alloc] initWithvCardStorage:vCardCoreDataStorage];
+    OTRvCardYapDatabaseStorage * vCardStorage  = [[OTRvCardYapDatabaseStorage alloc] init];
+	self.xmppvCardTempModule = [[XMPPvCardTempModule alloc] initWithvCardStorage:vCardStorage];
 	
 	self.xmppvCardAvatarModule = [[XMPPvCardAvatarModule alloc] initWithvCardTempModule:self.xmppvCardTempModule];
 	
@@ -609,7 +610,7 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
                  messageBuddy.chatState = kOTRChatStateInactive;
             else if([xmppMessage hasGoneChatState])
                  messageBuddy.chatState = kOTRChatStateGone;
-            //save to disk
+            [transaction setObject:messageBuddy forKey:messageBuddy.uniqueId inCollection:[OTRXMPPBuddy collection]];
         }
         
         if ([xmppMessage hasReceiptResponse] && ![xmppMessage isErrorMessage]) {
@@ -636,7 +637,7 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
                 [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
                     [transaction setObject:decryptedMessage forKey:message.uniqueId inCollection:[OTRMessage collection]];
                 }];
-                //FIXME [OTRManagedMessage showLocalNotificationForMessage:message];
+                [OTRMessage showLocalNotificationForMessage:message];
             }];
         }
         
@@ -667,9 +668,15 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
         [self failedToConnect:error];
 	}
     else {
-        //FIXME [self.account setAllBuddiesStatuts:OTRBuddyStatusOffline inContext:context];
-  
-        //Lost connection
+        [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+            NSArray *allBuddies = [self.account allBuddiesWithTransaction:transaction];
+            [allBuddies enumerateObjectsUsingBlock:^(OTRXMPPBuddy *buddy, NSUInteger idx, BOOL *stop) {
+                buddy.status = OTRBuddyStatusOffline;
+                buddy.statusMessage = nil;
+                [transaction setObject:buddy forKey:buddy.uniqueId inCollection:[OTRXMPPBuddy collection]];
+            }];
+            
+        }];
     }
     self.isXmppConnected = NO;
 }
@@ -684,7 +691,17 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
     
 	NSString *jidStrBare = [presence fromStr];
     
-    //FIXME [OTRXMPPManagedPresenceSubscriptionRequest fetchOrCreateWith:jidStrBare account:self.account inContext:context];
+    [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        OTRXMPPPresenceSubscriptionRequest *request = [OTRXMPPPresenceSubscriptionRequest fetchPresenceSubscriptionRequestWithJID:jidStrBare accontUniqueId:self.account.uniqueId transaction:transaction];
+        if (!request) {
+            request = [[OTRXMPPPresenceSubscriptionRequest alloc] init];
+        }
+        
+        request.jid = jidStrBare;
+        request.accountUniqueId = self.account.uniqueId;
+        
+        [transaction setObject:request forKey:request.uniqueId inCollection:[OTRXMPPPresenceSubscriptionRequest collection]];
+    }];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -696,7 +713,7 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
     NSString *text = message.text;
     
     __block OTRBuddy *buddy = nil;
-    [[OTRDatabaseManager sharedInstance].mainThreadReadOnlyDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+    [[OTRDatabaseManager sharedInstance].mainThreadReadOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         buddy = [message buddyWithTransaction:transaction];
     }];
     
@@ -727,8 +744,13 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
     [self connectWithJID:self.account.username password:myPassword];
 }
 
--(void)sendBuddy:(OTRXMPPBuddy *)buddy chatState:(OTRChatState)chatState
+-(void)sendChatState:(OTRChatState)chatState withBuddyID:(NSString *)buddyUniqueId
 {
+    __block OTRXMPPBuddy *buddy = nil;
+    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        buddy = [OTRXMPPBuddy fetchObjectWithUniqueID:buddyUniqueId transaction:transaction];
+    }];
+    
     if (buddy.lastSentChatState == chatState) {
         return;
     }
@@ -742,8 +764,8 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
         if (chatState == kOTRChatStateActive) {
             //Timers
             dispatch_async(dispatch_get_main_queue(), ^{
-                [[self pausedChatStateTimerForBuddyObjectID:buddy.uniqueId] invalidate];
-                [self restartInactiveChatStateTimerForBuddyObjectID:buddy.uniqueId];
+                [[self pausedChatStateTimerForBuddyObjectID:buddyUniqueId] invalidate];
+                [self restartInactiveChatStateTimerForBuddyObjectID:buddyUniqueId];
             });
             
             [xMessage addActiveChatState];

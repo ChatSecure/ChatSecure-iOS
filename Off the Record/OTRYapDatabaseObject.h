@@ -21,8 +21,11 @@ extern const struct OTRYapDatabaseObjectAttributes {
 
 - (instancetype)initWithUniqueId:(NSString *)uniqueId;
 
+- (void)saveWithTransaction:(YapDatabaseReadWriteTransaction *)transaction;
+
 + (NSString *)collection;
 
 + (instancetype) fetchObjectWithUniqueID:(NSString*)uniqueID transaction:(YapDatabaseReadTransaction*)transaction;
+
 
 @end

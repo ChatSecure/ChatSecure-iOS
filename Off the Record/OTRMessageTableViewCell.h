@@ -10,7 +10,7 @@
 #import "TTTAttributedLabel.h"
 
 
-@class OTRManagedChatMessage;
+@class OTRMessage;
 @class OTRChatBubbleView;
 
 @interface OTRMessageTableViewCell : UITableViewCell <TTTAttributedLabelDelegate>
@@ -18,13 +18,11 @@
     NSLayoutConstraint * dateHeightConstraint;
 }
 
-@property (nonatomic, strong) OTRManagedChatMessage * message;
-@property (nonatomic, strong) UILabel * dateLabel;
+@property (nonatomic, strong) OTRMessage *message;
+@property (nonatomic, strong) UILabel *dateLabel;
 @property (nonatomic) BOOL showDate;
 
 @property (nonatomic, strong) OTRChatBubbleView * bubbleView;
-
-- (void)setMessage:(OTRManagedChatMessage *)message;
 
 + (CGSize)messageTextLabelSize:(NSString *)message;
 

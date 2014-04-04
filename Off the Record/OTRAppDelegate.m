@@ -24,7 +24,7 @@
 
 #import "OTRConversationViewController.h"
 
-//#import "OTRChatViewController.h"
+#import "OTRChatViewController.h"
 #import "Strings.h"
 #import "OTRSettingsViewController.h"
 #import "OTRSettingsManager.h"
@@ -98,9 +98,7 @@
     
     //self.buddyListViewController = [[OTRBuddyListViewController alloc] init];
     //OTRChatViewController *chatViewController = [[OTRDemoChatViewController alloc] init];
-    //OTRChatViewController *chatViewController = [[OTRChatViewController alloc] init];
-    //buddyListViewController.chatViewController = chatViewController;
-    UIViewController *chatViewController = nil;
+    OTRChatViewController *chatViewController = [[OTRChatViewController alloc] init];
     self.settingsViewController = [[OTRSettingsViewController alloc] init];
     
     OTRConversationViewController * conversationViewController = [[OTRConversationViewController alloc] init];

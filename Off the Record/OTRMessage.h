@@ -16,6 +16,7 @@ extern const struct OTRMessageAttributes {
 	__unsafe_unretained NSString *read;
 	__unsafe_unretained NSString *incoming;
     __unsafe_unretained NSString *messageId;
+    __unsafe_unretained NSString *transportedSecurely;
 } OTRMessageAttributes;
 
 extern const struct OTRMessageRelationships {
@@ -34,6 +35,7 @@ extern const struct OTRMessageEdges {
 @property (nonatomic, getter = isDelivered) BOOL delivered;
 @property (nonatomic, getter = isRead) BOOL read;
 @property (nonatomic, getter = isIncoming) BOOL incoming;
+@property (nonatomic, getter = isTransportedSecurely) BOOL transportedSecurely;
 
 
 @property (nonatomic, strong) NSString *buddyUniqueId;
@@ -46,5 +48,7 @@ extern const struct OTRMessageEdges {
 + (void)deleteAllMessagesForBuddyId:(NSString *)uniqueBuddyId transaction:(YapDatabaseReadWriteTransaction*)transaction;
 + (void)deleteAllMessagesForAccountId:(NSString *)uniqueAccountId transaction:(YapDatabaseReadWriteTransaction*)transaction;
 + (void)receivedDeliveryReceiptForMessageId:(NSString *)messageId transaction:(YapDatabaseReadWriteTransaction*)transaction;
+
++ (void)showLocalNotificationForMessage:(OTRMessage *)message;
 
 @end

@@ -28,24 +28,14 @@
 
 @class OTRBuddy;
 
-@interface OTRChatViewController : UIViewController <UIActionSheetDelegate, UISplitViewControllerDelegate,UIAlertViewDelegate,UITableViewDataSource,UITableViewDelegate,NSFetchedResultsControllerDelegate,OTRChatInputBarDelegate>
+@interface OTRChatViewController : UIViewController <UISplitViewControllerDelegate>
 
 
 @property (nonatomic, retain) UILabel *instructionsLabel;
 
 @property (nonatomic, strong) UITableView * chatHistoryTableView;
-@property (nonatomic, strong) NSFetchedResultsController *messagesFetchedResultsController;
-@property (nonatomic, strong) NSFetchedResultsController *buddyFetchedResultsController;
 
 @property (nonatomic, retain) OTRBuddy *buddy;
-
-//@property (nonatomic, retain) OTRBuddyListViewController *buddyListController;
-
-@property (nonatomic, retain) NSURL *lastActionLink;
-
-@property (nonatomic) BOOL isComposingVisible;
-
-@property (nonatomic, retain) UISwipeGestureRecognizer * swipeGestureRecognizer;
 
 - (void)setupLockButton;
 - (void)refreshLockButton;

@@ -214,6 +214,8 @@
 		63813C1216E14E5D00909670 /* OTRBuddyListGroupManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 63813C1116E14E5D00909670 /* OTRBuddyListGroupManager.m */; };
 		638286E01846911C00F127C2 /* OTRAccountTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 638286DF1846911C00F127C2 /* OTRAccountTableViewCell.m */; };
 		6383196818EB938300862B25 /* OTRManagedAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 6397535D18CA8221005D6063 /* OTRManagedAccount.m */; };
+		6383196B18ECE0D200862B25 /* OTRvCardYapDatabaseStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 6383196A18ECE0D200862B25 /* OTRvCardYapDatabaseStorage.m */; };
+		6383196C18EE0F4500862B25 /* OTRChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63022BB516CDAD4C00F764F1 /* OTRChatViewController.m */; };
 		63926C8C18AAE8E10063B53D /* Lock_Locked_red.png in Resources */ = {isa = PBXBuildFile; fileRef = 63926C8818AAE8E10063B53D /* Lock_Locked_red.png */; };
 		63926C8F18AAE8E10063B53D /* Lock_Locked_yellow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63926C8B18AAE8E10063B53D /* Lock_Locked_yellow@2x.png */; };
 		639752EB18CA7B23005D6063 /* OTRCertificatesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 639752EA18CA7B23005D6063 /* OTRCertificatesViewController.m */; };
@@ -907,6 +909,8 @@
 		63813C1116E14E5D00909670 /* OTRBuddyListGroupManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBuddyListGroupManager.m; sourceTree = "<group>"; };
 		638286DE1846911C00F127C2 /* OTRAccountTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAccountTableViewCell.h; sourceTree = "<group>"; };
 		638286DF1846911C00F127C2 /* OTRAccountTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAccountTableViewCell.m; sourceTree = "<group>"; };
+		6383196918ECE0D200862B25 /* OTRvCardYapDatabaseStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRvCardYapDatabaseStorage.h; sourceTree = "<group>"; };
+		6383196A18ECE0D200862B25 /* OTRvCardYapDatabaseStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRvCardYapDatabaseStorage.m; sourceTree = "<group>"; };
 		638940CF1815E339005F651E /* OTRDemoChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRDemoChatViewController.h; sourceTree = "<group>"; };
 		638940D01815E339005F651E /* OTRDemoChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRDemoChatViewController.m; sourceTree = "<group>"; };
 		638B96B918C94A9C00CACFD7 /* xmpp-tor-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "xmpp-tor-logo.png"; path = "media/app-images/xmpp-logo/xmpp-tor-logo.png"; sourceTree = SOURCE_ROOT; };
@@ -1475,6 +1479,8 @@
 				63D0E4781819D41E003ACA13 /* OTRCapabilitiesInMemoryCoreDataStorage.m */,
 				63D0E47A1819D71A003ACA13 /* OTRvCardCoreDataStorage.h */,
 				63D0E47B1819D71A003ACA13 /* OTRvCardCoreDataStorage.m */,
+				6383196918ECE0D200862B25 /* OTRvCardYapDatabaseStorage.h */,
+				6383196A18ECE0D200862B25 /* OTRvCardYapDatabaseStorage.m */,
 			);
 			name = "XMPP - Storage";
 			sourceTree = "<group>";
@@ -3446,6 +3452,7 @@
 				63FA108316F9290A00D9EE45 /* OTRImages.m in Sources */,
 				63188CBD16E55B230000DD40 /* OTRNewBuddyViewController.m in Sources */,
 				6300F16716E6CF8400D3C1AA /* OTRSubscriptionRequestsViewController.m in Sources */,
+				6383196B18ECE0D200862B25 /* OTRvCardYapDatabaseStorage.m in Sources */,
 				63BFDB6D16E83A3F00C608D6 /* OTRSafariActionSheet.m in Sources */,
 				6301D87D16E94778008F67A6 /* OTRChooseAccountViewController.m in Sources */,
 				6301D88216E95A36008F67A6 /* OpenInChromeController.m in Sources */,
@@ -3533,6 +3540,7 @@
 				63483FB31752CED100779257 /* XMPPRoom.m in Sources */,
 				63483FB41752CED100779257 /* XMPPvCard.xcdatamodeld in Sources */,
 				639C60A418CA974A00CC4DF4 /* XMPPXOAuth2Google.m in Sources */,
+				6383196C18EE0F4500862B25 /* OTRChatViewController.m in Sources */,
 				63464F361889EC9200526358 /* _OTRManagedOscarAccount.m in Sources */,
 				63483FB51752CED100779257 /* XMPPvCardAvatarCoreDataStorageObject.m in Sources */,
 				639C60ED18CA99F200CC4DF4 /* OTRQRCodeActivity.m in Sources */,

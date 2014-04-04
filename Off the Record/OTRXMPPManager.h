@@ -39,11 +39,12 @@
 #import "OTRXMPPError.h"
 #import "OTRConstants.h"
 
-extern NSString *const OTRXMPPRegisterSucceededNotificationName;
-extern NSString *const OTRXMPPRegisterFailedNotificationName;
 @class OTRYapDatabaseRosterStorage;
 @class OTRXMPPAccount;
+@class OTRvCardYapDatabaseStorage;
 
+extern NSString *const OTRXMPPRegisterSucceededNotificationName;
+extern NSString *const OTRXMPPRegisterFailedNotificationName;
 
 @interface OTRXMPPManager : NSObject <XMPPRosterDelegate, NSFetchedResultsControllerDelegate, OTRProtocol, OTRCertificatePinningDelegate>
 
@@ -69,12 +70,12 @@ extern NSString *const OTRXMPPRegisterFailedNotificationName;
 
 
 //Chat State
-- (void)sendChatState:(OTRChatState)chatState withBuddyID:(NSString *)managedBuddyObjectID;
-- (void)restartPausedChatStateTimerForBuddyObjectID:(NSString *)managedBuddyObjectID;
-- (void)restartInactiveChatStateTimerForBuddyObjectID:(NSString *)managedBuddyObjectID;
+- (void)sendChatState:(OTRChatState)chatState withBuddyID:(NSString *)buddyUniqueId;
+- (void)restartPausedChatStateTimerForBuddyObjectID:(NSString *)buddyUniqueId;
+- (void)restartInactiveChatStateTimerForBuddyObjectID:(NSString *)buddyUniqueId;
 - (void)sendPausedChatState:(NSTimer *)timer;
 - (void)sendInactiveChatState:(NSTimer *)timer;
-- (NSTimer *)inactiveChatStateTimerForBuddyObjectID:(NSString *)managedBuddyObjectID;
-- (NSTimer *)pausedChatStateTimerForBuddyObjectID:(NSString *)managedBuddyObjectID;
+- (NSTimer *)inactiveChatStateTimerForBuddyObjectID:(NSString *)buddyUniqueId;
+- (NSTimer *)pausedChatStateTimerForBuddyObjectID:(NSString *)buddyUniqueId;
 
 @end

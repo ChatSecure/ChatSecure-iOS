@@ -12,6 +12,9 @@
 #import "YapDatabaseTransaction.h"
 #import "OTRDatabaseManager.h"
 #import "YapDatabaseRelationshipTransaction.h"
+#import "NSString+HTML.h"
+#import "Strings.h"
+#import "OTRConstants.h"
 
 const struct OTRMessageAttributes OTRMessageAttributes = {
 	.date = @"date",
@@ -19,7 +22,8 @@ const struct OTRMessageAttributes OTRMessageAttributes = {
 	.delivered = @"delivered",
 	.read = @"read",
 	.incoming = @"incoming",
-    .messageId = @"messageId"
+    .messageId = @"messageId",
+    .transportedSecurely = @"transportedSecurely"
 };
 
 const struct OTRMessageRelationships OTRMessageRelationships = {
@@ -37,6 +41,7 @@ const struct OTRMessageEdges OTRMessageEdges = {
 {
     if (self = [super init]) {
         self.date = [NSDate date];
+        self.messageId = [[NSUUID UUID] UUIDString];
         self.delivered = NO;
         self.read = NO;
     }
@@ -76,6 +81,7 @@ const struct OTRMessageEdges OTRMessageEdges = {
         self.read = [decoder decodeBoolForKey:OTRMessageAttributes.read];
         self.incoming = [decoder decodeBoolForKey:OTRMessageAttributes.incoming];
         self.messageId = [decoder decodeObjectForKey:OTRMessageAttributes.messageId];
+        self.transportedSecurely = [decoder decodeBoolForKey:OTRMessageAttributes.transportedSecurely];
         
         self.buddyUniqueId = [decoder decodeObjectForKey:OTRMessageRelationships.buddyUniqueId];
     }
@@ -92,6 +98,7 @@ const struct OTRMessageEdges OTRMessageEdges = {
     [encoder encodeBool:self.read forKey:OTRMessageAttributes.read];
     [encoder encodeBool:self.incoming forKey:OTRMessageAttributes.incoming];
     [encoder encodeObject:self.messageId forKey:OTRMessageAttributes.messageId];
+    [encoder encodeBool:self.transportedSecurely forKey:OTRMessageAttributes.transportedSecurely];
     
     [encoder encodeObject:self.buddyUniqueId forKey:OTRMessageRelationships.buddyUniqueId];
 }
@@ -106,6 +113,7 @@ const struct OTRMessageEdges OTRMessageEdges = {
     copy.delivered = self.delivered;
     copy.read = self.read;
     copy.incoming = self.incoming;
+    copy.transportedSecurely = self.transportedSecurely;
     copy.messageId = [self.messageId copyWithZone:zone];
     copy.buddyUniqueId = [self.buddyUniqueId copyWithZone:zone];
     
@@ -159,6 +167,38 @@ const struct OTRMessageEdges OTRMessageEdges = {
             }
         }
     }];
+}
+
++ (void)showLocalNotificationForMessage:(OTRMessage *)message
+{
+    if (![[UIApplication sharedApplication] applicationState] == UIApplicationStateActive)
+    {
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSString * rawMessage = [message.text stringByConvertingHTMLToPlainText];
+            // We are not active, so use a local notification instead
+            __block OTRBuddy *localBuddy = nil;
+            __block OTRAccount *localAccount;
+            [[OTRDatabaseManager sharedInstance].mainThreadReadOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+                localBuddy = [message buddyWithTransaction:transaction];
+                localAccount = [localBuddy accountWithTransaction:transaction];
+                
+            }];
+            UILocalNotification *localNotification = [[UILocalNotification alloc] init];
+            localNotification.alertAction = REPLY_STRING;
+            localNotification.soundName = UILocalNotificationDefaultSoundName;
+            localNotification.applicationIconBadgeNumber = [UIApplication sharedApplication].applicationIconBadgeNumber + 1;
+            localNotification.alertBody = [NSString stringWithFormat:@"%@: %@",localBuddy.displayName,rawMessage];
+            
+            NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithCapacity:3];
+            [userInfo setObject:localBuddy.username forKey:kOTRNotificationUserNameKey];
+            [userInfo setObject:localAccount.username forKey:kOTRNotificationAccountNameKey];
+            [userInfo setObject:@(localAccount.protocolType) forKey:kOTRNotificationProtocolKey];
+            localNotification.userInfo = userInfo;
+        
+            [[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
+        });
+    }
 }
 
 @end

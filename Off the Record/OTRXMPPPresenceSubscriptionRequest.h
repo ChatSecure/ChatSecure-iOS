@@ -30,4 +30,7 @@ extern const struct OTRXMPPPresenceSubscriptionRequestEdges {
 
 @property (nonatomic, strong) NSString *accountUniqueId;
 
+
++ (instancetype)fetchPresenceSubscriptionRequestWithJID:(NSString *)jid accontUniqueId:(NSString *)accountUniqueId transaction:(YapDatabaseReadTransaction *)transaction;
+
 @end

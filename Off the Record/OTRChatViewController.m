@@ -28,12 +28,9 @@
 #import "OTRAppDelegate.h"
 
 #import "DAKeyboardControl.h"
-#import "OTRManagedStatusMessage.h"
-#import "OTRManagedEncryptionMessage.h"
 #import "OTRStatusMessageCell.h"
 #import "OTRUtilities.h"
 #import "OTRLockButton.h"
-#import "OTRManagedXMPPTorAccount.h"
 
 #import "OTRIncomingMessageTableViewCell.h"
 #import "OTROutgoingMessageTableViewCell.h"
@@ -45,9 +42,12 @@
 #import "OTRChatBubbleView.h"
 #import "OTRBuddy.h"
 #import "OTRAccount.h"
+#import "OTRXMPPTorAccount.h"
+#import "OTRMessage.h"
 #import "OTRDatabaseManager.h"
-#import "YapDatabaseConnection.h"
-#import "YapDatabaseTransaction.h"
+#import "OTRDatabaseView.h"
+
+#import "OTRXMPPManager.h"
 
 static CGFloat const kOTRMessageMarginBottom = 10;
 static CGFloat const kOTRMessageMarginTop = 7;
@@ -60,30 +60,32 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
     OTRChatViewActionSheetEncryptionOptionsTag = 202
 };
 
-@interface OTRChatViewController ()
+@interface OTRChatViewController () <UIActionSheetDelegate,UIAlertViewDelegate,UITableViewDataSource,UITableViewDelegate,NSFetchedResultsControllerDelegate,OTRChatInputBarDelegate>
+
+@property (nonatomic) CGFloat previousTextViewContentHeight;
+@property (nonatomic, readonly) CGFloat initialBarChatBarHeight;
 
 @property (nonatomic, strong) UIView *composingImageView;
-@property (nonatomic, readonly) CGFloat initialBarChatBarHeight;
 @property (nonatomic, strong) OTRLockButton *lockButton;
 @property (nonatomic, strong) UIBarButtonItem *lockBarButtonItem;
 @property (nonatomic, strong) NSMutableArray *showDateForRowArray;
 @property (nonatomic, strong) NSDate *previousShownSentDate;
 @property (nonatomic, strong) OTRChatInputBar *chatInputBar;
 @property (nonatomic, strong) OTRTitleSubtitleView *titleView;
-@property (nonatomic) CGFloat previousTextViewContentHeight;
-@property (nonatomic, strong) OTRButtonView *buttonDropdownView;
 
+@property (nonatomic, strong) OTRButtonView *buttonDropdownView;
 @property (nonatomic, strong) OTRAccount *account;
+
+@property (nonatomic, retain) NSURL *lastActionLink;
+@property (nonatomic) BOOL isComposingVisible;
+@property (nonatomic, retain) UISwipeGestureRecognizer * swipeGestureRecognizer;
+
+@property (nonatomic, strong) YapDatabaseConnection *databaseConnection;
+@property (nonatomic, strong) YapDatabaseViewMappings *mappings;
 
 @end
 
 @implementation OTRChatViewController
-
-- (void) dealloc {
-    _messagesFetchedResultsController = nil;
-    _buddyFetchedResultsController = nil;
-    
-}
 
 - (id)init {
     if (self = [super init]) {
@@ -92,6 +94,12 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
         self.titleView = [[OTRTitleSubtitleView alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
         self.titleView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
         self.navigationItem.titleView = self.titleView;
+        self.databaseConnection = [OTRDatabaseManager sharedInstance].mainThreadReadOnlyDatabaseConnection;
+        [self.databaseConnection beginLongLivedReadTransaction];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(yapDatabaseModified:)
+                                                     name:OTRUIDatabaseConnectionDidUpdateNotification
+                                                   object:nil];
     }
     return self;
 }
@@ -120,7 +128,7 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
         NSString *fingerprintString = VERIFY_STRING;
         NSArray * buttons = nil;
         
-        if ([[OTRKit sharedInstance] isConversationEncryptedForUsername:weakSelf.buddy.username accountName:weakSelf.account.username protocol:weakSelf.account.protocol]) {
+        if ([[OTRKit sharedInstance] isConversationEncryptedForUsername:weakSelf.buddy.username accountName:weakSelf.account.username protocol:[weakSelf.account protocolTypeString]]) {
             encryptionString = CANCEL_ENCRYPTED_CHAT_STRING;
         }
         
@@ -197,11 +205,14 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
 {
     [super viewDidLoad];
     
+    
+    
     self.view.backgroundColor = [UIColor whiteColor];
     
     self.showDateForRowArray = [NSMutableArray array];
     
-    self.chatHistoryTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
+    self.chatHistoryTableView = [[UITableView alloc] initWithFrame:self.view.bounds
+                                                             style:UITableViewStylePlain];
     
     [self.chatHistoryTableView registerClass:[OTRIncomingMessageTableViewCell class]
                       forCellReuseIdentifier:[OTRIncomingMessageTableViewCell reuseIdentifier]];
@@ -216,7 +227,7 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
     
     self.chatHistoryTableView.dataSource = self;
     self.chatHistoryTableView.delegate = self;
-    self.chatHistoryTableView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);;
+    self.chatHistoryTableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.chatHistoryTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.chatHistoryTableView.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:self.chatHistoryTableView];
@@ -241,6 +252,63 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
     
     
 }
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        [self.buddy setAllMessagesRead:transaction];
+    }];
+    
+    [super viewWillDisappear:animated];
+}
+
+-(void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    [self.view removeKeyboardControl];
+    [self setBuddy:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    __weak OTRChatViewController * chatViewController = self;
+    __weak OTRChatInputBar * weakChatInputbar = self.chatInputBar;
+    [self.view addKeyboardPanningWithActionHandler:^(CGRect keyboardFrameInView) {
+        CGRect messageInputBarFrame = weakChatInputbar.frame;
+        messageInputBarFrame.origin.y = keyboardFrameInView.origin.y - messageInputBarFrame.size.height;
+        weakChatInputbar.frame = messageInputBarFrame;
+        
+        UIEdgeInsets tableViewContentInset = chatViewController.chatHistoryTableView.contentInset;
+        tableViewContentInset.bottom = chatViewController.view.frame.size.height-weakChatInputbar.frame.origin.y;
+        chatViewController.chatHistoryTableView.contentInset = chatViewController.chatHistoryTableView.scrollIndicatorInsets = tableViewContentInset;
+        [chatViewController scrollToBottomAnimated:NO];
+    }];
+    
+    [self refreshView];
+    [self updateChatState:NO];
+    
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshView) name:UIContentSizeCategoryDidChangeNotification object:nil];
+    }
+    
+    // KLUDGE: Work around keyboard visibility bug where chat input view is visible but keyboard is not
+    if (self.view.keyboardFrameInView.size.height == 0 && self.chatInputBar.frame.origin.y < self.view.frame.size.height - self.chatInputBar.frame.size.height) {
+        [self.chatInputBar.textView becomeFirstResponder];
+    }
+    // KLUDGE: If chatInputBar is beyond the bounds of the screen for some unknown reason, force it back into place
+    if (self.chatInputBar.frame.origin.y > self.view.frame.size.height - self.chatInputBar.frame.size.height) {
+        CGRect newFrame = self.chatInputBar.frame;
+        newFrame.origin.y = self.view.frame.size.height - self.chatInputBar.frame.size.height;
+        self.chatInputBar.frame = newFrame;
+    }
+    
+}
+
+#pragma - mark helper Methods
+
 -(void)handleSwipeFrom
 {
     if (self.swipeGestureRecognizer.direction == UISwipeGestureRecognizerDirectionRight && UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad) {
@@ -257,43 +325,22 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
     [alert show];
 }
 
-- (void) setBuddy:(OTRBuddy *)newBuddy {
-    [self saveCurrentMessageText];
-    
-    _buddy = newBuddy;
-    
-    [[OTRDatabaseManager sharedInstance].mainThreadReadOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        self.account = [_buddy accountWithTransaction:transaction];
-    }];
-    
-    [self refreshView];
-    if (self.buddy) {
-        if ([newBuddy.displayName length]) {
-            self.titleView.titleLabel.text = newBuddy.displayName;
-        }
-        else {
-            self.titleView.titleLabel.text = newBuddy.username;
-        }
-        
-        if(self.account.displayName.length) {
-            self.titleView.subtitleLabel.text = self.account.displayName;
-        }
-        else {
-            self.titleView.subtitleLabel.text = self.account.username;
-        }
-        
-        [self refreshLockButton];
-        [self updateChatState:NO];
+- (OTRXMPPManager *)xmppManager
+{
+    if ([self.account isKindOfClass:[OTRXMPPAccount class]]) {
+        return (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
     }
-    
+    return nil;
     
 }
+
 
 -(NSIndexPath *)lastIndexPath
 {
     return [NSIndexPath indexPathForRow:([self.chatHistoryTableView numberOfRowsInSection:0] - 1) inSection:0];
 }
 
+#pragma  - mark ComposingView Methods
 
 -(void)removeComposing
 {
@@ -366,15 +413,8 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
             break;
     }
 }
-- (void)textViewDidBeginEditing:(UITextView *)textView
-{
-    [self scrollToBottomAnimated:YES];
-}
 
-- (void) encryptionStateChangeNotification:(NSNotification *) notification
-{
-    [self refreshLockButton];
-}
+#pragma - mark iOS 6 Rotate
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
@@ -385,6 +425,8 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
         return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
     }
 }
+
+#pragma - mark LockButton Methods
 
 - (void)verifyButtonPressed:(id)sender
 {
@@ -455,6 +497,22 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
     }
 }
 
+-(void)addLockSpinner {
+    UIActivityIndicatorView * activityIndicatorView = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 25, 25)];
+    activityIndicatorView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
+    [activityIndicatorView sizeToFit];
+    [activityIndicatorView setAutoresizingMask:(UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin)];
+    UIBarButtonItem * activityBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:activityIndicatorView];
+    [activityIndicatorView startAnimating];
+    self.navigationItem.rightBarButtonItem = activityBarButtonItem;
+}
+-(void)removeLockSpinner {
+    self.navigationItem.rightBarButtonItem = self.lockBarButtonItem;
+    [self refreshLockButton];
+}
+
+#pragma - mark Dropdown Methods
+
 - (void)showDropdownWithTitle:(NSString *)title buttons:(NSArray *)buttons animated:(BOOL)animated
 {
     NSTimeInterval duration = 0.3;
@@ -501,28 +559,16 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
     }];
 }
 
+#pragma - mark UIScrollViewDelegate Methods
+
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
 {
     [self hideDropdown:YES];
 }
 
--(void)addLockSpinner {
-    UIActivityIndicatorView * activityIndicatorView = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 25, 25)];
-    activityIndicatorView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
-    [activityIndicatorView sizeToFit];
-    [activityIndicatorView setAutoresizingMask:(UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin)];
-    UIBarButtonItem * activityBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:activityIndicatorView];
-    [activityIndicatorView startAnimating];
-    self.navigationItem.rightBarButtonItem = activityBarButtonItem;
-}
--(void)removeLockSpinner {
-    self.navigationItem.rightBarButtonItem = self.lockBarButtonItem;
-    [self refreshLockButton];
-}
+#pragma - mark Refresh Methods
 
 - (void) refreshView {
-    _messagesFetchedResultsController = nil;
-    _buddyFetchedResultsController = nil;
     if (!self.buddy) {
         if (!self.instructionsLabel) {
             int labelWidth = 500;
@@ -539,8 +585,7 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
             [self.instructionsLabel removeFromSuperview];
             self.instructionsLabel = nil;
         }
-        [self buddyFetchedResultsController];
-        [self messagesFetchedResultsController];
+        
         self.showDateForRowArray = [NSMutableArray array];
         self.previousShownSentDate = nil;
         
@@ -552,7 +597,7 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
         
         if(![self.buddy.composingMessageString length])
         {
-            //FIXME [self.buddy sendActiveChatState];
+            [[self xmppManager] sendChatState:kOTRChatStateActive withBuddyID:self.buddy.uniqueId];
             self.chatInputBar.textView.text = nil;
         }
         else{
@@ -566,58 +611,39 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
     
 }
 
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        [self.buddy setAllMessagesRead:transaction];
-    }];
+- (void) setBuddy:(OTRBuddy *)newBuddy {
+    [self saveCurrentMessageText];
     
-    [super viewWillDisappear:animated];
-}
-
--(void)viewDidDisappear:(BOOL)animated
-{
-    [super viewDidDisappear:animated];
-    [self.view removeKeyboardControl];
-    [self setBuddy:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
--(void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
+    _buddy = newBuddy;
     
-    __weak OTRChatViewController * chatViewController = self;
-    __weak OTRChatInputBar * weakChatInputbar = self.chatInputBar;
-    [self.view addKeyboardPanningWithActionHandler:^(CGRect keyboardFrameInView) {
-        CGRect messageInputBarFrame = weakChatInputbar.frame;
-        messageInputBarFrame.origin.y = keyboardFrameInView.origin.y - messageInputBarFrame.size.height;
-        weakChatInputbar.frame = messageInputBarFrame;
-        
-        UIEdgeInsets tableViewContentInset = chatViewController.chatHistoryTableView.contentInset;
-        tableViewContentInset.bottom = chatViewController.view.frame.size.height-weakChatInputbar.frame.origin.y;
-        chatViewController.chatHistoryTableView.contentInset = chatViewController.chatHistoryTableView.scrollIndicatorInsets = tableViewContentInset;
-        [chatViewController scrollToBottomAnimated:NO];
+    [OTRDatabaseView registerChatDatabaseViewWithBuddyUniqueId:self.buddy.uniqueId];
+    
+    self.mappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[OTRChatMessageGroup] view:OTRChatDatabaseViewExtensionName];
+    
+    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        self.account = [self.buddy accountWithTransaction:transaction];
+        [self.mappings updateWithTransaction:transaction];
     }];
     
     [self refreshView];
-    [self updateChatState:NO];
-    
-    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshView) name:UIContentSizeCategoryDidChangeNotification object:nil];
+    if (self.buddy) {
+        if ([self.buddy.displayName length]) {
+            self.titleView.titleLabel.text = self.buddy.displayName;
+        }
+        else {
+            self.titleView.titleLabel.text = self.buddy.username;
+        }
+        
+        if(self.account.displayName.length) {
+            self.titleView.subtitleLabel.text = self.account.displayName;
+        }
+        else {
+            self.titleView.subtitleLabel.text = self.account.username;
+        }
+        
+        [self refreshLockButton];
+        [self updateChatState:NO];
     }
-    
-    // KLUDGE: Work around keyboard visibility bug where chat input view is visible but keyboard is not
-    if (self.view.keyboardFrameInView.size.height == 0 && self.chatInputBar.frame.origin.y < self.view.frame.size.height - self.chatInputBar.frame.size.height) {
-        [self.chatInputBar.textView becomeFirstResponder];
-    }
-    // KLUDGE: If chatInputBar is beyond the bounds of the screen for some unknown reason, force it back into place
-    if (self.chatInputBar.frame.origin.y > self.view.frame.size.height - self.chatInputBar.frame.size.height) {
-        CGRect newFrame = self.chatInputBar.frame;
-        newFrame.origin.y = self.view.frame.size.height - self.chatInputBar.frame.size.height;
-        self.chatInputBar.frame = newFrame;
-    }
-
 }
 
 -(void)saveCurrentMessageText
@@ -625,13 +651,13 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
     self.buddy.composingMessageString = self.chatInputBar.textView.text;
     if(![self.buddy.composingMessageString length])
     {
-        //FIXME [self.buddy sendInactiveChatState];
+        [[self xmppManager] sendChatState:kOTRChatStateInactive withBuddyID:self.buddy.uniqueId];
     }
     self.chatInputBar.textView.text = nil;
 }
 
 
-//detailedView delegate methods
+#pragma - mark detailedView delegate methods
 - (void)splitViewController:(UISplitViewController*)svc 
      willHideViewController:(UIViewController *)aViewController 
           withBarButtonItem:(UIBarButtonItem*)barButtonItem 
@@ -658,6 +684,17 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
         [self.chatHistoryTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:numberOfRows-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:animated];
     }
 }
+
+- (OTRMessage *)messageAtIndexPath:(NSIndexPath *)indexPath
+{
+    __block OTRMessage *message = nil;
+    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        message = [[transaction ext:OTRChatDatabaseViewExtensionName] objectAtIndexPath:indexPath withMappings:self.mappings];
+    }];
+    return message;
+}
+
+
 - (BOOL)showDateForMessageAtIndexPath:(NSIndexPath *)indexPath {
     
     if (indexPath.row < [self.showDateForRowArray count]) {
@@ -668,43 +705,32 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
         [self showDateForMessageAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row-1 inSection:indexPath.section]];
     }
     
-    __block BOOL showDate = NO;
-    if (indexPath.row < [[self.messagesFetchedResultsController sections][indexPath.section] numberOfObjects]) {
-        id messageOrStatus = [self.messagesFetchedResultsController objectAtIndexPath:indexPath];
-        if([messageOrStatus isKindOfClass:[OTRManagedChatMessage class]]) {
-            //only OTRManagedMessage get dates
-            
-            OTRManagedChatMessage * currentMessage = (OTRManagedChatMessage *)messageOrStatus;
-            
-            if (!_previousShownSentDate || [currentMessage.date timeIntervalSinceDate:_previousShownSentDate] > kOTRMessageSentDateShowTimeInterval) {
-                _previousShownSentDate = currentMessage.date;
-                showDate = YES;
-            }
+    BOOL showDate = NO;
+    if (indexPath.row < [self.mappings numberOfItemsInSection:indexPath.section]) {
+        OTRMessage *message = [self messageAtIndexPath:indexPath];
+        
+        if (!_previousShownSentDate || [message.date timeIntervalSinceDate:_previousShownSentDate] > kOTRMessageSentDateShowTimeInterval) {
+            _previousShownSentDate = message.date;
+            showDate = YES;
         }
     }
-    
     
     [self.showDateForRowArray addObject:[NSNumber numberWithBool:showDate]];
     
     return showDate;
 }
 
+#pragma - mark UITableView Methods
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     CGFloat height = 0;
-    if (indexPath.row < [[self.messagesFetchedResultsController sections][indexPath.section] numberOfObjects])
+    if (indexPath.row < [self.mappings numberOfItemsInSection:indexPath.section])
     {
         BOOL showDate = [self showDateForMessageAtIndexPath:indexPath];
-        id messageOrStatus = [self.messagesFetchedResultsController objectAtIndexPath:indexPath];
-        if([messageOrStatus isKindOfClass:[OTRManagedChatMessage class]]) {
-
-            OTRManagedChatMessage * message = (OTRManagedChatMessage *)messageOrStatus;
-            height = [OTRMessageTableViewCell heightForMesssage:message.message showDate:showDate];
-            
-        }
-        else {
-            height = kOTRMessageSentDateLabelHeight;
-        }
+        OTRMessage *message = [self messageAtIndexPath:indexPath];
+        
+        height = [OTRMessageTableViewCell heightForMesssage:message.text showDate:showDate];
     }
     else
     {
@@ -715,22 +741,26 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
     return height;
 }
 
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 1;
+}
+
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    NSInteger numMessages = [[self.messagesFetchedResultsController sections][section] numberOfObjects];
+    NSInteger numMessages = [self.mappings numberOfItemsInSection:section];
     if (self.isComposingVisible) {
         numMessages +=1;
     }
     return numMessages;
-    
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSInteger lastIndex = ([[self.messagesFetchedResultsController sections][indexPath.section] numberOfObjects]-1);
+    NSInteger lastIndex = ([self.mappings numberOfItemsInSection:indexPath.section]-1);
     BOOL isLastRow = indexPath.row > lastIndex;
-    BOOL isComposing = self.buddy.chatStateValue == kOTRChatStateComposing;
-    BOOL isPaused = self.buddy.chatStateValue == kOTRChatStatePaused;
+    BOOL isComposing = self.buddy.chatState == kOTRChatStateComposing;
+    BOOL isPaused = self.buddy.chatState == kOTRChatStatePaused;
     BOOL isComposingRow = ((isComposing || isPaused) && isLastRow);
     if (isComposingRow){
         UITableViewCell * cell;
@@ -744,149 +774,99 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
         }
         return cell;
     }
-    else if([[self.messagesFetchedResultsController sections][indexPath.section] numberOfObjects] > indexPath.row) {
+    else{
         
-        id messageOrStatus = [self.messagesFetchedResultsController objectAtIndexPath:indexPath];
+        OTRMessage *message = [self messageAtIndexPath:indexPath];
         BOOL showDate = [self showDateForMessageAtIndexPath:indexPath];
 
-        if ([messageOrStatus isKindOfClass:[OTRManagedChatMessage class]]) {
-            OTRManagedChatMessage * chatMessage = (OTRManagedChatMessage *)messageOrStatus;
-            NSString * reuseIdentifier = nil;
-            if (chatMessage.isIncomingValue) {
-                reuseIdentifier = [OTRIncomingMessageTableViewCell reuseIdentifier];
-            }
-            else {
-                reuseIdentifier = [OTROutgoingMessageTableViewCell reuseIdentifier];
-            }
-            
-            OTRMessageTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier forIndexPath:indexPath];
-            
-            if ([self.buddy.account isKindOfClass:[OTRManagedXMPPTorAccount class]]) {
-                cell.bubbleView.messageTextLabel.dataDetectorTypes = UIDataDetectorTypeNone;
-            }
-            else {
-                cell.bubbleView.messageTextLabel.dataDetectorTypes = UIDataDetectorTypeLink;
-            }
-            
-            cell.showDate = showDate;
-            [cell setMessage:chatMessage];
-            
-            return cell;
+        NSString * reuseIdentifier = nil;
+        if (message.isIncoming) {
+            reuseIdentifier = [OTRIncomingMessageTableViewCell reuseIdentifier];
         }
-        else if ([messageOrStatus isKindOfClass:[OTRManagedStatusMessage class]] || [messageOrStatus isKindOfClass:[OTRManagedEncryptionMessage class]])
+        else {
+            reuseIdentifier = [OTROutgoingMessageTableViewCell reuseIdentifier];
+        }
+        
+        OTRMessageTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier forIndexPath:indexPath];
+        
+        if ([self.account isKindOfClass:[OTRXMPPTorAccount class]]) {
+            cell.bubbleView.messageTextLabel.dataDetectorTypes = UIDataDetectorTypeNone;
+        }
+        else {
+            cell.bubbleView.messageTextLabel.dataDetectorTypes = UIDataDetectorTypeLink;
+        }
+        
+        cell.showDate = showDate;
+        [cell setMessage:message];
+        
+        return cell;
+    }
+}
+
+#pragma mark - YapDatabaseNotificatino Method
+
+- (void)yapDatabaseModified:(NSNotification *)notification
+{
+    // Process the notification(s),
+    // and get the change-set(s) as applies to my view and mappings configuration.
+    NSArray *notifications = notification.userInfo[@"notifications"];
+    
+    NSArray *sectionChanges = nil;
+    NSArray *rowChanges = nil;
+    
+    [[self.databaseConnection ext:OTRChatDatabaseViewExtensionName] getSectionChanges:&sectionChanges
+                                                                           rowChanges:&rowChanges
+                                                                     forNotifications:notifications
+                                                                         withMappings:self.mappings];
+    
+    // No need to update mappings.
+    // The above method did it automatically.
+    
+    if ([sectionChanges count] == 0 & [rowChanges count] == 0)
+    {
+        // Nothing has changed that affects our tableView
+        return;
+    }
+    
+    // Familiar with NSFetchedResultsController?
+    // Then this should look pretty familiar
+    
+    [self.chatHistoryTableView beginUpdates];
+    
+    for (YapDatabaseViewRowChange *rowChange in rowChanges)
+    {
+        switch (rowChange.type)
         {
-            static NSString *statusCellIdentifier = @"statusCell";
-            UITableViewCell * cell;
-            cell = [tableView dequeueReusableCellWithIdentifier:statusCellIdentifier];
-            if (!cell) {
-                cell = [[OTRStatusMessageCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:statusCellIdentifier];
+            case YapDatabaseViewChangeDelete :
+            {
+                [self.chatHistoryTableView deleteRowsAtIndexPaths:@[ rowChange.indexPath ]
+                                      withRowAnimation:UITableViewRowAnimationAutomatic];
+                break;
             }
-            
-            
-            NSString * cellText = nil;
-            OTRManagedMessage * managedStatus = (OTRManagedMessage *)messageOrStatus;
-            
-            if ([messageOrStatus isKindOfClass:[OTRManagedStatusMessage class]]) {
-                if (managedStatus.isIncomingValue) {
-                    cellText = [NSString stringWithFormat:INCOMING_STATUS_MESSAGE,managedStatus.message];
-                }
-                else{
-                    cellText = [NSString stringWithFormat:YOUR_STATUS_MESSAGE,managedStatus.message];
-                }
+            case YapDatabaseViewChangeInsert :
+            {
+                [self.chatHistoryTableView insertRowsAtIndexPaths:@[ rowChange.newIndexPath ]
+                                      withRowAnimation:UITableViewRowAnimationAutomatic];
+                break;
             }
-            else{
-                cellText = managedStatus.message;
+            case YapDatabaseViewChangeMove :
+            {
+                [self.chatHistoryTableView deleteRowsAtIndexPaths:@[ rowChange.indexPath ]
+                                      withRowAnimation:UITableViewRowAnimationAutomatic];
+                [self.chatHistoryTableView insertRowsAtIndexPaths:@[ rowChange.newIndexPath ]
+                                      withRowAnimation:UITableViewRowAnimationAutomatic];
+                break;
             }
-            
-            
-            ((OTRStatusMessageCell *)cell).statusMessageLabel.text = cellText;
-            
-            cell.userInteractionEnabled = NO;
-            return cell;
+            case YapDatabaseViewChangeUpdate :
+            {
+                [self.chatHistoryTableView reloadRowsAtIndexPaths:@[ rowChange.indexPath ]
+                                      withRowAnimation:UITableViewRowAnimationNone];
+                break;
+            }
         }
     }
-}
-
-#pragma mark - NSFetchedResultsControllerDelegate
-
--(NSFetchedResultsController *)buddyFetchedResultsController{
-    if (_buddyFetchedResultsController)
-        return _buddyFetchedResultsController;
     
-    NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"self == %@",self.buddy];
-    
-    _buddyFetchedResultsController = [OTRManagedBuddy MR_fetchAllGroupedBy:nil withPredicate:buddyFilter sortedBy:nil ascending:YES delegate:self];
-    
-    return _buddyFetchedResultsController;
-}
-
-- (NSFetchedResultsController *)messagesFetchedResultsController {
-    if (_messagesFetchedResultsController)
-    {
-        return _messagesFetchedResultsController;
-    }
-    
-    NSPredicate * buddyFilter = [NSPredicate predicateWithFormat:@"%K == %@",OTRManagedMessageRelationships.buddy,self.buddy];
-    NSPredicate * encryptionFilter = [NSPredicate predicateWithFormat:@"%K == NO",OTRManagedMessageAttributes.isEncrypted];
-    NSPredicate * messagePredicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[buddyFilter,encryptionFilter]];
-
-    _messagesFetchedResultsController = [OTRManagedMessage MR_fetchAllGroupedBy:nil withPredicate:messagePredicate sortedBy:OTRManagedMessageAttributes.date ascending:YES delegate:self];
-
-    return _messagesFetchedResultsController;
-}
-
-- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
-    [self updateChatState:YES];
-    [self refreshLockButton];
-    if ([controller isEqual:self.messagesFetchedResultsController])
-    {
-        [self.chatHistoryTableView beginUpdates];
-    }
-}
-
-- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject
-       atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
-      newIndexPath:(NSIndexPath *)newIndexPath {
-    UITableView *tableView = nil;
-    
-    if ([controller isEqual:_messagesFetchedResultsController])
-    {
-        tableView = self.chatHistoryTableView;
-        
-        
-        switch(type) {
-            case NSFetchedResultsChangeInsert:
-            {
-                [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationBottom];
-                
-                
-                id possibleMessage = [controller objectAtIndexPath:newIndexPath];
-                if ([possibleMessage isKindOfClass:[OTRManagedChatMessage class]]) {
-                    ((OTRManagedChatMessage *)possibleMessage).isReadValue = YES;
-                }
-                
-            }
-                break;
-            case NSFetchedResultsChangeUpdate:
-            {
-                [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
-            }
-                break;
-            case NSFetchedResultsChangeDelete:
-            {
-                [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationRight];
-            }
-                break;
-        }
-    }
-}
-
-- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
-    if ([controller isEqual:self.messagesFetchedResultsController])
-    {
-        [self.chatHistoryTableView endUpdates];
-        [self scrollToBottomAnimated:YES];
-    }
+    [self.chatHistoryTableView endUpdates];
 }
 
 #pragma mark OTRChatInputBarDelegate Methods
@@ -900,28 +880,36 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
     }
     NSString * text = inputBar.textView.text;
     if ([text length]) {
-        NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
-        OTRManagedChatMessage * message = [OTRManagedChatMessage newMessageToBuddy:self.buddy message:text encrypted:NO inContext:context];
         
-        [context MR_saveToPersistentStoreAndWait];
         
-        BOOL inSecureConversation = [[OTRKit sharedInstance] isConversationEncryptedForUsername:self.buddy.accountName accountName:self.buddy.account.username protocol:self.buddy.account.protocol];
+        
+        BOOL inSecureConversation = [[OTRKit sharedInstance] isConversationEncryptedForUsername:self.buddy.username accountName:self.account.username protocol:[self.account protocolTypeString]];
         BOOL secure = inSecureConversation || [OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyOpportunisticOtr];
+        
+        OTRMessage *message = [[OTRMessage alloc] init];
+        message.buddyUniqueId = self.buddy.uniqueId;
+        message.text = text;
+        message.transportedSecurely = secure;
+        
+        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+            [transaction setObject:message forKey:message.uniqueId inCollection:[OTRMessage collection]];
+        }];
+        
         if(secure)
         {
             //check if need to generate keys
-            [OTRCodec hasGeneratedKeyForAccount:self.buddy.account completionBlock:^(BOOL hasGeneratedKey) {
+            [OTRCodec hasGeneratedKeyForAccount:self.account completionBlock:^(BOOL hasGeneratedKey) {
                 if (!hasGeneratedKey) {
                     [self addLockSpinner];
-                    [OTRCodec generatePrivateKeyFor:self.buddy.account completionBlock:^(BOOL generatedKey) {
+                    [OTRCodec generatePrivateKeyFor:self.account completionBlock:^(BOOL generatedKey) {
                         [self removeLockSpinner];
-                        [OTRCodec encodeMessage:message completionBlock:^(OTRManagedChatMessage *message) {
+                        [OTRCodec encodeMessage:message completionBlock:^(OTRMessage *message) {
                             [[OTRProtocolManager sharedInstance] sendMessage:message];
                         }];
                     }];
                 }
                 else {
-                    [OTRCodec encodeMessage:message completionBlock:^(OTRManagedChatMessage *message) {
+                    [OTRCodec encodeMessage:message completionBlock:^(OTRMessage *message) {
                         [[OTRProtocolManager sharedInstance] sendMessage:message];
                     }];
                 }
@@ -937,12 +925,12 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
 -(BOOL)inputBar:(OTRChatInputBar *)inputBar shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
 {
      NSRange textFieldRange = NSMakeRange(0, [inputBar.textView.text length]);
-     
-     [self.buddy sendComposingChatState];
+    
+    [[self xmppManager] sendChatState:kOTRChatStateComposing withBuddyID:self.buddy.uniqueId];
      
      if (NSEqualRanges(range, textFieldRange) && [text length] == 0)
      {
-          [self.buddy sendActiveChatState];
+          [[self xmppManager] sendChatState:kOTRChatStateActive withBuddyID:self.buddy.uniqueId];
      }
      
      return YES;
