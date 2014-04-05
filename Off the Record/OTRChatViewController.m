@@ -82,6 +82,7 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
 
 @property (nonatomic, strong) YapDatabaseConnection *databaseConnection;
 @property (nonatomic, strong) YapDatabaseViewMappings *mappings;
+@property (nonatomic, strong) YapDatabaseViewMappings *buddyMappings;
 
 @end
 
@@ -288,7 +289,6 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
     }];
     
     [self refreshView];
-    [self updateChatState:NO];
     
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshView) name:UIContentSizeCategoryDidChangeNotification object:nil];
@@ -345,9 +345,9 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
 -(void)removeComposing
 {
     self.isComposingVisible = NO;
-    [self.chatHistoryTableView beginUpdates];
+
     [self.chatHistoryTableView deleteRowsAtIndexPaths:@[[self lastIndexPath]] withRowAnimation:UITableViewRowAnimationAutomatic];
-    [self.chatHistoryTableView endUpdates];
+
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
         [(OTRComposingImageView *)self.composingImageView stopBlinking];
     }
@@ -365,9 +365,9 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
     NSIndexPath * lastIndexPath = [self lastIndexPath];
     NSInteger newLast = [lastIndexPath indexAtPosition:lastIndexPath.length-1]+1;
     lastIndexPath = [[lastIndexPath indexPathByRemovingLastIndex] indexPathByAddingIndex:newLast];
-    [self.chatHistoryTableView beginUpdates];
+
     [self.chatHistoryTableView insertRowsAtIndexPaths:@[lastIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-    [self.chatHistoryTableView endUpdates];
+
     
     
     
@@ -607,23 +607,37 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
         
         [self scrollToBottomAnimated:NO];
         [self refreshLockButton];
+        [self updateChatState:NO];
     }
     
 }
 
 - (void) setBuddy:(OTRBuddy *)newBuddy {
-    [self saveCurrentMessageText];
+    
+    if (![_buddy.uniqueId isEqualToString:newBuddy.uniqueId]) {
+        [self saveCurrentMessageText];
+        
+        BOOL chatStatus = [OTRDatabaseView registerChatDatabaseViewWithBuddyUniqueId:newBuddy.uniqueId];
+        BOOL buddyStatus = [OTRDatabaseView registerBuddyDatabaseViewWithBuddyUniqueId:newBuddy.uniqueId];
+        
+        if (chatStatus && buddyStatus) {
+            self.mappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[OTRChatMessageGroup] view:OTRChatDatabaseViewExtensionName];
+            self.buddyMappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[OTRBuddyGroup] view:OTRBuddyDatabaseViewExtensionName];
+            
+            [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+                self.account = [newBuddy accountWithTransaction:transaction];
+                [self.mappings updateWithTransaction:transaction];
+                [self.buddyMappings updateWithTransaction:transaction];
+            }];
+        }
+        else {
+            self.mappings = nil;
+            self.buddyMappings = nil;
+        }
+        
+    }
     
     _buddy = newBuddy;
-    
-    [OTRDatabaseView registerChatDatabaseViewWithBuddyUniqueId:self.buddy.uniqueId];
-    
-    self.mappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[OTRChatMessageGroup] view:OTRChatDatabaseViewExtensionName];
-    
-    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        self.account = [self.buddy accountWithTransaction:transaction];
-        [self.mappings updateWithTransaction:transaction];
-    }];
     
     [self refreshView];
     if (self.buddy) {
@@ -640,9 +654,6 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
         else {
             self.titleView.subtitleLabel.text = self.account.username;
         }
-        
-        [self refreshLockButton];
-        [self updateChatState:NO];
     }
 }
 
@@ -819,19 +830,37 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
                                                                      forNotifications:notifications
                                                                          withMappings:self.mappings];
     
+    NSArray *buddyRowChanges = nil;
+    [[self.databaseConnection ext:OTRBuddyDatabaseViewExtensionName] getSectionChanges:nil
+                                                                            rowChanges:&buddyRowChanges
+                                                                      forNotifications:notifications
+                                                                          withMappings:self.buddyMappings];
+    [self.chatHistoryTableView beginUpdates];
+    for (YapDatabaseViewRowChange *rowChange in buddyRowChanges)
+    {
+        if (rowChange.type == YapDatabaseViewChangeUpdate) {
+            NSLog(@"update typing and chat state");
+            __block OTRBuddy *updatedBuddy = nil;
+            [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+                updatedBuddy = [[transaction ext:OTRBuddyDatabaseViewExtensionName] objectAtIndexPath:rowChange.indexPath withMappings:self.buddyMappings];
+            }];
+            self.buddy = updatedBuddy;
+        }
+    }
+    
     // No need to update mappings.
     // The above method did it automatically.
-    
+    /*
     if ([sectionChanges count] == 0 & [rowChanges count] == 0)
     {
         // Nothing has changed that affects our tableView
         return;
-    }
+    }*/
     
     // Familiar with NSFetchedResultsController?
     // Then this should look pretty familiar
     
-    [self.chatHistoryTableView beginUpdates];
+    
     
     for (YapDatabaseViewRowChange *rowChange in rowChanges)
     {

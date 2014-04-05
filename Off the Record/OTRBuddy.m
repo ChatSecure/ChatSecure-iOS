@@ -11,6 +11,7 @@
 #import "OTRMessage.h"
 #import "OTRDatabaseManager.h"
 #import "YapDatabaseRelationshipTransaction.h"
+#import "OTRKit.h"
 
 const struct OTRBuddyAttributes OTRBuddyAttributes = {
 	.username = @"username",
@@ -21,7 +22,8 @@ const struct OTRBuddyAttributes OTRBuddyAttributes = {
 	.lastSentChatState = @"lastSentChatState",
 	.status = @"status",
     .lastMessageDate = @"lastMessageDate",
-    .avatarData = @"avatarData"
+    .avatarData = @"avatarData",
+    .encryptionStatus = @"encryptionStatus"
 };
 
 const struct OTRBuddyRelationships OTRBuddyRelationships = {
@@ -40,6 +42,7 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
         self.status = OTRBuddyStatusOffline;
         self.chatState = kOTRChatStateUnknown;
         self.lastSentChatState = kOTRChatStateUnknown;
+        self.encryptionStatus = kOTRKitMessageStatePlaintext;
     }
     return self;
 }
@@ -83,6 +86,18 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
             [message saveWithTransaction:transaction];
         }
     }];
+}
+- (OTRMessage *)lastMessageWithTransaction:(YapDatabaseReadTransaction *)transaction
+{
+    __block OTRMessage *finalMessage = nil;
+    [[transaction ext:OTRYapDatabaseRelationshipName] enumerateEdgesWithName:OTRMessageEdges.buddy destinationKey:self.uniqueId collection:[OTRBuddy collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
+        OTRMessage *message = [OTRMessage fetchObjectWithUniqueID:edge.sourceKey transaction:transaction];
+        if (!finalMessage ||    [message.date compare:finalMessage.date] == NSOrderedDescending) {
+            finalMessage = message;
+        }
+        
+    }];
+    return finalMessage;
 }
 
 #pragma - mark Class Methods
@@ -132,6 +147,7 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
         self.lastSentChatState = [decoder decodeIntForKey:OTRBuddyAttributes.lastSentChatState];
         self.lastMessageDate = [decoder decodeObjectForKey:OTRBuddyAttributes.lastMessageDate];
         self.avatarData = [decoder decodeObjectForKey:OTRBuddyAttributes.avatarData];
+        self.encryptionStatus = [decoder decodeIntForKey:OTRBuddyAttributes.encryptionStatus];
         
         self.accountUniqueId = [decoder decodeObjectForKey:OTRBuddyRelationships.accountUniqueId];
     }
@@ -151,6 +167,7 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
     [encoder encodeInt:self.lastSentChatState forKey:OTRBuddyAttributes.lastSentChatState];
     [encoder encodeObject:self.lastMessageDate forKey:OTRBuddyAttributes.lastMessageDate];
     [encoder encodeObject:self.avatarData forKey:OTRBuddyAttributes.avatarData];
+    [encoder encodeInt:self.encryptionStatus forKey:OTRBuddyAttributes.encryptionStatus];
     
     
     [encoder encodeObject:self.accountUniqueId forKey:OTRBuddyRelationships.accountUniqueId];
@@ -167,6 +184,7 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
     copy.statusMessage = [self.statusMessage copyWithZone:zone];
     copy.status = self.status;
     copy.chatState = self.chatState;
+    copy.encryptionStatus = self.encryptionStatus;
     copy.lastSentChatState = self.lastSentChatState;
     copy.lastMessageDate = [self.lastMessageDate copyWithZone:zone];
     copy.avatarData = [self.avatarData copyWithZone:zone];

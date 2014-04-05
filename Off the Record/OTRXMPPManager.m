@@ -638,6 +638,11 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
                 {
                     [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
                         [transaction setObject:decryptedMessage forKey:message.uniqueId inCollection:[OTRMessage collection]];
+                        OTRXMPPBuddy *buddy = [OTRXMPPBuddy fetchObjectWithUniqueID:message.buddyUniqueId transaction:transaction];
+                        if (!buddy.lastMessageDate || [message.date compare:buddy.lastMessageDate] == NSOrderedDescending) {
+                            buddy.lastMessageDate = message.date;
+                            [buddy saveWithTransaction:transaction];
+                        }
                     }];
                     [OTRMessage showLocalNotificationForMessage:message];
                 }

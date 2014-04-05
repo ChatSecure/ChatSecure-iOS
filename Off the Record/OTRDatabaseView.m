@@ -17,16 +17,18 @@
 NSString *OTRConversationGroup = @"Conversation";
 NSString *OTRConversationDatabaseViewExtensionName = @"OTRConversationDatabaseViewExtensionName";
 NSString *OTRChatDatabaseViewExtensionName = @"OTRChatDatabaseViewExtensionName";
+NSString *OTRBuddyDatabaseViewExtensionName = @"OTRBuddyDatabaseViewExtensionName";
 
 NSString *OTRAllAccountGroup = @"All Accounts";
 NSString *OTRAllAccountDatabaseViewExtensionName = @"OTRAllAccountDatabaseViewExtensionName";
 NSString *OTRChatMessageGroup = @"Messages";
+NSString *OTRBuddyGroup = @"Buddy";
 
 @implementation OTRDatabaseView
 
 
 
-+ (void)registerConversationDatabaseView
++ (BOOL)registerConversationDatabaseView
 {
     YapDatabaseView *conversationView = [[OTRDatabaseManager sharedInstance].database registeredExtension:OTRConversationDatabaseViewExtensionName];
     if (conversationView) {
@@ -84,13 +86,13 @@ NSString *OTRChatMessageGroup = @"Messages";
                                   sortingBlockType:sortingBlockType
                                         versionTag:@""
                                            options:options];
-    [[OTRDatabaseManager sharedInstance].database registerExtension:databaseView withName:OTRConversationDatabaseViewExtensionName];
+    return [[OTRDatabaseManager sharedInstance].database registerExtension:databaseView withName:OTRConversationDatabaseViewExtensionName];
 }
 
 
 
 
-+ (void)registerAllAccountsDatabaseView
++ (BOOL)registerAllAccountsDatabaseView
 {
     YapDatabaseView *accountView = [[OTRDatabaseManager sharedInstance].database registeredExtension:OTRAllAccountDatabaseViewExtensionName];
     if (accountView) {
@@ -140,10 +142,10 @@ NSString *OTRChatMessageGroup = @"Messages";
                                   sortingBlockType:sortingBlockType
                                         versionTag:@""
                                            options:options];
-    [[OTRDatabaseManager sharedInstance].database registerExtension:databaseView withName:OTRAllAccountDatabaseViewExtensionName];
+    return [[OTRDatabaseManager sharedInstance].database registerExtension:databaseView withName:OTRAllAccountDatabaseViewExtensionName];
 }
 
-+ (void)registerChatDatabaseViewWithBuddyUniqueId:(NSString *)buddyUniqueId
++ (BOOL)registerChatDatabaseViewWithBuddyUniqueId:(NSString *)buddyUniqueId
 {
     YapDatabaseViewBlockType groupingBlockType;
     YapDatabaseViewGroupingWithObjectBlock groupingBlock;
@@ -189,7 +191,44 @@ NSString *OTRChatMessageGroup = @"Messages";
                                   sortingBlockType:sortingBlockType
                                         versionTag:@""
                                            options:options];
-    [[OTRDatabaseManager sharedInstance].database registerExtension:databaseView withName:OTRChatDatabaseViewExtensionName];
+    
+    [[OTRDatabaseManager sharedInstance].database unregisterExtension:OTRChatDatabaseViewExtensionName];
+    return [[OTRDatabaseManager sharedInstance].database registerExtension:databaseView withName:OTRChatDatabaseViewExtensionName];
+}
+
++ (BOOL)registerBuddyDatabaseViewWithBuddyUniqueId:(NSString *)buddyUniqueId
+{
+    YapDatabaseViewBlockType groupingBlockType;
+    YapDatabaseViewGroupingWithKeyBlock groupingBlock;
+    
+    YapDatabaseViewBlockType sortingBlockType;
+    YapDatabaseViewSortingWithKeyBlock sortingBlock;
+    
+    groupingBlockType = YapDatabaseViewBlockTypeWithKey;
+    
+    groupingBlock = ^NSString *(NSString *collection, NSString *key){
+        
+        if ([key isEqualToString:buddyUniqueId])
+        {
+            return OTRBuddyGroup;
+        }
+        return nil;
+    };
+    
+    sortingBlockType = YapDatabaseViewBlockTypeWithKey;
+    sortingBlock = ^(NSString *group, NSString *collection1, NSString *key1,
+                     NSString *collection2, NSString *key2){
+        return NSOrderedSame;
+    };
+    
+    YapDatabaseViewOptions *options = [[YapDatabaseViewOptions alloc] init];
+    options.isPersistent = NO;
+    options.allowedCollections = [NSSet setWithObject:[OTRBuddy collection]];
+    
+    YapDatabaseView *databaseView = [[YapDatabaseView alloc] initWithGroupingBlock:groupingBlock groupingBlockType:groupingBlockType sortingBlock:sortingBlock sortingBlockType:sortingBlockType versionTag:@"" options:options];
+    
+    [[OTRDatabaseManager sharedInstance].database unregisterExtension:OTRBuddyDatabaseViewExtensionName];
+    return [[OTRDatabaseManager sharedInstance].database registerExtension:databaseView withName:OTRBuddyDatabaseViewExtensionName];
 }
 
 @end

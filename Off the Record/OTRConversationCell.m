@@ -85,19 +85,12 @@
     
     __block OTRAccount *account = nil;
     __block OTRMessage *lastMessage = nil;
+
     
     [[OTRDatabaseManager sharedInstance].mainThreadReadOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         account = [transaction objectForKey:buddy.accountUniqueId inCollection:[OTRAccount collection]];
         
-        [transaction enumerateKeysAndObjectsInCollection:[OTRMessage collection] usingBlock:^(NSString *key, OTRMessage *message, BOOL *stop) {
-            if ([message isKindOfClass:[OTRMessage class]]) {
-                if ([message.buddyUniqueId isEqualToString:buddy.uniqueId]) {
-                    if (!lastMessage || [lastMessage.date compare:message.date] == NSOrderedDescending) {
-                        lastMessage = message;
-                    }
-                }
-            }
-        }];
+        lastMessage = [buddy lastMessageWithTransaction:transaction];
     }];
     
     

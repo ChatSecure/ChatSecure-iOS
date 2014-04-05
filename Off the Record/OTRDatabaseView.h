@@ -10,21 +10,26 @@
 #import "YapDatabaseViewMappings.h"
 #import "YapDatabaseView.h"
 
-extern NSString *OTRConversationGroup;
+
 extern NSString *OTRConversationDatabaseViewExtensionName;
 extern NSString *OTRChatDatabaseViewExtensionName;
+extern NSString *OTRAllAccountDatabaseViewExtensionName;
+extern NSString *OTRBuddyDatabaseViewExtensionName;
 
 extern NSString *OTRAllAccountGroup;
-extern NSString *OTRAllAccountDatabaseViewExtensionName;
+extern NSString *OTRConversationGroup;
 extern NSString *OTRChatMessageGroup;
+extern NSString *OTRBuddyGroup;
 
 @interface OTRDatabaseView : NSObject
 
 
-+ (void)registerConversationDatabaseView;
++ (BOOL)registerConversationDatabaseView;
 
-+ (void)registerAllAccountsDatabaseView;
++ (BOOL)registerAllAccountsDatabaseView;
 
-+ (void)registerChatDatabaseViewWithBuddyUniqueId:(NSString *)buddyUniqueId;
++ (BOOL)registerChatDatabaseViewWithBuddyUniqueId:(NSString *)buddyUniqueId;
+
++ (BOOL)registerBuddyDatabaseViewWithBuddyUniqueId:(NSString *)buddyUniqueId;
 
 @end

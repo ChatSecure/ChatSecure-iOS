@@ -56,7 +56,12 @@
         }
         
         OTRKitMessageState messageState = [[OTRKit sharedInstance] messageStateForUsername:friendAccount accountName:myAccountName protocol:protocol];
-        //fixme set buddy encryption state?
+        [[[OTRDatabaseManager sharedInstance] readWriteDatabaseConnection] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+            OTRBuddy *buddy = [OTRBuddy fetchObjectWithUniqueID:messageBuddy.uniqueId transaction:transaction];
+            buddy.encryptionStatus = messageState;
+            [buddy saveWithTransaction:transaction];
+        }];
+        
         
         if (completionBlock) {
             if ([decodedMessageString length])

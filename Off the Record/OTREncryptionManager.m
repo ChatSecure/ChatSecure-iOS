@@ -23,7 +23,9 @@
 #import "OTREncryptionManager.h"
 #import "OTRMessage.h"
 #import "OTRBuddy.h"
+#import "OTRAccount.h"
 #import "OTRProtocolManager.h"
+#import "OTRDatabaseManager.h"
 
 #import "OTRLog.h"
 
@@ -51,9 +53,12 @@
 
 - (void) updateMessageStateForUsername:(NSString*)username accountName:(NSString*)accountName protocol:(NSString*)protocol messageState:(OTRKitMessageState)messageState {
     
-    OTRBuddy *buddy = [[OTRProtocolManager sharedInstance] buddyForUserName:username accountName:accountName protocolType:[self prototcolTypeForString:protocol]];
-    //FIXME
-    //[buddy setNewEncryptionStatus:messageState inContext:context];
+    [[[OTRDatabaseManager sharedInstance] readWriteDatabaseConnection] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        OTRAccount *account =  [OTRAccount fetchAccountWithUsername:accountName protocolType:[self prototcolTypeForString:protocol] transaction:transaction];
+        OTRBuddy *buddy = [OTRBuddy fetchBuddyWithUsername:username withAccountUniqueId:account.uniqueId transaction:transaction];
+        buddy.encryptionStatus = messageState;
+        [buddy saveWithTransaction:transaction];
+    }];
 }
 
 - (void) injectMessage:(NSString*)text recipient:(NSString*)recipient accountName:(NSString*)accountName protocol:(NSString*)protocol {
