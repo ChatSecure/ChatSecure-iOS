@@ -195,7 +195,6 @@ static CGFloat cellHeight = 80.0;
     [cell.avatarImageView.layer setCornerRadius:(cellHeight-2.0*OTRBuddyImageCellPadding)/2.0];
     
     [cell setBuddy:buddy];
-    NSLog(@"Index Path: %d",indexPath.row);
     
     return cell;
 }

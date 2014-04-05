@@ -28,8 +28,8 @@ extern NSString *OTRBuddyGroup;
 
 + (BOOL)registerAllAccountsDatabaseView;
 
-+ (BOOL)registerChatDatabaseViewWithBuddyUniqueId:(NSString *)buddyUniqueId;
++ (BOOL)registerChatDatabaseView;
 
-+ (BOOL)registerBuddyDatabaseViewWithBuddyUniqueId:(NSString *)buddyUniqueId;
++ (BOOL)registerBuddyDatabaseView;
 
 @end

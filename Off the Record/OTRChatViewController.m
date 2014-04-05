@@ -97,10 +97,7 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
         self.navigationItem.titleView = self.titleView;
         self.databaseConnection = [OTRDatabaseManager sharedInstance].mainThreadReadOnlyDatabaseConnection;
         [self.databaseConnection beginLongLivedReadTransaction];
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(yapDatabaseModified:)
-                                                     name:OTRUIDatabaseConnectionDidUpdateNotification
-                                                   object:nil];
+        
     }
     return self;
 }
@@ -304,6 +301,11 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
         newFrame.origin.y = self.view.frame.size.height - self.chatInputBar.frame.size.height;
         self.chatInputBar.frame = newFrame;
     }
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(yapDatabaseModified:)
+                                                 name:OTRUIDatabaseConnectionDidUpdateNotification
+                                               object:nil];
     
 }
 
@@ -617,12 +619,12 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
     if (![_buddy.uniqueId isEqualToString:newBuddy.uniqueId]) {
         [self saveCurrentMessageText];
         
-        BOOL chatStatus = [OTRDatabaseView registerChatDatabaseViewWithBuddyUniqueId:newBuddy.uniqueId];
-        BOOL buddyStatus = [OTRDatabaseView registerBuddyDatabaseViewWithBuddyUniqueId:newBuddy.uniqueId];
+        //BOOL chatStatus = [OTRDatabaseView registerChatDatabaseViewWithBuddyUniqueId:newBuddy.uniqueId];
+        //BOOL buddyStatus = [OTRDatabaseView registerBuddyDatabaseViewWithBuddyUniqueId:newBuddy.uniqueId];
         
-        if (chatStatus && buddyStatus) {
-            self.mappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[OTRChatMessageGroup] view:OTRChatDatabaseViewExtensionName];
-            self.buddyMappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[OTRBuddyGroup] view:OTRBuddyDatabaseViewExtensionName];
+        if (newBuddy) {
+            self.mappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[newBuddy.uniqueId] view:OTRChatDatabaseViewExtensionName];
+            self.buddyMappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[newBuddy.uniqueId] view:OTRBuddyDatabaseViewExtensionName];
             
             [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
                 self.account = [newBuddy accountWithTransaction:transaction];
@@ -633,6 +635,7 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
         else {
             self.mappings = nil;
             self.buddyMappings = nil;
+            self.account = nil;
         }
         
     }
@@ -839,12 +842,16 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
     for (YapDatabaseViewRowChange *rowChange in buddyRowChanges)
     {
         if (rowChange.type == YapDatabaseViewChangeUpdate) {
-            NSLog(@"update typing and chat state");
             __block OTRBuddy *updatedBuddy = nil;
             [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
                 updatedBuddy = [[transaction ext:OTRBuddyDatabaseViewExtensionName] objectAtIndexPath:rowChange.indexPath withMappings:self.buddyMappings];
             }];
-            self.buddy = updatedBuddy;
+            
+            if (self.buddy.chatState != updatedBuddy.chatState || self.buddy.encryptionStatus != updatedBuddy.encryptionStatus) {
+                self.buddy = updatedBuddy;
+            }
+            
+
         }
     }
     

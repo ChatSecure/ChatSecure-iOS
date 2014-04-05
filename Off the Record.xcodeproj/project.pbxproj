@@ -216,6 +216,9 @@
 		6383196818EB938300862B25 /* OTRManagedAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 6397535D18CA8221005D6063 /* OTRManagedAccount.m */; };
 		6383196B18ECE0D200862B25 /* OTRvCardYapDatabaseStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 6383196A18ECE0D200862B25 /* OTRvCardYapDatabaseStorage.m */; };
 		6383196C18EE0F4500862B25 /* OTRChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63022BB516CDAD4C00F764F1 /* OTRChatViewController.m */; };
+		6383196D18EF9CF500862B25 /* bubble-min-tailless.png in Resources */ = {isa = PBXBuildFile; fileRef = 637A7DE5189745FD004EF5A2 /* bubble-min-tailless.png */; };
+		6383196E18EF9CF700862B25 /* bubble-min-tailless@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 637A7DE6189745FD004EF5A2 /* bubble-min-tailless@2x.png */; };
+		6383196F18EF9CFD00862B25 /* bubble-min@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 637A7DD818972CD9004EF5A2 /* bubble-min@2x.png */; };
 		63926C8C18AAE8E10063B53D /* Lock_Locked_red.png in Resources */ = {isa = PBXBuildFile; fileRef = 63926C8818AAE8E10063B53D /* Lock_Locked_red.png */; };
 		63926C8F18AAE8E10063B53D /* Lock_Locked_yellow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63926C8B18AAE8E10063B53D /* Lock_Locked_yellow@2x.png */; };
 		639752EB18CA7B23005D6063 /* OTRCertificatesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 639752EA18CA7B23005D6063 /* OTRCertificatesViewController.m */; };
@@ -3174,6 +3177,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6383196D18EF9CF500862B25 /* bubble-min-tailless.png in Resources */,
 				1A86AD5E18C3EF39001110D7 /* Podfile in Resources */,
 				D96847A018C158EE008FDC46 /* uv_idea@2x.png in Resources */,
 				D9F9378513F44BD3009A3D84 /* InfoPlist.strings in Resources */,
@@ -3227,6 +3231,8 @@
 				63926C8F18AAE8E10063B53D /* Lock_Locked_yellow@2x.png in Resources */,
 				633B6CFF17ECF4F7002DA152 /* googleTalkButton.png in Resources */,
 				6319F696165EAB1F0063AC93 /* supportedLanguages.plist in Resources */,
+				6383196F18EF9CFD00862B25 /* bubble-min@2x.png in Resources */,
+				6383196E18EF9CF700862B25 /* bubble-min-tailless@2x.png in Resources */,
 				D9BE44A1166F2E7D00A628C7 /* 29-heart.png in Resources */,
 				D9BE44A2166F2E7D00A628C7 /* 29-heart@2x.png in Resources */,
 				D9BE44A5166F2F5B00A628C7 /* 18-envelope@2x.png in Resources */,
