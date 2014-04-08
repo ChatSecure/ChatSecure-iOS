@@ -15,6 +15,8 @@ extern NSString *OTRConversationDatabaseViewExtensionName;
 extern NSString *OTRChatDatabaseViewExtensionName;
 extern NSString *OTRAllAccountDatabaseViewExtensionName;
 extern NSString *OTRBuddyDatabaseViewExtensionName;
+extern NSString *OTRBuddyNameSearchDatabaseViewExtensionName;
+extern NSString *OTRAllBuddiesDatabaseViewExtensionName;
 
 extern NSString *OTRAllAccountGroup;
 extern NSString *OTRConversationGroup;
@@ -31,5 +33,9 @@ extern NSString *OTRBuddyGroup;
 + (BOOL)registerChatDatabaseView;
 
 + (BOOL)registerBuddyDatabaseView;
+
++ (BOOL)registerBuddyNameSearchDatabaseView;
+
++ (BOOL)registerAllBuddiesDatabaseView;
 
 @end

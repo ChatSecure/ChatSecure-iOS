@@ -8,9 +8,13 @@
 
 #import "OTRComposeViewController.h"
 
-#import "OTRManagedBuddy.h"
-#import "OTRManagedAccount.h"
+#import "OTRBuddy.h"
+#import "OTRAccount.h"
+#import "OTRDatabaseView.h"
 #import "OTRLog.h"
+#import "OTRDatabaseManager.h"
+#import "OTRDatabaseView.h"
+#import "YapDatabaseFullTextSearchTransaction.h"
 
 #import "OTRBuddyInfoCell.h"
 
@@ -19,9 +23,12 @@ static CGFloat cellHeight = 60.0;
 @interface OTRComposeViewController () <UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, NSFetchedResultsControllerDelegate>
 
 @property (nonatomic, strong) UITableView *tableView;
-@property (nonatomic, strong) NSFetchedResultsController *buddySearchFetchedResultsController;
 @property (nonatomic, strong) UISearchBar *searchBar;
 @property (nonatomic, strong) NSLayoutConstraint *  tableViewBottomConstraint;
+@property (nonatomic, strong) YapDatabaseConnection *databaseConnection;
+@property (nonatomic, strong) YapDatabaseViewMappings *mappings;
+@property (nonatomic, strong) NSArray *searchResults;
+
 
 @end
 
@@ -58,6 +65,20 @@ static CGFloat cellHeight = 60.0;
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[topLayoutGuide][searchBar][tableView]" options:0 metrics:0 views:@{@"tableView":self.tableView,@"searchBar":self.searchBar,@"topLayoutGuide":self.topLayoutGuide}]];
     self.tableViewBottomConstraint = [NSLayoutConstraint constraintWithItem:self.tableView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0];
     [self.view addConstraint:self.tableViewBottomConstraint];
+    
+    //////// YapDatabase Connection /////////
+    self.databaseConnection = [[OTRDatabaseManager sharedInstance] mainThreadReadOnlyDatabaseConnection];
+    
+    self.mappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[OTRBuddyGroup] view:OTRAllBuddiesDatabaseViewExtensionName];
+    
+    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        [self.mappings updateWithTransaction:transaction];
+    }];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(yapDatabaseDidUpdate:)
+                                                 name:OTRUIDatabaseConnectionDidUpdateNotification
+                                               object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -82,25 +103,42 @@ static CGFloat cellHeight = 60.0;
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (NSFetchedResultsController *)buddySearchFetchedResultsController
+- (OTRBuddy *)buddyAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (!_buddySearchFetchedResultsController) {
-        NSArray * accountNames = [[OTRManagedAccount MR_findAll] valueForKey:OTRManagedAccountAttributes.username];
-        NSPredicate *notSelfPredicate = [NSPredicate predicateWithFormat:@"NOT (%K IN %@)",OTRManagedBuddyAttributes.accountName,accountNames];
-        _buddySearchFetchedResultsController = [OTRManagedBuddy MR_fetchAllGroupedBy:nil withPredicate:notSelfPredicate sortedBy:[NSString stringWithFormat:@"%@",OTRManagedBuddyAttributes.currentStatus] ascending:YES delegate:self];
+    if ([self useSearchResults]) {
+        if (indexPath.row < [self.searchResults count]) {
+            return self.searchResults[indexPath.row];
+        }
     }
-    return _buddySearchFetchedResultsController;
+    else
+    {
+        __block OTRBuddy *buddy;
+        [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+            buddy = [[transaction ext:OTRAllBuddiesDatabaseViewExtensionName] objectAtIndexPath:indexPath withMappings:self.mappings];
+        }];
+        return buddy;
+    }
+    
+    
+    return nil;
+}
+
+- (BOOL)useSearchResults
+{
+    if([self.searchBar.text length])
+    {
+        return YES;
+    }
+    return NO;
 }
 
 #pragma - mark keyBoardAnimation Methods
 - (void)keyboardWillShow:(NSNotification *)notification
 {
-    
     [self animateTableViewWithKeyboardNotification:notification];
 }
 - (void)keyboardWillHide:(NSNotification *)notification
 {
-    
     [self animateTableViewWithKeyboardNotification:notification];
 }
 
@@ -147,23 +185,22 @@ static CGFloat cellHeight = 60.0;
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
 {
-    NSPredicate *predicate = nil;
-    NSArray * accountNames = [[OTRManagedAccount MR_findAll] valueForKey:OTRManagedAccountAttributes.username];
-    NSPredicate *notSelfPredicate = [NSPredicate predicateWithFormat:@"NOT (%K IN %@)",OTRManagedBuddyAttributes.accountName,accountNames];
-    if (searchText.length) {
-        NSPredicate *textSearchPredicate = [NSPredicate predicateWithFormat:@"%K contains[cd] %@ OR %K contains[cd] %@",OTRManagedBuddyAttributes.accountName, searchText,OTRManagedBuddyAttributes.displayName,searchText];
-        predicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[textSearchPredicate,notSelfPredicate]];
-    }
-    else {
-        predicate = notSelfPredicate;
+    if ([searchText length]) {
+        
+        searchText = [NSString stringWithFormat:@"%@*",searchText];
+        
+        [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+            NSMutableArray *tempSearchResults = [NSMutableArray array];
+            [[transaction ext:OTRBuddyNameSearchDatabaseViewExtensionName] enumerateKeysAndObjectsMatching:searchText usingBlock:^(NSString *collection, NSString *key, id object, BOOL *stop) {
+                if ([object isKindOfClass:[OTRBuddy class]]) {
+                    [tempSearchResults addObject:object];
+                }
+            }];
+            self.searchResults = [tempSearchResults copy];
+        }];
     }
     
-    self.buddySearchFetchedResultsController.fetchRequest.predicate = predicate;
-    NSError *error = nil;
-    [self.buddySearchFetchedResultsController performFetch:&error];
-    if (error) {
-        DDLogError(@"Fetch Error: %@",error);
-    }
+    
     [self.tableView reloadData];
 }
 
@@ -171,18 +208,21 @@ static CGFloat cellHeight = 60.0;
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return [[self.buddySearchFetchedResultsController sections] count];
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [[self.buddySearchFetchedResultsController sections][section] numberOfObjects];
+    if ([self useSearchResults]) {
+        return [self.searchResults count];
+    }
+    return [self.mappings numberOfItemsInSection:section];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     OTRBuddyInfoCell *cell = [tableView dequeueReusableCellWithIdentifier:[OTRBuddyInfoCell reuseIdentifier] forIndexPath:indexPath];
-    OTRManagedBuddy * buddy = [self.buddySearchFetchedResultsController objectAtIndexPath:indexPath];
+    OTRBuddy * buddy = [self buddyAtIndexPath:indexPath];
     
     [cell setBuddy:buddy];
     
@@ -207,7 +247,8 @@ static CGFloat cellHeight = 60.0;
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if ([self.delegate respondsToSelector:@selector(controller:didSelectBuddy:)]) {
-        [self.delegate controller:self didSelectBuddy:[self.buddySearchFetchedResultsController objectAtIndexPath:indexPath]];
+        OTRBuddy * buddy = [self buddyAtIndexPath:indexPath];
+        [self.delegate controller:self didSelectBuddy:buddy];
     }
 }
 
@@ -218,53 +259,92 @@ static CGFloat cellHeight = 60.0;
     [self.view endEditing:YES];
 }
 
+#pragma - mark YapDatabaseViewUpdate
 
-#pragma - mark NSFetchedResultsDelegate Methods
-
-- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller
+- (void)yapDatabaseDidUpdate:(NSNotification *)notification;
 {
+    // Process the notification(s),
+    // and get the change-set(s) as applies to my view and mappings configuration.
+    NSArray *notifications = notification.userInfo[@"notifications"];
+    
+    NSArray *sectionChanges = nil;
+    NSArray *rowChanges = nil;
+    
+    if ([self useSearchResults]) {
+        return;
+    }
+    
+    [[self.databaseConnection ext:OTRAllBuddiesDatabaseViewExtensionName] getSectionChanges:&sectionChanges
+                                                                                 rowChanges:&rowChanges
+                                                                           forNotifications:notifications
+                                                                               withMappings:self.mappings];
+    
+    // No need to update mappings.
+    // The above method did it automatically.
+    
+    if ([sectionChanges count] == 0 & [rowChanges count] == 0)
+    {
+        // Nothing has changed that affects our tableView
+        return;
+    }
+    
+    // Familiar with NSFetchedResultsController?
+    // Then this should look pretty familiar
+    
     [self.tableView beginUpdates];
-}
-
-- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath
-{
-    switch (type) {
-        case NSFetchedResultsChangeInsert:
-            [self.tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationNone];
-            break;
-        case NSFetchedResultsChangeUpdate:
-            [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
-            break;
-        case NSFetchedResultsChangeMove:
-            [self.tableView moveRowAtIndexPath:indexPath toIndexPath:newIndexPath];
-            break;
-        case NSFetchedResultsChangeDelete:
-            [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
-            break;
-            
-        default:
-            break;
+    
+    for (YapDatabaseViewSectionChange *sectionChange in sectionChanges)
+    {
+        switch (sectionChange.type)
+        {
+            case YapDatabaseViewChangeDelete :
+            {
+                [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionChange.index]
+                              withRowAnimation:UITableViewRowAnimationAutomatic];
+                break;
+            }
+            case YapDatabaseViewChangeInsert :
+            {
+                [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionChange.index]
+                              withRowAnimation:UITableViewRowAnimationAutomatic];
+                break;
+            }
+        }
     }
-}
-
-- (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id<NSFetchedResultsSectionInfo>)sectionInfo atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type
-{
-
-    switch (type) {
-        case NSFetchedResultsChangeInsert:
-            [self.tableView insertSections:[[NSIndexSet alloc] initWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationNone];
-            break;
-        case NSFetchedResultsChangeDelete:
-            [self.tableView deleteSections:[[NSIndexSet alloc] initWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationNone];
-            break;
-            
-        default:
-            break;
+    
+    for (YapDatabaseViewRowChange *rowChange in rowChanges)
+    {
+        switch (rowChange.type)
+        {
+            case YapDatabaseViewChangeDelete :
+            {
+                [self.tableView deleteRowsAtIndexPaths:@[ rowChange.indexPath ]
+                                      withRowAnimation:UITableViewRowAnimationAutomatic];
+                break;
+            }
+            case YapDatabaseViewChangeInsert :
+            {
+                [self.tableView insertRowsAtIndexPaths:@[ rowChange.newIndexPath ]
+                                      withRowAnimation:UITableViewRowAnimationAutomatic];
+                break;
+            }
+            case YapDatabaseViewChangeMove :
+            {
+                [self.tableView deleteRowsAtIndexPaths:@[ rowChange.indexPath ]
+                                      withRowAnimation:UITableViewRowAnimationAutomatic];
+                [self.tableView insertRowsAtIndexPaths:@[ rowChange.newIndexPath ]
+                                      withRowAnimation:UITableViewRowAnimationAutomatic];
+                break;
+            }
+            case YapDatabaseViewChangeUpdate :
+            {
+                [self.tableView reloadRowsAtIndexPaths:@[ rowChange.indexPath ]
+                                      withRowAnimation:UITableViewRowAnimationNone];
+                break;
+            }
+        }
     }
-}
-
-- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
-{
+    
     [self.tableView endUpdates];
 }
 

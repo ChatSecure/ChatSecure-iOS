@@ -13,11 +13,14 @@
 #import "OTRBuddy.h"
 #import "OTRAccount.h"
 #import "OTRMessage.h"
+#import "YapDatabaseFullTextSearch.h"
 
 NSString *OTRConversationGroup = @"Conversation";
 NSString *OTRConversationDatabaseViewExtensionName = @"OTRConversationDatabaseViewExtensionName";
 NSString *OTRChatDatabaseViewExtensionName = @"OTRChatDatabaseViewExtensionName";
 NSString *OTRBuddyDatabaseViewExtensionName = @"OTRBuddyDatabaseViewExtensionName";
+NSString *OTRBuddyNameSearchDatabaseViewExtensionName = @"OTRBuddyBuddyNameSearchDatabaseViewExtensionName";
+NSString *OTRAllBuddiesDatabaseViewExtensionName = @"OTRAllBuddiesDatabaseViewExtensionName";
 
 NSString *OTRAllAccountGroup = @"All Accounts";
 NSString *OTRAllAccountDatabaseViewExtensionName = @"OTRAllAccountDatabaseViewExtensionName";
@@ -32,7 +35,7 @@ NSString *OTRBuddyGroup = @"Buddy";
 {
     YapDatabaseView *conversationView = [[OTRDatabaseManager sharedInstance].database registeredExtension:OTRConversationDatabaseViewExtensionName];
     if (conversationView) {
-        return;
+        return YES;
     }
     
     
@@ -96,7 +99,7 @@ NSString *OTRBuddyGroup = @"Buddy";
 {
     YapDatabaseView *accountView = [[OTRDatabaseManager sharedInstance].database registeredExtension:OTRAllAccountDatabaseViewExtensionName];
     if (accountView) {
-        return;
+        return YES;
     }
     
     
@@ -242,6 +245,101 @@ NSString *OTRBuddyGroup = @"Buddy";
     
     return [[OTRDatabaseManager sharedInstance].database registerExtension:view withName:OTRBuddyDatabaseViewExtensionName];
     
+}
+
++ (BOOL)registerBuddyNameSearchDatabaseView
+{
+    if ([[OTRDatabaseManager sharedInstance].database registeredExtension:OTRBuddyNameSearchDatabaseViewExtensionName]) {
+        return YES;
+    }
+    
+    NSArray *propertiesToIndex = @[OTRBuddyAttributes.username,OTRAccountAttributes.displayName];
+    
+    YapDatabaseFullTextSearchBlockType blockType = YapDatabaseFullTextSearchBlockTypeWithObject;
+    YapDatabaseFullTextSearchWithObjectBlock block = ^(NSMutableDictionary *dict, NSString *collection, NSString *key, id object) {
+        
+        if ([object isKindOfClass:[OTRBuddy class]])
+        {
+            OTRBuddy *buddy = (OTRBuddy *)object;
+            
+            if([buddy.username length]) {
+                [dict setObject:buddy.username forKey:OTRBuddyAttributes.username];
+            }
+            
+            if ([buddy.displayName length]) {
+                [dict setObject:buddy.displayName forKey:OTRBuddyAttributes.displayName];
+            }
+            
+            
+        }
+    };
+    
+    YapDatabaseFullTextSearch *fullTextSearch = [[YapDatabaseFullTextSearch alloc] initWithColumnNames:propertiesToIndex
+                                                                                      block:block
+                                                                                  blockType:blockType];
+    
+    return [[OTRDatabaseManager sharedInstance].database registerExtension:fullTextSearch withName:OTRBuddyNameSearchDatabaseViewExtensionName];
+}
+
++ (BOOL)registerAllBuddiesDatabaseView
+{
+    if ([[OTRDatabaseManager sharedInstance].database registeredExtension:OTRAllBuddiesDatabaseViewExtensionName]) {
+        return YES;
+    }
+    
+    YapDatabaseViewBlockType groupingBlockType;
+    YapDatabaseViewGroupingWithObjectBlock groupingBlock;
+    
+    YapDatabaseViewBlockType sortingBlockType;
+    YapDatabaseViewSortingWithObjectBlock sortingBlock;
+    
+    groupingBlockType = YapDatabaseViewBlockTypeWithObject;
+    
+    groupingBlock = ^NSString *(NSString *collection, NSString *key, id object){
+        
+        if ([object isKindOfClass:[OTRBuddy class]]) {
+            return OTRBuddyGroup;
+        }
+        return nil;
+    };
+    
+    sortingBlockType = YapDatabaseViewBlockTypeWithObject;
+    
+    sortingBlock =  ^(NSString *group, NSString *collection1, NSString *key1, id obj1, NSString *collection2, NSString *key2, id obj2) {
+        OTRBuddy *buddy1 = (OTRBuddy *)obj1;
+        OTRBuddy *buddy2 = (OTRBuddy *)obj2;
+        
+        if (buddy1.status == buddy2.status) {
+            NSString *buddy1String = buddy1.username;
+            NSString *buddy2String = buddy2.username;
+            
+            if ([buddy1.displayName length]) {
+                buddy1String = buddy1.displayName;
+            }
+            
+            if ([buddy2.displayName length]) {
+                buddy2String = buddy2.displayName;
+            }
+            
+            return [buddy1String compare:buddy2String options:NSCaseInsensitiveSearch];
+        }
+        else if (buddy1.status < buddy2.status) {
+            return NSOrderedAscending;
+        }
+        else{
+            return NSOrderedDescending;
+        }
+        
+    };
+    
+    YapDatabaseViewOptions *options = [[YapDatabaseViewOptions alloc] init];
+    options.isPersistent = YES;
+    options.allowedCollections = [NSSet setWithObject:[OTRBuddy collection]];
+    
+    YapDatabaseView *view = [[YapDatabaseView alloc] initWithGroupingBlock:groupingBlock groupingBlockType:groupingBlockType sortingBlock:sortingBlock sortingBlockType:sortingBlockType versionTag:@"" options:options];
+    
+    return [[OTRDatabaseManager sharedInstance].database registerExtension:view withName:OTRAllBuddiesDatabaseViewExtensionName];
+
 }
 
 @end

@@ -8,12 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-@class OTRManagedBuddy;
+@class OTRBuddy;
 @class OTRComposeViewController;
 
 @protocol OTRComposeViewControllerDelegate <NSObject>
 
-- (void)controller:(OTRComposeViewController *)viewController didSelectBuddy:(OTRManagedBuddy *)buddy;
+- (void)controller:(OTRComposeViewController *)viewController didSelectBuddy:(OTRBuddy *)buddy;
 
 @end
 

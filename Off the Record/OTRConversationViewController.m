@@ -305,7 +305,7 @@ static CGFloat cellHeight = 80.0;
 
 #pragma - mark OTRComposeViewController Method
 
-- (void)controller:(OTRComposeViewController *)viewController didSelectBuddy:(OTRManagedBuddy *)buddy
+- (void)controller:(OTRComposeViewController *)viewController didSelectBuddy:(OTRBuddy *)buddy
 {
     [viewController dismissViewControllerAnimated:YES completion:^{
         [self enterConversationWithBuddy:buddy];

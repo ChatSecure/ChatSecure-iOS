@@ -98,10 +98,10 @@ NSString *const OTRYapDatabaseRelationshipName = @"OTRYapDatabaseRelationshipNam
     
     YapDatabaseOptions *options = [[YapDatabaseOptions alloc] init];
     options.corruptAction = YapDatabaseCorruptAction_Delete;
-    options.passphraseBlock = ^{
-        // You can also do things like fetch from the keychain in here
-        return @"not a secure password";
-    };
+//    options.passphraseBlock = ^{
+//        // You can also do things like fetch from the keychain in here
+//        return @"not a secure password";
+//    };
     
     
     NSString *applicationSupportDirectory = [NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES) lastObject];
@@ -139,6 +139,8 @@ NSString *const OTRYapDatabaseRelationshipName = @"OTRYapDatabaseRelationshipNam
     [OTRDatabaseView registerConversationDatabaseView];
     [OTRDatabaseView registerChatDatabaseView];
     [OTRDatabaseView registerBuddyDatabaseView];
+    BOOL result = [OTRDatabaseView registerBuddyNameSearchDatabaseView];
+    [OTRDatabaseView registerAllBuddiesDatabaseView];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(yapDatabaseModified:)
