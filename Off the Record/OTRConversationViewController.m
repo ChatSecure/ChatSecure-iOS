@@ -264,6 +264,9 @@ static CGFloat cellHeight = 80.0;
                               withRowAnimation:UITableViewRowAnimationAutomatic];
                 break;
             }
+            case YapDatabaseViewChangeUpdate:
+            case YapDatabaseViewChangeMove:
+                break;
         }
     }
     

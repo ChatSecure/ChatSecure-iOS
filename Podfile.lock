@@ -39,15 +39,15 @@ PODS:
   - MBProgressHUD (0.8)
   - SBJson (3.2)
   - SIAlertView (1.3)
-  - SQLCipher (3.0.1):
-    - SQLCipher/standard
-  - SQLCipher/standard (3.0.1)
+  - SQLCipher/common (3.0.1)
+  - SQLCipher/fts (3.0.1):
+    - SQLCipher/common
   - SSKeychain (1.2.2)
   - UIAlertView-Blocks (1.0)
   - YapDatabase/common (2.4.1):
     - CocoaLumberjack (~> 1.6.3)
   - YapDatabase/SQLCipher (2.4.1):
-    - SQLCipher
+    - SQLCipher/fts
     - YapDatabase/common
 
 DEPENDENCIES:
@@ -78,19 +78,19 @@ SPEC CHECKSUMS:
   Appirater: 32fb9089615b5e542c7ad7b5749741a8aed55290
   CocoaLumberjack: 020378ec400d658923bf5887178394f65f052c90
   DAKeyboardControl: 219d6e32b9343eb85151255c43b1f238d8f0bbf7
-  Facebook-iOS-SDK: 5788541337dc88265bc940cb5ffb05915f9b64e3
+  Facebook-iOS-SDK: 762cebd849e9c2c6274ba000212c61eabec1bde8
   gtm-oauth2: 30600f0033c359f31d0e7a0e31c074a90353ece0
   GTMHTTPFetcher: bca306f50fec6a263d8de7493398657db255952a
   HockeySDK: aa28abb106de7804d31acf515f2c9aa4e6481fd0
   HPGrowingTextView: 4318f557b33c19def1c53ec275d6e2a2d6589cd0
-  JTTargetActionBlock: 3d6e5ecded7f8273ad006029444d285b58e016ea
+  JTTargetActionBlock: dc683c971f7b6ff875012f81e570b9ed15171c7b
   MagicalRecord: 95d49d74ef752cd52f6ad87bcb474817fc3978cf
   MBProgressHUD: 2bbc6f470111daf7f3eaa4eb12b8cbf01c4c0622
   SBJson: abc2bf2baef456d5dae213f9826fe2b6fdf19861
   SIAlertView: 522351a8870be07fb49053fa054c83da3ea17dbe
-  SQLCipher: 006f125d9b85e32ee6242b41adb68f0f5cbc4aa9
+  SQLCipher: be3b474de98f9ccc9539d35d98e159d4e55507a3
   SSKeychain: 3d0b76c87e7b062a7ad1631a825fddec84367d44
   UIAlertView-Blocks: f7be28a08e85ec21143951ec6797ca6474faf563
-  YapDatabase: a7286df03ef343ef802be084d4c36d0a042ac00e
+  YapDatabase: ef22d94b99f9f283fddbe1d21bdb6ba32277c2bb
 
 COCOAPODS: 0.31.1

@@ -21,53 +21,8 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "OTRManagedXMPPAccount.h"
-#import "OTRProtocol.h"
-#import "OTRConstants.h"
-#import "Strings.h"
-#import "OTRXMPPManager.h"
-#import "XMPPJID.h"
-
-static NSUInteger const OTRDefaultPortNumber = 5222;
-
-@interface OTRManagedXMPPAccount()
-@end
-
 
 @implementation OTRManagedXMPPAccount
-
-- (void) setDefaultsWithDomain:(NSString *)newDomain {
-    //[super setDefaultsWithProtocol:kOTRProtocolTypeXMPP];
-    self.domain = newDomain;
-    self.port = @(OTRDefaultPortNumber); // Default XMPP port number
-    self.resource = [[self class] newResource];  //Default resource chatsecure12345
-}
-
-+(NSNumber *)defaultPortNumber {
-    return @(OTRDefaultPortNumber);
-}
-
--(NSString *)providerName
-{
-    return JABBER_STRING;
-}
-
--(OTRAccountType)accountType
-{
-    return OTRAccountTypeJabber;
-}
-
-- (Class)protocolClass {
-    return [OTRXMPPManager class];
-}
-
--(NSString *)accountDomain{
-    if(!self.domain.length)
-    {
-        return [XMPPJID jidWithString:self.username].domain;
-    }
-    return self.domain;
-}
-
 
 
 @end

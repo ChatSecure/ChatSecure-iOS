@@ -619,9 +619,6 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
     if (![_buddy.uniqueId isEqualToString:newBuddy.uniqueId]) {
         [self saveCurrentMessageText];
         
-        //BOOL chatStatus = [OTRDatabaseView registerChatDatabaseViewWithBuddyUniqueId:newBuddy.uniqueId];
-        //BOOL buddyStatus = [OTRDatabaseView registerBuddyDatabaseViewWithBuddyUniqueId:newBuddy.uniqueId];
-        
         if (newBuddy) {
             self.mappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[newBuddy.uniqueId] view:OTRChatDatabaseViewExtensionName];
             self.buddyMappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[newBuddy.uniqueId] view:OTRBuddyDatabaseViewExtensionName];
