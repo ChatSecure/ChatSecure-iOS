@@ -33,26 +33,28 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
 
 @interface OTRAccount ()
 
-@property (nonatomic) OTRAccountType accountType;
+//@property (nonatomic) OTRAccountType accountType;
 
 @end
 
 @implementation OTRAccount
 
+@synthesize accountType = _accountType;
+
 - (id)init
 {
     if(self = [super init])
     {
-        self.accountType = OTRAccountTypeNone;
+        _accountType = OTRAccountTypeNone;
     }
     return self;
 }
 
-- (id)initWithAccountType:(OTRAccountType)accountType
+- (id)initWithAccountType:(OTRAccountType)acctType
 {
     if (self = [self init]) {
         
-        self.accountType = accountType;
+        _accountType = acctType;
     }
     return self;
 }
@@ -161,7 +163,7 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
             }
         }
     }];
-    return finalAccount;
+    return [finalAccount copy];
     
 }
 + (NSArray *)allAccountsWithTransaction:(YapDatabaseReadTransaction*)transaction
@@ -169,7 +171,7 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
     NSMutableArray *accounts = [NSMutableArray array];
     NSArray *allAccountKeys = [transaction allKeysInCollection:[OTRAccount collection]];
     [allAccountKeys enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        [accounts addObject:[transaction objectForKey:obj inCollection:[OTRAccount collection]]];
+        [accounts addObject:[[transaction objectForKey:obj inCollection:[OTRAccount collection]]copy]];
     }];
     
     return [accounts copy];

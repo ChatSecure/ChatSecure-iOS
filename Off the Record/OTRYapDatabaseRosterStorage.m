@@ -13,7 +13,7 @@
 #import "YapDatabaseTransaction.h"
 #import "OTRLog.h"
 #import "OTRXMPPBuddy.h"
-#import "OTRAccount.h"
+#import "OTRXMPPAccount.h"
 #import "Strings.h"
 
 @interface OTRYapDatabaseRosterStorage ()
@@ -35,26 +35,38 @@
 
 #pragma - mark Helper Methods
 
-- (OTRAccount *)accountForStream:(XMPPStream *)stream
+- (OTRXMPPAccount *)accountForStream:(XMPPStream *)stream
 {
-    __block OTRAccount *account = nil;
+    __block OTRXMPPAccount *account = nil;
     [self.connection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        account = [OTRAccount fetchAccountWithUsername:[stream.myJID bare] protocolType:OTRProtocolTypeXMPP transaction:transaction];
+        account = [self accountForStream:stream transaction:transaction];
     }];
     return account;
 }
 
+- (OTRXMPPAccount *)accountForStream:(XMPPStream *)stream transaction:(YapDatabaseReadTransaction *)transaction
+{
+    return [OTRXMPPAccount fetchAccountWithUsername:[stream.myJID bare] protocolType:OTRProtocolTypeXMPP transaction:transaction];
+}
+
 - (OTRXMPPBuddy *)buddyWithJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream
 {
+    __block OTRXMPPBuddy *buddy = nil;
+    [self.connection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        buddy = [self buddyWithJID:jid xmppStream:stream transaction:transaction];
+    }];
+    return buddy;
+}
+
+- (OTRXMPPBuddy *)buddyWithJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream transaction:(YapDatabaseReadTransaction *)transaction
+{
     if (![self.accountUniqueId length]) {
-        OTRAccount *account = [self accountForStream:stream];
+        OTRAccount *account = [self accountForStream:stream transaction:transaction];
         self.accountUniqueId = account.uniqueId;
     }
     __block OTRXMPPBuddy *buddy = nil;
     
-    [self.connection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        buddy = [OTRXMPPBuddy fetchBuddyWithUsername:[jid bare] withAccountUniqueId:self.accountUniqueId transaction:transaction];
-    }];
+    buddy = [OTRXMPPBuddy fetchBuddyWithUsername:[jid bare] withAccountUniqueId:self.accountUniqueId transaction:transaction];
     
     if (!buddy) {
         buddy = [[OTRXMPPBuddy alloc] init];
@@ -63,6 +75,7 @@
     }
     
     return buddy;
+
 }
 
 -(BOOL)isPendingApprovalElement:(NSXMLElement *)item
@@ -82,18 +95,24 @@
 
 - (void)updateBuddy:(OTRXMPPBuddy *)buddy withItem:(NSXMLElement *)item
 {
-    buddy.displayName = [item attributeStringValueForName:@"name"];
-    
-    if ([self isPendingApprovalElement:item]) {
-        //FIXME PendingApproval
-        buddy.pendingApproval = YES;
-    }
-    else {
-        buddy.pendingApproval = NO;
-    }
-    
     [self.connection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        [transaction setObject:buddy forKey:buddy.uniqueId inCollection:[OTRXMPPBuddy collection]];
+        
+        OTRXMPPBuddy *localBuddy = [OTRXMPPBuddy fetchObjectWithUniqueID:buddy.uniqueId transaction:transaction];
+        if (!localBuddy) {
+            localBuddy = buddy;
+        }
+        
+        localBuddy.displayName = [item attributeStringValueForName:@"name"];
+        
+        if ([self isPendingApprovalElement:item]) {
+            localBuddy.pendingApproval = YES;
+        }
+        else {
+            buddy.pendingApproval = NO;
+        }
+        
+        
+        [localBuddy saveWithTransaction:transaction];
     }];
 }
 
@@ -139,49 +158,51 @@
 
 - (void)handlePresence:(XMPPPresence *)presence xmppStream:(XMPPStream *)stream
 {
-    OTRXMPPBuddy *buddy = [self buddyWithJID:[presence from] xmppStream:stream];
     
-    if ([[presence type] isEqualToString:@"unavailable"] || [presence isErrorPresence]) {
-        buddy.status = OTRBuddyStatusOffline;
-        buddy.statusMessage = OFFLINE_STRING;
-    }
-    else if (buddy) {
-        NSString *defaultMessage = OFFLINE_STRING;
-        switch (presence.intShow)
-        {
-            case 0  :
-                buddy.status = OTRBuddyStatusDnd;
-                defaultMessage = DO_NOT_DISTURB_STRING;
-                break;
-            case 1  :
-                buddy.status = OTRBuddyStatusXa;
-                defaultMessage = EXTENDED_AWAY_STRING;
-                break;
-            case 2  :
-                buddy.status = OTRBuddyStatusAway;
-                defaultMessage = AWAY_STRING;
-                break;
-            case 3  :
-            case 4  :
-                buddy.status = OTRBuddyStatusAvailable;
-                defaultMessage = AVAILABLE_STRING;
-                break;
-            default :
-                buddy.status = OTRBuddyStatusOffline;
-                break;
-        }
-        
-        if ([[presence status] length]) {
-            buddy.statusMessage = [presence status];
-        }
-        else {
-            buddy.statusMessage = defaultMessage;
-        }
-
-    }
     
     [self.connection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        [transaction setObject:buddy forKey:buddy.uniqueId inCollection:[OTRBuddy collection]];
+        
+        OTRXMPPBuddy *buddy = [self buddyWithJID:[presence from] xmppStream:stream transaction:transaction];
+        
+        if ([[presence type] isEqualToString:@"unavailable"] || [presence isErrorPresence]) {
+            buddy.status = OTRBuddyStatusOffline;
+            buddy.statusMessage = OFFLINE_STRING;
+        }
+        else if (buddy) {
+            NSString *defaultMessage = OFFLINE_STRING;
+            switch (presence.intShow)
+            {
+                case 0  :
+                    buddy.status = OTRBuddyStatusDnd;
+                    defaultMessage = DO_NOT_DISTURB_STRING;
+                    break;
+                case 1  :
+                    buddy.status = OTRBuddyStatusXa;
+                    defaultMessage = EXTENDED_AWAY_STRING;
+                    break;
+                case 2  :
+                    buddy.status = OTRBuddyStatusAway;
+                    defaultMessage = AWAY_STRING;
+                    break;
+                case 3  :
+                case 4  :
+                    buddy.status = OTRBuddyStatusAvailable;
+                    defaultMessage = AVAILABLE_STRING;
+                    break;
+                default :
+                    buddy.status = OTRBuddyStatusOffline;
+                    break;
+            }
+            
+            if ([[presence status] length]) {
+                buddy.statusMessage = [presence status];
+            }
+            else {
+                buddy.statusMessage = defaultMessage;
+            }
+        }
+        
+        [buddy saveWithTransaction:transaction];
     }];
     
 }

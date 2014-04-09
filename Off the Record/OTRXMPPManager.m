@@ -604,7 +604,7 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
                  messageBuddy.chatState = kOTRChatStateInactive;
             else if([xmppMessage hasGoneChatState])
                  messageBuddy.chatState = kOTRChatStateGone;
-            [transaction setObject:messageBuddy forKey:messageBuddy.uniqueId inCollection:[OTRXMPPBuddy collection]];
+            [messageBuddy saveWithTransaction:transaction];
         }
         
         if ([xmppMessage hasReceiptResponse] && ![xmppMessage isErrorMessage]) {
@@ -784,19 +784,20 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 
 -(void)sendChatState:(OTRChatState)chatState withBuddyID:(NSString *)buddyUniqueId
 {
-    __block OTRXMPPBuddy *buddy = nil;
-    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        buddy = [OTRXMPPBuddy fetchObjectWithUniqueID:buddyUniqueId transaction:transaction];
-    }];
     
-    if (buddy.lastSentChatState == chatState) {
-        return;
-    }
     
     dispatch_async(self.workQueue, ^{
         
-        XMPPMessage * xMessage = [[XMPPMessage alloc] initWithType:@"chat" to:[XMPPJID jidWithString:buddy.username]];
+        __block OTRXMPPBuddy *buddy = nil;
+        [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+            buddy = [OTRXMPPBuddy fetchObjectWithUniqueID:buddyUniqueId transaction:transaction];
+        }];
         
+        if (buddy.lastSentChatState == chatState) {
+            return;
+        }
+        
+        XMPPMessage * xMessage = [[XMPPMessage alloc] initWithType:@"chat" to:[XMPPJID jidWithString:buddy.username]];
         BOOL shouldSend = YES;
         
         if (chatState == kOTRChatStateActive) {
@@ -843,9 +844,11 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
         
         if(shouldSend)
         {
-            buddy.lastSentChatState = chatState;
             [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-                [transaction setObject:buddy forKey:buddy.uniqueId inCollection:[OTRXMPPBuddy collection]];
+                OTRXMPPBuddy *localBuddy = [OTRXMPPBuddy fetchObjectWithUniqueID:buddy.uniqueId transaction:transaction];
+                localBuddy.lastSentChatState = chatState;
+                
+                [localBuddy saveWithTransaction:transaction];
             }];
             [self.xmppStream sendElement:xMessage];
         }

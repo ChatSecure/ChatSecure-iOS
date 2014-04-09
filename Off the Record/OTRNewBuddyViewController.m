@@ -196,7 +196,7 @@
             }
             
             buddy.displayName = newBuddyDisplayName;
-            [transaction setObject:buddy forKey:buddy.uniqueId inCollection:[OTRBuddy collection]];
+            [buddy saveWithTransaction:transaction];
         }];
         
         id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];

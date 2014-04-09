@@ -27,7 +27,7 @@
 {
     if (self = [super init]) {
         self.storageQueue = dispatch_queue_create("OTR.OTRvCardYapDatabaseStorage", NULL);
-        self.databaseConnection = [[OTRDatabaseManager sharedInstance] newConnection];
+        self.databaseConnection = [OTRDatabaseManager sharedInstance].readWriteDatabaseConnection;
     }
     return self;
 }
@@ -131,7 +131,7 @@
         buddy.waitingForvCardTempFetch = NO;
         buddy.lastUpdatedvCardTemp = [NSDate date];
         
-        [transaction setObject:buddy forKey:buddy.uniqueId inCollection:[OTRXMPPBuddy collection]];
+        [buddy saveWithTransaction:transaction];
     }];
     
 }
@@ -158,27 +158,30 @@
     if (![stream isAuthenticated]) {
         return NO;
     }
-    BOOL result = NO;
-    OTRXMPPBuddy * buddy = [self buddyWithJID:jid xmppStream:stream];
-    if (!buddy.isWaitingForvCardTempFetch) {
-        
-        buddy.waitingForvCardTempFetch = YES;
-        buddy.lastUpdatedvCardTemp = [NSDate date];
-        
-        result = YES;
-    }
-    else if ([buddy.lastUpdatedvCardTemp timeIntervalSinceNow] <= -10) {
-        
-        buddy.lastUpdatedvCardTemp = [NSDate date];
-        
-        result = YES;
-    }
+    __block BOOL result = NO;
     
-    if (result) {
-        [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-            [transaction setObject:buddy forKey:buddy.uniqueId inCollection:[OTRXMPPBuddy collection]];
-        }];
-    }
+    [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        
+        OTRXMPPBuddy * buddy = [self buddyWithJID:jid xmppStream:stream transaction:transaction];
+        if (!buddy.isWaitingForvCardTempFetch) {
+            
+            buddy.waitingForvCardTempFetch = YES;
+            buddy.lastUpdatedvCardTemp = [NSDate date];
+            
+            result = YES;
+        }
+        else if ([buddy.lastUpdatedvCardTemp timeIntervalSinceNow] <= -10) {
+            
+            buddy.lastUpdatedvCardTemp = [NSDate date];
+            
+            result = YES;
+        }
+        
+        
+        if (result) {
+            [buddy saveWithTransaction:transaction];
+        }
+    }];
     
     return result;
 }

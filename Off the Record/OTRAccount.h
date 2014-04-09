@@ -32,6 +32,7 @@ extern NSString *const OTRXMPPTorImageName;
 
 @property (nonatomic, strong) NSString *password;
 
+
 - (id)initWithAccountType:(OTRAccountType)accountType;
 
 - (Class)protocolClass;

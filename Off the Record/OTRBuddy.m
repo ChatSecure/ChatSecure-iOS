@@ -79,7 +79,7 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
 - (void)setAllMessagesRead:(YapDatabaseReadWriteTransaction *)transaction
 {
     [[transaction ext:OTRYapDatabaseRelationshipName] enumerateEdgesWithName:OTRMessageEdges.buddy destinationKey:self.uniqueId collection:[OTRBuddy collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
-        OTRMessage *message = [OTRMessage fetchObjectWithUniqueID:edge.sourceKey transaction:transaction];
+        OTRMessage *message = [[OTRMessage fetchObjectWithUniqueID:edge.sourceKey transaction:transaction] copy];
         
         if (!message.isRead) {
             message.read = YES;
@@ -97,7 +97,7 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
         }
         
     }];
-    return finalMessage;
+    return [finalMessage copy];
 }
 
 #pragma - mark Class Methods
@@ -114,7 +114,7 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
         }
     }];
     
-    return finalBuddy;
+    return [finalBuddy copy];
 }
 
 #pragma - mark YapDatabaseRelationshipNode

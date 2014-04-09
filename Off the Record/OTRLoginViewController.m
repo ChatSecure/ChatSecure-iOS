@@ -405,6 +405,7 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
         }];
         
         [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+            
             [transaction setObject:self.account forKey:self.account.uniqueId inCollection:[OTRAccount collection]];
         }];
     }
@@ -536,6 +537,7 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
 
 +(OTRLoginViewController *)loginViewControllerWithAcccount:(OTRAccount *)account
 {
+    
     switch (account.accountType) {
         case OTRAccountTypeXMPPTor:
         case OTRAccountTypeJabber:
