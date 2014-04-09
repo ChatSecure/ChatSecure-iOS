@@ -11,6 +11,7 @@
 #import "OTRSettingsViewController.h"
 #import "OTRChatViewController.h"
 #import "OTRComposeViewController.h"
+#import "OTRSubscriptionRequestsViewController.h"
 
 #import "OTRConversationCell.h"
 
@@ -36,6 +37,9 @@ static CGFloat cellHeight = 80.0;
 @property (nonatomic, strong) NSTimer *cellUpdateTimer;
 @property (nonatomic, strong) YapDatabaseConnection *connection;
 @property (nonatomic, strong) YapDatabaseViewMappings *mappings;
+@property (nonatomic, strong) YapDatabaseViewMappings *subscriptionRequestsMappings;
+
+@property (nonatomic, strong) UIBarButtonItem *composeBarButtonItem;
 @end
 
 @implementation OTRConversationViewController
@@ -50,8 +54,8 @@ static CGFloat cellHeight = 80.0;
     UIBarButtonItem *settingsBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"14-gear.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(settingsButtonPressed:)];
     self.navigationItem.rightBarButtonItem = settingsBarButtonItem;
     
-    UIBarButtonItem *composeBarButtonItem =[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(composeButtonPressed:)];
-    self.navigationItem.leftBarButtonItem = composeBarButtonItem;
+    self.composeBarButtonItem =[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(composeButtonPressed:)];
+    self.navigationItem.leftBarButtonItem = self.composeBarButtonItem;
     
     ////////// Create TableView /////////////////
     
@@ -73,11 +77,15 @@ static CGFloat cellHeight = 80.0;
     
     [OTRDatabaseView registerConversationDatabaseView];
     
-    self.mappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[OTRConversationGroup] view:OTRConversationDatabaseViewExtensionName];
+    self.mappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[OTRConversationGroup]
+                                                               view:OTRConversationDatabaseViewExtensionName];
+    self.subscriptionRequestsMappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[OTRAllPresenceSubscriptionRequestGroup]
+                                                                                   view:OTRAllSubscriptionRequestsViewExtensionName];
     
     
     [self.connection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         [self.mappings updateWithTransaction:transaction];
+        [self.subscriptionRequestsMappings updateWithTransaction:transaction];
     }];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -94,6 +102,7 @@ static CGFloat cellHeight = 80.0;
     [super viewWillAppear:animated];
     [self.cellUpdateTimer invalidate];
     [self.tableView reloadData];
+    [self updateInbox];
     self.cellUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:60.0 target:self selector:@selector(updateVisibleCells:) userInfo:nil repeats:YES];
     
 }
@@ -161,6 +170,43 @@ static CGFloat cellHeight = 80.0;
     return buddy;
 }
 
+#pragma - mark Inbox Methods
+
+- (void)showInbox
+{
+    if ([self.navigationItem.leftBarButtonItems count] != 2) {
+        UIBarButtonItem *inboxBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"inbox"] style:UIBarButtonItemStylePlain target:self action:@selector(inboxButtonPressed:)];
+        
+        self.navigationItem.leftBarButtonItems = @[self.composeBarButtonItem,inboxBarButtonItem];
+    }
+}
+
+- (void)hideInbox
+{
+    if (![self.navigationItem.leftBarButtonItem isEqual:self.composeBarButtonItem]) {
+        self.navigationItem.leftBarButtonItem = self.composeBarButtonItem;
+    }
+    
+}
+
+- (void)inboxButtonPressed:(id)sender
+{
+    OTRSubscriptionRequestsViewController *viewController = [[OTRSubscriptionRequestsViewController alloc] init];
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:viewController];
+
+    [self.navigationController presentViewController:navController animated:YES completion:nil];
+}
+
+- (void)updateInbox
+{
+    if ([self.subscriptionRequestsMappings numberOfItemsInAllGroups] > 0) {
+        [self showInbox];
+    }
+    else {
+        [self hideInbox];
+    }
+}
+
 
 #pragma - mark UITableViewDataSource Methods
 
@@ -222,6 +268,9 @@ static CGFloat cellHeight = 80.0;
 
 - (void)yapDatabaseModified:(NSNotification *)notification
 {
+    
+    [self updateInbox];
+    
     // Process the notification(s),
     // and get the change-set(s) as applies to my view and mappings configuration.
     NSArray *notifications = notification.userInfo[@"notifications"];

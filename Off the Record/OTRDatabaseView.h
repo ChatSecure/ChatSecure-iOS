@@ -17,11 +17,13 @@ extern NSString *OTRAllAccountDatabaseViewExtensionName;
 extern NSString *OTRBuddyDatabaseViewExtensionName;
 extern NSString *OTRBuddyNameSearchDatabaseViewExtensionName;
 extern NSString *OTRAllBuddiesDatabaseViewExtensionName;
+extern NSString *OTRAllSubscriptionRequestsViewExtensionName;
 
 extern NSString *OTRAllAccountGroup;
 extern NSString *OTRConversationGroup;
 extern NSString *OTRChatMessageGroup;
 extern NSString *OTRBuddyGroup;
+extern NSString *OTRAllPresenceSubscriptionRequestGroup;
 
 @interface OTRDatabaseView : NSObject
 
@@ -38,4 +40,5 @@ extern NSString *OTRBuddyGroup;
 
 + (BOOL)registerAllBuddiesDatabaseView;
 
++ (BOOL)registerAllSubscriptionRequestsView;
 @end

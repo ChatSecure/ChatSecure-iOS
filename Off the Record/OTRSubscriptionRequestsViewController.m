@@ -7,38 +7,63 @@
 //
 
 #import "OTRSubscriptionRequestsViewController.h"
-#import "OTRXMPPManagedPresenceSubscriptionRequest.h"
-#import "OTRManagedXMPPAccount.h"
+#import "OTRXMPPPresenceSubscriptionRequest.h"
+#import "OTRXMPPAccount.h"
+#import "OTRDatabaseManager.h"
+#import "OTRDatabaseView.h"
 #import "Strings.h"
 #import "OTRXMPPManager.h"
 #import "OTRProtocolManager.h"
 
-@interface OTRSubscriptionRequestsViewController ()
+#import "YapDatabaseViewMappings.h"
+#import "UIActionSheet+Blocks.h"
+
+@interface OTRSubscriptionRequestsViewController () <UITableViewDataSource, UITableViewDelegate>
+
+@property (nonatomic, strong) YapDatabaseConnection *databaseConnection;
+@property (nonatomic, strong) YapDatabaseViewMappings *mappings;
+
+@property (nonatomic, strong) UITableView *tableView;
+
 
 @end
 
 @implementation OTRSubscriptionRequestsViewController
 
-- (id)initWithStyle:(UITableViewStyle)style
-{
-    self = [super initWithStyle:style];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     self.title = SUBSCRIPTION_REQUEST_TITLE;
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneButtonPressed:)];
+    
+    
+    ////// Setup UITableView //////
+    
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self;
+    self.tableView.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.view addSubview:self.tableView];
+    
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[tableView]|" options:0 metrics:0 views:@{@"tableView":self.tableView}]];
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[tableView]|" options:0 metrics:0 views:@{@"tableView":self.tableView}]];
+    
+    
+    ////// Setup Connection //////
+    self.databaseConnection = [OTRDatabaseManager sharedInstance].mainThreadReadOnlyDatabaseConnection;
+    
+    self.mappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[OTRAllPresenceSubscriptionRequestGroup]
+                                                               view:OTRAllSubscriptionRequestsViewExtensionName];
+    
+    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        [self.mappings updateWithTransaction:transaction];
+    }];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(yapDatabaseModified:)
+                                                 name:OTRUIDatabaseConnectionDidUpdateNotification
+                                               object:nil];
     
 }
 
@@ -47,16 +72,48 @@
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
 
+- (OTRXMPPPresenceSubscriptionRequest *)subscriptionRequestAtIndexPath:(NSIndexPath *)indexPath
+{
+    __block OTRXMPPPresenceSubscriptionRequest *request = nil;
+    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        request = [[transaction extension:OTRAllSubscriptionRequestsViewExtensionName] objectAtIndexPath:indexPath withMappings:self.mappings];
+    }];
+    return request;
+}
+
+- (OTRXMPPAccount *)accountAtIndexPath:(NSIndexPath *)indexPath
+{
+    __block OTRXMPPAccount *account = nil;
+    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        OTRXMPPPresenceSubscriptionRequest *request = [[transaction extension:OTRAllSubscriptionRequestsViewExtensionName] objectAtIndexPath:indexPath withMappings:self.mappings];
+        account = [request accountWithTransaction:transaction];
+    }];
+    return account;
+}
+
+- (OTRXMPPManager *)managerAtIndexPath:(NSIndexPath *)indexPath
+{
+    OTRXMPPAccount *account = [self accountAtIndexPath:indexPath];
+    return (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:account];
+}
+
+- (void)deleteSubscriptionRequest:(OTRXMPPPresenceSubscriptionRequest *)subscriptionRequest
+{
+    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        [transaction setObject:nil forKey:subscriptionRequest.uniqueId inCollection:[OTRXMPPPresenceSubscriptionRequest collection]];
+    }];
+}
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 1;
+    return [self.mappings numberOfSections];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [[self subscriptionRequests] count];
+    return [self.mappings numberOfItemsInSection:section];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -67,100 +124,137 @@
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
     }
-    OTRXMPPManagedPresenceSubscriptionRequest * subRequest = [[self subscriptionRequests] objectAtIndex:indexPath.row];
+    OTRXMPPPresenceSubscriptionRequest * subRequest = [self subscriptionRequestAtIndexPath:indexPath];
+    OTRXMPPAccount *account = [self accountAtIndexPath:indexPath];
+    OTRXMPPManager *manager = [self managerAtIndexPath:indexPath];
     
     cell.textLabel.text = subRequest.jid;
-    cell.detailTextLabel.text = subRequest.xmppAccount.username;
+    cell.detailTextLabel.text = account.username;
+    
+    if (manager.isConnected) {
+        cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+    }
+    else {
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    }
     
     return cell;
 }
-
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
 
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    currentlySelectedRequest = [[self subscriptionRequests] objectAtIndex:indexPath.row];
-    UIActionSheet * requestActionSheet = [[UIActionSheet alloc] initWithTitle:currentlySelectedRequest.jid delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:REJECT_STRING otherButtonTitles:ADD_STRING, nil];
-    [requestActionSheet showInView:self.view];
+    OTRXMPPPresenceSubscriptionRequest *request = [self subscriptionRequestAtIndexPath:indexPath];
+    OTRXMPPManager * manager = [self managerAtIndexPath:indexPath];
+    XMPPJID *jid = [XMPPJID jidWithString:request.jid];
+    
+    if (manager.isConnected) {
+        RIButtonItem *cancelButton = [RIButtonItem itemWithLabel:CANCEL_STRING];
+        RIButtonItem *rejectButton = [RIButtonItem itemWithLabel:REJECT_STRING action:^{
+            [manager.xmppRoster rejectPresenceSubscriptionRequestFrom:jid];
+            [self deleteSubscriptionRequest:request];
+        }];
+        RIButtonItem *addButton = [RIButtonItem itemWithLabel:ADD_STRING action:^{
+            [manager.xmppRoster acceptPresenceSubscriptionRequestFrom:jid andAddToRoster:YES];
+            [self deleteSubscriptionRequest:request];
+        }];
+        UIActionSheet *actionSeet = [[UIActionSheet alloc] initWithTitle:request.jid cancelButtonItem:cancelButton destructiveButtonItem:rejectButton otherButtonItems:addButton, nil];
+        
+        [actionSeet showInView:self.view];
+    }
+    
+    
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
--(NSFetchedResultsController *)subscriptionRequestsFetchedResultsController
+#pragma - mark YapDatabase Methods
+
+- (void)yapDatabaseModified:(NSNotification *)notification
 {
-    if(_subscriptionRequestsFetchedResultsController)
+    // Process the notification(s),
+    // and get the change-set(s) as applies to my view and mappings configuration.
+    NSArray *notifications = notification.userInfo[@"notifications"];
+    
+    NSArray *sectionChanges = nil;
+    NSArray *rowChanges = nil;
+    
+    [[self.databaseConnection ext:OTRAllSubscriptionRequestsViewExtensionName] getSectionChanges:&sectionChanges
+                                                                                   rowChanges:&rowChanges
+                                                                             forNotifications:notifications
+                                                                                 withMappings:self.mappings];
+    
+    // No need to update mappings.
+    // The above method did it automatically.
+    
+    if ([sectionChanges count] == 0 & [rowChanges count] == 0)
     {
-        return _subscriptionRequestsFetchedResultsController;
+        // Nothing has changed that affects our tableView
+        return;
     }
     
-    _subscriptionRequestsFetchedResultsController = [OTRXMPPManagedPresenceSubscriptionRequest MR_fetchAllGroupedBy:nil withPredicate:nil sortedBy:OTRXMPPManagedPresenceSubscriptionRequestAttributes.jid ascending:YES delegate:self];
+    // Familiar with NSFetchedResultsController?
+    // Then this should look pretty familiar
     
-    return _subscriptionRequestsFetchedResultsController;
-}
-
--(NSArray* )subscriptionRequests {
-    NSPredicate * accountPredicate = [NSPredicate predicateWithFormat:@"self.xmppAccount.isConnected == YES"];
-    return [[self.subscriptionRequestsFetchedResultsController fetchedObjects] filteredArrayUsingPredicate:accountPredicate];
-}
-/*
--(void)controllerWillChangeContent:(NSFetchedResultsController *)controller
-{
     [self.tableView beginUpdates];
-}
-
--(void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath
-{
-    switch (type) {
-        case NSFetchedResultsChangeInsert:
-            [self.tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-            break;
-        case NSFetchedResultsChangeUpdate:
-            [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-            break;
-        case NSFetchedResultsChangeMove:
-            [self.tableView moveRowAtIndexPath:indexPath toIndexPath:newIndexPath];
-            break;
-        case NSFetchedResultsChangeDelete:
-             [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-            break;
-        default:
-            break;
-    }
-}
-*/
--(void)controllerDidChangeContent:(NSFetchedResultsController *)controller
-{
-    [self.tableView reloadData];
-}
-
--(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if(actionSheet.cancelButtonIndex != buttonIndex )
+    
+    for (YapDatabaseViewSectionChange *sectionChange in sectionChanges)
     {
-        OTRXMPPManager * manager = (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:currentlySelectedRequest.xmppAccount];
-        XMPPJID *jid = [XMPPJID jidWithString:currentlySelectedRequest.jid];
-        
-        if (actionSheet.destructiveButtonIndex == buttonIndex) {
-            [manager.xmppRoster rejectPresenceSubscriptionRequestFrom:jid];
-        }
-        else
+        switch (sectionChange.type)
         {
-            [manager.xmppRoster acceptPresenceSubscriptionRequestFrom:jid andAddToRoster:YES];
+            case YapDatabaseViewChangeDelete :
+            {
+                [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionChange.index]
+                              withRowAnimation:UITableViewRowAnimationAutomatic];
+                break;
+            }
+            case YapDatabaseViewChangeInsert :
+            {
+                [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionChange.index]
+                              withRowAnimation:UITableViewRowAnimationAutomatic];
+                break;
+            }
+            case YapDatabaseViewChangeUpdate:
+            case YapDatabaseViewChangeMove:
+                break;
         }
-        [currentlySelectedRequest MR_deleteEntity];
-        [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
     }
     
+    for (YapDatabaseViewRowChange *rowChange in rowChanges)
+    {
+        switch (rowChange.type)
+        {
+            case YapDatabaseViewChangeDelete :
+            {
+                [self.tableView deleteRowsAtIndexPaths:@[ rowChange.indexPath ]
+                                      withRowAnimation:UITableViewRowAnimationAutomatic];
+                break;
+            }
+            case YapDatabaseViewChangeInsert :
+            {
+                [self.tableView insertRowsAtIndexPaths:@[ rowChange.newIndexPath ]
+                                      withRowAnimation:UITableViewRowAnimationAutomatic];
+                break;
+            }
+            case YapDatabaseViewChangeMove :
+            {
+                [self.tableView deleteRowsAtIndexPaths:@[ rowChange.indexPath ]
+                                      withRowAnimation:UITableViewRowAnimationAutomatic];
+                [self.tableView insertRowsAtIndexPaths:@[ rowChange.newIndexPath ]
+                                      withRowAnimation:UITableViewRowAnimationAutomatic];
+                break;
+            }
+            case YapDatabaseViewChangeUpdate :
+            {
+                [self.tableView reloadRowsAtIndexPaths:@[ rowChange.indexPath ]
+                                      withRowAnimation:UITableViewRowAnimationNone];
+                break;
+            }
+        }
+    }
     
+    [self.tableView endUpdates];
 }
 
 @end

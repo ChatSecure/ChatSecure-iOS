@@ -28,7 +28,6 @@
 #import "XMPPCapabilitiesCoreDataStorage.h"
 #import "XMPPRosterCoreDataStorage.h"
 #import "XMPPvCardAvatarModule.h"
-#import "XMPPvCardCoreDataStorage.h"
 #import "XMPPMessage+XEP_0184.h"
 #import "XMPPMessage+XEP_0085.h"
 #import "NSXMLElement+XEP_0203.h"
@@ -77,7 +76,6 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 @property (nonatomic, strong) XMPPStream *xmppStream;
 @property (nonatomic, strong) XMPPReconnect *xmppReconnect;
 @property (nonatomic, strong) XMPPRoster *xmppRoster;
-@property (nonatomic, strong) XMPPvCardCoreDataStorage *xmppvCardStorage;
 @property (nonatomic, strong) XMPPvCardTempModule *xmppvCardTempModule;
 @property (nonatomic, strong) XMPPvCardAvatarModule *xmppvCardAvatarModule;
 @property (nonatomic, strong) XMPPCapabilities *xmppCapabilities;
@@ -208,9 +206,6 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
     
     //DDLogInfo(@"Unique Identifier: %@",self.account.uniqueIdentifier);
 	
-    //xmppRosterStorage = [[XMPPRosterCoreDataStorage alloc] initWithDatabaseFilename:self.account.uniqueIdentifier];
-    //  xmppRosterStorage = [[XMPPRosterCoreDataStorage alloc] init];
-    //	xmppRosterStorage = [[XMPPRosterCoreDataStorage alloc] initWithInMemoryStore];
     OTRYapDatabaseRosterStorage * rosterStorage = [[OTRYapDatabaseRosterStorage alloc] init];
 	
 	self.xmppRoster = [[XMPPRoster alloc] initWithRosterStorage:rosterStorage];
@@ -224,7 +219,6 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 	// The vCard Avatar module works in conjuction with the standard vCard Temp module to download user avatars.
 	// The XMPPRoster will automatically integrate with XMPPvCardAvatarModule to cache roster photos in the roster.
 	
-	//xmppvCardStorage = [XMPPvCardCoreDataStorage sharedInstance];
     OTRvCardYapDatabaseStorage * vCardStorage  = [[OTRvCardYapDatabaseStorage alloc] init];
 	self.xmppvCardTempModule = [[XMPPvCardTempModule alloc] initWithvCardStorage:vCardStorage];
 	
@@ -266,9 +260,9 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
     
 	// Add ourself as a delegate to anything we may be interested in
     
-	[self.xmppStream addDelegate:self delegateQueue:dispatch_get_main_queue()];
-	[self.xmppRoster addDelegate:self delegateQueue:dispatch_get_main_queue()];
-    [self.xmppCapabilities addDelegate:self delegateQueue:dispatch_get_main_queue()];
+	[self.xmppStream addDelegate:self delegateQueue:self.workQueue];
+	[self.xmppRoster addDelegate:self delegateQueue:self.workQueue];
+    [self.xmppCapabilities addDelegate:self delegateQueue:self.workQueue];
     
 	// Optional:
 	// 
@@ -289,6 +283,7 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 {
     [_xmppStream removeDelegate:self];
     [_xmppRoster removeDelegate:self];
+    [_xmppCapabilities removeDelegate:self];
 
     [_xmppReconnect         deactivate];
     [_xmppRoster            deactivate];
@@ -302,7 +297,6 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
     _xmppReconnect = nil;
     _xmppRoster = nil;
     _xmppRosterStorage = nil;
-    _xmppvCardStorage = nil;
     _xmppvCardTempModule = nil;
     _xmppvCardAvatarModule = nil;
     _xmppCapabilities = nil;
@@ -710,6 +704,42 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
         
         [transaction setObject:request forKey:request.uniqueId inCollection:[OTRXMPPPresenceSubscriptionRequest collection]];
     }];
+}
+
+- (void)xmppRoster:(XMPPRoster *)sender didReceiveRosterPush:(XMPPIQ *)iq
+{
+    DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
+    //verry unclear what this delegate call is supposed to do with jabber.ccc.de it seems to have all the subscription=both,none and jid
+    /*
+    if ([iq isSetIQ] && [[[[[[iq elementsForName:@"query"] firstObject] elementsForName:@"item"] firstObject] attributeStringValueForName:@"subscription"] isEqualToString:@"from"]) {
+        NSString *jidString = [[[[[iq elementsForName:@"query"] firstObject] elementsForName:@"item"] firstObject] attributeStringValueForName:@"jid"];
+        
+        [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+            OTRXMPPPresenceSubscriptionRequest *request = [OTRXMPPPresenceSubscriptionRequest fetchPresenceSubscriptionRequestWithJID:jidString accontUniqueId:self.account.uniqueId transaction:transaction];
+            if (!request) {
+                request = [[OTRXMPPPresenceSubscriptionRequest alloc] init];
+            }
+            
+            request.jid = jidString;
+            request.accountUniqueId = self.account.uniqueId;
+            
+            [transaction setObject:request forKey:request.uniqueId inCollection:[OTRXMPPPresenceSubscriptionRequest collection]];
+        }];
+    }
+    else if ([iq isSetIQ] && [[[[[[iq elementsForName:@"query"] firstObject] elementsForName:@"item"] firstObject] attributeStringValueForName:@"subscription"] isEqualToString:@"none"])
+    {
+        [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+            NSString *jidString = [[[[[iq elementsForName:@"query"] firstObject] elementsForName:@"item"] firstObject] attributeStringValueForName:@"jid"];
+            
+            OTRXMPPBuddy *buddy = [[OTRXMPPBuddy fetchBuddyWithUsername:jidString withAccountUniqueId:self.account.uniqueId transaction:transaction] copy];
+            buddy.pendingApproval = YES;
+            [buddy saveWithTransaction:transaction];
+        }];
+    }
+    
+    */
+    
+    
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

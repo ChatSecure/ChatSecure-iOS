@@ -139,8 +139,9 @@ NSString *const OTRYapDatabaseRelationshipName = @"OTRYapDatabaseRelationshipNam
     [OTRDatabaseView registerConversationDatabaseView];
     [OTRDatabaseView registerChatDatabaseView];
     [OTRDatabaseView registerBuddyDatabaseView];
-    BOOL result = [OTRDatabaseView registerBuddyNameSearchDatabaseView];
+    [OTRDatabaseView registerBuddyNameSearchDatabaseView];
     [OTRDatabaseView registerAllBuddiesDatabaseView];
+    [OTRDatabaseView registerAllSubscriptionRequestsView];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(yapDatabaseModified:)

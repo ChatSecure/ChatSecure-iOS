@@ -8,6 +8,10 @@
 
 #import "OTRYapDatabaseObject.h"
 
+#import "YapDatabaseTransaction.h"
+
+@class OTRXMPPAccount;
+
 extern const struct OTRXMPPPresenceSubscriptionRequestAttributes {
 	__unsafe_unretained NSString *date;
 	__unsafe_unretained NSString *displayName;
@@ -29,6 +33,9 @@ extern const struct OTRXMPPPresenceSubscriptionRequestEdges {
 @property (nonatomic, strong) NSString *jid;
 
 @property (nonatomic, strong) NSString *accountUniqueId;
+
+
+- (OTRXMPPAccount *)accountWithTransaction:(YapDatabaseReadTransaction *)transaction;
 
 
 + (instancetype)fetchPresenceSubscriptionRequestWithJID:(NSString *)jid accontUniqueId:(NSString *)accountUniqueId transaction:(YapDatabaseReadTransaction *)transaction;

@@ -13,6 +13,7 @@
 #import "OTRBuddy.h"
 #import "OTRAccount.h"
 #import "OTRMessage.h"
+#import "OTRXMPPPresenceSubscriptionRequest.h"
 #import "YapDatabaseFullTextSearch.h"
 
 NSString *OTRConversationGroup = @"Conversation";
@@ -21,11 +22,13 @@ NSString *OTRChatDatabaseViewExtensionName = @"OTRChatDatabaseViewExtensionName"
 NSString *OTRBuddyDatabaseViewExtensionName = @"OTRBuddyDatabaseViewExtensionName";
 NSString *OTRBuddyNameSearchDatabaseViewExtensionName = @"OTRBuddyBuddyNameSearchDatabaseViewExtensionName";
 NSString *OTRAllBuddiesDatabaseViewExtensionName = @"OTRAllBuddiesDatabaseViewExtensionName";
+NSString *OTRAllSubscriptionRequestsViewExtensionName = @"AllSubscriptionRequestsViewExtensionName";
 
 NSString *OTRAllAccountGroup = @"All Accounts";
 NSString *OTRAllAccountDatabaseViewExtensionName = @"OTRAllAccountDatabaseViewExtensionName";
 NSString *OTRChatMessageGroup = @"Messages";
 NSString *OTRBuddyGroup = @"Buddy";
+NSString *OTRAllPresenceSubscriptionRequestGroup = @"OTRAllPresenceSubscriptionRequestGroup";
 
 @implementation OTRDatabaseView
 
@@ -72,7 +75,7 @@ NSString *OTRBuddyGroup = @"Buddy";
                 OTRBuddy *buddy1 = (OTRBuddy *)obj1;
                 OTRBuddy *buddy2 = (OTRBuddy *)obj2;
                 
-                return [buddy1.lastMessageDate compare:buddy2.lastMessageDate];
+                return [buddy2.lastMessageDate compare:buddy1.lastMessageDate];
             }
         }
         return NSOrderedSame;
@@ -104,15 +107,15 @@ NSString *OTRBuddyGroup = @"Buddy";
     
     
     YapDatabaseViewBlockType groupingBlockType;
-    YapDatabaseViewGroupingWithObjectBlock groupingBlock;
+    YapDatabaseViewGroupingWithKeyBlock groupingBlock;
     
     YapDatabaseViewBlockType sortingBlockType;
     YapDatabaseViewSortingWithObjectBlock sortingBlock;
     
-    groupingBlockType = YapDatabaseViewBlockTypeWithObject;
-    groupingBlock = ^NSString *(NSString *collection, NSString *key, id object){
+    groupingBlockType = YapDatabaseViewBlockTypeWithKey;
+    groupingBlock = ^NSString *(NSString *collection, NSString *key){
         
-        if ([object isKindOfClass:[OTRAccount class]])
+        if ([collection isEqualToString:[OTRAccount collection]])
         {
             return OTRAllAccountGroup;
         }
@@ -340,6 +343,56 @@ NSString *OTRBuddyGroup = @"Buddy";
     
     return [[OTRDatabaseManager sharedInstance].database registerExtension:view withName:OTRAllBuddiesDatabaseViewExtensionName];
 
+}
+
++ (BOOL)registerAllSubscriptionRequestsView
+{
+    if ([[OTRDatabaseManager sharedInstance].database registeredExtension:OTRAllSubscriptionRequestsViewExtensionName]) {
+        return YES;
+    }
+    
+    YapDatabaseViewBlockType groupingBlockType;
+    YapDatabaseViewGroupingWithKeyBlock groupingBlock;
+    
+    YapDatabaseViewBlockType sortingBlockType;
+    YapDatabaseViewSortingWithObjectBlock sortingBlock;
+    
+    groupingBlockType = YapDatabaseViewBlockTypeWithKey;
+    groupingBlock = ^NSString *(NSString *collection, NSString *key){
+        
+        if ([collection isEqualToString:[OTRXMPPPresenceSubscriptionRequest collection]])
+        {
+            return OTRAllPresenceSubscriptionRequestGroup;
+        }
+        
+        return nil;
+    };
+    
+    sortingBlockType = YapDatabaseViewBlockTypeWithObject;
+    sortingBlock = ^(NSString *group, NSString *collection1, NSString *key1, id obj1,
+                     NSString *collection2, NSString *key2, id obj2){
+        OTRXMPPPresenceSubscriptionRequest *request1 = (OTRXMPPPresenceSubscriptionRequest *)obj1;
+        OTRXMPPPresenceSubscriptionRequest *request2 = (OTRXMPPPresenceSubscriptionRequest *)obj2;
+        
+        if (request1 && request2) {
+            return [request1.date compare:request2.date];
+        }
+        
+        return NSOrderedSame;
+    };
+    
+    YapDatabaseViewOptions *options = [[YapDatabaseViewOptions alloc] init];
+    options.isPersistent = YES;
+    options.allowedCollections = [NSSet setWithObject:[OTRXMPPPresenceSubscriptionRequest collection]];
+    
+    YapDatabaseView *databaseView =
+    [[YapDatabaseView alloc] initWithGroupingBlock:groupingBlock
+                                 groupingBlockType:groupingBlockType
+                                      sortingBlock:sortingBlock
+                                  sortingBlockType:sortingBlockType
+                                        versionTag:@""
+                                           options:options];
+    return [[OTRDatabaseManager sharedInstance].database registerExtension:databaseView withName:OTRAllSubscriptionRequestsViewExtensionName];
 }
 
 @end

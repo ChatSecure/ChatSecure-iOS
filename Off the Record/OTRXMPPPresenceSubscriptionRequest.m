@@ -10,6 +10,7 @@
 #import "OTRAccount.h"
 #import "YapDatabaseRelationshipTransaction.h"
 #import "OTRDatabaseManager.h"
+#import "OTRXMPPAccount.h"
 
 const struct OTRXMPPPresenceSubscriptionRequestAttributes OTRXMPPPresenceSubscriptionRequestAttributes = {
 	.date = @"date",
@@ -33,6 +34,11 @@ const struct OTRXMPPPresenceSubscriptionRequestEdges OTRXMPPPresenceSubscription
         self.date = [NSDate date];
     }
     return self;
+}
+
+- (OTRXMPPAccount *)accountWithTransaction:(YapDatabaseReadTransaction *)transaction
+{
+    return [OTRXMPPAccount fetchObjectWithUniqueID:self.accountUniqueId transaction:transaction];
 }
 
 
