@@ -42,28 +42,6 @@ const struct OTRYapDatabaseObjectAttributes OTRYapDatabaseObjectAttributes = {
     [transaction setObject:self forKey:self.uniqueId inCollection:[[self class] collection]];
 }
 
-#pragma mark NSCoding
-- (instancetype)initWithCoder:(NSCoder *)decoder // NSCoding deserialization
-{
-    if (self = [super init]) {
-        self.uniqueId = [decoder decodeObjectForKey:OTRYapDatabaseObjectAttributes.uniqueId];
-    }
-    return self;
-}
-
-- (void)encodeWithCoder:(NSCoder *)encoder // NSCoding serialization
-{
-    [encoder encodeObject:self.uniqueId forKey:OTRYapDatabaseObjectAttributes.uniqueId];
-}
-
-#pragma - mark NSCopying
-
-- (id)copyWithZone:(NSZone *)zone
-{
-    OTRYapDatabaseObject *copy = [[[self class] alloc] initWithUniqueId:[self.uniqueId copyWithZone:zone]];
-    return copy;
-}
-
 #pragma - mark Class Methods
 
 + (NSString *)collection

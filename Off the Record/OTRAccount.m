@@ -128,43 +128,6 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
 
 
 #pragma mark NSCoding
-- (instancetype)initWithCoder:(NSCoder *)decoder // NSCoding deserialization
-{
-    if (self = [super initWithCoder:decoder]) {
-        self.autologin = [decoder decodeBoolForKey:OTRAccountAttributes.autologin];
-        self.rememberPassword = [decoder decodeBoolForKey:OTRAccountAttributes.rememberPassword];
-        self.displayName = [decoder decodeObjectForKey:OTRAccountAttributes.displayName];
-        self.accountType = [decoder decodeIntForKey:OTRAccountAttributes.accountType];
-        self.username = [decoder decodeObjectForKey:OTRAccountAttributes.username];
-    }
-    return self;
-}
-
-- (void)encodeWithCoder:(NSCoder *)encoder // NSCoding serialization
-{
-    [super encodeWithCoder:encoder];
-    
-    [encoder encodeBool:self.autologin forKey:OTRAccountAttributes.autologin];
-    [encoder encodeBool:self.rememberPassword forKey:OTRAccountAttributes.rememberPassword];
-    [encoder encodeInt:self.accountType forKey:OTRAccountAttributes.accountType];
-    [encoder encodeObject:self.displayName forKey:OTRAccountAttributes.displayName];
-    [encoder encodeObject:self.username forKey:OTRAccountAttributes.username];
-    
-}
-
-#pragma - mark NSCopying
-
-- (id)copyWithZone:(NSZone *)zone
-{
-    OTRAccount *copy = [super copyWithZone:zone];
-    copy.autologin = self.autologin;
-    copy.rememberPassword = self.rememberPassword;
-    copy.accountType = self.accountType;
-    copy.displayName = [self.displayName copyWithZone:zone];
-    copy.username = [self.username copyWithZone:zone];
-    
-    return copy;
-}
 
 #pragma - mark Class Methods
 

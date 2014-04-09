@@ -43,11 +43,11 @@ extern const struct OTRBuddyEdges {
 @property (nonatomic) int status;
 @property (nonatomic) int encryptionStatus;
 @property (nonatomic, strong) NSData *avatarData;
-@property (nonatomic, readonly) UIImage *avatarImage;
-
 
 @property (nonatomic, strong) NSString *accountUniqueId;
 
+
+- (UIImage *)avatarImage;
 
 - (BOOL)hasMessagesWithTransaction:(YapDatabaseReadTransaction *)transaction;
 - (NSInteger)numberOfUnreadMessagesWithTransaction:(YapDatabaseReadTransaction *)transaction;

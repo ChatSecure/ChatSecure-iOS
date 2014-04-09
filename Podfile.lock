@@ -36,6 +36,9 @@ PODS:
   - MagicalRecord (2.2):
     - MagicalRecord/Core
   - MagicalRecord/Core (2.2)
+  - Mantle (1.4.1):
+    - Mantle/extobjc
+  - Mantle/extobjc (1.4.1)
   - MBProgressHUD (0.8)
   - SBJson (3.2)
   - SIAlertView (1.3)
@@ -61,6 +64,7 @@ DEPENDENCIES:
   - HPGrowingTextView (~> 1.1)
   - JTTargetActionBlock (~> 1.0)
   - MagicalRecord
+  - Mantle (~> 1.4)
   - MBProgressHUD (~> 0.8)
   - SIAlertView (from `PodSpecs/SIAlertView.podspec`)
   - SSKeychain
@@ -85,6 +89,7 @@ SPEC CHECKSUMS:
   HPGrowingTextView: 4318f557b33c19def1c53ec275d6e2a2d6589cd0
   JTTargetActionBlock: dc683c971f7b6ff875012f81e570b9ed15171c7b
   MagicalRecord: 95d49d74ef752cd52f6ad87bcb474817fc3978cf
+  Mantle: 0714cdb2b8559d9e6c2410d6a8529e3307bff189
   MBProgressHUD: 2bbc6f470111daf7f3eaa4eb12b8cbf01c4c0622
   SBJson: abc2bf2baef456d5dae213f9826fe2b6fdf19861
   SIAlertView: 522351a8870be07fb49053fa054c83da3ea17dbe

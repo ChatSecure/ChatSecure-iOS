@@ -53,41 +53,7 @@ static NSUInteger const OTRDefaultPortNumber = 5222;
     return [OTRXMPPManager class];
 }
 
-
-#pragma mark NSCoding
-- (instancetype)initWithCoder:(NSCoder *)decoder // NSCoding deserialization
-{
-    if (self = [super initWithCoder:decoder]) {
-        self.domain = [decoder decodeObjectForKey:OTRXMPPAccountAttributes.domain];
-        self.resource = [decoder decodeObjectForKey:OTRXMPPAccountAttributes.resource];
-        self.port = [decoder decodeIntForKey:OTRXMPPAccountAttributes.port];
-    }
-    return self;
-}
-
-- (void)encodeWithCoder:(NSCoder *)encoder // NSCoding serialization
-{
-    [super encodeWithCoder:encoder];
-    
-    [encoder encodeInt:self.port forKey:OTRXMPPAccountAttributes.port];
-    [encoder encodeObject:self.domain forKey:OTRXMPPAccountAttributes.domain];
-    [encoder encodeObject:self.resource forKey:OTRXMPPAccountAttributes.resource];
-}
-
-#pragma - mark NSCopying
-
-- (id)copyWithZone:(NSZone *)zone
-{
-    OTRXMPPAccount *copy = [super copyWithZone:zone];
-    copy.port = self.port;
-    copy.domain = [self.domain copyWithZone:zone];
-    copy.resource = [self.resource copyWithZone:zone];
-    
-    return copy;
-}
-
 #pragma - mark Class Methods
-
 
 + (NSString *)collection
 {

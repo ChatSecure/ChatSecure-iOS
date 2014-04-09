@@ -51,45 +51,6 @@ const struct OTRXMPPBuddyAttributes OTRXMPPBuddyAttributes = {
     }
 }
 
-
-#pragma mark NSCoding
-- (instancetype)initWithCoder:(NSCoder *)decoder // NSCoding deserialization
-{
-    if (self = [super initWithCoder:decoder]) {
-        self.pendingApproval = [decoder decodeBoolForKey:OTRXMPPBuddyAttributes.pendingApproval];
-        self.photoHash = [decoder decodeObjectForKey:OTRXMPPBuddyAttributes.photoHash];
-        self.vCardTemp = [decoder decodeObjectForKey:OTRXMPPBuddyAttributes.vCardTemp];
-        self.waitingForvCardTempFetch = [decoder decodeBoolForKey:OTRXMPPBuddyAttributes.waitingForvCardTempFetch];
-        self.lastUpdatedvCardTemp = [decoder decodeObjectForKey:OTRXMPPBuddyAttributes.lastUpdatedvCardTemp];
-    }
-    return self;
-}
-
-- (void)encodeWithCoder:(NSCoder *)encoder // NSCoding serialization
-{
-    [super encodeWithCoder:encoder];
-    
-    [encoder encodeBool:self.isPendingApproval forKey:OTRXMPPBuddyAttributes.pendingApproval];
-    [encoder encodeObject:self.photoHash forKey:OTRXMPPBuddyAttributes.photoHash];
-    [encoder encodeObject:self.vCardTemp forKey:OTRXMPPBuddyAttributes.vCardTemp];
-    [encoder encodeBool:self.waitingForvCardTempFetch forKey:OTRXMPPBuddyAttributes.waitingForvCardTempFetch];
-    [encoder encodeObject:self.lastUpdatedvCardTemp forKey:OTRXMPPBuddyAttributes.lastUpdatedvCardTemp];
-}
-
-#pragma - mark NSCopying
-
-- (id)copyWithZone:(NSZone *)zone
-{
-    OTRXMPPBuddy *copy = [super copyWithZone:zone];
-    copy.pendingApproval = self.pendingApproval;
-    copy.vCardTemp = [self.vCardTemp copyWithZone:zone];
-    copy.photoHash = [self.photoHash copyWithZone:zone];
-    copy.lastUpdatedvCardTemp = [self.lastUpdatedvCardTemp copyWithZone:zone];
-    copy.waitingForvCardTempFetch = self.waitingForvCardTempFetch;
-    
-    return copy;
-}
-
 #pragma - mark Class Methods
 
 + (NSString *)collection

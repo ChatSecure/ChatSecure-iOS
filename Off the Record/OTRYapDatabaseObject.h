@@ -10,12 +10,13 @@
 
 #import "YapDatabaseRelationshipNode.h"
 #import "YapDatabaseTransaction.h"
+#import "MTLModel+NSCoding.h"
 
 extern const struct OTRYapDatabaseObjectAttributes {
 	__unsafe_unretained NSString *uniqueId;
 } OTRYapDatabaseObjectAttributes;
 
-@interface OTRYapDatabaseObject : NSObject <NSCoding, NSCopying>
+@interface OTRYapDatabaseObject : MTLModel
 
 @property (nonatomic, readonly) NSString *uniqueId;
 

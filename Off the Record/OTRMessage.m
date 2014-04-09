@@ -71,55 +71,6 @@ const struct OTRMessageEdges OTRMessageEdges = {
     
 }
 
-#pragma mark NSCoding
-- (instancetype)initWithCoder:(NSCoder *)decoder // NSCoding deserialization
-{
-    if (self = [super initWithCoder:decoder]) {
-        self.date = [decoder decodeObjectForKey:OTRMessageAttributes.date];
-        self.text = [decoder decodeObjectForKey:OTRMessageAttributes.text];
-        self.delivered = [decoder decodeBoolForKey:OTRMessageAttributes.delivered];
-        self.read = [decoder decodeBoolForKey:OTRMessageAttributes.read];
-        self.incoming = [decoder decodeBoolForKey:OTRMessageAttributes.incoming];
-        self.messageId = [decoder decodeObjectForKey:OTRMessageAttributes.messageId];
-        self.transportedSecurely = [decoder decodeBoolForKey:OTRMessageAttributes.transportedSecurely];
-        
-        self.buddyUniqueId = [decoder decodeObjectForKey:OTRMessageRelationships.buddyUniqueId];
-    }
-    return self;
-}
-
-- (void)encodeWithCoder:(NSCoder *)encoder // NSCoding serialization
-{
-    [super encodeWithCoder:encoder];
-    
-    [encoder encodeObject:self.date forKey:OTRMessageAttributes.date];
-    [encoder encodeObject:self.text forKey:OTRMessageAttributes.text];
-    [encoder encodeBool:self.delivered forKey:OTRMessageAttributes.delivered];
-    [encoder encodeBool:self.read forKey:OTRMessageAttributes.read];
-    [encoder encodeBool:self.incoming forKey:OTRMessageAttributes.incoming];
-    [encoder encodeObject:self.messageId forKey:OTRMessageAttributes.messageId];
-    [encoder encodeBool:self.transportedSecurely forKey:OTRMessageAttributes.transportedSecurely];
-    
-    [encoder encodeObject:self.buddyUniqueId forKey:OTRMessageRelationships.buddyUniqueId];
-}
-
-#pragma - mark NSCopying
-
-- (id)copyWithZone:(NSZone *)zone
-{
-    OTRMessage *copy = [super copyWithZone:zone];
-    copy.date = [self.date copyWithZone:zone];
-    copy.text = [self.text copyWithZone:zone];
-    copy.delivered = self.delivered;
-    copy.read = self.read;
-    copy.incoming = self.incoming;
-    copy.transportedSecurely = self.transportedSecurely;
-    copy.messageId = [self.messageId copyWithZone:zone];
-    copy.buddyUniqueId = [self.buddyUniqueId copyWithZone:zone];
-    
-    return copy;
-}
-
 #pragma - mark Class Methods
 
 + (NSInteger)numberOfUnreadMessagesWithTransaction:(YapDatabaseReadTransaction*)transaction
