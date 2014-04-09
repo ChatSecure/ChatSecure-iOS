@@ -24,7 +24,7 @@ PODS:
   - CocoaLumberjack/Extensions (1.8.1):
     - CocoaLumberjack/Core
   - DAKeyboardControl (2.3.0)
-  - Facebook-iOS-SDK (3.13.0)
+  - Facebook-iOS-SDK (3.13.1)
   - gtm-oauth2 (0.0.4):
     - GTMHTTPFetcher (~> 0.0.1)
     - SBJson (~> 3.2)
@@ -82,7 +82,7 @@ SPEC CHECKSUMS:
   Appirater: 32fb9089615b5e542c7ad7b5749741a8aed55290
   CocoaLumberjack: 020378ec400d658923bf5887178394f65f052c90
   DAKeyboardControl: 219d6e32b9343eb85151255c43b1f238d8f0bbf7
-  Facebook-iOS-SDK: 762cebd849e9c2c6274ba000212c61eabec1bde8
+  Facebook-iOS-SDK: 0d121e16437981fabff9379e07bf646bd5ab245c
   gtm-oauth2: 30600f0033c359f31d0e7a0e31c074a90353ece0
   GTMHTTPFetcher: bca306f50fec6a263d8de7493398657db255952a
   HockeySDK: aa28abb106de7804d31acf515f2c9aa4e6481fd0
@@ -93,9 +93,9 @@ SPEC CHECKSUMS:
   MBProgressHUD: 2bbc6f470111daf7f3eaa4eb12b8cbf01c4c0622
   SBJson: abc2bf2baef456d5dae213f9826fe2b6fdf19861
   SIAlertView: 522351a8870be07fb49053fa054c83da3ea17dbe
-  SQLCipher: be3b474de98f9ccc9539d35d98e159d4e55507a3
+  SQLCipher: 9dc260ec6becc4d05cd73f1346d4bba9dc086560
   SSKeychain: 3d0b76c87e7b062a7ad1631a825fddec84367d44
   UIAlertView-Blocks: f7be28a08e85ec21143951ec6797ca6474faf563
-  YapDatabase: ef22d94b99f9f283fddbe1d21bdb6ba32277c2bb
+  YapDatabase: 1554bf9652e865cb0a09677626f45f8a29bdf09f
 
 COCOAPODS: 0.31.1
