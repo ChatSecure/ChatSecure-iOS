@@ -27,10 +27,6 @@ NSString *const kOTRProtocolLoginFailErrorKey              = @"ProtocolLoginFail
 NSString *const kOTRProtocolLoginFailSSLStatusKey          = @"kOTRProtocolLoginFailSSLStatusKey";
 NSString *const kOTRProtocolLoginFailHostnameKey           = @"kOTRProtocolLoginFailHostnameKey";
 NSString *const kOTRProtocolLoginFailSSLCertificateDataKey = @"kOTRProtocolLoginFailSSLCertificateData";
-NSString *const kOTRMessageReceived                        = @"MessageReceivedNotification";
-NSString *const kOTRMessageReceiptResonseReceived          = @"MessageReceiptResponseNotification";
-NSString *const kOTRStatusUpdate                           = @"StatusUpdatedNotification";
-NSString *const kOTRSendMessage                            = @"SendMessageNotification";
 NSString *const kOTRNotificationErrorKey                   = @"kOTRNotificationErrorKey";
 
 NSString *const kOTRFacebookDomain   = @"chat.facebook.com";
@@ -42,14 +38,6 @@ NSString *const kOTRNotificationAccountNameKey = @"kOTRNotificationAccountNameKe
 NSString *const kOTRNotificationUserNameKey    = @"kOTRNotificationUserNameKey";
 NSString *const kOTRNotificationProtocolKey    = @"kOTRNotificationProtocolKey";
 
-NSString *const kOTRXMPPAccountAllowSelfSignedSSLKey      = @"kOTRXMPPAccountAllowSelfSignedSSLKey";
-NSString *const kOTRXMPPAccountSendDeliveryReceiptsKey    = @"kOTRXMPPAccountSendDeliveryReceiptsKey";
-NSString *const kOTRXMPPAccountSendTypingNotificationsKey = @"kOTRXMPPAccountSendTypingNotificationsKey";
-NSString *const kOTRXMPPAccountAllowSSLHostNameMismatch   = @"kOTRXMPPAccountAllowSSLHostNameMismatch";
-NSString *const kOTRXMPPAccountPortNumber                 = @"kOTRXMPPAccountPortNumber";
-NSString *const kOTRXMPPAllowPlaintextAuthenticationKey   = @"kOTRXMPPAllowPlaintextAuthenticationKey";
-NSString *const kOTRXMPPRequireTLSKey                     = @"kOTRXMPPRequireTLSKey";
-
 NSString *const kOTRXMPPResource = @"chatsecure";
 
 NSString *const kOTRFacebookUsernameLink = @"http://www.facebook.com/help/?faq=211813265517027#What-are-usernames?";
@@ -58,9 +46,6 @@ NSString *const kOTRFeedbackEmail = @"support@chatsecure.org";
 
 NSString *const kOTRServiceName            = @"org.chatsecure.ChatSecure";
 NSString *const kOTRCertificateServiceName = @"org.chatsecure.ChatSecure.Certificate";
-
-NSString *const MESSAGE_PROCESSED_NOTIFICATION  = @"MessageProcessedNotification";
-NSString *const kOTREncryptionStateNotification = @"kOTREncryptionStateNotification";
 
 NSString *const kOTRSettingKeyFontSize                 = @"kOTRSettingKeyFontSize";
 NSString *const kOTRSettingKeyDeleteOnDisconnect       = @"kOTRSettingKeyDeleteOnDisconnect";
@@ -80,8 +65,6 @@ NSString *const GOOGLE_APP_ID    = @"719137339288.apps.googleusercontent.com";
 NSString *const GOOGLE_APP_SCOPE = @"https://www.googleapis.com/auth/googletalk";
 
 NSUInteger const kOTRActionSheetLinkTag  = 223;
-
-NSString *const kOTRAccountDomainKey = @"domain";
 
 NSString *const kOTRErrorDomain = @"com.chatsecure";
 

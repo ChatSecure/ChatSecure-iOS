@@ -8,11 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface OTRChooseAccountViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, NSFetchedResultsControllerDelegate>
-{
-    UITableView * tableView;
-}
-
-@property (nonatomic, strong) NSFetchedResultsController * accountsFetchedResultsController;
+@interface OTRChooseAccountViewController : UIViewController
 
 @end

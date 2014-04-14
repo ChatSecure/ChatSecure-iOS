@@ -105,6 +105,15 @@ static CGFloat cellHeight = 80.0;
     [self updateInbox];
     self.cellUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:60.0 target:self selector:@selector(updateVisibleCells:) userInfo:nil repeats:YES];
     
+    if([OTRProtocolManager sharedInstance].numberOfConnectedProtocols){
+        [self enableComposeButton];
+    }
+    else {
+        [self disableComposeButton];
+    }
+    
+    [[OTRProtocolManager sharedInstance] addObserver:self forKeyPath:NSStringFromSelector(@selector(numberOfConnectedProtocols)) options:NSKeyValueObservingOptionNew context:NULL];
+    
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -112,6 +121,8 @@ static CGFloat cellHeight = 80.0;
     [super viewDidDisappear:animated];
     [self.cellUpdateTimer invalidate];
     self.cellUpdateTimer = nil;
+    
+    [[OTRProtocolManager sharedInstance] removeObserver:self forKeyPath:NSStringFromSelector(@selector(numberOfConnectedProtocols))];
 }
 
 - (void)settingsButtonPressed:(id)sender
@@ -168,6 +179,29 @@ static CGFloat cellHeight = 80.0;
     }];
     
     return buddy;
+}
+
+- (void)enableComposeButton
+{
+    self.composeBarButtonItem.enabled = YES;
+}
+
+- (void)disableComposeButton
+{
+    self.composeBarButtonItem.enabled = NO;
+}
+
+#pragma KVO Methods
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    NSUInteger numberConnectedAccounts = [[change objectForKey:NSKeyValueChangeNewKey] unsignedIntegerValue];
+    if (numberConnectedAccounts) {
+        [self enableComposeButton];
+    }
+    else {
+        [self disableComposeButton];
+    }
 }
 
 #pragma - mark Inbox Methods

@@ -14,7 +14,9 @@
 #import "OTRAccountsManager.h"
 #import "OTRAccount.h"
 
-@interface OTRChooseAccountViewController ()
+@interface OTRChooseAccountViewController () <UITableViewDataSource, UITableViewDelegate>
+
+@property (nonatomic, strong) UITableView *tableView;
 
 @end
 
@@ -26,17 +28,17 @@
     
     self.title = ACCOUNT_STRING;
 	
-    tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
-    tableView.dataSource = self;
-    tableView.delegate = self;
-    tableView.scrollEnabled =  [self tableView:tableView numberOfRowsInSection:0] * 50.0 > tableView.frame.size.height;
+    self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
+    self.tableView.dataSource = self;
+    self.tableView.delegate = self;
+    //self.tableView.scrollEnabled =  [self tableView:self.tableView numberOfRowsInSection:0] * 50.0 > self.tableView.frame.size.height;
     
-    tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    self.tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneButtonPressed:)];
     
     
-    [self.view addSubview: tableView];
+    [self.view addSubview: self.tableView];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -75,34 +77,10 @@
     
     [tView deselectRowAtIndexPath:indexPath animated:YES];
 }
-/*
--(NSFetchedResultsController *)accountsFetchedResultsController
-{
-    if(_accountsFetchedResultsController)
-    {
-        return _accountsFetchedResultsController;
-    }
-    
-    _accountsFetchedResultsController = [OTRManagedAccount MR_fetchAllSortedBy:OTRManagedAccountAttributes.username ascending:YES withPredicate:nil groupBy:nil delegate:self];
-    
-    return _accountsFetchedResultsController;
-    
-}*/
 
 -(NSArray *)onlineAccounts
 {
     return [OTRAccountsManager allAccountsAbleToAddBuddies];
-}
-
--(void)controllerDidChangeContent:(NSFetchedResultsController *)controller
-{
-    [tableView reloadData];
-    tableView.scrollEnabled =  [self tableView:tableView numberOfRowsInSection:0] * 50.0 > tableView.frame.size.height;
-}
-
--(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
-{
-    tableView.scrollEnabled =  [self tableView:tableView numberOfRowsInSection:0] * 50.0 > tableView.frame.size.height;
 }
 
 -(void) configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath

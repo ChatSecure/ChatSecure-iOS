@@ -26,10 +26,6 @@ extern NSString *const kOTRProtocolLoginFailErrorKey;
 extern NSString *const kOTRProtocolLoginFailSSLStatusKey;
 extern NSString *const kOTRProtocolLoginFailHostnameKey;
 extern NSString *const kOTRProtocolLoginFailSSLCertificateDataKey;
-extern NSString *const kOTRMessageReceived;
-extern NSString *const kOTRMessageReceiptResonseReceived;
-extern NSString *const kOTRStatusUpdate;
-extern NSString *const kOTRSendMessage;
 extern NSString *const kOTRNotificationErrorKey;
 
 extern NSString *const kOTRFacebookDomain;
@@ -41,13 +37,8 @@ extern NSString *const kOTRNotificationAccountNameKey;
 extern NSString *const kOTRNotificationUserNameKey;
 extern NSString *const kOTRNotificationProtocolKey;
 
-extern NSString *const kOTRXMPPAccountAllowSelfSignedSSLKey;
 extern NSString *const kOTRXMPPAccountSendDeliveryReceiptsKey;
 extern NSString *const kOTRXMPPAccountSendTypingNotificationsKey;
-extern NSString *const kOTRXMPPAccountAllowSSLHostNameMismatch;
-extern NSString *const kOTRXMPPAccountPortNumber;
-extern NSString *const kOTRXMPPAllowPlaintextAuthenticationKey;
-extern NSString *const kOTRXMPPRequireTLSKey;
 
 extern NSString *const kOTRXMPPResource;
 
@@ -76,7 +67,6 @@ extern NSString *const GOOGLE_APP_ID;
 extern NSString *const GOOGLE_APP_SCOPE;
 
 extern NSUInteger const kOTRActionSheetLinkTag;
-extern NSString *const kOTRAccountDomainKey;
 
 //Chatview
 extern CGFloat const kOTRSentDateFontSize;

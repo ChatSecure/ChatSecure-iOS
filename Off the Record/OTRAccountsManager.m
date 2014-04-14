@@ -47,7 +47,7 @@
 + (NSArray *)allAccountsAbleToAddBuddies  {
     
     __block NSArray *accounts = nil;
-    [[OTRDatabaseManager sharedInstance].mainThreadReadOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         accounts = [OTRAccount allAccountsWithTransaction:transaction];
     }];
     

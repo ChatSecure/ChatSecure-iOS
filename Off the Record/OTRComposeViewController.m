@@ -14,9 +14,12 @@
 #import "OTRLog.h"
 #import "OTRDatabaseManager.h"
 #import "OTRDatabaseView.h"
+#import "OTRAccountsManager.h"
 #import "YapDatabaseFullTextSearchTransaction.h"
 
 #import "OTRBuddyInfoCell.h"
+#import "OTRNewBuddyViewController.h"
+#import "OTRChooseAccountViewController.h"
 
 static CGFloat cellHeight = 60.0;
 
@@ -103,18 +106,28 @@ static CGFloat cellHeight = 60.0;
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+- (BOOL)canAddBuddies
+{
+    if([OTRAccountsManager allAccountsAbleToAddBuddies]) {
+        return YES;
+    }
+    return NO;
+}
+
 - (OTRBuddy *)buddyAtIndexPath:(NSIndexPath *)indexPath
 {
+    NSIndexPath *viewIndexPath = [NSIndexPath indexPathForItem:indexPath.row inSection:0];
+    
     if ([self useSearchResults]) {
         if (indexPath.row < [self.searchResults count]) {
-            return self.searchResults[indexPath.row];
+            return self.searchResults[viewIndexPath.row];
         }
     }
     else
     {
         __block OTRBuddy *buddy;
         [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-            buddy = [[transaction ext:OTRAllBuddiesDatabaseViewExtensionName] objectAtIndexPath:indexPath withMappings:self.mappings];
+            buddy = [[transaction ext:OTRAllBuddiesDatabaseViewExtensionName] objectAtIndexPath:viewIndexPath withMappings:self.mappings];
         }];
         return buddy;
     }
@@ -208,27 +221,66 @@ static CGFloat cellHeight = 60.0;
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 1;
+    BOOL canAddBuddies = [self canAddBuddies];
+    NSInteger sections = 0;
+    if ([self useSearchResults]) {
+        sections = 1;
+    }
+    else {
+        sections = [self.mappings numberOfSections];
+    }
+    
+    if (canAddBuddies) {
+        sections += 1;
+    }
+    return sections;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if ([self useSearchResults]) {
-        return [self.searchResults count];
+    NSInteger numberOfRows = 0;
+    if (section == 0 && [self canAddBuddies]) {
+        numberOfRows = 1;
     }
-    return [self.mappings numberOfItemsInSection:section];
+    else {
+        if ([self useSearchResults]) {
+            numberOfRows = [self.searchResults count];
+        }
+        else {
+            numberOfRows = [self.mappings numberOfItemsInSection:0];
+        }
+    }
+   
+    return numberOfRows;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    OTRBuddyInfoCell *cell = [tableView dequeueReusableCellWithIdentifier:[OTRBuddyInfoCell reuseIdentifier] forIndexPath:indexPath];
-    OTRBuddy * buddy = [self buddyAtIndexPath:indexPath];
     
-    [cell setBuddy:buddy];
+    if(indexPath.section == 0 && [self canAddBuddies]) {
+        // add new buddy cell
+        static NSString *addCellIdentifier = @"addCellIdentifier";
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:addCellIdentifier];
+        if (!cell) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:addCellIdentifier];
+        }
+        cell.textLabel.text = @"Add Buddy";
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        
+        return cell;
+    }
+    else {
+        OTRBuddyInfoCell *cell = [tableView dequeueReusableCellWithIdentifier:[OTRBuddyInfoCell reuseIdentifier] forIndexPath:indexPath];
+        OTRBuddy * buddy = [self buddyAtIndexPath:indexPath];
+        
+        [cell setBuddy:buddy];
+        
+        [cell.avatarImageView.layer setCornerRadius:(cellHeight-2.0*OTRBuddyImageCellPadding)/2.0];
+        
+        return cell;
+    }
     
-    [cell.avatarImageView.layer setCornerRadius:(cellHeight-2.0*OTRBuddyImageCellPadding)/2.0];
     
-    return cell;
 }
 
 #pragma - mark UITableViewDelegate Methods
@@ -246,7 +298,25 @@ static CGFloat cellHeight = 60.0;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if ([self.delegate respondsToSelector:@selector(controller:didSelectBuddy:)]) {
+    NSArray *accounts = [OTRAccountsManager allAccountsAbleToAddBuddies];
+    if(indexPath.section == 0 && [accounts count])
+    {
+        
+        //add buddy cell
+        UIViewController *viewController = nil;
+        if([accounts count] > 1) {
+            // pick wich account
+            viewController = [[OTRChooseAccountViewController alloc] init];
+            
+        }
+        else {
+            OTRAccount *account = [accounts firstObject];
+            viewController = [[OTRNewBuddyViewController alloc] initWithAccountId:account.uniqueId];
+        }
+        [self.navigationController pushViewController:viewController animated:YES];
+        
+    }
+    else if ([self.delegate respondsToSelector:@selector(controller:didSelectBuddy:)]) {
         OTRBuddy * buddy = [self buddyAtIndexPath:indexPath];
         [self.delegate controller:self didSelectBuddy:buddy];
     }
@@ -293,19 +363,26 @@ static CGFloat cellHeight = 60.0;
     
     [self.tableView beginUpdates];
     
+    BOOL canAddBuddies = [self canAddBuddies];
+    
     for (YapDatabaseViewSectionChange *sectionChange in sectionChanges)
     {
+        NSUInteger sectionIndex = sectionChange.index;
+        if (canAddBuddies) {
+            sectionIndex += 1;
+        }
+        
         switch (sectionChange.type)
         {
             case YapDatabaseViewChangeDelete :
             {
-                [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionChange.index]
+                [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex]
                               withRowAnimation:UITableViewRowAnimationAutomatic];
                 break;
             }
             case YapDatabaseViewChangeInsert :
             {
-                [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionChange.index]
+                [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex]
                               withRowAnimation:UITableViewRowAnimationAutomatic];
                 break;
             }
@@ -315,33 +392,45 @@ static CGFloat cellHeight = 60.0;
         }
     }
     
+    
+    
     for (YapDatabaseViewRowChange *rowChange in rowChanges)
     {
+        NSIndexPath *indexPath = rowChange.indexPath;
+        NSIndexPath *newIndexPath = rowChange.newIndexPath;
+        if (canAddBuddies) {
+            indexPath = [NSIndexPath indexPathForItem:rowChange.indexPath.row inSection:1];
+            newIndexPath = [NSIndexPath indexPathForItem:rowChange.newIndexPath.row inSection:1];
+        }
+        else {
+            
+        }
+        
         switch (rowChange.type)
         {
             case YapDatabaseViewChangeDelete :
             {
-                [self.tableView deleteRowsAtIndexPaths:@[ rowChange.indexPath ]
+                [self.tableView deleteRowsAtIndexPaths:@[ indexPath ]
                                       withRowAnimation:UITableViewRowAnimationAutomatic];
                 break;
             }
             case YapDatabaseViewChangeInsert :
             {
-                [self.tableView insertRowsAtIndexPaths:@[ rowChange.newIndexPath ]
+                [self.tableView insertRowsAtIndexPaths:@[ newIndexPath ]
                                       withRowAnimation:UITableViewRowAnimationAutomatic];
                 break;
             }
             case YapDatabaseViewChangeMove :
             {
-                [self.tableView deleteRowsAtIndexPaths:@[ rowChange.indexPath ]
+                [self.tableView deleteRowsAtIndexPaths:@[ indexPath ]
                                       withRowAnimation:UITableViewRowAnimationAutomatic];
-                [self.tableView insertRowsAtIndexPaths:@[ rowChange.newIndexPath ]
+                [self.tableView insertRowsAtIndexPaths:@[ newIndexPath ]
                                       withRowAnimation:UITableViewRowAnimationAutomatic];
                 break;
             }
             case YapDatabaseViewChangeUpdate :
             {
-                [self.tableView reloadRowsAtIndexPaths:@[ rowChange.indexPath ]
+                [self.tableView reloadRowsAtIndexPaths:@[ indexPath ]
                                       withRowAnimation:UITableViewRowAnimationNone];
                 break;
             }
