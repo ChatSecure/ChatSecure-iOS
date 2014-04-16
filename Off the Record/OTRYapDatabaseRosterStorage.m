@@ -75,7 +75,20 @@
     }
     
     return buddy;
+}
 
+- (BOOL)existsBuddyWithJID:(XMPPJID *)jid xmppStram:(XMPPStream *)stream
+{
+    __block BOOL result = NO;
+    [self.connection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        OTRAccount *account = [self accountForStream:stream transaction:transaction];
+        OTRBuddy *buddy = [OTRXMPPBuddy fetchBuddyWithUsername:[jid bare] withAccountUniqueId:account.uniqueId transaction:transaction];
+        
+        if (buddy) {
+            result = YES;
+        }
+    }];
+    return result;
 }
 
 -(BOOL)isPendingApprovalElement:(NSXMLElement *)item
@@ -136,6 +149,12 @@
 {
     NSString *jidStr = [item attributeStringValueForName:@"jid"];
     XMPPJID *jid = [[XMPPJID jidWithString:jidStr] bareJID];
+    
+    if([[jid bare] isEqualToString:[[stream myJID] bare]])
+    {
+        // ignore self buddy
+        return;
+    }
     
     OTRXMPPBuddy *buddy = [self buddyWithJID:jid xmppStream:stream];
     
@@ -209,8 +228,7 @@
 
 - (BOOL)userExistsWithJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream
 {
-    OTRXMPPBuddy *buddy = [self buddyWithJID:jid xmppStream:stream];
-    if (buddy) {
+    if ([self existsBuddyWithJID:jid xmppStram:stream]) {
         return YES;
     }
     else {

@@ -11,5 +11,4 @@
 @interface OTROutgoingMessageTableViewCell : OTRMessageTableViewCell
 
 
-
 @end

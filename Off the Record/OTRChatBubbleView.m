@@ -13,7 +13,18 @@
 #import "OTRMessageTableViewCell.h"
 #import "OTRSettingsManager.h"
 
+static CGFloat const lockIconRatio = 1.2f;
+static CGFloat const checkIconRatio = 1.055f;
+
 @interface OTRChatBubbleView ()
+
+@property (nonatomic, strong) NSLayoutConstraint *imageViewSideConstraint;
+@property (nonatomic, strong) NSLayoutConstraint *labelSideConstraint;
+@property (nonatomic, strong) NSLayoutConstraint *textWidthConstraint;
+@property (nonatomic, strong) NSLayoutConstraint *textHeightConstraint;
+@property (nonatomic, strong) NSLayoutConstraint *deliveredSideConstraint;
+@property (nonatomic, strong) NSLayoutConstraint *secureSideConstraint;
+
 
 @property (nonatomic, strong) TTTAttributedLabel * messageTextLabel;
 
@@ -35,6 +46,10 @@
         self.deliveredImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
         self.deliveredImageView.translatesAutoresizingMaskIntoConstraints = NO;
         
+        self.secureImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
+        self.secureImageView.translatesAutoresizingMaskIntoConstraints = NO;
+        
+        [self addSubview:self.secureImageView];
         [self addSubview:self.deliveredImageView];
         [self addSubview:self.messageTextLabel];
         
@@ -67,6 +82,13 @@
         self.deliveredImageView.image = nil;
     }
     
+    if (self.isSecure) {
+        self.secureImageView.image = [UIImage imageNamed:@"lock"];
+    }
+    else {
+        self.secureImageView.image = nil;
+    }
+    
     [self setNeedsUpdateConstraints];
 }
 
@@ -97,10 +119,10 @@
     constraint = [NSLayoutConstraint constraintWithItem:self.deliveredImageView
                                               attribute:NSLayoutAttributeHeight
                                               relatedBy:NSLayoutRelationEqual
-                                                 toItem:nil
-                                              attribute:NSLayoutAttributeNotAnAttribute
-                                             multiplier:1.0
-                                               constant:10];
+                                                 toItem:self.deliveredImageView
+                                              attribute:NSLayoutAttributeWidth
+                                             multiplier:checkIconRatio
+                                               constant:0.0];
     [self addConstraint:constraint];
     
     constraint = [NSLayoutConstraint constraintWithItem:self.deliveredImageView
@@ -109,8 +131,36 @@
                                                  toItem:nil
                                               attribute:NSLayoutAttributeNotAnAttribute
                                              multiplier:1.0
+                                               constant:10.0];
+    [self addConstraint:constraint];
+    
+    constraint = [NSLayoutConstraint constraintWithItem:self.secureImageView
+                                              attribute:NSLayoutAttributeHeight
+                                              relatedBy:NSLayoutRelationEqual
+                                                 toItem:self.secureImageView
+                                              attribute:NSLayoutAttributeWidth
+                                             multiplier:lockIconRatio
+                                               constant:0.0];
+    [self addConstraint:constraint];
+    constraint = [NSLayoutConstraint constraintWithItem:self.secureImageView
+                                              attribute:NSLayoutAttributeWidth
+                                              relatedBy:NSLayoutRelationEqual
+                                                 toItem:nil
+                                              attribute:NSLayoutAttributeNotAnAttribute
+                                             multiplier:1.0
                                                constant:10];
     [self addConstraint:constraint];
+    
+    constraint = [NSLayoutConstraint constraintWithItem:self.secureImageView
+                                              attribute:NSLayoutAttributeCenterY
+                                              relatedBy:NSLayoutRelationEqual
+                                                 toItem:self
+                                              attribute:NSLayoutAttributeCenterY
+                                             multiplier:1.0
+                                               constant:0.0];
+    [self addConstraint:constraint];
+    
+    
     
     constraint = [NSLayoutConstraint constraintWithItem:self.messageBackgroundImageView
                                               attribute:NSLayoutAttributeWidth
@@ -175,31 +225,32 @@
     [self setupConstraints];
     
     CGSize messageTextLabelSize = [self.messageTextLabel sizeThatFits:CGSizeMake(180, CGFLOAT_MAX)];
-    [self removeConstraint:textWidthConstraint];
-    textWidthConstraint = [NSLayoutConstraint constraintWithItem:self.messageTextLabel
+    [self removeConstraint:self.textWidthConstraint];
+    self.textWidthConstraint = [NSLayoutConstraint constraintWithItem:self.messageTextLabel
                                                        attribute:NSLayoutAttributeWidth
                                                        relatedBy:NSLayoutRelationEqual
                                                           toItem:nil
                                                        attribute:NSLayoutAttributeNotAnAttribute
                                                       multiplier:1.0
                                                         constant:messageTextLabelSize.width];
-    [self addConstraint:textWidthConstraint];
+    [self addConstraint:self.textWidthConstraint];
     
-    [self removeConstraint:textHeightConstraint];
-    textHeightConstraint = [NSLayoutConstraint constraintWithItem:self.messageTextLabel
+    [self removeConstraint:self.textHeightConstraint];
+    self.textHeightConstraint = [NSLayoutConstraint constraintWithItem:self.messageTextLabel
                                                         attribute:NSLayoutAttributeHeight
                                                         relatedBy:NSLayoutRelationEqual
                                                            toItem:nil
                                                         attribute:NSLayoutAttributeNotAnAttribute
                                                        multiplier:1.0
                                                          constant:messageTextLabelSize.height];
-    [self addConstraint:textHeightConstraint];
+    [self addConstraint:self.textHeightConstraint];
     
-    [self removeConstraint:labelSideConstraint];
-    [self removeConstraint:imageViewSideConstraint];
-    [self removeConstraint:deliveredSideConstraint];
+    [self removeConstraint:self.labelSideConstraint];
+    [self removeConstraint:self.imageViewSideConstraint];
+    [self removeConstraint:self.deliveredSideConstraint];
+    [self removeConstraint:self.secureSideConstraint];
     if (self.isIncoming) {
-        labelSideConstraint = [NSLayoutConstraint constraintWithItem:self.messageTextLabel
+        self.labelSideConstraint = [NSLayoutConstraint constraintWithItem:self.messageTextLabel
                                                   attribute:NSLayoutAttributeRight
                                                   relatedBy:NSLayoutRelationEqual
                                                      toItem:self.messageBackgroundImageView
@@ -207,7 +258,7 @@
                                                  multiplier:1.0
                                                    constant:-12.0];
      
-        imageViewSideConstraint = [NSLayoutConstraint constraintWithItem:self.messageBackgroundImageView
+        self.imageViewSideConstraint = [NSLayoutConstraint constraintWithItem:self.messageBackgroundImageView
                                                   attribute:NSLayoutAttributeLeft
                                                   relatedBy:NSLayoutRelationEqual
                                                      toItem:self
@@ -215,16 +266,23 @@
                                                  multiplier:1.0
                                                 constant:0.0];
         
-        deliveredSideConstraint = [NSLayoutConstraint constraintWithItem:self.deliveredImageView
+        self.deliveredSideConstraint = [NSLayoutConstraint constraintWithItem:self.deliveredImageView
                                                                attribute:NSLayoutAttributeLeft
                                                                relatedBy:NSLayoutRelationEqual
                                                                   toItem:self.messageBackgroundImageView
                                                                attribute:NSLayoutAttributeRight
                                                               multiplier:1.0
                                                                 constant:5.0];
+        self.secureSideConstraint = [NSLayoutConstraint constraintWithItem:self.secureImageView
+                                                                    attribute:NSLayoutAttributeLeft
+                                                                    relatedBy:NSLayoutRelationEqual
+                                                                       toItem:self.deliveredImageView
+                                                                    attribute:NSLayoutAttributeRight
+                                                                   multiplier:1.0
+                                                                     constant:5.0];
     }
     else {
-        labelSideConstraint = [NSLayoutConstraint constraintWithItem:self.messageTextLabel
+        self.labelSideConstraint = [NSLayoutConstraint constraintWithItem:self.messageTextLabel
                                                   attribute:NSLayoutAttributeLeft
                                                   relatedBy:NSLayoutRelationEqual
                                                      toItem:self.messageBackgroundImageView
@@ -232,7 +290,7 @@
                                                  multiplier:1.0
                                                    constant:12.0];
 
-        imageViewSideConstraint = [NSLayoutConstraint constraintWithItem:self.messageBackgroundImageView
+        self.imageViewSideConstraint = [NSLayoutConstraint constraintWithItem:self.messageBackgroundImageView
                                                   attribute:NSLayoutAttributeRight
                                                   relatedBy:NSLayoutRelationEqual
                                                      toItem:self
@@ -240,17 +298,26 @@
                                                  multiplier:1.0
                                                    constant:0.0];
         
-        deliveredSideConstraint = [NSLayoutConstraint constraintWithItem:self.deliveredImageView
+        self.deliveredSideConstraint = [NSLayoutConstraint constraintWithItem:self.deliveredImageView
                                                                attribute:NSLayoutAttributeRight
                                                                relatedBy:NSLayoutRelationEqual
                                                                   toItem:self.messageBackgroundImageView
                                                                attribute:NSLayoutAttributeLeft
                                                               multiplier:1.0
                                                                 constant:-5.0];
+        self.secureSideConstraint = [NSLayoutConstraint constraintWithItem:self.secureImageView
+                                                                    attribute:NSLayoutAttributeRight
+                                                                    relatedBy:NSLayoutRelationEqual
+                                                                       toItem:self.deliveredImageView
+                                                                    attribute:NSLayoutAttributeLeft
+                                                                   multiplier:1.0
+                                                                     constant:-5.0];
+        
     }
-    [self addConstraint:deliveredSideConstraint];
-    [self addConstraint:imageViewSideConstraint];
-    [self addConstraint:labelSideConstraint];
+    [self addConstraint:self.deliveredSideConstraint];
+    [self addConstraint:self.imageViewSideConstraint];
+    [self addConstraint:self.labelSideConstraint];
+    [self addConstraint:self.secureSideConstraint];
 }
 
 +(TTTAttributedLabel *)defaultLabel

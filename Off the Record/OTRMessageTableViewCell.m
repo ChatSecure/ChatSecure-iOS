@@ -21,6 +21,8 @@
 
 static CGFloat const messageTextWidthMax = 180;
 
+
+
 @implementation OTRMessageTableViewCell
 
 -(id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
@@ -45,6 +47,7 @@ static CGFloat const messageTextWidthMax = 180;
         self.bubbleView = [[OTRChatBubbleView alloc] initWithFrame:CGRectZero];
         self.bubbleView.messageTextLabel.delegate = self;
         self.bubbleView.incoming = NO;
+        self.bubbleView.secure = NO;
         
         [self.bubbleView updateLayout];
         
@@ -62,6 +65,7 @@ static CGFloat const messageTextWidthMax = 180;
     _message = message;
     self.bubbleView.messageTextLabel.text = message.text;
     self.bubbleView.delivered = message.isDelivered;
+    self.bubbleView.secure = message.transportedSecurely;
     
     if (self.showDate) {
         self.dateLabel.text = [[OTRMessageTableViewCell defaultDateFormatter] stringFromDate:message.date];

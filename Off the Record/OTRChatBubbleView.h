@@ -11,19 +11,14 @@
 #import "TTTAttributedLabel.h"
 
 @interface OTRChatBubbleView : UIView
-{
-    NSLayoutConstraint * imageViewSideConstraint;
-    NSLayoutConstraint * labelSideConstraint;
-    NSLayoutConstraint * textWidthConstraint;
-    NSLayoutConstraint * textHeightConstraint;
-    NSLayoutConstraint * deliveredSideConstraint;
-}
 
-@property (nonatomic, strong) UIImageView * messageBackgroundImageView;
-@property (nonatomic, strong) UIImageView * deliveredImageView;
-@property (nonatomic, strong, readonly) TTTAttributedLabel * messageTextLabel;
+@property (nonatomic, strong) UIImageView *messageBackgroundImageView;
+@property (nonatomic, strong) UIImageView *deliveredImageView;
+@property (nonatomic, strong) UIImageView *secureImageView;
+@property (nonatomic, strong, readonly) TTTAttributedLabel *messageTextLabel;
 @property (nonatomic, getter = isIncoming) BOOL incoming;
 @property (nonatomic, getter = isDelivierd) BOOL delivered;
+@property (nonatomic, getter = isSecure) BOOL secure;
 
 - (void)updateLayout;
 
