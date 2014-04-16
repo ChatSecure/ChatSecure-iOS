@@ -25,9 +25,4 @@
 
 @implementation OTRManagedOscarAccount
 
-
--(OTRAccountType)accountType{
-    return OTRAccountTypeAIM;
-}
-
 @end

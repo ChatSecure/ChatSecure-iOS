@@ -21,21 +21,6 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "OTRManagedBuddy.h"
-#import "OTRManagedMessage.h"
-#import "OTRCodec.h"
-#import "OTRProtocolManager.h"
-#import "NSString+HTML.h"
-#import "Strings.h"
-#import "OTRConstants.h"
-#import "OTRXMPPManager.h"
-#import "OTRManagedStatusMessage.h"
-#import "OTRManagedEncryptionMessage.h"
-#import "OTRManagedGroup.h"
-
-#import "OTRLog.h"
-
-@interface OTRManagedBuddy()
-@end
 
 @implementation OTRManagedBuddy
 

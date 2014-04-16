@@ -13,18 +13,4 @@
 
 @implementation OTRManagedXMPPTorAccount
 
-- (OTRAccountType)accountType {
-    return OTRAccountTypeXMPPTor;
-}
-
--(NSString *)providerName
-{
-    return XMPP_TOR_STRING;
-}
-
--(Class)protocolClass
-{
-    return [OTRXMPPTorManager class];
-}
-
 @end

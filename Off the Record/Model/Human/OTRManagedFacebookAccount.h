@@ -1,5 +1,5 @@
 #import "_OTRmanagedFacebookAccount.h"
 
-@interface OTRManagedFacebookAccount : _OTRManagedFacebookAccount <OTRManagedOAuthAccountProtocol>
+@interface OTRManagedFacebookAccount : _OTRManagedFacebookAccount
 // Custom logic goes here.
 @end

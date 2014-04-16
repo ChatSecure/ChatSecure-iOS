@@ -21,26 +21,6 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "OTRManagedAccount.h"
-#import "OTRSettingsManager.h"
-#import "SSKeychain.h"
-#import "OTRProtocol.h"
-#import "OTRXMPPManager.h"
-#import "OTRConstants.h"
-#import "Strings.h"
-#import "OTRProtocolManager.h"
-#import "OTRUtilities.h"
-
-#import "OTRManagedFacebookAccount.h"
-#import "OTRManagedGoogleAccount.h"
-#import "OTRManagedOscarAccount.h"
-#import "OTRManagedXMPPTorAccount.h"
-
-#import "OTRLog.h"
-
-NSString *const OTRAccountProtocolKey         = @"kOTRAccountProtocolKey";
-NSString *const OTRAccountRememberPasswordKey = @"kOTRAccountRememberPasswordKey";
-
-NSString *const kOTRClassKey                     = @"classKey";
 
 @interface OTRManagedAccount()
 @end

@@ -205,8 +205,6 @@
 		636FE4BC161B771E002B28EF /* OTROscarLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 636FE4BB161B771E002B28EF /* OTROscarLoginViewController.m */; };
 		636FE4C0161B7C68002B28EF /* OTRInLineTextEditTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 636FE4BF161B7C68002B28EF /* OTRInLineTextEditTableViewCell.m */; };
 		6370C976185FC58C00CB6786 /* OTRTitleSubtitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6370C975185FC58C00CB6786 /* OTRTitleSubtitleView.m */; };
-		6370C985185FD18E00CB6786 /* OTRBuddyCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6370C984185FD18E00CB6786 /* OTRBuddyCell.m */; };
-		6370C988185FD9B900CB6786 /* OTRRecentBuddyCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6370C987185FD9B900CB6786 /* OTRRecentBuddyCell.m */; };
 		637A7DD918972CD9004EF5A2 /* bubble-min.png in Resources */ = {isa = PBXBuildFile; fileRef = 637A7DD718972CD9004EF5A2 /* bubble-min.png */; };
 		637A7DDF18973D2F004EF5A2 /* input-bar-flat.png in Resources */ = {isa = PBXBuildFile; fileRef = 637A7DDE18973D2F004EF5A2 /* input-bar-flat.png */; };
 		637A7DE118973D36004EF5A2 /* input-bar-flat@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 637A7DE018973D36004EF5A2 /* input-bar-flat@2x.png */; };
@@ -320,7 +318,6 @@
 		63CAF8F318FF1BC100C3337E /* lock@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63CAF8F118FF1BC100C3337E /* lock@2x.png */; };
 		63CC9F2116D2E93500BDA7D1 /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CC9F2016D2E93500BDA7D1 /* TTTAttributedLabel.m */; };
 		63D0E4791819D41E003ACA13 /* OTRCapabilitiesInMemoryCoreDataStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D0E4781819D41E003ACA13 /* OTRCapabilitiesInMemoryCoreDataStorage.m */; };
-		63D0E47C1819D71A003ACA13 /* OTRvCardCoreDataStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D0E47B1819D71A003ACA13 /* OTRvCardCoreDataStorage.m */; };
 		63D2BB1918568C6700FFE4B7 /* test_OTRErrorManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D2BB1818568C6700FFE4B7 /* test_OTRErrorManager.m */; };
 		63E5E73418CA940F00CF7E28 /* HITorURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E5E73318CA940F00CF7E28 /* HITorURLProtocol.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		63E5E73718CA942A00CF7E28 /* HITorManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E5E73618CA942A00CF7E28 /* HITorManager.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -892,10 +889,6 @@
 		636FE4BF161B7C68002B28EF /* OTRInLineTextEditTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRInLineTextEditTableViewCell.m; sourceTree = "<group>"; };
 		6370C974185FC58C00CB6786 /* OTRTitleSubtitleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRTitleSubtitleView.h; sourceTree = "<group>"; };
 		6370C975185FC58C00CB6786 /* OTRTitleSubtitleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRTitleSubtitleView.m; sourceTree = "<group>"; };
-		6370C983185FD18E00CB6786 /* OTRBuddyCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBuddyCell.h; sourceTree = "<group>"; };
-		6370C984185FD18E00CB6786 /* OTRBuddyCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBuddyCell.m; sourceTree = "<group>"; };
-		6370C986185FD9B900CB6786 /* OTRRecentBuddyCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRRecentBuddyCell.h; sourceTree = "<group>"; };
-		6370C987185FD9B900CB6786 /* OTRRecentBuddyCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRRecentBuddyCell.m; sourceTree = "<group>"; };
 		637A7DD718972CD9004EF5A2 /* bubble-min.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "bubble-min.png"; path = "Resources/Images/bubble-min.png"; sourceTree = "<group>"; };
 		637A7DD818972CD9004EF5A2 /* bubble-min@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "bubble-min@2x.png"; path = "Resources/Images/bubble-min@2x.png"; sourceTree = "<group>"; };
 		637A7DDB18973910004EF5A2 /* OTRColors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRColors.h; sourceTree = "<group>"; };
@@ -1093,8 +1086,6 @@
 		63CC9F2016D2E93500BDA7D1 /* TTTAttributedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTAttributedLabel.m; sourceTree = "<group>"; };
 		63D0E4771819D41E003ACA13 /* OTRCapabilitiesInMemoryCoreDataStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRCapabilitiesInMemoryCoreDataStorage.h; sourceTree = "<group>"; };
 		63D0E4781819D41E003ACA13 /* OTRCapabilitiesInMemoryCoreDataStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRCapabilitiesInMemoryCoreDataStorage.m; sourceTree = "<group>"; };
-		63D0E47A1819D71A003ACA13 /* OTRvCardCoreDataStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRvCardCoreDataStorage.h; sourceTree = "<group>"; };
-		63D0E47B1819D71A003ACA13 /* OTRvCardCoreDataStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRvCardCoreDataStorage.m; sourceTree = "<group>"; };
 		63D0E47D1819D962003ACA13 /* ChatSecure 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "ChatSecure 3.xcdatamodel"; sourceTree = "<group>"; };
 		63D2BB1818568C6700FFE4B7 /* test_OTRErrorManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = test_OTRErrorManager.m; sourceTree = "<group>"; };
 		63D511BF17EBDD31000D927B /* OTRAppVersionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAppVersionManager.h; sourceTree = "<group>"; };
@@ -1484,8 +1475,6 @@
 				632B963018EA2ECD002ABFD0 /* OTRYapDatabaseRosterStorage.m */,
 				63D0E4771819D41E003ACA13 /* OTRCapabilitiesInMemoryCoreDataStorage.h */,
 				63D0E4781819D41E003ACA13 /* OTRCapabilitiesInMemoryCoreDataStorage.m */,
-				63D0E47A1819D71A003ACA13 /* OTRvCardCoreDataStorage.h */,
-				63D0E47B1819D71A003ACA13 /* OTRvCardCoreDataStorage.m */,
 				6383196918ECE0D200862B25 /* OTRvCardYapDatabaseStorage.h */,
 				6383196A18ECE0D200862B25 /* OTRvCardYapDatabaseStorage.m */,
 			);
@@ -2261,7 +2250,7 @@
 		6397531118CA7CF1005D6063 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				D9D69B07141806BB0056FB9E /* CoreData */,
+				D9D69B07141806BB0056FB9E /* CoreData - old */,
 				63188E0618E6271A00037EE0 /* OTRYapDatabaseObject.h */,
 				63188E0718E6271A00037EE0 /* OTRYapDatabaseObject.m */,
 				63188E0918E627AC00037EE0 /* OTRMessage.h */,
@@ -2401,6 +2390,15 @@
 				63C0856D184574BE00B9C984 /* Off the Record Integration Tests-Prefix.pch */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		63CAF8F418FF218F00C3337E /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				639753AB18CA8550005D6063 /* OTRCertificateDomainViewController.h */,
+				639753AC18CA8550005D6063 /* OTRCertificateDomainViewController.m */,
+			);
+			name = "View Controllers";
 			sourceTree = "<group>";
 		};
 		63CC9F1E16D2E93500BDA7D1 /* TTTAttributedLabel */ = {
@@ -2662,14 +2660,14 @@
 			name = Managers;
 			sourceTree = "<group>";
 		};
-		D9D69B07141806BB0056FB9E /* CoreData */ = {
+		D9D69B07141806BB0056FB9E /* CoreData - old */ = {
 			isa = PBXGroup;
 			children = (
 				D9D3717C169D404F0086F358 /* ChatSecure.xcdatamodeld */,
 				63E72BA216CB11EE00B6F389 /* Machine */,
 				63ACAFEE18CA746600448508 /* Human */,
 			);
-			name = CoreData;
+			name = "CoreData - old";
 			sourceTree = "<group>";
 		};
 		D9D8D1F61531056300F9E8D3 /* Resources */ = {
@@ -2754,8 +2752,7 @@
 				D99B0AB118C0038A0017903C /* OTRConstants.h */,
 				D9F9378913F44BD3009A3D84 /* OTRAppDelegate.h */,
 				D9F9378A13F44BD3009A3D84 /* OTRAppDelegate.m */,
-				639753AB18CA8550005D6063 /* OTRCertificateDomainViewController.h */,
-				639753AC18CA8550005D6063 /* OTRCertificateDomainViewController.m */,
+				63CAF8F418FF218F00C3337E /* View Controllers */,
 				6397531418CA7D86005D6063 /* OTRLog.h */,
 				63188E2918E6475400037EE0 /* OTROAuthRefresher.h */,
 				63188E2A18E6475400037EE0 /* OTROAuthRefresher.m */,
@@ -2796,10 +2793,6 @@
 				637BC42F18985BAC006EC18C /* OTRColorFadingDotView.m */,
 				6370C974185FC58C00CB6786 /* OTRTitleSubtitleView.h */,
 				6370C975185FC58C00CB6786 /* OTRTitleSubtitleView.m */,
-				6370C983185FD18E00CB6786 /* OTRBuddyCell.h */,
-				6370C984185FD18E00CB6786 /* OTRBuddyCell.m */,
-				6370C986185FD9B900CB6786 /* OTRRecentBuddyCell.h */,
-				6370C987185FD9B900CB6786 /* OTRRecentBuddyCell.m */,
 				6391CAF518A99003003EC838 /* OTRLockButton.h */,
 				6391CAF618A99003003EC838 /* OTRLockButton.m */,
 				63591479184FE2AF00B311A1 /* XMPPModules */,
@@ -3404,7 +3397,6 @@
 				639FDE4716334FA500387666 /* OTRJabberLoginViewController.m in Sources */,
 				6334063C1652C33300A54C52 /* OTRListSettingViewController.m in Sources */,
 				6336CDE0165C4E9E00C8CBA8 /* OTRLanguageListSettingViewController.m in Sources */,
-				6370C988185FD9B900CB6786 /* OTRRecentBuddyCell.m in Sources */,
 				6397538718CA8222005D6063 /* OTRManagedOscarAccount.m in Sources */,
 				639C60C518CA988400CC4DF4 /* OTRValueSetting.m in Sources */,
 				631F4AE918C0004200AE6E8A /* OTRButtonView.m in Sources */,
@@ -3450,7 +3442,6 @@
 				63009E9418D0F93E0058976C /* GCDAsyncSocket.m in Sources */,
 				63464F351889EC9200526358 /* _OTRManagedOAuthAccount.m in Sources */,
 				D9CEF0EF16842AC700B236B5 /* NSString+HTML.m in Sources */,
-				6370C985185FD18E00CB6786 /* OTRBuddyCell.m in Sources */,
 				63E5E80916D1D7B2006E2B01 /* OTRXMPPBudyTimers.m in Sources */,
 				63E5E80A16D1D7C9006E2B01 /* OTRMessageTableViewCell.m in Sources */,
 				6397538018CA8222005D6063 /* OTRManagedChatMessage.m in Sources */,
@@ -3529,7 +3520,6 @@
 				63483FA51752CED100779257 /* XMPPPrivacy.m in Sources */,
 				639C60EF18CA9A1700CC4DF4 /* _OTRManagedMessage.m in Sources */,
 				63483FA61752CED100779257 /* XMPPRoom.xcdatamodeld in Sources */,
-				63D0E47C1819D71A003ACA13 /* OTRvCardCoreDataStorage.m in Sources */,
 				63483FA71752CED100779257 /* XMPPRoomCoreDataStorage.m in Sources */,
 				63464F3C1889EC9200526358 /* _OTRvCardTemp.m in Sources */,
 				639C60CC18CA98D400CC4DF4 /* OTRCertificateSetting.m in Sources */,

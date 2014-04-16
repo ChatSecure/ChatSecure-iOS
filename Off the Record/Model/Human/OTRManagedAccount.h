@@ -26,10 +26,6 @@
 #import "OTRManagedBuddy.h"
 #import "OTRConstants.h"
 
-
-extern NSString *const OTRAccountProtocolKey;
-extern NSString *const OTRAccountRememberPasswordKey;
-
 @interface OTRManagedAccount : _OTRManagedAccount
 
 @end

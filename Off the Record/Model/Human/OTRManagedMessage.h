@@ -24,10 +24,6 @@
 #import <CoreData/CoreData.h>
 #import "_OTRManagedMessage.h"
 
-@class OTRManagedBuddy;
-
 @interface OTRManagedMessage : _OTRManagedMessage
-
-+ (void)showLocalNotificationForMessage:(OTRManagedMessage*)message;
 
 @end

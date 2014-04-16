@@ -27,12 +27,4 @@
 @interface OTRManagedXMPPAccount : _OTRManagedXMPPAccount
 
 
-
-- (void) setDefaultsWithDomain:(NSString *)newDomain;
-- (NSString *)accountDomain;
-
-+ (NSNumber *)defaultPortNumber;
-+ (NSString * )newResource;
-
-
 @end
