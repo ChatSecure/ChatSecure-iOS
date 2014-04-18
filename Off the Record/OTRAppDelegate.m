@@ -270,6 +270,12 @@
 }
 */
 
+- (void)application:(UIApplication *)application
+didReceiveRemoteNotification:(NSDictionary *)userInfo {
+    NSLog(@"Push received! %@", [userInfo description]);
+    [[[UIAlertView alloc] initWithTitle:@"ChatSecure Push" message:[[userInfo objectForKey:@"aps"] objectForKey:@"alert"] delegate:nil cancelButtonTitle:OK_STRING otherButtonTitles:nil] show];
+}
+
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
     //DDLogInfo(@"Notification Body: %@", notification.alertBody);
     //DDLogInfo(@"User Info: %@", notification.userInfo);
@@ -302,6 +308,23 @@
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
     return [[FBSession activeSession] handleOpenURL:url];
+}
+
+// Delegation methods
+- (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)devToken {
+    NSArray *accounts = [OTRPushAccount MR_findAll];
+    for (OTRPushAccount *account in accounts) {
+        NSString *username = account.username;
+        [[OTRPushAPIClient sharedClient] updatePushTokenForAccount:account token:devToken  successBlock:^(void) {
+            NSLog(@"Device token updated for (%@): %@", username, devToken.description);
+        } failureBlock:^(NSError *error) {
+            NSLog(@"Error updating push token: %@", error.userInfo);
+        }];
+    }
+}
+
+- (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {
+    NSLog(@"Error in registration. Error: %@%@", [err localizedDescription], [err userInfo]);
 }
 
 @end
