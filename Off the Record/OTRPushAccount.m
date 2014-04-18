@@ -18,7 +18,7 @@
 
 - (NSString *)providerName
 {
-    return CHATSECURE_PUSH_STRING;
+    return @"ChatSecure Push";
 }
 
 - (Class) protocolClass {

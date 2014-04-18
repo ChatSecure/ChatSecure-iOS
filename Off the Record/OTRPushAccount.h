@@ -7,12 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <CoreData/CoreData.h>
-#import "_OTRPushAccount.h"
+#import "OTRAccount.h"
 
 
-@interface OTRPushAccount : _OTRPushAccount
+@interface OTRPushAccount : OTRAccount
 
+@property (nonatomic) BOOL isRegistered;
 
++ (OTRPushAccount*) activeAccount;
 
 @end

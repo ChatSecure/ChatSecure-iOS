@@ -23,7 +23,7 @@
 #import "OTRPurchaseController.h"
 #import "AFNetworking.h"
 #import "Strings.h"
-#import "OTRPushController.h"
+#import "OTRPushAPIClient.h"
 
 #define REQUEST_PRODUCT_IDENTIFIERS @"request_product_identifiers"
 #define PRODUCT_IDENTIFIERS_KEY @"identifiers"
@@ -64,13 +64,13 @@
 
 - (void) requestProductIdentifiers {
     // Code to request product identifiers here
-    NSURLRequest *productsRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:REQUEST_PRODUCT_IDENTIFIERS relativeToURL:[OTRPushAPIClient sharedClient].baseURL]];
-    AFJSONRequestOperation *request = [AFJSONRequestOperation JSONRequestOperationWithRequest:productsRequest success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
-        [self fetchProductsWithIdentifiers:[NSSet setWithArray:[JSON objectForKey:PRODUCT_IDENTIFIERS_KEY]]];
-    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+    NSURL *requestURL = [NSURL URLWithString:REQUEST_PRODUCT_IDENTIFIERS relativeToURL:[OTRPushAPIClient sharedClient].baseURL];
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    [manager GET:requestURL.absoluteString parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
+        [self fetchProductsWithIdentifiers:[NSSet setWithArray:[responseObject objectForKey:PRODUCT_IDENTIFIERS_KEY]]];
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
         NSLog(@"Error loading product identifiers: %@%@", [error localizedDescription], [error userInfo]);
     }];
-    [request start];
 }
 
 - (void) fetchProductsWithIdentifiers:(NSSet*)identifiers {
@@ -93,7 +93,8 @@
         SKPayment *payment = [SKPayment paymentWithProduct:product];
         [[SKPaymentQueue defaultQueue] addPayment:payment];
     } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:CANT_MAKE_PAYMENTS_STRING delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
+#warning Needs localziation
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:@"Cant make payments" delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
         [alert show];
     }
 }
@@ -104,7 +105,7 @@
         switch (transaction.transactionState) {
             case SKPaymentTransactionStatePurchased:
                 NSLog(@"Transaction purchased");
-                [[OTRPushController sharedInstance] registerWithReceipt:transaction.transactionReceipt resetAccount:NO];
+                //[[OTRPushController sharedInstance] registerWithReceipt:transaction.transactionReceipt resetAccount:NO];
                 [self setProductIdentifier:transaction.payment.productIdentifier purchased:YES];
                 [self sendProductUpdateNotification];
                 [[SKPaymentQueue defaultQueue] finishTransaction: transaction];
@@ -116,7 +117,7 @@
                 break;
             case SKPaymentTransactionStateRestored:
                 NSLog(@"Original transaction restored: %@", transaction.originalTransaction.transactionIdentifier);
-                [[OTRPushController sharedInstance] registerWithReceipt:transaction.transactionReceipt resetAccount:YES];
+                //[[OTRPushController sharedInstance] registerWithReceipt:transaction.transactionReceipt resetAccount:YES];
                 [self setProductIdentifier:transaction.payment.productIdentifier purchased:YES];
                 [self sendProductUpdateNotification];
                 [[SKPaymentQueue defaultQueue] finishTransaction: transaction];

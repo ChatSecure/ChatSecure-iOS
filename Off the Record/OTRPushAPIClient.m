@@ -7,8 +7,6 @@
 //
 
 #import "OTRPushAPIClient.h"
-#import "AFJSONRequestOperation.h"
-#import "OTRPushController.h"
 #import "OTRPushAccount.h"
 #import "NSData+XMPP.h"
 #import "OTRProtocolManager.h"
@@ -37,39 +35,30 @@
         return nil;
     }
     
-    [self registerHTTPOperationClass:[AFJSONRequestOperation class]];
     //self.parameterEncoding = AFJSONParameterEncoding;
     
     // Accept HTTP Header; see http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.1
-	[self setDefaultHeader:@"Accept" value:@"application/json"];
     
     return self;
 }
 
-- (NSMutableURLRequest*) requestWithMethod:(NSString*)method path:(NSString *)path parameters:(NSDictionary *)parameters {
-    NSMutableURLRequest *request = [super requestWithMethod:method path:path parameters:parameters];
-    request.HTTPShouldHandleCookies = YES;
-    return request;
-}
-
 - (void) processAccount:(OTRPushAccount*)account parameters:(NSDictionary*)parameters successBlock:(void (^)(OTRPushAccount* loggedInAccount))successBlock failureBlock:(void (^)(NSError *error))failureBlock {
-    if (account.isConnected.boolValue) {
+    
+    if (account.isRegistered) {
         if (failureBlock) {
             failureBlock([NSError errorWithDomain:NSERROR_DOMAIN code:123 userInfo:@{NSLocalizedDescriptionKey: @"Account already connected."}]);
         }
         return;
     }
-    [self postPath:@"account/" parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    
+    [self POST:@"account/" parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSError *error = nil;
         if ([responseObject isKindOfClass:[NSDictionary class]]) {
             BOOL success = [[responseObject objectForKey:@"success"] boolValue];
             if (success) {
                 OTRPushManager *pushManager = [[OTRProtocolManager sharedInstance] protocolForAccount:account];
                 pushManager.isConnected = YES;
-                NSManagedObjectContext *localContext = [NSManagedObjectContext MR_contextForCurrentThread];
-                OTRPushAccount *localAccount = (OTRPushAccount*)[localContext existingObjectWithID:account.objectID error:nil];
-                localAccount.isConnected = @(YES);
-                [localContext MR_saveToPersistentStoreAndWait];
+                OTRPushAccount *localAccount = nil;
                 if (successBlock) {
                     successBlock(localAccount);
                 }
@@ -98,8 +87,8 @@
     [self processAccount:account parameters:@{@"email": account.username, @"password": password, @"create": @(YES)} successBlock:successBlock failureBlock:failureBlock];
 }
 
-- (void) sendPushToBuddy:(OTRManagedBuddy*)buddy successBlock:(void (^)(void))successBlock failureBlock:(void (^)(NSError *error))failureBlock {
-    [self postPath:@"knock/" parameters:@{@"email": buddy.accountName} success:^(AFHTTPRequestOperation *operation, id responseObject) {
+- (void) sendPushToBuddy:(OTRBuddy*)buddy successBlock:(void (^)(void))successBlock failureBlock:(void (^)(NSError *error))failureBlock {
+    [self POST:@"knock/" parameters:@{@"email": buddy.username} success:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSError *error = nil;
         if ([responseObject isKindOfClass:[NSDictionary class]]) {
             BOOL success = [[responseObject objectForKey:@"success"] boolValue];
@@ -125,16 +114,16 @@
 
 
 - (void) updatePushTokenForAccount:(OTRPushAccount*)account token:(NSData *)devicePushToken successBlock:(void (^)(void))successBlock failureBlock:(void (^)(NSError *error))failureBlock {
-    NSDictionary *parameters = @{@"device_type": @"iPhone", @"operating_system": @"iOS", @"apple_push_token": [devicePushToken hexStringValue]};
+    NSDictionary *parameters = @{@"device_type": @"iPhone", @"operating_system": @"iOS", @"apple_push_token": [devicePushToken xmpp_hexStringValue]};
 
-    if (!account.isConnected.boolValue) {
+    if (!account.isRegistered) {
         [self connectAccount:account password:account.password successBlock:^(OTRPushAccount *loggedInAccount) {
             NSLog(@"Account logged in: %@, updating push token...", loggedInAccount.username);
             [self updatePushTokenForAccount:loggedInAccount token:devicePushToken successBlock:successBlock failureBlock:failureBlock];
         } failureBlock:failureBlock];
         return;
     }
-    [self postPath:@"device/" parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    [self POST:@"device/" parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSLog(@"Token updated: %@", responseObject);
         if ([responseObject isKindOfClass:[NSDictionary class]]) {
             BOOL success = [[responseObject objectForKey:@"success"] boolValue];

@@ -380,6 +380,11 @@
 		D974577715BE34E7002B9192 /* 31-circle-plus.png in Resources */ = {isa = PBXBuildFile; fileRef = D974577515BE34E7002B9192 /* 31-circle-plus.png */; };
 		D974577815BE34E7002B9192 /* 31-circle-plus@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D974577615BE34E7002B9192 /* 31-circle-plus@2x.png */; };
 		D97BF53B160150CF00DA91F9 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D97BF53A160150CE00DA91F9 /* Default-568h@2x.png */; };
+		D987BAD91901A6CF005B2382 /* OTRPurchaseController.m in Sources */ = {isa = PBXBuildFile; fileRef = D987BACA1901A6CF005B2382 /* OTRPurchaseController.m */; };
+		D987BADC1901A6CF005B2382 /* OTRPushAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = D987BAD01901A6CF005B2382 /* OTRPushAccount.m */; };
+		D987BADD1901A6CF005B2382 /* OTRPushAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = D987BAD21901A6CF005B2382 /* OTRPushAPIClient.m */; };
+		D987BADF1901A6CF005B2382 /* OTRPushLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D987BAD61901A6CF005B2382 /* OTRPushLoginViewController.m */; };
+		D987BAE01901A6CF005B2382 /* OTRPushManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D987BAD81901A6CF005B2382 /* OTRPushManager.m */; };
 		D989E88E15D4F92E0081DFD1 /* Twitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D989E88D15D4F92E0081DFD1 /* Twitter.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		D99071B2151EB5C6002CECC9 /* 08-chat@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D99071AF151EB5C5002CECC9 /* 08-chat@2x.png */; };
 		D99071B3151EB5C6002CECC9 /* 19-gear@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D99071B0151EB5C5002CECC9 /* 19-gear@2x.png */; };
@@ -1210,6 +1215,16 @@
 		D974577615BE34E7002B9192 /* 31-circle-plus@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "31-circle-plus@2x.png"; sourceTree = "<group>"; };
 		D974DABC15021E540028B2F4 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
 		D97BF53A160150CE00DA91F9 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "../Default-568h@2x.png"; sourceTree = "<group>"; };
+		D987BAC91901A6CF005B2382 /* OTRPurchaseController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRPurchaseController.h; sourceTree = "<group>"; };
+		D987BACA1901A6CF005B2382 /* OTRPurchaseController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRPurchaseController.m; sourceTree = "<group>"; };
+		D987BACF1901A6CF005B2382 /* OTRPushAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRPushAccount.h; sourceTree = "<group>"; };
+		D987BAD01901A6CF005B2382 /* OTRPushAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRPushAccount.m; sourceTree = "<group>"; };
+		D987BAD11901A6CF005B2382 /* OTRPushAPIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRPushAPIClient.h; sourceTree = "<group>"; };
+		D987BAD21901A6CF005B2382 /* OTRPushAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRPushAPIClient.m; sourceTree = "<group>"; };
+		D987BAD51901A6CF005B2382 /* OTRPushLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRPushLoginViewController.h; sourceTree = "<group>"; };
+		D987BAD61901A6CF005B2382 /* OTRPushLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRPushLoginViewController.m; sourceTree = "<group>"; };
+		D987BAD71901A6CF005B2382 /* OTRPushManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRPushManager.h; sourceTree = "<group>"; };
+		D987BAD81901A6CF005B2382 /* OTRPushManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRPushManager.m; sourceTree = "<group>"; };
 		D989E88D15D4F92E0081DFD1 /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
 		D99071AF151EB5C5002CECC9 /* 08-chat@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "08-chat@2x.png"; sourceTree = "<group>"; };
 		D99071B0151EB5C5002CECC9 /* 19-gear@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "19-gear@2x.png"; sourceTree = "<group>"; };
@@ -2689,6 +2704,23 @@
 			path = Submodules/UserVoice/Resources;
 			sourceTree = "<group>";
 		};
+		D987BAC81901A69E005B2382 /* Push */ = {
+			isa = PBXGroup;
+			children = (
+				D987BAC91901A6CF005B2382 /* OTRPurchaseController.h */,
+				D987BACA1901A6CF005B2382 /* OTRPurchaseController.m */,
+				D987BACF1901A6CF005B2382 /* OTRPushAccount.h */,
+				D987BAD01901A6CF005B2382 /* OTRPushAccount.m */,
+				D987BAD11901A6CF005B2382 /* OTRPushAPIClient.h */,
+				D987BAD21901A6CF005B2382 /* OTRPushAPIClient.m */,
+				D987BAD51901A6CF005B2382 /* OTRPushLoginViewController.h */,
+				D987BAD61901A6CF005B2382 /* OTRPushLoginViewController.m */,
+				D987BAD71901A6CF005B2382 /* OTRPushManager.h */,
+				D987BAD81901A6CF005B2382 /* OTRPushManager.m */,
+			);
+			name = Push;
+			sourceTree = "<group>";
+		};
 		D9CEED611684234D00B236B5 /* Submodules */ = {
 			isa = PBXGroup;
 			children = (
@@ -2845,6 +2877,7 @@
 		D9F9378013F44BD3009A3D84 /* Off the Record */ = {
 			isa = PBXGroup;
 			children = (
+				D987BAC81901A69E005B2382 /* Push */,
 				63CAF8F818FF268000C3337E /* OTRAppDelegate.h */,
 				63CAF8F918FF268000C3337E /* OTRAppDelegate.m */,
 				6397531418CA7D86005D6063 /* OTRLog.h */,
@@ -3402,6 +3435,7 @@
 				639C60D418CA992300CC4DF4 /* OTRDoubleSetting.m in Sources */,
 				636FE4BC161B771E002B28EF /* OTROscarLoginViewController.m in Sources */,
 				636FE4C0161B7C68002B28EF /* OTRInLineTextEditTableViewCell.m in Sources */,
+				D987BAE01901A6CF005B2382 /* OTRPushManager.m in Sources */,
 				639FDE4716334FA500387666 /* OTRJabberLoginViewController.m in Sources */,
 				6334063C1652C33300A54C52 /* OTRListSettingViewController.m in Sources */,
 				6336CDE0165C4E9E00C8CBA8 /* OTRLanguageListSettingViewController.m in Sources */,
@@ -3496,6 +3530,7 @@
 				63483F911752CED100779257 /* XMPPBandwidthMonitor.m in Sources */,
 				6397538118CA8222005D6063 /* OTRManagedEncryptionMessage.m in Sources */,
 				63483F921752CED100779257 /* XMPPCoreDataStorage.m in Sources */,
+				D987BADD1901A6CF005B2382 /* OTRPushAPIClient.m in Sources */,
 				6397538D18CA8222005D6063 /* OTRvCardTemp.m in Sources */,
 				63483F931752CED100779257 /* XMPPGoogleSharedStatus.m in Sources */,
 				63483F941752CED100779257 /* XMPPProcessOne.m in Sources */,
@@ -3573,10 +3608,12 @@
 				6398CD9517FA209A009389F8 /* XMPPCertificatePinning.m in Sources */,
 				63483FC11752CED100779257 /* NSXMLElement+XEP_0059.m in Sources */,
 				63483FC21752CED100779257 /* XMPPResultSet.m in Sources */,
+				D987BADF1901A6CF005B2382 /* OTRPushLoginViewController.m in Sources */,
 				63483FC31752CED100779257 /* XMPPIQ+XEP_0060.m in Sources */,
 				63483FC41752CED100779257 /* XMPPPubSub.m in Sources */,
 				63483FC51752CED100779257 /* TURNSocket.m in Sources */,
 				63483FC61752CED100779257 /* XMPPIQ+XEP_0066.m in Sources */,
+				D987BAD91901A6CF005B2382 /* OTRPurchaseController.m in Sources */,
 				6397538618CA8222005D6063 /* OTRManagedOAuthAccount.m in Sources */,
 				634FF44918D8E9F200022993 /* OTRBuddyImageCell.m in Sources */,
 				63483FC71752CED100779257 /* XMPPMessage+XEP_0066.m in Sources */,
@@ -3599,6 +3636,7 @@
 				63483FD41752CED100779257 /* XMPPMessageArchivingCoreDataStorage.m in Sources */,
 				63483FD51752CED100779257 /* XMPPMessageArchiving.m in Sources */,
 				63483FD61752CED100779257 /* XMPPvCardAvatarModule.m in Sources */,
+				D987BADC1901A6CF005B2382 /* OTRPushAccount.m in Sources */,
 				63483FD71752CED100779257 /* XMPPMessage+XEP_0172.m in Sources */,
 				63483FD81752CED100779257 /* XMPPPresence+XEP_0172.m in Sources */,
 				63483FD91752CED100779257 /* XMPPMessage+XEP_0184.m in Sources */,

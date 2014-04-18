@@ -16,7 +16,7 @@
 @implementation OTRPushManager
 @synthesize account, isConnected;
 
-- (void) sendMessage:(OTRManagedMessage*)message {
+- (void) sendMessage:(OTRMessage*)message {
     
 }
 - (void) connectWithPassword:(NSString *)password {
@@ -32,10 +32,10 @@
 }
 - (void) disconnect {
     self.isConnected = NO;
-    [[NSNotificationCenter defaultCenter] postNotificationName:kOTRProtocolDiconnect object:nil];
+    //[[NSNotificationCenter defaultCenter] postNotificationName:kOTRProtocolDiconnect object:nil];
 
 }
-- (void) addBuddy:(OTRManagedBuddy *)newBuddy {
+- (void) addBuddy:(OTRBuddy *)newBuddy {
     NSLog(@"push buddy added: %@", newBuddy);
 }
 

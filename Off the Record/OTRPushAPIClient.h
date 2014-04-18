@@ -6,10 +6,11 @@
 //  Copyright (c) 2012 Chris Ballinger. All rights reserved.
 //
 
-#import "AFHTTPClient.h"
+#import "AFNetworking.h"
 #import "OTRPushAccount.h"
+#import "OTRBuddy.h"
 
-@interface OTRPushAPIClient : AFHTTPClient
+@interface OTRPushAPIClient : AFHTTPRequestOperationManager
 
 + (OTRPushAPIClient*) sharedClient;
 
@@ -17,7 +18,7 @@
 
 - (void) createAccount:(OTRPushAccount*)account password:(NSString*)password successBlock:(void (^)(OTRPushAccount* loggedInAccount))successBlock failureBlock:(void (^)(NSError *error))failureBlock;
 
-- (void) sendPushToBuddy:(OTRManagedBuddy*)buddy successBlock:(void (^)(void))successBlock failureBlock:(void (^)(NSError *error))failureBlock;
+- (void) sendPushToBuddy:(OTRBuddy*)buddy successBlock:(void (^)(void))successBlock failureBlock:(void (^)(NSError *error))failureBlock;
 
 - (void) updatePushTokenForAccount:(OTRPushAccount*)account token:(NSData *)devicePushToken successBlock:(void (^)(void))successBlock failureBlock:(void (^)(NSError *error))failureBlock;
 
