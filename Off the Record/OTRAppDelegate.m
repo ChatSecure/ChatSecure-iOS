@@ -130,6 +130,8 @@
     [Appirater appLaunched:YES];
     
     [self autoLogin];
+    
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound];
         
     return YES;
 }
@@ -273,12 +275,6 @@
 }
 */
 
-- (void)application:(UIApplication *)application
-didReceiveRemoteNotification:(NSDictionary *)userInfo {
-    NSLog(@"Push received! %@", [userInfo description]);
-    [[[UIAlertView alloc] initWithTitle:@"ChatSecure Push" message:[[userInfo objectForKey:@"aps"] objectForKey:@"alert"] delegate:nil cancelButtonTitle:OK_STRING otherButtonTitles:nil] show];
-}
-
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
     //DDLogInfo(@"Notification Body: %@", notification.alertBody);
     //DDLogInfo(@"User Info: %@", notification.userInfo);
@@ -327,6 +323,16 @@ didReceiveRemoteNotification:(NSDictionary *)userInfo {
 
 - (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {
     NSLog(@"Error in registration. Error: %@%@", [err localizedDescription], [err userInfo]);
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
+{
+    NSLog(@"Remote Notification Recieved: %@", userInfo);
+    UILocalNotification *notification = [[UILocalNotification alloc] init];
+    notification.alertBody =  @"Looks like i got a notification - fetch thingy";
+    [application presentLocalNotificationNow:notification];
+    completionHandler(UIBackgroundFetchResultNewData);
+    
 }
 
 @end

@@ -10,6 +10,8 @@
 #import "Strings.h"
 #import "OTRPushManager.h"
 
+#define kOTRPushAccountKey @"OTRPushAccountKey"
+
 @implementation OTRPushAccount
 
 - (NSString *) imageName {
@@ -23,6 +25,23 @@
 
 - (Class) protocolClass {
     return [OTRPushManager class];
+}
+
++ (OTRPushAccount*) activeAccount {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    OTRPushAccount *testAccount = nil;
+    NSData *accountData = [defaults objectForKey:kOTRPushAccountKey];
+    if (!accountData) {
+        testAccount = [[OTRPushAccount alloc] initWithAccountType:OTRAccountTypeNone];
+        testAccount.username = @"test";
+        testAccount.rememberPassword = YES;
+        testAccount.password = @"test";
+        accountData = [NSKeyedArchiver archivedDataWithRootObject:testAccount];
+        [defaults setObject:accountData forKey:kOTRPushAccountKey];
+    } else {
+        testAccount = [NSKeyedUnarchiver unarchiveObjectWithData:accountData];
+    }
+    return testAccount;
 }
 
 @end

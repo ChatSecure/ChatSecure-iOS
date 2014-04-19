@@ -4072,7 +4072,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1AE5185718C3B3F000946594 /* en */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Chris Ballinger (9P62QGET7G)";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -4105,6 +4105,7 @@
 					"$(inherited)",
 				);
 				PRODUCT_NAME = ChatSecure;
+				PROVISIONING_PROFILE = "D7C341B4-8301-4979-8EC6-9CDA58A8AA96";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
@@ -4114,7 +4115,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1AE5186518C3B53C00946594 /* en */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Chris Ballinger (4T8JLQR6GR)";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -4147,6 +4148,7 @@
 					"$(inherited)",
 				);
 				PRODUCT_NAME = ChatSecure;
+				PROVISIONING_PROFILE = "609C8A73-CAB9-407E-97E7-9F00D0253022";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
