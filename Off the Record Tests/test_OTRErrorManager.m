@@ -8,7 +8,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import "OTRErrorManager.h"
+#import "OTRXMPPError.h"
 
 @interface test_OTRErrorManager : XCTestCase
 
@@ -30,11 +30,11 @@
 
 - (void) test_errorStringWithSSLStatus {
     
-    NSString * noErrorString = [OTRErrorManager errorStringWithSSLStatus:noErr];
+    NSString * noErrorString = [OTRXMPPError errorStringWithSSLStatus:noErr];
     XCTAssertNotNil(noErrorString, @"noErr string");
     for (OSStatus i = errSSLProtocol; i>= errSSLUnexpectedRecord; i--) {
         NSString * errorString = nil;
-        errorString = [OTRErrorManager errorStringWithSSLStatus:i];
+        errorString = [OTRXMPPError errorStringWithSSLStatus:i];
         XCTAssertNotNil(errorString, @"Checking Error %d",(int)i);
     }
     

@@ -6,14 +6,12 @@
 //  Copyright (c) 2013 Chris Ballinger. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#import "OTRAccount.h"
+#import "OTRPushObject.h"
 
+@interface OTRPushAccount : OTRPushObject
 
-@interface OTRPushAccount : OTRAccount
+@property (nonatomic, strong) NSString *username;
+@property (nonatomic, strong) NSString *email;
 
-@property (nonatomic) BOOL isRegistered;
-
-+ (OTRPushAccount*) activeAccount;
 
 @end

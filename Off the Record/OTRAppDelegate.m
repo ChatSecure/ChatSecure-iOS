@@ -312,13 +312,13 @@
 
 // Delegation methods
 - (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)devToken {
-    OTRPushAccount *account = [OTRPushAccount activeAccount];
-    NSString *username = account.username;
-    [[OTRPushAPIClient sharedClient] updatePushTokenForAccount:account token:devToken  successBlock:^(void) {
-        NSLog(@"Device token updated for (%@): %@", username, devToken.description);
-    } failureBlock:^(NSError *error) {
-        NSLog(@"Error updating push token: %@", error.userInfo);
-    }];
+//    OTRPushAccount *account = [OTRPushAccount activeAccount];
+//    NSString *username = account.username;
+//    [[OTRPushAPIClient sharedClient] updatePushTokenForAccount:account token:devToken  successBlock:^(void) {
+//        NSLog(@"Device token updated for (%@): %@", username, devToken.description);
+//    } failureBlock:^(NSError *error) {
+//        NSLog(@"Error updating push token: %@", error.userInfo);
+//    }];
 }
 
 - (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {

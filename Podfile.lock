@@ -17,6 +17,8 @@ PODS:
   - AFNetworking/Serialization (2.0.3)
   - AFNetworking/UIKit (2.0.3):
     - AFNetworking/NSURLConnection
+  - AFOAuth2Client (0.1.2):
+    - AFNetworking (~> 2.0)
   - Appirater (2.0.2)
   - CocoaLumberjack (1.8.1):
     - CocoaLumberjack/Extensions
@@ -46,6 +48,7 @@ PODS:
   - SQLCipher/fts (3.0.1):
     - SQLCipher/common
   - SSKeychain (1.2.2)
+  - TRVSMonitor (0.0.3)
   - UIAlertView-Blocks (1.0)
   - YapDatabase/common (2.4.1):
     - CocoaLumberjack (~> 1.6.3)
@@ -55,6 +58,7 @@ PODS:
 
 DEPENDENCIES:
   - AFNetworking (= 2.0.3)
+  - AFOAuth2Client (from `git@github.com:ChatSecure/AFOAuth2Client.git`, branch `release`)
   - Appirater
   - CocoaLumberjack
   - DAKeyboardControl (~> 2.3)
@@ -68,10 +72,14 @@ DEPENDENCIES:
   - MBProgressHUD (~> 0.8)
   - SIAlertView (from `PodSpecs/SIAlertView.podspec`)
   - SSKeychain
+  - TRVSMonitor (~> 0.0)
   - UIAlertView-Blocks
   - YapDatabase/SQLCipher (from `Submodules/YapDatabase`)
 
 EXTERNAL SOURCES:
+  AFOAuth2Client:
+    :branch: release
+    :git: git@github.com:ChatSecure/AFOAuth2Client.git
   SIAlertView:
     :podspec: PodSpecs/SIAlertView.podspec
   YapDatabase:
@@ -79,6 +87,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AFNetworking: e499052cbf3d743e9bb727bb37adb9dc2547ba15
+  AFOAuth2Client: 5244ffdc28081e2ce4d4a0d0f1198ed54e24d787
   Appirater: 32fb9089615b5e542c7ad7b5749741a8aed55290
   CocoaLumberjack: 020378ec400d658923bf5887178394f65f052c90
   DAKeyboardControl: 219d6e32b9343eb85151255c43b1f238d8f0bbf7
@@ -91,10 +100,11 @@ SPEC CHECKSUMS:
   MagicalRecord: 95d49d74ef752cd52f6ad87bcb474817fc3978cf
   Mantle: 0714cdb2b8559d9e6c2410d6a8529e3307bff189
   MBProgressHUD: 2bbc6f470111daf7f3eaa4eb12b8cbf01c4c0622
-  SBJson: abc2bf2baef456d5dae213f9826fe2b6fdf19861
+  SBJson: 0eeb4062451ec5ed792ff8b6615daff2ae39e218
   SIAlertView: 522351a8870be07fb49053fa054c83da3ea17dbe
   SQLCipher: 9dc260ec6becc4d05cd73f1346d4bba9dc086560
   SSKeychain: 3d0b76c87e7b062a7ad1631a825fddec84367d44
+  TRVSMonitor: cc2b3d6f4cf18639464f6b8295f1b4722f4d4f14
   UIAlertView-Blocks: f7be28a08e85ec21143951ec6797ca6474faf563
   YapDatabase: 1554bf9652e865cb0a09677626f45f8a29bdf09f
 

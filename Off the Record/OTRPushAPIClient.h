@@ -7,20 +7,41 @@
 //
 
 #import "AFNetworking.h"
-#import "OTRPushAccount.h"
-#import "OTRBuddy.h"
+
+@class OTRPushAccount;
+@class OTRPushToken;
 
 @interface OTRPushAPIClient : AFHTTPRequestOperationManager
 
-+ (OTRPushAPIClient*) sharedClient;
+- (id)initWithBaseURL:(NSURL *)url clientID:(NSString*)clientID clientSecret:(NSString*)clientSecret;
 
-- (void) connectAccount:(OTRPushAccount*)account password:(NSString*)password successBlock:(void (^)(OTRPushAccount* loggedInAccount))successBlock failureBlock:(void (^)(NSError *error))failureBlock;
+////// Login //////
 
-- (void) createAccount:(OTRPushAccount*)account password:(NSString*)password successBlock:(void (^)(OTRPushAccount* loggedInAccount))successBlock failureBlock:(void (^)(NSError *error))failureBlock;
+- (void)loginWithUsername:(NSString *)username password:(NSString *)password completion:(void (^)(BOOL success, NSError *error))completion;
 
-- (void) sendPushToBuddy:(OTRBuddy*)buddy successBlock:(void (^)(void))successBlock failureBlock:(void (^)(NSError *error))failureBlock;
+- (void)createNewAccountWithUsername:(NSString *)username password:(NSString *)password completion:(void (^)(OTRPushAccount *account, NSError *error))completion;
 
-- (void) updatePushTokenForAccount:(OTRPushAccount*)account token:(NSData *)devicePushToken successBlock:(void (^)(void))successBlock failureBlock:(void (^)(NSError *error))failureBlock;
+////// Push Tokens //////
+
+- (void)fetchNewPushTokenWithName:(NSString *)name completionBlock:(void (^)(OTRPushToken *pushToken, NSError *error))completionBlock;
+
+- (void)fetchAllPushTokensCompletinoBlock:(void (^)(NSArray *tokensArray, NSError *error))completionBlock;
+
+////// Singleton Methods //////
+
++ (void)setupWithBaseURL:(NSURL *)baseURL clientID:(NSString*)clientID clientSecret:(NSString*)clientSecret;
++ (void)setupWithCientID:(NSString*)clientID clientSecret:(NSString*)clientSecret;
+
++ (OTRPushAPIClient*)sharedClient;
+
+//- (void) connectAccount:(OTRPushAccount*)account password:(NSString*)password successBlock:(void (^)(OTRPushAccount* loggedInAccount))successBlock failureBlock:(void (^)(NSError *error))failureBlock;
+//
+//- (void) createAccount:(OTRPushAccount*)account password:(NSString*)password successBlock:(void (^)(OTRPushAccount* loggedInAccount))successBlock failureBlock:(void (^)(NSError *error))failureBlock;
+//
+//- (void) sendPushToBuddy:(OTRBuddy*)buddy successBlock:(void (^)(void))successBlock failureBlock:(void (^)(NSError *error))failureBlock;
+//
+//- (void) updatePushTokenForAccount:(OTRPushAccount*)account token:(NSData *)devicePushToken successBlock:(void (^)(void))successBlock failureBlock:(void (^)(NSError *error))failureBlock;
+
 
 
 @end
