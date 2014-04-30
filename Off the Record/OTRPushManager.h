@@ -18,7 +18,7 @@ typedef void (^OTRPushCompletionBlock)(BOOL success, NSError *error);
 
 #pragma - mark Account Methods
 
-- (void)createNewAccountWithUsername:(NSString *)username password:(NSString *)password completion:(OTRPushCompletionBlock)completion;
+- (void)createNewAccountWithUsername:(NSString *)username password:(NSString *)password emial:(NSString *)email completion:(OTRPushCompletionBlock)completion;
 
 - (void)refreshCurrentAccount:(OTRPushCompletionBlock)completion;
 

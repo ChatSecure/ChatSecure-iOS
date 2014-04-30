@@ -32,9 +32,9 @@
     return self;
 }
 
-- (void)createNewAccountWithUsername:(NSString *)username password:(NSString *)password completion:(OTRPushCompletionBlock)completion
+- (void)createNewAccountWithUsername:(NSString *)username password:(NSString *)password email:(NSString *)email completion:(OTRPushCompletionBlock)completion
 {
-    [[OTRPushAPIClient sharedClient] createNewAccountWithUsername:username password:password completion:^(OTRPushAccount *account, NSError *error) {
+    [[OTRPushAPIClient sharedClient] createNewAccountWithUsername:username password:password email:email completion:^(OTRPushAccount *account, NSError *error) {
         
         BOOL success = NO;
         

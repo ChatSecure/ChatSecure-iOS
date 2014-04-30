@@ -129,9 +129,19 @@ static OTRPushAPIClient *_sharedClient = nil;
     }];
 }
 
-- (void)createNewAccountWithUsername:(NSString *)username password:(NSString *)password completion:(void (^)(OTRPushAccount *account, NSError *error))completion
+- (void)createNewAccountWithUsername:(NSString *)username password:(NSString *)password email:(NSString *)email completion:(void (^)(OTRPushAccount *account, NSError *error))completion
 {
-    [self POST:@"accounts/" parameters:@{} success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    NSAssert(username, @"Required username");
+    NSAssert(password, @"Required password");
+    NSAssert(self.pushOAuthClient.clientID, @"Required clientId");
+    
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithDictionary:@{@"username":username,@"password":password,@"client_id":self.pushOAuthClient.clientID}];
+    
+    if ([email length]) {
+        [parameters addEntriesFromDictionary:@{@"email":email}];
+    }
+    
+    [self POST:@"accounts/" parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSError *error = nil;
         OTRPushAccount *pushAccount = [MTLJSONAdapter modelOfClass:[OTRPushAccount class] fromJSONDictionary:responseObject error:&error];
         if (!error) {

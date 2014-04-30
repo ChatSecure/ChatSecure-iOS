@@ -20,7 +20,7 @@
 
 - (void)loginWithUsername:(NSString *)username password:(NSString *)password completion:(void (^)(BOOL success, NSError *error))completionBlock;
 
-- (void)createNewAccountWithUsername:(NSString *)username password:(NSString *)password completion:(void (^)(OTRPushAccount *account, NSError *error))completion;
+- (void)createNewAccountWithUsername:(NSString *)username password:(NSString *)password email:(NSString *)email completion:(void (^)(OTRPushAccount *account, NSError *error))completion;
 
 ////// Account //////
 
