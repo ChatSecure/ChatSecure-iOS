@@ -407,9 +407,11 @@ NSString *OTRPushAccountGroup = @"Account";
 
 + (void)registerPushView
 {
-    if ([[OTRDatabaseManager sharedInstance].database registeredExtension:OTRAllPushAccountInfoViewExtensionName]) {
+    /*if ([[OTRDatabaseManager sharedInstance].database registeredExtension:OTRAllPushAccountInfoViewExtensionName]) {
         return YES;
-    }
+    }*/
+    
+    [[OTRDatabaseManager sharedInstance].database unregisterExtension:OTRAllPushAccountInfoViewExtensionName];
     
     YapDatabaseViewBlockType groupingBlockType;
     YapDatabaseViewGroupingWithKeyBlock groupingBlock;
@@ -417,9 +419,9 @@ NSString *OTRPushAccountGroup = @"Account";
     YapDatabaseViewBlockType sortingBlockType;
     YapDatabaseViewSortingWithObjectBlock sortingBlock;
     
-    NSString *pushAccountCollection = [OTRPushManager collectionForClass:[OTRPushAccount class]];
-    NSString *pushDeviceCollection  = [OTRPushManager collectionForClass:[OTRPushDevice class]];
-    NSString *pushTokenCollection   = [OTRPushManager collectionForClass:[OTRPushToken class]];
+    __block NSString *pushAccountCollection = [OTRPushManager collectionForClass:[OTRPushAccount class]];
+    __block NSString *pushDeviceCollection  = [OTRPushManager collectionForClass:[OTRPushDevice class]];
+    __block NSString *pushTokenCollection   = [OTRPushManager collectionForClass:[OTRPushToken class]];
     
     groupingBlockType = YapDatabaseViewBlockTypeWithKey;
     groupingBlock = ^NSString *(NSString *collection, NSString *key){
@@ -457,9 +459,9 @@ NSString *OTRPushAccountGroup = @"Account";
                                  groupingBlockType:groupingBlockType
                                       sortingBlock:sortingBlock
                                   sortingBlockType:sortingBlockType
-                                        versionTag:@""
+                                        versionTag:@"1"
                                            options:options];
-    return [[OTRDatabaseManager sharedInstance].database registerExtension:databaseView withName:OTRAllSubscriptionRequestsViewExtensionName];
+    return [[OTRDatabaseManager sharedInstance].database registerExtension:databaseView withName:OTRAllPushAccountInfoViewExtensionName];
 }
 
 @end
