@@ -27,7 +27,7 @@
 #import "OTRProtocol.h"
 #import "OTRAccountsManager.h"
 
-@class OTRAccount,OTRBuddy;
+@class OTRAccount,OTRBuddy, OTRPushManager;
 
 @interface OTRProtocolManager : NSObject
 
@@ -46,6 +46,8 @@
 - (void)loginAccounts:(NSArray *)accounts;
 
 - (void)sendMessage:(OTRMessage *)message;
+
+- (OTRPushManager *)defaultPushManager;
 
 + (OTRProtocolManager*)sharedInstance; // Singleton method
 

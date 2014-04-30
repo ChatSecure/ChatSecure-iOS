@@ -7,7 +7,8 @@
 //
 
 #import "OTRYapDatabaseObject.h"
+#import "OTRPushObject.h"
 
-@interface OTRYapPushObject : OTRYapDatabaseObject
+@interface OTRYapPushObject : OTRPushObject <OTRYapDatabseObjectProtocol>
 
 @end

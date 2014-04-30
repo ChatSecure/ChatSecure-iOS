@@ -30,6 +30,8 @@
 #import "OTRDatabaseManager.h"
 #import "YapDatabaseConnection.h"
 #import "YapDatabaseTransaction.h"
+#import "OTRPushManager.h"
+#import "OTRPushAPIClient.h"
 
 #import "OTRLog.h"
 
@@ -38,7 +40,7 @@ static OTRProtocolManager *sharedManager = nil;
 @interface OTRProtocolManager ()
 
 @property (nonatomic) NSUInteger numberOfConnectedProtocols;
-
+@property (nonatomic, strong) OTRPushManager *pushManager;
 
 @end
 
@@ -194,6 +196,15 @@ static OTRProtocolManager *sharedManager = nil;
     OTRProtocolManager * protocolManager = [OTRProtocolManager sharedInstance];
     id<OTRProtocol> protocol = [protocolManager protocolForAccount:account];
     [protocol sendMessage:message];
+}
+
+- (OTRPushManager *)defaultPushManager
+{
+    if (!self.pushManager) {
+        [OTRPushAPIClient setupWithCientID:@"YXfx?hkH7Q6R5uGJu!D!gSHWRnt;jmw8pN_nlfGc" clientSecret:@"e8FuSm13xSK4drc:vMMplnc_PF_Cb92=goHyHyc;-hx-HE4xZa!90cWLwYlJxaY!ppQfFMur0Gxu6jIZxN9Wol9OXu;ogVg?zD7fdkz:4@fRkaylJGZhEqpR?:6;Mxgq"];
+        self.pushManager = [[OTRPushManager alloc] init];
+    }
+    return self.pushManager;
 }
 
 @end

@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Chris Ballinger. All rights reserved.
 //
 
-#import "MTLModel.h"
+#import "MTLModel+NSCoding.h"
 #import <MTLJSONAdapter.h>
 
 @interface OTRPushObject : MTLModel <MTLJSONSerializing>

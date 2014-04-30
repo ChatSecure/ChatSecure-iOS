@@ -16,6 +16,11 @@
 #import "OTRXMPPPresenceSubscriptionRequest.h"
 #import "YapDatabaseFullTextSearch.h"
 
+#import "OTRPushManager.h"
+#import "OTRPushAccount.h"
+#import "OTRPushDevice.h"
+#import "OTRPushToken.h"
+
 NSString *OTRConversationGroup = @"Conversation";
 NSString *OTRConversationDatabaseViewExtensionName = @"OTRConversationDatabaseViewExtensionName";
 NSString *OTRChatDatabaseViewExtensionName = @"OTRChatDatabaseViewExtensionName";
@@ -23,12 +28,17 @@ NSString *OTRBuddyDatabaseViewExtensionName = @"OTRBuddyDatabaseViewExtensionNam
 NSString *OTRBuddyNameSearchDatabaseViewExtensionName = @"OTRBuddyBuddyNameSearchDatabaseViewExtensionName";
 NSString *OTRAllBuddiesDatabaseViewExtensionName = @"OTRAllBuddiesDatabaseViewExtensionName";
 NSString *OTRAllSubscriptionRequestsViewExtensionName = @"AllSubscriptionRequestsViewExtensionName";
+NSString *OTRAllPushAccountInfoViewExtensionName = @"OTRAllPushAccountInfoViewExtensionName";
 
 NSString *OTRAllAccountGroup = @"All Accounts";
 NSString *OTRAllAccountDatabaseViewExtensionName = @"OTRAllAccountDatabaseViewExtensionName";
 NSString *OTRChatMessageGroup = @"Messages";
 NSString *OTRBuddyGroup = @"Buddy";
 NSString *OTRAllPresenceSubscriptionRequestGroup = @"OTRAllPresenceSubscriptionRequestGroup";
+
+NSString *OTRPushTokenGroup = @"Tokens";
+NSString *OTRPushDeviceGroup = @"Devices";
+NSString *OTRPushAccountGroup = @"Account";
 
 @implementation OTRDatabaseView
 
@@ -384,6 +394,63 @@ NSString *OTRAllPresenceSubscriptionRequestGroup = @"OTRAllPresenceSubscriptionR
     YapDatabaseViewOptions *options = [[YapDatabaseViewOptions alloc] init];
     options.isPersistent = YES;
     options.allowedCollections = [NSSet setWithObject:[OTRXMPPPresenceSubscriptionRequest collection]];
+    
+    YapDatabaseView *databaseView =
+    [[YapDatabaseView alloc] initWithGroupingBlock:groupingBlock
+                                 groupingBlockType:groupingBlockType
+                                      sortingBlock:sortingBlock
+                                  sortingBlockType:sortingBlockType
+                                        versionTag:@""
+                                           options:options];
+    return [[OTRDatabaseManager sharedInstance].database registerExtension:databaseView withName:OTRAllSubscriptionRequestsViewExtensionName];
+}
+
++ (void)registerPushView
+{
+    if ([[OTRDatabaseManager sharedInstance].database registeredExtension:OTRAllPushAccountInfoViewExtensionName]) {
+        return YES;
+    }
+    
+    YapDatabaseViewBlockType groupingBlockType;
+    YapDatabaseViewGroupingWithKeyBlock groupingBlock;
+    
+    YapDatabaseViewBlockType sortingBlockType;
+    YapDatabaseViewSortingWithObjectBlock sortingBlock;
+    
+    NSString *pushAccountCollection = [OTRPushManager collectionForClass:[OTRPushAccount class]];
+    NSString *pushDeviceCollection  = [OTRPushManager collectionForClass:[OTRPushDevice class]];
+    NSString *pushTokenCollection   = [OTRPushManager collectionForClass:[OTRPushToken class]];
+    
+    groupingBlockType = YapDatabaseViewBlockTypeWithKey;
+    groupingBlock = ^NSString *(NSString *collection, NSString *key){
+        
+        if ([collection isEqualToString:pushAccountCollection])
+        {
+            return OTRPushAccountGroup;
+        }
+        else if ([collection isEqualToString:pushDeviceCollection])
+        {
+            return OTRPushDeviceGroup;
+        }
+        else if ([collection isEqualToString:pushTokenCollection])
+        {
+            return OTRPushTokenGroup;
+        }
+        
+        return nil;
+    };
+    
+    sortingBlockType = YapDatabaseViewBlockTypeWithObject;
+    sortingBlock = ^(NSString *group, NSString *collection1, NSString *key1, id obj1,
+                     NSString *collection2, NSString *key2, id obj2){
+#warning Needs sorting method
+        
+        return NSOrderedSame;
+    };
+    
+    YapDatabaseViewOptions *options = [[YapDatabaseViewOptions alloc] init];
+    options.isPersistent = YES;
+    options.allowedCollections = [NSSet setWithArray:@[pushDeviceCollection,pushAccountCollection,pushTokenCollection]];
     
     YapDatabaseView *databaseView =
     [[YapDatabaseView alloc] initWithGroupingBlock:groupingBlock

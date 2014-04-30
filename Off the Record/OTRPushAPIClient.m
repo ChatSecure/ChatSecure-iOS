@@ -15,10 +15,11 @@
 #import "OTRPushManager.h"
 #import "OTRPUSHHTTPRequestSerializer.h"
 #import "OTRPushOAuth2Client.h"
+#import "OTRPushDevice.h"
 
 #define NSERROR_DOMAIN @"OTRPushAPIClientError"
 
-#define SERVER_URL @"http://10.1.0.52:8000/api/"
+#define SERVER_URL @"http://192.168.48.62:8000"
 
 static OTRPushAPIClient *_sharedClient = nil;
 
@@ -40,7 +41,8 @@ static OTRPushAPIClient *_sharedClient = nil;
 }
 
 - (id)initWithBaseURL:(NSURL *)url {
-    if (self = [super initWithBaseURL:url]) {
+    NSURL *apiUrl = [url URLByAppendingPathComponent:@"api/"];
+    if (self = [super initWithBaseURL:apiUrl]) {
         
         self.httpRequestSerializer = [[OTRPUSHHTTPRequestSerializer alloc] init];
         self.requestSerializer = self.httpRequestSerializer;
@@ -83,6 +85,8 @@ static OTRPushAPIClient *_sharedClient = nil;
 {
     return [AFOAuthCredential retrieveCredentialWithIdentifier:self.pushOAuthClient.clientID];
 }
+
+#pragma - mark  oAuth Methods
 
 - (void)refreshOAuthIfNeededWithCompletion:(void (^)(BOOL success, NSError *error))completion
 {
@@ -158,109 +162,39 @@ static OTRPushAPIClient *_sharedClient = nil;
     }];
 }
 
-/*
+#pragma - mark Account Methods
 
-- (void) processAccount:(OTRPushAccount*)account parameters:(NSDictionary*)parameters successBlock:(void (^)(OTRPushAccount* loggedInAccount))successBlock failureBlock:(void (^)(NSError *error))failureBlock {
-    
-    if (account.isRegistered) {
-        if (failureBlock) {
-            failureBlock([NSError errorWithDomain:NSERROR_DOMAIN code:123 userInfo:@{NSLocalizedDescriptionKey: @"Account already connected."}]);
-        }
-        return;
-    }
-    
-    [self POST:@"account/" parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSError *error = nil;
-        if ([responseObject isKindOfClass:[NSDictionary class]]) {
-            BOOL success = [[responseObject objectForKey:@"success"] boolValue];
-            if (success) {
-                OTRPushManager *pushManager = [[OTRProtocolManager sharedInstance] protocolForAccount:account];
-                pushManager.isConnected = YES;
-                OTRPushAccount *localAccount = nil;
-                if (successBlock) {
-                    successBlock(localAccount);
+- (void)fetchCurrentAccount:(void (^)(OTRPushAccount *account, NSError *error))completionBlock
+{
+    [self refreshOAuthIfNeededWithCompletion:^(BOOL success, NSError *error) {
+        if (success) {
+            
+            [self GET:@"accounts/" parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                if ([responseObject isKindOfClass:[NSDictionary class]])
+                {
+                    NSDictionary *responseDictionary = (NSDictionary *)responseObject;
+                    NSError *parseError = nil;
+                    OTRPushAccount *pushAccount = [MTLJSONAdapter modelOfClass:[OTRPushAccount class] fromJSONDictionary:responseDictionary error:&parseError];
+                    
+                    if (completionBlock) {
+                        completionBlock(pushAccount,parseError);
+                    }
+                    
                 }
-                [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
-            } else {
-                error = [NSError errorWithDomain:NSERROR_DOMAIN code:100 userInfo:@{NSLocalizedDescriptionKey: @"Success is false.", @"data": responseObject}];
-            }
-        } else {
-            error = [NSError errorWithDomain:NSERROR_DOMAIN code:102 userInfo:@{NSLocalizedDescriptionKey: @"Response object not dictionary.", @"data": responseObject}];
+            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                if (completionBlock) {
+                    completionBlock(nil,error);
+                }
+            }];
+            
         }
-        if (error && failureBlock) {
-            failureBlock(error);
-        }
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        if (error && failureBlock) {
-            failureBlock(error);
+        else if(completionBlock){
+            completionBlock(nil,error);
         }
     }];
 }
 
-- (void) connectAccount:(OTRPushAccount*)account password:(NSString*)password successBlock:(void (^)(OTRPushAccount* loggedInAccount))successBlock failureBlock:(void (^)(NSError *error))failureBlock {
-    [self processAccount:account parameters:@{@"email": account.username, @"password": password} successBlock:successBlock failureBlock:failureBlock];
-}
-
-- (void) createAccount:(OTRPushAccount*)account password:(NSString*)password successBlock:(void (^)(OTRPushAccount* loggedInAccount))successBlock failureBlock:(void (^)(NSError *error))failureBlock {
-    [self processAccount:account parameters:@{@"email": account.username, @"password": password, @"create": @(YES)} successBlock:successBlock failureBlock:failureBlock];
-}
-
-- (void) sendPushToBuddy:(OTRBuddy*)buddy successBlock:(void (^)(void))successBlock failureBlock:(void (^)(NSError *error))failureBlock {
-    [self POST:@"knock/" parameters:@{@"email": buddy.username} success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSError *error = nil;
-        if ([responseObject isKindOfClass:[NSDictionary class]]) {
-            BOOL success = [[responseObject objectForKey:@"success"] boolValue];
-            if (success) {
-                if (successBlock) {
-                    successBlock();
-                }
-            } else {
-                error = [NSError errorWithDomain:NSERROR_DOMAIN code:100 userInfo:@{NSLocalizedDescriptionKey: @"Success is false.", @"data": responseObject}];
-            }
-        } else {
-            error = [NSError errorWithDomain:NSERROR_DOMAIN code:102 userInfo:@{NSLocalizedDescriptionKey: @"Response object not dictionary.", @"data": responseObject}];
-        }
-        if (error && failureBlock) {
-            failureBlock(error);
-        }
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        if (failureBlock) {
-            failureBlock(error);
-        }
-    }];
-}
-
-
-- (void) updatePushTokenForAccount:(OTRPushAccount*)account token:(NSData *)devicePushToken successBlock:(void (^)(void))successBlock failureBlock:(void (^)(NSError *error))failureBlock {
-    NSDictionary *parameters = @{@"device_type": @"iPhone", @"operating_system": @"iOS", @"apple_push_token": [devicePushToken xmpp_hexStringValue]};
-
-    if (!account.isRegistered) {
-        [self connectAccount:account password:account.password successBlock:^(OTRPushAccount *loggedInAccount) {
-            NSLog(@"Account logged in: %@, updating push token...", loggedInAccount.username);
-            [self updatePushTokenForAccount:loggedInAccount token:devicePushToken successBlock:successBlock failureBlock:failureBlock];
-        } failureBlock:failureBlock];
-        return;
-    }
-    [self POST:@"device/" parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSLog(@"Token updated: %@", responseObject);
-        if ([responseObject isKindOfClass:[NSDictionary class]]) {
-            BOOL success = [[responseObject objectForKey:@"success"] boolValue];
-            if (success) {
-                if (successBlock) {
-                    successBlock();
-                }
-                return;
-            }
-        }
-        if (failureBlock) {
-            failureBlock([NSError errorWithDomain:NSERROR_DOMAIN code:101 userInfo:@{NSLocalizedDescriptionKey: @"Data is not good!", @"data": responseObject}]);
-        }
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        if (failureBlock) {
-            failureBlock(error);
-        }
-    }];
-}*/
+#pragma - mark Token Methods
 
 - (void)fetchNewPushTokenWithName:(NSString *)name completionBlock:(void (^)(OTRPushToken *, NSError *))completionBlock
 {
@@ -302,7 +236,7 @@ static OTRPushAPIClient *_sharedClient = nil;
     }];
 }
 
-- (void)fetchAllPushTokensCompletinoBlock:(void (^)(NSArray *, NSError *))completionBlock
+- (void)fetchAllPushTokens:(void (^)(NSArray *, NSError *))completionBlock
 {
     [self refreshOAuthIfNeededWithCompletion:^(BOOL success, NSError *error) {
         if (success) {
@@ -315,7 +249,7 @@ static OTRPushAPIClient *_sharedClient = nil;
                     NSMutableArray *tokens = [NSMutableArray array];
                     __block NSError *error = nil;
                     [tokensJSONArray enumerateObjectsUsingBlock:^(NSDictionary *dictionary, NSUInteger idx, BOOL *stop) {
-                        OTRPushToken *token = [MTLJSONAdapter modelOfClass:token.class fromJSONDictionary:dictionary error:&error];
+                        OTRPushToken *token = [MTLJSONAdapter modelOfClass:[OTRPushToken class] fromJSONDictionary:dictionary error:&error];
                         if (error || !token) {
                             *stop = YES;
                         }
@@ -332,9 +266,6 @@ static OTRPushAPIClient *_sharedClient = nil;
                     else if (completionBlock) {
                         completionBlock([tokens copy],nil);
                     }
-                    
-                    
-                    
                 }
                 
             } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -352,6 +283,183 @@ static OTRPushAPIClient *_sharedClient = nil;
         }
         
     }];
+}
+
+- (void)deletePushToken:(OTRPushToken *)token completionBlock:(void (^)(BOOL success, NSError *error))completionBlock
+{
+    [self refreshOAuthIfNeededWithCompletion:^(BOOL success, NSError *error) {
+        if(success) {
+            NSString *path = [NSString stringWithFormat:@"tokens/%@",token.serverId];
+            AFHTTPRequestOperation *operation = [self DELETE:path parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                if (completionBlock) {
+                    completionBlock(YES,nil);
+                }
+            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                if (completionBlock) {
+                    completionBlock(NO,error);
+                }
+            }];
+            [operation start];
+            
+        }
+        else if (completionBlock)
+        {
+            completionBlock(success,error);
+        }
+    }];
+}
+
+#pragma - mark Devie Methods
+
+- (void)addDeviceToken:(NSData *)deviceToken name:(NSString *)name completionBlock:(void (^)(OTRPushDevice *device,NSError *error))completionBlock
+{
+    if (![deviceToken length]) {
+        if (completionBlock) {
+            completionBlock(nil,[NSError errorWithDomain:@"" code:101 userInfo:nil]);
+        }
+        return;
+    }
+    
+    [self refreshOAuthIfNeededWithCompletion:^(BOOL success, NSError *error) {
+        if(success) {
+            
+            NSString *tokenString = [OTRPushAPIClient hexStringValueWithData:deviceToken];
+            
+            NSDictionary *parameters = @{@"os_type":@"iOS",@"push_token":tokenString,@"os_version":[OTRPushAPIClient osVersion]};
+            
+            if ([name length]) {
+                NSMutableDictionary *mutableParameters = [NSMutableDictionary dictionaryWithDictionary:parameters];
+                [mutableParameters setObject:name forKey:@"device_name"];
+                parameters = [mutableParameters copy];
+            }
+            
+            AFHTTPRequestOperation *operation = [self POST:@"devices/" parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                
+                if ([responseObject isKindOfClass:[NSDictionary class]]) {
+                    NSError *error = nil;
+                    OTRPushDevice *device = [MTLJSONAdapter modelOfClass:[OTRPushDevice class] fromJSONDictionary:responseObject error:&error];
+                    
+                    if (completionBlock) {
+                        completionBlock(device,error);
+                    }
+                }
+                
+                
+            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                if (completionBlock) {
+                    completionBlock(nil,error);
+                }
+            }];
+            
+            [operation start];
+        }
+        else if (completionBlock)
+        {
+            completionBlock(nil,error);
+        }
+    }];
+
+}
+
+- (void)fetchAllDevices:(void (^)(NSArray *deviceArray,NSError *error))completionBlock
+{
+    [self refreshOAuthIfNeededWithCompletion:^(BOOL success, NSError *error) {
+        
+        if (success) {
+            AFHTTPRequestOperation *operation = [self GET:@"devices/" parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                
+                if ([responseObject isKindOfClass:[NSDictionary class]]) {
+                    NSDictionary *responseDictionary = (NSDictionary *)responseObject;
+                    NSArray *resultArray = responseDictionary[@"results"];
+                    if ([resultArray count]) {
+                        __block NSError *error = nil;
+                        __block NSMutableArray *deviceArray = nil;
+                        [resultArray enumerateObjectsUsingBlock:^(NSDictionary *deviceDictionary, NSUInteger idx, BOOL *stop) {
+                            if (!deviceArray) {
+                                deviceArray = [NSMutableArray array];
+                            }
+                            
+                            OTRPushDevice *device = [MTLJSONAdapter modelOfClass:[OTRPushDevice class] fromJSONDictionary:deviceDictionary error:&error];
+                            if (device) {
+                                [deviceArray addObject:device];
+                            }
+                            if (error) {
+                                *stop = YES;
+                            }
+                        }];
+                        
+                        if (completionBlock) {
+                            completionBlock([deviceArray copy],error);
+                        }
+                    }
+                }
+            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                if (completionBlock) {
+                    completionBlock(nil,error);
+                }
+            }];
+            [operation start];
+        }
+        else if (completionBlock) {
+            completionBlock(NO,error);
+        }
+    }];
+}
+
+- (void)deleteDevice:(OTRPushDevice *)device completionBlock:(void (^)(BOOL success, NSError *error))completionBlock
+{
+    if (!device.serverId)
+    {
+        if (completionBlock)
+        {
+            completionBlock(NO,[NSError errorWithDomain:@"" code:101 userInfo:nil]);
+        }
+    }
+    
+    [self refreshOAuthIfNeededWithCompletion:^(BOOL success, NSError *error) {
+        if (success) {
+            
+            NSString *path = [NSString stringWithFormat:@"devices/%@",device.serverId];
+            
+            AFHTTPRequestOperation *operation = [self DELETE:path parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                
+                if (completionBlock) {
+                    completionBlock(YES,nil);
+                }
+                
+            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                if (completionBlock) {
+                    completionBlock(NO,error);
+                }
+            }];
+            [operation start];
+        }
+        else if (completionBlock) {
+            completionBlock(success,error);
+        }
+    }];
+    
+}
+
+#pragma - mark Utitlities
++ (NSString *)hexStringValueWithData:(NSData *)data
+{
+	NSMutableString *stringBuffer = [NSMutableString stringWithCapacity:([data length] * 2)];
+	
+    const unsigned char *dataBuffer = [data bytes];
+    int i;
+    
+    for (i = 0; i < [data length]; ++i)
+	{
+        [stringBuffer appendFormat:@"%02x", (unsigned int)dataBuffer[i]];
+	}
+    
+    return [stringBuffer copy];
+}
+
++ (NSString *)osVersion
+{
+    return [[UIDevice currentDevice] systemVersion];
 }
 
 

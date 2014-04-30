@@ -7,12 +7,44 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "OTRProtocol.h"
-#import "OTRPushAccount.h"
 
-@interface OTRPushManager : NSObject <OTRProtocol>
+@class OTRPushToken;
+@class OTRPushDevice;
+@class OTRPushObject;
 
-@property (nonatomic) BOOL isConnected;
-@property (nonatomic, strong) OTRPushAccount *account;
+typedef void (^OTRPushCompletionBlock)(BOOL success, NSError *error);
+
+@interface OTRPushManager : NSObject
+
+#pragma - mark Account Methods
+
+- (void)createNewAccountWithUsername:(NSString *)username password:(NSString *)password completion:(OTRPushCompletionBlock)completion;
+
+- (void)refreshCurrentAccount:(OTRPushCompletionBlock)completion;
+
+- (void)loginWithUsername:(NSString *)username password:(NSString *)password completion:(OTRPushCompletionBlock)completionBlock;
+
+#pragma - mark Token Methods
+
+- (void)fetchNewPushTokenWithName:(NSString *)name completionBlock:(void (^)(OTRPushToken *pushToken, NSError *error))completionBlock;
+
+- (void)fetchAllPushTokens:(OTRPushCompletionBlock)completionBlock;
+
+- (void)deletePushToken:(OTRPushToken *)token completionBlock:(OTRPushCompletionBlock)completionBlock;
+
+#pragma - mark Device Methods
+
+- (void)addDeviceToken:(NSData *)deviceToken name:(NSString *)name completionBlock:(OTRPushCompletionBlock)completionBlock;
+
+- (void)fetchAllDevices:(OTRPushCompletionBlock)completionBlock;
+
+- (void)deleteDevice:(OTRPushDevice *)device completionBlock:(OTRPushCompletionBlock)completionBlock;
+
+#pragma - mark Class Methods
++ (NSString *)collectionForObject:(OTRPushObject *)object;
+
++ (NSString *)collectionForClass:(Class)class;
+
++ (NSString *)keyForObject:(OTRPushObject *)object;
 
 @end

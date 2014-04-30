@@ -7,8 +7,27 @@
 //
 
 #import "OTRPushDevice.h"
+#import "NSValueTransformer+MTLPredefinedTransformerAdditions.h"
 
 @implementation OTRPushDevice
 
++ (NSDictionary *)JSONKeyPathsByPropertyKey
+{
+    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super JSONKeyPathsByPropertyKey]];
+    
+    [dict addEntriesFromDictionary:@{@"osType":@"os_type",
+                                    @"osVersion":@"os_version",
+                                    @"deviceName":@"device_name",
+                                     @"pushToken":@"push_token"}];
+    
+    return [dict copy];
+}
+
++ (NSValueTransformer *)osTypeJSONTransformer {
+    return [NSValueTransformer mtl_valueMappingTransformerWithDictionary:@{
+                                                                           @"iOS": @(OTRPushDeviceTypeApple),
+                                                                           @"android": @(OTRPushDeviceTypeAndroid)
+                                                                           }];
+}
 
 @end

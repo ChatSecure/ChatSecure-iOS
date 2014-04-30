@@ -37,6 +37,7 @@
 #import "OTRCertificateSetting.h"
 #import "OTRUtilities.h"
 #import "OTRFingerprintSetting.h"
+#import "OTRPushAccountViewController.h"
 
 #import "OTRUtilities.h"
 
@@ -82,22 +83,38 @@
 
         [newSettingsDictionary setObject:fontSizeSetting forKey:kOTRSettingKeyFontSize];
     }
-    OTRBoolSetting *deletedDisconnectedConversations = [[OTRBoolSetting alloc] initWithTitle:DELETE_CONVERSATIONS_ON_DISCONNECT_TITLE_STRING description:DELETE_CONVERSATIONS_ON_DISCONNECT_DESCRIPTION_STRING settingsKey:kOTRSettingKeyDeleteOnDisconnect];
+    OTRBoolSetting *deletedDisconnectedConversations = [[OTRBoolSetting alloc] initWithTitle:DELETE_CONVERSATIONS_ON_DISCONNECT_TITLE_STRING
+                                                                                 description:DELETE_CONVERSATIONS_ON_DISCONNECT_DESCRIPTION_STRING
+                                                                                 settingsKey:kOTRSettingKeyDeleteOnDisconnect];
+    
     [newSettingsDictionary setObject:deletedDisconnectedConversations forKey:kOTRSettingKeyDeleteOnDisconnect];
     
-    OTRBoolSetting *showDisconnectionWarning = [[OTRBoolSetting alloc] initWithTitle:DISCONNECTION_WARNING_TITLE_STRING description:DISCONNECTION_WARNING_DESC_STRING settingsKey:kOTRSettingKeyShowDisconnectionWarning];
+    OTRBoolSetting *showDisconnectionWarning = [[OTRBoolSetting alloc] initWithTitle:DISCONNECTION_WARNING_TITLE_STRING
+                                                                         description:DISCONNECTION_WARNING_DESC_STRING
+                                                                         settingsKey:kOTRSettingKeyShowDisconnectionWarning];
     showDisconnectionWarning.defaultValue = @(NO);
     [newSettingsDictionary setObject:showDisconnectionWarning forKey:kOTRSettingKeyShowDisconnectionWarning];
     
-    OTRBoolSetting *opportunisticOtrSetting = [[OTRBoolSetting alloc] initWithTitle:OPPORTUNISTIC_OTR_SETTING_TITLE description:OPPORTUNISTIC_OTR_SETTING_DESCRIPTION settingsKey:kOTRSettingKeyOpportunisticOtr];
+    OTRBoolSetting *opportunisticOtrSetting = [[OTRBoolSetting alloc] initWithTitle:OPPORTUNISTIC_OTR_SETTING_TITLE
+                                                                        description:OPPORTUNISTIC_OTR_SETTING_DESCRIPTION
+                                                                        settingsKey:kOTRSettingKeyOpportunisticOtr];
     opportunisticOtrSetting.defaultValue = @(YES);
     [newSettingsDictionary setObject:opportunisticOtrSetting forKey:kOTRSettingKeyOpportunisticOtr];
     
-    OTRCertificateSetting * certSetting = [[OTRCertificateSetting alloc] initWithTitle:PINNED_CERTIFICATES_STRING description:PINNED_CERTIFICATES_DESCRIPTION_STRING];
+    OTRCertificateSetting * certSetting = [[OTRCertificateSetting alloc] initWithTitle:PINNED_CERTIFICATES_STRING
+                                                                           description:PINNED_CERTIFICATES_DESCRIPTION_STRING];
+    
     certSetting.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
-    OTRFingerprintSetting * fingerprintSetting = [[OTRFingerprintSetting alloc] initWithTitle:OTR_FINGERPRINTS_STRING description:OTR_FINGERPRINTS_SUBTITLE_STRING];
+    OTRFingerprintSetting * fingerprintSetting = [[OTRFingerprintSetting alloc] initWithTitle:OTR_FINGERPRINTS_STRING
+                                                                                  description:OTR_FINGERPRINTS_SUBTITLE_STRING];
     fingerprintSetting.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    
+    OTRViewSetting *pushViewSetting = [[OTRViewSetting alloc] initWithTitle:@"ChatSecure Push" description:@"Mange ChatSecure Push account" viewControllerClass:[OTRPushAccountViewController class]];
+    
+    OTRSettingsGroup *pushGroup = [[OTRSettingsGroup alloc] initWithTitle:@"Push" settings:@[pushViewSetting]];
+    
+    [settingsGroups addObject:pushGroup];
     
     NSArray *chatSettings;
     NSArray * securitySettings;

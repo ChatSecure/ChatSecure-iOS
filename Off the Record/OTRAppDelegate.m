@@ -50,6 +50,7 @@
 #import "YAPDatabaseTransaction.h"
 #import "YapDatabaseConnection.h"
 #import "OTRCertificatePinning.h"
+#import "NSData+XMPP.h"
 
 #import "OTRPushAccount.h"
 #import "OTRPushAPIClient.h"
@@ -319,6 +320,8 @@
 //    } failureBlock:^(NSError *error) {
 //        NSLog(@"Error updating push token: %@", error.userInfo);
 //    }];
+    NSLog(@"did register for remote notification: %@", [devToken xmpp_hexStringValue]);
+    
 }
 
 - (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {
