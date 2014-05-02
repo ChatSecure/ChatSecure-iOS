@@ -22,6 +22,8 @@
 
 - (void)createNewAccountWithUsername:(NSString *)username password:(NSString *)password email:(NSString *)email completion:(void (^)(OTRPushAccount *account, NSError *error))completion;
 
+- (void)removeOAuthTokenForAccount:(OTRPushAccount *)account;
+
 ////// Account //////
 
 - (void)fetchCurrentAccount:(void (^)(OTRPushAccount *account, NSError *error))completionBlock;

@@ -68,6 +68,9 @@ extern NSString *const GOOGLE_APP_SCOPE;
 
 extern NSUInteger const kOTRActionSheetLinkTag;
 
+extern NSString *const OTRFailedRemoteNotificationRegistration;
+extern NSString *const OTRSuccessfulRemoteNotificationRegistration;
+
 //Chatview
 extern CGFloat const kOTRSentDateFontSize;
 extern CGFloat const kOTRDeliveredFontSize;

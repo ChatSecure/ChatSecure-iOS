@@ -11,6 +11,8 @@
 @class OTRPushToken;
 @class OTRPushDevice;
 @class OTRPushObject;
+@class OTRPushAccount;
+
 
 typedef void (^OTRPushCompletionBlock)(BOOL success, NSError *error);
 
@@ -23,6 +25,8 @@ typedef void (^OTRPushCompletionBlock)(BOOL success, NSError *error);
 - (void)refreshCurrentAccount:(OTRPushCompletionBlock)completion;
 
 - (void)loginWithUsername:(NSString *)username password:(NSString *)password completion:(OTRPushCompletionBlock)completionBlock;
+
+- (void)removeOAuthTokenForAccount:(OTRPushAccount *)account;
 
 #pragma - mark Token Methods
 

@@ -68,6 +68,9 @@ NSUInteger const kOTRActionSheetLinkTag  = 223;
 
 NSString *const kOTRErrorDomain = @"com.chatsecure";
 
+NSString *const OTRFailedRemoteNotificationRegistration = @"OTRFailedRemoteNotificationRegistration";
+NSString *const OTRSuccessfulRemoteNotificationRegistration = @"OTRSuccessfulRemoteNotificationRegistration";
+
 //Chatview
 CGFloat const kOTRSentDateFontSize            = 13;
 CGFloat const kOTRDeliveredFontSize           = 13;

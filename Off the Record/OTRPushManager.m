@@ -32,7 +32,7 @@
     return self;
 }
 
-- (void)createNewAccountWithUsername:(NSString *)username password:(NSString *)password email:(NSString *)email completion:(OTRPushCompletionBlock)completion
+- (void)createNewAccountWithUsername:(NSString *)username password:(NSString *)password emial:(NSString *)email completion:(OTRPushCompletionBlock)completion
 {
     [[OTRPushAPIClient sharedClient] createNewAccountWithUsername:username password:password email:email completion:^(OTRPushAccount *account, NSError *error) {
         
@@ -148,25 +148,53 @@
     }];
 }
 
+- (void)removeOAuthTokenForAccount:(OTRPushAccount *)account
+{
+    [[OTRPushAPIClient sharedClient] removeOAuthTokenForAccount:account];
+}
+
 #pragma - makr Device Methods
 
 - (void)addDeviceToken:(NSData *)deviceToken name:(NSString *)name completionBlock:(OTRPushCompletionBlock)completionBlock
 {
-    [[OTRPushAPIClient sharedClient] addDeviceToken:deviceToken name:name completionBlock:^(OTRPushDevice *device, NSError *error) {
-        BOOL success = NO;
-        if (device) {
-            success = YES;
-            [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-                [self saveObject:device transaction:transaction];
-            }];
+    //check if it's already on the server
+    [self fetchAllDevices:^(BOOL success, NSError *error) {
+        if (success) {
+            
+            if ([self existsDeviceWithToken:[OTRPushAPIClient hexStringValueWithData:deviceToken]])
+            {
+                if (completionBlock) {
+                    completionBlock(YES,nil);
+                }
+            }
+            else {
+                [[OTRPushAPIClient sharedClient] addDeviceToken:deviceToken name:name completionBlock:^(OTRPushDevice *device, NSError *error) {
+                    BOOL success = NO;
+                    if (device) {
+                        success = YES;
+                        [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+                            [self saveObject:device transaction:transaction];
+                        }];
+                    }
+                    
+                    
+                    if (completionBlock) {
+                        completionBlock(success,error);
+                    }
+                    
+                }];
+            }
+            
+            
         }
-        
-        
-        if (completionBlock) {
+        else if(completionBlock)
+        {
             completionBlock(success,error);
         }
-        
     }];
+    
+    
+    
 }
 
 - (void)fetchAllDevices:(OTRPushCompletionBlock)completionBlock
@@ -205,6 +233,21 @@
             completionBlock(success,error);
         }
     }];
+}
+
+- (BOOL)existsDeviceWithToken:(NSString *)token
+{
+    __block BOOL exists = NO;
+    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        [transaction enumerateKeysAndObjectsInCollection:[OTRPushManager collectionForClass:[OTRPushDevice class]] usingBlock:^(NSString *key, OTRPushDevice  *device, BOOL *stop) {
+            if ([device.pushToken isEqualToString:token])
+            {
+                exists = YES;
+                *stop = YES;
+            }
+        }];
+    }];
+    return exists;
 }
 
 #pragma - mark YapDatabseMethods

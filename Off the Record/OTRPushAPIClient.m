@@ -19,7 +19,7 @@
 
 #define NSERROR_DOMAIN @"OTRPushAPIClientError"
 
-#define SERVER_URL @"http://192.168.48.62:8000"
+#define SERVER_URL @"http://192.168.49.32:8000"
 
 static OTRPushAPIClient *_sharedClient = nil;
 
@@ -81,6 +81,13 @@ static OTRPushAPIClient *_sharedClient = nil;
     [AFOAuthCredential storeCredential:credential withIdentifier:self.pushOAuthClient.clientID withAccessibility:(__bridge id)kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly];
 }
 
+- (void)removeOAuthCredentialForAccount:(OTRPushAccount *)account
+{
+    self.httpRequestSerializer.bearerToken = nil;
+    
+    [AFOAuthCredential deleteCredentialWithIdentifier:self.pushOAuthClient.clientID];
+}
+
 - (AFOAuthCredential *)oAuthCredential
 {
     return [AFOAuthCredential retrieveCredentialWithIdentifier:self.pushOAuthClient.clientID];
@@ -131,6 +138,7 @@ static OTRPushAPIClient *_sharedClient = nil;
 
 - (void)createNewAccountWithUsername:(NSString *)username password:(NSString *)password email:(NSString *)email completion:(void (^)(OTRPushAccount *account, NSError *error))completion
 {
+    [self removeOAuthTokenForAccount:[OTRAccountsManager defaultPushAccount]];
     NSAssert(username, @"Required username");
     NSAssert(password, @"Required password");
     NSAssert(self.pushOAuthClient.clientID, @"Required clientId");
@@ -202,6 +210,11 @@ static OTRPushAPIClient *_sharedClient = nil;
             completionBlock(nil,error);
         }
     }];
+}
+
+- (void)removeOAuthTokenForAccount:(OTRPushAccount *)account
+{
+    [self removeOAuthCredentialForAccount:account];
 }
 
 #pragma - mark Token Methods

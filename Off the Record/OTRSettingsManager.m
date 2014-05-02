@@ -37,7 +37,7 @@
 #import "OTRCertificateSetting.h"
 #import "OTRUtilities.h"
 #import "OTRFingerprintSetting.h"
-#import "OTRPushAccountViewController.h"
+#import "OTRPushViewSetting.h"
 
 #import "OTRUtilities.h"
 
@@ -110,7 +110,7 @@
                                                                                   description:OTR_FINGERPRINTS_SUBTITLE_STRING];
     fingerprintSetting.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
-    OTRViewSetting *pushViewSetting = [[OTRViewSetting alloc] initWithTitle:@"ChatSecure Push" description:@"Mange ChatSecure Push account" viewControllerClass:[OTRPushAccountViewController class]];
+    OTRViewSetting *pushViewSetting = [[OTRPushViewSetting alloc] initWithTitle:@"ChatSecure Push" description:@"Mange ChatSecure Push account"];
     
     OTRSettingsGroup *pushGroup = [[OTRSettingsGroup alloc] initWithTitle:@"Push" settings:@[pushViewSetting]];
     

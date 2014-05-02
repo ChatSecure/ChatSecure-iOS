@@ -53,7 +53,7 @@
 #import "NSData+XMPP.h"
 
 #import "OTRPushAccount.h"
-#import "OTRPushAPIClient.h"
+#import "OTRPushManager.h"
 
 @implementation OTRAppDelegate
 
@@ -132,8 +132,6 @@
     
     [self autoLogin];
     
-    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound];
-        
     return YES;
 }
 
@@ -313,6 +311,18 @@
 
 // Delegation methods
 - (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)devToken {
+    
+    OTRPushManager *pushManager = [[OTRPushManager alloc] init];
+    
+    [pushManager addDeviceToken:devToken name:[[UIDevice currentDevice] name] completionBlock:^(BOOL success, NSError *error) {
+        if (success) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:OTRSuccessfulRemoteNotificationRegistration object:self userInfo:nil];
+        }
+        else {
+            [[NSNotificationCenter defaultCenter] postNotificationName:OTRFailedRemoteNotificationRegistration object:self userInfo:@{kOTRNotificationErrorKey:error}];
+        }
+    }];
+    
 //    OTRPushAccount *account = [OTRPushAccount activeAccount];
 //    NSString *username = account.username;
 //    [[OTRPushAPIClient sharedClient] updatePushTokenForAccount:account token:devToken  successBlock:^(void) {
@@ -325,6 +335,7 @@
 }
 
 - (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {
+    [[NSNotificationCenter defaultCenter] postNotificationName:OTRFailedRemoteNotificationRegistration object:self userInfo:@{kOTRNotificationErrorKey:err}];
     NSLog(@"Error in registration. Error: %@%@", [err localizedDescription], [err userInfo]);
 }
 
