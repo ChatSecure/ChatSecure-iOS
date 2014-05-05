@@ -25,7 +25,6 @@
 #import "Strings.h"
 #import "OTRDoubleSetting.h"
 #import "OTRConstants.h"
-#import "OTRAppDelegate.h"
 
 #import "DAKeyboardControl.h"
 #import "OTRStatusMessageCell.h"

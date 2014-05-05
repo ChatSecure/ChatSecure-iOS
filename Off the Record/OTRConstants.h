@@ -71,6 +71,9 @@ extern NSUInteger const kOTRActionSheetLinkTag;
 extern NSString *const OTRFailedRemoteNotificationRegistration;
 extern NSString *const OTRSuccessfulRemoteNotificationRegistration;
 
+extern NSString *const OTRYapDatabasePassphraseAccountName;
+extern NSString *const OTRYapDatabaseName;
+
 //Chatview
 extern CGFloat const kOTRSentDateFontSize;
 extern CGFloat const kOTRDeliveredFontSize;

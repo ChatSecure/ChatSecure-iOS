@@ -23,8 +23,8 @@
 #import "OTRAboutViewController.h"
 #import "Strings.h"
 #import "OTRConstants.h"
-#import "OTRAppDelegate.h"
 #import "UIActionSheet+Blocks.h"
+#import "OTRAppDelegate.h"
 
 static NSString *const kDefaultCellReuseIdentifier = @"kDefaultCellReuseIdentifier";
 
@@ -154,7 +154,7 @@ static NSString *const kDefaultCellReuseIdentifier = @"kDefaultCellReuseIdentifi
         [[UIApplication sharedApplication] openURL:url];
     }];
     UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:url.absoluteString cancelButtonItem:cancelButton destructiveButtonItem:nil otherButtonItems:safariButton, nil];
-    [OTR_APP_DELEGATE presentActionSheet:actionSheet inView:self.view];
+    [OTRAppDelegate presentActionSheet:actionSheet inView:self.view];
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 

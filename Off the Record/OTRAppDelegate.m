@@ -54,6 +54,8 @@
 
 #import "OTRPushAccount.h"
 #import "OTRPushManager.h"
+#import "OTROnboardingStepsController.h"
+#import "OTRDatabaseUnlockViewController.h"
 
 @implementation OTRAppDelegate
 
@@ -70,56 +72,64 @@
                                                                delegate:self];
     [[BITHockeyManager sharedHockeyManager] startManager];
     
-    [SSKeychain setAccessibilityType:kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly];
-
-    NSString *outputStoreName = @"ChatSecure.sqlite";
-    [[OTRDatabaseManager sharedInstance] setupDatabaseWithName:outputStoreName];
+    [OTRCertificatePinning loadBundledCertificatesToKeychain];
     
-    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        NSArray *allAccounts = [OTRAccount allAccountsWithTransaction:transaction];
-        NSArray *allAccountsToDelete = [allAccounts filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
-            if ([evaluatedObject isKindOfClass:[OTRAccount class]]) {
-                OTRAccount *account = (OTRAccount *)evaluatedObject;
-                if (![account.username length]) {
-                    return YES;
-                }
-            }
-            return NO;
-        }]];
+    [SSKeychain setAccessibilityType:kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly];
+    
+    
+    UIViewController *rootViewController = nil;
+    
+    //OTROnboardingStepsController *onboardingStepsController = nil;
+    
+    if ([[OTRDatabaseManager sharedInstance] existsYapDatabase] && ![[OTRDatabaseManager sharedInstance] hasPassphrase]) {
+        // user needs to enter password for current database
+        rootViewController = [[OTRDatabaseUnlockViewController alloc] init];
         
-        [transaction removeObjectsForKeys:[allAccountsToDelete valueForKey:OTRYapDatabaseObjectAttributes.uniqueId] inCollection:[OTRAccount collection]];
-        //FIXME? [OTRManagedAccount resetAccountsConnectionStatus];
-    }];
+    }
+    else if ([[OTRDatabaseManager sharedInstance] existsYapDatabase] && [[OTRDatabaseManager sharedInstance] hasPassphrase]) {
+        
+         ////// Normal launch to conversationViewController //////
+        
+        rootViewController = [OTRAppDelegate conversationViewController];
+    }
+    else {
+        ////// Onboarding //////
+        OTROnboardingStepsController *onboardingStepsController = [[OTROnboardingStepsController alloc] init];
+        onboardingStepsController.stepsBar.hideCancelButton = YES;
+        
+        rootViewController = onboardingStepsController;
+    }
+
+
+    //rootViewController = [[OTRDatabaseUnlockViewController alloc] init];
+//    NSString *outputStoreName = @"ChatSecure.sqlite";
+//    [[OTRDatabaseManager sharedInstance] setupDatabaseWithName:outputStoreName];
+//    
+//    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+//        NSArray *allAccounts = [OTRAccount allAccountsWithTransaction:transaction];
+//        NSArray *allAccountsToDelete = [allAccounts filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+//            if ([evaluatedObject isKindOfClass:[OTRAccount class]]) {
+//                OTRAccount *account = (OTRAccount *)evaluatedObject;
+//                if (![account.username length]) {
+//                    return YES;
+//                }
+//            }
+//            return NO;
+//        }]];
+//        
+//        [transaction removeObjectsForKeys:[allAccountsToDelete valueForKey:OTRYapDatabaseObjectAttributes.uniqueId] inCollection:[OTRAccount collection]];
+//        //FIXME? [OTRManagedAccount resetAccountsConnectionStatus];
+//    }];
 
     
     
     
     //[OTRAppVersionManager applyAppUpdatesForCurrentAppVersion];
     
-    [OTRCertificatePinning loadBundledCertificatesToKeychain];
+    
 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
-    //self.buddyListViewController = [[OTRBuddyListViewController alloc] init];
-    //OTRChatViewController *chatViewController = [[OTRDemoChatViewController alloc] init];
-    OTRChatViewController *chatViewController = [[OTRChatViewController alloc] init];
-    self.settingsViewController = [[OTRSettingsViewController alloc] init];
-    
-    OTRConversationViewController * conversationViewController = [[OTRConversationViewController alloc] init];
-
-    UINavigationController *buddyListNavController = [[UINavigationController alloc] initWithRootViewController:conversationViewController];
-    //[buddyListNavController setNavigationBarHidden:NO];
-    UIViewController *rootViewController = nil;
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-        rootViewController = buddyListNavController;
-    } else {
-        UINavigationController *chatNavController = [[UINavigationController alloc ]initWithRootViewController:chatViewController];
-        UISplitViewController *splitViewController = [[UISplitViewController alloc] init];
-        splitViewController.viewControllers = [NSArray arrayWithObjects:buddyListNavController, chatNavController, nil];
-        splitViewController.delegate = chatViewController;
-        rootViewController = splitViewController;
-        splitViewController.title = CHAT_STRING;
-    }
 
     self.window.rootViewController = rootViewController;
     [self.window makeKeyAndVisible];
@@ -133,6 +143,36 @@
     [self autoLogin];
     
     return YES;
+}
+
++ (UIViewController *)conversationViewController
+{
+    UIViewController *rootViewController = nil;
+    OTRChatViewController *chatViewController = [[OTRChatViewController alloc] init];
+    [self appDelegate].settingsViewController = [[OTRSettingsViewController alloc] init];
+    
+    OTRConversationViewController * conversationViewController = [[OTRConversationViewController alloc] init];
+    
+    UINavigationController *buddyListNavController = [[UINavigationController alloc] initWithRootViewController:conversationViewController];
+    //[buddyListNavController setNavigationBarHidden:NO];
+    
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+        rootViewController = buddyListNavController;
+    } else {
+        UINavigationController *chatNavController = [[UINavigationController alloc ]initWithRootViewController:chatViewController];
+        UISplitViewController *splitViewController = [[UISplitViewController alloc] init];
+        splitViewController.viewControllers = [NSArray arrayWithObjects:buddyListNavController, chatNavController, nil];
+        splitViewController.delegate = chatViewController;
+        rootViewController = splitViewController;
+        splitViewController.title = CHAT_STRING;
+    }
+    
+    return rootViewController;
+}
+
++ (void)showConversationViewController
+{
+    [self appDelegate].window.rootViewController = [self conversationViewController];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
@@ -292,11 +332,11 @@
     //[buddyListViewController enterConversationWithBuddy:buddy];
 }
 
-- (void) presentActionSheet:(UIActionSheet*)sheet inView:(UIView*)view {
++ (void) presentActionSheet:(UIActionSheet*)sheet inView:(UIView*)view {
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
         [sheet showInView:view];
     } else if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-        [sheet showInView:self.window];
+        [sheet showInView:[self appDelegate].window];
     }
 }
 
@@ -347,6 +387,12 @@
     [application presentLocalNotificationNow:notification];
     completionHandler(UIBackgroundFetchResultNewData);
     
+}
+
+#pragma - mark Class Methods
++ (OTRAppDelegate *)appDelegate
+{
+    return (OTRAppDelegate *)[[UIApplication sharedApplication] delegate];
 }
 
 @end

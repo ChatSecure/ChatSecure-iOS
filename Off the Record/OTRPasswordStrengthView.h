@@ -13,7 +13,7 @@
 
 @protocol OTRPasswordStrengthViewDelegate <NSObject>
 
-- (void)view:(OTRPasswordStrengthView *)view didChangePassword:(NSString *)password strength:(NJOPasswordStrength)strength failingRules:(NSArray *)rules;
+- (void)passwordView:(OTRPasswordStrengthView *)view didChangePassword:(NSString *)password strength:(NJOPasswordStrength)strength failingRules:(NSArray *)rules;
 
 
 @end

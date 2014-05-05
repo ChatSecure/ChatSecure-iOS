@@ -31,7 +31,6 @@
 #import <QuartzCore/QuartzCore.h>
 #import "OTRNewAccountViewController.h"
 #import "OTRConstants.h"
-#import "OTRAppDelegate.h"
 #import "UserVoice.h"
 #import "OTRAccountTableViewCell.h"
 #import "OTRCreateAccountChooserViewController.h"
@@ -45,6 +44,7 @@
 #import "YapDatabase.h"
 #import "YapDatabaseView.h"
 #import "OTRAccount.h"
+#import "OTRAppDelegate.h"
 
 static NSString *const circleImageName = @"31-circle-plus-large.png";
 
@@ -231,7 +231,7 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 
                 UIActionSheet * logoutActionSheet = [[UIActionSheet alloc] initWithTitle:LOGOUT_STRING cancelButtonItem:cancelButtonItem destructiveButtonItem:logoutButtonItem otherButtonItems:nil];
                 
-                [OTR_APP_DELEGATE presentActionSheet:logoutActionSheet inView:self.view];
+                [OTRAppDelegate presentActionSheet:logoutActionSheet inView:self.view];
             }
         }
     } else {
@@ -339,7 +339,7 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     }];
     RIButtonItem *cancelItem = [RIButtonItem itemWithLabel:CANCEL_STRING];
     UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:DONATE_MESSAGE_STRING cancelButtonItem:cancelItem destructiveButtonItem:nil otherButtonItems:paypalItem, bitcoinItem, nil];
-    [OTR_APP_DELEGATE presentActionSheet:actionSheet inView:self.view];
+    [OTRAppDelegate presentActionSheet:actionSheet inView:self.view];
 }
 
 
@@ -352,7 +352,7 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
         [UserVoice presentUserVoiceInterfaceForParentViewController:self andConfig:config];
     }];
     UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:SHOW_USERVOICE_STRING cancelButtonItem:cancelItem destructiveButtonItem:nil otherButtonItems:showUVItem, nil];
-    [OTR_APP_DELEGATE presentActionSheet:actionSheet inView:self.view];
+    [OTRAppDelegate presentActionSheet:actionSheet inView:self.view];
 }
 
 #pragma - mark YapDatabse Methods

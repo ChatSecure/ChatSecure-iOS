@@ -12,7 +12,6 @@
 #import "OTRConstants.h"
 #import "OTRSettingsManager.h"
 #import "OTRSafariActionSheet.h"
-#import "OTRAppDelegate.h"
 #import "OTRChatBubbleView.h"
 #import "OTRUtilities.h"
 #import "OTRMessage.h"

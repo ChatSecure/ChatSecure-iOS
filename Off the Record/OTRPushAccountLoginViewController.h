@@ -10,4 +10,15 @@
 
 @interface OTRPushAccountLoginViewController : UIViewController
 
+
+@property (nonatomic, strong) UITextField *usernameTextField;
+@property (nonatomic, strong) UITextField *emailTextField;
+@property (nonatomic, strong) UITextField *passwordTextField;
+@property (nonatomic, strong) UIButton *loginButton;
+@property (nonatomic, strong) UIButton *switchCreateOrLogin;
+
+@property (nonatomic, strong) UIView *contentView;
+
+- (void)loginSuccessful;
+
 @end

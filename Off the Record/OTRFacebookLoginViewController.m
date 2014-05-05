@@ -22,7 +22,6 @@
 
 #import "OTRFacebookLoginViewController.h"
 #import "Strings.h"
-#import "OTRAppDelegate.h"
 #import "OTRConstants.h"
 #import "FacebookSDK.h"
 #import "OTRFacebookSessionCachingStrategy.h"

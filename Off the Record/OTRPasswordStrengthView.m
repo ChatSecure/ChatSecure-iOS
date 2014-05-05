@@ -49,7 +49,7 @@
         [self addSubview:self.textField];
         
         
-        [[NSNotificationCenter defaultCenter] addObserverForName:UITextFieldTextDidChangeNotification object:self queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
+        [[NSNotificationCenter defaultCenter] addObserverForName:UITextFieldTextDidChangeNotification object:self.textField queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
             [self updatePasswordStrength:note.object];
         }];
         
@@ -100,8 +100,8 @@
             self.passwordStrengthMeterView.tintColor = [UIColor redColor];
         }
         
-        if ([self.delegate respondsToSelector:@selector(view:didChangePassword:strength:failingRules:)]) {
-            [self.delegate view:self didChangePassword:password strength:strength failingRules:failingRules];
+        if ([self.delegate respondsToSelector:@selector(passwordView:didChangePassword:strength:failingRules:)]) {
+            [self.delegate passwordView:self didChangePassword:password strength:strength failingRules:failingRules];
         }
         
     }
@@ -113,8 +113,8 @@
     
     NSDictionary *views = NSDictionaryOfVariableBindings(_passwordStrengthMeterView,_textField);
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_textField]|" options:0 metrics:nil views:views]];
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_passwordStrengthEvaluator]|" options:0 metrics:nil views:views]];
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_textField][_passwordStrengthEvaluator]|" options:0 metrics:nil views:views]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_passwordStrengthMeterView]|" options:0 metrics:nil views:views]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_textField]-2-[_passwordStrengthMeterView]|" options:0 metrics:nil views:views]];
 }
 
 @end

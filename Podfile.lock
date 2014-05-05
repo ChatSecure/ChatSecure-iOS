@@ -43,6 +43,7 @@ PODS:
   - Mantle/extobjc (1.4.1)
   - MBProgressHUD (0.8)
   - Navajo (0.0.1)
+  - RMStepsController (1.0.0)
   - SBJson (3.2)
   - SIAlertView (1.3)
   - SQLCipher/common (3.0.1)
@@ -72,6 +73,7 @@ DEPENDENCIES:
   - Mantle (~> 1.4)
   - MBProgressHUD (~> 0.8)
   - Navajo (~> 0.0)
+  - RMStepsController (~> 1.0)
   - SIAlertView (from `PodSpecs/SIAlertView.podspec`)
   - SSKeychain
   - TRVSMonitor (~> 0.0)
@@ -103,6 +105,7 @@ SPEC CHECKSUMS:
   Mantle: 0714cdb2b8559d9e6c2410d6a8529e3307bff189
   MBProgressHUD: 2bbc6f470111daf7f3eaa4eb12b8cbf01c4c0622
   Navajo: 8609514569c10b06be093e62859bed20fd60483f
+  RMStepsController: bd30e3eb7bead3a3b93d34d912dc24ba0d1256fc
   SBJson: 0eeb4062451ec5ed792ff8b6615daff2ae39e218
   SIAlertView: 522351a8870be07fb49053fa054c83da3ea17dbe
   SQLCipher: 9dc260ec6becc4d05cd73f1346d4bba9dc086560

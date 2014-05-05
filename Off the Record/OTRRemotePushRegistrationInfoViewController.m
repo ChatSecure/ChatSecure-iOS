@@ -24,6 +24,8 @@
 {
     [super viewDidLoad];
     
+    self.view.backgroundColor = [UIColor whiteColor];
+    
     self.textView = [[UITextView alloc] initWithFrame:CGRectZero];
     self.textView.text = @"Explain why we need push";
     self.textView.userInteractionEnabled = NO;
@@ -41,7 +43,7 @@
     NSDictionary *views = NSDictionaryOfVariableBindings(_registerForPushButton,_textView);
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_registerForPushButton]-|" options:0 metrics:nil views:views]];
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_textView]-|" options:0 metrics:nil views:views]];
-    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[_textView]-[_registerForPushButton]-|" options:0 metrics:nil views:views]];
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(70)-[_textView(100)]-[_registerForPushButton]" options:0 metrics:nil views:views]];
     
     
 }

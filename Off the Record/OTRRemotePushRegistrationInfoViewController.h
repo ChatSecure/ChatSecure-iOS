@@ -10,4 +10,7 @@
 
 @interface OTRRemotePushRegistrationInfoViewController : UIViewController
 
+- (void)successfullRegistration:(NSNotification *)notification;
+- (void)failedToRegister:(NSNotification *)notification;
+
 @end

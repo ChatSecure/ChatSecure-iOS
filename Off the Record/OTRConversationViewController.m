@@ -27,6 +27,8 @@
 #import "OTRDatabaseView.h"
 #import "YapDatabaseViewMappings.h"
 
+#import "OTROnboardingStepsController.h"
+
 
 static CGFloat cellHeight = 80.0;
 
@@ -100,6 +102,10 @@ static CGFloat cellHeight = 80.0;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    
+    
+    
     [self.cellUpdateTimer invalidate];
     [self.tableView reloadData];
     [self updateInbox];
@@ -113,6 +119,16 @@ static CGFloat cellHeight = 80.0;
     }
     
     [[OTRProtocolManager sharedInstance] addObserver:self forKeyPath:NSStringFromSelector(@selector(numberOfConnectedProtocols)) options:NSKeyValueObservingOptionNew context:NULL];
+    
+    if (![[OTRDatabaseManager sharedInstance] existsYapDatabase]) {
+        ////// Onboarding //////
+        OTROnboardingStepsController *onboardingStepsController = [[OTROnboardingStepsController alloc] init];
+        onboardingStepsController.stepsBar.hideCancelButton = YES;
+        
+        [self.navigationController presentViewController:onboardingStepsController animated:NO completion:nil];
+        
+        //rootViewController = onboardingStepsController;
+    }
     
 }
 

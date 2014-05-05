@@ -13,6 +13,8 @@
 #import "OTRLog.h"
 #import "YapDatabaseRelationship.h"
 #import "OTRDatabaseView.h"
+#import "SSKeychain.h"
+#import "OTRConstants.h"
 
 NSString *const OTRUIDatabaseConnectionDidUpdateNotification = @"OTRUIDatabaseConnectionDidUpdateNotification";
 NSString *const OTRUIDatabaseConnectionWillUpdateNotification = @"OTRUIDatabaseConnectionWillUpdateNotification";
@@ -23,6 +25,7 @@ NSString *const OTRYapDatabaseRelationshipName = @"OTRYapDatabaseRelationshipNam
 @property (nonatomic, strong) YapDatabase *database;
 @property (nonatomic, strong) YapDatabaseConnection *mainThreadReadOnlyDatabaseConnection;
 @property (nonatomic, strong) YapDatabaseConnection *readWriteDatabaseConnection;
+@property (nonatomic, strong) NSString *inMemoryPassphrase;
 
 @end
 
@@ -56,10 +59,18 @@ NSString *const OTRYapDatabaseRelationshipName = @"OTRYapDatabaseRelationshipNam
 }
 
 - (BOOL) setupDatabaseWithName:(NSString*)databaseName {
+    
+    [self migrateCoreDataToYapDatabase];
+    
+    return [self setupYapDatabaseWithName:databaseName];
+}
+
+- (void)migrateCoreDataToYapDatabase
+{
     NSString *legacyDatabaseName = @"db.sqlite";
     NSURL * legacyDatabaseURL = [NSPersistentStore MR_urlForStoreName:legacyDatabaseName];
-
-    NSURL * databaseURL = [NSPersistentStore MR_urlForStoreName:databaseName];
+    
+    NSURL * databaseURL = [NSPersistentStore MR_urlForStoreName:@"ChatSecure.sqlite"];
     
     NSFileManager *fileManager = [NSFileManager defaultManager];
     if ([fileManager fileExistsAtPath:legacyDatabaseURL.path]) {
@@ -69,54 +80,66 @@ NSString *const OTRYapDatabaseRelationshipName = @"OTRYapDatabaseRelationshipNam
         }
     }
     
-    NSURL *mom2 = [[NSBundle mainBundle] URLForResource:@"ChatSecure 2" withExtension:@"mom" subdirectory:@"ChatSecure.momd"];
-    NSURL *mom3 = [[NSBundle mainBundle] URLForResource:@"ChatSecure 3" withExtension:@"mom" subdirectory:@"ChatSecure.momd"];
-    NSURL *mom4 = [[NSBundle mainBundle] URLForResource:@"ChatSecure 4" withExtension:@"mom" subdirectory:@"ChatSecure.momd"];
-    NSManagedObjectModel *version2Model = [[NSManagedObjectModel alloc] initWithContentsOfURL:mom2];
-    NSManagedObjectModel *version3Model = [[NSManagedObjectModel alloc] initWithContentsOfURL:mom3];
-    NSManagedObjectModel *version4Model = [[NSManagedObjectModel alloc] initWithContentsOfURL:mom4];
     
-    if ([OTRDatabaseManager isManagedObjectModel:version2Model compatibleWithStoreAtUrl:databaseURL]) {
+    if ([fileManager fileExistsAtPath:databaseURL.path])
+    {
+        NSURL *mom2 = [[NSBundle mainBundle] URLForResource:@"ChatSecure 2" withExtension:@"mom" subdirectory:@"ChatSecure.momd"];
+        NSURL *mom3 = [[NSBundle mainBundle] URLForResource:@"ChatSecure 3" withExtension:@"mom" subdirectory:@"ChatSecure.momd"];
+        NSURL *mom4 = [[NSBundle mainBundle] URLForResource:@"ChatSecure 4" withExtension:@"mom" subdirectory:@"ChatSecure.momd"];
+        NSManagedObjectModel *version2Model = [[NSManagedObjectModel alloc] initWithContentsOfURL:mom2];
+        NSManagedObjectModel *version3Model = [[NSManagedObjectModel alloc] initWithContentsOfURL:mom3];
+        NSManagedObjectModel *version4Model = [[NSManagedObjectModel alloc] initWithContentsOfURL:mom4];
+        
+        if ([OTRDatabaseManager isManagedObjectModel:version2Model compatibleWithStoreAtUrl:databaseURL]) {
+            
+        }
+        else if ([OTRDatabaseManager isManagedObjectModel:version3Model compatibleWithStoreAtUrl:databaseURL]) {
+            
+        }
+        else if ([OTRDatabaseManager isManagedObjectModel:version4Model compatibleWithStoreAtUrl:databaseURL]) {
+            
+        }
+        
+        
+        [MagicalRecord setShouldAutoCreateManagedObjectModel:NO];
+        [MagicalRecord setDefaultModelNamed:@"ChatSecure.momd"];
+        [MagicalRecord setupCoreDataStackWithAutoMigratingSqliteStoreNamed:@"ChatSecure.sqlite"];
+        
+        //[OTREncryptionManager setFileProtection:NSFileProtectionCompleteUntilFirstUserAuthentication path:databaseURL.path];
+        //[OTREncryptionManager addSkipBackupAttributeToItemAtURL:databaseURL];
+        
         
     }
-    else if ([OTRDatabaseManager isManagedObjectModel:version3Model compatibleWithStoreAtUrl:databaseURL]) {
-        
-    }
-    else if ([OTRDatabaseManager isManagedObjectModel:version4Model compatibleWithStoreAtUrl:databaseURL]) {
-        
-    }
-    
-    
-    [MagicalRecord setShouldAutoCreateManagedObjectModel:NO];
-    [MagicalRecord setDefaultModelNamed:@"ChatSecure.momd"];
-    [MagicalRecord setupCoreDataStackWithAutoMigratingSqliteStoreNamed:databaseName];
-    
-    [OTREncryptionManager setFileProtection:NSFileProtectionCompleteUntilFirstUserAuthentication path:databaseURL.path];
-    [OTREncryptionManager addSkipBackupAttributeToItemAtURL:databaseURL];
     
     [OTRDatabaseManager deleteLegacyXMPPFiles];
     
+    //fixme mirgate updated chatseucre to yapdatabase
+    
+}
+
+- (BOOL)setupYapDatabaseWithName:(NSString *)name
+{
     YapDatabaseOptions *options = [[YapDatabaseOptions alloc] init];
-    options.corruptAction = YapDatabaseCorruptAction_Delete;
+    options.corruptAction = YapDatabaseCorruptAction_Fail;
     options.passphraseBlock = ^{
-        // You can also do things like fetch from the keychain in here
-        return @"not a secure password";
+        NSString *passphrase = [self databasePassphrase];
+        if (!passphrase) {
+            passphrase = @"";
+        }
+        return passphrase;
     };
     
     
-    NSString *applicationSupportDirectory = [NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES) lastObject];
-    NSString *applicationName = [[[NSBundle mainBundle] infoDictionary] valueForKey:(NSString *)kCFBundleNameKey];
-    NSString *directory = [applicationSupportDirectory stringByAppendingPathComponent:applicationName];
-    NSString *databasePath = [directory stringByAppendingPathComponent:@"test.sqlite"];
+    NSString *databasePath = [self yapDatabasePathWithName:name];
     
     self.database = [[YapDatabase alloc] initWithPath:databasePath
-                                objectSerializer:NULL
-                              objectDeserializer:NULL
-                              metadataSerializer:NULL
-                            metadataDeserializer:NULL
-                                 objectSanitizer:NULL
-                               metadataSanitizer:NULL
-                                         options:options];
+                                     objectSerializer:NULL
+                                   objectDeserializer:NULL
+                                   metadataSerializer:NULL
+                                 metadataDeserializer:NULL
+                                      objectSanitizer:NULL
+                                    metadataSanitizer:NULL
+                                              options:options];
     
     self.mainThreadReadOnlyDatabaseConnection = [self.database newConnection];
     self.mainThreadReadOnlyDatabaseConnection.objectCacheLimit = 500;
@@ -269,6 +292,52 @@ NSString *const OTRYapDatabaseRelationshipName = @"OTRYapDatabaseRelationshipNam
                                 destinationType:NSSQLiteStoreType destinationOptions:nil error:outError];
     
     return success;
+}
+
+- (NSString *)yapDatabasePathWithName:(NSString *)name
+{
+    NSString *applicationSupportDirectory = [NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES) lastObject];
+    NSString *applicationName = [[[NSBundle mainBundle] infoDictionary] valueForKey:(NSString *)kCFBundleNameKey];
+    NSString *directory = [applicationSupportDirectory stringByAppendingPathComponent:applicationName];
+    return [directory stringByAppendingPathComponent:name];
+}
+
+- (BOOL)existsYapDatabase
+{
+    return [[NSFileManager defaultManager] fileExistsAtPath:[self yapDatabasePathWithName:OTRYapDatabaseName]];
+}
+
+- (NSError *)setDatabasePassphrase:(NSString *)passphrase remember:(BOOL)rememeber
+{
+    NSError *error = nil;
+    if (rememeber) {
+        self.inMemoryPassphrase = nil;
+        [SSKeychain setPassword:passphrase forService:kOTRServiceName account:OTRYapDatabasePassphraseAccountName error:&error];
+    }else {
+        [SSKeychain deletePasswordForService:kOTRServiceName account:OTRYapDatabasePassphraseAccountName];
+        self.inMemoryPassphrase = passphrase;
+    }
+    
+    
+    return error;
+
+    
+}
+
+- (BOOL)hasPassphrase
+{
+    return [self databasePassphrase] != nil;
+}
+
+- (NSString *)databasePassphrase
+{
+    if (self.inMemoryPassphrase) {
+        return self.inMemoryPassphrase;
+    }
+    else {
+        return [SSKeychain passwordForService:kOTRServiceName account:OTRYapDatabasePassphraseAccountName];
+    }
+    
 }
 
 #pragma - mark Singlton Methodd

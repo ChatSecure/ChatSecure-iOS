@@ -24,18 +24,15 @@ int maxPasswordLength = 100;
 int maxUsernameLength = 30;
 int maxEmailLength = 100;
 
-@interface OTRPushAccountLoginViewController () <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate>
+@interface OTRPushAccountLoginViewController () <UITextFieldDelegate>
 
 @property (nonatomic, strong) UITableView *tableView;
-
-@property (nonatomic, strong) UITextField *usernameTextField;
-@property (nonatomic, strong) UITextField *emailTextField;
-@property (nonatomic, strong) UITextField *passwordTextField;
-@property (nonatomic, strong) UIButton *loginButton;
 
 @property (nonatomic) BOOL createAccountMode;
 
 @property (nonatomic, strong) OTRPushManager *pushManager;
+@property (nonatomic, strong) NSLayoutConstraint *bottomConstraint;
+@property (nonatomic, strong) NSLayoutConstraint *emailHeightConstraint;
 
 @end
 
@@ -53,37 +50,86 @@ int maxEmailLength = 100;
 {
     [super viewDidLoad];
     
-    self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
-    self.tableView.delegate = self;
-    self.tableView.dataSource = self;
-    self.tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    self.view.backgroundColor = [UIColor whiteColor];
     
-    [self.tableView registerClass:[OTRTextFieldTableViewCell class] forCellReuseIdentifier:OTRTextFieldTableViewCellIdentifier];
-    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:OTRDefaultTableViewCellIdentifier];
+    self.contentView = [[UIView alloc] initWithFrame:CGRectZero];
+    self.contentView.translatesAutoresizingMaskIntoConstraints = NO;
     
-    [self.view addSubview:self.tableView];
+    [self.view addSubview:self.contentView];
     
     self.usernameTextField = [[UITextField alloc] init];
     self.usernameTextField.autocorrectionType = UITextAutocorrectionTypeNo;
     self.usernameTextField.placeholder = USERNAME_STRING;
     self.usernameTextField.delegate = self;
+    self.usernameTextField.translatesAutoresizingMaskIntoConstraints = NO;
+    
+    [self.contentView addSubview:self.usernameTextField];
     
     self.emailTextField = [[UITextField alloc] init];
     self.emailTextField.keyboardType = UIKeyboardTypeEmailAddress;
     self.emailTextField.autocorrectionType = UITextAutocorrectionTypeNo;
     self.emailTextField.placeholder = EMAIL_STRING;
+    self.emailTextField.translatesAutoresizingMaskIntoConstraints = NO;
+    
+    [self.contentView addSubview:self.emailTextField];
     
     self.passwordTextField = [[UITextField alloc] init];
     self.passwordTextField.secureTextEntry = YES;
     self.passwordTextField.placeholder = PASSWORD_STRING;
     self.passwordTextField.delegate = self;
+    self.passwordTextField.translatesAutoresizingMaskIntoConstraints = NO;
+    
+    [self.contentView addSubview:self.passwordTextField];
     
     self.loginButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [self.loginButton addTarget:self action:@selector(loginButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     self.loginButton.enabled = NO;
-    self.loginButton.frame = CGRectMake(0, 0, self.view.bounds.size.height-10, loginButtonHeight);
+    //self.loginButton.frame = CGRectMake(0, 0, self.view.bounds.size.height-10, loginButtonHeight);
+    self.loginButton.translatesAutoresizingMaskIntoConstraints = NO;
+    
+    [self.contentView addSubview:self.loginButton];
+    
+    
+    self.switchCreateOrLogin = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [self.switchCreateOrLogin addTarget:self action:@selector(switchCreateAccountMode:) forControlEvents:UIControlEventTouchUpInside];
+    self.switchCreateOrLogin.translatesAutoresizingMaskIntoConstraints = NO;
+    
+    [self.contentView addSubview:self.switchCreateOrLogin];
     
     self.createAccountMode = YES;
+    [self setupConstraints];
+}
+
+- (void)setupConstraints
+{
+    NSDictionary *views = NSDictionaryOfVariableBindings(_contentView,_usernameTextField,_emailTextField,_passwordTextField,_loginButton,_switchCreateOrLogin);
+    NSDictionary *metrics = @{@"margin":@(12)};
+    
+    ////// ScrollView //////
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_contentView]|" options:0 metrics:0 views:views]];
+    
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.contentView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0]];
+    
+    self.bottomConstraint = [NSLayoutConstraint constraintWithItem:self.contentView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0]
+    ;
+    [self.view addConstraint:self.bottomConstraint];
+    
+    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_usernameTextField]-|" options:0 metrics:0 views:views]];
+    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_emailTextField]-|" options:0 metrics:0 views:views]];
+    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_passwordTextField]-|" options:0 metrics:0 views:views]];
+    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_loginButton]-|" options:0 metrics:0 views:views]];
+    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_switchCreateOrLogin]-|" options:0 metrics:0 views:views]];
+    
+    
+    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-70-[_usernameTextField]-(margin)-[_emailTextField]-(margin)-[_passwordTextField]-(margin)-[_loginButton]-(margin)-[_switchCreateOrLogin]->=0-|" options:0 metrics:metrics views:views]];
+    
+    self.emailHeightConstraint = [NSLayoutConstraint constraintWithItem:self.emailTextField attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:21.0];
+    [self.contentView addConstraint:self.emailHeightConstraint];
+    
+    [[NSNotificationCenter defaultCenter] addObserverForName:UIKeyboardDidShowNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
+        [self keyboardDidShow:note];
+    }];
+    
 }
 
 - (void)loginButtonPressed:(id)sender
@@ -129,6 +175,11 @@ int maxEmailLength = 100;
     OTRRemotePushRegistrationInfoViewController *viewController = [[OTRRemotePushRegistrationInfoViewController alloc] init];
     [self.navigationController pushViewController:viewController animated:YES];
 }
+     
+- (void)switchCreateAccountMode:(id)sender
+{
+    self.createAccountMode = !self.createAccountMode;
+}
 
 - (void)setCreateAccountMode:(BOOL)createAccountMode
 {
@@ -136,12 +187,25 @@ int maxEmailLength = 100;
     if (_createAccountMode) {
         [self.loginButton setTitle:@"Sign Up" forState:UIControlStateNormal];
         [self.loginButton setTitle:@"Sign Up" forState:UIControlStateDisabled];
+        [self.switchCreateOrLogin setTitle:@"Already have an account" forState:UIControlStateNormal];
+        
     }
     else {
         [self.loginButton setTitle:@"Sign In" forState:UIControlStateNormal];
         [self.loginButton setTitle:@"Sign In" forState:UIControlStateDisabled];
+        [self.switchCreateOrLogin setTitle:@"Create account" forState:UIControlStateNormal];
     }
-    [self.tableView reloadData];
+    
+    if (!self.createAccountMode) {
+        self.emailHeightConstraint.constant = 0.0;
+    }
+    else {
+        self.emailHeightConstraint.constant = 21.0;
+    }
+    
+    [UIView animateKeyframesWithDuration:.5 delay:0.0 options:0 animations:^{
+        [self.contentView layoutIfNeeded];
+    } completion:nil];
 }
 
 - (BOOL)validUsername:(NSString *)string
@@ -187,95 +251,29 @@ int maxEmailLength = 100;
     [alertView show];
 }
 
-// password strength meter
-
-#pragma - mark UITableViewDataSource Methods
-
-////// Required //////
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+- (void)keyboardDidShow:(NSNotification *)notification
 {
-    if (section == 0) {
-        if (self.createAccountMode) {
-            //username
-            //email
-            //password
-            return 3;
-        }
-        else {
-            //username
-            //password
-            return 2;
-        }
-    }
-    else {
-        //cell for switching between types
-        return 1;
-    }
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (indexPath.section == 0) {
-        OTRTextFieldTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:OTRTextFieldTableViewCellIdentifier forIndexPath:indexPath];
-        if (indexPath.row == 0) {
-            cell.textField = self.usernameTextField;
-        }
-        else if (self.createAccountMode && indexPath.row == 1) {
-            cell.textField = self.emailTextField;
-            
-        }
-        else {
-            cell.textField = self.passwordTextField;
-        }
-        return cell;
-    }
-    else {
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:OTRDefaultTableViewCellIdentifier forIndexPath:indexPath];
-        if (self.createAccountMode) {
-            cell.textLabel.text = @"Login?";
-        }
-        else {
-            cell.textLabel.text = @"Create Account?";
-        }
-        
-        return cell;
-    }
+    NSValue *beginFrameValue = notification.userInfo[UIKeyboardFrameBeginUserInfoKey];
+    CGRect keyboardBeginFrame = [self.view convertRect:beginFrameValue.CGRectValue fromView:nil];
     
-}
-
-////// Optional //////
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-    return 2;
-}
-
-- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
-{
-    if (section == 0) {
-        return self.loginButton;
-    }
-    return nil;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
-{
-    if (section == 0) {
-        return loginButtonHeight;
-    }
-    return 0;
-}
-
-
-#pragma - mark UITableViewDelegate Methods
-
-////// Optional //////
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (indexPath.section == 1 && indexPath.row == 0) {
-        self.createAccountMode = !self.createAccountMode;
-    }
+    NSValue *endFrameValue = notification.userInfo[UIKeyboardFrameEndUserInfoKey];
+    CGRect keyboardEndFrame = [self.view convertRect:endFrameValue.CGRectValue fromView:nil];
+    
+    
+    NSTimeInterval duration = [notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+    UIViewAnimationCurve curve = [notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] integerValue];
+    
+    self.bottomConstraint.constant = keyboardEndFrame.size.height * -1;
+    
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationDuration:duration];
+    [UIView setAnimationCurve:curve];
+    [UIView setAnimationBeginsFromCurrentState:YES];
+    
+    
+    [self.view layoutIfNeeded];
+    
+    [UIView commitAnimations];
 }
 
 #pragma - mark UITextFieldDelegate Methods

@@ -58,7 +58,7 @@ NSUInteger const kOTRActionSheetShareTag = 333;
         sheet.tag = kOTRActionSheetShareTag;
         sheet.cancelButtonIndex = [buttonTitles count] - 1;
         
-        [OTR_APP_DELEGATE presentActionSheet:sheet inView:[delegate view]];
+        [OTRAppDelegate presentActionSheet:sheet inView:[delegate view]];
     }
 }
 
@@ -142,7 +142,7 @@ NSUInteger const kOTRActionSheetShareTag = 333;
         self.lastActionLink = request.URL;
         UIActionSheet *action = [[UIActionSheet alloc] initWithTitle:[[request.URL absoluteURL] description] delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:OPEN_IN_SAFARI_STRING, nil];
         action.tag = kOTRActionSheetLinkTag;
-        [OTR_APP_DELEGATE presentActionSheet:action inView:[delegate view]];
+        [OTRAppDelegate presentActionSheet:action inView:[delegate view]];
     }
     return NO;
 }

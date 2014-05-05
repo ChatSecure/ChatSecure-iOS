@@ -25,17 +25,16 @@
 
 @class OTRSettingsViewController;
 
-#define OTR_APP_DELEGATE (OTRAppDelegate *)[[UIApplication sharedApplication] delegate]
-
 @interface OTRAppDelegate : UIResponder <UIApplicationDelegate, BITHockeyManagerDelegate>
 
-@property (nonatomic, retain) UIWindow *window;
-@property (nonatomic, retain) OTRSettingsViewController *settingsViewController;
-//@property (nonatomic, retain) OTRBuddyListViewController *buddyListViewController;
-@property (nonatomic, retain) NSTimer *backgroundTimer;
+@property (nonatomic, strong) UIWindow *window;
+@property (nonatomic, strong) OTRSettingsViewController *settingsViewController;
+@property (nonatomic, strong) NSTimer *backgroundTimer;
 @property (nonatomic) UIBackgroundTaskIdentifier backgroundTask;
 @property (nonatomic) BOOL didShowDisconnectionWarning;
 
-- (void) presentActionSheet:(UIActionSheet*)sheet inView:(UIView*)view;
++ (OTRAppDelegate *)appDelegate;
++ (void)presentActionSheet:(UIActionSheet*)sheet inView:(UIView*)view;
++ (void)showConversationViewController;
 
 @end
