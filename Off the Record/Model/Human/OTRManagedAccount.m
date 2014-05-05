@@ -21,10 +21,33 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "OTRManagedAccount.h"
+#import "OTRConstants.h"
+
+NSString *const kOTRClassKey = @"kOTRClassKey";
 
 @interface OTRManagedAccount()
 @end
 
 @implementation OTRManagedAccount
+
+
+- (NSDictionary *)dictionaryRepresentation
+{
+    NSMutableDictionary * dictionary = [NSMutableDictionary dictionary];
+    
+    NSArray * attributes = [self.entity.attributesByName allKeys];
+    
+    dictionary[kOTRClassKey] = NSStringFromClass([self class]);
+    
+    [attributes enumerateObjectsUsingBlock:^(NSString * attributeName, NSUInteger idx, BOOL *stop) {
+        
+        NSObject* attributeValue = [self valueForKey:attributeName];
+        if (attributeValue) {
+            dictionary[attributeName] = attributeValue;
+        }
+    }];
+    
+    return dictionary;
+}
 
 @end

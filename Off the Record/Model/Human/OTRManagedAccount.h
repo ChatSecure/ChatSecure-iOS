@@ -26,6 +26,10 @@
 #import "OTRManagedBuddy.h"
 #import "OTRConstants.h"
 
+extern NSString *const kOTRClassKey;
+
 @interface OTRManagedAccount : _OTRManagedAccount
+
+- (NSDictionary *)propertiesDictionary;
 
 @end

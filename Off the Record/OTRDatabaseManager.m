@@ -16,6 +16,16 @@
 #import "SSKeychain.h"
 #import "OTRConstants.h"
 
+#import "OTRManagedOscarAccount.h"
+#import "OTRXMPPAccount.h"
+#import "OTRXMPPTorAccount.h"
+#import "OTRManagedGoogleAccount.h"
+#import "OTRManagedFacebookAccount.h"
+#import "OTRGoogleOAuthXMPPAccount.h"
+#import "OTRFacebookOAuthXMPPAccount.h"
+#import "OTRManagedXMPPTorAccount.h"
+#import "OTRAccount.h"
+
 NSString *const OTRUIDatabaseConnectionDidUpdateNotification = @"OTRUIDatabaseConnectionDidUpdateNotification";
 NSString *const OTRUIDatabaseConnectionWillUpdateNotification = @"OTRUIDatabaseConnectionWillUpdateNotification";
 NSString *const OTRYapDatabaseRelationshipName = @"OTRYapDatabaseRelationshipName";
@@ -60,9 +70,14 @@ NSString *const OTRYapDatabaseRelationshipName = @"OTRYapDatabaseRelationshipNam
 
 - (BOOL) setupDatabaseWithName:(NSString*)databaseName {
     
-    [self migrateCoreDataToYapDatabase];
     
-    return [self setupYapDatabaseWithName:databaseName];
+    
+    if ([self setupYapDatabaseWithName:databaseName] )
+    {
+        [self migrateCoreDataToYapDatabase];
+        return YES;
+    }
+    return NO;
 }
 
 - (void)migrateCoreDataToYapDatabase
@@ -108,13 +123,85 @@ NSString *const OTRYapDatabaseRelationshipName = @"OTRYapDatabaseRelationshipNam
         //[OTREncryptionManager setFileProtection:NSFileProtectionCompleteUntilFirstUserAuthentication path:databaseURL.path];
         //[OTREncryptionManager addSkipBackupAttributeToItemAtURL:databaseURL];
         
+         ////// Migrate core data to yapdatabase //////
+        
+        NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
+        
+        NSArray *coreDataAccounts = [OTRManagedAccount MR_findAllInContext:context];
+        
+        NSMutableArray *accounts = [NSMutableArray array];
+        [coreDataAccounts enumerateObjectsUsingBlock:^(OTRManagedAccount *account, NSUInteger idx, BOOL *stop) {
+            OTRAccount *newAccount = [self accountWithCoreDataAccount:account];
+            if (newAccount) {
+                [accounts addObject:newAccount];
+            }
+        }];
+        
+        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+            [accounts enumerateObjectsUsingBlock:^(OTRAccount *account, NSUInteger idx, BOOL *stop) {
+                [account saveWithTransaction:transaction];
+            }];
+        }];
+        
         
     }
     
     [OTRDatabaseManager deleteLegacyXMPPFiles];
+}
+
+- (OTRAccount *)accountWithCoreDataAccount:(OTRManagedAccount *)managedAccount
+{
+    NSDictionary *accountDictionary = [managedAccount propertiesDictionary];
     
-    //fixme mirgate updated chatseucre to yapdatabase
+    if ([accountDictionary[kOTRClassKey] isEqualToString:NSStringFromClass([OTRManagedOscarAccount class])]) {
+        return nil;
+    }
     
+    OTRXMPPAccount *account = (OTRXMPPAccount *)[OTRAccount accountForAccountType:[self accountTypeWithCoreDataClass:accountDictionary[kOTRClassKey]]];
+    
+    account.username = accountDictionary[OTRManagedAccountAttributes.username];
+    account.autologin = [accountDictionary[OTRManagedAccountAttributes.autologin] boolValue];
+    account.rememberPassword = [accountDictionary[OTRManagedAccountAttributes.rememberPassword] boolValue];
+    account.displayName = accountDictionary[OTRManagedAccountAttributes.displayName];
+    account.domain = accountDictionary[OTRManagedXMPPAccountAttributes.domain];
+    account.port = [accountDictionary[OTRManagedXMPPAccountAttributes.port] intValue];
+    account.resource = accountDictionary[OTRManagedXMPPAccountAttributes.resource];
+    
+    ////// transfer saved passwords //////
+    
+    if (account.accountType == OTRAccountTypeFacebook || account.accountType == OTRAccountTypeGoogleTalk) {
+        NSError *error = nil;
+        SSKeychainQuery * keychainQuery = [[SSKeychainQuery alloc] init];
+        keychainQuery.service = kOTRServiceName;
+        keychainQuery.account = accountDictionary[OTRManagedAccountAttributes.uniqueIdentifier];
+        [keychainQuery fetch:&error];
+        NSDictionary *dictionary = (NSDictionary *)keychainQuery.passwordObject;
+        
+        ((OTROAuthXMPPAccount *)account).oAuthTokenDictionary = dictionary;
+    }
+    else if (account.rememberPassword) {
+        NSError *error = nil;
+        NSString *password = [SSKeychain passwordForService:kOTRServiceName account:accountDictionary[OTRManagedAccountAttributes.uniqueIdentifier] error:&error];
+        
+        account.password = password;
+    }
+}
+
+- (OTRAccountType)accountTypeWithCoreDataClass:(NSString *)coreDataClass
+{
+    if ([coreDataClass isEqualToString:NSStringFromClass([OTRManagedXMPPAccount class])]) {
+        return OTRAccountTypeJabber;
+    }
+    else if ([coreDataClass isEqualToString:NSStringFromClass([OTRManagedXMPPTorAccount class])]) {
+        return OTRAccountTypeXMPPTor;
+    }
+    else if ([coreDataClass isEqualToString:NSStringFromClass([OTRManagedGoogleAccount class])]) {
+        return OTRAccountTypeGoogleTalk;
+    }
+    else if ([coreDataClass isEqualToString:NSStringFromClass([OTRManagedFacebookAccount class])]) {
+        return OTRAccountTypeFacebook;
+    }
+    return OTRAccountTypeNone;
 }
 
 - (BOOL)setupYapDatabaseWithName:(NSString *)name

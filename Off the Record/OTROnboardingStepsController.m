@@ -27,8 +27,12 @@
 - (NSArray *)stepViewControllers
 {
     OTRDatabasePassphraseViewController *databasePassphraseViewController = [[OTRDatabasePassphraseViewController alloc] init];
+    databasePassphraseViewController.step.title = @"Database Passphrase";
     OTROnboardingPushAccountLoginViewController *pushLoginViewController = [[OTROnboardingPushAccountLoginViewController alloc] init];
+    pushLoginViewController.step.title = @"ChatSecure Push";
     OTRRemotePushRegistrationInfoViewController *pushRegistrationViewController = [[OTRRemotePushRegistrationInfoViewController alloc] init];
+    pushRegistrationViewController.step.title = @"Push Registration";
+    
     
     return @[databasePassphraseViewController,pushLoginViewController,pushRegistrationViewController];
 }
