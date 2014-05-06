@@ -12,6 +12,7 @@
 #import "Strings.h"
 #import "OTRDatabaseManager.h"
 #import "OTRConstants.h"
+#import "UIAlertView+Blocks.h"
 
 @interface OTRDatabasePassphraseViewController () <OTRPasswordStrengthViewDelegate>
 
@@ -51,25 +52,33 @@
     
     self.rememberPasswordLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     self.rememberPasswordLabel.translatesAutoresizingMaskIntoConstraints = NO;
-    self.rememberPasswordLabel.text = REMEMBER_PASSWORD_STRING;
+    self.rememberPasswordLabel.text = @"Rember Passphrase";
     
-    self.rememberPasswordSwitch = [[UISwitch alloc] init];
+    self.rememberPasswordSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
     self.rememberPasswordSwitch.on = YES;
     self.rememberPasswordSwitch.userInteractionEnabled = YES;
     self.rememberPasswordSwitch.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.rememberPasswordSwitch addTarget:self action:@selector(switchChanged:) forControlEvents:UIControlEventValueChanged];
-
+    
+    UIButton *passwordInfoButton = [UIButton buttonWithType:UIButtonTypeInfoDark];
+    [passwordInfoButton addTarget:self action:@selector(passwordInfoButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    passwordInfoButton.translatesAutoresizingMaskIntoConstraints = NO;
+    
+    
     
     UIView *rememberPasswordView = [[UIView alloc] initWithFrame:CGRectZero];
     rememberPasswordView.translatesAutoresizingMaskIntoConstraints = NO;
     rememberPasswordView.userInteractionEnabled = YES;
     
-    [rememberPasswordView addSubview:self.rememberPasswordSwitch];
     [rememberPasswordView addSubview:self.rememberPasswordLabel];
+    [rememberPasswordView addSubview:self.rememberPasswordSwitch];
+    [rememberPasswordView addSubview:passwordInfoButton];
     [containerView addSubview:rememberPasswordView];
     
-    NSDictionary *views = NSDictionaryOfVariableBindings(_rememberPasswordLabel,_rememberPasswordSwitch);
-    [rememberPasswordView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_rememberPasswordLabel]->=0-[_rememberPasswordSwitch]|" options:NSLayoutFormatAlignAllCenterY metrics:nil views:views]];
+    NSDictionary *views = NSDictionaryOfVariableBindings(_rememberPasswordLabel,_rememberPasswordSwitch,passwordInfoButton);
+    [rememberPasswordView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_rememberPasswordLabel]-(2)-[passwordInfoButton]->=0-[_rememberPasswordSwitch]|" options:NSLayoutFormatAlignAllCenterY metrics:nil views:views]];
+    [rememberPasswordView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|->=0-[passwordInfoButton]->=0-|" options:0 metrics:nil views:views]];
+    [rememberPasswordView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|->=0-[_rememberPasswordSwitch]->=0-|" options:0 metrics:nil views:views]];
+    [rememberPasswordView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|->=0-[_rememberPasswordLabel]->=0-|" options:0 metrics:nil views:views]];
     
     
     
@@ -102,13 +111,20 @@
     }];
     
     self.nextStepButton.enabled = NO;
-    
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     [self.passwordView.textField becomeFirstResponder];
+    
+}
+
+- (void)passwordInfoButtonPressed:(id)sender
+{
+    RIButtonItem *okButton = [RIButtonItem itemWithLabel:OK_STRING];
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Remember Passphrase" message:@"Your password is stored locally on this device and is only as safe as your device passphrase or pin" cancelButtonItem:nil otherButtonItems:okButton, nil];
+    [alertView show];
 }
 
 - (void)keyboardDidShow:(NSNotification *)notification
@@ -136,11 +152,6 @@
     [UIView commitAnimations];
 }
 
-- (void)switchChanged:(id)sender
-{
-    
-}
-
 - (void)nextTapped:(id)sender
 {
     NSError *error = [[OTRDatabaseManager sharedInstance] setDatabasePassphrase:self.passwordView.textField.text remember:NO];
@@ -161,7 +172,7 @@
 
 - (void)passwordView:(OTRPasswordStrengthView *)view didChangePassword:(NSString *)password strength:(NJOPasswordStrength)strength failingRules:(NSArray *)rules
 {
-    if ([rules count]) {
+    if ([rules count] || ![password length]) {
         self.nextStepButton.enabled = NO;
     }
     else {

@@ -21,6 +21,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
     // Do any additional setup after loading the view.
 }
 
@@ -39,6 +40,13 @@
 
 - (void)finishedAllSteps {
     [OTRAppDelegate showConversationViewController];
+}
+
+#pragma - mark RMStepsBarDelegate
+
+- (void)stepsBar:(RMStepsBar *)bar shouldSelectStepAtIndex:(NSInteger)index
+{
+    return;
 }
 
 
