@@ -16,7 +16,7 @@ pod "SSKeychain"
 pod "UIAlertView-Blocks"
 pod 'gtm-oauth2', '~> 0.0.3'
 pod 'JTTargetActionBlock', '~> 1.0'
-pod 'YapDatabase/SQLCipher', :path => 'Submodules/YapDatabase'
+pod 'YapDatabase/SQLCipher', '~> 2.4'
 pod 'Mantle', '~> 1.4'
 pod 'Navajo', '~> 0.0'
 pod 'RMStepsController', '~> 1.0'

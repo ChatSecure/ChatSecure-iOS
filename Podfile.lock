@@ -52,9 +52,9 @@ PODS:
   - SSKeychain (1.2.2)
   - TRVSMonitor (0.0.3)
   - UIAlertView-Blocks (1.0)
-  - YapDatabase/common (2.4.1):
+  - YapDatabase/common (2.4.2):
     - CocoaLumberjack (~> 1.6.3)
-  - YapDatabase/SQLCipher (2.4.1):
+  - YapDatabase/SQLCipher (2.4.2):
     - SQLCipher/fts
     - YapDatabase/common
 
@@ -78,7 +78,7 @@ DEPENDENCIES:
   - SSKeychain
   - TRVSMonitor (~> 0.0)
   - UIAlertView-Blocks
-  - YapDatabase/SQLCipher (from `Submodules/YapDatabase`)
+  - YapDatabase/SQLCipher (~> 2.4)
 
 EXTERNAL SOURCES:
   AFOAuth2Client:
@@ -86,8 +86,6 @@ EXTERNAL SOURCES:
     :git: git@github.com:ChatSecure/AFOAuth2Client.git
   SIAlertView:
     :podspec: PodSpecs/SIAlertView.podspec
-  YapDatabase:
-    :path: Submodules/YapDatabase
 
 SPEC CHECKSUMS:
   AFNetworking: e499052cbf3d743e9bb727bb37adb9dc2547ba15
@@ -112,6 +110,6 @@ SPEC CHECKSUMS:
   SSKeychain: 3d0b76c87e7b062a7ad1631a825fddec84367d44
   TRVSMonitor: cc2b3d6f4cf18639464f6b8295f1b4722f4d4f14
   UIAlertView-Blocks: f7be28a08e85ec21143951ec6797ca6474faf563
-  YapDatabase: 1554bf9652e865cb0a09677626f45f8a29bdf09f
+  YapDatabase: 051a7930e3b92097470fe7bcf58d4b715d79997e
 
 COCOAPODS: 0.32.1
