@@ -10,13 +10,16 @@
 #import "OTRDatabaseManager.h"
 #import "OTRConstants.h"
 #import "OTRAppDelegate.h"
+#import "Strings.h"
 
-@interface OTRDatabaseUnlockViewController ()
+@interface OTRDatabaseUnlockViewController () <UITextFieldDelegate>
 
 @property (nonatomic, strong) UITextField *passphraseTextField;
 @property (nonatomic, strong) UIButton *unlockButton;
-
+@property (nonatomic, strong) UIButton *forgotPassphraseButton;
 @property (nonatomic, strong) NSLayoutConstraint *textFieldCenterXConstraint;
+
+@property (nonatomic, strong) NSLayoutConstraint *bottomConstraint;
 
 @end
 
@@ -32,6 +35,8 @@
     self.passphraseTextField.translatesAutoresizingMaskIntoConstraints = NO;
     self.passphraseTextField.secureTextEntry = YES;
     self.passphraseTextField.borderStyle = UITextBorderStyleRoundedRect;
+    self.passphraseTextField.returnKeyType = UIReturnKeyDone;
+    self.passphraseTextField.delegate = self;
     
     [self.view addSubview:self.passphraseTextField];
     
@@ -42,14 +47,32 @@
     
     [self.view addSubview:self.unlockButton];
     
+    self.forgotPassphraseButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    self.forgotPassphraseButton.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.forgotPassphraseButton setTitle:@"Forgot Passphrase?" forState:UIControlStateNormal];
+    [self.forgotPassphraseButton addTarget:self action:@selector(forgotTapped:) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.view addSubview:self.forgotPassphraseButton];
+    
+    
     [self setupConstraints];
+    
+    [[NSNotificationCenter defaultCenter] addObserverForName:UIKeyboardDidShowNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
+        [self keyboardDidShow:note];
+    }];
+    
+    [self.passphraseTextField becomeFirstResponder];
 }
 
 - (void)setupConstraints
 {
-    NSDictionary *views = NSDictionaryOfVariableBindings(_unlockButton,_passphraseTextField);
+    NSDictionary *views = NSDictionaryOfVariableBindings(_unlockButton,_passphraseTextField,_forgotPassphraseButton);
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_unlockButton]-|" options:0 metrics:nil views:views]];
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_forgotPassphraseButton]-|" options:0 metrics:nil views:views]];
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(100)-[_passphraseTextField]-[_unlockButton]" options:0 metrics:nil views:views]];
+    
+    self.bottomConstraint = [NSLayoutConstraint constraintWithItem:self.forgotPassphraseButton attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0];
+    [self.view addConstraint:self.bottomConstraint];
     
     
     self.textFieldCenterXConstraint = [NSLayoutConstraint constraintWithItem:self.passphraseTextField attribute:NSLayoutAttributeCenterX relatedBy:self.view toItem:self.view attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0.0];
@@ -67,8 +90,31 @@
     }
     else {
         [self shake:sender number:10 direction:1];
+        [UIView animateWithDuration:0.1 animations:^{
+            self.passphraseTextField.backgroundColor = [UIColor redColor];
+        } completion:^(BOOL finished) {
+            [UIView animateWithDuration:0.1 delay:0.1 options:0 animations:^{
+                self.passphraseTextField.backgroundColor = [UIColor whiteColor];
+            } completion:nil];
+        }];
     }
     
+}
+
+- (void)forgotTapped:(id)sender
+{
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Forgot Passphrase" message:@"You've lost your data and need to delete and reinstall ChatSecure. Consider using a password manager like 1Password or miniKeepass" delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
+    [alertView show];
+}
+
+- (void)keyboardDidShow:(NSNotification *)notification
+{
+    NSValue *endFrameValue = notification.userInfo[UIKeyboardFrameEndUserInfoKey];
+    CGRect keyboardEndFrame = [self.view convertRect:endFrameValue.CGRectValue fromView:nil];
+    
+    self.bottomConstraint.constant = keyboardEndFrame.size.height * -1;
+    
+    [self.view layoutIfNeeded];
 }
 
 -(void)shake:(UIView *)view number:(int)shakes direction:(int)direction
@@ -94,21 +140,15 @@
      }];
 }
 
+#pragma - mark UITextFieldDelegate Methods
 
-- (void)viewWillAppear:(BOOL)animated
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
-    [self.passphraseTextField becomeFirstResponder];
+    if ([string isEqualToString:@"\n"]) {
+        [self unlockTapped:textField];
+        return NO;
+    }
+    return YES;
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end
