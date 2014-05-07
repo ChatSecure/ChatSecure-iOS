@@ -28,7 +28,7 @@
          ////// label //////
         self.rememberPasswordLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         self.rememberPasswordLabel.translatesAutoresizingMaskIntoConstraints = NO;
-        self.rememberPasswordLabel.text = @"Rember Passphrase";
+        self.rememberPasswordLabel.text = @"Remember Passphrase";
         
         ////// switch //////
         self.rememberPasswordSwitch = [[UISwitch alloc] initWithFrame:CGRectZero];
@@ -50,7 +50,7 @@
 
 - (void)passwordInfoButtonPressed:(id)sender
 {
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Remember Passphrase" message:@"Your password is stored locally on this device and is only as safe as your device passphrase or pin" delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Remember Passphrase" message:@"Your password will be stored in the iOS Keychain of this device only, and is only as safe as your device passphrase or pin. However, it will not persist during a device backup/restore via iTunes, so please don't forget it, or you may lose your conversation history." delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
     [alertView show];
 }
 

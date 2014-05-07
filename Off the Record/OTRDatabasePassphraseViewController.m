@@ -93,13 +93,6 @@
     
 }
 
-- (void)passwordInfoButtonPressed:(id)sender
-{
-    RIButtonItem *okButton = [RIButtonItem itemWithLabel:OK_STRING];
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Remember Passphrase" message:@"Your password is stored locally on this device and is only as safe as your device passphrase or pin" cancelButtonItem:nil otherButtonItems:okButton, nil];
-    [alertView show];
-}
-
 - (void)keyboardDidShow:(NSNotification *)notification
 {
     NSValue *beginFrameValue = notification.userInfo[UIKeyboardFrameBeginUserInfoKey];
@@ -128,16 +121,18 @@
 - (void)nextTapped:(id)sender
 {
     BOOL rememberPassword = self.rememberPasswordView.rememberPassword;
-    NSError *error = [[OTRDatabaseManager sharedInstance] setDatabasePassphrase:self.passwordView.textField.text remember:NO];
+    NSError *error = nil;
+    [[OTRDatabaseManager sharedInstance] setDatabasePassphrase:self.passwordView.textField.text remember:rememberPassword error:&error];
     BOOL success = NO;
     if (!error) {
         success = [[OTRDatabaseManager sharedInstance] setupDatabaseWithName:OTRYapDatabaseName];
     }
     
-    if (error || success) {
+    if (error || !success) {
+#warning Error message goes here
         //error message
+        return;
     }
-    
     
     [self.stepsController showNextStep];
 }
@@ -146,7 +141,7 @@
 
 - (void)passwordView:(OTRPasswordStrengthView *)view didChangePassword:(NSString *)password strength:(NJOPasswordStrength)strength failingRules:(NSArray *)rules
 {
-    if ([rules count] || ![password length]) {
+    if ([rules count] || ![password length] || password.length < kOTRMinimumPassphraseLength) {
         self.nextStepButton.enabled = NO;
     }
     else {
