@@ -8,10 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-@class OTRPushToken;
-@class OTRPushDevice;
-@class OTRPushObject;
-@class OTRPushAccount;
+@class OTRYapPushToken;
+@class OTRYapPushDevice;
+@class OTRYapPushAccount;
 
 
 typedef void (^OTRPushCompletionBlock)(BOOL success, NSError *error);
@@ -26,15 +25,16 @@ typedef void (^OTRPushCompletionBlock)(BOOL success, NSError *error);
 
 - (void)loginWithUsername:(NSString *)username password:(NSString *)password completion:(OTRPushCompletionBlock)completionBlock;
 
-- (void)removeOAuthTokenForAccount:(OTRPushAccount *)account;
+- (void)removeOAuthTokenForAccount:(OTRYapPushAccount *)account;
 
 #pragma - mark Token Methods
 
-- (void)fetchNewPushTokenWithName:(NSString *)name completionBlock:(void (^)(OTRPushToken *pushToken, NSError *error))completionBlock;
+- (void)fetchNewPushTokenWithName:(NSString *)name completionBlock:(void (^)(OTRYapPushToken *pushToken, NSError *error))completionBlock;
 
-- (void)fetchAllPushTokens:(OTRPushCompletionBlock)completionBlock;
+// don't need to fetch all tokens from server syncing tokens should be done directly to device to device to maintain buddy connections
+//- (void)fetchAllPushTokens:(OTRPushCompletionBlock)completionBlock;
 
-- (void)deletePushToken:(OTRPushToken *)token completionBlock:(OTRPushCompletionBlock)completionBlock;
+- (void)deletePushToken:(OTRYapPushToken *)token completionBlock:(OTRPushCompletionBlock)completionBlock;
 
 #pragma - mark Device Methods
 
@@ -42,13 +42,6 @@ typedef void (^OTRPushCompletionBlock)(BOOL success, NSError *error);
 
 - (void)fetchAllDevices:(OTRPushCompletionBlock)completionBlock;
 
-- (void)deleteDevice:(OTRPushDevice *)device completionBlock:(OTRPushCompletionBlock)completionBlock;
-
-#pragma - mark Class Methods
-+ (NSString *)collectionForObject:(OTRPushObject *)object;
-
-+ (NSString *)collectionForClass:(Class)class;
-
-+ (NSString *)keyForObject:(OTRPushObject *)object;
+- (void)deleteDevice:(OTRYapPushDevice *)device completionBlock:(OTRPushCompletionBlock)completionBlock;
 
 @end

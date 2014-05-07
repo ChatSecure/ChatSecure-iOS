@@ -12,9 +12,9 @@
 
 #import "OTRDatabaseManager.h"
 
-#import "OTRPushAccount.h"
-#import "OTRPushToken.h"
-#import "OTRPushDevice.h"
+#import "OTRYapPushAccount.h"
+#import "OTRYapPushToken.h"
+#import "OTRYapPushDevice.h"
 
 @interface OTRPushManager()
 
@@ -42,7 +42,8 @@
             success = YES;
             [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
                 
-                [self saveObject:account transaction:transaction];
+                OTRYapPushAccount *yapPushAccount = [[OTRYapPushAccount alloc] initWithPushAccount:account];
+                [yapPushAccount saveWithTransaction:transaction];
             }];
         }
         
@@ -61,7 +62,8 @@
         if (!error) {
             success = YES;
             [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-                [self saveObject:account transaction:transaction];
+                OTRYapPushAccount *pushAccount = [[OTRYapPushAccount alloc] initWithPushAccount:account];
+                [pushAccount saveWithTransaction:transaction];
             }];
         }
         
@@ -90,18 +92,22 @@
 
 #pragma - mark Token Methods
 
-- (void)fetchNewPushTokenWithName:(NSString *)name completionBlock:(void (^)(OTRPushToken *, NSError *))completionBlock
+- (void)fetchNewPushTokenWithName:(NSString *)name completionBlock:(void (^)(OTRYapPushToken *, NSError *))completionBlock
 {
     [[OTRPushAPIClient sharedClient] fetchNewPushTokenWithName:name completionBlock:^(OTRPushToken *pushToken, NSError *error) {
         
+        __block OTRYapPushToken *yapPushToken = nil;
         if (pushToken) {
+            
             [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-                [self saveObject:pushToken transaction:transaction];
+                yapPushToken = [[OTRYapPushToken alloc] initWithPushToken:pushToken];
+                yapPushToken.accountUniqueId = [OTRYapPushAccount currentAccountWithTransaction:transaction].uniqueId;
+                [yapPushToken saveWithTransaction:transaction];
             }];
         }
         
         if (completionBlock) {
-            completionBlock(pushToken,error);
+            completionBlock(yapPushToken,error);
         }
         
     }];
@@ -118,10 +124,12 @@
             
             [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
                 
-                [transaction removeAllObjectsInCollection:[OTRPushManager collectionForClass:[OTRPushToken class]]];
+                [transaction removeAllObjectsInCollection:[OTRYapPushToken collection]];
                 
                 [tokensArray enumerateObjectsUsingBlock:^(OTRPushToken *pushToken, NSUInteger idx, BOOL *stop) {
-                    [self saveObject:pushToken transaction:transaction];
+                    OTRYapPushToken *yapPushToken = [[OTRYapPushToken alloc] initWithPushToken:pushToken];
+                    yapPushToken.accountUniqueId = [OTRYapPushAccount currentAccountWithTransaction:transaction].uniqueId;
+                    [yapPushToken saveWithTransaction:transaction];
                 }];
             }];
         }
@@ -132,13 +140,13 @@
     }];
 }
 
-- (void)deletePushToken:(OTRPushToken *)token completionBlock:(OTRPushCompletionBlock)completionBlock
+- (void)deletePushToken:(OTRYapPushToken *)token completionBlock:(OTRPushCompletionBlock)completionBlock
 {
-    [[OTRPushAPIClient sharedClient] deletePushToken:token completionBlock:^(BOOL success, NSError *error) {
+    [[OTRPushAPIClient sharedClient] deletePushToken:token.pushToken completionBlock:^(BOOL success, NSError *error) {
         
         if (success) {
             [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-                [self deleteObject:token transaction:transaction];
+                [token removeWithTransaction:transaction];
             }];
         }
         
@@ -148,9 +156,9 @@
     }];
 }
 
-- (void)removeOAuthTokenForAccount:(OTRPushAccount *)account
+- (void)removeOAuthTokenForAccount:(OTRYapPushAccount *)account
 {
-    [[OTRPushAPIClient sharedClient] removeOAuthTokenForAccount:account];
+    [[OTRPushAPIClient sharedClient] removeOAuthTokenForAccount:account.pushAccount];
 }
 
 #pragma - makr Device Methods
@@ -173,7 +181,9 @@
                     if (device) {
                         success = YES;
                         [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-                            [self saveObject:device transaction:transaction];
+                            OTRYapPushDevice *yapPushDevice = [[OTRYapPushDevice alloc] initWithPushDevice:device];
+                            yapPushDevice.accountUniqueId = [OTRYapPushAccount currentAccountWithTransaction:transaction].uniqueId;
+                            [yapPushDevice saveWithTransaction:transaction];
                         }];
                     }
                     
@@ -192,9 +202,6 @@
             completionBlock(success,error);
         }
     }];
-    
-    
-    
 }
 
 - (void)fetchAllDevices:(OTRPushCompletionBlock)completionBlock
@@ -205,10 +212,13 @@
             success = YES;
             [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
                 
-                [transaction removeAllObjectsInCollection:[OTRPushManager collectionForClass:[OTRPushDevice class]]];
+                [transaction removeAllObjectsInCollection:[OTRYapPushDevice collection]];
                 
                 [deviceArray enumerateObjectsUsingBlock:^(OTRPushDevice *device, NSUInteger idx, BOOL *stop) {
-                    [self saveObject:device transaction:transaction];
+                    OTRYapPushDevice *yapPushDevice = [[OTRYapPushDevice alloc] initWithPushDevice:device];
+                    yapPushDevice.accountUniqueId = [OTRYapPushAccount currentAccountWithTransaction:transaction].uniqueId;
+                    
+                    [yapPushDevice saveWithTransaction:transaction];
                 }];
             }];
         }
@@ -220,12 +230,12 @@
     }];
 }
 
-- (void)deleteDevice:(OTRPushDevice *)device completionBlock:(OTRPushCompletionBlock)completionBlock
+- (void)deleteDevice:(OTRYapPushDevice *)device completionBlock:(OTRPushCompletionBlock)completionBlock
 {
-    [[OTRPushAPIClient sharedClient] deleteDevice:device completionBlock:^(BOOL success, NSError *error) {
+    [[OTRPushAPIClient sharedClient] deleteDevice:device.pushDevice completionBlock:^(BOOL success, NSError *error) {
         if (success) {
             [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-                [self deleteObject:device transaction:transaction];
+                [device removeWithTransaction:transaction];
             }];
         }
         
@@ -239,8 +249,8 @@
 {
     __block BOOL exists = NO;
     [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        [transaction enumerateKeysAndObjectsInCollection:[OTRPushManager collectionForClass:[OTRPushDevice class]] usingBlock:^(NSString *key, OTRPushDevice  *device, BOOL *stop) {
-            if ([device.pushToken isEqualToString:token])
+        [transaction enumerateKeysAndObjectsInCollection:[OTRYapPushDevice collection] usingBlock:^(NSString *key, OTRYapPushDevice  *device, BOOL *stop) {
+            if ([device.pushDevice.pushToken isEqualToString:token])
             {
                 exists = YES;
                 *stop = YES;
@@ -248,33 +258,6 @@
         }];
     }];
     return exists;
-}
-
-#pragma - mark YapDatabseMethods
-
-- (void)saveObject:(OTRPushObject *)object transaction:(YapDatabaseReadWriteTransaction *)transaction
-{
-    [transaction setObject:object forKey:[OTRPushManager keyForObject:object] inCollection:[OTRPushManager collectionForObject:object]];
-}
-
-- (void)deleteObject:(OTRPushObject *)object transaction:(YapDatabaseReadWriteTransaction *)transaction
-{
-    [transaction setObject:nil forKey:[OTRPushManager keyForObject:object] inCollection:[OTRPushManager collectionForObject:object]];
-}
-
-+ (NSString *)collectionForObject:(OTRPushObject *)object
-{
-    return [self collectionForClass:[object class]];
-}
-
-+ (NSString *)collectionForClass:(Class)class
-{
-    return NSStringFromClass(class);
-}
-
-+ (NSString *)keyForObject:(OTRPushObject *)object
-{
-    return [object.serverId stringValue];
 }
 
 #pragma - mark Class Methods

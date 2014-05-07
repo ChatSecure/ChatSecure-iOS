@@ -42,7 +42,6 @@
 		63110892190788AE001188BB /* OTRPushToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 6311088E190788AE001188BB /* OTRPushToken.m */; };
 		6311089C190788D4001188BB /* OTRYapPushAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 63110895190788D4001188BB /* OTRYapPushAccount.m */; };
 		6311089D190788D4001188BB /* OTRYapPushDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 63110897190788D4001188BB /* OTRYapPushDevice.m */; };
-		6311089E190788D4001188BB /* OTRYapPushObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 63110899190788D4001188BB /* OTRYapPushObject.m */; };
 		6311089F190788D4001188BB /* OTRYapPushToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 6311089B190788D4001188BB /* OTRYapPushToken.m */; };
 		63188CBD16E55B230000DD40 /* OTRNewBuddyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63188CBC16E55B230000DD40 /* OTRNewBuddyViewController.m */; };
 		63188E0818E6271A00037EE0 /* OTRYapDatabaseObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 63188E0718E6271A00037EE0 /* OTRYapDatabaseObject.m */; };
@@ -570,8 +569,6 @@
 		63110895190788D4001188BB /* OTRYapPushAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRYapPushAccount.m; sourceTree = "<group>"; };
 		63110896190788D4001188BB /* OTRYapPushDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRYapPushDevice.h; sourceTree = "<group>"; };
 		63110897190788D4001188BB /* OTRYapPushDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRYapPushDevice.m; sourceTree = "<group>"; };
-		63110898190788D4001188BB /* OTRYapPushObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRYapPushObject.h; sourceTree = "<group>"; };
-		63110899190788D4001188BB /* OTRYapPushObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRYapPushObject.m; sourceTree = "<group>"; };
 		6311089A190788D4001188BB /* OTRYapPushToken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRYapPushToken.h; sourceTree = "<group>"; };
 		6311089B190788D4001188BB /* OTRYapPushToken.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRYapPushToken.m; sourceTree = "<group>"; };
 		63188CBB16E55B220000DD40 /* OTRNewBuddyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRNewBuddyViewController.h; sourceTree = "<group>"; };
@@ -1503,8 +1500,6 @@
 		63110893190788BC001188BB /* YapPush Models */ = {
 			isa = PBXGroup;
 			children = (
-				63110898190788D4001188BB /* OTRYapPushObject.h */,
-				63110899190788D4001188BB /* OTRYapPushObject.m */,
 				63110894190788D4001188BB /* OTRYapPushAccount.h */,
 				63110895190788D4001188BB /* OTRYapPushAccount.m */,
 				63110896190788D4001188BB /* OTRYapPushDevice.h */,
@@ -3839,7 +3834,6 @@
 				6335C0E1191192A300E506E5 /* OTRTextFieldTableViewCell.m in Sources */,
 				63AC174618C7AABD00E6624C /* OTRBuddyInfoCell.m in Sources */,
 				6335C0DE19118F0B00E506E5 /* OTRPushAccountLoginViewController.m in Sources */,
-				6311089E190788D4001188BB /* OTRYapPushObject.m in Sources */,
 				63483FE41752CED100779257 /* XMPPMessage+XEP_0308.m in Sources */,
 				63464F381889EC9200526358 /* _OTRManagedXMPPAccount.m in Sources */,
 				63483FE51752CED100779257 /* DDList.m in Sources */,

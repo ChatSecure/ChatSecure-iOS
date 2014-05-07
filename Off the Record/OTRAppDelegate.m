@@ -89,7 +89,7 @@
     else if ([[OTRDatabaseManager sharedInstance] existsYapDatabase] && [[OTRDatabaseManager sharedInstance] hasPassphrase]) {
         
          ////// Normal launch to conversationViewController //////
-        
+        [[OTRDatabaseManager sharedInstance] setupDatabaseWithName:OTRYapDatabaseName];
         rootViewController = [OTRAppDelegate conversationViewController];
     }
     else {

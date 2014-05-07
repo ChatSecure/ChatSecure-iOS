@@ -42,6 +42,11 @@ const struct OTRYapDatabaseObjectAttributes OTRYapDatabaseObjectAttributes = {
     [transaction setObject:self forKey:self.uniqueId inCollection:[[self class] collection]];
 }
 
+- (void)removeWithTransaction:(YapDatabaseReadWriteTransaction *)transaction
+{
+    [transaction removeObjectForKey:self.uniqueId inCollection:[[self class] collection]];
+}
+
 #pragma - mark Class Methods
 
 + (NSString *)collection

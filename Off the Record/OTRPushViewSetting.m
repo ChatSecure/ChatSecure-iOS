@@ -22,9 +22,6 @@
 
 - (void)showView
 {
-    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        [transaction removeAllObjectsInAllCollections];
-    }];
     Class class;
     if ([OTRAccountsManager defaultPushAccount]) {
         class = [OTRPushAccountViewController class];

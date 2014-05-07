@@ -29,7 +29,7 @@
 #import "YapDatabaseTransaction.h"
 #import "OTRLog.h"
 #import "OTRAccount.h"
-#import "OTRPushAccount.h"
+#import "OTRYapPushAccount.h"
 
 @interface OTRAccountsManager(Private)
 - (void) refreshAccountsArray;
@@ -99,15 +99,11 @@
     return [accounts filteredArrayUsingPredicate:predicate];
 }
 
-+ (OTRPushAccount *)defaultPushAccount
++ (OTRYapPushAccount *)defaultPushAccount
 {
-    __block OTRPushAccount *account = nil;
+    __block OTRYapPushAccount *account = nil;
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        NSArray *keys = [transaction allKeysInCollection:NSStringFromClass([OTRPushAccount class])];
-        
-        if ([keys count]) {
-            account = [transaction objectForKey:[keys firstObject] inCollection:NSStringFromClass([OTRPushAccount class])];
-        }
+        account = [OTRYapPushAccount currentAccountWithTransaction:transaction];
     }];
     
     return account;

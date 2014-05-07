@@ -14,7 +14,21 @@ const struct OTRPushDeviceEdges OTRPushDeviceEdges = {
 	.account = @"account",
 };
 
+@interface OTRYapPushDevice ()
+
+@property (nonatomic, strong) OTRPushDevice *pushDevice;
+
+@end
+
 @implementation OTRYapPushDevice
+
+- (id)initWithPushDevice:(OTRPushDevice *)pushDevice
+{
+    if (self = [self initWithUniqueId:[pushDevice.serverId stringValue]]) {
+        self.pushDevice = pushDevice;
+    }
+    return self;
+}
 
 #pragma - mark YapDatabaseRelationshipNode
 

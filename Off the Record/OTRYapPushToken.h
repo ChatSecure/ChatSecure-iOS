@@ -6,6 +6,8 @@
 //  Copyright (c) 2014 Chris Ballinger. All rights reserved.
 //
 
+#import "OTRPushToken.h"
+#import "YapDatabaseRelationshipNode.h"
 #import "OTRYapDatabaseObject.h"
 
 extern const struct OTRYapPushTokenEdges {
@@ -14,14 +16,22 @@ extern const struct OTRYapPushTokenEdges {
     
 } OTRYapPushTokenEdges;
 
+typedef NS_ENUM(NSUInteger, OTRYapPushTokenType){
+    OTRYapPushTokenTypeNone = 0,
+    OTRYapPushTokenTypeSent = 1,
+    OTRYapPushTokenTypeReceived = 2
+};
+
 @interface OTRYapPushToken : OTRYapDatabaseObject <YapDatabaseRelationshipNode>
 
-@property (nonatomic, strong) NSString *name;
-@property (nonatomic, strong) NSString *token;
-
+@property (nonatomic, strong, readonly) OTRPushToken *pushToken;
 @property (nonatomic, strong) NSString *accountUniqueId;
 @property (nonatomic, strong) NSString *buddyUniqueId;
+@property (nonatomic) OTRYapPushTokenType tokenType;
 
-+ (OTRYapPushToken *)tokenWithTokenString:(NSString *)tokenString transaction:(YapDatabaseReadTransaction *)transaction;
+
+- (id)initWithPushToken:(OTRPushToken *)pushToken;
+
++ (instancetype)tokenWithTokenString:(NSString *)tokenString transaction:(YapDatabaseReadTransaction *)transaction;
 
 @end

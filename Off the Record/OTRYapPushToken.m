@@ -15,7 +15,22 @@ const struct OTRYapPushTokenEdges OTRYapPushTokenEdges = {
     .buddy = @"buddy"
 };
 
+@interface OTRYapPushToken ()
+
+@property (nonatomic, strong) OTRPushToken *pushToken;
+
+@end
+
 @implementation OTRYapPushToken
+
+
+- (id)initWithPushToken:(OTRPushToken *)pushToken
+{
+    if (self = [self initWithUniqueId:pushToken.token]) {
+        self.pushToken = pushToken;
+    }
+    return self;
+}
 
 #pragma - mark YapDatabaseRelationshipNode
 
@@ -44,21 +59,9 @@ const struct OTRYapPushTokenEdges OTRYapPushTokenEdges = {
 
 #pragma - mark Class Methods
 
-+ (OTRYapPushToken *)tokenWithTokenString:(NSString *)tokenString transaction:(YapDatabaseReadTransaction *)transaction
++ (instancetype)tokenWithTokenString:(NSString *)tokenString transaction:(YapDatabaseReadTransaction *)transaction
 {
-    NSArray *allKeys = [transaction allKeysInCollection:[OTRYapPushToken collection]];
-    
-    __block OTRYapPushToken *resultToken = nil;
-    
-    [transaction enumerateObjectsForKeys:allKeys inCollection:[OTRYapPushToken collection] unorderedUsingBlock:^(NSUInteger keyIndex, OTRYapPushToken *token, BOOL *stop) {
-        if ([token.token isEqualToString:tokenString]) {
-            
-            resultToken = token;
-            *stop = YES;
-        }
-    }];
-    
-    return resultToken;
+    return [transaction objectForKey:tokenString inCollection:[self collection]];
 }
 
 @end

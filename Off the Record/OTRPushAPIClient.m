@@ -19,7 +19,7 @@
 
 #define NSERROR_DOMAIN @"OTRPushAPIClientError"
 
-#define SERVER_URL @"http://192.168.49.32:8000"
+#define SERVER_URL @"http://10.54.50.127:8000"
 
 static OTRPushAPIClient *_sharedClient = nil;
 

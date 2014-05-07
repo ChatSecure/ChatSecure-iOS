@@ -15,9 +15,9 @@
 #import "YapDatabaseViewMappings.h"
 #import "OTRDatabaseView.h"
 #import "OTRLog.h"
-#import "OTRPushDevice.h"
-#import "OTRPushToken.h"
-#import "OTRPushAccount.h"
+#import "OTRYapPushDevice.h"
+#import "OTRYapPushToken.h"
+#import "OTRYapPushAccount.h"
 
 @interface OTRPushAccountViewController () <UITableViewDataSource, UITableViewDelegate>
 
@@ -95,11 +95,12 @@
             DDLogError(@"Error refreshing Devices %@",error);
         }
     }];
+    /*
     [self.pushManager fetchAllPushTokens:^(BOOL success, NSError *error) {
         if (error) {
             DDLogError(@"Error refreshing Tokens %@",error);
         }
-    }];
+    }];*/
 }
 
 #pragma - mark YapDatabaseMethods
@@ -195,8 +196,8 @@
 {
     [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         NSMutableArray *devices = [NSMutableArray array];
-        NSArray *allDeviceKeys = [transaction allKeysInCollection:[OTRPushManager collectionForClass:[OTRPushToken class]]];
-        [transaction enumerateObjectsForKeys:allDeviceKeys inCollection:[OTRPushManager collectionForClass:[OTRPushToken class]] unorderedUsingBlock:^(NSUInteger keyIndex, id object, BOOL *stop) {
+        NSArray *allDeviceKeys = [transaction allKeysInCollection:[OTRYapPushToken collection]];
+        [transaction enumerateObjectsForKeys:allDeviceKeys inCollection:[OTRYapPushToken collection] unorderedUsingBlock:^(NSUInteger keyIndex, id object, BOOL *stop) {
             [devices addObject:object];
         }];
         

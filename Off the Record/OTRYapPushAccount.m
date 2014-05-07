@@ -12,20 +12,21 @@
 #import "OTRYapPushDevice.h"
 #import "YapDatabaseRelationshipTransaction.h"
 
+@interface OTRYapPushAccount ()
+
+@property (nonatomic, strong)OTRPushAccount *pushAccount;
+
+@end
+
 @implementation OTRYapPushAccount
 
-- (NSString *) imageName {
-    return @"ipad.png";
-}
-
-- (NSString *)providerName
+- (id)initWithPushAccount:(OTRPushAccount *)pushAccount
 {
-    return @"ChatSecure Push";
+    if (self = [self initWithUniqueId:[pushAccount.serverId stringValue]]) {
+        self.pushAccount = pushAccount;
+    }
+    return self;
 }
-
-//- (Class) protocolClass {
-//    return [OTRPushManager class];
-//}
 
 + (OTRYapPushAccount *) activeAccountWithTransaction:(YapDatabaseReadTransaction *)transaction
 {
@@ -58,5 +59,10 @@
     return [allDevices copy];
 }
 
++ (instancetype)currentAccountWithTransaction:(YapDatabaseReadTransaction *)transaction
+{
+    NSArray *keys = [transaction allKeysInCollection:[self collection]];
+    return [transaction objectForKey:[keys firstObject] inCollection:[self collection]];
+}
 
 @end

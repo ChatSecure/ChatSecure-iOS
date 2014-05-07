@@ -16,24 +16,17 @@ extern const struct OTRYapDatabaseObjectAttributes {
 	__unsafe_unretained NSString *uniqueId;
 } OTRYapDatabaseObjectAttributes;
 
-@protocol OTRYapDatabseObjectProtocol <NSObject>
+@interface OTRYapDatabaseObject : MTLModel
 
-@required
+@property (nonatomic, readonly) NSString *uniqueId;
+
 - (instancetype)initWithUniqueId:(NSString *)uniqueId;
 
-- (NSString *)uniqueId;
-
 - (void)saveWithTransaction:(YapDatabaseReadWriteTransaction *)transaction;
+- (void)removeWithTransaction:(YapDatabaseReadWriteTransaction *)transaction;
 
 + (NSString *)collection;
 
-+ (instancetype) fetchObjectWithUniqueID:(NSString*)uniqueID transaction:(YapDatabaseReadTransaction*)transaction;
-
-
-@end
-
-@interface OTRYapDatabaseObject : MTLModel <OTRYapDatabseObjectProtocol>
-
-@property (nonatomic, readonly) NSString *uniqueId;
++ (instancetype)fetchObjectWithUniqueID:(NSString*)uniqueID transaction:(YapDatabaseReadTransaction*)transaction;
 
 @end

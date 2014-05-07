@@ -16,10 +16,9 @@
 #import "OTRXMPPPresenceSubscriptionRequest.h"
 #import "YapDatabaseFullTextSearch.h"
 
-#import "OTRPushManager.h"
-#import "OTRPushAccount.h"
-#import "OTRPushDevice.h"
-#import "OTRPushToken.h"
+#import "OTRYapPushAccount.h"
+#import "OTRYapPushDevice.h"
+#import "OTRYapPushToken.h"
 
 NSString *OTRConversationGroup = @"Conversation";
 NSString *OTRConversationDatabaseViewExtensionName = @"OTRConversationDatabaseViewExtensionName";
@@ -405,7 +404,7 @@ NSString *OTRPushAccountGroup = @"Account";
     return [[OTRDatabaseManager sharedInstance].database registerExtension:databaseView withName:OTRAllSubscriptionRequestsViewExtensionName];
 }
 
-+ (void)registerPushView
++ (BOOL)registerPushView
 {
     /*if ([[OTRDatabaseManager sharedInstance].database registeredExtension:OTRAllPushAccountInfoViewExtensionName]) {
         return YES;
@@ -419,9 +418,9 @@ NSString *OTRPushAccountGroup = @"Account";
     YapDatabaseViewBlockType sortingBlockType;
     YapDatabaseViewSortingWithObjectBlock sortingBlock;
     
-    __block NSString *pushAccountCollection = [OTRPushManager collectionForClass:[OTRPushAccount class]];
-    __block NSString *pushDeviceCollection  = [OTRPushManager collectionForClass:[OTRPushDevice class]];
-    __block NSString *pushTokenCollection   = [OTRPushManager collectionForClass:[OTRPushToken class]];
+    __block NSString *pushAccountCollection = [OTRYapPushAccount collection];
+    __block NSString *pushDeviceCollection  = [OTRYapPushDevice collection];
+    __block NSString *pushTokenCollection   = [OTRYapPushToken collection];
     
     groupingBlockType = YapDatabaseViewBlockTypeWithKey;
     groupingBlock = ^NSString *(NSString *collection, NSString *key){
@@ -445,7 +444,7 @@ NSString *OTRPushAccountGroup = @"Account";
     sortingBlockType = YapDatabaseViewBlockTypeWithObject;
     sortingBlock = ^(NSString *group, NSString *collection1, NSString *key1, id obj1,
                      NSString *collection2, NSString *key2, id obj2){
-#warning Needs sorting method
+#warning TODO: Needs sorting method
         
         return NSOrderedSame;
     };

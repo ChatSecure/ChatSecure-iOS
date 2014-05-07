@@ -6,17 +6,20 @@
 //  Copyright (c) 2014 Chris Ballinger. All rights reserved.
 //
 
-#import "OTRYapPushObject.h"
+#import "OTRPushAccount.h"
+#import "YapDatabaseRelationshipNode.h"
+#import "YapDatabaseTransaction.h"
+#import "OTRYapDatabaseObject.h"
 
-@interface OTRYapPushAccount : OTRYapPushObject
+@interface OTRYapPushAccount : OTRYapDatabaseObject
 
-@property (nonatomic, strong) NSString *username;
-@property (nonatomic, strong) NSString *email;
+@property (nonatomic, strong, readonly) OTRPushAccount *pushAccount;
 
+- (id)initWithPushAccount:(OTRPushAccount *)pushAccount;
 
 - (NSArray *)allTokensWithTransaction:(YapDatabaseReadTransaction *)transaction;
 - (NSArray *)allDevicesWithTransaction:(YapDatabaseReadTransaction *)transaction;
 
-+ (OTRYapPushAccount *) activeAccountWithTransaction:(YapDatabaseReadTransaction *)transaction;
 
++ (instancetype)currentAccountWithTransaction:(YapDatabaseReadTransaction *)transaction;
 @end
