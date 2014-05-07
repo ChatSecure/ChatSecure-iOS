@@ -42,6 +42,7 @@
     
     self.unlockButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [self.unlockButton setTitle:@"Unlock" forState:UIControlStateNormal];
+    self.unlockButton.enabled = NO;
     [self.unlockButton addTarget:self action:@selector(unlockTapped:) forControlEvents:UIControlEventTouchUpInside];
     self.unlockButton.translatesAutoresizingMaskIntoConstraints = NO;
     
@@ -83,8 +84,8 @@
 
 - (void)unlockTapped:(id)sender
 {
-    [[OTRDatabaseManager sharedInstance] setDatabasePassphrase:self.passphraseTextField.text remember:NO];
-    
+#warning TODO: make it remember about remembered passwords
+    [[OTRDatabaseManager sharedInstance] setDatabasePassphrase:self.passphraseTextField.text remember:NO error:nil];
     if ([[OTRDatabaseManager sharedInstance] setupDatabaseWithName:OTRYapDatabaseName]) {
         [OTRAppDelegate showConversationViewController];
     }
@@ -103,7 +104,7 @@
 
 - (void)forgotTapped:(id)sender
 {
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Forgot Passphrase" message:@"You've lost your data and need to delete and reinstall ChatSecure. Consider using a password manager like 1Password or miniKeepass" delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Forgot Passphrase" message:@"Because the database contents is encrypted with your passphrase, you've lost access to your data and will need to delete and reinstall ChatSecure to continue. Password managers like 1Password or MiniKeePass can be helpful for generating and storing strong passwords." delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
     [alertView show];
 }
 
@@ -140,6 +141,14 @@
      }];
 }
 
+- (void) checkPasswordLength {
+    if (self.passphraseTextField.text.length >= kOTRMinimumPassphraseLength) {
+        self.unlockButton.enabled = YES;
+    } else {
+        self.unlockButton.enabled = NO;
+    }
+}
+
 #pragma - mark UITextFieldDelegate Methods
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
@@ -148,6 +157,8 @@
         [self unlockTapped:textField];
         return NO;
     }
+#warning Hack to check textfield length after modification
+    [self performSelector:@selector(checkPasswordLength) withObject:nil afterDelay:0.01];
     return YES;
 }
 

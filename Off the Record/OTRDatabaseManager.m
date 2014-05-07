@@ -69,9 +69,6 @@ NSString *const OTRYapDatabaseRelationshipName = @"OTRYapDatabaseRelationshipNam
 }
 
 - (BOOL) setupDatabaseWithName:(NSString*)databaseName {
-    
-    
-    
     if ([self setupYapDatabaseWithName:databaseName] )
     {
         [self migrateCoreDataToYapDatabase];
@@ -210,13 +207,16 @@ NSString *const OTRYapDatabaseRelationshipName = @"OTRYapDatabaseRelationshipNam
     options.corruptAction = YapDatabaseCorruptAction_Fail;
     options.passphraseBlock = ^{
         NSString *passphrase = [self databasePassphrase];
-        if (!passphrase) {
-            passphrase = @"";
+        if (!passphrase.length) {
+            [NSException raise:@"Must have passphrase of length > 0" format:@"password length is %d.", (int)passphrase.length];
         }
         return passphrase;
     };
     
-    
+    NSString *databaseDirectory = [self yapDatabaseDirectory];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:databaseDirectory]) {
+        [[NSFileManager defaultManager] createDirectoryAtPath:databaseDirectory withIntermediateDirectories:YES attributes:nil error:nil];
+    }
     NSString *databasePath = [self yapDatabasePathWithName:name];
     
     self.database = [[YapDatabase alloc] initWithPath:databasePath
@@ -381,12 +381,17 @@ NSString *const OTRYapDatabaseRelationshipName = @"OTRYapDatabaseRelationshipNam
     return success;
 }
 
-- (NSString *)yapDatabasePathWithName:(NSString *)name
-{
+- (NSString *)yapDatabaseDirectory {
     NSString *applicationSupportDirectory = [NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES) lastObject];
     NSString *applicationName = [[[NSBundle mainBundle] infoDictionary] valueForKey:(NSString *)kCFBundleNameKey];
     NSString *directory = [applicationSupportDirectory stringByAppendingPathComponent:applicationName];
-    return [directory stringByAppendingPathComponent:name];
+    return directory;
+}
+
+- (NSString *)yapDatabasePathWithName:(NSString *)name
+{
+    
+    return [[self yapDatabaseDirectory] stringByAppendingPathComponent:name];
 }
 
 - (BOOL)existsYapDatabase
@@ -394,26 +399,20 @@ NSString *const OTRYapDatabaseRelationshipName = @"OTRYapDatabaseRelationshipNam
     return [[NSFileManager defaultManager] fileExistsAtPath:[self yapDatabasePathWithName:OTRYapDatabaseName]];
 }
 
-- (NSError *)setDatabasePassphrase:(NSString *)passphrase remember:(BOOL)rememeber
+- (void) setDatabasePassphrase:(NSString *)passphrase remember:(BOOL)rememeber error:(NSError**)error
 {
-    NSError *error = nil;
     if (rememeber) {
         self.inMemoryPassphrase = nil;
-        [SSKeychain setPassword:passphrase forService:kOTRServiceName account:OTRYapDatabasePassphraseAccountName error:&error];
-    }else {
+        [SSKeychain setPassword:passphrase forService:kOTRServiceName account:OTRYapDatabasePassphraseAccountName error:error];
+    } else {
         [SSKeychain deletePasswordForService:kOTRServiceName account:OTRYapDatabasePassphraseAccountName];
         self.inMemoryPassphrase = passphrase;
     }
-    
-    
-    return error;
-
-    
 }
 
 - (BOOL)hasPassphrase
 {
-    return [self databasePassphrase] != nil;
+    return [self databasePassphrase].length != 0;
 }
 
 - (NSString *)databasePassphrase

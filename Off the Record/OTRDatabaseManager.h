@@ -28,7 +28,7 @@ extern NSString *const OTRYapDatabaseRelationshipName;
 
 - (BOOL)existsYapDatabase;
 
-- (NSError *)setDatabasePassphrase:(NSString *)passphrase remember:(BOOL)rememeber;
+- (void) setDatabasePassphrase:(NSString *)passphrase remember:(BOOL)rememeber error:(NSError**)error;
 - (BOOL)hasPassphrase;
 
 + (instancetype)sharedInstance;
