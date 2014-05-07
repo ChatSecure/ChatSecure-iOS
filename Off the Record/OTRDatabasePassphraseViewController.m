@@ -13,13 +13,14 @@
 #import "OTRDatabaseManager.h"
 #import "OTRConstants.h"
 #import "UIAlertView+Blocks.h"
+#import "OTRRememberPasswordView.h"
 
 @interface OTRDatabasePassphraseViewController () <OTRPasswordStrengthViewDelegate>
 
 @property (nonatomic, strong) OTRPasswordStrengthView *passwordView;
 @property (nonatomic, strong) UIButton *nextStepButton;
-@property (nonatomic, strong) UILabel *rememberPasswordLabel;
-@property (nonatomic, strong) UISwitch *rememberPasswordSwitch;
+@property (nonatomic, strong) OTRRememberPasswordView *rememberPasswordView;
+
 
 @property (nonatomic, strong) NSLayoutConstraint *bottomConstraint;
 
@@ -50,37 +51,9 @@
     
     ////// Remmeber Password //////
     
-    self.rememberPasswordLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-    self.rememberPasswordLabel.translatesAutoresizingMaskIntoConstraints = NO;
-    self.rememberPasswordLabel.text = @"Rember Passphrase";
-    
-    self.rememberPasswordSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
-    self.rememberPasswordSwitch.on = YES;
-    self.rememberPasswordSwitch.userInteractionEnabled = YES;
-    self.rememberPasswordSwitch.translatesAutoresizingMaskIntoConstraints = NO;
-    
-    UIButton *passwordInfoButton = [UIButton buttonWithType:UIButtonTypeInfoDark];
-    [passwordInfoButton addTarget:self action:@selector(passwordInfoButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-    passwordInfoButton.translatesAutoresizingMaskIntoConstraints = NO;
-    
-    
-    
-    UIView *rememberPasswordView = [[UIView alloc] initWithFrame:CGRectZero];
-    rememberPasswordView.translatesAutoresizingMaskIntoConstraints = NO;
-    rememberPasswordView.userInteractionEnabled = YES;
-    
-    [rememberPasswordView addSubview:self.rememberPasswordLabel];
-    [rememberPasswordView addSubview:self.rememberPasswordSwitch];
-    [rememberPasswordView addSubview:passwordInfoButton];
-    [containerView addSubview:rememberPasswordView];
-    
-    NSDictionary *views = NSDictionaryOfVariableBindings(_rememberPasswordLabel,_rememberPasswordSwitch,passwordInfoButton);
-    [rememberPasswordView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_rememberPasswordLabel]-(2)-[passwordInfoButton]->=0-[_rememberPasswordSwitch]|" options:NSLayoutFormatAlignAllCenterY metrics:nil views:views]];
-    [rememberPasswordView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|->=0-[passwordInfoButton]->=0-|" options:0 metrics:nil views:views]];
-    [rememberPasswordView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|->=0-[_rememberPasswordSwitch]->=0-|" options:0 metrics:nil views:views]];
-    [rememberPasswordView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|->=0-[_rememberPasswordLabel]->=0-|" options:0 metrics:nil views:views]];
-    
-    
+    self.rememberPasswordView = [[OTRRememberPasswordView alloc] init];
+    self.rememberPasswordView.translatesAutoresizingMaskIntoConstraints = NO;
+    [containerView addSubview:self.rememberPasswordView];
     
     ////// Next Step Button //////
     self.nextStepButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
@@ -90,11 +63,11 @@
     
     [containerView addSubview:self.nextStepButton];
     
-    views = NSDictionaryOfVariableBindings(_passwordView,_nextStepButton,containerView,rememberPasswordView);
+    NSDictionary *views = NSDictionaryOfVariableBindings(_passwordView,_nextStepButton,containerView,_rememberPasswordView);
     [containerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_passwordView]-|" options:0 metrics:nil views:views]];
     [containerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_nextStepButton]-|" options:0 metrics:nil views:views]];
-    [containerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[rememberPasswordView]-|" options:0 metrics:nil views:views]];
-    [containerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_passwordView]-5-[rememberPasswordView]->=0-[_nextStepButton]-|" options:0 metrics:nil views:views]];
+    [containerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_rememberPasswordView]-|" options:0 metrics:nil views:views]];
+    [containerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_passwordView]-5-[_rememberPasswordView]->=0-[_nextStepButton]-|" options:0 metrics:nil views:views]];
     
     [containerView addConstraint:[NSLayoutConstraint constraintWithItem:self.passwordView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:containerView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0.0]];
     
@@ -154,6 +127,7 @@
 
 - (void)nextTapped:(id)sender
 {
+    BOOL rememberPassword = self.rememberPasswordView.rememberPassword;
     NSError *error = [[OTRDatabaseManager sharedInstance] setDatabasePassphrase:self.passwordView.textField.text remember:NO];
     BOOL success = NO;
     if (!error) {

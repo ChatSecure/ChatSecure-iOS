@@ -326,6 +326,8 @@
 		63C0857F1845863900B9C984 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63C0857E1845863900B9C984 /* SenTestingKit.framework */; };
 		63C9667E19183546002B1490 /* OTROnboardingRemotePushRegistrationInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C9667D19183546002B1490 /* OTROnboardingRemotePushRegistrationInfoViewController.m */; };
 		63C96681191844B0002B1490 /* OTRDatabaseUnlockViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C96680191844B0002B1490 /* OTRDatabaseUnlockViewController.m */; };
+		63C966A01919910A002B1490 /* OTRChangeDatabasePassphraseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C9669F1919910A002B1490 /* OTRChangeDatabasePassphraseViewController.m */; };
+		63C966A31919951E002B1490 /* OTRRememberPasswordView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C966A21919951E002B1490 /* OTRRememberPasswordView.m */; };
 		63CAF8F218FF1BC100C3337E /* lock.png in Resources */ = {isa = PBXBuildFile; fileRef = 63CAF8F018FF1BC100C3337E /* lock.png */; };
 		63CAF8F318FF1BC100C3337E /* lock@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63CAF8F118FF1BC100C3337E /* lock@2x.png */; };
 		63CAF8FA18FF268000C3337E /* OTRAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAF8F918FF268000C3337E /* OTRAppDelegate.m */; };
@@ -1122,6 +1124,10 @@
 		63C9667D19183546002B1490 /* OTROnboardingRemotePushRegistrationInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTROnboardingRemotePushRegistrationInfoViewController.m; sourceTree = "<group>"; };
 		63C9667F191844B0002B1490 /* OTRDatabaseUnlockViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRDatabaseUnlockViewController.h; sourceTree = "<group>"; };
 		63C96680191844B0002B1490 /* OTRDatabaseUnlockViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRDatabaseUnlockViewController.m; sourceTree = "<group>"; };
+		63C9669E1919910A002B1490 /* OTRChangeDatabasePassphraseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRChangeDatabasePassphraseViewController.h; sourceTree = "<group>"; };
+		63C9669F1919910A002B1490 /* OTRChangeDatabasePassphraseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRChangeDatabasePassphraseViewController.m; sourceTree = "<group>"; };
+		63C966A11919951E002B1490 /* OTRRememberPasswordView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRRememberPasswordView.h; sourceTree = "<group>"; };
+		63C966A21919951E002B1490 /* OTRRememberPasswordView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRRememberPasswordView.m; sourceTree = "<group>"; };
 		63CAF8F018FF1BC100C3337E /* lock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = lock.png; path = "media/app-images/lock.png"; sourceTree = SOURCE_ROOT; };
 		63CAF8F118FF1BC100C3337E /* lock@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "lock@2x.png"; path = "media/app-images/lock@2x.png"; sourceTree = SOURCE_ROOT; };
 		63CAF8F818FF268000C3337E /* OTRAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAppDelegate.h; sourceTree = "<group>"; };
@@ -2554,6 +2560,8 @@
 				631F4AE818C0004200AE6E8A /* OTRButtonView.m */,
 				634357F0191308020062FD26 /* OTRPasswordStrengthView.h */,
 				634357F1191308020062FD26 /* OTRPasswordStrengthView.m */,
+				63C966A11919951E002B1490 /* OTRRememberPasswordView.h */,
+				63C966A21919951E002B1490 /* OTRRememberPasswordView.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -3045,6 +3053,8 @@
 				D9FC986B15588E300039518D /* OTRQRCodeViewController.m */,
 				D9FBD71615472FA700126568 /* OTRSettingTableViewCell.h */,
 				D9FBD71715472FA700126568 /* OTRSettingTableViewCell.m */,
+				63C9669E1919910A002B1490 /* OTRChangeDatabasePassphraseViewController.h */,
+				63C9669F1919910A002B1490 /* OTRChangeDatabasePassphraseViewController.m */,
 				D91DAE8A154740D5009D0B74 /* Detail Views */,
 			);
 			name = SettingsViewControllers;
@@ -3666,6 +3676,7 @@
 				6311088F190788AE001188BB /* OTRPushDevice.m in Sources */,
 				63CAF8FE18FF277200C3337E /* OTRLockButton.m in Sources */,
 				63483F801752CED100779257 /* XMPPAnonymousAuthentication.m in Sources */,
+				63C966A01919910A002B1490 /* OTRChangeDatabasePassphraseViewController.m in Sources */,
 				639C60C418CA988400CC4DF4 /* OTRShareSetting.m in Sources */,
 				63188E1E18E6333700037EE0 /* OTRGoogleOAuthXMPPAccount.m in Sources */,
 				63483F811752CED100779257 /* XMPPDeprecatedDigestAuthentication.m in Sources */,
@@ -3764,6 +3775,7 @@
 				63483FB81752CED100779257 /* XMPPvCardTempCoreDataStorageObject.m in Sources */,
 				63464F2F1889EC9200526358 /* _OTRManagedChatMessage.m in Sources */,
 				63483FB91752CED100779257 /* XMPPvCardTemp.m in Sources */,
+				63C966A31919951E002B1490 /* OTRRememberPasswordView.m in Sources */,
 				63483FBA1752CED100779257 /* XMPPvCardTempAdr.m in Sources */,
 				63483FBB1752CED100779257 /* XMPPvCardTempAdrTypes.m in Sources */,
 				63483FBC1752CED100779257 /* XMPPvCardTempBase.m in Sources */,

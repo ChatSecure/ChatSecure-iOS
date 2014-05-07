@@ -38,6 +38,7 @@
 #import "OTRUtilities.h"
 #import "OTRFingerprintSetting.h"
 #import "OTRPushViewSetting.h"
+#import "OTRChangeDatabasePassphraseViewController.h"
 
 #import "OTRUtilities.h"
 
@@ -112,6 +113,8 @@
     
     OTRViewSetting *pushViewSetting = [[OTRPushViewSetting alloc] initWithTitle:@"ChatSecure Push" description:@"Mange ChatSecure Push account"];
     
+    OTRViewSetting *changeDatabasePassphraseSetting = [[OTRViewSetting alloc] initWithTitle:@"Chnage Passphrase" description:@"Set new databse passphrase" viewControllerClass:[OTRChangeDatabasePassphraseViewController class]];
+    
     OTRSettingsGroup *pushGroup = [[OTRSettingsGroup alloc] initWithTitle:@"Push" settings:@[pushViewSetting]];
     
     [settingsGroups addObject:pushGroup];
@@ -127,7 +130,7 @@
     OTRSettingsGroup *chatSettingsGroup = [[OTRSettingsGroup alloc] initWithTitle:CHAT_STRING settings:chatSettings];
     [settingsGroups addObject:chatSettingsGroup];
     
-    securitySettings = @[opportunisticOtrSetting,certSetting,fingerprintSetting];
+    securitySettings = @[opportunisticOtrSetting,certSetting,fingerprintSetting,changeDatabasePassphraseSetting];
     OTRSettingsGroup *securitySettingsGroup = [[OTRSettingsGroup alloc] initWithTitle:SECURITY_STRING settings:securitySettings];
     [settingsGroups addObject:securitySettingsGroup];
     
