@@ -84,6 +84,7 @@ extern CGFloat const kOTRMessageDeliveredLabelHeight;
 extern NSString *const kOTRErrorDomain;
 
 extern NSUInteger const kOTRMinimumPassphraseLength;
+extern NSUInteger const kOTRMaximumPassphraseLength;
 
 typedef NS_ENUM(int, OTRChatState) {
     kOTRChatStateUnknown   = 0,

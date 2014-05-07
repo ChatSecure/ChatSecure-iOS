@@ -42,7 +42,8 @@
     [self.view addSubview:containerView];
     
     ////// password view //////
-    self.passwordView = [[OTRPasswordStrengthView alloc] initWithDefaultRules];
+    NSArray *rules = @[[NJOLengthRule ruleWithRange:NSMakeRange(kOTRMinimumPassphraseLength, kOTRMaximumPassphraseLength)]];
+    self.passwordView = [[OTRPasswordStrengthView alloc] initWithRules:rules];
     self.passwordView.translatesAutoresizingMaskIntoConstraints = NO;
     self.passwordView.textField.borderStyle = UITextBorderStyleRoundedRect;
     self.passwordView.delegate = self;
@@ -141,7 +142,7 @@
 
 - (void)passwordView:(OTRPasswordStrengthView *)view didChangePassword:(NSString *)password strength:(NJOPasswordStrength)strength failingRules:(NSArray *)rules
 {
-    if ([rules count] || ![password length] || password.length < kOTRMinimumPassphraseLength) {
+    if ([rules count] || ![password length]) {
         self.nextStepButton.enabled = NO;
     }
     else {

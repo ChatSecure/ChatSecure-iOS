@@ -83,3 +83,4 @@ CGFloat const kOTRMessageSentDateLabelHeight  = kOTRSentDateFontSize + 7;
 CGFloat const kOTRMessageDeliveredLabelHeight = kOTRDeliveredFontSize + 7;
 
 NSUInteger const kOTRMinimumPassphraseLength = 8;
+NSUInteger const kOTRMaximumPassphraseLength = 64;

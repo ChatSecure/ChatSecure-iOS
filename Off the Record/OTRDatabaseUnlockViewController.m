@@ -84,22 +84,31 @@
 
 - (void)unlockTapped:(id)sender
 {
-#warning TODO: make it remember about remembered passwords
+    if(![self.passphraseTextField.text length]) {
+        [self showPasswordError];
+        return;
+    }
+    
     [[OTRDatabaseManager sharedInstance] setDatabasePassphrase:self.passphraseTextField.text remember:NO error:nil];
     if ([[OTRDatabaseManager sharedInstance] setupDatabaseWithName:OTRYapDatabaseName]) {
         [OTRAppDelegate showConversationViewController];
     }
     else {
-        [self shake:sender number:10 direction:1];
-        [UIView animateWithDuration:0.1 animations:^{
-            self.passphraseTextField.backgroundColor = [UIColor redColor];
-        } completion:^(BOOL finished) {
-            [UIView animateWithDuration:0.1 delay:0.1 options:0 animations:^{
-                self.passphraseTextField.backgroundColor = [UIColor whiteColor];
-            } completion:nil];
-        }];
+        [self showPasswordError];
     }
     
+}
+
+- (void)showPasswordError
+{
+    [self shake:self.passphraseTextField number:10 direction:1];
+    [UIView animateWithDuration:0.1 animations:^{
+        self.passphraseTextField.backgroundColor = [UIColor redColor];
+    } completion:^(BOOL finished) {
+        [UIView animateWithDuration:0.1 delay:0.1 options:0 animations:^{
+            self.passphraseTextField.backgroundColor = [UIColor whiteColor];
+        } completion:nil];
+    }];
 }
 
 - (void)forgotTapped:(id)sender
@@ -141,8 +150,8 @@
      }];
 }
 
-- (void) checkPasswordLength {
-    if (self.passphraseTextField.text.length >= kOTRMinimumPassphraseLength) {
+- (void) checkPasswordLength:(NSString *)password {
+    if ([password length]) {
         self.unlockButton.enabled = YES;
     } else {
         self.unlockButton.enabled = NO;
@@ -157,8 +166,9 @@
         [self unlockTapped:textField];
         return NO;
     }
-#warning Hack to check textfield length after modification
-    [self performSelector:@selector(checkPasswordLength) withObject:nil afterDelay:0.01];
+    
+    NSString *newString = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    [self checkPasswordLength:newString];
     return YES;
 }
 
