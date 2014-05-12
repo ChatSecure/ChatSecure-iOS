@@ -11,14 +11,13 @@
 
 @protocol OTRCertificatePinningDelegate <NSObject>
 
-- (void)newTrust:(SecTrustRef)trust withHostName:(NSString *)hostname withStatus:(OSStatus)status;
+- (void)newTrust:(SecTrustRef)trust withHostName:(NSString *)hostname systemTrustResult:(SecTrustResultType)trustResultType;
 
 @end
 
 @interface OTRCertificatePinning : XMPPCertificatePinning
 
 @property (nonatomic, weak) id<OTRCertificatePinningDelegate> delegate;
-@property (nonatomic) BOOL doNotManuallyEvaluateOverride;
 
 + (void)addCertificate:(SecCertificateRef)cert withHostName:(NSString *)hostname;
 

@@ -13,16 +13,16 @@
 
 NSString *const OTRXMPPErrorDomain                = @"OTRXMPPErrorDomain";
 NSString *const OTRXMPPXMLErrorKey                = @"OTRXMPPXMLErrorKey";
-NSString *const OTRXMPPSSLStatusKey               = @"OTRXMPPSSLStatusKey";
+NSString *const OTRXMPPSSLTrustResultKey          = @"OTRXMPPSSLTrustResultKey";
 NSString *const OTRXMPPSSLCertificateDataKey      = @"OTRXMPPSSLCertificateDataKey";
 NSString *const OTRXMPPSSLHostnameKey             = @"OTRXMPPSSLHostnameKey";
 
 @implementation OTRXMPPError
 
-+ (NSError *)errorForSSLSatus:(OSStatus)status withCertData:(NSData *)certData hostname:(NSString *)hostName
++ (NSError *)errorForTrustResult:(SecTrustResultType)trustResultType withCertData:(NSData *)certData hostname:(NSString *)hostName
 {
     NSMutableDictionary * userInfo = [NSMutableDictionary dictionary];
-    userInfo[OTRXMPPSSLStatusKey] = [NSNumber numberWithLong:status];
+    userInfo[OTRXMPPSSLTrustResultKey] = @(trustResultType);
     if (certData) {
         userInfo[OTRXMPPSSLCertificateDataKey] = certData;
     }
@@ -62,6 +62,18 @@ NSString *const OTRXMPPSSLHostnameKey             = @"OTRXMPPSSLHostnameKey";
         }
     }
     return errorString;
+}
+
++ (NSString *)errorStringWithTrustResultType:(SecTrustResultType)resultType
+{
+    switch (resultType) {
+        case kSecTrustResultInvalid: return @"Error evaluating certificate";
+        case kSecTrustResultDeny: return @"User specified to deny trust";
+        case kSecTrustResultUnspecified: return @"Rejected Certificate";
+        case kSecTrustResultRecoverableTrustFailure : return @"Rejected Certificate";
+        case kSecTrustResultFatalTrustFailure :return @"Bad Certificate";
+        case kSecTrustResultOtherError: return @"Error evaluating certificate";
+    }
 }
 
 + (NSString *)errorStringWithSSLStatus:(OSStatus)status {

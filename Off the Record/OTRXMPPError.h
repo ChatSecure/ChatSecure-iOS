@@ -12,7 +12,7 @@
 
 extern NSString *const OTRXMPPErrorDomain;
 extern NSString *const OTRXMPPXMLErrorKey;
-extern NSString *const OTRXMPPSSLStatusKey;
+extern NSString *const OTRXMPPSSLTrustResultKey;
 extern NSString *const OTRXMPPSSLCertificateDataKey;
 extern NSString *const OTRXMPPSSLHostnameKey;
 
@@ -27,8 +27,8 @@ typedef NS_ENUM(NSUInteger, OTRXMPPErrorCode) {
 @interface OTRXMPPError : NSObject
 
 + (NSString *)errorStringWithSSLStatus:(OSStatus)status;
-
++ (NSString *)errorStringWithTrustResultType:(SecTrustResultType)resultType;
 + (NSError *)errorForXMLElement:(NSXMLElement *)xmlError;
-+ (NSError *)errorForSSLSatus:(OSStatus)status withCertData:(NSData *)certData hostname:(NSString *)hostName;
++ (NSError *)errorForTrustResult:(SecTrustResultType)trustResultType withCertData:(NSData *)certData hostname:(NSString *)hostName;
 
 @end

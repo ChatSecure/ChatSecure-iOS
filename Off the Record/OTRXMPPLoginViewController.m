@@ -27,7 +27,7 @@
 #import "HITorManager.h"
 #import "OTRColors.h"
 #import "OTRCertificatePinning.h"
-#import "OTRManagedXMPPTorAccount.h"
+#import "OTRXMPPTorAccount.h"
 #import "OTRXMPPAccount.h"
 #import "OTRXMPPManager.h"
 
@@ -78,7 +78,7 @@
 }
 
 - (BOOL)isTorAccount{
-    if ([self.account isKindOfClass:[OTRManagedXMPPTorAccount class]]) {
+    if ([self.account isKindOfClass:[OTRXMPPTorAccount class]]) {
         return YES;
     }
     return NO;
@@ -149,24 +149,16 @@
     if (error.code == OTRXMPPSSLError) {
         NSData * certData = error.userInfo[OTRXMPPSSLCertificateDataKey];
         NSString * hostname = error.userInfo[OTRXMPPSSLHostnameKey];
-        NSNumber * statusNumber = error.userInfo[OTRXMPPSSLStatusKey];
+        uint32_t trustResultType = [error.userInfo[OTRXMPPSSLTrustResultKey] unsignedIntValue];
         
-        if ([statusNumber longLongValue] == errSSLPeerAuthCompleted) {
-            //The cert was manually evaluated but did not anything that is saved so we have to recheck system and get interal validation status
-            id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
-            ((OTRXMPPManager *)protocol).certificatePinningModule.doNotManuallyEvaluateOverride = YES;
-            [self loginButtonPressed:nil];
-        }
-        else {
-            [self showCertWarningForCertificateData:certData withHostname:hostname withStatus:[statusNumber longValue]];
-        }
+        [self showCertWarningForCertificateData:certData withHostname:hostname trustResultType:trustResultType];
     }
     else if(!self.certAlertView.isVisible){
         [super protocolLoginFailed:notification];
     }
 }
 
-- (void)showCertWarningForCertificateData:(NSData *)certData withHostname:(NSString *)hostname withStatus:(OSStatus)status {
+- (void)showCertWarningForCertificateData:(NSData *)certData withHostname:(NSString *)hostname trustResultType:(SecTrustResultType)resultType {
     
     SecCertificateRef certificate = [OTRCertificatePinning certForData:certData];
     NSString * fingerprint = [OTRCertificatePinning sha1FingerprintForCertificate:certificate];
@@ -194,13 +186,13 @@
         
     }
     else {
-        if (status == noErr) {
+        if (resultType == kSecTrustResultProceed || resultType == kSecTrustResultUnspecified) {
             //#52A352
             sslMessageColor = [OTRColors greenNoErrorColor];
             message = [message stringByAppendingString:[NSString stringWithFormat:@"\n✓ %@",VALID_CERTIFICATE_STRING]];
         }
         else {
-            NSString * sslErrorMessage = [OTRXMPPError errorStringWithSSLStatus:status];
+            NSString * sslErrorMessage = [OTRXMPPError errorStringWithTrustResultType:resultType];
             sslMessageColor = [OTRColors redErrorColor];
             message = [message stringByAppendingString:[NSString stringWithFormat:@"\nX %@",sslErrorMessage]];
         }
@@ -241,7 +233,7 @@
 - (void)loginButtonPressed:(id)sender
 {
     self.loginButtonPressed = YES;
-    if( [self.account isKindOfClass:[OTRManagedXMPPTorAccount class]]){
+    if( [self isTorAccount] ){
         if(![HITorManager defaultManager].isRunning) {
             [self showHUDWithText:@"Connecting to Tor"];
             [[HITorManager defaultManager] start];

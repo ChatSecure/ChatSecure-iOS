@@ -18,6 +18,7 @@
 
 #import "OTRConstants.h"
 #import "OTRLog.h"
+#import "XMPPStream.h"
 
 
 ///////////////////////////////////////////////
@@ -59,6 +60,12 @@ static id AFPublicKeyForCertificate(NSData *certificate) {
     return (__bridge_transfer id)allowedPublicKey;
 }
 
+
+
+@interface OTRCertificatePinning () <XMPPStreamDelegate>
+
+@end
+
 @implementation OTRCertificatePinning
 
 - (id)initWithDefaultCertificates
@@ -66,7 +73,6 @@ static id AFPublicKeyForCertificate(NSData *certificate) {
     if (self = [super init]) {
         self.securityPolicy = [AFSecurityPolicy defaultPolicy];
         self.securityPolicy.SSLPinningMode = AFSSLPinningModeCertificate;
-        self.doNotManuallyEvaluateOverride = NO;
     }
     return self;
     
@@ -299,54 +305,23 @@ static id AFPublicKeyForCertificate(NSData *certificate) {
     
 }
 
-
 /**
  * GCDAsyncSocket Delegate Methods
 **/
 #pragma - mark GCDAsyncSockeTDelegate Methods
 
-- (BOOL)socket:(GCDAsyncSocket *)sock shouldFinishConnectionWithTrust:(SecTrustRef)trust status:(OSStatus)status {
-    
-    //used for writing files to disk only for debugging
-    //[XMPPCertificatePinning writeCertToDisk:trust withFileName:[NSString stringWithFormat:@"%@.cer",xmppStream.connectedHostName]];
-    BOOL trusted = [self isValidPinnedTrust:trust withHostName:xmppStream.connectedHostName];
-    if (!trusted) {
-        //Delegate firing off for user to verify with status
-        if ([self.delegate respondsToSelector:@selector(newTrust:withHostName:withStatus:)]) {
-            [self.delegate newTrust:trust withHostName:xmppStream.connectedHostName withStatus:status];
-        }
-    }
-    
-    return trusted;
-}
-
-- (BOOL)socketShouldManuallyEvaluateTrust:(GCDAsyncSocket *)sock {
-    if (self.doNotManuallyEvaluateOverride) {
-        self.doNotManuallyEvaluateOverride = NO;
-        return NO;
-    }
-    
-    NSArray * certDomains = @[kOTRGoogleTalkDomain,kOTRFacebookDomain];
-    NSString * hostname = xmppStream.connectedHostName;
-    if ([hostname length]) {
-        if([[OTRCertificatePinning storedCertificatesWithHostName:hostname] count] || [certDomains containsObject:hostname])
-        {
-            return YES;
-        }
-    }
-    return NO;
-}
-
-- (BOOL)socket:(GCDAsyncSocket *)sock shouldTrustPeer:(SecTrustRef)trust
+- (void)xmppStream:(XMPPStream *)sender didReceiveTrust:(SecTrustRef)trust completionHandler:(void (^)(BOOL))completionHandler
 {
     BOOL trusted = [self isValidPinnedTrust:trust withHostName:xmppStream.connectedHostName];
     if (!trusted) {
         //Delegate firing off for user to verify with status
-        if ([self.delegate respondsToSelector:@selector(newTrust:withHostName:withStatus:)]) {
-            [self.delegate newTrust:trust withHostName:xmppStream.connectedHostName withStatus:errSSLPeerAuthCompleted];
+        SecTrustResultType result;
+        OSStatus status =  SecTrustEvaluate(trust, &result);
+        if ([self.delegate respondsToSelector:@selector(newTrust:withHostName:systemTrustResult:)] && status == noErr) {
+            [self.delegate newTrust:trust withHostName:xmppStream.connectedHostName systemTrustResult:result];
         }
     }
-    return trusted;
+    completionHandler(trusted);
 }
 
 

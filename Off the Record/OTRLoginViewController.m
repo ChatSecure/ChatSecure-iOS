@@ -323,10 +323,6 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
     [super viewWillDisappear:animated];
     [self readInFields];
     
-    if(self.account.username.length)
-    {
-        [[NSManagedObjectContext MR_contextForCurrentThread] MR_saveToPersistentStoreAndWait];
-    }
     [self.view resignFirstResponder];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kOTRProtocolLoginFail object:[[OTRProtocolManager sharedInstance] protocolForAccount:self.account]];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kOTRProtocolLoginSuccess object:[[OTRProtocolManager sharedInstance] protocolForAccount:self.account]];

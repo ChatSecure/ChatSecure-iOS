@@ -527,7 +527,8 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
     
-    [settings setObject:[OTRUtilities cipherSuites] forKey:GCDAsyncSocketSSLCipherSuites];
+    settings[GCDAsyncSocketSSLCipherSuites] = [OTRUtilities cipherSuites];
+    settings[GCDAsyncSocketManuallyEvaluateTrust] = @(YES);
 }
 
 - (void)xmppStreamDidSecure:(XMPPStream *)sender
@@ -976,12 +977,13 @@ managedBuddyObjectID
     return _certificatePinningModule;
 }
 
-- (void)newTrust:(SecTrustRef)trust withHostName:(NSString *)hostname withStatus:(OSStatus)status; {
+- (void)newTrust:(SecTrustRef)trust withHostName:(NSString *)hostname systemTrustResult:(SecTrustResultType)trustResultType
+{
     DDLogVerbose(@"New trust found");
     
     dispatch_async(dispatch_get_main_queue(), ^{
         NSData * certifcateData = [OTRCertificatePinning dataForCertificate:[OTRCertificatePinning certForTrust:trust]];
-        [self failedToConnect:[OTRXMPPError errorForSSLSatus:status withCertData:certifcateData hostname:hostname]];
+        [self failedToConnect:[OTRXMPPError errorForTrustResult:trustResultType withCertData:certifcateData hostname:hostname]];
     });
     
     
