@@ -19,6 +19,4 @@
 
 @property (nonatomic, strong) UIView *contentView;
 
-- (void)loginSuccessful;
-
 @end

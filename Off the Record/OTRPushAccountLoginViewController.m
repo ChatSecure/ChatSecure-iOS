@@ -32,7 +32,10 @@ int maxEmailLength = 100;
 
 @property (nonatomic, strong) OTRPushManager *pushManager;
 @property (nonatomic, strong) NSLayoutConstraint *bottomConstraint;
-@property (nonatomic, strong) NSLayoutConstraint *emailHeightConstraint;
+@property (nonatomic, strong) NSArray *emailConstraints;
+
+@property (nonatomic, strong) NSDictionary *metrics;
+@property (nonatomic, strong) NSDictionary *views;
 
 @end
 
@@ -102,11 +105,11 @@ int maxEmailLength = 100;
 
 - (void)setupConstraints
 {
-    NSDictionary *views = NSDictionaryOfVariableBindings(_contentView,_usernameTextField,_emailTextField,_passwordTextField,_loginButton,_switchCreateOrLogin);
-    NSDictionary *metrics = @{@"margin":@(12)};
+    self.views = NSDictionaryOfVariableBindings(_contentView,_usernameTextField,_emailTextField,_passwordTextField,_loginButton,_switchCreateOrLogin);
+    self.metrics = @{@"margin":@(12)};
     
     ////// ScrollView //////
-    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_contentView]|" options:0 metrics:0 views:views]];
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_contentView]|" options:0 metrics:0 views:self.views]];
     
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.contentView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0]];
     
@@ -114,22 +117,18 @@ int maxEmailLength = 100;
     ;
     [self.view addConstraint:self.bottomConstraint];
     
-    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_usernameTextField]-|" options:0 metrics:0 views:views]];
-    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_emailTextField]-|" options:0 metrics:0 views:views]];
-    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_passwordTextField]-|" options:0 metrics:0 views:views]];
-    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_loginButton]-|" options:0 metrics:0 views:views]];
-    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_switchCreateOrLogin]-|" options:0 metrics:0 views:views]];
+    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_usernameTextField]-|" options:0 metrics:0 views:self.views]];
     
+    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_passwordTextField]-|" options:0 metrics:0 views:self.views]];
+    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_loginButton]-|" options:0 metrics:0 views:self.views]];
+    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_switchCreateOrLogin]-|" options:0 metrics:0 views:self.views]];
     
-    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-70-[_usernameTextField]-(margin)-[_emailTextField]-(margin)-[_passwordTextField]-(margin)-[_loginButton]-(margin)-[_switchCreateOrLogin]->=0-|" options:0 metrics:metrics views:views]];
+    [self addEmailTextFieldAnimated:NO];
     
-    self.emailHeightConstraint = [NSLayoutConstraint constraintWithItem:self.emailTextField attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:21.0];
-    [self.contentView addConstraint:self.emailHeightConstraint];
     
     [[NSNotificationCenter defaultCenter] addObserverForName:UIKeyboardDidShowNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
         [self keyboardDidShow:note];
     }];
-    
 }
 
 - (void)loginButtonPressed:(id)sender
@@ -170,6 +169,53 @@ int maxEmailLength = 100;
     }
 }
 
+- (void)addEmailTextFieldAnimated:(BOOL)animated
+{
+    NSMutableArray *mutableEmailTextFieldConstraints = [NSMutableArray array];
+    
+    if ([self.emailConstraints count]) {
+        [self.view removeConstraints:self.emailConstraints];
+    }
+    
+    [self.view addSubview:self.emailTextField];
+    
+    [mutableEmailTextFieldConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_emailTextField]-|" options:0 metrics:0 views:self.views]];
+    
+    [mutableEmailTextFieldConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-70-[_usernameTextField]-(margin)-[_emailTextField]-(margin)-[_passwordTextField]-(margin)-[_loginButton]-(margin)-[_switchCreateOrLogin]->=0-|" options:0 metrics:self.metrics views:self.views]];
+    
+    self.emailConstraints = [mutableEmailTextFieldConstraints copy];
+    [self.view addConstraints:self.emailConstraints];
+    NSTimeInterval duration = 0.3;
+    if (!animated) {
+        duration = 0.0;
+    }
+    
+    [UIView animateWithDuration:duration animations:^{
+        [self.view layoutIfNeeded];
+    }];
+}
+
+- (void)removeEmailTextFieldAnimated:(BOOL)animated
+{
+    [self.emailTextField removeFromSuperview];
+    
+    if (self.emailConstraints) {
+        [self.view removeConstraints:self.emailConstraints];
+    }
+    
+    self.emailConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-70-[_usernameTextField]-(margin)-[_passwordTextField]-(margin)-[_loginButton]-(margin)-[_switchCreateOrLogin]->=0-|" options:0 metrics:self.metrics views:self.views];
+    
+    [self.view addConstraints:self.emailConstraints];
+    NSTimeInterval duration = 0.3;
+    if (!animated) {
+        duration = 0.0;
+    }
+    
+    [UIView animateWithDuration:duration animations:^{
+        [self.view layoutIfNeeded];
+    }];
+}
+
 - (void)shownPushRegistrationViewController
 {
     OTRRemotePushRegistrationInfoViewController *viewController = [[OTRRemotePushRegistrationInfoViewController alloc] init];
@@ -197,10 +243,10 @@ int maxEmailLength = 100;
     }
     
     if (!self.createAccountMode) {
-        self.emailHeightConstraint.constant = 0.0;
+        [self removeEmailTextFieldAnimated:YES];
     }
     else {
-        self.emailHeightConstraint.constant = 21.0;
+        [self addEmailTextFieldAnimated:YES];
     }
     
     [UIView animateKeyframesWithDuration:.5 delay:0.0 options:0 animations:^{
