@@ -20,5 +20,5 @@
         #define XMPP_LOGGING_ENABLED 0
     #endif
 
-    #import "CoreData+MagicalRecord.h"
+    
 #endif

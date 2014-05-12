@@ -32,7 +32,7 @@
 
 static CGFloat cellHeight = 80.0;
 
-@interface OTRConversationViewController () <NSFetchedResultsControllerDelegate, OTRComposeViewControllerDelegate>
+@interface OTRConversationViewController () <OTRComposeViewControllerDelegate>
 
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) OTRChatViewController *chatViewController;

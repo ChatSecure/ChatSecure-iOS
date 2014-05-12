@@ -9,7 +9,9 @@
 #import "OTRFingerprintsViewController.h"
 #import "OTRKit.h"
 #import "Strings.h"
-#import "OTRManagedAccount.h"
+#import "OTRAccount.h"
+#import "OTRDatabaseManager.h"
+#import "OTRDatabaseView.h"
 
 @interface OTRFingerprintsViewController ()
 
@@ -45,13 +47,16 @@
 {
     if (!_myFingerprintsArray) {
         _myFingerprintsArray = @[];
-        NSArray * accounts = [OTRManagedAccount MR_findAllSortedBy:OTRManagedAccountAttributes.username ascending:YES];
-        [accounts enumerateObjectsUsingBlock:^(OTRManagedAccount * account, NSUInteger idx, BOOL *stop) {
-            NSString * fingerprint = [[OTRKit sharedInstance] fingerprintForAccountName:account.username protocol:account.protocol];
-            if (fingerprint.length) {
-                NSString * username = account.username;
-                _myFingerprintsArray = [_myFingerprintsArray arrayByAddingObject:@{OTRAccountNameKey:username,OTRFingerprintKey:fingerprint}];
-            }
+        
+        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+             [[transaction ext:OTRAllAccountDatabaseViewExtensionName] enumerateKeysAndObjectsInGroup:OTRAllAccountGroup usingBlock:^(NSString *collection, NSString *key, OTRAccount *account, NSUInteger index, BOOL *stop) {
+                 NSString * fingerprint = [[OTRKit sharedInstance] fingerprintForAccountName:account.username protocol:account.protocolTypeString];
+                 if (fingerprint.length) {
+                     NSString * username = account.username;
+                     _myFingerprintsArray = [_myFingerprintsArray arrayByAddingObject:@{OTRAccountNameKey:username,OTRFingerprintKey:fingerprint}];
+                 }
+                 
+             }];
         }];
     }
     

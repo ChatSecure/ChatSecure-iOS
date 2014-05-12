@@ -25,6 +25,7 @@
 #import "GTMOAuth2ViewControllerTouch.h"
 #import "OTRGoogleOAuthXMPPAccount.h"
 #import "OTRSecrets.h"
+#import "OTRDatabaseManager.h"
 
 @interface OTRGoogleTalkLoginViewController ()
 
@@ -69,8 +70,11 @@
         //[viewController dismissModalViewControllerAnimated:YES];
         if (!error) {
             [self.account setUsername:auth.userEmail];
-            NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
-            [context MR_saveToPersistentStoreAndWait];
+            
+            [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+                [self.account saveWithTransaction:transaction];
+            }];
+            
             self.account.oAuthTokenDictionary = auth.parameters;
             [self.loginViewTableView reloadData];
             [self loginButtonPressed:sender];

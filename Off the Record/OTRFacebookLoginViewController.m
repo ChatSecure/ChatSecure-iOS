@@ -25,6 +25,7 @@
 #import "OTRConstants.h"
 #import "FacebookSDK.h"
 #import "OTRFacebookSessionCachingStrategy.h"
+#import "OTRDatabaseManager.h"
 
 @interface OTRFacebookLoginViewController ()
 
@@ -75,8 +76,9 @@
             [request startWithCompletionHandler:^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *user, NSError *error) {
                 if (!error) {
                     [self didConnectUser:user];
-                    NSManagedObjectContext * context = [NSManagedObjectContext MR_contextForCurrentThread];
-                    [context MR_saveToPersistentStoreAndWait];
+                    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+                        [self.account saveWithTransaction:transaction];
+                    }];
                     self.account.oAuthTokenDictionary = [session.accessTokenData dictionary];
                     //self.account.password = session.accessTokenData.accessToken;
                     [self.loginViewTableView reloadData];

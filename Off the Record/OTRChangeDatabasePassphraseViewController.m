@@ -76,11 +76,6 @@
     [self.oldPasswordTextField becomeFirstResponder];
 }
 
-- (void)changePasswordButtonPressed:(id)sender
-{
-    BOOL rememberPassword = self.rememberPasswordView.rememberPassword;
-}
-
 - (void)passwordView:(OTRPasswordStrengthView *)view didChangePassword:(NSString *)password strength:(NJOPasswordStrength)strength failingRules:(NSArray *)rules
 {
     if ([rules count]) {

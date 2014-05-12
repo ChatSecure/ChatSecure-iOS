@@ -296,9 +296,7 @@
         [protocol disconnect];
     }
     //FIXME? [OTRManagedAccount resetAccountsConnectionStatus];
-    [OTRUtilities deleteAllBuddiesAndMessages];
-    
-    [MagicalRecord cleanUp];
+    //[OTRUtilities deleteAllBuddiesAndMessages];
 }
 /*
 // Optional UITabBarControllerDelegate method.

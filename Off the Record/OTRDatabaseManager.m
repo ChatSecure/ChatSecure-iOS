@@ -25,6 +25,7 @@
 #import "OTRFacebookOAuthXMPPAccount.h"
 #import "OTRManagedXMPPTorAccount.h"
 #import "OTRAccount.h"
+#import "CoreData+MagicalRecord.h"
 
 NSString *const OTRUIDatabaseConnectionDidUpdateNotification = @"OTRUIDatabaseConnectionDidUpdateNotification";
 NSString *const OTRUIDatabaseConnectionWillUpdateNotification = @"OTRUIDatabaseConnectionWillUpdateNotification";

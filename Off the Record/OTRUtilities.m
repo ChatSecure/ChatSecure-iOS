@@ -7,10 +7,10 @@
 //
 
 #import "OTRUtilities.h"
-#import "OTRManagedBuddy.h"
-#import "OTRManagedMessage.h"
-#import "OTRManagedGroup.h"
-#import "OTRManagedAccount.h"
+#import "OTRBuddy.h"
+#import "OTRMessage.h"
+#import "OTRAccount.h"
+#import "OTRDatabaseManager.h"
 #import <Security/SecureTransport.h>
 
 #import "OTRLog.h"
@@ -68,34 +68,24 @@
 
 +(void)deleteAllBuddiesAndMessages
 {
-    //Delete all stored buddies
-    NSArray * buddyArray = [OTRManagedBuddy MR_findAll];
-    [buddyArray enumerateObjectsUsingBlock:^(OTRManagedBuddy * buddy, NSUInteger idx, BOOL *stop) {
-        [buddy MR_deleteEntity];
+    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        [transaction removeAllObjectsInCollection:[OTRBuddy collection]];
+        [transaction removeAllObjectsInCollection:[OTRMessage collection]];
     }];
-    
-    [OTRManagedBuddy MR_deleteAllMatchingPredicate:nil];
-    //Delete all stored messages
-    [OTRManagedMessage MR_deleteAllMatchingPredicate:nil];
-    //Delete all Groups
-    [OTRManagedGroup MR_deleteAllMatchingPredicate:nil];
-    
-    
-    NSManagedObjectContext *context = [NSManagedObjectContext MR_contextForCurrentThread];
-    [context MR_saveToPersistentStoreAndWait];
 }
 
 + (void)deleteAccountsWithoutUsername
 {
-    NSManagedObjectContext *context = [NSManagedObjectContext MR_context];
-    NSArray * allAccounts = [OTRManagedAccount MR_findAllInContext:context];
-    for (OTRManagedAccount * account in allAccounts) {
-        if (![account.username length]) {
-            [account MR_deleteInContext:context];
-        }
-    }
-    
-    [context MR_saveToPersistentStoreAndWait];
+    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        NSMutableArray *deleteKeys = [NSMutableArray array];
+        [transaction enumerateKeysAndObjectsInCollection:[OTRAccount collection] usingBlock:^(NSString *key, OTRAccount *account, BOOL *stop) {
+            if (![account.username length]) {
+                [deleteKeys addObject:key];
+            }
+        }];
+        
+        [transaction removeObjectsForKeys:deleteKeys inCollection:[OTRAccount collection]];
+    }];
 }
 
 +(BOOL)dateInLast24Hours:(NSDate *)date

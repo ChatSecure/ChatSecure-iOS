@@ -144,9 +144,9 @@
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:accountCellIdentifier];
         }
         
-        OTRPushAccount *pushAccount = [OTRAccountsManager defaultPushAccount];
-        cell.textLabel.text = pushAccount.username;
-        cell.detailTextLabel.text = pushAccount.email;
+        OTRYapPushAccount *pushAccount = [OTRAccountsManager defaultPushAccount];
+        cell.textLabel.text = pushAccount.pushAccount.username;
+        cell.detailTextLabel.text = pushAccount.pushAccount.username;
         
     }
     else {

@@ -54,9 +54,7 @@
 - (void)pushCreateAccountViewControllerWithAccountType:(OTRAccountType)accountType
 {
     NSArray * hostnamesArray = nil;
-    NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
     OTRXMPPAccount * newAccount = (OTRXMPPAccount *)[OTRAccount accountForAccountType:accountType];
-    [context MR_saveToPersistentStoreAndWait];
     if(accountType == OTRAccountTypeJabber)
     {
         hostnamesArray = self.defaultDomains;
