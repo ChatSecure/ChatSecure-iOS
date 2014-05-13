@@ -245,15 +245,15 @@ NSString *const OTRYapDatabaseRelationshipName = @"OTRYapDatabaseRelationshipNam
     
     ////// Register standard views////////
     YapDatabaseRelationship *databaseRelationship = [[YapDatabaseRelationship alloc] init];
-    [self.database registerExtension:databaseRelationship withName:OTRYapDatabaseRelationshipName];
-    [OTRDatabaseView registerAllAccountsDatabaseView];
-    [OTRDatabaseView registerConversationDatabaseView];
-    [OTRDatabaseView registerChatDatabaseView];
-    [OTRDatabaseView registerBuddyDatabaseView];
-    [OTRDatabaseView registerBuddyNameSearchDatabaseView];
-    [OTRDatabaseView registerAllBuddiesDatabaseView];
-    [OTRDatabaseView registerAllSubscriptionRequestsView];
-    [OTRDatabaseView registerPushView];
+    BOOL success = [self.database registerExtension:databaseRelationship withName:OTRYapDatabaseRelationshipName];
+    if (success) success = [OTRDatabaseView registerAllAccountsDatabaseView];
+    if (success) success = [OTRDatabaseView registerConversationDatabaseView];
+    if (success) success = [OTRDatabaseView registerChatDatabaseView];
+    if (success) success = [OTRDatabaseView registerBuddyDatabaseView];
+    if (success) success = [OTRDatabaseView registerBuddyNameSearchDatabaseView];
+    if (success) success = [OTRDatabaseView registerAllBuddiesDatabaseView];
+    if (success) success = [OTRDatabaseView registerAllSubscriptionRequestsView];
+    if (success) success = [OTRDatabaseView registerPushView];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(yapDatabaseModified:)
@@ -263,7 +263,7 @@ NSString *const OTRYapDatabaseRelationshipName = @"OTRYapDatabaseRelationshipNam
     
     
     
-    if (self.database) {
+    if (self.database && success) {
         return YES;
     }
     else {

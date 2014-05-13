@@ -34,6 +34,9 @@ PODS:
     - SBJson (~> 3.2)
   - HockeySDK (3.5.4)
   - HPGrowingTextView (1.1)
+  - JSQMessagesViewController (5.0.0):
+    - JSQSystemSoundPlayer
+  - JSQSystemSoundPlayer (1.5.0)
   - JTTargetActionBlock (1.0.0)
   - MagicalRecord (2.2):
     - MagicalRecord/Core
@@ -68,6 +71,7 @@ DEPENDENCIES:
   - gtm-oauth2 (~> 0.0.3)
   - HockeySDK
   - HPGrowingTextView (~> 1.1)
+  - JSQMessagesViewController (~> 5.0)
   - JTTargetActionBlock (~> 1.0)
   - MagicalRecord
   - Mantle (~> 1.4)
@@ -98,6 +102,8 @@ SPEC CHECKSUMS:
   GTMHTTPFetcher: bca306f50fec6a263d8de7493398657db255952a
   HockeySDK: aa28abb106de7804d31acf515f2c9aa4e6481fd0
   HPGrowingTextView: 4318f557b33c19def1c53ec275d6e2a2d6589cd0
+  JSQMessagesViewController: 4ebac202bb5c3b4717b877b12905f41e14599776
+  JSQSystemSoundPlayer: 6dbac8dcc33e3add6facb3e59451a0249aece17d
   JTTargetActionBlock: dc683c971f7b6ff875012f81e570b9ed15171c7b
   MagicalRecord: 95d49d74ef752cd52f6ad87bcb474817fc3978cf
   Mantle: 0714cdb2b8559d9e6c2410d6a8529e3307bff189

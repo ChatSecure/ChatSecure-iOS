@@ -24,7 +24,7 @@
 
 #import "OTRConversationViewController.h"
 
-#import "OTRChatViewController.h"
+#import "OTRMessagesViewController.h"
 #import "Strings.h"
 #import "OTRSettingsViewController.h"
 #import "OTRSettingsManager.h"
@@ -148,7 +148,7 @@
 + (UIViewController *)conversationViewController
 {
     UIViewController *rootViewController = nil;
-    OTRChatViewController *chatViewController = [[OTRChatViewController alloc] init];
+    
     [self appDelegate].settingsViewController = [[OTRSettingsViewController alloc] init];
     
     OTRConversationViewController * conversationViewController = [[OTRConversationViewController alloc] init];
@@ -159,10 +159,11 @@
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
         rootViewController = buddyListNavController;
     } else {
-        UINavigationController *chatNavController = [[UINavigationController alloc ]initWithRootViewController:chatViewController];
+        OTRMessagesViewController *messagesViewController = [OTRMessagesViewController messagesViewController];
+        UINavigationController *chatNavController = [[UINavigationController alloc ]initWithRootViewController:messagesViewController];
         UISplitViewController *splitViewController = [[UISplitViewController alloc] init];
         splitViewController.viewControllers = [NSArray arrayWithObjects:buddyListNavController, chatNavController, nil];
-        splitViewController.delegate = chatViewController;
+        splitViewController.delegate = messagesViewController;
         rootViewController = splitViewController;
         splitViewController.title = CHAT_STRING;
     }
