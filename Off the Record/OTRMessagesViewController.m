@@ -16,6 +16,9 @@
 #import "OTRMessage+JSQMessageData.h"
 #import "JSQMessages.h"
 #import "OTRProtocolManager.h"
+#import "OTRXMPPTorAccount.h"
+
+static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
 
 @interface OTRMessagesViewController ()
 
@@ -27,6 +30,8 @@
 
 @property (nonatomic, strong) UIImageView *outgoingBubbleImageView;
 @property (nonatomic, strong) UIImageView *incomingBubbleImageView;
+
+@property (nonatomic, strong) NSDateFormatter *dateFormatter;
 
 
 @end
@@ -42,13 +47,16 @@
     
     self.incomingBubbleImageView = [JSQMessagesBubbleImageFactory incomingMessageBubbleImageViewWithColor:[UIColor jsq_messageBubbleLightGrayColor]];
     
-    
+    self.collectionView.collectionViewLayout.incomingAvatarViewSize = CGSizeZero;
+    self.collectionView.collectionViewLayout.outgoingAvatarViewSize = CGSizeZero;
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self.collectionView reloadData];
+    self.collectionView.collectionViewLayout.springinessEnabled = NO;
+    self.inputToolbar.contentView.leftBarButtonItem = nil;
+    
 }
 
 - (YapDatabaseConnection *)databaseConnection
@@ -59,6 +67,15 @@
         [_databaseConnection beginLongLivedReadTransaction];
     }
     return _databaseConnection;
+}
+
+- (NSDateFormatter *)dateFormatter
+{
+    if (!_dateFormatter) {
+        _dateFormatter = [[NSDateFormatter alloc] init];
+        [_dateFormatter setDateFormat:@"MMM dd, YYYY h:mm a"];
+    }
+    return _dateFormatter;
 }
 
 - (void)setBuddy:(OTRBuddy *)buddy
@@ -91,7 +108,12 @@
 
 - (void)saveCurrentMessageText
 {
-    
+    self.buddy.composingMessageString = self.inputToolbar.contentView.textView.text;
+    if(![self.buddy.composingMessageString length])
+    {
+        //[[self xmppManager] sendChatState:kOTRChatStateInactive withBuddyID:self.buddy.uniqueId];
+    }
+    [self finishSendingMessage];
 }
 
 - (OTRMessage *)messageAtIndexPath:(NSIndexPath *)indexPath
@@ -101,6 +123,24 @@
         message = [[transaction ext:OTRChatDatabaseViewExtensionName] objectAtIndexPath:indexPath withMappings:self.messageMappings];
     }];
     return message;
+}
+
+- (BOOL)showDateAtIndexPath:(NSIndexPath *)indexPath
+{
+    BOOL showDate = NO;
+    if (indexPath.row == 0) {
+        showDate = YES;
+    }
+    else {
+        OTRMessage *currentMessage = [self messageAtIndexPath:indexPath];
+        OTRMessage *previousMessage = [self messageAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row-1 inSection:indexPath.section]];
+        
+        NSTimeInterval timeDifference = [currentMessage.date timeIntervalSinceDate:previousMessage.date];
+        if (timeDifference > kOTRMessageSentDateShowTimeInterval) {
+            showDate = YES;
+        }
+    }
+    return showDate;
 }
 
 #pragma mark - JSQMessagesViewController method overrides
@@ -118,6 +158,30 @@
     
     [[OTRProtocolManager sharedInstance] sendMessage:message];
     [self finishSendingMessage];
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    JSQMessagesCollectionViewCell *cell = (JSQMessagesCollectionViewCell *)[super collectionView:collectionView cellForItemAtIndexPath:indexPath];
+    
+    
+    OTRMessage *message = [self messageAtIndexPath:indexPath];
+    
+    if (message.isIncoming) {
+        cell.textView.textColor = [UIColor blackColor];
+    }
+    else {
+        cell.textView.textColor = [UIColor whiteColor];
+    }
+    
+    if ([self.account isKindOfClass:[OTRXMPPTorAccount class]]) {
+        cell.textView.dataDetectorTypes = UIDataDetectorTypeNone;
+    }
+    else {
+        cell.textView.dataDetectorTypes = UIDataDetectorTypeAll;
+    }
+    
+    return cell;
 }
 
 #pragma mark - UICollectionView DataSource
@@ -159,13 +223,16 @@
 - (UIImageView *)collectionView:(JSQMessagesCollectionView *)collectionView avatarImageViewForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     return nil;
-    //return [[UIImageView alloc] initWithImage:self.buddy.avatarImage];
 }
 
 ////// Optional //////
 
 - (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForCellTopLabelAtIndexPath:(NSIndexPath *)indexPath
 {
+    if ([self showDateAtIndexPath:indexPath]) {
+        NSString *dateString = [self.dateFormatter stringFromDate:[self messageAtIndexPath:indexPath].date];
+        return [[NSAttributedString alloc] initWithString:dateString];
+    }
     return nil;
 }
 
@@ -182,14 +249,17 @@
 }
 
 #pragma - mark  JSQMessagesCollectionViewDelegateFlowLayout Methods
-/*
+
 - (CGFloat)collectionView:(JSQMessagesCollectionView *)collectionView
                    layout:(JSQMessagesCollectionViewFlowLayout *)collectionViewLayout
 heightForCellTopLabelAtIndexPath:(NSIndexPath *)indexPath
 {
-    
+    if ([self showDateAtIndexPath:indexPath]) {
+        return kJSQMessagesCollectionViewCellLabelHeightDefault;
+    }
+    return 0.0f;
 }
-
+/*
 - (CGFloat)collectionView:(JSQMessagesCollectionView *)collectionView
                    layout:(JSQMessagesCollectionViewFlowLayout *)collectionViewLayout
 heightForMessageBubbleTopLabelAtIndexPath:(NSIndexPath *)indexPath
@@ -258,55 +328,10 @@ didTapLoadEarlierMessagesButton:(UIButton *)sender
         }
     }
     
-    // No need to update mappings.
-    // The above method did it automatically.
-    /*
-     if ([sectionChanges count] == 0 & [rowChanges count] == 0)
-     {
-     // Nothing has changed that affects our tableView
-     return;
-     }*/
-    
-    // Familiar with NSFetchedResultsController?
-    // Then this should look pretty familiar
-    
-    /*
-    
-    for (YapDatabaseViewRowChange *rowChange in rowChanges)
-    {
-        switch (rowChange.type)
-        {
-            case YapDatabaseViewChangeDelete :
-            {
-                [self.chatHistoryTableView deleteRowsAtIndexPaths:@[ rowChange.indexPath ]
-                                                 withRowAnimation:UITableViewRowAnimationAutomatic];
-                break;
-            }
-            case YapDatabaseViewChangeInsert :
-            {
-                [self.chatHistoryTableView insertRowsAtIndexPaths:@[ rowChange.newIndexPath ]
-                                                 withRowAnimation:UITableViewRowAnimationAutomatic];
-                break;
-            }
-            case YapDatabaseViewChangeMove :
-            {
-                [self.chatHistoryTableView deleteRowsAtIndexPaths:@[ rowChange.indexPath ]
-                                                 withRowAnimation:UITableViewRowAnimationAutomatic];
-                [self.chatHistoryTableView insertRowsAtIndexPaths:@[ rowChange.newIndexPath ]
-                                                 withRowAnimation:UITableViewRowAnimationAutomatic];
-                break;
-            }
-            case YapDatabaseViewChangeUpdate :
-            {
-                [self.chatHistoryTableView reloadRowsAtIndexPaths:@[ rowChange.indexPath ]
-                                                 withRowAnimation:UITableViewRowAnimationNone];
-                break;
-            }
-        }
+    if ([rowChanges count]) {
+        [self finishReceivingMessage];
     }
-    */
     
-    [self finishReceivingMessage];
 }
 
 @end
