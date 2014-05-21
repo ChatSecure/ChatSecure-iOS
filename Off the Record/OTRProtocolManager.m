@@ -185,10 +185,14 @@ static OTRProtocolManager *sharedManager = nil;
     //[message.buddy invalidatePausedChatStateTimer];
     //FIXME
     
-    __block OTRBuddy *buddy = nil;
     __block OTRAccount *account = nil;
-    [[OTRDatabaseManager sharedInstance].mainThreadReadOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        buddy = [OTRBuddy fetchObjectWithUniqueID:message.buddyUniqueId transaction:transaction];
+    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        
+        
+        OTRBuddy *buddy = [OTRBuddy fetchObjectWithUniqueID:message.buddyUniqueId transaction:transaction];
+        buddy.lastSentChatState = kOTRChatStateActive;
+        [buddy saveWithTransaction:transaction];
+        
         account = [OTRAccount fetchObjectWithUniqueID:buddy.accountUniqueId transaction:transaction];
     }];
     

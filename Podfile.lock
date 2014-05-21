@@ -92,30 +92,30 @@ EXTERNAL SOURCES:
     :podspec: PodSpecs/SIAlertView.podspec
 
 SPEC CHECKSUMS:
-  AFNetworking: e499052cbf3d743e9bb727bb37adb9dc2547ba15
+  AFNetworking: a4d0e9a64de9242986620dafd1b3cee3b413ac5c
   AFOAuth2Client: 5244ffdc28081e2ce4d4a0d0f1198ed54e24d787
-  Appirater: 32fb9089615b5e542c7ad7b5749741a8aed55290
-  CocoaLumberjack: 020378ec400d658923bf5887178394f65f052c90
-  DAKeyboardControl: 219d6e32b9343eb85151255c43b1f238d8f0bbf7
-  Facebook-iOS-SDK: 47ae9e54684c84f93d75d4e6ab47cd031abdf406
-  gtm-oauth2: 30600f0033c359f31d0e7a0e31c074a90353ece0
-  GTMHTTPFetcher: bca306f50fec6a263d8de7493398657db255952a
-  HockeySDK: aa28abb106de7804d31acf515f2c9aa4e6481fd0
-  HPGrowingTextView: 4318f557b33c19def1c53ec275d6e2a2d6589cd0
-  JSQMessagesViewController: 4ebac202bb5c3b4717b877b12905f41e14599776
-  JSQSystemSoundPlayer: 6dbac8dcc33e3add6facb3e59451a0249aece17d
-  JTTargetActionBlock: dc683c971f7b6ff875012f81e570b9ed15171c7b
-  MagicalRecord: 95d49d74ef752cd52f6ad87bcb474817fc3978cf
-  Mantle: 0714cdb2b8559d9e6c2410d6a8529e3307bff189
-  MBProgressHUD: 2bbc6f470111daf7f3eaa4eb12b8cbf01c4c0622
-  Navajo: 8609514569c10b06be093e62859bed20fd60483f
-  RMStepsController: bd30e3eb7bead3a3b93d34d912dc24ba0d1256fc
-  SBJson: 0eeb4062451ec5ed792ff8b6615daff2ae39e218
+  Appirater: a5e00fb01d47a9a6acf4b2f22323b4ccf4f23fbb
+  CocoaLumberjack: 9d198d6e19909b3b113a38c5f06f7bb8eedd0427
+  DAKeyboardControl: 75f08eccac9bf16284f89c266d45ce7a82ef79bb
+  Facebook-iOS-SDK: bc0d0bdf14f64cb7f4d49f8f17d445f49c40d342
+  gtm-oauth2: f42910a514c45af03f2460323983ff615b5728a7
+  GTMHTTPFetcher: ea6abfc8842ca6df124d2f56cea3a53bcdd0dc74
+  HockeySDK: bf0e17f8d0c2b4778dff5ffd42248569a007ccbf
+  HPGrowingTextView: 07d5ab1f1e867acfb7a6f498b819948c9e97d07c
+  JSQMessagesViewController: 833cfacdd1e883b7f117d3a1b465085e9ae1ed8f
+  JSQSystemSoundPlayer: 0e636d5fd51e071fb708a0fec04e3d05175d9d27
+  JTTargetActionBlock: bef69054d368a91b33b98a520fa9e78e218a5a25
+  MagicalRecord: 2b471584fc9e3137f3d0a56967917baa4979e224
+  Mantle: 1ca9c0fa84d3d3fc98524e7229f30489b6dd44e5
+  MBProgressHUD: c356980b0cd097f19acec959b49dca5eb8ec31be
+  Navajo: 9130d497903e5d1b0f1b3c987be01f5b60fd37c7
+  RMStepsController: 4541ceeeb90a5b7369c6cc2d7ad732d6d0838017
+  SBJson: 72d7da8a5bf6c236e87194abb10ac573a8bccbef
   SIAlertView: 522351a8870be07fb49053fa054c83da3ea17dbe
-  SQLCipher: 9dc260ec6becc4d05cd73f1346d4bba9dc086560
-  SSKeychain: 3d0b76c87e7b062a7ad1631a825fddec84367d44
-  TRVSMonitor: cc2b3d6f4cf18639464f6b8295f1b4722f4d4f14
-  UIAlertView-Blocks: f7be28a08e85ec21143951ec6797ca6474faf563
-  YapDatabase: 051a7930e3b92097470fe7bcf58d4b715d79997e
+  SQLCipher: 16f738cbcac200e2362056a655077cbc28065954
+  SSKeychain: cc48bd3ad24fcd9125adb9e0d23dd50b8bbd08b9
+  TRVSMonitor: 61f54e833d4ad9efbc6e6fc8a060c42bcb01d0c3
+  UIAlertView-Blocks: f3271e84372beb97aea115cd1fb26ae66457f12f
+  YapDatabase: 269e2799fe19c7a517521783b909d11873dcb0c8
 
-COCOAPODS: 0.32.1
+COCOAPODS: 0.33.1

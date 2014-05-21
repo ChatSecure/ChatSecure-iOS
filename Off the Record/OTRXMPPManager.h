@@ -73,6 +73,7 @@ extern NSString *const OTRXMPPRegisterFailedNotificationName;
 - (void)sendChatState:(OTRChatState)chatState withBuddyID:(NSString *)buddyUniqueId;
 - (void)restartPausedChatStateTimerForBuddyObjectID:(NSString *)buddyUniqueId;
 - (void)restartInactiveChatStateTimerForBuddyObjectID:(NSString *)buddyUniqueId;
+- (void)invalidatePausedChatStateTimerForBuddyUniqueId:(NSString *)buddyUniqueId;
 - (void)sendPausedChatState:(NSTimer *)timer;
 - (void)sendInactiveChatState:(NSTimer *)timer;
 - (NSTimer *)inactiveChatStateTimerForBuddyObjectID:(NSString *)buddyUniqueId;

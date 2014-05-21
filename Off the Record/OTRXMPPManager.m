@@ -752,9 +752,11 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
     NSString *text = message.text;
     
     __block OTRBuddy *buddy = nil;
-    [[OTRDatabaseManager sharedInstance].mainThreadReadOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         buddy = [message buddyWithTransaction:transaction];
     }];
+    
+    [self invalidatePausedChatStateTimerForBuddyUniqueId:buddy.uniqueId];
     
     if ([text length])
     {
@@ -954,6 +956,11 @@ managedBuddyObjectID
     });
     
     [self sendChatState:kOTRChatStateInactive withBuddyID:managedBuddyObjectID];
+}
+
+- (void)invalidatePausedChatStateTimerForBuddyUniqueId:(NSString *)buddyUniqueId
+{
+    [[self pausedChatStateTimerForBuddyObjectID:buddyUniqueId] invalidate];
 }
 
 - (void)failedToConnect:(NSError *)error
