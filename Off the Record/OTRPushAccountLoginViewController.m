@@ -99,8 +99,8 @@ int maxEmailLength = 100;
     
     [self.contentView addSubview:self.switchCreateOrLogin];
     
-    self.createAccountMode = YES;
     [self setupConstraints];
+    self.createAccountMode = YES;
 }
 
 - (void)setupConstraints
