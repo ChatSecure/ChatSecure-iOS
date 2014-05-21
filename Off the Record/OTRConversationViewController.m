@@ -49,6 +49,8 @@ static CGFloat cellHeight = 80.0;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    [OTRBuddy resetAllChatStates];
    
     ///////////// Setup Navigation Bar //////////////
     
@@ -103,9 +105,6 @@ static CGFloat cellHeight = 80.0;
 {
     [super viewWillAppear:animated];
     
-    
-    
-    
     [self.cellUpdateTimer invalidate];
     [self.tableView reloadData];
     [self updateInbox];
@@ -127,7 +126,6 @@ static CGFloat cellHeight = 80.0;
         
         [self.navigationController presentViewController:onboardingStepsController animated:NO completion:nil];
         
-        //rootViewController = onboardingStepsController;
     }
     
 }

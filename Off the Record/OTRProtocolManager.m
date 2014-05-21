@@ -181,9 +181,6 @@ static OTRProtocolManager *sharedManager = nil;
 
 
 - (void)sendMessage:(OTRMessage *)message {
-    //message.buddy.lastSentChatStateValue=kOTRChatStateActive;
-    //[message.buddy invalidatePausedChatStateTimer];
-    //FIXME
     
     __block OTRAccount *account = nil;
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {

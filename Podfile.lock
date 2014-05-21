@@ -20,33 +20,35 @@ PODS:
   - AFOAuth2Client (0.1.2):
     - AFNetworking (~> 2.0)
   - Appirater (2.0.2)
+  - Bolts (1.1.0)
   - CocoaLumberjack (1.8.1):
     - CocoaLumberjack/Extensions
   - CocoaLumberjack/Core (1.8.1)
   - CocoaLumberjack/Extensions (1.8.1):
     - CocoaLumberjack/Core
-  - DAKeyboardControl (2.3.0)
-  - Facebook-iOS-SDK (3.13.1)
+  - DAKeyboardControl (2.3.1)
+  - Facebook-iOS-SDK (3.14.1):
+    - Bolts
   - gtm-oauth2 (0.0.4):
     - GTMHTTPFetcher (~> 0.0.1)
     - SBJson (~> 3.2)
   - GTMHTTPFetcher (0.0.3):
     - SBJson (~> 3.2)
-  - HockeySDK (3.5.4)
+  - HockeySDK (3.5.5)
   - HPGrowingTextView (1.1)
-  - JSQMessagesViewController (5.0.0):
+  - JSQMessagesViewController (5.0.2):
     - JSQSystemSoundPlayer
   - JSQSystemSoundPlayer (1.5.0)
   - JTTargetActionBlock (1.0.0)
   - MagicalRecord (2.2):
     - MagicalRecord/Core
   - MagicalRecord/Core (2.2)
-  - Mantle (1.4.1):
+  - Mantle (1.5):
     - Mantle/extobjc
-  - Mantle/extobjc (1.4.1)
+  - Mantle/extobjc (1.5)
   - MBProgressHUD (0.8)
   - Navajo (0.0.1)
-  - RMStepsController (1.0.0)
+  - RMStepsController (1.0.1)
   - SBJson (3.2)
   - SIAlertView (1.3)
   - SQLCipher/common (3.0.1)
@@ -95,21 +97,22 @@ SPEC CHECKSUMS:
   AFNetworking: a4d0e9a64de9242986620dafd1b3cee3b413ac5c
   AFOAuth2Client: 5244ffdc28081e2ce4d4a0d0f1198ed54e24d787
   Appirater: a5e00fb01d47a9a6acf4b2f22323b4ccf4f23fbb
+  Bolts: 91c2af8eae1d44e1dd75946a5b0ae04a43ea43e4
   CocoaLumberjack: 9d198d6e19909b3b113a38c5f06f7bb8eedd0427
-  DAKeyboardControl: 75f08eccac9bf16284f89c266d45ce7a82ef79bb
-  Facebook-iOS-SDK: bc0d0bdf14f64cb7f4d49f8f17d445f49c40d342
+  DAKeyboardControl: b17935d41242e094f96ec22696405c620ffb088b
+  Facebook-iOS-SDK: e9b3d5ac54ee3e5e693f4eef470b97911b3d076d
   gtm-oauth2: f42910a514c45af03f2460323983ff615b5728a7
   GTMHTTPFetcher: ea6abfc8842ca6df124d2f56cea3a53bcdd0dc74
-  HockeySDK: bf0e17f8d0c2b4778dff5ffd42248569a007ccbf
+  HockeySDK: f9af97c2f5df4eb6ca6d2a9c408f2ff498edd608
   HPGrowingTextView: 07d5ab1f1e867acfb7a6f498b819948c9e97d07c
-  JSQMessagesViewController: 833cfacdd1e883b7f117d3a1b465085e9ae1ed8f
+  JSQMessagesViewController: aa5af4abfc1694cdd0938a85bdeb2778d11440bf
   JSQSystemSoundPlayer: 0e636d5fd51e071fb708a0fec04e3d05175d9d27
   JTTargetActionBlock: bef69054d368a91b33b98a520fa9e78e218a5a25
   MagicalRecord: 2b471584fc9e3137f3d0a56967917baa4979e224
-  Mantle: 1ca9c0fa84d3d3fc98524e7229f30489b6dd44e5
+  Mantle: c67a7e45e14196ed42b2a7cbb98ff6a9920e6b92
   MBProgressHUD: c356980b0cd097f19acec959b49dca5eb8ec31be
   Navajo: 9130d497903e5d1b0f1b3c987be01f5b60fd37c7
-  RMStepsController: 4541ceeeb90a5b7369c6cc2d7ad732d6d0838017
+  RMStepsController: 8ff91f169d884fdd834ad37007f553c7bed333eb
   SBJson: 72d7da8a5bf6c236e87194abb10ac573a8bccbef
   SIAlertView: 522351a8870be07fb49053fa054c83da3ea17dbe
   SQLCipher: 16f738cbcac200e2362056a655077cbc28065954

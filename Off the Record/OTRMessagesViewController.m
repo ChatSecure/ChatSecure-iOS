@@ -17,6 +17,7 @@
 #import "JSQMessages.h"
 #import "OTRProtocolManager.h"
 #import "OTRXMPPTorAccount.h"
+#import "OTRXMPPManager.h"
 
 static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
 
@@ -32,6 +33,10 @@ static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
 @property (nonatomic, strong) UIImageView *incomingBubbleImageView;
 
 @property (nonatomic, strong) NSDateFormatter *dateFormatter;
+
+@property (nonatomic, weak) id textViewNotificationObject;
+
+@property (nonatomic, weak) OTRXMPPManager *xmppManager;
 
 
 @end
@@ -56,7 +61,21 @@ static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
     [super viewWillAppear:animated];
     self.collectionView.collectionViewLayout.springinessEnabled = NO;
     self.inputToolbar.contentView.leftBarButtonItem = nil;
+    [self.collectionView reloadData];
     
+    self.textViewNotificationObject = [[NSNotificationCenter defaultCenter] addObserverForName:UITextViewTextDidChangeNotification object:self.inputToolbar.contentView.textView queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
+        [self textViewDidChangeNotifcation:note];
+    }];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(yapDatabaseModified:) name:OTRUIDatabaseConnectionDidUpdateNotification object:nil];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self.textViewNotificationObject];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:OTRUIDatabaseConnectionDidUpdateNotification object:nil];
 }
 
 - (YapDatabaseConnection *)databaseConnection
@@ -80,27 +99,48 @@ static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
 
 - (void)setBuddy:(OTRBuddy *)buddy
 {
-    if (![self.buddy.uniqueId isEqualToString:buddy.uniqueId]) {
-        [self saveCurrentMessageText];
-    }
-    
-    _buddy = buddy;
-    
-    if (self.buddy) {
-        self.messageMappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[self.buddy.uniqueId] view:OTRChatDatabaseViewExtensionName];
-        self.buddyMappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[self.buddy.uniqueId] view:OTRBuddyDatabaseViewExtensionName];
+    if ([self.buddy.uniqueId isEqualToString:buddy.uniqueId]) {
+        // really same buddy with new info like chatState, EncryptionState, Name
+        _buddy = buddy;
         
-        [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-            self.account = [self.buddy accountWithTransaction:transaction];
-            [self.messageMappings updateWithTransaction:transaction];
-            [self.buddyMappings updateWithTransaction:transaction];
-        }];
+        if (buddy.chatState == kOTRChatStateComposing || buddy.chatState == kOTRChatStatePaused) {
+            self.showTypingIndicator = YES;
+        }
+        else {
+            self.showTypingIndicator = NO;
+        }
+        
+        
+        
     }
     else {
-        self.messageMappings = nil;
-        self.buddyMappings = nil;
-        self.account = nil;
+        //different buddy
+        [self saveCurrentMessageText];
+        _buddy = buddy;
+        
+        
+        if (self.buddy) {
+            self.messageMappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[self.buddy.uniqueId] view:OTRChatDatabaseViewExtensionName];
+            self.buddyMappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[self.buddy.uniqueId] view:OTRBuddyDatabaseViewExtensionName];
+            
+            [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+                self.account = [self.buddy accountWithTransaction:transaction];
+                [self.messageMappings updateWithTransaction:transaction];
+                [self.buddyMappings updateWithTransaction:transaction];
+            }];
+            
+            if ([self.account isKindOfClass:[OTRXMPPAccount class]]) {
+                self.xmppManager = (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
+            }
+        }
+        else {
+            self.messageMappings = nil;
+            self.buddyMappings = nil;
+            self.account = nil;
+            self.xmppManager = nil;
+        }
     }
+    
     
     //refresh other parts of the view
     
@@ -111,7 +151,7 @@ static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
     self.buddy.composingMessageString = self.inputToolbar.contentView.textView.text;
     if(![self.buddy.composingMessageString length])
     {
-        //[[self xmppManager] sendChatState:kOTRChatStateInactive withBuddyID:self.buddy.uniqueId];
+        [self.xmppManager sendChatState:kOTRChatStateInactive withBuddyID:self.buddy.uniqueId];
     }
     [self finishSendingMessage];
 }
@@ -141,6 +181,19 @@ static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
         }
     }
     return showDate;
+}
+
+- (void)textViewDidChangeNotifcation:(NSNotification *)notification
+{
+    JSQMessagesComposerTextView *textView = notification.object;
+    if ([textView.text length]) {
+        //typing
+        [self.xmppManager sendChatState:kOTRChatStateComposing withBuddyID:self.buddy.uniqueId];
+    }
+    else {
+        [self.xmppManager sendChatState:kOTRChatStateActive withBuddyID:self.buddy.uniqueId];
+        //done typing
+    }
 }
 
 #pragma mark - JSQMessagesViewController method overrides
@@ -230,8 +283,13 @@ static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
 - (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForCellTopLabelAtIndexPath:(NSIndexPath *)indexPath
 {
     if ([self showDateAtIndexPath:indexPath]) {
-        NSString *dateString = [self.dateFormatter stringFromDate:[self messageAtIndexPath:indexPath].date];
-        return [[NSAttributedString alloc] initWithString:dateString];
+        OTRMessage *message = [self messageAtIndexPath:indexPath];
+        if ([message.date timeIntervalSinceNow] > 86400) {
+            return [[JSQMessagesTimestampFormatter sharedFormatter] attributedTimestampForDate:message.date];
+        }
+        else {
+            return [[NSAttributedString alloc] initWithString:[[JSQMessagesTimestampFormatter sharedFormatter] timeForDate:message.date]];
+        }
     }
     return nil;
 }
