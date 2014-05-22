@@ -55,7 +55,7 @@ const struct OTRYapDatabaseObjectAttributes OTRYapDatabaseObjectAttributes = {
 }
 
 + (instancetype) fetchObjectWithUniqueID:(NSString *)uniqueID transaction:(YapDatabaseReadTransaction *)transaction {
-    return [[transaction objectForKey:uniqueID inCollection:[self collection]] copy];
+    return [transaction objectForKey:uniqueID inCollection:[self collection]];
 }
 
 @end
