@@ -85,8 +85,7 @@ static CGFloat cellHeight = 80.0;
                                                                view:OTRConversationDatabaseViewExtensionName];
     self.subscriptionRequestsMappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[OTRAllPresenceSubscriptionRequestGroup]
                                                                                    view:OTRAllSubscriptionRequestsViewExtensionName];
-    
-    
+        
     [self.connection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         [self.mappings updateWithTransaction:transaction];
         [self.subscriptionRequestsMappings updateWithTransaction:transaction];

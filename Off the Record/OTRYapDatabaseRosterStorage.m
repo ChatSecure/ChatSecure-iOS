@@ -115,13 +115,20 @@
             localBuddy = buddy;
         }
         
+        if (![localBuddy isKindOfClass:[OTRXMPPBuddy class]]) {
+            OTRXMPPBuddy *xmppBuddy = [[OTRXMPPBuddy alloc] init];
+            [xmppBuddy mergeValuesForKeysFromModel:localBuddy];
+            [localBuddy removeWithTransaction:transaction];
+            localBuddy = xmppBuddy;
+        }
+        
         localBuddy.displayName = [item attributeStringValueForName:@"name"];
         
         if ([self isPendingApprovalElement:item]) {
             localBuddy.pendingApproval = YES;
         }
         else {
-            buddy.pendingApproval = NO;
+            localBuddy.pendingApproval = NO;
         }
         
         
