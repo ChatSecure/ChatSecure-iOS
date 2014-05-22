@@ -240,7 +240,6 @@ NSString *const OTRYapDatabaseRelationshipName = @"OTRYapDatabaseRelationshipNam
     self.readWriteDatabaseConnection.name = @"readWriteDatabaseConnection";
     
     [self.mainThreadReadOnlyDatabaseConnection enableExceptionsForImplicitlyEndingLongLivedReadTransaction];
-    [self.mainThreadReadOnlyDatabaseConnection beginLongLivedReadTransaction];
     
     
     ////// Register standard views////////
@@ -260,8 +259,7 @@ NSString *const OTRYapDatabaseRelationshipName = @"OTRYapDatabaseRelationshipNam
                                                  name:YapDatabaseModifiedNotification
                                                object:self.database];
     
-    
-    
+    [self.mainThreadReadOnlyDatabaseConnection beginLongLivedReadTransaction];
     
     if (self.database && success) {
         return YES;
