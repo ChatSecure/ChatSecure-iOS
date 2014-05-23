@@ -18,6 +18,10 @@
 #import "OTRProtocolManager.h"
 #import "OTRXMPPTorAccount.h"
 #import "OTRXMPPManager.h"
+#import "OTRLockButton.h"
+#import "OTRButtonView.h"
+#import "Strings.h"
+#import "UIAlertView+Blocks.h"
 
 static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
 
@@ -32,11 +36,13 @@ static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
 @property (nonatomic, strong) UIImageView *outgoingBubbleImageView;
 @property (nonatomic, strong) UIImageView *incomingBubbleImageView;
 
-@property (nonatomic, strong) NSDateFormatter *dateFormatter;
-
 @property (nonatomic, weak) id textViewNotificationObject;
 
 @property (nonatomic, weak) OTRXMPPManager *xmppManager;
+
+@property (nonatomic ,strong) UIBarButtonItem *lockBarButtonItem;
+@property (nonatomic, strong) OTRLockButton *lockButton;
+@property (nonatomic, strong) OTRButtonView *buttonDropdownView;
 
 
 @end
@@ -54,6 +60,9 @@ static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
     
     self.collectionView.collectionViewLayout.incomingAvatarViewSize = CGSizeZero;
     self.collectionView.collectionViewLayout.outgoingAvatarViewSize = CGSizeZero;
+    
+    ////// Lock Button //////
+    [self setupLockButotn];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -88,20 +97,15 @@ static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
     return _databaseConnection;
 }
 
-- (NSDateFormatter *)dateFormatter
-{
-    if (!_dateFormatter) {
-        _dateFormatter = [[NSDateFormatter alloc] init];
-        [_dateFormatter setDateFormat:@"MMM dd, YYYY h:mm a"];
-    }
-    return _dateFormatter;
-}
-
 - (void)setBuddy:(OTRBuddy *)buddy
 {
     if ([self.buddy.uniqueId isEqualToString:buddy.uniqueId]) {
         // really same buddy with new info like chatState, EncryptionState, Name
+        
+        
         _buddy = buddy;
+        
+        [self refreshLockButton];
         
         if (buddy.chatState == kOTRChatStateComposing || buddy.chatState == kOTRChatStatePaused) {
             self.showTypingIndicator = YES;
@@ -109,9 +113,6 @@ static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
         else {
             self.showTypingIndicator = NO;
         }
-        
-        
-        
     }
     else {
         //different buddy
@@ -144,6 +145,220 @@ static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
     
     //refresh other parts of the view
     
+}
+
+#pragma - mark lockButton Methods
+
+- (void)setupLockButotn
+{
+    __weak OTRMessagesViewController *welf = self;
+    self.lockButton = [OTRLockButton lockButtonWithInitailLockStatus:OTRLockStatusUnlocked withBlock:^(OTRLockStatus currentStatus) {
+        if (self.buttonDropdownView) {
+            [self hideDropdown:YES];
+            return;
+        }
+        
+        NSString *encryptionString = INITIATE_ENCRYPTED_CHAT_STRING;
+        NSString *fingerprintString = VERIFY_STRING;
+        NSArray * buttons = nil;
+        
+        if ([[OTRKit sharedInstance] isConversationEncryptedForUsername:welf.buddy.username accountName:welf.account.username protocol:[welf.account protocolTypeString]]) {
+            encryptionString = CANCEL_ENCRYPTED_CHAT_STRING;
+        }
+        
+        NSString * title = nil;
+        if (currentStatus == OTRLockStatusLockedAndError) {
+            title = LOCKED_ERROR_STRING;
+        }
+        else if (currentStatus == OTRLockStatusLockedAndWarn) {
+            title = LOCKED_WARN_STRING;
+        }
+        else if (currentStatus == OTRLockStatusLockedAndVerified){
+            title = LOCKED_SECURE_STRING;
+        }
+        else if (currentStatus == OTRLockStatusUnlocked){
+            title = UNLOCKED_ALERT_STRING;
+        }
+        
+        UIButton *encryptionButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        [encryptionButton setTitle:encryptionString forState:UIControlStateNormal];
+        [encryptionButton addTarget:self action:@selector(encryptionButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+        
+        if (currentStatus == OTRLockStatusUnlocked || currentStatus == OTRLockStatusUnlocked) {
+            buttons = @[encryptionButton];
+        }
+        else {
+            UIButton *fingerprintButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+            [fingerprintButton setTitle:fingerprintString forState:UIControlStateNormal];
+            [fingerprintButton addTarget:self action:@selector(verifyButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+            buttons = @[encryptionButton,fingerprintButton];
+        }
+        
+        [self showDropdownWithTitle:title buttons:buttons animated:YES];
+    }];
+    
+    
+    self.lockBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.lockButton];
+    [self.navigationItem setRightBarButtonItem:self.lockBarButtonItem];
+}
+
+-(void)refreshLockButton
+{
+    [OTRCodec isGeneratingKeyForBuddy:self.buddy completion:^(BOOL isGeneratingKey) {
+        if (isGeneratingKey) {
+            [self addLockSpinner];
+        }
+    }];
+    UIBarButtonItem * rightBarItem = self.navigationItem.rightBarButtonItem;
+    if ([rightBarItem isEqual:self.lockBarButtonItem]) {
+        BOOL isTrusted = [[OTRKit sharedInstance] activeFingerprintIsVerifiedForUsername:self.buddy.username accountName:self.account.username protocol:[self.account protocolTypeString]];
+        BOOL isEncrypted = [[OTRKit sharedInstance] isConversationEncryptedForUsername:self.buddy.username accountName:self.account.username protocol:[self.account protocolTypeString]];
+        BOOL  hasVerifiedFingerprints = [[OTRKit sharedInstance] hasVerifiedFingerprintsForUsername:self.buddy.username accountName:self.account.username protocol:[self.account protocolTypeString]];
+        
+        if (isEncrypted && isTrusted) {
+            self.lockButton.lockStatus = OTRLockStatusLockedAndVerified;
+        }
+        else if (isEncrypted && hasVerifiedFingerprints)
+        {
+            self.lockButton.lockStatus = OTRLockStatusLockedAndError;
+        }
+        else if (isEncrypted) {
+            self.lockButton.lockStatus = OTRLockStatusLockedAndWarn;
+        }
+        else {
+            self.lockButton.lockStatus = OTRLockStatusUnlocked;
+        }
+    }
+}
+
+-(void)addLockSpinner {
+    UIActivityIndicatorView * activityIndicatorView = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 25, 25)];
+    activityIndicatorView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
+    [activityIndicatorView sizeToFit];
+    [activityIndicatorView setAutoresizingMask:(UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin)];
+    UIBarButtonItem * activityBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:activityIndicatorView];
+    [activityIndicatorView startAnimating];
+    self.navigationItem.rightBarButtonItem = activityBarButtonItem;
+}
+-(void)removeLockSpinner {
+    self.navigationItem.rightBarButtonItem = self.lockBarButtonItem;
+    [self refreshLockButton];
+}
+
+- (void)encryptionButtonPressed:(id)sender
+{
+    [self hideDropdown:YES];
+    if([[OTRKit sharedInstance] isConversationEncryptedForUsername:self.buddy.username accountName:self.account.username protocol:[self.account protocolTypeString]])
+    {
+        [[OTRKit sharedInstance] disableEncryptionForUsername:self.buddy.username accountName:self.account.username protocol:[self.account protocolTypeString]];
+    } else {
+        void (^sendInitateOTRMessage)(void) = ^void (void) {
+            [OTRCodec generateOtrInitiateOrRefreshMessageTobuddy:self.buddy completionBlock:^(OTRMessage *message) {
+                [[OTRProtocolManager sharedInstance] sendMessage:message];
+            }];
+        };
+        [OTRCodec hasGeneratedKeyForAccount:self.account completionBlock:^(BOOL hasGeneratedKey) {
+            if (!hasGeneratedKey) {
+                [self addLockSpinner];
+                [OTRCodec generatePrivateKeyFor:self.account completionBlock:^(BOOL generatedKey) {
+                    [self removeLockSpinner];
+                    sendInitateOTRMessage();
+                }];
+            }
+            else {
+                sendInitateOTRMessage();
+            }
+        }];
+    }
+}
+
+- (void)verifyButtonPressed:(id)sender
+{
+    [self hideDropdown:YES];
+    NSString *msg = nil;
+    NSString *ourFingerprintString = [[OTRKit sharedInstance] fingerprintForAccountName:self.account.username protocol:[self.account protocolTypeString]];
+    NSString *theirFingerprintString = [[OTRKit sharedInstance] fingerprintForUsername:self.buddy.username accountName:self.account.username protocol:[self.account protocolTypeString]];
+    BOOL trusted = [[OTRKit sharedInstance] activeFingerprintIsVerifiedForUsername:self.buddy.username accountName:self.account.username protocol:[self.account protocolTypeString]];
+    
+    
+    UIAlertView * alert;
+    __weak OTRMessagesViewController * welf = self;
+    RIButtonItem * verifiedButtonItem = [RIButtonItem itemWithLabel:VERIFIED_STRING action:^{
+        [[OTRKit sharedInstance] changeVerifyFingerprintForUsername:welf.buddy.username accountName:welf.account.username protocol:[welf.account protocolTypeString] verrified:YES];
+        [welf refreshLockButton];
+    }];
+    RIButtonItem * notVerifiedButtonItem = [RIButtonItem itemWithLabel:NOT_VERIFIED_STRING action:^{
+        [[OTRKit sharedInstance] changeVerifyFingerprintForUsername:welf.buddy.username accountName:welf.account.username protocol:[welf.account protocolTypeString] verrified:NO];
+        [welf refreshLockButton];
+    }];
+    RIButtonItem * verifyLaterButtonItem = [RIButtonItem itemWithLabel:VERIFY_LATER_STRING action:^{
+        [[OTRKit sharedInstance] changeVerifyFingerprintForUsername:welf.buddy.username accountName:welf.account.username protocol:[welf.account protocolTypeString] verrified:NO];
+        [welf refreshLockButton];
+    }];
+    
+    if(ourFingerprintString && theirFingerprintString) {
+        msg = [NSString stringWithFormat:@"%@, %@:\n%@\n\n%@ %@:\n%@\n", YOUR_FINGERPRINT_STRING, self.account.username, ourFingerprintString, THEIR_FINGERPRINT_STRING, self.buddy.username, theirFingerprintString];
+        if(trusted)
+        {
+            alert = [[UIAlertView alloc] initWithTitle:VERIFY_FINGERPRINT_STRING message:msg cancelButtonItem:verifiedButtonItem otherButtonItems:notVerifiedButtonItem, nil];
+        }
+        else
+        {
+            alert = [[UIAlertView alloc] initWithTitle:VERIFY_FINGERPRINT_STRING message:msg cancelButtonItem:verifyLaterButtonItem otherButtonItems:verifiedButtonItem, nil];
+        }
+    } else {
+        msg = SECURE_CONVERSATION_STRING;
+        alert = [[UIAlertView alloc] initWithTitle:nil message:msg delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
+    }
+    
+    [alert show];
+}
+
+#pragma - mark  dropDown Methods
+
+- (void)showDropdownWithTitle:(NSString *)title buttons:(NSArray *)buttons animated:(BOOL)animated
+{
+    NSTimeInterval duration = 0.3;
+    if (!animated) {
+        duration = 0.0;
+    }
+    
+    self.buttonDropdownView = [[OTRButtonView alloc] initWithTitile:title buttons:buttons];
+    
+    self.buttonDropdownView.frame = CGRectMake(0, self.navigationController.navigationBar.frame.size.height+self.navigationController.navigationBar.frame.origin.y-44, self.view.bounds.size.width, 44);
+    
+    [self.view addSubview:self.buttonDropdownView];
+    
+    [UIView animateWithDuration:duration animations:^{
+        CGRect frame = self.buttonDropdownView.frame;
+        frame.origin.y = self.navigationController.navigationBar.frame.size.height+self.navigationController.navigationBar.frame.origin.y;
+        self.buttonDropdownView.frame = frame;
+    } completion:nil];
+    
+}
+- (void)hideDropdown:(BOOL)animated
+{
+    if (!self.buttonDropdownView) {
+        return;
+    }
+    
+    NSTimeInterval duration = 0.3;
+    if (!animated) {
+        duration = 0.0;
+    }
+    
+    [UIView animateWithDuration:duration animations:^{
+        CGRect frame = self.buttonDropdownView.frame;
+        CGFloat navBarBottom = self.navigationController.navigationBar.frame.size.height+self.navigationController.navigationBar.frame.origin.y;
+        frame.origin.y = navBarBottom - frame.size.height;
+        self.buttonDropdownView.frame = frame;
+        
+    } completion:^(BOOL finished) {
+        if (finished) {
+            [self.buttonDropdownView removeFromSuperview];
+            self.buttonDropdownView = nil;
+        }
+    }];
 }
 
 - (void)saveCurrentMessageText
