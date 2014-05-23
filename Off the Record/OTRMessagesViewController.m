@@ -22,6 +22,7 @@
 #import "OTRButtonView.h"
 #import "Strings.h"
 #import "UIAlertView+Blocks.h"
+#import "OTRTitleSubtitleView.h"
 
 static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
 
@@ -43,7 +44,7 @@ static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
 @property (nonatomic ,strong) UIBarButtonItem *lockBarButtonItem;
 @property (nonatomic, strong) OTRLockButton *lockButton;
 @property (nonatomic, strong) OTRButtonView *buttonDropdownView;
-
+@property (nonatomic, strong) OTRTitleSubtitleView *titleView;
 
 @end
 
@@ -63,6 +64,13 @@ static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
     
     ////// Lock Button //////
     [self setupLockButotn];
+    
+     ////// TitleView //////
+    self.titleView = [[OTRTitleSubtitleView alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
+    self.titleView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+    self.navigationItem.titleView = self.titleView;
+    
+    [self refreshTitleView];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -113,6 +121,8 @@ static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
         else {
             self.showTypingIndicator = NO;
         }
+        
+        [self refreshTitleView];
     }
     else {
         //different buddy
@@ -145,6 +155,23 @@ static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
     
     //refresh other parts of the view
     
+}
+
+- (void)refreshTitleView
+{
+    if ([self.buddy.displayName length]) {
+        self.titleView.titleLabel.text = self.buddy.displayName;
+    }
+    else {
+        self.titleView.titleLabel.text = self.buddy.username;
+    }
+    
+    if(self.account.displayName.length) {
+        self.titleView.subtitleLabel.text = self.account.displayName;
+    }
+    else {
+        self.titleView.subtitleLabel.text = self.account.username;
+    }
 }
 
 #pragma - mark lockButton Methods
