@@ -17,7 +17,8 @@
 
 - (id)initWithPushAccount:(OTRPushAccount *)pushAccount;
 
-- (NSArray *)allTokensWithTransaction:(YapDatabaseReadTransaction *)transaction;
+- (NSArray *)allTokensOwnedWithTransaction:(YapDatabaseReadTransaction *)transaction;
+- (NSArray *)allTokensRevievedWithTransaction:(YapDatabaseReadTransaction *)transaction;
 - (NSArray *)allDevicesWithTransaction:(YapDatabaseReadTransaction *)transaction;
 
 

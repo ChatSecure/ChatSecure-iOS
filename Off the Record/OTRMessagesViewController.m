@@ -545,7 +545,22 @@ static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
 
 - (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 {
+    OTRMessage *message = [self messageAtIndexPath:indexPath];
+    NSMutableString *string = [NSMutableString string];
+    if (message.isTransportedSecurely) {
+        [string appendString:@"Secure "];
+    }
+    
+    if (message.isDelivered) {
+        [string appendString:@"Delivered"];
+    }
+    
+    NSString *finalString = [string stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    if ([finalString length]) {
+        return [[NSAttributedString alloc] initWithString:finalString];
+    }
     return nil;
+    
 }
 
 #pragma - mark  JSQMessagesCollectionViewDelegateFlowLayout Methods
@@ -559,18 +574,22 @@ heightForCellTopLabelAtIndexPath:(NSIndexPath *)indexPath
     }
     return 0.0f;
 }
-/*
-- (CGFloat)collectionView:(JSQMessagesCollectionView *)collectionView
-                   layout:(JSQMessagesCollectionViewFlowLayout *)collectionViewLayout
-heightForMessageBubbleTopLabelAtIndexPath:(NSIndexPath *)indexPath
-{
-    
-}
-
 
 - (CGFloat)collectionView:(JSQMessagesCollectionView *)collectionView
                    layout:(JSQMessagesCollectionViewFlowLayout *)collectionViewLayout
 heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
+{
+    OTRMessage *message = [self messageAtIndexPath:indexPath];
+    if (message.isDelivered || message.isTransportedSecurely) {
+        return kJSQMessagesCollectionViewCellLabelHeightDefault;
+    }
+    return 0.0f;
+}
+
+/*
+- (CGFloat)collectionView:(JSQMessagesCollectionView *)collectionView
+                   layout:(JSQMessagesCollectionViewFlowLayout *)collectionViewLayout
+heightForMessageBubbleTopLabelAtIndexPath:(NSIndexPath *)indexPath
 {
     
 }

@@ -210,6 +210,8 @@
 		634FF44918D8E9F200022993 /* OTRBuddyImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AC174A18C7AAF200E6624C /* OTRBuddyImageCell.m */; };
 		634FF44B18D8EA0A00022993 /* OTRConversationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AC174118C7AA8F00E6624C /* OTRConversationViewController.m */; };
 		634FF44C18D8EA2400022993 /* OTRComposeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AC173E18C7AA7A00E6624C /* OTRComposeViewController.m */; };
+		6350796719353635002C8A69 /* OTRYapPushTokenReceived.m in Sources */ = {isa = PBXBuildFile; fileRef = 6350796619353635002C8A69 /* OTRYapPushTokenReceived.m */; };
+		6350796A1935365A002C8A69 /* OTRYapPushTokenOwned.m in Sources */ = {isa = PBXBuildFile; fileRef = 635079691935365A002C8A69 /* OTRYapPushTokenOwned.m */; };
 		6352DC8815AF9F16007AD0B4 /* OTRNewAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6352DC8715AF9F16007AD0B4 /* OTRNewAccountViewController.m */; };
 		63534AAF187F5A1400061776 /* OTRChatBubbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63534AAE187F5A1400061776 /* OTRChatBubbleView.m */; };
 		636FE4B3161B76CF002B28EF /* OTRFacebookLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 636FE4B2161B76CF002B28EF /* OTRFacebookLoginViewController.m */; };
@@ -920,6 +922,10 @@
 		63488BC3167BE3280017594D /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = "Off the Record/ru.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
 		63488BC4167BE32F0017594D /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = "Off the Record/tr.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
 		63488BC5167BE3380017594D /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = "Off the Record/vi.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
+		6350796519353635002C8A69 /* OTRYapPushTokenReceived.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRYapPushTokenReceived.h; sourceTree = "<group>"; };
+		6350796619353635002C8A69 /* OTRYapPushTokenReceived.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRYapPushTokenReceived.m; sourceTree = "<group>"; };
+		635079681935365A002C8A69 /* OTRYapPushTokenOwned.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRYapPushTokenOwned.h; sourceTree = "<group>"; };
+		635079691935365A002C8A69 /* OTRYapPushTokenOwned.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRYapPushTokenOwned.m; sourceTree = "<group>"; };
 		6352DC8615AF9F16007AD0B4 /* OTRNewAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRNewAccountViewController.h; sourceTree = "<group>"; };
 		6352DC8715AF9F16007AD0B4 /* OTRNewAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRNewAccountViewController.m; sourceTree = "<group>"; };
 		63534A54187B6F7F00061776 /* ChatSecure 4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "ChatSecure 4.xcdatamodel"; sourceTree = "<group>"; };
@@ -1512,6 +1518,10 @@
 				63110897190788D4001188BB /* OTRYapPushDevice.m */,
 				6311089A190788D4001188BB /* OTRYapPushToken.h */,
 				6311089B190788D4001188BB /* OTRYapPushToken.m */,
+				6350796519353635002C8A69 /* OTRYapPushTokenReceived.h */,
+				6350796619353635002C8A69 /* OTRYapPushTokenReceived.m */,
+				635079681935365A002C8A69 /* OTRYapPushTokenOwned.h */,
+				635079691935365A002C8A69 /* OTRYapPushTokenOwned.m */,
 			);
 			name = "YapPush Models";
 			sourceTree = "<group>";
@@ -3635,6 +3645,7 @@
 				639C60CD18CA98E700CC4DF4 /* OTRColors.m in Sources */,
 				63E5E73718CA942A00CF7E28 /* HITorManager.m in Sources */,
 				6370C976185FC58C00CB6786 /* OTRTitleSubtitleView.m in Sources */,
+				6350796719353635002C8A69 /* OTRYapPushTokenReceived.m in Sources */,
 				6397538918CA8222005D6063 /* OTRManagedXMPPAccount.m in Sources */,
 				63464F831889F70D00526358 /* OTRXMPPProxyStream.m in Sources */,
 				63534AAF187F5A1400061776 /* OTRChatBubbleView.m in Sources */,
@@ -3679,6 +3690,7 @@
 				6397530A18CA7CB0005D6063 /* OTRProtocolManager.m in Sources */,
 				631FE8851720951400AEA107 /* OTRStatusMessageCell.m in Sources */,
 				6311088F190788AE001188BB /* OTRPushDevice.m in Sources */,
+				6350796A1935365A002C8A69 /* OTRYapPushTokenOwned.m in Sources */,
 				63CAF8FE18FF277200C3337E /* OTRLockButton.m in Sources */,
 				63483F801752CED100779257 /* XMPPAnonymousAuthentication.m in Sources */,
 				63C966A01919910A002B1490 /* OTRChangeDatabasePassphraseViewController.m in Sources */,

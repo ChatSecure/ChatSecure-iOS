@@ -9,6 +9,8 @@
 #import "OTRYapPushAccount.h"
 #import "OTRDatabaseManager.h"
 #import "OTRYapPushToken.h"
+#import "OTRYapPushTokenReceived.h"
+#import "OTRYapPushTokenOwned.h"
 #import "OTRYapPushDevice.h"
 #import "YapDatabaseRelationshipTransaction.h"
 
@@ -40,15 +42,26 @@
     return account;
 }
 
-- (NSArray *)allTokensWithTransaction:(YapDatabaseReadTransaction *)transaction
+- (NSArray *)allTokensOwnedWithTransaction:(YapDatabaseReadTransaction *)transaction
 {
     NSMutableArray *allTokens = [NSMutableArray array];
-    [[transaction ext:OTRYapDatabaseRelationshipName] enumerateEdgesWithName:OTRYapPushTokenEdges.account destinationKey:self.uniqueId collection:[OTRYapPushAccount collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
-        OTRYapPushToken *token = [OTRYapPushToken fetchObjectWithUniqueID:edge.sourceKey transaction:transaction];
+    [[transaction ext:OTRYapDatabaseRelationshipName] enumerateEdgesWithName:OTRYapPushTokenEdges.account destinationKey:self.uniqueId collection:[OTRYapPushTokenOwned collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
+        OTRYapPushTokenOwned *token = [OTRYapPushTokenOwned fetchObjectWithUniqueID:edge.sourceKey transaction:transaction];
         [allTokens addObject:token];
     }];
     return [allTokens copy];
 }
+
+- (NSArray *)allTokensRevievedWithTransaction:(YapDatabaseReadTransaction *)transaction
+{
+    NSMutableArray *allTokens = [NSMutableArray array];
+    [[transaction ext:OTRYapDatabaseRelationshipName] enumerateEdgesWithName:OTRYapPushTokenEdges.account destinationKey:self.uniqueId collection:[OTRYapPushTokenReceived collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
+        OTRYapPushTokenReceived *token = [OTRYapPushTokenReceived fetchObjectWithUniqueID:edge.sourceKey transaction:transaction];
+        [allTokens addObject:token];
+    }];
+    return [allTokens copy];
+}
+
 - (NSArray *)allDevicesWithTransaction:(YapDatabaseReadTransaction *)transaction
 {
     NSMutableArray *allDevices = [NSMutableArray array];
