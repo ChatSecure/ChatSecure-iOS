@@ -26,6 +26,12 @@
 
 static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
 
+typedef NS_ENUM(int, OTRDropDownType) {
+    OTRDropDownTypeNone          = 0,
+    OTRDropDownTypeEncryption    = 1,
+    OTRDropDownTypePush          = 2
+};
+
 @interface OTRMessagesViewController ()
 
 @property (nonatomic, strong) OTRAccount *account;
@@ -54,6 +60,9 @@ static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
 {
     [super viewDidLoad];
     
+    
+    self.automaticallyScrollsToMostRecentMessage = YES;
+    
      ////// bubbles //////
     self.outgoingBubbleImageView = [JSQMessagesBubbleImageFactory outgoingMessageBubbleImageViewWithColor:[UIColor jsq_messageBubbleBlueColor]];
     
@@ -69,6 +78,9 @@ static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
     self.titleView = [[OTRTitleSubtitleView alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
     self.titleView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
     self.navigationItem.titleView = self.titleView;
+    
+    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapTitleView:)];
+    [self.titleView addGestureRecognizer:tapGestureRecognizer];
     
     [self refreshTitleView];
 }
@@ -173,6 +185,56 @@ static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
         self.titleView.subtitleLabel.text = self.account.username;
     }
 }
+ #pragma - mark titleView Methods
+
+- (void)didTapTitleView:(id)sender
+{
+    void (^showPushDropDown)(void) = ^void(void) {
+        UIButton *requestPushTokenButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        [requestPushTokenButton setTitle:@"Request" forState:UIControlStateNormal];
+        [requestPushTokenButton addTarget:self action:@selector(requestPushToken:) forControlEvents:UIControlEventTouchUpInside];
+        
+        UIButton *revokePushTokenButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        [revokePushTokenButton setTitle:@"Revoke" forState:UIControlStateNormal];
+        [revokePushTokenButton addTarget:self action:@selector(revokePushToken:) forControlEvents:UIControlEventTouchUpInside];
+        
+        UIButton *sendPushTokenButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        [sendPushTokenButton setTitle:@"Send" forState:UIControlStateNormal];
+        [sendPushTokenButton addTarget:self action:@selector(sendPushToken:) forControlEvents:UIControlEventTouchUpInside];
+        
+        
+        [self showDropdownWithTitle:@"Push Token Actions" buttons:@[requestPushTokenButton,revokePushTokenButton,sendPushTokenButton] animated:YES tag:OTRDropDownTypePush];
+    };
+    
+    if (!self.buttonDropdownView) {
+        showPushDropDown();
+    }
+    else {
+        if (self.buttonDropdownView.tag == OTRDropDownTypePush) {
+            [self hideDropdownAnimated:YES completion:nil];
+        }
+        else {
+            [self hideDropdownAnimated:YES completion:showPushDropDown];
+        }
+    }
+    
+}
+#pragma - mark Push Methods
+
+- (void)revokePushToken:(id)sender
+{
+    
+}
+
+- (void)requestPushToken:(id)sender
+{
+    
+}
+
+- (void)sendPushToken:(id)sender
+{
+    
+}
 
 #pragma - mark lockButton Methods
 
@@ -180,48 +242,59 @@ static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
 {
     __weak OTRMessagesViewController *welf = self;
     self.lockButton = [OTRLockButton lockButtonWithInitailLockStatus:OTRLockStatusUnlocked withBlock:^(OTRLockStatus currentStatus) {
-        if (self.buttonDropdownView) {
-            [self hideDropdown:YES];
-            return;
+        
+        void (^showEncryptionDropDown)(void) = ^void(void) {
+            NSString *encryptionString = INITIATE_ENCRYPTED_CHAT_STRING;
+            NSString *fingerprintString = VERIFY_STRING;
+            NSArray * buttons = nil;
+            
+            if ([[OTRKit sharedInstance] isConversationEncryptedForUsername:welf.buddy.username accountName:welf.account.username protocol:[welf.account protocolTypeString]]) {
+                encryptionString = CANCEL_ENCRYPTED_CHAT_STRING;
+            }
+            
+            NSString * title = nil;
+            if (currentStatus == OTRLockStatusLockedAndError) {
+                title = LOCKED_ERROR_STRING;
+            }
+            else if (currentStatus == OTRLockStatusLockedAndWarn) {
+                title = LOCKED_WARN_STRING;
+            }
+            else if (currentStatus == OTRLockStatusLockedAndVerified){
+                title = LOCKED_SECURE_STRING;
+            }
+            else if (currentStatus == OTRLockStatusUnlocked){
+                title = UNLOCKED_ALERT_STRING;
+            }
+            
+            UIButton *encryptionButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+            [encryptionButton setTitle:encryptionString forState:UIControlStateNormal];
+            [encryptionButton addTarget:self action:@selector(encryptionButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+            
+            if (currentStatus == OTRLockStatusUnlocked || currentStatus == OTRLockStatusUnlocked) {
+                buttons = @[encryptionButton];
+            }
+            else {
+                UIButton *fingerprintButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+                [fingerprintButton setTitle:fingerprintString forState:UIControlStateNormal];
+                [fingerprintButton addTarget:self action:@selector(verifyButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+                buttons = @[encryptionButton,fingerprintButton];
+            }
+            
+            [self showDropdownWithTitle:title buttons:buttons animated:YES tag:OTRDropDownTypeEncryption];
+        };
+        if (!self.buttonDropdownView) {
+            showEncryptionDropDown();
+        }
+        else{
+            if (self.buttonDropdownView.tag == OTRDropDownTypeEncryption) {
+                [self hideDropdownAnimated:YES completion:nil];
+            }
+            else {
+                [self hideDropdownAnimated:YES completion:showEncryptionDropDown];
+            }
         }
         
-        NSString *encryptionString = INITIATE_ENCRYPTED_CHAT_STRING;
-        NSString *fingerprintString = VERIFY_STRING;
-        NSArray * buttons = nil;
         
-        if ([[OTRKit sharedInstance] isConversationEncryptedForUsername:welf.buddy.username accountName:welf.account.username protocol:[welf.account protocolTypeString]]) {
-            encryptionString = CANCEL_ENCRYPTED_CHAT_STRING;
-        }
-        
-        NSString * title = nil;
-        if (currentStatus == OTRLockStatusLockedAndError) {
-            title = LOCKED_ERROR_STRING;
-        }
-        else if (currentStatus == OTRLockStatusLockedAndWarn) {
-            title = LOCKED_WARN_STRING;
-        }
-        else if (currentStatus == OTRLockStatusLockedAndVerified){
-            title = LOCKED_SECURE_STRING;
-        }
-        else if (currentStatus == OTRLockStatusUnlocked){
-            title = UNLOCKED_ALERT_STRING;
-        }
-        
-        UIButton *encryptionButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        [encryptionButton setTitle:encryptionString forState:UIControlStateNormal];
-        [encryptionButton addTarget:self action:@selector(encryptionButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-        
-        if (currentStatus == OTRLockStatusUnlocked || currentStatus == OTRLockStatusUnlocked) {
-            buttons = @[encryptionButton];
-        }
-        else {
-            UIButton *fingerprintButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-            [fingerprintButton setTitle:fingerprintString forState:UIControlStateNormal];
-            [fingerprintButton addTarget:self action:@selector(verifyButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-            buttons = @[encryptionButton,fingerprintButton];
-        }
-        
-        [self showDropdownWithTitle:title buttons:buttons animated:YES];
     }];
     
     
@@ -274,7 +347,7 @@ static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
 
 - (void)encryptionButtonPressed:(id)sender
 {
-    [self hideDropdown:YES];
+    [self hideDropdownAnimated:YES completion:nil];
     if([[OTRKit sharedInstance] isConversationEncryptedForUsername:self.buddy.username accountName:self.account.username protocol:[self.account protocolTypeString]])
     {
         [[OTRKit sharedInstance] disableEncryptionForUsername:self.buddy.username accountName:self.account.username protocol:[self.account protocolTypeString]];
@@ -301,7 +374,7 @@ static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
 
 - (void)verifyButtonPressed:(id)sender
 {
-    [self hideDropdown:YES];
+    [self hideDropdownAnimated:YES completion:nil];
     NSString *msg = nil;
     NSString *ourFingerprintString = [[OTRKit sharedInstance] fingerprintForAccountName:self.account.username protocol:[self.account protocolTypeString]];
     NSString *theirFingerprintString = [[OTRKit sharedInstance] fingerprintForUsername:self.buddy.username accountName:self.account.username protocol:[self.account protocolTypeString]];
@@ -343,7 +416,7 @@ static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
 
 #pragma - mark  dropDown Methods
 
-- (void)showDropdownWithTitle:(NSString *)title buttons:(NSArray *)buttons animated:(BOOL)animated
+- (void)showDropdownWithTitle:(NSString *)title buttons:(NSArray *)buttons animated:(BOOL)animated tag:(NSInteger)tag
 {
     NSTimeInterval duration = 0.3;
     if (!animated) {
@@ -351,6 +424,7 @@ static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
     }
     
     self.buttonDropdownView = [[OTRButtonView alloc] initWithTitile:title buttons:buttons];
+    self.buttonDropdownView.tag = tag;
     
     self.buttonDropdownView.frame = CGRectMake(0, self.navigationController.navigationBar.frame.size.height+self.navigationController.navigationBar.frame.origin.y-44, self.view.bounds.size.width, 44);
     
@@ -363,29 +437,36 @@ static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
     } completion:nil];
     
 }
-- (void)hideDropdown:(BOOL)animated
+- (void)hideDropdownAnimated:(BOOL)animated completion:(void (^)(void))completion
 {
     if (!self.buttonDropdownView) {
-        return;
-    }
-    
-    NSTimeInterval duration = 0.3;
-    if (!animated) {
-        duration = 0.0;
-    }
-    
-    [UIView animateWithDuration:duration animations:^{
-        CGRect frame = self.buttonDropdownView.frame;
-        CGFloat navBarBottom = self.navigationController.navigationBar.frame.size.height+self.navigationController.navigationBar.frame.origin.y;
-        frame.origin.y = navBarBottom - frame.size.height;
-        self.buttonDropdownView.frame = frame;
-        
-    } completion:^(BOOL finished) {
-        if (finished) {
-            [self.buttonDropdownView removeFromSuperview];
-            self.buttonDropdownView = nil;
+        if (completion) {
+            completion();
         }
-    }];
+    }
+    else {
+        NSTimeInterval duration = 0.3;
+        if (!animated) {
+            duration = 0.0;
+        }
+        
+        [UIView animateWithDuration:duration animations:^{
+            CGRect frame = self.buttonDropdownView.frame;
+            CGFloat navBarBottom = self.navigationController.navigationBar.frame.size.height+self.navigationController.navigationBar.frame.origin.y;
+            frame.origin.y = navBarBottom - frame.size.height;
+            self.buttonDropdownView.frame = frame;
+            
+        } completion:^(BOOL finished) {
+            if (finished) {
+                [self.buttonDropdownView removeFromSuperview];
+                self.buttonDropdownView = nil;
+            }
+            
+            if (completion) {
+                completion();
+            }
+        }];
+    }
 }
 
 - (void)saveCurrentMessageText
@@ -477,6 +558,13 @@ static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
     }
     
     return cell;
+}
+
+#pragma - mark UIScrollViewDelegate Methods
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    [self hideDropdownAnimated:YES completion:nil];
 }
 
 #pragma mark - UICollectionView DataSource
