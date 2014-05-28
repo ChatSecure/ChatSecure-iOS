@@ -118,7 +118,7 @@ static OTRProtocolManager *sharedManager = nil;
         protocol = [[[account protocolClass] alloc] initWithAccount:account];
         if (protocol && account.uniqueId) {
             [protocolManagers setObject:protocol forKey:account.uniqueId];
-            [protocol addObserver:self forKeyPath:NSStringFromSelector(@selector(isConnected)) options:NSKeyValueObservingOptionNew context:NULL];
+            [protocol addObserver:self forKeyPath:NSStringFromSelector(@selector(connectionStatus)) options:NSKeyValueObservingOptionNew context:NULL];
         }
     }
     return protocol;
@@ -154,10 +154,10 @@ static OTRProtocolManager *sharedManager = nil;
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    if ([keyPath isEqualToString:NSStringFromSelector(@selector(isConnected))]) {
-        BOOL isConnected = [[change objectForKey:NSKeyValueChangeNewKey] boolValue];
+    if ([keyPath isEqualToString:NSStringFromSelector(@selector(connectionStatus))]) {
+        OTRProtocolConnectionStatus status = [[change objectForKey:NSKeyValueChangeNewKey] integerValue];
         NSInteger changeInt = 0;
-        if (isConnected) {
+        if (status == OTRProtocolConnectionStatusConnected) {
             changeInt = 1;
         }
         else if(self.numberOfConnectedProtocols > 0) {
@@ -173,7 +173,7 @@ static OTRProtocolManager *sharedManager = nil;
 {
     id <OTRProtocol> protocol = [protocolManagers objectForKey:account.uniqueId];
     if (protocol) {
-        return [protocol isConnected];
+        return [protocol connectionStatus] == OTRProtocolConnectionStatusConnected;
     }
     return NO;
     

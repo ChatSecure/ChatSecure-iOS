@@ -131,7 +131,7 @@
     cell.textLabel.text = subRequest.jid;
     cell.detailTextLabel.text = account.username;
     
-    if (manager.isConnected) {
+    if (manager.connectionStatus == OTRProtocolConnectionStatusConnected) {
         cell.selectionStyle = UITableViewCellSelectionStyleDefault;
     }
     else {
@@ -149,7 +149,7 @@
     OTRXMPPManager * manager = [self managerAtIndexPath:indexPath];
     XMPPJID *jid = [XMPPJID jidWithString:request.jid];
     
-    if (manager.isConnected) {
+    if (manager.connectionStatus == OTRProtocolConnectionStatusConnected) {
         RIButtonItem *cancelButton = [RIButtonItem itemWithLabel:CANCEL_STRING];
         RIButtonItem *rejectButton = [RIButtonItem itemWithLabel:REJECT_STRING action:^{
             [manager.xmppRoster rejectPresenceSubscriptionRequestFrom:jid];

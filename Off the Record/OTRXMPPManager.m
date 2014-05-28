@@ -71,7 +71,7 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 @interface OTRXMPPManager()
 
 @property (nonatomic, strong) OTRXMPPAccount *account;
-@property (nonatomic) BOOL isConnected;
+@property (nonatomic) OTRProtocolConnectionStatus connectionStatus;
 
 @property (nonatomic, strong) XMPPStream *xmppStream;
 @property (nonatomic, strong) XMPPReconnect *xmppReconnect;
@@ -108,7 +108,7 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
     if (self = [super init]) {
         NSString * queueLabel = [NSString stringWithFormat:@"%@.work.%@",[self class],self];
         self.workQueue = dispatch_queue_create([queueLabel UTF8String], 0);
-        self.isConnected = NO;
+        self.connectionStatus = OTRProtocolConnectionStatusDisconnected;
         self.buddyTimers = [NSMutableDictionary dictionary];
         self.databaseConnection = [OTRDatabaseManager sharedInstance].readWriteDatabaseConnection;
     }
@@ -120,7 +120,6 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
     {
         NSAssert([newAccount isKindOfClass:[OTRXMPPAccount class]], @"Must have XMPP account");
         self.isRegisteringNewAccount = NO;
-        self.isConnected = NO;
         self.account = (OTRXMPPAccount *)newAccount;
         
         // Setup the XMPP stream
@@ -130,16 +129,6 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
     }
     
     return self;
-}
-
-- (OTRAccount *)account
-{
-    return _account;
-}
-
-- (BOOL)isConnected
-{
-    return _isConnected;
 }
 
 - (void)dealloc
@@ -332,7 +321,7 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 
 - (void)goOnline
 {
-    self.isConnected = YES;
+    self.connectionStatus = OTRProtocolConnectionStatusConnected;
     [[NSNotificationCenter defaultCenter]
      postNotificationName:kOTRProtocolLoginSuccess object:self];
 	XMPPPresence *presence = [XMPPPresence presence]; // type="available" is implicit
@@ -412,7 +401,7 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 - (BOOL)connectWithJID:(NSString*) myJID password:(NSString*)myPassword;
 {
     self.password = myPassword;
-    
+    self.connectionStatus = OTRProtocolConnectionStatusConnecting;
     
     self.JID = [XMPPJID jidWithString:myJID resource:self.account.resource];
     
@@ -551,14 +540,14 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 - (void)xmppStreamDidAuthenticate:(XMPPStream *)sender
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
-    self.isConnected = YES;
+    self.connectionStatus = OTRProtocolConnectionStatusConnected;
 	[self goOnline];
 }
 
 - (void)xmppStream:(XMPPStream *)sender didNotAuthenticate:(NSXMLElement *)error
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
-    self.isConnected = NO;
+    self.connectionStatus = OTRProtocolConnectionStatusDisconnected;
     [self failedToConnect:[OTRXMPPError errorForXMLElement:error]];
 }
 
@@ -663,7 +652,7 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
     
-    self.isConnected = NO;
+    self.connectionStatus = OTRProtocolConnectionStatusDisconnected;
 	
 	if (!self.isXmppConnected)
 	{
