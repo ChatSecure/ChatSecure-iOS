@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
+@class OTRYapPushTokenOwned;
 @class OTRYapPushToken;
 @class OTRYapPushDevice;
 @class OTRYapPushAccount;
@@ -29,7 +30,7 @@ typedef void (^OTRPushCompletionBlock)(BOOL success, NSError *error);
 
 #pragma - mark Token Methods
 
-- (void)fetchNewPushTokenWithName:(NSString *)name completionBlock:(void (^)(OTRYapPushToken *pushToken, NSError *error))completionBlock;
+- (void)fetchNewPushTokenWithName:(NSString *)name completionBlock:(void (^)(OTRYapPushTokenOwned *pushToken, NSError *error))completionBlock;
 
 // don't need to fetch all tokens from server syncing tokens should be done directly to device to device to maintain buddy connections
 //- (void)fetchAllPushTokens:(OTRPushCompletionBlock)completionBlock;

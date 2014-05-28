@@ -16,6 +16,8 @@
 
 #import "OTRAccount.h"
 #import "OTRBuddy.h"
+#import "OTRXMPPAccount.h"
+#import "OTRXMPPBuddy.h"
 
 @interface OTRNewBuddyViewController ()
 
@@ -186,11 +188,11 @@
     if ([self checkFields]) {
         NSString * newBuddyAccountName = [[self.accountNameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] lowercaseString];
         NSString * newBuddyDisplayName = [self.displayNameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-        __block OTRBuddy *buddy = nil;
+        __block OTRXMPPBuddy *buddy = nil;
         [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-            buddy = [OTRBuddy fetchBuddyWithUsername:newBuddyAccountName withAccountUniqueId:self.account.uniqueId transaction:transaction];
+            buddy = [OTRXMPPBuddy fetchBuddyWithUsername:newBuddyAccountName withAccountUniqueId:self.account.uniqueId transaction:transaction];
             if (!buddy) {
-                buddy = [[OTRBuddy alloc] init];
+                buddy = [[OTRXMPPBuddy alloc] init];
                 buddy.username = newBuddyAccountName;
                 buddy.accountUniqueId = self.account.uniqueId;
             }

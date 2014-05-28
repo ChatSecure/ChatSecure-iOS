@@ -14,6 +14,7 @@
 
 #import "OTRYapPushAccount.h"
 #import "OTRYapPushToken.h"
+#import "OTRYapPushTokenOwned.h"
 #import "OTRYapPushDevice.h"
 
 @interface OTRPushManager()
@@ -92,15 +93,15 @@
 
 #pragma - mark Token Methods
 
-- (void)fetchNewPushTokenWithName:(NSString *)name completionBlock:(void (^)(OTRYapPushToken *, NSError *))completionBlock
+- (void)fetchNewPushTokenWithName:(NSString *)name completionBlock:(void (^)(OTRYapPushTokenOwned *, NSError *))completionBlock
 {
     [[OTRPushAPIClient sharedClient] fetchNewPushTokenWithName:name completionBlock:^(OTRPushToken *pushToken, NSError *error) {
         
-        __block OTRYapPushToken *yapPushToken = nil;
+        __block OTRYapPushTokenOwned *yapPushToken = nil;
         if (pushToken) {
             
             [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-                yapPushToken = [[OTRYapPushToken alloc] initWithPushToken:pushToken];
+                yapPushToken = [[OTRYapPushTokenOwned alloc] initWithPushToken:pushToken];
                 yapPushToken.accountUniqueId = [OTRYapPushAccount currentAccountWithTransaction:transaction].uniqueId;
                 [yapPushToken saveWithTransaction:transaction];
             }];
@@ -112,32 +113,6 @@
         
     }];
     
-}
-
-- (void)fetchAllPushTokens:(OTRPushCompletionBlock)completionBlock
-{
-    [[OTRPushAPIClient sharedClient] fetchAllPushTokens:^(NSArray *tokensArray, NSError *error) {
-        BOOL success = NO;
-        
-        if (!error) {
-            success = YES;
-            
-            [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-                
-                [transaction removeAllObjectsInCollection:[OTRYapPushToken collection]];
-                
-                [tokensArray enumerateObjectsUsingBlock:^(OTRPushToken *pushToken, NSUInteger idx, BOOL *stop) {
-                    OTRYapPushToken *yapPushToken = [[OTRYapPushToken alloc] initWithPushToken:pushToken];
-                    yapPushToken.accountUniqueId = [OTRYapPushAccount currentAccountWithTransaction:transaction].uniqueId;
-                    [yapPushToken saveWithTransaction:transaction];
-                }];
-            }];
-        }
-        
-        if (completionBlock) {
-            completionBlock(success, error);
-        }
-    }];
 }
 
 - (void)deletePushToken:(OTRYapPushToken *)token completionBlock:(OTRPushCompletionBlock)completionBlock

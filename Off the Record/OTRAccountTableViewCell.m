@@ -32,7 +32,7 @@
 
 - (void)setAccount:(OTRAccount *)account
 {
-    [self.protocol removeObserver:self forKeyPath:NSStringFromSelector(@selector(isConnected))];
+    [self.protocol removeObserver:self forKeyPath:NSStringFromSelector(@selector(connectionStatus))];
     self.accountUniqueIdentifier = account.uniqueId;
     
     self.textLabel.text = account.username;
@@ -52,8 +52,8 @@
     OTRProtocolManager * protocolManager = [OTRProtocolManager sharedInstance];
     self.protocol = [[OTRProtocolManager sharedInstance].protocolManagers objectForKey:account.uniqueId];
     if (self.protocol) {
-        [self.protocol addObserver:self forKeyPath:NSStringFromSelector(@selector(isConnected)) options:NSKeyValueObservingOptionNew context:NULL];
-        [self setConnectedText:self.protocol.isConnected];
+        [self.protocol addObserver:self forKeyPath:NSStringFromSelector(@selector(connectionStatus)) options:NSKeyValueObservingOptionNew context:NULL];
+        [self setConnectedText:self.protocol.connectionStatus];
     }
     else {
         [protocolManager addObserver:self forKeyPath:NSStringFromSelector(@selector(protocolManagers)) options:NSKeyValueObservingOptionNew context:NULL];
@@ -62,24 +62,28 @@
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    if ([keyPath isEqualToString:NSStringFromSelector(@selector(isConnected))]) {
-        BOOL isConnected = [[change objectForKey:NSKeyValueChangeNewKey] boolValue];
-        [self setConnectedText:isConnected];
+    if ([keyPath isEqualToString:NSStringFromSelector(@selector(connectionStatus))]) {
+        OTRProtocolConnectionStatus connectionStatus = [[change objectForKey:NSKeyValueChangeNewKey] integerValue];
+        [self setConnectedText:connectionStatus];
     }
     else if ([keyPath isEqualToString:NSStringFromSelector(@selector(protocolManagers))]) {
         self.protocol = [[OTRProtocolManager sharedInstance].protocolManagers objectForKey:self.accountUniqueIdentifier];
         if (self.protocol) {
-            [self setConnectedText:self.protocol.isConnected];
-            [self.protocol addObserver:self forKeyPath:NSStringFromSelector(@selector(isConnected)) options:NSKeyValueObservingOptionNew context:NULL];
+            [self setConnectedText:self.protocol.connectionStatus];
+            [self.protocol addObserver:self forKeyPath:NSStringFromSelector(@selector(connectionStatus)) options:NSKeyValueObservingOptionNew context:NULL];
             [[OTRProtocolManager sharedInstance] removeObserver:self forKeyPath:NSStringFromSelector(@selector(protocolManagers))];
         }
     }
     
 }
 
-- (void)setConnectedText:(BOOL)isConnected {
-    if (isConnected) {
+- (void)setConnectedText:(OTRProtocolConnectionStatus)connectionStatus {
+    if (connectionStatus == OTRProtocolConnectionStatusConnected) {
         self.detailTextLabel.text = CONNECTED_STRING;
+    }
+    else if (connectionStatus == OTRProtocolConnectionStatusConnecting)
+    {
+        self.detailTextLabel.text = CONNECTING_STRING;
     }
     else {
         self.detailTextLabel.text = nil;
@@ -94,7 +98,7 @@
 }
 
 -(void)dealloc {
-    [self.protocol removeObserver:self forKeyPath:NSStringFromSelector(@selector(isConnected))];
+    [self.protocol removeObserver:self forKeyPath:NSStringFromSelector(@selector(connectionStatus))];
     @try {
         [[OTRProtocolManager sharedInstance] removeObserver:self forKeyPath:NSStringFromSelector(@selector(protocolManagers))];
     }

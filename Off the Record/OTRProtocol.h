@@ -22,10 +22,16 @@
 
 @class OTRMessage, OTRBuddy, OTRAccount;
 
+typedef NS_ENUM(NSInteger, OTRProtocolConnectionStatus) {
+    OTRProtocolConnectionStatusDisconnected,
+    OTRProtocolConnectionStatusConnected,
+    OTRProtocolConnectionStatusConnecting
+};
+
 @protocol OTRProtocol <NSObject>
 
 - (OTRAccount *)account;
-- (BOOL)isConnected;
+- (OTRProtocolConnectionStatus)connectionStatus;
 
 - (void) sendMessage:(OTRMessage*)message;
 - (void) connectWithPassword:(NSString *)password;

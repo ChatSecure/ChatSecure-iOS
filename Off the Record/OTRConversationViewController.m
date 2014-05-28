@@ -9,7 +9,7 @@
 #import "OTRConversationViewController.h"
 
 #import "OTRSettingsViewController.h"
-#import "OTRChatViewController.h"
+#import "OTRMessagesViewController.h"
 #import "OTRComposeViewController.h"
 #import "OTRSubscriptionRequestsViewController.h"
 
@@ -35,7 +35,7 @@ static CGFloat cellHeight = 80.0;
 @interface OTRConversationViewController () <OTRComposeViewControllerDelegate>
 
 @property (nonatomic, strong) UITableView *tableView;
-@property (nonatomic, strong) OTRChatViewController *chatViewController;
+@property (nonatomic, strong) OTRMessagesViewController *messagesViewController;
 @property (nonatomic, strong) NSTimer *cellUpdateTimer;
 @property (nonatomic, strong) YapDatabaseConnection *connection;
 @property (nonatomic, strong) YapDatabaseViewMappings *mappings;
@@ -49,6 +49,13 @@ static CGFloat cellHeight = 80.0;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    ////// Reset buddy status //////
+    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        [OTRBuddy resetAllBuddyStatusesWithTransaction:transaction];
+        [OTRBuddy resetAllChatStatesWithTransaction:transaction];
+    }];
+    
    
     ///////////// Setup Navigation Bar //////////////
     
@@ -83,8 +90,7 @@ static CGFloat cellHeight = 80.0;
                                                                view:OTRConversationDatabaseViewExtensionName];
     self.subscriptionRequestsMappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[OTRAllPresenceSubscriptionRequestGroup]
                                                                                    view:OTRAllSubscriptionRequestsViewExtensionName];
-    
-    
+        
     [self.connection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         [self.mappings updateWithTransaction:transaction];
         [self.subscriptionRequestsMappings updateWithTransaction:transaction];
@@ -102,9 +108,6 @@ static CGFloat cellHeight = 80.0;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
-    
-    
     
     [self.cellUpdateTimer invalidate];
     [self.tableView reloadData];
@@ -127,7 +130,6 @@ static CGFloat cellHeight = 80.0;
         
         [self.navigationController presentViewController:onboardingStepsController animated:NO completion:nil];
         
-        //rootViewController = onboardingStepsController;
     }
     
 }
@@ -160,8 +162,8 @@ static CGFloat cellHeight = 80.0;
 
 - (void)enterConversationWithBuddy:(OTRBuddy *)buddy
 {
-    [self.chatViewController setBuddy:buddy];
-    [self.navigationController pushViewController:self.chatViewController animated:YES];
+    self.messagesViewController.buddy = buddy;
+    [self.navigationController pushViewController:self.messagesViewController animated:YES];
 }
 
 - (void)updateVisibleCells:(id)sender
@@ -177,12 +179,12 @@ static CGFloat cellHeight = 80.0;
     }
 }
 
-- (OTRChatViewController *)chatViewController
+- (OTRMessagesViewController *)messagesViewController
 {
-    if (!_chatViewController) {
-        _chatViewController = [[OTRChatViewController alloc] init];
+    if (!_messagesViewController) {
+        _messagesViewController = [OTRMessagesViewController messagesViewController];
     }
-    return _chatViewController;
+    return _messagesViewController;
 }
 
 - (OTRBuddy *)buddyForIndexPath:(NSIndexPath *)indexPath

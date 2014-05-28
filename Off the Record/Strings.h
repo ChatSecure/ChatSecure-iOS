@@ -167,6 +167,7 @@
 #define SECURITY_WARNING_STRING [OTRLanguageManager translatedString: @"Security Warning"]
 #define VERIFIED_STRING [OTRLanguageManager translatedString: @"Verified"]
 #define BUDDY_INFO_STRING [OTRLanguageManager translatedString: @"Buddy Info"]
+#define CONNECTING_STRING [OTRLanguageManager translatedString: @"Connecting"]
 #define CHAT_STATE_COMPOSING_STRING [OTRLanguageManager translatedString: @"Typing"]
 #define errSSLWouldBlockString [OTRLanguageManager translatedString: @"I/O would block (not fatal)"]
 #define QR_CODE_INSTRUCTIONS_STRING [OTRLanguageManager translatedString: @"This QR Code contains a link to http://omniqrcode.com/q/chatsecure and will redirect to the App Store."]

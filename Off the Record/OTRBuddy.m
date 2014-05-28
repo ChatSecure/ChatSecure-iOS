@@ -100,6 +100,23 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
     return [finalMessage copy];
 }
 
+#pragma - mark YapDatabaseRelationshipNode
+
+- (NSArray *)yapDatabaseRelationshipEdges
+{
+    NSArray *edges = nil;
+    if (self.accountUniqueId) {
+        YapDatabaseRelationshipEdge *accountEdge = [YapDatabaseRelationshipEdge edgeWithName:OTRBuddyEdges.account
+                                                                              destinationKey:self.accountUniqueId
+                                                                                  collection:[OTRAccount collection]
+                                                                             nodeDeleteRules:YDB_DeleteSourceIfDestinationDeleted];
+        edges = @[accountEdge];
+    }
+    
+    
+    return edges;
+}
+
 #pragma - mark Class Methods
 
 + (instancetype)fetchBuddyWithUsername:(NSString *)username withAccountUniqueId:(NSString *)accountUniqueId transaction:(YapDatabaseReadTransaction *)transaction
@@ -117,21 +134,36 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
     return [finalBuddy copy];
 }
 
-#pragma - mark YapDatabaseRelationshipNode
-
-- (NSArray *)yapDatabaseRelationshipEdges
++ (void)resetAllChatStatesWithTransaction:(YapDatabaseReadWriteTransaction *)transaction
 {
-    NSArray *edges = nil;
-    if (self.accountUniqueId) {
-        YapDatabaseRelationshipEdge *accountEdge = [YapDatabaseRelationshipEdge edgeWithName:OTRBuddyEdges.account
-                                                                              destinationKey:self.accountUniqueId
-                                                                                  collection:[OTRAccount collection]
-                                                                             nodeDeleteRules:YDB_DeleteSourceIfDestinationDeleted];
-        edges = @[accountEdge];
-    }
+    NSMutableArray *buddiesToChange = [NSMutableArray array];
+    [transaction enumerateKeysAndObjectsInCollection:[self collection] usingBlock:^(NSString *key, OTRBuddy *buddy, BOOL *stop) {
+        if(buddy.chatState != kOTRChatStateUnknown)
+        {
+            [buddiesToChange addObject:buddy];
+        }
+    }];
     
+    [buddiesToChange enumerateObjectsUsingBlock:^(OTRBuddy *buddy, NSUInteger idx, BOOL *stop) {
+        buddy.chatState = kOTRChatStateUnknown;
+        [buddy saveWithTransaction:transaction];
+    }];
+}
+
++ (void)resetAllBuddyStatusesWithTransaction:(YapDatabaseReadWriteTransaction *)transaction
+{
+    NSMutableArray *buddiesToChange = [NSMutableArray array];
+    [transaction enumerateKeysAndObjectsInCollection:[self collection] usingBlock:^(NSString *key, OTRBuddy *buddy, BOOL *stop) {
+        if(buddy.status != OTRBuddyStatusOffline)
+        {
+            [buddiesToChange addObject:buddy];
+        }
+    }];
     
-    return edges;
+    [buddiesToChange enumerateObjectsUsingBlock:^(OTRBuddy *buddy, NSUInteger idx, BOOL *stop) {
+        buddy.status = OTRBuddyStatusOffline;
+        [buddy saveWithTransaction:transaction];
+    }];
 }
 
 @end

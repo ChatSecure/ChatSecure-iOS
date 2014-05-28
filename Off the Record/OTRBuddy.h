@@ -7,6 +7,7 @@
 //
 
 #import "OTRYapDatabaseObject.h"
+#import "OTRConstants.h"
 
 @class OTRAccount, OTRMessage;
 
@@ -38,9 +39,9 @@ extern const struct OTRBuddyEdges {
 @property (nonatomic, strong) NSString *composingMessageString;
 @property (nonatomic, strong) NSString *statusMessage;
 @property (nonatomic, strong) NSDate *lastMessageDate;
-@property (nonatomic) int chatState;
-@property (nonatomic) int lastSentChatState;
-@property (nonatomic) int status;
+@property (nonatomic) OTRChatState chatState;
+@property (nonatomic) OTRChatState lastSentChatState;
+@property (nonatomic) OTRBuddyStatus status;
 @property (nonatomic) int encryptionStatus;
 @property (nonatomic, strong) NSData *avatarData;
 
@@ -56,6 +57,10 @@ extern const struct OTRBuddyEdges {
 - (void)setAllMessagesRead:(YapDatabaseReadWriteTransaction *)transaction;
 
 + (instancetype)fetchBuddyWithUsername:(NSString *)username withAccountUniqueId:(NSString *)accountUniqueId transaction:(YapDatabaseReadTransaction *)transaction;
+
+
++ (void)resetAllChatStatesWithTransaction:(YapDatabaseReadWriteTransaction *)transaction;
++ (void)resetAllBuddyStatusesWithTransaction:(YapDatabaseReadWriteTransaction *)transaction;
 
 
 @end
