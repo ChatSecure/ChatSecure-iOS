@@ -10,4 +10,6 @@
 
 @interface OTRYapPushTokenOwned : OTRYapPushToken
 
++ (instancetype)unusedPushTokenWithTransaction:(YapDatabaseReadTransaction *)transaction;
+
 @end

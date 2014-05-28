@@ -134,23 +134,35 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
     return [finalBuddy copy];
 }
 
-+ (void)resetAllChatStates
++ (void)resetAllChatStatesWithTransaction:(YapDatabaseReadWriteTransaction *)transaction
 {
+    NSMutableArray *buddiesToChange = [NSMutableArray array];
+    [transaction enumerateKeysAndObjectsInCollection:[self collection] usingBlock:^(NSString *key, OTRBuddy *buddy, BOOL *stop) {
+        if(buddy.chatState != kOTRChatStateUnknown)
+        {
+            [buddiesToChange addObject:buddy];
+        }
+    }];
     
-    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        NSMutableArray *buddiesToChange = [NSMutableArray array];
-        [transaction enumerateKeysAndObjectsInCollection:[self collection] usingBlock:^(NSString *key, OTRBuddy *buddy, BOOL *stop) {
-            if(buddy.chatState != kOTRChatStateUnknown)
-            {
-                [buddiesToChange addObject:buddy];
-            }
-        }];
-        
-        [buddiesToChange enumerateObjectsUsingBlock:^(OTRBuddy *buddy, NSUInteger idx, BOOL *stop) {
-            buddy.chatState = kOTRChatStateUnknown;
-            [buddy saveWithTransaction:transaction];
-        }];
-        
+    [buddiesToChange enumerateObjectsUsingBlock:^(OTRBuddy *buddy, NSUInteger idx, BOOL *stop) {
+        buddy.chatState = kOTRChatStateUnknown;
+        [buddy saveWithTransaction:transaction];
+    }];
+}
+
++ (void)resetAllBuddyStatusesWithTransaction:(YapDatabaseReadWriteTransaction *)transaction
+{
+    NSMutableArray *buddiesToChange = [NSMutableArray array];
+    [transaction enumerateKeysAndObjectsInCollection:[self collection] usingBlock:^(NSString *key, OTRBuddy *buddy, BOOL *stop) {
+        if(buddy.status != OTRBuddyStatusOffline)
+        {
+            [buddiesToChange addObject:buddy];
+        }
+    }];
+    
+    [buddiesToChange enumerateObjectsUsingBlock:^(OTRBuddy *buddy, NSUInteger idx, BOOL *stop) {
+        buddy.status = OTRBuddyStatusOffline;
+        [buddy saveWithTransaction:transaction];
     }];
 }
 

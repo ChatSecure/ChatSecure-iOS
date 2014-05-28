@@ -50,7 +50,12 @@ static CGFloat cellHeight = 80.0;
 {
     [super viewDidLoad];
     
-    [OTRBuddy resetAllChatStates];
+    ////// Reset buddy status //////
+    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        [OTRBuddy resetAllBuddyStatusesWithTransaction:transaction];
+        [OTRBuddy resetAllChatStatesWithTransaction:transaction];
+    }];
+    
    
     ///////////// Setup Navigation Bar //////////////
     

@@ -10,4 +10,17 @@
 
 @implementation OTRYapPushTokenOwned
 
++ (instancetype)unusedPushTokenWithTransaction:(YapDatabaseReadTransaction *)transaction
+{
+    __block OTRYapPushTokenOwned *pushToken = nil;
+    [transaction enumerateKeysAndObjectsInCollection:[self collection] usingBlock:^(NSString *key, OTRYapPushTokenOwned *token, BOOL *stop) {
+        if (![token.buddyUniqueId length]) {
+            pushToken = token;
+            *stop = YES;
+        }
+        
+    }];
+    return pushToken;
+}
+
 @end
