@@ -32,6 +32,7 @@ extern const struct OTRMessageEdges {
 @property (nonatomic, strong) NSDate *date;
 @property (nonatomic, strong) NSString *text;
 @property (nonatomic, strong) NSString *messageId;
+@property (nonatomic, strong) NSError *error;
 @property (nonatomic, getter = isDelivered) BOOL delivered;
 @property (nonatomic, getter = isRead) BOOL read;
 @property (nonatomic, getter = isIncoming) BOOL incoming;

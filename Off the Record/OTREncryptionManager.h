@@ -23,9 +23,15 @@
 #import <Foundation/Foundation.h>
 #import "OTRKit.h"
 
+extern NSString *const OTRMessageStateDidChangeNotification;
+extern NSString *const OTRWillStartGeneratingPrivateKeyNotification;
+extern NSString *const OTRDidFinishGeneratingPrivateKeyNotification;
+extern NSString *const OTRMessageStateKey;
+
 @interface OTREncryptionManager : NSObject <OTRKitDelegate>
 
 + (BOOL) setFileProtection:(NSString*)fileProtection path:(NSString*)path;
 + (BOOL)addSkipBackupAttributeToItemAtURL:(NSURL *)URL;
+
 
 @end

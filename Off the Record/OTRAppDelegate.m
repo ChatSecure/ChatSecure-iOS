@@ -318,14 +318,15 @@
     //DDLogInfo(@"User Info: %@", notification.userInfo);
     
     NSDictionary *userInfo = notification.userInfo;
-    NSString *accountName = [userInfo objectForKey:kOTRNotificationAccountNameKey];
-    NSString *userName = [userInfo objectForKey:kOTRNotificationUserNameKey];
-    NSNumber *protocol = [userInfo objectForKey:kOTRNotificationProtocolKey];
-    if (!accountName || !userName || !protocol) {
-        return;
-    }
-    OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
-    OTRBuddy *buddy = [protocolManager buddyForUserName:userName accountName:accountName protocolType:[protocol intValue]];
+    NSString *accountname = [userInfo objectForKey:kOTRNotificationAccountNameKey];
+    NSString *username = [userInfo objectForKey:kOTRNotificationUserNameKey];
+    OTRProtocolType protocolType = [[userInfo objectForKey:kOTRNotificationProtocolKey] intValue];
+    
+    __block OTRBuddy *buddy = nil;
+    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        buddy = [OTRBuddy fetchBuddyForUsername:username accountName:accountname protocolType:protocolType transaction:transaction];
+    }];
+    
 #warning UILocalNotifications no longer enter conversation
     //FIXME
     //[buddyListViewController enterConversationWithBuddy:buddy];

@@ -36,61 +36,44 @@
 {
     self = [super initWithStyle:style];
     if (self) {
-        [self myFingerprintsArray];
-        [self buddyFingerprintsArray];
+        [self loadMyFingerprints];
+        [self loadBuddyFingerprints];
         
     }
     return self;
 }
 
-- (NSArray *)myFingerprintsArray
+- (void)loadMyFingerprints
 {
-    if (!_myFingerprintsArray) {
-        _myFingerprintsArray = @[];
-        
-        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-             [[transaction ext:OTRAllAccountDatabaseViewExtensionName] enumerateKeysAndObjectsInGroup:OTRAllAccountGroup usingBlock:^(NSString *collection, NSString *key, OTRAccount *account, NSUInteger index, BOOL *stop) {
-                 NSString * fingerprint = [[OTRKit sharedInstance] fingerprintForAccountName:account.username protocol:account.protocolTypeString];
-                 if (fingerprint.length) {
-                     NSString * username = account.username;
-                     _myFingerprintsArray = [_myFingerprintsArray arrayByAddingObject:@{OTRAccountNameKey:username,OTRFingerprintKey:fingerprint}];
-                 }
-                 
-             }];
+    //FIXME I don't think this will work
+    self.myFingerprintsArray = @[];
+    __weak OTRFingerprintsViewController *welf = self;
+    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        [[transaction ext:OTRAllAccountDatabaseViewExtensionName] enumerateKeysAndObjectsInGroup:OTRAllAccountGroup usingBlock:^(NSString *collection, NSString *key, OTRAccount *account, NSUInteger index, BOOL *stop) {
+            [[OTRKit sharedInstance] fingerprintForAccountName:account.username protocol:account.protocolTypeString completion:^(NSString *fingerprint) {
+                welf.myFingerprintsArray = [welf.myFingerprintsArray arrayByAddingObject:@{kOTRKitAccountNameKey:account.username,kOTRKitFingerprintKey:fingerprint}];
+                [welf.tableView reloadData];
+            }];
         }];
-    }
-    
-    return _myFingerprintsArray;
+    }];
 }
 
-- (NSArray *)buddyFingerprintsArray
+- (void)loadBuddyFingerprints
 {
-    if (!_buddyFingerprintsArray) {
-        NSSortDescriptor * usernameSortDescriptor = [NSSortDescriptor sortDescriptorWithKey:OTRUsernameKey ascending:YES];
-        NSSortDescriptor * accountNameSortDescriptor = [NSSortDescriptor sortDescriptorWithKey:OTRAccountNameKey ascending:YES];
-        NSSortDescriptor * trustSortDescriptor = [NSSortDescriptor sortDescriptorWithKey:OTRTrustKey ascending:NO];
+    __weak OTRFingerprintsViewController *welf = self;
+    [[OTRKit sharedInstance] requestAllFingerprints:^(NSArray *allFingerprints) {
+        NSSortDescriptor * usernameSortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kOTRKitUsernameKey ascending:YES];
+        NSSortDescriptor * accountNameSortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kOTRKitAccountNameKey ascending:YES];
+        NSSortDescriptor * trustSortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kOTRKitTrustKey ascending:NO];
         NSArray * sortDescriptorsArray = @[usernameSortDescriptor,accountNameSortDescriptor,trustSortDescriptor];
-        
-        _buddyFingerprintsArray = [[[OTRKit sharedInstance] allFingerprints] sortedArrayUsingDescriptors:sortDescriptorsArray];
-    }
-    return _buddyFingerprintsArray;
+        self.buddyFingerprintsArray = [allFingerprints sortedArrayUsingDescriptors:sortDescriptorsArray];
+        [welf.tableView reloadData];
+    }];
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 #pragma mark - Table view data source
@@ -137,15 +120,15 @@
     
     if (indexPath.section == 0) {
         NSDictionary * cellDict = [self.myFingerprintsArray objectAtIndex:indexPath.row];
-        cell.textLabel.text = cellDict[OTRAccountNameKey];
-        cell.detailTextLabel.text = cellDict[OTRFingerprintKey];
+        cell.textLabel.text = cellDict[kOTRKitAccountNameKey];
+        cell.detailTextLabel.text = cellDict[kOTRKitFingerprintKey];
     }
     else if (indexPath.section == 1) {
         NSDictionary * cellDict = [self.buddyFingerprintsArray objectAtIndex:indexPath.row];
-        cell.textLabel.text = cellDict[OTRUsernameKey];
-        cell.detailTextLabel.text = cellDict[OTRAccountNameKey];
+        cell.textLabel.text = cellDict[kOTRKitUsernameKey];
+        cell.detailTextLabel.text = cellDict[kOTRKitAccountNameKey];
         
-        BOOL trusted = [cellDict[OTRTrustKey] boolValue];
+        BOOL trusted = [cellDict[kOTRKitTrustKey] boolValue];
         if (trusted) {
             cell.accessoryType = UITableViewCellAccessoryCheckmark;
         }
@@ -163,14 +146,14 @@
     NSString * title = nil;
     if (indexPath.section == 0) {
         NSDictionary * dict = self.myFingerprintsArray[indexPath.row];
-        title = dict[OTRAccountNameKey];
-        body = dict[OTRFingerprintKey];
+        title = dict[kOTRKitAccountNameKey];
+        body = dict[kOTRKitFingerprintKey];
     }
     else if (indexPath.section == 1) {
         NSDictionary * dict = self.buddyFingerprintsArray[indexPath.row];
-        title = dict[OTRUsernameKey];
-        NSString * fingerprint = dict[OTRFingerprintKey];
-        BOOL verified = [dict[OTRTrustKey] boolValue];
+        title = dict[kOTRKitUsernameKey];
+        NSString * fingerprint = dict[kOTRKitFingerprintKey];
+        BOOL verified = [dict[kOTRKitTrustKey] boolValue];
         NSString * verifiedString = nil;
         if (verified) {
             verifiedString = VERIFIED_STRING;
@@ -190,67 +173,15 @@
     if (indexPath.section == 1 && editingStyle == UITableViewCellEditingStyleDelete) {
         NSDictionary * dict = self.buddyFingerprintsArray[indexPath.row];
         
-        if([[OTRKit sharedInstance] deleteFingerprint:dict[OTRFingerprintKey] username:dict[OTRUsernameKey] accountName:dict[OTRAccountNameKey] protocol:dict[OTRProtocolKey]]) {
-            
-            //delete fingerpring
-            self.buddyFingerprintsArray = nil;
-            
-            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationLeft];
-            
-            
-        }
+        
+        [[OTRKit sharedInstance] deleteFingerprint:dict[kOTRKitFingerprintKey] username:dict[kOTRKitUsernameKey] accountName:dict[kOTRKitAccountNameKey] protocol:dict[kOTRKitProtocolKey] completion:^(BOOL success) {
+            if (success) {
+                self.buddyFingerprintsArray = nil;
+                
+                [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationLeft];
+            }
+        }];
     }
 }
-
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
-/*
-#pragma mark - Navigation
-
-// In a story board-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-
- */
 
 @end

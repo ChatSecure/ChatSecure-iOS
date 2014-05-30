@@ -34,7 +34,7 @@
 
 @implementation OTRCodec
 
-
+/*
 +(void) decodeMessage:(OTRMessage*)message completionBlock:(void (^)(OTRMessage *))completionBlock
 {
     __block OTRBuddy *messageBuddy = nil;
@@ -149,5 +149,5 @@
     
     [[OTRKit sharedInstance] hasPrivateKeyForAccountName:account.username protocol:[account protocolTypeString] completionBock:completionBlock];
 }
-
+*/
 @end

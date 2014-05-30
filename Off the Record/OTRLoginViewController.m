@@ -394,11 +394,6 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
     [self hideHUD];
     //After successful login generate new private key if none exists
     if([self.account.username length]) {
-        [[OTRKit sharedInstance] hasPrivateKeyForAccountName:self.account.username protocol:[self.account protocolTypeString] completionBock:^(BOOL hasPrivateKey) {
-            if(!hasPrivateKey){
-                [[OTRKit sharedInstance] generatePrivateKeyForAccountName:self.account.username protocol:[self.account protocolTypeString] completionBock:nil];
-            }
-        }];
         
         [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
             

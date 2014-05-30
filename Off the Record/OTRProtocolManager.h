@@ -37,7 +37,7 @@
 @property (nonatomic, strong) NSMutableDictionary * protocolManagers;
 
 
-- (OTRBuddy *)buddyForUserName:(NSString *)buddyUserName accountName:(NSString *)accountName protocolType:(OTRProtocolType)protocolType;
+
 - (id <OTRProtocol>) protocolForAccount:(OTRAccount *)account;
 - (void)removeProtocolManagerForAccount:(OTRAccount *)account;
 - (BOOL)isAccountConnected:(OTRAccount *)account;

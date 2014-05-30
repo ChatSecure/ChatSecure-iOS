@@ -99,17 +99,6 @@ static OTRProtocolManager *sharedManager = nil;
     return self;
 }
 
--(OTRBuddy *)buddyForUserName:(NSString *)buddyUserName accountName:(NSString *)accountName protocolType:(OTRProtocolType)protocolType;
-{
-    __block OTRBuddy *buddy = nil;
-    [[OTRDatabaseManager sharedInstance].mainThreadReadOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        OTRAccount *account =  [OTRAccount fetchAccountWithUsername:accountName protocolType:protocolType transaction:transaction];
-        buddy = [OTRBuddy fetchBuddyWithUsername:buddyUserName withAccountUniqueId:account.uniqueId transaction:transaction];
-    }];
-   
-    return buddy;
-}
-
 - (id <OTRProtocol>)protocolForAccount:(OTRAccount *)account
 {
     NSObject <OTRProtocol> * protocol = [protocolManagers objectForKey:account.uniqueId];
@@ -182,21 +171,19 @@ static OTRProtocolManager *sharedManager = nil;
 
 - (void)sendMessage:(OTRMessage *)message {
     
-    __block OTRAccount *account = nil;
-    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        
-        
+    __block OTRAccount * account = nil;
+    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
         OTRBuddy *buddy = [OTRBuddy fetchObjectWithUniqueID:message.buddyUniqueId transaction:transaction];
-        buddy.lastSentChatState = kOTRChatStateActive;
-        [buddy saveWithTransaction:transaction];
-        
         account = [OTRAccount fetchObjectWithUniqueID:buddy.accountUniqueId transaction:transaction];
+        
+    } completionBlock:^{
+        OTRProtocolManager * protocolManager = [OTRProtocolManager sharedInstance];
+        id<OTRProtocol> protocol = [protocolManager protocolForAccount:account];
+        [protocol sendMessage:message];
     }];
     
     
-    OTRProtocolManager * protocolManager = [OTRProtocolManager sharedInstance];
-    id<OTRProtocol> protocol = [protocolManager protocolForAccount:account];
-    [protocol sendMessage:message];
+    
 }
 
 - (OTRPushManager *)defaultPushManager

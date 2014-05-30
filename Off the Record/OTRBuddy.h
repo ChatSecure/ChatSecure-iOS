@@ -42,7 +42,6 @@ extern const struct OTRBuddyEdges {
 @property (nonatomic) OTRChatState chatState;
 @property (nonatomic) OTRChatState lastSentChatState;
 @property (nonatomic) OTRBuddyStatus status;
-@property (nonatomic) int encryptionStatus;
 @property (nonatomic, strong) NSData *avatarData;
 
 @property (nonatomic, strong) NSString *accountUniqueId;
@@ -56,6 +55,7 @@ extern const struct OTRBuddyEdges {
 - (OTRAccount*)accountWithTransaction:(YapDatabaseReadTransaction *)transaction;
 - (void)setAllMessagesRead:(YapDatabaseReadWriteTransaction *)transaction;
 
++ (OTRBuddy *)fetchBuddyForUsername:(NSString *)username accountName:(NSString *)accountName protocolType:(OTRProtocolType)protocolType transaction:(YapDatabaseReadTransaction *)transaction;
 + (instancetype)fetchBuddyWithUsername:(NSString *)username withAccountUniqueId:(NSString *)accountUniqueId transaction:(YapDatabaseReadTransaction *)transaction;
 
 

@@ -29,12 +29,25 @@
 
 #import "OTRLog.h"
 
+NSString *const OTRMessageStateDidChangeNotification = @"OTREncryptionManagerMessageStateDidChangeNotification";
+NSString *const OTRWillStartGeneratingPrivateKeyNotification = @"OTREncryptionManagerWillStartGeneratingPrivateKeyNotification";
+NSString *const OTRDidFinishGeneratingPrivateKeyNotification = @"OTREncryptionManagerdidFinishGeneratingPrivateKeyNotification";
+NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
+
+@interface OTREncryptionManager ()
+
+@property (nonatomic, strong)YapDatabaseConnection *databaseConnection;
+
+@end
+
 @implementation OTREncryptionManager
 
 
 - (id) init {
     if (self = [super init]) {
         OTRKit *otrKit = [OTRKit sharedInstance];
+        [otrKit setupWithDataPath:nil];
+        self.databaseConnection = [OTRDatabaseManager sharedInstance].readWriteDatabaseConnection;
         otrKit.delegate = self;
         NSArray *protectPaths = @[otrKit.privateKeyPath, otrKit.fingerprintsPath, otrKit.instanceTagsPath];
         for (NSString *path in protectPaths) {
@@ -48,43 +61,176 @@
     return self;
 }
 
+- (OTRProtocolType)prototcolTypeForString:(NSString *)typeString
+{
+    if ([typeString isEqualToString:@"xmpp"])
+    {
+        return OTRProtocolTypeXMPP;
+    }
+    else {
+        return OTRProtocolTypeNone;
+    }
+}
+
 
 #pragma mark OTRKitDelegate methods
 
-- (void) updateMessageStateForUsername:(NSString*)username accountName:(NSString*)accountName protocol:(NSString*)protocol messageState:(OTRKitMessageState)messageState {
-    
-    [[[OTRDatabaseManager sharedInstance] readWriteDatabaseConnection] readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        OTRAccount *account =  [OTRAccount fetchAccountWithUsername:accountName protocolType:[self prototcolTypeForString:protocol] transaction:transaction];
-        OTRBuddy *buddy = [OTRBuddy fetchBuddyWithUsername:username withAccountUniqueId:account.uniqueId transaction:transaction];
-        buddy.encryptionStatus = messageState;
-        [buddy saveWithTransaction:transaction];
-    }];
-}
-
-- (void) injectMessage:(NSString*)text recipient:(NSString*)recipient accountName:(NSString*)accountName protocol:(NSString*)protocol {
-
+- (void)otrKit:(OTRKit *)otrKit injectMessage:(NSString *)text username:(NSString *)username accountName:(NSString *)accountName protocol:(NSString *)protocol tag:(id)tag
+{
+    //only otrproltocol
     OTRMessage *message = [[OTRMessage alloc] init];
     message.text =text;
     message.incoming = NO;
     
-    OTRBuddy *buddy = [[OTRProtocolManager sharedInstance] buddyForUserName:recipient accountName:accountName protocolType:[self prototcolTypeForString:protocol]];
-    
-    message.buddyUniqueId = buddy.uniqueId;
-    
-    [[OTRProtocolManager sharedInstance] sendMessage:message];
+    __block OTRBuddy *buddy = nil;
+    [self.databaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        buddy = [OTRBuddy fetchBuddyForUsername:username accountName:accountName protocolType:[self prototcolTypeForString:protocol] transaction:transaction];
+    } completionBlock:^{
+        message.buddyUniqueId = buddy.uniqueId;
+        
+        [[OTRProtocolManager sharedInstance] sendMessage:message];
+    }];
 }
 
--(BOOL)recipientIsLoggedIn:(NSString *)recipient accountName:(NSString *)accountName protocol:(NSString *)protocol
+- (void)otrKit:(OTRKit *)otrKit encodedMessage:(NSString *)encodedMessage username:(NSString *)username accountName:(NSString *)accountName protocol:(NSString *)protocol tag:(id)tag error:(NSError *)error
 {
-    OTRBuddy *buddy = [[OTRProtocolManager sharedInstance] buddyForUserName:recipient accountName:accountName protocolType:[self prototcolTypeForString:protocol]];
-    if(buddy.status == OTRBuddyStatusOffline)
-    {
+    if (error) {
+        DDLogError(@"Encode Error: %@",error);
+    }
+    
+    OTRMessage *message = nil;
+    if ([tag isKindOfClass:[OTRMessage class]]) {
+        message = [tag copy];
+    }
+    
+    if (message && [encodedMessage length]) {
+    
+        if (![[encodedMessage stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] isEqualToString:[message.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]]) {
+             message.transportedSecurely = YES;
+        }
+        
+        message.text = encodedMessage;
+        [[OTRProtocolManager sharedInstance] sendMessage:message];
+    }
+    
+}
+
+- (void)otrKit:(OTRKit *)otrKit decodedMessage:(NSString *)decodedMessage tlvs:(NSArray *)tlvs username:(NSString *)username accountName:(NSString *)accountName protocol:(NSString *)protocol tag:(id)tag
+{
+    //decoded message can be nil if just TLV
+    OTRMessage *message = nil;
+    if ([tag isKindOfClass:[OTRMessage class]]) {
+        message = tag;
+    }
+    
+    if (message) {
+        if ([decodedMessage length]) {
+            message.text = decodedMessage;
+            message.transportedSecurely = YES;
+        }
+        
+        [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+            [message saveWithTransaction:transaction];
+        }];
+        
+    }
+    
+    if ([tlvs count]) {
+        DDLogVerbose(@"Found TLVS: %@",tlvs);
+    }
+}
+
+- (void)otrKit:(OTRKit *)otrKit updateMessageState:(OTRKitMessageState)messageState username:(NSString *)username accountName:(NSString *)accountName protocol:(NSString *)protocol
+{
+    __block OTRBuddy *buddy = nil;
+    [self.databaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        buddy = [OTRBuddy fetchBuddyForUsername:username accountName:accountName protocolType:[self prototcolTypeForString:protocol] transaction:transaction];
+    } completionBlock:^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:OTRMessageStateDidChangeNotification object:buddy userInfo:@{OTRMessageStateKey:@(messageState)}];
+    }];
+}
+
+- (BOOL)       otrKit:(OTRKit*)otrKit
+   isUsernameLoggedIn:(NSString*)username
+          accountName:(NSString*)accountName
+             protocol:(NSString*)protocol {
+    
+    __block OTRBuddy *buddy = nil;
+    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        buddy = [OTRBuddy fetchBuddyForUsername:username accountName:accountName protocolType:[self prototcolTypeForString:protocol] transaction:transaction];
+    }];
+    
+    if(!buddy || buddy.status == OTRBuddyStatusOffline) {
         return NO;
     }
-    else{
+    else {
         return YES;
     }
 }
+
+- (void)                           otrKit:(OTRKit*)otrKit
+  showFingerprintConfirmationForTheirHash:(NSString*)theirHash
+                                  ourHash:(NSString*)ourHash
+                                 username:(NSString*)username
+                              accountName:(NSString*)accountName
+                                 protocol:(NSString*)protocol
+{
+    //changed user fingerprint
+}
+
+- (void) otrKit:(OTRKit*)otrKit
+ handleSMPEvent:(OTRKitSMPEvent)event
+       progress:(double)progress
+       question:(NSString*)question
+       username:(NSString*)username
+    accountName:(NSString*)accountName
+       protocol:(NSString*)protocol
+{
+    
+}
+
+- (void) otrKit:(OTRKit *)otrKit handleMessageEvent:(OTRKitMessageEvent)event message:(NSString *)message username:(NSString *)username accountName:(NSString *)accountName protocol:(NSString *)protocol tag:(id)tag error:(NSError *)error {
+    //incoming and outgoing errors and other events
+    DDLogWarn(@"Message Event: %lu Error:%@",event,error);
+    
+}
+
+- (void)        otrKit:(OTRKit*)otrKit
+  receivedSymmetricKey:(NSData*)symmetricKey
+                forUse:(NSUInteger)use
+               useData:(NSData*)useData
+              username:(NSString*)username
+           accountName:(NSString*)accountName
+              protocol:(NSString*)protocol
+{
+    DDLogVerbose(@"Received Symetric Key");
+}
+
+ ////// Optional //////
+
+- (void)otrKit:(OTRKit *)otrKit willStartGeneratingPrivateKeyForAccountName:(NSString *)accountName protocol:(NSString *)protocol
+{
+    __block OTRAccount *account = nil;
+    [self.databaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        account = [OTRAccount fetchAccountWithUsername:accountName protocolType:[self prototcolTypeForString:protocol] transaction:transaction];
+    } completionBlock:^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:OTRWillStartGeneratingPrivateKeyNotification object:account];
+    }];
+    
+    
+}
+
+- (void)otrKit:(OTRKit *)otrKit didFinishGeneratingPrivateKeyForAccountName:(NSString *)accountName protocol:(NSString *)protocol error:(NSError *)error
+{
+    __block OTRAccount *account = nil;
+    [self.databaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        account = [OTRAccount fetchAccountWithUsername:accountName protocolType:[self prototcolTypeForString:protocol] transaction:transaction];
+    } completionBlock:^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:OTRDidFinishGeneratingPrivateKeyNotification object:account];
+    }];
+}
+
+#pragma - mark Class Methods
 
 + (BOOL) setFileProtection:(NSString*)fileProtection path:(NSString*)path {
     NSDictionary *fileAttributes = [NSDictionary dictionaryWithObject:fileProtection forKey:NSFileProtectionKey];
@@ -108,17 +254,6 @@
         DDLogError(@"Error excluding %@ from backup %@", [URL lastPathComponent], error);
     }
     return success;
-}
-
-- (OTRProtocolType)prototcolTypeForString:(NSString *)typeString
-{
-    if ([typeString isEqualToString:@"xmpp"])
-    {
-        return OTRProtocolTypeXMPP;
-    }
-    else {
-        return OTRProtocolTypeNone;
-    }
 }
 
 @end

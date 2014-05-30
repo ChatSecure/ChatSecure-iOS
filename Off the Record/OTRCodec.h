@@ -26,7 +26,7 @@
 @class OTRMessage, OTRBuddy, OTRAccount;
 
 @interface OTRCodec : NSObject
-
+/*
 + (void)decodeMessage:(OTRMessage *)theMessage completionBlock:(void (^)(OTRMessage * message))completionBlock;
 + (void)encodeMessage:(OTRMessage *)theMessage completionBlock:(void (^)(OTRMessage * message))completionBlock;
 
@@ -39,6 +39,6 @@
                      completion:(void (^)(BOOL isGeneratingKey))completion;
 
 + (void)hasGeneratedKeyForAccount:(OTRAccount *)account
-                completionBlock:(void (^)(BOOL hasGeneratedKey))completionBlock;
+                completionBlock:(void (^)(BOOL hasGeneratedKey))completionBlock;*/
 
 @end

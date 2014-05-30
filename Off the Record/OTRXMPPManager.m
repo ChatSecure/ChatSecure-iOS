@@ -617,20 +617,8 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
             
             message.messageId = [xmppMessage elementID];
             
-            [OTRCodec decodeMessage:message completionBlock:^(OTRMessage *decryptedMessage) {
-                if (decryptedMessage)
-                {
-                    [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-                        [transaction setObject:decryptedMessage forKey:message.uniqueId inCollection:[OTRMessage collection]];
-                        OTRXMPPBuddy *buddy = [OTRXMPPBuddy fetchObjectWithUniqueID:message.buddyUniqueId transaction:transaction];
-                        if (!buddy.lastMessageDate || [message.date compare:buddy.lastMessageDate] == NSOrderedDescending) {
-                            buddy.lastMessageDate = message.date;
-                            [buddy saveWithTransaction:transaction];
-                        }
-                    }];
-                    [OTRMessage showLocalNotificationForMessage:message];
-                }
-            }];
+            [[OTRKit sharedInstance] decodeMessage:message.text username:messageBuddy.username accountName:self.account.username protocol:@"XMPP" tag:message];
+            
         }
         
         if (messageBuddy) {
