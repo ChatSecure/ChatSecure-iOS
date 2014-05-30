@@ -37,7 +37,7 @@ static NSUInteger const OTRDefaultPortNumber = 5222;
 
 - (NSString *)protocolTypeString
 {
-    return @"xmpp";
+    return kOTRProtocolTypeXMPP;
 }
 
 - (UIImage *)accountImage

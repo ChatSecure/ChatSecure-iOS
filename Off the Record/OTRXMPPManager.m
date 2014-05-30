@@ -617,7 +617,7 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
             
             message.messageId = [xmppMessage elementID];
             
-            [[OTRKit sharedInstance] decodeMessage:message.text username:messageBuddy.username accountName:self.account.username protocol:@"XMPP" tag:message];
+            [[OTRKit sharedInstance] decodeMessage:message.text username:messageBuddy.username accountName:self.account.username protocol:kOTRProtocolTypeXMPP tag:message];
             
         }
         

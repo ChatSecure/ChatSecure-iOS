@@ -63,7 +63,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
 
 - (OTRProtocolType)prototcolTypeForString:(NSString *)typeString
 {
-    if ([typeString isEqualToString:@"xmpp"])
+    if ([typeString isEqualToString:kOTRProtocolTypeXMPP])
     {
         return OTRProtocolTypeXMPP;
     }
