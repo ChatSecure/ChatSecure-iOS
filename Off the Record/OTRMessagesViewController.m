@@ -24,6 +24,8 @@
 #import "UIAlertView+Blocks.h"
 #import "OTRTitleSubtitleView.h"
 #import "OTRKit.h"
+#import "OTRMessagesCollectionViewCellIncoming.h"
+#import "OTRMessagesCollectionViewCellOutgoing.h"
 
 static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
 
@@ -60,6 +62,13 @@ typedef NS_ENUM(int, OTRDropDownType) {
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    
+    self.outgoingCellIdentifier = [OTRMessagesCollectionViewCellOutgoing cellReuseIdentifier];
+    self.incomingCellIdentifier = [OTRMessagesCollectionViewCellIncoming cellReuseIdentifier];
+    
+    [self.collectionView registerNib:[OTRMessagesCollectionViewCellOutgoing nib] forCellWithReuseIdentifier:[OTRMessagesCollectionViewCellOutgoing cellReuseIdentifier]];
+    [self.collectionView registerNib:[OTRMessagesCollectionViewCellIncoming nib] forCellWithReuseIdentifier:[OTRMessagesCollectionViewCellIncoming cellReuseIdentifier]];
     
     
     self.automaticallyScrollsToMostRecentMessage = YES;
@@ -614,7 +623,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    JSQMessagesCollectionViewCell *cell = (JSQMessagesCollectionViewCell *)[super collectionView:collectionView cellForItemAtIndexPath:indexPath];
+    OTRMessagesCollectionViewCell *cell = (OTRMessagesCollectionViewCell *)[super collectionView:collectionView cellForItemAtIndexPath:indexPath];
     
     
     OTRMessage *message = [self messageAtIndexPath:indexPath];
@@ -632,6 +641,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
     else {
         cell.textView.dataDetectorTypes = UIDataDetectorTypeAll;
     }
+    
+    cell.errorImageView.image = [UIImage imageNamed:@"SendButtonHighlighted"];
     
     return cell;
 }

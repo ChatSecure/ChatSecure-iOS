@@ -321,6 +321,11 @@
 		63B43C2D166D93D5004A4C54 /* Lock_Locked_Verified.png in Resources */ = {isa = PBXBuildFile; fileRef = 63B43C29166D93D5004A4C54 /* Lock_Locked_Verified.png */; };
 		63B43C2E166D93D5004A4C54 /* Lock_Locked_Verified@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63B43C2A166D93D5004A4C54 /* Lock_Locked_Verified@2x.png */; };
 		63B43C30166D93D5004A4C54 /* Lock_Unlocked@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63B43C2C166D93D5004A4C54 /* Lock_Unlocked@2x.png */; };
+		63B7E55D193E89A300C2A444 /* OTRMessagesCollectionViewCellIncoming.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B7E55C193E89A300C2A444 /* OTRMessagesCollectionViewCellIncoming.m */; };
+		63B7E560193E89C300C2A444 /* OTRMessagesCollectionViewCellOutgoing.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B7E55F193E89C300C2A444 /* OTRMessagesCollectionViewCellOutgoing.m */; };
+		63B7E564193E913000C2A444 /* OTRMessagesCollectionViewCellOutgoing.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63B7E562193E913000C2A444 /* OTRMessagesCollectionViewCellOutgoing.xib */; };
+		63B7E567193E930E00C2A444 /* OTRMessagesCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B7E566193E930E00C2A444 /* OTRMessagesCollectionViewCell.m */; };
+		63B7E56B193E96AD00C2A444 /* OTRMessagesCollectionViewCellIncoming.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63B7E56A193E96AD00C2A444 /* OTRMessagesCollectionViewCellIncoming.xib */; };
 		63BA4EEC19086512008EA690 /* test_OTRPushAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BA4EEB19086512008EA690 /* test_OTRPushAPIClient.m */; };
 		63BE44CF17EE580D00F60670 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63BE44CE17EE580D00F60670 /* Social.framework */; };
 		63BE44D817EE5AB300F60670 /* 31-circle-plus-large.png in Resources */ = {isa = PBXBuildFile; fileRef = 63BE44D617EE5AB300F60670 /* 31-circle-plus-large.png */; };
@@ -1166,6 +1171,14 @@
 		63B43C29166D93D5004A4C54 /* Lock_Locked_Verified.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Lock_Locked_Verified.png; sourceTree = "<group>"; };
 		63B43C2A166D93D5004A4C54 /* Lock_Locked_Verified@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Lock_Locked_Verified@2x.png"; sourceTree = "<group>"; };
 		63B43C2C166D93D5004A4C54 /* Lock_Unlocked@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Lock_Unlocked@2x.png"; sourceTree = "<group>"; };
+		63B7E55B193E89A300C2A444 /* OTRMessagesCollectionViewCellIncoming.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRMessagesCollectionViewCellIncoming.h; sourceTree = "<group>"; };
+		63B7E55C193E89A300C2A444 /* OTRMessagesCollectionViewCellIncoming.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRMessagesCollectionViewCellIncoming.m; sourceTree = "<group>"; };
+		63B7E55E193E89C300C2A444 /* OTRMessagesCollectionViewCellOutgoing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRMessagesCollectionViewCellOutgoing.h; sourceTree = "<group>"; };
+		63B7E55F193E89C300C2A444 /* OTRMessagesCollectionViewCellOutgoing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRMessagesCollectionViewCellOutgoing.m; sourceTree = "<group>"; };
+		63B7E562193E913000C2A444 /* OTRMessagesCollectionViewCellOutgoing.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = OTRMessagesCollectionViewCellOutgoing.xib; path = "Off the Record/Resources/OTRMessagesCollectionViewCellOutgoing.xib"; sourceTree = SOURCE_ROOT; };
+		63B7E565193E930E00C2A444 /* OTRMessagesCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRMessagesCollectionViewCell.h; sourceTree = "<group>"; };
+		63B7E566193E930E00C2A444 /* OTRMessagesCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRMessagesCollectionViewCell.m; sourceTree = "<group>"; };
+		63B7E56A193E96AD00C2A444 /* OTRMessagesCollectionViewCellIncoming.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = OTRMessagesCollectionViewCellIncoming.xib; path = "Off the Record/Resources/OTRMessagesCollectionViewCellIncoming.xib"; sourceTree = SOURCE_ROOT; };
 		63BA4EEB19086512008EA690 /* test_OTRPushAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = test_OTRPushAPIClient.m; sourceTree = "<group>"; };
 		63BE44CE17EE580D00F60670 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		63BE44D617EE5AB300F60670 /* 31-circle-plus-large.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "31-circle-plus-large.png"; sourceTree = "<group>"; };
@@ -2776,6 +2789,12 @@
 				6335C0E31911930E00E506E5 /* OTROutgoingMessageTableViewCell.m */,
 				6335C0DF191192A300E506E5 /* OTRTextFieldTableViewCell.h */,
 				6335C0E0191192A300E506E5 /* OTRTextFieldTableViewCell.m */,
+				63B7E565193E930E00C2A444 /* OTRMessagesCollectionViewCell.h */,
+				63B7E566193E930E00C2A444 /* OTRMessagesCollectionViewCell.m */,
+				63B7E55B193E89A300C2A444 /* OTRMessagesCollectionViewCellIncoming.h */,
+				63B7E55C193E89A300C2A444 /* OTRMessagesCollectionViewCellIncoming.m */,
+				63B7E55E193E89C300C2A444 /* OTRMessagesCollectionViewCellOutgoing.h */,
+				63B7E55F193E89C300C2A444 /* OTRMessagesCollectionViewCellOutgoing.m */,
 			);
 			name = Cells;
 			sourceTree = "<group>";
@@ -3116,6 +3135,8 @@
 		D9D8D1F61531056300F9E8D3 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				63B7E56A193E96AD00C2A444 /* OTRMessagesCollectionViewCellIncoming.xib */,
+				63B7E562193E913000C2A444 /* OTRMessagesCollectionViewCellOutgoing.xib */,
 				1A86AD5D18C3EF39001110D7 /* Podfile */,
 				630606DF17FA1C9A00CEB7D3 /* Certificates */,
 				6344CCCE1817501700DA0402 /* strings.json */,
@@ -3531,6 +3552,7 @@
 				D9F9378513F44BD3009A3D84 /* InfoPlist.strings in Resources */,
 				D9CE422F13FDC9EF003EC27C /* 08-chat.png in Resources */,
 				63BE44D817EE5AB300F60670 /* 31-circle-plus-large.png in Resources */,
+				63B7E564193E913000C2A444 /* OTRMessagesCollectionViewCellOutgoing.xib in Resources */,
 				D9CE423213FDCA0F003EC27C /* 112-group.png in Resources */,
 				D9CE42C413FDCBDD003EC27C /* Lock_Unlocked.png in Resources */,
 				D95F8E921419C3D00094A634 /* chatsecure_icon.png in Resources */,
@@ -3550,6 +3572,7 @@
 				D99550BE141AE07D00A82FAC /* aim@2x.png in Resources */,
 				D9BBCD3B1491F7AB00AF1B9F /* 19-gear.png in Resources */,
 				63B046E4185BD2780066C8E5 /* button-green@2x.png in Resources */,
+				63B7E56B193E96AD00C2A444 /* OTRMessagesCollectionViewCellIncoming.xib in Resources */,
 				D99B0ACB18C019190017903C /* xmpp@2x.png in Resources */,
 				D9BBCD431491FFC800AF1B9F /* about_icon.png in Resources */,
 				D9BBCD441491FFC800AF1B9F /* about_icon@2x.png in Resources */,
@@ -3804,6 +3827,7 @@
 				63CAF90418FF284200C3337E /* OTRUtilities.m in Sources */,
 				63464F301889EC9200526358 /* _OTRManagedEncryptionMessage.m in Sources */,
 				639C60CD18CA98E700CC4DF4 /* OTRColors.m in Sources */,
+				63B7E560193E89C300C2A444 /* OTRMessagesCollectionViewCellOutgoing.m in Sources */,
 				63E5E73718CA942A00CF7E28 /* HITorManager.m in Sources */,
 				6370C976185FC58C00CB6786 /* OTRTitleSubtitleView.m in Sources */,
 				6350796719353635002C8A69 /* OTRYapPushTokenReceived.m in Sources */,
@@ -3993,9 +4017,11 @@
 				6383196818EB938300862B25 /* OTRManagedAccount.m in Sources */,
 				63483FD11752CED100779257 /* XMPPMessageArchiving.xcdatamodeld in Sources */,
 				63483FD21752CED100779257 /* XMPPMessageArchiving_Contact_CoreDataObject.m in Sources */,
+				63B7E567193E930E00C2A444 /* OTRMessagesCollectionViewCell.m in Sources */,
 				639C60D118CA990A00CC4DF4 /* OTRDonateSetting.m in Sources */,
 				63483FD31752CED100779257 /* XMPPMessageArchiving_Message_CoreDataObject.m in Sources */,
 				63188E0E18E62E5800037EE0 /* OTRBuddy.m in Sources */,
+				63B7E55D193E89A300C2A444 /* OTRMessagesCollectionViewCellIncoming.m in Sources */,
 				63483FD41752CED100779257 /* XMPPMessageArchivingCoreDataStorage.m in Sources */,
 				63483FD51752CED100779257 /* XMPPMessageArchiving.m in Sources */,
 				63483FD61752CED100779257 /* XMPPvCardAvatarModule.m in Sources */,
