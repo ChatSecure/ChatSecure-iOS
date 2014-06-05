@@ -98,20 +98,43 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
         DDLogError(@"Encode Error: %@",error);
     }
     
-    OTRMessage *message = nil;
+    __block OTRMessage *message = nil;
     if ([tag isKindOfClass:[OTRMessage class]]) {
         message = [tag copy];
-    }
-    
-    if (message && [encodedMessage length]) {
-    
-        if (![[encodedMessage stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] isEqualToString:[message.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]]) {
-             message.transportedSecurely = YES;
+        if (error) {
+            [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+                message.error = error;
+                [message saveWithTransaction:transaction];
+            }];
         }
-        
-        message.text = encodedMessage;
-        [[OTRProtocolManager sharedInstance] sendMessage:message];
+        else if ([encodedMessage length]) {
+            
+            if (![[encodedMessage stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] isEqualToString:[message.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]]) {
+                message.transportedSecurely = YES;
+            }
+            
+            [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+                [message saveWithTransaction:transaction];
+            } completionBlock:^{
+                message.text = encodedMessage;
+                [[OTRProtocolManager sharedInstance] sendMessage:message];
+            }];
+        }
     }
+    else if ([encodedMessage length]) {
+        
+        [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+            message = [[OTRMessage alloc] init];
+            message.incoming = NO;
+            message.text = encodedMessage;
+            OTRBuddy *buddy = [OTRBuddy fetchBuddyForUsername:username accountName:accountName protocolType:[self prototcolTypeForString:protocol] transaction:transaction];
+            message.buddyUniqueId = buddy.uniqueId;
+            
+        } completionBlock:^{
+            [[OTRProtocolManager sharedInstance] sendMessage:message];
+        }];
+    }
+    
     
 }
 

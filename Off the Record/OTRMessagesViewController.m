@@ -642,7 +642,22 @@ typedef NS_ENUM(int, OTRDropDownType) {
         cell.textView.dataDetectorTypes = UIDataDetectorTypeAll;
     }
     
-    cell.errorImageView.image = [UIImage imageNamed:@"SendButtonHighlighted"];
+    
+    
+    if (message.isTransportedSecurely) {
+        cell.lockImageView.image = [UIImage imageNamed:@"lock"];
+    }
+    else {
+        cell.lockImageView.image = nil;
+    }
+    
+    if (message.error) {
+        cell.errorImageView.image = [UIImage imageNamed:@"SendButtonHighlighted"];
+    }
+    else {
+        cell.errorImageView.image = nil;
+    }
+    
     
     return cell;
 }
@@ -722,9 +737,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
 {
     OTRMessage *message = [self messageAtIndexPath:indexPath];
     NSMutableString *string = [NSMutableString string];
-    if (message.isTransportedSecurely) {
-        [string appendString:@"Secure "];
-    }
     
     if (message.isDelivered) {
         [string appendString:@"Delivered"];
@@ -737,6 +749,21 @@ typedef NS_ENUM(int, OTRDropDownType) {
     return nil;
     
 }
+
+- (CGSize)collectionView:(JSQMessagesCollectionView *)collectionView
+                  layout:(JSQMessagesCollectionViewFlowLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    OTRMessage *message = [self messageAtIndexPath: indexPath];
+    CGSize size = [super collectionView:collectionView layout:collectionViewLayout sizeForItemAtIndexPath:indexPath];
+    if (message.isTransportedSecurely) {
+        size.height += 28.0;
+    }
+    
+    return size;
+
+
+}
+
 
 #pragma - mark  JSQMessagesCollectionViewDelegateFlowLayout Methods
 
@@ -755,7 +782,7 @@ heightForCellTopLabelAtIndexPath:(NSIndexPath *)indexPath
 heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 {
     OTRMessage *message = [self messageAtIndexPath:indexPath];
-    if (message.isDelivered || message.isTransportedSecurely) {
+    if (message.isDelivered) {
         return kJSQMessagesCollectionViewCellLabelHeightDefault;
     }
     return 0.0f;
@@ -824,6 +851,7 @@ didTapLoadEarlierMessagesButton:(UIButton *)sender
     
     if ([rowChanges count]) {
         [self finishReceivingMessage];
+        [self.collectionView.collectionViewLayout invalidateLayout];
     }
     
 }

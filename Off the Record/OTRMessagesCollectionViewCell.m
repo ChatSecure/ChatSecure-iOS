@@ -12,26 +12,29 @@
 
 @property (weak, nonatomic) IBOutlet UIImageView *errorImageView;
 
+@property (weak, nonatomic) IBOutlet UIImageView *lockImageView;
+
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *lockHeightConstraint;
+
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *lockBottomConstraint;
+
 @end
 
 @implementation OTRMessagesCollectionViewCell
 
-- (id)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        // Initialization code
-    }
-    return self;
-}
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
+
+- (void)updateConstraints
 {
-    // Drawing code
+    [super updateConstraints];
+    if (!self.lockImageView.image) {
+        self.lockHeightConstraint.constant = 0.0;
+        self.lockBottomConstraint.constant = 0.0;
+    }
+    else {
+        self.lockHeightConstraint.constant = 20.0;
+        self.lockBottomConstraint.constant = 8.0;
+    }
 }
-*/
 
 @end

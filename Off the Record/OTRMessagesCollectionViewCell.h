@@ -12,4 +12,6 @@
 
 @property (weak, nonatomic, readonly) UIImageView *errorImageView;
 
+@property (weak, nonatomic, readonly) UIImageView *lockImageView;
+
 @end
