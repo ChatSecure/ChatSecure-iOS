@@ -26,6 +26,7 @@
 #import "OTRAccount.h"
 #import "OTRProtocolManager.h"
 #import "OTRDatabaseManager.h"
+#import "OTRUtilities.h"
 
 #import "OTRLog.h"
 
@@ -148,8 +149,11 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     
     if (message) {
         if ([decodedMessage length]) {
-            message.text = decodedMessage;
+            message.text = [OTRUtilities stripHTML:decodedMessage];
             message.transportedSecurely = YES;
+        }
+        else {
+            message.text = [OTRUtilities stripHTML:message.text];
         }
         
         [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
