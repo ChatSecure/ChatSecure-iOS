@@ -36,7 +36,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     OTRDropDownTypePush          = 2
 };
 
-@interface OTRMessagesViewController ()
+@interface OTRMessagesViewController () <OTRMessagesCollectionViewCellDelegate>
 
 @property (nonatomic, strong) OTRAccount *account;
 
@@ -236,7 +236,13 @@ typedef NS_ENUM(int, OTRDropDownType) {
         self.titleView.subtitleLabel.text = self.account.username;
     }
 }
- #pragma - mark titleView Methods
+
+- (void)showErrorMessageForCell:(OTRMessagesCollectionViewCell *)cell
+{
+    
+}
+
+#pragma - mark titleView Methods
 
 - (void)didTapTitleView:(id)sender
 {
@@ -796,6 +802,11 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         [message removeWithTransaction:transaction];
     }];
+}
+
+- (void)messagesCollectionViewCellDidTapError:(OTRMessagesCollectionViewCell *)cell
+{
+    [self showErrorMessageForCell:cell];
 }
 
 /*

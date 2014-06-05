@@ -14,12 +14,10 @@
 
 @required
 
-/**
- *  Tells the delegate that the avatarImageView of a cell has been tapped.
- *
- *  @param cell The cell that received the tap.
- */
+@optional
+
 - (void)messagesCollectionViewCellDidTapDelete:(OTRMessagesCollectionViewCell *)cell;
+- (void)messagesCollectionViewCellDidTapError:(OTRMessagesCollectionViewCell *)cell;
 
 @end
 

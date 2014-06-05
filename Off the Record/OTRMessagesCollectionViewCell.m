@@ -18,9 +18,27 @@
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *lockBottomConstraint;
 
+@property (nonatomic, strong) UITapGestureRecognizer *tap;
+
 @end
 
 @implementation OTRMessagesCollectionViewCell
+
+- (void)awakeFromNib
+{
+    [super awakeFromNib];
+    
+    UITapGestureRecognizer *tapg = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(errorImageTap:)];
+    [self.errorImageView addGestureRecognizer:tapg];
+    self.tap = tapg;
+}
+
+- (void)errorImageTap:(UITapGestureRecognizer *)tap
+{
+    if ([self.delegate respondsToSelector:@selector(messagesCollectionViewCellDidTapError:)]) {
+        [self.delegate messagesCollectionViewCellDidTapError:self];
+    }
+}
 
 - (BOOL)canPerformAction:(SEL)action withSender:(id)sender
 {
