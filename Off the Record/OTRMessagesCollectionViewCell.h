@@ -8,7 +8,24 @@
 
 #import "JSQMessagesCollectionViewCell.h"
 
+@class OTRMessagesCollectionViewCell;
+
+@protocol OTRMessagesCollectionViewCellDelegate <JSQMessagesCollectionViewCellDelegate>
+
+@required
+
+/**
+ *  Tells the delegate that the avatarImageView of a cell has been tapped.
+ *
+ *  @param cell The cell that received the tap.
+ */
+- (void)messagesCollectionViewCellDidTapDelete:(OTRMessagesCollectionViewCell *)cell;
+
+@end
+
 @interface OTRMessagesCollectionViewCell : JSQMessagesCollectionViewCell
+
+@property (weak, nonatomic) id<OTRMessagesCollectionViewCellDelegate> delegate;
 
 @property (weak, nonatomic, readonly) UIImageView *errorImageView;
 

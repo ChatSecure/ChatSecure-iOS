@@ -22,7 +22,21 @@
 
 @implementation OTRMessagesCollectionViewCell
 
+- (BOOL)canPerformAction:(SEL)action withSender:(id)sender
+{
+    BOOL result = [super canPerformAction:action withSender:sender];
+    if (!result) {
+        result = (action == @selector(delete:));
+    }
+    return result;
+}
 
+- (void)delete:(id)sender
+{
+    if ([self.delegate respondsToSelector:@selector(messagesCollectionViewCellDidTapDelete:)]) {
+        [self.delegate messagesCollectionViewCellDidTapDelete:self];
+    }
+}
 
 - (void)updateConstraints
 {

@@ -788,6 +788,15 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
     return 0.0f;
 }
 
+- (void)messagesCollectionViewCellDidTapDelete:(OTRMessagesCollectionViewCell *)cell
+{
+    NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
+    __block OTRMessage *message = [self messageAtIndexPath:indexPath];
+    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        [message removeWithTransaction:transaction];
+    }];
+}
+
 /*
 - (CGFloat)collectionView:(JSQMessagesCollectionView *)collectionView
                    layout:(JSQMessagesCollectionViewFlowLayout *)collectionViewLayout
