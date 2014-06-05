@@ -18,17 +18,12 @@ typedef NS_ENUM(NSUInteger, OTRBubbleMessageType) {
 
 @interface OTRImages : NSObject
 
-+ (UIImage *)statusImageWithStatus:(OTRBuddyStatus)status;
-
-+ (UIImage *)openCaratImage;
-+ (UIImage *)closeCaratImage;
-
-
-+ (UIImageView *)bubbleImageViewForMessageType:(OTRBubbleMessageType)bubbleMessageType;
 + (UIView *)typingBubbleView;
 
 + (UIImage *)circleWithRadius:(CGFloat)radius;
 
 + (UIImage *)facebookImage;
+
++ (UIImage *)warningImage;
 
 @end

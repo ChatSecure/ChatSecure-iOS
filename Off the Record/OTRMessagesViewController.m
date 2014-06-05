@@ -26,6 +26,7 @@
 #import "OTRKit.h"
 #import "OTRMessagesCollectionViewCellIncoming.h"
 #import "OTRMessagesCollectionViewCellOutgoing.h"
+#import "OTRImages.h"
 
 static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
 
@@ -652,7 +653,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }
     
     if (message.error) {
-        cell.errorImageView.image = [UIImage imageNamed:@"SendButtonHighlighted"];
+        cell.errorImageView.image = [OTRImages warningImage];
     }
     else {
         cell.errorImageView.image = nil;

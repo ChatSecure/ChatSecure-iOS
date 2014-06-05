@@ -20,5 +20,6 @@
 
 + (UIColor *)redErrorColor;
 + (UIColor *)greenNoErrorColor;
++ (UIColor *)warnColor;
 
 @end
