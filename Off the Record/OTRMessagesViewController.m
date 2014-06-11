@@ -658,14 +658,14 @@ typedef NS_ENUM(int, OTRDropDownType) {
         cell.lockImageView.image = nil;
     }
     
-    if (message.error) {
+    if (message.error || YES) {
         cell.errorImageView.image = [OTRImages warningImage];
     }
     else {
         cell.errorImageView.image = nil;
     }
     
-    
+    //[cell updateConstraintsIfNeeded];
     return cell;
 }
 
@@ -755,20 +755,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }
     return nil;
     
-}
-
-- (CGSize)collectionView:(JSQMessagesCollectionView *)collectionView
-                  layout:(JSQMessagesCollectionViewFlowLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    OTRMessage *message = [self messageAtIndexPath: indexPath];
-    CGSize size = [super collectionView:collectionView layout:collectionViewLayout sizeForItemAtIndexPath:indexPath];
-    if (message.isTransportedSecurely) {
-        size.height += 28.0;
-    }
-    
-    return size;
-
-
 }
 
 
@@ -872,7 +858,7 @@ didTapLoadEarlierMessagesButton:(UIButton *)sender
     
     if ([rowChanges count]) {
         [self finishReceivingMessage];
-        [self.collectionView.collectionViewLayout invalidateLayout];
+        //[self.collectionView.collectionViewLayout invalidateLayoutWithContext:[JSQMessagesCollectionViewFlowLayoutInvalidationContext context]];
     }
     
 }

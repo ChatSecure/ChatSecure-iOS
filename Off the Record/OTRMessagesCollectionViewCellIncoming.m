@@ -12,6 +12,18 @@
 
 #pragma mark - Overrides
 
+- (void)setupConstraints
+{
+    [super setupConstraints];
+    
+    NSDictionary *views = @{@"errorImageView":self.errorImageView,@"deliveredImageView":self.deliveredImageView,@"lockImageView":self.lockImageView};
+    NSDictionary *metrics = @{@"margin":@(6)};
+    
+    [self.leftRightView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(margin)-[lockImageView][deliveredImageView][errorImageView]-(>=0)-|" options:0 metrics:metrics views:views]];
+    
+    
+}
+
 + (UINib *)nib
 {
     return [UINib nibWithNibName:NSStringFromClass([OTRMessagesCollectionViewCellIncoming class])
