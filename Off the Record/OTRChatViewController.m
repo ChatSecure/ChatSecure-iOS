@@ -505,7 +505,7 @@
     
     __weak OTRChatViewController * chatViewController = self;
     __weak OTRChatInputBar * weakChatInputbar = chatInputBar;
-    [self.view addKeyboardPanningWithActionHandler:^(CGRect keyboardFrameInView) {
+    [self.view addKeyboardPanningWithActionHandler:^(CGRect keyboardFrameInView, BOOL opening, BOOL closing) {
         CGRect messageInputBarFrame = weakChatInputbar.frame;
         messageInputBarFrame.origin.y = keyboardFrameInView.origin.y - messageInputBarFrame.size.height;
         weakChatInputbar.frame = messageInputBarFrame;
