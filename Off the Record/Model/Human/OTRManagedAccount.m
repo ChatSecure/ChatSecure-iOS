@@ -31,7 +31,7 @@ NSString *const kOTRClassKey = @"kOTRClassKey";
 @implementation OTRManagedAccount
 
 
-- (NSDictionary *)dictionaryRepresentation
+- (NSDictionary *)propertiesDictionary
 {
     NSMutableDictionary * dictionary = [NSMutableDictionary dictionary];
     
