@@ -218,6 +218,10 @@
     
     self.certAlertView.messageAttributedString = attributedString;
     
+    [self.certAlertView show];
+    
+    // For some reason we must show the alert view first,
+    // THEN change the button style, otherwise the button doesn't appear.
     UIImage * normalImage = [UIImage imageNamed:@"button-green"];
     CGFloat hInset = floorf(normalImage.size.width / 2);
 	CGFloat vInset = floorf(normalImage.size.height / 2);
@@ -226,8 +230,6 @@
     
     [self.certAlertView setDefaultButtonImage:buttonImage forState:UIControlStateNormal];
     [self.certAlertView setDefaultButtonImage:buttonImage forState:UIControlStateHighlighted];
-    
-    [self.certAlertView show];
 }
 
 - (void)loginButtonPressed:(id)sender
