@@ -582,7 +582,11 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
     [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         
         OTRXMPPBuddy *messageBuddy = [self buddyWithMessage:xmppMessage transaction:transaction];
-        if([xmppMessage hasChatState] && ![xmppMessage isErrorMessage])
+        if ([xmppMessage isErrorMessage]) {
+            NSError *error = [xmppMessage errorMessage];
+            DDLogCWarn(@"XMPP Error: %@",error);
+        }
+        else if([xmppMessage hasChatState])
         {
             if([xmppMessage hasComposingChatState])
                 messageBuddy.chatState = kOTRChatStateComposing;
@@ -596,6 +600,7 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
                  messageBuddy.chatState = kOTRChatStateGone;
             [messageBuddy saveWithTransaction:transaction];
         }
+        
         
         if ([xmppMessage hasReceiptResponse] && ![xmppMessage isErrorMessage]) {
             [OTRMessage receivedDeliveryReceiptForMessageId:[xmppMessage receiptResponseID] transaction:transaction];
@@ -634,6 +639,30 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 - (void)xmppStream:(XMPPStream *)sender didReceiveError:(id)error
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
+}
+
+- (void)xmppStream:(XMPPStream *)sender didFailToSendIQ:(XMPPIQ *)iq error:(NSError *)error
+{
+    DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
+}
+
+- (void)xmppStream:(XMPPStream *)sender didFailToSendMessage:(XMPPMessage *)message error:(NSError *)error
+{
+    if ([message.elementID length]) {
+        [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+            [OTRMessage enumerateMessagesWithMessageId:message.elementID transaction:transaction usingBlock:^(OTRMessage *message, BOOL *stop) {
+                message.error = error;
+                [message saveWithTransaction:transaction];
+                *stop = YES;
+            }];
+        }];
+    }
+    
+    DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
+}
+- (void)xmppStream:(XMPPStream *)sender didFailToSendPresence:(XMPPPresence *)presence error:(NSError *)error
+{
+    DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
 }
 
 - (void)xmppStreamDidDisconnect:(XMPPStream *)sender withError:(NSError *)error

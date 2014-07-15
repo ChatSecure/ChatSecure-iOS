@@ -15,6 +15,8 @@
 #import "NSString+HTML.h"
 #import "Strings.h"
 #import "OTRConstants.h"
+#import "YapDatabaseQuery.h"
+#import "YapDatabaseSecondaryIndexTransaction.h"
 
 const struct OTRMessageAttributes OTRMessageAttributes = {
 	.date = @"date",
@@ -150,6 +152,22 @@ const struct OTRMessageEdges OTRMessageEdges = {
             [[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
         });
     }
+}
+
++ (void)enumerateMessagesWithMessageId:(NSString *)messageId transaction:(YapDatabaseReadTransaction *)transaction usingBlock:(void (^)(OTRMessage *message,BOOL *stop))block;
+{
+    if ([messageId length] && block) {
+        NSString *queryString = [NSString stringWithFormat:@"Where %@ = ?",OTRYapDatabseMessageIdSecondaryIndex];
+        YapDatabaseQuery *query = [YapDatabaseQuery queryWithFormat:queryString,messageId];
+        
+        [[transaction ext:OTRYapDatabseMessageIdSecondaryIndexExtension] enumerateKeysMatchingQuery:query usingBlock:^(NSString *collection, NSString *key, BOOL *stop) {
+            OTRMessage *message = [OTRMessage fetchObjectWithUniqueID:key transaction:transaction];
+            if (message) {
+                block(message,stop);
+            }
+        }];
+        
+    }    
 }
 
 @end
