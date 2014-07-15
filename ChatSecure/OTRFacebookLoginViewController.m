@@ -98,7 +98,7 @@
         self.account.displayName =  user.username;
     }
     
-    self.account.username = [NSString stringWithFormat:@"-%@@%@",user.id,kOTRFacebookDomain];
+    self.account.username = [NSString stringWithFormat:@"-%@@%@",user.objectID,kOTRFacebookDomain];
 }
 
 @end
