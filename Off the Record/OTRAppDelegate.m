@@ -57,6 +57,10 @@
 #import "OTROnboardingStepsController.h"
 #import "OTRDatabaseUnlockViewController.h"
 
+#if CHATSECURE_DEMO
+#import "OTRChatDemo.h"
+#endif
+
 @implementation OTRAppDelegate
 
 @synthesize window = _window;
@@ -90,7 +94,12 @@
         
          ////// Normal launch to conversationViewController //////
         [[OTRDatabaseManager sharedInstance] setupDatabaseWithName:OTRYapDatabaseName];
+
         rootViewController = [OTRAppDelegate conversationViewController];
+        
+#if CHATSECURE_DEMO
+        [self performSelector:@selector(loadDemoData) withObject:nil afterDelay:10];
+#endif
     }
     else {
         ////// Onboarding //////
@@ -99,6 +108,7 @@
         
         rootViewController = onboardingStepsController;
     }
+
 
 
     //rootViewController = [[OTRDatabaseUnlockViewController alloc] init];
@@ -143,6 +153,12 @@
     [self autoLogin];
     
     return YES;
+}
+
+- (void) loadDemoData {
+#if CHATSECURE_DEMO
+    [OTRChatDemo loadDemoChatInDatabase];
+#endif
 }
 
 + (UIViewController *)conversationViewController

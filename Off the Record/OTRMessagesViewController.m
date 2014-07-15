@@ -658,7 +658,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         cell.lockImageView.image = nil;
     }
     
-    if (message.error || YES) {
+    if (message.error) {
         cell.errorImageView.image = [OTRImages warningImage];
     }
     else {

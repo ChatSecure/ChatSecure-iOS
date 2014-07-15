@@ -942,14 +942,16 @@ managedBuddyObjectID
 
 - (void)failedToConnect:(NSError *)error
 {
-    if (error) {
-        [[NSNotificationCenter defaultCenter]
-         postNotificationName:kOTRProtocolLoginFail object:self userInfo:@{kOTRNotificationErrorKey:error}];
-    }
-    else {
-        [[NSNotificationCenter defaultCenter]
-         postNotificationName:kOTRProtocolLoginFail object:self];
-    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (error) {
+            [[NSNotificationCenter defaultCenter]
+             postNotificationName:kOTRProtocolLoginFail object:self userInfo:@{kOTRNotificationErrorKey:error}];
+        }
+        else {
+            [[NSNotificationCenter defaultCenter]
+             postNotificationName:kOTRProtocolLoginFail object:self];
+        }
+    });
 }
 
 - (OTRCertificatePinning *)certificatePinningModule

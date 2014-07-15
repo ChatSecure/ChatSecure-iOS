@@ -10,4 +10,6 @@
 
 @interface OTRChatDemo : NSObject
 
++ (void)loadDemoChatInDatabase;
+
 @end

@@ -36,7 +36,6 @@
 #import "OTRUtilities.h"
 #import "OTRXMPPError.h"
 
-#import "SIAlertView.h"
 #import "UIAlertView+Blocks.h"
 #import "OTRCertificatePinning.h"
 #import "OTRDatabaseManager.h"

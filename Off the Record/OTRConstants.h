@@ -110,7 +110,7 @@ typedef NS_ENUM(int, OTRProtocolType) {
     OTRProtocolTypeOscar       = 2
 };
 
-typedef NS_ENUM(int, OTRBuddyStatus) {
+typedef NS_ENUM(NSInteger, OTRBuddyStatus) {
     OTRBuddyStatusOffline   = 4,
     OTRBuddyStatusXa        = 3,
     OTRBuddyStatusDnd       = 2,

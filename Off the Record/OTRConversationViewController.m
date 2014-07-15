@@ -338,7 +338,7 @@ static CGFloat cellHeight = 80.0;
     // No need to update mappings.
     // The above method did it automatically.
     
-    if ([sectionChanges count] == 0 & [rowChanges count] == 0)
+    if ([sectionChanges count] == 0 && [rowChanges count] == 0)
     {
         // Nothing has changed that affects our tableView
         return;

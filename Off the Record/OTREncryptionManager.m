@@ -27,6 +27,7 @@
 #import "OTRProtocolManager.h"
 #import "OTRDatabaseManager.h"
 #import "OTRUtilities.h"
+#import "Strings.h"
 
 #import "OTRLog.h"
 
@@ -220,6 +221,30 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     //incoming and outgoing errors and other events
     DDLogWarn(@"Message Event: %lu Error:%@",event,error);
     
+    if ([tag isKindOfClass:[OTRMessage class]]) {
+        __block NSError *error = nil;
+        
+        // These are the errors caught and 
+        switch (event) {
+            case OTRKitMessageEventEncryptionError:
+            case OTRKitMessageEventReceivedMessageNotInPrivate:
+            case OTRKitMessageEventReceivedMessageUnreadable:
+            case OTRKitMessageEventReceivedMessageMalformed:
+            case OTRKitMessageEventReceivedMessageGeneralError:
+            case OTRKitMessageEventReceivedMessageUnrecognized:
+                error = [OTREncryptionManager errorForMessageEvent:event];
+                break;
+            default:
+                break;
+        }
+        if (error) {
+            [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+                OTRMessage *message = (OTRMessage *)tag;
+                message.error = error;
+                [message saveWithTransaction:transaction];
+            }];
+        }
+    }
 }
 
 - (void)        otrKit:(OTRKit*)otrKit
@@ -258,6 +283,77 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
 }
 
 #pragma - mark Class Methods
+
++ (NSError *)errorForMessageEvent:(OTRKitMessageEvent)event
+{
+    
+    NSString *eventString = [OTREncryptionManager stringForEvent:event];
+    
+    NSInteger code = 200 + event;
+    NSMutableDictionary *userInfo = [@{NSLocalizedDescriptionKey:ENCRYPTION_ERROR_STRING} mutableCopy];
+    if ([eventString length]) {
+        [userInfo setObject:eventString forKey:NSLocalizedFailureReasonErrorKey];
+    }
+    NSError *error = [NSError errorWithDomain:kOTRErrorDomain code:code userInfo:userInfo];
+    
+    
+    return error;
+}
+
++ (NSString *)stringForEvent:(OTRKitMessageEvent)event
+{
+    NSString *string = nil;
+    switch (event) {
+        case OTRKitMessageEventEncryptionRequired:
+            string = OTRL_MSGEVENT_ENCRYPTION_REQUIRED_STRING;
+            break;
+        case OTRKitMessageEventEncryptionError:
+            string = OTRL_MSGEVENT_ENCRYPTION_ERROR_STRING;
+            break;
+        case OTRKitMessageEventConnectionEnded:
+            string = OTRL_MSGEVENT_CONNECTION_ENDED_STRING;
+            break;
+        case OTRKitMessageEventSetupError:
+            string = OTRL_MSGEVENT_SETUP_ERROR_STRING;
+            break;
+        case OTRKitMessageEventMessageReflected:
+            string = OTRL_MSGEVENT_MSG_REFLECTED_STRING;
+            break;
+        case OTRKitMessageEventMessageResent:
+            string = OTRL_MSGEVENT_MSG_RESENT_STRING;
+            break;
+        case OTRKitMessageEventReceivedMessageNotInPrivate:
+            string = OTRL_MSGEVENT_RCVDMSG_NOT_IN_PRIVATE_STRING;
+            break;
+        case OTRKitMessageEventReceivedMessageUnreadable:
+            string = OTRL_MSGEVENT_RCVDMSG_UNREADABLE_STRING;
+            break;
+        case OTRKitMessageEventReceivedMessageMalformed:
+            string = OTRL_MSGEVENT_RCVDMSG_MALFORMED_STRING;
+            break;
+        case OTRKitMessageEventLogHeartbeatReceived:
+            string = OTRL_MSGEVENT_LOG_HEARTBEAT_RCVD_STRING;
+            break;
+        case OTRKitMessageEventLogHeartbeatSent:
+            string = OTRL_MSGEVENT_LOG_HEARTBEAT_SENT_STRING;
+            break;
+        case OTRKitMessageEventReceivedMessageGeneralError:
+            string = OTRL_MSGEVENT_RCVDMSG_GENERAL_ERR_STRING;
+            break;
+        case OTRKitMessageEventReceivedMessageUnencrypted:
+            string = OTRL_MSGEVENT_RCVDMSG_UNENCRYPTED_STRING;
+            break;
+        case OTRKitMessageEventReceivedMessageUnrecognized:
+            string = OTRL_MSGEVENT_RCVDMSG_UNRECOGNIZED_STRING;
+            break;
+        case OTRKitMessageEventReceivedMessageForOtherInstance:
+            string = OTRL_MSGEVENT_RCVDMSG_FOR_OTHER_INSTANCE_STRING;
+            break;
+        default:
+            break;
+    }
+    return string;
+}
 
 + (BOOL) setFileProtection:(NSString*)fileProtection path:(NSString*)path {
     NSDictionary *fileAttributes = [NSDictionary dictionaryWithObject:fileProtection forKey:NSFileProtectionKey];

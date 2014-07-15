@@ -28,6 +28,10 @@ extern NSString *const OTRWillStartGeneratingPrivateKeyNotification;
 extern NSString *const OTRDidFinishGeneratingPrivateKeyNotification;
 extern NSString *const OTRMessageStateKey;
 
+extern NSString *const OTREncryptionError;
+extern NSString *const OTRMessageEventKey;
+
+
 @interface OTREncryptionManager : NSObject <OTRKitDelegate>
 
 + (BOOL) setFileProtection:(NSString*)fileProtection path:(NSString*)path;
