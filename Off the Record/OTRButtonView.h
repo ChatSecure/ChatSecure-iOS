@@ -12,6 +12,6 @@
 
 @interface OTRButtonView : UIView
 
-- (id)initWithTitile:(NSString *)title buttons:(NSArray *)buttons;
+- (id)initWithTitle:(NSString *)title buttons:(NSArray *)buttons;
 
 @end

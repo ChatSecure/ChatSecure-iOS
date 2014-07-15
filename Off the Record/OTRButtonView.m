@@ -20,7 +20,7 @@
 
 @implementation OTRButtonView
 
-- (id)initWithTitile:(NSString *)title buttons:(NSArray *)buttons
+- (id)initWithTitle:(NSString *)title buttons:(NSArray *)buttons
 {
     if (self = [super initWithFrame:CGRectZero]) {
         self.buttons = buttons;
