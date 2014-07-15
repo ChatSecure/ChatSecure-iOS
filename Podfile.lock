@@ -29,13 +29,13 @@ PODS:
   - BBlock/StoreKit (1.2.0)
   - BBlock/UIKit (1.2.0)
   - Bolts (1.1.0)
-  - CocoaLumberjack (1.9.0):
+  - CocoaLumberjack (1.9.1):
     - CocoaLumberjack/Extensions
-  - CocoaLumberjack/Core (1.9.0)
-  - CocoaLumberjack/Extensions (1.9.0):
+  - CocoaLumberjack/Core (1.9.1)
+  - CocoaLumberjack/Extensions (1.9.1):
     - CocoaLumberjack/Core
   - DAKeyboardControl (2.3.1)
-  - Facebook-iOS-SDK (3.14.1):
+  - Facebook-iOS-SDK (3.16):
     - Bolts
   - gtm-oauth2 (0.0.4):
     - GTMHTTPFetcher (~> 0.0.1)
@@ -59,15 +59,14 @@ PODS:
   - RMStepsController (1.0.1)
   - SBJson (3.2)
   - SIAlertView (1.3)
-  - SQLCipher/common (3.0.1)
-  - SQLCipher/fts (3.0.1):
+  - SQLCipher/common (3.1.0)
+  - SQLCipher/fts (3.1.0):
     - SQLCipher/common
   - SSKeychain (1.2.2)
-  - TRVSMonitor (0.0.3)
   - UIAlertView-Blocks (1.0)
-  - YapDatabase/common (2.4.2):
+  - YapDatabase/common (2.4.3):
     - CocoaLumberjack (~> 1.6.3)
-  - YapDatabase/SQLCipher (2.4.2):
+  - YapDatabase/SQLCipher (2.4.3):
     - SQLCipher/fts
     - YapDatabase/common
 
@@ -91,7 +90,6 @@ DEPENDENCIES:
   - RMStepsController (~> 1.0)
   - SIAlertView (from `PodSpecs/SIAlertView.podspec`)
   - SSKeychain
-  - TRVSMonitor (~> 0.0)
   - UIAlertView-Blocks
   - YapDatabase/SQLCipher (~> 2.4)
 
@@ -108,9 +106,9 @@ SPEC CHECKSUMS:
   Appirater: a5e00fb01d47a9a6acf4b2f22323b4ccf4f23fbb
   BBlock: 90f0ae0e3ba94fc88be6b9a85b4adbb73b8a7c9a
   Bolts: 91c2af8eae1d44e1dd75946a5b0ae04a43ea43e4
-  CocoaLumberjack: 5766cdd1d0a24bcf15a133c6023747346bf786dd
+  CocoaLumberjack: 94accd5749f5c5d15134c8d50f34a973aed8ef69
   DAKeyboardControl: b17935d41242e094f96ec22696405c620ffb088b
-  Facebook-iOS-SDK: e9b3d5ac54ee3e5e693f4eef470b97911b3d076d
+  Facebook-iOS-SDK: 82ad03cb9ce568855057e20a099054cf1e34ef12
   gtm-oauth2: f42910a514c45af03f2460323983ff615b5728a7
   GTMHTTPFetcher: ea6abfc8842ca6df124d2f56cea3a53bcdd0dc74
   HockeySDK: f9af97c2f5df4eb6ca6d2a9c408f2ff498edd608
@@ -125,10 +123,9 @@ SPEC CHECKSUMS:
   RMStepsController: 8ff91f169d884fdd834ad37007f553c7bed333eb
   SBJson: 72d7da8a5bf6c236e87194abb10ac573a8bccbef
   SIAlertView: 522351a8870be07fb49053fa054c83da3ea17dbe
-  SQLCipher: 16f738cbcac200e2362056a655077cbc28065954
+  SQLCipher: 981110217eb93c2779c34fb59e646a1c1da918d8
   SSKeychain: cc48bd3ad24fcd9125adb9e0d23dd50b8bbd08b9
-  TRVSMonitor: 61f54e833d4ad9efbc6e6fc8a060c42bcb01d0c3
   UIAlertView-Blocks: f3271e84372beb97aea115cd1fb26ae66457f12f
-  YapDatabase: 269e2799fe19c7a517521783b909d11873dcb0c8
+  YapDatabase: 2ec54726596299c88e09e899e8f17c15d7f6b18a
 
 COCOAPODS: 0.33.1
