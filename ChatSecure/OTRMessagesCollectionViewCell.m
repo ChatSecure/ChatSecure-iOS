@@ -36,6 +36,7 @@
     
     self.errorImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
     self.errorImageView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.errorImageView.userInteractionEnabled = YES;
     
     self.deliveredImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
     self.deliveredImageView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -51,9 +52,9 @@
     [self setupConstraints];
     
     
-    UITapGestureRecognizer *tapg = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(errorImageTap:)];
-    [self.errorImageView addGestureRecognizer:tapg];
-    self.tap = tapg;
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(errorImageTap:)];
+    [self.errorImageView addGestureRecognizer:tapGesture];
+    self.tap = tapGesture;
 }
 
 - (void)setupConstraints

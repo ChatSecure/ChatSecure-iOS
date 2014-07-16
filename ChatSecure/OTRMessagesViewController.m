@@ -173,7 +173,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
     if ([self.buddy.uniqueId isEqualToString:buddy.uniqueId]) {
         // really same buddy with new info like chatState, EncryptionState, Name
         
-        
         _buddy = buddy;
         
         [self refreshLockButton];
@@ -239,7 +238,19 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (void)showErrorMessageForCell:(OTRMessagesCollectionViewCell *)cell
 {
+    NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
+    OTRMessage *message = nil;
+    if (indexPath) {
+        message = [self messageAtIndexPath:indexPath];
+    }
     
+    if (message.error) {
+        RIButtonItem *okButton = [RIButtonItem itemWithLabel:OK_STRING];
+        
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Message Error" message:message.error.description cancelButtonItem:okButton otherButtonItems:nil];
+        
+        [alertView show];
+    }
 }
 
 #pragma - mark titleView Methods

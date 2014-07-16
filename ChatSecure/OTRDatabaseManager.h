@@ -15,6 +15,8 @@
 extern NSString *const OTRUIDatabaseConnectionDidUpdateNotification;
 extern NSString *const OTRUIDatabaseConnectionWillUpdateNotification;
 extern NSString *const OTRYapDatabaseRelationshipName;
+extern NSString *const OTRYapDatabseMessageIdSecondaryIndex;
+extern NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension;
 
 @interface OTRDatabaseManager : NSObject
 

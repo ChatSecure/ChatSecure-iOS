@@ -15,6 +15,8 @@
 #import "OTRDatabaseView.h"
 #import "SSKeychain.h"
 #import "OTRConstants.h"
+#import "YapDatabaseSecondaryIndexSetup.h"
+#import "YapDatabaseSecondaryIndex.h"
 
 #import "OTRManagedOscarAccount.h"
 #import "OTRXMPPAccount.h"
@@ -26,10 +28,14 @@
 #import "OTRManagedXMPPTorAccount.h"
 #import "OTRAccount.h"
 #import "CoreData+MagicalRecord.h"
+#import "OTRMessage.h"
 
 NSString *const OTRUIDatabaseConnectionDidUpdateNotification = @"OTRUIDatabaseConnectionDidUpdateNotification";
 NSString *const OTRUIDatabaseConnectionWillUpdateNotification = @"OTRUIDatabaseConnectionWillUpdateNotification";
 NSString *const OTRYapDatabaseRelationshipName = @"OTRYapDatabaseRelationshipName";
+NSString *const OTRYapDatabseMessageIdSecondaryIndex = @"OTRYapDatabseMessageIdSecondaryIndex";
+NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseMessageIdSecondaryIndexExtension";
+
 
 @interface OTRDatabaseManager ()
 
@@ -253,6 +259,7 @@ NSString *const OTRYapDatabaseRelationshipName = @"OTRYapDatabaseRelationshipNam
     if (success) success = [OTRDatabaseView registerAllBuddiesDatabaseView];
     if (success) success = [OTRDatabaseView registerAllSubscriptionRequestsView];
     if (success) success = [OTRDatabaseView registerPushView];
+    if (success) success = [self setupSecondaryIndexes];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(yapDatabaseModified:)
@@ -291,6 +298,32 @@ NSString *const OTRYapDatabaseRelationshipName = @"OTRYapDatabaseRelationshipNam
     [[NSNotificationCenter defaultCenter] postNotificationName:OTRUIDatabaseConnectionDidUpdateNotification
                                                         object:self
                                                       userInfo:userInfo];
+}
+
+- (BOOL)setupSecondaryIndexes
+{
+    YapDatabaseSecondaryIndexSetup *setup = [[YapDatabaseSecondaryIndexSetup alloc] init];
+    [setup addColumn:OTRYapDatabseMessageIdSecondaryIndex withType:YapDatabaseSecondaryIndexTypeText];
+    
+    YapDatabaseSecondaryIndexBlockType blockType = YapDatabaseSecondaryIndexBlockTypeWithObject;
+    YapDatabaseSecondaryIndexWithObjectBlock block = ^(NSMutableDictionary *dict, NSString *collection, NSString *key, id object){
+        
+        if ([object isKindOfClass:[OTRMessage class]])
+        {
+            OTRMessage *message = (OTRMessage *)object;
+            
+            if ([message.messageId length]) {
+                [dict setObject:message.messageId forKey:OTRYapDatabseMessageIdSecondaryIndex];
+            }
+        }
+    };
+    
+    YapDatabaseSecondaryIndex *secondaryIndex = [[YapDatabaseSecondaryIndex alloc] initWithSetup:setup
+                                                                                           block:block
+                                                                                       blockType:blockType];
+    
+    return [self.database registerExtension:secondaryIndex withName:OTRYapDatabseMessageIdSecondaryIndexExtension];
+    
 }
 
 + (void) deleteLegacyXMPPFiles {
