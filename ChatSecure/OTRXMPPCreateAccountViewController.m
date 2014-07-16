@@ -15,11 +15,17 @@
 #import "OTRConstants.h"
 #import "OTRXMPPAccount.h"
 #import "OTRXMPPManager.h"
+#import "OTRTextFieldTableViewCell.h"
+#import "JVFloatLabeledTextField.h"
+
+static NSString * const domainCellIdentifier = @"domainCellIdentifer";
 
 @interface OTRXMPPCreateAccountViewController ()
 
 @property (nonatomic, strong) NSArray * hostnameArray;
 @property (nonatomic, strong) OTRXMPPAccount *account;
+
+@property (nonatomic, strong) UITextField *otherHostnameTextField;
 
 @property (nonatomic) BOOL wasAbleToCreateAccount;
 
@@ -27,12 +33,20 @@
 
 @implementation OTRXMPPCreateAccountViewController
 
+- (id)init
+{
+    if (self = [super init]) {
+        self.otherHostnameTextField = [[UITextField alloc] initWithFrame:CGRectZero]; 
+    }
+    return self;
+}
+
 - (id)initWithHostnames:(NSArray *)newHostnames
 {
-    self = [super init];
+    self = [self init];
     if (self) {
         self.hostnameArray = newHostnames;
-        self.selectedHostname = [self.hostnameArray firstObject];
+        self.selectedHostnameIndex = 0;
     }
     return self;
 }
@@ -50,6 +64,10 @@
     [self.passwordTextField resignFirstResponder];
     
     self.loginButton.title = CREATE_STRING;
+    
+    [self.loginViewTableView registerClass:[UITableViewCell class] forCellReuseIdentifier:domainCellIdentifier];
+    [self.loginViewTableView registerClass:[OTRTextFieldTableViewCell class] forCellReuseIdentifier:[OTRTextFieldTableViewCell reuseIdentifier]];
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -58,17 +76,19 @@
     
     self.wasAbleToCreateAccount = NO;
     
-    [[NSNotificationCenter defaultCenter]
-     addObserver:self
-     selector:@selector(didReceiveRegistrationSucceededNotification:)
-     name:OTRXMPPRegisterSucceededNotificationName
-     object:nil ];
+    [[NSNotificationCenter defaultCenter] addObserverForName:OTRXMPPRegisterSucceededNotificationName
+                                                      object:nil
+                                                       queue:[NSOperationQueue mainQueue]
+                                                  usingBlock:^(NSNotification *note) {
+        [self didReceiveRegistrationSucceededNotification:note];
+    }];
     
-    [[NSNotificationCenter defaultCenter]
-     addObserver:self
-     selector:@selector(didReceiveRegistrationFailedNotification:)
-     name:OTRXMPPRegisterFailedNotificationName
-     object:nil ];
+    [[NSNotificationCenter defaultCenter] addObserverForName:OTRXMPPRegisterFailedNotificationName
+                                                      object:nil
+                                                       queue:[NSOperationQueue mainQueue]
+                                                  usingBlock:^(NSNotification *note) {
+        [self didReceiveRegistrationFailedNotification:note];
+    }];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -99,7 +119,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (section == 1) {
-        return self.hostnameArray.count;
+        return self.hostnameArray.count+1;
     }
     return [super tableView:tableView numberOfRowsInSection:section];
 }
@@ -122,21 +142,30 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString * const domainCellIdentifier = @"domainCellIdentifer";
+    
     UITableViewCell * cell = nil;
     if (indexPath.section == 1) {
-        cell = [tableView dequeueReusableCellWithIdentifier:domainCellIdentifier];
-        if (!cell) {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:domainCellIdentifier];
+        if (indexPath.row < [self.hostnameArray count]) {
+            cell = [tableView dequeueReusableCellWithIdentifier:domainCellIdentifier forIndexPath:indexPath];
+            NSString * hostName = self.hostnameArray[indexPath.row];
+            cell.textLabel.text = hostName;
         }
-        NSString * hostName = self.hostnameArray[indexPath.row];
-        cell.textLabel.text = hostName;
-        if ([hostName isEqualToString:self.selectedHostname]) {
+        else
+        {
+            //Other or Custom Hostname
+            OTRTextFieldTableViewCell *textCell = [tableView dequeueReusableCellWithIdentifier:[OTRTextFieldTableViewCell reuseIdentifier] forIndexPath:indexPath];
+            
+            [textCell.textField setPlaceholder:@"Custom" floatingTitle:@"Custom"];
+            cell = textCell;
+        }
+        
+        if (self.selectedHostnameIndex == indexPath.row) {
             cell.accessoryType = UITableViewCellAccessoryCheckmark;
         }
         else {
             cell.accessoryType = UITableViewCellAccessoryNone;
         }
+        
     }
     else {
         cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
@@ -147,7 +176,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (indexPath.section == 1) {
-        self.selectedHostname = self.hostnameArray[indexPath.row];
+        self.selectedHostnameIndex = indexPath.row;
         [tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationAutomatic];
     }
 }
@@ -191,10 +220,10 @@
         [[HITorManager defaultManager] start];
     }
     else {
-        NSString *newUsername = [self fixUsername:self.usernameTextField.text withDomain:self.selectedHostname];
+        NSString *newUsername = [self fixUsername:self.usernameTextField.text withDomain:[self hostnameForIndex:self.selectedHostnameIndex]];
         self.usernameTextField.text = newUsername;
         self.account.username = newUsername;
-        self.account.domain = self.selectedHostname;
+        self.account.domain = [self hostnameForIndex:self.selectedHostnameIndex];
         self.account.rememberPassword = self.rememberPasswordSwitch.on;
         self.account.autologin = self.autoLoginSwitch.on;
         OTRXMPPManager * xmppManager = [self xmppManager];
@@ -236,6 +265,18 @@
     }
     
     [self showAlertViewWithTitle:ERROR_STRING message:errorString error:error];
+}
+
+- (NSString *)hostnameForIndex:(NSInteger)index
+{
+    NSString *hostname = nil;
+    if (index < [self.hostnameArray count]) {
+        hostname = self.hostnameArray[index];
+    }
+    else {
+        //Other
+    }
+    return hostname;
 }
 
 - (OTRXMPPManager *)xmppManager

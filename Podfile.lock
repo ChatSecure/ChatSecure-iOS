@@ -48,6 +48,7 @@ PODS:
     - JSQSystemSoundPlayer
   - JSQSystemSoundPlayer (1.5.2)
   - JTTargetActionBlock (1.0.0)
+  - JVFloatLabeledTextField (0.0.8)
   - MagicalRecord (2.2):
     - MagicalRecord/Core
   - MagicalRecord/Core (2.2)
@@ -95,6 +96,7 @@ DEPENDENCIES:
   - HPGrowingTextView (~> 1.1)
   - JSQMessagesViewController (~> 5.0)
   - JTTargetActionBlock (~> 1.0)
+  - JVFloatLabeledTextField (~> 0.0)
   - MagicalRecord
   - Mantle (~> 1.4)
   - MBProgressHUD (~> 0.8)
@@ -139,6 +141,7 @@ SPEC CHECKSUMS:
   JSQMessagesViewController: 70be735cbe86b74961870d1d9a2948af7ea2da9d
   JSQSystemSoundPlayer: c24914bc96ff5365b5d28b59d7ecffd60d1c5587
   JTTargetActionBlock: bef69054d368a91b33b98a520fa9e78e218a5a25
+  JVFloatLabeledTextField: 16dea87b899a7b62026eb8d8cf9902c08b1953da
   MagicalRecord: 2b471584fc9e3137f3d0a56967917baa4979e224
   Mantle: c67a7e45e14196ed42b2a7cbb98ff6a9920e6b92
   MBProgressHUD: c356980b0cd097f19acec959b49dca5eb8ec31be
@@ -147,7 +150,7 @@ SPEC CHECKSUMS:
   OpenInChrome: b7c73ddf8fe0a1788dc0549c3c4c70e3c84da578
   RMStepsController: 8ff91f169d884fdd834ad37007f553c7bed333eb
   SBJson: 72d7da8a5bf6c236e87194abb10ac573a8bccbef
-  SIAlertView: e6d0d786c3a3f6e456b0e8b9376d0c34d68e827b
+  SIAlertView: 522351a8870be07fb49053fa054c83da3ea17dbe
   SQLCipher: 981110217eb93c2779c34fb59e646a1c1da918d8
   SSKeychain: cc48bd3ad24fcd9125adb9e0d23dd50b8bbd08b9
   TTTAttributedLabel: 2d27b3cd50ed69e452dbc6e2588283c5eafbcfec

@@ -8,8 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
+
+@class JVFloatLabeledTextField;
+
 @interface OTRTextFieldTableViewCell : UITableViewCell
 
-@property (nonatomic, strong) UITextField *textField;
+@property (nonatomic, readonly, strong) JVFloatLabeledTextField *textField;
+
++ (NSString *)reuseIdentifier;
 
 @end

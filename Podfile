@@ -23,6 +23,7 @@ pod 'Navajo', '~> 0.0'
 pod 'RMStepsController', '~> 1.0'
 pod 'JSQMessagesViewController', '~> 5.0'
 pod 'BBlock', '~> 1.2'
+pod 'JVFloatLabeledTextField', '~> 0.0'
 
 # Forks
 pod 'AFOAuth2Client', :git => 'git@github.com:ChatSecure/AFOAuth2Client.git', :branch => 'release'

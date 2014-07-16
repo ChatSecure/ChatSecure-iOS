@@ -10,8 +10,7 @@
 
 @interface OTRXMPPCreateAccountViewController : OTRXMPPLoginViewController
 
-
-@property (nonatomic,strong) NSString * selectedHostname;
+@property (nonatomic) NSInteger selectedHostnameIndex;
 
 - (instancetype)initWithHostnames:(NSArray *)hostnames;
 + (instancetype)createViewControllerWithHostnames:(NSArray *)hostNames;

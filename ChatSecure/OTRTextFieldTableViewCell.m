@@ -8,20 +8,47 @@
 
 #import "OTRTextFieldTableViewCell.h"
 
+#import "JVFloatLabeledTextField.h"
+
+NSString *const OTRTextFieldTableViewCellHeight = @"OTRTextFieldTableViewCellHeightMargin";
+NSString *const OTRTextFieldTableViewCellLeftMargin = @"OTRTextFieldTableViewCellLeftMargin";
+NSString *const OTRTextFieldTableViewCellRightMargin = @"OTRTextFieldTableViewCellRightMargin";
+
+@interface OTRTextFieldTableViewCell()
+
+@property (nonatomic, strong) JVFloatLabeledTextField *textField;
+
+@end
+
 @implementation OTRTextFieldTableViewCell
 
-- (void)setTextField:(UITextField *)textField
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
-    if (_textField) {
-        [_textField removeFromSuperview];
-    }
-    
-    _textField = textField;
-    
-    if (self.textField) {
-        self.textField.frame = CGRectMake(0, 0, self.contentView.frame.size.width, self.contentView.frame.size.height);
+    if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier])
+    {
+        self.textField = [[JVFloatLabeledTextField alloc] initWithFrame:CGRectZero];
+        self.textField.translatesAutoresizingMaskIntoConstraints = NO;
+        
+        NSDictionary *views = NSDictionaryOfVariableBindings(_textField);
+        CGFloat textFieldHeight = 43.5;
+        CGFloat textFieldLeftMargin = 15.0;
+        CGFloat textFieldRightMargin = 20.0;
+        NSDictionary *metrics = @{OTRTextFieldTableViewCellHeight:@(textFieldHeight),
+                                  OTRTextFieldTableViewCellLeftMargin:@(textFieldLeftMargin),
+                                  OTRTextFieldTableViewCellRightMargin:@(textFieldRightMargin)};
         [self.contentView addSubview:self.textField];
+        [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(OTRTextFieldTableViewCellLeftMargin)-[_textField]-(OTRTextFieldTableViewCellRightMargin)-|" options:0 metrics:metrics views:views]];
+        
+        [self.textField addConstraint:[NSLayoutConstraint constraintWithItem:self.textField attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:textFieldHeight]];
+        [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.textField attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0.0]];
     }
+    return self;
+}
+
+
++ (NSString *)reuseIdentifier
+{
+    return NSStringFromClass([self class]);
 }
 
 @end
