@@ -11,6 +11,7 @@
 #import "OTROnboardingPushAccountLoginViewController.h"
 #import "OTRRemotePushRegistrationInfoViewController.h"
 #import "OTRAppDelegate.h"
+#import "Strings.h"
 
 @interface OTROnboardingStepsController ()
 
@@ -27,15 +28,21 @@
 
 - (NSArray *)stepViewControllers
 {
+    NSMutableArray *steps = [NSMutableArray array];
     OTRDatabasePassphraseViewController *databasePassphraseViewController = [[OTRDatabasePassphraseViewController alloc] init];
-    databasePassphraseViewController.step.title = @"Database Passphrase";
+    databasePassphraseViewController.step.title = NEW_PASSPHRASE_STRING;
+    [steps addObject:databasePassphraseViewController];
+    
+#if CHATSECURE_PUSH
     OTROnboardingPushAccountLoginViewController *pushLoginViewController = [[OTROnboardingPushAccountLoginViewController alloc] init];
-    pushLoginViewController.step.title = @"ChatSecure Push";
+    pushLoginViewController.step.title = CHATSECURE_PUSH_STRING;
+    [steps addObject:pushLoginViewController];
     OTRRemotePushRegistrationInfoViewController *pushRegistrationViewController = [[OTRRemotePushRegistrationInfoViewController alloc] init];
     pushRegistrationViewController.step.title = @"Push Registration";
+    [steps addObject:pushRegistrationViewController];
+#endif
     
-    
-    return @[databasePassphraseViewController,pushLoginViewController,pushRegistrationViewController];
+    return steps;
 }
 
 - (void)finishedAllSteps {

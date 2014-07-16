@@ -139,14 +139,14 @@ int maxEmailLength = 100;
     
     if (self.createAccountMode) {
         if (![self validEmail:email]) {
-            [self showErrorTitle:@"Invalid Email" descritpion:@"Please choose a valid email address"];
+            [self showErrorTitle:INVALID_EMAIL_TITLE_STRING descritpion:INVALID_EMAIL_DETAIL_STRING];
             [self.emailTextField becomeFirstResponder];
         }
         else {
             [self.pushManager createNewAccountWithUsername:username password:password emial:email completion:^(BOOL success, NSError *error) {
                 if (error) {
                     DDLogError(@"Error Creating Account: %@",error);
-                    [self showErrorTitle:@"Error Creating Account" descritpion:error.localizedDescription];
+                    [self showErrorTitle:ERROR_CREATING_ACCOUNT_STRING descritpion:error.localizedDescription];
                 }
                 else {
                     [self shownPushRegistrationViewController];
@@ -160,7 +160,7 @@ int maxEmailLength = 100;
         [self.pushManager loginWithUsername:username password:password completion:^(BOOL success, NSError *error) {
             if (error) {
                 DDLogError(@"Error Loggin in: %@",error);
-                [self showErrorTitle:@"Error" descritpion:error.description];
+                [self showErrorTitle:ERROR_STRING descritpion:error.description];
             }
             else {
                 [self shownPushRegistrationViewController];
@@ -231,15 +231,15 @@ int maxEmailLength = 100;
 {
     _createAccountMode = createAccountMode;
     if (_createAccountMode) {
-        [self.loginButton setTitle:@"Sign Up" forState:UIControlStateNormal];
-        [self.loginButton setTitle:@"Sign Up" forState:UIControlStateDisabled];
-        [self.switchCreateOrLogin setTitle:@"Already have an account" forState:UIControlStateNormal];
+        [self.loginButton setTitle:SIGN_UP_STRING forState:UIControlStateNormal];
+        [self.loginButton setTitle:SIGN_UP_STRING forState:UIControlStateDisabled];
+        [self.switchCreateOrLogin setTitle:CONNECT_EXISTING_STRING forState:UIControlStateNormal];
         
     }
     else {
-        [self.loginButton setTitle:@"Sign In" forState:UIControlStateNormal];
-        [self.loginButton setTitle:@"Sign In" forState:UIControlStateDisabled];
-        [self.switchCreateOrLogin setTitle:@"Create account" forState:UIControlStateNormal];
+        [self.loginButton setTitle:LOGIN_STRING forState:UIControlStateNormal];
+        [self.loginButton setTitle:LOGIN_STRING forState:UIControlStateDisabled];
+        [self.switchCreateOrLogin setTitle:CREATE_NEW_ACCOUNT_STRING forState:UIControlStateNormal];
     }
     
     if (!self.createAccountMode) {

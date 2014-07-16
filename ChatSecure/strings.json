@@ -978,5 +978,49 @@
   "ENCRYPTION_ERROR_STRING" : {
     "comment": "Generic title for encryption errors",
     "string": "Encryption Error"
+  },
+  "CHATSECURE_PUSH_STRING" : {
+    "comment": "Title for ChatSecure Push (this probably doesnt need to be translated)",
+    "string": "ChatSecure Push"
+  },
+  "MANAGE_CHATSECURE_PUSH_ACCOUNT_STRING" : {
+    "comment": "Title for button to manage ChatSecure Push account",
+    "string": "Manage ChatSecure Push account"
+  },
+  "CHANGE_PASSPHRASE_STRING" : {
+    "comment": "Title for button to change encrypted database passphrase",
+    "string": "Change Passphrase"
+  },
+  "SET_NEW_DATABASE_PASSPHRASE_STRING" : {
+    "comment": "Detail label for button to change encrypted database passphrase",
+    "string": "Set new database passphrase"
+  },
+  "PUSH_TITLE_STRING" : {
+    "comment": "Title for push-messaging related settings",
+    "string": "Push"
+  },
+  "NEW_PASSPHRASE_STRING" : {
+    "comment": "title label for the new passphrase",
+    "string": "New Passphrase"
+  },
+  "CURRENT_PASSPHRASE_STRING" : {
+    "comment": "title label for the existing passphrase",
+    "string": "Current Passphrase"
+  },
+  "SIGN_UP_STRING" : {
+    "comment": "title label for signing up for a new account",
+    "string": "Sign Up"
+  },
+  "ERROR_CREATING_ACCOUNT_STRING" : {
+    "comment": "title label for error when creating account",
+    "string": "Error Creating Account"
+  },
+  "INVALID_EMAIL_TITLE_STRING" : {
+    "comment": "title label for invalid email",
+    "string": "Invalid Email"
+  },
+  "INVALID_EMAIL_DETAIL_STRING" : {
+    "comment": "detail title label for invalid email",
+    "string": "Please choose a valid email address"
   }
 }
