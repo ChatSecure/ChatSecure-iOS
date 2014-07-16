@@ -111,13 +111,15 @@
                                                                                   description:OTR_FINGERPRINTS_SUBTITLE_STRING];
     fingerprintSetting.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
-    OTRViewSetting *pushViewSetting = [[OTRPushViewSetting alloc] initWithTitle:@"ChatSecure Push" description:@"Mange ChatSecure Push account"];
+    OTRViewSetting *changeDatabasePassphraseSetting = [[OTRViewSetting alloc] initWithTitle:CHANGE_PASSPHRASE_STRING description:SET_NEW_DATABASE_PASSPHRASE_STRING viewControllerClass:[OTRChangeDatabasePassphraseViewController class]];
+    changeDatabasePassphraseSetting.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
-    OTRViewSetting *changeDatabasePassphraseSetting = [[OTRViewSetting alloc] initWithTitle:@"Chnage Passphrase" description:@"Set new databse passphrase" viewControllerClass:[OTRChangeDatabasePassphraseViewController class]];
-    
-    OTRSettingsGroup *pushGroup = [[OTRSettingsGroup alloc] initWithTitle:@"Push" settings:@[pushViewSetting]];
-    
+#if CHATSECURE_PUSH
+    OTRViewSetting *pushViewSetting = [[OTRPushViewSetting alloc] initWithTitle:CHATSECURE_PUSH_STRING description:MANAGE_CHATSECURE_PUSH_ACCOUNT_STRING];
+    pushViewSetting.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    OTRSettingsGroup *pushGroup = [[OTRSettingsGroup alloc] initWithTitle:PUSH_TITLE_STRING settings:@[pushViewSetting]];
     [settingsGroups addObject:pushGroup];
+#endif
     
     NSArray *chatSettings;
     NSArray * securitySettings;

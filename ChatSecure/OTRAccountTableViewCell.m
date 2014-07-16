@@ -57,7 +57,9 @@
     }
     else {
         [protocolManager addObserver:self forKeyPath:NSStringFromSelector(@selector(protocolManagers)) options:NSKeyValueObservingOptionNew context:NULL];
+        [self setConnectedText:OTRProtocolConnectionStatusDisconnected];
     }
+    
 }
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context

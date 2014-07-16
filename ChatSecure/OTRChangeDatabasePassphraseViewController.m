@@ -9,6 +9,7 @@
 #import "OTRChangeDatabasePassphraseViewController.h"
 #import "OTRPasswordStrengthView.h"
 #import "OTRRememberPasswordView.h"
+#import "Strings.h"
 
 @interface OTRChangeDatabasePassphraseViewController () <OTRPasswordStrengthViewDelegate>
 
@@ -35,7 +36,7 @@
     self.passwordView = [[OTRPasswordStrengthView alloc] initWithDefaultRules];
     self.passwordView.translatesAutoresizingMaskIntoConstraints = NO;
     self.passwordView.delegate = self;
-    self.passwordView.textField.placeholder = @"New Passphrase";
+    self.passwordView.textField.placeholder = NEW_PASSPHRASE_STRING;
     
     [self.view addSubview:self.passwordView];
     
@@ -43,14 +44,14 @@
     self.oldPasswordTextField = [[UITextField alloc] init];
     self.oldPasswordTextField.secureTextEntry = YES;
     self.oldPasswordTextField.translatesAutoresizingMaskIntoConstraints = NO;
-    self.oldPasswordTextField.placeholder = @"Current Passphrase";
+    self.oldPasswordTextField.placeholder = CURRENT_PASSPHRASE_STRING;
     
     [self.view addSubview:self.oldPasswordTextField];
     
     ////// changePassword Button //////
     
     self.changePasswordButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [self.changePasswordButton setTitle:@"Chanage Passphrase" forState:UIControlStateNormal];
+    [self.changePasswordButton setTitle:CHANGE_PASSPHRASE_STRING forState:UIControlStateNormal];
     [self.changePasswordButton addTarget:self action:@selector(changePasswordButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     self.changePasswordButton.translatesAutoresizingMaskIntoConstraints = NO;
     
