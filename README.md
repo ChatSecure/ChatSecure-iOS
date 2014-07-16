@@ -1,7 +1,7 @@
 ChatSecure
 =========
 
-ChatSecure is a free and open source instant messaging client for [iOS](https://itunes.apple.com/us/app/chatsecure/id464200063) and [Android](https://play.google.com/store/apps/details?id=info.guardianproject.otr.app.im&hl=en) that integrates encrypted [OTR](https://en.wikipedia.org/wiki/Off-the-Record_Messaging) ("Off the Record") messaging support from the [libotr](https://otr.cypherpunks.ca/) library and the [XMPPFramework](https://github.com/robbiehanson/XMPPFramework/) to handle Jabber/GTalk (XMPP).
+ChatSecure is a free and open source instant messaging client for [iOS](https://itunes.apple.com/us/app/chatsecure/id464200063) and [Android](https://play.google.com/store/apps/details?id=info.guardianproject.otr.app.im&hl=en) that integrates encrypted [OTR](https://en.wikipedia.org/wiki/ChatSecure_Messaging) ("Off the Record") messaging support from the [libotr](https://otr.cypherpunks.ca/) library and the [XMPPFramework](https://github.com/robbiehanson/XMPPFramework/) to handle Jabber/GTalk (XMPP).
 
 
 Cost
@@ -22,7 +22,7 @@ If you would like to contribute/improve a translation:
 
  1. Visit our [Transifex project page](https://www.transifex.net/projects/p/chatsecure/) and make an account if you don't have one already.
  2. Go to the resources subsites [AppStore.strings](https://www.transifex.net/projects/p/chatsecure/resource/appstorestrings/) & [Localizable.strings](https://www.transifex.net/projects/p/chatsecure/resource/strings/) to add a new language or improve an existing translation. 
- 3. [Open an issue on Github](https://github.com/chrisballinger/Off-the-Record-iOS/issues) notifying us of your translation.
+ 3. [Open an issue on Github](https://github.com/chrisballinger/ChatSecure-iOS/issues) notifying us of your translation.
 
 
 
@@ -45,7 +45,7 @@ Phone apps
 * **[ChatSecure Android](https://guardianproject.info/apps/chatsecure/) (formerly known as Gibberbot)**, a free and open source Android application produced by The Guardian Project, provides OTR protocol compatible over XMPP chat.
 * [BEEM](http://beem-project.com/projects/beem) - Android XMPP client (compatibility unknown)
 
-[Full List](https://en.wikipedia.org/wiki/Off-the-Record_Messaging#Client_support)
+[Full List](https://en.wikipedia.org/wiki/ChatSecure_Messaging#Client_support)
 
 Build Instructions
 ========
@@ -56,18 +56,14 @@ Install [mogenerator](http://rentzsch.github.io/mogenerator/) in order to regene
     
 Download the source code and **don't forget** to pull down all of the submodules as well.
 
-    $ git clone git@github.com:chrisballinger/Off-the-Record-iOS.git
-    $ cd Off-the-Record-iOS/
+    $ git clone https://github.com/chrisballinger/ChatSecure-iOS.git
+    $ cd ChatSecure-iOS/
     $ git submodule update --init --recursive
-    $ pod
+    $ pod install
     
-Make your own version of environment-specific data. Make `OTRSecrets.m` file with blank API keys, and set your provisioning profile ID in `OTR_Codesigning.xcconfig`. To find the provisioning profile ID, go to Project Settings -> Build Settings -> Code Signing -> Select Provisiong Profile -> Select Other -> Copy Profile's UUID into `OTR_Codesigning.xcconfig`.
-
-    $ cp "Off the Record/OTRSecrets-Template.m" "Off the Record/OTRSecrets.m"
-    $ cp "Off the Record/configurations/OTR_Codesigning.xcconfig.sample" "Off the Record/configurations/OTR_Codesigning.xcconfig"
-
+Make your own version of environment-specific data. Make `OTRSecrets.m` file with blank API keys.
     
-Open `Off the Record.xcworkspace` in Xcode and build. Note that you don't open the .xcodeproj anymore because we use Cocoapods now.
+Open `ChatSecure.xcworkspace` in Xcode and build. Note that you don't open the .xcodeproj anymore because we use Cocoapods now.
 
 License
 =========
@@ -97,9 +93,9 @@ Contributing
 
 Thank you for your interest in contributing to ChatSecure! To avoid potential legal headaches and to allow distribution on Apple's App Store please sign our CLA (Contributors License Agreement). For contributing translations, please check out our [Transifex](https://www.transifex.com/projects/p/chatsecure/) page.
 
-1. Sign the CLA ([odt](https://github.com/chrisballinger/Off-the-Record-iOS/raw/master/media/contributing/CLA.odt), [pdf](https://github.com/chrisballinger/Off-the-Record-iOS/raw/master/media/contributing/CLA.pdf)) and email it to [chris@chatsecure.org](mailto:chris@chatsecure.org).
-2. [Fork](https://github.com/chrisballinger/Off-the-Record-iOS/fork) the project and (preferably) work in a feature branch.
-3. Open a [pull request](https://github.com/chrisballinger/off-the-record-ios/pulls) on GitHub.
+1. Sign the CLA ([odt](https://github.com/chrisballinger/ChatSecure-iOS/raw/master/media/contributing/CLA.odt), [pdf](https://github.com/chrisballinger/ChatSecure-iOS/raw/master/media/contributing/CLA.pdf)) and email it to [chris@chatsecure.org](mailto:chris@chatsecure.org).
+2. [Fork](https://github.com/chrisballinger/ChatSecure-iOS/fork) the project and (preferably) work in a feature branch.
+3. Open a [pull request](https://github.com/chrisballinger/ChatSecure-ios/pulls) on GitHub.
 4. Thank you!
 
 
@@ -113,14 +109,13 @@ in the sources themselves:
 The following dependencies are bundled with the ChatSecure, but are under
 terms of a separate license:
 
-* [libotr](https://otr.cypherpunks.ca/) - provides the core message encryption capabilities
-* [libgcrypt](https://www.gnu.org/software/libgcrypt/) - handles core libotr encryption routines
-* [libgpg-error](http://www.gnupg.org/related_software/libgpg-error/) - error codes used by libotr
-* [LibOrange](https://github.com/unixpickle/LibOrange) - handles all of the OSCAR (AIM) functionality
+* [OTRKit](https://github.com/chatsecure/otrkit) - Objective-C libotr wrapper library for OTR encryption
+	* [libotr](https://otr.cypherpunks.ca/) - provides the core message encryption capabilities
+	* [libgcrypt](https://www.gnu.org/software/libgcrypt/) - handles core libotr encryption routines
+	* [libgpg-error](http://www.gnupg.org/related_software/libgpg-error/) - error codes used by libotr
 * [XMPPFramework](https://github.com/robbiehanson/XMPPFramework) - XMPP support
 * [MBProgressHUD](https://github.com/jdg/MBProgressHUD) - a nice looking progress HUD
 * [MWFeedParser](https://github.com/mwaterfall/MWFeedParser) - Methods for escaping HTML strings
-* [Crittercism](https://www.crittercism.com/) - crash reports, only submitted via opt-in
 * [SSKeychain](https://github.com/soffes/sskeychain) - Utilities to store passwords securely in the iOS keychain
 * [Appirater](https://github.com/arashpayan/appirater) - nags people to give reviews
 * [MagicalRecord](https://github.com/magicalpanda/MagicalRecord) - Core Data convenience methods
