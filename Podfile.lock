@@ -55,7 +55,17 @@ PODS:
     - Mantle/extobjc
   - Mantle/extobjc (1.5)
   - MBProgressHUD (0.8)
+  - MWFeedParser (1.0.1):
+    - MWFeedParser/FeedParser
+    - MWFeedParser/NSDate+InternetDateTime
+    - MWFeedParser/NSString+HTML
+  - MWFeedParser/FeedParser (1.0.1):
+    - MWFeedParser/NSDate+InternetDateTime
+    - MWFeedParser/NSString+HTML
+  - MWFeedParser/NSDate+InternetDateTime (1.0.1)
+  - MWFeedParser/NSString+HTML (1.0.1)
   - Navajo (0.0.1)
+  - OpenInChrome (0.0.1)
   - RMStepsController (1.0.1)
   - SBJson (3.2)
   - SIAlertView (1.3)
@@ -63,7 +73,9 @@ PODS:
   - SQLCipher/fts (3.1.0):
     - SQLCipher/common
   - SSKeychain (1.2.2)
+  - TTTAttributedLabel (1.6.0)
   - UIAlertView-Blocks (1.0)
+  - uservoice-iphone-sdk (3.1.0)
   - YapDatabase/common (2.4.3):
     - CocoaLumberjack (~> 1.6.3)
   - YapDatabase/SQLCipher (2.4.3):
@@ -86,11 +98,15 @@ DEPENDENCIES:
   - MagicalRecord
   - Mantle (~> 1.4)
   - MBProgressHUD (~> 0.8)
+  - MWFeedParser (~> 1.0)
   - Navajo (~> 0.0)
+  - OpenInChrome
   - RMStepsController (~> 1.0)
-  - SIAlertView (from `PodSpecs/SIAlertView.podspec`)
+  - SIAlertView (from `git@github.com:ChatSecure/SIAlertView.git`, branch `attributedText`)
   - SSKeychain
+  - TTTAttributedLabel (from `git@github.com:ChatSecure/TTTAttributedLabel.git`, branch `master`)
   - UIAlertView-Blocks
+  - uservoice-iphone-sdk (from `git@github.com:ChatSecure/uservoice-iphone-sdk.git`, branch `3.1.0-noanalytics`)
   - YapDatabase/SQLCipher (~> 2.4)
 
 EXTERNAL SOURCES:
@@ -98,7 +114,14 @@ EXTERNAL SOURCES:
     :branch: release
     :git: git@github.com:ChatSecure/AFOAuth2Client.git
   SIAlertView:
-    :podspec: PodSpecs/SIAlertView.podspec
+    :branch: attributedText
+    :git: git@github.com:ChatSecure/SIAlertView.git
+  TTTAttributedLabel:
+    :branch: master
+    :git: git@github.com:ChatSecure/TTTAttributedLabel.git
+  uservoice-iphone-sdk:
+    :branch: 3.1.0-noanalytics
+    :git: git@github.com:ChatSecure/uservoice-iphone-sdk.git
 
 SPEC CHECKSUMS:
   AFNetworking: a4d0e9a64de9242986620dafd1b3cee3b413ac5c
@@ -119,13 +142,17 @@ SPEC CHECKSUMS:
   MagicalRecord: 2b471584fc9e3137f3d0a56967917baa4979e224
   Mantle: c67a7e45e14196ed42b2a7cbb98ff6a9920e6b92
   MBProgressHUD: c356980b0cd097f19acec959b49dca5eb8ec31be
+  MWFeedParser: 003cbf5398e99a7f2057fbe9583054fd1b84be72
   Navajo: 9130d497903e5d1b0f1b3c987be01f5b60fd37c7
+  OpenInChrome: b7c73ddf8fe0a1788dc0549c3c4c70e3c84da578
   RMStepsController: 8ff91f169d884fdd834ad37007f553c7bed333eb
   SBJson: 72d7da8a5bf6c236e87194abb10ac573a8bccbef
-  SIAlertView: 522351a8870be07fb49053fa054c83da3ea17dbe
+  SIAlertView: e6d0d786c3a3f6e456b0e8b9376d0c34d68e827b
   SQLCipher: 981110217eb93c2779c34fb59e646a1c1da918d8
   SSKeychain: cc48bd3ad24fcd9125adb9e0d23dd50b8bbd08b9
+  TTTAttributedLabel: 2d27b3cd50ed69e452dbc6e2588283c5eafbcfec
   UIAlertView-Blocks: f3271e84372beb97aea115cd1fb26ae66457f12f
+  uservoice-iphone-sdk: 696bd0f493facb0e16d7bb7720cfcf660e27aa78
   YapDatabase: 2ec54726596299c88e09e899e8f17c15d7f6b18a
 
 COCOAPODS: 0.33.1
