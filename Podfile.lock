@@ -37,11 +37,9 @@ PODS:
   - DAKeyboardControl (2.3.1)
   - Facebook-iOS-SDK (3.16):
     - Bolts
-  - gtm-oauth2 (0.0.4):
-    - GTMHTTPFetcher (~> 0.0.1)
-    - SBJson (~> 3.2)
-  - GTMHTTPFetcher (0.0.3):
-    - SBJson (~> 3.2)
+  - gtm-oauth2 (0.1.0):
+    - GTMHTTPFetcher
+  - GTMHTTPFetcher (0.1.0)
   - HockeySDK (3.5.5)
   - HPGrowingTextView (1.1)
   - JSQMessagesViewController (5.0.4):
@@ -67,7 +65,6 @@ PODS:
   - Navajo (0.0.1)
   - OpenInChrome (0.0.1)
   - RMStepsController (1.0.1)
-  - SBJson (3.2)
   - SIAlertView (1.3)
   - SQLCipher/common (3.1.0)
   - SQLCipher/fts (3.1.0):
@@ -90,7 +87,7 @@ DEPENDENCIES:
   - CocoaLumberjack
   - DAKeyboardControl (~> 2.3)
   - Facebook-iOS-SDK
-  - gtm-oauth2 (~> 0.0.3)
+  - gtm-oauth2 (~> 0.1.0)
   - HockeySDK
   - HPGrowingTextView (~> 1.1)
   - JSQMessagesViewController (~> 5.0)
@@ -132,8 +129,8 @@ SPEC CHECKSUMS:
   CocoaLumberjack: 94accd5749f5c5d15134c8d50f34a973aed8ef69
   DAKeyboardControl: b17935d41242e094f96ec22696405c620ffb088b
   Facebook-iOS-SDK: 82ad03cb9ce568855057e20a099054cf1e34ef12
-  gtm-oauth2: f42910a514c45af03f2460323983ff615b5728a7
-  GTMHTTPFetcher: ea6abfc8842ca6df124d2f56cea3a53bcdd0dc74
+  gtm-oauth2: 64f2d404a50676ab63b5437a02a7567da8f8b7fa
+  GTMHTTPFetcher: 0f02d5a5803dd08736462981064de6a7f59cf9bd
   HockeySDK: f9af97c2f5df4eb6ca6d2a9c408f2ff498edd608
   HPGrowingTextView: 07d5ab1f1e867acfb7a6f498b819948c9e97d07c
   JSQMessagesViewController: 70be735cbe86b74961870d1d9a2948af7ea2da9d
@@ -146,7 +143,6 @@ SPEC CHECKSUMS:
   Navajo: 9130d497903e5d1b0f1b3c987be01f5b60fd37c7
   OpenInChrome: b7c73ddf8fe0a1788dc0549c3c4c70e3c84da578
   RMStepsController: 8ff91f169d884fdd834ad37007f553c7bed333eb
-  SBJson: 72d7da8a5bf6c236e87194abb10ac573a8bccbef
   SIAlertView: e6d0d786c3a3f6e456b0e8b9376d0c34d68e827b
   SQLCipher: 981110217eb93c2779c34fb59e646a1c1da918d8
   SSKeychain: cc48bd3ad24fcd9125adb9e0d23dd50b8bbd08b9

@@ -21,7 +21,6 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		1A86AD5E18C3EF39001110D7 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = 1A86AD5D18C3EF39001110D7 /* Podfile */; };
 		63009E9418D0F93E0058976C /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 63009E9318D0F93D0058976C /* GCDAsyncSocket.m */; };
 		63009E9718D122A70058976C /* OTRCreateAccountChooserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63009E9618D122A70058976C /* OTRCreateAccountChooserViewController.m */; };
 		63009E9A18D122D30058976C /* OTRXMPPCreateAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63009E9918D122D30058976C /* OTRXMPPCreateAccountViewController.m */; };
@@ -381,7 +380,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		1A86AD5D18C3EF39001110D7 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		1F12EE516C8C46438665EB76 /* libPods-ChatSecure Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ChatSecure Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		63009E9218D0F93D0058976C /* GCDAsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GCDAsyncSocket.h; path = CocoaAsyncSocket/GCD/GCDAsyncSocket.h; sourceTree = "<group>"; };
 		63009E9318D0F93D0058976C /* GCDAsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GCDAsyncSocket.m; path = CocoaAsyncSocket/GCD/GCDAsyncSocket.m; sourceTree = "<group>"; };
@@ -2630,7 +2628,6 @@
 				D913F4F01976528B00937C0B /* DemoImages.xcassets */,
 				638F2C8E1947C32A00EB5239 /* OTRMessagesCollectionViewCellOutgoing.xib */,
 				638F2C901947C98200EB5239 /* OTRMessagesCollectionViewCellIncoming.xib */,
-				1A86AD5D18C3EF39001110D7 /* Podfile */,
 				630606DF17FA1C9A00CEB7D3 /* Certificates */,
 				6344CCCE1817501700DA0402 /* strings.json */,
 				D9D8D20C153107E600F9E8D3 /* Strings.h */,
@@ -2874,7 +2871,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				D913F4EF19764A8B00937C0B /* Images.xcassets in Resources */,
-				1A86AD5E18C3EF39001110D7 /* Podfile in Resources */,
 				638DAF551938EC9700503AC2 /* gpg-error-config in Resources */,
 				D9F9378513F44BD3009A3D84 /* InfoPlist.strings in Resources */,
 				638F2C8F1947C32A00EB5239 /* OTRMessagesCollectionViewCellOutgoing.xib in Resources */,
