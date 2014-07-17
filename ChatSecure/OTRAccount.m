@@ -18,14 +18,6 @@
 #import "YapDatabaseRelationshipTransaction.h"
 #import "OTRBuddy.h"
 
-const struct OTRAccountAttributes OTRAccountAttributes = {
-	.autologin = @"autologin",
-	.displayName = @"displayName",
-    .accountType = @"accountType",
-	.rememberPassword = @"rememberPassword",
-	.username = @"username"
-};
-
 NSString *const OTRAimImageName               = @"aim.png";
 NSString *const OTRGoogleTalkImageName        = @"gtalk.png";
 NSString *const OTRXMPPImageName              = @"xmpp.png";
@@ -176,6 +168,18 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
     
     return [accounts copy];
     
+}
+
+
+// See MTLModel+NSCoding.h
+// This helps enforce that only the properties keys that we
+// desire will be encoded. Be careful to ensure that values
+// that should be stored in the keychain don't accidentally
+// get serialized!
++ (NSDictionary *)encodingBehaviorsByPropertyKey {
+    NSMutableDictionary *behaviors = [NSMutableDictionary dictionaryWithDictionary:[super encodingBehaviorsByPropertyKey]];
+    [behaviors setObject:@(MTLModelEncodingBehaviorExcluded) forKey:NSStringFromSelector(@selector(password))];
+    return behaviors;
 }
 
 @end

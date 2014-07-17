@@ -265,7 +265,7 @@ NSString *OTRPushAccountGroup = @"Account";
         return YES;
     }
     
-    NSArray *propertiesToIndex = @[OTRBuddyAttributes.username,OTRAccountAttributes.displayName];
+    NSArray *propertiesToIndex = @[OTRBuddyAttributes.username,OTRBuddyAttributes.displayName];
     
     YapDatabaseFullTextSearchBlockType blockType = YapDatabaseFullTextSearchBlockTypeWithObject;
     YapDatabaseFullTextSearchWithObjectBlock block = ^(NSMutableDictionary *dict, NSString *collection, NSString *key, id object) {

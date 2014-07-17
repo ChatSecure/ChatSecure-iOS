@@ -8,12 +8,6 @@
 
 #import "OTRAccount.h"
 
-extern const struct OTRXMPPAccountAttributes {
-	__unsafe_unretained NSString *domain;
-	__unsafe_unretained NSString *resource;
-	__unsafe_unretained NSString *port;
-} OTRXMPPAccountAttributes;
-
 @interface OTRXMPPAccount : OTRAccount
 
 @property (nonatomic, strong) NSString *domain;

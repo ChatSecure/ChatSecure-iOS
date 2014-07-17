@@ -884,7 +884,7 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
     
     
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        [transaction removeObjectsForKeys:[buddies valueForKey:OTRYapDatabaseObjectAttributes.uniqueId] inCollection:[OTRXMPPBuddy collection]];
+        [transaction removeObjectsForKeys:[buddies valueForKey:NSStringFromSelector(@selector(uniqueId))] inCollection:[OTRXMPPBuddy collection]];
     }];
 
 
