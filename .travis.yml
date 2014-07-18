@@ -1,6 +1,15 @@
 language: objective-c
+
+# Handle git submodules yourself
+# http://stackoverflow.com/a/24600210/805882
+git:
+    submodules: false
+# Use sed to replace the SSH URL with the public URL, then initialize submodules
+before_install:
+    - sed -i 's/git@github.com:/https:\/\/github.com\//' .gitmodules
+    - git submodule update --init --recursive
+
 install:
-  - git submodule update --init --recursive
   - ./Submodules/OnionKit/build-libssl.sh --noverify
   - ./Submodules/OnionKit/build-libevent.sh --noverify
   - ./Submodules/OnionKit/build-tor.sh --noverify
