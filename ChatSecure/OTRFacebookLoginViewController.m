@@ -26,6 +26,8 @@
 #import "FacebookSDK.h"
 #import "OTRFacebookSessionCachingStrategy.h"
 #import "OTRDatabaseManager.h"
+#import "FBLoginViewButtonPNG.h"
+#import "FBLoginViewButtonPressedPNG.h"
 
 @interface OTRFacebookLoginViewController ()
 
@@ -44,10 +46,10 @@
     
     UIEdgeInsets imageInsets = UIEdgeInsetsMake(4.0, 40.0, 4.0, 4.0);
     
-    UIImage *buttonImage = [[UIImage imageNamed:@"FBLoginViewButton"] resizableImageWithCapInsets:imageInsets];
+    UIImage *buttonImage = [[FBLoginViewButtonPNG image] resizableImageWithCapInsets:imageInsets];
     [self.connectButton setBackgroundImage:buttonImage forState:UIControlStateNormal];
     
-    UIImage * pressedButtonImage = [[UIImage imageNamed:@"FBLoginViewButtonPressed"] resizableImageWithCapInsets:imageInsets];
+    UIImage * pressedButtonImage = [[FBLoginViewButtonPressedPNG image] resizableImageWithCapInsets:imageInsets];
     [self.connectButton setBackgroundImage:pressedButtonImage forState:UIControlStateHighlighted];
     
     self.disconnectButton = [UIButton buttonWithType:UIButtonTypeCustom];

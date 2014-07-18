@@ -37,15 +37,18 @@
 {
     OTRFacebookSessionCachingStrategy * tokenCaching = [OTRFacebookSessionCachingStrategy createWithTokenDictionary:[authToken dictionary]];
     FBSession * session = [[FBSession alloc] initWithAppID:FACEBOOK_APP_ID permissions:@[@"xmpp_login"] urlSchemeSuffix:nil tokenCacheStrategy:tokenCaching];
+    
+    [session openWithBehavior:FBSessionLoginBehaviorUseSystemAccountIfPresent completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+        if (completionBlock) {
+            if (session.accessTokenData) {
+                completionBlock(session.accessTokenData,nil);
+            } else {
+                completionBlock(nil,error);
+            }
+        }
+    }];
 
-    if (completionBlock) {
-        if (session.accessTokenData) {
-            completionBlock(session.accessTokenData,nil);
-        }
-        else{
-            completionBlock(nil,[NSError errorWithDomain:@"" code:101 userInfo:@{NSLocalizedDescriptionKey:@"Error Creating Session"}]);
-        }
-    }
+    
 }
 
 + (void)refreshAccount:(OTROAuthXMPPAccount *)account completion:(OTROAuthCompletionBlock)completionBlock
