@@ -24,7 +24,6 @@
 #import "Strings.h"
 #import "OTRConstants.h"
 #import "FacebookSDK.h"
-#import "OTRFacebookSessionCachingStrategy.h"
 #import "OTRDatabaseManager.h"
 #import "FBLoginViewButtonPNG.h"
 #import "FBLoginViewButtonPressedPNG.h"
@@ -67,26 +66,30 @@
 
 -(void)connectAccount:(id)sender
 {
-    //[FBSettings setDefaultAppID:FACEBOOK_APP_ID];
-    FBSession * session = [[FBSession alloc] initWithAppID:FACEBOOK_APP_ID permissions:@[@"xmpp_login"] urlSchemeSuffix:nil tokenCacheStrategy:[FBSessionTokenCachingStrategy nullCacheInstance]];
-    [FBSession setActiveSession:session];
-    [session openWithBehavior:FBSessionLoginBehaviorUseSystemAccountIfPresent completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
-        if ([session isOpen]) {
-            
-            //DDLogInfo(@"Session: %@",session);
-            FBRequest * request = [[FBRequest alloc] initWithSession:session graphPath:@"me"];
-            [request startWithCompletionHandler:^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *user, NSError *error) {
-                if (!error) {
-                    [self didConnectUser:user];
-                    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-                        [self.account saveWithTransaction:transaction];
-                    }];
-                    self.account.oAuthTokenDictionary = [session.accessTokenData dictionary];
-                    //self.account.password = session.accessTokenData.accessToken;
-                    [self.loginViewTableView reloadData];
-                    [self loginButtonPressed:sender];
-                }
+    if ([FBSession activeSession].isOpen) {
+        [self requestMe:[FBSession activeSession] sender:sender];
+    }
+    else {
+        [[FBSession activeSession] openWithBehavior:FBSessionLoginBehaviorUseSystemAccountIfPresent completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+            if ([session isOpen]) {
+                [self requestMe:session sender:sender];
+            }
+        }];
+    }
+}
+
+- (void)requestMe:(FBSession *)session sender:(id)sender
+{
+    FBRequest * request = [[FBRequest alloc] initWithSession:session graphPath:@"me"];
+    [request startWithCompletionHandler:^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *user, NSError *error) {
+        if (!error) {
+            [self didConnectUser:user];
+            [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+                [self.account saveWithTransaction:transaction];
             }];
+            self.account.oAuthTokenDictionary = [session.accessTokenData dictionary];
+            [self.loginViewTableView reloadData];
+            [self loginButtonPressed:sender];
         }
     }];
 }

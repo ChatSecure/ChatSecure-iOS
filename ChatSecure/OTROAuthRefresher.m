@@ -10,9 +10,9 @@
 
 #import "FBAccessTokenData.h"
 #import "GTMOAuth2Authentication.h"
-#import "OTRFacebookSessionCachingStrategy.h"
 #import "OTRSecrets.h"
 #import "OTRConstants.h"
+#import "FBSessionTokenCachingStrategy.h"
 
 #import "OTROAuthXMPPAccount.h"
 
@@ -35,10 +35,13 @@
 
 + (void)refreshFacebookToken:(FBAccessTokenData *)authToken completion:(OTROAuthCompletionBlock)completionBlock
 {
-    OTRFacebookSessionCachingStrategy * tokenCaching = [OTRFacebookSessionCachingStrategy createWithTokenDictionary:[authToken dictionary]];
-    FBSession * session = [[FBSession alloc] initWithAppID:FACEBOOK_APP_ID permissions:@[@"xmpp_login"] urlSchemeSuffix:nil tokenCacheStrategy:tokenCaching];
+    FBSession * session = [[FBSession alloc] initWithAppID:FACEBOOK_APP_ID permissions:@[@"xmpp_login"] urlSchemeSuffix:nil tokenCacheStrategy:[FBSessionTokenCachingStrategy nullCacheInstance]];
+    
+    [FBSession setActiveSession:session];
     
     [session openWithBehavior:FBSessionLoginBehaviorUseSystemAccountIfPresent completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+    
+        
         if (completionBlock) {
             if (session.accessTokenData) {
                 completionBlock(session.accessTokenData,nil);

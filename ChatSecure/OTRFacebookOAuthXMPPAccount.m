@@ -10,7 +10,6 @@
 #import "OTRImages.h"
 #import "Strings.h"
 #import "FBAccessTokenData.h"
-#import "OTRFacebookSessionCachingStrategy.h"
 #import "OTRConstants.h"
 
 

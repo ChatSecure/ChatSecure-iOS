@@ -237,7 +237,6 @@
 		6397538C18CA8222005D6063 /* OTRvCardAvatar.m in Sources */ = {isa = PBXBuildFile; fileRef = 6397537918CA8222005D6063 /* OTRvCardAvatar.m */; };
 		6397538D18CA8222005D6063 /* OTRvCardTemp.m in Sources */ = {isa = PBXBuildFile; fileRef = 6397537B18CA8222005D6063 /* OTRvCardTemp.m */; };
 		6397538E18CA8222005D6063 /* OTRXMPPManagedPresenceSubscriptionRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 6397537D18CA8222005D6063 /* OTRXMPPManagedPresenceSubscriptionRequest.m */; };
-		6397539718CA8266005D6063 /* OTRFacebookSessionCachingStrategy.m in Sources */ = {isa = PBXBuildFile; fileRef = 6397539618CA8266005D6063 /* OTRFacebookSessionCachingStrategy.m */; };
 		639753A018CA82A2005D6063 /* OTRLanguageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6397539F18CA82A2005D6063 /* OTRLanguageManager.m */; };
 		639753A618CA8500005D6063 /* OTRXMPPManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 639753A518CA8500005D6063 /* OTRXMPPManager.m */; };
 		639753AD18CA8550005D6063 /* OTRCertificateDomainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 639753AC18CA8550005D6063 /* OTRCertificateDomainViewController.m */; };
@@ -893,8 +892,6 @@
 		6397537B18CA8222005D6063 /* OTRvCardTemp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OTRvCardTemp.m; path = Model/Human/OTRvCardTemp.m; sourceTree = "<group>"; };
 		6397537C18CA8222005D6063 /* OTRXMPPManagedPresenceSubscriptionRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OTRXMPPManagedPresenceSubscriptionRequest.h; path = Model/Human/OTRXMPPManagedPresenceSubscriptionRequest.h; sourceTree = "<group>"; };
 		6397537D18CA8222005D6063 /* OTRXMPPManagedPresenceSubscriptionRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OTRXMPPManagedPresenceSubscriptionRequest.m; path = Model/Human/OTRXMPPManagedPresenceSubscriptionRequest.m; sourceTree = "<group>"; };
-		6397539518CA8266005D6063 /* OTRFacebookSessionCachingStrategy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRFacebookSessionCachingStrategy.h; sourceTree = "<group>"; };
-		6397539618CA8266005D6063 /* OTRFacebookSessionCachingStrategy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRFacebookSessionCachingStrategy.m; sourceTree = "<group>"; };
 		6397539E18CA82A2005D6063 /* OTRLanguageManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRLanguageManager.h; sourceTree = "<group>"; };
 		6397539F18CA82A2005D6063 /* OTRLanguageManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRLanguageManager.m; sourceTree = "<group>"; };
 		639753A318CA84B8005D6063 /* OTRProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OTRProtocol.h; sourceTree = "<group>"; };
@@ -2585,8 +2582,6 @@
 			children = (
 				639753A318CA84B8005D6063 /* OTRProtocol.h */,
 				63CAF90118FF27EB00C3337E /* XMPP */,
-				6397539518CA8266005D6063 /* OTRFacebookSessionCachingStrategy.h */,
-				6397539618CA8266005D6063 /* OTRFacebookSessionCachingStrategy.m */,
 				63188E2918E6475400037EE0 /* OTROAuthRefresher.h */,
 				63188E2A18E6475400037EE0 /* OTROAuthRefresher.m */,
 				6397539E18CA82A2005D6063 /* OTRLanguageManager.h */,
@@ -2996,7 +2991,6 @@
 				6397538518CA8222005D6063 /* OTRManagedMessage.m in Sources */,
 				6397538C18CA8222005D6063 /* OTRvCardAvatar.m in Sources */,
 				63E5E83718CA95E300CF7E28 /* Reachability.m in Sources */,
-				6397539718CA8266005D6063 /* OTRFacebookSessionCachingStrategy.m in Sources */,
 				63464F3D1889EC9200526358 /* _OTRXMPPManagedPresenceSubscriptionRequest.m in Sources */,
 				63ACAFEC18CA73F100448508 /* SOCKSProxySocket.m in Sources */,
 				63CAF90418FF284200C3337E /* OTRUtilities.m in Sources */,
