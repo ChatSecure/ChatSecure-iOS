@@ -42,10 +42,10 @@ NSString *const kOTRExpiresInKey      = @"expires_in";
     return [self authToken].accessToken;
 }
 
--(void)setTokenDictionary:(NSDictionary *)tokenDictionary
+-(void)setOAuthTokenDictionary:(NSDictionary *)oAuthTokenDictionary
 {
-    if ([tokenDictionary count]) {
-        NSMutableDictionary * mutableTokenDictionary = [tokenDictionary mutableCopy];
+    if ([oAuthTokenDictionary count]) {
+        NSMutableDictionary * mutableTokenDictionary = [oAuthTokenDictionary mutableCopy];
         NSNumber * expiresIn = [mutableTokenDictionary objectForKey:kOTRExpiresInKey];
         [mutableTokenDictionary removeObjectForKey:kOTRExpiresInKey];
         NSDate *date = nil;
@@ -58,12 +58,12 @@ NSString *const kOTRExpiresInKey      = @"expires_in";
         if(date) {
             [mutableTokenDictionary setObject:date forKey:kOTRExpirationDateKey];
         }
-        tokenDictionary = mutableTokenDictionary;
+        oAuthTokenDictionary = mutableTokenDictionary;
     }
-    [super setOAuthTokenDictionary:tokenDictionary];
+    [super setOAuthTokenDictionary:oAuthTokenDictionary];
 }
 
--(NSDictionary *)tokenDictionary
+-(NSDictionary *)oAuthTokenDictionary
 {
     NSMutableDictionary * mutableTokenDictionary = [[super oAuthTokenDictionary] mutableCopy];
     NSDate * expirationDate = [mutableTokenDictionary objectForKey:kOTRExpirationDateKey];
@@ -97,7 +97,7 @@ NSString *const kOTRExpiresInKey      = @"expires_in";
 {
     if ([accountSpecificToken isKindOfClass:[GTMOAuth2Authentication class]]) {
         GTMOAuth2Authentication *token = (GTMOAuth2Authentication *)accountSpecificToken;
-        [self setTokenDictionary:token.parameters];
+        [self setOAuthTokenDictionary:token.parameters];
     }
 }
 
