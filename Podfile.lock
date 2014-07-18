@@ -71,7 +71,7 @@ PODS:
   - SQLCipher/fts (3.1.0):
     - SQLCipher/common
   - SSKeychain (1.2.2)
-  - TTTAttributedLabel (1.6.0)
+  - TTTAttributedLabel (1.10.1)
   - UIAlertView-Blocks (1.0)
   - uservoice-iphone-sdk (3.1.0)
   - YapDatabase/common (2.4.3):
@@ -103,7 +103,7 @@ DEPENDENCIES:
   - RMStepsController (~> 1.0)
   - SIAlertView (from `git@github.com:ChatSecure/SIAlertView.git`, branch `attributedText`)
   - SSKeychain
-  - TTTAttributedLabel (from `git@github.com:ChatSecure/TTTAttributedLabel.git`, branch `master`)
+  - TTTAttributedLabel (~> 1.10)
   - UIAlertView-Blocks
   - uservoice-iphone-sdk (from `git@github.com:ChatSecure/uservoice-iphone-sdk.git`, branch `3.1.0-noanalytics`)
   - YapDatabase/SQLCipher (~> 2.4)
@@ -115,9 +115,6 @@ EXTERNAL SOURCES:
   SIAlertView:
     :branch: attributedText
     :git: git@github.com:ChatSecure/SIAlertView.git
-  TTTAttributedLabel:
-    :branch: master
-    :git: git@github.com:ChatSecure/TTTAttributedLabel.git
   uservoice-iphone-sdk:
     :branch: 3.1.0-noanalytics
     :git: git@github.com:ChatSecure/uservoice-iphone-sdk.git
@@ -149,7 +146,7 @@ SPEC CHECKSUMS:
   SIAlertView: e6d0d786c3a3f6e456b0e8b9376d0c34d68e827b
   SQLCipher: 981110217eb93c2779c34fb59e646a1c1da918d8
   SSKeychain: cc48bd3ad24fcd9125adb9e0d23dd50b8bbd08b9
-  TTTAttributedLabel: 2d27b3cd50ed69e452dbc6e2588283c5eafbcfec
+  TTTAttributedLabel: 94bb04f1e005616002dd2cee0262a0082e533627
   UIAlertView-Blocks: f3271e84372beb97aea115cd1fb26ae66457f12f
   uservoice-iphone-sdk: 696bd0f493facb0e16d7bb7720cfcf660e27aa78
   YapDatabase: 2ec54726596299c88e09e899e8f17c15d7f6b18a

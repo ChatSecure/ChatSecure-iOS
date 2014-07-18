@@ -24,9 +24,9 @@ pod 'RMStepsController', '~> 1.0'
 pod 'JSQMessagesViewController', '~> 5.0'
 pod 'BBlock', '~> 1.2'
 pod 'JVFloatLabeledTextField', '~> 0.0'
+pod 'TTTAttributedLabel', '~> 1.10'
 
 # Forks
 pod 'AFOAuth2Client', :git => 'git@github.com:ChatSecure/AFOAuth2Client.git', :branch => 'release'
 pod 'SIAlertView', :git => 'git@github.com:ChatSecure/SIAlertView.git', :branch => 'attributedText'
-pod 'TTTAttributedLabel', :git => 'git@github.com:ChatSecure/TTTAttributedLabel.git', :branch => 'master'
 pod 'uservoice-iphone-sdk', :git => 'git@github.com:ChatSecure/uservoice-iphone-sdk.git', :branch => '3.1.0-noanalytics'
