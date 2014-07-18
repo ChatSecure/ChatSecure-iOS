@@ -15,7 +15,7 @@ pod "MagicalRecord", :inhibit_warnings => true
 pod 'MBProgressHUD', '~> 0.8'
 pod "SSKeychain"
 pod "UIAlertView-Blocks"
-pod 'gtm-oauth2', '~> 0.0.3'
+pod 'gtm-oauth2', '~> 0.1.0'
 pod 'JTTargetActionBlock', '~> 1.0'
 pod 'YapDatabase/SQLCipher', '~> 2.4'
 pod 'Mantle', '~> 1.4'

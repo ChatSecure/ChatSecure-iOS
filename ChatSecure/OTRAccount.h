@@ -9,14 +9,6 @@
 #import "OTRYapDatabaseObject.h"
 #import "OTRConstants.h"
 
-extern const struct OTRAccountAttributes {
-	__unsafe_unretained NSString *autologin;
-	__unsafe_unretained NSString *displayName;
-    __unsafe_unretained NSString *accountType;
-	__unsafe_unretained NSString *rememberPassword;
-	__unsafe_unretained NSString *username;
-} OTRAccountAttributes;
-
 extern NSString *const OTRAimImageName;
 extern NSString *const OTRGoogleTalkImageName;
 extern NSString *const OTRXMPPImageName;

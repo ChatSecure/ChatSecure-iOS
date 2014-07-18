@@ -16,7 +16,7 @@
 {
     if(![password length])
     {
-        [self setTokenDictionary:nil];
+        [self setOAuthTokenDictionary:nil];
     }
 }
 -(NSString *)password
@@ -29,9 +29,9 @@
     return @"";
 }
 
--(void)setTokenDictionary:(NSDictionary *)accessTokenDictionary
+-(void)setOAuthTokenDictionary:(NSDictionary *)oAuthTokenDictionary
 {
-    if (![accessTokenDictionary count]) {
+    if (![oAuthTokenDictionary count]) {
         [super setPassword:nil];
     }
     else {
@@ -39,7 +39,7 @@
         
         SSKeychainQuery * keychainQuery = [self baseKeychainQuery];
         
-        keychainQuery.passwordObject = accessTokenDictionary;
+        keychainQuery.passwordObject = oAuthTokenDictionary;
         
         [keychainQuery save:&error];
         
@@ -49,7 +49,7 @@
     }
 }
 
-- (NSDictionary *)tokenDictionary
+- (NSDictionary *)oAuthTokenDictionary
 {
     NSError * error = nil;
     NSDictionary *dictionary = nil;

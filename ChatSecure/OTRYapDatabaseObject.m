@@ -8,10 +8,6 @@
 
 #import "OTRYapDatabaseObject.h"
 
-const struct OTRYapDatabaseObjectAttributes OTRYapDatabaseObjectAttributes = {
-	.uniqueId = @"uniqueId"
-};
-
 @interface OTRYapDatabaseObject ()
 
 @property (nonatomic, strong) NSString *uniqueId;

@@ -11,12 +11,6 @@
 #import "Strings.h"
 #import "OTRConstants.h"
 
-const struct OTRXMPPAccountAttributes OTRXMPPAccountAttributes = {
-	.domain = @"domain",
-	.port = @"port",
-	.resource = @"resource"
-};
-
 static NSUInteger const OTRDefaultPortNumber = 5222;
 
 @implementation OTRXMPPAccount
@@ -69,6 +63,13 @@ static NSUInteger const OTRDefaultPortNumber = 5222;
 {
     int r = arc4random() % 99999;
     return [NSString stringWithFormat:@"%@%d",kOTRXMPPResource,r];
+}
+
++ (NSDictionary*) encodingBehaviorsByPropertyKey {
+    NSMutableDictionary *encodingBehaviors = [NSMutableDictionary dictionaryWithDictionary:[super encodingBehaviorsByPropertyKey]];
+    [encodingBehaviors setObject:@(MTLModelEncodingBehaviorExcluded) forKey:NSStringFromSelector(@selector(accountSpecificToken))];
+    [encodingBehaviors setObject:@(MTLModelEncodingBehaviorExcluded) forKey:NSStringFromSelector(@selector(oAuthTokenDictionary))];
+    return encodingBehaviors;
 }
 
 
