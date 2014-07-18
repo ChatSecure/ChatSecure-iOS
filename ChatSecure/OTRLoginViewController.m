@@ -29,7 +29,6 @@
 #import "OTRXMPPLoginViewController.h"
 #import "OTRJabberLoginViewController.h"
 #import "OTRFacebookLoginViewController.h"
-#import "OTROscarLoginViewController.h"
 #import "OTRGoogleTalkLoginViewController.h"
 #import "OTRInLineTextEditTableViewCell.h"
 #import "OTRManagedXMPPTorAccount.h"
@@ -391,15 +390,10 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
 - (void)protocolLoginSuccess:(NSNotification*)notification
 {
     [self hideHUD];
-    //After successful login generate new private key if none exists
-    if([self.account.username length]) {
+    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         
-        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-            
-            [transaction setObject:self.account forKey:self.account.uniqueId inCollection:[OTRAccount collection]];
-        }];
-    }
-    
+        [self.account saveWithTransaction:transaction];
+    }];
     [self dismissViewControllerAnimated:YES completion:nil];
 }  
 
@@ -413,6 +407,11 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
         [self showHUDWithText:LOGGING_IN_STRING];
         
         [self readInFields];
+        
+        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+            
+            [self.account saveWithTransaction:transaction];
+        }];
         
         id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
         [protocol connectWithPassword:self.passwordTextField.text];

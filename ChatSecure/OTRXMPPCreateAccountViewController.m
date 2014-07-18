@@ -17,6 +17,7 @@
 #import "OTRXMPPManager.h"
 #import "OTRTextFieldTableViewCell.h"
 #import "JVFloatLabeledTextField.h"
+#import "OTRDatabaseManager.h"
 
 static NSString * const domainCellIdentifier = @"domainCellIdentifer";
 
@@ -25,7 +26,7 @@ static NSString * const domainCellIdentifier = @"domainCellIdentifer";
 @property (nonatomic, strong) NSArray * hostnameArray;
 @property (nonatomic, strong) OTRXMPPAccount *account;
 
-@property (nonatomic, strong) UITextField *otherHostnameTextField;
+@property (nonatomic, strong) JVFloatLabeledTextField *customHostnameTextField;
 
 @property (nonatomic) BOOL wasAbleToCreateAccount;
 
@@ -36,7 +37,10 @@ static NSString * const domainCellIdentifier = @"domainCellIdentifer";
 - (id)init
 {
     if (self = [super init]) {
-        self.otherHostnameTextField = [[UITextField alloc] initWithFrame:CGRectZero]; 
+        self.customHostnameTextField = [[JVFloatLabeledTextField alloc] initWithFrame:CGRectZero];
+        [self.customHostnameTextField setPlaceholder:@"Custom"];
+        self.customHostnameTextField.returnKeyType = UIReturnKeyDone;
+        self.customHostnameTextField.delegate = self;
     }
     return self;
 }
@@ -155,7 +159,7 @@ static NSString * const domainCellIdentifier = @"domainCellIdentifer";
             //Other or Custom Hostname
             OTRTextFieldTableViewCell *textCell = [tableView dequeueReusableCellWithIdentifier:[OTRTextFieldTableViewCell reuseIdentifier] forIndexPath:indexPath];
             
-            [textCell.textField setPlaceholder:@"Custom" floatingTitle:@"Custom"];
+            textCell.textField = self.customHostnameTextField;
             cell = textCell;
         }
         
@@ -174,11 +178,15 @@ static NSString * const domainCellIdentifier = @"domainCellIdentifer";
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if (indexPath.section == 1) {
+    
+    if (indexPath.section == 1 && self.selectedHostnameIndex != indexPath.row) {
+        NSInteger oldRow = self.selectedHostnameIndex;
         self.selectedHostnameIndex = indexPath.row;
-        [tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationAutomatic];
+        NSIndexPath *oldIndexPath = [NSIndexPath indexPathForRow:oldRow inSection:1];
+        
+        [tableView reloadRowsAtIndexPaths:@[oldIndexPath,indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
     }
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 - (NSString *)fixUsername:(NSString *)username withDomain:(NSString *)domain;
@@ -186,25 +194,24 @@ static NSString * const domainCellIdentifier = @"domainCellIdentifer";
     NSString * finalUsername = nil;
     username = [username stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     if ([username length]) {
-        if ([username rangeOfString:@"@"].location != NSNotFound) {
-            // has @ symbol
-            NSRange range = [username rangeOfString:[NSString stringWithFormat:@"@%@",domain]];
-            if (range.location + range.length == [username length]) {
-                //propper ending of domain
-                finalUsername = username;
-            }
-            else {
-                //has @ symbol but incorrect domain
-                NSArray * components = [username componentsSeparatedByString:@"@"];
-                finalUsername = [NSString stringWithFormat:@"%@@%@",[components firstObject],domain];
-            }
-        }
-        else {
+        if ([username rangeOfString:@"@"].location == NSNotFound) {
             //append correct domain
             finalUsername = [NSString stringWithFormat:@"%@@%@",username,domain];
         }
     }
     return finalUsername;
+}
+
+- (BOOL)checkFields
+{
+    BOOL fields = [super checkFields];
+    if (fields) {
+        if (![[self hostnameForIndex:self.selectedHostnameIndex] length]) {
+            fields = NO;
+            [self showAlertViewWithTitle:ERROR_STRING message:DOMAIN_BLANK_ERROR_STRING error:nil];
+        }
+    }
+    return fields;
 }
 
 -(void) loginButtonPressed:(id)sender
@@ -226,6 +233,11 @@ static NSString * const domainCellIdentifier = @"domainCellIdentifer";
         self.account.domain = [self hostnameForIndex:self.selectedHostnameIndex];
         self.account.rememberPassword = self.rememberPasswordSwitch.on;
         self.account.autologin = self.autoLoginSwitch.on;
+        
+        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+            [self.account saveWithTransaction:transaction];
+        }];
+        
         OTRXMPPManager * xmppManager = [self xmppManager];
         if (xmppManager) {
             [self showHUDWithText:CREATING_ACCOUNT_STRING];
@@ -274,6 +286,7 @@ static NSString * const domainCellIdentifier = @"domainCellIdentifer";
         hostname = self.hostnameArray[index];
     }
     else {
+        hostname = self.customHostnameTextField.text;
         //Other
     }
     return hostname;
@@ -294,4 +307,29 @@ static NSString * const domainCellIdentifier = @"domainCellIdentifer";
     return [[self alloc] initWithHostnames:hostNames];
 }
 
+#pragma - mark UITextFieldDelegate  
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    if ([textField isEqual:self.customHostnameTextField]) {
+        
+        if (self.selectedHostnameIndex != [self.hostnameArray count]) {
+            NSInteger oldRow = self.selectedHostnameIndex;
+            self.selectedHostnameIndex = [self.hostnameArray count];
+            [self.loginViewTableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:oldRow inSection:1]] withRowAnimation:UITableViewRowAnimationNone];
+            
+            UITableViewCell *cell = [self.loginViewTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:[self.hostnameArray count] inSection:1]];
+            cell.accessoryType = UITableViewCellAccessoryCheckmark;
+        }
+        
+        
+    }
+    return YES;
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [textField resignFirstResponder];
+    return NO;
+}
 @end

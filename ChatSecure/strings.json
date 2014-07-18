@@ -1022,5 +1022,9 @@
   "INVALID_EMAIL_DETAIL_STRING" : {
     "comment": "detail title label for invalid email",
     "string": "Please choose a valid email address"
+  },
+  "DOMAIN_BLANK_ERROR_STRING" : {
+    "comment": "Error message when domain textfield left blank",
+    "string": "Domain needs to be set"
   }
 }

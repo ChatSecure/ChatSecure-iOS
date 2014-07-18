@@ -98,7 +98,6 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    //[self loginButtonPressed:[tableView cellForRowAtIndexPath:indexPath]];
 }
 
 -(void)readInFields

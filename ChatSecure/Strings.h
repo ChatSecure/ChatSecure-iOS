@@ -90,6 +90,7 @@
 #define ALLOW_PLAIN_TEXT_AUTHENTICATION_STRING [OTRLanguageManager translatedString: @"Allow Plaintext Authentication"]
 #define SAVED_CERTIFICATES_STRING [OTRLanguageManager translatedString: @"Saved Certificates"]
 #define NEW_ACCOUNT_STRING [OTRLanguageManager translatedString: @"New Account"]
+#define DOMAIN_BLANK_ERROR_STRING [OTRLanguageManager translatedString: @"Domain needs to be set"]
 #define REJECT_STRING [OTRLanguageManager translatedString: @"Reject"]
 #define AWAY_MESSAGE_STRING [OTRLanguageManager translatedString: @"is now away"]
 #define OPEN_IN_SAFARI_STRING [OTRLanguageManager translatedString: @"Open in Safari"]

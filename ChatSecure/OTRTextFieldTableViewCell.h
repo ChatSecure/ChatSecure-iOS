@@ -13,7 +13,7 @@
 
 @interface OTRTextFieldTableViewCell : UITableViewCell
 
-@property (nonatomic, readonly, strong) JVFloatLabeledTextField *textField;
+@property (nonatomic, strong) JVFloatLabeledTextField *textField;
 
 + (NSString *)reuseIdentifier;
 

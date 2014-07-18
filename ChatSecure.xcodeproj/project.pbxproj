@@ -201,7 +201,6 @@
 		636FE4B3161B76CF002B28EF /* OTRFacebookLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 636FE4B2161B76CF002B28EF /* OTRFacebookLoginViewController.m */; };
 		636FE4B6161B76EA002B28EF /* OTRGoogleTalkLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 636FE4B5161B76EA002B28EF /* OTRGoogleTalkLoginViewController.m */; };
 		636FE4B9161B7701002B28EF /* OTRXMPPLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 636FE4B8161B7701002B28EF /* OTRXMPPLoginViewController.m */; };
-		636FE4BC161B771E002B28EF /* OTROscarLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 636FE4BB161B771E002B28EF /* OTROscarLoginViewController.m */; };
 		636FE4C0161B7C68002B28EF /* OTRInLineTextEditTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 636FE4BF161B7C68002B28EF /* OTRInLineTextEditTableViewCell.m */; };
 		6370C976185FC58C00CB6786 /* OTRTitleSubtitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6370C975185FC58C00CB6786 /* OTRTitleSubtitleView.m */; };
 		637BC43018985BAC006EC18C /* OTRColorFadingDotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 637BC42F18985BAC006EC18C /* OTRColorFadingDotView.m */; };
@@ -772,8 +771,6 @@
 		636FE4B5161B76EA002B28EF /* OTRGoogleTalkLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRGoogleTalkLoginViewController.m; sourceTree = "<group>"; };
 		636FE4B7161B7701002B28EF /* OTRXMPPLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPLoginViewController.h; sourceTree = "<group>"; };
 		636FE4B8161B7701002B28EF /* OTRXMPPLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPLoginViewController.m; sourceTree = "<group>"; };
-		636FE4BA161B771E002B28EF /* OTROscarLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTROscarLoginViewController.h; sourceTree = "<group>"; };
-		636FE4BB161B771E002B28EF /* OTROscarLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTROscarLoginViewController.m; sourceTree = "<group>"; };
 		636FE4BE161B7C68002B28EF /* OTRInLineTextEditTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRInLineTextEditTableViewCell.h; sourceTree = "<group>"; };
 		636FE4BF161B7C68002B28EF /* OTRInLineTextEditTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRInLineTextEditTableViewCell.m; sourceTree = "<group>"; };
 		6370C974185FC58C00CB6786 /* OTRTitleSubtitleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRTitleSubtitleView.h; sourceTree = "<group>"; };
@@ -2000,8 +1997,6 @@
 				D9DE274913F4F0A400E335CA /* OTRLoginViewController.h */,
 				D9DE274A13F4F0A400E335CA /* OTRLoginViewController.m */,
 				6348184D17E3D6C8004E0146 /* XMPPLoginViewControllers */,
-				636FE4BA161B771E002B28EF /* OTROscarLoginViewController.h */,
-				636FE4BB161B771E002B28EF /* OTROscarLoginViewController.m */,
 				636FE4BE161B7C68002B28EF /* OTRInLineTextEditTableViewCell.h */,
 				636FE4BF161B7C68002B28EF /* OTRInLineTextEditTableViewCell.m */,
 			);
@@ -2985,7 +2980,6 @@
 				636FE4B6161B76EA002B28EF /* OTRGoogleTalkLoginViewController.m in Sources */,
 				636FE4B9161B7701002B28EF /* OTRXMPPLoginViewController.m in Sources */,
 				639C60D418CA992300CC4DF4 /* OTRDoubleSetting.m in Sources */,
-				636FE4BC161B771E002B28EF /* OTROscarLoginViewController.m in Sources */,
 				636FE4C0161B7C68002B28EF /* OTRInLineTextEditTableViewCell.m in Sources */,
 				D987BAE01901A6CF005B2382 /* OTRPushManager.m in Sources */,
 				639FDE4716334FA500387666 /* OTRJabberLoginViewController.m in Sources */,
