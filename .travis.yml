@@ -1,0 +1,17 @@
+language: objective-c
+install:
+  - git submodule update --init --recursive
+  - ./Submodules/OnionKit/build-libssl.sh --noverify
+  - ./Submodules/OnionKit/build-libevent.sh --noverify
+  - ./Submodules/OnionKit/build-tor.sh --noverify
+  - ./Submodules/OTRKit/build-all.sh
+
+before_script:
+  - gem install cocoapods
+  - brew update
+  - brew upgrade xctool
+script:
+  - xctool -workspace ChatSecure.xcworkspace -scheme ChatSecure -sdk iphonesimulator7.1 ONLY_ACTIVE_ARCH=NO build
+
+notifications:
+  email: false
