@@ -146,12 +146,7 @@ SPEC CHECKSUMS:
   Navajo: 9130d497903e5d1b0f1b3c987be01f5b60fd37c7
   OpenInChrome: b7c73ddf8fe0a1788dc0549c3c4c70e3c84da578
   RMStepsController: 8ff91f169d884fdd834ad37007f553c7bed333eb
-<<<<<<< HEAD
-  SBJson: 72d7da8a5bf6c236e87194abb10ac573a8bccbef
-  SIAlertView: 522351a8870be07fb49053fa054c83da3ea17dbe
-=======
   SIAlertView: e6d0d786c3a3f6e456b0e8b9376d0c34d68e827b
->>>>>>> 3277551a0a40aa9f7e084e1fdef8f443432824df
   SQLCipher: 981110217eb93c2779c34fb59e646a1c1da918d8
   SSKeychain: cc48bd3ad24fcd9125adb9e0d23dd50b8bbd08b9
   TTTAttributedLabel: 2d27b3cd50ed69e452dbc6e2588283c5eafbcfec
