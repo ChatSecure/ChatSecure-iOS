@@ -1,11 +1,11 @@
-ChatSecure
-=========
+# ChatSecure
 
-ChatSecure is a free and open source instant messaging client for [iOS](https://itunes.apple.com/us/app/chatsecure/id464200063) and [Android](https://play.google.com/store/apps/details?id=info.guardianproject.otr.app.im&hl=en) that integrates encrypted [OTR](https://en.wikipedia.org/wiki/ChatSecure_Messaging) ("Off the Record") messaging support from the [libotr](https://otr.cypherpunks.ca/) library and the [XMPPFramework](https://github.com/robbiehanson/XMPPFramework/) to handle Jabber/GTalk (XMPP).
+[![Build Status](https://travis-ci.org/chrisballinger/ChatSecure-iOS.svg?branch=master)](https://travis-ci.org/chrisballinger/ChatSecure-iOS)
+
+[ChatSecure](https://chatsecure.org) is a free and open source instant messaging client for [iOS](https://itunes.apple.com/us/app/chatsecure/id464200063) and [Android](https://play.google.com/store/apps/details?id=info.guardianproject.otr.app.im&hl=en) that integrates encrypted [OTR](https://en.wikipedia.org/wiki/ChatSecure_Messaging) ("Off the Record") messaging support from the [libotr](https://otr.cypherpunks.ca/) library and the [XMPPFramework](https://github.com/robbiehanson/XMPPFramework/) to handle Jabber/GTalk (XMPP).
 
 
-Cost
-=========
+## Cost
 
 This project is **100% free** because it is important that all people around the world have unrestricted access to privacy tools.
 However, developing and supporting this project is hard work and costs real money. Please help support the development of this project! We now also accept Bitcoin via Coinbase! :)
@@ -13,8 +13,8 @@ However, developing and supporting this project is hard work and costs real mone
 [![bitcoin](https://chatsecure.org/images/bitcoin_donate.png)](https://coinbase.com/checkouts/1cf35f00d722205726f50b940786c413) [![donation](https://chatsecure.org/images/paypal_donate.png)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=XRBHJ9AX5VWNA) 
 
 
-Localization
-=========
+## Localization
+
 
 ![transifex localization](https://www.transifex.com/projects/p/chatsecure/resource/strings/chart/image_png)
 
@@ -26,29 +26,29 @@ If you would like to contribute/improve a translation:
 
 
 
-Compatibility
-=========
+## Compatibility
 
-**Bold** indicates it has been tested and works properly.
 
-Native
-------
+**Bold** indicates it has been tested and works properly. [Full List](https://en.wikipedia.org/wiki/Off-the-Record_Messaging#Client_support).
+
+
+### Native
+
 * **[Adium](https://adium.im/) (Mac OS X) - OTR works over both XMPP and Oscar.**
 * Jitsi (Cross-platform)
 
-Plug-in
-------
+###  Plug-in
+
 * [Pidgin](https://pidgin.im/) (cross-platform), with [pidgin-otr](https://otr.cypherpunks.ca/index.php#downloads) plugin.
 
-Phone apps
-------
+### Phone apps
+
 * **[ChatSecure Android](https://guardianproject.info/apps/chatsecure/) (formerly known as Gibberbot)**, a free and open source Android application produced by The Guardian Project, provides OTR protocol compatible over XMPP chat.
 * [BEEM](http://beem-project.com/projects/beem) - Android XMPP client (compatibility unknown)
 
-[Full List](https://en.wikipedia.org/wiki/ChatSecure_Messaging#Client_support)
 
-Build Instructions
-========
+## Build Instructions
+
 Install [mogenerator](http://rentzsch.github.io/mogenerator/) in order to regenerate the Core Data model files. You'll also need [Cocoapods](http://cocoapods.org) for some of our dependencies.
     
     $ brew install mogenerator
@@ -65,8 +65,8 @@ Make your own version of environment-specific data. Make `OTRSecrets.m` file wit
     
 Open `ChatSecure.xcworkspace` in Xcode and build. Note that you don't open the .xcodeproj anymore because we use Cocoapods now.
 
-License
-=========
+## License
+
 
 	Software License Agreement (GPLv3+)
 	
@@ -88,8 +88,7 @@ License
 If you would like to relicense this code to distribute it on the App Store, 
 please contact me at [chris@chatsecure.org](mailto:chris@chatsecure.org).
 
-Contributing
-------------
+## Contributing
 
 Thank you for your interest in contributing to ChatSecure! To avoid potential legal headaches and to allow distribution on Apple's App Store please sign our CLA (Contributors License Agreement). For contributing translations, please check out our [Transifex](https://www.transifex.com/projects/p/chatsecure/) page.
 
@@ -99,8 +98,7 @@ Thank you for your interest in contributing to ChatSecure! To avoid potential le
 4. Thank you!
 
 
-Third-party Libraries
-=========
+## Third-party Libraries
 
 This software additionally references or incorporates the following sources
 of intellectual property, the license terms for which are set forth
@@ -124,8 +122,7 @@ terms of a separate license:
 * [mogenerator](https://github.com/rentzsch/mogenerator) - creates class files for core data model
 * [DAKeyboardControl](https://github.com/danielamitay/DAKeyboardControl) - support for swiping down keyboard in chat view
 
-Acknowledgements
-=========
+## Acknowledgements
 
 Thank you to everyone who helped this project become a reality! This project is also supported by the fine folks from [The Guardian Project](https://guardianproject.info) and [OpenITP](https://openitp.org).
 
