@@ -1,0 +1,29 @@
+language: objective-c
+
+# Handle git submodules yourself
+# http://stackoverflow.com/a/24600210/805882
+git:
+    submodules: false
+
+# Use sed to replace the SSH URL with the public URL, then initialize submodules
+before_install:
+    # https://help.github.com/articles/what-are-github-s-ssh-key-fingerprints
+    - echo "github.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==" >> ~/.ssh/known_hosts
+    - sed -i -e 's/git@github.com:/git:\/\/github.com\//' .gitmodules
+    - git submodule update --init --recursive
+
+install:
+  - ./Submodules/OnionKit/build-libssl.sh --noverify
+  - ./Submodules/OnionKit/build-libevent.sh --noverify
+  - ./Submodules/OnionKit/build-tor.sh --noverify
+  - ./Submodules/OTRKit/build-all.sh
+
+before_script:
+  - gem install cocoapods
+  - brew update
+  - brew upgrade xctool
+script:
+  - xctool -workspace ChatSecure.xcworkspace -scheme ChatSecure -sdk iphonesimulator7.1 ONLY_ACTIVE_ARCH=NO build
+
+notifications:
+  email: false

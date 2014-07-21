@@ -29,6 +29,7 @@ PODS:
   - BBlock/StoreKit (1.2.0)
   - BBlock/UIKit (1.2.0)
   - Bolts (1.1.0)
+  - CocoaAsyncSocket (7.4)
   - CocoaLumberjack (1.9.1):
     - CocoaLumberjack/Extensions
   - CocoaLumberjack/Core (1.9.1)
@@ -65,13 +66,18 @@ PODS:
   - MWFeedParser/NSString+HTML (1.0.1)
   - Navajo (0.0.1)
   - OpenInChrome (0.0.1)
+  - ProxyKit/Client (1.0.2):
+    - ProxyKit/common
+  - ProxyKit/common (1.0.2):
+    - CocoaAsyncSocket (~> 7.3)
+    - CocoaLumberjack (~> 1.9)
   - RMStepsController (1.0.1)
   - SIAlertView (1.3)
   - SQLCipher/common (3.1.0)
   - SQLCipher/fts (3.1.0):
     - SQLCipher/common
   - SSKeychain (1.2.2)
-  - TTTAttributedLabel (1.6.0)
+  - TTTAttributedLabel (1.10.1)
   - UIAlertView-Blocks (1.0)
   - uservoice-iphone-sdk (3.1.0)
   - YapDatabase/common (2.4.3):
@@ -85,6 +91,7 @@ DEPENDENCIES:
   - AFOAuth2Client (from `git@github.com:ChatSecure/AFOAuth2Client.git`, branch `release`)
   - Appirater
   - BBlock (~> 1.2)
+  - CocoaAsyncSocket (from `https://github.com/robbiehanson/CocoaAsyncSocket.git`, commit `2f6e2e4c1724dbb5a23ba1ebac64cb84ff3a0179`)
   - CocoaLumberjack
   - DAKeyboardControl (~> 2.3)
   - Facebook-iOS-SDK
@@ -100,10 +107,11 @@ DEPENDENCIES:
   - MWFeedParser (~> 1.0)
   - Navajo (~> 0.0)
   - OpenInChrome
+  - ProxyKit/Client (from `Submodules/ProxyKit/ProxyKit.podspec`)
   - RMStepsController (~> 1.0)
   - SIAlertView (from `git@github.com:ChatSecure/SIAlertView.git`, branch `attributedText`)
   - SSKeychain
-  - TTTAttributedLabel (from `git@github.com:ChatSecure/TTTAttributedLabel.git`, branch `master`)
+  - TTTAttributedLabel (~> 1.10)
   - UIAlertView-Blocks
   - uservoice-iphone-sdk (from `git@github.com:ChatSecure/uservoice-iphone-sdk.git`, branch `3.1.0-noanalytics`)
   - YapDatabase/SQLCipher (~> 2.4)
@@ -112,12 +120,14 @@ EXTERNAL SOURCES:
   AFOAuth2Client:
     :branch: release
     :git: git@github.com:ChatSecure/AFOAuth2Client.git
+  CocoaAsyncSocket:
+    :commit: 2f6e2e4c1724dbb5a23ba1ebac64cb84ff3a0179
+    :git: https://github.com/robbiehanson/CocoaAsyncSocket.git
+  ProxyKit:
+    :path: Submodules/ProxyKit/ProxyKit.podspec
   SIAlertView:
     :branch: attributedText
     :git: git@github.com:ChatSecure/SIAlertView.git
-  TTTAttributedLabel:
-    :branch: master
-    :git: git@github.com:ChatSecure/TTTAttributedLabel.git
   uservoice-iphone-sdk:
     :branch: 3.1.0-noanalytics
     :git: git@github.com:ChatSecure/uservoice-iphone-sdk.git
@@ -128,6 +138,7 @@ SPEC CHECKSUMS:
   Appirater: a5e00fb01d47a9a6acf4b2f22323b4ccf4f23fbb
   BBlock: 90f0ae0e3ba94fc88be6b9a85b4adbb73b8a7c9a
   Bolts: 91c2af8eae1d44e1dd75946a5b0ae04a43ea43e4
+  CocoaAsyncSocket: 05cf58994eda7b50e6ac1bd0266ef2db97d05d70
   CocoaLumberjack: 94accd5749f5c5d15134c8d50f34a973aed8ef69
   DAKeyboardControl: b17935d41242e094f96ec22696405c620ffb088b
   Facebook-iOS-SDK: 82ad03cb9ce568855057e20a099054cf1e34ef12
@@ -145,11 +156,12 @@ SPEC CHECKSUMS:
   MWFeedParser: 003cbf5398e99a7f2057fbe9583054fd1b84be72
   Navajo: 9130d497903e5d1b0f1b3c987be01f5b60fd37c7
   OpenInChrome: b7c73ddf8fe0a1788dc0549c3c4c70e3c84da578
+  ProxyKit: 3e73f2ad92327554549474ad10da21dde46d3ba8
   RMStepsController: 8ff91f169d884fdd834ad37007f553c7bed333eb
   SIAlertView: e6d0d786c3a3f6e456b0e8b9376d0c34d68e827b
   SQLCipher: 981110217eb93c2779c34fb59e646a1c1da918d8
   SSKeychain: cc48bd3ad24fcd9125adb9e0d23dd50b8bbd08b9
-  TTTAttributedLabel: 2d27b3cd50ed69e452dbc6e2588283c5eafbcfec
+  TTTAttributedLabel: 94bb04f1e005616002dd2cee0262a0082e533627
   UIAlertView-Blocks: f3271e84372beb97aea115cd1fb26ae66457f12f
   uservoice-iphone-sdk: 696bd0f493facb0e16d7bb7720cfcf660e27aa78
   YapDatabase: 2ec54726596299c88e09e899e8f17c15d7f6b18a

@@ -21,7 +21,6 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		63009E9418D0F93E0058976C /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 63009E9318D0F93D0058976C /* GCDAsyncSocket.m */; };
 		63009E9718D122A70058976C /* OTRCreateAccountChooserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63009E9618D122A70058976C /* OTRCreateAccountChooserViewController.m */; };
 		63009E9A18D122D30058976C /* OTRXMPPCreateAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63009E9918D122D30058976C /* OTRXMPPCreateAccountViewController.m */; };
 		6300F16716E6CF8400D3C1AA /* OTRSubscriptionRequestsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6300F16616E6CF8400D3C1AA /* OTRSubscriptionRequestsViewController.m */; };
@@ -284,8 +283,6 @@
 		639FDE4716334FA500387666 /* OTRJabberLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 639FDE4616334FA500387666 /* OTRJabberLoginViewController.m */; };
 		63AC174618C7AABD00E6624C /* OTRBuddyInfoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AC174418C7AABD00E6624C /* OTRBuddyInfoCell.m */; };
 		63AC174918C7AAE200E6624C /* OTRConversationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AC174818C7AAE200E6624C /* OTRConversationCell.m */; };
-		63ACAFEA18CA73F100448508 /* GCDAsyncProxySocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 63ACAFE518CA73F100448508 /* GCDAsyncProxySocket.m */; };
-		63ACAFEC18CA73F100448508 /* SOCKSProxySocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 63ACAFE918CA73F100448508 /* SOCKSProxySocket.m */; };
 		63B7E55D193E89A300C2A444 /* OTRMessagesCollectionViewCellIncoming.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B7E55C193E89A300C2A444 /* OTRMessagesCollectionViewCellIncoming.m */; };
 		63B7E560193E89C300C2A444 /* OTRMessagesCollectionViewCellOutgoing.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B7E55F193E89C300C2A444 /* OTRMessagesCollectionViewCellOutgoing.m */; };
 		63B7E567193E930E00C2A444 /* OTRMessagesCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B7E566193E930E00C2A444 /* OTRMessagesCollectionViewCell.m */; };
@@ -379,8 +376,6 @@
 
 /* Begin PBXFileReference section */
 		1F12EE516C8C46438665EB76 /* libPods-ChatSecure Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ChatSecure Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		63009E9218D0F93D0058976C /* GCDAsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GCDAsyncSocket.h; path = CocoaAsyncSocket/GCD/GCDAsyncSocket.h; sourceTree = "<group>"; };
-		63009E9318D0F93D0058976C /* GCDAsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GCDAsyncSocket.m; path = CocoaAsyncSocket/GCD/GCDAsyncSocket.m; sourceTree = "<group>"; };
 		63009E9518D122A70058976C /* OTRCreateAccountChooserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRCreateAccountChooserViewController.h; sourceTree = "<group>"; };
 		63009E9618D122A70058976C /* OTRCreateAccountChooserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRCreateAccountChooserViewController.m; sourceTree = "<group>"; };
 		63009E9818D122D30058976C /* OTRXMPPCreateAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPCreateAccountViewController.h; sourceTree = "<group>"; };
@@ -967,10 +962,6 @@
 		63AC174818C7AAE200E6624C /* OTRConversationCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRConversationCell.m; sourceTree = "<group>"; };
 		63AC174A18C7AAF200E6624C /* OTRBuddyImageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBuddyImageCell.m; sourceTree = "<group>"; };
 		63AC174B18C7AAF200E6624C /* OTRBuddyImageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBuddyImageCell.h; sourceTree = "<group>"; };
-		63ACAFE418CA73F100448508 /* GCDAsyncProxySocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDAsyncProxySocket.h; sourceTree = "<group>"; };
-		63ACAFE518CA73F100448508 /* GCDAsyncProxySocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDAsyncProxySocket.m; sourceTree = "<group>"; };
-		63ACAFE818CA73F100448508 /* SOCKSProxySocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SOCKSProxySocket.h; sourceTree = "<group>"; };
-		63ACAFE918CA73F100448508 /* SOCKSProxySocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SOCKSProxySocket.m; sourceTree = "<group>"; };
 		63B7E55B193E89A300C2A444 /* OTRMessagesCollectionViewCellIncoming.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRMessagesCollectionViewCellIncoming.h; sourceTree = "<group>"; };
 		63B7E55C193E89A300C2A444 /* OTRMessagesCollectionViewCellIncoming.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRMessagesCollectionViewCellIncoming.m; sourceTree = "<group>"; };
 		63B7E55E193E89C300C2A444 /* OTRMessagesCollectionViewCellOutgoing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRMessagesCollectionViewCellOutgoing.h; sourceTree = "<group>"; };
@@ -1933,8 +1924,6 @@
 		63483F081752CED100779257 /* Vendor */ = {
 			isa = PBXGroup;
 			children = (
-				63009E9218D0F93D0058976C /* GCDAsyncSocket.h */,
-				63009E9318D0F93D0058976C /* GCDAsyncSocket.m */,
 				63483F6E1752CED100779257 /* KissXML */,
 				63483F7B1752CED100779257 /* libidn */,
 			);
@@ -2185,10 +2174,6 @@
 		63ACAFE318CA73F100448508 /* ProxyKit */ = {
 			isa = PBXGroup;
 			children = (
-				63ACAFE418CA73F100448508 /* GCDAsyncProxySocket.h */,
-				63ACAFE518CA73F100448508 /* GCDAsyncProxySocket.m */,
-				63ACAFE818CA73F100448508 /* SOCKSProxySocket.h */,
-				63ACAFE918CA73F100448508 /* SOCKSProxySocket.m */,
 			);
 			name = ProxyKit;
 			path = Submodules/ProxyKit/ProxyKit;
@@ -2992,7 +2977,6 @@
 				6397538C18CA8222005D6063 /* OTRvCardAvatar.m in Sources */,
 				63E5E83718CA95E300CF7E28 /* Reachability.m in Sources */,
 				63464F3D1889EC9200526358 /* _OTRXMPPManagedPresenceSubscriptionRequest.m in Sources */,
-				63ACAFEC18CA73F100448508 /* SOCKSProxySocket.m in Sources */,
 				63CAF90418FF284200C3337E /* OTRUtilities.m in Sources */,
 				63464F301889EC9200526358 /* _OTRManagedEncryptionMessage.m in Sources */,
 				639C60CD18CA98E700CC4DF4 /* OTRColors.m in Sources */,
@@ -3019,7 +3003,6 @@
 				6311089F190788D4001188BB /* OTRYapPushToken.m in Sources */,
 				D9ADF9E518109D420096B07A /* OTRDatabaseManager.m in Sources */,
 				638286E01846911C00F127C2 /* OTRAccountTableViewCell.m in Sources */,
-				63009E9418D0F93E0058976C /* GCDAsyncSocket.m in Sources */,
 				63464F351889EC9200526358 /* _OTRManagedOAuthAccount.m in Sources */,
 				6335C0E719119B1F00E506E5 /* OTRPushViewSetting.m in Sources */,
 				63E5E80916D1D7B2006E2B01 /* OTRXMPPBudyTimers.m in Sources */,
@@ -3149,7 +3132,6 @@
 				63483FBE1752CED100779257 /* XMPPvCardTempLabel.m in Sources */,
 				63C55A5919218BBB00592477 /* OTRMessage+JSQMessageData.m in Sources */,
 				639C60C118CA988400CC4DF4 /* OTRLanguageSetting.m in Sources */,
-				63ACAFEA18CA73F100448508 /* GCDAsyncProxySocket.m in Sources */,
 				63483FBF1752CED100779257 /* XMPPvCardTempModule.m in Sources */,
 				63483FC01752CED100779257 /* XMPPvCardTempTel.m in Sources */,
 				6398CD9517FA209A009389F8 /* XMPPCertificatePinning.m in Sources */,
