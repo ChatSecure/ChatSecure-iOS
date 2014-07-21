@@ -34,9 +34,10 @@ NSString *const kOTRGoogleTalkDomain = @"talk.google.com";
 NSString *const kOTRProtocolTypeXMPP = @"xmpp";
 NSString *const kOTRProtocolTypeAIM  = @"prpl-oscar";
 
-NSString *const kOTRNotificationAccountNameKey = @"kOTRNotificationAccountNameKey";
-NSString *const kOTRNotificationUserNameKey    = @"kOTRNotificationUserNameKey";
-NSString *const kOTRNotificationProtocolKey    = @"kOTRNotificationProtocolKey";
+NSString *const kOTRNotificationAccountNameKey   = @"kOTRNotificationAccountNameKey";
+NSString *const kOTRNotificationUserNameKey      = @"kOTRNotificationUserNameKey";
+NSString *const kOTRNotificationProtocolKey      = @"kOTRNotificationProtocolKey";
+NSString *const kOTRNotificationBuddyUniqueIdKey = @"kOTRNotificationBuddyUniqueIdKey";
 
 NSString *const kOTRXMPPResource = @"chatsecure";
 

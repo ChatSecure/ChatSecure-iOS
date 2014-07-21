@@ -39,14 +39,9 @@
 {
     __block OTRXMPPAccount *account = nil;
     [self.connection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        account = [self accountForStream:stream transaction:transaction];
+        account = [OTRXMPPAccount accountForStream:stream transaction:transaction];
     }];
     return account;
-}
-
-- (OTRXMPPAccount *)accountForStream:(XMPPStream *)stream transaction:(YapDatabaseReadTransaction *)transaction
-{
-    return [OTRXMPPAccount fetchAccountWithUsername:[stream.myJID bare] protocolType:OTRProtocolTypeXMPP transaction:transaction];
 }
 
 - (OTRXMPPBuddy *)buddyWithJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream
@@ -61,7 +56,7 @@
 - (OTRXMPPBuddy *)buddyWithJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream transaction:(YapDatabaseReadTransaction *)transaction
 {
     if (![self.accountUniqueId length]) {
-        OTRAccount *account = [self accountForStream:stream transaction:transaction];
+        OTRAccount *account = [OTRXMPPAccount accountForStream:stream transaction:transaction];
         self.accountUniqueId = account.uniqueId;
     }
     __block OTRXMPPBuddy *buddy = nil;
@@ -81,7 +76,7 @@
 {
     __block BOOL result = NO;
     [self.connection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        OTRAccount *account = [self accountForStream:stream transaction:transaction];
+        OTRXMPPAccount *account = [OTRXMPPAccount accountForStream:stream transaction:transaction];
         OTRBuddy *buddy = [OTRXMPPBuddy fetchBuddyWithUsername:[jid bare] withAccountUniqueId:account.uniqueId transaction:transaction];
         
         if (buddy) {

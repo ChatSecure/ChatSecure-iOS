@@ -143,11 +143,7 @@ const struct OTRMessageEdges OTRMessageEdges = {
             localNotification.applicationIconBadgeNumber = [UIApplication sharedApplication].applicationIconBadgeNumber + 1;
             localNotification.alertBody = [NSString stringWithFormat:@"%@: %@",localBuddy.displayName,rawMessage];
             
-            NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithCapacity:3];
-            [userInfo setObject:localBuddy.username forKey:kOTRNotificationUserNameKey];
-            [userInfo setObject:localAccount.username forKey:kOTRNotificationAccountNameKey];
-            [userInfo setObject:@(localAccount.protocolType) forKey:kOTRNotificationProtocolKey];
-            localNotification.userInfo = userInfo;
+            localNotification.userInfo = @{kOTRNotificationBuddyUniqueIdKey:localBuddy.uniqueId};
         
             [[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
         });

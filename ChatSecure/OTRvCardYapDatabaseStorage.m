@@ -34,7 +34,7 @@
 
 - (OTRXMPPBuddy *)buddyWithJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream transaction:(YapDatabaseReadTransaction *)transaction
 {
-    OTRXMPPAccount *account = [self accountWithxmppStream:stream transaction:transaction];
+    OTRXMPPAccount *account = [OTRXMPPAccount accountForStream:stream transaction:transaction];
     return [OTRXMPPBuddy fetchBuddyWithUsername:[jid bare] withAccountUniqueId:account.uniqueId transaction:transaction];
 }
 
@@ -48,16 +48,11 @@
     return buddy;
 }
 
-- (OTRXMPPAccount *)accountWithxmppStream:(XMPPStream *)stream transaction:(YapDatabaseReadTransaction *)transaction
-{
-    return [OTRXMPPAccount fetchAccountWithUsername:[stream.myJID bare]  protocolType:OTRProtocolTypeXMPP transaction:transaction];
-}
-
 - (OTRXMPPAccount *)accountWithxmppStream:(XMPPStream *)stream
 {
     __block OTRXMPPAccount *account = nil;
     [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        account = [self accountWithxmppStream:stream transaction:transaction];
+        account = [OTRXMPPAccount accountForStream:stream transaction:transaction];
     }];
     return account;
 }

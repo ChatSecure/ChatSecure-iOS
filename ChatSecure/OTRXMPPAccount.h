@@ -8,6 +8,8 @@
 
 #import "OTRAccount.h"
 
+@class XMPPStream;
+
 @interface OTRXMPPAccount : OTRAccount
 
 @property (nonatomic, strong) NSString *domain;
@@ -17,5 +19,8 @@
 
 + (int)defaultPort;
 + (NSString * )newResource;
+
+
++ (instancetype)accountForStream:(XMPPStream *)stream transaction:(YapDatabaseReadTransaction *)transaction;
 
 @end

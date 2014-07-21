@@ -441,11 +441,37 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
     return YES;
 }
 
+- (BOOL)checkDuplicateUsername:(NSString *)username
+{
+    __block BOOL isDuplicate = NO;
+    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        NSArray *accounts = [OTRAccount allAccountsWithUsername:username transaction:transaction];
+        if(accounts.count) {
+            //already more than one account with this username
+            OTRAccount *savedAccount = [accounts firstObject];
+            if(accounts.count > 1 || ![savedAccount.uniqueId isEqualToString:self.account.uniqueId])
+            {
+                isDuplicate = YES;
+            }
+        }
+    }];
+    
+    return isDuplicate;
+}
+
 - (BOOL)checkFields
 {
-    BOOL fields = self.usernameTextField.text.length && self.passwordTextField.text.length;
+    __block BOOL fields = self.usernameTextField.text.length && self.passwordTextField.text.length;
     
-    if(!fields)
+    if (fields) {
+        //check that the username is unique
+        if([self checkDuplicateUsername:self.usernameTextField.text])
+        {
+            fields = NO;
+            [self showAlertViewWithTitle:@"Duplicate Account" message:@"Cannot create account with same username" error:nil];
+        }
+    }
+    else
     {
         [self showAlertViewWithTitle:ERROR_STRING message:USER_PASS_BLANK_STRING error:nil];
     }
@@ -469,51 +495,53 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
 
 - (void)showAlertViewWithTitle:(NSString *)title message:(NSString *)message error:(NSError *)error
 {
-    RIButtonItem * okButtonItem = [RIButtonItem itemWithLabel:OK_STRING];
-    UIAlertView * alertView = nil;
-    if (error) {
-        RIButtonItem * infoButton = [RIButtonItem itemWithLabel:INFO_STRING action:^{
-            NSString * errorDescriptionString = [NSString stringWithFormat:@"%@ : %@",[error domain],[error localizedDescription]];
-            
-            if ([[error domain] isEqualToString:@"kCFStreamErrorDomainSSL"]) {
-                NSString * sslString = [OTRXMPPError errorStringWithSSLStatus:(OSStatus)error.code];
-                if ([sslString length]) {
-                    errorDescriptionString = [errorDescriptionString stringByAppendingFormat:@"\n%@",sslString];
-                }
-            }
-            
-            
-            RIButtonItem * copyButtonItem = [RIButtonItem itemWithLabel:COPY_STRING action:^{
-                NSString * copyString = [NSString stringWithFormat:@"Domain: %@\nCode: %d\nUserInfo: %@",[error domain],[error code],[error userInfo]];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        RIButtonItem * okButtonItem = [RIButtonItem itemWithLabel:OK_STRING];
+        UIAlertView * alertView = nil;
+        if (error) {
+            RIButtonItem * infoButton = [RIButtonItem itemWithLabel:INFO_STRING action:^{
+                NSString * errorDescriptionString = [NSString stringWithFormat:@"%@ : %@",[error domain],[error localizedDescription]];
                 
-                UIPasteboard *pasteBoard = [UIPasteboard generalPasteboard];
-                [pasteBoard setString:copyString];
+                if ([[error domain] isEqualToString:@"kCFStreamErrorDomainSSL"]) {
+                    NSString * sslString = [OTRXMPPError errorStringWithSSLStatus:(OSStatus)error.code];
+                    if ([sslString length]) {
+                        errorDescriptionString = [errorDescriptionString stringByAppendingFormat:@"\n%@",sslString];
+                    }
+                }
+                
+                
+                RIButtonItem * copyButtonItem = [RIButtonItem itemWithLabel:COPY_STRING action:^{
+                    NSString * copyString = [NSString stringWithFormat:@"Domain: %@\nCode: %d\nUserInfo: %@",[error domain],[error code],[error userInfo]];
+                    
+                    UIPasteboard *pasteBoard = [UIPasteboard generalPasteboard];
+                    [pasteBoard setString:copyString];
+                }];
+                
+                UIAlertView * alert = [[UIAlertView alloc] initWithTitle:INFO_STRING
+                                                                 message:errorDescriptionString
+                                                        cancelButtonItem:nil
+                                                        otherButtonItems:okButtonItem,copyButtonItem, nil];
+                
+                [alert show];
             }];
-            
-            UIAlertView * alert = [[UIAlertView alloc] initWithTitle:INFO_STRING
-                                                             message:errorDescriptionString
-                                                    cancelButtonItem:nil
-                                                    otherButtonItems:okButtonItem,copyButtonItem, nil];
-            
-            [alert show];
-        }];
-        alertView = [[UIAlertView alloc] initWithTitle:title
-                                               message:message
-                                      cancelButtonItem:nil
-                                      otherButtonItems:okButtonItem,infoButton, nil];
-    }
-    else {
-        alertView = [[UIAlertView alloc] initWithTitle:title
-                                               message:message
-                                      cancelButtonItem:nil
-                                      otherButtonItems:okButtonItem, nil];
-    }
-   
-    
-    
-    if (alertView) {
-        [alertView show];
-    }
+            alertView = [[UIAlertView alloc] initWithTitle:title
+                                                   message:message
+                                          cancelButtonItem:nil
+                                          otherButtonItems:okButtonItem,infoButton, nil];
+        }
+        else {
+            alertView = [[UIAlertView alloc] initWithTitle:title
+                                                   message:message
+                                          cancelButtonItem:nil
+                                          otherButtonItems:okButtonItem, nil];
+        }
+        
+        
+        
+        if (alertView) {
+            [alertView show];
+        }
+    });
 }
 
 #pragma mark -

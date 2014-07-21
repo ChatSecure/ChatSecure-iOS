@@ -81,6 +81,7 @@ extern NSUInteger const kNewCertAlertViewTag;
                  userInputView:(UIView *)inputView;
 
 - (void)readInFields;
+- (BOOL)checkDuplicateUsername:(NSString *)username;
 - (void)hideHUD;
 
 - (void)protocolLoginFailed:(NSNotification*)notification;
@@ -88,6 +89,6 @@ extern NSUInteger const kNewCertAlertViewTag;
 
 - (void)showAlertViewWithTitle:(NSString *)title message:(NSString *)message error:(NSError *)error;
 
-+(OTRLoginViewController *)loginViewControllerWithAcccount:(OTRAccount *)account;
++ (OTRLoginViewController *)loginViewControllerWithAcccount:(OTRAccount *)account;
 
 @end

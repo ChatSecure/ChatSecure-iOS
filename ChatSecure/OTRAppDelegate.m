@@ -334,18 +334,20 @@
     //DDLogInfo(@"User Info: %@", notification.userInfo);
     
     NSDictionary *userInfo = notification.userInfo;
-    NSString *accountname = [userInfo objectForKey:kOTRNotificationAccountNameKey];
-    NSString *username = [userInfo objectForKey:kOTRNotificationUserNameKey];
-    OTRProtocolType protocolType = [[userInfo objectForKey:kOTRNotificationProtocolKey] intValue];
+    NSString *buddyUniqueId = userInfo[kOTRNotificationBuddyUniqueIdKey];
     
-    __block OTRBuddy *buddy = nil;
-    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        buddy = [OTRBuddy fetchBuddyForUsername:username accountName:accountname protocolType:protocolType transaction:transaction];
-    }];
-    
+    if([buddyUniqueId length]) {
+        __block OTRBuddy *buddy = nil;
+        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+            buddy = [OTRBuddy fetchObjectWithUniqueID:buddyUniqueId transaction:transaction];
+        }];
+        
 #warning UILocalNotifications no longer enter conversation
-    //FIXME
-    //[buddyListViewController enterConversationWithBuddy:buddy];
+        //FIXME
+        //[buddyListViewController enterConversationWithBuddy:buddy];
+    }
+    
+
 }
 
 + (void) presentActionSheet:(UIActionSheet*)sheet inView:(UIView*)view {
