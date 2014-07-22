@@ -140,27 +140,23 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     
 }
 
-- (void)otrKit:(OTRKit *)otrKit decodedMessage:(NSString *)decodedMessage tlvs:(NSArray *)tlvs username:(NSString *)username accountName:(NSString *)accountName protocol:(NSString *)protocol tag:(id)tag
+- (void)otrKit:(OTRKit *)otrKit decodedMessage:(NSString *)decodedMessage wasEncrypted:(BOOL)wasEncrypted tlvs:(NSArray *)tlvs username:(NSString *)username accountName:(NSString *)accountName protocol:(NSString *)protocol tag:(id)tag
 {
-    //decoded message can be nil if just TLV
-    OTRMessage *message = nil;
+    //decodedMessage can be nil if just TLV
+    OTRMessage *originalMessage = nil;
     if ([tag isKindOfClass:[OTRMessage class]]) {
-        message = tag;
+        originalMessage = [tag copy];
     }
+    NSParameterAssert(originalMessage);
     
-    if (message) {
-        if ([decodedMessage length]) {
-            message.text = [OTRUtilities stripHTML:decodedMessage];
-            message.transportedSecurely = YES;
+    if ([decodedMessage length]) {
+        originalMessage.text = [OTRUtilities stripHTML:decodedMessage];
+        if (wasEncrypted) {
+            originalMessage.transportedSecurely = YES;
         }
-        else {
-            message.text = [OTRUtilities stripHTML:message.text];
-        }
-        
         [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-            [message saveWithTransaction:transaction];
+            [originalMessage saveWithTransaction:transaction];
         }];
-        
     }
     
     if ([tlvs count]) {
