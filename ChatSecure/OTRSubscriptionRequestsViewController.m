@@ -100,7 +100,7 @@
 - (void)deleteSubscriptionRequest:(OTRXMPPPresenceSubscriptionRequest *)subscriptionRequest
 {
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        [transaction setObject:nil forKey:subscriptionRequest.uniqueId inCollection:[OTRXMPPPresenceSubscriptionRequest collection]];
+        [subscriptionRequest removeWithTransaction:transaction];
     }];
 }
 
@@ -124,19 +124,12 @@
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
     }
+    cell.selectionStyle = UITableViewCellSelectionStyleDefault;
     OTRXMPPPresenceSubscriptionRequest * subRequest = [self subscriptionRequestAtIndexPath:indexPath];
     OTRXMPPAccount *account = [self accountAtIndexPath:indexPath];
-    OTRXMPPManager *manager = [self managerAtIndexPath:indexPath];
     
     cell.textLabel.text = subRequest.jid;
     cell.detailTextLabel.text = account.username;
-    
-    if (manager.connectionStatus == OTRProtocolConnectionStatusConnected) {
-        cell.selectionStyle = UITableViewCellSelectionStyleDefault;
-    }
-    else {
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    }
     
     return cell;
 }
@@ -145,6 +138,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     OTRXMPPPresenceSubscriptionRequest *request = [self subscriptionRequestAtIndexPath:indexPath];
     OTRXMPPManager * manager = [self managerAtIndexPath:indexPath];
     XMPPJID *jid = [XMPPJID jidWithString:request.jid];
@@ -163,10 +157,10 @@
         
         [actionSeet showInView:self.view];
     }
-    
-    
-    
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    else {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:ACCOUNT_DISCONNECTED_STRING message:ACCOUNT_DISCONNECTED_DESCRIPTION_STRING delegate:nil cancelButtonTitle:OK_STRING otherButtonTitles: nil];
+        [alertView show];
+    }
 }
 
 #pragma - mark YapDatabase Methods

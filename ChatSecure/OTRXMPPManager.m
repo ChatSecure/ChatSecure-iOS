@@ -715,7 +715,7 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
         request.jid = jidStrBare;
         request.accountUniqueId = self.account.uniqueId;
         
-        [transaction setObject:request forKey:request.uniqueId inCollection:[OTRXMPPPresenceSubscriptionRequest collection]];
+        [request saveWithTransaction:transaction];
     }];
 }
 
