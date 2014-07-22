@@ -108,8 +108,30 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    [[OTRProtocolManager sharedInstance] addObserver:self forKeyPath:NSStringFromSelector(@selector(numberOfConnectedProtocols)) options:NSKeyValueObservingOptionNew context:NULL];
+    [[OTRProtocolManager sharedInstance] addObserver:self forKeyPath:NSStringFromSelector(@selector(numberOfConnectingProtocols)) options:NSKeyValueObservingOptionNew context:NULL];
+    
+    
     self.tableView.frame = self.view.bounds;
     [self.tableView reloadData];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    [[OTRProtocolManager sharedInstance] removeObserver:self forKeyPath:NSStringFromSelector(@selector(numberOfConnectedProtocols))];
+    [[OTRProtocolManager sharedInstance] removeObserver:self forKeyPath:NSStringFromSelector(@selector(numberOfConnectingProtocols))];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([keyPath isEqualToString:NSStringFromSelector(@selector(numberOfConnectedProtocols))] || [keyPath isEqualToString:NSStringFromSelector(@selector(numberOfConnectingProtocols))]) {
+            [self.tableView reloadSections:[[NSIndexSet alloc] initWithIndex:0] withRowAnimation:UITableViewRowAnimationNone];
+        }
+    });
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -153,7 +175,7 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
         static NSString *accountCellIdentifier = @"accountCellIdentifier";
         static NSString *addAccountCellIdentifier = @"addAccountCellIdentifier";
         UITableViewCell * cell = nil;
-        if (indexPath.row == [self.mappings numberOfItemsInSection:0]) {
+        if (indexPath.row == [self.mappings numberOfItemsInSection:indexPath.section]) {
             cell = [tableView dequeueReusableCellWithIdentifier:addAccountCellIdentifier];
             if (cell == nil) {
                 cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:addAccountCellIdentifier];
@@ -170,6 +192,14 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
             }
             
             [accountCell setAccount:account];
+            
+            id <OTRProtocol> protocol = [OTRProtocolManager sharedInstance].protocolManagerDictionary[account.uniqueId];
+            if (protocol) {
+                [accountCell setConnectedText:[protocol connectionStatus]];
+            }
+            else {
+                [accountCell setConnectedText:OTRProtocolConnectionStatusDisconnected];
+            }
 
             cell = accountCell;
         }

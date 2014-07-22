@@ -40,20 +40,13 @@ static OTRProtocolManager *sharedManager = nil;
 @interface OTRProtocolManager ()
 
 @property (nonatomic) NSUInteger numberOfConnectedProtocols;
+@property (nonatomic) NSUInteger numberOfConnectingProtocols;
 @property (nonatomic, strong) OTRPushManager *pushManager;
+@property (nonatomic, strong) NSDictionary * protocolManagerDictionary;
 
 @end
 
 @implementation OTRProtocolManager
-
-@synthesize encryptionManager;
-@synthesize protocolManagers;
-
-- (void) dealloc 
-{
-    self.encryptionManager = nil;
-    self.protocolManagers = nil;
-}
 
 -(id)init
 {
@@ -61,15 +54,25 @@ static OTRProtocolManager *sharedManager = nil;
     if(self)
     {
         self.numberOfConnectedProtocols = 0;
+        self.numberOfConnectingProtocols = 0;
         self.encryptionManager = [[OTREncryptionManager alloc] init];
-        self.protocolManagers = [[NSMutableDictionary alloc] init];
+        self.protocolManagerDictionary = [NSDictionary new];
     }
     return self;
 }
 
 - (void)removeProtocolManagerForAccount:(OTRAccount *)account
 {
-    [self.protocolManagers removeObjectForKey:account.uniqueId];
+    NSMutableDictionary *mutableCopy = [self.protocolManagerDictionary mutableCopy];
+    [mutableCopy removeObjectForKey:account.uniqueId];
+    self.protocolManagerDictionary = [mutableCopy copy];
+}
+
+- (void)addProtocol:(id)protocol forAccount:(OTRAccount *)account
+{
+    NSMutableDictionary *mutableCopy = [self.protocolManagerDictionary mutableCopy];
+    [mutableCopy setObject:protocol forKey:account.uniqueId];
+    self.protocolManagerDictionary = [mutableCopy copy];
 }
 
 #pragma mark -
@@ -101,13 +104,13 @@ static OTRProtocolManager *sharedManager = nil;
 
 - (id <OTRProtocol>)protocolForAccount:(OTRAccount *)account
 {
-    NSObject <OTRProtocol> * protocol = [protocolManagers objectForKey:account.uniqueId];
+    NSObject <OTRProtocol> * protocol = [self.protocolManagerDictionary objectForKey:account.uniqueId];
     if(!protocol)
     {
         protocol = [[[account protocolClass] alloc] initWithAccount:account];
         if (protocol && account.uniqueId) {
-            [protocolManagers setObject:protocol forKey:account.uniqueId];
-            [protocol addObserver:self forKeyPath:NSStringFromSelector(@selector(connectionStatus)) options:NSKeyValueObservingOptionNew context:NULL];
+            [self addProtocol:protocol forAccount:account];
+            [protocol addObserver:self forKeyPath:NSStringFromSelector(@selector(connectionStatus)) options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:NULL];
         }
     }
     return protocol;
@@ -144,23 +147,41 @@ static OTRProtocolManager *sharedManager = nil;
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     if ([keyPath isEqualToString:NSStringFromSelector(@selector(connectionStatus))]) {
-        OTRProtocolConnectionStatus status = [[change objectForKey:NSKeyValueChangeNewKey] integerValue];
-        NSInteger changeInt = 0;
-        if (status == OTRProtocolConnectionStatusConnected) {
-            changeInt = 1;
-        }
-        else if(self.numberOfConnectedProtocols > 0) {
-           changeInt = -1;
+        OTRProtocolConnectionStatus newStatus = [[change objectForKey:NSKeyValueChangeNewKey] integerValue];
+        OTRProtocolConnectionStatus oldStatus = [[change objectForKey:NSKeyValueChangeOldKey] integerValue];
+        NSInteger connectedInt = 0;
+        NSInteger connectingInt = 0;
+        
+        switch (oldStatus) {
+            case OTRProtocolConnectionStatusConnected:
+                connectedInt = -1;
+                break;
+            case OTRProtocolConnectionStatusConnecting:
+                connectingInt = -1;
+            default:
+                break;
         }
         
-        self.numberOfConnectedProtocols += changeInt;
+        switch (newStatus) {
+            case OTRProtocolConnectionStatusConnected:
+                connectedInt = 1;
+                break;
+            case OTRProtocolConnectionStatusConnecting:
+                connectedInt = 1;
+            default:
+                break;
+        }
+        
+        
+        self.numberOfConnectedProtocols += connectedInt;
+        self.numberOfConnectingProtocols += connectingInt;
     }
 
 }
 
 -(BOOL)isAccountConnected:(OTRAccount *)account;
 {
-    id <OTRProtocol> protocol = [protocolManagers objectForKey:account.uniqueId];
+    id <OTRProtocol> protocol = [self.protocolManagerDictionary objectForKey:account.uniqueId];
     if (protocol) {
         return [protocol connectionStatus] == OTRProtocolConnectionStatusConnected;
     }

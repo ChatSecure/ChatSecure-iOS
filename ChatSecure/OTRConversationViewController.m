@@ -276,9 +276,9 @@ static CGFloat cellHeight = 80.0;
 {
     //Delete conversation
     if(editingStyle == UITableViewCellEditingStyleDelete) {
-        OTRBuddy *cellBuddy = [self buddyForIndexPath:indexPath];
+        OTRBuddy *cellBuddy = [[self buddyForIndexPath:indexPath] copy];
         
-        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
             [OTRMessage deleteAllMessagesForBuddyId:cellBuddy.uniqueId transaction:transaction];
         }];
     }

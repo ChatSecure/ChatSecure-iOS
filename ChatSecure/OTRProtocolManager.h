@@ -31,12 +31,11 @@
 
 @interface OTRProtocolManager : NSObject
 
-@property (nonatomic,readonly) NSUInteger numberOfConnectedProtocols;
+@property (nonatomic, readonly) NSUInteger numberOfConnectedProtocols;
+@property (nonatomic, readonly) NSUInteger numberOfConnectingProtocols;
 
-@property (nonatomic, retain) OTREncryptionManager *encryptionManager;
-@property (nonatomic, strong) NSMutableDictionary * protocolManagers;
-
-
+@property (nonatomic, strong) OTREncryptionManager *encryptionManager;
+@property (nonatomic, strong, readonly) NSDictionary * protocolManagerDictionary;
 
 - (id <OTRProtocol>) protocolForAccount:(OTRAccount *)account;
 - (void)removeProtocolManagerForAccount:(OTRAccount *)account;

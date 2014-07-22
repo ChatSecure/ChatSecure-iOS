@@ -247,9 +247,9 @@
         self.backgroundTimer = nil;
         
         OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
-        for(id key in protocolManager.protocolManagers)
+        for(id key in protocolManager.protocolManagerDictionary)
         {
-            id <OTRProtocol> protocol = [protocolManager.protocolManagers objectForKey:key];
+            id <OTRProtocol> protocol = [protocolManager.protocolManagerDictionary objectForKey:key];
             [protocol disconnect];
         }
         //FIXME [OTRManagedAccount resetAccountsConnectionStatus];
@@ -307,9 +307,9 @@
     
     OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
     
-    for(id key in [protocolManager.protocolManagers allKeys])
+    for(id key in [protocolManager.protocolManagerDictionary allKeys])
     {
-        id <OTRProtocol> protocol = [protocolManager.protocolManagers objectForKey:key];
+        id <OTRProtocol> protocol = [protocolManager.protocolManagerDictionary objectForKey:key];
         [protocol disconnect];
     }
     //FIXME? [OTRManagedAccount resetAccountsConnectionStatus];

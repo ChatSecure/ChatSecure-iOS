@@ -7,13 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "OTRProtocol.h"
 
 @class OTRAccount;
 
 @interface OTRAccountTableViewCell : UITableViewCell
 
-- (id)initWithReuseIdentifier:(NSString *)identifier;
+- (instancetype)initWithReuseIdentifier:(NSString *)identifier;
 - (void)setAccount:(OTRAccount *)account;
+- (void)setConnectedText:(OTRProtocolConnectionStatus)connectionStatus;
 
 
 @end
