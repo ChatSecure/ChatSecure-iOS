@@ -288,17 +288,13 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
 {
     [super viewWillAppear:animated];
     
-    [[NSNotificationCenter defaultCenter]
-     addObserver:self
-     selector:@selector(protocolLoginFailed:)
-     name:kOTRProtocolLoginFail
-     object:[[OTRProtocolManager sharedInstance] protocolForAccount:self.account]];
+    [[NSNotificationCenter defaultCenter] addObserverForName:kOTRProtocolLoginFail object:[[OTRProtocolManager sharedInstance] protocolForAccount:self.account] queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
+        [self protocolLoginFailed:note];
+    }];
     
-    [[NSNotificationCenter defaultCenter]
-     addObserver:self
-     selector:@selector(protocolLoginSuccess:)
-     name:kOTRProtocolLoginSuccess
-     object:[[OTRProtocolManager sharedInstance] protocolForAccount:self.account]];
+    [[NSNotificationCenter defaultCenter] addObserverForName:kOTRProtocolLoginSuccess object:[[OTRProtocolManager sharedInstance] protocolForAccount:self.account] queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
+        [self protocolLoginSuccess:note];
+    }];
     
     if(!self.usernameTextField.text.length)
     {
