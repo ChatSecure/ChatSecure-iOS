@@ -91,7 +91,7 @@ DEPENDENCIES:
   - AFOAuth2Client (from `git@github.com:ChatSecure/AFOAuth2Client.git`, branch `release`)
   - Appirater
   - BBlock (~> 1.2)
-  - CocoaAsyncSocket (from `https://github.com/robbiehanson/CocoaAsyncSocket.git`, commit `2f6e2e4c1724dbb5a23ba1ebac64cb84ff3a0179`)
+  - CocoaAsyncSocket (from `git@github.com:ChatSecure/CocoaAsyncSocket.git`, branch `7.4-compilefix`)
   - CocoaLumberjack
   - DAKeyboardControl (~> 2.3)
   - Facebook-iOS-SDK
@@ -121,8 +121,8 @@ EXTERNAL SOURCES:
     :branch: release
     :git: git@github.com:ChatSecure/AFOAuth2Client.git
   CocoaAsyncSocket:
-    :commit: 2f6e2e4c1724dbb5a23ba1ebac64cb84ff3a0179
-    :git: https://github.com/robbiehanson/CocoaAsyncSocket.git
+    :branch: 7.4-compilefix
+    :git: git@github.com:ChatSecure/CocoaAsyncSocket.git
   ProxyKit:
     :path: Submodules/ProxyKit/ProxyKit.podspec
   SIAlertView:

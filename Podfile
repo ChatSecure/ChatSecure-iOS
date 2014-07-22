@@ -27,7 +27,7 @@ pod 'JVFloatLabeledTextField', '~> 0.0'
 pod 'TTTAttributedLabel', '~> 1.10'
 
 # Waiting for 7.4 to be pushed to trunk
-pod 'CocoaAsyncSocket', :git => 'https://github.com/robbiehanson/CocoaAsyncSocket.git', :commit => '2f6e2e4c1724dbb5a23ba1ebac64cb84ff3a0179'
+pod 'CocoaAsyncSocket', :git => 'git@github.com:ChatSecure/CocoaAsyncSocket.git', :branch => '7.4-compilefix'
 
 # Forks
 pod 'AFOAuth2Client', :git => 'git@github.com:ChatSecure/AFOAuth2Client.git', :branch => 'release'
