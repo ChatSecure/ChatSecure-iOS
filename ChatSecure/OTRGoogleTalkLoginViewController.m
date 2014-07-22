@@ -69,15 +69,22 @@
     GTMOAuth2ViewControllerTouch * oauthViewController = [GTMOAuth2ViewControllerTouch controllerWithScope:GOOGLE_APP_SCOPE clientID:GOOGLE_APP_ID clientSecret:kOTRGoogleAppSecret keychainItemName:nil completionHandler:^(GTMOAuth2ViewControllerTouch *viewController, GTMOAuth2Authentication *auth, NSError *error) {
         //[viewController dismissModalViewControllerAnimated:YES];
         if (!error) {
-            [self.account setUsername:auth.userEmail];
+            if([self isDuplicateUsername:auth.userEmail])
+            {
+                [self showAlertViewWithTitle:DUPLICATE_ACCOUNT_STRING message:DUPLICATE_ACCOUNT_MESSAGE_STRING error:nil];
+            }
+            else {
+                self.account.username = auth.userEmail;
+                
+                [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+                    [self.account saveWithTransaction:transaction];
+                }];
+                
+                self.account.oAuthTokenDictionary = auth.parameters;
+                [self.loginViewTableView reloadData];
+                [self loginButtonPressed:sender];
+            }
             
-            [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-                [self.account saveWithTransaction:transaction];
-            }];
-            
-            self.account.oAuthTokenDictionary = auth.parameters;
-            [self.loginViewTableView reloadData];
-            [self loginButtonPressed:sender];
         }
     }];
     [self.navigationController pushViewController:oauthViewController animated:YES];
