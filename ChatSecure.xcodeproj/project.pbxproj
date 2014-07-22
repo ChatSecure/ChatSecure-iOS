@@ -204,11 +204,6 @@
 		637BC43018985BAC006EC18C /* OTRColorFadingDotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 637BC42F18985BAC006EC18C /* OTRColorFadingDotView.m */; };
 		638286E01846911C00F127C2 /* OTRAccountTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 638286DF1846911C00F127C2 /* OTRAccountTableViewCell.m */; };
 		6383196818EB938300862B25 /* OTRManagedAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 6397535D18CA8221005D6063 /* OTRManagedAccount.m */; };
-		638DAF311938EC8000503AC2 /* OTRKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 638DAF2E1938EC8000503AC2 /* OTRKit.m */; };
-		638DAF321938EC8000503AC2 /* OTRTLV.m in Sources */ = {isa = PBXBuildFile; fileRef = 638DAF301938EC8000503AC2 /* OTRTLV.m */; };
-		638DAF581938EC9700503AC2 /* libgcrypt.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 638DAF501938EC9700503AC2 /* libgcrypt.a */; };
-		638DAF591938EC9700503AC2 /* libgpg-error.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 638DAF511938EC9700503AC2 /* libgpg-error.a */; };
-		638DAF5A1938EC9700503AC2 /* libotr.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 638DAF521938EC9700503AC2 /* libotr.a */; };
 		638F2C8F1947C32A00EB5239 /* OTRMessagesCollectionViewCellOutgoing.xib in Resources */ = {isa = PBXBuildFile; fileRef = 638F2C8E1947C32A00EB5239 /* OTRMessagesCollectionViewCellOutgoing.xib */; };
 		638F2C911947C98200EB5239 /* OTRMessagesCollectionViewCellIncoming.xib in Resources */ = {isa = PBXBuildFile; fileRef = 638F2C901947C98200EB5239 /* OTRMessagesCollectionViewCellIncoming.xib */; };
 		639752EB18CA7B23005D6063 /* OTRCertificatesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 639752EA18CA7B23005D6063 /* OTRCertificatesViewController.m */; };
@@ -762,68 +757,6 @@
 		638286DF1846911C00F127C2 /* OTRAccountTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAccountTableViewCell.m; sourceTree = "<group>"; };
 		638940CF1815E339005F651E /* OTRDemoChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRDemoChatViewController.h; sourceTree = "<group>"; };
 		638940D01815E339005F651E /* OTRDemoChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRDemoChatViewController.m; sourceTree = "<group>"; };
-		638DAF2D1938EC8000503AC2 /* OTRKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OTRKit.h; path = Submodules/OTRKit/OTRKit/OTRKit.h; sourceTree = "<group>"; };
-		638DAF2E1938EC8000503AC2 /* OTRKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OTRKit.m; path = Submodules/OTRKit/OTRKit/OTRKit.m; sourceTree = "<group>"; };
-		638DAF2F1938EC8000503AC2 /* OTRTLV.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OTRTLV.h; path = Submodules/OTRKit/OTRKit/OTRTLV.h; sourceTree = "<group>"; };
-		638DAF301938EC8000503AC2 /* OTRTLV.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OTRTLV.m; path = Submodules/OTRKit/OTRKit/OTRTLV.m; sourceTree = "<group>"; };
-		638DAF351938EC9700503AC2 /* dumpsexp */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = dumpsexp; sourceTree = "<group>"; };
-		638DAF361938EC9700503AC2 /* gpg-error */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = "gpg-error"; sourceTree = "<group>"; };
-		638DAF371938EC9700503AC2 /* gpg-error-config */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = "gpg-error-config"; sourceTree = "<group>"; };
-		638DAF381938EC9700503AC2 /* hmac256 */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = hmac256; sourceTree = "<group>"; };
-		638DAF391938EC9700503AC2 /* libgcrypt-config */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = "libgcrypt-config"; sourceTree = "<group>"; };
-		638DAF3B1938EC9700503AC2 /* gcrypt-module.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gcrypt-module.h"; sourceTree = "<group>"; };
-		638DAF3C1938EC9700503AC2 /* gcrypt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gcrypt.h; sourceTree = "<group>"; };
-		638DAF3D1938EC9700503AC2 /* gpg-error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gpg-error.h"; sourceTree = "<group>"; };
-		638DAF3F1938EC9700503AC2 /* auth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = auth.h; sourceTree = "<group>"; };
-		638DAF401938EC9700503AC2 /* b64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = b64.h; sourceTree = "<group>"; };
-		638DAF411938EC9700503AC2 /* context.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = context.h; sourceTree = "<group>"; };
-		638DAF421938EC9700503AC2 /* context_priv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = context_priv.h; sourceTree = "<group>"; };
-		638DAF431938EC9700503AC2 /* dh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dh.h; sourceTree = "<group>"; };
-		638DAF441938EC9700503AC2 /* instag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = instag.h; sourceTree = "<group>"; };
-		638DAF451938EC9700503AC2 /* mem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mem.h; sourceTree = "<group>"; };
-		638DAF461938EC9700503AC2 /* message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = message.h; sourceTree = "<group>"; };
-		638DAF471938EC9700503AC2 /* privkey-t.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "privkey-t.h"; sourceTree = "<group>"; };
-		638DAF481938EC9700503AC2 /* privkey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = privkey.h; sourceTree = "<group>"; };
-		638DAF491938EC9700503AC2 /* proto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = proto.h; sourceTree = "<group>"; };
-		638DAF4A1938EC9700503AC2 /* serial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = serial.h; sourceTree = "<group>"; };
-		638DAF4B1938EC9700503AC2 /* sm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sm.h; sourceTree = "<group>"; };
-		638DAF4C1938EC9700503AC2 /* tlv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tlv.h; sourceTree = "<group>"; };
-		638DAF4D1938EC9700503AC2 /* userstate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = userstate.h; sourceTree = "<group>"; };
-		638DAF4E1938EC9700503AC2 /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = version.h; sourceTree = "<group>"; };
-		638DAF501938EC9700503AC2 /* libgcrypt.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libgcrypt.a; sourceTree = "<group>"; };
-		638DAF511938EC9700503AC2 /* libgpg-error.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libgpg-error.a"; sourceTree = "<group>"; };
-		638DAF521938EC9700503AC2 /* libotr.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libotr.a; sourceTree = "<group>"; };
-		638DAF5C1938ECB000503AC2 /* auth.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = auth.c; sourceTree = "<group>"; };
-		638DAF5D1938ECB000503AC2 /* auth.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = auth.h; sourceTree = "<group>"; };
-		638DAF5E1938ECB000503AC2 /* b64.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = b64.c; sourceTree = "<group>"; };
-		638DAF5F1938ECB000503AC2 /* b64.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = b64.h; sourceTree = "<group>"; };
-		638DAF601938ECB000503AC2 /* context.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = context.c; sourceTree = "<group>"; };
-		638DAF611938ECB000503AC2 /* context.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = context.h; sourceTree = "<group>"; };
-		638DAF621938ECB000503AC2 /* context_priv.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = context_priv.c; sourceTree = "<group>"; };
-		638DAF631938ECB000503AC2 /* context_priv.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = context_priv.h; sourceTree = "<group>"; };
-		638DAF641938ECB000503AC2 /* dh.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = dh.c; sourceTree = "<group>"; };
-		638DAF651938ECB000503AC2 /* dh.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = dh.h; sourceTree = "<group>"; };
-		638DAF661938ECB000503AC2 /* instag.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = instag.c; sourceTree = "<group>"; };
-		638DAF671938ECB000503AC2 /* instag.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = instag.h; sourceTree = "<group>"; };
-		638DAF681938ECB000503AC2 /* Makefile.am */ = {isa = PBXFileReference; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
-		638DAF691938ECB000503AC2 /* Makefile.in */ = {isa = PBXFileReference; lastKnownFileType = text; path = Makefile.in; sourceTree = "<group>"; };
-		638DAF6A1938ECB000503AC2 /* mem.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = mem.c; sourceTree = "<group>"; };
-		638DAF6B1938ECB000503AC2 /* mem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mem.h; sourceTree = "<group>"; };
-		638DAF6C1938ECB000503AC2 /* message.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = message.c; sourceTree = "<group>"; };
-		638DAF6D1938ECB000503AC2 /* message.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = message.h; sourceTree = "<group>"; };
-		638DAF6E1938ECB000503AC2 /* privkey-t.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "privkey-t.h"; sourceTree = "<group>"; };
-		638DAF6F1938ECB000503AC2 /* privkey.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = privkey.c; sourceTree = "<group>"; };
-		638DAF701938ECB000503AC2 /* privkey.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = privkey.h; sourceTree = "<group>"; };
-		638DAF711938ECB000503AC2 /* proto.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = proto.c; sourceTree = "<group>"; };
-		638DAF721938ECB000503AC2 /* proto.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = proto.h; sourceTree = "<group>"; };
-		638DAF731938ECB000503AC2 /* serial.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = serial.h; sourceTree = "<group>"; };
-		638DAF741938ECB000503AC2 /* sm.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = sm.c; sourceTree = "<group>"; };
-		638DAF751938ECB000503AC2 /* sm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sm.h; sourceTree = "<group>"; };
-		638DAF761938ECB000503AC2 /* tlv.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tlv.c; sourceTree = "<group>"; };
-		638DAF771938ECB000503AC2 /* tlv.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tlv.h; sourceTree = "<group>"; };
-		638DAF781938ECB000503AC2 /* userstate.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = userstate.c; sourceTree = "<group>"; };
-		638DAF791938ECB000503AC2 /* userstate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = userstate.h; sourceTree = "<group>"; };
-		638DAF7A1938ECB000503AC2 /* version.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = version.h; sourceTree = "<group>"; };
 		638F2C8E1947C32A00EB5239 /* OTRMessagesCollectionViewCellOutgoing.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = OTRMessagesCollectionViewCellOutgoing.xib; path = ChatSecure/OTRMessagesCollectionViewCellOutgoing.xib; sourceTree = SOURCE_ROOT; };
 		638F2C901947C98200EB5239 /* OTRMessagesCollectionViewCellIncoming.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = OTRMessagesCollectionViewCellIncoming.xib; path = ChatSecure/OTRMessagesCollectionViewCellIncoming.xib; sourceTree = SOURCE_ROOT; };
 		6391CAF518A99003003EC838 /* OTRLockButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRLockButton.h; sourceTree = "<group>"; };
@@ -1084,7 +1017,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				639C612218CAA71600CC4DF4 /* libresolv.dylib in Frameworks */,
-				638DAF591938EC9700503AC2 /* libgpg-error.a in Frameworks */,
 				639C612118CAA6CE00CC4DF4 /* libz.1.2.5.dylib in Frameworks */,
 				639C611F18CAA6C000CC4DF4 /* libxml2.2.dylib in Frameworks */,
 				639C611218CA9CF800CC4DF4 /* libcrypto.a in Frameworks */,
@@ -1103,10 +1035,8 @@
 				63FE64C61727535700876D15 /* StoreKit.framework in Frameworks */,
 				D989E88E15D4F92E0081DFD1 /* Twitter.framework in Frameworks */,
 				D93C31B7159A8B4F006316C7 /* Security.framework in Frameworks */,
-				638DAF581938EC9700503AC2 /* libgcrypt.a in Frameworks */,
 				D9FC9860155881710039518D /* MessageUI.framework in Frameworks */,
 				D9D69B7E14180A330056FB9E /* CoreData.framework in Frameworks */,
-				638DAF5A1938EC9700503AC2 /* libotr.a in Frameworks */,
 				D9D69B7C14180A230056FB9E /* CoreLocation.framework in Frameworks */,
 				D9D69AA91417FDBA0056FB9E /* CFNetwork.framework in Frameworks */,
 				D913A70A13FCA9C200C97C1C /* ImageIO.framework in Frameworks */,
@@ -1945,125 +1875,6 @@
 			name = LoginViewControllers;
 			sourceTree = "<group>";
 		};
-		638DAF2C1938EC7800503AC2 /* OTRKit */ = {
-			isa = PBXGroup;
-			children = (
-				638DAF5B1938ECB000503AC2 /* src */,
-				638DAF331938EC9700503AC2 /* dependencies */,
-				638DAF2D1938EC8000503AC2 /* OTRKit.h */,
-				638DAF2E1938EC8000503AC2 /* OTRKit.m */,
-				638DAF2F1938EC8000503AC2 /* OTRTLV.h */,
-				638DAF301938EC8000503AC2 /* OTRTLV.m */,
-			);
-			name = OTRKit;
-			sourceTree = "<group>";
-		};
-		638DAF331938EC9700503AC2 /* dependencies */ = {
-			isa = PBXGroup;
-			children = (
-				638DAF341938EC9700503AC2 /* bin */,
-				638DAF3A1938EC9700503AC2 /* include */,
-				638DAF4F1938EC9700503AC2 /* lib */,
-			);
-			name = dependencies;
-			path = Submodules/OTRKit/dependencies;
-			sourceTree = "<group>";
-		};
-		638DAF341938EC9700503AC2 /* bin */ = {
-			isa = PBXGroup;
-			children = (
-				638DAF351938EC9700503AC2 /* dumpsexp */,
-				638DAF361938EC9700503AC2 /* gpg-error */,
-				638DAF371938EC9700503AC2 /* gpg-error-config */,
-				638DAF381938EC9700503AC2 /* hmac256 */,
-				638DAF391938EC9700503AC2 /* libgcrypt-config */,
-			);
-			path = bin;
-			sourceTree = "<group>";
-		};
-		638DAF3A1938EC9700503AC2 /* include */ = {
-			isa = PBXGroup;
-			children = (
-				638DAF3B1938EC9700503AC2 /* gcrypt-module.h */,
-				638DAF3C1938EC9700503AC2 /* gcrypt.h */,
-				638DAF3D1938EC9700503AC2 /* gpg-error.h */,
-				638DAF3E1938EC9700503AC2 /* libotr */,
-			);
-			path = include;
-			sourceTree = "<group>";
-		};
-		638DAF3E1938EC9700503AC2 /* libotr */ = {
-			isa = PBXGroup;
-			children = (
-				638DAF3F1938EC9700503AC2 /* auth.h */,
-				638DAF401938EC9700503AC2 /* b64.h */,
-				638DAF411938EC9700503AC2 /* context.h */,
-				638DAF421938EC9700503AC2 /* context_priv.h */,
-				638DAF431938EC9700503AC2 /* dh.h */,
-				638DAF441938EC9700503AC2 /* instag.h */,
-				638DAF451938EC9700503AC2 /* mem.h */,
-				638DAF461938EC9700503AC2 /* message.h */,
-				638DAF471938EC9700503AC2 /* privkey-t.h */,
-				638DAF481938EC9700503AC2 /* privkey.h */,
-				638DAF491938EC9700503AC2 /* proto.h */,
-				638DAF4A1938EC9700503AC2 /* serial.h */,
-				638DAF4B1938EC9700503AC2 /* sm.h */,
-				638DAF4C1938EC9700503AC2 /* tlv.h */,
-				638DAF4D1938EC9700503AC2 /* userstate.h */,
-				638DAF4E1938EC9700503AC2 /* version.h */,
-			);
-			path = libotr;
-			sourceTree = "<group>";
-		};
-		638DAF4F1938EC9700503AC2 /* lib */ = {
-			isa = PBXGroup;
-			children = (
-				638DAF501938EC9700503AC2 /* libgcrypt.a */,
-				638DAF511938EC9700503AC2 /* libgpg-error.a */,
-				638DAF521938EC9700503AC2 /* libotr.a */,
-			);
-			path = lib;
-			sourceTree = "<group>";
-		};
-		638DAF5B1938ECB000503AC2 /* src */ = {
-			isa = PBXGroup;
-			children = (
-				638DAF5C1938ECB000503AC2 /* auth.c */,
-				638DAF5D1938ECB000503AC2 /* auth.h */,
-				638DAF5E1938ECB000503AC2 /* b64.c */,
-				638DAF5F1938ECB000503AC2 /* b64.h */,
-				638DAF601938ECB000503AC2 /* context.c */,
-				638DAF611938ECB000503AC2 /* context.h */,
-				638DAF621938ECB000503AC2 /* context_priv.c */,
-				638DAF631938ECB000503AC2 /* context_priv.h */,
-				638DAF641938ECB000503AC2 /* dh.c */,
-				638DAF651938ECB000503AC2 /* dh.h */,
-				638DAF661938ECB000503AC2 /* instag.c */,
-				638DAF671938ECB000503AC2 /* instag.h */,
-				638DAF681938ECB000503AC2 /* Makefile.am */,
-				638DAF691938ECB000503AC2 /* Makefile.in */,
-				638DAF6A1938ECB000503AC2 /* mem.c */,
-				638DAF6B1938ECB000503AC2 /* mem.h */,
-				638DAF6C1938ECB000503AC2 /* message.c */,
-				638DAF6D1938ECB000503AC2 /* message.h */,
-				638DAF6E1938ECB000503AC2 /* privkey-t.h */,
-				638DAF6F1938ECB000503AC2 /* privkey.c */,
-				638DAF701938ECB000503AC2 /* privkey.h */,
-				638DAF711938ECB000503AC2 /* proto.c */,
-				638DAF721938ECB000503AC2 /* proto.h */,
-				638DAF731938ECB000503AC2 /* serial.h */,
-				638DAF741938ECB000503AC2 /* sm.c */,
-				638DAF751938ECB000503AC2 /* sm.h */,
-				638DAF761938ECB000503AC2 /* tlv.c */,
-				638DAF771938ECB000503AC2 /* tlv.h */,
-				638DAF781938ECB000503AC2 /* userstate.c */,
-				638DAF791938ECB000503AC2 /* userstate.h */,
-				638DAF7A1938ECB000503AC2 /* version.h */,
-			);
-			name = src;
-			path = "Submodules/OTRKit/build/src/libotr-4.0.0/src";
-			sourceTree = "<group>";
-		};
 		6397531118CA7CF1005D6063 /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -2470,7 +2281,6 @@
 		D9CEED611684234D00B236B5 /* Submodules */ = {
 			isa = PBXGroup;
 			children = (
-				638DAF2C1938EC7800503AC2 /* OTRKit */,
 				63E5E71318CA938B00CF7E28 /* OnionKit */,
 				63ACAFE318CA73F100448508 /* ProxyKit */,
 				63483DF41752CEB700779257 /* XMPPFramework */,
@@ -2884,7 +2694,6 @@
 				639C60C518CA988400CC4DF4 /* OTRValueSetting.m in Sources */,
 				6311089D190788D4001188BB /* OTRYapPushDevice.m in Sources */,
 				631F4AE918C0004200AE6E8A /* OTRButtonView.m in Sources */,
-				638DAF311938EC8000503AC2 /* OTRKit.m in Sources */,
 				639753A018CA82A2005D6063 /* OTRLanguageManager.m in Sources */,
 				639C60EE18CA9A0C00CC4DF4 /* _OTRManagedBuddy.m in Sources */,
 				6397538B18CA8222005D6063 /* OTRvCard.m in Sources */,
@@ -3009,7 +2818,6 @@
 				63188E1B18E6331900037EE0 /* OTROAuthXMPPAccount.m in Sources */,
 				63009E9A18D122D30058976C /* OTRXMPPCreateAccountViewController.m in Sources */,
 				63483FAA1752CED100779257 /* XMPPRoomHybrid.xcdatamodeld in Sources */,
-				638DAF321938EC8000503AC2 /* OTRTLV.m in Sources */,
 				6397532818CA7E92005D6063 /* OTRSetting.m in Sources */,
 				63483FAB1752CED100779257 /* XMPPRoomHybridStorage.m in Sources */,
 				63483FAC1752CED100779257 /* XMPPRoomMessageHybridCoreDataStorageObject.m in Sources */,

@@ -36,3 +36,4 @@ pod 'uservoice-iphone-sdk', :git => 'git@github.com:ChatSecure/uservoice-iphone-
 
 # Submodules
 pod 'ProxyKit/Client', :path => 'Submodules/ProxyKit/ProxyKit.podspec'
+pod 'OTRKit', :path => 'Submodules/OTRKit/OTRKit.podspec'

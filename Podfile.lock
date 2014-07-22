@@ -66,6 +66,7 @@ PODS:
   - MWFeedParser/NSString+HTML (1.0.1)
   - Navajo (0.0.1)
   - OpenInChrome (0.0.1)
+  - OTRKit (1.0.0)
   - ProxyKit/Client (1.0.2):
     - ProxyKit/common
   - ProxyKit/common (1.0.2):
@@ -107,6 +108,7 @@ DEPENDENCIES:
   - MWFeedParser (~> 1.0)
   - Navajo (~> 0.0)
   - OpenInChrome
+  - OTRKit (from `Submodules/OTRKit/OTRKit.podspec`)
   - ProxyKit/Client (from `Submodules/ProxyKit/ProxyKit.podspec`)
   - RMStepsController (~> 1.0)
   - SIAlertView (from `git@github.com:ChatSecure/SIAlertView.git`, branch `attributedText`)
@@ -123,6 +125,8 @@ EXTERNAL SOURCES:
   CocoaAsyncSocket:
     :branch: 7.4-compilefix
     :git: git@github.com:ChatSecure/CocoaAsyncSocket.git
+  OTRKit:
+    :path: Submodules/OTRKit/OTRKit.podspec
   ProxyKit:
     :path: Submodules/ProxyKit/ProxyKit.podspec
   SIAlertView:
@@ -156,6 +160,7 @@ SPEC CHECKSUMS:
   MWFeedParser: 003cbf5398e99a7f2057fbe9583054fd1b84be72
   Navajo: 9130d497903e5d1b0f1b3c987be01f5b60fd37c7
   OpenInChrome: b7c73ddf8fe0a1788dc0549c3c4c70e3c84da578
+  OTRKit: 8d35580ba78c4926320c40ba1906f353630d34e5
   ProxyKit: 3e73f2ad92327554549474ad10da21dde46d3ba8
   RMStepsController: 8ff91f169d884fdd834ad37007f553c7bed333eb
   SIAlertView: e6d0d786c3a3f6e456b0e8b9376d0c34d68e827b
