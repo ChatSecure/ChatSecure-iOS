@@ -511,7 +511,7 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
                 
                 
                 RIButtonItem * copyButtonItem = [RIButtonItem itemWithLabel:COPY_STRING action:^{
-                    NSString * copyString = [NSString stringWithFormat:@"Domain: %@\nCode: %d\nUserInfo: %@",[error domain],[error code],[error userInfo]];
+                    NSString * copyString = [NSString stringWithFormat:@"Domain: %@\nCode: %ld\nUserInfo: %@",[error domain],(long)[error code],[error userInfo]];
                     
                     UIPasteboard *pasteBoard = [UIPasteboard generalPasteboard];
                     [pasteBoard setString:copyString];

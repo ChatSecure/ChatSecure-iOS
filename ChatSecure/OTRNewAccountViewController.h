@@ -22,7 +22,7 @@
 
 #import <UIKit/UIKit.h>
 #import "Strings.h"
-#import "OTRManagedAccount.h"
+#import "OTRAccount.h"
 
 @interface OTRNewAccountViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
 {

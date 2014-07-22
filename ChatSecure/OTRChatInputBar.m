@@ -51,7 +51,8 @@
 {
     
     UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];
-    CGFloat buttonWidth = [SEND_STRING sizeWithFont:[UIFont systemFontOfSize:16]].width+20;
+    CGFloat buttonWidth = [SEND_STRING sizeWithAttributes:
+                           @{NSFontAttributeName:[UIFont systemFontOfSize:16]}].width+20;
     button.frame = CGRectMake(self.frame.size.width - (buttonWidth+6), 8, buttonWidth, 27);
     button.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin;
     UIEdgeInsets sendButtonEdgeInsets = UIEdgeInsetsMake(0, 13, 0, 13); // 27 x 27
@@ -69,7 +70,8 @@
 - (UIButton *)flatButton
 {
     UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];
-    CGFloat buttonWidth = [SEND_STRING sizeWithFont:[UIFont systemFontOfSize:16]].width+20;
+    CGFloat buttonWidth = [SEND_STRING sizeWithAttributes:
+                           @{NSFontAttributeName:[UIFont systemFontOfSize:16]}].width+20;
     button.frame = CGRectMake(self.frame.size.width - (buttonWidth+6), 8, buttonWidth, 27);
     button.backgroundColor = [UIColor clearColor];
     

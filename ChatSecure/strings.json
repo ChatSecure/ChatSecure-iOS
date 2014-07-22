@@ -1034,5 +1034,17 @@
   "DUPLICATE_ACCOUNT_MESSAGE_STRING" : {
     "comment": "Error message when there is a duplicate account",
     "string": "Cannot create account with same username"
+  },
+  "DATABASE_SETUP_ERROR_STRING" : {
+    "comment": "Error message when setting up database",
+    "string": "An error occurred while setting up the database."
+  },
+  "PAYMENTS_SETUP_ERROR_STRING" : {
+        "comment": "Error message when trying to make a purchase but payments haven't been set up yet",
+        "string": "This device doesn't seem to be configured to make payments."
+  },
+  "CONNECTING_TO_TOR_STRING" : {
+        "comment": "Message shown when connecting to the Tor network",
+        "string": "Connecting to Tor"
   }
 }

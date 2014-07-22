@@ -33,7 +33,7 @@
 }
 
 - (void) setIntValue:(NSInteger)value {
-    [self setValue:[NSNumber numberWithInt:value]];
+    [self setValue:[NSNumber numberWithInt:(int)value]];
     if(self.delegate && [self.delegate conformsToProtocol:@protocol(OTRSettingDelegate)]) {
         [self.delegate refreshView];
     }
@@ -48,7 +48,7 @@
 }
 
 - (NSString*) stringValue {
-    NSString *text = [NSString stringWithFormat:@"%d", [self intValue]];
+    NSString *text = [NSString stringWithFormat:@"%d", (int)[self intValue]];
     return text;
 }
 

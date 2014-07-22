@@ -269,15 +269,13 @@
     tempFrame.origin = CGPointMake(xPos, 5.0);
     nameLabel.frame = tempFrame;
     
-    
-    
     TTTAttributedLabel * statusMessageLabel = [[TTTAttributedLabel alloc] initWithFrame:CGRectZero];
     NSMutableDictionary *mutableLinkAttributes = [NSMutableDictionary dictionary];
     [mutableLinkAttributes setObject:(id)[statusMessageLabel.textColor CGColor] forKey:(NSString*)kCTForegroundColorAttributeName];
     [mutableLinkAttributes setObject:[NSNumber numberWithBool:YES] forKey:(NSString *)kCTUnderlineStyleAttributeName];
     statusMessageLabel.linkAttributes = mutableLinkAttributes;
     statusMessageLabel.delegate = self;
-    statusMessageLabel.dataDetectorTypes = UIDataDetectorTypeLink;
+    statusMessageLabel.enabledTextCheckingTypes = UIDataDetectorTypeLink;
     statusMessageLabel.numberOfLines = 0;
     statusMessageLabel.lineBreakMode = NSLineBreakByTruncatingTail;
     statusMessageLabel.adjustsFontSizeToFitWidth = YES;

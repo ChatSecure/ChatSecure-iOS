@@ -7,9 +7,25 @@
 //
 
 #import "OTRYapDatabaseObject.h"
-#import "OTRConstants.h"
 
 @class OTRAccount, OTRMessage;
+
+typedef NS_ENUM(NSInteger, OTRBuddyStatus) {
+    OTRBuddyStatusOffline   = 4,
+    OTRBuddyStatusXa        = 3,
+    OTRBuddyStatusDnd       = 2,
+    OTRBuddyStatusAway      = 1,
+    OTRBuddyStatusAvailable = 0
+};
+
+typedef NS_ENUM(int, OTRChatState) {
+    kOTRChatStateUnknown   = 0,
+    kOTRChatStateActive    = 1,
+    kOTRChatStateComposing = 2,
+    kOTRChatStatePaused    = 3,
+    kOTRChatStateInactive  = 4,
+    kOTRChatStateGone      = 5
+};
 
 extern const struct OTRBuddyAttributes {
 	__unsafe_unretained NSString *username;

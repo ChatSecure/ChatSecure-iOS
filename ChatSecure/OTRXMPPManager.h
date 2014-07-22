@@ -24,6 +24,7 @@
 #import <UIKit/UIKit.h>
 #import <CoreData/CoreData.h>
 
+#import "OTRBuddy.h"
 #import "XMPPFramework.h"
 #import "XMPPReconnect.h"
 #import "XMPPRoster.h"

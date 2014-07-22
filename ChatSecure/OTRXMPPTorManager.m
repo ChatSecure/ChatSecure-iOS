@@ -7,7 +7,7 @@
 //
 
 #import "OTRXMPPTorManager.h"
-#import "HITorManager.h"
+#import "OnionKit.h"
 #import "XMPPStream.h"
 #import "OTRXMPPTorAccount.h"
 
@@ -24,7 +24,7 @@ uint16_t const proxyPort = 9050;
 
 - (void)connectWithPassword:(NSString *)myPassword
 {
-    if ([HITorManager defaultManager].isRunning) {
+    if ([OnionKit sharedInstance].isRunning) {
         [super connectWithPassword:myPassword];
     }
     else {

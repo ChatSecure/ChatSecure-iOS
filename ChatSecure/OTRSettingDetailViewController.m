@@ -65,4 +65,9 @@
     }
 }
 
+- (CGSize) textSizeForLabel:(UILabel*)label {
+    return [label.text sizeWithAttributes:
+            @{NSFontAttributeName:label.font}];
+}
+
 @end

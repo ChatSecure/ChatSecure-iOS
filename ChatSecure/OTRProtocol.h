@@ -22,6 +22,12 @@
 
 @class OTRMessage, OTRBuddy, OTRAccount;
 
+typedef NS_ENUM(int, OTRProtocolType) {
+    OTRProtocolTypeNone        = 0,
+    OTRProtocolTypeXMPP        = 1,
+    OTRProtocolTypeOscar       = 2
+};
+
 typedef NS_ENUM(NSInteger, OTRProtocolConnectionStatus) {
     OTRProtocolConnectionStatusDisconnected,
     OTRProtocolConnectionStatusConnected,

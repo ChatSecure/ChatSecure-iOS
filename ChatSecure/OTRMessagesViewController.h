@@ -12,7 +12,7 @@
 
 @class OTRBuddy;
 
-@interface OTRMessagesViewController : JSQMessagesViewController
+@interface OTRMessagesViewController : JSQMessagesViewController <UISplitViewControllerDelegate>
 
 @property (nonatomic, strong) OTRBuddy *buddy;
 

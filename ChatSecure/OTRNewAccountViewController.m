@@ -117,8 +117,7 @@ NSString *const kOTRAccountTypeKey   = @"kOTRAccountTypeKey";
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    
-    OTRAccountType accountType = [accountsCellArray[indexPath.row][kOTRAccountTypeKey] unsignedIntegerValue];
+    OTRAccountType accountType = (OTRAccountType)[accountsCellArray[indexPath.row][kOTRAccountTypeKey] unsignedIntegerValue];
     [self didSelectAccountType:accountType];
 }
 

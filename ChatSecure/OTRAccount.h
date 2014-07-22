@@ -7,7 +7,16 @@
 //
 
 #import "OTRYapDatabaseObject.h"
-#import "OTRConstants.h"
+#import "OTRProtocol.h"
+
+typedef NS_ENUM(int, OTRAccountType) {
+    OTRAccountTypeNone        = 0,
+    OTRAccountTypeFacebook    = 1,
+    OTRAccountTypeGoogleTalk  = 2,
+    OTRAccountTypeJabber      = 3,
+    OTRAccountTypeAIM         = 4,
+    OTRAccountTypeXMPPTor     = 5
+};
 
 extern NSString *const OTRAimImageName;
 extern NSString *const OTRGoogleTalkImageName;

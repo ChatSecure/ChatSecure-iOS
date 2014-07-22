@@ -24,7 +24,7 @@
 #import "OTRConstants.h"
 #import "OTRXMPPError.h"
 #import "SIAlertView.h"
-#import "HITorManager.h"
+#import "OnionKit.h"
 #import "OTRColors.h"
 #import "OTRCertificatePinning.h"
 #import "OTRXMPPTorAccount.h"
@@ -113,7 +113,7 @@
     [self.passwordTextField resignFirstResponder];
     self.loginButtonPressed = NO;
     if (self.isTorAccount) {
-        [[HITorManager defaultManager] addObserver:self forKeyPath:NSStringFromSelector(@selector(isRunning)) options:NSKeyValueObservingOptionNew context:NULL];
+        [[OnionKit sharedInstance] addObserver:self forKeyPath:NSStringFromSelector(@selector(isRunning)) options:NSKeyValueObservingOptionNew context:NULL];
     }
 }
 
@@ -121,7 +121,7 @@
 {
     if(self.isTorAccount)
     {
-        [[HITorManager defaultManager] removeObserver:self forKeyPath:NSStringFromSelector(@selector(isRunning))];
+        [[OnionKit sharedInstance] removeObserver:self forKeyPath:NSStringFromSelector(@selector(isRunning))];
     }
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                               name:UIKeyboardWillHideNotification
@@ -134,7 +134,7 @@
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    if ([keyPath isEqualToString:NSStringFromSelector(@selector(isRunning))] && [object isEqual:[HITorManager defaultManager]]) {
+    if ([keyPath isEqualToString:NSStringFromSelector(@selector(isRunning))] && [object isEqual:[OnionKit sharedInstance]]) {
         BOOL isRunning = [[change objectForKey:NSKeyValueChangeNewKey] boolValue];
         if (isRunning && self.loginButtonPressed) {
             [self loginButtonPressed:nil];
@@ -235,10 +235,10 @@
 - (void)loginButtonPressed:(id)sender
 {
     self.loginButtonPressed = YES;
-    if( [self isTorAccount] ){
-        if(![HITorManager defaultManager].isRunning) {
-            [self showHUDWithText:@"Connecting to Tor"];
-            [[HITorManager defaultManager] start];
+    if([self isTorAccount]){
+        if(![OnionKit sharedInstance].isRunning) {
+            [self showHUDWithText:CONNECTING_TO_TOR_STRING];
+            [[OnionKit sharedInstance] start];
         }
         else{
             [super loginButtonPressed:sender];

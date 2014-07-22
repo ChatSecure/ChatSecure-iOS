@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "OTRConstants.h"
+#import "OTRBuddy.h"
 
 @interface OTRColors : NSObject
 

@@ -61,10 +61,6 @@
     [self.view addSubview:descriptionLabel];
 }
 
-- (CGSize) textSizeForLabel:(UILabel*)label {
-    return [label.text sizeWithFont:label.font];
-}
-
 - (CGPoint) roundedCenterPoint:(CGPoint) pt {
     return CGPointMake(round(pt.x), round(pt.y));
 }
@@ -120,7 +116,7 @@
 }
 
 - (NSString*) stringForValue:(NSInteger)value {
-    return [NSString stringWithFormat:@"%d", value];
+    return [NSString stringWithFormat:@"%d", (int)value];
 }
 
 - (NSInteger) valueForRow:(int)row
@@ -132,7 +128,7 @@
 
 - (int) indexForValue:(NSInteger)value
 {
-    int index = (value - otrSetting.minValue)/((otrSetting.maxValue - otrSetting.minValue)/otrSetting.numValues);
+    int index = (int)(value - otrSetting.minValue)/((otrSetting.maxValue - otrSetting.minValue)/otrSetting.numValues);
     return index;
 }
 
@@ -149,7 +145,7 @@
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
     }
-    NSInteger value = [self valueForRow:indexPath.row];
+    NSInteger value = [self valueForRow:(int)indexPath.row];
     cell.textLabel.text = [self stringForValue:value];
     if ([indexPath isEqual:selectedPath]) {
         cell.accessoryType = UITableViewCellAccessoryCheckmark;
@@ -165,7 +161,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     self.selectedPath = indexPath;
-    newValue = [self valueForRow:indexPath.row];
+    newValue = [self valueForRow:(int)indexPath.row];
     [self setTextForValueLabel];
     [self.valueTable reloadData];
     [self.valueTable selectRowAtIndexPath:selectedPath animated:NO scrollPosition:UITableViewScrollPositionNone];

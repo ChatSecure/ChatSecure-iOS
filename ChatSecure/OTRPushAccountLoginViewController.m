@@ -299,9 +299,6 @@ int maxEmailLength = 100;
 
 - (void)keyboardDidShow:(NSNotification *)notification
 {
-    NSValue *beginFrameValue = notification.userInfo[UIKeyboardFrameBeginUserInfoKey];
-    CGRect keyboardBeginFrame = [self.view convertRect:beginFrameValue.CGRectValue fromView:nil];
-    
     NSValue *endFrameValue = notification.userInfo[UIKeyboardFrameEndUserInfoKey];
     CGRect keyboardEndFrame = [self.view convertRect:endFrameValue.CGRectValue fromView:nil];
     

@@ -96,12 +96,8 @@
 
 - (void)keyboardDidShow:(NSNotification *)notification
 {
-    NSValue *beginFrameValue = notification.userInfo[UIKeyboardFrameBeginUserInfoKey];
-    CGRect keyboardBeginFrame = [self.view convertRect:beginFrameValue.CGRectValue fromView:nil];
-    
     NSValue *endFrameValue = notification.userInfo[UIKeyboardFrameEndUserInfoKey];
     CGRect keyboardEndFrame = [self.view convertRect:endFrameValue.CGRectValue fromView:nil];
-
     
     NSTimeInterval duration = [notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
     UIViewAnimationCurve curve = [notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] integerValue];
@@ -130,9 +126,7 @@
     }
     
     if (error || !success) {
-#warning Error message goes here
-        //error message
-        return;
+        [[[UIAlertView alloc] initWithTitle:ERROR_STRING message:DATABASE_SETUP_ERROR_STRING delegate:nil cancelButtonTitle:OK_STRING otherButtonTitles:nil] show];
     }
     
     [self.stepsController showNextStep];

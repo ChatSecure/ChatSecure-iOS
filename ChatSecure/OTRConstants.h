@@ -86,35 +86,3 @@ extern NSString *const kOTRErrorDomain;
 
 extern NSUInteger const kOTRMinimumPassphraseLength;
 extern NSUInteger const kOTRMaximumPassphraseLength;
-
-typedef NS_ENUM(int, OTRChatState) {
-    kOTRChatStateUnknown   = 0,
-    kOTRChatStateActive    = 1,
-    kOTRChatStateComposing = 2,
-    kOTRChatStatePaused    = 3,
-    kOTRChatStateInactive  = 4,
-    kOTRChatStateGone      = 5
-};
-
-typedef NS_ENUM(int, OTRAccountType) {
-    OTRAccountTypeNone        = 0,
-    OTRAccountTypeFacebook    = 1,
-    OTRAccountTypeGoogleTalk  = 2,
-    OTRAccountTypeJabber      = 3,
-    OTRAccountTypeAIM         = 4,
-    OTRAccountTypeXMPPTor     = 5
-};
-
-typedef NS_ENUM(int, OTRProtocolType) {
-    OTRProtocolTypeNone        = 0,
-    OTRProtocolTypeXMPP        = 1,
-    OTRProtocolTypeOscar       = 2
-};
-
-typedef NS_ENUM(NSInteger, OTRBuddyStatus) {
-    OTRBuddyStatusOffline   = 4,
-    OTRBuddyStatusXa        = 3,
-    OTRBuddyStatusDnd       = 2,
-    OTRBuddyStatusAway      = 1,
-    OTRBuddyStatusAvailable = 0
-};

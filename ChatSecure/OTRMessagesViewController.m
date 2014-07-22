@@ -693,6 +693,12 @@ typedef NS_ENUM(int, OTRDropDownType) {
     return [self.messageMappings numberOfItemsInSection:section];
 }
 
+#pragma - mark JSQMessagesCollectionViewCellDelegate Methods
+
+- (void)messagesCollectionViewCellDidTapAvatar:(JSQMessagesCollectionViewCell *)cell {
+    
+}
+
 #pragma - mark JSQMessagesCollectionViewDataSource Methods
 
  ////// Required //////

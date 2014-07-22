@@ -9,6 +9,7 @@
 #import "OTRAccount.h"
 #import "SSKeychain.h"
 #import "OTRLog.h"
+#import "OTRConstants.h"
 
 #import "OTRXMPPAccount.h"
 #import "OTRXMPPTorAccount.h"

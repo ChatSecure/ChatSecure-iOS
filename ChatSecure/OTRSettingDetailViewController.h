@@ -29,5 +29,6 @@
 @property (nonatomic, strong) UIBarButtonItem *saveButton;
 @property (nonatomic, strong) UIBarButtonItem *cancelButton;
 - (void) save:(id)sender;
+- (CGSize) textSizeForLabel:(UILabel*)label;
 
 @end

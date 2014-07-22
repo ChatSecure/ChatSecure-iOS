@@ -35,7 +35,6 @@
 #import "Strings.h"
 #import "OTRXMPPManagedPresenceSubscriptionRequest.h"
 #import "OTRYapDatabaseRosterStorage.h"
-#import "OTRCapabilitiesInMemoryCoreDataStorage.h"
 
 #import "OTRLog.h"
 
@@ -235,7 +234,7 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 	// The XMPPCapabilitiesCoreDataStorage is an ideal solution.
 	// It can also be shared amongst multiple streams to further reduce hash lookups.
 	
-	self.xmppCapabilitiesStorage = [OTRCapabilitiesInMemoryCoreDataStorage sharedInstance];
+	self.xmppCapabilitiesStorage = [[XMPPCapabilitiesCoreDataStorage alloc] initWithInMemoryStore];
     self.xmppCapabilities = [[XMPPCapabilities alloc] initWithCapabilitiesStorage:self.xmppCapabilitiesStorage];
     
     self.xmppCapabilities.autoFetchHashedCapabilities = YES;

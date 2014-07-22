@@ -93,8 +93,7 @@
         SKPayment *payment = [SKPayment paymentWithProduct:product];
         [[SKPaymentQueue defaultQueue] addPayment:payment];
     } else {
-#warning Needs localziation
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:@"Cant make payments" delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:PAYMENTS_SETUP_ERROR_STRING delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
         [alert show];
     }
 }
