@@ -59,6 +59,16 @@ static NSUInteger const OTRDefaultPortNumber = 5222;
     return OTRDefaultPortNumber;
 }
 
++ (instancetype)accountForStream:(XMPPStream *)stream transaction:(YapDatabaseReadTransaction *)transaction
+{
+    id xmppAccount = nil;
+    if([stream.tag isKindOfClass:[NSString class]]) {
+        
+        xmppAccount = [self fetchObjectWithUniqueID:stream.tag transaction:transaction];
+    }
+    return xmppAccount;
+}
+
 + (NSString * )newResource
 {
     int r = arc4random() % 99999;

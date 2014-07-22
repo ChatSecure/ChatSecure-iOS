@@ -118,9 +118,9 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
 
 #pragma - mark Class Methods
 
-+ (instancetype)fetchBuddyForUsername:(NSString *)username accountName:(NSString *)accountName protocolType:(OTRProtocolType)protocolType transaction:(YapDatabaseReadTransaction *)transaction
++ (instancetype)fetchBuddyForUsername:(NSString *)username accountName:(NSString *)accountName transaction:(YapDatabaseReadTransaction *)transaction
 {
-    OTRAccount *account = [OTRAccount fetchAccountWithUsername:accountName protocolType:protocolType transaction:transaction];
+    OTRAccount *account = [OTRAccount allAccountsWithUsername:username transaction:transaction];
     return [self fetchBuddyWithUsername:username withAccountUniqueId:account.uniqueId transaction:transaction];
 }
 

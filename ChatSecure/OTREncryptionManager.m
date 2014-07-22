@@ -86,7 +86,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     
     __block OTRBuddy *buddy = nil;
     [self.databaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        buddy = [OTRBuddy fetchBuddyForUsername:username accountName:accountName protocolType:[self prototcolTypeForString:protocol] transaction:transaction];
+        buddy = [OTRBuddy fetchBuddyForUsername:username accountName:accountName transaction:transaction];
     } completionBlock:^{
         message.buddyUniqueId = buddy.uniqueId;
         
@@ -129,7 +129,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
             message = [[OTRMessage alloc] init];
             message.incoming = NO;
             message.text = encodedMessage;
-            OTRBuddy *buddy = [OTRBuddy fetchBuddyForUsername:username accountName:accountName protocolType:[self prototcolTypeForString:protocol] transaction:transaction];
+            OTRBuddy *buddy = [OTRBuddy fetchBuddyForUsername:username accountName:accountName transaction:transaction];
             message.buddyUniqueId = buddy.uniqueId;
             
         } completionBlock:^{
@@ -172,7 +172,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
 {
     __block OTRBuddy *buddy = nil;
     [self.databaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        buddy = [OTRBuddy fetchBuddyForUsername:username accountName:accountName protocolType:[self prototcolTypeForString:protocol] transaction:transaction];
+        buddy = [OTRBuddy fetchBuddyForUsername:username accountName:accountName transaction:transaction];
     } completionBlock:^{
         [[NSNotificationCenter defaultCenter] postNotificationName:OTRMessageStateDidChangeNotification object:buddy userInfo:@{OTRMessageStateKey:@(messageState)}];
     }];
@@ -185,7 +185,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     
     __block OTRBuddy *buddy = nil;
     [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        buddy = [OTRBuddy fetchBuddyForUsername:username accountName:accountName protocolType:[self prototcolTypeForString:protocol] transaction:transaction];
+        buddy = [OTRBuddy fetchBuddyForUsername:username accountName:accountName transaction:transaction];
     }];
     
     if(!buddy || buddy.status == OTRBuddyStatusOffline) {
@@ -264,7 +264,8 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
 {
     __block OTRAccount *account = nil;
     [self.databaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        account = [OTRAccount fetchAccountWithUsername:accountName protocolType:[self prototcolTypeForString:protocol] transaction:transaction];
+        
+        account = [[OTRAccount allAccountsWithUsername:accountName transaction:transaction] firstObject];
     } completionBlock:^{
         [[NSNotificationCenter defaultCenter] postNotificationName:OTRWillStartGeneratingPrivateKeyNotification object:account];
     }];
@@ -276,7 +277,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
 {
     __block OTRAccount *account = nil;
     [self.databaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        account = [OTRAccount fetchAccountWithUsername:accountName protocolType:[self prototcolTypeForString:protocol] transaction:transaction];
+        account = [[OTRAccount allAccountsWithUsername:accountName transaction:transaction] firstObject];;
     } completionBlock:^{
         [[NSNotificationCenter defaultCenter] postNotificationName:OTRDidFinishGeneratingPrivateKeyNotification object:account];
     }];

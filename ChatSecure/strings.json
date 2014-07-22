@@ -1026,5 +1026,13 @@
   "DOMAIN_BLANK_ERROR_STRING" : {
     "comment": "Error message when domain textfield left blank",
     "string": "Domain needs to be set"
+  },
+  "DUPLICATE_ACCOUNT_STRING" : {
+    "comment": "Error title when there is a duplicate account",
+    "string": "Duplicate account"
+  },
+  "DUPLICATE_ACCOUNT_MESSAGE_STRING" : {
+    "comment": "Error message when there is a duplicate account",
+    "string": "Cannot create account with same username"
   }
 }

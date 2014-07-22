@@ -144,18 +144,15 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
     return account;
 }
 
-+ (instancetype)fetchAccountWithUsername:(NSString *)username protocolType:(OTRProtocolType)protocolType transaction:(YapDatabaseReadTransaction*)transaction
++ (NSArray *)allAccountsWithUsername:(NSString *)username transaction:(YapDatabaseReadTransaction*)transaction
 {
-    __block OTRAccount *finalAccount = nil;
+    __block NSMutableArray *accountsArray = [NSMutableArray array];
     [transaction enumerateKeysAndObjectsInCollection:[OTRAccount collection] usingBlock:^(NSString *key, OTRAccount *account, BOOL *stop) {
         if ([account isKindOfClass:[OTRAccount class]]) {
-            if ([account.username isEqualToString:username] && account.protocolType == protocolType) {
-                finalAccount = account;
-                *stop = YES;
-            }
+            [accountsArray addObject:account];
         }
     }];
-    return [finalAccount copy];
+    return [accountsArray copy];
     
 }
 + (NSArray *)allAccountsWithTransaction:(YapDatabaseReadTransaction*)transaction

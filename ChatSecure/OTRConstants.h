@@ -36,6 +36,7 @@ extern NSString *const kOTRProtocolTypeAIM;
 extern NSString *const kOTRNotificationAccountNameKey;
 extern NSString *const kOTRNotificationUserNameKey;
 extern NSString *const kOTRNotificationProtocolKey;
+extern NSString *const kOTRNotificationBuddyUniqueIdKey;
 
 extern NSString *const kOTRXMPPAccountSendDeliveryReceiptsKey;
 extern NSString *const kOTRXMPPAccountSendTypingNotificationsKey;

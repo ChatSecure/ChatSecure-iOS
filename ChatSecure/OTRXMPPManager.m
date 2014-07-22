@@ -150,6 +150,9 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
         self.xmppStream = [[XMPPStream alloc] init];
     }
     
+    //Used to fetch correct account from XMPPStream in delegate methods especailly
+    self.xmppStream.tag = self.account.uniqueId;
+    
     self.xmppStream.startTLSPolicy = XMPPStreamStartTLSPolicyRequired;
     
     [self.certificatePinningModule activate:self.xmppStream];

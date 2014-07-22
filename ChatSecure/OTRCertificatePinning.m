@@ -178,8 +178,10 @@ static id AFPublicKeyForCertificate(NSData *certificate) {
 }
 
 + (SecCertificateRef)certForData:(NSData *)data {
-    SecCertificateRef allowedCertificate = SecCertificateCreateWithData(NULL, (__bridge CFDataRef)data);
-
+    SecCertificateRef allowedCertificate = NULL;
+    if([ data length]) {
+        allowedCertificate = SecCertificateCreateWithData(NULL, (__bridge CFDataRef)data);
+    }
     return allowedCertificate;
 }
 
@@ -267,7 +269,10 @@ static id AFPublicKeyForCertificate(NSData *certificate) {
 
 + (id)publicKeyWithCertData:(NSData *)certData
 {
-    return AFPublicKeyForCertificate(certData);
+    if([certData length]) {
+        return AFPublicKeyForCertificate(certData);
+    }
+    return nil;
 }
 
 + (NSDictionary *)bundledCertHashes

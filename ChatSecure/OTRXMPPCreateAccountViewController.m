@@ -191,12 +191,11 @@ static NSString * const domainCellIdentifier = @"domainCellIdentifer";
 
 - (NSString *)fixUsername:(NSString *)username withDomain:(NSString *)domain;
 {
-    NSString * finalUsername = nil;
-    username = [username stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    if ([username length]) {
-        if ([username rangeOfString:@"@"].location == NSNotFound) {
+    NSString * finalUsername = [username stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];;
+    if ([finalUsername length]) {
+        if ([finalUsername rangeOfString:@"@"].location == NSNotFound) {
             //append correct domain
-            finalUsername = [NSString stringWithFormat:@"%@@%@",username,domain];
+            finalUsername = [NSString stringWithFormat:@"%@@%@",finalUsername,domain];
         }
     }
     return finalUsername;
@@ -234,11 +233,8 @@ static NSString * const domainCellIdentifier = @"domainCellIdentifer";
         self.account.rememberPassword = self.rememberPasswordSwitch.on;
         self.account.autologin = self.autoLoginSwitch.on;
         
-        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-            [self.account saveWithTransaction:transaction];
-        }];
         
-        OTRXMPPManager * xmppManager = [self xmppManager];
+        OTRXMPPManager * xmppManager = [self xmppManagerForCurrentAccount];
         if (xmppManager) {
             [self showHUDWithText:CREATING_ACCOUNT_STRING];
             [xmppManager registerNewAccountWithPassword:self.passwordTextField.text];
@@ -249,9 +245,12 @@ static NSString * const domainCellIdentifier = @"domainCellIdentifer";
 - (void)didReceiveRegistrationSucceededNotification:(NSNotification *)notification
 {
     self.wasAbleToCreateAccount = YES;
-    OTRXMPPManager * xmppMananger = [self xmppManager];
+    OTRXMPPManager * xmppMananger = [self xmppManagerForCurrentAccount];
     if (xmppMananger) {
         self.HUD.labelText = LOGGING_IN_STRING;
+        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+            [self.account saveWithTransaction:transaction];
+        }];
         [xmppMananger connectWithPassword:self.passwordTextField.text];
     }
 }
@@ -292,7 +291,7 @@ static NSString * const domainCellIdentifier = @"domainCellIdentifer";
     return hostname;
 }
 
-- (OTRXMPPManager *)xmppManager
+- (OTRXMPPManager *)xmppManagerForCurrentAccount
 {
     id protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
     OTRXMPPManager * xmppManager = nil;

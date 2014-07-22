@@ -68,11 +68,11 @@
     return [accounts filteredArrayUsingPredicate:predicate];
 }
 
-+ (OTRAccount *)accountWithUsername:(NSString *)username protocolType:(OTRProtocolType)protocolType
++ (OTRAccount *)accountWithUsername:(NSString *)username
 {
     __block OTRAccount *account = nil;
     [[OTRDatabaseManager sharedInstance].mainThreadReadOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        account = [OTRAccount fetchAccountWithUsername:username protocolType:protocolType transaction:transaction];
+        account = [[OTRAccount allAccountsWithUsername:username transaction:transaction] firstObject];
     }];
     return account;
 }
