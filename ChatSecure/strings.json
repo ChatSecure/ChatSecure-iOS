@@ -1046,5 +1046,13 @@
   "CONNECTING_TO_TOR_STRING" : {
         "comment": "Message shown when connecting to the Tor network",
         "string": "Connecting to Tor"
+  },
+  "ACCOUNT_DISCONNECTED_STRING" : {
+    "comment": "Error title when account is disconnected",
+    "string": "Account Disconnected"
+  },
+  "ACCOUNT_DISCONNECTED_DESCRIPTION_STRING" : {
+    "comment": "Error description when account is disconnected while managing requests",
+    "string": "Please log into this account before managing requests."
   }
 }
