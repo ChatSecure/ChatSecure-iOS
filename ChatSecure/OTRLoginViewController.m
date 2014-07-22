@@ -386,9 +386,10 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
 - (void)protocolLoginSuccess:(NSNotification*)notification
 {
     [self hideHUD];
+    __block OTRAccount *accountCopy = [self.account copy];
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         
-        [self.account saveWithTransaction:transaction];
+        [accountCopy saveWithTransaction:transaction];
     }];
     [self dismissViewControllerAnimated:YES completion:nil];
 }  

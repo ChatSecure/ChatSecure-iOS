@@ -187,7 +187,7 @@
 #define BUDDY_INFO_STRING [OTRLanguageManager translatedString: @"Buddy Info"]
 #define MANAGE_CHATSECURE_PUSH_ACCOUNT_STRING [OTRLanguageManager translatedString: @"Manage ChatSecure Push account"]
 #define CONNECTING_STRING [OTRLanguageManager translatedString: @"Connecting"]
-#define DUPLICATE_ACCOUNT_MESSAGE_STRING [OTRLanguageManager translatedString: @"Cannot create account with same username"]
+#define DUPLICATE_ACCOUNT_MESSAGE_STRING [OTRLanguageManager translatedString: @"There already exists an account with this username."]
 #define CHAT_STATE_COMPOSING_STRING [OTRLanguageManager translatedString: @"Typing"]
 #define errSSLWouldBlockString [OTRLanguageManager translatedString: @"I/O would block (not fatal)"]
 #define OTRL_MSGEVENT_ENCRYPTION_REQUIRED_STRING [OTRLanguageManager translatedString: @"Our policy requires encryption but we are trying to send an unencrypted message out."]

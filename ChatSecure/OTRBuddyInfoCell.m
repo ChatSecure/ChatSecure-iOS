@@ -9,6 +9,8 @@
 #import "OTRBuddyInfoCell.h"
 
 #import "OTRBuddy.h"
+#import "OTRXMPPBuddy.h"
+#import "Strings.h"
 
 @interface OTRBuddyInfoCell ()
 
@@ -24,11 +26,13 @@
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
         self.nameLabel = [[UILabel alloc] init];
         self.nameLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        self.nameLabel.adjustsFontSizeToFitWidth = YES;
         [self.contentView addSubview:self.nameLabel];
         
         self.identifierLabel = [[UILabel alloc] init];
         self.identifierLabel.textColor = [UIColor colorWithWhite:.45 alpha:1.0];
         self.identifierLabel.font = [UIFont systemFontOfSize:[UIFont smallSystemFontSize]];
+        self.identifierLabel.adjustsFontSizeToFitWidth = YES;
         self.identifierLabel.translatesAutoresizingMaskIntoConstraints = NO;
         [self.contentView addSubview:self.identifierLabel];
         
@@ -50,6 +54,13 @@
     else {
         self.nameLabel.text = accountName;
         self.identifierLabel.text = nil;
+    }
+    
+    if ([buddy isKindOfClass:[OTRXMPPBuddy class]]) {
+        if(((OTRXMPPBuddy *)buddy).isPendingApproval) {
+            NSString *pendingString = [NSString stringWithFormat:@" - %@",PENDING_APPROVAL_STRING];
+            self.nameLabel.text = [self.nameLabel.text stringByAppendingString:pendingString];
+        }
     }
 }
 
