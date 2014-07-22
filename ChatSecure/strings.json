@@ -1033,7 +1033,7 @@
   },
   "DUPLICATE_ACCOUNT_MESSAGE_STRING" : {
     "comment": "Error message when there is a duplicate account",
-    "string": "Cannot create account with same username"
+    "string": "There already exists an account with this username."
   },
   "DATABASE_SETUP_ERROR_STRING" : {
     "comment": "Error message when setting up database",

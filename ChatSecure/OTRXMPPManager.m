@@ -503,9 +503,13 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 
 - (void)xmppStreamDidChangeMyJID:(XMPPStream *)stream
 {
-    if (![[stream.myJID bare] isEqualToString:self.account.username])
+    if (![[stream.myJID bare] isEqualToString:self.account.username] || ![[stream.myJID resource] isEqualToString:self.account.resource])
     {
         self.account.username = [stream.myJID bare];
+        self.account.resource = [stream.myJID resource];
+        [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+            [self.account saveWithTransaction:transaction];
+        }];
     }
 }
 
