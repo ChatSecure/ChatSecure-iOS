@@ -81,7 +81,7 @@ extern NSUInteger const kNewCertAlertViewTag;
                  userInputView:(UIView *)inputView;
 
 - (void)readInFields;
-- (BOOL)checkDuplicateUsername:(NSString *)username;
+- (BOOL)isDuplicateUsername:(NSString *)username;
 - (void)hideHUD;
 
 - (void)protocolLoginFailed:(NSNotification*)notification;

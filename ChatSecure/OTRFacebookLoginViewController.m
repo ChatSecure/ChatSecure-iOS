@@ -84,12 +84,19 @@
     [request startWithCompletionHandler:^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *user, NSError *error) {
         if (!error) {
             [self didConnectUser:user];
-            [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-                [self.account saveWithTransaction:transaction];
-            }];
-            self.account.oAuthTokenDictionary = [session.accessTokenData dictionary];
-            [self.loginViewTableView reloadData];
-            [self loginButtonPressed:sender];
+            if(![self isDuplicateUsername:self.account.username])
+            {
+                [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+                    [self.account saveWithTransaction:transaction];
+                }];
+                self.account.oAuthTokenDictionary = [session.accessTokenData dictionary];
+                [self.loginViewTableView reloadData];
+                [self loginButtonPressed:sender];
+            }
+            else {
+                [self showAlertViewWithTitle:DUPLICATE_ACCOUNT_STRING message:DUPLICATE_ACCOUNT_MESSAGE_STRING error:nil];
+            }
+            
         }
     }];
 }

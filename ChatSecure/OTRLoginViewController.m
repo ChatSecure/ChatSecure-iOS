@@ -441,7 +441,7 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
     return YES;
 }
 
-- (BOOL)checkDuplicateUsername:(NSString *)username
+- (BOOL)isDuplicateUsername:(NSString *)username
 {
     __block BOOL isDuplicate = NO;
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
@@ -465,10 +465,10 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
     
     if (fields) {
         //check that the username is unique
-        if([self checkDuplicateUsername:self.usernameTextField.text])
+        if([self isDuplicateUsername:self.usernameTextField.text])
         {
             fields = NO;
-            [self showAlertViewWithTitle:@"Duplicate Account" message:@"Cannot create account with same username" error:nil];
+            [self showAlertViewWithTitle:DUPLICATE_ACCOUNT_STRING message:DUPLICATE_ACCOUNT_MESSAGE_STRING error:nil];
         }
     }
     else
