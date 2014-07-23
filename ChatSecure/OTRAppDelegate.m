@@ -40,7 +40,6 @@
 #import "OTRSecrets.h"
 #import "OTRDatabaseManager.h"
 
-#import "OTRDemoChatViewController.h"
 #import "SSKeychain.h"
 
 #import "OTRLog.h"

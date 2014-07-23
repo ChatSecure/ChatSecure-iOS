@@ -363,8 +363,6 @@
 		6300F16616E6CF8400D3C1AA /* OTRSubscriptionRequestsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRSubscriptionRequestsViewController.m; sourceTree = "<group>"; };
 		6301D87B16E94778008F67A6 /* OTRChooseAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRChooseAccountViewController.h; sourceTree = "<group>"; };
 		6301D87C16E94778008F67A6 /* OTRChooseAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRChooseAccountViewController.m; sourceTree = "<group>"; };
-		63022BB416CDAD4C00F764F1 /* OTRChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRChatViewController.h; sourceTree = "<group>"; };
-		63022BB516CDAD4C00F764F1 /* OTRChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRChatViewController.m; sourceTree = "<group>"; };
 		6304F4D118861C4300365824 /* OTRXMPPError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPError.h; sourceTree = "<group>"; };
 		6304F4D218861C4300365824 /* OTRXMPPError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPError.m; sourceTree = "<group>"; };
 		63058642183F02D4009ADB6B /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -755,8 +753,6 @@
 		637FF13417DEB8910012AA1B /* ChatSecure 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "ChatSecure 2.xcdatamodel"; sourceTree = "<group>"; };
 		638286DE1846911C00F127C2 /* OTRAccountTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAccountTableViewCell.h; sourceTree = "<group>"; };
 		638286DF1846911C00F127C2 /* OTRAccountTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAccountTableViewCell.m; sourceTree = "<group>"; };
-		638940CF1815E339005F651E /* OTRDemoChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRDemoChatViewController.h; sourceTree = "<group>"; };
-		638940D01815E339005F651E /* OTRDemoChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRDemoChatViewController.m; sourceTree = "<group>"; };
 		638F2C8E1947C32A00EB5239 /* OTRMessagesCollectionViewCellOutgoing.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = OTRMessagesCollectionViewCellOutgoing.xib; path = ChatSecure/OTRMessagesCollectionViewCellOutgoing.xib; sourceTree = SOURCE_ROOT; };
 		638F2C901947C98200EB5239 /* OTRMessagesCollectionViewCellIncoming.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = OTRMessagesCollectionViewCellIncoming.xib; path = ChatSecure/OTRMessagesCollectionViewCellIncoming.xib; sourceTree = SOURCE_ROOT; };
 		6391CAF518A99003003EC838 /* OTRLockButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRLockButton.h; sourceTree = "<group>"; };
@@ -2013,12 +2009,8 @@
 				63009E9618D122A70058976C /* OTRCreateAccountChooserViewController.m */,
 				639C60A918CA984400CC4DF4 /* OTRBuddyViewController.h */,
 				639C60AA18CA984400CC4DF4 /* OTRBuddyViewController.m */,
-				63022BB416CDAD4C00F764F1 /* OTRChatViewController.h */,
-				63022BB516CDAD4C00F764F1 /* OTRChatViewController.m */,
 				63C55A511921866500592477 /* OTRMessagesViewController.h */,
 				63C55A521921866500592477 /* OTRMessagesViewController.m */,
-				638940CF1815E339005F651E /* OTRDemoChatViewController.h */,
-				638940D01815E339005F651E /* OTRDemoChatViewController.m */,
 				639753AB18CA8550005D6063 /* OTRCertificateDomainViewController.h */,
 				639753AC18CA8550005D6063 /* OTRCertificateDomainViewController.m */,
 				6352DC8615AF9F16007AD0B4 /* OTRNewAccountViewController.h */,
