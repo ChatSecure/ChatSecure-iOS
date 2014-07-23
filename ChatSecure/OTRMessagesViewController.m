@@ -116,14 +116,21 @@ typedef NS_ENUM(int, OTRDropDownType) {
         [self textViewDidChangeNotifcation:note];
     }];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(yapDatabaseModified:) name:OTRUIDatabaseConnectionDidUpdateNotification object:nil];
+    __weak OTRMessagesViewController *welf = self;
+    [[NSNotificationCenter defaultCenter] addObserverForName:OTRUIDatabaseConnectionDidUpdateNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
+        [welf yapDatabaseModified:note];
+    }];
+    
+    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        [welf.messageMappings updateWithTransaction:transaction];
+        [welf.buddyMappings updateWithTransaction:transaction];
+    }];
     
     void (^refreshGeneratingLock)(OTRAccount *) = ^void(OTRAccount * account) {
         
         if ([account.uniqueId isEqualToString:self.account.uniqueId]) {
-            [self refreshLockButton];
+            [welf refreshLockButton];
         }
-        
     };
     
     [[NSNotificationCenter defaultCenter] addObserverForName:OTRDidFinishGeneratingPrivateKeyNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
@@ -163,7 +170,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
     if (!_databaseConnection)
     {
         _databaseConnection = [OTRDatabaseManager sharedInstance].mainThreadReadOnlyDatabaseConnection;
-        [_databaseConnection beginLongLivedReadTransaction];
     }
     return _databaseConnection;
 }

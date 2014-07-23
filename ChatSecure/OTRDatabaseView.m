@@ -162,6 +162,9 @@ NSString *OTRPushAccountGroup = @"Account";
 
 + (BOOL)registerChatDatabaseView
 {
+    if ([[OTRDatabaseManager sharedInstance].database registeredExtension:OTRChatDatabaseViewExtensionName]) {
+        return YES;
+    }
     
     YapDatabaseViewBlockType groupingBlockType;
     YapDatabaseViewGroupingWithObjectBlock groupingBlock;
@@ -198,25 +201,13 @@ NSString *OTRPushAccountGroup = @"Account";
     options.allowedCollections = [NSSet setWithObject:[OTRMessage collection]];
     
     
-    YapDatabaseView *view = [[[OTRDatabaseManager sharedInstance].database registeredExtensions] objectForKey:OTRChatDatabaseViewExtensionName];
-    int version = 1;
-    if (view) {
-        [[OTRDatabaseManager sharedInstance].database unregisterExtension:OTRChatDatabaseViewExtensionName];
-        version = [view.versionTag intValue];
-        version += 1;
-    }
-    
-    
-    
-    view = [[YapDatabaseView alloc] initWithGroupingBlock:groupingBlock
+    YapDatabaseView *view = [[YapDatabaseView alloc] initWithGroupingBlock:groupingBlock
                                  groupingBlockType:groupingBlockType
                                       sortingBlock:sortingBlock
                                   sortingBlockType:sortingBlockType
-                                        versionTag:[NSString stringWithFormat:@"%d",version]
+                                        versionTag:@""
                                            options:options];
     return [[OTRDatabaseManager sharedInstance].database registerExtension:view withName:OTRChatDatabaseViewExtensionName];
-  
-    
 }
 
 + (BOOL)registerBuddyDatabaseView

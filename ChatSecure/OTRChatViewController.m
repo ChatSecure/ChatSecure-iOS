@@ -95,8 +95,6 @@ typedef NS_ENUM(NSInteger, OTRChatViewTags) {
         self.titleView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
         self.navigationItem.titleView = self.titleView;
         self.databaseConnection = [OTRDatabaseManager sharedInstance].mainThreadReadOnlyDatabaseConnection;
-        [self.databaseConnection beginLongLivedReadTransaction];
-        
     }
     return self;
 }

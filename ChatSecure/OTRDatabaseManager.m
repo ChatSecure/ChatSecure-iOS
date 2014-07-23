@@ -261,12 +261,15 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
     if (success) success = [OTRDatabaseView registerPushView];
     if (success) success = [self setupSecondaryIndexes];
     
+    
+    
+    [self.mainThreadReadOnlyDatabaseConnection enableExceptionsForImplicitlyEndingLongLivedReadTransaction];
+    [self.mainThreadReadOnlyDatabaseConnection beginLongLivedReadTransaction];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(yapDatabaseModified:)
                                                  name:YapDatabaseModifiedNotification
                                                object:self.database];
-    
-    [self.mainThreadReadOnlyDatabaseConnection beginLongLivedReadTransaction];
     
     if (self.database && success) {
         return YES;
