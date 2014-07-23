@@ -42,7 +42,9 @@ static OTRProtocolManager *sharedManager = nil;
 @property (nonatomic) NSUInteger numberOfConnectedProtocols;
 @property (nonatomic) NSUInteger numberOfConnectingProtocols;
 @property (nonatomic, strong) OTRPushManager *pushManager;
-@property (nonatomic, strong) NSDictionary * protocolManagerDictionary;
+@property (nonatomic, strong) NSMutableDictionary * protocolManagerDictionary;
+
+@property (nonatomic) dispatch_queue_t internalQueue;
 
 @end
 
@@ -56,23 +58,41 @@ static OTRProtocolManager *sharedManager = nil;
         self.numberOfConnectedProtocols = 0;
         self.numberOfConnectingProtocols = 0;
         self.encryptionManager = [[OTREncryptionManager alloc] init];
-        self.protocolManagerDictionary = [NSDictionary new];
+        self.protocolManagerDictionary = [NSMutableDictionary new];
     }
     return self;
 }
 
-- (void)removeProtocolManagerForAccount:(OTRAccount *)account
+- (void)removeProtocolForAccount:(OTRAccount *)account
 {
-    NSMutableDictionary *mutableCopy = [self.protocolManagerDictionary mutableCopy];
-    [mutableCopy removeObjectForKey:account.uniqueId];
-    self.protocolManagerDictionary = [mutableCopy copy];
+    @synchronized(self.protocolManagerDictionary) {
+        id protocol = self.protocolManagerDictionary[account.uniqueId];
+        if (protocol) {
+            [protocol removeObserver:self forKeyPath:NSStringFromSelector(@selector(connectionStatus))];
+        }
+        [self.protocolManagerDictionary removeObjectForKey:account.uniqueId];
+    }
 }
 
 - (void)addProtocol:(id)protocol forAccount:(OTRAccount *)account
 {
-    NSMutableDictionary *mutableCopy = [self.protocolManagerDictionary mutableCopy];
-    [mutableCopy setObject:protocol forKey:account.uniqueId];
-    self.protocolManagerDictionary = [mutableCopy copy];
+    @synchronized(self.protocolManagerDictionary){
+        [self.protocolManagerDictionary setObject:protocol forKey:account.uniqueId];
+        [protocol addObserver:self forKeyPath:NSStringFromSelector(@selector(connectionStatus)) options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:NULL];
+    }
+}
+
+- (BOOL)existsProtocolForAccount:(OTRAccount *)account
+{
+    if ([account.uniqueId length]) {
+        @synchronized(self.protocolManagerDictionary) {
+            if ([self.protocolManagerDictionary objectForKey:account.uniqueId]) {
+                return YES;
+            }
+        }
+    }
+    
+    return NO;
 }
 
 #pragma mark -
@@ -110,7 +130,6 @@ static OTRProtocolManager *sharedManager = nil;
         protocol = [[[account protocolClass] alloc] initWithAccount:account];
         if (protocol && account.uniqueId) {
             [self addProtocol:protocol forAccount:account];
-            [protocol addObserver:self forKeyPath:NSStringFromSelector(@selector(connectionStatus)) options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:NULL];
         }
     }
     return protocol;
@@ -142,6 +161,15 @@ static OTRProtocolManager *sharedManager = nil;
     [accounts enumerateObjectsUsingBlock:^(OTRAccount * account, NSUInteger idx, BOOL *stop) {
         [self loginAccount:account];
     }];
+}
+
+- (void)disconnectAllAccounts
+{
+    @synchronized(self.protocolManagerDictionary) {
+        [self.protocolManagerDictionary enumerateKeysAndObjectsUsingBlock:^(id key, id <OTRProtocol> protocol, BOOL *stop) {
+            [protocol disconnect];
+        }];
+    }
 }
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context

@@ -35,14 +35,16 @@
 @property (nonatomic, readonly) NSUInteger numberOfConnectingProtocols;
 
 @property (nonatomic, strong) OTREncryptionManager *encryptionManager;
-@property (nonatomic, strong, readonly) NSDictionary * protocolManagerDictionary;
 
-- (id <OTRProtocol>) protocolForAccount:(OTRAccount *)account;
-- (void)removeProtocolManagerForAccount:(OTRAccount *)account;
+- (BOOL)existsProtocolForAccount:(OTRAccount *)account;
+- (id <OTRProtocol>)protocolForAccount:(OTRAccount *)account;
+- (void)removeProtocolForAccount:(OTRAccount *)account;
+
 - (BOOL)isAccountConnected:(OTRAccount *)account;
 
 - (void)loginAccount:(OTRAccount *)account;
 - (void)loginAccounts:(NSArray *)accounts;
+- (void)disconnectAllAccounts;
 
 - (void)sendMessage:(OTRMessage *)message;
 

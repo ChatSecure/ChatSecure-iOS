@@ -193,9 +193,11 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
             
             [accountCell setAccount:account];
             
-            id <OTRProtocol> protocol = [OTRProtocolManager sharedInstance].protocolManagerDictionary[account.uniqueId];
-            if (protocol) {
-                [accountCell setConnectedText:[protocol connectionStatus]];
+            if ([[OTRProtocolManager sharedInstance] existsProtocolForAccount:account]) {
+                id <OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:account];
+                if (protocol) {
+                    [accountCell setConnectedText:[protocol connectionStatus]];
+                }
             }
             else {
                 [accountCell setConnectedText:OTRProtocolConnectionStatusDisconnected];

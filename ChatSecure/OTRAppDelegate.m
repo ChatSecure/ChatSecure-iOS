@@ -246,12 +246,7 @@
         [self.backgroundTimer invalidate];
         self.backgroundTimer = nil;
         
-        OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
-        for(id key in protocolManager.protocolManagerDictionary)
-        {
-            id <OTRProtocol> protocol = [protocolManager.protocolManagerDictionary objectForKey:key];
-            [protocol disconnect];
-        }
+        [[OTRProtocolManager sharedInstance] disconnectAllAccounts];
         //FIXME [OTRManagedAccount resetAccountsConnectionStatus];
         
         
@@ -305,13 +300,8 @@
      */
     
     
-    OTRProtocolManager *protocolManager = [OTRProtocolManager sharedInstance];
+    [[OTRProtocolManager sharedInstance] disconnectAllAccounts];
     
-    for(id key in [protocolManager.protocolManagerDictionary allKeys])
-    {
-        id <OTRProtocol> protocol = [protocolManager.protocolManagerDictionary objectForKey:key];
-        [protocol disconnect];
-    }
     //FIXME? [OTRManagedAccount resetAccountsConnectionStatus];
     //[OTRUtilities deleteAllBuddiesAndMessages];
 }
