@@ -99,7 +99,7 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     self.tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
     [self.view addSubview:self.tableView];
     
-    UIBarButtonItem *aboutButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"about_icon.png"] style:UIBarButtonItemStylePlain target:self action:@selector(showAboutScreen)];
+    UIBarButtonItem *aboutButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"OTRInfoIcon"] style:UIBarButtonItemStylePlain target:self action:@selector(showAboutScreen)];
 
     self.navigationItem.rightBarButtonItem = aboutButton;
 }
