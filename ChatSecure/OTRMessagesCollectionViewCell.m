@@ -130,7 +130,7 @@
         self.textView.textColor = [UIColor whiteColor];
     }
     if (message.isTransportedSecurely) {
-        self.lockImageView.image = [UIImage imageNamed:@"OTRLockIcon"];
+        self.lockImageView.image = nil;
     } else {
         self.lockImageView.image = [UIImage imageNamed:@"OTRUnlockIcon"];
     }
