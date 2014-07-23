@@ -54,7 +54,6 @@ extern const struct OTRBuddyEdges {
 @property (nonatomic, strong) NSString *displayName;
 @property (nonatomic, strong) NSString *composingMessageString;
 @property (nonatomic, strong) NSString *statusMessage;
-@property (nonatomic, strong) NSDate *lastMessageDate;
 @property (nonatomic) OTRChatState chatState;
 @property (nonatomic) OTRChatState lastSentChatState;
 @property (nonatomic) OTRBuddyStatus status;
