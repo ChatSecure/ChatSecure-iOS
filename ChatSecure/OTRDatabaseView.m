@@ -84,7 +84,18 @@ NSString *OTRPushAccountGroup = @"Account";
                 OTRBuddy *buddy1 = (OTRBuddy *)obj1;
                 OTRBuddy *buddy2 = (OTRBuddy *)obj2;
                 
-                return [buddy2.lastMessageDate compare:buddy1.lastMessageDate];
+                __block OTRMessage *lastMessage1 = nil;
+                __block OTRMessage *lastMessage2 = nil;
+                
+                [[OTRDatabaseManager sharedInstance].mainThreadReadOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+                    lastMessage1 = [buddy1 lastMessageWithTransaction:transaction];
+                }];
+                
+                [[OTRDatabaseManager sharedInstance].mainThreadReadOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+                    lastMessage2 = [buddy2 lastMessageWithTransaction:transaction];
+                }];
+                
+                return [lastMessage2.date compare:lastMessage1.date];
             }
         }
         return NSOrderedSame;

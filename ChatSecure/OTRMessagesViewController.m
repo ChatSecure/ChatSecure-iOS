@@ -649,16 +649,10 @@ typedef NS_ENUM(int, OTRDropDownType) {
 {
     OTRMessagesCollectionViewCell *cell = (OTRMessagesCollectionViewCell *)[super collectionView:collectionView cellForItemAtIndexPath:indexPath];
     
-    
     OTRMessage *message = [self messageAtIndexPath:indexPath];
+    [cell setMessage:message];
     
-    if (message.isIncoming) {
-        cell.textView.textColor = [UIColor blackColor];
-    }
-    else {
-        cell.textView.textColor = [UIColor whiteColor];
-    }
-    
+    // Do not allow clickable links for Tor accounts to prevent information leakage
     if ([self.account isKindOfClass:[OTRXMPPTorAccount class]]) {
         cell.textView.dataDetectorTypes = UIDataDetectorTypeNone;
     }
@@ -666,23 +660,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
         cell.textView.dataDetectorTypes = UIDataDetectorTypeAll;
     }
     
-    
-    
-    if (message.isTransportedSecurely) {
-        cell.lockImageView.image = [UIImage imageNamed:@"lock"];
-    }
-    else {
-        cell.lockImageView.image = nil;
-    }
-    
-    if (message.error) {
-        cell.errorImageView.image = [OTRImages warningImage];
-    }
-    else {
-        cell.errorImageView.image = nil;
-    }
-    
-    //[cell updateConstraintsIfNeeded];
     return cell;
 }
 

@@ -7,23 +7,18 @@
 //
 
 #import "OTRMessagesCollectionViewCell.h"
+#import "OTRMessage.h"
+#import "OTRImages.h"
 
 @interface OTRMessagesCollectionViewCell ()
 
 @property (nonatomic, weak) IBOutlet UIView *leftRightView;
-
 @property (nonatomic, strong) UIImageView *errorImageView;
-
 @property (nonatomic, strong) UIImageView *deliveredImageView;
-
 @property (nonatomic, strong) UIImageView *lockImageView;
-
 @property (nonatomic, strong) NSLayoutConstraint *lockWidthConstraint;
-
 @property (nonatomic, strong) NSLayoutConstraint *deliveredWidthConstraint;
-
 @property (nonatomic, strong) NSLayoutConstraint *errorWidthConstraint;
-
 @property (nonatomic, strong) UITapGestureRecognizer *tap;
 
 @end
@@ -43,7 +38,7 @@
     
     self.lockImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
     self.lockImageView.translatesAutoresizingMaskIntoConstraints = NO;
-    
+    self.lockImageView.contentMode = UIViewContentModeScaleAspectFit;
     
     [self.leftRightView addSubview:self.errorImageView];
     [self.leftRightView addSubview:self.deliveredImageView];
@@ -125,6 +120,24 @@
     }
     else {
         self.deliveredWidthConstraint.constant = 24.0;
+    }
+}
+
+- (void) setMessage:(OTRMessage*)message {
+    if (message.isIncoming) {
+        self.textView.textColor = [UIColor blackColor];
+    } else {
+        self.textView.textColor = [UIColor whiteColor];
+    }
+    if (message.isTransportedSecurely) {
+        self.lockImageView.image = nil;
+    } else {
+        self.lockImageView.image = [UIImage imageNamed:@"OTRUnlockIcon"];
+    }
+    if (message.error) {
+        self.errorImageView.image = [OTRImages warningImage];
+    } else {
+        self.errorImageView.image = nil;
     }
 }
 

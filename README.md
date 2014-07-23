@@ -128,6 +128,7 @@ Thank you to everyone who helped this project become a reality! This project is 
 
 * [Nick Hum](http://nickhum.com/) - awesome icon.
 * [Glyphish](http://glyphish.com/) - icons used on the tab bar.
+* [Icons8](http://icons8.com/license) - Various new "iOS 7"-style icons
 * [Adium](https://adium.im/) - lock/unlock icon used in chat window, status gems.
 * [Sergio Sánchez López](https://www.iconfinder.com/icons/7043/aim_icon) - AIM protocol icon.
 * [Mateo Zlatar](http://thenounproject.com/mateozlatar/) - [World Icon](http://thenounproject.com/term/world/6502/)
