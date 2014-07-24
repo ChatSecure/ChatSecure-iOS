@@ -889,6 +889,7 @@ didTapLoadEarlierMessagesButton:(UIButton *)sender
 #pragma mark UISplitViewControllerDelegate methods
 
 - (void) splitViewController:(UISplitViewController *)svc willHideViewController:(UIViewController *)aViewController withBarButtonItem:(UIBarButtonItem *)barButtonItem forPopoverController:(UIPopoverController *)pc {
+    barButtonItem.title = aViewController.title;
     self.navigationItem.leftBarButtonItem = barButtonItem;
 }
 
