@@ -105,26 +105,14 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    __weak OTRMessagesViewController *welf = self;
-    [self.uiDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        [welf.messageMappings updateWithTransaction:transaction];
-        [welf.buddyMappings updateWithTransaction:transaction];
-    }];
-    [self.collectionView reloadData];
     [super viewWillAppear:animated];
-    self.collectionView.collectionViewLayout.springinessEnabled = NO;
-    self.inputToolbar.contentView.leftBarButtonItem = nil;
     
-    if (self.account) {
-        [[OTRKit sharedInstance] checkIfGeneratingKeyForAccountName:self.account.username protocol:self.account.protocolTypeString completion:^(BOOL isGeneratingKey) {
-            if (isGeneratingKey) {
-                [self refreshLockButton];
-            }
-        }];
-    }
+    [self refreshLockButton];
+    
+    __weak OTRMessagesViewController *welf = self;
     
     self.textViewNotificationObject = [[NSNotificationCenter defaultCenter] addObserverForName:UITextViewTextDidChangeNotification object:self.inputToolbar.contentView.textView queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
-        [self textViewDidChangeNotifcation:note];
+        [welf textViewDidChangeNotifcation:note];
     }];
     
     self.databaseConnectionDidUpdateNotificationObject = [[NSNotificationCenter defaultCenter] addObserverForName:OTRUIDatabaseConnectionDidUpdateNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
@@ -137,8 +125,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }];
     
     void (^refreshGeneratingLock)(OTRAccount *) = ^void(OTRAccount * account) {
-        
-        if ([account.uniqueId isEqualToString:self.account.uniqueId]) {
+        if ([account.uniqueId isEqualToString:welf.account.uniqueId]) {
             [welf refreshLockButton];
         }
     };
@@ -150,11 +137,10 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }];
    
     self.messageStateDidChangeNotificationObject = [[NSNotificationCenter defaultCenter] addObserverForName:OTRMessageStateDidChangeNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
-        
         if ([note.object isKindOfClass:[OTRBuddy class]]) {
             OTRBuddy *notificationBuddy = note.object;
-            if ([notificationBuddy.uniqueId isEqualToString:self.buddy.uniqueId]) {
-                [self refreshLockButton];
+            if ([notificationBuddy.uniqueId isEqualToString:welf.buddy.uniqueId]) {
+                [welf refreshLockButton];
             }
         }
     }];
@@ -185,8 +171,20 @@ typedef NS_ENUM(int, OTRDropDownType) {
     return _uiDatabaseConnection;
 }
 
+- (NSArray*) indexPathsToCount:(NSUInteger)count {
+    NSMutableArray *indexPaths = [NSMutableArray arrayWithCapacity:count];
+    for (NSUInteger i = 0; i < count; i++) {
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
+        [indexPaths addObject:indexPath];
+    }
+    return indexPaths;
+}
+
 - (void)setBuddy:(OTRBuddy *)buddy
 {
+    NSUInteger existingItemsCount = [self.collectionView numberOfItemsInSection:0];
+    NSArray *indexPathsToDelete = [self indexPathsToCount:existingItemsCount];
+    
     if ([self.buddy.uniqueId isEqualToString:buddy.uniqueId]) {
         // really same buddy with new info like chatState, EncryptionState, Name
         
@@ -232,9 +230,25 @@ typedef NS_ENUM(int, OTRDropDownType) {
         }
     }
     
-    
     //refresh other parts of the view
     
+    __weak OTRMessagesViewController *welf = self;
+    [self.uiDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        [welf.messageMappings updateWithTransaction:transaction];
+        [welf.buddyMappings updateWithTransaction:transaction];
+    }];
+    
+    NSUInteger itemsToAddCount = [self.messageMappings numberOfItemsInSection:0];
+    NSArray *indexPathsToAdd = [self indexPathsToCount:itemsToAddCount];
+    
+    [self.collectionView performBatchUpdates:^{
+        [self.collectionView deleteItemsAtIndexPaths:indexPathsToDelete];
+        [self.collectionView insertItemsAtIndexPaths:indexPathsToAdd];
+    } completion:nil];
+    
+    [self.collectionView.collectionViewLayout invalidateLayout];
+    [self.collectionView reloadData];
+    [self refreshLockButton];
 }
 
 - (void)refreshTitleView
@@ -873,16 +887,12 @@ didTapLoadEarlierMessagesButton:(UIButton *)sender
             if (self.buddy.chatState != updatedBuddy.chatState) {
                 self.buddy = updatedBuddy;
             }
-            
-            
         }
     }
     
     if ([rowChanges count]) {
         [self finishReceivingMessage];
-        //[self.collectionView.collectionViewLayout invalidateLayoutWithContext:[JSQMessagesCollectionViewFlowLayoutInvalidationContext context]];
     }
-    
 }
 
 @end
