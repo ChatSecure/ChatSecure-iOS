@@ -90,7 +90,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     self.collectionView.collectionViewLayout.outgoingAvatarViewSize = CGSizeZero;
     
     ////// Lock Button //////
-    [self setupLockButotn];
+    [self setupLockButton];
     
      ////// TitleView //////
     self.titleView = [[OTRTitleSubtitleView alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
@@ -182,10 +182,11 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (void)setBuddy:(OTRBuddy *)buddy
 {
-    if ([self.buddy.uniqueId isEqualToString:buddy.uniqueId]) {
+    OTRBuddy *originalBuddy = self.buddy;
+    _buddy = buddy;
+    
+    if ([originalBuddy.uniqueId isEqualToString:buddy.uniqueId]) {
         // really same buddy with new info like chatState, EncryptionState, Name
-        
-        _buddy = buddy;
         
         [self refreshLockButton];
         
@@ -195,14 +196,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
         else {
             self.showTypingIndicator = NO;
         }
-        
-        [self refreshTitleView];
-    }
-    else {
+    } else {
         //different buddy
         [self saveCurrentMessageText];
-        _buddy = buddy;
-        
         
         if (self.buddy) {
             NSParameterAssert(self.buddy.uniqueId != nil);
@@ -218,8 +214,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
             if ([self.account isKindOfClass:[OTRXMPPAccount class]]) {
                 self.xmppManager = (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
             }
-        }
-        else {
+        } else {
             self.messageMappings = nil;
             self.buddyMappings = nil;
             self.account = nil;
@@ -238,6 +233,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     [self.collectionView.collectionViewLayout invalidateLayout];
     [self.collectionView reloadData];
     [self refreshLockButton];
+    [self refreshTitleView];
 }
 
 - (void)refreshTitleView
@@ -278,6 +274,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (void)didTapTitleView:(id)sender
 {
+#ifndef CHATSECURE_PUSH
+    return;
+#endif
     void (^showPushDropDown)(void) = ^void(void) {
         UIButton *requestPushTokenButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         [requestPushTokenButton setTitle:@"Request" forState:UIControlStateNormal];
@@ -306,7 +305,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
             [self hideDropdownAnimated:YES completion:showPushDropDown];
         }
     }
-    
 }
 #pragma - mark Push Methods
 
@@ -327,7 +325,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 #pragma - mark lockButton Methods
 
-- (void)setupLockButotn
+- (void)setupLockButton
 {
     __weak OTRMessagesViewController *welf = self;
     self.lockButton = [OTRLockButton lockButtonWithInitailLockStatus:OTRLockStatusUnlocked withBlock:^(OTRLockStatus currentStatus) {
@@ -590,6 +588,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (void)saveCurrentMessageText
 {
+    if (!self.buddy) {
+        return;
+    }
     self.buddy.composingMessageString = self.inputToolbar.contentView.textView.text;
     if(![self.buddy.composingMessageString length])
     {
@@ -609,6 +610,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
         NSUInteger section = indexPath.section;
         NSUInteger numberOfItemsInSection = [self.messageMappings numberOfItemsInSection:section];
         
+        NSLog(@"Attempting to fetch row %d out of total numberOfMessages: %d", (int)row, (int)numberOfItemsInSection);
+
         NSAssert(row < numberOfItemsInSection, @"Cannot fetch message because row %d is >= numberOfItemsInSection %d", (int)row, (int)numberOfItemsInSection);
         
         message = [viewTransaction objectAtRow:row inSection:section withMappings:self.messageMappings];
@@ -699,7 +702,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
     NSInteger numberOfMessages = [self.messageMappings numberOfItemsInSection:section];
-    NSLog(@"numberOfMessages: %d", (int)numberOfMessages);
+    NSLog(@"collectionView:numberOfItemsInSection: %d", (int)numberOfMessages);
     return numberOfMessages;
 }
 
@@ -889,6 +892,7 @@ didTapLoadEarlierMessagesButton:(UIButton *)sender
 #pragma mark UISplitViewControllerDelegate methods
 
 - (void) splitViewController:(UISplitViewController *)svc willHideViewController:(UIViewController *)aViewController withBarButtonItem:(UIBarButtonItem *)barButtonItem forPopoverController:(UIPopoverController *)pc {
+    barButtonItem.title = aViewController.title;
     self.navigationItem.leftBarButtonItem = barButtonItem;
 }
 

@@ -6,20 +6,6 @@
 	objectVersion = 46;
 	objects = {
 
-/* Begin PBXAggregateTarget section */
-		63C1062316CB108A00D2C860 /* Mogenerator */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = 63C1062416CB108A00D2C860 /* Build configuration list for PBXAggregateTarget "Mogenerator" */;
-			buildPhases = (
-				63C1062716CB108E00D2C860 /* ShellScript */,
-			);
-			dependencies = (
-			);
-			name = Mogenerator;
-			productName = Mogenerator;
-		};
-/* End PBXAggregateTarget section */
-
 /* Begin PBXBuildFile section */
 		63009E9718D122A70058976C /* OTRCreateAccountChooserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63009E9618D122A70058976C /* OTRCreateAccountChooserViewController.m */; };
 		63009E9A18D122D30058976C /* OTRXMPPCreateAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63009E9918D122D30058976C /* OTRXMPPCreateAccountViewController.m */; };
@@ -337,13 +323,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		639F08B21752AEF5005C408D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D9F9376F13F44BD3009A3D84 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 63C1062316CB108A00D2C860;
-			remoteInfo = Mogenerator;
-		};
 		D9D370E7169D20C20086F358 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D9D370E0169D20C20086F358 /* openssl.xcodeproj */;
@@ -2464,7 +2443,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				639F08B31752AEF5005C408D /* PBXTargetDependency */,
 			);
 			name = ChatSecure;
 			productName = ChatSecure;
@@ -2551,7 +2529,6 @@
 			projectRoot = "";
 			targets = (
 				D9F9377713F44BD3009A3D84 /* ChatSecure */,
-				63C1062316CB108A00D2C860 /* Mogenerator */,
 			);
 		};
 /* End PBXProject section */
@@ -2613,19 +2590,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "cd \"${SRCROOT}/ChatSecure\"\npython StringsConverter.py";
-		};
-		63C1062716CB108E00D2C860 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/mogenerator --template-var arc=true -m \"ChatSecure/ChatSecure.xcdatamodeld/ChatSecure 4.xcdatamodel/\" -M \"ChatSecure/Model/Machine\" -H \"ChatSecure/Model/Human\"";
 		};
 		DCD88673560F4C18AC60C52B /* Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2927,14 +2891,6 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXTargetDependency section */
-		639F08B31752AEF5005C408D /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 63C1062316CB108A00D2C860 /* Mogenerator */;
-			targetProxy = 639F08B21752AEF5005C408D /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
 /* Begin PBXVariantGroup section */
 		D9D8D1F71531056300F9E8D3 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
@@ -2988,20 +2944,6 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		63C1062516CB108A00D2C860 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		63C1062616CB108A00D2C860 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
 		D9F937A013F44BD3009A3D84 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -3137,15 +3079,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		63C1062416CB108A00D2C860 /* Build configuration list for PBXAggregateTarget "Mogenerator" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				63C1062516CB108A00D2C860 /* Debug */,
-				63C1062616CB108A00D2C860 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		D9F9377213F44BD3009A3D84 /* Build configuration list for PBXProject "ChatSecure" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
