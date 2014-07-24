@@ -46,7 +46,7 @@
 }
 
 - (void)finishedAllSteps {
-    [OTRAppDelegate showConversationViewController];
+    [[OTRAppDelegate appDelegate] showConversationViewController];
 }
 
 #pragma - mark RMStepsBarDelegate

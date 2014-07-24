@@ -78,8 +78,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
     [self.collectionView registerNib:[OTRMessagesCollectionViewCellOutgoing nib] forCellWithReuseIdentifier:[OTRMessagesCollectionViewCellOutgoing cellReuseIdentifier]];
     [self.collectionView registerNib:[OTRMessagesCollectionViewCellIncoming nib] forCellWithReuseIdentifier:[OTRMessagesCollectionViewCellIncoming cellReuseIdentifier]];
     
-    
-    self.automaticallyScrollsToMostRecentMessage = YES;
+
+    self.automaticallyScrollsToMostRecentMessage = NO;
     
      ////// bubbles //////
     self.outgoingBubbleImageView = [JSQMessagesBubbleImageFactory outgoingMessageBubbleImageViewWithColor:[UIColor jsq_messageBubbleBlueColor]];
@@ -182,9 +182,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (void)setBuddy:(OTRBuddy *)buddy
 {
-    NSUInteger existingItemsCount = [self.collectionView numberOfItemsInSection:0];
-    NSArray *indexPathsToDelete = [self indexPathsToCount:existingItemsCount];
-    
     if ([self.buddy.uniqueId isEqualToString:buddy.uniqueId]) {
         // really same buddy with new info like chatState, EncryptionState, Name
         
@@ -237,14 +234,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
         [welf.messageMappings updateWithTransaction:transaction];
         [welf.buddyMappings updateWithTransaction:transaction];
     }];
-    
-    NSUInteger itemsToAddCount = [self.messageMappings numberOfItemsInSection:0];
-    NSArray *indexPathsToAdd = [self indexPathsToCount:itemsToAddCount];
-    
-    [self.collectionView performBatchUpdates:^{
-        [self.collectionView deleteItemsAtIndexPaths:indexPathsToDelete];
-        [self.collectionView insertItemsAtIndexPaths:indexPathsToAdd];
-    } completion:nil];
     
     [self.collectionView.collectionViewLayout invalidateLayout];
     [self.collectionView reloadData];
@@ -606,7 +595,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
     {
         [self.xmppManager sendChatState:kOTRChatStateInactive withBuddyID:self.buddy.uniqueId];
     }
-    [self finishSendingMessage];
 }
 
 - (OTRMessage *)messageAtIndexPath:(NSIndexPath *)indexPath
@@ -619,8 +607,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
         NSParameterAssert(indexPath != nil);
         NSUInteger row = indexPath.row;
         NSUInteger section = indexPath.section;
+        NSUInteger numberOfItemsInSection = [self.messageMappings numberOfItemsInSection:section];
         
-        NSAssert(row < [self.messageMappings numberOfItemsInSection:section], @"Cannot fetch message because row is >= numberOfItemsInSection");
+        NSAssert(row < numberOfItemsInSection, @"Cannot fetch message because row %d is >= numberOfItemsInSection %d", (int)row, (int)numberOfItemsInSection);
         
         message = [viewTransaction objectAtRow:row inSection:section withMappings:self.messageMappings];
         NSParameterAssert(message != nil);
@@ -709,7 +698,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
 #pragma mark - UICollectionView DataSource
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return [self.messageMappings numberOfItemsInSection:section];
+    NSInteger numberOfMessages = [self.messageMappings numberOfItemsInSection:section];
+    NSLog(@"numberOfMessages: %d", (int)numberOfMessages);
+    return numberOfMessages;
 }
 
 #pragma - mark JSQMessagesCollectionViewCellDelegate Methods
@@ -893,6 +884,16 @@ didTapLoadEarlierMessagesButton:(UIButton *)sender
     if ([rowChanges count]) {
         [self finishReceivingMessage];
     }
+}
+
+#pragma mark UISplitViewControllerDelegate methods
+
+- (void) splitViewController:(UISplitViewController *)svc willHideViewController:(UIViewController *)aViewController withBarButtonItem:(UIBarButtonItem *)barButtonItem forPopoverController:(UIPopoverController *)pc {
+    self.navigationItem.leftBarButtonItem = barButtonItem;
+}
+
+- (void) splitViewController:(UISplitViewController *)svc willShowViewController:(UIViewController *)aViewController invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem {
+    self.navigationItem.leftBarButtonItem = nil;
 }
 
 @end

@@ -82,19 +82,31 @@
     
     UIViewController *rootViewController = nil;
     
-    //OTROnboardingStepsController *onboardingStepsController = nil;
+    self.settingsViewController = [[OTRSettingsViewController alloc] init];
+    self.conversationViewController = [[OTRConversationViewController alloc] init];
+    self.messagesViewController = [OTRMessagesViewController messagesViewController];
     
     if ([[OTRDatabaseManager sharedInstance] existsYapDatabase] && ![[OTRDatabaseManager sharedInstance] hasPassphrase]) {
         // user needs to enter password for current database
         rootViewController = [[OTRDatabaseUnlockViewController alloc] init];
-        
     }
     else if ([[OTRDatabaseManager sharedInstance] existsYapDatabase] && [[OTRDatabaseManager sharedInstance] hasPassphrase]) {
         
          ////// Normal launch to conversationViewController //////
         [[OTRDatabaseManager sharedInstance] setupDatabaseWithName:OTRYapDatabaseName];
-
-        rootViewController = [OTRAppDelegate conversationViewController];
+        
+        UINavigationController *conversationListNavController = [[UINavigationController alloc] initWithRootViewController:self.conversationViewController];
+        
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+            rootViewController = conversationListNavController;
+        } else {
+            UINavigationController *messagesNavController = [[UINavigationController alloc ]initWithRootViewController:self.messagesViewController];
+            UISplitViewController *splitViewController = [[UISplitViewController alloc] init];
+            splitViewController.viewControllers = [NSArray arrayWithObjects:conversationListNavController, messagesNavController, nil];
+            splitViewController.delegate = self.messagesViewController;
+            rootViewController = splitViewController;
+            splitViewController.title = CHAT_STRING;
+        }
         
 #if CHATSECURE_DEMO
         [self performSelector:@selector(loadDemoData) withObject:nil afterDelay:10];
@@ -134,8 +146,6 @@
     
     
     //[OTRAppVersionManager applyAppUpdatesForCurrentAppVersion];
-    
-    
 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
@@ -160,35 +170,9 @@
 #endif
 }
 
-+ (UIViewController *)conversationViewController
+- (void)showConversationViewController
 {
-    UIViewController *rootViewController = nil;
-    
-    [self appDelegate].settingsViewController = [[OTRSettingsViewController alloc] init];
-    
-    OTRConversationViewController * conversationViewController = [[OTRConversationViewController alloc] init];
-    
-    UINavigationController *buddyListNavController = [[UINavigationController alloc] initWithRootViewController:conversationViewController];
-    //[buddyListNavController setNavigationBarHidden:NO];
-    
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-        rootViewController = buddyListNavController;
-    } else {
-        OTRMessagesViewController *messagesViewController = [OTRMessagesViewController messagesViewController];
-        UINavigationController *chatNavController = [[UINavigationController alloc ]initWithRootViewController:messagesViewController];
-        UISplitViewController *splitViewController = [[UISplitViewController alloc] init];
-        splitViewController.viewControllers = [NSArray arrayWithObjects:buddyListNavController, chatNavController, nil];
-        splitViewController.delegate = messagesViewController;
-        rootViewController = splitViewController;
-        splitViewController.title = CHAT_STRING;
-    }
-    
-    return rootViewController;
-}
-
-+ (void)showConversationViewController
-{
-    [self appDelegate].window.rootViewController = [self conversationViewController];
+    self.window.rootViewController = self.conversationViewController;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
