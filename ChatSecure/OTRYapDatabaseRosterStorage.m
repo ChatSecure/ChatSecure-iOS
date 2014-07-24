@@ -18,7 +18,7 @@
 
 @interface OTRYapDatabaseRosterStorage ()
 
-@property (nonatomic, strong) YapDatabaseConnection *connection;
+@property (nonatomic, strong) YapDatabaseConnection *databaseConnection;
 @property (nonatomic, strong) NSString *accountUniqueId;
 
 @end
@@ -28,7 +28,7 @@
 -(id)init
 {
     if (self = [super init]) {
-        self.connection = [[OTRDatabaseManager sharedInstance] readWriteDatabaseConnection];
+        self.databaseConnection = [[OTRDatabaseManager sharedInstance] newConnection];
     }
     return self;
 }
@@ -38,7 +38,7 @@
 - (OTRXMPPAccount *)accountForStream:(XMPPStream *)stream
 {
     __block OTRXMPPAccount *account = nil;
-    [self.connection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         account = [OTRXMPPAccount accountForStream:stream transaction:transaction];
     }];
     return account;
@@ -47,7 +47,7 @@
 - (OTRXMPPBuddy *)buddyWithJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream
 {
     __block OTRXMPPBuddy *buddy = nil;
-    [self.connection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         buddy = [self buddyWithJID:jid xmppStream:stream transaction:transaction];
     }];
     return buddy;
@@ -61,7 +61,7 @@
     }
     __block OTRXMPPBuddy *buddy = nil;
     
-    buddy = [OTRXMPPBuddy fetchBuddyWithUsername:[jid bare] withAccountUniqueId:self.accountUniqueId transaction:transaction];
+    buddy = [[OTRXMPPBuddy fetchBuddyWithUsername:[jid bare] withAccountUniqueId:self.accountUniqueId transaction:transaction] copy];
     
     if (!buddy) {
         buddy = [[OTRXMPPBuddy alloc] init];
@@ -75,7 +75,7 @@
 - (BOOL)existsBuddyWithJID:(XMPPJID *)jid xmppStram:(XMPPStream *)stream
 {
     __block BOOL result = NO;
-    [self.connection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         OTRXMPPAccount *account = [OTRXMPPAccount accountForStream:stream transaction:transaction];
         OTRBuddy *buddy = [OTRXMPPBuddy fetchBuddyWithUsername:[jid bare] withAccountUniqueId:account.uniqueId transaction:transaction];
         
@@ -103,9 +103,9 @@
 
 - (void)updateBuddy:(OTRXMPPBuddy *)buddy withItem:(NSXMLElement *)item
 {
-    [self.connection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+    [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         
-        OTRXMPPBuddy *localBuddy = [OTRXMPPBuddy fetchObjectWithUniqueID:buddy.uniqueId transaction:transaction];
+        OTRXMPPBuddy *localBuddy = [[OTRXMPPBuddy fetchObjectWithUniqueID:buddy.uniqueId transaction:transaction] copy];
         if (!localBuddy) {
             localBuddy = buddy;
         }
@@ -165,7 +165,7 @@
     {
         if (buddy)
         {
-            [self.connection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+            [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
                 [transaction setObject:nil forKey:buddy.uniqueId inCollection:[OTRXMPPBuddy collection]];
             }];
         }
@@ -181,7 +181,7 @@
 {
     
     
-    [self.connection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+    [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         
         OTRXMPPBuddy *buddy = [self buddyWithJID:[presence from] xmppStream:stream transaction:transaction];
         
@@ -252,7 +252,7 @@
 - (NSArray *)jidsForXMPPStream:(XMPPStream *)stream
 {
     __block NSMutableArray *jidArray = [NSMutableArray array];
-    [self.connection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         [transaction enumerateKeysAndObjectsInCollection:[OTRXMPPBuddy collection] usingBlock:^(NSString *key, id object, BOOL *stop) {
             if ([object isKindOfClass:[OTRXMPPBuddy class]]) {
                 OTRXMPPBuddy *buddy = (OTRXMPPBuddy *)buddy;

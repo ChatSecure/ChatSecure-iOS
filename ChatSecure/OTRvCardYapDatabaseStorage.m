@@ -27,7 +27,7 @@
 {
     if (self = [super init]) {
         self.storageQueue = dispatch_queue_create("OTR.OTRvCardYapDatabaseStorage", NULL);
-        self.databaseConnection = [OTRDatabaseManager sharedInstance].readWriteDatabaseConnection;
+        self.databaseConnection = [[OTRDatabaseManager sharedInstance] newConnection];
     }
     return self;
 }
@@ -77,7 +77,7 @@
 - (void)clearvCardTempForJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream
 {
     [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        OTRXMPPBuddy *buddy = [self buddyWithJID:jid xmppStream:stream transaction:transaction];
+        OTRXMPPBuddy *buddy = [[self buddyWithJID:jid xmppStream:stream transaction:transaction] copy];
         buddy.vCardTemp = nil;
         
         [transaction setObject:buddy forKey:buddy.uniqueId inCollection:[OTRXMPPBuddy collection]];
@@ -120,7 +120,7 @@
 - (void)setvCardTemp:(XMPPvCardTemp *)vCardTemp forJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream
 {
     [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        OTRXMPPBuddy *buddy = [self buddyWithJID:jid xmppStream:stream transaction:transaction];
+        OTRXMPPBuddy *buddy = [[self buddyWithJID:jid xmppStream:stream transaction:transaction] copy];
         
         buddy.vCardTemp = vCardTemp;
         buddy.waitingForvCardTempFetch = NO;
@@ -157,7 +157,7 @@
     
     [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         
-        OTRXMPPBuddy * buddy = [self buddyWithJID:jid xmppStream:stream transaction:transaction];
+        OTRXMPPBuddy * buddy = [[self buddyWithJID:jid xmppStream:stream transaction:transaction] copy];
         if (!buddy.isWaitingForvCardTempFetch) {
             
             buddy.waitingForvCardTempFetch = YES;
