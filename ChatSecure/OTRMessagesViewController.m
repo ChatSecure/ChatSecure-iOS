@@ -40,7 +40,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 @property (nonatomic, strong) OTRAccount *account;
 
-@property (nonatomic, strong) YapDatabaseConnection *databaseConnection;
+@property (nonatomic, strong) YapDatabaseConnection *uiDatabaseConnection;
 @property (nonatomic, strong) YapDatabaseViewMappings *messageMappings;
 @property (nonatomic, strong) YapDatabaseViewMappings *buddyMappings;
 
@@ -59,6 +59,10 @@ typedef NS_ENUM(int, OTRDropDownType) {
 @end
 
 @implementation OTRMessagesViewController
+
+- (void) dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 
 - (void)viewDidLoad
 {
@@ -98,10 +102,15 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    __weak OTRMessagesViewController *welf = self;
+    [self.uiDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        [welf.messageMappings updateWithTransaction:transaction];
+        [welf.buddyMappings updateWithTransaction:transaction];
+    }];
+    [self.collectionView reloadData];
     [super viewWillAppear:animated];
     self.collectionView.collectionViewLayout.springinessEnabled = NO;
     self.inputToolbar.contentView.leftBarButtonItem = nil;
-    [self.collectionView reloadData];
     
     if (self.account) {
         [[OTRKit sharedInstance] checkIfGeneratingKeyForAccountName:self.account.username protocol:self.account.protocolTypeString completion:^(BOOL isGeneratingKey) {
@@ -111,19 +120,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
         }];
     }
     
-    
     self.textViewNotificationObject = [[NSNotificationCenter defaultCenter] addObserverForName:UITextViewTextDidChangeNotification object:self.inputToolbar.contentView.textView queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
         [self textViewDidChangeNotifcation:note];
-    }];
-    
-    __weak OTRMessagesViewController *welf = self;
-    [[NSNotificationCenter defaultCenter] addObserverForName:OTRUIDatabaseConnectionDidUpdateNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
-        [welf yapDatabaseModified:note];
-    }];
-    
-    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        [welf.messageMappings updateWithTransaction:transaction];
-        [welf.buddyMappings updateWithTransaction:transaction];
     }];
     
     void (^refreshGeneratingLock)(OTRAccount *) = ^void(OTRAccount * account) {
@@ -151,7 +149,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
                 [self refreshLockButton];
             }
         }
-        }];
+    }];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -159,19 +157,24 @@ typedef NS_ENUM(int, OTRDropDownType) {
     [super viewDidDisappear:animated];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self.textViewNotificationObject];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:OTRUIDatabaseConnectionDidUpdateNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:OTRMessageStateDidChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:OTRDidFinishGeneratingPrivateKeyNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:OTRWillStartGeneratingPrivateKeyNotification object:nil];
 }
 
-- (YapDatabaseConnection *)databaseConnection
+- (YapDatabaseConnection *)uiDatabaseConnection
 {
-    if (!_databaseConnection)
-    {
-        _databaseConnection = [OTRDatabaseManager sharedInstance].mainThreadReadOnlyDatabaseConnection;
+    NSAssert([NSThread isMainThread], @"Must access uiDatabaseConnection on main thread!");
+    if (!_uiDatabaseConnection) {
+        YapDatabase *database = [OTRDatabaseManager sharedInstance].database;
+        _uiDatabaseConnection = [database newConnection];
+        [_uiDatabaseConnection beginLongLivedReadTransaction];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(yapDatabaseModified:)
+                                                     name:YapDatabaseModifiedNotification
+                                                   object:database];
     }
-    return _databaseConnection;
+    return _uiDatabaseConnection;
 }
 
 - (void)setBuddy:(OTRBuddy *)buddy
@@ -199,10 +202,11 @@ typedef NS_ENUM(int, OTRDropDownType) {
         
         
         if (self.buddy) {
+            NSParameterAssert(self.buddy.uniqueId != nil);
             self.messageMappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[self.buddy.uniqueId] view:OTRChatDatabaseViewExtensionName];
             self.buddyMappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[self.buddy.uniqueId] view:OTRBuddyDatabaseViewExtensionName];
             
-            [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+            [self.uiDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
                 self.account = [self.buddy accountWithTransaction:transaction];
                 [self.messageMappings updateWithTransaction:transaction];
                 [self.buddyMappings updateWithTransaction:transaction];
@@ -586,8 +590,18 @@ typedef NS_ENUM(int, OTRDropDownType) {
 - (OTRMessage *)messageAtIndexPath:(NSIndexPath *)indexPath
 {
     __block OTRMessage *message = nil;
-    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        message = [[transaction ext:OTRChatDatabaseViewExtensionName] objectAtIndexPath:indexPath withMappings:self.messageMappings];
+    [self.uiDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        YapDatabaseViewTransaction *viewTransaction = [transaction ext:OTRChatDatabaseViewExtensionName];
+        NSParameterAssert(viewTransaction != nil);
+        NSParameterAssert(self.messageMappings != nil);
+        NSParameterAssert(indexPath != nil);
+        NSUInteger row = indexPath.row;
+        NSUInteger section = indexPath.section;
+        
+        NSAssert(row < [self.messageMappings numberOfItemsInSection:section], @"Cannot fetch message because row is >= numberOfItemsInSection");
+        
+        message = [viewTransaction objectAtRow:row inSection:section withMappings:self.messageMappings];
+        NSParameterAssert(message != nil);
     }];
     return message;
 }
@@ -824,18 +838,18 @@ didTapLoadEarlierMessagesButton:(UIButton *)sender
 {
     // Process the notification(s),
     // and get the change-set(s) as applies to my view and mappings configuration.
-    NSArray *notifications = notification.userInfo[@"notifications"];
+    NSArray *notifications = [self.uiDatabaseConnection beginLongLivedReadTransaction];
     
     NSArray *sectionChanges = nil;
     NSArray *rowChanges = nil;
     
-    [[self.databaseConnection ext:OTRChatDatabaseViewExtensionName] getSectionChanges:&sectionChanges
+    [[self.uiDatabaseConnection ext:OTRChatDatabaseViewExtensionName] getSectionChanges:&sectionChanges
                                                                            rowChanges:&rowChanges
                                                                      forNotifications:notifications
                                                                          withMappings:self.messageMappings];
     
     NSArray *buddyRowChanges = nil;
-    [[self.databaseConnection ext:OTRBuddyDatabaseViewExtensionName] getSectionChanges:nil
+    [[self.uiDatabaseConnection ext:OTRBuddyDatabaseViewExtensionName] getSectionChanges:nil
                                                                             rowChanges:&buddyRowChanges
                                                                       forNotifications:notifications
                                                                           withMappings:self.buddyMappings];
@@ -844,7 +858,7 @@ didTapLoadEarlierMessagesButton:(UIButton *)sender
     {
         if (rowChange.type == YapDatabaseViewChangeUpdate) {
             __block OTRBuddy *updatedBuddy = nil;
-            [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+            [self.uiDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
                 updatedBuddy = [[transaction ext:OTRBuddyDatabaseViewExtensionName] objectAtIndexPath:rowChange.indexPath withMappings:self.buddyMappings];
             }];
             

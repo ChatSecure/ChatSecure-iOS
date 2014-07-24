@@ -261,9 +261,6 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
     if (success) success = [OTRDatabaseView registerPushView];
     if (success) success = [self setupSecondaryIndexes];
     
-    
-    
-    [self.mainThreadReadOnlyDatabaseConnection enableExceptionsForImplicitlyEndingLongLivedReadTransaction];
     [self.mainThreadReadOnlyDatabaseConnection beginLongLivedReadTransaction];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
