@@ -340,7 +340,7 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 
 #pragma mark OTRSettingDelegate method
 
-- (void) refreshView 
+- (void)refreshView
 {
     [self.tableView reloadData];
 }
@@ -403,20 +403,6 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
                                                                                  rowChanges:&rowChanges
                                                                            forNotifications:notifications
                                                                                withMappings:self.mappings];
-    
-    // No need to update mappings.
-    // The above method did it automatically.
-    
-    if ([sectionChanges count] == 0 & [rowChanges count] == 0)
-    {
-        //FIXME why does this not work from the start why do I have to refresh here on first appearence
-        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationNone];
-        // Nothing has changed that affects our tableView
-        return;
-    }
-    
-    // Familiar with NSFetchedResultsController?
-    // Then this should look pretty familiar
     
     [self.tableView beginUpdates];
     

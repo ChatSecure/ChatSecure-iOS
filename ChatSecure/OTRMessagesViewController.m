@@ -48,6 +48,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
 @property (nonatomic, strong) UIImageView *incomingBubbleImageView;
 
 @property (nonatomic, weak) id textViewNotificationObject;
+@property (nonatomic, weak) id databaseConnectionDidUpdateNotificationObject;
+@property (nonatomic, weak) id didFinishGeneratingPrivateKeyNotificationObject;
+@property (nonatomic, weak) id messageStateDidChangeNotificationObject;
 
 @property (nonatomic, weak) OTRXMPPManager *xmppManager;
 
@@ -124,6 +127,15 @@ typedef NS_ENUM(int, OTRDropDownType) {
         [self textViewDidChangeNotifcation:note];
     }];
     
+    self.databaseConnectionDidUpdateNotificationObject = [[NSNotificationCenter defaultCenter] addObserverForName:OTRUIDatabaseConnectionDidUpdateNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
+        [welf yapDatabaseModified:note];
+    }];
+    
+    [self.uiDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        [welf.messageMappings updateWithTransaction:transaction];
+        [welf.buddyMappings updateWithTransaction:transaction];
+    }];
+    
     void (^refreshGeneratingLock)(OTRAccount *) = ^void(OTRAccount * account) {
         
         if ([account.uniqueId isEqualToString:self.account.uniqueId]) {
@@ -131,17 +143,13 @@ typedef NS_ENUM(int, OTRDropDownType) {
         }
     };
     
-    [[NSNotificationCenter defaultCenter] addObserverForName:OTRDidFinishGeneratingPrivateKeyNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
+    self.didFinishGeneratingPrivateKeyNotificationObject = [[NSNotificationCenter defaultCenter] addObserverForName:OTRDidFinishGeneratingPrivateKeyNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
         if ([note.object isKindOfClass:[OTRAccount class]]) {
             refreshGeneratingLock(note.object);
         }
     }];
-    [[NSNotificationCenter defaultCenter] addObserverForName:OTRDidFinishGeneratingPrivateKeyNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
-        if ([note.object isKindOfClass:[OTRAccount class]]) {
-            refreshGeneratingLock(note.object);
-        }
-    }];
-    [[NSNotificationCenter defaultCenter] addObserverForName:OTRMessageStateDidChangeNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
+   
+    self.messageStateDidChangeNotificationObject = [[NSNotificationCenter defaultCenter] addObserverForName:OTRMessageStateDidChangeNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
         
         if ([note.object isKindOfClass:[OTRBuddy class]]) {
             OTRBuddy *notificationBuddy = note.object;
@@ -152,14 +160,14 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }];
 }
 
-- (void)viewDidDisappear:(BOOL)animated
+- (void)viewWillDisappear:(BOOL)animated
 {
-    [super viewDidDisappear:animated];
+    [super viewWillDisappear:animated];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self.textViewNotificationObject];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:OTRMessageStateDidChangeNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:OTRDidFinishGeneratingPrivateKeyNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:OTRWillStartGeneratingPrivateKeyNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self.databaseConnectionDidUpdateNotificationObject];
+    [[NSNotificationCenter defaultCenter] removeObserver:self.messageStateDidChangeNotificationObject];
+    [[NSNotificationCenter defaultCenter] removeObserver:self.didFinishGeneratingPrivateKeyNotificationObject];
 }
 
 - (YapDatabaseConnection *)uiDatabaseConnection
