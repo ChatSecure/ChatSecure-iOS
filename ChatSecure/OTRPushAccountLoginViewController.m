@@ -37,6 +37,8 @@ int maxEmailLength = 100;
 @property (nonatomic, strong) NSDictionary *metrics;
 @property (nonatomic, strong) NSDictionary *views;
 
+@property (nonatomic, weak) id UIKeyboardDidShowNotificationObject;
+
 @end
 
 @implementation OTRPushAccountLoginViewController
@@ -103,6 +105,21 @@ int maxEmailLength = 100;
     self.createAccountMode = YES;
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    __weak OTRPushAccountLoginViewController *welf = self;
+    self.UIKeyboardDidShowNotificationObject = [[NSNotificationCenter defaultCenter] addObserverForName:UIKeyboardDidShowNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
+        [welf keyboardDidShow:note];
+    }];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self.UIKeyboardDidShowNotificationObject];
+}
+
 - (void)setupConstraints
 {
     self.views = NSDictionaryOfVariableBindings(_contentView,_usernameTextField,_emailTextField,_passwordTextField,_loginButton,_switchCreateOrLogin);
@@ -126,9 +143,6 @@ int maxEmailLength = 100;
     [self addEmailTextFieldAnimated:NO];
     
     
-    [[NSNotificationCenter defaultCenter] addObserverForName:UIKeyboardDidShowNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
-        [self keyboardDidShow:note];
-    }];
 }
 
 - (void)loginButtonPressed:(id)sender

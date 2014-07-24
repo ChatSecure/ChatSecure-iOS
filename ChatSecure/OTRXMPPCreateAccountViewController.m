@@ -30,6 +30,9 @@ static NSString * const domainCellIdentifier = @"domainCellIdentifer";
 
 @property (nonatomic) BOOL wasAbleToCreateAccount;
 
+@property (nonatomic, weak) id OTRXMPPRegisterFailedNotificationNameObject;
+@property (nonatomic, weak) id OTRXMPPRegisterSucceededNotificationNameObject;
+
 @end
 
 @implementation OTRXMPPCreateAccountViewController
@@ -80,31 +83,22 @@ static NSString * const domainCellIdentifier = @"domainCellIdentifer";
     
     self.wasAbleToCreateAccount = NO;
     
-    [[NSNotificationCenter defaultCenter] addObserverForName:OTRXMPPRegisterSucceededNotificationName
-                                                      object:nil
-                                                       queue:[NSOperationQueue mainQueue]
-                                                  usingBlock:^(NSNotification *note) {
-        [self didReceiveRegistrationSucceededNotification:note];
+    __weak OTRXMPPCreateAccountViewController *welf = self;
+    self.OTRXMPPRegisterSucceededNotificationNameObject = [[NSNotificationCenter defaultCenter] addObserverForName:OTRXMPPRegisterSucceededNotificationName object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
+        [welf didReceiveRegistrationSucceededNotification:note];
     }];
     
-    [[NSNotificationCenter defaultCenter] addObserverForName:OTRXMPPRegisterFailedNotificationName
-                                                      object:nil
-                                                       queue:[NSOperationQueue mainQueue]
-                                                  usingBlock:^(NSNotification *note) {
-        [self didReceiveRegistrationFailedNotification:note];
+    self.OTRXMPPRegisterFailedNotificationNameObject = [[NSNotificationCenter defaultCenter] addObserverForName:OTRXMPPRegisterFailedNotificationName object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
+        [welf didReceiveRegistrationFailedNotification:note];
     }];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:OTRXMPPRegisterFailedNotificationName
-                                                  object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self.OTRXMPPRegisterFailedNotificationNameObject];
+    [[NSNotificationCenter defaultCenter] removeObserver:self.OTRXMPPRegisterSucceededNotificationNameObject];
     
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:OTRXMPPRegisterSucceededNotificationName
-                                                  object:nil];
     if (!self.wasAbleToCreateAccount) {
         [OTRAccountsManager removeAccount:self.account];
     }

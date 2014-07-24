@@ -13,9 +13,16 @@
 @property (nonatomic, strong) UIProgressView *passwordStrengthMeterView;
 @property (nonatomic, strong) NJOPasswordValidator *validator;
 
+@property (nonatomic, weak) id UITextFieldTextDidChangeNotificationObject;
+
 @end
 
 @implementation OTRPasswordStrengthView
+
+-(void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self.UITextFieldTextDidChangeNotificationObject];
+}
 
 - (id)initWithRules:(NSArray *)rules
 {
@@ -49,9 +56,9 @@
         
         [self addSubview:self.textField];
         
-        
-        [[NSNotificationCenter defaultCenter] addObserverForName:UITextFieldTextDidChangeNotification object:self.textField queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
-            [self updatePasswordStrength:note.object];
+        __weak OTRPasswordStrengthView *welf = self;
+        self.UITextFieldTextDidChangeNotificationObject = [[NSNotificationCenter defaultCenter] addObserverForName:UITextFieldTextDidChangeNotification object:self.textField queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
+            [welf updatePasswordStrength:note.object];
         }];
         
         [self updatePasswordStrength:self];
