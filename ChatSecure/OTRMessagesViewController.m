@@ -48,6 +48,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
 @property (nonatomic, strong) UIImageView *incomingBubbleImageView;
 
 @property (nonatomic, weak) id textViewNotificationObject;
+@property (nonatomic, weak) id databaseConnectionDidUpdateNotificationObject;
+@property (nonatomic, weak) id didFinishGeneratingPrivateKeyNotificationObject;
+@property (nonatomic, weak) id messageStateDidChangeNotificationObject;
 
 @property (nonatomic, weak) OTRXMPPManager *xmppManager;
 
@@ -75,8 +78,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
     [self.collectionView registerNib:[OTRMessagesCollectionViewCellOutgoing nib] forCellWithReuseIdentifier:[OTRMessagesCollectionViewCellOutgoing cellReuseIdentifier]];
     [self.collectionView registerNib:[OTRMessagesCollectionViewCellIncoming nib] forCellWithReuseIdentifier:[OTRMessagesCollectionViewCellIncoming cellReuseIdentifier]];
     
-    
-    self.automaticallyScrollsToMostRecentMessage = YES;
+
+    self.automaticallyScrollsToMostRecentMessage = NO;
     
      ////// bubbles //////
     self.outgoingBubbleImageView = [JSQMessagesBubbleImageFactory outgoingMessageBubbleImageViewWithColor:[UIColor jsq_messageBubbleBlueColor]];
@@ -102,64 +105,55 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
+    
+    [self refreshLockButton];
+    
     __weak OTRMessagesViewController *welf = self;
+    
+    self.textViewNotificationObject = [[NSNotificationCenter defaultCenter] addObserverForName:UITextViewTextDidChangeNotification object:self.inputToolbar.contentView.textView queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
+        [welf textViewDidChangeNotifcation:note];
+    }];
+    
+    self.databaseConnectionDidUpdateNotificationObject = [[NSNotificationCenter defaultCenter] addObserverForName:OTRUIDatabaseConnectionDidUpdateNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
+        [welf yapDatabaseModified:note];
+    }];
+    
     [self.uiDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         [welf.messageMappings updateWithTransaction:transaction];
         [welf.buddyMappings updateWithTransaction:transaction];
     }];
-    [self.collectionView reloadData];
-    [super viewWillAppear:animated];
-    self.collectionView.collectionViewLayout.springinessEnabled = NO;
-    self.inputToolbar.contentView.leftBarButtonItem = nil;
-    
-    if (self.account) {
-        [[OTRKit sharedInstance] checkIfGeneratingKeyForAccountName:self.account.username protocol:self.account.protocolTypeString completion:^(BOOL isGeneratingKey) {
-            if (isGeneratingKey) {
-                [self refreshLockButton];
-            }
-        }];
-    }
-    
-    self.textViewNotificationObject = [[NSNotificationCenter defaultCenter] addObserverForName:UITextViewTextDidChangeNotification object:self.inputToolbar.contentView.textView queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
-        [self textViewDidChangeNotifcation:note];
-    }];
     
     void (^refreshGeneratingLock)(OTRAccount *) = ^void(OTRAccount * account) {
-        
-        if ([account.uniqueId isEqualToString:self.account.uniqueId]) {
+        if ([account.uniqueId isEqualToString:welf.account.uniqueId]) {
             [welf refreshLockButton];
         }
     };
     
-    [[NSNotificationCenter defaultCenter] addObserverForName:OTRDidFinishGeneratingPrivateKeyNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
+    self.didFinishGeneratingPrivateKeyNotificationObject = [[NSNotificationCenter defaultCenter] addObserverForName:OTRDidFinishGeneratingPrivateKeyNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
         if ([note.object isKindOfClass:[OTRAccount class]]) {
             refreshGeneratingLock(note.object);
         }
     }];
-    [[NSNotificationCenter defaultCenter] addObserverForName:OTRDidFinishGeneratingPrivateKeyNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
-        if ([note.object isKindOfClass:[OTRAccount class]]) {
-            refreshGeneratingLock(note.object);
-        }
-    }];
-    [[NSNotificationCenter defaultCenter] addObserverForName:OTRMessageStateDidChangeNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
-        
+   
+    self.messageStateDidChangeNotificationObject = [[NSNotificationCenter defaultCenter] addObserverForName:OTRMessageStateDidChangeNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
         if ([note.object isKindOfClass:[OTRBuddy class]]) {
             OTRBuddy *notificationBuddy = note.object;
-            if ([notificationBuddy.uniqueId isEqualToString:self.buddy.uniqueId]) {
-                [self refreshLockButton];
+            if ([notificationBuddy.uniqueId isEqualToString:welf.buddy.uniqueId]) {
+                [welf refreshLockButton];
             }
         }
     }];
 }
 
-- (void)viewDidDisappear:(BOOL)animated
+- (void)viewWillDisappear:(BOOL)animated
 {
-    [super viewDidDisappear:animated];
+    [super viewWillDisappear:animated];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self.textViewNotificationObject];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:OTRMessageStateDidChangeNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:OTRDidFinishGeneratingPrivateKeyNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:OTRWillStartGeneratingPrivateKeyNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self.databaseConnectionDidUpdateNotificationObject];
+    [[NSNotificationCenter defaultCenter] removeObserver:self.messageStateDidChangeNotificationObject];
+    [[NSNotificationCenter defaultCenter] removeObserver:self.didFinishGeneratingPrivateKeyNotificationObject];
 }
 
 - (YapDatabaseConnection *)uiDatabaseConnection
@@ -175,6 +169,15 @@ typedef NS_ENUM(int, OTRDropDownType) {
                                                    object:database];
     }
     return _uiDatabaseConnection;
+}
+
+- (NSArray*) indexPathsToCount:(NSUInteger)count {
+    NSMutableArray *indexPaths = [NSMutableArray arrayWithCapacity:count];
+    for (NSUInteger i = 0; i < count; i++) {
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
+        [indexPaths addObject:indexPath];
+    }
+    return indexPaths;
 }
 
 - (void)setBuddy:(OTRBuddy *)buddy
@@ -224,9 +227,17 @@ typedef NS_ENUM(int, OTRDropDownType) {
         }
     }
     
-    
     //refresh other parts of the view
     
+    __weak OTRMessagesViewController *welf = self;
+    [self.uiDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        [welf.messageMappings updateWithTransaction:transaction];
+        [welf.buddyMappings updateWithTransaction:transaction];
+    }];
+    
+    [self.collectionView.collectionViewLayout invalidateLayout];
+    [self.collectionView reloadData];
+    [self refreshLockButton];
 }
 
 - (void)refreshTitleView
@@ -584,7 +595,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
     {
         [self.xmppManager sendChatState:kOTRChatStateInactive withBuddyID:self.buddy.uniqueId];
     }
-    [self finishSendingMessage];
 }
 
 - (OTRMessage *)messageAtIndexPath:(NSIndexPath *)indexPath
@@ -597,8 +607,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
         NSParameterAssert(indexPath != nil);
         NSUInteger row = indexPath.row;
         NSUInteger section = indexPath.section;
+        NSUInteger numberOfItemsInSection = [self.messageMappings numberOfItemsInSection:section];
         
-        NSAssert(row < [self.messageMappings numberOfItemsInSection:section], @"Cannot fetch message because row is >= numberOfItemsInSection");
+        NSAssert(row < numberOfItemsInSection, @"Cannot fetch message because row %d is >= numberOfItemsInSection %d", (int)row, (int)numberOfItemsInSection);
         
         message = [viewTransaction objectAtRow:row inSection:section withMappings:self.messageMappings];
         NSParameterAssert(message != nil);
@@ -687,7 +698,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
 #pragma mark - UICollectionView DataSource
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return [self.messageMappings numberOfItemsInSection:section];
+    NSInteger numberOfMessages = [self.messageMappings numberOfItemsInSection:section];
+    NSLog(@"numberOfMessages: %d", (int)numberOfMessages);
+    return numberOfMessages;
 }
 
 #pragma - mark JSQMessagesCollectionViewCellDelegate Methods
@@ -865,16 +878,22 @@ didTapLoadEarlierMessagesButton:(UIButton *)sender
             if (self.buddy.chatState != updatedBuddy.chatState) {
                 self.buddy = updatedBuddy;
             }
-            
-            
         }
     }
     
     if ([rowChanges count]) {
         [self finishReceivingMessage];
-        //[self.collectionView.collectionViewLayout invalidateLayoutWithContext:[JSQMessagesCollectionViewFlowLayoutInvalidationContext context]];
     }
-    
+}
+
+#pragma mark UISplitViewControllerDelegate methods
+
+- (void) splitViewController:(UISplitViewController *)svc willHideViewController:(UIViewController *)aViewController withBarButtonItem:(UIBarButtonItem *)barButtonItem forPopoverController:(UIPopoverController *)pc {
+    self.navigationItem.leftBarButtonItem = barButtonItem;
+}
+
+- (void) splitViewController:(UISplitViewController *)svc willShowViewController:(UIViewController *)aViewController invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem {
+    self.navigationItem.leftBarButtonItem = nil;
 }
 
 @end

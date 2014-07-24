@@ -28,6 +28,7 @@
 #import "YapDatabaseViewMappings.h"
 
 #import "OTROnboardingStepsController.h"
+#import "OTRAppDelegate.h"
 
 
 static CGFloat cellHeight = 80.0;
@@ -35,7 +36,6 @@ static CGFloat cellHeight = 80.0;
 @interface OTRConversationViewController () <OTRComposeViewControllerDelegate>
 
 @property (nonatomic, strong) UITableView *tableView;
-@property (nonatomic, strong) OTRMessagesViewController *messagesViewController;
 @property (nonatomic, strong) NSTimer *cellUpdateTimer;
 @property (nonatomic, strong) YapDatabaseConnection *connection;
 @property (nonatomic, strong) YapDatabaseViewMappings *mappings;
@@ -162,8 +162,11 @@ static CGFloat cellHeight = 80.0;
 
 - (void)enterConversationWithBuddy:(OTRBuddy *)buddy
 {
-    self.messagesViewController.buddy = buddy;
-    [self.navigationController pushViewController:self.messagesViewController animated:YES];
+    OTRMessagesViewController *messagesViewController = [OTRAppDelegate appDelegate].messagesViewController;
+    messagesViewController.buddy = buddy;
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+        [self.navigationController pushViewController:messagesViewController animated:YES];
+    }
 }
 
 - (void)updateVisibleCells:(id)sender
@@ -177,14 +180,6 @@ static CGFloat cellHeight = 80.0;
             [(OTRConversationCell *)cell setBuddy:buddy];
         }
     }
-}
-
-- (OTRMessagesViewController *)messagesViewController
-{
-    if (!_messagesViewController) {
-        _messagesViewController = [OTRMessagesViewController messagesViewController];
-    }
-    return _messagesViewController;
 }
 
 - (OTRBuddy *)buddyForIndexPath:(NSIndexPath *)indexPath

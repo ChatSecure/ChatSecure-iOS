@@ -91,7 +91,7 @@
     
     [[OTRDatabaseManager sharedInstance] setDatabasePassphrase:self.passphraseTextField.text remember:NO error:nil];
     if ([[OTRDatabaseManager sharedInstance] setupDatabaseWithName:OTRYapDatabaseName]) {
-        [OTRAppDelegate showConversationViewController];
+        [[OTRAppDelegate appDelegate] showConversationViewController];
     }
     else {
         [self showPasswordError];
