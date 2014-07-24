@@ -306,9 +306,11 @@ static CGFloat cellHeight = 80.0;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     OTRBuddy *buddy = [self buddyForIndexPath:indexPath];
     [self enterConversationWithBuddy:buddy];
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    }
 }
 
 #pragma - mark YapDatabse Methods
