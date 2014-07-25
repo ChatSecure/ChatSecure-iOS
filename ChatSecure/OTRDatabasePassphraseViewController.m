@@ -24,6 +24,8 @@
 
 @property (nonatomic, strong) NSLayoutConstraint *bottomConstraint;
 
+@property (nonatomic, strong) id UIKeyboardDidShowNotificationObject;
+
 @end
 
 @implementation OTRDatabasePassphraseViewController
@@ -80,10 +82,6 @@
     [self.view addConstraint:self.bottomConstraint];
     
     
-    [[NSNotificationCenter defaultCenter] addObserverForName:UIKeyboardDidShowNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
-        [self keyboardDidShow:note];
-    }];
-    
     self.nextStepButton.enabled = NO;
 }
 
@@ -92,6 +90,16 @@
     [super viewWillAppear:animated];
     [self.passwordView.textField becomeFirstResponder];
     
+    __weak OTRDatabasePassphraseViewController *welf = self;
+    self.UIKeyboardDidShowNotificationObject = [[NSNotificationCenter defaultCenter] addObserverForName:UIKeyboardDidShowNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
+        [welf keyboardDidShow:note];
+    }];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self.UIKeyboardDidShowNotificationObject];
 }
 
 - (void)keyboardDidShow:(NSNotification *)notification

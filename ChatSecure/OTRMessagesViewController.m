@@ -773,18 +773,16 @@ typedef NS_ENUM(int, OTRDropDownType) {
 - (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 {
     OTRMessage *message = [self messageAtIndexPath:indexPath];
-    NSMutableString *string = [NSMutableString string];
-    
+    NSAttributedString *attributedString = nil;
     if (message.isDelivered) {
-        [string appendString:@"Delivered"];
+        NSMutableParagraphStyle *paragrapStyle = NSMutableParagraphStyle.new;
+        paragrapStyle.alignment                = NSTextAlignmentRight;
+        
+        attributedString = [NSAttributedString.alloc initWithString:DELIVERED_STRING
+                                                         attributes: @{NSParagraphStyleAttributeName:paragrapStyle}];
     }
     
-    NSString *finalString = [string stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    if ([finalString length]) {
-        return [[NSAttributedString alloc] initWithString:finalString];
-    }
-    return nil;
-    
+    return attributedString;
 }
 
 

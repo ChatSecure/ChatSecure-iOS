@@ -21,6 +21,8 @@
 
 @property (nonatomic, strong) NSLayoutConstraint *bottomConstraint;
 
+@property (nonatomic, weak) id UIKeyboardDidShowNotificationObject;
+
 @end
 
 @implementation OTRDatabaseUnlockViewController
@@ -58,11 +60,25 @@
     
     [self setupConstraints];
     
-    [[NSNotificationCenter defaultCenter] addObserverForName:UIKeyboardDidShowNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
-        [self keyboardDidShow:note];
-    }];
+    
+    
     
     [self.passphraseTextField becomeFirstResponder];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    __weak OTRDatabaseUnlockViewController *welf = self;
+    self.UIKeyboardDidShowNotificationObject = [[NSNotificationCenter defaultCenter] addObserverForName:UIKeyboardDidShowNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
+        [welf keyboardDidShow:note];
+    }];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self.UIKeyboardDidShowNotificationObject];
 }
 
 - (void)setupConstraints

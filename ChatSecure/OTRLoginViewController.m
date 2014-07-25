@@ -48,6 +48,13 @@ NSString *const kCellTypeTextField      = @"kCellTypeTextField";
 NSString *const kCellTypeSwitch         = @"kCellTypeSwitch";
 NSString *const KCellTypeHelp           = @"KCellTypeHelp";
 
+@interface OTRLoginViewController ()
+
+@property (nonatomic, weak) id kOTRProtocolLoginFailObject;
+@property (nonatomic, weak) id kOTRProtocolLoginSuccessObject;
+
+@end
+
 @implementation OTRLoginViewController
 
 - (void) dealloc {
@@ -288,12 +295,13 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
 {
     [super viewWillAppear:animated];
     
-    [[NSNotificationCenter defaultCenter] addObserverForName:kOTRProtocolLoginFail object:[[OTRProtocolManager sharedInstance] protocolForAccount:self.account] queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
-        [self protocolLoginFailed:note];
+    __weak OTRLoginViewController *welf = self;
+    self.kOTRProtocolLoginFailObject = [[NSNotificationCenter defaultCenter] addObserverForName:kOTRProtocolLoginFail object:[[OTRProtocolManager sharedInstance] protocolForAccount:self.account] queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
+        [welf protocolLoginFailed:note];
     }];
     
-    [[NSNotificationCenter defaultCenter] addObserverForName:kOTRProtocolLoginSuccess object:[[OTRProtocolManager sharedInstance] protocolForAccount:self.account] queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
-        [self protocolLoginSuccess:note];
+    self.kOTRProtocolLoginSuccessObject = [[NSNotificationCenter defaultCenter] addObserverForName:kOTRProtocolLoginSuccess object:[[OTRProtocolManager sharedInstance] protocolForAccount:self.account] queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
+        [welf protocolLoginSuccess:note];
     }];
     
     if(!self.usernameTextField.text.length)
@@ -318,8 +326,8 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
     [self readInFields];
     
     [self.view resignFirstResponder];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kOTRProtocolLoginFail object:[[OTRProtocolManager sharedInstance] protocolForAccount:self.account]];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kOTRProtocolLoginSuccess object:[[OTRProtocolManager sharedInstance] protocolForAccount:self.account]];
+    [[NSNotificationCenter defaultCenter] removeObserver:self.kOTRProtocolLoginSuccessObject];
+    [[NSNotificationCenter defaultCenter] removeObserver:self.kOTRProtocolLoginFailObject];
 }
 
 -(void)readInFields

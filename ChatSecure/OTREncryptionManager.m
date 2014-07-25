@@ -101,6 +101,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     }
     
     __block OTRMessage *message = nil;
+    //
     if ([tag isKindOfClass:[OTRMessage class]]) {
         message = [tag copy];
         if (error) {
@@ -118,8 +119,9 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
             [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
                 [message saveWithTransaction:transaction];
             } completionBlock:^{
-                message.text = encodedMessage;
-                [[OTRProtocolManager sharedInstance] sendMessage:message];
+                OTRMessage *newEncodedMessage = [message copy];
+                newEncodedMessage.text = encodedMessage;
+                [[OTRProtocolManager sharedInstance] sendMessage:newEncodedMessage];
             }];
         }
     }
