@@ -230,7 +230,7 @@ static CGFloat cellHeight = 80.0;
 
 - (void)hideInbox
 {
-    if (![self.navigationItem.leftBarButtonItem isEqual:self.composeBarButtonItem]) {
+    if ([self.navigationItem.leftBarButtonItems count] > 1) {
         self.navigationItem.leftBarButtonItem = self.composeBarButtonItem;
     }
     
@@ -318,8 +318,6 @@ static CGFloat cellHeight = 80.0;
 - (void)yapDatabaseModified:(NSNotification *)notification
 {
     
-    [self updateInbox];
-    
     // Process the notification(s),
     // and get the change-set(s) as applies to my view and mappings configuration.
     NSArray *notifications = notification.userInfo[@"notifications"];
@@ -331,6 +329,14 @@ static CGFloat cellHeight = 80.0;
                                                   rowChanges:&rowChanges
                                             forNotifications:notifications
                                                 withMappings:self.mappings];
+    
+    NSArray *subscriptionSectionChanges = nil;
+    NSArray *subscriptionRowChanges = nil;
+    [[self.connection ext:OTRAllSubscriptionRequestsViewExtensionName] getSectionChanges:&subscriptionSectionChanges rowChanges:&subscriptionRowChanges forNotifications:notifications withMappings:self.subscriptionRequestsMappings];
+    
+    if ([subscriptionSectionChanges count] || [subscriptionRowChanges count]) {
+        [self updateInbox];
+    }
     
     // No need to update mappings.
     // The above method did it automatically.
