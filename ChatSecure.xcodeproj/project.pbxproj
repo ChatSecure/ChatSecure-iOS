@@ -50,7 +50,6 @@
 		634357F2191308020062FD26 /* OTRPasswordStrengthView.m in Sources */ = {isa = PBXBuildFile; fileRef = 634357F1191308020062FD26 /* OTRPasswordStrengthView.m */; };
 		634357F519143F8A0062FD26 /* OTROnboardingStepsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 634357F419143F8A0062FD26 /* OTROnboardingStepsController.m */; };
 		634357F919143FF70062FD26 /* OTRDatabasePassphraseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 634357F819143FF70062FD26 /* OTRDatabasePassphraseViewController.m */; };
-		6344CCCF1817501700DA0402 /* strings.json in Resources */ = {isa = PBXBuildFile; fileRef = 6344CCCE1817501700DA0402 /* strings.json */; };
 		63464F2D1889EC9200526358 /* _OTRManagedAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 63464F0C1889EC9200526358 /* _OTRManagedAccount.m */; };
 		63464F2F1889EC9200526358 /* _OTRManagedChatMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 63464F101889EC9200526358 /* _OTRManagedChatMessage.m */; };
 		63464F301889EC9200526358 /* _OTRManagedEncryptionMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 63464F121889EC9200526358 /* _OTRManagedEncryptionMessage.m */; };
@@ -2551,7 +2550,6 @@
 				D913F4EF19764A8B00937C0B /* Images.xcassets in Resources */,
 				D9F9378513F44BD3009A3D84 /* InfoPlist.strings in Resources */,
 				D9D8D2061531056300F9E8D3 /* Localizable.strings in Resources */,
-				6344CCCF1817501700DA0402 /* strings.json in Resources */,
 				6319F696165EAB1F0063AC93 /* supportedLanguages.plist in Resources */,
 				6326F63A184D5249008B6B01 /* chat.facebook.com.cer in Resources */,
 				63F2585717FB51C2007A7565 /* talk.google.com.cer in Resources */,
@@ -2589,7 +2587,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd \"${SRCROOT}/ChatSecure\"\npython StringsConverter.py";
+			shellScript = "python \"${SRCROOT}/ChatSecure/StringsConverter.py\"";
 		};
 		DCD88673560F4C18AC60C52B /* Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
