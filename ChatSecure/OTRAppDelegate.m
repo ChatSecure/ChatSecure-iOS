@@ -95,18 +95,8 @@
          ////// Normal launch to conversationViewController //////
         [[OTRDatabaseManager sharedInstance] setupDatabaseWithName:OTRYapDatabaseName];
         
-        UINavigationController *conversationListNavController = [[UINavigationController alloc] initWithRootViewController:self.conversationViewController];
+        rootViewController = [self defaultConversationNavigationController];
         
-        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-            rootViewController = conversationListNavController;
-        } else {
-            UINavigationController *messagesNavController = [[UINavigationController alloc ]initWithRootViewController:self.messagesViewController];
-            UISplitViewController *splitViewController = [[UISplitViewController alloc] init];
-            splitViewController.viewControllers = [NSArray arrayWithObjects:conversationListNavController, messagesNavController, nil];
-            splitViewController.delegate = self.messagesViewController;
-            rootViewController = splitViewController;
-            splitViewController.title = CHAT_STRING;
-        }
         
 #if CHATSECURE_DEMO
         [self performSelector:@selector(loadDemoData) withObject:nil afterDelay:10];
@@ -170,9 +160,35 @@
 #endif
 }
 
+- (UIViewController*)defaultConversationNavigationController
+{
+    UIViewController *viewController = nil;
+    
+    //ConversationViewController Nav
+    UINavigationController *conversationListNavController = [[UINavigationController alloc] initWithRootViewController:self.conversationViewController];
+    
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+        viewController = conversationListNavController;
+    } else {
+        //MessagesViewController Nav
+        UINavigationController *messagesNavController = [[UINavigationController alloc ]initWithRootViewController:self.messagesViewController];
+        
+        //SplitViewController
+        UISplitViewController *splitViewController = [[UISplitViewController alloc] init];
+        splitViewController.viewControllers = [NSArray arrayWithObjects:conversationListNavController, messagesNavController, nil];
+        splitViewController.delegate = self.messagesViewController;
+        splitViewController.title = CHAT_STRING;
+        
+        viewController = splitViewController;
+        
+    }
+    
+    return viewController;
+}
+
 - (void)showConversationViewController
 {
-    self.window.rootViewController = self.conversationViewController;
+    self.window.rootViewController = [self defaultConversationNavigationController];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
