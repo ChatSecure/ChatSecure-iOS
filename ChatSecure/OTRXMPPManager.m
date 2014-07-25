@@ -1001,14 +1001,12 @@ managedBuddyObjectID
 - (void)newTrust:(SecTrustRef)trust withHostName:(NSString *)hostname systemTrustResult:(SecTrustResultType)trustResultType
 {
     DDLogVerbose(@"New trust found");
-    
+    CFRetain(trust);
     dispatch_async(dispatch_get_main_queue(), ^{
         NSData * certifcateData = [OTRCertificatePinning dataForCertificate:[OTRCertificatePinning certForTrust:trust]];
         [self failedToConnect:[OTRXMPPError errorForTrustResult:trustResultType withCertData:certifcateData hostname:hostname]];
+        CFRelease(trust);
     });
-    
-    
-    
 }
 
 @end

@@ -94,7 +94,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     }];
 }
 
-- (void)otrKit:(OTRKit *)otrKit encodedMessage:(NSString *)encodedMessage username:(NSString *)username accountName:(NSString *)accountName protocol:(NSString *)protocol tag:(id)tag error:(NSError *)error
+- (void)otrKit:(OTRKit *)otrKit encodedMessage:(NSString *)encodedMessage wasEncrypted:(BOOL)wasEncrypted username:(NSString *)username accountName:(NSString *)accountName protocol:(NSString *)protocol tag:(id)tag error:(NSError *)error
 {
     if (error) {
         DDLogError(@"Encode Error: %@",error);
@@ -111,11 +111,9 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
             }];
         }
         else if ([encodedMessage length]) {
-            
-            if (![[encodedMessage stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] isEqualToString:[message.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]]) {
+            if (wasEncrypted) {
                 message.transportedSecurely = YES;
             }
-            
             [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
                 [message saveWithTransaction:transaction];
             } completionBlock:^{
