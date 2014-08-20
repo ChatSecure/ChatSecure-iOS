@@ -10,6 +10,7 @@
 
 #import "OTRDatabaseView.h"
 #import "OTRDatabaseManager.h"
+#import "OTRLog.h"
 
 #import "OTRBuddy.h"
 #import "OTRAccount.h"
@@ -71,15 +72,14 @@ typedef NS_ENUM(int, OTRDropDownType) {
 {
     [super viewDidLoad];
     
+    self.collectionView.frame = self.view.bounds;
+    self.automaticallyScrollsToMostRecentMessage = YES;
     
     self.outgoingCellIdentifier = [OTRMessagesCollectionViewCellOutgoing cellReuseIdentifier];
     self.incomingCellIdentifier = [OTRMessagesCollectionViewCellIncoming cellReuseIdentifier];
     
     [self.collectionView registerNib:[OTRMessagesCollectionViewCellOutgoing nib] forCellWithReuseIdentifier:[OTRMessagesCollectionViewCellOutgoing cellReuseIdentifier]];
     [self.collectionView registerNib:[OTRMessagesCollectionViewCellIncoming nib] forCellWithReuseIdentifier:[OTRMessagesCollectionViewCellIncoming cellReuseIdentifier]];
-    
-
-    self.automaticallyScrollsToMostRecentMessage = NO;
     
      ////// bubbles //////
     self.outgoingBubbleImageView = [JSQMessagesBubbleImageFactory outgoingMessageBubbleImageViewWithColor:[UIColor jsq_messageBubbleBlueColor]];
@@ -115,9 +115,11 @@ typedef NS_ENUM(int, OTRDropDownType) {
         [welf textViewDidChangeNotifcation:note];
     }];
     
+    /* Commented out while debugging crash
     self.databaseConnectionDidUpdateNotificationObject = [[NSNotificationCenter defaultCenter] addObserverForName:OTRUIDatabaseConnectionDidUpdateNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
         [welf yapDatabaseModified:note];
     }];
+    */
     
     [self.uiDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         [welf.messageMappings updateWithTransaction:transaction];
@@ -223,14 +225,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }
     
     //refresh other parts of the view
-    
-    __weak OTRMessagesViewController *welf = self;
-    [self.uiDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        [welf.messageMappings updateWithTransaction:transaction];
-        [welf.buddyMappings updateWithTransaction:transaction];
-    }];
-    
-    [self.collectionView.collectionViewLayout invalidateLayout];
     [self.collectionView reloadData];
     [self refreshLockButton];
     [self refreshTitleView];
@@ -610,8 +604,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
         NSUInteger section = indexPath.section;
         NSUInteger numberOfItemsInSection = [self.messageMappings numberOfItemsInSection:section];
         
-        NSLog(@"Attempting to fetch row %d out of total numberOfMessages: %d", (int)row, (int)numberOfItemsInSection);
-
         NSAssert(row < numberOfItemsInSection, @"Cannot fetch message because row %d is >= numberOfItemsInSection %d", (int)row, (int)numberOfItemsInSection);
         
         message = [viewTransaction objectAtRow:row inSection:section withMappings:self.messageMappings];
@@ -662,15 +654,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         [message saveWithTransaction:transaction];
-        
     } completionBlock:^{
-        [self finishSendingMessage];
         [[OTRKit sharedInstance] encodeMessage:message.text tlvs:nil username:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString tag:message];
     }];
-    
-    
-    
-    
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -702,13 +688,20 @@ typedef NS_ENUM(int, OTRDropDownType) {
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
     NSInteger numberOfMessages = [self.messageMappings numberOfItemsInSection:section];
-    NSLog(@"collectionView:numberOfItemsInSection: %d", (int)numberOfMessages);
     return numberOfMessages;
 }
 
 #pragma - mark JSQMessagesCollectionViewCellDelegate Methods
 
 - (void)messagesCollectionViewCellDidTapAvatar:(JSQMessagesCollectionViewCell *)cell {
+    
+}
+
+- (void)messagesCollectionViewCellDidTapMessageBubble:(JSQMessagesCollectionViewCell *)cell {
+    
+}
+
+- (void)messagesCollectionViewCellDidTapCell:(JSQMessagesCollectionViewCell *)cell atPosition:(CGPoint)position {
     
 }
 
@@ -854,11 +847,10 @@ didTapLoadEarlierMessagesButton:(UIButton *)sender
     // and get the change-set(s) as applies to my view and mappings configuration.
     NSArray *notifications = [self.uiDatabaseConnection beginLongLivedReadTransaction];
     
-    NSArray *sectionChanges = nil;
-    NSArray *rowChanges = nil;
+    NSArray *messageRowChanges = nil;
     
-    [[self.uiDatabaseConnection ext:OTRChatDatabaseViewExtensionName] getSectionChanges:&sectionChanges
-                                                                           rowChanges:&rowChanges
+    [[self.uiDatabaseConnection ext:OTRChatDatabaseViewExtensionName] getSectionChanges:nil
+                                                                           rowChanges:&messageRowChanges
                                                                      forNotifications:notifications
                                                                          withMappings:self.messageMappings];
     
@@ -882,8 +874,18 @@ didTapLoadEarlierMessagesButton:(UIButton *)sender
         }
     }
     
-    if ([rowChanges count]) {
-        [self finishReceivingMessage];
+    
+    [self.collectionView reloadData];
+    
+    if (messageRowChanges.count) {
+        NSUInteger lastMessageIndex = [self.collectionView numberOfItemsInSection:0] - 1;
+        NSIndexPath *lastMessageIndexPath = [NSIndexPath indexPathForRow:lastMessageIndex inSection:0];
+        OTRMessage *mostRecentMessage = [self messageAtIndexPath:lastMessageIndexPath];
+        if (mostRecentMessage.isIncoming) {
+            [self finishReceivingMessage];
+        } else {
+            [self finishSendingMessage];
+        }
     }
 }
 

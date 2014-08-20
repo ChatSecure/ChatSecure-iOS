@@ -19,7 +19,7 @@ PODS:
     - AFNetworking/NSURLConnection
   - AFOAuth2Client (0.1.2):
     - AFNetworking (~> 2.0)
-  - Appirater (2.0.2)
+  - Appirater (2.0.3)
   - BBlock (1.2.0):
     - BBlock/AppKit
     - BBlock/Foundation
@@ -28,33 +28,33 @@ PODS:
   - BBlock/Foundation (1.2.0)
   - BBlock/StoreKit (1.2.0)
   - BBlock/UIKit (1.2.0)
-  - Bolts (1.1.0)
+  - Bolts (1.1.1)
   - CocoaAsyncSocket (7.4)
   - CocoaLumberjack (1.9.1):
     - CocoaLumberjack/Extensions
   - CocoaLumberjack/Core (1.9.1)
   - CocoaLumberjack/Extensions (1.9.1):
     - CocoaLumberjack/Core
-  - DAKeyboardControl (2.3.1)
-  - Facebook-iOS-SDK (3.16.1):
+  - DAKeyboardControl (2.4.0)
+  - Facebook-iOS-SDK (3.17.0):
     - Bolts
   - gtm-oauth2 (0.1.0):
     - GTMHTTPFetcher
   - GTMHTTPFetcher (0.1.0)
   - HockeySDK (3.5.6)
   - HPGrowingTextView (1.1)
-  - JSQMessagesViewController (5.1.1):
+  - JSQMessagesViewController (5.2.4):
     - JSQSystemSoundPlayer
   - JSQSystemSoundPlayer (1.5.2)
   - JTTargetActionBlock (1.0.0)
-  - JVFloatLabeledTextField (0.0.8)
+  - JVFloatLabeledTextField (0.0.9)
   - MagicalRecord (2.2):
     - MagicalRecord/Core
   - MagicalRecord/Core (2.2)
   - Mantle (1.5):
     - Mantle/extobjc
   - Mantle/extobjc (1.5)
-  - MBProgressHUD (0.8)
+  - MBProgressHUD (0.9)
   - MWFeedParser (1.0.1):
     - MWFeedParser/FeedParser
     - MWFeedParser/NSDate+InternetDateTime
@@ -94,17 +94,17 @@ DEPENDENCIES:
   - BBlock (~> 1.2)
   - CocoaAsyncSocket (from `git@github.com:ChatSecure/CocoaAsyncSocket.git`, branch `7.4-compilefix`)
   - CocoaLumberjack (~> 1.9)
-  - DAKeyboardControl (~> 2.3)
-  - Facebook-iOS-SDK (~> 3.16)
+  - DAKeyboardControl (~> 2.4)
+  - Facebook-iOS-SDK (~> 3.17)
   - gtm-oauth2 (~> 0.1.0)
   - HockeySDK (~> 3.5)
   - HPGrowingTextView (~> 1.1)
-  - JSQMessagesViewController (~> 5.1)
+  - JSQMessagesViewController (~> 5.2)
   - JTTargetActionBlock (~> 1.0)
   - JVFloatLabeledTextField (~> 0.0)
   - MagicalRecord (~> 2.2)
   - Mantle (~> 1.4)
-  - MBProgressHUD (~> 0.8)
+  - MBProgressHUD (~> 0.9)
   - MWFeedParser (~> 1.0)
   - Navajo (~> 0.0)
   - OpenInChrome (~> 0.0)
@@ -139,24 +139,24 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   AFNetworking: a4d0e9a64de9242986620dafd1b3cee3b413ac5c
   AFOAuth2Client: 5244ffdc28081e2ce4d4a0d0f1198ed54e24d787
-  Appirater: a5e00fb01d47a9a6acf4b2f22323b4ccf4f23fbb
+  Appirater: 793f3723354b1b155f7ddc87fc6017bea889ce50
   BBlock: 90f0ae0e3ba94fc88be6b9a85b4adbb73b8a7c9a
-  Bolts: 91c2af8eae1d44e1dd75946a5b0ae04a43ea43e4
+  Bolts: 0ca796081c3e7c139bd86d6903c27f1b83036a5d
   CocoaAsyncSocket: 05cf58994eda7b50e6ac1bd0266ef2db97d05d70
   CocoaLumberjack: 94accd5749f5c5d15134c8d50f34a973aed8ef69
-  DAKeyboardControl: b17935d41242e094f96ec22696405c620ffb088b
-  Facebook-iOS-SDK: 594f0e2398fe62b0a44b6f7ae113c7795cfabfa4
+  DAKeyboardControl: 45a363c85c48a7df76f21f236d9f85800e001775
+  Facebook-iOS-SDK: f20274d809f112ba540842e2b6cbe50128d51b7b
   gtm-oauth2: 64f2d404a50676ab63b5437a02a7567da8f8b7fa
   GTMHTTPFetcher: 0f02d5a5803dd08736462981064de6a7f59cf9bd
   HockeySDK: 27d8b411208f9d3f70c8f6695a8defa2a3465721
   HPGrowingTextView: 07d5ab1f1e867acfb7a6f498b819948c9e97d07c
-  JSQMessagesViewController: 2e49397efc7cef9c990e7c804cdd1fa0c2bf7812
+  JSQMessagesViewController: 94683f03df3d2eb4d9387c1a28b0b52fd1a415b7
   JSQSystemSoundPlayer: c24914bc96ff5365b5d28b59d7ecffd60d1c5587
   JTTargetActionBlock: bef69054d368a91b33b98a520fa9e78e218a5a25
-  JVFloatLabeledTextField: 16dea87b899a7b62026eb8d8cf9902c08b1953da
+  JVFloatLabeledTextField: b6c7d824d231b3c01d14692feada878808480af8
   MagicalRecord: 2b471584fc9e3137f3d0a56967917baa4979e224
   Mantle: c67a7e45e14196ed42b2a7cbb98ff6a9920e6b92
-  MBProgressHUD: c356980b0cd097f19acec959b49dca5eb8ec31be
+  MBProgressHUD: 2038dbcf3dce73215abed6001657043d53aa79a8
   MWFeedParser: 003cbf5398e99a7f2057fbe9583054fd1b84be72
   Navajo: 9130d497903e5d1b0f1b3c987be01f5b60fd37c7
   OpenInChrome: b7c73ddf8fe0a1788dc0549c3c4c70e3c84da578
