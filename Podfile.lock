@@ -28,7 +28,7 @@ PODS:
   - BBlock/Foundation (1.2.0)
   - BBlock/StoreKit (1.2.0)
   - BBlock/UIKit (1.2.0)
-  - Bolts (1.1.1)
+  - Bolts (1.1.2)
   - CocoaAsyncSocket (7.4)
   - CocoaLumberjack (1.9.1):
     - CocoaLumberjack/Extensions
@@ -141,7 +141,7 @@ SPEC CHECKSUMS:
   AFOAuth2Client: 5244ffdc28081e2ce4d4a0d0f1198ed54e24d787
   Appirater: 793f3723354b1b155f7ddc87fc6017bea889ce50
   BBlock: 90f0ae0e3ba94fc88be6b9a85b4adbb73b8a7c9a
-  Bolts: 0ca796081c3e7c139bd86d6903c27f1b83036a5d
+  Bolts: 2635e8698a630774689441047f3465d78c48d485
   CocoaAsyncSocket: 05cf58994eda7b50e6ac1bd0266ef2db97d05d70
   CocoaLumberjack: 94accd5749f5c5d15134c8d50f34a973aed8ef69
   DAKeyboardControl: 45a363c85c48a7df76f21f236d9f85800e001775

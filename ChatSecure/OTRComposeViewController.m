@@ -202,19 +202,18 @@ static CGFloat cellHeight = 60.0;
         
         searchText = [NSString stringWithFormat:@"%@*",searchText];
         
-        [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-            NSMutableArray *tempSearchResults = [NSMutableArray array];
+        NSMutableArray *tempSearchResults = [NSMutableArray new];
+        [self.databaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
             [[transaction ext:OTRBuddyNameSearchDatabaseViewExtensionName] enumerateKeysAndObjectsMatching:searchText usingBlock:^(NSString *collection, NSString *key, id object, BOOL *stop) {
                 if ([object isKindOfClass:[OTRBuddy class]]) {
                     [tempSearchResults addObject:object];
                 }
             }];
-            self.searchResults = [tempSearchResults copy];
+        } completionBlock:^{
+            self.searchResults = tempSearchResults;
+            [self.tableView reloadData];
         }];
     }
-    
-    
-    [self.tableView reloadData];
 }
 
 #pragma - mark UITableViewDataSource Methods
