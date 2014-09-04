@@ -43,7 +43,7 @@ PODS:
   - GTMHTTPFetcher (0.1.0)
   - HockeySDK (3.5.6)
   - HPGrowingTextView (1.1)
-  - JSQMessagesViewController (5.2.4):
+  - JSQMessagesViewController (5.3.1):
     - JSQSystemSoundPlayer
   - JSQSystemSoundPlayer (1.5.2)
   - JTTargetActionBlock (1.0.0)
@@ -99,7 +99,7 @@ DEPENDENCIES:
   - gtm-oauth2 (~> 0.1.0)
   - HockeySDK (~> 3.5)
   - HPGrowingTextView (~> 1.1)
-  - JSQMessagesViewController (~> 5.2)
+  - JSQMessagesViewController (~> 5.3)
   - JTTargetActionBlock (~> 1.0)
   - JVFloatLabeledTextField (~> 0.0)
   - MagicalRecord (~> 2.2)
@@ -150,7 +150,7 @@ SPEC CHECKSUMS:
   GTMHTTPFetcher: 0f02d5a5803dd08736462981064de6a7f59cf9bd
   HockeySDK: 27d8b411208f9d3f70c8f6695a8defa2a3465721
   HPGrowingTextView: 07d5ab1f1e867acfb7a6f498b819948c9e97d07c
-  JSQMessagesViewController: 94683f03df3d2eb4d9387c1a28b0b52fd1a415b7
+  JSQMessagesViewController: d1f9dcf8f768aab54dc59ac9f042a69623057658
   JSQSystemSoundPlayer: c24914bc96ff5365b5d28b59d7ecffd60d1c5587
   JTTargetActionBlock: bef69054d368a91b33b98a520fa9e78e218a5a25
   JVFloatLabeledTextField: b6c7d824d231b3c01d14692feada878808480af8
