@@ -58,7 +58,14 @@ Download the source code and **don't forget** to pull down all of the submodules
 
     $ git clone https://github.com/chrisballinger/ChatSecure-iOS.git
     $ cd ChatSecure-iOS/
-    $ git submodule update --init --recursive
+    $ git submodule update --init --recursive  
+    （if you have problem in XMPPramework, do: $ git rm --cached Submodules/XMPPFramework/ 
+    	and: $ git submodule update --init --recursive)
+    $ ./Submodules/OnionKit/build-libssl.sh --noverify
+    $ ./Submodules/OnionKit/build-libevent.sh --noverify
+    $ ./Submodules/OnionKit/build-tor.sh --noverify 
+     (if you have command not found problem, make sure you have automake installed, you can do: $ brew install automake. )
+    $ ./Submodules/OTRKit/build-all.sh 
     $ pod install
     
 Make your own version of environment-specific data. Make `OTRSecrets.m` file with blank API keys.
