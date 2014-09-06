@@ -59,11 +59,18 @@ Download the source code and **don't forget** to pull down all of the submodules
     $ git clone https://github.com/chrisballinger/ChatSecure-iOS.git
     $ cd ChatSecure-iOS/
     $ git submodule update --init --recursive
+    
+Now you'll need to build the dependencies. During this process we will automatically verify the integity of each package by checking its GPG signature. Install [GPGTools](https://gpgtools.org) and add the public signing keys for OpenSSL, GnuPG, libevent, and libotr. *(TODO make these links to the keys)*
+    
+    $ bash ./Submodules/OnionKit/build-all.sh
+    $ bash ./Submodules/OTRKit/build-all.sh
     $ pod install
     
 Make your own version of environment-specific data. Make `OTRSecrets.m` file with blank API keys.
     
-Open `ChatSecure.xcworkspace` in Xcode and build. Note that you don't open the .xcodeproj anymore because we use Cocoapods now.
+Open `ChatSecure.xcworkspace` in Xcode and build. 
+
+*Note*: **Don't open the `.xcodeproj` anymore** because we use Cocoapods now!
 
 ## License
 
