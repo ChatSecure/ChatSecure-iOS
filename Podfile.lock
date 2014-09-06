@@ -28,6 +28,7 @@ PODS:
   - BBlock/Foundation (1.2.0)
   - BBlock/StoreKit (1.2.0)
   - BBlock/UIKit (1.2.0)
+  - BButton (4.0.1)
   - Bolts (1.1.2)
   - CocoaAsyncSocket (7.4)
   - CocoaLumberjack (1.9.1):
@@ -72,6 +73,7 @@ PODS:
   - ProxyKit/common (1.0.2):
     - CocoaAsyncSocket (~> 7.3)
     - CocoaLumberjack (~> 1.9)
+  - PureLayout (1.0.1)
   - RMStepsController (1.0.1)
   - SIAlertView (1.3)
   - SQLCipher/common (3.1.0)
@@ -81,6 +83,7 @@ PODS:
   - TTTAttributedLabel (1.10.1)
   - UIAlertView-Blocks (1.0)
   - uservoice-iphone-sdk (3.1.0)
+  - VTAcknowledgementsViewController (0.11)
   - YapDatabase/common (2.4.3):
     - CocoaLumberjack (~> 1.6.3)
   - YapDatabase/SQLCipher (2.4.3):
@@ -92,6 +95,7 @@ DEPENDENCIES:
   - AFOAuth2Client (from `git@github.com:ChatSecure/AFOAuth2Client.git`, branch `release`)
   - Appirater (~> 2.0)
   - BBlock (~> 1.2)
+  - BButton (~> 4.0)
   - CocoaAsyncSocket (from `git@github.com:ChatSecure/CocoaAsyncSocket.git`, branch `7.4-compilefix`)
   - CocoaLumberjack (~> 1.9)
   - DAKeyboardControl (~> 2.4)
@@ -110,12 +114,14 @@ DEPENDENCIES:
   - OpenInChrome (~> 0.0)
   - OTRKit (from `Submodules/OTRKit/OTRKit.podspec`)
   - ProxyKit/Client (from `Submodules/ProxyKit/ProxyKit.podspec`)
+  - PureLayout (~> 1.0)
   - RMStepsController (~> 1.0)
   - SIAlertView (from `git@github.com:ChatSecure/SIAlertView.git`, branch `attributedText`)
   - SSKeychain (~> 1.2)
   - TTTAttributedLabel (~> 1.10)
   - UIAlertView-Blocks (~> 1.0)
   - uservoice-iphone-sdk (from `git@github.com:ChatSecure/uservoice-iphone-sdk.git`, branch `3.1.0-noanalytics`)
+  - VTAcknowledgementsViewController (~> 0.11)
   - YapDatabase/SQLCipher (~> 2.4)
 
 EXTERNAL SOURCES:
@@ -141,6 +147,7 @@ SPEC CHECKSUMS:
   AFOAuth2Client: 5244ffdc28081e2ce4d4a0d0f1198ed54e24d787
   Appirater: 793f3723354b1b155f7ddc87fc6017bea889ce50
   BBlock: 90f0ae0e3ba94fc88be6b9a85b4adbb73b8a7c9a
+  BButton: 396a5e59648e3f687b7d8201b88ebdbad6e36b59
   Bolts: 2635e8698a630774689441047f3465d78c48d485
   CocoaAsyncSocket: 05cf58994eda7b50e6ac1bd0266ef2db97d05d70
   CocoaLumberjack: 94accd5749f5c5d15134c8d50f34a973aed8ef69
@@ -162,6 +169,7 @@ SPEC CHECKSUMS:
   OpenInChrome: b7c73ddf8fe0a1788dc0549c3c4c70e3c84da578
   OTRKit: 8d35580ba78c4926320c40ba1906f353630d34e5
   ProxyKit: 3e73f2ad92327554549474ad10da21dde46d3ba8
+  PureLayout: 972964b21dbcbc5cc36785aed16aba03176f057d
   RMStepsController: 8ff91f169d884fdd834ad37007f553c7bed333eb
   SIAlertView: e6d0d786c3a3f6e456b0e8b9376d0c34d68e827b
   SQLCipher: 981110217eb93c2779c34fb59e646a1c1da918d8
@@ -169,6 +177,7 @@ SPEC CHECKSUMS:
   TTTAttributedLabel: 94bb04f1e005616002dd2cee0262a0082e533627
   UIAlertView-Blocks: f3271e84372beb97aea115cd1fb26ae66457f12f
   uservoice-iphone-sdk: 696bd0f493facb0e16d7bb7720cfcf660e27aa78
+  VTAcknowledgementsViewController: 6e71652adbe73c68f0a278a73ac9ca1e1fc00b90
   YapDatabase: 2ec54726596299c88e09e899e8f17c15d7f6b18a
 
 COCOAPODS: 0.33.1

@@ -25,6 +25,9 @@ pod 'JSQMessagesViewController', '~> 5.3'
 pod 'BBlock', '~> 1.2'
 pod 'JVFloatLabeledTextField', '~> 0.0'
 pod 'TTTAttributedLabel', '~> 1.10'
+pod 'VTAcknowledgementsViewController', '~> 0.11'
+pod 'PureLayout', '~> 1.0'
+pod 'BButton', '~> 4.0'
 
 # Waiting for 7.4 to be pushed to trunk
 pod 'CocoaAsyncSocket', :git => 'git@github.com:ChatSecure/CocoaAsyncSocket.git', :branch => '7.4-compilefix'
