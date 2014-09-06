@@ -241,18 +241,6 @@
 		639C60EE18CA9A0C00CC4DF4 /* _OTRManagedBuddy.m in Sources */ = {isa = PBXBuildFile; fileRef = 63464F0E1889EC9200526358 /* _OTRManagedBuddy.m */; };
 		639C60EF18CA9A1700CC4DF4 /* _OTRManagedMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 63464F1A1889EC9200526358 /* _OTRManagedMessage.m */; };
 		639C60F018CA9A2000CC4DF4 /* _OTRManagedXMPPTorAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 63464F241889EC9200526358 /* _OTRManagedXMPPTorAccount.m */; };
-		639C611218CA9CF800CC4DF4 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 639C610618CA9CF700CC4DF4 /* libcrypto.a */; };
-		639C611318CA9CF800CC4DF4 /* libcurve25519_donna.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 639C610718CA9CF700CC4DF4 /* libcurve25519_donna.a */; };
-		639C611418CA9CF800CC4DF4 /* libevent_core.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 639C610818CA9CF700CC4DF4 /* libevent_core.a */; };
-		639C611518CA9CF800CC4DF4 /* libevent_extra.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 639C610918CA9CF700CC4DF4 /* libevent_extra.a */; };
-		639C611618CA9CF800CC4DF4 /* libevent_openssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 639C610A18CA9CF700CC4DF4 /* libevent_openssl.a */; };
-		639C611718CA9CF800CC4DF4 /* libevent_pthreads.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 639C610B18CA9CF700CC4DF4 /* libevent_pthreads.a */; };
-		639C611818CA9CF800CC4DF4 /* libevent.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 639C610C18CA9CF800CC4DF4 /* libevent.a */; };
-		639C611918CA9CF800CC4DF4 /* libor-crypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 639C610D18CA9CF800CC4DF4 /* libor-crypto.a */; };
-		639C611A18CA9CF800CC4DF4 /* libor-event.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 639C610E18CA9CF800CC4DF4 /* libor-event.a */; };
-		639C611B18CA9CF800CC4DF4 /* libor.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 639C610F18CA9CF800CC4DF4 /* libor.a */; };
-		639C611C18CA9CF800CC4DF4 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 639C611018CA9CF800CC4DF4 /* libssl.a */; };
-		639C611D18CA9CF800CC4DF4 /* libtor.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 639C611118CA9CF800CC4DF4 /* libtor.a */; };
 		639C611F18CAA6C000CC4DF4 /* libxml2.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 639C611E18CAA6C000CC4DF4 /* libxml2.2.dylib */; };
 		639C612118CAA6CE00CC4DF4 /* libz.1.2.5.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 639C612018CAA6CE00CC4DF4 /* libz.1.2.5.dylib */; };
 		639C612218CAA71600CC4DF4 /* libresolv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D69B011417FF450056FB9E /* libresolv.dylib */; };
@@ -315,7 +303,6 @@
 		D9D69B7E14180A330056FB9E /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D69B7D14180A330056FB9E /* CoreData.framework */; };
 		D9D8D2061531056300F9E8D3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = D9D8D1F91531056300F9E8D3 /* Localizable.strings */; };
 		D9DE274C13F4F0A500E335CA /* OTRLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9DE274A13F4F0A400E335CA /* OTRLoginViewController.m */; };
-		D9F56797197E0BB9008368C1 /* OnionKit.m in Sources */ = {isa = PBXBuildFile; fileRef = D9F56796197E0BB9008368C1 /* OnionKit.m */; };
 		D9F9377D13F44BD3009A3D84 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9F9377C13F44BD3009A3D84 /* UIKit.framework */; };
 		D9F9377F13F44BD3009A3D84 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9F9377E13F44BD3009A3D84 /* Foundation.framework */; };
 		D9F9378513F44BD3009A3D84 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D9F9378313F44BD3009A3D84 /* InfoPlist.strings */; };
@@ -833,18 +820,6 @@
 		639C60D618CA993900CC4DF4 /* OTRFingerprintsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRFingerprintsViewController.m; sourceTree = "<group>"; };
 		639C60EB18CA99F200CC4DF4 /* OTRQRCodeActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRQRCodeActivity.h; sourceTree = "<group>"; };
 		639C60EC18CA99F200CC4DF4 /* OTRQRCodeActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRQRCodeActivity.m; sourceTree = "<group>"; };
-		639C610618CA9CF700CC4DF4 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libcrypto.a; sourceTree = "<group>"; };
-		639C610718CA9CF700CC4DF4 /* libcurve25519_donna.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libcurve25519_donna.a; sourceTree = "<group>"; };
-		639C610818CA9CF700CC4DF4 /* libevent_core.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libevent_core.a; sourceTree = "<group>"; };
-		639C610918CA9CF700CC4DF4 /* libevent_extra.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libevent_extra.a; sourceTree = "<group>"; };
-		639C610A18CA9CF700CC4DF4 /* libevent_openssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libevent_openssl.a; sourceTree = "<group>"; };
-		639C610B18CA9CF700CC4DF4 /* libevent_pthreads.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libevent_pthreads.a; sourceTree = "<group>"; };
-		639C610C18CA9CF800CC4DF4 /* libevent.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libevent.a; sourceTree = "<group>"; };
-		639C610D18CA9CF800CC4DF4 /* libor-crypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libor-crypto.a"; sourceTree = "<group>"; };
-		639C610E18CA9CF800CC4DF4 /* libor-event.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libor-event.a"; sourceTree = "<group>"; };
-		639C610F18CA9CF800CC4DF4 /* libor.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libor.a; sourceTree = "<group>"; };
-		639C611018CA9CF800CC4DF4 /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libssl.a; sourceTree = "<group>"; };
-		639C611118CA9CF800CC4DF4 /* libtor.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libtor.a; sourceTree = "<group>"; };
 		639C611E18CAA6C000CC4DF4 /* libxml2.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.2.dylib; path = usr/lib/libxml2.2.dylib; sourceTree = SDKROOT; };
 		639C612018CAA6CE00CC4DF4 /* libz.1.2.5.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.2.5.dylib; path = usr/lib/libz.1.2.5.dylib; sourceTree = SDKROOT; };
 		639FDE4516334FA500387666 /* OTRJabberLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRJabberLoginViewController.h; sourceTree = "<group>"; };
@@ -898,7 +873,6 @@
 		63D55DDA196CB5AE004A5435 /* OTRChatDemo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRChatDemo.m; sourceTree = "<group>"; };
 		63D72B3519145CC2005F3428 /* OTROnboardingPushAccountLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTROnboardingPushAccountLoginViewController.h; sourceTree = "<group>"; };
 		63D72B3619145CC2005F3428 /* OTROnboardingPushAccountLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTROnboardingPushAccountLoginViewController.m; sourceTree = "<group>"; };
-		63E5E73018CA93F800CF7E28 /* micro-revision.i */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c.preprocessed; name = "micro-revision.i"; path = "Submodules/OnionKit/dependencies/include/micro-revision.i"; sourceTree = "<group>"; };
 		63E6BB741752D92F0070EC47 /* no */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = no; path = ChatSecure/no.lproj/Localizable.strings; sourceTree = SOURCE_ROOT; };
 		63EB09491727484D000FACDC /* he */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = he; path = ChatSecure/he.lproj/Localizable.strings; sourceTree = SOURCE_ROOT; };
 		63EB094A17274AA2000FACDC /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = ChatSecure/es.lproj/Localizable.strings; sourceTree = SOURCE_ROOT; };
@@ -980,8 +954,6 @@
 		D9D8D20C153107E600F9E8D3 /* Strings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Strings.h; path = ../Strings.h; sourceTree = "<group>"; };
 		D9DE274913F4F0A400E335CA /* OTRLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRLoginViewController.h; sourceTree = "<group>"; };
 		D9DE274A13F4F0A400E335CA /* OTRLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRLoginViewController.m; sourceTree = "<group>"; };
-		D9F56795197E0BB9008368C1 /* OnionKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OnionKit.h; path = Submodules/OnionKit/OnionKit/OnionKit.h; sourceTree = "<group>"; };
-		D9F56796197E0BB9008368C1 /* OnionKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OnionKit.m; path = Submodules/OnionKit/OnionKit/OnionKit.m; sourceTree = "<group>"; };
 		D9F9377813F44BD3009A3D84 /* ChatSecure.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatSecure.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D9F9377C13F44BD3009A3D84 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		D9F9377E13F44BD3009A3D84 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -1004,18 +976,6 @@
 				639C612218CAA71600CC4DF4 /* libresolv.dylib in Frameworks */,
 				639C612118CAA6CE00CC4DF4 /* libz.1.2.5.dylib in Frameworks */,
 				639C611F18CAA6C000CC4DF4 /* libxml2.2.dylib in Frameworks */,
-				639C611218CA9CF800CC4DF4 /* libcrypto.a in Frameworks */,
-				639C611318CA9CF800CC4DF4 /* libcurve25519_donna.a in Frameworks */,
-				639C611418CA9CF800CC4DF4 /* libevent_core.a in Frameworks */,
-				639C611518CA9CF800CC4DF4 /* libevent_extra.a in Frameworks */,
-				639C611618CA9CF800CC4DF4 /* libevent_openssl.a in Frameworks */,
-				639C611718CA9CF800CC4DF4 /* libevent_pthreads.a in Frameworks */,
-				639C611818CA9CF800CC4DF4 /* libevent.a in Frameworks */,
-				639C611918CA9CF800CC4DF4 /* libor-crypto.a in Frameworks */,
-				639C611A18CA9CF800CC4DF4 /* libor-event.a in Frameworks */,
-				639C611B18CA9CF800CC4DF4 /* libor.a in Frameworks */,
-				639C611C18CA9CF800CC4DF4 /* libssl.a in Frameworks */,
-				639C611D18CA9CF800CC4DF4 /* libtor.a in Frameworks */,
 				63BE44CF17EE580D00F60670 /* Social.framework in Frameworks */,
 				63FE64C61727535700876D15 /* StoreKit.framework in Frameworks */,
 				D989E88E15D4F92E0081DFD1 /* Twitter.framework in Frameworks */,
@@ -1925,14 +1885,6 @@
 			name = Settings;
 			sourceTree = "<group>";
 		};
-		63ACAFE318CA73F100448508 /* ProxyKit */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = ProxyKit;
-			path = Submodules/ProxyKit/ProxyKit;
-			sourceTree = "<group>";
-		};
 		63ACAFEE18CA746600448508 /* Human */ = {
 			isa = PBXGroup;
 			children = (
@@ -2156,37 +2108,6 @@
 			name = Encryption;
 			sourceTree = "<group>";
 		};
-		63E5E71318CA938B00CF7E28 /* OnionKit */ = {
-			isa = PBXGroup;
-			children = (
-				D9F56795197E0BB9008368C1 /* OnionKit.h */,
-				D9F56796197E0BB9008368C1 /* OnionKit.m */,
-				63E5E71718CA93BD00CF7E28 /* lib */,
-				63E5E73018CA93F800CF7E28 /* micro-revision.i */,
-			);
-			name = OnionKit;
-			sourceTree = "<group>";
-		};
-		63E5E71718CA93BD00CF7E28 /* lib */ = {
-			isa = PBXGroup;
-			children = (
-				639C610618CA9CF700CC4DF4 /* libcrypto.a */,
-				639C610718CA9CF700CC4DF4 /* libcurve25519_donna.a */,
-				639C610818CA9CF700CC4DF4 /* libevent_core.a */,
-				639C610918CA9CF700CC4DF4 /* libevent_extra.a */,
-				639C610A18CA9CF700CC4DF4 /* libevent_openssl.a */,
-				639C610B18CA9CF700CC4DF4 /* libevent_pthreads.a */,
-				639C610C18CA9CF800CC4DF4 /* libevent.a */,
-				639C610D18CA9CF800CC4DF4 /* libor-crypto.a */,
-				639C610E18CA9CF800CC4DF4 /* libor-event.a */,
-				639C610F18CA9CF800CC4DF4 /* libor.a */,
-				639C611018CA9CF800CC4DF4 /* libssl.a */,
-				639C611118CA9CF800CC4DF4 /* libtor.a */,
-			);
-			name = lib;
-			path = Submodules/OnionKit/dependencies/lib;
-			sourceTree = "<group>";
-		};
 		63E72BA216CB11EE00B6F389 /* Machine */ = {
 			isa = PBXGroup;
 			children = (
@@ -2266,8 +2187,6 @@
 		D9CEED611684234D00B236B5 /* Submodules */ = {
 			isa = PBXGroup;
 			children = (
-				63E5E71318CA938B00CF7E28 /* OnionKit */,
-				63ACAFE318CA73F100448508 /* ProxyKit */,
 				63483DF41752CEB700779257 /* XMPPFramework */,
 			);
 			name = Submodules;
@@ -2892,7 +2811,6 @@
 				63483FE91752CED100779257 /* XMPPIDTracker.m in Sources */,
 				639C60C318CA988400CC4DF4 /* OTRSettingsGroup.m in Sources */,
 				639C60BE18CA988400CC4DF4 /* OTRFeedbackSetting.m in Sources */,
-				D9F56797197E0BB9008368C1 /* OnionKit.m in Sources */,
 				63464F371889EC9200526358 /* _OTRManagedStatusMessage.m in Sources */,
 				63483FEA1752CED100779257 /* XMPPSRVResolver.m in Sources */,
 				634840191752CED100779257 /* NSString+DDXML.m in Sources */,
@@ -3035,8 +2953,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/Submodules/XMPPFramework/Vendor/libidn",
-					"$(SRCROOT)/Submodules/OnionKit/dependencies/lib",
-					"$(PROJECT_DIR)/Submodules/OTRKit/dependencies/lib",
 				);
 				OTHER_CFLAGS = (
 					"-DSQLITE_HAS_CODEC",
@@ -3082,8 +2998,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/Submodules/XMPPFramework/Vendor/libidn",
-					"$(SRCROOT)/Submodules/OnionKit/dependencies/lib",
-					"$(PROJECT_DIR)/Submodules/OTRKit/dependencies/lib",
 				);
 				OTHER_CFLAGS = (
 					"-DSQLITE_HAS_CODEC",
