@@ -41,6 +41,8 @@ static CGFloat cellHeight = 60.0;
 {
     [super viewDidLoad];
     
+    self.view.backgroundColor = [UIColor whiteColor];
+    
     /////////// Navigation Bar ///////////
     self.title = COMPOSE_STRING;
     UIBarButtonItem * cancelBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelButtonPressed:)];
