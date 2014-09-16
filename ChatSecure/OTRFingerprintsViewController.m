@@ -46,13 +46,16 @@
 - (void)loadMyFingerprints
 {
     //FIXME I don't think this will work
-    self.myFingerprintsArray = @[];
-    __weak OTRFingerprintsViewController *welf = self;
+    __weak OTRFingerprintsViewController *weakSelf = self;
+    NSMutableArray *fingerprintsArray = [NSMutableArray array];
+    self.myFingerprintsArray = fingerprintsArray;
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
         [[transaction ext:OTRAllAccountDatabaseViewExtensionName] enumerateKeysAndObjectsInGroup:OTRAllAccountGroup usingBlock:^(NSString *collection, NSString *key, OTRAccount *account, NSUInteger index, BOOL *stop) {
             [[OTRKit sharedInstance] fingerprintForAccountName:account.username protocol:account.protocolTypeString completion:^(NSString *fingerprint) {
-                welf.myFingerprintsArray = [welf.myFingerprintsArray arrayByAddingObject:@{kOTRKitAccountNameKey:account.username,kOTRKitFingerprintKey:fingerprint}];
-                [welf.tableView reloadData];
+                if (fingerprint) {
+                    [fingerprintsArray addObject:@{kOTRKitAccountNameKey:account.username,kOTRKitFingerprintKey:fingerprint}];
+                    [weakSelf.tableView reloadData];
+                }
             }];
         }];
     }];
