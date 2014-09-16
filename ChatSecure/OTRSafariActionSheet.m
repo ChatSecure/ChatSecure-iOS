@@ -10,16 +10,13 @@
 #import "Strings.h"
 #import "OpenInChromeController.h"
 
-@implementation OTRSafariActionSheet
+@interface OTRSafariActionSheet()
 
-- (id)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        // Initialization code
-    }
-    return self;
-}
+@property (nonatomic, strong) NSURL *url;
+
+@end
+
+@implementation OTRSafariActionSheet
 
 -(id)initWithUrl:(NSURL *)newUrl
 {
@@ -32,7 +29,7 @@
         self = [self initWithTitle:[[newUrl absoluteURL] description] delegate:self cancelButtonTitle:CANCEL_STRING destructiveButtonTitle:nil otherButtonTitles:OPEN_IN_SAFARI_STRING, nil];
     }
     
-    url = newUrl;
+    self.url = newUrl;
    
     
     return self;
@@ -44,21 +41,13 @@
     if (buttonIndex != actionSheet.cancelButtonIndex)
     {
         if (buttonIndex == 0) {
-            [[UIApplication sharedApplication] openURL:[url absoluteURL]];
+            [[UIApplication sharedApplication] openURL:[self.url absoluteURL]];
         }
         else
         {
-            [[OpenInChromeController sharedInstance] openInChrome:url];
+            [[OpenInChromeController sharedInstance] openInChrome:self.url];
         }
     }
 }
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
-{
-    // Drawing code
-}
-*/
 
 @end

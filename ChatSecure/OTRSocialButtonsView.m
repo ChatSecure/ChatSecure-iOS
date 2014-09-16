@@ -10,6 +10,10 @@
 #import "PureLayout.h"
 #import "BButton.h"
 #import "NSURL+chatsecure.h"
+#import "UIActionSheet+Blocks.h"
+#import "OTRAppDelegate.h"
+#import "Strings.h"
+#import "OTRSafariActionSheet.h"
 
 static CGFloat kOTRSocialButtonHeight = 30.0f;
 static CGFloat kOTRSocialButtonWidth = 93.0f;
@@ -79,26 +83,40 @@ static CGFloat kOTRSocialTotalWidth = 300.0f;
 }
 
 - (void) twitterButtonPressed:(id)sender {
-    NSURL *twitterURL = [NSURL otr_twitterAppURL];
-    if ([[UIApplication sharedApplication] canOpenURL:twitterURL]) {
-        [[UIApplication sharedApplication] openURL:twitterURL];
+    UIActionSheet *actionSheet = nil;
+    NSURL *twitterAppURL = [NSURL otr_twitterAppURL];
+    if ([[UIApplication sharedApplication] canOpenURL:twitterAppURL]) {
+        RIButtonItem *facebookAppButtonItem = [RIButtonItem itemWithLabel:@"Open in Twitter" action:^{
+            [[UIApplication sharedApplication] openURL:twitterAppURL];
+        }];
+        actionSheet = [[UIActionSheet alloc]  initWithTitle:@"Twitter" cancelButtonItem:[RIButtonItem itemWithLabel:CANCEL_STRING] destructiveButtonItem:nil otherButtonItems:facebookAppButtonItem,nil];
     } else {
-        [[UIApplication sharedApplication] openURL:[NSURL otr_twitterWebURL]];
+        actionSheet = [[OTRSafariActionSheet alloc] initWithUrl:[NSURL otr_twitterWebURL]];
     }
+    [OTRAppDelegate presentActionSheet:actionSheet inView:self];
 }
 
 - (void) facebookButtonPressed:(id)sender {
-    NSURL *facebookURL = [NSURL otr_facebookAppURL];
-    if ([[UIApplication sharedApplication] canOpenURL:facebookURL]) {
-        [[UIApplication sharedApplication] openURL:facebookURL];
+    
+    NSURL *facebookAppURL = [NSURL otr_facebookAppURL];
+    
+    UIActionSheet *actionSheet = nil;
+    
+    if ([[UIApplication sharedApplication] canOpenURL:facebookAppURL]) {
+        RIButtonItem *facebookAppButtonItem = [RIButtonItem itemWithLabel:@"Open in Facebook" action:^{
+            [[UIApplication sharedApplication] openURL:facebookAppURL];
+        }];
+        actionSheet = [[UIActionSheet alloc]  initWithTitle:FACEBOOK_STRING cancelButtonItem:[RIButtonItem itemWithLabel:CANCEL_STRING] destructiveButtonItem:nil otherButtonItems:facebookAppButtonItem,nil];
     } else {
-        [[UIApplication sharedApplication] openURL:[NSURL otr_facebookWebURL]];
+        actionSheet = [[OTRSafariActionSheet alloc] initWithUrl:[NSURL otr_facebookWebURL]];
     }
+    
+    [OTRAppDelegate presentActionSheet:actionSheet inView:self];
 }
 
 - (void) githubButtonPressed:(id)sender {
-    NSURL *githubURL = [NSURL otr_githubURL];
-    [[UIApplication sharedApplication] openURL:githubURL];
+    UIActionSheet *actionSheet = [[OTRSafariActionSheet alloc] initWithUrl:[NSURL otr_githubURL]];
+    [OTRAppDelegate presentActionSheet:actionSheet inView:self];
 }
 
 @end

@@ -9,9 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface OTRSafariActionSheet : UIActionSheet <UIActionSheetDelegate>
-{
-    NSURL * url;
-}
 
 -(id)initWithUrl:(NSURL *)url;
 
