@@ -59,7 +59,7 @@ static CGFloat cellHeight = 80.0;
    
     ///////////// Setup Navigation Bar //////////////
     
-    self.title = @"Chats";
+    self.title = CHATS_STRING;
     UIBarButtonItem *settingsBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"OTRSettingsIcon"] style:UIBarButtonItemStylePlain target:self action:@selector(settingsButtonPressed:)];
     self.navigationItem.rightBarButtonItem = settingsBarButtonItem;
     

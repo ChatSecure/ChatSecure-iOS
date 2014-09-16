@@ -43,7 +43,7 @@
     [self.view addSubview:self.passphraseTextField];
     
     self.unlockButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [self.unlockButton setTitle:@"Unlock" forState:UIControlStateNormal];
+    [self.unlockButton setTitle:UNLOCK_STRING forState:UIControlStateNormal];
     self.unlockButton.enabled = NO;
     [self.unlockButton addTarget:self action:@selector(unlockTapped:) forControlEvents:UIControlEventTouchUpInside];
     self.unlockButton.translatesAutoresizingMaskIntoConstraints = NO;
@@ -52,7 +52,7 @@
     
     self.forgotPassphraseButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     self.forgotPassphraseButton.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.forgotPassphraseButton setTitle:@"Forgot Passphrase?" forState:UIControlStateNormal];
+    [self.forgotPassphraseButton setTitle:FORGOT_PASSPHRASE_STRING forState:UIControlStateNormal];
     [self.forgotPassphraseButton addTarget:self action:@selector(forgotTapped:) forControlEvents:UIControlEventTouchUpInside];
     
     [self.view addSubview:self.forgotPassphraseButton];
@@ -129,7 +129,7 @@
 
 - (void)forgotTapped:(id)sender
 {
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Forgot Passphrase" message:@"Because the database contents is encrypted with your passphrase, you've lost access to your data and will need to delete and reinstall ChatSecure to continue. Password managers like 1Password or MiniKeePass can be helpful for generating and storing strong passwords." delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:FORGOT_PASSPHRASE_STRING message:FORGOT_PASSPHRASE_INFO_STRING delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
     [alertView show];
 }
 

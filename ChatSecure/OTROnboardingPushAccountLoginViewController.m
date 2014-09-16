@@ -8,6 +8,7 @@
 
 #import "OTROnboardingPushAccountLoginViewController.h"
 #import "OTROnboardingStepsController.h"
+#import "Strings.h"
 
 @interface OTROnboardingPushAccountLoginViewController ()
 
@@ -23,7 +24,7 @@
     
     self.skipButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     self.skipButton.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.skipButton setTitle:@"Skip" forState:UIControlStateNormal];
+    [self.skipButton setTitle:SKIP_STRING forState:UIControlStateNormal];
     [self.skipButton addTarget:self action:@selector(skipTapped:) forControlEvents:UIControlEventTouchUpInside];
     
     [self.contentView addSubview:self.skipButton];

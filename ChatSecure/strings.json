@@ -1054,5 +1054,73 @@
   "ACCOUNT_DISCONNECTED_DESCRIPTION_STRING" : {
     "comment": "Error description when account is disconnected while managing requests",
     "string": "Please log into this account before managing requests."
+  },
+  "OPEN_IN_TWITTER_STRING" : {
+    "comment": "Label for button to open link in twitter app",
+    "string": "Open in Twitter"
+  },
+  "TWITTER_STRING" : {
+    "comment": "Name of the popular social tweeting site",
+    "string": "Twitter"
+  },
+  "OPEN_IN_FACEBOOK_STRING" : {
+    "comment": "Label for button to open link in facebook app",
+    "string": "Open in Facebook"
+  },
+  "GITHUB_STRING" : {
+    "comment": "Name of popular web based hosting service",
+    "string": "GitHub"
+  },
+  "REMEMBER_PASSPHRASE_STRING" : {
+    "comment": "Label for switch to save passphrase",
+    "string": "Remember Passphrase"
+  },
+  "REMEMBER_PASSPHRASE_INFO_STRING" : {
+    "comment": "Text that describes what remembering your passphrase does",
+    "string": "Your password will be stored in the iOS Keychain of this device only, and is only as safe as your device passphrase or pin. However, it will not persist during a device backup/restore via iTunes, so please don't forget it, or you may lose your conversation history."
+  },
+  "COMPOSE_STRING" : {
+    "comment": "Label for text field where you compose a new message",
+    "string": "Compose"
+  },
+  "SEARCH_STRING" : {
+    "comment": "Label for text field where you search for a buddy",
+    "string": "Search"
+  },
+  "HELP_TRANSLATE_STRING" : {
+    "comment": "Label for button to open link to translate app",
+    "string": "Help Translate"
+  },
+  "ABOUT_VERSION_STRING" : {
+    "comment": "Label for button to show version numbers and licenses",
+    "string": "About This Version"
+  },
+  "CREATED_BY_STRING" : {
+    "comment": "Start of sentence that will be followed by names",
+    "string": "Created by"
+  },
+  "NEXT_STRING" : {
+    "comment": "Label for button to go to next step",
+    "string": "Next"
+  },
+  "SKIP_STRING" : {
+    "comment": "Label for button to skip this step",
+    "string": "Skip"
+  },
+  "UNLOCK_STRING" : {
+    "comment": "Label for button to unlock app",
+    "string": "Unlock"
+  },
+  "FORGOT_PASSPHRASE_STRING" : {
+    "comment": "Label for button when you've forgotten the passphrase",
+    "string": "Forgot Passphrase?"
+  },
+  "FORGOT_PASSPHRASE_INFO_STRING" : {
+    "comment": "Text describing what happens when the user has forgotten the passphrase",
+    "string": "Because the database contents is encrypted with your passphrase, you've lost access to your data and will need to delete and reinstall ChatSecure to continue. Password managers like 1Password or MiniKeePass can be helpful for generating and storing strong passwords."
+  },
+  "CHATS_STRING" : {
+    "comment": "Title for chats view",
+    "string": "Chats"
   }
 }

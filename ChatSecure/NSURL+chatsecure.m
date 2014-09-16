@@ -34,4 +34,11 @@
     return twitterURL;
 }
 
++ (NSURL*) otr_transifexURL {
+    return [NSURL URLWithString:@"https://www.transifex.com/projects/p/chatsecure"];
+}
+
++ (NSURL*) otr_projectURL {
+    return [NSURL URLWithString:@"https://chatsecure.org"];
+}
 @end

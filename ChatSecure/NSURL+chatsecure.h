@@ -18,4 +18,7 @@
 + (NSURL*) otr_twitterAppURL;
 + (NSURL*) otr_twitterWebURL;
 
++ (NSURL*) otr_transifexURL;
++ (NSURL*) otr_projectURL;
+
 @end

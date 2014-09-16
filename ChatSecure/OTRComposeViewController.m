@@ -16,7 +16,7 @@
 #import "OTRDatabaseView.h"
 #import "OTRAccountsManager.h"
 #import "YapDatabaseFullTextSearchTransaction.h"
-
+#import "Strings.h"
 #import "OTRBuddyInfoCell.h"
 #import "OTRNewBuddyViewController.h"
 #import "OTRChooseAccountViewController.h"
@@ -42,7 +42,7 @@ static CGFloat cellHeight = 60.0;
     [super viewDidLoad];
     
     /////////// Navigation Bar ///////////
-    self.title = @"Compose";
+    self.title = COMPOSE_STRING;
     UIBarButtonItem * cancelBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelButtonPressed:)];
     self.navigationItem.rightBarButtonItem = cancelBarButtonItem;
     
@@ -51,7 +51,7 @@ static CGFloat cellHeight = 60.0;
     self.searchBar = [[UISearchBar alloc] init];
     self.searchBar.translatesAutoresizingMaskIntoConstraints = NO;
     self.searchBar.delegate = self;
-    self.searchBar.placeholder = @"Search";
+    self.searchBar.placeholder = SEARCH_STRING;
     [self.view addSubview:self.searchBar];
     
     /////////// TableView ///////////
@@ -263,7 +263,7 @@ static CGFloat cellHeight = 60.0;
         if (!cell) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:addCellIdentifier];
         }
-        cell.textLabel.text = @"Add Buddy";
+        cell.textLabel.text = ADD_BUDDY_STRING;
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         
         return cell;

@@ -30,6 +30,8 @@
 #import "OTRSocialButtonsView.h"
 #import "OTRAcknowledgementsViewController.h"
 #import "OTRSafariActionSheet.h"
+#import "NSURL+chatsecure.h"
+#import "Strings.h"
 
 static NSString *const kDefaultCellReuseIdentifier = @"kDefaultCellReuseIdentifier";
 
@@ -95,7 +97,7 @@ static NSString *const kDefaultCellReuseIdentifier = @"kDefaultCellReuseIdentifi
     NSURL *chrisballingerURL = [NSURL URLWithString:@"https://github.com/chrisballinger"];
     NSString *davidchilesString = @"@davidchiles";
     NSURL *davidChilesURL = [NSURL URLWithString:@"https://github.com/davidchiles"];
-    NSString *headerText = [NSString stringWithFormat:@"Created by %@ & %@.", chrisballingerString, davidchilesString];
+    NSString *headerText = [NSString stringWithFormat:@"%@ %@ & %@.", CREATED_BY_STRING, chrisballingerString, davidchilesString];
     NSRange chrisRange = [headerText rangeOfString:chrisballingerString];
     NSRange davidRange = [headerText rangeOfString:davidchilesString];
     
@@ -155,8 +157,8 @@ static NSString *const kDefaultCellReuseIdentifier = @"kDefaultCellReuseIdentifi
         self.edgesForExtendedLayout = UIRectEdgeNone;
         [self.navigationController.view setBackgroundColor:[UIColor whiteColor]];
     }
-    OTRAboutTableCellData *translateData = [OTRAboutTableCellData cellDataWithTitle:@"Help Translate" url:[NSURL URLWithString:@"https://www.transifex.com/projects/p/chatsecure"]];
-    OTRAboutTableCellData *aboutThisVersion = [OTRAboutTableCellData cellDataWithTitle:@"About This Version" url:nil];
+    OTRAboutTableCellData *translateData = [OTRAboutTableCellData cellDataWithTitle:HELP_TRANSLATE_STRING url:[NSURL otr_transifexURL]];
+    OTRAboutTableCellData *aboutThisVersion = [OTRAboutTableCellData cellDataWithTitle:ABOUT_VERSION_STRING url:nil];
     self.cellData = @[aboutThisVersion,translateData];
     self.view.backgroundColor = [UIColor whiteColor];
 
@@ -209,7 +211,7 @@ static NSString *const kDefaultCellReuseIdentifier = @"kDefaultCellReuseIdentifi
 
 - (void)didTapImageView:(id)sender
 {
-    [self handleOpeningURL:[NSURL URLWithString:@"https://chatsecure.org"]];
+    [self handleOpeningURL:[NSURL otr_projectURL]];
 }
 
 - (void)handleOpeningURL:(NSURL *)url

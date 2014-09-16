@@ -32,17 +32,17 @@ static CGFloat kOTRSocialTotalWidth = 300.0f;
         self.translatesAutoresizingMaskIntoConstraints = NO;
         UIFont *buttonFont = [UIFont systemFontOfSize:15];
         self.facebookButton = [[BButton alloc] initWithFrame:CGRectZero type:BButtonTypeFacebook style:BButtonStyleBootstrapV3];
-        self.facebookButton.titleLabel.text = @"Facebook";
+        self.facebookButton.titleLabel.text = FACEBOOK_STRING;
         self.facebookButton.titleLabel.font = buttonFont;
         [self.facebookButton addAwesomeIcon:FAFacebook beforeTitle:YES];
         [self.facebookButton addTarget:self action:@selector(facebookButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         self.githubButton = [[BButton alloc] initWithFrame:CGRectZero type:BButtonTypeDefault style:BButtonStyleBootstrapV3];
-        self.githubButton.titleLabel.text = @"GitHub";
+        self.githubButton.titleLabel.text = GITHUB_STRING;
         self.githubButton.titleLabel.font = buttonFont;
         [self.githubButton addAwesomeIcon:FAGithub beforeTitle:YES];
         [self.githubButton addTarget:self action:@selector(githubButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         self.twitterButton = [[BButton alloc] initWithFrame:CGRectZero type:BButtonTypeTwitter style:BButtonStyleBootstrapV3];
-        self.twitterButton.titleLabel.text = @"Twitter";
+        self.twitterButton.titleLabel.text = TWITTER_STRING;
         self.twitterButton.titleLabel.font = buttonFont;
         [self.twitterButton addAwesomeIcon:FATwitter beforeTitle:YES];
         [self.twitterButton addTarget:self action:@selector(twitterButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
@@ -86,10 +86,10 @@ static CGFloat kOTRSocialTotalWidth = 300.0f;
     UIActionSheet *actionSheet = nil;
     NSURL *twitterAppURL = [NSURL otr_twitterAppURL];
     if ([[UIApplication sharedApplication] canOpenURL:twitterAppURL]) {
-        RIButtonItem *facebookAppButtonItem = [RIButtonItem itemWithLabel:@"Open in Twitter" action:^{
+        RIButtonItem *facebookAppButtonItem = [RIButtonItem itemWithLabel:OPEN_IN_TWITTER_STRING action:^{
             [[UIApplication sharedApplication] openURL:twitterAppURL];
         }];
-        actionSheet = [[UIActionSheet alloc]  initWithTitle:@"Twitter" cancelButtonItem:[RIButtonItem itemWithLabel:CANCEL_STRING] destructiveButtonItem:nil otherButtonItems:facebookAppButtonItem,nil];
+        actionSheet = [[UIActionSheet alloc]  initWithTitle:TWITTER_STRING cancelButtonItem:[RIButtonItem itemWithLabel:CANCEL_STRING] destructiveButtonItem:nil otherButtonItems:facebookAppButtonItem,nil];
     } else {
         actionSheet = [[OTRSafariActionSheet alloc] initWithUrl:[NSURL otr_twitterWebURL]];
     }
@@ -103,7 +103,7 @@ static CGFloat kOTRSocialTotalWidth = 300.0f;
     UIActionSheet *actionSheet = nil;
     
     if ([[UIApplication sharedApplication] canOpenURL:facebookAppURL]) {
-        RIButtonItem *facebookAppButtonItem = [RIButtonItem itemWithLabel:@"Open in Facebook" action:^{
+        RIButtonItem *facebookAppButtonItem = [RIButtonItem itemWithLabel:OPEN_IN_FACEBOOK_STRING action:^{
             [[UIApplication sharedApplication] openURL:facebookAppURL];
         }];
         actionSheet = [[UIActionSheet alloc]  initWithTitle:FACEBOOK_STRING cancelButtonItem:[RIButtonItem itemWithLabel:CANCEL_STRING] destructiveButtonItem:nil otherButtonItems:facebookAppButtonItem,nil];

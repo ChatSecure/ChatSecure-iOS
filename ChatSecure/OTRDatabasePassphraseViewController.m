@@ -14,6 +14,7 @@
 #import "OTRConstants.h"
 #import "UIAlertView+Blocks.h"
 #import "OTRRememberPasswordView.h"
+#import "Strings.h"
 
 @interface OTRDatabasePassphraseViewController () <OTRPasswordStrengthViewDelegate>
 
@@ -61,7 +62,7 @@
     ////// Next Step Button //////
     self.nextStepButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     self.nextStepButton.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.nextStepButton setTitle:@"Next" forState:UIControlStateNormal];
+    [self.nextStepButton setTitle:NEXT_STRING forState:UIControlStateNormal];
     [self.nextStepButton addTarget:self action:@selector(nextTapped:) forControlEvents:UIControlEventTouchUpInside];
     
     [containerView addSubview:self.nextStepButton];
