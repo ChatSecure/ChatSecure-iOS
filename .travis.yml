@@ -13,17 +13,13 @@ before_install:
     - git submodule update --init --recursive
 
 install:
-  - ./Submodules/OnionKit/build-libssl.sh --noverify
-  - ./Submodules/OnionKit/build-libevent.sh --noverify
-  - ./Submodules/OnionKit/build-tor.sh --noverify
+  - ./Submodules/OnionKit/build-libssl.sh --noverify --i386only
+  - ./Submodules/OnionKit/build-libevent.sh --noverify --i386only
+  - ./Submodules/OnionKit/build-tor.sh --noverify --i386only
   - ./Submodules/OTRKit/build-all.sh
 
 before_script:
   - gem install cocoapods
-  - brew update
-  - brew upgrade xctool
+  - pod install
 script:
-  - xctool -workspace ChatSecure.xcworkspace -scheme ChatSecure -sdk iphonesimulator7.1 ONLY_ACTIVE_ARCH=NO build
-
-notifications:
-  email: false
+  - xctool -workspace ChatSecure.xcworkspace -scheme ChatSecure -sdk iphonesimulator7.1 -arch i386 build
