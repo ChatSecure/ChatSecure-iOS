@@ -1,4 +1,4 @@
-# ChatSecure
+# [ChatSecure](https://github.com/chrisballinger/ChatSecure-iOS)
 
 [![Build Status](https://travis-ci.org/chrisballinger/ChatSecure-iOS.svg?branch=master)](https://travis-ci.org/chrisballinger/ChatSecure-iOS)
 
@@ -10,7 +10,7 @@
 This project is **100% free** because it is important that all people around the world have unrestricted access to privacy tools.
 However, developing and supporting this project is hard work and costs real money. Please help support the development of this project! We now also accept Bitcoin via Coinbase! :)
 
-[![bitcoin](https://chatsecure.org/images/bitcoin_donate.png)](https://coinbase.com/checkouts/1cf35f00d722205726f50b940786c413) [![donation](https://chatsecure.org/images/paypal_donate.png)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=XRBHJ9AX5VWNA) 
+[![bitcoin coinbase donation](https://chatsecure.org/images/bitcoin_donate.png)](https://coinbase.com/checkouts/1cf35f00d722205726f50b940786c413) [![paypal donation](https://chatsecure.org/images/paypal_donate.png)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=XRBHJ9AX5VWNA) 
 
 
 ## Localization
@@ -29,29 +29,25 @@ If you would like to contribute/improve a translation:
 ## Compatibility
 
 
-**Bold** indicates it has been tested and works properly. [Full List](https://en.wikipedia.org/wiki/Off-the-Record_Messaging#Client_support).
+There's a more [full list of OTR clients on Wikipedia](https://en.wikipedia.org/wiki/Off-the-Record_Messaging#Client_support).
 
 
-### Native
+### Desktop
 
-* **[Adium](https://adium.im/) (Mac OS X) - OTR works over both XMPP and Oscar.**
-* Jitsi (Cross-platform)
-
-###  Plug-in
-
+* [Adium](https://adium.im/) (Mac OS X)
+* [Jitsi](https://jitsi.org) (Cross-platform)
 * [Pidgin](https://pidgin.im/) (cross-platform), with [pidgin-otr](https://otr.cypherpunks.ca/index.php#downloads) plugin.
 
-### Phone apps
+### Mobile
 
-* **[ChatSecure Android](https://guardianproject.info/apps/chatsecure/) (formerly known as Gibberbot)**, a free and open source Android application produced by The Guardian Project, provides OTR protocol compatible over XMPP chat.
-* [BEEM](http://beem-project.com/projects/beem) - Android XMPP client (compatibility unknown)
-
+* [ChatSecure-Android](https://guardianproject.info/apps/chatsecure/) (formerly known as Gibberbot)
+* [BEEM](http://beem-project.com/projects/beem) (Android)
+* [Conversations](https://github.com/siacs/Conversations) (Android)
 
 ## Build Instructions
 
-Install [mogenerator](http://rentzsch.github.io/mogenerator/) in order to regenerate the Core Data model files. You'll also need [Cocoapods](http://cocoapods.org) for some of our dependencies.
+You'll need [Cocoapods](http://cocoapods.org) for most of our dependencies.
     
-    $ brew install mogenerator
     $ gem install cocoapods
     
 Download the source code and **don't forget** to pull down all of the submodules as well.
@@ -66,11 +62,30 @@ Now you'll need to build the dependencies. During this process we will automatic
     $ bash ./Submodules/OTRKit/build-all.sh
     $ pod install
     
-Make your own version of environment-specific data. Make `OTRSecrets.m` file with blank API keys.
+Next you'll need to create your own version of environment-specific data. Make `OTRSecrets.m` the file:
+
+    $ touch ChatSecure/OTRSecrets.m
+
+Then fill it with blank API keys:
+
+```obj-c
+NSString *const kOTRGoogleAppSecret = @"";
+NSString *const kOTRHockeyLiveIdentifier = @"";
+NSString *const kOTRHockeyBetaIdentifier = @"";
+```
     
 Open `ChatSecure.xcworkspace` in Xcode and build. 
 
-*Note*: **Don't open the `.xcodeproj` anymore** because we use Cocoapods now!
+*Note*: **Don't open the `.xcodeproj`** because we use Cocoapods now!
+
+## Contributing
+
+Thank you for your interest in contributing to ChatSecure! To avoid potential legal headaches and to allow distribution on Apple's App Store please sign our CLA (Contributors License Agreement). For contributing translations, please check out our [Transifex](https://www.transifex.com/projects/p/chatsecure/) page.
+
+1. Sign the CLA ([odt](https://github.com/chrisballinger/ChatSecure-iOS/raw/master/media/contributing/CLA.odt), [pdf](https://github.com/chrisballinger/ChatSecure-iOS/raw/master/media/contributing/CLA.pdf)) and email it to [chris@chatsecure.org](mailto:chris@chatsecure.org).
+2. [Fork](https://github.com/chrisballinger/ChatSecure-iOS/fork) the project and (preferably) work in a feature branch.
+3. Open a [pull request](https://github.com/chrisballinger/ChatSecure-ios/pulls) on GitHub.
+4. Thank you!
 
 ## License
 
@@ -95,16 +110,6 @@ Open `ChatSecure.xcworkspace` in Xcode and build.
 If you would like to relicense this code to distribute it on the App Store, 
 please contact me at [chris@chatsecure.org](mailto:chris@chatsecure.org).
 
-## Contributing
-
-Thank you for your interest in contributing to ChatSecure! To avoid potential legal headaches and to allow distribution on Apple's App Store please sign our CLA (Contributors License Agreement). For contributing translations, please check out our [Transifex](https://www.transifex.com/projects/p/chatsecure/) page.
-
-1. Sign the CLA ([odt](https://github.com/chrisballinger/ChatSecure-iOS/raw/master/media/contributing/CLA.odt), [pdf](https://github.com/chrisballinger/ChatSecure-iOS/raw/master/media/contributing/CLA.pdf)) and email it to [chris@chatsecure.org](mailto:chris@chatsecure.org).
-2. [Fork](https://github.com/chrisballinger/ChatSecure-iOS/fork) the project and (preferably) work in a feature branch.
-3. Open a [pull request](https://github.com/chrisballinger/ChatSecure-ios/pulls) on GitHub.
-4. Thank you!
-
-
 ## Third-party Libraries
 
 This software additionally references or incorporates the following sources
@@ -114,33 +119,37 @@ in the sources themselves:
 The following dependencies are bundled with the ChatSecure, but are under
 terms of a separate license:
 
-* [OTRKit](https://github.com/chatsecure/otrkit) - Objective-C libotr wrapper library for OTR encryption
+* [OTRKit](https://github.com/chatsecure/otrkit) - Objective-C libotr wrapper library for OTR encryption [![Build Status](https://travis-ci.org/ChatSecure/OTRKit.svg?branch=master)](https://travis-ci.org/ChatSecure/OTRKit)
 	* [libotr](https://otr.cypherpunks.ca/) - provides the core message encryption capabilities
 	* [libgcrypt](https://www.gnu.org/software/libgcrypt/) - handles core libotr encryption routines
 	* [libgpg-error](http://www.gnupg.org/related_software/libgpg-error/) - error codes used by libotr
+* [OnionKit](https://github.com/chatsecure/onionkit) - Objective-C Tor Wrapper Framework for iOS [![Build Status](https://travis-ci.org/ChatSecure/OnionKit.svg)](https://travis-ci.org/ChatSecure/OnionKit)
+	* [OpenSSL](https://www.openssl.org) - crypto primitives required by Tor
+	* [libevent](http://libevent.org) - Tor i/o dependency
+	* [Tor](https://www.torproject.org) - internet anonymity framework 
 * [XMPPFramework](https://github.com/robbiehanson/XMPPFramework) - XMPP support
+* [YapDatabase](https://github.com/yapstudios/YapDatabase) - YapDatabase is a pretty awesome key/value/collection store built atop sqlite for iOS & Mac.
+	* [SQLCipher](https://www.zetetic.net/sqlcipher/) - full database encryption for [sqlite](http://sqlite.org)
+* [Mantle](https://github.com/mantle/mantle) - Model framework for Cocoa and Cocoa Touch
+* [JSQMessagesViewController](https://github.com/jessesquires/JSQMessagesViewController) - Messages UI library for iOS
 * [MBProgressHUD](https://github.com/jdg/MBProgressHUD) - a nice looking progress HUD
 * [MWFeedParser](https://github.com/mwaterfall/MWFeedParser) - Methods for escaping HTML strings
 * [SSKeychain](https://github.com/soffes/sskeychain) - Utilities to store passwords securely in the iOS keychain
 * [Appirater](https://github.com/arashpayan/appirater) - nags people to give reviews
-* [MagicalRecord](https://github.com/magicalpanda/MagicalRecord) - Core Data convenience methods
-* [encrypted-core-data](https://github.com/project-imas/encrypted-core-data) - Core Data + SQLCipher
 * [UserVoice](https://www.uservoice.com/) - in-app support forum
-* [mogenerator](https://github.com/rentzsch/mogenerator) - creates class files for core data model
+* [HockeySDK](https://github.com/bitstadium/HockeySDK-iOS) - crash reporting framework
 * [DAKeyboardControl](https://github.com/danielamitay/DAKeyboardControl) - support for swiping down keyboard in chat view
+
+For a more complete list, check the [Podfile](https://github.com/chrisballinger/ChatSecure-iOS/blob/master/Podfile).
 
 ## Acknowledgements
 
 Thank you to everyone who helped this project become a reality! This project is also supported by the fine folks from [The Guardian Project](https://guardianproject.info) and [OpenITP](https://openitp.org).
 
 * [Nick Hum](http://nickhum.com/) - awesome icon.
-* [Glyphish](http://glyphish.com/) - icons used on the tab bar.
 * [Icons8](http://icons8.com/license) - Various new "iOS 7"-style icons
-* [Adium](https://adium.im/) - lock/unlock icon used in chat window, status gems.
-* [Sergio Sánchez López](https://www.iconfinder.com/icons/7043/aim_icon) - AIM protocol icon.
 * [Mateo Zlatar](http://thenounproject.com/mateozlatar/) - [World Icon](http://thenounproject.com/term/world/6502/)
 * [Goxxy](http://rocketdock.com/addon/icons/3462) - Google Talk icon.
-* [AcaniChat](https://github.com/acani/AcaniChat) - help on setting up chat view input box
 * [Localizations](https://www.transifex.com/projects/p/chatsecure/)
 	* [Jiajuan Lin](http://www.personal.psu.edu/jwl5262/blogs/lin_portfolio/) (Chinese)
 	* [Jan-Christoph Borchardt](http://jancborchardt.net/) (German)
