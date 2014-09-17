@@ -834,6 +834,8 @@
 		63AC174818C7AAE200E6624C /* OTRConversationCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRConversationCell.m; sourceTree = "<group>"; };
 		63AC174A18C7AAF200E6624C /* OTRBuddyImageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBuddyImageCell.m; sourceTree = "<group>"; };
 		63AC174B18C7AAF200E6624C /* OTRBuddyImageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBuddyImageCell.h; sourceTree = "<group>"; };
+		63B4114019C90593008977A5 /* uz */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uz; path = ChatSecure/uz.lproj/Localizable.strings; sourceTree = SOURCE_ROOT; };
+		63B4114119C905A0008977A5 /* da-DK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "da-DK"; path = "ChatSecure/da_DK.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
 		63B7E55B193E89A300C2A444 /* OTRMessagesCollectionViewCellIncoming.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRMessagesCollectionViewCellIncoming.h; sourceTree = "<group>"; };
 		63B7E55C193E89A300C2A444 /* OTRMessagesCollectionViewCellIncoming.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRMessagesCollectionViewCellIncoming.m; sourceTree = "<group>"; };
 		63B7E55E193E89C300C2A444 /* OTRMessagesCollectionViewCellOutgoing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRMessagesCollectionViewCellOutgoing.h; sourceTree = "<group>"; };
@@ -2452,6 +2454,8 @@
 				ro,
 				th,
 				uk,
+				uz,
+				"da-DK",
 			);
 			mainGroup = D9F9376D13F44BD3009A3D84;
 			productRefGroup = D9F9377913F44BD3009A3D84 /* Products */;
@@ -2867,6 +2871,8 @@
 				636BDD6F17D92A5C00861A9A /* ro_RO */,
 				D9077CFA18B7FEEC00AEE665 /* fr */,
 				D9077CFB18B7FF0500AEE665 /* pl */,
+				63B4114019C90593008977A5 /* uz */,
+				63B4114119C905A0008977A5 /* da-DK */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
