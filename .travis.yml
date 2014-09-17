@@ -13,12 +13,12 @@ before_install:
     - git submodule update --init --recursive
 
 install:
-  - ./Submodules/OnionKit/build-libssl.sh --noverify --i386only
-  - ./Submodules/OnionKit/build-libevent.sh --noverify --i386only
-  - ./Submodules/OnionKit/build-libtor.sh --noverify --i386only
-  - ./Submodules/OTRKit/build-libgpg-error.sh
-  - ./Submodules/OTRKit/build-libgcrypt.sh
-  - ./Submodules/OTRKit/build-libotr.sh
+  - bash ./Submodules/OnionKit/build-libssl.sh --noverify --i386only
+  - bash ./Submodules/OnionKit/build-libevent.sh --noverify --i386only
+  - bash ./Submodules/OnionKit/build-libtor.sh --noverify --i386only
+  - bash ./Submodules/OTRKit/build-libgpg-error.sh
+  - bash ./Submodules/OTRKit/build-libgcrypt.sh
+  - bash ./Submodules/OTRKit/build-libotr.sh
 
 before_script:
   - gem install cocoapods
