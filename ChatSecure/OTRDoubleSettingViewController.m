@@ -80,7 +80,7 @@
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self setTextForValueLabel];
-    self.descriptionLabel.text = otrSetting.description;
+    self.descriptionLabel.text = otrSetting.settingDescription;
     
     
     double widthFraction = .8;

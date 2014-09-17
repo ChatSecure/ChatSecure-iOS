@@ -29,7 +29,7 @@
     if (self = [super init])
     {
         _title = newTitle;
-        _description = newDescription;
+        _settingDescription = newDescription;
     }
     return self;
 }

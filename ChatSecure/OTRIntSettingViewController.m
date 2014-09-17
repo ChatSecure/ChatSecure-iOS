@@ -65,25 +65,20 @@
     return CGPointMake(round(pt.x), round(pt.y));
 }
 
-
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     newValue = otrSetting.intValue;
     [self setTextForValueLabel];
-    self.descriptionLabel.text = otrSetting.description;
-    
-    
+    self.descriptionLabel.text = otrSetting.settingDescription;
     
     [self resizeDescriptionLabel];
-    
     
     int index = [self indexForValue:otrSetting.intValue];
     self.selectedPath = [NSIndexPath indexPathForRow:index inSection:0];
     [self.valueTable selectRowAtIndexPath:selectedPath animated:NO scrollPosition:UITableViewScrollPositionNone];
     [self tableView:valueTable didSelectRowAtIndexPath:selectedPath];
-    
-    
 }
+
 -(void)resizeDescriptionLabel
 {
     double widthFraction = .8;

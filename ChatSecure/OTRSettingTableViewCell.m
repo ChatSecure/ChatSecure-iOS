@@ -32,7 +32,7 @@
 
 - (void) setOtrSetting:(OTRSetting *)setting {
     self.textLabel.text = setting.title;
-    self.detailTextLabel.text = setting.description;
+    self.detailTextLabel.text = setting.settingDescription;
     if(setting.imageName)
     {
         self.imageView.image = [UIImage imageNamed:setting.imageName];

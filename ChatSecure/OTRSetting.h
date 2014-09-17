@@ -35,7 +35,7 @@ typedef void (^OTRSettingActionBlock)(void);
 @interface OTRSetting : NSObject
 
 @property (nonatomic, strong, readonly) NSString *title;
-@property (nonatomic, strong, readonly) NSString *description;
+@property (nonatomic, strong, readonly) NSString *settingDescription;
 @property (nonatomic, strong) NSString *imageName;
 @property (nonatomic, weak) id<OTRSettingDelegate> delegate;
 @property (nonatomic, copy) OTRSettingActionBlock actionBlock;
