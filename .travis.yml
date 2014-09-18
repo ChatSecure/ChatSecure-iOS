@@ -14,6 +14,7 @@ before_install:
     - git submodule update --init --recursive
 
 install:
+  - echo -e "NSString *const kOTRGoogleAppSecret = @\"\";\nNSString *const kOTRHockeyLiveIdentifier = @\"\";\nNSString *const kOTRHockeyBetaIdentifier = @\"\";\n" > ./ChatSecure/OTRSecrets.m
   - bash ./Submodules/OnionKit/build-libssl.sh --noverify --i386only
   - bash ./Submodules/OnionKit/build-libevent.sh --noverify --i386only
   - bash ./Submodules/OnionKit/build-libtor.sh --noverify --i386only
