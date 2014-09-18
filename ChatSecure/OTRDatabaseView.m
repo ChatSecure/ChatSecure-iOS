@@ -15,6 +15,7 @@
 #import "OTRMessage.h"
 #import "OTRXMPPPresenceSubscriptionRequest.h"
 #import "YapDatabaseFullTextSearch.h"
+#import "YapDatabaseFilteredView.h"
 
 #import "OTRYapPushAccount.h"
 #import "OTRYapPushDevice.h"
@@ -28,12 +29,14 @@ NSString *OTRBuddyNameSearchDatabaseViewExtensionName = @"OTRBuddyBuddyNameSearc
 NSString *OTRAllBuddiesDatabaseViewExtensionName = @"OTRAllBuddiesDatabaseViewExtensionName";
 NSString *OTRAllSubscriptionRequestsViewExtensionName = @"AllSubscriptionRequestsViewExtensionName";
 NSString *OTRAllPushAccountInfoViewExtensionName = @"OTRAllPushAccountInfoViewExtensionName";
+NSString *OTRUnreadMessagesViewExtensionName = @"OTRUnreadMessagesViewExtensionName";
 
 NSString *OTRAllAccountGroup = @"All Accounts";
 NSString *OTRAllAccountDatabaseViewExtensionName = @"OTRAllAccountDatabaseViewExtensionName";
 NSString *OTRChatMessageGroup = @"Messages";
 NSString *OTRBuddyGroup = @"Buddy";
 NSString *OTRAllPresenceSubscriptionRequestGroup = @"OTRAllPresenceSubscriptionRequestGroup";
+NSString *OTRUnreadMessageGroup = @"Unread Messages";
 
 NSString *OTRPushTokenGroup = @"Tokens";
 NSString *OTRPushDeviceGroup = @"Devices";
@@ -404,6 +407,28 @@ NSString *OTRPushAccountGroup = @"Account";
                                         versionTag:@""
                                            options:options];
     return [[OTRDatabaseManager sharedInstance].database registerExtension:databaseView withName:OTRAllSubscriptionRequestsViewExtensionName];
+}
+
++ (BOOL)registerUnreadMessagesView
+{
+    YapDatabaseViewBlockType filteringBlockType;
+    YapDatabaseViewFilteringBlock filteringBlock;
+    
+    filteringBlockType = YapDatabaseViewBlockTypeWithObject;
+    filteringBlock = ^BOOL (NSString *group, NSString *collection, NSString *key, id object)
+    {
+        if ([object isKindOfClass:[OTRMessage class]]) {
+            return !((OTRMessage *)object).isRead;
+        }
+        return NO;
+    };
+    
+    YapDatabaseFilteredView *filteredView =
+    [[YapDatabaseFilteredView alloc] initWithParentViewName:OTRChatDatabaseViewExtensionName
+                                             filteringBlock:filteringBlock
+                                         filteringBlockType:filteringBlockType];
+    
+    return [[OTRDatabaseManager sharedInstance].database registerExtension:filteredView withName:OTRUnreadMessagesViewExtensionName];
 }
 
 + (BOOL)registerPushView

@@ -40,6 +40,7 @@ static CGFloat cellHeight = 80.0;
 @property (nonatomic, strong) YapDatabaseConnection *connection;
 @property (nonatomic, strong) YapDatabaseViewMappings *mappings;
 @property (nonatomic, strong) YapDatabaseViewMappings *subscriptionRequestsMappings;
+@property (nonatomic, strong) YapDatabaseViewMappings *unreadMessagesMappings;
 
 @property (nonatomic, strong) UIBarButtonItem *composeBarButtonItem;
 @end
@@ -84,16 +85,22 @@ static CGFloat cellHeight = 80.0;
     
     self.connection = [OTRDatabaseManager sharedInstance].mainThreadReadOnlyDatabaseConnection;
     
-    [OTRDatabaseView registerConversationDatabaseView];
-    
     self.mappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[OTRConversationGroup]
                                                                view:OTRConversationDatabaseViewExtensionName];
     self.subscriptionRequestsMappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[OTRAllPresenceSubscriptionRequestGroup]
                                                                                    view:OTRAllSubscriptionRequestsViewExtensionName];
+    self.unreadMessagesMappings = [[YapDatabaseViewMappings alloc] initWithGroupFilterBlock:^BOOL(NSString *group, YapDatabaseReadTransaction *transaction) {
+        return YES;
+    } sortBlock:^NSComparisonResult(NSString *group1, NSString *group2, YapDatabaseReadTransaction *transaction) {
+        return NSOrderedSame;
+    } view:OTRUnreadMessagesViewExtensionName];
+    
+    
         
     [self.connection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         [self.mappings updateWithTransaction:transaction];
         [self.subscriptionRequestsMappings updateWithTransaction:transaction];
+        [self.unreadMessagesMappings updateWithTransaction:transaction];
     }];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -112,6 +119,7 @@ static CGFloat cellHeight = 80.0;
     [self.cellUpdateTimer invalidate];
     [self.tableView reloadData];
     [self updateInbox];
+    [self updateTitle];
     self.cellUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:60.0 target:self selector:@selector(updateVisibleCells:) userInfo:nil repeats:YES];
     
     if([OTRProtocolManager sharedInstance].numberOfConnectedProtocols){
@@ -162,11 +170,17 @@ static CGFloat cellHeight = 80.0;
 
 - (void)enterConversationWithBuddy:(OTRBuddy *)buddy
 {
+    if (buddy) {
+        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+            [buddy setAllMessagesRead:transaction];
+        }];
+    }
     OTRMessagesViewController *messagesViewController = [OTRAppDelegate appDelegate].messagesViewController;
     messagesViewController.buddy = buddy;
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
         [self.navigationController pushViewController:messagesViewController animated:YES];
     }
+    
 }
 
 - (void)updateVisibleCells:(id)sender
@@ -254,6 +268,21 @@ static CGFloat cellHeight = 80.0;
     }
 }
 
+- (void)updateTitle
+{
+    NSUInteger numberUnreadMessages = [self.unreadMessagesMappings numberOfItemsInAllGroups];
+    if (numberUnreadMessages > 99) {
+        self.title = [NSString stringWithFormat:@"%@ (99+)",CHATS_STRING];
+    }
+    else if (numberUnreadMessages > 0)
+    {
+        self.title = [NSString stringWithFormat:@"%@ (%ld)",CHATS_STRING,numberUnreadMessages];
+    }
+    else {
+        self.title = CHATS_STRING;
+    }
+}
+
 
 #pragma - mark UITableViewDataSource Methods
 
@@ -317,25 +346,37 @@ static CGFloat cellHeight = 80.0;
 
 - (void)yapDatabaseModified:(NSNotification *)notification
 {
-    
-    // Process the notification(s),
-    // and get the change-set(s) as applies to my view and mappings configuration.
     NSArray *notifications = notification.userInfo[@"notifications"];
     
     NSArray *sectionChanges = nil;
     NSArray *rowChanges = nil;
     
     [[self.connection ext:OTRConversationDatabaseViewExtensionName] getSectionChanges:&sectionChanges
-                                                  rowChanges:&rowChanges
-                                            forNotifications:notifications
-                                                withMappings:self.mappings];
+                                                                           rowChanges:&rowChanges
+                                                                     forNotifications:notifications
+                                                                         withMappings:self.mappings];
     
     NSArray *subscriptionSectionChanges = nil;
     NSArray *subscriptionRowChanges = nil;
-    [[self.connection ext:OTRAllSubscriptionRequestsViewExtensionName] getSectionChanges:&subscriptionSectionChanges rowChanges:&subscriptionRowChanges forNotifications:notifications withMappings:self.subscriptionRequestsMappings];
+    [[self.connection ext:OTRAllSubscriptionRequestsViewExtensionName] getSectionChanges:&subscriptionSectionChanges
+                                                                              rowChanges:&subscriptionRowChanges
+                                                                        forNotifications:notifications
+                                                                            withMappings:self.subscriptionRequestsMappings];
     
     if ([subscriptionSectionChanges count] || [subscriptionRowChanges count]) {
         [self updateInbox];
+    }
+    
+    NSArray *unreadMessagesSectionChanges = nil;
+    NSArray *unreadMessagesRowChanges = nil;
+    
+    [[self.connection ext:OTRUnreadMessagesViewExtensionName] getSectionChanges:&unreadMessagesSectionChanges
+                                                                     rowChanges:&unreadMessagesRowChanges
+                                                               forNotifications:notifications
+                                                                   withMappings:self.unreadMessagesMappings];
+    
+    if ([unreadMessagesSectionChanges count] || [unreadMessagesRowChanges count]) {
+        [self updateTitle];
     }
     
     // No need to update mappings.

@@ -83,4 +83,6 @@ extern const struct OTRBuddyEdges {
 + (void)resetAllBuddyStatusesWithTransaction:(YapDatabaseReadWriteTransaction *)transaction;
 
 
+
+
 @end

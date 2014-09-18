@@ -10,7 +10,7 @@
 #import "YapDatabaseViewMappings.h"
 #import "YapDatabaseView.h"
 
-
+//Extension Strings
 extern NSString *OTRConversationDatabaseViewExtensionName;
 extern NSString *OTRChatDatabaseViewExtensionName;
 extern NSString *OTRAllAccountDatabaseViewExtensionName;
@@ -19,11 +19,14 @@ extern NSString *OTRBuddyNameSearchDatabaseViewExtensionName;
 extern NSString *OTRAllBuddiesDatabaseViewExtensionName;
 extern NSString *OTRAllSubscriptionRequestsViewExtensionName;
 extern NSString *OTRAllPushAccountInfoViewExtensionName;
+extern NSString *OTRUnreadMessagesViewExtensionName;
 
+// Group Strins
 extern NSString *OTRAllAccountGroup;
 extern NSString *OTRConversationGroup;
 extern NSString *OTRChatMessageGroup;
 extern NSString *OTRBuddyGroup;
+extern NSString *OTRUnreadMessageGroup;
 extern NSString *OTRAllPresenceSubscriptionRequestGroup;
 
 extern NSString *OTRPushAccountGroup;
@@ -46,6 +49,8 @@ extern NSString *OTRPushTokenGroup;
 + (BOOL)registerAllBuddiesDatabaseView;
 
 + (BOOL)registerAllSubscriptionRequestsView;
+
++ (BOOL)registerUnreadMessagesView;
 
 + (BOOL)registerPushView;
 @end
