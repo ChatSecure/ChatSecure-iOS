@@ -164,7 +164,6 @@
 
 - (void)updateConstraints
 {
-    [super updateConstraints];
     NSDictionary *views = @{@"imageView": self.avatarImageView,
                             @"conversationLabel": self.conversationLabel,
                             @"dateLabel":self.dateLabel,
@@ -173,19 +172,24 @@
                             @"accountLabel":self.accountLabel};
     
     NSDictionary *metrics = @{@"margin":[NSNumber numberWithFloat:OTRBuddyImageCellPadding]};
-    
-    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[imageView]-margin-[nameLabel]->=0-[dateLabel]-margin-|"
-                                                                             options:0
-                                                                             metrics:metrics
-                                                                               views:views]];
-    
-    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[imageView]-margin-[conversationLabel]-margin-|"
-                                                                             options:0
-                                                                             metrics:metrics
-                                                                               views:views]];
-    
-    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-margin-[dateLabel]" options:0 metrics:metrics
-                                                                               views:views]];
+    if (!self.addedConstraints) {
+        
+        
+        [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[imageView]-margin-[nameLabel]->=0-[dateLabel]-margin-|"
+                                                                                 options:0
+                                                                                 metrics:metrics
+                                                                                   views:views]];
+        
+        [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[imageView]-margin-[conversationLabel]-margin-|"
+                                                                                 options:0
+                                                                                 metrics:metrics
+                                                                                   views:views]];
+        
+        [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-margin-[dateLabel]" options:0 metrics:metrics
+                                                                                   views:views]];
+        
+        
+    }
     
     if([self.accountHorizontalConstraints count])
     {
@@ -195,7 +199,7 @@
     if([self.verticalConstraints count]) {
         [self.contentView removeConstraints:self.verticalConstraints];
     }
-
+    
     if (self.showAccountLabel) {
         self.accountHorizontalConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:[imageView]-margin-[accountLabel]|"
                                                                                     options:0
@@ -204,8 +208,8 @@
         
         self.verticalConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-margin-[nameLabel][conversationLabel][accountLabel]-margin-|"
                                                                            options:0
-                                                                            metrics:metrics
-                                                                            views:views];
+                                                                           metrics:metrics
+                                                                             views:views];
         
     }
     else {
@@ -221,9 +225,7 @@
     }
     
     [self.contentView addConstraints:self.verticalConstraints];
-    
-    
-    
+    [super updateConstraints];
 }
 
 @end

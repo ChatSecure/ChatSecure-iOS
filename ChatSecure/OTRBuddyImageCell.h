@@ -16,6 +16,7 @@ extern const CGFloat OTRBuddyImageCellPadding;
 
 @property (nonatomic, strong, readonly) UIImageView *avatarImageView;
 @property (nonatomic, strong) UIColor *imageViewBorderColor;
+@property (nonatomic, readonly) BOOL addedConstraints;
 
 - (void)setBuddy:(OTRBuddy *)buddy;
 

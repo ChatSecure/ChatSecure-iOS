@@ -17,7 +17,7 @@ const CGFloat OTRBuddyImageCellPadding = 12.0;
 @interface OTRBuddyImageCell ()
 
 @property (nonatomic, strong) UIImageView *avatarImageView;
-@property (nonatomic) BOOL addedContraints;
+@property (nonatomic) BOOL addedConstraints;
 
 @end
 
@@ -38,7 +38,7 @@ const CGFloat OTRBuddyImageCellPadding = 12.0;
         [cellImageLayer setBorderColor:[self.imageViewBorderColor CGColor]];
         [self.contentView addSubview:self.avatarImageView];
         self.translatesAutoresizingMaskIntoConstraints = NO;
-        self.addedContraints = NO;
+        self.addedConstraints = NO;
     }
     return self;
 }
@@ -78,17 +78,15 @@ const CGFloat OTRBuddyImageCellPadding = 12.0;
 
 - (void)updateConstraints
 {
-    [super updateConstraints];
-    
-    if (!self.addedContraints) {
+    if (!self.addedConstraints) {
         [self.avatarImageView autoPinEdgeToSuperviewEdge:ALEdgeLeft withInset:OTRBuddyImageCellPadding];
         [self.avatarImageView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:OTRBuddyImageCellPadding];
         [self.avatarImageView autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:OTRBuddyImageCellPadding];
         [self.avatarImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.avatarImageView];
         
-        self.addedContraints = YES;
+        self.addedConstraints = YES;
     }
-    
+    [super updateConstraints];
 }
 
 + (NSString *)reuseIdentifier

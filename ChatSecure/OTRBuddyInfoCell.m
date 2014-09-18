@@ -11,6 +11,7 @@
 #import "OTRBuddy.h"
 #import "OTRXMPPBuddy.h"
 #import "Strings.h"
+#import "PureLayout.h"
 
 @interface OTRBuddyInfoCell ()
 
@@ -66,17 +67,17 @@
 
 - (void)updateConstraints
 {
+    if (!self.addedConstraints) {
+        NSDictionary *metrics = @{@"margin":@(OTRBuddyImageCellPadding)};
+        
+        [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[imageView]-margin-[nameLabel]->=margin-|" options:0 metrics:metrics views:@{@"nameLabel":self.nameLabel,@"imageView":self.avatarImageView}]];
+        
+        [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[imageView]-margin-[identifierLabel]->=margin-|" options:0 metrics:metrics views:@{@"identifierLabel":self.identifierLabel,@"imageView":self.avatarImageView}]];
+        
+        [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-margin-[nameLabel]->=0-[identifierLabel]-margin-|" options:0 metrics:metrics views:@{@"nameLabel":self.nameLabel,@"identifierLabel":self.identifierLabel}]];
+        [super updateConstraints];
+    }
     [super updateConstraints];
-
-    NSDictionary *metrics = @{@"margin":@(OTRBuddyImageCellPadding)};
-    
-    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[imageView]-margin-[nameLabel]->=margin-|" options:0 metrics:metrics views:@{@"nameLabel":self.nameLabel,@"imageView":self.avatarImageView}]];
-    
-    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[imageView]-margin-[identifierLabel]->=margin-|" options:0 metrics:metrics views:@{@"identifierLabel":self.identifierLabel,@"imageView":self.avatarImageView}]];
-    
-    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-margin-[nameLabel]->=0-[identifierLabel]-margin-|" options:0 metrics:metrics views:@{@"nameLabel":self.nameLabel,@"identifierLabel":self.identifierLabel}]];
-    [super updateConstraints];
-     
 }
 
 @end
