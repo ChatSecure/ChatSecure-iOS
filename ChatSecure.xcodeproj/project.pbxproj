@@ -835,7 +835,7 @@
 		63AC174A18C7AAF200E6624C /* OTRBuddyImageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBuddyImageCell.m; sourceTree = "<group>"; };
 		63AC174B18C7AAF200E6624C /* OTRBuddyImageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBuddyImageCell.h; sourceTree = "<group>"; };
 		63B4114019C90593008977A5 /* uz */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uz; path = ChatSecure/uz.lproj/Localizable.strings; sourceTree = SOURCE_ROOT; };
-		63B4114119C905A0008977A5 /* da-DK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "da-DK"; path = "ChatSecure/da_DK.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
+		63B4114119C905A0008977A5 /* da-DK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "da-DK"; path = ChatSecure/da_DK.lproj/Localizable.strings; sourceTree = SOURCE_ROOT; };
 		63B7E55B193E89A300C2A444 /* OTRMessagesCollectionViewCellIncoming.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRMessagesCollectionViewCellIncoming.h; sourceTree = "<group>"; };
 		63B7E55C193E89A300C2A444 /* OTRMessagesCollectionViewCellIncoming.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRMessagesCollectionViewCellIncoming.m; sourceTree = "<group>"; };
 		63B7E55E193E89C300C2A444 /* OTRMessagesCollectionViewCellOutgoing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRMessagesCollectionViewCellOutgoing.h; sourceTree = "<group>"; };
@@ -2024,8 +2024,8 @@
 		63CAF8F718FF260C00C3337E /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				63AC174A18C7AAF200E6624C /* OTRBuddyImageCell.m */,
 				63AC174B18C7AAF200E6624C /* OTRBuddyImageCell.h */,
+				63AC174A18C7AAF200E6624C /* OTRBuddyImageCell.m */,
 				63AC174518C7AABD00E6624C /* OTRBuddyInfoCell.h */,
 				63AC174418C7AABD00E6624C /* OTRBuddyInfoCell.m */,
 				63AC174718C7AAE200E6624C /* OTRConversationCell.h */,

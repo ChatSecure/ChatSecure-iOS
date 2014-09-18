@@ -10,12 +10,14 @@
 #import "OTRBuddy.h"
 #import "OTRImages.h"
 #import "OTRColors.h"
+#import "PureLayout.h"
 
 const CGFloat OTRBuddyImageCellPadding = 12.0;
 
 @interface OTRBuddyImageCell ()
 
 @property (nonatomic, strong) UIImageView *avatarImageView;
+@property (nonatomic) BOOL addedContraints;
 
 @end
 
@@ -35,6 +37,8 @@ const CGFloat OTRBuddyImageCellPadding = 12.0;
         [cellImageLayer setMasksToBounds:YES];
         [cellImageLayer setBorderColor:[self.imageViewBorderColor CGColor]];
         [self.contentView addSubview:self.avatarImageView];
+        self.translatesAutoresizingMaskIntoConstraints = NO;
+        self.addedContraints = NO;
     }
     return self;
 }
@@ -76,18 +80,15 @@ const CGFloat OTRBuddyImageCellPadding = 12.0;
 {
     [super updateConstraints];
     
-    NSDictionary *views = @{@"imageView":self.avatarImageView};
-    NSDictionary *metrics = @{@"margin":@(OTRBuddyImageCellPadding)};
-    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-margin-[imageView]" options:0 metrics:metrics views:views]];
-    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-margin-[imageView]-margin-|" options:0 metrics:metrics views:views]];
+    if (!self.addedContraints) {
+        [self.avatarImageView autoPinEdgeToSuperviewEdge:ALEdgeLeft withInset:OTRBuddyImageCellPadding];
+        [self.avatarImageView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:OTRBuddyImageCellPadding];
+        [self.avatarImageView autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:OTRBuddyImageCellPadding];
+        [self.avatarImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.avatarImageView];
+        
+        self.addedContraints = YES;
+    }
     
-    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.avatarImageView
-                                                                 attribute:NSLayoutAttributeWidth
-                                                                 relatedBy:NSLayoutRelationEqual
-                                                                    toItem:self.avatarImageView
-                                                                 attribute:NSLayoutAttributeHeight
-                                                                multiplier:1.0
-                                                                  constant:0.0]];
 }
 
 + (NSString *)reuseIdentifier

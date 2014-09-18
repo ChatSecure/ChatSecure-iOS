@@ -66,6 +66,7 @@
 
 - (void)updateConstraints
 {
+    [super updateConstraints];
 
     NSDictionary *metrics = @{@"margin":@(OTRBuddyImageCellPadding)};
     
