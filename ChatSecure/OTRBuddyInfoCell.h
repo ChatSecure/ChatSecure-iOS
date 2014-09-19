@@ -10,4 +10,10 @@
 
 @interface OTRBuddyInfoCell : OTRBuddyImageCell
 
+@property (nonatomic, strong, readonly) UILabel *nameLabel;
+@property (nonatomic, strong, readonly) UILabel *identifierLabel;
+@property (nonatomic, strong, readonly) UILabel *accountLabel;
+
+- (void)setBuddy:(OTRBuddy *)buddy withAccountName:(NSString *)accountName;
+
 @end

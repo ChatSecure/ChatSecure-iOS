@@ -9,14 +9,17 @@
 #import "OTRBuddyInfoCell.h"
 
 #import "OTRBuddy.h"
+#import "OTRAccount.h"
 #import "OTRXMPPBuddy.h"
 #import "Strings.h"
 #import "PureLayout.h"
+#import "OTRDatabaseManager.h"
 
 @interface OTRBuddyInfoCell ()
 
-@property (nonatomic,strong) UILabel *nameLabel;
-@property (nonatomic,strong) UILabel *identifierLabel;
+@property (nonatomic, strong) UILabel *nameLabel;
+@property (nonatomic, strong) UILabel *identifierLabel;
+@property (nonatomic, strong) UILabel *accountLabel;
 
 @end
 
@@ -37,8 +40,28 @@
         self.identifierLabel.translatesAutoresizingMaskIntoConstraints = NO;
         [self.contentView addSubview:self.identifierLabel];
         
+        self.accountLabel = [[UILabel alloc] initForAutoLayout];
+        self.accountLabel.textColor = [UIColor colorWithWhite:.55 alpha:1.0];
+        self.accountLabel.font = [UIFont systemFontOfSize:[UIFont smallSystemFontSize]];
+        self.accountLabel.adjustsFontSizeToFitWidth = YES;
+        [self.contentView addSubview:self.accountLabel];
+        
     }
     return self;
+}
+
+- (void)setBuddy:(OTRBuddy *)buddy withAccountName:(NSString *)accountName
+{
+    [self setBuddy:buddy];
+    if ([accountName length]) {
+        if ([self.identifierLabel.text length]) {
+            self.accountLabel.text = accountName;
+        }
+        else {
+            self.identifierLabel.text = accountName;
+            self.accountLabel.text = nil;
+        }
+    }
 }
 
 - (void)setBuddy:(OTRBuddy *)buddy
@@ -67,15 +90,22 @@
 
 - (void)updateConstraints
 {
+
     if (!self.addedConstraints) {
-        NSDictionary *metrics = @{@"margin":@(OTRBuddyImageCellPadding)};
+        NSArray *textLabelsArray = @[self.nameLabel,self.identifierLabel,self.accountLabel];
         
-        [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[imageView]-margin-[nameLabel]->=margin-|" options:0 metrics:metrics views:@{@"nameLabel":self.nameLabel,@"imageView":self.avatarImageView}]];
+        //same horizontal contraints for all labels
+        for(UILabel *label in textLabelsArray) {
+            [label autoPinEdge:ALEdgeLeft toEdge:ALEdgeRight ofView:self.avatarImageView withOffset:OTRBuddyImageCellPadding];
+            [label autoPinEdgeToSuperviewEdge:ALEdgeRight withInset:OTRBuddyImageCellPadding relation:NSLayoutRelationGreaterThanOrEqual];
+        }
         
-        [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[imageView]-margin-[identifierLabel]->=margin-|" options:0 metrics:metrics views:@{@"identifierLabel":self.identifierLabel,@"imageView":self.avatarImageView}]];
+        [self.nameLabel autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:OTRBuddyImageCellPadding];
         
-        [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-margin-[nameLabel]->=0-[identifierLabel]-margin-|" options:0 metrics:metrics views:@{@"nameLabel":self.nameLabel,@"identifierLabel":self.identifierLabel}]];
-        [super updateConstraints];
+        [self.identifierLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.nameLabel withOffset:0 relation:NSLayoutRelationGreaterThanOrEqual];
+        [self.identifierLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.accountLabel withOffset:0 relation:NSLayoutRelationGreaterThanOrEqual];
+        
+        [self.accountLabel autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:OTRBuddyImageCellPadding];
     }
     [super updateConstraints];
 }

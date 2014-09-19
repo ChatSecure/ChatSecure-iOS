@@ -21,7 +21,7 @@
 #import "OTRNewBuddyViewController.h"
 #import "OTRChooseAccountViewController.h"
 
-static CGFloat cellHeight = 60.0;
+static CGFloat cellHeight = 80.0;
 
 @interface OTRComposeViewController () <UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate>
 
@@ -274,7 +274,12 @@ static CGFloat cellHeight = 60.0;
         OTRBuddyInfoCell *cell = [tableView dequeueReusableCellWithIdentifier:[OTRBuddyInfoCell reuseIdentifier] forIndexPath:indexPath];
         OTRBuddy * buddy = [self buddyAtIndexPath:indexPath];
         
-        [cell setBuddy:buddy];
+        __block NSString *buddyAccountName = nil;
+        [[OTRDatabaseManager sharedInstance].mainThreadReadOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+            buddyAccountName = [OTRAccount fetchObjectWithUniqueID:buddy.accountUniqueId transaction:transaction].username;
+        }];
+        
+        [cell setBuddy:buddy withAccountName:buddyAccountName];
         
         [cell.avatarImageView.layer setCornerRadius:(cellHeight-2.0*OTRBuddyImageCellPadding)/2.0];
         
