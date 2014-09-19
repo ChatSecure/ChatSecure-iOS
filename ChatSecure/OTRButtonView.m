@@ -7,6 +7,7 @@
 //
 
 #import "OTRButtonView.h"
+#import "PureLayout.h"
 
 @interface OTRButtonView ()
 
@@ -15,6 +16,7 @@
 @property (nonatomic, strong) UILabel *titleLabel;
 @property (nonatomic, strong) UIView * buttonView;
 @property (nonatomic, strong) UIToolbar *backgroundToolbar;
+@property (nonatomic) BOOL addedContraints;
 
 @end
 
@@ -23,6 +25,7 @@
 - (id)initWithTitle:(NSString *)title buttons:(NSArray *)buttons
 {
     if (self = [super initWithFrame:CGRectZero]) {
+        self.addedContraints = NO;
         self.buttons = buttons;
         self.titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         self.titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
@@ -112,15 +115,18 @@
 
 - (void)updateConstraints
 {
+    if (!self.addedContraints) {
+        [self addConstraints:[self constraintsWithButtons:self.buttons]];
+        
+        [self.buttonView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsZero excludingEdge:ALEdgeTop];
+        [self.titleLabel autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(3, 0, 0, 0) excludingEdge:ALEdgeBottom];
+        [self.buttonView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.titleLabel];
+        [self.backgroundToolbar autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsZero];
+        
+        self.addedContraints = YES;
+    }
     [super updateConstraints];
-    [self addConstraints:[self constraintsWithButtons:self.buttons]];
-    
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_buttonView]|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_buttonView)]];
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_titleLabel]|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_titleLabel)]];
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|->=3-[_titleLabel][_buttonView]|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_buttonView,_titleLabel)]];
-    
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_backgroundToolbar]|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_backgroundToolbar)]];
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_backgroundToolbar]|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_backgroundToolbar)]];
+   
 }
 
 
