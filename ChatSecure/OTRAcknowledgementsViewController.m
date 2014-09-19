@@ -44,15 +44,19 @@
     [self.headerView addSubview:self.headerLabel];
 }
 
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    [self updateViewConstraints];
+}
+
 - (void) updateViewConstraints {
-    [super updateViewConstraints];
-    if (self.hasAddedConstraints) {
-        return;
-    }
     
-    [self.headerLabel autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(10, 10, 10, 10)];
-    [self.headerLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
-    self.hasAddedConstraints = YES;
+    if (!self.hasAddedConstraints) {
+        [self.headerLabel autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(10, 10, 10, 10)];
+        [self.headerLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
+        self.hasAddedConstraints = YES;
+    }
+    [super updateViewConstraints];
 }
 
 // Overriding private method

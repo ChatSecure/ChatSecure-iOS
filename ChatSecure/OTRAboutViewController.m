@@ -63,6 +63,7 @@ static NSString *const kDefaultCellReuseIdentifier = @"kDefaultCellReuseIdentifi
 - (id)init {
     if (self = [super init]) {
         self.title = ABOUT_STRING;
+        self.hasAddedConstraints = NO;
     }
     return self;
 }
@@ -79,8 +80,8 @@ static NSString *const kDefaultCellReuseIdentifier = @"kDefaultCellReuseIdentifi
 
 - (void) setupImageView {
     self.imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"chatsecure_banner.png"]];
+    self.imageView.translatesAutoresizingMaskIntoConstraints = NO;
     self.imageView.contentMode = UIViewContentModeScaleAspectFit;
-    self.imageView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
     self.imageView.userInteractionEnabled = YES;
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapImageView:)];
     [self.imageView addGestureRecognizer:tapGestureRecognizer];
@@ -167,35 +168,36 @@ static NSString *const kDefaultCellReuseIdentifier = @"kDefaultCellReuseIdentifi
     [self setupImageView];
     [self setupSocialView];
     [self setupTableView];
-}
-
-- (void) viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    CGFloat padding = 10.0f;
-    self.imageView.frame = CGRectMake(padding, padding, self.view.frame.size.width - padding*2, 100);
+    [self.view setNeedsUpdateConstraints];
 }
 
 - (void) updateViewConstraints {
-    [super updateViewConstraints];
-    if (self.hasAddedConstraints) {
-        return;
+
+    if (!self.hasAddedConstraints) {
+        CGFloat padding = 10.0f;
+        [self.imageView autoAlignAxisToSuperviewAxis:ALAxisVertical];
+        [self.imageView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(padding, padding, padding, padding) excludingEdge:ALEdgeBottom];
+        [self.imageView autoSetDimension:ALDimensionHeight toSize:100.0];
+        
+        [self.socialView autoAlignAxisToSuperviewAxis:ALAxisVertical];
+        [self.socialView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.imageView withOffset:padding];
+        
+        [self.headerLabel autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsZero excludingEdge:ALEdgeBottom];
+        [self.headerLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
+        
+        [self.socialButtonsView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(padding, padding, padding, padding) excludingEdge:ALEdgeTop];
+        [self.socialButtonsView autoAlignAxisToSuperviewAxis:ALAxisVertical];
+        [self.socialButtonsView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.headerLabel withOffset:padding];
+        
+        [self.aboutTableView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:0];
+        [self.aboutTableView autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:0];
+        [self.aboutTableView autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:0];
+        [self.aboutTableView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.socialView];
+        
+        self.hasAddedConstraints = YES;
     }
-    CGFloat padding = 10.0f;
-    [self.socialView autoAlignAxisToSuperviewAxis:ALAxisVertical];
-    [self.socialView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.imageView withOffset:padding];
-    [self.socialButtonsView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(0, padding, padding, padding) excludingEdge:ALEdgeTop];
-    [self.socialButtonsView autoSetDimension:ALDimensionHeight toSize:45];
-    [self.socialButtonsView autoAlignAxisToSuperviewAxis:ALAxisVertical];
-    [self.headerLabel autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsZero excludingEdge:ALEdgeBottom];
-    [self.headerLabel autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.socialButtonsView];
-    [self.headerLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
+    [super updateViewConstraints];
     
-    [self.aboutTableView autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:self.view];
-    [self.aboutTableView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:self.view];
-    [self.aboutTableView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.socialView];
-    [self.aboutTableView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.view];
-    
-    self.hasAddedConstraints = YES;
 }
 
 

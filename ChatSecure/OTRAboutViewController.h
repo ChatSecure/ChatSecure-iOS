@@ -24,8 +24,8 @@
 
 @interface OTRAboutViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
 
-@property (nonatomic, retain) UIImageView *imageView;
-@property (strong, nonatomic) UILabel *versionLabel;
-@property (nonatomic, retain) UITableView *aboutTableView;
+@property (nonatomic, strong) UIImageView *imageView;
+@property (nonatomic, strong) UILabel *versionLabel;
+@property (nonatomic, strong) UITableView *aboutTableView;
 
 @end
