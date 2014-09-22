@@ -7,11 +7,13 @@
 //
 
 #import "OTRPasswordStrengthView.h"
+#import "PureLayout.h"
 
 @interface OTRPasswordStrengthView ()
 
 @property (nonatomic, strong) UIProgressView *passwordStrengthMeterView;
 @property (nonatomic, strong) NJOPasswordValidator *validator;
+@property (nonatomic) BOOL addedContraints;
 
 @property (nonatomic, weak) id UITextFieldTextDidChangeNotificationObject;
 
@@ -28,6 +30,7 @@
 {
     if (self = [self initWithFrame:CGRectZero]) {
         self.validator = [NJOPasswordValidator validatorWithRules:rules];
+        self.addedContraints = NO;
     }
     return self;
 }
@@ -64,6 +67,11 @@
         [self updatePasswordStrength:self];
     }
     return self;
+}
+
+- (CGSize)intrinsicContentSize
+{
+    return CGSizeMake(self.passwordStrengthMeterView.frame.size.width, self.passwordStrengthMeterView.frame.size.height+self.textField.frame.size.height+2);
 }
 
 - (void)updatePasswordStrength:(id)sender
@@ -114,12 +122,18 @@
 
 - (void)updateConstraints
 {
+    if (!self.addedContraints) {
+        
+        [self.textField autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsZero excludingEdge:ALEdgeBottom];
+        
+        [self.passwordStrengthMeterView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsZero excludingEdge:ALEdgeTop];
+        [self.passwordStrengthMeterView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.textField withOffset:2.0];
+        
+        self.addedContraints = YES;
+    }
     [super updateConstraints];
     
-    NSDictionary *views = NSDictionaryOfVariableBindings(_passwordStrengthMeterView,_textField);
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_textField]|" options:0 metrics:nil views:views]];
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_passwordStrengthMeterView]|" options:0 metrics:nil views:views]];
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_textField]-2-[_passwordStrengthMeterView]|" options:0 metrics:nil views:views]];
+   
 }
 
 @end

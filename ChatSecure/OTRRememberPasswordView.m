@@ -8,12 +8,15 @@
 
 #import "OTRRememberPasswordView.h"
 #import "Strings.h"
+#import "PureLayout.h"
 
 @interface OTRRememberPasswordView ()
 
 @property (nonatomic, strong) UISwitch *rememberPasswordSwitch;
 @property (nonatomic, strong) UILabel *rememberPasswordLabel;
 @property (nonatomic, strong) UIButton *passwordInfoButton;
+
+@property (nonatomic) BOOL addedConstraints;
 
 
 @end
@@ -40,12 +43,20 @@
         [self.passwordInfoButton addTarget:self action:@selector(passwordInfoButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         self.passwordInfoButton.translatesAutoresizingMaskIntoConstraints = NO;
         
+        self.addedConstraints = NO;
         
         [self addSubview:self.rememberPasswordLabel];
         [self addSubview:self.rememberPasswordSwitch];
         [self addSubview:self.passwordInfoButton];
     }
     return self;
+}
+
+- (CGSize)intrinsicContentSize
+{
+    CGFloat height = MAX(self.passwordInfoButton.frame.size.width,MAX(self.rememberPasswordLabel.frame.size.height, self.rememberPasswordSwitch.frame.size.height));
+    CGFloat width = self.passwordInfoButton.frame.size.width + self.rememberPasswordSwitch.frame.size.width + self.rememberPasswordSwitch.frame.size.width + 2.0;
+    return CGSizeMake(width, height);
 }
 
 - (void)passwordInfoButtonPressed:(id)sender
@@ -66,13 +77,20 @@
 
 - (void)updateConstraints
 {
+    if (!self.addedConstraints) {
+        
+        [self.rememberPasswordLabel autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+        [self.rememberPasswordSwitch autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+        [self.passwordInfoButton autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+        
+        [self.rememberPasswordLabel autoPinEdgeToSuperviewEdge:ALEdgeLeft withInset:0];
+        [self.passwordInfoButton autoPinEdge:ALEdgeLeft toEdge:ALEdgeRight ofView:self.rememberPasswordLabel withOffset:2.0];
+        [self.rememberPasswordSwitch autoPinEdge:ALEdgeLeft toEdge:ALEdgeRight ofView:self.passwordInfoButton withOffset:0.0 relation:NSLayoutRelationGreaterThanOrEqual];
+        [self.rememberPasswordSwitch autoPinEdgeToSuperviewEdge:ALEdgeRight withInset:0.0];
+        self.addedConstraints = YES;
+    }
     [super updateConstraints];
-    NSDictionary *views = NSDictionaryOfVariableBindings(_rememberPasswordLabel,_rememberPasswordSwitch,_passwordInfoButton);
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|->=0-[_rememberPasswordLabel]->=0-|" options:0 metrics:nil views:views]];
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|->=0-[_rememberPasswordSwitch]->=0-|" options:0 metrics:nil views:views]];
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|->=0-[_passwordInfoButton]->=0-|" options:0 metrics:nil views:views]];
     
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[_rememberPasswordLabel]-(2)-[_passwordInfoButton]->=0-[_rememberPasswordSwitch]|" options:0 metrics:nil views:views]];
 }
 
 @end

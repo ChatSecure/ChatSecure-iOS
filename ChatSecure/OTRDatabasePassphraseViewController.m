@@ -15,13 +15,15 @@
 #import "UIAlertView+Blocks.h"
 #import "OTRRememberPasswordView.h"
 #import "Strings.h"
+#import "PureLayout.h"
 
 @interface OTRDatabasePassphraseViewController () <OTRPasswordStrengthViewDelegate>
 
 @property (nonatomic, strong) OTRPasswordStrengthView *passwordView;
 @property (nonatomic, strong) UIButton *nextStepButton;
 @property (nonatomic, strong) OTRRememberPasswordView *rememberPasswordView;
-
+@property (nonatomic, strong) UIView *containerView;
+@property (nonatomic) BOOL addedConstraints;
 
 @property (nonatomic, strong) NSLayoutConstraint *bottomConstraint;
 
@@ -38,11 +40,11 @@
     self.view.backgroundColor = [UIColor whiteColor];
     
     ////// ContainerView //////
-    UIView *containerView = [[UIView alloc] init];
-    containerView.translatesAutoresizingMaskIntoConstraints = NO;
-    containerView.userInteractionEnabled = YES;
+    self.containerView = [[UIView alloc] init];
+    self.containerView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.containerView.userInteractionEnabled = YES;
     
-    [self.view addSubview:containerView];
+    [self.view addSubview:self.containerView];
     
     ////// password view //////
     NSArray *rules = @[[NJOLengthRule ruleWithRange:NSMakeRange(kOTRMinimumPassphraseLength, kOTRMaximumPassphraseLength)]];
@@ -51,13 +53,13 @@
     self.passwordView.textField.borderStyle = UITextBorderStyleRoundedRect;
     self.passwordView.delegate = self;
     
-    [containerView addSubview:self.passwordView];
+    [self.containerView addSubview:self.passwordView];
     
     ////// Remmeber Password //////
     
     self.rememberPasswordView = [[OTRRememberPasswordView alloc] init];
     self.rememberPasswordView.translatesAutoresizingMaskIntoConstraints = NO;
-    [containerView addSubview:self.rememberPasswordView];
+    [self.containerView addSubview:self.rememberPasswordView];
     
     ////// Next Step Button //////
     self.nextStepButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
@@ -65,23 +67,9 @@
     [self.nextStepButton setTitle:NEXT_STRING forState:UIControlStateNormal];
     [self.nextStepButton addTarget:self action:@selector(nextTapped:) forControlEvents:UIControlEventTouchUpInside];
     
-    [containerView addSubview:self.nextStepButton];
+    [self.containerView addSubview:self.nextStepButton];
     
-    NSDictionary *views = NSDictionaryOfVariableBindings(_passwordView,_nextStepButton,containerView,_rememberPasswordView);
-    [containerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_passwordView]-|" options:0 metrics:nil views:views]];
-    [containerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_nextStepButton]-|" options:0 metrics:nil views:views]];
-    [containerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_rememberPasswordView]-|" options:0 metrics:nil views:views]];
-    [containerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_passwordView]-5-[_rememberPasswordView]->=0-[_nextStepButton]-|" options:0 metrics:nil views:views]];
-    
-    [containerView addConstraint:[NSLayoutConstraint constraintWithItem:self.passwordView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:containerView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0.0]];
-    
-    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[containerView]|" options:0 metrics:nil views:views]];
-    
-    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:containerView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeTop multiplier:1.0 constant:0.0]];
-    
-    self.bottomConstraint = [NSLayoutConstraint constraintWithItem:containerView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0];
-    [self.view addConstraint:self.bottomConstraint];
-    
+    self.addedConstraints = NO;
     
     self.nextStepButton.enabled = NO;
 }
@@ -101,6 +89,30 @@
 {
     [super viewDidDisappear:animated];
     [[NSNotificationCenter defaultCenter] removeObserver:self.UIKeyboardDidShowNotificationObject];
+}
+
+- (void) updateViewConstraints {
+    
+    if (!self.addedConstraints) {
+        
+        CGFloat margin = 8.0;
+        
+        [self.passwordView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(margin, margin, margin, margin) excludingEdge:ALEdgeBottom];
+        
+        [self.rememberPasswordView autoPinEdgeToSuperviewEdge:ALEdgeLeft withInset:margin];
+        [self.rememberPasswordView autoPinEdgeToSuperviewEdge:ALEdgeRight withInset:margin];
+        [self.rememberPasswordView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.passwordView withOffset:margin*2];
+        
+        [self.nextStepButton autoAlignAxisToSuperviewAxis:ALAxisVertical];
+        [self.nextStepButton autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:margin];
+        [self.nextStepButton autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.rememberPasswordView withOffset:0.0 relation:NSLayoutRelationGreaterThanOrEqual];
+        
+        [self.containerView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(70, 0, 0, 0) excludingEdge:ALEdgeBottom];
+        self.bottomConstraint = [self.containerView autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:0.0];
+        
+        self.addedConstraints = YES;
+    }
+    [super updateViewConstraints];
 }
 
 - (void)keyboardDidShow:(NSNotification *)notification

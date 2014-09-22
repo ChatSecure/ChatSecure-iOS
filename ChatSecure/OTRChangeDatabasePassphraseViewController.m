@@ -10,6 +10,7 @@
 #import "OTRPasswordStrengthView.h"
 #import "OTRRememberPasswordView.h"
 #import "Strings.h"
+#import "PureLayout.h"
 
 @interface OTRChangeDatabasePassphraseViewController () <OTRPasswordStrengthViewDelegate>
 
@@ -20,6 +21,8 @@
 @property (nonatomic, strong) OTRRememberPasswordView *rememberPasswordView;
 
 @property (nonatomic, strong) UIButton *changePasswordButton;
+
+@property (nonatomic) BOOL addedConstraints;
 
 @end
 
@@ -64,17 +67,26 @@
     
     [self.view addSubview:self.rememberPasswordView];
     
-    ////// setup constraints //////
-    
-    NSDictionary *views = NSDictionaryOfVariableBindings(_passwordView,_oldPasswordTextField,_changePasswordButton,_rememberPasswordView);
-    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_passwordView]-|" options:0 metrics:nil views:views]];
-    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_oldPasswordTextField]-|" options:0 metrics:nil views:views]];
-    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_changePasswordButton]-|" options:0 metrics:nil views:views]];
-    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_rememberPasswordView]-|" options:0 metrics:nil views:views]];
-    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(70)-[_oldPasswordTextField]-[_passwordView]-[_rememberPasswordView]-[_changePasswordButton]" options:0 metrics:nil views:views]];
+    self.addedConstraints = NO;
     
     self.changePasswordButton.enabled = NO;
     [self.oldPasswordTextField becomeFirstResponder];
+}
+
+- (void)updateViewConstraints
+{
+    [super updateViewConstraints];
+    if (!self.addedConstraints) {
+        
+        NSDictionary *views = NSDictionaryOfVariableBindings(_passwordView,_oldPasswordTextField,_changePasswordButton,_rememberPasswordView);
+        [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_passwordView]-|" options:0 metrics:nil views:views]];
+        [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_oldPasswordTextField]-|" options:0 metrics:nil views:views]];
+        [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_changePasswordButton]-|" options:0 metrics:nil views:views]];
+        [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[_rememberPasswordView]-|" options:0 metrics:nil views:views]];
+        [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(70)-[_oldPasswordTextField]-[_passwordView]-[_rememberPasswordView]-[_changePasswordButton]" options:0 metrics:nil views:views]];
+        self.addedConstraints = YES;
+    }
+    
 }
 
 - (void)passwordView:(OTRPasswordStrengthView *)view didChangePassword:(NSString *)password strength:(NJOPasswordStrength)strength failingRules:(NSArray *)rules
