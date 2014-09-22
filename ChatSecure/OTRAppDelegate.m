@@ -73,7 +73,11 @@
     [[BITHockeyManager sharedHockeyManager] configureWithBetaIdentifier:kOTRHockeyBetaIdentifier
                                                          liveIdentifier:kOTRHockeyLiveIdentifier
                                                                delegate:self];
+    [[BITHockeyManager sharedHockeyManager].authenticator setIdentificationType:BITAuthenticatorIdentificationTypeDevice];
     [[BITHockeyManager sharedHockeyManager] startManager];
+#ifndef DEBUG
+    [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
+#endif
     
     [OTRCertificatePinning loadBundledCertificatesToKeychain];
     
@@ -347,13 +351,16 @@
     }
 }
 
-- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
-    return [[FBSession activeSession] handleOpenURL:url];
-}
-
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
-    return [[FBSession activeSession] handleOpenURL:url];
+    if( [[BITHockeyManager sharedHockeyManager].authenticator handleOpenURL:url
+                                                          sourceApplication:sourceApplication
+                                                                 annotation:annotation]) {
+        return YES;
+    } else if ([[url scheme] isEqualToString:[FBSettings defaultUrlSchemeSuffix]]) {
+        return [[FBSession activeSession] handleOpenURL:url];
+    }
+    return NO;
 }
 
 // Delegation methods
