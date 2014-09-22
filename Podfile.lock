@@ -19,7 +19,7 @@ PODS:
     - AFNetworking/NSURLConnection
   - AFOAuth2Client (0.1.2):
     - AFNetworking (~> 2.0)
-  - Appirater (2.0.3)
+  - Appirater (2.0.4)
   - BBlock (1.2.0):
     - BBlock/AppKit
     - BBlock/Foundation
@@ -31,20 +31,20 @@ PODS:
   - BButton (4.0.1)
   - Bolts (1.1.2)
   - CocoaAsyncSocket (7.4)
-  - CocoaLumberjack (1.9.1):
+  - CocoaLumberjack (1.9.2):
     - CocoaLumberjack/Extensions
-  - CocoaLumberjack/Core (1.9.1)
-  - CocoaLumberjack/Extensions (1.9.1):
+  - CocoaLumberjack/Core (1.9.2)
+  - CocoaLumberjack/Extensions (1.9.2):
     - CocoaLumberjack/Core
   - DAKeyboardControl (2.4.0)
-  - Facebook-iOS-SDK (3.17.0):
+  - Facebook-iOS-SDK (3.18.0):
     - Bolts
   - gtm-oauth2 (0.1.0):
     - GTMHTTPFetcher
   - GTMHTTPFetcher (0.1.0)
-  - HockeySDK (3.5.6)
+  - HockeySDK (3.5.7)
   - HPGrowingTextView (1.1)
-  - JSQMessagesViewController (5.3.1):
+  - JSQMessagesViewController (5.3.2):
     - JSQSystemSoundPlayer
   - JSQSystemSoundPlayer (1.5.2)
   - JTTargetActionBlock (1.0.0)
@@ -74,7 +74,7 @@ PODS:
   - ProxyKit/common (1.0.2):
     - CocoaAsyncSocket (~> 7.3)
     - CocoaLumberjack (~> 1.9)
-  - PureLayout (1.0.1)
+  - PureLayout (1.1.0)
   - RMStepsController (1.0.1)
   - SIAlertView (1.3)
   - SQLCipher/common (3.1.0)
@@ -85,9 +85,9 @@ PODS:
   - UIAlertView-Blocks (1.0)
   - uservoice-iphone-sdk (3.1.0)
   - VTAcknowledgementsViewController (0.11)
-  - YapDatabase/common (2.4.3):
-    - CocoaLumberjack (~> 1.6.3)
-  - YapDatabase/SQLCipher (2.4.3):
+  - YapDatabase/common (2.5.2):
+    - CocoaLumberjack (~> 1)
+  - YapDatabase/SQLCipher (2.5.2):
     - SQLCipher/fts
     - YapDatabase/common
 
@@ -100,7 +100,7 @@ DEPENDENCIES:
   - CocoaAsyncSocket (from `git@github.com:ChatSecure/CocoaAsyncSocket.git`, branch `7.4-compilefix`)
   - CocoaLumberjack (~> 1.9)
   - DAKeyboardControl (~> 2.4)
-  - Facebook-iOS-SDK (~> 3.17)
+  - Facebook-iOS-SDK (~> 3.18)
   - gtm-oauth2 (~> 0.1.0)
   - HockeySDK (~> 3.5)
   - HPGrowingTextView (~> 1.1)
@@ -116,7 +116,7 @@ DEPENDENCIES:
   - OpenInChrome (~> 0.0)
   - OTRKit (from `Submodules/OTRKit/OTRKit.podspec`)
   - ProxyKit/Client (from `Submodules/ProxyKit/ProxyKit.podspec`)
-  - PureLayout (~> 1.0)
+  - PureLayout (~> 1.1)
   - RMStepsController (~> 1.0)
   - SIAlertView (from `git@github.com:ChatSecure/SIAlertView.git`, branch `attributedText`)
   - SSKeychain (~> 1.2)
@@ -124,7 +124,7 @@ DEPENDENCIES:
   - UIAlertView-Blocks (~> 1.0)
   - uservoice-iphone-sdk (from `git@github.com:ChatSecure/uservoice-iphone-sdk.git`, branch `3.1.0-noanalytics`)
   - VTAcknowledgementsViewController (~> 0.11)
-  - YapDatabase/SQLCipher (~> 2.4)
+  - YapDatabase/SQLCipher (~> 2.5)
 
 EXTERNAL SOURCES:
   AFOAuth2Client:
@@ -149,19 +149,19 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   AFNetworking: a4d0e9a64de9242986620dafd1b3cee3b413ac5c
   AFOAuth2Client: 5244ffdc28081e2ce4d4a0d0f1198ed54e24d787
-  Appirater: 793f3723354b1b155f7ddc87fc6017bea889ce50
+  Appirater: cbdb7f305562cfde585300bfff86da01ae559deb
   BBlock: 90f0ae0e3ba94fc88be6b9a85b4adbb73b8a7c9a
   BButton: 396a5e59648e3f687b7d8201b88ebdbad6e36b59
   Bolts: 2635e8698a630774689441047f3465d78c48d485
   CocoaAsyncSocket: 05cf58994eda7b50e6ac1bd0266ef2db97d05d70
-  CocoaLumberjack: 94accd5749f5c5d15134c8d50f34a973aed8ef69
+  CocoaLumberjack: 205769c032b5fef85b92472046bcc8b7e7c8a817
   DAKeyboardControl: 45a363c85c48a7df76f21f236d9f85800e001775
-  Facebook-iOS-SDK: f20274d809f112ba540842e2b6cbe50128d51b7b
+  Facebook-iOS-SDK: fa12c51cc57bfb6f92e47793c9d4d2c65bc92741
   gtm-oauth2: 64f2d404a50676ab63b5437a02a7567da8f8b7fa
   GTMHTTPFetcher: 0f02d5a5803dd08736462981064de6a7f59cf9bd
-  HockeySDK: 27d8b411208f9d3f70c8f6695a8defa2a3465721
+  HockeySDK: f0e874d1c6833163ee0c4e423606faf33ad04071
   HPGrowingTextView: 07d5ab1f1e867acfb7a6f498b819948c9e97d07c
-  JSQMessagesViewController: d1f9dcf8f768aab54dc59ac9f042a69623057658
+  JSQMessagesViewController: d36408f51a8289c0354b7d9c497f572e9f26db67
   JSQSystemSoundPlayer: c24914bc96ff5365b5d28b59d7ecffd60d1c5587
   JTTargetActionBlock: bef69054d368a91b33b98a520fa9e78e218a5a25
   JVFloatLabeledTextField: b6c7d824d231b3c01d14692feada878808480af8
@@ -170,11 +170,11 @@ SPEC CHECKSUMS:
   MBProgressHUD: 2038dbcf3dce73215abed6001657043d53aa79a8
   MWFeedParser: 003cbf5398e99a7f2057fbe9583054fd1b84be72
   Navajo: 9130d497903e5d1b0f1b3c987be01f5b60fd37c7
-  OnionKit: afe51510e5ea0652503540d465b7eada7ef4b21f
+  OnionKit: 679881831ede86ceab124475322076d45e3708b6
   OpenInChrome: b7c73ddf8fe0a1788dc0549c3c4c70e3c84da578
   OTRKit: 8d35580ba78c4926320c40ba1906f353630d34e5
   ProxyKit: 3e73f2ad92327554549474ad10da21dde46d3ba8
-  PureLayout: 972964b21dbcbc5cc36785aed16aba03176f057d
+  PureLayout: c8960fa0f3b40d849d5e177d699d0148faa63b63
   RMStepsController: 8ff91f169d884fdd834ad37007f553c7bed333eb
   SIAlertView: e6d0d786c3a3f6e456b0e8b9376d0c34d68e827b
   SQLCipher: 981110217eb93c2779c34fb59e646a1c1da918d8
@@ -183,6 +183,6 @@ SPEC CHECKSUMS:
   UIAlertView-Blocks: f3271e84372beb97aea115cd1fb26ae66457f12f
   uservoice-iphone-sdk: 696bd0f493facb0e16d7bb7720cfcf660e27aa78
   VTAcknowledgementsViewController: 6e71652adbe73c68f0a278a73ac9ca1e1fc00b90
-  YapDatabase: 2ec54726596299c88e09e899e8f17c15d7f6b18a
+  YapDatabase: 50f763e49374c38025e8255b4c468d26d81b1048
 
 COCOAPODS: 0.33.1
