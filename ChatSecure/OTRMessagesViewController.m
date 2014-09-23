@@ -74,6 +74,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     self.collectionView.frame = self.view.bounds;
     self.automaticallyScrollsToMostRecentMessage = YES;
+    self.inputToolbar.contentView.leftBarButtonItem = nil;
     
     self.outgoingCellIdentifier = [OTRMessagesCollectionViewCellOutgoing cellReuseIdentifier];
     self.incomingCellIdentifier = [OTRMessagesCollectionViewCellIncoming cellReuseIdentifier];
@@ -650,6 +651,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     OTRMessage *message = [[OTRMessage alloc] init];
     message.buddyUniqueId = self.buddy.uniqueId;
     message.text = text;
+    message.read = YES;
     message.transportedSecurely = NO;
     
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
