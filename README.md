@@ -62,17 +62,10 @@ Now you'll need to build the dependencies. During this process we will automatic
     $ bash ./Submodules/OTRKit/build-all.sh
     $ pod install
     
-Next you'll need to create your own version of environment-specific data. Make `OTRSecrets.m` the file:
+Next you'll need to create your own version of environment-specific data. Make a copy of `OTRSecrets-Template.m` as `OTRSecrets.m` :
 
-    $ touch ChatSecure/OTRSecrets.m
+    $ cp ChatSecure/OTRSecrets-Template.m ChatSecure/OTRSecrets.m
 
-Then fill it with blank API keys:
-
-```obj-c
-NSString *const kOTRGoogleAppSecret = @"";
-NSString *const kOTRHockeyLiveIdentifier = @"";
-NSString *const kOTRHockeyBetaIdentifier = @"";
-```
     
 Open `ChatSecure.xcworkspace` in Xcode and build. 
 
