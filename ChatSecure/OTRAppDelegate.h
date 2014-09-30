@@ -38,9 +38,11 @@
 @property (nonatomic) UIBackgroundTaskIdentifier backgroundTask;
 @property (nonatomic) BOOL didShowDisconnectionWarning;
 
+- (void) showConversationViewController;
+
 + (OTRAppDelegate *)appDelegate;
 + (void)presentActionSheet:(UIActionSheet*)sheet inView:(UIView*)view;
 
-- (void) showConversationViewController;
+
 
 @end
