@@ -6,9 +6,16 @@
 //  Copyright (c) 2014 Chris Ballinger. All rights reserved.
 //
 
-#import "NSURL+chatsecure.h"
+#import "NSURL+ChatSecure.h"
+#import "OTRConstants.h"
 
-@implementation NSURL (chatsecure)
+@implementation NSURL (ChatSecure)
+
+- (BOOL)otr_isFacebookCallBackURL
+{
+    NSString *facebookScheme = [NSString stringWithFormat:@"fb%@",FACEBOOK_APP_ID];
+    return [[self scheme] isEqualToString:facebookScheme];
+}
 
 + (NSURL*) otr_githubURL {
     NSURL *githubURL = [NSURL URLWithString:@"https://github.com/chrisballinger/ChatSecure-iOS/"];

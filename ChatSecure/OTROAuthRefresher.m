@@ -12,7 +12,7 @@
 #import "GTMOAuth2Authentication.h"
 #import "OTRSecrets.h"
 #import "OTRConstants.h"
-#import "FBSessionTokenCachingStrategy.h"
+#import "OTRInMemorySessionTokenCachingStrategy.h"
 
 #import "OTROAuthXMPPAccount.h"
 
@@ -35,7 +35,8 @@
 
 + (void)refreshFacebookToken:(FBAccessTokenData *)authToken completion:(OTROAuthCompletionBlock)completionBlock
 {
-    FBSession * session = [[FBSession alloc] initWithAppID:FACEBOOK_APP_ID permissions:@[@"xmpp_login"] urlSchemeSuffix:nil tokenCacheStrategy:[FBSessionTokenCachingStrategy nullCacheInstance]];
+    OTRInMemorySessionTokenCachingStrategy *strategy = [[OTRInMemorySessionTokenCachingStrategy alloc] initWithToken:authToken];
+    FBSession * session = [[FBSession alloc] initWithAppID:FACEBOOK_APP_ID permissions:@[@"xmpp_login"] urlSchemeSuffix:nil tokenCacheStrategy:strategy];
     
     [FBSession setActiveSession:session];
     

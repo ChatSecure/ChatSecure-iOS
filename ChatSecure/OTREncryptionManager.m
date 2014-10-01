@@ -30,7 +30,7 @@
 #import "Strings.h"
 #import "OTRAppDelegate.h"
 #import "OTRMessagesViewController.h"
-#import "UIViewController+chatsecure.h"
+#import "UIViewController+ChatSecure.h"
 
 #import "OTRLog.h"
 
@@ -155,7 +155,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     decodedMessage = [OTRUtilities stripHTML:decodedMessage];
     
     if ([decodedMessage length]) {
-        if ([[OTRAppDelegate appDelegate].messagesViewController isVisible] && [[OTRAppDelegate appDelegate].messagesViewController.buddy.uniqueId isEqualToString:originalMessage.buddyUniqueId])
+        if ([[OTRAppDelegate appDelegate].messagesViewController otr_isVisible] && [[OTRAppDelegate appDelegate].messagesViewController.buddy.uniqueId isEqualToString:originalMessage.buddyUniqueId])
         {
             originalMessage.read = YES;
         }

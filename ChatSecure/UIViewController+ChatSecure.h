@@ -8,8 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface UIViewController (chatsecure)
+@interface UIViewController (ChatSecure)
 
-- (BOOL)isVisible;
+- (BOOL)otr_isVisible;
 
 @end

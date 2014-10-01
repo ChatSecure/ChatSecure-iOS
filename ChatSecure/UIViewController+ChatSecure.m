@@ -6,11 +6,11 @@
 //  Copyright (c) 2014 Chris Ballinger. All rights reserved.
 //
 
-#import "UIViewController+chatsecure.h"
+#import "UIViewController+ChatSecure.h"
 
-@implementation UIViewController (chatsecure)
+@implementation UIViewController (ChatSecure)
 
-- (BOOL)isVisible
+- (BOOL)otr_isVisible
 {
     return (self.isViewLoaded && self.view.window);
 }

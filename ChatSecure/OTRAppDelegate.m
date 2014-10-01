@@ -50,7 +50,7 @@
 #import "YapDatabaseConnection.h"
 #import "OTRCertificatePinning.h"
 #import "NSData+XMPP.h"
-
+#import "NSURL+ChatSecure.h"
 #import "OTRPushAccount.h"
 #import "OTRPushManager.h"
 #import "OTROnboardingStepsController.h"
@@ -357,7 +357,7 @@
                                                           sourceApplication:sourceApplication
                                                                  annotation:annotation]) {
         return YES;
-    } else if ([[url scheme] isEqualToString:[FBSettings defaultUrlSchemeSuffix]]) {
+    } else if ([url otr_isFacebookCallBackURL]) {
         return [[FBSession activeSession] handleOpenURL:url];
     }
     return NO;

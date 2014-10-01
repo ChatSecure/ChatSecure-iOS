@@ -8,7 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-@interface NSURL (chatsecure)
+@interface NSURL (ChatSecure)
+
+- (BOOL)otr_isFacebookCallBackURL;
 
 + (NSURL*) otr_githubURL;
 
