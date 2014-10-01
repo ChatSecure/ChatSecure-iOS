@@ -68,7 +68,7 @@ const CGFloat OTRBuddyImageCellPadding = 12.0;
     }
     UIColor *statusColor =  [OTRColors colorWithStatus:buddy.status];
     self.imageViewBorderColor = statusColor;
-    
+    [self.contentView setNeedsUpdateConstraints];
 }
 
 - (UIImage *)defaultImage
