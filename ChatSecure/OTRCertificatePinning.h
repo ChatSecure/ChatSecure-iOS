@@ -6,8 +6,9 @@
 //  Copyright (c) 2013 Chris Ballinger. All rights reserved.
 //
 
-#import "XMPPCertificatePinning.h"
+#import "XMPPModule.h"
 
+@class AFSecurityPolicy;
 
 @protocol OTRCertificatePinningDelegate <NSObject>
 
@@ -15,9 +16,12 @@
 
 @end
 
-@interface OTRCertificatePinning : XMPPCertificatePinning
+@interface OTRCertificatePinning : XMPPModule
 
+@property (nonatomic, strong) AFSecurityPolicy *securityPolicy;
 @property (nonatomic, weak) id<OTRCertificatePinningDelegate> delegate;
+
++ (instancetype)defaultCertificates;
 
 + (void)addCertificate:(SecCertificateRef)cert withHostName:(NSString *)hostname;
 

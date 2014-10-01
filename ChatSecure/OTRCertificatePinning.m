@@ -68,7 +68,7 @@ static id AFPublicKeyForCertificate(NSData *certificate) {
 
 @implementation OTRCertificatePinning
 
-- (id)initWithDefaultCertificates
+- (instancetype)initWithDefaultCertificates
 {
     if (self = [super init]) {
         self.securityPolicy = [[AFSecurityPolicy alloc] init];
@@ -114,6 +114,11 @@ static id AFPublicKeyForCertificate(NSData *certificate) {
             [data writeToFile:path atomically:YES];
         }
     }
+}
+
++ (instancetype)defaultCertificates
+{
+    return [[self alloc] initWithDefaultCertificates];
 }
 
 + (void)addCertificate:(SecCertificateRef)cert withHostName:(NSString *)hostname {
