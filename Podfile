@@ -2,7 +2,9 @@ platform :ios, "7.0"
 
 inhibit_all_warnings!
 
-pod "AFNetworking", '2.0.3'
+source 'https://github.com/CocoaPods/Specs.git'
+
+pod 'AFNetworking', '~> 2.4'
 pod "Appirater", '~> 2.0'
 pod 'OpenInChrome', '~> 0.0'
 pod 'MWFeedParser', '~> 1.0'

@@ -1,22 +1,25 @@
 PODS:
-  - AFNetworking (2.0.3):
+  - AFNetworking (2.4.1):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
     - AFNetworking/UIKit
-  - AFNetworking/NSURLConnection (2.0.3):
+  - AFNetworking/NSURLConnection (2.4.1):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/NSURLSession (2.0.3):
+  - AFNetworking/NSURLSession (2.4.1):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (2.4.1)
+  - AFNetworking/Security (2.4.1)
+  - AFNetworking/Serialization (2.4.1)
+  - AFNetworking/UIKit (2.4.1):
     - AFNetworking/NSURLConnection
-  - AFNetworking/Reachability (2.0.3)
-  - AFNetworking/Security (2.0.3)
-  - AFNetworking/Serialization (2.0.3)
-  - AFNetworking/UIKit (2.0.3):
-    - AFNetworking/NSURLConnection
+    - AFNetworking/NSURLSession
   - AFOAuth2Client (0.1.2):
     - AFNetworking (~> 2.0)
   - Appirater (2.0.4)
@@ -92,7 +95,7 @@ PODS:
     - YapDatabase/common
 
 DEPENDENCIES:
-  - AFNetworking (= 2.0.3)
+  - AFNetworking (~> 2.4)
   - AFOAuth2Client (from `git@github.com:ChatSecure/AFOAuth2Client.git`, branch `release`)
   - Appirater (~> 2.0)
   - BBlock (~> 1.2)
@@ -147,7 +150,7 @@ EXTERNAL SOURCES:
     :git: git@github.com:ChatSecure/uservoice-iphone-sdk.git
 
 SPEC CHECKSUMS:
-  AFNetworking: a4d0e9a64de9242986620dafd1b3cee3b413ac5c
+  AFNetworking: 0aabc6fae66d6e5d039eeb21c315843c7aae51ab
   AFOAuth2Client: 5244ffdc28081e2ce4d4a0d0f1198ed54e24d787
   Appirater: cbdb7f305562cfde585300bfff86da01ae559deb
   BBlock: 90f0ae0e3ba94fc88be6b9a85b4adbb73b8a7c9a
