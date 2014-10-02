@@ -39,7 +39,6 @@
 #import "OTRSettingsManager.h"
 #import "OTRSecrets.h"
 #import "OTRDatabaseManager.h"
-
 #import "SSKeychain.h"
 
 #import "OTRLog.h"
@@ -55,6 +54,7 @@
 #import "OTRPushManager.h"
 #import "OTROnboardingStepsController.h"
 #import "OTRDatabaseUnlockViewController.h"
+#import "OTRMessage.h"
 
 #if CHATSECURE_DEMO
 #import "OTRChatDemo.h"
@@ -82,7 +82,6 @@
     [OTRCertificatePinning loadBundledCertificatesToKeychain];
     
     [SSKeychain setAccessibilityType:kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly];
-    
     
     UIViewController *rootViewController = nil;
     
@@ -207,6 +206,11 @@
 {
     DDLogInfo(@"Application entered background state.");
     NSAssert(self.backgroundTask == UIBackgroundTaskInvalid, nil);
+    
+    [[OTRDatabaseManager sharedInstance].mainThreadReadOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        application.applicationIconBadgeNumber = [OTRMessage numberOfUnreadMessagesWithTransaction:transaction];
+    }];
+    
     self.didShowDisconnectionWarning = NO;
     
     self.backgroundTask = [application beginBackgroundTaskWithExpirationHandler: ^{
@@ -335,9 +339,7 @@
             buddy = [OTRBuddy fetchObjectWithUniqueID:buddyUniqueId transaction:transaction];
         }];
         
-#warning UILocalNotifications no longer enter conversation
-        //FIXME
-        //[buddyListViewController enterConversationWithBuddy:buddy];
+        [self.conversationViewController enterConversationWithBuddy:buddy];
     }
     
 

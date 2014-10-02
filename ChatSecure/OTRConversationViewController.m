@@ -14,11 +14,11 @@
 #import "OTRSubscriptionRequestsViewController.h"
 
 #import "OTRConversationCell.h"
-
+#import "OTRNotificationPermissions.h"
 #import "OTRAccount.h"
 #import "OTRBuddy.h"
 #import "OTRMessage.h"
-
+#import "UIViewController+ChatSecure.h"
 #import "OTRLog.h"
 #import "YapDatabaseView.h"
 #import "YapDatabase.h"
@@ -142,6 +142,12 @@ static CGFloat cellHeight = 80.0;
     
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [OTRNotificationPermissions checkPermissions];
+}
+
 - (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
@@ -177,7 +183,7 @@ static CGFloat cellHeight = 80.0;
     }
     OTRMessagesViewController *messagesViewController = [OTRAppDelegate appDelegate].messagesViewController;
     messagesViewController.buddy = buddy;
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone && ![messagesViewController otr_isVisible]) {
         [self.navigationController pushViewController:messagesViewController animated:YES];
     }
     

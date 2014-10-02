@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+@class OTRBuddy;
+
 @interface OTRConversationViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+
+- (void)enterConversationWithBuddy:(OTRBuddy *)buddy;
 
 @end

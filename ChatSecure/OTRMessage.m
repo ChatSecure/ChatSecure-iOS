@@ -132,16 +132,23 @@ const struct OTRMessageEdges OTRMessageEdges = {
             // We are not active, so use a local notification instead
             __block OTRBuddy *localBuddy = nil;
             __block OTRAccount *localAccount;
+            __block NSInteger unreadCount = 0;
             [[OTRDatabaseManager sharedInstance].mainThreadReadOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
                 localBuddy = [message buddyWithTransaction:transaction];
                 localAccount = [localBuddy accountWithTransaction:transaction];
-                
+                unreadCount = [self numberOfUnreadMessagesWithTransaction:transaction];
             }];
+            
+            NSString *name = localBuddy.username;
+            if ([localBuddy.displayName length]) {
+                name = localBuddy.displayName;
+            }
+            
             UILocalNotification *localNotification = [[UILocalNotification alloc] init];
             localNotification.alertAction = REPLY_STRING;
             localNotification.soundName = UILocalNotificationDefaultSoundName;
-            localNotification.applicationIconBadgeNumber = [UIApplication sharedApplication].applicationIconBadgeNumber + 1;
-            localNotification.alertBody = [NSString stringWithFormat:@"%@: %@",localBuddy.displayName,rawMessage];
+            localNotification.applicationIconBadgeNumber = unreadCount;
+            localNotification.alertBody = [NSString stringWithFormat:@"%@: %@",name,rawMessage];
             
             localNotification.userInfo = @{kOTRNotificationBuddyUniqueIdKey:localBuddy.uniqueId};
         

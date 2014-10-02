@@ -167,6 +167,8 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
         }
         [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
             [originalMessage saveWithTransaction:transaction];
+        } completionBlock:^{
+            [OTRMessage showLocalNotificationForMessage:originalMessage];
         }];
     }
     
