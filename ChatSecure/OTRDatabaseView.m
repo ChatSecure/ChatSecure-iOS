@@ -253,7 +253,7 @@ NSString *OTRPushAccountGroup = @"Account";
     YapDatabaseView *view = [[[OTRDatabaseManager sharedInstance].database registeredExtensions] objectForKey:OTRBuddyDatabaseViewExtensionName];
     int version = 1;
     if (view){
-        [[OTRDatabaseManager sharedInstance].database unregisterExtension:OTRBuddyDatabaseViewExtensionName];
+        [[OTRDatabaseManager sharedInstance].database unregisterExtensionWithName:OTRBuddyDatabaseViewExtensionName];
         version = [view.versionTag intValue];
         version += 1;
     }
@@ -437,7 +437,7 @@ NSString *OTRPushAccountGroup = @"Account";
         return YES;
     }*/
     
-    [[OTRDatabaseManager sharedInstance].database unregisterExtension:OTRAllPushAccountInfoViewExtensionName];
+    [[OTRDatabaseManager sharedInstance].database unregisterExtensionWithName:OTRAllPushAccountInfoViewExtensionName];
     
     YapDatabaseViewBlockType groupingBlockType;
     YapDatabaseViewGroupingWithKeyBlock groupingBlock;
@@ -471,7 +471,6 @@ NSString *OTRPushAccountGroup = @"Account";
     sortingBlockType = YapDatabaseViewBlockTypeWithObject;
     sortingBlock = ^(NSString *group, NSString *collection1, NSString *key1, id obj1,
                      NSString *collection2, NSString *key2, id obj2){
-#warning TODO: Needs sorting method
         
         return NSOrderedSame;
     };
