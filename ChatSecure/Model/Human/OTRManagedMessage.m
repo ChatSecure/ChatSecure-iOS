@@ -1,7 +1,6 @@
 #import "OTRManagedMessage.h"
 #import "OTRManagedBuddy.h"
 #import "OTRManagedAccount.h"
-#import "NSString+HTML.h"
 #import "Strings.h"
 
 #import "OTRLog.h"

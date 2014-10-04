@@ -9,10 +9,8 @@ pod "Appirater", '~> 2.0'
 pod 'OpenInChrome', '~> 0.0'
 pod 'MWFeedParser', '~> 1.0'
 pod "CocoaLumberjack", '~> 1.9'
-pod 'DAKeyboardControl', '~> 2.4'
-pod "Facebook-iOS-SDK", '~> 3.18'
-pod 'HPGrowingTextView', '~> 1.1'
-pod "HockeySDK", '~> 3.5'
+pod "Facebook-iOS-SDK", '~> 3.19'
+pod "HockeySDK", '~> 3.6'
 pod "MagicalRecord", '~> 2.2'
 pod 'MBProgressHUD', '~> 0.9'
 pod "SSKeychain", '~> 1.2'
@@ -30,14 +28,14 @@ pod 'TTTAttributedLabel', '~> 1.10'
 pod 'VTAcknowledgementsViewController', '~> 0.11'
 pod 'PureLayout', '~> 1.1'
 pod 'BButton', '~> 4.0'
+pod 'uservoice-iphone-sdk', '~> 3.2'
 
-# Waiting for 7.4 to be pushed to trunk
-pod 'CocoaAsyncSocket', :git => 'git@github.com:ChatSecure/CocoaAsyncSocket.git', :branch => '7.4-compilefix'
+# Waiting for 7.4.1 to be pushed to trunk
+pod 'CocoaAsyncSocket', :git => 'https://github.com/robbiehanson/CocoaAsyncSocket.git', :commit => 'c0bbcbcc5e039ca5d732f9844bf95c3d8ee31a5b'
 
 # Forks
-pod 'AFOAuth2Client', :git => 'git@github.com:ChatSecure/AFOAuth2Client.git', :branch => 'release'
-pod 'SIAlertView', :git => 'git@github.com:ChatSecure/SIAlertView.git', :branch => 'attributedText'
-pod 'uservoice-iphone-sdk', :git => 'git@github.com:ChatSecure/uservoice-iphone-sdk.git', :branch => '3.1.0-noanalytics'
+pod 'AFOAuth2Client', :git => 'https://github.com/ChatSecure/AFOAuth2Client.git', :branch => 'release'
+pod 'SIAlertView', :git => 'https://github.com/ChatSecure/SIAlertView.git', :branch => 'attributedText'
 
 # Submodules
 pod 'ProxyKit/Client', :path => 'Submodules/ProxyKit/ProxyKit.podspec'
