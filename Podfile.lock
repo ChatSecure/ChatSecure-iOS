@@ -39,6 +39,7 @@ PODS:
   - CocoaLumberjack/Core (1.9.2)
   - CocoaLumberjack/Extensions (1.9.2):
     - CocoaLumberjack/Core
+  - CPAProxy (1.0.0)
   - Facebook-iOS-SDK (3.19.0):
     - Bolts (~> 1.0)
   - gtm-oauth2 (0.1.0):
@@ -67,7 +68,6 @@ PODS:
   - MWFeedParser/NSDate+InternetDateTime (1.0.1)
   - MWFeedParser/NSString+HTML (1.0.1)
   - Navajo (0.0.1)
-  - OnionKit (1.0.0)
   - OpenInChrome (0.0.1)
   - OTRKit (1.0.0)
   - ProxyKit/Client (1.0.2):
@@ -100,6 +100,7 @@ DEPENDENCIES:
   - BButton (~> 4.0)
   - CocoaAsyncSocket (from `https://github.com/robbiehanson/CocoaAsyncSocket.git`, commit `c0bbcbcc5e039ca5d732f9844bf95c3d8ee31a5b`)
   - CocoaLumberjack (~> 1.9)
+  - CPAProxy (from `Submodules/CPAProxy/CPAProxy.podspec`)
   - Facebook-iOS-SDK (~> 3.19)
   - gtm-oauth2 (~> 0.1.0)
   - HockeySDK (~> 3.6)
@@ -111,7 +112,6 @@ DEPENDENCIES:
   - MBProgressHUD (~> 0.9)
   - MWFeedParser (~> 1.0)
   - Navajo (~> 0.0)
-  - OnionKit (from `Submodules/OnionKit/OnionKit.podspec`)
   - OpenInChrome (~> 0.0)
   - OTRKit (from `Submodules/OTRKit/OTRKit.podspec`)
   - ProxyKit/Client (from `Submodules/ProxyKit/ProxyKit.podspec`)
@@ -132,8 +132,8 @@ EXTERNAL SOURCES:
   CocoaAsyncSocket:
     :commit: c0bbcbcc5e039ca5d732f9844bf95c3d8ee31a5b
     :git: https://github.com/robbiehanson/CocoaAsyncSocket.git
-  OnionKit:
-    :path: Submodules/OnionKit/OnionKit.podspec
+  CPAProxy:
+    :path: Submodules/CPAProxy/CPAProxy.podspec
   OTRKit:
     :path: Submodules/OTRKit/OTRKit.podspec
   ProxyKit:
@@ -151,6 +151,7 @@ SPEC CHECKSUMS:
   Bolts: 2635e8698a630774689441047f3465d78c48d485
   CocoaAsyncSocket: 4bbe8fc969e61e62f408de98faac676468e155b3
   CocoaLumberjack: 205769c032b5fef85b92472046bcc8b7e7c8a817
+  CPAProxy: 6a90ca85dcf10ec5479da6fe9eea53a228b9bab9
   Facebook-iOS-SDK: cb7d74759d0b1ba546e6e6f1dde407b0d4e448d6
   gtm-oauth2: 64f2d404a50676ab63b5437a02a7567da8f8b7fa
   GTMHTTPFetcher: 0f02d5a5803dd08736462981064de6a7f59cf9bd
@@ -164,7 +165,6 @@ SPEC CHECKSUMS:
   MBProgressHUD: 2038dbcf3dce73215abed6001657043d53aa79a8
   MWFeedParser: 003cbf5398e99a7f2057fbe9583054fd1b84be72
   Navajo: 9130d497903e5d1b0f1b3c987be01f5b60fd37c7
-  OnionKit: 679881831ede86ceab124475322076d45e3708b6
   OpenInChrome: b7c73ddf8fe0a1788dc0549c3c4c70e3c84da578
   OTRKit: 8d35580ba78c4926320c40ba1906f353630d34e5
   ProxyKit: 3e73f2ad92327554549474ad10da21dde46d3ba8

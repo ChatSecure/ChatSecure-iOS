@@ -9,7 +9,7 @@
 #import "OTRXMPPCreateAccountViewController.h"
 #import "Strings.h"
 
-#import "OnionKit.h"
+#import "OTRTorManager.h"
 #import "OTRAccountsManager.h"
 #import "OTRLog.h"
 #import "OTRConstants.h"
@@ -214,10 +214,19 @@ static NSString * const domainCellIdentifier = @"domainCellIdentifer";
     }
     
     self.loginButtonPressed = YES;
-    if(self.isTorAccount && ![OnionKit sharedInstance].isRunning)
+    if(self.isTorAccount && [OTRTorManager sharedInstance].torManager.status != CPAStatusBootstrapDone)
     {
         [self showHUDWithText:CONNECTING_TO_TOR_STRING];
-        [[OnionKit sharedInstance] start];
+        [[OTRTorManager sharedInstance].torManager setupWithCompletion:^(NSString *socksHost, NSUInteger socksPort, NSError *error) {
+            // TODO: handle Tor/SOCKS setup error
+            if (error) {
+                
+            } else {
+                // successfully connected to Tor
+            }
+        } progress:^(NSInteger progress, NSString *summaryString) {
+            // TODO: show progress in HUD here
+        }];
     }
     else {
         NSString *newUsername = [self fixUsername:self.usernameTextField.text withDomain:[self hostnameForIndex:self.selectedHostnameIndex]];

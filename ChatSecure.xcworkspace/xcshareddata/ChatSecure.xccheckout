@@ -24,6 +24,8 @@
 		<string>github.com:ChatSecure/AFOAuth2Client.git</string>
 		<key>9894A09246C3858F99AD97DCE53FE014CFC07C96</key>
 		<string>github.com:ChatSecure/OnionKit.git</string>
+		<key>98D05BCBC40AE5315578EEE7C186D3063CCA59C3</key>
+		<string>github.com:ChatSecure/CPAProxy.git</string>
 		<key>B775552D1BBEEADC6A0BBB2FD048B6AA26CB309D</key>
 		<string>github.com:ChatSecure/XMPPFramework.git</string>
 		<key>E2E339EC05FF99AF5ECAE62EDBC78398DA1111C6</key>
@@ -47,6 +49,8 @@
 		<string>..Pods/AFOAuth2Client</string>
 		<key>9894A09246C3858F99AD97DCE53FE014CFC07C96</key>
 		<string>..Submodules/OnionKit</string>
+		<key>98D05BCBC40AE5315578EEE7C186D3063CCA59C3</key>
+		<string>../../ChatSecure-iOS/Submodules/CPAProxy</string>
 		<key>B775552D1BBEEADC6A0BBB2FD048B6AA26CB309D</key>
 		<string>..Submodules/XMPPFramework</string>
 		<key>E2E339EC05FF99AF5ECAE62EDBC78398DA1111C6</key>
@@ -83,6 +87,14 @@
 			<string>1C75F1C5CFCB95B3702F6F632FA05ED5244B519E</string>
 			<key>IDESourceControlWCCName</key>
 			<string>CocoaAsyncSocket</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>98D05BCBC40AE5315578EEE7C186D3063CCA59C3</string>
+			<key>IDESourceControlWCCName</key>
+			<string>CPAProxy</string>
 		</dict>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>

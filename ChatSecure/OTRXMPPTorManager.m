@@ -7,12 +7,9 @@
 //
 
 #import "OTRXMPPTorManager.h"
-#import "OnionKit.h"
+#import "OTRTorManager.h"
 #import "XMPPStream.h"
 #import "OTRXMPPTorAccount.h"
-
-NSString *const proxyAdress = @"127.0.0.1";
-uint16_t const proxyPort = 9050;
 
 @interface OTRXMPPTorManager()
 @property (nonatomic, strong) OTRXMPPTorAccount *account;
@@ -24,7 +21,7 @@ uint16_t const proxyPort = 9050;
 
 - (void)connectWithPassword:(NSString *)myPassword
 {
-    if ([OnionKit sharedInstance].isRunning) {
+    if ([OTRTorManager sharedInstance].torManager.status == CPAStatusBootstrapDone) {
         [super connectWithPassword:myPassword];
     }
     else {
@@ -37,7 +34,9 @@ uint16_t const proxyPort = 9050;
 {
     if (!_xmppStream) {
         _xmppStream = [super xmppStream];
-        [_xmppStream setProxyHost:proxyAdress port:proxyPort version:GCDAsyncSocketSOCKSVersion5];
+        NSString *proxyHost = [OTRTorManager sharedInstance].torManager.SOCKSHost;
+        NSUInteger proxyPort = [OTRTorManager sharedInstance].torManager.SOCKSPort;
+        [_xmppStream setProxyHost:proxyHost port:proxyPort version:GCDAsyncSocketSOCKSVersion5];
     }
     return _xmppStream;
 }

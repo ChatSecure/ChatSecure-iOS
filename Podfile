@@ -40,4 +40,4 @@ pod 'SIAlertView', :git => 'https://github.com/ChatSecure/SIAlertView.git', :bra
 # Submodules
 pod 'ProxyKit/Client', :path => 'Submodules/ProxyKit/ProxyKit.podspec'
 pod 'OTRKit', :path => 'Submodules/OTRKit/OTRKit.podspec'
-pod 'OnionKit', :path => 'Submodules/OnionKit/OnionKit.podspec'
+pod 'CPAProxy', :path => 'Submodules/CPAProxy/CPAProxy.podspec'

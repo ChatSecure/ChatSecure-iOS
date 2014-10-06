@@ -24,7 +24,7 @@
 #import "OTRConstants.h"
 #import "OTRXMPPError.h"
 #import "SIAlertView.h"
-#import "OnionKit.h"
+#import "OTRTorManager.h"
 #import "OTRColors.h"
 #import "OTRCertificatePinning.h"
 #import "OTRXMPPTorAccount.h"
@@ -113,7 +113,7 @@
     [self.passwordTextField resignFirstResponder];
     self.loginButtonPressed = NO;
     if (self.isTorAccount) {
-        [[OnionKit sharedInstance] addObserver:self forKeyPath:NSStringFromSelector(@selector(isRunning)) options:NSKeyValueObservingOptionNew context:NULL];
+        [[OTRTorManager sharedInstance].torManager addObserver:self forKeyPath:NSStringFromSelector(@selector(status)) options:NSKeyValueObservingOptionNew context:NULL];
     }
 }
 
@@ -121,7 +121,7 @@
 {
     if(self.isTorAccount)
     {
-        [[OnionKit sharedInstance] removeObserver:self forKeyPath:NSStringFromSelector(@selector(isRunning))];
+        [[OTRTorManager sharedInstance].torManager removeObserver:self forKeyPath:NSStringFromSelector(@selector(status))];
     }
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                               name:UIKeyboardWillHideNotification
@@ -134,8 +134,8 @@
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    if ([keyPath isEqualToString:NSStringFromSelector(@selector(isRunning))] && [object isEqual:[OnionKit sharedInstance]]) {
-        BOOL isRunning = [[change objectForKey:NSKeyValueChangeNewKey] boolValue];
+    if ([keyPath isEqualToString:NSStringFromSelector(@selector(status))] && [object isEqual:[OTRTorManager sharedInstance].torManager]) {
+        BOOL isRunning = [OTRTorManager sharedInstance].torManager.status == CPAStatusBootstrapDone;
         if (isRunning && self.loginButtonPressed) {
             [self loginButtonPressed:nil];
         }
@@ -235,16 +235,23 @@
 - (void)loginButtonPressed:(id)sender
 {
     self.loginButtonPressed = YES;
-    if([self isTorAccount]){
-        if(![OnionKit sharedInstance].isRunning) {
+    if([self isTorAccount]) {
+        if([OTRTorManager sharedInstance].torManager.status != CPAStatusBootstrapDone) {
             [self showHUDWithText:CONNECTING_TO_TOR_STRING];
-            [[OnionKit sharedInstance] start];
-        }
-        else{
+            [[OTRTorManager sharedInstance].torManager setupWithCompletion:^(NSString *socksHost, NSUInteger socksPort, NSError *error) {
+                // TODO: handle Tor/SOCKS setup error
+                if (error) {
+                    
+                } else {
+                    // successfully connected to Tor
+                }
+            } progress:^(NSInteger progress, NSString *summaryString) {
+                // TODO: show progress in HUD here
+            }];
+        } else {
             [super loginButtonPressed:sender];
         }
-    }
-    else {
+    } else {
         [super loginButtonPressed:sender];
     }
 }
