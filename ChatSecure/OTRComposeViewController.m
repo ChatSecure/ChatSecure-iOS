@@ -21,7 +21,7 @@
 #import "OTRNewBuddyViewController.h"
 #import "OTRChooseAccountViewController.h"
 
-static CGFloat cellHeight = 80.0;
+static CGFloat OTRBuddyInfoCellHeight = 80.0;
 
 @interface OTRComposeViewController () <UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate>
 
@@ -61,6 +61,7 @@ static CGFloat cellHeight = 80.0;
     self.tableView.translatesAutoresizingMaskIntoConstraints = NO;
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
+    self.tableView.rowHeight = OTRBuddyInfoCellHeight;
     [self.view addSubview:self.tableView];
     
     [self.tableView registerClass:[OTRBuddyInfoCell class] forCellReuseIdentifier:[OTRBuddyInfoCell reuseIdentifier]];
@@ -281,7 +282,7 @@ static CGFloat cellHeight = 80.0;
         
         [cell setBuddy:buddy withAccountName:buddyAccountName];
         
-        [cell.avatarImageView.layer setCornerRadius:(cellHeight-2.0*OTRBuddyImageCellPadding)/2.0];
+        [cell.avatarImageView.layer setCornerRadius:(OTRBuddyInfoCellHeight-2.0*OTRBuddyImageCellPadding)/2.0];
         
         return cell;
     }
@@ -291,9 +292,14 @@ static CGFloat cellHeight = 80.0;
 
 #pragma - mark UITableViewDelegate Methods
 
+- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return OTRBuddyInfoCellHeight;
+}
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return  cellHeight;
+    return OTRBuddyInfoCellHeight;
 }
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath

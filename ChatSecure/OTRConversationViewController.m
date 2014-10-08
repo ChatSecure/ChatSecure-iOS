@@ -31,7 +31,7 @@
 #import "OTRAppDelegate.h"
 
 
-static CGFloat cellHeight = 80.0;
+static CGFloat kOTRConversationCellHeight = 80.0;
 
 @interface OTRConversationViewController () <OTRComposeViewControllerDelegate>
 
@@ -73,6 +73,7 @@ static CGFloat cellHeight = 80.0;
     self.tableView.translatesAutoresizingMaskIntoConstraints = NO;
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
+    self.tableView.rowHeight = kOTRConversationCellHeight;
     [self.view addSubview:self.tableView];
     
     [self.tableView registerClass:[OTRConversationCell class] forCellReuseIdentifier:[OTRConversationCell reuseIdentifier]];
@@ -320,7 +321,7 @@ static CGFloat cellHeight = 80.0;
     OTRConversationCell *cell = [tableView dequeueReusableCellWithIdentifier:[OTRConversationCell reuseIdentifier] forIndexPath:indexPath];
     OTRBuddy * buddy = [self buddyForIndexPath:indexPath];
     
-    [cell.avatarImageView.layer setCornerRadius:(cellHeight-2.0*OTRBuddyImageCellPadding)/2.0];
+    [cell.avatarImageView.layer setCornerRadius:(kOTRConversationCellHeight-2.0*OTRBuddyImageCellPadding)/2.0];
     
     [cell setBuddy:buddy];
     
@@ -329,9 +330,13 @@ static CGFloat cellHeight = 80.0;
 
 #pragma - mark UITableViewDelegate Methods
 
+- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return kOTRConversationCellHeight;
+}
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return  cellHeight;
+    return kOTRConversationCellHeight;
 }
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath

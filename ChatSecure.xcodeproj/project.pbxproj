@@ -288,6 +288,7 @@
 		D93C31B7159A8B4F006316C7 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D93C31B6159A8B4F006316C7 /* Security.framework */; };
 		D94877DE19DF88060098CC06 /* OTRTorManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D94877DD19DF88060098CC06 /* OTRTorManager.m */; };
 		D962710A1755E16200F0A958 /* libidn.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 63483F7E1752CED100779257 /* libidn.a */; };
+		D984375819E5DFDE006508AE /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = D984375719E5DFDE006508AE /* LaunchScreen.xib */; };
 		D987BAD91901A6CF005B2382 /* OTRPurchaseController.m in Sources */ = {isa = PBXBuildFile; fileRef = D987BACA1901A6CF005B2382 /* OTRPurchaseController.m */; };
 		D987BADC1901A6CF005B2382 /* OTRPushAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = D987BAD01901A6CF005B2382 /* OTRPushAccount.m */; };
 		D987BADD1901A6CF005B2382 /* OTRPushAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = D987BAD21901A6CF005B2382 /* OTRPushAPIClient.m */; };
@@ -926,6 +927,7 @@
 		D953118916C71C2700AAB1D2 /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_TW; path = ChatSecure/zh_TW.lproj/Localizable.strings; sourceTree = SOURCE_ROOT; };
 		D953118A16C71CFD00AAB1D2 /* pt_BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt_BR; path = ChatSecure/pt_BR.lproj/Localizable.strings; sourceTree = SOURCE_ROOT; };
 		D974DABC15021E540028B2F4 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
+		D984375719E5DFDE006508AE /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LaunchScreen.xib; path = ChatSecure/LaunchScreen.xib; sourceTree = SOURCE_ROOT; };
 		D987BAC91901A6CF005B2382 /* OTRPurchaseController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRPurchaseController.h; sourceTree = "<group>"; };
 		D987BACA1901A6CF005B2382 /* OTRPurchaseController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRPurchaseController.m; sourceTree = "<group>"; };
 		D987BACF1901A6CF005B2382 /* OTRPushAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRPushAccount.h; sourceTree = "<group>"; };
@@ -2253,6 +2255,7 @@
 		D9D8D1F61531056300F9E8D3 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				D984375719E5DFDE006508AE /* LaunchScreen.xib */,
 				631F0BB019DB6D7F00190D58 /* Pods-acknowledgements.plist */,
 				D913F4EE19764A8B00937C0B /* Images.xcassets */,
 				D913F4F01976528B00937C0B /* DemoImages.xcassets */,
@@ -2502,6 +2505,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D984375819E5DFDE006508AE /* LaunchScreen.xib in Resources */,
 				D913F4EF19764A8B00937C0B /* Images.xcassets in Resources */,
 				D9F9378513F44BD3009A3D84 /* InfoPlist.strings in Resources */,
 				D9D8D2061531056300F9E8D3 /* Localizable.strings in Resources */,
