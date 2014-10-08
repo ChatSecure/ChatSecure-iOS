@@ -15,9 +15,8 @@ before_install:
 
 install:
   - echo -e "NSString *const kOTRGoogleAppSecret = @\"\";\nNSString *const kOTRHockeyLiveIdentifier = @\"\";\nNSString *const kOTRHockeyBetaIdentifier = @\"\";\n" > ./ChatSecure/OTRSecrets.m
-  - bash ./Submodules/OnionKit/build-libssl.sh --noverify --i386only
-  - bash ./Submodules/OnionKit/build-libevent.sh --noverify --i386only
-  - bash ./Submodules/OnionKit/build-libtor.sh --noverify --i386only
+  - export ARCHS="i386"   # Only build CPAProxy dependencies for i386 to speed things up
+  - bash ./Submodules/CPAProxy/scripts/build-all.sh
   - bash ./Submodules/OTRKit/build-libgpg-error.sh --noverify --i386only
   - bash ./Submodules/OTRKit/build-libgcrypt.sh --noverify --i386only
   - bash ./Submodules/OTRKit/build-libotr.sh --noverify --i386only
