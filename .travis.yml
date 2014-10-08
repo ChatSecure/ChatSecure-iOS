@@ -26,4 +26,4 @@ before_script:
   - gem update cocoapods
   - pod install
 script:
-  - xctool -workspace ChatSecure.xcworkspace -scheme ChatSecure -sdk iphonesimulator7.1 -arch i386 build
+  - xctool -workspace ChatSecure.xcworkspace -scheme ChatSecure -sdk iphonesimulator8.0 -arch i386 build
