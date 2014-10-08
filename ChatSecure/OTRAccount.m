@@ -118,7 +118,7 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
         OTRBuddy *buddy = [OTRBuddy fetchObjectWithUniqueID:edge.sourceKey transaction:transaction];
         [allBuddies addObject:buddy];
     }];
-    return [allBuddies copy];
+    return allBuddies;
 }
 
 
@@ -153,9 +153,9 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
             [accountsArray addObject:account];
         }
     }];
-    return [accountsArray copy];
-    
+    return accountsArray;
 }
+
 + (NSArray *)allAccountsWithTransaction:(YapDatabaseReadTransaction*)transaction
 {
     NSMutableArray *accounts = [NSMutableArray array];
@@ -164,7 +164,7 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
         [accounts addObject:[[transaction objectForKey:obj inCollection:[OTRAccount collection]]copy]];
     }];
     
-    return [accounts copy];
+    return accounts;
     
 }
 
