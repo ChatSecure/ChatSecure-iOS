@@ -120,7 +120,7 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
 
 + (instancetype)fetchBuddyForUsername:(NSString *)username accountName:(NSString *)accountName transaction:(YapDatabaseReadTransaction *)transaction
 {
-    OTRAccount *account = [[OTRAccount allAccountsWithUsername:username transaction:transaction] firstObject];
+    OTRAccount *account = [[OTRAccount allAccountsWithUsername:accountName transaction:transaction] firstObject];
     return [self fetchBuddyWithUsername:username withAccountUniqueId:account.uniqueId transaction:transaction];
 }
 
