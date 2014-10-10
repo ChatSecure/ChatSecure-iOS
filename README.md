@@ -58,22 +58,14 @@ Download the source code and **don't forget** to pull down all of the submodules
     
 Now you'll need to build the dependencies. During this process we will automatically verify the integity of each package by checking its GPG signature. Install [GPGTools](https://gpgtools.org) and add the public signing keys for OpenSSL, GnuPG, libevent, and libotr. *(TODO make these links to the keys)*
     
-    $ bash ./Submodules/OnionKit/build-all.sh
+    $ bash ./Submodules/CPAProxy/scripts/build-all.sh
     $ bash ./Submodules/OTRKit/build-all.sh
     $ pod install
     
-Next you'll need to create your own version of environment-specific data. Make `OTRSecrets.m` the file:
+Next you'll need to create your own version of environment-specific data. Make a copy of `OTRSecrets-Template.m` as `OTRSecrets.m`:
 
-    $ touch ChatSecure/OTRSecrets.m
+    $ cp ChatSecure/OTRSecrets-Template.m ChatSecure/OTRSecrets.m
 
-Then fill it with blank API keys:
-
-```obj-c
-NSString *const kOTRGoogleAppSecret = @"";
-NSString *const kOTRHockeyLiveIdentifier = @"";
-NSString *const kOTRHockeyBetaIdentifier = @"";
-```
-    
 Open `ChatSecure.xcworkspace` in Xcode and build. 
 
 *Note*: **Don't open the `.xcodeproj`** because we use Cocoapods now!
@@ -123,7 +115,7 @@ terms of a separate license:
 	* [libotr](https://otr.cypherpunks.ca/) - provides the core message encryption capabilities
 	* [libgcrypt](https://www.gnu.org/software/libgcrypt/) - handles core libotr encryption routines
 	* [libgpg-error](http://www.gnupg.org/related_software/libgpg-error/) - error codes used by libotr
-* [OnionKit](https://github.com/chatsecure/onionkit) - Objective-C Tor Wrapper Framework for iOS [![Build Status](https://travis-ci.org/ChatSecure/OnionKit.svg)](https://travis-ci.org/ChatSecure/OnionKit)
+* [CPAProxy](https://github.com/ursachec/CPAProxy) - Objective-C Tor Wrapper Framework for iOS [![Build Status](https://travis-ci.org//ursachec/CPAProxy.svg?branch=master)](https://travis-ci.org/ursachec/CPAProxy)
 	* [OpenSSL](https://www.openssl.org) - crypto primitives required by Tor
 	* [libevent](http://libevent.org) - Tor i/o dependency
 	* [Tor](https://www.torproject.org) - internet anonymity framework 
