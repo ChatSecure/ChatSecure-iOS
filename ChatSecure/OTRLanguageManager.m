@@ -76,7 +76,10 @@ NSString *const kOTRUserSetLanguageKey = @"userSetLanguageKey";
     
     for(NSString * locale in twoLetterLanguages)
     {
-        [languages addObject:[self languageNameForLocalization:locale]];
+        NSString *language = [self languageNameForLocalization:locale];
+        if (language) {
+            [languages addObject:language];
+        }
     }
     
     NSMutableArray * sortedLanguages =[[languages sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)] mutableCopy];
@@ -87,7 +90,8 @@ NSString *const kOTRUserSetLanguageKey = @"userSetLanguageKey";
 
 -(NSString *)languageNameForLocalization:(NSString *)locale
 {
-    return [[self.languageLookupDictionary allKeysForObject:locale] objectAtIndex:0];
+    NSArray *keysForLocale = [self.languageLookupDictionary allKeysForObject:locale];
+    return [keysForLocale firstObject];
 }
 
 -(void)setLocale:(NSString *)locale
