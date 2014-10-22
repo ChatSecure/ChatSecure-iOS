@@ -522,6 +522,7 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
     
+    settings[GCDAsyncSocketSSLProtocolVersionMin] = @(kTLSProtocol1);
     settings[GCDAsyncSocketSSLCipherSuites] = [OTRUtilities cipherSuites];
     settings[GCDAsyncSocketManuallyEvaluateTrust] = @(YES);
 }
