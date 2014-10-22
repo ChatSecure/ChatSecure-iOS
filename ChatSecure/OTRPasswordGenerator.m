@@ -8,6 +8,8 @@
 
 #import "OTRPasswordGenerator.h"
 
+NSUInteger const OTRDefaultPasswordLength = 100;
+
 @implementation OTRPasswordGenerator
 
 + (NSString *)passwordWithLength:(NSUInteger)length

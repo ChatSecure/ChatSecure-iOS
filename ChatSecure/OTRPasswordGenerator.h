@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+extern NSUInteger const OTRDefaultPasswordLength;
+
 @interface OTRPasswordGenerator : NSObject
 
 + (NSString *)passwordWithLength:(NSUInteger)length;

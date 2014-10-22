@@ -220,11 +220,11 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
         return passphrase;
     };
     
-    NSString *databaseDirectory = [self yapDatabaseDirectory];
+    NSString *databaseDirectory = [[self class] yapDatabaseDirectory];
     if (![[NSFileManager defaultManager] fileExistsAtPath:databaseDirectory]) {
         [[NSFileManager defaultManager] createDirectoryAtPath:databaseDirectory withIntermediateDirectories:YES attributes:nil error:nil];
     }
-    NSString *databasePath = [self yapDatabasePathWithName:name];
+    NSString *databasePath = [[self class] yapDatabasePathWithName:name];
     
     self.database = [[YapDatabase alloc] initWithPath:databasePath
                                      objectSerializer:NULL
@@ -414,20 +414,20 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
     return success;
 }
 
-- (NSString *)yapDatabaseDirectory {
++ (NSString *)yapDatabaseDirectory {
     NSString *applicationSupportDirectory = [NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES) lastObject];
     NSString *applicationName = [[[NSBundle mainBundle] infoDictionary] valueForKey:(NSString *)kCFBundleNameKey];
     NSString *directory = [applicationSupportDirectory stringByAppendingPathComponent:applicationName];
     return directory;
 }
 
-- (NSString *)yapDatabasePathWithName:(NSString *)name
++ (NSString *)yapDatabasePathWithName:(NSString *)name
 {
     
     return [[self yapDatabaseDirectory] stringByAppendingPathComponent:name];
 }
 
-- (BOOL)existsYapDatabase
++ (BOOL)existsYapDatabase
 {
     return [[NSFileManager defaultManager] fileExistsAtPath:[self yapDatabasePathWithName:OTRYapDatabaseName]];
 }

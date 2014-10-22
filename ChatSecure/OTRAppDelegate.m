@@ -52,9 +52,9 @@
 #import "NSURL+ChatSecure.h"
 #import "OTRPushAccount.h"
 #import "OTRPushManager.h"
-#import "OTROnboardingStepsController.h"
 #import "OTRDatabaseUnlockViewController.h"
 #import "OTRMessage.h"
+#import "OTRPasswordGenerator.h"
 
 #if CHATSECURE_DEMO
 #import "OTRChatDemo.h"
@@ -89,15 +89,25 @@
     self.conversationViewController = [[OTRConversationViewController alloc] init];
     self.messagesViewController = [OTRMessagesViewController messagesViewController];
     
-    if ([[OTRDatabaseManager sharedInstance] existsYapDatabase] && ![[OTRDatabaseManager sharedInstance] hasPassphrase]) {
+    if ([OTRDatabaseManager existsYapDatabase] && ![[OTRDatabaseManager sharedInstance] hasPassphrase]) {
         // user needs to enter password for current database
         rootViewController = [[OTRDatabaseUnlockViewController alloc] init];
-    }
-    else if ([[OTRDatabaseManager sharedInstance] existsYapDatabase] && [[OTRDatabaseManager sharedInstance] hasPassphrase]) {
-        
-         ////// Normal launch to conversationViewController //////
+    } else {
+        ////// Normal launch to conversationViewController //////
+        if (![OTRDatabaseManager existsYapDatabase]) {
+            /**
+             First Launch
+             Create password and save to keychain
+             **/
+            NSString *newPassword = [OTRPasswordGenerator passwordWithLength:OTRDefaultPasswordLength];
+            NSError *error = nil;
+            [[OTRDatabaseManager sharedInstance] setDatabasePassphrase:newPassword remember:YES error:&error];
+            if (error) {
+                DDLogError(@"Password Error: %@",error);
+            }
+        }
+
         [[OTRDatabaseManager sharedInstance] setupDatabaseWithName:OTRYapDatabaseName];
-        
         rootViewController = [self defaultConversationNavigationController];
         
         
@@ -105,13 +115,7 @@
         [self performSelector:@selector(loadDemoData) withObject:nil afterDelay:10];
 #endif
     }
-    else {
-        ////// Onboarding //////
-        OTROnboardingStepsController *onboardingStepsController = [[OTROnboardingStepsController alloc] init];
-        onboardingStepsController.stepsBar.hideCancelButton = YES;
-        
-        rootViewController = onboardingStepsController;
-    }
+
 
 
 

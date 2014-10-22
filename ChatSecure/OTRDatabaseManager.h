@@ -28,10 +28,12 @@ extern NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension;
 
 - (YapDatabaseConnection *)newConnection;
 
-- (BOOL)existsYapDatabase;
 
-- (void) setDatabasePassphrase:(NSString *)passphrase remember:(BOOL)rememeber error:(NSError**)error;
+
+- (void)setDatabasePassphrase:(NSString *)passphrase remember:(BOOL)rememeber error:(NSError**)error;
 - (BOOL)hasPassphrase;
+
++ (BOOL)existsYapDatabase;
 
 + (instancetype)sharedInstance;
 

@@ -131,16 +131,6 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     }
     
     [[OTRProtocolManager sharedInstance] addObserver:self forKeyPath:NSStringFromSelector(@selector(numberOfConnectedProtocols)) options:NSKeyValueObservingOptionNew context:NULL];
-    
-    if (![[OTRDatabaseManager sharedInstance] existsYapDatabase]) {
-        ////// Onboarding //////
-        OTROnboardingStepsController *onboardingStepsController = [[OTROnboardingStepsController alloc] init];
-        onboardingStepsController.stepsBar.hideCancelButton = YES;
-        
-        [self.navigationController presentViewController:onboardingStepsController animated:NO completion:nil];
-        
-    }
-    
 }
 
 - (void)viewDidAppear:(BOOL)animated
