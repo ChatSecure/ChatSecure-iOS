@@ -20,7 +20,5 @@ install:
 before_script:
   - gem install cocoapods --no-rdoc --no-ri # Need Cocoapods >= 0.34.1
   - pod install
-  - brew update
-  - brew install xctool
 script:
   - xctool -workspace ChatSecure.xcworkspace -scheme ChatSecure -sdk iphonesimulator8.0 -arch i386 build
