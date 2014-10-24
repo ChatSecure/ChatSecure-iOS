@@ -57,8 +57,6 @@ extern NSUInteger const kNewCertAlertViewTag;
 @property (nonatomic, strong) UIBarButtonItem *loginButton;
 @property (nonatomic, strong) UIBarButtonItem *cancelButton;
 
-@property (nonatomic, strong) NSTimer * timeoutTimer;
-
 @property (nonatomic, strong) NSMutableArray * tableViewArray;
 
 @property (nonatomic, strong) UITableView * loginViewTableView;

@@ -25,9 +25,6 @@
 #import "OTRAccount.h"
 
 @interface OTRNewAccountViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
-{
-    NSArray * accountsCellArray;
-}
 
 - (NSArray *)accounts;
 - (void)didSelectAccountType:(OTRAccountType)accountType;

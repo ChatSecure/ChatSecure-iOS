@@ -71,6 +71,7 @@
 		634FF44C18D8EA2400022993 /* OTRComposeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AC173E18C7AA7A00E6624C /* OTRComposeViewController.m */; };
 		6350796719353635002C8A69 /* OTRYapPushTokenReceived.m in Sources */ = {isa = PBXBuildFile; fileRef = 6350796619353635002C8A69 /* OTRYapPushTokenReceived.m */; };
 		6350796A1935365A002C8A69 /* OTRYapPushTokenOwned.m in Sources */ = {isa = PBXBuildFile; fileRef = 635079691935365A002C8A69 /* OTRYapPushTokenOwned.m */; };
+		6350B3E819F865D100364C0A /* OTRDomainCellInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6350B3E719F865D100364C0A /* OTRDomainCellInfo.m */; };
 		6352DC8815AF9F16007AD0B4 /* OTRNewAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6352DC8715AF9F16007AD0B4 /* OTRNewAccountViewController.m */; };
 		636FE4B3161B76CF002B28EF /* OTRFacebookLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 636FE4B2161B76CF002B28EF /* OTRFacebookLoginViewController.m */; };
 		636FE4B6161B76EA002B28EF /* OTRGoogleTalkLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 636FE4B5161B76EA002B28EF /* OTRGoogleTalkLoginViewController.m */; };
@@ -352,6 +353,8 @@
 		6350796619353635002C8A69 /* OTRYapPushTokenReceived.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRYapPushTokenReceived.m; sourceTree = "<group>"; };
 		635079681935365A002C8A69 /* OTRYapPushTokenOwned.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRYapPushTokenOwned.h; sourceTree = "<group>"; };
 		635079691935365A002C8A69 /* OTRYapPushTokenOwned.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRYapPushTokenOwned.m; sourceTree = "<group>"; };
+		6350B3E619F865D100364C0A /* OTRDomainCellInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRDomainCellInfo.h; sourceTree = "<group>"; };
+		6350B3E719F865D100364C0A /* OTRDomainCellInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRDomainCellInfo.m; sourceTree = "<group>"; };
 		6352DC8615AF9F16007AD0B4 /* OTRNewAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRNewAccountViewController.h; sourceTree = "<group>"; };
 		6352DC8715AF9F16007AD0B4 /* OTRNewAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRNewAccountViewController.m; sourceTree = "<group>"; };
 		63534A54187B6F7F00061776 /* ChatSecure 4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "ChatSecure 4.xcdatamodel"; sourceTree = "<group>"; };
@@ -780,6 +783,15 @@
 			name = "OAUTH Login";
 			sourceTree = "<group>";
 		};
+		6350B3E519F865BB00364C0A /* View Models */ = {
+			isa = PBXGroup;
+			children = (
+				6350B3E619F865D100364C0A /* OTRDomainCellInfo.h */,
+				6350B3E719F865D100364C0A /* OTRDomainCellInfo.m */,
+			);
+			name = "View Models";
+			sourceTree = "<group>";
+		};
 		636FE4BD161B7733002B28EF /* LoginViewControllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -948,6 +960,7 @@
 		63CAF8F618FF260000C3337E /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				6350B3E519F865BB00364C0A /* View Models */,
 				63CAF8F718FF260C00C3337E /* Cells */,
 				63CAF8FC18FF277200C3337E /* OTRLockButton.h */,
 				63CAF8FD18FF277200C3337E /* OTRLockButton.m */,
@@ -1650,6 +1663,7 @@
 				639C60C118CA988400CC4DF4 /* OTRLanguageSetting.m in Sources */,
 				634357F919143FF70062FD26 /* OTRDatabasePassphraseViewController.m in Sources */,
 				6335C0DB191059EB00E506E5 /* OTRPushAccountViewController.m in Sources */,
+				6350B3E819F865D100364C0A /* OTRDomainCellInfo.m in Sources */,
 				D987BAD91901A6CF005B2382 /* OTRPurchaseController.m in Sources */,
 				63D0BF5019BA35B3002FF6A4 /* OTRAcknowledgementsViewController.m in Sources */,
 				6397538618CA8222005D6063 /* OTRManagedOAuthAccount.m in Sources */,
@@ -1817,7 +1831,7 @@
 					"$(inherited)",
 				);
 				PRODUCT_NAME = ChatSecure;
-				PROVISIONING_PROFILE = "6e1ddacd-f2aa-4a68-9bed-a62b45a92c35";
+				PROVISIONING_PROFILE = "eba8b7bf-5edf-4e18-8d32-790efa92a02d";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
@@ -1862,7 +1876,7 @@
 					"$(inherited)",
 				);
 				PRODUCT_NAME = ChatSecure;
-				PROVISIONING_PROFILE = "1707f4f6-b9ad-48c2-8f53-4c11f8774921";
+				PROVISIONING_PROFILE = "eba8b7bf-5edf-4e18-8d32-790efa92a02d";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};

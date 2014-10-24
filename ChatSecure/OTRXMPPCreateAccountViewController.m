@@ -18,6 +18,7 @@
 #import "OTRTextFieldTableViewCell.h"
 #import "JVFloatLabeledTextField.h"
 #import "OTRDatabaseManager.h"
+#import "OTRDomainCellInfo.h"
 
 static NSString * const domainCellIdentifier = @"domainCellIdentifer";
 
@@ -71,10 +72,6 @@ static NSString * const domainCellIdentifier = @"domainCellIdentifer";
     [self.passwordTextField resignFirstResponder];
     
     self.loginButton.title = CREATE_STRING;
-    
-    [self.loginViewTableView registerClass:[UITableViewCell class] forCellReuseIdentifier:domainCellIdentifier];
-    [self.loginViewTableView registerClass:[OTRTextFieldTableViewCell class] forCellReuseIdentifier:[OTRTextFieldTableViewCell reuseIdentifier]];
-    
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -144,14 +141,22 @@ static NSString * const domainCellIdentifier = @"domainCellIdentifer";
     UITableViewCell * cell = nil;
     if (indexPath.section == 1) {
         if (indexPath.row < [self.hostnameArray count]) {
-            cell = [tableView dequeueReusableCellWithIdentifier:domainCellIdentifier forIndexPath:indexPath];
-            NSString * hostName = self.hostnameArray[indexPath.row];
-            cell.textLabel.text = hostName;
+            cell = [tableView dequeueReusableCellWithIdentifier:domainCellIdentifier];
+            if (!cell) {
+                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:domainCellIdentifier];
+            }
+            OTRDomainCellInfo* cellInfo = self.hostnameArray[indexPath.row];
+            cell.textLabel.text = cellInfo.displayName;
+            cell.detailTextLabel.text = cellInfo.domain;
         }
         else
         {
             //Other or Custom Hostname
-            OTRTextFieldTableViewCell *textCell = [tableView dequeueReusableCellWithIdentifier:[OTRTextFieldTableViewCell reuseIdentifier] forIndexPath:indexPath];
+            
+            OTRTextFieldTableViewCell *textCell = [tableView dequeueReusableCellWithIdentifier:[OTRTextFieldTableViewCell reuseIdentifier]];
+            if (!cell) {
+                textCell = [[OTRTextFieldTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:[OTRTextFieldTableViewCell reuseIdentifier]];
+            }
             
             textCell.textField = self.customHostnameTextField;
             cell = textCell;
@@ -199,7 +204,7 @@ static NSString * const domainCellIdentifier = @"domainCellIdentifer";
 {
     BOOL fields = [super checkFields];
     if (fields) {
-        if (![[self hostnameForIndex:self.selectedHostnameIndex] length]) {
+        if (![[self serverHostnameForIndex:self.selectedHostnameIndex] length]) {
             fields = NO;
             [self showAlertViewWithTitle:ERROR_STRING message:DOMAIN_BLANK_ERROR_STRING error:nil];
         }
@@ -223,16 +228,19 @@ static NSString * const domainCellIdentifier = @"domainCellIdentifer";
                 
             } else {
                 // successfully connected to Tor
+                [super loginButtonPressed:sender];
             }
         } progress:^(NSInteger progress, NSString *summaryString) {
-            // TODO: show progress in HUD here
+            self.HUD.mode = MBProgressHUDModeDeterminate;
+            self.HUD.labelText = summaryString;
+            self.HUD.progress = progress/100.0;
         }];
     }
     else {
-        NSString *newUsername = [self fixUsername:self.usernameTextField.text withDomain:[self hostnameForIndex:self.selectedHostnameIndex]];
+        NSString *newUsername = [self fixUsername:self.usernameTextField.text withDomain:[self usernameHostnameForIndex:self.selectedHostnameIndex]];
         self.usernameTextField.text = newUsername;
         self.account.username = newUsername;
-        self.account.domain = [self hostnameForIndex:self.selectedHostnameIndex];
+        self.account.domain = [self serverHostnameForIndex:self.selectedHostnameIndex];
         self.account.rememberPassword = self.rememberPasswordSwitch.on;
         self.account.autologin = self.autoLoginSwitch.on;
         
@@ -281,11 +289,26 @@ static NSString * const domainCellIdentifier = @"domainCellIdentifer";
     [self showAlertViewWithTitle:ERROR_STRING message:errorString error:error];
 }
 
-- (NSString *)hostnameForIndex:(NSInteger)index
+- (NSString *)usernameHostnameForIndex:(NSInteger)index
 {
     NSString *hostname = nil;
     if (index < [self.hostnameArray count]) {
-        hostname = self.hostnameArray[index];
+        OTRDomainCellInfo *cellInfo = self.hostnameArray[index];
+        hostname = cellInfo.usernameDomain;
+    }
+    else {
+        hostname = self.customHostnameTextField.text;
+        //Other
+    }
+    return hostname;
+}
+
+- (NSString *)serverHostnameForIndex:(NSInteger)index
+{
+    NSString *hostname = nil;
+    if (index < [self.hostnameArray count]) {
+        OTRDomainCellInfo *cellInfo = self.hostnameArray[index];
+        hostname = cellInfo.domain;
     }
     else {
         hostname = self.customHostnameTextField.text;

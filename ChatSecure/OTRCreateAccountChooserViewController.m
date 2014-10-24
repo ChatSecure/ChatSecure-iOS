@@ -10,22 +10,9 @@
 #import "OTRXMPPCreateAccountViewController.h"
 #import "UIAlertView+Blocks.h"
 #import "OTRXMPPAccount.h"
-
-@interface OTRCreateAccountChooserViewController ()
-
-@property (nonatomic,strong) NSArray * defaultDomains;
-
-@end
+#import "OTRDomainCellInfo.h"
 
 @implementation OTRCreateAccountChooserViewController
-
-- (id)init
-{
-    if (self = [super init]) {
-        self.defaultDomains = @[@"dukgo.com",@"jabber.ccc.de",@"jabberpl.org",@"neko.im",@"rkquery.de",@"xmpp.jp"];
-    }
-    return self;
-}
 
 - (NSArray*)accounts
 {
@@ -55,13 +42,12 @@
 {
     NSArray * hostnamesArray = nil;
     OTRXMPPAccount * newAccount = (OTRXMPPAccount *)[OTRAccount accountForAccountType:accountType];
-    if(accountType == OTRAccountTypeJabber)
-    {
-        hostnamesArray = self.defaultDomains;
+    
+    if(accountType == OTRAccountTypeJabber) {
+        hostnamesArray = [OTRDomainCellInfo defaultDomainCellInfoArray];
     }
-    else if (accountType == OTRAccountTypeXMPPTor)
-    {
-        hostnamesArray = self.defaultDomains;
+    else if (accountType == OTRAccountTypeXMPPTor) {
+        hostnamesArray = [OTRDomainCellInfo defaultTorDomainCellInfoArray];
     }
     
     if ([hostnamesArray count]) {

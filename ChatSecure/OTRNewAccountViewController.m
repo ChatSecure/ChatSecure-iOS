@@ -38,6 +38,8 @@ NSString *const kOTRAccountTypeKey   = @"kOTRAccountTypeKey";
 
 @interface OTRNewAccountViewController ()
 
+@property (nonatomic, strong) NSArray *accountsCellArray;
+
 @end
 
 @implementation OTRNewAccountViewController
@@ -55,7 +57,7 @@ NSString *const kOTRAccountTypeKey   = @"kOTRAccountTypeKey";
     
     
     
-    accountsCellArray = [self accounts];
+    self.accountsCellArray = [self accounts];
     
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:CANCEL_STRING style:UIBarButtonItemStyleBordered target:self action:@selector(cancelPressed:)];
     
@@ -76,7 +78,7 @@ NSString *const kOTRAccountTypeKey   = @"kOTRAccountTypeKey";
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [accountsCellArray count];
+    return [self.accountsCellArray count];
     
 }
 
@@ -94,7 +96,7 @@ NSString *const kOTRAccountTypeKey   = @"kOTRAccountTypeKey";
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
-    NSDictionary * cellAccount = [accountsCellArray objectAtIndex:indexPath.row];
+    NSDictionary * cellAccount = [self.accountsCellArray objectAtIndex:indexPath.row];
     cell.textLabel.text = cellAccount[kOTRDisplayNameKey];
     cell.textLabel.font = [UIFont boldSystemFontOfSize:19];
     cell.imageView.image = cellAccount[kOTRProviderImageKey];
@@ -117,7 +119,7 @@ NSString *const kOTRAccountTypeKey   = @"kOTRAccountTypeKey";
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    OTRAccountType accountType = (OTRAccountType)[accountsCellArray[indexPath.row][kOTRAccountTypeKey] unsignedIntegerValue];
+    OTRAccountType accountType = (OTRAccountType)[self.accountsCellArray[indexPath.row][kOTRAccountTypeKey] unsignedIntegerValue];
     [self didSelectAccountType:accountType];
 }
 

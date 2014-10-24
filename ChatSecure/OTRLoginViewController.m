@@ -57,10 +57,6 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
 
 @implementation OTRLoginViewController
 
-- (void) dealloc {
-    [_timeoutTimer invalidate];
-}
-
 - (id) initWithAccount:(OTRAccount *)account{
     if (self = [super init]) {
         self.account = account;
@@ -360,11 +356,6 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
     }
 }
 
--(void) timeout:(NSTimer *) timer
-{
-    //[timeoutTimer invalidate];
-    [self hideHUD];
-}
 - (void)hideHUD {
     if (self.HUD) {
         [self.HUD hide:YES];
@@ -421,7 +412,6 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
         id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
         [protocol connectWithPassword:self.passwordTextField.text];
     }
-    self.timeoutTimer = [NSTimer scheduledTimerWithTimeInterval:45.0 target:self selector:@selector(timeout:) userInfo:nil repeats:NO];
 }
 
 - (void)showHUDWithText:(NSString *)text
@@ -431,11 +421,9 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
         self.HUD = [[MBProgressHUD alloc] initWithView:self.view];
         [self.view addSubview:self.HUD];
     }
-    
+    self.HUD.mode = MBProgressHUDModeIndeterminate;
     self.HUD.labelText = text;
     [self.HUD show:YES];
-    
-    self.timeoutTimer = [NSTimer scheduledTimerWithTimeInterval:45.0 target:self selector:@selector(timeout:) userInfo:nil repeats:NO];
 }
 
 - (void)cancelPressed:(id)sender {

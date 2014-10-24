@@ -17,9 +17,10 @@
         NSBundle *cpaProxyBundle = [NSBundle bundleWithURL:cpaProxyBundleURL];
         NSString *torrcPath = [cpaProxyBundle pathForResource:@"torrc" ofType:nil];
         NSString *geoipPath = [cpaProxyBundle pathForResource:@"geoip" ofType:nil];
+        NSString *dataDirectory = [[[[[NSFileManager defaultManager] URLsForDirectory:NSApplicationSupportDirectory inDomains:NSUserDomainMask] lastObject] URLByAppendingPathComponent:@"com.ChatSecure.Tor"] path];
         
         // Initialize a CPAProxyManager
-        CPAConfiguration *configuration = [CPAConfiguration configurationWithTorrcPath:torrcPath geoipPath:geoipPath torDataDirectoryPath:nil];
+        CPAConfiguration *configuration = [CPAConfiguration configurationWithTorrcPath:torrcPath geoipPath:geoipPath torDataDirectoryPath:dataDirectory];
         self.torManager = [CPAProxyManager proxyWithConfiguration:configuration];
     }
     return self;

@@ -25,13 +25,10 @@
 
 @interface OTRXMPPLoginViewController : OTRLoginViewController
 
-
 @property (nonatomic) BOOL loginButtonPressed;
-
-@property (nonatomic,readonly,getter = isTorAccount) BOOL torAccount;
-
--(void)keyboardWillHideOrShow:(NSNotification *)notification;
-
+@property (nonatomic, readonly, getter = isTorAccount) BOOL torAccount;
 @property (nonatomic, strong) UITextField * resourceTextField;
+
+- (void)keyboardWillHideOrShow:(NSNotification *)notification;
 
 @end

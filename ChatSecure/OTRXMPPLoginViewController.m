@@ -246,7 +246,9 @@
                     // successfully connected to Tor
                 }
             } progress:^(NSInteger progress, NSString *summaryString) {
-                // TODO: show progress in HUD here
+                self.HUD.mode = MBProgressHUDModeDeterminate;
+                self.HUD.labelText = summaryString;
+                self.HUD.progress = progress/100.0;
             }];
         } else {
             [super loginButtonPressed:sender];
