@@ -127,7 +127,6 @@
                 [self showHUDWithText:LOGGING_IN_STRING];
                 id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
                 [protocol connectWithPassword:self.account.password];
-                self.timeoutTimer = [NSTimer scheduledTimerWithTimeInterval:45.0 target:self selector:@selector(timeout:) userInfo:nil repeats:NO];
             }
             else {
                 [self connectAccount:sender];
