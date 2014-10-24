@@ -748,12 +748,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 {
     if ([self showDateAtIndexPath:indexPath]) {
         OTRMessage *message = [self messageAtIndexPath:indexPath];
-        if ([message.date timeIntervalSinceNow] > 86400) {
-            return [[JSQMessagesTimestampFormatter sharedFormatter] attributedTimestampForDate:message.date];
-        }
-        else {
-            return [[NSAttributedString alloc] initWithString:[[JSQMessagesTimestampFormatter sharedFormatter] timeForDate:message.date]];
-        }
+        return [[JSQMessagesTimestampFormatter sharedFormatter] attributedTimestampForDate:message.date];
     }
     return nil;
 }
