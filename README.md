@@ -59,7 +59,7 @@ Download the source code and **don't forget** to pull down all of the submodules
 Now you'll need to build the dependencies. During this process we will automatically verify the integity of each package by checking its GPG signature. Install [GPGTools](https://gpgtools.org) and add the public signing keys for OpenSSL, GnuPG, libevent, and libotr. *(TODO make these links to the keys)*
     
     $ bash ./Submodules/CPAProxy/scripts/build-all.sh
-    $ bash ./Submodules/OTRKit/build-all.sh
+    $ bash ./Submodules/OTRKit/scripts/build-all.sh
     $ pod install
     
 Next you'll need to create your own version of environment-specific data. Make a copy of `OTRSecrets-Template.m` as `OTRSecrets.m`:
@@ -69,6 +69,8 @@ Next you'll need to create your own version of environment-specific data. Make a
 Open `ChatSecure.xcworkspace` in Xcode and build. 
 
 *Note*: **Don't open the `.xcodeproj`** because we use Cocoapods now!
+
+If you're still having trouble compiling check out the Travis-CI build status and `.travis.yml` file.
 
 ## Contributing
 
