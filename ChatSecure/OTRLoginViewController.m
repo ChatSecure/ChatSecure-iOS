@@ -61,13 +61,7 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
     if (self = [super init]) {
         self.account = account;
         
-        //DDLogInfo(@"Account Dictionary: %@",[account accountDictionary]);
-        if (SYSTEM_VERSION_LESS_THAN(@"7.0")) {
-            self.textFieldTextColor = [UIColor colorWithRed:0.22 green:0.33 blue:0.53 alpha:1.0];
-        }
-        else {
-            self.textFieldTextColor = [UIColor colorWithRed:0 green:0.47843137 blue:1 alpha:1];
-        }
+        self.textFieldTextColor = [UIColor colorWithRed:0 green:0.47843137 blue:1 alpha:1];
         
     }
     return self;

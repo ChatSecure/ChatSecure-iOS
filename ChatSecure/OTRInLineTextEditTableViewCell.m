@@ -68,32 +68,14 @@ static CGFloat const textLeftFieldBuffer = 100;
 
 -(void)applyConstraints {
     NSLayoutConstraint * constraint;
-    if (SYSTEM_VERSION_LESS_THAN(@"7.0")) {
-        CGFloat labelWidth = self.textLabel.frame.size.width+self.textLabel.frame.origin.x;
-        if(labelWidth < textLeftFieldBuffer)
-            labelWidth = textLeftFieldBuffer;
+    constraint = [NSLayoutConstraint constraintWithItem:self.textField
+                                              attribute:NSLayoutAttributeLeading
+                                              relatedBy:NSLayoutRelationEqual
+                                                 toItem:self.textLabel
+                                              attribute:NSLayoutAttributeTrailing
+                                             multiplier:1.0
+                                               constant:6.0];
         
-        if (isStyle2) {
-            labelWidth = 77.0f+6.0f;
-        }
-        constraint = [NSLayoutConstraint constraintWithItem:self.textField
-                                                  attribute:NSLayoutAttributeLeading
-                                                  relatedBy:NSLayoutRelationEqual
-                                                     toItem:nil
-                                                  attribute:NSLayoutAttributeTrailing
-                                                 multiplier:1.0
-                                                   constant:labelWidth];
-    }
-    else {
-        constraint = [NSLayoutConstraint constraintWithItem:self.textField
-                                                  attribute:NSLayoutAttributeLeading
-                                                  relatedBy:NSLayoutRelationEqual
-                                                     toItem:self.textLabel
-                                                  attribute:NSLayoutAttributeTrailing
-                                                 multiplier:1.0
-                                                   constant:6.0];
-        
-    }
     
     [self.contentView addConstraint:constraint];
     

@@ -15,18 +15,16 @@
 #import "OTRQRCodeActivity.h"
 #import "OTRConstants.h"
 
-NSUInteger const kOTRActionSheetShareTag = 333;
-
-
 @implementation OTRShareSetting
 
 -(id)initWithTitle:(NSString *)newTitle description:(NSString *)newDescription
 {
     self = [super initWithTitle:newTitle description:newDescription];
     if (self) {
-        __weak typeof (self) weakSelf = self;
+        __weak typeof(self)weakSelf = self;
         self.actionBlock = ^{
-            [weakSelf showActionSheet];
+            __strong typeof(weakSelf)strongSelf = weakSelf;
+            [strongSelf showActionSheet];
         };
     }
     return self;
@@ -37,32 +35,10 @@ NSUInteger const kOTRActionSheetShareTag = 333;
     OTRActivityItemProvider * itemProvider = [[OTRActivityItemProvider alloc] init];
     OTRQRCodeActivity * qrCodeActivity = [[OTRQRCodeActivity alloc] init];
     
-    
     UIActivityViewController * activityViewController = [[UIActivityViewController alloc] initWithActivityItems:@[itemProvider] applicationActivities:@[qrCodeActivity]];
     activityViewController.excludedActivityTypes = @[UIActivityTypePrint, UIActivityTypeAssignToContact, UIActivityTypeSaveToCameraRoll];
     
     [self.delegate presentViewController:activityViewController animated:YES completion:nil];
-}
-
-- (NSArray*) buttonTitlesForShareButton {
-    NSMutableArray *titleArray = [NSMutableArray arrayWithCapacity:4];
-    [titleArray addObject:@"SMS"];
-    [titleArray addObject:@"E-mail"];
-    [titleArray addObject:@"QR Code"];
-    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"5.0"))
-    {
-        [titleArray addObject:@"Twitter"];
-    }
-    [titleArray addObject:CANCEL_STRING];
-    return titleArray;
-}
-
-- (NSString*) shareString {
-    return [NSString stringWithFormat:@"%@: https://get.chatsecure.org", SHARE_MESSAGE_STRING];
-}
-
-- (NSString*) twitterShareString {
-    return [NSString stringWithFormat:@"%@ @ChatSecure", [self shareString]];
 }
 
 #pragma mark MFMessageComposeViewControllerDelegate methods
@@ -74,7 +50,8 @@ NSUInteger const kOTRActionSheetShareTag = 333;
 
 #pragma mark MFMailComposeViewControllerDelegate Methods
 
-- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
+- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)erro
+{
     [self.delegate dismissModalViewControllerAnimated:YES];
 }
 

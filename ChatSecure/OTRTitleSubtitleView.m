@@ -34,22 +34,8 @@
         
         self.subtitleLabel.textAlignment = NSTextAlignmentCenter;
         
-        if (SYSTEM_VERSION_GREATER_THAN(@"7.0")) {
-            self.titleLabel.font = [UIFont boldSystemFontOfSize:17];
-            self.subtitleLabel.font = [UIFont boldSystemFontOfSize:12];
-        }
-        else {
-            self.titleLabel.font = [UIFont boldSystemFontOfSize:20];
-            self.titleLabel.textColor = [UIColor whiteColor];
-            self.titleLabel.shadowColor = [UIColor darkGrayColor];
-            self.titleLabel.shadowOffset = CGSizeMake(0, -1);
-            
-            self.subtitleLabel.font = [UIFont boldSystemFontOfSize:13];
-            self.subtitleLabel.textColor = [UIColor whiteColor];
-            self.subtitleLabel.shadowColor = [UIColor darkGrayColor];
-            self.subtitleLabel.shadowOffset = CGSizeMake(0, -1);
-            self.subtitleLabel.adjustsFontSizeToFitWidth = YES;
-        }
+        self.titleLabel.font = [UIFont boldSystemFontOfSize:17];
+        self.subtitleLabel.font = [UIFont boldSystemFontOfSize:12];
         
         [self addSubview:self.titleLabel];
         [self addSubview:self.subtitleLabel];

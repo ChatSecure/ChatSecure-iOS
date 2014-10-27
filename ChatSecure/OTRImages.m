@@ -67,26 +67,22 @@ NSString *const OTRTwitterImageKey = @"OTRTwitterImageKey";
 {
     UIImageView * bubbleImageView = nil;
     UIImage * bubbleImage = nil;
-    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
-        bubbleImage = [UIImage imageNamed:@"bubble-min-tailless"];
-        
-        bubbleImage = [self image:bubbleImage maskWithColor:[OTRColors bubbleLightGrayColor]];
-        bubbleImage = [self mirrorImage:bubbleImage];
-        
-        CGPoint center = CGPointMake((bubbleImage.size.width / 2.0f), bubbleImage.size.height / 2.0f);
-        UIEdgeInsets capInsets = UIEdgeInsetsMake(center.y, center.x, center.y, center.x);
-        
-        bubbleImage = [bubbleImage resizableImageWithCapInsets:capInsets
-                                                    resizingMode:UIImageResizingModeStretch];
-        
-        bubbleImageView = [[OTRComposingImageView alloc] initWithImage:bubbleImage];
-        CGRect rect = bubbleImageView.frame;
-        rect.size.width = 60;
-        bubbleImageView.frame = rect;
-    }
-    else {
-        bubbleImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"MessageBubbleTyping"]];
-    }
+    bubbleImage = [UIImage imageNamed:@"bubble-min-tailless"];
+    
+    bubbleImage = [self image:bubbleImage maskWithColor:[OTRColors bubbleLightGrayColor]];
+    bubbleImage = [self mirrorImage:bubbleImage];
+    
+    CGPoint center = CGPointMake((bubbleImage.size.width / 2.0f), bubbleImage.size.height / 2.0f);
+    UIEdgeInsets capInsets = UIEdgeInsetsMake(center.y, center.x, center.y, center.x);
+    
+    bubbleImage = [bubbleImage resizableImageWithCapInsets:capInsets
+                                                resizingMode:UIImageResizingModeStretch];
+    
+    bubbleImageView = [[OTRComposingImageView alloc] initWithImage:bubbleImage];
+    CGRect rect = bubbleImageView.frame;
+    rect.size.width = 60;
+    bubbleImageView.frame = rect;
+    
     return bubbleImageView;
 }
 

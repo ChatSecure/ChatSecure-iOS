@@ -61,13 +61,7 @@
     
     displayNameTextField = [[UITextField alloc]init];
     displayNameTextField.placeholder = OPTIONAL_STRING;
-    
-    if (SYSTEM_VERSION_LESS_THAN(@"7.0")) {
-        displayNameTextField.font = [UIFont boldSystemFontOfSize:15];
-    }
-    else {
-        displayNameTextField.font = [UIFont systemFontOfSize:15];
-    }
+    displayNameTextField.font = [UIFont systemFontOfSize:15];
     
     displayNameTextField.delegate = self;
     

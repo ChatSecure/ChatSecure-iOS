@@ -67,12 +67,7 @@ static CGFloat const checkIconRatio = 1.055f;
     }
     else {
         self.messageBackgroundImageView = [OTRImages bubbleImageViewForMessageType:OTRBubbleMessageTypeOutgoing];
-        if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
-            self.messageTextLabel.textColor = [UIColor whiteColor];
-        }
-        else {
-            self.messageTextLabel.textColor = [UIColor blackColor];
-        }
+        self.messageTextLabel.textColor = [UIColor whiteColor];
     }
     
     if (self.isDelivierd) {
@@ -190,10 +185,8 @@ static CGFloat const checkIconRatio = 1.055f;
     [self addConstraint:constraint];
     
     //Text Label
-    CGFloat yCenterConstant = -2.0;
-    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
-        yCenterConstant = 0;
-    }
+    CGFloat yCenterConstant = 0;
+    
     constraint = [NSLayoutConstraint constraintWithItem:self.messageTextLabel
                                               attribute:NSLayoutAttributeCenterY
                                               relatedBy:NSLayoutRelationEqual
@@ -330,12 +323,7 @@ static CGFloat const checkIconRatio = 1.055f;
     messageTextLabel.lineBreakMode = NSLineBreakByWordWrapping;
     messageTextLabel.translatesAutoresizingMaskIntoConstraints = NO;
     
-    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7.0")) {
-        messageTextLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
-    } else {
-        CGFloat messageTextSize = [OTRSettingsManager floatForOTRSettingKey:kOTRSettingKeyFontSize];
-        messageTextLabel.font = [UIFont systemFontOfSize:messageTextSize];
-    }
+    messageTextLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
     return messageTextLabel;
 }
 
