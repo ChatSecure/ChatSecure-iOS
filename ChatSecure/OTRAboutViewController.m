@@ -23,15 +23,16 @@
 #import "OTRAboutViewController.h"
 #import "Strings.h"
 #import "OTRConstants.h"
-#import "UIActionSheet+Blocks.h"
 #import "OTRAppDelegate.h"
 #import "PureLayout.h"
 #import "TTTAttributedLabel.h"
 #import "OTRSocialButtonsView.h"
 #import "OTRAcknowledgementsViewController.h"
-#import "OTRSafariActionSheet.h"
 #import "NSURL+chatsecure.h"
 #import "Strings.h"
+#import "OTRUtilities.h"
+#import "UIActionSheet+ChatSecure.h"
+#import "UIActivityViewController+ChatSecure.h"
 
 static NSString *const kDefaultCellReuseIdentifier = @"kDefaultCellReuseIdentifier";
 
@@ -49,7 +50,7 @@ static NSString *const kDefaultCellReuseIdentifier = @"kDefaultCellReuseIdentifi
 }
 @end
 
-@interface OTRAboutViewController() <TTTAttributedLabelDelegate>
+@interface OTRAboutViewController() <TTTAttributedLabelDelegate, OTRSocialButtonsViewDelegate>
 
 @property (nonatomic, strong) UIView *socialView;
 @property (nonatomic, strong) TTTAttributedLabel *headerLabel;
@@ -133,6 +134,7 @@ static NSString *const kDefaultCellReuseIdentifier = @"kDefaultCellReuseIdentifi
     [self.headerLabel addLinkToURL:davidChilesURL withRange:davidRange];
     
     self.socialButtonsView = [[OTRSocialButtonsView alloc] initWithFrame:CGRectZero];
+    self.socialButtonsView.delegate = self;
     [self.socialView addSubview:self.socialButtonsView];
     [self.socialView addSubview:self.headerLabel];
     [self.view addSubview:self.socialView];
@@ -218,8 +220,8 @@ static NSString *const kDefaultCellReuseIdentifier = @"kDefaultCellReuseIdentifi
 
 - (void)handleOpeningURL:(NSURL *)url
 {
-    OTRSafariActionSheet *safariActionSheet = [[OTRSafariActionSheet alloc] initWithUrl:url];
-    [OTRAppDelegate presentActionSheet:safariActionSheet inView:self.view];
+    UIActivityViewController *activityViewController = [UIActivityViewController otr_linkActivityViewControllerWithURLs:@[url]];
+    [self presentViewController:activityViewController animated:YES completion:nil];
 }
 
 #pragma - mark UItableView Delegate & Datasource
@@ -261,6 +263,14 @@ static NSString *const kDefaultCellReuseIdentifier = @"kDefaultCellReuseIdentifi
     
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+
+#pragma - mark OTRSocialButtonsViewDelegate Methods
+
+- (void)socialButtons:(OTRSocialButtonsView *)view openURLs:(NSArray *)urlArray
+{
+    UIActivityViewController *activityViewController = [UIActivityViewController otr_linkActivityViewControllerWithURLs:urlArray];
+    [self presentViewController:activityViewController animated:YES completion:nil];
 }
 
 #pragma - mark TTTatributedLabelDelegate Methods

@@ -35,6 +35,7 @@
 #import "OTRAccountTableViewCell.h"
 #import "OTRCreateAccountChooserViewController.h"
 #import "UIAlertView+Blocks.h"
+#import "UIActionSheet+ChatSecure.h"
 #import "UIActionSheet+Blocks.h"
 #import "OTRSecrets.h"
 #import "YAPDatabaseViewMappings.h"
@@ -45,6 +46,7 @@
 #import "YapDatabaseView.h"
 #import "OTRAccount.h"
 #import "OTRAppDelegate.h"
+#import "OTRUtilities.h"
 
 static NSString *const circleImageName = @"31-circle-plus-large.png";
 
@@ -255,15 +257,7 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
             if (!connected) {
                 [self showLoginControllerForAccount:account];
             } else {
-                RIButtonItem * cancelButtonItem = [RIButtonItem itemWithLabel:CANCEL_STRING];
-                RIButtonItem * logoutButtonItem = [RIButtonItem itemWithLabel:LOGOUT_STRING action:^{
-                    id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:account];
-                    [protocol disconnect];
-                }];
-
-                UIActionSheet * logoutActionSheet = [[UIActionSheet alloc] initWithTitle:LOGOUT_STRING cancelButtonItem:cancelButtonItem destructiveButtonItem:logoutButtonItem otherButtonItems:nil];
-                
-                [OTRAppDelegate presentActionSheet:logoutActionSheet inView:self.view];
+                [self logoutAccount:account sender:[tableView cellForRowAtIndexPath:indexPath]];
             }
         }
     } else {
@@ -318,24 +312,80 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     [self.navigationController pushViewController:aboutController animated:YES];
 }
 
+- (void)logoutAccount:(OTRAccount *)account sender:(id)sender
+{
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
+        
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:LOGOUT_STRING message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+        UIAlertAction *cancelAlertAction = [UIAlertAction actionWithTitle:CANCEL_STRING style:UIAlertActionStyleCancel handler:nil];
+        UIAlertAction *logoutAlertAction = [UIAlertAction actionWithTitle:LOGOUT_STRING style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
+            id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:account];
+            [protocol disconnect];
+        }];
+        
+        [alertController addAction:logoutAlertAction];
+        [alertController addAction:cancelAlertAction];
+        
+        [self presentViewController:alertController animated:YES completion:nil];
+    }
+    else {
+        RIButtonItem * cancelButtonItem = [RIButtonItem itemWithLabel:CANCEL_STRING];
+        RIButtonItem * logoutButtonItem = [RIButtonItem itemWithLabel:LOGOUT_STRING action:^{
+            id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:account];
+            [protocol disconnect];
+        }];
+        
+        UIActionSheet * logoutActionSheet = [[UIActionSheet alloc] initWithTitle:LOGOUT_STRING cancelButtonItem:cancelButtonItem destructiveButtonItem:logoutButtonItem otherButtonItems:nil];
+        
+        [logoutActionSheet otr_presentInView:self.view];
+    }
+}
+
 - (void) addAccount:(id)sender {
-    RIButtonItem *cancelButton = [RIButtonItem itemWithLabel:CANCEL_STRING];
-    RIButtonItem *createAccountButton = [RIButtonItem itemWithLabel:CREATE_NEW_ACCOUNT_STRING action:^{
+    
+    void (^createAccountBlock)(void) = ^void(void) {
         OTRCreateAccountChooserViewController * createAccountChooser = [[OTRCreateAccountChooserViewController alloc] init];
         UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:createAccountChooser];
         nav.modalPresentationStyle = UIModalPresentationFormSheet;
         [self presentViewController:nav animated:YES completion:nil];
-    }];
-    RIButtonItem *loginAccountButton = [RIButtonItem itemWithLabel:CONNECT_EXISTING_STRING action:^{
+    };
+    
+    void (^connectAccountBlock)(void) = ^void(void) {
         OTRNewAccountViewController * newAccountView = [[OTRNewAccountViewController alloc] init];
         
         UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:newAccountView];
         nav.modalPresentationStyle = UIModalPresentationFormSheet;
         [self presentViewController:nav animated:YES completion:nil];
-    }];
-    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:NEW_ACCOUNT_STRING cancelButtonItem:cancelButton destructiveButtonItem:nil otherButtonItems:createAccountButton,loginAccountButton, nil];
+    };
     
-    [actionSheet showInView:self.view];
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NEW_ACCOUNT_STRING message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:CANCEL_STRING style:UIAlertActionStyleCancel handler:nil];
+        
+        UIAlertAction *createAccountAction = [UIAlertAction actionWithTitle:CREATE_NEW_ACCOUNT_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            createAccountBlock();
+        }];
+        
+        UIAlertAction *loginAccountAction = [UIAlertAction actionWithTitle:CONNECT_EXISTING_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            connectAccountBlock();
+        }];
+        
+        [alertController addAction:createAccountAction];
+        [alertController addAction:loginAccountAction];
+        [alertController addAction:cancelAction];
+        
+        [self presentViewController:alertController animated:YES completion:nil];
+    }
+    else {
+        RIButtonItem *cancelButton = [RIButtonItem itemWithLabel:CANCEL_STRING];
+        RIButtonItem *createAccountButton = [RIButtonItem itemWithLabel:CREATE_NEW_ACCOUNT_STRING action:createAccountBlock];
+        RIButtonItem *loginAccountButton = [RIButtonItem itemWithLabel:CONNECT_EXISTING_STRING action:connectAccountBlock];
+        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:NEW_ACCOUNT_STRING cancelButtonItem:cancelButton destructiveButtonItem:nil otherButtonItems:createAccountButton,loginAccountButton, nil];
+        
+        [actionSheet showInView:self.view];
+    }
+    
+    
 }
 
 #pragma mark OTRSettingDelegate method
@@ -363,28 +413,69 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 }
 
 - (void) donateSettingPressed:(OTRDonateSetting *)setting {
-    RIButtonItem *paypalItem = [RIButtonItem itemWithLabel:@"PayPal" action:^{
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=6YFSLLQGDZFXY"]];
-    }];
-    RIButtonItem *bitcoinItem = [RIButtonItem itemWithLabel:@"Bitcoin" action:^{
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://coinbase.com/checkouts/0a35048913df24e0ec3d586734d456d7"]];
-    }];
-    RIButtonItem *cancelItem = [RIButtonItem itemWithLabel:CANCEL_STRING];
-    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:DONATE_MESSAGE_STRING cancelButtonItem:cancelItem destructiveButtonItem:nil otherButtonItems:paypalItem, bitcoinItem, nil];
-    [OTRAppDelegate presentActionSheet:actionSheet inView:self.view];
+    
+    NSURL *paypalURL = [NSURL URLWithString:@"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=6YFSLLQGDZFXY"];
+    NSURL *bitcointURL = [NSURL URLWithString:@"https://coinbase.com/checkouts/0a35048913df24e0ec3d586734d456d7"];
+    
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:DONATE_MESSAGE_STRING message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+        
+        UIAlertAction *paypalAlertAction = [UIAlertAction actionWithTitle:@"PayPal" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            [[UIApplication sharedApplication] openURL:paypalURL];
+        }];
+        
+        UIAlertAction *bitcoinAlertAction = [UIAlertAction actionWithTitle:@"Bitcoint" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            [[UIApplication sharedApplication] openURL:bitcointURL];
+        }];
+        
+        UIAlertAction *cancelAlertAction = [UIAlertAction actionWithTitle:CANCEL_STRING style:UIAlertActionStyleCancel handler:nil];
+        
+        [alertController addAction:paypalAlertAction];
+        [alertController addAction:bitcoinAlertAction];
+        [alertController addAction:cancelAlertAction];
+        
+        [self presentViewController:alertController animated:YES completion:nil];
+    }
+    else {
+        RIButtonItem *paypalItem = [RIButtonItem itemWithLabel:@"PayPal" action:^{
+            [[UIApplication sharedApplication] openURL:paypalURL];
+        }];
+        RIButtonItem *bitcoinItem = [RIButtonItem itemWithLabel:@"Bitcoin" action:^{
+            [[UIApplication sharedApplication] openURL:bitcointURL];
+        }];
+        RIButtonItem *cancelItem = [RIButtonItem itemWithLabel:CANCEL_STRING];
+        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:DONATE_MESSAGE_STRING cancelButtonItem:cancelItem destructiveButtonItem:nil otherButtonItems:paypalItem, bitcoinItem, nil];
+        [actionSheet otr_presentInView:self.view];
+    }
 }
 
 
 #pragma mark OTRFeedbackSettingDelegate method
 
 - (void) presentUserVoiceView {
-    RIButtonItem *cancelItem = [RIButtonItem itemWithLabel:CANCEL_STRING];
-    RIButtonItem *showUVItem = [RIButtonItem itemWithLabel:OK_STRING action:^{
-        UVConfig *config = [UVConfig configWithSite:@"chatsecure.uservoice.com"];
-        [UserVoice presentUserVoiceInterfaceForParentViewController:self andConfig:config];
-    }];
-    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:SHOW_USERVOICE_STRING cancelButtonItem:cancelItem destructiveButtonItem:nil otherButtonItems:showUVItem, nil];
-    [OTRAppDelegate presentActionSheet:actionSheet inView:self.view];
+    
+    if(SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:SHOW_USERVOICE_STRING message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+        UIAlertAction *cancelAlertAction = [UIAlertAction actionWithTitle:CANCEL_STRING style:UIAlertActionStyleCancel handler:nil];
+        UIAlertAction *showUserVoiceAlertAction = [UIAlertAction actionWithTitle:OK_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            UVConfig *config = [UVConfig configWithSite:@"chatsecure.uservoice.com"];
+            [UserVoice presentUserVoiceInterfaceForParentViewController:self andConfig:config];
+        }];
+        
+        [alertController addAction:cancelAlertAction];
+        [alertController addAction:showUserVoiceAlertAction];
+        
+        [self presentViewController:alertController animated:YES completion:nil];
+    }
+    else {
+        RIButtonItem *cancelItem = [RIButtonItem itemWithLabel:CANCEL_STRING];
+        RIButtonItem *showUVItem = [RIButtonItem itemWithLabel:OK_STRING action:^{
+            UVConfig *config = [UVConfig configWithSite:@"chatsecure.uservoice.com"];
+            [UserVoice presentUserVoiceInterfaceForParentViewController:self andConfig:config];
+        }];
+        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:SHOW_USERVOICE_STRING cancelButtonItem:cancelItem destructiveButtonItem:nil otherButtonItems:showUVItem, nil];
+        [actionSheet otr_presentInView:self.view];
+    }
 }
 
 #pragma - mark YapDatabse Methods

@@ -39,7 +39,7 @@ extern NSUInteger const kErrorAlertViewTag;
 extern NSUInteger const kErrorInfoAlertViewTag;
 extern NSUInteger const kNewCertAlertViewTag;
 
-@interface OTRLoginViewController : UIViewController <UITextFieldDelegate, UIActionSheetDelegate, UITableViewDataSource,UITableViewDelegate, UIAlertViewDelegate> {
+@interface OTRLoginViewController : UIViewController <UITextFieldDelegate, UITableViewDataSource,UITableViewDelegate, UIAlertViewDelegate> {
     UIView *padding;
 }
 

@@ -30,6 +30,7 @@ pod 'VTAcknowledgementsViewController', '~> 0.12'
 pod 'PureLayout', '~> 2.0'
 pod 'BButton', '~> 4.0'
 pod 'uservoice-iphone-sdk', '~> 3.2'
+pod 'TUSafariActivity', '~> 1.0'
 
 # Waiting for 7.4.1 to be pushed to trunk
 pod 'CocoaAsyncSocket', :git => 'https://github.com/robbiehanson/CocoaAsyncSocket.git', :commit => 'c0bbcbcc5e039ca5d732f9844bf95c3d8ee31a5b'
@@ -37,6 +38,7 @@ pod 'CocoaAsyncSocket', :git => 'https://github.com/robbiehanson/CocoaAsyncSocke
 # Forks
 pod 'AFOAuth2Client', :git => 'https://github.com/ChatSecure/AFOAuth2Client.git', :branch => 'release'
 pod 'SIAlertView', :git => 'https://github.com/ChatSecure/SIAlertView.git', :branch => 'attributedText'
+pod 'ARChromeActivity', :git => 'https://github.com/davidchiles/ARChromeActivity', :branch => 'master'
 
 # Submodules
 pod 'ProxyKit/Client', :path => 'Submodules/ProxyKit/ProxyKit.podspec'

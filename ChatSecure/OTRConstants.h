@@ -67,8 +67,6 @@ extern NSString *const FACEBOOK_APP_ID;
 extern NSString *const GOOGLE_APP_ID;
 extern NSString *const GOOGLE_APP_SCOPE;
 
-extern NSUInteger const kOTRActionSheetLinkTag;
-
 extern NSString *const OTRFailedRemoteNotificationRegistration;
 extern NSString *const OTRSuccessfulRemoteNotificationRegistration;
 

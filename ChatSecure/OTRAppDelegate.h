@@ -41,8 +41,6 @@
 - (void) showConversationViewController;
 
 + (OTRAppDelegate *)appDelegate;
-+ (void)presentActionSheet:(UIActionSheet*)sheet inView:(UIView*)view;
-
 
 
 @end

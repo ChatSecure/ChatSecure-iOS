@@ -1122,5 +1122,13 @@
   "CHATS_STRING" : {
     "comment": "Title for chats view",
     "string": "Chats"
+  },
+  "OPEN_IN_CHROME" : {
+    "comment": "Label to open link in the chrome web browser",
+    "string": "Open in Chrome"
+  },
+  "QR_CODE_STRING" : {
+    "comment": "Label for qr code image",
+    "string": "QR code"
   }
 }

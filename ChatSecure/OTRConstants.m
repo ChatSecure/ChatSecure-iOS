@@ -65,8 +65,6 @@ NSString *const FACEBOOK_APP_ID  = @"447241325394334";
 NSString *const GOOGLE_APP_ID    = @"719137339288.apps.googleusercontent.com";
 NSString *const GOOGLE_APP_SCOPE = @"https://www.googleapis.com/auth/googletalk";
 
-NSUInteger const kOTRActionSheetLinkTag  = 223;
-
 NSString *const kOTRErrorDomain = @"com.chatsecure";
 
 NSString *const OTRFailedRemoteNotificationRegistration = @"OTRFailedRemoteNotificationRegistration";

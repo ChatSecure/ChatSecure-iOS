@@ -22,8 +22,14 @@ typedef NS_ENUM(NSUInteger, OTRBubbleMessageType) {
 
 + (UIImage *)circleWithRadius:(CGFloat)radius;
 
++ (UIImage *)twitterImage;
+
++ (UIImage *)facebookActivityImage;
+
 + (UIImage *)facebookImage;
 
 + (UIImage *)warningImage;
+
+
 
 @end

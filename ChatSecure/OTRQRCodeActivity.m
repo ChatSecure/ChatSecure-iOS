@@ -8,13 +8,15 @@
 
 #import "OTRQRCodeActivity.h"
 #import "OTRConstants.h"
-#import "OTRUtilities.h"
+#import "UIImage+ChatSecure.h"
+#import "UIActivity+ChatSecure.h"
+#import "Strings.h"
 
 @implementation OTRQRCodeActivity
 
 -(NSString *)activityTitle
 {
-    return @"QR Code";
+    return QR_CODE_STRING;
 }
 -(NSString *)activityType
 {
@@ -22,13 +24,7 @@
 }
 -(UIImage *)activityImage
 {
-    CGSize size = CGSizeZero;
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-        size = CGSizeMake(43, 43);
-    } else if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-        size = CGSizeMake(55, 55);
-    }
-    return [OTRUtilities imageWithImage:[UIImage imageNamed:@"chatsecure_qrcode.png"] scaledToSize:size];
+    return [UIImage otr_imageWithImage:[UIImage imageNamed:@"chatsecure_qrcode.png"] scaledToSize:[UIActivity otr_defaultImageSize]];
 }
 
 -(BOOL)canPerformWithActivityItems:(NSArray *)activityItems

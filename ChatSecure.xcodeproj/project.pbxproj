@@ -13,6 +13,10 @@
 		6301D87D16E94778008F67A6 /* OTRChooseAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6301D87C16E94778008F67A6 /* OTRChooseAccountViewController.m */; };
 		6301F92319DCB5F500027B66 /* OTRInMemorySessionTokenCachingStrategy.m in Sources */ = {isa = PBXBuildFile; fileRef = 6301F92219DCB5F500027B66 /* OTRInMemorySessionTokenCachingStrategy.m */; };
 		6304F4D318861C4300365824 /* OTRXMPPError.m in Sources */ = {isa = PBXBuildFile; fileRef = 6304F4D218861C4300365824 /* OTRXMPPError.m */; };
+		630A590F19FB0ED2007B47A5 /* UIActionSheet+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 630A590E19FB0ED2007B47A5 /* UIActionSheet+ChatSecure.m */; };
+		630A591519FB1D13007B47A5 /* UIActivityViewController+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 630A591419FB1D13007B47A5 /* UIActivityViewController+ChatSecure.m */; };
+		630A591F19FB3799007B47A5 /* OTROpenInFacebookActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 630A591E19FB3799007B47A5 /* OTROpenInFacebookActivity.m */; };
+		630A592219FB37BA007B47A5 /* OTROpenInTwitterActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 630A592119FB37BA007B47A5 /* OTROpenInTwitterActivity.m */; };
 		6311088F190788AE001188BB /* OTRPushDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 63110888190788AE001188BB /* OTRPushDevice.m */; };
 		63110890190788AE001188BB /* OTRPUSHHTTPRequestSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6311088A190788AE001188BB /* OTRPUSHHTTPRequestSerializer.m */; };
 		63110891190788AE001188BB /* OTRPushObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 6311088C190788AE001188BB /* OTRPushObject.m */; };
@@ -135,6 +139,8 @@
 		639C612118CAA6CE00CC4DF4 /* libz.1.2.5.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 639C612018CAA6CE00CC4DF4 /* libz.1.2.5.dylib */; };
 		639C612218CAA71600CC4DF4 /* libresolv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D69B011417FF450056FB9E /* libresolv.dylib */; };
 		639FDE4716334FA500387666 /* OTRJabberLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 639FDE4616334FA500387666 /* OTRJabberLoginViewController.m */; };
+		63A3D10C19FEF26E00FB3684 /* UIImage+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A3D10B19FEF26E00FB3684 /* UIImage+ChatSecure.m */; };
+		63A3D10F19FEF3B700FB3684 /* UIActivity+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A3D10E19FEF3B700FB3684 /* UIActivity+ChatSecure.m */; };
 		63A624B219DCC88000B7A0BD /* OTRNotificationPermissions.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A624B119DCC88000B7A0BD /* OTRNotificationPermissions.m */; };
 		63AC174618C7AABD00E6624C /* OTRBuddyInfoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AC174418C7AABD00E6624C /* OTRBuddyInfoCell.m */; };
 		63AC174918C7AAE200E6624C /* OTRConversationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AC174818C7AAE200E6624C /* OTRConversationCell.m */; };
@@ -143,7 +149,6 @@
 		63B7E567193E930E00C2A444 /* OTRMessagesCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B7E566193E930E00C2A444 /* OTRMessagesCollectionViewCell.m */; };
 		63BB1ED119BA549E0030E9BF /* NSURL+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BB1ED019BA549E0030E9BF /* NSURL+ChatSecure.m */; };
 		63BE44CF17EE580D00F60670 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63BE44CE17EE580D00F60670 /* Social.framework */; };
-		63BFDB6D16E83A3F00C608D6 /* OTRSafariActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BFDB6C16E83A3F00C608D6 /* OTRSafariActionSheet.m */; };
 		63C55A531921866500592477 /* OTRMessagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C55A521921866500592477 /* OTRMessagesViewController.m */; };
 		63C55A5919218BBB00592477 /* OTRMessage+JSQMessageData.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C55A5819218BBB00592477 /* OTRMessage+JSQMessageData.m */; };
 		63C9667E19183546002B1490 /* OTROnboardingRemotePushRegistrationInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C9667D19183546002B1490 /* OTROnboardingRemotePushRegistrationInfoViewController.m */; };
@@ -230,6 +235,14 @@
 		6304F4D118861C4300365824 /* OTRXMPPError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPError.h; sourceTree = "<group>"; };
 		6304F4D218861C4300365824 /* OTRXMPPError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPError.m; sourceTree = "<group>"; };
 		63058642183F02D4009ADB6B /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		630A590D19FB0ED2007B47A5 /* UIActionSheet+ChatSecure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIActionSheet+ChatSecure.h"; sourceTree = "<group>"; };
+		630A590E19FB0ED2007B47A5 /* UIActionSheet+ChatSecure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIActionSheet+ChatSecure.m"; sourceTree = "<group>"; };
+		630A591319FB1D13007B47A5 /* UIActivityViewController+ChatSecure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIActivityViewController+ChatSecure.h"; sourceTree = "<group>"; };
+		630A591419FB1D13007B47A5 /* UIActivityViewController+ChatSecure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIActivityViewController+ChatSecure.m"; sourceTree = "<group>"; };
+		630A591D19FB3799007B47A5 /* OTROpenInFacebookActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTROpenInFacebookActivity.h; sourceTree = "<group>"; };
+		630A591E19FB3799007B47A5 /* OTROpenInFacebookActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTROpenInFacebookActivity.m; sourceTree = "<group>"; };
+		630A592019FB37BA007B47A5 /* OTROpenInTwitterActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTROpenInTwitterActivity.h; sourceTree = "<group>"; };
+		630A592119FB37BA007B47A5 /* OTROpenInTwitterActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTROpenInTwitterActivity.m; sourceTree = "<group>"; };
 		63110887190788AE001188BB /* OTRPushDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRPushDevice.h; sourceTree = "<group>"; };
 		63110888190788AE001188BB /* OTRPushDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRPushDevice.m; sourceTree = "<group>"; };
 		63110889190788AE001188BB /* OTRPUSHHTTPRequestSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRPUSHHTTPRequestSerializer.h; sourceTree = "<group>"; };
@@ -483,6 +496,10 @@
 		639C612018CAA6CE00CC4DF4 /* libz.1.2.5.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.2.5.dylib; path = usr/lib/libz.1.2.5.dylib; sourceTree = SDKROOT; };
 		639FDE4516334FA500387666 /* OTRJabberLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRJabberLoginViewController.h; sourceTree = "<group>"; };
 		639FDE4616334FA500387666 /* OTRJabberLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRJabberLoginViewController.m; sourceTree = "<group>"; };
+		63A3D10A19FEF26E00FB3684 /* UIImage+ChatSecure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ChatSecure.h"; sourceTree = "<group>"; };
+		63A3D10B19FEF26E00FB3684 /* UIImage+ChatSecure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ChatSecure.m"; sourceTree = "<group>"; };
+		63A3D10D19FEF3B700FB3684 /* UIActivity+ChatSecure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIActivity+ChatSecure.h"; sourceTree = "<group>"; };
+		63A3D10E19FEF3B700FB3684 /* UIActivity+ChatSecure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIActivity+ChatSecure.m"; sourceTree = "<group>"; };
 		63A624B019DCC88000B7A0BD /* OTRNotificationPermissions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRNotificationPermissions.h; sourceTree = "<group>"; };
 		63A624B119DCC88000B7A0BD /* OTRNotificationPermissions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRNotificationPermissions.m; sourceTree = "<group>"; };
 		63AC173E18C7AA7A00E6624C /* OTRComposeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRComposeViewController.m; sourceTree = "<group>"; };
@@ -506,8 +523,6 @@
 		63BB1ECF19BA549E0030E9BF /* NSURL+ChatSecure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSURL+ChatSecure.h"; sourceTree = "<group>"; };
 		63BB1ED019BA549E0030E9BF /* NSURL+ChatSecure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSURL+ChatSecure.m"; sourceTree = "<group>"; };
 		63BE44CE17EE580D00F60670 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
-		63BFDB6B16E83A3F00C608D6 /* OTRSafariActionSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRSafariActionSheet.h; sourceTree = "<group>"; };
-		63BFDB6C16E83A3F00C608D6 /* OTRSafariActionSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRSafariActionSheet.m; sourceTree = "<group>"; };
 		63C0857E1845863900B9C984 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		63C55A511921866500592477 /* OTRMessagesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRMessagesViewController.h; sourceTree = "<group>"; };
 		63C55A521921866500592477 /* OTRMessagesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRMessagesViewController.m; sourceTree = "<group>"; };
@@ -945,6 +960,14 @@
 				63E78ED119DB634400F083F3 /* UIViewController+ChatSecure.m */,
 				63BB1ECF19BA549E0030E9BF /* NSURL+ChatSecure.h */,
 				63BB1ED019BA549E0030E9BF /* NSURL+ChatSecure.m */,
+				630A590D19FB0ED2007B47A5 /* UIActionSheet+ChatSecure.h */,
+				630A590E19FB0ED2007B47A5 /* UIActionSheet+ChatSecure.m */,
+				630A591319FB1D13007B47A5 /* UIActivityViewController+ChatSecure.h */,
+				630A591419FB1D13007B47A5 /* UIActivityViewController+ChatSecure.m */,
+				63A3D10A19FEF26E00FB3684 /* UIImage+ChatSecure.h */,
+				63A3D10B19FEF26E00FB3684 /* UIImage+ChatSecure.m */,
+				63A3D10D19FEF3B700FB3684 /* UIActivity+ChatSecure.h */,
+				63A3D10E19FEF3B700FB3684 /* UIActivity+ChatSecure.m */,
 				63CAF90218FF284200C3337E /* OTRUtilities.h */,
 				63CAF90318FF284200C3337E /* OTRUtilities.m */,
 				63FA108116F9290900D9EE45 /* OTRImages.h */,
@@ -972,8 +995,6 @@
 				6370C975185FC58C00CB6786 /* OTRTitleSubtitleView.m */,
 				6391CAF518A99003003EC838 /* OTRLockButton.h */,
 				6391CAF618A99003003EC838 /* OTRLockButton.m */,
-				63BFDB6B16E83A3F00C608D6 /* OTRSafariActionSheet.h */,
-				63BFDB6C16E83A3F00C608D6 /* OTRSafariActionSheet.m */,
 				63534AAD187F5A1400061776 /* OTRChatBubbleView.h */,
 				63534AAE187F5A1400061776 /* OTRChatBubbleView.m */,
 				631F4AE718C0004200AE6E8A /* OTRButtonView.h */,
@@ -1039,6 +1060,10 @@
 				639C60C818CA98AC00CC4DF4 /* OTRActivityItemProvider.m */,
 				639C60EB18CA99F200CC4DF4 /* OTRQRCodeActivity.h */,
 				639C60EC18CA99F200CC4DF4 /* OTRQRCodeActivity.m */,
+				630A591D19FB3799007B47A5 /* OTROpenInFacebookActivity.h */,
+				630A591E19FB3799007B47A5 /* OTROpenInFacebookActivity.m */,
+				630A592019FB37BA007B47A5 /* OTROpenInTwitterActivity.h */,
+				630A592119FB37BA007B47A5 /* OTROpenInTwitterActivity.m */,
 			);
 			name = Activities;
 			sourceTree = "<group>";
@@ -1554,15 +1579,18 @@
 				636FE4B6161B76EA002B28EF /* OTRGoogleTalkLoginViewController.m in Sources */,
 				636FE4B9161B7701002B28EF /* OTRXMPPLoginViewController.m in Sources */,
 				63E78ED219DB634400F083F3 /* UIViewController+ChatSecure.m in Sources */,
+				630A591F19FB3799007B47A5 /* OTROpenInFacebookActivity.m in Sources */,
 				639C60D418CA992300CC4DF4 /* OTRDoubleSetting.m in Sources */,
 				636FE4C0161B7C68002B28EF /* OTRInLineTextEditTableViewCell.m in Sources */,
 				D987BAE01901A6CF005B2382 /* OTRPushManager.m in Sources */,
+				630A592219FB37BA007B47A5 /* OTROpenInTwitterActivity.m in Sources */,
 				639FDE4716334FA500387666 /* OTRJabberLoginViewController.m in Sources */,
 				6334063C1652C33300A54C52 /* OTRListSettingViewController.m in Sources */,
 				6336CDE0165C4E9E00C8CBA8 /* OTRLanguageListSettingViewController.m in Sources */,
 				6397538718CA8222005D6063 /* OTRManagedOscarAccount.m in Sources */,
 				639C60C518CA988400CC4DF4 /* OTRValueSetting.m in Sources */,
 				6311089D190788D4001188BB /* OTRYapPushDevice.m in Sources */,
+				630A590F19FB0ED2007B47A5 /* UIActionSheet+ChatSecure.m in Sources */,
 				631F4AE918C0004200AE6E8A /* OTRButtonView.m in Sources */,
 				639753A018CA82A2005D6063 /* OTRLanguageManager.m in Sources */,
 				639C60EE18CA9A0C00CC4DF4 /* _OTRManagedBuddy.m in Sources */,
@@ -1599,6 +1627,7 @@
 				6397538018CA8222005D6063 /* OTRManagedChatMessage.m in Sources */,
 				63E5E81E16D1DE66006E2B01 /* ChatSecure.xcdatamodeld in Sources */,
 				63BB1ED119BA549E0030E9BF /* NSURL+ChatSecure.m in Sources */,
+				63A3D10C19FEF26E00FB3684 /* UIImage+ChatSecure.m in Sources */,
 				63F8A53316DD9B6F00374551 /* OTRIntSettingViewController.m in Sources */,
 				639C60C218CA988400CC4DF4 /* OTRListSetting.m in Sources */,
 				634357F2191308020062FD26 /* OTRPasswordStrengthView.m in Sources */,
@@ -1607,7 +1636,6 @@
 				63FA108316F9290A00D9EE45 /* OTRImages.m in Sources */,
 				63188CBD16E55B230000DD40 /* OTRNewBuddyViewController.m in Sources */,
 				6300F16716E6CF8400D3C1AA /* OTRSubscriptionRequestsViewController.m in Sources */,
-				63BFDB6D16E83A3F00C608D6 /* OTRSafariActionSheet.m in Sources */,
 				6301D87D16E94778008F67A6 /* OTRChooseAccountViewController.m in Sources */,
 				6397530A18CA7CB0005D6063 /* OTRProtocolManager.m in Sources */,
 				631FE8851720951400AEA107 /* OTRStatusMessageCell.m in Sources */,
@@ -1624,6 +1652,7 @@
 				639C60C018CA988400CC4DF4 /* OTRIntSetting.m in Sources */,
 				639C60C918CA98AC00CC4DF4 /* OTRActivityItemProvider.m in Sources */,
 				6397538118CA8222005D6063 /* OTRManagedEncryptionMessage.m in Sources */,
+				630A591519FB1D13007B47A5 /* UIActivityViewController+ChatSecure.m in Sources */,
 				D987BADD1901A6CF005B2382 /* OTRPushAPIClient.m in Sources */,
 				6397538D18CA8222005D6063 /* OTRvCardTemp.m in Sources */,
 				63D72B3719145CC2005F3428 /* OTROnboardingPushAccountLoginViewController.m in Sources */,
@@ -1634,6 +1663,7 @@
 				6398CBCD19BA52A80024018A /* OTRSocialButtonsView.m in Sources */,
 				6397537F18CA8222005D6063 /* OTRManagedBuddy.m in Sources */,
 				63F8813A19F72AB4001548AE /* OTRPasswordGenerator.m in Sources */,
+				63A3D10F19FEF3B700FB3684 /* UIActivity+ChatSecure.m in Sources */,
 				63009E9718D122A70058976C /* OTRCreateAccountChooserViewController.m in Sources */,
 				63C9667E19183546002B1490 /* OTROnboardingRemotePushRegistrationInfoViewController.m in Sources */,
 				639C60CE18CA98F700CC4DF4 /* OTRComposingImageView.m in Sources */,

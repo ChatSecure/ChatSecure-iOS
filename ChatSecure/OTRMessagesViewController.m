@@ -28,6 +28,7 @@
 #import "OTRMessagesCollectionViewCellIncoming.h"
 #import "OTRMessagesCollectionViewCellOutgoing.h"
 #import "OTRImages.h"
+#import "UIActivityViewController+ChatSecure.h"
 
 static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
 
@@ -37,7 +38,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     OTRDropDownTypePush          = 2
 };
 
-@interface OTRMessagesViewController () <OTRMessagesCollectionViewCellDelegate>
+@interface OTRMessagesViewController () <OTRMessagesCollectionViewCellDelegate, UITextViewDelegate>
 
 @property (nonatomic, strong) OTRAccount *account;
 
@@ -673,8 +674,10 @@ typedef NS_ENUM(int, OTRDropDownType) {
         cell.textView.dataDetectorTypes = UIDataDetectorTypeNone;
     }
     else {
-        cell.textView.dataDetectorTypes = UIDataDetectorTypeAll;
+        cell.textView.dataDetectorTypes = UIDataDetectorTypeLink;
     }
+    
+    cell.textView.delegate = self;
     
     return cell;
 }
@@ -895,6 +898,15 @@ didTapLoadEarlierMessagesButton:(UIButton *)sender
 
 - (void) splitViewController:(UISplitViewController *)svc willShowViewController:(UIViewController *)aViewController invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem {
     self.navigationItem.leftBarButtonItem = nil;
+}
+
+#pragma - mark UITextViewDelegateMethods
+
+- (BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange
+{
+    UIActivityViewController *activityViewController = [UIActivityViewController otr_linkActivityViewControllerWithURLs:@[URL]];
+    [self presentViewController:activityViewController animated:YES completion:nil];
+    return NO;
 }
 
 @end

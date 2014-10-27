@@ -30,8 +30,6 @@
 + (BOOL)dateInLast24Hours:(NSDate *)date;
 + (BOOL)dateInLast7Days:(NSDate *)date;
 
-+ (UIImage *)imageWithImage:(UIImage *)image scaledToSize:(CGSize)newSize;
-
 + (NSArray *)cipherSuites;
 
 + (NSString *)currentAppVersionString;

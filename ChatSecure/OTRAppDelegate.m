@@ -349,14 +349,6 @@
 
 }
 
-+ (void) presentActionSheet:(UIActionSheet*)sheet inView:(UIView*)view {
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-        [sheet showInView:view];
-    } else if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-        [sheet showInView:[self appDelegate].window];
-    }
-}
-
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
     if( [[BITHockeyManager sharedHockeyManager].authenticator handleOpenURL:url

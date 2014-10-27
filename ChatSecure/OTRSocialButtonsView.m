@@ -10,10 +10,8 @@
 #import "PureLayout.h"
 #import "BButton.h"
 #import "NSURL+chatsecure.h"
-#import "UIActionSheet+Blocks.h"
 #import "OTRAppDelegate.h"
 #import "Strings.h"
-#import "OTRSafariActionSheet.h"
 
 static CGFloat kOTRSocialButtonHeight = 30.0f;
 static CGFloat kOTRSocialButtonWidth = 93.0f;
@@ -83,40 +81,30 @@ static CGFloat kOTRSocialTotalWidth = 300.0f;
 }
 
 - (void) twitterButtonPressed:(id)sender {
-    UIActionSheet *actionSheet = nil;
+    
     NSURL *twitterAppURL = [NSURL otr_twitterAppURL];
-    if ([[UIApplication sharedApplication] canOpenURL:twitterAppURL]) {
-        RIButtonItem *facebookAppButtonItem = [RIButtonItem itemWithLabel:OPEN_IN_TWITTER_STRING action:^{
-            [[UIApplication sharedApplication] openURL:twitterAppURL];
-        }];
-        actionSheet = [[UIActionSheet alloc]  initWithTitle:TWITTER_STRING cancelButtonItem:[RIButtonItem itemWithLabel:CANCEL_STRING] destructiveButtonItem:nil otherButtonItems:facebookAppButtonItem,nil];
-    } else {
-        actionSheet = [[OTRSafariActionSheet alloc] initWithUrl:[NSURL otr_twitterWebURL]];
-    }
-    [OTRAppDelegate presentActionSheet:actionSheet inView:self];
+    NSURL *twitterWebURL = [NSURL otr_twitterWebURL];
+    
+    [self openActivityUrls:@[twitterAppURL,twitterWebURL]];
 }
 
 - (void) facebookButtonPressed:(id)sender {
     
     NSURL *facebookAppURL = [NSURL otr_facebookAppURL];
+    NSURL *facebookWebURL = [NSURL otr_facebookWebURL];
     
-    UIActionSheet *actionSheet = nil;
-    
-    if ([[UIApplication sharedApplication] canOpenURL:facebookAppURL]) {
-        RIButtonItem *facebookAppButtonItem = [RIButtonItem itemWithLabel:OPEN_IN_FACEBOOK_STRING action:^{
-            [[UIApplication sharedApplication] openURL:facebookAppURL];
-        }];
-        actionSheet = [[UIActionSheet alloc]  initWithTitle:FACEBOOK_STRING cancelButtonItem:[RIButtonItem itemWithLabel:CANCEL_STRING] destructiveButtonItem:nil otherButtonItems:facebookAppButtonItem,nil];
-    } else {
-        actionSheet = [[OTRSafariActionSheet alloc] initWithUrl:[NSURL otr_facebookWebURL]];
-    }
-    
-    [OTRAppDelegate presentActionSheet:actionSheet inView:self];
+    [self openActivityUrls:@[facebookAppURL,facebookWebURL]];
 }
 
 - (void) githubButtonPressed:(id)sender {
-    UIActionSheet *actionSheet = [[OTRSafariActionSheet alloc] initWithUrl:[NSURL otr_githubURL]];
-    [OTRAppDelegate presentActionSheet:actionSheet inView:self];
+    [self openActivityUrls:@[[NSURL otr_githubURL]]];
+}
+
+- (void)openActivityUrls:(NSArray *)activityURLs
+{
+    if ([self.delegate respondsToSelector:@selector(socialButtons:openURLs:)]) {
+        [self.delegate socialButtons:self openURLs:activityURLs];
+    }
 }
 
 @end

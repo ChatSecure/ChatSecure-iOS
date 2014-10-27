@@ -14,7 +14,8 @@
 #import "Strings.h"
 #import "OTRXMPPManager.h"
 #import "OTRProtocolManager.h"
-
+#import "OTRUtilities.h"
+#import "UIActionSheet+ChatSecure.h"
 #import "YapDatabaseViewMappings.h"
 #import "UIActionSheet+Blocks.h"
 
@@ -64,6 +65,55 @@
                                              selector:@selector(yapDatabaseModified:)
                                                  name:OTRUIDatabaseConnectionDidUpdateNotification
                                                object:nil];
+    
+}
+
+- (void)showActionSheetForIndexPath:(NSIndexPath *)indexPath
+{
+    OTRXMPPPresenceSubscriptionRequest *request = [self subscriptionRequestAtIndexPath:indexPath];
+    OTRXMPPManager * manager = [self managerAtIndexPath:indexPath];
+    __block XMPPJID *jid = [XMPPJID jidWithString:request.jid];
+    
+    void (^rejectBlock)(void) = ^void(void) {
+        [manager.xmppRoster rejectPresenceSubscriptionRequestFrom:jid];
+        [self deleteSubscriptionRequest:request];
+    };
+    void (^acceptBlock)(void) = ^void(void) {
+        [manager.xmppRoster acceptPresenceSubscriptionRequestFrom:jid andAddToRoster:YES];
+        [self deleteSubscriptionRequest:request];
+    };
+    
+    
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
+        
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:request.jid message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+        
+        UIAlertAction *cancelAlertAction = [UIAlertAction actionWithTitle:CANCEL_STRING style:UIAlertActionStyleCancel handler:nil];
+        UIAlertAction *rejectAlertAction = [UIAlertAction actionWithTitle:REJECT_STRING style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
+            rejectBlock();
+        }];
+        UIAlertAction *acceptAlertActtion = [UIAlertAction actionWithTitle:ADD_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            acceptBlock();
+        }];
+        
+        [alertController addAction:cancelAlertAction];
+        [alertController addAction:rejectAlertAction];
+        [alertController addAction:acceptAlertActtion];
+        
+        [self presentViewController:alertController animated:YES completion:nil];
+    }
+    else {
+        RIButtonItem *cancelButton = [RIButtonItem itemWithLabel:CANCEL_STRING];
+        RIButtonItem *rejectButton = [RIButtonItem itemWithLabel:REJECT_STRING action:^{
+            rejectBlock();
+        }];
+        RIButtonItem *addButton = [RIButtonItem itemWithLabel:ADD_STRING action:^{
+            acceptBlock();
+        }];
+        UIActionSheet *actionSeet = [[UIActionSheet alloc] initWithTitle:request.jid cancelButtonItem:cancelButton destructiveButtonItem:rejectButton otherButtonItems:addButton, nil];
+        
+        [actionSeet otr_presentInView:self.view];
+    }
     
 }
 
@@ -139,23 +189,11 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    OTRXMPPPresenceSubscriptionRequest *request = [self subscriptionRequestAtIndexPath:indexPath];
     OTRXMPPManager * manager = [self managerAtIndexPath:indexPath];
-    XMPPJID *jid = [XMPPJID jidWithString:request.jid];
     
     if (manager.connectionStatus == OTRProtocolConnectionStatusConnected) {
-        RIButtonItem *cancelButton = [RIButtonItem itemWithLabel:CANCEL_STRING];
-        RIButtonItem *rejectButton = [RIButtonItem itemWithLabel:REJECT_STRING action:^{
-            [manager.xmppRoster rejectPresenceSubscriptionRequestFrom:jid];
-            [self deleteSubscriptionRequest:request];
-        }];
-        RIButtonItem *addButton = [RIButtonItem itemWithLabel:ADD_STRING action:^{
-            [manager.xmppRoster acceptPresenceSubscriptionRequestFrom:jid andAddToRoster:YES];
-            [self deleteSubscriptionRequest:request];
-        }];
-        UIActionSheet *actionSeet = [[UIActionSheet alloc] initWithTitle:request.jid cancelButtonItem:cancelButton destructiveButtonItem:rejectButton otherButtonItems:addButton, nil];
+        [self showActionSheetForIndexPath:indexPath];
         
-        [actionSeet showInView:self.view];
     }
     else {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:ACCOUNT_DISCONNECTED_STRING message:ACCOUNT_DISCONNECTED_DESCRIPTION_STRING delegate:nil cancelButtonTitle:OK_STRING otherButtonTitles: nil];

@@ -9,8 +9,17 @@
 #import <UIKit/UIKit.h>
 
 @class BButton;
+@class OTRSocialButtonsView;
+
+@protocol OTRSocialButtonsViewDelegate <NSObject>
+
+- (void)socialButtons:(OTRSocialButtonsView *)view openURLs:(NSArray *)urlArray;
+
+@end
 
 @interface OTRSocialButtonsView : UIView
+
+@property (nonatomic, weak) id <OTRSocialButtonsViewDelegate> delegate;
 
 @property (nonatomic, strong) BButton *twitterButton;
 @property (nonatomic, strong) BButton *facebookButton;

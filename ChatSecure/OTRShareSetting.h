@@ -13,10 +13,10 @@
 
 #import "OTRSetting.h"
 
-@interface OTRShareSetting : OTRViewSetting <UIWebViewDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate,MFMessageComposeViewControllerDelegate>
+@interface OTRShareSetting : OTRViewSetting <UIWebViewDelegate, MFMailComposeViewControllerDelegate,MFMessageComposeViewControllerDelegate>
 
-@property (nonatomic,weak) id delegate;
-@property (nonatomic, retain) NSURL *lastActionLink;
+@property (nonatomic, weak) id delegate;
+@property (nonatomic, strong) NSURL *lastActionLink;
 
 
 @end

@@ -8,7 +8,6 @@
 
 #import "OTRBuddyViewController.h"
 #import <QuartzCore/QuartzCore.h>
-#import "OTRSafariActionSheet.h"
 #import "OTRInLineTextEditTableViewCell.h"
 #import "Strings.h"
 #import "OTRProtocolManager.h"
@@ -16,7 +15,7 @@
 #import "OTRUtilities.h"
 #import "OTRManagedStatusMessage.h"
 #import "OTRXMPPManager.h"
-
+#import "UIActivityViewController+ChatSecure.h"
 #import "OTRAccount.h"
 #import "OTRBuddy.h"
 #import "OTRDatabaseManager.h"
@@ -332,8 +331,8 @@
 
 -(void)attributedLabel:(TTTAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url
 {
-    OTRSafariActionSheet * actionSheet = [[OTRSafariActionSheet alloc] initWithUrl:url];
-    [actionSheet showInView:self.view];
+    UIActivityViewController *activityViewController = [UIActivityViewController otr_linkActivityViewControllerWithURLs:@[url]];
+    [self presentViewController:activityViewController animated:YES completion:nil];
 }
 
 @end
