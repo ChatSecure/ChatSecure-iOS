@@ -32,27 +32,9 @@
 
 -(void)showActionSheet
 {
-    OTRActivityItemProvider * itemProvider = [[OTRActivityItemProvider alloc] init];
-    OTRQRCodeActivity * qrCodeActivity = [[OTRQRCodeActivity alloc] init];
-    
-    UIActivityViewController * activityViewController = [[UIActivityViewController alloc] initWithActivityItems:@[itemProvider] applicationActivities:@[qrCodeActivity]];
-    activityViewController.excludedActivityTypes = @[UIActivityTypePrint, UIActivityTypeAssignToContact, UIActivityTypeSaveToCameraRoll];
-    
-    [self.delegate presentViewController:activityViewController animated:YES completion:nil];
-}
-
-#pragma mark MFMessageComposeViewControllerDelegate methods
-
-- (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result
-{
-    [self.delegate dismissModalViewControllerAnimated:YES];
-}
-
-#pragma mark MFMailComposeViewControllerDelegate Methods
-
-- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)erro
-{
-    [self.delegate dismissModalViewControllerAnimated:YES];
+    if ([self.delegate respondsToSelector:@selector(didSelectShareSetting:)]) {
+        [self.delegate didSelectShareSetting:self];
+    }
 }
 
 @end

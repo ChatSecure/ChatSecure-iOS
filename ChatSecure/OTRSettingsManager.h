@@ -34,6 +34,8 @@
 - (NSUInteger) numberOfSettingsInSection:(NSUInteger)section;
 - (OTRSetting*) settingForOTRSettingKey:(NSString*)key;
 
+- (NSIndexPath *)indexPathForSetting:(OTRSetting *)setting;
+
 + (BOOL) boolForOTRSettingKey:(NSString*)key;
 + (double) doubleForOTRSettingKey:(NSString*)key;
 + (NSInteger) intForOTRSettingKey:(NSString *)key;

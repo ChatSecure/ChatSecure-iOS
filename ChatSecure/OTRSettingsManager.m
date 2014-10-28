@@ -42,24 +42,21 @@
 
 #import "OTRUtilities.h"
 
-@interface OTRSettingsManager(Private)
+@interface OTRSettingsManager ()
+
+@property (nonatomic, strong) NSMutableArray *settingsGroups;
+@property (nonatomic, strong) NSDictionary *settingsDictionary;
+
 - (void) populateSettings;
 @end
 
 @implementation OTRSettingsManager
-@synthesize settingsGroups, settingsDictionary;
-
-- (void) dealloc
-{
-    settingsGroups = nil;
-    settingsDictionary = nil;
-}
 
 - (id) init
 {
     if (self = [super init])
     {
-        settingsGroups = [NSMutableArray array];
+        self.settingsGroups = [NSMutableArray array];
         [self populateSettings];
     }
     return self;
@@ -71,9 +68,7 @@
     // Leave this in for now
     OTRViewSetting *accountsViewSetting = [[OTRViewSetting alloc] initWithTitle:ACCOUNTS_STRING description:nil viewControllerClass:nil];
     OTRSettingsGroup *accountsGroup = [[OTRSettingsGroup alloc] initWithTitle:ACCOUNTS_STRING settings:[NSArray arrayWithObject:accountsViewSetting]];
-    [settingsGroups addObject:accountsGroup];
-    
-    OTRIntSetting *fontSizeSetting;
+    [self.settingsGroups addObject:accountsGroup];
     
     OTRBoolSetting *deletedDisconnectedConversations = [[OTRBoolSetting alloc] initWithTitle:DELETE_CONVERSATIONS_ON_DISCONNECT_TITLE_STRING
                                                                                  description:DELETE_CONVERSATIONS_ON_DISCONNECT_DESCRIPTION_STRING
@@ -120,11 +115,11 @@
     chatSettings = [NSArray arrayWithObjects:deletedDisconnectedConversations, showDisconnectionWarning, nil];
     
     OTRSettingsGroup *chatSettingsGroup = [[OTRSettingsGroup alloc] initWithTitle:CHAT_STRING settings:chatSettings];
-    [settingsGroups addObject:chatSettingsGroup];
+    [self.settingsGroups addObject:chatSettingsGroup];
     
     securitySettings = @[opportunisticOtrSetting,certSetting,fingerprintSetting];
     OTRSettingsGroup *securitySettingsGroup = [[OTRSettingsGroup alloc] initWithTitle:SECURITY_STRING settings:securitySettings];
-    [settingsGroups addObject:securitySettingsGroup];
+    [self.settingsGroups addObject:securitySettingsGroup];
     
     OTRFeedbackSetting * feedbackViewSetting = [[OTRFeedbackSetting alloc] initWithTitle:SEND_FEEDBACK_STRING description:nil];
     feedbackViewSetting.imageName = @"18-envelope.png";
@@ -143,26 +138,39 @@
     NSMutableArray *otherSettings = [NSMutableArray arrayWithCapacity:5];
     [otherSettings addObjectsFromArray:@[languageSetting,donateSetting, shareViewSetting,feedbackViewSetting]];
     OTRSettingsGroup *otherGroup = [[OTRSettingsGroup alloc] initWithTitle:OTHER_STRING settings:otherSettings];
-    [settingsGroups addObject:otherGroup];
-    settingsDictionary = newSettingsDictionary;
+    [self.settingsGroups addObject:otherGroup];
+    self.settingsDictionary = newSettingsDictionary;
 }
 
 - (OTRSetting*) settingAtIndexPath:(NSIndexPath*)indexPath
 {
-    OTRSettingsGroup *settingsGroup = [settingsGroups objectAtIndex:indexPath.section];
+    OTRSettingsGroup *settingsGroup = [self.settingsGroups objectAtIndex:indexPath.section];
     return [settingsGroup.settings objectAtIndex:indexPath.row];
 }
 
 - (NSString*) stringForGroupInSection:(NSUInteger)section
 {
-    OTRSettingsGroup *settingsGroup = [settingsGroups objectAtIndex:section];
+    OTRSettingsGroup *settingsGroup = [self.settingsGroups objectAtIndex:section];
     return settingsGroup.title;
 }
 
 - (NSUInteger) numberOfSettingsInSection:(NSUInteger)section
 {
-    OTRSettingsGroup *settingsGroup = [settingsGroups objectAtIndex:section];
+    OTRSettingsGroup *settingsGroup = [self.settingsGroups objectAtIndex:section];
     return [settingsGroup.settings count];
+}
+
+- (NSIndexPath *)indexPathForSetting:(OTRSetting *)setting
+{
+    __block NSIndexPath *indexPath = nil;
+    [self.settingsGroups enumerateObjectsUsingBlock:^(OTRSettingsGroup *group, NSUInteger idx, BOOL *stop) {
+        NSUInteger row = [group.settings indexOfObject:setting];
+        if (row != NSNotFound) {
+            indexPath = [NSIndexPath indexPathForItem:row inSection:idx];
+            stop = YES;
+        }
+    }];
+    return indexPath;
 }
 
 + (BOOL) boolForOTRSettingKey:(NSString*)key
@@ -190,7 +198,7 @@
 }
 
 - (OTRSetting*) settingForOTRSettingKey:(NSString*)key {
-    return [settingsDictionary objectForKey:key];
+    return [self.settingsDictionary objectForKey:key];
 }
 
 @end

@@ -8,9 +8,11 @@
 
 #import "OTRSetting.h"
 
+@class OTRFeedbackSetting;
+
 @protocol OTRFeedbackSettingDelegate <OTRSettingDelegate>
 @required
-- (void) presentUserVoiceView;
+- (void) presentUserVoiceViewForSetting:(OTRSetting *)setting;
 @end
 
 @interface OTRFeedbackSetting : OTRSetting

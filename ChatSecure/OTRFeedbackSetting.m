@@ -15,9 +15,10 @@
 {
     if (self = [super initWithTitle:newTitle description:newDescription])
     {
-        __weak typeof (self) weakSelf = self;
+        __weak typeof(self)weakSelf = self;
         self.actionBlock = ^{
-            [weakSelf showView];
+            __strong typeof(weakSelf)strongSelf = weakSelf;
+            [strongSelf showView];
         };
     }
     return self;
@@ -25,7 +26,7 @@
 
 - (void) showView
 {
-    [self.delegate presentUserVoiceView];
+    [self.delegate presentUserVoiceViewForSetting:self];
 }
 
 @end

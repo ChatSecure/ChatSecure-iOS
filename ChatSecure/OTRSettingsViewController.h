@@ -32,4 +32,6 @@
 @property (nonatomic, retain) OTRSettingsManager *settingsManager;
 @property (nonatomic, retain) OTRLoginViewController *loginController;
 
+
+
 @end

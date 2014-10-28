@@ -96,6 +96,12 @@
             acceptBlock();
         }];
         
+        if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
+            UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+            alertController.popoverPresentationController.sourceView = cell;
+            alertController.popoverPresentationController.sourceRect = cell.bounds;
+        }
+        
         [alertController addAction:cancelAlertAction];
         [alertController addAction:rejectAlertAction];
         [alertController addAction:acceptAlertActtion];

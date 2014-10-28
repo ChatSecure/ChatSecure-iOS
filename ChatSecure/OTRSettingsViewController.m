@@ -47,10 +47,13 @@
 #import "OTRAccount.h"
 #import "OTRAppDelegate.h"
 #import "OTRUtilities.h"
+#import "OTRShareSetting.h"
+#import "OTRActivityItemProvider.h"
+#import "OTRQRCodeActivity.h"
 
 static NSString *const circleImageName = @"31-circle-plus-large.png";
 
-@interface OTRSettingsViewController () <UITableViewDataSource, UITableViewDelegate>
+@interface OTRSettingsViewController () <UITableViewDataSource, UITableViewDelegate, OTRShareSettingDelegate>
 
 @property (nonatomic, strong) YapDatabaseViewMappings *mappings;
 @property (nonatomic, strong) YapDatabaseConnection *databaseConnection;
@@ -297,6 +300,8 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     }
 }
 
+#pragma - mark Other Methods
+
 - (void) showLoginControllerForAccount:(OTRAccount *)account {
     OTRLoginViewController *loginViewController = [OTRLoginViewController loginViewControllerWithAcccount:account];
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:loginViewController];
@@ -325,6 +330,12 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
         
         [alertController addAction:logoutAlertAction];
         [alertController addAction:cancelAlertAction];
+        
+        if ([sender isKindOfClass:[UIView class]]) {
+            UIView *senderView = (UIView *)sender;
+            alertController.popoverPresentationController.sourceRect = senderView.bounds;
+            alertController.popoverPresentationController.sourceView = senderView;
+        }
         
         [self presentViewController:alertController animated:YES completion:nil];
     }
@@ -374,6 +385,12 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
         [alertController addAction:loginAccountAction];
         [alertController addAction:cancelAction];
         
+        if ([sender isKindOfClass:[UIView class]]) {
+            UIView *senderView = (UIView *)sender;
+            alertController.popoverPresentationController.sourceRect = senderView.bounds;
+            alertController.popoverPresentationController.sourceView = senderView;
+        }
+        
         [self presentViewController:alertController animated:YES completion:nil];
     }
     else {
@@ -384,8 +401,11 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
         
         [actionSheet showInView:self.view];
     }
-    
-    
+}
+
+- (NSIndexPath *)indexPathForSetting:(OTRSetting *)setting
+{
+    return [self.settingsManager indexPathForSetting:setting];
 }
 
 #pragma mark OTRSettingDelegate method
@@ -415,7 +435,7 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 - (void) donateSettingPressed:(OTRDonateSetting *)setting {
     
     NSURL *paypalURL = [NSURL URLWithString:@"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=6YFSLLQGDZFXY"];
-    NSURL *bitcointURL = [NSURL URLWithString:@"https://coinbase.com/checkouts/0a35048913df24e0ec3d586734d456d7"];
+    NSURL *bitcoinURL = [NSURL URLWithString:@"https://coinbase.com/checkouts/0a35048913df24e0ec3d586734d456d7"];
     
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:DONATE_MESSAGE_STRING message:nil preferredStyle:UIAlertControllerStyleActionSheet];
@@ -424,8 +444,8 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
             [[UIApplication sharedApplication] openURL:paypalURL];
         }];
         
-        UIAlertAction *bitcoinAlertAction = [UIAlertAction actionWithTitle:@"Bitcoint" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-            [[UIApplication sharedApplication] openURL:bitcointURL];
+        UIAlertAction *bitcoinAlertAction = [UIAlertAction actionWithTitle:@"Bitcoin" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            [[UIApplication sharedApplication] openURL:bitcoinURL];
         }];
         
         UIAlertAction *cancelAlertAction = [UIAlertAction actionWithTitle:CANCEL_STRING style:UIAlertActionStyleCancel handler:nil];
@@ -434,6 +454,11 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
         [alertController addAction:bitcoinAlertAction];
         [alertController addAction:cancelAlertAction];
         
+        UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:[self indexPathForSetting:setting]];
+        
+        alertController.popoverPresentationController.sourceView = cell;
+        alertController.popoverPresentationController.sourceRect = cell.bounds;
+        
         [self presentViewController:alertController animated:YES completion:nil];
     }
     else {
@@ -441,7 +466,7 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
             [[UIApplication sharedApplication] openURL:paypalURL];
         }];
         RIButtonItem *bitcoinItem = [RIButtonItem itemWithLabel:@"Bitcoin" action:^{
-            [[UIApplication sharedApplication] openURL:bitcointURL];
+            [[UIApplication sharedApplication] openURL:bitcoinURL];
         }];
         RIButtonItem *cancelItem = [RIButtonItem itemWithLabel:CANCEL_STRING];
         UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:DONATE_MESSAGE_STRING cancelButtonItem:cancelItem destructiveButtonItem:nil otherButtonItems:paypalItem, bitcoinItem, nil];
@@ -449,10 +474,30 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     }
 }
 
+#pragma - mark OTRShareSettingDelegate Method
+
+- (void)didSelectShareSetting:(OTRShareSetting *)shareSetting
+{
+    OTRActivityItemProvider * itemProvider = [[OTRActivityItemProvider alloc] init];
+    OTRQRCodeActivity * qrCodeActivity = [[OTRQRCodeActivity alloc] init];
+    
+    UIActivityViewController * activityViewController = [[UIActivityViewController alloc] initWithActivityItems:@[itemProvider] applicationActivities:@[qrCodeActivity]];
+    activityViewController.excludedActivityTypes = @[UIActivityTypePrint, UIActivityTypeAssignToContact, UIActivityTypeSaveToCameraRoll];
+    
+    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:[self indexPathForSetting:shareSetting]];
+    
+    if( SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
+        activityViewController.popoverPresentationController.sourceView = cell;
+        activityViewController.popoverPresentationController.sourceRect = cell.bounds;
+    }
+    
+    [self presentViewController:activityViewController animated:YES completion:nil];
+}
+
 
 #pragma mark OTRFeedbackSettingDelegate method
 
-- (void) presentUserVoiceView {
+- (void) presentUserVoiceViewForSetting:(OTRSetting *)setting {
     
     if(SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:SHOW_USERVOICE_STRING message:nil preferredStyle:UIAlertControllerStyleActionSheet];
@@ -464,6 +509,11 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
         
         [alertController addAction:cancelAlertAction];
         [alertController addAction:showUserVoiceAlertAction];
+        
+        UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:[self indexPathForSetting:setting]];
+        
+        alertController.popoverPresentationController.sourceView = cell;
+        alertController.popoverPresentationController.sourceRect = cell.bounds;
         
         [self presentViewController:alertController animated:YES completion:nil];
     }
