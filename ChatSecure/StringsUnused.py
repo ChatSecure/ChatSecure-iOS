@@ -24,9 +24,6 @@ def findUnused(strings_dict,directory):
 		if (found == False):
 			unused_keys.append(key)
 	return unused_keys
-	
-		
-
 
 
 def main():
@@ -38,10 +35,8 @@ def main():
 	strings_dict = json.load(strings_json_file)
 
 	unused_keys = findUnused(strings_dict,script_directory)
-	print len(unused_keys)
 	for key in unused_keys:
 		print key + ' - ' + strings_dict[key]['string']
-
 
 
 if __name__ == "__main__":
