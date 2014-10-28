@@ -164,7 +164,13 @@ static NSString *const kDefaultCellReuseIdentifier = @"kDefaultCellReuseIdentifi
     OTRAboutTableCellData *aboutThisVersion = [OTRAboutTableCellData cellDataWithTitle:ABOUT_VERSION_STRING url:nil];
     self.cellData = @[aboutThisVersion,translateData];
     self.view.backgroundColor = [UIColor whiteColor];
-
+    
+    
+    if ([self isModal]) {
+        UIBarButtonItem *doneBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneButtonPressed:)];
+        
+        self.navigationItem.rightBarButtonItem = doneBarButtonItem;
+    }
     
     [self setupVersionLabel];
     [self setupImageView];
@@ -213,14 +219,33 @@ static NSString *const kDefaultCellReuseIdentifier = @"kDefaultCellReuseIdentifi
     }
 }
 
-- (void)didTapImageView:(id)sender
-{
-    [self handleOpeningURL:[NSURL otr_projectURL]];
+ #pragma - mark Utilitie Methods
+
+- (BOOL)isModal {
+    return self.presentingViewController.presentedViewController == self || self.navigationController.presentingViewController.presentedViewController == self.navigationController || [self.tabBarController.presentingViewController isKindOfClass:[UITabBarController class]];
 }
 
-- (void)handleOpeningURL:(NSURL *)url
+#pragma - mark Tap Methods
+
+- (void)doneButtonPressed:(id)sender
 {
-    UIActivityViewController *activityViewController = [UIActivityViewController otr_linkActivityViewControllerWithURLs:@[url]];
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)didTapImageView:(id)sender
+{
+    [self handleOpeningURLArray:@[[NSURL otr_projectURL]] fromView:self.imageView];
+}
+
+- (void)handleOpeningURLArray:(NSArray *)urlArray fromView:(UIView *)view
+{
+    UIActivityViewController *activityViewController = [UIActivityViewController otr_linkActivityViewControllerWithURLs:urlArray];
+    
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
+        activityViewController.popoverPresentationController.sourceView = view;
+        activityViewController.popoverPresentationController.sourceRect = view.bounds;
+    }
+    
     [self presentViewController:activityViewController animated:YES completion:nil];
 }
 
@@ -258,7 +283,7 @@ static NSString *const kDefaultCellReuseIdentifier = @"kDefaultCellReuseIdentifi
     } else {
         OTRAboutTableCellData *cellData = [self.cellData objectAtIndex:indexPath.row];
         NSURL *url = cellData.url;
-        [self handleOpeningURL:url];
+        [self handleOpeningURLArray:@[url] fromView:[tableView cellForRowAtIndexPath:indexPath]];
     }
     
     
@@ -267,17 +292,16 @@ static NSString *const kDefaultCellReuseIdentifier = @"kDefaultCellReuseIdentifi
 
 #pragma - mark OTRSocialButtonsViewDelegate Methods
 
-- (void)socialButtons:(OTRSocialButtonsView *)view openURLs:(NSArray *)urlArray
+- (void)socialButton:(UIButton *)button openURLs:(NSArray *)urlArray
 {
-    UIActivityViewController *activityViewController = [UIActivityViewController otr_linkActivityViewControllerWithURLs:urlArray];
-    [self presentViewController:activityViewController animated:YES completion:nil];
+    [self handleOpeningURLArray:urlArray fromView:button];
 }
 
 #pragma - mark TTTatributedLabelDelegate Methods
 
 - (void)attributedLabel:(TTTAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url
 {
-    [self handleOpeningURL:url];
+    [self handleOpeningURLArray:@[url] fromView:label];
 }
 
 @end

@@ -85,7 +85,7 @@ static CGFloat kOTRSocialTotalWidth = 300.0f;
     NSURL *twitterAppURL = [NSURL otr_twitterAppURL];
     NSURL *twitterWebURL = [NSURL otr_twitterWebURL];
     
-    [self openActivityUrls:@[twitterAppURL,twitterWebURL]];
+    [self openActivityUrls:@[twitterAppURL,twitterWebURL] withButton:sender];
 }
 
 - (void) facebookButtonPressed:(id)sender {
@@ -93,17 +93,17 @@ static CGFloat kOTRSocialTotalWidth = 300.0f;
     NSURL *facebookAppURL = [NSURL otr_facebookAppURL];
     NSURL *facebookWebURL = [NSURL otr_facebookWebURL];
     
-    [self openActivityUrls:@[facebookAppURL,facebookWebURL]];
+    [self openActivityUrls:@[facebookAppURL,facebookWebURL] withButton:sender];
 }
 
 - (void) githubButtonPressed:(id)sender {
-    [self openActivityUrls:@[[NSURL otr_githubURL]]];
+    [self openActivityUrls:@[[NSURL otr_githubURL]] withButton:sender];
 }
 
-- (void)openActivityUrls:(NSArray *)activityURLs
+- (void)openActivityUrls:(NSArray *)activityURLs withButton:(UIButton *)button
 {
-    if ([self.delegate respondsToSelector:@selector(socialButtons:openURLs:)]) {
-        [self.delegate socialButtons:self openURLs:activityURLs];
+    if ([self.delegate respondsToSelector:@selector(socialButton:openURLs:)]) {
+        [self.delegate socialButton:button openURLs:activityURLs];
     }
 }
 

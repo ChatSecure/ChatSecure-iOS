@@ -19,6 +19,7 @@
 #import "OTRAccount.h"
 #import "OTRBuddy.h"
 #import "OTRDatabaseManager.h"
+#import "OTRUtilities.h"
 
 @interface OTRBuddyViewController ()
 
@@ -326,6 +327,12 @@
 -(void)attributedLabel:(TTTAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url
 {
     UIActivityViewController *activityViewController = [UIActivityViewController otr_linkActivityViewControllerWithURLs:@[url]];
+    
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
+        activityViewController.popoverPresentationController.sourceView = label;
+        activityViewController.popoverPresentationController.sourceRect = label.bounds;
+    }
+    
     [self presentViewController:activityViewController animated:YES completion:nil];
 }
 

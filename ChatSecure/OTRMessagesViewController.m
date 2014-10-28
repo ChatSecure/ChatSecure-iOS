@@ -29,6 +29,7 @@
 #import "OTRMessagesCollectionViewCellOutgoing.h"
 #import "OTRImages.h"
 #import "UIActivityViewController+ChatSecure.h"
+#import "OTRUtilities.h"
 
 static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
 
@@ -905,6 +906,12 @@ didTapLoadEarlierMessagesButton:(UIButton *)sender
 - (BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange
 {
     UIActivityViewController *activityViewController = [UIActivityViewController otr_linkActivityViewControllerWithURLs:@[URL]];
+    
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
+        activityViewController.popoverPresentationController.sourceView = textView;
+        activityViewController.popoverPresentationController.sourceRect = textView.bounds;
+    }
+    
     [self presentViewController:activityViewController animated:YES completion:nil];
     return NO;
 }

@@ -9,11 +9,10 @@
 #import <UIKit/UIKit.h>
 
 @class BButton;
-@class OTRSocialButtonsView;
 
 @protocol OTRSocialButtonsViewDelegate <NSObject>
 
-- (void)socialButtons:(OTRSocialButtonsView *)view openURLs:(NSArray *)urlArray;
+- (void)socialButton:(UIButton *)button openURLs:(NSArray *)urlArray;
 
 @end
 

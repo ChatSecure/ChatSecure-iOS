@@ -314,7 +314,16 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 -(void)showAboutScreen
 {
     OTRAboutViewController *aboutController = [[OTRAboutViewController alloc] init];
-    [self.navigationController pushViewController:aboutController animated:YES];
+    
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:aboutController];
+        navController.modalPresentationStyle = UIModalPresentationFormSheet;
+        [self.navigationController presentViewController:navController animated:YES completion:nil];
+    }
+    else {
+       [self.navigationController pushViewController:aboutController animated:YES];
+    }
+    
 }
 
 - (void)logoutAccount:(OTRAccount *)account sender:(id)sender
