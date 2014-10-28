@@ -55,6 +55,7 @@
 #import "OTRDatabaseUnlockViewController.h"
 #import "OTRMessage.h"
 #import "OTRPasswordGenerator.h"
+#import "UIViewController+ChatSecure.h"
 
 #if CHATSECURE_DEMO
 #import "OTRChatDemo.h"
@@ -331,8 +332,6 @@
 */
 
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
-    //DDLogInfo(@"Notification Body: %@", notification.alertBody);
-    //DDLogInfo(@"User Info: %@", notification.userInfo);
     
     NSDictionary *userInfo = notification.userInfo;
     NSString *buddyUniqueId = userInfo[kOTRNotificationBuddyUniqueIdKey];
@@ -342,6 +341,10 @@
         [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
             buddy = [OTRBuddy fetchObjectWithUniqueID:buddyUniqueId transaction:transaction];
         }];
+        
+        if (!([self.messagesViewController otr_isVisible] || [self.conversationViewController otr_isVisible])) {
+            self.window.rootViewController = [self defaultConversationNavigationController];
+        }
         
         [self.conversationViewController enterConversationWithBuddy:buddy];
     }
