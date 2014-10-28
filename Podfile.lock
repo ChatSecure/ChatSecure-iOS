@@ -23,7 +23,7 @@ PODS:
   - AFOAuth2Client (0.1.2):
     - AFNetworking (~> 2.0)
   - Appirater (2.0.4)
-  - ARChromeActivity (1.0.3)
+  - ARChromeActivity (1.0.4)
   - BBlock (1.2.0):
     - BBlock/AppKit
     - BBlock/Foundation
@@ -241,7 +241,7 @@ DEPENDENCIES:
   - AFNetworking (~> 2.4)
   - AFOAuth2Client (from `https://github.com/ChatSecure/AFOAuth2Client.git`, branch `release`)
   - Appirater (~> 2.0)
-  - ARChromeActivity (from `https://github.com/davidchiles/ARChromeActivity`, branch `master`)
+  - ARChromeActivity (~> 1.0)
   - BBlock (~> 1.2)
   - BButton (~> 4.0)
   - CocoaAsyncSocket (from `https://github.com/robbiehanson/CocoaAsyncSocket.git`, commit `c0bbcbcc5e039ca5d732f9844bf95c3d8ee31a5b`)
@@ -272,15 +272,12 @@ DEPENDENCIES:
   - uservoice-iphone-sdk (~> 3.2)
   - VTAcknowledgementsViewController (~> 0.12)
   - XMPPFramework (from `Submodules/XMPPFramework/XMPPFramework.podspec`)
-  - YapDatabase/SQLCipher (~> 2.5)
+  - YapDatabase/SQLCipher (from `Submodules/YapDatabase/YapDatabase.podspec`)
 
 EXTERNAL SOURCES:
   AFOAuth2Client:
     :branch: release
     :git: https://github.com/ChatSecure/AFOAuth2Client.git
-  ARChromeActivity:
-    :branch: master
-    :git: https://github.com/davidchiles/ARChromeActivity
   CocoaAsyncSocket:
     :commit: c0bbcbcc5e039ca5d732f9844bf95c3d8ee31a5b
     :git: https://github.com/robbiehanson/CocoaAsyncSocket.git
@@ -295,12 +292,14 @@ EXTERNAL SOURCES:
     :git: https://github.com/ChatSecure/SIAlertView.git
   XMPPFramework:
     :path: Submodules/XMPPFramework/XMPPFramework.podspec
+  YapDatabase:
+    :path: Submodules/YapDatabase/YapDatabase.podspec
 
 SPEC CHECKSUMS:
   AFNetworking: 0aabc6fae66d6e5d039eeb21c315843c7aae51ab
   AFOAuth2Client: 5244ffdc28081e2ce4d4a0d0f1198ed54e24d787
   Appirater: cbdb7f305562cfde585300bfff86da01ae559deb
-  ARChromeActivity: edf490d00fe7f276a44cd4d6ba94ebf6b4a6c48b
+  ARChromeActivity: d8471d0f78b7fcc1de57929cfc1751b3a7f58bad
   BBlock: 90f0ae0e3ba94fc88be6b9a85b4adbb73b8a7c9a
   BButton: 396a5e59648e3f687b7d8201b88ebdbad6e36b59
   Bolts: 3db0a875235e0c9042b013af13af0f00f79b102c
@@ -334,6 +333,6 @@ SPEC CHECKSUMS:
   uservoice-iphone-sdk: 7cbc1e76dcbbc3d5ae3b4bf009fdcf355e1e83ec
   VTAcknowledgementsViewController: 5cdab8f3d003680b8fbdfcce90fcab92cee962a6
   XMPPFramework: 900d9163c493798b81ca19d058c5c1d126df3d24
-  YapDatabase: 096e860167b04e629b88bea33dfb7a4153279bb0
+  YapDatabase: 097c5cc7964e0856c8ff859fdf1b18961e92a50b
 
 COCOAPODS: 0.34.4

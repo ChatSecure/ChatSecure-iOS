@@ -151,6 +151,10 @@
     "comment": "Warns user that the current chat is secure",
     "string": "This chat is secured"
   },
+  "DATABASE_PASSPHRASE_CHANGE_ERROR_STRING": {
+    "comment": "shown when changing database passphrase fails",
+    "string": "An error occurred while changing the database passphrase."
+  },
   "DEFAULT_BUDDY_GROUP_STRING": {
     "comment": "Name for default buddy group",
     "string": "Buddies"

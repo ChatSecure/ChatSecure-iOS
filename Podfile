@@ -17,7 +17,7 @@ pod "SSKeychain", '~> 1.2'
 pod "UIAlertView-Blocks", '~> 1.0'
 pod 'gtm-oauth2', '~> 0.1.0'
 pod 'JTTargetActionBlock', '~> 1.0'
-pod 'YapDatabase/SQLCipher', '~> 2.5'
+# pod 'YapDatabase/SQLCipher', '~> 2.5' # We need to use fork for sqlite3_rekey support 
 pod 'Mantle', '~> 1.4'
 pod 'Navajo', '~> 0.0'
 pod 'RMStepsController', '~> 1.0'
@@ -31,6 +31,7 @@ pod 'PureLayout', '~> 2.0'
 pod 'BButton', '~> 4.0'
 pod 'uservoice-iphone-sdk', '~> 3.2'
 pod 'TUSafariActivity', '~> 1.0'
+pod 'ARChromeActivity', '~> 1.0'
 
 # Waiting for 7.4.1 to be pushed to trunk
 pod 'CocoaAsyncSocket', :git => 'https://github.com/robbiehanson/CocoaAsyncSocket.git', :commit => 'c0bbcbcc5e039ca5d732f9844bf95c3d8ee31a5b'
@@ -38,11 +39,10 @@ pod 'CocoaAsyncSocket', :git => 'https://github.com/robbiehanson/CocoaAsyncSocke
 # Forks
 pod 'AFOAuth2Client', :git => 'https://github.com/ChatSecure/AFOAuth2Client.git', :branch => 'release'
 pod 'SIAlertView', :git => 'https://github.com/ChatSecure/SIAlertView.git', :branch => 'attributedText'
-pod 'ARChromeActivity', :git => 'https://github.com/davidchiles/ARChromeActivity', :branch => 'master'
 
 # Submodules
 pod 'ProxyKit/Client', :path => 'Submodules/ProxyKit/ProxyKit.podspec'
 pod 'OTRKit', :path => 'Submodules/OTRKit/OTRKit.podspec'
 pod 'CPAProxy', :path => 'Submodules/CPAProxy/CPAProxy.podspec'
 pod 'XMPPFramework', :path => 'Submodules/XMPPFramework/XMPPFramework.podspec'
-
+pod 'YapDatabase/SQLCipher', :path => 'Submodules/YapDatabase/YapDatabase.podspec'

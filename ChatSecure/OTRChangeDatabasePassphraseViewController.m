@@ -11,18 +11,17 @@
 #import "OTRRememberPasswordView.h"
 #import "Strings.h"
 #import "PureLayout.h"
+#import "OTRDatabaseManager.h"
+#import "MBProgressHUD.h"
 
 @interface OTRChangeDatabasePassphraseViewController () <OTRPasswordStrengthViewDelegate>
 
 @property (nonatomic, strong) OTRPasswordStrengthView *passwordView;
-
 @property (nonatomic, strong) UITextField *oldPasswordTextField;
-
 @property (nonatomic, strong) OTRRememberPasswordView *rememberPasswordView;
-
 @property (nonatomic, strong) UIButton *changePasswordButton;
-
 @property (nonatomic) BOOL addedConstraints;
+@property (nonatomic, strong) MBProgressHUD *HUD;
 
 @end
 
@@ -71,6 +70,8 @@
     
     self.changePasswordButton.enabled = NO;
     [self.oldPasswordTextField becomeFirstResponder];
+    
+    [self.view updateConstraintsIfNeeded];
 }
 
 - (void)updateViewConstraints
@@ -97,6 +98,18 @@
     else {
         self.changePasswordButton.enabled = YES;
     }
+}
+
+- (void) changePasswordButtonPressed: (id)sender {
+    NSString *password = self.passwordView.textField.text;
+    NSAssert(password.length != 0, @"Password must have a length!");
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    BOOL success = [[OTRDatabaseManager sharedInstance].database changeEncryptionKey:password];
+    if (!success) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:DATABASE_PASSPHRASE_CHANGE_ERROR_STRING delegate:nil cancelButtonTitle:OK_STRING otherButtonTitles:nil];
+        [alert show];
+    }
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
 }
 
 @end
