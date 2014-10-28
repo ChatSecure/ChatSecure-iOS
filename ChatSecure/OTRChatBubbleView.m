@@ -70,7 +70,7 @@ static CGFloat const checkIconRatio = 1.055f;
         self.messageTextLabel.textColor = [UIColor whiteColor];
     }
     
-    if (self.isDelivierd) {
+    if (self.isDelivered) {
         self.deliveredImageView.image = [UIImage imageNamed:@"checkmark"];
     }
     else {
