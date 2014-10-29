@@ -658,6 +658,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         [message saveWithTransaction:transaction];
+        self.buddy.lastMessageDate = message.date;
+        [self.buddy saveWithTransaction:transaction];
     } completionBlock:^{
         [[OTRKit sharedInstance] encodeMessage:message.text tlvs:nil username:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString tag:message];
     }];
