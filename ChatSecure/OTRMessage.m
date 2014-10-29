@@ -98,6 +98,10 @@ const struct OTRMessageEdges OTRMessageEdges = {
     [[transaction ext:OTRYapDatabaseRelationshipName] enumerateEdgesWithName:OTRMessageEdges.buddy destinationKey:uniqueBuddyId collection:[OTRBuddy collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
         [transaction removeObjectForKey:edge.sourceKey inCollection:edge.sourceCollection];
     }];
+    //Update Last message date for sorting and grouping
+    OTRBuddy *buddy = [OTRBuddy fetchObjectWithUniqueID:uniqueBuddyId transaction:transaction];
+    buddy.lastMessageDate = nil;
+    [buddy saveWithTransaction:transaction];
 }
 
 + (void)deleteAllMessagesForAccountId:(NSString *)uniqueAccountId transaction:(YapDatabaseReadWriteTransaction*)transaction

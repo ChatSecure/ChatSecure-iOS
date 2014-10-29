@@ -58,6 +58,23 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
     return (numberOfMessages > 0);
 }
 
+- (void)updateLastMessageDateWithTransaction:(YapDatabaseReadTransaction *)transaction
+{
+    __block NSDate *date = nil;
+    [[transaction ext:OTRYapDatabaseRelationshipName] enumerateEdgesWithName:OTRMessageEdges.buddy destinationKey:self.uniqueId collection:[OTRBuddy collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
+        OTRMessage *message = [OTRMessage fetchObjectWithUniqueID:edge.sourceKey transaction:transaction];
+        if (message) {
+            if (!date) {
+                date = message.date;
+            }
+            else {
+                date = [date laterDate:message.date];
+            }
+        }
+    }];
+    self.lastMessageDate = date;
+}
+
 - (NSInteger)numberOfUnreadMessagesWithTransaction:(YapDatabaseReadTransaction *)transaction
 {
     __block NSUInteger count = 0;

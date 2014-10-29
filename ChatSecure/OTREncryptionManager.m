@@ -167,6 +167,10 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
         }
         [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
             [originalMessage saveWithTransaction:transaction];
+            //Update lastMessageDate for sorting and grouping
+            OTRBuddy *buddy = [OTRBuddy fetchObjectWithUniqueID:originalMessage.buddyUniqueId transaction:transaction];
+            buddy.lastMessageDate = originalMessage.date;
+            [buddy saveWithTransaction:transaction];
         } completionBlock:^{
             [OTRMessage showLocalNotificationForMessage:originalMessage];
         }];
