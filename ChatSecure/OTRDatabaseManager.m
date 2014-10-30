@@ -439,6 +439,19 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
     }
 }
 
+- (BOOL)changePassphrase:(NSString*)newPassphrase remember:(BOOL)rememeber {
+    // Temporarily grab old password in case change fails
+    NSString *oldPassword = [self databasePassphrase];
+    NSError *error = nil;
+    [self setDatabasePassphrase:newPassphrase remember:rememeber error:&error];
+    
+    BOOL success = [self.database changeEncryptionKey];
+    if (!success) {
+        [self setDatabasePassphrase:oldPassword remember:rememeber error:&error];
+    }
+    return success;
+}
+
 - (BOOL)hasPassphrase
 {
     return [self databasePassphrase].length != 0;

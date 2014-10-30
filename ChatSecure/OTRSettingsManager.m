@@ -97,9 +97,8 @@
                                                                                   description:OTR_FINGERPRINTS_SUBTITLE_STRING];
     fingerprintSetting.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
-    // Disable OTRChangeDatabasePassphraseViewController until we add support within YapDatabase
-    //OTRViewSetting *changeDatabasePassphraseSetting = [[OTRViewSetting alloc] initWithTitle:CHANGE_PASSPHRASE_STRING description:SET_NEW_DATABASE_PASSPHRASE_STRING viewControllerClass:[OTRChangeDatabasePassphraseViewController class]];
-    //changeDatabasePassphraseSetting.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    OTRViewSetting *changeDatabasePassphraseSetting = [[OTRViewSetting alloc] initWithTitle:CHANGE_PASSPHRASE_STRING description:SET_NEW_DATABASE_PASSPHRASE_STRING viewControllerClass:[OTRChangeDatabasePassphraseViewController class]];
+    changeDatabasePassphraseSetting.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
 #if CHATSECURE_PUSH
     OTRViewSetting *pushViewSetting = [[OTRPushViewSetting alloc] initWithTitle:CHATSECURE_PUSH_STRING description:MANAGE_CHATSECURE_PUSH_ACCOUNT_STRING];
@@ -117,7 +116,7 @@
     OTRSettingsGroup *chatSettingsGroup = [[OTRSettingsGroup alloc] initWithTitle:CHAT_STRING settings:chatSettings];
     [self.settingsGroups addObject:chatSettingsGroup];
     
-    securitySettings = @[opportunisticOtrSetting,certSetting,fingerprintSetting];
+    securitySettings = @[opportunisticOtrSetting,certSetting,fingerprintSetting, changeDatabasePassphraseSetting];
     OTRSettingsGroup *securitySettingsGroup = [[OTRSettingsGroup alloc] initWithTitle:SECURITY_STRING settings:securitySettings];
     [self.settingsGroups addObject:securitySettingsGroup];
     

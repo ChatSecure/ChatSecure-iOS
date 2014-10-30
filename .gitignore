@@ -8,6 +8,6 @@ xcuserdata
 DerivedData
 OTRSecrets.m
 *.orig
-
+*.xccheckout
 
 /Pods/
