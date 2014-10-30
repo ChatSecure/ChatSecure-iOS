@@ -28,6 +28,8 @@
 		<string>github.com:ChatSecure/CPAProxy.git</string>
 		<key>B775552D1BBEEADC6A0BBB2FD048B6AA26CB309D</key>
 		<string>github.com:ChatSecure/XMPPFramework.git</string>
+		<key>DAAB2C887EFA8AB12BAB622BBAFD20531F9A3784</key>
+		<string>github.com:chrisballinger/YapDatabase.git</string>
 		<key>E2E339EC05FF99AF5ECAE62EDBC78398DA1111C6</key>
 		<string>github.com:ChatSecure/SIAlertView.git</string>
 	</dict>
@@ -53,6 +55,8 @@
 		<string>../../ChatSecure-iOS/Submodules/CPAProxy</string>
 		<key>B775552D1BBEEADC6A0BBB2FD048B6AA26CB309D</key>
 		<string>..Submodules/XMPPFramework</string>
+		<key>DAAB2C887EFA8AB12BAB622BBAFD20531F9A3784</key>
+		<string>../Submodules/YapDatabase/</string>
 		<key>E2E339EC05FF99AF5ECAE62EDBC78398DA1111C6</key>
 		<string>..Pods/SIAlertView</string>
 	</dict>
@@ -143,6 +147,14 @@
 			<string>B775552D1BBEEADC6A0BBB2FD048B6AA26CB309D</string>
 			<key>IDESourceControlWCCName</key>
 			<string>XMPPFramework</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>DAAB2C887EFA8AB12BAB622BBAFD20531F9A3784</string>
+			<key>IDESourceControlWCCName</key>
+			<string>YapDatabase</string>
 		</dict>
 	</array>
 </dict>

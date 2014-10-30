@@ -10,4 +10,6 @@
 
 @interface OTRChangeDatabasePassphraseViewController : UIViewController
 
+- (instancetype)initRequireOldPassphrase:(BOOL)requireOldPassphrase;
+
 @end
