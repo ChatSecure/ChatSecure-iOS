@@ -56,7 +56,7 @@
 		<key>B775552D1BBEEADC6A0BBB2FD048B6AA26CB309D</key>
 		<string>..Submodules/XMPPFramework</string>
 		<key>DAAB2C887EFA8AB12BAB622BBAFD20531F9A3784</key>
-		<string>../../ChatSecure-iOS/Submodules/YapDatabase</string>
+		<string>../Submodules/YapDatabase/</string>
 		<key>E2E339EC05FF99AF5ECAE62EDBC78398DA1111C6</key>
 		<string>..Pods/SIAlertView</string>
 	</dict>
