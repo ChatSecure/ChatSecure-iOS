@@ -113,17 +113,17 @@ const struct OTRMessageEdges OTRMessageEdges = {
 
 + (void)receivedDeliveryReceiptForMessageId:(NSString *)messageId transaction:(YapDatabaseReadWriteTransaction*)transaction
 {
-    [transaction enumerateKeysAndObjectsInCollection:[OTRMessage collection] usingBlock:^(NSString *key, id object, BOOL *stop) {
-        if ([object isKindOfClass:[OTRMessage class]]) {
-            OTRMessage *message = (OTRMessage *)object;
-            if ([message.messageId isEqualToString:messageId]) {
-                message.delivered = YES;
-                [transaction setObject:message forKey:message.uniqueId inCollection:[OTRMessage collection]];
-                
-                *stop = YES;
-            }
+    __block OTRMessage *deliveredMessage = nil;
+    [self enumerateMessagesWithMessageId:messageId transaction:transaction usingBlock:^(OTRMessage *message, BOOL *stop) {
+        if (!message.isIncoming) {
+            deliveredMessage = message;
+            *stop = YES;
         }
     }];
+    if (deliveredMessage) {
+        deliveredMessage.delivered = YES;
+        [deliveredMessage saveWithTransaction:transaction];
+    }
 }
 
 + (void)showLocalNotificationForMessage:(OTRMessage *)message
