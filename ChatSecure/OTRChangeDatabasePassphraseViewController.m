@@ -13,6 +13,7 @@
 #import "PureLayout.h"
 #import "OTRDatabaseManager.h"
 #import "MBProgressHUD.h"
+#import "OTRDatabaseManager.h"
 
 @interface OTRChangeDatabasePassphraseViewController () <OTRPasswordStrengthViewDelegate>
 
@@ -104,11 +105,16 @@
     NSString *password = self.passwordView.textField.text;
     NSAssert(password.length != 0, @"Password must have a length!");
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    BOOL success = [[OTRDatabaseManager sharedInstance].database changeEncryptionKey:password];
+    
+    BOOL success = [[OTRDatabaseManager sharedInstance] changePassphrase:password remember:self.rememberPasswordView.rememberPassword];
     if (!success) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:DATABASE_PASSPHRASE_CHANGE_ERROR_STRING delegate:nil cancelButtonTitle:OK_STRING otherButtonTitles:nil];
         [alert show];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:OK_STRING message:nil delegate:nil cancelButtonTitle:OK_STRING otherButtonTitles:nil];
+        [alert show];
     }
+    
     [MBProgressHUD hideHUDForView:self.view animated:YES];
 }
 
