@@ -658,6 +658,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         [message saveWithTransaction:transaction];
+        self.buddy.lastMessageDate = message.date;
+        [self.buddy saveWithTransaction:transaction];
     } completionBlock:^{
         [[OTRKit sharedInstance] encodeMessage:message.text tlvs:nil username:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString tag:message];
     }];
@@ -679,7 +681,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }
     
     cell.textView.delegate = self;
-    
+    cell.actionDelegate = self;
     return cell;
 }
 
@@ -809,6 +811,9 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
     __block OTRMessage *message = [self messageAtIndexPath:indexPath];
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         [message removeWithTransaction:transaction];
+        //Update Last message date for sorting and grouping
+        [self.buddy updateLastMessageDateWithTransaction:transaction];
+        [self.buddy saveWithTransaction:transaction];
     }];
 }
 
@@ -878,7 +883,7 @@ didTapLoadEarlierMessagesButton:(UIButton *)sender
     
     [self.collectionView reloadData];
     
-    if (messageRowChanges.count) {
+    if (messageRowChanges.count && [self.collectionView numberOfItemsInSection:0] != 0) {
         NSUInteger lastMessageIndex = [self.collectionView numberOfItemsInSection:0] - 1;
         NSIndexPath *lastMessageIndexPath = [NSIndexPath indexPathForRow:lastMessageIndex inSection:0];
         OTRMessage *mostRecentMessage = [self messageAtIndexPath:lastMessageIndexPath];
@@ -913,6 +918,10 @@ didTapLoadEarlierMessagesButton:(UIButton *)sender
     }
     
     [self presentViewController:activityViewController animated:YES completion:nil];
+    return NO;
+}
+
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
     return NO;
 }
 

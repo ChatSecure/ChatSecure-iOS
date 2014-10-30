@@ -11,7 +11,7 @@
 @class OTRMessagesCollectionViewCell;
 @class OTRMessage;
 
-@protocol OTRMessagesCollectionViewCellDelegate <JSQMessagesCollectionViewCellDelegate>
+@protocol OTRMessagesCollectionViewCellDelegate <NSObject>
 
 @required
 
@@ -24,7 +24,7 @@
 
 @interface OTRMessagesCollectionViewCell : JSQMessagesCollectionViewCell
 
-@property (weak, nonatomic) id<OTRMessagesCollectionViewCellDelegate> delegate;
+@property (nonatomic, weak) id<OTRMessagesCollectionViewCellDelegate> actionDelegate;
 
 @property (nonatomic, weak, readonly) UIView *leftRightView;
 @property (nonatomic, strong, readonly) UIImageView *errorImageView;

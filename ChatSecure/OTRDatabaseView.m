@@ -57,16 +57,10 @@ NSString *OTRPushAccountGroup = @"Account";
         if ([object isKindOfClass:[OTRBuddy class]])
         {
             OTRBuddy *buddy = (OTRBuddy *)object;
-            __block BOOL hasMessages = NO;
-            [[OTRDatabaseManager sharedInstance].mainThreadReadOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-                hasMessages = [buddy hasMessagesWithTransaction:transaction];
-            }];
-            if (hasMessages) {
+            if (buddy.lastMessageDate) {
                 return OTRConversationGroup;
             }
-            
         }
-        
         return nil; // exclude from view
     }];
     
@@ -76,18 +70,7 @@ NSString *OTRPushAccountGroup = @"Account";
                 OTRBuddy *buddy1 = (OTRBuddy *)object1;
                 OTRBuddy *buddy2 = (OTRBuddy *)object2;
                 
-                __block OTRMessage *lastMessage1 = nil;
-                __block OTRMessage *lastMessage2 = nil;
-                
-                [[OTRDatabaseManager sharedInstance].mainThreadReadOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-                    lastMessage1 = [buddy1 lastMessageWithTransaction:transaction];
-                }];
-                
-                [[OTRDatabaseManager sharedInstance].mainThreadReadOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-                    lastMessage2 = [buddy2 lastMessageWithTransaction:transaction];
-                }];
-                
-                return [lastMessage2.date compare:lastMessage1.date];
+                return [buddy2.lastMessageDate compare:buddy1.lastMessageDate];
             }
         }
         return NSOrderedSame;

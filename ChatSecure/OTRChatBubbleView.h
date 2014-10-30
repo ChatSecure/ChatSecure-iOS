@@ -17,7 +17,7 @@
 @property (nonatomic, strong) UIImageView *secureImageView;
 @property (nonatomic, strong, readonly) TTTAttributedLabel *messageTextLabel;
 @property (nonatomic, getter = isIncoming) BOOL incoming;
-@property (nonatomic, getter = isDelivierd) BOOL delivered;
+@property (nonatomic, getter = isDelivered) BOOL delivered;
 @property (nonatomic, getter = isSecure) BOOL secure;
 
 - (void)updateLayout;

@@ -77,8 +77,8 @@
 
 - (void)errorImageTap:(UITapGestureRecognizer *)tap
 {
-    if ([self.delegate respondsToSelector:@selector(messagesCollectionViewCellDidTapError:)]) {
-        [self.delegate messagesCollectionViewCellDidTapError:self];
+    if ([self.actionDelegate respondsToSelector:@selector(messagesCollectionViewCellDidTapError:)]) {
+        [self.actionDelegate messagesCollectionViewCellDidTapError:self];
     }
 }
 
@@ -93,8 +93,8 @@
 
 - (void)delete:(id)sender
 {
-    if ([self.delegate respondsToSelector:@selector(messagesCollectionViewCellDidTapDelete:)]) {
-        [self.delegate messagesCollectionViewCellDidTapDelete:self];
+    if ([self.actionDelegate respondsToSelector:@selector(messagesCollectionViewCellDidTapDelete:)]) {
+        [self.actionDelegate messagesCollectionViewCellDidTapDelete:self];
     }
 }
 
