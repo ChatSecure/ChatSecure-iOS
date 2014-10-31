@@ -1861,7 +1861,7 @@
 					"$(inherited)",
 				);
 				PRODUCT_NAME = ChatSecure;
-				PROVISIONING_PROFILE = "eba8b7bf-5edf-4e18-8d32-790efa92a02d";
+				PROVISIONING_PROFILE = "dbbba898-7c60-4cf8-83ed-4b0cc1a7a08b";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
@@ -1906,7 +1906,7 @@
 					"$(inherited)",
 				);
 				PRODUCT_NAME = ChatSecure;
-				PROVISIONING_PROFILE = "eba8b7bf-5edf-4e18-8d32-790efa92a02d";
+				PROVISIONING_PROFILE = "1707f4f6-b9ad-48c2-8f53-4c11f8774921";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};

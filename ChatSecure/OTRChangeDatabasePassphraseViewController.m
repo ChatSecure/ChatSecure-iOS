@@ -135,6 +135,9 @@
 - (void) changePasswordButtonPressed: (id)sender {
     NSString *password = self.passwordView.textField.text;
     NSAssert(password.length != 0, @"Password must have a length!");
+    if (password.length == 0) {
+        return;
+    }
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
     BOOL success = [[OTRDatabaseManager sharedInstance] changePassphrase:password remember:self.rememberPasswordView.rememberPassword];
@@ -142,7 +145,7 @@
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:DATABASE_PASSPHRASE_CHANGE_ERROR_STRING delegate:nil cancelButtonTitle:OK_STRING otherButtonTitles:nil];
         [alert show];
     } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:OK_STRING message:nil delegate:nil cancelButtonTitle:OK_STRING otherButtonTitles:nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:DATABASE_PASSPHRASE_CHANGE_SUCCESS_STRING delegate:nil cancelButtonTitle:OK_STRING otherButtonTitles:nil];
         [alert show];
     }
     

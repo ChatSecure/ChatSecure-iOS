@@ -155,6 +155,10 @@
     "comment": "shown when changing database passphrase fails",
     "string": "An error occurred while changing the database passphrase."
   },
+  "DATABASE_PASSPHRASE_CHANGE_SUCCESS_STRING": {
+    "comment": "shown when changing database passphrase succeeds",
+    "string": "The database passphrase change was successful."
+  },
   "DEFAULT_BUDDY_GROUP_STRING": {
     "comment": "Name for default buddy group",
     "string": "Buddies"
