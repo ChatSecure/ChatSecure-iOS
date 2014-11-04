@@ -31,12 +31,22 @@ def main():
 	script_directory = os.path.dirname(os.path.abspath(__file__))
 	strings_json_path = os.path.join(script_directory, 'strings.json')
 
-	strings_json_file = open(strings_json_path,'r')
+	strings_json_file = open(strings_json_path,'r+')
 	strings_dict = json.load(strings_json_file)
 
+	print "Started with " +str(len(strings_dict.keys()))
 	unused_keys = findUnused(strings_dict,script_directory)
+	print "Found " + str(len(unused_keys)) + " unused"
 	for key in unused_keys:
-		print key + ' - ' + strings_dict[key]['string']
+		strings_dict.pop(key)
+
+	print "Finished with " + str(len(strings_dict.keys()))
+
+	# Overwrites strings.json with updated dictionary
+	# strings_json_file.seek(0)
+	# strings_json_file.truncate()
+	# json.dump(strings_dict, strings_json_file, sort_keys = True, indent = 4)
+
 
 
 if __name__ == "__main__":
