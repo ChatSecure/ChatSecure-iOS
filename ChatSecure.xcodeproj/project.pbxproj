@@ -87,6 +87,7 @@
 		6383196818EB938300862B25 /* OTRManagedAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 6397535D18CA8221005D6063 /* OTRManagedAccount.m */; };
 		638F2C8F1947C32A00EB5239 /* OTRMessagesCollectionViewCellOutgoing.xib in Resources */ = {isa = PBXBuildFile; fileRef = 638F2C8E1947C32A00EB5239 /* OTRMessagesCollectionViewCellOutgoing.xib */; };
 		638F2C911947C98200EB5239 /* OTRMessagesCollectionViewCellIncoming.xib in Resources */ = {isa = PBXBuildFile; fileRef = 638F2C901947C98200EB5239 /* OTRMessagesCollectionViewCellIncoming.xib */; };
+		639510951A09A78D0082A924 /* OTRChatDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D55DDA196CB5AE004A5435 /* OTRChatDemo.m */; };
 		639752EB18CA7B23005D6063 /* OTRCertificatesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 639752EA18CA7B23005D6063 /* OTRCertificatesViewController.m */; };
 		6397530A18CA7CB0005D6063 /* OTRProtocolManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6397530918CA7CB0005D6063 /* OTRProtocolManager.m */; };
 		6397531F18CA7E1C005D6063 /* OTRSettingsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6397531E18CA7E1C005D6063 /* OTRSettingsManager.m */; };
@@ -1658,6 +1659,7 @@
 				6397538D18CA8222005D6063 /* OTRvCardTemp.m in Sources */,
 				63D72B3719145CC2005F3428 /* OTROnboardingPushAccountLoginViewController.m in Sources */,
 				6397538A18CA8222005D6063 /* OTRManagedXMPPTorAccount.m in Sources */,
+				639510951A09A78D0082A924 /* OTRChatDemo.m in Sources */,
 				639C60AB18CA984500CC4DF4 /* OTRBuddyViewController.m in Sources */,
 				634357F519143F8A0062FD26 /* OTROnboardingStepsController.m in Sources */,
 				63CAF8FA18FF268000C3337E /* OTRAppDelegate.m in Sources */,
@@ -1837,6 +1839,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ChatSecure/ChatSecure-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
+					CHATSECURE_DEMO,
 					_GCRYPT_IN_LIBGCRYPT,
 					"$(inherited)",
 					USE_BUFFEREVENTS,

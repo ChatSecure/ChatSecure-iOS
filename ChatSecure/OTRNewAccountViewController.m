@@ -50,6 +50,7 @@ NSString *const kOTRAccountTypeKey   = @"kOTRAccountTypeKey";
 	
     self.title = NEW_ACCOUNT_STRING;
     UITableView * tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height) style:UITableViewStyleGrouped];
+    tableView.accessibilityIdentifier = @"newAccountTableView";
     tableView.dataSource = self;
     tableView.delegate = self;
     tableView.autoresizingMask = UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleHeight;

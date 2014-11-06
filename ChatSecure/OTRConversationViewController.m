@@ -70,6 +70,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     ////////// Create TableView /////////////////
     
     self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    self.tableView.accessibilityIdentifier = @"conversationTableView";
     self.tableView.translatesAutoresizingMaskIntoConstraints = NO;
     self.tableView.delegate = self;
     self.tableView.dataSource = self;

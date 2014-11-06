@@ -99,6 +99,7 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     
     
     self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
+    self.tableView.accessibilityIdentifier = @"settingsTableView";
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
     self.tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;

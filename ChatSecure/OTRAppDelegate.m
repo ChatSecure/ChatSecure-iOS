@@ -113,7 +113,7 @@
         
         
 #if CHATSECURE_DEMO
-        [self performSelector:@selector(loadDemoData) withObject:nil afterDelay:10];
+        [self performSelector:@selector(loadDemoData) withObject:nil afterDelay:0.0];
 #endif
     }
 

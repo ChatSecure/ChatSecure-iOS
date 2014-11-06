@@ -17,28 +17,29 @@
 
 + (void)loadDemoChatInDatabase
 {
-    NSArray *buddyNames = @[@"Tom",@"Susan",@"Julie"];
+    NSArray *buddyNames = @[@"Martin Hellman",@"Nikita Borisov",@"Whitfield Diffie"];
     NSString *accountName = @"username@domain.com";
-    NSArray *messages = @[@"Where are you?",@"Hey!",@"Going to the zoo later?"];
+    NSArray *helloArray = @[@"Hello",
+                            @"Bonjour",
+                            @"Hallo",
+                            @"你好",
+                            @"Здравствуйте",
+                            @"もしもし",
+                            @"Merhaba",@"مرحبا",
+                            @"Olá"];
     
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         
+        [transaction removeAllObjectsInAllCollections];
         
-        OTRXMPPAccount *account = [OTRXMPPAccount fetchAccountWithUsername:accountName protocolType:OTRProtocolTypeXMPP transaction:transaction];
-        if(!account)
-        {
-            account = [[OTRXMPPAccount alloc] initWithAccountType:OTRAccountTypeJabber];
-            account.username = accountName;
-            [account saveWithTransaction:transaction];
-        }
-        
-        
-        
+        OTRXMPPAccount *account = [[OTRXMPPAccount alloc] initWithAccountType:OTRAccountTypeJabber];
+        account.username = accountName;
+        [account saveWithTransaction:transaction];
         
         NSArray *avatarImageNames = @[@"avatar_fox",@"avatar_otter",@"avatar_badger"];
         
         [buddyNames enumerateObjectsUsingBlock:^(NSString *name, NSUInteger idx, BOOL *stop) {
-            OTRXMPPBuddy *buddy = [OTRXMPPBuddy fetchBuddyForUsername:name accountName:accountName protocolType:OTRProtocolTypeXMPP transaction:transaction];
+            OTRXMPPBuddy * buddy = [OTRXMPPBuddy fetchBuddyForUsername:name accountName:accountName transaction:transaction];
             if (!buddy) {
                 buddy = [[OTRXMPPBuddy alloc] init];
                 NSString *imageName = avatarImageNames[idx];
@@ -51,36 +52,48 @@
             
             buddy.status = (NSInteger)OTRBuddyStatusAvailable+idx;
             
-
-            
-            OTRMessage *message = [[OTRMessage alloc] init];
-            message.text = messages[idx];
-            message.buddyUniqueId = buddy.uniqueId;
-            NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
-            [dateComponents setHour:(-1*idx)];
-            message.date = [[NSCalendar currentCalendar] dateByAddingComponents:dateComponents toDate:[NSDate date] options:0];
-            
-            message.incoming = YES;
-            buddy.lastMessageDate = message.date;
+            NSArray *textArray = [self shuffleHelloArray:helloArray];
             
             [buddy saveWithTransaction:transaction];
-            [message saveWithTransaction:transaction];
             
+            [textArray enumerateObjectsUsingBlock:^(NSString *text, NSUInteger index, BOOL *stop) {
+                OTRMessage *message = [[OTRMessage alloc] init];
+                message.text = text;
+                message.buddyUniqueId = buddy.uniqueId;
+                NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
+                [dateComponents setHour:(-1*index)];
+                message.date = [[NSCalendar currentCalendar] dateByAddingComponents:dateComponents toDate:[NSDate date] options:0];
+                
+                if (index % 2) {
+                   message.incoming = YES;
+                }
+                else {
+                    message.incoming = NO;
+                }
+                
+                message.read = YES;
+                message.transportedSecurely = YES;
+                buddy.lastMessageDate = message.date;
+                
+                [message saveWithTransaction:transaction];
+            }];
             
+            [buddy updateLastMessageDateWithTransaction:transaction];
+            [buddy saveWithTransaction:transaction];
         }];
     }];
-    
-    
-    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        OTRXMPPBuddy *buddy = [OTRXMPPBuddy fetchBuddyForUsername:@"Susan" accountName:@"username@domain.com" protocolType:OTRProtocolTypeXMPP transaction:transaction];
-        BOOL hasMessage = [buddy hasMessagesWithTransaction:transaction];
-    }];
-    
-    [[OTRDatabaseManager sharedInstance].mainThreadReadOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        OTRXMPPBuddy *buddy = [OTRXMPPBuddy fetchBuddyForUsername:@"Susan" accountName:@"username@domain.com" protocolType:OTRProtocolTypeXMPP transaction:transaction];
-        BOOL hasMessage = [buddy hasMessagesWithTransaction:transaction];
-    }];
-    
+}
+
++ (NSArray *)shuffleHelloArray:(NSArray *)array
+{
+    NSMutableArray *mutableArray = [array mutableCopy];
+    NSUInteger count = [mutableArray count];
+    for (NSUInteger i = 0; i < count; ++i) {
+        NSInteger remainingCount = count - i;
+        NSInteger exchangeIndex = i + arc4random_uniform((u_int32_t )remainingCount);
+        [mutableArray exchangeObjectAtIndex:i withObjectAtIndex:exchangeIndex];
+    }
+    return mutableArray;
 }
 
 @end

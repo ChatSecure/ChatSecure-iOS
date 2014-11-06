@@ -4,9 +4,6 @@
 [submodule "Submodules/XMPPFramework"]
 	path = Submodules/XMPPFramework
 	url = git@github.com:ChatSecure/XMPPFramework.git
-[submodule "Submodules/iOS-Screenshot-Automater"]
-	path = Submodules/iOS-Screenshot-Automater
-	url = git@github.com:ChatSecure/iOS-Screenshot-Automator.git
 [submodule "Submodules/ChatSecure-Metadata"]
 	path = Submodules/ChatSecure-Metadata
 	url = git@github.com:ChatSecure/ChatSecure-Metadata.git
@@ -22,3 +19,6 @@
 [submodule "Submodules/YapDatabase"]
 	path = Submodules/YapDatabase
 	url = git@github.com:chrisballinger/YapDatabase.git
+[submodule "Submodules/rScreenshooter"]
+	path = Submodules/rScreenshooter
+	url = git@github.com:ChatSecure/rScreenshooter.git
