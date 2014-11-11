@@ -659,6 +659,10 @@
         "comment": "Message for warning about using tor network", 
         "string": "Tor is an experimental feature, please use with caution."
     }, 
+    "TOR_DOMAIN_WARNING_MESSAGE_STRING": {
+        "comment": "Message shown when using more than one Tor account with the same domain", 
+        "string": "Only one Tor account per domain is supported at this time."
+    },
     "TWITTER_STRING": {
         "comment": "Name of the popular social tweeting site", 
         "string": "Twitter"
