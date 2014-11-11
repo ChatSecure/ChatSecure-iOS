@@ -67,6 +67,7 @@
 #define REGISTER_ERROR_STRING [OTRLanguageManager translatedString: @"Error Registering Username"]
 #define OTRL_MSGEVENT_RCVDMSG_UNREADABLE_STRING [OTRLanguageManager translatedString: @"Cannot read the received message."]
 #define errSSLPeerProtocolVersionString [OTRLanguageManager translatedString: @"Bad protocol version"]
+#define TOR_DOMAIN_WARNING_MESSAGE_STRING [OTRLanguageManager translatedString: @"Only one Tor account per domain is supported at this time."]
 #define CHANGE_PASSPHRASE_STRING [OTRLanguageManager translatedString: @"Change Passphrase"]
 #define RECENT_STRING [OTRLanguageManager translatedString: @"Recent"]
 #define errSSLBufferOverflowString [OTRLanguageManager translatedString: @"Insufficient buffer provided"]

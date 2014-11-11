@@ -1398,7 +1398,7 @@
 				ORGANIZATIONNAME = "Chris Ballinger";
 				TargetAttributes = {
 					D9F9377713F44BD3009A3D84 = {
-						DevelopmentTeam = SF3NXKQQ64;
+						DevelopmentTeam = 4T8JLQR6GR;
 					};
 				};
 			};
@@ -1832,8 +1832,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: David Chiles (8TSMC84YJV)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Chris Ballinger (9P62QGET7G)";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -1865,7 +1865,7 @@
 					"$(inherited)",
 				);
 				PRODUCT_NAME = ChatSecure;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "dbbba898-7c60-4cf8-83ed-4b0cc1a7a08b";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
@@ -1878,8 +1878,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: David Chiles (8TSMC84YJV)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Chris Ballinger (4T8JLQR6GR)";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -1911,7 +1911,7 @@
 					"$(inherited)",
 				);
 				PRODUCT_NAME = ChatSecure;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "9c10d002-eb32-4a6c-954e-0dd26e210466";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};

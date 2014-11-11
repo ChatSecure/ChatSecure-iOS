@@ -19,6 +19,8 @@
 #import "JVFloatLabeledTextField.h"
 #import "OTRDatabaseManager.h"
 #import "OTRDomainCellInfo.h"
+#import "OTRDatabaseView.h"
+#import "OTRXMPPTorAccount.h"
 
 static NSString * const domainCellIdentifier = @"domainCellIdentifer";
 
@@ -212,10 +214,41 @@ static NSString * const domainCellIdentifier = @"domainCellIdentifer";
     return fields;
 }
 
+- (BOOL) checkForDuplicateTorAccounts {
+    OTRXMPPTorAccount *thisAccount = (OTRXMPPTorAccount*)self.account;
+    NSString *selectedDomain = nil;
+    if (thisAccount.domain.length) {
+        selectedDomain = thisAccount.domain;
+    } else {
+        selectedDomain = [self serverHostnameForIndex:self.selectedHostnameIndex];
+    }
+    __block BOOL alreadyExistingTorDomain = NO;
+    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        YapDatabaseViewTransaction *viewTransaction = [transaction ext:OTRAllAccountDatabaseViewExtensionName];
+        [viewTransaction enumerateKeysAndObjectsInGroup:OTRAllAccountGroup usingBlock:^(NSString *collection, NSString *key, OTRXMPPAccount *account, NSUInteger index, BOOL *stop) {
+            if ([account isKindOfClass:[OTRXMPPTorAccount class]] && [account.domain isEqualToString:selectedDomain] && thisAccount.uniqueId != account.uniqueId) {
+                alreadyExistingTorDomain = YES;
+            }
+        }];
+    }];
+    return alreadyExistingTorDomain;
+}
+
 -(void) loginButtonPressed:(id)sender
 {
     if (![self checkFields]) {
         return;
+    }
+    
+    // Kludge to prevent multiple Tor connections to the same domain until
+    // we support Tor's SOCKS user/pass isolation
+    if (self.isTorAccount) {
+        BOOL dupes = [self checkForDuplicateTorAccounts];
+        if (dupes) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:TOR_DOMAIN_WARNING_MESSAGE_STRING delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
+            [alert show];
+            return;
+        }
     }
     
     self.loginButtonPressed = YES;
