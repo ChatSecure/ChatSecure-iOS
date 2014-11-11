@@ -79,9 +79,7 @@ const CGFloat OTRBuddyImageCellPadding = 12.0;
 - (void)updateConstraints
 {
     if (!self.addedConstraints) {
-        [self.avatarImageView autoPinEdgeToSuperviewEdge:ALEdgeLeft withInset:OTRBuddyImageCellPadding];
-        [self.avatarImageView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:OTRBuddyImageCellPadding];
-        [self.avatarImageView autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:OTRBuddyImageCellPadding];
+        [self.avatarImageView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(OTRBuddyImageCellPadding, OTRBuddyImageCellPadding, OTRBuddyImageCellPadding, OTRBuddyImageCellPadding) excludingEdge:ALEdgeRight];
         [self.avatarImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.avatarImageView];
         
         self.addedConstraints = YES;

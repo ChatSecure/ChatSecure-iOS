@@ -21,87 +21,51 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "OTRInLineTextEditTableViewCell.h"
-#import "OTRConstants.h"
 #import "OTRUtilities.h"
+#import "PureLayout.h"
 
-static CGFloat const textLeftFieldBuffer = 100;
+@interface OTRInLineTextEditTableViewCell ()
+
+@property (nonatomic) BOOL addedConstraints;
+@property (nonatomic, strong) NSArray * constraints;
+
+@end
 
 @implementation OTRInLineTextEditTableViewCell
 
-@synthesize textField = _textField;
-
-- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-{
-    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-    if (self) {
-        isStyle2 = style == UITableViewCellStyleValue2;
-    }
-    return self;
-}
-
--(id)initWithTextField:(UITextField *)cellTextField textLabeltext:(NSString *)name reuseIdentifier:(NSString *)reuseIdentifier
-{
-    self = [super initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:reuseIdentifier];
-    self.textField = cellTextField;
-    self.textField.autocorrectionType = UITextAutocorrectionTypeNo;
-    self.textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
-    self.textField.backgroundColor = [UIColor whiteColor];
-    self.textField.tag = 999;
-
-    
-    self.textLabel.text = name;
-    
-    
-}
-
 -(void)setTextField:(UITextField *)newTextField
 {
-    [[self.contentView viewWithTag:999] removeFromSuperview];
+    if (self.textField) {
+        [self.textField removeFromSuperview];
+    }
     _textField = newTextField;
     _textField.translatesAutoresizingMaskIntoConstraints = NO;
 
-    self.textField.tag = 999;
+    [self.constraints autoRemoveConstraints];
+    self.constraints = nil;
+    self.addedConstraints = NO;
     [self.contentView addSubview:self.textField];
     [self setNeedsUpdateConstraints];
     [self updateConstraintsIfNeeded];
 }
 
--(void)applyConstraints {
-    NSLayoutConstraint * constraint;
-    constraint = [NSLayoutConstraint constraintWithItem:self.textField
-                                              attribute:NSLayoutAttributeLeading
-                                              relatedBy:NSLayoutRelationEqual
-                                                 toItem:self.textLabel
-                                              attribute:NSLayoutAttributeTrailing
-                                             multiplier:1.0
-                                               constant:6.0];
-        
-    
-    [self.contentView addConstraint:constraint];
-    
-    constraint = [NSLayoutConstraint constraintWithItem:self.textField
-                                              attribute:NSLayoutAttributeTrailing
-                                              relatedBy:NSLayoutRelationEqual
-                                                 toItem:self.contentView
-                                              attribute:NSLayoutAttributeTrailing
-                                             multiplier:1.0
-                                               constant:-5.0];
-    [self.contentView addConstraint:constraint];
-    
-    [self.contentView removeConstraint:centerConstraint];
-    centerConstraint = [NSLayoutConstraint constraintWithItem:self.textField
-                                              attribute:NSLayoutAttributeCenterY
-                                              relatedBy:NSLayoutRelationEqual
-                                                 toItem:self.contentView
-                                              attribute:NSLayoutAttributeCenterY
-                                             multiplier:1.0
-                                               constant:0.0];
-    [self.contentView addConstraint:centerConstraint];
-}
-
 -(void)updateConstraints{
     [super updateConstraints];
-    [self applyConstraints];
+    if (!self.addedConstraints && self.textField) {
+        
+        NSLayoutConstraint *leadingEdgeConstraint = [self.textField autoPinEdge:ALEdgeLeading
+                                                                          toEdge:ALEdgeRight
+                                                                          ofView:self.textLabel
+                                                                      withOffset:6];
+        
+        NSLayoutConstraint *trailingEdgeConstraint = [self.textField autoPinEdgeToSuperviewEdge:ALEdgeRight withInset:5];
+        
+        NSLayoutConstraint *centerConstraint = [self.textField autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+        
+        self.constraints = @[leadingEdgeConstraint,trailingEdgeConstraint,centerConstraint];
+        
+        self.addedConstraints = YES;
+    }
 }
 
 

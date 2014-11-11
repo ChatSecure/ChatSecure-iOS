@@ -23,14 +23,7 @@
 #import <UIKit/UIKit.h>
 
 @interface OTRInLineTextEditTableViewCell : UITableViewCell
-{
-    BOOL isStyle2;
-    NSLayoutConstraint * centerConstraint;
-}
 
 @property (nonatomic, strong) UITextField *textField;
-
--(id)initWithTextField:(UITextField *)cellTextField textLabeltext:(NSString *)name reuseIdentifier:(NSString *)reuseIdentifier;
-
 
 @end
