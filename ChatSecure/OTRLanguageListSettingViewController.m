@@ -7,6 +7,7 @@
 //
 
 #import "OTRLanguageListSettingViewController.h"
+#import "OTRLanguageSetting.h"
 #import "Strings.h"
 
 @interface OTRLanguageListSettingViewController ()
@@ -15,16 +16,12 @@
 
 @implementation OTRLanguageListSettingViewController
 
-
-
--(void)save:(id)sender
-{
-    if(![oldValue isEqualToString:newValue])
-    {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle: LANGUAGE_ALERT_TITLE_STRING message:LANGUAGE_ALERT_MESSAGE_STRING delegate:nil cancelButtonTitle:OK_STRING otherButtonTitles:nil];
-        [alert show];
+- (void)viewDidLoad {
+    //Need to regenerate list so that picks up on possible change in current locale since last generated
+    if ([self.otrSetting isKindOfClass:[OTRLanguageSetting class]]) {
+        [((OTRLanguageSetting *)self.otrSetting) generatePossibleValues];
     }
-    [super save:sender];
+    [super viewDidLoad];
 }
 
 @end

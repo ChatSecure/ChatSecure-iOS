@@ -8,15 +8,21 @@
 
 #import <Foundation/Foundation.h>
 
+extern NSString *const kOTRDefaultLanguageLocale;
+
 @interface OTRLanguageManager : NSObject
 
 @property (nonatomic,strong) NSDictionary * languageLookupDictionary;
 
+/**
+ @return an Array of supported language codes from the bundle
+ */
++ (NSArray *)supportedLanguages;
 
--(NSArray *)supportedLanguages;
--(void)setLocale:(NSString *)locale;
--(NSString *)currentValue;
-+(NSString *)currentLocale;
-+(NSString *)translatedString:(NSString *)englishString;
++ (void)setLocale:(NSString *)locale;
+
++ (NSString *)currentLocale;
+
++ (NSString *)translatedString:(NSString *)englishString;
 
 @end

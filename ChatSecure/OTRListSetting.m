@@ -8,18 +8,9 @@
 
 #import "OTRListSetting.h"
 #import "OTRLanguageListSettingViewController.h"
+#import "OTRListSettingValue.h"
 
 @implementation OTRListSetting
-
-@synthesize possibleValues;
-@synthesize defaultValue;
-@synthesize value;
-
-- (void)dealloc
-{
-    possibleValues = nil;
-}
-
 
 -(id)initWithTitle:(NSString *)newTitle description:(NSString *)newDescription settingsKey:(NSString *)newSettingsKey
 {
@@ -27,14 +18,30 @@
     {
         __weak typeof (self) weakSelf = self;
         self.actionBlock = ^{
-            [weakSelf editValue];
+            __strong typeof(weakSelf)strongSelf = weakSelf;
+            [strongSelf editValue];
         };
     }
     return self;
 }
 
+- (NSUInteger)indexOfValue:(id)value
+{
+    __block NSUInteger index = 0;
+    [self.possibleValues enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        if ([obj isKindOfClass:[OTRListSettingValue class]]) {
+            OTRListSettingValue *listSettingValue = (OTRListSettingValue *)obj;
+            if ([listSettingValue.value isEqual:value]) {
+                index = idx;
+                stop = YES;
+            }
+        }
+    }];
+    return index;
+}
+
 - (void) editValue {
-    if(self.delegate && [self.delegate conformsToProtocol:@protocol(OTRSettingDelegate)]) {
+    if(self.delegate && [self.delegate respondsToSelector:@selector(otrSetting:showDetailViewControllerClass:)]) {
         [self.delegate otrSetting:self showDetailViewControllerClass:[OTRLanguageListSettingViewController class]];
     }
 }
@@ -42,7 +49,7 @@
 -(void)setValue:(NSString *)newValue
 {
     [super setValue:newValue];
-    if(self.delegate && [self.delegate conformsToProtocol:@protocol(OTRSettingDelegate)]) {
+    if(self.delegate && [self.delegate respondsToSelector:@selector(referenceView)]) {
         [self.delegate refreshView];
     }
     

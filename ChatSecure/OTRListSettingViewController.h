@@ -10,10 +10,6 @@
 #import "OTRListSetting.h"
 
 @interface OTRListSettingViewController : OTRSettingDetailViewController <UITableViewDataSource,UITableViewDelegate>
-{
-    NSString * newValue;
-    NSString * oldValue;
-}
 
 @property (nonatomic,strong) OTRListSetting * otrSetting;
 @property (nonatomic,strong) NSIndexPath * selectedPath;

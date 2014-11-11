@@ -7,61 +7,47 @@
 //
 
 #import "OTRListSettingViewController.h"
+#import "OTRListSettingValue.h"
+#import "PureLayout.h"
 
 @interface OTRListSettingViewController ()
+
+@property (nonatomic, strong) id currentSelectedValue;
+@property (nonatomic) BOOL addedConstratints;
 
 @end
 
 @implementation OTRListSettingViewController
 
-@synthesize valueTable;
-@synthesize selectedPath;
-@synthesize otrSetting;
-
-- (void)dealloc
-{
-    valueTable = nil;
-    selectedPath =nil;
-    otrSetting = nil;
-}
-
-- (id)init
-{
-    if (self = [super init])
-    {
-        self.valueTable = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
-        self.valueTable.delegate = self;
-        self.valueTable.dataSource = self;
-    }
-    return self;
-}
-
 -(void) viewDidLoad
 {
     [super viewDidLoad];
-    self.valueTable.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    self.valueTable.frame = self.view.frame;
+    self.addedConstratints = NO;
+    self.valueTable = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
+    self.valueTable.delegate = self;
+    self.valueTable.dataSource = self;
+    self.valueTable.translatesAutoresizingMaskIntoConstraints = NO;
     
-    newValue = [otrSetting value];
-    oldValue = [otrSetting value];
+    self.currentSelectedValue = [self.otrSetting value];
     
-    self.selectedPath = [NSIndexPath indexPathForRow:[otrSetting.possibleValues indexOfObject:newValue] inSection:0];
+    self.selectedPath = [NSIndexPath indexPathForRow:[self.otrSetting indexOfValue:self.currentSelectedValue] inSection:0];
     
     [self.view addSubview:self.valueTable];
-    
-
+    [self.view setNeedsUpdateConstraints];
 }
 
--(void) viewWillAppear:(BOOL)animated
+- (void)updateViewConstraints
 {
-    [super viewWillAppear:animated];
-    
-    valueTable.frame = self.view.bounds;
+    [super updateViewConstraints];
+    if (!self.addedConstratints) {
+        [self.valueTable autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsZero];
+        self.addedConstratints = YES;
+    }
 }
 
 -(void)save:(id)sender
 {
-    [otrSetting setValue:newValue];
+    [self.otrSetting setValue:self.currentSelectedValue];
     [super save:sender];
 }
 
@@ -69,17 +55,19 @@
 
 - (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [otrSetting.possibleValues count];
+    return [self.otrSetting.possibleValues count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
     if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"Cell"];
     }
-    cell.textLabel.text = [self.otrSetting.possibleValues objectAtIndex:indexPath.row];
-    if ([indexPath isEqual:selectedPath]) {
+    OTRListSettingValue *listSettingValue = [self.otrSetting.possibleValues objectAtIndex:indexPath.row];
+    cell.textLabel.text = listSettingValue.title;
+    cell.detailTextLabel.text = listSettingValue.detail;
+    if ([indexPath isEqual:self.selectedPath]) {
         cell.accessoryType = UITableViewCellAccessoryCheckmark;
     } else {
         cell.accessoryType = UITableViewCellAccessoryNone;
@@ -92,16 +80,11 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     self.selectedPath = indexPath;
-    newValue = [self.otrSetting.possibleValues objectAtIndex:indexPath.row];
+    OTRListSettingValue *listSettingValue = [self.otrSetting.possibleValues objectAtIndex:indexPath.row];
+    self.currentSelectedValue = listSettingValue.value;
     [self.valueTable reloadData];
-    [self.valueTable selectRowAtIndexPath:selectedPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+    [self.valueTable selectRowAtIndexPath:self.selectedPath animated:NO scrollPosition:UITableViewScrollPositionNone];
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 @end

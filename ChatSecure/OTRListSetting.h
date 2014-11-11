@@ -10,10 +10,10 @@
 
 @interface OTRListSetting : OTRValueSetting
 
+@property (nonatomic, strong) NSArray * possibleValues;
+@property (nonatomic, strong) NSString *defaultValue;
 
-@property (nonatomic,strong) NSArray * possibleValues;
-@property (nonatomic, retain) NSString *defaultValue;
-
+- (NSUInteger)indexOfValue:(id)value;
 
 -(void)editValue;
 

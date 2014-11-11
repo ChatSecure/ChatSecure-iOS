@@ -11,7 +11,6 @@
 
 @interface OTRLanguageSetting : OTRListSetting
 
-
-@property (nonatomic,strong) OTRLanguageManager * languageManager;
+- (void)generatePossibleValues;
 
 @end
