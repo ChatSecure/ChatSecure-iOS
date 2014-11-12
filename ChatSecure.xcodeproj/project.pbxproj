@@ -395,6 +395,7 @@
 		637BC42E18985BAC006EC18C /* OTRColorFadingDotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRColorFadingDotView.h; sourceTree = "<group>"; };
 		637BC42F18985BAC006EC18C /* OTRColorFadingDotView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRColorFadingDotView.m; sourceTree = "<group>"; };
 		637FF13417DEB8910012AA1B /* ChatSecure 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "ChatSecure 2.xcdatamodel"; sourceTree = "<group>"; };
+		63800B461A12DC13004D747E /* sk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sk; path = ChatSecure/sk.lproj/Localizable.strings; sourceTree = SOURCE_ROOT; };
 		638286DE1846911C00F127C2 /* OTRAccountTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAccountTableViewCell.h; sourceTree = "<group>"; };
 		638286DF1846911C00F127C2 /* OTRAccountTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAccountTableViewCell.m; sourceTree = "<group>"; };
 		638F2C8E1947C32A00EB5239 /* OTRMessagesCollectionViewCellOutgoing.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = OTRMessagesCollectionViewCellOutgoing.xib; path = ChatSecure/OTRMessagesCollectionViewCellOutgoing.xib; sourceTree = SOURCE_ROOT; };
@@ -1398,7 +1399,7 @@
 				ORGANIZATIONNAME = "Chris Ballinger";
 				TargetAttributes = {
 					D9F9377713F44BD3009A3D84 = {
-						DevelopmentTeam = 4T8JLQR6GR;
+						DevelopmentTeam = SF3NXKQQ64;
 					};
 				};
 			};
@@ -1456,6 +1457,7 @@
 				uk,
 				uz,
 				"da-DK",
+				sk,
 			);
 			mainGroup = D9F9376D13F44BD3009A3D84;
 			productRefGroup = D9F9377913F44BD3009A3D84 /* Products */;
@@ -1772,6 +1774,7 @@
 				63B4114019C90593008977A5 /* uz */,
 				63B4114119C905A0008977A5 /* da-DK */,
 				63B47FAF1A098197005BB775 /* ja */,
+				63800B461A12DC13004D747E /* sk */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -1832,8 +1835,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Chris Ballinger (9P62QGET7G)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: David Chiles (8TSMC84YJV)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -1865,7 +1868,7 @@
 					"$(inherited)",
 				);
 				PRODUCT_NAME = ChatSecure;
-				PROVISIONING_PROFILE = "dbbba898-7c60-4cf8-83ed-4b0cc1a7a08b";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
@@ -1878,8 +1881,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Chris Ballinger (4T8JLQR6GR)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: David Chiles (8TSMC84YJV)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -1911,7 +1914,7 @@
 					"$(inherited)",
 				);
 				PRODUCT_NAME = ChatSecure;
-				PROVISIONING_PROFILE = "9c10d002-eb32-4a6c-954e-0dd26e210466";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
