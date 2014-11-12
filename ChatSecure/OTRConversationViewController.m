@@ -274,7 +274,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     }
     else if (numberUnreadMessages > 0)
     {
-        self.title = [NSString stringWithFormat:@"%@ (%ld)",CHATS_STRING,numberUnreadMessages];
+        self.title = [NSString stringWithFormat:@"%@ (%d)",CHATS_STRING,(int)numberUnreadMessages];
     }
     else {
         self.title = CHATS_STRING;
