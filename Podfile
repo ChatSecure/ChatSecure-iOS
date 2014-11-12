@@ -15,7 +15,7 @@ pod "MagicalRecord", '~> 2.2'
 pod 'MBProgressHUD', '~> 0.9'
 pod "SSKeychain", '~> 1.2'
 pod "UIAlertView-Blocks", '~> 1.0'
-pod 'gtm-oauth2', '~> 0.1.0'
+# pod 'gtm-oauth2', '~> 0.1.0' # Trunk is outdated, using local podspec
 pod 'JTTargetActionBlock', '~> 1.0'
 # pod 'YapDatabase/SQLCipher', '~> 2.5' # We need to use fork for sqlite3_rekey support 
 pod 'Mantle', '~> 1.4'
@@ -32,6 +32,10 @@ pod 'BButton', '~> 4.0'
 pod 'uservoice-iphone-sdk', '~> 3.2'
 pod 'TUSafariActivity', '~> 1.0'
 pod 'ARChromeActivity', '~> 1.0'
+
+# Local Podspecs
+pod 'gtm-http-fetcher', :podspec => 'Podspecs/gtm-http-fetcher.podspec.json'
+pod 'gtm-oauth2', :podspec => 'Podspecs/gtm-oauth2.podspec.json'
 
 # Waiting for 7.4.1 to be pushed to trunk
 pod 'CocoaAsyncSocket', :git => 'https://github.com/robbiehanson/CocoaAsyncSocket.git', :commit => 'c0bbcbcc5e039ca5d732f9844bf95c3d8ee31a5b'
