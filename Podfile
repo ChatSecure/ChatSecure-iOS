@@ -48,5 +48,5 @@ pod 'SIAlertView', :git => 'https://github.com/ChatSecure/SIAlertView.git', :bra
 pod 'ProxyKit/Client', :path => 'Submodules/ProxyKit/ProxyKit.podspec'
 pod 'OTRKit', :path => 'Submodules/OTRKit/OTRKit.podspec'
 pod 'CPAProxy', :path => 'Submodules/CPAProxy/CPAProxy.podspec'
-pod 'XMPPFramework', :path => 'Submodules/XMPPFramework/XMPPFramework.podspec'
+pod 'XMPPFramework', :path => 'Submodules/XMPPFramework/XMPPFramework.podspec.json'
 pod 'YapDatabase/SQLCipher', :path => 'Submodules/YapDatabase/YapDatabase.podspec'
