@@ -71,7 +71,7 @@
 + (OTRAccount *)accountWithUsername:(NSString *)username
 {
     __block OTRAccount *account = nil;
-    [[OTRDatabaseManager sharedInstance].mainThreadReadOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         account = [[OTRAccount allAccountsWithUsername:username transaction:transaction] firstObject];
     }];
     return account;

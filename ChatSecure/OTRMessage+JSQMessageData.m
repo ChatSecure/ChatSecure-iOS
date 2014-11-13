@@ -16,7 +16,7 @@
 - (NSString *)sender
 {
     __block NSString *sender = @"";
-    [[OTRDatabaseManager sharedInstance].mainThreadReadOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         OTRBuddy *buddy = [self buddyWithTransaction:transaction];
         if (self.isIncoming) {
             sender = buddy.uniqueId;

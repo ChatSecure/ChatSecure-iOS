@@ -212,7 +212,7 @@
     DDLogInfo(@"Application entered background state.");
     NSAssert(self.backgroundTask == UIBackgroundTaskInvalid, nil);
     
-    [[OTRDatabaseManager sharedInstance].mainThreadReadOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
+    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
         application.applicationIconBadgeNumber = [OTRMessage numberOfUnreadMessagesWithTransaction:transaction];
     }];
     

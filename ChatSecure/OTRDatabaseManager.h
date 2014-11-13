@@ -12,8 +12,6 @@
 #import "YapDatabase.h"
 #import "YapDatabaseTransaction.h"
 
-extern NSString *const OTRUIDatabaseConnectionDidUpdateNotification;
-extern NSString *const OTRUIDatabaseConnectionWillUpdateNotification;
 extern NSString *const OTRYapDatabaseRelationshipName;
 extern NSString *const OTRYapDatabseMessageIdSecondaryIndex;
 extern NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension;
@@ -21,7 +19,7 @@ extern NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension;
 @interface OTRDatabaseManager : NSObject
 
 @property (nonatomic, readonly) YapDatabase *database;
-@property (nonatomic, readonly) YapDatabaseConnection *mainThreadReadOnlyDatabaseConnection;
+@property (nonatomic, readonly) YapDatabaseConnection *readOnlyDatabaseConnection;
 @property (nonatomic, readonly) YapDatabaseConnection *readWriteDatabaseConnection;
 
 - (BOOL)setupDatabaseWithName:(NSString*)databaseName;

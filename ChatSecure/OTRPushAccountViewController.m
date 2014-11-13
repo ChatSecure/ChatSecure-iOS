@@ -67,7 +67,9 @@
     [self.view addSubview:self.tableView];
     
     ////// YapDatabase View //////
-    self.databaseConnection = [OTRDatabaseManager sharedInstance].mainThreadReadOnlyDatabaseConnection;
+    self.databaseConnection = [[OTRDatabaseManager sharedInstance] newConnection];
+    self.databaseConnection.name = NSStringFromClass([self class]);
+    [self.databaseConnection beginLongLivedReadTransaction];
     
     self.mappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[OTRPushAccountGroup,OTRPushTokenGroup,OTRPushDeviceGroup] view:OTRAllPushAccountInfoViewExtensionName];
     
@@ -77,7 +79,7 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(yapDatabaseModified:)
-                                                 name:OTRUIDatabaseConnectionDidUpdateNotification
+                                                 name:YapDatabaseModifiedNotification
                                                object:nil];
 }
 
@@ -210,7 +212,7 @@
 {
     // Process the notification(s),
     // and get the change-set(s) as applies to my view and mappings configuration.
-    NSArray *notifications = notification.userInfo[@"notifications"];
+    NSArray *notifications = [self.databaseConnection beginLongLivedReadTransaction];
     
     NSArray *sectionChanges = nil;
     NSArray *rowChanges = nil;

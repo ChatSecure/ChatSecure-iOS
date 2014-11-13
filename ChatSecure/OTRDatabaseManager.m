@@ -30,8 +30,6 @@
 #import "CoreData+MagicalRecord.h"
 #import "OTRMessage.h"
 
-NSString *const OTRUIDatabaseConnectionDidUpdateNotification = @"OTRUIDatabaseConnectionDidUpdateNotification";
-NSString *const OTRUIDatabaseConnectionWillUpdateNotification = @"OTRUIDatabaseConnectionWillUpdateNotification";
 NSString *const OTRYapDatabaseRelationshipName = @"OTRYapDatabaseRelationshipName";
 NSString *const OTRYapDatabseMessageIdSecondaryIndex = @"OTRYapDatabseMessageIdSecondaryIndex";
 NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseMessageIdSecondaryIndexExtension";
@@ -40,7 +38,7 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
 @interface OTRDatabaseManager ()
 
 @property (nonatomic, strong) YapDatabase *database;
-@property (nonatomic, strong) YapDatabaseConnection *mainThreadReadOnlyDatabaseConnection;
+@property (nonatomic, strong) YapDatabaseConnection *readOnlyDatabaseConnection;
 @property (nonatomic, strong) YapDatabaseConnection *readWriteDatabaseConnection;
 @property (nonatomic, strong) NSString *inMemoryPassphrase;
 
@@ -235,17 +233,14 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
                                     metadataSanitizer:NULL
                                               options:options];
     
-    self.mainThreadReadOnlyDatabaseConnection = [self.database newConnection];
-    self.mainThreadReadOnlyDatabaseConnection.objectCacheLimit = 500;
-    self.mainThreadReadOnlyDatabaseConnection.metadataCacheLimit = 500;
-    self.mainThreadReadOnlyDatabaseConnection.name = @"mainThreadReadOnlyDatabaseConnection";
+    self.database.defaultObjectPolicy = YapDatabasePolicyShare;
+    self.database.defaultObjectCacheLimit = 1000;
+    
+    self.readOnlyDatabaseConnection = [self.database newConnection];
+    self.readOnlyDatabaseConnection.name = @"readOnlyDatabaseConnection";
     
     self.readWriteDatabaseConnection = [self.database newConnection];
-    self.readWriteDatabaseConnection.objectCacheLimit = 200;
-    self.readWriteDatabaseConnection.metadataCacheLimit = 200;
     self.readWriteDatabaseConnection.name = @"readWriteDatabaseConnection";
-    
-    [self.mainThreadReadOnlyDatabaseConnection enableExceptionsForImplicitlyEndingLongLivedReadTransaction];
     
     
     ////// Register standard views////////
@@ -262,13 +257,6 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
     if (success) success = [OTRDatabaseView registerPushView];
     if (success) success = [self setupSecondaryIndexes];
     
-    [self.mainThreadReadOnlyDatabaseConnection beginLongLivedReadTransaction];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(yapDatabaseModified:)
-                                                 name:YapDatabaseModifiedNotification
-                                               object:self.database];
-    
     if (self.database && success) {
         return YES;
     }
@@ -280,25 +268,6 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
 - (YapDatabaseConnection *)newConnection
 {
     return [self.database newConnection];
-}
-
-- (void)yapDatabaseModified:(NSNotification *)ignored
-{
-    // Notify observers we're about to update the database connection
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:OTRUIDatabaseConnectionWillUpdateNotification object:self];
-    
-    // Move uiDatabaseConnection to the latest commit.
-    // Do so atomically, and fetch all the notifications for each commit we jump.
-    
-    NSArray *notifications = [self.mainThreadReadOnlyDatabaseConnection beginLongLivedReadTransaction];
-    
-    // Notify observers that the uiDatabaseConnection was updated
-    
-    NSDictionary *userInfo = @{ @"notifications": notifications };
-    [[NSNotificationCenter defaultCenter] postNotificationName:OTRUIDatabaseConnectionDidUpdateNotification
-                                                        object:self
-                                                      userInfo:userInfo];
 }
 
 - (BOOL)setupSecondaryIndexes

@@ -137,7 +137,7 @@ const struct OTRMessageEdges OTRMessageEdges = {
             __block OTRBuddy *localBuddy = nil;
             __block OTRAccount *localAccount;
             __block NSInteger unreadCount = 0;
-            [[OTRDatabaseManager sharedInstance].mainThreadReadOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+            [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
                 localBuddy = [message buddyWithTransaction:transaction];
                 localAccount = [localBuddy accountWithTransaction:transaction];
                 unreadCount = [self numberOfUnreadMessagesWithTransaction:transaction];

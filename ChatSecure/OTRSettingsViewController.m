@@ -83,7 +83,9 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     [OTRDatabaseView registerAllAccountsDatabaseView];
     
     //User main thread database connection
-    self.databaseConnection = [[OTRDatabaseManager sharedInstance] mainThreadReadOnlyDatabaseConnection];
+    self.databaseConnection = [[OTRDatabaseManager sharedInstance] newConnection];
+    self.databaseConnection.name = NSStringFromClass([self class]);
+    [self.databaseConnection beginLongLivedReadTransaction];
     
     //Create mappings from allAccountsDatabaseView
     self.mappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[OTRAllAccountGroup] view:OTRAllAccountDatabaseViewExtensionName];
@@ -94,7 +96,7 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(yapDatabaseModified:)
-                                                 name:OTRUIDatabaseConnectionDidUpdateNotification
+                                                 name:YapDatabaseModifiedNotification
                                                object:nil];
     
     
@@ -542,7 +544,7 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 
 - (void)yapDatabaseModified:(NSNotification *)notification
 {
-    NSArray *notifications = [notification.userInfo objectForKey:@"notifications"];
+    NSArray *notifications = [self.databaseConnection beginLongLivedReadTransaction];
     
     // Process the notification(s),
     // and get the change-set(s) as applies to my view and mappings configuration.

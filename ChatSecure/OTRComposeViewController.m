@@ -73,7 +73,9 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
     [self.view addConstraint:self.tableViewBottomConstraint];
     
     //////// YapDatabase Connection /////////
-    self.databaseConnection = [[OTRDatabaseManager sharedInstance] mainThreadReadOnlyDatabaseConnection];
+    self.databaseConnection = [[OTRDatabaseManager sharedInstance] newConnection];
+    self.databaseConnection.name = NSStringFromClass([self class]);
+    [self.databaseConnection beginLongLivedReadTransaction];
     
     self.mappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[OTRBuddyGroup] view:OTRAllBuddiesDatabaseViewExtensionName];
     
@@ -83,7 +85,7 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(yapDatabaseDidUpdate:)
-                                                 name:OTRUIDatabaseConnectionDidUpdateNotification
+                                                 name:YapDatabaseModifiedNotification
                                                object:nil];
 }
 
@@ -276,7 +278,7 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
         OTRBuddy * buddy = [self buddyAtIndexPath:indexPath];
         
         __block NSString *buddyAccountName = nil;
-        [[OTRDatabaseManager sharedInstance].mainThreadReadOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
             buddyAccountName = [OTRAccount fetchObjectWithUniqueID:buddy.accountUniqueId transaction:transaction].username;
         }];
         
@@ -347,7 +349,7 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
 {
     // Process the notification(s),
     // and get the change-set(s) as applies to my view and mappings configuration.
-    NSArray *notifications = notification.userInfo[@"notifications"];
+    NSArray *notifications = [self.databaseConnection beginLongLivedReadTransaction];
     
     NSArray *sectionChanges = nil;
     NSArray *rowChanges = nil;

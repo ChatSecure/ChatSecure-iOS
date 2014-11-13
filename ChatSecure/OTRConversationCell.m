@@ -87,7 +87,7 @@
     __block OTRMessage *lastMessage = nil;
 
     
-    [[OTRDatabaseManager sharedInstance].mainThreadReadOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         account = [transaction objectForKey:buddy.accountUniqueId inCollection:[OTRAccount collection]];
         
         lastMessage = [buddy lastMessageWithTransaction:transaction];
