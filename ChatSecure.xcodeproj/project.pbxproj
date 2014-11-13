@@ -168,7 +168,6 @@
 		63F8813A19F72AB4001548AE /* OTRPasswordGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F8813919F72AB4001548AE /* OTRPasswordGenerator.m */; };
 		63F8A53316DD9B6F00374551 /* OTRIntSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F8A53216DD9B6F00374551 /* OTRIntSettingViewController.m */; };
 		63FA108316F9290A00D9EE45 /* OTRImages.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FA108216F9290900D9EE45 /* OTRImages.m */; };
-		63FE64C61727535700876D15 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63FE64C51727535700876D15 /* StoreKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		D6547628B04B43DEB35EC9D3 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CE38008CD82242658DB86DEE /* libPods.a */; };
 		D90B80AC13FC719B006EFF3D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D90B80AB13FC719B006EFF3D /* CoreGraphics.framework */; };
 		D90B80AF13FC7E5F006EFF3D /* OTRCodec.m in Sources */ = {isa = PBXBuildFile; fileRef = D90B80AE13FC7E5F006EFF3D /* OTRCodec.m */; };
@@ -569,7 +568,6 @@
 		63FA108216F9290900D9EE45 /* OTRImages.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = OTRImages.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		63FAEED916B7553D004F1205 /* OTRXMPPBudyTimers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPBudyTimers.h; sourceTree = "<group>"; };
 		63FAEEDA16B7553E004F1205 /* OTRXMPPBudyTimers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPBudyTimers.m; sourceTree = "<group>"; };
-		63FE64C51727535700876D15 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		BB53C43E53505F9FC7DF1D5A /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		CE38008CD82242658DB86DEE /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		D9042E2C153168BE000D264C /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_CN; path = ChatSecure/zh_CN.lproj/InfoPlist.strings; sourceTree = SOURCE_ROOT; };
@@ -661,7 +659,6 @@
 				639C612118CAA6CE00CC4DF4 /* libz.1.2.5.dylib in Frameworks */,
 				639C611F18CAA6C000CC4DF4 /* libxml2.2.dylib in Frameworks */,
 				63BE44CF17EE580D00F60670 /* Social.framework in Frameworks */,
-				63FE64C61727535700876D15 /* StoreKit.framework in Frameworks */,
 				D989E88E15D4F92E0081DFD1 /* Twitter.framework in Frameworks */,
 				D93C31B7159A8B4F006316C7 /* Security.framework in Frameworks */,
 				D9FC9860155881710039518D /* MessageUI.framework in Frameworks */,
@@ -1288,7 +1285,6 @@
 				D974DABC15021E540028B2F4 /* libiconv.dylib */,
 				D9A3EFC918442C3B00C9283F /* MobileCoreServices.framework */,
 				63C0857E1845863900B9C984 /* SenTestingKit.framework */,
-				63FE64C51727535700876D15 /* StoreKit.framework */,
 				63BE44CE17EE580D00F60670 /* Social.framework */,
 				D989E88D15D4F92E0081DFD1 /* Twitter.framework */,
 				D93C31B6159A8B4F006316C7 /* Security.framework */,
@@ -1399,7 +1395,15 @@
 				ORGANIZATIONNAME = "Chris Ballinger";
 				TargetAttributes = {
 					D9F9377713F44BD3009A3D84 = {
-						DevelopmentTeam = SF3NXKQQ64;
+						DevelopmentTeam = 4T8JLQR6GR;
+						SystemCapabilities = {
+							com.apple.DataProtection = {
+								enabled = 1;
+							};
+							com.apple.InAppPurchase = {
+								enabled = 0;
+							};
+						};
 					};
 				};
 			};
@@ -1835,7 +1839,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: David Chiles (8TSMC84YJV)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -1881,8 +1885,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: David Chiles (8TSMC84YJV)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Chris Ballinger (4T8JLQR6GR)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Chris Ballinger (4T8JLQR6GR)";
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;

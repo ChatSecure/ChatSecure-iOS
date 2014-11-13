@@ -605,9 +605,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
         NSParameterAssert(indexPath != nil);
         NSUInteger row = indexPath.row;
         NSUInteger section = indexPath.section;
-        NSUInteger numberOfItemsInSection = [self.messageMappings numberOfItemsInSection:section];
         
-        NSAssert(row < numberOfItemsInSection, @"Cannot fetch message because row %d is >= numberOfItemsInSection %d", (int)row, (int)numberOfItemsInSection);
+        NSAssert(row < [self.messageMappings numberOfItemsInSection:section], @"Cannot fetch message because row %d is >= numberOfItemsInSection %d", (int)row, (int)[self.messageMappings numberOfItemsInSection:section]);
         
         message = [viewTransaction objectAtRow:row inSection:section withMappings:self.messageMappings];
         NSParameterAssert(message != nil);

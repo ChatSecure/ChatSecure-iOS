@@ -43,9 +43,9 @@ PODS:
   - CPAProxy (1.0.0)
   - Facebook-iOS-SDK (3.20.0):
     - Bolts (~> 1.0)
-  - gtm-oauth2 (0.1.0):
-    - GTMHTTPFetcher
-  - GTMHTTPFetcher (0.1.0)
+  - gtm-http-fetcher (1.0.141)
+  - gtm-oauth2 (1.0.126):
+    - gtm-http-fetcher
   - HockeySDK (3.6.1)
   - JSQMessagesViewController (5.3.2):
     - JSQSystemSoundPlayer
@@ -248,7 +248,8 @@ DEPENDENCIES:
   - CocoaLumberjack (~> 1.9)
   - CPAProxy (from `Submodules/CPAProxy/CPAProxy.podspec`)
   - Facebook-iOS-SDK (~> 3.19)
-  - gtm-oauth2 (~> 0.1.0)
+  - gtm-http-fetcher (from `Podspecs/gtm-http-fetcher.podspec.json`)
+  - gtm-oauth2 (from `Podspecs/gtm-oauth2.podspec.json`)
   - HockeySDK (~> 3.6)
   - JSQMessagesViewController (~> 5.3)
   - JSQSystemSoundPlayer (~> 1.5)
@@ -283,6 +284,10 @@ EXTERNAL SOURCES:
     :git: https://github.com/robbiehanson/CocoaAsyncSocket.git
   CPAProxy:
     :path: Submodules/CPAProxy/CPAProxy.podspec
+  gtm-http-fetcher:
+    :podspec: Podspecs/gtm-http-fetcher.podspec.json
+  gtm-oauth2:
+    :podspec: Podspecs/gtm-oauth2.podspec.json
   OTRKit:
     :path: Submodules/OTRKit/OTRKit.podspec
   ProxyKit:
@@ -306,9 +311,9 @@ SPEC CHECKSUMS:
   CocoaAsyncSocket: 4bbe8fc969e61e62f408de98faac676468e155b3
   CocoaLumberjack: 205769c032b5fef85b92472046bcc8b7e7c8a817
   CPAProxy: 6a90ca85dcf10ec5479da6fe9eea53a228b9bab9
-  Facebook-iOS-SDK: 5854404b4b651f612a8ef79ca06d766858f4cb8e
-  gtm-oauth2: 64f2d404a50676ab63b5437a02a7567da8f8b7fa
-  GTMHTTPFetcher: 0f02d5a5803dd08736462981064de6a7f59cf9bd
+  Facebook-iOS-SDK: cb7d74759d0b1ba546e6e6f1dde407b0d4e448d6
+  gtm-http-fetcher: 5072f07e523261f7a87df939d13c1be2340d8111
+  gtm-oauth2: dfb3016b8347b73fa80042e5aed29ec4f36e46bc
   HockeySDK: 15b24068466aa5ee421eed0cc1d58428d698edf6
   JSQMessagesViewController: d36408f51a8289c0354b7d9c497f572e9f26db67
   JSQSystemSoundPlayer: c24914bc96ff5365b5d28b59d7ecffd60d1c5587
