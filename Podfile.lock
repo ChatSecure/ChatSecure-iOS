@@ -41,7 +41,7 @@ PODS:
   - CocoaLumberjack/Extensions (1.9.2):
     - CocoaLumberjack/Core
   - CPAProxy (1.0.0)
-  - Facebook-iOS-SDK (3.19.0):
+  - Facebook-iOS-SDK (3.20.0):
     - Bolts (~> 1.0)
   - gtm-oauth2 (0.1.0):
     - GTMHTTPFetcher
@@ -76,7 +76,7 @@ PODS:
   - ProxyKit/common (1.0.2):
     - CocoaAsyncSocket (~> 7.3)
     - CocoaLumberjack (~> 1.9)
-  - PureLayout (2.0.1)
+  - PureLayout (2.0.2)
   - RMStepsController (1.0.1)
   - SIAlertView (1.3)
   - SQLCipher/common (3.1.0)
@@ -306,7 +306,7 @@ SPEC CHECKSUMS:
   CocoaAsyncSocket: 4bbe8fc969e61e62f408de98faac676468e155b3
   CocoaLumberjack: 205769c032b5fef85b92472046bcc8b7e7c8a817
   CPAProxy: 6a90ca85dcf10ec5479da6fe9eea53a228b9bab9
-  Facebook-iOS-SDK: cb7d74759d0b1ba546e6e6f1dde407b0d4e448d6
+  Facebook-iOS-SDK: 5854404b4b651f612a8ef79ca06d766858f4cb8e
   gtm-oauth2: 64f2d404a50676ab63b5437a02a7567da8f8b7fa
   GTMHTTPFetcher: 0f02d5a5803dd08736462981064de6a7f59cf9bd
   HockeySDK: 15b24068466aa5ee421eed0cc1d58428d698edf6
@@ -322,7 +322,7 @@ SPEC CHECKSUMS:
   OpenInChrome: b7c73ddf8fe0a1788dc0549c3c4c70e3c84da578
   OTRKit: 908a5ea8d40a2264ff491027a9f3d9d0d2c4afba
   ProxyKit: 3e73f2ad92327554549474ad10da21dde46d3ba8
-  PureLayout: 12eca5b6dc94f1a03fdf255d640604584ff1b55b
+  PureLayout: 03fe8d5ab68f5871038b3b7065d28ac880d5f2a0
   RMStepsController: 8ff91f169d884fdd834ad37007f553c7bed333eb
   SIAlertView: e6d0d786c3a3f6e456b0e8b9376d0c34d68e827b
   SQLCipher: 981110217eb93c2779c34fb59e646a1c1da918d8

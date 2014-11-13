@@ -35,23 +35,29 @@
 
 + (void)refreshFacebookToken:(FBAccessTokenData *)authToken completion:(OTROAuthCompletionBlock)completionBlock
 {
-    OTRInMemorySessionTokenCachingStrategy *strategy = [[OTRInMemorySessionTokenCachingStrategy alloc] initWithToken:authToken];
-    FBSession * session = [[FBSession alloc] initWithAppID:FACEBOOK_APP_ID permissions:@[@"xmpp_login"] urlSchemeSuffix:nil tokenCacheStrategy:strategy];
-    
-    [FBSession setActiveSession:session];
-    
-    [session openWithBehavior:FBSessionLoginBehaviorUseSystemAccountIfPresent completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
-    
+    if (![FBSession activeSession]) {
+        OTRInMemorySessionTokenCachingStrategy *strategy = [[OTRInMemorySessionTokenCachingStrategy alloc] initWithToken:authToken];
+        FBSession * session = [[FBSession alloc] initWithAppID:FACEBOOK_APP_ID permissions:@[@"xmpp_login"] urlSchemeSuffix:nil tokenCacheStrategy:strategy];
         
-        if (completionBlock) {
-            if (session.accessTokenData) {
-                completionBlock(session.accessTokenData,nil);
-            } else {
-                completionBlock(nil,error);
+        [FBSession setActiveSession:session];
+    }
+    
+    if(![FBSession activeSession].isOpen){
+        [[FBSession activeSession] openWithBehavior:FBSessionLoginBehaviorUseSystemAccountIfPresent completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+            if (completionBlock) {
+                if (session.accessTokenData) {
+                    completionBlock(session.accessTokenData,nil);
+                } else {
+                    completionBlock(nil,error);
+                }
             }
-        }
-    }];
-
+        }];
+    }
+    else if (completionBlock){
+        completionBlock([FBSession activeSession].accessTokenData,nil);
+    }
+   
+    
     
 }
 

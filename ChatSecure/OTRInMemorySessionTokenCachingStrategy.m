@@ -39,4 +39,9 @@
     self.tokenDictionary = nil;
 }
 
+- (NSString *)description
+{
+    return [self.tokenDictionary description];
+}
+
 @end
