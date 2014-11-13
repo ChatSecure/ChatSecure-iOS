@@ -295,8 +295,8 @@ static id AFPublicKeyForCertificate(NSData *certificate) {
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        bundledCertHashes = @{@"talk.google.com":@"f4 b4 fb eb d9 cd 29 f4 2f 3c 80 fa 7d c5 4f 63 10 5f d8 68",
-                              @"chat.facebook.com":@"6d 27 cf 4e 75 b3 40 ee e6 ad a8 ae 29 74 bd c7 64 22 11 87"};
+        bundledCertHashes = @{@"talk.google.com": @"83 56 59 a4 b0 02 c0 4b 37 91 70 59 70 e5 f7 95 ee 66 a1 70",
+                              @"chat.facebook.com": @"21 f1 6b d6 61 95 d5 b4 3a 06 b4 e9 a0 50 7e 15 30 56 2e d3"};
     });
     return bundledCertHashes;
 }
