@@ -91,16 +91,13 @@ PODS:
   - XMPPFramework (3.6.4):
     - XMPPFramework/All (= 3.6.4)
   - XMPPFramework/All (3.6.4):
-    - XMPPFramework/Authentication
     - XMPPFramework/BandwidthMonitor
-    - XMPPFramework/Categories
     - XMPPFramework/CoreDataStorage
     - XMPPFramework/GoogleSharedStatus
     - XMPPFramework/ProcessOne
     - XMPPFramework/Reconnect
     - XMPPFramework/Roster
     - XMPPFramework/SystemInputActivityMonitor
-    - XMPPFramework/Utilities
     - XMPPFramework/XEP-0009
     - XMPPFramework/XEP-0012
     - XMPPFramework/XEP-0016
@@ -132,11 +129,7 @@ PODS:
     - XMPPFramework/XEP-0308
     - XMPPFramework/XEP-0333
     - XMPPFramework/XEP-0335
-  - XMPPFramework/Authentication (3.6.4):
-    - XMPPFramework/Core
   - XMPPFramework/BandwidthMonitor (3.6.4):
-    - XMPPFramework/Core
-  - XMPPFramework/Categories (3.6.4):
     - XMPPFramework/Core
   - XMPPFramework/Core (3.6.4):
     - CocoaAsyncSocket (~> 7.4)
@@ -155,8 +148,6 @@ PODS:
     - XMPPFramework/Core
     - XMPPFramework/CoreDataStorage
     - XMPPFramework/XEP-0203
-  - XMPPFramework/Utilities (3.6.4):
-    - XMPPFramework/Core
   - XMPPFramework/XEP-0009 (3.6.4):
     - XMPPFramework/Core
   - XMPPFramework/XEP-0012 (3.6.4):
@@ -170,7 +161,6 @@ PODS:
   - XMPPFramework/XEP-0054 (3.6.4):
     - XMPPFramework/Core
     - XMPPFramework/Roster
-    - XMPPFramework/XEP-0153
   - XMPPFramework/XEP-0059 (3.6.4):
     - XMPPFramework/Core
   - XMPPFramework/XEP-0060 (3.6.4):
@@ -199,6 +189,7 @@ PODS:
     - XMPPFramework/XEP-0203
   - XMPPFramework/XEP-0153 (3.6.4):
     - XMPPFramework/Core
+    - XMPPFramework/XEP-0054
   - XMPPFramework/XEP-0172 (3.6.4):
     - XMPPFramework/Core
   - XMPPFramework/XEP-0184 (3.6.4):
@@ -336,7 +327,7 @@ SPEC CHECKSUMS:
   UIAlertView-Blocks: f3271e84372beb97aea115cd1fb26ae66457f12f
   uservoice-iphone-sdk: 7cbc1e76dcbbc3d5ae3b4bf009fdcf355e1e83ec
   VTAcknowledgementsViewController: 5cdab8f3d003680b8fbdfcce90fcab92cee962a6
-  XMPPFramework: 7d9964e72a48f5e4fe801bd456c8cf1d560123df
+  XMPPFramework: a64f1ad38c3e5966cf592e52240aa883de826d1a
   YapDatabase: 097c5cc7964e0856c8ff859fdf1b18961e92a50b
 
 COCOAPODS: 0.35.0.rc2
