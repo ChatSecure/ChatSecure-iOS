@@ -35,6 +35,8 @@ extern NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension;
 
 + (BOOL)existsYapDatabase;
 
++ (NSString *)yapDatabasePathWithName:(NSString *)name;
+
 + (instancetype)sharedInstance;
 
 @end

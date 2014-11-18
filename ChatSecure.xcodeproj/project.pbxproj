@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		3CC9B590E308D3C320E9548B /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 25A3853627C1F67D3A296AB4 /* libPods.a */; };
 		632461521A1ADC77000EF33B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 633104D61A169EC800C17BAE /* Localizable.strings */; };
+		632461581A1AE553000EF33B /* OTRCoreDataMigrationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 632461571A1AE553000EF33B /* OTRCoreDataMigrationTests.m */; };
 		633104FD1A16AD8700C17BAE /* chat.facebook.com.cer in Resources */ = {isa = PBXBuildFile; fileRef = 633104FB1A16AD8700C17BAE /* chat.facebook.com.cer */; };
 		633104FE1A16AD8700C17BAE /* talk.google.com.cer in Resources */ = {isa = PBXBuildFile; fileRef = 633104FC1A16AD8700C17BAE /* talk.google.com.cer */; };
 		633106771A16D1A300C17BAE /* NSURL+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105031A16D1A300C17BAE /* NSURL+ChatSecure.m */; };
@@ -206,6 +207,7 @@
 /* Begin PBXFileReference section */
 		154CBBDFA16BDE9C28017B1F /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		25A3853627C1F67D3A296AB4 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		632461571A1AE553000EF33B /* OTRCoreDataMigrationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRCoreDataMigrationTests.m; sourceTree = "<group>"; };
 		633104D51A169EC800C17BAE /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		633104D81A169F0E00C17BAE /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		633104DA1A169FF900C17BAE /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1167,6 +1169,7 @@
 			isa = PBXGroup;
 			children = (
 				6396AFB91A169D54009F3E6C /* ChatSecureTests.m */,
+				632461571A1AE553000EF33B /* OTRCoreDataMigrationTests.m */,
 				6396AFB71A169D54009F3E6C /* Supporting Files */,
 			);
 			path = ChatSecureTests;
@@ -1574,6 +1577,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6396AFBA1A169D54009F3E6C /* ChatSecureTests.m in Sources */,
+				632461581A1AE553000EF33B /* OTRCoreDataMigrationTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1805,6 +1809,7 @@
 		};
 		6396AFC11A169D54009F3E6C /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 954B60A022C05FDE4DCFEF6E /* Pods.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				FRAMEWORK_SEARCH_PATHS = (
