@@ -13,6 +13,7 @@ before_install:
 
 install:
   - cp ChatSecure/OTRSecrets-Template.m ChatSecure/OTRSecrets.m
+  - cp configurations/OTR_Codesigning.xcconfig.sample configurations/OTR_Codesigning.xcconfig
   - export ARCHS="i386"   # Only build CPAProxy dependencies for i386 to speed things up
   - bash ./Submodules/CPAProxy/scripts/build-all.sh
   - bash ./Submodules/OTRKit/scripts/build-all.sh
