@@ -6,6 +6,8 @@
 //  Copyright (c) 2012 Chris Ballinger. All rights reserved.
 //
 
+#import "OTRSecrets.h"
+
 NSString *const kOTRGoogleAppSecret = @"";
 NSString *const kOTRHockeyLiveIdentifier = @"";
 NSString *const kOTRHockeyBetaIdentifier = @"";
