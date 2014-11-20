@@ -189,9 +189,6 @@
 		6331072C1A16D1F200C17BAE /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6331072A1A16D1F200C17BAE /* Images.xcassets */; };
 		6396AFA01A169D54009F3E6C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6396AF9F1A169D54009F3E6C /* main.m */; };
 		6396AFBA1A169D54009F3E6C /* ChatSecureTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6396AFB91A169D54009F3E6C /* ChatSecureTests.m */; };
-		63DC0EB71A1ABC86002C9598 /* OTR_Codesigning.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 63DC0EB31A1ABC86002C9598 /* OTR_Codesigning.xcconfig */; };
-		63DC0EB81A1ABC86002C9598 /* OTR_Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 63DC0EB41A1ABC86002C9598 /* OTR_Debug.xcconfig */; };
-		63DC0EBA1A1ABC86002C9598 /* OTR_Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 63DC0EB61A1ABC86002C9598 /* OTR_Release.xcconfig */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1324,17 +1321,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				63DC0EBA1A1ABC86002C9598 /* OTR_Release.xcconfig in Resources */,
 				632461521A1ADC77000EF33B /* Localizable.strings in Resources */,
 				6331072C1A16D1F200C17BAE /* Images.xcassets in Resources */,
 				633104FD1A16AD8700C17BAE /* chat.facebook.com.cer in Resources */,
 				633107191A16D1A300C17BAE /* OTRMessagesCollectionViewCellIncoming.xib in Resources */,
 				6331072B1A16D1F200C17BAE /* DemoImages.xcassets in Resources */,
-				63DC0EB81A1ABC86002C9598 /* OTR_Debug.xcconfig in Resources */,
 				6331071B1A16D1A300C17BAE /* OTRMessagesCollectionViewCellOutgoing.xib in Resources */,
 				633107201A16D1A300C17BAE /* LaunchScreen.xib in Resources */,
 				633104FE1A16AD8700C17BAE /* talk.google.com.cer in Resources */,
-				63DC0EB71A1ABC86002C9598 /* OTR_Codesigning.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1674,13 +1668,13 @@
 			baseConfigurationReference = 63DC0EB61A1ABC86002C9598 /* OTR_Release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				BUNDLE_DISPLAY_NAME_SUFFIX = " β";
 				BUNDLE_ID_SUFFIX = .beta;
 				INFOPLIST_FILE = ChatSecure/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "eba8b7bf-5edf-4e18-8d32-790efa92a02d";
 			};
 			name = Beta;
 		};
@@ -1782,13 +1776,13 @@
 			baseConfigurationReference = 63DC0EB41A1ABC86002C9598 /* OTR_Debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				BUNDLE_DISPLAY_NAME_SUFFIX = " α";
 				BUNDLE_ID_SUFFIX = .debug;
 				INFOPLIST_FILE = ChatSecure/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "eba8b7bf-5edf-4e18-8d32-790efa92a02d";
 			};
 			name = Debug;
 		};
@@ -1797,13 +1791,13 @@
 			baseConfigurationReference = 63DC0EB61A1ABC86002C9598 /* OTR_Release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				BUNDLE_DISPLAY_NAME_SUFFIX = "";
 				BUNDLE_ID_SUFFIX = "";
 				INFOPLIST_FILE = ChatSecure/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "eba8b7bf-5edf-4e18-8d32-790efa92a02d";
 			};
 			name = Release;
 		};
