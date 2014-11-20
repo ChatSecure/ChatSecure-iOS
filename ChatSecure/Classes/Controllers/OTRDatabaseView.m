@@ -146,13 +146,11 @@ NSString *OTRPushAccountGroup = @"Account";
     }];
     
     YapDatabaseViewSorting *viewSorting = [YapDatabaseViewSorting withObjectBlock:^NSComparisonResult(NSString *group, NSString *collection1, NSString *key1, id object1, NSString *collection2, NSString *key2, id object2) {
-        if ([group isEqualToString:OTRChatMessageGroup]) {
-            if ([object1 isKindOfClass:[OTRMessage class]] && [object2 isKindOfClass:[OTRMessage class]]) {
-                OTRMessage *message1 = (OTRMessage *)object1;
-                OTRMessage *message2 = (OTRMessage *)object2;
-                
-                return [message1.date compare:message2.date];
-            }
+        if ([object1 isKindOfClass:[OTRMessage class]] && [object2 isKindOfClass:[OTRMessage class]]) {
+            OTRMessage *message1 = (OTRMessage *)object1;
+            OTRMessage *message2 = (OTRMessage *)object2;
+            
+            return [message1.date compare:message2.date];
         }
         return NSOrderedSame;
     }];
