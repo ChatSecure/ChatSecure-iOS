@@ -1,8 +1,4 @@
 #import "OTRManagedOAuthAccount.h"
-#import "SSKeychain.h"
-#import "OTRConstants.h"
-
-#import "OTRLog.h"
 
 @interface OTRManagedOAuthAccount ()
 
@@ -12,5 +8,6 @@
 
 @implementation OTRManagedOAuthAccount
 
+// Custom logic goes here.
 
 @end

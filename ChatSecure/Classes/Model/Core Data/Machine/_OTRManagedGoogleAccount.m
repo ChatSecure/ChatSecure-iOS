@@ -3,15 +3,6 @@
 
 #import "_OTRManagedGoogleAccount.h"
 
-const struct OTRManagedGoogleAccountAttributes OTRManagedGoogleAccountAttributes = {
-};
-
-const struct OTRManagedGoogleAccountRelationships OTRManagedGoogleAccountRelationships = {
-};
-
-const struct OTRManagedGoogleAccountFetchedProperties OTRManagedGoogleAccountFetchedProperties = {
-};
-
 @implementation OTRManagedGoogleAccountID
 @end
 
@@ -37,17 +28,9 @@ const struct OTRManagedGoogleAccountFetchedProperties OTRManagedGoogleAccountFet
 
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
-	
 
 	return keyPaths;
 }
 
-
-
-
-
-
-
-
-
 @end
+

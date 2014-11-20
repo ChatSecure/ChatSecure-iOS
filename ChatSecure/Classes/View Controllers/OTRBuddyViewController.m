@@ -13,7 +13,6 @@
 #import "OTRProtocolManager.h"
 #import "OTRConstants.h"
 #import "OTRUtilities.h"
-#import "OTRManagedStatusMessage.h"
 #import "OTRXMPPManager.h"
 #import "UIActivityViewController+ChatSecure.h"
 #import "OTRAccount.h"

@@ -1,11 +1,13 @@
 #import "OTRManagedGroup.h"
-#import "OTRLog.h"
 
 @interface OTRManagedGroup ()
 
+// Private interface goes here.
+
 @end
 
-
 @implementation OTRManagedGroup
+
+// Custom logic goes here.
 
 @end

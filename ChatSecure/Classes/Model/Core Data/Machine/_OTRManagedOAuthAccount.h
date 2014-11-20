@@ -4,38 +4,17 @@
 #import <CoreData/CoreData.h>
 #import "OTRManagedXMPPAccount.h"
 
-extern const struct OTRManagedOAuthAccountAttributes {
-} OTRManagedOAuthAccountAttributes;
-
-extern const struct OTRManagedOAuthAccountRelationships {
-} OTRManagedOAuthAccountRelationships;
-
-extern const struct OTRManagedOAuthAccountFetchedProperties {
-} OTRManagedOAuthAccountFetchedProperties;
-
-
-
-@interface OTRManagedOAuthAccountID : NSManagedObjectID {}
+@interface OTRManagedOAuthAccountID : OTRManagedXMPPAccountID {}
 @end
 
 @interface _OTRManagedOAuthAccount : OTRManagedXMPPAccount {}
 + (id)insertInManagedObjectContext:(NSManagedObjectContext*)moc_;
 + (NSString*)entityName;
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_;
-- (OTRManagedOAuthAccountID*)objectID;
-
-
-
-
-
-
-@end
-
-@interface _OTRManagedOAuthAccount (CoreDataGeneratedAccessors)
+@property (nonatomic, readonly, strong) OTRManagedOAuthAccountID* objectID;
 
 @end
 
 @interface _OTRManagedOAuthAccount (CoreDataGeneratedPrimitiveAccessors)
-
 
 @end

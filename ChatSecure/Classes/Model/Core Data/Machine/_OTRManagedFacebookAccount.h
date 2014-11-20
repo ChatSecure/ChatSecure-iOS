@@ -4,38 +4,17 @@
 #import <CoreData/CoreData.h>
 #import "OTRManagedOAuthAccount.h"
 
-extern const struct OTRManagedFacebookAccountAttributes {
-} OTRManagedFacebookAccountAttributes;
-
-extern const struct OTRManagedFacebookAccountRelationships {
-} OTRManagedFacebookAccountRelationships;
-
-extern const struct OTRManagedFacebookAccountFetchedProperties {
-} OTRManagedFacebookAccountFetchedProperties;
-
-
-
-@interface OTRManagedFacebookAccountID : NSManagedObjectID {}
+@interface OTRManagedFacebookAccountID : OTRManagedOAuthAccountID {}
 @end
 
 @interface _OTRManagedFacebookAccount : OTRManagedOAuthAccount {}
 + (id)insertInManagedObjectContext:(NSManagedObjectContext*)moc_;
 + (NSString*)entityName;
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_;
-- (OTRManagedFacebookAccountID*)objectID;
-
-
-
-
-
-
-@end
-
-@interface _OTRManagedFacebookAccount (CoreDataGeneratedAccessors)
+@property (nonatomic, readonly, strong) OTRManagedFacebookAccountID* objectID;
 
 @end
 
 @interface _OTRManagedFacebookAccount (CoreDataGeneratedPrimitiveAccessors)
-
 
 @end

@@ -3,15 +3,6 @@
 
 #import "_OTRManagedOscarAccount.h"
 
-const struct OTRManagedOscarAccountAttributes OTRManagedOscarAccountAttributes = {
-};
-
-const struct OTRManagedOscarAccountRelationships OTRManagedOscarAccountRelationships = {
-};
-
-const struct OTRManagedOscarAccountFetchedProperties OTRManagedOscarAccountFetchedProperties = {
-};
-
 @implementation OTRManagedOscarAccountID
 @end
 
@@ -37,17 +28,9 @@ const struct OTRManagedOscarAccountFetchedProperties OTRManagedOscarAccountFetch
 
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
-	
 
 	return keyPaths;
 }
 
-
-
-
-
-
-
-
-
 @end
+

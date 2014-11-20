@@ -11,9 +11,6 @@ const struct OTRvCardAvatarRelationships OTRvCardAvatarRelationships = {
 	.vCard = @"vCard",
 };
 
-const struct OTRvCardAvatarFetchedProperties OTRvCardAvatarFetchedProperties = {
-};
-
 @implementation OTRvCardAvatarID
 @end
 
@@ -39,28 +36,13 @@ const struct OTRvCardAvatarFetchedProperties OTRvCardAvatarFetchedProperties = {
 
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
-	
 
 	return keyPaths;
 }
 
-
-
-
 @dynamic photoData;
-
-
-
-
-
 
 @dynamic vCard;
 
-	
-
-
-
-
-
-
 @end
+

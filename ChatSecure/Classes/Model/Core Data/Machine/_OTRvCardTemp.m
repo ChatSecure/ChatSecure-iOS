@@ -11,9 +11,6 @@ const struct OTRvCardTempRelationships OTRvCardTempRelationships = {
 	.vCard = @"vCard",
 };
 
-const struct OTRvCardTempFetchedProperties OTRvCardTempFetchedProperties = {
-};
-
 @implementation OTRvCardTempID
 @end
 
@@ -39,28 +36,13 @@ const struct OTRvCardTempFetchedProperties OTRvCardTempFetchedProperties = {
 
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
-	
 
 	return keyPaths;
 }
 
-
-
-
 @dynamic vCardTemp;
-
-
-
-
-
 
 @dynamic vCard;
 
-	
-
-
-
-
-
-
 @end
+

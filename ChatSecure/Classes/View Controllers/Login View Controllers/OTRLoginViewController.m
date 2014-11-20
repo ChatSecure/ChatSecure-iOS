@@ -22,8 +22,6 @@
 
 #import "OTRLoginViewController.h"
 #import "OTRConstants.h"
-#import "OTRManagedXMPPAccount.h"
-#import "OTRManagedOscarAccount.h"
 
 
 #import "OTRXMPPLoginViewController.h"
@@ -31,7 +29,6 @@
 #import "OTRFacebookLoginViewController.h"
 #import "OTRGoogleTalkLoginViewController.h"
 #import "OTRInLineTextEditTableViewCell.h"
-#import "OTRManagedXMPPTorAccount.h"
 #import "OTRUtilities.h"
 #import "OTRXMPPError.h"
 

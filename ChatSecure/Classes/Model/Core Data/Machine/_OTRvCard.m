@@ -15,9 +15,6 @@ const struct OTRvCardRelationships OTRvCardRelationships = {
 	.vCardTempRelationship = @"vCardTempRelationship",
 };
 
-const struct OTRvCardFetchedProperties OTRvCardFetchedProperties = {
-};
-
 @implementation OTRvCardID
 @end
 
@@ -43,7 +40,7 @@ const struct OTRvCardFetchedProperties OTRvCardFetchedProperties = {
 
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
-	
+
 	if ([key isEqualToString:@"waitingForFetchValue"]) {
 		NSSet *affectingKey = [NSSet setWithObject:@"waitingForFetch"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
@@ -53,33 +50,13 @@ const struct OTRvCardFetchedProperties OTRvCardFetchedProperties = {
 	return keyPaths;
 }
 
-
-
-
 @dynamic jidString;
-
-
-
-
-
 
 @dynamic lastUpdated;
 
-
-
-
-
-
 @dynamic photoHash;
 
-
-
-
-
-
 @dynamic waitingForFetch;
-
-
 
 - (BOOL)waitingForFetchValue {
 	NSNumber *result = [self waitingForFetch];
@@ -99,21 +76,9 @@ const struct OTRvCardFetchedProperties OTRvCardFetchedProperties = {
 	[self setPrimitiveWaitingForFetch:[NSNumber numberWithBool:value_]];
 }
 
-
-
-
-
 @dynamic vCardAvatarRelationship;
-
-	
 
 @dynamic vCardTempRelationship;
 
-	
-
-
-
-
-
-
 @end
+

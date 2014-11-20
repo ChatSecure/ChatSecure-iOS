@@ -1,5 +1,4 @@
-#import "OTRmanagedFacebookAccount.h"
-
+#import "OTRManagedFacebookAccount.h"
 
 @interface OTRManagedFacebookAccount ()
 
@@ -7,8 +6,8 @@
 
 @end
 
-
 @implementation OTRManagedFacebookAccount
 
+// Custom logic goes here.
 
 @end

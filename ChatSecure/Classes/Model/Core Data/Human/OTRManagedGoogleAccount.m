@@ -6,8 +6,8 @@
 
 @end
 
-
 @implementation OTRManagedGoogleAccount
 
+// Custom logic goes here.
 
 @end

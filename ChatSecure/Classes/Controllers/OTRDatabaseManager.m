@@ -25,7 +25,6 @@
 #import "OTRManagedFacebookAccount.h"
 #import "OTRGoogleOAuthXMPPAccount.h"
 #import "OTRFacebookOAuthXMPPAccount.h"
-#import "OTRManagedXMPPTorAccount.h"
 #import "OTRAccount.h"
 #import "CoreData+MagicalRecord.h"
 #import "OTRMessage.h"
@@ -75,28 +74,17 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
     {
         NSURL *mom2 = [[NSBundle mainBundle] URLForResource:@"ChatSecure 2" withExtension:@"mom" subdirectory:@"ChatSecure.momd"];
         NSURL *mom3 = [[NSBundle mainBundle] URLForResource:@"ChatSecure 3" withExtension:@"mom" subdirectory:@"ChatSecure.momd"];
-        NSURL *mom4 = [[NSBundle mainBundle] URLForResource:@"ChatSecure 4" withExtension:@"mom" subdirectory:@"ChatSecure.momd"];
         NSManagedObjectModel *version2Model = [[NSManagedObjectModel alloc] initWithContentsOfURL:mom2];
         NSManagedObjectModel *version3Model = [[NSManagedObjectModel alloc] initWithContentsOfURL:mom3];
-        NSManagedObjectModel *version4Model = [[NSManagedObjectModel alloc] initWithContentsOfURL:mom4];
         
         if ([OTRDatabaseManager isManagedObjectModel:version2Model compatibleWithStoreAtUrl:databaseURL]) {
-            
-        }
-        else if ([OTRDatabaseManager isManagedObjectModel:version3Model compatibleWithStoreAtUrl:databaseURL]) {
-            
-        }
-        else if ([OTRDatabaseManager isManagedObjectModel:version4Model compatibleWithStoreAtUrl:databaseURL]) {
-            
+            [OTRDatabaseManager migrateLegacyStore:databaseURL destinationStore:databaseURL sourceModel:version2Model destinationModel:version3Model error:nil];
         }
         
         
         [MagicalRecord setShouldAutoCreateManagedObjectModel:NO];
         [MagicalRecord setDefaultModelNamed:@"ChatSecure.momd"];
         [MagicalRecord setupCoreDataStackWithAutoMigratingSqliteStoreNamed:@"ChatSecure.sqlite"];
-        
-        //[OTREncryptionManager setFileProtection:NSFileProtectionCompleteUntilFirstUserAuthentication path:databaseURL.path];
-        //[OTREncryptionManager addSkipBackupAttributeToItemAtURL:databaseURL];
         
          ////// Migrate core data to yapdatabase //////
         
@@ -118,7 +106,7 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
             }];
         }];
         
-        
+        [[NSFileManager defaultManager] removeItemAtURL:databaseURL error:nil];
     }
     
     [OTRDatabaseManager deleteLegacyXMPPFiles];
@@ -140,7 +128,6 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
     account.displayName = accountDictionary[OTRManagedAccountAttributes.displayName];
     account.domain = accountDictionary[OTRManagedXMPPAccountAttributes.domain];
     account.port = [accountDictionary[OTRManagedXMPPAccountAttributes.port] intValue];
-    account.resource = accountDictionary[OTRManagedXMPPAccountAttributes.resource];
     
     ////// transfer saved passwords //////
     
@@ -168,9 +155,6 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
 {
     if ([coreDataClass isEqualToString:NSStringFromClass([OTRManagedXMPPAccount class])]) {
         return OTRAccountTypeJabber;
-    }
-    else if ([coreDataClass isEqualToString:NSStringFromClass([OTRManagedXMPPTorAccount class])]) {
-        return OTRAccountTypeXMPPTor;
     }
     else if ([coreDataClass isEqualToString:NSStringFromClass([OTRManagedGoogleAccount class])]) {
         return OTRAccountTypeGoogleTalk;

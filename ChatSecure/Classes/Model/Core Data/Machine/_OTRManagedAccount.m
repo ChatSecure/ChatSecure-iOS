@@ -16,9 +16,6 @@ const struct OTRManagedAccountRelationships OTRManagedAccountRelationships = {
 	.buddies = @"buddies",
 };
 
-const struct OTRManagedAccountFetchedProperties OTRManagedAccountFetchedProperties = {
-};
-
 @implementation OTRManagedAccountID
 @end
 
@@ -44,7 +41,7 @@ const struct OTRManagedAccountFetchedProperties OTRManagedAccountFetchedProperti
 
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
-	
+
 	if ([key isEqualToString:@"autologinValue"]) {
 		NSSet *affectingKey = [NSSet setWithObject:@"autologin"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
@@ -59,12 +56,7 @@ const struct OTRManagedAccountFetchedProperties OTRManagedAccountFetchedProperti
 	return keyPaths;
 }
 
-
-
-
 @dynamic autologin;
-
-
 
 - (BOOL)autologinValue {
 	NSNumber *result = [self autologin];
@@ -84,27 +76,11 @@ const struct OTRManagedAccountFetchedProperties OTRManagedAccountFetchedProperti
 	[self setPrimitiveAutologin:[NSNumber numberWithBool:value_]];
 }
 
-
-
-
-
 @dynamic displayName;
-
-
-
-
-
 
 @dynamic protocol;
 
-
-
-
-
-
 @dynamic rememberPassword;
-
-
 
 - (BOOL)rememberPasswordValue {
 	NSNumber *result = [self rememberPassword];
@@ -124,40 +100,20 @@ const struct OTRManagedAccountFetchedProperties OTRManagedAccountFetchedProperti
 	[self setPrimitiveRememberPassword:[NSNumber numberWithBool:value_]];
 }
 
-
-
-
-
 @dynamic uniqueIdentifier;
-
-
-
-
-
 
 @dynamic username;
 
-
-
-
-
-
 @dynamic buddies;
 
-	
 - (NSMutableSet*)buddiesSet {
 	[self willAccessValueForKey:@"buddies"];
-  
+
 	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"buddies"];
-  
+
 	[self didAccessValueForKey:@"buddies"];
 	return result;
 }
-	
-
-
-
-
-
 
 @end
+

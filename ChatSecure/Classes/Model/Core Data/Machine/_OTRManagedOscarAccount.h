@@ -4,38 +4,17 @@
 #import <CoreData/CoreData.h>
 #import "OTRManagedAccount.h"
 
-extern const struct OTRManagedOscarAccountAttributes {
-} OTRManagedOscarAccountAttributes;
-
-extern const struct OTRManagedOscarAccountRelationships {
-} OTRManagedOscarAccountRelationships;
-
-extern const struct OTRManagedOscarAccountFetchedProperties {
-} OTRManagedOscarAccountFetchedProperties;
-
-
-
-@interface OTRManagedOscarAccountID : NSManagedObjectID {}
+@interface OTRManagedOscarAccountID : OTRManagedAccountID {}
 @end
 
 @interface _OTRManagedOscarAccount : OTRManagedAccount {}
 + (id)insertInManagedObjectContext:(NSManagedObjectContext*)moc_;
 + (NSString*)entityName;
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_;
-- (OTRManagedOscarAccountID*)objectID;
-
-
-
-
-
-
-@end
-
-@interface _OTRManagedOscarAccount (CoreDataGeneratedAccessors)
+@property (nonatomic, readonly, strong) OTRManagedOscarAccountID* objectID;
 
 @end
 
 @interface _OTRManagedOscarAccount (CoreDataGeneratedPrimitiveAccessors)
-
 
 @end

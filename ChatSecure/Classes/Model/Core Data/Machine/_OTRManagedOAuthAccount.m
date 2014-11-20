@@ -3,15 +3,6 @@
 
 #import "_OTRManagedOAuthAccount.h"
 
-const struct OTRManagedOAuthAccountAttributes OTRManagedOAuthAccountAttributes = {
-};
-
-const struct OTRManagedOAuthAccountRelationships OTRManagedOAuthAccountRelationships = {
-};
-
-const struct OTRManagedOAuthAccountFetchedProperties OTRManagedOAuthAccountFetchedProperties = {
-};
-
 @implementation OTRManagedOAuthAccountID
 @end
 
@@ -37,17 +28,9 @@ const struct OTRManagedOAuthAccountFetchedProperties OTRManagedOAuthAccountFetch
 
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
-	
 
 	return keyPaths;
 }
 
-
-
-
-
-
-
-
-
 @end
+

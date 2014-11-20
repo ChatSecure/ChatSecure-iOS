@@ -3,15 +3,6 @@
 
 #import "_OTRManagedFacebookAccount.h"
 
-const struct OTRManagedFacebookAccountAttributes OTRManagedFacebookAccountAttributes = {
-};
-
-const struct OTRManagedFacebookAccountRelationships OTRManagedFacebookAccountRelationships = {
-};
-
-const struct OTRManagedFacebookAccountFetchedProperties OTRManagedFacebookAccountFetchedProperties = {
-};
-
 @implementation OTRManagedFacebookAccountID
 @end
 
@@ -37,17 +28,9 @@ const struct OTRManagedFacebookAccountFetchedProperties OTRManagedFacebookAccoun
 
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
-	
 
 	return keyPaths;
 }
 
-
-
-
-
-
-
-
-
 @end
+

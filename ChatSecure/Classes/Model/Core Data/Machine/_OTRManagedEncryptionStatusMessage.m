@@ -1,44 +1,42 @@
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to OTRManagedStatusMessage.m instead.
+// Make changes to OTRManagedEncryptionStatusMessage.m instead.
 
-#import "_OTRManagedStatusMessage.h"
+#import "_OTRManagedEncryptionStatusMessage.h"
 
-const struct OTRManagedStatusMessageAttributes OTRManagedStatusMessageAttributes = {
+const struct OTRManagedEncryptionStatusMessageAttributes OTRManagedEncryptionStatusMessageAttributes = {
 	.status = @"status",
 };
 
-const struct OTRManagedStatusMessageRelationships OTRManagedStatusMessageRelationships = {
+const struct OTRManagedEncryptionStatusMessageRelationships OTRManagedEncryptionStatusMessageRelationships = {
+	.encryptionstatusbuddy = @"encryptionstatusbuddy",
 };
 
-const struct OTRManagedStatusMessageFetchedProperties OTRManagedStatusMessageFetchedProperties = {
-};
-
-@implementation OTRManagedStatusMessageID
+@implementation OTRManagedEncryptionStatusMessageID
 @end
 
-@implementation _OTRManagedStatusMessage
+@implementation _OTRManagedEncryptionStatusMessage
 
 + (id)insertInManagedObjectContext:(NSManagedObjectContext*)moc_ {
 	NSParameterAssert(moc_);
-	return [NSEntityDescription insertNewObjectForEntityForName:@"OTRManagedStatusMessage" inManagedObjectContext:moc_];
+	return [NSEntityDescription insertNewObjectForEntityForName:@"OTRManagedEncryptionStatusMessage" inManagedObjectContext:moc_];
 }
 
 + (NSString*)entityName {
-	return @"OTRManagedStatusMessage";
+	return @"OTRManagedEncryptionStatusMessage";
 }
 
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_ {
 	NSParameterAssert(moc_);
-	return [NSEntityDescription entityForName:@"OTRManagedStatusMessage" inManagedObjectContext:moc_];
+	return [NSEntityDescription entityForName:@"OTRManagedEncryptionStatusMessage" inManagedObjectContext:moc_];
 }
 
-- (OTRManagedStatusMessageID*)objectID {
-	return (OTRManagedStatusMessageID*)[super objectID];
+- (OTRManagedEncryptionStatusMessageID*)objectID {
+	return (OTRManagedEncryptionStatusMessageID*)[super objectID];
 }
 
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
-	
+
 	if ([key isEqualToString:@"statusValue"]) {
 		NSSet *affectingKey = [NSSet setWithObject:@"status"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
@@ -48,12 +46,7 @@ const struct OTRManagedStatusMessageFetchedProperties OTRManagedStatusMessageFet
 	return keyPaths;
 }
 
-
-
-
 @dynamic status;
-
-
 
 - (int16_t)statusValue {
 	NSNumber *result = [self status];
@@ -73,13 +66,7 @@ const struct OTRManagedStatusMessageFetchedProperties OTRManagedStatusMessageFet
 	[self setPrimitiveStatus:[NSNumber numberWithShort:value_]];
 }
 
-
-
-
-
-
-
-
-
+@dynamic encryptionstatusbuddy;
 
 @end
+

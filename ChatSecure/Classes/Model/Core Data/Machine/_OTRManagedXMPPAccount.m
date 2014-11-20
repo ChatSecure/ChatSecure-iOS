@@ -6,14 +6,10 @@
 const struct OTRManagedXMPPAccountAttributes OTRManagedXMPPAccountAttributes = {
 	.domain = @"domain",
 	.port = @"port",
-	.resource = @"resource",
 };
 
 const struct OTRManagedXMPPAccountRelationships OTRManagedXMPPAccountRelationships = {
 	.subscriptionRequests = @"subscriptionRequests",
-};
-
-const struct OTRManagedXMPPAccountFetchedProperties OTRManagedXMPPAccountFetchedProperties = {
 };
 
 @implementation OTRManagedXMPPAccountID
@@ -41,7 +37,7 @@ const struct OTRManagedXMPPAccountFetchedProperties OTRManagedXMPPAccountFetched
 
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
-	
+
 	if ([key isEqualToString:@"portValue"]) {
 		NSSet *affectingKey = [NSSet setWithObject:@"port"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
@@ -51,19 +47,9 @@ const struct OTRManagedXMPPAccountFetchedProperties OTRManagedXMPPAccountFetched
 	return keyPaths;
 }
 
-
-
-
 @dynamic domain;
 
-
-
-
-
-
 @dynamic port;
-
-
 
 - (int16_t)portValue {
 	NSNumber *result = [self port];
@@ -83,33 +69,16 @@ const struct OTRManagedXMPPAccountFetchedProperties OTRManagedXMPPAccountFetched
 	[self setPrimitivePort:[NSNumber numberWithShort:value_]];
 }
 
-
-
-
-
-@dynamic resource;
-
-
-
-
-
-
 @dynamic subscriptionRequests;
 
-	
 - (NSMutableSet*)subscriptionRequestsSet {
 	[self willAccessValueForKey:@"subscriptionRequests"];
-  
+
 	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"subscriptionRequests"];
-  
+
 	[self didAccessValueForKey:@"subscriptionRequests"];
 	return result;
 }
-	
-
-
-
-
-
 
 @end
+

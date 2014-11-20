@@ -11,9 +11,6 @@ const struct OTRManagedGroupRelationships OTRManagedGroupRelationships = {
 	.buddies = @"buddies",
 };
 
-const struct OTRManagedGroupFetchedProperties OTRManagedGroupFetchedProperties = {
-};
-
 @implementation OTRManagedGroupID
 @end
 
@@ -39,37 +36,22 @@ const struct OTRManagedGroupFetchedProperties OTRManagedGroupFetchedProperties =
 
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
-	
 
 	return keyPaths;
 }
 
-
-
-
 @dynamic name;
-
-
-
-
-
 
 @dynamic buddies;
 
-	
 - (NSMutableSet*)buddiesSet {
 	[self willAccessValueForKey:@"buddies"];
-  
+
 	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"buddies"];
-  
+
 	[self didAccessValueForKey:@"buddies"];
 	return result;
 }
-	
-
-
-
-
-
 
 @end
+

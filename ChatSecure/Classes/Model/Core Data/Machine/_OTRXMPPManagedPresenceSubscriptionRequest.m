@@ -13,9 +13,6 @@ const struct OTRXMPPManagedPresenceSubscriptionRequestRelationships OTRXMPPManag
 	.xmppAccount = @"xmppAccount",
 };
 
-const struct OTRXMPPManagedPresenceSubscriptionRequestFetchedProperties OTRXMPPManagedPresenceSubscriptionRequestFetchedProperties = {
-};
-
 @implementation OTRXMPPManagedPresenceSubscriptionRequestID
 @end
 
@@ -41,42 +38,17 @@ const struct OTRXMPPManagedPresenceSubscriptionRequestFetchedProperties OTRXMPPM
 
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
-	
 
 	return keyPaths;
 }
 
-
-
-
 @dynamic date;
-
-
-
-
-
 
 @dynamic displayName;
 
-
-
-
-
-
 @dynamic jid;
-
-
-
-
-
 
 @dynamic xmppAccount;
 
-	
-
-
-
-
-
-
 @end
+

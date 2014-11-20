@@ -4,17 +4,13 @@
 #import "_OTRManagedMessage.h"
 
 const struct OTRManagedMessageAttributes OTRManagedMessageAttributes = {
-	.date = @"date",
-	.isEncrypted = @"isEncrypted",
-	.isIncoming = @"isIncoming",
-	.message = @"message",
+	.isDelivered = @"isDelivered",
+	.isRead = @"isRead",
+	.uniqueID = @"uniqueID",
 };
 
 const struct OTRManagedMessageRelationships OTRManagedMessageRelationships = {
-	.buddy = @"buddy",
-};
-
-const struct OTRManagedMessageFetchedProperties OTRManagedMessageFetchedProperties = {
+	.messagebuddy = @"messagebuddy",
 };
 
 @implementation OTRManagedMessageID
@@ -42,14 +38,14 @@ const struct OTRManagedMessageFetchedProperties OTRManagedMessageFetchedProperti
 
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
-	
-	if ([key isEqualToString:@"isEncryptedValue"]) {
-		NSSet *affectingKey = [NSSet setWithObject:@"isEncrypted"];
+
+	if ([key isEqualToString:@"isDeliveredValue"]) {
+		NSSet *affectingKey = [NSSet setWithObject:@"isDelivered"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
 		return keyPaths;
 	}
-	if ([key isEqualToString:@"isIncomingValue"]) {
-		NSSet *affectingKey = [NSSet setWithObject:@"isIncoming"];
+	if ([key isEqualToString:@"isReadValue"]) {
+		NSSet *affectingKey = [NSSet setWithObject:@"isRead"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
 		return keyPaths;
 	}
@@ -57,82 +53,49 @@ const struct OTRManagedMessageFetchedProperties OTRManagedMessageFetchedProperti
 	return keyPaths;
 }
 
+@dynamic isDelivered;
 
-
-
-@dynamic date;
-
-
-
-
-
-
-@dynamic isEncrypted;
-
-
-
-- (BOOL)isEncryptedValue {
-	NSNumber *result = [self isEncrypted];
+- (BOOL)isDeliveredValue {
+	NSNumber *result = [self isDelivered];
 	return [result boolValue];
 }
 
-- (void)setIsEncryptedValue:(BOOL)value_ {
-	[self setIsEncrypted:[NSNumber numberWithBool:value_]];
+- (void)setIsDeliveredValue:(BOOL)value_ {
+	[self setIsDelivered:[NSNumber numberWithBool:value_]];
 }
 
-- (BOOL)primitiveIsEncryptedValue {
-	NSNumber *result = [self primitiveIsEncrypted];
+- (BOOL)primitiveIsDeliveredValue {
+	NSNumber *result = [self primitiveIsDelivered];
 	return [result boolValue];
 }
 
-- (void)setPrimitiveIsEncryptedValue:(BOOL)value_ {
-	[self setPrimitiveIsEncrypted:[NSNumber numberWithBool:value_]];
+- (void)setPrimitiveIsDeliveredValue:(BOOL)value_ {
+	[self setPrimitiveIsDelivered:[NSNumber numberWithBool:value_]];
 }
 
+@dynamic isRead;
 
-
-
-
-@dynamic isIncoming;
-
-
-
-- (BOOL)isIncomingValue {
-	NSNumber *result = [self isIncoming];
+- (BOOL)isReadValue {
+	NSNumber *result = [self isRead];
 	return [result boolValue];
 }
 
-- (void)setIsIncomingValue:(BOOL)value_ {
-	[self setIsIncoming:[NSNumber numberWithBool:value_]];
+- (void)setIsReadValue:(BOOL)value_ {
+	[self setIsRead:[NSNumber numberWithBool:value_]];
 }
 
-- (BOOL)primitiveIsIncomingValue {
-	NSNumber *result = [self primitiveIsIncoming];
+- (BOOL)primitiveIsReadValue {
+	NSNumber *result = [self primitiveIsRead];
 	return [result boolValue];
 }
 
-- (void)setPrimitiveIsIncomingValue:(BOOL)value_ {
-	[self setPrimitiveIsIncoming:[NSNumber numberWithBool:value_]];
+- (void)setPrimitiveIsReadValue:(BOOL)value_ {
+	[self setPrimitiveIsRead:[NSNumber numberWithBool:value_]];
 }
 
+@dynamic uniqueID;
 
-
-
-
-@dynamic message;
-
-
-
-
-
-
-@dynamic buddy;
-
-	
-
-
-
-
-
+@dynamic messagebuddy;
 
 @end
+
