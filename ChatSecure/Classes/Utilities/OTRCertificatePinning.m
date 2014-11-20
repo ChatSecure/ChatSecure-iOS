@@ -149,7 +149,7 @@ static id AFPublicKeyForCertificate(NSData *certificate) {
             [keychainQuery save:&error];
             
             if (error) {
-                DDLogError(@"Error saving new certificate to keychain");
+                DDLogError(@"Error saving new certificate to keychain: %@", error);
             }
         }
     }
@@ -164,7 +164,7 @@ static id AFPublicKeyForCertificate(NSData *certificate) {
     [keychainQuery fetch:&error];
     
     if (error) {
-        DDLogError(@"Error retrieving certificates from keychain");
+        DDLogError(@"Error retrieving certificates from keychain: %@", error);
     }
     
     id passwordObject = keychainQuery.passwordObject;
@@ -244,7 +244,7 @@ static id AFPublicKeyForCertificate(NSData *certificate) {
     NSError * error = nil;
     [SSKeychain deletePasswordForService:kOTRCertificateServiceName account:hostname error:&error];
     if (error) {
-        DDLogError(@"Error deleting all certificates");
+        DDLogError(@"Error deleting all certificates: %@", error);
     }
 }
 + (void)deleteCertificate:(SecCertificateRef)cert withHostName:(NSString *)hostname {
@@ -277,7 +277,7 @@ static id AFPublicKeyForCertificate(NSData *certificate) {
         [keychainQuery deleteItem:&error];
     }
     if (error) {
-        DDLogError(@"Error saving cert to keychain");
+        DDLogError(@"Error saving cert to keychain: %@", error);
     }
 }
 
