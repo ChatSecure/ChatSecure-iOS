@@ -1,11 +1,11 @@
 PODS:
   - AFNetworking (2.4.1):
-    - AFNetworking/NSURLConnection
-    - AFNetworking/NSURLSession
-    - AFNetworking/Reachability
-    - AFNetworking/Security
-    - AFNetworking/Serialization
-    - AFNetworking/UIKit
+    - AFNetworking/NSURLConnection (= 2.4.1)
+    - AFNetworking/NSURLSession (= 2.4.1)
+    - AFNetworking/Reachability (= 2.4.1)
+    - AFNetworking/Security (= 2.4.1)
+    - AFNetworking/Serialization (= 2.4.1)
+    - AFNetworking/UIKit (= 2.4.1)
   - AFNetworking/NSURLConnection (2.4.1):
     - AFNetworking/Reachability
     - AFNetworking/Security
@@ -25,10 +25,10 @@ PODS:
   - Appirater (2.0.4)
   - ARChromeActivity (1.0.4)
   - BBlock (1.2.0):
-    - BBlock/AppKit
-    - BBlock/Foundation
-    - BBlock/StoreKit
-    - BBlock/UIKit
+    - BBlock/AppKit (= 1.2.0)
+    - BBlock/Foundation (= 1.2.0)
+    - BBlock/StoreKit (= 1.2.0)
+    - BBlock/UIKit (= 1.2.0)
   - BBlock/Foundation (1.2.0)
   - BBlock/StoreKit (1.2.0)
   - BBlock/UIKit (1.2.0)
@@ -36,7 +36,7 @@ PODS:
   - Bolts (1.1.3)
   - CocoaAsyncSocket (7.4.1)
   - CocoaLumberjack (1.9.2):
-    - CocoaLumberjack/Extensions
+    - CocoaLumberjack/Extensions (= 1.9.2)
   - CocoaLumberjack/Core (1.9.2)
   - CocoaLumberjack/Extensions (1.9.2):
     - CocoaLumberjack/Core
@@ -53,16 +53,16 @@ PODS:
   - JTTargetActionBlock (1.0.0)
   - JVFloatLabeledTextField (0.0.9)
   - MagicalRecord (2.2):
-    - MagicalRecord/Core
+    - MagicalRecord/Core (= 2.2)
   - MagicalRecord/Core (2.2)
   - Mantle (1.5.1):
-    - Mantle/extobjc
+    - Mantle/extobjc (= 1.5.1)
   - Mantle/extobjc (1.5.1)
   - MBProgressHUD (0.9)
   - MWFeedParser (1.0.1):
-    - MWFeedParser/FeedParser
-    - MWFeedParser/NSDate+InternetDateTime
-    - MWFeedParser/NSString+HTML
+    - MWFeedParser/FeedParser (= 1.0.1)
+    - MWFeedParser/NSDate+InternetDateTime (= 1.0.1)
+    - MWFeedParser/NSString+HTML (= 1.0.1)
   - MWFeedParser/FeedParser (1.0.1):
     - MWFeedParser/NSDate+InternetDateTime
     - MWFeedParser/NSString+HTML
@@ -89,7 +89,7 @@ PODS:
   - uservoice-iphone-sdk (3.2.1)
   - VTAcknowledgementsViewController (0.12)
   - XMPPFramework (3.6.4):
-    - XMPPFramework/All
+    - XMPPFramework/All (= 3.6.4)
   - XMPPFramework/All (3.6.4):
     - XMPPFramework/Authentication
     - XMPPFramework/BandwidthMonitor
@@ -339,4 +339,4 @@ SPEC CHECKSUMS:
   XMPPFramework: 87bac7edb0ffe6d04b13e764a77df64767f1b369
   YapDatabase: 097c5cc7964e0856c8ff859fdf1b18961e92a50b
 
-COCOAPODS: 0.34.4
+COCOAPODS: 0.35.0.rc2
