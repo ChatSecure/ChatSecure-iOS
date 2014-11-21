@@ -71,8 +71,7 @@ static id AFPublicKeyForCertificate(NSData *certificate) {
 - (instancetype)initWithDefaultCertificates
 {
     if (self = [super init]) {
-        self.securityPolicy = [[AFSecurityPolicy alloc] init];
-        self.securityPolicy.SSLPinningMode = AFSSLPinningModePublicKey;
+        self.securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModePublicKey];
         self.securityPolicy.validatesDomainName = NO;
         self.securityPolicy.validatesCertificateChain = NO;
         self.securityPolicy.allowInvalidCertificates = YES;
