@@ -1,23 +1,23 @@
 PODS:
-  - AFNetworking (2.4.1):
-    - AFNetworking/NSURLConnection (= 2.4.1)
-    - AFNetworking/NSURLSession (= 2.4.1)
-    - AFNetworking/Reachability (= 2.4.1)
-    - AFNetworking/Security (= 2.4.1)
-    - AFNetworking/Serialization (= 2.4.1)
-    - AFNetworking/UIKit (= 2.4.1)
-  - AFNetworking/NSURLConnection (2.4.1):
+  - AFNetworking (2.5.0):
+    - AFNetworking/NSURLConnection (= 2.5.0)
+    - AFNetworking/NSURLSession (= 2.5.0)
+    - AFNetworking/Reachability (= 2.5.0)
+    - AFNetworking/Security (= 2.5.0)
+    - AFNetworking/Serialization (= 2.5.0)
+    - AFNetworking/UIKit (= 2.5.0)
+  - AFNetworking/NSURLConnection (2.5.0):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/NSURLSession (2.4.1):
+  - AFNetworking/NSURLSession (2.5.0):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/Reachability (2.4.1)
-  - AFNetworking/Security (2.4.1)
-  - AFNetworking/Serialization (2.4.1)
-  - AFNetworking/UIKit (2.4.1):
+  - AFNetworking/Reachability (2.5.0)
+  - AFNetworking/Security (2.5.0)
+  - AFNetworking/Serialization (2.5.0)
+  - AFNetworking/UIKit (2.5.0):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
   - AFOAuth2Client (0.1.2):
@@ -32,7 +32,7 @@ PODS:
   - BBlock/Foundation (1.2.0)
   - BBlock/StoreKit (1.2.0)
   - BBlock/UIKit (1.2.0)
-  - BButton (4.0.1)
+  - BButton (4.0.2)
   - Bolts (1.1.3)
   - CocoaAsyncSocket (7.4.1)
   - CocoaLumberjack (1.9.2):
@@ -77,14 +77,14 @@ PODS:
   - ProxyKit/common (1.0.2):
     - CocoaAsyncSocket (~> 7.3)
     - CocoaLumberjack (~> 1.9)
-  - PureLayout (2.0.2)
+  - PureLayout (2.0.3)
   - RMStepsController (1.0.1)
   - SIAlertView (1.3)
   - SQLCipher/common (3.1.0)
   - SQLCipher/fts (3.1.0):
     - SQLCipher/common
   - SSKeychain (1.2.2)
-  - TTTAttributedLabel (1.10.1)
+  - TTTAttributedLabel (1.11.0)
   - TUSafariActivity (1.0.2)
   - UIAlertView-Blocks (1.0)
   - uservoice-iphone-sdk (3.2.1)
@@ -300,13 +300,24 @@ EXTERNAL SOURCES:
   YapDatabase:
     :path: Submodules/YapDatabase/YapDatabase.podspec
 
+CHECKOUT OPTIONS:
+  AFOAuth2Client:
+    :commit: 6e4705c08346c3e77d9522a6d4a1876a3477f01d
+    :git: https://github.com/ChatSecure/AFOAuth2Client.git
+  CocoaAsyncSocket:
+    :commit: c0bbcbcc5e039ca5d732f9844bf95c3d8ee31a5b
+    :git: https://github.com/robbiehanson/CocoaAsyncSocket.git
+  SIAlertView:
+    :commit: e9a1a7d7d5a2a4ef5ff2e2e548644222b14edb27
+    :git: https://github.com/ChatSecure/SIAlertView.git
+
 SPEC CHECKSUMS:
-  AFNetworking: 0aabc6fae66d6e5d039eeb21c315843c7aae51ab
+  AFNetworking: 0f54cb5d16ce38c1b76948faffb8d5fb705021c7
   AFOAuth2Client: 5244ffdc28081e2ce4d4a0d0f1198ed54e24d787
   Appirater: cbdb7f305562cfde585300bfff86da01ae559deb
   ARChromeActivity: d8471d0f78b7fcc1de57929cfc1751b3a7f58bad
   BBlock: 90f0ae0e3ba94fc88be6b9a85b4adbb73b8a7c9a
-  BButton: 396a5e59648e3f687b7d8201b88ebdbad6e36b59
+  BButton: eab327e143be2730c81a22467cc016488a125162
   Bolts: 3db0a875235e0c9042b013af13af0f00f79b102c
   CocoaAsyncSocket: 4bbe8fc969e61e62f408de98faac676468e155b3
   CocoaLumberjack: 205769c032b5fef85b92472046bcc8b7e7c8a817
@@ -327,12 +338,12 @@ SPEC CHECKSUMS:
   OpenInChrome: b7c73ddf8fe0a1788dc0549c3c4c70e3c84da578
   OTRKit: 908a5ea8d40a2264ff491027a9f3d9d0d2c4afba
   ProxyKit: 3e73f2ad92327554549474ad10da21dde46d3ba8
-  PureLayout: 03fe8d5ab68f5871038b3b7065d28ac880d5f2a0
+  PureLayout: 9658675ed95dabfcdf5154c0771ec9ed0980b370
   RMStepsController: 8ff91f169d884fdd834ad37007f553c7bed333eb
   SIAlertView: e6d0d786c3a3f6e456b0e8b9376d0c34d68e827b
   SQLCipher: 981110217eb93c2779c34fb59e646a1c1da918d8
   SSKeychain: cc48bd3ad24fcd9125adb9e0d23dd50b8bbd08b9
-  TTTAttributedLabel: 94bb04f1e005616002dd2cee0262a0082e533627
+  TTTAttributedLabel: e63baa4d3b8798ea259f5d9f55720002b4bbbd66
   TUSafariActivity: 63c6b0584d1f0a731e955c0e4d9c89cde63bedc2
   UIAlertView-Blocks: f3271e84372beb97aea115cd1fb26ae66457f12f
   uservoice-iphone-sdk: 7cbc1e76dcbbc3d5ae3b4bf009fdcf355e1e83ec
