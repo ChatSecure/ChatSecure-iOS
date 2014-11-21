@@ -40,7 +40,8 @@ PODS:
   - CocoaLumberjack/Core (1.9.2)
   - CocoaLumberjack/Extensions (1.9.2):
     - CocoaLumberjack/Core
-  - CPAProxy (1.0.0)
+  - CPAProxy (1.0.0):
+    - CocoaAsyncSocket
   - Facebook-iOS-SDK (3.20.0):
     - Bolts (~> 1.0)
   - gtm-http-fetcher (1.0.141)
@@ -309,7 +310,7 @@ SPEC CHECKSUMS:
   Bolts: 3db0a875235e0c9042b013af13af0f00f79b102c
   CocoaAsyncSocket: 4bbe8fc969e61e62f408de98faac676468e155b3
   CocoaLumberjack: 205769c032b5fef85b92472046bcc8b7e7c8a817
-  CPAProxy: 6a90ca85dcf10ec5479da6fe9eea53a228b9bab9
+  CPAProxy: c3df549999514de2c04633d20a79b00daf627ddb
   Facebook-iOS-SDK: 5854404b4b651f612a8ef79ca06d766858f4cb8e
   gtm-http-fetcher: 5072f07e523261f7a87df939d13c1be2340d8111
   gtm-oauth2: dfb3016b8347b73fa80042e5aed29ec4f36e46bc
@@ -339,4 +340,4 @@ SPEC CHECKSUMS:
   XMPPFramework: 87bac7edb0ffe6d04b13e764a77df64767f1b369
   YapDatabase: 097c5cc7964e0856c8ff859fdf1b18961e92a50b
 
-COCOAPODS: 0.35.0.rc2
+COCOAPODS: 0.35.0

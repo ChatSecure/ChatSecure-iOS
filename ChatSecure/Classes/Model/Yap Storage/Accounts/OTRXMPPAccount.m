@@ -75,12 +75,4 @@ static NSUInteger const OTRDefaultPortNumber = 5222;
     return [NSString stringWithFormat:@"%@%d",kOTRXMPPResource,r];
 }
 
-+ (NSDictionary*) encodingBehaviorsByPropertyKey {
-    NSMutableDictionary *encodingBehaviors = [NSMutableDictionary dictionaryWithDictionary:[super encodingBehaviorsByPropertyKey]];
-    [encodingBehaviors setObject:@(MTLModelEncodingBehaviorExcluded) forKey:NSStringFromSelector(@selector(accountSpecificToken))];
-    [encodingBehaviors setObject:@(MTLModelEncodingBehaviorExcluded) forKey:NSStringFromSelector(@selector(oAuthTokenDictionary))];
-    return encodingBehaviors;
-}
-
-
 @end

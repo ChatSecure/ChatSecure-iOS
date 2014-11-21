@@ -252,13 +252,16 @@ static NSString * const domainCellIdentifier = @"domainCellIdentifer";
     }
     
     self.loginButtonPressed = YES;
-    if(self.isTorAccount && [OTRTorManager sharedInstance].torManager.status != CPAStatusBootstrapDone)
+    if(self.isTorAccount && ![OTRTorManager sharedInstance].torManager.isConnected)
     {
+        if ([OTRTorManager sharedInstance].torManager.status == CPAStatusConnecting) {
+            return;
+        }
         [self showHUDWithText:CONNECTING_TO_TOR_STRING];
         [[OTRTorManager sharedInstance].torManager setupWithCompletion:^(NSString *socksHost, NSUInteger socksPort, NSError *error) {
             // TODO: handle Tor/SOCKS setup error
             if (error) {
-                
+                DDLogError(@"Error setting up Tor: %@", error);
             } else {
                 // successfully connected to Tor
                 [super loginButtonPressed:sender];

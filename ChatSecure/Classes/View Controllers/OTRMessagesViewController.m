@@ -274,6 +274,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 #ifndef CHATSECURE_PUSH
     return;
 #endif
+    /*
     void (^showPushDropDown)(void) = ^void(void) {
         UIButton *requestPushTokenButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         [requestPushTokenButton setTitle:@"Request" forState:UIControlStateNormal];
@@ -302,6 +303,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
             [self hideDropdownAnimated:YES completion:showPushDropDown];
         }
     }
+     */
 }
 #pragma - mark Push Methods
 

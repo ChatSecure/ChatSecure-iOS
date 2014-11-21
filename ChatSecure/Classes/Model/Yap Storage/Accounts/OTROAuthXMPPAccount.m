@@ -84,4 +84,11 @@
     return NSStringFromClass([OTRAccount class]);
 }
 
++ (NSDictionary*) encodingBehaviorsByPropertyKey {
+    NSMutableDictionary *encodingBehaviors = [NSMutableDictionary dictionaryWithDictionary:[super encodingBehaviorsByPropertyKey]];
+    [encodingBehaviors setObject:@(MTLModelEncodingBehaviorExcluded) forKey:NSStringFromSelector(@selector(accountSpecificToken))];
+    [encodingBehaviors setObject:@(MTLModelEncodingBehaviorExcluded) forKey:NSStringFromSelector(@selector(oAuthTokenDictionary))];
+    return encodingBehaviors;
+}
+
 @end

@@ -30,7 +30,7 @@
 #import "OTRXMPPTorAccount.h"
 #import "OTRXMPPAccount.h"
 #import "OTRXMPPManager.h"
-
+#import "OTRLog.h"
 
 
 @interface OTRXMPPLoginViewController ()
@@ -135,8 +135,7 @@
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     if ([keyPath isEqualToString:NSStringFromSelector(@selector(status))] && [object isEqual:[OTRTorManager sharedInstance].torManager]) {
-        BOOL isRunning = [OTRTorManager sharedInstance].torManager.status == CPAStatusBootstrapDone;
-        if (isRunning && self.loginButtonPressed) {
+        if ([OTRTorManager sharedInstance].torManager.isConnected && self.loginButtonPressed) {
             [self loginButtonPressed:nil];
         }
     }
@@ -236,22 +235,26 @@
 {
     self.loginButtonPressed = YES;
     if([self isTorAccount]) {
-        if([OTRTorManager sharedInstance].torManager.status != CPAStatusBootstrapDone) {
+        if([OTRTorManager sharedInstance].torManager.isConnected) {
+            [super loginButtonPressed:sender];
+        } else {
+            if ([OTRTorManager sharedInstance].torManager.status == CPAStatusConnecting) {
+                return;
+            }
             [self showHUDWithText:CONNECTING_TO_TOR_STRING];
             [[OTRTorManager sharedInstance].torManager setupWithCompletion:^(NSString *socksHost, NSUInteger socksPort, NSError *error) {
                 // TODO: handle Tor/SOCKS setup error
                 if (error) {
-                    
+                    DDLogError(@"Error setting up Tor: %@", error);
                 } else {
                     // successfully connected to Tor
+                    [super loginButtonPressed:sender];
                 }
             } progress:^(NSInteger progress, NSString *summaryString) {
                 self.HUD.mode = MBProgressHUDModeDeterminate;
                 self.HUD.labelText = summaryString;
                 self.HUD.progress = progress/100.0;
             }];
-        } else {
-            [super loginButtonPressed:sender];
         }
     } else {
         [super loginButtonPressed:sender];

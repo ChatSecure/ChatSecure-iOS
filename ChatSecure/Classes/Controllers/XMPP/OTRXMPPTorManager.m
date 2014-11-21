@@ -21,7 +21,7 @@
 
 - (void)connectWithPassword:(NSString *)myPassword
 {
-    if ([OTRTorManager sharedInstance].torManager.status == CPAStatusBootstrapDone) {
+    if ([OTRTorManager sharedInstance].torManager.isConnected) {
         [super connectWithPassword:myPassword];
     }
     else {
