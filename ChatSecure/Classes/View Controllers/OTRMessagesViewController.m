@@ -30,6 +30,7 @@
 #import "OTRImages.h"
 #import "UIActivityViewController+ChatSecure.h"
 #import "OTRUtilities.h"
+#import "OTRProtocolManager.h"
 
 static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
 
@@ -519,15 +520,15 @@ typedef NS_ENUM(int, OTRDropDownType) {
                 }
                 
                 [alert show];
-                
             }];
-            
         }];
-        
     }];
-    
-    
-    
+}
+
+- (void)connectButtonPressed:(id)sender
+{
+    [self hideDropdownAnimated:YES completion:nil];
+    [[OTRProtocolManager sharedInstance] loginAccount:self.account];
 }
 
 #pragma - mark  dropDown Methods
@@ -553,6 +554,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     } completion:nil];
     
 }
+
 - (void)hideDropdownAnimated:(BOOL)animated completion:(void (^)(void))completion
 {
     if (!self.buttonDropdownView) {
@@ -651,19 +653,38 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (void)didPressSendButton:(UIButton *)button withMessageText:(NSString *)text sender:(NSString *)sender date:(NSDate *)date
 {
-    OTRMessage *message = [[OTRMessage alloc] init];
-    message.buddyUniqueId = self.buddy.uniqueId;
-    message.text = text;
-    message.read = YES;
-    message.transportedSecurely = NO;
+    if ([[OTRProtocolManager sharedInstance] isAccountConnected:self.account]) {
+        //Account is connected
+        
+        OTRMessage *message = [[OTRMessage alloc] init];
+        message.buddyUniqueId = self.buddy.uniqueId;
+        message.text = text;
+        message.read = YES;
+        message.transportedSecurely = NO;
+        
+        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+            [message saveWithTransaction:transaction];
+            self.buddy.lastMessageDate = message.date;
+            [self.buddy saveWithTransaction:transaction];
+        } completionBlock:^{
+            [[OTRKit sharedInstance] encodeMessage:message.text tlvs:nil username:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString tag:message];
+        }];
+    } else {
+        //Account is not currently connected
+        [self hideDropdownAnimated:YES completion:^{
+            UIButton *okButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+            [okButton setTitle:CONNECT_STRING forState:UIControlStateNormal];
+            [okButton addTarget:self action:@selector(connectButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+            
+            
+            [self showDropdownWithTitle:YOU_ARE_NOT_CONNECTED_STRING buttons:@[okButton] animated:YES tag:0];
+        }];
+    }
     
-    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        [message saveWithTransaction:transaction];
-        self.buddy.lastMessageDate = message.date;
-        [self.buddy saveWithTransaction:transaction];
-    } completionBlock:^{
-        [[OTRKit sharedInstance] encodeMessage:message.text tlvs:nil username:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString tag:message];
-    }];
+    //Reset text because of added whitespace
+    NSString *currentText = self.inputToolbar.contentView.textView.text;
+    self.inputToolbar.contentView.textView.text = [currentText substringToIndex:[currentText length]-1];
+    
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
