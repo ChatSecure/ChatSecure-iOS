@@ -31,6 +31,7 @@
 #import "UIActivityViewController+ChatSecure.h"
 #import "OTRUtilities.h"
 #import "OTRProtocolManager.h"
+#import "OTRNotificationController.h"
 
 static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
 
@@ -529,6 +530,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 {
     [self hideDropdownAnimated:YES completion:nil];
     [[OTRProtocolManager sharedInstance] loginAccount:self.account];
+    [[OTRNotificationController sharedInstance] showAccountConnectingNotificationWithAccountName:self.account.username];
 }
 
 #pragma - mark  dropDown Methods

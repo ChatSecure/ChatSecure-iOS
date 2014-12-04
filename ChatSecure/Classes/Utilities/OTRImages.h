@@ -30,6 +30,6 @@ typedef NS_ENUM(NSUInteger, OTRBubbleMessageType) {
 
 + (UIImage *)warningImage;
 
-
++ (UIImage *)checkMarkWithColor:(UIColor *)color;
 
 @end
