@@ -190,6 +190,7 @@
 		63D184861A2D3F2400334CD8 /* OTRNotificationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D184851A2D3F2400334CD8 /* OTRNotificationController.m */; };
 		63D64D661A2FBA8C00E21F77 /* OTRToastOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D64D651A2FBA8C00E21F77 /* OTRToastOptions.m */; };
 		D9365E7A1A1EB0050006434A /* torrc in Resources */ = {isa = PBXBuildFile; fileRef = D9365E791A1EB0050006434A /* torrc */; };
+		D973D7061A2D4094004D353E /* Pods-acknowledgements.plist in Resources */ = {isa = PBXBuildFile; fileRef = D973D7051A2D4094004D353E /* Pods-acknowledgements.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -600,6 +601,7 @@
 		63DC0EB61A1ABC86002C9598 /* OTR_Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = OTR_Release.xcconfig; path = configurations/OTR_Release.xcconfig; sourceTree = "<group>"; };
 		954B60A022C05FDE4DCFEF6E /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		D9365E791A1EB0050006434A /* torrc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = torrc; path = Resources/torrc; sourceTree = "<group>"; };
+		D973D7051A2D4094004D353E /* Pods-acknowledgements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Pods-acknowledgements.plist"; path = "Pods/Target Support Files/Pods/Pods-acknowledgements.plist"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -624,6 +626,7 @@
 		633104D71A169EE600C17BAE /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				D973D7051A2D4094004D353E /* Pods-acknowledgements.plist */,
 				D9365E791A1EB0050006434A /* torrc */,
 				633107291A16D1F200C17BAE /* DemoImages.xcassets */,
 				6331072A1A16D1F200C17BAE /* Images.xcassets */,
@@ -1331,6 +1334,7 @@
 				632461521A1ADC77000EF33B /* Localizable.strings in Resources */,
 				6331072C1A16D1F200C17BAE /* Images.xcassets in Resources */,
 				633104FD1A16AD8700C17BAE /* chat.facebook.com.cer in Resources */,
+				D973D7061A2D4094004D353E /* Pods-acknowledgements.plist in Resources */,
 				D9365E7A1A1EB0050006434A /* torrc in Resources */,
 				633107191A16D1A300C17BAE /* OTRMessagesCollectionViewCellIncoming.xib in Resources */,
 				6331072B1A16D1F200C17BAE /* DemoImages.xcassets in Resources */,

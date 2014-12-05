@@ -216,6 +216,22 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
     if (success) success = [OTRDatabaseView registerPushView];
     if (success) success = [self setupSecondaryIndexes];
     
+    
+    
+    //Enumerate all files in yap database directory and exclude from backup
+    if (success) {
+        NSError *error = nil;
+        NSDirectoryEnumerator *directoryEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:databaseDirectory];
+        id file;
+        while ((file = [directoryEnumerator nextObject]) && success && !error) {
+            if([file isKindOfClass:[NSString class]]) {
+                NSString *fileName = file;
+                NSURL *url = [NSURL fileURLWithPath:[databaseDirectory stringByAppendingPathComponent:fileName]];
+                success = [url setResourceValue: @(YES) forKey: NSURLIsExcludedFromBackupKey error: &error];
+            }
+        }
+    }
+    
     if (self.database && success) {
         return YES;
     }

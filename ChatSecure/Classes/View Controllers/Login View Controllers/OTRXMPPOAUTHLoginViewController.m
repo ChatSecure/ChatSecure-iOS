@@ -124,14 +124,12 @@
     
     [OTROAuthRefresher refreshAccount:self.account completion:^(id token, NSError *error) {
         if (!error) {
-            if ([self.account.password length]) {
-                [self showHUDWithText:LOGGING_IN_STRING];
-                id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
-                [protocol connectWithPassword:self.account.password userInitiated:YES];
-            }
-            else {
-                [self connectAccount:sender];
-            }
+            self.account.accountSpecificToken = token;
+            [self showHUDWithText:LOGGING_IN_STRING];
+            id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
+            [protocol connectWithPassword:self.account.password userInitiated:YES];
+        } else {
+            [self connectAccount:sender];
         }
     }];
 }
