@@ -10,6 +10,7 @@
 #import "CRToast.h"
 #import "OTRConstants.h"
 #import "OTRLoginViewController.h"
+#import "OTRSettingsViewController.h"
 #import "OTRXMPPManager.h"
 #import "OTRToastOptions.h"
 
@@ -89,9 +90,19 @@
 
 - (void)showLoginFailureNotification:(NSNotification *)notification
 {
+    BOOL isUserInitiated = [[notification.userInfo objectForKey:kOTRProtocolLoginUserInitiated] boolValue];
+    
     UIViewController *topViewController = [self topViewController];
-    if (![topViewController isKindOfClass:[OTRLoginViewController class]]) {
-        //[CRToastManager showNotificationWithMessage:@"Login Bad" completionBlock:nil];
+    
+    if (!([topViewController isKindOfClass:[OTRLoginViewController class]] || [topViewController isKindOfClass:[OTRSettingsViewController class]] )&& isUserInitiated) {
+        OTRXMPPManager *xmppManager = notification.object;
+        NSString *accountName = nil;
+        if (xmppManager) {
+            accountName = [xmppManager accountName];
+            accountName = [XMPPJID jidWithString:accountName].bare;
+        }
+        OTRToastOptions *options = [[OTRToastOptions alloc] initWithText:ACCOUNT_DISCONNECTED_STRING subtitleText:accountName optionType:OTRToastOptionTypeFailure];
+        [CRToastManager showNotificationWithOptions:[options dictionary] completionBlock:nil];
     }
 }
 

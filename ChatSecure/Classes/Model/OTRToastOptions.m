@@ -21,7 +21,7 @@ CGSize const kOTRDefaultNotificationImageSize = {25, 25};
         self.toastType = CRToastTypeNavigationBar;
         self.presentationType = CRToastPresentationTypeCover;
         self.duration = 3;
-        self.backgroundColor = [UIColor lightGrayColor];
+        self.backgroundColor = [OTRColors blueInfoColor];
         self.animationInDirection = CRToastAnimationDirectionTop;
         self.animationOutDirection = CRToastAnimationDirectionTop;
         self.animationInType = CRToastAnimationTypeGravity;
@@ -43,13 +43,15 @@ CGSize const kOTRDefaultNotificationImageSize = {25, 25};
         
         switch (option) {
             case OTRToastOptionTypeSuccess:
-                self.image = [UIImage otr_imageWithImage:[OTRImages checkMarkWithColor:[UIColor whiteColor]] scaledToSize:kOTRDefaultNotificationImageSize];
+                self.image = [UIImage otr_imageWithImage:[OTRImages checkmarkWithColor:[UIColor whiteColor]] scaledToSize:kOTRDefaultNotificationImageSize];
                 self.backgroundColor = [OTRColors greenNoErrorColor];
                 break;
             case OTRToastOptionTypeWarn:
+                self.image = [UIImage otr_imageWithImage:[OTRImages warningImageWithColor:[UIColor whiteColor]] scaledToSize:kOTRDefaultNotificationImageSize];
                 self.backgroundColor = [OTRColors warnColor];
                 break;
             case OTRToastOptionTypeFailure:
+                self.image = [UIImage otr_imageWithImage:[OTRImages errorWithColor:[UIColor whiteColor]] scaledToSize:kOTRDefaultNotificationImageSize];
                 self.backgroundColor = [OTRColors redErrorColor];
                 break;
             default:
@@ -90,9 +92,14 @@ CGSize const kOTRDefaultNotificationImageSize = {25, 25};
 
 #pragma - mark Class Methods
 
++ (instancetype)optionsWithText:(NSString *)text subtitleText:(NSString *)subtitleText optionType:(OTRToastOptionType)option
+{
+    return [[self alloc] initWithText:text subtitleText:subtitleText optionType:option];
+}
+
 + (instancetype)optionsWithText:(NSString *)text subtitleText:(NSString *)subtitleText
 {
-    return [[self alloc] initWithText:text subtitleText:subtitleText];
+    return [self optionsWithText:text subtitleText:subtitleText optionType:OTRToastOptionTypeDefault];
 }
 
 @end

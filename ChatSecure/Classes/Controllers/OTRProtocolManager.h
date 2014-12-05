@@ -42,6 +42,7 @@
 - (BOOL)isAccountConnected:(OTRAccount *)account;
 
 - (void)loginAccount:(OTRAccount *)account;
+- (void)loginAccount:(OTRAccount *)account userInitiated:(BOOL)userInitiated;
 - (void)loginAccounts:(NSArray *)accounts;
 - (void)disconnectAllAccounts;
 

@@ -18,6 +18,7 @@ NSString *const OTRFacebookImageKey = @"OTRFacebookImageKey";
 NSString *const OTRFacebookActivityImageKey = @"OTRFacebookActivityImageKey";
 NSString *const OTRTwitterImageKey = @"OTRTwitterImageKey";
 NSString *const OTRCheckmarkImageKey = @"OTRCeckmarkImageKey";
+NSString *const OTRErrorImageKey = @"OTRErrorImageKey";
 
 @implementation OTRImages
 
@@ -210,9 +211,20 @@ NSString *const OTRCheckmarkImageKey = @"OTRCeckmarkImageKey";
     }];
 }
 
-+ (UIImage *)warningImage
++(UIImage *)warningImage
 {
-    return [UIImage imageWithIdentifier:OTRWarningImageKey forSize:CGSizeMake(92.0, 92.0) andDrawingBlock:^{
+    return [self warningImageWithColor:[OTRColors warnColor]];
+}
+
++ (UIImage *)warningImageWithColor:(UIColor *)color;
+{
+    if (!color) {
+        color = [UIColor blackColor];
+    }
+    
+    NSString *identifier = [NSString stringWithFormat:@"%@-%@",OTRWarningImageKey,[color description]];
+    
+    return [UIImage imageWithIdentifier:identifier forSize:CGSizeMake(92.0, 92.0) andDrawingBlock:^{
         //// Bezier Drawing
         UIBezierPath* bezierPath = [UIBezierPath bezierPath];
         [bezierPath moveToPoint: CGPointMake(76.52, 86.78)];
@@ -245,13 +257,13 @@ NSString *const OTRCheckmarkImageKey = @"OTRCeckmarkImageKey";
         [bezierPath closePath];
         bezierPath.miterLimit = 4;
         
-        [[OTRColors warnColor] setFill];
+        [color setFill];
         [bezierPath fill];
 
     }];
 }
 
-+ (UIImage *)checkMarkWithColor:(UIColor *)color
++ (UIImage *)checkmarkWithColor:(UIColor *)color
 {
     if (!color) {
         color = [UIColor blackColor];
@@ -279,6 +291,49 @@ NSString *const OTRCheckmarkImageKey = @"OTRCeckmarkImageKey";
         [bezierPath addLineToPoint: CGPointMake(71.44, 26.56)];
         [bezierPath addCurveToPoint: CGPointMake(79.11, 25.67) controlPoint1: CGPointMake(73.33, 24.22) controlPoint2: CGPointMake(76.78, 23.78)];
         [bezierPath addCurveToPoint: CGPointMake(79.89, 33.33) controlPoint1: CGPointMake(81.33, 27.56) controlPoint2: CGPointMake(81.78, 31)];
+        [bezierPath closePath];
+        bezierPath.miterLimit = 4;
+        
+        [color setFill];
+        [bezierPath fill];
+    }];
+}
+
++ (UIImage *)errorWithColor:(UIColor *)color
+{
+    if (!color) {
+        color = [UIColor blackColor];
+    }
+    
+    NSString *identifier = [NSString stringWithFormat:@"%@-%@",OTRErrorImageKey,[color description]];
+    
+    return [UIImage imageWithIdentifier:identifier forSize:CGSizeMake(100, 100) andDrawingBlock:^{
+        UIBezierPath* bezierPath = [UIBezierPath bezierPath];
+        [bezierPath moveToPoint: CGPointMake(50, 0)];
+        [bezierPath addCurveToPoint: CGPointMake(0, 50) controlPoint1: CGPointMake(22.33, 0) controlPoint2: CGPointMake(0, 22.33)];
+        [bezierPath addCurveToPoint: CGPointMake(50, 100) controlPoint1: CGPointMake(0, 77.67) controlPoint2: CGPointMake(22.33, 100)];
+        [bezierPath addCurveToPoint: CGPointMake(100, 50) controlPoint1: CGPointMake(77.67, 100) controlPoint2: CGPointMake(100, 77.67)];
+        [bezierPath addCurveToPoint: CGPointMake(50, 0) controlPoint1: CGPointMake(100, 22.33) controlPoint2: CGPointMake(77.67, 0)];
+        [bezierPath closePath];
+        [bezierPath moveToPoint: CGPointMake(75.89, 69)];
+        [bezierPath addCurveToPoint: CGPointMake(75.78, 76.67) controlPoint1: CGPointMake(78, 71.11) controlPoint2: CGPointMake(77.89, 74.56)];
+        [bezierPath addCurveToPoint: CGPointMake(72, 78.22) controlPoint1: CGPointMake(74.78, 77.67) controlPoint2: CGPointMake(73.33, 78.22)];
+        [bezierPath addCurveToPoint: CGPointMake(68.11, 76.56) controlPoint1: CGPointMake(70.56, 78.22) controlPoint2: CGPointMake(69.11, 77.67)];
+        [bezierPath addLineToPoint: CGPointMake(50, 57.78)];
+        [bezierPath addLineToPoint: CGPointMake(31.89, 76.56)];
+        [bezierPath addCurveToPoint: CGPointMake(28, 78.22) controlPoint1: CGPointMake(30.78, 77.67) controlPoint2: CGPointMake(29.44, 78.22)];
+        [bezierPath addCurveToPoint: CGPointMake(24.22, 76.67) controlPoint1: CGPointMake(26.67, 78.22) controlPoint2: CGPointMake(25.33, 77.67)];
+        [bezierPath addCurveToPoint: CGPointMake(24.11, 69) controlPoint1: CGPointMake(22.11, 74.56) controlPoint2: CGPointMake(22, 71.11)];
+        [bezierPath addLineToPoint: CGPointMake(42.44, 50)];
+        [bezierPath addLineToPoint: CGPointMake(24.11, 31)];
+        [bezierPath addCurveToPoint: CGPointMake(24.22, 23.33) controlPoint1: CGPointMake(22, 28.89) controlPoint2: CGPointMake(22.11, 25.44)];
+        [bezierPath addCurveToPoint: CGPointMake(31.89, 23.44) controlPoint1: CGPointMake(26.33, 21.22) controlPoint2: CGPointMake(29.78, 21.33)];
+        [bezierPath addLineToPoint: CGPointMake(50, 42.22)];
+        [bezierPath addLineToPoint: CGPointMake(68.11, 23.56)];
+        [bezierPath addCurveToPoint: CGPointMake(75.78, 23.44) controlPoint1: CGPointMake(70.22, 21.44) controlPoint2: CGPointMake(73.67, 21.33)];
+        [bezierPath addCurveToPoint: CGPointMake(75.89, 31.11) controlPoint1: CGPointMake(77.89, 25.56) controlPoint2: CGPointMake(78, 29)];
+        [bezierPath addLineToPoint: CGPointMake(57.56, 50)];
+        [bezierPath addLineToPoint: CGPointMake(75.89, 69)];
         [bezierPath closePath];
         bezierPath.miterLimit = 4;
         

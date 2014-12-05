@@ -28,6 +28,7 @@ NSString *const kOTRProtocolLoginFailSSLStatusKey          = @"kOTRProtocolLogin
 NSString *const kOTRProtocolLoginFailHostnameKey           = @"kOTRProtocolLoginFailHostnameKey";
 NSString *const kOTRProtocolLoginFailSSLCertificateDataKey = @"kOTRProtocolLoginFailSSLCertificateData";
 NSString *const kOTRNotificationErrorKey                   = @"kOTRNotificationErrorKey";
+NSString *const kOTRProtocolLoginUserInitiated             = @"kOTRProtocolLoginUserInitiated";
 
 NSString *const kOTRFacebookDomain   = @"chat.facebook.com";
 NSString *const kOTRGoogleTalkDomain = @"talk.google.com";

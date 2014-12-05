@@ -87,6 +87,7 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 @property (nonatomic, strong) NSMutableDictionary * buddyTimers;
 @property (nonatomic) dispatch_queue_t workQueue;
 @property (nonatomic) BOOL isRegisteringNewAccount;
+@property (nonatomic) BOOL userInitiatedConnection;
 
 @property (nonatomic, strong) YapDatabaseConnection *databaseConnection;
 
@@ -793,9 +794,15 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
     return kOTRProtocolTypeXMPP;
 }
 
--(void)connectWithPassword:(NSString *)myPassword
+- (void) connectWithPassword:(NSString *)password userInitiated:(BOOL)userInitiated
 {
-    [self connectWithJID:self.account.username password:myPassword];
+    self.userInitiatedConnection = userInitiated;
+    [self connectWithJID:self.account.username password:password];
+}
+
+-(void)connectWithPassword:(NSString *)password
+{
+    [self connectWithPassword:password userInitiated:NO];
 }
 
 -(void)sendChatState:(OTRChatState)chatState withBuddyID:(NSString *)buddyUniqueId
@@ -978,15 +985,18 @@ managedBuddyObjectID
 
 - (void)failedToConnect:(NSError *)error
 {
+    __weak typeof(self)weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
+        __strong typeof(weakSelf)strongSelf = weakSelf;
+        
+        NSMutableDictionary *userInfo = [@{kOTRProtocolLoginUserInitiated : @(self.userInitiatedConnection)} mutableCopy];
         if (error) {
-            [[NSNotificationCenter defaultCenter]
-             postNotificationName:kOTRProtocolLoginFail object:self userInfo:@{kOTRNotificationErrorKey:error}];
+            [userInfo setObject:error forKey:kOTRNotificationErrorKey];
         }
-        else {
-            [[NSNotificationCenter defaultCenter]
-             postNotificationName:kOTRProtocolLoginFail object:self];
-        }
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:kOTRProtocolLoginFail object:self userInfo:userInfo];
+        //Only user initiated on the first time any subsequent attempts will not be from user
+        strongSelf.userInitiatedConnection = NO;
     });
 }
 

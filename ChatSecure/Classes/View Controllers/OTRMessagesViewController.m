@@ -529,7 +529,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 - (void)connectButtonPressed:(id)sender
 {
     [self hideDropdownAnimated:YES completion:nil];
-    [[OTRProtocolManager sharedInstance] loginAccount:self.account];
+    [[OTRProtocolManager sharedInstance] loginAccount:self.account userInitiated:YES];
     [[OTRNotificationController sharedInstance] showAccountConnectingNotificationWithAccountName:self.account.username];
 }
 

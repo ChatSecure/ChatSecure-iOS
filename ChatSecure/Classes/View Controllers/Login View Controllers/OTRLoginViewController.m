@@ -401,7 +401,7 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
         }];
         
         id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
-        [protocol connectWithPassword:self.passwordTextField.text];
+        [protocol connectWithPassword:self.passwordTextField.text userInitiated:YES];
     }
 }
 
