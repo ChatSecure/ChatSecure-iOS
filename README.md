@@ -149,6 +149,7 @@ Thank you to everyone who helped this project become a reality! This project is 
 * [Goxxy](http://rocketdock.com/addon/icons/3462) - Google Talk icon.
 * Yes designed by [Kristin Hogan](http://www.thenounproject.com/khogan87) from the [Noun Project](http://www.thenounproject.com)
 * No designed by [Kristin Hogan](http://www.thenounproject.com/khogan87) from the [Noun Project](http://www.thenounproject.com)
+* Wifi designed by [useiconic.com](http://thenounproject.com/useiconic.com/) from the [Noun Project](http://www.thenounproject.com)
 * [Localizations](https://www.transifex.com/projects/p/chatsecure/)
 	* [Jiajuan Lin](http://www.personal.psu.edu/jwl5262/blogs/lin_portfolio/) (Chinese)
 	* [Jan-Christoph Borchardt](http://jancborchardt.net/) (German)

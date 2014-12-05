@@ -13,6 +13,8 @@
 #import "OTRSettingsViewController.h"
 #import "OTRXMPPManager.h"
 #import "OTRToastOptions.h"
+#import "OTRImages.h"
+#import "UIImage+ChatSecure.h"
 
 @interface OTRNotificationController ()
 
@@ -123,6 +125,7 @@
 - (void)showAccountConnectingNotificationWithAccountName:(NSString *)accountName
 {
     OTRToastOptions *options = [OTRToastOptions optionsWithText:CONNECTING_STRING subtitleText:accountName];
+    options.image = [UIImage otr_imageWithImage:[OTRImages wifiWithColor:[UIColor whiteColor]] scaledToSize:kOTRDefaultNotificationImageSize];
     [CRToastManager showNotificationWithOptions:[options dictionary] completionBlock:nil];
 }
 

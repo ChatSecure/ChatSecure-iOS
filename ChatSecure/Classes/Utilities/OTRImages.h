@@ -36,4 +36,6 @@ typedef NS_ENUM(NSUInteger, OTRBubbleMessageType) {
 
 + (UIImage *)errorWithColor:(UIColor *)color;
 
++ (UIImage *)wifiWithColor:(UIColor *)color;
+
 @end
