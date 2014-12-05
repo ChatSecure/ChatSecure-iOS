@@ -378,7 +378,7 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 - (void)authenticateWithStream:(XMPPStream *)stream {
     NSError * error = nil;
     BOOL status = YES;
-    if ([stream supportsXFacebookPlatformAuthentication]) {
+    if ([stream supportsXFacebookPlatformAuthentication] && self.account.accountType == OTRAccountTypeFacebook) {
         status = [stream authenticateWithFacebookAccessToken:self.password error:&error];
     }
     else if ([stream supportsXOAuth2GoogleAuthentication] && self.account.accountType == OTRAccountTypeGoogleTalk) {
