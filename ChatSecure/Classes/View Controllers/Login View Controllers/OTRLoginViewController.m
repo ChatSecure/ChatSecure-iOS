@@ -536,6 +536,16 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
     [self.HUD removeFromSuperview];
 }
 
+#pragma - mark Class Methods
+
++ (void)showLoginViewControllerWithAccount:(OTRAccount *)account fromViewController:(UIViewController *)viewController completion:(void (^)(void))completion
+{
+    OTRLoginViewController *loginViewController = [OTRLoginViewController loginViewControllerWithAcccount:account];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:loginViewController];
+    nav.modalPresentationStyle = UIModalPresentationFormSheet;
+    [viewController presentViewController:nav animated:YES completion:completion];
+}
+
 +(OTRLoginViewController *)loginViewControllerWithAcccount:(OTRAccount *)account
 {
     

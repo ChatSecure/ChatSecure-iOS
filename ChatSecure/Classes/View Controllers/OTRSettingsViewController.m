@@ -60,7 +60,6 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 @property (nonatomic, strong) UITableView *tableView;
 
 - (void) addAccount:(id)sender;
-- (void) showLoginControllerForAccount:(OTRAccount*)account;
 @end
 
 @implementation OTRSettingsViewController
@@ -261,7 +260,7 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
             
             BOOL connected = [[OTRProtocolManager sharedInstance] isAccountConnected:account];
             if (!connected) {
-                [self showLoginControllerForAccount:account];
+                [OTRLoginViewController showLoginViewControllerWithAccount:account fromViewController:self completion:nil];
             } else {
                 [self logoutAccount:account sender:[tableView cellForRowAtIndexPath:indexPath]];
             }
@@ -304,15 +303,6 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 }
 
 #pragma - mark Other Methods
-
-- (void) showLoginControllerForAccount:(OTRAccount *)account {
-    OTRLoginViewController *loginViewController = [OTRLoginViewController loginViewControllerWithAcccount:account];
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:loginViewController];
-    nav.modalPresentationStyle = UIModalPresentationFormSheet;
-    [self presentViewController:nav animated:YES completion:nil];
-    
-    self.loginController = loginViewController;
-}
 
 -(void)showAboutScreen
 {

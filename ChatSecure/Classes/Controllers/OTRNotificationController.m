@@ -70,7 +70,13 @@
 
 - (UIViewController *)topViewController
 {
-    return [[UIApplication sharedApplication].delegate window].rootViewController;
+    UIViewController *topController = [[UIApplication sharedApplication].delegate window].rootViewController;
+    
+    while (topController.presentedViewController) {
+        topController = topController.presentedViewController;
+    }
+    
+    return topController;
 }
 
 - (void)showLoginSuccessNotification:(NSNotification *)notification
@@ -93,8 +99,14 @@
     BOOL isUserInitiated = [[notification.userInfo objectForKey:kOTRProtocolLoginUserInitiated] boolValue];
     
     UIViewController *topViewController = [self topViewController];
+    if ([topViewController isKindOfClass:[UINavigationController class]]) {
+        topViewController = ((UINavigationController *)topViewController).topViewController;
+    }
     
-    if (!([topViewController isKindOfClass:[OTRLoginViewController class]] || [topViewController isKindOfClass:[OTRSettingsViewController class]] )&& isUserInitiated) {
+    BOOL correctViewController = !([topViewController isKindOfClass:[OTRLoginViewController class]] || [topViewController isKindOfClass:[OTRSettingsViewController class]]);
+    
+    
+    if (correctViewController && isUserInitiated) {
         OTRXMPPManager *xmppManager = notification.object;
         NSString *accountName = nil;
         if (xmppManager) {
