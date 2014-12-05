@@ -32,6 +32,9 @@ extern CGSize const kOTRDefaultNotificationImageSize;
 @property (nonatomic) CRToastAnimationType animationInType;
 @property (nonatomic) CRToastAnimationType animationOutType;
 
+//Array of CRToastInteractionResponder
+@property (nonatomic, strong) NSArray *interactionResponders;
+
 @property (nonatomic, strong) NSString *text;
 @property (nonatomic, strong) NSString *subtitleText;
 @property (nonatomic, strong) UIColor *backgroundColor;
@@ -39,6 +42,10 @@ extern CGSize const kOTRDefaultNotificationImageSize;
 
 - (instancetype)initWithText:(NSString *)text subtitleText:(NSString *)subtitleText;
 - (instancetype)initWithText:(NSString *)text subtitleText:(NSString *)subtitleText optionType:(OTRToastOptionType)option;
+
+- (void)addInteractionResponderWithType:(CRToastInteractionType)type
+                   automaticallyDismiss:(BOOL)automaticallyDismiss
+                                  block:(void (^)(CRToastInteractionType interactionType))block;
 
 - (NSDictionary *)dictionary;
 

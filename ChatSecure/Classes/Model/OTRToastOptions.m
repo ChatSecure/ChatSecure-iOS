@@ -26,6 +26,8 @@ CGSize const kOTRDefaultNotificationImageSize = {25, 25};
         self.animationOutDirection = CRToastAnimationDirectionTop;
         self.animationInType = CRToastAnimationTypeGravity;
         self.animationOutType = CRToastAnimationTypeGravity;
+        
+        [self addInteractionResponderWithType:CRToastInteractionTypeSwipeUp automaticallyDismiss:YES block:nil];
     }
     return self;
 }
@@ -61,7 +63,22 @@ CGSize const kOTRDefaultNotificationImageSize = {25, 25};
     return self;
 }
 
-
+- (void)addInteractionResponderWithType:(CRToastInteractionType)type
+                   automaticallyDismiss:(BOOL)automaticallyDismiss
+                                  block:(void (^)(CRToastInteractionType interactionType))block
+{
+    if (!block) {
+        block = ^void(CRToastInteractionType interactionType) { };
+    }
+    
+    CRToastInteractionResponder *interactionResponder = [CRToastInteractionResponder interactionResponderWithInteractionType:type automaticallyDismiss:automaticallyDismiss block:block];
+    
+    if (!self.interactionResponders) {
+        self.interactionResponders = @[interactionResponder];
+    } else {
+        self.interactionResponders = [self.interactionResponders arrayByAddingObject:interactionResponder];
+    }
+}
 
 
 - (NSDictionary *)dictionary
@@ -85,6 +102,10 @@ CGSize const kOTRDefaultNotificationImageSize = {25, 25};
     
     if (self.image) {
         options[kCRToastImageKey] = self.image;
+    }
+    
+    if ([self.interactionResponders count]) {
+        options[kCRToastInteractionRespondersKey] = self.interactionResponders;
     }
     
     return options;
