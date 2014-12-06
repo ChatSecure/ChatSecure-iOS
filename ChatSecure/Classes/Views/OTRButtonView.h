@@ -14,4 +14,7 @@
 
 - (id)initWithTitle:(NSString *)title buttons:(NSArray *)buttons;
 
+
++ (CGFloat )heightForTitle:(NSString *)title width:(CGFloat)width buttons:(NSArray *)buttons;
+
 @end

@@ -9,6 +9,9 @@
 #import "OTRButtonView.h"
 #import "PureLayout.h"
 
+
+CGFloat const kOTRButtonViewTopMargin = 3;
+
 @interface OTRButtonView ()
 
 @property (nonatomic, strong) NSArray *buttons;
@@ -27,12 +30,8 @@
     if (self = [super initWithFrame:CGRectZero]) {
         self.addedContraints = NO;
         self.buttons = buttons;
-        self.titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-        self.titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
-        self.titleLabel.font = [UIFont systemFontOfSize:13.0];
-        self.titleLabel.textColor = [UIColor colorWithWhite:0.54 alpha:1.0];
+        self.titleLabel = [[self class] defaultTitleLabel];
         self.titleLabel.text = title;
-        self.titleLabel.textAlignment = NSTextAlignmentCenter;
         
         self.backgroundColor = [UIColor clearColor];
         
@@ -119,7 +118,7 @@
         [self addConstraints:[self constraintsWithButtons:self.buttons]];
         
         [self.buttonView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsZero excludingEdge:ALEdgeTop];
-        [self.titleLabel autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(3, 0, 0, 0) excludingEdge:ALEdgeBottom];
+        [self.titleLabel autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(kOTRButtonViewTopMargin, 0, 0, 0) excludingEdge:ALEdgeBottom];
         [self.buttonView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.titleLabel];
         [self.backgroundToolbar autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsZero];
         
@@ -129,6 +128,39 @@
    
 }
 
+#pragma - mark Class Methods
+
++ (UILabel *)defaultTitleLabel
+{
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
+    label.translatesAutoresizingMaskIntoConstraints = NO;
+    label.font = [UIFont systemFontOfSize:13.0];
+    label.textColor = [UIColor colorWithWhite:0.54 alpha:1.0];
+    label.numberOfLines = 0;
+    label.textAlignment = NSTextAlignmentCenter;
+    
+    return label;
+}
+
++ (CGFloat )heightForTitle:(NSString *)title width:(CGFloat)width buttons:(NSArray *)buttons;
+{
+    UILabel *titleLabel = [self defaultTitleLabel];
+    titleLabel.text = title;
+    CGRect labelRect = titleLabel.frame;
+    labelRect.size.width = width;
+    titleLabel.frame = labelRect;
+    [titleLabel sizeToFit];
+    
+    __block CGFloat buttonHeight = 0;
+    [buttons enumerateObjectsUsingBlock:^(UIButton *button, NSUInteger idx, BOOL *stop) {
+        [button sizeToFit];
+        if (button.frame.size.height > buttonHeight) {
+            buttonHeight = button.frame.size.height;
+        }
+    }];
+    
+    return titleLabel.frame.size.height + kOTRButtonViewTopMargin + buttonHeight;
+}
 
 
 @end
