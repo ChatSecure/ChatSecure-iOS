@@ -542,7 +542,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
     self.buttonDropdownView = [[OTRButtonView alloc] initWithTitle:title buttons:buttons];
     self.buttonDropdownView.tag = tag;
     
-    self.buttonDropdownView.frame = CGRectMake(0, self.navigationController.navigationBar.frame.size.height+self.navigationController.navigationBar.frame.origin.y-44, self.view.bounds.size.width, 44);
+    CGFloat height = [OTRButtonView heightForTitle:title width:self.view.bounds.size.width buttons:buttons];
+    
+    self.buttonDropdownView.frame = CGRectMake(0, self.navigationController.navigationBar.frame.size.height+self.navigationController.navigationBar.frame.origin.y-height, self.view.bounds.size.width, height);
     
     [self.view addSubview:self.buttonDropdownView];
     
