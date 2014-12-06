@@ -11,6 +11,9 @@
 @interface OTRNotificationController : NSObject
 
 
+- (void)start;
+- (void)stop;
+
 - (void)showAccountConnectingNotificationWithAccountName:(NSString *)accountName;
 
 

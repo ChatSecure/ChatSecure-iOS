@@ -154,7 +154,8 @@
     
     application.applicationIconBadgeNumber = 0;
     
-    [OTRNotificationController sharedInstance];
+    OTRNotificationController *notificationController = [OTRNotificationController sharedInstance];
+    [notificationController start];
   
     [Appirater setAppId:@"464200063"];
     [Appirater setOpenInAppStore:NO];

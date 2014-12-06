@@ -21,6 +21,8 @@
 @property (nonatomic, strong) NSOperationQueue *notificationQueue;
 @property (nonatomic, strong) NSMutableDictionary *notificationObservers;
 
+@property (nonatomic) BOOL started;
+
 @end
 
 @implementation OTRNotificationController
@@ -31,8 +33,16 @@
     if (self = [super init]) {
         
         self.notificationQueue = [NSOperationQueue mainQueue];
-        self.notificationObservers = [NSMutableDictionary new];
+        self.notificationObservers = [[NSMutableDictionary alloc] init];
+        self.started = NO;
         
+    }
+    return self;
+}
+
+- (void)start
+{
+    if (!self.started) {
         __weak typeof(self)weakSelf = self;
         [self addObserverWithName:kOTRProtocolLoginSuccess withBlock:^(NSNotification *note) {
             __strong typeof(weakSelf)strongSelf = weakSelf;
@@ -43,10 +53,21 @@
             __strong typeof(weakSelf)strongSelf = weakSelf;
             [strongSelf showLoginFailureNotification:note];
         }];
-        
-        
+        self.started = YES;
     }
-    return self;
+
+}
+
+- (void)stop
+{
+    if (self.started) {
+        NSDictionary *observers =  [self.notificationObservers copy];
+        [observers enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+            [[NSNotificationCenter defaultCenter] removeObserver:obj];
+        }];
+        self.started = NO;
+    }
+    
 }
 
 - (void)addObserverWithName:(NSString *)name withBlock:(void (^)(NSNotification *note))block
