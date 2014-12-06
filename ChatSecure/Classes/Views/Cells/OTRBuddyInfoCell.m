@@ -96,8 +96,8 @@
         
         //same horizontal contraints for all labels
         for(UILabel *label in textLabelsArray) {
-            [label autoPinEdge:ALEdgeLeft toEdge:ALEdgeRight ofView:self.avatarImageView withOffset:OTRBuddyImageCellPadding];
-            [label autoPinEdgeToSuperviewEdge:ALEdgeRight withInset:OTRBuddyImageCellPadding relation:NSLayoutRelationGreaterThanOrEqual];
+            [label autoPinEdge:ALEdgeLeading toEdge:ALEdgeTrailing ofView:self.avatarImageView withOffset:OTRBuddyImageCellPadding];
+            [label autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:OTRBuddyImageCellPadding relation:NSLayoutRelationGreaterThanOrEqual];
         }
         
         [self.nameLabel autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:OTRBuddyImageCellPadding];
