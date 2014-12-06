@@ -57,6 +57,7 @@
 #import "OTRAccount.h"
 #import "OTRXMPPPresenceSubscriptionRequest.h"
 #import "OTRvCardYapDatabaseStorage.h"
+#import "OTRNotificationController.h"
 
 NSString *const OTRXMPPRegisterSucceededNotificationName = @"OTRXMPPRegisterSucceededNotificationName";
 NSString *const OTRXMPPRegisterFailedNotificationName    = @"OTRXMPPRegisterFailedNotificationName";
@@ -798,6 +799,9 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 {
     self.userInitiatedConnection = userInitiated;
     [self connectWithJID:self.account.username password:password];
+    if (self.userInitiatedConnection) {
+        [[OTRNotificationController sharedInstance] showAccountConnectingNotificationWithAccountName:self.account.username];
+    }
 }
 
 -(void)connectWithPassword:(NSString *)password

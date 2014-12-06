@@ -31,7 +31,6 @@
 #import "UIActivityViewController+ChatSecure.h"
 #import "OTRUtilities.h"
 #import "OTRProtocolManager.h"
-#import "OTRNotificationController.h"
 #import "OTRLoginViewController.h"
 
 static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
@@ -534,7 +533,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     //If we have the password then we can login with that password otherwise show login UI to enter password
     if ([self.account.password length]) {
         [[OTRProtocolManager sharedInstance] loginAccount:self.account userInitiated:YES];
-        [[OTRNotificationController sharedInstance] showAccountConnectingNotificationWithAccountName:self.account.username];
+        
     } else {
         [OTRLoginViewController showLoginViewControllerWithAccount:self.account fromViewController:self completion:nil];
     }
