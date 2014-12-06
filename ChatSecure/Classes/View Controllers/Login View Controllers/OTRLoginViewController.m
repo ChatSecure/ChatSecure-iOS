@@ -401,7 +401,7 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
         }];
         
         id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
-        [protocol connectWithPassword:self.passwordTextField.text];
+        [protocol connectWithPassword:self.passwordTextField.text userInitiated:YES];
     }
 }
 
@@ -534,6 +534,16 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
 - (void)hudWasHidden:(MBProgressHUD *)hud {
     // Remove HUD from screen when the HUD was hidded
     [self.HUD removeFromSuperview];
+}
+
+#pragma - mark Class Methods
+
++ (void)showLoginViewControllerWithAccount:(OTRAccount *)account fromViewController:(UIViewController *)viewController completion:(void (^)(void))completion
+{
+    OTRLoginViewController *loginViewController = [OTRLoginViewController loginViewControllerWithAcccount:account];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:loginViewController];
+    nav.modalPresentationStyle = UIModalPresentationFormSheet;
+    [viewController presentViewController:nav animated:YES completion:completion];
 }
 
 +(OTRLoginViewController *)loginViewControllerWithAcccount:(OTRAccount *)account

@@ -135,7 +135,7 @@ static OTRProtocolManager *sharedManager = nil;
     return protocol;
 }
 
-- (void)loginAccount:(OTRAccount *)account
+- (void)loginAccount:(OTRAccount *)account userInitiated:(BOOL)userInitiated
 {
     id <OTRProtocol> protocol = [self protocolForAccount:account];
     
@@ -144,7 +144,7 @@ static OTRProtocolManager *sharedManager = nil;
         [OTROAuthRefresher refreshAccount:(OTROAuthXMPPAccount *)account completion:^(id token, NSError *error) {
             if (!error) {
                 ((OTROAuthXMPPAccount *)account).accountSpecificToken = token;
-                [protocol connectWithPassword:account.password];
+                [protocol connectWithPassword:account.password userInitiated:userInitiated];
             }
             else {
                 DDLogError(@"Error Refreshing Token");
@@ -153,8 +153,13 @@ static OTRProtocolManager *sharedManager = nil;
     }
     else
     {
-        [protocol connectWithPassword:account.password];
+        [protocol connectWithPassword:account.password userInitiated:userInitiated];
     }
+}
+
+- (void)loginAccount:(OTRAccount *)account
+{
+    [self loginAccount:account userInitiated:NO];
 }
 - (void)loginAccounts:(NSArray *)accounts
 {

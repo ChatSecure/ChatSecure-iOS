@@ -127,7 +127,7 @@
             self.account.accountSpecificToken = token;
             [self showHUDWithText:LOGGING_IN_STRING];
             id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
-            [protocol connectWithPassword:self.account.password];
+            [protocol connectWithPassword:self.account.password userInitiated:YES];
         } else {
             [self connectAccount:sender];
         }

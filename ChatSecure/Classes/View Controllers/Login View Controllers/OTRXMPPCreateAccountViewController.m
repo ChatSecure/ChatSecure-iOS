@@ -298,7 +298,7 @@ static NSString * const domainCellIdentifier = @"domainCellIdentifer";
         [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
             [self.account saveWithTransaction:transaction];
         }];
-        [xmppMananger connectWithPassword:self.passwordTextField.text];
+        [xmppMananger connectWithPassword:self.passwordTextField.text userInitiated:YES];
     }
 }
 

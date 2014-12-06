@@ -19,15 +19,20 @@
 
 @synthesize xmppStream = _xmppStream;
 
-- (void)connectWithPassword:(NSString *)myPassword
+- (void)connectWithPassword:(NSString *)password userInitiated:(BOOL)userInitiated
 {
     if ([OTRTorManager sharedInstance].torManager.isConnected) {
-        [super connectWithPassword:myPassword];
+        [super connectWithPassword:password userInitiated:userInitiated];
     }
     else {
         NSError * error = [NSError errorWithDomain:OTRXMPPErrorDomain code:OTRXMPPTorError userInfo:@{NSLocalizedDescriptionKey:@"Need to connect to Tor"}];
         [self failedToConnect:error];
     }
+}
+
+- (void)connectWithPassword:(NSString *)password
+{
+    [self connectWithPassword:password userInitiated:NO];
 }
 
 -(XMPPStream *)xmppStream

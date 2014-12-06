@@ -18,7 +18,7 @@
 
 
 + (int)defaultPort;
-+ (NSString * )newResource;
++ (NSString *)newResource;
 
 
 + (instancetype)accountForStream:(XMPPStream *)stream transaction:(YapDatabaseReadTransaction *)transaction;

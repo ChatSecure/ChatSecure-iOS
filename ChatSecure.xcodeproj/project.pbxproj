@@ -187,6 +187,8 @@
 		63C4BD2C1A1E9BE1001696CD /* _OTRvCardAvatar.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BD0A1A1E9BE1001696CD /* _OTRvCardAvatar.m */; };
 		63C4BD2D1A1E9BE1001696CD /* _OTRvCardTemp.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BD0C1A1E9BE1001696CD /* _OTRvCardTemp.m */; };
 		63C4BD2E1A1E9BE1001696CD /* _OTRXMPPManagedPresenceSubscriptionRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BD0E1A1E9BE1001696CD /* _OTRXMPPManagedPresenceSubscriptionRequest.m */; };
+		63D184861A2D3F2400334CD8 /* OTRNotificationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D184851A2D3F2400334CD8 /* OTRNotificationController.m */; };
+		63D64D661A2FBA8C00E21F77 /* OTRToastOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D64D651A2FBA8C00E21F77 /* OTRToastOptions.m */; };
 		D9365E7A1A1EB0050006434A /* torrc in Resources */ = {isa = PBXBuildFile; fileRef = D9365E791A1EB0050006434A /* torrc */; };
 		D973D7061A2D4094004D353E /* Pods-acknowledgements.plist in Resources */ = {isa = PBXBuildFile; fileRef = D973D7051A2D4094004D353E /* Pods-acknowledgements.plist */; };
 /* End PBXBuildFile section */
@@ -590,6 +592,10 @@
 		63C4BD0C1A1E9BE1001696CD /* _OTRvCardTemp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _OTRvCardTemp.m; sourceTree = "<group>"; };
 		63C4BD0D1A1E9BE1001696CD /* _OTRXMPPManagedPresenceSubscriptionRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _OTRXMPPManagedPresenceSubscriptionRequest.h; sourceTree = "<group>"; };
 		63C4BD0E1A1E9BE1001696CD /* _OTRXMPPManagedPresenceSubscriptionRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _OTRXMPPManagedPresenceSubscriptionRequest.m; sourceTree = "<group>"; };
+		63D184841A2D3F2400334CD8 /* OTRNotificationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRNotificationController.h; sourceTree = "<group>"; };
+		63D184851A2D3F2400334CD8 /* OTRNotificationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRNotificationController.m; sourceTree = "<group>"; };
+		63D64D641A2FBA8C00E21F77 /* OTRToastOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRToastOptions.h; sourceTree = "<group>"; };
+		63D64D651A2FBA8C00E21F77 /* OTRToastOptions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRToastOptions.m; sourceTree = "<group>"; };
 		63DC0EB31A1ABC86002C9598 /* OTR_Codesigning.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = OTR_Codesigning.xcconfig; path = configurations/OTR_Codesigning.xcconfig; sourceTree = "<group>"; };
 		63DC0EB41A1ABC86002C9598 /* OTR_Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = OTR_Debug.xcconfig; path = configurations/OTR_Debug.xcconfig; sourceTree = "<group>"; };
 		63DC0EB61A1ABC86002C9598 /* OTR_Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = OTR_Release.xcconfig; path = configurations/OTR_Release.xcconfig; sourceTree = "<group>"; };
@@ -709,6 +715,8 @@
 				6331052F1A16D1A300C17BAE /* OTRSettingsManager.m */,
 				633105301A16D1A300C17BAE /* OTRTorManager.h */,
 				633105311A16D1A300C17BAE /* OTRTorManager.m */,
+				63D184841A2D3F2400334CD8 /* OTRNotificationController.h */,
+				63D184851A2D3F2400334CD8 /* OTRNotificationController.m */,
 				633105321A16D1A300C17BAE /* XMPP */,
 			);
 			path = Controllers;
@@ -748,6 +756,8 @@
 				633105941A16D1A300C17BAE /* OTROpenInTwitterActivity.m */,
 				633105951A16D1A300C17BAE /* OTRQRCodeActivity.h */,
 				633105961A16D1A300C17BAE /* OTRQRCodeActivity.m */,
+				63D64D641A2FBA8C00E21F77 /* OTRToastOptions.h */,
+				63D64D651A2FBA8C00E21F77 /* OTRToastOptions.m */,
 				633105971A16D1A300C17BAE /* Settings */,
 				633105B81A16D1A300C17BAE /* Yap Storage */,
 			);
@@ -1452,6 +1462,7 @@
 				633106C11A16D1A300C17BAE /* OTRFingerprintSetting.m in Sources */,
 				633106F41A16D1A300C17BAE /* OTRXMPPLoginViewController.m in Sources */,
 				63C4BCCC1A1E9B9F001696CD /* ChatSecure.xcdatamodeld in Sources */,
+				63D184861A2D3F2400334CD8 /* OTRNotificationController.m in Sources */,
 				633106F71A16D1A300C17BAE /* OTRAcknowledgementsViewController.m in Sources */,
 				63C4BD1D1A1E9BE1001696CD /* OTRvCardTemp.m in Sources */,
 				633106CE1A16D1A300C17BAE /* OTRGoogleOAuthXMPPAccount.m in Sources */,
@@ -1496,6 +1507,7 @@
 				633106CC1A16D1A300C17BAE /* OTRAccount.m in Sources */,
 				63C4BD191A1E9BE1001696CD /* OTRManagedStatus.m in Sources */,
 				633106D81A16D1A300C17BAE /* OTRXMPPPresenceSubscriptionRequest.m in Sources */,
+				63D64D661A2FBA8C00E21F77 /* OTRToastOptions.m in Sources */,
 				633106F51A16D1A300C17BAE /* OTRXMPPOAUTHLoginViewController.m in Sources */,
 				633106F11A16D1A300C17BAE /* OTRPushAccountLoginViewController.m in Sources */,
 				633106BB1A16D1A300C17BAE /* OTRQRCodeActivity.m in Sources */,

@@ -89,4 +89,6 @@ extern NSUInteger const kNewCertAlertViewTag;
 
 + (OTRLoginViewController *)loginViewControllerWithAcccount:(OTRAccount *)account;
 
++ (void)showLoginViewControllerWithAccount:(OTRAccount *)account fromViewController:(UIViewController *)viewController completion:(void (^)(void))completion;
+
 @end

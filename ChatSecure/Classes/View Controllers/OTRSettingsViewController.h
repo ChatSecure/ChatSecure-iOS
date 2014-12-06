@@ -29,9 +29,6 @@
 
 @interface OTRSettingsViewController : UIViewController <OTRSettingDelegate, MFMailComposeViewControllerDelegate, OTRDonateSettingDelegate>
 
-@property (nonatomic, retain) OTRSettingsManager *settingsManager;
-@property (nonatomic, retain) OTRLoginViewController *loginController;
-
-
+@property (nonatomic, strong) OTRSettingsManager *settingsManager;
 
 @end

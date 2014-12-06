@@ -32,6 +32,7 @@ pod 'BButton', '~> 4.0'
 pod 'uservoice-iphone-sdk', '~> 3.2'
 pod 'TUSafariActivity', '~> 1.0'
 pod 'ARChromeActivity', '~> 1.0'
+pod 'CRToast', '~> 0.0.7'
 
 # Local Podspecs
 pod 'gtm-http-fetcher', :podspec => 'Podspecs/gtm-http-fetcher.podspec.json'

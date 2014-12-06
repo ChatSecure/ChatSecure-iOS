@@ -934,5 +934,13 @@
     "noErrString": {
         "comment": "SSL error message", 
         "string": "No Error"
+    },
+    "CONNECT_STRING": {
+        "comment": "String for button to connect connect", 
+        "string": "Connect"
+    },
+    "YOU_ARE_NOT_CONNECTED_STRING" : {
+        "comment": "Text explaining that the account is not currently connected",
+        "string": "You are not connected"
     }
 }
