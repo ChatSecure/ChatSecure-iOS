@@ -244,12 +244,15 @@ typedef NS_ENUM(int, OTRDropDownType) {
         self.titleView.titleLabel.text = self.buddy.username;
     }
     
-    if(self.account.displayName.length) {
+    if([self.account.displayName length]) {
         self.titleView.subtitleLabel.text = self.account.displayName;
     }
     else {
         self.titleView.subtitleLabel.text = self.account.username;
     }
+    
+    self.titleView.titleImageView.image = [OTRImages circleWithRadius:5];
+    self.titleView.subtitleImageView.image = [OTRImages circleWithRadius:5];
 }
 
 - (void)showErrorMessageForCell:(OTRMessagesCollectionViewCell *)cell
