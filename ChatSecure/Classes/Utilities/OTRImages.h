@@ -21,6 +21,7 @@ typedef NS_ENUM(NSUInteger, OTRBubbleMessageType) {
 + (UIView *)typingBubbleView;
 
 + (UIImage *)circleWithRadius:(CGFloat)radius;
++ (UIImage *)circleWithRadius:(CGFloat)radius lineWidth:(CGFloat)lineWidth lineColor:(UIColor *)lineColor fillColor:(UIColor *)fillColor;
 
 + (UIImage *)twitterImage;
 

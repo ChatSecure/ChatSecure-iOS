@@ -75,7 +75,7 @@
     [self.titleLabel autoPinEdgeToSuperviewEdge:ALEdgeTop];
     [self.titleLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
     [self.titleLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.6];
-    [self.titleLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:0.9 relation:NSLayoutRelationLessThanOrEqual];
+    [self.titleLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:0.9];
     
     ///////////// SUBTITLE LABEL /////////////
     [self.subtitleLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
@@ -89,7 +89,7 @@
     [self setupConstraintsWithImageView:self.subtitleImageView withLabel:self.subtitleLabel];
     
     //Keeps imgeviews the same or simlar with titleImageView > subtitleImageView
-    [self.titleImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.subtitleImageView withMultiplier:1.0 relation:NSLayoutRelationGreaterThanOrEqual];
+    [self.subtitleImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.titleImageView withMultiplier:1.0 relation:NSLayoutRelationLessThanOrEqual];
 }
 
 - (void)setupConstraintsWithImageView:(UIImageView *)imageView withLabel:(UILabel *)label

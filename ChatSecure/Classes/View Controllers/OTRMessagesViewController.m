@@ -32,6 +32,7 @@
 #import "OTRUtilities.h"
 #import "OTRProtocolManager.h"
 #import "OTRLoginViewController.h"
+#import "OTRColors.h"
 
 static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
 
@@ -157,6 +158,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
 {
     [super viewWillDisappear:animated];
     
+    [self saveCurrentMessageText];
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self.textViewNotificationObject];
     [[NSNotificationCenter defaultCenter] removeObserver:self.databaseConnectionDidUpdateNotificationObject];
     [[NSNotificationCenter defaultCenter] removeObserver:self.messageStateDidChangeNotificationObject];
@@ -190,28 +193,40 @@ typedef NS_ENUM(int, OTRDropDownType) {
 - (void)setBuddy:(OTRBuddy *)buddy
 {
     OTRBuddy *originalBuddy = self.buddy;
-    _buddy = buddy;
+    
     
     if ([originalBuddy.uniqueId isEqualToString:buddy.uniqueId]) {
-        // really same buddy with new info like chatState, EncryptionState, Name
+        _buddy = buddy;
         
-        [self refreshLockButton];
+        //Update chatstate if it changed
+        if (originalBuddy.chatState != self.buddy.chatState) {
+            if (buddy.chatState == kOTRChatStateComposing || buddy.chatState == kOTRChatStatePaused) {
+                self.showTypingIndicator = YES;
+            }
+            else {
+                self.showTypingIndicator = NO;
+            }
+        }
         
-        if (buddy.chatState == kOTRChatStateComposing || buddy.chatState == kOTRChatStatePaused) {
-            self.showTypingIndicator = YES;
+        //Update title view if the status or username or display name have changed
+        if (originalBuddy.status != self.buddy.status || ![originalBuddy.username isEqualToString:self.buddy.username] || ![originalBuddy.displayName isEqualToString:self.buddy.displayName]) {
+            [self refreshTitleView];
         }
-        else {
-            self.showTypingIndicator = NO;
-        }
+        
+        
     } else {
         //different buddy
-        [self saveCurrentMessageText];
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+            [self saveCurrentMessageText];
+        }
         
+        _buddy = buddy;
         if (self.buddy) {
             NSParameterAssert(self.buddy.uniqueId != nil);
             self.messageMappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[self.buddy.uniqueId] view:OTRChatDatabaseViewExtensionName];
             self.buddyMappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[self.buddy.uniqueId] view:OTRBuddyDatabaseViewExtensionName];
-            
+            self.inputToolbar.contentView.textView.text = self.buddy.composingMessageString;
+
             [self.uiDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
                 self.account = [self.buddy accountWithTransaction:transaction];
                 [self.messageMappings updateWithTransaction:transaction];
@@ -227,12 +242,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
             self.account = nil;
             self.xmppManager = nil;
         }
+        [self refreshTitleView];
+        [self.collectionView reloadData];
     }
-    
-    //refresh other parts of the view
-    [self.collectionView reloadData];
-    [self refreshLockButton];
-    [self refreshTitleView];
 }
 
 - (void)refreshTitleView
@@ -251,8 +263,13 @@ typedef NS_ENUM(int, OTRDropDownType) {
         self.titleView.subtitleLabel.text = self.account.username;
     }
     
-    self.titleView.titleImageView.image = [OTRImages circleWithRadius:5];
-    self.titleView.subtitleImageView.image = [OTRImages circleWithRadius:5];
+    //Create big circle and the imageview will resize it down
+    if (!self.buddy) {
+        self.titleView.titleImageView.image = nil;
+    } else {
+       self.titleView.titleImageView.image = [OTRImages circleWithRadius:50 lineWidth:0 lineColor:nil fillColor:[OTRColors colorWithStatus:self.buddy.status]];
+    }
+    
 }
 
 - (void)showErrorMessageForCell:(OTRMessagesCollectionViewCell *)cell
@@ -608,10 +625,15 @@ typedef NS_ENUM(int, OTRDropDownType) {
         return;
     }
     self.buddy.composingMessageString = self.inputToolbar.contentView.textView.text;
-    if(![self.buddy.composingMessageString length])
-    {
+    __block OTRBuddy *buddy = [self.buddy copy];
+    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        [buddy saveWithTransaction:transaction];
+    }];
+    
+    if (![self.buddy.composingMessageString length]) {
         [self.xmppManager sendChatState:kOTRChatStateInactive withBuddyID:self.buddy.uniqueId];
     }
+    
 }
 
 - (OTRMessage *)messageAtIndexPath:(NSIndexPath *)indexPath
@@ -911,9 +933,7 @@ didTapLoadEarlierMessagesButton:(UIButton *)sender
                 updatedBuddy = [[transaction ext:OTRBuddyDatabaseViewExtensionName] objectAtIndexPath:rowChange.indexPath withMappings:self.buddyMappings];
             }];
             
-            if (self.buddy.chatState != updatedBuddy.chatState) {
-                self.buddy = updatedBuddy;
-            }
+            self.buddy = updatedBuddy;
         }
     }
     
