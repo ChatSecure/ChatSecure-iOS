@@ -216,9 +216,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         
     } else {
         //different buddy
-        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-            [self saveCurrentMessageText];
-        }
+        [self saveCurrentMessageText];
         
         _buddy = buddy;
         if (self.buddy) {
