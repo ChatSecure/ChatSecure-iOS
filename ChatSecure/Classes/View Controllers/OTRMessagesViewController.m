@@ -30,6 +30,9 @@
 #import "OTRImages.h"
 #import "UIActivityViewController+ChatSecure.h"
 #import "OTRUtilities.h"
+#import "OTRProtocolManager.h"
+#import "OTRLoginViewController.h"
+#import "OTRColors.h"
 
 static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
 
@@ -155,6 +158,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
 {
     [super viewWillDisappear:animated];
     
+    [self saveCurrentMessageText];
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self.textViewNotificationObject];
     [[NSNotificationCenter defaultCenter] removeObserver:self.databaseConnectionDidUpdateNotificationObject];
     [[NSNotificationCenter defaultCenter] removeObserver:self.messageStateDidChangeNotificationObject];
@@ -188,28 +193,38 @@ typedef NS_ENUM(int, OTRDropDownType) {
 - (void)setBuddy:(OTRBuddy *)buddy
 {
     OTRBuddy *originalBuddy = self.buddy;
-    _buddy = buddy;
+    
     
     if ([originalBuddy.uniqueId isEqualToString:buddy.uniqueId]) {
-        // really same buddy with new info like chatState, EncryptionState, Name
+        _buddy = buddy;
         
-        [self refreshLockButton];
+        //Update chatstate if it changed
+        if (originalBuddy.chatState != self.buddy.chatState) {
+            if (buddy.chatState == kOTRChatStateComposing || buddy.chatState == kOTRChatStatePaused) {
+                self.showTypingIndicator = YES;
+            }
+            else {
+                self.showTypingIndicator = NO;
+            }
+        }
         
-        if (buddy.chatState == kOTRChatStateComposing || buddy.chatState == kOTRChatStatePaused) {
-            self.showTypingIndicator = YES;
+        //Update title view if the status or username or display name have changed
+        if (originalBuddy.status != self.buddy.status || ![originalBuddy.username isEqualToString:self.buddy.username] || ![originalBuddy.displayName isEqualToString:self.buddy.displayName]) {
+            [self refreshTitleView];
         }
-        else {
-            self.showTypingIndicator = NO;
-        }
+        
+        
     } else {
         //different buddy
         [self saveCurrentMessageText];
         
+        _buddy = buddy;
         if (self.buddy) {
             NSParameterAssert(self.buddy.uniqueId != nil);
             self.messageMappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[self.buddy.uniqueId] view:OTRChatDatabaseViewExtensionName];
             self.buddyMappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[self.buddy.uniqueId] view:OTRBuddyDatabaseViewExtensionName];
-            
+            self.inputToolbar.contentView.textView.text = self.buddy.composingMessageString;
+
             [self.uiDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
                 self.account = [self.buddy accountWithTransaction:transaction];
                 [self.messageMappings updateWithTransaction:transaction];
@@ -225,12 +240,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
             self.account = nil;
             self.xmppManager = nil;
         }
+        [self refreshTitleView];
+        [self.collectionView reloadData];
     }
-    
-    //refresh other parts of the view
-    [self.collectionView reloadData];
-    [self refreshLockButton];
-    [self refreshTitleView];
 }
 
 - (void)refreshTitleView
@@ -242,12 +254,20 @@ typedef NS_ENUM(int, OTRDropDownType) {
         self.titleView.titleLabel.text = self.buddy.username;
     }
     
-    if(self.account.displayName.length) {
+    if([self.account.displayName length]) {
         self.titleView.subtitleLabel.text = self.account.displayName;
     }
     else {
         self.titleView.subtitleLabel.text = self.account.username;
     }
+    
+    //Create big circle and the imageview will resize it down
+    if (!self.buddy) {
+        self.titleView.titleImageView.image = nil;
+    } else {
+       self.titleView.titleImageView.image = [OTRImages circleWithRadius:50 lineWidth:0 lineColor:nil fillColor:[OTRColors colorWithStatus:self.buddy.status]];
+    }
+    
 }
 
 - (void)showErrorMessageForCell:(OTRMessagesCollectionViewCell *)cell
@@ -519,13 +539,22 @@ typedef NS_ENUM(int, OTRDropDownType) {
                 }
                 
                 [alert show];
-                
             }];
-            
         }];
-        
     }];
+}
+
+- (void)connectButtonPressed:(id)sender
+{
+    [self hideDropdownAnimated:YES completion:nil];
     
+    //If we have the password then we can login with that password otherwise show login UI to enter password
+    if ([self.account.password length]) {
+        [[OTRProtocolManager sharedInstance] loginAccount:self.account userInitiated:YES];
+        
+    } else {
+        [OTRLoginViewController showLoginViewControllerWithAccount:self.account fromViewController:self completion:nil];
+    }
     
     
 }
@@ -542,7 +571,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
     self.buttonDropdownView = [[OTRButtonView alloc] initWithTitle:title buttons:buttons];
     self.buttonDropdownView.tag = tag;
     
-    self.buttonDropdownView.frame = CGRectMake(0, self.navigationController.navigationBar.frame.size.height+self.navigationController.navigationBar.frame.origin.y-44, self.view.bounds.size.width, 44);
+    CGFloat height = [OTRButtonView heightForTitle:title width:self.view.bounds.size.width buttons:buttons];
+    
+    self.buttonDropdownView.frame = CGRectMake(0, self.navigationController.navigationBar.frame.size.height+self.navigationController.navigationBar.frame.origin.y-height, self.view.bounds.size.width, height);
     
     [self.view addSubview:self.buttonDropdownView];
     
@@ -553,6 +584,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     } completion:nil];
     
 }
+
 - (void)hideDropdownAnimated:(BOOL)animated completion:(void (^)(void))completion
 {
     if (!self.buttonDropdownView) {
@@ -591,10 +623,15 @@ typedef NS_ENUM(int, OTRDropDownType) {
         return;
     }
     self.buddy.composingMessageString = self.inputToolbar.contentView.textView.text;
-    if(![self.buddy.composingMessageString length])
-    {
+    __block OTRBuddy *buddy = [self.buddy copy];
+    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        [buddy saveWithTransaction:transaction];
+    }];
+    
+    if (![self.buddy.composingMessageString length]) {
         [self.xmppManager sendChatState:kOTRChatStateInactive withBuddyID:self.buddy.uniqueId];
     }
+    
 }
 
 - (OTRMessage *)messageAtIndexPath:(NSIndexPath *)indexPath
@@ -651,19 +688,38 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (void)didPressSendButton:(UIButton *)button withMessageText:(NSString *)text sender:(NSString *)sender date:(NSDate *)date
 {
-    OTRMessage *message = [[OTRMessage alloc] init];
-    message.buddyUniqueId = self.buddy.uniqueId;
-    message.text = text;
-    message.read = YES;
-    message.transportedSecurely = NO;
+    if ([[OTRProtocolManager sharedInstance] isAccountConnected:self.account]) {
+        //Account is connected
+        
+        OTRMessage *message = [[OTRMessage alloc] init];
+        message.buddyUniqueId = self.buddy.uniqueId;
+        message.text = text;
+        message.read = YES;
+        message.transportedSecurely = NO;
+        
+        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+            [message saveWithTransaction:transaction];
+            self.buddy.lastMessageDate = message.date;
+            [self.buddy saveWithTransaction:transaction];
+        } completionBlock:^{
+            [[OTRKit sharedInstance] encodeMessage:message.text tlvs:nil username:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString tag:message];
+        }];
+    } else {
+        //Account is not currently connected
+        [self hideDropdownAnimated:YES completion:^{
+            UIButton *okButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+            [okButton setTitle:CONNECT_STRING forState:UIControlStateNormal];
+            [okButton addTarget:self action:@selector(connectButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+            
+            
+            [self showDropdownWithTitle:YOU_ARE_NOT_CONNECTED_STRING buttons:@[okButton] animated:YES tag:0];
+        }];
+    }
     
-    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        [message saveWithTransaction:transaction];
-        self.buddy.lastMessageDate = message.date;
-        [self.buddy saveWithTransaction:transaction];
-    } completionBlock:^{
-        [[OTRKit sharedInstance] encodeMessage:message.text tlvs:nil username:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString tag:message];
-    }];
+    //Reset text because of added whitespace
+    NSString *currentText = self.inputToolbar.contentView.textView.text;
+    self.inputToolbar.contentView.textView.text = [currentText substringToIndex:[currentText length]-1];
+    
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -875,9 +931,7 @@ didTapLoadEarlierMessagesButton:(UIButton *)sender
                 updatedBuddy = [[transaction ext:OTRBuddyDatabaseViewExtensionName] objectAtIndexPath:rowChange.indexPath withMappings:self.buddyMappings];
             }];
             
-            if (self.buddy.chatState != updatedBuddy.chatState) {
-                self.buddy = updatedBuddy;
-            }
+            self.buddy = updatedBuddy;
         }
     }
     

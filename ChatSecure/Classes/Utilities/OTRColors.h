@@ -18,6 +18,7 @@
 + (UIColor *)bubbleBlueColor;
 + (UIColor *)bubbleLightGrayColor;
 
++ (UIColor *)blueInfoColor;
 + (UIColor *)redErrorColor;
 + (UIColor *)greenNoErrorColor;
 + (UIColor *)warnColor;

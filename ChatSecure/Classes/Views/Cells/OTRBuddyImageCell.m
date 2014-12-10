@@ -37,7 +37,6 @@ const CGFloat OTRBuddyImageCellPadding = 12.0;
         [cellImageLayer setMasksToBounds:YES];
         [cellImageLayer setBorderColor:[self.imageViewBorderColor CGColor]];
         [self.contentView addSubview:self.avatarImageView];
-        self.translatesAutoresizingMaskIntoConstraints = NO;
         self.addedConstraints = NO;
     }
     return self;
@@ -79,7 +78,7 @@ const CGFloat OTRBuddyImageCellPadding = 12.0;
 - (void)updateConstraints
 {
     if (!self.addedConstraints) {
-        [self.avatarImageView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(OTRBuddyImageCellPadding, OTRBuddyImageCellPadding, OTRBuddyImageCellPadding, OTRBuddyImageCellPadding) excludingEdge:ALEdgeRight];
+        [self.avatarImageView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(OTRBuddyImageCellPadding, OTRBuddyImageCellPadding, OTRBuddyImageCellPadding, OTRBuddyImageCellPadding) excludingEdge:ALEdgeTrailing];
         [self.avatarImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.avatarImageView];
         
         self.addedConstraints = YES;

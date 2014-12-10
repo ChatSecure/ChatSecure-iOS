@@ -29,6 +29,7 @@ extern NSString *const kOTRProtocolLoginFailSSLStatusKey;
 extern NSString *const kOTRProtocolLoginFailHostnameKey;
 extern NSString *const kOTRProtocolLoginFailSSLCertificateDataKey;
 extern NSString *const kOTRNotificationErrorKey;
+extern NSString *const kOTRProtocolLoginUserInitiated;
 
 extern NSString *const kOTRFacebookDomain;
 extern NSString *const kOTRGoogleTalkDomain;

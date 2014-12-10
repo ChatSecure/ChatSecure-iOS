@@ -40,7 +40,10 @@ typedef NS_ENUM(NSInteger, OTRProtocolConnectionStatus) {
 - (OTRProtocolConnectionStatus)connectionStatus;
 
 - (void) sendMessage:(OTRMessage*)message;
+
 - (void) connectWithPassword:(NSString *)password;
+- (void) connectWithPassword:(NSString *)password userInitiated:(BOOL)userInitiated;
+
 - (void) disconnect;
 - (void) addBuddy:(OTRBuddy *)newBuddy;
 

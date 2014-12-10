@@ -56,6 +56,7 @@
 #import "OTRMessage.h"
 #import "OTRPasswordGenerator.h"
 #import "UIViewController+ChatSecure.h"
+#import "OTRNotificationController.h"
 
 #if CHATSECURE_DEMO
 #import "OTRChatDemo.h"
@@ -152,6 +153,9 @@
     [self.window makeKeyAndVisible];
     
     application.applicationIconBadgeNumber = 0;
+    
+    OTRNotificationController *notificationController = [OTRNotificationController sharedInstance];
+    [notificationController start];
   
     [Appirater setAppId:@"464200063"];
     [Appirater setOpenInAppStore:NO];

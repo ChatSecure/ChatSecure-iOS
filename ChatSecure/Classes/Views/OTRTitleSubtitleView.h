@@ -11,7 +11,10 @@
 @interface OTRTitleSubtitleView : UIView
 
 
-@property (nonatomic,strong) UILabel * titleLabel;
-@property (nonatomic,strong) UILabel * subtitleLabel;
+@property (nonatomic, strong, readonly) UILabel * titleLabel;
+@property (nonatomic, strong, readonly) UILabel * subtitleLabel;
+
+@property (nonatomic, strong, readonly) UIImageView *titleImageView;
+@property (nonatomic, strong, readonly) UIImageView *subtitleImageView;
 
 @end

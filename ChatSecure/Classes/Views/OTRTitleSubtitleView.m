@@ -9,120 +9,104 @@
 #import "OTRTitleSubtitleView.h"
 #import "OTRUtilities.h"
 
+#import "PureLayout.h"
+
+@interface OTRTitleSubtitleView ()
+
+@property (nonatomic, strong) UILabel * titleLabel;
+@property (nonatomic, strong) UILabel * subtitleLabel;
+
+@property (nonatomic, strong) UIImageView *titleImageView;
+@property (nonatomic, strong) UIImageView *subtitleImageView;
+
+@property (nonatomic) BOOL addedConstraints;
+
+@end
+
 @implementation OTRTitleSubtitleView
 
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
-        
+        self.addedConstraints = NO;
         self.backgroundColor = [UIColor clearColor];
         self.autoresizesSubviews = YES;
         
-        self.titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-        self.titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        self.titleLabel = [[UILabel alloc] initForAutoLayout];
         
         self.titleLabel.backgroundColor = [UIColor clearColor];
         
         self.titleLabel.textAlignment = NSTextAlignmentCenter;
         self.titleLabel.adjustsFontSizeToFitWidth = YES;
         
-        self.subtitleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-        self.subtitleLabel.translatesAutoresizingMaskIntoConstraints = NO;
-        
+        self.subtitleLabel = [[UILabel alloc] initForAutoLayout];
         self.subtitleLabel.backgroundColor = [UIColor clearColor];
-        
         self.subtitleLabel.textAlignment = NSTextAlignmentCenter;
         
         self.titleLabel.font = [UIFont boldSystemFontOfSize:17];
         self.subtitleLabel.font = [UIFont boldSystemFontOfSize:12];
         
+        self.titleImageView = [[UIImageView alloc] initForAutoLayout];
+        self.subtitleImageView = [[UIImageView alloc] initForAutoLayout];
+        
+        [self addSubview:self.titleImageView];
+        [self addSubview:self.subtitleImageView];
+        
         [self addSubview:self.titleLabel];
         [self addSubview:self.subtitleLabel];
         
-        [self setupContraints];
         [self setNeedsUpdateConstraints];
     }
     return self;
 }
 
+- (void)updateConstraints {
+    if (!self.addedConstraints) {
+        [self setupContraints];
+        self.addedConstraints = YES;
+    }
+    [super updateConstraints];
+}
+
 - (void)setupContraints {
     
     /////////TITLE LABEL ////////////////
-    NSLayoutConstraint * constraint = [NSLayoutConstraint constraintWithItem:self.titleLabel
-                                                                   attribute:NSLayoutAttributeTop
-                                                                   relatedBy:NSLayoutRelationEqual
-                                                                      toItem:self
-                                                                   attribute:NSLayoutAttributeTop
-                                                                  multiplier:1.0
-                                                                    constant:0.0];
-    [self addConstraint:constraint];
-    
-    constraint = [NSLayoutConstraint constraintWithItem:self.titleLabel
-                                              attribute:NSLayoutAttributeCenterX
-                                              relatedBy:NSLayoutRelationEqual
-                                                 toItem:self
-                                              attribute:NSLayoutAttributeCenterX
-                                             multiplier:1.0
-                                               constant:0.0];
-    [self addConstraint:constraint];
-    
-    constraint = [NSLayoutConstraint constraintWithItem:self.titleLabel
-                                              attribute:NSLayoutAttributeHeight
-                                              relatedBy:NSLayoutRelationEqual
-                                                 toItem:self
-                                              attribute:NSLayoutAttributeHeight
-                                             multiplier:0.6
-                                               constant:0.0];
-    [self addConstraint:constraint];
-    
-    constraint = [NSLayoutConstraint constraintWithItem:self.titleLabel
-                                              attribute:NSLayoutAttributeWidth
-                                              relatedBy:NSLayoutRelationLessThanOrEqual
-                                                 toItem:self
-                                              attribute:NSLayoutAttributeWidth
-                                             multiplier:0.9
-                                               constant:0.0];
-    [self addConstraint:constraint];
+    [self.titleLabel autoPinEdgeToSuperviewEdge:ALEdgeTop];
+    [self.titleLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
+    [self.titleLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.6];
+    [self.titleLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:0.9];
     
     ///////////// SUBTITLE LABEL /////////////
+    [self.subtitleLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
+    [self.subtitleLabel autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+    [self.subtitleLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.titleLabel];
     
-    constraint = [NSLayoutConstraint constraintWithItem:self.subtitleLabel
-                                              attribute:NSLayoutAttributeCenterX
-                                              relatedBy:NSLayoutRelationEqual
-                                                 toItem:self
-                                              attribute:NSLayoutAttributeCenterX
-                                             multiplier:1.0
-                                               constant:0.0];
-    [self addConstraint:constraint];
+    ////// TITLE IMAGEVIEW //////
+    [self setupConstraintsWithImageView:self.titleImageView withLabel:self.titleLabel];
     
-    constraint = [NSLayoutConstraint constraintWithItem:self.subtitleLabel
-                                              attribute:NSLayoutAttributeBottom
-                                              relatedBy:NSLayoutRelationEqual
-                                                 toItem:self
-                                              attribute:NSLayoutAttributeBottom
-                                             multiplier:1.0
-                                               constant:0.0];
-    [self addConstraint:constraint];
+    ////// SUBTITILE IMAGEVIEW //////
+    [self setupConstraintsWithImageView:self.subtitleImageView withLabel:self.subtitleLabel];
     
-    constraint = [NSLayoutConstraint constraintWithItem:self.subtitleLabel
-                                              attribute:NSLayoutAttributeTop
-                                              relatedBy:NSLayoutRelationEqual
-                                                 toItem:self.titleLabel
-                                              attribute:NSLayoutAttributeBottom
-                                             multiplier:1.0
-                                               constant:0.0];
-    [self addConstraint:constraint];
-    
+    //Keeps imgeviews the same or simlar with titleImageView > subtitleImageView
+    [self.subtitleImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.titleImageView withMultiplier:1.0 relation:NSLayoutRelationLessThanOrEqual];
 }
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
+- (void)setupConstraintsWithImageView:(UIImageView *)imageView withLabel:(UILabel *)label
 {
-    // Drawing code
+    
+    //Keeps trailing edge off of leading edge of label by at least 2
+    [imageView autoPinEdge:ALEdgeTrailing toEdge:ALEdgeLeading ofView:label withOffset:-2.0];
+    //Keep centered horizontaly
+    [imageView autoAlignAxis:ALAxisHorizontal toSameAxisOfView:label];
+    
+    //Keep leading edge inside superview
+    [imageView autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:0 relation:NSLayoutRelationGreaterThanOrEqual];
+    
+    //Less than equal to height of label
+    [imageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:label withOffset:0 relation:NSLayoutRelationLessThanOrEqual];
+    //Square ImageView
+    [imageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:imageView];
 }
-*/
 
 @end
