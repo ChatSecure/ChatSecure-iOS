@@ -51,19 +51,29 @@ NSString *const OTRWifiImageKey = @"OTRWifiImageKey";
 
 + (UIImage *)circleWithRadius:(CGFloat)radius
 {
-    UIGraphicsBeginImageContextWithOptions(CGSizeMake(radius*2, radius*2), NO, 0);
-    //// Color Declarations
-    UIColor* fillColor = [UIColor blackColor];
+    return [self circleWithRadius:radius lineWidth:0 lineColor:nil fillColor:nil];
+}
+
++ (UIImage *)circleWithRadius:(CGFloat)radius lineWidth:(CGFloat)lineWidth lineColor:(UIColor *)lineColor fillColor:(UIColor *)fillColor
+{
+    if (!fillColor) {
+        fillColor = [UIColor blackColor];
+    }
     
-    //// Polygon Drawing
-    UIBezierPath* ovalPath = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(0, 0, radius*2, radius*2)];
-    [fillColor setFill];
-    [ovalPath fill];
+    if (!lineColor) {
+        lineColor = [UIColor blackColor];
+    }
     
-    UIImage *circle = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
+    return [UIImage imageForSize:CGSizeMake(radius*2+lineWidth, radius*2+lineWidth) opaque:NO withDrawingBlock:^{
+        UIBezierPath* ovalPath = [UIBezierPath bezierPathWithOvalInRect: CGRectMake(lineWidth/2.0, lineWidth/2.0, radius*2.0, radius*2.0)];
+        [fillColor setFill];
+        [ovalPath fill];
+        [lineColor setStroke];
+        ovalPath.lineWidth = lineWidth;
+        [ovalPath stroke];
+        
+    }];
     
-    return circle;
 }
 
 + (UIView *)typingBubbleView
