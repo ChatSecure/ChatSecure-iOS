@@ -11,6 +11,8 @@
 #import "OTRMessage.h"
 #import "OTRDatabaseManager.h"
 #import "YapDatabaseRelationshipTransaction.h"
+#import "OTRImages.h"
+#import "JSQMessagesAvatarImageFactory.h"
 #import "OTRKit.h"
 
 const struct OTRBuddyAttributes OTRBuddyAttributes = {
@@ -48,7 +50,87 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
 
 - (UIImage *)avatarImage
 {
-    return [UIImage imageWithData:self.avatarData];
+    //on setAvatar clear this buddies image cache
+    //invalidate if jid or display name changes 
+    UIImage *image = [OTRImages imageWithIdentifier:self.uniqueId];
+    if (!image) {
+        if (self.avatarData) {
+            image = [UIImage imageWithData:self.avatarData];
+        }
+        else {
+            
+            JSQMessagesAvatarImage *jsqImage = [JSQMessagesAvatarImageFactory avatarImageWithUserInitials:[self displayInitials]
+                                                                                          backgroundColor:[UIColor colorWithWhite:0.85f alpha:1.0f]
+                                                                                                textColor:[UIColor colorWithWhite:0.60f alpha:1.0f]
+                                                                                                     font:[UIFont systemFontOfSize:30.0f]
+                                                                                                 diameter:60];
+            image = jsqImage.avatarImage;
+        }
+        
+        [OTRImages setImage:image forIdentifier:self.uniqueId];
+    }
+    
+    return image;
+}
+
+- (void)setAvatarData:(NSData *)avatarData
+{
+    if (![_avatarData isEqualToData: avatarData]) {
+        _avatarData = avatarData;
+        [OTRImages removeImageWithIdentifier:self.uniqueId];
+    }
+}
+
+- (void)setDisplayName:(NSString *)displayName
+{
+    if (![_displayName isEqualToString:displayName]) {
+        _displayName = displayName;
+        if (!self.avatarData) {
+            [OTRImages removeImageWithIdentifier:self.uniqueId];
+        }
+    }
+}
+
+- (NSString *)displayInitials
+{
+    NSUInteger maxInitials = 2;
+    if ([self.displayName length]) {
+        return [self initialsFromString:self.displayName maxCharacters:maxInitials];
+    }
+    else {
+        NSString *username = [[self.username componentsSeparatedByString:@"@"] firstObject];
+        if (![username length]) {
+            username = self.username;
+        }
+        return [self initialsFromString:username maxCharacters:maxInitials];
+    }
+}
+
+- (NSString *)initialsFromString:(NSString *)string maxCharacters:(NSUInteger)maxCharacters
+{
+    if (![string length]) {
+        return nil;
+    }
+    
+    if (maxCharacters == 1) {
+        return [string substringToIndex:1];
+    } else {
+        NSCharacterSet *characterSet = [NSCharacterSet characterSetWithCharactersInString:@" ._-+"];
+        NSArray *splitArray = [string componentsSeparatedByCharactersInSet:characterSet];
+        if ([splitArray count] > maxCharacters) {
+            splitArray = [splitArray subarrayWithRange:NSMakeRange(0, maxCharacters)];
+        }
+        
+        NSMutableString *finalString = [[NSMutableString alloc] init];
+        [splitArray enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL *stop) {
+            if ([obj length]) {
+                [finalString appendString:[obj substringToIndex:1]];
+            }
+            
+        }];
+        
+        return [finalString uppercaseString];
+    }
 }
 
 

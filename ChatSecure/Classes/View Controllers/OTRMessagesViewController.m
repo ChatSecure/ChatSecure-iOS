@@ -25,8 +25,6 @@
 #import "UIAlertView+Blocks.h"
 #import "OTRTitleSubtitleView.h"
 #import "OTRKit.h"
-#import "OTRMessagesCollectionViewCellIncoming.h"
-#import "OTRMessagesCollectionViewCellOutgoing.h"
 #import "OTRImages.h"
 #import "UIActivityViewController+ChatSecure.h"
 #import "OTRUtilities.h"
@@ -42,7 +40,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     OTRDropDownTypePush          = 2
 };
 
-@interface OTRMessagesViewController () <OTRMessagesCollectionViewCellDelegate, UITextViewDelegate>
+@interface OTRMessagesViewController () <UITextViewDelegate>
 
 @property (nonatomic, strong) OTRAccount *account;
 
@@ -50,8 +48,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
 @property (nonatomic, strong) YapDatabaseViewMappings *messageMappings;
 @property (nonatomic, strong) YapDatabaseViewMappings *buddyMappings;
 
-@property (nonatomic, strong) UIImageView *outgoingBubbleImageView;
-@property (nonatomic, strong) UIImageView *incomingBubbleImageView;
+@property (nonatomic, strong) JSQMessagesBubbleImage *outgoingBubbleImage;
+@property (nonatomic, strong) JSQMessagesBubbleImage *incomingBubbleImage;
 
 @property (nonatomic, weak) id textViewNotificationObject;
 @property (nonatomic, weak) id databaseConnectionDidUpdateNotificationObject;
@@ -77,22 +75,16 @@ typedef NS_ENUM(int, OTRDropDownType) {
 {
     [super viewDidLoad];
     
-    self.collectionView.frame = self.view.bounds;
     self.automaticallyScrollsToMostRecentMessage = YES;
     self.inputToolbar.contentView.leftBarButtonItem = nil;
     
-    self.outgoingCellIdentifier = [OTRMessagesCollectionViewCellOutgoing cellReuseIdentifier];
-    self.incomingCellIdentifier = [OTRMessagesCollectionViewCellIncoming cellReuseIdentifier];
-    
-    [self.collectionView registerNib:[OTRMessagesCollectionViewCellOutgoing nib] forCellWithReuseIdentifier:[OTRMessagesCollectionViewCellOutgoing cellReuseIdentifier]];
-    [self.collectionView registerNib:[OTRMessagesCollectionViewCellIncoming nib] forCellWithReuseIdentifier:[OTRMessagesCollectionViewCellIncoming cellReuseIdentifier]];
-    
      ////// bubbles //////
-    self.outgoingBubbleImageView = [JSQMessagesBubbleImageFactory outgoingMessageBubbleImageViewWithColor:[UIColor jsq_messageBubbleBlueColor]];
+    JSQMessagesBubbleImageFactory *bubbleImageFactory = [[JSQMessagesBubbleImageFactory alloc] init];
+                                                         
+    self.outgoingBubbleImage = [bubbleImageFactory outgoingMessagesBubbleImageWithColor:[UIColor jsq_messageBubbleBlueColor]];
     
-    self.incomingBubbleImageView = [JSQMessagesBubbleImageFactory incomingMessageBubbleImageViewWithColor:[UIColor jsq_messageBubbleLightGrayColor]];
+    self.incomingBubbleImage = [bubbleImageFactory incomingMessagesBubbleImageWithColor:[UIColor jsq_messageBubbleLightGrayColor]];
     
-    self.collectionView.collectionViewLayout.incomingAvatarViewSize = CGSizeZero;
     self.collectionView.collectionViewLayout.outgoingAvatarViewSize = CGSizeZero;
     
     ////// Lock Button //////
@@ -120,12 +112,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
     self.textViewNotificationObject = [[NSNotificationCenter defaultCenter] addObserverForName:UITextViewTextDidChangeNotification object:self.inputToolbar.contentView.textView queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
         [welf textViewDidChangeNotifcation:note];
     }];
-    
-    /* Commented out while debugging crash
-    self.databaseConnectionDidUpdateNotificationObject = [[NSNotificationCenter defaultCenter] addObserverForName:OTRUIDatabaseConnectionDidUpdateNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
-        [welf yapDatabaseModified:note];
-    }];
-    */
     
     [self.uiDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         [welf.messageMappings updateWithTransaction:transaction];
@@ -270,9 +256,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
 }
 
-- (void)showErrorMessageForCell:(OTRMessagesCollectionViewCell *)cell
+- (void)showErrorMessageForCell:(id)sender
 {
-    NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
+    NSIndexPath *indexPath = [self.collectionView indexPathForCell:sender];
     OTRMessage *message = nil;
     if (indexPath) {
         message = [self messageAtIndexPath:indexPath];
@@ -686,7 +672,23 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 #pragma mark - JSQMessagesViewController method overrides
 
-- (void)didPressSendButton:(UIButton *)button withMessageText:(NSString *)text sender:(NSString *)sender date:(NSDate *)date
+- (UICollectionViewCell *)collectionView:(JSQMessagesCollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    JSQMessagesCollectionViewCell *cell = (JSQMessagesCollectionViewCell *)[super collectionView:collectionView cellForItemAtIndexPath:indexPath];
+    
+    OTRMessage *message = [self messageAtIndexPath:indexPath];
+    
+    if (message.isIncoming) {
+        cell.textView.textColor = [UIColor blackColor];
+    }
+    else {
+        cell.textView.textColor = [UIColor whiteColor];
+    }
+    
+    return cell;
+}
+
+- (void)didPressSendButton:(UIButton *)button withMessageText:(NSString *)text senderId:(NSString *)senderId senderDisplayName:(NSString *)senderDisplayName date:(NSDate *)date
 {
     if ([[OTRProtocolManager sharedInstance] isAccountConnected:self.account]) {
         //Account is connected
@@ -722,26 +724,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
 }
 
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    OTRMessagesCollectionViewCell *cell = (OTRMessagesCollectionViewCell *)[super collectionView:collectionView cellForItemAtIndexPath:indexPath];
-    
-    OTRMessage *message = [self messageAtIndexPath:indexPath];
-    [cell setMessage:message];
-    
-    // Do not allow clickable links for Tor accounts to prevent information leakage
-    if ([self.account isKindOfClass:[OTRXMPPTorAccount class]]) {
-        cell.textView.dataDetectorTypes = UIDataDetectorTypeNone;
-    }
-    else {
-        cell.textView.dataDetectorTypes = UIDataDetectorTypeLink;
-    }
-    
-    cell.textView.delegate = self;
-    cell.actionDelegate = self;
-    return cell;
-}
-
 #pragma - mark UIScrollViewDelegate Methods
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
@@ -772,36 +754,49 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 #pragma - mark JSQMessagesCollectionViewDataSource Methods
 
- ////// Required //////
-- (NSString *)sender
+- (NSString *)senderDisplayName
 {
-    if (self.account) {
-        return self.account.uniqueId;
+    if ([self.account.displayName length]) {
+        return self.account.displayName;
     }
-    return @"JSQDefaultSender";
+    return self.account.username;
 }
 
-- (id<JSQMessageData>)collectionView:(JSQMessagesCollectionView *)collectionView
-       messageDataForItemAtIndexPath:(NSIndexPath *)indexPath
+- (NSString *)senderId
+{
+    return self.account.uniqueId;
+}
+
+- (id<JSQMessageData>)collectionView:(JSQMessagesCollectionView *)collectionView messageDataForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     return [self messageAtIndexPath:indexPath];
 }
 
-- (UIImageView *)collectionView:(JSQMessagesCollectionView *)collectionView bubbleImageViewForItemAtIndexPath:(NSIndexPath *)indexPath
+- (id<JSQMessageBubbleImageDataSource>)collectionView:(JSQMessagesCollectionView *)collectionView messageBubbleImageDataForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     OTRMessage *message = [self messageAtIndexPath:indexPath];
-    UIImageView *imageView = nil;
+    JSQMessagesBubbleImage *image = nil;
     if (message.isIncoming) {
-        imageView = [[UIImageView alloc] initWithImage:self.incomingBubbleImageView.image highlightedImage:self.incomingBubbleImageView.highlightedImage];
+        image = self.incomingBubbleImage;
     }
     else {
-        imageView = [[UIImageView alloc] initWithImage:self.outgoingBubbleImageView.image highlightedImage:self.outgoingBubbleImageView.highlightedImage];
+        image = self.outgoingBubbleImage;
     }
-    return imageView;
+    return image;
 }
 
-- (UIImageView *)collectionView:(JSQMessagesCollectionView *)collectionView avatarImageViewForItemAtIndexPath:(NSIndexPath *)indexPath
+- (id <JSQMessageAvatarImageDataSource>)collectionView:(JSQMessagesCollectionView *)collectionView avatarImageDataForItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    OTRMessage *message = [self messageAtIndexPath:indexPath];
+    UIImage *avatarImage = nil;
+    if (message.isIncoming) {
+        avatarImage = self.buddy.avatarImage;
+    }
+    
+    if (avatarImage) {
+        NSUInteger diameter = MIN(avatarImage.size.width, avatarImage.size.height);
+        return [JSQMessagesAvatarImageFactory avatarImageWithImage:avatarImage diameter:diameter];
+    }
     return nil;
 }
 
@@ -862,9 +857,9 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
     return 0.0f;
 }
 
-- (void)messagesCollectionViewCellDidTapDelete:(OTRMessagesCollectionViewCell *)cell
+- (void)messagesCollectionViewCellDidTapDelete:(id)sender
 {
-    NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
+    NSIndexPath *indexPath = [self.collectionView indexPathForCell:sender];
     __block OTRMessage *message = [self messageAtIndexPath:indexPath];
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         [message removeWithTransaction:transaction];
@@ -872,11 +867,6 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
         [self.buddy updateLastMessageDateWithTransaction:transaction];
         [self.buddy saveWithTransaction:transaction];
     }];
-}
-
-- (void)messagesCollectionViewCellDidTapError:(OTRMessagesCollectionViewCell *)cell
-{
-    [self showErrorMessageForCell:cell];
 }
 
 /*

@@ -39,4 +39,9 @@ typedef NS_ENUM(NSUInteger, OTRBubbleMessageType) {
 
 + (UIImage *)wifiWithColor:(UIColor *)color;
 
++ (UIImage *)imageWithIdentifier:(NSString *)identifier;
++ (void)removeImageWithIdentifier:(NSString *)identifier;
++ (void)setImage:(UIImage *)image forIdentifier:(NSString *)identifier;
+
+
 @end

@@ -23,6 +23,15 @@ NSString *const OTRWifiImageKey = @"OTRWifiImageKey";
 
 @implementation OTRImages
 
++ (NSCache *)imageCache{
+    static NSCache *imageCache = nil;
+    static dispatch_once_t predicate;
+    dispatch_once(&predicate, ^{
+        imageCache = [[NSCache alloc] init];
+    });
+    return imageCache;
+}
+
 + (UIImage *)mirrorImage:(UIImage *)image {
     return [UIImage imageWithCGImage:image.CGImage
                                scale:image.scale
@@ -401,5 +410,29 @@ NSString *const OTRWifiImageKey = @"OTRWifiImageKey";
     }];
 }
 
++ (UIImage *)imageWithIdentifier:(NSString *)identifier
+{
+    return [[self imageCache] objectForKey:identifier];
+}
+
++ (void)removeImageWithIdentifier:(NSString *)identifier
+{
+    [[self imageCache] removeObjectForKey:identifier];
+}
+
++ (void)setImage:(UIImage *)image forIdentifier:(NSString *)identifier
+{
+    if (![identifier length]) {
+        return;
+    }
+    
+    if (image && [image isKindOfClass:[UIImage class]]) {
+        
+        [[self imageCache] setObject:image forKey:identifier];
+        
+    } else if (!image) {
+        [self removeImageWithIdentifier:identifier];
+    }
+}
 
 @end

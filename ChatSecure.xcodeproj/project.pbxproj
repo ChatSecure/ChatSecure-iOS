@@ -134,10 +134,6 @@
 		633107151A16D1A300C17BAE /* OTRConversationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106531A16D1A300C17BAE /* OTRConversationCell.m */; };
 		633107161A16D1A300C17BAE /* OTRInLineTextEditTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106551A16D1A300C17BAE /* OTRInLineTextEditTableViewCell.m */; };
 		633107171A16D1A300C17BAE /* OTRMessagesCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106571A16D1A300C17BAE /* OTRMessagesCollectionViewCell.m */; };
-		633107181A16D1A300C17BAE /* OTRMessagesCollectionViewCellIncoming.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106591A16D1A300C17BAE /* OTRMessagesCollectionViewCellIncoming.m */; };
-		633107191A16D1A300C17BAE /* OTRMessagesCollectionViewCellIncoming.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6331065A1A16D1A300C17BAE /* OTRMessagesCollectionViewCellIncoming.xib */; };
-		6331071A1A16D1A300C17BAE /* OTRMessagesCollectionViewCellOutgoing.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331065C1A16D1A300C17BAE /* OTRMessagesCollectionViewCellOutgoing.m */; };
-		6331071B1A16D1A300C17BAE /* OTRMessagesCollectionViewCellOutgoing.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6331065D1A16D1A300C17BAE /* OTRMessagesCollectionViewCellOutgoing.xib */; };
 		6331071C1A16D1A300C17BAE /* OTRSettingTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331065F1A16D1A300C17BAE /* OTRSettingTableViewCell.m */; };
 		6331071D1A16D1A300C17BAE /* OTRStatusMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106611A16D1A300C17BAE /* OTRStatusMessageCell.m */; };
 		6331071F1A16D1A300C17BAE /* OTRTextFieldTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106651A16D1A300C17BAE /* OTRTextFieldTableViewCell.m */; };
@@ -488,12 +484,6 @@
 		633106551A16D1A300C17BAE /* OTRInLineTextEditTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRInLineTextEditTableViewCell.m; sourceTree = "<group>"; };
 		633106561A16D1A300C17BAE /* OTRMessagesCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRMessagesCollectionViewCell.h; sourceTree = "<group>"; };
 		633106571A16D1A300C17BAE /* OTRMessagesCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRMessagesCollectionViewCell.m; sourceTree = "<group>"; };
-		633106581A16D1A300C17BAE /* OTRMessagesCollectionViewCellIncoming.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRMessagesCollectionViewCellIncoming.h; sourceTree = "<group>"; };
-		633106591A16D1A300C17BAE /* OTRMessagesCollectionViewCellIncoming.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRMessagesCollectionViewCellIncoming.m; sourceTree = "<group>"; };
-		6331065A1A16D1A300C17BAE /* OTRMessagesCollectionViewCellIncoming.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OTRMessagesCollectionViewCellIncoming.xib; sourceTree = "<group>"; };
-		6331065B1A16D1A300C17BAE /* OTRMessagesCollectionViewCellOutgoing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRMessagesCollectionViewCellOutgoing.h; sourceTree = "<group>"; };
-		6331065C1A16D1A300C17BAE /* OTRMessagesCollectionViewCellOutgoing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRMessagesCollectionViewCellOutgoing.m; sourceTree = "<group>"; };
-		6331065D1A16D1A300C17BAE /* OTRMessagesCollectionViewCellOutgoing.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OTRMessagesCollectionViewCellOutgoing.xib; sourceTree = "<group>"; };
 		6331065E1A16D1A300C17BAE /* OTRSettingTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRSettingTableViewCell.h; sourceTree = "<group>"; };
 		6331065F1A16D1A300C17BAE /* OTRSettingTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRSettingTableViewCell.m; sourceTree = "<group>"; };
 		633106601A16D1A300C17BAE /* OTRStatusMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRStatusMessageCell.h; sourceTree = "<group>"; };
@@ -1033,12 +1023,6 @@
 				633106551A16D1A300C17BAE /* OTRInLineTextEditTableViewCell.m */,
 				633106561A16D1A300C17BAE /* OTRMessagesCollectionViewCell.h */,
 				633106571A16D1A300C17BAE /* OTRMessagesCollectionViewCell.m */,
-				633106581A16D1A300C17BAE /* OTRMessagesCollectionViewCellIncoming.h */,
-				633106591A16D1A300C17BAE /* OTRMessagesCollectionViewCellIncoming.m */,
-				6331065A1A16D1A300C17BAE /* OTRMessagesCollectionViewCellIncoming.xib */,
-				6331065B1A16D1A300C17BAE /* OTRMessagesCollectionViewCellOutgoing.h */,
-				6331065C1A16D1A300C17BAE /* OTRMessagesCollectionViewCellOutgoing.m */,
-				6331065D1A16D1A300C17BAE /* OTRMessagesCollectionViewCellOutgoing.xib */,
 				6331065E1A16D1A300C17BAE /* OTRSettingTableViewCell.h */,
 				6331065F1A16D1A300C17BAE /* OTRSettingTableViewCell.m */,
 				633106601A16D1A300C17BAE /* OTRStatusMessageCell.h */,
@@ -1336,9 +1320,7 @@
 				633104FD1A16AD8700C17BAE /* chat.facebook.com.cer in Resources */,
 				D973D7061A2D4094004D353E /* Pods-acknowledgements.plist in Resources */,
 				D9365E7A1A1EB0050006434A /* torrc in Resources */,
-				633107191A16D1A300C17BAE /* OTRMessagesCollectionViewCellIncoming.xib in Resources */,
 				6331072B1A16D1F200C17BAE /* DemoImages.xcassets in Resources */,
-				6331071B1A16D1A300C17BAE /* OTRMessagesCollectionViewCellOutgoing.xib in Resources */,
 				633107201A16D1A300C17BAE /* LaunchScreen.xib in Resources */,
 				633104FE1A16AD8700C17BAE /* talk.google.com.cer in Resources */,
 			);
@@ -1498,7 +1480,6 @@
 				633106C51A16D1A300C17BAE /* OTRListSettingValue.m in Sources */,
 				633106EC1A16D1A300C17BAE /* OTRXMPPError.m in Sources */,
 				633106EE1A16D1A300C17BAE /* OTRGoogleTalkLoginViewController.m in Sources */,
-				6331071A1A16D1A300C17BAE /* OTRMessagesCollectionViewCellOutgoing.m in Sources */,
 				633106FB1A16D1A300C17BAE /* OTRChangeDatabasePassphraseViewController.m in Sources */,
 				6331068E1A16D1A300C17BAE /* OTRvCardYapDatabaseStorage.m in Sources */,
 				633107211A16D1A300C17BAE /* OTRButtonView.m in Sources */,
@@ -1564,7 +1545,6 @@
 				6331070E1A16D1A300C17BAE /* OTRSettingDetailViewController.m in Sources */,
 				63C4BD1A1A1E9BE1001696CD /* OTRManagedXMPPAccount.m in Sources */,
 				63C4BD251A1E9BE1001696CD /* _OTRManagedMessage.m in Sources */,
-				633107181A16D1A300C17BAE /* OTRMessagesCollectionViewCellIncoming.m in Sources */,
 				633107081A16D1A300C17BAE /* OTRNewAccountViewController.m in Sources */,
 				633106F01A16D1A300C17BAE /* OTRLoginViewController.m in Sources */,
 				633106DA1A16D1A300C17BAE /* OTRPushDevice.m in Sources */,

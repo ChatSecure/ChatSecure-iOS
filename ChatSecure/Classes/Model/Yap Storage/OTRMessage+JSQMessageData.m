@@ -13,7 +13,7 @@
 
 @implementation OTRMessage (JSQMessageData)
 
-- (NSString *)sender
+- (NSString *)senderId
 {
     __block NSString *sender = @"";
     [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
@@ -25,9 +25,39 @@
             OTRAccount *account = [buddy accountWithTransaction:transaction];
             sender = account.uniqueId;
         }
-        
     }];
     return sender;
 }
+
+- (NSString *)senderDisplayName {
+    __block NSString *sender = @"";
+    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        OTRBuddy *buddy = [self buddyWithTransaction:transaction];
+        if (self.isIncoming) {
+            if ([buddy.displayName length]) {
+                sender = buddy.displayName;
+            }
+            else {
+                sender = buddy.username;
+            }
+        }
+        else {
+            OTRAccount *account = [buddy accountWithTransaction:transaction];
+            if ([account.displayName length]) {
+                sender = account.displayName;
+            }
+            else {
+                sender = account.username;
+            }
+        }
+    }];
+    return sender;
+}
+
+- (BOOL)isMediaMessage
+{
+    return NO;
+}
+
 
 @end

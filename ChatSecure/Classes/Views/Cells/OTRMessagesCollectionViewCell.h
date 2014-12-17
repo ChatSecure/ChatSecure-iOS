@@ -26,14 +26,6 @@
 
 @property (nonatomic, weak) id<OTRMessagesCollectionViewCellDelegate> actionDelegate;
 
-@property (nonatomic, weak, readonly) UIView *leftRightView;
-@property (nonatomic, strong, readonly) UIImageView *errorImageView;
-@property (nonatomic, strong, readonly) UIImageView *deliveredImageView;
-@property (nonatomic, strong, readonly) UIImageView *lockImageView;
-
-- (void)setupConstraints;
-
-
 - (void) setMessage:(OTRMessage*)message;
 
 @end
