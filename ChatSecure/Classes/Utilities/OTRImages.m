@@ -10,8 +10,9 @@
 #import "OTRUtilities.h"
 #import "OTRColors.h"
 #import "UIImage+BBlock.h"
-
+#import "JSQMessagesAvatarImageFactory.h"
 #import "OTRComposingImageView.h"
+#import "NSString+ChatSecure.h"
 
 NSString *const OTRWarningImageKey = @"OTRWarningImageKey";
 NSString *const OTRFacebookImageKey = @"OTRFacebookImageKey";
@@ -433,6 +434,17 @@ NSString *const OTRWifiImageKey = @"OTRWifiImageKey";
     } else if (!image) {
         [self removeImageWithIdentifier:identifier];
     }
+}
+
++ (UIImage *)avatarImageWithUsername:(NSString *)username
+{
+    NSString *initials = [username otr_stringInitialsWithMaxCharacters:2];
+    JSQMessagesAvatarImage *jsqImage = [JSQMessagesAvatarImageFactory avatarImageWithUserInitials:initials
+                                                                                  backgroundColor:[UIColor colorWithWhite:0.85f alpha:1.0f]
+                                                                                        textColor:[UIColor colorWithWhite:0.60f alpha:1.0f]
+                                                                                             font:[UIFont systemFontOfSize:30.0f]
+                                                                                         diameter:60];
+    return jsqImage.avatarImage;
 }
 
 @end

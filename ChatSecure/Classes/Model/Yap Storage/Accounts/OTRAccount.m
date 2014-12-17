@@ -18,6 +18,7 @@
 #import "OTRDatabaseManager.h"
 #import "YapDatabaseRelationshipTransaction.h"
 #import "OTRBuddy.h"
+#import "OTRImages.h"
 
 NSString *const OTRAimImageName               = @"aim.png";
 NSString *const OTRGoogleTalkImageName        = @"gtalk.png";
@@ -70,6 +71,40 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
 - (NSString *)protocolTypeString
 {
     return @"";
+}
+
+- (void)setAvatarData:(NSData *)avatarData
+{
+    if (![self.avatarData isEqualToData:avatarData]) {
+        _avatarData = avatarData;
+        [OTRImages removeImageWithIdentifier:self.uniqueId];
+    }
+}
+
+- (UIImage *)avatarImage
+{
+    //on setAvatar clear this buddies image cache
+    //invalidate if jid or display name changes
+    UIImage *image = [OTRImages imageWithIdentifier:self.uniqueId];
+    if (!image) {
+        if (self.avatarData) {
+            image = [UIImage imageWithData:self.avatarData];
+        }
+        else {
+            NSString *username  = self.displayName;
+            if (![username length]) {
+                username = [[self.username componentsSeparatedByString:@"@"] firstObject];
+                if (![username length]) {
+                    username = self.username;
+                }
+            }
+            image = [OTRImages avatarImageWithUsername:username];
+        }
+        
+        [OTRImages setImage:image forIdentifier:self.uniqueId];
+    }
+    
+    return image;
 }
 
 - (Class)protocolClass {

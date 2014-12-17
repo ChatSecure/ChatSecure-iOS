@@ -27,6 +27,7 @@ extern NSString *const OTRXMPPTorImageName;
 
 @property (nonatomic, strong) NSString *displayName;
 @property (nonatomic, readonly) OTRAccountType accountType;
+@property (nonatomic, strong) NSData *avatarData;
 @property (nonatomic, strong) NSString *username;
 @property (nonatomic) BOOL rememberPassword;
 @property (nonatomic) BOOL autologin;
@@ -36,6 +37,7 @@ extern NSString *const OTRXMPPTorImageName;
 
 - (id)initWithAccountType:(OTRAccountType)accountType;
 
+- (UIImage *)avatarImage;
 - (Class)protocolClass;
 - (UIImage *)accountImage;
 - (OTRProtocolType)protocolType;

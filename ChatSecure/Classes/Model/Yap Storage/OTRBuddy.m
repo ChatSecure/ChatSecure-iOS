@@ -58,13 +58,14 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
             image = [UIImage imageWithData:self.avatarData];
         }
         else {
-            
-            JSQMessagesAvatarImage *jsqImage = [JSQMessagesAvatarImageFactory avatarImageWithUserInitials:[self displayInitials]
-                                                                                          backgroundColor:[UIColor colorWithWhite:0.85f alpha:1.0f]
-                                                                                                textColor:[UIColor colorWithWhite:0.60f alpha:1.0f]
-                                                                                                     font:[UIFont systemFontOfSize:30.0f]
-                                                                                                 diameter:60];
-            image = jsqImage.avatarImage;
+            NSString *username  = self.displayName;
+            if (![username length]) {
+                username = [[self.username componentsSeparatedByString:@"@"] firstObject];
+                if (![username length]) {
+                    username = self.username;
+                }
+            }
+            image = [OTRImages avatarImageWithUsername:username];
         }
         
         [OTRImages setImage:image forIdentifier:self.uniqueId];
@@ -88,48 +89,6 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
         if (!self.avatarData) {
             [OTRImages removeImageWithIdentifier:self.uniqueId];
         }
-    }
-}
-
-- (NSString *)displayInitials
-{
-    NSUInteger maxInitials = 2;
-    if ([self.displayName length]) {
-        return [self initialsFromString:self.displayName maxCharacters:maxInitials];
-    }
-    else {
-        NSString *username = [[self.username componentsSeparatedByString:@"@"] firstObject];
-        if (![username length]) {
-            username = self.username;
-        }
-        return [self initialsFromString:username maxCharacters:maxInitials];
-    }
-}
-
-- (NSString *)initialsFromString:(NSString *)string maxCharacters:(NSUInteger)maxCharacters
-{
-    if (![string length]) {
-        return nil;
-    }
-    
-    if (maxCharacters == 1) {
-        return [string substringToIndex:1];
-    } else {
-        NSCharacterSet *characterSet = [NSCharacterSet characterSetWithCharactersInString:@" ._-+"];
-        NSArray *splitArray = [string componentsSeparatedByCharactersInSet:characterSet];
-        if ([splitArray count] > maxCharacters) {
-            splitArray = [splitArray subarrayWithRange:NSMakeRange(0, maxCharacters)];
-        }
-        
-        NSMutableString *finalString = [[NSMutableString alloc] init];
-        [splitArray enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL *stop) {
-            if ([obj length]) {
-                [finalString appendString:[obj substringToIndex:1]];
-            }
-            
-        }];
-        
-        return [finalString uppercaseString];
     }
 }
 

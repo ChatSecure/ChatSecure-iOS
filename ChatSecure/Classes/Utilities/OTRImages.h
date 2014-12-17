@@ -43,5 +43,7 @@ typedef NS_ENUM(NSUInteger, OTRBubbleMessageType) {
 + (void)removeImageWithIdentifier:(NSString *)identifier;
 + (void)setImage:(UIImage *)image forIdentifier:(NSString *)identifier;
 
++ (UIImage *)avatarImageWithUsername:(NSString *)username;
+
 
 @end

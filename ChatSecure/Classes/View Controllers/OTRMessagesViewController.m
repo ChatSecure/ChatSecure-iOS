@@ -87,7 +87,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     self.incomingBubbleImage = [bubbleImageFactory incomingMessagesBubbleImageWithColor:[UIColor jsq_messageBubbleLightGrayColor]];
     
-    self.collectionView.collectionViewLayout.outgoingAvatarViewSize = CGSizeZero;
+    //self.collectionView.collectionViewLayout.outgoingAvatarViewSize = CGSizeZero;
     
     ////// Lock Button //////
     [self setupLockButton];
@@ -811,7 +811,10 @@ typedef NS_ENUM(int, OTRDropDownType) {
     OTRMessage *message = [self messageAtIndexPath:indexPath];
     UIImage *avatarImage = nil;
     if (message.isIncoming) {
-        avatarImage = self.buddy.avatarImage;
+        avatarImage = [self.buddy avatarImage];
+    }
+    else {
+        avatarImage = [self.account avatarImage];
     }
     
     if (avatarImage) {
