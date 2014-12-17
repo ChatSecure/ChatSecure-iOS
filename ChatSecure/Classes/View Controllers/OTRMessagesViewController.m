@@ -31,6 +31,7 @@
 #import "OTRProtocolManager.h"
 #import "OTRLoginViewController.h"
 #import "OTRColors.h"
+#import "JSQMessagesCollectionViewCell+ChatSecure.h"
 
 static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
 
@@ -688,6 +689,15 @@ typedef NS_ENUM(int, OTRDropDownType) {
     return cell;
 }
 
+- (BOOL)collectionView:(UICollectionView *)collectionView canPerformAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender
+{
+    if (action == @selector(delete:)) {
+        return YES;
+    }
+    
+    return [super collectionView:collectionView canPerformAction:action forItemAtIndexPath:indexPath withSender:sender];
+}
+
 - (void)didPressSendButton:(UIButton *)button withMessageText:(NSString *)text senderId:(NSString *)senderId senderDisplayName:(NSString *)senderDisplayName date:(NSDate *)date
 {
     if ([[OTRProtocolManager sharedInstance] isAccountConnected:self.account]) {
@@ -722,6 +732,16 @@ typedef NS_ENUM(int, OTRDropDownType) {
     NSString *currentText = self.inputToolbar.contentView.textView.text;
     self.inputToolbar.contentView.textView.text = [currentText substringToIndex:[currentText length]-1];
     
+}
+
+- (void)collectionView:(UICollectionView *)collectionView performAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender
+{
+    if (action == @selector(delete:)) {
+        [self deleteMessageAtIndexPath:indexPath];
+    }
+    else {
+        [super collectionView:collectionView performAction:action forItemAtIndexPath:indexPath withSender:sender];
+    }
 }
 
 #pragma - mark UIScrollViewDelegate Methods
@@ -857,9 +877,8 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
     return 0.0f;
 }
 
-- (void)messagesCollectionViewCellDidTapDelete:(id)sender
+- (void)deleteMessageAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSIndexPath *indexPath = [self.collectionView indexPathForCell:sender];
     __block OTRMessage *message = [self messageAtIndexPath:indexPath];
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         [message removeWithTransaction:transaction];
