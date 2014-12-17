@@ -32,6 +32,7 @@
 #import "OTRLoginViewController.h"
 #import "OTRColors.h"
 #import "JSQMessagesCollectionViewCell+ChatSecure.h"
+#import "NSString+FontAwesome.h"
 
 static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
 
@@ -841,13 +842,25 @@ typedef NS_ENUM(int, OTRDropDownType) {
 - (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 {
     OTRMessage *message = [self messageAtIndexPath:indexPath];
-    NSAttributedString *attributedString = nil;
+    
+    UIFont *font = [UIFont fontWithName:kFontAwesomeFont size:12];
+    NSDictionary *iconAttributes = @{NSFontAttributeName: font};
+    
+    NSString *lockString = nil;
+    if (message.transportedSecurely) {
+        lockString = [NSString stringWithFormat:@"%@ ",[NSString fa_stringForFontAwesomeIcon:FALock]];
+    }
+    else {
+        lockString = [NSString fa_stringForFontAwesomeIcon:FAUnlock];
+    }
+    
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:lockString attributes:iconAttributes];
+    
+    
     if (message.isDelivered) {
-        NSMutableParagraphStyle *paragrapStyle = NSMutableParagraphStyle.new;
-        paragrapStyle.alignment                = NSTextAlignmentRight;
+        NSString *iconString = [NSString stringWithFormat:@"%@ ",[NSString fa_stringForFontAwesomeIcon:FACheck]];
         
-        attributedString = [NSAttributedString.alloc initWithString:DELIVERED_STRING
-                                                         attributes: @{NSParagraphStyleAttributeName:paragrapStyle}];
+        [attributedString appendAttributedString:[[NSAttributedString alloc] initWithString:iconString attributes:iconAttributes]];
     }
     
     return attributedString;
@@ -870,11 +883,7 @@ heightForCellTopLabelAtIndexPath:(NSIndexPath *)indexPath
                    layout:(JSQMessagesCollectionViewFlowLayout *)collectionViewLayout
 heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 {
-    OTRMessage *message = [self messageAtIndexPath:indexPath];
-    if (message.isDelivered) {
-        return kJSQMessagesCollectionViewCellLabelHeightDefault;
-    }
-    return 0.0f;
+    return kJSQMessagesCollectionViewCellLabelHeightDefault;
 }
 
 - (void)deleteMessageAtIndexPath:(NSIndexPath *)indexPath
