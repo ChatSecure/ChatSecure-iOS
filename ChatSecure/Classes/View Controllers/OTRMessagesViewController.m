@@ -42,7 +42,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     OTRDropDownTypePush          = 2
 };
 
-@interface OTRMessagesViewController () <UITextViewDelegate>
+@interface OTRMessagesViewController () <UITextViewDelegate, JSQMessagesCollectionViewCellDelegate>
 
 @property (nonatomic, strong) OTRAccount *account;
 
@@ -86,8 +86,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
     self.outgoingBubbleImage = [bubbleImageFactory outgoingMessagesBubbleImageWithColor:[UIColor jsq_messageBubbleBlueColor]];
     
     self.incomingBubbleImage = [bubbleImageFactory incomingMessagesBubbleImageWithColor:[UIColor jsq_messageBubbleLightGrayColor]];
-    
-    //self.collectionView.collectionViewLayout.outgoingAvatarViewSize = CGSizeZero;
     
     ////// Lock Button //////
     [self setupLockButton];
@@ -258,18 +256,12 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
 }
 
-- (void)showErrorMessageForCell:(id)sender
+- (void)showMessageError:(NSError *)error
 {
-    NSIndexPath *indexPath = [self.collectionView indexPathForCell:sender];
-    OTRMessage *message = nil;
-    if (indexPath) {
-        message = [self messageAtIndexPath:indexPath];
-    }
-    
-    if (message.error) {
+    if (error) {
         RIButtonItem *okButton = [RIButtonItem itemWithLabel:OK_STRING];
         
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Message Error" message:message.error.description cancelButtonItem:okButton otherButtonItems:nil];
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:error.localizedDescription cancelButtonItem:okButton otherButtonItems:nil];
         
         [alertView show];
     }
@@ -687,6 +679,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
         cell.textView.textColor = [UIColor whiteColor];
     }
     
+    cell.delegate = self;
+    
     return cell;
 }
 
@@ -762,7 +756,11 @@ typedef NS_ENUM(int, OTRDropDownType) {
 #pragma - mark JSQMessagesCollectionViewCellDelegate Methods
 
 - (void)messagesCollectionViewCellDidTapAvatar:(JSQMessagesCollectionViewCell *)cell {
-    
+    NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
+    OTRMessage *message = [self messageAtIndexPath:indexPath];
+    if (message.error) {
+        [self showMessageError:message.error];
+    }
 }
 
 - (void)messagesCollectionViewCellDidTapMessageBubble:(JSQMessagesCollectionViewCell *)cell {
@@ -810,7 +808,10 @@ typedef NS_ENUM(int, OTRDropDownType) {
 {
     OTRMessage *message = [self messageAtIndexPath:indexPath];
     UIImage *avatarImage = nil;
-    if (message.isIncoming) {
+    if (message.error) {
+        avatarImage = [OTRImages circleWarningWithColor:[OTRColors warnColor]];
+    }
+    else if (message.isIncoming) {
         avatarImage = [self.buddy avatarImage];
     }
     else {
