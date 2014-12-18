@@ -679,8 +679,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
         cell.textView.textColor = [UIColor whiteColor];
     }
     
-    cell.delegate = self;
-    
     return cell;
 }
 
@@ -751,24 +749,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
 {
     NSInteger numberOfMessages = [self.messageMappings numberOfItemsInSection:section];
     return numberOfMessages;
-}
-
-#pragma - mark JSQMessagesCollectionViewCellDelegate Methods
-
-- (void)messagesCollectionViewCellDidTapAvatar:(JSQMessagesCollectionViewCell *)cell {
-    NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
-    OTRMessage *message = [self messageAtIndexPath:indexPath];
-    if (message.error) {
-        [self showMessageError:message.error];
-    }
-}
-
-- (void)messagesCollectionViewCellDidTapMessageBubble:(JSQMessagesCollectionViewCell *)cell {
-    
-}
-
-- (void)messagesCollectionViewCellDidTapCell:(JSQMessagesCollectionViewCell *)cell atPosition:(CGPoint)position {
-    
 }
 
 #pragma - mark JSQMessagesCollectionViewDataSource Methods
@@ -901,28 +881,13 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
     }];
 }
 
-/*
-- (CGFloat)collectionView:(JSQMessagesCollectionView *)collectionView
-                   layout:(JSQMessagesCollectionViewFlowLayout *)collectionViewLayout
-heightForMessageBubbleTopLabelAtIndexPath:(NSIndexPath *)indexPath
+- (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapAvatarImageView:(UIImageView *)avatarImageView atIndexPath:(NSIndexPath *)indexPath
 {
-    
+    OTRMessage *message = [self messageAtIndexPath:indexPath];
+    if (message.error) {
+        [self showMessageError:message.error];
+    }
 }
-
-- (void)collectionView:(JSQMessagesCollectionView *)collectionView
- didTapAvatarImageView:(UIImageView *)avatarImageView
-           atIndexPath:(NSIndexPath *)indexPath
-{
-    
-}
-
-
-- (void)collectionView:(JSQMessagesCollectionView *)collectionView
-                header:(JSQMessagesLoadEarlierHeaderView *)headerView
-didTapLoadEarlierMessagesButton:(UIButton *)sender
-{
-    
-}*/
 
 #pragma mark - YapDatabaseNotificatino Method
 
