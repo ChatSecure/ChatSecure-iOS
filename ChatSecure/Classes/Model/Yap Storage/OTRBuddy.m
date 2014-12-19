@@ -52,26 +52,7 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
 {
     //on setAvatar clear this buddies image cache
     //invalidate if jid or display name changes 
-    UIImage *image = [OTRImages imageWithIdentifier:self.uniqueId];
-    if (!image) {
-        if (self.avatarData) {
-            image = [UIImage imageWithData:self.avatarData];
-        }
-        else {
-            NSString *username  = self.displayName;
-            if (![username length]) {
-                username = [[self.username componentsSeparatedByString:@"@"] firstObject];
-                if (![username length]) {
-                    username = self.username;
-                }
-            }
-            image = [OTRImages avatarImageWithUsername:username];
-        }
-        
-        [OTRImages setImage:image forIdentifier:self.uniqueId];
-    }
-    
-    return image;
+    return [OTRImages avatarImageWithUniqueIdentifier:self.uniqueId avatarData:self.avatarData displayName:self.displayName username:self.username];
 }
 
 - (void)setAvatarData:(NSData *)avatarData

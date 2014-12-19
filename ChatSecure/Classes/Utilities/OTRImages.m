@@ -494,4 +494,28 @@ NSString *const OTRWifiImageKey = @"OTRWifiImageKey";
     return jsqImage.avatarImage;
 }
 
++ (UIImage *)avatarImageWithUniqueIdentifier:(NSString *)identifier avatarData:(NSData *)data displayName:(NSString *)displayName username:(NSString *)username
+{
+    UIImage *image = [self imageWithIdentifier:identifier];
+    if (!image) {
+        if (data) {
+            image = [UIImage imageWithData:data];
+        }
+        else {
+            NSString *name  = displayName;
+            if (![name length]) {
+                name = [[username componentsSeparatedByString:@"@"] firstObject];
+                if (![name length]) {
+                    name = username;
+                }
+            }
+            image = [self avatarImageWithUsername:name];
+        }
+        
+        [self setImage:image forIdentifier:identifier];
+    }
+    
+    return image;
+}
+
 @end

@@ -45,5 +45,16 @@ typedef NS_ENUM(NSUInteger, OTRBubbleMessageType) {
 
 + (UIImage *)avatarImageWithUsername:(NSString *)username;
 
+/**
+ This creates and caches either the image from the avatarData or the initials image created from dispalyName or username. If a cached image is available then that will be returned.
+ 
+ @param identifier Required if the image is to be cached
+ @param avatarData Optional primary source of the UIimage
+ @param displayName Optional the secondary source for generating an avatar
+ @param username Optional the last source for generating an avatar
+ @return An UIImage that represents the best possible image
+ */
++ (UIImage *)avatarImageWithUniqueIdentifier:(NSString *)identifier avatarData:(NSData *)data displayName:(NSString *)displayName username:(NSString *)username;
+
 
 @end
