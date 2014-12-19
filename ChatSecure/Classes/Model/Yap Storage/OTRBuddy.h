@@ -59,11 +59,21 @@ extern const struct OTRBuddyEdges {
 @property (nonatomic) OTRChatState lastSentChatState;
 @property (nonatomic) OTRBuddyStatus status;
 @property (nonatomic, strong) NSDate *lastMessageDate;
+
+/**
+ * Setting this value does a comparison of against the previously value
+ * to invalidate the OTRImages cache.
+ */
 @property (nonatomic, strong) NSData *avatarData;
 
 @property (nonatomic, strong) NSString *accountUniqueId;
 
-
+/**
+ The current or generated avatar image either from avatarData or the initials from displayName or username
+ 
+ @return An UIImage from the OTRImages NSCache
+ */
+- (UIImage *)avatarImage;
 - (UIImage *)avatarImage;
 - (NSInteger)numberOfUnreadMessagesWithTransaction:(YapDatabaseReadTransaction *)transaction;
 - (OTRMessage *)lastMessageWithTransaction:(YapDatabaseReadTransaction *)transaction;

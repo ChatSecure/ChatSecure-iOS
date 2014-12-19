@@ -48,15 +48,6 @@
     return buddy;
 }
 
-- (OTRXMPPAccount *)accountWithxmppStream:(XMPPStream *)stream
-{
-    __block OTRXMPPAccount *account = nil;
-    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        account = [OTRXMPPAccount accountForStream:stream transaction:transaction];
-    }];
-    return account;
-}
-
 #pragma - mark XMPPvCardAvatarStorage Methods
 
 - (NSData *)photoDataForJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream
@@ -121,6 +112,13 @@
 {
     [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         OTRXMPPBuddy *buddy = [[self buddyWithJID:jid xmppStream:stream transaction:transaction] copy];
+        
+        if ([stream.myJID isEqualToJID:jid options:XMPPJIDCompareBare]) {
+            //this is the self buddy
+            OTRXMPPAccount *account = [[OTRXMPPAccount accountForStream:stream transaction:transaction] copy];
+            account.avatarData = vCardTemp.photo;
+            [account saveWithTransaction:transaction];
+        }
         
         buddy.vCardTemp = vCardTemp;
         buddy.waitingForvCardTempFetch = NO;

@@ -11,6 +11,8 @@
 #import "OTRMessage.h"
 #import "OTRDatabaseManager.h"
 #import "YapDatabaseRelationshipTransaction.h"
+#import "OTRImages.h"
+#import "JSQMessagesAvatarImageFactory.h"
 #import "OTRKit.h"
 
 const struct OTRBuddyAttributes OTRBuddyAttributes = {
@@ -48,7 +50,27 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
 
 - (UIImage *)avatarImage
 {
-    return [UIImage imageWithData:self.avatarData];
+    //on setAvatar clear this buddies image cache
+    //invalidate if jid or display name changes 
+    return [OTRImages avatarImageWithUniqueIdentifier:self.uniqueId avatarData:self.avatarData displayName:self.displayName username:self.username];
+}
+
+- (void)setAvatarData:(NSData *)avatarData
+{
+    if (![_avatarData isEqualToData: avatarData]) {
+        _avatarData = avatarData;
+        [OTRImages removeImageWithIdentifier:self.uniqueId];
+    }
+}
+
+- (void)setDisplayName:(NSString *)displayName
+{
+    if (![_displayName isEqualToString:displayName]) {
+        _displayName = displayName;
+        if (!self.avatarData) {
+            [OTRImages removeImageWithIdentifier:self.uniqueId];
+        }
+    }
 }
 
 
