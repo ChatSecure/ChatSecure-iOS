@@ -27,16 +27,26 @@ extern NSString *const OTRXMPPTorImageName;
 
 @property (nonatomic, strong) NSString *displayName;
 @property (nonatomic, readonly) OTRAccountType accountType;
-@property (nonatomic, strong) NSData *avatarData;
 @property (nonatomic, strong) NSString *username;
 @property (nonatomic) BOOL rememberPassword;
 @property (nonatomic) BOOL autologin;
+
+/**
+ * Setting this value does a comparison of against the previously value
+ * to invalidate the OTRImages cache.
+ */
+@property (nonatomic, strong) NSData *avatarData;
 
 @property (nonatomic, strong) NSString *password;
 
 
 - (id)initWithAccountType:(OTRAccountType)accountType;
 
+/**
+ The current or generated avatar image either from avatarData or the initials from displayName or username
+ 
+ @return An UIImage from the OTRImages NSCache
+ */
 - (UIImage *)avatarImage;
 - (Class)protocolClass;
 - (UIImage *)accountImage;
