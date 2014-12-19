@@ -27,10 +27,6 @@
 		633106841A16D1A300C17BAE /* OTROAuthRefresher.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331051E1A16D1A300C17BAE /* OTROAuthRefresher.m */; };
 		633106851A16D1A300C17BAE /* OTROnboardingStepsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105201A16D1A300C17BAE /* OTROnboardingStepsController.m */; };
 		633106861A16D1A300C17BAE /* OTRProtocolManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105231A16D1A300C17BAE /* OTRProtocolManager.m */; };
-		633106881A16D1A300C17BAE /* OTRPushAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105271A16D1A300C17BAE /* OTRPushAPIClient.m */; };
-		633106891A16D1A300C17BAE /* OTRPUSHHTTPRequestSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105291A16D1A300C17BAE /* OTRPUSHHTTPRequestSerializer.m */; };
-		6331068A1A16D1A300C17BAE /* OTRPushManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331052B1A16D1A300C17BAE /* OTRPushManager.m */; };
-		6331068B1A16D1A300C17BAE /* OTRPushOAuth2Client.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331052D1A16D1A300C17BAE /* OTRPushOAuth2Client.m */; };
 		6331068C1A16D1A300C17BAE /* OTRSettingsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331052F1A16D1A300C17BAE /* OTRSettingsManager.m */; };
 		6331068D1A16D1A300C17BAE /* OTRTorManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105311A16D1A300C17BAE /* OTRTorManager.m */; };
 		6331068E1A16D1A300C17BAE /* OTRvCardYapDatabaseStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105341A16D1A300C17BAE /* OTRvCardYapDatabaseStorage.m */; };
@@ -54,7 +50,6 @@
 		633106C31A16D1A300C17BAE /* OTRLanguageSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105A71A16D1A300C17BAE /* OTRLanguageSetting.m */; };
 		633106C41A16D1A300C17BAE /* OTRListSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105A91A16D1A300C17BAE /* OTRListSetting.m */; };
 		633106C51A16D1A300C17BAE /* OTRListSettingValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105AB1A16D1A300C17BAE /* OTRListSettingValue.m */; };
-		633106C61A16D1A300C17BAE /* OTRPushViewSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105AD1A16D1A300C17BAE /* OTRPushViewSetting.m */; };
 		633106C71A16D1A300C17BAE /* OTRSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105AF1A16D1A300C17BAE /* OTRSetting.m */; };
 		633106C81A16D1A300C17BAE /* OTRSettingsGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105B11A16D1A300C17BAE /* OTRSettingsGroup.m */; };
 		633106C91A16D1A300C17BAE /* OTRShareSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105B31A16D1A300C17BAE /* OTRShareSetting.m */; };
@@ -64,23 +59,14 @@
 		633106CD1A16D1A300C17BAE /* OTRFacebookOAuthXMPPAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105BD1A16D1A300C17BAE /* OTRFacebookOAuthXMPPAccount.m */; };
 		633106CE1A16D1A300C17BAE /* OTRGoogleOAuthXMPPAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105BF1A16D1A300C17BAE /* OTRGoogleOAuthXMPPAccount.m */; };
 		633106CF1A16D1A300C17BAE /* OTROAuthXMPPAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105C11A16D1A300C17BAE /* OTROAuthXMPPAccount.m */; };
-		633106D01A16D1A300C17BAE /* OTRPushAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105C31A16D1A300C17BAE /* OTRPushAccount.m */; };
 		633106D11A16D1A300C17BAE /* OTRXMPPAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105C51A16D1A300C17BAE /* OTRXMPPAccount.m */; };
 		633106D21A16D1A300C17BAE /* OTRXMPPTorAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105C71A16D1A300C17BAE /* OTRXMPPTorAccount.m */; };
-		633106D31A16D1A300C17BAE /* OTRYapPushAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105C91A16D1A300C17BAE /* OTRYapPushAccount.m */; };
 		633106D41A16D1A300C17BAE /* OTRBuddy.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105CB1A16D1A300C17BAE /* OTRBuddy.m */; };
 		633106D51A16D1A300C17BAE /* OTRMessage+JSQMessageData.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105CD1A16D1A300C17BAE /* OTRMessage+JSQMessageData.m */; };
 		633106D61A16D1A300C17BAE /* OTRMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105CF1A16D1A300C17BAE /* OTRMessage.m */; };
 		633106D71A16D1A300C17BAE /* OTRXMPPBuddy.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105D11A16D1A300C17BAE /* OTRXMPPBuddy.m */; };
 		633106D81A16D1A300C17BAE /* OTRXMPPPresenceSubscriptionRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105D31A16D1A300C17BAE /* OTRXMPPPresenceSubscriptionRequest.m */; };
 		633106D91A16D1A300C17BAE /* OTRYapDatabaseObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105D51A16D1A300C17BAE /* OTRYapDatabaseObject.m */; };
-		633106DA1A16D1A300C17BAE /* OTRPushDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105D81A16D1A300C17BAE /* OTRPushDevice.m */; };
-		633106DB1A16D1A300C17BAE /* OTRPushObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105DA1A16D1A300C17BAE /* OTRPushObject.m */; };
-		633106DC1A16D1A300C17BAE /* OTRPushToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105DC1A16D1A300C17BAE /* OTRPushToken.m */; };
-		633106DD1A16D1A300C17BAE /* OTRYapPushDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105DE1A16D1A300C17BAE /* OTRYapPushDevice.m */; };
-		633106DE1A16D1A300C17BAE /* OTRYapPushToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105E01A16D1A300C17BAE /* OTRYapPushToken.m */; };
-		633106DF1A16D1A300C17BAE /* OTRYapPushTokenOwned.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105E21A16D1A300C17BAE /* OTRYapPushTokenOwned.m */; };
-		633106E01A16D1A300C17BAE /* OTRYapPushTokenReceived.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105E41A16D1A300C17BAE /* OTRYapPushTokenReceived.m */; };
 		633106E11A16D1A300C17BAE /* OTRAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105E61A16D1A300C17BAE /* OTRAppDelegate.m */; };
 		633106E21A16D1A300C17BAE /* OTRCertificatePinning.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105E91A16D1A300C17BAE /* OTRCertificatePinning.m */; };
 		633106E31A16D1A300C17BAE /* OTRChatDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105EB1A16D1A300C17BAE /* OTRChatDemo.m */; };
@@ -96,8 +82,6 @@
 		633106EE1A16D1A300C17BAE /* OTRGoogleTalkLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106031A16D1A300C17BAE /* OTRGoogleTalkLoginViewController.m */; };
 		633106EF1A16D1A300C17BAE /* OTRJabberLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106051A16D1A300C17BAE /* OTRJabberLoginViewController.m */; };
 		633106F01A16D1A300C17BAE /* OTRLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106071A16D1A300C17BAE /* OTRLoginViewController.m */; };
-		633106F11A16D1A300C17BAE /* OTRPushAccountLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106091A16D1A300C17BAE /* OTRPushAccountLoginViewController.m */; };
-		633106F21A16D1A300C17BAE /* OTRPushAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331060B1A16D1A300C17BAE /* OTRPushAccountViewController.m */; };
 		633106F31A16D1A300C17BAE /* OTRXMPPCreateAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331060D1A16D1A300C17BAE /* OTRXMPPCreateAccountViewController.m */; };
 		633106F41A16D1A300C17BAE /* OTRXMPPLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331060F1A16D1A300C17BAE /* OTRXMPPLoginViewController.m */; };
 		633106F51A16D1A300C17BAE /* OTRXMPPOAUTHLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106111A16D1A300C17BAE /* OTRXMPPOAUTHLoginViewController.m */; };
@@ -121,10 +105,7 @@
 		633107071A16D1A300C17BAE /* OTRMessagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106351A16D1A300C17BAE /* OTRMessagesViewController.m */; };
 		633107081A16D1A300C17BAE /* OTRNewAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106371A16D1A300C17BAE /* OTRNewAccountViewController.m */; };
 		633107091A16D1A300C17BAE /* OTRNewBuddyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106391A16D1A300C17BAE /* OTRNewBuddyViewController.m */; };
-		6331070A1A16D1A300C17BAE /* OTROnboardingPushAccountLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331063B1A16D1A300C17BAE /* OTROnboardingPushAccountLoginViewController.m */; };
-		6331070B1A16D1A300C17BAE /* OTROnboardingRemotePushRegistrationInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331063D1A16D1A300C17BAE /* OTROnboardingRemotePushRegistrationInfoViewController.m */; };
 		6331070C1A16D1A300C17BAE /* OTRQRCodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331063F1A16D1A300C17BAE /* OTRQRCodeViewController.m */; };
-		6331070D1A16D1A300C17BAE /* OTRRemotePushRegistrationInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106411A16D1A300C17BAE /* OTRRemotePushRegistrationInfoViewController.m */; };
 		6331070E1A16D1A300C17BAE /* OTRSettingDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106431A16D1A300C17BAE /* OTRSettingDetailViewController.m */; };
 		6331070F1A16D1A300C17BAE /* OTRSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106451A16D1A300C17BAE /* OTRSettingsViewController.m */; };
 		633107111A16D1A300C17BAE /* OTRSubscriptionRequestsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106491A16D1A300C17BAE /* OTRSubscriptionRequestsViewController.m */; };
@@ -269,14 +250,6 @@
 		633105211A16D1A300C17BAE /* OTRProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRProtocol.h; sourceTree = "<group>"; };
 		633105221A16D1A300C17BAE /* OTRProtocolManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRProtocolManager.h; sourceTree = "<group>"; };
 		633105231A16D1A300C17BAE /* OTRProtocolManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRProtocolManager.m; sourceTree = "<group>"; };
-		633105261A16D1A300C17BAE /* OTRPushAPIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRPushAPIClient.h; sourceTree = "<group>"; };
-		633105271A16D1A300C17BAE /* OTRPushAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRPushAPIClient.m; sourceTree = "<group>"; };
-		633105281A16D1A300C17BAE /* OTRPUSHHTTPRequestSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRPUSHHTTPRequestSerializer.h; sourceTree = "<group>"; };
-		633105291A16D1A300C17BAE /* OTRPUSHHTTPRequestSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRPUSHHTTPRequestSerializer.m; sourceTree = "<group>"; };
-		6331052A1A16D1A300C17BAE /* OTRPushManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRPushManager.h; sourceTree = "<group>"; };
-		6331052B1A16D1A300C17BAE /* OTRPushManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRPushManager.m; sourceTree = "<group>"; };
-		6331052C1A16D1A300C17BAE /* OTRPushOAuth2Client.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRPushOAuth2Client.h; sourceTree = "<group>"; };
-		6331052D1A16D1A300C17BAE /* OTRPushOAuth2Client.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRPushOAuth2Client.m; sourceTree = "<group>"; };
 		6331052E1A16D1A300C17BAE /* OTRSettingsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRSettingsManager.h; sourceTree = "<group>"; };
 		6331052F1A16D1A300C17BAE /* OTRSettingsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRSettingsManager.m; sourceTree = "<group>"; };
 		633105301A16D1A300C17BAE /* OTRTorManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRTorManager.h; sourceTree = "<group>"; };
@@ -324,8 +297,6 @@
 		633105A91A16D1A300C17BAE /* OTRListSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRListSetting.m; sourceTree = "<group>"; };
 		633105AA1A16D1A300C17BAE /* OTRListSettingValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRListSettingValue.h; sourceTree = "<group>"; };
 		633105AB1A16D1A300C17BAE /* OTRListSettingValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRListSettingValue.m; sourceTree = "<group>"; };
-		633105AC1A16D1A300C17BAE /* OTRPushViewSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRPushViewSetting.h; sourceTree = "<group>"; };
-		633105AD1A16D1A300C17BAE /* OTRPushViewSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRPushViewSetting.m; sourceTree = "<group>"; };
 		633105AE1A16D1A300C17BAE /* OTRSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRSetting.h; sourceTree = "<group>"; };
 		633105AF1A16D1A300C17BAE /* OTRSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRSetting.m; sourceTree = "<group>"; };
 		633105B01A16D1A300C17BAE /* OTRSettingsGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRSettingsGroup.h; sourceTree = "<group>"; };
@@ -344,14 +315,10 @@
 		633105BF1A16D1A300C17BAE /* OTRGoogleOAuthXMPPAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRGoogleOAuthXMPPAccount.m; sourceTree = "<group>"; };
 		633105C01A16D1A300C17BAE /* OTROAuthXMPPAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTROAuthXMPPAccount.h; sourceTree = "<group>"; };
 		633105C11A16D1A300C17BAE /* OTROAuthXMPPAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTROAuthXMPPAccount.m; sourceTree = "<group>"; };
-		633105C21A16D1A300C17BAE /* OTRPushAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRPushAccount.h; sourceTree = "<group>"; };
-		633105C31A16D1A300C17BAE /* OTRPushAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRPushAccount.m; sourceTree = "<group>"; };
 		633105C41A16D1A300C17BAE /* OTRXMPPAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPAccount.h; sourceTree = "<group>"; };
 		633105C51A16D1A300C17BAE /* OTRXMPPAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPAccount.m; sourceTree = "<group>"; };
 		633105C61A16D1A300C17BAE /* OTRXMPPTorAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPTorAccount.h; sourceTree = "<group>"; };
 		633105C71A16D1A300C17BAE /* OTRXMPPTorAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPTorAccount.m; sourceTree = "<group>"; };
-		633105C81A16D1A300C17BAE /* OTRYapPushAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRYapPushAccount.h; sourceTree = "<group>"; };
-		633105C91A16D1A300C17BAE /* OTRYapPushAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRYapPushAccount.m; sourceTree = "<group>"; };
 		633105CA1A16D1A300C17BAE /* OTRBuddy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBuddy.h; sourceTree = "<group>"; };
 		633105CB1A16D1A300C17BAE /* OTRBuddy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBuddy.m; sourceTree = "<group>"; };
 		633105CC1A16D1A300C17BAE /* OTRMessage+JSQMessageData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OTRMessage+JSQMessageData.h"; sourceTree = "<group>"; };
@@ -364,20 +331,6 @@
 		633105D31A16D1A300C17BAE /* OTRXMPPPresenceSubscriptionRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPPresenceSubscriptionRequest.m; sourceTree = "<group>"; };
 		633105D41A16D1A300C17BAE /* OTRYapDatabaseObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRYapDatabaseObject.h; sourceTree = "<group>"; };
 		633105D51A16D1A300C17BAE /* OTRYapDatabaseObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRYapDatabaseObject.m; sourceTree = "<group>"; };
-		633105D71A16D1A300C17BAE /* OTRPushDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRPushDevice.h; sourceTree = "<group>"; };
-		633105D81A16D1A300C17BAE /* OTRPushDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRPushDevice.m; sourceTree = "<group>"; };
-		633105D91A16D1A300C17BAE /* OTRPushObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRPushObject.h; sourceTree = "<group>"; };
-		633105DA1A16D1A300C17BAE /* OTRPushObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRPushObject.m; sourceTree = "<group>"; };
-		633105DB1A16D1A300C17BAE /* OTRPushToken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRPushToken.h; sourceTree = "<group>"; };
-		633105DC1A16D1A300C17BAE /* OTRPushToken.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRPushToken.m; sourceTree = "<group>"; };
-		633105DD1A16D1A300C17BAE /* OTRYapPushDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRYapPushDevice.h; sourceTree = "<group>"; };
-		633105DE1A16D1A300C17BAE /* OTRYapPushDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRYapPushDevice.m; sourceTree = "<group>"; };
-		633105DF1A16D1A300C17BAE /* OTRYapPushToken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRYapPushToken.h; sourceTree = "<group>"; };
-		633105E01A16D1A300C17BAE /* OTRYapPushToken.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRYapPushToken.m; sourceTree = "<group>"; };
-		633105E11A16D1A300C17BAE /* OTRYapPushTokenOwned.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRYapPushTokenOwned.h; sourceTree = "<group>"; };
-		633105E21A16D1A300C17BAE /* OTRYapPushTokenOwned.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRYapPushTokenOwned.m; sourceTree = "<group>"; };
-		633105E31A16D1A300C17BAE /* OTRYapPushTokenReceived.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRYapPushTokenReceived.h; sourceTree = "<group>"; };
-		633105E41A16D1A300C17BAE /* OTRYapPushTokenReceived.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRYapPushTokenReceived.m; sourceTree = "<group>"; };
 		633105E51A16D1A300C17BAE /* OTRAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAppDelegate.h; sourceTree = "<group>"; };
 		633105E61A16D1A300C17BAE /* OTRAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAppDelegate.m; sourceTree = "<group>"; };
 		633105E81A16D1A300C17BAE /* OTRCertificatePinning.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRCertificatePinning.h; sourceTree = "<group>"; };
@@ -409,10 +362,6 @@
 		633106051A16D1A300C17BAE /* OTRJabberLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRJabberLoginViewController.m; sourceTree = "<group>"; };
 		633106061A16D1A300C17BAE /* OTRLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRLoginViewController.h; sourceTree = "<group>"; };
 		633106071A16D1A300C17BAE /* OTRLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRLoginViewController.m; sourceTree = "<group>"; };
-		633106081A16D1A300C17BAE /* OTRPushAccountLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRPushAccountLoginViewController.h; sourceTree = "<group>"; };
-		633106091A16D1A300C17BAE /* OTRPushAccountLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRPushAccountLoginViewController.m; sourceTree = "<group>"; };
-		6331060A1A16D1A300C17BAE /* OTRPushAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRPushAccountViewController.h; sourceTree = "<group>"; };
-		6331060B1A16D1A300C17BAE /* OTRPushAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRPushAccountViewController.m; sourceTree = "<group>"; };
 		6331060C1A16D1A300C17BAE /* OTRXMPPCreateAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPCreateAccountViewController.h; sourceTree = "<group>"; };
 		6331060D1A16D1A300C17BAE /* OTRXMPPCreateAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPCreateAccountViewController.m; sourceTree = "<group>"; };
 		6331060E1A16D1A300C17BAE /* OTRXMPPLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPLoginViewController.h; sourceTree = "<group>"; };
@@ -459,14 +408,8 @@
 		633106371A16D1A300C17BAE /* OTRNewAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRNewAccountViewController.m; sourceTree = "<group>"; };
 		633106381A16D1A300C17BAE /* OTRNewBuddyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRNewBuddyViewController.h; sourceTree = "<group>"; };
 		633106391A16D1A300C17BAE /* OTRNewBuddyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRNewBuddyViewController.m; sourceTree = "<group>"; };
-		6331063A1A16D1A300C17BAE /* OTROnboardingPushAccountLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTROnboardingPushAccountLoginViewController.h; sourceTree = "<group>"; };
-		6331063B1A16D1A300C17BAE /* OTROnboardingPushAccountLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTROnboardingPushAccountLoginViewController.m; sourceTree = "<group>"; };
-		6331063C1A16D1A300C17BAE /* OTROnboardingRemotePushRegistrationInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTROnboardingRemotePushRegistrationInfoViewController.h; sourceTree = "<group>"; };
-		6331063D1A16D1A300C17BAE /* OTROnboardingRemotePushRegistrationInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTROnboardingRemotePushRegistrationInfoViewController.m; sourceTree = "<group>"; };
 		6331063E1A16D1A300C17BAE /* OTRQRCodeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRQRCodeViewController.h; sourceTree = "<group>"; };
 		6331063F1A16D1A300C17BAE /* OTRQRCodeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRQRCodeViewController.m; sourceTree = "<group>"; };
-		633106401A16D1A300C17BAE /* OTRRemotePushRegistrationInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRRemotePushRegistrationInfoViewController.h; sourceTree = "<group>"; };
-		633106411A16D1A300C17BAE /* OTRRemotePushRegistrationInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRRemotePushRegistrationInfoViewController.m; sourceTree = "<group>"; };
 		633106421A16D1A300C17BAE /* OTRSettingDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRSettingDetailViewController.h; sourceTree = "<group>"; };
 		633106431A16D1A300C17BAE /* OTRSettingDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRSettingDetailViewController.m; sourceTree = "<group>"; };
 		633106441A16D1A300C17BAE /* OTRSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRSettingsViewController.h; sourceTree = "<group>"; };
@@ -700,14 +643,6 @@
 				633105211A16D1A300C17BAE /* OTRProtocol.h */,
 				633105221A16D1A300C17BAE /* OTRProtocolManager.h */,
 				633105231A16D1A300C17BAE /* OTRProtocolManager.m */,
-				633105261A16D1A300C17BAE /* OTRPushAPIClient.h */,
-				633105271A16D1A300C17BAE /* OTRPushAPIClient.m */,
-				633105281A16D1A300C17BAE /* OTRPUSHHTTPRequestSerializer.h */,
-				633105291A16D1A300C17BAE /* OTRPUSHHTTPRequestSerializer.m */,
-				6331052A1A16D1A300C17BAE /* OTRPushManager.h */,
-				6331052B1A16D1A300C17BAE /* OTRPushManager.m */,
-				6331052C1A16D1A300C17BAE /* OTRPushOAuth2Client.h */,
-				6331052D1A16D1A300C17BAE /* OTRPushOAuth2Client.m */,
 				6331052E1A16D1A300C17BAE /* OTRSettingsManager.h */,
 				6331052F1A16D1A300C17BAE /* OTRSettingsManager.m */,
 				633105301A16D1A300C17BAE /* OTRTorManager.h */,
@@ -794,8 +729,6 @@
 				633105A91A16D1A300C17BAE /* OTRListSetting.m */,
 				633105AA1A16D1A300C17BAE /* OTRListSettingValue.h */,
 				633105AB1A16D1A300C17BAE /* OTRListSettingValue.m */,
-				633105AC1A16D1A300C17BAE /* OTRPushViewSetting.h */,
-				633105AD1A16D1A300C17BAE /* OTRPushViewSetting.m */,
 				633105AE1A16D1A300C17BAE /* OTRSetting.h */,
 				633105AF1A16D1A300C17BAE /* OTRSetting.m */,
 				633105B01A16D1A300C17BAE /* OTRSettingsGroup.h */,
@@ -826,7 +759,6 @@
 				633105D31A16D1A300C17BAE /* OTRXMPPPresenceSubscriptionRequest.m */,
 				633105D41A16D1A300C17BAE /* OTRYapDatabaseObject.h */,
 				633105D51A16D1A300C17BAE /* OTRYapDatabaseObject.m */,
-				633105D61A16D1A300C17BAE /* Push */,
 			);
 			path = "Yap Storage";
 			sourceTree = "<group>";
@@ -842,37 +774,12 @@
 				633105BF1A16D1A300C17BAE /* OTRGoogleOAuthXMPPAccount.m */,
 				633105C01A16D1A300C17BAE /* OTROAuthXMPPAccount.h */,
 				633105C11A16D1A300C17BAE /* OTROAuthXMPPAccount.m */,
-				633105C21A16D1A300C17BAE /* OTRPushAccount.h */,
-				633105C31A16D1A300C17BAE /* OTRPushAccount.m */,
 				633105C41A16D1A300C17BAE /* OTRXMPPAccount.h */,
 				633105C51A16D1A300C17BAE /* OTRXMPPAccount.m */,
 				633105C61A16D1A300C17BAE /* OTRXMPPTorAccount.h */,
 				633105C71A16D1A300C17BAE /* OTRXMPPTorAccount.m */,
-				633105C81A16D1A300C17BAE /* OTRYapPushAccount.h */,
-				633105C91A16D1A300C17BAE /* OTRYapPushAccount.m */,
 			);
 			path = Accounts;
-			sourceTree = "<group>";
-		};
-		633105D61A16D1A300C17BAE /* Push */ = {
-			isa = PBXGroup;
-			children = (
-				633105D71A16D1A300C17BAE /* OTRPushDevice.h */,
-				633105D81A16D1A300C17BAE /* OTRPushDevice.m */,
-				633105D91A16D1A300C17BAE /* OTRPushObject.h */,
-				633105DA1A16D1A300C17BAE /* OTRPushObject.m */,
-				633105DB1A16D1A300C17BAE /* OTRPushToken.h */,
-				633105DC1A16D1A300C17BAE /* OTRPushToken.m */,
-				633105DD1A16D1A300C17BAE /* OTRYapPushDevice.h */,
-				633105DE1A16D1A300C17BAE /* OTRYapPushDevice.m */,
-				633105DF1A16D1A300C17BAE /* OTRYapPushToken.h */,
-				633105E01A16D1A300C17BAE /* OTRYapPushToken.m */,
-				633105E11A16D1A300C17BAE /* OTRYapPushTokenOwned.h */,
-				633105E21A16D1A300C17BAE /* OTRYapPushTokenOwned.m */,
-				633105E31A16D1A300C17BAE /* OTRYapPushTokenReceived.h */,
-				633105E41A16D1A300C17BAE /* OTRYapPushTokenReceived.m */,
-			);
-			path = Push;
 			sourceTree = "<group>";
 		};
 		633105E71A16D1A300C17BAE /* Utilities */ = {
@@ -947,14 +854,8 @@
 				633106371A16D1A300C17BAE /* OTRNewAccountViewController.m */,
 				633106381A16D1A300C17BAE /* OTRNewBuddyViewController.h */,
 				633106391A16D1A300C17BAE /* OTRNewBuddyViewController.m */,
-				6331063A1A16D1A300C17BAE /* OTROnboardingPushAccountLoginViewController.h */,
-				6331063B1A16D1A300C17BAE /* OTROnboardingPushAccountLoginViewController.m */,
-				6331063C1A16D1A300C17BAE /* OTROnboardingRemotePushRegistrationInfoViewController.h */,
-				6331063D1A16D1A300C17BAE /* OTROnboardingRemotePushRegistrationInfoViewController.m */,
 				6331063E1A16D1A300C17BAE /* OTRQRCodeViewController.h */,
 				6331063F1A16D1A300C17BAE /* OTRQRCodeViewController.m */,
-				633106401A16D1A300C17BAE /* OTRRemotePushRegistrationInfoViewController.h */,
-				633106411A16D1A300C17BAE /* OTRRemotePushRegistrationInfoViewController.m */,
 				633106421A16D1A300C17BAE /* OTRSettingDetailViewController.h */,
 				633106431A16D1A300C17BAE /* OTRSettingDetailViewController.m */,
 				633106441A16D1A300C17BAE /* OTRSettingsViewController.h */,
@@ -976,10 +877,6 @@
 				633106051A16D1A300C17BAE /* OTRJabberLoginViewController.m */,
 				633106061A16D1A300C17BAE /* OTRLoginViewController.h */,
 				633106071A16D1A300C17BAE /* OTRLoginViewController.m */,
-				633106081A16D1A300C17BAE /* OTRPushAccountLoginViewController.h */,
-				633106091A16D1A300C17BAE /* OTRPushAccountLoginViewController.m */,
-				6331060A1A16D1A300C17BAE /* OTRPushAccountViewController.h */,
-				6331060B1A16D1A300C17BAE /* OTRPushAccountViewController.m */,
 				6331060C1A16D1A300C17BAE /* OTRXMPPCreateAccountViewController.h */,
 				6331060D1A16D1A300C17BAE /* OTRXMPPCreateAccountViewController.m */,
 				6331060E1A16D1A300C17BAE /* OTRXMPPLoginViewController.h */,
@@ -1393,7 +1290,6 @@
 			files = (
 				63C4BD1C1A1E9BE1001696CD /* OTRvCardAvatar.m in Sources */,
 				63C4BD281A1E9BE1001696CD /* _OTRManagedOscarAccount.m in Sources */,
-				6331070B1A16D1A300C17BAE /* OTROnboardingRemotePushRegistrationInfoViewController.m in Sources */,
 				633107031A16D1A300C17BAE /* OTRFingerprintsViewController.m in Sources */,
 				6331068C1A16D1A300C17BAE /* OTRSettingsManager.m in Sources */,
 				6331070C1A16D1A300C17BAE /* OTRQRCodeViewController.m in Sources */,
@@ -1417,18 +1313,15 @@
 				633106E21A16D1A300C17BAE /* OTRCertificatePinning.m in Sources */,
 				633107161A16D1A300C17BAE /* OTRInLineTextEditTableViewCell.m in Sources */,
 				633107121A16D1A300C17BAE /* OTRAccountTableViewCell.m in Sources */,
-				633106DD1A16D1A300C17BAE /* OTRYapPushDevice.m in Sources */,
 				633106E71A16D1A300C17BAE /* OTRNotificationPermissions.m in Sources */,
 				633107071A16D1A300C17BAE /* OTRMessagesViewController.m in Sources */,
 				633106D21A16D1A300C17BAE /* OTRXMPPTorAccount.m in Sources */,
-				6331070A1A16D1A300C17BAE /* OTROnboardingPushAccountLoginViewController.m in Sources */,
 				63C4BD2C1A1E9BE1001696CD /* _OTRvCardAvatar.m in Sources */,
 				6331070F1A16D1A300C17BAE /* OTRSettingsViewController.m in Sources */,
 				633106CB1A16D1A300C17BAE /* OTRViewSetting.m in Sources */,
 				633107141A16D1A300C17BAE /* OTRBuddyInfoCell.m in Sources */,
 				633107051A16D1A300C17BAE /* OTRLanguageListSettingViewController.m in Sources */,
 				633106FE1A16D1A300C17BAE /* OTRConversationViewController.m in Sources */,
-				633106891A16D1A300C17BAE /* OTRPUSHHTTPRequestSerializer.m in Sources */,
 				63C4BD1E1A1E9BE1001696CD /* OTRXMPPManagedPresenceSubscriptionRequest.m in Sources */,
 				633107091A16D1A300C17BAE /* OTRNewBuddyViewController.m in Sources */,
 				633107221A16D1A300C17BAE /* OTRColorFadingDotView.m in Sources */,
@@ -1441,7 +1334,6 @@
 				633107261A16D1A400C17BAE /* OTRRememberPasswordView.m in Sources */,
 				633106F81A16D1A300C17BAE /* OTRBuddyViewController.m in Sources */,
 				633106BC1A16D1A300C17BAE /* OTRBoolSetting.m in Sources */,
-				633106DC1A16D1A300C17BAE /* OTRPushToken.m in Sources */,
 				633106831A16D1A300C17BAE /* OTRLanguageManager.m in Sources */,
 				63C4BD201A1E9BE1001696CD /* _OTRManagedBuddy.m in Sources */,
 				633106E61A16D1A300C17BAE /* OTRImages.m in Sources */,
@@ -1452,7 +1344,6 @@
 				633106F71A16D1A300C17BAE /* OTRAcknowledgementsViewController.m in Sources */,
 				63C4BD1D1A1E9BE1001696CD /* OTRvCardTemp.m in Sources */,
 				633106CE1A16D1A300C17BAE /* OTRGoogleOAuthXMPPAccount.m in Sources */,
-				633106D31A16D1A300C17BAE /* OTRYapPushAccount.m in Sources */,
 				633106E81A16D1A300C17BAE /* OTRPasswordGenerator.m in Sources */,
 				63C4BD221A1E9BE1001696CD /* _OTRManagedFacebookAccount.m in Sources */,
 				633106BA1A16D1A300C17BAE /* OTROpenInTwitterActivity.m in Sources */,
@@ -1464,7 +1355,6 @@
 				633106911A16D1A300C17BAE /* OTRXMPPProxyStream.m in Sources */,
 				633106C01A16D1A300C17BAE /* OTRFeedbackSetting.m in Sources */,
 				63C4BD1F1A1E9BE1001696CD /* _OTRManagedAccount.m in Sources */,
-				633106DF1A16D1A300C17BAE /* OTRYapPushTokenOwned.m in Sources */,
 				633106ED1A16D1A300C17BAE /* OTRFacebookLoginViewController.m in Sources */,
 				633106B81A16D1A300C17BAE /* OTRDomainCellInfo.m in Sources */,
 				633107111A16D1A300C17BAE /* OTRSubscriptionRequestsViewController.m in Sources */,
@@ -1478,7 +1368,6 @@
 				633106841A16D1A300C17BAE /* OTROAuthRefresher.m in Sources */,
 				633107131A16D1A300C17BAE /* OTRBuddyImageCell.m in Sources */,
 				63C4BD211A1E9BE1001696CD /* _OTRManagedEncryptionStatusMessage.m in Sources */,
-				633106C61A16D1A300C17BAE /* OTRPushViewSetting.m in Sources */,
 				63C4BD241A1E9BE1001696CD /* _OTRManagedGroup.m in Sources */,
 				633106CF1A16D1A300C17BAE /* OTROAuthXMPPAccount.m in Sources */,
 				633106C51A16D1A300C17BAE /* OTRListSettingValue.m in Sources */,
@@ -1495,24 +1384,19 @@
 				633106D81A16D1A300C17BAE /* OTRXMPPPresenceSubscriptionRequest.m in Sources */,
 				63D64D661A2FBA8C00E21F77 /* OTRToastOptions.m in Sources */,
 				633106F51A16D1A300C17BAE /* OTRXMPPOAUTHLoginViewController.m in Sources */,
-				633106F11A16D1A300C17BAE /* OTRPushAccountLoginViewController.m in Sources */,
 				633106BB1A16D1A300C17BAE /* OTRQRCodeActivity.m in Sources */,
-				633106DE1A16D1A300C17BAE /* OTRYapPushToken.m in Sources */,
 				633106E11A16D1A300C17BAE /* OTRAppDelegate.m in Sources */,
 				633106FA1A16D1A300C17BAE /* OTRCertificatesViewController.m in Sources */,
 				6331068D1A16D1A300C17BAE /* OTRTorManager.m in Sources */,
-				6331070D1A16D1A300C17BAE /* OTRRemotePushRegistrationInfoViewController.m in Sources */,
 				633106C31A16D1A300C17BAE /* OTRLanguageSetting.m in Sources */,
 				633106D11A16D1A300C17BAE /* OTRXMPPAccount.m in Sources */,
 				63C4BD171A1E9BE1001696CD /* OTRManagedOAuthAccount.m in Sources */,
-				633106F21A16D1A300C17BAE /* OTRPushAccountViewController.m in Sources */,
 				633106C71A16D1A300C17BAE /* OTRSetting.m in Sources */,
 				63C4BD121A1E9BE1001696CD /* OTRManagedFacebookAccount.m in Sources */,
 				633106E41A16D1A300C17BAE /* OTRColors.m in Sources */,
 				633106B91A16D1A300C17BAE /* OTROpenInFacebookActivity.m in Sources */,
 				63C4BD151A1E9BE1001696CD /* OTRManagedMessage.m in Sources */,
 				633106FC1A16D1A300C17BAE /* OTRChooseAccountViewController.m in Sources */,
-				633106881A16D1A300C17BAE /* OTRPushAPIClient.m in Sources */,
 				63C4BD291A1E9BE1001696CD /* _OTRManagedStatus.m in Sources */,
 				633106EF1A16D1A300C17BAE /* OTRJabberLoginViewController.m in Sources */,
 				6331071F1A16D1A300C17BAE /* OTRTextFieldTableViewCell.m in Sources */,
@@ -1532,27 +1416,22 @@
 				633106D51A16D1A300C17BAE /* OTRMessage+JSQMessageData.m in Sources */,
 				633107011A16D1A300C17BAE /* OTRDatabaseUnlockViewController.m in Sources */,
 				633106EA1A16D1A300C17BAE /* OTRSecrets.m in Sources */,
-				633106D01A16D1A300C17BAE /* OTRPushAccount.m in Sources */,
 				633107001A16D1A300C17BAE /* OTRDatabasePassphraseViewController.m in Sources */,
 				633107021A16D1A300C17BAE /* OTRDoubleSettingViewController.m in Sources */,
 				633106D41A16D1A300C17BAE /* OTRBuddy.m in Sources */,
 				633106791A16D1A300C17BAE /* UIActivity+ChatSecure.m in Sources */,
 				63C4BD2E1A1E9BE1001696CD /* _OTRXMPPManagedPresenceSubscriptionRequest.m in Sources */,
 				633107231A16D1A300C17BAE /* OTRComposingImageView.m in Sources */,
-				6331068A1A16D1A300C17BAE /* OTRPushManager.m in Sources */,
-				633106DB1A16D1A300C17BAE /* OTRPushObject.m in Sources */,
 				633106901A16D1A300C17BAE /* OTRXMPPManager.m in Sources */,
 				633106C41A16D1A300C17BAE /* OTRListSetting.m in Sources */,
 				633106BE1A16D1A300C17BAE /* OTRDonateSetting.m in Sources */,
 				63C4BD2A1A1E9BE1001696CD /* _OTRManagedXMPPAccount.m in Sources */,
-				633106E01A16D1A300C17BAE /* OTRYapPushTokenReceived.m in Sources */,
 				633106C91A16D1A300C17BAE /* OTRShareSetting.m in Sources */,
 				6331070E1A16D1A300C17BAE /* OTRSettingDetailViewController.m in Sources */,
 				63C4BD1A1A1E9BE1001696CD /* OTRManagedXMPPAccount.m in Sources */,
 				63C4BD251A1E9BE1001696CD /* _OTRManagedMessage.m in Sources */,
 				633107081A16D1A300C17BAE /* OTRNewAccountViewController.m in Sources */,
 				633106F01A16D1A300C17BAE /* OTRLoginViewController.m in Sources */,
-				633106DA1A16D1A300C17BAE /* OTRPushDevice.m in Sources */,
 				633106C81A16D1A300C17BAE /* OTRSettingsGroup.m in Sources */,
 				633107271A16D1A400C17BAE /* OTRSocialButtonsView.m in Sources */,
 				63C4BD271A1E9BE1001696CD /* _OTRManagedOAuthAccount.m in Sources */,
@@ -1560,7 +1439,6 @@
 				63FABC911A41218E009BF681 /* NSString+ChatSecure.m in Sources */,
 				633106D91A16D1A300C17BAE /* OTRYapDatabaseObject.m in Sources */,
 				6331067C1A16D1A300C17BAE /* UIViewController+ChatSecure.m in Sources */,
-				6331068B1A16D1A300C17BAE /* OTRPushOAuth2Client.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

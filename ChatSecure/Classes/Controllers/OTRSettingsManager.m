@@ -37,7 +37,6 @@
 #import "OTRCertificateSetting.h"
 #import "OTRUtilities.h"
 #import "OTRFingerprintSetting.h"
-#import "OTRPushViewSetting.h"
 #import "OTRChangeDatabasePassphraseViewController.h"
 
 #import "OTRUtilities.h"

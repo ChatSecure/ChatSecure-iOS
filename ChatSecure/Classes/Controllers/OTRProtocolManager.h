@@ -48,8 +48,6 @@
 
 - (void)sendMessage:(OTRMessage *)message;
 
-- (OTRPushManager *)defaultPushManager;
-
 + (OTRProtocolManager*)sharedInstance; // Singleton method
 
 @end

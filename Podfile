@@ -47,7 +47,6 @@ pod 'CRToast', :git => 'https://github.com/cruffenach/CRToast', :commit => '7856
 pod 'JSQMessagesViewController', :git => 'https://github.com/jessesquires/JSQMessagesViewController', :commit => '736d110eba3e9b2d909a29d4c47c060605b2209a'
 
 # Forks
-pod 'AFOAuth2Client', :git => 'https://github.com/ChatSecure/AFOAuth2Client.git', :branch => 'release'
 pod 'SIAlertView', :git => 'https://github.com/ChatSecure/SIAlertView.git', :branch => 'attributedText'
 
 # Submodules

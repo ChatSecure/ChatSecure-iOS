@@ -50,8 +50,6 @@
 #import "OTRCertificatePinning.h"
 #import "NSData+XMPP.h"
 #import "NSURL+ChatSecure.h"
-#import "OTRPushAccount.h"
-#import "OTRPushManager.h"
 #import "OTRDatabaseUnlockViewController.h"
 #import "OTRMessage.h"
 #import "OTRPasswordGenerator.h"
@@ -371,41 +369,12 @@
 // Delegation methods
 - (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)devToken {
     
-    OTRPushManager *pushManager = [[OTRPushManager alloc] init];
-    
-    [pushManager addDeviceToken:devToken name:[[UIDevice currentDevice] name] completionBlock:^(BOOL success, NSError *error) {
-        if (success) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:OTRSuccessfulRemoteNotificationRegistration object:self userInfo:nil];
-        }
-        else {
-            [[NSNotificationCenter defaultCenter] postNotificationName:OTRFailedRemoteNotificationRegistration object:self userInfo:@{kOTRNotificationErrorKey:error}];
-        }
-    }];
-    
-//    OTRPushAccount *account = [OTRPushAccount activeAccount];
-//    NSString *username = account.username;
-//    [[OTRPushAPIClient sharedClient] updatePushTokenForAccount:account token:devToken  successBlock:^(void) {
-//        NSLog(@"Device token updated for (%@): %@", username, devToken.description);
-//    } failureBlock:^(NSError *error) {
-//        NSLog(@"Error updating push token: %@", error.userInfo);
-//    }];
-    NSLog(@"did register for remote notification: %@", [devToken xmpp_hexStringValue]);
     
 }
 
 - (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {
     [[NSNotificationCenter defaultCenter] postNotificationName:OTRFailedRemoteNotificationRegistration object:self userInfo:@{kOTRNotificationErrorKey:err}];
-    NSLog(@"Error in registration. Error: %@%@", [err localizedDescription], [err userInfo]);
-}
-
-- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
-{
-    NSLog(@"Remote Notification Recieved: %@", userInfo);
-    UILocalNotification *notification = [[UILocalNotification alloc] init];
-    notification.alertBody =  @"Looks like i got a notification - fetch thingy";
-    [application presentLocalNotificationNow:notification];
-    completionHandler(UIBackgroundFetchResultNewData);
-    
+    DDLogError(@"Error in registration. Error: %@%@", [err localizedDescription], [err userInfo]);
 }
 
 #pragma - mark Class Methods

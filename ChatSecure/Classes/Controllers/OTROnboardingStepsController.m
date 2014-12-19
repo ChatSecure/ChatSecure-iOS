@@ -8,8 +8,6 @@
 
 #import "OTROnboardingStepsController.h"
 #import "OTRDatabasePassphraseViewController.h"
-#import "OTROnboardingPushAccountLoginViewController.h"
-#import "OTRRemotePushRegistrationInfoViewController.h"
 #import "OTRAppDelegate.h"
 #import "Strings.h"
 

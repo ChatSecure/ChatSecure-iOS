@@ -20,8 +20,6 @@ PODS:
   - AFNetworking/UIKit (2.5.0):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
-  - AFOAuth2Client (0.1.2):
-    - AFNetworking (~> 2.0)
   - Appirater (2.0.4)
   - ARChromeActivity (1.0.4)
   - BBlock (1.2.0):
@@ -240,7 +238,6 @@ PODS:
 
 DEPENDENCIES:
   - AFNetworking (~> 2.4)
-  - AFOAuth2Client (from `https://github.com/ChatSecure/AFOAuth2Client.git`, branch `release`)
   - Appirater (~> 2.0)
   - ARChromeActivity (~> 1.0)
   - BBlock (~> 1.2)
@@ -277,9 +274,6 @@ DEPENDENCIES:
   - YapDatabase/SQLCipher (from `Submodules/YapDatabase/YapDatabase.podspec`)
 
 EXTERNAL SOURCES:
-  AFOAuth2Client:
-    :branch: release
-    :git: https://github.com/ChatSecure/AFOAuth2Client.git
   CocoaAsyncSocket:
     :commit: c0bbcbcc5e039ca5d732f9844bf95c3d8ee31a5b
     :git: https://github.com/robbiehanson/CocoaAsyncSocket.git
@@ -308,9 +302,6 @@ EXTERNAL SOURCES:
     :path: Submodules/YapDatabase/YapDatabase.podspec
 
 CHECKOUT OPTIONS:
-  AFOAuth2Client:
-    :commit: 6e4705c08346c3e77d9522a6d4a1876a3477f01d
-    :git: https://github.com/ChatSecure/AFOAuth2Client.git
   CocoaAsyncSocket:
     :commit: c0bbcbcc5e039ca5d732f9844bf95c3d8ee31a5b
     :git: https://github.com/robbiehanson/CocoaAsyncSocket.git
@@ -326,7 +317,6 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   AFNetworking: 0f54cb5d16ce38c1b76948faffb8d5fb705021c7
-  AFOAuth2Client: 5244ffdc28081e2ce4d4a0d0f1198ed54e24d787
   Appirater: cbdb7f305562cfde585300bfff86da01ae559deb
   ARChromeActivity: d8471d0f78b7fcc1de57929cfc1751b3a7f58bad
   BBlock: 90f0ae0e3ba94fc88be6b9a85b4adbb73b8a7c9a

@@ -23,7 +23,6 @@
 #import <Foundation/Foundation.h>
 #import "OTRConstants.h"
 
-@class OTRYapPushAccount;
 @class OTRAccount;
 
 @interface OTRAccountsManager : NSObject
@@ -33,8 +32,6 @@
 + (OTRAccount *)accountWithUsername:(NSString *)username;
 
 + (NSArray *)allAutoLoginAccounts;
-
-+ (OTRYapPushAccount *)defaultPushAccount;
 
 
 @end
