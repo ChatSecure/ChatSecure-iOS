@@ -25,6 +25,9 @@
                                      withSender:sender];
 }
 
+
+// See issue https://github.com/jessesquires/JSQMessagesViewController/issues/569
+// and issue https://github.com/jessesquires/JSQMessagesViewController/issues/483
 - (void)performSelectorOnParentCollectionView:(SEL)selector
                                    withSender:(id)sender {
     UIView *view = self;
