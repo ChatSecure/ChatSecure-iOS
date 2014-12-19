@@ -24,7 +24,7 @@ pod 'RMStepsController', '~> 1.0'
 # Waiting on bug fixes that should be in 6.1.1
 # pod 'JSQMessagesViewController', '~> 6.1'
 pod 'BBlock', '~> 1.2'
-pod 'JVFloatLabeledTextField', '~> 0.0'
+pod 'JVFloatLabeledTextField', '~> 1.0'
 pod 'TTTAttributedLabel', '~> 1.10'
 pod 'VTAcknowledgementsViewController', '~> 0.12'
 pod 'PureLayout', '~> 2.0'

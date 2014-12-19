@@ -53,7 +53,7 @@ PODS:
     - JSQSystemSoundPlayer (~> 2.0.0)
   - JSQSystemSoundPlayer (2.0.0)
   - JTTargetActionBlock (1.0.0)
-  - JVFloatLabeledTextField (0.0.9)
+  - JVFloatLabeledTextField (1.0.0)
   - MagicalRecord (2.2):
     - MagicalRecord/Core (= 2.2)
   - MagicalRecord/Core (2.2)
@@ -255,7 +255,7 @@ DEPENDENCIES:
   - HockeySDK (~> 3.6)
   - JSQMessagesViewController (from `https://github.com/jessesquires/JSQMessagesViewController`, commit `736d110eba3e9b2d909a29d4c47c060605b2209a`)
   - JTTargetActionBlock (~> 1.0)
-  - JVFloatLabeledTextField (~> 0.0)
+  - JVFloatLabeledTextField (~> 1.0)
   - MagicalRecord (~> 2.2)
   - Mantle (~> 1.4)
   - MBProgressHUD (~> 0.9)
@@ -343,7 +343,7 @@ SPEC CHECKSUMS:
   JSQMessagesViewController: fb0f6e71c0a8009d210d6c7d73ba2b94bb77dc9b
   JSQSystemSoundPlayer: c98443b1cbb3b45db09d0d3d6c2355cf78294981
   JTTargetActionBlock: bef69054d368a91b33b98a520fa9e78e218a5a25
-  JVFloatLabeledTextField: b6c7d824d231b3c01d14692feada878808480af8
+  JVFloatLabeledTextField: c2b8124e439cf2b05fe5bb38f44358743588c1bd
   MagicalRecord: 2b471584fc9e3137f3d0a56967917baa4979e224
   Mantle: d7c5ac734579ec751c58fecbf56189853056c58c
   MBProgressHUD: 2038dbcf3dce73215abed6001657043d53aa79a8
