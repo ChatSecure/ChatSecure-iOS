@@ -29,7 +29,6 @@
 #import "YapDatabaseTransaction.h"
 #import "OTRLog.h"
 #import "OTRAccount.h"
-#import "OTRYapPushAccount.h"
 
 @interface OTRAccountsManager(Private)
 - (void) refreshAccountsArray;
@@ -97,16 +96,6 @@
     }];
     
     return [accounts filteredArrayUsingPredicate:predicate];
-}
-
-+ (OTRYapPushAccount *)defaultPushAccount
-{
-    __block OTRYapPushAccount *account = nil;
-    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        account = [OTRYapPushAccount currentAccountWithTransaction:transaction];
-    }];
-    
-    return account;
 }
 
 

@@ -17,10 +17,6 @@
 #import "YapDatabaseFullTextSearch.h"
 #import "YapDatabaseFilteredView.h"
 
-#import "OTRYapPushAccount.h"
-#import "OTRYapPushDevice.h"
-#import "OTRYapPushToken.h"
-
 NSString *OTRConversationGroup = @"Conversation";
 NSString *OTRConversationDatabaseViewExtensionName = @"OTRConversationDatabaseViewExtensionName";
 NSString *OTRChatDatabaseViewExtensionName = @"OTRChatDatabaseViewExtensionName";
@@ -340,47 +336,6 @@ NSString *OTRPushAccountGroup = @"Account";
     
     
     return [[OTRDatabaseManager sharedInstance].database registerExtension:filteredView withName:OTRUnreadMessagesViewExtensionName];
-}
-
-+ (BOOL)registerPushView
-{
-    /*if ([[OTRDatabaseManager sharedInstance].database registeredExtension:OTRAllPushAccountInfoViewExtensionName]) {
-        return YES;
-    }*/
-    
-    [[OTRDatabaseManager sharedInstance].database unregisterExtensionWithName:OTRAllPushAccountInfoViewExtensionName];
-    
-    YapDatabaseViewGrouping *viewGrouping = [YapDatabaseViewGrouping withKeyBlock:^NSString *(NSString *collection, NSString *key) {
-        
-        if ([collection isEqualToString:[OTRYapPushAccount collection]])
-        {
-            return OTRPushAccountGroup;
-        }
-        else if ([collection isEqualToString:[OTRYapPushDevice collection]])
-        {
-            return OTRPushDeviceGroup;
-        }
-        else if ([collection isEqualToString:[OTRYapPushToken collection]])
-        {
-            return OTRPushTokenGroup;
-        }
-        
-        return nil;
-        
-    }];
-    
-    YapDatabaseViewSorting *viewSorting = [YapDatabaseViewSorting withKeyBlock:^NSComparisonResult(NSString *group, NSString *collection1, NSString *key1, NSString *collection2, NSString *key2) {
-        return NSOrderedSame;
-    }];
-    
-    YapDatabaseViewOptions *options = [[YapDatabaseViewOptions alloc] init];
-    options.isPersistent = YES;
-    options.allowedCollections = [[YapWhitelistBlacklist alloc] initWithWhitelist:[NSSet setWithArray:@[[OTRYapPushAccount collection],[OTRYapPushDevice collection],[OTRYapPushToken collection]]]];
-    
-    YapDatabaseView *databaseView = [[YapDatabaseView alloc] initWithGrouping:viewGrouping
-                                                                      sorting:viewSorting
-                                                                   versionTag:@"1" options:options];
-    return [[OTRDatabaseManager sharedInstance].database registerExtension:databaseView withName:OTRAllPushAccountInfoViewExtensionName];
 }
 
 @end

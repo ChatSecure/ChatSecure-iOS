@@ -52,5 +52,4 @@ extern NSString *OTRPushTokenGroup;
 
 + (BOOL)registerUnreadMessagesView;
 
-+ (BOOL)registerPushView;
 @end

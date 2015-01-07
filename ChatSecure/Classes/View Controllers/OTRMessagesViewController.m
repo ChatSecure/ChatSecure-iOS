@@ -42,7 +42,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     OTRDropDownTypePush          = 2
 };
 
-@interface OTRMessagesViewController () <UITextViewDelegate, JSQMessagesCollectionViewCellDelegate>
+@interface OTRMessagesViewController () <UITextViewDelegate>
 
 @property (nonatomic, strong) OTRAccount *account;
 

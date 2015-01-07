@@ -74,7 +74,6 @@ extern const struct OTRBuddyEdges {
  @return An UIImage from the OTRImages NSCache
  */
 - (UIImage *)avatarImage;
-- (UIImage *)avatarImage;
 - (NSInteger)numberOfUnreadMessagesWithTransaction:(YapDatabaseReadTransaction *)transaction;
 - (OTRMessage *)lastMessageWithTransaction:(YapDatabaseReadTransaction *)transaction;
 - (OTRAccount*)accountWithTransaction:(YapDatabaseReadTransaction *)transaction;

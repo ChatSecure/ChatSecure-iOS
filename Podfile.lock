@@ -20,8 +20,6 @@ PODS:
   - AFNetworking/UIKit (2.5.0):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
-  - AFOAuth2Client (0.1.2):
-    - AFNetworking (~> 2.0)
   - Appirater (2.0.4)
   - ARChromeActivity (1.0.4)
   - BBlock (1.2.0):
@@ -43,17 +41,17 @@ PODS:
   - CPAProxy (1.0.0):
     - CocoaAsyncSocket
   - CRToast (0.0.7)
-  - Facebook-iOS-SDK (3.20.0):
+  - Facebook-iOS-SDK (3.21.1):
     - Bolts (~> 1.0)
   - gtm-http-fetcher (1.0.141)
   - gtm-oauth2 (1.0.126):
     - gtm-http-fetcher
-  - HockeySDK (3.6.1)
+  - HockeySDK (3.6.2)
   - JSQMessagesViewController (6.1.0):
     - JSQSystemSoundPlayer (~> 2.0.0)
   - JSQSystemSoundPlayer (2.0.0)
   - JTTargetActionBlock (1.0.0)
-  - JVFloatLabeledTextField (0.0.9)
+  - JVFloatLabeledTextField (1.0.0)
   - MagicalRecord (2.2):
     - MagicalRecord/Core (= 2.2)
   - MagicalRecord/Core (2.2)
@@ -78,14 +76,14 @@ PODS:
   - ProxyKit/common (1.0.2):
     - CocoaAsyncSocket (~> 7.3)
     - CocoaLumberjack (~> 1.9)
-  - PureLayout (2.0.3)
+  - PureLayout (2.0.4)
   - RMStepsController (1.0.1)
   - SIAlertView (1.3)
   - SQLCipher/common (3.1.0)
   - SQLCipher/fts (3.1.0):
     - SQLCipher/common
   - SSKeychain (1.2.2)
-  - TTTAttributedLabel (1.11.0)
+  - TTTAttributedLabel (1.12.0)
   - TUSafariActivity (1.0.2)
   - UIAlertView-Blocks (1.0)
   - uservoice-iphone-sdk (3.2.1)
@@ -240,7 +238,6 @@ PODS:
 
 DEPENDENCIES:
   - AFNetworking (~> 2.4)
-  - AFOAuth2Client (from `https://github.com/ChatSecure/AFOAuth2Client.git`, branch `release`)
   - Appirater (~> 2.0)
   - ARChromeActivity (~> 1.0)
   - BBlock (~> 1.2)
@@ -255,7 +252,7 @@ DEPENDENCIES:
   - HockeySDK (~> 3.6)
   - JSQMessagesViewController (from `https://github.com/jessesquires/JSQMessagesViewController`, commit `736d110eba3e9b2d909a29d4c47c060605b2209a`)
   - JTTargetActionBlock (~> 1.0)
-  - JVFloatLabeledTextField (~> 0.0)
+  - JVFloatLabeledTextField (~> 1.0)
   - MagicalRecord (~> 2.2)
   - Mantle (~> 1.4)
   - MBProgressHUD (~> 0.9)
@@ -277,9 +274,6 @@ DEPENDENCIES:
   - YapDatabase/SQLCipher (from `Submodules/YapDatabase/YapDatabase.podspec`)
 
 EXTERNAL SOURCES:
-  AFOAuth2Client:
-    :branch: release
-    :git: https://github.com/ChatSecure/AFOAuth2Client.git
   CocoaAsyncSocket:
     :commit: c0bbcbcc5e039ca5d732f9844bf95c3d8ee31a5b
     :git: https://github.com/robbiehanson/CocoaAsyncSocket.git
@@ -308,9 +302,6 @@ EXTERNAL SOURCES:
     :path: Submodules/YapDatabase/YapDatabase.podspec
 
 CHECKOUT OPTIONS:
-  AFOAuth2Client:
-    :commit: 6e4705c08346c3e77d9522a6d4a1876a3477f01d
-    :git: https://github.com/ChatSecure/AFOAuth2Client.git
   CocoaAsyncSocket:
     :commit: c0bbcbcc5e039ca5d732f9844bf95c3d8ee31a5b
     :git: https://github.com/robbiehanson/CocoaAsyncSocket.git
@@ -326,7 +317,6 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   AFNetworking: 0f54cb5d16ce38c1b76948faffb8d5fb705021c7
-  AFOAuth2Client: 5244ffdc28081e2ce4d4a0d0f1198ed54e24d787
   Appirater: cbdb7f305562cfde585300bfff86da01ae559deb
   ARChromeActivity: d8471d0f78b7fcc1de57929cfc1751b3a7f58bad
   BBlock: 90f0ae0e3ba94fc88be6b9a85b4adbb73b8a7c9a
@@ -336,14 +326,14 @@ SPEC CHECKSUMS:
   CocoaLumberjack: 205769c032b5fef85b92472046bcc8b7e7c8a817
   CPAProxy: c3df549999514de2c04633d20a79b00daf627ddb
   CRToast: da11d94a05b1351a87bb26cbf8f25e80ed2e7115
-  Facebook-iOS-SDK: 5854404b4b651f612a8ef79ca06d766858f4cb8e
+  Facebook-iOS-SDK: 18c26e86ab25c17854a2ee2a8f60562099c6600f
   gtm-http-fetcher: 5072f07e523261f7a87df939d13c1be2340d8111
   gtm-oauth2: dfb3016b8347b73fa80042e5aed29ec4f36e46bc
-  HockeySDK: 15b24068466aa5ee421eed0cc1d58428d698edf6
+  HockeySDK: bfd1f5ac75938b07499c4ac12932244b72a2e70b
   JSQMessagesViewController: fb0f6e71c0a8009d210d6c7d73ba2b94bb77dc9b
   JSQSystemSoundPlayer: c98443b1cbb3b45db09d0d3d6c2355cf78294981
   JTTargetActionBlock: bef69054d368a91b33b98a520fa9e78e218a5a25
-  JVFloatLabeledTextField: b6c7d824d231b3c01d14692feada878808480af8
+  JVFloatLabeledTextField: c2b8124e439cf2b05fe5bb38f44358743588c1bd
   MagicalRecord: 2b471584fc9e3137f3d0a56967917baa4979e224
   Mantle: d7c5ac734579ec751c58fecbf56189853056c58c
   MBProgressHUD: 2038dbcf3dce73215abed6001657043d53aa79a8
@@ -352,12 +342,12 @@ SPEC CHECKSUMS:
   OpenInChrome: b7c73ddf8fe0a1788dc0549c3c4c70e3c84da578
   OTRKit: e033fd50a3423fde513e606aa70e305da96f5b3b
   ProxyKit: 3e73f2ad92327554549474ad10da21dde46d3ba8
-  PureLayout: 9658675ed95dabfcdf5154c0771ec9ed0980b370
+  PureLayout: ddf4fedf7e2f5984f972bbd2205dda4fc3418347
   RMStepsController: 8ff91f169d884fdd834ad37007f553c7bed333eb
   SIAlertView: e6d0d786c3a3f6e456b0e8b9376d0c34d68e827b
   SQLCipher: 981110217eb93c2779c34fb59e646a1c1da918d8
   SSKeychain: cc48bd3ad24fcd9125adb9e0d23dd50b8bbd08b9
-  TTTAttributedLabel: e63baa4d3b8798ea259f5d9f55720002b4bbbd66
+  TTTAttributedLabel: 9825f9b6c8f1c01939fa26827e59b7586483a45b
   TUSafariActivity: 63c6b0584d1f0a731e955c0e4d9c89cde63bedc2
   UIAlertView-Blocks: f3271e84372beb97aea115cd1fb26ae66457f12f
   uservoice-iphone-sdk: 7cbc1e76dcbbc3d5ae3b4bf009fdcf355e1e83ec
