@@ -679,6 +679,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }
     else {
         cell.textView.dataDetectorTypes = UIDataDetectorTypeLink;
+        cell.textView.linkTextAttributes = @{ NSForegroundColorAttributeName : cell.textView.textColor,
+                                              NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle | NSUnderlinePatternSolid) };
     }
     
     cell.textView.delegate = self;
