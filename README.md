@@ -1,6 +1,6 @@
-# [ChatSecure](https://github.com/chrisballinger/ChatSecure-iOS)
+# [ChatSecure](https://github.com/ChatSecure/ChatSecure-iOS)
 
-[![Build Status](https://travis-ci.org/chrisballinger/ChatSecure-iOS.svg?branch=master)](https://travis-ci.org/chrisballinger/ChatSecure-iOS)
+[![Build Status](https://travis-ci.org/ChatSecure/ChatSecure-iOS.svg?branch=master)](https://travis-ci.org/ChatSecure/ChatSecure-iOS)
 
 [ChatSecure](https://chatsecure.org) is a free and open source instant messaging client for [iOS](https://itunes.apple.com/us/app/chatsecure/id464200063) and [Android](https://play.google.com/store/apps/details?id=info.guardianproject.otr.app.im&hl=en) that integrates encrypted [OTR](https://en.wikipedia.org/wiki/ChatSecure_Messaging) ("Off the Record") messaging support from the [libotr](https://otr.cypherpunks.ca/) library and the [XMPPFramework](https://github.com/robbiehanson/XMPPFramework/) to handle Jabber/GTalk (XMPP).
 
@@ -22,7 +22,7 @@ If you would like to contribute/improve a translation:
 
  1. Visit our [Transifex project page](https://www.transifex.net/projects/p/chatsecure/) and make an account if you don't have one already.
  2. Go to the resources subsites [AppStore.strings](https://www.transifex.net/projects/p/chatsecure/resource/appstorestrings/) & [Localizable.strings](https://www.transifex.net/projects/p/chatsecure/resource/strings/) to add a new language or improve an existing translation. 
- 3. [Open an issue on Github](https://github.com/chrisballinger/ChatSecure-iOS/issues) notifying us of your translation.
+ 3. [Open an issue on Github](https://github.com/ChatSecure/ChatSecure-iOS/issues) notifying us of your translation.
 
 
 
@@ -52,7 +52,7 @@ You'll need [Cocoapods](http://cocoapods.org) for most of our dependencies.
     
 Download the source code and **don't forget** to pull down all of the submodules as well.
 
-    $ git clone https://github.com/chrisballinger/ChatSecure-iOS.git
+    $ git clone https://github.com/ChatSecure/ChatSecure-iOS.git
     $ cd ChatSecure-iOS/
     $ git submodule update --init --recursive
     
@@ -64,7 +64,7 @@ Now you'll need to build the dependencies. During this process we will automatic
     
 Next you'll need to create your own version of environment-specific data. Make a copy of `OTRSecrets-Template.m` as `OTRSecrets.m`:
 
-    $ cp ChatSecure/OTRSecrets-Template.m ChatSecure/OTRSecrets.m
+    $ cp ChatSecure/Classes/Utilities/OTRSecrets-Template.m ChatSecure/Classes/Utilities/OTRSecrets.m
     $ cp ./configurations/OTR_Codesigning.xcconfig.sample ./configurations/OTR_Codesigning.xcconfig
     
 Then set your own value for `PROVISIONING_PROFILE_Debug` in `OTR_Codesigning.xcconfig` to your iOS team provisioning profile identifier to run it on your device. You can get this identifier by temporarily selecting the desired profile in Xcode (Build Settings -> Provisiong Profile), then selecting "Other...".
@@ -79,9 +79,9 @@ If you're still having trouble compiling check out the Travis-CI build status an
 
 Thank you for your interest in contributing to ChatSecure! To avoid potential legal headaches and to allow distribution on Apple's App Store please sign our CLA (Contributors License Agreement). For contributing translations, please check out our [Transifex](https://www.transifex.com/projects/p/chatsecure/) page.
 
-1. Sign the CLA ([odt](https://github.com/chrisballinger/ChatSecure-iOS/raw/master/media/contributing/CLA.odt), [pdf](https://github.com/chrisballinger/ChatSecure-iOS/raw/master/media/contributing/CLA.pdf)) and email it to [chris@chatsecure.org](mailto:chris@chatsecure.org).
-2. [Fork](https://github.com/chrisballinger/ChatSecure-iOS/fork) the project and (preferably) work in a feature branch.
-3. Open a [pull request](https://github.com/chrisballinger/ChatSecure-ios/pulls) on GitHub.
+1. Sign the CLA ([odt](https://github.com/ChatSecure/ChatSecure-iOS/raw/master/media/contributing/CLA.odt), [pdf](https://github.com/ChatSecure/ChatSecure-iOS/raw/master/media/contributing/CLA.pdf)) and email it to [chris@chatsecure.org](mailto:chris@chatsecure.org).
+2. [Fork](https://github.com/ChatSecure/ChatSecure-iOS/fork) the project and (preferably) work in a feature branch.
+3. Open a [pull request](https://github.com/ChatSecure/ChatSecure-ios/pulls) on GitHub.
 4. Thank you!
 
 ## License
@@ -89,7 +89,7 @@ Thank you for your interest in contributing to ChatSecure! To avoid potential le
 
 	Software License Agreement (GPLv3+)
 	
-	Copyright (c) 2012, Chris Ballinger. All rights reserved.
+	Copyright (c) 2015, Chris Ballinger. All rights reserved.
 	
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -120,7 +120,7 @@ terms of a separate license:
 	* [libotr](https://otr.cypherpunks.ca/) - provides the core message encryption capabilities
 	* [libgcrypt](https://www.gnu.org/software/libgcrypt/) - handles core libotr encryption routines
 	* [libgpg-error](http://www.gnupg.org/related_software/libgpg-error/) - error codes used by libotr
-* [CPAProxy](https://github.com/ursachec/CPAProxy) - Objective-C Tor Wrapper Framework for iOS [![Build Status](https://travis-ci.org//ursachec/CPAProxy.svg?branch=master)](https://travis-ci.org/ursachec/CPAProxy)
+* [CPAProxy](https://github.com/ursachec/CPAProxy) - Objective-C Tor Wrapper Framework for iOS [![Build Status](https://travis-ci.org/ursachec/CPAProxy.svg?branch=master)](https://travis-ci.org/ursachec/CPAProxy)
 	* [OpenSSL](https://www.openssl.org) - crypto primitives required by Tor
 	* [libevent](http://libevent.org) - Tor i/o dependency
 	* [Tor](https://www.torproject.org) - internet anonymity framework 
@@ -137,7 +137,7 @@ terms of a separate license:
 * [HockeySDK](https://github.com/bitstadium/HockeySDK-iOS) - crash reporting framework
 * [DAKeyboardControl](https://github.com/danielamitay/DAKeyboardControl) - support for swiping down keyboard in chat view
 
-For a more complete list, check the [Podfile](https://github.com/chrisballinger/ChatSecure-iOS/blob/master/Podfile).
+For a more complete list, check the [Podfile](https://github.com/ChatSecure/ChatSecure-iOS/blob/master/Podfile).
 
 ## Acknowledgements
 
