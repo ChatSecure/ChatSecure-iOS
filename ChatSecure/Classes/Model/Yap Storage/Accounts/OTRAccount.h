@@ -5,9 +5,11 @@
 //  Created by David Chiles on 3/28/14.
 //  Copyright (c) 2014 Chris Ballinger. All rights reserved.
 //
-@import UIKit;
+
 #import "OTRYapDatabaseObject.h"
 #import "OTRProtocol.h"
+#import "XMPPvCardTemp.h"
+@import UIKit;
 
 typedef NS_ENUM(int, OTRAccountType) {
     OTRAccountTypeNone        = 0,
@@ -23,6 +25,7 @@ extern NSString *const OTRGoogleTalkImageName;
 extern NSString *const OTRXMPPImageName;
 extern NSString *const OTRXMPPTorImageName;
 
+
 @interface OTRAccount : OTRYapDatabaseObject
 
 @property (nonatomic, strong) NSString *displayName;
@@ -30,6 +33,7 @@ extern NSString *const OTRXMPPTorImageName;
 @property (nonatomic, strong) NSString *username;
 @property (nonatomic) BOOL rememberPassword;
 @property (nonatomic) BOOL autologin;
+@property (nonatomic, strong) NSString *groups;
 
 @property (nonatomic, strong) NSString *password;
 

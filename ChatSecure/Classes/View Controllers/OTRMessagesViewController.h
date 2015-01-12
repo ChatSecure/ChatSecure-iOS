@@ -10,10 +10,13 @@
 
 #import "JSQMessagesViewController.h"
 
-@class OTRBuddy;
+@class OTRBuddy, OTRMessage;
 
 @interface OTRMessagesViewController : JSQMessagesViewController <UISplitViewControllerDelegate>
 
 @property (nonatomic, strong) OTRBuddy *buddy;
+@property (nonatomic, strong) OTRMessage *message;
+@property (nonatomic) BOOL autoScroll;
+
 
 @end

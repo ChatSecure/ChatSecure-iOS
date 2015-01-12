@@ -35,6 +35,7 @@
 #import "Strings.h"
 #import "OTRXMPPManagedPresenceSubscriptionRequest.h"
 #import "OTRYapDatabaseRosterStorage.h"
+#import "XMPPvCardTemp.h"
 
 #import "OTRLog.h"
 
@@ -48,6 +49,8 @@
 #import "XMPPXOAuth2Google.h"
 #import "OTRConstants.h"
 #import "OTRUtilities.h"
+
+
 
 #import "OTRDatabaseManager.h"
 #import "YapDatabaseConnection.h"
@@ -139,6 +142,7 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 #pragma mark Private
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+//set up stream and submodules
 - (void)setupStream
 {
 	NSAssert(_xmppStream == nil, @"Method setupStream invoked multiple times");
@@ -263,18 +267,20 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 	// If you don't supply a hostName, then it will be automatically resolved using the JID (below).
 	// For example, if you supply a JID like 'user@quack.com/rsrc'
 	// then the xmpp framework will follow the xmpp specification, and do a SRV lookup for quack.com.
-	// 
+	//
 	// If you don't specify a hostPort, then the default (5222) will be used.
 	
     //	[xmppStream setHostName:@"talk.google.com"];
     //	[xmppStream setHostPort:5222];	
 }
 
+//dealloc modules
 - (void)teardownStream
 {
     [_xmppStream removeDelegate:self];
     [_xmppRoster removeDelegate:self];
     [_xmppCapabilities removeDelegate:self];
+    
 
     [_xmppReconnect         deactivate];
     [_xmppRoster            deactivate];
@@ -523,6 +529,7 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
     
     settings[GCDAsyncSocketSSLProtocolVersionMin] = @(kTLSProtocol1);
+
     settings[GCDAsyncSocketSSLCipherSuites] = [OTRUtilities cipherSuites];
     settings[GCDAsyncSocketManuallyEvaluateTrust] = @(YES);
 }
@@ -536,6 +543,7 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
     
+    //if it is a new account
     if (self.isRegisteringNewAccount) {
         [self registerNewAccountWithPassword:self.password stream:sender];
     }
@@ -561,7 +569,8 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 - (BOOL)xmppStream:(XMPPStream *)sender didReceiveIQ:(XMPPIQ *)iq
 {
 	DDLogVerbose(@"%@: %@ - %@", THIS_FILE, THIS_METHOD, [iq elementID]);
-	return NO;
+    
+    return NO;
 }
 
 - (void)xmppStreamDidRegister:(XMPPStream *)sender {
@@ -616,10 +625,15 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
         if ([xmppMessage isMessageWithBody] && ![xmppMessage isErrorMessage])
         {
             NSString *body = [[xmppMessage elementForName:@"body"] stringValue];
-            
             NSDate * date = [xmppMessage delayedDeliveryDate];
             
             OTRMessage *message = [[OTRMessage alloc] init];
+            NSString *a = xmppMessage.subject;
+            if([xmppMessage.subject isEqual:@"broadcastMessage"])
+            {
+                message.isBroadcastMessage = YES;
+            }
+
             message.incoming = YES;
             message.text = body;
             message.buddyUniqueId = messageBuddy.uniqueId;
@@ -696,6 +710,7 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
     }
     self.isXmppConnected = NO;
 }
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark XMPPRosterDelegate
@@ -775,8 +790,12 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
     {
         NSString * messageID = message.messageId;
         XMPPMessage * xmppMessage = [XMPPMessage messageWithType:@"chat" to:[XMPPJID jidWithString:buddy.username] elementID:messageID];
+        if(message.isBroadcastMessage)
+        {
+            [xmppMessage addSubject:@"broadcastMessage"];
+        }
+        
         [xmppMessage addBody:text];
-
         [xmppMessage addActiveChatState];
 		
 		[self.xmppStream sendElement:xmppMessage];

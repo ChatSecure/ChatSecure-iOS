@@ -8,6 +8,7 @@
 
 #import "OTRBuddyImageCell.h"
 #import "OTRBuddy.h"
+#import "OTRGroup.h"
 #import "OTRImages.h"
 #import "OTRColors.h"
 #import "PureLayout.h"
@@ -18,6 +19,7 @@ const CGFloat OTRBuddyImageCellPadding = 12.0;
 
 @property (nonatomic, strong) UIImageView *avatarImageView;
 @property (nonatomic) BOOL addedConstraints;
+
 
 @end
 
@@ -39,6 +41,7 @@ const CGFloat OTRBuddyImageCellPadding = 12.0;
         [self.contentView addSubview:self.avatarImageView];
         self.translatesAutoresizingMaskIntoConstraints = NO;
         self.addedConstraints = NO;
+        
     }
     return self;
 }
@@ -71,6 +74,12 @@ const CGFloat OTRBuddyImageCellPadding = 12.0;
     [self.contentView setNeedsUpdateConstraints];
 }
 
+- (void)setGroup:(OTRGroup *)group
+{
+
+}
+
+
 - (UIImage *)defaultImage
 {
     return [UIImage imageNamed:@"person"];
@@ -79,7 +88,9 @@ const CGFloat OTRBuddyImageCellPadding = 12.0;
 - (void)updateConstraints
 {
     if (!self.addedConstraints) {
-        [self.avatarImageView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsMake(OTRBuddyImageCellPadding, OTRBuddyImageCellPadding, OTRBuddyImageCellPadding, OTRBuddyImageCellPadding) excludingEdge:ALEdgeRight];
+        [self.avatarImageView autoPinEdgeToSuperviewEdge:ALEdgeLeft withInset:OTRBuddyImageCellPadding];
+        [self.avatarImageView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:OTRBuddyImageCellPadding];
+        [self.avatarImageView autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:OTRBuddyImageCellPadding];
         [self.avatarImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.avatarImageView];
         
         self.addedConstraints = YES;
@@ -91,5 +102,6 @@ const CGFloat OTRBuddyImageCellPadding = 12.0;
 {
     return NSStringFromClass([self class]);
 }
+
 
 @end

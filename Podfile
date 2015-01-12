@@ -32,6 +32,8 @@ pod 'BButton', '~> 4.0'
 pod 'uservoice-iphone-sdk', '~> 3.2'
 pod 'TUSafariActivity', '~> 1.0'
 pod 'ARChromeActivity', '~> 1.0'
+pod 'BFPaperCheckbox', '~> 1.2.4'
+pod 'SLExpandableTableView'
 
 # Local Podspecs
 pod 'gtm-http-fetcher', :podspec => 'Podspecs/gtm-http-fetcher.podspec.json'

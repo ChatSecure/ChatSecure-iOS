@@ -20,9 +20,11 @@ static NSUInteger const OTRDefaultPortNumber = 5222;
     if (self = [super init]) {
         self.port = [OTRXMPPAccount defaultPort];
         self.resource = [OTRXMPPAccount newResource];
+        self.waitingForvCardTempFetch = YES;
     }
     return self;
 }
+
 
 - (OTRProtocolType)protocolType
 {
@@ -74,5 +76,24 @@ static NSUInteger const OTRDefaultPortNumber = 5222;
     int r = arc4random() % 99999;
     return [NSString stringWithFormat:@"%@%d",kOTRXMPPResource,r];
 }
+
++ (NSDictionary*) encodingBehaviorsByPropertyKey {
+    NSMutableDictionary *encodingBehaviors = [NSMutableDictionary dictionaryWithDictionary:[super encodingBehaviorsByPropertyKey]];
+    [encodingBehaviors setObject:@(MTLModelEncodingBehaviorExcluded) forKey:NSStringFromSelector(@selector(accountSpecificToken))];
+    [encodingBehaviors setObject:@(MTLModelEncodingBehaviorExcluded) forKey:NSStringFromSelector(@selector(oAuthTokenDictionary))];
+    return encodingBehaviors;
+}
+
+
+#pragma - mark setters & getters
+
+- (void)setVCardTemp:(XMPPvCardTemp *)vCardTemp
+{
+    _vCardTemp = vCardTemp;
+    if ([self.vCardTemp.orgName length]) {
+        self.groups = self.vCardTemp.orgName;
+    }
+}
+
 
 @end

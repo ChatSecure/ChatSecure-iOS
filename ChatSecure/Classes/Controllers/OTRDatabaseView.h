@@ -13,9 +13,19 @@
 //Extension Strings
 extern NSString *OTRConversationDatabaseViewExtensionName;
 extern NSString *OTRChatDatabaseViewExtensionName;
+extern NSString *OTRBroadcastChatDatabaseViewExtensionName;
 extern NSString *OTRAllAccountDatabaseViewExtensionName;
 extern NSString *OTRBuddyDatabaseViewExtensionName;
+extern NSString *OTRGroupDatabaseViewExtensionName;
+extern NSString *OTRContactByGroupDatabaseViewExtensionName;
+
 extern NSString *OTRBuddyNameSearchDatabaseViewExtensionName;
+extern NSString *OTRChatNameSearchDatabaseViewExtensionName;
+extern NSString *OTRBroadcastChatNameSearchDatabaseViewExtensionName;
+
+extern NSString *OTRAllBroadcastListDatabaseViewExtensionName;
+
+extern NSString *OTRContactDatabaseViewExtensionName;
 extern NSString *OTRAllBuddiesDatabaseViewExtensionName;
 extern NSString *OTRAllSubscriptionRequestsViewExtensionName;
 extern NSString *OTRAllPushAccountInfoViewExtensionName;
@@ -23,18 +33,29 @@ extern NSString *OTRUnreadMessagesViewExtensionName;
 
 // Group Strins
 extern NSString *OTRAllAccountGroup;
+extern NSString *OTRAllGroupsGroup;
 extern NSString *OTRConversationGroup;
 extern NSString *OTRChatMessageGroup;
-extern NSString *OTRBuddyGroup;
+extern NSString *OTRBuddyGroupList;
+extern NSString *OTRAllBroadcastGroupList;
+extern NSString *OTRAllBuddiesGroupList;
+extern NSMutableArray *OTRContactByGroupList;
+
 extern NSString *OTRUnreadMessageGroup;
 extern NSString *OTRAllPresenceSubscriptionRequestGroup;
+
 
 extern NSString *OTRPushAccountGroup;
 extern NSString *OTRPushDeviceGroup;
 extern NSString *OTRPushTokenGroup;
 
+
 @interface OTRDatabaseView : NSObject
 
+
++ (BOOL)registerAllBroadcastListDatabaseView;
+
++ (BOOL)registerContactByGroupDatabaseView;
 
 + (BOOL)registerConversationDatabaseView;
 
@@ -42,11 +63,19 @@ extern NSString *OTRPushTokenGroup;
 
 + (BOOL)registerChatDatabaseView;
 
++ (BOOL)registerBroadcastChatDatabaseView;
+
++ (BOOL)registerGroupDatabaseView;
+
 + (BOOL)registerBuddyDatabaseView;
 
 + (BOOL)registerBuddyNameSearchDatabaseView;
 
++ (BOOL)registerChatNameSearchDatabaseView;
+
 + (BOOL)registerAllBuddiesDatabaseView;
+
++ (BOOL)registerContactDatabaseView;
 
 + (BOOL)registerAllSubscriptionRequestsView;
 

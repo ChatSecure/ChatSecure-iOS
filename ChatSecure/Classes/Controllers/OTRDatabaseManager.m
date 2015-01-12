@@ -74,8 +74,10 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
     {
         NSURL *mom2 = [[NSBundle mainBundle] URLForResource:@"ChatSecure 2" withExtension:@"mom" subdirectory:@"ChatSecure.momd"];
         NSURL *mom3 = [[NSBundle mainBundle] URLForResource:@"ChatSecure 3" withExtension:@"mom" subdirectory:@"ChatSecure.momd"];
+       
         NSManagedObjectModel *version2Model = [[NSManagedObjectModel alloc] initWithContentsOfURL:mom2];
         NSManagedObjectModel *version3Model = [[NSManagedObjectModel alloc] initWithContentsOfURL:mom3];
+        
         
         if ([OTRDatabaseManager isManagedObjectModel:version2Model compatibleWithStoreAtUrl:databaseURL]) {
             [OTRDatabaseManager migrateLegacyStore:databaseURL destinationStore:databaseURL sourceModel:version2Model destinationModel:version3Model error:nil];
@@ -86,7 +88,10 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
         [MagicalRecord setDefaultModelNamed:@"ChatSecure.momd"];
         [MagicalRecord setupCoreDataStackWithAutoMigratingSqliteStoreNamed:@"ChatSecure.sqlite"];
         
-         ////// Migrate core data to yapdatabase //////
+        //[OTREncryptionManager setFileProtection:NSFileProtectionCompleteUntilFirstUserAuthentication path:databaseURL.path];
+        //[OTREncryptionManager addSkipBackupAttributeToItemAtURL:databaseURL];
+        
+        ////// Migrate core data to yapdatabase //////
         
         NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
         
@@ -107,6 +112,7 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
         }];
         
         [[NSFileManager defaultManager] removeItemAtURL:databaseURL error:nil];
+        
     }
     
     [OTRDatabaseManager deleteLegacyXMPPFiles];
@@ -155,6 +161,9 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
 {
     if ([coreDataClass isEqualToString:NSStringFromClass([OTRManagedXMPPAccount class])]) {
         return OTRAccountTypeJabber;
+    }
+    else if ([coreDataClass isEqualToString:NSStringFromClass([OTRManagedXMPPAccount class])]) {
+        return OTRAccountTypeXMPPTor;
     }
     else if ([coreDataClass isEqualToString:NSStringFromClass([OTRManagedGoogleAccount class])]) {
         return OTRAccountTypeGoogleTalk;
@@ -207,13 +216,20 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
     BOOL success = [self.database registerExtension:databaseRelationship withName:OTRYapDatabaseRelationshipName];
     if (success) success = [OTRDatabaseView registerAllAccountsDatabaseView];
     if (success) success = [OTRDatabaseView registerConversationDatabaseView];
+    if (success) success = [OTRDatabaseView registerAllBroadcastListDatabaseView];
     if (success) success = [OTRDatabaseView registerChatDatabaseView];
     if (success) success = [OTRDatabaseView registerBuddyDatabaseView];
+    if (success) success = [OTRDatabaseView registerGroupDatabaseView];
     if (success) success = [OTRDatabaseView registerBuddyNameSearchDatabaseView];
+    if (success) success = [OTRDatabaseView registerChatNameSearchDatabaseView];
+    if (success) success = [OTRDatabaseView registerBroadcastChatDatabaseView];
     if (success) success = [OTRDatabaseView registerAllBuddiesDatabaseView];
+    if (success) success = [OTRDatabaseView registerContactDatabaseView];
     if (success) success = [OTRDatabaseView registerAllSubscriptionRequestsView];
     if (success) success = [OTRDatabaseView registerUnreadMessagesView];
     if (success) success = [OTRDatabaseView registerPushView];
+    if (success) success = [OTRDatabaseView registerContactByGroupDatabaseView];
+
     if (success) success = [self setupSecondaryIndexes];
     
     if (self.database && success) {

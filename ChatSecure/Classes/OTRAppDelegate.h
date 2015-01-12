@@ -24,23 +24,38 @@
 #import "HockeySDK.h"
 
 @class OTRSettingsViewController;
+@class OTRMessagesGroupViewController;
+@class OTRBroadcastListViewController;
 @class OTRMessagesViewController;
 @class OTRConversationViewController;
+@class OTRLoginViewController;
+@class OTRContactsViewController;
+@class OTRTabBarController;
+
 
 @interface OTRAppDelegate : UIResponder <UIApplicationDelegate, BITHockeyManagerDelegate>
 
 @property (nonatomic, strong) UIWindow *window;
 @property (nonatomic, strong) OTRSettingsViewController *settingsViewController;
+@property (nonatomic, strong) OTRMessagesGroupViewController *groupMessagesViewController;
 @property (nonatomic, strong) OTRMessagesViewController *messagesViewController;
+
+@property (nonatomic, strong) OTRBroadcastListViewController *broadcastListViewController;
 @property (nonatomic, strong) OTRConversationViewController *conversationViewController;
+@property (nonatomic, strong) OTRLoginViewController *loginViewController;
+@property (nonatomic, strong) OTRContactsViewController *contactsViewController;
+@property (nonatomic, strong) OTRTabBarController *tabBarController;
 
 @property (nonatomic, strong) NSTimer *backgroundTimer;
 @property (nonatomic) UIBackgroundTaskIdentifier backgroundTask;
 @property (nonatomic) BOOL didShowDisconnectionWarning;
 
+
 - (void) showConversationViewController;
+- (void) autoLogin;
 
 + (OTRAppDelegate *)appDelegate;
++ (void)presentActionSheet:(UIActionSheet*)sheet inView:(UIView*)view;
 
 
 @end

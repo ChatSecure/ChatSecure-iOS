@@ -10,6 +10,7 @@
 #import "OTRDatabaseManager.h"
 #import "OTRBuddy.h"
 #import "OTRAccount.h"
+#import "OTRBroadcastGroup.h"
 
 @implementation OTRMessage (JSQMessageData)
 
@@ -18,12 +19,21 @@
     __block NSString *sender = @"";
     [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         OTRBuddy *buddy = [self buddyWithTransaction:transaction];
+        OTRBroadcastGroup *broadcastGroup = [self broadcastGroupWithTransaction:transaction];
         if (self.isIncoming) {
             sender = buddy.uniqueId;
         }
         else {
-            OTRAccount *account = [buddy accountWithTransaction:transaction];
-            sender = account.uniqueId;
+            if(self.broadcastGroupUniqueId)
+            {
+                OTRAccount *account = [broadcastGroup accountWithTransaction:transaction];
+                sender = account.uniqueId;
+            }
+            else
+            {
+                OTRAccount *account = [buddy accountWithTransaction:transaction];
+                sender = account.uniqueId;
+            }
         }
         
     }];

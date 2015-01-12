@@ -1,4 +1,4 @@
-//
+    //
 //  OTRConversationViewController.m
 //  Off the Record
 //
@@ -12,14 +12,16 @@
 #import "OTRMessagesViewController.h"
 #import "OTRComposeViewController.h"
 #import "OTRSubscriptionRequestsViewController.h"
+#import "YapDatabaseFullTextSearchTransaction.h"
 
 #import "OTRConversationCell.h"
 #import "OTRNotificationPermissions.h"
 #import "OTRAccount.h"
 #import "OTRBuddy.h"
+#import "OTRXMPPBuddy.h"
 #import "OTRMessage.h"
 #import "UIViewController+ChatSecure.h"
-#import "OTRLog.h"
+#import "OTRLog.h" 
 #import "YapDatabaseView.h"
 #import "YapDatabase.h"
 #import "OTRDatabaseManager.h"
@@ -30,17 +32,25 @@
 #import "OTROnboardingStepsController.h"
 #import "OTRAppDelegate.h"
 
-
 static CGFloat kOTRConversationCellHeight = 80.0;
+
 
 @interface OTRConversationViewController () <OTRComposeViewControllerDelegate>
 
 @property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) NSString *searchString;
 @property (nonatomic, strong) NSTimer *cellUpdateTimer;
-@property (nonatomic, strong) YapDatabaseConnection *databaseConnection;
+@property (nonatomic, strong) UISearchBar *searchBar;
+@property (nonatomic, strong) YapDatabaseConnection *connection;
 @property (nonatomic, strong) YapDatabaseViewMappings *mappings;
+@property (nonatomic, strong) YapDatabaseViewMappings *chatMappings;
 @property (nonatomic, strong) YapDatabaseViewMappings *subscriptionRequestsMappings;
 @property (nonatomic, strong) YapDatabaseViewMappings *unreadMessagesMappings;
+@property (nonatomic, strong) YapDatabaseViewMappings *deleteMessagesMappings;
+@property (nonatomic, strong) NSLayoutConstraint *  tableViewBottomConstraint;
+@property (nonatomic, strong) NSArray *searchResults;
+
+@property (nonatomic, weak) id textViewNotificationObject;
 
 @property (nonatomic, strong) UIBarButtonItem *composeBarButtonItem;
 @end
@@ -51,21 +61,41 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 {
     [super viewDidLoad];
     
+    /*OTRComposeViewController * composeView = [[OTRComposeViewController alloc] init];
+    
+    //important to set the viewcontroller's delegate to be self
+    composeView.delegate = self;*/
+    
     ////// Reset buddy status //////
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         [OTRBuddy resetAllBuddyStatusesWithTransaction:transaction];
         [OTRBuddy resetAllChatStatesWithTransaction:transaction];
     }];
     
-   
+    //////////// TabBar Icon /////////
+    UITabBarItem *tab1 = [[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemRecents tag:1];
+    tab1.title = CHATS_STRING;
+    [self setTabBarItem:tab1];
+    
+
     ///////////// Setup Navigation Bar //////////////
     
     self.title = CHATS_STRING;
-    UIBarButtonItem *settingsBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"OTRSettingsIcon"] style:UIBarButtonItemStylePlain target:self action:@selector(settingsButtonPressed:)];
-    self.navigationItem.rightBarButtonItem = settingsBarButtonItem;
+    //UIBarButtonItem *settingsBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"OTRSettingsIcon"] style:UIBarButtonItemStylePlain target:self action:@selector(settingsButtonPressed:)];
+    //self.navigationItem.rightBarButtonItem = settingsBarButtonItem;
     
     self.composeBarButtonItem =[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(composeButtonPressed:)];
     self.navigationItem.leftBarButtonItem = self.composeBarButtonItem;
+
+    
+    /////////// Search Bar ///////////
+    
+    self.searchBar = [[UISearchBar alloc] init];
+    self.searchBar.translatesAutoresizingMaskIntoConstraints = NO;
+    self.searchBar.delegate = self;
+    self.searchBar.placeholder = SEARCH_STRING;
+    [self.view addSubview:self.searchBar];
+    
     
     ////////// Create TableView /////////////////
     
@@ -80,18 +110,23 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     [self.tableView registerClass:[OTRConversationCell class] forCellReuseIdentifier:[OTRConversationCell reuseIdentifier]];
     
     
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[searchBar]|" options:0 metrics:0 views:@{@"searchBar":self.searchBar}]];
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[tableView]|" options:0 metrics:0 views:@{@"tableView":self.tableView}]];
-    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[tableView]|" options:0 metrics:0 views:@{@"tableView":self.tableView}]];
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[topLayoutGuide][searchBar][tableView]" options:0 metrics:0 views:@{@"tableView":self.tableView,@"searchBar":self.searchBar,@"topLayoutGuide":self.topLayoutGuide}]];
+    self.tableViewBottomConstraint = [NSLayoutConstraint constraintWithItem:self.tableView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0];
+    [self.view addConstraint:self.tableViewBottomConstraint];
     
     ////////// Create YapDatabase View /////////////////
     
-    self.databaseConnection = [[OTRDatabaseManager sharedInstance] newConnection];
-    self.databaseConnection.name = NSStringFromClass([self class]);
-    [self.databaseConnection beginLongLivedReadTransaction];
+    self.connection = [[OTRDatabaseManager sharedInstance] newConnection];
+    self.connection.name = NSStringFromClass([self class]);
+    [self.connection beginLongLivedReadTransaction];
     
     self.mappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[OTRConversationGroup]
                                                                view:OTRConversationDatabaseViewExtensionName];
     
+    self.chatMappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[OTRChatMessageGroup]
+                                                               view:OTRChatDatabaseViewExtensionName];
     self.subscriptionRequestsMappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[OTRAllPresenceSubscriptionRequestGroup]
                                                                                    view:OTRAllSubscriptionRequestsViewExtensionName];
     self.unreadMessagesMappings = [[YapDatabaseViewMappings alloc] initWithGroupFilterBlock:^BOOL(NSString *group, YapDatabaseReadTransaction *transaction) {
@@ -100,12 +135,11 @@ static CGFloat kOTRConversationCellHeight = 80.0;
         return NSOrderedSame;
     } view:OTRUnreadMessagesViewExtensionName];
     
-    
-        
-    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+    [self.connection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         [self.mappings updateWithTransaction:transaction];
         [self.subscriptionRequestsMappings updateWithTransaction:transaction];
         [self.unreadMessagesMappings updateWithTransaction:transaction];
+        [self.chatMappings updateWithTransaction:transaction];
     }];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -135,6 +169,17 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     }
     
     [[OTRProtocolManager sharedInstance] addObserver:self forKeyPath:NSStringFromSelector(@selector(numberOfConnectedProtocols)) options:NSKeyValueObservingOptionNew context:NULL];
+    
+    /*if (![[OTRDatabaseManager sharedInstance] existsYapDatabase]) {
+        ////// Onboarding //////
+        OTROnboardingStepsController *onboardingStepsController = [[OTROnboardingStepsController alloc] init];
+        onboardingStepsController.stepsBar.hideCancelButton = YES;
+        
+        [self.navigationController presentViewController:onboardingStepsController animated:NO completion:nil];
+        
+    }*/
+    [self.tableView reloadData];
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -161,7 +206,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 
 - (void)composeButtonPressed:(id)sender
 {
-    OTRComposeViewController * composeViewController = [[OTRComposeViewController alloc] init];
+    OTRComposeViewController * composeViewController = [[OTRComposeViewController alloc] initWithOptions:NO];
     composeViewController.delegate = self;
     UINavigationController * modalNavigationController = [[UINavigationController alloc] initWithRootViewController:composeViewController];
     //modalNavigationController.modalPresentationStyle = UIModalTransitionStyleCoverVertical;
@@ -177,6 +222,8 @@ static CGFloat kOTRConversationCellHeight = 80.0;
         }];
     }
     OTRMessagesViewController *messagesViewController = [OTRAppDelegate appDelegate].messagesViewController;
+    messagesViewController.hidesBottomBarWhenPushed = YES;
+    messagesViewController.autoScroll = YES;
     messagesViewController.buddy = buddy;
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone && ![messagesViewController otr_isVisible]) {
         [self.navigationController pushViewController:messagesViewController animated:YES];
@@ -184,8 +231,33 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     
 }
 
+- (void)enterConversationWithBuddy:(OTRBuddy *)buddy andMessage:(OTRMessage *)message
+{
+    if (buddy) {
+        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+            [buddy setAllMessagesRead:transaction];
+        }];
+    }
+    OTRMessagesViewController *messagesViewController = [OTRAppDelegate appDelegate].messagesViewController;
+    messagesViewController.hidesBottomBarWhenPushed = YES;
+    messagesViewController.autoScroll = NO;
+    messagesViewController.buddy = buddy;
+    messagesViewController.message = message;
+    
+    
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone && ![messagesViewController otr_isVisible]) {
+        [self.navigationController pushViewController:messagesViewController animated:YES];
+    }
+    
+    
+}
+
 - (void)updateVisibleCells:(id)sender
 {
+    if ([self useSearchResults]) {
+        return;
+    }
+    
     NSArray * indexPathsArray = [self.tableView indexPathsForVisibleRows];
     for(NSIndexPath *indexPath in indexPathsArray)
     {
@@ -197,16 +269,68 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     }
 }
 
+
+- (OTRMessage *)messageForIndexPath:(NSIndexPath *)indexPath
+{
+    NSIndexPath *viewIndexPath = [NSIndexPath indexPathForItem:indexPath.row inSection:0];
+    
+    
+    if ([self useSearchResults]) {
+        if (indexPath.row < [self.searchResults count]) {
+            if(![self.searchResults[viewIndexPath.row] isKindOfClass:[OTRBuddy class]])
+            {
+                return self.searchResults[viewIndexPath.row];
+            }
+        }
+    }
+    
+    return nil;
+}
+
 - (OTRBuddy *)buddyForIndexPath:(NSIndexPath *)indexPath
 {
+     NSIndexPath *viewIndexPath = [NSIndexPath indexPathForItem:indexPath.row inSection:0];
     
-    __block OTRBuddy *buddy = nil;
-    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+
+    if ([self useSearchResults]) {
+        if (indexPath.row < [self.searchResults count]) {
+            if([self.searchResults[viewIndexPath.row] isKindOfClass:[OTRBuddy class]])
+            {
+                return self.searchResults[viewIndexPath.row];
+            }
+            else{
+                __block OTRBuddy *buddy = nil;
+                OTRMessage *message = self.searchResults[viewIndexPath.row];
+                [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+                   
+                    buddy =  [message buddyWithTransaction:transaction];
+                }];
+                
+                return buddy;
+            }
+        }
+    }
+    else
+    {
+        __block OTRBuddy *buddy = nil;
+        [self.connection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+            
+            buddy = [[transaction extension:OTRConversationDatabaseViewExtensionName] objectAtIndexPath:indexPath withMappings:self.mappings];
+        }];
         
-        buddy = [[transaction extension:OTRConversationDatabaseViewExtensionName] objectAtIndexPath:indexPath withMappings:self.mappings];
-    }];
+        return buddy;
+    }
     
-    return buddy;
+    return nil;
+}
+
+- (BOOL)useSearchResults
+{
+    if([self.searchBar.text length])
+    {
+        return YES;
+    }
+    return NO;
 }
 
 - (void)enableComposeButton
@@ -277,12 +401,19 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     }
     else if (numberUnreadMessages > 0)
     {
-        self.title = [NSString stringWithFormat:@"%@ (%d)",CHATS_STRING,(int)numberUnreadMessages];
+        self.title = [NSString stringWithFormat:@"%@ (%ld)",CHATS_STRING,numberUnreadMessages];
     }
     else {
         self.title = CHATS_STRING;
     }
 }
+
+
+- (void)updateLasMessage
+{
+    [self.tableView reloadData];
+}
+
 
 
 #pragma - mark UITableViewDataSource Methods
@@ -294,32 +425,94 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [self.mappings numberOfItemsInSection:section];
+    NSInteger numberOfRows = 0;
+
+    if ([self useSearchResults]) {
+        numberOfRows = [self.searchResults count];
+    }
+    else {
+        numberOfRows = [self.mappings numberOfItemsInSection:section];
+    }
+    
+    return numberOfRows;
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if ([self useSearchResults]) {
+        return;
+    }
+    
+    
     //Delete conversation
     if(editingStyle == UITableViewCellEditingStyleDelete) {
         OTRBuddy *cellBuddy = [[self buddyForIndexPath:indexPath] copy];
         
-        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction)
+        {
             [OTRMessage deleteAllMessagesForBuddyId:cellBuddy.uniqueId transaction:transaction];
-        }];
+            //TODO[[[OTRXMPPBuddy fetchObjectWithUniqueID:cellBuddy.uniqueId transaction:transaction] copy] removeWithTransaction:transaction] ;
+            
+        }
+        completionBlock:^{
+           
+            [self.tableView reloadData];
+
+        } ];
+        
+        
     }
-    
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    OTRConversationCell *cell = [tableView dequeueReusableCellWithIdentifier:[OTRConversationCell reuseIdentifier] forIndexPath:indexPath];
-    OTRBuddy * buddy = [self buddyForIndexPath:indexPath];
+    NSIndexPath *viewIndexPath = [NSIndexPath indexPathForItem:indexPath.row inSection:0];
     
-    [cell.avatarImageView.layer setCornerRadius:(kOTRConversationCellHeight-2.0*OTRBuddyImageCellPadding)/2.0];
+    if ([self useSearchResults]) {
+        if (indexPath.row < [self.searchResults count]) {
+            if([self.searchResults[viewIndexPath.row] isKindOfClass:[OTRBuddy class]])
+            {
+                OTRConversationCell *cell = [tableView dequeueReusableCellWithIdentifier:[OTRConversationCell reuseIdentifier] forIndexPath:indexPath];
+                OTRBuddy * buddy = [self buddyForIndexPath:indexPath];
+                
+                [cell.avatarImageView.layer setCornerRadius:(kOTRConversationCellHeight-2.0*OTRBuddyImageCellPadding)/2.0];
+                
+                
+                [cell setBuddy:buddy];
+                
+                return cell;
+            }
+            else{
+                OTRConversationCell *cell = [tableView dequeueReusableCellWithIdentifier:[OTRConversationCell reuseIdentifier] forIndexPath:indexPath];
+                
+                OTRBuddy * buddy = [self buddyForIndexPath:indexPath];
+                OTRMessage * message = [self messageForIndexPath:indexPath];
+                
+                [cell.avatarImageView.layer setCornerRadius:(kOTRConversationCellHeight-2.0*OTRBuddyImageCellPadding)/2.0];
+                
+                [cell setBuddy:buddy withMessage:message andSearch:self.searchString];
+                
+                return cell;
+
+            }
+            
+            return nil;
+        }
+        
+        return nil;
+    }
+    else{
     
-    [cell setBuddy:buddy];
-    
-    return cell;
+        OTRConversationCell *cell = [tableView dequeueReusableCellWithIdentifier:[OTRConversationCell reuseIdentifier] forIndexPath:indexPath];
+        OTRBuddy * buddy = [self buddyForIndexPath:indexPath];
+        
+        [cell.avatarImageView.layer setCornerRadius:(kOTRConversationCellHeight-2.0*OTRBuddyImageCellPadding)/2.0];
+
+        
+        [cell setBuddy:buddy];
+        
+        return cell;
+    }
 }
 
 #pragma - mark UITableViewDelegate Methods
@@ -333,17 +526,33 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     return kOTRConversationCellHeight;
 }
 
+
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if ([self useSearchResults]) {
+        return nil;
+    }
+    
     return UITableViewCellEditingStyleDelete;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    OTRBuddy *buddy = [self buddyForIndexPath:indexPath];
-    [self enterConversationWithBuddy:buddy];
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    if ([self useSearchResults]) {
+        OTRBuddy *buddy = [self buddyForIndexPath:indexPath];
+        OTRMessage * message = [self messageForIndexPath:indexPath];
+        [self enterConversationWithBuddy:buddy andMessage:message];
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+            [tableView deselectRowAtIndexPath:indexPath animated:YES];
+        }
+
+    }
+    else{
+        OTRBuddy *buddy = [self buddyForIndexPath:indexPath];
+        [self enterConversationWithBuddy:buddy];
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+            [tableView deselectRowAtIndexPath:indexPath animated:YES];
+        }
     }
 }
 
@@ -351,22 +560,36 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 
 - (void)yapDatabaseModified:(NSNotification *)notification
 {
-    NSArray *notifications = [self.databaseConnection beginLongLivedReadTransaction];
+     NSArray *notifications = [self.connection beginLongLivedReadTransaction];
     
     NSArray *sectionChanges = nil;
     NSArray *rowChanges = nil;
     
-    [[self.databaseConnection ext:OTRConversationDatabaseViewExtensionName] getSectionChanges:&sectionChanges
-                                                                                   rowChanges:&rowChanges
-                                                                             forNotifications:notifications
-                                                                                 withMappings:self.mappings];
+    /*
+    [self.connection readWithBlock:^(YapDatabaseReadTransaction *transaction){
+        
+        [self.mappings updateWithTransaction:transaction];
+        [self.chatMappings updateWithTransaction:transaction];
+        [self.unreadMessagesMappings updateWithTransaction:transaction];
+        [self.subscriptionRequestsMappings updateWithTransaction:transaction];
+    }];*/
+    
+    
+    if ([self useSearchResults]) {
+        return;
+    }
+    
+    [[self.connection ext:OTRConversationDatabaseViewExtensionName] getSectionChanges:&sectionChanges
+                                                                           rowChanges:&rowChanges
+                                                                     forNotifications:notifications
+                                                                         withMappings:self.mappings];
     
     NSArray *subscriptionSectionChanges = nil;
     NSArray *subscriptionRowChanges = nil;
-    [[self.databaseConnection ext:OTRAllSubscriptionRequestsViewExtensionName] getSectionChanges:&subscriptionSectionChanges
-                                                                                      rowChanges:&subscriptionRowChanges
-                                                                                forNotifications:notifications
-                                                                                    withMappings:self.subscriptionRequestsMappings];
+    [[self.connection ext:OTRAllSubscriptionRequestsViewExtensionName] getSectionChanges:&subscriptionSectionChanges
+                                                                              rowChanges:&subscriptionRowChanges
+                                                                        forNotifications:notifications
+                                                                            withMappings:self.subscriptionRequestsMappings];
     
     if ([subscriptionSectionChanges count] || [subscriptionRowChanges count]) {
         [self updateInbox];
@@ -375,13 +598,26 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     NSArray *unreadMessagesSectionChanges = nil;
     NSArray *unreadMessagesRowChanges = nil;
     
-    [[self.databaseConnection ext:OTRUnreadMessagesViewExtensionName] getSectionChanges:&unreadMessagesSectionChanges
-                                                                             rowChanges:&unreadMessagesRowChanges
-                                                                       forNotifications:notifications
-                                                                           withMappings:self.unreadMessagesMappings];
+    [[self.connection ext:OTRUnreadMessagesViewExtensionName] getSectionChanges:&unreadMessagesSectionChanges
+                                                                     rowChanges:&unreadMessagesRowChanges
+                                                               forNotifications:notifications
+                                                                   withMappings:self.unreadMessagesMappings];
     
     if ([unreadMessagesSectionChanges count] || [unreadMessagesRowChanges count]) {
         [self updateTitle];
+    }
+    
+    
+    NSArray *chatSectionChanges = nil;
+    NSArray *chatRowChanges = nil;
+    
+    [[self.connection ext:OTRUnreadMessagesViewExtensionName] getSectionChanges:&chatSectionChanges
+                                                                     rowChanges:&chatRowChanges
+                                                               forNotifications:notifications
+                                                                   withMappings:self.chatMappings];
+    
+    if ([chatSectionChanges count] || [chatRowChanges count]) {
+        [self.tableView reloadData];
     }
     
     // No need to update mappings.
@@ -463,6 +699,37 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     [viewController dismissViewControllerAnimated:YES completion:^{
         [self enterConversationWithBuddy:buddy];
     }];
+}
+
+
+#pragma - mark UISearchBarDelegateMethods
+
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
+{
+    if ([searchText length]) {
+        
+        self.searchString = [NSString stringWithFormat:@"%@*",searchText];
+        
+        NSMutableArray *tempSearchResults = [NSMutableArray new];
+        [self.connection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
+            [[transaction ext:OTRChatNameSearchDatabaseViewExtensionName] enumerateKeysAndObjectsMatching:self.searchString usingBlock:^(NSString *collection, NSString *key, id object, BOOL *stop) {
+                if ([object isKindOfClass:[OTRBuddy class]]) {
+                    [tempSearchResults addObject:object];
+                }
+                
+                if ([object isKindOfClass:[OTRMessage class]]) {
+                    [tempSearchResults addObject:object];
+                }
+    
+            }];
+        } completionBlock:^{
+            self.searchResults = tempSearchResults;
+            [self.tableView reloadData];
+        }];  
+    }
+    else{
+        [self.tableView reloadData];
+    }
 }
 
 

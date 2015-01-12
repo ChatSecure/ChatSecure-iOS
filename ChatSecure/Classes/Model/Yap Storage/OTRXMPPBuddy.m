@@ -24,8 +24,8 @@ const struct OTRXMPPBuddyAttributes OTRXMPPBuddyAttributes = {
 - (id)init
 {
     if (self = [super init]) {
-        self.pendingApproval = NO;
-        self.waitingForvCardTempFetch = NO;
+        self.pendingApproval = YES;
+        self.waitingForvCardTempFetch = YES;
     }
     return self;
 }
@@ -37,6 +37,10 @@ const struct OTRXMPPBuddyAttributes OTRXMPPBuddyAttributes = {
     _vCardTemp = vCardTemp;
     if ([self.vCardTemp.photo length]) {
         self.avatarData = self.vCardTemp.photo;
+    }
+    
+    if ([self.vCardTemp.orgName length]) {
+        self.groupsData = self.vCardTemp.orgName;
     }
 }
 

@@ -1,4 +1,4 @@
-//
+ //
 //  OTRMessagesViewController.m
 //  Off the Record
 //
@@ -31,6 +31,7 @@
 #import "UIActivityViewController+ChatSecure.h"
 #import "OTRUtilities.h"
 
+
 static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
 
 typedef NS_ENUM(int, OTRDropDownType) {
@@ -46,9 +47,12 @@ typedef NS_ENUM(int, OTRDropDownType) {
 @property (nonatomic, strong) YapDatabaseConnection *uiDatabaseConnection;
 @property (nonatomic, strong) YapDatabaseViewMappings *messageMappings;
 @property (nonatomic, strong) YapDatabaseViewMappings *buddyMappings;
+@property (nonatomic, strong) YapDatabaseViewMappings *messageSearchMappings;
 
 @property (nonatomic, strong) UIImageView *outgoingBubbleImageView;
 @property (nonatomic, strong) UIImageView *incomingBubbleImageView;
+@property (nonatomic, strong) UIImageView *broadcastBubbleOutgoingImageView;
+@property (nonatomic, strong) UIImageView *broadcastBubbleIncomingImageView;
 
 @property (nonatomic, weak) id textViewNotificationObject;
 @property (nonatomic, weak) id databaseConnectionDidUpdateNotificationObject;
@@ -61,6 +65,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
 @property (nonatomic, strong) OTRLockButton *lockButton;
 @property (nonatomic, strong) OTRButtonView *buttonDropdownView;
 @property (nonatomic, strong) OTRTitleSubtitleView *titleView;
+@property (nonatomic, strong) NSIndexPath *indexPathForMessage;
+
+
 
 @end
 
@@ -75,7 +82,16 @@ typedef NS_ENUM(int, OTRDropDownType) {
     [super viewDidLoad];
     
     self.collectionView.frame = self.view.bounds;
-    self.automaticallyScrollsToMostRecentMessage = YES;
+    
+    if(self.autoScroll)
+    {
+        self.automaticallyScrollsToMostRecentMessage = YES;
+    }
+    else{
+        self.automaticallyScrollsToMostRecentMessage = NO;
+
+    }
+    
     self.inputToolbar.contentView.leftBarButtonItem = nil;
     
     self.outgoingCellIdentifier = [OTRMessagesCollectionViewCellOutgoing cellReuseIdentifier];
@@ -87,10 +103,13 @@ typedef NS_ENUM(int, OTRDropDownType) {
      ////// bubbles //////
     self.outgoingBubbleImageView = [JSQMessagesBubbleImageFactory outgoingMessageBubbleImageViewWithColor:[UIColor jsq_messageBubbleBlueColor]];
     
+    self.broadcastBubbleIncomingImageView = [JSQMessagesBubbleImageFactory outgoingMessageBubbleImageViewWithColor:[UIColor jsq_messageBubbleGreenColor]];
+    
     self.incomingBubbleImageView = [JSQMessagesBubbleImageFactory incomingMessageBubbleImageViewWithColor:[UIColor jsq_messageBubbleLightGrayColor]];
     
+     self.broadcastBubbleOutgoingImageView = [JSQMessagesBubbleImageFactory outgoingMessageBubbleImageViewWithColor:[UIColor jsq_messageBubbleGreenColor]];
+    
     self.collectionView.collectionViewLayout.incomingAvatarViewSize = CGSizeZero;
-    self.collectionView.collectionViewLayout.outgoingAvatarViewSize = CGSizeZero;
     
     ////// Lock Button //////
     [self setupLockButton];
@@ -103,7 +122,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapTitleView:)];
     [self.titleView addGestureRecognizer:tapGestureRecognizer];
     
-    [self refreshTitleView];
+    [self refreshTitleView];   
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -149,6 +168,18 @@ typedef NS_ENUM(int, OTRDropDownType) {
             }
         }
     }];
+    
+   
+    
+}
+
+-(void)viewDidAppear:(BOOL)animated
+{
+    if(!self.autoScroll)
+    {
+        [self.collectionView scrollToItemAtIndexPath:self.indexPathForMessage atScrollPosition:(UICollectionViewScrollPositionTop) animated:NO];
+    }
+    
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -190,7 +221,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     OTRBuddy *originalBuddy = self.buddy;
     _buddy = buddy;
     
-    if ([originalBuddy.uniqueId isEqualToString:buddy.uniqueId]) {
+    if ([originalBuddy.uniqueId isEqualToString:buddy.uniqueId] && self.autoScroll) {
         // really same buddy with new info like chatState, EncryptionState, Name
         
         [self refreshLockButton];
@@ -228,10 +259,18 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }
     
     //refresh other parts of the view
+    NSMutableArray *arr = [[NSMutableArray alloc]init];
+    for(int i = 0; i < [self.messageMappings numberOfItemsInSection:0]; i++)
+    {
+        [arr addObject:[NSIndexPath indexPathForRow:i inSection:0]];
+    }
+    
     [self.collectionView reloadData];
+    [self.collectionView reloadItemsAtIndexPaths:arr];
     [self refreshLockButton];
     [self refreshTitleView];
 }
+
 
 - (void)refreshTitleView
 {
@@ -302,8 +341,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         else {
             [self hideDropdownAnimated:YES completion:showPushDropDown];
         }
-    }
-     */
+    }*/
 }
 #pragma - mark Push Methods
 
@@ -607,8 +645,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
         NSParameterAssert(indexPath != nil);
         NSUInteger row = indexPath.row;
         NSUInteger section = indexPath.section;
+        NSUInteger numberOfItemsInSection = [self.messageMappings numberOfItemsInSection:section];
         
-        NSAssert(row < [self.messageMappings numberOfItemsInSection:section], @"Cannot fetch message because row %d is >= numberOfItemsInSection %d", (int)row, (int)[self.messageMappings numberOfItemsInSection:section]);
+        NSAssert(row < numberOfItemsInSection, @"Cannot fetch message because row %d is >= numberOfItemsInSection %d", (int)row, (int)numberOfItemsInSection);
         
         message = [viewTransaction objectAtRow:row inSection:section withMappings:self.messageMappings];
         NSParameterAssert(message != nil);
@@ -651,6 +690,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (void)didPressSendButton:(UIButton *)button withMessageText:(NSString *)text sender:(NSString *)sender date:(NSDate *)date
 {
+    self.automaticallyScrollsToMostRecentMessage = YES;
+    
     OTRMessage *message = [[OTRMessage alloc] init];
     message.buddyUniqueId = self.buddy.uniqueId;
     message.text = text;
@@ -658,10 +699,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
     message.transportedSecurely = NO;
     
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        [message saveWithTransaction:transaction];
         self.buddy.lastMessageDate = message.date;
         [self.buddy saveWithTransaction:transaction];
-    } completionBlock:^{
+    } completionBlock:^{   
         [[OTRKit sharedInstance] encodeMessage:message.text tlvs:nil username:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString tag:message];
     }];
 }
@@ -671,6 +711,14 @@ typedef NS_ENUM(int, OTRDropDownType) {
     OTRMessagesCollectionViewCell *cell = (OTRMessagesCollectionViewCell *)[super collectionView:collectionView cellForItemAtIndexPath:indexPath];
     
     OTRMessage *message = [self messageAtIndexPath:indexPath];
+    if(!self.autoScroll)
+    {
+        if([message.text isEqual:self.message.text] && [message.date isEqualToDate:self.message.date])
+        {
+            self.indexPathForMessage = indexPath;
+        }
+    }
+    
     [cell setMessage:message];
     
     // Do not allow clickable links for Tor accounts to prevent information leakage
@@ -678,11 +726,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
         cell.textView.dataDetectorTypes = UIDataDetectorTypeNone;
     }
     else {
-        cell.textView.dataDetectorTypes = UIDataDetectorTypeLink;
+        cell.textView.dataDetectorTypes = UIDataDetectorTypeAll;
     }
     
-    cell.textView.delegate = self;
-    cell.actionDelegate = self;
     return cell;
 }
 
@@ -736,10 +782,22 @@ typedef NS_ENUM(int, OTRDropDownType) {
     OTRMessage *message = [self messageAtIndexPath:indexPath];
     UIImageView *imageView = nil;
     if (message.isIncoming) {
-        imageView = [[UIImageView alloc] initWithImage:self.incomingBubbleImageView.image highlightedImage:self.incomingBubbleImageView.highlightedImage];
+        if(message.isBroadcastMessage)
+        {
+            imageView = [[UIImageView alloc] initWithImage:self.broadcastBubbleIncomingImageView.image highlightedImage:self.broadcastBubbleIncomingImageView.highlightedImage];
+        }
+        else{
+            imageView = [[UIImageView alloc] initWithImage:self.incomingBubbleImageView.image highlightedImage:self.incomingBubbleImageView.highlightedImage];
+        }
     }
     else {
-        imageView = [[UIImageView alloc] initWithImage:self.outgoingBubbleImageView.image highlightedImage:self.outgoingBubbleImageView.highlightedImage];
+        if(message.isBroadcastMessage)
+        {
+            imageView = [[UIImageView alloc] initWithImage:self.broadcastBubbleOutgoingImageView.image highlightedImage:self.broadcastBubbleOutgoingImageView.highlightedImage];
+        }
+        else{
+            imageView = [[UIImageView alloc] initWithImage:self.outgoingBubbleImageView.image highlightedImage:self.outgoingBubbleImageView.highlightedImage];
+        }
     }
     return imageView;
 }
@@ -755,7 +813,12 @@ typedef NS_ENUM(int, OTRDropDownType) {
 {
     if ([self showDateAtIndexPath:indexPath]) {
         OTRMessage *message = [self messageAtIndexPath:indexPath];
-        return [[JSQMessagesTimestampFormatter sharedFormatter] attributedTimestampForDate:message.date];
+        if ([message.date timeIntervalSinceNow] > 86400) {
+            return [[JSQMessagesTimestampFormatter sharedFormatter] attributedTimestampForDate:message.date];
+        }
+        else {
+            return [[NSAttributedString alloc] initWithString:[[JSQMessagesTimestampFormatter sharedFormatter] timeForDate:message.date]];
+        }
     }
     return nil;
 }
@@ -812,9 +875,6 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
     __block OTRMessage *message = [self messageAtIndexPath:indexPath];
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         [message removeWithTransaction:transaction];
-        //Update Last message date for sorting and grouping
-        [self.buddy updateLastMessageDateWithTransaction:transaction];
-        [self.buddy saveWithTransaction:transaction];
     }];
 }
 
@@ -883,8 +943,8 @@ didTapLoadEarlierMessagesButton:(UIButton *)sender
     
     
     [self.collectionView reloadData];
-    
-    if (messageRowChanges.count && [self.collectionView numberOfItemsInSection:0] != 0) {
+
+    if (messageRowChanges.count && [self.collectionView numberOfItemsInSection:0] > 0) {
         NSUInteger lastMessageIndex = [self.collectionView numberOfItemsInSection:0] - 1;
         NSIndexPath *lastMessageIndexPath = [NSIndexPath indexPathForRow:lastMessageIndex inSection:0];
         OTRMessage *mostRecentMessage = [self messageAtIndexPath:lastMessageIndexPath];
@@ -907,6 +967,7 @@ didTapLoadEarlierMessagesButton:(UIButton *)sender
     self.navigationItem.leftBarButtonItem = nil;
 }
 
+
 #pragma - mark UITextViewDelegateMethods
 
 - (BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange
@@ -925,5 +986,6 @@ didTapLoadEarlierMessagesButton:(UIButton *)sender
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
     return NO;
 }
+
 
 @end
