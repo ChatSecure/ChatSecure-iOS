@@ -45,10 +45,14 @@
 
 +(NSString *)stripHTML:(NSString *)string
 {
+    if (!string) {
+        return nil;
+    }
     NSRange range;
     NSString *finalString = [string copy];
-    while ((range = [finalString rangeOfString:@"<[^>]+>" options:NSRegularExpressionSearch]).location != NSNotFound)
+    while ((range = [finalString rangeOfString:@"<[^>]+>" options:NSRegularExpressionSearch]).location != NSNotFound) {
         finalString = [finalString stringByReplacingCharactersInRange:range withString:@""];
+    }
     return finalString;
 }
 
