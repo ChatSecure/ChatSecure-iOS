@@ -9,7 +9,8 @@ pod "Appirater", '~> 2.0'
 pod 'OpenInChrome', '~> 0.0'
 pod 'MWFeedParser', '~> 1.0'
 pod "CocoaLumberjack", '~> 1.9'
-pod "Facebook-iOS-SDK", '~> 3.19'
+# In Facebook-iOS-SDK 3.22 removes headers for resource files https://developers.facebook.com/docs/ios/change-log-3.x
+pod "Facebook-iOS-SDK", '3.21.1'
 pod "HockeySDK", '~> 3.6'
 pod "MagicalRecord", '~> 2.2'
 pod 'MBProgressHUD', '~> 0.9'
@@ -21,8 +22,7 @@ pod 'JTTargetActionBlock', '~> 1.0'
 pod 'Mantle', '~> 1.4'
 pod 'Navajo', '~> 0.0'
 pod 'RMStepsController', '~> 1.0'
-# Waiting on bug fixes that should be in 6.1.1
-# pod 'JSQMessagesViewController', '~> 6.1'
+pod 'JSQMessagesViewController', '~> 6.1'
 pod 'BBlock', '~> 1.2'
 pod 'JVFloatLabeledTextField', '~> 1.0'
 pod 'TTTAttributedLabel', '~> 1.10'
@@ -42,9 +42,6 @@ pod 'CocoaAsyncSocket', :git => 'https://github.com/robbiehanson/CocoaAsyncSocke
 
 # Wating for update to pod needed for iPad bugs
 pod 'CRToast', :git => 'https://github.com/cruffenach/CRToast', :commit => '78569d0e6e6704872af5db1bc37be0ff9d112ac0'
-
-# Waiting on bug fixes that should be in version 6.1.1
-pod 'JSQMessagesViewController', :git => 'https://github.com/jessesquires/JSQMessagesViewController', :commit => '736d110eba3e9b2d909a29d4c47c060605b2209a'
 
 # Forks
 pod 'SIAlertView', :git => 'https://github.com/ChatSecure/SIAlertView.git', :branch => 'attributedText'
