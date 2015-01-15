@@ -242,7 +242,7 @@ DEPENDENCIES:
   - ARChromeActivity (~> 1.0)
   - BBlock (~> 1.2)
   - BButton (~> 4.0)
-  - CocoaAsyncSocket (from `https://github.com/robbiehanson/CocoaAsyncSocket.git`, commit `c0bbcbcc5e039ca5d732f9844bf95c3d8ee31a5b`)
+  - CocoaAsyncSocket (~> 7.4)
   - CocoaLumberjack (~> 1.9)
   - CPAProxy (from `Submodules/CPAProxy/CPAProxy.podspec`)
   - CRToast (from `https://github.com/cruffenach/CRToast`, commit `78569d0e6e6704872af5db1bc37be0ff9d112ac0`)
@@ -274,9 +274,6 @@ DEPENDENCIES:
   - YapDatabase/SQLCipher (from `Submodules/YapDatabase/YapDatabase.podspec`)
 
 EXTERNAL SOURCES:
-  CocoaAsyncSocket:
-    :commit: c0bbcbcc5e039ca5d732f9844bf95c3d8ee31a5b
-    :git: https://github.com/robbiehanson/CocoaAsyncSocket.git
   CPAProxy:
     :path: Submodules/CPAProxy/CPAProxy.podspec
   CRToast:
@@ -299,9 +296,6 @@ EXTERNAL SOURCES:
     :path: Submodules/YapDatabase/YapDatabase.podspec
 
 CHECKOUT OPTIONS:
-  CocoaAsyncSocket:
-    :commit: c0bbcbcc5e039ca5d732f9844bf95c3d8ee31a5b
-    :git: https://github.com/robbiehanson/CocoaAsyncSocket.git
   CRToast:
     :commit: 78569d0e6e6704872af5db1bc37be0ff9d112ac0
     :git: https://github.com/cruffenach/CRToast
@@ -316,7 +310,7 @@ SPEC CHECKSUMS:
   BBlock: 90f0ae0e3ba94fc88be6b9a85b4adbb73b8a7c9a
   BButton: eab327e143be2730c81a22467cc016488a125162
   Bolts: 3db0a875235e0c9042b013af13af0f00f79b102c
-  CocoaAsyncSocket: 4bbe8fc969e61e62f408de98faac676468e155b3
+  CocoaAsyncSocket: b0a1a89e7ea4c1c0ea4ec83f57d55117d3cdae06
   CocoaLumberjack: 205769c032b5fef85b92472046bcc8b7e7c8a817
   CPAProxy: c3df549999514de2c04633d20a79b00daf627ddb
   CRToast: da11d94a05b1351a87bb26cbf8f25e80ed2e7115
