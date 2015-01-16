@@ -33,14 +33,14 @@
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
     
     if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
-        UIAlertAction *takePhotoAction = [UIAlertAction actionWithTitle:@"Take Photo" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        UIAlertAction *takePhotoAction = [UIAlertAction actionWithTitle:TAKE_PHOTO_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
             [self showImagePickerForSourceType:UIImagePickerControllerSourceTypeCamera];
         }];
         [alertController addAction:takePhotoAction];
     }
     
     if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary]) {
-        UIAlertAction *openLibraryAction = [UIAlertAction actionWithTitle:@"Photo Library" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        UIAlertAction *openLibraryAction = [UIAlertAction actionWithTitle:PHOTO_LIBRARY_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
             [self showImagePickerForSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
         }];
         [alertController addAction:openLibraryAction];
