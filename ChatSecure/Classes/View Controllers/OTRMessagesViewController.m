@@ -33,6 +33,7 @@
 #import "OTRColors.h"
 #import "JSQMessagesCollectionViewCell+ChatSecure.h"
 #import "NSString+FontAwesome.h"
+#import "OTRAttachmentPicker.h"
 
 static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
 
@@ -42,7 +43,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     OTRDropDownTypePush          = 2
 };
 
-@interface OTRMessagesViewController () <UITextViewDelegate>
+@interface OTRMessagesViewController () <UITextViewDelegate, OTRAttachmentPickerDelegate>
 
 @property (nonatomic, strong) OTRAccount *account;
 
@@ -65,6 +66,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
 @property (nonatomic, strong) OTRButtonView *buttonDropdownView;
 @property (nonatomic, strong) OTRTitleSubtitleView *titleView;
 
+@property (nonatomic, strong) OTRAttachmentPicker *attachmentPicker;
+
 @end
 
 @implementation OTRMessagesViewController
@@ -78,7 +81,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
     [super viewDidLoad];
     
     self.automaticallyScrollsToMostRecentMessage = YES;
-    self.inputToolbar.contentView.leftBarButtonItem = nil;
     
      ////// bubbles //////
     JSQMessagesBubbleImageFactory *bubbleImageFactory = [[JSQMessagesBubbleImageFactory alloc] init];
@@ -165,6 +167,14 @@ typedef NS_ENUM(int, OTRDropDownType) {
                                                    object:database];
     }
     return _uiDatabaseConnection;
+}
+
+- (OTRAttachmentPicker *)attachmentPicker
+{
+    if (!_attachmentPicker) {
+        _attachmentPicker = [[OTRAttachmentPicker alloc] initWithRootViewController:self delegate:self];
+    }
+    return _attachmentPicker;
 }
 
 - (NSArray*) indexPathsToCount:(NSUInteger)count {
@@ -727,6 +737,11 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
 }
 
+- (void)didPressAccessoryButton:(UIButton *)sender
+{
+    [self.attachmentPicker showAlertControllerWithCompletion:nil];
+}
+
 - (void)collectionView:(UICollectionView *)collectionView performAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender
 {
     if (action == @selector(delete:)) {
@@ -735,6 +750,13 @@ typedef NS_ENUM(int, OTRDropDownType) {
     else {
         [super collectionView:collectionView performAction:action forItemAtIndexPath:indexPath withSender:sender];
     }
+}
+
+#pragma - mark OTRAttachmentPickerDelegate Methods
+
+- (void)attachmentPicker:(OTRAttachmentPicker *)attachmentPicker gotPhoto:(UIImage *)photo withInfo:(NSDictionary *)info
+{
+    
 }
 
 #pragma - mark UIScrollViewDelegate Methods

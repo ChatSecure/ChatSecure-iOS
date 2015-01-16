@@ -165,6 +165,7 @@
 		63C4BD2E1A1E9BE1001696CD /* _OTRXMPPManagedPresenceSubscriptionRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BD0E1A1E9BE1001696CD /* _OTRXMPPManagedPresenceSubscriptionRequest.m */; };
 		63D184861A2D3F2400334CD8 /* OTRNotificationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D184851A2D3F2400334CD8 /* OTRNotificationController.m */; };
 		63D64D661A2FBA8C00E21F77 /* OTRToastOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D64D651A2FBA8C00E21F77 /* OTRToastOptions.m */; };
+		63F6E1911A69B9BA0011E6F7 /* OTRAttachmentPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F6E1901A69B9BA0011E6F7 /* OTRAttachmentPicker.m */; };
 		63FABC8E1A410EBF009BF681 /* JSQMessagesCollectionViewCell+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FABC8D1A410EBF009BF681 /* JSQMessagesCollectionViewCell+ChatSecure.m */; };
 		63FABC911A41218E009BF681 /* NSString+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FABC901A41218E009BF681 /* NSString+ChatSecure.m */; };
 		D9365E7A1A1EB0050006434A /* torrc in Resources */ = {isa = PBXBuildFile; fileRef = D9365E791A1EB0050006434A /* torrc */; };
@@ -532,6 +533,8 @@
 		63DC0EB31A1ABC86002C9598 /* OTR_Codesigning.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = OTR_Codesigning.xcconfig; path = configurations/OTR_Codesigning.xcconfig; sourceTree = "<group>"; };
 		63DC0EB41A1ABC86002C9598 /* OTR_Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = OTR_Debug.xcconfig; path = configurations/OTR_Debug.xcconfig; sourceTree = "<group>"; };
 		63DC0EB61A1ABC86002C9598 /* OTR_Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = OTR_Release.xcconfig; path = configurations/OTR_Release.xcconfig; sourceTree = "<group>"; };
+		63F6E18F1A69B9BA0011E6F7 /* OTRAttachmentPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAttachmentPicker.h; sourceTree = "<group>"; };
+		63F6E1901A69B9BA0011E6F7 /* OTRAttachmentPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAttachmentPicker.m; sourceTree = "<group>"; };
 		63FABC8C1A410EBF009BF681 /* JSQMessagesCollectionViewCell+ChatSecure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "JSQMessagesCollectionViewCell+ChatSecure.h"; sourceTree = "<group>"; };
 		63FABC8D1A410EBF009BF681 /* JSQMessagesCollectionViewCell+ChatSecure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "JSQMessagesCollectionViewCell+ChatSecure.m"; sourceTree = "<group>"; };
 		63FABC8F1A41218E009BF681 /* NSString+ChatSecure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+ChatSecure.h"; sourceTree = "<group>"; };
@@ -629,6 +632,8 @@
 			children = (
 				D955143A1A66002700C1A45D /* OTRFileTransferManager.h */,
 				D955143B1A66002700C1A45D /* OTRFileTransferManager.m */,
+				63F6E18F1A69B9BA0011E6F7 /* OTRAttachmentPicker.h */,
+				63F6E1901A69B9BA0011E6F7 /* OTRAttachmentPicker.m */,
 				6331050F1A16D1A300C17BAE /* OTRAccountsManager.h */,
 				633105101A16D1A300C17BAE /* OTRAccountsManager.m */,
 				633105131A16D1A300C17BAE /* OTRDatabaseManager.h */,
@@ -1321,6 +1326,7 @@
 				633106E71A16D1A300C17BAE /* OTRNotificationPermissions.m in Sources */,
 				633107071A16D1A300C17BAE /* OTRMessagesViewController.m in Sources */,
 				633106D21A16D1A300C17BAE /* OTRXMPPTorAccount.m in Sources */,
+				63F6E1911A69B9BA0011E6F7 /* OTRAttachmentPicker.m in Sources */,
 				63C4BD2C1A1E9BE1001696CD /* _OTRvCardAvatar.m in Sources */,
 				6331070F1A16D1A300C17BAE /* OTRSettingsViewController.m in Sources */,
 				633106CB1A16D1A300C17BAE /* OTRViewSetting.m in Sources */,
