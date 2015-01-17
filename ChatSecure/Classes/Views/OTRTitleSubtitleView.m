@@ -11,6 +11,8 @@
 
 #import "PureLayout.h"
 
+static const CGFloat kOTRMaxImageViewHeight = 9;
+
 @interface OTRTitleSubtitleView ()
 
 @property (nonatomic, strong) UILabel * titleLabel;
@@ -75,7 +77,7 @@
     [self.titleLabel autoPinEdgeToSuperviewEdge:ALEdgeTop];
     [self.titleLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
     [self.titleLabel autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self withMultiplier:0.6];
-    [self.titleLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:0.9];
+    [self.titleLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self withMultiplier:0.9 relation:NSLayoutRelationLessThanOrEqual];
     
     ///////////// SUBTITLE LABEL /////////////
     [self.subtitleLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
@@ -105,6 +107,9 @@
     
     //Less than equal to height of label
     [imageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:label withOffset:0 relation:NSLayoutRelationLessThanOrEqual];
+    //Less than equal to max height
+    [imageView autoSetDimension:ALDimensionHeight toSize:kOTRMaxImageViewHeight relation:NSLayoutRelationLessThanOrEqual];
+    
     //Square ImageView
     [imageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:imageView];
 }
