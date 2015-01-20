@@ -107,7 +107,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
+    [[UIApplication sharedApplication] setStatusBarHidden:NO];
     [self refreshLockButton];
     
     __weak OTRMessagesViewController *welf = self;

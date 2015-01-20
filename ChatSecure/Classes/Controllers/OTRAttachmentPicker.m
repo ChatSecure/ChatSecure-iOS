@@ -34,6 +34,7 @@
     
     if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
         UIAlertAction *takePhotoAction = [UIAlertAction actionWithTitle:TAKE_PHOTO_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
             [self showImagePickerForSourceType:UIImagePickerControllerSourceTypeCamera];
         }];
         [alertController addAction:takePhotoAction];
@@ -93,13 +94,10 @@
     }
 }
 
- #pragma - mark UINavigatoinControllerDelegate Methods
-
--(void)navigationController:(UINavigationController *)navigationController
-     willShowViewController:(UIViewController *)viewController
-                   animated:(BOOL)animated
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
 {
-    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
+    [picker dismissViewControllerAnimated:YES completion:nil];
+    self.imagePickerController = nil;
 }
 
 @end
