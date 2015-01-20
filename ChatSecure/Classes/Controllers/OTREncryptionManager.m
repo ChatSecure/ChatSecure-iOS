@@ -31,7 +31,6 @@
 #import "OTRAppDelegate.h"
 #import "OTRMessagesViewController.h"
 #import "UIViewController+ChatSecure.h"
-#import "OTRFileTransferManager.h"
 
 #import "OTRLog.h"
 
@@ -41,10 +40,7 @@ NSString *const OTRDidFinishGeneratingPrivateKeyNotification = @"OTREncryptionMa
 NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
 
 @interface OTREncryptionManager ()
-@property (nonatomic, strong) OTRFileTransferManager *fileTransferManager;
 @property (nonatomic, strong) OTRKit *otrKit;
-/** Handles OTRDATA TLV's and passes results to OTRFileTransferManager */
-@property (nonatomic, strong) OTRDataHandler *dataHandler;
 @end
 
 @implementation OTREncryptionManager
@@ -55,8 +51,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
         self.otrKit = [OTRKit sharedInstance];
         [self.otrKit setupWithDataPath:nil];
         self.otrKit.delegate = self;
-        self.fileTransferManager = [[OTRFileTransferManager alloc] init];
-        self.dataHandler = [[OTRDataHandler alloc] initWithOTRKit:self.otrKit delegate:self.fileTransferManager];
+        _dataHandler = [[OTRDataHandler alloc] initWithOTRKit:self.otrKit delegate:self];
         NSArray *protectPaths = @[self.otrKit.privateKeyPath, self.otrKit.fingerprintsPath, self.otrKit.instanceTagsPath];
         for (NSString *path in protectPaths) {
             if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
@@ -395,5 +390,35 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     }
     return success;
 }
+
+#pragma mark OTRDataHandlerDelegate methods
+
+- (void)dataHandler:(OTRDataHandler*)dataHandler
+           transfer:(OTRDataTransfer*)transfer
+              error:(NSError*)error {
+    DDLogError(@"error with file transfer: %@ %@", transfer, error);
+}
+
+- (void)dataHandler:(OTRDataHandler*)dataHandler
+    offeredTransfer:(OTRDataIncomingTransfer*)transfer {
+    DDLogInfo(@"offered file transfer: %@", transfer);
+    
+    // for now, just accept all incoming files
+#warning auto-accept of all incoming files
+    [dataHandler startIncomingTransfer:transfer];
+}
+
+- (void)dataHandler:(OTRDataHandler*)dataHandler
+           transfer:(OTRDataTransfer*)transfer
+           progress:(float)progress {
+    DDLogInfo(@"file transfer progress: %@ %f", transfer, progress);
+    
+}
+
+- (void)dataHandler:(OTRDataHandler*)dataHandler
+   transferComplete:(OTRDataTransfer*)transfer {
+    DDLogInfo(@"transfer complete: %@", transfer);
+}
+
 
 @end

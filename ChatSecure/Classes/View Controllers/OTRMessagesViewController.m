@@ -761,12 +761,14 @@ typedef NS_ENUM(int, OTRDropDownType) {
         // Example of saving image to filesystem (unencrypted) and then saving to yapDatatbase
         // This will need to be changed to include encrypted storage and sending via OTRData
         // THis should also be asynchronous as it curretly blocks the UI
+		NSData *imageData = UIImageJPEGRepresentation(photo, 0.5);
+    
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
         NSString *documentsPath = [paths firstObject];
         NSString *UUID = [[NSUUID UUID] UUIDString];
         NSString *path = [documentsPath stringByAppendingPathComponent:UUID];
         
-        [UIImagePNGRepresentation(photo) writeToFile:path atomically:YES];
+        [imageData writeToFile:path atomically:YES];
         
         OTRMediaItem *mediaItem  = [[OTRMediaItem alloc] init];
         mediaItem.mediaType = OTRMediaItemTypeImage;
@@ -781,6 +783,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
         
         [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
             [message saveWithTransaction:transaction];
+        } completionBlock:^{
+            [[OTRProtocolManager sharedInstance].encryptionManager.dataHandler sendFileWithName:@"image.jpg" fileData:imageData username:self.buddy.username accountName:self.account.username protocol:kOTRProtocolTypeXMPP tag:nil];
         }];
     }
 }

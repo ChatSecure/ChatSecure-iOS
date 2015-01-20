@@ -591,6 +591,7 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
     [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         
         OTRXMPPBuddy *messageBuddy = [self buddyWithMessage:xmppMessage transaction:transaction];
+
         if ([xmppMessage isErrorMessage]) {
             NSError *error = [xmppMessage errorMessage];
             DDLogCWarn(@"XMPP Error: %@",error);
@@ -631,10 +632,13 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
             
             message.messageId = [xmppMessage elementID];
             
-            [[OTRKit sharedInstance] decodeMessage:message.text username:messageBuddy.username accountName:self.account.username protocol:kOTRProtocolTypeXMPP tag:message];
-            
+            if (messageBuddy) {
+                [[OTRKit sharedInstance] decodeMessage:message.text username:messageBuddy.username accountName:self.account.username protocol:kOTRProtocolTypeXMPP tag:message];
+            } else {
+                // message from server
+                DDLogWarn(@"No buddy for message: %@", xmppMessage);
+            }
         }
-        
         if (messageBuddy) {
             [transaction setObject:messageBuddy forKey:messageBuddy.uniqueId inCollection:[OTRXMPPBuddy collection]];
         }
