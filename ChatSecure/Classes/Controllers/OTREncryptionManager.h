@@ -22,6 +22,7 @@
 
 #import <Foundation/Foundation.h>
 #import "OTRKit.h"
+#import "OTRDataHandler.h"
 
 extern NSString *const OTRMessageStateDidChangeNotification;
 extern NSString *const OTRWillStartGeneratingPrivateKeyNotification;
@@ -32,10 +33,11 @@ extern NSString *const OTREncryptionError;
 extern NSString *const OTRMessageEventKey;
 
 
-@interface OTREncryptionManager : NSObject <OTRKitDelegate>
+@interface OTREncryptionManager : NSObject <OTRKitDelegate, OTRDataHandlerDelegate>
 
 + (BOOL) setFileProtection:(NSString*)fileProtection path:(NSString*)path;
 + (BOOL)addSkipBackupAttributeToItemAtURL:(NSURL *)URL;
 
+@property (nonatomic, strong, readonly) OTRDataHandler *dataHandler;
 
 @end

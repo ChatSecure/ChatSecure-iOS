@@ -168,7 +168,6 @@
 		63FABC8E1A410EBF009BF681 /* JSQMessagesCollectionViewCell+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FABC8D1A410EBF009BF681 /* JSQMessagesCollectionViewCell+ChatSecure.m */; };
 		63FABC911A41218E009BF681 /* NSString+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FABC901A41218E009BF681 /* NSString+ChatSecure.m */; };
 		D9365E7A1A1EB0050006434A /* torrc in Resources */ = {isa = PBXBuildFile; fileRef = D9365E791A1EB0050006434A /* torrc */; };
-		D955143C1A66002700C1A45D /* OTRFileTransferManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D955143B1A66002700C1A45D /* OTRFileTransferManager.m */; };
 		D973D7061A2D4094004D353E /* Pods-acknowledgements.plist in Resources */ = {isa = PBXBuildFile; fileRef = D973D7051A2D4094004D353E /* Pods-acknowledgements.plist */; };
 /* End PBXBuildFile section */
 
@@ -538,8 +537,6 @@
 		63FABC901A41218E009BF681 /* NSString+ChatSecure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+ChatSecure.m"; sourceTree = "<group>"; };
 		954B60A022C05FDE4DCFEF6E /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		D9365E791A1EB0050006434A /* torrc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = torrc; path = Resources/torrc; sourceTree = "<group>"; };
-		D955143A1A66002700C1A45D /* OTRFileTransferManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRFileTransferManager.h; sourceTree = "<group>"; };
-		D955143B1A66002700C1A45D /* OTRFileTransferManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRFileTransferManager.m; sourceTree = "<group>"; };
 		D973D7051A2D4094004D353E /* Pods-acknowledgements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Pods-acknowledgements.plist"; path = "Pods/Target Support Files/Pods/Pods-acknowledgements.plist"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -627,8 +624,6 @@
 		6331050E1A16D1A300C17BAE /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				D955143A1A66002700C1A45D /* OTRFileTransferManager.h */,
-				D955143B1A66002700C1A45D /* OTRFileTransferManager.m */,
 				6331050F1A16D1A300C17BAE /* OTRAccountsManager.h */,
 				633105101A16D1A300C17BAE /* OTRAccountsManager.m */,
 				633105131A16D1A300C17BAE /* OTRDatabaseManager.h */,
@@ -1421,7 +1416,6 @@
 				633106D51A16D1A300C17BAE /* OTRMessage+JSQMessageData.m in Sources */,
 				633107011A16D1A300C17BAE /* OTRDatabaseUnlockViewController.m in Sources */,
 				633106EA1A16D1A300C17BAE /* OTRSecrets.m in Sources */,
-				D955143C1A66002700C1A45D /* OTRFileTransferManager.m in Sources */,
 				633107001A16D1A300C17BAE /* OTRDatabasePassphraseViewController.m in Sources */,
 				633107021A16D1A300C17BAE /* OTRDoubleSettingViewController.m in Sources */,
 				633106D41A16D1A300C17BAE /* OTRBuddy.m in Sources */,

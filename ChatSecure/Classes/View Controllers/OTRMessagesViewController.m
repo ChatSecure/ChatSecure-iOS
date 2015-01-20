@@ -42,7 +42,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     OTRDropDownTypePush          = 2
 };
 
-@interface OTRMessagesViewController () <UITextViewDelegate>
+@interface OTRMessagesViewController () <UITextViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
 @property (nonatomic, strong) OTRAccount *account;
 
@@ -78,7 +78,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     [super viewDidLoad];
     
     self.automaticallyScrollsToMostRecentMessage = YES;
-    self.inputToolbar.contentView.leftBarButtonItem = nil;
+    //self.inputToolbar.contentView.leftBarButtonItem = nil;
     
      ////// bubbles //////
     JSQMessagesBubbleImageFactory *bubbleImageFactory = [[JSQMessagesBubbleImageFactory alloc] init];
@@ -666,6 +666,14 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 #pragma mark - JSQMessagesViewController method overrides
 
+/** This is for media attachments */
+- (void)didPressAccessoryButton:(UIButton *)sender
+{
+    UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+    imagePicker.delegate = self;
+    [self presentViewController:imagePicker animated:YES completion:nil];
+}
+
 - (UICollectionViewCell *)collectionView:(JSQMessagesCollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     JSQMessagesCollectionViewCell *cell = (JSQMessagesCollectionViewCell *)[super collectionView:collectionView cellForItemAtIndexPath:indexPath];
@@ -965,6 +973,18 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
     return NO;
+}
+
+#pragma mark - UIImagePickerControllerDelegate methods
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
+    UIImage *image = info[@"UIImagePickerControllerOriginalImage"];
+    NSData *imageData = UIImageJPEGRepresentation(image, 0.5);
+    [[OTRProtocolManager sharedInstance].encryptionManager.dataHandler sendFileWithName:@"image.jpg" fileData:imageData username:self.buddy.username accountName:self.account.username protocol:kOTRProtocolTypeXMPP tag:nil];
+}
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
+    [picker dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end
