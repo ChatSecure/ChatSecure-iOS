@@ -33,6 +33,7 @@
 #import "OTRColors.h"
 #import "JSQMessagesCollectionViewCell+ChatSecure.h"
 #import "NSString+FontAwesome.h"
+#import "OTRAttachmentPicker.h"
 
 static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
 
@@ -42,7 +43,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     OTRDropDownTypePush          = 2
 };
 
-@interface OTRMessagesViewController () <UITextViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
+@interface OTRMessagesViewController () <UITextViewDelegate, OTRAttachmentPickerDelegate>
 
 @property (nonatomic, strong) OTRAccount *account;
 
@@ -65,6 +66,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
 @property (nonatomic, strong) OTRButtonView *buttonDropdownView;
 @property (nonatomic, strong) OTRTitleSubtitleView *titleView;
 
+@property (nonatomic, strong) OTRAttachmentPicker *attachmentPicker;
+
 @end
 
 @implementation OTRMessagesViewController
@@ -78,7 +81,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
     [super viewDidLoad];
     
     self.automaticallyScrollsToMostRecentMessage = YES;
-    //self.inputToolbar.contentView.leftBarButtonItem = nil;
     
      ////// bubbles //////
     JSQMessagesBubbleImageFactory *bubbleImageFactory = [[JSQMessagesBubbleImageFactory alloc] init];
@@ -165,6 +167,14 @@ typedef NS_ENUM(int, OTRDropDownType) {
                                                    object:database];
     }
     return _uiDatabaseConnection;
+}
+
+- (OTRAttachmentPicker *)attachmentPicker
+{
+    if (!_attachmentPicker) {
+        _attachmentPicker = [[OTRAttachmentPicker alloc] initWithRootViewController:self delegate:self];
+    }
+    return _attachmentPicker;
 }
 
 - (NSArray*) indexPathsToCount:(NSUInteger)count {
@@ -666,14 +676,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 #pragma mark - JSQMessagesViewController method overrides
 
-/** This is for media attachments */
-- (void)didPressAccessoryButton:(UIButton *)sender
-{
-    UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
-    imagePicker.delegate = self;
-    [self presentViewController:imagePicker animated:YES completion:nil];
-}
-
 - (UICollectionViewCell *)collectionView:(JSQMessagesCollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     JSQMessagesCollectionViewCell *cell = (JSQMessagesCollectionViewCell *)[super collectionView:collectionView cellForItemAtIndexPath:indexPath];
@@ -735,6 +737,11 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
 }
 
+- (void)didPressAccessoryButton:(UIButton *)sender
+{
+    [self.attachmentPicker showAlertControllerWithCompletion:nil];
+}
+
 - (void)collectionView:(UICollectionView *)collectionView performAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender
 {
     if (action == @selector(delete:)) {
@@ -743,6 +750,14 @@ typedef NS_ENUM(int, OTRDropDownType) {
     else {
         [super collectionView:collectionView performAction:action forItemAtIndexPath:indexPath withSender:sender];
     }
+}
+
+#pragma - mark OTRAttachmentPickerDelegate Methods
+
+- (void)attachmentPicker:(OTRAttachmentPicker *)attachmentPicker gotPhoto:(UIImage *)photo withInfo:(NSDictionary *)info
+{
+    NSData *imageData = UIImageJPEGRepresentation(photo, 0.5);
+    [[OTRProtocolManager sharedInstance].encryptionManager.dataHandler sendFileWithName:@"image.jpg" fileData:imageData username:self.buddy.username accountName:self.account.username protocol:kOTRProtocolTypeXMPP tag:nil];
 }
 
 #pragma - mark UIScrollViewDelegate Methods
@@ -973,18 +988,6 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
     return NO;
-}
-
-#pragma mark - UIImagePickerControllerDelegate methods
-
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
-    UIImage *image = info[@"UIImagePickerControllerOriginalImage"];
-    NSData *imageData = UIImageJPEGRepresentation(image, 0.5);
-    [[OTRProtocolManager sharedInstance].encryptionManager.dataHandler sendFileWithName:@"image.jpg" fileData:imageData username:self.buddy.username accountName:self.account.username protocol:kOTRProtocolTypeXMPP tag:nil];
-}
-
-- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
-    [picker dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end
