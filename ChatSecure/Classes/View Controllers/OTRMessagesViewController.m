@@ -34,6 +34,7 @@
 #import "JSQMessagesCollectionViewCell+ChatSecure.h"
 #import "NSString+FontAwesome.h"
 #import "OTRAttachmentPicker.h"
+#import "OTRMediaItem.h"
 
 static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
 
@@ -756,7 +757,32 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (void)attachmentPicker:(OTRAttachmentPicker *)attachmentPicker gotPhoto:(UIImage *)photo withInfo:(NSDictionary *)info
 {
-    
+    if (photo) {
+        // Example of saving image to filesystem (unencrypted) and then saving to yapDatatbase
+        // This will need to be changed to include encrypted storage and sending via OTRData
+        // THis should also be asynchronous as it curretly blocks the UI
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *documentsPath = [paths firstObject];
+        NSString *UUID = [[NSUUID UUID] UUIDString];
+        NSString *path = [documentsPath stringByAppendingPathComponent:UUID];
+        
+        [UIImagePNGRepresentation(photo) writeToFile:path atomically:YES];
+        
+        OTRMediaItem *mediaItem  = [[OTRMediaItem alloc] init];
+        mediaItem.mediaType = OTRMediaItemTypeImage;
+        mediaItem.isIncoming = NO;
+        mediaItem.filename = UUID;
+        
+        __block OTRMessage *message = [[OTRMessage alloc] init];
+        message.incoming = NO;
+        message.buddyUniqueId = self.buddy.uniqueId;
+        message.mediaItem = mediaItem;
+        message.transportedSecurely = YES;
+        
+        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+            [message saveWithTransaction:transaction];
+        }];
+    }
 }
 
 #pragma - mark UIScrollViewDelegate Methods

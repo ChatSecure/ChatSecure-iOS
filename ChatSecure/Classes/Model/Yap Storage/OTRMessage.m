@@ -25,7 +25,8 @@ const struct OTRMessageAttributes OTRMessageAttributes = {
 	.read = @"read",
 	.incoming = @"incoming",
     .messageId = @"messageId",
-    .transportedSecurely = @"transportedSecurely"
+    .transportedSecurely = @"transportedSecurely",
+    .mediaItem = @"mediaItem"
 };
 
 const struct OTRMessageRelationships OTRMessageRelationships = {

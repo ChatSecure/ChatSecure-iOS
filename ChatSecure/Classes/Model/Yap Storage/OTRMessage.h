@@ -7,7 +7,7 @@
 //
 
 #import "OTRYapDatabaseObject.h"
-@class OTRBuddy,YapDatabaseReadTransaction;
+@class OTRBuddy,YapDatabaseReadTransaction, OTRMediaItem;
 
 extern const struct OTRMessageAttributes {
 	__unsafe_unretained NSString *date;
@@ -17,6 +17,7 @@ extern const struct OTRMessageAttributes {
 	__unsafe_unretained NSString *incoming;
     __unsafe_unretained NSString *messageId;
     __unsafe_unretained NSString *transportedSecurely;
+    __unsafe_unretained NSString *mediaItem;
 } OTRMessageAttributes;
 
 extern const struct OTRMessageRelationships {
@@ -37,7 +38,7 @@ extern const struct OTRMessageEdges {
 @property (nonatomic, getter = isRead) BOOL read;
 @property (nonatomic, getter = isIncoming) BOOL incoming;
 @property (nonatomic, getter = isTransportedSecurely) BOOL transportedSecurely;
-
+@property (nonatomic, strong) OTRMediaItem *mediaItem;
 
 @property (nonatomic, strong) NSString *buddyUniqueId;
 

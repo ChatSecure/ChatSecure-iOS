@@ -164,6 +164,7 @@
 		63C4BD2D1A1E9BE1001696CD /* _OTRvCardTemp.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BD0C1A1E9BE1001696CD /* _OTRvCardTemp.m */; };
 		63C4BD2E1A1E9BE1001696CD /* _OTRXMPPManagedPresenceSubscriptionRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BD0E1A1E9BE1001696CD /* _OTRXMPPManagedPresenceSubscriptionRequest.m */; };
 		63D184861A2D3F2400334CD8 /* OTRNotificationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D184851A2D3F2400334CD8 /* OTRNotificationController.m */; };
+		63D27FC51A6DC51C00EC251A /* OTRMediaItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D27FC41A6DC51C00EC251A /* OTRMediaItem.m */; };
 		63D64D661A2FBA8C00E21F77 /* OTRToastOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D64D651A2FBA8C00E21F77 /* OTRToastOptions.m */; };
 		63F6E1911A69B9BA0011E6F7 /* OTRAttachmentPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F6E1901A69B9BA0011E6F7 /* OTRAttachmentPicker.m */; };
 		63FABC8E1A410EBF009BF681 /* JSQMessagesCollectionViewCell+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FABC8D1A410EBF009BF681 /* JSQMessagesCollectionViewCell+ChatSecure.m */; };
@@ -528,6 +529,8 @@
 		63C4BD0E1A1E9BE1001696CD /* _OTRXMPPManagedPresenceSubscriptionRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _OTRXMPPManagedPresenceSubscriptionRequest.m; sourceTree = "<group>"; };
 		63D184841A2D3F2400334CD8 /* OTRNotificationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRNotificationController.h; sourceTree = "<group>"; };
 		63D184851A2D3F2400334CD8 /* OTRNotificationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRNotificationController.m; sourceTree = "<group>"; };
+		63D27FC31A6DC51C00EC251A /* OTRMediaItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRMediaItem.h; sourceTree = "<group>"; };
+		63D27FC41A6DC51C00EC251A /* OTRMediaItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRMediaItem.m; sourceTree = "<group>"; };
 		63D64D641A2FBA8C00E21F77 /* OTRToastOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRToastOptions.h; sourceTree = "<group>"; };
 		63D64D651A2FBA8C00E21F77 /* OTRToastOptions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRToastOptions.m; sourceTree = "<group>"; };
 		63DC0EB31A1ABC86002C9598 /* OTR_Codesigning.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = OTR_Codesigning.xcconfig; path = configurations/OTR_Codesigning.xcconfig; sourceTree = "<group>"; };
@@ -763,6 +766,8 @@
 				633105CD1A16D1A300C17BAE /* OTRMessage+JSQMessageData.m */,
 				633105CE1A16D1A300C17BAE /* OTRMessage.h */,
 				633105CF1A16D1A300C17BAE /* OTRMessage.m */,
+				63D27FC31A6DC51C00EC251A /* OTRMediaItem.h */,
+				63D27FC41A6DC51C00EC251A /* OTRMediaItem.m */,
 				633105D01A16D1A300C17BAE /* OTRXMPPBuddy.h */,
 				633105D11A16D1A300C17BAE /* OTRXMPPBuddy.m */,
 				633105D21A16D1A300C17BAE /* OTRXMPPPresenceSubscriptionRequest.h */,
@@ -1417,6 +1422,7 @@
 				633106C21A16D1A300C17BAE /* OTRIntSetting.m in Sources */,
 				6331068F1A16D1A300C17BAE /* OTRXMPPBudyTimers.m in Sources */,
 				633106801A16D1A300C17BAE /* OTRDatabaseView.m in Sources */,
+				63D27FC51A6DC51C00EC251A /* OTRMediaItem.m in Sources */,
 				633107241A16D1A300C17BAE /* OTRLockButton.m in Sources */,
 				6331071D1A16D1A300C17BAE /* OTRStatusMessageCell.m in Sources */,
 				633106FD1A16D1A300C17BAE /* OTRComposeViewController.m in Sources */,

@@ -10,6 +10,7 @@
 #import "OTRDatabaseManager.h"
 #import "OTRBuddy.h"
 #import "OTRAccount.h"
+#import "OTRMediaItem.h"
 
 @implementation OTRMessage (JSQMessageData)
 
@@ -56,7 +57,15 @@
 
 - (BOOL)isMediaMessage
 {
+    if (self.media) {
+        return YES;
+    }
     return NO;
+}
+
+- (id<JSQMessageMediaData>)media
+{
+    return self.mediaItem;
 }
 
 
