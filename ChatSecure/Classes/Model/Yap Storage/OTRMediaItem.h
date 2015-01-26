@@ -9,17 +9,11 @@
 #import "JSQMessageMediaData.h"
 #import "MTLModel+NSCoding.h"
 
-typedef NS_ENUM(NSUInteger, OTRMediaItemType) {
-    OTRMediaItemTypeUnkown = 0,
-    OTRMediaItemTypeImage  = 1,
-    OTRMediaItemTypeVideo  = 2,
-    OTRMediaItemTypeAudio  = 3
-};
-
 @interface OTRMediaItem : MTLModel <JSQMessageMediaData>
 
 @property (nonatomic, strong) NSString *filename;
 @property (nonatomic) BOOL isIncoming;
-@property (nonatomic) OTRMediaItemType mediaType;
+
++ (CGSize)normalizeWidth:(CGFloat)width height:(CGFloat)height;
 
 @end

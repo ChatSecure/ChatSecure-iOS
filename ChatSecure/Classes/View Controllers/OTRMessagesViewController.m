@@ -34,7 +34,7 @@
 #import "JSQMessagesCollectionViewCell+ChatSecure.h"
 #import "NSString+FontAwesome.h"
 #import "OTRAttachmentPicker.h"
-#import "OTRMediaItem.h"
+#import "OTRImageItem.h"
 
 static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
 
@@ -770,15 +770,16 @@ typedef NS_ENUM(int, OTRDropDownType) {
         
         [imageData writeToFile:path atomically:YES];
         
-        OTRMediaItem *mediaItem  = [[OTRMediaItem alloc] init];
-        mediaItem.mediaType = OTRMediaItemTypeImage;
-        mediaItem.isIncoming = NO;
-        mediaItem.filename = UUID;
+        OTRImageItem *imageItem  = [[OTRImageItem alloc] init];
+        imageItem.width = photo.size.width;
+        imageItem.height = photo.size.height;
+        imageItem.isIncoming = NO;
+        imageItem.filename = UUID;
         
         __block OTRMessage *message = [[OTRMessage alloc] init];
         message.incoming = NO;
         message.buddyUniqueId = self.buddy.uniqueId;
-        message.mediaItem = mediaItem;
+        message.mediaItem = imageItem;
         message.transportedSecurely = YES;
         
         [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {

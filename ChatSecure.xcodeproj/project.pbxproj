@@ -128,6 +128,9 @@
 		633107281A16D1A400C17BAE /* OTRTitleSubtitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106761A16D1A300C17BAE /* OTRTitleSubtitleView.m */; };
 		6331072B1A16D1F200C17BAE /* DemoImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 633107291A16D1F200C17BAE /* DemoImages.xcassets */; };
 		6331072C1A16D1F200C17BAE /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6331072A1A16D1F200C17BAE /* Images.xcassets */; };
+		633620991A76E87B006E8739 /* OTRImageItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 633620981A76E87B006E8739 /* OTRImageItem.m */; };
+		6336209C1A76E88C006E8739 /* OTRVideoItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6336209B1A76E88C006E8739 /* OTRVideoItem.m */; };
+		6336209F1A76E89A006E8739 /* OTRAudioItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6336209E1A76E89A006E8739 /* OTRAudioItem.m */; };
 		6396AFA01A169D54009F3E6C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6396AF9F1A169D54009F3E6C /* main.m */; };
 		6396AFBA1A169D54009F3E6C /* ChatSecureTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6396AFB91A169D54009F3E6C /* ChatSecureTests.m */; };
 		63C4BCCC1A1E9B9F001696CD /* ChatSecure.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCC81A1E9B9F001696CD /* ChatSecure.xcdatamodeld */; };
@@ -453,6 +456,12 @@
 		633106761A16D1A300C17BAE /* OTRTitleSubtitleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRTitleSubtitleView.m; sourceTree = "<group>"; };
 		633107291A16D1F200C17BAE /* DemoImages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = DemoImages.xcassets; path = Resources/DemoImages.xcassets; sourceTree = "<group>"; };
 		6331072A1A16D1F200C17BAE /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Resources/Images.xcassets; sourceTree = "<group>"; };
+		633620971A76E87B006E8739 /* OTRImageItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRImageItem.h; sourceTree = "<group>"; };
+		633620981A76E87B006E8739 /* OTRImageItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRImageItem.m; sourceTree = "<group>"; };
+		6336209A1A76E88C006E8739 /* OTRVideoItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRVideoItem.h; sourceTree = "<group>"; };
+		6336209B1A76E88C006E8739 /* OTRVideoItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRVideoItem.m; sourceTree = "<group>"; };
+		6336209D1A76E89A006E8739 /* OTRAudioItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAudioItem.h; sourceTree = "<group>"; };
+		6336209E1A76E89A006E8739 /* OTRAudioItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAudioItem.m; sourceTree = "<group>"; };
 		6396AF9A1A169D54009F3E6C /* ChatSecure.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatSecure.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6396AF9E1A169D54009F3E6C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6396AF9F1A169D54009F3E6C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -761,8 +770,7 @@
 				633105CD1A16D1A300C17BAE /* OTRMessage+JSQMessageData.m */,
 				633105CE1A16D1A300C17BAE /* OTRMessage.h */,
 				633105CF1A16D1A300C17BAE /* OTRMessage.m */,
-				63D27FC31A6DC51C00EC251A /* OTRMediaItem.h */,
-				63D27FC41A6DC51C00EC251A /* OTRMediaItem.m */,
+				633620961A76E854006E8739 /* Media Items */,
 				633105D01A16D1A300C17BAE /* OTRXMPPBuddy.h */,
 				633105D11A16D1A300C17BAE /* OTRXMPPBuddy.m */,
 				633105D21A16D1A300C17BAE /* OTRXMPPPresenceSubscriptionRequest.h */,
@@ -943,6 +951,21 @@
 				633106651A16D1A300C17BAE /* OTRTextFieldTableViewCell.m */,
 			);
 			path = Cells;
+			sourceTree = "<group>";
+		};
+		633620961A76E854006E8739 /* Media Items */ = {
+			isa = PBXGroup;
+			children = (
+				63D27FC31A6DC51C00EC251A /* OTRMediaItem.h */,
+				63D27FC41A6DC51C00EC251A /* OTRMediaItem.m */,
+				633620971A76E87B006E8739 /* OTRImageItem.h */,
+				633620981A76E87B006E8739 /* OTRImageItem.m */,
+				6336209A1A76E88C006E8739 /* OTRVideoItem.h */,
+				6336209B1A76E88C006E8739 /* OTRVideoItem.m */,
+				6336209D1A76E89A006E8739 /* OTRAudioItem.h */,
+				6336209E1A76E89A006E8739 /* OTRAudioItem.m */,
+			);
+			name = "Media Items";
 			sourceTree = "<group>";
 		};
 		6396AF911A169D54009F3E6C = {
@@ -1442,7 +1465,9 @@
 				6331070E1A16D1A300C17BAE /* OTRSettingDetailViewController.m in Sources */,
 				63C4BD1A1A1E9BE1001696CD /* OTRManagedXMPPAccount.m in Sources */,
 				63C4BD251A1E9BE1001696CD /* _OTRManagedMessage.m in Sources */,
+				633620991A76E87B006E8739 /* OTRImageItem.m in Sources */,
 				633107081A16D1A300C17BAE /* OTRNewAccountViewController.m in Sources */,
+				6336209C1A76E88C006E8739 /* OTRVideoItem.m in Sources */,
 				633106F01A16D1A300C17BAE /* OTRLoginViewController.m in Sources */,
 				633106C81A16D1A300C17BAE /* OTRSettingsGroup.m in Sources */,
 				633107271A16D1A400C17BAE /* OTRSocialButtonsView.m in Sources */,
@@ -1451,6 +1476,7 @@
 				63FABC911A41218E009BF681 /* NSString+ChatSecure.m in Sources */,
 				633106D91A16D1A300C17BAE /* OTRYapDatabaseObject.m in Sources */,
 				6331067C1A16D1A300C17BAE /* UIViewController+ChatSecure.m in Sources */,
+				6336209F1A76E89A006E8739 /* OTRAudioItem.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

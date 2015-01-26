@@ -25,18 +25,15 @@
 
 - (UIView *)mediaView
 {
-    if (self.mediaType == OTRMediaItemTypeImage) {
-        // Naive fetching from unencrypted file storage with no caching
-        CGSize size = [self mediaViewDisplaySize];
-        UIImage *image = [UIImage imageWithContentsOfFile:[self mediaPath]];
-        UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
-        imageView.frame = CGRectMake(0.0f, 0.0f, size.width, size.height);
-        imageView.contentMode = UIViewContentModeScaleAspectFill;
-        imageView.clipsToBounds = YES;
-        [JSQMessagesMediaViewBubbleImageMasker applyBubbleImageMaskToMediaView:imageView isOutgoing:!self.isIncoming];
-        return imageView;
-    }
-    return nil;
+    // Naive fetching from unencrypted file storage with no caching
+    CGSize size = [self mediaViewDisplaySize];
+    UIImage *image = [UIImage imageWithContentsOfFile:[self mediaPath]];
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
+    imageView.frame = CGRectMake(0.0f, 0.0f, size.width, size.height);
+    imageView.contentMode = UIViewContentModeScaleAspectFill;
+    imageView.clipsToBounds = YES;
+    [JSQMessagesMediaViewBubbleImageMasker applyBubbleImageMaskToMediaView:imageView isOutgoing:!self.isIncoming];
+    return imageView;
 }
 
 - (CGSize)mediaViewDisplaySize
@@ -61,6 +58,31 @@
 - (NSUInteger)hash
 {
     return [self mediaPath].hash;
+}
+
+ #pragma - mark Class Methods
+
++ (CGSize)normalizeWidth:(CGFloat)width height:(CGFloat)height
+{
+    CGFloat maxWidth = 210;
+    CGFloat maxHeight = 150;
+    if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
+        maxWidth = 315;
+        maxHeight = 225;
+    }
+    
+    float aspectRatio = width / height;
+    
+    if (aspectRatio < 1) {
+        //Taller then wider then use max height and resize width
+        CGFloat newWidth = maxHeight * 1/aspectRatio;
+        return CGSizeMake(newWidth, maxHeight);
+    }
+    else {
+        //Wider than taller then use max width and resize height
+        CGFloat newHeight = maxWidth * 1/aspectRatio;
+        return CGSizeMake(maxWidth, newHeight);
+    }
 }
 
 @end
