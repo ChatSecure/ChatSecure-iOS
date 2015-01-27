@@ -13,27 +13,15 @@
 
 @implementation OTRMediaItem
 
-- (NSString *)mediaPath
-{
-    // Example file storage in documents directory
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsPath = [paths firstObject];
-    return [documentsPath stringByAppendingPathComponent:self.filename];
-}
-
 #pragma - mark JSQMessageMediaData Methods
 
 - (UIView *)mediaView
 {
-    // Naive fetching from unencrypted file storage with no caching
+    // Default black view
     CGSize size = [self mediaViewDisplaySize];
-    UIImage *image = [UIImage imageWithContentsOfFile:[self mediaPath]];
-    UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
-    imageView.frame = CGRectMake(0.0f, 0.0f, size.width, size.height);
-    imageView.contentMode = UIViewContentModeScaleAspectFill;
-    imageView.clipsToBounds = YES;
-    [JSQMessagesMediaViewBubbleImageMasker applyBubbleImageMaskToMediaView:imageView isOutgoing:!self.isIncoming];
-    return imageView;
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height)];
+    view.backgroundColor = [UIColor blackColor];
+    return view;
 }
 
 - (CGSize)mediaViewDisplaySize
@@ -57,10 +45,18 @@
 
 - (NSUInteger)hash
 {
-    return [self mediaPath].hash;
+    return self.filename.hash;
 }
 
- #pragma - mark Class Methods
+#pragma - mark YapDatabaseRelationshipNode Methods
+
+- (id)yapDatabaseRelationshipEdgeDeleted:(YapDatabaseRelationshipEdge *)edge withReason:(YDB_NotifyReason)reason
+{
+    //TODO:Delete File because the parent OTRMessage was deleted
+    return nil;
+}
+
+#pragma - mark Class Methods
 
 + (CGSize)normalizeWidth:(CGFloat)width height:(CGFloat)height
 {

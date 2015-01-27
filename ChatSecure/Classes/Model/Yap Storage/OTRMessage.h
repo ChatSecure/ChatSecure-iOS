@@ -26,6 +26,7 @@ extern const struct OTRMessageRelationships {
 
 extern const struct OTRMessageEdges {
 	__unsafe_unretained NSString *buddy;
+    __unsafe_unretained NSString *media;
 } OTRMessageEdges;
 
 @interface OTRMessage : OTRYapDatabaseObject <YapDatabaseRelationshipNode>
@@ -38,7 +39,7 @@ extern const struct OTRMessageEdges {
 @property (nonatomic, getter = isRead) BOOL read;
 @property (nonatomic, getter = isIncoming) BOOL incoming;
 @property (nonatomic, getter = isTransportedSecurely) BOOL transportedSecurely;
-@property (nonatomic, strong) OTRMediaItem *mediaItem;
+@property (nonatomic, strong) NSString *mediaItemUniqueId;
 
 @property (nonatomic, strong) NSString *buddyUniqueId;
 

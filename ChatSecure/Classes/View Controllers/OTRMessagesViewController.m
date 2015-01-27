@@ -770,7 +770,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         
         [imageData writeToFile:path atomically:YES];
         
-        OTRImageItem *imageItem  = [[OTRImageItem alloc] init];
+        __block OTRImageItem *imageItem  = [[OTRImageItem alloc] init];
         imageItem.width = photo.size.width;
         imageItem.height = photo.size.height;
         imageItem.isIncoming = NO;
@@ -779,11 +779,12 @@ typedef NS_ENUM(int, OTRDropDownType) {
         __block OTRMessage *message = [[OTRMessage alloc] init];
         message.incoming = NO;
         message.buddyUniqueId = self.buddy.uniqueId;
-        message.mediaItem = imageItem;
+        message.mediaItemUniqueId = imageItem.uniqueId;
         message.transportedSecurely = YES;
         
         [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
             [message saveWithTransaction:transaction];
+            [imageItem saveWithTransaction:transaction];
         } completionBlock:^{
             [[OTRProtocolManager sharedInstance].encryptionManager.dataHandler sendFileWithName:@"image.jpg" fileData:imageData username:self.buddy.username accountName:self.account.username protocol:kOTRProtocolTypeXMPP tag:nil];
         }];

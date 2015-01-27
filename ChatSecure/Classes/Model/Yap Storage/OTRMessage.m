@@ -17,6 +17,7 @@
 #import "OTRConstants.h"
 #import "YapDatabaseQuery.h"
 #import "YapDatabaseSecondaryIndexTransaction.h"
+#import "OTRMediaItem.h"
 
 const struct OTRMessageAttributes OTRMessageAttributes = {
 	.date = @"date",
@@ -30,11 +31,12 @@ const struct OTRMessageAttributes OTRMessageAttributes = {
 };
 
 const struct OTRMessageRelationships OTRMessageRelationships = {
-	.buddyUniqueId = @"buddyUniqueId",
+	.buddyUniqueId = @"buddyUniqueId"
 };
 
 const struct OTRMessageEdges OTRMessageEdges = {
 	.buddy = @"buddy",
+    .media = @"media"
 };
 
 
@@ -70,8 +72,21 @@ const struct OTRMessageEdges OTRMessageEdges = {
         edges = @[buddyEdge];
     }
     
-    return edges;
+    if (self.mediaItemUniqueId) {
+        YapDatabaseRelationshipEdge *mediaEdge = [YapDatabaseRelationshipEdge edgeWithName:OTRMessageEdges.media
+                                                                            destinationKey:self.mediaItemUniqueId
+                                                                                collection:[OTRMediaItem collection]
+                                                                           nodeDeleteRules:YDB_DeleteDestinationIfSourceDeleted | YDB_NotifyIfSourceDeleted];
+        
+        if ([edges count]) {
+            edges = [edges arrayByAddingObject:mediaEdge];
+        }
+        else {
+            edges = @[mediaEdge];
+        }
+    }
     
+    return edges;
 }
 
 #pragma - mark Class Methods

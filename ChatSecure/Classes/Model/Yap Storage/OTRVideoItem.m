@@ -18,4 +18,9 @@
     return [super mediaViewDisplaySize];
 }
 
++ (NSString *)collection
+{
+    return [OTRMediaItem collection];
+}
+
 @end

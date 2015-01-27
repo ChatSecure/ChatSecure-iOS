@@ -11,6 +11,7 @@
 #import "OTRBuddy.h"
 #import "OTRAccount.h"
 #import "OTRMediaItem.h"
+#import "YapDatabaseRelationshipTransaction.h"
 
 @implementation OTRMessage (JSQMessageData)
 
@@ -57,7 +58,7 @@
 
 - (BOOL)isMediaMessage
 {
-    if (self.media) {
+    if (self.mediaItemUniqueId) {
         return YES;
     }
     return NO;
@@ -65,7 +66,11 @@
 
 - (id<JSQMessageMediaData>)media
 {
-    return self.mediaItem;
+    __block id <JSQMessageMediaData>media = nil;
+    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        media = [OTRMediaItem fetchObjectWithUniqueID:self.mediaItemUniqueId transaction:transaction];
+    }];
+    return media;
 }
 
 

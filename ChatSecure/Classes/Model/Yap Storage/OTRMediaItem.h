@@ -7,9 +7,9 @@
 //
 
 #import "JSQMessageMediaData.h"
-#import "MTLModel+NSCoding.h"
+#import "OTRYapDatabaseObject.h"
 
-@interface OTRMediaItem : MTLModel <JSQMessageMediaData>
+@interface OTRMediaItem : OTRYapDatabaseObject <JSQMessageMediaData>
 
 @property (nonatomic, strong) NSString *filename;
 @property (nonatomic) BOOL isIncoming;

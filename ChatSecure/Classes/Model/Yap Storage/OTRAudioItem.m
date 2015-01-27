@@ -10,4 +10,9 @@
 
 @implementation OTRAudioItem
 
++ (NSString *)collection
+{
+    return [OTRMediaItem collection];
+}
+
 @end
