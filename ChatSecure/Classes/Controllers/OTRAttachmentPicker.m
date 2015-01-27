@@ -37,7 +37,7 @@
                  UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil cancelButtonItem:nil destructiveButtonItem:nil otherButtonItems:nil];
         
         if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
-            RIButtonItem *takePhotoButton = [RIButtonItem itemWithLabel:TAKE_PHOTO_STRING action:^{
+            RIButtonItem *takePhotoButton = [RIButtonItem itemWithLabel:USE_CAMERA_STRING action:^{
                 [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
                 [self showImagePickerForSourceType:UIImagePickerControllerSourceTypeCamera];
             }];
@@ -61,7 +61,7 @@
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
         
         if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
-            UIAlertAction *takePhotoAction = [UIAlertAction actionWithTitle:TAKE_PHOTO_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            UIAlertAction *takePhotoAction = [UIAlertAction actionWithTitle:USE_CAMERA_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
                 [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
                 [self showImagePickerForSourceType:UIImagePickerControllerSourceTypeCamera];
             }];
@@ -91,6 +91,8 @@
     UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
     imagePickerController.modalPresentationStyle = UIModalPresentationCurrentContext;
     imagePickerController.sourceType = sourceType;
+    NSArray* mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypeCamera];
+    imagePickerController.mediaTypes = mediaTypes;
     imagePickerController.delegate = self;
     
     self.imagePickerController = imagePickerController;
@@ -102,6 +104,8 @@
 {
     NSString *mediaType = info[UIImagePickerControllerMediaType];
     NSString *imageString = (NSString *)kUTTypeImage;
+    NSString *videoString = (NSString *)kUTTypeVideo;
+    NSString *movieString = (NSString *)kUTTypeMovie;
     
     if ([mediaType isEqualToString:imageString]) {
         UIImage *editedImage = (UIImage *)info[UIImagePickerControllerEditedImage];
@@ -119,6 +123,14 @@
             [self.delegate attachmentPicker:self gotPhoto:finalImage withInfo:info];
         }
         
+        [picker dismissViewControllerAnimated:YES completion:nil];
+        self.imagePickerController = nil;
+    }
+    else if ([mediaType isEqualToString:videoString] || [mediaType isEqualToString:movieString]) {
+        NSURL *videoURL = info[UIImagePickerControllerMediaURL];
+        if ([self.delegate respondsToSelector:@selector(attachmentPicker:gotVideoURL:)]) {
+            [self.delegate attachmentPicker:self gotVideoURL:videoURL];
+        }
         [picker dismissViewControllerAnimated:YES completion:nil];
         self.imagePickerController = nil;
     }

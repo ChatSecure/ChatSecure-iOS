@@ -35,6 +35,10 @@
 #import "NSString+FontAwesome.h"
 #import "OTRAttachmentPicker.h"
 #import "OTRImageItem.h"
+#import "OTRVideoItem.h"
+#import "OTRAudioItem.h"
+
+@import AVFoundation;
 
 static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
 
@@ -787,6 +791,40 @@ typedef NS_ENUM(int, OTRDropDownType) {
             [imageItem saveWithTransaction:transaction];
         } completionBlock:^{
             [[OTRProtocolManager sharedInstance].encryptionManager.dataHandler sendFileWithName:@"image.jpg" fileData:imageData username:self.buddy.username accountName:self.account.username protocol:kOTRProtocolTypeXMPP tag:nil];
+        }];
+    }
+}
+
+- (void)attachmentPicker:(OTRAttachmentPicker *)attachmentPicker gotVideoURL:(NSURL *)videoURL
+{
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsPath = [paths firstObject];
+    NSString *UUID = [[NSUUID UUID] UUIDString];
+    NSString *fileName = [UUID stringByAppendingPathExtension:videoURL.pathExtension];
+    NSString *path = [documentsPath stringByAppendingPathComponent:fileName];
+    NSURL *finalVideoURL = [NSURL fileURLWithPath:path];
+    
+    NSError *error = nil;
+    [[NSFileManager defaultManager] copyItemAtURL:videoURL toURL:finalVideoURL error:&error];
+    if (!error) {
+        AVAsset *asset = [AVAsset assetWithURL:finalVideoURL];
+        AVAssetTrack *videoTrack = [[asset tracksWithMediaType:AVMediaTypeVideo] firstObject];
+        CGSize videoSize = videoTrack.naturalSize;
+        
+        __block OTRVideoItem *videoItem = [[OTRVideoItem alloc] init];
+        videoItem.width = videoSize.width;
+        videoItem.height = videoSize.height;
+        videoItem.filename = fileName;
+        
+        __block OTRMessage *message = [[OTRMessage alloc] init];
+        message.incoming = NO;
+        message.mediaItemUniqueId = videoItem.uniqueId;
+        message.buddyUniqueId = self.buddy.uniqueId;
+        message.transportedSecurely = YES;
+        
+        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+            [message saveWithTransaction:transaction];
+            [videoItem saveWithTransaction:transaction];
         }];
     }
 }

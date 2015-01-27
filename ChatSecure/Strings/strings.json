@@ -943,9 +943,9 @@
         "comment": "Text explaining that the account is not currently connected",
         "string": "You are not connected"
     },
-    "TAKE_PHOTO_STRING" : {
+    "USE_CAMERA_STRING" : {
         "comment": "Label for button to take a photo from camera",
-        "string": "Take Photo"
+        "string": "Take Photo or Video"
     },
     "PHOTO_LIBRARY_STRING" : {
         "comment": "Label for button to open up photo library and choose photo",

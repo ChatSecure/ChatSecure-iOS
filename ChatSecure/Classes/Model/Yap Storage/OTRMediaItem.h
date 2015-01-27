@@ -14,6 +14,8 @@
 @property (nonatomic, strong) NSString *filename;
 @property (nonatomic) BOOL isIncoming;
 
+- (void)touchParentMessage;
+
 + (CGSize)normalizeWidth:(CGFloat)width height:(CGFloat)height;
 
 @end

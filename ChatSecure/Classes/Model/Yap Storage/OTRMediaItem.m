@@ -10,18 +10,36 @@
 #import "OTRImages.h"
 #import "JSQMessagesMediaPlaceholderView.h"
 #import "JSQMessagesMediaViewBubbleImageMasker.h"
+#import "YapDatabaseRelationshipTransaction.h"
+#import "OTRDatabaseManager.h"
+#import "OTRMessage.h"
 
 @implementation OTRMediaItem
+
+- (void)touchParentMessage
+{
+    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        [[transaction ext:OTRYapDatabaseRelationshipName] enumerateEdgesWithName:OTRMessageEdges.media destinationKey:self.uniqueId collection:[[self class] collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
+            [transaction touchObjectForKey:edge.sourceKey inCollection:edge.sourceCollection];
+        }];
+    }];
+}
 
 #pragma - mark JSQMessageMediaData Methods
 
 - (UIView *)mediaView
 {
-    // Default black view
-    CGSize size = [self mediaViewDisplaySize];
-    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height)];
-    view.backgroundColor = [UIColor blackColor];
-    return view;
+    UIImage *image = [OTRImages imageWithIdentifier:self.filename];
+    if (image) {
+        CGSize size = [self mediaViewDisplaySize];
+        UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
+        imageView.frame = CGRectMake(0.0f, 0.0f, size.width, size.height);
+        imageView.contentMode = UIViewContentModeScaleAspectFill;
+        imageView.clipsToBounds = YES;
+        [JSQMessagesMediaViewBubbleImageMasker applyBubbleImageMaskToMediaView:imageView isOutgoing:!self.isIncoming];
+        return imageView;
+    }
+    return nil;
 }
 
 - (CGSize)mediaViewDisplaySize
