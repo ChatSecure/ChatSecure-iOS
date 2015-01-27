@@ -12,6 +12,8 @@
 #import "YapDatabaseRelationshipTransaction.h"
 #import "OTRDatabaseManager.h"
 #import "OTRMessage.h"
+#import "UIImage+JSQMessages.h"
+#import "PureLayout.h"
 
 @import AVFoundation;
 
@@ -55,8 +57,19 @@
             }
         });
     } else {
-        //add play icon
+        UIImage *playIcon = [[UIImage jsq_defaultPlayImage] jsq_imageMaskedWithColor:[UIColor lightGrayColor]];
+        
+        UIImageView *imageView = [[UIImageView alloc] initWithImage:playIcon];
+        imageView.backgroundColor = [UIColor clearColor];
+        imageView.contentMode = UIViewContentModeCenter;
+        imageView.clipsToBounds = YES;
+        imageView.translatesAutoresizingMaskIntoConstraints = NO;
+        [view addSubview:imageView];
+        [imageView autoCenterInSuperview];
     }
+    
+    
+    
     return view;
 }
 
