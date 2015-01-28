@@ -40,6 +40,7 @@
 #import "JTSImageViewController.h"
 
 @import AVFoundation;
+@import MediaPlayer;
 
 static NSTimeInterval const kOTRMessageSentDateShowTimeInterval = 5 * 60;
 
@@ -704,6 +705,18 @@ typedef NS_ENUM(int, OTRDropDownType) {
     [imageViewer showFromViewController:self transition:JTSImageViewControllerTransition_FromOriginalPosition];
 }
 
+- (void)showVideo:(OTRVideoItem *)videoItem fromCollectionView:(JSQMessagesCollectionView *)collectionView atIndexPath:(NSIndexPath *)indexPath
+{
+    if (videoItem.filename) {
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *documentsPath = [paths firstObject];
+        NSString *filePath = [documentsPath stringByAppendingPathComponent:videoItem.filename];
+        NSURL *videoURL = [NSURL fileURLWithPath:filePath];
+        MPMoviePlayerViewController *moviePlayerViewController = [[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
+        [self presentViewController:moviePlayerViewController animated:YES completion:nil];
+    }
+}
+
 #pragma mark - JSQMessagesViewController method overrides
 
 - (UICollectionViewCell *)collectionView:(JSQMessagesCollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -1016,6 +1029,9 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
         } completionBlock:^{
             if ([item isKindOfClass:[OTRImageItem class]]) {
                 [self showImage:(OTRImageItem *)item fromCollectionView:collectionView atIndexPath:indexPath];
+            }
+            else if ([item isKindOfClass:[OTRVideoItem class]]) {
+                [self showVideo:(OTRVideoItem *)item fromCollectionView:collectionView atIndexPath:indexPath];
             }
         }];
     }
