@@ -37,6 +37,7 @@
 #import "OTRImageItem.h"
 #import "OTRVideoItem.h"
 #import "OTRAudioItem.h"
+#import "JTSImageViewController.h"
 
 @import AVFoundation;
 
@@ -679,6 +680,30 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }
 }
 
+#pragma - mark Media Display Methods
+
+- (void)showImage:(OTRImageItem *)imageItem fromCollectionView:(JSQMessagesCollectionView *)collectionView atIndexPath:(NSIndexPath *)indexPath
+{
+    //FIXME: Possible for image to not be in cache?
+    UIImage *image = [OTRImages imageWithIdentifier:imageItem.filename];
+    JTSImageInfo *imageInfo = [[JTSImageInfo alloc] init];
+    imageInfo.image = image;
+    
+    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
+    if ([cell isKindOfClass:[JSQMessagesCollectionViewCell class]]) {
+        UIView *cellContainterView = ((JSQMessagesCollectionViewCell *)cell).messageBubbleContainerView;
+        imageInfo.referenceRect = cellContainterView.bounds;
+        imageInfo.referenceView = cellContainterView;
+    }
+    
+    JTSImageViewController *imageViewer = [[JTSImageViewController alloc]
+                                           initWithImageInfo:imageInfo
+                                           mode:JTSImageViewControllerMode_Image
+                                           backgroundStyle:JTSImageViewControllerBackgroundOption_Blurred];
+    
+    [imageViewer showFromViewController:self transition:JTSImageViewControllerTransition_FromOriginalPosition];
+}
+
 #pragma mark - JSQMessagesViewController method overrides
 
 - (UICollectionViewCell *)collectionView:(JSQMessagesCollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -978,6 +1003,21 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
     OTRMessage *message = [self messageAtIndexPath:indexPath];
     if (message.error) {
         [self showMessageError:message.error];
+    }
+}
+
+- (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapMessageBubbleAtIndexPath:(NSIndexPath *)indexPath
+{
+    OTRMessage *message = [self messageAtIndexPath:indexPath];
+    if ([message isMediaMessage]) {
+        __block OTRMediaItem *item = nil;
+        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
+             item = [OTRImageItem fetchObjectWithUniqueID:message.mediaItemUniqueId transaction:transaction];
+        } completionBlock:^{
+            if ([item isKindOfClass:[OTRImageItem class]]) {
+                [self showImage:(OTRImageItem *)item fromCollectionView:collectionView atIndexPath:indexPath];
+            }
+        }];
     }
 }
 

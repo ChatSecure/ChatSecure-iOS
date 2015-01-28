@@ -50,6 +50,7 @@ PODS:
   - JSQMessagesViewController (6.1.0):
     - JSQSystemSoundPlayer (~> 2.0.0)
   - JSQSystemSoundPlayer (2.0.0)
+  - JTSImageViewController (1.4)
   - JTTargetActionBlock (1.0.0)
   - JVFloatLabeledTextField (1.0.0)
   - MagicalRecord (2.2):
@@ -251,6 +252,7 @@ DEPENDENCIES:
   - gtm-oauth2 (from `Podspecs/gtm-oauth2.podspec.json`)
   - HockeySDK (~> 3.6)
   - JSQMessagesViewController (from `https://github.com/jessesquires/JSQMessagesViewController`, commit `736d110eba3e9b2d909a29d4c47c060605b2209a`)
+  - JTSImageViewController (~> 1.4)
   - JTTargetActionBlock (~> 1.0)
   - JVFloatLabeledTextField (~> 1.0)
   - MagicalRecord (~> 2.2)
@@ -332,6 +334,7 @@ SPEC CHECKSUMS:
   HockeySDK: bfd1f5ac75938b07499c4ac12932244b72a2e70b
   JSQMessagesViewController: fb0f6e71c0a8009d210d6c7d73ba2b94bb77dc9b
   JSQSystemSoundPlayer: c98443b1cbb3b45db09d0d3d6c2355cf78294981
+  JTSImageViewController: 9fe6402194b7679f0e28d0c1002d6164301fc34a
   JTTargetActionBlock: bef69054d368a91b33b98a520fa9e78e218a5a25
   JVFloatLabeledTextField: c2b8124e439cf2b05fe5bb38f44358743588c1bd
   MagicalRecord: 2b471584fc9e3137f3d0a56967917baa4979e224
