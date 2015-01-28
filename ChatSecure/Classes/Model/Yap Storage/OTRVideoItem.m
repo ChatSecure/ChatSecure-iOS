@@ -45,6 +45,7 @@
             __strong typeof(weakSelf)strongSelf = weakSelf;
             AVAsset *asset = [AVAsset assetWithURL:[strongSelf mediaURL]];
             AVAssetImageGenerator *imageGenerator = [[AVAssetImageGenerator alloc] initWithAsset:asset];
+            imageGenerator.appliesPreferredTrackTransform = YES;
             NSError *error = nil;
             //Grab middle frame
             CMTime time = CMTimeMultiplyByFloat64(asset.duration, 0.5);
