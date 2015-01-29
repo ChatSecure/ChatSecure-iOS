@@ -99,6 +99,29 @@
     return [accounts filteredArrayUsingPredicate:predicate];
 }
 
++ (NSArray *)allAccounts
+{
+    __block NSArray *accounts = nil;
+    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        accounts = [OTRAccount allAccountsWithTransaction:transaction];
+    }];
+    
+    
+    NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+        if ([evaluatedObject isKindOfClass:[OTRAccount class]]) {
+            OTRAccount *account = (OTRAccount *)evaluatedObject;
+            if (account.accountType != OTRAccountTypeXMPPTor) {
+                return YES;
+            }
+            
+        }
+        return NO;
+    }];
+    
+    return [accounts filteredArrayUsingPredicate:predicate];
+}
+
+
 + (OTRYapPushAccount *)defaultPushAccount
 {
     __block OTRYapPushAccount *account = nil;

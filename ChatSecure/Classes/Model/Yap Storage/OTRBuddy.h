@@ -38,15 +38,18 @@ extern const struct OTRBuddyAttributes {
     __unsafe_unretained NSString *status;
     __unsafe_unretained NSString *lastMessageDate;
     __unsafe_unretained NSString *avatarData;
+    __unsafe_unretained NSString *groupsData;
     __unsafe_unretained NSString *encryptionStatus;
 } OTRBuddyAttributes;
 
 extern const struct OTRBuddyRelationships {
 	__unsafe_unretained NSString *accountUniqueId;
+    __unsafe_unretained NSString *groupUniqueId;
 } OTRBuddyRelationships;
 
 extern const struct OTRBuddyEdges {
 	__unsafe_unretained NSString *account;
+    __unsafe_unretained NSString *group;
 } OTRBuddyEdges;
 
 @interface OTRBuddy : OTRYapDatabaseObject <YapDatabaseRelationshipNode>
@@ -58,13 +61,18 @@ extern const struct OTRBuddyEdges {
 @property (nonatomic) OTRChatState chatState;
 @property (nonatomic) OTRChatState lastSentChatState;
 @property (nonatomic) OTRBuddyStatus status;
-@property (nonatomic, strong) NSDate *lastMessageDate;
 @property (nonatomic, strong) NSData *avatarData;
+@property (nonatomic, strong) NSString *groupsData;
+@property (nonatomic, strong) NSDate *lastMessageDate;
 
 @property (nonatomic, strong) NSString *accountUniqueId;
+@property (nonatomic, strong) NSMutableArray *groupUniqueId;
+
 
 
 - (UIImage *)avatarImage;
+- (void)updateGroupUniqueId:(NSString *)groupId;
+- (BOOL)hasMessagesWithTransaction:(YapDatabaseReadTransaction *)transaction;
 - (NSInteger)numberOfUnreadMessagesWithTransaction:(YapDatabaseReadTransaction *)transaction;
 - (OTRMessage *)lastMessageWithTransaction:(YapDatabaseReadTransaction *)transaction;
 - (OTRAccount*)accountWithTransaction:(YapDatabaseReadTransaction *)transaction;

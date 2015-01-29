@@ -13,12 +13,16 @@
 
 @protocol OTRComposeViewControllerDelegate <NSObject>
 
+@required
 - (void)controller:(OTRComposeViewController *)viewController didSelectBuddy:(OTRBuddy *)buddy;
+- (void)controller:(OTRComposeViewController *)viewController didSelectBuddies:(NSMutableArray *)buddies;
 
 @end
 
 @interface OTRComposeViewController : UIViewController
 
 @property (nonatomic, weak) id<OTRComposeViewControllerDelegate> delegate;
+
+- (id) initWithOptions:(BOOL)listOfDifussion;
 
 @end

@@ -701,7 +701,7 @@
     }, 
     "XMPP_FAIL_STRING": {
         "comment": "Message when cannot connect to XMPP server", 
-        "string": "Failed to connect to XMPP server. Please check your login credentials and internet connection and try again."
+        "string": "Incorrect Username or/and Password."
     }, 
     "XMPP_PORT_FAIL_STRING": {
         "comment": "Message when port is changed but domain not set", 
@@ -934,5 +934,30 @@
     "noErrString": {
         "comment": "SSL error message", 
         "string": "No Error"
+    },
+    "SEARCH_STRING": {
+        "comment": "Search string",
+        "string": "Search"
+    }, 
+    "LIST_OF_DIFUSSION_STRING": {
+        "comment": "List of diffusion title", 
+        "string": "Broadcast List"
+    }, 
+    "NEW_BROADCAST_LIST_STRING": {
+        "comment": "New List Title", 
+        "string": "New Broadcast List"
+    }, 
+    "CONTACTS_STRING": {
+        "comment": "Contacts String", 
+        "string": "Contacts"
+    }, 
+    "CONVERSATION_STRING": {
+        "comment": "Conversation String", 
+        "string": "Conversation"
+    }, 
+    "GROUP_STRING": {
+        "comment": "Group String", 
+        "string": "Groups"
     }
+
 }

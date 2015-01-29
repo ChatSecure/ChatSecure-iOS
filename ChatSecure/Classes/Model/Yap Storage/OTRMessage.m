@@ -17,6 +17,7 @@
 #import "OTRConstants.h"
 #import "YapDatabaseQuery.h"
 #import "YapDatabaseSecondaryIndexTransaction.h"
+#import "OTRBroadcastGroup.h"
 
 const struct OTRMessageAttributes OTRMessageAttributes = {
 	.date = @"date",
@@ -25,15 +26,18 @@ const struct OTRMessageAttributes OTRMessageAttributes = {
 	.read = @"read",
 	.incoming = @"incoming",
     .messageId = @"messageId",
-    .transportedSecurely = @"transportedSecurely"
+    .transportedSecurely = @"transportedSecurely",
+    .isBroadcastMessage = @"broadcastMessage"
 };
 
 const struct OTRMessageRelationships OTRMessageRelationships = {
 	.buddyUniqueId = @"buddyUniqueId",
+    .broadcastGroupUniqueId = @"broadcastGroupUniqueId",
 };
 
 const struct OTRMessageEdges OTRMessageEdges = {
 	.buddy = @"buddy",
+    .broadcastGroup = @"broadcastGroup",
 };
 
 
@@ -46,6 +50,7 @@ const struct OTRMessageEdges OTRMessageEdges = {
         self.messageId = [[NSUUID UUID] UUIDString];
         self.delivered = NO;
         self.read = NO;
+        self.isBroadcastMessage = NO;
     }
     return self;
 }
@@ -53,6 +58,12 @@ const struct OTRMessageEdges OTRMessageEdges = {
 - (OTRBuddy *)buddyWithTransaction:(YapDatabaseReadTransaction *)readTransaction
 {
     return [OTRBuddy fetchObjectWithUniqueID:self.buddyUniqueId transaction:readTransaction];
+}
+
+
+- (OTRBroadcastGroup *)broadcastGroupWithTransaction:(YapDatabaseReadTransaction *)readTransaction
+{
+    return [OTRBroadcastGroup fetchObjectWithUniqueID:self.broadcastGroupUniqueId transaction:readTransaction];
 }
 
 #pragma - mark YapDatabaseRelationshipNode
@@ -67,6 +78,16 @@ const struct OTRMessageEdges OTRMessageEdges = {
                                                                            nodeDeleteRules:YDB_DeleteSourceIfDestinationDeleted];
         
         edges = @[buddyEdge];
+    }
+    
+    
+    if (self.broadcastGroupUniqueId) {
+        YapDatabaseRelationshipEdge *broadcastGroupEdge = [YapDatabaseRelationshipEdge edgeWithName:OTRMessageEdges.broadcastGroup
+                                                                            destinationKey:self.broadcastGroupUniqueId
+                                                                                collection:[OTRBroadcastGroup collection]
+                                                                           nodeDeleteRules:YDB_DeleteSourceIfDestinationDeleted];
+        
+        edges = @[broadcastGroupEdge];
     }
     
     return edges;
@@ -97,11 +118,14 @@ const struct OTRMessageEdges OTRMessageEdges = {
 {
     [[transaction ext:OTRYapDatabaseRelationshipName] enumerateEdgesWithName:OTRMessageEdges.buddy destinationKey:uniqueBuddyId collection:[OTRBuddy collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
         [transaction removeObjectForKey:edge.sourceKey inCollection:edge.sourceCollection];
+        
     }];
+    
     //Update Last message date for sorting and grouping
     OTRBuddy *buddy = [OTRBuddy fetchObjectWithUniqueID:uniqueBuddyId transaction:transaction];
     buddy.lastMessageDate = nil;
     [buddy saveWithTransaction:transaction];
+
 }
 
 + (void)deleteAllMessagesForAccountId:(NSString *)uniqueAccountId transaction:(YapDatabaseReadWriteTransaction*)transaction
@@ -124,6 +148,7 @@ const struct OTRMessageEdges OTRMessageEdges = {
         deliveredMessage.delivered = YES;
         [deliveredMessage saveWithTransaction:transaction];
     }
+
 }
 
 + (void)showLocalNotificationForMessage:(OTRMessage *)message

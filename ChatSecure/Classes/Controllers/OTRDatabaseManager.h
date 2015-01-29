@@ -12,6 +12,7 @@
 #import "YapDatabase.h"
 #import "YapDatabaseTransaction.h"
 
+
 extern NSString *const OTRYapDatabaseRelationshipName;
 extern NSString *const OTRYapDatabseMessageIdSecondaryIndex;
 extern NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension;
@@ -26,9 +27,11 @@ extern NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension;
 
 - (YapDatabaseConnection *)newConnection;
 
-- (void)setDatabasePassphrase:(NSString *)passphrase remember:(BOOL)rememeber error:(NSError**)error;
-/** This only works after calling setDatabasePassphrase */
+
+- (void) setDatabasePassphrase:(NSString *)passphrase remember:(BOOL)rememeber error:(NSError**)error;
 - (BOOL)changePassphrase:(NSString*)newPassphrase remember:(BOOL)rememeber;
+
+
 
 
 - (BOOL)hasPassphrase;

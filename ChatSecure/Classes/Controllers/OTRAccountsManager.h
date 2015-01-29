@@ -33,6 +33,7 @@
 + (OTRAccount *)accountWithUsername:(NSString *)username;
 
 + (NSArray *)allAutoLoginAccounts;
++ (NSArray *)allAccounts;
 
 + (OTRYapPushAccount *)defaultPushAccount;
 

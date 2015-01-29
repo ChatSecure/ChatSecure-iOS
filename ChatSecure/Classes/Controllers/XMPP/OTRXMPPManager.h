@@ -20,8 +20,9 @@
 //  You should have received a copy of the GNU General Public License
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
-@import Foundation;
+#import <Foundation/Foundation.h>
 @import UIKit;
+
 
 #import "OTRBuddy.h"
 #import "XMPPFramework.h"
@@ -32,6 +33,7 @@
 #import "XMPPvCardCoreDataStorage.h"
 #import "XMPPCapabilities.h"
 #import "XMPPCapabilitiesCoreDataStorage.h"
+
 #import "OTRProtocol.h"
 #import "OTRXMPPBudyTimers.h"
 #import "OTRCertificatePinning.h"

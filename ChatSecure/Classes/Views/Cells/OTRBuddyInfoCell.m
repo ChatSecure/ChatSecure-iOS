@@ -9,6 +9,7 @@
 #import "OTRBuddyInfoCell.h"
 
 #import "OTRBuddy.h"
+#import "OTRGroup.h"
 #import "OTRAccount.h"
 #import "OTRXMPPBuddy.h"
 #import "Strings.h"
@@ -46,6 +47,7 @@
         self.accountLabel.adjustsFontSizeToFitWidth = YES;
         [self.contentView addSubview:self.accountLabel];
         
+                
     }
     return self;
 }
@@ -66,26 +68,69 @@
 
 - (void)setBuddy:(OTRBuddy *)buddy
 {
+    //if ([buddy isKindOfClass:[OTRXMPPBuddy class]]) {
+    //    if(!((OTRXMPPBuddy *)buddy).isPendingApproval) {
+    
     [super setBuddy:buddy];
     
     NSString * displayName = buddy.displayName;
     NSString * accountName = buddy.username;
+    NSString * statusMessage = buddy.statusMessage;
     
     if ([displayName length]) {
         self.nameLabel.text = displayName;
-        self.identifierLabel.text = accountName;
+        //self.identifierLabel.text = accountName;
+        self.identifierLabel.text = statusMessage;
     }
     else {
         self.nameLabel.text = accountName;
-        self.identifierLabel.text = nil;
+        //self.identifierLabel.text = nil;
+        self.identifierLabel.text = statusMessage;
     }
     
-    if ([buddy isKindOfClass:[OTRXMPPBuddy class]]) {
-        if(((OTRXMPPBuddy *)buddy).isPendingApproval) {
-            NSString *pendingString = [NSString stringWithFormat:@" - %@",PENDING_APPROVAL_STRING];
-            self.nameLabel.text = [self.nameLabel.text stringByAppendingString:pendingString];
-        }
-    }
+    
+     //   }
+    //NSString *pendingString = [NSString stringWithFormat:@" - %@",PENDING_APPROVAL_STRING];
+    //self.nameLabel.text = [self.nameLabel.text stringByAppendingString:pendingString];
+       
+    //}
+}
+
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated
+{
+    [super setSelected:selected animated:animated];
+    
+    // Configure the view for the selected state
+}
+
+- (void)setGroup:(OTRGroup *)group
+{
+    //if ([buddy isKindOfClass:[OTRXMPPBuddy class]]) {
+    //    if(!((OTRXMPPBuddy *)buddy).isPendingApproval) {
+    
+    [super setGroup:group];
+    
+    NSString * displayName = group.displayName;
+    //NSString * accountName = buddy.username;
+     //NSString * statusMessage = buddy.statusMessage;
+     
+     if ([displayName length]) {
+     self.nameLabel.text = displayName;
+     //self.identifierLabel.text = accountName;
+     //elf.identifierLabel.text = statusMessage;
+     }
+     else {
+     //self.nameLabel.text = accountName;
+     //self.identifierLabel.text = nil;
+     //self.identifierLabel.text = statusMessage;
+     }
+    
+    //   }
+    //NSString *pendingString = [NSString stringWithFormat:@" - %@",PENDING_APPROVAL_STRING];
+    //self.nameLabel.text = [self.nameLabel.text stringByAppendingString:pendingString];
+    
+    //}
 }
 
 - (void)updateConstraints

@@ -15,6 +15,9 @@
 @property (nonatomic, strong) NSString *domain;
 @property (nonatomic, strong) NSString *resource;
 @property (nonatomic) int port;
+@property (nonatomic, getter =  isWaitingForvCardTempFetch) BOOL waitingForvCardTempFetch;
+@property (nonatomic, strong) NSDate *lastUpdatedvCardTemp;
+@property (nonatomic, strong) XMPPvCardTemp *vCardTemp;
 
 
 + (int)defaultPort;

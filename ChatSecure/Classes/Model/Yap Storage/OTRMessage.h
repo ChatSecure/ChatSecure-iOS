@@ -7,7 +7,8 @@
 //
 
 #import "OTRYapDatabaseObject.h"
-@class OTRBuddy,YapDatabaseReadTransaction;
+
+@class OTRBuddy, YapDatabaseReadTransaction, OTRBroadcastGroup;
 
 extern const struct OTRMessageAttributes {
 	__unsafe_unretained NSString *date;
@@ -17,14 +18,17 @@ extern const struct OTRMessageAttributes {
 	__unsafe_unretained NSString *incoming;
     __unsafe_unretained NSString *messageId;
     __unsafe_unretained NSString *transportedSecurely;
+    __unsafe_unretained NSString *isBroadcastMessage;
 } OTRMessageAttributes;
 
 extern const struct OTRMessageRelationships {
 	__unsafe_unretained NSString *buddyUniqueId;
+    __unsafe_unretained NSString *broadcastGroupUniqueId;
 } OTRMessageRelationships;
 
 extern const struct OTRMessageEdges {
 	__unsafe_unretained NSString *buddy;
+    __unsafe_unretained NSString *broadcastGroup;
 } OTRMessageEdges;
 
 @interface OTRMessage : OTRYapDatabaseObject <YapDatabaseRelationshipNode>
@@ -37,11 +41,15 @@ extern const struct OTRMessageEdges {
 @property (nonatomic, getter = isRead) BOOL read;
 @property (nonatomic, getter = isIncoming) BOOL incoming;
 @property (nonatomic, getter = isTransportedSecurely) BOOL transportedSecurely;
+@property (nonatomic, getter = isBroadcastMessage) BOOL isBroadcastMessage;
 
 
 @property (nonatomic, strong) NSString *buddyUniqueId;
+@property (nonatomic, strong) NSString *broadcastGroupUniqueId;
 
 - (OTRBuddy *)buddyWithTransaction:(YapDatabaseReadTransaction *)readTransaction;
+- (OTRBroadcastGroup *)broadcastGroupWithTransaction:(YapDatabaseReadTransaction *)readTransaction;
+
 
 
 + (NSInteger)numberOfUnreadMessagesWithTransaction:(YapDatabaseReadTransaction*)transaction;

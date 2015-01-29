@@ -112,7 +112,51 @@
     self.dateLabel.textColor = self.nameLabel.textColor;
     
     [self updateDateString:lastMessage.date];
+
 }
+
+
+- (void)setBuddy:(OTRBuddy *)buddy withMessage:(OTRMessage *)message andSearch:(NSString *)str
+{
+    [super setBuddy:buddy];
+    NSString * nameString = nil;
+    if (buddy.displayName.length) {
+        nameString = buddy.displayName;
+    }
+    else {
+        nameString = buddy.username;
+    }
+    self.nameLabel.text = nameString;
+    
+    UIFont *currentFont = self.conversationLabel.font;
+    CGFloat fontSize = currentFont.pointSize;
+   
+    NSRange range = [message.text rangeOfString:str];
+    if (range.location == NSNotFound)
+    {
+        self.conversationLabel.text = message.text;
+    }
+    else
+    {
+        NSMutableAttributedString *temString=[[NSMutableAttributedString alloc]initWithString:message.text];
+        [temString addAttribute:NSUnderlineStyleAttributeName
+                          value:[NSNumber numberWithInt:1]
+                          range:(NSRange){range.location,str.length}];
+        NSLog(@"%@",temString);
+        self.conversationLabel.attributedText = temString;
+    }
+    
+   
+    self.nameLabel.font = [UIFont boldSystemFontOfSize:fontSize];
+    self.nameLabel.textColor = [UIColor blackColor];
+        
+    
+    self.dateLabel.textColor = self.nameLabel.textColor;
+    
+    [self updateDateString:message.date];
+    
+}
+
 
 - (void)updateDateString:(NSDate *)date
 {

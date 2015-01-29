@@ -23,15 +23,18 @@ const struct OTRBuddyAttributes OTRBuddyAttributes = {
 	.status = @"status",
     .lastMessageDate = @"lastMessageDate",
     .avatarData = @"avatarData",
+    .groupsData = @"groupsData",
     .encryptionStatus = @"encryptionStatus"
 };
 
 const struct OTRBuddyRelationships OTRBuddyRelationships = {
 	.accountUniqueId = @"accountUniqueId",
+    .groupUniqueId = @"groupUniqueId"
 };
 
 const struct OTRBuddyEdges OTRBuddyEdges = {
 	.account = @"account",
+    .group = @"group"
 };
 
 @implementation OTRBuddy
@@ -42,6 +45,7 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
         self.status = OTRBuddyStatusOffline;
         self.chatState = kOTRChatStateUnknown;
         self.lastSentChatState = kOTRChatStateUnknown;
+        self.groupUniqueId = [[NSMutableArray alloc]init];
     }
     return self;
 }
@@ -51,12 +55,24 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
     return [UIImage imageWithData:self.avatarData];
 }
 
+- (void)updateGroupUniqueId:(NSString *)groupId
+{
+    if(groupId)
+    {
+        if(![self.groupUniqueId containsObject:groupId])
+        {
+            [self.groupUniqueId addObject:groupId];
+        }
+    }
+}
+
 
 - (BOOL)hasMessagesWithTransaction:(YapDatabaseReadTransaction *)transaction
 {
     NSUInteger numberOfMessages = [[transaction ext:OTRYapDatabaseRelationshipName] edgeCountWithName:OTRMessageEdges.buddy destinationKey:self.uniqueId collection:[OTRBuddy collection]];
     return (numberOfMessages > 0);
 }
+
 
 - (void)updateLastMessageDateWithTransaction:(YapDatabaseReadTransaction *)transaction
 {
@@ -91,6 +107,7 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
 {
     return [OTRAccount fetchObjectWithUniqueID:self.accountUniqueId transaction:transaction];
 }
+
 
 - (void)setAllMessagesRead:(YapDatabaseReadWriteTransaction *)transaction
 {

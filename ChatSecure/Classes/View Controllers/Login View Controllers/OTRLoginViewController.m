@@ -22,6 +22,9 @@
 
 #import "OTRLoginViewController.h"
 #import "OTRConstants.h"
+#import "OTRManagedXMPPAccount.h"
+#import "OTRManagedOscarAccount.h"
+#import "OTRAppDelegate.h"
 
 
 #import "OTRXMPPLoginViewController.h"
@@ -29,6 +32,7 @@
 #import "OTRFacebookLoginViewController.h"
 #import "OTRGoogleTalkLoginViewController.h"
 #import "OTRInLineTextEditTableViewCell.h"
+
 #import "OTRUtilities.h"
 #import "OTRXMPPError.h"
 
@@ -37,6 +41,7 @@
 #import "OTRDatabaseManager.h"
 
 #import "OTRXMPPTorAccount.h"
+
 
 NSString *const kTextLabelTextKey       = @"kTextLabelTextKey";
 NSString *const kCellTypeKey            = @"kCellTypeKey";
@@ -54,6 +59,10 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
 
 @implementation OTRLoginViewController
 
+- (void) dealloc {
+    [_timeoutTimer invalidate];
+}
+
 - (id) initWithAccount:(OTRAccount *)account{
     if (self = [super init]) {
         self.account = account;
@@ -70,12 +79,12 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
 
     [self addCellinfoWithSection:0 row:1 labelText:PASSWORD_STRING cellType:kCellTypeTextField userInputView:self.passwordTextField];
     
-    [self addCellinfoWithSection:0 row:2 labelText:REMEMBER_PASSWORD_STRING cellType:kCellTypeSwitch userInputView:self.rememberPasswordSwitch];
+    //[self addCellinfoWithSection:0 row:2 labelText:REMEMBER_PASSWORD_STRING cellType:kCellTypeSwitch userInputView:self.rememberPasswordSwitch];
     
-    if(![self.account isKindOfClass:[OTRXMPPTorAccount class]])
+    /*if(![self.account isKindOfClass:[OTRXMPPTorAccount class]])
     {
         [self addCellinfoWithSection:0 row:3 labelText:LOGIN_AUTOMATICALLY_STRING cellType:kCellTypeSwitch userInputView:self.autoLoginSwitch];
-    }
+    }*/
 }
 
 -(UITextField *)usernameTextField
@@ -181,7 +190,9 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
     
     [self setupFields];
     
-    self.title = [self.account accountDisplayName];
+    //add to string.h
+    self.title = LOGIN_STRING;
+
     
     self.loginButton = [[UIBarButtonItem alloc] initWithTitle:LOGIN_STRING style:UIBarButtonItemStyleDone target:self action:@selector(loginButtonPressed:)];
     self.navigationItem.rightBarButtonItem = self.loginButton;
@@ -299,13 +310,13 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
         [self.passwordTextField becomeFirstResponder];
     }
     
-    self.autoLoginSwitch.on = self.account.autologin;
+    /*self.autoLoginSwitch.on = self.account.autologin;
     self.rememberPasswordSwitch.on = self.account.rememberPassword;
     if (self.account.rememberPassword) {
         self.passwordTextField.text = self.account.password;
     } else {
         self.passwordTextField.text = @"";
-    }
+    }*/
 }
 - (void) viewWillDisappear:(BOOL)animated
 {    
@@ -320,15 +331,17 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
 -(void)readInFields
 {
     self.account.username = [self.usernameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-    self.account.rememberPassword = self.rememberPasswordSwitch.on;
+    //self.account.rememberPassword = self.rememberPasswordSwitch.on;
+    self.account.rememberPassword = TRUE;
     
-    self.account.autologin = self.autoLoginSwitch.on;
+    //self.account.autologin = self.autoLoginSwitch.on;
+    self.account.autologin= TRUE;
     
-    if (self.account.rememberPassword) {
-        self.account.password = self.passwordTextField.text;
-    } else {
-        self.account.password = nil;
-    }
+    //if (self.account.rememberPassword) {
+    self.account.password = self.passwordTextField.text;
+    //} else {
+    //    self.account.password = nil;
+    //}
 }
 
 -(void)viewDidDisappear:(BOOL)animated
@@ -347,6 +360,11 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
     }
 }
 
+-(void) timeout:(NSTimer *) timer
+{
+    //[timeoutTimer invalidate];
+    [self hideHUD];
+}
 - (void)hideHUD {
     if (self.HUD) {
         [self.HUD hide:YES];
@@ -370,6 +388,12 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
         else {
             [self showAlertViewWithTitle:ERROR_STRING message:XMPP_FAIL_STRING error:nil];
         }
+        
+        if(self.account)
+        {
+            [OTRAccountsManager removeAccount:self.account];
+        }
+        
     }
 }
 
@@ -377,12 +401,16 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
 {
     [self hideHUD];
     __block OTRAccount *accountCopy = [self.account copy];
+    
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         
         [accountCopy saveWithTransaction:transaction];
     }];
     [self dismissViewControllerAnimated:YES completion:nil];
-}  
+    
+    [[OTRAppDelegate appDelegate] showConversationViewController];
+    
+}
 
 
 
@@ -403,6 +431,7 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
         id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
         [protocol connectWithPassword:self.passwordTextField.text];
     }
+    self.timeoutTimer = [NSTimer scheduledTimerWithTimeInterval:45.0 target:self selector:@selector(timeout:) userInfo:nil repeats:NO];
 }
 
 - (void)showHUDWithText:(NSString *)text
@@ -412,9 +441,13 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
         self.HUD = [[MBProgressHUD alloc] initWithView:self.view];
         [self.view addSubview:self.HUD];
     }
+    
     self.HUD.mode = MBProgressHUDModeIndeterminate;
+
     self.HUD.labelText = text;
     [self.HUD show:YES];
+    
+    self.timeoutTimer = [NSTimer scheduledTimerWithTimeInterval:100.0 target:self selector:@selector(timeout:) userInfo:nil repeats:NO];
 }
 
 - (void)cancelPressed:(id)sender {

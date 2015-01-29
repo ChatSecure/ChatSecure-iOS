@@ -62,6 +62,7 @@
     displayNameTextField = [[UITextField alloc]init];
     displayNameTextField.placeholder = OPTIONAL_STRING;
     displayNameTextField.font = [UIFont systemFontOfSize:15];
+
     
     displayNameTextField.delegate = self;
     

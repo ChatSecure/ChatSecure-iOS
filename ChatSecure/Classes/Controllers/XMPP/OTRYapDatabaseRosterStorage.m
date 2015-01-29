@@ -15,6 +15,8 @@
 #import "OTRXMPPBuddy.h"
 #import "OTRXMPPAccount.h"
 #import "Strings.h"
+#import "OTRGroup.h"
+#import "OTRBuddyGroup.h"
 
 @interface OTRYapDatabaseRosterStorage ()
 
@@ -53,6 +55,15 @@
     return buddy;
 }
 
+- (OTRGroup *)groupWithName:(NSString *)name xmppStream:(XMPPStream *)stream
+{
+    __block OTRGroup *group = nil;
+    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        group = [self groupWithName:name xmppStream:stream transaction:transaction];
+    }];
+    return group;
+}
+
 - (OTRXMPPBuddy *)buddyWithJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream transaction:(YapDatabaseReadTransaction *)transaction
 {
     if (![self.accountUniqueId length]) {
@@ -71,6 +82,26 @@
     
     return buddy;
 }
+
+
+- (OTRGroup *)groupWithName:(NSString *)name xmppStream:(XMPPStream *)stream transaction:(YapDatabaseReadTransaction *)transaction
+{
+    if (![self.accountUniqueId length]) {
+        OTRAccount *account = [OTRXMPPAccount accountForStream:stream transaction:transaction];
+        self.accountUniqueId = account.uniqueId;
+    }
+    __block OTRGroup *group = nil;
+    
+    group = [[OTRGroup fetchGroupWithGroupName:name withAccountUniqueId:self.accountUniqueId transaction:transaction] copy];
+    
+    if (!group) {
+        group = [[OTRGroup alloc] initWithGroupName:name];
+        group.accountUniqueId = self.accountUniqueId;
+    }
+    
+    return group;
+}
+
 
 - (BOOL)existsBuddyWithJID:(XMPPJID *)jid xmppStram:(XMPPStream *)stream
 {
@@ -131,6 +162,22 @@
     }];
 }
 
+- (void)updateGroup:(OTRGroup *)group withString:(NSString *)string
+{
+    [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        
+        OTRGroup *localGroup = [[OTRGroup fetchObjectWithUniqueID:group.uniqueId transaction:transaction] copy];
+        if (!localGroup) {
+            localGroup = group;
+        }
+        
+        localGroup.displayName = string;
+        
+        [localGroup saveWithTransaction:transaction];
+    }];
+}
+
+
 #pragma - mark XMPPRosterStorage Methods
 
 - (BOOL)configureWithParent:(XMPPRoster *)aParent queue:(dispatch_queue_t)queue
@@ -150,6 +197,7 @@
 - (void)handleRosterItem:(NSXMLElement *)item xmppStream:(XMPPStream *)stream
 {
     NSString *jidStr = [item attributeStringValueForName:@"jid"];
+    NSArray *groups = [item elementsForName:@"group"];
     XMPPJID *jid = [[XMPPJID jidWithString:jidStr] bareJID];
     
     if([[jid bare] isEqualToString:[[stream myJID] bare]])
@@ -158,22 +206,76 @@
         return;
     }
     
-    OTRXMPPBuddy *buddy = [self buddyWithJID:jid xmppStream:stream];
     
-    NSString *subscription = [item attributeStringValueForName:@"subscription"];
-    if ([subscription isEqualToString:@"remove"])
+    if([groups count] >= 1)
     {
-        if (buddy)
+        OTRGroup *group; 
+        
+        for (DDXMLElement *object in groups)
         {
-            [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-                [transaction setObject:nil forKey:buddy.uniqueId inCollection:[OTRXMPPBuddy collection]];
+             group = [self groupWithName:[object stringValue] xmppStream:stream];
+            
+            if(group)
+            {
+                [self updateGroup:group withString:[object stringValue]];
+            }
+            
+            OTRXMPPBuddy *buddy = [self buddyWithJID:jid xmppStream:stream];
+            [buddy updateGroupUniqueId:group.uniqueId];
+            
+            __block OTRBuddyGroup *buddyGroup = nil;
+            [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+                buddyGroup = [OTRBuddyGroup fetchBuddyGroupWithBuddyUniqueId:buddy.uniqueId withGroupUniqueId:group.uniqueId transaction:transaction];
+                if (!buddyGroup) {
+                    buddyGroup = [[OTRBuddyGroup alloc] init];
+                    buddyGroup.buddyUniqueId = buddy.uniqueId;
+                    buddyGroup.groupUniqueId = group.uniqueId;
+                }
+                
+                [buddyGroup saveWithTransaction:transaction];
             }];
+
+            
+            NSString *subscription = [item attributeStringValueForName:@"subscription"];
+            if ([subscription isEqualToString:@"remove"])
+            {
+                if (buddy)
+                {
+                    [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+                        [transaction setObject:nil forKey:buddy.uniqueId inCollection:[OTRXMPPBuddy collection]];
+                    }];
+                }
+            }
+            else if(buddy)
+            {
+                [self updateBuddy:buddy withItem:item];
+            }
+
+
+        }
+        
+    }
+    else
+    {
+        OTRXMPPBuddy *buddy = [self buddyWithJID:jid xmppStream:stream];
+        
+        NSString *subscription = [item attributeStringValueForName:@"subscription"];
+        if ([subscription isEqualToString:@"remove"])
+        {
+            if (buddy)
+            {
+                [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+                    [transaction setObject:nil forKey:buddy.uniqueId inCollection:[OTRXMPPBuddy collection]];
+                }];
+            }
+        }
+        else if(buddy)
+        {
+            [self updateBuddy:buddy withItem:item];
         }
     }
-    else if(buddy)
-    {
-        [self updateBuddy:buddy withItem:item];
-    }
+    
+    
     
 }
 

@@ -80,6 +80,7 @@
     if ([self.actionDelegate respondsToSelector:@selector(messagesCollectionViewCellDidTapError:)]) {
         [self.actionDelegate messagesCollectionViewCellDidTapError:self];
     }
+
 }
 
 - (BOOL)canPerformAction:(SEL)action withSender:(id)sender
@@ -96,6 +97,7 @@
     if ([self.actionDelegate respondsToSelector:@selector(messagesCollectionViewCellDidTapDelete:)]) {
         [self.actionDelegate messagesCollectionViewCellDidTapDelete:self];
     }
+
 }
 
 - (void)updateConstraints

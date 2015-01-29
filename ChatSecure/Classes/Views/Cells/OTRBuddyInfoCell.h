@@ -7,13 +7,16 @@
 //
 
 #import "OTRBuddyImageCell.h"
+#import "OTRGroup.h"
 
 @interface OTRBuddyInfoCell : OTRBuddyImageCell
 
 @property (nonatomic, strong, readonly) UILabel *nameLabel;
 @property (nonatomic, strong, readonly) UILabel *identifierLabel;
 @property (nonatomic, strong, readonly) UILabel *accountLabel;
+@property (nonatomic, strong) IBOutlet UIButton *btnExpand;
 
 - (void)setBuddy:(OTRBuddy *)buddy withAccountName:(NSString *)accountName;
+- (void)setGroup:(OTRGroup *)group;
 
 @end
