@@ -10,4 +10,6 @@
 
 @interface OTRAudioItem : OTRMediaItem
 
+@property (nonatomic) NSTimeInterval timeLength;
+
 @end

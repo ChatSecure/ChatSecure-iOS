@@ -169,7 +169,11 @@
 		63D184861A2D3F2400334CD8 /* OTRNotificationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D184851A2D3F2400334CD8 /* OTRNotificationController.m */; };
 		63D27FC51A6DC51C00EC251A /* OTRMediaItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D27FC41A6DC51C00EC251A /* OTRMediaItem.m */; };
 		63D64D661A2FBA8C00E21F77 /* OTRToastOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D64D651A2FBA8C00E21F77 /* OTRToastOptions.m */; };
+		63F0FF641A798D8E001F0C99 /* OTRAudioBubbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F0FF631A798D8E001F0C99 /* OTRAudioBubbleView.m */; };
 		63F6E1911A69B9BA0011E6F7 /* OTRAttachmentPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F6E1901A69B9BA0011E6F7 /* OTRAttachmentPicker.m */; };
+		63FA548B1A7ACA2F00F2AEBB /* OTRPlayPauseProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FA548A1A7ACA2F00F2AEBB /* OTRPlayPauseProgressView.m */; };
+		63FA548E1A7B29EB00F2AEBB /* OTRPlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FA548D1A7B29EB00F2AEBB /* OTRPlayView.m */; };
+		63FA54911A7B2C2E00F2AEBB /* OTRPauseView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FA54901A7B2C2E00F2AEBB /* OTRPauseView.m */; };
 		63FABC8E1A410EBF009BF681 /* JSQMessagesCollectionViewCell+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FABC8D1A410EBF009BF681 /* JSQMessagesCollectionViewCell+ChatSecure.m */; };
 		63FABC911A41218E009BF681 /* NSString+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FABC901A41218E009BF681 /* NSString+ChatSecure.m */; };
 		D9365E7A1A1EB0050006434A /* torrc in Resources */ = {isa = PBXBuildFile; fileRef = D9365E791A1EB0050006434A /* torrc */; };
@@ -544,8 +548,16 @@
 		63DC0EB31A1ABC86002C9598 /* OTR_Codesigning.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = OTR_Codesigning.xcconfig; path = configurations/OTR_Codesigning.xcconfig; sourceTree = "<group>"; };
 		63DC0EB41A1ABC86002C9598 /* OTR_Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = OTR_Debug.xcconfig; path = configurations/OTR_Debug.xcconfig; sourceTree = "<group>"; };
 		63DC0EB61A1ABC86002C9598 /* OTR_Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = OTR_Release.xcconfig; path = configurations/OTR_Release.xcconfig; sourceTree = "<group>"; };
+		63F0FF621A798D8E001F0C99 /* OTRAudioBubbleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAudioBubbleView.h; sourceTree = "<group>"; };
+		63F0FF631A798D8E001F0C99 /* OTRAudioBubbleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAudioBubbleView.m; sourceTree = "<group>"; };
 		63F6E18F1A69B9BA0011E6F7 /* OTRAttachmentPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAttachmentPicker.h; sourceTree = "<group>"; };
 		63F6E1901A69B9BA0011E6F7 /* OTRAttachmentPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAttachmentPicker.m; sourceTree = "<group>"; };
+		63FA54891A7ACA2F00F2AEBB /* OTRPlayPauseProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRPlayPauseProgressView.h; sourceTree = "<group>"; };
+		63FA548A1A7ACA2F00F2AEBB /* OTRPlayPauseProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRPlayPauseProgressView.m; sourceTree = "<group>"; };
+		63FA548C1A7B29EB00F2AEBB /* OTRPlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRPlayView.h; sourceTree = "<group>"; };
+		63FA548D1A7B29EB00F2AEBB /* OTRPlayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRPlayView.m; sourceTree = "<group>"; };
+		63FA548F1A7B2C2E00F2AEBB /* OTRPauseView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRPauseView.h; sourceTree = "<group>"; };
+		63FA54901A7B2C2E00F2AEBB /* OTRPauseView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRPauseView.m; sourceTree = "<group>"; };
 		63FABC8C1A410EBF009BF681 /* JSQMessagesCollectionViewCell+ChatSecure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "JSQMessagesCollectionViewCell+ChatSecure.h"; sourceTree = "<group>"; };
 		63FABC8D1A410EBF009BF681 /* JSQMessagesCollectionViewCell+ChatSecure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "JSQMessagesCollectionViewCell+ChatSecure.m"; sourceTree = "<group>"; };
 		63FABC8F1A41218E009BF681 /* NSString+ChatSecure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+ChatSecure.h"; sourceTree = "<group>"; };
@@ -912,6 +924,7 @@
 				633106661A16D1A300C17BAE /* LaunchScreen.xib */,
 				633106671A16D1A300C17BAE /* OTRButtonView.h */,
 				633106681A16D1A300C17BAE /* OTRButtonView.m */,
+				63FA54921A7C127F00F2AEBB /* AudioBubble Views */,
 				633106691A16D1A300C17BAE /* OTRColorFadingDotView.h */,
 				6331066A1A16D1A300C17BAE /* OTRColorFadingDotView.m */,
 				6331066B1A16D1A300C17BAE /* OTRComposingImageView.h */,
@@ -1112,6 +1125,21 @@
 				63DC0EB61A1ABC86002C9598 /* OTR_Release.xcconfig */,
 			);
 			name = Configurations;
+			sourceTree = "<group>";
+		};
+		63FA54921A7C127F00F2AEBB /* AudioBubble Views */ = {
+			isa = PBXGroup;
+			children = (
+				63F0FF621A798D8E001F0C99 /* OTRAudioBubbleView.h */,
+				63F0FF631A798D8E001F0C99 /* OTRAudioBubbleView.m */,
+				63FA54891A7ACA2F00F2AEBB /* OTRPlayPauseProgressView.h */,
+				63FA548A1A7ACA2F00F2AEBB /* OTRPlayPauseProgressView.m */,
+				63FA548C1A7B29EB00F2AEBB /* OTRPlayView.h */,
+				63FA548D1A7B29EB00F2AEBB /* OTRPlayView.m */,
+				63FA548F1A7B2C2E00F2AEBB /* OTRPauseView.h */,
+				63FA54901A7B2C2E00F2AEBB /* OTRPauseView.m */,
+			);
+			name = "AudioBubble Views";
 			sourceTree = "<group>";
 		};
 		C1E90FC219EFFEE2E8C7EECF /* Pods */ = {
@@ -1365,6 +1393,7 @@
 				63C4BD231A1E9BE1001696CD /* _OTRManagedGoogleAccount.m in Sources */,
 				633107061A16D1A300C17BAE /* OTRListSettingViewController.m in Sources */,
 				63C4BD2B1A1E9BE1001696CD /* _OTRvCard.m in Sources */,
+				63FA548B1A7ACA2F00F2AEBB /* OTRPlayPauseProgressView.m in Sources */,
 				633107261A16D1A400C17BAE /* OTRRememberPasswordView.m in Sources */,
 				633106F81A16D1A300C17BAE /* OTRBuddyViewController.m in Sources */,
 				633106BC1A16D1A300C17BAE /* OTRBoolSetting.m in Sources */,
@@ -1375,6 +1404,7 @@
 				633106F41A16D1A300C17BAE /* OTRXMPPLoginViewController.m in Sources */,
 				63C4BCCC1A1E9B9F001696CD /* ChatSecure.xcdatamodeld in Sources */,
 				63D184861A2D3F2400334CD8 /* OTRNotificationController.m in Sources */,
+				63FA54911A7B2C2E00F2AEBB /* OTRPauseView.m in Sources */,
 				633106F71A16D1A300C17BAE /* OTRAcknowledgementsViewController.m in Sources */,
 				63C4BD1D1A1E9BE1001696CD /* OTRvCardTemp.m in Sources */,
 				633106CE1A16D1A300C17BAE /* OTRGoogleOAuthXMPPAccount.m in Sources */,
@@ -1476,7 +1506,9 @@
 				63FABC911A41218E009BF681 /* NSString+ChatSecure.m in Sources */,
 				633106D91A16D1A300C17BAE /* OTRYapDatabaseObject.m in Sources */,
 				6331067C1A16D1A300C17BAE /* UIViewController+ChatSecure.m in Sources */,
+				63FA548E1A7B29EB00F2AEBB /* OTRPlayView.m in Sources */,
 				6336209F1A76E89A006E8739 /* OTRAudioItem.m in Sources */,
+				63F0FF641A798D8E001F0C99 /* OTRAudioBubbleView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
