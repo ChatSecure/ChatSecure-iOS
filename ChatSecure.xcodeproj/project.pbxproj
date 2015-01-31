@@ -131,6 +131,7 @@
 		633620991A76E87B006E8739 /* OTRImageItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 633620981A76E87B006E8739 /* OTRImageItem.m */; };
 		6336209C1A76E88C006E8739 /* OTRVideoItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6336209B1A76E88C006E8739 /* OTRVideoItem.m */; };
 		6336209F1A76E89A006E8739 /* OTRAudioItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6336209E1A76E89A006E8739 /* OTRAudioItem.m */; };
+		633AF2FA1A7C3DBC0030A3FF /* OTRAudioSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 633AF2F91A7C3DBC0030A3FF /* OTRAudioSessionManager.m */; };
 		6396AFA01A169D54009F3E6C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6396AF9F1A169D54009F3E6C /* main.m */; };
 		6396AFBA1A169D54009F3E6C /* ChatSecureTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6396AFB91A169D54009F3E6C /* ChatSecureTests.m */; };
 		63C4BCCC1A1E9B9F001696CD /* ChatSecure.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCC81A1E9B9F001696CD /* ChatSecure.xcdatamodeld */; };
@@ -466,6 +467,8 @@
 		6336209B1A76E88C006E8739 /* OTRVideoItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRVideoItem.m; sourceTree = "<group>"; };
 		6336209D1A76E89A006E8739 /* OTRAudioItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAudioItem.h; sourceTree = "<group>"; };
 		6336209E1A76E89A006E8739 /* OTRAudioItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAudioItem.m; sourceTree = "<group>"; };
+		633AF2F81A7C3DBB0030A3FF /* OTRAudioSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAudioSessionManager.h; sourceTree = "<group>"; };
+		633AF2F91A7C3DBC0030A3FF /* OTRAudioSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAudioSessionManager.m; sourceTree = "<group>"; };
 		6396AF9A1A169D54009F3E6C /* ChatSecure.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatSecure.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6396AF9E1A169D54009F3E6C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6396AF9F1A169D54009F3E6C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -678,6 +681,8 @@
 				633105311A16D1A300C17BAE /* OTRTorManager.m */,
 				63D184841A2D3F2400334CD8 /* OTRNotificationController.h */,
 				63D184851A2D3F2400334CD8 /* OTRNotificationController.m */,
+				633AF2F81A7C3DBB0030A3FF /* OTRAudioSessionManager.h */,
+				633AF2F91A7C3DBC0030A3FF /* OTRAudioSessionManager.m */,
 				633105321A16D1A300C17BAE /* XMPP */,
 			);
 			path = Controllers;
@@ -1415,6 +1420,7 @@
 				63C4BD161A1E9BE1001696CD /* OTRManagedMessageAndStatus.m in Sources */,
 				633106E51A16D1A300C17BAE /* OTRConstants.m in Sources */,
 				633107281A16D1A400C17BAE /* OTRTitleSubtitleView.m in Sources */,
+				633AF2FA1A7C3DBC0030A3FF /* OTRAudioSessionManager.m in Sources */,
 				633107251A16D1A400C17BAE /* OTRPasswordStrengthView.m in Sources */,
 				633106911A16D1A300C17BAE /* OTRXMPPProxyStream.m in Sources */,
 				633106C01A16D1A300C17BAE /* OTRFeedbackSetting.m in Sources */,

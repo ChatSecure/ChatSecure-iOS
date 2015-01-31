@@ -38,6 +38,7 @@
 #import "OTRVideoItem.h"
 #import "OTRAudioItem.h"
 #import "JTSImageViewController.h"
+#import "OTRAudioSessionManager.h"
 
 @import AVFoundation;
 @import MediaPlayer;
@@ -73,11 +74,17 @@ typedef NS_ENUM(int, OTRDropDownType) {
 @property (nonatomic, strong) OTRButtonView *buttonDropdownView;
 @property (nonatomic, strong) OTRTitleSubtitleView *titleView;
 
+@property (nonatomic, strong) UIButton *microphoneButton;
+
 @property (nonatomic, strong) OTRAttachmentPicker *attachmentPicker;
+@property (nonatomic, strong) OTRAudioSessionManager *audioSessionManager;
 
 @end
 
 @implementation OTRMessagesViewController
+
+
+#pragma - mark Lifecylce Methods
 
 - (void) dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -108,6 +115,17 @@ typedef NS_ENUM(int, OTRDropDownType) {
     [self.titleView addGestureRecognizer:tapGestureRecognizer];
     
     [self refreshTitleView];
+    
+    ////// Microphone Button //////
+    self.microphoneButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    self.microphoneButton.titleLabel.font = [UIFont fontWithName:kFontAwesomeFont size:20];
+    self.microphoneButton.titleLabel.textAlignment = NSTextAlignmentCenter;
+    [self.microphoneButton setTitle:[NSString fa_stringForFontAwesomeIcon:FAMicrophone]
+          forState:UIControlStateNormal];
+    
+    [self.inputToolbar.contentView setRightBarButtonItem:self.microphoneButton];
+    self.inputToolbar.contentView.rightBarButtonItem.enabled = YES;
+ 
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -161,6 +179,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
     [[NSNotificationCenter defaultCenter] removeObserver:self.didFinishGeneratingPrivateKeyNotificationObject];
 }
 
+#pragma - mark Database
+
 - (YapDatabaseConnection *)uiDatabaseConnection
 {
     NSAssert([NSThread isMainThread], @"Must access uiDatabaseConnection on main thread!");
@@ -174,6 +194,23 @@ typedef NS_ENUM(int, OTRDropDownType) {
                                                    object:database];
     }
     return _uiDatabaseConnection;
+}
+
+#pragma - mark KVO Methods
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+}
+
+#pragma - mark Setters & getters
+
+- (OTRAudioSessionManager *)audioSessionManager
+{
+    if (!_audioSessionManager) {
+        _audioSessionManager = [[OTRAudioSessionManager alloc] init];
+    }
+    return _audioSessionManager;
 }
 
 - (OTRAttachmentPicker *)attachmentPicker
@@ -469,6 +506,16 @@ typedef NS_ENUM(int, OTRDropDownType) {
     [self refreshLockButton];
 }
 
+- (void)refreshInputToolbar
+{
+    if([self.inputToolbar.contentView.textView hasText]) {
+        self.inputToolbar.contentView.rightBarButtonItem = [JSQMessagesToolbarButtonFactory defaultSendButtonItem];
+    }
+    else {
+        self.inputToolbar.contentView.rightBarButtonItem = self.microphoneButton;
+    }
+}
+
 - (void)encryptionButtonPressed:(id)sender
 {
     [self hideDropdownAnimated:YES completion:nil];
@@ -717,6 +764,21 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }
 }
 
+- (void)playOrPauseAudio:(OTRAudioItem *)audioItem fromCollectionView:(JSQMessagesCollectionView *)collectionView atIndexPath:(NSIndexPath *)indexPath
+{
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsPath = [paths firstObject];
+    NSString *filePath = [documentsPath stringByAppendingPathComponent:audioItem.filename];
+    NSError *error = nil;
+    [self.audioSessionManager playAudioWithURL:[NSURL URLWithString:filePath] error:nil];
+    
+    if (error) {
+         NSLog(@"Audio Playback Error: %@",error);
+    }
+   
+}
+
+
 #pragma mark - JSQMessagesViewController method overrides
 
 - (UICollectionViewCell *)collectionView:(JSQMessagesCollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -749,19 +811,59 @@ typedef NS_ENUM(int, OTRDropDownType) {
     if ([[OTRProtocolManager sharedInstance] isAccountConnected:self.account]) {
         //Account is connected
         
-        OTRMessage *message = [[OTRMessage alloc] init];
-        message.buddyUniqueId = self.buddy.uniqueId;
-        message.text = text;
-        message.read = YES;
-        message.transportedSecurely = NO;
+        if ([button isEqual:self.microphoneButton]) {
+            //FIXME where should audio be saved
+            if (self.audioSessionManager.isRecording) {
+                __block NSURL *url = [self.audioSessionManager currentRecorderURL];
+                __block double duration = self.audioSessionManager.currentTimeRecordTime;
+                [self.audioSessionManager stopRecording];
+                
+                __weak typeof(self)weakSelf = self;
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                    __strong typeof(weakSelf)strongSelf = weakSelf;
+                    OTRMessage *message = [[OTRMessage alloc] init];
+                    message.incoming = NO;
+                    message.buddyUniqueId = strongSelf.buddy.uniqueId;
+                    
+                    OTRAudioItem *audioItem = [[OTRAudioItem alloc] init];
+                    audioItem.isIncoming = message.incoming;
+                    audioItem.filename = [[url absoluteString] lastPathComponent];
+                    
+                    audioItem.timeLength = duration;
+                    
+                    message.mediaItemUniqueId = audioItem.uniqueId;
+                    
+                    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+                        [audioItem saveWithTransaction:transaction];
+                        [message saveWithTransaction:transaction];
+                    }];
+                });
+                
+                
+            } else {
+                NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+                NSString *documentsPath = [paths firstObject];
+                NSString *fileName = [NSString stringWithFormat:@"%@.m4a",[[NSUUID UUID] UUIDString]];
+                NSURL *url = [NSURL URLWithString:[documentsPath stringByAppendingPathComponent:fileName]];
+                [self.audioSessionManager recordAudioToURL:url error:nil];
+            }
+            
+        } else {
+            OTRMessage *message = [[OTRMessage alloc] init];
+            message.buddyUniqueId = self.buddy.uniqueId;
+            message.text = text;
+            message.read = YES;
+            message.transportedSecurely = NO;
+            
+            [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+                [message saveWithTransaction:transaction];
+                self.buddy.lastMessageDate = message.date;
+                [self.buddy saveWithTransaction:transaction];
+            } completionBlock:^{
+                [[OTRKit sharedInstance] encodeMessage:message.text tlvs:nil username:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString tag:message];
+            }];
+        }
         
-        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-            [message saveWithTransaction:transaction];
-            self.buddy.lastMessageDate = message.date;
-            [self.buddy saveWithTransaction:transaction];
-        } completionBlock:^{
-            [[OTRKit sharedInstance] encodeMessage:message.text tlvs:nil username:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString tag:message];
-        }];
     } else {
         //Account is not currently connected
         [self hideDropdownAnimated:YES completion:^{
@@ -1032,6 +1134,9 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
             }
             else if ([item isKindOfClass:[OTRVideoItem class]]) {
                 [self showVideo:(OTRVideoItem *)item fromCollectionView:collectionView atIndexPath:indexPath];
+            }
+            else if ([item isKindOfClass:[OTRAudioItem class]]) {
+                [self playOrPauseAudio:(OTRAudioItem *)item fromCollectionView:collectionView atIndexPath:indexPath];
             }
         }];
     }

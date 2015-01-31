@@ -47,9 +47,9 @@ PODS:
   - gtm-oauth2 (1.0.126):
     - gtm-http-fetcher
   - HockeySDK (3.6.2)
-  - JSQMessagesViewController (6.1.0):
-    - JSQSystemSoundPlayer (~> 2.0.0)
-  - JSQSystemSoundPlayer (2.0.0)
+  - JSQMessagesViewController (6.1.3):
+    - JSQSystemSoundPlayer (~> 2.0.1)
+  - JSQSystemSoundPlayer (2.0.1)
   - JTSImageViewController (1.4)
   - JTTargetActionBlock (1.0.0)
   - JVFloatLabeledTextField (1.0.0)
@@ -251,7 +251,7 @@ DEPENDENCIES:
   - gtm-http-fetcher (from `Podspecs/gtm-http-fetcher.podspec.json`)
   - gtm-oauth2 (from `Podspecs/gtm-oauth2.podspec.json`)
   - HockeySDK (~> 3.6)
-  - JSQMessagesViewController (from `https://github.com/jessesquires/JSQMessagesViewController`, commit `736d110eba3e9b2d909a29d4c47c060605b2209a`)
+  - JSQMessagesViewController (~> 6.1)
   - JTSImageViewController (~> 1.4)
   - JTTargetActionBlock (~> 1.0)
   - JVFloatLabeledTextField (~> 1.0)
@@ -288,9 +288,6 @@ EXTERNAL SOURCES:
     :podspec: Podspecs/gtm-http-fetcher.podspec.json
   gtm-oauth2:
     :podspec: Podspecs/gtm-oauth2.podspec.json
-  JSQMessagesViewController:
-    :commit: 736d110eba3e9b2d909a29d4c47c060605b2209a
-    :git: https://github.com/jessesquires/JSQMessagesViewController
   OTRKit:
     :path: Submodules/OTRKit/OTRKit.podspec
   ProxyKit:
@@ -310,9 +307,6 @@ CHECKOUT OPTIONS:
   CRToast:
     :commit: 78569d0e6e6704872af5db1bc37be0ff9d112ac0
     :git: https://github.com/cruffenach/CRToast
-  JSQMessagesViewController:
-    :commit: 736d110eba3e9b2d909a29d4c47c060605b2209a
-    :git: https://github.com/jessesquires/JSQMessagesViewController
   SIAlertView:
     :commit: e9a1a7d7d5a2a4ef5ff2e2e548644222b14edb27
     :git: https://github.com/ChatSecure/SIAlertView.git
@@ -332,8 +326,8 @@ SPEC CHECKSUMS:
   gtm-http-fetcher: 5072f07e523261f7a87df939d13c1be2340d8111
   gtm-oauth2: dfb3016b8347b73fa80042e5aed29ec4f36e46bc
   HockeySDK: bfd1f5ac75938b07499c4ac12932244b72a2e70b
-  JSQMessagesViewController: fb0f6e71c0a8009d210d6c7d73ba2b94bb77dc9b
-  JSQSystemSoundPlayer: c98443b1cbb3b45db09d0d3d6c2355cf78294981
+  JSQMessagesViewController: e93a288a9662d4519c95a28a8c0eec10beae1bfc
+  JSQSystemSoundPlayer: 55528c699a283aae2220d3ae7b8b527d2ecef4b4
   JTSImageViewController: 9fe6402194b7679f0e28d0c1002d6164301fc34a
   JTTargetActionBlock: bef69054d368a91b33b98a520fa9e78e218a5a25
   JVFloatLabeledTextField: c2b8124e439cf2b05fe5bb38f44358743588c1bd
