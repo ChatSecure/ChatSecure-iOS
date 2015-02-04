@@ -1,22 +1,22 @@
 //
-//  OTRAudioBubbleView.m
+//  OTRAudioControlsView.m
 //  ChatSecure
 //
 //  Created by David Chiles on 1/28/15.
 //  Copyright (c) 2015 Chris Ballinger. All rights reserved.
 //
 
-#import "OTRAudioBubbleView.h"
+#import "OTRAudioControlsView.h"
 #import "PureLayout.h"
 #import "OTRPlayPauseProgressView.h"
 
-@interface OTRAudioBubbleView ()
+@interface OTRAudioControlsView ()
 
 @property (nonatomic) BOOL addedConstraints;
 
 @end
 
-@implementation OTRAudioBubbleView
+@implementation OTRAudioControlsView
 
 - (instancetype)initWithFrame:(CGRect)frame
 {

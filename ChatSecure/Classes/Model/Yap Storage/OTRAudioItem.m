@@ -7,7 +7,7 @@
 //
 
 #import "OTRAudioItem.h"
-#import "OTRAudioBubbleView.h"
+#import "OTRAudioControlsView.h"
 #import "UIColor+JSQMessages.h"
 #import "JSQMessagesMediaViewBubbleImageMasker.h"
 
@@ -30,15 +30,15 @@
     CGRect viewRect = CGRectMake(0, 0, size.width, size.height);
     CGRect bubbleRect = UIEdgeInsetsInsetRect(viewRect, bubbleInset);
     
-    OTRAudioBubbleView *bubbleView = [[OTRAudioBubbleView alloc] initWithFrame:bubbleRect];
+    OTRAudioControlsView *audioControls = [[OTRAudioControlsView alloc] initWithFrame:bubbleRect];
     NSUInteger minutes = (int)self.timeLength / 60;
     NSUInteger seconds = (int)self.timeLength % 60;
     
-    bubbleView.timeLabel.text = [NSString stringWithFormat:@"%ld:%02ld",minutes,seconds];
+    audioControls.timeLabel.text = [NSString stringWithFormat:@"%ld:%02ld",minutes,seconds];
     
     
     UIView *view = [[UIView alloc] initWithFrame:viewRect];
-    [view addSubview:bubbleView];
+    [view addSubview:audioControls];
     
     if (self.isIncoming) {
         view.backgroundColor = [UIColor jsq_messageBubbleLightGrayColor];

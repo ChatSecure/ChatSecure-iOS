@@ -170,7 +170,7 @@
 		63D184861A2D3F2400334CD8 /* OTRNotificationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D184851A2D3F2400334CD8 /* OTRNotificationController.m */; };
 		63D27FC51A6DC51C00EC251A /* OTRMediaItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D27FC41A6DC51C00EC251A /* OTRMediaItem.m */; };
 		63D64D661A2FBA8C00E21F77 /* OTRToastOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D64D651A2FBA8C00E21F77 /* OTRToastOptions.m */; };
-		63F0FF641A798D8E001F0C99 /* OTRAudioBubbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F0FF631A798D8E001F0C99 /* OTRAudioBubbleView.m */; };
+		63F0FF641A798D8E001F0C99 /* OTRAudioControlsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F0FF631A798D8E001F0C99 /* OTRAudioControlsView.m */; };
 		63F6E1911A69B9BA0011E6F7 /* OTRAttachmentPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F6E1901A69B9BA0011E6F7 /* OTRAttachmentPicker.m */; };
 		63FA548B1A7ACA2F00F2AEBB /* OTRPlayPauseProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FA548A1A7ACA2F00F2AEBB /* OTRPlayPauseProgressView.m */; };
 		63FA548E1A7B29EB00F2AEBB /* OTRPlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FA548D1A7B29EB00F2AEBB /* OTRPlayView.m */; };
@@ -551,8 +551,8 @@
 		63DC0EB31A1ABC86002C9598 /* OTR_Codesigning.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = OTR_Codesigning.xcconfig; path = configurations/OTR_Codesigning.xcconfig; sourceTree = "<group>"; };
 		63DC0EB41A1ABC86002C9598 /* OTR_Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = OTR_Debug.xcconfig; path = configurations/OTR_Debug.xcconfig; sourceTree = "<group>"; };
 		63DC0EB61A1ABC86002C9598 /* OTR_Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = OTR_Release.xcconfig; path = configurations/OTR_Release.xcconfig; sourceTree = "<group>"; };
-		63F0FF621A798D8E001F0C99 /* OTRAudioBubbleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAudioBubbleView.h; sourceTree = "<group>"; };
-		63F0FF631A798D8E001F0C99 /* OTRAudioBubbleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAudioBubbleView.m; sourceTree = "<group>"; };
+		63F0FF621A798D8E001F0C99 /* OTRAudioControlsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAudioControlsView.h; sourceTree = "<group>"; };
+		63F0FF631A798D8E001F0C99 /* OTRAudioControlsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAudioControlsView.m; sourceTree = "<group>"; };
 		63F6E18F1A69B9BA0011E6F7 /* OTRAttachmentPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAttachmentPicker.h; sourceTree = "<group>"; };
 		63F6E1901A69B9BA0011E6F7 /* OTRAttachmentPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAttachmentPicker.m; sourceTree = "<group>"; };
 		63FA54891A7ACA2F00F2AEBB /* OTRPlayPauseProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRPlayPauseProgressView.h; sourceTree = "<group>"; };
@@ -1135,8 +1135,8 @@
 		63FA54921A7C127F00F2AEBB /* AudioBubble Views */ = {
 			isa = PBXGroup;
 			children = (
-				63F0FF621A798D8E001F0C99 /* OTRAudioBubbleView.h */,
-				63F0FF631A798D8E001F0C99 /* OTRAudioBubbleView.m */,
+				63F0FF621A798D8E001F0C99 /* OTRAudioControlsView.h */,
+				63F0FF631A798D8E001F0C99 /* OTRAudioControlsView.m */,
 				63FA54891A7ACA2F00F2AEBB /* OTRPlayPauseProgressView.h */,
 				63FA548A1A7ACA2F00F2AEBB /* OTRPlayPauseProgressView.m */,
 				63FA548C1A7B29EB00F2AEBB /* OTRPlayView.h */,
@@ -1514,7 +1514,7 @@
 				6331067C1A16D1A300C17BAE /* UIViewController+ChatSecure.m in Sources */,
 				63FA548E1A7B29EB00F2AEBB /* OTRPlayView.m in Sources */,
 				6336209F1A76E89A006E8739 /* OTRAudioItem.m in Sources */,
-				63F0FF641A798D8E001F0C99 /* OTRAudioBubbleView.m in Sources */,
+				63F0FF641A798D8E001F0C99 /* OTRAudioControlsView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
