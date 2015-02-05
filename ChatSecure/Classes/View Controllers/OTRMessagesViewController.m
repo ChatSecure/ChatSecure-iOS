@@ -39,6 +39,8 @@
 #import "OTRAudioItem.h"
 #import "JTSImageViewController.h"
 #import "OTRAudioSessionManager.h"
+#import "OTRAudioControlsView.h"
+#import "OTRPlayPauseProgressView.h"
 
 @import AVFoundation;
 @import MediaPlayer;
@@ -770,12 +772,30 @@ typedef NS_ENUM(int, OTRDropDownType) {
     NSString *documentsPath = [paths firstObject];
     NSString *filePath = [documentsPath stringByAppendingPathComponent:audioItem.filename];
     NSError *error = nil;
-    [self.audioSessionManager playAudioWithURL:[NSURL URLWithString:filePath] error:nil];
+    NSURL *fileURL = [NSURL fileURLWithPath:filePath];
+    [self.audioSessionManager playAudioWithURL:fileURL error:nil];
+    AVAsset *audioAsset = [AVAsset assetWithURL:fileURL];
+    double duration = CMTimeGetSeconds(audioAsset.duration);
+    OTRAudioControlsView *audioControls = [self audioControllsfromCollectionView:collectionView atIndexPath:indexPath];
+    [audioControls.playPuaseProgressView setPercent:1 duration:duration];
     
     if (error) {
          NSLog(@"Audio Playback Error: %@",error);
     }
    
+}
+
+- (OTRAudioControlsView *)audioControllsfromCollectionView:(JSQMessagesCollectionView *)collectionView atIndexPath:(NSIndexPath *)indexPath {
+    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
+    if ([cell isKindOfClass:[JSQMessagesCollectionViewCell class]]) {
+        UIView *cellContainterView = ((JSQMessagesCollectionViewCell *)cell).messageBubbleContainerView;
+        UIView *view = [cellContainterView viewWithTag:kOTRAudioControlsViewTag];
+        if ([view isKindOfClass:[OTRAudioControlsView class]]) {
+            return (OTRAudioControlsView *)view;
+        }
+    }
+    
+    return nil;
 }
 
 
@@ -815,7 +835,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
             //FIXME where should audio be saved
             if (self.audioSessionManager.isRecording) {
                 __block NSURL *url = [self.audioSessionManager currentRecorderURL];
-                __block double duration = self.audioSessionManager.currentTimeRecordTime;
                 [self.audioSessionManager stopRecording];
                 
                 __weak typeof(self)weakSelf = self;
@@ -829,7 +848,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
                     audioItem.isIncoming = message.incoming;
                     audioItem.filename = [[url absoluteString] lastPathComponent];
                     
-                    audioItem.timeLength = duration;
+                    AVAsset *audioAsset = [AVAsset assetWithURL:url];
+                    audioItem.timeLength = CMTimeGetSeconds(audioAsset.duration);
                     
                     message.mediaItemUniqueId = audioItem.uniqueId;
                     
@@ -844,7 +864,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
                 NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
                 NSString *documentsPath = [paths firstObject];
                 NSString *fileName = [NSString stringWithFormat:@"%@.m4a",[[NSUUID UUID] UUIDString]];
-                NSURL *url = [NSURL URLWithString:[documentsPath stringByAppendingPathComponent:fileName]];
+                NSURL *url = [NSURL fileURLWithPath:[documentsPath stringByAppendingPathComponent:fileName]];
                 [self.audioSessionManager recordAudioToURL:url error:nil];
             }
             

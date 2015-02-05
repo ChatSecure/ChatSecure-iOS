@@ -19,5 +19,6 @@ typedef NS_ENUM(NSUInteger, OTRPlayPauseProgressViewStatus) {
 @property (nonatomic, strong) UIColor *color;
 @property (nonatomic) CGFloat percent;
 
+- (void)setPercent:(CGFloat)percent duration:(NSTimeInterval)duration;
 
 @end

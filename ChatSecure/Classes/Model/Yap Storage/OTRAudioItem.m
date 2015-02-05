@@ -34,7 +34,7 @@
     NSUInteger minutes = (int)self.timeLength / 60;
     NSUInteger seconds = (int)self.timeLength % 60;
     
-    audioControls.timeLabel.text = [NSString stringWithFormat:@"%ld:%02ld",minutes,seconds];
+    audioControls.timeLabel.text = [NSString stringWithFormat:@"%lu:%02ld",(unsigned long)minutes,seconds];
     
     
     UIView *view = [[UIView alloc] initWithFrame:viewRect];

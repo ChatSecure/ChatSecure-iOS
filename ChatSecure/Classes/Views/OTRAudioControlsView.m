@@ -10,6 +10,8 @@
 #import "PureLayout.h"
 #import "OTRPlayPauseProgressView.h"
 
+NSInteger const kOTRAudioControlsViewTag = 301;
+
 @interface OTRAudioControlsView ()
 
 @property (nonatomic) BOOL addedConstraints;
@@ -21,6 +23,7 @@
 - (instancetype)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame]) {
+        self.tag = kOTRAudioControlsViewTag;
         _timeLabel = [[UILabel alloc] initForAutoLayout];
         self.timeLabel.textColor = [UIColor whiteColor];
         self.timeLabel.textAlignment = NSTextAlignmentCenter;

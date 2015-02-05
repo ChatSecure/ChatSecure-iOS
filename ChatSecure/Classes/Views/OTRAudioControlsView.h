@@ -10,6 +10,8 @@
 
 @class  OTRPlayPauseProgressView;
 
+extern NSInteger const kOTRAudioControlsViewTag;
+
 @interface OTRAudioControlsView : UIView
 
 @property (nonatomic, strong, readonly) OTRPlayPauseProgressView *playPuaseProgressView;
