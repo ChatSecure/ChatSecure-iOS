@@ -35,7 +35,6 @@ NSString *const kOTRPlayProgressAnimationKey = @"kOTRPlayProgressAnimationKey";
         self.playView = [[OTRPlayView alloc] initForAutoLayout];
         self.pauseView = [[OTRPauseView alloc] initForAutoLayout];
         self.status = OTRPlayPauseProgressViewStatusPlay;
-        self.percent = 0;
         self.color = [UIColor blackColor];
         
         self.percentShapeLayer = [[CAShapeLayer alloc] init];
@@ -91,40 +90,57 @@ NSString *const kOTRPlayProgressAnimationKey = @"kOTRPlayProgressAnimationKey";
     }
 }
 
-- (void)setPercent:(CGFloat)percent
+- (void)startProgressCircleWithDuration:(NSTimeInterval)duration
 {
-    if (percent > 1) {
-        _percent = 1;
-    }
-    else if (percent < 0){
-        _percent = 0;
-    }
-    else {
-        _percent = percent;
+    [self resumeAnimation];
+    [self removeProgressCircle];
+    if (duration > 0) {
+        CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:NSStringFromSelector(@selector(strokeEnd))];
+        animation.fromValue = @(0);
+        animation.toValue = @(1);
+        animation.duration = duration;
+        self.percentShapeLayer.strokeEnd = 0;
+        [self.percentShapeLayer addAnimation:animation forKey:kOTRPlayProgressAnimationKey];
     }
 }
 
-- (void)setPercent:(CGFloat)percent duration:(NSTimeInterval)duration
+- (void)removeProgressCircle
 {
-    CGFloat oldPercent  = self.percent;
-    self.percent = percent;
-    if (duration > 0) {
-        CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:NSStringFromSelector(@selector(strokeEnd))];
-        animation.fromValue = nil;
-        if (oldPercent == 0) {
-            animation.fromValue = @(oldPercent);
-        }
-        animation.toValue = @(self.percent);
-        animation.duration = duration;
-        self.percentShapeLayer.strokeEnd = percent;
-        [self.percentShapeLayer addAnimation:animation forKey:kOTRPlayProgressAnimationKey];
-    }
-    else {
-        [CATransaction begin];
-        [CATransaction setDisableActions:YES];
-        self.percentShapeLayer.strokeEnd = self.percent;
-        [CATransaction commit];
-    }
+    [self.percentShapeLayer removeAnimationForKey:kOTRPlayProgressAnimationKey];
+    [CATransaction begin];
+    [CATransaction setDisableActions:YES];
+    self.percentShapeLayer.strokeEnd = 0;
+    [CATransaction commit];
+    
+}
+
+- (void)pauseAnimation
+{
+    [self pauseLayer:self.percentShapeLayer];
+}
+
+- (void)resumeAnimation
+{
+    [self resumeLayer:self.percentShapeLayer];
+}
+
+//How do I pause all animations in a layer tree? https://developer.apple.com/library/ios/qa/qa1673/_index.html
+
+-(void)pauseLayer:(CALayer*)layer
+{
+    CFTimeInterval pausedTime = [layer convertTime:CACurrentMediaTime() fromLayer:nil];
+    layer.speed = 0.0;
+    layer.timeOffset = pausedTime;
+}
+
+-(void)resumeLayer:(CALayer*)layer
+{
+    CFTimeInterval pausedTime = [layer timeOffset];
+    layer.speed = 1.0;
+    layer.timeOffset = 0.0;
+    layer.beginTime = 0.0;
+    CFTimeInterval timeSincePause = [layer convertTime:CACurrentMediaTime() fromLayer:nil] - pausedTime;
+    layer.beginTime = timeSincePause;
 }
 
 - (void)setStatus:(OTRPlayPauseProgressViewStatus)status

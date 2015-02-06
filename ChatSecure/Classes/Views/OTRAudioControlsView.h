@@ -17,4 +17,6 @@ extern NSInteger const kOTRAudioControlsViewTag;
 @property (nonatomic, strong, readonly) OTRPlayPauseProgressView *playPuaseProgressView;
 @property (nonatomic, strong, readonly) UILabel *timeLabel;
 
+- (void)setTime:(NSTimeInterval)time;
+
 @end

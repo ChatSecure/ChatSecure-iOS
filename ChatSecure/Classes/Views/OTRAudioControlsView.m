@@ -28,12 +28,12 @@ NSInteger const kOTRAudioControlsViewTag = 301;
         self.timeLabel.textColor = [UIColor whiteColor];
         self.timeLabel.textAlignment = NSTextAlignmentCenter;
         self.timeLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14];
+        [self setTime:0];
         
         _playPuaseProgressView = [[OTRPlayPauseProgressView alloc] initForAutoLayout];
         self.playPuaseProgressView.opaque = NO;
-        self.playPuaseProgressView.percent = 0;
         self.playPuaseProgressView.color = [UIColor whiteColor];
-        self.playPuaseProgressView.status = OTRPlayPauseProgressViewStatusPause;
+        self.playPuaseProgressView.status = OTRPlayPauseProgressViewStatusPlay;
         
         [self addSubview:self.timeLabel];
         [self addSubview:self.playPuaseProgressView];
@@ -41,6 +41,14 @@ NSInteger const kOTRAudioControlsViewTag = 301;
         self.addedConstraints = NO;
     }
     return self;
+}
+
+- (void)setTime:(NSTimeInterval)time
+{
+    NSUInteger minutes = (int)time / 60;
+    NSUInteger seconds = (int)time % 60;
+    
+    self.timeLabel.text = [NSString stringWithFormat:@"%lu:%02ld",(unsigned long)minutes,seconds];
 }
 
 - (void)updateConstraints{
@@ -56,5 +64,7 @@ NSInteger const kOTRAudioControlsViewTag = 301;
         self.addedConstraints = YES;
     }
 }
+
+
 
 @end

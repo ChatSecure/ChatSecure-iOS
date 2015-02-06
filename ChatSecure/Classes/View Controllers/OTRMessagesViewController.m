@@ -41,6 +41,7 @@
 #import "OTRAudioSessionManager.h"
 #import "OTRAudioControlsView.h"
 #import "OTRPlayPauseProgressView.h"
+#import "OTRAudioPlaybackController.h"
 
 @import AVFoundation;
 @import MediaPlayer;
@@ -80,6 +81,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 @property (nonatomic, strong) OTRAttachmentPicker *attachmentPicker;
 @property (nonatomic, strong) OTRAudioSessionManager *audioSessionManager;
+@property (nonatomic, strong) OTRAudioPlaybackController *audioPlaybackController;
 
 @end
 
@@ -127,6 +129,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     [self.inputToolbar.contentView setRightBarButtonItem:self.microphoneButton];
     self.inputToolbar.contentView.rightBarButtonItem.enabled = YES;
+    
+    self.audioPlaybackController = [[OTRAudioPlaybackController alloc] init];
  
 }
 
@@ -768,16 +772,20 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (void)playOrPauseAudio:(OTRAudioItem *)audioItem fromCollectionView:(JSQMessagesCollectionView *)collectionView atIndexPath:(NSIndexPath *)indexPath
 {
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsPath = [paths firstObject];
-    NSString *filePath = [documentsPath stringByAppendingPathComponent:audioItem.filename];
     NSError *error = nil;
-    NSURL *fileURL = [NSURL fileURLWithPath:filePath];
-    [self.audioSessionManager playAudioWithURL:fileURL error:nil];
-    AVAsset *audioAsset = [AVAsset assetWithURL:fileURL];
-    double duration = CMTimeGetSeconds(audioAsset.duration);
-    OTRAudioControlsView *audioControls = [self audioControllsfromCollectionView:collectionView atIndexPath:indexPath];
-    [audioControls.playPuaseProgressView setPercent:1 duration:duration];
+    if  ([audioItem.uniqueId isEqualToString:self.audioPlaybackController.currentAudioItem.uniqueId]) {
+        if  ([self.audioPlaybackController isPlaying]) {
+            [self.audioPlaybackController pauseCurrentlyPlaying];
+        }
+        else {
+            [self.audioPlaybackController resumeCurrentlyPlaying];
+        }
+    }
+    else {
+        [self.audioPlaybackController stopCurrentlyPlaying];
+        OTRAudioControlsView *audioControls = [self audioControllsfromCollectionView:collectionView atIndexPath:indexPath];
+        [self.audioPlaybackController playAudioItem:audioItem withView:audioControls error:&error];
+    }
     
     if (error) {
          NSLog(@"Audio Playback Error: %@",error);

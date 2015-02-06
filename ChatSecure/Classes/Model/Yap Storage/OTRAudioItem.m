@@ -31,10 +31,7 @@
     CGRect bubbleRect = UIEdgeInsetsInsetRect(viewRect, bubbleInset);
     
     OTRAudioControlsView *audioControls = [[OTRAudioControlsView alloc] initWithFrame:bubbleRect];
-    NSUInteger minutes = (int)self.timeLength / 60;
-    NSUInteger seconds = (int)self.timeLength % 60;
-    
-    audioControls.timeLabel.text = [NSString stringWithFormat:@"%lu:%02ld",(unsigned long)minutes,seconds];
+    [audioControls setTime:self.timeLength];
     
     
     UIView *view = [[UIView alloc] initWithFrame:viewRect];

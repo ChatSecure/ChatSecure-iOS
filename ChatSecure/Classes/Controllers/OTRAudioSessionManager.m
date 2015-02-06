@@ -12,9 +12,6 @@
 
 @interface OTRAudioSessionManager () <AVAudioPlayerDelegate, AVAudioRecorderDelegate>
 
-@property (nonatomic) BOOL recording;
-@property (nonatomic) BOOL playing;
-
 @property (nonatomic, strong) AVAudioSession *audioSession;
 @property (nonatomic, strong) AVAudioRecorder *currentRecorder;
 @property (nonatomic, strong) AVAudioPlayer *currentPlayer;
@@ -31,8 +28,6 @@
 - (instancetype)init
 {
     if (self = [super init]) {
-        self.recording = NO;
-        self.playing = NO;
         self.audioSession = [AVAudioSession sharedInstance];
         [self.audioSession setMode:AVAudioSessionModeVoiceChat error:nil];
     }
@@ -50,6 +45,11 @@
     return NO;
 }
 
+- (BOOL)isPlaying
+{
+    return [self.currentPlayer isPlaying];
+}
+
 #pragma - mark Public Methods
 
 ////// Playing //////
@@ -57,12 +57,13 @@
 {
     [self stopPlaying];
     [self stopRecording];
-    
+    error = nil;
     [self.audioSession setCategory:AVAudioSessionCategoryPlayback error:error];
     if (error) {
         return;
     }
     
+    error = nil;
     self.currentPlayer = [self audioPlayerWithURL:url error:error];
     if (error) {
         return;
@@ -178,9 +179,16 @@
 
 - (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag
 {
+    if ([player isEqual:self.currentPlayer]) {
+        if ([self.delegate respondsToSelector:@selector(audioSession:didFinishSuccefully:)]) {
+            [self.delegate audioSession:self didFinishSuccefully:flag];
+        }
+    }
+    
     [self.currentRecorder stop];
     self.currentPlayer = nil;
     [self deactivateSession:nil];
+    
     
 }
 

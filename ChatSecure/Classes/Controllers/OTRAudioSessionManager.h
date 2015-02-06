@@ -8,10 +8,19 @@
 
 #import <Foundation/Foundation.h>
 
+@class OTRAudioSessionManager;
+
+@protocol OTRAudioSessionManagerDelegate <NSObject>
+
+- (void)audioSession:(OTRAudioSessionManager *)audioSessionManager didFinishSuccefully:(BOOL)success;
+
+@end
+
 @interface OTRAudioSessionManager : NSObject
 
-@property (nonatomic, readonly) BOOL isRecording;
 @property (nonatomic, readonly) BOOL isPlaying;
+
+@property (nonatomic, weak) id<OTRAudioSessionManagerDelegate> delegate;
 
 - (void)playAudioWithURL:(NSURL *)url error:(NSError **)error;
 - (void)pausePlaying;
@@ -20,10 +29,12 @@
 - (NSTimeInterval)currentTimePlayTime;
 - (NSTimeInterval)durationPlayTime;
 - (NSURL *)currentPlayerURL;
+- (BOOL)isPlaying;
 
 - (void)recordAudioToURL:(NSURL *)url error:(NSError **)error;
 - (void)stopRecording;
 - (NSTimeInterval)currentTimeRecordTime;
 - (NSURL *)currentRecorderURL;
+- (BOOL)isRecording;
 
 @end
