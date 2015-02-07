@@ -16,7 +16,6 @@
 
 @interface OTRAudioPlaybackController () <OTRAudioSessionManagerDelegate>
 
-@property (nonatomic, strong) OTRAudioControlsView *audioControlsView;
 @property (nonatomic, strong) OTRAudioSessionManager *audioSessionManager;
 
 @property (nonatomic, strong) NSTimer *labelTimer;
@@ -40,21 +39,20 @@
 
 - (void)updateTimeLabel
 {
-    NSTimeInterval currentTime = ceil([self.audioSessionManager currentTimePlayTime]);
-    [self.audioControlsView setTime:currentTime];
+    NSTimeInterval currentTime = [self.audioSessionManager currentTimePlayTime];
+    [self.currentAudioControlsView setTime:currentTime];
 }
 
-- (void)playURL:(NSURL *)url withView:(OTRAudioControlsView *)controlsView error:(NSError **)error;
+- (void)playURL:(NSURL *)url error:(NSError **)error;
 {
-    self.audioControlsView = controlsView;
     AVAsset *asset = [AVAsset assetWithURL:url];
     self.duration = CMTimeGetSeconds(asset.duration);
-    self.audioControlsView.playPuaseProgressView.status = OTRPlayPauseProgressViewStatusPause;
+    self.currentAudioControlsView.playPuaseProgressView.status = OTRPlayPauseProgressViewStatusPause;
     error = nil;
     [self.audioSessionManager playAudioWithURL:url error:error];
-    [self.audioControlsView.playPuaseProgressView startProgressCircleWithDuration:self.duration];
-    self.audioControlsView.playPuaseProgressView.status = OTRPlayPauseProgressViewStatusPause;
-    [self.audioControlsView setTime:0];
+    [self.currentAudioControlsView.playPuaseProgressView animateProgressArcWithFromValue:0 duration:self.duration];
+    self.currentAudioControlsView.playPuaseProgressView.status = OTRPlayPauseProgressViewStatusPause;
+    [self.currentAudioControlsView setTime:0];
     
     [self startLabelTimer];
 }
@@ -68,9 +66,26 @@
                                                       repeats:YES];
 }
 
+- (float)currentPlayProgress
+{
+    NSTimeInterval currentProgressTime = [self.audioSessionManager currentTimePlayTime];
+    NSTimeInterval durationTime = [self.audioSessionManager durationPlayTime];
+    
+    float progress = currentProgressTime/durationTime;
+    return progress;
+}
+
+- (NSTimeInterval)currentPlayTimeRemaining
+{
+    NSTimeInterval currentProgressTime = [self.audioSessionManager currentTimePlayTime];
+    NSTimeInterval durationTime = [self.audioSessionManager durationPlayTime];
+    
+    return durationTime - currentProgressTime;
+}
+
 #pragma - mark Public Methods
 
-- (void)playAudioItem:(OTRAudioItem *)audioItem withView:(OTRAudioControlsView *)controlsView error:(NSError **)error
+- (void)playAudioItem:(OTRAudioItem *)audioItem error:(NSError **)error
 {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsPath = [paths firstObject];
@@ -79,14 +94,46 @@
     
     _currentAudioItem = audioItem;
     
-    [self playURL:fileURL withView:controlsView error:error];
+    [self playURL:fileURL error:error];
+}
+
+- (void)attachAudioControlsView:(OTRAudioControlsView *)audioControlsView
+{
+    _currentAudioControlsView = audioControlsView;
+    [self.labelTimer invalidate];
+    self.labelTimer = nil;
+    
+    if (self.currentAudioItem && [self.audioSessionManager currentTimePlayTime] > 0) {
+        //Is Paused or Playing
+        [self updateTimeLabel];
+        
+        
+        CGFloat progress = [self currentPlayProgress];
+        NSTimeInterval duration = [self currentPlayTimeRemaining];
+        [self.currentAudioControlsView.playPuaseProgressView animateProgressArcWithFromValue:progress duration:duration];
+        
+        if ([self.audioSessionManager isPlaying]) {
+            //Playing
+            self.currentAudioControlsView.playPuaseProgressView.status = OTRPlayPauseProgressViewStatusPause;
+            [self startLabelTimer];
+        }
+        else {
+            //Paused
+            [self.currentAudioControlsView.playPuaseProgressView setProgressArcValue:progress];
+            self.currentAudioControlsView.playPuaseProgressView.status = OTRPlayPauseProgressViewStatusPlay;
+        }
+    }
+    else {
+        [self.currentAudioControlsView.playPuaseProgressView removeProgressArc];
+        self.currentAudioControlsView.playPuaseProgressView.status = OTRPlayPauseProgressViewStatusPlay;
+    }
 }
 
 - (void)pauseCurrentlyPlaying
 {
     [self.audioSessionManager pausePlaying];
-    [self.audioControlsView.playPuaseProgressView pauseAnimation];
-    self.audioControlsView.playPuaseProgressView.status = OTRPlayPauseProgressViewStatusPlay;
+    [self.currentAudioControlsView.playPuaseProgressView setProgressArcValue:[self currentPlayProgress]];
+    self.currentAudioControlsView.playPuaseProgressView.status = OTRPlayPauseProgressViewStatusPlay;
     [self.labelTimer invalidate];
     self.labelTimer = nil;
     [self updateTimeLabel];
@@ -97,19 +144,21 @@
 {
     [self updateTimeLabel];
     [self.audioSessionManager resumePlaying];
-    [self.audioControlsView.playPuaseProgressView resumeAnimation];
-    self.audioControlsView.playPuaseProgressView.status = OTRPlayPauseProgressViewStatusPause;
+    CGFloat progress = [self currentPlayProgress];
+    NSTimeInterval duration = [self currentPlayTimeRemaining];
+    [self.currentAudioControlsView.playPuaseProgressView animateProgressArcWithFromValue:progress duration:duration];
+    self.currentAudioControlsView.playPuaseProgressView.status = OTRPlayPauseProgressViewStatusPause;
     [self startLabelTimer];
 }
 
 - (void)stopCurrentlyPlaying
 {
     [self.audioSessionManager stopPlaying];
-    self.audioControlsView.playPuaseProgressView.status = OTRPlayPauseProgressViewStatusPlay;
-    [self.audioControlsView.playPuaseProgressView removeProgressCircle];
+    self.currentAudioControlsView.playPuaseProgressView.status = OTRPlayPauseProgressViewStatusPlay;
+    [self.currentAudioControlsView.playPuaseProgressView removeProgressArc];
     [self.labelTimer invalidate];
     self.labelTimer = nil;
-    [self.audioControlsView setTime:self.currentAudioItem.timeLength];
+    [self.currentAudioControlsView setTime:self.currentAudioItem.timeLength];
     _currentAudioItem = nil;
 }
 
@@ -127,10 +176,10 @@
 
 - (void)audioSession:(OTRAudioSessionManager *)audioSessionManager didFinishSuccefully:(BOOL)success
 {
-    self.audioControlsView.playPuaseProgressView.status = OTRPlayPauseProgressViewStatusPlay;
-    [self.audioControlsView.playPuaseProgressView removeProgressCircle];
+    self.currentAudioControlsView.playPuaseProgressView.status = OTRPlayPauseProgressViewStatusPlay;
+    [self.currentAudioControlsView.playPuaseProgressView removeProgressArc];
     [self.labelTimer invalidate];
-    [self.audioControlsView setTime:self.currentAudioItem.timeLength];
+    [self.currentAudioControlsView setTime:self.currentAudioItem.timeLength];
     _currentAudioItem = nil;
 }
 

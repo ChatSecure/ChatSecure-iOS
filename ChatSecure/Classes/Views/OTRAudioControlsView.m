@@ -45,6 +45,7 @@ NSInteger const kOTRAudioControlsViewTag = 301;
 
 - (void)setTime:(NSTimeInterval)time
 {
+    time = round(time);
     NSUInteger minutes = (int)time / 60;
     NSUInteger seconds = (int)time % 60;
     

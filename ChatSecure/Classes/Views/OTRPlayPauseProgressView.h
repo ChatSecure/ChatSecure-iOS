@@ -18,12 +18,10 @@ typedef NS_ENUM(NSUInteger, OTRPlayPauseProgressViewStatus) {
 @property (nonatomic) OTRPlayPauseProgressViewStatus status;
 @property (nonatomic, strong) UIColor *color;
 
-- (void)startProgressCircleWithDuration:(NSTimeInterval)duration;
+- (void)animateProgressArcWithFromValue:(CGFloat)fromValue duration:(NSTimeInterval)duration;
 
-- (void)removeProgressCircle;
+- (void)setProgressArcValue:(CGFloat)value;
 
-- (void)pauseAnimation;
-
-- (void)resumeAnimation;
+- (void)removeProgressArc;
 
 @end

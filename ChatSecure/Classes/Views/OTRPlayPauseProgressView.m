@@ -90,38 +90,34 @@ NSString *const kOTRPlayProgressAnimationKey = @"kOTRPlayProgressAnimationKey";
     }
 }
 
-- (void)startProgressCircleWithDuration:(NSTimeInterval)duration
+- (void)animateProgressArcWithFromValue:(CGFloat)fromValue duration:(NSTimeInterval)duration
 {
-    [self resumeAnimation];
-    [self removeProgressCircle];
+    self.percentShapeLayer.beginTime = [self.percentShapeLayer convertTime:CACurrentMediaTime() fromLayer:nil];
+    self.percentShapeLayer.timeOffset = 0;
+    self.percentShapeLayer.speed = 1.0;
+    [self setProgressArcValue:fromValue];
     if (duration > 0) {
         CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:NSStringFromSelector(@selector(strokeEnd))];
-        animation.fromValue = @(0);
+        animation.fromValue = nil;
         animation.toValue = @(1);
         animation.duration = duration;
-        self.percentShapeLayer.strokeEnd = 0;
         [self.percentShapeLayer addAnimation:animation forKey:kOTRPlayProgressAnimationKey];
     }
 }
 
-- (void)removeProgressCircle
+- (void)setProgressArcValue:(CGFloat)value
 {
     [self.percentShapeLayer removeAnimationForKey:kOTRPlayProgressAnimationKey];
     [CATransaction begin];
     [CATransaction setDisableActions:YES];
-    self.percentShapeLayer.strokeEnd = 0;
+    self.percentShapeLayer.strokeEnd = value;
     [CATransaction commit];
+}
+
+- (void)removeProgressArc
+{
+    [self setProgressArcValue:0];
     
-}
-
-- (void)pauseAnimation
-{
-    [self pauseLayer:self.percentShapeLayer];
-}
-
-- (void)resumeAnimation
-{
-    [self resumeLayer:self.percentShapeLayer];
 }
 
 //How do I pause all animations in a layer tree? https://developer.apple.com/library/ios/qa/qa1673/_index.html

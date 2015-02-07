@@ -784,7 +784,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
     else {
         [self.audioPlaybackController stopCurrentlyPlaying];
         OTRAudioControlsView *audioControls = [self audioControllsfromCollectionView:collectionView atIndexPath:indexPath];
-        [self.audioPlaybackController playAudioItem:audioItem withView:audioControls error:&error];
+        [self.audioPlaybackController attachAudioControlsView:audioControls];
+        [self.audioPlaybackController playAudioItem:audioItem error:&error];
     }
     
     if (error) {
@@ -796,8 +797,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
 - (OTRAudioControlsView *)audioControllsfromCollectionView:(JSQMessagesCollectionView *)collectionView atIndexPath:(NSIndexPath *)indexPath {
     UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
     if ([cell isKindOfClass:[JSQMessagesCollectionViewCell class]]) {
-        UIView *cellContainterView = ((JSQMessagesCollectionViewCell *)cell).messageBubbleContainerView;
-        UIView *view = [cellContainterView viewWithTag:kOTRAudioControlsViewTag];
+        UIView *mediaView = ((JSQMessagesCollectionViewCell *)cell).mediaView;
+        UIView *view = [mediaView viewWithTag:kOTRAudioControlsViewTag];
         if ([view isKindOfClass:[OTRAudioControlsView class]]) {
             return (OTRAudioControlsView *)view;
         }
@@ -820,6 +821,13 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }
     else {
         cell.textView.textColor = [UIColor whiteColor];
+    }
+    
+    if ([message.mediaItemUniqueId isEqualToString:self.audioPlaybackController.currentAudioItem.uniqueId]) {
+        UIView *view = [cell.mediaView viewWithTag:kOTRAudioControlsViewTag];
+        if ([view isKindOfClass:[OTRAudioControlsView class]]) {
+            [self.audioPlaybackController attachAudioControlsView:(OTRAudioControlsView *)view];
+        }
     }
     
     return cell;

@@ -14,8 +14,11 @@
 @interface OTRAudioPlaybackController : NSObject
 
 @property (nonatomic, strong, readonly) OTRAudioItem *currentAudioItem;
+@property (nonatomic, weak, readonly) OTRAudioControlsView *currentAudioControlsView;
 
-- (void)playAudioItem:(OTRAudioItem *)audioItem withView:(OTRAudioControlsView *)controlsView error:(NSError **)error;
+- (void)playAudioItem:(OTRAudioItem *)audioItem error:(NSError **)error;
+
+- (void)attachAudioControlsView:(OTRAudioControlsView *)audioControlsView;
 
 - (void)pauseCurrentlyPlaying;
 - (void)resumeCurrentlyPlaying;
