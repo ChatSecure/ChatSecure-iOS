@@ -65,7 +65,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
 @property (nonatomic, strong) JSQMessagesBubbleImage *outgoingBubbleImage;
 @property (nonatomic, strong) JSQMessagesBubbleImage *incomingBubbleImage;
 
-@property (nonatomic, weak) id textViewNotificationObject;
 @property (nonatomic, weak) id databaseConnectionDidUpdateNotificationObject;
 @property (nonatomic, weak) id didFinishGeneratingPrivateKeyNotificationObject;
 @property (nonatomic, weak) id messageStateDidChangeNotificationObject;
@@ -78,6 +77,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 @property (nonatomic, strong) OTRTitleSubtitleView *titleView;
 
 @property (nonatomic, strong) UIButton *microphoneButton;
+@property (nonatomic, strong) UIButton *sendButton;
 
 @property (nonatomic, strong) OTRAttachmentPicker *attachmentPicker;
 @property (nonatomic, strong) OTRAudioSessionManager *audioSessionManager;
@@ -120,6 +120,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     [self refreshTitleView];
     
+    ////// Send Button //////
+    self.sendButton = [JSQMessagesToolbarButtonFactory defaultSendButtonItem];
+    
     ////// Microphone Button //////
     self.microphoneButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     self.microphoneButton.titleLabel.font = [UIFont fontWithName:kFontAwesomeFont size:20];
@@ -141,10 +144,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
     [self refreshLockButton];
     
     __weak OTRMessagesViewController *welf = self;
-    
-    self.textViewNotificationObject = [[NSNotificationCenter defaultCenter] addObserverForName:UITextViewTextDidChangeNotification object:self.inputToolbar.contentView.textView queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
-        [welf textViewDidChangeNotifcation:note];
-    }];
     
     [self.uiDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         [welf.messageMappings updateWithTransaction:transaction];
@@ -179,7 +178,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     [self saveCurrentMessageText];
     
-    [[NSNotificationCenter defaultCenter] removeObserver:self.textViewNotificationObject];
     [[NSNotificationCenter defaultCenter] removeObserver:self.databaseConnectionDidUpdateNotificationObject];
     [[NSNotificationCenter defaultCenter] removeObserver:self.messageStateDidChangeNotificationObject];
     [[NSNotificationCenter defaultCenter] removeObserver:self.didFinishGeneratingPrivateKeyNotificationObject];
@@ -515,10 +513,12 @@ typedef NS_ENUM(int, OTRDropDownType) {
 - (void)refreshInputToolbar
 {
     if([self.inputToolbar.contentView.textView hasText]) {
-        self.inputToolbar.contentView.rightBarButtonItem = [JSQMessagesToolbarButtonFactory defaultSendButtonItem];
+        self.inputToolbar.contentView.rightBarButtonItem = self.sendButton;
+        self.inputToolbar.contentView.rightBarButtonItem.enabled = YES;
     }
     else {
         self.inputToolbar.contentView.rightBarButtonItem = self.microphoneButton;
+        self.inputToolbar.contentView.rightBarButtonItem.enabled = YES;
     }
 }
 
@@ -721,16 +721,20 @@ typedef NS_ENUM(int, OTRDropDownType) {
     return showDate;
 }
 
-- (void)textViewDidChangeNotifcation:(NSNotification *)notification
+- (void)textViewDidChange:(UITextView *)textView
 {
-    JSQMessagesComposerTextView *textView = notification.object;
     if ([textView.text length]) {
+        self.inputToolbar.contentView.rightBarButtonItem = self.sendButton;
+        self.inputToolbar.contentView.rightBarButtonItem.enabled = YES;
         //typing
         [self.xmppManager sendChatState:kOTRChatStateComposing withBuddyID:self.buddy.uniqueId];
     }
     else {
-        [self.xmppManager sendChatState:kOTRChatStateActive withBuddyID:self.buddy.uniqueId];
+        self.inputToolbar.contentView.rightBarButtonItem = self.microphoneButton;
+        self.inputToolbar.contentView.rightBarButtonItem.enabled = YES;
         //done typing
+        [self.xmppManager sendChatState:kOTRChatStateActive withBuddyID:self.buddy.uniqueId];
+        
     }
 }
 
@@ -931,6 +935,13 @@ typedef NS_ENUM(int, OTRDropDownType) {
     else {
         [super collectionView:collectionView performAction:action forItemAtIndexPath:indexPath withSender:sender];
     }
+}
+
+- (void)finishSendingMessageAnimated:(BOOL)animated
+{
+    //Theres a toggleSendButtonEnabled in finishSendingMessageAnimated so we need to 'balance' it out
+    [super finishSendingMessageAnimated:animated];
+    self.inputToolbar.contentView.rightBarButtonItem.enabled = YES;
 }
 
 #pragma - mark OTRAttachmentPickerDelegate Methods
