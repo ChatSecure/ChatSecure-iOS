@@ -42,6 +42,7 @@
 #import "OTRAudioControlsView.h"
 #import "OTRPlayPauseProgressView.h"
 #import "OTRAudioPlaybackController.h"
+#import "OTRAudioRecorderViewController.h"
 
 @import AVFoundation;
 @import MediaPlayer;
@@ -752,6 +753,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         UIView *cellContainterView = ((JSQMessagesCollectionViewCell *)cell).messageBubbleContainerView;
         imageInfo.referenceRect = cellContainterView.bounds;
         imageInfo.referenceView = cellContainterView;
+        imageInfo.referenceCornerRadius = 5;
     }
     
     JTSImageViewController *imageViewer = [[JTSImageViewController alloc]
@@ -848,45 +850,18 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (void)didPressSendButton:(UIButton *)button withMessageText:(NSString *)text senderId:(NSString *)senderId senderDisplayName:(NSString *)senderDisplayName date:(NSDate *)date
 {
+    self.navigationController.providesPresentationContextTransitionStyle = YES;
+    self.navigationController.definesPresentationContext = YES;
+    OTRAudioRecorderViewController *recorderViewController = [[OTRAudioRecorderViewController alloc] initWithBuddy:self.buddy];
+    CGRect rectInWindow = [self.microphoneButton convertRect:self.microphoneButton.frame toView:nil];
+    [recorderViewController showAudioRecorderFromViewController:self animated:YES fromMicrophoneRectInWindow:rectInWindow];
     if ([[OTRProtocolManager sharedInstance] isAccountConnected:self.account]) {
         //Account is connected
         
         if ([button isEqual:self.microphoneButton]) {
-            //FIXME where should audio be saved
-            if (self.audioSessionManager.isRecording) {
-                __block NSURL *url = [self.audioSessionManager currentRecorderURL];
-                [self.audioSessionManager stopRecording];
-                
-                __weak typeof(self)weakSelf = self;
-                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                    __strong typeof(weakSelf)strongSelf = weakSelf;
-                    OTRMessage *message = [[OTRMessage alloc] init];
-                    message.incoming = NO;
-                    message.buddyUniqueId = strongSelf.buddy.uniqueId;
-                    
-                    OTRAudioItem *audioItem = [[OTRAudioItem alloc] init];
-                    audioItem.isIncoming = message.incoming;
-                    audioItem.filename = [[url absoluteString] lastPathComponent];
-                    
-                    AVAsset *audioAsset = [AVAsset assetWithURL:url];
-                    audioItem.timeLength = CMTimeGetSeconds(audioAsset.duration);
-                    
-                    message.mediaItemUniqueId = audioItem.uniqueId;
-                    
-                    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-                        [audioItem saveWithTransaction:transaction];
-                        [message saveWithTransaction:transaction];
-                    }];
-                });
-                
-                
-            } else {
-                NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-                NSString *documentsPath = [paths firstObject];
-                NSString *fileName = [NSString stringWithFormat:@"%@.m4a",[[NSUUID UUID] UUIDString]];
-                NSURL *url = [NSURL fileURLWithPath:[documentsPath stringByAppendingPathComponent:fileName]];
-                [self.audioSessionManager recordAudioToURL:url error:nil];
-            }
+            
+            OTRAudioRecorderViewController *recorderViewController = [[OTRAudioRecorderViewController alloc] initWithBuddy:self.buddy];
+            //[recorderViewController showAudioRecorderFromViewController:self];
             
         } else {
             OTRMessage *message = [[OTRMessage alloc] init];
@@ -1221,9 +1196,6 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
             self.buddy = updatedBuddy;
         }
     }
-    
-    
-    [self.collectionView reloadData];
     
     if (messageRowChanges.count && [self.collectionView numberOfItemsInSection:0] != 0) {
         NSUInteger lastMessageIndex = [self.collectionView numberOfItemsInSection:0] - 1;

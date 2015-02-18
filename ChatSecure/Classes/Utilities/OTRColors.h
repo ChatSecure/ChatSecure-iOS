@@ -23,4 +23,6 @@
 + (UIColor *)greenNoErrorColor;
 + (UIColor *)warnColor;
 
++ (UIColor *)defaultBlueColor;
+
 @end
