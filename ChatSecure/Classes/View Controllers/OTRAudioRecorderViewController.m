@@ -16,14 +16,14 @@
 #import "OTRDatabaseManager.h"
 #import "OTRUtilities.h"
 #import "OTRImages.h"
-#import "BButton.h"
 #import "OTRColors.h"
+#import "EZAudio.h"
 
 @import AVFoundation;
 
 NSString *const kOTRAudioRecordAnimatePath = @"kOTRAudioRecordAnimatePath";
 
-@interface OTRAudioRecorderViewController ()
+@interface OTRAudioRecorderViewController () <OTRAudioSessionManagerDelegate>
 
 @property (nonatomic, strong) OTRBuddy *buddy;
 @property (nonatomic, strong) OTRAudioSessionManager *audioSessionManager;
@@ -36,13 +36,16 @@ NSString *const kOTRAudioRecordAnimatePath = @"kOTRAudioRecordAnimatePath";
 @property (nonatomic, strong) UIButton *sendButton;
 @property (nonatomic, strong) UIButton *cancelButton;
 @property (nonatomic, strong) UILabel *timerLabel;
+@property (nonatomic, strong) EZAudioPlotGL *audioPlot;
 
 @property (nonatomic, strong) NSLayoutConstraint *sendButtonBottomConstraint;
 @property (nonatomic, strong) NSLayoutConstraint *cancelButtonBottomConstraint;
+@property (nonatomic, strong) NSLayoutConstraint *audioPlotWidthConstraint;
 
 @property (nonatomic, strong) NSTimer *labelTimer;
 
 @property (nonatomic) CGFloat microphoneRatio;
+
 
 @end
 
@@ -53,6 +56,7 @@ NSString *const kOTRAudioRecordAnimatePath = @"kOTRAudioRecordAnimatePath";
     if (self = [super init]) {
         self.buddy = buddy;
         self.audioSessionManager = [[OTRAudioSessionManager alloc] init];
+        self.audioSessionManager.delegate = self;
         self.addedConstraints = NO;
     }
     return self;
@@ -85,8 +89,9 @@ NSString *const kOTRAudioRecordAnimatePath = @"kOTRAudioRecordAnimatePath";
     [self.sendButton setTitle:@"Send" forState:UIControlStateNormal];
     [self.sendButton addTarget:self action:@selector(didPressSend:) forControlEvents:UIControlEventTouchUpInside];
     
-    self.cancelButton = [[BButton alloc] initWithFrame:CGRectZero type:BButtonTypeDefault style:BButtonStyleBootstrapV3 icon:FATimes fontSize:12.0];
+    self.cancelButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     self.cancelButton.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.cancelButton setTitle:CANCEL_STRING forState:UIControlStateNormal];
     [self.cancelButton addTarget:self  action:@selector(didPressCancel:) forControlEvents:UIControlEventTouchUpInside];
     
     self.timerLabel = [[UILabel alloc] initForAutoLayout];
@@ -96,7 +101,22 @@ NSString *const kOTRAudioRecordAnimatePath = @"kOTRAudioRecordAnimatePath";
     self.timerLabel.adjustsFontSizeToFitWidth = YES;
     self.timerLabel.textAlignment = NSTextAlignmentCenter;
     
+    self.audioPlot = [[EZAudioPlotGL alloc] initWithFrame:CGRectZero];
+    self.audioPlot.translatesAutoresizingMaskIntoConstraints = NO;
+    self.audioPlot.backgroundColor = [UIColor clearColor];
+    //Trying to get a clear background https://github.com/syedhali/EZAudio/issues/46
+    //Possible secondary method https://github.com/syedhali/EZAudio/issues/66
+    for (UIView *subview in [self.audioPlot subviews]) {
+        subview.opaque = NO;
+        subview.backgroundColor = [UIColor clearColor];
+    }
+    self.audioPlot.color = [UIColor whiteColor];
+    self.audioPlot.plotType     = EZPlotTypeRolling;
+    self.audioPlot.shouldFill   = NO;
+    self.audioPlot.shouldMirror = YES;
+    
     [self.view addSubview:self.blurredBackgroundView];
+    [self.view addSubview:self.audioPlot];
     [self.view addSubview:self.microphoneView];
     [self.microphoneView addSubview:self.microphoneImageView];
     [self.microphoneView addSubview:self.timerLabel];
@@ -173,9 +193,11 @@ NSString *const kOTRAudioRecordAnimatePath = @"kOTRAudioRecordAnimatePath";
                     [self.view layoutIfNeeded];
                 } completion:^(BOOL finished) {
                     //Start recording once the microphone icon is presented
+                    
                     if (!self.audioSessionManager.isRecording) {
                         [self startRecording];
                     }
+                    
                     [UIView animateWithDuration:0.5 delay:0 usingSpringWithDamping:0.8 initialSpringVelocity:10 options:0 animations:^{
                         [self.sendButtonBottomConstraint autoRemove];
                         [self.cancelButtonBottomConstraint autoRemove];
@@ -231,9 +253,12 @@ NSString *const kOTRAudioRecordAnimatePath = @"kOTRAudioRecordAnimatePath";
     ((CAShapeLayer *)self.blurredBackgroundView.layer.mask).path = newPath;
     
     [UIView animateWithDuration:duration animations:^{
+        self.audioPlotWidthConstraint.constant = CGRectGetWidth(self.view.bounds) * -1;
         self.microphoneView.frame = CGRectMake(0, 0, 0, 0);
         self.microphoneView.center = self.view.center;
         [self.cancelButton removeFromSuperview];
+        [self.sendButton removeFromSuperview];
+        [self.timerLabel removeFromSuperview];
         [self.view layoutIfNeeded];
     } completion:completion];
 }
@@ -259,6 +284,13 @@ NSString *const kOTRAudioRecordAnimatePath = @"kOTRAudioRecordAnimatePath";
     
     __block NSString *buddyUniqueId = self.buddy.uniqueId;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        //Move audio file from tmp location to permanent location (IOCipher eventually)
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *documentsPath = [paths firstObject];
+        NSString *newPath = [documentsPath stringByAppendingPathComponent:[[url absoluteString] lastPathComponent]];
+        NSURL *newURL = [NSURL fileURLWithPath:newPath];
+        [[NSFileManager defaultManager] moveItemAtURL:url toURL:newURL error:nil];
+        
         OTRMessage *message = [[OTRMessage alloc] init];
         message.incoming = NO;
         message.buddyUniqueId = buddyUniqueId;
@@ -267,7 +299,7 @@ NSString *const kOTRAudioRecordAnimatePath = @"kOTRAudioRecordAnimatePath";
         audioItem.isIncoming = message.incoming;
         audioItem.filename = [[url absoluteString] lastPathComponent];
         
-        AVAsset *audioAsset = [AVAsset assetWithURL:url];
+        AVAsset *audioAsset = [AVAsset assetWithURL:newURL];
         audioItem.timeLength = CMTimeGetSeconds(audioAsset.duration);
         
         message.mediaItemUniqueId = audioItem.uniqueId;
@@ -294,29 +326,34 @@ NSString *const kOTRAudioRecordAnimatePath = @"kOTRAudioRecordAnimatePath";
         
         [self.blurredBackgroundView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsZero];
         
-        [self.timerLabel autoAlignAxis:ALAxisVertical toSameAxisOfView:self.microphoneImageView];
-        // The numbers .68 and .56 were calculated from the original svg to find the center of the microphone
-        [self.timerLabel autoConstrainAttribute:ALAttributeHorizontal toAttribute:ALAttributeHorizontal ofView:self.microphoneImageView withMultiplier:0.68];
-        [self.timerLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.microphoneImageView withMultiplier:0.56];
+        [self.audioPlot autoAlignAxisToSuperviewAxis:ALAxisVertical];
+        self.audioPlotWidthConstraint = [self.audioPlot autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
+        [self.audioPlot autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.microphoneView];
+        [self.audioPlot autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:self.view];
+        
+        [self.timerLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
+        [self.timerLabel autoConstrainAttribute:ALAttributeHorizontal toAttribute:ALAttributeTop ofView:self.sendButton];
+        
         
         [self.microphoneImageView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.microphoneImageView.superview];
         [self.microphoneImageView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.microphoneImageView withMultiplier:self.microphoneRatio];
         [self.microphoneImageView autoCenterInSuperview];
         
-        [self.cancelButton autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:5];
+        CGFloat buttonMargin = 10;
+        CGFloat buttonHeight = 35;
+        
+        [self.cancelButton autoPinEdgeToSuperviewEdge:ALEdgeLeading withInset:buttonMargin];
         [UIView autoSetPriority:UILayoutPriorityDefaultLow forConstraints:^{
-            [self.cancelButton autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:5];
+            [self.cancelButton autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:buttonMargin];
         }];
         
-        [self.cancelButton autoSetDimension:ALDimensionHeight toSize:30];
-        [self.cancelButton autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.cancelButton];
+        [self.cancelButton autoSetDimension:ALDimensionHeight toSize:buttonHeight];
         
-        [self.sendButton autoAlignAxis:ALAxisVertical toSameAxisOfView:self.microphoneView];
+        [self.sendButton autoPinEdgeToSuperviewEdge:ALEdgeTrailing withInset:buttonMargin];
         [UIView autoSetPriority:UILayoutPriorityDefaultLow forConstraints:^{
-            [self.sendButton autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.microphoneView];
+            [self.sendButton autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:buttonMargin];
         }];
-        [self.sendButton autoSetDimension:ALDimensionHeight toSize:35];
-        [self.sendButton autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.microphoneView];
+        [self.sendButton autoSetDimension:ALDimensionHeight toSize:buttonHeight];
         
         if (!self.sendButtonBottomConstraint) {
             self.sendButtonBottomConstraint = [NSLayoutConstraint constraintWithItem:self.sendButton attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeBottom multiplier:1.0 constant:5];
@@ -360,5 +397,13 @@ NSString *const kOTRAudioRecordAnimatePath = @"kOTRAudioRecordAnimatePath";
     }];
     
 }
+
+#pragma - mark OTRAudioSessionDelegate Methods
+
+- (void)audioSession:(OTRAudioSessionManager *)audioSessionManager hasAudioReceived:(float **)buffer withBufferSize:(UInt32)bufferSize withNumberOfChannels:(UInt32)numberOfChannels
+{
+    dispatch_async(dispatch_get_main_queue(),^{
+        [self.audioPlot updateBuffer:buffer[1] withBufferSize:bufferSize];
+    });}
 
 @end
