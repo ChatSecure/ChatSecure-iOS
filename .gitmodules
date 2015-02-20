@@ -22,3 +22,6 @@
 [submodule "Submodules/rScreenshooter"]
 	path = Submodules/rScreenshooter
 	url = git@github.com:ChatSecure/rScreenshooter.git
+[submodule "Submodules/IOCipher"]
+	path = Submodules/IOCipher
+	url = git@github.com:ChatSecure/IOCipher-ObjC.git
