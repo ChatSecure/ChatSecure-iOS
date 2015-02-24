@@ -9,12 +9,15 @@
 #import "JSQMessageMediaData.h"
 #import "OTRYapDatabaseObject.h"
 
+@class OTRMessage;
+
 @interface OTRMediaItem : OTRYapDatabaseObject <JSQMessageMediaData>
 
 @property (nonatomic, strong) NSString *filename;
 @property (nonatomic) BOOL isIncoming;
 
 - (void)touchParentMessage;
+- (OTRMessage *)parentMessageInTransaction:(YapDatabaseReadTransaction *)readTransaction;
 
 + (CGSize)normalizeWidth:(CGFloat)width height:(CGFloat)height;
 

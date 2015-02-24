@@ -91,7 +91,7 @@
     UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
     imagePickerController.modalPresentationStyle = UIModalPresentationCurrentContext;
     imagePickerController.sourceType = sourceType;
-    NSArray* mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypeCamera];
+    NSArray* mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:sourceType];
     imagePickerController.mediaTypes = mediaTypes;
     imagePickerController.delegate = self;
     

@@ -43,6 +43,7 @@
 #import "OTRPlayPauseProgressView.h"
 #import "OTRAudioPlaybackController.h"
 #import "OTRAudioRecorderViewController.h"
+#import "OTRMediaFileManager.h"
 
 @import AVFoundation;
 @import MediaPlayer;
@@ -924,36 +925,34 @@ typedef NS_ENUM(int, OTRDropDownType) {
 - (void)attachmentPicker:(OTRAttachmentPicker *)attachmentPicker gotPhoto:(UIImage *)photo withInfo:(NSDictionary *)info
 {
     if (photo) {
-        // Example of saving image to filesystem (unencrypted) and then saving to yapDatatbase
-        // This will need to be changed to include encrypted storage and sending via OTRData
-        // THis should also be asynchronous as it curretly blocks the UI
-		NSData *imageData = UIImageJPEGRepresentation(photo, 0.5);
-    
-        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-        NSString *documentsPath = [paths firstObject];
-        NSString *UUID = [[NSUUID UUID] UUIDString];
-        NSString *path = [documentsPath stringByAppendingPathComponent:UUID];
-        
-        [imageData writeToFile:path atomically:YES];
-        
-        __block OTRImageItem *imageItem  = [[OTRImageItem alloc] init];
-        imageItem.width = photo.size.width;
-        imageItem.height = photo.size.height;
-        imageItem.isIncoming = NO;
-        imageItem.filename = UUID;
-        
-        __block OTRMessage *message = [[OTRMessage alloc] init];
-        message.incoming = NO;
-        message.buddyUniqueId = self.buddy.uniqueId;
-        message.mediaItemUniqueId = imageItem.uniqueId;
-        message.transportedSecurely = YES;
-        
-        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-            [message saveWithTransaction:transaction];
-            [imageItem saveWithTransaction:transaction];
-        } completionBlock:^{
-            [[OTRProtocolManager sharedInstance].encryptionManager.dataHandler sendFileWithName:@"image.jpg" fileData:imageData username:self.buddy.username accountName:self.account.username protocol:kOTRProtocolTypeXMPP tag:nil];
-        }];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            __block NSData *imageData = UIImageJPEGRepresentation(photo, 0.5);
+            
+            NSString *UUID = [[NSUUID UUID] UUIDString];
+            
+            __block OTRImageItem *imageItem  = [[OTRImageItem alloc] init];
+            imageItem.width = photo.size.width;
+            imageItem.height = photo.size.height;
+            imageItem.isIncoming = NO;
+            imageItem.filename = [UUID stringByAppendingPathExtension:@"jpg"];
+            
+            __block OTRMessage *message = [[OTRMessage alloc] init];
+            message.incoming = NO;
+            message.buddyUniqueId = self.buddy.uniqueId;
+            message.mediaItemUniqueId = imageItem.uniqueId;
+            message.transportedSecurely = YES;
+            
+            [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+                [message saveWithTransaction:transaction];
+                [imageItem saveWithTransaction:transaction];
+            } completionBlock:^{
+                [[OTRMediaFileManager sharedInstance] setData:imageData forItem:imageItem completion:^(NSInteger bytesWritten, NSError *error) {
+                    [imageItem touchParentMessage];
+                    [[OTRProtocolManager sharedInstance].encryptionManager.dataHandler sendFileWithName:@"image.jpg" fileData:imageData username:self.buddy.username accountName:self.account.username protocol:kOTRProtocolTypeXMPP tag:nil];
+                    
+                } completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
+            }];
+        });
     }
 }
 

@@ -55,6 +55,7 @@
 #import "OTRPasswordGenerator.h"
 #import "UIViewController+ChatSecure.h"
 #import "OTRNotificationController.h"
+#import "OTRMediaFileManager.h"
 
 #if CHATSECURE_DEMO
 #import "OTRChatDemo.h"
@@ -115,6 +116,11 @@
         [self performSelector:@selector(loadDemoData) withObject:nil afterDelay:0.0];
 #endif
     }
+    
+    //FIXME
+    NSString *path = [OTRDatabaseManager yapDatabasePathWithName:nil];
+    path = [path stringByAppendingPathComponent:@"media.sqlite"];
+    [[OTRMediaFileManager sharedInstance] setupWithPath:path password:@"password"];
 
 
 

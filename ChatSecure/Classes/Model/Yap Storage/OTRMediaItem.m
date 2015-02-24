@@ -25,15 +25,25 @@
     }];
 }
 
+- (OTRMessage *)parentMessageInTransaction:(YapDatabaseReadTransaction *)readTransaction
+{
+    __block OTRMessage *message = nil;
+    [[readTransaction ext:OTRYapDatabaseRelationshipName] enumerateEdgesWithName:OTRMessageEdges.media destinationKey:self.uniqueId collection:[[self class] collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
+        message = [OTRMessage fetchObjectWithUniqueID:edge.sourceKey transaction:readTransaction];
+        *stop = YES;
+    }];
+    return message;
+}
+
 #pragma - mark JSQMessageMediaData Methods
 
 - (UIView *)mediaView
 {
-    UIImage *image = [OTRImages imageWithIdentifier:self.filename];
+    UIImage *image = [OTRImages imageWithIdentifier:self.uniqueId];
     if (image) {
         CGSize size = [self mediaViewDisplaySize];
         UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
-        imageView.frame = CGRectMake(0.0f, 0.0f, size.width, size.height);
+        imageView.frame = CGRectMake(0, 0, size.width, size.height);
         imageView.contentMode = UIViewContentModeScaleAspectFill;
         imageView.clipsToBounds = YES;
         [JSQMessagesMediaViewBubbleImageMasker applyBubbleImageMaskToMediaView:imageView isOutgoing:!self.isIncoming];
