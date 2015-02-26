@@ -849,7 +849,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         
         if ([button isEqual:self.microphoneButton]) {
             
-            //OTRAudioRecorderViewController *recorderViewController = [[OTRAudioRecorderViewController alloc] initWithBuddy:self.buddy];
+            OTRAudioRecorderViewController *recorderViewController = [[OTRAudioRecorderViewController alloc] initWithBuddy:self.buddy];
             //[recorderViewController showAudioRecorderFromViewController:self];
             
         } else {
@@ -876,7 +876,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
             [okButton addTarget:self action:@selector(connectButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
             
             
-            //[self showDropdownWithTitle:YOU_ARE_NOT_CONNECTED_STRING buttons:@[okButton] animated:YES tag:0];
+            [self showDropdownWithTitle:YOU_ARE_NOT_CONNECTED_STRING buttons:@[okButton] animated:YES tag:0];
         }];
     }
     

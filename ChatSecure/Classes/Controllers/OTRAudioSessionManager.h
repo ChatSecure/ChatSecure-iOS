@@ -12,12 +12,7 @@
 
 @protocol OTRAudioSessionManagerDelegate <NSObject>
 
-@optional
 - (void)audioSession:(OTRAudioSessionManager *)audioSessionManager didFinishSuccefully:(BOOL)success;
-
-- (void)audioSession:(OTRAudioSessionManager *)audioSessionManager
-    hasAudioReceived:(float **)buffer withBufferSize:(UInt32)bufferSize
-withNumberOfChannels:(UInt32)numberOfChannels;
 
 @end
 

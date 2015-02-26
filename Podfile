@@ -32,7 +32,6 @@ pod 'uservoice-iphone-sdk', '~> 3.2'
 pod 'TUSafariActivity', '~> 1.0'
 pod 'ARChromeActivity', '~> 1.0'
 pod 'JTSImageViewController', '~> 1.4'
-pod 'EZAudio', '~> 0.0'
 
 # Local Podspecs
 pod 'gtm-http-fetcher', :podspec => 'Podspecs/gtm-http-fetcher.podspec.json'

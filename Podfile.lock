@@ -41,7 +41,6 @@ PODS:
   - CPAProxy (1.0.0):
     - CocoaAsyncSocket
   - CRToast (0.0.7)
-  - EZAudio (0.0.6)
   - Facebook-iOS-SDK (3.21.1):
     - Bolts (~> 1.0)
   - GCDWebServer (3.2.2):
@@ -260,7 +259,6 @@ DEPENDENCIES:
   - CocoaLumberjack (~> 1.9)
   - CPAProxy (from `Submodules/CPAProxy/CPAProxy.podspec`)
   - CRToast (from `https://github.com/cruffenach/CRToast`, commit `78569d0e6e6704872af5db1bc37be0ff9d112ac0`)
-  - EZAudio (~> 0.0)
   - Facebook-iOS-SDK (~> 3.19)
   - gtm-http-fetcher (from `Podspecs/gtm-http-fetcher.podspec.json`)
   - gtm-oauth2 (from `Podspecs/gtm-oauth2.podspec.json`)
@@ -339,7 +337,6 @@ SPEC CHECKSUMS:
   CocoaLumberjack: 205769c032b5fef85b92472046bcc8b7e7c8a817
   CPAProxy: c3df549999514de2c04633d20a79b00daf627ddb
   CRToast: da11d94a05b1351a87bb26cbf8f25e80ed2e7115
-  EZAudio: 2f2e5a5094d29ab91d45b229a75c3c31ee26ed1f
   Facebook-iOS-SDK: 18c26e86ab25c17854a2ee2a8f60562099c6600f
   GCDWebServer: 285fde9951ab2cd87c2d9d74735fee977a16fe04
   gtm-http-fetcher: 5072f07e523261f7a87df939d13c1be2340d8111

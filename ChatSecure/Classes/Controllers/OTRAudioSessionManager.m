@@ -7,19 +7,14 @@
 //
 
 #import "OTRAudioSessionManager.h"
-#import "EZAudio.h"
 
 @import AVFoundation;
 
-@interface OTRAudioSessionManager () <AVAudioPlayerDelegate, EZMicrophoneDelegate>
+@interface OTRAudioSessionManager () <AVAudioPlayerDelegate, AVAudioRecorderDelegate>
 
 @property (nonatomic, strong) AVAudioSession *audioSession;
+@property (nonatomic, strong) AVAudioRecorder *currentRecorder;
 @property (nonatomic, strong) AVAudioPlayer *currentPlayer;
-
-@property (nonatomic, strong) EZRecorder *recorder;
-@property (nonatomic, strong) EZMicrophone *microphone;
-
-@property (nonatomic, strong) NSDate *startRecordingDate;
 
 @end
 
@@ -43,8 +38,8 @@
 
 - (BOOL)isRecording
 {
-    if (self.microphone) {
-        return self.microphone.microphoneOn;
+    if (self.currentRecorder) {
+        return self.currentRecorder.isRecording;
     }
     
     return NO;
@@ -122,37 +117,38 @@
     [self stopRecording];
     [self stopPlaying];
     
-    self.microphone = [EZMicrophone sharedMicrophone];
-    self.microphone.microphoneDelegate = self;
-    self.recorder = [EZRecorder recorderWithDestinationURL:url
-                                              sourceFormat:self.microphone.audioStreamBasicDescription
-                                       destinationFileType:EZRecorderFileTypeM4A];
+    [self.audioSession setCategory:AVAudioSessionCategoryRecord error:error];
+    if (error) {
+        return;
+    }
     
-    [self.microphone startFetchingAudio];
-    self.startRecordingDate = [NSDate date];
+    self.currentRecorder = [self audioRecorderWithURL:url error:error];
+    if (error) {
+        return;
+    }
+    
+    [self.currentRecorder record];
 }
 
 - (void)stopRecording
 {
-    [self.microphone stopFetchingAudio];
-    self.microphone = nil;
-    [self.recorder closeAudioFile];
-    self.recorder = nil;
-    self.startRecordingDate = nil;
+    [self.currentRecorder stop];
+    self.currentRecorder = nil;
     [self deactivateSession:nil];
+    
 }
 
 - (NSTimeInterval)currentTimeRecordTime
 {
-    if (self.startRecordingDate) {
-        return [[NSDate date] timeIntervalSinceDate:self.startRecordingDate];
+    if (self.currentRecorder) {
+        return self.currentRecorder.currentTime;
     }
     return 0;
 }
 
 - (NSURL *)currentRecorderURL
 {
-    return [self.recorder url];
+    return self.currentRecorder.url;
 }
 
 #pragma - mark Private Methods
@@ -169,18 +165,12 @@
     return audioPlayer;
 }
 
-#pragma - mark EZMicrophoneDelegateMethods
-
-- (void)microphone:(EZMicrophone *)microphone hasBufferList:(AudioBufferList *)bufferList withBufferSize:(UInt32)bufferSize withNumberOfChannels:(UInt32)numberOfChannels
+- (AVAudioRecorder *)audioRecorderWithURL:(NSURL *)url error:(NSError **)error
 {
-    [self.recorder appendDataFromBufferList:bufferList withBufferSize:bufferSize];
-}
-
-- (void)microphone:(EZMicrophone *)microphone hasAudioReceived:(float **)buffer withBufferSize:(UInt32)bufferSize withNumberOfChannels:(UInt32)numberOfChannels
-{
-    if ([self.delegate respondsToSelector:@selector(audioSession:hasAudioReceived:withBufferSize:withNumberOfChannels:)]) {
-        [self.delegate audioSession:self hasAudioReceived:buffer withBufferSize:bufferSize withNumberOfChannels:numberOfChannels];
-    }
+    NSDictionary *settings = [[self class] defaultRecordingSettings];
+    AVAudioRecorder *recorder = [[AVAudioRecorder alloc] initWithURL:url settings:settings error:error];
+    recorder.delegate = self;
+    return recorder;
 }
 
 #pragma - mark AVAudioRecorderDelegate Methods
@@ -195,6 +185,7 @@
         }
     }
     
+    [self.currentRecorder stop];
     self.currentPlayer = nil;
     [self deactivateSession:nil];
     
