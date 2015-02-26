@@ -173,6 +173,10 @@
 		63D27FC51A6DC51C00EC251A /* OTRMediaItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D27FC41A6DC51C00EC251A /* OTRMediaItem.m */; };
 		63D58C261A8C154D003C5A2D /* OTRAudioRecorderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D58C251A8C154D003C5A2D /* OTRAudioRecorderViewController.m */; };
 		63D64D661A2FBA8C00E21F77 /* OTRToastOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D64D651A2FBA8C00E21F77 /* OTRToastOptions.m */; };
+		63DDD8B01A9D3C0400C0A918 /* OTRMediaServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 63DDD8AF1A9D3C0400C0A918 /* OTRMediaServer.m */; };
+		63DDD8B31A9D53E300C0A918 /* OTRFileCopier.m in Sources */ = {isa = PBXBuildFile; fileRef = 63DDD8B21A9D53E300C0A918 /* OTRFileCopier.m */; };
+		63DDD8B51A9E94B700C0A918 /* OTRMediaTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63DDD8B41A9E94B700C0A918 /* OTRMediaTests.m */; };
+		63DDD8BA1A9E9BD900C0A918 /* samples in Resources */ = {isa = PBXBuildFile; fileRef = 63DDD8B91A9E9BD900C0A918 /* samples */; };
 		63F0FF641A798D8E001F0C99 /* OTRAudioControlsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F0FF631A798D8E001F0C99 /* OTRAudioControlsView.m */; };
 		63F6E1911A69B9BA0011E6F7 /* OTRAttachmentPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F6E1901A69B9BA0011E6F7 /* OTRAttachmentPicker.m */; };
 		63FA548B1A7ACA2F00F2AEBB /* OTRPlayPauseProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FA548A1A7ACA2F00F2AEBB /* OTRPlayPauseProgressView.m */; };
@@ -560,6 +564,12 @@
 		63DC0EB31A1ABC86002C9598 /* OTR_Codesigning.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = OTR_Codesigning.xcconfig; path = configurations/OTR_Codesigning.xcconfig; sourceTree = "<group>"; };
 		63DC0EB41A1ABC86002C9598 /* OTR_Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = OTR_Debug.xcconfig; path = configurations/OTR_Debug.xcconfig; sourceTree = "<group>"; };
 		63DC0EB61A1ABC86002C9598 /* OTR_Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = OTR_Release.xcconfig; path = configurations/OTR_Release.xcconfig; sourceTree = "<group>"; };
+		63DDD8AE1A9D3C0400C0A918 /* OTRMediaServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRMediaServer.h; sourceTree = "<group>"; };
+		63DDD8AF1A9D3C0400C0A918 /* OTRMediaServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRMediaServer.m; sourceTree = "<group>"; };
+		63DDD8B11A9D53E300C0A918 /* OTRFileCopier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRFileCopier.h; sourceTree = "<group>"; };
+		63DDD8B21A9D53E300C0A918 /* OTRFileCopier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRFileCopier.m; sourceTree = "<group>"; };
+		63DDD8B41A9E94B700C0A918 /* OTRMediaTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRMediaTests.m; sourceTree = "<group>"; };
+		63DDD8B91A9E9BD900C0A918 /* samples */ = {isa = PBXFileReference; lastKnownFileType = folder; path = samples; sourceTree = "<group>"; };
 		63F0FF621A798D8E001F0C99 /* OTRAudioControlsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAudioControlsView.h; sourceTree = "<group>"; };
 		63F0FF631A798D8E001F0C99 /* OTRAudioControlsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAudioControlsView.m; sourceTree = "<group>"; };
 		63F6E18F1A69B9BA0011E6F7 /* OTRAttachmentPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAttachmentPicker.h; sourceTree = "<group>"; };
@@ -696,6 +706,10 @@
 				63C5B6691A82F3EE0011BEA8 /* OTRAudioPlaybackController.m */,
 				6354BBE21A96C67400E8EBAC /* OTRMediaFileManager.h */,
 				6354BBE31A96C67400E8EBAC /* OTRMediaFileManager.m */,
+				63DDD8B11A9D53E300C0A918 /* OTRFileCopier.h */,
+				63DDD8B21A9D53E300C0A918 /* OTRFileCopier.m */,
+				63DDD8AE1A9D3C0400C0A918 /* OTRMediaServer.h */,
+				63DDD8AF1A9D3C0400C0A918 /* OTRMediaServer.m */,
 				633105321A16D1A300C17BAE /* XMPP */,
 			);
 			path = Controllers;
@@ -1044,7 +1058,9 @@
 		6396AFB61A169D54009F3E6C /* ChatSecureTests */ = {
 			isa = PBXGroup;
 			children = (
+				63DDD8B91A9E9BD900C0A918 /* samples */,
 				6396AFB91A169D54009F3E6C /* ChatSecureTests.m */,
+				63DDD8B41A9E94B700C0A918 /* OTRMediaTests.m */,
 				632461571A1AE553000EF33B /* OTRCoreDataMigrationTests.m */,
 				6396AFB71A169D54009F3E6C /* Supporting Files */,
 			);
@@ -1313,6 +1329,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				63DDD8BA1A9E9BD900C0A918 /* samples in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1402,6 +1419,7 @@
 				63C4BD2C1A1E9BE1001696CD /* _OTRvCardAvatar.m in Sources */,
 				6331070F1A16D1A300C17BAE /* OTRSettingsViewController.m in Sources */,
 				633106CB1A16D1A300C17BAE /* OTRViewSetting.m in Sources */,
+				63DDD8B01A9D3C0400C0A918 /* OTRMediaServer.m in Sources */,
 				633107141A16D1A300C17BAE /* OTRBuddyInfoCell.m in Sources */,
 				633107051A16D1A300C17BAE /* OTRLanguageListSettingViewController.m in Sources */,
 				633106FE1A16D1A300C17BAE /* OTRConversationViewController.m in Sources */,
@@ -1431,6 +1449,7 @@
 				633106CE1A16D1A300C17BAE /* OTRGoogleOAuthXMPPAccount.m in Sources */,
 				633106E81A16D1A300C17BAE /* OTRPasswordGenerator.m in Sources */,
 				63C4BD221A1E9BE1001696CD /* _OTRManagedFacebookAccount.m in Sources */,
+				63DDD8B31A9D53E300C0A918 /* OTRFileCopier.m in Sources */,
 				633106BA1A16D1A300C17BAE /* OTROpenInTwitterActivity.m in Sources */,
 				633106781A16D1A300C17BAE /* UIActionSheet+ChatSecure.m in Sources */,
 				63C5B66A1A82F3EE0011BEA8 /* OTRAudioPlaybackController.m in Sources */,
@@ -1541,6 +1560,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6396AFBA1A169D54009F3E6C /* ChatSecureTests.m in Sources */,
+				63DDD8B51A9E94B700C0A918 /* OTRMediaTests.m in Sources */,
 				632461581A1AE553000EF33B /* OTRCoreDataMigrationTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -8,19 +8,32 @@
 
 #import <Foundation/Foundation.h>
 
-@class OTRMediaItem;
+@class OTRMediaItem, IOCipher;
+
+extern NSString *const kOTRRootMediaDirectory;
 
 @interface OTRMediaFileManager : NSObject
 
+@property (nonatomic, strong, readonly) IOCipher *ioCipher;
+
 - (void)setupWithPath:(NSString *)path password:(NSString *)password;
+
+- (void)copyDataFromFilePath:(NSString *)filePath
+             toEncryptedPath:(NSString *)path
+             completionQueue:(dispatch_queue_t)completionQueue
+                  completion:(void (^)(NSInteger, NSError *))completion;
 
 - (void)setData:(NSData *)data forItem:(OTRMediaItem *)mediaItem
      completion:(void (^)(NSInteger bytesWritten, NSError *error))completion
 completionQueue:(dispatch_queue_t)completionQueue;
 
-- (void)mediaForItem:(OTRMediaItem *)mediaItem
+- (void)dataForItem:(OTRMediaItem *)mediaItem
+      buddyUniqueId:(NSString *)buddyUniqueId
           completion:(void (^)(NSData *data, NSError *error))completion
      completionQueue:(dispatch_queue_t)completionQueue;
+
++ (NSString *)pathForMediaItem:(OTRMediaItem *)mediaItem buddyUniqueId:(NSString *)buddyUniqueId;
++ (NSString *)pathForMediaItem:(OTRMediaItem *)mediaItem;
 
 + (instancetype)sharedInstance;
 

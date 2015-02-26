@@ -35,14 +35,15 @@
     if (!view) {
         //async loading image into OTRImages image cache
         __weak typeof(self)weakSelf = self;
-        [[OTRMediaFileManager sharedInstance] mediaForItem:self completion:^(NSData *data, NSError *error) {
-            if([data length]) {
-                __strong typeof(weakSelf)strongSelf = weakSelf;
-                UIImage *image = [UIImage imageWithData:data];
-                [OTRImages setImage:image forIdentifier:strongSelf.uniqueId];
-                [strongSelf touchParentMessage];
-            }
-        } completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
+        //FIXME
+//        [[OTRMediaFileManager sharedInstance] mediaForItem:self completion:^(NSData *data, NSError *error) {
+//            if([data length]) {
+//                __strong typeof(weakSelf)strongSelf = weakSelf;
+//                UIImage *image = [UIImage imageWithData:data];
+//                [OTRImages setImage:image forIdentifier:strongSelf.uniqueId];
+//                [strongSelf touchParentMessage];
+//            }
+//        } completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
     }
     return view;
 }

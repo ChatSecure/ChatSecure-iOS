@@ -44,6 +44,7 @@
 #import "OTRAudioPlaybackController.h"
 #import "OTRAudioRecorderViewController.h"
 #import "OTRMediaFileManager.h"
+#import "OTRMediaServer.h"
 
 @import AVFoundation;
 @import MediaPlayer;
@@ -768,10 +769,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 - (void)showVideo:(OTRVideoItem *)videoItem fromCollectionView:(JSQMessagesCollectionView *)collectionView atIndexPath:(NSIndexPath *)indexPath
 {
     if (videoItem.filename) {
-        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-        NSString *documentsPath = [paths firstObject];
-        NSString *filePath = [documentsPath stringByAppendingPathComponent:videoItem.filename];
-        NSURL *videoURL = [NSURL fileURLWithPath:filePath];
+        NSURL *videoURL = [[OTRMediaServer sharedInstance] urlForMediaItem:videoItem];
         MPMoviePlayerViewController *moviePlayerViewController = [[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
         [self presentViewController:moviePlayerViewController animated:YES completion:nil];
     }
@@ -958,36 +956,31 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (void)attachmentPicker:(OTRAttachmentPicker *)attachmentPicker gotVideoURL:(NSURL *)videoURL
 {
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsPath = [paths firstObject];
-    NSString *UUID = [[NSUUID UUID] UUIDString];
-    NSString *fileName = [UUID stringByAppendingPathExtension:videoURL.pathExtension];
-    NSString *path = [documentsPath stringByAppendingPathComponent:fileName];
-    NSURL *finalVideoURL = [NSURL fileURLWithPath:path];
+    __block OTRVideoItem *videoItem = [OTRVideoItem videoItemWithFileURL:videoURL];
     
-    NSError *error = nil;
-    [[NSFileManager defaultManager] copyItemAtURL:videoURL toURL:finalVideoURL error:&error];
-    if (!error) {
-        AVAsset *asset = [AVAsset assetWithURL:finalVideoURL];
-        AVAssetTrack *videoTrack = [[asset tracksWithMediaType:AVMediaTypeVideo] firstObject];
-        CGSize videoSize = videoTrack.naturalSize;
+    __block OTRMessage *message = [[OTRMessage alloc] init];
+    message.incoming = NO;
+    message.mediaItemUniqueId = videoItem.uniqueId;
+    message.buddyUniqueId = self.buddy.uniqueId;
+    message.transportedSecurely = YES;
+    
+    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        [message saveWithTransaction:transaction];
+        [videoItem saveWithTransaction:transaction];
+    } completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0) completionBlock:^{
         
-        __block OTRVideoItem *videoItem = [[OTRVideoItem alloc] init];
-        videoItem.width = videoSize.width;
-        videoItem.height = videoSize.height;
-        videoItem.filename = fileName;
-        
-        __block OTRMessage *message = [[OTRMessage alloc] init];
-        message.incoming = NO;
-        message.mediaItemUniqueId = videoItem.uniqueId;
-        message.buddyUniqueId = self.buddy.uniqueId;
-        message.transportedSecurely = YES;
-        
-        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-            [message saveWithTransaction:transaction];
-            [videoItem saveWithTransaction:transaction];
+        NSString *newPath = [OTRMediaFileManager pathForMediaItem:videoItem];
+        [[OTRMediaFileManager sharedInstance] copyDataFromFilePath:videoURL.path
+                                                   toEncryptedPath:newPath
+                                                   completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
+                                                        completion:^(NSInteger bytesWritten, NSError *error) {
+            if (error) {
+                DDLogError(@"Error Copying Video: %@",error);
+            }
+            
+            [videoItem touchParentMessage];
         }];
-    }
+    }];
 }
 
 #pragma - mark UIScrollViewDelegate Methods

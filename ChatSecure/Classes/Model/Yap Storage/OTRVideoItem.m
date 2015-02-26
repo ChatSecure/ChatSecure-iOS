@@ -74,6 +74,20 @@
     return view;
 }
 
++ (instancetype)videoItemWithFileURL:(NSURL *)url
+{
+    AVAsset *asset = [AVAsset assetWithURL:url];
+    AVAssetTrack *videoTrack = [[asset tracksWithMediaType:AVMediaTypeVideo] firstObject];
+    CGSize videoSize = videoTrack.naturalSize;
+    
+    OTRVideoItem *videoItem = [[OTRVideoItem alloc] init];
+    videoItem.width = videoSize.width;
+    videoItem.height = videoSize.height;
+    videoItem.filename = url.lastPathComponent;
+    
+    return videoItem;
+}
+
 + (NSString *)collection
 {
     return [OTRMediaItem collection];

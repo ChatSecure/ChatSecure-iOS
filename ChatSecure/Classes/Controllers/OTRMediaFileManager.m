@@ -12,13 +12,15 @@
 #import "OTRMessage.h"
 #import "OTRDatabaseManager.h"
 #import "OTRConstants.h"
+#import "OTRFileCopier.h"
 
-NSString *const rootMediaDirectory = @"media";
+NSString *const kOTRRootMediaDirectory = @"media";
 
 @interface OTRMediaFileManager ()
 
 @property (nonatomic) dispatch_queue_t concurrentQueue;
-@property (nonatomic, strong) IOCipher *ioCipher;
+@property (nonatomic) dispatch_queue_t isolationQueue;
+@property (nonatomic, strong) NSMutableDictionary *fileCopierDictionary;
 
 @end
 
@@ -27,16 +29,66 @@ NSString *const rootMediaDirectory = @"media";
 - (instancetype)init
 {
     if (self = [super init]) {
+        self.fileCopierDictionary = [[NSMutableDictionary alloc] init];
         self.concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        NSString *isolationLabel = [NSString stringWithFormat:@"%@.isolation.%p", [self class], self];
+        self.isolationQueue = dispatch_queue_create([isolationLabel UTF8String], DISPATCH_QUEUE_CONCURRENT);
     }
     return self;
+}
+
+- (void)setFileCopier:(OTRFileCopier *)fileCopier forEncryptedFilePath:(NSString *)encryptedFilePath
+{
+    if (encryptedFilePath) {
+        dispatch_barrier_async(self.isolationQueue, ^{
+            if (fileCopier) {
+                [self.fileCopierDictionary setObject:fileCopier forKey:encryptedFilePath];
+            } else {
+                [self.fileCopierDictionary removeObjectForKey:encryptedFilePath];
+            }
+            
+        });
+    }
+}
+
+- (OTRFileCopier *)completionBlockForFileCopier:(OTRFileCopier *)fileCopier
+{
+    __block void (^completion)(NSInteger, NSError *) = nil;
+    if (fileCopier) {
+        dispatch_sync(self.isolationQueue, ^{
+            completion = [self.fileCopierDictionary objectForKey:fileCopier];
+        });
+    }
+    return completion;
 }
 
 #pragma - mark Public Methods
 
 - (void)setupWithPath:(NSString *)path password:(NSString *)password
 {
-    self.ioCipher = [[IOCipher alloc] initWithPath:path password:password];
+    _ioCipher = [[IOCipher alloc] initWithPath:path password:password];
+}
+
+- (void)copyDataFromFilePath:(NSString *)filePath toEncryptedPath:(NSString *)path completionQueue:(dispatch_queue_t)completionQueue completion:(void (^)(NSInteger, NSError *))completion 
+{
+    __weak typeof(self)weakSelf = self;
+    dispatch_async(self.concurrentQueue, ^{
+        __strong typeof(weakSelf)strongSelf = weakSelf;
+        __block OTRFileCopier *fileCopier = [[OTRFileCopier alloc] initWithFilePath:filePath toEncryptedPath:path ioCipher:strongSelf.ioCipher completionQueue:self.concurrentQueue completion:^(NSInteger bytesWritten, NSError *error) {
+            
+            if (completion) {
+                dispatch_async([[self class] completionQueue:completionQueue], ^{
+                    completion(bytesWritten,error);
+                });
+                
+            }
+            
+            [strongSelf setFileCopier:nil forEncryptedFilePath:fileCopier.encryptedFilePath];
+        }];
+        [self setFileCopier:fileCopier forEncryptedFilePath:fileCopier.encryptedFilePath];
+        [fileCopier start];
+    });
+    
 }
 
 - (void)setData:(NSData *)data forItem:(OTRMediaItem *)mediaItem completion:(void (^)(NSInteger bytesWritten, NSError *error))completion completionQueue:(dispatch_queue_t)completionQueue
@@ -84,13 +136,12 @@ NSString *const rootMediaDirectory = @"media";
     });
     
 }
-
-- (void)mediaForItem:(OTRMediaItem *)mediaItem completion:(void (^)(NSData *, NSError *))completion completionQueue:(dispatch_queue_t)completionQueue
+- (void)dataForItem:(OTRMediaItem *)mediaItem buddyUniqueId:(NSString *)buddyUniqueId completion:(void (^)(NSData *, NSError *))completion completionQueue:(dispatch_queue_t)completionQueue
 {
     completionQueue = [[self class] completionQueue:completionQueue];
     
     dispatch_async(self.concurrentQueue, ^{
-        NSString *filePath = [[self class] pathForMediaItem:mediaItem];
+        NSString *filePath = [[self class] pathForMediaItem:mediaItem buddyUniqueId:buddyUniqueId];
         if (!filePath) {
             NSError *error = [NSError errorWithDomain:kOTRErrorDomain code:150 userInfo:@{NSLocalizedDescriptionKey:@"Unable to create file path"}];
             dispatch_async(completion, ^{
@@ -144,14 +195,19 @@ NSString *const rootMediaDirectory = @"media";
     return completionQueue;
 }
 
++ (NSString *)pathForMediaItem:(OTRMediaItem *)mediaItem buddyUniqueId:(NSString *)buddyUniqueId
+{
+    if ([buddyUniqueId length] && [mediaItem.uniqueId length] && [mediaItem.filename length]) {
+        return [NSString pathWithComponents:@[@"/",kOTRRootMediaDirectory,buddyUniqueId,mediaItem.uniqueId,mediaItem.filename]];
+    }
+    return nil;
+}
+
 + (NSString *)pathForMediaItem:(OTRMediaItem *)mediaItem
 {
     NSString *path = nil;
     NSString *buddyUniqueId = [self buddyUniqueIdForMeidaItem:mediaItem];
-    if ([buddyUniqueId length] && [mediaItem.uniqueId length] && [mediaItem.filename length]) {
-        path = [NSString pathWithComponents:@[rootMediaDirectory,buddyUniqueId,mediaItem.uniqueId,mediaItem.filename]];
-    }
-    return path;
+    return [self pathForMediaItem:mediaItem buddyUniqueId:buddyUniqueId];
 }
 
 + (NSString *)buddyUniqueIdForMeidaItem:(OTRMediaItem *)mediaItem

@@ -13,4 +13,6 @@
 @property (nonatomic) float width;
 @property (nonatomic) float height;
 
++ (instancetype)videoItemWithFileURL:(NSURL *)url;
+
 @end

@@ -56,10 +56,17 @@
 #import "UIViewController+ChatSecure.h"
 #import "OTRNotificationController.h"
 #import "OTRMediaFileManager.h"
+#import "OTRMediaServer.h"
 
 #if CHATSECURE_DEMO
 #import "OTRChatDemo.h"
 #endif
+
+@interface OTRAppDelegate ()
+
+@property (nonatomic, strong) OTRMediaServer *mediaServer;
+
+@end
 
 @implementation OTRAppDelegate
 
@@ -121,8 +128,14 @@
     NSString *path = [OTRDatabaseManager yapDatabasePathWithName:nil];
     path = [path stringByAppendingPathComponent:@"media.sqlite"];
     [[OTRMediaFileManager sharedInstance] setupWithPath:path password:@"password"];
-
-
+    
+    self.mediaServer = [OTRMediaServer sharedInstance];
+    NSError *error = nil;
+    [self.mediaServer startOnPort:8080 error:&error];
+    if (error) {
+        DDLogError(@"Error starting media server: %@",error);
+    }
+    
 
 
     //rootViewController = [[OTRDatabaseUnlockViewController alloc] init];
