@@ -91,11 +91,11 @@ NSString *const kOTRRootMediaDirectory = @"media";
     
 }
 
-- (void)setData:(NSData *)data forItem:(OTRMediaItem *)mediaItem completion:(void (^)(NSInteger bytesWritten, NSError *error))completion completionQueue:(dispatch_queue_t)completionQueue
+- (void)setData:(NSData *)data forItem:(OTRMediaItem *)mediaItem buddyUniqueId:(NSString *)buddyUniqueId completion:(void (^)(NSInteger bytesWritten, NSError *error))completion completionQueue:(dispatch_queue_t)completionQueue
 {
     
     dispatch_async(self.concurrentQueue, ^{
-        NSString *path = [[self class] pathForMediaItem:mediaItem];
+        NSString *path = [[self class] pathForMediaItem:mediaItem buddyUniqueId:buddyUniqueId];
         if (![path length]) {
             NSError *error = [NSError errorWithDomain:kOTRErrorDomain code:150 userInfo:@{NSLocalizedDescriptionKey:@"Unable to create file path"}];
             dispatch_async([[self class] completionQueue:completionQueue], ^{
@@ -201,23 +201,6 @@ NSString *const kOTRRootMediaDirectory = @"media";
         return [NSString pathWithComponents:@[@"/",kOTRRootMediaDirectory,buddyUniqueId,mediaItem.uniqueId,mediaItem.filename]];
     }
     return nil;
-}
-
-+ (NSString *)pathForMediaItem:(OTRMediaItem *)mediaItem
-{
-    NSString *path = nil;
-    NSString *buddyUniqueId = [self buddyUniqueIdForMeidaItem:mediaItem];
-    return [self pathForMediaItem:mediaItem buddyUniqueId:buddyUniqueId];
-}
-
-+ (NSString *)buddyUniqueIdForMeidaItem:(OTRMediaItem *)mediaItem
-{
-    __block NSString *buddyUniqueId = nil;
-    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        OTRMessage *message = [mediaItem parentMessageInTransaction:transaction];
-        buddyUniqueId = [message buddyUniqueId];
-    }];
-    return buddyUniqueId;
 }
 
 @end

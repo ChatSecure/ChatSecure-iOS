@@ -23,7 +23,9 @@ extern NSString *const kOTRRootMediaDirectory;
              completionQueue:(dispatch_queue_t)completionQueue
                   completion:(void (^)(NSInteger, NSError *))completion;
 
-- (void)setData:(NSData *)data forItem:(OTRMediaItem *)mediaItem
+- (void)setData:(NSData *)data
+        forItem:(OTRMediaItem *)mediaItem
+  buddyUniqueId:(NSString *)buddyUniqueId
      completion:(void (^)(NSInteger bytesWritten, NSError *error))completion
 completionQueue:(dispatch_queue_t)completionQueue;
 
@@ -33,7 +35,6 @@ completionQueue:(dispatch_queue_t)completionQueue;
      completionQueue:(dispatch_queue_t)completionQueue;
 
 + (NSString *)pathForMediaItem:(OTRMediaItem *)mediaItem buddyUniqueId:(NSString *)buddyUniqueId;
-+ (NSString *)pathForMediaItem:(OTRMediaItem *)mediaItem;
 
 + (instancetype)sharedInstance;
 

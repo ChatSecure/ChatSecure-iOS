@@ -10,6 +10,8 @@
 #import "OTRImages.h"
 #import "OTRMediaFileManager.h"
 #import "JSQMessagesMediaViewBubbleImageMasker.h"
+#import "OTRDatabaseManager.h"
+#import "OTRMessage.h"
 
 
 @implementation OTRImageItem
@@ -35,15 +37,23 @@
     if (!view) {
         //async loading image into OTRImages image cache
         __weak typeof(self)weakSelf = self;
-        //FIXME
-//        [[OTRMediaFileManager sharedInstance] mediaForItem:self completion:^(NSData *data, NSError *error) {
-//            if([data length]) {
-//                __strong typeof(weakSelf)strongSelf = weakSelf;
-//                UIImage *image = [UIImage imageWithData:data];
-//                [OTRImages setImage:image forIdentifier:strongSelf.uniqueId];
-//                [strongSelf touchParentMessage];
-//            }
-//        } completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
+        __block NSString *buddyUniqueId = nil;
+        [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
+            __strong typeof(weakSelf)strongSelf = weakSelf;
+            OTRMessage *message = [strongSelf parentMessageInTransaction:transaction];
+            buddyUniqueId = [message buddyUniqueId];
+        } completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0) completionBlock:^{
+            __strong typeof(weakSelf)strongSelf = weakSelf;
+            [[OTRMediaFileManager sharedInstance] dataForItem:strongSelf buddyUniqueId:buddyUniqueId completion:^(NSData *data, NSError *error) {
+                if([data length]) {
+                    __strong typeof(weakSelf)strongSelf = weakSelf;
+                    UIImage *image = [UIImage imageWithData:data];
+                    [OTRImages setImage:image forIdentifier:strongSelf.uniqueId];
+                    [strongSelf touchParentMessage];
+                }
+            } completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
+        }];
+        
     }
     return view;
 }

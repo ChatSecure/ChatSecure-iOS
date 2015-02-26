@@ -14,8 +14,7 @@
 
 - (void)startOnPort:(NSUInteger)port error:(NSError **)error;
 
-- (NSURL *)urlForMediaItem:(OTRMediaItem *)mediaItem;
-
+- (NSURL *)urlForMediaItem:(OTRMediaItem *)mediaItem buddyUniqueId:(NSString *)buddyUniqueId;
 
 + (instancetype)sharedInstance;
 

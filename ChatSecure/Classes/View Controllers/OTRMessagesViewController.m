@@ -769,7 +769,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 - (void)showVideo:(OTRVideoItem *)videoItem fromCollectionView:(JSQMessagesCollectionView *)collectionView atIndexPath:(NSIndexPath *)indexPath
 {
     if (videoItem.filename) {
-        NSURL *videoURL = [[OTRMediaServer sharedInstance] urlForMediaItem:videoItem];
+        NSURL *videoURL = [[OTRMediaServer sharedInstance] urlForMediaItem:videoItem buddyUniqueId:self.buddy.uniqueId];
         MPMoviePlayerViewController *moviePlayerViewController = [[MPMoviePlayerViewController alloc] initWithContentURL:videoURL];
         [self presentViewController:moviePlayerViewController animated:YES completion:nil];
     }
@@ -944,7 +944,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
                 [message saveWithTransaction:transaction];
                 [imageItem saveWithTransaction:transaction];
             } completionBlock:^{
-                [[OTRMediaFileManager sharedInstance] setData:imageData forItem:imageItem completion:^(NSInteger bytesWritten, NSError *error) {
+                [[OTRMediaFileManager sharedInstance] setData:imageData forItem:imageItem buddyUniqueId:self.buddy.uniqueId completion:^(NSInteger bytesWritten, NSError *error) {
                     [imageItem touchParentMessage];
                     [[OTRProtocolManager sharedInstance].encryptionManager.dataHandler sendFileWithName:@"image.jpg" fileData:imageData username:self.buddy.username accountName:self.account.username protocol:kOTRProtocolTypeXMPP tag:nil];
                     
@@ -969,7 +969,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         [videoItem saveWithTransaction:transaction];
     } completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0) completionBlock:^{
         
-        NSString *newPath = [OTRMediaFileManager pathForMediaItem:videoItem];
+        NSString *newPath = [OTRMediaFileManager pathForMediaItem:videoItem buddyUniqueId:self.buddy.uniqueId];
         [[OTRMediaFileManager sharedInstance] copyDataFromFilePath:videoURL.path
                                                    toEncryptedPath:newPath
                                                    completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)

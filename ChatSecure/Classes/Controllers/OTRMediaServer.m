@@ -63,9 +63,9 @@
     }
 }
 
-- (NSURL *)urlForMediaItem:(OTRMediaItem *)mediaItem
+- (NSURL *)urlForMediaItem:(OTRMediaItem *)mediaItem buddyUniqueId:(NSString *)buddyUniqueId
 {
-    NSString *itemPath = [OTRMediaFileManager pathForMediaItem:mediaItem];
+    NSString *itemPath = [OTRMediaFileManager pathForMediaItem:mediaItem buddyUniqueId:buddyUniqueId];
     NSString *path = [[NSString stringWithFormat:@"http://localhost:%lu",(unsigned long)self.webServer.port] stringByAppendingPathComponent:itemPath];
     return [NSURL URLWithString:path];
 }
