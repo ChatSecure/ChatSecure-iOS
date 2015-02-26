@@ -14,6 +14,7 @@
 #import "OTRMessage.h"
 #import "UIImage+JSQMessages.h"
 #import "PureLayout.h"
+#import "OTRMediaServer.h"
 
 @import AVFoundation;
 
@@ -21,10 +22,13 @@
 
 - (NSURL *)mediaURL
 {
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsPath = [paths firstObject];
-    NSString *path = [documentsPath stringByAppendingPathComponent:self.filename];
-    return [NSURL fileURLWithPath:path];
+    __block NSString *buddyUniqueId = nil;
+    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        OTRMessage *message = [self parentMessageInTransaction:transaction];
+        buddyUniqueId = message.buddyUniqueId;
+    }];
+    
+    return [[OTRMediaServer sharedInstance] urlForMediaItem:self buddyUniqueId:buddyUniqueId];
 }
 
 - (CGSize)mediaViewDisplaySize
@@ -43,7 +47,7 @@
         __weak typeof(self)weakSelf = self;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             __strong typeof(weakSelf)strongSelf = weakSelf;
-            AVAsset *asset = [AVAsset assetWithURL:[strongSelf mediaURL]];
+            AVURLAsset *asset = [AVURLAsset assetWithURL:[strongSelf mediaURL]];
             AVAssetImageGenerator *imageGenerator = [[AVAssetImageGenerator alloc] initWithAsset:asset];
             imageGenerator.appliesPreferredTrackTransform = YES;
             NSError *error = nil;
@@ -53,7 +57,7 @@
             UIImage *image = [UIImage imageWithCGImage:imageRef];
             CGImageRelease(imageRef);
             if (image && !error) {
-                [OTRImages setImage:image forIdentifier:strongSelf.filename];
+                [OTRImages setImage:image forIdentifier:strongSelf.uniqueId];
                 [strongSelf touchParentMessage];
             }
         });
@@ -76,7 +80,7 @@
 
 + (instancetype)videoItemWithFileURL:(NSURL *)url
 {
-    AVAsset *asset = [AVAsset assetWithURL:url];
+    AVURLAsset *asset = [AVURLAsset assetWithURL:url];
     AVAssetTrack *videoTrack = [[asset tracksWithMediaType:AVMediaTypeVideo] firstObject];
     CGSize videoSize = videoTrack.naturalSize;
     
