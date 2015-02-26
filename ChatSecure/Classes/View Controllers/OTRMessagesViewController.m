@@ -38,7 +38,6 @@
 #import "OTRVideoItem.h"
 #import "OTRAudioItem.h"
 #import "JTSImageViewController.h"
-#import "OTRAudioSessionManager.h"
 #import "OTRAudioControlsView.h"
 #import "OTRPlayPauseProgressView.h"
 #import "OTRAudioPlaybackController.h"
@@ -83,7 +82,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
 @property (nonatomic, strong) UIButton *sendButton;
 
 @property (nonatomic, strong) OTRAttachmentPicker *attachmentPicker;
-@property (nonatomic, strong) OTRAudioSessionManager *audioSessionManager;
 @property (nonatomic, strong) OTRAudioPlaybackController *audioPlaybackController;
 
 @end
@@ -211,14 +209,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
 }
 
 #pragma - mark Setters & getters
-
-- (OTRAudioSessionManager *)audioSessionManager
-{
-    if (!_audioSessionManager) {
-        _audioSessionManager = [[OTRAudioSessionManager alloc] init];
-    }
-    return _audioSessionManager;
-}
 
 - (OTRAttachmentPicker *)attachmentPicker
 {
@@ -794,7 +784,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }
     
     if (error) {
-         NSLog(@"Audio Playback Error: %@",error);
+         DDLogError(@"Audio Playback Error: %@",error);
     }
    
 }
@@ -924,6 +914,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
 {
     if (photo) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            
+            //FIXME Better choice from image size and compression
             __block NSData *imageData = UIImageJPEGRepresentation(photo, 0.5);
             
             NSString *UUID = [[NSUUID UUID] UUIDString];
