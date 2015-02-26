@@ -780,7 +780,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         [self.audioPlaybackController stopCurrentlyPlaying];
         OTRAudioControlsView *audioControls = [self audioControllsfromCollectionView:collectionView atIndexPath:indexPath];
         [self.audioPlaybackController attachAudioControlsView:audioControls];
-        [self.audioPlaybackController playAudioItem:audioItem error:&error];
+        [self.audioPlaybackController playAudioItem:audioItem buddyUniqueId:self.buddy.uniqueId error:&error];
     }
     
     if (error) {
@@ -969,6 +969,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
             if (error) {
                 DDLogError(@"Error Copying Video: %@",error);
             }
+                                                            if ([[NSFileManager defaultManager] fileExistsAtPath:videoURL.path]) {
+                                                                [[NSFileManager defaultManager] removeItemAtPath:videoURL.path error:nil];
+                                                            }
             
             [videoItem touchParentMessage];
         }];

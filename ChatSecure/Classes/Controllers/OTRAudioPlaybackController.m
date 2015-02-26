@@ -11,6 +11,7 @@
 #import "OTRAudioSessionManager.h"
 #import "OTRPlayPauseProgressView.h"
 #import "OTRAudioItem.h"
+#import "OTRMediaServer.h"
 
 @import AVFoundation;
 
@@ -45,7 +46,7 @@
 
 - (void)playURL:(NSURL *)url error:(NSError **)error;
 {
-    AVAsset *asset = [AVAsset assetWithURL:url];
+    AVURLAsset *asset = [AVURLAsset assetWithURL:url];
     self.duration = CMTimeGetSeconds(asset.duration);
     self.currentAudioControlsView.playPuaseProgressView.status = OTRPlayPauseProgressViewStatusPause;
     error = nil;
@@ -85,16 +86,13 @@
 
 #pragma - mark Public Methods
 
-- (void)playAudioItem:(OTRAudioItem *)audioItem error:(NSError **)error
+- (void)playAudioItem:(OTRAudioItem *)audioItem buddyUniqueId:(NSString *)buddyUniqueId error:(NSError *__autoreleasing *)error
 {
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsPath = [paths firstObject];
-    NSString *filePath = [documentsPath stringByAppendingPathComponent:audioItem.filename];
-    NSURL *fileURL = [NSURL fileURLWithPath:filePath];
+    NSURL *audioURL = [[OTRMediaServer sharedInstance] urlForMediaItem:audioItem buddyUniqueId:buddyUniqueId];
     
     _currentAudioItem = audioItem;
     
-    [self playURL:fileURL error:error];
+    [self playURL:audioURL error:error];
 }
 
 - (void)attachAudioControlsView:(OTRAudioControlsView *)audioControlsView

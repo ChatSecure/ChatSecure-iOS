@@ -18,6 +18,7 @@
 #import "OTRImages.h"
 #import "BButton.h"
 #import "OTRColors.h"
+#import "OTRMediaFileManager.h"
 
 @import AVFoundation;
 
@@ -259,32 +260,36 @@ NSString *const kOTRAudioRecordAnimatePath = @"kOTRAudioRecordAnimatePath";
     
     __block NSString *buddyUniqueId = self.buddy.uniqueId;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        OTRMessage *message = [[OTRMessage alloc] init];
+        __block OTRMessage *message = [[OTRMessage alloc] init];
         message.incoming = NO;
         message.buddyUniqueId = buddyUniqueId;
         
-        OTRAudioItem *audioItem = [[OTRAudioItem alloc] init];
+        __block OTRAudioItem *audioItem = [[OTRAudioItem alloc] init];
         audioItem.isIncoming = message.incoming;
         audioItem.filename = [[url absoluteString] lastPathComponent];
         
-        AVAsset *audioAsset = [AVAsset assetWithURL:url];
+        AVURLAsset *audioAsset = [AVURLAsset assetWithURL:url];
         audioItem.timeLength = CMTimeGetSeconds(audioAsset.duration);
         
         message.mediaItemUniqueId = audioItem.uniqueId;
         
-        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-            [audioItem saveWithTransaction:transaction];
-            [message saveWithTransaction:transaction];
-        }];
+        //Copy from temporary directory to encrypted stroage
+        NSString *encryptedPath = [OTRMediaFileManager pathForMediaItem:audioItem buddyUniqueId:buddyUniqueId];
+        [[OTRMediaFileManager sharedInstance] copyDataFromFilePath:url.path
+                                                   toEncryptedPath:encryptedPath
+                                                   completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
+                                                        completion:^(NSInteger bytesWritten, NSError *error) {
+                                                            [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+                                                                [audioItem saveWithTransaction:transaction];
+                                                                [message saveWithTransaction:transaction];
+                                                            }];
+                                                            
+                                                            if ([[NSFileManager defaultManager] fileExistsAtPath:url.path]) {
+                                                                
+                                                                [[NSFileManager defaultManager] removeItemAtURL:url error:nil];
+                                                            }
+                                                        }];
     });
-}
-
-- (void)removeFile:(NSURL *)url
-{
-    if ([[NSFileManager defaultManager] fileExistsAtPath:url.path]) {
-        
-        [[NSFileManager defaultManager] removeItemAtURL:url error:nil];
-    }
 }
 
 #pragma - mark AutoLayout
@@ -341,7 +346,9 @@ NSString *const kOTRAudioRecordAnimatePath = @"kOTRAudioRecordAnimatePath";
         //Cancel
         NSURL *currentURL = [self.audioSessionManager currentRecorderURL];
         [self.audioSessionManager stopRecording];
-        [self removeFile:currentURL];
+        if([[NSFileManager defaultManager] fileExistsAtPath:currentURL.path]) {
+            [[NSFileManager defaultManager] removeItemAtPath:currentURL.path error:nil];
+        }
     }
     
     //Animate away the views

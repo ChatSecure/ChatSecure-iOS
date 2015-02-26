@@ -16,14 +16,6 @@
 
 @implementation OTRImageItem
 
-- (NSString *)mediaPath
-{
-    // Example file storage in documents directory
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsPath = [paths firstObject];
-    return [documentsPath stringByAppendingPathComponent:self.filename];
-}
-
 - (CGSize)mediaViewDisplaySize
 {
     if (self.height && self.width) {
