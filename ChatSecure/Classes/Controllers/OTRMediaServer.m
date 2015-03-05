@@ -38,10 +38,6 @@
         port = 8080;
     }
     __weak typeof(self)weakSelf = self;
-    [self.webServer startWithOptions:@{GCDWebServerOption_Port: @(port),
-                                       GCDWebServerOption_BindToLocalhost: @(YES),
-                                       GCDWebServerOption_AutomaticallySuspendInBackground: @(NO)}
-                               error:error];
     [self.webServer addHandlerForMethod:@"GET"
                               pathRegex:[NSString stringWithFormat:@"/%@/.*",kOTRRootMediaDirectory]
                            requestClass:[GCDWebServerRequest class]
@@ -49,12 +45,16 @@
                           __strong typeof(weakSelf)strongSelf = weakSelf;
                           [strongSelf handleMediaRequest:request completion:completionBlock];
                       }];
+    [self.webServer startWithOptions:@{GCDWebServerOption_Port: @(port),
+                                       GCDWebServerOption_BindToLocalhost: @(YES),
+                                       GCDWebServerOption_AutomaticallySuspendInBackground: @(NO)}
+                               error:error];
+    
 }
 
 - (void)handleMediaRequest:(GCDWebServerRequest *)request completion:(GCDWebServerCompletionBlock)completionBlock
 {
     if (completionBlock) {
-        NSLog(@"Server Request: %@",request);
         GCDWebServerVirtualFileResponse *virtualFileResponse = [GCDWebServerVirtualFileResponse responseWithFile:request.path
                                                                                                        byteRange:request.byteRange
                                                                                                     isAttachment:NO
