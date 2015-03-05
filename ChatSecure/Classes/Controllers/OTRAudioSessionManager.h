@@ -13,7 +13,7 @@
 @protocol OTRAudioSessionManagerDelegate <NSObject>
 
 - (void)audioSession:(OTRAudioSessionManager *)audioSessionManager didFinishWithError:(NSError *)error;
-
+- (void)audioSessionDidStartPlaying:(OTRAudioSessionManager *)sessionManager;
 @end
 
 @interface OTRAudioSessionManager : NSObject

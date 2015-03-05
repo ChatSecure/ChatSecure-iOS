@@ -23,6 +23,7 @@
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [_currentPlayer removeObserver:self forKeyPath:NSStringFromSelector(@selector(rate))];
 }
 
 - (instancetype)init
@@ -89,6 +90,7 @@
 {
     [self.currentPlayer pause];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [self.currentPlayer removeObserver:self forKeyPath:NSStringFromSelector(@selector(rate))];
     self.currentPlayer = nil;
     [self deactivateSession:nil];
     
@@ -180,6 +182,9 @@
                                              selector:@selector(itemDidErrorPlaying:)
                                                  name:AVPlayerItemFailedToPlayToEndTimeNotification
                                                object:playerItem];
+    
+    [audioPlayer addObserver:self forKeyPath:NSStringFromSelector(@selector(rate)) options:NSKeyValueObservingOptionNew context:NULL];
+    
     return audioPlayer;
 }
 
@@ -189,6 +194,21 @@
     AVAudioRecorder *recorder = [[AVAudioRecorder alloc] initWithURL:url settings:settings error:error];
     recorder.delegate = self;
     return recorder;
+}
+
+#pragma - mark KVO Methods
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    if ([keyPath isEqualToString:NSStringFromSelector(@selector(rate))]) {
+        if ([object isEqual:self.currentPlayer]) {
+            if (self.currentPlayer.rate && [self.delegate respondsToSelector:@selector(audioSessionDidStartPlaying:)]) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.delegate audioSessionDidStartPlaying:self];
+                });
+            }
+        }
+    }
 }
 
 #pragma - mark AVAudioRecorderDelegate Methods
@@ -225,6 +245,7 @@
     }
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [self.currentPlayer removeObserver:self forKeyPath:NSStringFromSelector(@selector(rate))];
     self.currentPlayer = nil;
     [self deactivateSession:nil];
 }

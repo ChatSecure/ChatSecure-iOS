@@ -51,7 +51,7 @@
     self.currentAudioControlsView.playPuaseProgressView.status = OTRPlayPauseProgressViewStatusPause;
     error = nil;
     [self.audioSessionManager playAudioWithURL:url error:error];
-    [self.currentAudioControlsView.playPuaseProgressView animateProgressArcWithFromValue:0 duration:self.duration];
+    
     self.currentAudioControlsView.playPuaseProgressView.status = OTRPlayPauseProgressViewStatusPause;
     [self.currentAudioControlsView setTime:0];
     
@@ -82,6 +82,13 @@
     NSTimeInterval durationTime = [self.audioSessionManager durationPlayTime];
     
     return durationTime - currentProgressTime;
+}
+
+- (void)startAnimatingArc
+{
+    CGFloat progress = [self currentPlayProgress];
+    NSTimeInterval duration = [self currentPlayTimeRemaining];
+    [self.currentAudioControlsView.playPuaseProgressView animateProgressArcWithFromValue:progress duration:duration];
 }
 
 #pragma - mark Public Methods
@@ -142,9 +149,6 @@
 {
     [self updateTimeLabel];
     [self.audioSessionManager resumePlaying];
-    CGFloat progress = [self currentPlayProgress];
-    NSTimeInterval duration = [self currentPlayTimeRemaining];
-    [self.currentAudioControlsView.playPuaseProgressView animateProgressArcWithFromValue:progress duration:duration];
     self.currentAudioControlsView.playPuaseProgressView.status = OTRPlayPauseProgressViewStatusPause;
     [self startLabelTimer];
 }
@@ -179,6 +183,11 @@
     [self.labelTimer invalidate];
     [self.currentAudioControlsView setTime:self.currentAudioItem.timeLength];
     _currentAudioItem = nil;
+}
+
+- (void)audioSessionDidStartPlaying:(OTRAudioSessionManager *)sessionManager
+{
+    [self startAnimatingArc];
 }
 
 @end
