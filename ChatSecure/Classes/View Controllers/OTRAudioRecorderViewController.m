@@ -278,7 +278,7 @@ NSString *const kOTRAudioRecordAnimatePath = @"kOTRAudioRecordAnimatePath";
         [[OTRMediaFileManager sharedInstance] copyDataFromFilePath:url.path
                                                    toEncryptedPath:encryptedPath
                                                    completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
-                                                        completion:^(NSInteger bytesWritten, NSError *error) {
+                                                        completion:^(NSError *error) {
                                                             [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
                                                                 [audioItem saveWithTransaction:transaction];
                                                                 [message saveWithTransaction:transaction];

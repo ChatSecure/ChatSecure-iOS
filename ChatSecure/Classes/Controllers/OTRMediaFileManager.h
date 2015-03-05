@@ -21,7 +21,7 @@ extern NSString *const kOTRRootMediaDirectory;
 - (void)copyDataFromFilePath:(NSString *)filePath
              toEncryptedPath:(NSString *)path
              completionQueue:(dispatch_queue_t)completionQueue
-                  completion:(void (^)(NSInteger, NSError *))completion;
+                  completion:(void (^)(NSError *))completion;
 
 - (void)setData:(NSData *)data
         forItem:(OTRMediaItem *)mediaItem

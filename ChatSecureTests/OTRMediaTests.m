@@ -69,7 +69,7 @@
     return [OTRMediaFileManager pathForMediaItem:mediaItem buddyUniqueId:self.buddy.uniqueId];
 }
 
-- (void)copyToEncryptedStorage:(OTRMediaItem *)mediaItem completion:(void (^)(NSInteger bytesWritten, NSError *error))completion
+- (void)copyToEncryptedStorage:(OTRMediaItem *)mediaItem completion:(void (^)(NSError *error))completion
 {
     
     __block NSString *bundlePath = [self bundlePathForMediaItem:mediaItem];
@@ -84,16 +84,14 @@
     [self.mediaItems enumerateObjectsUsingBlock:^(OTRMediaItem *mediaItem, NSUInteger idx, BOOL *stop) {
         __block XCTestExpectation *expectation = [self expectationWithDescription:mediaItem.filename];
         
-        [self copyToEncryptedStorage:mediaItem completion:^(NSInteger bytesWritten, NSError *error) {
+        [self copyToEncryptedStorage:mediaItem completion:^(NSError *error) {
             XCTAssertNil(error,@"Error copying File: %@",error);
-            XCTAssertGreaterThan(bytesWritten, 0);
             NSError *attributesError = nil;
             NSDictionary *fileAttributes = [self.mediaFileManager.ioCipher fileAttributesAtPath:[self encryptedPathForMediaItem:mediaItem] error:&attributesError];
             
             XCTAssertNotNil(fileAttributes[NSFileModificationDate],@"No modifaction date");
             NSNumber *attributesFileSize = fileAttributes[NSFileSize];
             XCTAssertNotNil(attributesFileSize,@"No file size");
-            XCTAssertEqual(attributesFileSize.integerValue, bytesWritten, @"Size difference");
             XCTAssertNil(attributesError,@"Error getting attributes");
             XCTAssertNotNil(fileAttributes, @"Error no attributes");
             XCTAssertGreaterThan([[fileAttributes allKeys] count], 0,@"Error no attributes");

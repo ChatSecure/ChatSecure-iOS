@@ -54,6 +54,7 @@
 - (void)handleMediaRequest:(GCDWebServerRequest *)request completion:(GCDWebServerCompletionBlock)completionBlock
 {
     if (completionBlock) {
+        NSLog(@"Server Request: %@",request);
         GCDWebServerVirtualFileResponse *virtualFileResponse = [GCDWebServerVirtualFileResponse responseWithFile:request.path
                                                                                                        byteRange:request.byteRange
                                                                                                     isAttachment:NO

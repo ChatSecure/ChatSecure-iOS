@@ -965,7 +965,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         [[OTRMediaFileManager sharedInstance] copyDataFromFilePath:videoURL.path
                                                    toEncryptedPath:newPath
                                                    completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
-                                                        completion:^(NSInteger bytesWritten, NSError *error) {
+                                                        completion:^(NSError *error) {
             if (error) {
                 DDLogError(@"Error Copying Video: %@",error);
             }

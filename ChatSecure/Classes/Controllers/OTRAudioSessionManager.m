@@ -10,11 +10,11 @@
 
 @import AVFoundation;
 
-@interface OTRAudioSessionManager () <AVAudioPlayerDelegate, AVAudioRecorderDelegate>
+@interface OTRAudioSessionManager () <AVAudioRecorderDelegate>
 
 @property (nonatomic, strong) AVAudioSession *audioSession;
 @property (nonatomic, strong) AVAudioRecorder *currentRecorder;
-@property (nonatomic, strong) AVAudioPlayer *currentPlayer;
+@property (nonatomic, strong) AVPlayer *currentPlayer;
 
 @end
 
@@ -47,7 +47,10 @@
 
 - (BOOL)isPlaying
 {
-    return [self.currentPlayer isPlaying];
+    if (self.currentPlayer.rate > 0 && !self.currentPlayer.error) {
+        return YES;
+    }
+    return NO;
 }
 
 #pragma - mark Public Methods
@@ -84,7 +87,8 @@
 
 - (void)stopPlaying
 {
-    [self.currentPlayer stop];
+    [self.currentPlayer pause];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     self.currentPlayer = nil;
     [self deactivateSession:nil];
     
@@ -93,7 +97,8 @@
 - (NSTimeInterval)currentTimePlayTime
 {
     if (self.currentPlayer) {
-        return [self.currentPlayer currentTime];
+        CMTime time = [self.currentPlayer currentTime];
+        return CMTimeGetSeconds(time);
     }
     return 0;
 }
@@ -101,14 +106,17 @@
 - (NSTimeInterval)durationPlayTime
 {
     if (self.currentPlayer) {
-        return [self.currentPlayer duration];
+        return CMTimeGetSeconds([self.currentPlayer currentItem].duration);
     }
     return 0;
 }
 
 - (NSURL *)currentPlayerURL
 {
-    return self.currentPlayer.url;
+    if ([self.currentPlayer.currentItem.asset isKindOfClass:AVURLAsset.class]) {
+        return ((AVURLAsset *)self.currentPlayer.currentItem.asset).URL;
+    }
+    return nil;
 }
 
 ////// Recording //////
@@ -158,10 +166,20 @@
     [self.audioSession setActive:NO withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:error];
 }
 
-- (AVAudioPlayer *)audioPlayerWithURL:(NSURL *)url error:(NSError **)error
+- (AVPlayer *)audioPlayerWithURL:(NSURL *)url error:(NSError **)error
 {
-    AVAudioPlayer *audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:error];
-    audioPlayer.delegate = self;
+    AVPlayerItem *playerItem = [[AVPlayerItem alloc] initWithURL:url];
+    AVPlayer *audioPlayer = [[AVPlayer alloc] initWithPlayerItem:playerItem];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(itemDidFinishPlaying:)
+                                                 name:AVPlayerItemDidPlayToEndTimeNotification
+                                               object:playerItem];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(itemDidErrorPlaying:)
+                                                 name:AVPlayerItemFailedToPlayToEndTimeNotification
+                                               object:playerItem];
     return audioPlayer;
 }
 
@@ -175,21 +193,40 @@
 
 #pragma - mark AVAudioRecorderDelegate Methods
 
-#pragma - mark AVAudioPlayerDelegate Methods
+#pragma - mark AVAudioPlayerDelegate Notifcation
 
-- (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag
+- (void)itemDidFinishPlaying:(NSNotification *)notification
 {
-    if ([player isEqual:self.currentPlayer]) {
-        if ([self.delegate respondsToSelector:@selector(audioSession:didFinishSuccefully:)]) {
-            [self.delegate audioSession:self didFinishSuccefully:flag];
+    __weak typeof(self)weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __strong typeof(weakSelf)strongSelf = weakSelf;
+        
+        AVPlayerItem *playerItem = notification.object;
+        [strongSelf playerItem:playerItem finishedPlayingWithError:nil];
+    });
+}
+
+- (void)itemDidErrorPlaying:(NSNotification *)notification
+{
+    __weak typeof(self)weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __strong typeof(weakSelf)strongSelf = weakSelf;
+        AVPlayerItem *playerItem = notification.object;
+        [strongSelf playerItem:playerItem finishedPlayingWithError:playerItem.error];
+    });
+}
+
+- (void)playerItem:(AVPlayerItem *)playerItem finishedPlayingWithError:(NSError *)error
+{
+    if ([playerItem isEqual:self.currentPlayer.currentItem]) {
+        if ([self.delegate respondsToSelector:@selector(audioSession:didFinishWithError:)]) {
+            [self.delegate audioSession:self didFinishWithError:error];
         }
     }
     
-    [self.currentRecorder stop];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     self.currentPlayer = nil;
     [self deactivateSession:nil];
-    
-    
 }
 
 #pragma - mark Class Methods

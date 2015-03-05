@@ -12,15 +12,12 @@
 #import "OTRMessage.h"
 #import "OTRDatabaseManager.h"
 #import "OTRConstants.h"
-#import "OTRFileCopier.h"
 
 NSString *const kOTRRootMediaDirectory = @"media";
 
 @interface OTRMediaFileManager ()
 
 @property (nonatomic) dispatch_queue_t concurrentQueue;
-@property (nonatomic) dispatch_queue_t isolationQueue;
-@property (nonatomic, strong) NSMutableDictionary *fileCopierDictionary;
 
 @end
 
@@ -29,37 +26,9 @@ NSString *const kOTRRootMediaDirectory = @"media";
 - (instancetype)init
 {
     if (self = [super init]) {
-        self.fileCopierDictionary = [[NSMutableDictionary alloc] init];
         self.concurrentQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-        NSString *isolationLabel = [NSString stringWithFormat:@"%@.isolation.%p", [self class], self];
-        self.isolationQueue = dispatch_queue_create([isolationLabel UTF8String], DISPATCH_QUEUE_CONCURRENT);
     }
     return self;
-}
-
-- (void)setFileCopier:(OTRFileCopier *)fileCopier forEncryptedFilePath:(NSString *)encryptedFilePath
-{
-    if (encryptedFilePath) {
-        dispatch_barrier_async(self.isolationQueue, ^{
-            if (fileCopier) {
-                [self.fileCopierDictionary setObject:fileCopier forKey:encryptedFilePath];
-            } else {
-                [self.fileCopierDictionary removeObjectForKey:encryptedFilePath];
-            }
-            
-        });
-    }
-}
-
-- (OTRFileCopier *)completionBlockForFileCopier:(OTRFileCopier *)fileCopier
-{
-    __block void (^completion)(NSInteger, NSError *) = nil;
-    if (fileCopier) {
-        dispatch_sync(self.isolationQueue, ^{
-            completion = [self.fileCopierDictionary objectForKey:fileCopier];
-        });
-    }
-    return completion;
 }
 
 #pragma - mark Public Methods
@@ -69,24 +38,23 @@ NSString *const kOTRRootMediaDirectory = @"media";
     _ioCipher = [[IOCipher alloc] initWithPath:path password:password];
 }
 
-- (void)copyDataFromFilePath:(NSString *)filePath toEncryptedPath:(NSString *)path completionQueue:(dispatch_queue_t)completionQueue completion:(void (^)(NSInteger, NSError *))completion 
+- (void)copyDataFromFilePath:(NSString *)filePath toEncryptedPath:(NSString *)path completionQueue:(dispatch_queue_t)completionQueue completion:(void (^)(NSError *))completion
 {
+    if (!completionQueue) {
+        completionQueue = dispatch_get_main_queue();
+    }
     __weak typeof(self)weakSelf = self;
     dispatch_async(self.concurrentQueue, ^{
         __strong typeof(weakSelf)strongSelf = weakSelf;
-        __block OTRFileCopier *fileCopier = [[OTRFileCopier alloc] initWithFilePath:filePath toEncryptedPath:path ioCipher:strongSelf.ioCipher completionQueue:self.concurrentQueue completion:^(NSInteger bytesWritten, NSError *error) {
-            
-            if (completion) {
-                dispatch_async([[self class] completionQueue:completionQueue], ^{
-                    completion(bytesWritten,error);
-                });
-                
-            }
-            
-            [strongSelf setFileCopier:nil forEncryptedFilePath:fileCopier.encryptedFilePath];
-        }];
-        [self setFileCopier:fileCopier forEncryptedFilePath:fileCopier.encryptedFilePath];
-        [fileCopier start];
+        
+        NSError *error = nil;
+        [strongSelf.ioCipher copyItemAtFileSystemPath:filePath toEncryptedPath:path error:&error];
+        
+        if (completion) {
+            dispatch_async(completionQueue, ^{
+                completion(error);
+            });
+        }
     });
     
 }

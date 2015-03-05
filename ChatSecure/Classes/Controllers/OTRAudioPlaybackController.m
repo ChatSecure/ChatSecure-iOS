@@ -172,7 +172,7 @@
 
 #pragma - mark OTRAudioSessionManagerDelegate Methods
 
-- (void)audioSession:(OTRAudioSessionManager *)audioSessionManager didFinishSuccefully:(BOOL)success
+- (void)audioSession:(OTRAudioSessionManager *)audioSessionManager didFinishWithError:(NSError *)error
 {
     self.currentAudioControlsView.playPuaseProgressView.status = OTRPlayPauseProgressViewStatusPlay;
     [self.currentAudioControlsView.playPuaseProgressView removeProgressArc];
