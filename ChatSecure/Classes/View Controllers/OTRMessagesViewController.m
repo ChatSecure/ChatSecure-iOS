@@ -80,6 +80,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 @property (nonatomic, strong) UIButton *microphoneButton;
 @property (nonatomic, strong) UIButton *sendButton;
+@property (nonatomic, strong) UIButton *cameraButton;
 
 @property (nonatomic, strong) OTRAttachmentPicker *attachmentPicker;
 @property (nonatomic, strong) OTRAudioPlaybackController *audioPlaybackController;
@@ -124,36 +125,43 @@ typedef NS_ENUM(int, OTRDropDownType) {
     ////// Send Button //////
     self.sendButton = [JSQMessagesToolbarButtonFactory defaultSendButtonItem];
     
+    ////// Attachment Button //////
+    self.inputToolbar.contentView.leftBarButtonItem = nil;
+    self.cameraButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    self.cameraButton.titleLabel.font = [UIFont fontWithName:kFontAwesomeFont size:20];
+    self.cameraButton.titleLabel.textAlignment = NSTextAlignmentCenter;
+    [self.cameraButton setTitle:[NSString fa_stringForFontAwesomeIcon:FACamera] forState:UIControlStateNormal];
+    self.cameraButton.frame = CGRectMake(0, 0, 22, 32);
+    
     ////// Microphone Button //////
     self.microphoneButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    self.microphoneButton.frame = CGRectMake(0, 0, 22, 32);
     self.microphoneButton.titleLabel.font = [UIFont fontWithName:kFontAwesomeFont size:20];
     self.microphoneButton.titleLabel.textAlignment = NSTextAlignmentCenter;
     [self.microphoneButton setTitle:[NSString fa_stringForFontAwesomeIcon:FAMicrophone]
           forState:UIControlStateNormal];
     
-    [self.inputToolbar.contentView setRightBarButtonItem:self.microphoneButton];
-    self.inputToolbar.contentView.rightBarButtonItem.enabled = YES;
-    
     self.audioPlaybackController = [[OTRAudioPlaybackController alloc] init];
- 
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
-    [self refreshLockButton];
+    [self updateEncryptionState];
     
-    __weak OTRMessagesViewController *welf = self;
+    __weak typeof(self)weakSelf = self;
     
     [self.uiDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        [welf.messageMappings updateWithTransaction:transaction];
-        [welf.buddyMappings updateWithTransaction:transaction];
+        __strong typeof(weakSelf)strongSelf = weakSelf;
+        [strongSelf.messageMappings updateWithTransaction:transaction];
+        [strongSelf.buddyMappings updateWithTransaction:transaction];
     }];
     
     void (^refreshGeneratingLock)(OTRAccount *) = ^void(OTRAccount * account) {
-        if ([account.uniqueId isEqualToString:welf.account.uniqueId]) {
-            [welf refreshLockButton];
+        __strong typeof(weakSelf)strongSelf = weakSelf;
+        if ([account.uniqueId isEqualToString:strongSelf.account.uniqueId]) {
+            [strongSelf updateEncryptionState];
         }
     };
     
@@ -164,10 +172,11 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }];
    
     self.messageStateDidChangeNotificationObject = [[NSNotificationCenter defaultCenter] addObserverForName:OTRMessageStateDidChangeNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
+        __strong typeof(weakSelf)strongSelf = weakSelf;
         if ([note.object isKindOfClass:[OTRBuddy class]]) {
             OTRBuddy *notificationBuddy = note.object;
-            if ([notificationBuddy.uniqueId isEqualToString:welf.buddy.uniqueId]) {
-                [welf refreshLockButton];
+            if ([notificationBuddy.uniqueId isEqualToString:strongSelf.buddy.uniqueId]) {
+                [strongSelf updateEncryptionState];
             }
         }
     }];
@@ -445,7 +454,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     [self.navigationItem setRightBarButtonItem:self.lockBarButtonItem];
 }
 
--(void)refreshLockButton
+-(void)updateEncryptionState
 {
     [[OTRKit sharedInstance] checkIfGeneratingKeyForAccountName:self.account.username protocol:self.account.protocolTypeString completion:^(BOOL isGeneratingKey) {
         if( isGeneratingKey) {
@@ -462,7 +471,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
                         
                         [[OTRKit sharedInstance] messageStateForUsername:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString completion:^(OTRKitMessageState messageState) {
                             
-                            
+                            //Set correct lock icon and status
                             if (messageState == OTRKitMessageStateEncrypted && isTrusted) {
                                 self.lockButton.lockStatus = OTRLockStatusLockedAndVerified;
                             }
@@ -477,15 +486,24 @@ typedef NS_ENUM(int, OTRDropDownType) {
                                 self.lockButton.lockStatus = OTRLockStatusUnlocked;
                             }
                             
+                            
+                            //set correct camera and microphone
+                            if (messageState == OTRKitMessageStateEncrypted) {
+                                if (![self.inputToolbar.contentView.textView.text length]) {
+                                    self.inputToolbar.contentView.rightBarButtonItem = self.microphoneButton;
+                                    self.inputToolbar.contentView.rightBarButtonItem.enabled = YES;
+                                }
+                                self.inputToolbar.contentView.leftBarButtonItem = self.cameraButton;
+                            }
+                            else {
+                                self.inputToolbar.contentView.rightBarButtonItem = self.sendButton;
+                                self.inputToolbar.contentView.leftBarButtonItem = nil;
+                            }
                         }];
-                        
                     }];
-                    
                 }];
             }
-
         }
-        
     }];
 }
 
@@ -500,19 +518,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 }
 -(void)removeLockSpinner {
     self.navigationItem.rightBarButtonItem = self.lockBarButtonItem;
-    [self refreshLockButton];
-}
-
-- (void)refreshInputToolbar
-{
-    if([self.inputToolbar.contentView.textView hasText]) {
-        self.inputToolbar.contentView.rightBarButtonItem = self.sendButton;
-        self.inputToolbar.contentView.rightBarButtonItem.enabled = YES;
-    }
-    else {
-        self.inputToolbar.contentView.rightBarButtonItem = self.microphoneButton;
-        self.inputToolbar.contentView.rightBarButtonItem.enabled = YES;
-    }
+    [self updateEncryptionState];
 }
 
 - (void)encryptionButtonPressed:(id)sender
@@ -549,20 +555,20 @@ typedef NS_ENUM(int, OTRDropDownType) {
                 
                 RIButtonItem * verifiedButtonItem = [RIButtonItem itemWithLabel:VERIFIED_STRING action:^{
                     [[OTRKit sharedInstance] setActiveFingerprintVerificationForUsername:welf.buddy.username accountName:welf.account.username protocol:self.account.protocolTypeString verified:YES completion:^{
-                        [welf refreshLockButton];
+                        [welf updateEncryptionState];
                     }];
                 }];
                 
                 RIButtonItem * notVerifiedButtonItem = [RIButtonItem itemWithLabel:NOT_VERIFIED_STRING action:^{
                     
                     [[OTRKit sharedInstance] setActiveFingerprintVerificationForUsername:welf.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString verified:NO completion:^{
-                        [welf refreshLockButton];
+                        [welf updateEncryptionState];
                     }];
                 }];
                 
                 RIButtonItem * verifyLaterButtonItem = [RIButtonItem itemWithLabel:VERIFY_LATER_STRING action:^{
                     [[OTRKit sharedInstance] setActiveFingerprintVerificationForUsername:welf.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString verified:NO completion:^{
-                        [welf refreshLockButton];
+                        [welf updateEncryptionState];
                     }];
                 }];
                 
@@ -723,8 +729,13 @@ typedef NS_ENUM(int, OTRDropDownType) {
         [self.xmppManager sendChatState:kOTRChatStateComposing withBuddyID:self.buddy.uniqueId];
     }
     else {
-        self.inputToolbar.contentView.rightBarButtonItem = self.microphoneButton;
-        self.inputToolbar.contentView.rightBarButtonItem.enabled = YES;
+        [[OTRKit sharedInstance] messageStateForUsername:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString completion:^(OTRKitMessageState messageState) {
+            if (messageState == OTRKitMessageStateEncrypted) {
+                self.inputToolbar.contentView.rightBarButtonItem = self.microphoneButton;
+                self.inputToolbar.contentView.rightBarButtonItem.enabled = YES;
+            }
+        }];
+        
         //done typing
         [self.xmppManager sendChatState:kOTRChatStateActive withBuddyID:self.buddy.uniqueId];
         
@@ -841,16 +852,15 @@ typedef NS_ENUM(int, OTRDropDownType) {
 {
     self.navigationController.providesPresentationContextTransitionStyle = YES;
     self.navigationController.definesPresentationContext = YES;
-    OTRAudioRecorderViewController *recorderViewController = [[OTRAudioRecorderViewController alloc] initWithBuddy:self.buddy];
-    CGRect rectInWindow = [self.microphoneButton convertRect:self.microphoneButton.frame toView:nil];
-    [recorderViewController showAudioRecorderFromViewController:self animated:YES fromMicrophoneRectInWindow:rectInWindow];
+    
     if ([[OTRProtocolManager sharedInstance] isAccountConnected:self.account]) {
         //Account is connected
         
         if ([button isEqual:self.microphoneButton]) {
             
             OTRAudioRecorderViewController *recorderViewController = [[OTRAudioRecorderViewController alloc] initWithBuddy:self.buddy];
-            //[recorderViewController showAudioRecorderFromViewController:self];
+            CGRect rectInWindow = [self.microphoneButton convertRect:self.microphoneButton.frame toView:nil];
+            [recorderViewController showAudioRecorderFromViewController:self animated:YES fromMicrophoneRectInWindow:rectInWindow];
             
         } else {
             OTRMessage *message = [[OTRMessage alloc] init];
