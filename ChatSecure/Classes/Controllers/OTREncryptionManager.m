@@ -105,6 +105,19 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     //
     if ([tag isKindOfClass:[OTRMessage class]]) {
         message = [tag copy];
+        
+        // When replying to OTRDATA requests, we pass along the tag
+        // of the original incoming message. We don't want to actually show these messages in the chat
+        // so if we detect an incoming message in the encodedMessage callback we should just send the encoded data.
+        if (message.isIncoming) {
+            OTRMessage *otrDataMessage = [[OTRMessage alloc] init];
+            otrDataMessage.incoming = NO;
+            otrDataMessage.buddyUniqueId = message.buddyUniqueId;
+            otrDataMessage.text = encodedMessage;
+            [[OTRProtocolManager sharedInstance] sendMessage:otrDataMessage];
+            return;
+        }
+        
         if (error) {
             [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
                 message.error = error;
@@ -418,6 +431,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
 - (void)dataHandler:(OTRDataHandler*)dataHandler
    transferComplete:(OTRDataTransfer*)transfer {
     DDLogInfo(@"transfer complete: %@", transfer);
+    
 }
 
 
