@@ -333,16 +333,16 @@ SPEC CHECKSUMS:
   BBlock: 90f0ae0e3ba94fc88be6b9a85b4adbb73b8a7c9a
   BButton: eab327e143be2730c81a22467cc016488a125162
   Bolts: 3db0a875235e0c9042b013af13af0f00f79b102c
-  CocoaAsyncSocket: 4bbe8fc969e61e62f408de98faac676468e155b3
+  CocoaAsyncSocket: 7cbf214b27f8e7f7574db6a3fd96352ffaed433d
   CocoaLumberjack: 205769c032b5fef85b92472046bcc8b7e7c8a817
-  CPAProxy: c3df549999514de2c04633d20a79b00daf627ddb
-  CRToast: da11d94a05b1351a87bb26cbf8f25e80ed2e7115
+  CPAProxy: 2f0d2ef592b28e0686b5a100ad663bdd3e51900b
+  CRToast: 99a28f4387def43b439ad88f957ce31357ff7373
   Facebook-iOS-SDK: 18c26e86ab25c17854a2ee2a8f60562099c6600f
   GCDWebServer: 285fde9951ab2cd87c2d9d74735fee977a16fe04
   gtm-http-fetcher: 5072f07e523261f7a87df939d13c1be2340d8111
   gtm-oauth2: dfb3016b8347b73fa80042e5aed29ec4f36e46bc
   HockeySDK: bfd1f5ac75938b07499c4ac12932244b72a2e70b
-  IOCipher: b98913cec82ead5a0c933513b4e462133044f90a
+  IOCipher: 2bcc56103fbdd9cd9139a5b030ebb97ed6fbc4b9
   JSQMessagesViewController: e93a288a9662d4519c95a28a8c0eec10beae1bfc
   JSQSystemSoundPlayer: 55528c699a283aae2220d3ae7b8b527d2ecef4b4
   JTSImageViewController: 9fe6402194b7679f0e28d0c1002d6164301fc34a
@@ -355,11 +355,11 @@ SPEC CHECKSUMS:
   MWFeedParser: 003cbf5398e99a7f2057fbe9583054fd1b84be72
   Navajo: 9130d497903e5d1b0f1b3c987be01f5b60fd37c7
   OpenInChrome: b7c73ddf8fe0a1788dc0549c3c4c70e3c84da578
-  OTRKit: f97f1c3433349ac2f6d8d737d749c1edf55dbb1b
-  ProxyKit: 3e73f2ad92327554549474ad10da21dde46d3ba8
+  OTRKit: d7db6a96cc8fd9562008d3525e375b999be7e4f2
+  ProxyKit: f7be31d07ed93444c433956d18e842ea9c709224
   PureLayout: ddf4fedf7e2f5984f972bbd2205dda4fc3418347
   RMStepsController: 8ff91f169d884fdd834ad37007f553c7bed333eb
-  SIAlertView: e6d0d786c3a3f6e456b0e8b9376d0c34d68e827b
+  SIAlertView: 20c794b55eaf44d888773ea51647cf8907723919
   SQLCipher: 981110217eb93c2779c34fb59e646a1c1da918d8
   SSKeychain: cc48bd3ad24fcd9125adb9e0d23dd50b8bbd08b9
   TTTAttributedLabel: 9825f9b6c8f1c01939fa26827e59b7586483a45b
@@ -367,7 +367,7 @@ SPEC CHECKSUMS:
   UIAlertView-Blocks: f3271e84372beb97aea115cd1fb26ae66457f12f
   uservoice-iphone-sdk: 7cbc1e76dcbbc3d5ae3b4bf009fdcf355e1e83ec
   VTAcknowledgementsViewController: 5cdab8f3d003680b8fbdfcce90fcab92cee962a6
-  XMPPFramework: 87bac7edb0ffe6d04b13e764a77df64767f1b369
-  YapDatabase: 097c5cc7964e0856c8ff859fdf1b18961e92a50b
+  XMPPFramework: 239fe709baff208fff5970708469b939387105ee
+  YapDatabase: 2e1ad4bb8f54cfa8ec3e0e2c1a558ed7670e7f61
 
-COCOAPODS: 0.35.0
+COCOAPODS: 0.36.0
