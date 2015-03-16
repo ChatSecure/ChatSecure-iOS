@@ -44,6 +44,7 @@
 #import "OTRAudioRecorderViewController.h"
 #import "OTRMediaFileManager.h"
 #import "OTRMediaServer.h"
+#import "UIImage+ChatSecure.h"
 
 @import AVFoundation;
 @import MediaPlayer;
@@ -915,8 +916,11 @@ typedef NS_ENUM(int, OTRDropDownType) {
     if (photo) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             
-            //FIXME Better choice from image size and compression
-            __block NSData *imageData = UIImageJPEGRepresentation(photo, 0.5);
+            CGFloat scaleFactor = 0.25;
+            CGSize newSize = CGSizeMake(photo.size.width * scaleFactor, photo.size.height * scaleFactor);
+            UIImage *scaledImage = [UIImage otr_imageWithImage:photo scaledToSize:newSize];
+            
+            __block NSData *imageData = UIImageJPEGRepresentation(scaledImage, 0.5);
             
             NSString *UUID = [[NSUUID UUID] UUIDString];
             
