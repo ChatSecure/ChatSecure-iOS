@@ -490,13 +490,16 @@ typedef NS_ENUM(int, OTRDropDownType) {
                             //set correct camera and microphone
                             if (messageState == OTRKitMessageStateEncrypted) {
                                 if (![self.inputToolbar.contentView.textView.text length]) {
+                                    self.inputToolbar.sendButtonLocation = JSQMessagesInputSendButtonLocationNone;
                                     self.inputToolbar.contentView.rightBarButtonItem = self.microphoneButton;
                                     self.inputToolbar.contentView.rightBarButtonItem.enabled = YES;
+                                    
                                 }
                                 self.inputToolbar.contentView.leftBarButtonItem = self.cameraButton;
                             }
                             else {
                                 self.inputToolbar.contentView.rightBarButtonItem = self.sendButton;
+                                self.inputToolbar.sendButtonLocation = JSQMessagesInputSendButtonLocationRight;
                                 self.inputToolbar.contentView.leftBarButtonItem = nil;
                             }
                         }];
@@ -719,11 +722,12 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }
     return showDate;
 }
-
+move accessroy and send microphone
 - (void)textViewDidChange:(UITextView *)textView
 {
     if ([textView.text length]) {
         self.inputToolbar.contentView.rightBarButtonItem = self.sendButton;
+        self.inputToolbar.sendButtonLocation = JSQMessagesInputSendButtonLocationRight;
         self.inputToolbar.contentView.rightBarButtonItem.enabled = YES;
         //typing
         [self.xmppManager sendChatState:kOTRChatStateComposing withBuddyID:self.buddy.uniqueId];
@@ -732,6 +736,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         [[OTRKit sharedInstance] messageStateForUsername:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString completion:^(OTRKitMessageState messageState) {
             if (messageState == OTRKitMessageStateEncrypted) {
                 self.inputToolbar.contentView.rightBarButtonItem = self.microphoneButton;
+                self.inputToolbar.sendButtonLocation = JSQMessagesInputSendButtonLocationNone;
                 self.inputToolbar.contentView.rightBarButtonItem.enabled = YES;
             }
         }];
@@ -915,7 +920,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 {
     //Theres a toggleSendButtonEnabled in finishSendingMessageAnimated so we need to 'balance' it out
     [super finishSendingMessageAnimated:animated];
-    self.inputToolbar.contentView.rightBarButtonItem.enabled = YES;
+    [self textViewDidChange:self.inputToolbar.contentView.textView];
 }
 
 #pragma - mark OTRAttachmentPickerDelegate Methods

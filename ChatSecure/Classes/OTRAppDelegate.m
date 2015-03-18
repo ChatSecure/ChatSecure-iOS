@@ -123,7 +123,7 @@
         [self performSelector:@selector(loadDemoData) withObject:nil afterDelay:0.0];
 #endif
     }
-    
+
     //FIXME
     NSString *path = [OTRDatabaseManager yapDatabasePathWithName:nil];
     path = [path stringByAppendingPathComponent:@"media.sqlite"];
@@ -131,12 +131,10 @@
     
     self.mediaServer = [OTRMediaServer sharedInstance];
     NSError *error = nil;
-    [self.mediaServer startOnPort:8080 error:&error];
-    if (error) {
+    BOOL mediaServerStarted = [self.mediaServer startOnPort:8080 error:&error];
+    if (mediaServerStarted) {
         DDLogError(@"Error starting media server: %@",error);
     }
-    
-
 
     //rootViewController = [[OTRDatabaseUnlockViewController alloc] init];
 //    NSString *outputStoreName = @"ChatSecure.sqlite";

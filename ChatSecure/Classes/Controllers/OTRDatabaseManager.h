@@ -22,6 +22,14 @@ extern NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension;
 @property (nonatomic, readonly) YapDatabaseConnection *readOnlyDatabaseConnection;
 @property (nonatomic, readonly) YapDatabaseConnection *readWriteDatabaseConnection;
 
+
+/**
+ This method sets up both the yap database and IOCipher media storage
+ Before this method is called the passphrase needs to be set.
+ 
+ @param databaseName the name of the database. The media storage with be databaseName-media
+ @return whether setup was successful
+ */
 - (BOOL)setupDatabaseWithName:(NSString*)databaseName;
 
 - (YapDatabaseConnection *)newConnection;

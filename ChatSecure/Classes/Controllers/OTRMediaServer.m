@@ -32,7 +32,7 @@
     return [OTRMediaFileManager sharedInstance].ioCipher;
 }
 
-- (void)startOnPort:(NSUInteger)port error:(NSError **)error
+- (BOOL)startOnPort:(NSUInteger)port error:(NSError **)error
 {
     if (!(port > 0)) {
         port = 8080;
@@ -45,10 +45,10 @@
                           __strong typeof(weakSelf)strongSelf = weakSelf;
                           [strongSelf handleMediaRequest:request completion:completionBlock];
                       }];
-    [self.webServer startWithOptions:@{GCDWebServerOption_Port: @(port),
-                                       GCDWebServerOption_BindToLocalhost: @(YES),
-                                       GCDWebServerOption_AutomaticallySuspendInBackground: @(NO)}
-                               error:error];
+    return [self.webServer startWithOptions:@{GCDWebServerOption_Port: @(port),
+                                              GCDWebServerOption_BindToLocalhost: @(YES),
+                                              GCDWebServerOption_AutomaticallySuspendInBackground: @(NO)}
+                                      error:error];
     
 }
 

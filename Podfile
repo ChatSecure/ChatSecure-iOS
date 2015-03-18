@@ -21,7 +21,7 @@ pod 'JTTargetActionBlock', '~> 1.0'
 pod 'Mantle', '~> 1.4'
 pod 'Navajo', '~> 0.0'
 pod 'RMStepsController', '~> 1.0'
-pod 'JSQMessagesViewController', '~> 6.1'
+# pod 'JSQMessagesViewController', '~> 6.1'
 pod 'BBlock', '~> 1.2'
 pod 'JVFloatLabeledTextField', '~> 1.0'
 pod 'TTTAttributedLabel', '~> 1.10'
@@ -45,6 +45,7 @@ pod 'CRToast', :git => 'https://github.com/cruffenach/CRToast', :commit => '7856
 
 # Forks
 pod 'SIAlertView', :git => 'https://github.com/ChatSecure/SIAlertView.git', :branch => 'attributedText'
+pod 'JSQMessagesViewController', :git => 'https://github.com/davidchiles/JSQMessagesViewController', :branch => 'send_button_location'
 
 # Submodules
 pod 'ProxyKit/Client', :path => 'Submodules/ProxyKit/ProxyKit.podspec'

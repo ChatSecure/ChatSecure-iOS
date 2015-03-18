@@ -28,6 +28,8 @@
 #import "OTRAccount.h"
 #import "CoreData+MagicalRecord.h"
 #import "OTRMessage.h"
+#import "OTRMediaFileManager.h"
+#import "IOCipher.h"
 
 NSString *const OTRYapDatabaseRelationshipName = @"OTRYapDatabaseRelationshipName";
 NSString *const OTRYapDatabseMessageIdSecondaryIndex = @"OTRYapDatabseMessageIdSecondaryIndex";
@@ -48,6 +50,8 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
 - (BOOL) setupDatabaseWithName:(NSString*)databaseName {
     if ([self setupYapDatabaseWithName:databaseName] )
     {
+        NSString *ioCipherName = [[[databaseName stringByDeletingPathExtension] stringByAppendingString:@"-media"] stringByAppendingPathExtension:@"sqlite"];
+        [self setupIOCipherWithName:ioCipherName password:[self databasePassphrase]];
         [self migrateCoreDataToYapDatabase];
         return YES;
     }
@@ -163,6 +167,13 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
         return OTRAccountTypeFacebook;
     }
     return OTRAccountTypeNone;
+}
+
+- (void)setupIOCipherWithName:(NSString *)name password:(NSString *)password
+{
+    NSString *path = [OTRDatabaseManager yapDatabasePathWithName:name];
+    [[OTRMediaFileManager sharedInstance] setupWithPath:path password:password];
+    
 }
 
 - (BOOL)setupYapDatabaseWithName:(NSString *)name
@@ -391,6 +402,8 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
     BOOL success = [self.database changeEncryptionKey];
     if (!success) {
         [self setDatabasePassphrase:oldPassword remember:rememeber error:&error];
+    } else {
+       success = [[OTRMediaFileManager sharedInstance].ioCipher changePassword:newPassphrase oldPassword:oldPassword];
     }
     return success;
 }

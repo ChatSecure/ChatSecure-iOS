@@ -12,7 +12,7 @@
 
 @interface OTRMediaServer : NSObject
 
-- (void)startOnPort:(NSUInteger)port error:(NSError **)error;
+- (BOOL)startOnPort:(NSUInteger)port error:(NSError **)error;
 
 - (NSURL *)urlForMediaItem:(OTRMediaItem *)mediaItem buddyUniqueId:(NSString *)buddyUniqueId;
 
