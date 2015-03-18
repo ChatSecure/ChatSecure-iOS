@@ -44,6 +44,7 @@
 #import "OTRAudioRecorderViewController.h"
 #import "OTRMediaFileManager.h"
 #import "OTRMediaServer.h"
+#import "UIImage+ChatSecure.h"
 
 @import AVFoundation;
 @import MediaPlayer;
@@ -722,7 +723,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }
     return showDate;
 }
-move accessroy and send microphone
+
 - (void)textViewDidChange:(UITextView *)textView
 {
     if ([textView.text length]) {
@@ -930,8 +931,11 @@ move accessroy and send microphone
     if (photo) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             
-            //FIXME Better choice from image size and compression
-            __block NSData *imageData = UIImageJPEGRepresentation(photo, 0.5);
+            CGFloat scaleFactor = 0.25;
+            CGSize newSize = CGSizeMake(photo.size.width * scaleFactor, photo.size.height * scaleFactor);
+            UIImage *scaledImage = [UIImage otr_imageWithImage:photo scaledToSize:newSize];
+            
+            __block NSData *imageData = UIImageJPEGRepresentation(scaledImage, 0.5);
             
             NSString *UUID = [[NSUUID UUID] UUIDString];
             
@@ -953,7 +957,7 @@ move accessroy and send microphone
             } completionBlock:^{
                 [[OTRMediaFileManager sharedInstance] setData:imageData forItem:imageItem buddyUniqueId:self.buddy.uniqueId completion:^(NSInteger bytesWritten, NSError *error) {
                     [imageItem touchParentMessage];
-                    [[OTRProtocolManager sharedInstance].encryptionManager.dataHandler sendFileWithName:@"image.jpg" fileData:imageData username:self.buddy.username accountName:self.account.username protocol:kOTRProtocolTypeXMPP tag:nil];
+                    [[OTRProtocolManager sharedInstance].encryptionManager.dataHandler sendFileWithName:@"image.jpg" fileData:imageData username:self.buddy.username accountName:self.account.username protocol:kOTRProtocolTypeXMPP tag:message];
                     
                 } completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
             }];

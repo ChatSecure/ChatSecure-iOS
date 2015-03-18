@@ -31,6 +31,8 @@
 #import "OTRAppDelegate.h"
 #import "OTRMessagesViewController.h"
 #import "UIViewController+ChatSecure.h"
+#import "OTRImageItem.h"
+#import "OTRMediaFileManager.h"
 
 #import "OTRLog.h"
 
@@ -105,6 +107,19 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     //
     if ([tag isKindOfClass:[OTRMessage class]]) {
         message = [tag copy];
+        
+        // When replying to OTRDATA requests, we pass along the tag
+        // of the original incoming message. We don't want to actually show these messages in the chat
+        // so if we detect an incoming message in the encodedMessage callback we should just send the encoded data.
+        if (message.isIncoming) {
+            OTRMessage *otrDataMessage = [[OTRMessage alloc] init];
+            otrDataMessage.incoming = NO;
+            otrDataMessage.buddyUniqueId = message.buddyUniqueId;
+            otrDataMessage.text = encodedMessage;
+            [[OTRProtocolManager sharedInstance] sendMessage:otrDataMessage];
+            return;
+        }
+        
         if (error) {
             [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
                 message.error = error;
@@ -418,6 +433,33 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
 - (void)dataHandler:(OTRDataHandler*)dataHandler
    transferComplete:(OTRDataTransfer*)transfer {
     DDLogInfo(@"transfer complete: %@", transfer);
+    if ([transfer isKindOfClass:[OTRDataIncomingTransfer class]]) {
+        if ([transfer.mimeType containsString:@"image"]) {
+            OTRMessage *parentMessage = transfer.tag;
+            
+            UIImage *tempImage = [UIImage imageWithData:transfer.fileData];
+            OTRImageItem *imageItem = [[OTRImageItem alloc] init];
+            imageItem.width = tempImage.size.width;
+            imageItem.height = tempImage.size.height;
+            imageItem.isIncoming = YES;
+            imageItem.filename = transfer.fileName;
+            
+            OTRMessage *message = [[OTRMessage alloc] init];
+            message.incoming = YES;
+            message.buddyUniqueId = parentMessage.buddyUniqueId;
+            message.mediaItemUniqueId = imageItem.uniqueId;
+            message.transportedSecurely = YES;
+            
+            [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+                [message saveWithTransaction:transaction];
+                [imageItem saveWithTransaction:transaction];
+            } completionBlock:^{
+                [[OTRMediaFileManager sharedInstance] setData:transfer.fileData forItem:imageItem buddyUniqueId:parentMessage.buddyUniqueId completion:^(NSInteger bytesWritten, NSError *error) {
+                    [imageItem touchParentMessage];
+                } completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
+            }];
+        }
+    }
 }
 
 
