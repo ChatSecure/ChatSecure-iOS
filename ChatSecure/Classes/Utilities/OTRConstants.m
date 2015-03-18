@@ -30,7 +30,6 @@ NSString *const kOTRProtocolLoginFailSSLCertificateDataKey = @"kOTRProtocolLogin
 NSString *const kOTRNotificationErrorKey                   = @"kOTRNotificationErrorKey";
 NSString *const kOTRProtocolLoginUserInitiated             = @"kOTRProtocolLoginUserInitiated";
 
-NSString *const kOTRFacebookDomain   = @"chat.facebook.com";
 NSString *const kOTRGoogleTalkDomain = @"talk.google.com";
 NSString *const kOTRProtocolTypeXMPP = @"xmpp";
 NSString *const kOTRProtocolTypeAIM  = @"prpl-oscar";
@@ -41,8 +40,6 @@ NSString *const kOTRNotificationProtocolKey      = @"kOTRNotificationProtocolKey
 NSString *const kOTRNotificationBuddyUniqueIdKey = @"kOTRNotificationBuddyUniqueIdKey";
 
 NSString *const kOTRXMPPResource = @"chatsecure";
-
-NSString *const kOTRFacebookUsernameLink = @"http://www.facebook.com/help/?faq=211813265517027#What-are-usernames?";
 
 NSString *const kOTRFeedbackEmail = @"support@chatsecure.org";
 
@@ -62,7 +59,6 @@ NSString *const OTRActivityTypeQRCode = @"OTRActivityTypeQRCode";
 
 NSString *const OTRArchiverKey = @"OTRArchiverKey";
 
-NSString *const FACEBOOK_APP_ID  = @"447241325394334";
 NSString *const GOOGLE_APP_ID    = @"719137339288.apps.googleusercontent.com";
 NSString *const GOOGLE_APP_SCOPE = @"https://www.googleapis.com/auth/googletalk";
 

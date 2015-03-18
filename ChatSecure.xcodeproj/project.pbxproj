@@ -22,7 +22,6 @@
 		6331067F1A16D1A300C17BAE /* OTRDatabaseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105141A16D1A300C17BAE /* OTRDatabaseManager.m */; };
 		633106801A16D1A300C17BAE /* OTRDatabaseView.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105161A16D1A300C17BAE /* OTRDatabaseView.m */; };
 		633106811A16D1A300C17BAE /* OTREncryptionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105181A16D1A300C17BAE /* OTREncryptionManager.m */; };
-		633106821A16D1A300C17BAE /* OTRInMemorySessionTokenCachingStrategy.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331051A1A16D1A300C17BAE /* OTRInMemorySessionTokenCachingStrategy.m */; };
 		633106831A16D1A300C17BAE /* OTRLanguageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331051C1A16D1A300C17BAE /* OTRLanguageManager.m */; };
 		633106841A16D1A300C17BAE /* OTROAuthRefresher.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331051E1A16D1A300C17BAE /* OTROAuthRefresher.m */; };
 		633106851A16D1A300C17BAE /* OTROnboardingStepsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105201A16D1A300C17BAE /* OTROnboardingStepsController.m */; };
@@ -56,7 +55,6 @@
 		633106CA1A16D1A300C17BAE /* OTRValueSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105B51A16D1A300C17BAE /* OTRValueSetting.m */; };
 		633106CB1A16D1A300C17BAE /* OTRViewSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105B71A16D1A300C17BAE /* OTRViewSetting.m */; };
 		633106CC1A16D1A300C17BAE /* OTRAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105BB1A16D1A300C17BAE /* OTRAccount.m */; };
-		633106CD1A16D1A300C17BAE /* OTRFacebookOAuthXMPPAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105BD1A16D1A300C17BAE /* OTRFacebookOAuthXMPPAccount.m */; };
 		633106CE1A16D1A300C17BAE /* OTRGoogleOAuthXMPPAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105BF1A16D1A300C17BAE /* OTRGoogleOAuthXMPPAccount.m */; };
 		633106CF1A16D1A300C17BAE /* OTROAuthXMPPAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105C11A16D1A300C17BAE /* OTROAuthXMPPAccount.m */; };
 		633106D11A16D1A300C17BAE /* OTRXMPPAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105C51A16D1A300C17BAE /* OTRXMPPAccount.m */; };
@@ -78,7 +76,6 @@
 		633106EA1A16D1A300C17BAE /* OTRSecrets.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105F91A16D1A300C17BAE /* OTRSecrets.m */; };
 		633106EB1A16D1A300C17BAE /* OTRUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105FB1A16D1A300C17BAE /* OTRUtilities.m */; };
 		633106EC1A16D1A300C17BAE /* OTRXMPPError.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105FD1A16D1A300C17BAE /* OTRXMPPError.m */; };
-		633106ED1A16D1A300C17BAE /* OTRFacebookLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106011A16D1A300C17BAE /* OTRFacebookLoginViewController.m */; };
 		633106EE1A16D1A300C17BAE /* OTRGoogleTalkLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106031A16D1A300C17BAE /* OTRGoogleTalkLoginViewController.m */; };
 		633106EF1A16D1A300C17BAE /* OTRJabberLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106051A16D1A300C17BAE /* OTRJabberLoginViewController.m */; };
 		633106F01A16D1A300C17BAE /* OTRLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106071A16D1A300C17BAE /* OTRLoginViewController.m */; };
@@ -255,8 +252,6 @@
 		633105161A16D1A300C17BAE /* OTRDatabaseView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRDatabaseView.m; sourceTree = "<group>"; };
 		633105171A16D1A300C17BAE /* OTREncryptionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTREncryptionManager.h; sourceTree = "<group>"; };
 		633105181A16D1A300C17BAE /* OTREncryptionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTREncryptionManager.m; sourceTree = "<group>"; };
-		633105191A16D1A300C17BAE /* OTRInMemorySessionTokenCachingStrategy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRInMemorySessionTokenCachingStrategy.h; sourceTree = "<group>"; };
-		6331051A1A16D1A300C17BAE /* OTRInMemorySessionTokenCachingStrategy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRInMemorySessionTokenCachingStrategy.m; sourceTree = "<group>"; };
 		6331051B1A16D1A300C17BAE /* OTRLanguageManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRLanguageManager.h; sourceTree = "<group>"; };
 		6331051C1A16D1A300C17BAE /* OTRLanguageManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRLanguageManager.m; sourceTree = "<group>"; };
 		6331051D1A16D1A300C17BAE /* OTROAuthRefresher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTROAuthRefresher.h; sourceTree = "<group>"; };
@@ -325,8 +320,6 @@
 		633105B71A16D1A300C17BAE /* OTRViewSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRViewSetting.m; sourceTree = "<group>"; };
 		633105BA1A16D1A300C17BAE /* OTRAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAccount.h; sourceTree = "<group>"; };
 		633105BB1A16D1A300C17BAE /* OTRAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAccount.m; sourceTree = "<group>"; };
-		633105BC1A16D1A300C17BAE /* OTRFacebookOAuthXMPPAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRFacebookOAuthXMPPAccount.h; sourceTree = "<group>"; };
-		633105BD1A16D1A300C17BAE /* OTRFacebookOAuthXMPPAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRFacebookOAuthXMPPAccount.m; sourceTree = "<group>"; };
 		633105BE1A16D1A300C17BAE /* OTRGoogleOAuthXMPPAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRGoogleOAuthXMPPAccount.h; sourceTree = "<group>"; };
 		633105BF1A16D1A300C17BAE /* OTRGoogleOAuthXMPPAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRGoogleOAuthXMPPAccount.m; sourceTree = "<group>"; };
 		633105C01A16D1A300C17BAE /* OTROAuthXMPPAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTROAuthXMPPAccount.h; sourceTree = "<group>"; };
@@ -370,8 +363,6 @@
 		633105FB1A16D1A300C17BAE /* OTRUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRUtilities.m; sourceTree = "<group>"; };
 		633105FC1A16D1A300C17BAE /* OTRXMPPError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPError.h; sourceTree = "<group>"; };
 		633105FD1A16D1A300C17BAE /* OTRXMPPError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPError.m; sourceTree = "<group>"; };
-		633106001A16D1A300C17BAE /* OTRFacebookLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRFacebookLoginViewController.h; sourceTree = "<group>"; };
-		633106011A16D1A300C17BAE /* OTRFacebookLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRFacebookLoginViewController.m; sourceTree = "<group>"; };
 		633106021A16D1A300C17BAE /* OTRGoogleTalkLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRGoogleTalkLoginViewController.h; sourceTree = "<group>"; };
 		633106031A16D1A300C17BAE /* OTRGoogleTalkLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRGoogleTalkLoginViewController.m; sourceTree = "<group>"; };
 		633106041A16D1A300C17BAE /* OTRJabberLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRJabberLoginViewController.h; sourceTree = "<group>"; };
@@ -680,8 +671,6 @@
 				633105161A16D1A300C17BAE /* OTRDatabaseView.m */,
 				633105171A16D1A300C17BAE /* OTREncryptionManager.h */,
 				633105181A16D1A300C17BAE /* OTREncryptionManager.m */,
-				633105191A16D1A300C17BAE /* OTRInMemorySessionTokenCachingStrategy.h */,
-				6331051A1A16D1A300C17BAE /* OTRInMemorySessionTokenCachingStrategy.m */,
 				6331051B1A16D1A300C17BAE /* OTRLanguageManager.h */,
 				6331051C1A16D1A300C17BAE /* OTRLanguageManager.m */,
 				6331051D1A16D1A300C17BAE /* OTROAuthRefresher.h */,
@@ -825,8 +814,6 @@
 			children = (
 				633105BA1A16D1A300C17BAE /* OTRAccount.h */,
 				633105BB1A16D1A300C17BAE /* OTRAccount.m */,
-				633105BC1A16D1A300C17BAE /* OTRFacebookOAuthXMPPAccount.h */,
-				633105BD1A16D1A300C17BAE /* OTRFacebookOAuthXMPPAccount.m */,
 				633105BE1A16D1A300C17BAE /* OTRGoogleOAuthXMPPAccount.h */,
 				633105BF1A16D1A300C17BAE /* OTRGoogleOAuthXMPPAccount.m */,
 				633105C01A16D1A300C17BAE /* OTROAuthXMPPAccount.h */,
@@ -928,8 +915,6 @@
 		633105FF1A16D1A300C17BAE /* Login View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				633106001A16D1A300C17BAE /* OTRFacebookLoginViewController.h */,
-				633106011A16D1A300C17BAE /* OTRFacebookLoginViewController.m */,
 				633106021A16D1A300C17BAE /* OTRGoogleTalkLoginViewController.h */,
 				633106031A16D1A300C17BAE /* OTRGoogleTalkLoginViewController.m */,
 				633106041A16D1A300C17BAE /* OTRJabberLoginViewController.h */,
@@ -1388,7 +1373,6 @@
 				6331068C1A16D1A300C17BAE /* OTRSettingsManager.m in Sources */,
 				6331070C1A16D1A300C17BAE /* OTRQRCodeViewController.m in Sources */,
 				6331067B1A16D1A300C17BAE /* UIImage+ChatSecure.m in Sources */,
-				633106821A16D1A300C17BAE /* OTRInMemorySessionTokenCachingStrategy.m in Sources */,
 				6331071C1A16D1A300C17BAE /* OTRSettingTableViewCell.m in Sources */,
 				6331067F1A16D1A300C17BAE /* OTRDatabaseManager.m in Sources */,
 				633106FF1A16D1A300C17BAE /* OTRCreateAccountChooserViewController.m in Sources */,
@@ -1455,7 +1439,6 @@
 				633106911A16D1A300C17BAE /* OTRXMPPProxyStream.m in Sources */,
 				633106C01A16D1A300C17BAE /* OTRFeedbackSetting.m in Sources */,
 				63C4BD1F1A1E9BE1001696CD /* _OTRManagedAccount.m in Sources */,
-				633106ED1A16D1A300C17BAE /* OTRFacebookLoginViewController.m in Sources */,
 				633106B81A16D1A300C17BAE /* OTRDomainCellInfo.m in Sources */,
 				633107111A16D1A300C17BAE /* OTRSubscriptionRequestsViewController.m in Sources */,
 				633106BF1A16D1A300C17BAE /* OTRDoubleSetting.m in Sources */,
@@ -1464,7 +1447,6 @@
 				63C4BD181A1E9BE1001696CD /* OTRManagedOscarAccount.m in Sources */,
 				633106771A16D1A300C17BAE /* NSURL+ChatSecure.m in Sources */,
 				6331067D1A16D1A300C17BAE /* OTRAccountsManager.m in Sources */,
-				633106CD1A16D1A300C17BAE /* OTRFacebookOAuthXMPPAccount.m in Sources */,
 				633106841A16D1A300C17BAE /* OTROAuthRefresher.m in Sources */,
 				633107131A16D1A300C17BAE /* OTRBuddyImageCell.m in Sources */,
 				63C4BD211A1E9BE1001696CD /* _OTRManagedEncryptionStatusMessage.m in Sources */,

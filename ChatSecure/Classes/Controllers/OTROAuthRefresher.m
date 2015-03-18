@@ -8,11 +8,9 @@
 
 #import "OTROAuthRefresher.h"
 
-#import "FBAccessTokenData.h"
 #import "GTMOAuth2Authentication.h"
 #import "OTRSecrets.h"
 #import "OTRConstants.h"
-#import "OTRInMemorySessionTokenCachingStrategy.h"
 
 #import "OTROAuthXMPPAccount.h"
 
@@ -33,41 +31,10 @@
     }];
 }
 
-+ (void)refreshFacebookToken:(FBAccessTokenData *)authToken completion:(OTROAuthCompletionBlock)completionBlock
-{
-    if (![FBSession activeSession]) {
-        OTRInMemorySessionTokenCachingStrategy *strategy = [[OTRInMemorySessionTokenCachingStrategy alloc] initWithToken:authToken];
-        FBSession * session = [[FBSession alloc] initWithAppID:FACEBOOK_APP_ID permissions:@[@"xmpp_login"] urlSchemeSuffix:nil tokenCacheStrategy:strategy];
-        
-        [FBSession setActiveSession:session];
-    }
-    
-    if(![FBSession activeSession].isOpen){
-        [[FBSession activeSession] openWithBehavior:FBSessionLoginBehaviorUseSystemAccountIfPresent completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
-            if (completionBlock) {
-                if (session.accessTokenData) {
-                    completionBlock(session.accessTokenData,nil);
-                } else {
-                    completionBlock(nil,error);
-                }
-            }
-        }];
-    }
-    else if (completionBlock){
-        completionBlock([FBSession activeSession].accessTokenData,nil);
-    }
-   
-    
-    
-}
-
 + (void)refreshAccount:(OTROAuthXMPPAccount *)account completion:(OTROAuthCompletionBlock)completionBlock
 {
     if (account.accountType == OTRAccountTypeGoogleTalk) {
         [self refreshGoogleToken:[account accountSpecificToken] completion:completionBlock];
-    }
-    else if(account.accountType == OTRAccountTypeFacebook) {
-        [self refreshFacebookToken:[account accountSpecificToken] completion:completionBlock];
     }
 }
 

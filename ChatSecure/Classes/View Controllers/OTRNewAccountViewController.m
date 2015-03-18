@@ -66,8 +66,7 @@ NSString *const kOTRAccountTypeKey   = @"kOTRAccountTypeKey";
 
 - (NSArray*)accounts
 {
-    return @[[OTRNewAccountViewController facebookCellDictionary],
-             [OTRNewAccountViewController googleCellDictionary],
+    return @[[OTRNewAccountViewController googleCellDictionary],
              [OTRNewAccountViewController XMPPCellDictionary],
              [OTRNewAccountViewController XMPPTorCellDictionary]];
 }
@@ -103,15 +102,7 @@ NSString *const kOTRAccountTypeKey   = @"kOTRAccountTypeKey";
     cell.imageView.image = cellAccount[kOTRProviderImageKey];
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
-    if( [cellAccount[kOTRAccountTypeKey] isEqual:@(OTRAccountTypeFacebook)])
-    {
-        cell.imageView.layer.masksToBounds = YES;
-        cell.imageView.layer.cornerRadius = 10.0;
-    }
-    else {
-        cell.imageView.layer.cornerRadius = 0.0;
-    }
-    
+    cell.imageView.layer.cornerRadius = 0.0;
     
     return cell;
 }
@@ -170,11 +161,6 @@ NSString *const kOTRAccountTypeKey   = @"kOTRAccountTypeKey";
     return @{kOTRDisplayNameKey:GOOGLE_TALK_STRING,
              kOTRProviderImageKey: [UIImage imageNamed:OTRGoogleTalkImageName],
              kOTRAccountTypeKey: @(OTRAccountTypeGoogleTalk)};
-}
-+(NSDictionary *)facebookCellDictionary {
-    return @{kOTRDisplayNameKey:FACEBOOK_STRING,
-             kOTRProviderImageKey: [OTRImages facebookImage],
-             kOTRAccountTypeKey: @(OTRAccountTypeFacebook)};
 }
 +(NSDictionary *)XMPPCellDictionary {
     return @{kOTRDisplayNameKey: JABBER_STRING,

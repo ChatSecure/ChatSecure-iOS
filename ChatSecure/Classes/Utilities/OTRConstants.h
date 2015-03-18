@@ -31,7 +31,6 @@ extern NSString *const kOTRProtocolLoginFailSSLCertificateDataKey;
 extern NSString *const kOTRNotificationErrorKey;
 extern NSString *const kOTRProtocolLoginUserInitiated;
 
-extern NSString *const kOTRFacebookDomain;
 extern NSString *const kOTRGoogleTalkDomain;
 extern NSString *const kOTRProtocolTypeXMPP;
 extern NSString *const kOTRProtocolTypeAIM;
@@ -45,8 +44,6 @@ extern NSString *const kOTRXMPPAccountSendDeliveryReceiptsKey;
 extern NSString *const kOTRXMPPAccountSendTypingNotificationsKey;
 
 extern NSString *const kOTRXMPPResource;
-
-extern NSString *const kOTRFacebookUsernameLink;
 
 extern NSString *const kOTRFeedbackEmail;
 
@@ -66,7 +63,6 @@ extern NSString *const OTRActivityTypeQRCode;
 
 extern NSString *const OTRArchiverKey;
 
-extern NSString *const FACEBOOK_APP_ID;
 extern NSString *const GOOGLE_APP_ID;
 extern NSString *const GOOGLE_APP_SCOPE;
 

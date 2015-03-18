@@ -34,8 +34,6 @@
 #import "OTRLanguageManager.h"
 #import "OTRUtilities.h"
 #import "OTRAccountsManager.h"
-#import "FacebookSDK.h"
-//#import "OTRAppVersionManager.h"
 #import "OTRSettingsManager.h"
 #import "OTRSecrets.h"
 #import "OTRDatabaseManager.h"
@@ -373,12 +371,10 @@
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
-    if( [[BITHockeyManager sharedHockeyManager].authenticator handleOpenURL:url
+    if ([[BITHockeyManager sharedHockeyManager].authenticator handleOpenURL:url
                                                           sourceApplication:sourceApplication
                                                                  annotation:annotation]) {
         return YES;
-    } else if ([url otr_isFacebookCallBackURL]) {
-        return [[FBSession activeSession] handleOpenURL:url];
     }
     return NO;
 }

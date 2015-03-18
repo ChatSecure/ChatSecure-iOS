@@ -30,7 +30,6 @@
 - (void)didSelectAccountType:(OTRAccountType)accountType;
 
 +(NSDictionary *)googleCellDictionary;
-+(NSDictionary *)facebookCellDictionary;
 +(NSDictionary *)XMPPCellDictionary;
 +(NSDictionary *)XMPPTorCellDictionary;
 +(NSDictionary *)aimCellDictionary;

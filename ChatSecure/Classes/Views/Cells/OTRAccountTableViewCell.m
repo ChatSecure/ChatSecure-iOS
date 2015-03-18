@@ -27,12 +27,6 @@
     }
     
     self.imageView.image = [account accountImage];
-    
-    if( account.accountType == OTRAccountTypeFacebook)
-    {
-        self.imageView.layer.masksToBounds = YES;
-        self.imageView.layer.cornerRadius = 10.0;
-    }
 }
 
 - (void)setConnectedText:(OTRProtocolConnectionStatus)connectionStatus {

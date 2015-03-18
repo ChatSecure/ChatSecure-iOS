@@ -24,7 +24,6 @@
 #import "OTRManagedGoogleAccount.h"
 #import "OTRManagedFacebookAccount.h"
 #import "OTRGoogleOAuthXMPPAccount.h"
-#import "OTRFacebookOAuthXMPPAccount.h"
 #import "OTRAccount.h"
 #import "CoreData+MagicalRecord.h"
 #import "OTRMessage.h"
@@ -135,7 +134,7 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
     
     ////// transfer saved passwords //////
     
-    if (account.accountType == OTRAccountTypeFacebook || account.accountType == OTRAccountTypeGoogleTalk) {
+    if (account.accountType == OTRAccountTypeGoogleTalk) {
         NSError *error = nil;
         SSKeychainQuery * keychainQuery = [[SSKeychainQuery alloc] init];
         keychainQuery.service = kOTRServiceName;
@@ -162,9 +161,6 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
     }
     else if ([coreDataClass isEqualToString:NSStringFromClass([OTRManagedGoogleAccount class])]) {
         return OTRAccountTypeGoogleTalk;
-    }
-    else if ([coreDataClass isEqualToString:NSStringFromClass([OTRManagedFacebookAccount class])]) {
-        return OTRAccountTypeFacebook;
     }
     return OTRAccountTypeNone;
 }

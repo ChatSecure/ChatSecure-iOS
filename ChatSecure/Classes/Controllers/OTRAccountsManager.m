@@ -56,7 +56,7 @@
         if ([evaluatedObject isKindOfClass:[OTRAccount class]]) {
             OTRAccount *account = (OTRAccount *)evaluatedObject;
             
-            if (account.accountType != OTRAccountTypeFacebook && [[OTRProtocolManager sharedInstance] isAccountConnected:account]) {
+            if ([[OTRProtocolManager sharedInstance] isAccountConnected:account]) {
                 return YES;
             }
         }

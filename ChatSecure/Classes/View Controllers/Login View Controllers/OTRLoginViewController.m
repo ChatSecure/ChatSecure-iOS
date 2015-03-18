@@ -26,7 +26,6 @@
 
 #import "OTRXMPPLoginViewController.h"
 #import "OTRJabberLoginViewController.h"
-#import "OTRFacebookLoginViewController.h"
 #import "OTRGoogleTalkLoginViewController.h"
 #import "OTRInLineTextEditTableViewCell.h"
 #import "OTRUtilities.h"
@@ -553,8 +552,6 @@ NSString *const KCellTypeHelp           = @"KCellTypeHelp";
         case OTRAccountTypeXMPPTor:
         case OTRAccountTypeJabber:
             return [[OTRJabberLoginViewController alloc] initWithAccount:account];
-        case OTRAccountTypeFacebook:
-            return [[OTRFacebookLoginViewController alloc] initWithAccount:account];
         case OTRAccountTypeGoogleTalk:
             return [[OTRGoogleTalkLoginViewController alloc] initWithAccount:account];
         default:

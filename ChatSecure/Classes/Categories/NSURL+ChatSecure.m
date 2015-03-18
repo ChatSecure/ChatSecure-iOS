@@ -11,12 +11,6 @@
 
 @implementation NSURL (ChatSecure)
 
-- (BOOL)otr_isFacebookCallBackURL
-{
-    NSString *facebookScheme = [NSString stringWithFormat:@"fb%@",FACEBOOK_APP_ID];
-    return [[self scheme] isEqualToString:facebookScheme];
-}
-
 + (NSURL*) otr_githubURL {
     NSURL *githubURL = [NSURL URLWithString:@"https://github.com/chrisballinger/ChatSecure-iOS/"];
     return githubURL;

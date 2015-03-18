@@ -14,7 +14,6 @@
 #import "OTRXMPPAccount.h"
 #import "OTRXMPPTorAccount.h"
 #import "OTRGoogleOAuthXMPPAccount.h"
-#import "OTRFacebookOAuthXMPPAccount.h"
 #import "OTRDatabaseManager.h"
 #import "YapDatabaseRelationshipTransaction.h"
 #import "OTRBuddy.h"
@@ -153,9 +152,6 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
     }
     else if (accountType == OTRAccountTypeGoogleTalk) {
         account = [[OTRGoogleOAuthXMPPAccount alloc] initWithAccountType:accountType];
-    }
-    else if (accountType == OTRAccountTypeFacebook) {
-        account = [[OTRFacebookOAuthXMPPAccount alloc] initWithAccountType:accountType];
     }
     
     return account;

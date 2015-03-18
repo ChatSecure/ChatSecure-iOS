@@ -44,7 +44,6 @@
 #import "OTRConstants.h"
 #import "OTRProtocolManager.h"
 #include <stdlib.h>
-#import "XMPPXFacebookPlatformAuthentication.h"
 #import "XMPPXOAuth2Google.h"
 #import "OTRConstants.h"
 #import "OTRUtilities.h"
@@ -145,11 +144,7 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 {
 	NSAssert(_xmppStream == nil, @"Method setupStream invoked multiple times");
     
-	if (self.account.accountType == OTRAccountTypeFacebook) {
-        self.xmppStream = [[XMPPStream alloc] initWithFacebookAppId:FACEBOOK_APP_ID];
-    } else {
-        self.xmppStream = [[XMPPStream alloc] init];
-    }
+	self.xmppStream = [[XMPPStream alloc] init];
     
     //Used to fetch correct account from XMPPStream in delegate methods especailly
     self.xmppStream.tag = self.account.uniqueId;
@@ -312,12 +307,7 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 {
     if(!_xmppStream)
     {
-        if (self.account.accountType == OTRAccountTypeFacebook) {
-            _xmppStream = [[XMPPStream alloc] initWithFacebookAppId:FACEBOOK_APP_ID];
-        }
-        else{
-            _xmppStream = [[XMPPStream alloc] init];
-        }
+        _xmppStream = [[XMPPStream alloc] init];
         _xmppStream.startTLSPolicy = XMPPStreamStartTLSPolicyRequired;
     }
     return _xmppStream;
@@ -378,10 +368,7 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 - (void)authenticateWithStream:(XMPPStream *)stream {
     NSError * error = nil;
     BOOL status = YES;
-    if ([stream supportsXFacebookPlatformAuthentication] && self.account.accountType == OTRAccountTypeFacebook) {
-        status = [stream authenticateWithFacebookAccessToken:self.password error:&error];
-    }
-    else if ([stream supportsXOAuth2GoogleAuthentication] && self.account.accountType == OTRAccountTypeGoogleTalk) {
+    if ([stream supportsXOAuth2GoogleAuthentication] && self.account.accountType == OTRAccountTypeGoogleTalk) {
         status = [stream authenticateWithGoogleAccessToken:self.password error:&error];
     }
     else {

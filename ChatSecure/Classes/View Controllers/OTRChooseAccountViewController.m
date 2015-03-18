@@ -90,12 +90,6 @@
     cell.detailTextLabel.text = nil;
     cell.imageView.image = [account accountImage];
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    
-    if( account.accountType == OTRAccountTypeFacebook)
-    {
-        cell.imageView.layer.masksToBounds = YES;
-        cell.imageView.layer.cornerRadius = 10.0;
-    }
 }
 
 -(void)doneButtonPressed:(id)sender

@@ -31,7 +31,6 @@ PODS:
   - BBlock/StoreKit (1.2.0)
   - BBlock/UIKit (1.2.0)
   - BButton (4.0.2)
-  - Bolts (1.1.4)
   - CocoaAsyncSocket (7.4.1)
   - CocoaLumberjack (1.9.2):
     - CocoaLumberjack/Extensions (= 1.9.2)
@@ -41,8 +40,6 @@ PODS:
   - CPAProxy (1.0.0):
     - CocoaAsyncSocket
   - CRToast (0.0.7)
-  - Facebook-iOS-SDK (3.21.1):
-    - Bolts (~> 1.0)
   - GCDWebServer (3.2.2):
     - GCDWebServer/Core (= 3.2.2)
   - GCDWebServer/Core (3.2.2)
@@ -259,7 +256,6 @@ DEPENDENCIES:
   - CocoaLumberjack (~> 1.9)
   - CPAProxy (from `Submodules/CPAProxy/CPAProxy.podspec`)
   - CRToast (from `https://github.com/cruffenach/CRToast`, commit `78569d0e6e6704872af5db1bc37be0ff9d112ac0`)
-  - Facebook-iOS-SDK (= 3.21.1)
   - gtm-http-fetcher (from `Podspecs/gtm-http-fetcher.podspec.json`)
   - gtm-oauth2 (from `Podspecs/gtm-oauth2.podspec.json`)
   - HockeySDK (~> 3.6)
@@ -332,12 +328,10 @@ SPEC CHECKSUMS:
   ARChromeActivity: d8471d0f78b7fcc1de57929cfc1751b3a7f58bad
   BBlock: 90f0ae0e3ba94fc88be6b9a85b4adbb73b8a7c9a
   BButton: eab327e143be2730c81a22467cc016488a125162
-  Bolts: dd9fb8433d67f5acc3b6b4d1379bbc5513d716c1
   CocoaAsyncSocket: b0a1a89e7ea4c1c0ea4ec83f57d55117d3cdae06
   CocoaLumberjack: 205769c032b5fef85b92472046bcc8b7e7c8a817
   CPAProxy: c3df549999514de2c04633d20a79b00daf627ddb
   CRToast: da11d94a05b1351a87bb26cbf8f25e80ed2e7115
-  Facebook-iOS-SDK: 18c26e86ab25c17854a2ee2a8f60562099c6600f
   GCDWebServer: 285fde9951ab2cd87c2d9d74735fee977a16fe04
   gtm-http-fetcher: 5072f07e523261f7a87df939d13c1be2340d8111
   gtm-oauth2: dfb3016b8347b73fa80042e5aed29ec4f36e46bc

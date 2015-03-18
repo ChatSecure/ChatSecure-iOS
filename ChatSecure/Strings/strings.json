@@ -127,10 +127,6 @@
         "comment": "Label for button to create account by logging into an existing account", 
         "string": "Connect to Existing Account"
     }, 
-    "CONNECT_FACEBOOK_STRING": {
-        "comment": "Button label for connecting a Facebook account", 
-        "string": "Connect Facebook"
-    }, 
     "CONVERSATION_NOT_SECURE_WARNING_STRING": {
         "comment": "Warn user that the current chat is not secure", 
         "string": "Warning: This chat is not encrypted"
@@ -206,10 +202,6 @@
     "DISCONNECTION_WARNING_TITLE_STRING": {
         "comment": "Title for setting about showing a warning before disconnection", 
         "string": "Sign out Warning"
-    }, 
-    "DISCONNECT_FACEBOOK_STRING": {
-        "comment": "button label for disconnecting Facebook account", 
-        "string": "Disconnect Facebook"
     }, 
     "DOMAIN_BLANK_ERROR_STRING": {
         "comment": "Error message when domain textfield left blank", 

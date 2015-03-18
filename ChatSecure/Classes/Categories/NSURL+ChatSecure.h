@@ -10,8 +10,6 @@
 
 @interface NSURL (ChatSecure)
 
-- (BOOL)otr_isFacebookCallBackURL;
-
 + (NSURL*) otr_githubURL;
 
 + (NSURL*) otr_facebookAppURL;

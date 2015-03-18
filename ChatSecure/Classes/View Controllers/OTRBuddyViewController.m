@@ -105,9 +105,6 @@
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    if (self.account.accountType == OTRAccountTypeFacebook) {
-        return 3;
-    }
     return 4;
 }
 

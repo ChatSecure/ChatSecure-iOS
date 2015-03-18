@@ -27,8 +27,6 @@ typedef NS_ENUM(NSUInteger, OTRBubbleMessageType) {
 
 + (UIImage *)facebookActivityImage;
 
-+ (UIImage *)facebookImage;
-
 + (UIImage *)warningImage;
 + (UIImage *)circleWarningWithColor:(UIColor *)color;
 + (UIImage *)warningImageWithColor:(UIColor *)color;

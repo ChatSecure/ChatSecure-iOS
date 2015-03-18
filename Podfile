@@ -9,8 +9,6 @@ pod "Appirater", '~> 2.0'
 pod 'OpenInChrome', '~> 0.0'
 pod 'MWFeedParser', '~> 1.0'
 pod "CocoaLumberjack", '~> 1.9'
-# In Facebook-iOS-SDK 3.22 removes headers for resource files https://developers.facebook.com/docs/ios/change-log-3.x
-pod "Facebook-iOS-SDK", '3.21.1'
 pod "HockeySDK", '~> 3.6'
 pod "MagicalRecord", '~> 2.2'
 pod 'MBProgressHUD', '~> 0.9'
