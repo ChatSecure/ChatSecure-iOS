@@ -9,7 +9,8 @@ pod "Appirater", '~> 2.0'
 pod 'OpenInChrome', '~> 0.0'
 pod 'MWFeedParser', '~> 1.0'
 pod "CocoaLumberjack", '~> 1.9'
-pod "Facebook-iOS-SDK", '~> 3.19'
+# In Facebook-iOS-SDK 3.22 removes headers for resource files https://developers.facebook.com/docs/ios/change-log-3.x
+pod "Facebook-iOS-SDK", '3.21.1'
 pod "HockeySDK", '~> 3.6'
 pod "MagicalRecord", '~> 2.2'
 pod 'MBProgressHUD', '~> 0.9'
@@ -31,14 +32,12 @@ pod 'BButton', '~> 4.0'
 pod 'uservoice-iphone-sdk', '~> 3.2'
 pod 'TUSafariActivity', '~> 1.0'
 pod 'ARChromeActivity', '~> 1.0'
+pod 'CocoaAsyncSocket', '~> 7.4'
 pod 'JTSImageViewController', '~> 1.4'
 
 # Local Podspecs
 pod 'gtm-http-fetcher', :podspec => 'Podspecs/gtm-http-fetcher.podspec.json'
 pod 'gtm-oauth2', :podspec => 'Podspecs/gtm-oauth2.podspec.json'
-
-# Waiting for 7.4.1 to be pushed to trunk
-pod 'CocoaAsyncSocket', :git => 'https://github.com/robbiehanson/CocoaAsyncSocket.git', :commit => 'c0bbcbcc5e039ca5d732f9844bf95c3d8ee31a5b'
 
 # Wating for update to pod needed for iPad bugs
 pod 'CRToast', :git => 'https://github.com/cruffenach/CRToast', :commit => '78569d0e6e6704872af5db1bc37be0ff9d112ac0'
