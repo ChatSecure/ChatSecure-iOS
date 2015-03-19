@@ -41,6 +41,8 @@ extern NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension;
 
 - (BOOL)hasPassphrase;
 
+- (NSString *)databasePassphrase;
+
 + (BOOL)existsYapDatabase;
 
 + (NSString *)yapDatabasePathWithName:(NSString *)name;

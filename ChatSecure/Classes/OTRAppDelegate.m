@@ -112,9 +112,11 @@
             if (error) {
                 DDLogError(@"Password Error: %@",error);
             }
+            
         }
 
         [[OTRDatabaseManager sharedInstance] setupDatabaseWithName:OTRYapDatabaseName];
+        [self setupSecureStorageWithPassword:[[OTRDatabaseManager sharedInstance] databasePassphrase]];
         rootViewController = [self defaultConversationNavigationController];
         
         
@@ -123,16 +125,7 @@
 #endif
     }
 
-    NSString *path = [OTRDatabaseManager yapDatabasePathWithName:nil];
-    path = [path stringByAppendingPathComponent:@"media.sqlite"];
-    [[OTRMediaFileManager sharedInstance] setupWithPath:path password:@"password"];
     
-    self.mediaServer = [OTRMediaServer sharedInstance];
-    NSError *error = nil;
-    BOOL mediaServerStarted = [self.mediaServer startOnPort:8080 error:&error];
-    if (mediaServerStarted) {
-        DDLogError(@"Error starting media server: %@",error);
-    }
 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.rootViewController = rootViewController;
@@ -236,6 +229,20 @@
             }
         }
     }];
+}
+
+- (void)setupSecureStorageWithPassword:(NSString *)password
+{
+    NSString *path = [OTRDatabaseManager yapDatabasePathWithName:nil];
+    path = [path stringByAppendingPathComponent:@"media.sqlite"];
+    [[OTRMediaFileManager sharedInstance] setupWithPath:path password:password];
+    
+    self.mediaServer = [OTRMediaServer sharedInstance];
+    NSError *error = nil;
+    BOOL mediaServerStarted = [self.mediaServer startOnPort:8080 error:&error];
+    if (!mediaServerStarted) {
+        DDLogError(@"Error starting media server: %@",error);
+    }
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

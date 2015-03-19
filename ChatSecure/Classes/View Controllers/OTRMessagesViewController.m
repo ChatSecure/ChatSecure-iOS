@@ -929,7 +929,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
 - (void)attachmentPicker:(OTRAttachmentPicker *)attachmentPicker gotPhoto:(UIImage *)photo withInfo:(NSDictionary *)info
 {
     if (photo) {
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        dispatch_async(queue, ^{
             
             CGFloat scaleFactor = 0.25;
             CGSize newSize = CGSizeMake(photo.size.width * scaleFactor, photo.size.height * scaleFactor);
@@ -957,7 +958,13 @@ typedef NS_ENUM(int, OTRDropDownType) {
             } completionBlock:^{
                 [[OTRMediaFileManager sharedInstance] setData:imageData forItem:imageItem buddyUniqueId:self.buddy.uniqueId completion:^(NSInteger bytesWritten, NSError *error) {
                     [imageItem touchParentMessage];
-                    [[OTRProtocolManager sharedInstance].encryptionManager.dataHandler sendFileWithName:@"image.jpg" fileData:imageData username:self.buddy.username accountName:self.account.username protocol:kOTRProtocolTypeXMPP tag:message];
+                    if (error) {
+                        message.error = error;
+                        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+                            [message saveWithTransaction:transaction];
+                        }];
+                    }
+                    [[OTRProtocolManager sharedInstance].encryptionManager.dataHandler sendFileWithName:imageItem.filename fileData:imageData username:self.buddy.username accountName:self.account.username protocol:kOTRProtocolTypeXMPP tag:message];
                     
                 } completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
             }];
@@ -985,14 +992,18 @@ typedef NS_ENUM(int, OTRDropDownType) {
                                                    toEncryptedPath:newPath
                                                    completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
                                                         completion:^(NSError *error) {
-            if (error) {
-                DDLogError(@"Error Copying Video: %@",error);
-            }
-                                                            if ([[NSFileManager defaultManager] fileExistsAtPath:videoURL.path]) {
-                                                                [[NSFileManager defaultManager] removeItemAtPath:videoURL.path error:nil];
+                                                            if (error) {
+                                                            DDLogError(@"Error Copying Video: %@",error);
                                                             }
-            
-            [videoItem touchParentMessage];
+                                                            if ([[NSFileManager defaultManager] fileExistsAtPath:videoURL.path]) {
+                                                            [[NSFileManager defaultManager] removeItemAtPath:videoURL.path error:nil];
+                                                            }
+                                                            
+                                                            NSURL *url = [[OTRMediaServer sharedInstance] urlForMediaItem:videoItem buddyUniqueId:self.buddy.uniqueId];
+                                                            
+                                                            [[OTRProtocolManager sharedInstance].encryptionManager.dataHandler sendFileWithURL:url username:self.buddy.username accountName:self.account.username protocol:kOTRProtocolTypeXMPP tag:message];
+                                                            
+                                                            [videoItem touchParentMessage];
         }];
     }];
 }

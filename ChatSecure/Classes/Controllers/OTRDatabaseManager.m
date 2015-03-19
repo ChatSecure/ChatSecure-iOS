@@ -49,8 +49,6 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
 - (BOOL) setupDatabaseWithName:(NSString*)databaseName {
     if ([self setupYapDatabaseWithName:databaseName] )
     {
-        NSString *ioCipherName = [[[databaseName stringByDeletingPathExtension] stringByAppendingString:@"-media"] stringByAppendingPathExtension:@"sqlite"];
-        [self setupIOCipherWithName:ioCipherName password:[self databasePassphrase]];
         [self migrateCoreDataToYapDatabase];
         return YES;
     }
@@ -165,13 +163,6 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
     return OTRAccountTypeNone;
 }
 
-- (void)setupIOCipherWithName:(NSString *)name password:(NSString *)password
-{
-    NSString *path = [OTRDatabaseManager yapDatabasePathWithName:name];
-    [[OTRMediaFileManager sharedInstance] setupWithPath:path password:password];
-    
-}
-
 - (BOOL)setupYapDatabaseWithName:(NSString *)name
 {
     YapDatabaseOptions *options = [[YapDatabaseOptions alloc] init];
@@ -270,7 +261,6 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
     YapDatabaseSecondaryIndex *secondaryIndex = [[YapDatabaseSecondaryIndex alloc] initWithSetup:setup handler:indexHandler];
     
     return [self.database registerExtension:secondaryIndex withName:OTRYapDatabseMessageIdSecondaryIndexExtension];
-    
 }
 
 + (void) deleteLegacyXMPPFiles {
