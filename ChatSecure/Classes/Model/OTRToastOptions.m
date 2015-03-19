@@ -28,6 +28,7 @@ CGSize const kOTRDefaultNotificationImageSize = {25, 25};
         self.animationOutType = CRToastAnimationTypeGravity;
         
         [self addInteractionResponderWithType:CRToastInteractionTypeSwipeUp automaticallyDismiss:YES block:nil];
+        [self addInteractionResponderWithType:CRToastInteractionTypeTapOnce automaticallyDismiss:YES block:nil];
     }
     return self;
 }
