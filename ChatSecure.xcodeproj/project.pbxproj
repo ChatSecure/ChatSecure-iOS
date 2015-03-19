@@ -166,6 +166,7 @@
 		63C4BD2D1A1E9BE1001696CD /* _OTRvCardTemp.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BD0C1A1E9BE1001696CD /* _OTRvCardTemp.m */; };
 		63C4BD2E1A1E9BE1001696CD /* _OTRXMPPManagedPresenceSubscriptionRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BD0E1A1E9BE1001696CD /* _OTRXMPPManagedPresenceSubscriptionRequest.m */; };
 		63C5B66A1A82F3EE0011BEA8 /* OTRAudioPlaybackController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C5B6691A82F3EE0011BEA8 /* OTRAudioPlaybackController.m */; };
+		63CFB1041ABA492600A8D27E /* OTRFacebookOAuthXMPPAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CFB1031ABA492600A8D27E /* OTRFacebookOAuthXMPPAccount.m */; };
 		63D184861A2D3F2400334CD8 /* OTRNotificationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D184851A2D3F2400334CD8 /* OTRNotificationController.m */; };
 		63D27FC51A6DC51C00EC251A /* OTRMediaItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D27FC41A6DC51C00EC251A /* OTRMediaItem.m */; };
 		63D58C261A8C154D003C5A2D /* OTRAudioRecorderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D58C251A8C154D003C5A2D /* OTRAudioRecorderViewController.m */; };
@@ -543,6 +544,8 @@
 		63C4BD0E1A1E9BE1001696CD /* _OTRXMPPManagedPresenceSubscriptionRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _OTRXMPPManagedPresenceSubscriptionRequest.m; sourceTree = "<group>"; };
 		63C5B6681A82F3EE0011BEA8 /* OTRAudioPlaybackController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAudioPlaybackController.h; sourceTree = "<group>"; };
 		63C5B6691A82F3EE0011BEA8 /* OTRAudioPlaybackController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAudioPlaybackController.m; sourceTree = "<group>"; };
+		63CFB1021ABA492600A8D27E /* OTRFacebookOAuthXMPPAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRFacebookOAuthXMPPAccount.h; sourceTree = "<group>"; };
+		63CFB1031ABA492600A8D27E /* OTRFacebookOAuthXMPPAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRFacebookOAuthXMPPAccount.m; sourceTree = "<group>"; };
 		63D184841A2D3F2400334CD8 /* OTRNotificationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRNotificationController.h; sourceTree = "<group>"; };
 		63D184851A2D3F2400334CD8 /* OTRNotificationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRNotificationController.m; sourceTree = "<group>"; };
 		63D27FC31A6DC51C00EC251A /* OTRMediaItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRMediaItem.h; sourceTree = "<group>"; };
@@ -812,6 +815,7 @@
 		633105B91A16D1A300C17BAE /* Accounts */ = {
 			isa = PBXGroup;
 			children = (
+				63CFB1051ABA492B00A8D27E /* Removed */,
 				633105BA1A16D1A300C17BAE /* OTRAccount.h */,
 				633105BB1A16D1A300C17BAE /* OTRAccount.m */,
 				633105BE1A16D1A300C17BAE /* OTRGoogleOAuthXMPPAccount.h */,
@@ -1131,6 +1135,15 @@
 				63C4BD0E1A1E9BE1001696CD /* _OTRXMPPManagedPresenceSubscriptionRequest.m */,
 			);
 			path = Machine;
+			sourceTree = "<group>";
+		};
+		63CFB1051ABA492B00A8D27E /* Removed */ = {
+			isa = PBXGroup;
+			children = (
+				63CFB1021ABA492600A8D27E /* OTRFacebookOAuthXMPPAccount.h */,
+				63CFB1031ABA492600A8D27E /* OTRFacebookOAuthXMPPAccount.m */,
+			);
+			name = Removed;
 			sourceTree = "<group>";
 		};
 		63DC0EB21A1ABC3E002C9598 /* Configurations */ = {
@@ -1497,6 +1510,7 @@
 				633106EB1A16D1A300C17BAE /* OTRUtilities.m in Sources */,
 				633106D61A16D1A300C17BAE /* OTRMessage.m in Sources */,
 				633106E31A16D1A300C17BAE /* OTRChatDemo.m in Sources */,
+				63CFB1041ABA492600A8D27E /* OTRFacebookOAuthXMPPAccount.m in Sources */,
 				633106D51A16D1A300C17BAE /* OTRMessage+JSQMessageData.m in Sources */,
 				633107011A16D1A300C17BAE /* OTRDatabaseUnlockViewController.m in Sources */,
 				633106EA1A16D1A300C17BAE /* OTRSecrets.m in Sources */,

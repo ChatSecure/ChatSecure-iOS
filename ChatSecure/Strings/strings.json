@@ -942,6 +942,14 @@
     "PHOTO_LIBRARY_STRING" : {
         "comment": "Label for button to open up photo library and choose photo",
         "string": "Photo Library"
+    },
+    "FACEBOOK_REMOVED_STRING" : {
+        "comment": "Title for alert about removing facebook",
+        "string": "Facebook account removed"
+    },
+    "FACEBOOK_REMOVED_MESSAGE_STRING" : {
+        "comment": "Message for when facebook accounts removed",
+        "string": "Facebook has remmoved acces to the chat API"
     }
 
 }

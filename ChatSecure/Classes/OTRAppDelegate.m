@@ -55,6 +55,7 @@
 #import "OTRNotificationController.h"
 #import "OTRMediaFileManager.h"
 #import "OTRMediaServer.h"
+#import "UIAlertView+Blocks.h"
 
 #if CHATSECURE_DEMO
 #import "OTRChatDemo.h"
@@ -122,7 +123,6 @@
 #endif
     }
 
-    //FIXME
     NSString *path = [OTRDatabaseManager yapDatabasePathWithName:nil];
     path = [path stringByAppendingPathComponent:@"media.sqlite"];
     [[OTRMediaFileManager sharedInstance] setupWithPath:path password:@"password"];
@@ -134,34 +134,7 @@
         DDLogError(@"Error starting media server: %@",error);
     }
 
-    //rootViewController = [[OTRDatabaseUnlockViewController alloc] init];
-//    NSString *outputStoreName = @"ChatSecure.sqlite";
-//    [[OTRDatabaseManager sharedInstance] setupDatabaseWithName:outputStoreName];
-//    
-//    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-//        NSArray *allAccounts = [OTRAccount allAccountsWithTransaction:transaction];
-//        NSArray *allAccountsToDelete = [allAccounts filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
-//            if ([evaluatedObject isKindOfClass:[OTRAccount class]]) {
-//                OTRAccount *account = (OTRAccount *)evaluatedObject;
-//                if (![account.username length]) {
-//                    return YES;
-//                }
-//            }
-//            return NO;
-//        }]];
-//        
-//        [transaction removeObjectsForKeys:[allAccountsToDelete valueForKey:OTRYapDatabaseObjectAttributes.uniqueId] inCollection:[OTRAccount collection]];
-//        //FIXME? [OTRManagedAccount resetAccountsConnectionStatus];
-//    }];
-
-    
-    
-    
-    //[OTRAppVersionManager applyAppUpdatesForCurrentAppVersion];
-
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    
-
     self.window.rootViewController = rootViewController;
     [self.window makeKeyAndVisible];
     
@@ -175,6 +148,8 @@
     [Appirater appLaunched:YES];
     
     [self autoLogin];
+    
+    [self removeFacebookAccounts];
     
     return YES;
 }
@@ -214,6 +189,53 @@
 - (void)showConversationViewController
 {
     self.window.rootViewController = [self defaultConversationNavigationController];
+}
+
+- (void)removeFacebookAccounts
+{
+    NSNumber *deleted = [[NSUserDefaults standardUserDefaults] objectForKey:kOTRDeletedFacebookKey];
+    
+    if (deleted.boolValue) {
+        return;
+    }
+    
+    __block NSUInteger deletedAccountsCount = 0;
+    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        deletedAccountsCount = [OTRAccount removeAllAccountsOfType:OTRAccountTypeFacebook inTransaction:transaction];
+        [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:kOTRDeletedFacebookKey];
+        
+    } completionQueue:dispatch_get_main_queue() completionBlock:^{
+        if (deletedAccountsCount > 0) {
+            
+            void (^moreInfoBlock)(void) = ^void(void) {
+                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://developers.facebook.com/docs/chat"]];
+            };
+            
+            if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")){
+                
+                UIAlertController *alertController = [UIAlertController alertControllerWithTitle:FACEBOOK_REMOVED_STRING message:FACEBOOK_REMOVED_MESSAGE_STRING preferredStyle:UIAlertControllerStyleAlert];
+                
+                UIAlertAction *okAction = [UIAlertAction actionWithTitle:OK_STRING style:UIAlertActionStyleDefault handler:nil];
+                UIAlertAction *moreInfoAction = [UIAlertAction actionWithTitle:INFO_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                    moreInfoBlock();
+                }];
+                
+                [alertController addAction:okAction];
+                [alertController addAction:moreInfoAction];
+                
+                [self.window.rootViewController presentViewController:alertController animated:YES completion:nil];
+                
+            } else {
+                RIButtonItem *okButtonItem = [RIButtonItem itemWithLabel:OK_STRING];
+                RIButtonItem *moreInfoButtonItem = [RIButtonItem itemWithLabel:INFO_STRING action:^{
+                    moreInfoBlock();
+                }];
+                
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:FACEBOOK_REMOVED_STRING message:FACEBOOK_REMOVED_MESSAGE_STRING cancelButtonItem:nil otherButtonItems:okButtonItem,moreInfoButtonItem, nil];
+                [alertView show];
+            }
+        }
+    }];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

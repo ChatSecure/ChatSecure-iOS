@@ -72,6 +72,9 @@ extern NSString *const OTRSuccessfulRemoteNotificationRegistration;
 extern NSString *const OTRYapDatabasePassphraseAccountName;
 extern NSString *const OTRYapDatabaseName;
 
+//NSUserDefaults
+extern NSString *const kOTRDeletedFacebookKey;
+
 //Chatview
 extern CGFloat const kOTRSentDateFontSize;
 extern CGFloat const kOTRDeliveredFontSize;

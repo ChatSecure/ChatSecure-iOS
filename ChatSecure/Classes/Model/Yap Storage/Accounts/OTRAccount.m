@@ -180,6 +180,24 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
     
 }
 
++ (NSUInteger)removeAllAccountsOfType:(OTRAccountType)accountType inTransaction:(YapDatabaseReadWriteTransaction *)transaction
+{
+    NSMutableArray *keys = [NSMutableArray array];
+    [transaction enumerateKeysAndObjectsInCollection:[self collection] usingBlock:^(NSString *key, id object, BOOL *stop) {
+        if ([object isKindOfClass:[self class]]) {
+            OTRAccount *account = (OTRAccount *)object;
+            account.password = nil;
+            
+            if (account.accountType == accountType) {
+                [keys addObject:account.uniqueId];
+            }
+        }
+    }];
+    
+    [transaction removeObjectsForKeys:keys inCollection:[self collection]];
+    return [keys count];
+}
+
 
 // See MTLModel+NSCoding.h
 // This helps enforce that only the properties keys that we

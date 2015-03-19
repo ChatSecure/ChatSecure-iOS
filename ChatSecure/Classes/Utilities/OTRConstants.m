@@ -71,6 +71,9 @@ NSString *const OTRYapDatabasePassphraseAccountName = @"OTRYapDatabasePassphrase
 
 NSString *const OTRYapDatabaseName = @"ChatSecureYap.sqlite";
 
+//NSUserDefaults
+NSString *const kOTRDeletedFacebookKey = @"kOTRDeletedFacebookKey";
+
 //Chatview
 CGFloat const kOTRSentDateFontSize            = 13;
 CGFloat const kOTRDeliveredFontSize           = 13;
