@@ -62,11 +62,16 @@ NSString *const kOTRRootMediaDirectory = @"media";
 - (void)setData:(NSData *)data forItem:(OTRMediaItem *)mediaItem buddyUniqueId:(NSString *)buddyUniqueId completion:(void (^)(NSInteger bytesWritten, NSError *error))completion completionQueue:(dispatch_queue_t)completionQueue
 {
     
+    if (!completionQueue) {
+        completionQueue = dispatch_get_main_queue();
+    }
+
+    
     dispatch_async(self.concurrentQueue, ^{
         NSString *path = [[self class] pathForMediaItem:mediaItem buddyUniqueId:buddyUniqueId];
         if (![path length]) {
             NSError *error = [NSError errorWithDomain:kOTRErrorDomain code:150 userInfo:@{NSLocalizedDescriptionKey:@"Unable to create file path"}];
-            dispatch_async([[self class] completionQueue:completionQueue], ^{
+            dispatch_async(completionQueue, ^{
                 completion(-1,error);
             });
             return;
@@ -79,7 +84,7 @@ NSString *const kOTRRootMediaDirectory = @"media";
             [self.ioCipher removeItemAtPath:path error:&error];
             if (error) {
                 NSError *error = [NSError errorWithDomain:kOTRErrorDomain code:151 userInfo:@{NSLocalizedDescriptionKey:@"Unable to remove existing file"}];
-                dispatch_async([[self class] completionQueue:completionQueue], ^{
+                dispatch_async(completionQueue, ^{
                     completion(-1,error);
                 });
                 return;
@@ -90,7 +95,7 @@ NSString *const kOTRRootMediaDirectory = @"media";
         BOOL created = [self.ioCipher createFileAtPath:path error:&error];
         if (!created) {
             NSError *error = [NSError errorWithDomain:kOTRErrorDomain code:152 userInfo:@{NSLocalizedDescriptionKey:@"Unable to create file"}];
-            dispatch_async([[self class] completionQueue:completionQueue], ^{
+            dispatch_async(completionQueue, ^{
                 completion(-1,error);
             });
             return;
@@ -106,13 +111,15 @@ NSString *const kOTRRootMediaDirectory = @"media";
 }
 - (void)dataForItem:(OTRMediaItem *)mediaItem buddyUniqueId:(NSString *)buddyUniqueId completion:(void (^)(NSData *, NSError *))completion completionQueue:(dispatch_queue_t)completionQueue
 {
-    completionQueue = [[self class] completionQueue:completionQueue];
+    if (!completionQueue) {
+        completionQueue = dispatch_get_main_queue();
+    }
     
     dispatch_async(self.concurrentQueue, ^{
         NSString *filePath = [[self class] pathForMediaItem:mediaItem buddyUniqueId:buddyUniqueId];
         if (!filePath) {
             NSError *error = [NSError errorWithDomain:kOTRErrorDomain code:150 userInfo:@{NSLocalizedDescriptionKey:@"Unable to create file path"}];
-            dispatch_async(completion, ^{
+            dispatch_async(completionQueue, ^{
                 completion(nil,error);
             });
             return;
@@ -124,7 +131,7 @@ NSString *const kOTRRootMediaDirectory = @"media";
             __block NSError *error;
             NSDictionary *fileAttributes = [self.ioCipher fileAttributesAtPath:filePath error:&error];
             if (error) {
-                dispatch_async(completion, ^{
+                dispatch_async(completionQueue, ^{
                     completion(nil,error);
                 });
                 return;
@@ -152,15 +159,6 @@ NSString *const kOTRRootMediaDirectory = @"media";
     });
     
     return sharedInstance;
-}
-
-+ (dispatch_queue_t)completionQueue:(dispatch_queue_t)completionQueue
-{
-    if (!completionQueue) {
-        return dispatch_get_main_queue();
-    }
-    
-    return completionQueue;
 }
 
 + (NSString *)pathForMediaItem:(OTRMediaItem *)mediaItem buddyUniqueId:(NSString *)buddyUniqueId
