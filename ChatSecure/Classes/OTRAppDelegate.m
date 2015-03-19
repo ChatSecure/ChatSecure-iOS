@@ -234,7 +234,7 @@
 - (void)setupSecureStorageWithPassword:(NSString *)password
 {
     NSString *path = [OTRDatabaseManager yapDatabasePathWithName:nil];
-    path = [path stringByAppendingPathComponent:@"media.sqlite"];
+    path = [path stringByAppendingPathComponent:@"ChatSecure-media.sqlite"];
     [[OTRMediaFileManager sharedInstance] setupWithPath:path password:password];
     
     self.mediaServer = [OTRMediaServer sharedInstance];

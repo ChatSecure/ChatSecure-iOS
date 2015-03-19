@@ -753,7 +753,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 - (void)showImage:(OTRImageItem *)imageItem fromCollectionView:(JSQMessagesCollectionView *)collectionView atIndexPath:(NSIndexPath *)indexPath
 {
     //FIXME: Possible for image to not be in cache?
-    UIImage *image = [OTRImages imageWithIdentifier:imageItem.filename];
+    UIImage *image = [OTRImages imageWithIdentifier:imageItem.uniqueId];
     JTSImageInfo *imageInfo = [[JTSImageInfo alloc] init];
     imageInfo.image = image;
     
@@ -762,7 +762,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         UIView *cellContainterView = ((JSQMessagesCollectionViewCell *)cell).messageBubbleContainerView;
         imageInfo.referenceRect = cellContainterView.bounds;
         imageInfo.referenceView = cellContainterView;
-        imageInfo.referenceCornerRadius = 5;
+        imageInfo.referenceCornerRadius = 10;
     }
     
     JTSImageViewController *imageViewer = [[JTSImageViewController alloc]

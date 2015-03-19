@@ -79,7 +79,7 @@ NSString *const kOTRRootMediaDirectory = @"media";
             [self.ioCipher removeItemAtPath:path error:&error];
             if (error) {
                 NSError *error = [NSError errorWithDomain:kOTRErrorDomain code:151 userInfo:@{NSLocalizedDescriptionKey:@"Unable to remove existing file"}];
-                dispatch_async(completion, ^{
+                dispatch_async([[self class] completionQueue:completionQueue], ^{
                     completion(-1,error);
                 });
                 return;
@@ -90,7 +90,7 @@ NSString *const kOTRRootMediaDirectory = @"media";
         BOOL created = [self.ioCipher createFileAtPath:path error:&error];
         if (!created) {
             NSError *error = [NSError errorWithDomain:kOTRErrorDomain code:152 userInfo:@{NSLocalizedDescriptionKey:@"Unable to create file"}];
-            dispatch_async(completion, ^{
+            dispatch_async([[self class] completionQueue:completionQueue], ^{
                 completion(-1,error);
             });
             return;
