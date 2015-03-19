@@ -211,7 +211,7 @@ NSString *const kOTRAudioRecordAnimatePath = @"kOTRAudioRecordAnimatePath";
     NSUInteger minutes = (int)time / 60;
     NSUInteger seconds = (int)time % 60;
     
-    self.timerLabel.text = [NSString stringWithFormat:@"%lu:%02ld",(unsigned long)minutes,seconds];
+    self.timerLabel.text = [NSString stringWithFormat:@"%lu:%02ld",(unsigned long)minutes,(unsigned long)seconds];
 }
 
 - (void)animateAwayViewsWithDuration:(NSTimeInterval)duration completion:(void (^)(BOOL finished))completion

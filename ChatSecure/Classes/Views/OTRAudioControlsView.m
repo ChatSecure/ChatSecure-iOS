@@ -49,7 +49,7 @@ NSInteger const kOTRAudioControlsViewTag = 301;
     NSUInteger minutes = (int)time / 60;
     NSUInteger seconds = (int)time % 60;
     
-    self.timeLabel.text = [NSString stringWithFormat:@"%lu:%02ld",(unsigned long)minutes,seconds];
+    self.timeLabel.text = [NSString stringWithFormat:@"%lu:%02ld",(unsigned long)minutes,(unsigned long)seconds];
 }
 
 - (void)updateConstraints{
