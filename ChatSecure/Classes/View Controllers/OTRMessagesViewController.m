@@ -57,7 +57,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     OTRDropDownTypePush          = 2
 };
 
-@interface OTRMessagesViewController () <UITextViewDelegate, OTRAttachmentPickerDelegate>
+@interface OTRMessagesViewController () <UITextViewDelegate, OTRAttachmentPickerDelegate, OTRAudioRecorderViewControllerDelegate>
 
 @property (nonatomic, strong) OTRAccount *account;
 
@@ -748,6 +748,23 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }
 }
 
+#pragma - mark Sending Media Items
+
+- (void)sendMediaItem:(OTRMediaItem *)mediaItem data:(NSData *)data tag:(id)tag
+{
+    if (data) {
+        
+        [[OTRProtocolManager sharedInstance].encryptionManager.dataHandler sendFileWithName:mediaItem.filename fileData:data username:self.buddy.username accountName:self.account.username protocol:kOTRProtocolTypeXMPP tag:tag];
+        
+    } else {
+        NSURL *url = [[OTRMediaServer sharedInstance] urlForMediaItem:mediaItem buddyUniqueId:self.buddy.uniqueId];
+        
+        [[OTRProtocolManager sharedInstance].encryptionManager.dataHandler sendFileWithURL:url username:self.buddy.username accountName:self.account.username protocol:kOTRProtocolTypeXMPP tag:tag];
+    }
+    
+    [mediaItem touchParentMessage];
+}
+
 #pragma - mark Media Display Methods
 
 - (void)showImage:(OTRImageItem *)imageItem fromCollectionView:(JSQMessagesCollectionView *)collectionView atIndexPath:(NSIndexPath *)indexPath
@@ -862,27 +879,19 @@ typedef NS_ENUM(int, OTRDropDownType) {
     if ([[OTRProtocolManager sharedInstance] isAccountConnected:self.account]) {
         //Account is connected
         
-        if ([button isEqual:self.microphoneButton]) {
-            
-            OTRAudioRecorderViewController *recorderViewController = [[OTRAudioRecorderViewController alloc] initWithBuddy:self.buddy];
-            CGRect rectInWindow = [self.microphoneButton convertRect:self.microphoneButton.frame toView:nil];
-            [recorderViewController showAudioRecorderFromViewController:self animated:YES fromMicrophoneRectInWindow:rectInWindow];
-            
-        } else {
-            OTRMessage *message = [[OTRMessage alloc] init];
-            message.buddyUniqueId = self.buddy.uniqueId;
-            message.text = text;
-            message.read = YES;
-            message.transportedSecurely = NO;
-            
-            [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-                [message saveWithTransaction:transaction];
-                self.buddy.lastMessageDate = message.date;
-                [self.buddy saveWithTransaction:transaction];
-            } completionBlock:^{
-                [[OTRKit sharedInstance] encodeMessage:message.text tlvs:nil username:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString tag:message];
-            }];
-        }
+        OTRMessage *message = [[OTRMessage alloc] init];
+        message.buddyUniqueId = self.buddy.uniqueId;
+        message.text = text;
+        message.read = YES;
+        message.transportedSecurely = NO;
+        
+        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+            [message saveWithTransaction:transaction];
+            self.buddy.lastMessageDate = message.date;
+            [self.buddy saveWithTransaction:transaction];
+        } completionBlock:^{
+            [[OTRKit sharedInstance] encodeMessage:message.text tlvs:nil username:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString tag:message];
+        }];
         
     } else {
         //Account is not currently connected
@@ -904,7 +913,17 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (void)didPressAccessoryButton:(UIButton *)sender
 {
-    [self.attachmentPicker showAlertControllerWithCompletion:nil];
+    if ([sender isEqual:self.microphoneButton]) {
+        
+        OTRAudioRecorderViewController *recorderViewController = [[OTRAudioRecorderViewController alloc] init];
+        recorderViewController.delegate = self;
+        CGRect rectInWindow = [self.microphoneButton convertRect:self.microphoneButton.frame toView:nil];
+        [recorderViewController showAudioRecorderFromViewController:self animated:YES fromMicrophoneRectInWindow:rectInWindow];
+        
+    } else if ([sender isEqual:self.cameraButton]) {
+        [self.attachmentPicker showAlertControllerWithCompletion:nil];
+    }
+    
 }
 
 - (void)collectionView:(UICollectionView *)collectionView performAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender
@@ -919,7 +938,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (void)finishSendingMessageAnimated:(BOOL)animated
 {
-    //Theres a toggleSendButtonEnabled in finishSendingMessageAnimated so we need to 'balance' it out
     [super finishSendingMessageAnimated:animated];
     [self textViewDidChange:self.inputToolbar.contentView.textView];
 }
@@ -964,7 +982,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
                             [message saveWithTransaction:transaction];
                         }];
                     }
-                    [[OTRProtocolManager sharedInstance].encryptionManager.dataHandler sendFileWithName:imageItem.filename fileData:imageData username:self.buddy.username accountName:self.account.username protocol:kOTRProtocolTypeXMPP tag:message];
+                    [self sendMediaItem:imageItem data:imageData tag:message];
                     
                 } completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
             }];
@@ -982,29 +1000,65 @@ typedef NS_ENUM(int, OTRDropDownType) {
     message.buddyUniqueId = self.buddy.uniqueId;
     message.transportedSecurely = YES;
     
-    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        [message saveWithTransaction:transaction];
-        [videoItem saveWithTransaction:transaction];
-    } completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0) completionBlock:^{
+    NSString *newPath = [OTRMediaFileManager pathForMediaItem:videoItem buddyUniqueId:self.buddy.uniqueId];
+    [[OTRMediaFileManager sharedInstance] copyDataFromFilePath:videoURL.path toEncryptedPath:newPath completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0) completion:^(NSError *error) {
         
-        NSString *newPath = [OTRMediaFileManager pathForMediaItem:videoItem buddyUniqueId:self.buddy.uniqueId];
-        [[OTRMediaFileManager sharedInstance] copyDataFromFilePath:videoURL.path
-                                                   toEncryptedPath:newPath
-                                                   completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
-                                                        completion:^(NSError *error) {
-                                                            if (error) {
-                                                            DDLogError(@"Error Copying Video: %@",error);
-                                                            }
-                                                            if ([[NSFileManager defaultManager] fileExistsAtPath:videoURL.path]) {
-                                                            [[NSFileManager defaultManager] removeItemAtPath:videoURL.path error:nil];
-                                                            }
-                                                            
-                                                            NSURL *url = [[OTRMediaServer sharedInstance] urlForMediaItem:videoItem buddyUniqueId:self.buddy.uniqueId];
-                                                            
-                                                            [[OTRProtocolManager sharedInstance].encryptionManager.dataHandler sendFileWithURL:url username:self.buddy.username accountName:self.account.username protocol:kOTRProtocolTypeXMPP tag:message];
-                                                            
-                                                            [videoItem touchParentMessage];
+        if ([[NSFileManager defaultManager] fileExistsAtPath:videoURL.path]) {
+            NSError *err = nil;
+            [[NSFileManager defaultManager] removeItemAtPath:videoURL.path error:&err];
+            if (err) {
+                DDLogError(@"Error Removing Video File");
+            }
+            
+        }
+        
+        message.error = error;
+        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+            [videoItem saveWithTransaction:transaction];
+            [message saveWithTransaction:transaction];
         }];
+        
+        [self sendMediaItem:videoItem data:nil tag:message];
+        
+    }];
+}
+
+#pragma - mark OTRAudioRecorderViewControllerDelegate Methods
+
+- (void)audioRecorder:(OTRAudioRecorderViewController *)audioRecorder gotAudioURL:(NSURL *)url
+{
+    __block OTRMessage *message = [[OTRMessage alloc] init];
+    message.incoming = NO;
+    message.buddyUniqueId = self.buddy.uniqueId;
+    
+    __block OTRAudioItem *audioItem = [[OTRAudioItem alloc] init];
+    audioItem.isIncoming = message.incoming;
+    audioItem.filename = [[url absoluteString] lastPathComponent];
+    
+    AVURLAsset *audioAsset = [AVURLAsset assetWithURL:url];
+    audioItem.timeLength = CMTimeGetSeconds(audioAsset.duration);
+    
+    message.mediaItemUniqueId = audioItem.uniqueId;
+    
+    NSString *newPath = [OTRMediaFileManager pathForMediaItem:audioItem buddyUniqueId:self.buddy.uniqueId];
+    
+    [[OTRMediaFileManager sharedInstance] copyDataFromFilePath:url.path toEncryptedPath:newPath completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0) completion:^(NSError *error) {
+        
+        if ([[NSFileManager defaultManager] fileExistsAtPath:url.path]) {
+            NSError *err = nil;
+            [[NSFileManager defaultManager] removeItemAtPath:url.path error:&err];
+            if (err) {
+                DDLogError(@"Error Removing Audio File");
+            }
+        }
+        
+        message.error = error;
+        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+            [message saveWithTransaction:transaction];
+            [audioItem saveWithTransaction:transaction];
+        }];
+        
+        [self sendMediaItem:audioItem data:nil tag:message];        
     }];
 }
 

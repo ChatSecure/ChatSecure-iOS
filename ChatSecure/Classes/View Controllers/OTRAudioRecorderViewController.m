@@ -49,10 +49,9 @@ NSString *const kOTRAudioRecordAnimatePath = @"kOTRAudioRecordAnimatePath";
 
 @implementation OTRAudioRecorderViewController
 
-- (instancetype) initWithBuddy:(OTRBuddy *)buddy
+- (instancetype) init
 {
     if (self = [super init]) {
-        self.buddy = buddy;
         self.audioSessionManager = [[OTRAudioSessionManager alloc] init];
         self.addedConstraints = NO;
     }
@@ -258,38 +257,9 @@ NSString *const kOTRAudioRecordAnimatePath = @"kOTRAudioRecordAnimatePath";
     __block NSURL *url = [self.audioSessionManager currentRecorderURL];
     [self.audioSessionManager stopRecording];
     
-    __block NSString *buddyUniqueId = self.buddy.uniqueId;
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        __block OTRMessage *message = [[OTRMessage alloc] init];
-        message.incoming = NO;
-        message.buddyUniqueId = buddyUniqueId;
-        
-        __block OTRAudioItem *audioItem = [[OTRAudioItem alloc] init];
-        audioItem.isIncoming = message.incoming;
-        audioItem.filename = [[url absoluteString] lastPathComponent];
-        
-        AVURLAsset *audioAsset = [AVURLAsset assetWithURL:url];
-        audioItem.timeLength = CMTimeGetSeconds(audioAsset.duration);
-        
-        message.mediaItemUniqueId = audioItem.uniqueId;
-        
-        //Copy from temporary directory to encrypted stroage
-        NSString *encryptedPath = [OTRMediaFileManager pathForMediaItem:audioItem buddyUniqueId:buddyUniqueId];
-        [[OTRMediaFileManager sharedInstance] copyDataFromFilePath:url.path
-                                                   toEncryptedPath:encryptedPath
-                                                   completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
-                                                        completion:^(NSError *error) {
-                                                            [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-                                                                [audioItem saveWithTransaction:transaction];
-                                                                [message saveWithTransaction:transaction];
-                                                            }];
-                                                            
-                                                            if ([[NSFileManager defaultManager] fileExistsAtPath:url.path]) {
-                                                                
-                                                                [[NSFileManager defaultManager] removeItemAtURL:url error:nil];
-                                                            }
-                                                        }];
-    });
+    if ([self.delegate respondsToSelector:@selector(audioRecorder:gotAudioURL:)]) {
+        [self.delegate audioRecorder:self gotAudioURL:url];
+    }
 }
 
 #pragma - mark AutoLayout

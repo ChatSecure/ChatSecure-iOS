@@ -8,11 +8,17 @@
 
 #import <UIKit/UIKit.h>
 
-@class OTRBuddy;
+@class OTRBuddy, OTRAudioRecorderViewController;
+
+@protocol OTRAudioRecorderViewControllerDelegate <NSObject>
+
+- (void)audioRecorder:(OTRAudioRecorderViewController *)audioRecorder gotAudioURL:(NSURL *)url;
+
+@end
 
 @interface OTRAudioRecorderViewController : UIViewController
 
-- (instancetype)initWithBuddy:(OTRBuddy *)buddy;
+@property (nonatomic, weak) id <OTRAudioRecorderViewControllerDelegate> delegate;
 
 - (void)showAudioRecorderFromViewController:(UIViewController *)viewController animated:(BOOL)animated fromMicrophoneRectInWindow:(CGRect)rectInWindow;
 
