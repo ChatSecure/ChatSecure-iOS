@@ -32,9 +32,14 @@
 #import "OTRMessagesViewController.h"
 #import "UIViewController+ChatSecure.h"
 #import "OTRImageItem.h"
+#import "OTRAudioItem.h"
+#import "OTRVideoItem.h"
 #import "OTRMediaFileManager.h"
+#import "OTRMediaServer.h"
 
 #import "OTRLog.h"
+
+@import AVFoundation;
 
 NSString *const OTRMessageStateDidChangeNotification = @"OTREncryptionManagerMessageStateDidChangeNotification";
 NSString *const OTRWillStartGeneratingPrivateKeyNotification = @"OTREncryptionManagerWillStartGeneratingPrivateKeyNotification";
@@ -434,8 +439,18 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
    transferComplete:(OTRDataTransfer*)transfer {
     DDLogInfo(@"transfer complete: %@", transfer);
     if ([transfer isKindOfClass:[OTRDataIncomingTransfer class]]) {
-        if ([transfer.mimeType containsString:@"image"]) {
-            OTRMessage *parentMessage = transfer.tag;
+        NSRange imageRange = [transfer.mimeType rangeOfString:@"image"];
+        NSRange audioRange = [transfer.mimeType rangeOfString:@"audio"];
+        NSRange videoRange = [transfer.mimeType rangeOfString:@"video"];
+        
+        OTRMessage *parentMessage = transfer.tag;
+        
+        OTRMessage *message = [[OTRMessage alloc] init];
+        message.incoming = YES;
+        message.buddyUniqueId = parentMessage.buddyUniqueId;
+        message.transportedSecurely = YES;
+        
+        if (imageRange.location != NSNotFound) {
             
             UIImage *tempImage = [UIImage imageWithData:transfer.fileData];
             OTRImageItem *imageItem = [[OTRImageItem alloc] init];
@@ -444,11 +459,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
             imageItem.isIncoming = YES;
             imageItem.filename = transfer.fileName;
             
-            OTRMessage *message = [[OTRMessage alloc] init];
-            message.incoming = YES;
-            message.buddyUniqueId = parentMessage.buddyUniqueId;
             message.mediaItemUniqueId = imageItem.uniqueId;
-            message.transportedSecurely = YES;
             
             [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
                 [message saveWithTransaction:transaction];
@@ -458,6 +469,32 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
                     [imageItem touchParentMessage];
                 } completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
             }];
+        }
+        else if (audioRange.location != NSNotFound) {
+            
+            OTRAudioItem *audioItem = [[OTRAudioItem alloc] init];
+            audioItem.filename = transfer.fileName;
+            audioItem.isIncoming = YES;
+            
+            message.mediaItemUniqueId = audioItem.uniqueId;
+            
+            [[OTRMediaFileManager sharedInstance] setData:transfer.fileData forItem:audioItem buddyUniqueId:parentMessage.buddyUniqueId completion:^(NSInteger bytesWritten, NSError *error) {
+                
+                NSURL *url = [[OTRMediaServer sharedInstance] urlForMediaItem:audioItem buddyUniqueId:parentMessage.buddyUniqueId];
+                AVURLAsset *audioAsset = [AVURLAsset assetWithURL:url];
+                audioItem.timeLength = CMTimeGetSeconds(audioAsset.duration);
+                
+                [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+                    [audioItem saveWithTransaction:transaction];
+                    [message saveWithTransaction:transaction];
+                }];
+                
+                
+            } completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
+            
+        }
+        else if (videoRange.location != NSNotFound) {
+            
         }
     }
 }
