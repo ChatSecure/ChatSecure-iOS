@@ -99,7 +99,7 @@
     
     if (aspectRatio < 1) {
         //Taller then wider then use max height and resize width
-        CGFloat newWidth = maxHeight * 1/aspectRatio;
+        CGFloat newWidth = maxHeight * aspectRatio;
         return CGSizeMake(newWidth, maxHeight);
     }
     else {

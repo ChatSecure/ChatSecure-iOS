@@ -431,7 +431,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
 - (void)dataHandler:(OTRDataHandler*)dataHandler
            transfer:(OTRDataTransfer*)transfer
            progress:(float)progress {
-    DDLogInfo(@"file transfer progress: %@ %f", transfer, progress);
+    DDLogInfo(@"[OTRDATA]file transfer %@ progress: %f", transfer.transferId, progress);
     
 }
 
@@ -494,7 +494,20 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
             
         }
         else if (videoRange.location != NSNotFound) {
+            OTRVideoItem *videoItem  =[[OTRVideoItem alloc] init];
+            videoItem.filename = transfer.fileName;
+            videoItem.isIncoming = YES;
             
+            message.mediaItemUniqueId = videoItem.uniqueId;
+            
+            [[OTRMediaFileManager sharedInstance] setData:transfer.fileData forItem:videoItem buddyUniqueId:parentMessage.buddyUniqueId completion:^(NSInteger bytesWritten, NSError *error) {
+                
+                [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+                    [videoItem saveWithTransaction:transaction];
+                    [message saveWithTransaction:transaction];
+                }];
+                
+            } completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
         }
     }
 }

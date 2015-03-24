@@ -85,9 +85,19 @@
     CGSize videoSize = videoTrack.naturalSize;
     
     OTRVideoItem *videoItem = [[OTRVideoItem alloc] init];
-    videoItem.width = videoSize.width;
-    videoItem.height = videoSize.height;
     videoItem.filename = url.lastPathComponent;
+    
+    CGAffineTransform transform = videoTrack.preferredTransform;
+    if ((videoSize.width == transform.tx && videoSize.height == transform.ty) || (transform.tx == 0 && transform.ty == 0))
+    {
+        videoItem.width = videoSize.width;
+        videoItem.height = videoSize.height;
+    }
+    else
+    {
+        videoItem.width = videoSize.height;
+        videoItem.height = videoSize.width;
+    }
     
     return videoItem;
 }
