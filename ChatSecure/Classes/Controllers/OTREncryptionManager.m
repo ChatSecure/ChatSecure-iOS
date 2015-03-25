@@ -438,7 +438,15 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
 - (void)dataHandler:(OTRDataHandler*)dataHandler
    transferComplete:(OTRDataTransfer*)transfer {
     DDLogInfo(@"transfer complete: %@", transfer);
-    if ([transfer isKindOfClass:[OTRDataIncomingTransfer class]]) {
+    if ([transfer isKindOfClass:[OTRDataOutgoingTransfer class]]) {
+        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+            OTRMessage *tagMessage = transfer.tag;
+            OTRMessage *message = [OTRMessage fetchObjectWithUniqueID:tagMessage.uniqueId transaction:transaction];
+            message.delivered = YES;
+            [message saveWithTransaction:transaction];
+        }];
+    }
+    else if ([transfer isKindOfClass:[OTRDataIncomingTransfer class]]) {
         NSRange imageRange = [transfer.mimeType rangeOfString:@"image"];
         NSRange audioRange = [transfer.mimeType rangeOfString:@"audio"];
         NSRange videoRange = [transfer.mimeType rangeOfString:@"video"];

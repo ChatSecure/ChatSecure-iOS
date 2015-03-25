@@ -132,8 +132,12 @@ const struct OTRMessageEdges OTRMessageEdges = {
     __block OTRMessage *deliveredMessage = nil;
     [self enumerateMessagesWithMessageId:messageId transaction:transaction usingBlock:^(OTRMessage *message, BOOL *stop) {
         if (!message.isIncoming) {
-            deliveredMessage = message;
-            *stop = YES;
+            //Media messages are not delivered until the transfer is complete. This is handled in the OTREncryptionManager.
+            if (![message.mediaItemUniqueId length]) {
+                deliveredMessage = message;
+                *stop = YES;
+            }
+            
         }
     }];
     if (deliveredMessage) {
