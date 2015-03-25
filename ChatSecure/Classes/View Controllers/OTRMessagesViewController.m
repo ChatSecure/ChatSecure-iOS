@@ -1238,6 +1238,18 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
     // and get the change-set(s) as applies to my view and mappings configuration.
     NSArray *notifications = [self.uiDatabaseConnection beginLongLivedReadTransaction];
     
+    //TODO check if the view is not visible
+    // If the view isn't visible, we might decide to skip the UI animation stuff.
+//    if ([self viewIsNotVisible])
+//    {
+//        // Since we moved our databaseConnection to a new commit,
+//        // we need to update the mappings too.
+//        [self.uiDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction){
+//            [self.messageMappings updateWithTransaction:transaction];
+//        }];
+//        return;
+//    }
+    
     NSArray *messageRowChanges = nil;
     
     [[self.uiDatabaseConnection ext:OTRChatDatabaseViewExtensionName] getSectionChanges:nil
@@ -1257,14 +1269,53 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
         self.buddy = updatedBuddy;
     }
     
-    if (messageRowChanges.count && [self.collectionView numberOfItemsInSection:0] != 0) {
-        NSUInteger lastMessageIndex = [self.collectionView numberOfItemsInSection:0] - 1;
-        NSIndexPath *lastMessageIndexPath = [NSIndexPath indexPathForRow:lastMessageIndex inSection:0];
-        OTRMessage *mostRecentMessage = [self messageAtIndexPath:lastMessageIndexPath];
-        if (mostRecentMessage.isIncoming) {
-            [self finishReceivingMessage];
+    //Changes in the messages add new one or deleted some
+    if (messageRowChanges.count) {
+        NSUInteger collectionViewNumberOfItems = [self.collectionView numberOfItemsInSection:0];
+        NSUInteger numberMappingsItems = [self.messageMappings numberOfItemsInSection:0];
+        
+        
+        if(numberMappingsItems > collectionViewNumberOfItems && numberMappingsItems > 0) {
+            //Inserted new item, probably at the end
+            //Get last message and test if isIncoming
+            NSIndexPath *lastMessageIndexPath = [NSIndexPath indexPathForRow:numberMappingsItems - 1 inSection:0];
+            OTRMessage *lastMessage = [self messageAtIndexPath:lastMessageIndexPath];
+            if (lastMessage.isIncoming) {
+                [self finishReceivingMessage];
+            } else {
+                [self finishSendingMessage];
+            }
         } else {
-            [self finishSendingMessage];
+            //deleted a message or message updated
+            [self.collectionView performBatchUpdates:^{
+                
+                for (YapDatabaseViewRowChange *rowChange in messageRowChanges)
+                {
+                    switch (rowChange.type)
+                    {
+                        case YapDatabaseViewChangeDelete :
+                        {
+                            [self.collectionView deleteItemsAtIndexPaths:@[rowChange.indexPath]];
+                            break;
+                        }
+                        case YapDatabaseViewChangeInsert :
+                        {
+                            [self.collectionView insertItemsAtIndexPaths:@[ rowChange.newIndexPath ]];
+                            break;
+                        }
+                        case YapDatabaseViewChangeMove :
+                        {
+                            [self.collectionView moveItemAtIndexPath:rowChange.indexPath toIndexPath:rowChange.newIndexPath];
+                            break;
+                        }
+                        case YapDatabaseViewChangeUpdate :
+                        {
+                            [self.collectionView reloadItemsAtIndexPaths:@[ rowChange.indexPath]];
+                            break;
+                        }
+                    }
+                }
+            } completion:nil];
         }
     }
 }
