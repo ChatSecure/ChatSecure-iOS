@@ -56,6 +56,11 @@
     return sender;
 }
 
+- (NSUInteger)messageHash
+{
+    return [self hash];
+}
+
 - (BOOL)isMediaMessage
 {
     if (self.mediaItemUniqueId) {

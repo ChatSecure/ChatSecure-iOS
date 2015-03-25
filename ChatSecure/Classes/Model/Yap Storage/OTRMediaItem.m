@@ -37,6 +37,11 @@
 
 #pragma - mark JSQMessageMediaData Methods
 
+- (NSUInteger)mediaHash
+{
+    return [self hash];
+}
+
 - (UIView *)mediaView
 {
     UIImage *image = [OTRImages imageWithIdentifier:self.uniqueId];

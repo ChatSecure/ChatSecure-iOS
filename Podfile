@@ -16,11 +16,13 @@ pod "SSKeychain", '~> 1.2'
 pod "UIAlertView-Blocks", '~> 1.0'
 # pod 'gtm-oauth2', '~> 0.1.0' # Trunk is outdated, using local podspec
 pod 'JTTargetActionBlock', '~> 1.0'
-# pod 'YapDatabase/SQLCipher', '~> 2.5' # We need to use fork for sqlite3_rekey support 
+# pod 'YapDatabase/SQLCipher', '~> 2.5' # We need to use fork for sqlite3_rekey support
 pod 'Mantle', '~> 1.4'
 pod 'Navajo', '~> 0.0'
 pod 'RMStepsController', '~> 1.0'
-# pod 'JSQMessagesViewController', '~> 6.1'
+# wating on 8.0 https://github.com/jessesquires/JSQMessagesViewController/pull/840
+# using for in meantime
+# pod 'JSQMessagesViewController', '~> 8.0'
 pod 'BBlock', '~> 1.2'
 pod 'JVFloatLabeledTextField', '~> 1.0'
 pod 'TTTAttributedLabel', '~> 1.10'
