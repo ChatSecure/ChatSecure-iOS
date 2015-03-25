@@ -142,6 +142,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
           forState:UIControlStateNormal];
     
     self.audioPlaybackController = [[OTRAudioPlaybackController alloc] init];
+    
+    ////// TextViewUpdates //////
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedTextViewChangedNotification:) name:UITextViewTextDidChangeNotification object:self.inputToolbar.contentView.textView];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -719,6 +722,11 @@ typedef NS_ENUM(int, OTRDropDownType) {
     return showDate;
 }
 
+- (void)receivedTextViewChangedNotification:(NSNotification *)notification
+{
+    [self textViewDidChange:notification.object];
+}
+
 - (void)textViewDidChange:(UITextView *)textView
 {
     if ([textView.text length]) {
@@ -899,11 +907,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
             [self showDropdownWithTitle:YOU_ARE_NOT_CONNECTED_STRING buttons:@[okButton] animated:YES tag:0];
         }];
     }
-    
-    //Reset text because of added whitespace
-    NSString *currentText = self.inputToolbar.contentView.textView.text;
-    self.inputToolbar.contentView.textView.text = [currentText substringToIndex:[currentText length]-1];
-    
 }
 
 - (void)didPressAccessoryButton:(UIButton *)sender
@@ -929,12 +932,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
     else {
         [super collectionView:collectionView performAction:action forItemAtIndexPath:indexPath withSender:sender];
     }
-}
-
-- (void)finishSendingMessageAnimated:(BOOL)animated
-{
-    [super finishSendingMessageAnimated:animated];
-    [self textViewDidChange:self.inputToolbar.contentView.textView];
 }
 
 #pragma - mark OTRAttachmentPickerDelegate Methods
