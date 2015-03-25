@@ -63,7 +63,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 @property (nonatomic, strong) YapDatabaseConnection *uiDatabaseConnection;
 @property (nonatomic, strong) YapDatabaseViewMappings *messageMappings;
-@property (nonatomic, strong) YapDatabaseViewMappings *buddyMappings;
 
 @property (nonatomic, strong) JSQMessagesBubbleImage *outgoingBubbleImage;
 @property (nonatomic, strong) JSQMessagesBubbleImage *incomingBubbleImage;
@@ -156,7 +155,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
     [self.uiDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         __strong typeof(weakSelf)strongSelf = weakSelf;
         [strongSelf.messageMappings updateWithTransaction:transaction];
-        [strongSelf.buddyMappings updateWithTransaction:transaction];
     }];
     
     void (^refreshGeneratingLock)(OTRAccount *) = ^void(OTRAccount * account) {
@@ -269,13 +267,11 @@ typedef NS_ENUM(int, OTRDropDownType) {
         if (self.buddy) {
             NSParameterAssert(self.buddy.uniqueId != nil);
             self.messageMappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[self.buddy.uniqueId] view:OTRChatDatabaseViewExtensionName];
-            self.buddyMappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[self.buddy.uniqueId] view:OTRBuddyDatabaseViewExtensionName];
             self.inputToolbar.contentView.textView.text = self.buddy.composingMessageString;
 
             [self.uiDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
                 self.account = [self.buddy accountWithTransaction:transaction];
                 [self.messageMappings updateWithTransaction:transaction];
-                [self.buddyMappings updateWithTransaction:transaction];
             }];
             
             if ([self.account isKindOfClass:[OTRXMPPAccount class]]) {
@@ -283,7 +279,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
             }
         } else {
             self.messageMappings = nil;
-            self.buddyMappings = nil;
             self.account = nil;
             self.xmppManager = nil;
         }
@@ -1250,22 +1245,16 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
                                                                      forNotifications:notifications
                                                                          withMappings:self.messageMappings];
     
-    NSArray *buddyRowChanges = nil;
-    [[self.uiDatabaseConnection ext:OTRBuddyDatabaseViewExtensionName] getSectionChanges:nil
-                                                                            rowChanges:&buddyRowChanges
-                                                                      forNotifications:notifications
-                                                                          withMappings:self.buddyMappings];
     
-    for (YapDatabaseViewRowChange *rowChange in buddyRowChanges)
+    BOOL buddyChanged = [self.uiDatabaseConnection hasChangeForKey:self.buddy.uniqueId inCollection:[OTRBuddy collection] inNotifications:notifications];
+    if (buddyChanged)
     {
-        if (rowChange.type == YapDatabaseViewChangeUpdate) {
-            __block OTRBuddy *updatedBuddy = nil;
-            [self.uiDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-                updatedBuddy = [[transaction ext:OTRBuddyDatabaseViewExtensionName] objectAtIndexPath:rowChange.indexPath withMappings:self.buddyMappings];
-            }];
-            
-            self.buddy = updatedBuddy;
-        }
+        __block OTRBuddy *updatedBuddy = nil;
+        [self.uiDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+            updatedBuddy = [OTRBuddy fetchObjectWithUniqueID:self.buddy.uniqueId transaction:transaction];
+        }];
+        
+        self.buddy = updatedBuddy;
     }
     
     if (messageRowChanges.count && [self.collectionView numberOfItemsInSection:0] != 0) {

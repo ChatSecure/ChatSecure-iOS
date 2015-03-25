@@ -20,7 +20,6 @@
 NSString *OTRConversationGroup = @"Conversation";
 NSString *OTRConversationDatabaseViewExtensionName = @"OTRConversationDatabaseViewExtensionName";
 NSString *OTRChatDatabaseViewExtensionName = @"OTRChatDatabaseViewExtensionName";
-NSString *OTRBuddyDatabaseViewExtensionName = @"OTRBuddyDatabaseViewExtensionName";
 NSString *OTRBuddyNameSearchDatabaseViewExtensionName = @"OTRBuddyBuddyNameSearchDatabaseViewExtensionName";
 NSString *OTRAllBuddiesDatabaseViewExtensionName = @"OTRAllBuddiesDatabaseViewExtensionName";
 NSString *OTRAllSubscriptionRequestsViewExtensionName = @"AllSubscriptionRequestsViewExtensionName";
@@ -163,38 +162,6 @@ NSString *OTRPushAccountGroup = @"Account";
                                                               options:options];
     
     return [[OTRDatabaseManager sharedInstance].database registerExtension:view withName:OTRChatDatabaseViewExtensionName];
-}
-
-+ (BOOL)registerBuddyDatabaseView
-{
-    YapDatabaseViewGrouping *viewGrouping = [YapDatabaseViewGrouping withKeyBlock:^NSString *(NSString *collection, NSString *key) {
-        return key;
-    }];
-    
-   YapDatabaseViewSorting *viewSorting = [YapDatabaseViewSorting withKeyBlock:^NSComparisonResult(NSString *group, NSString *collection1, NSString *key1, NSString *collection2, NSString *key2) {
-       return NSOrderedSame;
-   }];
-    
-    YapDatabaseViewOptions *options = [[YapDatabaseViewOptions alloc] init];
-    options.isPersistent = YES;
-    options.allowedCollections = [[YapWhitelistBlacklist alloc] initWithWhitelist:[NSSet setWithObject:[OTRBuddy collection]]];
-    
-    
-    YapDatabaseView *view = [[[OTRDatabaseManager sharedInstance].database registeredExtensions] objectForKey:OTRBuddyDatabaseViewExtensionName];
-    int version = 1;
-    if (view){
-        [[OTRDatabaseManager sharedInstance].database unregisterExtensionWithName:OTRBuddyDatabaseViewExtensionName];
-        version = [view.versionTag intValue];
-        version += 1;
-    }
-    
-    view = [[YapDatabaseView alloc] initWithGrouping:viewGrouping
-                                             sorting:viewSorting
-                                          versionTag:[NSString stringWithFormat:@"%d",version]
-                                             options:options];
-    
-    return [[OTRDatabaseManager sharedInstance].database registerExtension:view withName:OTRBuddyDatabaseViewExtensionName];
-    
 }
 
 + (BOOL)registerBuddyNameSearchDatabaseView

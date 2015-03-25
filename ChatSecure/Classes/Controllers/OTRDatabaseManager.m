@@ -206,7 +206,6 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
     if (success) success = [OTRDatabaseView registerAllAccountsDatabaseView];
     if (success) success = [OTRDatabaseView registerConversationDatabaseView];
     if (success) success = [OTRDatabaseView registerChatDatabaseView];
-    if (success) success = [OTRDatabaseView registerBuddyDatabaseView];
     if (success) success = [OTRDatabaseView registerBuddyNameSearchDatabaseView];
     if (success) success = [OTRDatabaseView registerAllBuddiesDatabaseView];
     if (success) success = [OTRDatabaseView registerAllSubscriptionRequestsView];
