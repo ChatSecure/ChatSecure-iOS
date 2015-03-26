@@ -21,12 +21,15 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
 			<key>CFBundleURLName</key>
 			<string>com.chrisballinger.ChatSecure</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>chatsecure</string>
 				<string>fb447241325394334</string>
+				<string>ha52f2393da517e1c89b36ac1df60924ca</string>
 			</array>
 		</dict>
 	</array>
