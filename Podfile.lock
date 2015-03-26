@@ -330,14 +330,14 @@ SPEC CHECKSUMS:
   BButton: eab327e143be2730c81a22467cc016488a125162
   CocoaAsyncSocket: b0a1a89e7ea4c1c0ea4ec83f57d55117d3cdae06
   CocoaLumberjack: 205769c032b5fef85b92472046bcc8b7e7c8a817
-  CPAProxy: c3df549999514de2c04633d20a79b00daf627ddb
-  CRToast: da11d94a05b1351a87bb26cbf8f25e80ed2e7115
+  CPAProxy: 2f0d2ef592b28e0686b5a100ad663bdd3e51900b
+  CRToast: 99a28f4387def43b439ad88f957ce31357ff7373
   GCDWebServer: 285fde9951ab2cd87c2d9d74735fee977a16fe04
   gtm-http-fetcher: 5072f07e523261f7a87df939d13c1be2340d8111
   gtm-oauth2: dfb3016b8347b73fa80042e5aed29ec4f36e46bc
   HockeySDK: bfd1f5ac75938b07499c4ac12932244b72a2e70b
-  IOCipher: b98913cec82ead5a0c933513b4e462133044f90a
-  JSQMessagesViewController: 4cc4ff3b26599e8743166b7e8e908528c8f01a80
+  IOCipher: 2bcc56103fbdd9cd9139a5b030ebb97ed6fbc4b9
+  JSQMessagesViewController: 31b79ac9547e060ba96413eb2e1b2ee5260f5189
   JSQSystemSoundPlayer: 55528c699a283aae2220d3ae7b8b527d2ecef4b4
   JTSImageViewController: 9fe6402194b7679f0e28d0c1002d6164301fc34a
   JTTargetActionBlock: bef69054d368a91b33b98a520fa9e78e218a5a25
@@ -349,11 +349,11 @@ SPEC CHECKSUMS:
   MWFeedParser: 003cbf5398e99a7f2057fbe9583054fd1b84be72
   Navajo: 9130d497903e5d1b0f1b3c987be01f5b60fd37c7
   OpenInChrome: b7c73ddf8fe0a1788dc0549c3c4c70e3c84da578
-  OTRKit: f97f1c3433349ac2f6d8d737d749c1edf55dbb1b
-  ProxyKit: 3e73f2ad92327554549474ad10da21dde46d3ba8
+  OTRKit: d7db6a96cc8fd9562008d3525e375b999be7e4f2
+  ProxyKit: f7be31d07ed93444c433956d18e842ea9c709224
   PureLayout: 63a3257320223e8edddcd3afb407445f85a6bf74
   RMStepsController: 558a9e73e8202945a100dc629b1c15fc8b59754f
-  SIAlertView: e6d0d786c3a3f6e456b0e8b9376d0c34d68e827b
+  SIAlertView: 20c794b55eaf44d888773ea51647cf8907723919
   SQLCipher: 981110217eb93c2779c34fb59e646a1c1da918d8
   SSKeychain: cc48bd3ad24fcd9125adb9e0d23dd50b8bbd08b9
   TTTAttributedLabel: 6f3174aef8e738f44dff97c2eb7d8184f6ab6277
@@ -361,7 +361,7 @@ SPEC CHECKSUMS:
   UIAlertView-Blocks: f3271e84372beb97aea115cd1fb26ae66457f12f
   uservoice-iphone-sdk: 02d974352f04d8457ee39b8514d1c58ef0e2c860
   VTAcknowledgementsViewController: 62e43d3dcd54b13ee7e7da60ba96345d1f7c788f
-  XMPPFramework: 87bac7edb0ffe6d04b13e764a77df64767f1b369
-  YapDatabase: 097c5cc7964e0856c8ff859fdf1b18961e92a50b
+  XMPPFramework: 239fe709baff208fff5970708469b939387105ee
+  YapDatabase: 2e1ad4bb8f54cfa8ec3e0e2c1a558ed7670e7f61
 
-COCOAPODS: 0.35.0
+COCOAPODS: 0.36.0

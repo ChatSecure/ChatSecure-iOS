@@ -1,6 +1,13 @@
 # ChatSecure Changelog
 
-## Version 3.0 (In Testing)
+## Version 3.1 (in progress)
+
+* Media messaging via OTRDATA
+* Media storage inside IOCipher container
+* Better UX for connection status
+* Bug fixes
+
+## Version 3.0 (Dec 12, 2014)
 
 * Message archiving with SQLCipher support (using YapDatabase)
 * Tor support for XMPP
