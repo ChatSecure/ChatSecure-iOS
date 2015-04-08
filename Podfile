@@ -42,7 +42,7 @@ pod 'CRToast', :git => 'https://github.com/cruffenach/CRToast', :commit => '7856
 
 # Forks
 pod 'SIAlertView', :git => 'https://github.com/ChatSecure/SIAlertView.git', :branch => 'attributedText'
-pod 'JSQMessagesViewController', :git => 'https://github.com/davidchiles/JSQMessagesViewController', :branch => 'send_button_location'
+pod 'JSQMessagesViewController', :git => 'https://github.com/davidchiles/JSQMessagesViewController', :commit => '3331ff17fb31056077f2d07b93045be72504414a'
 
 # Submodules
 pod 'ProxyKit/Client', :path => 'Submodules/ProxyKit/ProxyKit.podspec'

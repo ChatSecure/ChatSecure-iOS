@@ -1,23 +1,23 @@
 PODS:
-  - AFNetworking (2.5.1):
-    - AFNetworking/NSURLConnection (= 2.5.1)
-    - AFNetworking/NSURLSession (= 2.5.1)
-    - AFNetworking/Reachability (= 2.5.1)
-    - AFNetworking/Security (= 2.5.1)
-    - AFNetworking/Serialization (= 2.5.1)
-    - AFNetworking/UIKit (= 2.5.1)
-  - AFNetworking/NSURLConnection (2.5.1):
+  - AFNetworking (2.5.2):
+    - AFNetworking/NSURLConnection (= 2.5.2)
+    - AFNetworking/NSURLSession (= 2.5.2)
+    - AFNetworking/Reachability (= 2.5.2)
+    - AFNetworking/Security (= 2.5.2)
+    - AFNetworking/Serialization (= 2.5.2)
+    - AFNetworking/UIKit (= 2.5.2)
+  - AFNetworking/NSURLConnection (2.5.2):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/NSURLSession (2.5.1):
+  - AFNetworking/NSURLSession (2.5.2):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/Reachability (2.5.1)
-  - AFNetworking/Security (2.5.1)
-  - AFNetworking/Serialization (2.5.1)
-  - AFNetworking/UIKit (2.5.1):
+  - AFNetworking/Reachability (2.5.2)
+  - AFNetworking/Security (2.5.2)
+  - AFNetworking/Serialization (2.5.2)
+  - AFNetworking/UIKit (2.5.2):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
   - Appirater (2.0.4)
@@ -43,8 +43,8 @@ PODS:
   - GCDWebServer (3.2.2):
     - GCDWebServer/Core (= 3.2.2)
   - GCDWebServer/Core (3.2.2)
-  - gtm-http-fetcher (1.0.141)
-  - gtm-oauth2 (1.0.126):
+  - gtm-http-fetcher (1.0.142)
+  - gtm-oauth2 (1.0.129):
     - gtm-http-fetcher
   - HockeySDK (3.6.2)
   - IOCipher/common (0.1.0):
@@ -92,7 +92,7 @@ PODS:
   - SQLCipher/common (3.1.0)
   - SQLCipher/fts (3.1.0):
     - SQLCipher/common
-  - SSKeychain (1.2.2)
+  - SSKeychain (1.2.3)
   - TTTAttributedLabel (1.13.3)
   - TUSafariActivity (1.0.4)
   - UIAlertView-Blocks (1.0)
@@ -260,7 +260,8 @@ DEPENDENCIES:
   - gtm-oauth2 (from `Podspecs/gtm-oauth2.podspec.json`)
   - HockeySDK (~> 3.6)
   - IOCipher/GCDWebServer (from `Submodules/IOCipher/IOCipher.podspec`)
-  - JSQMessagesViewController (from `https://github.com/davidchiles/JSQMessagesViewController`, branch `send_button_location`)
+  - JSQMessagesViewController (from `https://github.com/davidchiles/JSQMessagesViewController`,
+    commit `3331ff17fb31056077f2d07b93045be72504414a`)
   - JTSImageViewController (~> 1.4)
   - JTTargetActionBlock (~> 1.0)
   - JVFloatLabeledTextField (~> 1.0)
@@ -297,7 +298,7 @@ EXTERNAL SOURCES:
   IOCipher:
     :path: Submodules/IOCipher/IOCipher.podspec
   JSQMessagesViewController:
-    :branch: send_button_location
+    :commit: 3331ff17fb31056077f2d07b93045be72504414a
     :git: https://github.com/davidchiles/JSQMessagesViewController
   OTRKit:
     :path: Submodules/OTRKit/OTRKit.podspec
@@ -323,7 +324,7 @@ CHECKOUT OPTIONS:
     :git: https://github.com/ChatSecure/SIAlertView.git
 
 SPEC CHECKSUMS:
-  AFNetworking: 10e85a00bb0f475124e4ff2677bf15693b2c1523
+  AFNetworking: fefbce9660acb17f48ae0011292d4da0f457bf36
   Appirater: 8783318c36414e8de3ea023443028df94c1b784b
   ARChromeActivity: 9064d94803338d3377f3e1013a8e8f4821d7daf1
   BBlock: 11c666b6898c074eceb40fa56a901b96415ebf68
@@ -333,8 +334,8 @@ SPEC CHECKSUMS:
   CPAProxy: 2f0d2ef592b28e0686b5a100ad663bdd3e51900b
   CRToast: 99a28f4387def43b439ad88f957ce31357ff7373
   GCDWebServer: 5320220ad0d497da8e7beca1396f0c82d4f83730
-  gtm-http-fetcher: 5072f07e523261f7a87df939d13c1be2340d8111
-  gtm-oauth2: dfb3016b8347b73fa80042e5aed29ec4f36e46bc
+  gtm-http-fetcher: 52f5c6444c2c883380de3b902e14fdab4b1d3e7d
+  gtm-oauth2: 3a9a46400b8d7ee916807550e0902c4a4db11167
   HockeySDK: 51ade1aff04463137e852797d2eb4dfb2511d6a9
   IOCipher: 2bcc56103fbdd9cd9139a5b030ebb97ed6fbc4b9
   JSQMessagesViewController: 31b79ac9547e060ba96413eb2e1b2ee5260f5189
@@ -355,7 +356,7 @@ SPEC CHECKSUMS:
   RMStepsController: 195aa02c57ee5fea74483d0b9dcc30881ae7639d
   SIAlertView: 20c794b55eaf44d888773ea51647cf8907723919
   SQLCipher: c44fcca49c31483c2489cfb79aa7a69407f3794a
-  SSKeychain: 88767e903ee8d274ed380e364d96b7a101235286
+  SSKeychain: 3f42991739c6c60a9cf1bbd4dff6c0d3694bcf3d
   TTTAttributedLabel: 6f3174aef8e738f44dff97c2eb7d8184f6ab6277
   TUSafariActivity: afc55a00965377939107ce4fdc7f951f62454546
   UIAlertView-Blocks: 7904744fca618afbd2ec646608924f5e69d5acd1
@@ -364,4 +365,4 @@ SPEC CHECKSUMS:
   XMPPFramework: 239fe709baff208fff5970708469b939387105ee
   YapDatabase: 2e1ad4bb8f54cfa8ec3e0e2c1a558ed7670e7f61
 
-COCOAPODS: 0.36.0
+COCOAPODS: 0.36.3
