@@ -9,10 +9,13 @@
 #import "OTRAudioTrashView.h"
 #import "PureLayout.h"
 #import "OTRColors.h"
+#import "OTRCircleView.h"
 
 CGFloat const kOTRAudioTrashMargin = 10;
 
 @interface OTRAudioTrashView ()
+
+@property (nonatomic, strong) NSLayoutConstraint *animatingViewSizeConstraint;
 
 @property (nonatomic) BOOL addedConstraints;
 
@@ -23,16 +26,12 @@ CGFloat const kOTRAudioTrashMargin = 10;
 - (instancetype)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame]) {
+        _animatingSoundView = [[OTRCircleView alloc] initForAutoLayout];
+        _animatingSoundView.backgroundColor = [UIColor grayColor];
         
         _trashButton = [[BButton alloc] initWithFrame:CGRectZero
-                                                     type:BButtonTypeDefault
-                                                    style:BButtonStyleBootstrapV3
-                                                     icon:FAMicrophone
-                                                 fontSize:25];
-        [self.trashButton setTitle:[NSString fa_stringForFontAwesomeIcon:FATrash]
-                          forState:UIControlStateHighlighted];
-        [self.trashButton setTitleColor:[OTRColors redErrorColor]
-                               forState:UIControlStateHighlighted];
+                                                 type:BButtonTypeDefault
+                                                style:BButtonStyleBootstrapV3];
         
         self.trashButton.buttonCornerRadius = @(25);
         
@@ -41,7 +40,24 @@ CGFloat const kOTRAudioTrashMargin = 10;
         self.trashLabel.translatesAutoresizingMaskIntoConstraints = NO;
         self.trashLabel.text = @"Swipe up to delete";
         
+        CGFloat fontSize = 25;
+        
+        _trashIconLabel = [[UILabel alloc] initForAutoLayout];
+        self.trashIconLabel.textAlignment = NSTextAlignmentCenter;
+        self.trashIconLabel.text = [NSString fa_stringForFontAwesomeIcon:FATrash];
+        self.trashIconLabel.font = [UIFont fontWithName:kFontAwesomeFont size:fontSize];
+        self.trashIconLabel.textColor = [OTRColors redErrorColor];
+        self.trashIconLabel.alpha = 0;
+        
+        _microphoneIconLabel = [[UILabel alloc] initForAutoLayout];
+        self.microphoneIconLabel.textAlignment = NSTextAlignmentCenter;
+        self.microphoneIconLabel.text = [NSString fa_stringForFontAwesomeIcon:FAMicrophone];
+        self.microphoneIconLabel.font = [UIFont fontWithName:kFontAwesomeFont size:fontSize];
+        
+        [self addSubview:self.animatingSoundView];
         [self addSubview:self.trashButton];
+        [self addSubview:self.trashIconLabel];
+        [self addSubview:self.microphoneIconLabel];
         [self addSubview:self.trashLabel];
     }
     return self;
@@ -51,22 +67,43 @@ CGFloat const kOTRAudioTrashMargin = 10;
 - (CGSize)intrinsicContentSize
 {
     CGFloat width = MAX(self.trashButton.intrinsicContentSize.width, self.trashLabel.intrinsicContentSize.width);
-    CGFloat height = self.trashButton.intrinsicContentSize.height + (self.trashLabel.intrinsicContentSize.height + kOTRAudioTrashMargin) *2;
+    CGFloat height = self.trashButton.intrinsicContentSize.height + (self.trashLabel.intrinsicContentSize.height + kOTRAudioTrashMargin*2) *2;
     return CGSizeMake(width, height);
 }
 
 - (void)updateConstraints{
     if (!self.addedConstraints) {
         
+        [self.animatingSoundView autoCenterInSuperview];
+        self.animatingViewSizeConstraint = [self.animatingSoundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.trashButton withOffset:kOTRAudioTrashMargin];
+        [self.animatingSoundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.animatingSoundView];
+        
         [self.trashButton autoCenterInSuperview];
-        [self.trashButton autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:(self.trashLabel.intrinsicContentSize.height + kOTRAudioTrashMargin)];
+        [self.trashButton autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:(self.trashLabel.intrinsicContentSize.height + kOTRAudioTrashMargin *2)];
         [self.trashButton autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.trashButton];
-        [self.trashButton autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.trashLabel withOffset:kOTRAudioTrashMargin];
+        //[self.trashButton autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.trashLabel withOffset:kOTRAudioTrashMargin *2];
         
         [self.trashLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
         [self.trashLabel autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+        
+        [self.trashIconLabel autoCenterInSuperview];
+        [self.microphoneIconLabel autoCenterInSuperview];
+        
+        self.addedConstraints = YES;
     }
     [super updateConstraints];
+}
+
+- (void)layoutSubviews
+{
+    self.animatingSoundView.layer.cornerRadius = CGRectGetWidth(self.animatingSoundView.bounds)/ 2;
+    [super layoutSubviews];
+}
+
+- (void)setAnimationChange:(double)change
+{
+    self.animatingViewSizeConstraint.constant = kOTRAudioTrashMargin + change;
+    [self setNeedsUpdateConstraints];
 }
 
 @end

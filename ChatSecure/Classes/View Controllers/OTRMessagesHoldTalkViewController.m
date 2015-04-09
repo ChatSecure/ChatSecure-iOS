@@ -13,7 +13,7 @@
 #import "OTRAudioTrashView.h"
 
 
-@interface OTRMessagesHoldTalkViewController () <OTRHoldToTalkViewStateDelegate>
+@interface OTRMessagesHoldTalkViewController () <OTRHoldToTalkViewStateDelegate, OTRAudioSessionManagerDelegate>
 
 @property (nonatomic, strong) OTRHoldToTalkView *hold2TalkButton;
 @property (nonatomic, strong) OTRAudioTrashView *trashView;
@@ -35,6 +35,7 @@
     [super viewDidLoad];
     
     self.audioSessionManager = [[OTRAudioSessionManager alloc] init];
+    self.audioSessionManager.delegate = self;
     
     self.hold2TalkButton = [[OTRHoldToTalkView alloc] initForAutoLayout];
     self.hold2TalkButton.normalText = @"Hold to talk";
@@ -136,16 +137,28 @@
     
     CGFloat distance = [self distanceBetweenPoint1:poinInView point2:trashButtonCenter];
     
+    CGFloat percentDistance = (normalDistance - distance)/normalDistance;
     CGFloat defaultHeight = self.trashView.intrinsicContentSize.height;
-    self.trashViewWidthConstraint.constant = MAX(defaultHeight, defaultHeight+defaultHeight * (normalDistance - distance)/normalDistance);
+    self.trashViewWidthConstraint.constant = MAX(defaultHeight, defaultHeight+defaultHeight * percentDistance);
     
-    [self.view setNeedsUpdateConstraints];
+    
+    
+    
     
     CGPoint testPoint = [self.trashView.trashButton convertPoint:poinInView fromView:self.view];
     BOOL insideButton = CGRectContainsPoint(self.trashView.trashButton.bounds, testPoint);
     
     self.trashView.trashButton.highlighted = insideButton;
     
+    if (insideButton) {
+        self.trashView.trashIconLabel.alpha = 1;
+        self.trashView.microphoneIconLabel.alpha = 0;
+    } else {
+        self.trashView.trashIconLabel.alpha = percentDistance;
+        self.trashView.microphoneIconLabel.alpha = 1-percentDistance;
+    }
+    
+    [self.view setNeedsUpdateConstraints];
 }
 
 - (void)didReleaseTouch:(OTRHoldToTalkView *)view
@@ -165,6 +178,14 @@
     if([[NSFileManager defaultManager] fileExistsAtPath:currentURL.path]) {
         [[NSFileManager defaultManager] removeItemAtPath:currentURL.path error:nil];
     }
+}
+
+#pragma - mark AudioSeessionDelegate
+
+- (void)audioSession:(OTRAudioSessionManager *)audioSessionManager didUpdateRecordingDecibel:(double)decibel
+{
+    double linearScale = pow(10, decibel/20);
+    [self.trashView setAnimationChange:100 * linearScale];
 }
 
 

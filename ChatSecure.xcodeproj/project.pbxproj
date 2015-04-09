@@ -133,6 +133,7 @@
 		6354BBE41A96C67400E8EBAC /* OTRMediaFileManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6354BBE31A96C67400E8EBAC /* OTRMediaFileManager.m */; };
 		6396AFA01A169D54009F3E6C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6396AF9F1A169D54009F3E6C /* main.m */; };
 		6396AFBA1A169D54009F3E6C /* ChatSecureTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6396AFB91A169D54009F3E6C /* ChatSecureTests.m */; };
+		639CDD8E1AD71BC4009BAABC /* OTRCircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 639CDD8D1AD71BC4009BAABC /* OTRCircleView.m */; };
 		63C4BCCC1A1E9B9F001696CD /* ChatSecure.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCC81A1E9B9F001696CD /* ChatSecure.xcdatamodeld */; };
 		63C4BD0F1A1E9BE1001696CD /* OTRManagedAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCCF1A1E9BE1001696CD /* OTRManagedAccount.m */; };
 		63C4BD101A1E9BE1001696CD /* OTRManagedBuddy.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCD11A1E9BE1001696CD /* OTRManagedBuddy.m */; };
@@ -480,6 +481,8 @@
 		6396AFB31A169D54009F3E6C /* ChatSecureTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChatSecureTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6396AFB81A169D54009F3E6C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6396AFB91A169D54009F3E6C /* ChatSecureTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatSecureTests.m; sourceTree = "<group>"; };
+		639CDD8C1AD71BC4009BAABC /* OTRCircleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRCircleView.h; sourceTree = "<group>"; };
+		639CDD8D1AD71BC4009BAABC /* OTRCircleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRCircleView.m; sourceTree = "<group>"; };
 		63C4BCC91A1E9B9F001696CD /* ChatSecure 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "ChatSecure 2.xcdatamodel"; sourceTree = "<group>"; };
 		63C4BCCA1A1E9B9F001696CD /* ChatSecure 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "ChatSecure 3.xcdatamodel"; sourceTree = "<group>"; };
 		63C4BCCB1A1E9B9F001696CD /* ChatSecure.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ChatSecure.xcdatamodel; sourceTree = "<group>"; };
@@ -969,6 +972,8 @@
 				63EA4CFC1ACC96AB00B19E12 /* OTRHoldToTalkView.m */,
 				6353AC2B1AD5E32000753B83 /* OTRAudioTrashView.h */,
 				6353AC2C1AD5E32000753B83 /* OTRAudioTrashView.m */,
+				639CDD8C1AD71BC4009BAABC /* OTRCircleView.h */,
+				639CDD8D1AD71BC4009BAABC /* OTRCircleView.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1460,6 +1465,7 @@
 				633106F41A16D1A300C17BAE /* OTRXMPPLoginViewController.m in Sources */,
 				63C4BCCC1A1E9B9F001696CD /* ChatSecure.xcdatamodeld in Sources */,
 				63D184861A2D3F2400334CD8 /* OTRNotificationController.m in Sources */,
+				639CDD8E1AD71BC4009BAABC /* OTRCircleView.m in Sources */,
 				63FA54911A7B2C2E00F2AEBB /* OTRPauseView.m in Sources */,
 				633106F71A16D1A300C17BAE /* OTRAcknowledgementsViewController.m in Sources */,
 				63C4BD1D1A1E9BE1001696CD /* OTRvCardTemp.m in Sources */,
