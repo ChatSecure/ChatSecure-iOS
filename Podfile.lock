@@ -260,7 +260,8 @@ DEPENDENCIES:
   - gtm-oauth2 (from `Podspecs/gtm-oauth2.podspec.json`)
   - HockeySDK (~> 3.6)
   - IOCipher/GCDWebServer (from `Submodules/IOCipher/IOCipher.podspec`)
-  - JSQMessagesViewController (from `https://github.com/davidchiles/JSQMessagesViewController`, branch `send_button_location`)
+  - JSQMessagesViewController (from `https://github.com/davidchiles/JSQMessagesViewController`,
+    branch `send_button_location`)
   - JTSImageViewController (~> 1.4)
   - JTTargetActionBlock (~> 1.0)
   - JVFloatLabeledTextField (~> 1.0)
@@ -323,45 +324,45 @@ CHECKOUT OPTIONS:
     :git: https://github.com/ChatSecure/SIAlertView.git
 
 SPEC CHECKSUMS:
-  AFNetworking: 8bee59492a6ff15d69130efa4d0dc67e0094a52a
-  Appirater: cbdb7f305562cfde585300bfff86da01ae559deb
-  ARChromeActivity: d8471d0f78b7fcc1de57929cfc1751b3a7f58bad
-  BBlock: 90f0ae0e3ba94fc88be6b9a85b4adbb73b8a7c9a
-  BButton: eab327e143be2730c81a22467cc016488a125162
-  CocoaAsyncSocket: b0a1a89e7ea4c1c0ea4ec83f57d55117d3cdae06
-  CocoaLumberjack: 205769c032b5fef85b92472046bcc8b7e7c8a817
-  CPAProxy: c3df549999514de2c04633d20a79b00daf627ddb
-  CRToast: da11d94a05b1351a87bb26cbf8f25e80ed2e7115
-  GCDWebServer: 285fde9951ab2cd87c2d9d74735fee977a16fe04
+  AFNetworking: 10e85a00bb0f475124e4ff2677bf15693b2c1523
+  Appirater: 8783318c36414e8de3ea023443028df94c1b784b
+  ARChromeActivity: 9064d94803338d3377f3e1013a8e8f4821d7daf1
+  BBlock: 11c666b6898c074eceb40fa56a901b96415ebf68
+  BButton: ab0f2ed3b998ae73c5188b57d270d81e4a1eeb27
+  CocoaAsyncSocket: 7cbf214b27f8e7f7574db6a3fd96352ffaed433d
+  CocoaLumberjack: 628fca2e88ef06f7cf6817309aa405f325d9a6fa
+  CPAProxy: 2f0d2ef592b28e0686b5a100ad663bdd3e51900b
+  CRToast: 99a28f4387def43b439ad88f957ce31357ff7373
+  GCDWebServer: 5320220ad0d497da8e7beca1396f0c82d4f83730
   gtm-http-fetcher: 5072f07e523261f7a87df939d13c1be2340d8111
   gtm-oauth2: dfb3016b8347b73fa80042e5aed29ec4f36e46bc
-  HockeySDK: bfd1f5ac75938b07499c4ac12932244b72a2e70b
-  IOCipher: b98913cec82ead5a0c933513b4e462133044f90a
-  JSQMessagesViewController: 5e6beff1d5aeeea71c45cec4057b9c2c22c0aebd
-  JSQSystemSoundPlayer: 55528c699a283aae2220d3ae7b8b527d2ecef4b4
-  JTSImageViewController: 9fe6402194b7679f0e28d0c1002d6164301fc34a
-  JTTargetActionBlock: bef69054d368a91b33b98a520fa9e78e218a5a25
-  JVFloatLabeledTextField: c1ad6b4b5bd77115cfe6c71ba4c023866df5c4cf
-  libsqlfs: a9b325b13ff38c9b8381c43e9765315cc242d802
-  MagicalRecord: 2b471584fc9e3137f3d0a56967917baa4979e224
-  Mantle: d5fbaf30fbc58031223af13812c060e15934a1fe
-  MBProgressHUD: f3747dcbd45a9e855a6b0674550651e0b7ed250c
-  MWFeedParser: 003cbf5398e99a7f2057fbe9583054fd1b84be72
-  Navajo: 9130d497903e5d1b0f1b3c987be01f5b60fd37c7
-  OpenInChrome: b7c73ddf8fe0a1788dc0549c3c4c70e3c84da578
-  OTRKit: f97f1c3433349ac2f6d8d737d749c1edf55dbb1b
-  ProxyKit: 3e73f2ad92327554549474ad10da21dde46d3ba8
-  PureLayout: 63a3257320223e8edddcd3afb407445f85a6bf74
-  RMStepsController: 558a9e73e8202945a100dc629b1c15fc8b59754f
-  SIAlertView: e6d0d786c3a3f6e456b0e8b9376d0c34d68e827b
-  SQLCipher: 981110217eb93c2779c34fb59e646a1c1da918d8
-  SSKeychain: cc48bd3ad24fcd9125adb9e0d23dd50b8bbd08b9
+  HockeySDK: 51ade1aff04463137e852797d2eb4dfb2511d6a9
+  IOCipher: 2bcc56103fbdd9cd9139a5b030ebb97ed6fbc4b9
+  JSQMessagesViewController: 9fd7e9ac96e9fc91f2deca86928e2cc916aeebaa
+  JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
+  JTSImageViewController: 6a367b144e257db02cdfacdba78d684377d3777b
+  JTTargetActionBlock: 6e9201e5fa88651deb354c91b7c9c6487a1abe55
+  JVFloatLabeledTextField: 58a3a32cfb800e5b224f676987e7c13abf50a14d
+  libsqlfs: 179e4fb40b8c07fd0ee7933ec4c0b9f4815cbd0e
+  MagicalRecord: f8a56bb87ab6552f20c4bb8681a1958a197ea3cd
+  Mantle: 60acd0cd363e27d945bda0a6b8e90577112d28f3
+  MBProgressHUD: c47f2c166c126cf2ce36498d80f33e754d4e93ad
+  MWFeedParser: 2cf646014c1baf6ad1b08c480b40a08180079247
+  Navajo: 5fb68239b4e3af4610f31925bae1ca8e6bab8eaa
+  OpenInChrome: f1f3f9dec682216fe78a0d7fe0b5b263d6312c32
+  OTRKit: d7db6a96cc8fd9562008d3525e375b999be7e4f2
+  ProxyKit: f7be31d07ed93444c433956d18e842ea9c709224
+  PureLayout: a0fe75f1cf485801e7e00b723b8a3c32dca558e2
+  RMStepsController: 195aa02c57ee5fea74483d0b9dcc30881ae7639d
+  SIAlertView: 20c794b55eaf44d888773ea51647cf8907723919
+  SQLCipher: c44fcca49c31483c2489cfb79aa7a69407f3794a
+  SSKeychain: 88767e903ee8d274ed380e364d96b7a101235286
   TTTAttributedLabel: 6f3174aef8e738f44dff97c2eb7d8184f6ab6277
   TUSafariActivity: afc55a00965377939107ce4fdc7f951f62454546
-  UIAlertView-Blocks: f3271e84372beb97aea115cd1fb26ae66457f12f
-  uservoice-iphone-sdk: 02d974352f04d8457ee39b8514d1c58ef0e2c860
-  VTAcknowledgementsViewController: 62e43d3dcd54b13ee7e7da60ba96345d1f7c788f
-  XMPPFramework: 87bac7edb0ffe6d04b13e764a77df64767f1b369
-  YapDatabase: 097c5cc7964e0856c8ff859fdf1b18961e92a50b
+  UIAlertView-Blocks: 7904744fca618afbd2ec646608924f5e69d5acd1
+  uservoice-iphone-sdk: 349d9ef36d3c43939d28390b9e86bb32b65fe983
+  VTAcknowledgementsViewController: f2391b007c3abafd3b3afccda7d8914a59b44309
+  XMPPFramework: 239fe709baff208fff5970708469b939387105ee
+  YapDatabase: 2e1ad4bb8f54cfa8ec3e0e2c1a558ed7670e7f61
 
-COCOAPODS: 0.35.0
+COCOAPODS: 0.36.3

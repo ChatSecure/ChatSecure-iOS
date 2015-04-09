@@ -78,10 +78,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
 @property (nonatomic, strong) OTRButtonView *buttonDropdownView;
 @property (nonatomic, strong) OTRTitleSubtitleView *titleView;
 
-@property (nonatomic, strong) UIButton *microphoneButton;
-@property (nonatomic, strong) UIButton *sendButton;
-@property (nonatomic, strong) UIButton *cameraButton;
-
 @property (nonatomic, strong) OTRAttachmentPicker *attachmentPicker;
 @property (nonatomic, strong) OTRAudioPlaybackController *audioPlaybackController;
 
@@ -1017,7 +1013,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 #pragma - mark OTRAudioRecorderViewControllerDelegate Methods
 
-- (void)audioRecorder:(OTRAudioRecorderViewController *)audioRecorder gotAudioURL:(NSURL *)url
+- (void)sendAudioFileURL:(NSURL *)url
 {
     __block OTRMessage *message = [[OTRMessage alloc] init];
     message.incoming = NO;

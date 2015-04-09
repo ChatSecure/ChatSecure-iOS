@@ -9,7 +9,7 @@
 #import "OTRConversationViewController.h"
 
 #import "OTRSettingsViewController.h"
-#import "OTRMessagesViewController.h"
+#import "OTRMessagesHoldTalkViewController.h"
 #import "OTRComposeViewController.h"
 #import "OTRSubscriptionRequestsViewController.h"
 
@@ -176,7 +176,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
             [buddy setAllMessagesRead:transaction];
         }];
     }
-    OTRMessagesViewController *messagesViewController = [OTRAppDelegate appDelegate].messagesViewController;
+    OTRMessagesHoldTalkViewController *messagesViewController = [OTRAppDelegate appDelegate].messagesViewController;
     messagesViewController.buddy = buddy;
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone && ![messagesViewController otr_isVisible]) {
         [self.navigationController pushViewController:messagesViewController animated:YES];

@@ -129,6 +129,7 @@
 		6336209C1A76E88C006E8739 /* OTRVideoItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6336209B1A76E88C006E8739 /* OTRVideoItem.m */; };
 		6336209F1A76E89A006E8739 /* OTRAudioItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6336209E1A76E89A006E8739 /* OTRAudioItem.m */; };
 		633AF2FA1A7C3DBC0030A3FF /* OTRAudioSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 633AF2F91A7C3DBC0030A3FF /* OTRAudioSessionManager.m */; };
+		6353AC2D1AD5E32000753B83 /* OTRAudioTrashView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6353AC2C1AD5E32000753B83 /* OTRAudioTrashView.m */; };
 		6354BBE41A96C67400E8EBAC /* OTRMediaFileManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6354BBE31A96C67400E8EBAC /* OTRMediaFileManager.m */; };
 		6396AFA01A169D54009F3E6C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6396AF9F1A169D54009F3E6C /* main.m */; };
 		6396AFBA1A169D54009F3E6C /* ChatSecureTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6396AFB91A169D54009F3E6C /* ChatSecureTests.m */; };
@@ -174,6 +175,8 @@
 		63DDD8B01A9D3C0400C0A918 /* OTRMediaServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 63DDD8AF1A9D3C0400C0A918 /* OTRMediaServer.m */; };
 		63DDD8B51A9E94B700C0A918 /* OTRMediaTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63DDD8B41A9E94B700C0A918 /* OTRMediaTests.m */; };
 		63DDD8BA1A9E9BD900C0A918 /* samples in Resources */ = {isa = PBXBuildFile; fileRef = 63DDD8B91A9E9BD900C0A918 /* samples */; };
+		63EA4CF91ACC81C800B19E12 /* OTRMessagesHoldTalkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EA4CF81ACC81C800B19E12 /* OTRMessagesHoldTalkViewController.m */; };
+		63EA4CFD1ACC96AB00B19E12 /* OTRHoldToTalkView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EA4CFC1ACC96AB00B19E12 /* OTRHoldToTalkView.m */; };
 		63F0FF641A798D8E001F0C99 /* OTRAudioControlsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F0FF631A798D8E001F0C99 /* OTRAudioControlsView.m */; };
 		63F6E1911A69B9BA0011E6F7 /* OTRAttachmentPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F6E1901A69B9BA0011E6F7 /* OTRAttachmentPicker.m */; };
 		63FA548B1A7ACA2F00F2AEBB /* OTRPlayPauseProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FA548A1A7ACA2F00F2AEBB /* OTRPlayPauseProgressView.m */; };
@@ -467,6 +470,8 @@
 		6336209E1A76E89A006E8739 /* OTRAudioItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAudioItem.m; sourceTree = "<group>"; };
 		633AF2F81A7C3DBB0030A3FF /* OTRAudioSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAudioSessionManager.h; sourceTree = "<group>"; };
 		633AF2F91A7C3DBC0030A3FF /* OTRAudioSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAudioSessionManager.m; sourceTree = "<group>"; };
+		6353AC2B1AD5E32000753B83 /* OTRAudioTrashView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAudioTrashView.h; sourceTree = "<group>"; };
+		6353AC2C1AD5E32000753B83 /* OTRAudioTrashView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAudioTrashView.m; sourceTree = "<group>"; };
 		6354BBE21A96C67400E8EBAC /* OTRMediaFileManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRMediaFileManager.h; sourceTree = "<group>"; };
 		6354BBE31A96C67400E8EBAC /* OTRMediaFileManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRMediaFileManager.m; sourceTree = "<group>"; };
 		6396AF9A1A169D54009F3E6C /* ChatSecure.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatSecure.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -561,6 +566,10 @@
 		63DDD8AF1A9D3C0400C0A918 /* OTRMediaServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRMediaServer.m; sourceTree = "<group>"; };
 		63DDD8B41A9E94B700C0A918 /* OTRMediaTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRMediaTests.m; sourceTree = "<group>"; };
 		63DDD8B91A9E9BD900C0A918 /* samples */ = {isa = PBXFileReference; lastKnownFileType = folder; path = samples; sourceTree = "<group>"; };
+		63EA4CF71ACC81C800B19E12 /* OTRMessagesHoldTalkViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRMessagesHoldTalkViewController.h; sourceTree = "<group>"; };
+		63EA4CF81ACC81C800B19E12 /* OTRMessagesHoldTalkViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRMessagesHoldTalkViewController.m; sourceTree = "<group>"; };
+		63EA4CFB1ACC96AB00B19E12 /* OTRHoldToTalkView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRHoldToTalkView.h; sourceTree = "<group>"; };
+		63EA4CFC1ACC96AB00B19E12 /* OTRHoldToTalkView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRHoldToTalkView.m; sourceTree = "<group>"; };
 		63F0FF621A798D8E001F0C99 /* OTRAudioControlsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAudioControlsView.h; sourceTree = "<group>"; };
 		63F0FF631A798D8E001F0C99 /* OTRAudioControlsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAudioControlsView.m; sourceTree = "<group>"; };
 		63F6E18F1A69B9BA0011E6F7 /* OTRAttachmentPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAttachmentPicker.h; sourceTree = "<group>"; };
@@ -896,8 +905,7 @@
 				633106311A16D1A300C17BAE /* OTRLanguageListSettingViewController.m */,
 				633106321A16D1A300C17BAE /* OTRListSettingViewController.h */,
 				633106331A16D1A300C17BAE /* OTRListSettingViewController.m */,
-				633106341A16D1A300C17BAE /* OTRMessagesViewController.h */,
-				633106351A16D1A300C17BAE /* OTRMessagesViewController.m */,
+				63EA4CFA1ACC931200B19E12 /* Messages View Controller */,
 				63D58C241A8C154D003C5A2D /* OTRAudioRecorderViewController.h */,
 				63D58C251A8C154D003C5A2D /* OTRAudioRecorderViewController.m */,
 				633106361A16D1A300C17BAE /* OTRNewAccountViewController.h */,
@@ -957,6 +965,10 @@
 				633106741A16D1A300C17BAE /* OTRSocialButtonsView.m */,
 				633106751A16D1A300C17BAE /* OTRTitleSubtitleView.h */,
 				633106761A16D1A300C17BAE /* OTRTitleSubtitleView.m */,
+				63EA4CFB1ACC96AB00B19E12 /* OTRHoldToTalkView.h */,
+				63EA4CFC1ACC96AB00B19E12 /* OTRHoldToTalkView.m */,
+				6353AC2B1AD5E32000753B83 /* OTRAudioTrashView.h */,
+				6353AC2C1AD5E32000753B83 /* OTRAudioTrashView.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1154,6 +1166,17 @@
 				63DC0EB61A1ABC86002C9598 /* OTR_Release.xcconfig */,
 			);
 			name = Configurations;
+			sourceTree = "<group>";
+		};
+		63EA4CFA1ACC931200B19E12 /* Messages View Controller */ = {
+			isa = PBXGroup;
+			children = (
+				633106341A16D1A300C17BAE /* OTRMessagesViewController.h */,
+				633106351A16D1A300C17BAE /* OTRMessagesViewController.m */,
+				63EA4CF71ACC81C800B19E12 /* OTRMessagesHoldTalkViewController.h */,
+				63EA4CF81ACC81C800B19E12 /* OTRMessagesHoldTalkViewController.m */,
+			);
+			name = "Messages View Controller";
 			sourceTree = "<group>";
 		};
 		63FA54921A7C127F00F2AEBB /* AudioBubble Views */ = {
@@ -1395,9 +1418,11 @@
 				633106D71A16D1A300C17BAE /* OTRXMPPBuddy.m in Sources */,
 				63C4BD111A1E9BE1001696CD /* OTRManagedEncryptionStatusMessage.m in Sources */,
 				633106861A16D1A300C17BAE /* OTRProtocolManager.m in Sources */,
+				63EA4CFD1ACC96AB00B19E12 /* OTRHoldToTalkView.m in Sources */,
 				6331067A1A16D1A300C17BAE /* UIActivityViewController+ChatSecure.m in Sources */,
 				63C4BD261A1E9BE1001696CD /* _OTRManagedMessageAndStatus.m in Sources */,
 				633106921A16D1A300C17BAE /* OTRXMPPTorManager.m in Sources */,
+				6353AC2D1AD5E32000753B83 /* OTRAudioTrashView.m in Sources */,
 				633106CA1A16D1A300C17BAE /* OTRValueSetting.m in Sources */,
 				633106B71A16D1A300C17BAE /* OTRActivityItemProvider.m in Sources */,
 				633106811A16D1A300C17BAE /* OTREncryptionManager.m in Sources */,
@@ -1452,6 +1477,7 @@
 				633106911A16D1A300C17BAE /* OTRXMPPProxyStream.m in Sources */,
 				633106C01A16D1A300C17BAE /* OTRFeedbackSetting.m in Sources */,
 				63C4BD1F1A1E9BE1001696CD /* _OTRManagedAccount.m in Sources */,
+				63EA4CF91ACC81C800B19E12 /* OTRMessagesHoldTalkViewController.m in Sources */,
 				633106B81A16D1A300C17BAE /* OTRDomainCellInfo.m in Sources */,
 				633107111A16D1A300C17BAE /* OTRSubscriptionRequestsViewController.m in Sources */,
 				633106BF1A16D1A300C17BAE /* OTRDoubleSetting.m in Sources */,

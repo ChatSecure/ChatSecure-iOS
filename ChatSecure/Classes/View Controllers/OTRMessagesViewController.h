@@ -16,4 +16,10 @@
 
 @property (nonatomic, strong) OTRBuddy *buddy;
 
+@property (nonatomic, strong) UIButton *microphoneButton;
+@property (nonatomic, strong) UIButton *sendButton;
+@property (nonatomic, strong) UIButton *cameraButton;
+
+-(void)sendAudioFileURL:(NSURL *)url;
+
 @end
