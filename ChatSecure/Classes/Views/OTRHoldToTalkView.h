@@ -10,11 +10,6 @@
 
 @class OTRHoldToTalkView;
 
-typedef NS_ENUM(NSUInteger, OTRHoldToTalkViewState) {
-    OTRHoldToTalkViewStateNormal = 0,
-    OTRHoldToTalkViewStatePressed = 1
-};
-
 @protocol OTRHoldToTalkViewStateDelegate <NSObject>
 
 @required
@@ -27,16 +22,7 @@ typedef NS_ENUM(NSUInteger, OTRHoldToTalkViewState) {
 
 @interface OTRHoldToTalkView : UIView
 
-@property (nonatomic) OTRHoldToTalkViewState state;
-
-@property (nonatomic, strong) NSString *normalText;
-@property (nonatomic, strong) UIColor *normalTextColor;
-
-@property (nonatomic, strong) NSString *pressedText;
-@property (nonatomic, strong) UIColor *pressedTextColor;
-
-@property (nonatomic, strong) UIColor *normalBackgroundColor;
-@property (nonatomic, strong) UIColor *pressedBackgroundColor;
+@property (nonatomic, strong, readonly) UILabel *textLabel;
 
 @property (nonatomic, weak) id <OTRHoldToTalkViewStateDelegate> delegate;
 

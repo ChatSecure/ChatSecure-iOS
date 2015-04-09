@@ -33,8 +33,6 @@ CGFloat const kOTRAudioTrashMargin = 10;
                                                  type:BButtonTypeDefault
                                                 style:BButtonStyleBootstrapV3];
         
-        self.trashButton.buttonCornerRadius = @(25);
-        
         _trashLabel = [[UILabel alloc] initForAutoLayout];
         self.trashLabel.textAlignment = NSTextAlignmentCenter;
         self.trashLabel.translatesAutoresizingMaskIntoConstraints = NO;
@@ -62,7 +60,6 @@ CGFloat const kOTRAudioTrashMargin = 10;
     }
     return self;
 }
-
 
 - (CGSize)intrinsicContentSize
 {
@@ -96,8 +93,9 @@ CGFloat const kOTRAudioTrashMargin = 10;
 
 - (void)layoutSubviews
 {
-    self.animatingSoundView.layer.cornerRadius = CGRectGetWidth(self.animatingSoundView.bounds)/ 2;
     [super layoutSubviews];
+    self.animatingSoundView.layer.cornerRadius = CGRectGetWidth(self.animatingSoundView.bounds)/ 2;
+    self.trashButton.buttonCornerRadius = @(CGRectGetWidth(self.trashButton.bounds)/2);
 }
 
 - (void)setAnimationChange:(double)change

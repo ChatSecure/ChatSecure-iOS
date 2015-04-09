@@ -26,6 +26,8 @@
 
 @property (nonatomic, strong) OTRAudioSessionManager *audioSessionManager;
 
+@property (nonatomic, strong) UIView *recordingBackgroundView;
+
 @end
 
 @implementation OTRMessagesHoldTalkViewController
@@ -36,13 +38,6 @@
     
     self.audioSessionManager = [[OTRAudioSessionManager alloc] init];
     self.audioSessionManager.delegate = self;
-    
-    self.hold2TalkButton = [[OTRHoldToTalkView alloc] initForAutoLayout];
-    self.hold2TalkButton.normalText = @"Hold to talk";
-    self.hold2TalkButton.pressedText = @"Release to send";
-    self.hold2TalkButton.delegate = self;
-    
-    self.trashView = [[OTRAudioTrashView alloc] initForAutoLayout];
     
     self.keyboardButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     self.keyboardButton.frame = CGRectMake(0, 0, 22, 32);
@@ -80,6 +75,9 @@
 
 - (void)addPush2TalkButton
 {
+    self.hold2TalkButton = [[OTRHoldToTalkView alloc] initForAutoLayout];
+    [self setHold2TalkStatusWaiting];
+    self.hold2TalkButton.delegate = self;
     [self.view addSubview:self.hold2TalkButton];
     
     UIView *textView = self.inputToolbar.contentView.textView;
@@ -93,23 +91,59 @@
     [self.view setNeedsUpdateConstraints];
 }
 
+- (void)setHold2TalkStatusWaiting
+{
+    self.hold2TalkButton.textLabel.text = @"Hold to talk";
+    self.hold2TalkButton.textLabel.textColor = [UIColor whiteColor];
+    self.hold2TalkButton.backgroundColor = [UIColor darkGrayColor];
+}
+
+- (void)setHold2TalkButtonRecording
+{
+    self.hold2TalkButton.textLabel.text = @"Release to send";
+    self.hold2TalkButton.textLabel.textColor = [UIColor darkGrayColor];
+    self.hold2TalkButton.backgroundColor = [UIColor whiteColor];
+}
+
 - (void)addTrashViewItems
 {
+    self.trashView = [[OTRAudioTrashView alloc] initForAutoLayout];
     [self.view addSubview:self.trashView];
     
     [self.trashView autoAlignAxis:ALAxisHorizontal toSameAxisOfView:self.view withOffset:50];
     [self.trashView autoAlignAxisToSuperviewAxis:ALAxisVertical];
     self.trashViewWidthConstraint = [self.trashView autoSetDimension:ALDimensionHeight toSize:self.trashView.intrinsicContentSize.height];
+    self.trashView.trashIconLabel.alpha = 0;
+    self.trashView.microphoneIconLabel.alpha = 1;
+    self.trashView.trashButton.highlighted = NO;
+}
+
+- (void)addRecordingBackgroundView
+{
+    self.recordingBackgroundView = [[UIView alloc] initForAutoLayout];
+    self.recordingBackgroundView.backgroundColor = [UIColor grayColor];
+    self.recordingBackgroundView.alpha = 0.5;
+    [self.view insertSubview:self.recordingBackgroundView belowSubview:self.hold2TalkButton];
+    
+    [self.recordingBackgroundView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsZero];
+}
+
+- (void)removeRecordingBackgroundView
+{
+    [self.recordingBackgroundView removeFromSuperview];
+    self.recordingBackgroundView = nil;
 }
 
 - (void)removePush2TalkButton
 {
     [self.hold2TalkButton removeFromSuperview];
+    self.hold2TalkButton = nil;
 }
 
 - (void)removeTrashViewItems
 {
     [self.trashView removeFromSuperview];
+    self.trashView = nil;
     
 }
 
@@ -118,11 +152,13 @@
 - (void)didBeginTouch:(OTRHoldToTalkView *)view
 {
     //start Recording
+    [self addRecordingBackgroundView];
     [self addTrashViewItems];
     NSString *temporaryPath = NSTemporaryDirectory();
     NSString *fileName = [NSString stringWithFormat:@"%@.m4a",[[NSUUID UUID] UUIDString]];
     NSURL *url = [NSURL fileURLWithPath:[temporaryPath stringByAppendingPathComponent:fileName]];
     [self.audioSessionManager recordAudioToURL:url error:nil];
+    [self setHold2TalkButtonRecording];
 }
 
 - (void)view:(OTRHoldToTalkView *)view touchDidMoveToPointInWindow:(CGPoint)point
@@ -141,10 +177,6 @@
     CGFloat defaultHeight = self.trashView.intrinsicContentSize.height;
     self.trashViewWidthConstraint.constant = MAX(defaultHeight, defaultHeight+defaultHeight * percentDistance);
     
-    
-    
-    
-    
     CGPoint testPoint = [self.trashView.trashButton convertPoint:poinInView fromView:self.view];
     BOOL insideButton = CGRectContainsPoint(self.trashView.trashButton.bounds, testPoint);
     
@@ -153,9 +185,11 @@
     if (insideButton) {
         self.trashView.trashIconLabel.alpha = 1;
         self.trashView.microphoneIconLabel.alpha = 0;
+        self.hold2TalkButton.textLabel.text = @"Release to delete";
     } else {
         self.trashView.trashIconLabel.alpha = percentDistance;
         self.trashView.microphoneIconLabel.alpha = 1-percentDistance;
+        self.hold2TalkButton.textLabel.text = @"Release to send";
     }
     
     [self.view setNeedsUpdateConstraints];
@@ -166,18 +200,32 @@
     //stop recording and send
     NSURL *currentURL = [self.audioSessionManager currentRecorderURL];
     [self.audioSessionManager stopRecording];
-    //[self sendAudioFileURL:currentURL];
+    if (self.trashView.trashButton.isHighlighted) {
+        if([[NSFileManager defaultManager] fileExistsAtPath:currentURL.path]) {
+            [[NSFileManager defaultManager] removeItemAtPath:currentURL.path error:nil];
+        }
+    } else {
+        [self sendAudioFileURL:currentURL];
+
+    }
+    
+    [self removeTrashViewItems];
+    [self setHold2TalkStatusWaiting];
+    [self removeRecordingBackgroundView];
+    
 }
 
 - (void)touchCancelled:(OTRHoldToTalkView *)view
 {
-    //sto recording and delete
+    //stop recording and delete
     NSURL *currentURL = [self.audioSessionManager currentRecorderURL];
-    [self.audioSessionManager stopRecording];
     [self.audioSessionManager stopRecording];
     if([[NSFileManager defaultManager] fileExistsAtPath:currentURL.path]) {
         [[NSFileManager defaultManager] removeItemAtPath:currentURL.path error:nil];
     }
+    [self removeTrashViewItems];
+    [self setHold2TalkStatusWaiting];
+    [self removeRecordingBackgroundView];
 }
 
 #pragma - mark AudioSeessionDelegate
