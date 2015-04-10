@@ -8,10 +8,14 @@
 
 #import "OTRHoldToTalkView.h"
 #import "PureLayout.h"
+#import "OTRTouchAndHoldGestureRecognizer.h"
 
 @interface OTRHoldToTalkView ()
 
 @property (nonatomic) BOOL addedConstraints;
+@property (nonatomic, strong) OTRTouchAndHoldGestureRecognizer *gestureRecognizer;
+@property (nonatomic, strong) UIPanGestureRecognizer *panGestureRecognizer;
+
 
 @end
 
@@ -23,7 +27,11 @@
         _textLabel = [[UILabel alloc] initForAutoLayout];
         self.textLabel.textAlignment = NSTextAlignmentCenter;
         self.textLabel.backgroundColor = [UIColor clearColor];
+        self.textLabel.userInteractionEnabled = NO;
         self.multipleTouchEnabled = NO;
+        
+        self.gestureRecognizer = [[OTRTouchAndHoldGestureRecognizer alloc] initWithTarget:self action:@selector(gesture:)];
+        [self addGestureRecognizer:self.gestureRecognizer];
         
         [self addSubview:self.textLabel];
     }
@@ -46,26 +54,30 @@
 
 #pragma - mark Touches
 
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+- (void)gesture:(OTRTouchAndHoldGestureRecognizer *)sender
 {
-    [self.delegate didBeginTouch:self];
-}
-
-- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    CGPoint pointInWindow = [[touches anyObject] locationInView:nil];
-    if ([self.delegate respondsToSelector:@selector(view:touchDidMoveToPointInWindow:)]) {
-        [self.delegate view:self touchDidMoveToPointInWindow:pointInWindow];
+    switch (sender.state) {
+        case UIGestureRecognizerStateBegan: {
+            NSLog(@"Touch Began");
+            [self.delegate didBeginTouch:self];
+            break;
+        }
+        case UIGestureRecognizerStateChanged: {
+             CGPoint pointInWindow = [self.gestureRecognizer locationInView:nil];
+            [self.delegate view:self touchDidMoveToPointInWindow:pointInWindow];
+            break;
+        }
+        case UIGestureRecognizerStateCancelled: {
+           [self.delegate touchCancelled:self];
+            break;
+        }
+        case UIGestureRecognizerStateEnded: {
+            [self.delegate didReleaseTouch:self];
+            break;
+        }
+        default:
+            break;
     }
-}
-
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    [self.delegate didReleaseTouch:self];
-}
-- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    [self.delegate touchCancelled:self];
 }
 
 
