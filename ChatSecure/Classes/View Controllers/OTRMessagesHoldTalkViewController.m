@@ -11,6 +11,7 @@
 #import "OTRHoldToTalkView.h"
 #import "OTRAudioSessionManager.h"
 #import "OTRAudioTrashView.h"
+#import "Strings.h"
 
 
 @interface OTRMessagesHoldTalkViewController () <OTRHoldToTalkViewStateDelegate, OTRAudioSessionManagerDelegate>
@@ -82,10 +83,12 @@
     
     UIView *textView = self.inputToolbar.contentView.textView;
     
-    [self.hold2TalkButton autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:textView];
-    [self.hold2TalkButton autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:textView];
-    [self.hold2TalkButton autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:textView];
-    [self.hold2TalkButton autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:textView];
+    CGFloat offset = 1;
+    
+    [self.hold2TalkButton autoPinEdge:ALEdgeLeading toEdge:ALEdgeLeading ofView:textView withOffset:-offset];
+    [self.hold2TalkButton autoPinEdge:ALEdgeTrailing toEdge:ALEdgeTrailing ofView:textView withOffset:offset];
+    [self.hold2TalkButton autoPinEdge:ALEdgeTop toEdge:ALEdgeTop ofView:textView withOffset:-offset];
+    [self.hold2TalkButton autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:textView withOffset:offset];
     
     
     [self.view setNeedsUpdateConstraints];
@@ -93,14 +96,14 @@
 
 - (void)setHold2TalkStatusWaiting
 {
-    self.hold2TalkButton.textLabel.text = @"Hold to talk";
+    self.hold2TalkButton.textLabel.text = HOLD_TO_TALK_STRING;
     self.hold2TalkButton.textLabel.textColor = [UIColor whiteColor];
     self.hold2TalkButton.backgroundColor = [UIColor darkGrayColor];
 }
 
 - (void)setHold2TalkButtonRecording
 {
-    self.hold2TalkButton.textLabel.text = @"Release to send";
+    self.hold2TalkButton.textLabel.text = RELEASE_TO_SEND_STRING;
     self.hold2TalkButton.textLabel.textColor = [UIColor darkGrayColor];
     self.hold2TalkButton.backgroundColor = [UIColor whiteColor];
 }
@@ -116,13 +119,14 @@
     self.trashView.trashIconLabel.alpha = 0;
     self.trashView.microphoneIconLabel.alpha = 1;
     self.trashView.trashButton.highlighted = NO;
+    self.trashView.trashLabel.textColor = [UIColor whiteColor];
 }
 
 - (void)addRecordingBackgroundView
 {
     self.recordingBackgroundView = [[UIView alloc] initForAutoLayout];
     self.recordingBackgroundView.backgroundColor = [UIColor grayColor];
-    self.recordingBackgroundView.alpha = 0.5;
+    self.recordingBackgroundView.alpha = 0.7;
     [self.view insertSubview:self.recordingBackgroundView belowSubview:self.hold2TalkButton];
     
     [self.recordingBackgroundView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsZero];
@@ -185,11 +189,11 @@
     if (insideButton) {
         self.trashView.trashIconLabel.alpha = 1;
         self.trashView.microphoneIconLabel.alpha = 0;
-        self.hold2TalkButton.textLabel.text = @"Release to delete";
+        self.hold2TalkButton.textLabel.text = RELEASE_TO_DELETE_STRING;
     } else {
         self.trashView.trashIconLabel.alpha = percentDistance;
         self.trashView.microphoneIconLabel.alpha = 1-percentDistance;
-        self.hold2TalkButton.textLabel.text = @"Release to send";
+        self.hold2TalkButton.textLabel.text = RELEASE_TO_SEND_STRING;
     }
     
     [self.view setNeedsUpdateConstraints];
@@ -232,8 +236,26 @@
 
 - (void)audioSession:(OTRAudioSessionManager *)audioSessionManager didUpdateRecordingDecibel:(double)decibel
 {
-    double linearScale = pow(10, decibel/20);
-    [self.trashView setAnimationChange:100 * linearScale];
+    double scale = 0;
+    //Values for human speech range quiet to loud
+    double mindB = -80;
+    double maxdB = -10;
+    if (decibel >= maxdB) {
+        //too loud
+        scale = 1;
+    } else if (decibel >= mindB && decibel <= maxdB) {
+        //normal voice
+        double powerFactor = 20;
+        double mindBScale = pow(10, mindB / powerFactor);
+        double maxdBScale = pow(10, maxdB / powerFactor);
+        double linearScale = pow (10, decibel / powerFactor);
+        double scaleMin = 0;
+        double scaleMax = 1;
+        //Get a value between 0 and 1 for mindB & maxdB values
+        scale = ( ((scaleMax - scaleMin) * (linearScale - mindBScale)) / (maxdBScale - mindBScale)) + scaleMin;
+    }
+    
+    [self.trashView setAnimationChange:30 * scale];
 }
 
 

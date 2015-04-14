@@ -172,7 +172,6 @@
 		63CFB1041ABA492600A8D27E /* OTRFacebookOAuthXMPPAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CFB1031ABA492600A8D27E /* OTRFacebookOAuthXMPPAccount.m */; };
 		63D184861A2D3F2400334CD8 /* OTRNotificationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D184851A2D3F2400334CD8 /* OTRNotificationController.m */; };
 		63D27FC51A6DC51C00EC251A /* OTRMediaItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D27FC41A6DC51C00EC251A /* OTRMediaItem.m */; };
-		63D58C261A8C154D003C5A2D /* OTRAudioRecorderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D58C251A8C154D003C5A2D /* OTRAudioRecorderViewController.m */; };
 		63D64D661A2FBA8C00E21F77 /* OTRToastOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D64D651A2FBA8C00E21F77 /* OTRToastOptions.m */; };
 		63DDD8B01A9D3C0400C0A918 /* OTRMediaServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 63DDD8AF1A9D3C0400C0A918 /* OTRMediaServer.m */; };
 		63DDD8B51A9E94B700C0A918 /* OTRMediaTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63DDD8B41A9E94B700C0A918 /* OTRMediaTests.m */; };
@@ -561,8 +560,6 @@
 		63D184851A2D3F2400334CD8 /* OTRNotificationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRNotificationController.m; sourceTree = "<group>"; };
 		63D27FC31A6DC51C00EC251A /* OTRMediaItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRMediaItem.h; sourceTree = "<group>"; };
 		63D27FC41A6DC51C00EC251A /* OTRMediaItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRMediaItem.m; sourceTree = "<group>"; };
-		63D58C241A8C154D003C5A2D /* OTRAudioRecorderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAudioRecorderViewController.h; sourceTree = "<group>"; };
-		63D58C251A8C154D003C5A2D /* OTRAudioRecorderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAudioRecorderViewController.m; sourceTree = "<group>"; };
 		63D64D641A2FBA8C00E21F77 /* OTRToastOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRToastOptions.h; sourceTree = "<group>"; };
 		63D64D651A2FBA8C00E21F77 /* OTRToastOptions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRToastOptions.m; sourceTree = "<group>"; };
 		63DC0EB31A1ABC86002C9598 /* OTR_Codesigning.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = OTR_Codesigning.xcconfig; path = configurations/OTR_Codesigning.xcconfig; sourceTree = "<group>"; };
@@ -912,8 +909,6 @@
 				633106321A16D1A300C17BAE /* OTRListSettingViewController.h */,
 				633106331A16D1A300C17BAE /* OTRListSettingViewController.m */,
 				63EA4CFA1ACC931200B19E12 /* Messages View Controller */,
-				63D58C241A8C154D003C5A2D /* OTRAudioRecorderViewController.h */,
-				63D58C251A8C154D003C5A2D /* OTRAudioRecorderViewController.m */,
 				633106361A16D1A300C17BAE /* OTRNewAccountViewController.h */,
 				633106371A16D1A300C17BAE /* OTRNewAccountViewController.m */,
 				633106381A16D1A300C17BAE /* OTRNewBuddyViewController.h */,
@@ -1415,7 +1410,6 @@
 				63C4BD1C1A1E9BE1001696CD /* OTRvCardAvatar.m in Sources */,
 				63C4BD281A1E9BE1001696CD /* _OTRManagedOscarAccount.m in Sources */,
 				633107031A16D1A300C17BAE /* OTRFingerprintsViewController.m in Sources */,
-				63D58C261A8C154D003C5A2D /* OTRAudioRecorderViewController.m in Sources */,
 				6331068C1A16D1A300C17BAE /* OTRSettingsManager.m in Sources */,
 				6331070C1A16D1A300C17BAE /* OTRQRCodeViewController.m in Sources */,
 				6331067B1A16D1A300C17BAE /* UIImage+ChatSecure.m in Sources */,

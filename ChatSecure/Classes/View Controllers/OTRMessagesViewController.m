@@ -41,7 +41,6 @@
 #import "OTRAudioControlsView.h"
 #import "OTRPlayPauseProgressView.h"
 #import "OTRAudioPlaybackController.h"
-#import "OTRAudioRecorderViewController.h"
 #import "OTRMediaFileManager.h"
 #import "OTRMediaServer.h"
 #import "UIImage+ChatSecure.h"
@@ -57,7 +56,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     OTRDropDownTypePush          = 2
 };
 
-@interface OTRMessagesViewController () <UITextViewDelegate, OTRAttachmentPickerDelegate, OTRAudioRecorderViewControllerDelegate>
+@interface OTRMessagesViewController () <UITextViewDelegate, OTRAttachmentPickerDelegate>
 
 @property (nonatomic, strong) OTRAccount *account;
 
@@ -907,17 +906,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (void)didPressAccessoryButton:(UIButton *)sender
 {
-    if ([sender isEqual:self.microphoneButton]) {
-        
-        OTRAudioRecorderViewController *recorderViewController = [[OTRAudioRecorderViewController alloc] init];
-        recorderViewController.delegate = self;
-        CGRect rectInWindow = [self.microphoneButton convertRect:self.microphoneButton.frame toView:nil];
-        [recorderViewController showAudioRecorderFromViewController:self animated:YES fromMicrophoneRectInWindow:rectInWindow];
-        
-    } else if ([sender isEqual:self.cameraButton]) {
+    if ([sender isEqual:self.cameraButton]) {
         [self.attachmentPicker showAlertControllerWithCompletion:nil];
     }
-    
 }
 
 - (void)collectionView:(UICollectionView *)collectionView performAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender
@@ -1010,8 +1001,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
         
     }];
 }
-
-#pragma - mark OTRAudioRecorderViewControllerDelegate Methods
 
 - (void)sendAudioFileURL:(NSURL *)url
 {

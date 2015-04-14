@@ -70,7 +70,6 @@ CGFloat const kOTRAudioTrashMargin = 10;
 
 - (void)updateConstraints{
     if (!self.addedConstraints) {
-        
         [self.animatingSoundView autoCenterInSuperview];
         self.animatingViewSizeConstraint = [self.animatingSoundView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.trashButton withOffset:kOTRAudioTrashMargin];
         [self.animatingSoundView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.animatingSoundView];
@@ -78,7 +77,6 @@ CGFloat const kOTRAudioTrashMargin = 10;
         [self.trashButton autoCenterInSuperview];
         [self.trashButton autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:(self.trashLabel.intrinsicContentSize.height + kOTRAudioTrashMargin *2)];
         [self.trashButton autoMatchDimension:ALDimensionWidth toDimension:ALDimensionHeight ofView:self.trashButton];
-        //[self.trashButton autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.trashLabel withOffset:kOTRAudioTrashMargin *2];
         
         [self.trashLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
         [self.trashLabel autoPinEdgeToSuperviewEdge:ALEdgeBottom];
