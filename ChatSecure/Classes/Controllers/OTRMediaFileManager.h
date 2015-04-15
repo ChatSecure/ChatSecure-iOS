@@ -16,7 +16,7 @@ extern NSString *const kOTRRootMediaDirectory;
 
 @property (nonatomic, strong, readonly) IOCipher *ioCipher;
 
-- (void)setupWithPath:(NSString *)path password:(NSString *)password;
+- (BOOL)setupWithPath:(NSString *)path password:(NSString *)password;
 
 - (void)copyDataFromFilePath:(NSString *)filePath
              toEncryptedPath:(NSString *)path

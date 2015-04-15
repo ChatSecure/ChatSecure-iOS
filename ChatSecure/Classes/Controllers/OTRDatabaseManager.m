@@ -47,12 +47,30 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
 @implementation OTRDatabaseManager
 
 - (BOOL) setupDatabaseWithName:(NSString*)databaseName {
+    BOOL success = NO;
     if ([self setupYapDatabaseWithName:databaseName] )
     {
         [self migrateCoreDataToYapDatabase];
-        return YES;
+        success = YES;
     }
-    return NO;
+    success = [self setupSecureMediaStorage];
+    return success;
+}
+
+- (BOOL)setupSecureMediaStorage
+{
+    NSString *password = [self databasePassphrase];
+    NSString *path = [OTRDatabaseManager yapDatabasePathWithName:nil];
+    path = [path stringByAppendingPathComponent:@"ChatSecure-media.sqlite"];
+    BOOL success = [[OTRMediaFileManager sharedInstance] setupWithPath:path password:password];
+    
+    self.mediaServer = [OTRMediaServer sharedInstance];
+    NSError *error = nil;
+    BOOL mediaServerStarted = [self.mediaServer startOnPort:8080 error:&error];
+    if (!mediaServerStarted) {
+        DDLogError(@"Error starting media server: %@",error);
+    }
+    return success;
 }
 
 - (void)migrateCoreDataToYapDatabase
