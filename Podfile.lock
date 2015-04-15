@@ -40,9 +40,9 @@ PODS:
   - CPAProxy (1.0.0):
     - CocoaAsyncSocket
   - CRToast (0.0.7)
-  - GCDWebServer (3.2.2):
-    - GCDWebServer/Core (= 3.2.2)
-  - GCDWebServer/Core (3.2.2)
+  - GCDWebServer (3.2.3):
+    - GCDWebServer/Core (= 3.2.3)
+  - GCDWebServer/Core (3.2.3)
   - gtm-http-fetcher (1.0.142)
   - gtm-oauth2 (1.0.129):
     - gtm-http-fetcher
@@ -80,7 +80,7 @@ PODS:
   - MWFeedParser/NSString+HTML (1.0.1)
   - Navajo (0.0.1)
   - OpenInChrome (0.0.1)
-  - OTRKit (1.0.0)
+  - OTRKit (1.1.0)
   - ProxyKit/Client (1.0.2):
     - ProxyKit/common
   - ProxyKit/common (1.0.2):
@@ -336,7 +336,7 @@ SPEC CHECKSUMS:
   CocoaLumberjack: 628fca2e88ef06f7cf6817309aa405f325d9a6fa
   CPAProxy: 2f0d2ef592b28e0686b5a100ad663bdd3e51900b
   CRToast: 99a28f4387def43b439ad88f957ce31357ff7373
-  GCDWebServer: 5320220ad0d497da8e7beca1396f0c82d4f83730
+  GCDWebServer: 0f68bdc06d035f285f2d1ef0ac35ed46be040a71
   gtm-http-fetcher: 52f5c6444c2c883380de3b902e14fdab4b1d3e7d
   gtm-oauth2: 3a9a46400b8d7ee916807550e0902c4a4db11167
   HockeySDK: 51ade1aff04463137e852797d2eb4dfb2511d6a9
@@ -353,7 +353,7 @@ SPEC CHECKSUMS:
   MWFeedParser: 2cf646014c1baf6ad1b08c480b40a08180079247
   Navajo: 5fb68239b4e3af4610f31925bae1ca8e6bab8eaa
   OpenInChrome: f1f3f9dec682216fe78a0d7fe0b5b263d6312c32
-  OTRKit: d7db6a96cc8fd9562008d3525e375b999be7e4f2
+  OTRKit: b7b7be43350577f25dcf986376342a62bf3e7ea7
   ProxyKit: f7be31d07ed93444c433956d18e842ea9c709224
   PureLayout: a0fe75f1cf485801e7e00b723b8a3c32dca558e2
   RMStepsController: 195aa02c57ee5fea74483d0b9dcc30881ae7639d
