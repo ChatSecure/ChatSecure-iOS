@@ -21,7 +21,6 @@ pod 'JTTargetActionBlock', '~> 1.0'
 # pod 'YapDatabase/SQLCipher', '~> 2.5' # We need to use fork for sqlite3_rekey support
 pod 'Mantle', '~> 1.4'
 pod 'Navajo', '~> 0.0'
-pod 'RMStepsController', '~> 1.0'
 # wating on 8.0 https://github.com/jessesquires/JSQMessagesViewController/pull/840
 # using for in meantime
 # pod 'JSQMessagesViewController', '~> 8.0'
