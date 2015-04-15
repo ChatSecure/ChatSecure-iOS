@@ -394,26 +394,6 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
     self.password = myPassword;
     self.connectionStatus = OTRProtocolConnectionStatusConnecting;
     
-    // We aren't properly storing the Facebook JID after the OAuthToken refresher
-    // so have to rely on this hack for now. In theory this should be fixed elsewhere
-    // however that code requires a refactor first to avoid code duplication.
-    // Facebook Chat over XMPP will be disabled on April 30, 2015 anyway. :(
-    if (!myJID.length) {
-        if ([self.account isKindOfClass:[OTRFacebookOAuthXMPPAccount class]]) {
-            OTRFacebookOAuthXMPPAccount *facebookAccount = (OTRFacebookOAuthXMPPAccount*)self.account;
-            FBAccessTokenData *tokenData = facebookAccount.accountSpecificToken;
-            myJID = [NSString stringWithFormat:@"%@@%@", tokenData.userID, @"chat.facebook.com"];
-            [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-                OTRFacebookOAuthXMPPAccount *account = [transaction objectForKey:facebookAccount.uniqueId inCollection:[[facebookAccount class] collection]];
-                if (account) {
-                    account = [account copy];
-                    account.username = myJID;
-                    [transaction setObject:account forKey:account.uniqueId inCollection:[[facebookAccount class] collection]];
-                }
-            } completionBlock:nil];
-        }
-    }
-    
     self.JID = [XMPPJID jidWithString:myJID resource:self.account.resource];
     
     if (![self.JID.domain isEqualToString:self.xmppStream.myJID.domain]) {
