@@ -167,7 +167,9 @@ NSString *const kOTRPlayProgressAnimationKey = @"kOTRPlayProgressAnimationKey";
 - (void)removePauseView
 {
     [self.pauseView removeFromSuperview];
-    [self removeConstraints:self.pauseViewConstraints];
+    if ([self.pauseViewConstraints count]) {
+        [self removeConstraints:self.pauseViewConstraints];
+    }
     self.pauseViewConstraints = nil;
 }
 

@@ -1,6 +1,6 @@
 {
   "name": "gtm-oauth2",
-  "version": "1.0.126",
+  "version": "1.0.129",
   "authors": "Google",
   "license": {
     "type": "Apache License, Version 2.0",
@@ -9,7 +9,7 @@
   "homepage": "https://code.google.com/p/gtm-oauth2/",
   "source": {
     "svn": "http://gtm-oauth2.googlecode.com/svn/trunk/",
-    "revision": "126"
+    "revision": "129"
   },
   "summary": "Google Toolbox for Mac - OAuth 2 Controllers",
   "description": "                    The Google Toolbox for Mac OAuth 2 Controllers make it easy for Cocoa\n                    applications to sign in to services using OAuth 2 for authentication\n                    and authorization.\n\n                    This version can be used with iOS ≥ 5.0 or OS X ≥ 10.7.\n                    To target earlier versions of iOS or OS X, use\n\n                      pod 'gtm-oauth2', '~> 0.0.1'\n",

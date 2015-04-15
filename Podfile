@@ -4,6 +4,8 @@ inhibit_all_warnings!
 
 source 'https://github.com/CocoaPods/Specs.git'
 
+link_with 'ChatSecure', 'ChatSecureTests'
+
 pod 'AFNetworking', '~> 2.4'
 pod "Appirater", '~> 2.0'
 pod 'OpenInChrome', '~> 0.0'
@@ -19,7 +21,6 @@ pod 'JTTargetActionBlock', '~> 1.0'
 # pod 'YapDatabase/SQLCipher', '~> 2.5' # We need to use fork for sqlite3_rekey support
 pod 'Mantle', '~> 1.4'
 pod 'Navajo', '~> 0.0'
-pod 'RMStepsController', '~> 1.0'
 # wating on 8.0 https://github.com/jessesquires/JSQMessagesViewController/pull/840
 # using for in meantime
 # pod 'JSQMessagesViewController', '~> 8.0'
@@ -38,13 +39,14 @@ pod 'JTSImageViewController', '~> 1.4'
 # Local Podspecs
 pod 'gtm-http-fetcher', :podspec => 'Podspecs/gtm-http-fetcher.podspec.json'
 pod 'gtm-oauth2', :podspec => 'Podspecs/gtm-oauth2.podspec.json'
+pod 'SQLCipher/fts', :podspec => 'Podspecs/SQLCipher.podspec.json'
 
 # Wating for update to pod needed for iPad bugs
 pod 'CRToast', :git => 'https://github.com/cruffenach/CRToast', :commit => '78569d0e6e6704872af5db1bc37be0ff9d112ac0'
 
 # Forks
 pod 'SIAlertView', :git => 'https://github.com/ChatSecure/SIAlertView.git', :branch => 'attributedText'
-pod 'JSQMessagesViewController', :git => 'https://github.com/davidchiles/JSQMessagesViewController', :branch => 'send_button_location'
+pod 'JSQMessagesViewController', :git => 'https://github.com/davidchiles/JSQMessagesViewController', :commit => 'a327445a586306a7d1b21043f1e5bd3d9c964594'
 
 # Submodules
 pod 'ProxyKit/Client', :path => 'Submodules/ProxyKit/ProxyKit.podspec'
