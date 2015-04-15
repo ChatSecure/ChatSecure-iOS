@@ -11,6 +11,8 @@
 #import "YapDatabaseConnection.h"
 #import "YapDatabase.h"
 #import "YapDatabaseTransaction.h"
+#import "OTRMediaServer.h"
+#import "OTRMediaFileManager.h"
 
 extern NSString *const OTRYapDatabaseRelationshipName;
 extern NSString *const OTRYapDatabseMessageIdSecondaryIndex;
@@ -19,6 +21,7 @@ extern NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension;
 @interface OTRDatabaseManager : NSObject
 
 @property (nonatomic, readonly) YapDatabase *database;
+@property (nonatomic, strong) OTRMediaServer *mediaServer;
 @property (nonatomic, readonly) YapDatabaseConnection *readOnlyDatabaseConnection;
 @property (nonatomic, readonly) YapDatabaseConnection *readWriteDatabaseConnection;
 

@@ -53,8 +53,6 @@
 #import "OTRPasswordGenerator.h"
 #import "UIViewController+ChatSecure.h"
 #import "OTRNotificationController.h"
-#import "OTRMediaFileManager.h"
-#import "OTRMediaServer.h"
 #import "UIAlertView+Blocks.h"
 
 #if CHATSECURE_DEMO
@@ -63,7 +61,6 @@
 
 @interface OTRAppDelegate ()
 
-@property (nonatomic, strong) OTRMediaServer *mediaServer;
 
 @end
 
@@ -116,7 +113,6 @@
         }
 
         [[OTRDatabaseManager sharedInstance] setupDatabaseWithName:OTRYapDatabaseName];
-        [self setupSecureStorageWithPassword:[[OTRDatabaseManager sharedInstance] databasePassphrase]];
         rootViewController = [self defaultConversationNavigationController];
         
         
@@ -229,20 +225,6 @@
             }
         }
     }];
-}
-
-- (void)setupSecureStorageWithPassword:(NSString *)password
-{
-    NSString *path = [OTRDatabaseManager yapDatabasePathWithName:nil];
-    path = [path stringByAppendingPathComponent:@"ChatSecure-media.sqlite"];
-    [[OTRMediaFileManager sharedInstance] setupWithPath:path password:password];
-    
-    self.mediaServer = [OTRMediaServer sharedInstance];
-    NSError *error = nil;
-    BOOL mediaServerStarted = [self.mediaServer startOnPort:8080 error:&error];
-    if (!mediaServerStarted) {
-        DDLogError(@"Error starting media server: %@",error);
-    }
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
