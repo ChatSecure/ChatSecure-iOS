@@ -33,9 +33,10 @@ NSString *const kOTRRootMediaDirectory = @"media";
 
 #pragma - mark Public Methods
 
-- (void)setupWithPath:(NSString *)path password:(NSString *)password
+- (BOOL)setupWithPath:(NSString *)path password:(NSString *)password
 {
     _ioCipher = [[IOCipher alloc] initWithPath:path password:password];
+    return _ioCipher != nil;
 }
 
 - (void)copyDataFromFilePath:(NSString *)filePath toEncryptedPath:(NSString *)path completionQueue:(dispatch_queue_t)completionQueue completion:(void (^)(NSError *))completion

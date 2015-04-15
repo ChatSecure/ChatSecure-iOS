@@ -80,14 +80,13 @@ PODS:
   - MWFeedParser/NSString+HTML (1.0.1)
   - Navajo (0.0.1)
   - OpenInChrome (0.0.1)
-  - OTRKit (1.0.0)
+  - OTRKit (1.1.0)
   - ProxyKit/Client (1.0.2):
     - ProxyKit/common
   - ProxyKit/common (1.0.2):
     - CocoaAsyncSocket (~> 7.3)
     - CocoaLumberjack (~> 1.9)
   - PureLayout (2.0.5)
-  - RMStepsController (1.0.2)
   - SIAlertView (1.3)
   - SQLCipher/common (3.3.0)
   - SQLCipher/fts (3.3.0):
@@ -274,7 +273,6 @@ DEPENDENCIES:
   - OTRKit (from `Submodules/OTRKit/OTRKit.podspec`)
   - ProxyKit/Client (from `Submodules/ProxyKit/ProxyKit.podspec`)
   - PureLayout (~> 2.0)
-  - RMStepsController (~> 1.0)
   - SIAlertView (from `https://github.com/ChatSecure/SIAlertView.git`, branch `attributedText`)
   - SQLCipher/fts (from `Podspecs/SQLCipher.podspec.json`)
   - SSKeychain (~> 1.2)
@@ -353,10 +351,9 @@ SPEC CHECKSUMS:
   MWFeedParser: 2cf646014c1baf6ad1b08c480b40a08180079247
   Navajo: 5fb68239b4e3af4610f31925bae1ca8e6bab8eaa
   OpenInChrome: f1f3f9dec682216fe78a0d7fe0b5b263d6312c32
-  OTRKit: d7db6a96cc8fd9562008d3525e375b999be7e4f2
+  OTRKit: b7b7be43350577f25dcf986376342a62bf3e7ea7
   ProxyKit: f7be31d07ed93444c433956d18e842ea9c709224
   PureLayout: a0fe75f1cf485801e7e00b723b8a3c32dca558e2
-  RMStepsController: 195aa02c57ee5fea74483d0b9dcc30881ae7639d
   SIAlertView: 20c794b55eaf44d888773ea51647cf8907723919
   SQLCipher: dd01eccee441e56835da76656f05f34e02681ded
   SSKeychain: 3f42991739c6c60a9cf1bbd4dff6c0d3694bcf3d
