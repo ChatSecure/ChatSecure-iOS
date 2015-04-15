@@ -40,9 +40,9 @@ PODS:
   - CPAProxy (1.0.0):
     - CocoaAsyncSocket
   - CRToast (0.0.7)
-  - GCDWebServer (3.2.2):
-    - GCDWebServer/Core (= 3.2.2)
-  - GCDWebServer/Core (3.2.2)
+  - GCDWebServer (3.2.3):
+    - GCDWebServer/Core (= 3.2.3)
+  - GCDWebServer/Core (3.2.3)
   - gtm-http-fetcher (1.0.142)
   - gtm-oauth2 (1.0.129):
     - gtm-http-fetcher
@@ -336,7 +336,7 @@ SPEC CHECKSUMS:
   CocoaLumberjack: 628fca2e88ef06f7cf6817309aa405f325d9a6fa
   CPAProxy: 2f0d2ef592b28e0686b5a100ad663bdd3e51900b
   CRToast: 99a28f4387def43b439ad88f957ce31357ff7373
-  GCDWebServer: 5320220ad0d497da8e7beca1396f0c82d4f83730
+  GCDWebServer: 0f68bdc06d035f285f2d1ef0ac35ed46be040a71
   gtm-http-fetcher: 52f5c6444c2c883380de3b902e14fdab4b1d3e7d
   gtm-oauth2: 3a9a46400b8d7ee916807550e0902c4a4db11167
   HockeySDK: 51ade1aff04463137e852797d2eb4dfb2511d6a9
