@@ -143,9 +143,9 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     [OTRNotificationPermissions checkPermissions];
 }
 
-- (void)viewDidDisappear:(BOOL)animated
+- (void)viewWillDisappear:(BOOL)animated
 {
-    [super viewDidDisappear:animated];
+    [super viewWillDisappear:animated];
     [self.cellUpdateTimer invalidate];
     self.cellUpdateTimer = nil;
     
