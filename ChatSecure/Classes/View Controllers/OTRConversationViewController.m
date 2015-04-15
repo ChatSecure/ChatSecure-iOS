@@ -27,7 +27,6 @@
 #import "OTRDatabaseView.h"
 #import "YapDatabaseViewMappings.h"
 
-#import "OTROnboardingStepsController.h"
 #import "OTRAppDelegate.h"
 
 

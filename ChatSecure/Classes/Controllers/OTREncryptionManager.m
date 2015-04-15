@@ -424,7 +424,6 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     DDLogInfo(@"offered file transfer: %@", transfer);
     
     // for now, just accept all incoming files
-#warning auto-accept of all incoming files
     [dataHandler startIncomingTransfer:transfer];
 }
 
