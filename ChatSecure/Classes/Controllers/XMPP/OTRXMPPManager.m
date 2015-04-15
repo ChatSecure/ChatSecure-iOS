@@ -450,6 +450,15 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
     
     [self.xmppStream disconnect];
     
+    [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        NSArray *buddiesArray = [self.account allBuddiesWithTransaction:transaction];
+        for (OTRXMPPBuddy *buddy in buddiesArray) {
+            buddy.status = OTRBuddyStatusOffline;
+            buddy.chatState = kOTRChatStateGone;
+            
+            [buddy saveWithTransaction:transaction];
+        }
+    }];
     
     if([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyDeleteOnDisconnect])
     {

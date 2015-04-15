@@ -64,7 +64,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     self.navigationItem.rightBarButtonItem = settingsBarButtonItem;
     
     self.composeBarButtonItem =[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(composeButtonPressed:)];
-    self.navigationItem.leftBarButtonItem = self.composeBarButtonItem;
+    self.navigationItem.leftBarButtonItems = @[self.composeBarButtonItem];
     
     ////////// Create TableView /////////////////
     
@@ -245,7 +245,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 - (void)hideInbox
 {
     if ([self.navigationItem.leftBarButtonItems count] > 1) {
-        self.navigationItem.leftBarButtonItem = self.composeBarButtonItem;
+        self.navigationItem.leftBarButtonItems = @[self.composeBarButtonItem];
     }
     
 }
