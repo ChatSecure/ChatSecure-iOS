@@ -38,13 +38,14 @@ pod 'JTSImageViewController', '~> 1.4'
 # Local Podspecs
 pod 'gtm-http-fetcher', :podspec => 'Podspecs/gtm-http-fetcher.podspec.json'
 pod 'gtm-oauth2', :podspec => 'Podspecs/gtm-oauth2.podspec.json'
+pod 'SQLCipher/fts', :podspec => 'Podspecs/SQLCipher.podspec.json'
 
 # Wating for update to pod needed for iPad bugs
 pod 'CRToast', :git => 'https://github.com/cruffenach/CRToast', :commit => '78569d0e6e6704872af5db1bc37be0ff9d112ac0'
 
 # Forks
 pod 'SIAlertView', :git => 'https://github.com/ChatSecure/SIAlertView.git', :branch => 'attributedText'
-pod 'JSQMessagesViewController', :git => 'https://github.com/davidchiles/JSQMessagesViewController', :branch => 'send_button_location'
+pod 'JSQMessagesViewController', :git => 'https://github.com/davidchiles/JSQMessagesViewController', :commit => 'a327445a586306a7d1b21043f1e5bd3d9c964594'
 
 # Submodules
 pod 'ProxyKit/Client', :path => 'Submodules/ProxyKit/ProxyKit.podspec'

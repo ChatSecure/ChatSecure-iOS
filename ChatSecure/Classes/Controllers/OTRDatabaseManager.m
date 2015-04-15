@@ -167,12 +167,13 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
 {
     YapDatabaseOptions *options = [[YapDatabaseOptions alloc] init];
     options.corruptAction = YapDatabaseCorruptAction_Fail;
-    options.passphraseBlock = ^{
+    options.cipherKeyBlock = ^{
         NSString *passphrase = [self databasePassphrase];
-        if (!passphrase.length) {
-            [NSException raise:@"Must have passphrase of length > 0" format:@"password length is %d.", (int)passphrase.length];
+        NSData *keyData = [passphrase dataUsingEncoding:NSUTF8StringEncoding];
+        if (!keyData.length) {
+            [NSException raise:@"Must have passphrase of length > 0" format:@"password length is %d.", (int)keyData.length];
         }
-        return passphrase;
+        return keyData;
     };
     
     NSString *databaseDirectory = [[self class] yapDatabaseDirectory];
@@ -182,12 +183,8 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
     NSString *databasePath = [[self class] yapDatabasePathWithName:name];
     
     self.database = [[YapDatabase alloc] initWithPath:databasePath
-                                     objectSerializer:NULL
-                                   objectDeserializer:NULL
-                                   metadataSerializer:NULL
-                                 metadataDeserializer:NULL
-                                      objectSanitizer:NULL
-                                    metadataSanitizer:NULL
+                                           serializer:nil
+                                         deserializer:nil
                                               options:options];
     
     self.database.defaultObjectPolicy = YapDatabasePolicyShare;
@@ -384,7 +381,7 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
     NSError *error = nil;
     [self setDatabasePassphrase:newPassphrase remember:rememeber error:&error];
     
-    BOOL success = [self.database changeEncryptionKey];
+    BOOL success = [self.database rekeyDatabase];
     if (!success) {
         [self setDatabasePassphrase:oldPassword remember:rememeber error:&error];
     } else {

@@ -1,6 +1,6 @@
 {
   "name": "gtm-http-fetcher",
-  "version": "1.0.141",
+  "version": "1.0.142",
   "summary": "Google Toolbox for Mac - HTTP Fetcher.",
   "homepage": "https://code.google.com/p/gtm-http-fetcher",
   "license": {
@@ -12,7 +12,7 @@
   },
   "source": {
     "svn": "http://gtm-http-fetcher.googlecode.com/svn/trunk/",
-    "revision": "141"
+    "revision": "142"
   },
   "source_files": "Source/GTM*.{h,m}",
   "exclude_files": "Source/GTMHTTPFetcherLogViewController.{h,m}",
