@@ -10,11 +10,19 @@
 
 #import "JSQMessagesViewController.h"
 
-@class OTRBuddy;
+@class OTRBuddy, OTRXMPPManager, OTRAccount;
 
-@interface OTRMessagesViewController : JSQMessagesViewController <UISplitViewControllerDelegate>
+@protocol OTRMessagesViewControllerProtocol <NSObject>
+
+- (void)receivedTextViewChangedNotification:(NSNotification *)notification;
+
+@end
+
+@interface OTRMessagesViewController : JSQMessagesViewController <UISplitViewControllerDelegate, OTRMessagesViewControllerProtocol>
 
 @property (nonatomic, strong) OTRBuddy *buddy;
+@property (nonatomic, strong, readonly) OTRAccount *account;
+@property (nonatomic, weak, readonly) OTRXMPPManager *xmppManager;
 
 @property (nonatomic, strong) UIButton *microphoneButton;
 @property (nonatomic, strong) UIButton *sendButton;

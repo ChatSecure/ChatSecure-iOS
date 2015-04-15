@@ -58,8 +58,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 @interface OTRMessagesViewController () <UITextViewDelegate, OTRAttachmentPickerDelegate>
 
-@property (nonatomic, strong) OTRAccount *account;
-
 @property (nonatomic, strong) YapDatabaseConnection *uiDatabaseConnection;
 @property (nonatomic, strong) YapDatabaseViewMappings *messageMappings;
 
@@ -69,8 +67,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
 @property (nonatomic, weak) id databaseConnectionDidUpdateNotificationObject;
 @property (nonatomic, weak) id didFinishGeneratingPrivateKeyNotificationObject;
 @property (nonatomic, weak) id messageStateDidChangeNotificationObject;
-
-@property (nonatomic, weak) OTRXMPPManager *xmppManager;
 
 @property (nonatomic ,strong) UIBarButtonItem *lockBarButtonItem;
 @property (nonatomic, strong) OTRLockButton *lockButton;
@@ -268,17 +264,17 @@ typedef NS_ENUM(int, OTRDropDownType) {
             self.inputToolbar.contentView.textView.text = self.buddy.composingMessageString;
 
             [self.uiDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-                self.account = [self.buddy accountWithTransaction:transaction];
+                _account = [self.buddy accountWithTransaction:transaction];
                 [self.messageMappings updateWithTransaction:transaction];
             }];
             
             if ([self.account isKindOfClass:[OTRXMPPAccount class]]) {
-                self.xmppManager = (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
+                _xmppManager = (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
             }
         } else {
             self.messageMappings = nil;
-            self.account = nil;
-            self.xmppManager = nil;
+            _account = nil;
+            _xmppManager = nil;
         }
         [self refreshTitleView];
         [self.collectionView reloadData];
@@ -719,31 +715,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (void)receivedTextViewChangedNotification:(NSNotification *)notification
 {
-    [self textViewDidChange:notification.object];
-}
-
-- (void)textViewDidChange:(UITextView *)textView
-{
-    if ([textView.text length]) {
-        self.inputToolbar.contentView.rightBarButtonItem = self.sendButton;
-        self.inputToolbar.sendButtonLocation = JSQMessagesInputSendButtonLocationRight;
-        self.inputToolbar.contentView.rightBarButtonItem.enabled = YES;
-        //typing
-        [self.xmppManager sendChatState:kOTRChatStateComposing withBuddyID:self.buddy.uniqueId];
-    }
-    else {
-        [[OTRKit sharedInstance] messageStateForUsername:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString completion:^(OTRKitMessageState messageState) {
-            if (messageState == OTRKitMessageStateEncrypted) {
-                self.inputToolbar.contentView.rightBarButtonItem = self.microphoneButton;
-                self.inputToolbar.sendButtonLocation = JSQMessagesInputSendButtonLocationNone;
-                self.inputToolbar.contentView.rightBarButtonItem.enabled = YES;
-            }
-        }];
-        
-        //done typing
-        [self.xmppManager sendChatState:kOTRChatStateActive withBuddyID:self.buddy.uniqueId];
-        
-    }
+    //implemented in subclasses
+    return;
 }
 
 #pragma - mark Sending Media Items

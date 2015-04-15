@@ -12,7 +12,10 @@
 #import "OTRAudioSessionManager.h"
 #import "OTRAudioTrashView.h"
 #import "Strings.h"
-
+#import "OTRKit.h"
+#import "OTRBuddy.h"
+#import "OTRXMPPManager.h"
+#import "OTRXMPPAccount.h"
 
 @interface OTRMessagesHoldTalkViewController () <OTRHoldToTalkViewStateDelegate, OTRAudioSessionManagerDelegate>
 
@@ -149,6 +152,43 @@
     [self.trashView removeFromSuperview];
     self.trashView = nil;
     
+}
+
+#pragma - mark JSQMessageViewController
+
+- (void)receivedTextViewChangedNotification:(NSNotification *)notification
+{
+    [self textViewDidChange:notification.object];
+}
+
+- (void)textViewDidChange:(UITextView *)textView
+{
+    if ([textView.text length]) {
+        self.inputToolbar.contentView.rightBarButtonItem = self.sendButton;
+        self.inputToolbar.sendButtonLocation = JSQMessagesInputSendButtonLocationRight;
+        self.inputToolbar.contentView.rightBarButtonItem.enabled = YES;
+        //typing
+        [self.xmppManager sendChatState:kOTRChatStateComposing withBuddyID:self.buddy.uniqueId];
+    }
+    else {
+        [[OTRKit sharedInstance] messageStateForUsername:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString completion:^(OTRKitMessageState messageState) {
+            if (messageState == OTRKitMessageStateEncrypted) {
+                
+                if ([self.hold2TalkButton superview]) {
+                     self.inputToolbar.contentView.rightBarButtonItem = self.keyboardButton;
+                } else {
+                     self.inputToolbar.contentView.rightBarButtonItem = self.microphoneButton;
+                }
+               
+                self.inputToolbar.sendButtonLocation = JSQMessagesInputSendButtonLocationNone;
+                self.inputToolbar.contentView.rightBarButtonItem.enabled = YES;
+            }
+        }];
+        
+        //done typing
+        [self.xmppManager sendChatState:kOTRChatStateActive withBuddyID:self.buddy.uniqueId];
+        
+    }
 }
 
 #pragma - mark OTRHoldToTalkViewStateDelegate
