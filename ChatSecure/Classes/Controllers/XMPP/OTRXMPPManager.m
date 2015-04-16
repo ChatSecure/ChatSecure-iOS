@@ -797,6 +797,10 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 
 - (void) connectWithPassword:(NSString *)password userInitiated:(BOOL)userInitiated
 {
+    // Don't issue a reconnect if we're already connected and authenticated
+    if ([self.xmppStream isConnected] && [self.xmppStream isAuthenticated]) {
+        return;
+    }
     self.userInitiatedConnection = userInitiated;
     [self connectWithJID:self.account.username password:password];
     if (self.userInitiatedConnection) {
