@@ -9,12 +9,14 @@
 #import <UIKit/UIKit.h>
 
 #import "JSQMessagesViewController.h"
+#import "OTRKit.h"
 
 @class OTRBuddy, OTRXMPPManager, OTRAccount;
 
 @protocol OTRMessagesViewControllerProtocol <NSObject>
 
 - (void)receivedTextViewChangedNotification:(NSNotification *)notification;
+- (void)setupAccessoryButtonsWithMessageState:(OTRKitMessageState)messageState;
 
 @end
 

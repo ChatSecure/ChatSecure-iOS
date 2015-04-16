@@ -476,22 +476,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
                                 self.lockButton.lockStatus = OTRLockStatusUnlocked;
                             }
                             
-                            
-                            //set correct camera and microphone
-                            if (messageState == OTRKitMessageStateEncrypted) {
-                                if (![self.inputToolbar.contentView.textView.text length]) {
-                                    self.inputToolbar.sendButtonLocation = JSQMessagesInputSendButtonLocationNone;
-                                    self.inputToolbar.contentView.rightBarButtonItem = self.microphoneButton;
-                                    self.inputToolbar.contentView.rightBarButtonItem.enabled = YES;
-                                    
-                                }
-                                self.inputToolbar.contentView.leftBarButtonItem = self.cameraButton;
-                            }
-                            else {
-                                self.inputToolbar.contentView.rightBarButtonItem = self.sendButton;
-                                self.inputToolbar.sendButtonLocation = JSQMessagesInputSendButtonLocationRight;
-                                self.inputToolbar.contentView.leftBarButtonItem = nil;
-                            }
+                            [self setupAccessoryButtonsWithMessageState:messageState];
                         }];
                     }];
                 }];
@@ -584,6 +569,13 @@ typedef NS_ENUM(int, OTRDropDownType) {
             }];
         }];
     }];
+}
+
+- (void)setupAccessoryButtonsWithMessageState:(OTRKitMessageState)messageState
+{
+    self.inputToolbar.contentView.rightBarButtonItem = self.sendButton;
+    self.inputToolbar.sendButtonLocation = JSQMessagesInputSendButtonLocationRight;
+    self.inputToolbar.contentView.leftBarButtonItem = nil;
 }
 
 - (void)connectButtonPressed:(id)sender

@@ -191,6 +191,33 @@
     }
 }
 
+- (void)setupAccessoryButtonsWithMessageState:(OTRKitMessageState)messageState
+{
+    //set correct camera and microphone
+    if (messageState == OTRKitMessageStateEncrypted) {
+        if (![self.inputToolbar.contentView.textView.text length]) {
+            
+            if ([self.hold2TalkButton superview]) {
+                self.inputToolbar.contentView.rightBarButtonItem = self.keyboardButton;
+            } else {
+                self.inputToolbar.contentView.rightBarButtonItem = self.microphoneButton;
+            }
+            
+            self.inputToolbar.sendButtonLocation = JSQMessagesInputSendButtonLocationNone;
+            self.inputToolbar.contentView.rightBarButtonItem.enabled = YES;
+        }
+        self.inputToolbar.contentView.leftBarButtonItem = self.cameraButton;
+    }
+    else {
+        [self removePush2TalkButton];
+        [self removeRecordingBackgroundView];
+        [self removeTrashViewItems];
+        self.inputToolbar.contentView.rightBarButtonItem = self.sendButton;
+        self.inputToolbar.sendButtonLocation = JSQMessagesInputSendButtonLocationRight;
+        self.inputToolbar.contentView.leftBarButtonItem = nil;
+    }
+}
+
 #pragma - mark OTRHoldToTalkViewStateDelegate
 
 - (void)didBeginTouch:(OTRHoldToTalkView *)view
