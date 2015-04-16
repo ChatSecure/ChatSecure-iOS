@@ -12,8 +12,11 @@
 
 @protocol OTRAudioSessionManagerDelegate <NSObject>
 
+@optional
 - (void)audioSession:(OTRAudioSessionManager *)audioSessionManager didFinishWithError:(NSError *)error;
 - (void)audioSessionDidStartPlaying:(OTRAudioSessionManager *)sessionManager;
+
+- (void)audioSession:(OTRAudioSessionManager *)audioSessionManager didUpdateRecordingDecibel:(double)decibel;
 @end
 
 @interface OTRAudioSessionManager : NSObject

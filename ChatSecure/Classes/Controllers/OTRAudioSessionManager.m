@@ -16,6 +16,8 @@
 @property (nonatomic, strong) AVAudioRecorder *currentRecorder;
 @property (nonatomic, strong) AVPlayer *currentPlayer;
 
+@property (nonatomic, strong) NSTimer *recordDecibelTimer;
+
 @end
 
 @implementation OTRAudioSessionManager
@@ -133,19 +135,34 @@
     }
     
     self.currentRecorder = [self audioRecorderWithURL:url error:error];
+    
     if (error) {
         return;
     }
+    
+    self.currentRecorder.meteringEnabled = YES;
+    self.recordDecibelTimer = [NSTimer scheduledTimerWithTimeInterval:0.03 target:self selector:@selector(updateDecibelRecording:) userInfo:nil repeats:YES];
     
     [self.currentRecorder record];
 }
 
 - (void)stopRecording
 {
+    [self.recordDecibelTimer invalidate];
+    self.recordDecibelTimer = nil;
     [self.currentRecorder stop];
     self.currentRecorder = nil;
     [self deactivateSession:nil];
     
+}
+
+- (void)updateDecibelRecording:(id)sender
+{
+    [self.currentRecorder updateMeters];
+    double decibles = [self.currentRecorder averagePowerForChannel:0];
+    if ([self.delegate respondsToSelector:@selector(audioSession:didUpdateRecordingDecibel:)]) {
+        [self.delegate audioSession:self didUpdateRecordingDecibel:decibles];
+    }
 }
 
 - (NSTimeInterval)currentTimeRecordTime

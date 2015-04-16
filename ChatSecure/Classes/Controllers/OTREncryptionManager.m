@@ -29,7 +29,7 @@
 #import "OTRUtilities.h"
 #import "Strings.h"
 #import "OTRAppDelegate.h"
-#import "OTRMessagesViewController.h"
+#import "OTRMessagesHoldTalkViewController.h"
 #import "UIViewController+ChatSecure.h"
 #import "OTRImageItem.h"
 #import "OTRAudioItem.h"

@@ -24,7 +24,7 @@
 
 #import "OTRConversationViewController.h"
 
-#import "OTRMessagesViewController.h"
+#import "OTRMessagesHoldTalkViewController.h"
 #import "Strings.h"
 #import "OTRSettingsViewController.h"
 #import "OTRSettingsManager.h"
@@ -91,7 +91,7 @@
     
     self.settingsViewController = [[OTRSettingsViewController alloc] init];
     self.conversationViewController = [[OTRConversationViewController alloc] init];
-    self.messagesViewController = [OTRMessagesViewController messagesViewController];
+    self.messagesViewController = [OTRMessagesHoldTalkViewController messagesViewController];
     
     if ([OTRDatabaseManager existsYapDatabase] && ![[OTRDatabaseManager sharedInstance] hasPassphrase]) {
         // user needs to enter password for current database
