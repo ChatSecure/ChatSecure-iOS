@@ -41,7 +41,6 @@
 #import "OTRAudioControlsView.h"
 #import "OTRPlayPauseProgressView.h"
 #import "OTRAudioPlaybackController.h"
-#import "OTRAudioRecorderViewController.h"
 #import "OTRMediaFileManager.h"
 #import "OTRMediaServer.h"
 #import "UIImage+ChatSecure.h"
@@ -57,9 +56,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     OTRDropDownTypePush          = 2
 };
 
-@interface OTRMessagesViewController () <UITextViewDelegate, OTRAttachmentPickerDelegate, OTRAudioRecorderViewControllerDelegate>
-
-@property (nonatomic, strong) OTRAccount *account;
+@interface OTRMessagesViewController () <UITextViewDelegate, OTRAttachmentPickerDelegate>
 
 @property (nonatomic, strong) YapDatabaseConnection *uiDatabaseConnection;
 @property (nonatomic, strong) YapDatabaseViewMappings *messageMappings;
@@ -71,16 +68,10 @@ typedef NS_ENUM(int, OTRDropDownType) {
 @property (nonatomic, weak) id didFinishGeneratingPrivateKeyNotificationObject;
 @property (nonatomic, weak) id messageStateDidChangeNotificationObject;
 
-@property (nonatomic, weak) OTRXMPPManager *xmppManager;
-
 @property (nonatomic ,strong) UIBarButtonItem *lockBarButtonItem;
 @property (nonatomic, strong) OTRLockButton *lockButton;
 @property (nonatomic, strong) OTRButtonView *buttonDropdownView;
 @property (nonatomic, strong) OTRTitleSubtitleView *titleView;
-
-@property (nonatomic, strong) UIButton *microphoneButton;
-@property (nonatomic, strong) UIButton *sendButton;
-@property (nonatomic, strong) UIButton *cameraButton;
 
 @property (nonatomic, strong) OTRAttachmentPicker *attachmentPicker;
 @property (nonatomic, strong) OTRAudioPlaybackController *audioPlaybackController;
@@ -273,17 +264,17 @@ typedef NS_ENUM(int, OTRDropDownType) {
             self.inputToolbar.contentView.textView.text = self.buddy.composingMessageString;
 
             [self.uiDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-                self.account = [self.buddy accountWithTransaction:transaction];
+                _account = [self.buddy accountWithTransaction:transaction];
                 [self.messageMappings updateWithTransaction:transaction];
             }];
             
             if ([self.account isKindOfClass:[OTRXMPPAccount class]]) {
-                self.xmppManager = (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
+                _xmppManager = (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
             }
         } else {
             self.messageMappings = nil;
-            self.account = nil;
-            self.xmppManager = nil;
+            _account = nil;
+            _xmppManager = nil;
         }
         [self refreshTitleView];
         [self.collectionView reloadData];
@@ -485,22 +476,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
                                 self.lockButton.lockStatus = OTRLockStatusUnlocked;
                             }
                             
-                            
-                            //set correct camera and microphone
-                            if (messageState == OTRKitMessageStateEncrypted) {
-                                if (![self.inputToolbar.contentView.textView.text length]) {
-                                    self.inputToolbar.sendButtonLocation = JSQMessagesInputSendButtonLocationNone;
-                                    self.inputToolbar.contentView.rightBarButtonItem = self.microphoneButton;
-                                    self.inputToolbar.contentView.rightBarButtonItem.enabled = YES;
-                                    
-                                }
-                                self.inputToolbar.contentView.leftBarButtonItem = self.cameraButton;
-                            }
-                            else {
-                                self.inputToolbar.contentView.rightBarButtonItem = self.sendButton;
-                                self.inputToolbar.sendButtonLocation = JSQMessagesInputSendButtonLocationRight;
-                                self.inputToolbar.contentView.leftBarButtonItem = nil;
-                            }
+                            [self setupAccessoryButtonsWithMessageState:messageState];
                         }];
                     }];
                 }];
@@ -593,6 +569,13 @@ typedef NS_ENUM(int, OTRDropDownType) {
             }];
         }];
     }];
+}
+
+- (void)setupAccessoryButtonsWithMessageState:(OTRKitMessageState)messageState
+{
+    self.inputToolbar.contentView.rightBarButtonItem = self.sendButton;
+    self.inputToolbar.sendButtonLocation = JSQMessagesInputSendButtonLocationRight;
+    self.inputToolbar.contentView.leftBarButtonItem = nil;
 }
 
 - (void)connectButtonPressed:(id)sender
@@ -724,31 +707,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (void)receivedTextViewChangedNotification:(NSNotification *)notification
 {
-    [self textViewDidChange:notification.object];
-}
-
-- (void)textViewDidChange:(UITextView *)textView
-{
-    if ([textView.text length]) {
-        self.inputToolbar.contentView.rightBarButtonItem = self.sendButton;
-        self.inputToolbar.sendButtonLocation = JSQMessagesInputSendButtonLocationRight;
-        self.inputToolbar.contentView.rightBarButtonItem.enabled = YES;
-        //typing
-        [self.xmppManager sendChatState:kOTRChatStateComposing withBuddyID:self.buddy.uniqueId];
-    }
-    else {
-        [[OTRKit sharedInstance] messageStateForUsername:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString completion:^(OTRKitMessageState messageState) {
-            if (messageState == OTRKitMessageStateEncrypted) {
-                self.inputToolbar.contentView.rightBarButtonItem = self.microphoneButton;
-                self.inputToolbar.sendButtonLocation = JSQMessagesInputSendButtonLocationNone;
-                self.inputToolbar.contentView.rightBarButtonItem.enabled = YES;
-            }
-        }];
-        
-        //done typing
-        [self.xmppManager sendChatState:kOTRChatStateActive withBuddyID:self.buddy.uniqueId];
-        
-    }
+    //implemented in subclasses
+    return;
 }
 
 #pragma - mark Sending Media Items
@@ -911,17 +871,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (void)didPressAccessoryButton:(UIButton *)sender
 {
-    if ([sender isEqual:self.microphoneButton]) {
-        
-        OTRAudioRecorderViewController *recorderViewController = [[OTRAudioRecorderViewController alloc] init];
-        recorderViewController.delegate = self;
-        CGRect rectInWindow = [self.microphoneButton convertRect:self.microphoneButton.frame toView:nil];
-        [recorderViewController showAudioRecorderFromViewController:self animated:YES fromMicrophoneRectInWindow:rectInWindow];
-        
-    } else if ([sender isEqual:self.cameraButton]) {
+    if ([sender isEqual:self.cameraButton]) {
         [self.attachmentPicker showAlertControllerWithCompletion:nil];
     }
-    
 }
 
 - (void)collectionView:(UICollectionView *)collectionView performAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender
@@ -1015,9 +967,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }];
 }
 
-#pragma - mark OTRAudioRecorderViewControllerDelegate Methods
-
-- (void)audioRecorder:(OTRAudioRecorderViewController *)audioRecorder gotAudioURL:(NSURL *)url
+- (void)sendAudioFileURL:(NSURL *)url
 {
     __block OTRMessage *message = [[OTRMessage alloc] init];
     message.incoming = NO;

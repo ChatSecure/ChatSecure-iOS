@@ -950,6 +950,17 @@
     "FACEBOOK_REMOVED_MESSAGE_STRING" : {
         "comment": "Message for when facebook accounts removed",
         "string": "Facebook has remmoved acces to the chat API"
+    },
+    "HOLD_TO_TALK_STRING" : {
+        "comment": "Label for button to hold to record audio",
+        "string": "Hold to talk"
+    },
+    "RELEASE_TO_SEND_STRING" : {
+        "comment": "Label for instruction to send current audio",
+        "string": "Release to send"
+    },
+    "RELEASE_TO_DELETE_STRING" : {
+        "comment": "Label for instruction to delete current recording",
+        "string": "Release to delete"
     }
-
 }
