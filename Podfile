@@ -46,7 +46,7 @@ pod 'CRToast', :git => 'https://github.com/cruffenach/CRToast', :commit => '7856
 
 # Forks
 pod 'SIAlertView', :git => 'https://github.com/ChatSecure/SIAlertView.git', :branch => 'attributedText'
-pod 'JSQMessagesViewController', :git => 'https://github.com/davidchiles/JSQMessagesViewController', :commit => 'a327445a586306a7d1b21043f1e5bd3d9c964594'
+pod 'JSQMessagesViewController', :git => 'https://github.com/ChatSecure/JSQMessagesViewController', :branch => 'toolbar-fixes'
 
 # Submodules
 pod 'ProxyKit/Client', :path => 'Submodules/ProxyKit/ProxyKit.podspec'

@@ -259,8 +259,8 @@ DEPENDENCIES:
   - gtm-oauth2 (from `Podspecs/gtm-oauth2.podspec.json`)
   - HockeySDK (~> 3.6)
   - IOCipher/GCDWebServer (from `Submodules/IOCipher/IOCipher.podspec`)
-  - JSQMessagesViewController (from `https://github.com/davidchiles/JSQMessagesViewController`,
-    commit `a327445a586306a7d1b21043f1e5bd3d9c964594`)
+  - JSQMessagesViewController (from `https://github.com/ChatSecure/JSQMessagesViewController`,
+    branch `toolbar-fixes`)
   - JTSImageViewController (~> 1.4)
   - JTTargetActionBlock (~> 1.0)
   - JVFloatLabeledTextField (~> 1.0)
@@ -297,8 +297,8 @@ EXTERNAL SOURCES:
   IOCipher:
     :path: Submodules/IOCipher/IOCipher.podspec
   JSQMessagesViewController:
-    :commit: a327445a586306a7d1b21043f1e5bd3d9c964594
-    :git: https://github.com/davidchiles/JSQMessagesViewController
+    :branch: toolbar-fixes
+    :git: https://github.com/ChatSecure/JSQMessagesViewController
   OTRKit:
     :path: Submodules/OTRKit/OTRKit.podspec
   ProxyKit:
@@ -318,8 +318,8 @@ CHECKOUT OPTIONS:
     :commit: 78569d0e6e6704872af5db1bc37be0ff9d112ac0
     :git: https://github.com/cruffenach/CRToast
   JSQMessagesViewController:
-    :commit: a327445a586306a7d1b21043f1e5bd3d9c964594
-    :git: https://github.com/davidchiles/JSQMessagesViewController
+    :commit: b9dc5203781fa6fa62398168abea8b4476a516a6
+    :git: https://github.com/ChatSecure/JSQMessagesViewController
   SIAlertView:
     :commit: e9a1a7d7d5a2a4ef5ff2e2e548644222b14edb27
     :git: https://github.com/ChatSecure/SIAlertView.git
