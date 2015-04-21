@@ -446,6 +446,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 -(void)updateEncryptionState
 {
+    if (!self.account) {
+        return;
+    }
     [[OTRKit sharedInstance] checkIfGeneratingKeyForAccountName:self.account.username protocol:self.account.protocolTypeString completion:^(BOOL isGeneratingKey) {
         if( isGeneratingKey) {
             [self addLockSpinner];
@@ -1022,15 +1025,29 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (NSString *)senderDisplayName
 {
-    if ([self.account.displayName length]) {
-        return self.account.displayName;
+    NSString *senderDisplayName = nil;
+    if (self.account) {
+        if ([self.account.displayName length]) {
+            senderDisplayName = self.account.displayName;
+        } else {
+            senderDisplayName = self.account.username;
+        }
+    } else {
+        senderDisplayName = @"";
     }
-    return self.account.username;
+    
+    return senderDisplayName;
 }
 
 - (NSString *)senderId
 {
-    return self.account.uniqueId;
+    NSString *senderId = nil;
+    if (self.account) {
+        senderId = self.account.uniqueId;
+    } else {
+        senderId = @"";
+    }
+    return senderId;
 }
 
 - (id<JSQMessageData>)collectionView:(JSQMessagesCollectionView *)collectionView messageDataForItemAtIndexPath:(NSIndexPath *)indexPath
