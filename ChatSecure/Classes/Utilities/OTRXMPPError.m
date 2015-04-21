@@ -40,6 +40,8 @@ NSString *const OTRXMPPSSLHostnameKey             = @"OTRXMPPSSLHostnameKey";
     NSMutableDictionary * userInfo = [NSMutableDictionary dictionary];
     if (errorString) {
         [userInfo setObject:errorString forKey:NSLocalizedDescriptionKey];
+    } else if (xmlError) {
+        [userInfo setObject:xmlError.stringValue forKey:NSLocalizedDescriptionKey];
     }
     
     if(xmlError)
