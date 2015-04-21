@@ -163,7 +163,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     OTRComposeViewController * composeViewController = [[OTRComposeViewController alloc] init];
     composeViewController.delegate = self;
     UINavigationController * modalNavigationController = [[UINavigationController alloc] initWithRootViewController:composeViewController];
-    //modalNavigationController.modalPresentationStyle = UIModalTransitionStyleCoverVertical;
+    modalNavigationController.modalPresentationStyle = UIModalPresentationFormSheet;
     
     [self presentViewController:modalNavigationController animated:YES completion:nil];
 }
@@ -254,7 +254,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 {
     OTRSubscriptionRequestsViewController *viewController = [[OTRSubscriptionRequestsViewController alloc] init];
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:viewController];
-
+    navController.modalPresentationStyle = UIModalPresentationFormSheet;
     [self.navigationController presentViewController:navController animated:YES completion:nil];
 }
 
