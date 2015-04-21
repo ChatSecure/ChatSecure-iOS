@@ -1,23 +1,23 @@
 PODS:
-  - AFNetworking (2.5.2):
-    - AFNetworking/NSURLConnection (= 2.5.2)
-    - AFNetworking/NSURLSession (= 2.5.2)
-    - AFNetworking/Reachability (= 2.5.2)
-    - AFNetworking/Security (= 2.5.2)
-    - AFNetworking/Serialization (= 2.5.2)
-    - AFNetworking/UIKit (= 2.5.2)
-  - AFNetworking/NSURLConnection (2.5.2):
+  - AFNetworking (2.5.3):
+    - AFNetworking/NSURLConnection (= 2.5.3)
+    - AFNetworking/NSURLSession (= 2.5.3)
+    - AFNetworking/Reachability (= 2.5.3)
+    - AFNetworking/Security (= 2.5.3)
+    - AFNetworking/Serialization (= 2.5.3)
+    - AFNetworking/UIKit (= 2.5.3)
+  - AFNetworking/NSURLConnection (2.5.3):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/NSURLSession (2.5.2):
+  - AFNetworking/NSURLSession (2.5.3):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/Reachability (2.5.2)
-  - AFNetworking/Security (2.5.2)
-  - AFNetworking/Serialization (2.5.2)
-  - AFNetworking/UIKit (2.5.2):
+  - AFNetworking/Reachability (2.5.3)
+  - AFNetworking/Security (2.5.3)
+  - AFNetworking/Serialization (2.5.3)
+  - AFNetworking/UIKit (2.5.3):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
   - Appirater (2.0.4)
@@ -52,7 +52,7 @@ PODS:
   - IOCipher/GCDWebServer (0.1.0):
     - GCDWebServer
     - IOCipher/common
-  - JSQMessagesViewController (7.0.0):
+  - JSQMessagesViewController (7.0.1):
     - JSQSystemSoundPlayer (~> 2.0.1)
   - JSQSystemSoundPlayer (2.0.1)
   - JTSImageViewController (1.4)
@@ -260,7 +260,7 @@ DEPENDENCIES:
   - HockeySDK (~> 3.6)
   - IOCipher/GCDWebServer (from `Submodules/IOCipher/IOCipher.podspec`)
   - JSQMessagesViewController (from `https://github.com/ChatSecure/JSQMessagesViewController`,
-    branch `send_button_location`)
+    branch `7.0.1-send_button`)
   - JTSImageViewController (~> 1.4)
   - JTTargetActionBlock (~> 1.0)
   - JVFloatLabeledTextField (~> 1.0)
@@ -297,7 +297,7 @@ EXTERNAL SOURCES:
   IOCipher:
     :path: Submodules/IOCipher/IOCipher.podspec
   JSQMessagesViewController:
-    :branch: send_button_location
+    :branch: 7.0.1-send_button
     :git: https://github.com/ChatSecure/JSQMessagesViewController
   OTRKit:
     :path: Submodules/OTRKit/OTRKit.podspec
@@ -318,14 +318,14 @@ CHECKOUT OPTIONS:
     :commit: 78569d0e6e6704872af5db1bc37be0ff9d112ac0
     :git: https://github.com/cruffenach/CRToast
   JSQMessagesViewController:
-    :commit: a327445a586306a7d1b21043f1e5bd3d9c964594
+    :commit: 4008dfffa65ab8f14c01b95d19ebe2825adce49e
     :git: https://github.com/ChatSecure/JSQMessagesViewController
   SIAlertView:
     :commit: e9a1a7d7d5a2a4ef5ff2e2e548644222b14edb27
     :git: https://github.com/ChatSecure/SIAlertView.git
 
 SPEC CHECKSUMS:
-  AFNetworking: fefbce9660acb17f48ae0011292d4da0f457bf36
+  AFNetworking: e1d86c2a96bb5d2e7408da36149806706ee122fe
   Appirater: 8783318c36414e8de3ea023443028df94c1b784b
   ARChromeActivity: 9064d94803338d3377f3e1013a8e8f4821d7daf1
   BBlock: 11c666b6898c074eceb40fa56a901b96415ebf68
@@ -339,7 +339,7 @@ SPEC CHECKSUMS:
   gtm-oauth2: 3a9a46400b8d7ee916807550e0902c4a4db11167
   HockeySDK: 51ade1aff04463137e852797d2eb4dfb2511d6a9
   IOCipher: 2bcc56103fbdd9cd9139a5b030ebb97ed6fbc4b9
-  JSQMessagesViewController: 9fd7e9ac96e9fc91f2deca86928e2cc916aeebaa
+  JSQMessagesViewController: 03fba8a3021a3ddc1c91847f180ffe549f2e8cf2
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
   JTSImageViewController: 6a367b144e257db02cdfacdba78d684377d3777b
   JTTargetActionBlock: 6e9201e5fa88651deb354c91b7c9c6487a1abe55
