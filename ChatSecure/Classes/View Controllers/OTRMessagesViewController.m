@@ -914,6 +914,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
             imageItem.filename = [UUID stringByAppendingPathExtension:@"jpg"];
             
             __block OTRMessage *message = [[OTRMessage alloc] init];
+            message.read = YES;
             message.incoming = NO;
             message.buddyUniqueId = self.buddy.uniqueId;
             message.mediaItemUniqueId = imageItem.uniqueId;
@@ -944,6 +945,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     __block OTRVideoItem *videoItem = [OTRVideoItem videoItemWithFileURL:videoURL];
     
     __block OTRMessage *message = [[OTRMessage alloc] init];
+    message.read = YES;
     message.incoming = NO;
     message.mediaItemUniqueId = videoItem.uniqueId;
     message.buddyUniqueId = self.buddy.uniqueId;
@@ -975,6 +977,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 - (void)sendAudioFileURL:(NSURL *)url
 {
     __block OTRMessage *message = [[OTRMessage alloc] init];
+    message.read = YES;
     message.incoming = NO;
     message.buddyUniqueId = self.buddy.uniqueId;
     
@@ -1116,6 +1119,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
     UIFont *font = [UIFont fontWithName:kFontAwesomeFont size:12];
     NSDictionary *iconAttributes = @{NSFontAttributeName: font};
     
+    
+    ////// Lock Icon //////
     NSString *lockString = nil;
     if (message.transportedSecurely) {
         lockString = [NSString stringWithFormat:@"%@ ",[NSString fa_stringForFontAwesomeIcon:FALock]];
@@ -1126,11 +1131,31 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:lockString attributes:iconAttributes];
     
-    
+    ////// Delivered Icon //////
     if (message.isDelivered) {
         NSString *iconString = [NSString stringWithFormat:@"%@ ",[NSString fa_stringForFontAwesomeIcon:FACheck]];
         
         [attributedString appendAttributedString:[[NSAttributedString alloc] initWithString:iconString attributes:iconAttributes]];
+    }
+    else if([message isMediaMessage] && ![message isIncoming]) {
+        
+        __block OTRMediaItem *mediaItem = nil;
+        //Get the media item
+        [self.uiDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+            mediaItem = [OTRMediaItem fetchObjectWithUniqueID:message.mediaItemUniqueId transaction:transaction];
+        }];
+        
+        float percentProgress = mediaItem.transferProgress * 100;
+        
+        NSString *progressString = nil;
+        
+        if(percentProgress > 0) {
+            progressString = [NSString stringWithFormat:@"%@ %.0f%% ",SENDING_STRING,percentProgress];
+        } else {
+            progressString = [NSString stringWithFormat:@"%@ ",WAITING_STRING];
+        }
+        UIFont *font = [UIFont systemFontOfSize:12];
+        [attributedString insertAttributedString:[[NSAttributedString alloc] initWithString:progressString attributes:@{NSFontAttributeName: font}] atIndex:0];
     }
     
     return attributedString;

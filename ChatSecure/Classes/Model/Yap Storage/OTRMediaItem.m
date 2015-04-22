@@ -16,12 +16,24 @@
 
 @implementation OTRMediaItem
 
+- (instancetype) init {
+    if (self = [super init]) {
+        self.transferProgress = 0;
+    }
+    return self;
+}
+
+- (void)touchParentMessageWithTransaction:(YapDatabaseReadWriteTransaction *)transaction
+{
+    [[transaction ext:OTRYapDatabaseRelationshipName] enumerateEdgesWithName:OTRMessageEdges.media destinationKey:self.uniqueId collection:[[self class] collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
+        [transaction touchObjectForKey:edge.sourceKey inCollection:edge.sourceCollection];
+    }];
+}
+
 - (void)touchParentMessage
 {
     [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        [[transaction ext:OTRYapDatabaseRelationshipName] enumerateEdgesWithName:OTRMessageEdges.media destinationKey:self.uniqueId collection:[[self class] collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
-            [transaction touchObjectForKey:edge.sourceKey inCollection:edge.sourceCollection];
-        }];
+        [self touchParentMessageWithTransaction:transaction];
     }];
 }
 

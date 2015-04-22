@@ -962,5 +962,13 @@
     "RELEASE_TO_DELETE_STRING" : {
         "comment": "Label for instruction to delete current recording",
         "string": "Release to delete"
+    }, 
+    "WAITING_STRING" : {
+        "comment": "Label text for when a transfer has not started yet",
+        "string": "Waiting"
+    },
+    "SENDING_STRING" : {
+        "comment": "Label text for when a transfer is in progress (normally followed by a percent value 34%)",
+        "string": "Sending"
     }
 }

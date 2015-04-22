@@ -273,6 +273,7 @@
 {
     return @{AVFormatIDKey: @(kAudioFormatMPEG4AAC),
              AVSampleRateKey: @(16000),
-             AVNumberOfChannelsKey: @(1)};
+             AVNumberOfChannelsKey: @(1),
+             AVEncoderBitRatePerChannelKey: @(16000)};
 }
 @end

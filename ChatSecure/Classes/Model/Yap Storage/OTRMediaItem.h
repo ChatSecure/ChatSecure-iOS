@@ -16,7 +16,10 @@
 @property (nonatomic, strong) NSString *filename;
 @property (nonatomic) BOOL isIncoming;
 
+@property (nonatomic) float transferProgress;
+
 - (void)touchParentMessage;
+- (void)touchParentMessageWithTransaction:(YapDatabaseReadWriteTransaction *)transaction;
 - (OTRMessage *)parentMessageInTransaction:(YapDatabaseReadTransaction *)readTransaction;
 
 + (CGSize)normalizeWidth:(CGFloat)width height:(CGFloat)height;

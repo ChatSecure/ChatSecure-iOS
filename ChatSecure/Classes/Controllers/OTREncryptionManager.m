@@ -432,6 +432,14 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
            progress:(float)progress {
     DDLogInfo(@"[OTRDATA]file transfer %@ progress: %f", transfer.transferId, progress);
     
+    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        OTRMessage *tagMessage = transfer.tag;
+        OTRMediaItem *mediaItem = [OTRMediaItem fetchObjectWithUniqueID:tagMessage.mediaItemUniqueId transaction:transaction];
+        mediaItem.transferProgress = progress;
+        [mediaItem saveWithTransaction:transaction];
+        [mediaItem touchParentMessageWithTransaction:transaction];
+    }];
+    
 }
 
 - (void)dataHandler:(OTRDataHandler*)dataHandler
@@ -456,6 +464,11 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
         message.incoming = YES;
         message.buddyUniqueId = parentMessage.buddyUniqueId;
         message.transportedSecurely = YES;
+        
+        if ([[OTRAppDelegate appDelegate].messagesViewController otr_isVisible] && [[OTRAppDelegate appDelegate].messagesViewController.buddy.uniqueId isEqualToString:message.buddyUniqueId])
+        {
+            message.read = YES;
+        }
         
         if (imageRange.location != NSNotFound) {
             

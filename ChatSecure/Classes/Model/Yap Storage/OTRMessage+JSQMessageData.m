@@ -63,7 +63,7 @@
 
 - (BOOL)isMediaMessage
 {
-    if (self.mediaItemUniqueId) {
+    if ([self.mediaItemUniqueId length]) {
         return YES;
     }
     return NO;
