@@ -73,6 +73,7 @@
 #define RECENT_STRING [OTRLanguageManager translatedString: @"Recent"]
 #define errSSLBufferOverflowString [OTRLanguageManager translatedString: @"Insufficient buffer provided"]
 #define COPY_STRING [OTRLanguageManager translatedString: @"Copy"]
+#define INCOMING_STRING [OTRLanguageManager translatedString: @"Incoming"]
 #define CONNECTING_STRING [OTRLanguageManager translatedString: @"Connecting"]
 #define LOCKED_WARN_STRING [OTRLanguageManager translatedString: @"The fingerprint has not been verified"]
 #define UNLOCK_STRING [OTRLanguageManager translatedString: @"Unlock"]

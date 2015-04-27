@@ -425,6 +425,42 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     
     // for now, just accept all incoming files
     [dataHandler startIncomingTransfer:transfer];
+    //Create placeholder for updating progress
+    
+    OTRMessage *newMessage = [((OTRMessage *)transfer.tag) copy];
+    newMessage.transportedSecurely = YES;
+    newMessage.text = nil;
+    
+    NSRange imageRange = [transfer.mimeType rangeOfString:@"image"];
+    NSRange audioRange = [transfer.mimeType rangeOfString:@"audio"];
+    NSRange videoRange = [transfer.mimeType rangeOfString:@"video"];
+    
+    OTRMediaItem *mediaItem = nil;
+    if(audioRange.location == 0) {
+        mediaItem = [[OTRAudioItem alloc] init];
+        
+    } else if (imageRange.location == 0) {
+        mediaItem = [[OTRImageItem alloc] init];
+        
+    } else if (videoRange.location == 0) {
+        mediaItem = [[OTRVideoItem alloc] init];
+    }
+    
+    mediaItem.filename = transfer.fileName;
+    mediaItem.isIncoming = YES;
+    newMessage.mediaItemUniqueId = mediaItem.uniqueId;
+    
+    if ([[OTRAppDelegate appDelegate].messagesViewController otr_isVisible] && [[OTRAppDelegate appDelegate].messagesViewController.buddy.uniqueId isEqualToString:newMessage.buddyUniqueId])
+    {
+        newMessage.read = YES;
+    }
+    
+    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        [newMessage saveWithTransaction:transaction];
+        [mediaItem saveWithTransaction:transaction];
+    }];
+    
+    
 }
 
 - (void)dataHandler:(OTRDataHandler*)dataHandler
@@ -434,7 +470,8 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         OTRMessage *tagMessage = transfer.tag;
-        OTRMediaItem *mediaItem = [OTRMediaItem fetchObjectWithUniqueID:tagMessage.mediaItemUniqueId transaction:transaction];
+        OTRMessage *databaseMessage = [OTRMessage fetchObjectWithUniqueID:tagMessage.uniqueId transaction:transaction];
+        OTRMediaItem *mediaItem = [OTRMediaItem fetchObjectWithUniqueID:databaseMessage.mediaItemUniqueId transaction:transaction];
         mediaItem.transferProgress = progress;
         [mediaItem saveWithTransaction:transaction];
         [mediaItem touchParentMessageWithTransaction:transaction];
@@ -454,53 +491,25 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
         }];
     }
     else if ([transfer isKindOfClass:[OTRDataIncomingTransfer class]]) {
-        NSRange imageRange = [transfer.mimeType rangeOfString:@"image"];
-        NSRange audioRange = [transfer.mimeType rangeOfString:@"audio"];
-        NSRange videoRange = [transfer.mimeType rangeOfString:@"video"];
         
-        OTRMessage *parentMessage = transfer.tag;
+        __block OTRMessage *tagMessage = transfer.tag;
         
-        OTRMessage *message = [[OTRMessage alloc] init];
-        message.incoming = YES;
-        message.buddyUniqueId = parentMessage.buddyUniqueId;
-        message.transportedSecurely = YES;
+        __block OTRMessage *message = nil;
+        __block OTRMediaItem *mediaItem = nil;
         
-        if ([[OTRAppDelegate appDelegate].messagesViewController otr_isVisible] && [[OTRAppDelegate appDelegate].messagesViewController.buddy.uniqueId isEqualToString:message.buddyUniqueId])
-        {
-            message.read = YES;
-        }
+        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+            message = [OTRMessage fetchObjectWithUniqueID:tagMessage.uniqueId transaction:transaction];
+            mediaItem = [OTRMediaItem fetchObjectWithUniqueID:message.mediaItemUniqueId transaction:transaction];
+        }];
         
-        if (imageRange.location != NSNotFound) {
+        mediaItem.transferProgress = 1;
+        
+        if ([mediaItem isKindOfClass:[OTRAudioItem class]]) {
+            OTRAudioItem *audioItem = (OTRAudioItem *)mediaItem;
             
-            UIImage *tempImage = [UIImage imageWithData:transfer.fileData];
-            OTRImageItem *imageItem = [[OTRImageItem alloc] init];
-            imageItem.width = tempImage.size.width;
-            imageItem.height = tempImage.size.height;
-            imageItem.isIncoming = YES;
-            imageItem.filename = transfer.fileName;
-            
-            message.mediaItemUniqueId = imageItem.uniqueId;
-            
-            [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-                [message saveWithTransaction:transaction];
-                [imageItem saveWithTransaction:transaction];
-            } completionBlock:^{
-                [[OTRMediaFileManager sharedInstance] setData:transfer.fileData forItem:imageItem buddyUniqueId:parentMessage.buddyUniqueId completion:^(NSInteger bytesWritten, NSError *error) {
-                    [imageItem touchParentMessage];
-                } completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
-            }];
-        }
-        else if (audioRange.location != NSNotFound) {
-            
-            OTRAudioItem *audioItem = [[OTRAudioItem alloc] init];
-            audioItem.filename = transfer.fileName;
-            audioItem.isIncoming = YES;
-            
-            message.mediaItemUniqueId = audioItem.uniqueId;
-            
-            [[OTRMediaFileManager sharedInstance] setData:transfer.fileData forItem:audioItem buddyUniqueId:parentMessage.buddyUniqueId completion:^(NSInteger bytesWritten, NSError *error) {
+            [[OTRMediaFileManager sharedInstance] setData:transfer.fileData forItem:audioItem buddyUniqueId:message.buddyUniqueId completion:^(NSInteger bytesWritten, NSError *error) {
                 
-                NSURL *url = [[OTRMediaServer sharedInstance] urlForMediaItem:audioItem buddyUniqueId:parentMessage.buddyUniqueId];
+                NSURL *url = [[OTRMediaServer sharedInstance] urlForMediaItem:audioItem buddyUniqueId:message.buddyUniqueId];
                 AVURLAsset *audioAsset = [AVURLAsset assetWithURL:url];
                 audioItem.timeLength = CMTimeGetSeconds(audioAsset.duration);
                 
@@ -512,15 +521,29 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
                 
             } completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
             
-        }
-        else if (videoRange.location != NSNotFound) {
-            OTRVideoItem *videoItem  =[[OTRVideoItem alloc] init];
-            videoItem.filename = transfer.fileName;
-            videoItem.isIncoming = YES;
+        } else if ([mediaItem isKindOfClass:[OTRImageItem class]]) {
+            OTRImageItem *imageItem = (OTRImageItem *)mediaItem;
             
-            message.mediaItemUniqueId = videoItem.uniqueId;
+            UIImage *tempImage = [UIImage imageWithData:transfer.fileData];
+            imageItem.width = tempImage.size.width;
+            imageItem.height = tempImage.size.height;
             
-            [[OTRMediaFileManager sharedInstance] setData:transfer.fileData forItem:videoItem buddyUniqueId:parentMessage.buddyUniqueId completion:^(NSInteger bytesWritten, NSError *error) {
+            
+            [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+                [message saveWithTransaction:transaction];
+                [imageItem saveWithTransaction:transaction];
+            } completionBlock:^{
+                [[OTRMediaFileManager sharedInstance] setData:transfer.fileData forItem:imageItem buddyUniqueId:message.buddyUniqueId completion:^(NSInteger bytesWritten, NSError *error) {
+                    [imageItem touchParentMessage];
+                } completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
+            }];
+             
+            
+        } else if ([mediaItem isKindOfClass:[OTRVideoItem class]]) {
+            OTRVideoItem *videoItem = (OTRVideoItem *)mediaItem;
+            
+            [[OTRMediaFileManager sharedInstance] setData:transfer.fileData forItem:videoItem buddyUniqueId:message.buddyUniqueId completion:^(NSInteger bytesWritten, NSError *error) {
+                
                 
                 [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
                     [videoItem saveWithTransaction:transaction];

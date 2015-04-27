@@ -970,5 +970,9 @@
     "SENDING_STRING" : {
         "comment": "Label text for when a transfer is in progress (normally followed by a percent value 34%)",
         "string": "Sending"
+    },
+    "INCOMING_STRING" : {
+        "comment": "Label for incoming data transfers",
+        "string": "Incoming"
     }
 }

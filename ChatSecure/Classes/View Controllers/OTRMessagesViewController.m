@@ -1137,7 +1137,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         
         [attributedString appendAttributedString:[[NSAttributedString alloc] initWithString:iconString attributes:iconAttributes]];
     }
-    else if([message isMediaMessage] && ![message isIncoming]) {
+    else if([message isMediaMessage]) {
         
         __block OTRMediaItem *mediaItem = nil;
         //Get the media item
@@ -1148,15 +1148,27 @@ typedef NS_ENUM(int, OTRDropDownType) {
         float percentProgress = mediaItem.transferProgress * 100;
         
         NSString *progressString = nil;
+        NSUInteger insertIndex = 0;
         
-        if(percentProgress > 0) {
-            progressString = [NSString stringWithFormat:@"%@ %.0f%% ",SENDING_STRING,percentProgress];
-        } else {
-            progressString = [NSString stringWithFormat:@"%@ ",WAITING_STRING];
+        if (mediaItem.isIncoming && mediaItem.transferProgress < 1) {
+            progressString = [NSString stringWithFormat:@" %@ %.0f%%",INCOMING_STRING,percentProgress];
+            insertIndex = [attributedString length];
+        } else if (!mediaItem.isIncoming) {
+            if(percentProgress > 0) {
+                progressString = [NSString stringWithFormat:@"%@ %.0f%% ",SENDING_STRING,percentProgress];
+            } else {
+                progressString = [NSString stringWithFormat:@"%@ ",WAITING_STRING];
+            }
         }
-        UIFont *font = [UIFont systemFontOfSize:12];
-        [attributedString insertAttributedString:[[NSAttributedString alloc] initWithString:progressString attributes:@{NSFontAttributeName: font}] atIndex:0];
+        
+        if ([progressString length]) {
+            UIFont *font = [UIFont systemFontOfSize:12];
+            [attributedString insertAttributedString:[[NSAttributedString alloc] initWithString:progressString attributes:@{NSFontAttributeName: font}] atIndex:insertIndex];
+        }
+        
+        
     }
+    
     
     return attributedString;
 }
