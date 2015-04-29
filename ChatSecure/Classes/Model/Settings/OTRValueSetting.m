@@ -21,6 +21,7 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "OTRValueSetting.h"
+#import "OTRConstants.h"
 
 @implementation OTRValueSetting
 @synthesize key, defaultValue;
@@ -50,6 +51,7 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults setObject:settingsValue forKey:key];
     [defaults synchronize];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kOTRSettingsValueUpdatedNotification object:key userInfo:@{key: settingsValue}];
 }
 
 

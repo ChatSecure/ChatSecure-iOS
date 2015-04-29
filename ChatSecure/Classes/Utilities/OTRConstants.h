@@ -57,6 +57,7 @@ extern NSString *const kOTRSettingKeyShowDisconnectionWarning;
 extern NSString *const kOTRSettingUserAgreedToEULA;
 extern NSString *const kOTRSettingAccountsKey;
 extern NSString *const kOTRSettingKeyLanguage;
+extern NSString *const kOTRSettingsValueUpdatedNotification;
 
 extern NSString *const kOTRAppVersionKey;
 extern NSString *const OTRActivityTypeQRCode;

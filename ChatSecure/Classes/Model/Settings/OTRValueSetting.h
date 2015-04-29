@@ -22,7 +22,6 @@
 
 #import "OTRSetting.h"
 
-
 @interface OTRValueSetting : OTRSetting
 
 @property (nonatomic, retain, readonly) NSString *key;

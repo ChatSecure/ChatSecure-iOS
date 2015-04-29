@@ -53,6 +53,8 @@ NSString *const kOTRSettingKeyShowDisconnectionWarning = @"kOTRSettingKeyShowDis
 NSString *const kOTRSettingUserAgreedToEULA            = @"kOTRSettingUserAgreedToEULA";
 NSString *const kOTRSettingAccountsKey                 = @"kOTRSettingAccountsKey";
 NSString *const kOTRSettingKeyLanguage                 = @"userSelectedSetting";
+NSString *const kOTRSettingsValueUpdatedNotification = @"kOTRSettingsValueUpdatedNotification";
+
 
 NSString *const kOTRAppVersionKey     = @"kOTRAppVersionKey";
 NSString *const OTRActivityTypeQRCode = @"OTRActivityTypeQRCode";

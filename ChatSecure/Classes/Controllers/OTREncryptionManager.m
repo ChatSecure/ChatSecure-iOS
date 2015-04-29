@@ -67,8 +67,28 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
             [OTREncryptionManager setFileProtection:NSFileProtectionCompleteUntilFirstUserAuthentication path:path];
             [OTREncryptionManager addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:path]];
         }
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(settingsValueUpdated:) name:kOTRSettingsValueUpdatedNotification object:kOTRSettingKeyOpportunisticOtr];
+        BOOL opportunistic = [OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyOpportunisticOtr];
+        if (opportunistic) {
+            self.otrKit.otrPolicy = OTRKitPolicyOpportunistic;
+        } else {
+            self.otrKit.otrPolicy = OTRKitPolicyManual;
+        }
     }
     return self;
+}
+
+- (void) settingsValueUpdated:(NSNotification*)notification {
+    id settingsValue = [notification.userInfo objectForKey:kOTRSettingKeyOpportunisticOtr];
+    if ([settingsValue isKindOfClass:[NSNumber class]]) {
+        NSNumber *opportunisticSetting = settingsValue;
+        BOOL opportunistic = opportunisticSetting.boolValue;
+        if (opportunistic) {
+            self.otrKit.otrPolicy = OTRKitPolicyOpportunistic;
+        } else {
+            self.otrKit.otrPolicy = OTRKitPolicyManual;
+        }
+    }
 }
 
 - (OTRProtocolType)prototcolTypeForString:(NSString *)typeString
