@@ -69,6 +69,7 @@
                 }
                 else {
                     message.incoming = NO;
+                    message.delivered = YES;
                 }
                 
                 message.read = YES;
