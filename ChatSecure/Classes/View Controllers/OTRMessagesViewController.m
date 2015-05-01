@@ -217,7 +217,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 - (OTRAttachmentPicker *)attachmentPicker
 {
     if (!_attachmentPicker) {
-        _attachmentPicker = [[OTRAttachmentPicker alloc] initWithRootViewController:self delegate:self];
+        _attachmentPicker = [[OTRAttachmentPicker alloc] initWithParentViewController:self delegate:self];
     }
     return _attachmentPicker;
 }
@@ -889,6 +889,14 @@ typedef NS_ENUM(int, OTRDropDownType) {
     else {
         [super collectionView:collectionView performAction:action forItemAtIndexPath:indexPath withSender:sender];
     }
+}
+
+#pragma - mark UIPopoverPresentationControllerDelegate Methods
+
+- (void)prepareForPopoverPresentation:(UIPopoverPresentationController *)popoverPresentationController {
+    // Without setting this, there will be a crash on iPad
+    // This delegate is set in the OTRAttachmentPicker
+    popoverPresentationController.sourceView = self.cameraButton;
 }
 
 #pragma - mark OTRAttachmentPickerDelegate Methods

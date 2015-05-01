@@ -20,7 +20,7 @@
 
 @end
 
-@interface OTRMessagesViewController : JSQMessagesViewController <UISplitViewControllerDelegate, OTRMessagesViewControllerProtocol>
+@interface OTRMessagesViewController : JSQMessagesViewController <UISplitViewControllerDelegate, OTRMessagesViewControllerProtocol, UIPopoverPresentationControllerDelegate>
 
 @property (nonatomic, strong) OTRBuddy *buddy;
 @property (nonatomic, strong, readonly) OTRAccount *account;

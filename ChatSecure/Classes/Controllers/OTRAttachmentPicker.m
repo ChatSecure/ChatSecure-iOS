@@ -22,10 +22,10 @@
 
 @implementation OTRAttachmentPicker
 
-- (instancetype)initWithRootViewController:(UIViewController *)viewController delegate:(id<OTRAttachmentPickerDelegate>)delegate
+- (instancetype)initWithParentViewController:(UIViewController<UIPopoverPresentationControllerDelegate> *)viewController delegate:(id<OTRAttachmentPickerDelegate>)delegate
 {
     if (self = [self init]) {
-        _rootViewController = viewController;
+        _parentViewController = viewController;
         _delegate = delegate;
     }
     return self;
@@ -34,7 +34,7 @@
 - (void)showAlertControllerWithCompletion:(void (^)(void))completion
 {
     if (SYSTEM_VERSION_LESS_THAN(@"8.0")) {
-                 UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil cancelButtonItem:nil destructiveButtonItem:nil otherButtonItems:nil];
+        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil cancelButtonItem:nil destructiveButtonItem:nil otherButtonItems:nil];
         
         if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
             RIButtonItem *takePhotoButton = [RIButtonItem itemWithLabel:USE_CAMERA_STRING action:^{
@@ -55,7 +55,7 @@
         [actionSheet addButtonItem:cancelButton];
         [actionSheet setCancelButtonIndex:[actionSheet numberOfButtons]-1];
         
-        [actionSheet otr_presentInView:self.rootViewController.view];
+        [actionSheet otr_presentInView:self.parentViewController.view];
     }
     else {
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
@@ -79,7 +79,9 @@
         
         [alertController addAction:cancelAlertAction];
         
-        [self.rootViewController presentViewController:alertController animated:YES completion:completion];
+        alertController.popoverPresentationController.delegate = self.parentViewController;
+        
+        [self.parentViewController presentViewController:alertController animated:YES completion:completion];
     }
     
     
@@ -96,7 +98,7 @@
     imagePickerController.delegate = self;
     
     self.imagePickerController = imagePickerController;
-    [self.rootViewController presentViewController:self.imagePickerController animated:YES completion:nil];
+    [self.parentViewController presentViewController:self.imagePickerController animated:YES completion:nil];
 }
 
 #pragma - mark UIImagePickerControllerDelegate

@@ -21,10 +21,10 @@
 
 @interface OTRAttachmentPicker : NSObject <UIImagePickerControllerDelegate>
 
-@property (nonatomic, weak, readonly) UIViewController *rootViewController;
+@property (nonatomic, weak, readonly) UIViewController<UIPopoverPresentationControllerDelegate> *parentViewController;
 @property (nonatomic, weak, readonly) id<OTRAttachmentPickerDelegate> delegate;
 
-- (instancetype)initWithRootViewController:(UIViewController *)viewController delegate:(id<OTRAttachmentPickerDelegate>)delegate;
+- (instancetype)initWithParentViewController:(UIViewController<UIPopoverPresentationControllerDelegate> *)parentViewController delegate:(id<OTRAttachmentPickerDelegate>)delegate;
 
 - (void)showAlertControllerWithCompletion:(void (^)(void))completion;
 
