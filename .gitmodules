@@ -19,9 +19,6 @@
 [submodule "Submodules/YapDatabase"]
 	path = Submodules/YapDatabase
 	url = git@github.com:chrisballinger/YapDatabase.git
-[submodule "Submodules/rScreenshooter"]
-	path = Submodules/rScreenshooter
-	url = git@github.com:ChatSecure/rScreenshooter.git
 [submodule "Submodules/IOCipher"]
 	path = Submodules/IOCipher
 	url = git@github.com:ChatSecure/IOCipher-ObjC.git
