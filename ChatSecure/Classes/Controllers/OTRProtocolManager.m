@@ -120,6 +120,11 @@ static OTRProtocolManager *sharedManager = nil;
     return self;
 }
 
+- (void)setProtocol:(id <OTRProtocol>)protocol forAccount:(OTRAccount *)account
+{
+    [self addProtocol:protocol forAccount:account];
+}
+
 - (id <OTRProtocol>)protocolForAccount:(OTRAccount *)account
 {
     NSObject <OTRProtocol> * protocol = [self.protocolManagerDictionary objectForKey:account.uniqueId];

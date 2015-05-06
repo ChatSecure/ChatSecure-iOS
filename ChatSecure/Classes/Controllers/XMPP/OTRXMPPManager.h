@@ -59,12 +59,19 @@ extern NSString *const OTRXMPPRegisterFailedNotificationName;
 @property (nonatomic, readonly) BOOL isXmppConnected;
 @property BOOL didSecure;
 
+////// Callbacks //////
+@property (nonatomic) dispatch_queue_t callBackQueue;
+
+@property (nonatomic, copy) void (^xmppStreamRegisterBlock)(NSError *error);
+
+
+@property (nonatomic, strong, readonly) OTRXMPPAccount *account;
+
 - (BOOL)connectWithJID:(NSString*) myJID password:(NSString*)myPassword;
 - (void)disconnect;
 
 - (NSString *)accountName;
 
-- (void)registerNewAccountWithPassword:(NSString *)password;
 - (void)failedToConnect:(NSError *)error;
 
 
@@ -77,5 +84,11 @@ extern NSString *const OTRXMPPRegisterFailedNotificationName;
 - (void)sendInactiveChatState:(NSTimer *)timer;
 - (NSTimer *)inactiveChatStateTimerForBuddyObjectID:(NSString *)buddyUniqueId;
 - (NSTimer *)pausedChatStateTimerForBuddyObjectID:(NSString *)buddyUniqueId;
+
++ (OTRXMPPManager *)attemptToCreateAccountWithUsername:(NSString *)username
+                                              password:(NSString *)password
+                                                domain:(NSString *)domain
+                                       completionQueue:(dispatch_queue_t)completionQueue
+                                            completion:(void (^)(NSError *error))completion;
 
 @end

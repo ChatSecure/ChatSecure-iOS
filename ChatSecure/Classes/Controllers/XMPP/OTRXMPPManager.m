@@ -69,7 +69,6 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 
 @interface OTRXMPPManager()
 
-@property (nonatomic, strong) OTRXMPPAccount *account;
 @property (nonatomic) OTRProtocolConnectionStatus connectionStatus;
 
 @property (nonatomic, strong) XMPPStream *xmppStream;
@@ -120,7 +119,7 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
     {
         NSAssert([newAccount isKindOfClass:[OTRXMPPAccount class]], @"Must have XMPP account");
         self.isRegisteringNewAccount = NO;
-        self.account = (OTRXMPPAccount *)newAccount;
+        _account = (OTRXMPPAccount *)newAccount;
         
         // Setup the XMPP stream
         [self setupStream];
@@ -564,6 +563,11 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 
 - (void)xmppStreamDidRegister:(XMPPStream *)sender {
     [self didRegisterNewAccount];
+    if (self.xmppStreamRegisterBlock) {
+        dispatch_async(self.callBackQueue, ^{
+            self.xmppStreamRegisterBlock(nil);
+        });
+    }
 }
 
 - (void)xmppStream:(XMPPStream *)sender didNotRegister:(NSXMLElement *)xmlError {
@@ -571,6 +575,11 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
     self.isRegisteringNewAccount = NO;
     NSError * error = [OTRXMPPError errorForXMLElement:xmlError];
     [self failedToRegisterNewAccount:error];
+    if (self.xmppStreamRegisterBlock) {
+        dispatch_async(self.callBackQueue, ^{
+            self.xmppStreamRegisterBlock(error);
+        });
+    }
 }
 
 -(OTRXMPPBuddy *)buddyWithMessage:(XMPPMessage *)message transaction:(YapDatabaseReadTransaction *)transaction
@@ -1024,6 +1033,37 @@ managedBuddyObjectID
     dispatch_async(dispatch_get_main_queue(), ^{
         [self failedToConnect:[OTRXMPPError errorForTrustResult:trustResultType withCertData:certifcateData hostname:hostname]];
     });
+}
+
+#pragma - mark Class Methods
++ (OTRXMPPManager *)attemptToCreateAccountWithUsername:(NSString *)username
+                                              password:(NSString *)password
+                                                domain:(NSString *)domain
+                                       completionQueue:(dispatch_queue_t)completionQueue
+                                            completion:(void (^)(NSError *error))completion
+{
+    if (!completionQueue) {
+        completionQueue = dispatch_get_main_queue();
+    }
+    
+    OTRXMPPAccount *xmppAccount = [[OTRXMPPAccount alloc] initWithAccountType:OTRAccountTypeJabber];
+    xmppAccount.username = [[XMPPJID jidWithUser:username domain:domain resource:nil] bare];
+    xmppAccount.domain = domain;
+    
+    OTRXMPPManager *xmppManager = [[OTRXMPPManager alloc] initWithAccount:xmppAccount];
+    
+    if (completion) {
+        xmppManager.callBackQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        xmppManager.xmppStreamRegisterBlock = ^void(NSError *error) {
+            dispatch_async(completionQueue, ^{
+                completion(error);
+            });
+        };
+    }
+    
+    [xmppManager registerNewAccountWithPassword:password];
+    
+    return xmppManager;
 }
 
 @end
