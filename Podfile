@@ -36,6 +36,8 @@ pod 'ARChromeActivity', '~> 1.0'
 pod 'CocoaAsyncSocket', '~> 7.4'
 pod 'JTSImageViewController', '~> 1.4'
 
+pod 'XLForm', :git => 'https://github.com/xmartlabs/XLForm.git', :commit => '514807c473f013211c14c65919846044d1f72da9'
+
 # Local Podspecs
 pod 'gtm-http-fetcher', :podspec => 'Podspecs/gtm-http-fetcher.podspec.json'
 pod 'gtm-oauth2', :podspec => 'Podspecs/gtm-oauth2.podspec.json'

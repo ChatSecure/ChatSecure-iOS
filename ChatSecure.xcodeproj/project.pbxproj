@@ -130,6 +130,12 @@
 		633AF2FA1A7C3DBC0030A3FF /* OTRAudioSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 633AF2F91A7C3DBC0030A3FF /* OTRAudioSessionManager.m */; };
 		6353AC2D1AD5E32000753B83 /* OTRAudioTrashView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6353AC2C1AD5E32000753B83 /* OTRAudioTrashView.m */; };
 		6354BBE41A96C67400E8EBAC /* OTRMediaFileManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6354BBE31A96C67400E8EBAC /* OTRMediaFileManager.m */; };
+		638C7CEF1B029810004F8EC3 /* OTRLoginCreateTableViewDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 638C7CEE1B029810004F8EC3 /* OTRLoginCreateTableViewDataSource.m */; };
+		638C7CF21B02BE4A004F8EC3 /* OTRBaseLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 638C7CF11B02BE4A004F8EC3 /* OTRBaseLoginViewController.m */; };
+		638C7CF51B02BF0D004F8EC3 /* OTRXLFormCreator.m in Sources */ = {isa = PBXBuildFile; fileRef = 638C7CF41B02BF0D004F8EC3 /* OTRXLFormCreator.m */; };
+		638D2E001AFAD3D500F3C50C /* OTRWelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 638D2DFF1AFAD3D500F3C50C /* OTRWelcomeViewController.m */; };
+		638D2E031AFBFE2200F3C50C /* OTRWelcomeAccountTableViewDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 638D2E021AFBFE2200F3C50C /* OTRWelcomeAccountTableViewDelegate.m */; };
+		638D2E061AFC0DF100F3C50C /* OTRLoginCreateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 638D2E051AFC0DF100F3C50C /* OTRLoginCreateViewController.m */; };
 		6396AFA01A169D54009F3E6C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6396AF9F1A169D54009F3E6C /* main.m */; };
 		6396AFBA1A169D54009F3E6C /* ChatSecureTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6396AFB91A169D54009F3E6C /* ChatSecureTests.m */; };
 		639CDD8E1AD71BC4009BAABC /* OTRCircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 639CDD8D1AD71BC4009BAABC /* OTRCircleView.m */; };
@@ -470,6 +476,18 @@
 		6353AC2C1AD5E32000753B83 /* OTRAudioTrashView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAudioTrashView.m; sourceTree = "<group>"; };
 		6354BBE21A96C67400E8EBAC /* OTRMediaFileManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRMediaFileManager.h; sourceTree = "<group>"; };
 		6354BBE31A96C67400E8EBAC /* OTRMediaFileManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRMediaFileManager.m; sourceTree = "<group>"; };
+		638C7CED1B029810004F8EC3 /* OTRLoginCreateTableViewDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRLoginCreateTableViewDataSource.h; sourceTree = "<group>"; };
+		638C7CEE1B029810004F8EC3 /* OTRLoginCreateTableViewDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRLoginCreateTableViewDataSource.m; sourceTree = "<group>"; };
+		638C7CF01B02BE4A004F8EC3 /* OTRBaseLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBaseLoginViewController.h; sourceTree = "<group>"; };
+		638C7CF11B02BE4A004F8EC3 /* OTRBaseLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBaseLoginViewController.m; sourceTree = "<group>"; };
+		638C7CF31B02BF0D004F8EC3 /* OTRXLFormCreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXLFormCreator.h; sourceTree = "<group>"; };
+		638C7CF41B02BF0D004F8EC3 /* OTRXLFormCreator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXLFormCreator.m; sourceTree = "<group>"; };
+		638D2DFE1AFAD3D500F3C50C /* OTRWelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OTRWelcomeViewController.h; path = Onboarding/OTRWelcomeViewController.h; sourceTree = "<group>"; };
+		638D2DFF1AFAD3D500F3C50C /* OTRWelcomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OTRWelcomeViewController.m; path = Onboarding/OTRWelcomeViewController.m; sourceTree = "<group>"; };
+		638D2E011AFBFE2200F3C50C /* OTRWelcomeAccountTableViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OTRWelcomeAccountTableViewDelegate.h; path = Onboarding/OTRWelcomeAccountTableViewDelegate.h; sourceTree = "<group>"; };
+		638D2E021AFBFE2200F3C50C /* OTRWelcomeAccountTableViewDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OTRWelcomeAccountTableViewDelegate.m; path = Onboarding/OTRWelcomeAccountTableViewDelegate.m; sourceTree = "<group>"; };
+		638D2E041AFC0DF100F3C50C /* OTRLoginCreateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRLoginCreateViewController.h; sourceTree = "<group>"; };
+		638D2E051AFC0DF100F3C50C /* OTRLoginCreateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRLoginCreateViewController.m; sourceTree = "<group>"; };
 		6396AF9A1A169D54009F3E6C /* ChatSecure.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatSecure.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6396AF9E1A169D54009F3E6C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6396AF9F1A169D54009F3E6C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -868,6 +886,7 @@
 		633105FE1A16D1A300C17BAE /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				638D2DFD1AFAD3AE00F3C50C /* Onboarding */,
 				633105FF1A16D1A300C17BAE /* Login View Controllers */,
 				633106121A16D1A300C17BAE /* OTRAboutViewController.h */,
 				633106131A16D1A300C17BAE /* OTRAboutViewController.m */,
@@ -933,6 +952,14 @@
 				6331060F1A16D1A300C17BAE /* OTRXMPPLoginViewController.m */,
 				633106101A16D1A300C17BAE /* OTRXMPPOAUTHLoginViewController.h */,
 				633106111A16D1A300C17BAE /* OTRXMPPOAUTHLoginViewController.m */,
+				638C7CF01B02BE4A004F8EC3 /* OTRBaseLoginViewController.h */,
+				638C7CF11B02BE4A004F8EC3 /* OTRBaseLoginViewController.m */,
+				638C7CF31B02BF0D004F8EC3 /* OTRXLFormCreator.h */,
+				638C7CF41B02BF0D004F8EC3 /* OTRXLFormCreator.m */,
+				638D2E041AFC0DF100F3C50C /* OTRLoginCreateViewController.h */,
+				638D2E051AFC0DF100F3C50C /* OTRLoginCreateViewController.m */,
+				638C7CED1B029810004F8EC3 /* OTRLoginCreateTableViewDataSource.h */,
+				638C7CEE1B029810004F8EC3 /* OTRLoginCreateTableViewDataSource.m */,
 			);
 			path = "Login View Controllers";
 			sourceTree = "<group>";
@@ -1007,6 +1034,17 @@
 				6336209E1A76E89A006E8739 /* OTRAudioItem.m */,
 			);
 			name = "Media Items";
+			sourceTree = "<group>";
+		};
+		638D2DFD1AFAD3AE00F3C50C /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				638D2DFE1AFAD3D500F3C50C /* OTRWelcomeViewController.h */,
+				638D2DFF1AFAD3D500F3C50C /* OTRWelcomeViewController.m */,
+				638D2E011AFBFE2200F3C50C /* OTRWelcomeAccountTableViewDelegate.h */,
+				638D2E021AFBFE2200F3C50C /* OTRWelcomeAccountTableViewDelegate.m */,
+			);
+			name = Onboarding;
 			sourceTree = "<group>";
 		};
 		6396AF911A169D54009F3E6C = {
@@ -1445,12 +1483,15 @@
 				633106FF1A16D1A300C17BAE /* OTRCreateAccountChooserViewController.m in Sources */,
 				633106931A16D1A300C17BAE /* OTRYapDatabaseRosterStorage.m in Sources */,
 				63C4BD131A1E9BE1001696CD /* OTRManagedGoogleAccount.m in Sources */,
+				638C7CF21B02BE4A004F8EC3 /* OTRBaseLoginViewController.m in Sources */,
+				638C7CF51B02BF0D004F8EC3 /* OTRXLFormCreator.m in Sources */,
 				633106F31A16D1A300C17BAE /* OTRXMPPCreateAccountViewController.m in Sources */,
 				633106D71A16D1A300C17BAE /* OTRXMPPBuddy.m in Sources */,
 				63C4BD111A1E9BE1001696CD /* OTRManagedEncryptionStatusMessage.m in Sources */,
 				633106861A16D1A300C17BAE /* OTRProtocolManager.m in Sources */,
 				63EA4CFD1ACC96AB00B19E12 /* OTRHoldToTalkView.m in Sources */,
 				6331067A1A16D1A300C17BAE /* UIActivityViewController+ChatSecure.m in Sources */,
+				638D2E031AFBFE2200F3C50C /* OTRWelcomeAccountTableViewDelegate.m in Sources */,
 				63C4BD261A1E9BE1001696CD /* _OTRManagedMessageAndStatus.m in Sources */,
 				633106921A16D1A300C17BAE /* OTRXMPPTorManager.m in Sources */,
 				6353AC2D1AD5E32000753B83 /* OTRAudioTrashView.m in Sources */,
@@ -1471,6 +1512,7 @@
 				63DDD8B01A9D3C0400C0A918 /* OTRMediaServer.m in Sources */,
 				633107141A16D1A300C17BAE /* OTRBuddyInfoCell.m in Sources */,
 				633107051A16D1A300C17BAE /* OTRLanguageListSettingViewController.m in Sources */,
+				638D2E001AFAD3D500F3C50C /* OTRWelcomeViewController.m in Sources */,
 				633106FE1A16D1A300C17BAE /* OTRConversationViewController.m in Sources */,
 				63C4BD1E1A1E9BE1001696CD /* OTRXMPPManagedPresenceSubscriptionRequest.m in Sources */,
 				633107091A16D1A300C17BAE /* OTRNewBuddyViewController.m in Sources */,
@@ -1481,6 +1523,7 @@
 				63C4BD231A1E9BE1001696CD /* _OTRManagedGoogleAccount.m in Sources */,
 				633107061A16D1A300C17BAE /* OTRListSettingViewController.m in Sources */,
 				63C4BD2B1A1E9BE1001696CD /* _OTRvCard.m in Sources */,
+				638C7CEF1B029810004F8EC3 /* OTRLoginCreateTableViewDataSource.m in Sources */,
 				63FA548B1A7ACA2F00F2AEBB /* OTRPlayPauseProgressView.m in Sources */,
 				633107261A16D1A400C17BAE /* OTRRememberPasswordView.m in Sources */,
 				633106F81A16D1A300C17BAE /* OTRBuddyViewController.m in Sources */,
@@ -1490,6 +1533,7 @@
 				633106E61A16D1A300C17BAE /* OTRImages.m in Sources */,
 				633106C11A16D1A300C17BAE /* OTRFingerprintSetting.m in Sources */,
 				633106F41A16D1A300C17BAE /* OTRXMPPLoginViewController.m in Sources */,
+				638D2E061AFC0DF100F3C50C /* OTRLoginCreateViewController.m in Sources */,
 				63C4BCCC1A1E9B9F001696CD /* ChatSecure.xcdatamodeld in Sources */,
 				63D184861A2D3F2400334CD8 /* OTRNotificationController.m in Sources */,
 				639CDD8E1AD71BC4009BAABC /* OTRCircleView.m in Sources */,

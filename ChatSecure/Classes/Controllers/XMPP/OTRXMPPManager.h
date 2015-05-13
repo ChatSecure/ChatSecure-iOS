@@ -66,6 +66,7 @@ extern NSString *const OTRXMPPRegisterFailedNotificationName;
 
 
 @property (nonatomic, strong, readonly) OTRXMPPAccount *account;
+@property (nonatomic, strong, readonly) NSString *accountUniqueId;
 
 - (BOOL)connectWithJID:(NSString*) myJID password:(NSString*)myPassword;
 - (void)disconnect;

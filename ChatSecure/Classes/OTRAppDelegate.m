@@ -54,6 +54,7 @@
 #import "UIViewController+ChatSecure.h"
 #import "OTRNotificationController.h"
 #import "UIAlertView+Blocks.h"
+#import "OTRWelcomeViewController.h"
 
 #if CHATSECURE_DEMO
 #import "OTRChatDemo.h"
@@ -113,8 +114,10 @@
         }
 
         [[OTRDatabaseManager sharedInstance] setupDatabaseWithName:OTRYapDatabaseName];
-        rootViewController = [self defaultConversationNavigationController];
-        
+        //rootViewController = [self defaultConversationNavigationController];
+        NSArray *accountInfoArray = [OTRWelcomeViewController defaultAccountArray];
+        rootViewController = [[OTRWelcomeViewController alloc] initWithAccountInfoArray:accountInfoArray];
+        rootViewController = [[UINavigationController alloc] initWithRootViewController:rootViewController];
         
 #if CHATSECURE_DEMO
         [self performSelector:@selector(loadDemoData) withObject:nil afterDelay:0.0];

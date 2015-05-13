@@ -50,7 +50,6 @@ extern NSUInteger const kNewCertAlertViewTag;
 
 @property (nonatomic, strong) UISwitch *rememberPasswordSwitch;
 @property (nonatomic, strong) UISwitch * autoLoginSwitch;
-@property (nonatomic, strong) UIImageView *logoView;
 @property (nonatomic, strong) UITextField *usernameTextField;
 @property (nonatomic, strong) UITextField *passwordTextField;
 
