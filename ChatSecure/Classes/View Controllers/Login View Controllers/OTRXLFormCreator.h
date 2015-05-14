@@ -23,7 +23,7 @@ extern NSString *const kOTRXLFormResourceTextFieldTag;
 
 + (XLFormDescriptor *)formForAccount:(OTRAccount *)account;
 
-+ (XLFormDescriptor *)formForAccountType:(OTRAccountType)accountType;
++ (XLFormDescriptor *)formForAccountType:(OTRAccountType)accountType createAccount:(BOOL)createAccount;
 
 
 @end

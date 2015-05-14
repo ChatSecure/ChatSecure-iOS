@@ -66,6 +66,12 @@ static NSString *const kOTRXMPPErrorDomain = @"kOTRXMPPErrorDomain";
 NSTimeInterval const kOTRChatStatePausedTimeout   = 5;
 NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 
+NSString *const OTRXMPPLoginStatusNotificationName = @"OTRXMPPLoginStatusNotificationName";
+
+NSString *const OTRXMPPOldLoginStatusKey = @"OTRXMPPOldLoginStatusKey";
+NSString *const OTRXMPPNewLoginStatusKey = @"OTRXMPPNewLoginStatusKey";
+NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
+
 
 @interface OTRXMPPManager()
 
@@ -82,11 +88,11 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 @property (nonatomic, strong) XMPPCapabilitiesCoreDataStorage *xmppCapabilitiesStorage;
 @property (nonatomic, strong) OTRYapDatabaseRosterStorage * xmppRosterStorage;
 @property (nonatomic, strong) OTRCertificatePinning * certificatePinningModule;
-@property (nonatomic, readwrite) BOOL isXmppConnected;
 @property (nonatomic, strong) NSMutableDictionary * buddyTimers;
 @property (nonatomic) dispatch_queue_t workQueue;
 @property (nonatomic) BOOL isRegisteringNewAccount;
 @property (nonatomic) BOOL userInitiatedConnection;
+@property (nonatomic) OTRLoginStatus loginStatus;
 
 @property (nonatomic, strong) YapDatabaseConnection *databaseConnection;
 
@@ -513,6 +519,7 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 - (void)xmppStream:(XMPPStream *)sender socketDidConnect:(GCDAsyncSocket *)socket 
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
+    [self changeLoginStatus:OTRLoginStatusConnected error:nil];
 }
 
 - (void)xmppStream:(XMPPStream *)sender willSecureWithSettings:(NSMutableDictionary *)settings
@@ -522,11 +529,15 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
     settings[GCDAsyncSocketSSLProtocolVersionMin] = @(kTLSProtocol1);
     settings[GCDAsyncSocketSSLCipherSuites] = [OTRUtilities cipherSuites];
     settings[GCDAsyncSocketManuallyEvaluateTrust] = @(YES);
+    
+    [self changeLoginStatus:OTRLoginStatusSecuring error:nil];
 }
 
 - (void)xmppStreamDidSecure:(XMPPStream *)sender
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
+    
+    [self changeLoginStatus:OTRLoginStatusSecured error:nil];
 }
 
 - (void)xmppStreamDidConnect:(XMPPStream *)sender
@@ -539,6 +550,35 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
     else{
         [self authenticateWithStream:sender];
     }
+    
+    [self changeLoginStatus:OTRLoginStatusAuthenticating error:nil];
+}
+
+- (void)xmppStreamDidDisconnect:(XMPPStream *)sender withError:(NSError *)error
+{
+    DDLogVerbose(@"%@: %@ %@", THIS_FILE, THIS_METHOD, error);
+    
+    self.connectionStatus = OTRProtocolConnectionStatusDisconnected;
+    
+    [self changeLoginStatus:OTRLoginStatusDisconnected error:error];
+    
+    if (self.loginStatus == OTRLoginStatusDisconnected)
+    {
+        DDLogError(@"Unable to connect to server. Check xmppStream.hostName");
+        
+        [self failedToConnect:error];
+    }
+    
+    //Reset buddy info to offline
+    [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        NSArray *allBuddies = [self.account allBuddiesWithTransaction:transaction];
+        [allBuddies enumerateObjectsUsingBlock:^(OTRXMPPBuddy *buddy, NSUInteger idx, BOOL *stop) {
+            buddy.status = OTRBuddyStatusOffline;
+            buddy.statusMessage = nil;
+            [transaction setObject:buddy forKey:buddy.uniqueId inCollection:[OTRXMPPBuddy collection]];
+        }];
+        
+    }];
 }
 
 - (void)xmppStreamDidAuthenticate:(XMPPStream *)sender
@@ -546,13 +586,21 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
     self.connectionStatus = OTRProtocolConnectionStatusConnected;
 	[self goOnline];
+    
+    
+    [self changeLoginStatus:OTRLoginStatusAuthenticated error:nil];
+    
+    
 }
 
 - (void)xmppStream:(XMPPStream *)sender didNotAuthenticate:(NSXMLElement *)error
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
     self.connectionStatus = OTRProtocolConnectionStatusDisconnected;
-    [self failedToConnect:[OTRXMPPError errorForXMLElement:error]];
+    NSError *err = [OTRXMPPError errorForXMLElement:error];
+    [self failedToConnect:err];
+    
+    [self changeLoginStatus:OTRLoginStatusSecured error:err];
 }
 
 - (BOOL)xmppStream:(XMPPStream *)sender didReceiveIQ:(XMPPIQ *)iq
@@ -563,11 +611,6 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 
 - (void)xmppStreamDidRegister:(XMPPStream *)sender {
     [self didRegisterNewAccount];
-    if (self.xmppStreamRegisterBlock) {
-        dispatch_async(self.callBackQueue, ^{
-            self.xmppStreamRegisterBlock(nil);
-        });
-    }
 }
 
 - (void)xmppStream:(XMPPStream *)sender didNotRegister:(NSXMLElement *)xmlError {
@@ -575,11 +618,8 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
     self.isRegisteringNewAccount = NO;
     NSError * error = [OTRXMPPError errorForXMLElement:xmlError];
     [self failedToRegisterNewAccount:error];
-    if (self.xmppStreamRegisterBlock) {
-        dispatch_async(self.callBackQueue, ^{
-            self.xmppStreamRegisterBlock(error);
-        });
-    }
+    
+    [self changeLoginStatus:OTRLoginStatusSecured error:error];
 }
 
 -(OTRXMPPBuddy *)buddyWithMessage:(XMPPMessage *)message transaction:(YapDatabaseReadTransaction *)transaction
@@ -681,31 +721,6 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 - (void)xmppStream:(XMPPStream *)sender didFailToSendPresence:(XMPPPresence *)presence error:(NSError *)error
 {
     DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
-}
-
-- (void)xmppStreamDidDisconnect:(XMPPStream *)sender withError:(NSError *)error
-{
-	DDLogVerbose(@"%@: %@ %@", THIS_FILE, THIS_METHOD, error);
-    
-    self.connectionStatus = OTRProtocolConnectionStatusDisconnected;
-	
-	if (!self.isXmppConnected)
-	{
-		DDLogError(@"Unable to connect to server. Check xmppStream.hostName");
-        [self failedToConnect:error];
-	}
-    else {
-        [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-            NSArray *allBuddies = [self.account allBuddiesWithTransaction:transaction];
-            [allBuddies enumerateObjectsUsingBlock:^(OTRXMPPBuddy *buddy, NSUInteger idx, BOOL *stop) {
-                buddy.status = OTRBuddyStatusOffline;
-                buddy.statusMessage = nil;
-                [transaction setObject:buddy forKey:buddy.uniqueId inCollection:[OTRXMPPBuddy collection]];
-            }];
-            
-        }];
-    }
-    self.isXmppConnected = NO;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1030,8 +1045,28 @@ managedBuddyObjectID
 {
     NSData * certifcateData = [OTRCertificatePinning dataForCertificate:[OTRCertificatePinning certForTrust:trust]];
     DDLogVerbose(@"New trustResultType: %d certLength: %d", (int)trustResultType, (int)certifcateData.length);
+    NSError *error = [OTRXMPPError errorForTrustResult:trustResultType withCertData:certifcateData hostname:hostname];
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self failedToConnect:[OTRXMPPError errorForTrustResult:trustResultType withCertData:certifcateData hostname:hostname]];
+        [self failedToConnect:error];
+    });
+    
+    [self changeLoginStatus:OTRLoginStatusDisconnected error:error];
+}
+
+- (void)changeLoginStatus:(OTRLoginStatus)status error:(NSError *)error
+{
+    OTRLoginStatus oldStatus = self.loginStatus;
+    OTRLoginStatus newStatus = status;
+    self.loginStatus = status;
+    
+    NSMutableDictionary *userInfo = [@{OTRXMPPOldLoginStatusKey: @(oldStatus), OTRXMPPNewLoginStatusKey: @(newStatus)} mutableCopy];
+    
+    if (error) {
+        userInfo[OTRXMPPLoginErrorKey] = error;
+    }
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:OTRXMPPLoginStatusNotificationName object:self userInfo:userInfo];
     });
 }
 
@@ -1053,12 +1088,12 @@ managedBuddyObjectID
     OTRXMPPManager *xmppManager = [[OTRXMPPManager alloc] initWithAccount:xmppAccount];
     
     if (completion) {
-        xmppManager.callBackQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-        xmppManager.xmppStreamRegisterBlock = ^void(NSError *error) {
-            dispatch_async(completionQueue, ^{
-                completion(error);
-            });
-        };
+//        xmppManager.callBackQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+//        xmppManager.xmppStreamRegisterBlock = ^void(NSError *error) {
+//            dispatch_async(completionQueue, ^{
+//                completion(error);
+//            });
+//        };
     }
     
     [xmppManager registerNewAccountWithPassword:password];

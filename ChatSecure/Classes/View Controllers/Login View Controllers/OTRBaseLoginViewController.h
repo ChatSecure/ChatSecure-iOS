@@ -7,7 +7,21 @@
 //
 
 #import "XLFormViewController.h"
+@class OTRAccount;
+
+@protocol OTRBaseLoginViewControllerHandlerProtocol <NSObject>
+
+@required
+- (void)performActionWithValidForm:(XLFormDescriptor *)form account:(OTRAccount *)account completion:(void (^)(NSError *error, OTRAccount *account))completion;
+
+@end
 
 @interface OTRBaseLoginViewController : XLFormViewController
+
+@property (nonatomic, strong) UIBarButtonItem *loginCreateButtonItem;
+
+@property (nonatomic, strong) OTRAccount *account;
+
+@property (nonatomic, strong) id<OTRBaseLoginViewControllerHandlerProtocol> createLoginHandler;
 
 @end

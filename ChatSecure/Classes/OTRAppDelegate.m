@@ -115,8 +115,7 @@
 
         [[OTRDatabaseManager sharedInstance] setupDatabaseWithName:OTRYapDatabaseName];
         //rootViewController = [self defaultConversationNavigationController];
-        NSArray *accountInfoArray = [OTRWelcomeViewController defaultAccountArray];
-        rootViewController = [[OTRWelcomeViewController alloc] initWithAccountInfoArray:accountInfoArray];
+        rootViewController = [[OTRWelcomeViewController alloc] initWithDefaultAccountArray];
         rootViewController = [[UINavigationController alloc] initWithRootViewController:rootViewController];
         
 #if CHATSECURE_DEMO

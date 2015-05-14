@@ -23,7 +23,7 @@ NSString *const kOTRXLFormResourceTextFieldTag        = @"kOTRXLFormResourceText
 
 + (XLFormDescriptor *)formForAccount:(OTRAccount *)account
 {
-    XLFormDescriptor *descriptor = [self formForAccountType:account.accountType];
+    XLFormDescriptor *descriptor = [self formForAccountType:account.accountType createAccount:NO];
     
     [[descriptor formRowWithTag:kOTRXLFormUsernameTextFieldTag] setValue:account.username];
     [[descriptor formRowWithTag:kOTRXLFormPasswordTextFieldTag] setValue:account.password];
@@ -43,7 +43,7 @@ NSString *const kOTRXLFormResourceTextFieldTag        = @"kOTRXLFormResourceText
     return descriptor;
 }
 
-+ (XLFormDescriptor *)formForAccountType:(OTRAccountType)accountType
++ (XLFormDescriptor *)formForAccountType:(OTRAccountType)accountType createAccount:(BOOL)createAccount;
 {
     XLFormDescriptor *descriptor = [[XLFormDescriptor alloc] init];
     switch (accountType) {
@@ -93,6 +93,7 @@ NSString *const kOTRXLFormResourceTextFieldTag        = @"kOTRXLFormResourceText
 + (XLFormRowDescriptor *)usernameTextFieldRowDescriptorWithValue:(NSString *)value
 {
     XLFormRowDescriptor *usernameDescriptor = [self textfieldFormDescriptorType:XLFormRowDescriptorTypeEmail withTag:kOTRXLFormUsernameTextFieldTag title:USERNAME_STRING placeHolder:XMPP_USERNAME_EXAMPLE_STRING value:value];
+    usernameDescriptor.required = YES;
     return usernameDescriptor;
 }
 
@@ -100,6 +101,7 @@ NSString *const kOTRXLFormResourceTextFieldTag        = @"kOTRXLFormResourceText
 {
     XLFormRowDescriptor *passwordDescriptor = [XLFormRowDescriptor formRowDescriptorWithTag:kOTRXLFormPasswordTextFieldTag rowType:XLFormRowDescriptorTypePassword title:PASSWORD_STRING];
     passwordDescriptor.value = value;
+    passwordDescriptor.required = YES;
     [passwordDescriptor.cellConfigAtConfigure setObject:REQUIRED_STRING forKey:@"textField.placeholder"];
     
     return passwordDescriptor;
@@ -130,7 +132,12 @@ NSString *const kOTRXLFormResourceTextFieldTag        = @"kOTRXLFormResourceText
 {
     NSString *defaultPortNumberString = [NSString stringWithFormat:@"%d",[OTRXMPPAccount defaultPort]];
     
-    return [self textfieldFormDescriptorType:XLFormRowDescriptorTypeInteger withTag:kOTRXLFormPortTextFieldTag title:PORT_STRING placeHolder:defaultPortNumberString value:value];
+    XLFormRowDescriptor *portRowDescriptor = [self textfieldFormDescriptorType:XLFormRowDescriptorTypeInteger withTag:kOTRXLFormPortTextFieldTag title:PORT_STRING placeHolder:defaultPortNumberString value:value];
+    
+    //Regex between 0 and 65536 for valid ports or empty
+    [portRowDescriptor addValidator:[XLFormRegexValidator formRegexValidatorWithMsg:@"Incorect port number" regex:@"^$|^([1-9][0-9]{0,3}|[1-5][0-9]{0,4}|6[0-5]{0,2}[0-3][0-5])$"]];
+    
+    return portRowDescriptor;
 }
 
 + (XLFormRowDescriptor *)resourceRowDescriptorWithValue:(NSString *)value

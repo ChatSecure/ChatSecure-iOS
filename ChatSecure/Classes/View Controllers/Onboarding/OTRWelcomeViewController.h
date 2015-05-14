@@ -34,8 +34,8 @@
 
 @property (nonatomic, strong, readonly) NSArray *accountInfoArray;
 
-- (instancetype) initWithAccountInfoArray:(NSArray *)accountInfoArray;
+- (instancetype) initWithDefaultAccountArray;
 
-+ (NSArray *)defaultAccountArray;
+- (NSArray *)defaultAccountArray;
 
 @end

@@ -13,6 +13,7 @@
 #import "OTRImages.h"
 #import "OTRBaseLoginViewController.h"
 #import "OTRXLFormCreator.h"
+#import "OTRXMPPLoginHandler.h"
 
 @implementation OTRWelcomeAccountInfo
 
@@ -52,10 +53,10 @@
     return self;
 }
 
-- (instancetype)initWithAccountInfoArray:(NSArray *)accountInfoArray
+- (instancetype)initWithDefaultAccountArray
 {
     if (self = [self init]) {
-        _accountInfoArray = accountInfoArray;
+        _accountInfoArray = [self defaultAccountArray];
         self.tableViewDelegate = [[OTRWelcomeAccountTableViewDelegate alloc] init];
         self.tableViewDelegate.welcomeAccountInfoArray= self.accountInfoArray;
     }
@@ -200,7 +201,7 @@
 
 - (void)didTapCreateChatID:(id)sender
 {
-    OTRBaseLoginViewController *loginViewController = [[OTRBaseLoginViewController alloc] initWithForm:[OTRXLFormCreator formForAccountType:OTRAccountTypeJabber] style:UITableViewStyleGrouped];
+    OTRBaseLoginViewController *loginViewController = [[OTRBaseLoginViewController alloc] initWithForm:[OTRXLFormCreator formForAccountType:OTRAccountTypeJabber createAccount:YES] style:UITableViewStyleGrouped];
     
     [self.navigationController pushViewController:loginViewController animated:YES];
     NSLog(@"Create Chat ID");
@@ -212,14 +213,23 @@
     
 }
 
- #pragma - mark Class Methods
-
-+ (NSArray *)defaultAccountArray
+- (NSArray *)defaultAccountArray
 {
     NSMutableArray *accountArray = [NSMutableArray array];
     
+    __weak typeof(self)weakSelf = self;
     [accountArray addObject:[OTRWelcomeAccountInfo accountInfoWithText:@"ChatSecure ID" image:nil didSelectBlock:NULL]];
-    [accountArray addObject:[OTRWelcomeAccountInfo accountInfoWithText:@"XMPP" image:[UIImage imageNamed:@"xmpp"] didSelectBlock:NULL]];
+    [accountArray addObject:[OTRWelcomeAccountInfo accountInfoWithText:@"XMPP" image:[UIImage imageNamed:@"xmpp"] didSelectBlock:^{
+        __strong typeof(weakSelf)strongSelf = weakSelf;
+        
+        OTRXMPPAccount *xmppAccount = [[OTRXMPPAccount alloc] initWithAccountType:OTRAccountTypeJabber];
+        OTRBaseLoginViewController *loginViewController = [[OTRBaseLoginViewController alloc] initWithForm:[OTRXLFormCreator formForAccountType:OTRAccountTypeJabber createAccount:NO] style:UITableViewStyleGrouped];
+        loginViewController.account = xmppAccount;
+        OTRXMPPLoginHandler *loginHandler = [[OTRXMPPLoginHandler alloc] init];
+        loginViewController.createLoginHandler = loginHandler;
+        
+        [strongSelf.navigationController pushViewController:loginViewController animated:YES];
+    }]];
     [accountArray addObject:[OTRWelcomeAccountInfo accountInfoWithText:@"Google" image:[UIImage imageNamed:@"gtalk"] didSelectBlock:NULL]];
     
     return accountArray;
