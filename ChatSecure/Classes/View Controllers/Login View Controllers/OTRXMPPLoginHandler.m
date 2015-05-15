@@ -23,6 +23,23 @@
 
 @implementation OTRXMPPLoginHandler
 
+- (void)moveAccountValues:(OTRXMPPAccount *)account intoForm:(XLFormDescriptor *)form
+{
+    [[form formRowWithTag:kOTRXLFormUsernameTextFieldTag] setValue:account.username];
+    [[form formRowWithTag:kOTRXLFormPasswordTextFieldTag] setValue:account.password];
+    [[form formRowWithTag:kOTRXLFormRememberPasswordSwitchTag] setValue:@(account.rememberPassword)];
+    [[form formRowWithTag:kOTRXLFormLoginAutomaticallySwitchTag] setValue:@(account.autologin)];
+    [[form formRowWithTag:kOTRXLFormHostnameTextFieldTag] setValue:account.domain];
+    
+    if (account.port != [OTRXMPPAccount defaultPort]) {
+        [[form formRowWithTag:kOTRXLFormPortTextFieldTag] setValue:@(account.port)];
+    } else {
+        [[form formRowWithTag:kOTRXLFormPortTextFieldTag] setValue:nil];
+    }
+    
+    [[form formRowWithTag:kOTRXLFormResourceTextFieldTag] setValue:account.resource];
+}
+
 - (OTRAccount *)moveValues:(XLFormDescriptor *)form intoAccount:(OTRXMPPAccount *)account
 {
     account.username = [[form formRowWithTag:kOTRXLFormUsernameTextFieldTag] value];

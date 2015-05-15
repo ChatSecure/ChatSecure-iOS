@@ -7,7 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "OTRXMPPLoginHandler.h"
 
-@interface OTRXMPPCreateAccountHandler : NSObject
+@interface OTRXMPPCreateAccountHandler : OTRXMPPLoginHandler
 
 @end

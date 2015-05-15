@@ -36,6 +36,13 @@
     [super viewWillAppear:animated];
     
     [self.navigationController setNavigationBarHidden:NO animated:animated];
+    [self.createLoginHandler moveAccountValues:self.account intoForm:self.form];
+}
+
+- (void)setAccount:(OTRAccount *)account
+{
+    _account = account;
+    [self.createLoginHandler moveAccountValues:self.account intoForm:self.form];
 }
 
 - (void)loginButtonPressed:(id)sender
@@ -74,6 +81,8 @@
     }];
     return validForm;
 }
+
+ #pragma - mark Errors and Alert Views
 
 - (void)handleError:(NSError *)error
 {

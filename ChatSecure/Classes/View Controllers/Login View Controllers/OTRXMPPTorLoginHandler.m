@@ -7,15 +7,28 @@
 //
 
 #import "OTRXMPPTorLoginHandler.h"
+#import "OTRTorManager.h"
 
 @implementation OTRXMPPTorLoginHandler
 
 - (void)performActionWithValidForm:(XLFormDescriptor *)form account:(OTRAccount *)account completion:(void (^)(NSError *, OTRAccount *))completion
 {
-    //check tor
-    BOOL torIsRunning = NO;
-    if (torIsRunning) {
+    //check tor is running
+    if ([OTRTorManager sharedInstance].torManager.status == CPAStatusOpen) {
         [super performActionWithValidForm:form account:account completion:completion];
+    } else if ([OTRTorManager sharedInstance].torManager.status == CPAStatusClosed) {
+        [[OTRTorManager sharedInstance].torManager setupWithCompletion:^(NSString *socksHost, NSUInteger socksPort, NSError *error) {
+            
+            if (error) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completion(error,account);
+                });
+            } else {
+                [super performActionWithValidForm:form account:account completion:completion];
+            }
+        } progress:^(NSInteger progress, NSString *summaryString) {
+            
+        }];
     }
 }
 

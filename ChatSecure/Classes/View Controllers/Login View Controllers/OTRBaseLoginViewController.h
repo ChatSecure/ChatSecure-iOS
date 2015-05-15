@@ -13,6 +13,7 @@
 
 @required
 - (void)performActionWithValidForm:(XLFormDescriptor *)form account:(OTRAccount *)account completion:(void (^)(NSError *error, OTRAccount *account))completion;
+- (void)moveAccountValues:(OTRAccount *)account intoForm:(XLFormDescriptor *)form;
 
 @end
 

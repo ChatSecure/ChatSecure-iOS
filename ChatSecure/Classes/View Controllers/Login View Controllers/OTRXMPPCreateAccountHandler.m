@@ -10,4 +10,9 @@
 
 @implementation OTRXMPPCreateAccountHandler
 
+- (void)moveAccountValues:(OTRAccount *)account intoForm:(XLFormDescriptor *)form
+{
+    
+}
+
 @end
