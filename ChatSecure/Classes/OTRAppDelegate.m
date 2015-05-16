@@ -54,6 +54,7 @@
 #import "UIViewController+ChatSecure.h"
 #import "OTRNotificationController.h"
 #import "UIAlertView+Blocks.h"
+#import "XMPPURI.h"
 
 #if CHATSECURE_DEMO
 #import "OTRChatDemo.h"
@@ -385,6 +386,11 @@
     if ([[BITHockeyManager sharedHockeyManager].authenticator handleOpenURL:url
                                                           sourceApplication:sourceApplication
                                                                  annotation:annotation]) {
+        return YES;
+    }
+    if ([url.scheme isEqualToString:@"xmpp"]) {
+        XMPPURI *xmppURI = [[XMPPURI alloc] initWithURL:url];
+        XMPPJID *jid = xmppURI.jid;
         return YES;
     }
     return NO;

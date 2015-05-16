@@ -16,10 +16,8 @@
 @property (nonatomic, strong) NSString *resource;
 @property (nonatomic) int port;
 
-
 + (int)defaultPort;
 + (NSString *)newResource;
-
 
 + (instancetype)accountForStream:(XMPPStream *)stream transaction:(YapDatabaseReadTransaction *)transaction;
 

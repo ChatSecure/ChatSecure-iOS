@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
+#import "XMPPURI.h"
 
 @interface ChatSecureTests : XCTestCase
 
@@ -25,9 +26,26 @@
     [super tearDown];
 }
 
-- (void)testExample {
-    // This is an example of a functional test case.
-    XCTAssert(YES, @"Pass");
+- (void) testPlainXMPPURIParser {
+    NSString *username = @"username";
+    NSString *domain = @"example.com";
+    XMPPJID *jid1 = [XMPPJID jidWithUser:username domain:domain resource:nil];
+    XMPPURI *uri1 = [[XMPPURI alloc] initWithJID:jid1 fingerprint:nil];
+    NSString *uriString = uri1.uriString;
+    NSURL *url = [NSURL URLWithString:uriString];
+    XMPPURI *uri2 = [[XMPPURI alloc] initWithURL:url];
+    
+    XMPPJID *jid2 = uri2.jid;
+    XCTAssertEqualObjects(username, jid2.user);
+    XCTAssertEqualObjects(domain, jid2.domain);
+}
+
+- (void) testXMPPURIParserWithOTR {
+    NSString *uriString = @"xmpp:nathan@guardianproject.info/?otr-fingerprint=C9BC6E902B11C5C100EB017E8E15E0617A9939D3";
+    NSURL *url = [NSURL URLWithString:uriString];
+    XMPPURI *uri2 = [[XMPPURI alloc] initWithURL:url];
+    
+    XMPPJID *jid2 = uri2.jid;
 }
 
 @end
