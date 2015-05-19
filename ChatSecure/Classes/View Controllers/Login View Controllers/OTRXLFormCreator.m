@@ -46,35 +46,56 @@ NSString *const kOTRXLFormResourceTextFieldTag        = @"kOTRXLFormResourceText
 + (XLFormDescriptor *)formForAccountType:(OTRAccountType)accountType createAccount:(BOOL)createAccount;
 {
     XLFormDescriptor *descriptor = [[XLFormDescriptor alloc] init];
-    switch (accountType) {
-        case OTRAccountTypeJabber:
-        case OTRAccountTypeXMPPTor:{
-            
-            XLFormSectionDescriptor *basicSection = [XLFormSectionDescriptor formSectionWithTitle:BASIC_STRING];
-            XLFormSectionDescriptor *advancedSection = [XLFormSectionDescriptor formSectionWithTitle:ADVANCED_STRING];
-            
-            [basicSection addFormRow:[self usernameTextFieldRowDescriptorWithValue:nil]];
-            [basicSection addFormRow:[self passwordTextFieldRowDescriptorWithValue:nil]];
-            [basicSection addFormRow:[self rememberPasswordRowDescriptorWithValue:YES]];
-            [basicSection addFormRow:[self loginAutomaticallyRowDescriptorWithValue:NO]];
-            
-            [advancedSection addFormRow:[self hostnameRowDescriptorWithValue:nil]];
-            [advancedSection addFormRow:[self portRowDescriptorWithValue:nil]];
-            [advancedSection addFormRow:[self resourceRowDescriptorWithValue:nil]];
-            
-            [descriptor addFormSection:basicSection];
-            [descriptor addFormSection:advancedSection];
-            
-            break;
+    
+    if (createAccount) {
+        
+        XLFormSectionDescriptor *basicSection = [XLFormSectionDescriptor formSectionWithTitle:nil];
+        [basicSection addFormRow:[self usernameTextFieldRowDescriptorWithValue:nil]];
+        [basicSection addFormRow:[self passwordTextFieldRowDescriptorWithValue:nil]];
+        
+        
+        XLFormSectionDescriptor *serverSection = [XLFormSectionDescriptor formSectionWithTitle:@"Server"];
+        serverSection.footerTitle = @"Pick a server";
+        [serverSection addFormRow:[self serverRowDescriptorWithValue:nil]];
+        
+        
+        [descriptor addFormSection:basicSection];
+        [descriptor addFormSection:serverSection];
+        
+        
+    } else {
+        switch (accountType) {
+            case OTRAccountTypeJabber:
+            case OTRAccountTypeXMPPTor:{
+                
+                XLFormSectionDescriptor *basicSection = [XLFormSectionDescriptor formSectionWithTitle:BASIC_STRING];
+                XLFormSectionDescriptor *advancedSection = [XLFormSectionDescriptor formSectionWithTitle:ADVANCED_STRING];
+                
+                [basicSection addFormRow:[self usernameTextFieldRowDescriptorWithValue:nil]];
+                [basicSection addFormRow:[self passwordTextFieldRowDescriptorWithValue:nil]];
+                [basicSection addFormRow:[self rememberPasswordRowDescriptorWithValue:YES]];
+                [basicSection addFormRow:[self loginAutomaticallyRowDescriptorWithValue:NO]];
+                
+                [advancedSection addFormRow:[self hostnameRowDescriptorWithValue:nil]];
+                [advancedSection addFormRow:[self portRowDescriptorWithValue:nil]];
+                [advancedSection addFormRow:[self resourceRowDescriptorWithValue:nil]];
+                
+                [descriptor addFormSection:basicSection];
+                [descriptor addFormSection:advancedSection];
+                
+                break;
+            }
+            case OTRAccountTypeGoogleTalk: {
+                
+                break;
+            }
+                
+            default:
+                break;
         }
-        case OTRAccountTypeGoogleTalk: {
-            
-            break;
-        }
-            
-        default:
-            break;
     }
+    
+    
     
     return descriptor;
 }
@@ -146,6 +167,11 @@ NSString *const kOTRXLFormResourceTextFieldTag        = @"kOTRXLFormResourceText
     resourceRowDescriptor.value = value;
     
     return resourceRowDescriptor;
+}
+
++ (XLFormRowDescriptor *)serverRowDescriptorWithValue:(id)value
+{
+    
 }
 
 
