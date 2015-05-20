@@ -36,6 +36,7 @@
     [super viewWillAppear:animated];
     
     [self.navigationController setNavigationBarHidden:NO animated:animated];
+    [self.tableView reloadData];
     [self.createLoginHandler moveAccountValues:self.account intoForm:self.form];
 }
 

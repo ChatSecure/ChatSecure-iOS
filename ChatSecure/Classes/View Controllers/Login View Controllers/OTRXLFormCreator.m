@@ -10,6 +10,9 @@
 #import "XLForm.h"
 #import "OTRXMPPAccount.h"
 #import "Strings.h"
+#import "OTRXMPPServerTableViewCell.h"
+#import "OTRImages.h"
+#import "OTRXMPPServerListViewController.h"
 
 NSString *const kOTRXLFormUsernameTextFieldTag        = @"kOTRXLFormUsernameTextFieldTag";
 NSString *const kOTRXLFormPasswordTextFieldTag        = @"kOTRXLFormPasswordTextFieldTag";
@@ -18,6 +21,7 @@ NSString *const kOTRXLFormLoginAutomaticallySwitchTag = @"kOTRXLFormLoginAutomat
 NSString *const kOTRXLFormHostnameTextFieldTag        = @"kOTRXLFormHostnameTextFieldTag";
 NSString *const kOTRXLFormPortTextFieldTag            = @"kOTRXLFormPortTextFieldTag";
 NSString *const kOTRXLFormResourceTextFieldTag        = @"kOTRXLFormResourceTextFieldTag";
+NSString *const kOTRXLFormXMPPServerTag               = @"kOTRXLFormXMPPServerTag";
 
 @implementation OTRXLFormCreator
 
@@ -171,7 +175,16 @@ NSString *const kOTRXLFormResourceTextFieldTag        = @"kOTRXLFormResourceText
 
 + (XLFormRowDescriptor *)serverRowDescriptorWithValue:(id)value
 {
+    XLFormRowDescriptor *xmppServerDescriptor = [XLFormRowDescriptor formRowDescriptorWithTag:kOTRXLFormXMPPServerTag rowType:kOTRFormRowDescriptorTypeXMPPServer];
+    OTRXMPPServerTableViewCellInfo *info = [[OTRXMPPServerTableViewCellInfo alloc] init];
+    info.serverName = @"Dukgo";
+    info.serverDomain = @"dukgo.com";
+    info.serverImage = [OTRImages duckduckgoImage];
     
+    xmppServerDescriptor.value = info;
+    xmppServerDescriptor.action.viewControllerClass = [OTRXMPPServerListViewController class];
+    
+    return xmppServerDescriptor;
 }
 
 

@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		26456792F7EBE46ADC17E5BC /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 25A3853627C1F67D3A296AB4 /* libPods.a */; };
 		3CC9B590E308D3C320E9548B /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 25A3853627C1F67D3A296AB4 /* libPods.a */; };
+		63039E931B0D1DFC007C9978 /* OTRXMPPServerTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63039E921B0D1DFC007C9978 /* OTRXMPPServerTableViewCell.m */; };
+		63039E981B0D43FE007C9978 /* OTRXMPPServerListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63039E971B0D43FE007C9978 /* OTRXMPPServerListViewController.m */; };
+		63039E9A1B0D46B6007C9978 /* xmppServers.plist in Resources */ = {isa = PBXBuildFile; fileRef = 63039E991B0D46B6007C9978 /* xmppServers.plist */; };
 		632461521A1ADC77000EF33B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 633104D61A169EC800C17BAE /* Localizable.strings */; };
 		632461581A1AE553000EF33B /* OTRCoreDataMigrationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 632461571A1AE553000EF33B /* OTRCoreDataMigrationTests.m */; };
 		633104FD1A16AD8700C17BAE /* chat.facebook.com.cer in Resources */ = {isa = PBXBuildFile; fileRef = 633104FB1A16AD8700C17BAE /* chat.facebook.com.cer */; };
@@ -211,6 +214,11 @@
 /* Begin PBXFileReference section */
 		154CBBDFA16BDE9C28017B1F /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		25A3853627C1F67D3A296AB4 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		63039E911B0D1DFC007C9978 /* OTRXMPPServerTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPServerTableViewCell.h; sourceTree = "<group>"; };
+		63039E921B0D1DFC007C9978 /* OTRXMPPServerTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPServerTableViewCell.m; sourceTree = "<group>"; };
+		63039E961B0D43FE007C9978 /* OTRXMPPServerListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPServerListViewController.h; sourceTree = "<group>"; };
+		63039E971B0D43FE007C9978 /* OTRXMPPServerListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPServerListViewController.m; sourceTree = "<group>"; };
+		63039E991B0D46B6007C9978 /* xmppServers.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = xmppServers.plist; sourceTree = "<group>"; };
 		632461571A1AE553000EF33B /* OTRCoreDataMigrationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRCoreDataMigrationTests.m; sourceTree = "<group>"; };
 		633104D51A169EC800C17BAE /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		633104D81A169F0E00C17BAE /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -968,6 +976,9 @@
 				638C7CF11B02BE4A004F8EC3 /* OTRBaseLoginViewController.m */,
 				638C7CF31B02BF0D004F8EC3 /* OTRXLFormCreator.h */,
 				638C7CF41B02BF0D004F8EC3 /* OTRXLFormCreator.m */,
+				63039E961B0D43FE007C9978 /* OTRXMPPServerListViewController.h */,
+				63039E991B0D46B6007C9978 /* xmppServers.plist */,
+				63039E971B0D43FE007C9978 /* OTRXMPPServerListViewController.m */,
 				634680871B041EE900D9A1C5 /* Login Handlers */,
 				638D2E041AFC0DF100F3C50C /* OTRLoginCreateViewController.h */,
 				638D2E051AFC0DF100F3C50C /* OTRLoginCreateViewController.m */,
@@ -1030,6 +1041,8 @@
 				633106611A16D1A300C17BAE /* OTRStatusMessageCell.m */,
 				633106641A16D1A300C17BAE /* OTRTextFieldTableViewCell.h */,
 				633106651A16D1A300C17BAE /* OTRTextFieldTableViewCell.m */,
+				63039E911B0D1DFC007C9978 /* OTRXMPPServerTableViewCell.h */,
+				63039E921B0D1DFC007C9978 /* OTRXMPPServerTableViewCell.m */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -1403,6 +1416,7 @@
 				633104FD1A16AD8700C17BAE /* chat.facebook.com.cer in Resources */,
 				D973D7061A2D4094004D353E /* Pods-acknowledgements.plist in Resources */,
 				D9365E7A1A1EB0050006434A /* torrc in Resources */,
+				63039E9A1B0D46B6007C9978 /* xmppServers.plist in Resources */,
 				6331072B1A16D1F200C17BAE /* DemoImages.xcassets in Resources */,
 				633107201A16D1A300C17BAE /* LaunchScreen.xib in Resources */,
 				633104FE1A16AD8700C17BAE /* talk.google.com.cer in Resources */,
@@ -1575,6 +1589,7 @@
 				633106BA1A16D1A300C17BAE /* OTROpenInTwitterActivity.m in Sources */,
 				633106781A16D1A300C17BAE /* UIActionSheet+ChatSecure.m in Sources */,
 				63C5B66A1A82F3EE0011BEA8 /* OTRAudioPlaybackController.m in Sources */,
+				63039E931B0D1DFC007C9978 /* OTRXMPPServerTableViewCell.m in Sources */,
 				63C4BD161A1E9BE1001696CD /* OTRManagedMessageAndStatus.m in Sources */,
 				633106E51A16D1A300C17BAE /* OTRConstants.m in Sources */,
 				633107281A16D1A400C17BAE /* OTRTitleSubtitleView.m in Sources */,
@@ -1596,6 +1611,7 @@
 				633106841A16D1A300C17BAE /* OTROAuthRefresher.m in Sources */,
 				633107131A16D1A300C17BAE /* OTRBuddyImageCell.m in Sources */,
 				63C4BD211A1E9BE1001696CD /* _OTRManagedEncryptionStatusMessage.m in Sources */,
+				63039E981B0D43FE007C9978 /* OTRXMPPServerListViewController.m in Sources */,
 				63C4BD241A1E9BE1001696CD /* _OTRManagedGroup.m in Sources */,
 				633106CF1A16D1A300C17BAE /* OTROAuthXMPPAccount.m in Sources */,
 				633106C51A16D1A300C17BAE /* OTRListSettingValue.m in Sources */,
