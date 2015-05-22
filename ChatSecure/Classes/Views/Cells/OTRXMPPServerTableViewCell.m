@@ -13,6 +13,17 @@ NSString *const kOTRFormRowDescriptorTypeXMPPServer = @"kOTRFormRowDescriptorTyp
 
 @implementation OTRXMPPServerTableViewCellInfo
 
+- (BOOL)isEqual:(id)object
+{
+    if ([object isKindOfClass:[OTRXMPPServerTableViewCellInfo class]]) {
+        OTRXMPPServerTableViewCellInfo *info = object;
+        if ([self.serverName isEqualToString:info.serverName] && [self.serverDomain isEqualToString:info.serverDomain]) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
 @end
 
 @implementation OTRXMPPServerTableViewCell

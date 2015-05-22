@@ -218,7 +218,7 @@
 		63039E921B0D1DFC007C9978 /* OTRXMPPServerTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPServerTableViewCell.m; sourceTree = "<group>"; };
 		63039E961B0D43FE007C9978 /* OTRXMPPServerListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPServerListViewController.h; sourceTree = "<group>"; };
 		63039E971B0D43FE007C9978 /* OTRXMPPServerListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPServerListViewController.m; sourceTree = "<group>"; };
-		63039E991B0D46B6007C9978 /* xmppServers.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = xmppServers.plist; sourceTree = "<group>"; };
+		63039E991B0D46B6007C9978 /* xmppServers.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = xmppServers.plist; path = "Classes/View Controllers/Login View Controllers/xmppServers.plist"; sourceTree = "<group>"; };
 		632461571A1AE553000EF33B /* OTRCoreDataMigrationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRCoreDataMigrationTests.m; sourceTree = "<group>"; };
 		633104D51A169EC800C17BAE /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		633104D81A169F0E00C17BAE /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -650,6 +650,7 @@
 			isa = PBXGroup;
 			children = (
 				D973D7051A2D4094004D353E /* Pods-acknowledgements.plist */,
+				63039E991B0D46B6007C9978 /* xmppServers.plist */,
 				D9365E791A1EB0050006434A /* torrc */,
 				633107291A16D1F200C17BAE /* DemoImages.xcassets */,
 				6331072A1A16D1F200C17BAE /* Images.xcassets */,
@@ -977,7 +978,6 @@
 				638C7CF31B02BF0D004F8EC3 /* OTRXLFormCreator.h */,
 				638C7CF41B02BF0D004F8EC3 /* OTRXLFormCreator.m */,
 				63039E961B0D43FE007C9978 /* OTRXMPPServerListViewController.h */,
-				63039E991B0D46B6007C9978 /* xmppServers.plist */,
 				63039E971B0D43FE007C9978 /* OTRXMPPServerListViewController.m */,
 				634680871B041EE900D9A1C5 /* Login Handlers */,
 				638D2E041AFC0DF100F3C50C /* OTRLoginCreateViewController.h */,
