@@ -30,7 +30,7 @@
 #import "OTRDatabaseManager.h"
 #import "YapDatabaseConnection.h"
 #import "YapDatabaseTransaction.h"
-
+#import <KVOController/FBKVOController.h>
 #import "OTRLog.h"
 
 static OTRProtocolManager *sharedManager = nil;
@@ -41,7 +41,7 @@ static OTRProtocolManager *sharedManager = nil;
 @property (nonatomic) NSUInteger numberOfConnectingProtocols;
 @property (nonatomic, strong) OTRPushManager *pushManager;
 @property (nonatomic, strong) NSMutableDictionary * protocolManagerDictionary;
-
+@property (nonatomic, strong) FBKVOController *KVOController;
 @property (nonatomic) dispatch_queue_t internalQueue;
 
 @end
@@ -56,7 +56,8 @@ static OTRProtocolManager *sharedManager = nil;
         self.numberOfConnectedProtocols = 0;
         self.numberOfConnectingProtocols = 0;
         self.encryptionManager = [[OTREncryptionManager alloc] init];
-        self.protocolManagerDictionary = [NSMutableDictionary new];
+        self.protocolManagerDictionary = [[NSMutableDictionary alloc] init];
+        self.KVOController = [FBKVOController controllerWithObserver:self];
     }
     return self;
 }
@@ -64,10 +65,6 @@ static OTRProtocolManager *sharedManager = nil;
 - (void)removeProtocolForAccount:(OTRAccount *)account
 {
     @synchronized(self.protocolManagerDictionary) {
-        id protocol = self.protocolManagerDictionary[account.uniqueId];
-        if (protocol) {
-            [protocol removeObserver:self forKeyPath:NSStringFromSelector(@selector(connectionStatus))];
-        }
         [self.protocolManagerDictionary removeObjectForKey:account.uniqueId];
     }
 }
@@ -76,7 +73,7 @@ static OTRProtocolManager *sharedManager = nil;
 {
     @synchronized(self.protocolManagerDictionary){
         [self.protocolManagerDictionary setObject:protocol forKey:account.uniqueId];
-        [protocol addObserver:self forKeyPath:NSStringFromSelector(@selector(connectionStatus)) options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:NULL];
+        [self.KVOController observe:protocol keyPath:NSStringFromSelector(@selector(connectionStatus)) options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld action:@selector(protocolDidChange:)];
     }
 }
 
@@ -180,39 +177,42 @@ static OTRProtocolManager *sharedManager = nil;
     }
 }
 
--(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+- (void)protocolDidChange:(NSDictionary *)change
 {
-    if ([keyPath isEqualToString:NSStringFromSelector(@selector(connectionStatus))]) {
-        OTRProtocolConnectionStatus newStatus = [[change objectForKey:NSKeyValueChangeNewKey] integerValue];
-        OTRProtocolConnectionStatus oldStatus = [[change objectForKey:NSKeyValueChangeOldKey] integerValue];
-        NSInteger connectedInt = 0;
-        NSInteger connectingInt = 0;
-        
-        switch (oldStatus) {
-            case OTRProtocolConnectionStatusConnected:
-                connectedInt = -1;
-                break;
-            case OTRProtocolConnectionStatusConnecting:
-                connectingInt = -1;
-            default:
-                break;
-        }
-        
-        switch (newStatus) {
-            case OTRProtocolConnectionStatusConnected:
-                connectedInt = 1;
-                break;
-            case OTRProtocolConnectionStatusConnecting:
-                connectedInt = 1;
-            default:
-                break;
-        }
-        
-        
-        self.numberOfConnectedProtocols += connectedInt;
-        self.numberOfConnectingProtocols += connectingInt;
+    
+    OTRProtocolConnectionStatus newStatus = [[change objectForKey:NSKeyValueChangeNewKey] integerValue];
+    OTRProtocolConnectionStatus oldStatus = [[change objectForKey:NSKeyValueChangeOldKey] integerValue];
+    
+    if (oldStatus == newStatus) {
+        return;
     }
-
+    
+    NSInteger connectedInt = 0;
+    NSInteger connectingInt = 0;
+    
+    switch (oldStatus) {
+        case OTRProtocolConnectionStatusConnected:
+            connectedInt = -1;
+            break;
+        case OTRProtocolConnectionStatusConnecting:
+            connectingInt = -1;
+        default:
+            break;
+    }
+    
+    switch (newStatus) {
+        case OTRProtocolConnectionStatusConnected:
+            connectedInt = 1;
+            break;
+        case OTRProtocolConnectionStatusConnecting:
+            connectingInt = 1;
+        default:
+            break;
+    }
+    
+    
+    self.numberOfConnectedProtocols += connectedInt;
+    self.numberOfConnectingProtocols += connectingInt;
 }
 
 -(BOOL)isAccountConnected:(OTRAccount *)account;

@@ -1276,8 +1276,13 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
         [self.uiDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
             updatedBuddy = [OTRBuddy fetchObjectWithUniqueID:self.buddy.uniqueId transaction:transaction];
         }];
-        
         self.buddy = updatedBuddy;
+    }
+    
+    // When deleting messages/buddies we shouldn't animate the changes
+    if (!self.buddy) {
+        [self.collectionView reloadData];
+        return;
     }
     
     //Changes in the messages add new one or deleted some

@@ -48,6 +48,9 @@
 
 - (void) setValue:(id)settingsValue
 {
+    if (!key || !settingsValue) {
+        return;
+    }
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults setObject:settingsValue forKey:key];
     [defaults synchronize];

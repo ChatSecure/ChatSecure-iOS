@@ -35,6 +35,7 @@ pod 'TUSafariActivity', '~> 1.0'
 pod 'ARChromeActivity', '~> 1.0'
 pod 'CocoaAsyncSocket', '~> 7.4'
 pod 'JTSImageViewController', '~> 1.4'
+pod 'KVOController', '~> 1.0'
 
 pod 'XLForm', :git => 'https://github.com/xmartlabs/XLForm.git', :commit => '514807c473f013211c14c65919846044d1f72da9'
 

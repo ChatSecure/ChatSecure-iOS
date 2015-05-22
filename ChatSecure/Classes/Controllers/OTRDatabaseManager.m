@@ -29,6 +29,7 @@
 #import "OTRMessage.h"
 #import "OTRMediaFileManager.h"
 #import "IOCipher.h"
+#import "NSFileManager+ChatSecure.h"
 
 NSString *const OTRYapDatabaseRelationshipName = @"OTRYapDatabaseRelationshipName";
 NSString *const OTRYapDatabseMessageIdSecondaryIndex = @"OTRYapDatabseMessageIdSecondaryIndex";
@@ -53,7 +54,13 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
         [self migrateCoreDataToYapDatabase];
         success = YES;
     }
-    success = [self setupSecureMediaStorage];
+    if (success) success = [self setupSecureMediaStorage];
+    
+    NSString *databaseDirectory = [OTRDatabaseManager yapDatabaseDirectory];
+    //Enumerate all files in yap database directory and exclude from backup
+    if (success) success = [[NSFileManager defaultManager] otr_excudeFromBackUpFilesInDirectory:databaseDirectory];
+    //fix file protection on existing files
+     if (success) success = [[NSFileManager defaultManager] otr_setFileProtection:NSFileProtectionCompleteUntilFirstUserAuthentication forFilesInDirectory:databaseDirectory];
     return success;
 }
 
@@ -200,6 +207,7 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
     }
     NSString *databasePath = [[self class] yapDatabasePathWithName:name];
     
+    
     self.database = [[YapDatabase alloc] initWithPath:databasePath
                                            serializer:nil
                                          deserializer:nil
@@ -226,22 +234,6 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
     if (success) success = [OTRDatabaseView registerAllSubscriptionRequestsView];
     if (success) success = [OTRDatabaseView registerUnreadMessagesView];
     if (success) success = [self setupSecondaryIndexes];
-    
-    
-    
-    //Enumerate all files in yap database directory and exclude from backup
-    if (success) {
-        NSError *error = nil;
-        NSDirectoryEnumerator *directoryEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:databaseDirectory];
-        id file;
-        while ((file = [directoryEnumerator nextObject]) && success && !error) {
-            if([file isKindOfClass:[NSString class]]) {
-                NSString *fileName = file;
-                NSURL *url = [NSURL fileURLWithPath:[databaseDirectory stringByAppendingPathComponent:fileName]];
-                success = [url setResourceValue: @(YES) forKey: NSURLIsExcludedFromBackupKey error: &error];
-            }
-        }
-    }
     
     if (self.database && success) {
         return YES;
