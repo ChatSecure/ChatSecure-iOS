@@ -14,6 +14,7 @@
 #import "OTRBaseLoginViewController.h"
 #import "OTRXLFormCreator.h"
 #import "OTRXMPPLoginHandler.h"
+#import "OTRXMPPCreateAccountHandler.h"
 
 @implementation OTRWelcomeAccountInfo
 
@@ -201,9 +202,11 @@
 
 - (void)didTapCreateChatID:(id)sender
 {
-    OTRBaseLoginViewController *loginViewController = [[OTRBaseLoginViewController alloc] initWithForm:[OTRXLFormCreator formForAccountType:OTRAccountTypeJabber createAccount:YES] style:UITableViewStyleGrouped];
+    OTRBaseLoginViewController *createAccountViewController = [[OTRBaseLoginViewController alloc] initWithForm:[OTRXLFormCreator formForAccountType:OTRAccountTypeJabber createAccount:YES] style:UITableViewStyleGrouped];
+    createAccountViewController.createLoginHandler = [[OTRXMPPCreateAccountHandler alloc] init];
+    createAccountViewController.account = [[OTRXMPPAccount alloc] initWithAccountType:OTRAccountTypeJabber];
     
-    [self.navigationController pushViewController:loginViewController animated:YES];
+    [self.navigationController pushViewController:createAccountViewController animated:YES];
     NSLog(@"Create Chat ID");
 }
 

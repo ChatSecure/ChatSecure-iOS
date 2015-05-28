@@ -247,15 +247,15 @@ static NSString * const domainCellIdentifier = @"domainCellIdentifer";
     else {
         [self showHUDWithText:CREATING_ACCOUNT_STRING];
         __weak typeof(self)weakSelf = self;
-        self.currentXMPPManager = [OTRXMPPManager attemptToCreateAccountWithUsername:self.usernameTextField.text password:self.passwordTextField.text domain:[self serverHostnameForIndex:self.selectedHostnameIndex] completionQueue:dispatch_get_main_queue() completion:^(NSError *error) {
-            __strong typeof(weakSelf)strongSelf = weakSelf;
-            if (error) {
-                [strongSelf didReceiveRegistrationFailedError:error];
-            }
-            else {
-                [strongSelf didReceiveRegistrationSucceeded];
-            }
-        }];
+//        self.currentXMPPManager = [OTRXMPPManager attemptToCreateAccountWithUsername:self.usernameTextField.text password:self.passwordTextField.text domain:[self serverHostnameForIndex:self.selectedHostnameIndex] completionQueue:dispatch_get_main_queue() completion:^(NSError *error) {
+//            __strong typeof(weakSelf)strongSelf = weakSelf;
+//            if (error) {
+//                [strongSelf didReceiveRegistrationFailedError:error];
+//            }
+//            else {
+//                [strongSelf didReceiveRegistrationSucceeded];
+//            }
+//        }];
     }
 }
 

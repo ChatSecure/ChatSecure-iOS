@@ -86,6 +86,8 @@ extern NSString *const OTRXMPPLoginErrorKey;
 
 - (void)failedToConnect:(NSError *)error;
 
+- (void)registerNewAccountWithPassword:(NSString *)newPassword;
+
 
 //Chat State
 - (void)sendChatState:(OTRChatState)chatState withBuddyID:(NSString *)buddyUniqueId;
@@ -96,11 +98,5 @@ extern NSString *const OTRXMPPLoginErrorKey;
 - (void)sendInactiveChatState:(NSTimer *)timer;
 - (NSTimer *)inactiveChatStateTimerForBuddyObjectID:(NSString *)buddyUniqueId;
 - (NSTimer *)pausedChatStateTimerForBuddyObjectID:(NSString *)buddyUniqueId;
-
-+ (OTRXMPPManager *)attemptToCreateAccountWithUsername:(NSString *)username
-                                              password:(NSString *)password
-                                                domain:(NSString *)domain
-                                       completionQueue:(dispatch_queue_t)completionQueue
-                                            completion:(void (^)(NSError *error))completion;
 
 @end

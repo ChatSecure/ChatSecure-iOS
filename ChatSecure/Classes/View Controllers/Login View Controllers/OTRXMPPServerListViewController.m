@@ -109,7 +109,9 @@ NSString *const kOTROTRXMPPServerListViewControllerCustomTag = @"kOTROTRXMPPServ
         OTRXMPPServerTableViewCellInfo *cellInfo = [[OTRXMPPServerTableViewCellInfo alloc] init];
         cellInfo.serverName = domainDictionary[@"serverName"];
         cellInfo.serverDomain = domainDictionary[@"serverDomain"];
+        cellInfo.userDomain = domainDictionary[@"userDomain"];
         cellInfo.serverImage = [OTRImages xmppServerImageWithName:domainDictionary[@"serverImage"]];
+
         
         XLFormRowDescriptor *rowDescriptor = [XLFormRowDescriptor formRowDescriptorWithTag:nil rowType:kOTRFormRowDescriptorTypeXMPPServer];
         rowDescriptor.value = cellInfo;

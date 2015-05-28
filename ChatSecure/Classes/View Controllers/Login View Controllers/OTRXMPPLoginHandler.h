@@ -10,8 +10,15 @@
 #import "OTRBaseLoginViewController.h"
 #import "OTRXMPPAccount.h"
 
-@class XLFormViewController;
+@class XLFormViewController, OTRXMPPManager;
 
 @interface OTRXMPPLoginHandler : NSObject <OTRBaseLoginViewControllerHandlerProtocol>
+
+@property (nonatomic, copy) void (^completion)(NSError *error, OTRAccount *account);
+@property (nonatomic, strong, readonly) OTRXMPPManager *xmppManager;
+
+- (OTRAccount *)moveValues:(XLFormDescriptor *)form intoAccount:(OTRXMPPAccount *)account;
+
+- (void)prepareForXMPPConnectionFrom:(XLFormDescriptor *)form account:(OTRXMPPAccount *)account;
 
 @end

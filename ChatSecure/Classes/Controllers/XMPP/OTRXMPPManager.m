@@ -1070,35 +1070,4 @@ managedBuddyObjectID
     });
 }
 
-#pragma - mark Class Methods
-+ (OTRXMPPManager *)attemptToCreateAccountWithUsername:(NSString *)username
-                                              password:(NSString *)password
-                                                domain:(NSString *)domain
-                                       completionQueue:(dispatch_queue_t)completionQueue
-                                            completion:(void (^)(NSError *error))completion
-{
-    if (!completionQueue) {
-        completionQueue = dispatch_get_main_queue();
-    }
-    
-    OTRXMPPAccount *xmppAccount = [[OTRXMPPAccount alloc] initWithAccountType:OTRAccountTypeJabber];
-    xmppAccount.username = [[XMPPJID jidWithUser:username domain:domain resource:nil] bare];
-    xmppAccount.domain = domain;
-    
-    OTRXMPPManager *xmppManager = [[OTRXMPPManager alloc] initWithAccount:xmppAccount];
-    
-    if (completion) {
-//        xmppManager.callBackQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-//        xmppManager.xmppStreamRegisterBlock = ^void(NSError *error) {
-//            dispatch_async(completionQueue, ^{
-//                completion(error);
-//            });
-//        };
-    }
-    
-    [xmppManager registerNewAccountWithPassword:password];
-    
-    return xmppManager;
-}
-
 @end

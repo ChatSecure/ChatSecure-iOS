@@ -13,14 +13,6 @@
 #import "OTRProtocolManager.h"
 #import "OTRDatabaseManager.h"
 
-@interface OTRXMPPLoginHandler ()
-
-@property (nonatomic, strong) OTRXMPPManager *xmppManager;
-
-@property (nonatomic, copy) void (^completion)(NSError *error, OTRAccount *account);
-
-@end
-
 @implementation OTRXMPPLoginHandler
 
 - (void)moveAccountValues:(OTRXMPPAccount *)account intoForm:(XLFormDescriptor *)form
@@ -40,7 +32,7 @@
     [[form formRowWithTag:kOTRXLFormResourceTextFieldTag] setValue:account.resource];
 }
 
-- (OTRAccount *)moveValues:(XLFormDescriptor *)form intoAccount:(OTRXMPPAccount *)account
+- (OTRXMPPAccount *)moveValues:(XLFormDescriptor *)form intoAccount:(OTRXMPPAccount *)account
 {
     account.username = [[form formRowWithTag:kOTRXLFormUsernameTextFieldTag] value];
     account.rememberPassword = [[[form formRowWithTag:kOTRXLFormRememberPasswordSwitchTag] value] boolValue];
@@ -68,13 +60,18 @@
 
 #pragma - mark OTRBaseLoginViewController
 
+- (void)prepareForXMPPConnectionFrom:(XLFormDescriptor *)form account:(OTRXMPPAccount *)account
+{
+    OTRAccount *modifiedAccount = [self moveValues:form intoAccount:account];
+    _xmppManager = (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:modifiedAccount];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedNotificatoin:) name:OTRXMPPLoginStatusNotificationName object:self.xmppManager];
+}
+
 - (void)performActionWithValidForm:(XLFormDescriptor *)form account:(OTRXMPPAccount *)account completion:(void (^)(NSError *, OTRAccount *))completion
 {
     self.completion = completion;
-    OTRAccount *modifiedAccount = [self moveValues:form intoAccount:account];
-    self.xmppManager = (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:modifiedAccount];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedNotificatoin:) name:OTRXMPPLoginStatusNotificationName object:self.xmppManager];
+    [self prepareForXMPPConnectionFrom:form account:account];
     
     NSString *password = [[form formRowWithTag:kOTRXLFormPasswordTextFieldTag] value];
     [self.xmppManager connectWithPassword:password userInitiated:YES];

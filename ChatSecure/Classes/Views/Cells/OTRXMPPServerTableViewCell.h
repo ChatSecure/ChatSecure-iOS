@@ -15,6 +15,7 @@ extern NSString *const kOTRFormRowDescriptorTypeXMPPServer;
 @property (nonatomic, strong) UIImage *serverImage;
 @property (nonatomic, strong) NSString *serverName;
 @property (nonatomic, strong) NSString *serverDomain;
+@property (nonatomic, strong) NSString *userDomain;
 
 @end
 
