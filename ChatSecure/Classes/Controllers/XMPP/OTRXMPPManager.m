@@ -458,14 +458,14 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
             
             [buddy saveWithTransaction:transaction];
         }
+    } completionQueue:dispatch_get_main_queue() completionBlock:^{
+        if([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyDeleteOnDisconnect])
+        {
+            [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+                [OTRMessage deleteAllMessagesForAccountId:self.account.uniqueId transaction:transaction];
+            }];
+        }
     }];
-    
-    if([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyDeleteOnDisconnect])
-    {
-        [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-            [OTRMessage deleteAllMessagesForAccountId:self.account.uniqueId transaction:transaction];
-        }];
-    }
 }
 
 - (void)registerNewAccountWithPassword:(NSString *)newPassword
