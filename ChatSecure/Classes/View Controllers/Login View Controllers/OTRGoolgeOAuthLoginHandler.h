@@ -7,7 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "OTRXMPPLoginHandler.h"
 
-@interface OTRGoolgeOAuthLoginHandler : NSObject
+@interface OTRGoolgeOAuthLoginHandler : OTRXMPPLoginHandler
 
 @end

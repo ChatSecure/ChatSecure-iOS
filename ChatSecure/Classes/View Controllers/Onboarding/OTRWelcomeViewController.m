@@ -15,6 +15,12 @@
 #import "OTRXLFormCreator.h"
 #import "OTRXMPPLoginHandler.h"
 #import "OTRXMPPCreateAccountHandler.h"
+#import "OTRGoogleOAuthXMPPAccount.h"
+#import "OTRGoolgeOAuthLoginHandler.h"
+#import "GTMOAuth2ViewControllerTouch.h"
+#import "OTRSecrets.h"
+#import "OTRConstants.h"
+#import "OTRDatabaseManager.h"
 
 @implementation OTRWelcomeAccountInfo
 
@@ -67,7 +73,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [self.navigationController setNavigationBarHidden:YES];
+    
     self.view.backgroundColor = [UIColor whiteColor];
     
     _chatsecureLabel = [[UILabel alloc] initForAutoLayout];
@@ -233,8 +239,53 @@
         
         [strongSelf.navigationController pushViewController:loginViewController animated:YES];
     }]];
-    [accountArray addObject:[OTRWelcomeAccountInfo accountInfoWithText:@"Google" image:[UIImage imageNamed:@"gtalk"] didSelectBlock:NULL]];
+    [accountArray addObject:[OTRWelcomeAccountInfo accountInfoWithText:@"Google" image:[UIImage imageNamed:@"gtalk"] didSelectBlock:^{
+        __strong typeof(weakSelf)strongSelf = weakSelf;
+        
+        
+        //Authenicate and go through google oauth
+        GTMOAuth2ViewControllerTouch * oauthViewController = [GTMOAuth2ViewControllerTouch controllerWithScope:GOOGLE_APP_SCOPE clientID:GOOGLE_APP_ID clientSecret:kOTRGoogleAppSecret keychainItemName:nil completionHandler:^(GTMOAuth2ViewControllerTouch *viewController, GTMOAuth2Authentication *auth, NSError *error) {
+            if (!error) {
+                OTRGoogleOAuthXMPPAccount *googleAccount = [[OTRGoogleOAuthXMPPAccount alloc] initWithAccountType:OTRAccountTypeGoogleTalk];
+                googleAccount.username = auth.userEmail;
+                
+                [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+                    [googleAccount saveWithTransaction:transaction];
+                }];
+                
+                googleAccount.oAuthTokenDictionary = auth.parameters;
+                
+                OTRBaseLoginViewController *loginViewController = [[OTRBaseLoginViewController alloc] initWithForm:[OTRXLFormCreator formForAccount:googleAccount] style:UITableViewStyleGrouped];
+                loginViewController.account = googleAccount;
+                OTRGoolgeOAuthLoginHandler *loginHandler = [[OTRGoolgeOAuthLoginHandler alloc] init];
+                loginViewController.createLoginHandler = loginHandler;
+                
+                //[strongSelf.navigationController pushViewController:loginViewController animated:YES];
+                NSLog(@"stop");
+                NSMutableArray *viewControllers = [self.navigationController.viewControllers mutableCopy];
+                [viewControllers removeObject:viewController];
+                [viewControllers addObject:loginViewController];
+                [self.navigationController setViewControllers:viewControllers animated:YES];
+            }
+        }];
+        [oauthViewController setPopViewBlock:^{
+            
+        }];
+        [self.navigationController pushViewController:oauthViewController animated:YES];
+    }]];
     
     return accountArray;
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self.navigationController setNavigationBarHidden:YES animated:animated];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [self.navigationController setNavigationBarHidden:NO animated:animated];
 }
 @end

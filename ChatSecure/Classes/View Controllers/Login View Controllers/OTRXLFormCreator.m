@@ -34,15 +34,12 @@ NSString *const kOTRXLFormXMPPServerTag               = @"kOTRXLFormXMPPServerTa
     [[descriptor formRowWithTag:kOTRXLFormRememberPasswordSwitchTag] setValue:@(account.rememberPassword)];
     [[descriptor formRowWithTag:kOTRXLFormLoginAutomaticallySwitchTag] setValue:@(account.autologin)];
     
-    if([account isKindOfClass:[OTRXMPPAccount class]])
-    {
+    if([account isKindOfClass:[OTRXMPPAccount class]]) {
         OTRXMPPAccount *xmppAccount = (OTRXMPPAccount *)account;
         [[descriptor formRowWithTag:kOTRXLFormHostnameTextFieldTag] setValue:xmppAccount.domain];
         [[descriptor formRowWithTag:kOTRXLFormPortTextFieldTag] setValue:@(xmppAccount.port)];
         [[descriptor formRowWithTag:kOTRXLFormResourceTextFieldTag] setValue:xmppAccount.resource];
     }
-    
-    
     
     return descriptor;
 }
@@ -68,6 +65,9 @@ NSString *const kOTRXLFormXMPPServerTag               = @"kOTRXLFormXMPPServerTa
         
         
     } else {
+        XLFormSectionDescriptor *basicSection = [XLFormSectionDescriptor formSectionWithTitle:BASIC_STRING];
+        XLFormSectionDescriptor *advancedSection = [XLFormSectionDescriptor formSectionWithTitle:ADVANCED_STRING];
+        
         switch (accountType) {
             case OTRAccountTypeJabber:
             case OTRAccountTypeXMPPTor:{
@@ -84,12 +84,18 @@ NSString *const kOTRXLFormXMPPServerTag               = @"kOTRXLFormXMPPServerTa
                 [advancedSection addFormRow:[self portRowDescriptorWithValue:nil]];
                 [advancedSection addFormRow:[self resourceRowDescriptorWithValue:nil]];
                 
-                [descriptor addFormSection:basicSection];
-                [descriptor addFormSection:advancedSection];
+                
                 
                 break;
             }
             case OTRAccountTypeGoogleTalk: {
+                XLFormRowDescriptor *usernameRow = [self usernameTextFieldRowDescriptorWithValue:nil];
+                usernameRow.disabled = @(YES);
+                
+                [basicSection addFormRow:usernameRow];
+                [basicSection addFormRow:[self loginAutomaticallyRowDescriptorWithValue:YES]];
+                
+                [advancedSection addFormRow:[self resourceRowDescriptorWithValue:nil]];
                 
                 break;
             }
@@ -97,6 +103,9 @@ NSString *const kOTRXLFormXMPPServerTag               = @"kOTRXLFormXMPPServerTa
             default:
                 break;
         }
+        
+        [descriptor addFormSection:basicSection];
+        [descriptor addFormSection:advancedSection];
     }
     
     
