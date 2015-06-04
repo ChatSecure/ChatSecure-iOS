@@ -11,6 +11,7 @@
 #import "OTRImages.h"
 #import "Strings.h"
 #import "XLFormTextFieldCell.h"
+#import "OTRXMPPServerInfo.h"
 
 NSString *const kOTROTRXMPPServerListViewControllerCustomTag = @"kOTROTRXMPPServerListViewControllerCustomTag";
 
@@ -32,7 +33,7 @@ NSString *const kOTROTRXMPPServerListViewControllerCustomTag = @"kOTROTRXMPPServ
 
 - (void)didSelectFormRow:(XLFormRowDescriptor *)formRow
 {
-    if ([formRow.value isKindOfClass:[OTRXMPPServerTableViewCellInfo class]]) {
+    if ([formRow.value isKindOfClass:[OTRXMPPServerInfo class]]) {
         self.rowDescriptor.value = formRow.value;
         self.selectedPreset = YES;
         [self.navigationController popViewControllerAnimated:YES];
@@ -52,7 +53,7 @@ NSString *const kOTROTRXMPPServerListViewControllerCustomTag = @"kOTROTRXMPPServ
     }
     
     if (!foundMatch) {
-        [self.form formRowWithTag:kOTROTRXMPPServerListViewControllerCustomTag].value = ((OTRXMPPServerTableViewCellInfo *)self.rowDescriptor.value).serverDomain;
+        [self.form formRowWithTag:kOTROTRXMPPServerListViewControllerCustomTag].value = ((OTRXMPPServerInfo *)self.rowDescriptor.value).serverDomain;
     }
 }
 
@@ -62,7 +63,7 @@ NSString *const kOTROTRXMPPServerListViewControllerCustomTag = @"kOTROTRXMPPServ
     if (!self.selectedPreset) {
         NSString *customDomain = [self.form formRowWithTag:kOTROTRXMPPServerListViewControllerCustomTag].value;
         if ([customDomain length]) {
-            OTRXMPPServerTableViewCellInfo *info = (OTRXMPPServerTableViewCellInfo *)self.rowDescriptor.value;
+            OTRXMPPServerInfo *info = (OTRXMPPServerInfo *)self.rowDescriptor.value;
             info.serverName = CUSTOM_STRING;
             info.serverDomain = customDomain;
             info.serverImage = nil;
@@ -98,23 +99,15 @@ NSString *const kOTROTRXMPPServerListViewControllerCustomTag = @"kOTROTRXMPPServ
 
 + (XLFormDescriptor *)defaultServerForm
 {
-    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"xmppServers" ofType:@"plist"];
-    NSArray *domains = [NSArray arrayWithContentsOfFile:filePath];
+    NSArray *serverList = [OTRXMPPServerInfo defaultServerListIncludeTor:YES];
     
     XLFormDescriptor *formDescriptor = [[XLFormDescriptor alloc] init];
     XLFormSectionDescriptor *sectionDescriptor = [[XLFormSectionDescriptor alloc] init];
     [formDescriptor addFormSection:sectionDescriptor];
     
-    for (NSDictionary *domainDictionary in domains) {
-        OTRXMPPServerTableViewCellInfo *cellInfo = [[OTRXMPPServerTableViewCellInfo alloc] init];
-        cellInfo.serverName = domainDictionary[@"serverName"];
-        cellInfo.serverDomain = domainDictionary[@"serverDomain"];
-        cellInfo.userDomain = domainDictionary[@"userDomain"];
-        cellInfo.serverImage = [OTRImages xmppServerImageWithName:domainDictionary[@"serverImage"]];
-
-        
+    for (OTRXMPPServerInfo *serverInfo in serverList) {
         XLFormRowDescriptor *rowDescriptor = [XLFormRowDescriptor formRowDescriptorWithTag:nil rowType:kOTRFormRowDescriptorTypeXMPPServer];
-        rowDescriptor.value = cellInfo;
+        rowDescriptor.value = serverInfo;
         [sectionDescriptor addFormRow:rowDescriptor];
     }
     

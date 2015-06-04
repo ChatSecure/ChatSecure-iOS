@@ -65,7 +65,7 @@
     OTRAccount *modifiedAccount = [self moveValues:form intoAccount:account];
     _xmppManager = (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:modifiedAccount];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedNotificatoin:) name:OTRXMPPLoginStatusNotificationName object:self.xmppManager];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedNotification:) name:OTRXMPPLoginStatusNotificationName object:self.xmppManager];
 }
 
 - (void)performActionWithValidForm:(XLFormDescriptor *)form account:(OTRXMPPAccount *)account completion:(void (^)(NSError *, OTRAccount *))completion
@@ -77,7 +77,7 @@
     [self.xmppManager connectWithPassword:password userInitiated:YES];
 }
 
-- (void)receivedNotificatoin:(NSNotification *)notification
+- (void)receivedNotification:(NSNotification *)notification
 {
     OTRLoginStatus newStatus = [notification.userInfo[OTRXMPPNewLoginStatusKey] integerValue];
     NSError *error = notification.userInfo[OTRXMPPLoginErrorKey];

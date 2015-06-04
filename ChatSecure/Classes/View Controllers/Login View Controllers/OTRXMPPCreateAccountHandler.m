@@ -15,13 +15,14 @@
 #import "OTRXMPPServerTableViewCell.h"
 #import "XMPPJID.h"
 #import "OTRXMPPManager.h"
+#import "OTRXMPPServerInfo.h"
 
 @implementation OTRXMPPCreateAccountHandler
 
 - (OTRXMPPAccount *)moveValues:(XLFormDescriptor *)form intoAccount:(OTRXMPPAccount *)account
 {
     account = (OTRXMPPAccount *)[super moveValues:form intoAccount:account];
-    OTRXMPPServerTableViewCellInfo *serverInfo = [[form formRowWithTag:kOTRXLFormXMPPServerTag] value];
+    OTRXMPPServerInfo *serverInfo = [[form formRowWithTag:kOTRXLFormXMPPServerTag] value];
     
     //Get correct user domain
     NSString *userDomain = serverInfo.serverDomain;

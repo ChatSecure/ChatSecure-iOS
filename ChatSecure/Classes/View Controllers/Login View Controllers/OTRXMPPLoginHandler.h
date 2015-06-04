@@ -21,4 +21,6 @@
 
 - (void)prepareForXMPPConnectionFrom:(XLFormDescriptor *)form account:(OTRXMPPAccount *)account;
 
+- (void)receivedNotification:(NSNotification *)notification;
+
 @end

@@ -13,6 +13,7 @@
 #import "OTRXMPPServerTableViewCell.h"
 #import "OTRImages.h"
 #import "OTRXMPPServerListViewController.h"
+#import "OTRXMPPServerInfo.h"
 
 NSString *const kOTRXLFormUsernameTextFieldTag        = @"kOTRXLFormUsernameTextFieldTag";
 NSString *const kOTRXLFormPasswordTextFieldTag        = @"kOTRXLFormPasswordTextFieldTag";
@@ -71,10 +72,6 @@ NSString *const kOTRXLFormXMPPServerTag               = @"kOTRXLFormXMPPServerTa
         switch (accountType) {
             case OTRAccountTypeJabber:
             case OTRAccountTypeXMPPTor:{
-                
-                XLFormSectionDescriptor *basicSection = [XLFormSectionDescriptor formSectionWithTitle:BASIC_STRING];
-                XLFormSectionDescriptor *advancedSection = [XLFormSectionDescriptor formSectionWithTitle:ADVANCED_STRING];
-                
                 [basicSection addFormRow:[self usernameTextFieldRowDescriptorWithValue:nil]];
                 [basicSection addFormRow:[self passwordTextFieldRowDescriptorWithValue:nil]];
                 [basicSection addFormRow:[self rememberPasswordRowDescriptorWithValue:YES]];
@@ -83,8 +80,6 @@ NSString *const kOTRXLFormXMPPServerTag               = @"kOTRXLFormXMPPServerTa
                 [advancedSection addFormRow:[self hostnameRowDescriptorWithValue:nil]];
                 [advancedSection addFormRow:[self portRowDescriptorWithValue:nil]];
                 [advancedSection addFormRow:[self resourceRowDescriptorWithValue:nil]];
-                
-                
                 
                 break;
             }
@@ -107,10 +102,20 @@ NSString *const kOTRXLFormXMPPServerTag               = @"kOTRXLFormXMPPServerTa
         [descriptor addFormSection:basicSection];
         [descriptor addFormSection:advancedSection];
     }
-    
-    
-    
     return descriptor;
+}
+
++ (XLFormDescriptor *)ChatSecureIDForm
+{
+    XLFormDescriptor *form = [XLFormDescriptor formDescriptor];
+    XLFormSectionDescriptor *section = [XLFormSectionDescriptor formSection];
+    XLFormRowDescriptor *usernameRow = [self usernameTextFieldRowDescriptorWithValue:nil];
+    [usernameRow.cellConfigAtConfigure setObject:@"ChatScure ID" forKey:@"textField.placeholder"];
+    
+    [section addFormRow:usernameRow];
+    [form addFormSection:section];
+    
+    return form;
 }
 
 + (XLFormRowDescriptor *)textfieldFormDescriptorType:(NSString *)type withTag:(NSString *)tag title:(NSString *)title placeHolder:(NSString *)placeholder value:(id)value
@@ -185,12 +190,8 @@ NSString *const kOTRXLFormXMPPServerTag               = @"kOTRXLFormXMPPServerTa
 + (XLFormRowDescriptor *)serverRowDescriptorWithValue:(id)value
 {
     XLFormRowDescriptor *xmppServerDescriptor = [XLFormRowDescriptor formRowDescriptorWithTag:kOTRXLFormXMPPServerTag rowType:kOTRFormRowDescriptorTypeXMPPServer];
-    OTRXMPPServerTableViewCellInfo *info = [[OTRXMPPServerTableViewCellInfo alloc] init];
-    info.serverName = @"Dukgo";
-    info.serverDomain = @"dukgo.com";
-    info.serverImage = [OTRImages duckduckgoImage];
     
-    xmppServerDescriptor.value = info;
+    xmppServerDescriptor.value = [[OTRXMPPServerInfo defaultServerListIncludeTor:NO] firstObject];
     xmppServerDescriptor.action.viewControllerClass = [OTRXMPPServerListViewController class];
     
     return xmppServerDescriptor;

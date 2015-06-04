@@ -8,23 +8,9 @@
 
 #import "OTRXMPPServerTableViewCell.h"
 #import "PureLayout.h"
+#import "OTRXMPPServerInfo.h"
 
 NSString *const kOTRFormRowDescriptorTypeXMPPServer = @"kOTRFormRowDescriptorTypeXMPPServer";
-
-@implementation OTRXMPPServerTableViewCellInfo
-
-- (BOOL)isEqual:(id)object
-{
-    if ([object isKindOfClass:[OTRXMPPServerTableViewCellInfo class]]) {
-        OTRXMPPServerTableViewCellInfo *info = object;
-        if ([self.serverName isEqualToString:info.serverName] && [self.serverDomain isEqualToString:info.serverDomain]) {
-            return YES;
-        }
-    }
-    return NO;
-}
-
-@end
 
 @implementation OTRXMPPServerTableViewCell
 
@@ -54,8 +40,8 @@ NSString *const kOTRFormRowDescriptorTypeXMPPServer = @"kOTRFormRowDescriptorTyp
 - (void)update
 {
     [super update];
-    OTRXMPPServerTableViewCellInfo *info = self.rowDescriptor.value;
-    self.serverImageView.image = info.serverImage;
+    OTRXMPPServerInfo *info = self.rowDescriptor.value;
+    self.serverImageView.image = [UIImage imageNamed:info.serverImage];
     self.serverNameLabel.text = info.serverName;
     self.serverDomainLabel.text = info.serverDomain;
 }

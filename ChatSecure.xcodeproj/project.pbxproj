@@ -137,13 +137,13 @@
 		6346808D1B04206400D9A1C5 /* OTRXMPPCreateAccountHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 6346808C1B04206400D9A1C5 /* OTRXMPPCreateAccountHandler.m */; };
 		6353AC2D1AD5E32000753B83 /* OTRAudioTrashView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6353AC2C1AD5E32000753B83 /* OTRAudioTrashView.m */; };
 		6354BBE41A96C67400E8EBAC /* OTRMediaFileManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6354BBE31A96C67400E8EBAC /* OTRMediaFileManager.m */; };
-		638FC09D1B0BE46100B37454 /* NSFileManager+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 638FC09C1B0BE46100B37454 /* NSFileManager+ChatSecure.m */; };
 		638C7CEF1B029810004F8EC3 /* OTRLoginCreateTableViewDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 638C7CEE1B029810004F8EC3 /* OTRLoginCreateTableViewDataSource.m */; };
 		638C7CF21B02BE4A004F8EC3 /* OTRBaseLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 638C7CF11B02BE4A004F8EC3 /* OTRBaseLoginViewController.m */; };
 		638C7CF51B02BF0D004F8EC3 /* OTRXLFormCreator.m in Sources */ = {isa = PBXBuildFile; fileRef = 638C7CF41B02BF0D004F8EC3 /* OTRXLFormCreator.m */; };
 		638D2E001AFAD3D500F3C50C /* OTRWelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 638D2DFF1AFAD3D500F3C50C /* OTRWelcomeViewController.m */; };
 		638D2E031AFBFE2200F3C50C /* OTRWelcomeAccountTableViewDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 638D2E021AFBFE2200F3C50C /* OTRWelcomeAccountTableViewDelegate.m */; };
 		638D2E061AFC0DF100F3C50C /* OTRLoginCreateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 638D2E051AFC0DF100F3C50C /* OTRLoginCreateViewController.m */; };
+		638FC09D1B0BE46100B37454 /* NSFileManager+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 638FC09C1B0BE46100B37454 /* NSFileManager+ChatSecure.m */; };
 		6396AFA01A169D54009F3E6C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6396AF9F1A169D54009F3E6C /* main.m */; };
 		6396AFBA1A169D54009F3E6C /* ChatSecureTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6396AFB91A169D54009F3E6C /* ChatSecureTests.m */; };
 		639CDD8E1AD71BC4009BAABC /* OTRCircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 639CDD8D1AD71BC4009BAABC /* OTRCircleView.m */; };
@@ -182,6 +182,8 @@
 		63C4BD2D1A1E9BE1001696CD /* _OTRvCardTemp.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BD0C1A1E9BE1001696CD /* _OTRvCardTemp.m */; };
 		63C4BD2E1A1E9BE1001696CD /* _OTRXMPPManagedPresenceSubscriptionRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BD0E1A1E9BE1001696CD /* _OTRXMPPManagedPresenceSubscriptionRequest.m */; };
 		63C5B66A1A82F3EE0011BEA8 /* OTRAudioPlaybackController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C5B6691A82F3EE0011BEA8 /* OTRAudioPlaybackController.m */; };
+		63C7E64B1B20F5730085FA06 /* OTRChatSecureIDCreateAccountHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C7E64A1B20F5730085FA06 /* OTRChatSecureIDCreateAccountHandler.m */; };
+		63C7E64E1B20F69F0085FA06 /* OTRXMPPServerInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C7E64D1B20F69F0085FA06 /* OTRXMPPServerInfo.m */; };
 		63CFB1041ABA492600A8D27E /* OTRFacebookOAuthXMPPAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CFB1031ABA492600A8D27E /* OTRFacebookOAuthXMPPAccount.m */; };
 		63D184861A2D3F2400334CD8 /* OTRNotificationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D184851A2D3F2400334CD8 /* OTRNotificationController.m */; };
 		63D27FC51A6DC51C00EC251A /* OTRMediaItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D27FC41A6DC51C00EC251A /* OTRMediaItem.m */; };
@@ -497,8 +499,6 @@
 		6353AC2C1AD5E32000753B83 /* OTRAudioTrashView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAudioTrashView.m; sourceTree = "<group>"; };
 		6354BBE21A96C67400E8EBAC /* OTRMediaFileManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRMediaFileManager.h; sourceTree = "<group>"; };
 		6354BBE31A96C67400E8EBAC /* OTRMediaFileManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRMediaFileManager.m; sourceTree = "<group>"; };
-		638FC09B1B0BE46100B37454 /* NSFileManager+ChatSecure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSFileManager+ChatSecure.h"; sourceTree = "<group>"; };
-		638FC09C1B0BE46100B37454 /* NSFileManager+ChatSecure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFileManager+ChatSecure.m"; sourceTree = "<group>"; };
 		638C7CED1B029810004F8EC3 /* OTRLoginCreateTableViewDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRLoginCreateTableViewDataSource.h; sourceTree = "<group>"; };
 		638C7CEE1B029810004F8EC3 /* OTRLoginCreateTableViewDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRLoginCreateTableViewDataSource.m; sourceTree = "<group>"; };
 		638C7CF01B02BE4A004F8EC3 /* OTRBaseLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBaseLoginViewController.h; sourceTree = "<group>"; };
@@ -511,6 +511,8 @@
 		638D2E021AFBFE2200F3C50C /* OTRWelcomeAccountTableViewDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OTRWelcomeAccountTableViewDelegate.m; path = Onboarding/OTRWelcomeAccountTableViewDelegate.m; sourceTree = "<group>"; };
 		638D2E041AFC0DF100F3C50C /* OTRLoginCreateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRLoginCreateViewController.h; sourceTree = "<group>"; };
 		638D2E051AFC0DF100F3C50C /* OTRLoginCreateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRLoginCreateViewController.m; sourceTree = "<group>"; };
+		638FC09B1B0BE46100B37454 /* NSFileManager+ChatSecure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSFileManager+ChatSecure.h"; sourceTree = "<group>"; };
+		638FC09C1B0BE46100B37454 /* NSFileManager+ChatSecure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFileManager+ChatSecure.m"; sourceTree = "<group>"; };
 		6396AF9A1A169D54009F3E6C /* ChatSecure.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatSecure.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6396AF9E1A169D54009F3E6C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6396AF9F1A169D54009F3E6C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -590,6 +592,10 @@
 		63C4BD0E1A1E9BE1001696CD /* _OTRXMPPManagedPresenceSubscriptionRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _OTRXMPPManagedPresenceSubscriptionRequest.m; sourceTree = "<group>"; };
 		63C5B6681A82F3EE0011BEA8 /* OTRAudioPlaybackController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAudioPlaybackController.h; sourceTree = "<group>"; };
 		63C5B6691A82F3EE0011BEA8 /* OTRAudioPlaybackController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAudioPlaybackController.m; sourceTree = "<group>"; };
+		63C7E6491B20F5730085FA06 /* OTRChatSecureIDCreateAccountHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRChatSecureIDCreateAccountHandler.h; sourceTree = "<group>"; };
+		63C7E64A1B20F5730085FA06 /* OTRChatSecureIDCreateAccountHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRChatSecureIDCreateAccountHandler.m; sourceTree = "<group>"; };
+		63C7E64C1B20F69F0085FA06 /* OTRXMPPServerInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OTRXMPPServerInfo.h; path = ChatSecure/Classes/Model/OTRXMPPServerInfo.h; sourceTree = SOURCE_ROOT; };
+		63C7E64D1B20F69F0085FA06 /* OTRXMPPServerInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OTRXMPPServerInfo.m; path = ChatSecure/Classes/Model/OTRXMPPServerInfo.m; sourceTree = SOURCE_ROOT; };
 		63CFB1021ABA492600A8D27E /* OTRFacebookOAuthXMPPAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRFacebookOAuthXMPPAccount.h; sourceTree = "<group>"; };
 		63CFB1031ABA492600A8D27E /* OTRFacebookOAuthXMPPAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRFacebookOAuthXMPPAccount.m; sourceTree = "<group>"; };
 		63D184841A2D3F2400334CD8 /* OTRNotificationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRNotificationController.h; sourceTree = "<group>"; };
@@ -776,6 +782,8 @@
 		633105401A16D1A300C17BAE /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				63C7E64C1B20F69F0085FA06 /* OTRXMPPServerInfo.h */,
+				63C7E64D1B20F69F0085FA06 /* OTRXMPPServerInfo.m */,
 				633105411A16D1A300C17BAE /* Core Data */,
 				6331058D1A16D1A300C17BAE /* OTRActivityItemProvider.h */,
 				6331058E1A16D1A300C17BAE /* OTRActivityItemProvider.m */,
@@ -1076,6 +1084,8 @@
 				634680851B041EA900D9A1C5 /* OTRXMPPTorLoginHandler.m */,
 				634680881B041F2F00D9A1C5 /* OTRGoolgeOAuthLoginHandler.h */,
 				634680891B041F2F00D9A1C5 /* OTRGoolgeOAuthLoginHandler.m */,
+				63C7E6491B20F5730085FA06 /* OTRChatSecureIDCreateAccountHandler.h */,
+				63C7E64A1B20F5730085FA06 /* OTRChatSecureIDCreateAccountHandler.m */,
 				6346808B1B04206400D9A1C5 /* OTRXMPPCreateAccountHandler.h */,
 				6346808C1B04206400D9A1C5 /* OTRXMPPCreateAccountHandler.m */,
 			);
@@ -1606,10 +1616,12 @@
 				63C4BD1F1A1E9BE1001696CD /* _OTRManagedAccount.m in Sources */,
 				63EA4CF91ACC81C800B19E12 /* OTRMessagesHoldTalkViewController.m in Sources */,
 				633106B81A16D1A300C17BAE /* OTRDomainCellInfo.m in Sources */,
+				63C7E64E1B20F69F0085FA06 /* OTRXMPPServerInfo.m in Sources */,
 				633107111A16D1A300C17BAE /* OTRSubscriptionRequestsViewController.m in Sources */,
 				633106BF1A16D1A300C17BAE /* OTRDoubleSetting.m in Sources */,
 				63C4BD101A1E9BE1001696CD /* OTRManagedBuddy.m in Sources */,
 				63C4BD141A1E9BE1001696CD /* OTRManagedGroup.m in Sources */,
+				63C7E64B1B20F5730085FA06 /* OTRChatSecureIDCreateAccountHandler.m in Sources */,
 				63C4BD181A1E9BE1001696CD /* OTRManagedOscarAccount.m in Sources */,
 				633106771A16D1A300C17BAE /* NSURL+ChatSecure.m in Sources */,
 				6331067D1A16D1A300C17BAE /* OTRAccountsManager.m in Sources */,

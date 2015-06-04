@@ -21,6 +21,7 @@
 #import "OTRSecrets.h"
 #import "OTRConstants.h"
 #import "OTRDatabaseManager.h"
+#import "OTRChatSecureIDCreateAccountHandler.h"
 
 @implementation OTRWelcomeAccountInfo
 
@@ -208,8 +209,8 @@
 
 - (void)didTapCreateChatID:(id)sender
 {
-    OTRBaseLoginViewController *createAccountViewController = [[OTRBaseLoginViewController alloc] initWithForm:[OTRXLFormCreator formForAccountType:OTRAccountTypeJabber createAccount:YES] style:UITableViewStyleGrouped];
-    createAccountViewController.createLoginHandler = [[OTRXMPPCreateAccountHandler alloc] init];
+    OTRBaseLoginViewController *createAccountViewController = [[OTRBaseLoginViewController alloc] initWithForm:[OTRXLFormCreator ChatSecureIDForm] style:UITableViewStyleGrouped];
+    createAccountViewController.createLoginHandler = [[OTRChatSecureIDCreateAccountHandler alloc] init];
     createAccountViewController.account = [[OTRXMPPAccount alloc] initWithAccountType:OTRAccountTypeJabber];
     
     [self.navigationController pushViewController:createAccountViewController animated:YES];
@@ -232,7 +233,7 @@
         __strong typeof(weakSelf)strongSelf = weakSelf;
         
         OTRXMPPAccount *xmppAccount = [[OTRXMPPAccount alloc] initWithAccountType:OTRAccountTypeJabber];
-        OTRBaseLoginViewController *loginViewController = [[OTRBaseLoginViewController alloc] initWithForm:[OTRXLFormCreator formForAccountType:OTRAccountTypeJabber createAccount:NO] style:UITableViewStyleGrouped];
+        OTRBaseLoginViewController *loginViewController = [[OTRBaseLoginViewController alloc] initWithForm:[OTRXLFormCreator formForAccount:xmppAccount] style:UITableViewStyleGrouped];
         loginViewController.account = xmppAccount;
         OTRXMPPLoginHandler *loginHandler = [[OTRXMPPLoginHandler alloc] init];
         loginViewController.createLoginHandler = loginHandler;
@@ -260,9 +261,7 @@
                 OTRGoolgeOAuthLoginHandler *loginHandler = [[OTRGoolgeOAuthLoginHandler alloc] init];
                 loginViewController.createLoginHandler = loginHandler;
                 
-                //[strongSelf.navigationController pushViewController:loginViewController animated:YES];
-                NSLog(@"stop");
-                NSMutableArray *viewControllers = [self.navigationController.viewControllers mutableCopy];
+                NSMutableArray *viewControllers = [strongSelf.navigationController.viewControllers mutableCopy];
                 [viewControllers removeObject:viewController];
                 [viewControllers addObject:loginViewController];
                 [self.navigationController setViewControllers:viewControllers animated:YES];

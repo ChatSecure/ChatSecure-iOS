@@ -10,15 +10,6 @@
 
 extern NSString *const kOTRFormRowDescriptorTypeXMPPServer;
 
-@interface OTRXMPPServerTableViewCellInfo : NSObject
-
-@property (nonatomic, strong) UIImage *serverImage;
-@property (nonatomic, strong) NSString *serverName;
-@property (nonatomic, strong) NSString *serverDomain;
-@property (nonatomic, strong) NSString *userDomain;
-
-@end
-
 @interface OTRXMPPServerTableViewCell : XLFormBaseCell
 
 @property (nonatomic, strong, readonly) UIImageView *serverImageView;
