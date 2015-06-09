@@ -8,11 +8,9 @@
 
 #import "XMPPURI.h"
 
-static NSString *const kOTRFingerprintQuery = @"otr-fingerprint";
-
 @implementation XMPPURI
 
-- (instancetype) initWithString:(NSString *)uriString {
+- (instancetype) initWithURIString:(NSString *)uriString {
     if (self = [super init]) {
         [self parseURIString:uriString];
     }
@@ -20,44 +18,67 @@ static NSString *const kOTRFingerprintQuery = @"otr-fingerprint";
 }
 
 - (instancetype) initWithURL:(NSURL *)url {
-    if (self = [self initWithString:url.absoluteString]) {
+    if (self = [self initWithURIString:url.absoluteString]) {
     }
     return self;
 }
 
-- (instancetype) initWithJID:(XMPPJID *)jid fingerprint:(NSString *)fingerprint {
+- (instancetype) initWithJID:(XMPPJID*)jid
+                 queryAction:(NSString*)queryAction
+             queryParameters:(NSDictionary*)queryParameters {
     if (self = [super init]) {
-        _jid = jid;
-        _fingerprint = fingerprint;
+        _jid = [jid copy];
+        _queryAction = [queryAction copy];
+        _queryParameters = [queryParameters copy];
     }
     return self;
 }
 
 - (NSString*) uriString {
-    NSString *uriString = nil;
-    if (self.fingerprint) {
-        uriString = [NSString stringWithFormat:@"xmpp:%@?%@=%@", self.jid.bare, kOTRFingerprintQuery, self.fingerprint];
-    } else {
-        uriString = [NSString stringWithFormat:@"xmpp:%@", self.jid.bare];
+    NSMutableString *uriString = [NSMutableString stringWithFormat:@"xmpp:%@", self.jid.bare];
+    if (self.queryAction) {
+        [uriString appendFormat:@"?%@", self.queryAction];
     }
+    [self.queryParameters enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *obj, BOOL *stop) {
+        [uriString appendFormat:@";%@=%@", key, [obj stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    }];
     return uriString;
 }
 
 - (void) parseURIString:(NSString*)uriString {
+    // Fix potentially malformed URIs
+    if ([uriString containsString:@"://"]) {
+        uriString = [uriString stringByReplacingOccurrencesOfString:@"://" withString:@":" options:0 range:NSMakeRange(0, uriString.length)];
+    }
     NSArray *uriComponents = [uriString componentsSeparatedByString:@":"];
+    NSString *scheme = nil;
     NSString *jidString = nil;
     
     if (uriComponents.count >= 2) {
+        scheme = uriComponents[0];
         NSString *path = uriComponents[1];
         if ([path containsString:@"?"]) {
             NSArray *queryComponents = [path componentsSeparatedByString:@"?"];
             jidString = queryComponents[0];
             NSString *query = queryComponents[1];
-            if ([query.lowercaseString isEqualToString:@"join"]) {
-                _isMUC = YES;
-            } else {
-                [self parseFingerprintFromQuery:query];
-            }
+            NSArray *queryKeys = [query componentsSeparatedByString:@";"];
+            
+            NSMutableDictionary *queryParameters = [NSMutableDictionary dictionaryWithCapacity:queryKeys.count];
+            [queryKeys enumerateObjectsUsingBlock:^(NSString *queryItem, NSUInteger idx, BOOL *stop) {
+                if (idx == 0) {
+                    _queryAction = queryItem;
+                } else {
+                    NSArray *keyValue = [queryItem componentsSeparatedByString:@"="];
+                    if (keyValue.count == 2) {
+                        NSString *key = keyValue[0];
+                        NSString *value = [keyValue[1] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+                        if (key && value) {
+                            queryParameters[key] = value;
+                        }
+                    }
+                }
+            }];
+            _queryParameters = queryParameters;
         } else {
             jidString = path;
         }
@@ -65,10 +86,6 @@ static NSString *const kOTRFingerprintQuery = @"otr-fingerprint";
     if (jidString) {
         _jid = [XMPPJID jidWithString:jidString];
     }
-}
-
-- (void) parseFingerprintFromQuery:(NSString*)query {
-    
 }
 
 @end

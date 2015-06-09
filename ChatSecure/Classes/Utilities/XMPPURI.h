@@ -9,21 +9,47 @@
 #import <Foundation/Foundation.h>
 #import "XMPPJID.h"
 
-/** For parsing XMPP URIs (xmpp:username@domain.com) */
+/** 
+ *  For parsing and creating XMPP URIs RFC5122/XEP-0147
+ *  e.g. xmpp:username@domain.com?subscribe 
+ *  http://www.xmpp.org/extensions/xep-0147.html
+ */
 @interface XMPPURI : NSObject
 
 @property (nonatomic, strong, readonly) XMPPJID *jid;
-/** OTR fingerprint (?otr-fingerprint=xxx) */
-@property (nonatomic, strong, readonly) NSString *fingerprint;
-/** Multi user chatroom (?join) */
-@property (nonatomic, readonly) BOOL isMUC;
 
-/** Returns URI string (xmpp:username@domain.com) */
-@property (nonatomic, strong, readonly) NSString *uriString;
+/** 
+ * XMPP query action. e.g. subscribe
+ * For example, the query action below would be 'subscribe'
+ *    xmpp:romeo@montague.net?subscribe
+ * For full list: http://xmpp.org/registrar/querytypes.html
+ */
+@property (nonatomic, strong, readonly) NSString *queryAction;
 
+/**
+ * XMPP query parameters. e.g. subject=Test
+ *
+ * For example the query parameters for
+ *     xmpp:romeo@montague.net?message;subject=Test%20Message;body=Here%27s%20a%20test%20message
+ * would be
+ * {"subject": "Test Message",
+ *  "body": "Here's a test message"}
+ */
+@property (nonatomic, strong, readonly) NSDictionary *queryParameters;
+
+/** 
+ * Generates URI string from jid, queryAction, and queryParameters
+ * e.g. xmpp:romeo@montague.net?subscribe 
+ */
+- (NSString*) uriString;
+
+// Parsing XMPP URIs
 - (instancetype) initWithURL:(NSURL*)url;
 - (instancetype) initWithURIString:(NSString*)uriString;
-/** JID and 40-character hex OTR fingerprint */
-- (instancetype) initWithJID:(XMPPJID*)jid fingerprint:(NSString*)fingerprint;
+
+// Creating XMPP URIs
+- (instancetype) initWithJID:(XMPPJID*)jid
+                 queryAction:(NSString*)queryAction
+             queryParameters:(NSDictionary*)queryParameters;
 
 @end

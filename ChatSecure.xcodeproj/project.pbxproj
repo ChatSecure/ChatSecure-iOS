@@ -132,7 +132,6 @@
 		6354BBE41A96C67400E8EBAC /* OTRMediaFileManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6354BBE31A96C67400E8EBAC /* OTRMediaFileManager.m */; };
 		638FC09D1B0BE46100B37454 /* NSFileManager+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 638FC09C1B0BE46100B37454 /* NSFileManager+ChatSecure.m */; };
 		6396AFA01A169D54009F3E6C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6396AF9F1A169D54009F3E6C /* main.m */; };
-		6396AFBA1A169D54009F3E6C /* ChatSecureTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6396AFB91A169D54009F3E6C /* ChatSecureTests.m */; };
 		639CDD8E1AD71BC4009BAABC /* OTRCircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 639CDD8D1AD71BC4009BAABC /* OTRCircleView.m */; };
 		639CDD911AD74419009BAABC /* OTRTouchAndHoldGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 639CDD901AD74419009BAABC /* OTRTouchAndHoldGestureRecognizer.m */; };
 		63C4BCCC1A1E9B9F001696CD /* ChatSecure.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCC81A1E9B9F001696CD /* ChatSecure.xcdatamodeld */; };
@@ -188,6 +187,7 @@
 		D9365E7A1A1EB0050006434A /* torrc in Resources */ = {isa = PBXBuildFile; fileRef = D9365E791A1EB0050006434A /* torrc */; };
 		D973D7061A2D4094004D353E /* Pods-acknowledgements.plist in Resources */ = {isa = PBXBuildFile; fileRef = D973D7051A2D4094004D353E /* Pods-acknowledgements.plist */; };
 		D989EC8D1B06AFE30069FE37 /* XMPPURI.m in Sources */ = {isa = PBXBuildFile; fileRef = D989EC8C1B06AFE30069FE37 /* XMPPURI.m */; };
+		D9A3CB2C1B2798D7000A50C6 /* XMPPURITests.m in Sources */ = {isa = PBXBuildFile; fileRef = D9A3CB2B1B2798D7000A50C6 /* XMPPURITests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -479,7 +479,6 @@
 		6396AF9F1A169D54009F3E6C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		6396AFB31A169D54009F3E6C /* ChatSecureTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChatSecureTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6396AFB81A169D54009F3E6C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		6396AFB91A169D54009F3E6C /* ChatSecureTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatSecureTests.m; sourceTree = "<group>"; };
 		639CDD8C1AD71BC4009BAABC /* OTRCircleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRCircleView.h; sourceTree = "<group>"; };
 		639CDD8D1AD71BC4009BAABC /* OTRCircleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRCircleView.m; sourceTree = "<group>"; };
 		639CDD8F1AD74419009BAABC /* OTRTouchAndHoldGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRTouchAndHoldGestureRecognizer.h; sourceTree = "<group>"; };
@@ -592,6 +591,7 @@
 		D973D7051A2D4094004D353E /* Pods-acknowledgements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Pods-acknowledgements.plist"; path = "Pods/Target Support Files/Pods/Pods-acknowledgements.plist"; sourceTree = SOURCE_ROOT; };
 		D989EC8B1B06AFE30069FE37 /* XMPPURI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPURI.h; sourceTree = "<group>"; };
 		D989EC8C1B06AFE30069FE37 /* XMPPURI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPURI.m; sourceTree = "<group>"; };
+		D9A3CB2B1B2798D7000A50C6 /* XMPPURITests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPURITests.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1063,7 +1063,7 @@
 			isa = PBXGroup;
 			children = (
 				63DDD8B91A9E9BD900C0A918 /* samples */,
-				6396AFB91A169D54009F3E6C /* ChatSecureTests.m */,
+				D9A3CB2B1B2798D7000A50C6 /* XMPPURITests.m */,
 				63DDD8B41A9E94B700C0A918 /* OTRMediaTests.m */,
 				632461571A1AE553000EF33B /* OTRCoreDataMigrationTests.m */,
 				6396AFB71A169D54009F3E6C /* Supporting Files */,
@@ -1619,8 +1619,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				632461581A1AE553000EF33B /* OTRCoreDataMigrationTests.m in Sources */,
+				D9A3CB2C1B2798D7000A50C6 /* XMPPURITests.m in Sources */,
 				63DDD8B51A9E94B700C0A918 /* OTRMediaTests.m in Sources */,
-				6396AFBA1A169D54009F3E6C /* ChatSecureTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
