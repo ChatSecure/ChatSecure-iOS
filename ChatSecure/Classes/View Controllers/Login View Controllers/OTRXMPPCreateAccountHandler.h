@@ -11,4 +11,6 @@
 
 @interface OTRXMPPCreateAccountHandler : OTRXMPPLoginHandler
 
+@property (nonatomic, strong) NSString *password;
+
 @end

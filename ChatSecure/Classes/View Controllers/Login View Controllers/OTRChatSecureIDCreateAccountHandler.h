@@ -6,9 +6,9 @@
 //  Copyright (c) 2015 Chris Ballinger. All rights reserved.
 //
 
-#import "OTRXMPPLoginHandler.h"
+#import "OTRXMPPCreateAccountHandler.h"
 
-@interface OTRChatSecureIDCreateAccountHandler : OTRXMPPLoginHandler
+@interface OTRChatSecureIDCreateAccountHandler : OTRXMPPCreateAccountHandler
 
 
 

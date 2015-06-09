@@ -65,7 +65,9 @@ static OTRProtocolManager *sharedManager = nil;
 - (void)removeProtocolForAccount:(OTRAccount *)account
 {
     @synchronized(self.protocolManagerDictionary) {
-        [self.protocolManagerDictionary removeObjectForKey:account.uniqueId];
+        if (account) {
+            [self.protocolManagerDictionary removeObjectForKey:account.uniqueId];
+        }
     }
 }
 

@@ -62,8 +62,11 @@
 
 - (void)prepareForXMPPConnectionFrom:(XLFormDescriptor *)form account:(OTRXMPPAccount *)account
 {
-    OTRAccount *modifiedAccount = [self moveValues:form intoAccount:account];
-    _xmppManager = (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:modifiedAccount];
+    if (form) {
+        account = (OTRXMPPAccount *)[self moveValues:form intoAccount:account];
+    }
+    
+    _xmppManager = (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:account];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedNotification:) name:OTRXMPPLoginStatusNotificationName object:self.xmppManager];
 }

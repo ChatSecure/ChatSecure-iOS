@@ -51,10 +51,13 @@
     self.completion = completion;
     [self prepareForXMPPConnectionFrom:form account:(OTRXMPPAccount *)account];
     
-    NSString *password = [[form formRowWithTag:kOTRXLFormPasswordTextFieldTag] value];
+    NSString *passowrdFromForm = [[form formRowWithTag:kOTRXLFormPasswordTextFieldTag] value];
+    if ([passowrdFromForm length]) {
+        _password = passowrdFromForm;
+    }
     
 
-    [self.xmppManager registerNewAccountWithPassword:password];
+    [self.xmppManager registerNewAccountWithPassword:self.password];
     
 }
 
