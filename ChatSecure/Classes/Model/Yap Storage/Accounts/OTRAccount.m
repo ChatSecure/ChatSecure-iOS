@@ -131,7 +131,9 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
     NSMutableArray *allBuddies = [NSMutableArray array];
     [[transaction ext:OTRYapDatabaseRelationshipName] enumerateEdgesWithName:OTRBuddyEdges.account destinationKey:self.uniqueId collection:[OTRAccount collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
         OTRBuddy *buddy = [OTRBuddy fetchObjectWithUniqueID:edge.sourceKey transaction:transaction];
-        [allBuddies addObject:buddy];
+        if (buddy) {
+            [allBuddies addObject:buddy];
+        }
     }];
     return allBuddies;
 }
