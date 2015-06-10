@@ -31,6 +31,7 @@
 #import "OTRXMPPAccount.h"
 #import "OTRXMPPManager.h"
 #import "OTRLog.h"
+#import <KVOController/FBKVOController.h>
 
 
 @interface OTRXMPPLoginViewController ()
@@ -113,16 +114,18 @@
     [self.passwordTextField resignFirstResponder];
     self.loginButtonPressed = NO;
     if (self.isTorAccount) {
-        [[OTRTorManager sharedInstance].torManager addObserver:self forKeyPath:NSStringFromSelector(@selector(status)) options:NSKeyValueObservingOptionNew context:NULL];
+        __weak typeof(self)weakSelf = self;
+        [self.KVOController observe:[OTRTorManager sharedInstance].torManager keyPath:NSStringFromSelector(@selector(status)) options:NSKeyValueObservingOptionNew block:^(id observer, id object, NSDictionary *change) {
+            __strong typeof(weakSelf)strongSelf = weakSelf;
+            if ([OTRTorManager sharedInstance].torManager.isConnected && strongSelf.loginButtonPressed) {
+                [strongSelf loginButtonPressed:nil];
+            }
+        }];
     }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-    if(self.isTorAccount)
-    {
-        [[OTRTorManager sharedInstance].torManager removeObserver:self forKeyPath:NSStringFromSelector(@selector(status))];
-    }
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                               name:UIKeyboardWillHideNotification
                                                   object:nil];
@@ -130,15 +133,6 @@
                                               name:UIKeyboardWillShowNotification
                                                   object:nil];
     [super viewWillDisappear:animated];
-}
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
-{
-    if ([keyPath isEqualToString:NSStringFromSelector(@selector(status))] && [object isEqual:[OTRTorManager sharedInstance].torManager]) {
-        if ([OTRTorManager sharedInstance].torManager.isConnected && self.loginButtonPressed) {
-            [self loginButtonPressed:nil];
-        }
-    }
 }
 
 - (void)protocolLoginFailed:(NSNotification *)notification {

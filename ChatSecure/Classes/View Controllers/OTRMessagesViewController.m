@@ -205,13 +205,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
     return _uiDatabaseConnection;
 }
 
-#pragma - mark KVO Methods
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
-{
-    [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
-}
-
 #pragma - mark Setters & getters
 
 - (OTRAttachmentPicker *)attachmentPicker
