@@ -53,7 +53,11 @@
 {
     if ([self validForm]) {
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        self.loginCreateButtonItem.enabled = NO;
+        self.navigationItem.backBarButtonItem.enabled = NO;
         [self.createLoginHandler performActionWithValidForm:self.form account:self.account completion:^(NSError *error, OTRAccount *account) {
+            self.loginCreateButtonItem.enabled = YES;
+            self.navigationItem.backBarButtonItem.enabled = YES;
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
             if (error) {
                 [self handleError:error];
