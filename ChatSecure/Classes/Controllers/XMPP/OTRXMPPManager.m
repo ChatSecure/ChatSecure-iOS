@@ -340,9 +340,10 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     return self.account.domain;
 }
 
-- (void)didRegisterNewAccount
+- (void)didRegisterNewAccountWithStream:(XMPPStream *)stream
 {
     self.isRegisteringNewAccount = NO;
+    [self authenticateWithStream:stream];
     [[NSNotificationCenter defaultCenter] postNotificationName:OTRXMPPRegisterSucceededNotificationName object:self];
 }
 - (void)failedToRegisterNewAccount:(NSError *)error
@@ -610,7 +611,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 }
 
 - (void)xmppStreamDidRegister:(XMPPStream *)sender {
-    [self didRegisterNewAccount];
+    [self didRegisterNewAccountWithStream:sender];
 }
 
 - (void)xmppStream:(XMPPStream *)sender didNotRegister:(NSXMLElement *)xmlError {
