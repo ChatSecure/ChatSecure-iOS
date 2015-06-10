@@ -22,8 +22,7 @@
 
 @interface OTRWelcomeViewController : UIViewController
 
-@property (nonatomic, strong, readonly) UILabel *chatsecureLabel;
-@property (nonatomic, strong, readonly) UILabel *stayConnectedLabel;
+@property (nonatomic, strong, readonly) UIImageView *brandImageView;
 @property (nonatomic, strong, readonly) UILabel *createLabel;
 @property (nonatomic, strong, readonly) UILabel *anonymousLabel;
 @property (nonatomic, strong, readonly) OTRCircleView *createView;

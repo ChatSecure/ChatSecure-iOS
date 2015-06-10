@@ -56,7 +56,7 @@
 - (instancetype)init
 {
     if (self = [super init]) {
-        self.tableViewHeight = 4*33;
+        self.tableViewHeight = 3*33;
     }
     return self;
 }
@@ -77,33 +77,43 @@
     
     self.view.backgroundColor = [UIColor whiteColor];
     
-    _chatsecureLabel = [[UILabel alloc] initForAutoLayout];
-    self.chatsecureLabel.text = @"ChatSecure";
     
-    _stayConnectedLabel = [[UILabel alloc] initForAutoLayout];
-    self.stayConnectedLabel.text = @"Stay Connected";
+    _brandImageView = [[UIImageView alloc] initForAutoLayout];
+    self.brandImageView.image = [UIImage imageNamed:@"chatsecure_banner"];
     
     _anonymousLabel = [[UILabel alloc] initForAutoLayout];
     self.anonymousLabel.lineBreakMode = NSLineBreakByWordWrapping;
     self.anonymousLabel.numberOfLines = 0;
     self.anonymousLabel.textAlignment = NSTextAlignmentCenter;
-    self.anonymousLabel.text = @"Be Anonymous Moose";
+    self.anonymousLabel.text = @"Anonymous";
     
     _createLabel = [[UILabel alloc] initForAutoLayout];
     self.createLabel.lineBreakMode = NSLineBreakByWordWrapping;
     self.createLabel.numberOfLines = 0;
     self.createLabel.textAlignment = NSTextAlignmentCenter;
-    self.createLabel.text = @"Create a Chat ID";
+    self.createLabel.text = @"Sign Up";
     
     _createView = [[OTRCircleView alloc] initForAutoLayout];
     self.createView.backgroundColor = [UIColor lightGrayColor];
     UITapGestureRecognizer *createTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapCreateChatID:)];
     [self.createView addGestureRecognizer:createTapGestureRecognizer];
     
+    UIImageView *createImageView = [[UIImageView alloc] initForAutoLayout];
+    createImageView.image = [UIImage imageNamed:@"createChatIDImage"];
+    createImageView.contentMode = UIViewContentModeScaleAspectFill;
+    [self.createView addSubview:createImageView];
+    [createImageView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsZero];
+    
     _anonymousView = [[OTRCircleView alloc] initForAutoLayout];
     self.anonymousView.backgroundColor = [UIColor lightGrayColor];
     UITapGestureRecognizer *anonymousTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self  action:@selector(didTapCreateAnonymousAccount:)];
     [self.anonymousView addGestureRecognizer:anonymousTapGestureRecognizer];
+    
+    UIImageView *anonymousImageView = [[UIImageView alloc] initForAutoLayout];
+    anonymousImageView.image = [UIImage imageNamed:@"createAnonymousImage"];
+    anonymousImageView.contentMode = UIViewContentModeScaleAspectFill;
+    [self.anonymousView addSubview:anonymousImageView];
+    [anonymousImageView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsZero];
     
     _accountPickerHeaderView = [[UIView alloc] initForAutoLayout];
     self.accountPickerHeaderView.backgroundColor = [UIColor darkGrayColor];
@@ -120,15 +130,14 @@
     [self.accountPickerHeaderView addGestureRecognizer:tapGestureRecognizer];
     
     _accountPickkerHeaderLabel = [[UILabel alloc] initForAutoLayout];
-    _accountPickkerHeaderLabel.text = @"Use My Own Account";
+    _accountPickkerHeaderLabel.text = @"Login";
     
     _accountPickerHeaderImageView = [[UIImageView alloc] initForAutoLayout];
     
     [self.accountPickerHeaderView addSubview:self.accountPickkerHeaderLabel];
     [self.accountPickerHeaderView addSubview:self.accountPickerHeaderImageView];
     
-    [self.view addSubview:self.chatsecureLabel];
-    [self.view addSubview:self.stayConnectedLabel];
+    [self.view addSubview:self.brandImageView];
     [self.view addSubview:self.createLabel];
     [self.view addSubview:self.anonymousLabel];
     [self.view addSubview:self.createView];
@@ -154,13 +163,10 @@
 
 - (void)addBaseConstraints
 {
-    [self.chatsecureLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
-    [self.chatsecureLabel autoConstrainAttribute:ALAttributeHorizontal toAttribute:ALAttributeHorizontal ofView:self.view withMultiplier:0.5];
+    [self.brandImageView autoAlignAxisToSuperviewAxis:ALAxisVertical];
+    [self.brandImageView autoConstrainAttribute:ALAttributeHorizontal toAttribute:ALAttributeHorizontal ofView:self.view withMultiplier:0.5];
     
-    [self.stayConnectedLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.chatsecureLabel withOffset:10];
-    [self.stayConnectedLabel autoAlignAxisToSuperviewAxis:ALAxisVertical];
-    
-    [self.createView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.stayConnectedLabel withOffset:10];
+    [self.createView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.brandImageView withOffset:10];
     [self.createView autoConstrainAttribute:ALAttributeVertical toAttribute:ALAttributeVertical ofView:self.view withMultiplier:0.5];
     [self.createView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:0.25];
     [self.createView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.createView];
@@ -242,8 +248,6 @@
         }
     };
     
-    
-    [accountArray addObject:[OTRWelcomeAccountInfo accountInfoWithText:@"ChatSecure ID" image:nil didSelectBlock:NULL]];
     [accountArray addObject:[OTRWelcomeAccountInfo accountInfoWithText:@"XMPP" image:[UIImage imageNamed:@"xmpp"] didSelectBlock:^{
         __strong typeof(weakSelf)strongSelf = weakSelf;
         
