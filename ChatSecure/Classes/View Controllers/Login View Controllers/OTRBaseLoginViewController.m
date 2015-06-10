@@ -14,6 +14,9 @@
 #import "OTRXMPPError.h"
 #import "SIAlertView.h"
 #import "UIAlertView+Blocks.h"
+#import "OTRDatabaseManager.h"
+#import "OTRAccount.h"
+#import "MBProgressHUD.h"
 
 @interface OTRBaseLoginViewController ()
 
@@ -49,14 +52,19 @@
 - (void)loginButtonPressed:(id)sender
 {
     if ([self validForm]) {
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         [self.createLoginHandler performActionWithValidForm:self.form account:self.account completion:^(NSError *error, OTRAccount *account) {
-            
-            if (account) {
-                self.account = account;
-            }
-            
+            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
             if (error) {
                 [self handleError:error];
+            } else {
+                self.account = account;
+                [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+                    [self.account saveWithTransaction:transaction];
+                }];
+                if (self.successBlock) {
+                    self.successBlock();
+                }
             }
         }];
     }

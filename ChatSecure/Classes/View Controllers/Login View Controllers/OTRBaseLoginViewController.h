@@ -25,4 +25,6 @@
 
 @property (nonatomic, strong) id<OTRBaseLoginViewControllerHandlerProtocol> createLoginHandler;
 
+@property (nonatomic, copy) void (^successBlock)(void);
+
 @end

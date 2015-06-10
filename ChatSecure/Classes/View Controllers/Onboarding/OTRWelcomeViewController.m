@@ -212,6 +212,13 @@
     OTRBaseLoginViewController *createAccountViewController = [[OTRBaseLoginViewController alloc] initWithForm:[OTRXLFormCreator ChatSecureIDForm] style:UITableViewStyleGrouped];
     createAccountViewController.createLoginHandler = [[OTRChatSecureIDCreateAccountHandler alloc] init];
     createAccountViewController.account = [[OTRXMPPAccount alloc] initWithAccountType:OTRAccountTypeJabber];
+    __weak typeof(self)weakSelf = self;
+    [createAccountViewController setSuccessBlock:^{
+        __strong typeof(weakSelf)strongSelf = weakSelf;
+        if (strongSelf.successBlock) {
+            strongSelf.successBlock();
+        }
+    }];
     
     [self.navigationController pushViewController:createAccountViewController animated:YES];
     NSLog(@"Create Chat ID");
@@ -226,14 +233,23 @@
 - (NSArray *)defaultAccountArray
 {
     NSMutableArray *accountArray = [NSMutableArray array];
-    
     __weak typeof(self)weakSelf = self;
+    
+    void (^successBlock)(void) = ^void(void) {
+        __strong typeof(weakSelf)strongSelf = weakSelf;
+        if (strongSelf.successBlock) {
+            strongSelf.successBlock();
+        }
+    };
+    
+    
     [accountArray addObject:[OTRWelcomeAccountInfo accountInfoWithText:@"ChatSecure ID" image:nil didSelectBlock:NULL]];
     [accountArray addObject:[OTRWelcomeAccountInfo accountInfoWithText:@"XMPP" image:[UIImage imageNamed:@"xmpp"] didSelectBlock:^{
         __strong typeof(weakSelf)strongSelf = weakSelf;
         
         OTRXMPPAccount *xmppAccount = [[OTRXMPPAccount alloc] initWithAccountType:OTRAccountTypeJabber];
         OTRBaseLoginViewController *loginViewController = [[OTRBaseLoginViewController alloc] initWithForm:[OTRXLFormCreator formForAccount:xmppAccount] style:UITableViewStyleGrouped];
+        loginViewController.successBlock = successBlock;
         loginViewController.account = xmppAccount;
         OTRXMPPLoginHandler *loginHandler = [[OTRXMPPLoginHandler alloc] init];
         loginViewController.createLoginHandler = loginHandler;
@@ -257,6 +273,7 @@
                 googleAccount.oAuthTokenDictionary = auth.parameters;
                 
                 OTRBaseLoginViewController *loginViewController = [[OTRBaseLoginViewController alloc] initWithForm:[OTRXLFormCreator formForAccount:googleAccount] style:UITableViewStyleGrouped];
+                loginViewController.successBlock = successBlock;
                 loginViewController.account = googleAccount;
                 OTRGoolgeOAuthLoginHandler *loginHandler = [[OTRGoolgeOAuthLoginHandler alloc] init];
                 loginViewController.createLoginHandler = loginHandler;

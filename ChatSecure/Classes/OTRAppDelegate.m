@@ -114,15 +114,34 @@
         }
 
         [[OTRDatabaseManager sharedInstance] setupDatabaseWithName:OTRYapDatabaseName];
-        //rootViewController = [self defaultConversationNavigationController];
-        rootViewController = [[OTRWelcomeViewController alloc] initWithDefaultAccountArray];
-        rootViewController = [[UINavigationController alloc] initWithRootViewController:rootViewController];
+        
+        __block BOOL hasAccounts = NO;
+        [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+            [transaction enumerateKeysInCollection:[OTRAccount collection] usingBlock:^(NSString *key, BOOL *stop) {
+                hasAccounts = YES;
+                *stop = YES;
+            }];
+        }];
+        
+        //If there is any number of accounts launch into default conversation view otherwise onboarding time
+        if (hasAccounts) {
+            rootViewController= [self defaultConversationNavigationController];
+        } else {
+            __weak typeof(self)weakSelf = self;
+            OTRWelcomeViewController *welcomeViewController = [[OTRWelcomeViewController alloc] initWithDefaultAccountArray];
+            [welcomeViewController setSuccessBlock:^{
+                //Todo: make nice and aminated :)
+                __strong typeof(weakSelf)strongSelf = weakSelf;
+                strongSelf.window.rootViewController = [strongSelf defaultConversationNavigationController];
+            }];
+            rootViewController = [[UINavigationController alloc] initWithRootViewController:welcomeViewController];
+        }
+        
         
 #if CHATSECURE_DEMO
         [self performSelector:@selector(loadDemoData) withObject:nil afterDelay:0.0];
 #endif
     }
-
     
 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];

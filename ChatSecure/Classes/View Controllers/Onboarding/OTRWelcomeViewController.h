@@ -34,6 +34,8 @@
 
 @property (nonatomic, strong, readonly) NSArray *accountInfoArray;
 
+@property (nonatomic, copy) void (^successBlock)(void);
+
 - (instancetype) initWithDefaultAccountArray;
 
 - (NSArray *)defaultAccountArray;
