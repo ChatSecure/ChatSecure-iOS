@@ -42,6 +42,7 @@
 #import "OTRLog.h"
 #import "DDTTYLogger.h"
 #import "OTRAccount.h"
+#import "OTRXMPPAccount.h"
 #import "OTRBuddy.h"
 #import "YAPDatabaseTransaction.h"
 #import "YapDatabaseConnection.h"
@@ -412,6 +413,38 @@
     if ([url.scheme isEqualToString:@"xmpp"]) {
         XMPPURI *xmppURI = [[XMPPURI alloc] initWithURL:url];
         XMPPJID *jid = xmppURI.jid;
+        NSString *otrFingerprint = xmppURI.queryParameters[@"otr-fingerprint"];
+        NSString *action = xmppURI.queryAction;
+        if (jid && [action isEqualToString:@"subscribe"]) {
+            NSString *message = jid.full;
+            if (otrFingerprint.length == 40) {
+                message = [message stringByAppendingFormat:@"\n%@", otrFingerprint];
+            }
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:ADD_BUDDY_STRING message:message preferredStyle:UIAlertControllerStyleActionSheet];
+            __block NSArray *accounts = nil;
+            [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+                accounts = [OTRAccount allAccountsWithTransaction:transaction];
+            }];
+            [accounts enumerateObjectsUsingBlock:^(OTRAccount *account, NSUInteger idx, BOOL *stop) {
+                if ([account isKindOfClass:[OTRXMPPAccount class]]) {
+                    UIAlertAction *action = [UIAlertAction actionWithTitle:account.username style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                        id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:account];
+                        OTRBuddy *buddy = [[OTRBuddy alloc] init];
+                        buddy.username = jid.full;
+                        [protocol addBuddy:buddy];
+                        /* TODO OTR fingerprint verificaction
+                        if (otrFingerprint) {
+                            // We are missing a method to add fingerprint to trust store
+                            [[OTRKit sharedInstance] setActiveFingerprintVerificationForUsername:buddy.username accountName:account.username protocol:account.protocolTypeString verified:YES completion:nil];
+                        }*/
+                    }];
+                    [alert addAction:action];
+                }
+            }];
+            UIAlertAction *cancel = [UIAlertAction actionWithTitle:CANCEL_STRING style:UIAlertActionStyleCancel handler:nil];
+            [alert addAction:cancel];
+            [self.window.rootViewController presentViewController:alert animated:YES completion:nil];
+        }
         return YES;
     }
     return NO;
