@@ -34,6 +34,16 @@ typedef NS_ENUM(NSInteger, OTRProtocolConnectionStatus) {
     OTRProtocolConnectionStatusConnecting
 };
 
+typedef NS_ENUM(NSInteger, OTRLoginStatus) {
+    OTRLoginStatusDisconnected = 0,
+    OTRLoginStatusConnecting,
+    OTRLoginStatusConnected,
+    OTRLoginStatusSecuring,
+    OTRLoginStatusSecured,
+    OTRLoginStatusAuthenticating,
+    OTRLoginStatusAuthenticated
+};
+
 @protocol OTRProtocol <NSObject>
 
 - (OTRAccount *)account;

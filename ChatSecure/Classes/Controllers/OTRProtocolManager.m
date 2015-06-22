@@ -65,7 +65,9 @@ static OTRProtocolManager *sharedManager = nil;
 - (void)removeProtocolForAccount:(OTRAccount *)account
 {
     @synchronized(self.protocolManagerDictionary) {
-        [self.protocolManagerDictionary removeObjectForKey:account.uniqueId];
+        if (account) {
+            [self.protocolManagerDictionary removeObjectForKey:account.uniqueId];
+        }
     }
 }
 
@@ -115,6 +117,11 @@ static OTRProtocolManager *sharedManager = nil;
 - (id)copyWithZone:(NSZone *)zone
 {
     return self;
+}
+
+- (void)setProtocol:(id <OTRProtocol>)protocol forAccount:(OTRAccount *)account
+{
+    [self addProtocol:protocol forAccount:account];
 }
 
 - (id <OTRProtocol>)protocolForAccount:(OTRAccount *)account

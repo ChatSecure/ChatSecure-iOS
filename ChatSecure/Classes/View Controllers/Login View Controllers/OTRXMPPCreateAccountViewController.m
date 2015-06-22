@@ -21,30 +21,29 @@
 #import "OTRDomainCellInfo.h"
 #import "OTRDatabaseView.h"
 #import "OTRXMPPTorAccount.h"
+#import "Strings.h"
 
 static NSString * const domainCellIdentifier = @"domainCellIdentifer";
 
 @interface OTRXMPPCreateAccountViewController ()
 
 @property (nonatomic, strong) NSArray * hostnameArray;
-@property (nonatomic, strong) OTRXMPPAccount *account;
 
 @property (nonatomic, strong) JVFloatLabeledTextField *customHostnameTextField;
 
-@property (nonatomic) BOOL wasAbleToCreateAccount;
-
-@property (nonatomic, weak) id OTRXMPPRegisterFailedNotificationNameObject;
-@property (nonatomic, weak) id OTRXMPPRegisterSucceededNotificationNameObject;
+@property (nonatomic, strong) OTRXMPPManager *currentXMPPManager;
 
 @end
 
 @implementation OTRXMPPCreateAccountViewController
 
+@dynamic account;
+
 - (id)init
 {
     if (self = [super init]) {
         self.customHostnameTextField = [[JVFloatLabeledTextField alloc] initWithFrame:CGRectZero];
-        [self.customHostnameTextField setPlaceholder:@"Custom"];
+        [self.customHostnameTextField setPlaceholder:CUSTOM_STRING];
         self.customHostnameTextField.returnKeyType = UIReturnKeyDone;
         self.customHostnameTextField.delegate = self;
     }
@@ -74,33 +73,6 @@ static NSString * const domainCellIdentifier = @"domainCellIdentifer";
     [self.passwordTextField resignFirstResponder];
     
     self.loginButton.title = CREATE_STRING;
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    
-    self.wasAbleToCreateAccount = NO;
-    
-    __weak OTRXMPPCreateAccountViewController *welf = self;
-    self.OTRXMPPRegisterSucceededNotificationNameObject = [[NSNotificationCenter defaultCenter] addObserverForName:OTRXMPPRegisterSucceededNotificationName object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
-        [welf didReceiveRegistrationSucceededNotification:note];
-    }];
-    
-    self.OTRXMPPRegisterFailedNotificationNameObject = [[NSNotificationCenter defaultCenter] addObserverForName:OTRXMPPRegisterFailedNotificationName object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
-        [welf didReceiveRegistrationFailedNotification:note];
-    }];
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-    [[NSNotificationCenter defaultCenter] removeObserver:self.OTRXMPPRegisterFailedNotificationNameObject];
-    [[NSNotificationCenter defaultCenter] removeObserver:self.OTRXMPPRegisterSucceededNotificationNameObject];
-    
-    if (!self.wasAbleToCreateAccount) {
-        [OTRAccountsManager removeAccount:self.account];
-    }
 }
 
 #pragma - mark UITableViewDelegate Mehtods
@@ -273,40 +245,40 @@ static NSString * const domainCellIdentifier = @"domainCellIdentifer";
         }];
     }
     else {
-        NSString *newUsername = [self fixUsername:self.usernameTextField.text withDomain:[self usernameHostnameForIndex:self.selectedHostnameIndex]];
-        self.usernameTextField.text = newUsername;
-        self.account.username = newUsername;
-        self.account.domain = [self serverHostnameForIndex:self.selectedHostnameIndex];
-        self.account.rememberPassword = self.rememberPasswordSwitch.on;
-        self.account.autologin = self.autoLoginSwitch.on;
-        
-        
-        OTRXMPPManager * xmppManager = [self xmppManagerForCurrentAccount];
-        if (xmppManager) {
-            [self showHUDWithText:CREATING_ACCOUNT_STRING];
-            [xmppManager registerNewAccountWithPassword:self.passwordTextField.text];
-        }
+        [self showHUDWithText:CREATING_ACCOUNT_STRING];
+        __weak typeof(self)weakSelf = self;
+//        self.currentXMPPManager = [OTRXMPPManager attemptToCreateAccountWithUsername:self.usernameTextField.text password:self.passwordTextField.text domain:[self serverHostnameForIndex:self.selectedHostnameIndex] completionQueue:dispatch_get_main_queue() completion:^(NSError *error) {
+//            __strong typeof(weakSelf)strongSelf = weakSelf;
+//            if (error) {
+//                [strongSelf didReceiveRegistrationFailedError:error];
+//            }
+//            else {
+//                [strongSelf didReceiveRegistrationSucceeded];
+//            }
+//        }];
     }
 }
 
-- (void)didReceiveRegistrationSucceededNotification:(NSNotification *)notification
+- (void)didReceiveRegistrationSucceeded
 {
-    self.wasAbleToCreateAccount = YES;
-    OTRXMPPManager * xmppMananger = [self xmppManagerForCurrentAccount];
-    if (xmppMananger) {
+    if (self.currentXMPPManager) {
         self.HUD.labelText = LOGGING_IN_STRING;
+        self.currentXMPPManager.account.rememberPassword = self.rememberPasswordSwitch.on;
+        self.currentXMPPManager.account.autologin = self.autoLoginSwitch.on;
+        self.currentXMPPManager.account.domain = [self serverHostnameForIndex:self.selectedHostnameIndex];
         [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-            [self.account saveWithTransaction:transaction];
+            [self.currentXMPPManager.account saveWithTransaction:transaction];
         }];
-        [xmppMananger connectWithPassword:self.passwordTextField.text userInitiated:YES];
+        
+        [[OTRProtocolManager sharedInstance] setProtocol:self.currentXMPPManager forAccount:self.currentXMPPManager.account];
+        
+        [self.currentXMPPManager connectWithPassword:self.passwordTextField.text userInitiated:YES];
     }
 }
 
-- (void)didReceiveRegistrationFailedNotification:(NSNotification *)notification
+- (void)didReceiveRegistrationFailedError:(NSError *)error
 {
     [self hideHUD];
-    self.wasAbleToCreateAccount = NO;
-    NSError * error = [[notification userInfo] objectForKey:kOTRNotificationErrorKey];
     DDLogWarn(@"Registration Failed: %@",error);
     NSString * errorString = REGISTER_ERROR_STRING;
     if (error) {
@@ -351,16 +323,6 @@ static NSString * const domainCellIdentifier = @"domainCellIdentifer";
         //Other
     }
     return hostname;
-}
-
-- (OTRXMPPManager *)xmppManagerForCurrentAccount
-{
-    id protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
-    OTRXMPPManager * xmppManager = nil;
-    if ([protocol isKindOfClass:[OTRXMPPManager class]]) {
-        xmppManager = (OTRXMPPManager *)protocol;
-    }
-    return xmppManager;
 }
 
 + (instancetype)createViewControllerWithHostnames:(NSArray *)hostNames

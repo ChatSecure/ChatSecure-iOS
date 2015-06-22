@@ -974,5 +974,9 @@
     "INCOMING_STRING" : {
         "comment": "Label for incoming data transfers",
         "string": "Incoming"
+    },
+    "CUSTOM_STRING" : {
+        "comment": "Place holder label for custom domains",
+        "string": "Custom"
     }
 }

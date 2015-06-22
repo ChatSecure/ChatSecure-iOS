@@ -38,12 +38,30 @@
 #import "OTRXMPPError.h"
 #import "OTRConstants.h"
 
-@class OTRYapDatabaseRosterStorage;
-@class OTRXMPPAccount;
-@class OTRvCardYapDatabaseStorage;
+@class OTRYapDatabaseRosterStorage,OTRXMPPAccount, OTRvCardYapDatabaseStorage, OTRXMPPManager;
 
 extern NSString *const OTRXMPPRegisterSucceededNotificationName;
 extern NSString *const OTRXMPPRegisterFailedNotificationName;
+
+
+
+/**
+ This notification is sent every time there is a change in the login status and if it goes 'backwards' there
+ should be an error or a user initiated disconnect.
+ 
+ @{
+        OTRXMPPOldLoginStatusKey : @(OTRLoginStatus)
+        OTRXMPPNewLoginStatusKey : @(OTRLoginStatus)
+        OTRXMPPLoginErrorKey     : NSError*
+ }
+*/
+
+extern NSString *const OTRXMPPLoginStatusNotificationName;
+
+extern NSString *const OTRXMPPOldLoginStatusKey;
+extern NSString *const OTRXMPPNewLoginStatusKey;
+extern NSString *const OTRXMPPLoginErrorKey;
+
 
 @interface OTRXMPPManager : NSObject <XMPPRosterDelegate, NSFetchedResultsControllerDelegate, OTRProtocol, OTRCertificatePinningDelegate>
 
@@ -56,16 +74,19 @@ extern NSString *const OTRXMPPRegisterFailedNotificationName;
 @property (nonatomic, readonly) XMPPCapabilities *xmppCapabilities;
 @property (nonatomic, readonly) XMPPCapabilitiesCoreDataStorage *xmppCapabilitiesStorage;
 @property (nonatomic, readonly) OTRCertificatePinning * certificatePinningModule;
-@property (nonatomic, readonly) BOOL isXmppConnected;
 @property BOOL didSecure;
+
+@property (nonatomic, strong, readonly) OTRXMPPAccount *account;
+@property (nonatomic, strong, readonly) NSString *accountUniqueId;
 
 - (BOOL)connectWithJID:(NSString*) myJID password:(NSString*)myPassword;
 - (void)disconnect;
 
 - (NSString *)accountName;
 
-- (void)registerNewAccountWithPassword:(NSString *)password;
 - (void)failedToConnect:(NSError *)error;
+
+- (void)registerNewAccountWithPassword:(NSString *)newPassword;
 
 
 //Chat State

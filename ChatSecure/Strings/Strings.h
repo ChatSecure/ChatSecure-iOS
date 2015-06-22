@@ -100,6 +100,7 @@
 #define HOSTNAME_STRING [OTRLanguageManager translatedString: @"Hostname"]
 #define errSSLPeerInsufficientSecurityString [OTRLanguageManager translatedString: @"Insufficient security"]
 #define iOS_SSL_ERROR_TITLE_STRING [OTRLanguageManager translatedString: @"iOS Vulnerability"]
+#define CUSTOM_STRING [OTRLanguageManager translatedString: @"Custom"]
 #define HOLD_TO_TALK_STRING [OTRLanguageManager translatedString: @"Hold to talk"]
 #define SKIP_STRING [OTRLanguageManager translatedString: @"Skip"]
 #define SEARCH_STRING [OTRLanguageManager translatedString: @"Search"]

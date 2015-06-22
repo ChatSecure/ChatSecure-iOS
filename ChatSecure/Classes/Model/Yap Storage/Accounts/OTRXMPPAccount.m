@@ -20,6 +20,8 @@ static NSUInteger const OTRDefaultPortNumber = 5222;
     if (self = [super init]) {
         self.port = [OTRXMPPAccount defaultPort];
         self.resource = [OTRXMPPAccount newResource];
+        self.autologin = YES;
+        self.rememberPassword = YES;
     }
     return self;
 }
