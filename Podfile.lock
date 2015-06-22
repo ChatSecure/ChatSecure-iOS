@@ -88,6 +88,7 @@ PODS:
     - CocoaAsyncSocket (~> 7.3)
     - CocoaLumberjack (~> 1.9)
   - PureLayout (2.0.6)
+  - QRCodeReaderViewController (3.4.0)
   - SIAlertView (1.3)
   - SQLCipher/common (3.3.0)
   - SQLCipher/fts (3.3.0):
@@ -246,6 +247,9 @@ PODS:
   - YapDatabase/SQLCipher (2.6.1):
     - SQLCipher/fts
     - YapDatabase/common
+  - ZXingObjC (3.1.0):
+    - ZXingObjC/All (= 3.1.0)
+  - ZXingObjC/All (3.1.0)
 
 DEPENDENCIES:
   - AFNetworking (~> 2.4)
@@ -276,6 +280,7 @@ DEPENDENCIES:
   - OTRKit (from `Submodules/OTRKit/OTRKit.podspec`)
   - ProxyKit/Client (from `Submodules/ProxyKit/ProxyKit.podspec`)
   - PureLayout (~> 2.0)
+  - QRCodeReaderViewController (~> 3.4.0)
   - SIAlertView (from `https://github.com/ChatSecure/SIAlertView.git`, branch `attributedText`)
   - SQLCipher/fts (from `Podspecs/SQLCipher.podspec.json`)
   - SSKeychain (~> 1.2)
@@ -287,6 +292,7 @@ DEPENDENCIES:
   - XLForm (from `https://github.com/xmartlabs/XLForm.git`, commit `514807c473f013211c14c65919846044d1f72da9`)
   - XMPPFramework (from `Submodules/XMPPFramework/XMPPFramework.podspec.json`)
   - YapDatabase/SQLCipher (from `Submodules/YapDatabase/YapDatabase.podspec`)
+  - ZXingObjC (~> 3.0)
 
 EXTERNAL SOURCES:
   CPAProxy:
@@ -365,6 +371,7 @@ SPEC CHECKSUMS:
   OTRKit: b7b7be43350577f25dcf986376342a62bf3e7ea7
   ProxyKit: f7be31d07ed93444c433956d18e842ea9c709224
   PureLayout: f25f0bb904d5ccfe6e31da3cb869185259f02e0d
+  QRCodeReaderViewController: bbe09ba1805a74e4da29863a5220a7ad0411f5bc
   SIAlertView: 20c794b55eaf44d888773ea51647cf8907723919
   SQLCipher: dd01eccee441e56835da76656f05f34e02681ded
   SSKeychain: 3f42991739c6c60a9cf1bbd4dff6c0d3694bcf3d
@@ -376,5 +383,6 @@ SPEC CHECKSUMS:
   XLForm: 10fc7eb9e2d5df21a515fa3a794f4e26319abd0e
   XMPPFramework: 239fe709baff208fff5970708469b939387105ee
   YapDatabase: 13566c87dc9226a0f15d755edba08e8ad94cac9f
+  ZXingObjC: bf15b3814f7a105b6d99f47da2333c93a063650a
 
 COCOAPODS: 0.37.2
