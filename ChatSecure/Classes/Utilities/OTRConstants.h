@@ -60,7 +60,6 @@ extern NSString *const kOTRSettingKeyLanguage;
 extern NSString *const kOTRSettingsValueUpdatedNotification;
 
 extern NSString *const kOTRAppVersionKey;
-extern NSString *const OTRActivityTypeQRCode;
 
 extern NSString *const OTRArchiverKey;
 
