@@ -63,6 +63,7 @@
 - (void)loginButtonPressed:(id)sender
 {
     if ([self validForm]) {
+        self.form.disabled = YES;
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         self.loginCreateButtonItem.enabled = NO;
         self.navigationItem.leftBarButtonItem.enabled = NO;
@@ -70,6 +71,7 @@
         __weak typeof(self)weakSelf = self;
         [self.createLoginHandler performActionWithValidForm:self.form account:self.account completion:^(NSError *error, OTRAccount *account) {
             __strong typeof(weakSelf)strongSelf = weakSelf;
+            self.form.disabled = NO;
             strongSelf.loginCreateButtonItem.enabled = YES;
             strongSelf.navigationItem.backBarButtonItem.enabled = YES;
             strongSelf.navigationItem.leftBarButtonItem.enabled = YES;
