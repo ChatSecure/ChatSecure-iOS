@@ -55,6 +55,7 @@
 #import "OTRNotificationController.h"
 #import "UIAlertView+Blocks.h"
 #import "OTRWelcomeViewController.h"
+#import "OTRProtocolManager.h"
 
 #if CHATSECURE_DEMO
 #import "OTRChatDemo.h"

@@ -29,7 +29,6 @@
 #import "UIActivityViewController+ChatSecure.h"
 #import "OTRUtilities.h"
 #import "OTRProtocolManager.h"
-#import "OTRLoginViewController.h"
 #import "OTRColors.h"
 #import "JSQMessagesCollectionViewCell+ChatSecure.h"
 #import "NSString+FontAwesome.h"
@@ -44,6 +43,7 @@
 #import "OTRMediaFileManager.h"
 #import "OTRMediaServer.h"
 #import "UIImage+ChatSecure.h"
+#import "OTRBaseLoginViewController.h"
 
 @import AVFoundation;
 @import MediaPlayer;
@@ -592,7 +592,10 @@ typedef NS_ENUM(int, OTRDropDownType) {
         [[OTRProtocolManager sharedInstance] loginAccount:self.account userInitiated:YES];
         
     } else {
-        [OTRLoginViewController showLoginViewControllerWithAccount:self.account fromViewController:self completion:nil];
+        OTRBaseLoginViewController *loginViewController = [OTRBaseLoginViewController loginViewControllerForAccount:self.account];
+        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:loginViewController];
+        nav.modalPresentationStyle = UIModalPresentationFormSheet;
+        [self presentViewController:nav animated:YES completion:nil];
     }
     
     

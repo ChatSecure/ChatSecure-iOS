@@ -24,10 +24,10 @@
 #import "Strings.h"
 #import "OTRProtocol.h"
 #import "OTRConstants.h"
-#import "OTRLoginViewController.h"
 #import "QuartzCore/QuartzCore.h"
 #import "OTRImages.h"
 #import "UIAlertView+Blocks.h"
+#import "OTRBaseLoginViewController.h"
 
 #import "OTRAccount.h"
 
@@ -141,9 +141,8 @@ NSString *const kOTRAccountTypeKey   = @"kOTRAccountTypeKey";
 {
     OTRAccount *account = [OTRAccount accountForAccountType:accountType];
     
-    OTRLoginViewController *loginViewController = [OTRLoginViewController loginViewControllerWithAcccount:account];
-    loginViewController.isNewAccount = YES;
-    [self.navigationController pushViewController:loginViewController animated:YES];
+#warning Need to change how accounts are created
+//    [self.navigationController pushViewController:loginViewController animated:YES];
 }
 
 

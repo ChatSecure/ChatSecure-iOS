@@ -31,6 +31,8 @@
 @property (nonatomic, strong, readonly) UILabel *accountPickkerHeaderLabel;
 @property (nonatomic, strong, readonly) UIImageView *accountPickerHeaderImageView;
 
+@property (nonatomic) BOOL showNavigationBar;
+
 @property (nonatomic, strong, readonly) NSArray *accountInfoArray;
 
 @property (nonatomic, copy) void (^successBlock)(void);

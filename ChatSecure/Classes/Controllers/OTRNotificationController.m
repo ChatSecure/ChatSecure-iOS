@@ -9,12 +9,13 @@
 #import "OTRNotificationController.h"
 #import "CRToast.h"
 #import "OTRConstants.h"
-#import "OTRLoginViewController.h"
 #import "OTRSettingsViewController.h"
 #import "OTRXMPPManager.h"
 #import "OTRToastOptions.h"
 #import "OTRImages.h"
 #import "UIImage+ChatSecure.h"
+#import "OTRBaseLoginViewController.h"
+#import "Strings.h"
 
 @interface OTRNotificationController ()
 
@@ -105,7 +106,7 @@
 - (void)showLoginSuccessNotification:(NSNotification *)notification
 {
     UIViewController *topViewController = [self topViewController];
-    if (![topViewController isKindOfClass:[OTRLoginViewController class]]) {
+    if (![topViewController isKindOfClass:[OTRBaseLoginViewController class]]) {
         OTRXMPPManager *xmppManager = notification.object;
         NSString *accountName = nil;
         if (xmppManager) {
@@ -126,7 +127,7 @@
         topViewController = ((UINavigationController *)topViewController).topViewController;
     }
     
-    BOOL correctViewController = !([topViewController isKindOfClass:[OTRLoginViewController class]] || [topViewController isKindOfClass:[OTRSettingsViewController class]]);
+    BOOL correctViewController = !([topViewController isKindOfClass:[OTRBaseLoginViewController class]] || [topViewController isKindOfClass:[OTRSettingsViewController class]]);
     
     
     if (correctViewController && isUserInitiated) {

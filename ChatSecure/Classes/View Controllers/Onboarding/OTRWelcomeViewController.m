@@ -57,6 +57,7 @@
 {
     if (self = [super init]) {
         self.tableViewHeight = 3*33;
+        self.showNavigationBar = NO;
     }
     return self;
 }
@@ -252,11 +253,8 @@
         __strong typeof(weakSelf)strongSelf = weakSelf;
         
         OTRXMPPAccount *xmppAccount = [[OTRXMPPAccount alloc] initWithAccountType:OTRAccountTypeJabber];
-        OTRBaseLoginViewController *loginViewController = [[OTRBaseLoginViewController alloc] initWithForm:[OTRXLFormCreator formForAccount:xmppAccount] style:UITableViewStyleGrouped];
-        loginViewController.successBlock = successBlock;
+        OTRBaseLoginViewController *loginViewController = [OTRBaseLoginViewController loginViewControllerForAccount:xmppAccount];        loginViewController.successBlock = successBlock;
         loginViewController.account = xmppAccount;
-        OTRXMPPLoginHandler *loginHandler = [[OTRXMPPLoginHandler alloc] init];
-        loginViewController.createLoginHandler = loginHandler;
         
         [strongSelf.navigationController pushViewController:loginViewController animated:YES];
     }]];
@@ -300,7 +298,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self.navigationController setNavigationBarHidden:YES animated:animated];
+    [self.navigationController setNavigationBarHidden:!self.showNavigationBar animated:animated];
 }
 
 - (void)viewWillDisappear:(BOOL)animated

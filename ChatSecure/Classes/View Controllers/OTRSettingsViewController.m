@@ -33,7 +33,6 @@
 #import "OTRConstants.h"
 #import "UserVoice.h"
 #import "OTRAccountTableViewCell.h"
-#import "OTRCreateAccountChooserViewController.h"
 #import "UIAlertView+Blocks.h"
 #import "UIActionSheet+ChatSecure.h"
 #import "UIActionSheet+Blocks.h"
@@ -50,6 +49,9 @@
 #import "OTRShareSetting.h"
 #import "OTRActivityItemProvider.h"
 #import "OTRQRCodeActivity.h"
+#import "OTRWelcomeViewController.h"
+#import "OTRBaseLoginViewController.h"
+#import "OTRXLFormCreator.h"
 
 static NSString *const circleImageName = @"31-circle-plus-large.png";
 
@@ -59,7 +61,6 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 @property (nonatomic, strong) YapDatabaseConnection *databaseConnection;
 @property (nonatomic, strong) UITableView *tableView;
 
-- (void) addAccount:(id)sender;
 @end
 
 @implementation OTRSettingsViewController
@@ -260,7 +261,10 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
             
             BOOL connected = [[OTRProtocolManager sharedInstance] isAccountConnected:account];
             if (!connected) {
-                [OTRLoginViewController showLoginViewControllerWithAccount:account fromViewController:self completion:nil];
+                OTRBaseLoginViewController *baseLoginViewController = [OTRBaseLoginViewController loginViewControllerForAccount:account];
+                UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:baseLoginViewController];
+                navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
+                [self.navigationController presentViewController:navigationController animated:YES completion:nil];
             } else {
                 [self logoutAccount:account sender:[tableView cellForRowAtIndexPath:indexPath]];
             }
@@ -356,53 +360,12 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 
 - (void) addAccount:(id)sender {
     
-    void (^createAccountBlock)(void) = ^void(void) {
-        OTRCreateAccountChooserViewController * createAccountChooser = [[OTRCreateAccountChooserViewController alloc] init];
-        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:createAccountChooser];
-        nav.modalPresentationStyle = UIModalPresentationFormSheet;
-        [self presentViewController:nav animated:YES completion:nil];
-    };
-    
-    void (^connectAccountBlock)(void) = ^void(void) {
-        OTRNewAccountViewController * newAccountView = [[OTRNewAccountViewController alloc] init];
-        
-        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:newAccountView];
-        nav.modalPresentationStyle = UIModalPresentationFormSheet;
-        [self presentViewController:nav animated:YES completion:nil];
-    };
-    
-    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
-        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NEW_ACCOUNT_STRING message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:CANCEL_STRING style:UIAlertActionStyleCancel handler:nil];
-        
-        UIAlertAction *createAccountAction = [UIAlertAction actionWithTitle:CREATE_NEW_ACCOUNT_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-            createAccountBlock();
-        }];
-        
-        UIAlertAction *loginAccountAction = [UIAlertAction actionWithTitle:CONNECT_EXISTING_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-            connectAccountBlock();
-        }];
-        
-        [alertController addAction:createAccountAction];
-        [alertController addAction:loginAccountAction];
-        [alertController addAction:cancelAction];
-        
-        if ([sender isKindOfClass:[UIView class]]) {
-            UIView *senderView = (UIView *)sender;
-            alertController.popoverPresentationController.sourceRect = senderView.bounds;
-            alertController.popoverPresentationController.sourceView = senderView;
-        }
-        
-        [self presentViewController:alertController animated:YES completion:nil];
-    }
-    else {
-        RIButtonItem *cancelButton = [RIButtonItem itemWithLabel:CANCEL_STRING];
-        RIButtonItem *createAccountButton = [RIButtonItem itemWithLabel:CREATE_NEW_ACCOUNT_STRING action:createAccountBlock];
-        RIButtonItem *loginAccountButton = [RIButtonItem itemWithLabel:CONNECT_EXISTING_STRING action:connectAccountBlock];
-        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:NEW_ACCOUNT_STRING cancelButtonItem:cancelButton destructiveButtonItem:nil otherButtonItems:createAccountButton,loginAccountButton, nil];
-        
-        [actionSheet showInView:self.view];
-    }
+    OTRWelcomeViewController *welcomeViewController = [[OTRWelcomeViewController alloc] initWithDefaultAccountArray];
+    welcomeViewController.showNavigationBar = YES;
+    [welcomeViewController setSuccessBlock:^{
+        NSLog(@"Finished setting up account");
+    }];
+    [self.navigationController pushViewController:welcomeViewController animated:YES];
 }
 
 - (NSIndexPath *)indexPathForSetting:(OTRSetting *)setting

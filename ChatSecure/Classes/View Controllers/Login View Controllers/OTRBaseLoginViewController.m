@@ -17,6 +17,7 @@
 #import "OTRDatabaseManager.h"
 #import "OTRAccount.h"
 #import "MBProgressHUD.h"
+#import "OTRXLFormCreator.h"
 
 @interface OTRBaseLoginViewController ()
 
@@ -41,6 +42,11 @@
     [self.navigationController setNavigationBarHidden:NO animated:animated];
     [self.tableView reloadData];
     [self.createLoginHandler moveAccountValues:self.account intoForm:self.form];
+    
+    if (!self.navigationController.navigationBar.backItem) {
+        UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneButtonPressed:)];
+        self.navigationItem.leftBarButtonItem = doneButton;
+    }
 }
 
 - (void)setAccount:(OTRAccount *)account
@@ -49,25 +55,34 @@
     [self.createLoginHandler moveAccountValues:self.account intoForm:self.form];
 }
 
+- (void)doneButtonPressed:(id)sender {
+    
+    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+}
+
 - (void)loginButtonPressed:(id)sender
 {
     if ([self validForm]) {
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         self.loginCreateButtonItem.enabled = NO;
+        self.navigationItem.leftBarButtonItem.enabled = NO;
         self.navigationItem.backBarButtonItem.enabled = NO;
+        __weak typeof(self)weakSelf = self;
         [self.createLoginHandler performActionWithValidForm:self.form account:self.account completion:^(NSError *error, OTRAccount *account) {
-            self.loginCreateButtonItem.enabled = YES;
-            self.navigationItem.backBarButtonItem.enabled = YES;
-            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+            __strong typeof(weakSelf)strongSelf = weakSelf;
+            strongSelf.loginCreateButtonItem.enabled = YES;
+            strongSelf.navigationItem.backBarButtonItem.enabled = YES;
+            strongSelf.navigationItem.leftBarButtonItem.enabled = YES;
+            [MBProgressHUD hideAllHUDsForView:strongSelf.view animated:YES];
             if (error) {
-                [self handleError:error];
+                [strongSelf handleError:error];
             } else {
-                self.account = account;
+                strongSelf.account = account;
                 [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-                    [self.account saveWithTransaction:transaction];
+                    [strongSelf.account saveWithTransaction:transaction];
                 }];
-                if (self.successBlock) {
-                    self.successBlock();
+                if (strongSelf.successBlock) {
+                    strongSelf.successBlock();
                 }
             }
         }];
@@ -240,6 +255,17 @@
     
     [self.certAlertView setDefaultButtonImage:buttonImage forState:UIControlStateNormal];
     [self.certAlertView setDefaultButtonImage:buttonImage forState:UIControlStateHighlighted];
+}
+
+#pragma - mark Class Methods
+
++ (instancetype)loginViewControllerForAccount:(OTRAccount *)account
+{
+    OTRBaseLoginViewController *baseLoginViewController = [[self alloc] initWithForm:[OTRXLFormCreator formForAccount:account] style:UITableViewStyleGrouped];
+    baseLoginViewController.account = account;
+    baseLoginViewController.createLoginHandler = [OTRLoginHandler loginHandlerForAccount:account];
+    
+    return baseLoginViewController;
 }
 
 @end

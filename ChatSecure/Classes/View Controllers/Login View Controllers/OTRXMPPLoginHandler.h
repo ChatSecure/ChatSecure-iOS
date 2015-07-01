@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "OTRBaseLoginViewController.h"
 #import "OTRXMPPAccount.h"
+#import "OTRLoginHandler.h"
 
 @class XLFormViewController, OTRXMPPManager;
 

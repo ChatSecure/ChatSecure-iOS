@@ -26,8 +26,9 @@
 #import "YapDatabaseConnection.h"
 #import "OTRDatabaseView.h"
 #import "YapDatabaseViewMappings.h"
-
+#import "Strings.h"
 #import "OTRAppDelegate.h"
+#import "OTRProtocolManager.h"
 
 
 static CGFloat kOTRConversationCellHeight = 80.0;
