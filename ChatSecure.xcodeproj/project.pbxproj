@@ -95,7 +95,6 @@
 		633107051A16D1A300C17BAE /* OTRLanguageListSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106311A16D1A300C17BAE /* OTRLanguageListSettingViewController.m */; };
 		633107061A16D1A300C17BAE /* OTRListSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106331A16D1A300C17BAE /* OTRListSettingViewController.m */; };
 		633107071A16D1A300C17BAE /* OTRMessagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106351A16D1A300C17BAE /* OTRMessagesViewController.m */; };
-		633107081A16D1A300C17BAE /* OTRNewAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106371A16D1A300C17BAE /* OTRNewAccountViewController.m */; };
 		633107091A16D1A300C17BAE /* OTRNewBuddyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106391A16D1A300C17BAE /* OTRNewBuddyViewController.m */; };
 		6331070C1A16D1A300C17BAE /* OTRQRCodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331063F1A16D1A300C17BAE /* OTRQRCodeViewController.m */; };
 		6331070E1A16D1A300C17BAE /* OTRSettingDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106431A16D1A300C17BAE /* OTRSettingDetailViewController.m */; };
@@ -410,8 +409,6 @@
 		633106331A16D1A300C17BAE /* OTRListSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRListSettingViewController.m; sourceTree = "<group>"; };
 		633106341A16D1A300C17BAE /* OTRMessagesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRMessagesViewController.h; sourceTree = "<group>"; };
 		633106351A16D1A300C17BAE /* OTRMessagesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRMessagesViewController.m; sourceTree = "<group>"; };
-		633106361A16D1A300C17BAE /* OTRNewAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRNewAccountViewController.h; sourceTree = "<group>"; };
-		633106371A16D1A300C17BAE /* OTRNewAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRNewAccountViewController.m; sourceTree = "<group>"; };
 		633106381A16D1A300C17BAE /* OTRNewBuddyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRNewBuddyViewController.h; sourceTree = "<group>"; };
 		633106391A16D1A300C17BAE /* OTRNewBuddyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRNewBuddyViewController.m; sourceTree = "<group>"; };
 		6331063E1A16D1A300C17BAE /* OTRQRCodeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRQRCodeViewController.h; sourceTree = "<group>"; };
@@ -929,8 +926,6 @@
 				633106321A16D1A300C17BAE /* OTRListSettingViewController.h */,
 				633106331A16D1A300C17BAE /* OTRListSettingViewController.m */,
 				63EA4CFA1ACC931200B19E12 /* Messages View Controller */,
-				633106361A16D1A300C17BAE /* OTRNewAccountViewController.h */,
-				633106371A16D1A300C17BAE /* OTRNewAccountViewController.m */,
 				633106381A16D1A300C17BAE /* OTRNewBuddyViewController.h */,
 				633106391A16D1A300C17BAE /* OTRNewBuddyViewController.m */,
 				6331063E1A16D1A300C17BAE /* OTRQRCodeViewController.h */,
@@ -1649,7 +1644,6 @@
 				634680831B0404CE00D9A1C5 /* OTRXMPPLoginHandler.m in Sources */,
 				63C4BD251A1E9BE1001696CD /* _OTRManagedMessage.m in Sources */,
 				633620991A76E87B006E8739 /* OTRImageItem.m in Sources */,
-				633107081A16D1A300C17BAE /* OTRNewAccountViewController.m in Sources */,
 				6336209C1A76E88C006E8739 /* OTRVideoItem.m in Sources */,
 				638FC09D1B0BE46100B37454 /* NSFileManager+ChatSecure.m in Sources */,
 				633106C81A16D1A300C17BAE /* OTRSettingsGroup.m in Sources */,

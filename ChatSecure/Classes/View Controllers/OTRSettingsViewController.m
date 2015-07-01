@@ -29,7 +29,6 @@
 #import "OTRAboutViewController.h"
 #import "OTRQRCodeViewController.h"
 #import <QuartzCore/QuartzCore.h>
-#import "OTRNewAccountViewController.h"
 #import "OTRConstants.h"
 #import "UserVoice.h"
 #import "OTRAccountTableViewCell.h"
