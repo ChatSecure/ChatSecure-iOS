@@ -94,27 +94,26 @@
     self.createLabel.textAlignment = NSTextAlignmentCenter;
     self.createLabel.text = @"Sign Up";
     
-    _createView = [[OTRCircleView alloc] initForAutoLayout];
-    self.createView.backgroundColor = [UIColor lightGrayColor];
-    UITapGestureRecognizer *createTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapCreateChatID:)];
-    [self.createView addGestureRecognizer:createTapGestureRecognizer];
+    _createButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.createButton.backgroundColor = [UIColor lightGrayColor];
+    self.createButton.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.createButton addTarget:self action:@selector(didTapCreateChatID:) forControlEvents:UIControlEventTouchUpInside];
     
-    UIImageView *createImageView = [[UIImageView alloc] initForAutoLayout];
-    createImageView.image = [UIImage imageNamed:@"createChatIDImage"];
-    createImageView.contentMode = UIViewContentModeScaleAspectFill;
-    [self.createView addSubview:createImageView];
-    [createImageView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsZero];
+    self.createButton.contentMode = UIViewContentModeScaleAspectFill;
+    self.createButton.imageView.image = [UIImage imageNamed:@"createChatIDImage"];
+    
+    _createView = [[OTRCircleView alloc] initForAutoLayout];
+    [self.createView addSubview:self.createButton];
+    
+    _anonymousButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.anonymousButton.backgroundColor = [UIColor lightGrayColor];
+    self.anonymousButton.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.anonymousButton addTarget:self action:@selector(didTapCreateAnonymousAccount:) forControlEvents:UIControlEventTouchUpInside];
+    self.anonymousButton.imageView.contentMode = UIViewContentModeScaleAspectFill;
+    self.anonymousButton.imageView.image = [UIImage imageNamed:@"createAnonymousImage"];
     
     _anonymousView = [[OTRCircleView alloc] initForAutoLayout];
-    self.anonymousView.backgroundColor = [UIColor lightGrayColor];
-    UITapGestureRecognizer *anonymousTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self  action:@selector(didTapCreateAnonymousAccount:)];
-    [self.anonymousView addGestureRecognizer:anonymousTapGestureRecognizer];
-    
-    UIImageView *anonymousImageView = [[UIImageView alloc] initForAutoLayout];
-    anonymousImageView.image = [UIImage imageNamed:@"createAnonymousImage"];
-    anonymousImageView.contentMode = UIViewContentModeScaleAspectFill;
-    [self.anonymousView addSubview:anonymousImageView];
-    [anonymousImageView autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsZero];
+    [self.anonymousView addSubview:self.anonymousButton];
     
     _accountPickerHeaderView = [[UIView alloc] initForAutoLayout];
     self.accountPickerHeaderView.backgroundColor = [UIColor darkGrayColor];
@@ -169,8 +168,19 @@
     
     [self.createView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.brandImageView withOffset:10];
     [self.createView autoConstrainAttribute:ALAttributeVertical toAttribute:ALAttributeVertical ofView:self.view withMultiplier:0.5];
-    [self.createView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:0.25];
+    [UIView autoSetPriority:UILayoutPriorityDefaultLow forConstraints:^{
+        [self.createView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:0.25];
+    }];
+    
     [self.createView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.createView];
+    
+    [UIView autoSetPriority:UILayoutPriorityRequired forConstraints:^{
+        [self.createView autoSetDimension:ALDimensionWidth toSize:100 relation:NSLayoutRelationLessThanOrEqual];
+    }];
+    
+    
+    [self.createButton autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsZero];
+    [self.anonymousButton autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsZero];
     
     [self.anonymousView autoAlignAxis:ALAxisHorizontal toSameAxisOfView:self.createView];
     [self.anonymousView autoConstrainAttribute:ALAttributeVertical toAttribute:ALAttributeVertical ofView:self.view withMultiplier:1.5];

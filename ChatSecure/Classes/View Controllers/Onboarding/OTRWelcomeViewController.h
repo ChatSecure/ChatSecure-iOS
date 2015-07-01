@@ -25,6 +25,8 @@
 @property (nonatomic, strong, readonly) UIImageView *brandImageView;
 @property (nonatomic, strong, readonly) UILabel *createLabel;
 @property (nonatomic, strong, readonly) UILabel *anonymousLabel;
+@property (nonatomic, strong, readonly) UIButton *createButton;
+@property (nonatomic, strong, readonly) UIButton *anonymousButton;
 @property (nonatomic, strong, readonly) OTRCircleView *createView;
 @property (nonatomic, strong, readonly) OTRCircleView *anonymousView;
 @property (nonatomic, strong, readonly) UIView *accountPickerHeaderView;
