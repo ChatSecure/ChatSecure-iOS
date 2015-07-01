@@ -33,6 +33,8 @@
 {
     [super prepareForXMPPConnectionFrom:form account:account];
     [self moveServerInfo:[self.serverList firstObject] intoAccount:account];
+    account.rememberPassword = YES;
+    account.autologin = YES;
     self.account = account;
 }
 
@@ -79,6 +81,11 @@
         
         [self attemptToCreateAccount];
     } else {
+        //successfully created account
+        //need to save password
+        if (newStatus == OTRLoginStatusAuthenticated) {
+            self.account.password = self.password;
+        }
         [super receivedNotification:notification];
     }
 }
