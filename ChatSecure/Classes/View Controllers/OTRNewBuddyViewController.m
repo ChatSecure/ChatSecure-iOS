@@ -19,7 +19,11 @@
 #import "OTRXMPPAccount.h"
 #import "OTRXMPPBuddy.h"
 
-@interface OTRNewBuddyViewController ()
+#import "QRCodeReaderViewController.h"
+#import "QRCodeReader.h"
+#import "XMPPURI.h"
+
+@interface OTRNewBuddyViewController () <QRCodeReaderDelegate>
 
 @property (nonatomic) BOOL isXMPPaccount;
 
@@ -34,7 +38,6 @@
         [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
             self.account = [OTRAccount fetchObjectWithUniqueID:accountId transaction:transaction];
         }];
-
     }
     return self;
     
@@ -63,11 +66,17 @@
     
     //self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelButtonPressed:)];
     
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(doneButtonPressed:)];
     
+    UIBarButtonItem *qrButton = [[UIBarButtonItem alloc] initWithTitle:QR_CODE_STRING style:UIBarButtonItemStylePlain target:self action:@selector(qrButtonPressed:)];
+    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(doneButtonPressed:)];
+    if ([QRCodeReader supportsMetadataObjectTypes:@[AVMetadataObjectTypeQRCode]]) {
+        self.navigationItem.rightBarButtonItems = @[doneButton, qrButton];
+    } else {
+        self.navigationItem.rightBarButtonItem = doneButton;
+    }
     
     self.accountNameTextField = [[UITextField alloc] initWithFrame:CGRectZero];
-    self.accountNameTextField.placeholder = REQUIRED_STRING;
+    self.accountNameTextField.placeholder = XMPP_USERNAME_EXAMPLE_STRING;
     
     if (self.isXMPPaccount) {
         self.displayNameTextField = [[UITextField alloc] initWithFrame:CGRectZero];
@@ -108,7 +117,7 @@
     
     if (indexPath.row == 0) {
         textField = self.accountNameTextField;
-        cellText = EMAIL_STRING;
+        cellText = USERNAME_STRING;
     }
     else if(indexPath.row == 1) {
         textField = self.displayNameTextField;
@@ -219,6 +228,31 @@
         
     }
     
+}
+
+- (void) qrButtonPressed:(id)sender {
+    QRCodeReaderViewController *reader = [[QRCodeReaderViewController alloc] init];
+    reader.modalPresentationStyle = UIModalPresentationFormSheet;
+    reader.delegate = self;
+    [self presentViewController:reader animated:YES completion:NULL];
+}
+
+#pragma mark - QRCodeReader Delegate Methods
+
+- (void)reader:(QRCodeReaderViewController *)reader didScanResult:(NSString *)result
+{
+    [self dismissViewControllerAnimated:YES completion:^{
+        XMPPURI *uri = [[XMPPURI alloc] initWithURIString:result];
+        NSString *jid = uri.jid.full;
+        if (jid.length) {
+            self.accountNameTextField.text = jid;
+        }
+    }];
+}
+
+- (void)readerDidCancel:(QRCodeReaderViewController *)reader
+{
+    [reader dismissViewControllerAnimated:YES completion:NULL];
 }
 
 @end

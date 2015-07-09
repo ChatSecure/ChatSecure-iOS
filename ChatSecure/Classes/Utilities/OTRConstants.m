@@ -57,7 +57,6 @@ NSString *const kOTRSettingsValueUpdatedNotification = @"kOTRSettingsValueUpdate
 
 
 NSString *const kOTRAppVersionKey     = @"kOTRAppVersionKey";
-NSString *const OTRActivityTypeQRCode = @"OTRActivityTypeQRCode";
 
 NSString *const OTRArchiverKey = @"OTRArchiverKey";
 

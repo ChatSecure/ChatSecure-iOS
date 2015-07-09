@@ -48,6 +48,7 @@
 #import "OTRShareSetting.h"
 #import "OTRActivityItemProvider.h"
 #import "OTRQRCodeActivity.h"
+#import "XMPPURI.h"
 #import "OTRWelcomeViewController.h"
 #import "OTRBaseLoginViewController.h"
 #import "OTRXLFormCreator.h"
@@ -326,13 +327,18 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 {
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
         
-        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:LOGOUT_STRING message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
         UIAlertAction *cancelAlertAction = [UIAlertAction actionWithTitle:CANCEL_STRING style:UIAlertActionStyleCancel handler:nil];
         UIAlertAction *logoutAlertAction = [UIAlertAction actionWithTitle:LOGOUT_STRING style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
             id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:account];
             [protocol disconnect];
         }];
         
+        UIAlertAction *shareAction = [UIAlertAction actionWithTitle:SHARE_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            [self shareAccount:account sender:sender];
+        }];
+        
+        [alertController addAction:shareAction];
         [alertController addAction:logoutAlertAction];
         [alertController addAction:cancelAlertAction];
         
@@ -350,8 +356,11 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
             id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:account];
             [protocol disconnect];
         }];
+        RIButtonItem *shareButtonItem = [RIButtonItem itemWithLabel:SHARE_STRING action:^{
+            [self shareAccount:account sender:sender];
+        }];
         
-        UIActionSheet * logoutActionSheet = [[UIActionSheet alloc] initWithTitle:LOGOUT_STRING cancelButtonItem:cancelButtonItem destructiveButtonItem:logoutButtonItem otherButtonItems:nil];
+        UIActionSheet * logoutActionSheet = [[UIActionSheet alloc] initWithTitle:nil cancelButtonItem:cancelButtonItem destructiveButtonItem:logoutButtonItem otherButtonItems:shareButtonItem, nil];
         
         [logoutActionSheet otr_presentInView:self.view];
     }
@@ -449,6 +458,26 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     activityViewController.excludedActivityTypes = @[UIActivityTypePrint, UIActivityTypeAssignToContact, UIActivityTypeSaveToCameraRoll];
     
     UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:[self indexPathForSetting:shareSetting]];
+    
+    if( SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
+        activityViewController.popoverPresentationController.sourceView = cell;
+        activityViewController.popoverPresentationController.sourceRect = cell.bounds;
+    }
+    
+    [self presentViewController:activityViewController animated:YES completion:nil];
+}
+
+- (void) shareAccount:(OTRAccount*)account sender:(id)sender {
+    XMPPJID *jid = [XMPPJID jidWithString:account.username];
+    XMPPURI *uri = [[XMPPURI alloc] initWithJID:jid queryAction:@"subscribe" queryParameters:nil];
+    NSURL *url = [NSURL URLWithString:uri.uriString];
+    
+    OTRQRCodeActivity * qrCodeActivity = [[OTRQRCodeActivity alloc] init];
+    
+    UIActivityViewController * activityViewController = [[UIActivityViewController alloc] initWithActivityItems:@[url] applicationActivities:@[qrCodeActivity]];
+    activityViewController.excludedActivityTypes = @[UIActivityTypePrint, UIActivityTypeSaveToCameraRoll, UIActivityTypeAddToReadingList];
+    
+    UITableViewCell *cell = sender;
     
     if( SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
         activityViewController.popoverPresentationController.sourceView = cell;

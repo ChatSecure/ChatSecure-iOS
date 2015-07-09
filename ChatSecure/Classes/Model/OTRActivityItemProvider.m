@@ -8,6 +8,9 @@
 
 #import "OTRActivityItemProvider.h"
 #import "Strings.h"
+#import "OTRQRCodeActivity.h"
+
+static NSString *const kShareURL = @"https://get.chatsecure.org";
 
 @implementation OTRActivityItemProvider
 
@@ -22,14 +25,15 @@
     
     if ([activityType isEqualToString:UIActivityTypePostToTwitter]) {
         shareString = [NSString stringWithFormat:@"%@", [self twitterShareString]];
+    } else if ([activityType isEqualToString:kOTRActivityTypeQRCode]) {
+        shareString = kShareURL;
     }
-    
     
     return shareString;
 }
 
 - (NSString*) shareString {
-    return [NSString stringWithFormat:@"%@: https://get.chatsecure.org", SHARE_MESSAGE_STRING];
+    return [NSString stringWithFormat:@"%@: %@", SHARE_MESSAGE_STRING, kShareURL];
 }
 
 - (NSString*) twitterShareString {

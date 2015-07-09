@@ -37,6 +37,10 @@ pod 'CocoaAsyncSocket', '~> 7.4'
 pod 'JTSImageViewController', '~> 1.4'
 pod 'KVOController', '~> 1.0'
 
+# QR Codes
+pod 'QRCodeReaderViewController', '~> 3.4.0'
+pod 'ZXingObjC', '~> 3.0'
+
 pod 'XLForm', :git => 'https://github.com/xmartlabs/XLForm.git', :commit => '514807c473f013211c14c65919846044d1f72da9'
 
 # Local Podspecs
