@@ -119,6 +119,7 @@
 		633107281A16D1A400C17BAE /* OTRTitleSubtitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106761A16D1A300C17BAE /* OTRTitleSubtitleView.m */; };
 		6331072B1A16D1F200C17BAE /* DemoImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 633107291A16D1F200C17BAE /* DemoImages.xcassets */; };
 		6331072C1A16D1F200C17BAE /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6331072A1A16D1F200C17BAE /* Images.xcassets */; };
+		6331D3B71B4DBBEE00C85365 /* OTRInviteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331D3B61B4DBBEE00C85365 /* OTRInviteViewController.m */; };
 		633620991A76E87B006E8739 /* OTRImageItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 633620981A76E87B006E8739 /* OTRImageItem.m */; };
 		6336209C1A76E88C006E8739 /* OTRVideoItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6336209B1A76E88C006E8739 /* OTRVideoItem.m */; };
 		6336209F1A76E89A006E8739 /* OTRAudioItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6336209E1A76E89A006E8739 /* OTRAudioItem.m */; };
@@ -454,6 +455,8 @@
 		633106761A16D1A300C17BAE /* OTRTitleSubtitleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRTitleSubtitleView.m; sourceTree = "<group>"; };
 		633107291A16D1F200C17BAE /* DemoImages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = DemoImages.xcassets; path = Resources/DemoImages.xcassets; sourceTree = "<group>"; };
 		6331072A1A16D1F200C17BAE /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Resources/Images.xcassets; sourceTree = "<group>"; };
+		6331D3B51B4DBBEE00C85365 /* OTRInviteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRInviteViewController.h; sourceTree = "<group>"; };
+		6331D3B61B4DBBEE00C85365 /* OTRInviteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRInviteViewController.m; sourceTree = "<group>"; };
 		633620971A76E87B006E8739 /* OTRImageItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRImageItem.h; sourceTree = "<group>"; };
 		633620981A76E87B006E8739 /* OTRImageItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRImageItem.m; sourceTree = "<group>"; };
 		6336209A1A76E88C006E8739 /* OTRVideoItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRVideoItem.h; sourceTree = "<group>"; };
@@ -1054,6 +1057,8 @@
 				638D2DFF1AFAD3D500F3C50C /* OTRWelcomeViewController.m */,
 				638D2E011AFBFE2200F3C50C /* OTRWelcomeAccountTableViewDelegate.h */,
 				638D2E021AFBFE2200F3C50C /* OTRWelcomeAccountTableViewDelegate.m */,
+				6331D3B51B4DBBEE00C85365 /* OTRInviteViewController.h */,
+				6331D3B61B4DBBEE00C85365 /* OTRInviteViewController.m */,
 			);
 			name = Onboarding;
 			sourceTree = "<group>";
@@ -1495,6 +1500,7 @@
 				63BE425E1B320EE20017058C /* OTRLoginHandler.m in Sources */,
 				633106931A16D1A300C17BAE /* OTRYapDatabaseRosterStorage.m in Sources */,
 				63C4BD131A1E9BE1001696CD /* OTRManagedGoogleAccount.m in Sources */,
+				6331D3B71B4DBBEE00C85365 /* OTRInviteViewController.m in Sources */,
 				638C7CF21B02BE4A004F8EC3 /* OTRBaseLoginViewController.m in Sources */,
 				638C7CF51B02BF0D004F8EC3 /* OTRXLFormCreator.m in Sources */,
 				633106D71A16D1A300C17BAE /* OTRXMPPBuddy.m in Sources */,
