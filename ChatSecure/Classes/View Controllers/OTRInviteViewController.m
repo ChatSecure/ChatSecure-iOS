@@ -10,6 +10,7 @@
 #import "PureLayout.h"
 #import "Strings.h"
 #import "BButton.h"
+#import "OTRAddBuddyQRCodeViewController.h"
 
 static CGFloat const kOTRInvitePadding = 10;
 
@@ -117,7 +118,13 @@ static CGFloat const kOTRInvitePadding = 10;
 
 - (void)qrButtonPressed:(id)sender
 {
-    
+    __weak typeof(self)weakSelf = self;
+    OTRAddBuddyQRCodeViewController *reader = [[OTRAddBuddyQRCodeViewController alloc] initWIthAccountID:@"" completion:^{
+        [weakSelf dismissViewControllerAnimated:YES completion:nil];
+    }];
+    reader.modalPresentationStyle = UIModalPresentationFormSheet;
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:reader];
+    [self presentViewController:navigationController animated:YES completion:NULL];
 }
 
 - (void)linkShareButtonPressed:(id)sender

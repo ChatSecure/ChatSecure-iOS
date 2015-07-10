@@ -120,6 +120,8 @@
 		6331072B1A16D1F200C17BAE /* DemoImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 633107291A16D1F200C17BAE /* DemoImages.xcassets */; };
 		6331072C1A16D1F200C17BAE /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6331072A1A16D1F200C17BAE /* Images.xcassets */; };
 		6331D3B71B4DBBEE00C85365 /* OTRInviteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331D3B61B4DBBEE00C85365 /* OTRInviteViewController.m */; };
+		6331D3BA1B4F3C6E00C85365 /* OTRAddBuddyQRCodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331D3B91B4F3C6E00C85365 /* OTRAddBuddyQRCodeViewController.m */; };
+		6331D3BD1B4F41AF00C85365 /* OTRQRCodeReaderDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331D3BC1B4F41AF00C85365 /* OTRQRCodeReaderDelegate.m */; };
 		633620991A76E87B006E8739 /* OTRImageItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 633620981A76E87B006E8739 /* OTRImageItem.m */; };
 		6336209C1A76E88C006E8739 /* OTRVideoItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6336209B1A76E88C006E8739 /* OTRVideoItem.m */; };
 		6336209F1A76E89A006E8739 /* OTRAudioItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6336209E1A76E89A006E8739 /* OTRAudioItem.m */; };
@@ -458,6 +460,10 @@
 		6331072A1A16D1F200C17BAE /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Resources/Images.xcassets; sourceTree = "<group>"; };
 		6331D3B51B4DBBEE00C85365 /* OTRInviteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRInviteViewController.h; sourceTree = "<group>"; };
 		6331D3B61B4DBBEE00C85365 /* OTRInviteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRInviteViewController.m; sourceTree = "<group>"; };
+		6331D3B81B4F3C6E00C85365 /* OTRAddBuddyQRCodeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OTRAddBuddyQRCodeViewController.h; path = Onboarding/OTRAddBuddyQRCodeViewController.h; sourceTree = "<group>"; };
+		6331D3B91B4F3C6E00C85365 /* OTRAddBuddyQRCodeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OTRAddBuddyQRCodeViewController.m; path = Onboarding/OTRAddBuddyQRCodeViewController.m; sourceTree = "<group>"; };
+		6331D3BB1B4F41AF00C85365 /* OTRQRCodeReaderDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRQRCodeReaderDelegate.h; sourceTree = "<group>"; };
+		6331D3BC1B4F41AF00C85365 /* OTRQRCodeReaderDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRQRCodeReaderDelegate.m; sourceTree = "<group>"; };
 		633620971A76E87B006E8739 /* OTRImageItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRImageItem.h; sourceTree = "<group>"; };
 		633620981A76E87B006E8739 /* OTRImageItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRImageItem.m; sourceTree = "<group>"; };
 		6336209A1A76E88C006E8739 /* OTRVideoItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRVideoItem.h; sourceTree = "<group>"; };
@@ -1064,6 +1070,10 @@
 				638D2E021AFBFE2200F3C50C /* OTRWelcomeAccountTableViewDelegate.m */,
 				6331D3B51B4DBBEE00C85365 /* OTRInviteViewController.h */,
 				6331D3B61B4DBBEE00C85365 /* OTRInviteViewController.m */,
+				6331D3B81B4F3C6E00C85365 /* OTRAddBuddyQRCodeViewController.h */,
+				6331D3B91B4F3C6E00C85365 /* OTRAddBuddyQRCodeViewController.m */,
+				6331D3BB1B4F41AF00C85365 /* OTRQRCodeReaderDelegate.h */,
+				6331D3BC1B4F41AF00C85365 /* OTRQRCodeReaderDelegate.m */,
 			);
 			name = Onboarding;
 			sourceTree = "<group>";
@@ -1567,6 +1577,7 @@
 				633106BA1A16D1A300C17BAE /* OTROpenInTwitterActivity.m in Sources */,
 				633106781A16D1A300C17BAE /* UIActionSheet+ChatSecure.m in Sources */,
 				63C5B66A1A82F3EE0011BEA8 /* OTRAudioPlaybackController.m in Sources */,
+				6331D3BD1B4F41AF00C85365 /* OTRQRCodeReaderDelegate.m in Sources */,
 				63039E931B0D1DFC007C9978 /* OTRXMPPServerTableViewCell.m in Sources */,
 				63C4BD161A1E9BE1001696CD /* OTRManagedMessageAndStatus.m in Sources */,
 				633106E51A16D1A300C17BAE /* OTRConstants.m in Sources */,
@@ -1665,6 +1676,7 @@
 				633106D91A16D1A300C17BAE /* OTRYapDatabaseObject.m in Sources */,
 				6331067C1A16D1A300C17BAE /* UIViewController+ChatSecure.m in Sources */,
 				63FA548E1A7B29EB00F2AEBB /* OTRPlayView.m in Sources */,
+				6331D3BA1B4F3C6E00C85365 /* OTRAddBuddyQRCodeViewController.m in Sources */,
 				6336209F1A76E89A006E8739 /* OTRAudioItem.m in Sources */,
 				63F0FF641A798D8E001F0C99 /* OTRAudioControlsView.m in Sources */,
 			);

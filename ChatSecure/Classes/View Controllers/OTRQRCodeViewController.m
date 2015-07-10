@@ -102,6 +102,7 @@
     
     UIImage *image = [self imageForQRString:self.qrString size:self.imageView.frame.size];
     self.imageView.image = image;
+    [self.navigationController setNavigationBarHidden:NO animated:animated];
 }
 
 - (void) doneButtonPressed:(id)sender
