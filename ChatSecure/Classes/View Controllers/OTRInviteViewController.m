@@ -11,10 +11,11 @@
 #import "Strings.h"
 #import "BButton.h"
 #import "OTRAddBuddyQRCodeViewController.h"
+#import <MessageUI/MessageUI.h>
 
 static CGFloat const kOTRInvitePadding = 10;
 
-@interface OTRInviteViewController ()
+@interface OTRInviteViewController () <MFMessageComposeViewControllerDelegate>
 
 @property (nonatomic) BOOL addedConstraints;
 
@@ -47,7 +48,10 @@ static CGFloat const kOTRInvitePadding = 10;
     
     NSMutableArray *shareButtons = [[NSMutableArray alloc] initWithCapacity:3];
     
-    [shareButtons addObject:[self shareButtonWithIcon:FAEnvelope title:@"Invite SMS" action:@selector(shareSMSPressed:)]];
+    if ([MFMessageComposeViewController canSendText]) {
+        [shareButtons addObject:[self shareButtonWithIcon:FAEnvelope title:@"Invite SMS" action:@selector(shareSMSPressed:)]];
+    }
+    
     [shareButtons addObject:[self shareButtonWithIcon:FAGlobe title:@"Invite Share" action:@selector(linkShareButtonPressed:)]];
     [shareButtons addObject:[self shareButtonWithIcon:FACamera title:@"Scan QR" action:@selector(qrButtonPressed:)]];
     
@@ -113,7 +117,13 @@ static CGFloat const kOTRInvitePadding = 10;
 
 - (void)shareSMSPressed:(id)sender
 {
+    MFMessageComposeViewController *messageComposeViewController = [[MFMessageComposeViewController alloc] init];
+    messageComposeViewController.messageComposeDelegate = self;
     
+    //Todo: Here's where we can set the body
+    //[messageComposeViewController setBody:nil];
+    
+    [self presentViewController:messageComposeViewController animated:YES completion:nil];
 }
 
 - (void)qrButtonPressed:(id)sender
@@ -141,6 +151,13 @@ static CGFloat const kOTRInvitePadding = 10;
     button.titleLabel.font = [button.titleLabel.font fontWithSize:14];
     [button addTarget:self action:action forControlEvents:UIControlEventTouchUpInside];
     return button;
+}
+
+#pragma - mark MFMessageComposeViewControllerDelegate Methods
+
+- (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end
