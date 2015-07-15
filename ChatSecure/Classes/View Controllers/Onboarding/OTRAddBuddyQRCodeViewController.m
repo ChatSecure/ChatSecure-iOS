@@ -14,6 +14,7 @@
 #import "XMPPURI.h"
 #import "OTRAccount.h"
 #import "OTRDatabaseManager.h"
+#import "NSURL+ChatSecure.h"
 
 @interface OTRAddBuddyQRCodeViewController ()
 
@@ -27,7 +28,6 @@
 - (instancetype)initWIthAccountID:(NSString *)accountUniqueID completion:(void (^)(void))completion
 {
     if(self = [super initWithCancelButtonTitle:CANCEL_STRING]){
-        
         self.qrCodeDelegate = [[OTRQRCodeReaderDelegate alloc] initWithAccountUniqueId:accountUniqueID];
         self.qrCodeDelegate.completion = completion;
         
@@ -74,8 +74,10 @@
         account = [OTRAccount fetchObjectWithUniqueID:self.qrCodeDelegate.accountUniqueID transaction:transaction];
     }];
     
-    XMPPURI *uri = [[XMPPURI alloc] initWithJID:[XMPPJID jidWithString:account.username] queryAction:@"subscribe" queryParameters:nil];
-    OTRQRCodeViewController *qrCodeViewController = [[OTRQRCodeViewController alloc] initWithQRString:uri.uriString];
+    
+    //XMPPURI *uri = [[XMPPURI alloc] initWithJID:[XMPPJID jidWithString:account.username] queryAction:@"subscribe" queryParameters:nil];
+    NSURL *url = [NSURL otr_shareLink:[NSURL otr_shareBaseURL].absoluteString username:account.username fingerprint:nil base64Encoded:YES];
+    OTRQRCodeViewController *qrCodeViewController = [[OTRQRCodeViewController alloc] initWithQRString:url.absoluteString];
     [self.navigationController pushViewController:qrCodeViewController animated:YES];
 }
 @end

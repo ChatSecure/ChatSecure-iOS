@@ -7,6 +7,7 @@
 //
 
 #import "OTRQRCodeReaderDelegate.h"
+#import "NSURL+ChatSecure.h"
 
 
 @implementation OTRQRCodeReaderDelegate
@@ -24,6 +25,16 @@
 
 - (void)reader:(QRCodeReaderViewController *)reader didScanResult:(NSString *)result
 {
+    NSURL *url = [NSURL URLWithString:result];
+    
+    //Todo: Check to make sure url is really a share url
+    __block NSString *username = nil;
+    __block NSString *fingerprint = nil;
+    [url otr_decodeShareLink:^(NSString *uName, NSString *fPrint) {
+        username = uName;
+        fingerprint = fPrint;
+    }];
+    
     //send subscription request to JID
     [self done];
 }

@@ -8,6 +8,7 @@
 
 #import "NSURL+ChatSecure.h"
 #import "OTRConstants.h"
+#import "XMPPJID.h"
 
 @implementation NSURL (ChatSecure)
 
@@ -41,5 +42,68 @@
 
 + (NSURL*) otr_projectURL {
     return [NSURL URLWithString:@"https://chatsecure.org"];
+}
+
++ (NSURL*) otr_shareBaseURL {
+    return [NSURL URLWithString:@"https://chatsecure.org/invitation/"];
+}
+
+
+//As described https://dev.guardianproject.info/projects/gibberbot/wiki/Invite_Links
++ (NSURL*) otr_shareLink:(NSString *)baseURL
+                username:(NSString *)username
+             fingerprint:(NSString *)fingerprint
+           base64Encoded:(BOOL)base64Encoded
+{
+    
+    NSURL *url = [NSURL URLWithString:baseURL];
+    
+    if (base64Encoded) {
+        
+        NSString *user = username;
+        if ([fingerprint length]) {
+            user = [user stringByAppendingFormat:@"?%@",fingerprint];
+        }
+        
+        NSString *base64String = [[user dataUsingEncoding:NSUTF8StringEncoding] base64EncodedStringWithOptions:0];
+        
+        url = [url URLByAppendingPathComponent:base64String];
+        
+    } else {
+        url = [url URLByAppendingPathComponent:username];
+        if ([fingerprint length]) {
+            url = [url URLByAppendingPathComponent:fingerprint];
+        }
+    }
+    
+    return url;
+}
+
+//As described https://dev.guardianproject.info/projects/gibberbot/wiki/Invite_Links
+- (void)otr_decodeShareLink:(void (^)(NSString *, NSString *))completion
+{
+    if (!completion) {
+        return;
+    }
+    
+    NSString *lastComponent = self.lastPathComponent;
+    XMPPJID *jid = [XMPPJID jidWithString:lastComponent];
+    if ([[jid user] length]) {
+        completion([jid bare],nil);
+    } else {
+        NSString *secondToLast = [self URLByDeletingLastPathComponent].lastPathComponent;
+        jid = [XMPPJID jidWithString:secondToLast];
+        if ([[jid user] length]) {
+            completion([jid bare],lastComponent);
+        } else {
+            //Base64
+            NSData *data = [[NSData alloc] initWithBase64EncodedString:lastComponent options:0];
+            NSString *utf8String = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            NSArray *components = [utf8String componentsSeparatedByString:@"?"];
+            completion(components.firstObject, components.lastObject);
+        }
+    }
+    
+    
 }
 @end
