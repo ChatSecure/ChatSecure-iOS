@@ -139,7 +139,13 @@ static CGFloat const kOTRInvitePadding = 10;
 
 - (void)linkShareButtonPressed:(id)sender
 {
+    NSURL *url = [NSURL URLWithString:@"https://google.com"];
     
+    NSArray *activityItems = @[url];
+    
+    UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:activityItems applicationActivities:nil];
+    
+    [self presentViewController:activityViewController animated:YES completion:nil];
 }
 
 - (UIButton *)shareButtonWithIcon:(FAIcon)icon title:(NSString *)title action:(SEL)action
