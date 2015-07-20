@@ -196,6 +196,7 @@
 		63FABC911A41218E009BF681 /* NSString+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FABC901A41218E009BF681 /* NSString+ChatSecure.m */; };
 		D9365E7A1A1EB0050006434A /* torrc in Resources */ = {isa = PBXBuildFile; fileRef = D9365E791A1EB0050006434A /* torrc */; };
 		D973D7061A2D4094004D353E /* Pods-acknowledgements.plist in Resources */ = {isa = PBXBuildFile; fileRef = D973D7051A2D4094004D353E /* Pods-acknowledgements.plist */; };
+		D989A84F1B5DBD90000608A9 /* OTRAdvancedWelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D989A84E1B5DBD90000608A9 /* OTRAdvancedWelcomeViewController.m */; };
 		D989EC8D1B06AFE30069FE37 /* XMPPURI.m in Sources */ = {isa = PBXBuildFile; fileRef = D989EC8C1B06AFE30069FE37 /* XMPPURI.m */; };
 		D9A3CB2C1B2798D7000A50C6 /* XMPPURITests.m in Sources */ = {isa = PBXBuildFile; fileRef = D9A3CB2B1B2798D7000A50C6 /* XMPPURITests.m */; };
 /* End PBXBuildFile section */
@@ -617,6 +618,8 @@
 		B977533C20F88A4A840303F9 /* Pods.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.beta.xcconfig; path = "Pods/Target Support Files/Pods/Pods.beta.xcconfig"; sourceTree = "<group>"; };
 		D9365E791A1EB0050006434A /* torrc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = torrc; path = Resources/torrc; sourceTree = "<group>"; };
 		D973D7051A2D4094004D353E /* Pods-acknowledgements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Pods-acknowledgements.plist"; path = "Pods/Target Support Files/Pods/Pods-acknowledgements.plist"; sourceTree = SOURCE_ROOT; };
+		D989A84D1B5DBD90000608A9 /* OTRAdvancedWelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OTRAdvancedWelcomeViewController.h; path = "Login View Controllers/OTRAdvancedWelcomeViewController.h"; sourceTree = "<group>"; };
+		D989A84E1B5DBD90000608A9 /* OTRAdvancedWelcomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OTRAdvancedWelcomeViewController.m; path = "Login View Controllers/OTRAdvancedWelcomeViewController.m"; sourceTree = "<group>"; };
 		D989EC8B1B06AFE30069FE37 /* XMPPURI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPURI.h; sourceTree = "<group>"; };
 		D989EC8C1B06AFE30069FE37 /* XMPPURI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPURI.m; sourceTree = "<group>"; };
 		D9A3CB2B1B2798D7000A50C6 /* XMPPURITests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPURITests.m; sourceTree = "<group>"; };
@@ -914,6 +917,8 @@
 				633106121A16D1A300C17BAE /* OTRAboutViewController.h */,
 				633106131A16D1A300C17BAE /* OTRAboutViewController.m */,
 				633106141A16D1A300C17BAE /* OTRAcknowledgementsViewController.h */,
+				D989A84D1B5DBD90000608A9 /* OTRAdvancedWelcomeViewController.h */,
+				D989A84E1B5DBD90000608A9 /* OTRAdvancedWelcomeViewController.m */,
 				633106151A16D1A300C17BAE /* OTRAcknowledgementsViewController.m */,
 				633106161A16D1A300C17BAE /* OTRBuddyViewController.h */,
 				633106171A16D1A300C17BAE /* OTRBuddyViewController.m */,
@@ -1682,6 +1687,7 @@
 				6331D3BA1B4F3C6E00C85365 /* OTRAddBuddyQRCodeViewController.m in Sources */,
 				6336209F1A76E89A006E8739 /* OTRAudioItem.m in Sources */,
 				63F0FF641A798D8E001F0C99 /* OTRAudioControlsView.m in Sources */,
+				D989A84F1B5DBD90000608A9 /* OTRAdvancedWelcomeViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -42,11 +42,6 @@
     [self.navigationController setNavigationBarHidden:NO animated:animated];
     [self.tableView reloadData];
     [self.createLoginHandler moveAccountValues:self.account intoForm:self.form];
-    
-    if (!self.navigationController.navigationBar.backItem) {
-        UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneButtonPressed:)];
-        self.navigationItem.leftBarButtonItem = doneButton;
-    }
 }
 
 - (void)setAccount:(OTRAccount *)account

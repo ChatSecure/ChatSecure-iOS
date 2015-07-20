@@ -118,27 +118,12 @@
 
         [[OTRDatabaseManager sharedInstance] setupDatabaseWithName:OTRYapDatabaseName];
         
-        __block BOOL hasAccounts = NO;
-        [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-            [transaction enumerateKeysInCollection:[OTRAccount collection] usingBlock:^(NSString *key, BOOL *stop) {
-                hasAccounts = YES;
-                *stop = YES;
-            }];
-        }];
         
-        //If there is any number of accounts launch into default conversation view otherwise onboarding time
-        if (hasAccounts) {
-            rootViewController= [self defaultConversationNavigationController];
-        } else {
-            __weak typeof(self)weakSelf = self;
-            OTRWelcomeViewController *welcomeViewController = [[OTRWelcomeViewController alloc] initWithDefaultAccountArray];
-            [welcomeViewController setSuccessBlock:^{
-                //Todo: make nice and aminated :)
-                __strong typeof(weakSelf)strongSelf = weakSelf;
-                strongSelf.window.rootViewController = [strongSelf defaultConversationNavigationController];
-            }];
-            rootViewController = [[UINavigationController alloc] initWithRootViewController:welcomeViewController];
-        }
+        
+        
+        rootViewController = [self defaultConversationNavigationController];
+        
+        
         
         
 #if CHATSECURE_DEMO
@@ -150,6 +135,7 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.rootViewController = rootViewController;
     [self.window makeKeyAndVisible];
+    
     
     application.applicationIconBadgeNumber = 0;
     
@@ -164,7 +150,29 @@
     
     [self removeFacebookAccounts];
     
+    [self showOnboardingIfNeeded];
+    
     return YES;
+}
+
+- (void) showOnboardingIfNeeded {
+    __block BOOL hasAccounts = NO;
+    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        NSUInteger count = [transaction numberOfKeysInCollection:[OTRAccount collection]];
+        if (count > 0) {
+            hasAccounts = YES;
+        }
+    }];
+    //If there is any number of accounts launch into default conversation view otherwise onboarding time
+    if (!hasAccounts) {
+        OTRWelcomeViewController *welcomeViewController = [[OTRWelcomeViewController alloc] init];
+        __weak id weakVC = welcomeViewController;
+        [welcomeViewController setSuccessBlock:^{
+            [weakVC dismissViewControllerAnimated:YES completion:nil];
+        }];
+        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:welcomeViewController];
+        [self.window.rootViewController presentViewController:nav animated:NO completion:nil];
+    }
 }
 
 - (void) loadDemoData {

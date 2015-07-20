@@ -368,12 +368,13 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 
 - (void) addAccount:(id)sender {
     
-    OTRWelcomeViewController *welcomeViewController = [[OTRWelcomeViewController alloc] initWithDefaultAccountArray];
-    welcomeViewController.showNavigationBar = YES;
+    OTRWelcomeViewController *welcomeViewController = [[OTRWelcomeViewController alloc] init];
+    welcomeViewController.showNavigationBar = NO;
     [welcomeViewController setSuccessBlock:^{
         NSLog(@"Finished setting up account");
     }];
-    [self.navigationController pushViewController:welcomeViewController animated:YES];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:welcomeViewController];
+    [self presentViewController:nav animated:YES completion:nil];
 }
 
 - (NSIndexPath *)indexPathForSetting:(OTRSetting *)setting
