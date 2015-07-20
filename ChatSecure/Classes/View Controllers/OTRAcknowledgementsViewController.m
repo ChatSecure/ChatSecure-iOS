@@ -73,7 +73,7 @@
 
 + (instancetype)defaultAcknowledgementViewController
 {
-    TTTAttributedLabel *headerLabel = [[TTTAttributedLabel alloc] init];
+    TTTAttributedLabel *headerLabel = [[TTTAttributedLabel alloc] initWithFrame:CGRectZero];
     
     NSString *libotrString = @"libotr";
     NSString *libgpgErrorString = @"libgpg-error";

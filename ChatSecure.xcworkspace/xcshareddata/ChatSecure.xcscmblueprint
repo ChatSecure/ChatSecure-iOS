@@ -1,0 +1,100 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "65A79C2919A5538250064F3C245A290D7BFC656E",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "98D05BCBC40AE5315578EEE7C186D3063CCA59C3" : 0,
+    "1C75F1C5CFCB95B3702F6F632FA05ED5244B519E" : 0,
+    "9894A09246C3858F99AD97DCE53FE014CFC07C96" : 0,
+    "B775552D1BBEEADC6A0BBB2FD048B6AA26CB309D" : 0,
+    "DAAB2C887EFA8AB12BAB622BBAFD20531F9A3784" : 0,
+    "0667158F825A93D2AA325B5DCB5737C5DE9CB558" : 0,
+    "E2E339EC05FF99AF5ECAE62EDBC78398DA1111C6" : 0,
+    "8D256B418BF7466F1E7306EA36B44A4A04C31B48" : 0,
+    "425D736B25093B4D45BF64638604863B9D31F2C1" : 0,
+    "65A79C2919A5538250064F3C245A290D7BFC656E" : 0,
+    "285D543319EEB38B059014F34D43A79D66C1ECDC" : 0,
+    "2D31E58E12E928BB18019A2FA755DD659EB4E709" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "658CDF4C-0E3B-4627-BD95-2A49A05F1B30",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "98D05BCBC40AE5315578EEE7C186D3063CCA59C3" : "ChatSecure-iOS\/Submodules\/CPAProxy",
+    "1C75F1C5CFCB95B3702F6F632FA05ED5244B519E" : "chatsecure-iosPods\/CocoaAsyncSocket",
+    "9894A09246C3858F99AD97DCE53FE014CFC07C96" : "chatsecure-iosSubmodules\/OnionKit",
+    "B775552D1BBEEADC6A0BBB2FD048B6AA26CB309D" : "chatsecure-iosSubmodules\/XMPPFramework",
+    "DAAB2C887EFA8AB12BAB622BBAFD20531F9A3784" : "chatsecure-ios\/Submodules\/YapDatabase",
+    "0667158F825A93D2AA325B5DCB5737C5DE9CB558" : "ChatSecure-iOS\/Submodules\/IOCipher",
+    "E2E339EC05FF99AF5ECAE62EDBC78398DA1111C6" : "chatsecure-iosPods\/SIAlertView",
+    "8D256B418BF7466F1E7306EA36B44A4A04C31B48" : "chatsecure-iosPods\/AFOAuth2Client",
+    "425D736B25093B4D45BF64638604863B9D31F2C1" : "chatsecure-iosSubmodules\/OTRKit",
+    "65A79C2919A5538250064F3C245A290D7BFC656E" : "chatsecure-ios",
+    "285D543319EEB38B059014F34D43A79D66C1ECDC" : "chatsecure-iosPods\/uservoice-iphone-sdk",
+    "2D31E58E12E928BB18019A2FA755DD659EB4E709" : "chatsecure-iosSubmodules\/ProxyKit"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "ChatSecure",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 203,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "ChatSecure.xcworkspace",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:ChatSecure\/IOCipher-ObjC.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "0667158F825A93D2AA325B5DCB5737C5DE9CB558"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:ChatSecure\/CocoaAsyncSocket.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "1C75F1C5CFCB95B3702F6F632FA05ED5244B519E"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:ChatSecure\/uservoice-iphone-sdk.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "285D543319EEB38B059014F34D43A79D66C1ECDC"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:chrisballinger\/ProxyKit.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "2D31E58E12E928BB18019A2FA755DD659EB4E709"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:ChatSecure\/OTRKit.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "425D736B25093B4D45BF64638604863B9D31F2C1"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:chrisballinger\/ChatSecure-iOS.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "65A79C2919A5538250064F3C245A290D7BFC656E"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:ChatSecure\/AFOAuth2Client.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "8D256B418BF7466F1E7306EA36B44A4A04C31B48"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:ChatSecure\/OnionKit.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "9894A09246C3858F99AD97DCE53FE014CFC07C96"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:ChatSecure\/CPAProxy.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "98D05BCBC40AE5315578EEE7C186D3063CCA59C3"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:ChatSecure\/XMPPFramework.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "B775552D1BBEEADC6A0BBB2FD048B6AA26CB309D"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:chrisballinger\/YapDatabase.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "DAAB2C887EFA8AB12BAB622BBAFD20531F9A3784"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:ChatSecure\/SIAlertView.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "E2E339EC05FF99AF5ECAE62EDBC78398DA1111C6"
+    }
+  ]
+}

@@ -110,7 +110,7 @@ NSString *const kOTRXLFormXMPPServerTag               = @"kOTRXLFormXMPPServerTa
     XLFormDescriptor *form = [XLFormDescriptor formDescriptor];
     XLFormSectionDescriptor *section = [XLFormSectionDescriptor formSection];
     XLFormRowDescriptor *usernameRow = [self usernameTextFieldRowDescriptorWithValue:nil];
-    [usernameRow.cellConfigAtConfigure setObject:@"ChatScure ID" forKey:@"textField.placeholder"];
+    [usernameRow.cellConfigAtConfigure setObject:@"ChatSecure ID" forKey:@"textField.placeholder"];
     
     [section addFormRow:usernameRow];
     [form addFormSection:section];
