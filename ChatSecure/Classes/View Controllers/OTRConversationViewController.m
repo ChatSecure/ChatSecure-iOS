@@ -27,6 +27,7 @@
 #import "OTRDatabaseView.h"
 #import "YapDatabaseViewMappings.h"
 #import "Strings.h"
+#import <KVOController/FBKVOController.h>
 #import "OTRAppDelegate.h"
 #import "OTRProtocolManager.h"
 
@@ -113,8 +114,18 @@ static CGFloat kOTRConversationCellHeight = 80.0;
                                                  name:YapDatabaseModifiedNotification
                                                object:nil];
     
-    
-    
+    ////// KVO //////
+    __weak typeof(self)weakSelf = self;
+    [self.KVOController observe:[OTRProtocolManager sharedInstance] keyPath:NSStringFromSelector(@selector(numberOfConnectedProtocols)) options:NSKeyValueObservingOptionNew block:^(id observer, id object, NSDictionary *change) {
+        __strong typeof(weakSelf)strongSelf = weakSelf;
+        NSUInteger numberConnectedAccounts = [[change objectForKey:NSKeyValueChangeNewKey] unsignedIntegerValue];
+        if (numberConnectedAccounts) {
+            [strongSelf enableComposeButton];
+        }
+        else {
+            [strongSelf disableComposeButton];
+        }
+    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -134,7 +145,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
         [self disableComposeButton];
     }
     
-    [[OTRProtocolManager sharedInstance] addObserver:self forKeyPath:NSStringFromSelector(@selector(numberOfConnectedProtocols)) options:NSKeyValueObservingOptionNew context:NULL];
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -148,8 +159,6 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     [super viewWillDisappear:animated];
     [self.cellUpdateTimer invalidate];
     self.cellUpdateTimer = nil;
-    
-    [[OTRProtocolManager sharedInstance] removeObserver:self forKeyPath:NSStringFromSelector(@selector(numberOfConnectedProtocols))];
 }
 
 - (void)settingsButtonPressed:(id)sender
@@ -217,19 +226,6 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 - (void)disableComposeButton
 {
     self.composeBarButtonItem.enabled = NO;
-}
-
-#pragma KVO Methods
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
-{
-    NSUInteger numberConnectedAccounts = [[change objectForKey:NSKeyValueChangeNewKey] unsignedIntegerValue];
-    if (numberConnectedAccounts) {
-        [self enableComposeButton];
-    }
-    else {
-        [self disableComposeButton];
-    }
 }
 
 #pragma - mark Inbox Methods

@@ -41,7 +41,6 @@ static OTRProtocolManager *sharedManager = nil;
 @property (nonatomic) NSUInteger numberOfConnectingProtocols;
 @property (nonatomic, strong) OTRPushManager *pushManager;
 @property (nonatomic, strong) NSMutableDictionary * protocolManagerDictionary;
-@property (nonatomic, strong) FBKVOController *KVOController;
 @property (nonatomic) dispatch_queue_t internalQueue;
 
 @end
@@ -57,7 +56,6 @@ static OTRProtocolManager *sharedManager = nil;
         self.numberOfConnectingProtocols = 0;
         self.encryptionManager = [[OTREncryptionManager alloc] init];
         self.protocolManagerDictionary = [[NSMutableDictionary alloc] init];
-        self.KVOController = [FBKVOController controllerWithObserver:self];
     }
     return self;
 }
