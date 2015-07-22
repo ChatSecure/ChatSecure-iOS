@@ -117,14 +117,16 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     ////// KVO //////
     __weak typeof(self)weakSelf = self;
     [self.KVOController observe:[OTRProtocolManager sharedInstance] keyPath:NSStringFromSelector(@selector(numberOfConnectedProtocols)) options:NSKeyValueObservingOptionNew block:^(id observer, id object, NSDictionary *change) {
-        __strong typeof(weakSelf)strongSelf = weakSelf;
-        NSUInteger numberConnectedAccounts = [[change objectForKey:NSKeyValueChangeNewKey] unsignedIntegerValue];
-        if (numberConnectedAccounts) {
-            [strongSelf enableComposeButton];
-        }
-        else {
-            [strongSelf disableComposeButton];
-        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(weakSelf)strongSelf = weakSelf;
+            NSUInteger numberConnectedAccounts = [[change objectForKey:NSKeyValueChangeNewKey] unsignedIntegerValue];
+            if (numberConnectedAccounts) {
+                [strongSelf enableComposeButton];
+            }
+            else {
+                [strongSelf disableComposeButton];
+            }
+        });
     }];
 }
 
