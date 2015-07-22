@@ -20,6 +20,7 @@ install:
 
 before_script:
   - gem install cocoapods --no-rdoc --no-ri # Need Cocoapods >= 0.34.1
+  - export COCOAPODS_DISABLE_DETERMINISTIC_UUIDS=1 # Fix XMPPFramework podspec error w/ Cocoapods 0.38
   - pod install
 script:
   - xctool -workspace ChatSecure.xcworkspace -scheme ChatSecure -sdk iphonesimulator -arch i386 build
