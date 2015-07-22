@@ -87,8 +87,8 @@ PODS:
   - PureLayout (2.0.6)
   - QRCodeReaderViewController (3.5.2)
   - SIAlertView (1.3)
-  - SQLCipher/common (3.3.0)
-  - SQLCipher/fts (3.3.0):
+  - SQLCipher/common (3.3.1)
+  - SQLCipher/fts (3.3.1):
     - SQLCipher/common
   - SSKeychain (1.2.3)
   - TTTAttributedLabel (1.13.4)
@@ -98,8 +98,147 @@ PODS:
   - VTAcknowledgementsViewController (0.14)
   - XLForm (3.0.0)
   - XMPPFramework (3.6.4):
+    - XMPPFramework/All (= 3.6.4)
+  - XMPPFramework/All (3.6.4):
+    - XMPPFramework/Authentication
+    - XMPPFramework/BandwidthMonitor
+    - XMPPFramework/Categories
+    - XMPPFramework/CoreDataStorage
+    - XMPPFramework/GoogleSharedStatus
+    - XMPPFramework/ProcessOne
+    - XMPPFramework/Reconnect
+    - XMPPFramework/Roster
+    - XMPPFramework/SystemInputActivityMonitor
+    - XMPPFramework/Utilities
+    - XMPPFramework/XEP-0009
+    - XMPPFramework/XEP-0012
+    - XMPPFramework/XEP-0016
+    - XMPPFramework/XEP-0045
+    - XMPPFramework/XEP-0054
+    - XMPPFramework/XEP-0059
+    - XMPPFramework/XEP-0060
+    - XMPPFramework/XEP-0065
+    - XMPPFramework/XEP-0066
+    - XMPPFramework/XEP-0082
+    - XMPPFramework/XEP-0085
+    - XMPPFramework/XEP-0092
+    - XMPPFramework/XEP-0100
+    - XMPPFramework/XEP-0106
+    - XMPPFramework/XEP-0115
+    - XMPPFramework/XEP-0136
+    - XMPPFramework/XEP-0153
+    - XMPPFramework/XEP-0172
+    - XMPPFramework/XEP-0184
+    - XMPPFramework/XEP-0191
+    - XMPPFramework/XEP-0198
+    - XMPPFramework/XEP-0199
+    - XMPPFramework/XEP-0202
+    - XMPPFramework/XEP-0203
+    - XMPPFramework/XEP-0223
+    - XMPPFramework/XEP-0224
+    - XMPPFramework/XEP-0280
+    - XMPPFramework/XEP-0297
+    - XMPPFramework/XEP-0308
+    - XMPPFramework/XEP-0333
+    - XMPPFramework/XEP-0335
+  - XMPPFramework/Authentication (3.6.4):
+    - XMPPFramework/Core
+  - XMPPFramework/BandwidthMonitor (3.6.4):
+    - XMPPFramework/Core
+  - XMPPFramework/Categories (3.6.4):
+    - XMPPFramework/Core
+  - XMPPFramework/Core (3.6.4):
     - CocoaAsyncSocket (~> 7.4)
     - CocoaLumberjack (~> 1.9)
+    - XMPPFramework/KissXML
+  - XMPPFramework/CoreDataStorage (3.6.4):
+    - XMPPFramework/Core
+  - XMPPFramework/GoogleSharedStatus (3.6.4):
+    - XMPPFramework/Core
+  - XMPPFramework/KissXML (3.6.4)
+  - XMPPFramework/ProcessOne (3.6.4):
+    - XMPPFramework/Core
+  - XMPPFramework/Reconnect (3.6.4):
+    - XMPPFramework/Core
+  - XMPPFramework/Roster (3.6.4):
+    - XMPPFramework/Core
+    - XMPPFramework/CoreDataStorage
+    - XMPPFramework/XEP-0203
+  - XMPPFramework/Utilities (3.6.4):
+    - XMPPFramework/Core
+  - XMPPFramework/XEP-0009 (3.6.4):
+    - XMPPFramework/Core
+  - XMPPFramework/XEP-0012 (3.6.4):
+    - XMPPFramework/Core
+  - XMPPFramework/XEP-0016 (3.6.4):
+    - XMPPFramework/Core
+  - XMPPFramework/XEP-0045 (3.6.4):
+    - XMPPFramework/Core
+    - XMPPFramework/CoreDataStorage
+    - XMPPFramework/XEP-0203
+  - XMPPFramework/XEP-0054 (3.6.4):
+    - XMPPFramework/Core
+    - XMPPFramework/Roster
+  - XMPPFramework/XEP-0059 (3.6.4):
+    - XMPPFramework/Core
+  - XMPPFramework/XEP-0060 (3.6.4):
+    - XMPPFramework/Core
+  - XMPPFramework/XEP-0065 (3.6.4):
+    - XMPPFramework/Core
+  - XMPPFramework/XEP-0066 (3.6.4):
+    - XMPPFramework/Core
+  - XMPPFramework/XEP-0082 (3.6.4):
+    - XMPPFramework/Core
+  - XMPPFramework/XEP-0085 (3.6.4):
+    - XMPPFramework/Core
+  - XMPPFramework/XEP-0092 (3.6.4):
+    - XMPPFramework/Core
+  - XMPPFramework/XEP-0100 (3.6.4):
+    - XMPPFramework/Core
+  - XMPPFramework/XEP-0106 (3.6.4):
+    - XMPPFramework/Core
+  - XMPPFramework/XEP-0115 (3.6.4):
+    - XMPPFramework/Core
+    - XMPPFramework/CoreDataStorage
+  - XMPPFramework/XEP-0136 (3.6.4):
+    - XMPPFramework/Core
+    - XMPPFramework/CoreDataStorage
+    - XMPPFramework/XEP-0085
+    - XMPPFramework/XEP-0203
+  - XMPPFramework/XEP-0153 (3.6.4):
+    - XMPPFramework/Core
+    - XMPPFramework/XEP-0054
+  - XMPPFramework/XEP-0172 (3.6.4):
+    - XMPPFramework/Core
+  - XMPPFramework/XEP-0184 (3.6.4):
+    - XMPPFramework/Core
+  - XMPPFramework/XEP-0191 (3.6.4):
+    - XMPPFramework/Core
+  - XMPPFramework/XEP-0198 (3.6.4):
+    - XMPPFramework/Core
+  - XMPPFramework/XEP-0199 (3.6.4):
+    - XMPPFramework/Core
+  - XMPPFramework/XEP-0202 (3.6.4):
+    - XMPPFramework/Core
+    - XMPPFramework/XEP-0082
+  - XMPPFramework/XEP-0203 (3.6.4):
+    - XMPPFramework/Core
+    - XMPPFramework/XEP-0082
+  - XMPPFramework/XEP-0223 (3.6.4):
+    - XMPPFramework/Core
+  - XMPPFramework/XEP-0224 (3.6.4):
+    - XMPPFramework/Core
+  - XMPPFramework/XEP-0280 (3.6.4):
+    - XMPPFramework/Core
+  - XMPPFramework/XEP-0297 (3.6.4):
+    - XMPPFramework/Core
+    - XMPPFramework/XEP-0203
+  - XMPPFramework/XEP-0308 (3.6.4):
+    - XMPPFramework/Core
+  - XMPPFramework/XEP-0333 (3.6.4):
+    - XMPPFramework/Core
+  - XMPPFramework/XEP-0335 (3.6.4):
+    - XMPPFramework/Core
   - YapDatabase/SQLCipher (2.6.5):
     - CocoaLumberjack (~> 1)
     - SQLCipher/fts
@@ -227,7 +366,7 @@ SPEC CHECKSUMS:
   PureLayout: f25f0bb904d5ccfe6e31da3cb869185259f02e0d
   QRCodeReaderViewController: f20275985c41ae551099641493ab364691d9113e
   SIAlertView: 20c794b55eaf44d888773ea51647cf8907723919
-  SQLCipher: dd01eccee441e56835da76656f05f34e02681ded
+  SQLCipher: 46ea06f972292f622aeb2d3f960a573a964d378f
   SSKeychain: 3f42991739c6c60a9cf1bbd4dff6c0d3694bcf3d
   TTTAttributedLabel: 0a2ac7b2dd726d32a070dafb01446026b11e624f
   TUSafariActivity: afc55a00965377939107ce4fdc7f951f62454546
@@ -235,7 +374,7 @@ SPEC CHECKSUMS:
   uservoice-iphone-sdk: 349d9ef36d3c43939d28390b9e86bb32b65fe983
   VTAcknowledgementsViewController: 11a869dd69598a852f12699aeaf36e2589d3fc1b
   XLForm: 3e0521195126c4da4e90b104017e2758776393f1
-  XMPPFramework: efcc4cba4581f1c13cef610a0ce351001fde8f51
+  XMPPFramework: 239fe709baff208fff5970708469b939387105ee
   YapDatabase: 814f9ff862a95c1e581d93335a4020482b69155b
   ZXingObjC: bf15b3814f7a105b6d99f47da2333c93a063650a
 
