@@ -25,7 +25,6 @@
 #import "OTRManagedFacebookAccount.h"
 #import "OTRGoogleOAuthXMPPAccount.h"
 #import "OTRAccount.h"
-#import "CoreData+MagicalRecord.h"
 #import "OTRMessage.h"
 #import "OTRMediaFileManager.h"
 #import "IOCipher.h"
@@ -51,7 +50,6 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
     BOOL success = NO;
     if ([self setupYapDatabaseWithName:databaseName] )
     {
-        [self migrateCoreDataToYapDatabase];
         success = YES;
     }
     if (success) success = [self setupSecureMediaStorage];
@@ -78,64 +76,6 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
         DDLogError(@"Error starting media server: %@",error);
     }
     return success;
-}
-
-- (void)migrateCoreDataToYapDatabase
-{
-    NSString *legacyDatabaseName = @"db.sqlite";
-    NSURL * legacyDatabaseURL = [NSPersistentStore MR_urlForStoreName:legacyDatabaseName];
-    
-    NSURL * databaseURL = [NSPersistentStore MR_urlForStoreName:@"ChatSecure.sqlite"];
-    
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    if ([fileManager fileExistsAtPath:legacyDatabaseURL.path]) {
-        // migrate store
-        if([OTRDatabaseManager migrateLegacyStore:legacyDatabaseURL destinationStore:databaseURL]) {
-            [fileManager removeItemAtURL:legacyDatabaseURL error:nil];
-        }
-    }
-    
-    
-    if ([fileManager fileExistsAtPath:databaseURL.path])
-    {
-        NSURL *mom2 = [[NSBundle mainBundle] URLForResource:@"ChatSecure 2" withExtension:@"mom" subdirectory:@"ChatSecure.momd"];
-        NSURL *mom3 = [[NSBundle mainBundle] URLForResource:@"ChatSecure 3" withExtension:@"mom" subdirectory:@"ChatSecure.momd"];
-        NSManagedObjectModel *version2Model = [[NSManagedObjectModel alloc] initWithContentsOfURL:mom2];
-        NSManagedObjectModel *version3Model = [[NSManagedObjectModel alloc] initWithContentsOfURL:mom3];
-        
-        if ([OTRDatabaseManager isManagedObjectModel:version2Model compatibleWithStoreAtUrl:databaseURL]) {
-            [OTRDatabaseManager migrateLegacyStore:databaseURL destinationStore:databaseURL sourceModel:version2Model destinationModel:version3Model error:nil];
-        }
-        
-        
-        [MagicalRecord setShouldAutoCreateManagedObjectModel:NO];
-        [MagicalRecord setDefaultModelNamed:@"ChatSecure.momd"];
-        [MagicalRecord setupCoreDataStackWithAutoMigratingSqliteStoreNamed:@"ChatSecure.sqlite"];
-        
-         ////// Migrate core data to yapdatabase //////
-        
-        NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
-        
-        NSArray *coreDataAccounts = [OTRManagedAccount MR_findAllInContext:context];
-        
-        NSMutableArray *accounts = [NSMutableArray array];
-        [coreDataAccounts enumerateObjectsUsingBlock:^(OTRManagedAccount *account, NSUInteger idx, BOOL *stop) {
-            OTRAccount *newAccount = [self accountWithCoreDataAccount:account];
-            if (newAccount) {
-                [accounts addObject:newAccount];
-            }
-        }];
-        
-        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-            [accounts enumerateObjectsUsingBlock:^(OTRAccount *account, NSUInteger idx, BOOL *stop) {
-                [account saveWithTransaction:transaction];
-            }];
-        }];
-        
-        [[NSFileManager defaultManager] removeItemAtURL:databaseURL error:nil];
-    }
-    
-    [OTRDatabaseManager deleteLegacyXMPPFiles];
 }
 
 - (OTRAccount *)accountWithCoreDataAccount:(OTRManagedAccount *)managedAccount

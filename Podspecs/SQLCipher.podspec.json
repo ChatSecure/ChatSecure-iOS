@@ -1,6 +1,6 @@
 {
   "name": "SQLCipher",
-  "version": "3.3.0",
+  "version": "3.3.1",
   "license": "BSD",
   "summary": "Full Database Encryption for SQLite.",
   "description": "SQLCipher is an open source extension to SQLite that provides transparent 256-bit AES encryption of database files.",
@@ -8,7 +8,7 @@
   "authors": "Zetetic LLC",
   "source": {
     "git": "https://github.com/sqlcipher/sqlcipher.git",
-    "tag": "v3.3.0"
+    "tag": "v3.3.1"
   },
   "prepare_command": "    ./configure --enable-tempstore=yes --with-crypto-lib=commoncrypto CFLAGS=\"-DSQLITE_HAS_CODEC -DSQLITE_TEMP_STORE=2 -DSQLITE_ENABLE_FTS4 -DSQLITE_ENABLE_FTS3_PARENTHESIS -DSQLITE_ENABLE_UNLOCK_NOTIFY\"\n    make sqlite3.c\n",
   "default_subspec": "standard",

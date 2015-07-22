@@ -94,7 +94,7 @@ static NSString *const kDefaultCellReuseIdentifier = @"kDefaultCellReuseIdentifi
     self.socialView = [[UIView alloc] initForAutoLayout];
     
     CGFloat labelMargin = 10;
-    self.headerLabel = [[TTTAttributedLabel alloc] init];
+    self.headerLabel = [[TTTAttributedLabel alloc] initWithFrame:CGRectZero];
     NSString *chrisballingerString = @"@chrisballinger";
     NSURL *chrisballingerURL = [NSURL URLWithString:@"https://github.com/chrisballinger"];
     NSString *davidchilesString = @"@davidchiles";
