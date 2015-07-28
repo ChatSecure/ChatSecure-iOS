@@ -109,29 +109,17 @@
             if (error) {
                 DDLogError(@"Password Error: %@",error);
             }
-            
         }
 
         [[OTRDatabaseManager sharedInstance] setupDatabaseWithName:OTRYapDatabaseName];
-        
-        
-        
-        
         rootViewController = [self defaultConversationNavigationController];
-        
-        
-        
-        
 #if CHATSECURE_DEMO
         [self performSelector:@selector(loadDemoData) withObject:nil afterDelay:0.0];
 #endif
     }
-    
-
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.rootViewController = rootViewController;
     [self.window makeKeyAndVisible];
-    
     
     application.applicationIconBadgeNumber = 0;
     
@@ -145,30 +133,8 @@
     [self autoLogin];
     
     [self removeFacebookAccounts];
-    
-    [self showOnboardingIfNeeded];
-    
+        
     return YES;
-}
-
-- (void) showOnboardingIfNeeded {
-    __block BOOL hasAccounts = NO;
-    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        NSUInteger count = [transaction numberOfKeysInCollection:[OTRAccount collection]];
-        if (count > 0) {
-            hasAccounts = YES;
-        }
-    }];
-    //If there is any number of accounts launch into default conversation view otherwise onboarding time
-    if (!hasAccounts) {
-        OTRWelcomeViewController *welcomeViewController = [[OTRWelcomeViewController alloc] init];
-        __weak id weakVC = welcomeViewController;
-        [welcomeViewController setSuccessBlock:^{
-            [weakVC dismissViewControllerAnimated:YES completion:nil];
-        }];
-        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:welcomeViewController];
-        [self.window.rootViewController presentViewController:nav animated:NO completion:nil];
-    }
 }
 
 - (void) loadDemoData {
@@ -197,7 +163,6 @@
         splitViewController.title = CHAT_STRING;
         
         viewController = splitViewController;
-        
     }
     
     return viewController;

@@ -30,6 +30,7 @@
 #import <KVOController/FBKVOController.h>
 #import "OTRAppDelegate.h"
 #import "OTRProtocolManager.h"
+#import "OTRWelcomeViewController.h"
 
 
 static CGFloat kOTRConversationCellHeight = 80.0;
@@ -44,6 +45,8 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 @property (nonatomic, strong) YapDatabaseViewMappings *unreadMessagesMappings;
 
 @property (nonatomic, strong) UIBarButtonItem *composeBarButtonItem;
+
+@property (nonatomic) BOOL hasPresentedOnboarding;
 @end
 
 @implementation OTRConversationViewController
@@ -130,6 +133,31 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     }];
 }
 
+- (void) showOnboardingIfNeeded {
+    if (self.hasPresentedOnboarding) {
+        return;
+    }
+    __block BOOL hasAccounts = NO;
+    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        NSUInteger count = [transaction numberOfKeysInCollection:[OTRAccount collection]];
+        if (count > 0) {
+            hasAccounts = YES;
+        }
+    }];
+    //If there is any number of accounts launch into default conversation view otherwise onboarding time
+    if (!hasAccounts) {
+        OTRWelcomeViewController *welcomeViewController = [[OTRWelcomeViewController alloc] init];
+        __weak id weakVC = welcomeViewController;
+        [welcomeViewController setSuccessBlock:^{
+            [weakVC dismissViewControllerAnimated:YES completion:nil];
+        }];
+        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:welcomeViewController];
+        nav.modalPresentationStyle = UIModalPresentationFullScreen;
+        [self presentViewController:nav animated:NO completion:nil];
+        self.hasPresentedOnboarding = YES;
+    }
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -154,6 +182,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 {
     [super viewDidAppear:animated];
     [OTRNotificationPermissions checkPermissions];
+    [self showOnboardingIfNeeded];
 }
 
 - (void)viewWillDisappear:(BOOL)animated

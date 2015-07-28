@@ -39,6 +39,10 @@
 {
     [super viewWillAppear:animated];
     
+    if (self.showsCancelButton) {
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelButtonPressed:)];
+    }
+    
     [self.navigationController setNavigationBarHidden:NO animated:animated];
     [self.tableView reloadData];
     [self.createLoginHandler moveAccountValues:self.account intoForm:self.form];
@@ -50,9 +54,8 @@
     [self.createLoginHandler moveAccountValues:self.account intoForm:self.form];
 }
 
-- (void)doneButtonPressed:(id)sender {
-    
-    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+- (void) cancelButtonPressed:(id)sender {
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)loginButtonPressed:(id)sender
@@ -80,6 +83,8 @@
                 }];
                 if (strongSelf.successBlock) {
                     strongSelf.successBlock();
+                } else {
+                    [self dismissViewControllerAnimated:YES completion:nil];
                 }
             }
         }];

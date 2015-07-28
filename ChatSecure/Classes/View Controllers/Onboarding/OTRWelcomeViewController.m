@@ -8,7 +8,6 @@
 
 #import "OTRWelcomeViewController.h"
 #import "PureLayout.h"
-#import "OTRCircleView.h"
 #import "OTRWelcomeAccountTableViewDelegate.h"
 #import "OTRImages.h"
 #import "OTRBaseLoginViewController.h"
@@ -23,7 +22,8 @@
 #import "OTRDatabaseManager.h"
 #import "OTRChatSecureIDCreateAccountHandler.h"
 #import "OTRAdvancedWelcomeViewController.h"
-
+#import <QuartzCore/QuartzCore.h>
+#import "OTRCircleButtonView.h"
 
 @interface OTRWelcomeViewController ()
 
@@ -49,59 +49,39 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    UIFont *font = [UIFont fontWithDescriptor:[UIFontDescriptor preferredFontDescriptorWithTextStyle:UIFontTextStyleHeadline] size:0];
     _skipButton = [UIButton buttonWithType:UIButtonTypeSystem];
     self.skipButton.translatesAutoresizingMaskIntoConstraints = NO;
     [self.skipButton addTarget:self action:@selector(skipButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [self.skipButton setTitle:NSLocalizedString(@"Skip", @"skip account creation") forState:UIControlStateNormal];
+    [self.skipButton.titleLabel setFont:font];
+    [self.skipButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
+    [self.skipButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
+    
     _advancedButton = [UIButton buttonWithType:UIButtonTypeSystem];
     self.advancedButton.translatesAutoresizingMaskIntoConstraints = NO;
     [self.advancedButton addTarget:self action:@selector(advancedButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-    [self.advancedButton setTitle:NSLocalizedString(@"Advanced", @"advanced account setup") forState:UIControlStateNormal];
+    [self.advancedButton.titleLabel setFont:font];
+    [self.advancedButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
+    [self.advancedButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
+    [self.advancedButton setTitle:NSLocalizedString(@"Login", @"advanced account setup") forState:UIControlStateNormal];
     
     self.view.backgroundColor = [UIColor whiteColor];
     
     _brandImageView = [[UIImageView alloc] initForAutoLayout];
-    self.brandImageView.image = [UIImage imageNamed:@"chatsecure_banner"];
+    self.brandImageView.image = [UIImage imageNamed:@"chatsecure_logo_transparent"];
     
-    _anonymousLabel = [[UILabel alloc] initForAutoLayout];
-    self.anonymousLabel.lineBreakMode = NSLineBreakByWordWrapping;
-    self.anonymousLabel.numberOfLines = 0;
-    self.anonymousLabel.textAlignment = NSTextAlignmentCenter;
-    self.anonymousLabel.text = @"Anonymous";
+    _createButton = [[OTRCircleButtonView alloc] initWithFrame:CGRectZero title:NSLocalizedString(@"Sign Up", @"create new account") image:[UIImage imageNamed:@"XMPPCreateAccount"] imageSize:CGSizeMake(65, 65) circleSize:CGSizeMake(100, 100) actionBlock:^{
+        [self didTapCreateChatID:self.createButton];
+    }];
+    [self.view addSubview:self.createButton];
     
-    _createLabel = [[UILabel alloc] initForAutoLayout];
-    self.createLabel.lineBreakMode = NSLineBreakByWordWrapping;
-    self.createLabel.numberOfLines = 0;
-    self.createLabel.textAlignment = NSTextAlignmentCenter;
-    self.createLabel.text = @"Sign Up";
+    _anonymousButton = [[OTRCircleButtonView alloc] initWithFrame:CGRectZero title:NSLocalizedString(@"Anonymous", @"create anonymous account") image:[UIImage imageNamed:@"Tor_Onion"] imageSize:CGSizeMake(85, 85) circleSize:CGSizeMake(100, 100) actionBlock:^{
+        [self didTapCreateAnonymousAccount:self.anonymousButton];
+    }];
     
-    _createButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.createButton.backgroundColor = [UIColor lightGrayColor];
-    self.createButton.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.createButton addTarget:self action:@selector(didTapCreateChatID:) forControlEvents:UIControlEventTouchUpInside];
-    
-    self.createButton.contentMode = UIViewContentModeScaleAspectFill;
-    self.createButton.imageView.image = [UIImage imageNamed:@"createChatIDImage"];
-    
-    _createView = [[OTRCircleView alloc] initForAutoLayout];
-    [self.createView addSubview:self.createButton];
-    
-    _anonymousButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.anonymousButton.backgroundColor = [UIColor lightGrayColor];
-    self.anonymousButton.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.anonymousButton addTarget:self action:@selector(didTapCreateAnonymousAccount:) forControlEvents:UIControlEventTouchUpInside];
-    self.anonymousButton.imageView.contentMode = UIViewContentModeScaleAspectFill;
-    self.anonymousButton.imageView.image = [UIImage imageNamed:@"createAnonymousImage"];
-    
-    _anonymousView = [[OTRCircleView alloc] initForAutoLayout];
-    [self.anonymousView addSubview:self.anonymousButton];
-    
+    [self.view addSubview:self.anonymousButton];
     [self.view addSubview:self.brandImageView];
-    [self.view addSubview:self.createLabel];
-    [self.view addSubview:self.anonymousLabel];
-    [self.view addSubview:self.createView];
-    [self.view addSubview:self.anonymousView];
-    
     [self.view addSubview:self.advancedButton];
     [self.view addSubview:self.skipButton];
     
@@ -110,45 +90,24 @@
 }
 
 
+
+
 - (void)addBaseConstraints
 {
-    CGFloat padding = 10.0f;
-    [self.advancedButton autoPinEdgeToSuperviewEdge:ALEdgeLeft withInset:padding];
+    CGFloat padding = 30.0f;
+    [self.advancedButton autoAlignAxis:ALAxisVertical toSameAxisOfView:self.createButton];
     [self.advancedButton autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:padding];
-    [self.skipButton autoPinEdgeToSuperviewEdge:ALEdgeRight withInset:padding];
+    [self.skipButton autoAlignAxis:ALAxisVertical toSameAxisOfView:self.anonymousButton];
     [self.skipButton autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:padding];
     
     [self.brandImageView autoAlignAxisToSuperviewAxis:ALAxisVertical];
     [self.brandImageView autoConstrainAttribute:ALAttributeHorizontal toAttribute:ALAttributeHorizontal ofView:self.view withMultiplier:0.5];
     
-    [self.createView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.brandImageView withOffset:10];
-    [self.createView autoConstrainAttribute:ALAttributeVertical toAttribute:ALAttributeVertical ofView:self.view withMultiplier:0.5];
-    [UIView autoSetPriority:UILayoutPriorityDefaultLow forConstraints:^{
-        [self.createView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view withMultiplier:0.25];
-    }];
+    [self.createButton autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+    [self.createButton autoPinEdgeToSuperviewEdge:ALEdgeLeft withInset:padding];
     
-    [self.createView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionWidth ofView:self.createView];
-    
-    [UIView autoSetPriority:UILayoutPriorityRequired forConstraints:^{
-        [self.createView autoSetDimension:ALDimensionWidth toSize:100 relation:NSLayoutRelationLessThanOrEqual];
-    }];
-    
-    
-    [self.createButton autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsZero];
-    [self.anonymousButton autoPinEdgesToSuperviewEdgesWithInsets:UIEdgeInsetsZero];
-    
-    [self.anonymousView autoAlignAxis:ALAxisHorizontal toSameAxisOfView:self.createView];
-    [self.anonymousView autoConstrainAttribute:ALAttributeVertical toAttribute:ALAttributeVertical ofView:self.view withMultiplier:1.5];
-    [self.anonymousView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.createView];
-    [self.anonymousView autoMatchDimension:ALDimensionHeight toDimension:ALDimensionHeight ofView:self.createView];
-    
-    [self.createLabel autoAlignAxis:ALAxisVertical toSameAxisOfView:self.createView];
-    [self.createLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.createView withOffset:10];
-    [self.createLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.createView withMultiplier:1.2];
-    
-    [self.anonymousLabel autoAlignAxis:ALAxisVertical toSameAxisOfView:self.anonymousView];
-    [self.anonymousLabel autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.anonymousView withOffset:10];
-    [self.anonymousLabel autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.anonymousView withMultiplier:1.2];
+    [self.anonymousButton autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+    [self.anonymousButton autoPinEdgeToSuperviewEdge:ALEdgeRight withInset:padding];
 }
 
 - (void)didTapCreateChatID:(id)sender
@@ -165,13 +124,11 @@
     }];
     
     [self.navigationController pushViewController:createAccountViewController animated:YES];
-    NSLog(@"Create Chat ID");
 }
 
 - (void)didTapCreateAnonymousAccount:(id)sender
 {
-    NSLog(@"Moose");
-    
+    [[[UIAlertView alloc] initWithTitle:@"Not implemented yet." message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
 }
 
 - (void) skipButtonPressed:(id)sender {

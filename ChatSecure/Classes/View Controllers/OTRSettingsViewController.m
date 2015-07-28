@@ -251,9 +251,10 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
             BOOL connected = [[OTRProtocolManager sharedInstance] isAccountConnected:account];
             if (!connected) {
                 OTRBaseLoginViewController *baseLoginViewController = [OTRBaseLoginViewController loginViewControllerForAccount:account];
+                baseLoginViewController.showsCancelButton = YES;
                 UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:baseLoginViewController];
                 navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
-                [self.navigationController presentViewController:navigationController animated:YES completion:nil];
+                [self presentViewController:navigationController animated:YES completion:nil];
             } else {
                 [self logoutAccount:account sender:[tableView cellForRowAtIndexPath:indexPath]];
             }

@@ -50,6 +50,7 @@
     self.tableDelegate.welcomeAccountInfoArray = self.accountInfoArray;
     self.tableView.delegate = self.tableDelegate;
     self.tableView.dataSource = self.tableDelegate;
+    self.tableView.rowHeight = 80;
     // Do any additional setup after loading the view.
 }
 

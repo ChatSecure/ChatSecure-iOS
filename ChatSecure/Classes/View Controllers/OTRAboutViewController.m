@@ -80,7 +80,7 @@ static NSString *const kDefaultCellReuseIdentifier = @"kDefaultCellReuseIdentifi
 }
 
 - (void) setupImageView {
-    self.imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"chatsecure_banner.png"]];
+    self.imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"chatsecure_logo_transparent"]];
     self.imageView.translatesAutoresizingMaskIntoConstraints = NO;
     self.imageView.contentMode = UIViewContentModeScaleAspectFit;
     self.imageView.userInteractionEnabled = YES;
