@@ -25,9 +25,9 @@
     OTRXMPPServerInfo *serverInfo = [[form formRowWithTag:kOTRXLFormXMPPServerTag] value];
     
     //Get correct user domain
-    NSString *userDomain = serverInfo.serverDomain;
-    if ([serverInfo.userDomain length]) {
-        userDomain = serverInfo.userDomain;
+    NSString *userDomain = serverInfo.domain;
+    if ([serverInfo.server length]) {
+        userDomain = serverInfo.server;
     }
     
     //Create valid 'username' which is a bare jid (user@domain.com)

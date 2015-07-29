@@ -112,23 +112,20 @@
 
 - (void)didTapCreateChatID:(id)sender
 {
-    OTRBaseLoginViewController *createAccountViewController = [[OTRBaseLoginViewController alloc] initWithForm:[OTRXLFormCreator ChatSecureIDForm] style:UITableViewStyleGrouped];
-    createAccountViewController.createLoginHandler = [[OTRChatSecureIDCreateAccountHandler alloc] init];
+    OTRBaseLoginViewController *createAccountViewController = [[OTRBaseLoginViewController alloc] initWithForm:[OTRXLFormCreator formForAccountType:OTRAccountTypeJabber createAccount:YES] style:UITableViewStyleGrouped];
+    createAccountViewController.createLoginHandler = [[OTRXMPPCreateAccountHandler alloc] init];
     createAccountViewController.account = [[OTRXMPPAccount alloc] initWithAccountType:OTRAccountTypeJabber];
-    __weak typeof(self)weakSelf = self;
-    [createAccountViewController setSuccessBlock:^{
-        __strong typeof(weakSelf)strongSelf = weakSelf;
-        if (strongSelf.successBlock) {
-            strongSelf.successBlock();
-        }
-    }];
-    
+    [createAccountViewController setSuccessBlock:self.successBlock];
     [self.navigationController pushViewController:createAccountViewController animated:YES];
 }
 
 - (void)didTapCreateAnonymousAccount:(id)sender
 {
-    [[[UIAlertView alloc] initWithTitle:@"Not implemented yet." message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+    OTRBaseLoginViewController *createAccountViewController = [[OTRBaseLoginViewController alloc] initWithForm:[OTRXLFormCreator formForAccountType:OTRAccountTypeXMPPTor createAccount:YES] style:UITableViewStyleGrouped];
+    createAccountViewController.createLoginHandler = [[OTRXMPPCreateAccountHandler alloc] init];
+    createAccountViewController.account = [[OTRXMPPAccount alloc] initWithAccountType:OTRAccountTypeXMPPTor];
+    [createAccountViewController setSuccessBlock:self.successBlock];
+    [self.navigationController pushViewController:createAccountViewController animated:YES];
 }
 
 - (void) skipButtonPressed:(id)sender {

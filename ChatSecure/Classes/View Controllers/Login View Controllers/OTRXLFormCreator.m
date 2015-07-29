@@ -191,7 +191,7 @@ NSString *const kOTRXLFormXMPPServerTag               = @"kOTRXLFormXMPPServerTa
 {
     XLFormRowDescriptor *xmppServerDescriptor = [XLFormRowDescriptor formRowDescriptorWithTag:kOTRXLFormXMPPServerTag rowType:kOTRFormRowDescriptorTypeXMPPServer];
     
-    xmppServerDescriptor.value = [[OTRXMPPServerInfo defaultServerListIncludeTor:NO] firstObject];
+    xmppServerDescriptor.value = [[OTRXMPPServerInfo defaultServerList] firstObject];
     xmppServerDescriptor.action.viewControllerClass = [OTRXMPPServerListViewController class];
     
     return xmppServerDescriptor;
