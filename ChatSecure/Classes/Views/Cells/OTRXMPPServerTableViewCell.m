@@ -41,9 +41,9 @@ NSString *const kOTRFormRowDescriptorTypeXMPPServer = @"kOTRFormRowDescriptorTyp
 {
     [super update];
     OTRXMPPServerInfo *info = self.rowDescriptor.value;
-    self.serverImageView.image = [UIImage imageNamed:info.serverImage];
-    self.serverNameLabel.text = info.serverName;
-    self.serverDomainLabel.text = info.serverDomain;
+    self.serverImageView.image = info.logoImage;
+    self.serverNameLabel.text = info.name;
+    self.serverDomainLabel.text = info.domain;
 }
 
 - (void)formDescriptorCellDidSelectedWithFormController:(XLFormViewController *)controller

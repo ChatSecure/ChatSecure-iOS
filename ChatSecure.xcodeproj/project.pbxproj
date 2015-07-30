@@ -11,11 +11,8 @@
 		3CC9B590E308D3C320E9548B /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 25A3853627C1F67D3A296AB4 /* libPods.a */; };
 		63039E931B0D1DFC007C9978 /* OTRXMPPServerTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63039E921B0D1DFC007C9978 /* OTRXMPPServerTableViewCell.m */; };
 		63039E981B0D43FE007C9978 /* OTRXMPPServerListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63039E971B0D43FE007C9978 /* OTRXMPPServerListViewController.m */; };
-		63039E9A1B0D46B6007C9978 /* xmppServers.plist in Resources */ = {isa = PBXBuildFile; fileRef = 63039E991B0D46B6007C9978 /* xmppServers.plist */; };
 		632461521A1ADC77000EF33B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 633104D61A169EC800C17BAE /* Localizable.strings */; };
 		632461581A1AE553000EF33B /* OTRCoreDataMigrationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 632461571A1AE553000EF33B /* OTRCoreDataMigrationTests.m */; };
-		633104FD1A16AD8700C17BAE /* chat.facebook.com.cer in Resources */ = {isa = PBXBuildFile; fileRef = 633104FB1A16AD8700C17BAE /* chat.facebook.com.cer */; };
-		633104FE1A16AD8700C17BAE /* talk.google.com.cer in Resources */ = {isa = PBXBuildFile; fileRef = 633104FC1A16AD8700C17BAE /* talk.google.com.cer */; };
 		633106771A16D1A300C17BAE /* NSURL+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105031A16D1A300C17BAE /* NSURL+ChatSecure.m */; };
 		633106781A16D1A300C17BAE /* UIActionSheet+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105051A16D1A300C17BAE /* UIActionSheet+ChatSecure.m */; };
 		633106791A16D1A300C17BAE /* UIActivity+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105071A16D1A300C17BAE /* UIActivity+ChatSecure.m */; };
@@ -139,7 +136,6 @@
 		638D2E031AFBFE2200F3C50C /* OTRWelcomeAccountTableViewDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 638D2E021AFBFE2200F3C50C /* OTRWelcomeAccountTableViewDelegate.m */; };
 		638FC09D1B0BE46100B37454 /* NSFileManager+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 638FC09C1B0BE46100B37454 /* NSFileManager+ChatSecure.m */; };
 		6396AFA01A169D54009F3E6C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6396AF9F1A169D54009F3E6C /* main.m */; };
-		639CDD8E1AD71BC4009BAABC /* OTRCircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 639CDD8D1AD71BC4009BAABC /* OTRCircleView.m */; };
 		639CDD911AD74419009BAABC /* OTRTouchAndHoldGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 639CDD901AD74419009BAABC /* OTRTouchAndHoldGestureRecognizer.m */; };
 		63BE425E1B320EE20017058C /* OTRLoginHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BE425D1B320EE20017058C /* OTRLoginHandler.m */; };
 		63C4BCCC1A1E9B9F001696CD /* ChatSecure.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCC81A1E9B9F001696CD /* ChatSecure.xcdatamodeld */; };
@@ -195,9 +191,13 @@
 		63FABC8E1A410EBF009BF681 /* JSQMessagesCollectionViewCell+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FABC8D1A410EBF009BF681 /* JSQMessagesCollectionViewCell+ChatSecure.m */; };
 		63FABC911A41218E009BF681 /* NSString+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FABC901A41218E009BF681 /* NSString+ChatSecure.m */; };
 		D9365E7A1A1EB0050006434A /* torrc in Resources */ = {isa = PBXBuildFile; fileRef = D9365E791A1EB0050006434A /* torrc */; };
+		D95AD2241B67FD6A007DEBC3 /* OTRCircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = D95AD2231B67FD6A007DEBC3 /* OTRCircleView.m */; };
+		D95AD2291B684AE1007DEBC3 /* xmpp-server-list in Resources */ = {isa = PBXBuildFile; fileRef = D95AD2281B684AE1007DEBC3 /* xmpp-server-list */; };
 		D973D7061A2D4094004D353E /* Pods-acknowledgements.plist in Resources */ = {isa = PBXBuildFile; fileRef = D973D7051A2D4094004D353E /* Pods-acknowledgements.plist */; };
+		D989A84F1B5DBD90000608A9 /* OTRAdvancedWelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D989A84E1B5DBD90000608A9 /* OTRAdvancedWelcomeViewController.m */; };
 		D989EC8D1B06AFE30069FE37 /* XMPPURI.m in Sources */ = {isa = PBXBuildFile; fileRef = D989EC8C1B06AFE30069FE37 /* XMPPURI.m */; };
 		D9A3CB2C1B2798D7000A50C6 /* XMPPURITests.m in Sources */ = {isa = PBXBuildFile; fileRef = D9A3CB2B1B2798D7000A50C6 /* XMPPURITests.m */; };
+		D9ADE5B91B606642009471FF /* OTRCircleButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = D9ADE5B81B606642009471FF /* OTRCircleButtonView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -217,7 +217,6 @@
 		63039E921B0D1DFC007C9978 /* OTRXMPPServerTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPServerTableViewCell.m; sourceTree = "<group>"; };
 		63039E961B0D43FE007C9978 /* OTRXMPPServerListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPServerListViewController.h; sourceTree = "<group>"; };
 		63039E971B0D43FE007C9978 /* OTRXMPPServerListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPServerListViewController.m; sourceTree = "<group>"; };
-		63039E991B0D46B6007C9978 /* xmppServers.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = xmppServers.plist; path = "Classes/View Controllers/Login View Controllers/xmppServers.plist"; sourceTree = "<group>"; };
 		632461571A1AE553000EF33B /* OTRCoreDataMigrationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRCoreDataMigrationTests.m; sourceTree = "<group>"; };
 		633104D51A169EC800C17BAE /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		633104D81A169F0E00C17BAE /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -250,8 +249,6 @@
 		633104F51A16A29B00C17BAE /* zh-Hans-CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans-CN"; path = "zh-Hans-CN.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		633104F61A16A35500C17BAE /* nb-NO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "nb-NO"; path = "nb-NO.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		633104F71A16AACB00C17BAE /* zh-Hant-TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant-TW"; path = "zh-Hant-TW.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		633104FB1A16AD8700C17BAE /* chat.facebook.com.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = chat.facebook.com.cer; sourceTree = "<group>"; };
-		633104FC1A16AD8700C17BAE /* talk.google.com.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = talk.google.com.cer; sourceTree = "<group>"; };
 		633104FF1A16AEA800C17BAE /* Strings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Strings.h; path = Strings/Strings.h; sourceTree = "<group>"; };
 		633105021A16D1A300C17BAE /* NSURL+ChatSecure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSURL+ChatSecure.h"; sourceTree = "<group>"; };
 		633105031A16D1A300C17BAE /* NSURL+ChatSecure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSURL+ChatSecure.m"; sourceTree = "<group>"; };
@@ -501,8 +498,6 @@
 		6396AF9F1A169D54009F3E6C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		6396AFB31A169D54009F3E6C /* ChatSecureTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChatSecureTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6396AFB81A169D54009F3E6C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		639CDD8C1AD71BC4009BAABC /* OTRCircleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRCircleView.h; sourceTree = "<group>"; };
-		639CDD8D1AD71BC4009BAABC /* OTRCircleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRCircleView.m; sourceTree = "<group>"; };
 		639CDD8F1AD74419009BAABC /* OTRTouchAndHoldGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRTouchAndHoldGestureRecognizer.h; sourceTree = "<group>"; };
 		639CDD901AD74419009BAABC /* OTRTouchAndHoldGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRTouchAndHoldGestureRecognizer.m; sourceTree = "<group>"; };
 		63BE425C1B320EE20017058C /* OTRLoginHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRLoginHandler.h; sourceTree = "<group>"; };
@@ -616,10 +611,17 @@
 		954B60A022C05FDE4DCFEF6E /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		B977533C20F88A4A840303F9 /* Pods.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.beta.xcconfig; path = "Pods/Target Support Files/Pods/Pods.beta.xcconfig"; sourceTree = "<group>"; };
 		D9365E791A1EB0050006434A /* torrc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = torrc; path = Resources/torrc; sourceTree = "<group>"; };
+		D95AD2221B67FD6A007DEBC3 /* OTRCircleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRCircleView.h; sourceTree = "<group>"; };
+		D95AD2231B67FD6A007DEBC3 /* OTRCircleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRCircleView.m; sourceTree = "<group>"; };
+		D95AD2281B684AE1007DEBC3 /* xmpp-server-list */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "xmpp-server-list"; path = "Submodules/xmpp-server-list"; sourceTree = SOURCE_ROOT; };
 		D973D7051A2D4094004D353E /* Pods-acknowledgements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Pods-acknowledgements.plist"; path = "Pods/Target Support Files/Pods/Pods-acknowledgements.plist"; sourceTree = SOURCE_ROOT; };
+		D989A84D1B5DBD90000608A9 /* OTRAdvancedWelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OTRAdvancedWelcomeViewController.h; path = "Login View Controllers/OTRAdvancedWelcomeViewController.h"; sourceTree = "<group>"; };
+		D989A84E1B5DBD90000608A9 /* OTRAdvancedWelcomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OTRAdvancedWelcomeViewController.m; path = "Login View Controllers/OTRAdvancedWelcomeViewController.m"; sourceTree = "<group>"; };
 		D989EC8B1B06AFE30069FE37 /* XMPPURI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPURI.h; sourceTree = "<group>"; };
 		D989EC8C1B06AFE30069FE37 /* XMPPURI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPURI.m; sourceTree = "<group>"; };
 		D9A3CB2B1B2798D7000A50C6 /* XMPPURITests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPURITests.m; sourceTree = "<group>"; };
+		D9ADE5B71B606642009471FF /* OTRCircleButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRCircleButtonView.h; sourceTree = "<group>"; };
+		D9ADE5B81B606642009471FF /* OTRCircleButtonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRCircleButtonView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -645,8 +647,8 @@
 		633104D71A169EE600C17BAE /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				D95AD2281B684AE1007DEBC3 /* xmpp-server-list */,
 				D973D7051A2D4094004D353E /* Pods-acknowledgements.plist */,
-				63039E991B0D46B6007C9978 /* xmppServers.plist */,
 				D9365E791A1EB0050006434A /* torrc */,
 				633107291A16D1F200C17BAE /* DemoImages.xcassets */,
 				6331072A1A16D1F200C17BAE /* Images.xcassets */,
@@ -660,8 +662,6 @@
 		633104FA1A16AD8700C17BAE /* Certificates */ = {
 			isa = PBXGroup;
 			children = (
-				633104FB1A16AD8700C17BAE /* chat.facebook.com.cer */,
-				633104FC1A16AD8700C17BAE /* talk.google.com.cer */,
 			);
 			name = Certificates;
 			path = Resources/Certificates;
@@ -914,6 +914,8 @@
 				633106121A16D1A300C17BAE /* OTRAboutViewController.h */,
 				633106131A16D1A300C17BAE /* OTRAboutViewController.m */,
 				633106141A16D1A300C17BAE /* OTRAcknowledgementsViewController.h */,
+				D989A84D1B5DBD90000608A9 /* OTRAdvancedWelcomeViewController.h */,
+				D989A84E1B5DBD90000608A9 /* OTRAdvancedWelcomeViewController.m */,
 				633106151A16D1A300C17BAE /* OTRAcknowledgementsViewController.m */,
 				633106161A16D1A300C17BAE /* OTRBuddyViewController.h */,
 				633106171A16D1A300C17BAE /* OTRBuddyViewController.m */,
@@ -973,6 +975,10 @@
 		6331064A1A16D1A300C17BAE /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				D95AD2221B67FD6A007DEBC3 /* OTRCircleView.h */,
+				D95AD2231B67FD6A007DEBC3 /* OTRCircleView.m */,
+				D9ADE5B71B606642009471FF /* OTRCircleButtonView.h */,
+				D9ADE5B81B606642009471FF /* OTRCircleButtonView.m */,
 				6331064B1A16D1A300C17BAE /* Cells */,
 				633106661A16D1A300C17BAE /* LaunchScreen.xib */,
 				633106671A16D1A300C17BAE /* OTRButtonView.h */,
@@ -996,8 +1002,6 @@
 				63EA4CFC1ACC96AB00B19E12 /* OTRHoldToTalkView.m */,
 				6353AC2B1AD5E32000753B83 /* OTRAudioTrashView.h */,
 				6353AC2C1AD5E32000753B83 /* OTRAudioTrashView.m */,
-				639CDD8C1AD71BC4009BAABC /* OTRCircleView.h */,
-				639CDD8D1AD71BC4009BAABC /* OTRCircleView.m */,
 				639CDD8F1AD74419009BAABC /* OTRTouchAndHoldGestureRecognizer.h */,
 				639CDD901AD74419009BAABC /* OTRTouchAndHoldGestureRecognizer.m */,
 			);
@@ -1406,13 +1410,11 @@
 			files = (
 				632461521A1ADC77000EF33B /* Localizable.strings in Resources */,
 				6331072C1A16D1F200C17BAE /* Images.xcassets in Resources */,
-				633104FD1A16AD8700C17BAE /* chat.facebook.com.cer in Resources */,
 				D973D7061A2D4094004D353E /* Pods-acknowledgements.plist in Resources */,
 				D9365E7A1A1EB0050006434A /* torrc in Resources */,
-				63039E9A1B0D46B6007C9978 /* xmppServers.plist in Resources */,
 				6331072B1A16D1F200C17BAE /* DemoImages.xcassets in Resources */,
 				633107201A16D1A300C17BAE /* LaunchScreen.xib in Resources */,
-				633104FE1A16AD8700C17BAE /* talk.google.com.cer in Resources */,
+				D95AD2291B684AE1007DEBC3 /* xmpp-server-list in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1570,7 +1572,6 @@
 				63C4BCCC1A1E9B9F001696CD /* ChatSecure.xcdatamodeld in Sources */,
 				6346808A1B041F2F00D9A1C5 /* OTRGoolgeOAuthLoginHandler.m in Sources */,
 				63D184861A2D3F2400334CD8 /* OTRNotificationController.m in Sources */,
-				639CDD8E1AD71BC4009BAABC /* OTRCircleView.m in Sources */,
 				63FA54911A7B2C2E00F2AEBB /* OTRPauseView.m in Sources */,
 				633106F71A16D1A300C17BAE /* OTRAcknowledgementsViewController.m in Sources */,
 				63C4BD1D1A1E9BE1001696CD /* OTRvCardTemp.m in Sources */,
@@ -1581,6 +1582,7 @@
 				633106781A16D1A300C17BAE /* UIActionSheet+ChatSecure.m in Sources */,
 				63C5B66A1A82F3EE0011BEA8 /* OTRAudioPlaybackController.m in Sources */,
 				6331D3BD1B4F41AF00C85365 /* OTRQRCodeReaderDelegate.m in Sources */,
+				D95AD2241B67FD6A007DEBC3 /* OTRCircleView.m in Sources */,
 				63039E931B0D1DFC007C9978 /* OTRXMPPServerTableViewCell.m in Sources */,
 				63C4BD161A1E9BE1001696CD /* OTRManagedMessageAndStatus.m in Sources */,
 				633106E51A16D1A300C17BAE /* OTRConstants.m in Sources */,
@@ -1682,6 +1684,8 @@
 				6331D3BA1B4F3C6E00C85365 /* OTRAddBuddyQRCodeViewController.m in Sources */,
 				6336209F1A76E89A006E8739 /* OTRAudioItem.m in Sources */,
 				63F0FF641A798D8E001F0C99 /* OTRAudioControlsView.m in Sources */,
+				D9ADE5B91B606642009471FF /* OTRCircleButtonView.m in Sources */,
+				D989A84F1B5DBD90000608A9 /* OTRAdvancedWelcomeViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

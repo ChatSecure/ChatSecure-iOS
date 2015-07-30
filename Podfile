@@ -11,15 +11,14 @@ pod "Appirater", '~> 2.0'
 pod 'OpenInChrome', '~> 0.0'
 pod 'MWFeedParser', '~> 1.0'
 pod "CocoaLumberjack", '~> 1.9'
-pod "HockeySDK", '~> 3.6'
-pod "MagicalRecord", '~> 2.2'
+pod "HockeySDK-Source", '~> 3.7'
 pod 'MBProgressHUD', '~> 0.9'
 pod "SSKeychain", '~> 1.2'
 pod "UIAlertView-Blocks", '~> 1.0'
 # pod 'gtm-oauth2', '~> 0.1.0' # Trunk is outdated, using local podspec
 pod 'JTTargetActionBlock', '~> 1.0'
 # pod 'YapDatabase/SQLCipher', '~> 2.5' # We need to use fork for sqlite3_rekey support
-pod 'Mantle', '~> 1.4'
+pod 'Mantle', '~> 2.0'
 pod 'Navajo', '~> 0.0'
 # wating on 8.0 https://github.com/jessesquires/JSQMessagesViewController/pull/840
 # using for in meantime
@@ -38,7 +37,7 @@ pod 'JTSImageViewController', '~> 1.4'
 pod 'KVOController', '~> 1.0'
 
 # QR Codes
-pod 'QRCodeReaderViewController', '~> 3.4.0'
+pod 'QRCodeReaderViewController', '~> 3.5.0'
 pod 'ZXingObjC', '~> 3.0'
 
 pod 'XLForm', :git => 'https://github.com/xmartlabs/XLForm.git', :commit => '514807c473f013211c14c65919846044d1f72da9'
@@ -53,12 +52,12 @@ pod 'CRToast', :git => 'https://github.com/cruffenach/CRToast', :commit => '7856
 
 # Forks
 pod 'SIAlertView', :git => 'https://github.com/ChatSecure/SIAlertView.git', :branch => 'attributedText'
-pod 'JSQMessagesViewController', :git => 'https://github.com/ChatSecure/JSQMessagesViewController', :branch => '7.0.1-send_button'
+pod 'JSQMessagesViewController', :git => 'https://github.com/ChatSecure/JSQMessagesViewController', :branch => '7.1.0-send_button'
 
 # Submodules
 pod 'ProxyKit/Client', :path => 'Submodules/ProxyKit/ProxyKit.podspec'
 pod 'OTRKit', :path => 'Submodules/OTRKit/OTRKit.podspec'
 pod 'CPAProxy', :path => 'Submodules/CPAProxy/CPAProxy.podspec'
-pod 'XMPPFramework', :path => 'Submodules/XMPPFramework/XMPPFramework.podspec.json'
+pod 'XMPPFramework', :path => 'Submodules/XMPPFramework/XMPPFramework.podspec'
 pod 'YapDatabase/SQLCipher', :path => 'Submodules/YapDatabase/YapDatabase.podspec'
 pod 'IOCipher/GCDWebServer', :path => 'Submodules/IOCipher/IOCipher.podspec'

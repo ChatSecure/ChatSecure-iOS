@@ -52,6 +52,7 @@
 #import "OTRWelcomeViewController.h"
 #import "OTRBaseLoginViewController.h"
 #import "OTRXLFormCreator.h"
+#import <KVOController/FBKVOController.h>
 
 static NSString *const circleImageName = @"31-circle-plus-large.png";
 
@@ -110,6 +111,15 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     UIBarButtonItem *aboutButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"OTRInfoIcon"] style:UIBarButtonItemStylePlain target:self action:@selector(showAboutScreen)];
 
     self.navigationItem.rightBarButtonItem = aboutButton;
+    
+    ////// KVO //////
+    __weak typeof(self)weakSelf = self;
+    [self.KVOController observe:[OTRProtocolManager sharedInstance] keyPaths:@[NSStringFromSelector(@selector(numberOfConnectedProtocols)),NSStringFromSelector(@selector(numberOfConnectingProtocols))] options:NSKeyValueObservingOptionNew block:^(id observer, id object, NSDictionary *change) {
+        __strong typeof(weakSelf)strongSelf = weakSelf;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [strongSelf.tableView reloadSections:[[NSIndexSet alloc] initWithIndex:0] withRowAnimation:UITableViewRowAnimationNone];
+        });
+    }];
 }
 
 
@@ -117,29 +127,8 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 {
     [super viewWillAppear:animated];
     
-    [[OTRProtocolManager sharedInstance] addObserver:self forKeyPath:NSStringFromSelector(@selector(numberOfConnectedProtocols)) options:NSKeyValueObservingOptionNew context:NULL];
-    [[OTRProtocolManager sharedInstance] addObserver:self forKeyPath:NSStringFromSelector(@selector(numberOfConnectingProtocols)) options:NSKeyValueObservingOptionNew context:NULL];
-    
-    
     self.tableView.frame = self.view.bounds;
     [self.tableView reloadData];
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-    
-    [[OTRProtocolManager sharedInstance] removeObserver:self forKeyPath:NSStringFromSelector(@selector(numberOfConnectedProtocols))];
-    [[OTRProtocolManager sharedInstance] removeObserver:self forKeyPath:NSStringFromSelector(@selector(numberOfConnectingProtocols))];
-}
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
-{
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if ([keyPath isEqualToString:NSStringFromSelector(@selector(numberOfConnectedProtocols))] || [keyPath isEqualToString:NSStringFromSelector(@selector(numberOfConnectingProtocols))]) {
-            [self.tableView reloadSections:[[NSIndexSet alloc] initWithIndex:0] withRowAnimation:UITableViewRowAnimationNone];
-        }
-    });
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -262,9 +251,10 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
             BOOL connected = [[OTRProtocolManager sharedInstance] isAccountConnected:account];
             if (!connected) {
                 OTRBaseLoginViewController *baseLoginViewController = [OTRBaseLoginViewController loginViewControllerForAccount:account];
+                baseLoginViewController.showsCancelButton = YES;
                 UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:baseLoginViewController];
                 navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
-                [self.navigationController presentViewController:navigationController animated:YES completion:nil];
+                [self presentViewController:navigationController animated:YES completion:nil];
             } else {
                 [self logoutAccount:account sender:[tableView cellForRowAtIndexPath:indexPath]];
             }
@@ -368,12 +358,13 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 
 - (void) addAccount:(id)sender {
     
-    OTRWelcomeViewController *welcomeViewController = [[OTRWelcomeViewController alloc] initWithDefaultAccountArray];
-    welcomeViewController.showNavigationBar = YES;
+    OTRWelcomeViewController *welcomeViewController = [[OTRWelcomeViewController alloc] init];
+    welcomeViewController.showNavigationBar = NO;
     [welcomeViewController setSuccessBlock:^{
         NSLog(@"Finished setting up account");
     }];
-    [self.navigationController pushViewController:welcomeViewController animated:YES];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:welcomeViewController];
+    [self presentViewController:nav animated:YES completion:nil];
 }
 
 - (NSIndexPath *)indexPathForSetting:(OTRSetting *)setting

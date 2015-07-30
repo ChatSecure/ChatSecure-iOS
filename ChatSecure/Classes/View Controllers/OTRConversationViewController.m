@@ -27,8 +27,10 @@
 #import "OTRDatabaseView.h"
 #import "YapDatabaseViewMappings.h"
 #import "Strings.h"
+#import <KVOController/FBKVOController.h>
 #import "OTRAppDelegate.h"
 #import "OTRProtocolManager.h"
+#import "OTRWelcomeViewController.h"
 
 
 static CGFloat kOTRConversationCellHeight = 80.0;
@@ -43,6 +45,8 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 @property (nonatomic, strong) YapDatabaseViewMappings *unreadMessagesMappings;
 
 @property (nonatomic, strong) UIBarButtonItem *composeBarButtonItem;
+
+@property (nonatomic) BOOL hasPresentedOnboarding;
 @end
 
 @implementation OTRConversationViewController
@@ -113,8 +117,45 @@ static CGFloat kOTRConversationCellHeight = 80.0;
                                                  name:YapDatabaseModifiedNotification
                                                object:nil];
     
-    
-    
+    ////// KVO //////
+    __weak typeof(self)weakSelf = self;
+    [self.KVOController observe:[OTRProtocolManager sharedInstance] keyPath:NSStringFromSelector(@selector(numberOfConnectedProtocols)) options:NSKeyValueObservingOptionNew block:^(id observer, id object, NSDictionary *change) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(weakSelf)strongSelf = weakSelf;
+            NSUInteger numberConnectedAccounts = [[change objectForKey:NSKeyValueChangeNewKey] unsignedIntegerValue];
+            if (numberConnectedAccounts) {
+                [strongSelf enableComposeButton];
+            }
+            else {
+                [strongSelf disableComposeButton];
+            }
+        });
+    }];
+}
+
+- (void) showOnboardingIfNeeded {
+    if (self.hasPresentedOnboarding) {
+        return;
+    }
+    __block BOOL hasAccounts = NO;
+    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        NSUInteger count = [transaction numberOfKeysInCollection:[OTRAccount collection]];
+        if (count > 0) {
+            hasAccounts = YES;
+        }
+    }];
+    //If there is any number of accounts launch into default conversation view otherwise onboarding time
+    if (!hasAccounts) {
+        OTRWelcomeViewController *welcomeViewController = [[OTRWelcomeViewController alloc] init];
+        __weak id weakVC = welcomeViewController;
+        [welcomeViewController setSuccessBlock:^{
+            [weakVC dismissViewControllerAnimated:YES completion:nil];
+        }];
+        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:welcomeViewController];
+        nav.modalPresentationStyle = UIModalPresentationFullScreen;
+        [self presentViewController:nav animated:NO completion:nil];
+        self.hasPresentedOnboarding = YES;
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -134,13 +175,14 @@ static CGFloat kOTRConversationCellHeight = 80.0;
         [self disableComposeButton];
     }
     
-    [[OTRProtocolManager sharedInstance] addObserver:self forKeyPath:NSStringFromSelector(@selector(numberOfConnectedProtocols)) options:NSKeyValueObservingOptionNew context:NULL];
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     [OTRNotificationPermissions checkPermissions];
+    [self showOnboardingIfNeeded];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -148,8 +190,6 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     [super viewWillDisappear:animated];
     [self.cellUpdateTimer invalidate];
     self.cellUpdateTimer = nil;
-    
-    [[OTRProtocolManager sharedInstance] removeObserver:self forKeyPath:NSStringFromSelector(@selector(numberOfConnectedProtocols))];
 }
 
 - (void)settingsButtonPressed:(id)sender
@@ -217,19 +257,6 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 - (void)disableComposeButton
 {
     self.composeBarButtonItem.enabled = NO;
-}
-
-#pragma KVO Methods
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
-{
-    NSUInteger numberConnectedAccounts = [[change objectForKey:NSKeyValueChangeNewKey] unsignedIntegerValue];
-    if (numberConnectedAccounts) {
-        [self enableComposeButton];
-    }
-    else {
-        [self disableComposeButton];
-    }
 }
 
 #pragma - mark Inbox Methods

@@ -80,7 +80,7 @@ static NSString *const kDefaultCellReuseIdentifier = @"kDefaultCellReuseIdentifi
 }
 
 - (void) setupImageView {
-    self.imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"chatsecure_banner.png"]];
+    self.imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"chatsecure_logo_transparent"]];
     self.imageView.translatesAutoresizingMaskIntoConstraints = NO;
     self.imageView.contentMode = UIViewContentModeScaleAspectFit;
     self.imageView.userInteractionEnabled = YES;
@@ -94,7 +94,7 @@ static NSString *const kDefaultCellReuseIdentifier = @"kDefaultCellReuseIdentifi
     self.socialView = [[UIView alloc] initForAutoLayout];
     
     CGFloat labelMargin = 10;
-    self.headerLabel = [[TTTAttributedLabel alloc] init];
+    self.headerLabel = [[TTTAttributedLabel alloc] initWithFrame:CGRectZero];
     NSString *chrisballingerString = @"@chrisballinger";
     NSURL *chrisballingerURL = [NSURL URLWithString:@"https://github.com/chrisballinger"];
     NSString *davidchilesString = @"@davidchiles";

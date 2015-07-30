@@ -24,7 +24,7 @@
 - (instancetype)init
 {
     if (self = [super init]) {
-        self.serverList = [[OTRXMPPServerInfo defaultServerListIncludeTor:NO] mutableCopy];
+        self.serverList = [[OTRXMPPServerInfo defaultServerList] mutableCopy];
     }
     return self;
 }
@@ -44,12 +44,8 @@
     if (![user length]) {
         user = account.username;
     }
-    NSString *userDomain = serverInfo.userDomain;
-    if (![userDomain length]) {
-        userDomain = serverInfo.serverDomain;
-    }
-    account.username = [XMPPJID jidWithUser:user domain:userDomain resource:nil].bare;
-    account.domain = serverInfo.serverDomain;
+    account.username = [XMPPJID jidWithUser:user domain:serverInfo.domain resource:nil].bare;
+    account.domain = serverInfo.domain;
 }
 
 - (void)attemptToCreateAccount

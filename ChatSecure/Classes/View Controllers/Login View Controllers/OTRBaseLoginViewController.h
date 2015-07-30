@@ -13,11 +13,13 @@
 @interface OTRBaseLoginViewController : XLFormViewController
 
 @property (nonatomic, strong) UIBarButtonItem *loginCreateButtonItem;
+@property (nonatomic) BOOL showsCancelButton;
 
 @property (nonatomic, strong) OTRAccount *account;
 
 @property (nonatomic, strong) id<OTRBaseLoginViewControllerHandlerProtocol> createLoginHandler;
 
+/** if successBlock is set, you must dismiss VC manually */
 @property (nonatomic, copy) void (^successBlock)(void);
 
 /**
@@ -26,7 +28,6 @@
  @param An account to use to create the view
  @return A configured OTRBaseLoginViewController
  */
-
 + (instancetype)loginViewControllerForAccount:(OTRAccount *)account;
 
 @end

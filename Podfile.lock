@@ -1,26 +1,26 @@
 PODS:
-  - AFNetworking (2.5.3):
-    - AFNetworking/NSURLConnection (= 2.5.3)
-    - AFNetworking/NSURLSession (= 2.5.3)
-    - AFNetworking/Reachability (= 2.5.3)
-    - AFNetworking/Security (= 2.5.3)
-    - AFNetworking/Serialization (= 2.5.3)
-    - AFNetworking/UIKit (= 2.5.3)
-  - AFNetworking/NSURLConnection (2.5.3):
+  - AFNetworking (2.5.4):
+    - AFNetworking/NSURLConnection (= 2.5.4)
+    - AFNetworking/NSURLSession (= 2.5.4)
+    - AFNetworking/Reachability (= 2.5.4)
+    - AFNetworking/Security (= 2.5.4)
+    - AFNetworking/Serialization (= 2.5.4)
+    - AFNetworking/UIKit (= 2.5.4)
+  - AFNetworking/NSURLConnection (2.5.4):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/NSURLSession (2.5.3):
+  - AFNetworking/NSURLSession (2.5.4):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/Reachability (2.5.3)
-  - AFNetworking/Security (2.5.3)
-  - AFNetworking/Serialization (2.5.3)
-  - AFNetworking/UIKit (2.5.3):
+  - AFNetworking/Reachability (2.5.4)
+  - AFNetworking/Security (2.5.4)
+  - AFNetworking/Serialization (2.5.4)
+  - AFNetworking/UIKit (2.5.4):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
-  - Appirater (2.0.4)
+  - Appirater (2.0.5)
   - ARChromeActivity (1.0.4)
   - BBlock (1.2.0):
     - BBlock/AppKit (= 1.2.0)
@@ -40,35 +40,32 @@ PODS:
   - CPAProxy (1.0.0):
     - CocoaAsyncSocket
   - CRToast (0.0.7)
-  - GCDWebServer (3.2.3):
-    - GCDWebServer/Core (= 3.2.3)
-  - GCDWebServer/Core (3.2.3)
+  - GCDWebServer (3.2.5):
+    - GCDWebServer/Core (= 3.2.5)
+  - GCDWebServer/Core (3.2.5)
   - gtm-http-fetcher (1.0.142)
   - gtm-oauth2 (1.0.129):
     - gtm-http-fetcher
-  - HockeySDK (3.6.4)
+  - HockeySDK-Source (3.7.1)
   - IOCipher/common (0.1.0):
     - libsqlfs/SQLCipher
   - IOCipher/GCDWebServer (0.1.0):
     - GCDWebServer
     - IOCipher/common
-  - JSQMessagesViewController (7.0.1):
+  - JSQMessagesViewController (7.1.0):
     - JSQSystemSoundPlayer (~> 2.0.1)
   - JSQSystemSoundPlayer (2.0.1)
   - JTSImageViewController (1.4)
   - JTTargetActionBlock (1.0.0)
-  - JVFloatLabeledTextField (1.0.2)
+  - JVFloatLabeledTextField (1.1.0)
   - KVOController (1.0.3)
   - libsqlfs/common (1.3)
   - libsqlfs/SQLCipher (1.3):
     - libsqlfs/common
     - SQLCipher/fts
-  - MagicalRecord (2.2):
-    - MagicalRecord/Core (= 2.2)
-  - MagicalRecord/Core (2.2)
-  - Mantle (1.5.4):
-    - Mantle/extobjc (= 1.5.4)
-  - Mantle/extobjc (1.5.4)
+  - Mantle (2.0.2):
+    - Mantle/extobjc (= 2.0.2)
+  - Mantle/extobjc (2.0.2)
   - MBProgressHUD (0.9.1)
   - MWFeedParser (1.0.1):
     - MWFeedParser/FeedParser (= 1.0.1)
@@ -88,17 +85,17 @@ PODS:
     - CocoaAsyncSocket (~> 7.3)
     - CocoaLumberjack (~> 1.9)
   - PureLayout (2.0.6)
-  - QRCodeReaderViewController (3.4.0)
+  - QRCodeReaderViewController (3.5.2)
   - SIAlertView (1.3)
-  - SQLCipher/common (3.3.0)
-  - SQLCipher/fts (3.3.0):
+  - SQLCipher/common (3.3.1)
+  - SQLCipher/fts (3.3.1):
     - SQLCipher/common
   - SSKeychain (1.2.3)
-  - TTTAttributedLabel (1.13.3)
+  - TTTAttributedLabel (1.13.4)
   - TUSafariActivity (1.0.4)
   - UIAlertView-Blocks (1.0)
   - uservoice-iphone-sdk (3.2.3)
-  - VTAcknowledgementsViewController (0.13)
+  - VTAcknowledgementsViewController (0.14)
   - XLForm (3.0.0)
   - XMPPFramework (3.6.4):
     - XMPPFramework/All (= 3.6.4)
@@ -242,11 +239,9 @@ PODS:
     - XMPPFramework/Core
   - XMPPFramework/XEP-0335 (3.6.4):
     - XMPPFramework/Core
-  - YapDatabase/common (2.6.1):
+  - YapDatabase/SQLCipher (2.6.5):
     - CocoaLumberjack (~> 1)
-  - YapDatabase/SQLCipher (2.6.1):
     - SQLCipher/fts
-    - YapDatabase/common
   - ZXingObjC (3.1.0):
     - ZXingObjC/All (= 3.1.0)
   - ZXingObjC/All (3.1.0)
@@ -263,16 +258,15 @@ DEPENDENCIES:
   - CRToast (from `https://github.com/cruffenach/CRToast`, commit `78569d0e6e6704872af5db1bc37be0ff9d112ac0`)
   - gtm-http-fetcher (from `Podspecs/gtm-http-fetcher.podspec.json`)
   - gtm-oauth2 (from `Podspecs/gtm-oauth2.podspec.json`)
-  - HockeySDK (~> 3.6)
+  - HockeySDK-Source (~> 3.7)
   - IOCipher/GCDWebServer (from `Submodules/IOCipher/IOCipher.podspec`)
   - JSQMessagesViewController (from `https://github.com/ChatSecure/JSQMessagesViewController`,
-    branch `7.0.1-send_button`)
+    branch `7.1.0-send_button`)
   - JTSImageViewController (~> 1.4)
   - JTTargetActionBlock (~> 1.0)
   - JVFloatLabeledTextField (~> 1.0)
   - KVOController (~> 1.0)
-  - MagicalRecord (~> 2.2)
-  - Mantle (~> 1.4)
+  - Mantle (~> 2.0)
   - MBProgressHUD (~> 0.9)
   - MWFeedParser (~> 1.0)
   - Navajo (~> 0.0)
@@ -280,7 +274,7 @@ DEPENDENCIES:
   - OTRKit (from `Submodules/OTRKit/OTRKit.podspec`)
   - ProxyKit/Client (from `Submodules/ProxyKit/ProxyKit.podspec`)
   - PureLayout (~> 2.0)
-  - QRCodeReaderViewController (~> 3.4.0)
+  - QRCodeReaderViewController (~> 3.5.0)
   - SIAlertView (from `https://github.com/ChatSecure/SIAlertView.git`, branch `attributedText`)
   - SQLCipher/fts (from `Podspecs/SQLCipher.podspec.json`)
   - SSKeychain (~> 1.2)
@@ -290,7 +284,7 @@ DEPENDENCIES:
   - uservoice-iphone-sdk (~> 3.2)
   - VTAcknowledgementsViewController (~> 0.12)
   - XLForm (from `https://github.com/xmartlabs/XLForm.git`, commit `514807c473f013211c14c65919846044d1f72da9`)
-  - XMPPFramework (from `Submodules/XMPPFramework/XMPPFramework.podspec.json`)
+  - XMPPFramework (from `Submodules/XMPPFramework/XMPPFramework.podspec`)
   - YapDatabase/SQLCipher (from `Submodules/YapDatabase/YapDatabase.podspec`)
   - ZXingObjC (~> 3.0)
 
@@ -307,7 +301,7 @@ EXTERNAL SOURCES:
   IOCipher:
     :path: Submodules/IOCipher/IOCipher.podspec
   JSQMessagesViewController:
-    :branch: 7.0.1-send_button
+    :branch: 7.1.0-send_button
     :git: https://github.com/ChatSecure/JSQMessagesViewController
   OTRKit:
     :path: Submodules/OTRKit/OTRKit.podspec
@@ -322,7 +316,7 @@ EXTERNAL SOURCES:
     :commit: 514807c473f013211c14c65919846044d1f72da9
     :git: https://github.com/xmartlabs/XLForm.git
   XMPPFramework:
-    :path: Submodules/XMPPFramework/XMPPFramework.podspec.json
+    :path: Submodules/XMPPFramework/XMPPFramework.podspec
   YapDatabase:
     :path: Submodules/YapDatabase/YapDatabase.podspec
 
@@ -331,7 +325,7 @@ CHECKOUT OPTIONS:
     :commit: 78569d0e6e6704872af5db1bc37be0ff9d112ac0
     :git: https://github.com/cruffenach/CRToast
   JSQMessagesViewController:
-    :commit: 4008dfffa65ab8f14c01b95d19ebe2825adce49e
+    :commit: aced19e84fe5ecfac7e89db2b247dfbd505127cb
     :git: https://github.com/ChatSecure/JSQMessagesViewController
   SIAlertView:
     :commit: e9a1a7d7d5a2a4ef5ff2e2e548644222b14edb27
@@ -341,48 +335,47 @@ CHECKOUT OPTIONS:
     :git: https://github.com/xmartlabs/XLForm.git
 
 SPEC CHECKSUMS:
-  AFNetworking: e1d86c2a96bb5d2e7408da36149806706ee122fe
-  Appirater: 8783318c36414e8de3ea023443028df94c1b784b
+  AFNetworking: 05edc0ac4c4c8cf57bcf4b84be5b0744b6d8e71e
+  Appirater: e7c0a47fb67ee5041ce8479e6ba960927fb40264
   ARChromeActivity: 9064d94803338d3377f3e1013a8e8f4821d7daf1
   BBlock: 11c666b6898c074eceb40fa56a901b96415ebf68
   BButton: ab0f2ed3b998ae73c5188b57d270d81e4a1eeb27
   CocoaAsyncSocket: 7cbf214b27f8e7f7574db6a3fd96352ffaed433d
   CocoaLumberjack: 628fca2e88ef06f7cf6817309aa405f325d9a6fa
-  CPAProxy: 2f0d2ef592b28e0686b5a100ad663bdd3e51900b
+  CPAProxy: 9ca6809d0ee47d90ee149da033a53b911d15ab82
   CRToast: 99a28f4387def43b439ad88f957ce31357ff7373
-  GCDWebServer: 0f68bdc06d035f285f2d1ef0ac35ed46be040a71
+  GCDWebServer: d0e1b23785e3dfd6c87601323d0f7cae059aab18
   gtm-http-fetcher: 52f5c6444c2c883380de3b902e14fdab4b1d3e7d
   gtm-oauth2: 3a9a46400b8d7ee916807550e0902c4a4db11167
-  HockeySDK: c07cdd580296737edcd0963e292c19885a53f563
+  HockeySDK-Source: d620f330b23691017c141de6e25e5cdc8c67848c
   IOCipher: 2bcc56103fbdd9cd9139a5b030ebb97ed6fbc4b9
-  JSQMessagesViewController: 03fba8a3021a3ddc1c91847f180ffe549f2e8cf2
+  JSQMessagesViewController: ca11f86fa68ca70835f05e169df9244147c1dc40
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
   JTSImageViewController: 6a367b144e257db02cdfacdba78d684377d3777b
   JTTargetActionBlock: 6e9201e5fa88651deb354c91b7c9c6487a1abe55
-  JVFloatLabeledTextField: 58a3a32cfb800e5b224f676987e7c13abf50a14d
+  JVFloatLabeledTextField: ea4a3d8387ddd43724c472bb2b8ab39b79af05d4
   KVOController: 9fd8f0343670994e4b6f9f0b31f5a45663f3e1cf
   libsqlfs: 179e4fb40b8c07fd0ee7933ec4c0b9f4815cbd0e
-  MagicalRecord: f8a56bb87ab6552f20c4bb8681a1958a197ea3cd
-  Mantle: 60acd0cd363e27d945bda0a6b8e90577112d28f3
+  Mantle: 967fd31ea0220890b2e76589198996b534bb3fb1
   MBProgressHUD: c47f2c166c126cf2ce36498d80f33e754d4e93ad
   MWFeedParser: 2cf646014c1baf6ad1b08c480b40a08180079247
   Navajo: 5fb68239b4e3af4610f31925bae1ca8e6bab8eaa
   OpenInChrome: f1f3f9dec682216fe78a0d7fe0b5b263d6312c32
-  OTRKit: b7b7be43350577f25dcf986376342a62bf3e7ea7
+  OTRKit: 084a83936ac19e2dbd08096cd94263a979dc4502
   ProxyKit: f7be31d07ed93444c433956d18e842ea9c709224
   PureLayout: f25f0bb904d5ccfe6e31da3cb869185259f02e0d
-  QRCodeReaderViewController: bbe09ba1805a74e4da29863a5220a7ad0411f5bc
+  QRCodeReaderViewController: f20275985c41ae551099641493ab364691d9113e
   SIAlertView: 20c794b55eaf44d888773ea51647cf8907723919
-  SQLCipher: dd01eccee441e56835da76656f05f34e02681ded
+  SQLCipher: 46ea06f972292f622aeb2d3f960a573a964d378f
   SSKeychain: 3f42991739c6c60a9cf1bbd4dff6c0d3694bcf3d
-  TTTAttributedLabel: 6f3174aef8e738f44dff97c2eb7d8184f6ab6277
+  TTTAttributedLabel: 0a2ac7b2dd726d32a070dafb01446026b11e624f
   TUSafariActivity: afc55a00965377939107ce4fdc7f951f62454546
   UIAlertView-Blocks: 7904744fca618afbd2ec646608924f5e69d5acd1
   uservoice-iphone-sdk: 349d9ef36d3c43939d28390b9e86bb32b65fe983
-  VTAcknowledgementsViewController: f2391b007c3abafd3b3afccda7d8914a59b44309
-  XLForm: 10fc7eb9e2d5df21a515fa3a794f4e26319abd0e
+  VTAcknowledgementsViewController: 11a869dd69598a852f12699aeaf36e2589d3fc1b
+  XLForm: 3e0521195126c4da4e90b104017e2758776393f1
   XMPPFramework: 239fe709baff208fff5970708469b939387105ee
-  YapDatabase: 13566c87dc9226a0f15d755edba08e8ad94cac9f
+  YapDatabase: 814f9ff862a95c1e581d93335a4020482b69155b
   ZXingObjC: bf15b3814f7a105b6d99f47da2333c93a063650a
 
-COCOAPODS: 0.37.2
+COCOAPODS: 0.38.0

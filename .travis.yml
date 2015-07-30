@@ -1,4 +1,5 @@
 language: objective-c
+osx_image: xcode6.4
 
 # Handle git submodules yourself
 # http://stackoverflow.com/a/24600210/805882
@@ -20,6 +21,7 @@ install:
 
 before_script:
   - gem install cocoapods --no-rdoc --no-ri # Need Cocoapods >= 0.34.1
+  - export COCOAPODS_DISABLE_DETERMINISTIC_UUIDS=1 # https://github.com/CocoaPods/CocoaPods/issues/3850
   - pod install
 script:
   - xctool -workspace ChatSecure.xcworkspace -scheme ChatSecure -sdk iphonesimulator -arch i386 build

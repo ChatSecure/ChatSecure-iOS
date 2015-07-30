@@ -53,7 +53,7 @@ NSString *const kOTROTRXMPPServerListViewControllerCustomTag = @"kOTROTRXMPPServ
     }
     
     if (!foundMatch) {
-        [self.form formRowWithTag:kOTROTRXMPPServerListViewControllerCustomTag].value = ((OTRXMPPServerInfo *)self.rowDescriptor.value).serverDomain;
+        [self.form formRowWithTag:kOTROTRXMPPServerListViewControllerCustomTag].value = ((OTRXMPPServerInfo *)self.rowDescriptor.value).domain;
     }
 }
 
@@ -64,12 +64,10 @@ NSString *const kOTROTRXMPPServerListViewControllerCustomTag = @"kOTROTRXMPPServ
         NSString *customDomain = [self.form formRowWithTag:kOTROTRXMPPServerListViewControllerCustomTag].value;
         if ([customDomain length]) {
             OTRXMPPServerInfo *info = (OTRXMPPServerInfo *)self.rowDescriptor.value;
-            info.serverName = CUSTOM_STRING;
-            info.serverDomain = customDomain;
-            info.serverImage = nil;
+            info.name = CUSTOM_STRING;
+            info.domain = customDomain;
         }
     }
-    
 }
 
 #pragma - mark UITextFieldMethods
@@ -99,7 +97,7 @@ NSString *const kOTROTRXMPPServerListViewControllerCustomTag = @"kOTROTRXMPPServ
 
 + (XLFormDescriptor *)defaultServerForm
 {
-    NSArray *serverList = [OTRXMPPServerInfo defaultServerListIncludeTor:YES];
+    NSArray *serverList = [OTRXMPPServerInfo defaultServerList];
     
     XLFormDescriptor *formDescriptor = [[XLFormDescriptor alloc] init];
     XLFormSectionDescriptor *sectionDescriptor = [[XLFormSectionDescriptor alloc] init];
