@@ -67,7 +67,10 @@
         
         NSString *base64String = [[user dataUsingEncoding:NSUTF8StringEncoding] base64EncodedStringWithOptions:0];
         
-        url = [url URLByAppendingPathComponent:base64String];
+        if(base64String) {
+            url = [url URLByAppendingPathComponent:base64String];
+        }
+        
         
     } else {
         url = [url URLByAppendingPathComponent:username];
