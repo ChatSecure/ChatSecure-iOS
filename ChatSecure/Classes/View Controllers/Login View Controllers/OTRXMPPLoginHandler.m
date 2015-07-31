@@ -98,7 +98,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedNotification:) name:OTRXMPPLoginStatusNotificationName object:self.xmppManager];
 }
 
-- (void)performActionWithValidForm:(XLFormDescriptor *)form account:(OTRXMPPAccount *)account completion:(void (^)(NSError *, OTRAccount *))completion
+- (void)performActionWithValidForm:(XLFormDescriptor *)form account:(OTRXMPPAccount *)account completion:(void (^)(OTRAccount * account, NSError *error))completion
 {
     self.completion = completion;
     [self prepareForXMPPConnectionFrom:form account:account];
@@ -111,19 +111,23 @@
 {
     OTRLoginStatus newStatus = [notification.userInfo[OTRXMPPNewLoginStatusKey] integerValue];
     NSError *error = notification.userInfo[OTRXMPPLoginErrorKey];
-    
+    OTRAccount *account = self.xmppManager.account;
+
     if (newStatus == OTRLoginStatusAuthenticated) {
         [[NSNotificationCenter defaultCenter] removeObserver:self];
         
         // Account has been created, so save the password
-        OTRAccount *account = self.xmppManager.account;
         account.password = self.password;
         
-        self.completion(nil,account);
+        if (self.completion) {
+            self.completion(account,nil);
+        }
     }
     else if (error) {
         [[NSNotificationCenter defaultCenter] removeObserver:self];
-        self.completion(error,self.xmppManager.account);
+        if (self.completion) {
+            self.completion(account,error);
+        }
     }
 }
 

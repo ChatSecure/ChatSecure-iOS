@@ -11,7 +11,7 @@
 
 @implementation OTRXMPPTorLoginHandler
 
-- (void)performActionWithValidForm:(XLFormDescriptor *)form account:(OTRAccount *)account completion:(void (^)(NSError *, OTRAccount *))completion
+- (void)performActionWithValidForm:(XLFormDescriptor *)form account:(OTRAccount *)account completion:(void (^)(OTRAccount * account, NSError *error))completion
 {
     //check tor is running
     if ([OTRTorManager sharedInstance].torManager.status == CPAStatusOpen) {
@@ -21,7 +21,7 @@
             
             if (error) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    completion(error,account);
+                    completion(account,error);
                 });
             } else {
                 [super performActionWithValidForm:form account:account completion:completion];

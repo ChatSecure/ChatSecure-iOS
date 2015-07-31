@@ -66,23 +66,21 @@
         self.loginCreateButtonItem.enabled = NO;
         self.navigationItem.leftBarButtonItem.enabled = NO;
         self.navigationItem.backBarButtonItem.enabled = NO;
-        __weak typeof(self)weakSelf = self;
-        [self.createLoginHandler performActionWithValidForm:self.form account:self.account completion:^(NSError *error, OTRAccount *account) {
-            __strong typeof(weakSelf)strongSelf = weakSelf;
+        [self.createLoginHandler performActionWithValidForm:self.form account:self.account completion:^(OTRAccount *account, NSError *error) {
             self.form.disabled = NO;
-            strongSelf.loginCreateButtonItem.enabled = YES;
-            strongSelf.navigationItem.backBarButtonItem.enabled = YES;
-            strongSelf.navigationItem.leftBarButtonItem.enabled = YES;
-            [MBProgressHUD hideAllHUDsForView:strongSelf.view animated:YES];
+            self.loginCreateButtonItem.enabled = YES;
+            self.navigationItem.backBarButtonItem.enabled = YES;
+            self.navigationItem.leftBarButtonItem.enabled = YES;
+            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
             if (error) {
-                [strongSelf handleError:error];
+                [self handleError:error];
             } else {
-                strongSelf.account = account;
+                self.account = account;
                 [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-                    [strongSelf.account saveWithTransaction:transaction];
+                    [self.account saveWithTransaction:transaction];
                 }];
-                if (strongSelf.successBlock) {
-                    strongSelf.successBlock();
+                if (self.completionBlock) {
+                    self.completionBlock(account, nil);
                 } else {
                     [self dismissViewControllerAnimated:YES completion:nil];
                 }

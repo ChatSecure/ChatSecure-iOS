@@ -58,7 +58,7 @@
     }
 }
 
-- (void)performActionWithValidForm:(XLFormDescriptor *)form account:(OTRAccount *)account completion:(void (^)(NSError *, OTRAccount *))completion
+- (void)performActionWithValidForm:(XLFormDescriptor *)form account:(OTRAccount *)account completion:(void (^)(OTRAccount * account, NSError *error))completion
 {
     self.password = [OTRPasswordGenerator passwordWithLength:25];//Create random password
     [super performActionWithValidForm:form account:account completion:completion];

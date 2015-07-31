@@ -44,7 +44,7 @@
     return account;
 }
 
-- (void)performActionWithValidForm:(XLFormDescriptor *)form account:(OTRAccount *)account completion:(void (^)(NSError *, OTRAccount *))completion
+- (void)performActionWithValidForm:(XLFormDescriptor *)form account:(OTRAccount *)account completion:(void (^)(OTRAccount * account, NSError *error))completion
 {
     self.completion = completion;
     [self prepareForXMPPConnectionFrom:form account:(OTRXMPPAccount *)account];
@@ -53,7 +53,6 @@
     if ([passowrdFromForm length]) {
         _password = passowrdFromForm;
     }
-    
 
     [self.xmppManager registerNewAccountWithPassword:self.password];
     

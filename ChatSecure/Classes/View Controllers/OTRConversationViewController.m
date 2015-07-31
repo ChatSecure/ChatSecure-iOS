@@ -149,18 +149,10 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     if (!hasAccounts) {
         OTRWelcomeViewController *welcomeViewController = [[OTRWelcomeViewController alloc] init];
         __weak OTRWelcomeViewController *weakVC = welcomeViewController;
-        [welcomeViewController setSuccessBlock:^{
-            OTRInviteViewController *inviteViewController = [[OTRInviteViewController alloc] init];
-            __block OTRAccount *account = nil;
-            [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * transaction) {
-                [transaction enumerateKeysAndObjectsInCollection:[OTRAccount collection] usingBlock:^(NSString * key, id object, BOOL *stop) {
-                    account = object;
-                    *stop = YES;
-                }];
-            }];
-            inviteViewController.account = account;
-            [inviteViewController.navigationItem setHidesBackButton:YES animated:YES];
-            [weakVC.navigationController pushViewController:inviteViewController animated:YES];
+        [welcomeViewController setCompletionBlock:^(OTRAccount *account, NSError *error) {
+            if (account) {
+                [OTRInviteViewController showInviteFromVC:weakVC withAccount:account];
+            }
         }];
         UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:welcomeViewController];
         nav.modalPresentationStyle = UIModalPresentationFullScreen;

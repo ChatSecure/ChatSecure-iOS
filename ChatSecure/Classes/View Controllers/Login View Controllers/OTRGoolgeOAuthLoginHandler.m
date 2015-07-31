@@ -12,7 +12,7 @@
 
 @implementation OTRGoolgeOAuthLoginHandler
 
-- (void)performActionWithValidForm:(XLFormDescriptor *)form account:(OTROAuthXMPPAccount *)account completion:(void (^)(NSError *, OTRAccount *))completion
+- (void)performActionWithValidForm:(XLFormDescriptor *)form account:(OTROAuthXMPPAccount *)account completion:(void (^)(OTRAccount * account, NSError *error))completion
 {
     account = (OTROAuthXMPPAccount *)[self moveValues:form intoAccount:account];
     [OTROAuthRefresher refreshAccount:account completion:^(id token, NSError *error) {
@@ -21,7 +21,7 @@
             [super performActionWithValidForm:form account:account completion:completion];
         } else if (completion) {
             //Error refreshing account
-            completion(error,account);
+            completion(account, error);
         }
     }];
 }

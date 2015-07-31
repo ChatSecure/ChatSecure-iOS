@@ -172,4 +172,16 @@ static CGFloat const kOTRInvitePadding = 10;
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
++ (void) showInviteFromVC:(UIViewController *)vc withAccount:(OTRAccount *)account {
+    NSParameterAssert(vc != nil);
+    NSParameterAssert(account != nil);
+    if (!vc || !account) {
+        return;
+    }
+    OTRInviteViewController *inviteViewController = [[OTRInviteViewController alloc] init];
+    inviteViewController.account = account;
+    [inviteViewController.navigationItem setHidesBackButton:YES animated:YES];
+    [vc.navigationController pushViewController:inviteViewController animated:YES];
+}
+
 @end

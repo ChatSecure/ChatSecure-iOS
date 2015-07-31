@@ -77,29 +77,15 @@
 - (NSArray *)defaultAccountArray
 {
     NSMutableArray *accountArray = [NSMutableArray array];
-    __weak typeof(self)weakSelf = self;
-    
-    void (^successBlock)(void) = ^void(void) {
-        __strong typeof(weakSelf)strongSelf = weakSelf;
-        if (strongSelf.successBlock) {
-            strongSelf.successBlock();
-        }
-    };
     
     [accountArray addObject:[OTRWelcomeAccountInfo accountInfoWithText:@"XMPP" image:[UIImage imageNamed:@"xmpp"] didSelectBlock:^{
-        __strong typeof(weakSelf)strongSelf = weakSelf;
-        
         OTRXMPPAccount *xmppAccount = [[OTRXMPPAccount alloc] initWithAccountType:OTRAccountTypeJabber];
         OTRBaseLoginViewController *loginViewController = [OTRBaseLoginViewController loginViewControllerForAccount:xmppAccount];
-        loginViewController.successBlock = successBlock;
+        loginViewController.completionBlock = self.completionBlock;
         loginViewController.account = xmppAccount;
-        
-        [strongSelf.navigationController pushViewController:loginViewController animated:YES];
+        [self.navigationController pushViewController:loginViewController animated:YES];
     }]];
     [accountArray addObject:[OTRWelcomeAccountInfo accountInfoWithText:@"Google" image:[UIImage imageNamed:@"gtalk"] didSelectBlock:^{
-        __strong typeof(weakSelf)strongSelf = weakSelf;
-        
-        
         //Authenicate and go through google oauth
         GTMOAuth2ViewControllerTouch * oauthViewController = [GTMOAuth2ViewControllerTouch controllerWithScope:GOOGLE_APP_SCOPE clientID:GOOGLE_APP_ID clientSecret:kOTRGoogleAppSecret keychainItemName:nil completionHandler:^(GTMOAuth2ViewControllerTouch *viewController, GTMOAuth2Authentication *auth, NSError *error) {
             if (!error) {
@@ -113,12 +99,12 @@
                 googleAccount.oAuthTokenDictionary = auth.parameters;
                 
                 OTRBaseLoginViewController *loginViewController = [[OTRBaseLoginViewController alloc] initWithForm:[OTRXLFormCreator formForAccount:googleAccount] style:UITableViewStyleGrouped];
-                loginViewController.successBlock = successBlock;
+                loginViewController.completionBlock = self.completionBlock;
                 loginViewController.account = googleAccount;
                 OTRGoolgeOAuthLoginHandler *loginHandler = [[OTRGoolgeOAuthLoginHandler alloc] init];
                 loginViewController.createLoginHandler = loginHandler;
                 
-                NSMutableArray *viewControllers = [strongSelf.navigationController.viewControllers mutableCopy];
+                NSMutableArray *viewControllers = [self.navigationController.viewControllers mutableCopy];
                 [viewControllers removeObject:viewController];
                 [viewControllers addObject:loginViewController];
                 [self.navigationController setViewControllers:viewControllers animated:YES];

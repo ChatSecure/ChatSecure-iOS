@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+@class OTRAccount;
+
 @interface OTRWelcomeAccountInfo : NSObject
 
 @property (nonatomic, strong) UIImage *image;
@@ -24,7 +26,7 @@
 
 - (instancetype) initWithAccountInfoArray:(NSArray*)accountInfoArray;
 
-@property (nonatomic, copy) void (^successBlock)(void);
+@property (nonatomic, copy) void (^completionBlock)(OTRAccount * account, NSError *error);
 
 
 @end

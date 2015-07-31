@@ -53,6 +53,7 @@
 #import "OTRBaseLoginViewController.h"
 #import "OTRXLFormCreator.h"
 #import <KVOController/FBKVOController.h>
+#import "OTRInviteViewController.h"
 
 static NSString *const circleImageName = @"31-circle-plus-large.png";
 
@@ -360,8 +361,10 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     
     OTRWelcomeViewController *welcomeViewController = [[OTRWelcomeViewController alloc] init];
     welcomeViewController.showNavigationBar = NO;
-    [welcomeViewController setSuccessBlock:^{
-        NSLog(@"Finished setting up account");
+    [welcomeViewController setCompletionBlock:^(OTRAccount *account, NSError *error) {
+        if (account) {
+            [OTRInviteViewController showInviteFromVC:self withAccount:account];
+        }
     }];
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:welcomeViewController];
     [self presentViewController:nav animated:YES completion:nil];

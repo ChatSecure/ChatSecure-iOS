@@ -10,7 +10,7 @@
 
 @class OTRCircleView;
 @class OTRCircleButtonView;
-
+@class OTRAccount;
 
 @interface OTRWelcomeViewController : UIViewController
 
@@ -20,6 +20,6 @@
 
 @property (nonatomic) BOOL showNavigationBar;
 
-@property (nonatomic, copy) void (^successBlock)(void);
+@property (nonatomic, copy) void (^completionBlock)(OTRAccount *account, NSError *error);
 
 @end

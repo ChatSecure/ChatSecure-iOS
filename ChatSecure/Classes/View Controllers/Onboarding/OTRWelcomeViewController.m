@@ -115,7 +115,7 @@
     OTRBaseLoginViewController *createAccountViewController = [[OTRBaseLoginViewController alloc] initWithForm:[OTRXLFormCreator formForAccountType:OTRAccountTypeJabber createAccount:YES] style:UITableViewStyleGrouped];
     createAccountViewController.createLoginHandler = [[OTRXMPPCreateAccountHandler alloc] init];
     createAccountViewController.account = [[OTRXMPPAccount alloc] initWithAccountType:OTRAccountTypeJabber];
-    [createAccountViewController setSuccessBlock:self.successBlock];
+    createAccountViewController.completionBlock = self.completionBlock;
     [self.navigationController pushViewController:createAccountViewController animated:YES];
 }
 
@@ -124,7 +124,7 @@
     OTRBaseLoginViewController *createAccountViewController = [[OTRBaseLoginViewController alloc] initWithForm:[OTRXLFormCreator formForAccountType:OTRAccountTypeXMPPTor createAccount:YES] style:UITableViewStyleGrouped];
     createAccountViewController.createLoginHandler = [[OTRXMPPCreateAccountHandler alloc] init];
     createAccountViewController.account = [[OTRXMPPAccount alloc] initWithAccountType:OTRAccountTypeXMPPTor];
-    [createAccountViewController setSuccessBlock:self.successBlock];
+    createAccountViewController.completionBlock = self.completionBlock;
     [self.navigationController pushViewController:createAccountViewController animated:YES];
 }
 

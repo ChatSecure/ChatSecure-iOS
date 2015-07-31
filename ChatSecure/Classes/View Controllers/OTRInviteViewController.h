@@ -19,4 +19,6 @@
 
 @property (nonatomic ,strong) OTRAccount *account;
 
++ (void) showInviteFromVC:(UIViewController*)vc withAccount:(OTRAccount*)account;
+
 @end
