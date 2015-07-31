@@ -31,6 +31,7 @@
 #import "OTRAppDelegate.h"
 #import "OTRProtocolManager.h"
 #import "OTRWelcomeViewController.h"
+#import "OTRInviteViewController.h"
 
 
 static CGFloat kOTRConversationCellHeight = 80.0;
@@ -147,9 +148,19 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     //If there is any number of accounts launch into default conversation view otherwise onboarding time
     if (!hasAccounts) {
         OTRWelcomeViewController *welcomeViewController = [[OTRWelcomeViewController alloc] init];
-        __weak id weakVC = welcomeViewController;
+        __weak OTRWelcomeViewController *weakVC = welcomeViewController;
         [welcomeViewController setSuccessBlock:^{
-            [weakVC dismissViewControllerAnimated:YES completion:nil];
+            OTRInviteViewController *inviteViewController = [[OTRInviteViewController alloc] init];
+            __block OTRAccount *account = nil;
+            [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * transaction) {
+                [transaction enumerateKeysAndObjectsInCollection:[OTRAccount collection] usingBlock:^(NSString * key, id object, BOOL *stop) {
+                    account = object;
+                    *stop = YES;
+                }];
+            }];
+            inviteViewController.account = account;
+            [inviteViewController.navigationItem setHidesBackButton:YES animated:YES];
+            [weakVC.navigationController pushViewController:inviteViewController animated:YES];
         }];
         UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:welcomeViewController];
         nav.modalPresentationStyle = UIModalPresentationFullScreen;
