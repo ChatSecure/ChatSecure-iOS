@@ -113,7 +113,7 @@ static CGFloat const kOTRInvitePadding = 10;
 
 - (void)skipPressed:(id)sender
 {
-    
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)shareSMSPressed:(id)sender
