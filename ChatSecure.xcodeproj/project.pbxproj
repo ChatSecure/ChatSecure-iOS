@@ -12,7 +12,6 @@
 		63039E931B0D1DFC007C9978 /* OTRXMPPServerTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63039E921B0D1DFC007C9978 /* OTRXMPPServerTableViewCell.m */; };
 		63039E981B0D43FE007C9978 /* OTRXMPPServerListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63039E971B0D43FE007C9978 /* OTRXMPPServerListViewController.m */; };
 		632461521A1ADC77000EF33B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 633104D61A169EC800C17BAE /* Localizable.strings */; };
-		632461581A1AE553000EF33B /* OTRCoreDataMigrationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 632461571A1AE553000EF33B /* OTRCoreDataMigrationTests.m */; };
 		633106771A16D1A300C17BAE /* NSURL+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105031A16D1A300C17BAE /* NSURL+ChatSecure.m */; };
 		633106781A16D1A300C17BAE /* UIActionSheet+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105051A16D1A300C17BAE /* UIActionSheet+ChatSecure.m */; };
 		633106791A16D1A300C17BAE /* UIActivity+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105071A16D1A300C17BAE /* UIActivity+ChatSecure.m */; };
@@ -219,7 +218,6 @@
 		63039E921B0D1DFC007C9978 /* OTRXMPPServerTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPServerTableViewCell.m; sourceTree = "<group>"; };
 		63039E961B0D43FE007C9978 /* OTRXMPPServerListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPServerListViewController.h; sourceTree = "<group>"; };
 		63039E971B0D43FE007C9978 /* OTRXMPPServerListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPServerListViewController.m; sourceTree = "<group>"; };
-		632461571A1AE553000EF33B /* OTRCoreDataMigrationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRCoreDataMigrationTests.m; sourceTree = "<group>"; };
 		633104D51A169EC800C17BAE /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		633104D81A169F0E00C17BAE /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		633104DA1A169FF900C17BAE /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1139,7 +1137,6 @@
 				D9A3CB2B1B2798D7000A50C6 /* XMPPURITests.m */,
 				636C63201B571B56008FEE69 /* OTRURLTests.m */,
 				63DDD8B41A9E94B700C0A918 /* OTRMediaTests.m */,
-				632461571A1AE553000EF33B /* OTRCoreDataMigrationTests.m */,
 				6396AFB71A169D54009F3E6C /* Supporting Files */,
 			);
 			path = ChatSecureTests;
@@ -1703,7 +1700,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				632461581A1AE553000EF33B /* OTRCoreDataMigrationTests.m in Sources */,
 				D9A3CB2C1B2798D7000A50C6 /* XMPPURITests.m in Sources */,
 				63DDD8B51A9E94B700C0A918 /* OTRMediaTests.m in Sources */,
 				636C63211B571B56008FEE69 /* OTRURLTests.m in Sources */,

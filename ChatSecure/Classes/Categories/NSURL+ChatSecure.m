@@ -45,7 +45,7 @@
 }
 
 + (NSURL*) otr_shareBaseURL {
-    return [NSURL URLWithString:@"https://chatsecure.org/invitation/"];
+    return [NSURL URLWithString:@"https://chatsecure.org/i/#"];
 }
 
 
@@ -62,7 +62,7 @@
         
         NSString *user = username;
         if ([fingerprint length]) {
-            user = [user stringByAppendingFormat:@"?%@",fingerprint];
+            user = [user stringByAppendingFormat:@"?otr=%@",fingerprint];
         }
         
         NSString *base64String = [[user dataUsingEncoding:NSUTF8StringEncoding] base64EncodedStringWithOptions:0];
@@ -102,7 +102,7 @@
             //Base64
             NSData *data = [[NSData alloc] initWithBase64EncodedString:lastComponent options:0];
             NSString *utf8String = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-            NSArray *components = [utf8String componentsSeparatedByString:@"?"];
+            NSArray *components = [utf8String componentsSeparatedByString:@"?otr="];
             completion(components.firstObject, components.lastObject);
         }
     }
