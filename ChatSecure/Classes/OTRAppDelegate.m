@@ -58,6 +58,7 @@
 #import "XMPPURI.h"
 #import "OTRWelcomeViewController.h"
 #import "OTRProtocolManager.h"
+#import "OTRInviteViewController.h"
 
 #if CHATSECURE_DEMO
 #import "OTRChatDemo.h"
@@ -118,7 +119,17 @@
 #endif
     }
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    self.window.rootViewController = rootViewController;
+    
+    ///////////
+    OTRInviteViewController *inviteVC = [[OTRInviteViewController alloc] init];
+    OTRAccount *account = [[OTRAccount alloc] init];
+    account.username = @"test@example.com";
+    inviteVC.account = account;
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:inviteVC];
+    self.window.rootViewController = nav;
+    ////////////
+    
+    //self.window.rootViewController = rootViewController;
     [self.window makeKeyAndVisible];
     
     application.applicationIconBadgeNumber = 0;

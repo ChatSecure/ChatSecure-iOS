@@ -358,12 +358,12 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 }
 
 - (void) addAccount:(id)sender {
-    
     OTRWelcomeViewController *welcomeViewController = [[OTRWelcomeViewController alloc] init];
+    __weak id welcomeVC = welcomeViewController;
     welcomeViewController.showNavigationBar = NO;
     [welcomeViewController setCompletionBlock:^(OTRAccount *account, NSError *error) {
         if (account) {
-            [OTRInviteViewController showInviteFromVC:self withAccount:account];
+            [OTRInviteViewController showInviteFromVC:welcomeVC withAccount:account];
         }
     }];
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:welcomeViewController];

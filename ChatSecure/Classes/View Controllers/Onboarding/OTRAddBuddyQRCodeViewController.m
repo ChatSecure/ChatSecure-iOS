@@ -25,10 +25,11 @@
 
 @implementation OTRAddBuddyQRCodeViewController
 
-- (instancetype)initWIthAccountID:(NSString *)accountUniqueID completion:(void (^)(void))completion
+- (instancetype)initWithAccount:(OTRAccount *)account completion:(void (^)(void))completion
 {
     if(self = [super initWithCancelButtonTitle:CANCEL_STRING]){
-        self.qrCodeDelegate = [[OTRQRCodeReaderDelegate alloc] initWithAccountUniqueId:accountUniqueID];
+        self.account = account;
+        self.qrCodeDelegate = [[OTRQRCodeReaderDelegate alloc] initWithAccount:account];
         self.qrCodeDelegate.completion = completion;
         
         self.delegate = self.qrCodeDelegate;
@@ -69,14 +70,8 @@
 
 - (void)showOwnQRCode:(id)sender
 {
-    __block OTRAccount *account = nil;
-    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        account = [OTRAccount fetchObjectWithUniqueID:self.qrCodeDelegate.accountUniqueID transaction:transaction];
-    }];
-    
-    
     //XMPPURI *uri = [[XMPPURI alloc] initWithJID:[XMPPJID jidWithString:account.username] queryAction:@"subscribe" queryParameters:nil];
-    NSURL *url = [NSURL otr_shareLink:[NSURL otr_shareBaseURL].absoluteString username:account.username fingerprint:nil base64Encoded:YES];
+    NSURL *url = [NSURL otr_shareLink:[NSURL otr_shareBaseURL].absoluteString username:self.account.username fingerprint:nil base64Encoded:YES];
     OTRQRCodeViewController *qrCodeViewController = [[OTRQRCodeViewController alloc] initWithQRString:url.absoluteString];
     [self.navigationController pushViewController:qrCodeViewController animated:YES];
 }

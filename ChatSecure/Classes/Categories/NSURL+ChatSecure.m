@@ -55,11 +55,10 @@
              fingerprint:(NSString *)fingerprint
            base64Encoded:(BOOL)base64Encoded
 {
-    
-    NSURL *url = [NSURL URLWithString:baseURL];
-    
+    NSParameterAssert(baseURL);
+    NSParameterAssert(username);
+    NSString *urlString = nil;
     if (base64Encoded) {
-        
         NSString *user = username;
         if ([fingerprint length]) {
             user = [user stringByAppendingFormat:@"?otr=%@",fingerprint];
@@ -68,17 +67,15 @@
         NSString *base64String = [[user dataUsingEncoding:NSUTF8StringEncoding] base64EncodedStringWithOptions:0];
         
         if(base64String) {
-            url = [url URLByAppendingPathComponent:base64String];
+            urlString = [NSString stringWithFormat:@"%@%@", baseURL, base64String];
         }
-        
-        
     } else {
-        url = [url URLByAppendingPathComponent:username];
+        urlString = [baseURL stringByAppendingString:username];
         if ([fingerprint length]) {
-            url = [url URLByAppendingPathComponent:fingerprint];
+            urlString = [urlString stringByAppendingString:fingerprint];
         }
     }
-    
+    NSURL *url = [NSURL URLWithString:urlString];
     return url;
 }
 

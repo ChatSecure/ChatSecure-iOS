@@ -12,10 +12,10 @@
 
 @implementation OTRQRCodeReaderDelegate
 
-- (instancetype)initWithAccountUniqueId:(NSString *)accountUniqueID
+- (instancetype)initWithAccount:(OTRAccount *)account
 {
     if (self = [super init]) {
-        self.accountUniqueID = accountUniqueID;
+        self.account = account;
     }
     return self;
 }

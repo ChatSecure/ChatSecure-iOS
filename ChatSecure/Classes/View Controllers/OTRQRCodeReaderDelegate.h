@@ -8,12 +8,13 @@
 
 #import <Foundation/Foundation.h>
 #import "QRCodeReaderViewController.h"
+@class OTRAccount;
 
 @interface OTRQRCodeReaderDelegate : NSObject <QRCodeReaderDelegate>
 
-@property (nonatomic, strong) NSString *accountUniqueID;
+@property (nonatomic, strong) OTRAccount *account;
 @property (nonatomic, copy) void (^completion)(void);
 
-- (instancetype)initWithAccountUniqueId:(NSString *)accountUniqueID;
+- (instancetype)initWithAccount:(OTRAccount *)account;
 
 @end

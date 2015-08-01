@@ -39,7 +39,7 @@ static CGFloat const kOTRInvitePadding = 10;
 {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor lightGrayColor];
-    self.subtitleLabel.text = @"Tell your friends about ChatSecure";
+    //self.subtitleLabel.text = @"Tell your friends about ChatSecure";
     
     [self.view addSubview:self.titleImageView];
     [self.view addSubview:self.subtitleLabel];
@@ -53,7 +53,7 @@ static CGFloat const kOTRInvitePadding = 10;
         [shareButtons addObject:[self shareButtonWithIcon:FAEnvelope title:@"Invite SMS" action:@selector(shareSMSPressed:)]];
     }
     
-    [shareButtons addObject:[self shareButtonWithIcon:FAGlobe title:@"Invite Share" action:@selector(linkShareButtonPressed:)]];
+    [shareButtons addObject:[self shareButtonWithIcon:FAGlobe title:@"Share Invite Link" action:@selector(linkShareButtonPressed:)]];
     [shareButtons addObject:[self shareButtonWithIcon:FACamera title:@"Scan QR" action:@selector(qrButtonPressed:)]];
     
     
@@ -130,7 +130,7 @@ static CGFloat const kOTRInvitePadding = 10;
 - (void)qrButtonPressed:(id)sender
 {
     __weak typeof(self)weakSelf = self;
-    OTRAddBuddyQRCodeViewController *reader = [[OTRAddBuddyQRCodeViewController alloc] initWIthAccountID:self.account.uniqueId completion:^{
+    OTRAddBuddyQRCodeViewController *reader = [[OTRAddBuddyQRCodeViewController alloc] initWithAccount:self.account completion:^{
         [weakSelf dismissViewControllerAnimated:YES completion:nil];
     }];
     reader.modalPresentationStyle = UIModalPresentationFormSheet;
@@ -173,6 +173,7 @@ static CGFloat const kOTRInvitePadding = 10;
 }
 
 + (void) showInviteFromVC:(UIViewController *)vc withAccount:(OTRAccount *)account {
+    NSParameterAssert([NSThread currentThread] == [NSThread mainThread]);
     NSParameterAssert(vc != nil);
     NSParameterAssert(account != nil);
     if (!vc || !account) {

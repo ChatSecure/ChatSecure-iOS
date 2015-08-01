@@ -7,10 +7,12 @@
 //
 
 #import "QRCodeReaderViewController.h"
+@class OTRAccount;
 
 @interface OTRAddBuddyQRCodeViewController : QRCodeReaderViewController
 
+@property (nonatomic, strong) OTRAccount *account;
 
-- (instancetype)initWIthAccountID:(NSString *)accountUniqueID completion:(void (^)(void))completion;;
+- (instancetype)initWithAccount:(OTRAccount *)account completion:(void (^)(void))completion;
 
 @end

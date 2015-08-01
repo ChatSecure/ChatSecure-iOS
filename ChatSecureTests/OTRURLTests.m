@@ -29,7 +29,7 @@
 - (void)testCreatingURL {
     
     NSString *username = @"account@server.com";
-    NSString *baseUrl = @"https://chatsecure.org/i/";
+    NSString *baseUrl = @"https://chatsecure.org/i/#";
     NSString *fingerprint = @"fingerprint";
     
     NSURL *url = [NSURL otr_shareLink:baseUrl username:username fingerprint:fingerprint base64Encoded:NO];
