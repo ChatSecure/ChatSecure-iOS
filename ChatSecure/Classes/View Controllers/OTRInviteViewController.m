@@ -27,8 +27,7 @@ static CGFloat const kOTRInvitePadding = 10;
 
 - (instancetype)init
 {
-    if( self = [super init]) {
-        
+    if (self = [super init]) {
         _titleImageView = [[UIImageView alloc] initForAutoLayout];
         _subtitleLabel = [[UILabel alloc] initForAutoLayout];
     }

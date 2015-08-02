@@ -7,7 +7,7 @@
 //
 
 #import "OTRXMPPServerListViewController.h"
-#import "OTRXMPPServerTableViewCell.h"
+#import "XMPPServerInfoCell.h"
 #import "OTRImages.h"
 #import "Strings.h"
 #import "XLFormTextFieldCell.h"

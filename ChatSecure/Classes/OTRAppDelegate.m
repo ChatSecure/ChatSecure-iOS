@@ -119,8 +119,10 @@
 #endif
     }
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    
-    ///////////
+    self.window.rootViewController = rootViewController;
+
+    /*
+    /////////// testing invite VC
     OTRInviteViewController *inviteVC = [[OTRInviteViewController alloc] init];
     OTRAccount *account = [[OTRAccount alloc] init];
     account.username = @"test@example.com";
@@ -128,8 +130,8 @@
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:inviteVC];
     self.window.rootViewController = nav;
     ////////////
-    
-    //self.window.rootViewController = rootViewController;
+    */
+     
     [self.window makeKeyAndVisible];
     
     application.applicationIconBadgeNumber = 0;

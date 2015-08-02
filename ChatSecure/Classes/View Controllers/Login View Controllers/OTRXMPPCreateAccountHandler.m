@@ -12,7 +12,7 @@
 #import "OTRXLFormCreator.h"
 #import "OTRProtocolManager.h"
 #import "OTRDatabaseManager.h"
-#import "OTRXMPPServerTableViewCell.h"
+#import "XMPPServerInfoCell.h"
 #import "XMPPJID.h"
 #import "OTRXMPPManager.h"
 #import "OTRXMPPServerInfo.h"
