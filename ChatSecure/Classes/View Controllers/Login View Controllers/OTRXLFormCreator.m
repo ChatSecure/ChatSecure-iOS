@@ -47,17 +47,16 @@ NSString *const kOTRXLFormXMPPServerTag               = @"kOTRXLFormXMPPServerTa
 
 + (XLFormDescriptor *)formForAccountType:(OTRAccountType)accountType createAccount:(BOOL)createAccount;
 {
-    XLFormDescriptor *descriptor = [[XLFormDescriptor alloc] init];
-    
+    XLFormDescriptor *descriptor = nil;
     if (createAccount) {
-        
+        descriptor = [[XLFormDescriptor alloc] initWithTitle:NSLocalizedString(@"Sign Up", @"title for creating a new account")];
         XLFormSectionDescriptor *basicSection = [XLFormSectionDescriptor formSectionWithTitle:nil];
         [basicSection addFormRow:[self usernameTextFieldRowDescriptorWithValue:nil]];
         [basicSection addFormRow:[self passwordTextFieldRowDescriptorWithValue:nil]];
         
         
-        XLFormSectionDescriptor *serverSection = [XLFormSectionDescriptor formSectionWithTitle:@"Server"];
-        serverSection.footerTitle = @"Pick a server";
+        XLFormSectionDescriptor *serverSection = [XLFormSectionDescriptor formSectionWithTitle:NSLocalizedString(@"Server", @"server selection section title")];
+        serverSection.footerTitle = NSLocalizedString(@"Choose from our list of trusted servers, or bring your own.", @"server selection footer");
         [serverSection addFormRow:[self serverRowDescriptorWithValue:nil]];
         
         
@@ -66,6 +65,7 @@ NSString *const kOTRXLFormXMPPServerTag               = @"kOTRXLFormXMPPServerTa
         
         
     } else {
+        descriptor = [[XLFormDescriptor alloc] initWithTitle:NSLocalizedString(@"Log In", @"title for logging in")];
         XLFormSectionDescriptor *basicSection = [XLFormSectionDescriptor formSectionWithTitle:BASIC_STRING];
         XLFormSectionDescriptor *advancedSection = [XLFormSectionDescriptor formSectionWithTitle:ADVANCED_STRING];
         
