@@ -43,7 +43,8 @@ static CGFloat const kOTRInvitePadding = 10;
     [self.view addSubview:self.titleImageView];
     [self.view addSubview:self.subtitleLabel];
     
-    UIBarButtonItem *skipButton = [[UIBarButtonItem alloc] initWithTitle:SKIP_STRING style:UIBarButtonItemStylePlain target:self action:@selector(skipPressed:)];
+    UIImage *checkImage = [UIImage imageNamed:@"ic-check"];
+    UIBarButtonItem *skipButton = [[UIBarButtonItem alloc] initWithImage:checkImage style:UIBarButtonItemStylePlain target:self action:@selector(skipPressed:)];
     self.navigationItem.rightBarButtonItem = skipButton;
     
     NSMutableArray *shareButtons = [[NSMutableArray alloc] initWithCapacity:3];
@@ -94,6 +95,13 @@ static CGFloat const kOTRInvitePadding = 10;
         }
         [button autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:self.subtitleLabel withOffset:kOTRInvitePadding];
     }];
+}
+
+- (void)setAccount:(OTRAccount *)account
+{
+    if(![account isEqual:_account]) {
+        _account = account;
+    }
 }
 
 - (void)setShareButtons:(NSArray *)shareButtons
