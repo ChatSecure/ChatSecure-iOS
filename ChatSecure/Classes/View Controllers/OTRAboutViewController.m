@@ -73,7 +73,7 @@ static NSString *const kDefaultCellReuseIdentifier = @"kDefaultCellReuseIdentifi
 
 - (void) setupVersionLabel {
     self.versionLabel = [[UILabel alloc] init];
-    NSString *version = [[[NSBundle mainBundle] infoDictionary] valueForKey:@"CFBundleShortVersionString"];
+    NSString *version = [[[NSBundle mainBundle] infoDictionary] valueForKey:@"CFBundleName"];
     self.versionLabel.text = [NSString stringWithFormat:@"%@ %@", VERSION_STRING, version];
     self.versionLabel.textAlignment = NSTextAlignmentCenter;
     self.versionLabel.frame = CGRectMake(0, 0, self.view.frame.size.width, 30);

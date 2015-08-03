@@ -14,6 +14,7 @@
 #import <MessageUI/MessageUI.h>
 #import "OTRAccount.h"
 #import "NSURL+ChatSecure.h"
+#import "Strings.h"
 
 static CGFloat const kOTRInvitePadding = 10;
 
@@ -30,6 +31,8 @@ static CGFloat const kOTRInvitePadding = 10;
     if (self = [super init]) {
         _titleImageView = [[UIImageView alloc] initForAutoLayout];
         _subtitleLabel = [[UILabel alloc] initForAutoLayout];
+        _subtitleLabel.numberOfLines = 0;
+        _subtitleLabel.textColor = [UIColor whiteColor];
     }
     return self;
 }
@@ -50,11 +53,11 @@ static CGFloat const kOTRInvitePadding = 10;
     NSMutableArray *shareButtons = [[NSMutableArray alloc] initWithCapacity:3];
     
     if ([MFMessageComposeViewController canSendText]) {
-        [shareButtons addObject:[self shareButtonWithIcon:FAEnvelope title:@"Invite SMS" action:@selector(shareSMSPressed:)]];
+        [shareButtons addObject:[self shareButtonWithIcon:FAEnvelope title:INVITE_SMS_STRING action:@selector(shareSMSPressed:)]];
     }
     
-    [shareButtons addObject:[self shareButtonWithIcon:FAGlobe title:@"Share Invite Link" action:@selector(linkShareButtonPressed:)]];
-    [shareButtons addObject:[self shareButtonWithIcon:FACamera title:@"Scan QR" action:@selector(qrButtonPressed:)]];
+    [shareButtons addObject:[self shareButtonWithIcon:FAGlobe title:INVITE_LINK_STRING action:@selector(linkShareButtonPressed:)]];
+    [shareButtons addObject:[self shareButtonWithIcon:FACamera title:SCAN_QR_STRING action:@selector(qrButtonPressed:)]];
     
     
     self.shareButtons = shareButtons;
@@ -101,6 +104,8 @@ static CGFloat const kOTRInvitePadding = 10;
 {
     if(![account isEqual:_account]) {
         _account = account;
+        
+        self.subtitleLabel.text = [NSString stringWithFormat:@"%@ %@\n%@",ONBOARDING_SUCCESS_STRING,[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"] ,self.account.username];
     }
 }
 
