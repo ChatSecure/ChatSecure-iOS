@@ -37,7 +37,7 @@
 #import "OTRSettingsManager.h"
 #import "OTRSecrets.h"
 #import "OTRDatabaseManager.h"
-#import "SSKeychain.h"
+#import <SSKeychain/SSKeychain.h>
 
 #import "OTRLog.h"
 #import "DDTTYLogger.h"

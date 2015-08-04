@@ -13,7 +13,7 @@
 #import "OTRLog.h"
 #import "YapDatabaseRelationship.h"
 #import "OTRDatabaseView.h"
-#import "SSKeychain.h"
+#import <SSKeychain/SSKeychain.h>
 #import "OTRConstants.h"
 #import "YapDatabaseSecondaryIndexSetup.h"
 #import "YapDatabaseSecondaryIndex.h"

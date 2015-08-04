@@ -7,7 +7,7 @@
 //
 
 #import "OTRCertificatePinning.h"
-#import "SSKeychain.h"
+#import <SSKeychain/SSKeychain.h>
 #import "SSKeychainQuery.h"
 #import "GCDAsyncSocket.h"
 #import "AFSecurityPolicy.h"
