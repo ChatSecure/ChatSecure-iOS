@@ -978,5 +978,21 @@
     "CUSTOM_STRING" : {
         "comment": "Place holder label for custom domains",
         "string": "Custom"
+    },
+    "ONBOARDING_SUCCESS_STRING": {
+        "comment": "String used when onboarding works",
+        "string": "You're ready to"
+    },
+    "INVITE_SMS_STRING": {
+        "comment": "Label for inviting friends via sms",
+        "string": "Invite SMS"
+    },
+    "INVITE_LINK_STRING": {
+        "comment": "Label for inviting friends via URL",
+        "string": "Share Invite Link"
+    },
+    "SCAN_QR_STRING": {
+        "comment": "Label for sharing via QR Code",
+        "string": "Scan QR"
     }
 }
