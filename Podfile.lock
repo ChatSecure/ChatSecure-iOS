@@ -79,6 +79,7 @@ PODS:
   - Navajo (0.0.1)
   - OpenInChrome (0.0.1)
   - OTRKit (1.1.0)
+  - ParkedTextField (0.1.2)
   - ProxyKit/Client (1.0.2):
     - ProxyKit/common
   - ProxyKit/common (1.0.2):
@@ -273,6 +274,7 @@ DEPENDENCIES:
   - Navajo (~> 0.0)
   - OpenInChrome (~> 0.0)
   - OTRKit (from `Submodules/OTRKit/OTRKit.podspec`)
+  - ParkedTextField (~> 0.1)
   - ProxyKit/Client (from `Submodules/ProxyKit/ProxyKit.podspec`)
   - PureLayout (~> 2.0)
   - QRCodeReaderViewController (~> 3.5.0)
@@ -363,6 +365,7 @@ SPEC CHECKSUMS:
   Navajo: 5fb68239b4e3af4610f31925bae1ca8e6bab8eaa
   OpenInChrome: f1f3f9dec682216fe78a0d7fe0b5b263d6312c32
   OTRKit: 084a83936ac19e2dbd08096cd94263a979dc4502
+  ParkedTextField: 602a34c13acf59577ab1124ac8bc380a33f5fe3a
   ProxyKit: f7be31d07ed93444c433956d18e842ea9c709224
   PureLayout: f25f0bb904d5ccfe6e31da3cb869185259f02e0d
   QRCodeReaderViewController: f20275985c41ae551099641493ab364691d9113e

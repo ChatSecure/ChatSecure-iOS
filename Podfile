@@ -36,6 +36,7 @@ pod 'ARChromeActivity', '~> 1.0'
 pod 'CocoaAsyncSocket', '~> 7.4'
 pod 'JTSImageViewController', '~> 1.4'
 pod 'KVOController', '~> 1.0'
+pod 'ParkedTextField', '~> 0.1'
 
 # QR Codes
 pod 'QRCodeReaderViewController', '~> 3.5.0'

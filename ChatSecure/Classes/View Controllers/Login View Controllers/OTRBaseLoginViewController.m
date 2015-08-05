@@ -18,6 +18,9 @@
 #import "OTRAccount.h"
 #import "MBProgressHUD.h"
 #import "OTRXLFormCreator.h"
+#import "ChatSecure-Swift.h"
+#import "OTRXMPPServerInfo.h"
+#import "OTRXMPPAccount.h"
 
 @interface OTRBaseLoginViewController ()
 
@@ -33,6 +36,7 @@
     self.loginCreateButtonItem = [[UIBarButtonItem alloc] initWithTitle:LOGIN_STRING style:UIBarButtonItemStylePlain target:self action:@selector(loginButtonPressed:)];
     
     self.navigationItem.rightBarButtonItem = self.loginCreateButtonItem;
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -46,6 +50,9 @@
     [self.navigationController setNavigationBarHidden:NO animated:animated];
     [self.tableView reloadData];
     [self.createLoginHandler moveAccountValues:self.account intoForm:self.form];
+    
+    // We need to refresh the username row with the default selected server
+    [self updateUsernameRow];
 }
 
 - (void)setAccount:(OTRAccount *)account
@@ -108,6 +115,38 @@
         
     }];
     return validForm;
+}
+
+- (void) updateUsernameRow {
+    XLFormRowDescriptor *usernameRow = [self.form formRowWithTag:kOTRXLFormUsernameTextFieldTag];
+    if (!usernameRow) {
+        return;
+    }
+    NSMutableDictionary *username = [usernameRow.value mutableCopy];
+    XLFormRowDescriptor *serverRow = [self.form formRowWithTag:kOTRXLFormXMPPServerTag];
+    NSString *domain = nil;
+    if (serverRow) {
+        OTRXMPPServerInfo *serverInfo = serverRow.value;
+        domain = serverInfo.domain;
+    } else {
+        OTRXMPPAccount *xmppAccount = (OTRXMPPAccount*)self.account;
+        domain = xmppAccount.domain;
+    }
+    if (domain) {
+        [username setObject:domain forKey:[OTRUsernameCell DomainKey]];
+        usernameRow.value = username;
+        [self updateFormRow:usernameRow];
+    }
+}
+
+#pragma mark XLFormDescriptorDelegate
+
+-(void)formRowDescriptorValueHasChanged:(XLFormRowDescriptor *)formRow oldValue:(id)oldValue newValue:(id)newValue
+{
+    [super formRowDescriptorValueHasChanged:formRow oldValue:oldValue newValue:newValue];
+    if (formRow.tag == kOTRXLFormXMPPServerTag) {
+        [self updateUsernameRow];
+    }
 }
 
  #pragma - mark Errors and Alert Views

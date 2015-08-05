@@ -35,9 +35,9 @@
 /** can be relative path or absolute url string */
 @property (nonatomic, strong, readonly) NSString *logo;
 @property (nonatomic, strong, readonly) NSString *countryCode;
-/** root domain e.g. calyxinstitute.org */
+/** domain shown at the end of usernames e.g. dukgo.com */
 @property (nonatomic, strong) NSString *domain;
-/** server fqdn e.g. conference.calyxinstitute.org */
+/** server fqdn e.g. xmpp.dukgo.com */
 @property (nonatomic, strong, readonly) NSString *server;
 @property (nonatomic, strong, readonly) NSString *onion;
 @property (nonatomic, readonly) uint16_t portNumber;

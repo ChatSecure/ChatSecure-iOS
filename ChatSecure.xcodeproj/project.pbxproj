@@ -198,6 +198,8 @@
 		D9ADE5B91B606642009471FF /* OTRCircleButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = D9ADE5B81B606642009471FF /* OTRCircleButtonView.m */; };
 		D9BE65461B6A08ED002D4136 /* XMPPServerInfoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D9BE65441B6A08ED002D4136 /* XMPPServerInfoCell.m */; };
 		D9BE65471B6A08ED002D4136 /* XMPPServerInfoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9BE65451B6A08ED002D4136 /* XMPPServerInfoCell.xib */; };
+		D9C6E69F1B7148EF00572273 /* OTRUsernameCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9C6E69D1B7148EF00572273 /* OTRUsernameCell.xib */; };
+		D9C6E6A11B71575300572273 /* OTRUsernameCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9C6E6A01B71575300572273 /* OTRUsernameCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -622,6 +624,9 @@
 		D9BE65431B6A08ED002D4136 /* XMPPServerInfoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPServerInfoCell.h; sourceTree = "<group>"; };
 		D9BE65441B6A08ED002D4136 /* XMPPServerInfoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPServerInfoCell.m; sourceTree = "<group>"; };
 		D9BE65451B6A08ED002D4136 /* XMPPServerInfoCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = XMPPServerInfoCell.xib; sourceTree = "<group>"; };
+		D9C6E69B1B7148EF00572273 /* ChatSecure-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "ChatSecure-Bridging-Header.h"; path = "Classes/Views/Cells/ChatSecure-Bridging-Header.h"; sourceTree = "<group>"; };
+		D9C6E69D1B7148EF00572273 /* OTRUsernameCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OTRUsernameCell.xib; sourceTree = "<group>"; };
+		D9C6E6A01B71575300572273 /* OTRUsernameCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRUsernameCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1030,6 +1035,8 @@
 				633106611A16D1A300C17BAE /* OTRStatusMessageCell.m */,
 				633106641A16D1A300C17BAE /* OTRTextFieldTableViewCell.h */,
 				633106651A16D1A300C17BAE /* OTRTextFieldTableViewCell.m */,
+				D9C6E69D1B7148EF00572273 /* OTRUsernameCell.xib */,
+				D9C6E6A01B71575300572273 /* OTRUsernameCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -1119,6 +1126,7 @@
 		6396AF9D1A169D54009F3E6C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				D9C6E69B1B7148EF00572273 /* ChatSecure-Bridging-Header.h */,
 				6396AF9E1A169D54009F3E6C /* Info.plist */,
 				6396AF9F1A169D54009F3E6C /* main.m */,
 			);
@@ -1410,6 +1418,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D9C6E69F1B7148EF00572273 /* OTRUsernameCell.xib in Resources */,
 				632461521A1ADC77000EF33B /* Localizable.strings in Resources */,
 				6331072C1A16D1F200C17BAE /* Images.xcassets in Resources */,
 				D973D7061A2D4094004D353E /* Pods-acknowledgements.plist in Resources */,
@@ -1661,6 +1670,7 @@
 				633106FA1A16D1A300C17BAE /* OTRCertificatesViewController.m in Sources */,
 				6331068D1A16D1A300C17BAE /* OTRTorManager.m in Sources */,
 				633106C31A16D1A300C17BAE /* OTRLanguageSetting.m in Sources */,
+				D9C6E6A11B71575300572273 /* OTRUsernameCell.swift in Sources */,
 				633106D11A16D1A300C17BAE /* OTRXMPPAccount.m in Sources */,
 				63C4BD171A1E9BE1001696CD /* OTRManagedOAuthAccount.m in Sources */,
 				633106C71A16D1A300C17BAE /* OTRSetting.m in Sources */,
@@ -1828,11 +1838,13 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				BUNDLE_DISPLAY_NAME_SUFFIX = " β";
 				BUNDLE_ID_SUFFIX = .beta;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = ChatSecure/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "ChatSecure/Classes/Views/Cells/ChatSecure-Bridging-Header.h";
 			};
 			name = Beta;
 		};
@@ -1938,11 +1950,14 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				BUNDLE_DISPLAY_NAME_SUFFIX = " α";
 				BUNDLE_ID_SUFFIX = .debug;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = ChatSecure/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "ChatSecure/Classes/Views/Cells/ChatSecure-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
@@ -1954,11 +1969,13 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				BUNDLE_DISPLAY_NAME_SUFFIX = "";
 				BUNDLE_ID_SUFFIX = "";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = ChatSecure/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "ChatSecure/Classes/Views/Cells/ChatSecure-Bridging-Header.h";
 			};
 			name = Release;
 		};

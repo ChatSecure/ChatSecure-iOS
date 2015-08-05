@@ -14,6 +14,7 @@
 #import "OTRImages.h"
 #import "OTRXMPPServerListViewController.h"
 #import "OTRXMPPServerInfo.h"
+#import "ChatSecure-Swift.h"
 
 NSString *const kOTRXLFormUsernameTextFieldTag        = @"kOTRXLFormUsernameTextFieldTag";
 NSString *const kOTRXLFormPasswordTextFieldTag        = @"kOTRXLFormPasswordTextFieldTag";
@@ -30,13 +31,20 @@ NSString *const kOTRXLFormXMPPServerTag               = @"kOTRXLFormXMPPServerTa
 {
     XLFormDescriptor *descriptor = [self formForAccountType:account.accountType createAccount:NO];
     
-    [[descriptor formRowWithTag:kOTRXLFormUsernameTextFieldTag] setValue:account.username];
+    NSDictionary *username = [OTRUsernameCell createRowDictionaryValueForUsername:account.username domain:nil];
+    [[descriptor formRowWithTag:kOTRXLFormUsernameTextFieldTag] setValue:username];
     [[descriptor formRowWithTag:kOTRXLFormPasswordTextFieldTag] setValue:account.password];
     [[descriptor formRowWithTag:kOTRXLFormRememberPasswordSwitchTag] setValue:@(account.rememberPassword)];
     [[descriptor formRowWithTag:kOTRXLFormLoginAutomaticallySwitchTag] setValue:@(account.autologin)];
     
     if([account isKindOfClass:[OTRXMPPAccount class]]) {
         OTRXMPPAccount *xmppAccount = (OTRXMPPAccount *)account;
+        NSString *jidWithoutDomain = account.username;
+        if ([jidWithoutDomain containsString:@"@"]) {
+            jidWithoutDomain = [[jidWithoutDomain componentsSeparatedByString:@"@"] firstObject];
+        }
+        NSDictionary *username = [OTRUsernameCell createRowDictionaryValueForUsername:jidWithoutDomain domain:xmppAccount.domain];
+        [[descriptor formRowWithTag:kOTRXLFormUsernameTextFieldTag] setValue:username];
         [[descriptor formRowWithTag:kOTRXLFormHostnameTextFieldTag] setValue:xmppAccount.domain];
         [[descriptor formRowWithTag:kOTRXLFormPortTextFieldTag] setValue:@(xmppAccount.port)];
         [[descriptor formRowWithTag:kOTRXLFormResourceTextFieldTag] setValue:xmppAccount.resource];
@@ -131,7 +139,8 @@ NSString *const kOTRXLFormXMPPServerTag               = @"kOTRXLFormXMPPServerTa
 
 + (XLFormRowDescriptor *)usernameTextFieldRowDescriptorWithValue:(NSString *)value
 {
-    XLFormRowDescriptor *usernameDescriptor = [self textfieldFormDescriptorType:XLFormRowDescriptorTypeEmail withTag:kOTRXLFormUsernameTextFieldTag title:USERNAME_STRING placeHolder:XMPP_USERNAME_EXAMPLE_STRING value:value];
+    XLFormRowDescriptor *usernameDescriptor = [XLFormRowDescriptor formRowDescriptorWithTag:kOTRXLFormUsernameTextFieldTag rowType:[OTRUsernameCell kOTRFormRowDescriptorTypeUsername] title:USERNAME_STRING];
+    usernameDescriptor.value = value;
     usernameDescriptor.required = YES;
     return usernameDescriptor;
 }
@@ -187,11 +196,13 @@ NSString *const kOTRXLFormXMPPServerTag               = @"kOTRXLFormXMPPServerTa
     return resourceRowDescriptor;
 }
 
-+ (XLFormRowDescriptor *)serverRowDescriptorWithValue:(id)value
++ (XLFormRowDescriptor *)serverRowDescriptorWithValue:(OTRXMPPServerInfo *)value
 {
     XLFormRowDescriptor *xmppServerDescriptor = [XLFormRowDescriptor formRowDescriptorWithTag:kOTRXLFormXMPPServerTag rowType:kOTRFormRowDescriptorTypeXMPPServer];
-    
-    xmppServerDescriptor.value = [[OTRXMPPServerInfo defaultServerList] firstObject];
+    if (!value) {
+        value = [[OTRXMPPServerInfo defaultServerList] firstObject];
+    }
+    xmppServerDescriptor.value = value;
     xmppServerDescriptor.action.viewControllerClass = [OTRXMPPServerListViewController class];
     
     return xmppServerDescriptor;
