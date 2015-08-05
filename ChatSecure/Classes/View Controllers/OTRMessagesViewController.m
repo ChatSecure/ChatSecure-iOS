@@ -205,13 +205,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
     return _uiDatabaseConnection;
 }
 
-#pragma - mark KVO Methods
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
-{
-    [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
-}
-
 #pragma - mark Setters & getters
 
 - (OTRAttachmentPicker *)attachmentPicker
@@ -1276,8 +1269,13 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
         [self.uiDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
             updatedBuddy = [OTRBuddy fetchObjectWithUniqueID:self.buddy.uniqueId transaction:transaction];
         }];
-        
         self.buddy = updatedBuddy;
+    }
+    
+    // When deleting messages/buddies we shouldn't animate the changes
+    if (!self.buddy) {
+        [self.collectionView reloadData];
+        return;
     }
     
     //Changes in the messages add new one or deleted some

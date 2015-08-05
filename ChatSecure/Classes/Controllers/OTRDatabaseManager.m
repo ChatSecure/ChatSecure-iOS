@@ -25,10 +25,10 @@
 #import "OTRManagedFacebookAccount.h"
 #import "OTRGoogleOAuthXMPPAccount.h"
 #import "OTRAccount.h"
-#import "CoreData+MagicalRecord.h"
 #import "OTRMessage.h"
 #import "OTRMediaFileManager.h"
 #import "IOCipher.h"
+#import "NSFileManager+ChatSecure.h"
 
 NSString *const OTRYapDatabaseRelationshipName = @"OTRYapDatabaseRelationshipName";
 NSString *const OTRYapDatabseMessageIdSecondaryIndex = @"OTRYapDatabseMessageIdSecondaryIndex";
@@ -50,10 +50,15 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
     BOOL success = NO;
     if ([self setupYapDatabaseWithName:databaseName] )
     {
-        [self migrateCoreDataToYapDatabase];
         success = YES;
     }
-    success = [self setupSecureMediaStorage];
+    if (success) success = [self setupSecureMediaStorage];
+    
+    NSString *databaseDirectory = [OTRDatabaseManager yapDatabaseDirectory];
+    //Enumerate all files in yap database directory and exclude from backup
+    if (success) success = [[NSFileManager defaultManager] otr_excudeFromBackUpFilesInDirectory:databaseDirectory];
+    //fix file protection on existing files
+     if (success) success = [[NSFileManager defaultManager] otr_setFileProtection:NSFileProtectionCompleteUntilFirstUserAuthentication forFilesInDirectory:databaseDirectory];
     return success;
 }
 
@@ -71,64 +76,6 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
         DDLogError(@"Error starting media server: %@",error);
     }
     return success;
-}
-
-- (void)migrateCoreDataToYapDatabase
-{
-    NSString *legacyDatabaseName = @"db.sqlite";
-    NSURL * legacyDatabaseURL = [NSPersistentStore MR_urlForStoreName:legacyDatabaseName];
-    
-    NSURL * databaseURL = [NSPersistentStore MR_urlForStoreName:@"ChatSecure.sqlite"];
-    
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    if ([fileManager fileExistsAtPath:legacyDatabaseURL.path]) {
-        // migrate store
-        if([OTRDatabaseManager migrateLegacyStore:legacyDatabaseURL destinationStore:databaseURL]) {
-            [fileManager removeItemAtURL:legacyDatabaseURL error:nil];
-        }
-    }
-    
-    
-    if ([fileManager fileExistsAtPath:databaseURL.path])
-    {
-        NSURL *mom2 = [[NSBundle mainBundle] URLForResource:@"ChatSecure 2" withExtension:@"mom" subdirectory:@"ChatSecure.momd"];
-        NSURL *mom3 = [[NSBundle mainBundle] URLForResource:@"ChatSecure 3" withExtension:@"mom" subdirectory:@"ChatSecure.momd"];
-        NSManagedObjectModel *version2Model = [[NSManagedObjectModel alloc] initWithContentsOfURL:mom2];
-        NSManagedObjectModel *version3Model = [[NSManagedObjectModel alloc] initWithContentsOfURL:mom3];
-        
-        if ([OTRDatabaseManager isManagedObjectModel:version2Model compatibleWithStoreAtUrl:databaseURL]) {
-            [OTRDatabaseManager migrateLegacyStore:databaseURL destinationStore:databaseURL sourceModel:version2Model destinationModel:version3Model error:nil];
-        }
-        
-        
-        [MagicalRecord setShouldAutoCreateManagedObjectModel:NO];
-        [MagicalRecord setDefaultModelNamed:@"ChatSecure.momd"];
-        [MagicalRecord setupCoreDataStackWithAutoMigratingSqliteStoreNamed:@"ChatSecure.sqlite"];
-        
-         ////// Migrate core data to yapdatabase //////
-        
-        NSManagedObjectContext *context = [NSManagedObjectContext MR_defaultContext];
-        
-        NSArray *coreDataAccounts = [OTRManagedAccount MR_findAllInContext:context];
-        
-        NSMutableArray *accounts = [NSMutableArray array];
-        [coreDataAccounts enumerateObjectsUsingBlock:^(OTRManagedAccount *account, NSUInteger idx, BOOL *stop) {
-            OTRAccount *newAccount = [self accountWithCoreDataAccount:account];
-            if (newAccount) {
-                [accounts addObject:newAccount];
-            }
-        }];
-        
-        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-            [accounts enumerateObjectsUsingBlock:^(OTRAccount *account, NSUInteger idx, BOOL *stop) {
-                [account saveWithTransaction:transaction];
-            }];
-        }];
-        
-        [[NSFileManager defaultManager] removeItemAtURL:databaseURL error:nil];
-    }
-    
-    [OTRDatabaseManager deleteLegacyXMPPFiles];
 }
 
 - (OTRAccount *)accountWithCoreDataAccount:(OTRManagedAccount *)managedAccount
@@ -200,6 +147,7 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
     }
     NSString *databasePath = [[self class] yapDatabasePathWithName:name];
     
+    
     self.database = [[YapDatabase alloc] initWithPath:databasePath
                                            serializer:nil
                                          deserializer:nil
@@ -226,22 +174,6 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
     if (success) success = [OTRDatabaseView registerAllSubscriptionRequestsView];
     if (success) success = [OTRDatabaseView registerUnreadMessagesView];
     if (success) success = [self setupSecondaryIndexes];
-    
-    
-    
-    //Enumerate all files in yap database directory and exclude from backup
-    if (success) {
-        NSError *error = nil;
-        NSDirectoryEnumerator *directoryEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:databaseDirectory];
-        id file;
-        while ((file = [directoryEnumerator nextObject]) && success && !error) {
-            if([file isKindOfClass:[NSString class]]) {
-                NSString *fileName = file;
-                NSURL *url = [NSURL fileURLWithPath:[databaseDirectory stringByAppendingPathComponent:fileName]];
-                success = [url setResourceValue: @(YES) forKey: NSURLIsExcludedFromBackupKey error: &error];
-            }
-        }
-    }
     
     if (self.database && success) {
         return YES;

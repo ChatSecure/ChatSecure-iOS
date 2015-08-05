@@ -50,6 +50,7 @@
 #import "OTRShareSetting.h"
 #import "OTRActivityItemProvider.h"
 #import "OTRQRCodeActivity.h"
+#import <KVOController/FBKVOController.h>
 
 static NSString *const circleImageName = @"31-circle-plus-large.png";
 
@@ -109,6 +110,15 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     UIBarButtonItem *aboutButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"OTRInfoIcon"] style:UIBarButtonItemStylePlain target:self action:@selector(showAboutScreen)];
 
     self.navigationItem.rightBarButtonItem = aboutButton;
+    
+    ////// KVO //////
+    __weak typeof(self)weakSelf = self;
+    [self.KVOController observe:[OTRProtocolManager sharedInstance] keyPaths:@[NSStringFromSelector(@selector(numberOfConnectedProtocols)),NSStringFromSelector(@selector(numberOfConnectingProtocols))] options:NSKeyValueObservingOptionNew block:^(id observer, id object, NSDictionary *change) {
+        __strong typeof(weakSelf)strongSelf = weakSelf;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [strongSelf.tableView reloadSections:[[NSIndexSet alloc] initWithIndex:0] withRowAnimation:UITableViewRowAnimationNone];
+        });
+    }];
 }
 
 
@@ -116,29 +126,8 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 {
     [super viewWillAppear:animated];
     
-    [[OTRProtocolManager sharedInstance] addObserver:self forKeyPath:NSStringFromSelector(@selector(numberOfConnectedProtocols)) options:NSKeyValueObservingOptionNew context:NULL];
-    [[OTRProtocolManager sharedInstance] addObserver:self forKeyPath:NSStringFromSelector(@selector(numberOfConnectingProtocols)) options:NSKeyValueObservingOptionNew context:NULL];
-    
-    
     self.tableView.frame = self.view.bounds;
     [self.tableView reloadData];
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-    
-    [[OTRProtocolManager sharedInstance] removeObserver:self forKeyPath:NSStringFromSelector(@selector(numberOfConnectedProtocols))];
-    [[OTRProtocolManager sharedInstance] removeObserver:self forKeyPath:NSStringFromSelector(@selector(numberOfConnectingProtocols))];
-}
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
-{
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if ([keyPath isEqualToString:NSStringFromSelector(@selector(numberOfConnectedProtocols))] || [keyPath isEqualToString:NSStringFromSelector(@selector(numberOfConnectingProtocols))]) {
-            [self.tableView reloadSections:[[NSIndexSet alloc] initWithIndex:0] withRowAnimation:UITableViewRowAnimationNone];
-        }
-    });
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

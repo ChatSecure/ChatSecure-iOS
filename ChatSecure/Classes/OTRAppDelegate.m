@@ -77,11 +77,7 @@
     [[BITHockeyManager sharedHockeyManager] configureWithBetaIdentifier:kOTRHockeyBetaIdentifier
                                                          liveIdentifier:kOTRHockeyLiveIdentifier
                                                                delegate:self];
-    [[BITHockeyManager sharedHockeyManager].authenticator setIdentificationType:BITAuthenticatorIdentificationTypeDevice];
     [[BITHockeyManager sharedHockeyManager] startManager];
-#ifndef DEBUG
-    [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
-#endif
     
     [OTRCertificatePinning loadBundledCertificatesToKeychain];
     

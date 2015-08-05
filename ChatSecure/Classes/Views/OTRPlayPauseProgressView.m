@@ -160,7 +160,9 @@ NSString *const kOTRPlayProgressAnimationKey = @"kOTRPlayProgressAnimationKey";
 - (void)removePlayView
 {
     [self.playView removeFromSuperview];
-    [self removeConstraints:self.playViewConstraints];
+    if ([self.playViewConstraints count]) {
+        [self removeConstraints:self.playViewConstraints];
+    }
     self.playViewConstraints = nil;
 }
 

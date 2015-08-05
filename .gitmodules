@@ -15,7 +15,7 @@
 	url = git@github.com:chrisballinger/ProxyKit.git
 [submodule "Submodules/CPAProxy"]
 	path = Submodules/CPAProxy
-	url = git@github.com:ChatSecure/CPAProxy.git
+	url = git@github.com:ursachec/CPAProxy.git
 [submodule "Submodules/YapDatabase"]
 	path = Submodules/YapDatabase
 	url = git@github.com:chrisballinger/YapDatabase.git

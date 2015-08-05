@@ -52,10 +52,12 @@
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
         [[transaction ext:OTRAllAccountDatabaseViewExtensionName] enumerateKeysAndObjectsInGroup:OTRAllAccountGroup usingBlock:^(NSString *collection, NSString *key, OTRAccount *account, NSUInteger index, BOOL *stop) {
             [[OTRKit sharedInstance] fingerprintForAccountName:account.username protocol:account.protocolTypeString completion:^(NSString *fingerprint) {
-                if (fingerprint) {
-                    [fingerprintsArray addObject:@{kOTRKitAccountNameKey:account.username,kOTRKitFingerprintKey:fingerprint}];
-                    [weakSelf.tableView reloadData];
-                }
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (fingerprint) {
+                        [fingerprintsArray addObject:@{kOTRKitAccountNameKey:account.username,kOTRKitFingerprintKey:fingerprint}];
+                        [weakSelf.tableView reloadData];
+                    }
+                });
             }];
         }];
     }];
@@ -65,12 +67,14 @@
 {
     __weak OTRFingerprintsViewController *welf = self;
     [[OTRKit sharedInstance] requestAllFingerprints:^(NSArray *allFingerprints) {
-        NSSortDescriptor * usernameSortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kOTRKitUsernameKey ascending:YES];
-        NSSortDescriptor * accountNameSortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kOTRKitAccountNameKey ascending:YES];
-        NSSortDescriptor * trustSortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kOTRKitTrustKey ascending:NO];
-        NSArray * sortDescriptorsArray = @[usernameSortDescriptor,accountNameSortDescriptor,trustSortDescriptor];
-        self.buddyFingerprintsArray = [allFingerprints sortedArrayUsingDescriptors:sortDescriptorsArray];
-        [welf.tableView reloadData];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSSortDescriptor * usernameSortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kOTRKitUsernameKey ascending:YES];
+            NSSortDescriptor * accountNameSortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kOTRKitAccountNameKey ascending:YES];
+            NSSortDescriptor * trustSortDescriptor = [NSSortDescriptor sortDescriptorWithKey:kOTRKitTrustKey ascending:NO];
+            NSArray * sortDescriptorsArray = @[usernameSortDescriptor,accountNameSortDescriptor,trustSortDescriptor];
+            self.buddyFingerprintsArray = [allFingerprints sortedArrayUsingDescriptors:sortDescriptorsArray];
+            [welf.tableView reloadData];
+        });
     }];
 }
 
@@ -176,13 +180,10 @@
     if (indexPath.section == 1 && editingStyle == UITableViewCellEditingStyleDelete) {
         NSDictionary * dict = self.buddyFingerprintsArray[indexPath.row];
         
-        
         [[OTRKit sharedInstance] deleteFingerprint:dict[kOTRKitFingerprintKey] username:dict[kOTRKitUsernameKey] accountName:dict[kOTRKitAccountNameKey] protocol:dict[kOTRKitProtocolKey] completion:^(BOOL success) {
-            if (success) {
-                self.buddyFingerprintsArray = nil;
-                
-                [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationLeft];
-            }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self loadBuddyFingerprints];
+            });
         }];
     }
 }
