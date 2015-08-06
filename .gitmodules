@@ -7,9 +7,6 @@
 [submodule "Submodules/ChatSecure-Metadata"]
 	path = Submodules/ChatSecure-Metadata
 	url = git@github.com:ChatSecure/ChatSecure-Metadata.git
-[submodule "Submodules/OnionKit"]
-	path = Submodules/OnionKit
-	url = git@github.com:ChatSecure/OnionKit.git
 [submodule "Submodules/ProxyKit"]
 	path = Submodules/ProxyKit
 	url = git@github.com:chrisballinger/ProxyKit.git
