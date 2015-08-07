@@ -49,7 +49,7 @@
 #import "OTRUtilities.h"
 
 #import "OTRDatabaseManager.h"
-#import "YapDatabaseConnection.h"
+@import YapDatabase;
 #import "OTRXMPPBuddy.h"
 #import "OTRXMPPAccount.h"
 #import "OTRMessage.h"

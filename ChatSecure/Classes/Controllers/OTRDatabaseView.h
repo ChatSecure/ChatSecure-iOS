@@ -7,8 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "YapDatabaseViewMappings.h"
-#import "YapDatabaseView.h"
+@import YapDatabase;
+
 
 //Extension Strings
 extern NSString *OTRConversationDatabaseViewExtensionName;

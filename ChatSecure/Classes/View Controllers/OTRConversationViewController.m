@@ -20,19 +20,16 @@
 #import "OTRMessage.h"
 #import "UIViewController+ChatSecure.h"
 #import "OTRLog.h"
-#import "YapDatabaseView.h"
-#import "YapDatabase.h"
+@import YapDatabase;
+
 #import "OTRDatabaseManager.h"
-#import "YapDatabaseConnection.h"
 #import "OTRDatabaseView.h"
-#import "YapDatabaseViewMappings.h"
 #import "Strings.h"
 #import <KVOController/FBKVOController.h>
 #import "OTRAppDelegate.h"
 #import "OTRProtocolManager.h"
-#import "OTRWelcomeViewController.h"
 #import "OTRInviteViewController.h"
-
+#import "ChatSecure-Swift.h"
 
 static CGFloat kOTRConversationCellHeight = 80.0;
 
@@ -147,16 +144,17 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     }];
     //If there is any number of accounts launch into default conversation view otherwise onboarding time
     if (!hasAccounts) {
-        OTRWelcomeViewController *welcomeViewController = [[OTRWelcomeViewController alloc] init];
-        __weak OTRWelcomeViewController *weakVC = welcomeViewController;
+        UIStoryboard *onboardingStoryboard = [UIStoryboard storyboardWithName:@"Onboarding" bundle:[NSBundle mainBundle]];
+        UINavigationController *welcomeNavController = [onboardingStoryboard instantiateInitialViewController];
+        OTRWelcomeViewController *welcomeViewController = welcomeNavController.viewControllers[0];
+        __weak id welcomeVC = welcomeViewController;
         [welcomeViewController setCompletionBlock:^(OTRAccount *account, NSError *error) {
             if (account) {
-                [OTRInviteViewController showInviteFromVC:weakVC withAccount:account];
+                [OTRInviteViewController showInviteFromVC:welcomeVC withAccount:account];
             }
         }];
         UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:welcomeViewController];
-        nav.modalPresentationStyle = UIModalPresentationFullScreen;
-        [self presentViewController:nav animated:NO completion:nil];
+        [self presentViewController:nav animated:YES completion:nil];
         self.hasPresentedOnboarding = YES;
     }
 }

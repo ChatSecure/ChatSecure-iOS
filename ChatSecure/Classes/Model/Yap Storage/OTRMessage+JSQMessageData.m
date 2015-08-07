@@ -11,7 +11,7 @@
 #import "OTRBuddy.h"
 #import "OTRAccount.h"
 #import "OTRMediaItem.h"
-#import "YapDatabaseRelationshipTransaction.h"
+@import YapDatabase;
 
 @implementation OTRMessage (JSQMessageData)
 

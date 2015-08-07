@@ -7,8 +7,7 @@
 //
 
 #import "OTRWelcomeAccountTableViewDelegate.h"
-#import "OTRWelcomeViewController.h"
-#import "OTRAdvancedWelcomeViewController.h"
+#import "OTRExistingAccountViewController.h"
 
 @implementation OTRWelcomeAccountTableViewDelegate
 

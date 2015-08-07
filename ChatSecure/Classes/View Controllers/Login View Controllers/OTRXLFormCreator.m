@@ -137,19 +137,6 @@ NSString *const kOTRXLFormGenerateSecurePasswordTag               = @"kOTRXLForm
     return descriptor;
 }
 
-+ (XLFormDescriptor *)ChatSecureIDForm
-{
-    XLFormDescriptor *form = [XLFormDescriptor formDescriptor];
-    XLFormSectionDescriptor *section = [XLFormSectionDescriptor formSection];
-    XLFormRowDescriptor *usernameRow = [self usernameTextFieldRowDescriptorWithValue:nil];
-    [usernameRow.cellConfigAtConfigure setObject:@"ChatSecure ID" forKey:@"textField.placeholder"];
-    
-    [section addFormRow:usernameRow];
-    [form addFormSection:section];
-    
-    return form;
-}
-
 + (XLFormRowDescriptor *)textfieldFormDescriptorType:(NSString *)type withTag:(NSString *)tag title:(NSString *)title placeHolder:(NSString *)placeholder value:(id)value
 {
     XLFormRowDescriptor *textFieldDescriptor = [XLFormRowDescriptor formRowDescriptorWithTag:tag rowType:type title:title];

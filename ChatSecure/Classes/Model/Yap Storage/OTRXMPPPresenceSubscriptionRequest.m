@@ -8,7 +8,7 @@
 
 #import "OTRXMPPPresenceSubscriptionRequest.h"
 #import "OTRAccount.h"
-#import "YapDatabaseRelationshipTransaction.h"
+@import YapDatabase;
 #import "OTRDatabaseManager.h"
 #import "OTRXMPPAccount.h"
 

@@ -11,12 +11,9 @@
 #import "OTRManagedAccount.h"
 #import "OTREncryptionManager.h"
 #import "OTRLog.h"
-#import "YapDatabaseRelationship.h"
 #import "OTRDatabaseView.h"
 #import <SSKeychain/SSKeychain.h>
 #import "OTRConstants.h"
-#import "YapDatabaseSecondaryIndexSetup.h"
-#import "YapDatabaseSecondaryIndex.h"
 
 #import "OTRManagedOscarAccount.h"
 #import "OTRXMPPAccount.h"

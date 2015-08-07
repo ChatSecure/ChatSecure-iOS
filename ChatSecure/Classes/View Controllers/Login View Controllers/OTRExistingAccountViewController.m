@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Chris Ballinger. All rights reserved.
 //
 
-#import "OTRAdvancedWelcomeViewController.h"
+#import "OTRExistingAccountViewController.h"
 #import "PureLayout.h"
 #import "OTRCircleView.h"
 #import "OTRWelcomeAccountTableViewDelegate.h"
@@ -38,11 +38,11 @@
 
 @end
 
-@interface OTRAdvancedWelcomeViewController ()
+@interface OTRExistingAccountViewController ()
 @property (nonatomic, strong, readonly) OTRWelcomeAccountTableViewDelegate *tableDelegate;
 @end
 
-@implementation OTRAdvancedWelcomeViewController
+@implementation OTRExistingAccountViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -59,6 +59,27 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (instancetype) initWithCoder:(NSCoder *)aDecoder {
+    if (self = [super initWithCoder:aDecoder]) {
+        _accountInfoArray = [self defaultAccountArray];
+    }
+    return self;
+}
+
+- (instancetype) initWithStyle:(UITableViewStyle)style {
+    if (self = [super initWithStyle:style]) {
+        _accountInfoArray = [self defaultAccountArray];
+    }
+    return self;
+}
+
+- (instancetype) initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+    if (self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
+        _accountInfoArray = [self defaultAccountArray];
+    }
+    return self;
+}
+
 - (instancetype) init
 {
     if (self = [self initWithAccountInfoArray:[self defaultAccountArray]]) {
@@ -69,7 +90,6 @@
 - (instancetype) initWithAccountInfoArray:(NSArray*)accountInfoArray {
     if (self = [super initWithStyle:UITableViewStyleGrouped]) {
         _accountInfoArray = accountInfoArray;
-        self.title = NSLocalizedString(@"Advanced", @"advanced account setup");
     }
     return self;
 }

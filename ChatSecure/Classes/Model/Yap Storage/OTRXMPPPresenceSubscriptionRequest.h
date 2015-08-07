@@ -8,7 +8,7 @@
 
 #import "OTRYapDatabaseObject.h"
 
-#import "YapDatabaseTransaction.h"
+@import YapDatabase;
 
 @class OTRXMPPAccount;
 
