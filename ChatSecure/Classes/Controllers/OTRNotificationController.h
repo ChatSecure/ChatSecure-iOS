@@ -10,6 +10,7 @@
 
 @interface OTRNotificationController : NSObject
 
+@property (nonatomic) BOOL enabled;
 
 - (void)start;
 - (void)stop;
