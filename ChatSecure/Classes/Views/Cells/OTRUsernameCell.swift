@@ -10,7 +10,7 @@ import UIKit
 import XLForm
 import ParkedTextField
 
-public class OTRUsernameCell: XLFormBaseCell {
+public class OTRUsernameCell: XLFormBaseCell, UITextFieldDelegate {
 
     @IBOutlet var usernameLabel: UILabel!
     @IBOutlet var usernameField: ParkedTextField!
@@ -19,9 +19,14 @@ public class OTRUsernameCell: XLFormBaseCell {
     static let UsernameKey = "username"
     static let DomainKey = "domain"
     
+    deinit {
+        self.usernameField.delegate = nil
+    }
+    
     override public func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        self.usernameField.delegate = self
     }
     
     override public class func initialize() {
@@ -70,11 +75,9 @@ public class OTRUsernameCell: XLFormBaseCell {
     
     // MARK: XLFormDescriptorCell
     
-    /*
     func formDescriptorCellHeightForRowDescriptor(rowDescriptor: XLFormRowDescriptor!) -> CGFloat {
         return 45
     }
-    */
     
     override public func formDescriptorCellCanBecomeFirstResponder() -> Bool {
         return true
