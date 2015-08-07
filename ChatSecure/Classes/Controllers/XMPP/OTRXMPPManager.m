@@ -57,6 +57,8 @@
 #import "OTRXMPPPresenceSubscriptionRequest.h"
 #import "OTRvCardYapDatabaseStorage.h"
 #import "OTRNotificationController.h"
+#import "XMPPStreamManagement.h"
+#import "OTRStreamManagementYapStorage.h"
 
 NSString *const OTRXMPPRegisterSucceededNotificationName = @"OTRXMPPRegisterSucceededNotificationName";
 NSString *const OTRXMPPRegisterFailedNotificationName    = @"OTRXMPPRegisterFailedNotificationName";
@@ -91,6 +93,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 @property (nonatomic, strong) NSMutableDictionary * buddyTimers;
 @property (nonatomic) dispatch_queue_t workQueue;
 @property (nonatomic) BOOL isRegisteringNewAccount;
+@property (nonatomic, strong) XMPPStreamManagement *streamManagement;
 @property (nonatomic) BOOL userInitiatedConnection;
 @property (nonatomic) OTRLoginStatus loginStatus;
 
@@ -257,19 +260,12 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 	[self.xmppRoster addDelegate:self delegateQueue:self.workQueue];
     [self.xmppCapabilities addDelegate:self delegateQueue:self.workQueue];
     
-	// Optional:
-	// 
-	// Replace me with the proper domain and port.
-	// The example below is setup for a typical google talk account.
-	// 
-	// If you don't supply a hostName, then it will be automatically resolved using the JID (below).
-	// For example, if you supply a JID like 'user@quack.com/rsrc'
-	// then the xmpp framework will follow the xmpp specification, and do a SRV lookup for quack.com.
-	// 
-	// If you don't specify a hostPort, then the default (5222) will be used.
-	
-    //	[xmppStream setHostName:@"talk.google.com"];
-    //	[xmppStream setHostPort:5222];	
+    //Stream Management
+    OTRStreamManagementYapStorage *streamManagementStorage = [[OTRStreamManagementYapStorage alloc] init];
+    self.streamManagement = [[XMPPStreamManagement alloc] initWithStorage:streamManagementStorage];
+    [self.streamManagement automaticallyRequestAcksAfterStanzaCount:10 orTimeout:0];
+    self.streamManagement.autoResume = YES;
+    [self.streamManagement activate:self.xmppStream];
 }
 
 - (void)teardownStream
@@ -283,6 +279,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     [_xmppvCardTempModule   deactivate];
     [_xmppvCardAvatarModule deactivate];
     [_xmppCapabilities      deactivate];
+    [_streamManagement      deactivate];
 
     [_xmppStream disconnect];
 
@@ -585,6 +582,10 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 - (void)xmppStreamDidAuthenticate:(XMPPStream *)sender
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
+    if ([sender supportsStreamManagement]) {
+        [self.streamManagement enableStreamManagementWithResumption:YES maxTimeout:100];
+    }
+    
     self.connectionStatus = OTRProtocolConnectionStatusConnected;
 	[self goOnline];
     

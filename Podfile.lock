@@ -151,6 +151,7 @@ PODS:
   - XMPPFramework/Core (3.6.4):
     - CocoaAsyncSocket (~> 7.4)
     - CocoaLumberjack (~> 1.9)
+    - ProxyKit/Client (~> 1.0)
     - XMPPFramework/KissXML
   - XMPPFramework/CoreDataStorage (3.6.4):
     - XMPPFramework/Core
@@ -377,7 +378,7 @@ SPEC CHECKSUMS:
   uservoice-iphone-sdk: 349d9ef36d3c43939d28390b9e86bb32b65fe983
   VTAcknowledgementsViewController: 11a869dd69598a852f12699aeaf36e2589d3fc1b
   XLForm: 3e0521195126c4da4e90b104017e2758776393f1
-  XMPPFramework: 239fe709baff208fff5970708469b939387105ee
+  XMPPFramework: 77fe98961b6f5e53a0068d8a18888fe01f9040a5
   YapDatabase: 814f9ff862a95c1e581d93335a4020482b69155b
   ZXingObjC: bf15b3814f7a105b6d99f47da2333c93a063650a
 
