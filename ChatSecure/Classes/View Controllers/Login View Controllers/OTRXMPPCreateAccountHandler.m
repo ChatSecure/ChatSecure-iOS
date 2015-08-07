@@ -16,6 +16,7 @@
 #import "XMPPJID.h"
 #import "OTRXMPPManager.h"
 #import "OTRXMPPServerInfo.h"
+#import "OTRPasswordGenerator.h"
 
 @implementation OTRXMPPCreateAccountHandler
 
@@ -49,13 +50,18 @@
     self.completion = completion;
     [self prepareForXMPPConnectionFrom:form account:(OTRXMPPAccount *)account];
     
-    NSString *passowrdFromForm = [[form formRowWithTag:kOTRXLFormPasswordTextFieldTag] value];
-    if ([passowrdFromForm length]) {
-        _password = passowrdFromForm;
+    XLFormRowDescriptor *passwordRow = [form formRowWithTag:kOTRXLFormPasswordTextFieldTag];
+    NSString *passwordFromForm = [passwordRow value];
+    if (passwordRow.sectionDescriptor.isHidden == NO &&
+        passwordRow.isHidden == NO &&
+        passwordFromForm.length > 0) {
+        _password = passwordFromForm;
+    } else {
+        // if no password provided, generate a strong one
+        _password = [OTRPasswordGenerator passwordWithLength:11];
     }
-
-    [self.xmppManager registerNewAccountWithPassword:self.password];
     
+    [self.xmppManager registerNewAccountWithPassword:self.password];
 }
 
 @end

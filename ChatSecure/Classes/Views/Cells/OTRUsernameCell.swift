@@ -10,6 +10,31 @@ import UIKit
 import XLForm
 import ParkedTextField
 
+public class OTRUsernameValidator: NSObject, XLFormValidatorProtocol {
+    public func isValid(row: XLFormRowDescriptor!) -> XLFormValidationStatus! {
+        var isValid = false
+        if let value: Dictionary<String, String> = row.value as? Dictionary<String, String> {
+            var hasUsername = false
+            if let username = value[OTRUsernameCell.UsernameKey] {
+                if count(username) > 0 {
+                    hasUsername = true
+                }
+            }
+            var hasDomain = false
+            if let domain = value[OTRUsernameCell.DomainKey] {
+                if count(domain) > 0 {
+                    hasDomain = true
+                }
+            }
+            isValid = hasUsername && hasDomain
+        } else {
+            assert(false, "Value must be a Dictionary<String, String>")
+        }
+        let status: XLFormValidationStatus = XLFormValidationStatus(msg: "", status: isValid, rowDescriptor: row)
+        return status
+    }
+}
+
 public class OTRUsernameCell: XLFormBaseCell, UITextFieldDelegate {
 
     @IBOutlet var usernameLabel: UILabel!

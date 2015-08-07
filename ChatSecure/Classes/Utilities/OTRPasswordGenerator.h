@@ -12,6 +12,7 @@ extern NSUInteger const OTRDefaultPasswordLength;
 
 @interface OTRPasswordGenerator : NSObject
 
+/** Length is number of raw random bytes, which is then converted to base64 so expect a longer length. */
 + (NSString *)passwordWithLength:(NSUInteger)length;
 
 @end

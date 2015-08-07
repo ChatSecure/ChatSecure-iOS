@@ -165,7 +165,7 @@ NSString *const kOTRXLFormGenerateSecurePasswordTag               = @"kOTRXLForm
 {
     XLFormRowDescriptor *usernameDescriptor = [XLFormRowDescriptor formRowDescriptorWithTag:kOTRXLFormUsernameTextFieldTag rowType:[OTRUsernameCell kOTRFormRowDescriptorTypeUsername] title:USERNAME_STRING];
     usernameDescriptor.value = value;
-    usernameDescriptor.required = YES;
+    [usernameDescriptor addValidator:[[OTRUsernameValidator alloc] init]];
     return usernameDescriptor;
 }
 
