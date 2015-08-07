@@ -1121,6 +1121,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
     OTRMessage *message = [self messageAtIndexPath:indexPath];
     
     UIFont *font = [UIFont fontWithName:kFontAwesomeFont size:12];
+    if (!font) {
+        font = [UIFont systemFontOfSize:12];
+    }
     NSDictionary *iconAttributes = @{NSFontAttributeName: font};
     
     

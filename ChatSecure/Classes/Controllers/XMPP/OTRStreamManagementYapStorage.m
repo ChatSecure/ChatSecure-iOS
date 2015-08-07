@@ -112,6 +112,7 @@
         OTRStreamManagementStorageObject *storageObject = [self fetchOrCreateStorageObjectWithStream:stream transaction:transaction];
         storageObject.timeout = timeout;
         storageObject.lastDisconnectDate = date;
+        storageObject.resumptionId = resumptionId;
         
         [storageObject saveWithTransaction:transaction];
     }];

@@ -583,7 +583,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
     if ([sender supportsStreamManagement]) {
-        [self.streamManagement enableStreamManagementWithResumption:YES maxTimeout:100];
+        [self.streamManagement enableStreamManagementWithResumption:YES maxTimeout:0];
     }
     
     self.connectionStatus = OTRProtocolConnectionStatusConnected;
