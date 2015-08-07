@@ -33,10 +33,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.loginCreateButtonItem = [[UIBarButtonItem alloc] initWithTitle:LOGIN_STRING style:UIBarButtonItemStylePlain target:self action:@selector(loginButtonPressed:)];
+    UIImage *checkImage = [UIImage imageNamed:@"ic-check"];
+    UIBarButtonItem *checkButton = [[UIBarButtonItem alloc] initWithImage:checkImage style:UIBarButtonItemStylePlain target:self action:@selector(loginButtonPressed:)];
     
-    self.navigationItem.rightBarButtonItem = self.loginCreateButtonItem;
-    
+    self.navigationItem.rightBarButtonItem = checkButton;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -70,12 +70,12 @@
     if ([self validForm]) {
         self.form.disabled = YES;
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        self.loginCreateButtonItem.enabled = NO;
+        self.navigationItem.rightBarButtonItem.enabled = NO;
         self.navigationItem.leftBarButtonItem.enabled = NO;
         self.navigationItem.backBarButtonItem.enabled = NO;
         [self.createLoginHandler performActionWithValidForm:self.form account:self.account completion:^(OTRAccount *account, NSError *error) {
             self.form.disabled = NO;
-            self.loginCreateButtonItem.enabled = YES;
+            self.navigationItem.rightBarButtonItem.enabled = YES;
             self.navigationItem.backBarButtonItem.enabled = YES;
             self.navigationItem.leftBarButtonItem.enabled = YES;
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];

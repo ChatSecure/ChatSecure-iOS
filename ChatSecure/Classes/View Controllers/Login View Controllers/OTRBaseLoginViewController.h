@@ -12,7 +12,6 @@
 
 @interface OTRBaseLoginViewController : XLFormViewController
 
-@property (nonatomic, strong) UIBarButtonItem *loginCreateButtonItem;
 @property (nonatomic) BOOL showsCancelButton;
 
 @property (nonatomic, strong) OTRAccount *account;
