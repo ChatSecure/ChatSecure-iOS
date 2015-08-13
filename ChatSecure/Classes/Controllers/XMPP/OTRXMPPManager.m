@@ -263,7 +263,8 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     //Stream Management
     OTRStreamManagementYapStorage *streamManagementStorage = [[OTRStreamManagementYapStorage alloc] init];
     self.streamManagement = [[XMPPStreamManagement alloc] initWithStorage:streamManagementStorage];
-    [self.streamManagement automaticallyRequestAcksAfterStanzaCount:10 orTimeout:0];
+    [self.streamManagement automaticallyRequestAcksAfterStanzaCount:10 orTimeout:90];
+    [self.streamManagement automaticallySendAcksAfterStanzaCount:10 orTimeout:90];
     self.streamManagement.autoResume = YES;
     [self.streamManagement activate:self.xmppStream];
 }
