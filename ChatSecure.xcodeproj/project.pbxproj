@@ -127,6 +127,8 @@
 		6353AC2D1AD5E32000753B83 /* OTRAudioTrashView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6353AC2C1AD5E32000753B83 /* OTRAudioTrashView.m */; };
 		6354BBE41A96C67400E8EBAC /* OTRMediaFileManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6354BBE31A96C67400E8EBAC /* OTRMediaFileManager.m */; };
 		636C63211B571B56008FEE69 /* OTRURLTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 636C63201B571B56008FEE69 /* OTRURLTests.m */; };
+		637DBB191B7D5302003845B7 /* OTRXMPPMessageCarbonsDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 637DBB181B7D5302003845B7 /* OTRXMPPMessageCarbonsDelegate.m */; };
+		637DBB1C1B7D5A23003845B7 /* OTRXMPPMessageYapStroage.m in Sources */ = {isa = PBXBuildFile; fileRef = 637DBB1B1B7D5A23003845B7 /* OTRXMPPMessageYapStroage.m */; };
 		638C7CF21B02BE4A004F8EC3 /* OTRBaseLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 638C7CF11B02BE4A004F8EC3 /* OTRBaseLoginViewController.m */; };
 		638C7CF51B02BF0D004F8EC3 /* OTRXLFormCreator.m in Sources */ = {isa = PBXBuildFile; fileRef = 638C7CF41B02BF0D004F8EC3 /* OTRXLFormCreator.m */; };
 		638D2E001AFAD3D500F3C50C /* OTRWelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 638D2DFF1AFAD3D500F3C50C /* OTRWelcomeViewController.m */; };
@@ -483,6 +485,10 @@
 		6354BBE21A96C67400E8EBAC /* OTRMediaFileManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRMediaFileManager.h; sourceTree = "<group>"; };
 		6354BBE31A96C67400E8EBAC /* OTRMediaFileManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRMediaFileManager.m; sourceTree = "<group>"; };
 		636C63201B571B56008FEE69 /* OTRURLTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRURLTests.m; sourceTree = "<group>"; };
+		637DBB171B7D5302003845B7 /* OTRXMPPMessageCarbonsDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPMessageCarbonsDelegate.h; sourceTree = "<group>"; };
+		637DBB181B7D5302003845B7 /* OTRXMPPMessageCarbonsDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPMessageCarbonsDelegate.m; sourceTree = "<group>"; };
+		637DBB1A1B7D5A23003845B7 /* OTRXMPPMessageYapStroage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPMessageYapStroage.h; sourceTree = "<group>"; };
+		637DBB1B1B7D5A23003845B7 /* OTRXMPPMessageYapStroage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPMessageYapStroage.m; sourceTree = "<group>"; };
 		638C7CF01B02BE4A004F8EC3 /* OTRBaseLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBaseLoginViewController.h; sourceTree = "<group>"; };
 		638C7CF11B02BE4A004F8EC3 /* OTRBaseLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBaseLoginViewController.m; sourceTree = "<group>"; };
 		638C7CF31B02BF0D004F8EC3 /* OTRXLFormCreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXLFormCreator.h; sourceTree = "<group>"; };
@@ -762,6 +768,10 @@
 			children = (
 				63B916E01B743198003B778F /* OTRStreamManagementYapStorage.h */,
 				63B916E11B743198003B778F /* OTRStreamManagementYapStorage.m */,
+				637DBB171B7D5302003845B7 /* OTRXMPPMessageCarbonsDelegate.h */,
+				637DBB181B7D5302003845B7 /* OTRXMPPMessageCarbonsDelegate.m */,
+				637DBB1A1B7D5A23003845B7 /* OTRXMPPMessageYapStroage.h */,
+				637DBB1B1B7D5A23003845B7 /* OTRXMPPMessageYapStroage.m */,
 				633105331A16D1A300C17BAE /* OTRvCardYapDatabaseStorage.h */,
 				633105341A16D1A300C17BAE /* OTRvCardYapDatabaseStorage.m */,
 				633105351A16D1A300C17BAE /* OTRXMPPBudyTimers.h */,
@@ -1624,6 +1634,7 @@
 				633106E61A16D1A300C17BAE /* OTRImages.m in Sources */,
 				633106C11A16D1A300C17BAE /* OTRFingerprintSetting.m in Sources */,
 				63C4BCCC1A1E9B9F001696CD /* ChatSecure.xcdatamodeld in Sources */,
+				637DBB1C1B7D5A23003845B7 /* OTRXMPPMessageYapStroage.m in Sources */,
 				6346808A1B041F2F00D9A1C5 /* OTRGoolgeOAuthLoginHandler.m in Sources */,
 				63D184861A2D3F2400334CD8 /* OTRNotificationController.m in Sources */,
 				63FA54911A7B2C2E00F2AEBB /* OTRPauseView.m in Sources */,
@@ -1642,6 +1653,7 @@
 				633107281A16D1A400C17BAE /* OTRTitleSubtitleView.m in Sources */,
 				633AF2FA1A7C3DBC0030A3FF /* OTRAudioSessionManager.m in Sources */,
 				633107251A16D1A400C17BAE /* OTRPasswordStrengthView.m in Sources */,
+				637DBB191B7D5302003845B7 /* OTRXMPPMessageCarbonsDelegate.m in Sources */,
 				634680861B041EA900D9A1C5 /* OTRXMPPTorLoginHandler.m in Sources */,
 				633106911A16D1A300C17BAE /* OTRXMPPProxyStream.m in Sources */,
 				633106C01A16D1A300C17BAE /* OTRFeedbackSetting.m in Sources */,

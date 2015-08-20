@@ -59,6 +59,9 @@
 #import "OTRNotificationController.h"
 #import "XMPPStreamManagement.h"
 #import "OTRStreamManagementYapStorage.h"
+#import "XMPPMessageCarbons.h"
+#import "OTRXMPPMessageCarbonsDelegate.h"
+#import "OTRXMPPMessageYapStroage.h"
 
 NSString *const OTRXMPPRegisterSucceededNotificationName = @"OTRXMPPRegisterSucceededNotificationName";
 NSString *const OTRXMPPRegisterFailedNotificationName    = @"OTRXMPPRegisterFailedNotificationName";
@@ -94,6 +97,9 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 @property (nonatomic) dispatch_queue_t workQueue;
 @property (nonatomic) BOOL isRegisteringNewAccount;
 @property (nonatomic, strong) XMPPStreamManagement *streamManagement;
+@property (nonatomic, strong) XMPPMessageCarbons *messageCarbons;
+@property (nonatomic, strong) OTRXMPPMessageCarbonsDelegate *messageCarbonsDelegate;
+@property (nonatomic, strong) OTRXMPPMessageYapStroage *messageStorage;
 @property (nonatomic) BOOL userInitiatedConnection;
 @property (nonatomic) OTRLoginStatus loginStatus;
 
@@ -260,6 +266,10 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 	[self.xmppRoster addDelegate:self delegateQueue:self.workQueue];
     [self.xmppCapabilities addDelegate:self delegateQueue:self.workQueue];
     
+    // Message storage
+    self.messageStorage = [[OTRXMPPMessageYapStroage alloc] initWithDatabaseConnection:self.databaseConnection];
+    [self.messageStorage activate:self.xmppStream];
+    
     //Stream Management
     OTRStreamManagementYapStorage *streamManagementStorage = [[OTRStreamManagementYapStorage alloc] init];
     self.streamManagement = [[XMPPStreamManagement alloc] initWithStorage:streamManagementStorage];
@@ -267,6 +277,13 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     [self.streamManagement automaticallySendAcksAfterStanzaCount:10 orTimeout:90];
     self.streamManagement.autoResume = YES;
     [self.streamManagement activate:self.xmppStream];
+    
+    // Message Carbons
+    self.messageCarbons = [[XMPPMessageCarbons alloc] init];
+    self.messageCarbonsDelegate = [[OTRXMPPMessageCarbonsDelegate alloc] init];
+    [self.messageCarbons addDelegate:self.messageCarbonsDelegate delegateQueue:self.workQueue];
+    [self.messageCarbons activate:self.xmppStream];
+    
 }
 
 - (void)teardownStream
@@ -281,6 +298,8 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     [_xmppvCardAvatarModule deactivate];
     [_xmppCapabilities      deactivate];
     [_streamManagement      deactivate];
+    [_messageCarbons        deactivate];
+    [_messageStorage        deactivate];
 
     [_xmppStream disconnect];
 
@@ -636,61 +655,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
 
-    [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        
-        OTRXMPPBuddy *messageBuddy = [self buddyWithMessage:xmppMessage transaction:transaction];
-
-        if ([xmppMessage isErrorMessage]) {
-            NSError *error = [xmppMessage errorMessage];
-            DDLogCWarn(@"XMPP Error: %@",error);
-        }
-        else if([xmppMessage hasChatState])
-        {
-            if([xmppMessage hasComposingChatState])
-                messageBuddy.chatState = kOTRChatStateComposing;
-            else if([xmppMessage hasPausedChatState])
-                 messageBuddy.chatState = kOTRChatStatePaused;
-            else if([xmppMessage hasActiveChatState])
-                 messageBuddy.chatState = kOTRChatStateActive;
-            else if([xmppMessage hasInactiveChatState])
-                 messageBuddy.chatState = kOTRChatStateInactive;
-            else if([xmppMessage hasGoneChatState])
-                 messageBuddy.chatState = kOTRChatStateGone;
-            [messageBuddy saveWithTransaction:transaction];
-        }
-        
-        
-        if ([xmppMessage hasReceiptResponse] && ![xmppMessage isErrorMessage]) {
-            [OTRMessage receivedDeliveryReceiptForMessageId:[xmppMessage receiptResponseID] transaction:transaction];
-        }
-        
-        if ([xmppMessage isMessageWithBody] && ![xmppMessage isErrorMessage])
-        {
-            NSString *body = [[xmppMessage elementForName:@"body"] stringValue];
-            
-            NSDate * date = [xmppMessage delayedDeliveryDate];
-            
-            OTRMessage *message = [[OTRMessage alloc] init];
-            message.incoming = YES;
-            message.text = body;
-            message.buddyUniqueId = messageBuddy.uniqueId;
-            if (date) {
-                message.date = date;
-            }
-            
-            message.messageId = [xmppMessage elementID];
-            
-            if (messageBuddy) {
-                [[OTRKit sharedInstance] decodeMessage:message.text username:messageBuddy.username accountName:self.account.username protocol:kOTRProtocolTypeXMPP tag:message];
-            } else {
-                // message from server
-                DDLogWarn(@"No buddy for message: %@", xmppMessage);
-            }
-        }
-        if (messageBuddy) {
-            [transaction setObject:messageBuddy forKey:messageBuddy.uniqueId inCollection:[OTRXMPPBuddy collection]];
-        }
-    }];
+    
 }
 - (void)xmppStream:(XMPPStream *)sender didReceivePresence:(XMPPPresence *)presence
 {
