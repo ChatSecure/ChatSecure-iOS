@@ -10,14 +10,7 @@
 #import "YapDatabaseConnection.h"
 @class XMPPMessage;
 
-@protocol OTRXMPPMessageYapStroageProtocol <NSObject>
-
-@required;
-- (void)storeMessage:(XMPPMessage *)message stream:(XMPPStream *)stream incoming:(BOOL)incoming;
-
-@end
-
-@interface OTRXMPPMessageYapStroage : XMPPModule <OTRXMPPMessageYapStroageProtocol>
+@interface OTRXMPPMessageYapStroage : XMPPModule
 
 @property (nonatomic, strong) YapDatabaseConnection *databaseConnection;
 

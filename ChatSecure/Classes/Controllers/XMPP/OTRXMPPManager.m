@@ -60,7 +60,6 @@
 #import "XMPPStreamManagement.h"
 #import "OTRStreamManagementYapStorage.h"
 #import "XMPPMessageCarbons.h"
-#import "OTRXMPPMessageCarbonsDelegate.h"
 #import "OTRXMPPMessageYapStroage.h"
 
 NSString *const OTRXMPPRegisterSucceededNotificationName = @"OTRXMPPRegisterSucceededNotificationName";
@@ -98,7 +97,6 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 @property (nonatomic) BOOL isRegisteringNewAccount;
 @property (nonatomic, strong) XMPPStreamManagement *streamManagement;
 @property (nonatomic, strong) XMPPMessageCarbons *messageCarbons;
-@property (nonatomic, strong) OTRXMPPMessageCarbonsDelegate *messageCarbonsDelegate;
 @property (nonatomic, strong) OTRXMPPMessageYapStroage *messageStorage;
 @property (nonatomic) BOOL userInitiatedConnection;
 @property (nonatomic) OTRLoginStatus loginStatus;
@@ -266,6 +264,10 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 	[self.xmppRoster addDelegate:self delegateQueue:self.workQueue];
     [self.xmppCapabilities addDelegate:self delegateQueue:self.workQueue];
     
+    // Message Carbons
+    self.messageCarbons = [[XMPPMessageCarbons alloc] init];
+    [self.messageCarbons activate:self.xmppStream];
+    
     // Message storage
     self.messageStorage = [[OTRXMPPMessageYapStroage alloc] initWithDatabaseConnection:self.databaseConnection];
     [self.messageStorage activate:self.xmppStream];
@@ -278,11 +280,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     self.streamManagement.autoResume = YES;
     [self.streamManagement activate:self.xmppStream];
     
-    // Message Carbons
-    self.messageCarbons = [[XMPPMessageCarbons alloc] init];
-    self.messageCarbonsDelegate = [[OTRXMPPMessageCarbonsDelegate alloc] init];
-    [self.messageCarbons addDelegate:self.messageCarbonsDelegate delegateQueue:self.workQueue];
-    [self.messageCarbons activate:self.xmppStream];
+    
     
 }
 
