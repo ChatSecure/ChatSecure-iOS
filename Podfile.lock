@@ -31,7 +31,7 @@ PODS:
   - BBlock/StoreKit (1.2.0)
   - BBlock/UIKit (1.2.0)
   - BButton (4.0.2)
-  - CocoaAsyncSocket (7.4.1)
+  - CocoaAsyncSocket (7.4.2)
   - CocoaLumberjack (1.9.2):
     - CocoaLumberjack/Extensions (= 1.9.2)
   - CocoaLumberjack/Core (1.9.2)
@@ -63,9 +63,9 @@ PODS:
   - libsqlfs/SQLCipher (1.3):
     - libsqlfs/common
     - SQLCipher/fts
-  - Mantle (2.0.3):
-    - Mantle/extobjc (= 2.0.3)
-  - Mantle/extobjc (2.0.3)
+  - Mantle (2.0.4):
+    - Mantle/extobjc (= 2.0.4)
+  - Mantle/extobjc (2.0.4)
   - MBProgressHUD (0.9.1)
   - MWFeedParser (1.0.1):
     - MWFeedParser/FeedParser (= 1.0.1)
@@ -151,6 +151,7 @@ PODS:
   - XMPPFramework/Core (3.6.4):
     - CocoaAsyncSocket (~> 7.4)
     - CocoaLumberjack (~> 1.9)
+    - ProxyKit/Client (~> 1.0)
     - XMPPFramework/KissXML
   - XMPPFramework/CoreDataStorage (3.6.4):
     - XMPPFramework/Core
@@ -342,7 +343,7 @@ SPEC CHECKSUMS:
   ARChromeActivity: 9064d94803338d3377f3e1013a8e8f4821d7daf1
   BBlock: 11c666b6898c074eceb40fa56a901b96415ebf68
   BButton: ab0f2ed3b998ae73c5188b57d270d81e4a1eeb27
-  CocoaAsyncSocket: 7cbf214b27f8e7f7574db6a3fd96352ffaed433d
+  CocoaAsyncSocket: f5783bdedd232d91b89769bc4b5a1580aed518ad
   CocoaLumberjack: 628fca2e88ef06f7cf6817309aa405f325d9a6fa
   CPAProxy: 9ca6809d0ee47d90ee149da033a53b911d15ab82
   CRToast: 99a28f4387def43b439ad88f957ce31357ff7373
@@ -358,7 +359,7 @@ SPEC CHECKSUMS:
   JVFloatLabeledTextField: ea4a3d8387ddd43724c472bb2b8ab39b79af05d4
   KVOController: 9fd8f0343670994e4b6f9f0b31f5a45663f3e1cf
   libsqlfs: 179e4fb40b8c07fd0ee7933ec4c0b9f4815cbd0e
-  Mantle: 8d6b14979a082a9ed4994463eb7a4ff576c94632
+  Mantle: 6bee68168423948be0c0c5924832bf3af188e099
   MBProgressHUD: c47f2c166c126cf2ce36498d80f33e754d4e93ad
   MWFeedParser: 2cf646014c1baf6ad1b08c480b40a08180079247
   Navajo: 5fb68239b4e3af4610f31925bae1ca8e6bab8eaa
@@ -377,7 +378,7 @@ SPEC CHECKSUMS:
   uservoice-iphone-sdk: 349d9ef36d3c43939d28390b9e86bb32b65fe983
   VTAcknowledgementsViewController: 11a869dd69598a852f12699aeaf36e2589d3fc1b
   XLForm: 3e0521195126c4da4e90b104017e2758776393f1
-  XMPPFramework: 239fe709baff208fff5970708469b939387105ee
+  XMPPFramework: 77fe98961b6f5e53a0068d8a18888fe01f9040a5
   YapDatabase: 814f9ff862a95c1e581d93335a4020482b69155b
   ZXingObjC: bf15b3814f7a105b6d99f47da2333c93a063650a
 
