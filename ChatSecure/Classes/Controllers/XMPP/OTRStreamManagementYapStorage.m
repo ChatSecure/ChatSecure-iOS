@@ -13,18 +13,16 @@
 
 @interface OTRStreamManagementYapStorage ()
 
-@property (nonatomic, strong) YapDatabaseConnection *databaseConnection;
 @property (nonatomic) dispatch_queue_t parentQueue;
 
 @end
 
 @implementation OTRStreamManagementYapStorage
 
-- (instancetype)init
+- (instancetype)initWithDatabaseConnection:(YapDatabaseConnection *)databaseConnection
 {
     if (self = [super init]) {
-        self.databaseConnection = [[OTRDatabaseManager sharedInstance] newConnection];
-        self.databaseConnection.name = NSStringFromClass([self class]);
+        self.databaseConnection = databaseConnection;
     }
     return self;
 }
