@@ -7,9 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
-
 #import "XMPPStreamManagement.h"
 
+@class YapDatabaseConnection;
+
 @interface OTRStreamManagementYapStorage : NSObject <XMPPStreamManagementStorage>
+
+- (instancetype)initWithDatabaseConnection:(YapDatabaseConnection *)databaseConnection;
+
+@property (nonatomic, strong) YapDatabaseConnection *databaseConnection;
 
 @end

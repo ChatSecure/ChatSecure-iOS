@@ -274,7 +274,9 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     [self.messageStorage activate:self.xmppStream];
     
     //Stream Management
-    OTRStreamManagementYapStorage *streamManagementStorage = [[OTRStreamManagementYapStorage alloc] init];
+    YapDatabaseConnection *databaseConnection = [[OTRDatabaseManager sharedInstance] newConnection];
+    databaseConnection.name = NSStringFromClass([OTRStreamManagementYapStorage class]);
+    OTRStreamManagementYapStorage *streamManagementStorage = [[OTRStreamManagementYapStorage alloc] initWithDatabaseConnection:databaseConnection];
     self.streamManagement = [[XMPPStreamManagement alloc] initWithStorage:streamManagementStorage];
     [self.streamManagement automaticallyRequestAcksAfterStanzaCount:10 orTimeout:90];
     [self.streamManagement automaticallySendAcksAfterStanzaCount:10 orTimeout:90];
