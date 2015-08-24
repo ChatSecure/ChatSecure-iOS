@@ -169,7 +169,7 @@
                 
                 
                 
-                if ([forwardedMessage isMessageWithBody] && ![forwardedMessage isErrorMessage]) {
+                if ([forwardedMessage isMessageWithBody] && ![forwardedMessage isErrorMessage] && ![OTRKit stringStartsWithOTRPrefix:forwardedMessage.body]) {
                     OTRMessage *message = [self messageFromXMPPMessage:forwardedMessage buddyId:buddy.uniqueId];
                     message.incoming = incoming;
                     [message saveWithTransaction:transaction];
