@@ -30,6 +30,7 @@
 #import "XMPPvCardAvatarModule.h"
 #import "XMPPMessage+XEP_0184.h"
 #import "XMPPMessage+XEP_0085.h"
+#import "XMPPMessage+XEP_0280.h"
 #import "NSXMLElement+XEP_0203.h"
 #import "XMPPMessageDeliveryReceipts.h"
 #import "Strings.h"
@@ -770,6 +771,10 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
         [xmppMessage addBody:text];
 
         [xmppMessage addActiveChatState];
+        
+        if ([OTRKit stringStartsWithOTRPrefix:text]) {
+            [xmppMessage addPrivateMessageCarbons];
+        }
 		
 		[self.xmppStream sendElement:xmppMessage];
     }
