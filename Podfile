@@ -57,6 +57,7 @@ pod 'SIAlertView', :git => 'https://github.com/ChatSecure/SIAlertView.git', :bra
 pod 'JSQMessagesViewController', :git => 'https://github.com/ChatSecure/JSQMessagesViewController', :branch => '7.1.0-send_button'
 
 # Submodules
+pod 'ChatSecure-Push-iOS', :path => 'Submodules/ChatSecure-Push-iOS/ChatSecure-Push-iOS.podspec'
 pod 'ProxyKit/Client', :path => 'Submodules/ProxyKit/ProxyKit.podspec'
 pod 'OTRKit', :path => 'Submodules/OTRKit/OTRKit.podspec'
 pod 'CPAProxy', :path => 'Submodules/CPAProxy/CPAProxy.podspec'

@@ -26,7 +26,7 @@
 #import "OTRProtocol.h"
 #import "OTRAccountsManager.h"
 
-@class OTRAccount,OTRBuddy, OTRPushManager;
+@class OTRAccount,OTRBuddy;
 
 @interface OTRProtocolManager : NSObject
 

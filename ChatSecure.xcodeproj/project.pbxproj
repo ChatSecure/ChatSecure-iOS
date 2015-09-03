@@ -127,6 +127,7 @@
 		6353AC2D1AD5E32000753B83 /* OTRAudioTrashView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6353AC2C1AD5E32000753B83 /* OTRAudioTrashView.m */; };
 		6354BBE41A96C67400E8EBAC /* OTRMediaFileManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6354BBE31A96C67400E8EBAC /* OTRMediaFileManager.m */; };
 		636C63211B571B56008FEE69 /* OTRURLTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 636C63201B571B56008FEE69 /* OTRURLTests.m */; };
+		637645C91B98F9BF00B3402F /* PushController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637645C81B98F9BF00B3402F /* PushController.swift */; };
 		637DBB1C1B7D5A23003845B7 /* OTRXMPPMessageYapStroage.m in Sources */ = {isa = PBXBuildFile; fileRef = 637DBB1B1B7D5A23003845B7 /* OTRXMPPMessageYapStroage.m */; };
 		638C7CF21B02BE4A004F8EC3 /* OTRBaseLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 638C7CF11B02BE4A004F8EC3 /* OTRBaseLoginViewController.m */; };
 		638C7CF51B02BF0D004F8EC3 /* OTRXLFormCreator.m in Sources */ = {isa = PBXBuildFile; fileRef = 638C7CF41B02BF0D004F8EC3 /* OTRXLFormCreator.m */; };
@@ -484,6 +485,7 @@
 		6354BBE21A96C67400E8EBAC /* OTRMediaFileManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRMediaFileManager.h; sourceTree = "<group>"; };
 		6354BBE31A96C67400E8EBAC /* OTRMediaFileManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRMediaFileManager.m; sourceTree = "<group>"; };
 		636C63201B571B56008FEE69 /* OTRURLTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRURLTests.m; sourceTree = "<group>"; };
+		637645C81B98F9BF00B3402F /* PushController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushController.swift; sourceTree = "<group>"; };
 		637DBB1A1B7D5A23003845B7 /* OTRXMPPMessageYapStroage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPMessageYapStroage.h; sourceTree = "<group>"; };
 		637DBB1B1B7D5A23003845B7 /* OTRXMPPMessageYapStroage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPMessageYapStroage.m; sourceTree = "<group>"; };
 		638C7CF01B02BE4A004F8EC3 /* OTRBaseLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBaseLoginViewController.h; sourceTree = "<group>"; };
@@ -755,6 +757,7 @@
 				6354BBE31A96C67400E8EBAC /* OTRMediaFileManager.m */,
 				63DDD8AE1A9D3C0400C0A918 /* OTRMediaServer.h */,
 				63DDD8AF1A9D3C0400C0A918 /* OTRMediaServer.m */,
+				637645C81B98F9BF00B3402F /* PushController.swift */,
 				633105321A16D1A300C17BAE /* XMPP */,
 			);
 			path = Controllers;
@@ -1645,6 +1648,7 @@
 				D95AD2241B67FD6A007DEBC3 /* OTRCircleView.m in Sources */,
 				63C4BD161A1E9BE1001696CD /* OTRManagedMessageAndStatus.m in Sources */,
 				633106E51A16D1A300C17BAE /* OTRConstants.m in Sources */,
+				637645C91B98F9BF00B3402F /* PushController.swift in Sources */,
 				633107281A16D1A400C17BAE /* OTRTitleSubtitleView.m in Sources */,
 				633AF2FA1A7C3DBC0030A3FF /* OTRAudioSessionManager.m in Sources */,
 				633107251A16D1A400C17BAE /* OTRPasswordStrengthView.m in Sources */,
@@ -1858,6 +1862,7 @@
 				BUNDLE_ID_SUFFIX = .beta;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEFINES_MODULE = YES;
 				INFOPLIST_FILE = ChatSecure/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1970,6 +1975,7 @@
 				BUNDLE_ID_SUFFIX = .debug;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEFINES_MODULE = YES;
 				INFOPLIST_FILE = ChatSecure/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1989,6 +1995,7 @@
 				BUNDLE_ID_SUFFIX = "";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEFINES_MODULE = YES;
 				INFOPLIST_FILE = ChatSecure/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

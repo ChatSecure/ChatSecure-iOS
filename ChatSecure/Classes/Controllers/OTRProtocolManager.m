@@ -39,7 +39,6 @@ static OTRProtocolManager *sharedManager = nil;
 
 @property (nonatomic) NSUInteger numberOfConnectedProtocols;
 @property (nonatomic) NSUInteger numberOfConnectingProtocols;
-@property (nonatomic, strong) OTRPushManager *pushManager;
 @property (nonatomic, strong) NSMutableDictionary * protocolManagerDictionary;
 @property (nonatomic) dispatch_queue_t internalQueue;
 
