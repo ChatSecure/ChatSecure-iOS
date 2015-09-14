@@ -191,6 +191,7 @@
 		63FABC8E1A410EBF009BF681 /* JSQMessagesCollectionViewCell+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FABC8D1A410EBF009BF681 /* JSQMessagesCollectionViewCell+ChatSecure.m */; };
 		63FABC911A41218E009BF681 /* NSString+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FABC901A41218E009BF681 /* NSString+ChatSecure.m */; };
 		BB852C4F65587CD8A46FF428 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCD1F8E85C658C8D3865B584 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		D9227C241BA78E6B00B5E1D0 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D9227C231BA78E6B00B5E1D0 /* FontAwesome.ttf */; settings = {ASSET_TAGS = (); }; };
 		D9365E7A1A1EB0050006434A /* torrc in Resources */ = {isa = PBXBuildFile; fileRef = D9365E791A1EB0050006434A /* torrc */; };
 		D95AD2241B67FD6A007DEBC3 /* OTRCircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = D95AD2231B67FD6A007DEBC3 /* OTRCircleView.m */; };
 		D95AD2291B684AE1007DEBC3 /* xmpp-server-list in Resources */ = {isa = PBXBuildFile; fileRef = D95AD2281B684AE1007DEBC3 /* xmpp-server-list */; };
@@ -618,6 +619,7 @@
 		954B60A022C05FDE4DCFEF6E /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		B977533C20F88A4A840303F9 /* Pods.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.beta.xcconfig; path = "Pods/Target Support Files/Pods/Pods.beta.xcconfig"; sourceTree = "<group>"; };
 		CCD1F8E85C658C8D3865B584 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D9227C231BA78E6B00B5E1D0 /* FontAwesome.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome.ttf; sourceTree = "<group>"; };
 		D9365E791A1EB0050006434A /* torrc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = torrc; path = Resources/torrc; sourceTree = "<group>"; };
 		D95AD2221B67FD6A007DEBC3 /* OTRCircleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRCircleView.h; sourceTree = "<group>"; };
 		D95AD2231B67FD6A007DEBC3 /* OTRCircleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRCircleView.m; sourceTree = "<group>"; };
@@ -661,6 +663,7 @@
 		633104D71A169EE600C17BAE /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				D9227C231BA78E6B00B5E1D0 /* FontAwesome.ttf */,
 				D95AD2281B684AE1007DEBC3 /* xmpp-server-list */,
 				D973D7051A2D4094004D353E /* Pods-acknowledgements.plist */,
 				D9365E791A1EB0050006434A /* torrc */,
@@ -1436,6 +1439,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D9C6E69F1B7148EF00572273 /* OTRUsernameCell.xib in Resources */,
+				D9227C241BA78E6B00B5E1D0 /* FontAwesome.ttf in Resources */,
 				632461521A1ADC77000EF33B /* Localizable.strings in Resources */,
 				6331072C1A16D1F200C17BAE /* Images.xcassets in Resources */,
 				D973D7061A2D4094004D353E /* Pods-acknowledgements.plist in Resources */,
