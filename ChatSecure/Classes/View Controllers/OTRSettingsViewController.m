@@ -445,7 +445,7 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 
 - (void)didSelectShareSetting:(OTRShareSetting *)shareSetting
 {
-    OTRActivityItemProvider * itemProvider = [[OTRActivityItemProvider alloc] init];
+    OTRActivityItemProvider * itemProvider = [[OTRActivityItemProvider alloc] initWithPlaceholderItem:@""];
     OTRQRCodeActivity * qrCodeActivity = [[OTRQRCodeActivity alloc] init];
     
     UIActivityViewController * activityViewController = [[UIActivityViewController alloc] initWithActivityItems:@[itemProvider] applicationActivities:@[qrCodeActivity]];

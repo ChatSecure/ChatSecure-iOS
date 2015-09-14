@@ -36,7 +36,7 @@ pod 'ARChromeActivity', '~> 1.0'
 pod 'CocoaAsyncSocket', '~> 7.4'
 pod 'JTSImageViewController', '~> 1.4'
 pod 'KVOController', '~> 1.0'
-pod 'ParkedTextField', '~> 0.1'
+# pod 'ParkedTextField', '~> 0.1' # Need to use Swift 2.0 fork
 
 # QR Codes
 pod 'QRCodeReaderViewController', '~> 3.5.0'
@@ -63,3 +63,5 @@ pod 'CPAProxy', :path => 'Submodules/CPAProxy/CPAProxy.podspec'
 pod 'XMPPFramework', :path => 'Submodules/XMPPFramework/XMPPFramework.podspec'
 pod 'YapDatabase/SQLCipher', :path => 'Submodules/YapDatabase/YapDatabase.podspec'
 pod 'IOCipher/GCDWebServer', :path => 'Submodules/IOCipher/IOCipher.podspec'
+pod 'ParkedTextField', :path => 'Submodules/ParkedTextField/ParkedTextField.podspec'
+

@@ -59,12 +59,12 @@ public class OTRUsernameCell: XLFormBaseCell, UITextFieldDelegate {
         super.update()
         if let value: Dictionary<String, String> = self.rowDescriptor!.value as? Dictionary<String, String> {
             if let username = value[OTRUsernameCell.UsernameKey] {
-                if count(username) > 0 {
+                if username.characters.count > 0 {
                     self.usernameField.typedText = username
                 }
             }
             if let domain = value[OTRUsernameCell.DomainKey] {
-                if count(domain) > 0 {
+                if domain.characters.count > 0 {
                     self.usernameField.parkedText = "@" + domain
                 }
             }
@@ -92,14 +92,16 @@ public class OTRUsernameCell: XLFormBaseCell, UITextFieldDelegate {
     
     @IBAction func textFieldValueChanged(sender: ParkedTextField) {
         let value = OTRUsernameCell.createRowDictionaryValueForUsername(sender.typedText, domain: sender.parkedText)
-        self.rowDescriptor.value = value
+        if let row = rowDescriptor {
+            row.value = value
+        }
     }
     
     // MARK: Private methods
     
     public static func createRowDictionaryValueForUsername(username: String?, domain: String?) -> Dictionary<String, String> {
-        var unwrappedUsername = username ?? ""
-        var unwrappedDomain = domain ?? ""
+        let unwrappedUsername = username ?? ""
+        let unwrappedDomain = domain ?? ""
         let value: Dictionary<String, String> = [OTRUsernameCell.UsernameKey: unwrappedUsername, OTRUsernameCell.DomainKey: unwrappedDomain]
         return value
     }

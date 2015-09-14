@@ -274,7 +274,7 @@ DEPENDENCIES:
   - Navajo (~> 0.0)
   - OpenInChrome (~> 0.0)
   - OTRKit (from `Submodules/OTRKit/OTRKit.podspec`)
-  - ParkedTextField (~> 0.1)
+  - ParkedTextField (from `Submodules/ParkedTextField/ParkedTextField.podspec`)
   - ProxyKit/Client (from `Submodules/ProxyKit/ProxyKit.podspec`)
   - PureLayout (~> 2.0)
   - QRCodeReaderViewController (~> 3.5.0)
@@ -308,6 +308,8 @@ EXTERNAL SOURCES:
     :git: https://github.com/ChatSecure/JSQMessagesViewController
   OTRKit:
     :path: Submodules/OTRKit/OTRKit.podspec
+  ParkedTextField:
+    :path: Submodules/ParkedTextField/ParkedTextField.podspec
   ProxyKit:
     :path: Submodules/ProxyKit/ProxyKit.podspec
   SIAlertView:
