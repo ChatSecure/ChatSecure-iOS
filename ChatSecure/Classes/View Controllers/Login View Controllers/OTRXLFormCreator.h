@@ -26,7 +26,5 @@ extern NSString *const kOTRXLFormXMPPServerTag;
 
 + (XLFormDescriptor *)formForAccountType:(OTRAccountType)accountType createAccount:(BOOL)createAccount;
 
-+ (XLFormDescriptor *)ChatSecureIDForm;
-
 
 @end

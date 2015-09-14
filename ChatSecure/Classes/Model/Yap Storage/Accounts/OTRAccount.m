@@ -15,7 +15,7 @@
 #import "OTRXMPPTorAccount.h"
 #import "OTRGoogleOAuthXMPPAccount.h"
 #import "OTRDatabaseManager.h"
-#import "YapDatabaseRelationshipTransaction.h"
+@import YapDatabase;
 #import "OTRBuddy.h"
 #import "OTRImages.h"
 

@@ -23,7 +23,7 @@
                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="kEP-B8-ru7" customClass="ParkedTextField" customModule="ParkedTextField">
                         <rect key="frame" x="91" y="8" width="221" height="28"/>
                         <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                        <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="emailAddress" returnKeyType="go" enablesReturnKeyAutomatically="YES"/>
+                        <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="go" enablesReturnKeyAutomatically="YES"/>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="string" keyPath="parkedText" value="@dukgo.com"/>
                             <userDefinedRuntimeAttribute type="string" keyPath="placeholderText" value="username"/>
@@ -46,7 +46,7 @@
                 <outlet property="usernameField" destination="kEP-B8-ru7" id="KGh-cv-1B1"/>
                 <outlet property="usernameLabel" destination="Up3-rC-vaX" id="cyq-gt-Puo"/>
             </connections>
-            <point key="canvasLocation" x="551" y="288"/>
+            <point key="canvasLocation" x="281" y="270.5"/>
         </tableViewCell>
     </objects>
 </document>

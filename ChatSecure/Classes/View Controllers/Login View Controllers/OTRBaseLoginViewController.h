@@ -6,13 +6,12 @@
 //  Copyright (c) 2015 Chris Ballinger. All rights reserved.
 //
 
-#import "XLFormViewController.h"
+@import XLForm;
 #import "OTRLoginHandler.h"
 @class OTRAccount;
 
 @interface OTRBaseLoginViewController : XLFormViewController
 
-@property (nonatomic, strong) UIBarButtonItem *loginCreateButtonItem;
 @property (nonatomic) BOOL showsCancelButton;
 
 @property (nonatomic, strong) OTRAccount *account;

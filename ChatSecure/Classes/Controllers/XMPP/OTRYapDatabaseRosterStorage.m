@@ -8,9 +8,8 @@
 
 #import "OTRYapDatabaseRosterStorage.h"
 
-#import "YapDatabaseConnection.h"
+@import YapDatabase;
 #import "OTRDatabaseManager.h"
-#import "YapDatabaseTransaction.h"
 #import "OTRLog.h"
 #import "OTRXMPPBuddy.h"
 #import "OTRXMPPAccount.h"

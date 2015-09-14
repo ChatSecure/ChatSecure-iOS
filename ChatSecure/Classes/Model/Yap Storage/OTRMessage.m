@@ -9,14 +9,11 @@
 #import "OTRMessage.h"
 #import "OTRBuddy.h"
 #import "OTRAccount.h"
-#import "YapDatabaseTransaction.h"
+@import YapDatabase;
 #import "OTRDatabaseManager.h"
-#import "YapDatabaseRelationshipTransaction.h"
 #import "NSString+HTML.h"
 #import "Strings.h"
 #import "OTRConstants.h"
-#import "YapDatabaseQuery.h"
-#import "YapDatabaseSecondaryIndexTransaction.h"
 #import "OTRMediaItem.h"
 
 const struct OTRMessageAttributes OTRMessageAttributes = {

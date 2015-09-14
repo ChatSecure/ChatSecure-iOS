@@ -10,6 +10,31 @@ import UIKit
 import XLForm
 import ParkedTextField
 
+public class OTRUsernameValidator: NSObject, XLFormValidatorProtocol {
+    public func isValid(row: XLFormRowDescriptor!) -> XLFormValidationStatus! {
+        var isValid = false
+        if let value: Dictionary<String, String> = row.value as? Dictionary<String, String> {
+            var hasUsername = false
+            if let username = value[OTRUsernameCell.UsernameKey] {
+                if count(username) > 0 {
+                    hasUsername = true
+                }
+            }
+            var hasDomain = false
+            if let domain = value[OTRUsernameCell.DomainKey] {
+                if count(domain) > 0 {
+                    hasDomain = true
+                }
+            }
+            isValid = hasUsername && hasDomain
+        } else {
+            assert(false, "Value must be a Dictionary<String, String>")
+        }
+        let status: XLFormValidationStatus = XLFormValidationStatus(msg: "", status: isValid, rowDescriptor: row)
+        return status
+    }
+}
+
 public class OTRUsernameCell: XLFormBaseCell, UITextFieldDelegate {
 
     @IBOutlet var usernameLabel: UILabel!
@@ -43,7 +68,7 @@ public class OTRUsernameCell: XLFormBaseCell, UITextFieldDelegate {
         self.selectionStyle = UITableViewCellSelectionStyle.None
     }
     
-    /*
+    
     override public func highlight() {
         super.highlight()
         self.usernameLabel.textColor = self.tintColor
@@ -53,10 +78,12 @@ public class OTRUsernameCell: XLFormBaseCell, UITextFieldDelegate {
         super.unhighlight()
         self.formViewController().updateFormRow(self.rowDescriptor)
     }
-    */
+    
    
     override public func update() {
         super.update()
+        self.usernameField.delegate = self
+        self.usernameLabel.textColor = UIColor.darkTextColor()
         if let value: Dictionary<String, String> = self.rowDescriptor!.value as? Dictionary<String, String> {
             if let username = value[OTRUsernameCell.UsernameKey] {
                 if username.characters.count > 0 {
@@ -65,7 +92,11 @@ public class OTRUsernameCell: XLFormBaseCell, UITextFieldDelegate {
             }
             if let domain = value[OTRUsernameCell.DomainKey] {
                 if domain.characters.count > 0 {
-                    self.usernameField.parkedText = "@" + domain
+                    var parkedText = domain
+                    if (domain as NSString).containsString("@") == false {
+                        parkedText = "@" + domain
+                    }
+                    self.usernameField.parkedText = parkedText
                 }
             }
         } else {
@@ -75,17 +106,50 @@ public class OTRUsernameCell: XLFormBaseCell, UITextFieldDelegate {
     
     // MARK: XLFormDescriptorCell
     
-    func formDescriptorCellHeightForRowDescriptor(rowDescriptor: XLFormRowDescriptor!) -> CGFloat {
-        return 45
+    override public static func formDescriptorCellHeightForRowDescriptor(rowDescriptor: XLFormRowDescriptor!) -> CGFloat {
+        return 43
     }
     
     override public func formDescriptorCellCanBecomeFirstResponder() -> Bool {
-        return true
+        return !self.rowDescriptor.isDisabled()
     }
     
     override public func formDescriptorCellBecomeFirstResponder() -> Bool {
         self.highlight()
         return self.usernameField.becomeFirstResponder()
+    }
+    
+    // MARK: UITextFieldDelegate
+    
+    public func textFieldShouldClear(textField: UITextField) -> Bool {
+        return self.formViewController().textFieldShouldClear(textField)
+    }
+    
+    public func textFieldShouldReturn(textField: UITextField) -> Bool {
+        return self.formViewController().textFieldShouldReturn(textField)
+    }
+    
+    public func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
+        return self.formViewController().textFieldShouldBeginEditing(textField)
+    }
+    
+    public func textFieldShouldEndEditing(textField: UITextField) -> Bool {
+        return self.formViewController().textFieldShouldEndEditing(textField)
+    }
+    
+    public func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
+        return self.formViewController().textField(textField, shouldChangeCharactersInRange: range, replacementString: string)
+    }
+   
+    public func textFieldDidBeginEditing(textField: UITextField) {
+        self.formViewController().beginEditing(self.rowDescriptor)
+        self.formViewController().textFieldDidBeginEditing(textField)
+    }
+    
+    public func textFieldDidEndEditing(textField: UITextField) {
+        self.textFieldValueChanged(self.usernameField)
+        self.formViewController().endEditing(self.rowDescriptor)
+        self.formViewController().textFieldDidEndEditing(textField)
     }
     
     // MARK: UITextField value changes
