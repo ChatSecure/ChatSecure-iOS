@@ -16,13 +16,13 @@ public class OTRUsernameValidator: NSObject, XLFormValidatorProtocol {
         if let value: Dictionary<String, String> = row.value as? Dictionary<String, String> {
             var hasUsername = false
             if let username = value[OTRUsernameCell.UsernameKey] {
-                if count(username) > 0 {
+                if username.characters.count > 0 {
                     hasUsername = true
                 }
             }
             var hasDomain = false
             if let domain = value[OTRUsernameCell.DomainKey] {
-                if count(domain) > 0 {
+                if domain.characters.count > 0 {
                     hasDomain = true
                 }
             }
@@ -111,7 +111,7 @@ public class OTRUsernameCell: XLFormBaseCell, UITextFieldDelegate {
     }
     
     override public func formDescriptorCellCanBecomeFirstResponder() -> Bool {
-        return !self.rowDescriptor.isDisabled()
+        return !self.rowDescriptor!.isDisabled()
     }
     
     override public func formDescriptorCellBecomeFirstResponder() -> Bool {
