@@ -9,7 +9,7 @@
 #import "OTRVideoItem.h"
 #import "OTRImages.h"
 #import "JSQMessagesMediaViewBubbleImageMasker.h"
-#import "YapDatabaseRelationshipTransaction.h"
+@import YapDatabase;
 #import "OTRDatabaseManager.h"
 #import "OTRMessage.h"
 #import "UIImage+JSQMessages.h"

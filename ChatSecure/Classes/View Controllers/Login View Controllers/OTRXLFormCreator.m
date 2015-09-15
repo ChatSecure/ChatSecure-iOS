@@ -62,7 +62,7 @@ NSString *const kOTRXLFormGenerateSecurePasswordTag               = @"kOTRXLForm
 {
     XLFormDescriptor *descriptor = nil;
     if (createAccount) {
-        descriptor = [[XLFormDescriptor alloc] initWithTitle:NSLocalizedString(@"Sign Up", @"title for creating a new account")];
+        descriptor = [XLFormDescriptor formDescriptorWithTitle:NSLocalizedString(@"Sign Up", @"title for creating a new account")];
         descriptor.assignFirstResponderOnShow = YES;
         
         XLFormSectionDescriptor *basicSection = [XLFormSectionDescriptor formSectionWithTitle:NSLocalizedString(@"Basic Setup", @"username section")];
@@ -97,7 +97,7 @@ NSString *const kOTRXLFormGenerateSecurePasswordTag               = @"kOTRXLForm
         
         
     } else {
-        descriptor = [[XLFormDescriptor alloc] initWithTitle:NSLocalizedString(@"Log In", @"title for logging in")];
+        descriptor = [XLFormDescriptor formDescriptorWithTitle:NSLocalizedString(@"Log In", @"title for logging in")];
         XLFormSectionDescriptor *basicSection = [XLFormSectionDescriptor formSectionWithTitle:BASIC_STRING];
         XLFormSectionDescriptor *advancedSection = [XLFormSectionDescriptor formSectionWithTitle:ADVANCED_STRING];
         
@@ -137,19 +137,6 @@ NSString *const kOTRXLFormGenerateSecurePasswordTag               = @"kOTRXLForm
     return descriptor;
 }
 
-+ (XLFormDescriptor *)ChatSecureIDForm
-{
-    XLFormDescriptor *form = [XLFormDescriptor formDescriptor];
-    XLFormSectionDescriptor *section = [XLFormSectionDescriptor formSection];
-    XLFormRowDescriptor *usernameRow = [self usernameTextFieldRowDescriptorWithValue:nil];
-    [usernameRow.cellConfigAtConfigure setObject:@"ChatSecure ID" forKey:@"textField.placeholder"];
-    
-    [section addFormRow:usernameRow];
-    [form addFormSection:section];
-    
-    return form;
-}
-
 + (XLFormRowDescriptor *)textfieldFormDescriptorType:(NSString *)type withTag:(NSString *)tag title:(NSString *)title placeHolder:(NSString *)placeholder value:(id)value
 {
     XLFormRowDescriptor *textFieldDescriptor = [XLFormRowDescriptor formRowDescriptorWithTag:tag rowType:type title:title];
@@ -165,7 +152,7 @@ NSString *const kOTRXLFormGenerateSecurePasswordTag               = @"kOTRXLForm
 {
     XLFormRowDescriptor *usernameDescriptor = [XLFormRowDescriptor formRowDescriptorWithTag:kOTRXLFormUsernameTextFieldTag rowType:[OTRUsernameCell kOTRFormRowDescriptorTypeUsername] title:USERNAME_STRING];
     usernameDescriptor.value = value;
-    usernameDescriptor.required = YES;
+    [usernameDescriptor addValidator:[[OTRUsernameValidator alloc] init]];
     return usernameDescriptor;
 }
 

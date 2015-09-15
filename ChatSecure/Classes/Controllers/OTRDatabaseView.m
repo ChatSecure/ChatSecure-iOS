@@ -7,15 +7,12 @@
 //
 
 #import "OTRDatabaseView.h"
-#import "YapDatabaseView.h"
-#import "YapDatabase.h"
+@import YapDatabase;
 #import "OTRDatabaseManager.h"
 #import "OTRBuddy.h"
 #import "OTRAccount.h"
 #import "OTRMessage.h"
 #import "OTRXMPPPresenceSubscriptionRequest.h"
-#import "YapDatabaseFullTextSearch.h"
-#import "YapDatabaseFilteredView.h"
 
 NSString *OTRConversationGroup = @"Conversation";
 NSString *OTRConversationDatabaseViewExtensionName = @"OTRConversationDatabaseViewExtensionName";

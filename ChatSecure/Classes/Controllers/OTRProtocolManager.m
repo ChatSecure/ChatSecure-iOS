@@ -28,8 +28,8 @@
 #import "OTROAuthRefresher.h"
 #import "OTROAuthXMPPAccount.h"
 #import "OTRDatabaseManager.h"
-#import "YapDatabaseConnection.h"
-#import "YapDatabaseTransaction.h"
+@import YapDatabase;
+
 #import <KVOController/FBKVOController.h>
 #import "OTRLog.h"
 

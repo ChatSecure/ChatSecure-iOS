@@ -11,8 +11,8 @@
 #import "OTRAccount.h"
 #import "OTRMessage.h"
 #import "OTRDatabaseManager.h"
-#import "YapDatabaseConnection.h"
-#import "YapDatabaseTransaction.h"
+@import YapDatabase;
+
 
 @interface OTRConversationCell ()
 

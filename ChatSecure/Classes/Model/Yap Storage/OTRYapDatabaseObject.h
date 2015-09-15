@@ -8,9 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-#import "YapDatabaseRelationshipNode.h"
-#import "YapDatabaseTransaction.h"
-#import "MTLModel+NSCoding.h"
+@import YapDatabase;
+@import Mantle;
 
 @interface OTRYapDatabaseObject : MTLModel
 

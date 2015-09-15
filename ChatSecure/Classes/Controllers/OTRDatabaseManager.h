@@ -8,9 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-#import "YapDatabaseConnection.h"
-#import "YapDatabase.h"
-#import "YapDatabaseTransaction.h"
+@import YapDatabase;
+
 #import "OTRMediaServer.h"
 #import "OTRMediaFileManager.h"
 

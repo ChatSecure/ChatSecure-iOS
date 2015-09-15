@@ -32,7 +32,7 @@
 - (instancetype)init
 {
     if (self = [super init]) {
-        
+        self.enabled = NO;
         self.notificationQueue = [NSOperationQueue mainQueue];
         self.notificationObservers = [[NSMutableDictionary alloc] init];
         self.started = NO;
@@ -105,6 +105,9 @@
 
 - (void)showLoginSuccessNotification:(NSNotification *)notification
 {
+    if (!self.enabled) {
+        return;
+    }
     UIViewController *topViewController = [self topViewController];
     if (![topViewController isKindOfClass:[OTRBaseLoginViewController class]]) {
         OTRXMPPManager *xmppManager = notification.object;
@@ -120,6 +123,9 @@
 
 - (void)showLoginFailureNotification:(NSNotification *)notification
 {
+    if (!self.enabled) {
+        return;
+    }
     BOOL isUserInitiated = [[notification.userInfo objectForKey:kOTRProtocolLoginUserInitiated] boolValue];
     
     UIViewController *topViewController = [self topViewController];
@@ -146,6 +152,9 @@
 
 - (void)showAccountConnectingNotificationWithAccountName:(NSString *)accountName
 {
+    if (!self.enabled) {
+        return;
+    }
     OTRToastOptions *options = [OTRToastOptions optionsWithText:CONNECTING_STRING subtitleText:accountName];
     options.image = [UIImage otr_imageWithImage:[OTRImages wifiWithColor:[UIColor whiteColor]] scaledToSize:kOTRDefaultNotificationImageSize];
     [CRToastManager showNotificationWithOptions:[options dictionary] completionBlock:nil];

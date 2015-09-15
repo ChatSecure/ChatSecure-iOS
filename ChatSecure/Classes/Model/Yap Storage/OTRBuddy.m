@@ -10,7 +10,7 @@
 #import "OTRAccount.h"
 #import "OTRMessage.h"
 #import "OTRDatabaseManager.h"
-#import "YapDatabaseRelationshipTransaction.h"
+@import YapDatabase;
 #import "OTRImages.h"
 #import "JSQMessagesAvatarImageFactory.h"
 #import "OTRKit.h"

@@ -20,7 +20,7 @@
 
 @end
 
-@interface OTRAdvancedWelcomeViewController : UITableViewController
+@interface OTRExistingAccountViewController : UITableViewController
 
 @property (nonatomic, strong, readonly) NSArray *accountInfoArray;
 

@@ -5,3 +5,7 @@
 #import <YapDatabase/YapDatabase.h>
 
 #import "OTRPasswordGenerator.h"
+#import "OTRAccount.h"
+#import "OTRBaseLoginViewController.h"
+#import "OTRXMPPCreateAccountHandler.h"
+#import "OTRXLFormCreator.h"

@@ -99,7 +99,7 @@ NSString *const kOTROTRXMPPServerListViewControllerCustomTag = @"kOTROTRXMPPServ
 {
     NSArray *serverList = [OTRXMPPServerInfo defaultServerList];
     
-    XLFormDescriptor *formDescriptor = [[XLFormDescriptor alloc] initWithTitle:NSLocalizedString(@"Choose Server", @"title for server selection screen")];
+    XLFormDescriptor *formDescriptor = [XLFormDescriptor formDescriptorWithTitle:NSLocalizedString(@"Choose Server", @"title for server selection screen")];
     XLFormSectionDescriptor *sectionDescriptor = [[XLFormSectionDescriptor alloc] init];
     [formDescriptor addFormSection:sectionDescriptor];
     

@@ -15,7 +15,7 @@
 #import "OTRDatabaseManager.h"
 #import "OTRDatabaseView.h"
 #import "OTRAccountsManager.h"
-#import "YapDatabaseFullTextSearchTransaction.h"
+@import YapDatabase;
 #import "Strings.h"
 #import "OTRBuddyInfoCell.h"
 #import "OTRNewBuddyViewController.h"

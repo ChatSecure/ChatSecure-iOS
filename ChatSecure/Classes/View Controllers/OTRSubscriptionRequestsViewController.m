@@ -16,7 +16,7 @@
 #import "OTRProtocolManager.h"
 #import "OTRUtilities.h"
 #import "UIActionSheet+ChatSecure.h"
-#import "YapDatabaseViewMappings.h"
+@import YapDatabase;
 #import "UIActionSheet+Blocks.h"
 
 @interface OTRSubscriptionRequestsViewController () <UITableViewDataSource, UITableViewDelegate>
