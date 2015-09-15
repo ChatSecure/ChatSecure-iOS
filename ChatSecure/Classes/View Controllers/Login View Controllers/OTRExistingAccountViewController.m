@@ -19,10 +19,10 @@
 #import "OTRGoolgeOAuthLoginHandler.h"
 #import "GTMOAuth2ViewControllerTouch.h"
 #import "OTRSecrets.h"
-#import "OTRConstants.h"
 #import "OTRDatabaseManager.h"
 #import "OTRChatSecureIDCreateAccountHandler.h"
 #import "OTRWelcomeAccountTableViewDelegate.h"
+@import OTRAssets;
 
 @implementation OTRWelcomeAccountInfo
 
@@ -98,14 +98,14 @@
 {
     NSMutableArray *accountArray = [NSMutableArray array];
     
-    [accountArray addObject:[OTRWelcomeAccountInfo accountInfoWithText:@"XMPP" image:[UIImage imageNamed:@"xmpp"] didSelectBlock:^{
+    [accountArray addObject:[OTRWelcomeAccountInfo accountInfoWithText:@"XMPP" image:[UIImage imageNamed:@"xmpp" inBundle:[NSBundle bundleForClass:[OTRAssets class]] compatibleWithTraitCollection:nil] didSelectBlock:^{
         OTRXMPPAccount *xmppAccount = [[OTRXMPPAccount alloc] initWithAccountType:OTRAccountTypeJabber];
         OTRBaseLoginViewController *loginViewController = [OTRBaseLoginViewController loginViewControllerForAccount:xmppAccount];
         loginViewController.completionBlock = self.completionBlock;
         loginViewController.account = xmppAccount;
         [self.navigationController pushViewController:loginViewController animated:YES];
     }]];
-    [accountArray addObject:[OTRWelcomeAccountInfo accountInfoWithText:@"Google" image:[UIImage imageNamed:@"gtalk"] didSelectBlock:^{
+    [accountArray addObject:[OTRWelcomeAccountInfo accountInfoWithText:@"Google" image:[UIImage imageNamed:@"gtalk" inBundle:[NSBundle bundleForClass:[OTRAssets class]] compatibleWithTraitCollection:nil] didSelectBlock:^{
         //Authenicate and go through google oauth
         GTMOAuth2ViewControllerTouch * oauthViewController = [GTMOAuth2ViewControllerTouch controllerWithScope:GOOGLE_APP_SCOPE clientID:GOOGLE_APP_ID clientSecret:kOTRGoogleAppSecret keychainItemName:nil completionHandler:^(GTMOAuth2ViewControllerTouch *viewController, GTMOAuth2Authentication *auth, NSError *error) {
             if (!error) {

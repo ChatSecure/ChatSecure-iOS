@@ -21,7 +21,7 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "OTRAboutViewController.h"
-#import "Strings.h"
+#import "OTRStrings.h"
 #import "OTRConstants.h"
 #import "OTRAppDelegate.h"
 #import "PureLayout.h"
@@ -29,10 +29,12 @@
 #import "OTRSocialButtonsView.h"
 #import "OTRAcknowledgementsViewController.h"
 #import "NSURL+chatsecure.h"
-#import "Strings.h"
+#import "OTRStrings.h"
 #import "OTRUtilities.h"
 #import "UIActionSheet+ChatSecure.h"
 #import "UIActivityViewController+ChatSecure.h"
+@import OTRAssets;
+#import "OTRLanguageManager.h"
 
 static NSString *const kDefaultCellReuseIdentifier = @"kDefaultCellReuseIdentifier";
 
@@ -80,7 +82,7 @@ static NSString *const kDefaultCellReuseIdentifier = @"kDefaultCellReuseIdentifi
 }
 
 - (void) setupImageView {
-    self.imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"chatsecure_logo_transparent"]];
+    self.imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"chatsecure_logo_transparent" inBundle:[NSBundle bundleForClass:[OTRAssets class]] compatibleWithTraitCollection:nil]];
     self.imageView.translatesAutoresizingMaskIntoConstraints = NO;
     self.imageView.contentMode = UIViewContentModeScaleAspectFit;
     self.imageView.userInteractionEnabled = YES;

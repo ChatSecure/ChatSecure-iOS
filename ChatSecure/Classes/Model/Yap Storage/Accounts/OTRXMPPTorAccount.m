@@ -9,14 +9,16 @@
 #import "OTRXMPPTorAccount.h"
 
 #import "OTRXMPPTorManager.h"
-#import "Strings.h"
+#import "OTRStrings.h"
+#import "OTRLanguageManager.h"
+@import OTRAssets;
 
 
 @implementation OTRXMPPTorAccount
 
 - (UIImage *)accountImage
 {
-    return [UIImage imageNamed:OTRXMPPTorImageName];
+    return [UIImage imageNamed:OTRXMPPTorImageName inBundle:[NSBundle bundleForClass:[OTRAssets class]] compatibleWithTraitCollection:nil];
 }
 
 - (NSString *)accountDisplayName

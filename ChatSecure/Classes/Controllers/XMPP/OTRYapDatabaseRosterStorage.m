@@ -13,7 +13,8 @@
 #import "OTRLog.h"
 #import "OTRXMPPBuddy.h"
 #import "OTRXMPPAccount.h"
-#import "Strings.h"
+#import "OTRStrings.h"
+#import "OTRLanguageManager.h"
 
 @interface OTRYapDatabaseRosterStorage ()
 

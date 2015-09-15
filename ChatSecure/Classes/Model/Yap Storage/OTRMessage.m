@@ -12,9 +12,10 @@
 @import YapDatabase;
 #import "OTRDatabaseManager.h"
 #import "NSString+HTML.h"
-#import "Strings.h"
+#import "OTRStrings.h"
 #import "OTRConstants.h"
 #import "OTRMediaItem.h"
+#import "OTRLanguageManager.h"
 
 const struct OTRMessageAttributes OTRMessageAttributes = {
 	.date = @"date",

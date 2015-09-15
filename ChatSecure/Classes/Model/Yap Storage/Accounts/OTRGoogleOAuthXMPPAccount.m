@@ -7,12 +7,13 @@
 //
 
 #import "OTRGoogleOAuthXMPPAccount.h"
-#import "OTRConstants.h"
-#import "Strings.h"
+#import "OTRStrings.h"
 #import "GTMOAuth2Authentication.h"
 #import "GTMOAuth2SignIn.h"
 #import "OTRSecrets.h"
+@import OTRAssets;
 #import "OTRConstants.h"
+#import "OTRLanguageManager.h"
 
 NSString *const kOTRExpirationDateKey = @"kOTRExpirationDateKey";
 NSString *const kOTRExpiresInKey      = @"expires_in";
@@ -31,7 +32,7 @@ NSString *const kOTRExpiresInKey      = @"expires_in";
 
 - (UIImage *)accountImage
 {
-    return [UIImage imageNamed:OTRGoogleTalkImageName];
+    return [UIImage imageNamed:OTRGoogleTalkImageName inBundle:[NSBundle bundleForClass:[OTRAssets class]] compatibleWithTraitCollection:nil];
 }
 - (NSString *)accountDisplayName
 {

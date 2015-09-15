@@ -9,8 +9,9 @@
 #import "OTRAccountTableViewCell.h"
 
 #import "OTRAccount.h"
-#import "Strings.h"
+#import "OTRStrings.h"
 #import "OTRImages.h"
+#import "OTRLanguageManager.h"
 
 @implementation OTRAccountTableViewCell
 

@@ -11,7 +11,8 @@
 #import "BButton.h"
 #import "NSURL+chatsecure.h"
 #import "OTRAppDelegate.h"
-#import "Strings.h"
+#import "OTRStrings.h"
+#import "OTRLanguageManager.h"
 
 static CGFloat kOTRSocialButtonHeight = 30.0f;
 static CGFloat kOTRSocialButtonWidth = 93.0f;

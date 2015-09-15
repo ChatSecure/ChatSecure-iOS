@@ -11,7 +11,8 @@
 #import "TUSafariActivity.h"
 #import "OTROpenInFacebookActivity.h"
 #import "OTROpenInTwitterActivity.h"
-#import "Strings.h"
+#import "OTRStrings.h"
+#import "OTRLanguageManager.h"
 
 @implementation UIActivityViewController (ChatSecure)
 

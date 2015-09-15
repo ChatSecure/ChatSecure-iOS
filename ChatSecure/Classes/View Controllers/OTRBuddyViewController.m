@@ -9,7 +9,7 @@
 #import "OTRBuddyViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import "OTRInLineTextEditTableViewCell.h"
-#import "Strings.h"
+#import "OTRStrings.h"
 #import "OTRProtocolManager.h"
 #import "OTRConstants.h"
 #import "OTRUtilities.h"
@@ -19,6 +19,7 @@
 #import "OTRBuddy.h"
 #import "OTRDatabaseManager.h"
 #import "OTRUtilities.h"
+#import "OTRLanguageManager.h"
 
 @interface OTRBuddyViewController ()
 

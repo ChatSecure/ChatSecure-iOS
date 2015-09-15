@@ -9,7 +9,9 @@
 #import "OTRQRCodeActivity.h"
 #import "UIImage+ChatSecure.h"
 #import "UIActivity+ChatSecure.h"
-#import "Strings.h"
+#import "OTRStrings.h"
+#import "OTRLanguageManager.h"
+@import OTRAssets;
 
 NSString *const kOTRActivityTypeQRCode = @"OTRActivityTypeQRCode";
 
@@ -32,7 +34,7 @@ NSString *const kOTRActivityTypeQRCode = @"OTRActivityTypeQRCode";
 
 -(UIImage *)activityImage
 {
-    return [UIImage otr_imageWithImage:[UIImage imageNamed:@"chatsecure_qrcode.png"] scaledToSize:[UIActivity otr_defaultImageSize]];
+    return [UIImage otr_imageWithImage:[UIImage imageNamed:@"chatsecure_qrcode.png" inBundle:[NSBundle bundleForClass:[OTRAssets class]] compatibleWithTraitCollection:nil] scaledToSize:[UIActivity otr_defaultImageSize]];
 }
 
 -(BOOL)canPerformWithActivityItems:(NSArray *)activityItems

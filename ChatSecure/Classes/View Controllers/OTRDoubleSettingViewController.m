@@ -21,7 +21,8 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "OTRDoubleSettingViewController.h"
-#import "Strings.h"
+#import "OTRStrings.h"
+#import "OTRLanguageManager.h"
 
 @interface OTRDoubleSettingViewController (Private)
 - (void) setTextForValueLabel;

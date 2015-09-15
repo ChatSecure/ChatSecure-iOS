@@ -27,7 +27,7 @@
 #import "OTRProtocolManager.h"
 #import "OTRDatabaseManager.h"
 #import "OTRUtilities.h"
-#import "Strings.h"
+#import "OTRStrings.h"
 #import "OTRAppDelegate.h"
 #import "OTRMessagesHoldTalkViewController.h"
 #import "UIViewController+ChatSecure.h"
@@ -36,7 +36,7 @@
 #import "OTRVideoItem.h"
 #import "OTRMediaFileManager.h"
 #import "OTRMediaServer.h"
-
+#import "OTRLanguageManager.h"
 #import "OTRLog.h"
 
 @import AVFoundation;

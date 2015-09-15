@@ -9,9 +9,10 @@
 #import "OTRXMPPServerListViewController.h"
 #import "XMPPServerInfoCell.h"
 #import "OTRImages.h"
-#import "Strings.h"
+#import "OTRStrings.h"
 #import "XLFormTextFieldCell.h"
 #import "OTRXMPPServerInfo.h"
+#import "OTRLanguageManager.h"
 
 NSString *const kOTROTRXMPPServerListViewControllerCustomTag = @"kOTROTRXMPPServerListViewControllerCustomTag";
 
