@@ -14,7 +14,6 @@ extension Account {
     public class func yapCollection() -> String {
         return "ChatSecurePushColletion"
     }
-    
 }
 
 /** 
@@ -43,8 +42,8 @@ public class PushController: NSObject {
     }
     
     func createNewRandomPushAccount(completion:(success: Bool, error: NSError?) -> Void) {
-        var username = NSUUID().UUIDString
-        var password = OTRPasswordGenerator.passwordWithLength(OTRDefaultPasswordLength)
+        let username = NSUUID().UUIDString
+        let password = OTRPasswordGenerator.passwordWithLength(OTRDefaultPasswordLength)
         
         self.apiClient.registerNewUser(username, password: password, email: nil) { (account, error) -> Void in
             if let newAccount = account {

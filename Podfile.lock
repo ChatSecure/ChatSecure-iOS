@@ -64,9 +64,9 @@ PODS:
   - libsqlfs/SQLCipher (1.3):
     - libsqlfs/common
     - SQLCipher/fts
-  - Mantle (2.0.4):
-    - Mantle/extobjc (= 2.0.4)
-  - Mantle/extobjc (2.0.4)
+  - Mantle (2.0.5):
+    - Mantle/extobjc (= 2.0.5)
+  - Mantle/extobjc (2.0.5)
   - MBProgressHUD (0.9.1)
   - MWFeedParser (1.0.1):
     - MWFeedParser/FeedParser (= 1.0.1)
@@ -354,7 +354,7 @@ SPEC CHECKSUMS:
   JVFloatLabeledTextField: ea4a3d8387ddd43724c472bb2b8ab39b79af05d4
   KVOController: 9fd8f0343670994e4b6f9f0b31f5a45663f3e1cf
   libsqlfs: 179e4fb40b8c07fd0ee7933ec4c0b9f4815cbd0e
-  Mantle: 6bee68168423948be0c0c5924832bf3af188e099
+  Mantle: 1912395033f601de5adc8ee91e48f46e4c7051ad
   MBProgressHUD: c47f2c166c126cf2ce36498d80f33e754d4e93ad
   MWFeedParser: 2cf646014c1baf6ad1b08c480b40a08180079247
   Navajo: 5fb68239b4e3af4610f31925bae1ca8e6bab8eaa
