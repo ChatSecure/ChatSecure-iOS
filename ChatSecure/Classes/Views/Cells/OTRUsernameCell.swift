@@ -35,14 +35,15 @@ public class OTRUsernameValidator: NSObject, XLFormValidatorProtocol {
     }
 }
 
+@objc(OTRUsernameCell)
 public class OTRUsernameCell: XLFormBaseCell, UITextFieldDelegate {
 
     @IBOutlet var usernameLabel: UILabel!
     @IBOutlet var usernameField: ParkedTextField!
     
-    static let kOTRFormRowDescriptorTypeUsername = "kOTRFormRowDescriptorTypeUsername"
-    static let UsernameKey = "username"
-    static let DomainKey = "domain"
+    public static let kOTRFormRowDescriptorTypeUsername = "kOTRFormRowDescriptorTypeUsername"
+    public static let UsernameKey = "username"
+    public static let DomainKey = "domain"
     
     deinit {
         self.usernameField.delegate = nil

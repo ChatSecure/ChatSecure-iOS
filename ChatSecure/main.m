@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "OTRAppDelegate.h"
+@import ChatSecureCore;
 
 int main(int argc, char * argv[]) {
     @autoreleasepool {

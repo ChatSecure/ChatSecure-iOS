@@ -50,7 +50,7 @@
 #import "OTRXLFormCreator.h"
 #import <KVOController/FBKVOController.h>
 #import "OTRInviteViewController.h"
-#import "ChatSecure-Swift.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 static NSString *const circleImageName = @"31-circle-plus-large.png";
 
@@ -355,7 +355,7 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 }
 
 - (void) addAccount:(id)sender {
-    UIStoryboard *onboardingStoryboard = [UIStoryboard storyboardWithName:@"Onboarding" bundle:[NSBundle mainBundle]];
+    UIStoryboard *onboardingStoryboard = [UIStoryboard storyboardWithName:@"Onboarding" bundle:[NSBundle bundleForClass:[OTRWelcomeViewController class]]];
     UINavigationController *welcomeNavController = [onboardingStoryboard instantiateInitialViewController];
     OTRWelcomeViewController *welcomeViewController = welcomeNavController.viewControllers[0];
     __weak id welcomeVC = welcomeViewController;

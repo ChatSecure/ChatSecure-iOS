@@ -14,7 +14,7 @@
 #import "OTRImages.h"
 #import "OTRXMPPServerListViewController.h"
 #import "OTRXMPPServerInfo.h"
-#import "ChatSecure-Swift.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 NSString *const kOTRXLFormUsernameTextFieldTag        = @"kOTRXLFormUsernameTextFieldTag";
 NSString *const kOTRXLFormPasswordTextFieldTag        = @"kOTRXLFormPasswordTextFieldTag";

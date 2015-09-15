@@ -29,7 +29,7 @@
 #import "OTRAppDelegate.h"
 #import "OTRProtocolManager.h"
 #import "OTRInviteViewController.h"
-#import "ChatSecure-Swift.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 static CGFloat kOTRConversationCellHeight = 80.0;
 
@@ -144,7 +144,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     }];
     //If there is any number of accounts launch into default conversation view otherwise onboarding time
     if (!hasAccounts) {
-        UIStoryboard *onboardingStoryboard = [UIStoryboard storyboardWithName:@"Onboarding" bundle:[NSBundle mainBundle]];
+        UIStoryboard *onboardingStoryboard = [UIStoryboard storyboardWithName:@"Onboarding" bundle:[NSBundle bundleForClass:[OTRWelcomeViewController class]]];
         UINavigationController *welcomeNavController = [onboardingStoryboard instantiateInitialViewController];
         OTRWelcomeViewController *welcomeViewController = welcomeNavController.viewControllers[0];
         __weak id welcomeVC = welcomeViewController;
