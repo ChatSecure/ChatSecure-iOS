@@ -9,3 +9,6 @@
 #import "OTRBaseLoginViewController.h"
 #import "OTRXMPPCreateAccountHandler.h"
 #import "OTRXLFormCreator.h"
+#import "OTRBuddy.h"
+#import "OTRConstants.h"
+#import "OTRDatabaseManager.h"
