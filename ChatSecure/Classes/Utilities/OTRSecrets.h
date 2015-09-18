@@ -8,6 +8,10 @@
 
 @import Foundation;
 
-extern NSString *const kOTRGoogleAppSecret;
-extern NSString *const kOTRHockeyLiveIdentifier;
-extern NSString *const kOTRHockeyBetaIdentifier;
+@interface OTRSecrets : NSObject
+
++ (NSString*) googleAppSecret;
++ (NSString*) hockeyLiveIdentifier;
++ (NSString*) hockeyBetaIdentifier;
+
+@end

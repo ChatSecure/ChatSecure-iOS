@@ -35,7 +35,7 @@ NSString *const kOTRAppleLanguagesKey  = @"AppleLanguages";
 
 + (NSArray *)supportedLanguages
 {
-    NSBundle *bundle = [NSBundle bundleForClass:[OTRAssets class]];
+    NSBundle *bundle = [OTRAssets resourcesBundle];
     NSParameterAssert(bundle != nil);
     NSMutableArray *supportedLanguages = [[bundle localizations] mutableCopy];
     //Strange Xcode 6 base localization
@@ -54,7 +54,7 @@ NSString *const kOTRAppleLanguagesKey  = @"AppleLanguages";
 +(NSString *)translatedString:(NSString *)englishString
 {
     NSString * currentLocale = [OTRLanguageManager currentLocale];
-    NSBundle *bundle = [NSBundle bundleForClass:[OTRAssets class]];
+    NSBundle *bundle = [OTRAssets resourcesBundle];
     NSParameterAssert(bundle != nil);
     NSString *bundlePath = [bundle pathForResource:@"Localizable" ofType:@"strings" inDirectory:nil forLocalization:currentLocale];
     if (!bundlePath && [currentLocale length] > 2) {

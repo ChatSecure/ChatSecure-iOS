@@ -58,7 +58,7 @@ public class OTRUsernameCell: XLFormBaseCell, UITextFieldDelegate {
     override public class func initialize() {
         // Register xib
         XLFormViewController.cellClassesForRowDescriptorTypes()
-            .setObject("OTRUsernameCell",
+            .setObject("OTRResources.bundle/OTRUsernameCell",
                 forKey: OTRUsernameCell.kOTRFormRowDescriptorTypeUsername)
     }
     

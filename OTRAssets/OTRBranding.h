@@ -8,10 +8,46 @@
 
 #import <Foundation/Foundation.h>
 
+@interface OTRBranding : NSObject
 
-extern NSString *const kOTRXMPPResource;
+#pragma mark Strings
 
-extern NSString *const kOTRFeedbackEmail;
+/** The default XMPP resource (e.g. username@example.com/chatsecure) */
++ (NSString*) xmppResource;
 
-extern NSString *const GOOGLE_APP_ID;
-extern NSString *const GOOGLE_APP_SCOPE;
+/** Email for user feedback e.g. support@chatsecure.org */
++ (NSString*) feedbackEmail;
+
+/** Google Apps GOOGLE_APP_ID */
++ (NSString*) googleAppId;
+
+/** Google Apps Scope e.g. https://www.googleapis.com/auth/googletalk */
++ (NSString*) googleAppScope;
+
+#pragma mark URLs
+
+/** Project source code on GitHub */
++ (NSURL*) githubURL;
+
+/** Facebook App URL (launches FB app) */
++ (NSURL*) facebookAppURL;
+
+/** Facebook Web URL */
++ (NSURL*) facebookWebURL;
+
+/** Twitter App URL (launches Twitter app) */
++ (NSURL*) twitterAppURL;
+
+/** Twitter Web URL */
++ (NSURL*) twitterWebURL;
+
+/** Transifex URL */
++ (NSURL*) transifexURL;
+
+/** Project URL e.g. https://chatsecure.org */
++ (NSURL*) projectURL;
+
+/** Share Base URL e.g. https://chatsecure.org/i/# */
++ (NSURL*) shareBaseURL;
+
+@end

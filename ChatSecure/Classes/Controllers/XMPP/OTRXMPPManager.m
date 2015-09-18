@@ -381,7 +381,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 {
     int r = arc4random() % 99999;
     
-    NSString * resource = [NSString stringWithFormat:@"%@%d",kOTRXMPPResource,r];
+    NSString * resource = [NSString stringWithFormat:@"%@%d",[OTRBranding xmppResource],r];
     
     self.JID = [XMPPJID jidWithString:myJID resource:resource];
     

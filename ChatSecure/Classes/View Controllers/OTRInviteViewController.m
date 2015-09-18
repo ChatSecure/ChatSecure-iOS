@@ -48,7 +48,7 @@ static CGFloat const kOTRInvitePadding = 10;
     [self.view addSubview:self.titleImageView];
     [self.view addSubview:self.subtitleLabel];
     
-    UIImage *checkImage = [UIImage imageNamed:@"ic-check" inBundle:[NSBundle bundleForClass:[OTRAssets class]] compatibleWithTraitCollection:nil];
+    UIImage *checkImage = [UIImage imageNamed:@"ic-check" inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];
     UIBarButtonItem *skipButton = [[UIBarButtonItem alloc] initWithImage:checkImage style:UIBarButtonItemStylePlain target:self action:@selector(skipPressed:)];
     self.navigationItem.rightBarButtonItem = skipButton;
     

@@ -32,7 +32,7 @@ NSString *const kOTRExpiresInKey      = @"expires_in";
 
 - (UIImage *)accountImage
 {
-    return [UIImage imageNamed:OTRGoogleTalkImageName inBundle:[NSBundle bundleForClass:[OTRAssets class]] compatibleWithTraitCollection:nil];
+    return [UIImage imageNamed:OTRGoogleTalkImageName inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];
 }
 - (NSString *)accountDisplayName
 {
@@ -82,9 +82,9 @@ NSString *const kOTRExpiresInKey      = @"expires_in";
         auth = [[GTMOAuth2Authentication alloc] init];
         [auth setParameters:[tokenDictionary mutableCopy]];
     }
-    auth.clientID = GOOGLE_APP_ID;
-    auth.clientSecret = kOTRGoogleAppSecret;
-    auth.scope = GOOGLE_APP_SCOPE;
+    auth.clientID = [OTRBranding googleAppId];
+    auth.clientSecret = [OTRSecrets googleAppSecret];
+    auth.scope = [OTRBranding googleAppScope];
     auth.tokenURL = [GTMOAuth2SignIn googleTokenURL];
     return auth;
 }

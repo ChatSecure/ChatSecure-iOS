@@ -35,7 +35,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    UIImage *checkImage = [UIImage imageNamed:@"ic-check" inBundle:[NSBundle bundleForClass:[OTRAssets class]] compatibleWithTraitCollection:nil];
+    UIImage *checkImage = [UIImage imageNamed:@"ic-check" inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];
     UIBarButtonItem *checkButton = [[UIBarButtonItem alloc] initWithImage:checkImage style:UIBarButtonItemStylePlain target:self action:@selector(loginButtonPressed:)];
     
     self.navigationItem.rightBarButtonItem = checkButton;
@@ -288,7 +288,7 @@
     
     // For some reason we must show the alert view first,
     // THEN change the button style, otherwise the button doesn't appear.
-    UIImage * normalImage = [UIImage imageNamed:@"button-green" inBundle:[NSBundle bundleForClass:[OTRAssets class]] compatibleWithTraitCollection:nil];
+    UIImage * normalImage = [UIImage imageNamed:@"button-green" inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];
     CGFloat hInset = floorf(normalImage.size.width / 2);
     CGFloat vInset = floorf(normalImage.size.height / 2);
     UIEdgeInsets insets = UIEdgeInsetsMake(vInset, hInset, vInset, hInset);

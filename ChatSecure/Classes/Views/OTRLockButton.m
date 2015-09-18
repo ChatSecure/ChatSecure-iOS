@@ -26,22 +26,22 @@ static NSString *const kOTRUnlockImageName          = @"Lock_Unlocked";
     
     switch (lockStatus) {
         case OTRLockStatusUnlocked:
-            backgroundImage = [UIImage imageNamed:kOTRUnlockImageName inBundle:[NSBundle bundleForClass:[OTRAssets class]] compatibleWithTraitCollection:nil];
+            backgroundImage = [UIImage imageNamed:kOTRUnlockImageName inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];
             break;
         case OTRLockStatusLockedAndVerified:
-            backgroundImage = [UIImage imageNamed:kOTRLockAndVerifiedImageName inBundle:[NSBundle bundleForClass:[OTRAssets class]] compatibleWithTraitCollection:nil];
+            backgroundImage = [UIImage imageNamed:kOTRLockAndVerifiedImageName inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];
             break;
         case OTRLockStatusLockedAndError:
-            backgroundImage = [UIImage imageNamed:kOTRLockedAndErrorImageName inBundle:[NSBundle bundleForClass:[OTRAssets class]] compatibleWithTraitCollection:nil];
+            backgroundImage = [UIImage imageNamed:kOTRLockedAndErrorImageName inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];
             break;
         case OTRLockStatusLockedAndWarn:
-            backgroundImage = [UIImage imageNamed:kOTRLockedAndWarnImageName inBundle:[NSBundle bundleForClass:[OTRAssets class]] compatibleWithTraitCollection:nil];
+            backgroundImage = [UIImage imageNamed:kOTRLockedAndWarnImageName inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];
             break;
         case OTRLockStatusLocked:
-            backgroundImage = [UIImage imageNamed:kOTRLockImageName inBundle:[NSBundle bundleForClass:[OTRAssets class]] compatibleWithTraitCollection:nil];
+            backgroundImage = [UIImage imageNamed:kOTRLockImageName inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];
             break;
         default:
-            backgroundImage = [UIImage imageNamed:kOTRUnlockImageName inBundle:[NSBundle bundleForClass:[OTRAssets class]] compatibleWithTraitCollection:nil];
+            backgroundImage = [UIImage imageNamed:kOTRUnlockImageName inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];
             break;
     }
     

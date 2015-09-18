@@ -10,6 +10,10 @@
 
 /** Stub class for identifying asset framework bundle via bundleForClass: */
 @interface OTRAssets : NSObject
+
+/** Returns OTRResources.bundle */
++ (NSBundle*) resourcesBundle;
+
 @end
 
 //! Project version number for OTRAssets.

@@ -108,7 +108,7 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     self.tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
     [self.view addSubview:self.tableView];
     
-    UIBarButtonItem *aboutButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"OTRInfoIcon" inBundle:[NSBundle bundleForClass:[OTRAssets class]] compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:self action:@selector(showAboutScreen)];
+    UIBarButtonItem *aboutButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"OTRInfoIcon" inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:self action:@selector(showAboutScreen)];
 
     self.navigationItem.rightBarButtonItem = aboutButton;
     
@@ -177,7 +177,7 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
             if (cell == nil) {
                 cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:addAccountCellIdentifier];
                 cell.textLabel.text = NEW_ACCOUNT_STRING;
-                cell.imageView.image = [UIImage imageNamed:circleImageName inBundle:[NSBundle bundleForClass:[OTRAssets class]] compatibleWithTraitCollection:nil];
+                cell.imageView.image = [UIImage imageNamed:circleImageName inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];
                 cell.detailTextLabel.text = nil;
             }
         }
@@ -357,7 +357,7 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 }
 
 - (void) addAccount:(id)sender {
-    UIStoryboard *onboardingStoryboard = [UIStoryboard storyboardWithName:@"Onboarding" bundle:[NSBundle bundleForClass:[OTRWelcomeViewController class]]];
+    UIStoryboard *onboardingStoryboard = [UIStoryboard storyboardWithName:@"Onboarding" bundle:[OTRAssets resourcesBundle]];
     UINavigationController *welcomeNavController = [onboardingStoryboard instantiateInitialViewController];
     OTRWelcomeViewController *welcomeViewController = welcomeNavController.viewControllers[0];
     __weak id welcomeVC = welcomeViewController;

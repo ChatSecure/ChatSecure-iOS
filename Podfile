@@ -37,7 +37,7 @@ pod 'CocoaAsyncSocket', '~> 7.4'
 pod 'JTSImageViewController', '~> 1.4'
 pod 'KVOController', '~> 1.0'
 pod 'CRToast', '~> 0.0.8'
-pod 'XLForm', '~> 3.0'
+# pod 'XLForm', '~> 3.0' # Need to use bundle fork
 # pod 'ParkedTextField', '~> 0.1' # Need to use Swift 2.0 fork
 
 # QR Codes
@@ -63,4 +63,5 @@ pod 'XMPPFramework', :path => 'Submodules/XMPPFramework/XMPPFramework.podspec'
 pod 'YapDatabase/SQLCipher', :path => 'Submodules/YapDatabase/YapDatabase.podspec'
 pod 'IOCipher/GCDWebServer', :path => 'Submodules/IOCipher/IOCipher.podspec'
 pod 'ParkedTextField', :path => 'Submodules/ParkedTextField/ParkedTextField.podspec'
+pod 'XLForm', :path => 'Submodules/XLForm/XLForm.podspec'
 

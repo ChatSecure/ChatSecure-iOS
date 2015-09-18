@@ -36,7 +36,7 @@
     self.detailTextLabel.text = setting.settingDescription;
     if(setting.imageName)
     {
-        self.imageView.image = [UIImage imageNamed:setting.imageName inBundle:[NSBundle bundleForClass:[OTRAssets class]] compatibleWithTraitCollection:nil];
+        self.imageView.image = [UIImage imageNamed:setting.imageName inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];
     }
     else 
     {

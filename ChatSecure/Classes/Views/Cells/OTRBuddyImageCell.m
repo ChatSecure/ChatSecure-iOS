@@ -73,7 +73,7 @@ const CGFloat OTRBuddyImageCellPadding = 12.0;
 
 - (UIImage *)defaultImage
 {
-    return [UIImage imageNamed:@"person" inBundle:[NSBundle bundleForClass:[OTRAssets class]] compatibleWithTraitCollection:nil];
+    return [UIImage imageNamed:@"person" inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];
 }
 
 - (void)updateConstraints
