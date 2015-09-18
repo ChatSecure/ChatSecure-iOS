@@ -9,11 +9,12 @@
 #import "OTRChangeDatabasePassphraseViewController.h"
 #import "OTRPasswordStrengthView.h"
 #import "OTRRememberPasswordView.h"
-#import "Strings.h"
+#import "OTRStrings.h"
 #import "PureLayout.h"
 #import "OTRDatabaseManager.h"
 #import "MBProgressHUD.h"
 #import "OTRDatabaseManager.h"
+#import "OTRLanguageManager.h"
 
 @interface OTRChangeDatabasePassphraseViewController () <OTRPasswordStrengthViewDelegate>
 

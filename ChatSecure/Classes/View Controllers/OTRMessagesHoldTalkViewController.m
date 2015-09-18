@@ -11,11 +11,12 @@
 #import "OTRHoldToTalkView.h"
 #import "OTRAudioSessionManager.h"
 #import "OTRAudioTrashView.h"
-#import "Strings.h"
+#import "OTRStrings.h"
 #import "OTRKit.h"
 #import "OTRBuddy.h"
 #import "OTRXMPPManager.h"
 #import "OTRXMPPAccount.h"
+#import "OTRLanguageManager.h"
 
 @interface OTRMessagesHoldTalkViewController () <OTRHoldToTalkViewStateDelegate, OTRAudioSessionManagerDelegate>
 

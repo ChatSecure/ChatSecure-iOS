@@ -7,7 +7,7 @@
 //
 
 #import "OTRBaseLoginViewController.h"
-#import "Strings.h"
+#import "OTRStrings.h"
 #import "OTRColors.h"
 #import "OTRCertificatePinning.h"
 #import "OTRConstants.h"
@@ -18,9 +18,11 @@
 #import "OTRAccount.h"
 #import "MBProgressHUD.h"
 #import "OTRXLFormCreator.h"
-#import "ChatSecure-Swift.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
 #import "OTRXMPPServerInfo.h"
 #import "OTRXMPPAccount.h"
+@import OTRAssets;
+#import "OTRLanguageManager.h"
 
 @interface OTRBaseLoginViewController ()
 
@@ -33,7 +35,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    UIImage *checkImage = [UIImage imageNamed:@"ic-check"];
+    UIImage *checkImage = [UIImage imageNamed:@"ic-check" inBundle:[NSBundle bundleForClass:[OTRAssets class]] compatibleWithTraitCollection:nil];
     UIBarButtonItem *checkButton = [[UIBarButtonItem alloc] initWithImage:checkImage style:UIBarButtonItemStylePlain target:self action:@selector(loginButtonPressed:)];
     
     self.navigationItem.rightBarButtonItem = checkButton;
@@ -286,7 +288,7 @@
     
     // For some reason we must show the alert view first,
     // THEN change the button style, otherwise the button doesn't appear.
-    UIImage * normalImage = [UIImage imageNamed:@"button-green"];
+    UIImage * normalImage = [UIImage imageNamed:@"button-green" inBundle:[NSBundle bundleForClass:[OTRAssets class]] compatibleWithTraitCollection:nil];
     CGFloat hInset = floorf(normalImage.size.width / 2);
     CGFloat vInset = floorf(normalImage.size.height / 2);
     UIEdgeInsets insets = UIEdgeInsetsMake(vInset, hInset, vInset, hInset);

@@ -9,12 +9,13 @@
 #import "OTRXLFormCreator.h"
 #import "XLForm.h"
 #import "OTRXMPPAccount.h"
-#import "Strings.h"
+#import "OTRStrings.h"
 #import "XMPPServerInfoCell.h"
 #import "OTRImages.h"
 #import "OTRXMPPServerListViewController.h"
 #import "OTRXMPPServerInfo.h"
-#import "ChatSecure-Swift.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "OTRLanguageManager.h"
 
 NSString *const kOTRXLFormUsernameTextFieldTag        = @"kOTRXLFormUsernameTextFieldTag";
 NSString *const kOTRXLFormPasswordTextFieldTag        = @"kOTRXLFormPasswordTextFieldTag";

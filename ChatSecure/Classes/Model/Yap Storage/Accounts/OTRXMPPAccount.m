@@ -8,8 +8,10 @@
 
 #import "OTRXMPPAccount.h"
 #import "OTRXMPPManager.h"
-#import "Strings.h"
+#import "OTRStrings.h"
 #import "OTRConstants.h"
+@import OTRAssets;
+#import "OTRLanguageManager.h"
 
 static NSUInteger const OTRDefaultPortNumber = 5222;
 
@@ -38,7 +40,7 @@ static NSUInteger const OTRDefaultPortNumber = 5222;
 
 - (UIImage *)accountImage
 {
-    return [UIImage imageNamed:OTRXMPPImageName];
+    return [UIImage imageNamed:OTRXMPPImageName inBundle:[NSBundle bundleForClass:[OTRAssets class]] compatibleWithTraitCollection:nil];
 }
 - (NSString *)accountDisplayName
 {

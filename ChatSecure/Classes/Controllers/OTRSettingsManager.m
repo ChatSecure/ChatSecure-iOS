@@ -22,7 +22,7 @@
 
 #import "OTRSettingsManager.h"
 #import "OTRViewSetting.h"
-#import "Strings.h"
+#import "OTRStrings.h"
 #import "OTRSettingsGroup.h"
 #import "OTRSetting.h"
 #import "OTRBoolSetting.h"

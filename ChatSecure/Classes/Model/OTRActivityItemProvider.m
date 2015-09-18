@@ -7,8 +7,9 @@
 //
 
 #import "OTRActivityItemProvider.h"
-#import "Strings.h"
+#import "OTRStrings.h"
 #import "OTRQRCodeActivity.h"
+#import "OTRLanguageManager.h"
 
 static NSString *const kShareURL = @"https://get.chatsecure.org";
 

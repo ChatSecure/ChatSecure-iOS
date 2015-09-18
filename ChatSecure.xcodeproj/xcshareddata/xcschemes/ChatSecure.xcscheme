@@ -52,6 +52,16 @@
                ReferencedContainer = "container:ChatSecure.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "D9227C321BA7952100B5E1D0"
+               BuildableName = "ChatSecureCoreTests.xctest"
+               BlueprintName = "ChatSecureCoreTests"
+               ReferencedContainer = "container:ChatSecure.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference

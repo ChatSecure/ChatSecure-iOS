@@ -7,6 +7,7 @@
 //
 
 #import "XMPPServerInfoCell.h"
+@import OTRAssets;
 
 NSString *const kOTRFormRowDescriptorTypeXMPPServer = @"kOTRFormRowDescriptorTypeXMPPServer";
 
@@ -55,7 +56,7 @@ NSString *const kOTRFormRowDescriptorTypeXMPPServer = @"kOTRFormRowDescriptorTyp
     
     UIImage *image = info.logoImage;
     if (!image) {
-        image = [UIImage imageNamed:@"xmpp"];
+        image = [UIImage imageNamed:@"xmpp" inBundle:[NSBundle bundleForClass:[OTRAssets class]] compatibleWithTraitCollection:nil];
     }
     self.logoImageView.image = info.logoImage;
     self.serverNameLabel.text = info.name;
@@ -78,7 +79,7 @@ NSString *const kOTRFormRowDescriptorTypeXMPPServer = @"kOTRFormRowDescriptorTyp
         self.onionButton.hidden = YES;
         self.onionButton.enabled = NO;
     }
-    UIImage *countryImage = [UIImage imageNamed:info.countryCode];
+    UIImage *countryImage = [UIImage imageNamed:info.countryCode inBundle:[NSBundle bundleForClass:[OTRAssets class]] compatibleWithTraitCollection:nil];
     self.countryImageView.image = countryImage;
 }
 

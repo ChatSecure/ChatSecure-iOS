@@ -8,13 +8,15 @@
 
 #import "OTRInviteViewController.h"
 #import "PureLayout.h"
-#import "Strings.h"
+#import "OTRStrings.h"
 #import "BButton.h"
 #import "OTRAddBuddyQRCodeViewController.h"
 #import <MessageUI/MessageUI.h>
 #import "OTRAccount.h"
 #import "NSURL+ChatSecure.h"
-#import "Strings.h"
+#import "OTRStrings.h"
+#import "OTRLanguageManager.h"
+@import OTRAssets;
 
 static CGFloat const kOTRInvitePadding = 10;
 
@@ -46,7 +48,7 @@ static CGFloat const kOTRInvitePadding = 10;
     [self.view addSubview:self.titleImageView];
     [self.view addSubview:self.subtitleLabel];
     
-    UIImage *checkImage = [UIImage imageNamed:@"ic-check"];
+    UIImage *checkImage = [UIImage imageNamed:@"ic-check" inBundle:[NSBundle bundleForClass:[OTRAssets class]] compatibleWithTraitCollection:nil];
     UIBarButtonItem *skipButton = [[UIBarButtonItem alloc] initWithImage:checkImage style:UIBarButtonItemStylePlain target:self action:@selector(skipPressed:)];
     self.navigationItem.rightBarButtonItem = skipButton;
     

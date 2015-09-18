@@ -11,6 +11,7 @@
 #import "OTRImages.h"
 #import "OTRColors.h"
 #import "PureLayout.h"
+@import OTRAssets;
 
 const CGFloat OTRBuddyImageCellPadding = 12.0;
 
@@ -72,7 +73,7 @@ const CGFloat OTRBuddyImageCellPadding = 12.0;
 
 - (UIImage *)defaultImage
 {
-    return [UIImage imageNamed:@"person"];
+    return [UIImage imageNamed:@"person" inBundle:[NSBundle bundleForClass:[OTRAssets class]] compatibleWithTraitCollection:nil];
 }
 
 - (void)updateConstraints

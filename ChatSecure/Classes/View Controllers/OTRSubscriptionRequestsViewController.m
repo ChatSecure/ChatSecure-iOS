@@ -11,13 +11,14 @@
 #import "OTRXMPPAccount.h"
 #import "OTRDatabaseManager.h"
 #import "OTRDatabaseView.h"
-#import "Strings.h"
+#import "OTRStrings.h"
 #import "OTRXMPPManager.h"
 #import "OTRProtocolManager.h"
 #import "OTRUtilities.h"
 #import "UIActionSheet+ChatSecure.h"
 @import YapDatabase;
 #import "UIActionSheet+Blocks.h"
+#import "OTRLanguageManager.h"
 
 @interface OTRSubscriptionRequestsViewController () <UITableViewDataSource, UITableViewDelegate>
 

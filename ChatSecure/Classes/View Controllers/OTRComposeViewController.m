@@ -16,10 +16,11 @@
 #import "OTRDatabaseView.h"
 #import "OTRAccountsManager.h"
 @import YapDatabase;
-#import "Strings.h"
+#import "OTRStrings.h"
 #import "OTRBuddyInfoCell.h"
 #import "OTRNewBuddyViewController.h"
 #import "OTRChooseAccountViewController.h"
+#import "OTRLanguageManager.h"
 
 static CGFloat OTRBuddyInfoCellHeight = 80.0;
 

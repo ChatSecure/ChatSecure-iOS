@@ -21,7 +21,7 @@
 #import "OTRXMPPManager.h"
 #import "OTRLockButton.h"
 #import "OTRButtonView.h"
-#import "Strings.h"
+#import "OTRStrings.h"
 #import "UIAlertView+Blocks.h"
 #import "OTRTitleSubtitleView.h"
 #import "OTRKit.h"
@@ -44,6 +44,7 @@
 #import "OTRMediaServer.h"
 #import "UIImage+ChatSecure.h"
 #import "OTRBaseLoginViewController.h"
+#import "OTRLanguageManager.h"
 
 @import AVFoundation;
 @import MediaPlayer;

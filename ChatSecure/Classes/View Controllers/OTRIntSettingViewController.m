@@ -7,7 +7,8 @@
 //
 
 #import "OTRIntSettingViewController.h"
-#import "Strings.h"
+#import "OTRStrings.h"
+#import "OTRLanguageManager.h"
 
 @interface OTRIntSettingViewController (Private)
 - (void) setTextForValueLabel;

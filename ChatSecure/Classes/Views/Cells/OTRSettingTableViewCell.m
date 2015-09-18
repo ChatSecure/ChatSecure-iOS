@@ -25,6 +25,7 @@
 #import "OTRViewSetting.h"
 #import "OTRDoubleSetting.h"
 #import "OTRIntSetting.h"
+@import OTRAssets;
 
 @implementation OTRSettingTableViewCell
 @synthesize otrSetting;
@@ -35,7 +36,7 @@
     self.detailTextLabel.text = setting.settingDescription;
     if(setting.imageName)
     {
-        self.imageView.image = [UIImage imageNamed:setting.imageName];
+        self.imageView.image = [UIImage imageNamed:setting.imageName inBundle:[NSBundle bundleForClass:[OTRAssets class]] compatibleWithTraitCollection:nil];
     }
     else 
     {

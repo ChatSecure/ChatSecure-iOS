@@ -24,12 +24,14 @@
 
 #import "OTRDatabaseManager.h"
 #import "OTRDatabaseView.h"
-#import "Strings.h"
+#import "OTRStrings.h"
 #import <KVOController/FBKVOController.h>
 #import "OTRAppDelegate.h"
 #import "OTRProtocolManager.h"
 #import "OTRInviteViewController.h"
-#import "ChatSecure-Swift.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
+@import OTRAssets;
+#import "OTRLanguageManager.h"
 
 static CGFloat kOTRConversationCellHeight = 80.0;
 
@@ -63,7 +65,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     ///////////// Setup Navigation Bar //////////////
     
     self.title = CHATS_STRING;
-    UIBarButtonItem *settingsBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"OTRSettingsIcon"] style:UIBarButtonItemStylePlain target:self action:@selector(settingsButtonPressed:)];
+    UIBarButtonItem *settingsBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"OTRSettingsIcon" inBundle:[NSBundle bundleForClass:[OTRAssets class]] compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:self action:@selector(settingsButtonPressed:)];
     self.navigationItem.rightBarButtonItem = settingsBarButtonItem;
     
     self.composeBarButtonItem =[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(composeButtonPressed:)];
@@ -144,7 +146,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     }];
     //If there is any number of accounts launch into default conversation view otherwise onboarding time
     if (!hasAccounts) {
-        UIStoryboard *onboardingStoryboard = [UIStoryboard storyboardWithName:@"Onboarding" bundle:[NSBundle mainBundle]];
+        UIStoryboard *onboardingStoryboard = [UIStoryboard storyboardWithName:@"Onboarding" bundle:[NSBundle bundleForClass:[OTRWelcomeViewController class]]];
         UINavigationController *welcomeNavController = [onboardingStoryboard instantiateInitialViewController];
         OTRWelcomeViewController *welcomeViewController = welcomeNavController.viewControllers[0];
         __weak id welcomeVC = welcomeViewController;
@@ -265,7 +267,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 - (void)showInbox
 {
     if ([self.navigationItem.leftBarButtonItems count] != 2) {
-        UIBarButtonItem *inboxBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"inbox"] style:UIBarButtonItemStylePlain target:self action:@selector(inboxButtonPressed:)];
+        UIBarButtonItem *inboxBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"inbox" inBundle:[NSBundle bundleForClass:[OTRAssets class]] compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:self action:@selector(inboxButtonPressed:)];
         
         self.navigationItem.leftBarButtonItems = @[self.composeBarButtonItem,inboxBarButtonItem];
     }

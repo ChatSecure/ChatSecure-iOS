@@ -22,10 +22,10 @@
 
 #import "OTRQRCodeViewController.h"
 #import "ZXingObjC.h"
-#import "Strings.h"
+#import "OTRStrings.h"
 #import "PureLayout.h"
 #import  <QuartzCore/CALayer.h>
-
+#import "OTRLanguageManager.h"
 
 @interface OTRQRCodeViewController()
 @property (nonatomic, assign) BOOL didSetupConstraints;

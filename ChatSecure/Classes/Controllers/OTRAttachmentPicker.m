@@ -9,10 +9,11 @@
 #import "OTRAttachmentPicker.h"
 
 #import <MobileCoreServices/MobileCoreServices.h>
-#import "Strings.h"
+#import "OTRStrings.h"
 #import "OTRUtilities.h"
 #import "UIActionSheet+ChatSecure.h"
 #import "UIActionSheet+Blocks.h"
+#import "OTRLanguageManager.h"
 
 @interface OTRAttachmentPicker () <UINavigationControllerDelegate>
 

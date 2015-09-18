@@ -13,7 +13,7 @@
 #import "OTRProtocolManager.h"
 #import "OTRDatabaseManager.h"
 #import "OTRPasswordGenerator.h"
-#import "ChatSecure-Swift.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 @interface OTRXMPPLoginHandler()
 @property (nonatomic, strong) NSString *password;

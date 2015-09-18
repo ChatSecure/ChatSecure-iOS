@@ -10,9 +10,10 @@
 
 #import "OTRNewBuddyViewController.h"
 #import <QuartzCore/QuartzCore.h>
-#import "Strings.h"
+#import "OTRStrings.h"
 #import "OTRAccountsManager.h"
 #import "OTRAccount.h"
+#import "OTRLanguageManager.h"
 
 @interface OTRChooseAccountViewController () <UITableViewDataSource, UITableViewDelegate>
 

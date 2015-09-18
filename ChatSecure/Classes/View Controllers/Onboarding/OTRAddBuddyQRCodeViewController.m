@@ -7,7 +7,7 @@
 //
 
 #import "OTRAddBuddyQRCodeViewController.h"
-#import "Strings.h"
+#import "OTRStrings.h"
 #import "PureLayout.h"
 #import "OTRQRCodeReaderDelegate.h"
 #import "OTRQRCodeViewController.h"
@@ -15,6 +15,7 @@
 #import "OTRAccount.h"
 #import "OTRDatabaseManager.h"
 #import "NSURL+ChatSecure.h"
+#import "OTRLanguageManager.h"
 
 @interface OTRAddBuddyQRCodeViewController ()
 

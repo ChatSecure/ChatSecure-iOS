@@ -11,9 +11,10 @@
 #import "OTRBuddy.h"
 #import "OTRAccount.h"
 #import "OTRXMPPBuddy.h"
-#import "Strings.h"
+#import "OTRStrings.h"
 #import "PureLayout.h"
 #import "OTRDatabaseManager.h"
+#import "OTRLanguageManager.h"
 
 @interface OTRBuddyInfoCell ()
 

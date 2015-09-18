@@ -13,6 +13,7 @@
 #import "JSQMessagesAvatarImageFactory.h"
 #import "OTRComposingImageView.h"
 #import "NSString+ChatSecure.h"
+@import OTRAssets;
 
 NSString *const OTRWarningImageKey = @"OTRWarningImageKey";
 NSString *const OTRWarningCircleImageKey = @"OTRWarningCircleImageKey";
@@ -92,7 +93,7 @@ NSString *const OTRDuckDuckGoImageKey = @"OTRMicrophoneImageKey";
 {
     UIImageView * bubbleImageView = nil;
     UIImage * bubbleImage = nil;
-    bubbleImage = [UIImage imageNamed:@"bubble-min-tailless"];
+    bubbleImage = [UIImage imageNamed:@"bubble-min-tailless" inBundle:[NSBundle bundleForClass:[OTRAssets class]] compatibleWithTraitCollection:nil];
     
     bubbleImage = [self image:bubbleImage maskWithColor:[OTRColors bubbleLightGrayColor]];
     bubbleImage = [self mirrorImage:bubbleImage];
@@ -504,7 +505,7 @@ NSString *const OTRDuckDuckGoImageKey = @"OTRMicrophoneImageKey";
         return [self duckduckgoImage];
     }
     else {
-        return [UIImage imageNamed:name];
+        return [UIImage imageNamed:name inBundle:[NSBundle bundleForClass:[OTRAssets class]] compatibleWithTraitCollection:nil];
     }
 }
 

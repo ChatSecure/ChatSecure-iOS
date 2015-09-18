@@ -5,7 +5,7 @@ inhibit_all_warnings!
 
 source 'https://github.com/CocoaPods/Specs.git'
 
-link_with 'ChatSecure', 'ChatSecureTests'
+link_with 'ChatSecureCore'
 
 pod 'AFNetworking', '~> 2.6'
 pod "Appirater", '~> 2.0'

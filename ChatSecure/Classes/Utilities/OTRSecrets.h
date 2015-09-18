@@ -9,8 +9,5 @@
 @import Foundation;
 
 extern NSString *const kOTRGoogleAppSecret;
-extern NSString *const kOTRUservoiceKey;
-extern NSString *const kOTRUservoiceSecret;
-
 extern NSString *const kOTRHockeyLiveIdentifier;
 extern NSString *const kOTRHockeyBetaIdentifier;

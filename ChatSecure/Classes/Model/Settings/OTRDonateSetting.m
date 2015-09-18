@@ -7,7 +7,7 @@
 //
 
 #import "OTRDonateSetting.h"
-#import "Strings.h"
+#import "OTRStrings.h"
 
 @implementation OTRDonateSetting
 

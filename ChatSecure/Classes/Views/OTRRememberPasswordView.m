@@ -7,8 +7,9 @@
 //
 
 #import "OTRRememberPasswordView.h"
-#import "Strings.h"
+#import "OTRStrings.h"
 #import "PureLayout.h"
+#import "OTRLanguageManager.h"
 
 @interface OTRRememberPasswordView ()
 

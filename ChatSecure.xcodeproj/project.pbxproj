@@ -8,205 +8,395 @@
 
 /* Begin PBXBuildFile section */
 		3A971C2C5AB08E34FDD18676 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCD1F8E85C658C8D3865B584 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		63039E981B0D43FE007C9978 /* OTRXMPPServerListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63039E971B0D43FE007C9978 /* OTRXMPPServerListViewController.m */; };
-		632461521A1ADC77000EF33B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 633104D61A169EC800C17BAE /* Localizable.strings */; };
-		633106771A16D1A300C17BAE /* NSURL+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105031A16D1A300C17BAE /* NSURL+ChatSecure.m */; };
-		633106781A16D1A300C17BAE /* UIActionSheet+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105051A16D1A300C17BAE /* UIActionSheet+ChatSecure.m */; };
-		633106791A16D1A300C17BAE /* UIActivity+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105071A16D1A300C17BAE /* UIActivity+ChatSecure.m */; };
-		6331067A1A16D1A300C17BAE /* UIActivityViewController+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105091A16D1A300C17BAE /* UIActivityViewController+ChatSecure.m */; };
-		6331067B1A16D1A300C17BAE /* UIImage+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331050B1A16D1A300C17BAE /* UIImage+ChatSecure.m */; };
-		6331067C1A16D1A300C17BAE /* UIViewController+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331050D1A16D1A300C17BAE /* UIViewController+ChatSecure.m */; };
-		6331067D1A16D1A300C17BAE /* OTRAccountsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105101A16D1A300C17BAE /* OTRAccountsManager.m */; };
-		6331067F1A16D1A300C17BAE /* OTRDatabaseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105141A16D1A300C17BAE /* OTRDatabaseManager.m */; };
-		633106801A16D1A300C17BAE /* OTRDatabaseView.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105161A16D1A300C17BAE /* OTRDatabaseView.m */; };
-		633106811A16D1A300C17BAE /* OTREncryptionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105181A16D1A300C17BAE /* OTREncryptionManager.m */; };
-		633106831A16D1A300C17BAE /* OTRLanguageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331051C1A16D1A300C17BAE /* OTRLanguageManager.m */; };
-		633106841A16D1A300C17BAE /* OTROAuthRefresher.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331051E1A16D1A300C17BAE /* OTROAuthRefresher.m */; };
-		633106861A16D1A300C17BAE /* OTRProtocolManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105231A16D1A300C17BAE /* OTRProtocolManager.m */; };
-		6331068C1A16D1A300C17BAE /* OTRSettingsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331052F1A16D1A300C17BAE /* OTRSettingsManager.m */; };
-		6331068D1A16D1A300C17BAE /* OTRTorManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105311A16D1A300C17BAE /* OTRTorManager.m */; };
-		6331068E1A16D1A300C17BAE /* OTRvCardYapDatabaseStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105341A16D1A300C17BAE /* OTRvCardYapDatabaseStorage.m */; };
-		6331068F1A16D1A300C17BAE /* OTRXMPPBudyTimers.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105361A16D1A300C17BAE /* OTRXMPPBudyTimers.m */; };
-		633106901A16D1A300C17BAE /* OTRXMPPManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105381A16D1A300C17BAE /* OTRXMPPManager.m */; };
-		633106911A16D1A300C17BAE /* OTRXMPPProxyStream.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331053A1A16D1A300C17BAE /* OTRXMPPProxyStream.m */; };
-		633106921A16D1A300C17BAE /* OTRXMPPTorManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331053C1A16D1A300C17BAE /* OTRXMPPTorManager.m */; };
-		633106931A16D1A300C17BAE /* OTRYapDatabaseRosterStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331053E1A16D1A300C17BAE /* OTRYapDatabaseRosterStorage.m */; };
-		633106B71A16D1A300C17BAE /* OTRActivityItemProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331058E1A16D1A300C17BAE /* OTRActivityItemProvider.m */; };
-		633106B81A16D1A300C17BAE /* OTRDomainCellInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105901A16D1A300C17BAE /* OTRDomainCellInfo.m */; };
-		633106B91A16D1A300C17BAE /* OTROpenInFacebookActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105921A16D1A300C17BAE /* OTROpenInFacebookActivity.m */; };
-		633106BA1A16D1A300C17BAE /* OTROpenInTwitterActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105941A16D1A300C17BAE /* OTROpenInTwitterActivity.m */; };
-		633106BB1A16D1A300C17BAE /* OTRQRCodeActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105961A16D1A300C17BAE /* OTRQRCodeActivity.m */; };
-		633106BC1A16D1A300C17BAE /* OTRBoolSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105991A16D1A300C17BAE /* OTRBoolSetting.m */; };
-		633106BD1A16D1A300C17BAE /* OTRCertificateSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331059B1A16D1A300C17BAE /* OTRCertificateSetting.m */; };
-		633106BE1A16D1A300C17BAE /* OTRDonateSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331059D1A16D1A300C17BAE /* OTRDonateSetting.m */; };
-		633106BF1A16D1A300C17BAE /* OTRDoubleSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331059F1A16D1A300C17BAE /* OTRDoubleSetting.m */; };
-		633106C01A16D1A300C17BAE /* OTRFeedbackSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105A11A16D1A300C17BAE /* OTRFeedbackSetting.m */; };
-		633106C11A16D1A300C17BAE /* OTRFingerprintSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105A31A16D1A300C17BAE /* OTRFingerprintSetting.m */; };
-		633106C21A16D1A300C17BAE /* OTRIntSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105A51A16D1A300C17BAE /* OTRIntSetting.m */; };
-		633106C31A16D1A300C17BAE /* OTRLanguageSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105A71A16D1A300C17BAE /* OTRLanguageSetting.m */; };
-		633106C41A16D1A300C17BAE /* OTRListSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105A91A16D1A300C17BAE /* OTRListSetting.m */; };
-		633106C51A16D1A300C17BAE /* OTRListSettingValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105AB1A16D1A300C17BAE /* OTRListSettingValue.m */; };
-		633106C71A16D1A300C17BAE /* OTRSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105AF1A16D1A300C17BAE /* OTRSetting.m */; };
-		633106C81A16D1A300C17BAE /* OTRSettingsGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105B11A16D1A300C17BAE /* OTRSettingsGroup.m */; };
-		633106C91A16D1A300C17BAE /* OTRShareSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105B31A16D1A300C17BAE /* OTRShareSetting.m */; };
-		633106CA1A16D1A300C17BAE /* OTRValueSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105B51A16D1A300C17BAE /* OTRValueSetting.m */; };
-		633106CB1A16D1A300C17BAE /* OTRViewSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105B71A16D1A300C17BAE /* OTRViewSetting.m */; };
-		633106CC1A16D1A300C17BAE /* OTRAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105BB1A16D1A300C17BAE /* OTRAccount.m */; };
-		633106CE1A16D1A300C17BAE /* OTRGoogleOAuthXMPPAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105BF1A16D1A300C17BAE /* OTRGoogleOAuthXMPPAccount.m */; };
-		633106CF1A16D1A300C17BAE /* OTROAuthXMPPAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105C11A16D1A300C17BAE /* OTROAuthXMPPAccount.m */; };
-		633106D11A16D1A300C17BAE /* OTRXMPPAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105C51A16D1A300C17BAE /* OTRXMPPAccount.m */; };
-		633106D21A16D1A300C17BAE /* OTRXMPPTorAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105C71A16D1A300C17BAE /* OTRXMPPTorAccount.m */; };
-		633106D41A16D1A300C17BAE /* OTRBuddy.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105CB1A16D1A300C17BAE /* OTRBuddy.m */; };
-		633106D51A16D1A300C17BAE /* OTRMessage+JSQMessageData.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105CD1A16D1A300C17BAE /* OTRMessage+JSQMessageData.m */; };
-		633106D61A16D1A300C17BAE /* OTRMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105CF1A16D1A300C17BAE /* OTRMessage.m */; };
-		633106D71A16D1A300C17BAE /* OTRXMPPBuddy.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105D11A16D1A300C17BAE /* OTRXMPPBuddy.m */; };
-		633106D81A16D1A300C17BAE /* OTRXMPPPresenceSubscriptionRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105D31A16D1A300C17BAE /* OTRXMPPPresenceSubscriptionRequest.m */; };
-		633106D91A16D1A300C17BAE /* OTRYapDatabaseObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105D51A16D1A300C17BAE /* OTRYapDatabaseObject.m */; };
-		633106E11A16D1A300C17BAE /* OTRAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105E61A16D1A300C17BAE /* OTRAppDelegate.m */; };
-		633106E21A16D1A300C17BAE /* OTRCertificatePinning.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105E91A16D1A300C17BAE /* OTRCertificatePinning.m */; };
-		633106E31A16D1A300C17BAE /* OTRChatDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105EB1A16D1A300C17BAE /* OTRChatDemo.m */; };
-		633106E41A16D1A300C17BAE /* OTRColors.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105ED1A16D1A300C17BAE /* OTRColors.m */; };
-		633106E51A16D1A300C17BAE /* OTRConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105EF1A16D1A300C17BAE /* OTRConstants.m */; };
-		633106E61A16D1A300C17BAE /* OTRImages.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105F11A16D1A300C17BAE /* OTRImages.m */; };
-		633106E71A16D1A300C17BAE /* OTRNotificationPermissions.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105F41A16D1A300C17BAE /* OTRNotificationPermissions.m */; };
-		633106E81A16D1A300C17BAE /* OTRPasswordGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105F61A16D1A300C17BAE /* OTRPasswordGenerator.m */; };
-		633106EA1A16D1A300C17BAE /* OTRSecrets.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105F91A16D1A300C17BAE /* OTRSecrets.m */; };
-		633106EB1A16D1A300C17BAE /* OTRUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105FB1A16D1A300C17BAE /* OTRUtilities.m */; };
-		633106EC1A16D1A300C17BAE /* OTRXMPPError.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105FD1A16D1A300C17BAE /* OTRXMPPError.m */; };
-		633106F61A16D1A300C17BAE /* OTRAboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106131A16D1A300C17BAE /* OTRAboutViewController.m */; };
-		633106F71A16D1A300C17BAE /* OTRAcknowledgementsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106151A16D1A300C17BAE /* OTRAcknowledgementsViewController.m */; };
-		633106F81A16D1A300C17BAE /* OTRBuddyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106171A16D1A300C17BAE /* OTRBuddyViewController.m */; };
-		633106F91A16D1A300C17BAE /* OTRCertificateDomainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106191A16D1A300C17BAE /* OTRCertificateDomainViewController.m */; };
-		633106FA1A16D1A300C17BAE /* OTRCertificatesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331061B1A16D1A300C17BAE /* OTRCertificatesViewController.m */; };
-		633106FB1A16D1A300C17BAE /* OTRChangeDatabasePassphraseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331061D1A16D1A300C17BAE /* OTRChangeDatabasePassphraseViewController.m */; };
-		633106FC1A16D1A300C17BAE /* OTRChooseAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331061F1A16D1A300C17BAE /* OTRChooseAccountViewController.m */; };
-		633106FD1A16D1A300C17BAE /* OTRComposeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106211A16D1A300C17BAE /* OTRComposeViewController.m */; };
-		633106FE1A16D1A300C17BAE /* OTRConversationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106231A16D1A300C17BAE /* OTRConversationViewController.m */; };
-		633107011A16D1A300C17BAE /* OTRDatabaseUnlockViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106291A16D1A300C17BAE /* OTRDatabaseUnlockViewController.m */; };
-		633107021A16D1A300C17BAE /* OTRDoubleSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331062B1A16D1A300C17BAE /* OTRDoubleSettingViewController.m */; };
-		633107031A16D1A300C17BAE /* OTRFingerprintsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331062D1A16D1A300C17BAE /* OTRFingerprintsViewController.m */; };
-		633107041A16D1A300C17BAE /* OTRIntSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331062F1A16D1A300C17BAE /* OTRIntSettingViewController.m */; };
-		633107051A16D1A300C17BAE /* OTRLanguageListSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106311A16D1A300C17BAE /* OTRLanguageListSettingViewController.m */; };
-		633107061A16D1A300C17BAE /* OTRListSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106331A16D1A300C17BAE /* OTRListSettingViewController.m */; };
-		633107071A16D1A300C17BAE /* OTRMessagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106351A16D1A300C17BAE /* OTRMessagesViewController.m */; };
-		633107091A16D1A300C17BAE /* OTRNewBuddyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106391A16D1A300C17BAE /* OTRNewBuddyViewController.m */; };
-		6331070C1A16D1A300C17BAE /* OTRQRCodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331063F1A16D1A300C17BAE /* OTRQRCodeViewController.m */; };
-		6331070E1A16D1A300C17BAE /* OTRSettingDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106431A16D1A300C17BAE /* OTRSettingDetailViewController.m */; };
-		6331070F1A16D1A300C17BAE /* OTRSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106451A16D1A300C17BAE /* OTRSettingsViewController.m */; };
-		633107111A16D1A300C17BAE /* OTRSubscriptionRequestsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106491A16D1A300C17BAE /* OTRSubscriptionRequestsViewController.m */; };
-		633107121A16D1A300C17BAE /* OTRAccountTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331064D1A16D1A300C17BAE /* OTRAccountTableViewCell.m */; };
-		633107131A16D1A300C17BAE /* OTRBuddyImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331064F1A16D1A300C17BAE /* OTRBuddyImageCell.m */; };
-		633107141A16D1A300C17BAE /* OTRBuddyInfoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106511A16D1A300C17BAE /* OTRBuddyInfoCell.m */; };
-		633107151A16D1A300C17BAE /* OTRConversationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106531A16D1A300C17BAE /* OTRConversationCell.m */; };
-		633107161A16D1A300C17BAE /* OTRInLineTextEditTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106551A16D1A300C17BAE /* OTRInLineTextEditTableViewCell.m */; };
-		6331071C1A16D1A300C17BAE /* OTRSettingTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331065F1A16D1A300C17BAE /* OTRSettingTableViewCell.m */; };
-		6331071D1A16D1A300C17BAE /* OTRStatusMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106611A16D1A300C17BAE /* OTRStatusMessageCell.m */; };
-		6331071F1A16D1A300C17BAE /* OTRTextFieldTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106651A16D1A300C17BAE /* OTRTextFieldTableViewCell.m */; };
 		633107201A16D1A300C17BAE /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 633106661A16D1A300C17BAE /* LaunchScreen.xib */; };
-		633107211A16D1A300C17BAE /* OTRButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106681A16D1A300C17BAE /* OTRButtonView.m */; };
-		633107221A16D1A300C17BAE /* OTRColorFadingDotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331066A1A16D1A300C17BAE /* OTRColorFadingDotView.m */; };
-		633107231A16D1A300C17BAE /* OTRComposingImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331066C1A16D1A300C17BAE /* OTRComposingImageView.m */; };
-		633107241A16D1A300C17BAE /* OTRLockButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331066E1A16D1A300C17BAE /* OTRLockButton.m */; };
-		633107251A16D1A400C17BAE /* OTRPasswordStrengthView.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106701A16D1A300C17BAE /* OTRPasswordStrengthView.m */; };
-		633107261A16D1A400C17BAE /* OTRRememberPasswordView.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106721A16D1A300C17BAE /* OTRRememberPasswordView.m */; };
-		633107271A16D1A400C17BAE /* OTRSocialButtonsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106741A16D1A300C17BAE /* OTRSocialButtonsView.m */; };
-		633107281A16D1A400C17BAE /* OTRTitleSubtitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106761A16D1A300C17BAE /* OTRTitleSubtitleView.m */; };
 		6331072B1A16D1F200C17BAE /* DemoImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 633107291A16D1F200C17BAE /* DemoImages.xcassets */; };
 		6331072C1A16D1F200C17BAE /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6331072A1A16D1F200C17BAE /* Images.xcassets */; };
-		6331D3B71B4DBBEE00C85365 /* OTRInviteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331D3B61B4DBBEE00C85365 /* OTRInviteViewController.m */; };
-		6331D3BA1B4F3C6E00C85365 /* OTRAddBuddyQRCodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331D3B91B4F3C6E00C85365 /* OTRAddBuddyQRCodeViewController.m */; };
-		6331D3BD1B4F41AF00C85365 /* OTRQRCodeReaderDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331D3BC1B4F41AF00C85365 /* OTRQRCodeReaderDelegate.m */; };
-		633620991A76E87B006E8739 /* OTRImageItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 633620981A76E87B006E8739 /* OTRImageItem.m */; };
-		6336209C1A76E88C006E8739 /* OTRVideoItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6336209B1A76E88C006E8739 /* OTRVideoItem.m */; };
-		6336209F1A76E89A006E8739 /* OTRAudioItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6336209E1A76E89A006E8739 /* OTRAudioItem.m */; };
-		633821C91BA8D48D0019C906 /* PushContainers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633821C81BA8D48D0019C906 /* PushContainers.swift */; settings = {ASSET_TAGS = (); }; };
-		633AF2FA1A7C3DBC0030A3FF /* OTRAudioSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 633AF2F91A7C3DBC0030A3FF /* OTRAudioSessionManager.m */; };
-		634680831B0404CE00D9A1C5 /* OTRXMPPLoginHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 634680821B0404CE00D9A1C5 /* OTRXMPPLoginHandler.m */; };
-		634680861B041EA900D9A1C5 /* OTRXMPPTorLoginHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 634680851B041EA900D9A1C5 /* OTRXMPPTorLoginHandler.m */; };
-		6346808A1B041F2F00D9A1C5 /* OTRGoolgeOAuthLoginHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 634680891B041F2F00D9A1C5 /* OTRGoolgeOAuthLoginHandler.m */; };
-		6346808D1B04206400D9A1C5 /* OTRXMPPCreateAccountHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 6346808C1B04206400D9A1C5 /* OTRXMPPCreateAccountHandler.m */; };
-		6353AC2D1AD5E32000753B83 /* OTRAudioTrashView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6353AC2C1AD5E32000753B83 /* OTRAudioTrashView.m */; };
-		6354BBE41A96C67400E8EBAC /* OTRMediaFileManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6354BBE31A96C67400E8EBAC /* OTRMediaFileManager.m */; };
 		636C63211B571B56008FEE69 /* OTRURLTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 636C63201B571B56008FEE69 /* OTRURLTests.m */; };
-		637645C91B98F9BF00B3402F /* PushController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637645C81B98F9BF00B3402F /* PushController.swift */; };
-		637DBB1C1B7D5A23003845B7 /* OTRXMPPMessageYapStroage.m in Sources */ = {isa = PBXBuildFile; fileRef = 637DBB1B1B7D5A23003845B7 /* OTRXMPPMessageYapStroage.m */; };
-		638C7CF21B02BE4A004F8EC3 /* OTRBaseLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 638C7CF11B02BE4A004F8EC3 /* OTRBaseLoginViewController.m */; };
-		638C7CF51B02BF0D004F8EC3 /* OTRXLFormCreator.m in Sources */ = {isa = PBXBuildFile; fileRef = 638C7CF41B02BF0D004F8EC3 /* OTRXLFormCreator.m */; };
-		638D2E031AFBFE2200F3C50C /* OTRWelcomeAccountTableViewDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 638D2E021AFBFE2200F3C50C /* OTRWelcomeAccountTableViewDelegate.m */; };
-		638FC09D1B0BE46100B37454 /* NSFileManager+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 638FC09C1B0BE46100B37454 /* NSFileManager+ChatSecure.m */; };
-		6396AFA01A169D54009F3E6C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6396AF9F1A169D54009F3E6C /* main.m */; };
-		639CDD911AD74419009BAABC /* OTRTouchAndHoldGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 639CDD901AD74419009BAABC /* OTRTouchAndHoldGestureRecognizer.m */; };
-		63B916E21B743198003B778F /* OTRStreamManagementYapStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B916E11B743198003B778F /* OTRStreamManagementYapStorage.m */; };
-		63B916E51B7431C1003B778F /* OTRStreamManagementStorageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B916E41B7431C1003B778F /* OTRStreamManagementStorageObject.m */; };
-		63BE425E1B320EE20017058C /* OTRLoginHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BE425D1B320EE20017058C /* OTRLoginHandler.m */; };
-		63C4BCCC1A1E9B9F001696CD /* ChatSecure.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCC81A1E9B9F001696CD /* ChatSecure.xcdatamodeld */; };
-		63C4BD0F1A1E9BE1001696CD /* OTRManagedAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCCF1A1E9BE1001696CD /* OTRManagedAccount.m */; };
-		63C4BD101A1E9BE1001696CD /* OTRManagedBuddy.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCD11A1E9BE1001696CD /* OTRManagedBuddy.m */; };
-		63C4BD111A1E9BE1001696CD /* OTRManagedEncryptionStatusMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCD31A1E9BE1001696CD /* OTRManagedEncryptionStatusMessage.m */; };
-		63C4BD121A1E9BE1001696CD /* OTRManagedFacebookAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCD51A1E9BE1001696CD /* OTRManagedFacebookAccount.m */; };
-		63C4BD131A1E9BE1001696CD /* OTRManagedGoogleAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCD71A1E9BE1001696CD /* OTRManagedGoogleAccount.m */; };
-		63C4BD141A1E9BE1001696CD /* OTRManagedGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCD91A1E9BE1001696CD /* OTRManagedGroup.m */; };
-		63C4BD151A1E9BE1001696CD /* OTRManagedMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCDB1A1E9BE1001696CD /* OTRManagedMessage.m */; };
-		63C4BD161A1E9BE1001696CD /* OTRManagedMessageAndStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCDD1A1E9BE1001696CD /* OTRManagedMessageAndStatus.m */; };
-		63C4BD171A1E9BE1001696CD /* OTRManagedOAuthAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCDF1A1E9BE1001696CD /* OTRManagedOAuthAccount.m */; };
-		63C4BD181A1E9BE1001696CD /* OTRManagedOscarAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCE11A1E9BE1001696CD /* OTRManagedOscarAccount.m */; };
-		63C4BD191A1E9BE1001696CD /* OTRManagedStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCE31A1E9BE1001696CD /* OTRManagedStatus.m */; };
-		63C4BD1A1A1E9BE1001696CD /* OTRManagedXMPPAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCE51A1E9BE1001696CD /* OTRManagedXMPPAccount.m */; };
-		63C4BD1B1A1E9BE1001696CD /* OTRvCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCE71A1E9BE1001696CD /* OTRvCard.m */; };
-		63C4BD1C1A1E9BE1001696CD /* OTRvCardAvatar.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCE91A1E9BE1001696CD /* OTRvCardAvatar.m */; };
-		63C4BD1D1A1E9BE1001696CD /* OTRvCardTemp.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCEB1A1E9BE1001696CD /* OTRvCardTemp.m */; };
-		63C4BD1E1A1E9BE1001696CD /* OTRXMPPManagedPresenceSubscriptionRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCED1A1E9BE1001696CD /* OTRXMPPManagedPresenceSubscriptionRequest.m */; };
-		63C4BD1F1A1E9BE1001696CD /* _OTRManagedAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCF01A1E9BE1001696CD /* _OTRManagedAccount.m */; };
-		63C4BD201A1E9BE1001696CD /* _OTRManagedBuddy.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCF21A1E9BE1001696CD /* _OTRManagedBuddy.m */; };
-		63C4BD211A1E9BE1001696CD /* _OTRManagedEncryptionStatusMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCF41A1E9BE1001696CD /* _OTRManagedEncryptionStatusMessage.m */; };
-		63C4BD221A1E9BE1001696CD /* _OTRManagedFacebookAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCF61A1E9BE1001696CD /* _OTRManagedFacebookAccount.m */; };
-		63C4BD231A1E9BE1001696CD /* _OTRManagedGoogleAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCF81A1E9BE1001696CD /* _OTRManagedGoogleAccount.m */; };
-		63C4BD241A1E9BE1001696CD /* _OTRManagedGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCFA1A1E9BE1001696CD /* _OTRManagedGroup.m */; };
-		63C4BD251A1E9BE1001696CD /* _OTRManagedMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCFC1A1E9BE1001696CD /* _OTRManagedMessage.m */; };
-		63C4BD261A1E9BE1001696CD /* _OTRManagedMessageAndStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCFE1A1E9BE1001696CD /* _OTRManagedMessageAndStatus.m */; };
-		63C4BD271A1E9BE1001696CD /* _OTRManagedOAuthAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BD001A1E9BE1001696CD /* _OTRManagedOAuthAccount.m */; };
-		63C4BD281A1E9BE1001696CD /* _OTRManagedOscarAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BD021A1E9BE1001696CD /* _OTRManagedOscarAccount.m */; };
-		63C4BD291A1E9BE1001696CD /* _OTRManagedStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BD041A1E9BE1001696CD /* _OTRManagedStatus.m */; };
-		63C4BD2A1A1E9BE1001696CD /* _OTRManagedXMPPAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BD061A1E9BE1001696CD /* _OTRManagedXMPPAccount.m */; };
-		63C4BD2B1A1E9BE1001696CD /* _OTRvCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BD081A1E9BE1001696CD /* _OTRvCard.m */; };
-		63C4BD2C1A1E9BE1001696CD /* _OTRvCardAvatar.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BD0A1A1E9BE1001696CD /* _OTRvCardAvatar.m */; };
-		63C4BD2D1A1E9BE1001696CD /* _OTRvCardTemp.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BD0C1A1E9BE1001696CD /* _OTRvCardTemp.m */; };
-		63C4BD2E1A1E9BE1001696CD /* _OTRXMPPManagedPresenceSubscriptionRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BD0E1A1E9BE1001696CD /* _OTRXMPPManagedPresenceSubscriptionRequest.m */; };
-		63C5B66A1A82F3EE0011BEA8 /* OTRAudioPlaybackController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C5B6691A82F3EE0011BEA8 /* OTRAudioPlaybackController.m */; };
-		63C7E64B1B20F5730085FA06 /* OTRChatSecureIDCreateAccountHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C7E64A1B20F5730085FA06 /* OTRChatSecureIDCreateAccountHandler.m */; };
-		63C7E64E1B20F69F0085FA06 /* OTRXMPPServerInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C7E64D1B20F69F0085FA06 /* OTRXMPPServerInfo.m */; };
-		63CFB1041ABA492600A8D27E /* OTRFacebookOAuthXMPPAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CFB1031ABA492600A8D27E /* OTRFacebookOAuthXMPPAccount.m */; };
-		63D184861A2D3F2400334CD8 /* OTRNotificationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D184851A2D3F2400334CD8 /* OTRNotificationController.m */; };
-		63D27FC51A6DC51C00EC251A /* OTRMediaItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D27FC41A6DC51C00EC251A /* OTRMediaItem.m */; };
-		63D64D661A2FBA8C00E21F77 /* OTRToastOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D64D651A2FBA8C00E21F77 /* OTRToastOptions.m */; };
-		63DDD8B01A9D3C0400C0A918 /* OTRMediaServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 63DDD8AF1A9D3C0400C0A918 /* OTRMediaServer.m */; };
 		63DDD8B51A9E94B700C0A918 /* OTRMediaTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63DDD8B41A9E94B700C0A918 /* OTRMediaTests.m */; };
 		63DDD8BA1A9E9BD900C0A918 /* samples in Resources */ = {isa = PBXBuildFile; fileRef = 63DDD8B91A9E9BD900C0A918 /* samples */; };
-		63EA4CF91ACC81C800B19E12 /* OTRMessagesHoldTalkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EA4CF81ACC81C800B19E12 /* OTRMessagesHoldTalkViewController.m */; };
-		63EA4CFD1ACC96AB00B19E12 /* OTRHoldToTalkView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EA4CFC1ACC96AB00B19E12 /* OTRHoldToTalkView.m */; };
-		63F0FF641A798D8E001F0C99 /* OTRAudioControlsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F0FF631A798D8E001F0C99 /* OTRAudioControlsView.m */; };
-		63F6E1911A69B9BA0011E6F7 /* OTRAttachmentPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F6E1901A69B9BA0011E6F7 /* OTRAttachmentPicker.m */; };
-		63FA548B1A7ACA2F00F2AEBB /* OTRPlayPauseProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FA548A1A7ACA2F00F2AEBB /* OTRPlayPauseProgressView.m */; };
-		63FA548E1A7B29EB00F2AEBB /* OTRPlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FA548D1A7B29EB00F2AEBB /* OTRPlayView.m */; };
-		63FA54911A7B2C2E00F2AEBB /* OTRPauseView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FA54901A7B2C2E00F2AEBB /* OTRPauseView.m */; };
-		63FABC8E1A410EBF009BF681 /* JSQMessagesCollectionViewCell+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FABC8D1A410EBF009BF681 /* JSQMessagesCollectionViewCell+ChatSecure.m */; };
-		63FABC911A41218E009BF681 /* NSString+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FABC901A41218E009BF681 /* NSString+ChatSecure.m */; };
+		8FE09CE9A16DB3D068D19753 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCD1F8E85C658C8D3865B584 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		BB852C4F65587CD8A46FF428 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCD1F8E85C658C8D3865B584 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		D913A56D1B747B62006C5ACD /* Onboarding.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D913A56C1B747B62006C5ACD /* Onboarding.storyboard */; };
-		D913A56F1B7481AD006C5ACD /* OTRWelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D913A56E1B7481AD006C5ACD /* OTRWelcomeViewController.swift */; };
 		D9227C241BA78E6B00B5E1D0 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D9227C231BA78E6B00B5E1D0 /* FontAwesome.ttf */; settings = {ASSET_TAGS = (); }; };
+		D9227C2D1BA7952100B5E1D0 /* ChatSecureCore.h in Headers */ = {isa = PBXBuildFile; fileRef = D9227C2C1BA7952100B5E1D0 /* ChatSecureCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D9227C3F1BA7952100B5E1D0 /* ChatSecureCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9227C2A1BA7952100B5E1D0 /* ChatSecureCore.framework */; };
+		D9227C401BA7952100B5E1D0 /* ChatSecureCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D9227C2A1BA7952100B5E1D0 /* ChatSecureCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D9365E7A1A1EB0050006434A /* torrc in Resources */ = {isa = PBXBuildFile; fileRef = D9365E791A1EB0050006434A /* torrc */; };
-		D95AD2241B67FD6A007DEBC3 /* OTRCircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = D95AD2231B67FD6A007DEBC3 /* OTRCircleView.m */; };
+		D93DDA781BA79A2400CD8331 /* OTRAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105E61A16D1A300C17BAE /* OTRAppDelegate.m */; };
+		D93DDA791BA79A2400CD8331 /* NSURL+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105031A16D1A300C17BAE /* NSURL+ChatSecure.m */; };
+		D93DDA7A1BA79A2400CD8331 /* UIActionSheet+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105051A16D1A300C17BAE /* UIActionSheet+ChatSecure.m */; };
+		D93DDA7B1BA79A2400CD8331 /* UIActivity+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105071A16D1A300C17BAE /* UIActivity+ChatSecure.m */; };
+		D93DDA7C1BA79A2400CD8331 /* UIActivityViewController+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105091A16D1A300C17BAE /* UIActivityViewController+ChatSecure.m */; };
+		D93DDA7D1BA79A2400CD8331 /* UIImage+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331050B1A16D1A300C17BAE /* UIImage+ChatSecure.m */; };
+		D93DDA7E1BA79A2400CD8331 /* UIViewController+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331050D1A16D1A300C17BAE /* UIViewController+ChatSecure.m */; };
+		D93DDA7F1BA79A2400CD8331 /* JSQMessagesCollectionViewCell+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FABC8D1A410EBF009BF681 /* JSQMessagesCollectionViewCell+ChatSecure.m */; };
+		D93DDA801BA79A2400CD8331 /* NSString+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FABC901A41218E009BF681 /* NSString+ChatSecure.m */; };
+		D93DDA811BA79A2400CD8331 /* NSFileManager+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 638FC09C1B0BE46100B37454 /* NSFileManager+ChatSecure.m */; };
+		D93DDA821BA79A2400CD8331 /* OTRAttachmentPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F6E1901A69B9BA0011E6F7 /* OTRAttachmentPicker.m */; };
+		D93DDA831BA79A2400CD8331 /* OTRAccountsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105101A16D1A300C17BAE /* OTRAccountsManager.m */; };
+		D93DDA841BA79A2400CD8331 /* OTRDatabaseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105141A16D1A300C17BAE /* OTRDatabaseManager.m */; };
+		D93DDA851BA79A2400CD8331 /* OTRDatabaseView.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105161A16D1A300C17BAE /* OTRDatabaseView.m */; };
+		D93DDA861BA79A2400CD8331 /* OTREncryptionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105181A16D1A300C17BAE /* OTREncryptionManager.m */; };
+		D93DDA881BA79A2400CD8331 /* OTROAuthRefresher.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331051E1A16D1A300C17BAE /* OTROAuthRefresher.m */; };
+		D93DDA891BA79A2400CD8331 /* OTRProtocolManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105231A16D1A300C17BAE /* OTRProtocolManager.m */; };
+		D93DDA8A1BA79A2400CD8331 /* OTRSettingsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331052F1A16D1A300C17BAE /* OTRSettingsManager.m */; };
+		D93DDA8B1BA79A2400CD8331 /* OTRTorManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105311A16D1A300C17BAE /* OTRTorManager.m */; };
+		D93DDA8C1BA79A2400CD8331 /* OTRNotificationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D184851A2D3F2400334CD8 /* OTRNotificationController.m */; };
+		D93DDA8D1BA79A2400CD8331 /* OTRAudioSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 633AF2F91A7C3DBC0030A3FF /* OTRAudioSessionManager.m */; };
+		D93DDA8E1BA79A2400CD8331 /* OTRAudioPlaybackController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C5B6691A82F3EE0011BEA8 /* OTRAudioPlaybackController.m */; };
+		D93DDA8F1BA79A2400CD8331 /* OTRMediaFileManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6354BBE31A96C67400E8EBAC /* OTRMediaFileManager.m */; };
+		D93DDA901BA79A2400CD8331 /* OTRMediaServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 63DDD8AF1A9D3C0400C0A918 /* OTRMediaServer.m */; };
+		D93DDA911BA79A2400CD8331 /* OTRStreamManagementYapStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B916E11B743198003B778F /* OTRStreamManagementYapStorage.m */; };
+		D93DDA921BA79A2400CD8331 /* OTRXMPPMessageYapStroage.m in Sources */ = {isa = PBXBuildFile; fileRef = 637DBB1B1B7D5A23003845B7 /* OTRXMPPMessageYapStroage.m */; };
+		D93DDA931BA79A2400CD8331 /* OTRvCardYapDatabaseStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105341A16D1A300C17BAE /* OTRvCardYapDatabaseStorage.m */; };
+		D93DDA941BA79A2400CD8331 /* OTRXMPPBudyTimers.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105361A16D1A300C17BAE /* OTRXMPPBudyTimers.m */; };
+		D93DDA951BA79A2400CD8331 /* OTRXMPPManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105381A16D1A300C17BAE /* OTRXMPPManager.m */; };
+		D93DDA961BA79A2400CD8331 /* OTRXMPPProxyStream.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331053A1A16D1A300C17BAE /* OTRXMPPProxyStream.m */; };
+		D93DDA971BA79A2400CD8331 /* OTRXMPPTorManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331053C1A16D1A300C17BAE /* OTRXMPPTorManager.m */; };
+		D93DDA981BA79A2400CD8331 /* OTRYapDatabaseRosterStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331053E1A16D1A300C17BAE /* OTRYapDatabaseRosterStorage.m */; };
+		D93DDA991BA79A2400CD8331 /* OTRXMPPServerInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C7E64D1B20F69F0085FA06 /* OTRXMPPServerInfo.m */; };
+		D93DDA9A1BA79A2400CD8331 /* OTRManagedAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCCF1A1E9BE1001696CD /* OTRManagedAccount.m */; };
+		D93DDA9B1BA79A2400CD8331 /* OTRManagedBuddy.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCD11A1E9BE1001696CD /* OTRManagedBuddy.m */; };
+		D93DDA9C1BA79A2400CD8331 /* OTRManagedEncryptionStatusMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCD31A1E9BE1001696CD /* OTRManagedEncryptionStatusMessage.m */; };
+		D93DDA9D1BA79A2500CD8331 /* OTRManagedFacebookAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCD51A1E9BE1001696CD /* OTRManagedFacebookAccount.m */; };
+		D93DDA9E1BA79A2500CD8331 /* OTRManagedGoogleAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCD71A1E9BE1001696CD /* OTRManagedGoogleAccount.m */; };
+		D93DDA9F1BA79A2500CD8331 /* OTRManagedGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCD91A1E9BE1001696CD /* OTRManagedGroup.m */; };
+		D93DDAA01BA79A2500CD8331 /* OTRManagedMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCDB1A1E9BE1001696CD /* OTRManagedMessage.m */; };
+		D93DDAA11BA79A2500CD8331 /* OTRManagedMessageAndStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCDD1A1E9BE1001696CD /* OTRManagedMessageAndStatus.m */; };
+		D93DDAA21BA79A2500CD8331 /* OTRManagedOAuthAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCDF1A1E9BE1001696CD /* OTRManagedOAuthAccount.m */; };
+		D93DDAA31BA79A2500CD8331 /* OTRManagedOscarAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCE11A1E9BE1001696CD /* OTRManagedOscarAccount.m */; };
+		D93DDAA41BA79A2500CD8331 /* OTRManagedStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCE31A1E9BE1001696CD /* OTRManagedStatus.m */; };
+		D93DDAA51BA79A2500CD8331 /* OTRManagedXMPPAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCE51A1E9BE1001696CD /* OTRManagedXMPPAccount.m */; };
+		D93DDAA61BA79A2500CD8331 /* OTRvCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCE71A1E9BE1001696CD /* OTRvCard.m */; };
+		D93DDAA71BA79A2500CD8331 /* OTRvCardAvatar.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCE91A1E9BE1001696CD /* OTRvCardAvatar.m */; };
+		D93DDAA81BA79A2500CD8331 /* OTRvCardTemp.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCEB1A1E9BE1001696CD /* OTRvCardTemp.m */; };
+		D93DDAA91BA79A2500CD8331 /* OTRXMPPManagedPresenceSubscriptionRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCED1A1E9BE1001696CD /* OTRXMPPManagedPresenceSubscriptionRequest.m */; };
+		D93DDAAA1BA79A2500CD8331 /* _OTRManagedAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCF01A1E9BE1001696CD /* _OTRManagedAccount.m */; };
+		D93DDAAB1BA79A2500CD8331 /* _OTRManagedBuddy.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCF21A1E9BE1001696CD /* _OTRManagedBuddy.m */; };
+		D93DDAAC1BA79A2500CD8331 /* _OTRManagedEncryptionStatusMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCF41A1E9BE1001696CD /* _OTRManagedEncryptionStatusMessage.m */; };
+		D93DDAAD1BA79A2500CD8331 /* _OTRManagedFacebookAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCF61A1E9BE1001696CD /* _OTRManagedFacebookAccount.m */; };
+		D93DDAAE1BA79A2500CD8331 /* _OTRManagedGoogleAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCF81A1E9BE1001696CD /* _OTRManagedGoogleAccount.m */; };
+		D93DDAAF1BA79A2500CD8331 /* _OTRManagedGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCFA1A1E9BE1001696CD /* _OTRManagedGroup.m */; };
+		D93DDAB01BA79A2500CD8331 /* _OTRManagedMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCFC1A1E9BE1001696CD /* _OTRManagedMessage.m */; };
+		D93DDAB11BA79A2500CD8331 /* _OTRManagedMessageAndStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCFE1A1E9BE1001696CD /* _OTRManagedMessageAndStatus.m */; };
+		D93DDAB21BA79A2500CD8331 /* _OTRManagedOAuthAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BD001A1E9BE1001696CD /* _OTRManagedOAuthAccount.m */; };
+		D93DDAB31BA79A2500CD8331 /* _OTRManagedOscarAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BD021A1E9BE1001696CD /* _OTRManagedOscarAccount.m */; };
+		D93DDAB41BA79A2500CD8331 /* _OTRManagedStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BD041A1E9BE1001696CD /* _OTRManagedStatus.m */; };
+		D93DDAB51BA79A2500CD8331 /* _OTRManagedXMPPAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BD061A1E9BE1001696CD /* _OTRManagedXMPPAccount.m */; };
+		D93DDAB61BA79A2500CD8331 /* _OTRvCard.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BD081A1E9BE1001696CD /* _OTRvCard.m */; };
+		D93DDAB71BA79A2500CD8331 /* _OTRvCardAvatar.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BD0A1A1E9BE1001696CD /* _OTRvCardAvatar.m */; };
+		D93DDAB81BA79A2500CD8331 /* _OTRvCardTemp.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BD0C1A1E9BE1001696CD /* _OTRvCardTemp.m */; };
+		D93DDAB91BA79A2500CD8331 /* _OTRXMPPManagedPresenceSubscriptionRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BD0E1A1E9BE1001696CD /* _OTRXMPPManagedPresenceSubscriptionRequest.m */; };
+		D93DDABA1BA79A2500CD8331 /* OTRActivityItemProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331058E1A16D1A300C17BAE /* OTRActivityItemProvider.m */; };
+		D93DDABB1BA79A2500CD8331 /* OTRDomainCellInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105901A16D1A300C17BAE /* OTRDomainCellInfo.m */; };
+		D93DDABC1BA79A2500CD8331 /* OTROpenInFacebookActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105921A16D1A300C17BAE /* OTROpenInFacebookActivity.m */; };
+		D93DDABD1BA79A2500CD8331 /* OTROpenInTwitterActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105941A16D1A300C17BAE /* OTROpenInTwitterActivity.m */; };
+		D93DDABE1BA79A2500CD8331 /* OTRQRCodeActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105961A16D1A300C17BAE /* OTRQRCodeActivity.m */; };
+		D93DDABF1BA79A2500CD8331 /* OTRToastOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D64D651A2FBA8C00E21F77 /* OTRToastOptions.m */; };
+		D93DDAC01BA79A2600CD8331 /* OTRBoolSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105991A16D1A300C17BAE /* OTRBoolSetting.m */; };
+		D93DDAC11BA79A2600CD8331 /* OTRCertificateSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331059B1A16D1A300C17BAE /* OTRCertificateSetting.m */; };
+		D93DDAC21BA79A2600CD8331 /* OTRDonateSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331059D1A16D1A300C17BAE /* OTRDonateSetting.m */; };
+		D93DDAC31BA79A2600CD8331 /* OTRDoubleSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331059F1A16D1A300C17BAE /* OTRDoubleSetting.m */; };
+		D93DDAC41BA79A2600CD8331 /* OTRFeedbackSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105A11A16D1A300C17BAE /* OTRFeedbackSetting.m */; };
+		D93DDAC51BA79A2600CD8331 /* OTRFingerprintSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105A31A16D1A300C17BAE /* OTRFingerprintSetting.m */; };
+		D93DDAC61BA79A2600CD8331 /* OTRIntSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105A51A16D1A300C17BAE /* OTRIntSetting.m */; };
+		D93DDAC71BA79A2600CD8331 /* OTRLanguageSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105A71A16D1A300C17BAE /* OTRLanguageSetting.m */; };
+		D93DDAC81BA79A2600CD8331 /* OTRListSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105A91A16D1A300C17BAE /* OTRListSetting.m */; };
+		D93DDAC91BA79A2600CD8331 /* OTRListSettingValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105AB1A16D1A300C17BAE /* OTRListSettingValue.m */; };
+		D93DDACA1BA79A2600CD8331 /* OTRSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105AF1A16D1A300C17BAE /* OTRSetting.m */; };
+		D93DDACB1BA79A2600CD8331 /* OTRSettingsGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105B11A16D1A300C17BAE /* OTRSettingsGroup.m */; };
+		D93DDACC1BA79A2600CD8331 /* OTRShareSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105B31A16D1A300C17BAE /* OTRShareSetting.m */; };
+		D93DDACD1BA79A2600CD8331 /* OTRValueSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105B51A16D1A300C17BAE /* OTRValueSetting.m */; };
+		D93DDACE1BA79A2600CD8331 /* OTRViewSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105B71A16D1A300C17BAE /* OTRViewSetting.m */; };
+		D93DDACF1BA79A2600CD8331 /* OTRFacebookOAuthXMPPAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CFB1031ABA492600A8D27E /* OTRFacebookOAuthXMPPAccount.m */; };
+		D93DDAD01BA79A2600CD8331 /* OTRAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105BB1A16D1A300C17BAE /* OTRAccount.m */; };
+		D93DDAD11BA79A2600CD8331 /* OTRGoogleOAuthXMPPAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105BF1A16D1A300C17BAE /* OTRGoogleOAuthXMPPAccount.m */; };
+		D93DDAD21BA79A2600CD8331 /* OTROAuthXMPPAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105C11A16D1A300C17BAE /* OTROAuthXMPPAccount.m */; };
+		D93DDAD31BA79A2600CD8331 /* OTRXMPPAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105C51A16D1A300C17BAE /* OTRXMPPAccount.m */; };
+		D93DDAD41BA79A2600CD8331 /* OTRXMPPTorAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105C71A16D1A300C17BAE /* OTRXMPPTorAccount.m */; };
+		D93DDAD51BA79A2700CD8331 /* OTRMediaItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D27FC41A6DC51C00EC251A /* OTRMediaItem.m */; };
+		D93DDAD61BA79A2700CD8331 /* OTRImageItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 633620981A76E87B006E8739 /* OTRImageItem.m */; };
+		D93DDAD71BA79A2700CD8331 /* OTRVideoItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6336209B1A76E88C006E8739 /* OTRVideoItem.m */; };
+		D93DDAD81BA79A2700CD8331 /* OTRAudioItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 6336209E1A76E89A006E8739 /* OTRAudioItem.m */; };
+		D93DDAD91BA79A2700CD8331 /* OTRStreamManagementStorageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B916E41B7431C1003B778F /* OTRStreamManagementStorageObject.m */; };
+		D93DDADA1BA79A2700CD8331 /* OTRBuddy.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105CB1A16D1A300C17BAE /* OTRBuddy.m */; };
+		D93DDADB1BA79A2700CD8331 /* OTRMessage+JSQMessageData.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105CD1A16D1A300C17BAE /* OTRMessage+JSQMessageData.m */; };
+		D93DDADC1BA79A2700CD8331 /* OTRMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105CF1A16D1A300C17BAE /* OTRMessage.m */; };
+		D93DDADD1BA79A2700CD8331 /* OTRXMPPBuddy.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105D11A16D1A300C17BAE /* OTRXMPPBuddy.m */; };
+		D93DDADE1BA79A2700CD8331 /* OTRXMPPPresenceSubscriptionRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105D31A16D1A300C17BAE /* OTRXMPPPresenceSubscriptionRequest.m */; };
+		D93DDADF1BA79A2700CD8331 /* OTRYapDatabaseObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105D51A16D1A300C17BAE /* OTRYapDatabaseObject.m */; };
+		D93DDAE01BA79A2700CD8331 /* OTRCertificatePinning.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105E91A16D1A300C17BAE /* OTRCertificatePinning.m */; };
+		D93DDAE11BA79A2700CD8331 /* OTRChatDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105EB1A16D1A300C17BAE /* OTRChatDemo.m */; };
+		D93DDAE21BA79A2700CD8331 /* OTRColors.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105ED1A16D1A300C17BAE /* OTRColors.m */; };
+		D93DDAE41BA79A2700CD8331 /* OTRImages.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105F11A16D1A300C17BAE /* OTRImages.m */; };
+		D93DDAE51BA79A2700CD8331 /* OTRNotificationPermissions.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105F41A16D1A300C17BAE /* OTRNotificationPermissions.m */; };
+		D93DDAE61BA79A2700CD8331 /* OTRPasswordGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105F61A16D1A300C17BAE /* OTRPasswordGenerator.m */; };
+		D93DDAE81BA79A2800CD8331 /* OTRUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105FB1A16D1A300C17BAE /* OTRUtilities.m */; };
+		D93DDAE91BA79A2800CD8331 /* OTRXMPPError.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105FD1A16D1A300C17BAE /* OTRXMPPError.m */; };
+		D93DDAEA1BA79A2800CD8331 /* XMPPURI.m in Sources */ = {isa = PBXBuildFile; fileRef = D989EC8C1B06AFE30069FE37 /* XMPPURI.m */; };
+		D93DDAEB1BA79A2800CD8331 /* OTRExistingAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D989A84E1B5DBD90000608A9 /* OTRExistingAccountViewController.m */; };
+		D93DDAEC1BA79A2800CD8331 /* OTRWelcomeAccountTableViewDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 638D2E021AFBFE2200F3C50C /* OTRWelcomeAccountTableViewDelegate.m */; };
+		D93DDAED1BA79A2800CD8331 /* OTRInviteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331D3B61B4DBBEE00C85365 /* OTRInviteViewController.m */; };
+		D93DDAEE1BA79A2800CD8331 /* OTRAddBuddyQRCodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331D3B91B4F3C6E00C85365 /* OTRAddBuddyQRCodeViewController.m */; };
+		D93DDAEF1BA79A2800CD8331 /* OTRQRCodeReaderDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331D3BC1B4F41AF00C85365 /* OTRQRCodeReaderDelegate.m */; };
+		D93DDAF01BA79A2800CD8331 /* OTRBaseLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 638C7CF11B02BE4A004F8EC3 /* OTRBaseLoginViewController.m */; };
+		D93DDAF11BA79A2800CD8331 /* OTRXLFormCreator.m in Sources */ = {isa = PBXBuildFile; fileRef = 638C7CF41B02BF0D004F8EC3 /* OTRXLFormCreator.m */; };
+		D93DDAF21BA79A2800CD8331 /* OTRXMPPServerListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63039E971B0D43FE007C9978 /* OTRXMPPServerListViewController.m */; };
+		D93DDAF31BA79A2800CD8331 /* OTRXMPPLoginHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 634680821B0404CE00D9A1C5 /* OTRXMPPLoginHandler.m */; };
+		D93DDAF41BA79A2800CD8331 /* OTRXMPPTorLoginHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 634680851B041EA900D9A1C5 /* OTRXMPPTorLoginHandler.m */; };
+		D93DDAF51BA79A2800CD8331 /* OTRGoolgeOAuthLoginHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 634680891B041F2F00D9A1C5 /* OTRGoolgeOAuthLoginHandler.m */; };
+		D93DDAF61BA79A2900CD8331 /* OTRChatSecureIDCreateAccountHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C7E64A1B20F5730085FA06 /* OTRChatSecureIDCreateAccountHandler.m */; };
+		D93DDAF71BA79A2900CD8331 /* OTRXMPPCreateAccountHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 6346808C1B04206400D9A1C5 /* OTRXMPPCreateAccountHandler.m */; };
+		D93DDAF81BA79A2900CD8331 /* OTRLoginHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BE425D1B320EE20017058C /* OTRLoginHandler.m */; };
+		D93DDAF91BA79A2900CD8331 /* OTRAboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106131A16D1A300C17BAE /* OTRAboutViewController.m */; };
+		D93DDAFA1BA79A2900CD8331 /* OTRAcknowledgementsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106151A16D1A300C17BAE /* OTRAcknowledgementsViewController.m */; };
+		D93DDAFB1BA79A2900CD8331 /* OTRBuddyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106171A16D1A300C17BAE /* OTRBuddyViewController.m */; };
+		D93DDAFC1BA79A2900CD8331 /* OTRCertificateDomainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106191A16D1A300C17BAE /* OTRCertificateDomainViewController.m */; };
+		D93DDAFD1BA79A2900CD8331 /* OTRCertificatesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331061B1A16D1A300C17BAE /* OTRCertificatesViewController.m */; };
+		D93DDAFE1BA79A2900CD8331 /* OTRChangeDatabasePassphraseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331061D1A16D1A300C17BAE /* OTRChangeDatabasePassphraseViewController.m */; };
+		D93DDAFF1BA79A2900CD8331 /* OTRChooseAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331061F1A16D1A300C17BAE /* OTRChooseAccountViewController.m */; };
+		D93DDB001BA79A2900CD8331 /* OTRComposeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106211A16D1A300C17BAE /* OTRComposeViewController.m */; };
+		D93DDB011BA79A2900CD8331 /* OTRConversationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106231A16D1A300C17BAE /* OTRConversationViewController.m */; };
+		D93DDB021BA79A2900CD8331 /* OTRDatabaseUnlockViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106291A16D1A300C17BAE /* OTRDatabaseUnlockViewController.m */; };
+		D93DDB031BA79A2A00CD8331 /* OTRDoubleSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331062B1A16D1A300C17BAE /* OTRDoubleSettingViewController.m */; };
+		D93DDB041BA79A2A00CD8331 /* OTRFingerprintsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331062D1A16D1A300C17BAE /* OTRFingerprintsViewController.m */; };
+		D93DDB051BA79A2A00CD8331 /* OTRIntSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331062F1A16D1A300C17BAE /* OTRIntSettingViewController.m */; };
+		D93DDB061BA79A2A00CD8331 /* OTRLanguageListSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106311A16D1A300C17BAE /* OTRLanguageListSettingViewController.m */; };
+		D93DDB071BA79A2A00CD8331 /* OTRListSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106331A16D1A300C17BAE /* OTRListSettingViewController.m */; };
+		D93DDB081BA79A2A00CD8331 /* OTRMessagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106351A16D1A300C17BAE /* OTRMessagesViewController.m */; };
+		D93DDB091BA79A2A00CD8331 /* OTRMessagesHoldTalkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EA4CF81ACC81C800B19E12 /* OTRMessagesHoldTalkViewController.m */; };
+		D93DDB0A1BA79A2A00CD8331 /* OTRNewBuddyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106391A16D1A300C17BAE /* OTRNewBuddyViewController.m */; };
+		D93DDB0B1BA79A2A00CD8331 /* OTRQRCodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331063F1A16D1A300C17BAE /* OTRQRCodeViewController.m */; };
+		D93DDB0C1BA79A2A00CD8331 /* OTRSettingDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106431A16D1A300C17BAE /* OTRSettingDetailViewController.m */; };
+		D93DDB0D1BA79A2A00CD8331 /* OTRSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106451A16D1A300C17BAE /* OTRSettingsViewController.m */; };
+		D93DDB0E1BA79A2B00CD8331 /* OTRSubscriptionRequestsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106491A16D1A300C17BAE /* OTRSubscriptionRequestsViewController.m */; };
+		D93DDB0F1BA79A2B00CD8331 /* OTRCircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = D95AD2231B67FD6A007DEBC3 /* OTRCircleView.m */; };
+		D93DDB101BA79A2B00CD8331 /* OTRCircleButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = D9ADE5B81B606642009471FF /* OTRCircleButtonView.m */; };
+		D93DDB111BA79A2B00CD8331 /* XMPPServerInfoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D9BE65441B6A08ED002D4136 /* XMPPServerInfoCell.m */; };
+		D93DDB121BA79A2B00CD8331 /* OTRAccountTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331064D1A16D1A300C17BAE /* OTRAccountTableViewCell.m */; };
+		D93DDB131BA79A2B00CD8331 /* OTRBuddyImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331064F1A16D1A300C17BAE /* OTRBuddyImageCell.m */; };
+		D93DDB141BA79A2B00CD8331 /* OTRBuddyInfoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106511A16D1A300C17BAE /* OTRBuddyInfoCell.m */; };
+		D93DDB151BA79A2B00CD8331 /* OTRConversationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106531A16D1A300C17BAE /* OTRConversationCell.m */; };
+		D93DDB161BA79A2B00CD8331 /* OTRInLineTextEditTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106551A16D1A300C17BAE /* OTRInLineTextEditTableViewCell.m */; };
+		D93DDB171BA79A2B00CD8331 /* OTRSettingTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331065F1A16D1A300C17BAE /* OTRSettingTableViewCell.m */; };
+		D93DDB181BA79A2C00CD8331 /* OTRStatusMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106611A16D1A300C17BAE /* OTRStatusMessageCell.m */; };
+		D93DDB191BA79A2C00CD8331 /* OTRTextFieldTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106651A16D1A300C17BAE /* OTRTextFieldTableViewCell.m */; };
+		D93DDB1A1BA79A2C00CD8331 /* OTRButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106681A16D1A300C17BAE /* OTRButtonView.m */; };
+		D93DDB1B1BA79A2C00CD8331 /* OTRAudioControlsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F0FF631A798D8E001F0C99 /* OTRAudioControlsView.m */; };
+		D93DDB1C1BA79A2C00CD8331 /* OTRPlayPauseProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FA548A1A7ACA2F00F2AEBB /* OTRPlayPauseProgressView.m */; };
+		D93DDB1D1BA79A2C00CD8331 /* OTRPlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FA548D1A7B29EB00F2AEBB /* OTRPlayView.m */; };
+		D93DDB1E1BA79A2C00CD8331 /* OTRPauseView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FA54901A7B2C2E00F2AEBB /* OTRPauseView.m */; };
+		D93DDB1F1BA79A2C00CD8331 /* OTRColorFadingDotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331066A1A16D1A300C17BAE /* OTRColorFadingDotView.m */; };
+		D93DDB201BA79A2C00CD8331 /* OTRComposingImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331066C1A16D1A300C17BAE /* OTRComposingImageView.m */; };
+		D93DDB211BA79A2C00CD8331 /* OTRLockButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331066E1A16D1A300C17BAE /* OTRLockButton.m */; };
+		D93DDB221BA79A2C00CD8331 /* OTRPasswordStrengthView.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106701A16D1A300C17BAE /* OTRPasswordStrengthView.m */; };
+		D93DDB231BA79A2D00CD8331 /* OTRRememberPasswordView.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106721A16D1A300C17BAE /* OTRRememberPasswordView.m */; };
+		D93DDB241BA79A2D00CD8331 /* OTRSocialButtonsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106741A16D1A300C17BAE /* OTRSocialButtonsView.m */; };
+		D93DDB251BA79A2D00CD8331 /* OTRTitleSubtitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 633106761A16D1A300C17BAE /* OTRTitleSubtitleView.m */; };
+		D93DDB261BA79A2D00CD8331 /* OTRHoldToTalkView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EA4CFC1ACC96AB00B19E12 /* OTRHoldToTalkView.m */; };
+		D93DDB271BA79A2D00CD8331 /* OTRAudioTrashView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6353AC2C1AD5E32000753B83 /* OTRAudioTrashView.m */; };
+		D93DDB281BA79A2D00CD8331 /* OTRTouchAndHoldGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 639CDD901AD74419009BAABC /* OTRTouchAndHoldGestureRecognizer.m */; };
+		D93DDB291BA79A5400CD8331 /* OTRWelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D913A56E1B7481AD006C5ACD /* OTRWelcomeViewController.swift */; };
+		D93DDB2A1BA79A5400CD8331 /* OTRUsernameCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9C6E6A01B71575300572273 /* OTRUsernameCell.swift */; };
+		D93DDB2B1BA79A7000CD8331 /* OTRAppDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105E51A16D1A300C17BAE /* OTRAppDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB2C1BA79A7000CD8331 /* NSURL+ChatSecure.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105021A16D1A300C17BAE /* NSURL+ChatSecure.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB2D1BA79A7000CD8331 /* UIActionSheet+ChatSecure.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105041A16D1A300C17BAE /* UIActionSheet+ChatSecure.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB2E1BA79A7000CD8331 /* UIActivity+ChatSecure.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105061A16D1A300C17BAE /* UIActivity+ChatSecure.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB2F1BA79A7000CD8331 /* UIActivityViewController+ChatSecure.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105081A16D1A300C17BAE /* UIActivityViewController+ChatSecure.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB301BA79A7000CD8331 /* UIImage+ChatSecure.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331050A1A16D1A300C17BAE /* UIImage+ChatSecure.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB311BA79A7000CD8331 /* UIViewController+ChatSecure.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331050C1A16D1A300C17BAE /* UIViewController+ChatSecure.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB321BA79A7000CD8331 /* JSQMessagesCollectionViewCell+ChatSecure.h in Headers */ = {isa = PBXBuildFile; fileRef = 63FABC8C1A410EBF009BF681 /* JSQMessagesCollectionViewCell+ChatSecure.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB331BA79A7000CD8331 /* NSString+ChatSecure.h in Headers */ = {isa = PBXBuildFile; fileRef = 63FABC8F1A41218E009BF681 /* NSString+ChatSecure.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB341BA79A7000CD8331 /* NSFileManager+ChatSecure.h in Headers */ = {isa = PBXBuildFile; fileRef = 638FC09B1B0BE46100B37454 /* NSFileManager+ChatSecure.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB351BA79A7000CD8331 /* OTRAttachmentPicker.h in Headers */ = {isa = PBXBuildFile; fileRef = 63F6E18F1A69B9BA0011E6F7 /* OTRAttachmentPicker.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB361BA79A7000CD8331 /* OTRAccountsManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331050F1A16D1A300C17BAE /* OTRAccountsManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB371BA79A7100CD8331 /* OTRDatabaseManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105131A16D1A300C17BAE /* OTRDatabaseManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB381BA79A7100CD8331 /* OTRDatabaseView.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105151A16D1A300C17BAE /* OTRDatabaseView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB391BA79A7100CD8331 /* OTREncryptionManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105171A16D1A300C17BAE /* OTREncryptionManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB3B1BA79A7100CD8331 /* OTROAuthRefresher.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331051D1A16D1A300C17BAE /* OTROAuthRefresher.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB3C1BA79A7100CD8331 /* OTRProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105211A16D1A300C17BAE /* OTRProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB3D1BA79A7100CD8331 /* OTRProtocolManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105221A16D1A300C17BAE /* OTRProtocolManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB3E1BA79A7100CD8331 /* OTRSettingsManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331052E1A16D1A300C17BAE /* OTRSettingsManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB3F1BA79A7100CD8331 /* OTRTorManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105301A16D1A300C17BAE /* OTRTorManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB401BA79A7100CD8331 /* OTRNotificationController.h in Headers */ = {isa = PBXBuildFile; fileRef = 63D184841A2D3F2400334CD8 /* OTRNotificationController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB411BA79A7100CD8331 /* OTRAudioSessionManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 633AF2F81A7C3DBB0030A3FF /* OTRAudioSessionManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB421BA79A7100CD8331 /* OTRAudioPlaybackController.h in Headers */ = {isa = PBXBuildFile; fileRef = 63C5B6681A82F3EE0011BEA8 /* OTRAudioPlaybackController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB431BA79A7200CD8331 /* OTRMediaFileManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 6354BBE21A96C67400E8EBAC /* OTRMediaFileManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB441BA79A7200CD8331 /* OTRMediaServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 63DDD8AE1A9D3C0400C0A918 /* OTRMediaServer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB451BA79A7200CD8331 /* OTRStreamManagementYapStorage.h in Headers */ = {isa = PBXBuildFile; fileRef = 63B916E01B743198003B778F /* OTRStreamManagementYapStorage.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB461BA79A7200CD8331 /* OTRXMPPMessageYapStroage.h in Headers */ = {isa = PBXBuildFile; fileRef = 637DBB1A1B7D5A23003845B7 /* OTRXMPPMessageYapStroage.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB471BA79A7200CD8331 /* OTRvCardYapDatabaseStorage.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105331A16D1A300C17BAE /* OTRvCardYapDatabaseStorage.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB481BA79A7200CD8331 /* OTRXMPPBudyTimers.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105351A16D1A300C17BAE /* OTRXMPPBudyTimers.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB491BA79A7200CD8331 /* OTRXMPPManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105371A16D1A300C17BAE /* OTRXMPPManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB4A1BA79A7300CD8331 /* OTRXMPPProxyStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105391A16D1A300C17BAE /* OTRXMPPProxyStream.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB4B1BA79A7300CD8331 /* OTRXMPPTorManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331053B1A16D1A300C17BAE /* OTRXMPPTorManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB4C1BA79A7300CD8331 /* OTRYapDatabaseRosterStorage.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331053D1A16D1A300C17BAE /* OTRYapDatabaseRosterStorage.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB4D1BA79A7300CD8331 /* XMPPFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331053F1A16D1A300C17BAE /* XMPPFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB4E1BA79A7300CD8331 /* OTRXMPPServerInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 63C7E64C1B20F69F0085FA06 /* OTRXMPPServerInfo.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB4F1BA79A7400CD8331 /* OTRManagedAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 63C4BCCE1A1E9BE1001696CD /* OTRManagedAccount.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB501BA79A7400CD8331 /* OTRManagedBuddy.h in Headers */ = {isa = PBXBuildFile; fileRef = 63C4BCD01A1E9BE1001696CD /* OTRManagedBuddy.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB511BA79A7400CD8331 /* OTRManagedEncryptionStatusMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 63C4BCD21A1E9BE1001696CD /* OTRManagedEncryptionStatusMessage.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB521BA79A7400CD8331 /* OTRManagedFacebookAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 63C4BCD41A1E9BE1001696CD /* OTRManagedFacebookAccount.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB531BA79A7400CD8331 /* OTRManagedGoogleAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 63C4BCD61A1E9BE1001696CD /* OTRManagedGoogleAccount.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB541BA79A7500CD8331 /* OTRManagedGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 63C4BCD81A1E9BE1001696CD /* OTRManagedGroup.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB551BA79A7500CD8331 /* OTRManagedMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 63C4BCDA1A1E9BE1001696CD /* OTRManagedMessage.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB561BA79A7500CD8331 /* OTRManagedMessageAndStatus.h in Headers */ = {isa = PBXBuildFile; fileRef = 63C4BCDC1A1E9BE1001696CD /* OTRManagedMessageAndStatus.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB571BA79A7500CD8331 /* OTRManagedOAuthAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 63C4BCDE1A1E9BE1001696CD /* OTRManagedOAuthAccount.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB581BA79A7600CD8331 /* OTRManagedOscarAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 63C4BCE01A1E9BE1001696CD /* OTRManagedOscarAccount.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB591BA79A7600CD8331 /* OTRManagedStatus.h in Headers */ = {isa = PBXBuildFile; fileRef = 63C4BCE21A1E9BE1001696CD /* OTRManagedStatus.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB5A1BA79A7600CD8331 /* OTRManagedXMPPAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 63C4BCE41A1E9BE1001696CD /* OTRManagedXMPPAccount.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB5B1BA79A7600CD8331 /* OTRvCard.h in Headers */ = {isa = PBXBuildFile; fileRef = 63C4BCE61A1E9BE1001696CD /* OTRvCard.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB5C1BA79A7700CD8331 /* OTRvCardAvatar.h in Headers */ = {isa = PBXBuildFile; fileRef = 63C4BCE81A1E9BE1001696CD /* OTRvCardAvatar.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB5D1BA79A7700CD8331 /* OTRvCardTemp.h in Headers */ = {isa = PBXBuildFile; fileRef = 63C4BCEA1A1E9BE1001696CD /* OTRvCardTemp.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB5E1BA79A7700CD8331 /* OTRXMPPManagedPresenceSubscriptionRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 63C4BCEC1A1E9BE1001696CD /* OTRXMPPManagedPresenceSubscriptionRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB5F1BA79A7800CD8331 /* _OTRManagedAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 63C4BCEF1A1E9BE1001696CD /* _OTRManagedAccount.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB601BA79A7800CD8331 /* _OTRManagedBuddy.h in Headers */ = {isa = PBXBuildFile; fileRef = 63C4BCF11A1E9BE1001696CD /* _OTRManagedBuddy.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB611BA79A7800CD8331 /* _OTRManagedEncryptionStatusMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 63C4BCF31A1E9BE1001696CD /* _OTRManagedEncryptionStatusMessage.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB621BA79A7900CD8331 /* _OTRManagedFacebookAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 63C4BCF51A1E9BE1001696CD /* _OTRManagedFacebookAccount.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB631BA79A7900CD8331 /* _OTRManagedGoogleAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 63C4BCF71A1E9BE1001696CD /* _OTRManagedGoogleAccount.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB641BA79A7900CD8331 /* _OTRManagedGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 63C4BCF91A1E9BE1001696CD /* _OTRManagedGroup.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB651BA79A7A00CD8331 /* _OTRManagedMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 63C4BCFB1A1E9BE1001696CD /* _OTRManagedMessage.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB661BA79A7A00CD8331 /* _OTRManagedMessageAndStatus.h in Headers */ = {isa = PBXBuildFile; fileRef = 63C4BCFD1A1E9BE1001696CD /* _OTRManagedMessageAndStatus.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB671BA79A7A00CD8331 /* _OTRManagedOAuthAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 63C4BCFF1A1E9BE1001696CD /* _OTRManagedOAuthAccount.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB681BA79A7B00CD8331 /* _OTRManagedOscarAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 63C4BD011A1E9BE1001696CD /* _OTRManagedOscarAccount.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB691BA79A7B00CD8331 /* _OTRManagedStatus.h in Headers */ = {isa = PBXBuildFile; fileRef = 63C4BD031A1E9BE1001696CD /* _OTRManagedStatus.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB6A1BA79A7C00CD8331 /* _OTRManagedXMPPAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 63C4BD051A1E9BE1001696CD /* _OTRManagedXMPPAccount.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB6B1BA79A7C00CD8331 /* _OTRvCard.h in Headers */ = {isa = PBXBuildFile; fileRef = 63C4BD071A1E9BE1001696CD /* _OTRvCard.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB6C1BA79A7C00CD8331 /* _OTRvCardAvatar.h in Headers */ = {isa = PBXBuildFile; fileRef = 63C4BD091A1E9BE1001696CD /* _OTRvCardAvatar.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB6D1BA79A7D00CD8331 /* _OTRvCardTemp.h in Headers */ = {isa = PBXBuildFile; fileRef = 63C4BD0B1A1E9BE1001696CD /* _OTRvCardTemp.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB6E1BA79A7D00CD8331 /* _OTRXMPPManagedPresenceSubscriptionRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 63C4BD0D1A1E9BE1001696CD /* _OTRXMPPManagedPresenceSubscriptionRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB6F1BA79A7E00CD8331 /* OTRActivityItemProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331058D1A16D1A300C17BAE /* OTRActivityItemProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB701BA79A7E00CD8331 /* OTRDomainCellInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331058F1A16D1A300C17BAE /* OTRDomainCellInfo.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB711BA79A7F00CD8331 /* OTROpenInFacebookActivity.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105911A16D1A300C17BAE /* OTROpenInFacebookActivity.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB721BA79A7F00CD8331 /* OTROpenInTwitterActivity.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105931A16D1A300C17BAE /* OTROpenInTwitterActivity.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB731BA79A7F00CD8331 /* OTRQRCodeActivity.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105951A16D1A300C17BAE /* OTRQRCodeActivity.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB741BA79A8000CD8331 /* OTRToastOptions.h in Headers */ = {isa = PBXBuildFile; fileRef = 63D64D641A2FBA8C00E21F77 /* OTRToastOptions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB751BA79A8000CD8331 /* OTRBoolSetting.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105981A16D1A300C17BAE /* OTRBoolSetting.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB761BA79A8100CD8331 /* OTRCertificateSetting.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331059A1A16D1A300C17BAE /* OTRCertificateSetting.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB771BA79A8100CD8331 /* OTRDonateSetting.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331059C1A16D1A300C17BAE /* OTRDonateSetting.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB781BA79A8200CD8331 /* OTRDoubleSetting.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331059E1A16D1A300C17BAE /* OTRDoubleSetting.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB791BA79A8200CD8331 /* OTRFeedbackSetting.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105A01A16D1A300C17BAE /* OTRFeedbackSetting.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB7A1BA79A8300CD8331 /* OTRFingerprintSetting.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105A21A16D1A300C17BAE /* OTRFingerprintSetting.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB7B1BA79A8300CD8331 /* OTRIntSetting.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105A41A16D1A300C17BAE /* OTRIntSetting.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB7C1BA79A8400CD8331 /* OTRLanguageSetting.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105A61A16D1A300C17BAE /* OTRLanguageSetting.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB7D1BA79A8400CD8331 /* OTRListSetting.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105A81A16D1A300C17BAE /* OTRListSetting.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB7E1BA79A8500CD8331 /* OTRListSettingValue.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105AA1A16D1A300C17BAE /* OTRListSettingValue.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB7F1BA79A8500CD8331 /* OTRSetting.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105AE1A16D1A300C17BAE /* OTRSetting.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB801BA79A8600CD8331 /* OTRSettingsGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105B01A16D1A300C17BAE /* OTRSettingsGroup.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB811BA79A8700CD8331 /* OTRShareSetting.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105B21A16D1A300C17BAE /* OTRShareSetting.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB821BA79A8700CD8331 /* OTRValueSetting.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105B41A16D1A300C17BAE /* OTRValueSetting.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB831BA79A8800CD8331 /* OTRViewSetting.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105B61A16D1A300C17BAE /* OTRViewSetting.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB841BA79A8800CD8331 /* OTRFacebookOAuthXMPPAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 63CFB1021ABA492600A8D27E /* OTRFacebookOAuthXMPPAccount.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB851BA79A8900CD8331 /* OTRAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105BA1A16D1A300C17BAE /* OTRAccount.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB861BA79A8900CD8331 /* OTRGoogleOAuthXMPPAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105BE1A16D1A300C17BAE /* OTRGoogleOAuthXMPPAccount.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB871BA79A8A00CD8331 /* OTROAuthXMPPAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105C01A16D1A300C17BAE /* OTROAuthXMPPAccount.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB881BA79A8B00CD8331 /* OTRXMPPAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105C41A16D1A300C17BAE /* OTRXMPPAccount.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB891BA79A8C00CD8331 /* OTRXMPPTorAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105C61A16D1A300C17BAE /* OTRXMPPTorAccount.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB8A1BA79A8C00CD8331 /* OTRMediaItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 63D27FC31A6DC51C00EC251A /* OTRMediaItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB8B1BA79A8D00CD8331 /* OTRImageItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 633620971A76E87B006E8739 /* OTRImageItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB8C1BA79A8E00CD8331 /* OTRVideoItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 6336209A1A76E88C006E8739 /* OTRVideoItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB8D1BA79A8F00CD8331 /* OTRAudioItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 6336209D1A76E89A006E8739 /* OTRAudioItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB8E1BA79A9000CD8331 /* OTRStreamManagementStorageObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 63B916E31B7431C1003B778F /* OTRStreamManagementStorageObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB8F1BA79A9100CD8331 /* OTRBuddy.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105CA1A16D1A300C17BAE /* OTRBuddy.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB901BA79A9100CD8331 /* OTRMessage+JSQMessageData.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105CC1A16D1A300C17BAE /* OTRMessage+JSQMessageData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB911BA79A9200CD8331 /* OTRMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105CE1A16D1A300C17BAE /* OTRMessage.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB921BA79A9300CD8331 /* OTRXMPPBuddy.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105D01A16D1A300C17BAE /* OTRXMPPBuddy.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB931BA79A9400CD8331 /* OTRXMPPPresenceSubscriptionRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105D21A16D1A300C17BAE /* OTRXMPPPresenceSubscriptionRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB941BA79A9500CD8331 /* OTRYapDatabaseObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105D41A16D1A300C17BAE /* OTRYapDatabaseObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB951BA79A9600CD8331 /* OTRCertificatePinning.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105E81A16D1A300C17BAE /* OTRCertificatePinning.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB961BA79A9800CD8331 /* OTRChatDemo.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105EA1A16D1A300C17BAE /* OTRChatDemo.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB971BA79A9900CD8331 /* OTRColors.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105EC1A16D1A300C17BAE /* OTRColors.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB991BA79A9B00CD8331 /* OTRImages.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105F01A16D1A300C17BAE /* OTRImages.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB9A1BA79A9C00CD8331 /* OTRLog.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105F21A16D1A300C17BAE /* OTRLog.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB9B1BA79A9D00CD8331 /* OTRNotificationPermissions.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105F31A16D1A300C17BAE /* OTRNotificationPermissions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB9C1BA79A9E00CD8331 /* OTRPasswordGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105F51A16D1A300C17BAE /* OTRPasswordGenerator.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB9E1BA79AA000CD8331 /* OTRUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105FA1A16D1A300C17BAE /* OTRUtilities.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDB9F1BA79AA100CD8331 /* OTRXMPPError.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105FC1A16D1A300C17BAE /* OTRXMPPError.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBA01BA79AA200CD8331 /* XMPPURI.h in Headers */ = {isa = PBXBuildFile; fileRef = D989EC8B1B06AFE30069FE37 /* XMPPURI.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBA11BA79AA300CD8331 /* OTRExistingAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = D989A84D1B5DBD90000608A9 /* OTRExistingAccountViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBA21BA79AA400CD8331 /* OTRWelcomeAccountTableViewDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 638D2E011AFBFE2200F3C50C /* OTRWelcomeAccountTableViewDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBA31BA79AA500CD8331 /* OTRInviteViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331D3B51B4DBBEE00C85365 /* OTRInviteViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBA41BA79AA600CD8331 /* OTRAddBuddyQRCodeViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331D3B81B4F3C6E00C85365 /* OTRAddBuddyQRCodeViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBA51BA79AA700CD8331 /* OTRQRCodeReaderDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331D3BB1B4F41AF00C85365 /* OTRQRCodeReaderDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBA61BA79AA800CD8331 /* OTRBaseLoginViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 638C7CF01B02BE4A004F8EC3 /* OTRBaseLoginViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBA71BA79AA900CD8331 /* OTRXLFormCreator.h in Headers */ = {isa = PBXBuildFile; fileRef = 638C7CF31B02BF0D004F8EC3 /* OTRXLFormCreator.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBA81BA79AAA00CD8331 /* OTRXMPPServerListViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 63039E961B0D43FE007C9978 /* OTRXMPPServerListViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBA91BA79AAB00CD8331 /* OTRXMPPLoginHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 634680811B0404CE00D9A1C5 /* OTRXMPPLoginHandler.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBAA1BA79AAD00CD8331 /* OTRXMPPTorLoginHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 634680841B041EA900D9A1C5 /* OTRXMPPTorLoginHandler.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBAB1BA79AAE00CD8331 /* OTRGoolgeOAuthLoginHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 634680881B041F2F00D9A1C5 /* OTRGoolgeOAuthLoginHandler.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBAC1BA79AAF00CD8331 /* OTRChatSecureIDCreateAccountHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 63C7E6491B20F5730085FA06 /* OTRChatSecureIDCreateAccountHandler.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBAD1BA79AB000CD8331 /* OTRXMPPCreateAccountHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 6346808B1B04206400D9A1C5 /* OTRXMPPCreateAccountHandler.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBAE1BA79AB100CD8331 /* OTRLoginHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 63BE425C1B320EE20017058C /* OTRLoginHandler.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBAF1BA79AB200CD8331 /* OTRAboutViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 633106121A16D1A300C17BAE /* OTRAboutViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBB01BA79AB300CD8331 /* OTRAcknowledgementsViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 633106141A16D1A300C17BAE /* OTRAcknowledgementsViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBB11BA79AB500CD8331 /* OTRBuddyViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 633106161A16D1A300C17BAE /* OTRBuddyViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBB21BA79AB600CD8331 /* OTRCertificateDomainViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 633106181A16D1A300C17BAE /* OTRCertificateDomainViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBB31BA79AB700CD8331 /* OTRCertificatesViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331061A1A16D1A300C17BAE /* OTRCertificatesViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBB41BA79AB900CD8331 /* OTRChangeDatabasePassphraseViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331061C1A16D1A300C17BAE /* OTRChangeDatabasePassphraseViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBB51BA79ABA00CD8331 /* OTRChooseAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331061E1A16D1A300C17BAE /* OTRChooseAccountViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBB61BA79ABB00CD8331 /* OTRComposeViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 633106201A16D1A300C17BAE /* OTRComposeViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBB71BA79ABD00CD8331 /* OTRConversationViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 633106221A16D1A300C17BAE /* OTRConversationViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBB81BA79ABE00CD8331 /* OTRDatabaseUnlockViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 633106281A16D1A300C17BAE /* OTRDatabaseUnlockViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBB91BA79ABF00CD8331 /* OTRDoubleSettingViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331062A1A16D1A300C17BAE /* OTRDoubleSettingViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBBA1BA79AC000CD8331 /* OTRFingerprintsViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331062C1A16D1A300C17BAE /* OTRFingerprintsViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBBB1BA79AC200CD8331 /* OTRIntSettingViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331062E1A16D1A300C17BAE /* OTRIntSettingViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBBC1BA79AC300CD8331 /* OTRLanguageListSettingViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 633106301A16D1A300C17BAE /* OTRLanguageListSettingViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBBD1BA79AC400CD8331 /* OTRListSettingViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 633106321A16D1A300C17BAE /* OTRListSettingViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBBE1BA79AC600CD8331 /* OTRMessagesViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 633106341A16D1A300C17BAE /* OTRMessagesViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBBF1BA79AC700CD8331 /* OTRMessagesHoldTalkViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 63EA4CF71ACC81C800B19E12 /* OTRMessagesHoldTalkViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBC01BA79AC800CD8331 /* OTRNewBuddyViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 633106381A16D1A300C17BAE /* OTRNewBuddyViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBC11BA79ACA00CD8331 /* OTRQRCodeViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331063E1A16D1A300C17BAE /* OTRQRCodeViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBC21BA79ACB00CD8331 /* OTRSettingDetailViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 633106421A16D1A300C17BAE /* OTRSettingDetailViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBC31BA79ACC00CD8331 /* OTRSettingsViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 633106441A16D1A300C17BAE /* OTRSettingsViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBC41BA79ACE00CD8331 /* OTRSubscriptionRequestsViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 633106481A16D1A300C17BAE /* OTRSubscriptionRequestsViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBC51BA79ACF00CD8331 /* OTRCircleView.h in Headers */ = {isa = PBXBuildFile; fileRef = D95AD2221B67FD6A007DEBC3 /* OTRCircleView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBC61BA79AD000CD8331 /* OTRCircleButtonView.h in Headers */ = {isa = PBXBuildFile; fileRef = D9ADE5B71B606642009471FF /* OTRCircleButtonView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBC71BA79AD200CD8331 /* XMPPServerInfoCell.h in Headers */ = {isa = PBXBuildFile; fileRef = D9BE65431B6A08ED002D4136 /* XMPPServerInfoCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBC81BA79AD300CD8331 /* OTRAccountTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331064C1A16D1A300C17BAE /* OTRAccountTableViewCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBC91BA79AD500CD8331 /* OTRBuddyImageCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331064E1A16D1A300C17BAE /* OTRBuddyImageCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBCA1BA79AD700CD8331 /* OTRBuddyInfoCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 633106501A16D1A300C17BAE /* OTRBuddyInfoCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBCB1BA79AD800CD8331 /* OTRConversationCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 633106521A16D1A300C17BAE /* OTRConversationCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBCC1BA79ADA00CD8331 /* OTRInLineTextEditTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 633106541A16D1A300C17BAE /* OTRInLineTextEditTableViewCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBCD1BA79ADB00CD8331 /* OTRSettingTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331065E1A16D1A300C17BAE /* OTRSettingTableViewCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBCE1BA79ADD00CD8331 /* OTRStatusMessageCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 633106601A16D1A300C17BAE /* OTRStatusMessageCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBCF1BA79ADE00CD8331 /* OTRTextFieldTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 633106641A16D1A300C17BAE /* OTRTextFieldTableViewCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBD01BA79AE000CD8331 /* OTRButtonView.h in Headers */ = {isa = PBXBuildFile; fileRef = 633106671A16D1A300C17BAE /* OTRButtonView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBD11BA79AE200CD8331 /* OTRAudioControlsView.h in Headers */ = {isa = PBXBuildFile; fileRef = 63F0FF621A798D8E001F0C99 /* OTRAudioControlsView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBD21BA79AE400CD8331 /* OTRPlayPauseProgressView.h in Headers */ = {isa = PBXBuildFile; fileRef = 63FA54891A7ACA2F00F2AEBB /* OTRPlayPauseProgressView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBD31BA79AE500CD8331 /* OTRPlayView.h in Headers */ = {isa = PBXBuildFile; fileRef = 63FA548C1A7B29EB00F2AEBB /* OTRPlayView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBD41BA79AE700CD8331 /* OTRPauseView.h in Headers */ = {isa = PBXBuildFile; fileRef = 63FA548F1A7B2C2E00F2AEBB /* OTRPauseView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBD51BA79AE900CD8331 /* OTRColorFadingDotView.h in Headers */ = {isa = PBXBuildFile; fileRef = 633106691A16D1A300C17BAE /* OTRColorFadingDotView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBD61BA79AEA00CD8331 /* OTRComposingImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331066B1A16D1A300C17BAE /* OTRComposingImageView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBD71BA79AEC00CD8331 /* OTRLockButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331066D1A16D1A300C17BAE /* OTRLockButton.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBD81BA79AEE00CD8331 /* OTRPasswordStrengthView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331066F1A16D1A300C17BAE /* OTRPasswordStrengthView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBD91BA79AF000CD8331 /* OTRRememberPasswordView.h in Headers */ = {isa = PBXBuildFile; fileRef = 633106711A16D1A300C17BAE /* OTRRememberPasswordView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBDA1BA79AF100CD8331 /* OTRSocialButtonsView.h in Headers */ = {isa = PBXBuildFile; fileRef = 633106731A16D1A300C17BAE /* OTRSocialButtonsView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBDB1BA79AF300CD8331 /* OTRTitleSubtitleView.h in Headers */ = {isa = PBXBuildFile; fileRef = 633106751A16D1A300C17BAE /* OTRTitleSubtitleView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBDC1BA79AF500CD8331 /* OTRHoldToTalkView.h in Headers */ = {isa = PBXBuildFile; fileRef = 63EA4CFB1ACC96AB00B19E12 /* OTRHoldToTalkView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBDD1BA79AF700CD8331 /* OTRAudioTrashView.h in Headers */ = {isa = PBXBuildFile; fileRef = 6353AC2B1AD5E32000753B83 /* OTRAudioTrashView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBDE1BA79AF900CD8331 /* OTRTouchAndHoldGestureRecognizer.h in Headers */ = {isa = PBXBuildFile; fileRef = 639CDD8F1AD74419009BAABC /* OTRTouchAndHoldGestureRecognizer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D93DDBE21BA7A06A00CD8331 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6396AF9F1A169D54009F3E6C /* main.m */; };
+		D93DDBE31BA7A22700CD8331 /* XMPPServerInfoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9BE65451B6A08ED002D4136 /* XMPPServerInfoCell.xib */; };
+		D93DDBE41BA7A22700CD8331 /* OTRUsernameCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9C6E69D1B7148EF00572273 /* OTRUsernameCell.xib */; };
+		D93DDBE51BA7A22D00CD8331 /* Onboarding.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D913A56C1B747B62006C5ACD /* Onboarding.storyboard */; };
 		D95AD2291B684AE1007DEBC3 /* xmpp-server-list in Resources */ = {isa = PBXBuildFile; fileRef = D95AD2281B684AE1007DEBC3 /* xmpp-server-list */; };
 		D973D7061A2D4094004D353E /* Pods-acknowledgements.plist in Resources */ = {isa = PBXBuildFile; fileRef = D973D7051A2D4094004D353E /* Pods-acknowledgements.plist */; };
-		D989A84F1B5DBD90000608A9 /* OTRExistingAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D989A84E1B5DBD90000608A9 /* OTRExistingAccountViewController.m */; };
-		D989EC8D1B06AFE30069FE37 /* XMPPURI.m in Sources */ = {isa = PBXBuildFile; fileRef = D989EC8C1B06AFE30069FE37 /* XMPPURI.m */; };
 		D9A3CB2C1B2798D7000A50C6 /* XMPPURITests.m in Sources */ = {isa = PBXBuildFile; fileRef = D9A3CB2B1B2798D7000A50C6 /* XMPPURITests.m */; };
-		D9ADE5B91B606642009471FF /* OTRCircleButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = D9ADE5B81B606642009471FF /* OTRCircleButtonView.m */; };
-		D9BE65461B6A08ED002D4136 /* XMPPServerInfoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D9BE65441B6A08ED002D4136 /* XMPPServerInfoCell.m */; };
-		D9BE65471B6A08ED002D4136 /* XMPPServerInfoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9BE65451B6A08ED002D4136 /* XMPPServerInfoCell.xib */; };
-		D9C6E69F1B7148EF00572273 /* OTRUsernameCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9C6E69D1B7148EF00572273 /* OTRUsernameCell.xib */; };
-		D9C6E6A11B71575300572273 /* OTRUsernameCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9C6E6A01B71575300572273 /* OTRUsernameCell.swift */; };
+		D9AE3A111BA8CBFA00255537 /* OTRAssets.h in Headers */ = {isa = PBXBuildFile; fileRef = D9AE3A101BA8CBFA00255537 /* OTRAssets.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D9AE3A161BA8CBFA00255537 /* OTRAssets.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D9AE3A0E1BA8CBFA00255537 /* OTRAssets.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D9AE3A1B1BA8CC8600255537 /* OTRSecrets.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105F91A16D1A300C17BAE /* OTRSecrets.m */; };
+		D9AE3A1C1BA8CC8E00255537 /* OTRSecrets.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105F81A16D1A300C17BAE /* OTRSecrets.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D9AE3A201BA8CCFE00255537 /* OTRAssets.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9AE3A0E1BA8CBFA00255537 /* OTRAssets.framework */; };
+		D9AE3A211BA8CF4400255537 /* OTRStrings.h in Headers */ = {isa = PBXBuildFile; fileRef = 633104FF1A16AEA800C17BAE /* OTRStrings.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D9AE3A241BA8D02800255537 /* OTRCountryImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D9AE3A221BA8D02800255537 /* OTRCountryImages.xcassets */; settings = {ASSET_TAGS = (); }; };
+		D9AE3A251BA8D02800255537 /* OTRImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D9AE3A231BA8D02800255537 /* OTRImages.xcassets */; settings = {ASSET_TAGS = (); }; };
+		D9AE3A271BA8D0DB00255537 /* OTRAssets.m in Sources */ = {isa = PBXBuildFile; fileRef = D9AE3A261BA8D0DB00255537 /* OTRAssets.m */; settings = {ASSET_TAGS = (); }; };
+		D9AE3A2A1BA8D29C00255537 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 633104D61A169EC800C17BAE /* Localizable.strings */; settings = {ASSET_TAGS = (); }; };
+		D9AE3A301BA8D84500255537 /* OTRBranding.h in Headers */ = {isa = PBXBuildFile; fileRef = D9AE3A2E1BA8D84500255537 /* OTRBranding.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D9AE3A311BA8D84500255537 /* OTRBranding.m in Sources */ = {isa = PBXBuildFile; fileRef = D9AE3A2F1BA8D84500255537 /* OTRBranding.m */; settings = {ASSET_TAGS = (); }; };
+		D9AE3A321BA8D9AB00255537 /* OTRConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 633105EE1A16D1A300C17BAE /* OTRConstants.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D9AE3A331BA8D9AB00255537 /* OTRConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105EF1A16D1A300C17BAE /* OTRConstants.m */; settings = {ASSET_TAGS = (); }; };
+		D9AE3A341BA8DAB600255537 /* OTRLanguageManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331051B1A16D1A300C17BAE /* OTRLanguageManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D9AE3A351BA8DAB600255537 /* OTRLanguageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331051C1A16D1A300C17BAE /* OTRLanguageManager.m */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -217,7 +407,36 @@
 			remoteGlobalIDString = 6396AF991A169D54009F3E6C;
 			remoteInfo = ChatSecure;
 		};
+		D9227C3D1BA7952100B5E1D0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6396AF921A169D54009F3E6C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D9227C291BA7952100B5E1D0;
+			remoteInfo = ChatSecureCore;
+		};
+		D9AE3A1E1BA8CCFA00255537 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6396AF921A169D54009F3E6C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D9AE3A0D1BA8CBFA00255537;
+			remoteInfo = OTRAssets;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		D9227C481BA7952100B5E1D0 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				D9227C401BA7952100B5E1D0 /* ChatSecureCore.framework in Embed Frameworks */,
+				D9AE3A161BA8CBFA00255537 /* OTRAssets.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		154CBBDFA16BDE9C28017B1F /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
@@ -254,7 +473,7 @@
 		633104F51A16A29B00C17BAE /* zh-Hans-CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans-CN"; path = "zh-Hans-CN.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		633104F61A16A35500C17BAE /* nb-NO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "nb-NO"; path = "nb-NO.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		633104F71A16AACB00C17BAE /* zh-Hant-TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant-TW"; path = "zh-Hant-TW.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		633104FF1A16AEA800C17BAE /* Strings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Strings.h; path = Strings/Strings.h; sourceTree = "<group>"; };
+		633104FF1A16AEA800C17BAE /* OTRStrings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OTRStrings.h; path = ../ChatSecure/Strings/OTRStrings.h; sourceTree = "<group>"; };
 		633105021A16D1A300C17BAE /* NSURL+ChatSecure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSURL+ChatSecure.h"; sourceTree = "<group>"; };
 		633105031A16D1A300C17BAE /* NSURL+ChatSecure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSURL+ChatSecure.m"; sourceTree = "<group>"; };
 		633105041A16D1A300C17BAE /* UIActionSheet+ChatSecure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIActionSheet+ChatSecure.h"; sourceTree = "<group>"; };
@@ -275,8 +494,8 @@
 		633105161A16D1A300C17BAE /* OTRDatabaseView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRDatabaseView.m; sourceTree = "<group>"; };
 		633105171A16D1A300C17BAE /* OTREncryptionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTREncryptionManager.h; sourceTree = "<group>"; };
 		633105181A16D1A300C17BAE /* OTREncryptionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTREncryptionManager.m; sourceTree = "<group>"; };
-		6331051B1A16D1A300C17BAE /* OTRLanguageManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRLanguageManager.h; sourceTree = "<group>"; };
-		6331051C1A16D1A300C17BAE /* OTRLanguageManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRLanguageManager.m; sourceTree = "<group>"; };
+		6331051B1A16D1A300C17BAE /* OTRLanguageManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OTRLanguageManager.h; path = ../Controllers/OTRLanguageManager.h; sourceTree = "<group>"; };
+		6331051C1A16D1A300C17BAE /* OTRLanguageManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OTRLanguageManager.m; path = ../Controllers/OTRLanguageManager.m; sourceTree = "<group>"; };
 		6331051D1A16D1A300C17BAE /* OTROAuthRefresher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTROAuthRefresher.h; sourceTree = "<group>"; };
 		6331051E1A16D1A300C17BAE /* OTROAuthRefresher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTROAuthRefresher.m; sourceTree = "<group>"; };
 		633105211A16D1A300C17BAE /* OTRProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRProtocol.h; sourceTree = "<group>"; };
@@ -378,8 +597,8 @@
 		633105F41A16D1A300C17BAE /* OTRNotificationPermissions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRNotificationPermissions.m; sourceTree = "<group>"; };
 		633105F51A16D1A300C17BAE /* OTRPasswordGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRPasswordGenerator.h; sourceTree = "<group>"; };
 		633105F61A16D1A300C17BAE /* OTRPasswordGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRPasswordGenerator.m; sourceTree = "<group>"; };
-		633105F81A16D1A300C17BAE /* OTRSecrets.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRSecrets.h; sourceTree = "<group>"; };
-		633105F91A16D1A300C17BAE /* OTRSecrets.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRSecrets.m; sourceTree = "<group>"; };
+		633105F81A16D1A300C17BAE /* OTRSecrets.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OTRSecrets.h; path = ../ChatSecure/Classes/Utilities/OTRSecrets.h; sourceTree = "<group>"; };
+		633105F91A16D1A300C17BAE /* OTRSecrets.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OTRSecrets.m; path = ../ChatSecure/Classes/Utilities/OTRSecrets.m; sourceTree = "<group>"; };
 		633105FA1A16D1A300C17BAE /* OTRUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRUtilities.h; sourceTree = "<group>"; };
 		633105FB1A16D1A300C17BAE /* OTRUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRUtilities.m; sourceTree = "<group>"; };
 		633105FC1A16D1A300C17BAE /* OTRXMPPError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPError.h; sourceTree = "<group>"; };
@@ -625,6 +844,9 @@
 		D913A56C1B747B62006C5ACD /* Onboarding.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Onboarding.storyboard; path = Onboarding/Onboarding.storyboard; sourceTree = "<group>"; };
 		D913A56E1B7481AD006C5ACD /* OTRWelcomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OTRWelcomeViewController.swift; path = Onboarding/OTRWelcomeViewController.swift; sourceTree = "<group>"; };
 		D9227C231BA78E6B00B5E1D0 /* FontAwesome.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome.ttf; sourceTree = "<group>"; };
+		D9227C2A1BA7952100B5E1D0 /* ChatSecureCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ChatSecureCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D9227C2C1BA7952100B5E1D0 /* ChatSecureCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatSecureCore.h; sourceTree = "<group>"; };
+		D9227C2E1BA7952100B5E1D0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D9365E791A1EB0050006434A /* torrc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = torrc; path = Resources/torrc; sourceTree = "<group>"; };
 		D95AD2221B67FD6A007DEBC3 /* OTRCircleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRCircleView.h; sourceTree = "<group>"; };
 		D95AD2231B67FD6A007DEBC3 /* OTRCircleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRCircleView.m; sourceTree = "<group>"; };
@@ -637,10 +859,17 @@
 		D9A3CB2B1B2798D7000A50C6 /* XMPPURITests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPURITests.m; sourceTree = "<group>"; };
 		D9ADE5B71B606642009471FF /* OTRCircleButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRCircleButtonView.h; sourceTree = "<group>"; };
 		D9ADE5B81B606642009471FF /* OTRCircleButtonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRCircleButtonView.m; sourceTree = "<group>"; };
+		D9AE3A0E1BA8CBFA00255537 /* OTRAssets.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = OTRAssets.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D9AE3A101BA8CBFA00255537 /* OTRAssets.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OTRAssets.h; sourceTree = "<group>"; };
+		D9AE3A121BA8CBFA00255537 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D9AE3A221BA8D02800255537 /* OTRCountryImages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = OTRCountryImages.xcassets; sourceTree = "<group>"; };
+		D9AE3A231BA8D02800255537 /* OTRImages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = OTRImages.xcassets; sourceTree = "<group>"; };
+		D9AE3A261BA8D0DB00255537 /* OTRAssets.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAssets.m; sourceTree = "<group>"; };
+		D9AE3A2E1BA8D84500255537 /* OTRBranding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBranding.h; sourceTree = "<group>"; };
+		D9AE3A2F1BA8D84500255537 /* OTRBranding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBranding.m; sourceTree = "<group>"; };
 		D9BE65431B6A08ED002D4136 /* XMPPServerInfoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPServerInfoCell.h; sourceTree = "<group>"; };
 		D9BE65441B6A08ED002D4136 /* XMPPServerInfoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPServerInfoCell.m; sourceTree = "<group>"; };
 		D9BE65451B6A08ED002D4136 /* XMPPServerInfoCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = XMPPServerInfoCell.xib; sourceTree = "<group>"; };
-		D9C6E69B1B7148EF00572273 /* ChatSecure-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "ChatSecure-Bridging-Header.h"; path = "Classes/Views/Cells/ChatSecure-Bridging-Header.h"; sourceTree = "<group>"; };
 		D9C6E69D1B7148EF00572273 /* OTRUsernameCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OTRUsernameCell.xib; sourceTree = "<group>"; };
 		D9C6E6A01B71575300572273 /* OTRUsernameCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRUsernameCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -650,6 +879,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D9227C3F1BA7952100B5E1D0 /* ChatSecureCore.framework in Frameworks */,
 				BB852C4F65587CD8A46FF428 /* Pods.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -659,6 +889,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				3A971C2C5AB08E34FDD18676 /* Pods.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D9227C261BA7952100B5E1D0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D9AE3A201BA8CCFE00255537 /* OTRAssets.framework in Frameworks */,
+				8FE09CE9A16DB3D068D19753 /* Pods.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D9AE3A0A1BA8CBFA00255537 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -674,19 +920,8 @@
 				D9365E791A1EB0050006434A /* torrc */,
 				633107291A16D1F200C17BAE /* DemoImages.xcassets */,
 				6331072A1A16D1F200C17BAE /* Images.xcassets */,
-				633104FF1A16AEA800C17BAE /* Strings.h */,
-				633104FA1A16AD8700C17BAE /* Certificates */,
-				633104D61A169EC800C17BAE /* Localizable.strings */,
 			);
 			name = Resources;
-			sourceTree = "<group>";
-		};
-		633104FA1A16AD8700C17BAE /* Certificates */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Certificates;
-			path = Resources/Certificates;
 			sourceTree = "<group>";
 		};
 		633105001A16D1A300C17BAE /* Classes */ = {
@@ -701,7 +936,8 @@
 				633105FE1A16D1A300C17BAE /* View Controllers */,
 				6331064A1A16D1A300C17BAE /* Views */,
 			);
-			path = Classes;
+			name = Classes;
+			path = ../ChatSecure/Classes;
 			sourceTree = "<group>";
 		};
 		633105011A16D1A300C17BAE /* Categories */ = {
@@ -742,8 +978,6 @@
 				633105161A16D1A300C17BAE /* OTRDatabaseView.m */,
 				633105171A16D1A300C17BAE /* OTREncryptionManager.h */,
 				633105181A16D1A300C17BAE /* OTREncryptionManager.m */,
-				6331051B1A16D1A300C17BAE /* OTRLanguageManager.h */,
-				6331051C1A16D1A300C17BAE /* OTRLanguageManager.m */,
 				6331051D1A16D1A300C17BAE /* OTROAuthRefresher.h */,
 				6331051E1A16D1A300C17BAE /* OTROAuthRefresher.m */,
 				633105211A16D1A300C17BAE /* OTRProtocol.h */,
@@ -915,8 +1149,6 @@
 				633105EB1A16D1A300C17BAE /* OTRChatDemo.m */,
 				633105EC1A16D1A300C17BAE /* OTRColors.h */,
 				633105ED1A16D1A300C17BAE /* OTRColors.m */,
-				633105EE1A16D1A300C17BAE /* OTRConstants.h */,
-				633105EF1A16D1A300C17BAE /* OTRConstants.m */,
 				633105F01A16D1A300C17BAE /* OTRImages.h */,
 				633105F11A16D1A300C17BAE /* OTRImages.m */,
 				633105F21A16D1A300C17BAE /* OTRLog.h */,
@@ -924,14 +1156,16 @@
 				633105F41A16D1A300C17BAE /* OTRNotificationPermissions.m */,
 				633105F51A16D1A300C17BAE /* OTRPasswordGenerator.h */,
 				633105F61A16D1A300C17BAE /* OTRPasswordGenerator.m */,
-				633105F81A16D1A300C17BAE /* OTRSecrets.h */,
-				633105F91A16D1A300C17BAE /* OTRSecrets.m */,
+				633105EE1A16D1A300C17BAE /* OTRConstants.h */,
+				633105EF1A16D1A300C17BAE /* OTRConstants.m */,
 				633105FA1A16D1A300C17BAE /* OTRUtilities.h */,
 				633105FB1A16D1A300C17BAE /* OTRUtilities.m */,
 				633105FC1A16D1A300C17BAE /* OTRXMPPError.h */,
 				633105FD1A16D1A300C17BAE /* OTRXMPPError.m */,
 				D989EC8B1B06AFE30069FE37 /* XMPPURI.h */,
 				D989EC8C1B06AFE30069FE37 /* XMPPURI.m */,
+				6331051B1A16D1A300C17BAE /* OTRLanguageManager.h */,
+				6331051C1A16D1A300C17BAE /* OTRLanguageManager.m */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -1131,6 +1365,8 @@
 				63DC0EB21A1ABC3E002C9598 /* Configurations */,
 				6396AF9C1A169D54009F3E6C /* ChatSecure */,
 				6396AFB61A169D54009F3E6C /* ChatSecureTests */,
+				D9227C2B1BA7952100B5E1D0 /* ChatSecureCore */,
+				D9AE3A0F1BA8CBFA00255537 /* OTRAssets */,
 				6396AF9B1A169D54009F3E6C /* Products */,
 				C1E90FC219EFFEE2E8C7EECF /* Pods */,
 				DB9AACD6ED82090C7A6B0076 /* Frameworks */,
@@ -1142,6 +1378,8 @@
 			children = (
 				6396AF9A1A169D54009F3E6C /* ChatSecure.app */,
 				6396AFB31A169D54009F3E6C /* ChatSecureTests.xctest */,
+				D9227C2A1BA7952100B5E1D0 /* ChatSecureCore.framework */,
+				D9AE3A0E1BA8CBFA00255537 /* OTRAssets.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1149,7 +1387,6 @@
 		6396AF9C1A169D54009F3E6C /* ChatSecure */ = {
 			isa = PBXGroup;
 			children = (
-				633105001A16D1A300C17BAE /* Classes */,
 				633104D71A169EE600C17BAE /* Resources */,
 				6396AF9D1A169D54009F3E6C /* Supporting Files */,
 			);
@@ -1159,7 +1396,6 @@
 		6396AF9D1A169D54009F3E6C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				D9C6E69B1B7148EF00572273 /* ChatSecure-Bridging-Header.h */,
 				6396AF9E1A169D54009F3E6C /* Info.plist */,
 				6396AF9F1A169D54009F3E6C /* main.m */,
 			);
@@ -1319,6 +1555,50 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		D9227C2B1BA7952100B5E1D0 /* ChatSecureCore */ = {
+			isa = PBXGroup;
+			children = (
+				633105001A16D1A300C17BAE /* Classes */,
+				D9227C2C1BA7952100B5E1D0 /* ChatSecureCore.h */,
+				D9227C2E1BA7952100B5E1D0 /* Info.plist */,
+			);
+			path = ChatSecureCore;
+			sourceTree = "<group>";
+		};
+		D9AE3A0F1BA8CBFA00255537 /* OTRAssets */ = {
+			isa = PBXGroup;
+			children = (
+				D9AE3A2B1BA8D2AD00255537 /* Resources */,
+				D9AE3A1D1BA8CCAA00255537 /* Classes */,
+				D9AE3A121BA8CBFA00255537 /* Info.plist */,
+			);
+			path = OTRAssets;
+			sourceTree = "<group>";
+		};
+		D9AE3A1D1BA8CCAA00255537 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				D9AE3A2E1BA8D84500255537 /* OTRBranding.h */,
+				D9AE3A2F1BA8D84500255537 /* OTRBranding.m */,
+				D9AE3A101BA8CBFA00255537 /* OTRAssets.h */,
+				D9AE3A261BA8D0DB00255537 /* OTRAssets.m */,
+				633104FF1A16AEA800C17BAE /* OTRStrings.h */,
+				633105F81A16D1A300C17BAE /* OTRSecrets.h */,
+				633105F91A16D1A300C17BAE /* OTRSecrets.m */,
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
+		D9AE3A2B1BA8D2AD00255537 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				633104D61A169EC800C17BAE /* Localizable.strings */,
+				D9AE3A221BA8D02800255537 /* OTRCountryImages.xcassets */,
+				D9AE3A231BA8D02800255537 /* OTRImages.xcassets */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
 		DB9AACD6ED82090C7A6B0076 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -1328,6 +1608,207 @@
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		D9227C271BA7952100B5E1D0 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D9227C2D1BA7952100B5E1D0 /* ChatSecureCore.h in Headers */,
+				D93DDB2B1BA79A7000CD8331 /* OTRAppDelegate.h in Headers */,
+				D93DDB2C1BA79A7000CD8331 /* NSURL+ChatSecure.h in Headers */,
+				D93DDB2D1BA79A7000CD8331 /* UIActionSheet+ChatSecure.h in Headers */,
+				D93DDB2E1BA79A7000CD8331 /* UIActivity+ChatSecure.h in Headers */,
+				D93DDB2F1BA79A7000CD8331 /* UIActivityViewController+ChatSecure.h in Headers */,
+				D93DDB301BA79A7000CD8331 /* UIImage+ChatSecure.h in Headers */,
+				D93DDB311BA79A7000CD8331 /* UIViewController+ChatSecure.h in Headers */,
+				D93DDB321BA79A7000CD8331 /* JSQMessagesCollectionViewCell+ChatSecure.h in Headers */,
+				D93DDB331BA79A7000CD8331 /* NSString+ChatSecure.h in Headers */,
+				D93DDB341BA79A7000CD8331 /* NSFileManager+ChatSecure.h in Headers */,
+				D93DDB351BA79A7000CD8331 /* OTRAttachmentPicker.h in Headers */,
+				D93DDB361BA79A7000CD8331 /* OTRAccountsManager.h in Headers */,
+				D93DDB371BA79A7100CD8331 /* OTRDatabaseManager.h in Headers */,
+				D93DDB381BA79A7100CD8331 /* OTRDatabaseView.h in Headers */,
+				D93DDB391BA79A7100CD8331 /* OTREncryptionManager.h in Headers */,
+				D93DDB3B1BA79A7100CD8331 /* OTROAuthRefresher.h in Headers */,
+				D93DDB3C1BA79A7100CD8331 /* OTRProtocol.h in Headers */,
+				D93DDB3D1BA79A7100CD8331 /* OTRProtocolManager.h in Headers */,
+				D93DDB3E1BA79A7100CD8331 /* OTRSettingsManager.h in Headers */,
+				D93DDB3F1BA79A7100CD8331 /* OTRTorManager.h in Headers */,
+				D93DDB401BA79A7100CD8331 /* OTRNotificationController.h in Headers */,
+				D93DDB411BA79A7100CD8331 /* OTRAudioSessionManager.h in Headers */,
+				D93DDB421BA79A7100CD8331 /* OTRAudioPlaybackController.h in Headers */,
+				D93DDB431BA79A7200CD8331 /* OTRMediaFileManager.h in Headers */,
+				D93DDB441BA79A7200CD8331 /* OTRMediaServer.h in Headers */,
+				D93DDB451BA79A7200CD8331 /* OTRStreamManagementYapStorage.h in Headers */,
+				D93DDB461BA79A7200CD8331 /* OTRXMPPMessageYapStroage.h in Headers */,
+				D93DDB471BA79A7200CD8331 /* OTRvCardYapDatabaseStorage.h in Headers */,
+				D93DDB481BA79A7200CD8331 /* OTRXMPPBudyTimers.h in Headers */,
+				D93DDB491BA79A7200CD8331 /* OTRXMPPManager.h in Headers */,
+				D93DDB4A1BA79A7300CD8331 /* OTRXMPPProxyStream.h in Headers */,
+				D93DDB4B1BA79A7300CD8331 /* OTRXMPPTorManager.h in Headers */,
+				D93DDB4C1BA79A7300CD8331 /* OTRYapDatabaseRosterStorage.h in Headers */,
+				D93DDB4D1BA79A7300CD8331 /* XMPPFramework.h in Headers */,
+				D93DDB4E1BA79A7300CD8331 /* OTRXMPPServerInfo.h in Headers */,
+				D93DDB4F1BA79A7400CD8331 /* OTRManagedAccount.h in Headers */,
+				D93DDB501BA79A7400CD8331 /* OTRManagedBuddy.h in Headers */,
+				D93DDB511BA79A7400CD8331 /* OTRManagedEncryptionStatusMessage.h in Headers */,
+				D93DDB521BA79A7400CD8331 /* OTRManagedFacebookAccount.h in Headers */,
+				D93DDB531BA79A7400CD8331 /* OTRManagedGoogleAccount.h in Headers */,
+				D93DDB541BA79A7500CD8331 /* OTRManagedGroup.h in Headers */,
+				D93DDB551BA79A7500CD8331 /* OTRManagedMessage.h in Headers */,
+				D93DDB561BA79A7500CD8331 /* OTRManagedMessageAndStatus.h in Headers */,
+				D93DDB571BA79A7500CD8331 /* OTRManagedOAuthAccount.h in Headers */,
+				D93DDB581BA79A7600CD8331 /* OTRManagedOscarAccount.h in Headers */,
+				D93DDB591BA79A7600CD8331 /* OTRManagedStatus.h in Headers */,
+				D93DDB5A1BA79A7600CD8331 /* OTRManagedXMPPAccount.h in Headers */,
+				D93DDB5B1BA79A7600CD8331 /* OTRvCard.h in Headers */,
+				D93DDB5C1BA79A7700CD8331 /* OTRvCardAvatar.h in Headers */,
+				D93DDB5D1BA79A7700CD8331 /* OTRvCardTemp.h in Headers */,
+				D93DDB5E1BA79A7700CD8331 /* OTRXMPPManagedPresenceSubscriptionRequest.h in Headers */,
+				D93DDB5F1BA79A7800CD8331 /* _OTRManagedAccount.h in Headers */,
+				D93DDB601BA79A7800CD8331 /* _OTRManagedBuddy.h in Headers */,
+				D93DDB611BA79A7800CD8331 /* _OTRManagedEncryptionStatusMessage.h in Headers */,
+				D93DDB621BA79A7900CD8331 /* _OTRManagedFacebookAccount.h in Headers */,
+				D93DDB631BA79A7900CD8331 /* _OTRManagedGoogleAccount.h in Headers */,
+				D93DDB641BA79A7900CD8331 /* _OTRManagedGroup.h in Headers */,
+				D93DDB651BA79A7A00CD8331 /* _OTRManagedMessage.h in Headers */,
+				D93DDB661BA79A7A00CD8331 /* _OTRManagedMessageAndStatus.h in Headers */,
+				D93DDB671BA79A7A00CD8331 /* _OTRManagedOAuthAccount.h in Headers */,
+				D93DDB681BA79A7B00CD8331 /* _OTRManagedOscarAccount.h in Headers */,
+				D93DDB691BA79A7B00CD8331 /* _OTRManagedStatus.h in Headers */,
+				D93DDB6A1BA79A7C00CD8331 /* _OTRManagedXMPPAccount.h in Headers */,
+				D93DDB6B1BA79A7C00CD8331 /* _OTRvCard.h in Headers */,
+				D93DDB6C1BA79A7C00CD8331 /* _OTRvCardAvatar.h in Headers */,
+				D93DDB6D1BA79A7D00CD8331 /* _OTRvCardTemp.h in Headers */,
+				D93DDB6E1BA79A7D00CD8331 /* _OTRXMPPManagedPresenceSubscriptionRequest.h in Headers */,
+				D93DDB6F1BA79A7E00CD8331 /* OTRActivityItemProvider.h in Headers */,
+				D93DDB701BA79A7E00CD8331 /* OTRDomainCellInfo.h in Headers */,
+				D9AE3A341BA8DAB600255537 /* OTRLanguageManager.h in Headers */,
+				D93DDB711BA79A7F00CD8331 /* OTROpenInFacebookActivity.h in Headers */,
+				D93DDB721BA79A7F00CD8331 /* OTROpenInTwitterActivity.h in Headers */,
+				D93DDB731BA79A7F00CD8331 /* OTRQRCodeActivity.h in Headers */,
+				D93DDB741BA79A8000CD8331 /* OTRToastOptions.h in Headers */,
+				D93DDB751BA79A8000CD8331 /* OTRBoolSetting.h in Headers */,
+				D93DDB761BA79A8100CD8331 /* OTRCertificateSetting.h in Headers */,
+				D93DDB771BA79A8100CD8331 /* OTRDonateSetting.h in Headers */,
+				D93DDB781BA79A8200CD8331 /* OTRDoubleSetting.h in Headers */,
+				D93DDB791BA79A8200CD8331 /* OTRFeedbackSetting.h in Headers */,
+				D93DDB7A1BA79A8300CD8331 /* OTRFingerprintSetting.h in Headers */,
+				D93DDB7B1BA79A8300CD8331 /* OTRIntSetting.h in Headers */,
+				D93DDB7C1BA79A8400CD8331 /* OTRLanguageSetting.h in Headers */,
+				D93DDB7D1BA79A8400CD8331 /* OTRListSetting.h in Headers */,
+				D93DDB7E1BA79A8500CD8331 /* OTRListSettingValue.h in Headers */,
+				D93DDB7F1BA79A8500CD8331 /* OTRSetting.h in Headers */,
+				D93DDB801BA79A8600CD8331 /* OTRSettingsGroup.h in Headers */,
+				D93DDB811BA79A8700CD8331 /* OTRShareSetting.h in Headers */,
+				D93DDB821BA79A8700CD8331 /* OTRValueSetting.h in Headers */,
+				D93DDB831BA79A8800CD8331 /* OTRViewSetting.h in Headers */,
+				D93DDB841BA79A8800CD8331 /* OTRFacebookOAuthXMPPAccount.h in Headers */,
+				D93DDB851BA79A8900CD8331 /* OTRAccount.h in Headers */,
+				D93DDB861BA79A8900CD8331 /* OTRGoogleOAuthXMPPAccount.h in Headers */,
+				D93DDB871BA79A8A00CD8331 /* OTROAuthXMPPAccount.h in Headers */,
+				D93DDB881BA79A8B00CD8331 /* OTRXMPPAccount.h in Headers */,
+				D93DDB891BA79A8C00CD8331 /* OTRXMPPTorAccount.h in Headers */,
+				D93DDB8A1BA79A8C00CD8331 /* OTRMediaItem.h in Headers */,
+				D93DDB8B1BA79A8D00CD8331 /* OTRImageItem.h in Headers */,
+				D93DDB8C1BA79A8E00CD8331 /* OTRVideoItem.h in Headers */,
+				D93DDB8D1BA79A8F00CD8331 /* OTRAudioItem.h in Headers */,
+				D93DDB8E1BA79A9000CD8331 /* OTRStreamManagementStorageObject.h in Headers */,
+				D93DDB8F1BA79A9100CD8331 /* OTRBuddy.h in Headers */,
+				D93DDB901BA79A9100CD8331 /* OTRMessage+JSQMessageData.h in Headers */,
+				D93DDB911BA79A9200CD8331 /* OTRMessage.h in Headers */,
+				D93DDB921BA79A9300CD8331 /* OTRXMPPBuddy.h in Headers */,
+				D93DDB931BA79A9400CD8331 /* OTRXMPPPresenceSubscriptionRequest.h in Headers */,
+				D93DDB941BA79A9500CD8331 /* OTRYapDatabaseObject.h in Headers */,
+				D93DDB951BA79A9600CD8331 /* OTRCertificatePinning.h in Headers */,
+				D93DDB961BA79A9800CD8331 /* OTRChatDemo.h in Headers */,
+				D93DDB971BA79A9900CD8331 /* OTRColors.h in Headers */,
+				D93DDB991BA79A9B00CD8331 /* OTRImages.h in Headers */,
+				D93DDB9A1BA79A9C00CD8331 /* OTRLog.h in Headers */,
+				D93DDB9B1BA79A9D00CD8331 /* OTRNotificationPermissions.h in Headers */,
+				D93DDB9C1BA79A9E00CD8331 /* OTRPasswordGenerator.h in Headers */,
+				D93DDB9E1BA79AA000CD8331 /* OTRUtilities.h in Headers */,
+				D93DDB9F1BA79AA100CD8331 /* OTRXMPPError.h in Headers */,
+				D93DDBA01BA79AA200CD8331 /* XMPPURI.h in Headers */,
+				D93DDBA11BA79AA300CD8331 /* OTRExistingAccountViewController.h in Headers */,
+				D93DDBA21BA79AA400CD8331 /* OTRWelcomeAccountTableViewDelegate.h in Headers */,
+				D93DDBA31BA79AA500CD8331 /* OTRInviteViewController.h in Headers */,
+				D93DDBA41BA79AA600CD8331 /* OTRAddBuddyQRCodeViewController.h in Headers */,
+				D93DDBA51BA79AA700CD8331 /* OTRQRCodeReaderDelegate.h in Headers */,
+				D93DDBA61BA79AA800CD8331 /* OTRBaseLoginViewController.h in Headers */,
+				D93DDBA71BA79AA900CD8331 /* OTRXLFormCreator.h in Headers */,
+				D93DDBA81BA79AAA00CD8331 /* OTRXMPPServerListViewController.h in Headers */,
+				D93DDBA91BA79AAB00CD8331 /* OTRXMPPLoginHandler.h in Headers */,
+				D93DDBAA1BA79AAD00CD8331 /* OTRXMPPTorLoginHandler.h in Headers */,
+				D93DDBAB1BA79AAE00CD8331 /* OTRGoolgeOAuthLoginHandler.h in Headers */,
+				D93DDBAC1BA79AAF00CD8331 /* OTRChatSecureIDCreateAccountHandler.h in Headers */,
+				D93DDBAD1BA79AB000CD8331 /* OTRXMPPCreateAccountHandler.h in Headers */,
+				D93DDBAE1BA79AB100CD8331 /* OTRLoginHandler.h in Headers */,
+				D93DDBAF1BA79AB200CD8331 /* OTRAboutViewController.h in Headers */,
+				D93DDBB01BA79AB300CD8331 /* OTRAcknowledgementsViewController.h in Headers */,
+				D93DDBB11BA79AB500CD8331 /* OTRBuddyViewController.h in Headers */,
+				D93DDBB21BA79AB600CD8331 /* OTRCertificateDomainViewController.h in Headers */,
+				D93DDBB31BA79AB700CD8331 /* OTRCertificatesViewController.h in Headers */,
+				D93DDBB41BA79AB900CD8331 /* OTRChangeDatabasePassphraseViewController.h in Headers */,
+				D93DDBB51BA79ABA00CD8331 /* OTRChooseAccountViewController.h in Headers */,
+				D93DDBB61BA79ABB00CD8331 /* OTRComposeViewController.h in Headers */,
+				D93DDBB71BA79ABD00CD8331 /* OTRConversationViewController.h in Headers */,
+				D9AE3A321BA8D9AB00255537 /* OTRConstants.h in Headers */,
+				D93DDBB81BA79ABE00CD8331 /* OTRDatabaseUnlockViewController.h in Headers */,
+				D93DDBB91BA79ABF00CD8331 /* OTRDoubleSettingViewController.h in Headers */,
+				D93DDBBA1BA79AC000CD8331 /* OTRFingerprintsViewController.h in Headers */,
+				D93DDBBB1BA79AC200CD8331 /* OTRIntSettingViewController.h in Headers */,
+				D93DDBBC1BA79AC300CD8331 /* OTRLanguageListSettingViewController.h in Headers */,
+				D93DDBBD1BA79AC400CD8331 /* OTRListSettingViewController.h in Headers */,
+				D93DDBBE1BA79AC600CD8331 /* OTRMessagesViewController.h in Headers */,
+				D93DDBBF1BA79AC700CD8331 /* OTRMessagesHoldTalkViewController.h in Headers */,
+				D93DDBC01BA79AC800CD8331 /* OTRNewBuddyViewController.h in Headers */,
+				D93DDBC11BA79ACA00CD8331 /* OTRQRCodeViewController.h in Headers */,
+				D93DDBC21BA79ACB00CD8331 /* OTRSettingDetailViewController.h in Headers */,
+				D93DDBC31BA79ACC00CD8331 /* OTRSettingsViewController.h in Headers */,
+				D93DDBC41BA79ACE00CD8331 /* OTRSubscriptionRequestsViewController.h in Headers */,
+				D93DDBC51BA79ACF00CD8331 /* OTRCircleView.h in Headers */,
+				D93DDBC61BA79AD000CD8331 /* OTRCircleButtonView.h in Headers */,
+				D93DDBC71BA79AD200CD8331 /* XMPPServerInfoCell.h in Headers */,
+				D93DDBC81BA79AD300CD8331 /* OTRAccountTableViewCell.h in Headers */,
+				D93DDBC91BA79AD500CD8331 /* OTRBuddyImageCell.h in Headers */,
+				D93DDBCA1BA79AD700CD8331 /* OTRBuddyInfoCell.h in Headers */,
+				D93DDBCB1BA79AD800CD8331 /* OTRConversationCell.h in Headers */,
+				D93DDBCC1BA79ADA00CD8331 /* OTRInLineTextEditTableViewCell.h in Headers */,
+				D93DDBCD1BA79ADB00CD8331 /* OTRSettingTableViewCell.h in Headers */,
+				D93DDBCE1BA79ADD00CD8331 /* OTRStatusMessageCell.h in Headers */,
+				D93DDBCF1BA79ADE00CD8331 /* OTRTextFieldTableViewCell.h in Headers */,
+				D93DDBD01BA79AE000CD8331 /* OTRButtonView.h in Headers */,
+				D93DDBD11BA79AE200CD8331 /* OTRAudioControlsView.h in Headers */,
+				D93DDBD21BA79AE400CD8331 /* OTRPlayPauseProgressView.h in Headers */,
+				D93DDBD31BA79AE500CD8331 /* OTRPlayView.h in Headers */,
+				D93DDBD41BA79AE700CD8331 /* OTRPauseView.h in Headers */,
+				D93DDBD51BA79AE900CD8331 /* OTRColorFadingDotView.h in Headers */,
+				D93DDBD61BA79AEA00CD8331 /* OTRComposingImageView.h in Headers */,
+				D93DDBD71BA79AEC00CD8331 /* OTRLockButton.h in Headers */,
+				D93DDBD81BA79AEE00CD8331 /* OTRPasswordStrengthView.h in Headers */,
+				D93DDBD91BA79AF000CD8331 /* OTRRememberPasswordView.h in Headers */,
+				D93DDBDA1BA79AF100CD8331 /* OTRSocialButtonsView.h in Headers */,
+				D93DDBDB1BA79AF300CD8331 /* OTRTitleSubtitleView.h in Headers */,
+				D93DDBDC1BA79AF500CD8331 /* OTRHoldToTalkView.h in Headers */,
+				D93DDBDD1BA79AF700CD8331 /* OTRAudioTrashView.h in Headers */,
+				D93DDBDE1BA79AF900CD8331 /* OTRTouchAndHoldGestureRecognizer.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D9AE3A0B1BA8CBFA00255537 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D9AE3A111BA8CBFA00255537 /* OTRAssets.h in Headers */,
+				D9AE3A211BA8CF4400255537 /* OTRStrings.h in Headers */,
+				D9AE3A1C1BA8CC8E00255537 /* OTRSecrets.h in Headers */,
+				D9AE3A301BA8D84500255537 /* OTRBranding.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
 		6396AF991A169D54009F3E6C /* ChatSecure */ = {
@@ -1341,10 +1822,12 @@
 				8A2E66B35EF52AF3A8D65276 /* Copy Pods Resources */,
 				6386E24E1A16DBAD003465DC /* ShellScript */,
 				A60AF14A61B7922CB2D653D0 /* Embed Pods Frameworks */,
+				D9227C481BA7952100B5E1D0 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				D9227C3E1BA7952100B5E1D0 /* PBXTargetDependency */,
 			);
 			name = ChatSecure;
 			productName = ChatSecure;
@@ -1372,6 +1855,45 @@
 			productReference = 6396AFB31A169D54009F3E6C /* ChatSecureTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		D9227C291BA7952100B5E1D0 /* ChatSecureCore */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D9227C471BA7952100B5E1D0 /* Build configuration list for PBXNativeTarget "ChatSecureCore" */;
+			buildPhases = (
+				ED8AB696AE0578D36330802D /* Check Pods Manifest.lock */,
+				D9227C251BA7952100B5E1D0 /* Sources */,
+				D9227C261BA7952100B5E1D0 /* Frameworks */,
+				D9227C271BA7952100B5E1D0 /* Headers */,
+				D9227C281BA7952100B5E1D0 /* Resources */,
+				7420B054A336828B59EB9DBC /* Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D9AE3A1F1BA8CCFA00255537 /* PBXTargetDependency */,
+			);
+			name = ChatSecureCore;
+			productName = ChatSecureCore;
+			productReference = D9227C2A1BA7952100B5E1D0 /* ChatSecureCore.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		D9AE3A0D1BA8CBFA00255537 /* OTRAssets */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D9AE3A171BA8CBFA00255537 /* Build configuration list for PBXNativeTarget "OTRAssets" */;
+			buildPhases = (
+				D9AE3A091BA8CBFA00255537 /* Sources */,
+				D9AE3A0A1BA8CBFA00255537 /* Frameworks */,
+				D9AE3A0B1BA8CBFA00255537 /* Headers */,
+				D9AE3A0C1BA8CBFA00255537 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = OTRAssets;
+			productName = OTRAssets;
+			productReference = D9AE3A0E1BA8CBFA00255537 /* OTRAssets.framework */;
+			productType = "com.apple.product-type.framework";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -1396,6 +1918,14 @@
 					6396AFB21A169D54009F3E6C = {
 						CreatedOnToolsVersion = 6.1;
 						TestTargetID = 6396AF991A169D54009F3E6C;
+					};
+					D9227C291BA7952100B5E1D0 = {
+						CreatedOnToolsVersion = 7.0;
+						DevelopmentTeam = 4T8JLQR6GR;
+					};
+					D9AE3A0D1BA8CBFA00255537 = {
+						CreatedOnToolsVersion = 7.0;
+						DevelopmentTeam = 4T8JLQR6GR;
 					};
 				};
 			};
@@ -1444,6 +1974,8 @@
 			targets = (
 				6396AF991A169D54009F3E6C /* ChatSecure */,
 				6396AFB21A169D54009F3E6C /* ChatSecureTests */,
+				D9227C291BA7952100B5E1D0 /* ChatSecureCore */,
+				D9AE3A0D1BA8CBFA00255537 /* OTRAssets */,
 			);
 		};
 /* End PBXProject section */
@@ -1453,17 +1985,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D9C6E69F1B7148EF00572273 /* OTRUsernameCell.xib in Resources */,
 				D9227C241BA78E6B00B5E1D0 /* FontAwesome.ttf in Resources */,
-				D913A56D1B747B62006C5ACD /* Onboarding.storyboard in Resources */,
-				632461521A1ADC77000EF33B /* Localizable.strings in Resources */,
 				6331072C1A16D1F200C17BAE /* Images.xcassets in Resources */,
 				D973D7061A2D4094004D353E /* Pods-acknowledgements.plist in Resources */,
 				D9365E7A1A1EB0050006434A /* torrc in Resources */,
 				6331072B1A16D1F200C17BAE /* DemoImages.xcassets in Resources */,
 				633107201A16D1A300C17BAE /* LaunchScreen.xib in Resources */,
 				D95AD2291B684AE1007DEBC3 /* xmpp-server-list in Resources */,
-				D9BE65471B6A08ED002D4136 /* XMPPServerInfoCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1472,6 +2000,26 @@
 			buildActionMask = 2147483647;
 			files = (
 				63DDD8BA1A9E9BD900C0A918 /* samples in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D9227C281BA7952100B5E1D0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D93DDBE51BA7A22D00CD8331 /* Onboarding.storyboard in Resources */,
+				D93DDBE31BA7A22700CD8331 /* XMPPServerInfoCell.xib in Resources */,
+				D93DDBE41BA7A22700CD8331 /* OTRUsernameCell.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D9AE3A0C1BA8CBFA00255537 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D9AE3A241BA8D02800255537 /* OTRCountryImages.xcassets in Resources */,
+				D9AE3A2A1BA8D29C00255537 /* Localizable.strings in Resources */,
+				D9AE3A251BA8D02800255537 /* OTRImages.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1505,6 +2053,21 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "python \"${SRCROOT}/ChatSecure/Strings/StringsConverter.py\"";
+		};
+		7420B054A336828B59EB9DBC /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 		8A2E66B35EF52AF3A8D65276 /* Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1566,6 +2129,21 @@
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
+		ED8AB696AE0578D36330802D /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
 		F92CD31427EF6855AC77AF5E /* Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1588,189 +2166,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				63C4BD1C1A1E9BE1001696CD /* OTRvCardAvatar.m in Sources */,
-				63C4BD281A1E9BE1001696CD /* _OTRManagedOscarAccount.m in Sources */,
-				633107031A16D1A300C17BAE /* OTRFingerprintsViewController.m in Sources */,
-				6331068C1A16D1A300C17BAE /* OTRSettingsManager.m in Sources */,
-				6331070C1A16D1A300C17BAE /* OTRQRCodeViewController.m in Sources */,
-				6331067B1A16D1A300C17BAE /* UIImage+ChatSecure.m in Sources */,
-				6331071C1A16D1A300C17BAE /* OTRSettingTableViewCell.m in Sources */,
-				6331067F1A16D1A300C17BAE /* OTRDatabaseManager.m in Sources */,
-				63BE425E1B320EE20017058C /* OTRLoginHandler.m in Sources */,
-				633106931A16D1A300C17BAE /* OTRYapDatabaseRosterStorage.m in Sources */,
-				63C4BD131A1E9BE1001696CD /* OTRManagedGoogleAccount.m in Sources */,
-				6331D3B71B4DBBEE00C85365 /* OTRInviteViewController.m in Sources */,
-				638C7CF21B02BE4A004F8EC3 /* OTRBaseLoginViewController.m in Sources */,
-				638C7CF51B02BF0D004F8EC3 /* OTRXLFormCreator.m in Sources */,
-				633106D71A16D1A300C17BAE /* OTRXMPPBuddy.m in Sources */,
-				D989EC8D1B06AFE30069FE37 /* XMPPURI.m in Sources */,
-				63C4BD111A1E9BE1001696CD /* OTRManagedEncryptionStatusMessage.m in Sources */,
-				633106861A16D1A300C17BAE /* OTRProtocolManager.m in Sources */,
-				63EA4CFD1ACC96AB00B19E12 /* OTRHoldToTalkView.m in Sources */,
-				6331067A1A16D1A300C17BAE /* UIActivityViewController+ChatSecure.m in Sources */,
-				638D2E031AFBFE2200F3C50C /* OTRWelcomeAccountTableViewDelegate.m in Sources */,
-				63C4BD261A1E9BE1001696CD /* _OTRManagedMessageAndStatus.m in Sources */,
-				633106921A16D1A300C17BAE /* OTRXMPPTorManager.m in Sources */,
-				6353AC2D1AD5E32000753B83 /* OTRAudioTrashView.m in Sources */,
-				633106CA1A16D1A300C17BAE /* OTRValueSetting.m in Sources */,
-				639CDD911AD74419009BAABC /* OTRTouchAndHoldGestureRecognizer.m in Sources */,
-				633106B71A16D1A300C17BAE /* OTRActivityItemProvider.m in Sources */,
-				633106811A16D1A300C17BAE /* OTREncryptionManager.m in Sources */,
-				633106E21A16D1A300C17BAE /* OTRCertificatePinning.m in Sources */,
-				633107161A16D1A300C17BAE /* OTRInLineTextEditTableViewCell.m in Sources */,
-				D913A56F1B7481AD006C5ACD /* OTRWelcomeViewController.swift in Sources */,
-				633107121A16D1A300C17BAE /* OTRAccountTableViewCell.m in Sources */,
-				633106E71A16D1A300C17BAE /* OTRNotificationPermissions.m in Sources */,
-				633107071A16D1A300C17BAE /* OTRMessagesViewController.m in Sources */,
-				633106D21A16D1A300C17BAE /* OTRXMPPTorAccount.m in Sources */,
-				63F6E1911A69B9BA0011E6F7 /* OTRAttachmentPicker.m in Sources */,
-				63C4BD2C1A1E9BE1001696CD /* _OTRvCardAvatar.m in Sources */,
-				6331070F1A16D1A300C17BAE /* OTRSettingsViewController.m in Sources */,
-				633106CB1A16D1A300C17BAE /* OTRViewSetting.m in Sources */,
-				63DDD8B01A9D3C0400C0A918 /* OTRMediaServer.m in Sources */,
-				633107141A16D1A300C17BAE /* OTRBuddyInfoCell.m in Sources */,
-				633107051A16D1A300C17BAE /* OTRLanguageListSettingViewController.m in Sources */,
-				D9BE65461B6A08ED002D4136 /* XMPPServerInfoCell.m in Sources */,
-				633106FE1A16D1A300C17BAE /* OTRConversationViewController.m in Sources */,
-				63C4BD1E1A1E9BE1001696CD /* OTRXMPPManagedPresenceSubscriptionRequest.m in Sources */,
-				633107091A16D1A300C17BAE /* OTRNewBuddyViewController.m in Sources */,
-				633107221A16D1A300C17BAE /* OTRColorFadingDotView.m in Sources */,
-				633107151A16D1A300C17BAE /* OTRConversationCell.m in Sources */,
-				633106F61A16D1A300C17BAE /* OTRAboutViewController.m in Sources */,
-				633106F91A16D1A300C17BAE /* OTRCertificateDomainViewController.m in Sources */,
-				63B916E21B743198003B778F /* OTRStreamManagementYapStorage.m in Sources */,
-				63C4BD231A1E9BE1001696CD /* _OTRManagedGoogleAccount.m in Sources */,
-				633107061A16D1A300C17BAE /* OTRListSettingViewController.m in Sources */,
-				63C4BD2B1A1E9BE1001696CD /* _OTRvCard.m in Sources */,
-				63FA548B1A7ACA2F00F2AEBB /* OTRPlayPauseProgressView.m in Sources */,
-				633107261A16D1A400C17BAE /* OTRRememberPasswordView.m in Sources */,
-				633106F81A16D1A300C17BAE /* OTRBuddyViewController.m in Sources */,
-				633106BC1A16D1A300C17BAE /* OTRBoolSetting.m in Sources */,
-				633106831A16D1A300C17BAE /* OTRLanguageManager.m in Sources */,
-				63C4BD201A1E9BE1001696CD /* _OTRManagedBuddy.m in Sources */,
-				633106E61A16D1A300C17BAE /* OTRImages.m in Sources */,
-				633106C11A16D1A300C17BAE /* OTRFingerprintSetting.m in Sources */,
-				63C4BCCC1A1E9B9F001696CD /* ChatSecure.xcdatamodeld in Sources */,
-				637DBB1C1B7D5A23003845B7 /* OTRXMPPMessageYapStroage.m in Sources */,
-				6346808A1B041F2F00D9A1C5 /* OTRGoolgeOAuthLoginHandler.m in Sources */,
-				63D184861A2D3F2400334CD8 /* OTRNotificationController.m in Sources */,
-				63FA54911A7B2C2E00F2AEBB /* OTRPauseView.m in Sources */,
-				633106F71A16D1A300C17BAE /* OTRAcknowledgementsViewController.m in Sources */,
-				63C4BD1D1A1E9BE1001696CD /* OTRvCardTemp.m in Sources */,
-				633106CE1A16D1A300C17BAE /* OTRGoogleOAuthXMPPAccount.m in Sources */,
-				633106E81A16D1A300C17BAE /* OTRPasswordGenerator.m in Sources */,
-				63C4BD221A1E9BE1001696CD /* _OTRManagedFacebookAccount.m in Sources */,
-				633106BA1A16D1A300C17BAE /* OTROpenInTwitterActivity.m in Sources */,
-				633106781A16D1A300C17BAE /* UIActionSheet+ChatSecure.m in Sources */,
-				63C5B66A1A82F3EE0011BEA8 /* OTRAudioPlaybackController.m in Sources */,
-				6331D3BD1B4F41AF00C85365 /* OTRQRCodeReaderDelegate.m in Sources */,
-				D95AD2241B67FD6A007DEBC3 /* OTRCircleView.m in Sources */,
-				63C4BD161A1E9BE1001696CD /* OTRManagedMessageAndStatus.m in Sources */,
-				633106E51A16D1A300C17BAE /* OTRConstants.m in Sources */,
-				637645C91B98F9BF00B3402F /* PushController.swift in Sources */,
-				633107281A16D1A400C17BAE /* OTRTitleSubtitleView.m in Sources */,
-				633AF2FA1A7C3DBC0030A3FF /* OTRAudioSessionManager.m in Sources */,
-				633107251A16D1A400C17BAE /* OTRPasswordStrengthView.m in Sources */,
-				634680861B041EA900D9A1C5 /* OTRXMPPTorLoginHandler.m in Sources */,
-				633106911A16D1A300C17BAE /* OTRXMPPProxyStream.m in Sources */,
-				633106C01A16D1A300C17BAE /* OTRFeedbackSetting.m in Sources */,
-				63C4BD1F1A1E9BE1001696CD /* _OTRManagedAccount.m in Sources */,
-				63EA4CF91ACC81C800B19E12 /* OTRMessagesHoldTalkViewController.m in Sources */,
-				633106B81A16D1A300C17BAE /* OTRDomainCellInfo.m in Sources */,
-				63C7E64E1B20F69F0085FA06 /* OTRXMPPServerInfo.m in Sources */,
-				633107111A16D1A300C17BAE /* OTRSubscriptionRequestsViewController.m in Sources */,
-				633106BF1A16D1A300C17BAE /* OTRDoubleSetting.m in Sources */,
-				63C4BD101A1E9BE1001696CD /* OTRManagedBuddy.m in Sources */,
-				63C4BD141A1E9BE1001696CD /* OTRManagedGroup.m in Sources */,
-				63C7E64B1B20F5730085FA06 /* OTRChatSecureIDCreateAccountHandler.m in Sources */,
-				63C4BD181A1E9BE1001696CD /* OTRManagedOscarAccount.m in Sources */,
-				633106771A16D1A300C17BAE /* NSURL+ChatSecure.m in Sources */,
-				6331067D1A16D1A300C17BAE /* OTRAccountsManager.m in Sources */,
-				633106841A16D1A300C17BAE /* OTROAuthRefresher.m in Sources */,
-				633107131A16D1A300C17BAE /* OTRBuddyImageCell.m in Sources */,
-				63C4BD211A1E9BE1001696CD /* _OTRManagedEncryptionStatusMessage.m in Sources */,
-				63039E981B0D43FE007C9978 /* OTRXMPPServerListViewController.m in Sources */,
-				63C4BD241A1E9BE1001696CD /* _OTRManagedGroup.m in Sources */,
-				633106CF1A16D1A300C17BAE /* OTROAuthXMPPAccount.m in Sources */,
-				633106C51A16D1A300C17BAE /* OTRListSettingValue.m in Sources */,
-				63FABC8E1A410EBF009BF681 /* JSQMessagesCollectionViewCell+ChatSecure.m in Sources */,
-				633106EC1A16D1A300C17BAE /* OTRXMPPError.m in Sources */,
-				633106FB1A16D1A300C17BAE /* OTRChangeDatabasePassphraseViewController.m in Sources */,
-				6331068E1A16D1A300C17BAE /* OTRvCardYapDatabaseStorage.m in Sources */,
-				633107211A16D1A300C17BAE /* OTRButtonView.m in Sources */,
-				6396AFA01A169D54009F3E6C /* main.m in Sources */,
-				633107041A16D1A300C17BAE /* OTRIntSettingViewController.m in Sources */,
-				633106CC1A16D1A300C17BAE /* OTRAccount.m in Sources */,
-				63C4BD191A1E9BE1001696CD /* OTRManagedStatus.m in Sources */,
-				633106D81A16D1A300C17BAE /* OTRXMPPPresenceSubscriptionRequest.m in Sources */,
-				63D64D661A2FBA8C00E21F77 /* OTRToastOptions.m in Sources */,
-				6346808D1B04206400D9A1C5 /* OTRXMPPCreateAccountHandler.m in Sources */,
-				633106BB1A16D1A300C17BAE /* OTRQRCodeActivity.m in Sources */,
-				633106E11A16D1A300C17BAE /* OTRAppDelegate.m in Sources */,
-				633106FA1A16D1A300C17BAE /* OTRCertificatesViewController.m in Sources */,
-				6331068D1A16D1A300C17BAE /* OTRTorManager.m in Sources */,
-				633106C31A16D1A300C17BAE /* OTRLanguageSetting.m in Sources */,
-				D9C6E6A11B71575300572273 /* OTRUsernameCell.swift in Sources */,
-				633106D11A16D1A300C17BAE /* OTRXMPPAccount.m in Sources */,
-				63C4BD171A1E9BE1001696CD /* OTRManagedOAuthAccount.m in Sources */,
-				633106C71A16D1A300C17BAE /* OTRSetting.m in Sources */,
-				63C4BD121A1E9BE1001696CD /* OTRManagedFacebookAccount.m in Sources */,
-				633106E41A16D1A300C17BAE /* OTRColors.m in Sources */,
-				633106B91A16D1A300C17BAE /* OTROpenInFacebookActivity.m in Sources */,
-				63C4BD151A1E9BE1001696CD /* OTRManagedMessage.m in Sources */,
-				633106FC1A16D1A300C17BAE /* OTRChooseAccountViewController.m in Sources */,
-				6354BBE41A96C67400E8EBAC /* OTRMediaFileManager.m in Sources */,
-				63C4BD291A1E9BE1001696CD /* _OTRManagedStatus.m in Sources */,
-				63B916E51B7431C1003B778F /* OTRStreamManagementStorageObject.m in Sources */,
-				6331071F1A16D1A300C17BAE /* OTRTextFieldTableViewCell.m in Sources */,
-				63C4BD2D1A1E9BE1001696CD /* _OTRvCardTemp.m in Sources */,
-				633106BD1A16D1A300C17BAE /* OTRCertificateSetting.m in Sources */,
-				63C4BD0F1A1E9BE1001696CD /* OTRManagedAccount.m in Sources */,
-				633106C21A16D1A300C17BAE /* OTRIntSetting.m in Sources */,
-				6331068F1A16D1A300C17BAE /* OTRXMPPBudyTimers.m in Sources */,
-				633106801A16D1A300C17BAE /* OTRDatabaseView.m in Sources */,
-				63D27FC51A6DC51C00EC251A /* OTRMediaItem.m in Sources */,
-				633107241A16D1A300C17BAE /* OTRLockButton.m in Sources */,
-				6331071D1A16D1A300C17BAE /* OTRStatusMessageCell.m in Sources */,
-				633106FD1A16D1A300C17BAE /* OTRComposeViewController.m in Sources */,
-				63C4BD1B1A1E9BE1001696CD /* OTRvCard.m in Sources */,
-				633106EB1A16D1A300C17BAE /* OTRUtilities.m in Sources */,
-				633106D61A16D1A300C17BAE /* OTRMessage.m in Sources */,
-				633106E31A16D1A300C17BAE /* OTRChatDemo.m in Sources */,
-				63CFB1041ABA492600A8D27E /* OTRFacebookOAuthXMPPAccount.m in Sources */,
-				633106D51A16D1A300C17BAE /* OTRMessage+JSQMessageData.m in Sources */,
-				633107011A16D1A300C17BAE /* OTRDatabaseUnlockViewController.m in Sources */,
-				633821C91BA8D48D0019C906 /* PushContainers.swift in Sources */,
-				633106EA1A16D1A300C17BAE /* OTRSecrets.m in Sources */,
-				633107021A16D1A300C17BAE /* OTRDoubleSettingViewController.m in Sources */,
-				633106D41A16D1A300C17BAE /* OTRBuddy.m in Sources */,
-				633106791A16D1A300C17BAE /* UIActivity+ChatSecure.m in Sources */,
-				63C4BD2E1A1E9BE1001696CD /* _OTRXMPPManagedPresenceSubscriptionRequest.m in Sources */,
-				633107231A16D1A300C17BAE /* OTRComposingImageView.m in Sources */,
-				633106901A16D1A300C17BAE /* OTRXMPPManager.m in Sources */,
-				633106C41A16D1A300C17BAE /* OTRListSetting.m in Sources */,
-				633106BE1A16D1A300C17BAE /* OTRDonateSetting.m in Sources */,
-				63C4BD2A1A1E9BE1001696CD /* _OTRManagedXMPPAccount.m in Sources */,
-				633106C91A16D1A300C17BAE /* OTRShareSetting.m in Sources */,
-				6331070E1A16D1A300C17BAE /* OTRSettingDetailViewController.m in Sources */,
-				63C4BD1A1A1E9BE1001696CD /* OTRManagedXMPPAccount.m in Sources */,
-				634680831B0404CE00D9A1C5 /* OTRXMPPLoginHandler.m in Sources */,
-				63C4BD251A1E9BE1001696CD /* _OTRManagedMessage.m in Sources */,
-				633620991A76E87B006E8739 /* OTRImageItem.m in Sources */,
-				6336209C1A76E88C006E8739 /* OTRVideoItem.m in Sources */,
-				638FC09D1B0BE46100B37454 /* NSFileManager+ChatSecure.m in Sources */,
-				633106C81A16D1A300C17BAE /* OTRSettingsGroup.m in Sources */,
-				633107271A16D1A400C17BAE /* OTRSocialButtonsView.m in Sources */,
-				63C4BD271A1E9BE1001696CD /* _OTRManagedOAuthAccount.m in Sources */,
-				63FABC911A41218E009BF681 /* NSString+ChatSecure.m in Sources */,
-				633106D91A16D1A300C17BAE /* OTRYapDatabaseObject.m in Sources */,
-				6331067C1A16D1A300C17BAE /* UIViewController+ChatSecure.m in Sources */,
-				63FA548E1A7B29EB00F2AEBB /* OTRPlayView.m in Sources */,
-				6331D3BA1B4F3C6E00C85365 /* OTRAddBuddyQRCodeViewController.m in Sources */,
-				6336209F1A76E89A006E8739 /* OTRAudioItem.m in Sources */,
-				63F0FF641A798D8E001F0C99 /* OTRAudioControlsView.m in Sources */,
-				D9ADE5B91B606642009471FF /* OTRCircleButtonView.m in Sources */,
-				D989A84F1B5DBD90000608A9 /* OTRExistingAccountViewController.m in Sources */,
+				D93DDBE21BA7A06A00CD8331 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1784,6 +2180,201 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D9227C251BA7952100B5E1D0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D93DDB291BA79A5400CD8331 /* OTRWelcomeViewController.swift in Sources */,
+				D93DDB2A1BA79A5400CD8331 /* OTRUsernameCell.swift in Sources */,
+				D93DDA781BA79A2400CD8331 /* OTRAppDelegate.m in Sources */,
+				D93DDA791BA79A2400CD8331 /* NSURL+ChatSecure.m in Sources */,
+				D93DDA7A1BA79A2400CD8331 /* UIActionSheet+ChatSecure.m in Sources */,
+				D93DDA7B1BA79A2400CD8331 /* UIActivity+ChatSecure.m in Sources */,
+				D93DDA7C1BA79A2400CD8331 /* UIActivityViewController+ChatSecure.m in Sources */,
+				D93DDA7D1BA79A2400CD8331 /* UIImage+ChatSecure.m in Sources */,
+				D93DDA7E1BA79A2400CD8331 /* UIViewController+ChatSecure.m in Sources */,
+				D93DDA7F1BA79A2400CD8331 /* JSQMessagesCollectionViewCell+ChatSecure.m in Sources */,
+				D93DDA801BA79A2400CD8331 /* NSString+ChatSecure.m in Sources */,
+				D93DDA811BA79A2400CD8331 /* NSFileManager+ChatSecure.m in Sources */,
+				D93DDA821BA79A2400CD8331 /* OTRAttachmentPicker.m in Sources */,
+				D93DDA831BA79A2400CD8331 /* OTRAccountsManager.m in Sources */,
+				D93DDA841BA79A2400CD8331 /* OTRDatabaseManager.m in Sources */,
+				D93DDA851BA79A2400CD8331 /* OTRDatabaseView.m in Sources */,
+				D93DDA861BA79A2400CD8331 /* OTREncryptionManager.m in Sources */,
+				D93DDA881BA79A2400CD8331 /* OTROAuthRefresher.m in Sources */,
+				D93DDA891BA79A2400CD8331 /* OTRProtocolManager.m in Sources */,
+				D93DDA8A1BA79A2400CD8331 /* OTRSettingsManager.m in Sources */,
+				D93DDA8B1BA79A2400CD8331 /* OTRTorManager.m in Sources */,
+				D93DDA8C1BA79A2400CD8331 /* OTRNotificationController.m in Sources */,
+				D93DDA8D1BA79A2400CD8331 /* OTRAudioSessionManager.m in Sources */,
+				D93DDA8E1BA79A2400CD8331 /* OTRAudioPlaybackController.m in Sources */,
+				D93DDA8F1BA79A2400CD8331 /* OTRMediaFileManager.m in Sources */,
+				D93DDA901BA79A2400CD8331 /* OTRMediaServer.m in Sources */,
+				D93DDA911BA79A2400CD8331 /* OTRStreamManagementYapStorage.m in Sources */,
+				D93DDA921BA79A2400CD8331 /* OTRXMPPMessageYapStroage.m in Sources */,
+				D93DDA931BA79A2400CD8331 /* OTRvCardYapDatabaseStorage.m in Sources */,
+				D93DDA941BA79A2400CD8331 /* OTRXMPPBudyTimers.m in Sources */,
+				D93DDA951BA79A2400CD8331 /* OTRXMPPManager.m in Sources */,
+				D93DDA961BA79A2400CD8331 /* OTRXMPPProxyStream.m in Sources */,
+				D9AE3A331BA8D9AB00255537 /* OTRConstants.m in Sources */,
+				D93DDA971BA79A2400CD8331 /* OTRXMPPTorManager.m in Sources */,
+				D93DDA981BA79A2400CD8331 /* OTRYapDatabaseRosterStorage.m in Sources */,
+				D93DDA991BA79A2400CD8331 /* OTRXMPPServerInfo.m in Sources */,
+				D93DDA9A1BA79A2400CD8331 /* OTRManagedAccount.m in Sources */,
+				D93DDA9B1BA79A2400CD8331 /* OTRManagedBuddy.m in Sources */,
+				D93DDA9C1BA79A2400CD8331 /* OTRManagedEncryptionStatusMessage.m in Sources */,
+				D93DDA9D1BA79A2500CD8331 /* OTRManagedFacebookAccount.m in Sources */,
+				D93DDA9E1BA79A2500CD8331 /* OTRManagedGoogleAccount.m in Sources */,
+				D93DDA9F1BA79A2500CD8331 /* OTRManagedGroup.m in Sources */,
+				D93DDAA01BA79A2500CD8331 /* OTRManagedMessage.m in Sources */,
+				D93DDAA11BA79A2500CD8331 /* OTRManagedMessageAndStatus.m in Sources */,
+				D93DDAA21BA79A2500CD8331 /* OTRManagedOAuthAccount.m in Sources */,
+				D93DDAA31BA79A2500CD8331 /* OTRManagedOscarAccount.m in Sources */,
+				D93DDAA41BA79A2500CD8331 /* OTRManagedStatus.m in Sources */,
+				D93DDAA51BA79A2500CD8331 /* OTRManagedXMPPAccount.m in Sources */,
+				D93DDAA61BA79A2500CD8331 /* OTRvCard.m in Sources */,
+				D93DDAA71BA79A2500CD8331 /* OTRvCardAvatar.m in Sources */,
+				D93DDAA81BA79A2500CD8331 /* OTRvCardTemp.m in Sources */,
+				D9AE3A351BA8DAB600255537 /* OTRLanguageManager.m in Sources */,
+				D93DDAA91BA79A2500CD8331 /* OTRXMPPManagedPresenceSubscriptionRequest.m in Sources */,
+				D93DDAAA1BA79A2500CD8331 /* _OTRManagedAccount.m in Sources */,
+				D93DDAAB1BA79A2500CD8331 /* _OTRManagedBuddy.m in Sources */,
+				D93DDAAC1BA79A2500CD8331 /* _OTRManagedEncryptionStatusMessage.m in Sources */,
+				D93DDAAD1BA79A2500CD8331 /* _OTRManagedFacebookAccount.m in Sources */,
+				D93DDAAE1BA79A2500CD8331 /* _OTRManagedGoogleAccount.m in Sources */,
+				D93DDAAF1BA79A2500CD8331 /* _OTRManagedGroup.m in Sources */,
+				D93DDAB01BA79A2500CD8331 /* _OTRManagedMessage.m in Sources */,
+				D93DDAB11BA79A2500CD8331 /* _OTRManagedMessageAndStatus.m in Sources */,
+				D93DDAB21BA79A2500CD8331 /* _OTRManagedOAuthAccount.m in Sources */,
+				D93DDAB31BA79A2500CD8331 /* _OTRManagedOscarAccount.m in Sources */,
+				D93DDAB41BA79A2500CD8331 /* _OTRManagedStatus.m in Sources */,
+				D93DDAB51BA79A2500CD8331 /* _OTRManagedXMPPAccount.m in Sources */,
+				D93DDAB61BA79A2500CD8331 /* _OTRvCard.m in Sources */,
+				D93DDAB71BA79A2500CD8331 /* _OTRvCardAvatar.m in Sources */,
+				D93DDAB81BA79A2500CD8331 /* _OTRvCardTemp.m in Sources */,
+				D93DDAB91BA79A2500CD8331 /* _OTRXMPPManagedPresenceSubscriptionRequest.m in Sources */,
+				D93DDABA1BA79A2500CD8331 /* OTRActivityItemProvider.m in Sources */,
+				D93DDABB1BA79A2500CD8331 /* OTRDomainCellInfo.m in Sources */,
+				D93DDABC1BA79A2500CD8331 /* OTROpenInFacebookActivity.m in Sources */,
+				D93DDABD1BA79A2500CD8331 /* OTROpenInTwitterActivity.m in Sources */,
+				D93DDABE1BA79A2500CD8331 /* OTRQRCodeActivity.m in Sources */,
+				D93DDABF1BA79A2500CD8331 /* OTRToastOptions.m in Sources */,
+				D93DDAC01BA79A2600CD8331 /* OTRBoolSetting.m in Sources */,
+				D93DDAC11BA79A2600CD8331 /* OTRCertificateSetting.m in Sources */,
+				D93DDAC21BA79A2600CD8331 /* OTRDonateSetting.m in Sources */,
+				D93DDAC31BA79A2600CD8331 /* OTRDoubleSetting.m in Sources */,
+				D93DDAC41BA79A2600CD8331 /* OTRFeedbackSetting.m in Sources */,
+				D93DDAC51BA79A2600CD8331 /* OTRFingerprintSetting.m in Sources */,
+				D93DDAC61BA79A2600CD8331 /* OTRIntSetting.m in Sources */,
+				D93DDAC71BA79A2600CD8331 /* OTRLanguageSetting.m in Sources */,
+				D93DDAC81BA79A2600CD8331 /* OTRListSetting.m in Sources */,
+				D93DDAC91BA79A2600CD8331 /* OTRListSettingValue.m in Sources */,
+				D93DDACA1BA79A2600CD8331 /* OTRSetting.m in Sources */,
+				D93DDACB1BA79A2600CD8331 /* OTRSettingsGroup.m in Sources */,
+				D93DDACC1BA79A2600CD8331 /* OTRShareSetting.m in Sources */,
+				D93DDACD1BA79A2600CD8331 /* OTRValueSetting.m in Sources */,
+				D93DDACE1BA79A2600CD8331 /* OTRViewSetting.m in Sources */,
+				D93DDACF1BA79A2600CD8331 /* OTRFacebookOAuthXMPPAccount.m in Sources */,
+				D93DDAD01BA79A2600CD8331 /* OTRAccount.m in Sources */,
+				D93DDAD11BA79A2600CD8331 /* OTRGoogleOAuthXMPPAccount.m in Sources */,
+				D93DDAD21BA79A2600CD8331 /* OTROAuthXMPPAccount.m in Sources */,
+				D93DDAD31BA79A2600CD8331 /* OTRXMPPAccount.m in Sources */,
+				D93DDAD41BA79A2600CD8331 /* OTRXMPPTorAccount.m in Sources */,
+				D93DDAD51BA79A2700CD8331 /* OTRMediaItem.m in Sources */,
+				D93DDAD61BA79A2700CD8331 /* OTRImageItem.m in Sources */,
+				D93DDAD71BA79A2700CD8331 /* OTRVideoItem.m in Sources */,
+				D93DDAD81BA79A2700CD8331 /* OTRAudioItem.m in Sources */,
+				D93DDAD91BA79A2700CD8331 /* OTRStreamManagementStorageObject.m in Sources */,
+				D93DDADA1BA79A2700CD8331 /* OTRBuddy.m in Sources */,
+				D93DDADB1BA79A2700CD8331 /* OTRMessage+JSQMessageData.m in Sources */,
+				D93DDADC1BA79A2700CD8331 /* OTRMessage.m in Sources */,
+				D93DDADD1BA79A2700CD8331 /* OTRXMPPBuddy.m in Sources */,
+				D93DDADE1BA79A2700CD8331 /* OTRXMPPPresenceSubscriptionRequest.m in Sources */,
+				D93DDADF1BA79A2700CD8331 /* OTRYapDatabaseObject.m in Sources */,
+				D93DDAE01BA79A2700CD8331 /* OTRCertificatePinning.m in Sources */,
+				D93DDAE11BA79A2700CD8331 /* OTRChatDemo.m in Sources */,
+				D93DDAE21BA79A2700CD8331 /* OTRColors.m in Sources */,
+				D93DDAE41BA79A2700CD8331 /* OTRImages.m in Sources */,
+				D93DDAE51BA79A2700CD8331 /* OTRNotificationPermissions.m in Sources */,
+				D93DDAE61BA79A2700CD8331 /* OTRPasswordGenerator.m in Sources */,
+				D93DDAE81BA79A2800CD8331 /* OTRUtilities.m in Sources */,
+				D93DDAE91BA79A2800CD8331 /* OTRXMPPError.m in Sources */,
+				D93DDAEA1BA79A2800CD8331 /* XMPPURI.m in Sources */,
+				D93DDAEB1BA79A2800CD8331 /* OTRExistingAccountViewController.m in Sources */,
+				D93DDAEC1BA79A2800CD8331 /* OTRWelcomeAccountTableViewDelegate.m in Sources */,
+				D93DDAED1BA79A2800CD8331 /* OTRInviteViewController.m in Sources */,
+				D93DDAEE1BA79A2800CD8331 /* OTRAddBuddyQRCodeViewController.m in Sources */,
+				D93DDAEF1BA79A2800CD8331 /* OTRQRCodeReaderDelegate.m in Sources */,
+				D93DDAF01BA79A2800CD8331 /* OTRBaseLoginViewController.m in Sources */,
+				D93DDAF11BA79A2800CD8331 /* OTRXLFormCreator.m in Sources */,
+				D93DDAF21BA79A2800CD8331 /* OTRXMPPServerListViewController.m in Sources */,
+				D93DDAF31BA79A2800CD8331 /* OTRXMPPLoginHandler.m in Sources */,
+				D93DDAF41BA79A2800CD8331 /* OTRXMPPTorLoginHandler.m in Sources */,
+				D93DDAF51BA79A2800CD8331 /* OTRGoolgeOAuthLoginHandler.m in Sources */,
+				D93DDAF61BA79A2900CD8331 /* OTRChatSecureIDCreateAccountHandler.m in Sources */,
+				D93DDAF71BA79A2900CD8331 /* OTRXMPPCreateAccountHandler.m in Sources */,
+				D93DDAF81BA79A2900CD8331 /* OTRLoginHandler.m in Sources */,
+				D93DDAF91BA79A2900CD8331 /* OTRAboutViewController.m in Sources */,
+				D93DDAFA1BA79A2900CD8331 /* OTRAcknowledgementsViewController.m in Sources */,
+				D93DDAFB1BA79A2900CD8331 /* OTRBuddyViewController.m in Sources */,
+				D93DDAFC1BA79A2900CD8331 /* OTRCertificateDomainViewController.m in Sources */,
+				D93DDAFD1BA79A2900CD8331 /* OTRCertificatesViewController.m in Sources */,
+				D93DDAFE1BA79A2900CD8331 /* OTRChangeDatabasePassphraseViewController.m in Sources */,
+				D93DDAFF1BA79A2900CD8331 /* OTRChooseAccountViewController.m in Sources */,
+				D93DDB001BA79A2900CD8331 /* OTRComposeViewController.m in Sources */,
+				D93DDB011BA79A2900CD8331 /* OTRConversationViewController.m in Sources */,
+				D93DDB021BA79A2900CD8331 /* OTRDatabaseUnlockViewController.m in Sources */,
+				D93DDB031BA79A2A00CD8331 /* OTRDoubleSettingViewController.m in Sources */,
+				D93DDB041BA79A2A00CD8331 /* OTRFingerprintsViewController.m in Sources */,
+				D93DDB051BA79A2A00CD8331 /* OTRIntSettingViewController.m in Sources */,
+				D93DDB061BA79A2A00CD8331 /* OTRLanguageListSettingViewController.m in Sources */,
+				D93DDB071BA79A2A00CD8331 /* OTRListSettingViewController.m in Sources */,
+				D93DDB081BA79A2A00CD8331 /* OTRMessagesViewController.m in Sources */,
+				D93DDB091BA79A2A00CD8331 /* OTRMessagesHoldTalkViewController.m in Sources */,
+				D93DDB0A1BA79A2A00CD8331 /* OTRNewBuddyViewController.m in Sources */,
+				D93DDB0B1BA79A2A00CD8331 /* OTRQRCodeViewController.m in Sources */,
+				D93DDB0C1BA79A2A00CD8331 /* OTRSettingDetailViewController.m in Sources */,
+				D93DDB0D1BA79A2A00CD8331 /* OTRSettingsViewController.m in Sources */,
+				D93DDB0E1BA79A2B00CD8331 /* OTRSubscriptionRequestsViewController.m in Sources */,
+				D93DDB0F1BA79A2B00CD8331 /* OTRCircleView.m in Sources */,
+				D93DDB101BA79A2B00CD8331 /* OTRCircleButtonView.m in Sources */,
+				D93DDB111BA79A2B00CD8331 /* XMPPServerInfoCell.m in Sources */,
+				D93DDB121BA79A2B00CD8331 /* OTRAccountTableViewCell.m in Sources */,
+				D93DDB131BA79A2B00CD8331 /* OTRBuddyImageCell.m in Sources */,
+				D93DDB141BA79A2B00CD8331 /* OTRBuddyInfoCell.m in Sources */,
+				D93DDB151BA79A2B00CD8331 /* OTRConversationCell.m in Sources */,
+				D93DDB161BA79A2B00CD8331 /* OTRInLineTextEditTableViewCell.m in Sources */,
+				D93DDB171BA79A2B00CD8331 /* OTRSettingTableViewCell.m in Sources */,
+				D93DDB181BA79A2C00CD8331 /* OTRStatusMessageCell.m in Sources */,
+				D93DDB191BA79A2C00CD8331 /* OTRTextFieldTableViewCell.m in Sources */,
+				D93DDB1A1BA79A2C00CD8331 /* OTRButtonView.m in Sources */,
+				D93DDB1B1BA79A2C00CD8331 /* OTRAudioControlsView.m in Sources */,
+				D93DDB1C1BA79A2C00CD8331 /* OTRPlayPauseProgressView.m in Sources */,
+				D93DDB1D1BA79A2C00CD8331 /* OTRPlayView.m in Sources */,
+				D93DDB1E1BA79A2C00CD8331 /* OTRPauseView.m in Sources */,
+				D93DDB1F1BA79A2C00CD8331 /* OTRColorFadingDotView.m in Sources */,
+				D93DDB201BA79A2C00CD8331 /* OTRComposingImageView.m in Sources */,
+				D93DDB211BA79A2C00CD8331 /* OTRLockButton.m in Sources */,
+				D93DDB221BA79A2C00CD8331 /* OTRPasswordStrengthView.m in Sources */,
+				D93DDB231BA79A2D00CD8331 /* OTRRememberPasswordView.m in Sources */,
+				D93DDB241BA79A2D00CD8331 /* OTRSocialButtonsView.m in Sources */,
+				D93DDB251BA79A2D00CD8331 /* OTRTitleSubtitleView.m in Sources */,
+				D93DDB261BA79A2D00CD8331 /* OTRHoldToTalkView.m in Sources */,
+				D93DDB271BA79A2D00CD8331 /* OTRAudioTrashView.m in Sources */,
+				D93DDB281BA79A2D00CD8331 /* OTRTouchAndHoldGestureRecognizer.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D9AE3A091BA8CBFA00255537 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D9AE3A311BA8D84500255537 /* OTRBranding.m in Sources */,
+				D9AE3A271BA8D0DB00255537 /* OTRAssets.m in Sources */,
+				D9AE3A1B1BA8CC8600255537 /* OTRSecrets.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -1791,6 +2382,16 @@
 			isa = PBXTargetDependency;
 			target = 6396AF991A169D54009F3E6C /* ChatSecure */;
 			targetProxy = 6396AFB41A169D54009F3E6C /* PBXContainerItemProxy */;
+		};
+		D9227C3E1BA7952100B5E1D0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D9227C291BA7952100B5E1D0 /* ChatSecureCore */;
+			targetProxy = D9227C3D1BA7952100B5E1D0 /* PBXContainerItemProxy */;
+		};
+		D9AE3A1F1BA8CCFA00255537 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D9AE3A0D1BA8CBFA00255537 /* OTRAssets */;
+			targetProxy = D9AE3A1E1BA8CCFA00255537 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1831,6 +2432,7 @@
 				633104F71A16AACB00C17BAE /* zh-Hant-TW */,
 			);
 			name = Localizable.strings;
+			path = ../ChatSecure;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -1883,12 +2485,12 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEFINES_MODULE = YES;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = ChatSecure/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.chrisballinger.$(PRODUCT_NAME:rfc1034identifier)$(BUNDLE_ID_SUFFIX)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "ChatSecure/Classes/Views/Cells/ChatSecure-Bridging-Header.h";
 			};
 			name = Beta;
 		};
@@ -1999,12 +2601,12 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEFINES_MODULE = YES;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = ChatSecure/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.chrisballinger.$(PRODUCT_NAME:rfc1034identifier)$(BUNDLE_ID_SUFFIX)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "ChatSecure/Classes/Views/Cells/ChatSecure-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -2020,12 +2622,12 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEFINES_MODULE = YES;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = ChatSecure/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.chrisballinger.$(PRODUCT_NAME:rfc1034identifier)$(BUNDLE_ID_SUFFIX)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "ChatSecure/Classes/Views/Cells/ChatSecure-Bridging-Header.h";
 			};
 			name = Release;
 		};
@@ -2067,6 +2669,152 @@
 			};
 			name = Release;
 		};
+		D9227C411BA7952100B5E1D0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 954B60A022C05FDE4DCFEF6E /* Pods.debug.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_NO_COMMON_BLOCKS = YES;
+				INFOPLIST_FILE = ChatSecureCore/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = org.chatsecure.ChatSecureCore;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		D9227C421BA7952100B5E1D0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 154CBBDFA16BDE9C28017B1F /* Pods.release.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_NO_COMMON_BLOCKS = YES;
+				INFOPLIST_FILE = ChatSecureCore/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = org.chatsecure.ChatSecureCore;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		D9227C431BA7952100B5E1D0 /* Beta */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B977533C20F88A4A840303F9 /* Pods.beta.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_NO_COMMON_BLOCKS = YES;
+				INFOPLIST_FILE = ChatSecureCore/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = org.chatsecure.ChatSecureCore;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Beta;
+		};
+		D9AE3A181BA8CBFA00255537 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_NO_COMMON_BLOCKS = YES;
+				INFOPLIST_FILE = OTRAssets/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = org.chatsecure.OTRAssets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		D9AE3A191BA8CBFA00255537 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_NO_COMMON_BLOCKS = YES;
+				INFOPLIST_FILE = OTRAssets/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = org.chatsecure.OTRAssets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		D9AE3A1A1BA8CBFA00255537 /* Beta */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_NO_COMMON_BLOCKS = YES;
+				INFOPLIST_FILE = OTRAssets/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = org.chatsecure.OTRAssets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Beta;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -2099,6 +2847,25 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		D9227C471BA7952100B5E1D0 /* Build configuration list for PBXNativeTarget "ChatSecureCore" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D9227C411BA7952100B5E1D0 /* Debug */,
+				D9227C421BA7952100B5E1D0 /* Release */,
+				D9227C431BA7952100B5E1D0 /* Beta */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D9AE3A171BA8CBFA00255537 /* Build configuration list for PBXNativeTarget "OTRAssets" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D9AE3A181BA8CBFA00255537 /* Debug */,
+				D9AE3A191BA8CBFA00255537 /* Release */,
+				D9AE3A1A1BA8CBFA00255537 /* Beta */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 
