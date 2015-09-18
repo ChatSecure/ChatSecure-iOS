@@ -44,9 +44,15 @@
 
 - (OTRXMPPAccount *)moveValues:(XLFormDescriptor *)form intoAccount:(OTRXMPPAccount *)account
 {
-    NSDictionary *username = [[form formRowWithTag:kOTRXLFormUsernameTextFieldTag] value];
-    account.username = username[OTRUsernameCell.UsernameKey];
-    //account.domain = username[OTRUsernameCell.DomainKey];
+    NSString *nickname = [[form formRowWithTag:kOTRXLFormNicknameTextFieldTag] value];
+    NSDictionary *usernameValue = [[form formRowWithTag:kOTRXLFormUsernameTextFieldTag] value];
+    NSString *username = usernameValue[OTRUsernameCell.UsernameKey];
+    if (!username.length) {
+        username = nickname;
+    }
+    account.username = username;
+    account.domain = usernameValue[OTRUsernameCell.DomainKey];
+    
     NSNumber *rememberPassword = [[form formRowWithTag:kOTRXLFormRememberPasswordSwitchTag] value];
     if (rememberPassword) {
         account.rememberPassword = [rememberPassword boolValue];
@@ -76,7 +82,7 @@
     NSNumber *port = [[form formRowWithTag:kOTRXLFormPortTextFieldTag] value];
     NSString *resource = [[form formRowWithTag:kOTRXLFormResourceTextFieldTag] value];
     
-    if ([hostname length]) {
+    if (!account.domain && [hostname length]) {
         account.domain = hostname;
     }
     

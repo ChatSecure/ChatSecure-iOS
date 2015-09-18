@@ -11,6 +11,8 @@
 
 @class XLFormDescriptor;
 
+extern NSString *const kOTRXLFormCustomizeUsernameSwitchTag;
+extern NSString *const kOTRXLFormNicknameTextFieldTag;
 extern NSString *const kOTRXLFormUsernameTextFieldTag;
 extern NSString *const kOTRXLFormPasswordTextFieldTag;
 extern NSString *const kOTRXLFormRememberPasswordSwitchTag;
