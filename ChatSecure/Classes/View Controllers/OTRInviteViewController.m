@@ -8,15 +8,18 @@
 
 #import "OTRInviteViewController.h"
 #import "PureLayout.h"
-#import "OTRStrings.h"
+#import "Strings.h"
 #import "BButton.h"
 #import "OTRAddBuddyQRCodeViewController.h"
 #import <MessageUI/MessageUI.h>
 #import "OTRAccount.h"
 #import "NSURL+ChatSecure.h"
-#import "OTRStrings.h"
-#import "OTRLanguageManager.h"
+#import "Strings.h"
+#import "OTRAppDelegate.h"
+#import "OTRTheme.h"
+#import "OTRColors.h"
 @import OTRAssets;
+#import "OTRLanguageManager.h"
 
 static CGFloat const kOTRInvitePadding = 10;
 
@@ -35,6 +38,7 @@ static CGFloat const kOTRInvitePadding = 10;
         _subtitleLabel = [[UILabel alloc] initForAutoLayout];
         _subtitleLabel.numberOfLines = 0;
         _subtitleLabel.textColor = [UIColor whiteColor];
+        _subtitleLabel.textAlignment = NSTextAlignmentCenter;
     }
     return self;
 }
@@ -42,8 +46,10 @@ static CGFloat const kOTRInvitePadding = 10;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor lightGrayColor];
-    //self.subtitleLabel.text = @"Tell your friends about ChatSecure";
+    self.view.backgroundColor = [OTRAppDelegate appDelegate].theme.mainThemeColor;
+    
+    self.titleImageView.image = [UIImage imageNamed:@"invite_success" inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];
+    self.titleImageView.contentMode = UIViewContentModeScaleAspectFit;
     
     [self.view addSubview:self.titleImageView];
     [self.view addSubview:self.subtitleLabel];
