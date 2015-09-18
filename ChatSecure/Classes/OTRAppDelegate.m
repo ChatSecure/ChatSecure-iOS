@@ -58,6 +58,7 @@
 #import "XMPPURI.h"
 #import "OTRProtocolManager.h"
 #import "OTRInviteViewController.h"
+#import "OTRTheme.h"
 @import OTRAssets;
 
 #if CHATSECURE_DEMO
@@ -83,6 +84,9 @@
                                                          liveIdentifier:[OTRSecrets hockeyLiveIdentifier]
                                                                delegate:self];
     [[BITHockeyManager sharedHockeyManager] startManager];
+    
+    _theme = [[[self themeClass] alloc] init];
+    [self.theme setupGlobalTheme];
     
     [OTRCertificatePinning loadBundledCertificatesToKeychain];
     
@@ -449,5 +453,12 @@
 {
     return (OTRAppDelegate *)[[UIApplication sharedApplication] delegate];
 }
+
+#pragma mark - Theming
+
+- (Class) themeClass {
+    return [OTRTheme class];
+}
+
 
 @end

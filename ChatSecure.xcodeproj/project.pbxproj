@@ -377,6 +377,8 @@
 		D93DDBE21BA7A06A00CD8331 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6396AF9F1A169D54009F3E6C /* main.m */; };
 		D95AD2291B684AE1007DEBC3 /* xmpp-server-list in Resources */ = {isa = PBXBuildFile; fileRef = D95AD2281B684AE1007DEBC3 /* xmpp-server-list */; };
 		D973D7061A2D4094004D353E /* Pods-acknowledgements.plist in Resources */ = {isa = PBXBuildFile; fileRef = D973D7051A2D4094004D353E /* Pods-acknowledgements.plist */; };
+		D978BC921BABE0F4009246CF /* OTRTheme.h in Headers */ = {isa = PBXBuildFile; fileRef = D978BC901BABE0F4009246CF /* OTRTheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D978BC931BABE0F4009246CF /* OTRTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = D978BC911BABE0F4009246CF /* OTRTheme.m */; settings = {ASSET_TAGS = (); }; };
 		D99F17861BAB932800604558 /* OTRImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D9AE3A231BA8D02800255537 /* OTRImages.xcassets */; settings = {ASSET_TAGS = (); }; };
 		D99F17871BAB932C00604558 /* OTRCountryImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D9AE3A221BA8D02800255537 /* OTRCountryImages.xcassets */; settings = {ASSET_TAGS = (); }; };
 		D99F17881BAB936100604558 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 633104D61A169EC800C17BAE /* Localizable.strings */; settings = {ASSET_TAGS = (); }; };
@@ -671,7 +673,7 @@
 		633106611A16D1A300C17BAE /* OTRStatusMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRStatusMessageCell.m; sourceTree = "<group>"; };
 		633106641A16D1A300C17BAE /* OTRTextFieldTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRTextFieldTableViewCell.h; sourceTree = "<group>"; };
 		633106651A16D1A300C17BAE /* OTRTextFieldTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRTextFieldTableViewCell.m; sourceTree = "<group>"; };
-		633106661A16D1A300C17BAE /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LaunchScreen.xib; sourceTree = "<group>"; };
+		633106661A16D1A300C17BAE /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LaunchScreen.xib; path = Resources/LaunchScreen.xib; sourceTree = "<group>"; };
 		633106671A16D1A300C17BAE /* OTRButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRButtonView.h; sourceTree = "<group>"; };
 		633106681A16D1A300C17BAE /* OTRButtonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRButtonView.m; sourceTree = "<group>"; };
 		633106691A16D1A300C17BAE /* OTRColorFadingDotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRColorFadingDotView.h; sourceTree = "<group>"; };
@@ -862,6 +864,8 @@
 		D95AD2231B67FD6A007DEBC3 /* OTRCircleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRCircleView.m; sourceTree = "<group>"; };
 		D95AD2281B684AE1007DEBC3 /* xmpp-server-list */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "xmpp-server-list"; path = "Submodules/xmpp-server-list"; sourceTree = SOURCE_ROOT; };
 		D973D7051A2D4094004D353E /* Pods-acknowledgements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Pods-acknowledgements.plist"; path = "Pods/Target Support Files/Pods/Pods-acknowledgements.plist"; sourceTree = SOURCE_ROOT; };
+		D978BC901BABE0F4009246CF /* OTRTheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRTheme.h; sourceTree = "<group>"; };
+		D978BC911BABE0F4009246CF /* OTRTheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRTheme.m; sourceTree = "<group>"; };
 		D989A84D1B5DBD90000608A9 /* OTRExistingAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OTRExistingAccountViewController.h; path = "Login View Controllers/OTRExistingAccountViewController.h"; sourceTree = "<group>"; };
 		D989A84E1B5DBD90000608A9 /* OTRExistingAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OTRExistingAccountViewController.m; path = "Login View Controllers/OTRExistingAccountViewController.m"; sourceTree = "<group>"; };
 		D989EC8B1B06AFE30069FE37 /* XMPPURI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPURI.h; sourceTree = "<group>"; };
@@ -933,6 +937,7 @@
 		633104D71A169EE600C17BAE /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				633106661A16D1A300C17BAE /* LaunchScreen.xib */,
 				D9227C231BA78E6B00B5E1D0 /* FontAwesome.ttf */,
 				D95AD2281B684AE1007DEBC3 /* xmpp-server-list */,
 				D973D7051A2D4094004D353E /* Pods-acknowledgements.plist */,
@@ -1160,6 +1165,8 @@
 		633105E71A16D1A300C17BAE /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				D978BC901BABE0F4009246CF /* OTRTheme.h */,
+				D978BC911BABE0F4009246CF /* OTRTheme.m */,
 				633105E81A16D1A300C17BAE /* OTRCertificatePinning.h */,
 				633105E91A16D1A300C17BAE /* OTRCertificatePinning.m */,
 				633105EA1A16D1A300C17BAE /* OTRChatDemo.h */,
@@ -1259,7 +1266,6 @@
 				D9ADE5B71B606642009471FF /* OTRCircleButtonView.h */,
 				D9ADE5B81B606642009471FF /* OTRCircleButtonView.m */,
 				6331064B1A16D1A300C17BAE /* Cells */,
-				633106661A16D1A300C17BAE /* LaunchScreen.xib */,
 				633106671A16D1A300C17BAE /* OTRButtonView.h */,
 				633106681A16D1A300C17BAE /* OTRButtonView.m */,
 				63FA54921A7C127F00F2AEBB /* AudioBubble Views */,
@@ -1788,6 +1794,7 @@
 				D93DDBC11BA79ACA00CD8331 /* OTRQRCodeViewController.h in Headers */,
 				D93DDBC21BA79ACB00CD8331 /* OTRSettingDetailViewController.h in Headers */,
 				D93DDBC31BA79ACC00CD8331 /* OTRSettingsViewController.h in Headers */,
+				D978BC921BABE0F4009246CF /* OTRTheme.h in Headers */,
 				D93DDBC41BA79ACE00CD8331 /* OTRSubscriptionRequestsViewController.h in Headers */,
 				D93DDBC51BA79ACF00CD8331 /* OTRCircleView.h in Headers */,
 				D93DDBC61BA79AD000CD8331 /* OTRCircleButtonView.h in Headers */,
@@ -2326,6 +2333,7 @@
 				D93DDACB1BA79A2600CD8331 /* OTRSettingsGroup.m in Sources */,
 				D93DDACC1BA79A2600CD8331 /* OTRShareSetting.m in Sources */,
 				D93DDACD1BA79A2600CD8331 /* OTRValueSetting.m in Sources */,
+				D978BC931BABE0F4009246CF /* OTRTheme.m in Sources */,
 				D93DDACE1BA79A2600CD8331 /* OTRViewSetting.m in Sources */,
 				D93DDACF1BA79A2600CD8331 /* OTRFacebookOAuthXMPPAccount.m in Sources */,
 				D93DDAD01BA79A2600CD8331 /* OTRAccount.m in Sources */,
