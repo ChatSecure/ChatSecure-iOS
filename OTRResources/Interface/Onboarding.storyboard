@@ -26,7 +26,7 @@
         <!--Welcome View Controller-->
         <scene sceneID="Hlq-Ux-DTm">
             <objects>
-                <viewController id="3qI-wK-O4t" customClass="OTRWelcomeViewController" customModule="ChatSecureCore" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="3qI-wK-O4t" customClass="OTRWelcomeViewController" customModule="ChatSecureCore" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="kXQ-5q-U2m"/>
                         <viewControllerLayoutGuide type="bottom" id="3ZM-WP-oof"/>
@@ -134,7 +134,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <animations/>
-                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="kExistingAccountCellIdentifier" id="Bgx-jG-Lpl">
                                 <rect key="frame" x="0.0" y="50" width="600" height="44"/>

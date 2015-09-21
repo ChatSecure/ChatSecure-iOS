@@ -288,7 +288,7 @@ DEPENDENCIES:
   - UIAlertView-Blocks (~> 1.0)
   - uservoice-iphone-sdk (~> 3.2)
   - VTAcknowledgementsViewController (~> 0.15)
-  - XLForm (~> 3.0)
+  - XLForm (from `Submodules/XLForm/XLForm.podspec`)
   - XMPPFramework (from `Submodules/XMPPFramework/XMPPFramework.podspec`)
   - YapDatabase/SQLCipher (from `Submodules/YapDatabase/YapDatabase.podspec`)
   - ZXingObjC (~> 3.0)
@@ -318,6 +318,8 @@ EXTERNAL SOURCES:
     :git: https://github.com/ChatSecure/SIAlertView.git
   SQLCipher:
     :podspec: Podspecs/SQLCipher.podspec.json
+  XLForm:
+    :path: Submodules/XLForm/XLForm.podspec
   XMPPFramework:
     :path: Submodules/XMPPFramework/XMPPFramework.podspec
   YapDatabase:

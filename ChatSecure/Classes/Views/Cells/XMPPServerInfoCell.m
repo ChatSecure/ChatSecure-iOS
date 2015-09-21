@@ -28,7 +28,11 @@ NSString *const kOTRFormRowDescriptorTypeXMPPServer = @"kOTRFormRowDescriptorTyp
 
 + (void)load
 {
-    [[XLFormViewController cellClassesForRowDescriptorTypes] setObject:NSStringFromClass([self class]) forKey:kOTRFormRowDescriptorTypeXMPPServer];
+    NSBundle *bundle = [OTRAssets resourcesBundle];
+    NSString *path = bundle.bundlePath;
+    NSString *bundleName = [path lastPathComponent];
+    NSString *class = [NSString stringWithFormat:@"%@/%@", bundleName, NSStringFromClass([self class])];
+    [[XLFormViewController cellClassesForRowDescriptorTypes] setObject:class forKey:kOTRFormRowDescriptorTypeXMPPServer];
 }
 
 + (CGFloat)formDescriptorCellHeightForRowDescriptor:(XLFormRowDescriptor *)rowDescriptor
@@ -56,7 +60,7 @@ NSString *const kOTRFormRowDescriptorTypeXMPPServer = @"kOTRFormRowDescriptorTyp
     
     UIImage *image = info.logoImage;
     if (!image) {
-        image = [UIImage imageNamed:@"xmpp" inBundle:[NSBundle bundleForClass:[OTRAssets class]] compatibleWithTraitCollection:nil];
+        image = [UIImage imageNamed:@"xmpp" inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];
     }
     self.logoImageView.image = info.logoImage;
     self.serverNameLabel.text = info.name;
@@ -79,7 +83,7 @@ NSString *const kOTRFormRowDescriptorTypeXMPPServer = @"kOTRFormRowDescriptorTyp
         self.onionButton.hidden = YES;
         self.onionButton.enabled = NO;
     }
-    UIImage *countryImage = [UIImage imageNamed:info.countryCode inBundle:[NSBundle bundleForClass:[OTRAssets class]] compatibleWithTraitCollection:nil];
+    UIImage *countryImage = [UIImage imageNamed:info.countryCode inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];
     self.countryImageView.image = countryImage;
 }
 

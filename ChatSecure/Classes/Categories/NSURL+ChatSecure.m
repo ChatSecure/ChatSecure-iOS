@@ -9,43 +9,40 @@
 #import "NSURL+ChatSecure.h"
 #import "OTRConstants.h"
 #import "XMPPJID.h"
+@import OTRAssets;
 
 @implementation NSURL (ChatSecure)
 
 + (NSURL*) otr_githubURL {
-    NSURL *githubURL = [NSURL URLWithString:@"https://github.com/chrisballinger/ChatSecure-iOS/"];
-    return githubURL;
+    return [OTRBranding githubURL];
 }
 
 + (NSURL*) otr_facebookAppURL {
-    NSURL *facebookURL = [NSURL URLWithString:@"fb://profile/151354555075008"];
-    return facebookURL;
+    return [OTRBranding facebookAppURL];
 }
 
 + (NSURL*) otr_facebookWebURL {
-    NSURL *facebookURL = [NSURL URLWithString:@"https://www.facebook.com/chatsecure"];
-    return facebookURL;
+    return [OTRBranding facebookWebURL];
 }
 
 + (NSURL*) otr_twitterAppURL {
-    NSURL *twitterURL = [NSURL URLWithString:@"twitter://user?screen_name=ChatSecure"];
-    return twitterURL;
+    return [OTRBranding twitterAppURL];
 }
+
 + (NSURL*) otr_twitterWebURL {
-    NSURL *twitterURL = [NSURL URLWithString:@"https://twitter.com/ChatSecure"];
-    return twitterURL;
+    return [OTRBranding twitterWebURL];
 }
 
 + (NSURL*) otr_transifexURL {
-    return [NSURL URLWithString:@"https://www.transifex.com/projects/p/chatsecure"];
+    return [OTRBranding transifexURL];
 }
 
 + (NSURL*) otr_projectURL {
-    return [NSURL URLWithString:@"https://chatsecure.org"];
+    return [OTRBranding projectURL];
 }
 
 + (NSURL*) otr_shareBaseURL {
-    return [NSURL URLWithString:@"https://chatsecure.org/i/#"];
+    return [OTRBranding shareBaseURL];
 }
 
 

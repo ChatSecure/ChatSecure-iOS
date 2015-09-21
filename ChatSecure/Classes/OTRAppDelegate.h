@@ -23,6 +23,7 @@
 @import UIKit;
 @import HockeySDK_Source;
 
+@class OTRTheme;
 @class OTRSettingsViewController;
 @class OTRMessagesHoldTalkViewController;
 @class OTRConversationViewController;
@@ -42,5 +43,11 @@
 
 + (OTRAppDelegate *)appDelegate;
 
+
+#pragma mark Theming
+
+@property (nonatomic, strong, readonly) OTRTheme *theme;
+/** Override this in subclass to use a different theme class */
+- (Class) themeClass;
 
 @end

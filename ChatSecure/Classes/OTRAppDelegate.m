@@ -58,6 +58,8 @@
 #import "XMPPURI.h"
 #import "OTRProtocolManager.h"
 #import "OTRInviteViewController.h"
+#import "OTRTheme.h"
+@import OTRAssets;
 
 #if CHATSECURE_DEMO
 #import "OTRChatDemo.h"
@@ -78,10 +80,13 @@
 {
     [DDLog addLogger:[DDTTYLogger sharedInstance]];
     
-    [[BITHockeyManager sharedHockeyManager] configureWithBetaIdentifier:kOTRHockeyBetaIdentifier
-                                                         liveIdentifier:kOTRHockeyLiveIdentifier
+    [[BITHockeyManager sharedHockeyManager] configureWithBetaIdentifier:[OTRSecrets hockeyBetaIdentifier]
+                                                         liveIdentifier:[OTRSecrets hockeyLiveIdentifier]
                                                                delegate:self];
     [[BITHockeyManager sharedHockeyManager] startManager];
+    
+    _theme = [[[self themeClass] alloc] init];
+    [self.theme setupGlobalTheme];
     
     [OTRCertificatePinning loadBundledCertificatesToKeychain];
     
@@ -448,5 +453,12 @@
 {
     return (OTRAppDelegate *)[[UIApplication sharedApplication] delegate];
 }
+
+#pragma mark - Theming
+
+- (Class) themeClass {
+    return [OTRTheme class];
+}
+
 
 @end

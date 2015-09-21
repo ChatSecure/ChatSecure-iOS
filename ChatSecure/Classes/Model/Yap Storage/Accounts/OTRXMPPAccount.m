@@ -40,7 +40,7 @@ static NSUInteger const OTRDefaultPortNumber = 5222;
 
 - (UIImage *)accountImage
 {
-    return [UIImage imageNamed:OTRXMPPImageName inBundle:[NSBundle bundleForClass:[OTRAssets class]] compatibleWithTraitCollection:nil];
+    return [UIImage imageNamed:OTRXMPPImageName inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];
 }
 - (NSString *)accountDisplayName
 {
@@ -76,7 +76,7 @@ static NSUInteger const OTRDefaultPortNumber = 5222;
 + (NSString * )newResource
 {
     int r = arc4random() % 99999;
-    return [NSString stringWithFormat:@"%@%d",kOTRXMPPResource,r];
+    return [NSString stringWithFormat:@"%@%d",[OTRBranding xmppResource],r];
 }
 
 

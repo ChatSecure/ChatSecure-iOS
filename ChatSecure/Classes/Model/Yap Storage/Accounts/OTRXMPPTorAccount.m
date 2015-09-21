@@ -18,7 +18,7 @@
 
 - (UIImage *)accountImage
 {
-    return [UIImage imageNamed:OTRXMPPTorImageName inBundle:[NSBundle bundleForClass:[OTRAssets class]] compatibleWithTraitCollection:nil];
+    return [UIImage imageNamed:OTRXMPPTorImageName inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];
 }
 
 - (NSString *)accountDisplayName

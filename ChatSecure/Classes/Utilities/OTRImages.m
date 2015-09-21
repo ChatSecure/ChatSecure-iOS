@@ -93,7 +93,7 @@ NSString *const OTRDuckDuckGoImageKey = @"OTRMicrophoneImageKey";
 {
     UIImageView * bubbleImageView = nil;
     UIImage * bubbleImage = nil;
-    bubbleImage = [UIImage imageNamed:@"bubble-min-tailless" inBundle:[NSBundle bundleForClass:[OTRAssets class]] compatibleWithTraitCollection:nil];
+    bubbleImage = [UIImage imageNamed:@"bubble-min-tailless" inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];
     
     bubbleImage = [self image:bubbleImage maskWithColor:[OTRColors bubbleLightGrayColor]];
     bubbleImage = [self mirrorImage:bubbleImage];
@@ -505,7 +505,7 @@ NSString *const OTRDuckDuckGoImageKey = @"OTRMicrophoneImageKey";
         return [self duckduckgoImage];
     }
     else {
-        return [UIImage imageNamed:name inBundle:[NSBundle bundleForClass:[OTRAssets class]] compatibleWithTraitCollection:nil];
+        return [UIImage imageNamed:name inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];
     }
 }
 
