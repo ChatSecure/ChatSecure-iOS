@@ -11,6 +11,8 @@
 		633107201A16D1A300C17BAE /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 633106661A16D1A300C17BAE /* LaunchScreen.xib */; };
 		6331072B1A16D1F200C17BAE /* DemoImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 633107291A16D1F200C17BAE /* DemoImages.xcassets */; };
 		6331072C1A16D1F200C17BAE /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6331072A1A16D1F200C17BAE /* Images.xcassets */; };
+		634E68BD1BAB887200DC6B25 /* PushController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637645C81B98F9BF00B3402F /* PushController.swift */; settings = {ASSET_TAGS = (); }; };
+		634E68BE1BAB891C00DC6B25 /* PushContainers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633821C81BA8D48D0019C906 /* PushContainers.swift */; settings = {ASSET_TAGS = (); }; };
 		636C63211B571B56008FEE69 /* OTRURLTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 636C63201B571B56008FEE69 /* OTRURLTests.m */; };
 		63DDD8B51A9E94B700C0A918 /* OTRMediaTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63DDD8B41A9E94B700C0A918 /* OTRMediaTests.m */; };
 		63DDD8BA1A9E9BD900C0A918 /* samples in Resources */ = {isa = PBXBuildFile; fileRef = 63DDD8B91A9E9BD900C0A918 /* samples */; };
@@ -2188,6 +2190,7 @@
 				D93DDB2A1BA79A5400CD8331 /* OTRUsernameCell.swift in Sources */,
 				D93DDA781BA79A2400CD8331 /* OTRAppDelegate.m in Sources */,
 				D93DDA791BA79A2400CD8331 /* NSURL+ChatSecure.m in Sources */,
+				634E68BD1BAB887200DC6B25 /* PushController.swift in Sources */,
 				D93DDA7A1BA79A2400CD8331 /* UIActionSheet+ChatSecure.m in Sources */,
 				D93DDA7B1BA79A2400CD8331 /* UIActivity+ChatSecure.m in Sources */,
 				D93DDA7C1BA79A2400CD8331 /* UIActivityViewController+ChatSecure.m in Sources */,
@@ -2248,6 +2251,7 @@
 				D93DDAB21BA79A2500CD8331 /* _OTRManagedOAuthAccount.m in Sources */,
 				D93DDAB31BA79A2500CD8331 /* _OTRManagedOscarAccount.m in Sources */,
 				D93DDAB41BA79A2500CD8331 /* _OTRManagedStatus.m in Sources */,
+				634E68BE1BAB891C00DC6B25 /* PushContainers.swift in Sources */,
 				D93DDAB51BA79A2500CD8331 /* _OTRManagedXMPPAccount.m in Sources */,
 				D93DDAB61BA79A2500CD8331 /* _OTRvCard.m in Sources */,
 				D93DDAB71BA79A2500CD8331 /* _OTRvCardAvatar.m in Sources */,
@@ -2866,6 +2870,7 @@
 				D9AE3A1A1BA8CBFA00255537 /* Beta */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
