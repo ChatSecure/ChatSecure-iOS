@@ -59,6 +59,7 @@
 #import "OTRProtocolManager.h"
 #import "OTRInviteViewController.h"
 #import "OTRTheme.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
 @import OTRAssets;
 
 #if CHATSECURE_DEMO
@@ -67,14 +68,9 @@
 
 @interface OTRAppDelegate ()
 
-
 @end
 
 @implementation OTRAppDelegate
-
-@synthesize window = _window;
-@synthesize backgroundTask, backgroundTimer, didShowDisconnectionWarning;
-@synthesize settingsViewController;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -115,6 +111,9 @@
                 DDLogError(@"Password Error: %@",error);
             }
         }
+        
+        UIUserNotificationSettings *notificationSettings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeBadge | UIUserNotificationTypeAlert | UIUserNotificationTypeSound categories:nil];
+        [application registerUserNotificationSettings:notificationSettings];
 
         [[OTRDatabaseManager sharedInstance] setupDatabaseWithName:OTRYapDatabaseName];
         rootViewController = [self defaultConversationNavigationController];
@@ -437,15 +436,29 @@
     return NO;
 }
 
-// Delegation methods
-- (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)devToken {
-    
-    
+- (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings
+{
+    [application registerForRemoteNotifications];
+}
+
+- (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(nonnull NSData *)deviceToken
+{
+    [self.pushController didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
 }
 
 - (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {
     [[NSNotificationCenter defaultCenter] postNotificationName:OTRFailedRemoteNotificationRegistration object:self userInfo:@{kOTRNotificationErrorKey:err}];
     DDLogError(@"Error in registration. Error: %@%@", [err localizedDescription], [err userInfo]);
+}
+
+#pragma - mark Getters and Setters
+
+- (PushController *)pushController{
+    if (!_pushController) {
+        _pushController = [[PushController alloc] initWithBaseURL:[NSURL URLWithString:kOTRPushAPIEndpoint] sessionConfiguration:[NSURLSessionConfiguration ephemeralSessionConfiguration] databaseConnection:[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection];
+
+    }
+    return _pushController;
 }
 
 #pragma - mark Class Methods

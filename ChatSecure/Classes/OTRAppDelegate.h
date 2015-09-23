@@ -27,6 +27,7 @@
 @class OTRSettingsViewController;
 @class OTRMessagesHoldTalkViewController;
 @class OTRConversationViewController;
+@class PushController;
 
 @interface OTRAppDelegate : UIResponder <UIApplicationDelegate, BITHockeyManagerDelegate>
 
@@ -34,6 +35,8 @@
 @property (nonatomic, strong) OTRSettingsViewController *settingsViewController;
 @property (nonatomic, strong) OTRMessagesHoldTalkViewController *messagesViewController;
 @property (nonatomic, strong) OTRConversationViewController *conversationViewController;
+
+@property (nonatomic, strong) PushController *pushController;
 
 @property (nonatomic, strong) NSTimer *backgroundTimer;
 @property (nonatomic) UIBackgroundTaskIdentifier backgroundTask;

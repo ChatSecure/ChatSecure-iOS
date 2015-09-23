@@ -78,5 +78,8 @@ extern CGFloat const kOTRMessageDeliveredLabelHeight;
 
 extern NSString *const kOTRErrorDomain;
 
+//Push
+extern NSString *const kOTRPushAPIEndpoint;
+
 extern NSUInteger const kOTRMinimumPassphraseLength;
 extern NSUInteger const kOTRMaximumPassphraseLength;

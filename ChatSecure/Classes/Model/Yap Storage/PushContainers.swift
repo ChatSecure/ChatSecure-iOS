@@ -29,7 +29,7 @@ public class DeviceContainer: OTRYapDatabaseObject, YapDatabaseRelationshipNode 
     
     public func yapDatabaseRelationshipEdges() -> [AnyObject]! {
         if let accountKey = self.pushAccountKey {
-            let accountEdge = [YapDatabaseRelationshipEdge(name: deviceAccountRelationshipEdgeName, destinationKey: accountKey, collection: Account.yapCollection(), nodeDeleteRules: YDB_NodeDeleteRules.DeleteSourceIfDestinationDeleted)]
+            let accountEdge = YapDatabaseRelationshipEdge(name: deviceAccountRelationshipEdgeName, destinationKey: accountKey, collection: Account.yapCollection(), nodeDeleteRules: YDB_NodeDeleteRules())
             return [accountEdge]
         }
         return []
