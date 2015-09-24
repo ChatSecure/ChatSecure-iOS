@@ -45,7 +45,6 @@
 #import "OTRShareSetting.h"
 #import "OTRActivityItemProvider.h"
 #import "OTRQRCodeActivity.h"
-#import "XMPPURI.h"
 #import "OTRBaseLoginViewController.h"
 #import "OTRXLFormCreator.h"
 #import <KVOController/FBKVOController.h>
@@ -53,6 +52,7 @@
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 @import OTRAssets;
 #import "OTRLanguageManager.h"
+#import "NSURL+ChatSecure.h"
 
 static NSString *const circleImageName = @"31-circle-plus-large.png";
 
@@ -462,9 +462,7 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 }
 
 - (void) shareAccount:(OTRAccount*)account sender:(id)sender {
-    XMPPJID *jid = [XMPPJID jidWithString:account.username];
-    XMPPURI *uri = [[XMPPURI alloc] initWithJID:jid queryAction:@"subscribe" queryParameters:nil];
-    NSURL *url = [NSURL URLWithString:uri.uriString];
+    NSURL *url = [NSURL otr_shareLink:[NSURL otr_shareBaseURL].absoluteString username:account.username fingerprint:nil base64Encoded:YES];
     
     OTRQRCodeActivity * qrCodeActivity = [[OTRQRCodeActivity alloc] init];
     
@@ -473,10 +471,8 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     
     UITableViewCell *cell = sender;
     
-    if( SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
-        activityViewController.popoverPresentationController.sourceView = cell;
-        activityViewController.popoverPresentationController.sourceRect = cell.bounds;
-    }
+    activityViewController.popoverPresentationController.sourceView = cell;
+    activityViewController.popoverPresentationController.sourceRect = cell.bounds;
     
     [self presentViewController:activityViewController animated:YES completion:nil];
 }
