@@ -7,10 +7,10 @@
 //
 
 #import <XCTest/XCTest.h>
-#import "OTRMediaFileManager.h"
-#import "OTRVideoItem.h"
-#import "OTRBuddy.h"
-#import "OTRMessage.h"
+#import <ChatSecureCore/OTRMediaFileManager.h>
+#import <ChatSecureCore/OTRVideoItem.h>
+#import <ChatSecureCore/OTRBuddy.h>
+#import <ChatSecureCore/OTRMessage.h>
 #import "IOCipher.h"
 
 @interface OTRMediaTests : XCTestCase

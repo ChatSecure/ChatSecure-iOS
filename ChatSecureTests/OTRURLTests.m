@@ -7,7 +7,8 @@
 //
 
 #import <XCTest/XCTest.h>
-#import "NSURL+ChatSecure.h"
+#import <ChatSecureCore/NSURL+ChatSecure.h>
+#import <OTRAssets/OTRBranding.h>
 
 @interface OTRURLTests : XCTestCase
 
@@ -29,7 +30,7 @@
 - (void)testCreatingURL {
     
     NSString *username = @"account@server.com";
-    NSString *baseUrl = @"https://chatsecure.org/i/#";
+    NSString *baseUrl = [OTRBranding shareBaseURL].absoluteString;
     NSString *fingerprint = @"fingerprint";
     
     NSURL *url = [NSURL otr_shareLink:baseUrl username:username fingerprint:fingerprint base64Encoded:NO];

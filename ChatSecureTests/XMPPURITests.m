@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
-#import "XMPPURI.h"
+#import <ChatSecureCore/XMPPURI.h>
 
 @interface XMPPURITests : XCTestCase
 
