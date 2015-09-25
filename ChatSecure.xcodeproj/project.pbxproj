@@ -21,6 +21,8 @@
 		D9227C3F1BA7952100B5E1D0 /* ChatSecureCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9227C2A1BA7952100B5E1D0 /* ChatSecureCore.framework */; };
 		D9227C401BA7952100B5E1D0 /* ChatSecureCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D9227C2A1BA7952100B5E1D0 /* ChatSecureCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D9315CAE1BB600450077D2EE /* AddFriendsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9315CAD1BB600450077D2EE /* AddFriendsView.xib */; settings = {ASSET_TAGS = (); }; };
+		D9315CB01BB604FA0077D2EE /* AddFriendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9315CAF1BB604FA0077D2EE /* AddFriendsView.swift */; settings = {ASSET_TAGS = (); }; };
+		D9315CB21BB606890077D2EE /* ShareController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9315CB11BB606890077D2EE /* ShareController.swift */; settings = {ASSET_TAGS = (); }; };
 		D9365E7A1A1EB0050006434A /* torrc in Resources */ = {isa = PBXBuildFile; fileRef = D9365E791A1EB0050006434A /* torrc */; };
 		D93DDA781BA79A2400CD8331 /* OTRAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105E61A16D1A300C17BAE /* OTRAppDelegate.m */; };
 		D93DDA791BA79A2400CD8331 /* NSURL+ChatSecure.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105031A16D1A300C17BAE /* NSURL+ChatSecure.m */; };
@@ -861,6 +863,8 @@
 		D93027561BAA381F000CC975 /* OTRResources.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OTRResources.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		D93027581BAA381F000CC975 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D9315CAD1BB600450077D2EE /* AddFriendsView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AddFriendsView.xib; path = Interface/AddFriendsView.xib; sourceTree = "<group>"; };
+		D9315CAF1BB604FA0077D2EE /* AddFriendsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddFriendsView.swift; sourceTree = "<group>"; };
+		D9315CB11BB606890077D2EE /* ShareController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShareController.swift; sourceTree = "<group>"; };
 		D9365E791A1EB0050006434A /* torrc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = torrc; path = Resources/torrc; sourceTree = "<group>"; };
 		D95AD2221B67FD6A007DEBC3 /* OTRCircleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRCircleView.h; sourceTree = "<group>"; };
 		D95AD2231B67FD6A007DEBC3 /* OTRCircleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRCircleView.m; sourceTree = "<group>"; };
@@ -994,6 +998,7 @@
 		6331050E1A16D1A300C17BAE /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				D9315CB11BB606890077D2EE /* ShareController.swift */,
 				63F6E18F1A69B9BA0011E6F7 /* OTRAttachmentPicker.h */,
 				63F6E1901A69B9BA0011E6F7 /* OTRAttachmentPicker.m */,
 				6331050F1A16D1A300C17BAE /* OTRAccountsManager.h */,
@@ -1263,6 +1268,7 @@
 		6331064A1A16D1A300C17BAE /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				D9315CAF1BB604FA0077D2EE /* AddFriendsView.swift */,
 				D95AD2221B67FD6A007DEBC3 /* OTRCircleView.h */,
 				D95AD2231B67FD6A007DEBC3 /* OTRCircleView.m */,
 				D9ADE5B71B606642009471FF /* OTRCircleButtonView.h */,
@@ -2314,6 +2320,7 @@
 				D93DDAC41BA79A2600CD8331 /* OTRFeedbackSetting.m in Sources */,
 				D93DDAC51BA79A2600CD8331 /* OTRFingerprintSetting.m in Sources */,
 				D93DDAC61BA79A2600CD8331 /* OTRIntSetting.m in Sources */,
+				D9315CB01BB604FA0077D2EE /* AddFriendsView.swift in Sources */,
 				D93DDAC71BA79A2600CD8331 /* OTRLanguageSetting.m in Sources */,
 				D93DDAC81BA79A2600CD8331 /* OTRListSetting.m in Sources */,
 				D93DDAC91BA79A2600CD8331 /* OTRListSettingValue.m in Sources */,
@@ -2333,6 +2340,7 @@
 				D93DDAD61BA79A2700CD8331 /* OTRImageItem.m in Sources */,
 				D93DDAD71BA79A2700CD8331 /* OTRVideoItem.m in Sources */,
 				D93DDAD81BA79A2700CD8331 /* OTRAudioItem.m in Sources */,
+				D9315CB21BB606890077D2EE /* ShareController.swift in Sources */,
 				D93DDAD91BA79A2700CD8331 /* OTRStreamManagementStorageObject.m in Sources */,
 				D93DDADA1BA79A2700CD8331 /* OTRBuddy.m in Sources */,
 				D93DDADB1BA79A2700CD8331 /* OTRMessage+JSQMessageData.m in Sources */,

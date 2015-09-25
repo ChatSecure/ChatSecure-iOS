@@ -20,3 +20,5 @@ FOUNDATION_EXPORT const unsigned char ChatSecureCoreVersionString[];
 #import <ChatSecureCore/OTRXLFormCreator.h>
 #import <ChatSecureCore/OTRAppDelegate.h>
 #import <ChatSecureCore/OTRTheme.h>
+#import <ChatSecureCore/NSURL+ChatSecure.h>
+#import <ChatSecureCore/OTRQRCodeActivity.h>
