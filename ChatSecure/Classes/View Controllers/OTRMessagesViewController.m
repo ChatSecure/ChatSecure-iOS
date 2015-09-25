@@ -816,6 +816,16 @@ typedef NS_ENUM(int, OTRDropDownType) {
     else {
         cell.textView.textColor = [UIColor whiteColor];
     }
+
+	// Do not allow clickable links for Tor accounts to prevent information leakage
+    if ([self.account isKindOfClass:[OTRXMPPTorAccount class]]) {
+        cell.textView.dataDetectorTypes = UIDataDetectorTypeNone;
+    }
+    else {
+        cell.textView.dataDetectorTypes = UIDataDetectorTypeLink;
+        cell.textView.linkTextAttributes = @{ NSForegroundColorAttributeName : cell.textView.textColor,
+                                              NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle | NSUnderlinePatternSolid) };
+    }
     
     if ([message.mediaItemUniqueId isEqualToString:self.audioPlaybackController.currentAudioItem.uniqueId]) {
         UIView *view = [cell.mediaView viewWithTag:kOTRAudioControlsViewTag];
