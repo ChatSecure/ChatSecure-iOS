@@ -11,7 +11,7 @@ import ChatSecure_Push_iOS
 
 public class PushDeserializer: NSObject  {
     
-    public class func deserializeTokenData(data:NSData) throws -> [TokenContainer] {
+    public class func deserializeToken(data:NSData) throws -> [TokenContainer] {
         guard let jsonDictionary = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions()) as? [String:AnyObject] else {
             throw PushError.invalidJSON.error()
         }

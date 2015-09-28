@@ -17,7 +17,7 @@ enum jsonKeys: String {
 
 public class PushSerializer: NSObject {
     
-    public class func jsonDataForTokens(tokens:[Token], APIEndpoint:String) -> NSData? {
+    public class func serialize(tokens:[Token], APIEndpoint:String) -> NSData? {
         if tokens.count < 1 {
             return nil
         }

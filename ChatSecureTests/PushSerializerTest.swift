@@ -15,10 +15,10 @@ class PushSerializerTest: XCTestCase {
     
     func testSerialization() {
         let array = [Token(tokenString: "token1", deviceID: nil),Token(tokenString: "token2", deviceID: nil),Token(tokenString: "token3", deviceID: nil)]
-        let data = PushSerializer.jsonDataForTokens(array, APIEndpoint: "https://example.com/messages")
+        let data = PushSerializer.serialize(array, APIEndpoint: "https://example.com/messages")
         XCTAssertNotNil(data,"No json data")
         do {
-            let newArray = try PushDeserializer.deserializeTokenData(data!)
+            let newArray = try PushDeserializer.deserializeToken(data!)
             XCTAssertEqual(array.count, newArray.count)
         } catch let error as NSError {
             XCTAssertNil(error)

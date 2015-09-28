@@ -20,7 +20,7 @@ extension Account {
     The purpose of this class is to tie together the api client and the data store, YapDatabase.
     It also provides some helper methods that makes dealing with the api easier
 */
-public class PushController: NSObject {
+public class PushController: NSObject, OTRPushTLVHandlerDelegate {
     var apiClient : Client
     var databaseConnection: YapDatabaseConnection
     var callbackQueue = NSOperationQueue()
@@ -414,4 +414,43 @@ public class PushController: NSObject {
             })
         }
     }
+    
+    //MARK: OTRPushTLVHandlerDelegate
+    public func receivePushData(tlvData: NSData!, username: String!, accountName: String!, protocolString: String!) {
+        
+        var buddy:OTRBuddy? = nil
+        self.databaseConnection.readWithBlock { (transaction) -> Void in
+            buddy = OTRBuddy.fetchBuddyForUsername(username, accountName: accountName, transaction: transaction)
+        }
+        
+        guard let buddyKey = buddy?.uniqueId else {
+            //Error fetching buddy
+            return
+        }
+        
+        do {
+            let tokenArray = try PushDeserializer.deserializeToken(tlvData)
+            for token in tokenArray {
+                guard let tokenString = token.pushToken?.tokenString else {
+                    return
+                }
+                
+                guard let url = token.endpoint?.absoluteString else {
+                    return
+                }
+                
+                self.saveReceivedPushToken(tokenString, buddyKey: buddyKey, endpoint: url, completion: { (success, error) -> Void in
+                    if !success {
+                        NSLog("Error saving token")
+                    }
+                })
+            }
+        } catch {
+            NSLog("Error handling TLV data")
+        }
+    }
+    
+    
+    
+    
 }
