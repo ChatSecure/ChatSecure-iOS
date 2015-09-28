@@ -76,7 +76,7 @@ CGFloat const kOTRMessageSentDateLabelHeight  = kOTRSentDateFontSize + 7;
 CGFloat const kOTRMessageDeliveredLabelHeight = kOTRDeliveredFontSize + 7;
 
 //push
-NSString *const kOTRPushAPIEndpoint = @"https://chatsecure-push.herokuapp.com/api/v1/";
+NSString *const kOTRPushAPIEndpoint = @"http://10.254.254.186:8000/api/v1/";
 
 NSUInteger const kOTRMinimumPassphraseLength = 8;
 NSUInteger const kOTRMaximumPassphraseLength = 64;

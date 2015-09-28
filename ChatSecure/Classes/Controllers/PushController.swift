@@ -197,8 +197,9 @@ public class PushController: NSObject {
                     completion(tokenKey: newTokenContainer.pushToken?.tokenString, error: nil)
                 })
             })
-        
     }
+    
+    public
     
     
     func fetchNewPushToken(deviceID:String, name: String?, completion:(success:Bool,error:NSError?)->Void) {
@@ -207,6 +208,7 @@ public class PushController: NSObject {
                 self?.databaseConnection.readWriteWithBlock({ (transaction) -> Void in
                     let tokenContainer = TokenContainer()
                     tokenContainer.pushToken = newToken
+                    tokenContainer.accountKey = PushYapKeys.thisAccountKey.rawValue
                     transaction.setObject(tokenContainer, forKey:tokenContainer.uniqueId, inCollection:PushYapCollections.unusedTokenCollection.rawValue)
                 })
                 self?.callbackQueue.addOperationWithBlock({ () -> Void in
@@ -285,7 +287,6 @@ public class PushController: NSObject {
             
             let tokenContainer = TokenContainer()
             tokenContainer.pushToken = token
-            tokenContainer.ownedByYou = false
             tokenContainer.endpoint = endpointURL
             tokenContainer.buddyKey = buddyKey
             
@@ -298,17 +299,21 @@ public class PushController: NSObject {
         
     }
     
-    public func tokensForBuddy(buddyKey:String, transaction:YapDatabaseReadTransaction) throws -> [TokenContainer] {
+    public func tokensForBuddy(buddyKey:String, createdByThisAccount:Bool, transaction:YapDatabaseReadTransaction) throws -> [TokenContainer] {
         guard let buddy = transaction.objectForKey(buddyKey, inCollection: OTRBuddy.collection()) as? OTRBuddy else {
             throw PushError.noBuddyFound.error()
         }
         
         var tokens: [TokenContainer] = []
         if let relationshipTransaction = transaction.ext(OTRYapDatabaseRelationshipName) as? YapDatabaseRelationshipTransaction {
-            relationshipTransaction.enumerateEdgesWithName(buddyTokenRelationshipEdgeName, destinationKey: buddy.uniqueId, collection: OTRBuddy.collection(), usingBlock: { (edge, stop) -> Void in
+            relationshipTransaction.enumerateEdgesWithName(kBuddyTokenRelationshipEdgeName, destinationKey: buddy.uniqueId, collection: OTRBuddy.collection(), usingBlock: { (edge, stop) -> Void in
                 
                 if let tokenContainer = transaction.objectForKey(edge.sourceKey, inCollection: edge.sourceCollection) as? TokenContainer {
-                    tokens.append(tokenContainer)
+                    if tokenContainer.accountKey != nil && createdByThisAccount {
+                        tokens.append(tokenContainer)
+                    } else if tokenContainer.accountKey == nil && !createdByThisAccount {
+                        tokens.append(tokenContainer)
+                    }
                 }
                 
             })
@@ -330,7 +335,7 @@ public class PushController: NSObject {
         self.databaseConnection.asyncReadWithBlock { (t) -> Void in
             
             do {
-                guard let token = try self.tokensForBuddy(buddyKey, transaction: t).first?.pushToken else {
+                guard let token = try self.tokensForBuddy(buddyKey, createdByThisAccount: false, transaction: t).first?.pushToken else {
                     self.callbackQueue.addOperationWithBlock({ () -> Void in
                         completion(success: false, error: PushError.noTokensFound.error())
                     })
@@ -359,6 +364,8 @@ public class PushController: NSObject {
         }
     }
     
+    
+    //MARK: APNS Token
     public func didRegisterForRemoteNotificationsWithDeviceToken(data:NSData) -> Void {
         let pushTokenString = data.hexString;
         if (!self.hasPushAccount()) {

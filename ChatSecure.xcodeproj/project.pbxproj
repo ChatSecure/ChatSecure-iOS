@@ -14,9 +14,12 @@
 		634E68BD1BAB887200DC6B25 /* PushController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637645C81B98F9BF00B3402F /* PushController.swift */; settings = {ASSET_TAGS = (); }; };
 		634E68BE1BAB891C00DC6B25 /* PushContainers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633821C81BA8D48D0019C906 /* PushContainers.swift */; settings = {ASSET_TAGS = (); }; };
 		636C63211B571B56008FEE69 /* OTRURLTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 636C63201B571B56008FEE69 /* OTRURLTests.m */; };
+		638045681BB4BDED002D8BAE /* PushSerializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638045671BB4BDEC002D8BAE /* PushSerializer.swift */; settings = {ASSET_TAGS = (); }; };
+		6380456A1BB4C833002D8BAE /* PushDeserializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638045691BB4C832002D8BAE /* PushDeserializer.swift */; settings = {ASSET_TAGS = (); }; };
 		63DC417B1BB3767100D42857 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DC417A1BB3767000D42857 /* Errors.swift */; settings = {ASSET_TAGS = (); }; };
 		63DDD8B51A9E94B700C0A918 /* OTRMediaTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63DDD8B41A9E94B700C0A918 /* OTRMediaTests.m */; };
 		63DDD8BA1A9E9BD900C0A918 /* samples in Resources */ = {isa = PBXBuildFile; fileRef = 63DDD8B91A9E9BD900C0A918 /* samples */; };
+		63E353B21BB9D0CF005C54C3 /* PushSerializerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E353B11BB9D0CF005C54C3 /* PushSerializerTest.swift */; settings = {ASSET_TAGS = (); }; };
 		63F614DC1BB214660083A06A /* ChatSecureModelTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F614DB1BB214660083A06A /* ChatSecureModelTest.swift */; settings = {ASSET_TAGS = (); }; };
 		8FE09CE9A16DB3D068D19753 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCD1F8E85C658C8D3865B584 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		BB852C4F65587CD8A46FF428 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCD1F8E85C658C8D3865B584 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -727,6 +730,8 @@
 		637645C81B98F9BF00B3402F /* PushController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushController.swift; sourceTree = "<group>"; };
 		637DBB1A1B7D5A23003845B7 /* OTRXMPPMessageYapStroage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPMessageYapStroage.h; sourceTree = "<group>"; };
 		637DBB1B1B7D5A23003845B7 /* OTRXMPPMessageYapStroage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPMessageYapStroage.m; sourceTree = "<group>"; };
+		638045671BB4BDEC002D8BAE /* PushSerializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushSerializer.swift; sourceTree = "<group>"; };
+		638045691BB4C832002D8BAE /* PushDeserializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushDeserializer.swift; sourceTree = "<group>"; };
 		638C7CF01B02BE4A004F8EC3 /* OTRBaseLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBaseLoginViewController.h; sourceTree = "<group>"; };
 		638C7CF11B02BE4A004F8EC3 /* OTRBaseLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRBaseLoginViewController.m; sourceTree = "<group>"; };
 		638C7CF31B02BF0D004F8EC3 /* OTRXLFormCreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXLFormCreator.h; sourceTree = "<group>"; };
@@ -837,6 +842,7 @@
 		63DDD8AF1A9D3C0400C0A918 /* OTRMediaServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRMediaServer.m; sourceTree = "<group>"; };
 		63DDD8B41A9E94B700C0A918 /* OTRMediaTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRMediaTests.m; sourceTree = "<group>"; };
 		63DDD8B91A9E9BD900C0A918 /* samples */ = {isa = PBXFileReference; lastKnownFileType = folder; path = samples; sourceTree = "<group>"; };
+		63E353B11BB9D0CF005C54C3 /* PushSerializerTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushSerializerTest.swift; sourceTree = "<group>"; };
 		63EA4CF71ACC81C800B19E12 /* OTRMessagesHoldTalkViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRMessagesHoldTalkViewController.h; sourceTree = "<group>"; };
 		63EA4CF81ACC81C800B19E12 /* OTRMessagesHoldTalkViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRMessagesHoldTalkViewController.m; sourceTree = "<group>"; };
 		63EA4CFB1ACC96AB00B19E12 /* OTRHoldToTalkView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRHoldToTalkView.h; sourceTree = "<group>"; };
@@ -1031,6 +1037,8 @@
 				63DDD8AE1A9D3C0400C0A918 /* OTRMediaServer.h */,
 				63DDD8AF1A9D3C0400C0A918 /* OTRMediaServer.m */,
 				637645C81B98F9BF00B3402F /* PushController.swift */,
+				638045671BB4BDEC002D8BAE /* PushSerializer.swift */,
+				638045691BB4C832002D8BAE /* PushDeserializer.swift */,
 				63DC417A1BB3767000D42857 /* Errors.swift */,
 				633105321A16D1A300C17BAE /* XMPP */,
 			);
@@ -1444,6 +1452,7 @@
 				636C63201B571B56008FEE69 /* OTRURLTests.m */,
 				63DDD8B41A9E94B700C0A918 /* OTRMediaTests.m */,
 				63F614DB1BB214660083A06A /* ChatSecureModelTest.swift */,
+				63E353B11BB9D0CF005C54C3 /* PushSerializerTest.swift */,
 				6396AFB71A169D54009F3E6C /* Supporting Files */,
 				63F614DA1BB214640083A06A /* ChatSecureTests-Bridging-Header.h */,
 			);
@@ -2244,6 +2253,7 @@
 				D9A3CB2C1B2798D7000A50C6 /* XMPPURITests.m in Sources */,
 				63DDD8B51A9E94B700C0A918 /* OTRMediaTests.m in Sources */,
 				636C63211B571B56008FEE69 /* OTRURLTests.m in Sources */,
+				63E353B21BB9D0CF005C54C3 /* PushSerializerTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2279,6 +2289,7 @@
 				D93DDA8E1BA79A2400CD8331 /* OTRAudioPlaybackController.m in Sources */,
 				D93DDA8F1BA79A2400CD8331 /* OTRMediaFileManager.m in Sources */,
 				D93DDA901BA79A2400CD8331 /* OTRMediaServer.m in Sources */,
+				6380456A1BB4C833002D8BAE /* PushDeserializer.swift in Sources */,
 				D93DDA911BA79A2400CD8331 /* OTRStreamManagementYapStorage.m in Sources */,
 				D93DDA921BA79A2400CD8331 /* OTRXMPPMessageYapStroage.m in Sources */,
 				D93DDA931BA79A2400CD8331 /* OTRvCardYapDatabaseStorage.m in Sources */,
@@ -2294,6 +2305,7 @@
 				D93DDA9C1BA79A2400CD8331 /* OTRManagedEncryptionStatusMessage.m in Sources */,
 				D93DDA9D1BA79A2500CD8331 /* OTRManagedFacebookAccount.m in Sources */,
 				D93DDA9E1BA79A2500CD8331 /* OTRManagedGoogleAccount.m in Sources */,
+				638045681BB4BDED002D8BAE /* PushSerializer.swift in Sources */,
 				D93DDA9F1BA79A2500CD8331 /* OTRManagedGroup.m in Sources */,
 				D93DDAA01BA79A2500CD8331 /* OTRManagedMessage.m in Sources */,
 				D93DDAA11BA79A2500CD8331 /* OTRManagedMessageAndStatus.m in Sources */,

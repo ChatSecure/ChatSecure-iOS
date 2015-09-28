@@ -9,10 +9,13 @@
 import Foundation
 
 enum PushError: Int {
-    case noPushDevice  = 301
-    case invalidURL    = 302
-    case noBuddyFound  = 303
-    case noTokensFound = 304
+    case noPushDevice       = 301
+    case invalidURL         = 302
+    case noBuddyFound       = 303
+    case noTokensFound      = 304
+    case invalidJSON        = 305
+    case missingAPIEndpoint = 306
+    case missingTokens      = 307
 }
 
 extension PushError {
@@ -26,6 +29,12 @@ extension PushError {
             return "No buddy found."
         case .noTokensFound:
             return "No tokens found."
+        case .invalidJSON:
+            return "Invalid JSON format."
+        case .missingAPIEndpoint:
+            return "Missing API endpoint key."
+        case .missingTokens:
+            return "Missing token key"
         }
     }
     
