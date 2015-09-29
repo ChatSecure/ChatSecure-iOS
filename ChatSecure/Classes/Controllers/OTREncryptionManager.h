@@ -21,8 +21,7 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 #import <Foundation/Foundation.h>
-#import "OTRKit.h"
-#import "OTRDataHandler.h"
+@class OTRDataHandler;
 
 extern NSString *const OTRMessageStateDidChangeNotification;
 extern NSString *const OTRWillStartGeneratingPrivateKeyNotification;
@@ -32,11 +31,21 @@ extern NSString *const OTRMessageStateKey;
 extern NSString *const OTREncryptionError;
 extern NSString *const OTRMessageEventKey;
 
+// This is a hack to get around problems using OTRKit.h in swift files
+typedef NS_ENUM(NSUInteger, OTREncryptionMessageState) {
+    OTREncryptionMessageStatePlaintext,
+    OTREncryptionMessageStateEncrypted,
+    OTREncryptionMessageStateFinished,
+    OTREncryptionMessageStateError
+};
 
-@interface OTREncryptionManager : NSObject <OTRKitDelegate, OTRDataHandlerDelegate>
+
+@interface OTREncryptionManager : NSObject
 
 + (BOOL) setFileProtection:(NSString*)fileProtection path:(NSString*)path;
-+ (BOOL)addSkipBackupAttributeToItemAtURL:(NSURL *)URL;
++ (BOOL) addSkipBackupAttributeToItemAtURL:(NSURL *)URL;
+
++ (OTREncryptionMessageState)convertEncryptionState:(NSUInteger)messageState;
 
 @property (nonatomic, strong, readonly) OTRDataHandler *dataHandler;
 

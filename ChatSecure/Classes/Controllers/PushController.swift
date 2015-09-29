@@ -10,53 +10,23 @@ import Foundation
 import ChatSecure_Push_iOS
 import YapDatabase
 
-extension Account {
-    public class func yapCollection() -> String {
-        return "ChatSecurePushAccountColletion"
-    }
-}
 
 /** 
     The purpose of this class is to tie together the api client and the data store, YapDatabase.
     It also provides some helper methods that makes dealing with the api easier
 */
 public class PushController: NSObject, OTRPushTLVHandlerDelegate {
+    
+    let storage: PushStorageProtocol
     var apiClient : Client
-    var databaseConnection: YapDatabaseConnection
     var callbackQueue = NSOperationQueue()
-    
-    enum PushYapKeys: String {
-        case thisDeviceKey = "kYapThisDeviceKey"
-        case thisAccountKey = "kYapThisAccountKey"
-    }
-    
-    enum PushYapCollections: String {
-        case unusedTokenCollection = "kYapUnusedTokenCollection"
-    }
-    
-    static let unusedTokenStoreSize:UInt = 50
     
     public init(baseURL: NSURL, sessionConfiguration: NSURLSessionConfiguration, databaseConnection: YapDatabaseConnection) {
         self.apiClient = Client(baseUrl: baseURL, urlSessionConfiguration: sessionConfiguration, account: nil)
-        self.databaseConnection = databaseConnection
+
+        self.storage = PushStorage(databaseConnection: databaseConnection)
         super.init()
-        self.apiClient.account = self.thisDevicePushAccount()
-    }
-    
-    public func thisDevicePushAccount() -> Account? {
-        var account:Account? = nil
-        self.databaseConnection.readWithBlock { (transaction) -> Void in
-            account = transaction.objectForKey(PushYapKeys.thisAccountKey.rawValue, inCollection: Account.yapCollection()) as? Account
-        }
-        return account
-    }
-    
-    public func hasPushAccount() -> Bool {
-        var hasAccount = false
-        self.databaseConnection.readWithBlock { (transaction) -> Void in
-            hasAccount = transaction.hasObjectForKey(PushYapKeys.thisAccountKey.rawValue, inCollection: Account.yapCollection())
-        }
-        return hasAccount
+        self.apiClient.account = self.storage.thisDevicePushAccount()
     }
     
     public func createNewRandomPushAccount(completion:(success: Bool, error: NSError?) -> Void) {
@@ -70,9 +40,7 @@ public class PushController: NSObject, OTRPushTLVHandlerDelegate {
         self.apiClient.registerNewUser(username, password: password, email: nil) {[weak self] (account, error) -> Void in
             if let newAccount = account {
                 self?.apiClient.account = newAccount
-                self?.databaseConnection.readWriteWithBlock({ (t) -> Void in
-                    t.setObject(newAccount, forKey:PushYapKeys.thisAccountKey.rawValue, inCollection:Account.yapCollection())
-                })
+                self?.storage.saveThisAccount(newAccount)
                 self?.callbackQueue.addOperationWithBlock({ () -> Void in
                     completion(success: true, error: nil)
                 })
@@ -87,7 +55,7 @@ public class PushController: NSObject, OTRPushTLVHandlerDelegate {
     public func registerThisDevice(apns:String, completion:(success: Bool, error: NSError?) -> Void) {
         self.apiClient.registerDevice(apns, name: nil, deviceID: nil) {[weak self] (device, error) -> Void in
             if let newDevice = device {
-                self?.saveThisDevice(newDevice)
+                self?.storage.saveThisDevice(newDevice)
                 self?.callbackQueue.addOperationWithBlock({ () -> Void in
                     completion(success: true, error: nil)
                 })
@@ -101,17 +69,24 @@ public class PushController: NSObject, OTRPushTLVHandlerDelegate {
     }
     
     public func updateThisDevice(apns:String, completion:(success: Bool, error: NSError?) -> Void) {
-        self.thisDevice {[weak self] (device, error) -> Void in
-            guard let id = device?.id else {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {[weak self] () -> Void in
+            guard let device = self?.storage.thisDevice() else {
                 self?.callbackQueue.addOperationWithBlock({ () -> Void in
                     completion(success: false, error:PushError.noPushDevice.error())
                 })
                 return
             }
             
-            self?.apiClient.updateDevice(id, APNSToken: apns, name: device?.name, deviceID: device?.id, completion: {[weak self] (device, error) -> Void in
+            guard let id = device.id else {
+                self?.callbackQueue.addOperationWithBlock({ () -> Void in
+                    completion(success: false, error:PushError.noPushDevice.error())
+                })
+                return
+            }
+            
+            self?.apiClient.updateDevice(id, APNSToken: apns, name: device.name, deviceID: device.id, completion: {[weak self] (device, error) -> Void in
                 if let newDevice = device {
-                    self?.saveThisDevice(newDevice)
+                    self?.storage.saveThisDevice(newDevice)
                     self?.callbackQueue.addOperationWithBlock({ () -> Void in
                         completion(success: true, error:nil)
                     })
@@ -120,97 +95,44 @@ public class PushController: NSObject, OTRPushTLVHandlerDelegate {
                         completion(success: false, error:error)
                     })
                 }
-            })
-        }
-    }
-    
-    func saveThisDevice(device:Device) {
-        let deviceContainer = DeviceContainer()
-        deviceContainer.pushDevice = device
-        deviceContainer.pushAccountKey = PushYapKeys.thisAccountKey.rawValue
-        self.databaseConnection.readWriteWithBlock({ (transaction) -> Void in
-            transaction.setObject(deviceContainer, forKey:PushYapKeys.thisDeviceKey.rawValue, inCollection:DeviceContainer.collection())
-        })
-    }
-    
-    func thisDevice() -> Device? {
-        var device:Device? = nil
-        self.databaseConnection.readWithBlock { (transaction) -> Void in
-            if let deviceContainer = transaction.objectForKey(PushYapKeys.thisDeviceKey.rawValue, inCollection:DeviceContainer.collection()) as? DeviceContainer {
-                device = deviceContainer.pushDevice
-            }
-        }
-        return device
-    }
-    
-    public func thisDevice(completion:(device: Device?, error: NSError?) -> Void) {
-        var device:Device? = nil
-        self.databaseConnection.asyncReadWithBlock({ (transaction) -> Void in
-            device = self.thisDevice()
-            }) {[weak self] () -> Void in
-                self?.callbackQueue.addOperationWithBlock({ () -> Void in
-                    completion(device: device,error: nil)
                 })
         }
+        
     }
     
-    func unusedToken(transaction:YapDatabaseReadTransaction) -> TokenContainer? {
-        var tokenContainer:TokenContainer? = nil
-        transaction.enumerateKeysAndObjectsInCollection(PushYapCollections.unusedTokenCollection.rawValue, usingBlock: { (key, object, stop) -> Void in
-            if let tc = object as? TokenContainer {
-                tokenContainer = tc
-            }
-            stop.initialize(true)
-        })
-        return tokenContainer
-    }
+    
+    
+    
     
     public func getNewPushToken(buddyKey:String, completion:(tokenKey:String?,error:NSError?) -> Void) {
-        var tokenContainer:TokenContainer? = nil
-        self.databaseConnection.asyncReadWriteWithBlock({[weak self] (transaction) -> Void in
-            //1. Get random token from database
-            tokenContainer = self?.unusedToken(transaction)
-            //2. Remove from unused colleciton
-            if let key = tokenContainer?.uniqueId {
-                transaction.removeObjectForKey(key, inCollection: PushYapCollections.unusedTokenCollection.rawValue)
-            }
-        }, completionBlock: {[weak self] () -> Void in
-                //If no tokens found then update store and try again
-                guard let newTokenContainer = tokenContainer else {
-                    self?.updateUnusedTokenStore({[weak self] (success, error) -> Void in
-                        if success {
-                            self?.getNewPushToken(buddyKey, completion: completion)
-                        } else {
-                            self?.callbackQueue.addOperationWithBlock({ () -> Void in
-                                completion(tokenKey: nil, error: error)
-                            })
-                        }
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {[weak self] () -> Void in
+            guard let tokenContainer = self?.storage.unusedToken() else {
+                self?.updateUnusedTokenStore({[weak self] (success, error) -> Void in
+                    if success {
+                        self?.getNewPushToken(buddyKey, completion: completion)
+                    } else {
+                        self?.callbackQueue.addOperationWithBlock({ () -> Void in
+                            completion(tokenKey: nil, error: error)
+                        })
+                    }
                     })
-                    return
-                }
-                //3. Connect buddy to token and save to database
-                newTokenContainer.buddyKey = buddyKey
-                self?.databaseConnection.readWriteWithBlock({ (transaction) -> Void in
-                    newTokenContainer.saveWithTransaction(transaction)
-                })
-                self?.callbackQueue.addOperationWithBlock({ () -> Void in
-                    completion(tokenKey: newTokenContainer.pushToken?.tokenString, error: nil)
-                })
+                return
+            }
+            
+            self?.storage.removeUnusedToken(tokenContainer)
+            self?.storage.associateBuddy(tokenContainer, buddyKey: buddyKey)
+            self?.callbackQueue.addOperationWithBlock({ () -> Void in
+                completion(tokenKey: tokenContainer.pushToken?.tokenString, error: nil)
             })
+        }
     }
-    
-    public
-    
     
     func fetchNewPushToken(deviceID:String, name: String?, completion:(success:Bool,error:NSError?)->Void) {
         self.apiClient.createToken(deviceID, name: name) {[weak self] (token, error) -> Void in
             if let newToken = token {
-                self?.databaseConnection.readWriteWithBlock({ (transaction) -> Void in
-                    let tokenContainer = TokenContainer()
-                    tokenContainer.pushToken = newToken
-                    tokenContainer.accountKey = PushYapKeys.thisAccountKey.rawValue
-                    transaction.setObject(tokenContainer, forKey:tokenContainer.uniqueId, inCollection:PushYapCollections.unusedTokenCollection.rawValue)
-                })
+                let tokenContainer = TokenContainer()
+                tokenContainer.pushToken = newToken
+                self?.storage.saveUnusedToken(tokenContainer)
                 self?.callbackQueue.addOperationWithBlock({ () -> Void in
                     completion(success:true,error:nil)
                 })
@@ -232,52 +154,60 @@ public class PushController: NSObject, OTRPushTLVHandlerDelegate {
     */
     public func updateUnusedTokenStore(completion:(success:Bool,error:NSError?) -> Void) {
         
-        guard let id = self.thisDevice()?.id else {
-            self.callbackQueue.addOperationWithBlock({ () -> Void in
-                completion(success: false, error: PushError.noPushDevice.error())
-            })
-            return;
-        }
-        
-        var tokensToCreate:UInt = 0
-        self.databaseConnection.asyncReadWithBlock({ (transaction) -> Void in
-            let unusedTokens = transaction.numberOfKeysInCollection(PushYapCollections.unusedTokenCollection.rawValue)
-            if unusedTokens < PushController.unusedTokenStoreSize {
-                tokensToCreate = PushController.unusedTokenStoreSize
-            }
-            }) { [weak self] () -> Void in
-                
-                var error:NSError? = nil
-                if tokensToCreate > 0 {
-                    
-                    let group = dispatch_group_create()
-                    for _ in 0...tokensToCreate {
-                        dispatch_group_enter(group)
-                        self?.fetchNewPushToken(id, name: nil, completion: { (success, err) -> Void in
-                            if err != nil {
-                                error = err
-                            }
-                            dispatch_group_leave(group)
-                        })
-                    }
-                    
-                    dispatch_group_wait(group, DISPATCH_TIME_FOREVER)
-                }
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {[weak self] () -> Void in
+            guard let id = self?.storage.thisDevice()?.id else {
                 self?.callbackQueue.addOperationWithBlock({ () -> Void in
-                    var succes = false
-                    if error == nil {
-                        succes = true
-                    }
-                    completion(success: succes, error: error)
+                    completion(success: false, error: PushError.noPushDevice.error())
                 })
+                return;
+            }
+            
+            var tokensToCreate:UInt = 0
+            
+            guard let unusedTokens = self?.storage.numberUnusedTokens() else {
+                return;
+            }
+            
+            guard let currentCount = self?.storage.unusedTokenStoreMinimum() else {
+                return;
+            }
+            
+            if unusedTokens < currentCount  {
+                tokensToCreate = currentCount
+            }
+            
+            var error:NSError? = nil
+            if tokensToCreate > 0 {
+                
+                let group = dispatch_group_create()
+                for _ in 0...tokensToCreate {
+                    dispatch_group_enter(group)
+                    self?.fetchNewPushToken(id, name: nil, completion: { (success, err) -> Void in
+                        if err != nil {
+                            error = err
+                        }
+                        dispatch_group_leave(group)
+                    })
+                }
+                
+                dispatch_group_wait(group, DISPATCH_TIME_FOREVER)
+            }
+            self?.callbackQueue.addOperationWithBlock({ () -> Void in
+                var succes = false
+                if error == nil {
+                    succes = true
+                }
+                completion(success: succes, error: error)
+            })
+
         }
     }
     
     public func saveReceivedPushToken(tokenString:String, buddyKey:String, endpoint:String, completion:(success:Bool, error:NSError?)->Void) {
         
-        self.databaseConnection.asyncReadWriteWithBlock { (transaction) -> Void in
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {[weak self] () -> Void in
             guard let endpointURL = NSURL(string: endpoint) else  {
-                self.callbackQueue.addOperationWithBlock({ () -> Void in
+                self?.callbackQueue.addOperationWithBlock({ () -> Void in
                     completion(success: false, error: PushError.invalidURL.error())
                 })
                 return
@@ -289,10 +219,8 @@ public class PushController: NSObject, OTRPushTLVHandlerDelegate {
             tokenContainer.pushToken = token
             tokenContainer.endpoint = endpointURL
             tokenContainer.buddyKey = buddyKey
-            
-            tokenContainer.saveWithTransaction(transaction)
-            
-            self.callbackQueue.addOperationWithBlock({ () -> Void in
+            self?.storage.saveUsedToken(tokenContainer)
+            self?.callbackQueue.addOperationWithBlock({ () -> Void in
                 completion(success: true, error: nil)
             })
         }
@@ -332,61 +260,66 @@ public class PushController: NSObject, OTRPushTLVHandlerDelegate {
 
     //MARK: Sending Message
     public func sendKnock(buddyKey:String, completion:(success:Bool, error:NSError?) -> Void) {
-        self.databaseConnection.asyncReadWithBlock { (t) -> Void in
-            
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {[weak self] () -> Void in
             do {
-                guard let token = try self.tokensForBuddy(buddyKey, createdByThisAccount: false, transaction: t).first?.pushToken else {
-                    self.callbackQueue.addOperationWithBlock({ () -> Void in
+                guard let token = try self?.storage.tokensForBuddy(buddyKey, createdByThisAccount: false).first?.pushToken else {
+                    self?.callbackQueue.addOperationWithBlock({ () -> Void in
                         completion(success: false, error: PushError.noTokensFound.error())
                     })
                     return
                 }
+                
                 let message = Message(token: token.tokenString, data: nil)
                 
-                self.apiClient.sendMessage(message, completion: { (message, error) -> Void in
+                self?.apiClient.sendMessage(message, completion: {[weak self] (message, error) -> Void in
                     if let _ = message {
-                        self.callbackQueue.addOperationWithBlock({ () -> Void in
+                        self?.callbackQueue.addOperationWithBlock({ () -> Void in
                             completion(success: true, error: nil)
                         })
                     } else {
-                        self.callbackQueue.addOperationWithBlock({ () -> Void in
+                        self?.callbackQueue.addOperationWithBlock({ () -> Void in
                             completion(success: false, error: error)
                         })
                     }
                 })
             } catch let error as NSError {
                 
-                self.callbackQueue.addOperationWithBlock({ () -> Void in
+                self?.callbackQueue.addOperationWithBlock({ () -> Void in
                     completion(success: false, error: error)
                 })
             }
-    
         }
     }
     
     
     //MARK: APNS Token
     public func didRegisterForRemoteNotificationsWithDeviceToken(data:NSData) -> Void {
-        let pushTokenString = data.hexString;
-        if (!self.hasPushAccount()) {
-            self.createNewRandomPushAccount({[weak self] (success, error) -> Void in
-                if success {
-                    self?.registerThisDevice(pushTokenString, completion: {[weak self] (success, error) -> Void in
-                        if !success {
-                            NSLog("Unable to register this device")
-                        } else {
-                            self?.updateUnusedTokenStore({ (success, error) -> Void in
-                                if !success {
-                                    NSLog("Unable to update store")
-                                }
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {[weak self] () -> Void in
+            let pushTokenString = data.hexString;
+            guard let storage = self?.storage else {
+                return
+            }
+            
+            if (!storage.hasPushAccount()) {
+                self?.createNewRandomPushAccount({[weak self] (success, error) -> Void in
+                    if success {
+                        self?.registerThisDevice(pushTokenString, completion: {[weak self] (success, error) -> Void in
+                            if !success {
+                                NSLog("Unable to register this device")
+                            } else {
+                                self?.updateUnusedTokenStore({ (success, error) -> Void in
+                                    if !success {
+                                        NSLog("Unable to update store")
+                                    }
+                                })
+                            }
                             })
-                        }
+                    }
                     })
-                }
-            })
-        } else {
-            self.thisDevice({ [weak self] (device, error) -> Void in
-                if device != nil {
+            }
+            else {
+                if let _ = storage.thisDevice() {
                     self?.updateThisDevice(pushTokenString, completion: { (success, error) -> Void in
                         if !success {
                             NSLog("Unable to update this device")
@@ -411,17 +344,14 @@ public class PushController: NSObject, OTRPushTLVHandlerDelegate {
                         }
                     })
                 }
-            })
+            }
         }
     }
     
     //MARK: OTRPushTLVHandlerDelegate
     public func receivePushData(tlvData: NSData!, username: String!, accountName: String!, protocolString: String!) {
         
-        var buddy:OTRBuddy? = nil
-        self.databaseConnection.readWithBlock { (transaction) -> Void in
-            buddy = OTRBuddy.fetchBuddyForUsername(username, accountName: accountName, transaction: transaction)
-        }
+        let buddy = self.storage.buddy(username, accountName: accountName)
         
         guard let buddyKey = buddy?.uniqueId else {
             //Error fetching buddy

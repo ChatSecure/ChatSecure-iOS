@@ -45,6 +45,7 @@
 #import "UIImage+ChatSecure.h"
 #import "OTRBaseLoginViewController.h"
 #import "OTRLanguageManager.h"
+#import "OTRDataHandler.h"
 
 @import AVFoundation;
 @import MediaPlayer;

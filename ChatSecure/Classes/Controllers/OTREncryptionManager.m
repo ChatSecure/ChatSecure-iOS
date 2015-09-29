@@ -38,6 +38,8 @@
 #import "OTRMediaServer.h"
 #import "OTRLanguageManager.h"
 #import "OTRLog.h"
+#import "OTRKit.h"
+#import "OTRDataHandler.h"
 
 @import AVFoundation;
 
@@ -46,7 +48,7 @@ NSString *const OTRWillStartGeneratingPrivateKeyNotification = @"OTREncryptionMa
 NSString *const OTRDidFinishGeneratingPrivateKeyNotification = @"OTREncryptionManagerdidFinishGeneratingPrivateKeyNotification";
 NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
 
-@interface OTREncryptionManager ()
+@interface OTREncryptionManager () <OTRKitDelegate, OTRDataHandlerDelegate>
 @property (nonatomic, strong) OTRKit *otrKit;
 @end
 
@@ -225,7 +227,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
         buddy = [OTRBuddy fetchBuddyForUsername:username accountName:accountName transaction:transaction];
     } completionBlock:^{
-        [[NSNotificationCenter defaultCenter] postNotificationName:OTRMessageStateDidChangeNotification object:buddy userInfo:@{OTRMessageStateKey:@(messageState)}];
+        [[NSNotificationCenter defaultCenter] postNotificationName:OTRMessageStateDidChangeNotification object:buddy userInfo:@{OTRMessageStateKey:@([[self class] convertEncryptionState:messageState])}];
     }];
 }
 
@@ -405,6 +407,19 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
             break;
     }
     return string;
+}
+
++ (OTREncryptionMessageState)convertEncryptionState:(NSUInteger)messageState
+{
+    switch (messageState) {
+        case OTRKitMessageStateEncrypted:
+            return OTREncryptionMessageStateEncrypted;
+        case OTRKitMessageStatePlaintext:
+            return OTREncryptionMessageStatePlaintext;
+        case OTRKitMessageStateFinished:
+            return OTREncryptionMessageStateFinished;
+    }
+    return OTREncryptionMessageStateError;
 }
 
 + (BOOL) setFileProtection:(NSString*)fileProtection path:(NSString*)path {

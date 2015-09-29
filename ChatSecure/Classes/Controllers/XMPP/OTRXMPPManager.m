@@ -62,6 +62,7 @@
 #import "OTRStreamManagementYapStorage.h"
 #import "XMPPMessageCarbons.h"
 #import "OTRXMPPMessageYapStroage.h"
+#import "OTRKit.h"
 @import OTRAssets;
 
 NSString *const OTRXMPPRegisterSucceededNotificationName = @"OTRXMPPRegisterSucceededNotificationName";

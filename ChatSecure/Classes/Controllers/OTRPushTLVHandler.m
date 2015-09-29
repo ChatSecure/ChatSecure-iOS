@@ -9,6 +9,8 @@
 #import "OTRPushTLVHandler.h"
 #import "OTRKit.h"
 
+static const uint16_t OTRPushTLVType = 0x01A4;
+
 @implementation OTRPushTLVHandler
 
 - (instancetype)initWithDelegate:(id<OTRPushTLVHandlerDelegate>)delegate
@@ -22,12 +24,18 @@
 
 - (NSArray *)handledTLVTypes
 {
-    return @[@(0x01A4)];
+    return @[@(OTRPushTLVType)];
 }
 
 - (void)receiveTLV:(OTRTLV *)tlv username:(NSString *)username accountName:(NSString *)accountName protocol:(NSString *)protocol tag:(id)tag
 {
     [self.delegate receivePushData:tlv.data username:username accountName:accountName protocolString:protocol];
+}
+
+- (void)sendPushData:(NSData *)data username:(NSString *)username accountName:(NSString *)accountName protocol:(NSString *)protocol
+{
+    OTRTLV *tlv = [[OTRTLV alloc] initWithType:OTRPushTLVType data:data];
+    [self.otrKit encodeMessage:nil tlvs:@[tlv] username:username accountName:accountName protocol:protocol tag:nil];
 }
 
 @end
