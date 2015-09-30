@@ -13,10 +13,12 @@ static const uint16_t OTRPushTLVType = 0x01A4;
 
 @implementation OTRPushTLVHandler
 
-- (instancetype)initWithDelegate:(id<OTRPushTLVHandlerDelegate>)delegate
+- (instancetype)initWithOTRKit:(OTRKit *)otrKit delegate:(id<OTRPushTLVHandlerDelegate>)delegate;
 {
     if (self = [self init]) {
-        _delegate = delegate;
+        self.otrKit = otrKit;
+        self.delegate = delegate;
+        [self.otrKit registerTLVHandler:self];
     }
     return self;
     

@@ -28,10 +28,12 @@
 #import "OTROAuthRefresher.h"
 #import "OTROAuthXMPPAccount.h"
 #import "OTRDatabaseManager.h"
+#import "OTRPushTLVHandler.h"
 @import YapDatabase;
 
 #import <KVOController/FBKVOController.h>
 #import "OTRLog.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 static OTRProtocolManager *sharedManager = nil;
 
@@ -54,6 +56,7 @@ static OTRProtocolManager *sharedManager = nil;
         self.numberOfConnectedProtocols = 0;
         self.numberOfConnectingProtocols = 0;
         self.encryptionManager = [[OTREncryptionManager alloc] init];
+        self.encryptionManager.pushTLVHandler.delegate = [OTRAppDelegate appDelegate].pushController;
         self.protocolManagerDictionary = [[NSMutableDictionary alloc] init];
     }
     return self;

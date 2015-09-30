@@ -40,6 +40,7 @@
 #import "OTRLog.h"
 #import "OTRKit.h"
 #import "OTRDataHandler.h"
+#import "OTRPushTLVHandler.h"
 
 @import AVFoundation;
 
@@ -61,6 +62,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
         [self.otrKit setupWithDataPath:nil];
         self.otrKit.delegate = self;
         _dataHandler = [[OTRDataHandler alloc] initWithOTRKit:self.otrKit delegate:self];
+        _pushTLVHandler = [[OTRPushTLVHandler alloc] initWithOTRKit:self.otrKit delegate:nil];
         NSArray *protectPaths = @[self.otrKit.privateKeyPath, self.otrKit.fingerprintsPath, self.otrKit.instanceTagsPath];
         for (NSString *path in protectPaths) {
             if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {

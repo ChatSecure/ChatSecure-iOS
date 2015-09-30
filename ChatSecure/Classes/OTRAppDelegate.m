@@ -455,7 +455,8 @@
 
 - (PushController *)pushController{
     if (!_pushController) {
-        _pushController = [[PushController alloc] initWithBaseURL:[NSURL URLWithString:kOTRPushAPIEndpoint] sessionConfiguration:[NSURLSessionConfiguration ephemeralSessionConfiguration] databaseConnection:[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection];
+        OTRPushTLVHandler *tlvHandler = [OTRProtocolManager sharedInstance].encryptionManager.pushTLVHandler;
+        _pushController = [[PushController alloc] initWithBaseURL:[NSURL URLWithString:kOTRPushAPIEndpoint] sessionConfiguration:[NSURLSessionConfiguration ephemeralSessionConfiguration] databaseConnection:[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection tlvHandler:tlvHandler];
 
     }
     return _pushController;

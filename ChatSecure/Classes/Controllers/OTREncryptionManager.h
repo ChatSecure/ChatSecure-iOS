@@ -21,7 +21,7 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 #import <Foundation/Foundation.h>
-@class OTRDataHandler;
+@class OTRDataHandler, OTRPushTLVHandler;
 
 extern NSString *const OTRMessageStateDidChangeNotification;
 extern NSString *const OTRWillStartGeneratingPrivateKeyNotification;
@@ -48,5 +48,6 @@ typedef NS_ENUM(NSUInteger, OTREncryptionMessageState) {
 + (OTREncryptionMessageState)convertEncryptionState:(NSUInteger)messageState;
 
 @property (nonatomic, strong, readonly) OTRDataHandler *dataHandler;
+@property (nonatomic, strong, readonly) OTRPushTLVHandler *pushTLVHandler;
 
 @end

@@ -15,3 +15,13 @@
          protocolString:(NSString *)protocolString;
 
 @end
+
+@protocol OTRPushTLVHandlerProtocol
+
+@required
+- (void)sendPushData:(NSData *)data
+            username:(NSString *)username
+         accountName:(NSString *)accountName
+            protocol:(NSString *)protocol;
+
+@end

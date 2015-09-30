@@ -8,16 +8,14 @@
 
 #import <Foundation/Foundation.h>
 #import "OTRTLVHandler.h"
-#import "OTRPushTLVHandlerDelegateProtocol.h"
+#import <ChatSecureCore/OTRPushTLVHandlerProtocols.h>
 @class OTRKit;
 
-@interface OTRPushTLVHandler : NSObject <OTRTLVHandler>
+@interface OTRPushTLVHandler : NSObject <OTRTLVHandler, OTRPushTLVHandlerProtocol>
 
-@property (nonatomic, weak, readonly) id<OTRPushTLVHandlerDelegate> delegate;
+@property (nonatomic, weak, readwrite) id<OTRPushTLVHandlerDelegate> delegate;
 @property (nonatomic, weak, readwrite) OTRKit *otrKit;
 
-- (instancetype)initWithDelegate:(id<OTRPushTLVHandlerDelegate>)delegate;
-
-- (void)sendPushData:(NSData *)data username:(NSString *)username accountName:(NSString *)accountName protocol:(NSString *)protocol;
+- (instancetype)initWithOTRKit:(OTRKit *)otrKit delegate:(id<OTRPushTLVHandlerDelegate>)delegate;
 
 @end

@@ -10,7 +10,7 @@ import Foundation
 import ChatSecure_Push_iOS
 import YapDatabase
 
-protocol PushStorageProtocol: class {
+public protocol PushStorageProtocol: class {
     func thisDevicePushAccount() -> Account?
     func hasPushAccount() -> Bool
     func saveThisAccount(account:Account)
@@ -25,6 +25,7 @@ protocol PushStorageProtocol: class {
     func unusedTokenStoreMinimum() -> UInt
     func tokensForBuddy(buddyKey:String, createdByThisAccount:Bool) throws -> [TokenContainer]
     func buddy(username: String, accountName: String) -> OTRBuddy?
+    func account(accountUniqueID:String) -> OTRAccount?
 }
 
 extension Account {
@@ -190,6 +191,14 @@ class PushStorage: NSObject, PushStorageProtocol {
             buddy = OTRBuddy.fetchBuddyForUsername(username, accountName: accountName, transaction: transaction)
         }
         return buddy
+    }
+    
+    func account(accountUniqueID: String) -> OTRAccount? {
+        var account:OTRAccount? = nil
+        self.databaseConnection.readWithBlock { (transaction) -> Void in
+            account = OTRAccount.fetchObjectWithUniqueID(accountUniqueID, transaction: transaction)
+        }
+        return account
     }
     
 }
