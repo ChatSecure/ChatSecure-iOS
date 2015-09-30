@@ -149,14 +149,13 @@ class PushStorage: NSObject, PushStorageProtocol {
     
     func tokensForBuddy(buddyKey: String, createdByThisAccount: Bool) throws -> [TokenContainer] {
         var error:NSError? = nil
-        let tokens:[TokenContainer] = []
+        var tokens:[TokenContainer] = []
         self.databaseConnection.readWriteWithBlock { (transaction) -> Void in
             guard let buddy = transaction.objectForKey(buddyKey, inCollection: OTRBuddy.collection()) as? OTRBuddy else {
                 error = PushError.noBuddyFound.error()
                 return
             }
             
-            var tokens: [TokenContainer] = []
             if let relationshipTransaction = transaction.ext(OTRYapDatabaseRelationshipName) as? YapDatabaseRelationshipTransaction {
                 relationshipTransaction.enumerateEdgesWithName(kBuddyTokenRelationshipEdgeName, destinationKey: buddy.uniqueId, collection: OTRBuddy.collection(), usingBlock: { (edge, stop) -> Void in
                     

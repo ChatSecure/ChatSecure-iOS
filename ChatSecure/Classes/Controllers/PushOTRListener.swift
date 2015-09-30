@@ -52,7 +52,10 @@ class PushOTRListener: NSObject {
                             if let newToken = token {
                                 if let url = self.pushController?.apiClient.messageEndpont().absoluteString {
                                     let data = PushSerializer.serialize([newToken], APIEndpoint: url)
-                                    self.tlvHandler?.sendPushData(data, username: buddy.username, accountName:"" , `protocol`: nil)
+                                    if let account = self.storage?.account(buddy.accountUniqueId) {
+                                        self.tlvHandler?.sendPushData(data, username: buddy.username, accountName:account.username  , `protocol`: account.protocolTypeString())
+                                    }
+                                    
                                 }
                                 
                             }
