@@ -45,7 +45,6 @@
 #import "OTRShareSetting.h"
 #import "OTRActivityItemProvider.h"
 #import "OTRQRCodeActivity.h"
-#import "XMPPURI.h"
 #import "OTRBaseLoginViewController.h"
 #import "OTRXLFormCreator.h"
 #import <KVOController/FBKVOController.h>
@@ -53,6 +52,7 @@
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 @import OTRAssets;
 #import "OTRLanguageManager.h"
+#import "NSURL+ChatSecure.h"
 
 static NSString *const circleImageName = @"31-circle-plus-large.png";
 
@@ -107,6 +107,7 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     self.tableView.delegate = self;
     self.tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
     [self.view addSubview:self.tableView];
+    [self.tableView registerClass:[OTRAccountTableViewCell class] forCellReuseIdentifier:[OTRAccountTableViewCell cellIdentifier]];
     
     UIBarButtonItem *aboutButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"OTRInfoIcon" inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:self action:@selector(showAboutScreen)];
 
@@ -169,7 +170,6 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section == 0) { // Accounts 
-        static NSString *accountCellIdentifier = @"accountCellIdentifier";
         static NSString *addAccountCellIdentifier = @"addAccountCellIdentifier";
         UITableViewCell * cell = nil;
         if (indexPath.row == [self.mappings numberOfItemsInSection:indexPath.section]) {
@@ -183,10 +183,8 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
         }
         else {
             OTRAccount *account = [self accountAtIndexPath:indexPath];
-            OTRAccountTableViewCell *accountCell = (OTRAccountTableViewCell*)[tableView dequeueReusableCellWithIdentifier:accountCellIdentifier];
-            if (accountCell == nil) {
-                accountCell = [[OTRAccountTableViewCell alloc] initWithReuseIdentifier:accountCellIdentifier];
-            }
+            OTRAccountTableViewCell *accountCell = (OTRAccountTableViewCell*)[tableView dequeueReusableCellWithIdentifier:[OTRAccountTableViewCell cellIdentifier] forIndexPath:indexPath];
+            [accountCell.shareButton addTarget:self action:@selector(accountCellShareButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
             
             [accountCell setAccount:account];
             
@@ -215,6 +213,15 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     cell.otrSetting = setting;
     
     return cell;
+}
+
+- (void) accountCellShareButtonPressed:(id)sender {
+    if ([sender isKindOfClass:[UIButton class]]) {
+        UIButton *button = sender;
+        OTRAccountTableViewCell *cell = (OTRAccountTableViewCell*)button.superview;
+        OTRAccount *account = cell.account;
+        [ShareController shareAccount:account sender:sender viewController:self];
+    }
 }
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView 
@@ -315,45 +322,28 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 
 - (void)logoutAccount:(OTRAccount *)account sender:(id)sender
 {
-    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
-        
-        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-        UIAlertAction *cancelAlertAction = [UIAlertAction actionWithTitle:CANCEL_STRING style:UIAlertActionStyleCancel handler:nil];
-        UIAlertAction *logoutAlertAction = [UIAlertAction actionWithTitle:LOGOUT_STRING style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
-            id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:account];
-            [protocol disconnect];
-        }];
-        
-        UIAlertAction *shareAction = [UIAlertAction actionWithTitle:SHARE_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-            [self shareAccount:account sender:sender];
-        }];
-        
-        [alertController addAction:shareAction];
-        [alertController addAction:logoutAlertAction];
-        [alertController addAction:cancelAlertAction];
-        
-        if ([sender isKindOfClass:[UIView class]]) {
-            UIView *senderView = (UIView *)sender;
-            alertController.popoverPresentationController.sourceRect = senderView.bounds;
-            alertController.popoverPresentationController.sourceView = senderView;
-        }
-        
-        [self presentViewController:alertController animated:YES completion:nil];
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    UIAlertAction *cancelAlertAction = [UIAlertAction actionWithTitle:CANCEL_STRING style:UIAlertActionStyleCancel handler:nil];
+    UIAlertAction *logoutAlertAction = [UIAlertAction actionWithTitle:LOGOUT_STRING style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
+        id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:account];
+        [protocol disconnect];
+    }];
+    
+    UIAlertAction *shareAction = [UIAlertAction actionWithTitle:SHARE_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        [ShareController shareAccount:account sender:sender viewController:self];
+    }];
+    
+    [alertController addAction:shareAction];
+    [alertController addAction:logoutAlertAction];
+    [alertController addAction:cancelAlertAction];
+    
+    if ([sender isKindOfClass:[UIView class]]) {
+        UIView *senderView = (UIView *)sender;
+        alertController.popoverPresentationController.sourceRect = senderView.bounds;
+        alertController.popoverPresentationController.sourceView = senderView;
     }
-    else {
-        RIButtonItem * cancelButtonItem = [RIButtonItem itemWithLabel:CANCEL_STRING];
-        RIButtonItem * logoutButtonItem = [RIButtonItem itemWithLabel:LOGOUT_STRING action:^{
-            id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:account];
-            [protocol disconnect];
-        }];
-        RIButtonItem *shareButtonItem = [RIButtonItem itemWithLabel:SHARE_STRING action:^{
-            [self shareAccount:account sender:sender];
-        }];
-        
-        UIActionSheet * logoutActionSheet = [[UIActionSheet alloc] initWithTitle:nil cancelButtonItem:cancelButtonItem destructiveButtonItem:logoutButtonItem otherButtonItems:shareButtonItem, nil];
-        
-        [logoutActionSheet otr_presentInView:self.view];
-    }
+    
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 - (void) addAccount:(id)sender {
@@ -460,27 +450,6 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     
     [self presentViewController:activityViewController animated:YES completion:nil];
 }
-
-- (void) shareAccount:(OTRAccount*)account sender:(id)sender {
-    XMPPJID *jid = [XMPPJID jidWithString:account.username];
-    XMPPURI *uri = [[XMPPURI alloc] initWithJID:jid queryAction:@"subscribe" queryParameters:nil];
-    NSURL *url = [NSURL URLWithString:uri.uriString];
-    
-    OTRQRCodeActivity * qrCodeActivity = [[OTRQRCodeActivity alloc] init];
-    
-    UIActivityViewController * activityViewController = [[UIActivityViewController alloc] initWithActivityItems:@[url] applicationActivities:@[qrCodeActivity]];
-    activityViewController.excludedActivityTypes = @[UIActivityTypePrint, UIActivityTypeSaveToCameraRoll, UIActivityTypeAddToReadingList];
-    
-    UITableViewCell *cell = sender;
-    
-    if( SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
-        activityViewController.popoverPresentationController.sourceView = cell;
-        activityViewController.popoverPresentationController.sourceRect = cell.bounds;
-    }
-    
-    [self presentViewController:activityViewController animated:YES completion:nil];
-}
-
 
 #pragma mark OTRFeedbackSettingDelegate method
 

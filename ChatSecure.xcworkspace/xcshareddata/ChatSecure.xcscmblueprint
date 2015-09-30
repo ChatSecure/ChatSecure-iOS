@@ -14,8 +14,10 @@
     "6629762BA356A4C56436558F8BA2A9102478B1C6" : 0,
     "8D256B418BF7466F1E7306EA36B44A4A04C31B48" : 0,
     "425D736B25093B4D45BF64638604863B9D31F2C1" : 0,
+    "6629762BA356A4C56436558F8BA2A9102478B1C6" : 0,
     "A9EA2EFC6B3324DC133DBB5B2F093519479E5635" : 0,
     "65A79C2919A5538250064F3C245A290D7BFC656E" : 0,
+    "A9950D8C7A488A3339E7426A4D08917C04DE7033" : 0,
     "285D543319EEB38B059014F34D43A79D66C1ECDC" : 0,
     "2D31E58E12E928BB18019A2FA755DD659EB4E709" : 0,
     "A3F0483F361B2F4077033C635E9F3F6840AE7757" : 0,
@@ -33,8 +35,10 @@
     "6629762BA356A4C56436558F8BA2A9102478B1C6" : "ChatSecure-iOS\/Submodules\/xmpp-server-list\/",
     "8D256B418BF7466F1E7306EA36B44A4A04C31B48" : "chatsecure-iosPods\/AFOAuth2Client",
     "425D736B25093B4D45BF64638604863B9D31F2C1" : "chatsecure-iosSubmodules\/OTRKit",
+    "6629762BA356A4C56436558F8BA2A9102478B1C6" : "ChatSecure-iOS\/Submodules\/xmpp-server-list\/",
     "A9EA2EFC6B3324DC133DBB5B2F093519479E5635" : "ChatSecure-iOS\/Submodules\/ParkedTextField\/",
     "65A79C2919A5538250064F3C245A290D7BFC656E" : "chatsecure-ios",
+    "A9950D8C7A488A3339E7426A4D08917C04DE7033" : "",
     "285D543319EEB38B059014F34D43A79D66C1ECDC" : "chatsecure-iosPods\/uservoice-iphone-sdk",
     "2D31E58E12E928BB18019A2FA755DD659EB4E709" : "chatsecure-iosSubmodules\/ProxyKit",
     "A3F0483F361B2F4077033C635E9F3F6840AE7757" : "chatsecure-ios\/Submodules\/ChatSecure-Push-iOS\/",
@@ -98,6 +102,11 @@
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:ChatSecure\/ChatSecure-Push-iOS.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "A3F0483F361B2F4077033C635E9F3F6840AE7757"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:zom\/Zom-iOS.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "A9950D8C7A488A3339E7426A4D08917C04DE7033"
     },
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:chrisballinger\/ParkedTextField.git",

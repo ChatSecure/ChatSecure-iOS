@@ -26,6 +26,8 @@
 #import "OTRMediaFileManager.h"
 #import "IOCipher.h"
 #import "NSFileManager+ChatSecure.h"
+@import OTRAssets;
+#import "OTRLanguageManager.h"
 
 NSString *const OTRYapDatabaseRelationshipName = @"OTRYapDatabaseRelationshipName";
 NSString *const OTRYapDatabseMessageIdSecondaryIndex = @"OTRYapDatabseMessageIdSecondaryIndex";
@@ -176,6 +178,8 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
         return YES;
     }
     else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Database Error", @"title for db error msg") message:NSLocalizedString(@"Could not decrypt database. If the app is not working properly, you may need to delete and reinstall.", @"db err msg") delegate:nil cancelButtonTitle:OK_STRING otherButtonTitles:nil];
+        [alert show];
         return NO;
     }
 }

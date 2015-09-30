@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:../Zom/Zom.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:ChatSecure.xcodeproj">
    </FileRef>
    <FileRef

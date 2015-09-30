@@ -1,3 +1,6 @@
+# Disable CocoaPods deterministic UUIDs as Pods are not checked in
+ENV["COCOAPODS_DISABLE_DETERMINISTIC_UUIDS"] = "true"
+
 platform :ios, "8.0"
 
 use_frameworks!

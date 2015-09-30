@@ -13,9 +13,11 @@
 
 @interface OTRAccountTableViewCell : UITableViewCell
 
-- (instancetype)initWithReuseIdentifier:(NSString *)identifier;
-- (void)setAccount:(OTRAccount *)account;
+@property (nonatomic, strong) UIButton *shareButton;
+@property (nonatomic, strong) OTRAccount *account;
+
 - (void)setConnectedText:(OTRProtocolConnectionStatus)connectionStatus;
 
++ (NSString*) cellIdentifier;
 
 @end
