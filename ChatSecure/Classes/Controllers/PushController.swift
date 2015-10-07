@@ -10,12 +10,16 @@ import Foundation
 import ChatSecure_Push_iOS
 import YapDatabase
 
+@objc public protocol PushControllerProtocol {
+    func sendKnock(buddyKey:String, completion:(success:Bool, error:NSError?) -> Void)
+    func receiveRemoteNotification(notification:[NSObject:AnyObject], completion:(buddy:OTRBuddy?, error:NSError?) -> Void)
+}
 
 /** 
     The purpose of this class is to tie together the api client and the data store, YapDatabase.
     It also provides some helper methods that makes dealing with the api easier
 */
-public class PushController: NSObject, OTRPushTLVHandlerDelegate {
+public class PushController: NSObject, OTRPushTLVHandlerDelegate, PushControllerProtocol {
     
     let storage: PushStorageProtocol
     var apiClient : Client
@@ -257,6 +261,31 @@ public class PushController: NSObject, OTRPushTLVHandlerDelegate {
         })
         
         return tokens
+    }
+    
+    //MARK: Receiving remote notification
+    public func receiveRemoteNotification(notification: [NSObject : AnyObject], completion:(buddy:OTRBuddy?, error: NSError?) -> Void) {
+        do {
+            let message = try Deserializer.messageFromPushDictionary(notification)
+            guard let buddy = self.storage.budy(message.token) else {
+                self.callbackQueue.addOperationWithBlock({ () -> Void in
+                    completion(buddy:nil, error: PushError.noBuddyFound.error())
+                })
+                return;
+            }
+            
+            self.callbackQueue.addOperationWithBlock({ () -> Void in
+                completion(buddy: buddy, error: nil)
+            })
+            
+            
+            
+            
+        } catch let error as NSError{
+            self.callbackQueue.addOperationWithBlock({ () -> Void in
+                completion(buddy: nil, error: error)
+            })
+        }
     }
 
     //MARK: Sending Message

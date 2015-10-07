@@ -368,6 +368,25 @@
 }
 */
 
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
+{
+    [self.pushController receiveRemoteNotification:userInfo completion:^(OTRBuddy *buddy, NSError * _Nullable error) {
+        UIBackgroundFetchResult result = UIBackgroundFetchResultNewData;
+        if (!buddy) {
+            result = UIBackgroundFetchResultFailed;
+        }
+        
+        UILocalNotification *localNotification = [[UILocalNotification alloc] init];
+        localNotification.alertAction = REPLY_STRING;
+        localNotification.soundName = UILocalNotificationDefaultSoundName;
+        localNotification.alertBody = [NSString stringWithFormat:@"%@: %@",buddy.username,@"Is trying to talk to you"];
+        localNotification.userInfo = @{kOTRNotificationBuddyUniqueIdKey:buddy.uniqueId};
+        [application presentLocalNotificationNow:localNotification];
+        
+        completionHandler(result);
+    }];
+}
+
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
     
     NSDictionary *userInfo = notification.userInfo;

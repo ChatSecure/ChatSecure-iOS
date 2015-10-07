@@ -26,6 +26,7 @@ public protocol PushStorageProtocol: class {
     func tokensForBuddy(buddyKey:String, createdByThisAccount:Bool) throws -> [TokenContainer]
     func buddy(username: String, accountName: String) -> OTRBuddy?
     func account(accountUniqueID:String) -> OTRAccount?
+    func budy(token:String) -> OTRBuddy?
 }
 
 extension Account {
@@ -198,6 +199,21 @@ class PushStorage: NSObject, PushStorageProtocol {
             account = OTRAccount.fetchObjectWithUniqueID(accountUniqueID, transaction: transaction)
         }
         return account
+    }
+    
+    func budy(token: String) -> OTRBuddy? {
+        var buddy:OTRBuddy? = nil
+        self.databaseConnection.readWithBlock { (transaction) -> Void in
+            if let relationshipTransaction = transaction.ext(OTRYapDatabaseRelationshipName) as? YapDatabaseRelationshipTransaction {
+                relationshipTransaction.enumerateEdgesWithName(kBuddyTokenRelationshipEdgeName, sourceKey: token, collection: TokenContainer.collection(), usingBlock: { (edge, stop) -> Void in
+                    buddy = transaction.objectForKey(edge.destinationKey, inCollection: edge.destinationCollection) as? OTRBuddy
+                    if buddy != nil {
+                        stop.initialize(true)
+                    }
+                })
+            }
+        }
+        return buddy
     }
     
 }

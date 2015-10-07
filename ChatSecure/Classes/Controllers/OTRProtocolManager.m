@@ -130,6 +130,7 @@ static OTRProtocolManager *sharedManager = nil;
     if(!protocol)
     {
         protocol = [[[account protocolClass] alloc] initWithAccount:account];
+        protocol.pushController = [OTRAppDelegate appDelegate].pushController;
         if (protocol && account.uniqueId) {
             [self addProtocol:protocol forAccount:account];
         }

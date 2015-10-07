@@ -37,6 +37,7 @@
 #import "OTRCertificatePinning.h"
 #import "OTRXMPPError.h"
 #import "OTRConstants.h"
+#import <ChatSecureCore/ChatSecureCore-swift.h>
 
 @class OTRYapDatabaseRosterStorage,OTRXMPPAccount, OTRvCardYapDatabaseStorage, OTRXMPPManager;
 
@@ -78,6 +79,7 @@ extern NSString *const OTRXMPPLoginErrorKey;
 
 @property (nonatomic, strong, readonly) OTRXMPPAccount *account;
 @property (nonatomic, strong, readonly) NSString *accountUniqueId;
+@property (nonatomic, weak) id <PushControllerProtocol> pushController;
 
 - (BOOL)connectWithJID:(NSString*) myJID password:(NSString*)myPassword;
 - (void)disconnect;

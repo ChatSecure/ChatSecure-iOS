@@ -766,6 +766,14 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
         buddy = [message buddyWithTransaction:transaction];
     }];
     
+    if(buddy.status == OTRBuddyStatusOffline) {
+        [self.pushController sendKnock:buddy.uniqueId completion:^(BOOL success, NSError *error) {
+            if (!success) {
+                DDLogError(@"Error sending knock");
+            }
+        }];
+    }
+    
     [self invalidatePausedChatStateTimerForBuddyUniqueId:buddy.uniqueId];
     
     if ([text length])

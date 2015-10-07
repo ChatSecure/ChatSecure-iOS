@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import ChatSecure_Push_iOS
 
 /**
 * Listen for changes from EncryptionManager for changes in state and when detetced going encrypted
@@ -46,20 +47,25 @@ class PushOTRListener: NSObject {
                 //Check to see if we've given this buddy a token before
                 //If we haven't then we need to transmit a token to them
                 do {
-                    if try self.storage?.tokensForBuddy(buddy.uniqueId, createdByThisAccount: true).count <= 0 {
+                    if let storedTokens = try self.storage?.tokensForBuddy(buddy.uniqueId, createdByThisAccount: true) {
                         //Couldn't find any tokens that we gave to this buddy
-                        self.pushController?.getNewPushToken(buddy.uniqueId, completion: { (token, error) -> Void in
-                            if let newToken = token {
-                                if let url = self.pushController?.apiClient.messageEndpont().absoluteString {
-                                    let data = PushSerializer.serialize([newToken], APIEndpoint: url)
-                                    if let account = self.storage?.account(buddy.accountUniqueId) {
-                                        self.tlvHandler?.sendPushData(data, username: buddy.username, accountName:account.username  , `protocol`: account.protocolTypeString())
-                                    }
-                                    
+                        
+                        guard let account = self.storage?.account(buddy.accountUniqueId) else {
+                            
+                            return
+                        }
+                        
+                        if storedTokens.count <= 0 {
+                            self.pushController?.getNewPushToken(buddy.uniqueId, completion: {[weak self] (t, error) -> Void in
+                                if let token = t {
+                                    self?.sendOffToken(token, buddyUsername: buddy.username, accountUsername: account.username, `protocol`: account.protocolTypeString())
                                 }
-                                
+                            })
+                        } else {
+                            if let token = storedTokens[0].pushToken {
+                                self.sendOffToken(token, buddyUsername: buddy.username, accountUsername: account.username, `protocol`: account.protocolTypeString())
                             }
-                        })
+                        }
                     }
                 } catch {
                     NSLog("Error finding tokens")
@@ -68,8 +74,13 @@ class PushOTRListener: NSObject {
             }
             
         }
-        
-        
+    }
+    
+    func sendOffToken(token:Token, buddyUsername:String, accountUsername:String, `protocol`:String) -> Void {
+        if let url = self.pushController?.apiClient.messageEndpont().absoluteString {
+            let data = PushSerializer.serialize([token], APIEndpoint: url)
+            self.tlvHandler?.sendPushData(data, username: buddyUsername, accountName:buddyUsername  , `protocol`: `protocol`)
+        }
     }
     
     deinit {
