@@ -7,6 +7,7 @@
 //
 
 #import "OTRYapDatabaseObject.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
 @import UIKit;
 
 @class OTRAccount, OTRMessage;
@@ -49,7 +50,7 @@ extern const struct OTRBuddyEdges {
 	__unsafe_unretained NSString *account;
 } OTRBuddyEdges;
 
-@interface OTRBuddy : OTRYapDatabaseObject <YapDatabaseRelationshipNode>
+@interface OTRBuddy : OTRYapDatabaseObject <YapDatabaseRelationshipNode, OTRThreadOwner>
 
 @property (nonatomic, strong) NSString *username;
 @property (nonatomic, strong) NSString *displayName;

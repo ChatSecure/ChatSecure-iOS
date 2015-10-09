@@ -9,11 +9,31 @@
 import UIKit
 import YapDatabase
 
-public class OTRXMPPRoom: OTRYapDatabaseObject {
+@objc public protocol OTRThreadOwner: NSObjectProtocol {
+    
+    func threadName() -> String
+    func threadIdentifier() -> String
+    func threadAccountIdentifier() -> String
+    
+}
+
+public class OTRXMPPRoom: OTRYapDatabaseObject, OTRThreadOwner {
     
     public var accountUniqueId:String?
     public var ownJID:String?
     public var jid:String?
+    
+    public func threadName() -> String {
+        return self.jid ?? ""
+    }
+    
+    public func threadIdentifier() -> String {
+        return self.uniqueId
+    }
+    
+    public func threadAccountIdentifier() -> String {
+        return self.accountUniqueId ?? ""
+    }
 }
 
 public class OTRXMPPRoomOccupant: OTRYapDatabaseObject, YapDatabaseRelationshipNode {

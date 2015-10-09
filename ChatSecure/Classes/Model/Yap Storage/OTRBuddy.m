@@ -138,6 +138,25 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
     return [finalMessage copy];
 }
 
+#pragma - makr OTRThreadOwner Methods
+
+- (NSString *)threadName
+{
+    NSString *threadName = self.displayName;
+    if(![threadName length]) {
+        threadName = self.username;
+    }
+    return threadName;
+}
+
+- (NSString *)threadIdentifier {
+    return self.uniqueId;
+}
+
+- (NSString *)threadAccountIdentifier {
+    return self.accountUniqueId;
+}
+
 #pragma - mark YapDatabaseRelationshipNode
 
 - (NSArray *)yapDatabaseRelationshipEdges
