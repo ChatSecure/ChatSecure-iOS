@@ -130,19 +130,19 @@ NSString *OTRPushAccountGroup = @"Account";
     }
     
     YapDatabaseViewGrouping *viewGrouping = [YapDatabaseViewGrouping withObjectBlock:^NSString *(NSString *collection, NSString *key, id object) {
-        if ([object isKindOfClass:[OTRMessage class]])
+        if ([object conformsToProtocol:@protocol(OTRMesssageProtocol)])
         {
-            return ((OTRMessage *)object).buddyUniqueId;
+            return ((id <OTRMesssageProtocol>)object).ownerIdentifier;
         }
         return nil;
     }];
     
     YapDatabaseViewSorting *viewSorting = [YapDatabaseViewSorting withObjectBlock:^NSComparisonResult(NSString *group, NSString *collection1, NSString *key1, id object1, NSString *collection2, NSString *key2, id object2) {
-        if ([object1 isKindOfClass:[OTRMessage class]] && [object2 isKindOfClass:[OTRMessage class]]) {
-            OTRMessage *message1 = (OTRMessage *)object1;
-            OTRMessage *message2 = (OTRMessage *)object2;
+        if ([object1 conformsToProtocol:@protocol(OTRMesssageProtocol)] && [object2 conformsToProtocol:@protocol(OTRMesssageProtocol)]) {
+            id <OTRMesssageProtocol> message1 = (id <OTRMesssageProtocol>)object1;
+            id <OTRMesssageProtocol> message2 = (id <OTRMesssageProtocol>)object2;
             
-            return [message1.date compare:message2.date];
+            return [[message1 messageDate] compare:[message2 messageDate]];
         }
         return NSOrderedSame;
     }];

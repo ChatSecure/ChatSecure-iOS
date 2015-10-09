@@ -20,7 +20,7 @@ extern NSString *OTRAllSubscriptionRequestsViewExtensionName;
 extern NSString *OTRAllPushAccountInfoViewExtensionName;
 extern NSString *OTRUnreadMessagesViewExtensionName;
 
-// Group Strins
+// Group Strings
 extern NSString *OTRAllAccountGroup;
 extern NSString *OTRConversationGroup;
 extern NSString *OTRChatMessageGroup;
@@ -39,6 +39,12 @@ extern NSString *OTRPushTokenGroup;
 
 + (BOOL)registerAllAccountsDatabaseView;
 
+
+/**
+ Objects in this class are both OTRMessage and OTRXMPPRoomMessage. For OTRMessage they are grouped
+ by buddyUniqueID. For OTRXMPPRoomMessage they are grouped by roomUniqueID. In both cases they are
+ sorted by date.
+ */
 + (BOOL)registerChatDatabaseView;
 
 + (BOOL)registerBuddyNameSearchDatabaseView;

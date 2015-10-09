@@ -87,6 +87,16 @@ const struct OTRMessageEdges OTRMessageEdges = {
     return edges;
 }
 
+#pragma - mark OTRMessage Protocol methods
+
+- (NSDate *)messageDate {
+    return  self.date;
+}
+
+- (NSString *)ownerIdentifier {
+    return self.buddyUniqueId;
+}
+
 #pragma - mark Class Methods
 
 + (NSInteger)numberOfUnreadMessagesWithTransaction:(YapDatabaseReadTransaction*)transaction

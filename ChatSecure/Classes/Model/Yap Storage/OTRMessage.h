@@ -29,7 +29,19 @@ extern const struct OTRMessageEdges {
     __unsafe_unretained NSString *media;
 } OTRMessageEdges;
 
-@interface OTRMessage : OTRYapDatabaseObject <YapDatabaseRelationshipNode>
+@protocol OTRMesssageProtocol <NSObject>
+@required
+// This should be the best attempt at message date for sorting and display
+- (NSDate *)messageDate;
+
+//This should be either the buddy for one to one conversatinos
+//or the room for group chats
+- (NSString *)ownerIdentifier;
+
+
+@end
+
+@interface OTRMessage : OTRYapDatabaseObject <YapDatabaseRelationshipNode, OTRMesssageProtocol>
 
 @property (nonatomic, strong) NSDate *date;
 @property (nonatomic, strong) NSString *text;
