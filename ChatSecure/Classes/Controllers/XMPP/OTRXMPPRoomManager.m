@@ -47,13 +47,20 @@
     if (!room) {
         OTRXMPPRoomYapStorage *storage = [[OTRXMPPRoomYapStorage alloc] initWithDatabaseConnection:self.databaseConnection];
         XMPPRoom *room = [[XMPPRoom alloc] initWithRoomStorage:storage jid:jid];
-        [room activate:self.xmppStream];
         @synchronized(self.rooms) {
             [self.rooms setObject:room forKey:room.roomJID.bare];
         }
+        [room activate:self.xmppStream];
+        [room joinRoomUsingNickname:name history:nil];
     }
     
     [room joinRoomUsingNickname:name history:nil];
+}
+
+- (void)inviteUser:(NSString *)user toRoom:(NSString *)roomJID withMessage:(NSString *)message
+{
+    XMPPRoom *room = [self.rooms objectForKey:roomJID];
+    [room inviteUser:[XMPPJID jidWithString:user] withMessage:message];
 }
 
 - (NSMutableDictionary *)rooms {
@@ -80,7 +87,7 @@
         NSString *jid = [element attributeStringValueForName:@"jid"];
         if ([jid length] && [jid containsString:@"conference"]) {
             [array addObject:jid];
-            //TODO instead of just checking if it's a confernce room we need to preform a iq 'get' to see it's capabilities.
+            //TODO instead of just checking if it has the word 'confernce' in the name we need to preform a iq 'get' to see it's capabilities.
             
         }
         
@@ -96,4 +103,10 @@
     }];
 }
 
+#pragma - mark XMPPRoomDelegate Methods
+
+- (void)xmppRoomDidJoin:(XMPPRoom *)sender
+{
+    [sender configureRoomUsingOptions:nil];
+}
 @end
