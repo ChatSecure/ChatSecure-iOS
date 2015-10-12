@@ -12,6 +12,6 @@
 
 @interface OTRConversationViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
-- (void)enterConversationWithBuddy:(OTRBuddy *)buddy;
+- (void)enterConversationWithBuddyId:(NSString *)buddyId;
 
 @end

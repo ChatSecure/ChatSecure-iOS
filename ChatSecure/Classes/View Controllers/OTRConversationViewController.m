@@ -212,6 +212,14 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     [self presentViewController:modalNavigationController animated:YES completion:nil];
 }
 
+- (void)enterConversationWithBuddyId:(NSString *)buddyId {
+    __block OTRBuddy *buddy = nil;
+    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        buddy = [OTRBuddy fetchObjectWithUniqueID:buddyId transaction:transaction];
+    }];
+    [self enterConversationWithBuddy:buddy];
+}
+
 - (void)enterConversationWithBuddy:(OTRBuddy *)buddy
 {
     if (buddy) {
@@ -488,10 +496,16 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 
 #pragma - mark OTRComposeViewController Method
 
-- (void)controller:(OTRComposeViewController *)viewController didSelectBuddy:(OTRBuddy *)buddy
+- (void)controller:(OTRComposeViewController *)viewController didSelectBuddies:(NSArray<OTRBuddy *> *)buddies
 {
     [viewController dismissViewControllerAnimated:YES completion:^{
-        [self enterConversationWithBuddy:buddy];
+        
+        if ([buddies count] == 1) {
+            [self enterConversationWithBuddyId:[buddies firstObject]];
+        } else {
+            //TODO: Enter group chat
+        }
+        
     }];
 }
 

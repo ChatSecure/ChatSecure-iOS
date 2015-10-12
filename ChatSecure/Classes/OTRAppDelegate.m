@@ -375,16 +375,12 @@
     NSString *buddyUniqueId = userInfo[kOTRNotificationBuddyUniqueIdKey];
     
     if([buddyUniqueId length]) {
-        __block OTRBuddy *buddy = nil;
-        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-            buddy = [OTRBuddy fetchObjectWithUniqueID:buddyUniqueId transaction:transaction];
-        }];
         
         if (!([self.messagesViewController otr_isVisible] || [self.conversationViewController otr_isVisible])) {
             self.window.rootViewController = [self defaultConversationNavigationController];
         }
         
-        [self.conversationViewController enterConversationWithBuddy:buddy];
+        [self.conversationViewController enterConversationWithBuddyId:buddyUniqueId];
     }
     
 

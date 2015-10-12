@@ -22,6 +22,8 @@
 #import "OTRChooseAccountViewController.h"
 #import "OTRLanguageManager.h"
 
+@import OTRAssets;
+
 static CGFloat OTRBuddyInfoCellHeight = 80.0;
 
 @interface OTRComposeViewController () <UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate>
@@ -33,10 +35,18 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
 @property (nonatomic, strong) YapDatabaseViewMappings *mappings;
 @property (nonatomic, strong) NSArray *searchResults;
 
+@property (nonatomic, strong) NSMutableSet *selectedBuddiesIdSet;
 
 @end
 
 @implementation OTRComposeViewController
+
+- (instancetype)init {
+    if (self = [super init]) {
+        self.selectedBuddiesIdSet = [[NSMutableSet alloc] init];
+    }
+    return self;
+}
 
 - (void)viewDidLoad
 {
@@ -46,8 +56,15 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
     
     /////////// Navigation Bar ///////////
     self.title = COMPOSE_STRING;
+    
     UIBarButtonItem * cancelBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelButtonPressed:)];
-    self.navigationItem.rightBarButtonItem = cancelBarButtonItem;
+    
+    UIImage *checkImage = [UIImage imageNamed:@"ic-check" inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];
+    UIBarButtonItem *doneButtonItem = [[UIBarButtonItem alloc] initWithImage:checkImage style:UIBarButtonItemStylePlain target:self action:@selector(doneButtonPressed:)];
+    doneButtonItem.enabled = NO;
+    
+    self.navigationItem.leftBarButtonItem = cancelBarButtonItem;
+    self.navigationItem.rightBarButtonItem = doneButtonItem;
     
     /////////// Search Bar ///////////
     
@@ -112,6 +129,13 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+- (void)doneButtonPressed:(id)sender
+{
+    if ([self.delegate respondsToSelector:@selector(controller:didSelectBuddies:)]) {
+        [self.delegate controller:self didSelectBuddies:[self.selectedBuddiesIdSet allObjects]];
+    }
+}
+
 - (BOOL)canAddBuddies
 {
     if([OTRAccountsManager allAccountsAbleToAddBuddies]) {
@@ -151,6 +175,25 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
     return NO;
 }
 
+- (void)selectedBuddy:(NSString *)buddyId{
+    if (![buddyId length]) {
+        return;
+    }
+    
+    
+    if ([self.selectedBuddiesIdSet containsObject:buddyId]) {
+        [self.selectedBuddiesIdSet removeObject:buddyId];
+    } else {
+        [self.selectedBuddiesIdSet addObject:buddyId];
+    }
+    
+    //Check legth of selected buddies and if none then disable button
+    if ([self.selectedBuddiesIdSet count]) {
+        self.navigationItem.rightBarButtonItem.enabled = YES;
+    } else {
+        self.navigationItem.rightBarButtonItem.enabled = NO;
+    }
+}
 #pragma - mark keyBoardAnimation Methods
 - (void)keyboardWillShow:(NSNotification *)notification
 {
@@ -286,7 +329,11 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
         [cell setBuddy:buddy withAccountName:buddyAccountName];
         
         [cell.avatarImageView.layer setCornerRadius:(OTRBuddyInfoCellHeight-2.0*OTRBuddyImageCellPadding)/2.0];
-        
+        if ([self.selectedBuddiesIdSet containsObject:buddy.uniqueId]) {
+            cell.accessoryType = UITableViewCellAccessoryCheckmark;
+        } else {
+            cell.accessoryType = UITableViewCellAccessoryNone;
+        }
         return cell;
     }
     
@@ -331,9 +378,10 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
         [self.navigationController pushViewController:viewController animated:YES];
         
     }
-    else if ([self.delegate respondsToSelector:@selector(controller:didSelectBuddy:)]) {
+    else {
         OTRBuddy * buddy = [self buddyAtIndexPath:indexPath];
-        [self.delegate controller:self didSelectBuddy:buddy];
+        [self selectedBuddy:buddy.uniqueId];
+        [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
     }
 }
 
