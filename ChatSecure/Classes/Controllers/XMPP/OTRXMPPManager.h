@@ -38,7 +38,7 @@
 #import "OTRXMPPError.h"
 #import "OTRConstants.h"
 
-@class OTRYapDatabaseRosterStorage,OTRXMPPAccount, OTRvCardYapDatabaseStorage, OTRXMPPManager;
+@class OTRYapDatabaseRosterStorage,OTRXMPPAccount, OTRvCardYapDatabaseStorage, OTRXMPPManager, OTRXMPPRoomManager;
 
 extern NSString *const OTRXMPPRegisterSucceededNotificationName;
 extern NSString *const OTRXMPPRegisterFailedNotificationName;
@@ -74,6 +74,7 @@ extern NSString *const OTRXMPPLoginErrorKey;
 @property (nonatomic, readonly) XMPPCapabilities *xmppCapabilities;
 @property (nonatomic, readonly) XMPPCapabilitiesCoreDataStorage *xmppCapabilitiesStorage;
 @property (nonatomic, readonly) OTRCertificatePinning * certificatePinningModule;
+@property (nonatomic, readonly) OTRXMPPRoomManager *roomManager;
 @property BOOL didSecure;
 
 @property (nonatomic, strong, readonly) OTRXMPPAccount *account;

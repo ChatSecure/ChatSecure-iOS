@@ -62,6 +62,7 @@
 #import "OTRStreamManagementYapStorage.h"
 #import "XMPPMessageCarbons.h"
 #import "OTRXMPPMessageYapStroage.h"
+#import "OTRXMPPRoomManager.h"
 @import OTRAssets;
 
 NSString *const OTRXMPPRegisterSucceededNotificationName = @"OTRXMPPRegisterSucceededNotificationName";
@@ -284,8 +285,10 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     self.streamManagement.autoResume = YES;
     [self.streamManagement activate:self.xmppStream];
     
-    
-    
+    //MUC
+    _roomManager = [[OTRXMPPRoomManager alloc] init];
+    self.roomManager.databaseConnection = self.databaseConnection;
+    [self.roomManager activate:self.xmppStream];
 }
 
 - (void)teardownStream

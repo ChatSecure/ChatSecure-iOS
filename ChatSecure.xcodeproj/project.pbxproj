@@ -11,6 +11,8 @@
 		633107201A16D1A300C17BAE /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 633106661A16D1A300C17BAE /* LaunchScreen.xib */; };
 		6331072B1A16D1F200C17BAE /* DemoImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 633107291A16D1F200C17BAE /* DemoImages.xcassets */; };
 		6331072C1A16D1F200C17BAE /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6331072A1A16D1F200C17BAE /* Images.xcassets */; };
+		6369855A1BC875110083FC53 /* OTRXMPPRoomManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 636985581BC875110083FC53 /* OTRXMPPRoomManager.h */; settings = {ASSET_TAGS = (); }; };
+		6369855B1BC875110083FC53 /* OTRXMPPRoomManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 636985591BC875110083FC53 /* OTRXMPPRoomManager.m */; settings = {ASSET_TAGS = (); }; };
 		636C63211B571B56008FEE69 /* OTRURLTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 636C63201B571B56008FEE69 /* OTRURLTests.m */; };
 		63BB66AF1BC5D2F40004A619 /* OTRXMPPRoomYapStorage.h in Headers */ = {isa = PBXBuildFile; fileRef = 63BB66AD1BC5D2F40004A619 /* OTRXMPPRoomYapStorage.h */; settings = {ASSET_TAGS = (); }; };
 		63BB66B01BC5D2F40004A619 /* OTRXMPPRoomYapStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BB66AE1BC5D2F40004A619 /* OTRXMPPRoomYapStorage.m */; settings = {ASSET_TAGS = (); }; };
@@ -724,6 +726,8 @@
 		6353AC2C1AD5E32000753B83 /* OTRAudioTrashView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAudioTrashView.m; sourceTree = "<group>"; };
 		6354BBE21A96C67400E8EBAC /* OTRMediaFileManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRMediaFileManager.h; sourceTree = "<group>"; };
 		6354BBE31A96C67400E8EBAC /* OTRMediaFileManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRMediaFileManager.m; sourceTree = "<group>"; };
+		636985581BC875110083FC53 /* OTRXMPPRoomManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPRoomManager.h; sourceTree = "<group>"; };
+		636985591BC875110083FC53 /* OTRXMPPRoomManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPRoomManager.m; sourceTree = "<group>"; };
 		636C63201B571B56008FEE69 /* OTRURLTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRURLTests.m; sourceTree = "<group>"; };
 		637DBB1A1B7D5A23003845B7 /* OTRXMPPMessageYapStroage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPMessageYapStroage.h; sourceTree = "<group>"; };
 		637DBB1B1B7D5A23003845B7 /* OTRXMPPMessageYapStroage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPMessageYapStroage.m; sourceTree = "<group>"; };
@@ -1052,6 +1056,8 @@
 				633105361A16D1A300C17BAE /* OTRXMPPBudyTimers.m */,
 				633105371A16D1A300C17BAE /* OTRXMPPManager.h */,
 				633105381A16D1A300C17BAE /* OTRXMPPManager.m */,
+				636985581BC875110083FC53 /* OTRXMPPRoomManager.h */,
+				636985591BC875110083FC53 /* OTRXMPPRoomManager.m */,
 				633105391A16D1A300C17BAE /* OTRXMPPProxyStream.h */,
 				6331053A1A16D1A300C17BAE /* OTRXMPPProxyStream.m */,
 				6331053B1A16D1A300C17BAE /* OTRXMPPTorManager.h */,
@@ -1661,6 +1667,7 @@
 			files = (
 				D9227C2D1BA7952100B5E1D0 /* ChatSecureCore.h in Headers */,
 				D93DDB2B1BA79A7000CD8331 /* OTRAppDelegate.h in Headers */,
+				6369855A1BC875110083FC53 /* OTRXMPPRoomManager.h in Headers */,
 				D93DDB2C1BA79A7000CD8331 /* NSURL+ChatSecure.h in Headers */,
 				D93DDB2D1BA79A7000CD8331 /* UIActionSheet+ChatSecure.h in Headers */,
 				D93DDB2E1BA79A7000CD8331 /* UIActivity+ChatSecure.h in Headers */,
@@ -2305,6 +2312,7 @@
 				D93DDAAB1BA79A2500CD8331 /* _OTRManagedBuddy.m in Sources */,
 				D93DDAAC1BA79A2500CD8331 /* _OTRManagedEncryptionStatusMessage.m in Sources */,
 				D93DDAAD1BA79A2500CD8331 /* _OTRManagedFacebookAccount.m in Sources */,
+				6369855B1BC875110083FC53 /* OTRXMPPRoomManager.m in Sources */,
 				D93DDAAE1BA79A2500CD8331 /* _OTRManagedGoogleAccount.m in Sources */,
 				D93DDAAF1BA79A2500CD8331 /* _OTRManagedGroup.m in Sources */,
 				D93DDAB01BA79A2500CD8331 /* _OTRManagedMessage.m in Sources */,

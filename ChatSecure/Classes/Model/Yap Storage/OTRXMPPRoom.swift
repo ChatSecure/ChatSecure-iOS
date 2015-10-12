@@ -22,6 +22,17 @@ public class OTRXMPPRoom: OTRYapDatabaseObject, OTRThreadOwner {
     public var accountUniqueId:String?
     public var ownJID:String?
     public var jid:String?
+    public var joined = false
+    override public var uniqueId:String {
+        get {
+            if let account = self.accountUniqueId {
+                if let jid = self.jid {
+                    return OTRXMPPRoom.createUniqueId(account, jid: jid)
+                }
+            }
+            return super.uniqueId
+        }
+    }
     
     public func threadName() -> String {
         return self.jid ?? ""
@@ -33,6 +44,10 @@ public class OTRXMPPRoom: OTRYapDatabaseObject, OTRThreadOwner {
     
     public func threadAccountIdentifier() -> String {
         return self.accountUniqueId ?? ""
+    }
+    
+    public class func createUniqueId(accountId:String, jid:String) -> String {
+        return accountId + jid
     }
 }
 
@@ -86,4 +101,8 @@ public class OTRXMPPRoomMessage: OTRYapDatabaseObject, YapDatabaseRelationshipNo
             return []
         }
     }
+}
+
+public class OTRXMPPRoomInvitation: OTRYapDatabaseObject {
+    public var roomJID:String?
 }
