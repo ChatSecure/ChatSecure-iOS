@@ -23,6 +23,7 @@
 #import "QRCodeReader.h"
 #import "XMPPURI.h"
 #import "OTRLanguageManager.h"
+#import "NSURL+ChatSecure.h"
 
 @interface OTRNewBuddyViewController () <QRCodeReaderDelegate>
 
@@ -243,10 +244,29 @@
 - (void)reader:(QRCodeReaderViewController *)reader didScanResult:(NSString *)result
 {
     [self dismissViewControllerAnimated:YES completion:^{
-        XMPPURI *uri = [[XMPPURI alloc] initWithURIString:result];
-        NSString *jid = uri.jid.full;
-        if (jid.length) {
-            self.accountNameTextField.text = jid;
+        NSURL *resultURL = [NSURL URLWithString:result];
+        if ([result containsString:@"xmpp:"]) {
+            XMPPURI *uri = [[XMPPURI alloc] initWithURIString:result];
+            NSString *jid = uri.jid.full;
+            if (jid.length) {
+                self.accountNameTextField.text = jid;
+            }
+        } else if ([resultURL otr_isInviteLink]) {
+            NSURL *url = [NSURL URLWithString:result];
+            __block NSString *username = nil;
+            __block NSString *fingerprint = nil;
+            [url otr_decodeShareLink:^(NSString *uName, NSString *fPrint) {
+                username = uName;
+                fingerprint = fPrint;
+            }];
+            if (username.length) {
+                self.accountNameTextField.text = username;
+            }
+#warning TODO: Process OTR fingerprint
+            // this is where you'd add the OTR (or Axolotl) fingerprint to the trusted store
+        } else {
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Unrecognized Invite Format", @"shown when invite QR code doesnt work") message:nil preferredStyle:UIAlertControllerStyleAlert];
+            [self presentViewController:alert animated:YES completion:nil];
         }
     }];
 }

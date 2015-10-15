@@ -48,4 +48,7 @@
  */
 - (void) otr_decodeShareLink:(void (^)(NSString *username, NSString *fingerprint))completion;
 
+/** Checks if URL contains '/i/#' for the invite links of this style: https://chatsecure.org/i/#YWhkdmRqZW5kYmRicmVpQGR1a2dvLmNvbT9vdHI9M0EyN0FDODZBRkVGOENGMDlEOTAyMEQwNTJBNzNGMUVGMEQyOUI2Rg */
+- (BOOL) otr_isInviteLink;
+
 @end
