@@ -197,16 +197,16 @@ static id AFPublicKeyForCertificate(NSData *certificate) {
     return allowedCertificate;
 }
 
-+(NSString*)sha1FingerprintForCertificate:(SecCertificateRef)certificate {
++(NSString*)sha256FingerprintForCertificate:(SecCertificateRef)certificate {
     NSData * certData = [self dataForCertificate:certificate];
-    unsigned char sha1Buffer[CC_SHA1_DIGEST_LENGTH];
-    CC_SHA1(certData.bytes, (CC_LONG)certData.length, sha1Buffer);
-    NSMutableString *fingerprint = [NSMutableString stringWithCapacity:CC_SHA1_DIGEST_LENGTH * 3];
-    for (int i = 0; i < CC_SHA1_DIGEST_LENGTH; ++i)
+    NSUInteger bufferLength = CC_SHA256_DIGEST_LENGTH;
+    unsigned char sha256Buffer[bufferLength];
+    CC_SHA256(certData.bytes, (CC_LONG)certData.length, sha256Buffer);
+    NSMutableString *fingerprint = [NSMutableString stringWithCapacity:bufferLength * 3];
+    for (int i = 0; i < bufferLength; ++i)
     {
-        [fingerprint appendFormat:@"%02x ",sha1Buffer[i]];
+        [fingerprint appendFormat:@"%02x",sha256Buffer[i]];
     }
-    
     return [fingerprint stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 }
 
@@ -314,7 +314,7 @@ static id AFPublicKeyForCertificate(NSData *certificate) {
     
     [bundledCertificatesDictionary enumerateKeysAndObjectsUsingBlock:^(NSString *domain, NSData *bundledCertData, BOOL *stop) {
         
-        NSString *hash = [self sha1FingerprintForCertificate:[self certForData:bundledCertData]];
+        NSString *hash = [self sha256FingerprintForCertificate:[self certForData:bundledCertData]];
         if ([hash isEqualToString:[self bundledCertHashes][domain]]) {
             [self addCertificate:[self certForData:bundledCertData] withHostName:domain];
         }

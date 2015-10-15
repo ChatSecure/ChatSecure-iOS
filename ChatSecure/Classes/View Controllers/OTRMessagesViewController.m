@@ -22,7 +22,6 @@
 #import "OTRLockButton.h"
 #import "OTRButtonView.h"
 #import "OTRStrings.h"
-#import "UIAlertView+Blocks.h"
 #import "OTRTitleSubtitleView.h"
 #import "OTRKit.h"
 #import "OTRImages.h"
@@ -305,11 +304,11 @@ typedef NS_ENUM(int, OTRDropDownType) {
 - (void)showMessageError:(NSError *)error
 {
     if (error) {
-        RIButtonItem *okButton = [RIButtonItem itemWithLabel:OK_STRING];
+        UIAlertAction *okButton = [UIAlertAction actionWithTitle:OK_STRING style:UIAlertActionStyleDefault handler:nil];
         
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:ERROR_STRING message:error.localizedDescription cancelButtonItem:okButton otherButtonItems:nil];
-        
-        [alertView show];
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:ERROR_STRING message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+        [alertController addAction:okButton];
+        [self presentViewController:alertController animated:YES completion:nil];
     }
 }
 
@@ -527,44 +526,48 @@ typedef NS_ENUM(int, OTRDropDownType) {
             [[OTRKit sharedInstance] activeFingerprintIsVerifiedForUsername:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString completion:^(BOOL verified) {
                 
                 
-                UIAlertView * alert;
-                __weak OTRMessagesViewController * welf = self;
+                UIAlertController * alert = nil;
                 
-                RIButtonItem * verifiedButtonItem = [RIButtonItem itemWithLabel:VERIFIED_STRING action:^{
-                    [[OTRKit sharedInstance] setActiveFingerprintVerificationForUsername:welf.buddy.username accountName:welf.account.username protocol:self.account.protocolTypeString verified:YES completion:^{
-                        [welf updateEncryptionState];
+                UIAlertAction * verifiedButtonItem = [UIAlertAction actionWithTitle:VERIFIED_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                    [[OTRKit sharedInstance] setActiveFingerprintVerificationForUsername:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString verified:YES completion:^{
+                        [self updateEncryptionState];
                     }];
                 }];
                 
-                RIButtonItem * notVerifiedButtonItem = [RIButtonItem itemWithLabel:NOT_VERIFIED_STRING action:^{
+                UIAlertAction * notVerifiedButtonItem = [UIAlertAction actionWithTitle:NOT_VERIFIED_STRING style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
                     
-                    [[OTRKit sharedInstance] setActiveFingerprintVerificationForUsername:welf.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString verified:NO completion:^{
-                        [welf updateEncryptionState];
+                    [[OTRKit sharedInstance] setActiveFingerprintVerificationForUsername:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString verified:NO completion:^{
+                        [self updateEncryptionState];
                     }];
                 }];
                 
-                RIButtonItem * verifyLaterButtonItem = [RIButtonItem itemWithLabel:VERIFY_LATER_STRING action:^{
-                    [[OTRKit sharedInstance] setActiveFingerprintVerificationForUsername:welf.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString verified:NO completion:^{
-                        [welf updateEncryptionState];
+                UIAlertAction * verifyLaterButtonItem = [UIAlertAction actionWithTitle:VERIFY_LATER_STRING style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                    [[OTRKit sharedInstance] setActiveFingerprintVerificationForUsername:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString verified:NO completion:^{
+                        [self updateEncryptionState];
                     }];
                 }];
                 
                 if(ourFingerprintString && theirFingerprintString) {
                     NSString *msg = [NSString stringWithFormat:@"%@, %@:\n%@\n\n%@ %@:\n%@\n", YOUR_FINGERPRINT_STRING, self.account.username, ourFingerprintString, THEIR_FINGERPRINT_STRING, self.buddy.username, theirFingerprintString];
+                    alert = [UIAlertController alertControllerWithTitle:VERIFY_FINGERPRINT_STRING message:msg preferredStyle:UIAlertControllerStyleAlert];
+
                     if(verified)
                     {
-                        alert = [[UIAlertView alloc] initWithTitle:VERIFY_FINGERPRINT_STRING message:msg cancelButtonItem:verifiedButtonItem otherButtonItems:notVerifiedButtonItem, nil];
+                        [alert addAction:verifiedButtonItem];
+                        [alert addAction:notVerifiedButtonItem];
                     }
                     else
                     {
-                        alert = [[UIAlertView alloc] initWithTitle:VERIFY_FINGERPRINT_STRING message:msg cancelButtonItem:verifyLaterButtonItem otherButtonItems:verifiedButtonItem, nil];
+                        [alert addAction:verifyLaterButtonItem];
+                        [alert addAction:verifiedButtonItem];
                     }
                 } else {
-                    NSString *msg = SECURE_CONVERSATION_STRING;
-                    alert = [[UIAlertView alloc] initWithTitle:nil message:msg delegate:nil cancelButtonTitle:nil otherButtonTitles:OK_STRING, nil];
+                    alert = [UIAlertController alertControllerWithTitle:nil message:SECURE_CONVERSATION_STRING preferredStyle:UIAlertControllerStyleAlert];
+                    UIAlertAction *ok = [UIAlertAction actionWithTitle:OK_STRING style:UIAlertActionStyleDefault handler:nil];
+                    [alert addAction:ok];
                 }
                 
-                [alert show];
+                [self presentViewController:alert animated:YES completion:nil];
             }];
         }];
     }];

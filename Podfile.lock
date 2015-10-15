@@ -39,7 +39,6 @@ PODS:
     - CocoaLumberjack/Core
   - CPAProxy (1.0.0):
     - CocoaAsyncSocket
-  - CRToast (0.0.8)
   - GCDWebServer (3.2.7):
     - GCDWebServer/Core (= 3.2.7)
   - GCDWebServer/Core (3.2.7)
@@ -87,14 +86,12 @@ PODS:
     - CocoaLumberjack (~> 1.9)
   - PureLayout (3.0.1)
   - QRCodeReaderViewController (3.5.2)
-  - SIAlertView (1.3)
   - SQLCipher/common (3.3.1)
   - SQLCipher/fts (3.3.1):
     - SQLCipher/common
   - SSKeychain (1.2.3)
   - TTTAttributedLabel (1.13.4)
   - TUSafariActivity (1.0.4)
-  - UIAlertView-Blocks (1.0)
   - uservoice-iphone-sdk (3.2.3)
   - VTAcknowledgementsViewController (0.15)
   - XLForm (3.0.2)
@@ -257,7 +254,6 @@ DEPENDENCIES:
   - CocoaAsyncSocket (~> 7.4)
   - CocoaLumberjack (~> 1.9)
   - CPAProxy (from `Submodules/CPAProxy/CPAProxy.podspec`)
-  - CRToast (~> 0.0.8)
   - gtm-http-fetcher (from `Podspecs/gtm-http-fetcher.podspec`)
   - gtm-oauth2 (from `Podspecs/gtm-oauth2.podspec`)
   - HockeySDK-Source (~> 3.7)
@@ -278,12 +274,10 @@ DEPENDENCIES:
   - ProxyKit/Client (from `Submodules/ProxyKit/ProxyKit.podspec`)
   - PureLayout (~> 3.0)
   - QRCodeReaderViewController (~> 3.5.0)
-  - SIAlertView (from `https://github.com/ChatSecure/SIAlertView.git`, branch `attributedText`)
   - SQLCipher/fts (from `Podspecs/SQLCipher.podspec.json`)
   - SSKeychain (~> 1.2)
   - TTTAttributedLabel (~> 1.10)
   - TUSafariActivity (~> 1.0)
-  - UIAlertView-Blocks (~> 1.0)
   - uservoice-iphone-sdk (~> 3.2)
   - VTAcknowledgementsViewController (~> 0.15)
   - XLForm (from `Submodules/XLForm/XLForm.podspec`)
@@ -309,9 +303,6 @@ EXTERNAL SOURCES:
     :path: Submodules/ParkedTextField/ParkedTextField.podspec
   ProxyKit:
     :path: Submodules/ProxyKit/ProxyKit.podspec
-  SIAlertView:
-    :branch: attributedText
-    :git: https://github.com/ChatSecure/SIAlertView.git
   SQLCipher:
     :podspec: Podspecs/SQLCipher.podspec.json
   XLForm:
@@ -325,9 +316,6 @@ CHECKOUT OPTIONS:
   JSQMessagesViewController:
     :commit: aced19e84fe5ecfac7e89db2b247dfbd505127cb
     :git: https://github.com/ChatSecure/JSQMessagesViewController
-  SIAlertView:
-    :commit: e9a1a7d7d5a2a4ef5ff2e2e548644222b14edb27
-    :git: https://github.com/ChatSecure/SIAlertView.git
 
 SPEC CHECKSUMS:
   AFNetworking: 79f7eb1a0fcfa7beb409332b2ca49afe9ce53b05
@@ -338,7 +326,6 @@ SPEC CHECKSUMS:
   CocoaAsyncSocket: f5783bdedd232d91b89769bc4b5a1580aed518ad
   CocoaLumberjack: 628fca2e88ef06f7cf6817309aa405f325d9a6fa
   CPAProxy: 9ca6809d0ee47d90ee149da033a53b911d15ab82
-  CRToast: b087127369b4c603726ef6249d74d0d737629ab8
   GCDWebServer: 76a9540371d5f12f850b32ec7f555dd2d266e543
   gtm-http-fetcher: 4e7de79fc9e774b291eae66a240f17b3a5277ec7
   gtm-oauth2: b31c9d7c82f773f7b7094cbb7da8dc7b5968ce16
@@ -361,12 +348,10 @@ SPEC CHECKSUMS:
   ProxyKit: f7be31d07ed93444c433956d18e842ea9c709224
   PureLayout: f35f5384c9c4e4479df041dbe33ad7577b71ddfb
   QRCodeReaderViewController: f20275985c41ae551099641493ab364691d9113e
-  SIAlertView: 20c794b55eaf44d888773ea51647cf8907723919
   SQLCipher: 46ea06f972292f622aeb2d3f960a573a964d378f
   SSKeychain: 3f42991739c6c60a9cf1bbd4dff6c0d3694bcf3d
   TTTAttributedLabel: 0a2ac7b2dd726d32a070dafb01446026b11e624f
   TUSafariActivity: afc55a00965377939107ce4fdc7f951f62454546
-  UIAlertView-Blocks: 7904744fca618afbd2ec646608924f5e69d5acd1
   uservoice-iphone-sdk: 349d9ef36d3c43939d28390b9e86bb32b65fe983
   VTAcknowledgementsViewController: 575f5841fb47b7d9c852ccb406104ea68de07b21
   XLForm: 7817ce29f3f259186e837bb7309ac7e5b7e9b883
@@ -374,4 +359,4 @@ SPEC CHECKSUMS:
   YapDatabase: 814f9ff862a95c1e581d93335a4020482b69155b
   ZXingObjC: bf15b3814f7a105b6d99f47da2333c93a063650a
 
-COCOAPODS: 0.38.2
+COCOAPODS: 0.39.0

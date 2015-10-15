@@ -54,7 +54,6 @@
 #import "OTRPasswordGenerator.h"
 #import "UIViewController+ChatSecure.h"
 #import "OTRNotificationController.h"
-#import "UIAlertView+Blocks.h"
 #import "XMPPURI.h"
 #import "OTRProtocolManager.h"
 #import "OTRInviteViewController.h"
@@ -209,30 +208,18 @@
             void (^moreInfoBlock)(void) = ^void(void) {
                 [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://developers.facebook.com/docs/chat"]];
             };
+        
+            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:FACEBOOK_REMOVED_STRING message:FACEBOOK_REMOVED_MESSAGE_STRING preferredStyle:UIAlertControllerStyleAlert];
             
-            if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")){
-                
-                UIAlertController *alertController = [UIAlertController alertControllerWithTitle:FACEBOOK_REMOVED_STRING message:FACEBOOK_REMOVED_MESSAGE_STRING preferredStyle:UIAlertControllerStyleAlert];
-                
-                UIAlertAction *okAction = [UIAlertAction actionWithTitle:OK_STRING style:UIAlertActionStyleDefault handler:nil];
-                UIAlertAction *moreInfoAction = [UIAlertAction actionWithTitle:INFO_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-                    moreInfoBlock();
-                }];
-                
-                [alertController addAction:okAction];
-                [alertController addAction:moreInfoAction];
-                
-                [self.window.rootViewController presentViewController:alertController animated:YES completion:nil];
-                
-            } else {
-                RIButtonItem *okButtonItem = [RIButtonItem itemWithLabel:OK_STRING];
-                RIButtonItem *moreInfoButtonItem = [RIButtonItem itemWithLabel:INFO_STRING action:^{
-                    moreInfoBlock();
-                }];
-                
-                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:FACEBOOK_REMOVED_STRING message:FACEBOOK_REMOVED_MESSAGE_STRING cancelButtonItem:nil otherButtonItems:okButtonItem,moreInfoButtonItem, nil];
-                [alertView show];
-            }
+            UIAlertAction *okAction = [UIAlertAction actionWithTitle:OK_STRING style:UIAlertActionStyleDefault handler:nil];
+            UIAlertAction *moreInfoAction = [UIAlertAction actionWithTitle:INFO_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                moreInfoBlock();
+            }];
+            
+            [alertController addAction:okAction];
+            [alertController addAction:moreInfoAction];
+            
+            [self.window.rootViewController presentViewController:alertController animated:YES completion:nil];
         }
     }];
 }
