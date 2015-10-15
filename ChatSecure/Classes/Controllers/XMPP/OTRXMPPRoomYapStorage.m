@@ -29,11 +29,11 @@
     return self;
 }
 
-- (OTRXMPPRoomOccupant *)roomOccupantForJID:(NSString *)jid inRoom:(XMPPRoom *)room inTransaction:(YapDatabaseReadTransaction *)transaction
+- (OTRXMPPRoomOccupant *)roomOccupantForJID:(NSString *)jid roomJID:(NSString *)roomJID accountId:(NSString *)accountId inTransaction:(YapDatabaseReadTransaction *)transaction
 {
     __block OTRXMPPRoomOccupant *occupant = nil;
         
-    OTRXMPPRoom *databaseRoom = [self fetchRoomWithXMPPRoom:room inTransaction:transaction];
+    OTRXMPPRoom *databaseRoom = [self fetchRoomWithXMPPRoomJID:roomJID accountId:accountId inTransaction:transaction];
     //Enumerate of room eges to occupants
     [[transaction ext:OTRYapDatabaseRelationshipName] enumerateEdgesWithName:[OTRXMPPRoomOccupant roomEdgeName] destinationKey:databaseRoom.uniqueId collection:[OTRXMPPRoom collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
         
@@ -48,19 +48,19 @@
     if(!occupant) {
         occupant = [[OTRXMPPRoomOccupant alloc] init];
         occupant.jid = jid;
-        occupant.roomUniqueId = [OTRXMPPRoom createUniqueId:room.xmppStream.tag jid:room.roomJID.bare];
+        occupant.roomUniqueId = [OTRXMPPRoom createUniqueId:accountId jid:roomJID];
     }
     return occupant;
 }
 
-- (OTRXMPPRoom *)fetchRoomWithXMPPRoom:(XMPPRoom *)room inTransaction:(YapDatabaseReadTransaction *)transaction {
-    NSString *jid = room.roomJID.bare;
-    NSString *account = room.xmppStream.tag;
-    return [OTRXMPPRoom fetchObjectWithUniqueID:[OTRXMPPRoom createUniqueId:account jid:jid] transaction:transaction];
+- (OTRXMPPRoom *)fetchRoomWithXMPPRoomJID:(NSString *)roomJID accountId:(NSString *)accountId inTransaction:(YapDatabaseReadTransaction *)transaction {
+    return [OTRXMPPRoom fetchObjectWithUniqueID:[OTRXMPPRoom createUniqueId:accountId jid:roomJID] transaction:transaction];
 }
 
 - (void)insertMessage:(XMPPMessage *)message intoRoom:(XMPPRoom *)room outgoing:(BOOL)outgoing
 {
+    NSString *accountId = room.xmppStream.tag;
+    NSString *roomJID = room.roomJID.bare;
     [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
         OTRXMPPRoomMessage *databaseMessage = [[OTRXMPPRoomMessage alloc] init];
         databaseMessage.text = [message body];
@@ -69,7 +69,7 @@
             databaseMessage.date = [NSDate date];
         }
         databaseMessage.senderJID = [[message from] bare];
-        OTRXMPPRoom *databaseRoom = [self fetchRoomWithXMPPRoom:room inTransaction:transaction];
+        OTRXMPPRoom *databaseRoom = [self fetchRoomWithXMPPRoomJID:roomJID accountId:accountId inTransaction:transaction];
         databaseMessage.roomJID = databaseRoom.jid;
         databaseMessage.incoming = !outgoing;
         databaseMessage.roomUniqueId = databaseRoom.uniqueId;
@@ -103,10 +103,12 @@
  * If the presence type is "available", and the occupant doesn't already exist, then one should be created.
  **/
 - (void)handlePresence:(XMPPPresence *)presence room:(XMPPRoom *)room {
-    [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+    NSString *accountId = room.xmppStream.tag;
+    XMPPJID *presenceJID = [presence from];
+    [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
 
-        XMPPJID *presenceJID = [presence from];
-        OTRXMPPRoomOccupant *occupant = [self roomOccupantForJID:presenceJID.bare inRoom:room inTransaction:transaction];
+        
+        OTRXMPPRoomOccupant *occupant = [self roomOccupantForJID:presenceJID.bare roomJID:room.roomJID.bare accountId:accountId inTransaction:transaction];
         if ([[presence type] isEqualToString:@"unavailable"]) {
             occupant.available = NO;
         } else {
@@ -144,16 +146,20 @@
  * Handles leaving the room, which generally means clearing the list of occupants.
  **/
 - (void)handleDidLeaveRoom:(XMPPRoom *)room {
-    [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-        OTRXMPPRoom *databaseRoom = [self fetchRoomWithXMPPRoom:room inTransaction:transaction];
+    NSString *roomJID = room.roomJID.bare;
+    NSString *accountId = room.xmppStream.tag;
+    [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+        OTRXMPPRoom *databaseRoom = [self fetchRoomWithXMPPRoomJID:roomJID accountId:accountId inTransaction:transaction];
         databaseRoom.joined = NO;
         [databaseRoom saveWithTransaction:transaction];
     }];
 }
 
 - (void)handleDidJoinRoom:(XMPPRoom *)room withNickname:(NSString *)nickname {
-    [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-        OTRXMPPRoom *databaseRoom = [self fetchRoomWithXMPPRoom:room inTransaction:transaction];
+    NSString *roomJID = room.roomJID.bare;
+    NSString *accountId = room.xmppStream.tag;
+    [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+        OTRXMPPRoom *databaseRoom = [self fetchRoomWithXMPPRoomJID:roomJID accountId:accountId inTransaction:transaction];
         databaseRoom.joined = YES;
         [databaseRoom saveWithTransaction:transaction];
     }];

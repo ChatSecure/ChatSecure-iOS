@@ -13,7 +13,7 @@
 
 @protocol OTRComposeViewControllerDelegate <NSObject>
 
-- (void)controller:(OTRComposeViewController *)viewController didSelectBuddies:(NSArray <OTRBuddy *>*)buddies;
+- (void)controller:(OTRComposeViewController *)viewController didSelectBuddies:(NSArray<NSString *> *)buddies accountId:(NSString *)accountId;
 
 @end
 

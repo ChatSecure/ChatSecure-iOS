@@ -32,6 +32,7 @@
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 @import OTRAssets;
 #import "OTRLanguageManager.h"
+#import "OTRMessagesGroupViewController.h"
 
 static CGFloat kOTRConversationCellHeight = 80.0;
 
@@ -218,6 +219,18 @@ static CGFloat kOTRConversationCellHeight = 80.0;
         buddy = [OTRBuddy fetchObjectWithUniqueID:buddyId transaction:transaction];
     }];
     [self enterConversationWithBuddy:buddy];
+}
+
+- (void)enterConversationWithBuddies:(NSArray <NSString *>*)buddyArray accountId:(NSString *)accountId
+{
+    __block OTRAccount *account = nil;
+    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        account = [OTRAccount fetchObjectWithUniqueID:accountId transaction:transaction];
+    }];
+    OTRMessagesGroupViewController *groupViewController = [[OTRMessagesGroupViewController alloc] initWithBuddies:buddyArray account:account];
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone && ![groupViewController otr_isVisible]) {
+        [self.navigationController pushViewController:groupViewController animated:YES];
+    }
 }
 
 - (void)enterConversationWithBuddy:(OTRBuddy *)buddy
@@ -496,7 +509,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 
 #pragma - mark OTRComposeViewController Method
 
-- (void)controller:(OTRComposeViewController *)viewController didSelectBuddies:(NSArray<OTRBuddy *> *)buddies
+- (void)controller:(OTRComposeViewController *)viewController didSelectBuddies:(NSArray<NSString *> *)buddies accountId:(NSString *)accountId
 {
     [viewController dismissViewControllerAnimated:YES completion:^{
         
@@ -504,6 +517,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
             [self enterConversationWithBuddyId:[buddies firstObject]];
         } else {
             //TODO: Enter group chat
+            [self enterConversationWithBuddies:buddies accountId:accountId];
         }
         
     }];

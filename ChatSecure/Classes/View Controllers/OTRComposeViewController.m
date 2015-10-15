@@ -35,7 +35,7 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
 @property (nonatomic, strong) YapDatabaseViewMappings *mappings;
 @property (nonatomic, strong) NSArray *searchResults;
 
-@property (nonatomic, strong) NSMutableSet *selectedBuddiesIdSet;
+@property (nonatomic, strong) NSMutableSet <NSString *>*selectedBuddiesIdSet;
 
 @end
 
@@ -131,8 +131,14 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
 
 - (void)doneButtonPressed:(id)sender
 {
-    if ([self.delegate respondsToSelector:@selector(controller:didSelectBuddies:)]) {
-        [self.delegate controller:self didSelectBuddies:[self.selectedBuddiesIdSet allObjects]];
+    if ([self.delegate respondsToSelector:@selector(controller:didSelectBuddies:accountId:)]) {
+        //TODO: Naive choosing account just any buddy but should really check that account is connected or show picker
+        __block NSString *accountId = nil;
+        [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+            NSString *buddyKey  = [self.selectedBuddiesIdSet anyObject];
+            accountId = [OTRBuddy fetchObjectWithUniqueID:buddyKey transaction:transaction].accountUniqueId;
+        }];
+        [self.delegate controller:self didSelectBuddies:[self.selectedBuddiesIdSet allObjects] accountId:accountId];
     }
 }
 

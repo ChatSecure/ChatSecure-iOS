@@ -12,9 +12,11 @@
 
 @interface OTRXMPPRoomManager : XMPPModule
 
-@property (nonatomic, strong, readonly) NSArray * conferenceServicesJID;
-@property (nonatomic, strong) YapDatabaseConnection *databaseConnection;
+@property (nonatomic, strong, readonly)  NSArray * _Nullable conferenceServicesJID;
+@property (nonatomic, strong) YapDatabaseConnection * _Nullable databaseConnection;
 
-- (void)joinRoom:(XMPPJID *)jid withNickname:(NSString *)name;
+- (nullable NSString *)joinRoom:(nonnull XMPPJID *)jid withNickname:(nonnull NSString *)name;
+
+- (nullable NSString *)startGroupChatWithBuddies:(nullable NSArray <NSString *>*)buddiesArray roomJID:(nonnull XMPPJID *)roomName nickname:(nonnull NSString *)name;
 
 @end

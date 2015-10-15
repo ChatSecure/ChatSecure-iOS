@@ -143,7 +143,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 {
     [super viewWillAppear:animated];
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
-    [self updateEncryptionState];
+    
     
     __weak typeof(self)weakSelf = self;
     
@@ -225,6 +225,17 @@ typedef NS_ENUM(int, OTRDropDownType) {
     return indexPaths;
 }
 
+- (void)setAccount:(OTRAccount *)account
+{
+    if (![account isEqual:_account]) {
+        _account = account;
+        if ([self.account isKindOfClass:[OTRXMPPAccount class]]) {
+            _xmppManager = (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
+        }
+    }
+    
+}
+
 - (void)setBuddy:(OTRBuddy *)buddy
 {
     OTRBuddy *originalBuddy = self.buddy;
@@ -260,13 +271,11 @@ typedef NS_ENUM(int, OTRDropDownType) {
             self.inputToolbar.contentView.textView.text = self.buddy.composingMessageString;
 
             [self.uiDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-                _account = [self.buddy accountWithTransaction:transaction];
+                self.account = [self.buddy accountWithTransaction:transaction];
                 [self.messageMappings updateWithTransaction:transaction];
             }];
             
-            if ([self.account isKindOfClass:[OTRXMPPAccount class]]) {
-                _xmppManager = (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
-            }
+            
         } else {
             self.messageMappings = nil;
             _account = nil;

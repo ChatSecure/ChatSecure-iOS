@@ -23,7 +23,7 @@
 @interface OTRMessagesViewController : JSQMessagesViewController <UISplitViewControllerDelegate, OTRMessagesViewControllerProtocol, UIPopoverPresentationControllerDelegate>
 
 @property (nonatomic, strong) OTRBuddy *buddy;
-@property (nonatomic, strong, readonly) OTRAccount *account;
+@property (nonatomic, strong) OTRAccount *account;
 @property (nonatomic, weak, readonly) OTRXMPPManager *xmppManager;
 
 @property (nonatomic, strong) UIButton *microphoneButton;
@@ -31,5 +31,7 @@
 @property (nonatomic, strong) UIButton *cameraButton;
 
 -(void)sendAudioFileURL:(NSURL *)url;
+
+-(void)updateEncryptionState;
 
 @end

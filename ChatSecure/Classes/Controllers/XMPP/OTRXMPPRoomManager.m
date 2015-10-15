@@ -13,6 +13,7 @@
 #import "YapDatabase.h"
 #import "OTRXMPPRoomYapStorage.h"
 #import "XMPPIDTracker.h"
+#import "OTRBuddy.h"
 
 @interface OTRXMPPRoomManager () <XMPPMUCDelegate, XMPPRoomDelegate, XMPPStreamDelegate>
 
@@ -21,6 +22,10 @@
 @property (nonatomic, strong) XMPPMUC *mucModule;
 @property (nonatomic, strong) XMPPIDTracker *iqTracker;
 
+/** This dictionary has jid as the key and array of buddy unique Ids to invite once we've joined the room*/
+@property (nonnull, strong) NSMutableDictionary *inviteDictionary;
+
+
 @end
 
 @implementation OTRXMPPRoomManager
@@ -28,6 +33,7 @@
 - (instancetype)init {
     if (self = [super init]) {
         self.mucModule = [[XMPPMUC alloc] init];
+        self.inviteDictionary = [[NSMutableDictionary alloc] init];
     }
     return self;
 }
@@ -37,11 +43,12 @@
     BOOL result = [super activate:aXmppStream];
     [self.mucModule activate:aXmppStream];
     [self.mucModule addDelegate:self delegateQueue:moduleQueue];
+    [multicastDelegate addDelegate:self delegateQueue:moduleQueue];
     self.iqTracker = [[XMPPIDTracker alloc] initWithStream:aXmppStream dispatchQueue:moduleQueue];
     return result;
 }
 
-- (void)joinRoom:(XMPPJID *)jid withNickname:(NSString *)name
+- (NSString *)joinRoom:(XMPPJID *)jid withNickname:(NSString *)name
 {
     XMPPRoom *room = [self.rooms objectForKey:jid.bare];
     if (!room) {
@@ -51,10 +58,23 @@
             [self.rooms setObject:room forKey:room.roomJID.bare];
         }
         [room activate:self.xmppStream];
+        [room addDelegate:self delegateQueue:moduleQueue];
         [room joinRoomUsingNickname:name history:nil];
     }
     
     [room joinRoomUsingNickname:name history:nil];
+    return [OTRXMPPRoom createUniqueId:self.xmppStream.tag jid:jid.bare];
+}
+
+- (NSString *)startGroupChatWithBuddies:(NSArray<NSString *> *)buddiesArray roomJID:(XMPPJID *)roomName nickname:(nonnull NSString *)name
+{
+    dispatch_async(moduleQueue, ^{
+        if ([buddiesArray count]) {
+            [self.inviteDictionary setObject:buddiesArray forKey:roomName.bare];
+        }
+    });
+    
+    return [self joinRoom:roomName withNickname:name];
 }
 
 - (void)inviteUser:(NSString *)user toRoom:(NSString *)roomJID withMessage:(NSString *)message
@@ -107,6 +127,49 @@
 
 - (void)xmppRoomDidJoin:(XMPPRoom *)sender
 {
-    [sender configureRoomUsingOptions:nil];
+    
+    [sender configureRoomUsingOptions:[[self class] defaultRoomConfiguration]];
+    
+    //Invite other buddies waiting
+    dispatch_async(moduleQueue, ^{
+        NSArray *arary = [self.inviteDictionary objectForKey:sender.roomJID.bare];
+        if ([arary count]) {
+            [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+                [arary enumerateObjectsUsingBlock:^(NSString *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    OTRBuddy *buddy = [OTRBuddy fetchObjectWithUniqueID:obj transaction:transaction];
+                    if (buddy) {
+                        [self inviteUser:buddy.username toRoom:sender.roomJID.bare withMessage:nil];
+                    }
+                }];
+            }];
+        }
+    });
+    
+}
+
+#pragma - mark Class Methods
+
++ (NSXMLElement *)defaultRoomConfiguration
+{
+    NSXMLElement *form = [[NSXMLElement alloc] initWithName:@"x" xmlns:@"jabber:x:data"];
+    [form addAttributeWithName:@"typ" stringValue:@"form"];
+    
+    NSXMLElement *publicField = [[NSXMLElement alloc] initWithName:@"field"];
+    [publicField addAttributeWithName:@"var" stringValue:@"muc#roomconfig_publicroom"];
+    [publicField addChild:[[NSXMLElement alloc] initWithName:@"value" numberValue:@(0)]];
+    
+    NSXMLElement *persistentField = [[NSXMLElement alloc] initWithName:@"field"];
+    [publicField addAttributeWithName:@"var" stringValue:@"muc#roomconfig_persistentroom"];
+    [publicField addChild:[[NSXMLElement alloc] initWithName:@"value" numberValue:@(1)]];
+    
+    NSXMLElement *whoisField = [[NSXMLElement alloc] initWithName:@"field"];
+    [publicField addAttributeWithName:@"var" stringValue:@"muc#roomconfig_persistentroom"];
+    [publicField addChild:[[NSXMLElement alloc] initWithName:@"value" stringValue:@"anyone"]];
+    
+    [form addChild:publicField];
+    [form addChild:persistentField];
+    [form addChild:whoisField];
+    
+    return form;
 }
 @end

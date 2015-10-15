@@ -54,6 +54,12 @@
     [self.view setNeedsUpdateConstraints];
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [self updateEncryptionState];
+}
+
 #pragma - mark AutoLayout
 
 - (void)viewDidLayoutSubviews
