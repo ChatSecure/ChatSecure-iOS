@@ -118,6 +118,8 @@
 - (void)xmppMUC:(XMPPMUC *)sender roomJID:(XMPPJID *)roomJID didReceiveInvitation:(XMPPMessage *)message
 {
     OTRXMPPRoomInvitation *invite = [[OTRXMPPRoomInvitation alloc] init];
+    invite.roomJID = roomJID.bare;
+    invite.message = [message body];
     [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
         [invite saveWithTransaction:transaction];
     }];

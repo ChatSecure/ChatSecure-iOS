@@ -11,7 +11,9 @@
 #import "JSQMessagesViewController.h"
 #import "OTRKit.h"
 
-@class OTRBuddy, OTRXMPPManager, OTRAccount;
+@class OTRBuddy, OTRXMPPManager, OTRAccount, YapDatabaseConnection, OTRYapDatabaseObject;
+
+@protocol OTRThreadOwner;
 
 @protocol OTRMessagesViewControllerProtocol <NSObject>
 
@@ -22,16 +24,19 @@
 
 @interface OTRMessagesViewController : JSQMessagesViewController <UISplitViewControllerDelegate, OTRMessagesViewControllerProtocol, UIPopoverPresentationControllerDelegate>
 
-@property (nonatomic, strong) OTRBuddy *buddy;
-@property (nonatomic, strong) OTRAccount *account;
-@property (nonatomic, weak, readonly) OTRXMPPManager *xmppManager;
-
+@property (nonatomic, strong) YapDatabaseConnection *databaseConnection;
 @property (nonatomic, strong) UIButton *microphoneButton;
 @property (nonatomic, strong) UIButton *sendButton;
 @property (nonatomic, strong) UIButton *cameraButton;
 
--(void)sendAudioFileURL:(NSURL *)url;
+- (void)setThreadKey:(NSString *)key collection:(NSString *)collection;
 
--(void)updateEncryptionState;
+- (void)sendAudioFileURL:(NSURL *)url;
+
+- (void)updateEncryptionState;
+
+- (id<OTRThreadOwner>)threadObject;
+- (OTRAccount *)account;
+- (OTRXMPPManager *)xmppManager;
 
 @end

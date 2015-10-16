@@ -157,6 +157,15 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
     return self.accountUniqueId;
 }
 
+- (void)setCurrentMessageText:(NSString *)text
+{
+    self.composingMessageString = text;
+}
+
+- (NSString *)currentMessageText {
+    return self.composingMessageString;
+}
+
 #pragma - mark YapDatabaseRelationshipNode
 
 - (NSArray *)yapDatabaseRelationshipEdges

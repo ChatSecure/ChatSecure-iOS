@@ -29,7 +29,6 @@
 - (instancetype)initWithBuddies:(NSArray<NSString *> *)buddies account:(OTRAccount *)account
 {
     if (self = [self init]) {
-        self.account = account;
         [self setupGroupChat:buddies];
     }
     return self;

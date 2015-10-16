@@ -241,7 +241,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
         }];
     }
     OTRMessagesHoldTalkViewController *messagesViewController = [OTRAppDelegate appDelegate].messagesViewController;
-    messagesViewController.buddy = buddy;
+    [messagesViewController setThreadKey:buddy.uniqueId collection:[OTRBuddy collection]];
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone && ![messagesViewController otr_isVisible]) {
         [self.navigationController pushViewController:messagesViewController animated:YES];
     }

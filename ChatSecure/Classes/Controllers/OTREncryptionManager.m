@@ -193,10 +193,12 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     decodedMessage = [OTRUtilities stripHTML:decodedMessage];
     
     if ([decodedMessage length]) {
-        if ([[OTRAppDelegate appDelegate].messagesViewController otr_isVisible] && [[OTRAppDelegate appDelegate].messagesViewController.buddy.uniqueId isEqualToString:originalMessage.buddyUniqueId])
-        {
-            originalMessage.read = YES;
-        }
+        
+        //TODO This needs to be moved
+//        if ([[OTRAppDelegate appDelegate].messagesViewController otr_isVisible] && [[OTRAppDelegate appDelegate].messagesViewController.buddy.uniqueId isEqualToString:originalMessage.buddyUniqueId])
+//        {
+//            originalMessage.read = YES;
+//        }
         
         originalMessage.text = decodedMessage;
         
@@ -470,10 +472,12 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     mediaItem.isIncoming = YES;
     newMessage.mediaItemUniqueId = mediaItem.uniqueId;
     
-    if ([[OTRAppDelegate appDelegate].messagesViewController otr_isVisible] && [[OTRAppDelegate appDelegate].messagesViewController.buddy.uniqueId isEqualToString:newMessage.buddyUniqueId])
-    {
-        newMessage.read = YES;
-    }
+    
+    //Todo This needs to be moved
+//    if ([[OTRAppDelegate appDelegate].messagesViewController otr_isVisible] && [[OTRAppDelegate appDelegate].messagesViewController.buddy.uniqueId isEqualToString:newMessage.buddyUniqueId])
+//    {
+//        newMessage.read = YES;
+//    }
     
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         [newMessage saveWithTransaction:transaction];

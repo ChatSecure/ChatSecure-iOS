@@ -14,7 +14,8 @@ import YapDatabase
     func threadName() -> String
     func threadIdentifier() -> String
     func threadAccountIdentifier() -> String
-    
+    func setCurrentMessageText(text:String?)
+    func currentMessageText() -> String?
 }
 
 public class OTRXMPPRoom: OTRYapDatabaseObject, OTRThreadOwner {
@@ -23,6 +24,7 @@ public class OTRXMPPRoom: OTRYapDatabaseObject, OTRThreadOwner {
     public var ownJID:String?
     public var jid:String?
     public var joined = false
+    public var messageText:String?
     override public var uniqueId:String {
         get {
             if let account = self.accountUniqueId {
@@ -44,6 +46,14 @@ public class OTRXMPPRoom: OTRYapDatabaseObject, OTRThreadOwner {
     
     public func threadAccountIdentifier() -> String {
         return self.accountUniqueId ?? ""
+    }
+    
+    public func setCurrentMessageText(text: String?) {
+        self.messageText = text
+    }
+    
+    public func currentMessageText() -> String? {
+        return self.messageText
     }
     
     public class func createUniqueId(accountId:String, jid:String) -> String {
@@ -105,4 +115,5 @@ public class OTRXMPPRoomMessage: OTRYapDatabaseObject, YapDatabaseRelationshipNo
 
 public class OTRXMPPRoomInvitation: OTRYapDatabaseObject {
     public var roomJID:String?
+    public var message:String?
 }
