@@ -223,11 +223,8 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 
 - (void)enterConversationWithBuddies:(NSArray <NSString *>*)buddyArray accountId:(NSString *)accountId
 {
-    __block OTRAccount *account = nil;
-    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-        account = [OTRAccount fetchObjectWithUniqueID:accountId transaction:transaction];
-    }];
-    OTRMessagesGroupViewController *groupViewController = [[OTRMessagesGroupViewController alloc] initWithBuddies:buddyArray account:account];
+    OTRMessagesGroupViewController *groupViewController = [OTRMessagesGroupViewController messagesViewController];
+    [groupViewController setupWithBuddies:buddyArray accountId:accountId];
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone && ![groupViewController otr_isVisible]) {
         [self.navigationController pushViewController:groupViewController animated:YES];
     }

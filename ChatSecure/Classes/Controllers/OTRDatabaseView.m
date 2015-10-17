@@ -149,7 +149,8 @@ NSString *OTRPushAccountGroup = @"Account";
     
     YapDatabaseViewOptions *options = [[YapDatabaseViewOptions alloc] init];
     options.isPersistent = YES;
-    options.allowedCollections = [[YapWhitelistBlacklist alloc] initWithWhitelist:[NSSet setWithObject:[OTRMessage collection]]];
+    NSSet *whitelist = [NSSet setWithObjects:[OTRMessage collection],[OTRXMPPRoomMessage collection], nil];
+    options.allowedCollections = [[YapWhitelistBlacklist alloc] initWithWhitelist:whitelist];
     
     
     

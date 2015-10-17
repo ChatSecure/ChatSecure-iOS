@@ -51,19 +51,34 @@
 - (NSString *)joinRoom:(XMPPJID *)jid withNickname:(NSString *)name
 {
     XMPPRoom *room = [self.rooms objectForKey:jid.bare];
+    NSString* accountId = self.xmppStream.tag;
+    NSString *databaseRoomKey = [OTRXMPPRoom createUniqueId:self.xmppStream.tag jid:jid.bare];
     if (!room) {
         OTRXMPPRoomYapStorage *storage = [[OTRXMPPRoomYapStorage alloc] initWithDatabaseConnection:self.databaseConnection];
-        XMPPRoom *room = [[XMPPRoom alloc] initWithRoomStorage:storage jid:jid];
+        room = [[XMPPRoom alloc] initWithRoomStorage:storage jid:jid];
         @synchronized(self.rooms) {
             [self.rooms setObject:room forKey:room.roomJID.bare];
         }
         [room activate:self.xmppStream];
         [room addDelegate:self delegateQueue:moduleQueue];
-        [room joinRoomUsingNickname:name history:nil];
     }
     
+    /** Create room database object */
+    [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+        OTRXMPPRoom *room = [OTRXMPPRoom fetchObjectWithUniqueID:databaseRoomKey transaction:transaction];
+        if(!room) {
+            room = [[OTRXMPPRoom alloc] init];
+            room.accountUniqueId = accountId;
+            room.jid = jid.bare;
+        }
+        
+        //Other Room properties should be set here
+        
+        [room saveWithTransaction:transaction];
+    }];
+    
     [room joinRoomUsingNickname:name history:nil];
-    return [OTRXMPPRoom createUniqueId:self.xmppStream.tag jid:jid.bare];
+    return databaseRoomKey;
 }
 
 - (NSString *)startGroupChatWithBuddies:(NSArray<NSString *> *)buddiesArray roomJID:(XMPPJID *)roomName nickname:(nonnull NSString *)name
@@ -117,19 +132,13 @@
 
 - (void)xmppMUC:(XMPPMUC *)sender roomJID:(XMPPJID *)roomJID didReceiveInvitation:(XMPPMessage *)message
 {
-    OTRXMPPRoomInvitation *invite = [[OTRXMPPRoomInvitation alloc] init];
-    invite.roomJID = roomJID.bare;
-    invite.message = [message body];
-    [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-        [invite saveWithTransaction:transaction];
-    }];
+    [self joinRoom:roomJID withNickname:sender.xmppStream.myJID.bare];
 }
 
 #pragma - mark XMPPRoomDelegate Methods
 
 - (void)xmppRoomDidJoin:(XMPPRoom *)sender
 {
-    
     [sender configureRoomUsingOptions:[[self class] defaultRoomConfiguration]];
     
     //Invite other buddies waiting
@@ -165,7 +174,7 @@
     [publicField addChild:[[NSXMLElement alloc] initWithName:@"value" numberValue:@(1)]];
     
     NSXMLElement *whoisField = [[NSXMLElement alloc] initWithName:@"field"];
-    [publicField addAttributeWithName:@"var" stringValue:@"muc#roomconfig_persistentroom"];
+    [publicField addAttributeWithName:@"var" stringValue:@"muc#roomconfig_whois"];
     [publicField addChild:[[NSXMLElement alloc] initWithName:@"value" stringValue:@"anyone"]];
     
     [form addChild:publicField];

@@ -39,6 +39,9 @@ extern const struct OTRMessageEdges {
 - (NSString *)ownerIdentifier;
 
 
+- (BOOL)messageIncoming;
+
+
 @end
 
 @interface OTRMessage : OTRYapDatabaseObject <YapDatabaseRelationshipNode, OTRMesssageProtocol>

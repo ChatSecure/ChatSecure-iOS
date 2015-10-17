@@ -10,7 +10,7 @@
 
 @interface OTRMessagesGroupViewController : OTRMessagesViewController
 
-- (instancetype)initWithGroupYapId:(NSString *)groupId;
-- (instancetype)initWithBuddies:(NSArray <NSString *>*)buddies account:(OTRAccount *)account;
+- (void)setupWithGroupYapId:(NSString *)groupId;
+- (void)setupWithBuddies:(NSArray<NSString *> *)buddies accountId:(NSString *)accountId;
 
 @end

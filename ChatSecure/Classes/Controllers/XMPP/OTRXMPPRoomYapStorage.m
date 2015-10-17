@@ -61,6 +61,7 @@
 {
     NSString *accountId = room.xmppStream.tag;
     NSString *roomJID = room.roomJID.bare;
+    XMPPJID *fromJID = [message from];
     [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
         OTRXMPPRoomMessage *databaseMessage = [[OTRXMPPRoomMessage alloc] init];
         databaseMessage.text = [message body];
@@ -68,7 +69,7 @@
         if (!databaseMessage.date) {
             databaseMessage.date = [NSDate date];
         }
-        databaseMessage.senderJID = [[message from] bare];
+        databaseMessage.senderJID = [fromJID full];
         OTRXMPPRoom *databaseRoom = [self fetchRoomWithXMPPRoomJID:roomJID accountId:accountId inTransaction:transaction];
         databaseMessage.roomJID = databaseRoom.jid;
         databaseMessage.incoming = !outgoing;
@@ -83,18 +84,6 @@
 - (BOOL)configureWithParent:(XMPPRoom *)aParent queue:(dispatch_queue_t)queue
 {
     self.parentQueue = queue;
-    
-    [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-        OTRXMPPRoom *room = [OTRXMPPRoom fetchObjectWithUniqueID:[OTRXMPPRoom createUniqueId:aParent.xmppStream.tag jid:aParent.roomJID.bare] transaction:transaction];
-        if(!room) {
-            room = [[OTRXMPPRoom alloc] init];
-        }
-        
-        //Other Room properties should be set here
-        
-        [room saveWithTransaction:transaction];
-    }];
-    
     return YES;
 }
 
@@ -105,15 +94,39 @@
 - (void)handlePresence:(XMPPPresence *)presence room:(XMPPRoom *)room {
     NSString *accountId = room.xmppStream.tag;
     XMPPJID *presenceJID = [presence from];
+    NSArray *children = [presence children];
+    __block XMPPJID *buddyJID = nil;
+    [children enumerateObjectsUsingBlock:^(NSXMLElement *element, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([[element xmlns] containsString:XMPPMUCNamespace]) {
+            NSArray *items = [element children];
+            [items enumerateObjectsUsingBlock:^(NSXMLElement *item, NSUInteger idx, BOOL * _Nonnull stop) {
+                NSString *jid = [item attributeStringValueForName:@"jid"];
+                if ([jid length]) {
+                    buddyJID = [XMPPJID jidWithString:jid];
+                    *stop = YES;
+                }
+            }];
+            *stop = YES;
+        }
+    }];
+    
     [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
 
         
-        OTRXMPPRoomOccupant *occupant = [self roomOccupantForJID:presenceJID.bare roomJID:room.roomJID.bare accountId:accountId inTransaction:transaction];
+        OTRXMPPRoomOccupant *occupant = [self roomOccupantForJID:[presenceJID full] roomJID:room.roomJID.bare accountId:accountId inTransaction:transaction];
         if ([[presence type] isEqualToString:@"unavailable"]) {
             occupant.available = NO;
         } else {
             occupant.available = YES;
         }
+        
+        if (buddyJID) {
+            occupant.realJID = buddyJID.bare;
+        }
+        
+        occupant.roomName = [presenceJID resource];
+        
+        
     
         [occupant saveWithTransaction:transaction];
     }];
@@ -135,7 +148,7 @@
         }
     }
     
-    //May need to check if the message is unique. Unser if this is a real problem. Look at XMPPRoomCoreDataStorage.m existsMessage:
+    //May need to check if the message is unique. Unsure if this is a real problem. Look at XMPPRoomCoreDataStorage.m existsMessage:
     [self insertMessage:message intoRoom:room outgoing:NO];
 }
 - (void)handleOutgoingMessage:(XMPPMessage *)message room:(XMPPRoom *)room {
@@ -160,6 +173,7 @@
     NSString *accountId = room.xmppStream.tag;
     [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
         OTRXMPPRoom *databaseRoom = [self fetchRoomWithXMPPRoomJID:roomJID accountId:accountId inTransaction:transaction];
+        
         databaseRoom.joined = YES;
         [databaseRoom saveWithTransaction:transaction];
     }];

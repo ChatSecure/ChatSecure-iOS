@@ -66,7 +66,15 @@ public class OTRXMPPRoomOccupant: OTRYapDatabaseObject, YapDatabaseRelationshipN
     public static let roomEdgeName = "OTRRoomOccupantEdgeName"
     
     public var available = false
+    
+    /** This is the JID of the participant as it's known in teh room  ie baseball_chat@conference.dukgo.com/user123 */
     public var jid:String?
+    
+    /** This is the name your known as in the room. Seems to be username without domain */
+    public var roomName:String?
+    
+    /**When given by the server we get the room participants reall JID*/
+    public var realJID:String?
     
     public var roomUniqueId:String?
     
@@ -85,6 +93,8 @@ public class OTRXMPPRoomMessage: OTRYapDatabaseObject, YapDatabaseRelationshipNo
     public static let roomEdgeName = "OTRRoomMesageEdgeName"
     
     public var roomJID:String?
+    
+    /** This is the full JID of the sender. This should be equal to the occupant.jid*/
     public var senderJID:String?
     public var incoming = false
     public var text:String?
@@ -92,13 +102,17 @@ public class OTRXMPPRoomMessage: OTRYapDatabaseObject, YapDatabaseRelationshipNo
     
     public var roomUniqueId:String?
     
-    //MARK: OTRMessagePRotocol
+    //MARK: OTRMessageProtocol
     public func messageDate() -> NSDate! {
         return self.date
     }
     
     public func ownerIdentifier() -> String! {
         return self.roomUniqueId
+    }
+    
+    public func incoming() -> Bool {
+        return self.incoming
     }
     
     //MARK: YapRelationshipNode
@@ -111,9 +125,4 @@ public class OTRXMPPRoomMessage: OTRYapDatabaseObject, YapDatabaseRelationshipNo
             return []
         }
     }
-}
-
-public class OTRXMPPRoomInvitation: OTRYapDatabaseObject {
-    public var roomJID:String?
-    public var message:String?
 }

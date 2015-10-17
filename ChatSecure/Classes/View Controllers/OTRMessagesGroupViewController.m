@@ -13,36 +13,39 @@
 @interface OTRMessagesGroupViewController ()
 
 @property (nonatomic, strong) NSString *threadID;
+@property (nonatomic, strong) NSString *accountUniqueId;
 
 @end
 
 @implementation OTRMessagesGroupViewController
 
-- (instancetype)initWithGroupYapId:(NSString *)groupId
+- (void)setupWithGroupYapId:(NSString *)groupId
 {
-    if (self = [self init]) {
-        self.threadID = groupId;
-    }
-    return self;
+    self.threadID = groupId;
+    self.accountUniqueId = [[self threadObject] threadAccountIdentifier];
 }
 
-- (instancetype)initWithBuddies:(NSArray<NSString *> *)buddies account:(OTRAccount *)account
+- (void)setupWithBuddies:(NSArray<NSString *> *)buddies accountId:(NSString *)accountId
 {
-    if (self = [self init]) {
-        [self setupGroupChat:buddies];
-    }
-    return self;
+    self.accountUniqueId = accountId;
+    [self setupGroupChat:buddies account:[self account]];
+    
 }
 
-- (void)setupGroupChat:(NSArray <NSString *>*)buddies {
+- (void)setupGroupChat:(NSArray <NSString *>*)buddies account:(OTRAccount *)account {
     NSString *service = [self.xmppManager.roomManager.conferenceServicesJID firstObject];
     NSString *roomName = [NSUUID UUID].UUIDString;
     XMPPJID *roomJID = [XMPPJID jidWithString:[NSString stringWithFormat:@"%@@%@",roomName,service]];
-    self.threadID = [self.xmppManager.roomManager startGroupChatWithBuddies:buddies roomJID:roomJID nickname:self.account.username];
+    self.threadID = [self.xmppManager.roomManager startGroupChatWithBuddies:buddies roomJID:roomJID nickname:account.username];
+    [self setThreadKey:self.threadID collection:[OTRXMPPRoom collection]];
 }
 
-- (void)setupYapViewsWithGroupID:(NSString *)groupId {
-    
+- (OTRAccount *)account {
+    __block OTRAccount *account = nil;
+    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        account = [OTRAccount fetchObjectWithUniqueID:self.accountUniqueId transaction:transaction];
+    }];
+    return account;
 }
 
 #pragma - mark Lifecycle
