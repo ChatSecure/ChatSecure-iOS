@@ -632,7 +632,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }];
 }
 
-- (OTRMessage *)messageAtIndexPath:(NSIndexPath *)indexPath
+- (id <OTRMesssageProtocol>)messageAtIndexPath:(NSIndexPath *)indexPath
 {
     return [self.viewHandler object:indexPath];
 }
@@ -644,10 +644,10 @@ typedef NS_ENUM(int, OTRDropDownType) {
         showDate = YES;
     }
     else {
-        OTRMessage *currentMessage = [self messageAtIndexPath:indexPath];
-        OTRMessage *previousMessage = [self messageAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row-1 inSection:indexPath.section]];
+        id <OTRMesssageProtocol> currentMessage = [self messageAtIndexPath:indexPath];
+        id <OTRMesssageProtocol> previousMessage = [self messageAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row-1 inSection:indexPath.section]];
         
-        NSTimeInterval timeDifference = [currentMessage.date timeIntervalSinceDate:previousMessage.date];
+        NSTimeInterval timeDifference = [[currentMessage date] timeIntervalSinceDate:[previousMessage date]];
         if (timeDifference > kOTRMessageSentDateShowTimeInterval) {
             showDate = YES;
         }
@@ -756,9 +756,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
 {
     JSQMessagesCollectionViewCell *cell = (JSQMessagesCollectionViewCell *)[super collectionView:collectionView cellForItemAtIndexPath:indexPath];
     
-    OTRMessage *message = [self messageAtIndexPath:indexPath];
+    id <OTRMesssageProtocol>message = [self messageAtIndexPath:indexPath];
     
-    if (message.isIncoming) {
+    if ([message messageIncoming]) {
         cell.textView.textColor = [UIColor blackColor];
     }
     else {
@@ -775,7 +775,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
                                               NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle | NSUnderlinePatternSolid) };
     }
     
-    if ([message.mediaItemUniqueId isEqualToString:self.audioPlaybackController.currentAudioItem.uniqueId]) {
+    if ([[message messageMediaItemKey] isEqualToString:self.audioPlaybackController.currentAudioItem.uniqueId]) {
         UIView *view = [cell.mediaView viewWithTag:kOTRAudioControlsViewTag];
         if ([view isKindOfClass:[OTRAudioControlsView class]]) {
             [self.audioPlaybackController attachAudioControlsView:(OTRAudioControlsView *)view];

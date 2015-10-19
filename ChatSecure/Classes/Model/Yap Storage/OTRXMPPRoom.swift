@@ -88,7 +88,7 @@ public class OTRXMPPRoomOccupant: OTRYapDatabaseObject, YapDatabaseRelationshipN
     }
 }
 
-public class OTRXMPPRoomMessage: OTRYapDatabaseObject, YapDatabaseRelationshipNode, OTRMesssageProtocol {
+public class OTRXMPPRoomMessage: OTRYapDatabaseObject {
     
     public static let roomEdgeName = "OTRRoomMesageEdgeName"
     
@@ -96,25 +96,15 @@ public class OTRXMPPRoomMessage: OTRYapDatabaseObject, YapDatabaseRelationshipNo
     
     /** This is the full JID of the sender. This should be equal to the occupant.jid*/
     public var senderJID:String?
+    public var displayName:String?
     public var incoming = false
-    public var text:String?
-    public var date:NSDate?
+    public var messageText:String?
+    public var messageDate:NSDate?
     
     public var roomUniqueId:String?
-    
-    //MARK: OTRMessageProtocol
-    public func messageDate() -> NSDate! {
-        return self.date
-    }
-    
-    public func ownerIdentifier() -> String! {
-        return self.roomUniqueId
-    }
-    
-    public func incoming() -> Bool {
-        return self.incoming
-    }
-    
+}
+
+extension OTRXMPPRoomMessage:YapDatabaseRelationshipNode {
     //MARK: YapRelationshipNode
     public func yapDatabaseRelationshipEdges() -> [AnyObject]! {
         
@@ -125,4 +115,47 @@ public class OTRXMPPRoomMessage: OTRYapDatabaseObject, YapDatabaseRelationshipNo
             return []
         }
     }
+}
+
+extension OTRXMPPRoomMessage:OTRMesssageProtocol {
+    
+    //MARK: OTRMessageProtocol
+    
+    public func messageIncoming() -> Bool {
+        return self.incoming
+    }
+    
+    public func messageMediaItemKey() -> String! {
+        return nil
+    }
+    
+    //MARK: JSQMessageData Protocol methods
+    
+    public func senderId() -> String! {
+        return self.senderJID
+    }
+    
+    public func senderDisplayName() -> String! {
+        return self.displayName
+    }
+    
+    public func date() -> NSDate! {
+        return self.messageDate
+    }
+    
+    public func isMediaMessage() -> Bool {
+        return false
+    }
+    
+    public func messageHash() -> UInt {
+        if let hash = self.messageText?.hash {
+            return UInt(hash)
+        }
+        return 0
+    }
+    
+    public func text() -> String! {
+        return self.messageText
+    }
+    
 }

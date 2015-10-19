@@ -7,6 +7,7 @@
 //
 
 #import "OTRYapDatabaseObject.h"
+@import JSQMessagesViewController;
 @class OTRBuddy,YapDatabaseReadTransaction, OTRMediaItem;
 
 extern const struct OTRMessageAttributes {
@@ -29,17 +30,13 @@ extern const struct OTRMessageEdges {
     __unsafe_unretained NSString *media;
 } OTRMessageEdges;
 
-@protocol OTRMesssageProtocol <NSObject>
+@protocol OTRMesssageProtocol <JSQMessageData>
 @required
-// This should be the best attempt at message date for sorting and display
-- (NSDate *)messageDate;
-
-//This should be either the buddy for one to one conversatinos
-//or the room for group chats
-- (NSString *)ownerIdentifier;
-
 
 - (BOOL)messageIncoming;
+
+
+- (NSString *)messageMediaItemKey;
 
 
 @end

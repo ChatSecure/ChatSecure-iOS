@@ -64,10 +64,10 @@
     XMPPJID *fromJID = [message from];
     [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
         OTRXMPPRoomMessage *databaseMessage = [[OTRXMPPRoomMessage alloc] init];
-        databaseMessage.text = [message body];
-        databaseMessage.date = [message delayedDeliveryDate];
+        databaseMessage.messageText = [message body];
+        databaseMessage.messageDate = [message delayedDeliveryDate];
         if (!databaseMessage.date) {
-            databaseMessage.date = [NSDate date];
+            databaseMessage.messageDate = [NSDate date];
         }
         databaseMessage.senderJID = [fromJID full];
         OTRXMPPRoom *databaseRoom = [self fetchRoomWithXMPPRoomJID:roomJID accountId:accountId inTransaction:transaction];

@@ -97,6 +97,16 @@ const struct OTRMessageEdges OTRMessageEdges = {
     return self.buddyUniqueId;
 }
 
+- (BOOL)messageIncoming
+{
+    return self.incoming;
+}
+
+- (NSString *)messageMediaItemKey
+{
+    return self.mediaItemUniqueId;
+}
+
 #pragma - mark Class Methods
 
 + (NSInteger)numberOfUnreadMessagesWithTransaction:(YapDatabaseReadTransaction*)transaction
