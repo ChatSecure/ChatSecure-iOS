@@ -14,6 +14,8 @@
 #import "OTRXMPPRoomYapStorage.h"
 #import "XMPPIDTracker.h"
 #import "OTRBuddy.h"
+#import "XMPPMUC.h"
+#import "XMPPRoom.h"
 
 @interface OTRXMPPRoomManager () <XMPPMUCDelegate, XMPPRoomDelegate, XMPPStreamDelegate>
 

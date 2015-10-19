@@ -1025,9 +1025,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (id<JSQMessageBubbleImageDataSource>)collectionView:(JSQMessagesCollectionView *)collectionView messageBubbleImageDataForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    OTRMessage *message = [self messageAtIndexPath:indexPath];
+    id <OTRMesssageProtocol> message = [self messageAtIndexPath:indexPath];
     JSQMessagesBubbleImage *image = nil;
-    if (message.isIncoming) {
+    if ([message messageIncoming]) {
         image = self.incomingBubbleImage;
     }
     else {
@@ -1038,12 +1038,12 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (id <JSQMessageAvatarImageDataSource>)collectionView:(JSQMessagesCollectionView *)collectionView avatarImageDataForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    OTRMessage *message = [self messageAtIndexPath:indexPath];
+    id <OTRMesssageProtocol> message = [self messageAtIndexPath:indexPath];
     UIImage *avatarImage = nil;
-    if (message.error) {
+    if ([message messageError]) {
         avatarImage = [OTRImages circleWarningWithColor:[OTRColors warnColor]];
     }
-    else if (message.isIncoming) {
+    else if ([message messageIncoming]) {
         avatarImage = [self.buddy avatarImage];
     }
     else {
@@ -1062,8 +1062,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
 - (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForCellTopLabelAtIndexPath:(NSIndexPath *)indexPath
 {
     if ([self showDateAtIndexPath:indexPath]) {
-        OTRMessage *message = [self messageAtIndexPath:indexPath];
-        return [[JSQMessagesTimestampFormatter sharedFormatter] attributedTimestampForDate:message.date];
+        id <OTRMesssageProtocol> message = [self messageAtIndexPath:indexPath];
+        return [[JSQMessagesTimestampFormatter sharedFormatter] attributedTimestampForDate:[message date]];
     }
     return nil;
 }
@@ -1077,7 +1077,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 {
-    OTRMessage *message = [self messageAtIndexPath:indexPath];
+    id <OTRMesssageProtocol> message = [self messageAtIndexPath:indexPath];
     
     UIFont *font = [UIFont fontWithName:kFontAwesomeFont size:12];
     if (!font) {
@@ -1098,42 +1098,47 @@ typedef NS_ENUM(int, OTRDropDownType) {
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:lockString attributes:iconAttributes];
     
     ////// Delivered Icon //////
-    if (message.isDelivered) {
-        NSString *iconString = [NSString stringWithFormat:@"%@ ",[NSString fa_stringForFontAwesomeIcon:FACheck]];
+    if([message isKindOfClass:[OTRMessage class]]) {
+        OTRMessage *msg = (OTRMessage *)message;
+        if (msg.isDelivered) {
+            NSString *iconString = [NSString stringWithFormat:@"%@ ",[NSString fa_stringForFontAwesomeIcon:FACheck]];
+            
+            [attributedString appendAttributedString:[[NSAttributedString alloc] initWithString:iconString attributes:iconAttributes]];
+        }
         
-        [attributedString appendAttributedString:[[NSAttributedString alloc] initWithString:iconString attributes:iconAttributes]];
-    }
-    else if([message isMediaMessage]) {
-        
-        __block OTRMediaItem *mediaItem = nil;
-        //Get the media item
-        [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-            mediaItem = [OTRMediaItem fetchObjectWithUniqueID:message.mediaItemUniqueId transaction:transaction];
-        }];
-        
-        float percentProgress = mediaItem.transferProgress * 100;
-        
-        NSString *progressString = nil;
-        NSUInteger insertIndex = 0;
-        
-        if (mediaItem.isIncoming && mediaItem.transferProgress < 1) {
-            progressString = [NSString stringWithFormat:@" %@ %.0f%%",INCOMING_STRING,percentProgress];
-            insertIndex = [attributedString length];
-        } else if (!mediaItem.isIncoming) {
-            if(percentProgress > 0) {
-                progressString = [NSString stringWithFormat:@"%@ %.0f%% ",SENDING_STRING,percentProgress];
-            } else {
-                progressString = [NSString stringWithFormat:@"%@ ",WAITING_STRING];
+        if([msg isMediaMessage]) {
+            
+            __block OTRMediaItem *mediaItem = nil;
+            //Get the media item
+            [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+                mediaItem = [OTRMediaItem fetchObjectWithUniqueID:msg.mediaItemUniqueId transaction:transaction];
+            }];
+            
+            float percentProgress = mediaItem.transferProgress * 100;
+            
+            NSString *progressString = nil;
+            NSUInteger insertIndex = 0;
+            
+            if (mediaItem.isIncoming && mediaItem.transferProgress < 1) {
+                progressString = [NSString stringWithFormat:@" %@ %.0f%%",INCOMING_STRING,percentProgress];
+                insertIndex = [attributedString length];
+            } else if (!mediaItem.isIncoming) {
+                if(percentProgress > 0) {
+                    progressString = [NSString stringWithFormat:@"%@ %.0f%% ",SENDING_STRING,percentProgress];
+                } else {
+                    progressString = [NSString stringWithFormat:@"%@ ",WAITING_STRING];
+                }
             }
+            
+            if ([progressString length]) {
+                UIFont *font = [UIFont systemFontOfSize:12];
+                [attributedString insertAttributedString:[[NSAttributedString alloc] initWithString:progressString attributes:@{NSFontAttributeName: font}] atIndex:insertIndex];
+            }
+            
+            
         }
-        
-        if ([progressString length]) {
-            UIFont *font = [UIFont systemFontOfSize:12];
-            [attributedString insertAttributedString:[[NSAttributedString alloc] initWithString:progressString attributes:@{NSFontAttributeName: font}] atIndex:insertIndex];
-        }
-        
-        
     }
+    
     
     
     return attributedString;
@@ -1217,8 +1222,8 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
             //Inserted new item, probably at the end
             //Get last message and test if isIncoming
             NSIndexPath *lastMessageIndexPath = [NSIndexPath indexPathForRow:numberMappingsItems - 1 inSection:0];
-            OTRMessage *lastMessage = [self messageAtIndexPath:lastMessageIndexPath];
-            if (lastMessage.isIncoming) {
+            id <OTRMesssageProtocol>lastMessage = [self messageAtIndexPath:lastMessageIndexPath];
+            if ([lastMessage messageIncoming]) {
                 [self finishReceivingMessage];
             } else {
                 [self finishSendingMessage];

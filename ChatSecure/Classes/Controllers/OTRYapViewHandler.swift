@@ -123,7 +123,9 @@ public class OTRYapViewHandler: NSObject {
 
         if let sc = sectionChanges as? [YapDatabaseViewSectionChange] {
             if let rc = rowChanges as? [YapDatabaseViewRowChange] {
-                self.delegate?.didRecieveChanges(self, sectionChanges: sc, rowChanges: rc)
+                if sc.count > 0 || rc.count > 0 {
+                    self.delegate?.didRecieveChanges(self, sectionChanges: sc, rowChanges: rc)
+                }
             }
         }
         

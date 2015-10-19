@@ -74,6 +74,8 @@
         databaseMessage.roomJID = databaseRoom.jid;
         databaseMessage.incoming = !outgoing;
         databaseMessage.roomUniqueId = databaseRoom.uniqueId;
+        OTRXMPPRoomOccupant *occupant = [self roomOccupantForJID:databaseMessage.senderId roomJID:databaseMessage.roomJID accountId:accountId inTransaction:transaction];
+        databaseMessage.displayName = occupant.realJID;
         
         [databaseMessage saveWithTransaction:transaction];
     }];

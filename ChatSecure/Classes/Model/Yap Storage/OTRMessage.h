@@ -33,10 +33,15 @@ extern const struct OTRMessageEdges {
 @protocol OTRMesssageProtocol <JSQMessageData>
 @required
 
+- (NSString *)threadId;
+
 - (BOOL)messageIncoming;
 
-
 - (NSString *)messageMediaItemKey;
+
+- (NSError *)messageError;
+
+- (BOOL)transportedSecurely;
 
 
 @end

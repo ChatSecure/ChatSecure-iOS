@@ -102,6 +102,12 @@ public class OTRXMPPRoomMessage: OTRYapDatabaseObject {
     public var messageDate:NSDate?
     
     public var roomUniqueId:String?
+    
+    public override var hash: Int {
+        get {
+           return super.hash
+        }
+    }
 }
 
 extension OTRXMPPRoomMessage:YapDatabaseRelationshipNode {
@@ -121,12 +127,24 @@ extension OTRXMPPRoomMessage:OTRMesssageProtocol {
     
     //MARK: OTRMessageProtocol
     
+    public func threadId() -> String! {
+        return self.roomUniqueId
+    }
+    
     public func messageIncoming() -> Bool {
         return self.incoming
     }
     
     public func messageMediaItemKey() -> String! {
         return nil
+    }
+    
+    public func messageError() -> NSError! {
+        return nil
+    }
+    
+    public func transportedSecurely() -> Bool {
+        return false;
     }
     
     //MARK: JSQMessageData Protocol methods
@@ -148,10 +166,9 @@ extension OTRXMPPRoomMessage:OTRMesssageProtocol {
     }
     
     public func messageHash() -> UInt {
-        if let hash = self.messageText?.hash {
-            return UInt(hash)
-        }
-        return 0
+        
+        //TODO this is not correct but UInt(self.hash) is not working
+        return UInt(self.date().timeIntervalSince1970)
     }
     
     public func text() -> String! {

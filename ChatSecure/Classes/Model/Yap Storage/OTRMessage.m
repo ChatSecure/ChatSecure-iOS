@@ -93,7 +93,7 @@ const struct OTRMessageEdges OTRMessageEdges = {
     return  self.date;
 }
 
-- (NSString *)ownerIdentifier {
+- (NSString *)threadId {
     return self.buddyUniqueId;
 }
 
@@ -105,6 +105,14 @@ const struct OTRMessageEdges OTRMessageEdges = {
 - (NSString *)messageMediaItemKey
 {
     return self.mediaItemUniqueId;
+}
+
+- (NSError *)messageError {
+    return self.error;
+}
+
+- (BOOL)transportedSecurely {
+    return self.transportedSecurely;
 }
 
 #pragma - mark Class Methods
