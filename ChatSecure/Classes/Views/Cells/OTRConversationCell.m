@@ -71,26 +71,21 @@
     }
 }
 
-- (void)setBuddy:(OTRBuddy *)buddy
+- (void)setThread:(id <OTRThreadOwner>)thread
 {
-    [super setBuddy:buddy];
-    NSString * nameString = nil;
-    if (buddy.displayName.length) {
-        nameString = buddy.displayName;
-    }
-    else {
-        nameString = buddy.username;
-    }
+    [super setThread:thread];
+    NSString * nameString = [thread threadName];
+    
     self.nameLabel.text = nameString;
     
     __block OTRAccount *account = nil;
-    __block OTRMessage *lastMessage = nil;
+    __block id <OTRMesssageProtocol> lastMessage = nil;
 
     
     [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        account = [transaction objectForKey:buddy.accountUniqueId inCollection:[OTRAccount collection]];
+        account = [transaction objectForKey:[thread threadAccountIdentifier] inCollection:[OTRAccount collection]];
         
-        lastMessage = [buddy lastMessageWithTransaction:transaction];
+        lastMessage = [thread lastMessageWithTransaction:transaction];
     }];
     
     
@@ -99,7 +94,7 @@
     UIFont *currentFont = self.conversationLabel.font;
     CGFloat fontSize = currentFont.pointSize;
     self.conversationLabel.text = lastMessage.text;
-    if (!lastMessage.isRead) {
+    if (![lastMessage messageRead]) {
         //unread message
         self.nameLabel.font = [UIFont boldSystemFontOfSize:fontSize];
         self.nameLabel.textColor = [UIColor blackColor];

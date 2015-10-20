@@ -46,10 +46,14 @@ NSString *OTRPushAccountGroup = @"Account";
     }
     
     YapDatabaseViewGrouping *viewGrouping = [YapDatabaseViewGrouping withObjectBlock:^NSString *(NSString *collection, NSString *key, id object) {
-        if ([object isKindOfClass:[OTRBuddy class]])
-        {
-            OTRBuddy *buddy = (OTRBuddy *)object;
-            if (buddy.lastMessageDate) {
+        if ([object conformsToProtocol:@protocol(OTRThreadOwner)]) {
+            if ([object isKindOfClass:[OTRBuddy class]])
+            {
+                OTRBuddy *buddy = (OTRBuddy *)object;
+                if (buddy.lastMessageDate) {
+                    return OTRConversationGroup;
+                }
+            } else {
                 return OTRConversationGroup;
             }
         }
@@ -58,11 +62,11 @@ NSString *OTRPushAccountGroup = @"Account";
     
     YapDatabaseViewSorting *viewSorting = [YapDatabaseViewSorting withObjectBlock:^NSComparisonResult(NSString *group, NSString *collection1, NSString *key1, id object1, NSString *collection2, NSString *key2, id object2) {
         if ([group isEqualToString:OTRConversationGroup]) {
-            if ([object1 isKindOfClass:[OTRBuddy class]] && [object2 isKindOfClass:[OTRBuddy class]]) {
-                OTRBuddy *buddy1 = (OTRBuddy *)object1;
-                OTRBuddy *buddy2 = (OTRBuddy *)object2;
+            if ([object1 conformsToProtocol:@protocol(OTRThreadOwner)] && [object2 conformsToProtocol:@protocol(OTRThreadOwner)]) {
+                id <OTRThreadOwner> thread1 = object1;
+                id <OTRThreadOwner> thread2 = object2;
                 
-                return [buddy2.lastMessageDate compare:buddy1.lastMessageDate];
+                return [[thread2 lastMessageDate] compare:[thread1 lastMessageDate]];
             }
         }
         return NSOrderedSame;
@@ -70,11 +74,12 @@ NSString *OTRPushAccountGroup = @"Account";
     
     YapDatabaseViewOptions *options = [[YapDatabaseViewOptions alloc] init];
     options.isPersistent = YES;
-    options.allowedCollections = [[YapWhitelistBlacklist alloc] initWithWhitelist:[NSSet setWithObject:[OTRBuddy collection]]];
+    NSSet *whiteListSet = [NSSet setWithObjects:[OTRBuddy collection],[OTRXMPPRoom collection], nil];
+    options.allowedCollections = [[YapWhitelistBlacklist alloc] initWithWhitelist:whiteListSet];
     
     YapDatabaseView *databaseView = [[YapDatabaseView alloc] initWithGrouping:viewGrouping
                                                                       sorting:viewSorting
-                                                                   versionTag:@"1"
+                                                                   versionTag:@"2"
                                                                       options:options];
     
     return [[OTRDatabaseManager sharedInstance].database registerExtension:databaseView withName:OTRConversationDatabaseViewExtensionName];

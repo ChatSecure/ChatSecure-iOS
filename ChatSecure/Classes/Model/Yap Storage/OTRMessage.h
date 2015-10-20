@@ -43,6 +43,8 @@ extern const struct OTRMessageEdges {
 
 - (BOOL)transportedSecurely;
 
+- (BOOL)messageRead;
+
 
 @end
 

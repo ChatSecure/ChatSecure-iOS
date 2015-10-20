@@ -70,6 +70,7 @@
         OTRXMPPRoom *room = [OTRXMPPRoom fetchObjectWithUniqueID:databaseRoomKey transaction:transaction];
         if(!room) {
             room = [[OTRXMPPRoom alloc] init];
+            room.lastRoomMessageDate = [NSDate date];
             room.accountUniqueId = accountId;
             room.jid = jid.bare;
         }
@@ -113,6 +114,7 @@
     
     //Once we've connecected and authenticated we find what room services are available
     [self.mucModule discoverServices];
+    
 }
 
 #pragma - mark XMPPMUCDelegate Methods

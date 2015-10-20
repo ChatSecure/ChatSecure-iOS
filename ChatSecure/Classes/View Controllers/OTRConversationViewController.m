@@ -218,7 +218,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
         buddy = [OTRBuddy fetchObjectWithUniqueID:buddyId transaction:transaction];
     }];
-    [self enterConversationWithBuddy:buddy];
+    [self enterConversationWithThread:buddy];
 }
 
 - (void)enterConversationWithBuddies:(NSArray <NSString *>*)buddyArray accountId:(NSString *)accountId
@@ -230,15 +230,15 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     }
 }
 
-- (void)enterConversationWithBuddy:(OTRBuddy *)buddy
+- (void)enterConversationWithThread:(id <OTRThreadOwner>) thread
 {
-    if (buddy) {
+    if ([thread isKindOfClass:[OTRBuddy class]]) {
         [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-            [buddy setAllMessagesRead:transaction];
+            [((OTRBuddy *)thread) setAllMessagesRead:transaction];
         }];
     }
     OTRMessagesHoldTalkViewController *messagesViewController = [OTRAppDelegate appDelegate].messagesViewController;
-    [messagesViewController setThreadKey:buddy.uniqueId collection:[OTRBuddy collection]];
+    [messagesViewController setThreadKey:[thread threadIdentifier] collection:[thread threadCollection]];
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone && ![messagesViewController otr_isVisible]) {
         [self.navigationController pushViewController:messagesViewController animated:YES];
     }
@@ -250,24 +250,24 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     NSArray * indexPathsArray = [self.tableView indexPathsForVisibleRows];
     for(NSIndexPath *indexPath in indexPathsArray)
     {
-        OTRBuddy *buddy = [self buddyForIndexPath:indexPath];
+        id <OTRThreadOwner> thread = [self threadForIndexPath:indexPath];
         UITableViewCell * cell = [self.tableView cellForRowAtIndexPath:indexPath];
         if ([cell isKindOfClass:[OTRConversationCell class]]) {
-            [(OTRConversationCell *)cell setBuddy:buddy];
+            [(OTRConversationCell *)cell setThread:thread];
         }
     }
 }
 
-- (OTRBuddy *)buddyForIndexPath:(NSIndexPath *)indexPath
+- (id <OTRThreadOwner>)threadForIndexPath:(NSIndexPath *)indexPath
 {
     
-    __block OTRBuddy *buddy = nil;
+    __block id thread = nil;
     [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         
-        buddy = [[transaction extension:OTRConversationDatabaseViewExtensionName] objectAtIndexPath:indexPath withMappings:self.mappings];
+        thread = [[transaction extension:OTRConversationDatabaseViewExtensionName] objectAtIndexPath:indexPath withMappings:self.mappings];
     }];
     
-    return buddy;
+    return thread;
 }
 
 - (void)enableComposeButton
@@ -348,11 +348,12 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     //Delete conversation
+    //Todo needs to updated for group chats
     if(editingStyle == UITableViewCellEditingStyleDelete) {
-        OTRBuddy *cellBuddy = [[self buddyForIndexPath:indexPath] copy];
+        id <OTRThreadOwner> thread = [self threadForIndexPath:indexPath];
         
         [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-            [OTRMessage deleteAllMessagesForBuddyId:cellBuddy.uniqueId transaction:transaction];
+            [OTRMessage deleteAllMessagesForBuddyId:[thread threadIdentifier] transaction:transaction];
         }];
     }
     
@@ -361,11 +362,11 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     OTRConversationCell *cell = [tableView dequeueReusableCellWithIdentifier:[OTRConversationCell reuseIdentifier] forIndexPath:indexPath];
-    OTRBuddy * buddy = [self buddyForIndexPath:indexPath];
+    id <OTRThreadOwner> thread = [self threadForIndexPath:indexPath];
     
     [cell.avatarImageView.layer setCornerRadius:(kOTRConversationCellHeight-2.0*OTRBuddyImageCellPadding)/2.0];
     
-    [cell setBuddy:buddy];
+    [cell setThread:thread];
     
     return cell;
 }
@@ -388,8 +389,8 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    OTRBuddy *buddy = [self buddyForIndexPath:indexPath];
-    [self enterConversationWithBuddy:buddy];
+    id <OTRThreadOwner> thread = [self threadForIndexPath:indexPath];
+    [self enterConversationWithThread:thread];
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
     }

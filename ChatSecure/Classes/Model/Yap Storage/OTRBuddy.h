@@ -10,16 +10,6 @@
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 @import UIKit;
 
-@class OTRAccount, OTRMessage;
-
-typedef NS_ENUM(NSInteger, OTRBuddyStatus) {
-    OTRBuddyStatusOffline   = 4,
-    OTRBuddyStatusXa        = 3,
-    OTRBuddyStatusDnd       = 2,
-    OTRBuddyStatusAway      = 1,
-    OTRBuddyStatusAvailable = 0
-};
-
 typedef NS_ENUM(int, OTRChatState) {
     kOTRChatStateUnknown   = 0,
     kOTRChatStateActive    = 1,
@@ -28,6 +18,9 @@ typedef NS_ENUM(int, OTRChatState) {
     kOTRChatStateInactive  = 4,
     kOTRChatStateGone      = 5
 };
+
+
+@class OTRAccount, OTRMessage;
 
 extern const struct OTRBuddyAttributes {
 	__unsafe_unretained NSString *username;
@@ -58,7 +51,7 @@ extern const struct OTRBuddyEdges {
 @property (nonatomic, strong) NSString *statusMessage;
 @property (nonatomic) OTRChatState chatState;
 @property (nonatomic) OTRChatState lastSentChatState;
-@property (nonatomic) OTRBuddyStatus status;
+@property (nonatomic) ThreadStatus status;
 @property (nonatomic, strong) NSDate *lastMessageDate;
 
 /**
@@ -69,12 +62,7 @@ extern const struct OTRBuddyEdges {
 
 @property (nonatomic, strong) NSString *accountUniqueId;
 
-/**
- The current or generated avatar image either from avatarData or the initials from displayName or username
- 
- @return An UIImage from the OTRImages NSCache
- */
-- (UIImage *)avatarImage;
+
 - (NSInteger)numberOfUnreadMessagesWithTransaction:(YapDatabaseReadTransaction *)transaction;
 - (OTRMessage *)lastMessageWithTransaction:(YapDatabaseReadTransaction *)transaction;
 - (OTRAccount*)accountWithTransaction:(YapDatabaseReadTransaction *)transaction;

@@ -481,7 +481,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         NSArray *buddiesArray = [self.account allBuddiesWithTransaction:transaction];
         for (OTRXMPPBuddy *buddy in buddiesArray) {
-            buddy.status = OTRBuddyStatusOffline;
+            buddy.status = ThreadStatusOffline;
             buddy.chatState = kOTRChatStateGone;
             
             [buddy saveWithTransaction:transaction];
@@ -596,7 +596,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         NSArray *allBuddies = [self.account allBuddiesWithTransaction:transaction];
         [allBuddies enumerateObjectsUsingBlock:^(OTRXMPPBuddy *buddy, NSUInteger idx, BOOL *stop) {
-            buddy.status = OTRBuddyStatusOffline;
+            buddy.status = ThreadStatusOffline;
             buddy.statusMessage = nil;
             [transaction setObject:buddy forKey:buddy.uniqueId inCollection:[OTRXMPPBuddy collection]];
         }];

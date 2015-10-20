@@ -25,14 +25,14 @@
 
 @class OTRTheme;
 @class OTRSettingsViewController;
-@class OTRMessagesHoldTalkViewController;
+@class OTRMessagesViewController;
 @class OTRConversationViewController;
 
 @interface OTRAppDelegate : UIResponder <UIApplicationDelegate, BITHockeyManagerDelegate>
 
 @property (nonatomic, strong) UIWindow *window;
 @property (nonatomic, strong) OTRSettingsViewController *settingsViewController;
-@property (nonatomic, strong) OTRMessagesHoldTalkViewController *messagesViewController;
+@property (nonatomic, strong) OTRMessagesViewController *messagesViewController;
 @property (nonatomic, strong) OTRConversationViewController *conversationViewController;
 
 @property (nonatomic, strong) NSTimer *backgroundTimer;

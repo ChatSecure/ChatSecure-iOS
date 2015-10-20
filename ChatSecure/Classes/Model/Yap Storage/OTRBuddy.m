@@ -41,13 +41,18 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
 - (id)init
 {
     if (self = [super init]) {
-        self.status = OTRBuddyStatusOffline;
+        self.status = ThreadStatusOffline;
         self.chatState = kOTRChatStateUnknown;
         self.lastSentChatState = kOTRChatStateUnknown;
     }
     return self;
 }
 
+/**
+ The current or generated avatar image either from avatarData or the initials from displayName or username
+ 
+ @return An UIImage from the OTRImages NSCache
+ */
 - (UIImage *)avatarImage
 {
     //on setAvatar clear this buddies image cache
@@ -157,6 +162,10 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
     return self.accountUniqueId;
 }
 
+- (NSString *)threadCollection {
+    return [OTRBuddy collection];
+}
+
 - (void)setCurrentMessageText:(NSString *)text
 {
     self.composingMessageString = text;
@@ -164,6 +173,10 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
 
 - (NSString *)currentMessageText {
     return self.composingMessageString;
+}
+
+- (ThreadStatus)currentStatus {
+    return self.status;
 }
 
 #pragma - mark YapDatabaseRelationshipNode
@@ -226,14 +239,14 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
 {
     NSMutableArray *buddiesToChange = [NSMutableArray array];
     [transaction enumerateKeysAndObjectsInCollection:[self collection] usingBlock:^(NSString *key, OTRBuddy *buddy, BOOL *stop) {
-        if(buddy.status != OTRBuddyStatusOffline)
+        if(buddy.status != ThreadStatusOffline)
         {
             [buddiesToChange addObject:buddy];
         }
     }];
     
     [buddiesToChange enumerateObjectsUsingBlock:^(OTRBuddy *buddy, NSUInteger idx, BOOL *stop) {
-        buddy.status = OTRBuddyStatusOffline;
+        buddy.status = ThreadStatusOffline;
         [buddy saveWithTransaction:transaction];
     }];
 }

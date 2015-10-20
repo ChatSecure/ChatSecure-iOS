@@ -77,6 +77,9 @@
         OTRXMPPRoomOccupant *occupant = [self roomOccupantForJID:databaseMessage.senderId roomJID:databaseMessage.roomJID accountId:accountId inTransaction:transaction];
         databaseMessage.displayName = occupant.realJID;
         
+        databaseRoom.lastRoomMessageDate = [databaseMessage date];
+        
+        [databaseRoom saveWithTransaction:transaction];
         [databaseMessage saveWithTransaction:transaction];
     }];
 }

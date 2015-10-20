@@ -332,7 +332,7 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
             buddyAccountName = [OTRAccount fetchObjectWithUniqueID:buddy.accountUniqueId transaction:transaction].username;
         }];
         
-        [cell setBuddy:buddy withAccountName:buddyAccountName];
+        [cell setThread:buddy withAccountName:buddyAccountName];
         
         [cell.avatarImageView.layer setCornerRadius:(OTRBuddyInfoCellHeight-2.0*OTRBuddyImageCellPadding)/2.0];
         if ([self.selectedBuddiesIdSet containsObject:buddy.uniqueId]) {

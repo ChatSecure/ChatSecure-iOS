@@ -115,6 +115,10 @@ const struct OTRMessageEdges OTRMessageEdges = {
     return self.transportedSecurely;
 }
 
+- (BOOL)messageRead {
+    return self.isRead;
+}
+
 #pragma - mark Class Methods
 
 + (NSInteger)numberOfUnreadMessagesWithTransaction:(YapDatabaseReadTransaction*)transaction
