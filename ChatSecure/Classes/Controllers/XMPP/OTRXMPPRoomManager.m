@@ -114,7 +114,30 @@
     
     //Once we've connecected and authenticated we find what room services are available
     [self.mucModule discoverServices];
-    
+    //Once we've authenitcated we need to rejoin existing rooms
+    NSMutableArray <NSString *>*jidArray = [[NSMutableArray alloc] init];
+    [self.databaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        [transaction enumerateKeysAndObjectsInCollection:[OTRXMPPRoom collection] usingBlock:^(NSString * _Nonnull key, id  _Nonnull object, BOOL * _Nonnull stop) {
+            
+            if ([object isKindOfClass:[OTRXMPPRoom class]]) {
+                OTRXMPPRoom *room = (OTRXMPPRoom *)object;
+                if ([room.jid length]) {
+                    [jidArray addObject:room.jid];
+                }
+            }
+            
+        } withFilter:^BOOL(NSString * _Nonnull key) {
+            //OTRXMPPRoom is saved with the jid and account id as part of the key
+            if ([key containsString:self.xmppStream.tag]) {
+                return YES;
+            }
+            return NO;
+        }];
+    } completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0) completionBlock:^{
+        [jidArray enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            [self joinRoom:[XMPPJID jidWithString:obj] withNickname:self.xmppStream.myJID.bare];
+        }];
+    }];
 }
 
 #pragma - mark XMPPMUCDelegate Methods

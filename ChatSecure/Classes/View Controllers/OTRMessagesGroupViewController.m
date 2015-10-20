@@ -48,10 +48,21 @@
     return account;
 }
 
+- (UIBarButtonItem *)rightBarButtonItem {
+    UIBarButtonItem *barButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"112-group"] style:UIBarButtonItemStylePlain target:self action:@selector(didSelectOccupantsButton:)];
+    return barButtonItem;
+}
+
 #pragma - mark Lifecycle
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+}
+
+#pragma - mark Button Actions
+
+- (void)didSelectOccupantsButton:(id)sender {
+    
 }
 
 @end

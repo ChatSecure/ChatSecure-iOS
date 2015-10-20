@@ -35,6 +35,8 @@
 
 - (void)updateEncryptionState;
 
+- (UIBarButtonItem *)rightBarButtonItem;
+
 - (id<OTRThreadOwner>)threadObject;
 - (OTRAccount *)account;
 - (OTRXMPPManager *)xmppManager;

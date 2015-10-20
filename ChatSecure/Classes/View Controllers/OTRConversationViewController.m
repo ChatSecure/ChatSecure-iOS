@@ -361,6 +361,12 @@ static CGFloat kOTRConversationCellHeight = 80.0;
         [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
             [OTRMessage deleteAllMessagesForBuddyId:[thread threadIdentifier] transaction:transaction];
         }];
+        
+        if ([thread isKindOfClass:[OTRXMPPRoom class]]) {
+            [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+                [((OTRXMPPRoom *)thread) removeWithTransaction:transaction];
+            }];
+        }
     }
     
 }

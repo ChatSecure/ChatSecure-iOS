@@ -393,13 +393,21 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }];
     
     
-    self.lockBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.lockButton];
-    [self.navigationItem setRightBarButtonItem:self.lockBarButtonItem];
+    
+    [self.navigationItem setRightBarButtonItem:[self rightBarButtonItem]];
+}
+
+- (UIBarButtonItem *)rightBarButtonItem
+{
+    if (!self.lockBarButtonItem) {
+        self.lockBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.lockButton];
+    }
+    return self.lockBarButtonItem;
 }
 
 -(void)updateEncryptionState
 {
-    if (!self.account) {
+    if (!self.account || !self.rightBarButtonItem) {
         return;
     }
     [[OTRKit sharedInstance] checkIfGeneratingKeyForAccountName:self.account.username protocol:self.account.protocolTypeString completion:^(BOOL isGeneratingKey) {
@@ -459,7 +467,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
 {
     [self hideDropdownAnimated:YES completion:nil];
     
-    
     [[OTRKit sharedInstance] messageStateForUsername:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString completion:^(OTRKitMessageState messageState) {
         
         if (messageState == OTRKitMessageStateEncrypted) {
@@ -468,8 +475,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
         else {
             [[OTRKit sharedInstance] initiateEncryptionWithUsername:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString];
         }
-        
-        
     }];
 }
 
