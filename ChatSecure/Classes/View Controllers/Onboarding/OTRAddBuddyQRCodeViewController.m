@@ -71,9 +71,15 @@
 
 - (void)showOwnQRCode:(id)sender
 {
-    //XMPPURI *uri = [[XMPPURI alloc] initWithJID:[XMPPJID jidWithString:account.username] queryAction:@"subscribe" queryParameters:nil];
-    NSURL *url = [NSURL otr_shareLink:[NSURL otr_shareBaseURL].absoluteString username:self.account.username fingerprint:nil base64Encoded:YES];
-    OTRQRCodeViewController *qrCodeViewController = [[OTRQRCodeViewController alloc] initWithQRString:url.absoluteString];
-    [self.navigationController pushViewController:qrCodeViewController animated:YES];
+    NSSet <NSNumber*> *fingerprintTypes = [NSSet setWithArray:@[@(OTRFingerprintTypeOTR)]];
+    [self.account generateShareURLWithFingerprintTypes:fingerprintTypes completion:^(NSURL *shareURL, NSError *error) {
+        if (shareURL) {
+            OTRQRCodeViewController *qrCodeViewController = [[OTRQRCodeViewController alloc] initWithQRString:shareURL.absoluteString];
+            [self.navigationController pushViewController:qrCodeViewController animated:YES];
+        } else {
+            NSLog(@"Error generating shareURL for %@: %@", self.account.username, error);
+        }
+        
+    }];
 }
 @end
