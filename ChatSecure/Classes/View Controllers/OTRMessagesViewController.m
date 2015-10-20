@@ -23,7 +23,7 @@
 #import "OTRButtonView.h"
 #import "OTRStrings.h"
 #import "OTRTitleSubtitleView.h"
-#import "OTRKit.h"
+@import OTRKit;
 #import "OTRImages.h"
 #import "UIActivityViewController+ChatSecure.h"
 #import "OTRUtilities.h"

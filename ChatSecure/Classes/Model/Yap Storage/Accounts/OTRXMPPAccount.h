@@ -8,13 +8,16 @@
 
 #import "OTRAccount.h"
 
-@class XMPPStream;
+@class XMPPJID, XMPPStream;
 
 @interface OTRXMPPAccount : OTRAccount
 
 @property (nonatomic, strong) NSString *domain;
 @property (nonatomic, strong) NSString *resource;
 @property (nonatomic) int port;
+
+/** Returns the XMPP JID representation of the current username */
+- (XMPPJID*) jid;
 
 + (int)defaultPort;
 + (NSString *)newResource;

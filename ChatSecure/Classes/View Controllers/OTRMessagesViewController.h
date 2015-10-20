@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 #import "JSQMessagesViewController.h"
-#import "OTRKit.h"
+@import OTRKit;
 
 @class OTRBuddy, OTRXMPPManager, OTRAccount;
 

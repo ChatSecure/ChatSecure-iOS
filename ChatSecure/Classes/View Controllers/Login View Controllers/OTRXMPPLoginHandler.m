@@ -14,6 +14,7 @@
 #import "OTRDatabaseManager.h"
 #import "OTRPasswordGenerator.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "XMPPJID.h"
 
 @interface OTRXMPPLoginHandler()
 @property (nonatomic, strong) NSString *password;
@@ -48,7 +49,10 @@
     NSDictionary *usernameValue = [[form formRowWithTag:kOTRXLFormUsernameTextFieldTag] value];
     NSString *username = usernameValue[OTRUsernameCell.UsernameKey];
     if (!username.length) {
-        username = nickname;
+        // strip whitespace and make nickname lowercase
+        // TODO - replace with hexified Ed25519 identity key
+        username = [nickname stringByReplacingOccurrencesOfString:@" " withString:@""];
+        username = [username lowercaseString];
     }
     account.username = username;
     account.domain = usernameValue[OTRUsernameCell.DomainKey];
@@ -93,6 +97,28 @@
     if ([resource length]) {
         account.resource = resource;
     }
+    
+    // Post-process values via XMPPJID for stringprep
+    
+    XMPPJID *jid = [XMPPJID jidWithUser:account.username domain:account.domain resource:account.resource];
+    if (!jid) {
+        NSParameterAssert(jid != nil);
+        NSLog(@"Error creating JID from account values!");
+    }
+    account.username = jid.user;
+    account.domain = jid.domain;
+    account.resource = jid.resource;
+    
+    // Start generating our OTR key here so it's ready when we need it
+    
+    [[OTRProtocolManager sharedInstance].encryptionManager.otrKit generatePrivateKeyForAccountName:account.username protocol:kOTRProtocolTypeXMPP completion:^(NSString *fingerprint, NSError *error) {
+        NSParameterAssert(fingerprint.length > 0);
+        if (fingerprint.length) {
+            NSLog(@"Fingerprint generated for %@: %@", jid.bare, fingerprint);
+        } else {
+            NSLog(@"Error generating fingerprint for %@: %@", jid.bare, error);
+        }
+    }];
     
     return account;
 }

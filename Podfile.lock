@@ -77,7 +77,7 @@ PODS:
   - MWFeedParser/NSString+HTML (1.0.1)
   - Navajo (0.0.1)
   - OpenInChrome (0.0.1)
-  - OTRKit (1.1.0)
+  - OTRKit (1.1.1)
   - ParkedTextField (0.1.2)
   - ProxyKit/Client (1.0.2):
     - ProxyKit/common
@@ -343,7 +343,7 @@ SPEC CHECKSUMS:
   MWFeedParser: 2cf646014c1baf6ad1b08c480b40a08180079247
   Navajo: 5fb68239b4e3af4610f31925bae1ca8e6bab8eaa
   OpenInChrome: f1f3f9dec682216fe78a0d7fe0b5b263d6312c32
-  OTRKit: 084a83936ac19e2dbd08096cd94263a979dc4502
+  OTRKit: d3bc784277eb34d4b7844e75e7ea4334e56030d6
   ParkedTextField: 602a34c13acf59577ab1124ac8bc380a33f5fe3a
   ProxyKit: f7be31d07ed93444c433956d18e842ea9c709224
   PureLayout: f35f5384c9c4e4479df041dbe33ad7577b71ddfb

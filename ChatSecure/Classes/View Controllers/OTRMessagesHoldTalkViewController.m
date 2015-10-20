@@ -12,7 +12,7 @@
 #import "OTRAudioSessionManager.h"
 #import "OTRAudioTrashView.h"
 #import "OTRStrings.h"
-#import "OTRKit.h"
+@import OTRKit;
 #import "OTRBuddy.h"
 #import "OTRXMPPManager.h"
 #import "OTRXMPPAccount.h"

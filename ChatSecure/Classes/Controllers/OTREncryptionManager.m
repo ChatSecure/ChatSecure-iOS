@@ -47,7 +47,6 @@ NSString *const OTRDidFinishGeneratingPrivateKeyNotification = @"OTREncryptionMa
 NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
 
 @interface OTREncryptionManager ()
-@property (nonatomic, strong) OTRKit *otrKit;
 @end
 
 @implementation OTREncryptionManager
@@ -55,7 +54,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
 
 - (id) init {
     if (self = [super init]) {
-        self.otrKit = [OTRKit sharedInstance];
+        _otrKit = [OTRKit sharedInstance];
         [self.otrKit setupWithDataPath:nil];
         self.otrKit.delegate = self;
         _dataHandler = [[OTRDataHandler alloc] initWithOTRKit:self.otrKit delegate:self];
