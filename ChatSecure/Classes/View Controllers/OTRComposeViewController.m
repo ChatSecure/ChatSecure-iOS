@@ -21,18 +21,18 @@
 #import "OTRNewBuddyViewController.h"
 #import "OTRChooseAccountViewController.h"
 #import "OTRLanguageManager.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 @import OTRAssets;
 
 static CGFloat OTRBuddyInfoCellHeight = 80.0;
 
-@interface OTRComposeViewController () <UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate>
+@interface OTRComposeViewController () <UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, OTRYapViewHandlerDelegateProtocol>
 
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) UISearchBar *searchBar;
 @property (nonatomic, strong) NSLayoutConstraint *  tableViewBottomConstraint;
-@property (nonatomic, strong) YapDatabaseConnection *databaseConnection;
-@property (nonatomic, strong) YapDatabaseViewMappings *mappings;
+@property (nonatomic, strong) OTRYapViewHandler *viewHandler;
 @property (nonatomic, strong) NSArray *searchResults;
 
 @property (nonatomic, strong) NSMutableSet <NSString *>*selectedBuddiesIdSet;
@@ -91,20 +91,8 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
     [self.view addConstraint:self.tableViewBottomConstraint];
     
     //////// YapDatabase Connection /////////
-    self.databaseConnection = [[OTRDatabaseManager sharedInstance] newConnection];
-    self.databaseConnection.name = NSStringFromClass([self class]);
-    [self.databaseConnection beginLongLivedReadTransaction];
-    
-    self.mappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[OTRBuddyGroup] view:OTRAllBuddiesDatabaseViewExtensionName];
-    
-    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        [self.mappings updateWithTransaction:transaction];
-    }];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(yapDatabaseDidUpdate:)
-                                                 name:YapDatabaseModifiedNotification
-                                               object:nil];
+    self.viewHandler = [[OTRYapViewHandler alloc] initWithDatabaseConnection:[[OTRDatabaseManager sharedInstance] newConnection]];
+    [self.viewHandler setup:OTRAllBuddiesDatabaseViewExtensionName groups:@[OTRBuddyGroup]];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -134,7 +122,7 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
     if ([self.delegate respondsToSelector:@selector(controller:didSelectBuddies:accountId:)]) {
         //TODO: Naive choosing account just any buddy but should really check that account is connected or show picker
         __block NSString *accountId = nil;
-        [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        [self.viewHandler.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
             NSString *buddyKey  = [self.selectedBuddiesIdSet anyObject];
             accountId = [OTRBuddy fetchObjectWithUniqueID:buddyKey transaction:transaction].accountUniqueId;
         }];
@@ -161,11 +149,7 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
     }
     else
     {
-        __block OTRBuddy *buddy;
-        [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-            buddy = [[transaction ext:OTRAllBuddiesDatabaseViewExtensionName] objectAtIndexPath:viewIndexPath withMappings:self.mappings];
-        }];
-        return buddy;
+        return [self.viewHandler object:viewIndexPath];
     }
     
     
@@ -258,7 +242,7 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
         searchText = [NSString stringWithFormat:@"%@*",searchText];
         
         NSMutableArray *tempSearchResults = [NSMutableArray new];
-        [self.databaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        [self.viewHandler.databaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
             [[transaction ext:OTRBuddyNameSearchDatabaseViewExtensionName] enumerateKeysAndObjectsMatching:searchText usingBlock:^(NSString *collection, NSString *key, id object, BOOL *stop) {
                 if ([object isKindOfClass:[OTRBuddy class]]) {
                     [tempSearchResults addObject:object];
@@ -281,7 +265,7 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
         sections = 1;
     }
     else {
-        sections = [self.mappings numberOfSections];
+        sections = [self.viewHandler.mappings numberOfSections];
     }
     
     if (canAddBuddies) {
@@ -301,7 +285,7 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
             numberOfRows = [self.searchResults count];
         }
         else {
-            numberOfRows = [self.mappings numberOfItemsInSection:0];
+            numberOfRows = [self.viewHandler.mappings numberOfItemsInSection:0];
         }
     }
    
@@ -328,7 +312,7 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
         OTRBuddy * buddy = [self buddyAtIndexPath:indexPath];
         
         __block NSString *buddyAccountName = nil;
-        [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        [self.viewHandler.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
             buddyAccountName = [OTRAccount fetchObjectWithUniqueID:buddy.accountUniqueId transaction:transaction].username;
         }];
         
@@ -400,28 +384,9 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
 
 #pragma - mark YapDatabaseViewUpdate
 
-- (void)yapDatabaseDidUpdate:(NSNotification *)notification;
+- (void)didRecieveChanges:(OTRYapViewHandler *)handler sectionChanges:(NSArray<YapDatabaseViewSectionChange *> *)sectionChanges rowChanges:(NSArray<YapDatabaseViewRowChange *> *)rowChanges
 {
-    // Process the notification(s),
-    // and get the change-set(s) as applies to my view and mappings configuration.
-    NSArray *notifications = [self.databaseConnection beginLongLivedReadTransaction];
-    
-    NSArray *sectionChanges = nil;
-    NSArray *rowChanges = nil;
-    
-    if ([self useSearchResults]) {
-        return;
-    }
-    
-    [[self.databaseConnection ext:OTRAllBuddiesDatabaseViewExtensionName] getSectionChanges:&sectionChanges
-                                                                                 rowChanges:&rowChanges
-                                                                           forNotifications:notifications
-                                                                               withMappings:self.mappings];
-    
-    // No need to update mappings.
-    // The above method did it automatically.
-    
-    if ([sectionChanges count] == 0 & [rowChanges count] == 0)
+    if ([sectionChanges count] == 0 && [rowChanges count] == 0)
     {
         // Nothing has changed that affects our tableView
         return;

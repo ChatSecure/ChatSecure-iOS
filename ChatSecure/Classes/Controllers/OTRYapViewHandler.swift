@@ -10,8 +10,9 @@ import Foundation
 import YapDatabase
 
 @objc public protocol OTRYapViewHandlerDelegateProtocol:NSObjectProtocol {
-    func didRecieveChanges(handler:OTRYapViewHandler, sectionChanges:[YapDatabaseViewSectionChange], rowChanges:[YapDatabaseViewRowChange])
-    func didReceiveChanges(handler:OTRYapViewHandler, key:String, collection:String)
+    
+    optional func didRecieveChanges(handler:OTRYapViewHandler, sectionChanges:[YapDatabaseViewSectionChange], rowChanges:[YapDatabaseViewRowChange])
+    optional func didReceiveChanges(handler:OTRYapViewHandler, key:String, collection:String)
 }
 
 public struct keyCollectionPair {
@@ -124,14 +125,14 @@ public class OTRYapViewHandler: NSObject {
         if let sc = sectionChanges as? [YapDatabaseViewSectionChange] {
             if let rc = rowChanges as? [YapDatabaseViewRowChange] {
                 if sc.count > 0 || rc.count > 0 {
-                    self.delegate?.didRecieveChanges(self, sectionChanges: sc, rowChanges: rc)
+                    self.delegate?.didRecieveChanges?(self, sectionChanges: sc, rowChanges: rc)
                 }
             }
         }
         
         for (_,value) in self.keyCollectionObserver.storage {
             if self.databaseConnection.hasChangeForKey(value.key, inCollection: value.collection, inNotifications: notifications) {
-                self.delegate?.didReceiveChanges(self, key: value.key, collection: value.collection)
+                self.delegate?.didReceiveChanges?(self, key: value.key, collection: value.collection)
             }
         }
     }

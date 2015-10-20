@@ -9,6 +9,7 @@
 #import "OTRMessagesGroupViewController.h"
 #import "OTRXMPPManager.h"
 #import "OTRXMPPRoomManager.h"
+@import OTRAssets;
 
 @interface OTRMessagesGroupViewController ()
 
@@ -49,7 +50,7 @@
 }
 
 - (UIBarButtonItem *)rightBarButtonItem {
-    UIBarButtonItem *barButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"112-group"] style:UIBarButtonItemStylePlain target:self action:@selector(didSelectOccupantsButton:)];
+    UIBarButtonItem *barButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"112-group" inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:self action:@selector(didSelectOccupantsButton:)];
     return barButtonItem;
 }
 
