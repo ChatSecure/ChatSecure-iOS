@@ -232,17 +232,23 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 
 - (void)enterConversationWithThread:(id <OTRThreadOwner>) thread
 {
+    OTRMessagesViewController *messagesViewController = [OTRAppDelegate appDelegate].messagesViewController;
     if ([thread isKindOfClass:[OTRBuddy class]]) {
         [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
             [((OTRBuddy *)thread) setAllMessagesRead:transaction];
         }];
+        messagesViewController = [OTRMessagesHoldTalkViewController messagesViewController];
+    } else if ([thread isKindOfClass:[OTRXMPPRoom class]]) {
+        messagesViewController = [OTRMessagesGroupViewController messagesViewController];
     }
-    OTRMessagesHoldTalkViewController *messagesViewController = [OTRAppDelegate appDelegate].messagesViewController;
+    
+    
+    [OTRAppDelegate appDelegate].messagesViewController = messagesViewController;
+    
     [messagesViewController setThreadKey:[thread threadIdentifier] collection:[thread threadCollection]];
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone && ![messagesViewController otr_isVisible]) {
         [self.navigationController pushViewController:messagesViewController animated:YES];
     }
-    
 }
 
 - (void)updateVisibleCells:(id)sender
