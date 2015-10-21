@@ -9,6 +9,20 @@
 import Foundation
 import YapDatabase
 
+@objc public enum RoomMessageState:Int {
+    case Received = 0
+    case NeedsSending = 1
+    case PendingSent = 2
+    case Sent = 3
+    
+    public func incoming() -> Bool {
+        switch self {
+        case .Received: return true
+        default: return false
+        }
+    }
+}
+
 public class OTRXMPPRoomMessage: OTRYapDatabaseObject {
     
     public static let roomEdgeName = "OTRRoomMesageEdgeName"
@@ -18,9 +32,10 @@ public class OTRXMPPRoomMessage: OTRYapDatabaseObject {
     /** This is the full JID of the sender. This should be equal to the occupant.jid*/
     public var senderJID:String?
     public var displayName:String?
-    public var incoming = false
+    public var state:RoomMessageState = .Received
     public var messageText:String?
     public var messageDate:NSDate?
+    public var xmppId:String? = NSUUID().UUIDString
     
     public var roomUniqueId:String?
     
@@ -53,7 +68,7 @@ extension OTRXMPPRoomMessage:OTRMesssageProtocol {
     }
     
     public func messageIncoming() -> Bool {
-        return self.incoming
+        return self.state.incoming()
     }
     
     public func messageMediaItemKey() -> String! {

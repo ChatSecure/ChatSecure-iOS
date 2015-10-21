@@ -1,27 +1,27 @@
 PODS:
-  - AFNetworking (2.6.0):
-    - AFNetworking/NSURLConnection (= 2.6.0)
-    - AFNetworking/NSURLSession (= 2.6.0)
-    - AFNetworking/Reachability (= 2.6.0)
-    - AFNetworking/Security (= 2.6.0)
-    - AFNetworking/Serialization (= 2.6.0)
-    - AFNetworking/UIKit (= 2.6.0)
-  - AFNetworking/NSURLConnection (2.6.0):
+  - AFNetworking (2.6.1):
+    - AFNetworking/NSURLConnection (= 2.6.1)
+    - AFNetworking/NSURLSession (= 2.6.1)
+    - AFNetworking/Reachability (= 2.6.1)
+    - AFNetworking/Security (= 2.6.1)
+    - AFNetworking/Serialization (= 2.6.1)
+    - AFNetworking/UIKit (= 2.6.1)
+  - AFNetworking/NSURLConnection (2.6.1):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/NSURLSession (2.6.0):
+  - AFNetworking/NSURLSession (2.6.1):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/Reachability (2.6.0)
-  - AFNetworking/Security (2.6.0)
-  - AFNetworking/Serialization (2.6.0)
-  - AFNetworking/UIKit (2.6.0):
+  - AFNetworking/Reachability (2.6.1)
+  - AFNetworking/Security (2.6.1)
+  - AFNetworking/Serialization (2.6.1)
+  - AFNetworking/UIKit (2.6.1):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
   - Appirater (2.0.5)
-  - ARChromeActivity (1.0.4)
+  - ARChromeActivity (1.0.5)
   - BBlock (1.2.1):
     - BBlock/AppKit (= 1.2.1)
     - BBlock/Foundation (= 1.2.1)
@@ -39,14 +39,14 @@ PODS:
     - CocoaLumberjack/Core
   - CPAProxy (1.0.0):
     - CocoaAsyncSocket
-  - CRToast (0.0.8)
+  - CRToast (0.0.9)
   - GCDWebServer (3.2.7):
     - GCDWebServer/Core (= 3.2.7)
   - GCDWebServer/Core (3.2.7)
   - gtm-http-fetcher (1.1)
   - gtm-oauth2 (1.1):
     - gtm-http-fetcher (~> 1.1)
-  - HockeySDK-Source (3.7.3)
+  - HockeySDK-Source (3.8.2)
   - IOCipher/common (0.1.0):
     - libsqlfs/SQLCipher
   - IOCipher/GCDWebServer (0.1.0):
@@ -63,9 +63,9 @@ PODS:
   - libsqlfs/SQLCipher (1.3):
     - libsqlfs/common
     - SQLCipher/fts
-  - Mantle (2.0.4):
-    - Mantle/extobjc (= 2.0.4)
-  - Mantle/extobjc (2.0.4)
+  - Mantle (2.0.5):
+    - Mantle/extobjc (= 2.0.5)
+  - Mantle/extobjc (2.0.5)
   - MBProgressHUD (0.9.1)
   - MWFeedParser (1.0.1):
     - MWFeedParser/FeedParser (= 1.0.1)
@@ -330,19 +330,19 @@ CHECKOUT OPTIONS:
     :git: https://github.com/ChatSecure/SIAlertView.git
 
 SPEC CHECKSUMS:
-  AFNetworking: 79f7eb1a0fcfa7beb409332b2ca49afe9ce53b05
+  AFNetworking: 8e4e60500beb8bec644cf575beee72990a76d399
   Appirater: e7c0a47fb67ee5041ce8479e6ba960927fb40264
-  ARChromeActivity: 9064d94803338d3377f3e1013a8e8f4821d7daf1
+  ARChromeActivity: 821c7849b566f49583987468733a896fee35aa4d
   BBlock: c56d7f72597ffe1634fcdc73836c5c0fed3271be
   BButton: ab0f2ed3b998ae73c5188b57d270d81e4a1eeb27
   CocoaAsyncSocket: f5783bdedd232d91b89769bc4b5a1580aed518ad
   CocoaLumberjack: 628fca2e88ef06f7cf6817309aa405f325d9a6fa
   CPAProxy: 9ca6809d0ee47d90ee149da033a53b911d15ab82
-  CRToast: b087127369b4c603726ef6249d74d0d737629ab8
+  CRToast: 5a78c22b921c5ed3487488af605bc403a9c92fed
   GCDWebServer: 76a9540371d5f12f850b32ec7f555dd2d266e543
   gtm-http-fetcher: 4e7de79fc9e774b291eae66a240f17b3a5277ec7
   gtm-oauth2: b31c9d7c82f773f7b7094cbb7da8dc7b5968ce16
-  HockeySDK-Source: 2ed30df0d39d9ffe5aeed4deda8000a20fdcce54
+  HockeySDK-Source: 42b2ead932f97de6b88bed9d1aa2a13b2e6e21ad
   IOCipher: 2bcc56103fbdd9cd9139a5b030ebb97ed6fbc4b9
   JSQMessagesViewController: ca11f86fa68ca70835f05e169df9244147c1dc40
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
@@ -351,7 +351,7 @@ SPEC CHECKSUMS:
   JVFloatLabeledTextField: ea4a3d8387ddd43724c472bb2b8ab39b79af05d4
   KVOController: 9fd8f0343670994e4b6f9f0b31f5a45663f3e1cf
   libsqlfs: 179e4fb40b8c07fd0ee7933ec4c0b9f4815cbd0e
-  Mantle: 6bee68168423948be0c0c5924832bf3af188e099
+  Mantle: 1912395033f601de5adc8ee91e48f46e4c7051ad
   MBProgressHUD: c47f2c166c126cf2ce36498d80f33e754d4e93ad
   MWFeedParser: 2cf646014c1baf6ad1b08c480b40a08180079247
   Navajo: 5fb68239b4e3af4610f31925bae1ca8e6bab8eaa

@@ -11,6 +11,8 @@ import YapDatabase
 
 @objc public protocol OTRYapViewHandlerDelegateProtocol:NSObjectProtocol {
     
+    /** Recommeded to do a reload data here*/
+    optional func didSetupMappings(handler:OTRYapViewHandler)
     optional func didRecieveChanges(handler:OTRYapViewHandler, sectionChanges:[YapDatabaseViewSectionChange], rowChanges:[YapDatabaseViewRowChange])
     optional func didReceiveChanges(handler:OTRYapViewHandler, key:String, collection:String)
 }
@@ -44,12 +46,14 @@ public class OTRYapKeyCollectionHandler {
 public class OTRYapViewHandler: NSObject {
     
     var notificationToken:NSObjectProtocol? = nil
+    public var viewName:String? = nil
+    public var groups:[String]? = nil
     public weak var delegate:OTRYapViewHandlerDelegateProtocol? = nil
     public let keyCollectionObserver = OTRYapKeyCollectionHandler()
     
     public var mappings:YapDatabaseViewMappings? {
         didSet {
-            self.databaseConnection.readWithBlock { (transaction) -> Void in
+            self.databaseConnection.asyncReadWithBlock { (transaction) -> Void in
                 self.mappings?.updateWithTransaction(transaction)
             }
         }
@@ -81,12 +85,27 @@ public class OTRYapViewHandler: NSObject {
     }
     
     public func setup(view:String,groups:[String]) {
-        self.mappings  = YapDatabaseViewMappings(groups: groups, view: view)
+        self.viewName = view
+        self.groups = groups
+        self.mappings = nil;
+        self.setupMappings(view, groups: groups);
+    }
+    
+    func setupMappings(view:String,groups:[String]) {
+        self.databaseConnection.asyncReadWithBlock({ (transaction) -> Void in
+            if let _ = transaction.ext(view) {
+                self.mappings  = YapDatabaseViewMappings(groups: groups, view: view)
+            }
+            }, completionQueue: dispatch_get_main_queue()) { () -> Void in
+                if(self.mappings != nil) {
+                    self.delegate?.didSetupMappings?(self)
+                }
+        }
     }
     
     public func object(indexPath:NSIndexPath) -> AnyObject? {
         var object:AnyObject? = nil
-        self.databaseConnection .readWithBlock { (transaction) -> Void in
+        self.databaseConnection.readWithBlock { (transaction) -> Void in
             guard let viewName = self.mappings?.view else {
                 return
             }
@@ -109,18 +128,24 @@ public class OTRYapViewHandler: NSObject {
     func yapDatbaseModified(notification:NSNotification) {
         let notifications = self.databaseConnection.beginLongLivedReadTransaction()
         
-        guard let viewName = self.mappings?.view else {
+        //There are no mappings so we need to set them up first
+        guard let mappings = self.mappings else {
+            if let view = self.viewName {
+                if let groups = self.groups {
+                    self.setupMappings(view, groups: groups);
+                }
+            }
             return
         }
         
-        guard let databaseView = self.databaseConnection.ext(viewName) as? YapDatabaseViewConnection else {
+        guard let databaseView = self.databaseConnection.ext(mappings.view) as? YapDatabaseViewConnection else {
             return
         }
         
         var sectionChanges:NSArray? = nil
         var rowChanges:NSArray? = nil
         
-        databaseView.getSectionChanges(&sectionChanges, rowChanges: &rowChanges, forNotifications: notifications, withMappings: self.mappings)
+        databaseView.getSectionChanges(&sectionChanges, rowChanges: &rowChanges, forNotifications: notifications, withMappings: mappings)
 
         if let sc = sectionChanges as? [YapDatabaseViewSectionChange] {
             if let rc = rowChanges as? [YapDatabaseViewRowChange] {

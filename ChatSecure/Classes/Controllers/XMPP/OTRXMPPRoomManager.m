@@ -17,12 +17,13 @@
 #import "XMPPMUC.h"
 #import "XMPPRoom.h"
 
-@interface OTRXMPPRoomManager () <XMPPMUCDelegate, XMPPRoomDelegate, XMPPStreamDelegate>
+@interface OTRXMPPRoomManager () <XMPPMUCDelegate, XMPPRoomDelegate, XMPPStreamDelegate, OTRYapViewHandlerDelegateProtocol>
 
 @property (nonatomic, strong) NSMutableDictionary *rooms;
 
 @property (nonatomic, strong) XMPPMUC *mucModule;
-@property (nonatomic, strong) XMPPIDTracker *iqTracker;
+
+@property (nonatomic, strong) OTRYapViewHandler *unsentMessagesViewHandler;
 
 /** This dictionary has jid as the key and array of buddy unique Ids to invite once we've joined the room*/
 @property (nonnull, strong) NSMutableDictionary *inviteDictionary;
@@ -46,16 +47,32 @@
     [self.mucModule activate:aXmppStream];
     [self.mucModule addDelegate:self delegateQueue:moduleQueue];
     [multicastDelegate addDelegate:self delegateQueue:moduleQueue];
-    self.iqTracker = [[XMPPIDTracker alloc] initWithStream:aXmppStream dispatchQueue:moduleQueue];
+    self.unsentMessagesViewHandler = [[OTRYapViewHandler alloc] initWithDatabaseConnection:[self.databaseConnection.database newConnection]];
+    self.unsentMessagesViewHandler.delegate = self;
     return result;
 }
 
 - (NSString *)joinRoom:(XMPPJID *)jid withNickname:(NSString *)name
 {
+    //Register view for sending message queue
+    [self.databaseConnection.database asyncRegisterUnsentGroupMessagesView:nil completionBlock:nil];
+    
+    
+    
     XMPPRoom *room = [self.rooms objectForKey:jid.bare];
     NSString* accountId = self.xmppStream.tag;
     NSString *databaseRoomKey = [OTRXMPPRoom createUniqueId:self.xmppStream.tag jid:jid.bare];
     if (!room) {
+        
+        
+        //Update view mappings with this room
+        NSArray *groups = self.unsentMessagesViewHandler.groups;
+        if (!groups) {
+            groups = [[NSArray alloc] init];
+        }
+        groups = [groups arrayByAddingObject:[OTRXMPPRoom createUniqueId:self.xmppStream.tag jid:jid.bare]];
+        [self.unsentMessagesViewHandler setup:[YapDatabase viewName:DatabaseViewNamesUnsentGroupMessagesViewName] groups:groups];
+        
         OTRXMPPRoomYapStorage *storage = [[OTRXMPPRoomYapStorage alloc] initWithDatabaseConnection:self.databaseConnection];
         room = [[XMPPRoom alloc] initWithRoomStorage:storage jid:jid];
         @synchronized(self.rooms) {
@@ -108,6 +125,35 @@
     return _rooms;
 }
 
+- (void)handleNewViewItems:(OTRYapViewHandler *)viewHandler {
+    NSMutableArray <OTRXMPPRoomMessage *>*messagesTosend = [[NSMutableArray alloc] init];
+    [viewHandler.databaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        NSUInteger sections = [viewHandler.mappings numberOfSections];
+        for(NSUInteger section = 0; section < sections; section++) {
+            NSUInteger rows = [viewHandler.mappings numberOfItemsInSection:section];
+            for (NSUInteger row = 0; row < rows; row++) {
+                
+                OTRXMPPRoomMessage *roomMessage = [[transaction ext:viewHandler.mappings.view] objectAtIndexPath:[NSIndexPath indexPathForRow:row inSection:section] withMappings:viewHandler.mappings];
+                if (roomMessage){
+                    [messagesTosend addObject:roomMessage];
+                }
+            }
+        }
+    } completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0) completionBlock:^{
+        [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+            [messagesTosend enumerateObjectsUsingBlock:^(OTRXMPPRoomMessage *roomMessage, NSUInteger idx, BOOL * _Nonnull stop) {
+                XMPPRoom *room = [self.rooms objectForKey:roomMessage.roomJID];
+                if (room) {
+                    XMPPMessage *message = [[self class] xmppMessage:roomMessage];
+                    [room sendMessage:message];
+                }
+                roomMessage.state = RoomMessageStatePendingSent;
+                [roomMessage saveWithTransaction:transaction];
+            }];
+        }];
+    }];
+}
+
 #pragma - mark XMPPStreamDelegate Methods
 
 - (void)xmppStreamDidAuthenticate:(XMPPStream *)sender {
@@ -138,6 +184,17 @@
             [self joinRoom:[XMPPJID jidWithString:obj] withNickname:self.xmppStream.myJID.bare];
         }];
     }];
+}
+
+- (void)xmppStream:(XMPPStream *)sender didFailToSendMessage:(XMPPMessage *)message error:(NSError *)error
+{
+    //Check id and mark as needs sending
+    
+}
+
+- (void)xmppStream:(XMPPStream *)sender didSendMessage:(XMPPMessage *)message
+{
+    //Check id and mark as sent
 }
 
 #pragma - mark XMPPMUCDelegate Methods
@@ -185,6 +242,18 @@
     
 }
 
+#pragma - mark OTRYapViewHandlerDelegateProtocol Methods
+
+- (void)didRecieveChanges:(OTRYapViewHandler *)handler sectionChanges:(NSArray<YapDatabaseViewSectionChange *> *)sectionChanges rowChanges:(NSArray<YapDatabaseViewRowChange *> *)rowChanges
+{
+    [self handleNewViewItems:handler];
+}
+
+- (void)didSetupMappings:(OTRYapViewHandler *)handler
+{
+    [self handleNewViewItems:handler];
+}
+
 #pragma - mark Class Methods
 
 + (NSXMLElement *)defaultRoomConfiguration
@@ -209,5 +278,13 @@
     [form addChild:whoisField];
     
     return form;
+}
+
++ (XMPPMessage *)xmppMessage:(OTRXMPPRoomMessage *)databaseMessage {
+    NSXMLElement *body = [NSXMLElement elementWithName:@"body" stringValue:databaseMessage.text];
+    XMPPMessage *message = [XMPPMessage message];
+    [message addChild:body];
+    [message addAttributeWithName:@"id" stringValue:databaseMessage.xmppId];
+    return message;
 }
 @end

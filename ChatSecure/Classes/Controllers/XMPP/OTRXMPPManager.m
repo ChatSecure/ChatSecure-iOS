@@ -287,7 +287,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     
     //MUC
     _roomManager = [[OTRXMPPRoomManager alloc] init];
-    self.roomManager.databaseConnection = self.databaseConnection;
+    self.roomManager.databaseConnection = [self.databaseConnection.database newConnection];
     [self.roomManager activate:self.xmppStream];
 }
 

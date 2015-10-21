@@ -66,4 +66,25 @@
     
 }
 
+- (void)didPressSendButton:(UIButton *)button withMessageText:(NSString *)text senderId:(NSString *)senderId senderDisplayName:(NSString *)senderDisplayName date:(NSDate *)date
+{
+    if(![text length]) {
+        return;
+    }
+    OTRXMPPRoomMessage *databaseMessage = [[OTRXMPPRoomMessage alloc] init];
+    databaseMessage.messageText = text;
+    databaseMessage.messageDate = [NSDate date];
+    databaseMessage.roomUniqueId = self.threadID;
+    OTRXMPPRoom *room = (OTRXMPPRoom *)[self threadObject];
+    databaseMessage.roomJID = room.jid;
+    databaseMessage.roomUniqueId = room.uniqueId;
+    databaseMessage.senderJID = room.ownJID;
+    databaseMessage.state = RoomMessageStateNeedsSending;
+    
+    [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+        [databaseMessage saveWithTransaction:transaction];
+    }];
+    
+}
+
 @end

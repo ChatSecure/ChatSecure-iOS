@@ -57,7 +57,7 @@
     return [OTRXMPPRoom fetchObjectWithUniqueID:[OTRXMPPRoom createUniqueId:accountId jid:roomJID] transaction:transaction];
 }
 
-- (void)insertMessage:(XMPPMessage *)message intoRoom:(XMPPRoom *)room outgoing:(BOOL)outgoing
+- (void)insertIncomingMessage:(XMPPMessage *)message intoRoom:(XMPPRoom *)room
 {
     NSString *accountId = room.xmppStream.tag;
     NSString *roomJID = room.roomJID.bare;
@@ -72,7 +72,7 @@
         databaseMessage.senderJID = [fromJID full];
         OTRXMPPRoom *databaseRoom = [self fetchRoomWithXMPPRoomJID:roomJID accountId:accountId inTransaction:transaction];
         databaseMessage.roomJID = databaseRoom.jid;
-        databaseMessage.incoming = !outgoing;
+        databaseMessage.state = RoomMessageStateReceived;
         databaseMessage.roomUniqueId = databaseRoom.uniqueId;
         OTRXMPPRoomOccupant *occupant = [self roomOccupantForJID:databaseMessage.senderId roomJID:databaseMessage.roomJID accountId:accountId inTransaction:transaction];
         databaseMessage.displayName = occupant.realJID;
@@ -154,7 +154,7 @@
     }
     
     //May need to check if the message is unique. Unsure if this is a real problem. Look at XMPPRoomCoreDataStorage.m existsMessage:
-    [self insertMessage:message intoRoom:room outgoing:NO];
+    [self insertIncomingMessage:message intoRoom:room];
 }
 - (void)handleOutgoingMessage:(XMPPMessage *)message room:(XMPPRoom *)room {
     
@@ -180,6 +180,7 @@
         OTRXMPPRoom *databaseRoom = [self fetchRoomWithXMPPRoomJID:roomJID accountId:accountId inTransaction:transaction];
         
         databaseRoom.joined = YES;
+        databaseRoom.ownJID = room.myRoomJID.full;
         [databaseRoom saveWithTransaction:transaction];
     }];
 }
