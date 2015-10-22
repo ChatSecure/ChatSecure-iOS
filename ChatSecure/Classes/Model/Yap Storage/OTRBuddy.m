@@ -13,7 +13,7 @@
 @import YapDatabase;
 #import "OTRImages.h"
 #import "JSQMessagesAvatarImageFactory.h"
-#import "OTRKit.h"
+@import OTRKit;
 
 const struct OTRBuddyAttributes OTRBuddyAttributes = {
 	.username = @"username",

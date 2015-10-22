@@ -21,8 +21,7 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 #import <Foundation/Foundation.h>
-#import "OTRKit.h"
-#import "OTRDataHandler.h"
+@import OTRKit;
 
 extern NSString *const OTRMessageStateDidChangeNotification;
 extern NSString *const OTRWillStartGeneratingPrivateKeyNotification;
@@ -35,9 +34,10 @@ extern NSString *const OTRMessageEventKey;
 
 @interface OTREncryptionManager : NSObject <OTRKitDelegate, OTRDataHandlerDelegate>
 
-+ (BOOL) setFileProtection:(NSString*)fileProtection path:(NSString*)path;
-+ (BOOL)addSkipBackupAttributeToItemAtURL:(NSURL *)URL;
-
+@property (nonatomic, strong, readonly) OTRKit *otrKit;
 @property (nonatomic, strong, readonly) OTRDataHandler *dataHandler;
+
++ (BOOL) setFileProtection:(NSString*)fileProtection path:(NSString*)path;
++ (BOOL) addSkipBackupAttributeToItemAtURL:(NSURL *)URL;
 
 @end

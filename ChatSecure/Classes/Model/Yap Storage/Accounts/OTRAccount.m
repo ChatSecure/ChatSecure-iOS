@@ -18,6 +18,9 @@
 @import YapDatabase;
 #import "OTRBuddy.h"
 #import "OTRImages.h"
+#import "NSURL+ChatSecure.h"
+#import "OTRProtocolManager.h"
+
 
 NSString *const OTRAimImageName               = @"aim.png";
 NSString *const OTRGoogleTalkImageName        = @"gtalk.png";
@@ -210,6 +213,71 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
     NSMutableDictionary *behaviors = [NSMutableDictionary dictionaryWithDictionary:[super encodingBehaviorsByPropertyKey]];
     [behaviors setObject:@(MTLModelEncodingBehaviorExcluded) forKey:NSStringFromSelector(@selector(password))];
     return behaviors;
+}
+
+#pragma mark Fingerprints
+
+/**
+ *  Returns the full share URL invite link for this account. Optionally includes fingerprints of various key types.
+ *
+ *  @param fingerprintTypes (optional) include a NSSet of boxed of OTRFingerprintType values
+ *  @param completion called on main queue with shareURL, or potentially nil if there's an error during link generation.
+ */
+- (void) generateShareURLWithFingerprintTypes:(NSSet <NSNumber*> *)fingerprintTypes
+                                   completion:(void (^)(NSURL* shareURL, NSError *error))completionBlock {
+    NSParameterAssert(completionBlock != nil);
+    if (!completionBlock) {
+        return;
+    }
+    NSURL *baseURL = [NSURL otr_shareBaseURL];
+    
+    NSMutableDictionary <NSString*, NSString*> *fingerprints = [NSMutableDictionary dictionary];
+    
+    if (fingerprintTypes.count > 0) {
+        // We only support OTR fingerprints at the moment
+        if ([fingerprintTypes containsObject:@(OTRFingerprintTypeOTR)]) {
+            [OTRProtocolManager.sharedInstance.encryptionManager.otrKit generatePrivateKeyForAccountName:self.username protocol:self.protocolTypeString completion:^(NSString *fingerprint, NSError *error) {
+                if (fingerprint) {
+                    NSString *key = [[self class] fingerprintStringTypeForFingerprintType:OTRFingerprintTypeOTR];
+                    [fingerprints setObject:fingerprint forKey:key];
+                }
+                
+                // Since we only support OTR at the moment, we can finish here, but this should be refactored with a dispatch_group when we support more key types.
+                
+                NSURL *url = [NSURL otr_shareLink:baseURL.absoluteString username:self.username fingerprints:fingerprints base64Encoded:YES];
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completionBlock(url, nil);
+                });
+            }];
+        }
+    }
+}
+
+/**
+ *  Returns string representation of OTRFingerprintType
+ *
+ *  - "otr" for OTRFingerprintTypeOTR
+ *  - "omemo" for OTRFingerprintTypeAxolotl
+ *  - "gpg" for OTRFingerprintTypeGPG
+ *
+ *  @return String representation of OTRFingerprintType
+ */
++ (NSString*) fingerprintStringTypeForFingerprintType:(OTRFingerprintType)fingerprintType {
+    switch (fingerprintType) {
+        case OTRFingerprintTypeAxolotl:
+            return @"axolotl";
+            break;
+        case OTRFingerprintTypeGPG:
+            return @"gpg";
+            break;
+        case OTRFingerprintTypeOTR:
+            return @"otr";
+            break;
+        default:
+            return nil;
+            break;
+    }
 }
 
 @end

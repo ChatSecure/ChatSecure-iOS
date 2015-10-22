@@ -8,8 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+@import OTRKit;
 @import JSQMessagesViewController;
-#import "OTRKit.h"
 
 @class OTRBuddy, OTRXMPPManager, OTRAccount, YapDatabaseConnection, OTRYapDatabaseObject;
 

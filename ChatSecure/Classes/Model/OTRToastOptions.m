@@ -18,17 +18,17 @@ CGSize const kOTRDefaultNotificationImageSize = {25, 25};
 - (instancetype)init
 {
     if (self = [super init]) {
-        self.toastType = CRToastTypeNavigationBar;
-        self.presentationType = CRToastPresentationTypeCover;
+        self.toastType = 0;
+        self.presentationType = 0;
         self.duration = 3;
         self.backgroundColor = [OTRColors blueInfoColor];
-        self.animationInDirection = CRToastAnimationDirectionTop;
-        self.animationOutDirection = CRToastAnimationDirectionTop;
-        self.animationInType = CRToastAnimationTypeGravity;
-        self.animationOutType = CRToastAnimationTypeGravity;
+        self.animationInDirection = 0;
+        self.animationOutDirection = 0;
+        self.animationInType = 0;
+        self.animationOutType = 0;
         
-        [self addInteractionResponderWithType:CRToastInteractionTypeSwipeUp automaticallyDismiss:YES block:nil];
-        [self addInteractionResponderWithType:CRToastInteractionTypeTapOnce automaticallyDismiss:YES block:nil];
+        [self addInteractionResponderWithType:0 automaticallyDismiss:YES block:nil];
+        [self addInteractionResponderWithType:0 automaticallyDismiss:YES block:nil];
     }
     return self;
 }
@@ -64,14 +64,14 @@ CGSize const kOTRDefaultNotificationImageSize = {25, 25};
     return self;
 }
 
-- (void)addInteractionResponderWithType:(CRToastInteractionType)type
+- (void)addInteractionResponderWithType:(int)type
                    automaticallyDismiss:(BOOL)automaticallyDismiss
-                                  block:(void (^)(CRToastInteractionType interactionType))block
+                                  block:(void (^)(int interactionType))block
 {
     if (!block) {
-        block = ^void(CRToastInteractionType interactionType) { };
+        block = ^void(int interactionType) { };
     }
-    
+    /*
     CRToastInteractionResponder *interactionResponder = [CRToastInteractionResponder interactionResponderWithInteractionType:type automaticallyDismiss:automaticallyDismiss block:block];
     
     if (!self.interactionResponders) {
@@ -79,11 +79,13 @@ CGSize const kOTRDefaultNotificationImageSize = {25, 25};
     } else {
         self.interactionResponders = [self.interactionResponders arrayByAddingObject:interactionResponder];
     }
+     */
 }
 
 
 - (NSDictionary *)dictionary
 {
+    /*
     NSMutableDictionary *options = [@{kCRToastNotificationTypeKey : @(self.toastType),
                                       kCRToastNotificationPresentationTypeKey : @(self.presentationType),
                                       kCRToastTimeIntervalKey : @(self.duration),
@@ -110,6 +112,8 @@ CGSize const kOTRDefaultNotificationImageSize = {25, 25};
     }
     
     return options;
+     */
+    return nil;
 }
 
 #pragma - mark Class Methods

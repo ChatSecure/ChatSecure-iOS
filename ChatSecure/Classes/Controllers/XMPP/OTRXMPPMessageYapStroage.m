@@ -13,7 +13,7 @@
 #import "XMPPMessage+XEP_0280.h"
 #import "NSXMLElement+XEP_0203.h"
 #import "OTRLog.h"
-#import "OTRKit.h"
+@import OTRKit;
 #import "OTRXMPPBuddy.h"
 #import "OTRMessage.h"
 #import "OTRAccount.h"

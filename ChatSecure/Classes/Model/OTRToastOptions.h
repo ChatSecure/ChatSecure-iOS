@@ -9,8 +9,6 @@
 @import Foundation;
 @import UIKit;
 
-#import "CRToast.h"
-
 typedef NS_ENUM(NSUInteger, OTRToastOptionType) {
     OTRToastOptionTypeDefault,
     OTRToastOptionTypeSuccess,
@@ -20,17 +18,18 @@ typedef NS_ENUM(NSUInteger, OTRToastOptionType) {
 
 extern CGSize const kOTRDefaultNotificationImageSize;
 
+/** This is deprecated! Do not use. */
 @interface OTRToastOptions : NSObject
 
-@property (nonatomic) CRToastType toastType;
-@property (nonatomic) CRToastPresentationType presentationType;
+@property (nonatomic) int toastType;
+@property (nonatomic) int presentationType;
 @property (nonatomic) NSTimeInterval duration;
 
-@property (nonatomic) CRToastAnimationDirection animationInDirection;
-@property (nonatomic) CRToastAnimationDirection animationOutDirection;
+@property (nonatomic) int animationInDirection;
+@property (nonatomic) int animationOutDirection;
 
-@property (nonatomic) CRToastAnimationType animationInType;
-@property (nonatomic) CRToastAnimationType animationOutType;
+@property (nonatomic) int animationInType;
+@property (nonatomic) int animationOutType;
 
 //Array of CRToastInteractionResponder
 @property (nonatomic, strong) NSArray *interactionResponders;
@@ -43,9 +42,9 @@ extern CGSize const kOTRDefaultNotificationImageSize;
 - (instancetype)initWithText:(NSString *)text subtitleText:(NSString *)subtitleText;
 - (instancetype)initWithText:(NSString *)text subtitleText:(NSString *)subtitleText optionType:(OTRToastOptionType)option;
 
-- (void)addInteractionResponderWithType:(CRToastInteractionType)type
+- (void)addInteractionResponderWithType:(int)type
                    automaticallyDismiss:(BOOL)automaticallyDismiss
-                                  block:(void (^)(CRToastInteractionType interactionType))block;
+                                  block:(void (^)(int interactionType))block;
 
 - (NSDictionary *)dictionary;
 

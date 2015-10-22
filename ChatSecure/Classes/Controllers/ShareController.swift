@@ -10,17 +10,20 @@ import UIKit
 
 public class ShareController: NSObject {
     public static func shareAccount(account: OTRAccount, sender: AnyObject, viewController: UIViewController) {
-        let url = NSURL.otr_shareLink(NSURL.otr_shareBaseURL().absoluteString, username: account.username, fingerprint: nil, base64Encoded: true)
-        let qrCodeActivity = OTRQRCodeActivity()
-        let activityViewController = UIActivityViewController(activityItems: [url], applicationActivities: [qrCodeActivity])
-        activityViewController.excludedActivityTypes = [UIActivityTypePrint, UIActivityTypeSaveToCameraRoll, UIActivityTypeAddToReadingList]
+        let fingerprintTypes = Set([NSNumber(int: OTRFingerprintType.OTR.rawValue)])
         
-        if let cell = sender as? UITableViewCell {
-            if let ppc = activityViewController.popoverPresentationController {
-                ppc.sourceView = cell
-                ppc.sourceRect = cell.bounds
+        account.generateShareURLWithFingerprintTypes(fingerprintTypes, completion: { (url: NSURL!, error: NSError!) -> Void in
+            let qrCodeActivity = OTRQRCodeActivity()
+            let activityViewController = UIActivityViewController(activityItems: [url], applicationActivities: [qrCodeActivity])
+            activityViewController.excludedActivityTypes = [UIActivityTypePrint, UIActivityTypeSaveToCameraRoll, UIActivityTypeAddToReadingList]
+            if let cell = sender as? UITableViewCell {
+                if let ppc = activityViewController.popoverPresentationController {
+                    ppc.sourceView = cell
+                    ppc.sourceRect = cell.bounds
+                }
             }
-        }
-        viewController.presentViewController(activityViewController, animated: true, completion: nil)
+            viewController.presentViewController(activityViewController, animated: true, completion: nil)
+        })
+        
     }
 }
