@@ -68,7 +68,7 @@
 
 - (void)handleMessage:(XMPPMessage *)xmppMessage stream:(XMPPStream *)stream incoming:(BOOL)incoming;
 {
-    [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+    [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         
         if ([stream.tag isKindOfClass:[NSString class]]) {
             NSString *username = [[xmppMessage from] bare];

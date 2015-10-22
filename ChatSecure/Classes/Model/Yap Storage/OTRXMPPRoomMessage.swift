@@ -82,15 +82,29 @@ extension OTRXMPPRoomMessage:OTRMesssageProtocol {
     public func transportedSecurely() -> Bool {
         return false;
     }
-    
+}
+
+
+extension OTRXMPPRoomMessage:JSQMessageData {
     //MARK: JSQMessageData Protocol methods
     
     public func senderId() -> String! {
-        return self.senderJID
+        var result:String? = nil
+        OTRDatabaseManager.sharedInstance().readWriteDatabaseConnection.readWithBlock { (transaction) -> Void in
+            if (self.state.incoming()) {
+                result = self.senderJID
+            } else {
+                guard let thread = transaction.objectForKey(self.threadId(), inCollection: OTRXMPPRoom.collection()) as? OTRXMPPRoom else {
+                    return
+                }
+                result = thread.accountUniqueId
+            }
+        }
+        return result
     }
     
     public func senderDisplayName() -> String! {
-        return self.displayName
+        return self.displayName ?? ""
     }
     
     public func date() -> NSDate! {

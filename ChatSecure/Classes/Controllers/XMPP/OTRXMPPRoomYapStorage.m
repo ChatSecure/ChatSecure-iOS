@@ -62,7 +62,7 @@
     NSString *accountId = room.xmppStream.tag;
     NSString *roomJID = room.roomJID.bare;
     XMPPJID *fromJID = [message from];
-    [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+    [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
         OTRXMPPRoomMessage *databaseMessage = [[OTRXMPPRoomMessage alloc] init];
         databaseMessage.messageText = [message body];
         databaseMessage.messageDate = [message delayedDeliveryDate];

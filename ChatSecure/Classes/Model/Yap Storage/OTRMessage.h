@@ -30,7 +30,7 @@ extern const struct OTRMessageEdges {
     __unsafe_unretained NSString *media;
 } OTRMessageEdges;
 
-@protocol OTRMesssageProtocol <JSQMessageData>
+@protocol OTRMesssageProtocol <NSObject>
 @required
 
 - (NSString *)threadId;
@@ -45,6 +45,9 @@ extern const struct OTRMessageEdges {
 
 - (BOOL)messageRead;
 
+- (NSDate *)date;
+
+- (NSString *)text;
 
 @end
 

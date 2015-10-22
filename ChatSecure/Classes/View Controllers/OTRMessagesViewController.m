@@ -245,6 +245,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     if (![oldKey isEqualToString:key] || ![oldCollection isEqualToString:collection]) {
         [self saveCurrentMessageText:self.inputToolbar.contentView.textView.text threadKey:oldKey colleciton:oldCollection];
+        self.senderId = [self.threadObject threadAccountIdentifier];
         [self.collectionView reloadData];
     }
     
@@ -630,11 +631,11 @@ typedef NS_ENUM(int, OTRDropDownType) {
             [xmppManager sendChatState:kOTRChatStateInactive withBuddyID:[thread threadAccountIdentifier]];
         }
     }];
-    if (!self.buddy) {
+    if ([self.threadKey length]) {
         return;
     }
-    self.buddy.composingMessageString = self.inputToolbar.contentView.textView.text;
-    __block OTRBuddy *buddy = [self.buddy copy];
+    OTRBuddy *buddy = self.buddy;
+    buddy.composingMessageString = self.inputToolbar.contentView.textView.text;
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         [buddy saveWithTransaction:transaction];
     }];
@@ -1001,34 +1002,21 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (NSString *)senderDisplayName
 {
-    NSString *senderDisplayName = nil;
+    NSString *senderDisplayName = @"";
     if (self.account) {
         if ([self.account.displayName length]) {
             senderDisplayName = self.account.displayName;
         } else {
             senderDisplayName = self.account.username;
         }
-    } else {
-        senderDisplayName = @"";
     }
     
     return senderDisplayName;
 }
 
-- (NSString *)senderId
-{
-    NSString *senderId = nil;
-    if (self.account) {
-        senderId = self.account.uniqueId;
-    } else {
-        senderId = @"";
-    }
-    return senderId;
-}
-
 - (id<JSQMessageData>)collectionView:(JSQMessagesCollectionView *)collectionView messageDataForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return [self messageAtIndexPath:indexPath];
+    return (id <JSQMessageData>)[self messageAtIndexPath:indexPath];
 }
 
 - (id<JSQMessageBubbleImageDataSource>)collectionView:(JSQMessagesCollectionView *)collectionView messageBubbleImageDataForItemAtIndexPath:(NSIndexPath *)indexPath
