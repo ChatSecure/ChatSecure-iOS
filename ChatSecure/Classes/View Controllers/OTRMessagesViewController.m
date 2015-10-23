@@ -641,7 +641,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }];
 }
 
-- (id <OTRMesssageProtocol>)messageAtIndexPath:(NSIndexPath *)indexPath
+- (id <OTRMesssageProtocol,JSQMessageData>)messageAtIndexPath:(NSIndexPath *)indexPath
 {
     return [self.viewHandler object:indexPath];
 }
@@ -662,6 +662,28 @@ typedef NS_ENUM(int, OTRDropDownType) {
         }
     }
     return showDate;
+}
+
+- (BOOL)showSenderDisplayNameAtIndexPath:(NSIndexPath *)indexPath {
+    id<OTRMesssageProtocol,JSQMessageData> message = [self messageAtIndexPath:indexPath];
+    
+    if(![self.threadCollection isEqualToString:[OTRXMPPRoom collection]]) {
+        return NO;
+    }
+    
+    if ([[message senderId] isEqualToString:self.senderId]) {
+        return NO;
+    }
+    
+    if(indexPath.row -1 >= 0) {
+        NSIndexPath *previousIndexPath = [NSIndexPath indexPathForRow:indexPath.row - 1 inSection:indexPath.section];
+        id<OTRMesssageProtocol,JSQMessageData> previousMessage = [self messageAtIndexPath:previousIndexPath];
+        if ([[previousMessage senderId] isEqualToString:message.senderId]) {
+            return NO;
+        }
+    }
+    
+    return YES;
 }
 
 - (void)receivedTextViewChangedNotification:(NSNotification *)notification
@@ -1067,7 +1089,15 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForMessageBubbleTopLabelAtIndexPath:(NSIndexPath *)indexPath
 {
-    return nil;
+    
+    
+    if ([self showSenderDisplayNameAtIndexPath:indexPath]) {
+        id<OTRMesssageProtocol,JSQMessageData> message = [self messageAtIndexPath:indexPath];
+        NSString *displayName = [message senderDisplayName];
+        return [[NSAttributedString alloc] initWithString:displayName];
+    }
+    
+    return  nil;
 }
 
 
@@ -1148,6 +1178,16 @@ typedef NS_ENUM(int, OTRDropDownType) {
 heightForCellTopLabelAtIndexPath:(NSIndexPath *)indexPath
 {
     if ([self showDateAtIndexPath:indexPath]) {
+        return kJSQMessagesCollectionViewCellLabelHeightDefault;
+    }
+    return 0.0f;
+}
+
+- (CGFloat)collectionView:(JSQMessagesCollectionView *)collectionView
+                   layout:(JSQMessagesCollectionViewFlowLayout *)collectionViewLayout
+heightForMessageBubbleTopLabelAtIndexPath:(NSIndexPath *)indexPath
+{
+    if ([self showSenderDisplayNameAtIndexPath:indexPath]) {
         return kJSQMessagesCollectionViewCellLabelHeightDefault;
     }
     return 0.0f;

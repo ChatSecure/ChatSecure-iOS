@@ -51,7 +51,7 @@ PODS:
   - IOCipher/GCDWebServer (0.1.0):
     - GCDWebServer
     - IOCipher/common
-  - JSQMessagesViewController (7.1.0):
+  - JSQMessagesViewController (7.2.0):
     - JSQSystemSoundPlayer (~> 2.0.1)
   - JSQSystemSoundPlayer (2.0.1)
   - JTSImageViewController (1.5.1)
@@ -259,7 +259,7 @@ DEPENDENCIES:
   - HockeySDK-Source (~> 3.7)
   - IOCipher/GCDWebServer (from `Submodules/IOCipher/IOCipher.podspec`)
   - JSQMessagesViewController (from `https://github.com/ChatSecure/JSQMessagesViewController`,
-    branch `7.1.0-send_button`)
+    branch `7.2.0-send_button`)
   - JTSImageViewController (~> 1.4)
   - JTTargetActionBlock (~> 1.0)
   - JVFloatLabeledTextField (~> 1.0)
@@ -295,7 +295,7 @@ EXTERNAL SOURCES:
   IOCipher:
     :path: Submodules/IOCipher/IOCipher.podspec
   JSQMessagesViewController:
-    :branch: 7.1.0-send_button
+    :branch: 7.2.0-send_button
     :git: https://github.com/ChatSecure/JSQMessagesViewController
   OTRKit:
     :path: Submodules/OTRKit/OTRKit.podspec
@@ -314,7 +314,7 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   JSQMessagesViewController:
-    :commit: aced19e84fe5ecfac7e89db2b247dfbd505127cb
+    :commit: 4bae8b303c4f7e3c34571a4c898bd1f11ecc65a5
     :git: https://github.com/ChatSecure/JSQMessagesViewController
 
 SPEC CHECKSUMS:
@@ -331,7 +331,7 @@ SPEC CHECKSUMS:
   gtm-oauth2: b31c9d7c82f773f7b7094cbb7da8dc7b5968ce16
   HockeySDK-Source: 42b2ead932f97de6b88bed9d1aa2a13b2e6e21ad
   IOCipher: 2bcc56103fbdd9cd9139a5b030ebb97ed6fbc4b9
-  JSQMessagesViewController: ca11f86fa68ca70835f05e169df9244147c1dc40
+  JSQMessagesViewController: 73cab48aa92fc2d512f3b6724f3425cc47a19eb5
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
   JTSImageViewController: 1f8ce1cc93dab0d0af8e53badeea7528560cfec9
   JTTargetActionBlock: 6e9201e5fa88651deb354c91b7c9c6487a1abe55

@@ -117,7 +117,7 @@ extension OTRXMPPRoomMessage:JSQMessageData {
     
     public func messageHash() -> UInt {
         
-        //TODO this is not correct but UInt(self.hash) is not working
+        //TODO this is not correct but UInt(self.hash) does not working
         return UInt(self.date().timeIntervalSince1970)
     }
     

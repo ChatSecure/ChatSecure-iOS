@@ -61,7 +61,7 @@ pod 'gtm-oauth2', :podspec => 'Podspecs/gtm-oauth2.podspec'
 pod 'SQLCipher/fts', :podspec => 'Podspecs/SQLCipher.podspec.json'
 
 # Forks
-pod 'JSQMessagesViewController', :git => 'https://github.com/ChatSecure/JSQMessagesViewController', :branch => '7.1.0-send_button'
+pod 'JSQMessagesViewController', :git => 'https://github.com/ChatSecure/JSQMessagesViewController', :branch => '7.2.0-send_button'
 
 # Submodules
 pod 'ProxyKit/Client', :path => 'Submodules/ProxyKit/ProxyKit.podspec'
@@ -72,4 +72,3 @@ pod 'YapDatabase/SQLCipher', :path => 'Submodules/YapDatabase/YapDatabase.podspe
 pod 'IOCipher/GCDWebServer', :path => 'Submodules/IOCipher/IOCipher.podspec'
 pod 'ParkedTextField', :path => 'Submodules/ParkedTextField/ParkedTextField.podspec'
 pod 'XLForm', :path => 'Submodules/XLForm/XLForm.podspec'
-
