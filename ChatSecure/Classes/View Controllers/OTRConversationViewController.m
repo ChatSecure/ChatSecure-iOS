@@ -33,6 +33,8 @@
 @import OTRAssets;
 #import "OTRLanguageManager.h"
 #import "OTRMessagesGroupViewController.h"
+#import "OTRXMPPManager.h"
+#import "OTRXMPPRoomManager.h"
 
 static CGFloat kOTRConversationCellHeight = 80.0;
 
@@ -354,7 +356,6 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     //Delete conversation
-    //Todo needs to updated for group chats
     if(editingStyle == UITableViewCellEditingStyleDelete) {
         id <OTRThreadOwner> thread = [self threadForIndexPath:indexPath];
         
@@ -363,6 +364,18 @@ static CGFloat kOTRConversationCellHeight = 80.0;
         }];
         
         if ([thread isKindOfClass:[OTRXMPPRoom class]]) {
+            
+            //Leave room
+            NSString *accountKey = [thread threadAccountIdentifier];
+            __block OTRAccount *account = nil;
+            [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+                account = [OTRAccount fetchObjectWithUniqueID:accountKey transaction:transaction];
+            }];
+            OTRXMPPManager *xmppManager = (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:account];
+            XMPPJID *jid = [XMPPJID jidWithString:((OTRXMPPRoom *)thread).jid];
+            [xmppManager.roomManager leaveRoom:jid];
+            
+            //Delete database items
             [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
                 [((OTRXMPPRoom *)thread) removeWithTransaction:transaction];
             }];
@@ -526,7 +539,6 @@ static CGFloat kOTRConversationCellHeight = 80.0;
         if ([buddies count] == 1) {
             [self enterConversationWithBuddyId:[buddies firstObject]];
         } else {
-            //TODO: Enter group chat
             [self enterConversationWithBuddies:buddies accountId:accountId];
         }
         

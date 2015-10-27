@@ -116,6 +116,12 @@
     return databaseRoomKey;
 }
 
+- (void)leaveRoom:(nonnull XMPPJID *)jid
+{
+    XMPPRoom *room = [self.rooms objectForKey:jid.bare];
+    [room leaveRoom];
+}
+
 - (NSString *)startGroupChatWithBuddies:(NSArray<NSString *> *)buddiesArray roomJID:(XMPPJID *)roomName nickname:(nonnull NSString *)name
 {
     dispatch_async(moduleQueue, ^{
