@@ -122,6 +122,16 @@
     }];
 }
 
+- (id <OTRMesssageProtocol>)lastMessageInRoom:(XMPPRoom *)room accountKey:(NSString *)accountKey
+{
+    __block id<OTRMesssageProtocol> message = nil;
+    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        OTRXMPPRoom *databaseRoom = [self fetchRoomWithXMPPRoomJID:room.roomJID.bare accountId:accountKey inTransaction:transaction];
+        message = [databaseRoom lastMessageWithTransaction:transaction];
+    }];
+    return message;
+}
+
 //MARK: XMPPRoomStorage
 
 - (BOOL)configureWithParent:(XMPPRoom *)aParent queue:(dispatch_queue_t)queue

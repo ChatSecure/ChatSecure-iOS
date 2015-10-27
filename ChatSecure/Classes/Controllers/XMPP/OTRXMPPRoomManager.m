@@ -16,6 +16,7 @@
 #import "OTRBuddy.h"
 #import "XMPPMUC.h"
 #import "XMPPRoom.h"
+#import "NSDate+XMPPDateTimeProfiles.h"
 
 @interface OTRXMPPRoomManager () <XMPPMUCDelegate, XMPPRoomDelegate, XMPPStreamDelegate, OTRYapViewHandlerDelegateProtocol>
 
@@ -97,7 +98,21 @@
         [room saveWithTransaction:transaction];
     }];
     
-    [room joinRoomUsingNickname:name history:nil];
+    //Get history if any
+    NSXMLElement *historyElement = nil;
+    OTRXMPPRoomYapStorage *storage = room.xmppRoomStorage;
+    id<OTRMesssageProtocol> lastMessage = [storage lastMessageInRoom:room accountKey:accountId];
+    NSDate *lastMessageDate = [lastMessage date];
+    if (lastMessageDate) {
+        //Use since as our history marker if we have a last message
+        //http://xmpp.org/extensions/xep-0045.html#enter-managehistory
+        NSString *dateTimeString = [lastMessageDate xmppDateTimeString];
+        historyElement = [NSXMLElement elementWithName:@"history"];
+        [historyElement addAttributeWithName:@"since" stringValue:dateTimeString];
+    }
+    
+    
+    [room joinRoomUsingNickname:name history:historyElement];
     return databaseRoomKey;
 }
 

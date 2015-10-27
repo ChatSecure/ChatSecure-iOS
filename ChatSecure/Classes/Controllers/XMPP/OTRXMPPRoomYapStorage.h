@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "XMPPRoom.h"
 #import "YapDatabaseConnection.h"
+#import "OTRMessage.h"
 
 @interface OTRXMPPRoomYapStorage : NSObject <XMPPRoomStorage>
 
@@ -16,4 +17,5 @@
 
 - (instancetype)initWithDatabaseConnection:(YapDatabaseConnection *)databaseConnection;
 
+- (id <OTRMesssageProtocol>)lastMessageInRoom:(XMPPRoom *)room accountKey:(NSString *)accountKey;
 @end
