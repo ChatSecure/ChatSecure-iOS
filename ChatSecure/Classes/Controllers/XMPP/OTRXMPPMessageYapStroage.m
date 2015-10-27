@@ -18,6 +18,7 @@
 #import "OTRMessage.h"
 #import "OTRAccount.h"
 #import "OTRConstants.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 @implementation OTRXMPPMessageYapStroage
 
@@ -131,8 +132,8 @@
 {
     __block BOOL result = NO;
     if ([message.elementID length]) {
-        [OTRMessage enumerateMessagesWithMessageId:message.elementID transaction:transaction usingBlock:^(OTRMessage *message, BOOL *stop) {
-            if ([message.buddyUniqueId isEqualToString:buddyUniqueId]) {
+        [transaction enumerateMessagesWithId:message.elementID block:^(id<OTRMesssageProtocol> _Nonnull databaseMessage, BOOL * _Null_unspecified stop) {
+            if ([[databaseMessage threadId] isEqualToString:buddyUniqueId]) {
                 *stop = YES;
                 result = YES;
             }

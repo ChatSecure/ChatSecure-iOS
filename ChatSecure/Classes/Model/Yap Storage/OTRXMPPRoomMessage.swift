@@ -82,6 +82,10 @@ extension OTRXMPPRoomMessage:OTRMesssageProtocol {
     public func transportedSecurely() -> Bool {
         return false;
     }
+    
+    public func remoteMessageId() -> String! {
+        return self.xmppId
+    }
 }
 
 

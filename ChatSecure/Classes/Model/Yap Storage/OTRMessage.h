@@ -49,6 +49,8 @@ extern const struct OTRMessageEdges {
 
 - (NSString *)text;
 
+- (NSString *)remoteMessageId;
+
 @end
 
 @interface OTRMessage : OTRYapDatabaseObject <YapDatabaseRelationshipNode, OTRMesssageProtocol>
@@ -75,7 +77,5 @@ extern const struct OTRMessageEdges {
 + (void)receivedDeliveryReceiptForMessageId:(NSString *)messageId transaction:(YapDatabaseReadWriteTransaction*)transaction;
 
 + (void)showLocalNotificationForMessage:(OTRMessage *)message;
-
-+ (void)enumerateMessagesWithMessageId:(NSString *)messageId transaction:(YapDatabaseReadTransaction *)transaction usingBlock:(void (^)(OTRMessage *message,BOOL *stop))block;
 
 @end

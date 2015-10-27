@@ -119,6 +119,11 @@ const struct OTRMessageEdges OTRMessageEdges = {
     return self.isRead;
 }
 
+- (NSString *)remoteMessageId
+{
+    return self.messageId;
+}
+
 #pragma - mark Class Methods
 
 + (NSInteger)numberOfUnreadMessagesWithTransaction:(YapDatabaseReadTransaction*)transaction
@@ -160,16 +165,17 @@ const struct OTRMessageEdges OTRMessageEdges = {
 + (void)receivedDeliveryReceiptForMessageId:(NSString *)messageId transaction:(YapDatabaseReadWriteTransaction*)transaction
 {
     __block OTRMessage *deliveredMessage = nil;
-    [self enumerateMessagesWithMessageId:messageId transaction:transaction usingBlock:^(OTRMessage *message, BOOL *stop) {
-        if (!message.isIncoming) {
+    [transaction enumerateMessagesWithId:messageId block:^(id<OTRMesssageProtocol> _Nonnull message, BOOL * _Null_unspecified stop) {
+        if (![message messageIncoming] && [message isKindOfClass:[OTRMessage class]]) {
             //Media messages are not delivered until the transfer is complete. This is handled in the OTREncryptionManager.
-            if (![message.mediaItemUniqueId length]) {
-                deliveredMessage = message;
+            OTRMessage *msg = (OTRMessage *)message;
+            if (![msg.mediaItemUniqueId length]) {
+                deliveredMessage = msg;
                 *stop = YES;
             }
-            
         }
     }];
+
     if (deliveredMessage) {
         deliveredMessage.delivered = YES;
         [deliveredMessage saveWithTransaction:transaction];
@@ -209,22 +215,6 @@ const struct OTRMessageEdges OTRMessageEdges = {
             [[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
         });
     }
-}
-
-+ (void)enumerateMessagesWithMessageId:(NSString *)messageId transaction:(YapDatabaseReadTransaction *)transaction usingBlock:(void (^)(OTRMessage *message,BOOL *stop))block;
-{
-    if ([messageId length] && block) {
-        NSString *queryString = [NSString stringWithFormat:@"Where %@ = ?",OTRYapDatabseMessageIdSecondaryIndex];
-        YapDatabaseQuery *query = [YapDatabaseQuery queryWithFormat:queryString,messageId];
-        
-        [[transaction ext:OTRYapDatabseMessageIdSecondaryIndexExtension] enumerateKeysMatchingQuery:query usingBlock:^(NSString *collection, NSString *key, BOOL *stop) {
-            OTRMessage *message = [OTRMessage fetchObjectWithUniqueID:key transaction:transaction];
-            if (message) {
-                block(message,stop);
-            }
-        }];
-        
-    }    
 }
 
 @end

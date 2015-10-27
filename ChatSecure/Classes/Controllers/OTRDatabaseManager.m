@@ -195,12 +195,12 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
     [setup addColumn:OTRYapDatabseMessageIdSecondaryIndex withType:YapDatabaseSecondaryIndexTypeText];
     
     YapDatabaseSecondaryIndexHandler *indexHandler = [YapDatabaseSecondaryIndexHandler withObjectBlock:^(NSMutableDictionary *dict, NSString *collection, NSString *key, id object) {
-        if ([object isKindOfClass:[OTRMessage class]])
+        if ([object conformsToProtocol:@protocol(OTRMesssageProtocol)])
         {
-            OTRMessage *message = (OTRMessage *)object;
-            
-            if ([message.messageId length]) {
-                [dict setObject:message.messageId forKey:OTRYapDatabseMessageIdSecondaryIndex];
+            id<OTRMesssageProtocol> message = (id <OTRMesssageProtocol>)object;
+                
+            if ([[message remoteMessageId] length]) {
+                [dict setObject:[message remoteMessageId] forKey:OTRYapDatabseMessageIdSecondaryIndex];
             }
         }
     }];

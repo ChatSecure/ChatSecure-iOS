@@ -681,10 +681,13 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 {
     if ([message.elementID length]) {
         [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-            [OTRMessage enumerateMessagesWithMessageId:message.elementID transaction:transaction usingBlock:^(OTRMessage *message, BOOL *stop) {
-                message.error = error;
-                [message saveWithTransaction:transaction];
-                *stop = YES;
+            [transaction enumerateMessagesWithId:message.elementID block:^(id<OTRMesssageProtocol> _Nonnull databaseMessage, BOOL * _Null_unspecified stop) {
+                if ([databaseMessage isKindOfClass:[OTRMessage class]]) {
+                    ((OTRMessage *)databaseMessage).error = error;
+                    [(OTRMessage *)databaseMessage saveWithTransaction:transaction];
+                    *stop = YES;
+                }
+                
             }];
         }];
     }

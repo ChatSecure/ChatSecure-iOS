@@ -57,13 +57,51 @@
     return [OTRXMPPRoom fetchObjectWithUniqueID:[OTRXMPPRoom createUniqueId:accountId jid:roomJID] transaction:transaction];
 }
 
+- (BOOL)existsMessage:(XMPPMessage *)message from:(XMPPJID *)fromJID account:(NSString *)acountKey transaction:(YapDatabaseReadTransaction *)transaction
+{
+    NSDate *remoteTimestamp = [message delayedDeliveryDate];
+    
+    if (!remoteTimestamp)
+    {
+        // When the xmpp server sends us a room message, it will always timestamp delayed messages.
+        // For example, when retrieving the discussion history, all messages will include the original timestamp.
+        // If a message doesn't include such timestamp, then we know we're getting it in "real time".
+        
+        return NO;
+    }
+    
+    NSString *elementID = [message elementID];
+    if ([elementID length]) {
+        __block BOOL result = NO;
+        [transaction enumerateMessagesWithId:elementID block:^(id<OTRMesssageProtocol> _Nonnull databaseMessage, BOOL * _Null_unspecified stop) {
+            //Need to check room JID
+            //So if message has same ID and same room jid that's got to be the same message, right?
+            if ([databaseMessage isKindOfClass:[OTRXMPPRoomMessage class]]) {
+                OTRXMPPRoomMessage *msg = (OTRXMPPRoomMessage *)databaseMessage;
+                if ([msg.roomJID isEqualToString:fromJID.bare]) {
+                    *stop = YES;
+                    result = YES;
+                }}
+        }];
+        return result;
+    }
+    
+    return NO;
+}
+
 - (void)insertIncomingMessage:(XMPPMessage *)message intoRoom:(XMPPRoom *)room
 {
     NSString *accountId = room.xmppStream.tag;
     NSString *roomJID = room.roomJID.bare;
     XMPPJID *fromJID = [message from];
+    
     [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+        if ([self existsMessage:message from:fromJID account:accountId transaction:transaction]) {
+            
+            return;
+        }
         OTRXMPPRoomMessage *databaseMessage = [[OTRXMPPRoomMessage alloc] init];
+        databaseMessage.xmppId = [message elementID];
         databaseMessage.messageText = [message body];
         databaseMessage.messageDate = [message delayedDeliveryDate];
         if (!databaseMessage.date) {
@@ -74,7 +112,7 @@
         databaseMessage.roomJID = databaseRoom.jid;
         databaseMessage.state = RoomMessageStateReceived;
         databaseMessage.roomUniqueId = databaseRoom.uniqueId;
-        OTRXMPPRoomOccupant *occupant = [self roomOccupantForJID:databaseMessage.senderId roomJID:databaseMessage.roomJID accountId:accountId inTransaction:transaction];
+        OTRXMPPRoomOccupant *occupant = [self roomOccupantForJID:databaseMessage.senderJID roomJID:databaseMessage.roomJID accountId:accountId inTransaction:transaction];
         databaseMessage.displayName = occupant.realJID;
         
         databaseRoom.lastRoomMessageDate = [databaseMessage date];
