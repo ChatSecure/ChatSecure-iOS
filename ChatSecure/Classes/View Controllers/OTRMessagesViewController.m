@@ -61,9 +61,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 @property (nonatomic, strong) OTRYapViewHandler *viewHandler;
 
-@property (nonatomic, strong) NSString *threadKey;
-@property (nonatomic, strong) NSString *threadCollection;
-
 @property (nonatomic, strong) JSQMessagesBubbleImage *outgoingBubbleImage;
 @property (nonatomic, strong) JSQMessagesBubbleImage *incomingBubbleImage;
 

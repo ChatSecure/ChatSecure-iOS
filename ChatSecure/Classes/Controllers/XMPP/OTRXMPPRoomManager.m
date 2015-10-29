@@ -55,8 +55,9 @@
 
 - (NSString *)joinRoom:(XMPPJID *)jid withNickname:(NSString *)name
 {
-    //Register view for sending message queue
+    //Register view for sending message queue and occupants
     [self.databaseConnection.database asyncRegisterUnsentGroupMessagesView:nil completionBlock:nil];
+    [self.databaseConnection.database asyncRegisterGroupOccupantsView:nil completionBlock:nil];
     
     
     

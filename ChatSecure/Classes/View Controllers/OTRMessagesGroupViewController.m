@@ -9,11 +9,11 @@
 #import "OTRMessagesGroupViewController.h"
 #import "OTRXMPPManager.h"
 #import "OTRXMPPRoomManager.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
 @import OTRAssets;
 
 @interface OTRMessagesGroupViewController ()
 
-@property (nonatomic, strong) NSString *threadID;
 @property (nonatomic, strong) NSString *accountUniqueId;
 
 @end
@@ -22,7 +22,6 @@
 
 - (void)setupWithGroupYapId:(NSString *)groupId
 {
-    self.threadID = groupId;
     self.accountUniqueId = [[self threadObject] threadAccountIdentifier];
 }
 
@@ -37,8 +36,8 @@
     NSString *service = [self.xmppManager.roomManager.conferenceServicesJID firstObject];
     NSString *roomName = [NSUUID UUID].UUIDString;
     XMPPJID *roomJID = [XMPPJID jidWithString:[NSString stringWithFormat:@"%@@%@",roomName,service]];
-    self.threadID = [self.xmppManager.roomManager startGroupChatWithBuddies:buddies roomJID:roomJID nickname:account.username];
-    [self setThreadKey:self.threadID collection:[OTRXMPPRoom collection]];
+    self.threadKey = [self.xmppManager.roomManager startGroupChatWithBuddies:buddies roomJID:roomJID nickname:account.username];
+    [self setThreadKey:self.threadKey collection:[OTRXMPPRoom collection]];
 }
 
 - (OTRAccount *)account {
@@ -63,7 +62,8 @@
 #pragma - mark Button Actions
 
 - (void)didSelectOccupantsButton:(id)sender {
-    
+    OTRRoomOccupantsViewController *occupantsViewController = [[OTRRoomOccupantsViewController alloc] initWithDatabaseConnection:[self.databaseConnection.database newConnection] roomKey:self.threadKey];
+    [self.navigationController pushViewController:occupantsViewController animated:YES];
 }
 
 - (void)didPressSendButton:(UIButton *)button withMessageText:(NSString *)text senderId:(NSString *)senderId senderDisplayName:(NSString *)senderDisplayName date:(NSDate *)date
@@ -74,7 +74,7 @@
     OTRXMPPRoomMessage *databaseMessage = [[OTRXMPPRoomMessage alloc] init];
     databaseMessage.messageText = text;
     databaseMessage.messageDate = [NSDate date];
-    databaseMessage.roomUniqueId = self.threadID;
+    databaseMessage.roomUniqueId = self.threadKey;
     OTRXMPPRoom *room = (OTRXMPPRoom *)[self threadObject];
     databaseMessage.roomJID = room.jid;
     databaseMessage.roomUniqueId = room.uniqueId;

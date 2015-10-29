@@ -11,10 +11,12 @@ import YapDatabase
 
 @objc public enum DatabaseViewNames: Int {
     case UnsentGroupMessagesViewName
+    case GroupOccupantsViewName
     
     public func name() -> String {
         switch self {
         case UnsentGroupMessagesViewName: return "UnsentGroupMessagesViewName"
+        case GroupOccupantsViewName: return "GroupOccupantsViewName"
         }
     }
 }
@@ -64,6 +66,36 @@ public extension YapDatabase {
             
             return date1.compare(date2)
         }), version: "1", whiteList: [OTRXMPPRoomMessage.collection()], name: .UnsentGroupMessagesViewName, completionQueue:completionQueue, completionBlock:completionBlock)
+    }
+    
+    public func asyncRegisterGroupOccupantsView(completionQueue:dispatch_queue_t?, completionBlock:((Bool) ->Void)?) {
+        
+        let grouping = YapDatabaseViewGrouping.withObjectBlock { (collection , key , object ) -> String! in
+            guard let occupant = object as? OTRXMPPRoomOccupant else {
+                return nil
+            }
+            
+            guard let roomId = occupant.roomUniqueId else {
+                return nil
+            }
+            
+            return roomId
+        }
+        
+        let sorting = YapDatabaseViewSorting.withObjectBlock { (group, collection1, key1, object1, collection2, key2, object2) -> NSComparisonResult in
+            
+            guard let name1 = (object1 as? OTRXMPPRoomOccupant)?.realJID ?? (object1 as? OTRXMPPRoomOccupant)?.jid else {
+                return .OrderedSame
+            }
+            
+            guard let name2 = (object2 as? OTRXMPPRoomOccupant)?.realJID ?? (object2 as? OTRXMPPRoomOccupant)?.jid else {
+                return .OrderedSame
+            }
+            
+            return name1.localizedCompare(name2)
+        }
+        
+        self.asyncRegisterView(grouping, sorting: sorting, version: "1", whiteList: [OTRXMPPRoomOccupant.collection()], name: .GroupOccupantsViewName, completionQueue: completionQueue, completionBlock: completionBlock)
     }
     
     //Needed for Obj-C

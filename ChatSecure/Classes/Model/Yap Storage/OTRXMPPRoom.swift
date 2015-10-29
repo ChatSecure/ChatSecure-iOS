@@ -102,7 +102,13 @@ extension OTRXMPPRoom:OTRThreadOwner {
         guard let viewTransaction = transaction.ext(OTRChatDatabaseViewExtensionName) as? YapDatabaseViewTransaction else {
             return nil
         }
+        
         let numberOfItems = viewTransaction.numberOfItemsInGroup(self.threadIdentifier())
+        
+        if numberOfItems == 0 {
+            return nil
+        }
+        
         guard let message = viewTransaction.objectAtIndex(numberOfItems-1, inGroup: self.threadIdentifier()) as? OTRMesssageProtocol else {
             return nil
         }

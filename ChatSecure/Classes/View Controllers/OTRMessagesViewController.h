@@ -25,6 +25,8 @@
 @interface OTRMessagesViewController : JSQMessagesViewController <UISplitViewControllerDelegate, OTRMessagesViewControllerProtocol, UIPopoverPresentationControllerDelegate>
 
 @property (nonatomic, strong) YapDatabaseConnection *databaseConnection;
+@property (nonatomic, strong) NSString *threadKey;
+@property (nonatomic, strong) NSString *threadCollection;
 @property (nonatomic, strong) UIButton *microphoneButton;
 @property (nonatomic, strong) UIButton *sendButton;
 @property (nonatomic, strong) UIButton *cameraButton;

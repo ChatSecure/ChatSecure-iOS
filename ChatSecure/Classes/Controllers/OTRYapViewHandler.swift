@@ -13,7 +13,7 @@ import YapDatabase
     
     /** Recommeded to do a reload data here*/
     optional func didSetupMappings(handler:OTRYapViewHandler)
-    optional func didRecieveChanges(handler:OTRYapViewHandler, sectionChanges:[YapDatabaseViewSectionChange], rowChanges:[YapDatabaseViewRowChange])
+    optional func didReceiveChanges(handler:OTRYapViewHandler, sectionChanges:[YapDatabaseViewSectionChange], rowChanges:[YapDatabaseViewRowChange])
     optional func didReceiveChanges(handler:OTRYapViewHandler, key:String, collection:String)
 }
 
@@ -150,7 +150,7 @@ public class OTRYapViewHandler: NSObject {
         if let sc = sectionChanges as? [YapDatabaseViewSectionChange] {
             if let rc = rowChanges as? [YapDatabaseViewRowChange] {
                 if sc.count > 0 || rc.count > 0 {
-                    self.delegate?.didRecieveChanges?(self, sectionChanges: sc, rowChanges: rc)
+                    self.delegate?.didReceiveChanges?(self, sectionChanges: sc, rowChanges: rc)
                 }
             }
         }
