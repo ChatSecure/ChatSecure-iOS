@@ -25,4 +25,20 @@ extension YapDatabaseReadTransaction {
             }
         }
     }
+    
+    /** The jid here is the full jid not real jid or nickname */
+    public func enumerateRoomOccupants(jid jid:String, block:(occupant:OTRXMPPRoomOccupant, stop:UnsafeMutablePointer<ObjCBool>) -> Void) {
+        guard let secondaryIndexTransaction = self.ext(OTRYapDatabseMessageIdSecondaryIndexExtension) as? YapDatabaseSecondaryIndexTransaction else {
+            return
+        }
+        
+        let queryString = "Where \(OTRYapDatabseRoomOccupantJIdSecondaryIndex) = ?"
+        let query = YapDatabaseQuery(string: queryString, parameters: [jid])
+        
+        secondaryIndexTransaction.enumerateKeysMatchingQuery(query) { (collection, key, stop) -> Void in
+            if let occupant = self.objectForKey(key, inCollection: collection) as? OTRXMPPRoomOccupant {
+                block(occupant: occupant, stop: stop)
+            }
+        }
+    }
 }

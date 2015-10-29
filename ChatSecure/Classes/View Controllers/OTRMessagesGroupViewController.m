@@ -87,4 +87,32 @@
     
 }
 
+#pragma - mark JSQMessagesCollectionViewDataSource Methods
+
+- (id <JSQMessageAvatarImageDataSource>)collectionView:(JSQMessagesCollectionView *)collectionView avatarImageDataForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    id <JSQMessageAvatarImageDataSource> imageDataSource = [super collectionView:collectionView avatarImageDataForItemAtIndexPath:indexPath];
+    if (!imageDataSource) {
+        
+        id <OTRMesssageProtocol, JSQMessageData> message = [self messageAtIndexPath:indexPath];
+        if ([message isKindOfClass:[OTRXMPPRoomMessage class]]) {
+            OTRXMPPRoomMessage *roomMessage = (OTRXMPPRoomMessage *)message;
+            __block OTRXMPPRoomOccupant *roomOccupant = nil;
+            [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+                [transaction enumerateRoomOccupantsWithJid:roomMessage.senderJID block:^(OTRXMPPRoomOccupant * _Nonnull occupant, BOOL * _Null_unspecified stop) {
+                    roomOccupant = occupant;
+                    *stop = YES;
+                }];
+            }];
+            UIImage *avatarImage = [roomOccupant avatarImage];
+            if (avatarImage) {
+                NSUInteger diameter = MIN(avatarImage.size.width, avatarImage.size.height);
+                imageDataSource = [JSQMessagesAvatarImageFactory avatarImageWithImage:avatarImage diameter:diameter];
+            }
+        }
+        
+    }
+    return imageDataSource;
+}
+
 @end

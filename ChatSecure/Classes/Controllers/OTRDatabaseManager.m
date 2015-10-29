@@ -28,9 +28,11 @@
 #import "NSFileManager+ChatSecure.h"
 @import OTRAssets;
 #import "OTRLanguageManager.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 NSString *const OTRYapDatabaseRelationshipName = @"OTRYapDatabaseRelationshipName";
 NSString *const OTRYapDatabseMessageIdSecondaryIndex = @"OTRYapDatabseMessageIdSecondaryIndex";
+NSString *const OTRYapDatabseRoomOccupantJIdSecondaryIndex = @"constOTRYapDatabseRoomOccupantJIdSecondaryIndex";
 NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseMessageIdSecondaryIndexExtension";
 
 
@@ -193,6 +195,7 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
 {
     YapDatabaseSecondaryIndexSetup *setup = [[YapDatabaseSecondaryIndexSetup alloc] init];
     [setup addColumn:OTRYapDatabseMessageIdSecondaryIndex withType:YapDatabaseSecondaryIndexTypeText];
+    [setup addColumn:OTRYapDatabseRoomOccupantJIdSecondaryIndex withType:YapDatabaseSecondaryIndexTypeText];
     
     YapDatabaseSecondaryIndexHandler *indexHandler = [YapDatabaseSecondaryIndexHandler withObjectBlock:^(NSMutableDictionary *dict, NSString *collection, NSString *key, id object) {
         if ([object conformsToProtocol:@protocol(OTRMesssageProtocol)])
@@ -201,6 +204,13 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
                 
             if ([[message remoteMessageId] length]) {
                 [dict setObject:[message remoteMessageId] forKey:OTRYapDatabseMessageIdSecondaryIndex];
+            }
+        }
+        
+        if ([collection isEqualToString:[OTRXMPPRoomOccupant collection]]) {
+            OTRXMPPRoomOccupant *roomOccupant = (OTRXMPPRoomOccupant *)object;
+            if ([roomOccupant.jid length]) {
+                [dict setObject:roomOccupant.jid forKey:OTRYapDatabseRoomOccupantJIdSecondaryIndex];
             }
         }
     }];

@@ -15,7 +15,7 @@ public class OTRXMPPRoomOccupant: OTRYapDatabaseObject, YapDatabaseRelationshipN
     
     public var available = false
     
-    /** This is the JID of the participant as it's known in teh room  ie baseball_chat@conference.dukgo.com/user123 */
+    /** This is the JID of the participant as it's known in the room i.e. baseball_chat@conference.dukgo.com/user123 */
     public var jid:String?
     
     /** This is the name your known as in the room. Seems to be username without domain */
@@ -26,6 +26,11 @@ public class OTRXMPPRoomOccupant: OTRYapDatabaseObject, YapDatabaseRelationshipN
     
     public var roomUniqueId:String?
     
+    public func avatarImage() -> UIImage {
+        return OTRImages.avatarImageWithUniqueIdentifier(self.uniqueId, avatarData: nil, displayName: nil, username: self.realJID)
+    }
+    
+    //MARK: YapDatabaseRelationshipNode Methods
     public func yapDatabaseRelationshipEdges() -> [AnyObject]! {
         if let roomID = self.roomUniqueId {
             let relationship = YapDatabaseRelationshipEdge(name: OTRXMPPRoomOccupant.roomEdgeName, sourceKey: self.uniqueId, collection: OTRXMPPRoomOccupant.collection(), destinationKey: roomID, collection: OTRXMPPRoom.collection(), nodeDeleteRules: YDB_NodeDeleteRules.DeleteSourceIfDestinationDeleted)
