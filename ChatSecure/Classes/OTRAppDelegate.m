@@ -116,6 +116,14 @@
         }
 
         [[OTRDatabaseManager sharedInstance] setupDatabaseWithName:OTRYapDatabaseName];
+        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+            OTRAccount *account = [OTRAccount accountForAccountType:OTRAccountTypeJabber];
+            account.rememberPassword = YES;
+            account.username = @"dchiles@dukgo.com";
+            account.password = @"2548588";
+            ((OTRXMPPAccount *)account).domain = @"dukgo.com";
+            //[account saveWithTransaction:transaction];
+        }];
         rootViewController = [self defaultConversationNavigationController];
 #if CHATSECURE_DEMO
         [self performSelector:@selector(loadDemoData) withObject:nil afterDelay:0.0];
@@ -187,6 +195,17 @@
 - (void)showConversationViewController
 {
     self.window.rootViewController = [self defaultConversationNavigationController];
+}
+
+- (void)setMessagesViewController:(OTRMessagesViewController *)messagesViewController
+{
+    _messagesViewController = messagesViewController;
+    if ([self.window.rootViewController isKindOfClass:[UISplitViewController class]]) {
+        UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
+        NSArray *viewController = splitViewController.viewControllers;
+        UINavigationController *messagesNavController = [[UINavigationController alloc ]initWithRootViewController:self.messagesViewController];
+        splitViewController.viewControllers = @[viewController.firstObject,messagesNavController];
+    }
 }
 
 - (void)removeFacebookAccounts

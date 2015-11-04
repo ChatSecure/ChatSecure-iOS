@@ -79,6 +79,15 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 @implementation OTRMessagesViewController
 
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    if (self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
+        self.senderId = @"";
+        self.senderDisplayName = @"";
+    }
+    return self;
+}
+
 #pragma - mark Lifecylce Methods
 
 - (void) dealloc {
@@ -170,8 +179,12 @@ typedef NS_ENUM(int, OTRDropDownType) {
         }
     }];
     
-    [self.viewHandler setup:OTRChatDatabaseViewExtensionName groups:@[self.threadKey]];
-    self.inputToolbar.contentView.textView.text = self.buddy.composingMessageString;
+    if ([self.threadKey length]) {
+        [self.viewHandler setup:OTRChatDatabaseViewExtensionName groups:@[self.threadKey]];
+        self.inputToolbar.contentView.textView.text = self.buddy.composingMessageString;
+    }
+    
+    
     [self.collectionView reloadData];
 }
 
