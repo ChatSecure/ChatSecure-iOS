@@ -95,7 +95,7 @@
     
     self.settingsViewController = [[OTRSettingsViewController alloc] init];
     self.conversationViewController = [[OTRConversationViewController alloc] init];
-    self.messagesViewController = [OTRMessagesHoldTalkViewController messagesViewController];
+    self.messagesViewController = [[self messagesViewControllerClass] messagesViewController];
     
     if ([OTRDatabaseManager existsYapDatabase] && ![[OTRDatabaseManager sharedInstance] hasPassphrase]) {
         // user needs to enter password for current database
@@ -447,5 +447,10 @@
     return [OTRTheme class];
 }
 
+#pragma mark - Overrides
+
+- (Class) messagesViewControllerClass {
+    return [OTRMessagesHoldTalkViewController class];
+}
 
 @end

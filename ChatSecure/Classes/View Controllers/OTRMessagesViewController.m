@@ -1030,6 +1030,12 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }];
 }
 
+- (void)sendImageFilePath:(NSString *)filePath
+{
+    [self attachmentPicker:nil gotPhoto:[UIImage imageWithContentsOfFile:filePath] withInfo:nil];
+}
+
+
 #pragma - mark UIScrollViewDelegate Methods
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView

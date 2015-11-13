@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import "JSQMessagesViewController.h"
+#import <JSQMessagesViewController/JSQMessagesViewController.h>
 @import OTRKit;
 
 @class OTRBuddy, OTRXMPPManager, OTRAccount;
@@ -31,5 +31,6 @@
 @property (nonatomic, strong) UIButton *cameraButton;
 
 -(void)sendAudioFileURL:(NSURL *)url;
+- (void)sendImageFilePath:(NSString *)filePath;
 
 @end
