@@ -813,12 +813,15 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     OTRMessage *message = [self messageAtIndexPath:indexPath];
     
+    UIColor *textColor = nil;
     if (message.isIncoming) {
-        cell.textView.textColor = [UIColor blackColor];
+        textColor = [UIColor blackColor];
     }
     else {
-        cell.textView.textColor = [UIColor whiteColor];
+        textColor = [UIColor whiteColor];
     }
+    if (cell.textView != nil)
+        cell.textView.textColor = textColor;
 
 	// Do not allow clickable links for Tor accounts to prevent information leakage
     if ([self.account isKindOfClass:[OTRXMPPTorAccount class]]) {
@@ -826,7 +829,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }
     else {
         cell.textView.dataDetectorTypes = UIDataDetectorTypeLink;
-        cell.textView.linkTextAttributes = @{ NSForegroundColorAttributeName : cell.textView.textColor,
+        cell.textView.linkTextAttributes = @{ NSForegroundColorAttributeName : textColor,
                                               NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle | NSUnderlinePatternSolid) };
     }
     
