@@ -94,7 +94,7 @@
     UIViewController *rootViewController = nil;
     
     self.settingsViewController = [[OTRSettingsViewController alloc] init];
-    self.conversationViewController = [[OTRConversationViewController alloc] init];
+    self.conversationViewController = [[[self conversationViewControllerClass] alloc] init];
     self.messagesViewController = [[self messagesViewControllerClass] messagesViewController];
     
     if ([OTRDatabaseManager existsYapDatabase] && ![[OTRDatabaseManager sharedInstance] hasPassphrase]) {
@@ -452,6 +452,10 @@
 }
 
 #pragma mark - Overrides
+
+- (Class) conversationViewControllerClass {
+    return [OTRConversationViewController class];
+}
 
 - (Class) messagesViewControllerClass {
     return [OTRMessagesHoldTalkViewController class];
