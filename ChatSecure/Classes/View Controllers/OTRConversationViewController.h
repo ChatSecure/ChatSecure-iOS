@@ -9,9 +9,19 @@
 #import <UIKit/UIKit.h>
 
 @class OTRBuddy;
+@class OTRConversationViewController;
+
+@protocol OTRConversationViewControllerDelegate <NSObject>
+
+- (void)controller:(OTRConversationViewController *)viewController didChangeNumberOfConnectedAccounts:(NSInteger)connectedAccounts;
+
+@end
 
 @interface OTRConversationViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
+@property (nonatomic, strong) UITableView *tableView;
+
+@property (nonatomic, weak) id<OTRConversationViewControllerDelegate> delegate;
 - (void)enterConversationWithBuddy:(OTRBuddy *)buddy;
 
 @end
