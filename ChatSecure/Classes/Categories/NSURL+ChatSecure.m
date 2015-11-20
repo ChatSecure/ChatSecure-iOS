@@ -84,6 +84,9 @@
         if (!anchor.length) {
             return nil;
         }
+        //Use url safe flavor of base64
+        anchor = [anchor stringByReplacingOccurrencesOfString:@"+" withString:@"-"];
+        anchor = [anchor stringByReplacingOccurrencesOfString:@"/" withString:@"_"];
     }
     urlString = [NSString stringWithFormat:@"%@%@", baseURL, anchor];
     NSURL *url = [NSURL URLWithString:urlString];
