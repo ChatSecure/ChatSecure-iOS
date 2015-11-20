@@ -50,4 +50,10 @@
 /** Override this in subclass to use a different theme class */
 - (Class) themeClass;
 
+/** Override this in subclass to use a different conversation view controller class */
+- (Class) conversationViewControllerClass;
+
+/** Override this in subclass to use a different message view controller class */
+- (Class) messagesViewControllerClass;
+
 @end

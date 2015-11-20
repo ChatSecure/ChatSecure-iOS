@@ -37,7 +37,6 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 
 @interface OTRConversationViewController () <OTRComposeViewControllerDelegate>
 
-@property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSTimer *cellUpdateTimer;
 @property (nonatomic, strong) YapDatabaseConnection *databaseConnection;
 @property (nonatomic, strong) YapDatabaseViewMappings *mappings;
@@ -128,6 +127,9 @@ static CGFloat kOTRConversationCellHeight = 80.0;
             }
             else {
                 [strongSelf disableComposeButton];
+            }
+            if (self.delegate != nil && [self.delegate respondsToSelector:@selector(controller:didChangeNumberOfConnectedAccounts:)]) {
+                [self.delegate controller:self didChangeNumberOfConnectedAccounts:numberConnectedAccounts];
             }
         });
     }];
