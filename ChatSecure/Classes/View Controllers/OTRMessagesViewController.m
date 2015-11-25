@@ -912,27 +912,28 @@ typedef NS_ENUM(int, OTRDropDownType) {
     popoverPresentationController.sourceView = self.cameraButton;
 }
 
-#pragma - mark OTRAttachmentPickerDelegate Methods
-
-- (void)attachmentPicker:(OTRAttachmentPicker *)attachmentPicker gotPhoto:(UIImage *)photo withInfo:(NSDictionary *)info
-{
+- (void)sendPhoto:(UIImage *)photo asJPEG:(BOOL)asJPEG shouldResize:(BOOL)shouldResize {
     if (photo) {
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
         dispatch_async(queue, ^{
             
             CGFloat scaleFactor = 0.25;
             CGSize newSize = CGSizeMake(photo.size.width * scaleFactor, photo.size.height * scaleFactor);
-            UIImage *scaledImage = [UIImage otr_imageWithImage:photo scaledToSize:newSize];
+            UIImage *scaledImage = shouldResize ? [UIImage otr_imageWithImage:photo scaledToSize:newSize] : photo;
             
-            __block NSData *imageData = UIImageJPEGRepresentation(scaledImage, 0.5);
-            
+            __block NSData *imageData = nil;
+            if (!asJPEG) {
+                imageData = UIImagePNGRepresentation(scaledImage);
+            } else {
+                imageData = UIImageJPEGRepresentation(scaledImage, 0.5);
+            }
             NSString *UUID = [[NSUUID UUID] UUIDString];
             
             __block OTRImageItem *imageItem  = [[OTRImageItem alloc] init];
             imageItem.width = photo.size.width;
             imageItem.height = photo.size.height;
             imageItem.isIncoming = NO;
-            imageItem.filename = [UUID stringByAppendingPathExtension:@"jpg"];
+            imageItem.filename = [UUID stringByAppendingPathExtension:(asJPEG ? @"jpg" : @"png")];
             
             __block OTRMessage *message = [[OTRMessage alloc] init];
             message.read = YES;
@@ -959,6 +960,14 @@ typedef NS_ENUM(int, OTRDropDownType) {
             }];
         });
     }
+
+}
+
+#pragma - mark OTRAttachmentPickerDelegate Methods
+
+- (void)attachmentPicker:(OTRAttachmentPicker *)attachmentPicker gotPhoto:(UIImage *)photo withInfo:(NSDictionary *)info
+{
+    [self sendPhoto:photo asJPEG:YES shouldResize:YES];
 }
 
 - (void)attachmentPicker:(OTRAttachmentPicker *)attachmentPicker gotVideoURL:(NSURL *)videoURL
@@ -1033,9 +1042,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }];
 }
 
-- (void)sendImageFilePath:(NSString *)filePath
+- (void)sendImageFilePath:(NSString *)filePath asJPEG:(BOOL)asJPEG shouldResize:(BOOL)shouldResize
 {
-    [self attachmentPicker:nil gotPhoto:[UIImage imageWithContentsOfFile:filePath] withInfo:nil];
+    [self sendPhoto:[UIImage imageWithContentsOfFile:filePath] asJPEG:asJPEG shouldResize:shouldResize];
 }
 
 
