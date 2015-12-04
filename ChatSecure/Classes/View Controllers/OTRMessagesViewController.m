@@ -1265,8 +1265,7 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 {
     [self updateviewWithKey:key colleciton:collection];
 }
-
-- (void)didRecieveChanges:(OTRYapViewHandler *)handler sectionChanges:(NSArray<YapDatabaseViewSectionChange *> *)sectionChanges rowChanges:(NSArray<YapDatabaseViewRowChange *> *)rowChanges
+- (void)didReceiveChanges:(OTRYapViewHandler *)handler sectionChanges:(NSArray<YapDatabaseViewSectionChange *> *)sectionChanges rowChanges:(NSArray<YapDatabaseViewRowChange *> *)rowChanges
 {
     if (rowChanges.count) {
         NSUInteger collectionViewNumberOfItems = [self.collectionView numberOfItemsInSection:0];
