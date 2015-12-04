@@ -13,7 +13,10 @@
 
 @protocol OTRComposeViewControllerDelegate <NSObject>
 
-- (void)controller:(OTRComposeViewController *)viewController didSelectBuddies:(NSArray<NSString *> *)buddies accountId:(NSString *)accountId;
+/**
+ This method is called when the view controller 'done' button is pressed. Sends all the selected buddies the accountId to use and an optional name for groups.
+ */
+- (void)controller:(nonnull OTRComposeViewController *)viewController didSelectBuddies:(nullable NSArray<NSString *> *)buddies accountId:(nullable NSString *)accountId name:(nullable NSString *)name;
 
 @end
 

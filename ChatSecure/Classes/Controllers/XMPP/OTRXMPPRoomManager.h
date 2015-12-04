@@ -16,10 +16,10 @@
 @property (nonatomic, strong) YapDatabaseConnection * _Nullable databaseConnection;
 
 /** All room creation and joining should go through this method. This ensures the delegates are setup properly and database is in sync */
-- (nullable NSString *)joinRoom:(nonnull XMPPJID *)jid withNickname:(nonnull NSString *)name;
+- (nullable NSString *)joinRoom:(nonnull XMPPJID *)jid withNickname:(nonnull NSString *)name subject:(nullable NSString *)subject;
 
 - (void)leaveRoom:(nonnull XMPPJID *)jid;
 
-- (nullable NSString *)startGroupChatWithBuddies:(nullable NSArray <NSString *>*)buddiesArray roomJID:(nonnull XMPPJID *)roomName nickname:(nonnull NSString *)name;
+- (nullable NSString *)startGroupChatWithBuddies:(nullable NSArray <NSString *>*)buddiesArray roomJID:(nonnull XMPPJID *)roomName nickname:(nonnull NSString *)name subject:(nullable NSString *)subject;
 
 @end

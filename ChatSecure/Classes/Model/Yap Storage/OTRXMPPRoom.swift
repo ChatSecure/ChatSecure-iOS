@@ -17,6 +17,7 @@ public class OTRXMPPRoom: OTRYapDatabaseObject {
     public var joined = false
     public var messageText:String?
     public var lastRoomMessageDate:NSDate?
+    public var subject:String?
     override public var uniqueId:String {
         get {
             if let account = self.accountUniqueId {
@@ -35,7 +36,7 @@ public class OTRXMPPRoom: OTRYapDatabaseObject {
 
 extension OTRXMPPRoom:OTRThreadOwner {
     public func threadName() -> String {
-        return self.jid ?? ""
+        return self.subject ?? self.jid ?? ""
     }
     
     public func threadIdentifier() -> String {

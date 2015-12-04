@@ -299,14 +299,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (void)refreshTitleView
 {
-    OTRBuddy *buddy = [self buddy];
+    id<OTRThreadOwner> thread = [self threadObject];
     OTRAccount *account = [self account];
-    if ([buddy.displayName length]) {
-        self.titleView.titleLabel.text = buddy.displayName;
-    }
-    else {
-        self.titleView.titleLabel.text = buddy.username;
-    }
+    self.titleView.titleLabel.text = [thread threadName];
     
     if([self.account.displayName length]) {
         self.titleView.subtitleLabel.text = account.displayName;
@@ -319,7 +314,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     if (!self.buddy) {
         self.titleView.titleImageView.image = nil;
     } else {
-       self.titleView.titleImageView.image = [OTRImages circleWithRadius:50 lineWidth:0 lineColor:nil fillColor:[OTRColors colorWithStatus:buddy.status]];
+       self.titleView.titleImageView.image = [OTRImages circleWithRadius:50 lineWidth:0 lineColor:nil fillColor:[OTRColors colorWithStatus:[thread currentStatus]]];
     }
     
 }

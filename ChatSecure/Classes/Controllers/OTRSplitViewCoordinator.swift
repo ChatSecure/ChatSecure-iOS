@@ -17,7 +17,7 @@ public class OTRSplitViewCoordinator: NSObject, OTRConversationViewControllerDel
         self.databaseConnection = databaseConnection
     }
     
-    public func enterConversationWithBuddies(buddyKeys:[String], accountKey:String) {
+    public func enterConversationWithBuddies(buddyKeys:[String], accountKey:String, name:String?) {
         guard let splitVC = self.splitViewController else {
             return
         }
@@ -25,7 +25,7 @@ public class OTRSplitViewCoordinator: NSObject, OTRConversationViewControllerDel
         if let appDelegate = UIApplication.sharedApplication().delegate as? OTRAppDelegate {
             if let c = appDelegate.groupMessagesViewControllerClass() as? OTRMessagesGroupViewController.Type {
                 let messagesVC = c.init()
-                messagesVC.setupWithBuddies(buddyKeys, accountId: accountKey)
+                messagesVC.setupWithBuddies(buddyKeys, accountId: accountKey, name:name)
                 //setup 'back' button in nav bar
                 let navigationController = UINavigationController(rootViewController: messagesVC)
                 navigationController.topViewController!.navigationItem.leftBarButtonItem = splitVC.displayModeButtonItem();
@@ -88,15 +88,23 @@ public class OTRSplitViewCoordinator: NSObject, OTRConversationViewControllerDel
     }
     
     //MARK: OTRComposeViewControllerDelegate Methods
-    
-    public func controller(viewController: OTRComposeViewController!, didSelectBuddies buddies: [String]!, accountId: String!) {
+    public func controller(viewController: OTRComposeViewController, didSelectBuddies buddies: [String]?, accountId: String?, name: String?) {
         viewController .dismissViewControllerAnimated(true) { () -> Void in
-            if (buddies.count == 1) {
-                if let key = buddies.first {
+            
+            guard let buds = buddies else {
+                return
+            }
+            
+            guard let accountKey = accountId else {
+                return
+            }
+            
+            if (buds.count == 1) {
+                if let key = buds.first {
                     self.enterConversationWithBuddy(key)
                 }
-            } else if (buddies.count > 1) {
-                self.enterConversationWithBuddies(buddies, accountKey: accountId)
+            } else if (buds.count > 1) {
+                self.enterConversationWithBuddies(buds, accountKey: accountKey, name:name)
             }
         }
     }

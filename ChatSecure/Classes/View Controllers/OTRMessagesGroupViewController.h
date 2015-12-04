@@ -11,6 +11,6 @@
 @interface OTRMessagesGroupViewController : OTRMessagesViewController
 
 - (void)setupWithGroupYapId:(NSString *)groupId;
-- (void)setupWithBuddies:(NSArray<NSString *> *)buddies accountId:(NSString *)accountId;
+- (void)setupWithBuddies:(NSArray<NSString *> *)buddies accountId:(NSString *)accountId name:(NSString *)name;
 
 @end

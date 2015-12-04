@@ -25,18 +25,18 @@
     self.accountUniqueId = [[self threadObject] threadAccountIdentifier];
 }
 
-- (void)setupWithBuddies:(NSArray<NSString *> *)buddies accountId:(NSString *)accountId
+- (void)setupWithBuddies:(NSArray<NSString *> *)buddies accountId:(NSString *)accountId name:(NSString *)name
 {
     self.accountUniqueId = accountId;
-    [self setupGroupChat:buddies account:[self account]];
+    [self setupGroupChat:buddies account:[self account] name:name];
     
 }
 
-- (void)setupGroupChat:(NSArray <NSString *>*)buddies account:(OTRAccount *)account {
+- (void)setupGroupChat:(NSArray <NSString *>*)buddies account:(OTRAccount *)account name:(NSString *)name {
     NSString *service = [self.xmppManager.roomManager.conferenceServicesJID firstObject];
     NSString *roomName = [NSUUID UUID].UUIDString;
     XMPPJID *roomJID = [XMPPJID jidWithString:[NSString stringWithFormat:@"%@@%@",roomName,service]];
-    self.threadKey = [self.xmppManager.roomManager startGroupChatWithBuddies:buddies roomJID:roomJID nickname:account.username];
+    self.threadKey = [self.xmppManager.roomManager startGroupChatWithBuddies:buddies roomJID:roomJID nickname:account.username subject:name];
     [self setThreadKey:self.threadKey collection:[OTRXMPPRoom collection]];
 }
 

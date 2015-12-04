@@ -27,7 +27,10 @@
 @property (nonatomic, strong) OTRYapViewHandler *unsentMessagesViewHandler;
 
 /** This dictionary has jid as the key and array of buddy unique Ids to invite once we've joined the room*/
-@property (nonnull, strong) NSMutableDictionary *inviteDictionary;
+@property (nonatomic, strong) NSMutableDictionary *inviteDictionary;
+
+/** This dictionary is a temporary holding for setting a room subject. Once the room is created teh subject is set from this dictionary. */
+@property (nonatomic, strong) NSMutableDictionary *tempRoomSubject;
 
 
 @end
@@ -38,6 +41,7 @@
     if (self = [super init]) {
         self.mucModule = [[XMPPMUC alloc] init];
         self.inviteDictionary = [[NSMutableDictionary alloc] init];
+        self.tempRoomSubject = [[NSMutableDictionary alloc] init];
     }
     return self;
 }
@@ -53,8 +57,14 @@
     return result;
 }
 
-- (NSString *)joinRoom:(XMPPJID *)jid withNickname:(NSString *)name
+- (NSString *)joinRoom:(XMPPJID *)jid withNickname:(NSString *)name subject:(NSString *)subject
 {
+    dispatch_async(moduleQueue, ^{
+        if ([subject length]) {
+            [self.tempRoomSubject setObject:subject forKey:jid.bare];
+        }
+    });
+    
     //Register view for sending message queue and occupants
     [self.databaseConnection.database asyncRegisterUnsentGroupMessagesView:nil completionBlock:nil];
     [self.databaseConnection.database asyncRegisterGroupOccupantsView:nil completionBlock:nil];
@@ -92,9 +102,11 @@
             room.lastRoomMessageDate = [NSDate date];
             room.accountUniqueId = accountId;
             room.jid = jid.bare;
+            
         }
         
         //Other Room properties should be set here
+        room.subject = subject;
         
         [room saveWithTransaction:transaction];
     }];
@@ -123,15 +135,17 @@
     [room leaveRoom];
 }
 
-- (NSString *)startGroupChatWithBuddies:(NSArray<NSString *> *)buddiesArray roomJID:(XMPPJID *)roomName nickname:(nonnull NSString *)name
+- (NSString *)startGroupChatWithBuddies:(NSArray<NSString *> *)buddiesArray roomJID:(XMPPJID *)roomName nickname:(nonnull NSString *)name subject:(nullable NSString *)subject
 {
     dispatch_async(moduleQueue, ^{
         if ([buddiesArray count]) {
             [self.inviteDictionary setObject:buddiesArray forKey:roomName.bare];
         }
+        
+        
     });
     
-    return [self joinRoom:roomName withNickname:name];
+    return [self joinRoom:roomName withNickname:name subject:subject];
 }
 
 - (void)inviteUser:(NSString *)user toRoom:(NSString *)roomJID withMessage:(NSString *)message
@@ -183,14 +197,14 @@
     //Once we've connecected and authenticated we find what room services are available
     [self.mucModule discoverServices];
     //Once we've authenitcated we need to rejoin existing rooms
-    NSMutableArray <NSString *>*jidArray = [[NSMutableArray alloc] init];
+    NSMutableArray <OTRXMPPRoom *>*roomArray = [[NSMutableArray alloc] init];
     [self.databaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
         [transaction enumerateKeysAndObjectsInCollection:[OTRXMPPRoom collection] usingBlock:^(NSString * _Nonnull key, id  _Nonnull object, BOOL * _Nonnull stop) {
             
             if ([object isKindOfClass:[OTRXMPPRoom class]]) {
                 OTRXMPPRoom *room = (OTRXMPPRoom *)object;
                 if ([room.jid length]) {
-                    [jidArray addObject:room.jid];
+                    [roomArray addObject:room];
                 }
             }
             
@@ -202,8 +216,8 @@
             return NO;
         }];
     } completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0) completionBlock:^{
-        [jidArray enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            [self joinRoom:[XMPPJID jidWithString:obj] withNickname:self.xmppStream.myJID.bare];
+        [roomArray enumerateObjectsUsingBlock:^(OTRXMPPRoom * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            [self joinRoom:[XMPPJID jidWithString:obj.jid] withNickname:self.xmppStream.myJID.bare subject:obj.subject];
         }];
     }];
 }
@@ -238,7 +252,7 @@
 
 - (void)xmppMUC:(XMPPMUC *)sender roomJID:(XMPPJID *)roomJID didReceiveInvitation:(XMPPMessage *)message
 {
-    [self joinRoom:roomJID withNickname:sender.xmppStream.myJID.bare];
+    [self joinRoom:roomJID withNickname:sender.xmppStream.myJID.bare subject:nil];
 }
 
 #pragma - mark XMPPRoomDelegate Methods
@@ -247,8 +261,16 @@
 {
     [sender configureRoomUsingOptions:[[self class] defaultRoomConfiguration]];
     
-    //Invite other buddies waiting
     dispatch_async(moduleQueue, ^{
+        
+        //Set Rome Subject
+        NSString *subject = [self.tempRoomSubject objectForKey:sender.roomJID.bare];
+        if (subject) {
+            [self.tempRoomSubject removeObjectForKey:sender.roomJID.bare];
+            [sender changeRoomSubject:subject];
+        }
+        
+        //Invite buddies
         NSArray *arary = [self.inviteDictionary objectForKey:sender.roomJID.bare];
         if ([arary count]) {
             [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {

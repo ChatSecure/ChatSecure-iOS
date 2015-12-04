@@ -119,15 +119,48 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
 
 - (void)doneButtonPressed:(id)sender
 {
-    if ([self.delegate respondsToSelector:@selector(controller:didSelectBuddies:accountId:)]) {
-        //TODO: Naive choosing account just any buddy but should really check that account is connected or show picker
-        __block NSString *accountId = nil;
-        [self.viewHandler.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-            NSString *buddyKey  = [self.selectedBuddiesIdSet anyObject];
-            accountId = [OTRBuddy fetchObjectWithUniqueID:buddyKey transaction:transaction].accountUniqueId;
+    void (^completion)(NSString *) = ^void(NSString *name) {
+        if ([self.delegate respondsToSelector:@selector(controller:didSelectBuddies:accountId:name:)]) {
+            //TODO: Naive choosing account just any buddy but should really check that account is connected or show picker
+            __block NSString *accountId = nil;
+            [self.viewHandler.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+                NSString *buddyKey  = [self.selectedBuddiesIdSet anyObject];
+                accountId = [OTRBuddy fetchObjectWithUniqueID:buddyKey transaction:transaction].accountUniqueId;
+            }];
+            [self.delegate controller:self didSelectBuddies:[self.selectedBuddiesIdSet allObjects] accountId:accountId name:name];
+        }
+    };
+    
+    if (self.selectedBuddiesIdSet.count > 1) {
+        //Group so need user to select name
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Group Name" message:@"Enter a group name" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *okAction = [UIAlertAction actionWithTitle:OK_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            NSString *name = alertController.textFields.firstObject.text;
+            completion(name);
         }];
-        [self.delegate controller:self didSelectBuddies:[self.selectedBuddiesIdSet allObjects] accountId:accountId];
+        
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:CANCEL_STRING style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            
+        }];
+        
+        [alertController addAction:okAction];
+        [alertController addAction:cancelAction];
+        
+        [alertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+            textField.placeholder = @"Group name";
+            
+            [[NSNotificationCenter defaultCenter] addObserverForName:UITextFieldTextDidChangeNotification object:textField queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification * _Nonnull note) {
+                okAction.enabled = textField.text.length > 0;
+            }];
+        }];
+        
+        
+        
+        [self presentViewController:alertController animated:YES completion:nil];
+    } else {
+        completion(nil);
     }
+    
 }
 
 - (BOOL)canAddBuddies
