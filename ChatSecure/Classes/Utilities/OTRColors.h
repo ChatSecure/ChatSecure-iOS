@@ -8,11 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
-#import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import <ChatSecureCore/OTRThreadOwner.h>
 
 @interface OTRColors : NSObject
 
-+(UIColor *)colorWithStatus:(ThreadStatus)status;
++(UIColor *)colorWithStatus:(OTRThreadStatus)status;
 
 + (UIColor *)darkenColor:(UIColor *)color withValue:(CGFloat)value;
 + (UIColor *)bubbleBlueColor;

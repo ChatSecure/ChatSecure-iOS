@@ -186,7 +186,7 @@
         OTRXMPPBuddy *buddy = [self buddyWithJID:[presence from] xmppStream:stream transaction:transaction];
         
         if ([[presence type] isEqualToString:@"unavailable"] || [presence isErrorPresence]) {
-            buddy.status = ThreadStatusOffline;
+            buddy.status = OTRThreadStatusOffline;
             buddy.statusMessage = OFFLINE_STRING;
         }
         else if (buddy) {
@@ -194,24 +194,24 @@
             switch (presence.intShow)
             {
                 case 0  :
-                    buddy.status = ThreadStatusDoNotDisturb;
+                    buddy.status = OTRThreadStatusDoNotDisturb;
                     defaultMessage = DO_NOT_DISTURB_STRING;
                     break;
                 case 1  :
-                    buddy.status = ThreadStatusExtendedAway;
+                    buddy.status = OTRThreadStatusExtendedAway;
                     defaultMessage = EXTENDED_AWAY_STRING;
                     break;
                 case 2  :
-                    buddy.status = ThreadStatusAway;
+                    buddy.status = OTRThreadStatusAway;
                     defaultMessage = AWAY_STRING;
                     break;
                 case 3  :
                 case 4  :
-                    buddy.status = ThreadStatusAvailable;
+                    buddy.status = OTRThreadStatusAvailable;
                     defaultMessage = AVAILABLE_STRING;
                     break;
                 default :
-                    buddy.status = ThreadStatusOffline;
+                    buddy.status = OTRThreadStatusOffline;
                     break;
             }
             

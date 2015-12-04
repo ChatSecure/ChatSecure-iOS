@@ -240,7 +240,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
         buddy = [OTRBuddy fetchBuddyForUsername:username accountName:accountName transaction:transaction];
     }];
     
-    if(!buddy || buddy.status == ThreadStatusOffline) {
+    if(!buddy || buddy.status == OTRThreadStatusOffline) {
         return NO;
     }
     else {

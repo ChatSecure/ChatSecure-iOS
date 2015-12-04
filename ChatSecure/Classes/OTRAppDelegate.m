@@ -58,6 +58,7 @@
 #import "OTRProtocolManager.h"
 #import "OTRInviteViewController.h"
 #import "OTRTheme.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
 @import OTRAssets;
 
 #if CHATSECURE_DEMO
@@ -66,6 +67,8 @@
 
 @interface OTRAppDelegate ()
 
+@property (nonatomic, strong) OTRSplitViewCoordinator *splitViewCoordinator;
+@property (nonatomic, strong) OTRSplitViewControllerDelegateObject *splitViewControllerDelegate;
 
 @end
 
@@ -94,8 +97,7 @@
     UIViewController *rootViewController = nil;
     
     self.settingsViewController = [[OTRSettingsViewController alloc] init];
-    self.conversationViewController = [[OTRConversationViewController alloc] init];
-    self.messagesViewController = [OTRMessagesHoldTalkViewController messagesViewController];
+    self.conversationViewController = [[[self conversationViewControllerClass] alloc] init];
     
     if ([OTRDatabaseManager existsYapDatabase] && ![[OTRDatabaseManager sharedInstance] hasPassphrase]) {
         // user needs to enter password for current database
@@ -171,23 +173,32 @@
 {
     UIViewController *viewController = nil;
     
+    YapDatabaseConnection *connection = [OTRDatabaseManager sharedInstance].readWriteDatabaseConnection;
+    self.splitViewCoordinator = [[OTRSplitViewCoordinator alloc] initWithDatabaseConnection:connection];
+    self.splitViewControllerDelegate = [[OTRSplitViewControllerDelegateObject alloc] init];
+    
     //ConversationViewController Nav
     UINavigationController *conversationListNavController = [[UINavigationController alloc] initWithRootViewController:self.conversationViewController];
+    self.conversationViewController.delegate = self.splitViewCoordinator;
     
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-        viewController = conversationListNavController;
-    } else {
-        //MessagesViewController Nav
-        UINavigationController *messagesNavController = [[UINavigationController alloc ]initWithRootViewController:self.messagesViewController];
-        
-        //SplitViewController
-        UISplitViewController *splitViewController = [[UISplitViewController alloc] init];
-        splitViewController.viewControllers = [NSArray arrayWithObjects:conversationListNavController, messagesNavController, nil];
-        splitViewController.delegate = self.messagesViewController;
-        splitViewController.title = CHAT_STRING;
-        
-        viewController = splitViewController;
-    }
+    //MessagesViewController Nav
+    UINavigationController *messagesNavController = [[UINavigationController alloc ]initWithRootViewController:[[self messagesViewControllerClass] messagesViewController]];
+    
+    
+    
+    //SplitViewController
+    UISplitViewController *splitViewController = [[UISplitViewController alloc] init];
+    splitViewController.viewControllers = [NSArray arrayWithObjects:conversationListNavController, messagesNavController, nil];
+    splitViewController.delegate = self.splitViewControllerDelegate;
+    splitViewController.title = CHAT_STRING;
+    
+    //setup 'back' button in nav bar
+    messagesNavController.topViewController.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem;
+    messagesNavController.topViewController.navigationItem.leftItemsSupplementBackButton = YES;
+    
+    self.splitViewCoordinator.splitViewController = splitViewController;
+    
+    viewController = splitViewController;
     
     return viewController;
 }
@@ -195,17 +206,6 @@
 - (void)showConversationViewController
 {
     self.window.rootViewController = [self defaultConversationNavigationController];
-}
-
-- (void)setMessagesViewController:(OTRMessagesViewController *)messagesViewController
-{
-    _messagesViewController = messagesViewController;
-    if ([self.window.rootViewController isKindOfClass:[UISplitViewController class]]) {
-        UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
-        NSArray *viewController = splitViewController.viewControllers;
-        UINavigationController *messagesNavController = [[UINavigationController alloc ]initWithRootViewController:self.messagesViewController];
-        splitViewController.viewControllers = @[viewController.firstObject,messagesNavController];
-    }
 }
 
 - (void)removeFacebookAccounts
@@ -382,11 +382,11 @@
     
     if([buddyUniqueId length]) {
         
-        if (!([self.messagesViewController otr_isVisible] || [self.conversationViewController otr_isVisible])) {
-            self.window.rootViewController = [self defaultConversationNavigationController];
-        }
+//        if (!([self.messagesViewController otr_isVisible] || [self.conversationViewController otr_isVisible])) {
+//            self.window.rootViewController = [self defaultConversationNavigationController];
+//        }
         
-        [self.conversationViewController enterConversationWithBuddyId:buddyUniqueId];
+        //[self.conversationViewController enterConversationWithBuddyId:buddyUniqueId];
     }
     
 
@@ -405,38 +405,45 @@
         NSString *otrFingerprint = xmppURI.queryParameters[@"otr-fingerprint"];
         NSString *action = xmppURI.queryAction;
         if (jid && [action isEqualToString:@"subscribe"]) {
-            NSString *message = jid.full;
-            if (otrFingerprint.length == 40) {
-                message = [message stringByAppendingFormat:@"\n%@", otrFingerprint];
-            }
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle:ADD_BUDDY_STRING message:message preferredStyle:UIAlertControllerStyleActionSheet];
-            __block NSArray *accounts = nil;
-            [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-                accounts = [OTRAccount allAccountsWithTransaction:transaction];
-            }];
-            [accounts enumerateObjectsUsingBlock:^(OTRAccount *account, NSUInteger idx, BOOL *stop) {
-                if ([account isKindOfClass:[OTRXMPPAccount class]]) {
-                    UIAlertAction *action = [UIAlertAction actionWithTitle:account.username style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-                        id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:account];
-                        OTRBuddy *buddy = [[OTRBuddy alloc] init];
-                        buddy.username = jid.full;
-                        [protocol addBuddy:buddy];
-                        /* TODO OTR fingerprint verificaction
-                        if (otrFingerprint) {
-                            // We are missing a method to add fingerprint to trust store
-                            [[OTRKit sharedInstance] setActiveFingerprintVerificationForUsername:buddy.username accountName:account.username protocol:account.protocolTypeString verified:YES completion:nil];
-                        }*/
-                    }];
-                    [alert addAction:action];
-                }
-            }];
-            UIAlertAction *cancel = [UIAlertAction actionWithTitle:CANCEL_STRING style:UIAlertActionStyleCancel handler:nil];
-            [alert addAction:cancel];
-            [self.window.rootViewController presentViewController:alert animated:YES completion:nil];
+            [self handleInvite:jid.full fingerprint:otrFingerprint];
         }
         return YES;
     }
     return NO;
+}
+
+- (void)handleInvite:(NSString *)jidString fingerprint:(NSString *)otrFingerprint {
+    NSString *message = [NSString stringWithString:jidString];
+    if (otrFingerprint.length == 40) {
+        message = [message stringByAppendingFormat:@"\n%@", otrFingerprint];
+    }
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:ADD_BUDDY_STRING message:message preferredStyle:(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) ? UIAlertControllerStyleActionSheet : UIAlertControllerStyleAlert];
+    __block NSArray *accounts = nil;
+    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        accounts = [OTRAccount allAccountsWithTransaction:transaction];
+    }];
+    [accounts enumerateObjectsUsingBlock:^(OTRAccount *account, NSUInteger idx, BOOL *stop) {
+        if ([account isKindOfClass:[OTRXMPPAccount class]]) {
+            UIAlertAction *action = [UIAlertAction actionWithTitle:account.username style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:account];
+                OTRBuddy *buddy = [[OTRBuddy alloc] init];
+                buddy.username = jidString;
+                [protocol addBuddy:buddy];
+                /* TODO OTR fingerprint verificaction
+                 if (otrFingerprint) {
+                 // We are missing a method to add fingerprint to trust store
+                 [[OTRKit sharedInstance] setActiveFingerprintVerificationForUsername:buddy.username accountName:account.username protocol:account.protocolTypeString verified:YES completion:nil];
+                 }*/
+            }];
+            [alert addAction:action];
+        }
+    }];
+    if (alert.actions.count > 0) {
+        // No need to show anything if only option is "cancel"
+        UIAlertAction *cancel = [UIAlertAction actionWithTitle:CANCEL_STRING style:UIAlertActionStyleCancel handler:nil];
+        [alert addAction:cancel];
+        [self.window.rootViewController presentViewController:alert animated:YES completion:nil];
+    }
 }
 
 // Delegation methods
@@ -462,5 +469,18 @@
     return [OTRTheme class];
 }
 
+#pragma mark - Overrides
+
+- (Class) conversationViewControllerClass {
+    return [OTRConversationViewController class];
+}
+
+- (Class) messagesViewControllerClass {
+    return [OTRMessagesHoldTalkViewController class];
+}
+
+- (Class) groupMessagesViewControllerClass {
+    return [OTRMessagesGroupViewController class];
+}
 
 @end

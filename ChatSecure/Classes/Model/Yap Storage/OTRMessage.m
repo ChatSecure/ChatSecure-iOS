@@ -16,6 +16,7 @@
 #import "OTRConstants.h"
 #import "OTRMediaItem.h"
 #import "OTRLanguageManager.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 const struct OTRMessageAttributes OTRMessageAttributes = {
 	.date = @"date",

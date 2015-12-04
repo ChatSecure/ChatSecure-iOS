@@ -63,6 +63,7 @@
 #import "XMPPMessageCarbons.h"
 #import "OTRXMPPMessageYapStroage.h"
 #import "OTRXMPPRoomManager.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
 @import OTRAssets;
 
 NSString *const OTRXMPPRegisterSucceededNotificationName = @"OTRXMPPRegisterSucceededNotificationName";
@@ -481,7 +482,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         NSArray *buddiesArray = [self.account allBuddiesWithTransaction:transaction];
         for (OTRXMPPBuddy *buddy in buddiesArray) {
-            buddy.status = ThreadStatusOffline;
+            buddy.status = OTRThreadStatusOffline;
             buddy.chatState = kOTRChatStateGone;
             
             [buddy saveWithTransaction:transaction];
@@ -596,7 +597,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         NSArray *allBuddies = [self.account allBuddiesWithTransaction:transaction];
         [allBuddies enumerateObjectsUsingBlock:^(OTRXMPPBuddy *buddy, NSUInteger idx, BOOL *stop) {
-            buddy.status = ThreadStatusOffline;
+            buddy.status = OTRThreadStatusOffline;
             buddy.statusMessage = nil;
             [transaction setObject:buddy forKey:buddy.uniqueId inCollection:[OTRXMPPBuddy collection]];
         }];

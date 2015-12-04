@@ -10,24 +10,24 @@
 
 @implementation OTRColors
 
-+(UIColor *)colorWithStatus:(ThreadStatus)status
++(UIColor *)colorWithStatus:(OTRThreadStatus)status
 {
     UIColor *color = nil;
     switch(status)
     {
-        case ThreadStatusOffline:
+        case OTRThreadStatusOffline:
             color = [UIColor colorWithRed: 0.763 green: 0.763 blue: 0.763 alpha: 1];
             break;
-        case ThreadStatusAway:
+        case OTRThreadStatusAway:
             color = [UIColor colorWithRed: 0.901 green: 0.527 blue: 0.23 alpha: 1];
             break;
-        case ThreadStatusExtendedAway:
+        case OTRThreadStatusExtendedAway:
             color = [UIColor colorWithRed: 0.734 green: 0.124 blue: 0.124 alpha: 1];
             break;
-        case ThreadStatusDoNotDisturb:
+        case OTRThreadStatusDoNotDisturb:
             color = [UIColor colorWithRed: 0.734 green: 0.124 blue: 0.124 alpha: 1];
             break;
-        case ThreadStatusAvailable:
+        case OTRThreadStatusAvailable:
             color = [UIColor colorWithRed: 0.083 green: 0.767 blue: 0.194 alpha: 1];
             break;
     }

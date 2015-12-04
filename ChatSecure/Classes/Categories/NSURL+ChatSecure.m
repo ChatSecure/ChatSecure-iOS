@@ -113,11 +113,14 @@
     
     NSString *base64String = components[1];
     
+    base64String = [base64String stringByReplacingOccurrencesOfString:@"-" withString:@"+"];
+    base64String = [base64String stringByReplacingOccurrencesOfString:@"_" withString:@"/"];
+    
     // Apple's base64 decoder requires padding http://stackoverflow.com/a/21407393/805882
     if (base64String.length % 4 != 0) {
         int remainder = base64String.length % 4;
         NSMutableString *padding = [[NSMutableString alloc] init];
-        for (int i = 0; i < remainder; i++) {
+        for (int i = 0; i < (4 - remainder); i++) {
             [padding appendString:@"="];
         }
         base64String = [base64String stringByAppendingString:padding];

@@ -28,11 +28,11 @@
 @class OTRMessagesViewController;
 @class OTRConversationViewController;
 
+
 @interface OTRAppDelegate : UIResponder <UIApplicationDelegate, BITHockeyManagerDelegate>
 
 @property (nonatomic, strong) UIWindow *window;
 @property (nonatomic, strong) OTRSettingsViewController *settingsViewController;
-@property (nonatomic, strong) OTRMessagesViewController *messagesViewController;
 @property (nonatomic, strong) OTRConversationViewController *conversationViewController;
 
 @property (nonatomic, strong) NSTimer *backgroundTimer;
@@ -49,5 +49,14 @@
 @property (nonatomic, strong, readonly) OTRTheme *theme;
 /** Override this in subclass to use a different theme class */
 - (Class) themeClass;
+
+/** Override this in subclass to use a different conversation view controller class */
+- (Class) conversationViewControllerClass;
+
+/** Override this in subclass to use a different message view controller class */
+- (Class) messagesViewControllerClass;
+
+/** Override this in subclass to use a different group message view controller class */
+- (Class) groupMessagesViewControllerClass;
 
 @end

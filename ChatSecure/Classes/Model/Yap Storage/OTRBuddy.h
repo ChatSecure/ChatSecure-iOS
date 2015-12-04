@@ -7,7 +7,7 @@
 //
 
 #import "OTRYapDatabaseObject.h"
-#import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "OTRThreadOwner.h"
 @import UIKit;
 
 typedef NS_ENUM(int, OTRChatState) {
@@ -51,7 +51,7 @@ extern const struct OTRBuddyEdges {
 @property (nonatomic, strong) NSString *statusMessage;
 @property (nonatomic) OTRChatState chatState;
 @property (nonatomic) OTRChatState lastSentChatState;
-@property (nonatomic) ThreadStatus status;
+@property (nonatomic) OTRThreadStatus status;
 @property (nonatomic, strong) NSDate *lastMessageDate;
 
 /**

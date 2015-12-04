@@ -799,12 +799,15 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     id <OTRMesssageProtocol>message = [self messageAtIndexPath:indexPath];
     
+    UIColor *textColor = nil;
     if ([message messageIncoming]) {
-        cell.textView.textColor = [UIColor blackColor];
+        textColor = [UIColor blackColor];
     }
     else {
-        cell.textView.textColor = [UIColor whiteColor];
+        textColor = [UIColor whiteColor];
     }
+    if (cell.textView != nil)
+        cell.textView.textColor = textColor;
 
 	// Do not allow clickable links for Tor accounts to prevent information leakage
     if ([self.account isKindOfClass:[OTRXMPPTorAccount class]]) {
@@ -812,7 +815,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }
     else {
         cell.textView.dataDetectorTypes = UIDataDetectorTypeLink;
-        cell.textView.linkTextAttributes = @{ NSForegroundColorAttributeName : cell.textView.textColor,
+        cell.textView.linkTextAttributes = @{ NSForegroundColorAttributeName : textColor,
                                               NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle | NSUnderlinePatternSolid) };
     }
     
@@ -1015,6 +1018,12 @@ typedef NS_ENUM(int, OTRDropDownType) {
         [self sendMediaItem:audioItem data:nil tag:message];        
     }];
 }
+
+- (void)sendImageFilePath:(NSString *)filePath
+{
+    [self attachmentPicker:nil gotPhoto:[UIImage imageWithContentsOfFile:filePath] withInfo:nil];
+}
+
 
 #pragma - mark UIScrollViewDelegate Methods
 
@@ -1307,17 +1316,6 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
             } completion:nil];
         }
     }
-}
-
-#pragma mark UISplitViewControllerDelegate methods
-
-- (void) splitViewController:(UISplitViewController *)svc willHideViewController:(UIViewController *)aViewController withBarButtonItem:(UIBarButtonItem *)barButtonItem forPopoverController:(UIPopoverController *)pc {
-    barButtonItem.title = aViewController.title;
-    self.navigationItem.leftBarButtonItem = barButtonItem;
-}
-
-- (void) splitViewController:(UISplitViewController *)svc willShowViewController:(UIViewController *)aViewController invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem {
-    self.navigationItem.leftBarButtonItem = nil;
 }
 
 #pragma - mark UITextViewDelegateMethods

@@ -13,6 +13,7 @@
 #import "OTRAccount.h"
 #import "OTRMessage.h"
 #import "OTRXMPPPresenceSubscriptionRequest.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 NSString *OTRConversationGroup = @"Conversation";
 NSString *OTRConversationDatabaseViewExtensionName = @"OTRConversationDatabaseViewExtensionName";

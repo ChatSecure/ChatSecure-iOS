@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
+#import <JSQMessagesViewController/JSQMessagesViewController.h>
 @import OTRKit;
 @import JSQMessagesViewController;
 
@@ -22,7 +23,7 @@
 
 @end
 
-@interface OTRMessagesViewController : JSQMessagesViewController <UISplitViewControllerDelegate, OTRMessagesViewControllerProtocol, UIPopoverPresentationControllerDelegate>
+@interface OTRMessagesViewController : JSQMessagesViewController <OTRMessagesViewControllerProtocol, UIPopoverPresentationControllerDelegate>
 
 @property (nonatomic, strong) YapDatabaseConnection *databaseConnection;
 @property (nonatomic, strong) NSString *threadKey;
@@ -32,6 +33,8 @@
 @property (nonatomic, strong) UIButton *cameraButton;
 
 - (void)setThreadKey:(NSString *)key collection:(NSString *)collection;
+- (void)sendAudioFileURL:(NSURL *)url;
+- (void)sendImageFilePath:(NSString *)filePath;
 
 - (void)sendAudioFileURL:(NSURL *)url;
 

@@ -38,9 +38,8 @@
 
 static CGFloat kOTRConversationCellHeight = 80.0;
 
-@interface OTRConversationViewController () <OTRComposeViewControllerDelegate>
+@interface OTRConversationViewController ()
 
-@property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSTimer *cellUpdateTimer;
 @property (nonatomic, strong) YapDatabaseConnection *databaseConnection;
 @property (nonatomic, strong) YapDatabaseViewMappings *mappings;
@@ -207,49 +206,8 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 
 - (void)composeButtonPressed:(id)sender
 {
-    OTRComposeViewController * composeViewController = [[OTRComposeViewController alloc] init];
-    composeViewController.delegate = self;
-    UINavigationController * modalNavigationController = [[UINavigationController alloc] initWithRootViewController:composeViewController];
-    modalNavigationController.modalPresentationStyle = UIModalPresentationFormSheet;
-    
-    [self presentViewController:modalNavigationController animated:YES completion:nil];
-}
-
-- (void)enterConversationWithBuddyId:(NSString *)buddyId {
-    __block OTRBuddy *buddy = nil;
-    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-        buddy = [OTRBuddy fetchObjectWithUniqueID:buddyId transaction:transaction];
-    }];
-    [self enterConversationWithThread:buddy];
-}
-
-- (void)enterConversationWithBuddies:(NSArray <NSString *>*)buddyArray accountId:(NSString *)accountId
-{
-    OTRMessagesGroupViewController *groupViewController = [OTRMessagesGroupViewController messagesViewController];
-    [groupViewController setupWithBuddies:buddyArray accountId:accountId];
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone && ![groupViewController otr_isVisible]) {
-        [self.navigationController pushViewController:groupViewController animated:YES];
-    }
-}
-
-- (void)enterConversationWithThread:(id <OTRThreadOwner>) thread
-{
-    OTRMessagesViewController *messagesViewController = [OTRAppDelegate appDelegate].messagesViewController;
-    if ([thread isKindOfClass:[OTRBuddy class]]) {
-        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-            [((OTRBuddy *)thread) setAllMessagesRead:transaction];
-        }];
-        messagesViewController = [OTRMessagesHoldTalkViewController messagesViewController];
-    } else if ([thread isKindOfClass:[OTRXMPPRoom class]]) {
-        messagesViewController = [OTRMessagesGroupViewController messagesViewController];
-    }
-    
-    
-    [OTRAppDelegate appDelegate].messagesViewController = messagesViewController;
-    
-    [messagesViewController setThreadKey:[thread threadIdentifier] collection:[thread threadCollection]];
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone && ![messagesViewController otr_isVisible]) {
-        [self.navigationController pushViewController:messagesViewController animated:YES];
+    if ([self.delegate respondsToSelector:@selector(conversationViewController:didSelectCompose:)]) {
+        [self.delegate conversationViewController:self didSelectCompose:sender];
     }
 }
 
@@ -415,9 +373,8 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     id <OTRThreadOwner> thread = [self threadForIndexPath:indexPath];
-    [self enterConversationWithThread:thread];
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    if ([self.delegate respondsToSelector:@selector(conversationViewController:didSelectThread:)]) {
+        [self.delegate conversationViewController:self didSelectThread:thread];
     }
 }
 
@@ -529,22 +486,4 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     
     [self.tableView endUpdates];
 }
-
-#pragma - mark OTRComposeViewController Method
-
-- (void)controller:(OTRComposeViewController *)viewController didSelectBuddies:(NSArray<NSString *> *)buddies accountId:(NSString *)accountId
-{
-    [viewController dismissViewControllerAnimated:YES completion:^{
-        
-        if ([buddies count] == 1) {
-            [self enterConversationWithBuddyId:[buddies firstObject]];
-        } else {
-            [self enterConversationWithBuddies:buddies accountId:accountId];
-        }
-        
-    }];
-}
-
-
-
 @end

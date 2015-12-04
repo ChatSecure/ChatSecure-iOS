@@ -9,28 +9,6 @@
 import UIKit
 import YapDatabase
 
-@objc public enum ThreadStatus:Int {
-    case Available = 0
-    case Away = 1
-    case DoNotDisturb = 2
-    case ExtendedAway = 3
-    case Offline = 4
-}
-
-@objc public protocol OTRThreadOwner: NSObjectProtocol {
-    
-    func threadName() -> String
-    func threadIdentifier() -> String
-    func threadCollection() -> String
-    func threadAccountIdentifier() -> String
-    func setCurrentMessageText(text:String?)
-    func currentMessageText() -> String?
-    func lastMessageDate() -> NSDate?
-    func avatarImage() -> UIImage
-    func currentStatus() -> ThreadStatus
-    func lastMessageWithTransaction(transaction:YapDatabaseReadTransaction) -> OTRMesssageProtocol?
-}
-
 public class OTRXMPPRoom: OTRYapDatabaseObject {
     
     public var accountUniqueId:String?
@@ -88,7 +66,7 @@ extension OTRXMPPRoom:OTRThreadOwner {
         return OTRImages.avatarImageWithUniqueIdentifier(self.uniqueId, avatarData: nil, displayName: nil, username: self.jid)
     }
     
-    public func currentStatus() -> ThreadStatus {
+    public func currentStatus() -> OTRThreadStatus {
         switch self.joined {
         case true:
             return .Available
@@ -113,5 +91,9 @@ extension OTRXMPPRoom:OTRThreadOwner {
             return nil
         }
         return message
+    }
+    
+    public func isGroupThread() -> Bool {
+        return true
     }
 }

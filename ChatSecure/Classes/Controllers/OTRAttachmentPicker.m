@@ -50,6 +50,10 @@
         [alertController addAction:openLibraryAction];
     }
     
+    if ([self.delegate respondsToSelector:@selector(attachmentPicker:addAdditionalOptions:)]) {
+        [self.delegate attachmentPicker:self addAdditionalOptions:alertController];
+    }
+    
     UIAlertAction *cancelAlertAction = [UIAlertAction actionWithTitle:CANCEL_STRING style:UIAlertActionStyleCancel handler:nil];
     
     [alertController addAction:cancelAlertAction];

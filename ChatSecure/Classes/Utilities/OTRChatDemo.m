@@ -51,7 +51,7 @@
                 
             }
             
-            buddy.status = (NSInteger)ThreadStatusAvailable+idx;
+            buddy.status = (NSInteger)OTRThreadStatusAvailable+idx;
             
             NSArray *textArray = [self shuffleHelloArray:helloArray];
             

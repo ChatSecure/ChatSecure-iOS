@@ -41,7 +41,7 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
 - (id)init
 {
     if (self = [super init]) {
-        self.status = ThreadStatusOffline;
+        self.status = OTRThreadStatusOffline;
         self.chatState = kOTRChatStateUnknown;
         self.lastSentChatState = kOTRChatStateUnknown;
     }
@@ -175,8 +175,12 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
     return self.composingMessageString;
 }
 
-- (ThreadStatus)currentStatus {
+- (OTRThreadStatus)currentStatus {
     return self.status;
+}
+
+- (BOOL)isGroupThread {
+    return NO;
 }
 
 #pragma - mark YapDatabaseRelationshipNode
@@ -239,14 +243,14 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
 {
     NSMutableArray *buddiesToChange = [NSMutableArray array];
     [transaction enumerateKeysAndObjectsInCollection:[self collection] usingBlock:^(NSString *key, OTRBuddy *buddy, BOOL *stop) {
-        if(buddy.status != ThreadStatusOffline)
+        if(buddy.status != OTRThreadStatusOffline)
         {
             [buddiesToChange addObject:buddy];
         }
     }];
     
     [buddiesToChange enumerateObjectsUsingBlock:^(OTRBuddy *buddy, NSUInteger idx, BOOL *stop) {
-        buddy.status = ThreadStatusOffline;
+        buddy.status = OTRThreadStatusOffline;
         [buddy saveWithTransaction:transaction];
     }];
 }
