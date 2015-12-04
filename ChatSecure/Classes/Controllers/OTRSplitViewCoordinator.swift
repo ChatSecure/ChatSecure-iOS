@@ -23,7 +23,7 @@ public class OTRSplitViewCoordinator: NSObject, OTRConversationViewControllerDel
         }
         
         if let appDelegate = UIApplication.sharedApplication().delegate as? OTRAppDelegate {
-            if let c = appDelegate.groupMessagesViewControllerClass() as? OTRMessagesGroupViewController.Type {
+            if let c = appDelegate.theme.groupMessagesViewControllerClass() as? OTRMessagesGroupViewController.Type {
                 let messagesVC = c.init()
                 messagesVC.setupWithBuddies(buddyKeys, accountId: accountKey, name:name)
                 //setup 'back' button in nav bar
@@ -53,11 +53,11 @@ public class OTRSplitViewCoordinator: NSObject, OTRConversationViewControllerDel
         let appDelegate = UIApplication.sharedApplication().delegate as? OTRAppDelegate
         var messagesVC:OTRMessagesViewController? = nil
         if threadOwner.isGroupThread() {
-            if let c = appDelegate?.groupMessagesViewControllerClass() as? OTRMessagesGroupViewController.Type {
+            if let c = appDelegate?.theme.groupMessagesViewControllerClass() as? OTRMessagesGroupViewController.Type {
                 messagesVC = c.init()
             }
             
-        } else if let c = appDelegate?.messagesViewControllerClass() as? OTRMessagesViewController.Type {
+        } else if let c = appDelegate?.theme.messagesViewControllerClass() as? OTRMessagesViewController.Type {
             messagesVC = c.init()
         }
         

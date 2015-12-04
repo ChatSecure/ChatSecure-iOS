@@ -386,26 +386,28 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
     NSArray *accounts = [OTRAccountsManager allAccountsAbleToAddBuddies];
     if(indexPath.section == 0 && [accounts count])
     {
-        
-        //add buddy cell
-        UIViewController *viewController = nil;
-        if([accounts count] > 1) {
-            // pick wich account
-            viewController = [[OTRChooseAccountViewController alloc] init];
-            
-        }
-        else {
-            OTRAccount *account = [accounts firstObject];
-            viewController = [[OTRNewBuddyViewController alloc] initWithAccountId:account.uniqueId];
-        }
-        [self.navigationController pushViewController:viewController animated:YES];
-        
+        [self addBuddy:accounts];
     }
     else {
         OTRBuddy * buddy = [self buddyAtIndexPath:indexPath];
         [self selectedBuddy:buddy.uniqueId];
         [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
     }
+}
+
+- (void)addBuddy:(NSArray *)accountsAbleToAddBuddies
+{
+    //add buddy cell
+    UIViewController *viewController = nil;
+    if([accountsAbleToAddBuddies count] > 1) {
+        // pick which account
+        viewController = [[OTRChooseAccountViewController alloc] init];
+    }
+    else {
+        OTRAccount *account = [accountsAbleToAddBuddies firstObject];
+        viewController = [[OTRNewBuddyViewController alloc] initWithAccountId:account.uniqueId];
+    }
+    [self.navigationController pushViewController:viewController animated:YES];
 }
 
 #pragma - mark UIScrollViewDelegate

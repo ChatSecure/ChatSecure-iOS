@@ -34,7 +34,7 @@
 
 - (void)setThreadKey:(NSString *)key collection:(NSString *)collection;
 - (void)sendAudioFileURL:(NSURL *)url;
-- (void)sendImageFilePath:(NSString *)filePath;
+- (void)sendImageFilePath:(NSString *)filePath asJPEG:(BOOL)asJPEG shouldResize:(BOOL)shouldResize;
 
 - (void)sendAudioFileURL:(NSURL *)url;
 

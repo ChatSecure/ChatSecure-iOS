@@ -7,10 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "OTRThreadOwner.h"
 
 @class OTRBuddy;
 @class OTRConversationViewController;
-@protocol OTRThreadOwner;
 
 @protocol OTRConversationViewControllerDelegate <NSObject>
 

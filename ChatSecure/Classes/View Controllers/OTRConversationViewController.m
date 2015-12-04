@@ -27,6 +27,7 @@
 #import "OTRStrings.h"
 #import <KVOController/FBKVOController.h>
 #import "OTRAppDelegate.h"
+#import "OTRTheme.h"
 #import "OTRProtocolManager.h"
 #import "OTRInviteViewController.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>

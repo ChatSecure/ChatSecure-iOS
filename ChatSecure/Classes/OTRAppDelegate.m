@@ -97,7 +97,7 @@
     UIViewController *rootViewController = nil;
     
     self.settingsViewController = [[OTRSettingsViewController alloc] init];
-    self.conversationViewController = [[[self conversationViewControllerClass] alloc] init];
+    self.conversationViewController = [[[self.theme conversationViewControllerClass] alloc] init];
     
     if ([OTRDatabaseManager existsYapDatabase] && ![[OTRDatabaseManager sharedInstance] hasPassphrase]) {
         // user needs to enter password for current database
@@ -182,7 +182,7 @@
     self.conversationViewController.delegate = self.splitViewCoordinator;
     
     //MessagesViewController Nav
-    UINavigationController *messagesNavController = [[UINavigationController alloc ]initWithRootViewController:[[self messagesViewControllerClass] messagesViewController]];
+    UINavigationController *messagesNavController = [[UINavigationController alloc ]initWithRootViewController:[[self.theme messagesViewControllerClass] messagesViewController]];
     
     
     
@@ -467,20 +467,6 @@
 
 - (Class) themeClass {
     return [OTRTheme class];
-}
-
-#pragma mark - Overrides
-
-- (Class) conversationViewControllerClass {
-    return [OTRConversationViewController class];
-}
-
-- (Class) messagesViewControllerClass {
-    return [OTRMessagesHoldTalkViewController class];
-}
-
-- (Class) groupMessagesViewControllerClass {
-    return [OTRMessagesGroupViewController class];
 }
 
 @end

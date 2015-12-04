@@ -7,6 +7,10 @@
 //
 
 #import "OTRTheme.h"
+#import "OTRConversationViewController.h"
+#import "OTRMessagesHoldTalkViewController.h"
+#import "OTRComposeViewController.h"
+#import "OTRMessagesGroupViewController.h"
 
 @implementation OTRTheme
 
@@ -21,6 +25,23 @@
 
 /** Set global app appearance via UIAppearance */
 - (void) setupGlobalTheme {
+}
+
+
+- (Class) conversationViewControllerClass {
+    return [OTRConversationViewController class];
+}
+
+- (Class) groupMessagesViewControllerClass {
+    return [OTRMessagesGroupViewController class];
+}
+
+- (Class) messagesViewControllerClass {
+    return [OTRMessagesHoldTalkViewController class];
+}
+
+- (Class)composeViewControllerClass {
+    return [OTRComposeViewController class];
 }
 
 @end
