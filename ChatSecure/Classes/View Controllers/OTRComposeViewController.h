@@ -21,4 +21,6 @@
 
 @property (nonatomic, weak) id<OTRComposeViewControllerDelegate> delegate;
 
+- (void)addBuddy:(NSArray *)accountsAbleToAddBuddies;
+
 @end

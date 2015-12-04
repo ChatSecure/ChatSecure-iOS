@@ -19,4 +19,13 @@
 /** Set global app appearance via UIAppearance */
 - (void) setupGlobalTheme;
 
+/** Override this in subclass to use a different conversation view controller class */
+- (Class) conversationViewControllerClass;
+
+/** Override this in subclass to use a different message view controller class */
+- (Class) messagesViewControllerClass;
+
+/** Override this in subclass to use a different compose view controller class */
+- (Class) composeViewControllerClass;
+
 @end

@@ -27,6 +27,7 @@
 #import "OTRStrings.h"
 #import <KVOController/FBKVOController.h>
 #import "OTRAppDelegate.h"
+#import "OTRTheme.h"
 #import "OTRProtocolManager.h"
 #import "OTRInviteViewController.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
@@ -206,7 +207,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 
 - (void)composeButtonPressed:(id)sender
 {
-    OTRComposeViewController * composeViewController = [[OTRComposeViewController alloc] init];
+    OTRComposeViewController * composeViewController = [[[[OTRAppDelegate appDelegate].theme composeViewControllerClass] alloc] init];
     composeViewController.delegate = self;
     UINavigationController * modalNavigationController = [[UINavigationController alloc] initWithRootViewController:composeViewController];
     modalNavigationController.modalPresentationStyle = UIModalPresentationFormSheet;

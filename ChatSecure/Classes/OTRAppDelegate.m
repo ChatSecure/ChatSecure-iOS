@@ -94,8 +94,8 @@
     UIViewController *rootViewController = nil;
     
     self.settingsViewController = [[OTRSettingsViewController alloc] init];
-    self.conversationViewController = [[[self conversationViewControllerClass] alloc] init];
-    self.messagesViewController = [[self messagesViewControllerClass] messagesViewController];
+    self.conversationViewController = [[[self.theme conversationViewControllerClass] alloc] init];
+    self.messagesViewController = [[self.theme messagesViewControllerClass] messagesViewController];
     
     if ([OTRDatabaseManager existsYapDatabase] && ![[OTRDatabaseManager sharedInstance] hasPassphrase]) {
         // user needs to enter password for current database
@@ -452,16 +452,6 @@
 
 - (Class) themeClass {
     return [OTRTheme class];
-}
-
-#pragma mark - Overrides
-
-- (Class) conversationViewControllerClass {
-    return [OTRConversationViewController class];
-}
-
-- (Class) messagesViewControllerClass {
-    return [OTRMessagesHoldTalkViewController class];
 }
 
 @end

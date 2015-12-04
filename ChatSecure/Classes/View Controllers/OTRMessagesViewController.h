@@ -31,6 +31,6 @@
 @property (nonatomic, strong) UIButton *cameraButton;
 
 -(void)sendAudioFileURL:(NSURL *)url;
-- (void)sendImageFilePath:(NSString *)filePath;
+- (void)sendImageFilePath:(NSString *)filePath asJPEG:(BOOL)asJPEG shouldResize:(BOOL)shouldResize;
 
 @end
