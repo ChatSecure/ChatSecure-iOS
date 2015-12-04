@@ -105,7 +105,7 @@
         NSParameterAssert(jid != nil);
         NSLog(@"Error creating JID from account values!");
     }
-    account.username = jid.user;
+    account.username = jid.bare;
     account.domain = jid.domain;
     account.resource = jid.resource;
     

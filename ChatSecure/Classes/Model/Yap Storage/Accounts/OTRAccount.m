@@ -124,11 +124,6 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
     return password;
 }
 
-- (NSString *)description
-{
-    return [NSString stringWithFormat:@"%@ - %@",NSStringFromClass([self class]), self.username];
-}
-
 - (NSArray *)allBuddiesWithTransaction:(YapDatabaseReadTransaction *)transaction
 {
     NSMutableArray *allBuddies = [NSMutableArray array];

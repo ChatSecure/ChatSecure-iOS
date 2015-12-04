@@ -166,7 +166,10 @@ public class OTRUsernameCell: XLFormBaseCell, UITextFieldDelegate {
     
     public static func createRowDictionaryValueForUsername(username: String?, domain: String?) -> Dictionary<String, String> {
         let unwrappedUsername = username ?? ""
-        let unwrappedDomain = domain ?? ""
+        var unwrappedDomain = domain ?? ""
+        if (unwrappedDomain.hasPrefix("@")) {
+            unwrappedDomain = unwrappedDomain.substringFromIndex(unwrappedDomain.startIndex.advancedBy(1))
+        }
         let value: Dictionary<String, String> = [OTRUsernameCell.UsernameKey: unwrappedUsername, OTRUsernameCell.DomainKey: unwrappedDomain]
         return value
     }
