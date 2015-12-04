@@ -580,13 +580,14 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     CGFloat height = [OTRButtonView heightForTitle:title width:self.view.bounds.size.width buttons:buttons];
     
-    self.buttonDropdownView.frame = CGRectMake(0, self.navigationController.navigationBar.frame.size.height+self.navigationController.navigationBar.frame.origin.y-height, self.view.bounds.size.width, height);
+    //Use double navigationController to get to real navbar. Better fix would be to put this in a call back or delegate this to something else
+    self.buttonDropdownView.frame = CGRectMake(0, self.navigationController.navigationController.navigationBar.frame.size.height+self.navigationController.navigationController.navigationBar.frame.origin.y-height, self.view.bounds.size.width, height);
     
     [self.view addSubview:self.buttonDropdownView];
     
     [UIView animateWithDuration:duration animations:^{
         CGRect frame = self.buttonDropdownView.frame;
-        frame.origin.y = self.navigationController.navigationBar.frame.size.height+self.navigationController.navigationBar.frame.origin.y;
+        frame.origin.y = self.navigationController.navigationController.navigationBar.frame.size.height+self.navigationController.navigationController.navigationBar.frame.origin.y;
         self.buttonDropdownView.frame = frame;
     } completion:nil];
     
