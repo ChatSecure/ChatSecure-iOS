@@ -9,6 +9,7 @@
 #import "OTRXMPPRoomManager.h"
 #import "XMPP.h"
 #import "NSXMLElement+XMPP.h"
+#import "XMPPMessage+XEP0045.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 #import "YapDatabase.h"
 #import "OTRXMPPRoomYapStorage.h"
@@ -106,7 +107,9 @@
         }
         
         //Other Room properties should be set here
-        room.subject = subject;
+        if ([subject length]) {
+            room.subject = subject;
+        }
         
         [room saveWithTransaction:transaction];
     }];
@@ -123,7 +126,6 @@
         historyElement = [NSXMLElement elementWithName:@"history"];
         [historyElement addAttributeWithName:@"since" stringValue:dateTimeString];
     }
-    
     
     [room joinRoomUsingNickname:name history:historyElement];
     return databaseRoomKey;
@@ -231,6 +233,26 @@
 - (void)xmppStream:(XMPPStream *)sender didSendMessage:(XMPPMessage *)message
 {
     //Check id and mark as sent
+}
+
+- (void)xmppStream:(XMPPStream *)sender didReceiveMessage:(XMPPMessage *)message
+{
+    XMPPJID *from = [message from];
+    //Check that this is a message for one of our rooms
+    if([message isGroupChatMessageWithSubject] && [[self.rooms allKeys] containsObject:from.bare]) {
+        
+        NSString *subject = [message subject];
+        
+        NSString *databaseRoomKey = [OTRXMPPRoom createUniqueId:self.xmppStream.tag jid:from.bare];
+        
+        [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+            OTRXMPPRoom *room = [OTRXMPPRoom fetchObjectWithUniqueID:databaseRoomKey transaction:transaction];
+            room.subject = subject;
+            [room saveWithTransaction:transaction];
+        }];
+        
+    }
+    
 }
 
 #pragma - mark XMPPMUCDelegate Methods
