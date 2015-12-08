@@ -37,7 +37,7 @@ PODS:
   - CocoaLumberjack/Core (1.9.2)
   - CocoaLumberjack/Extensions (1.9.2):
     - CocoaLumberjack/Core
-  - CPAProxy (1.0.0):
+  - CPAProxy (1.1.0):
     - CocoaAsyncSocket
   - GCDWebServer (3.2.7):
     - GCDWebServer/Core (= 3.2.7)
@@ -325,7 +325,7 @@ SPEC CHECKSUMS:
   BButton: ab0f2ed3b998ae73c5188b57d270d81e4a1eeb27
   CocoaAsyncSocket: f5783bdedd232d91b89769bc4b5a1580aed518ad
   CocoaLumberjack: 628fca2e88ef06f7cf6817309aa405f325d9a6fa
-  CPAProxy: 9ca6809d0ee47d90ee149da033a53b911d15ab82
+  CPAProxy: cfd27b25328d6517b1f8570c4f0045838353e888
   GCDWebServer: 76a9540371d5f12f850b32ec7f555dd2d266e543
   gtm-http-fetcher: 4e7de79fc9e774b291eae66a240f17b3a5277ec7
   gtm-oauth2: b31c9d7c82f773f7b7094cbb7da8dc7b5968ce16
