@@ -33,6 +33,10 @@ extern const struct OTRMessageEdges {
 @protocol OTRMesssageProtocol <NSObject>
 @required
 
+- (NSString *)messageKey;
+
+- (NSString *)messageCollection;
+
 - (NSString *)threadId;
 
 - (BOOL)messageIncoming;

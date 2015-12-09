@@ -90,6 +90,14 @@ const struct OTRMessageEdges OTRMessageEdges = {
 
 #pragma - mark OTRMessage Protocol methods
 
+- (NSString *)messageKey {
+    return self.uniqueId;
+}
+
+- (NSString *)messageCollection {
+    return [self.class collection];
+}
+
 - (NSDate *)messageDate {
     return  self.date;
 }

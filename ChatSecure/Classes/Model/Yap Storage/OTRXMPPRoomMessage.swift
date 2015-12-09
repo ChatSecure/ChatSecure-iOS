@@ -63,6 +63,14 @@ extension OTRXMPPRoomMessage:OTRMesssageProtocol {
     
     //MARK: OTRMessageProtocol
     
+    public func messageKey() -> String! {
+        return self.uniqueId
+    }
+    
+    public func messageCollection() -> String! {
+        return self.dynamicType.collection()
+    }
+    
     public func threadId() -> String! {
         return self.roomUniqueId
     }
