@@ -64,7 +64,7 @@ extension OTRXMPPRoom:OTRThreadOwner {
     }
     
     public func avatarImage() -> UIImage {
-        return OTRImages.avatarImageWithUniqueIdentifier(self.uniqueId, avatarData: nil, displayName: nil, username: self.jid)
+        return OTRImages.avatarImageWithUniqueIdentifier(self.uniqueId, avatarData: nil, displayName: nil, username: self.threadName())
     }
     
     public func currentStatus() -> OTRThreadStatus {
