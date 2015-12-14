@@ -295,6 +295,12 @@ typedef NS_ENUM(int, OTRDropDownType) {
         
         [self refreshTitleView];
     }
+    
+    // Set all messages as read
+    id <OTRThreadOwner>threadOwner = [self threadObject];
+    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+        [threadOwner setAllMessagesAsReadInTransaction:transaction];
+    }];
 }
 
 - (void)refreshTitleView

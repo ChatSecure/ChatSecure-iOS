@@ -59,6 +59,7 @@
 #import "OTRInviteViewController.h"
 #import "OTRTheme.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "OTRMessagesViewController.h"
 @import OTRAssets;
 
 #if CHATSECURE_DEMO
@@ -206,6 +207,34 @@
 - (void)showConversationViewController
 {
     self.window.rootViewController = [self defaultConversationNavigationController];
+}
+
+- (id<OTRThreadOwner>)activeThread
+{
+    __block id<OTRThreadOwner> threadOwner = nil;
+    NSArray <UIViewController *>*viewControllers = [self.splitViewCoordinator.splitViewController viewControllers];
+    [viewControllers enumerateObjectsUsingBlock:^(UIViewController * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSArray <UIViewController *>*result = nil;
+        if ([obj isKindOfClass:[UINavigationController class] ]) {
+            result = [((UINavigationController *)obj) otr_baseViewContorllers];
+        } else {
+            result = @[obj];
+        }
+        
+        [result enumerateObjectsUsingBlock:^(UIViewController * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if([obj isKindOfClass:[OTRMessagesViewController class]] && [obj otr_isVisible])
+            {
+                OTRMessagesViewController *messagesViewController = (OTRMessagesViewController *)obj;
+                threadOwner = [messagesViewController threadObject];
+                *stop = YES;
+            }
+        }];
+        
+        if (threadOwner) {
+            *stop = YES;
+        }
+    }];
+    return threadOwner;
 }
 
 - (void)removeFacebookAccounts

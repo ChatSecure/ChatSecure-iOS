@@ -36,6 +36,7 @@ public class OTRXMPPRoomMessage: OTRYapDatabaseObject {
     public var messageText:String?
     public var messageDate:NSDate?
     public var xmppId:String? = NSUUID().UUIDString
+    public var read = true
     
     public var roomUniqueId:String?
     

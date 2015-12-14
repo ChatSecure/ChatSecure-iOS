@@ -119,7 +119,7 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
     return [OTRAccount fetchObjectWithUniqueID:self.accountUniqueId transaction:transaction];
 }
 
-- (void)setAllMessagesRead:(YapDatabaseReadWriteTransaction *)transaction
+- (void)setAllMessagesAsReadInTransaction:(YapDatabaseReadWriteTransaction *)transaction
 {
     [[transaction ext:OTRYapDatabaseRelationshipName] enumerateEdgesWithName:OTRMessageEdges.buddy destinationKey:self.uniqueId collection:[OTRBuddy collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
         OTRMessage *message = [[OTRMessage fetchObjectWithUniqueID:edge.sourceKey transaction:transaction] copy];

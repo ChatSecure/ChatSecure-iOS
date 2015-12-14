@@ -116,6 +116,12 @@
         databaseMessage.displayName = occupant.realJID;
         
         databaseRoom.lastRoomMessageDate = [databaseMessage date];
+        id<OTRThreadOwner>activeThread = [[OTRAppDelegate appDelegate] activeThread];
+        if([[activeThread threadIdentifier] isEqualToString:databaseMessage.threadId]) {
+            databaseMessage.read = YES;
+        } else {
+            databaseMessage.read = NO;
+        }
         
         [databaseRoom saveWithTransaction:transaction];
         [databaseMessage saveWithTransaction:transaction];

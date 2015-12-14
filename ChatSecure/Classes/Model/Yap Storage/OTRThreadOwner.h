@@ -28,6 +28,7 @@ typedef NS_ENUM(NSInteger, OTRThreadStatus) {
 - (nonnull UIImage *)avatarImage;
 - (OTRThreadStatus)currentStatus;
 - (nullable id <OTRMesssageProtocol>)lastMessageWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
+- (void)setAllMessagesAsReadInTransaction:(nonnull YapDatabaseReadWriteTransaction *)transaction;
 - (BOOL)isGroupThread;
 
 
