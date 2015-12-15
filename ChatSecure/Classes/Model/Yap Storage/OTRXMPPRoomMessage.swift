@@ -36,6 +36,7 @@ public class OTRXMPPRoomMessage: OTRYapDatabaseObject {
     public var messageText:String?
     public var messageDate:NSDate?
     public var xmppId:String? = NSUUID().UUIDString
+    public var read = true
     
     public var roomUniqueId:String?
     
@@ -63,6 +64,14 @@ extension OTRXMPPRoomMessage:OTRMesssageProtocol {
     
     //MARK: OTRMessageProtocol
     
+    public func messageKey() -> String! {
+        return self.uniqueId
+    }
+    
+    public func messageCollection() -> String! {
+        return self.dynamicType.collection()
+    }
+    
     public func threadId() -> String! {
         return self.roomUniqueId
     }
@@ -85,6 +94,10 @@ extension OTRXMPPRoomMessage:OTRMesssageProtocol {
     
     public func remoteMessageId() -> String! {
         return self.xmppId
+    }
+    
+    public func threadOwnerWithTransaction(transaction: YapDatabaseReadTransaction!) -> OTRThreadOwner! {
+        return OTRXMPPRoom.fetchObjectWithUniqueID(self.threadId(), transaction: transaction)
     }
 }
 
@@ -130,7 +143,7 @@ extension OTRXMPPRoomMessage:JSQMessageData {
     }
     
     public func messageRead() -> Bool {
-        return true
+        return self.read
     }
     
 }

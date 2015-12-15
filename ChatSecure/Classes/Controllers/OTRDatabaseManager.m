@@ -33,7 +33,8 @@
 NSString *const OTRYapDatabaseRelationshipName = @"OTRYapDatabaseRelationshipName";
 NSString *const OTRYapDatabseMessageIdSecondaryIndex = @"OTRYapDatabseMessageIdSecondaryIndex";
 NSString *const OTRYapDatabseRoomOccupantJIdSecondaryIndex = @"constOTRYapDatabseRoomOccupantJIdSecondaryIndex";
-NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseMessageIdSecondaryIndexExtension";
+NSString *const OTRYapDatabseSecondaryIndexExtension = @"OTRYapDatabseMessageIdSecondaryIndexExtension";
+NSString *const OTRYapDatabaseUnreadMessageSecondaryIndex = @"OTRYapDatbaseUnreadMessageSecondaryIndex";
 
 
 @interface OTRDatabaseManager ()
@@ -196,6 +197,7 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
     YapDatabaseSecondaryIndexSetup *setup = [[YapDatabaseSecondaryIndexSetup alloc] init];
     [setup addColumn:OTRYapDatabseMessageIdSecondaryIndex withType:YapDatabaseSecondaryIndexTypeText];
     [setup addColumn:OTRYapDatabseRoomOccupantJIdSecondaryIndex withType:YapDatabaseSecondaryIndexTypeText];
+    [setup addColumn:OTRYapDatabaseUnreadMessageSecondaryIndex withType:YapDatabaseSecondaryIndexTypeInteger];
     
     YapDatabaseSecondaryIndexHandler *indexHandler = [YapDatabaseSecondaryIndexHandler withObjectBlock:^(NSMutableDictionary *dict, NSString *collection, NSString *key, id object) {
         if ([object conformsToProtocol:@protocol(OTRMesssageProtocol)])
@@ -205,6 +207,8 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
             if ([[message remoteMessageId] length]) {
                 [dict setObject:[message remoteMessageId] forKey:OTRYapDatabseMessageIdSecondaryIndex];
             }
+            
+            [dict setObject:@([message messageRead]) forKey:OTRYapDatabaseUnreadMessageSecondaryIndex];
         }
         
         if ([collection isEqualToString:[OTRXMPPRoomOccupant collection]]) {
@@ -215,9 +219,9 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
         }
     }];
     
-    YapDatabaseSecondaryIndex *secondaryIndex = [[YapDatabaseSecondaryIndex alloc] initWithSetup:setup handler:indexHandler];
+    YapDatabaseSecondaryIndex *secondaryIndex = [[YapDatabaseSecondaryIndex alloc] initWithSetup:setup handler:indexHandler versionTag:@"1"];
     
-    return [self.database registerExtension:secondaryIndex withName:OTRYapDatabseMessageIdSecondaryIndexExtension];
+    return [self.database registerExtension:secondaryIndex withName:OTRYapDatabseSecondaryIndexExtension];
 }
 
 + (void) deleteLegacyXMPPFiles {

@@ -66,6 +66,10 @@ extern NSString *const OTRSuccessfulRemoteNotificationRegistration;
 extern NSString *const OTRYapDatabasePassphraseAccountName;
 extern NSString *const OTRYapDatabaseName;
 
+//Notifications
+extern NSString *const kOTRNotificationThreadKey;
+extern NSString *const kOTRNotificationThreadCollection;
+
 //NSUserDefaults
 extern NSString *const kOTRDeletedFacebookKey;
 

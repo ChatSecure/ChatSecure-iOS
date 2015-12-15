@@ -52,11 +52,6 @@ const struct OTRMessageEdges OTRMessageEdges = {
     return self;
 }
 
-- (OTRBuddy *)buddyWithTransaction:(YapDatabaseReadTransaction *)readTransaction
-{
-    return [OTRBuddy fetchObjectWithUniqueID:self.buddyUniqueId transaction:readTransaction];
-}
-
 #pragma - mark YapDatabaseRelationshipNode
 
 - (NSArray *)yapDatabaseRelationshipEdges
@@ -89,6 +84,14 @@ const struct OTRMessageEdges OTRMessageEdges = {
 }
 
 #pragma - mark OTRMessage Protocol methods
+
+- (NSString *)messageKey {
+    return self.uniqueId;
+}
+
+- (NSString *)messageCollection {
+    return [self.class collection];
+}
 
 - (NSDate *)messageDate {
     return  self.date;
@@ -125,19 +128,9 @@ const struct OTRMessageEdges OTRMessageEdges = {
     return self.messageId;
 }
 
-#pragma - mark Class Methods
-
-+ (NSInteger)numberOfUnreadMessagesWithTransaction:(YapDatabaseReadTransaction*)transaction
+- (id<OTRThreadOwner>)threadOwnerWithTransaction:(YapDatabaseReadTransaction *)transaction
 {
-    __block int count = 0;
-    [transaction enumerateKeysAndObjectsInCollection:[OTRMessage collection] usingBlock:^(NSString *key, OTRMessage *message, BOOL *stop) {
-        if ([message isKindOfClass:[OTRMessage class]]) {
-            if (!message.isRead) {
-                count +=1;
-            }
-        }
-    }];
-    return count;
+    return [OTRBuddy fetchObjectWithUniqueID:self.buddyUniqueId transaction:transaction];
 }
 
 + (void)deleteAllMessagesWithTransaction:(YapDatabaseReadWriteTransaction*)transaction
@@ -180,41 +173,6 @@ const struct OTRMessageEdges OTRMessageEdges = {
     if (deliveredMessage) {
         deliveredMessage.delivered = YES;
         [deliveredMessage saveWithTransaction:transaction];
-    }
-}
-
-+ (void)showLocalNotificationForMessage:(OTRMessage *)message
-{
-    if (![[UIApplication sharedApplication] applicationState] == UIApplicationStateActive)
-    {
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            NSString * rawMessage = [message.text stringByConvertingHTMLToPlainText];
-            // We are not active, so use a local notification instead
-            __block OTRBuddy *localBuddy = nil;
-            __block OTRAccount *localAccount;
-            __block NSInteger unreadCount = 0;
-            [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-                localBuddy = [message buddyWithTransaction:transaction];
-                localAccount = [localBuddy accountWithTransaction:transaction];
-                unreadCount = [self numberOfUnreadMessagesWithTransaction:transaction];
-            }];
-            
-            NSString *name = localBuddy.username;
-            if ([localBuddy.displayName length]) {
-                name = localBuddy.displayName;
-            }
-            
-            UILocalNotification *localNotification = [[UILocalNotification alloc] init];
-            localNotification.alertAction = REPLY_STRING;
-            localNotification.soundName = UILocalNotificationDefaultSoundName;
-            localNotification.applicationIconBadgeNumber = unreadCount;
-            localNotification.alertBody = [NSString stringWithFormat:@"%@: %@",name,rawMessage];
-            
-            localNotification.userInfo = @{kOTRNotificationBuddyUniqueIdKey:localBuddy.uniqueId};
-        
-            [[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
-        });
     }
 }
 

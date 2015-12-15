@@ -38,6 +38,7 @@
 #import "OTRMediaServer.h"
 #import "OTRLanguageManager.h"
 #import "OTRLog.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 @import AVFoundation;
 
@@ -211,7 +212,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
             buddy.lastMessageDate = originalMessage.date;
             [buddy saveWithTransaction:transaction];
         } completionBlock:^{
-            [OTRMessage showLocalNotificationForMessage:originalMessage];
+            [[UIApplication sharedApplication] showLocalNotification:originalMessage];
         }];
     }
     

@@ -95,12 +95,13 @@
     NSString *roomJID = room.roomJID.bare;
     XMPPJID *fromJID = [message from];
     
+    __block OTRXMPPRoomMessage *databaseMessage = nil;
     [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
         if ([self existsMessage:message from:fromJID account:accountId transaction:transaction]) {
             
             return;
         }
-        OTRXMPPRoomMessage *databaseMessage = [[OTRXMPPRoomMessage alloc] init];
+        databaseMessage = [[OTRXMPPRoomMessage alloc] init];
         databaseMessage.xmppId = [message elementID];
         databaseMessage.messageText = [message body];
         databaseMessage.messageDate = [message delayedDeliveryDate];
@@ -116,10 +117,20 @@
         databaseMessage.displayName = occupant.realJID;
         
         databaseRoom.lastRoomMessageDate = [databaseMessage date];
+        id<OTRThreadOwner>activeThread = [[OTRAppDelegate appDelegate] activeThread];
+        if([[activeThread threadIdentifier] isEqualToString:databaseMessage.threadId]) {
+            databaseMessage.read = YES;
+        } else {
+            databaseMessage.read = NO;
+        }
         
         [databaseRoom saveWithTransaction:transaction];
         [databaseMessage saveWithTransaction:transaction];
     }];
+    
+    if(databaseMessage) {
+        [[UIApplication sharedApplication] showLocalNotification:databaseMessage];
+    }
 }
 
 - (id <OTRMesssageProtocol>)lastMessageInRoom:(XMPPRoom *)room accountKey:(NSString *)accountKey

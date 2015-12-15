@@ -9,6 +9,7 @@
 #import "OTRYapDatabaseObject.h"
 @import JSQMessagesViewController;
 @class OTRBuddy,YapDatabaseReadTransaction, OTRMediaItem;
+@protocol OTRThreadOwner;
 
 extern const struct OTRMessageAttributes {
 	__unsafe_unretained NSString *date;
@@ -33,6 +34,10 @@ extern const struct OTRMessageEdges {
 @protocol OTRMesssageProtocol <NSObject>
 @required
 
+- (NSString *)messageKey;
+
+- (NSString *)messageCollection;
+
 - (NSString *)threadId;
 
 - (BOOL)messageIncoming;
@@ -51,6 +56,8 @@ extern const struct OTRMessageEdges {
 
 - (NSString *)remoteMessageId;
 
+- (id<OTRThreadOwner>)threadOwnerWithTransaction:(YapDatabaseReadTransaction *)transaction;
+
 @end
 
 @interface OTRMessage : OTRYapDatabaseObject <YapDatabaseRelationshipNode, OTRMesssageProtocol>
@@ -67,15 +74,9 @@ extern const struct OTRMessageEdges {
 @property (nonatomic, strong) NSString *mediaItemUniqueId;
 @property (nonatomic, strong) NSString *buddyUniqueId;
 
-- (OTRBuddy *)buddyWithTransaction:(YapDatabaseReadTransaction *)readTransaction;
-
-
-+ (NSInteger)numberOfUnreadMessagesWithTransaction:(YapDatabaseReadTransaction*)transaction;
 + (void)deleteAllMessagesWithTransaction:(YapDatabaseReadWriteTransaction*)transaction;
 + (void)deleteAllMessagesForBuddyId:(NSString *)uniqueBuddyId transaction:(YapDatabaseReadWriteTransaction*)transaction;
 + (void)deleteAllMessagesForAccountId:(NSString *)uniqueAccountId transaction:(YapDatabaseReadWriteTransaction*)transaction;
 + (void)receivedDeliveryReceiptForMessageId:(NSString *)messageId transaction:(YapDatabaseReadWriteTransaction*)transaction;
-
-+ (void)showLocalNotificationForMessage:(OTRMessage *)message;
 
 @end

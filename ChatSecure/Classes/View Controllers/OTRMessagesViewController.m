@@ -295,6 +295,12 @@ typedef NS_ENUM(int, OTRDropDownType) {
         
         [self refreshTitleView];
     }
+    
+    // Set all messages as read
+    id <OTRThreadOwner>threadOwner = [self threadObject];
+    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+        [threadOwner setAllMessagesAsReadInTransaction:transaction];
+    }];
 }
 
 - (void)refreshTitleView
@@ -1226,9 +1232,9 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 
 - (void)deleteMessageAtIndexPath:(NSIndexPath *)indexPath
 {
-    __block OTRMessage *message = [self messageAtIndexPath:indexPath];
+    __block id <OTRMesssageProtocol,JSQMessageData> message = [self messageAtIndexPath:indexPath];
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        [message removeWithTransaction:transaction];
+        [transaction removeObjectForKey:[message messageKey] inCollection:[message messageCollection]];
         //Update Last message date for sorting and grouping
         [self.buddy updateLastMessageDateWithTransaction:transaction];
         [self.buddy saveWithTransaction:transaction];
@@ -1237,19 +1243,19 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 
 - (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapAvatarImageView:(UIImageView *)avatarImageView atIndexPath:(NSIndexPath *)indexPath
 {
-    OTRMessage *message = [self messageAtIndexPath:indexPath];
-    if (message.error) {
-        [self showMessageError:message.error];
+    id <OTRMesssageProtocol,JSQMessageData> message = [self messageAtIndexPath:indexPath];
+    if ([message messageError]) {
+        [self showMessageError:[message messageError]];
     }
 }
 
 - (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapMessageBubbleAtIndexPath:(NSIndexPath *)indexPath
 {
-    OTRMessage *message = [self messageAtIndexPath:indexPath];
+    id <OTRMesssageProtocol,JSQMessageData> message = [self messageAtIndexPath:indexPath];
     if ([message isMediaMessage]) {
         __block OTRMediaItem *item = nil;
         [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
-             item = [OTRImageItem fetchObjectWithUniqueID:message.mediaItemUniqueId transaction:transaction];
+             item = [OTRImageItem fetchObjectWithUniqueID:[message messageMediaItemKey] transaction:transaction];
         } completionBlock:^{
             if ([item isKindOfClass:[OTRImageItem class]]) {
                 [self showImage:(OTRImageItem *)item fromCollectionView:collectionView atIndexPath:indexPath];

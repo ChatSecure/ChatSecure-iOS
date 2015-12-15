@@ -19,6 +19,7 @@
 #import "OTRAccount.h"
 #import "OTRConstants.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "OTRThreadOwner.h"
 
 @implementation OTRXMPPMessageYapStroage
 
@@ -88,6 +89,10 @@
                 if (messageBuddy && ![self duplicateMessage:xmppMessage buddyUniqueId:messageBuddy.uniqueId transaction:transaction]) {
                     OTRMessage *message = [self messageFromXMPPMessage:xmppMessage buddyId:messageBuddy.uniqueId];
                     message.incoming = YES;
+                    id<OTRThreadOwner>activeThread = [[OTRAppDelegate appDelegate] activeThread];
+                    if([[activeThread threadIdentifier] isEqualToString:message.threadId]) {
+                        message.read = YES;
+                    }
                     
                     if (messageBuddy) {
                         OTRAccount *account = [OTRAccount fetchObjectWithUniqueID:xmppStream.tag transaction:transaction];
@@ -173,6 +178,10 @@
                 if ([forwardedMessage isMessageWithBody] && ![forwardedMessage isErrorMessage] && ![OTRKit stringStartsWithOTRPrefix:forwardedMessage.body]) {
                     OTRMessage *message = [self messageFromXMPPMessage:forwardedMessage buddyId:buddy.uniqueId];
                     message.incoming = incoming;
+                    id<OTRThreadOwner>activeThread = [[OTRAppDelegate appDelegate] activeThread];
+                    if([[activeThread threadIdentifier] isEqualToString:message.threadId]) {
+                        message.read = YES;
+                    }
                     [message saveWithTransaction:transaction];
                 }
             }

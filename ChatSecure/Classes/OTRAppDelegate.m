@@ -59,6 +59,7 @@
 #import "OTRInviteViewController.h"
 #import "OTRTheme.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "OTRMessagesViewController.h"
 @import OTRAssets;
 
 #if CHATSECURE_DEMO
@@ -208,6 +209,34 @@
     self.window.rootViewController = [self defaultConversationNavigationController];
 }
 
+- (id<OTRThreadOwner>)activeThread
+{
+    __block id<OTRThreadOwner> threadOwner = nil;
+    NSArray <UIViewController *>*viewControllers = [self.splitViewCoordinator.splitViewController viewControllers];
+    [viewControllers enumerateObjectsUsingBlock:^(UIViewController * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSArray <UIViewController *>*result = nil;
+        if ([obj isKindOfClass:[UINavigationController class] ]) {
+            result = [((UINavigationController *)obj) otr_baseViewContorllers];
+        } else {
+            result = @[obj];
+        }
+        
+        [result enumerateObjectsUsingBlock:^(UIViewController * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if([obj isKindOfClass:[OTRMessagesViewController class]] && [obj otr_isVisible])
+            {
+                OTRMessagesViewController *messagesViewController = (OTRMessagesViewController *)obj;
+                threadOwner = [messagesViewController threadObject];
+                *stop = YES;
+            }
+        }];
+        
+        if (threadOwner) {
+            *stop = YES;
+        }
+    }];
+    return threadOwner;
+}
+
 - (void)removeFacebookAccounts
 {
     NSNumber *deleted = [[NSUserDefaults standardUserDefaults] objectForKey:kOTRDeletedFacebookKey];
@@ -257,7 +286,7 @@
     NSAssert(self.backgroundTask == UIBackgroundTaskInvalid, nil);
     
     [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        application.applicationIconBadgeNumber = [OTRMessage numberOfUnreadMessagesWithTransaction:transaction];
+        application.applicationIconBadgeNumber = [transaction numberOfUnreadMessages];
     }];
     
     self.didShowDisconnectionWarning = NO;
@@ -361,35 +390,21 @@
     //FIXME? [OTRManagedAccount resetAccountsConnectionStatus];
     //[OTRUtilities deleteAllBuddiesAndMessages];
 }
-/*
-// Optional UITabBarControllerDelegate method.
-- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController
-{
-}
-*/
-
-/*
-// Optional UITabBarControllerDelegate method.
-- (void)tabBarController:(UITabBarController *)tabBarController didEndCustomizingViewControllers:(NSArray *)viewControllers changed:(BOOL)changed
-{
-}
-*/
 
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
     
     NSDictionary *userInfo = notification.userInfo;
-    NSString *buddyUniqueId = userInfo[kOTRNotificationBuddyUniqueIdKey];
+    NSString *threadKey = userInfo[kOTRNotificationThreadKey];
+    NSString *threadCollection = userInfo[kOTRNotificationThreadCollection];
     
-    if([buddyUniqueId length]) {
-        
-//        if (!([self.messagesViewController otr_isVisible] || [self.conversationViewController otr_isVisible])) {
-//            self.window.rootViewController = [self defaultConversationNavigationController];
-//        }
-        
-        //[self.conversationViewController enterConversationWithBuddyId:buddyUniqueId];
+    __block id <OTRThreadOwner> thread = nil;
+    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        thread = [transaction objectForKey:threadKey inCollection:threadCollection];
+    }];
+    
+    if (thread) {
+        [self.splitViewCoordinator enterConversatoinWithThread:thread sender:notification];
     }
-    
-
 }
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation

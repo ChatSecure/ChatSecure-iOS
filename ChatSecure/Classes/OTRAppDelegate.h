@@ -27,6 +27,7 @@
 @class OTRSettingsViewController;
 @class OTRMessagesViewController;
 @class OTRConversationViewController;
+@protocol OTRThreadOwner;
 
 
 @interface OTRAppDelegate : UIResponder <UIApplicationDelegate, BITHockeyManagerDelegate>
@@ -40,6 +41,8 @@
 @property (nonatomic) BOOL didShowDisconnectionWarning;
 
 - (void) showConversationViewController;
+
+- (id<OTRThreadOwner>)activeThread;
 
 + (OTRAppDelegate *)appDelegate;
 

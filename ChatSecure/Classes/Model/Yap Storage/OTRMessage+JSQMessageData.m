@@ -19,7 +19,7 @@
 {
     __block NSString *sender = @"";
     [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        OTRBuddy *buddy = [self buddyWithTransaction:transaction];
+        OTRBuddy *buddy = (OTRBuddy *)[self threadOwnerWithTransaction:transaction];
         if (self.isIncoming) {
             sender = buddy.uniqueId;
         }
@@ -34,7 +34,7 @@
 - (NSString *)senderDisplayName {
     __block NSString *sender = @"";
     [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        OTRBuddy *buddy = [self buddyWithTransaction:transaction];
+        OTRBuddy *buddy = (OTRBuddy *)[self threadOwnerWithTransaction:transaction];
         if (self.isIncoming) {
             if ([buddy.displayName length]) {
                 sender = buddy.displayName;

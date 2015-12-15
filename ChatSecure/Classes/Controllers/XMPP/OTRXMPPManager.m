@@ -769,7 +769,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     
     __block OTRBuddy *buddy = nil;
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        buddy = [message buddyWithTransaction:transaction];
+        buddy = (OTRBuddy *)[message threadOwnerWithTransaction:transaction];
     }];
     
     [self invalidatePausedChatStateTimerForBuddyUniqueId:buddy.uniqueId];

@@ -64,7 +64,7 @@ extension OTRXMPPRoom:OTRThreadOwner {
     }
     
     public func avatarImage() -> UIImage {
-        return OTRImages.avatarImageWithUniqueIdentifier(self.uniqueId, avatarData: nil, displayName: nil, username: self.jid)
+        return OTRImages.avatarImageWithUniqueIdentifier(self.uniqueId, avatarData: nil, displayName: nil, username: self.threadName())
     }
     
     public func currentStatus() -> OTRThreadStatus {
@@ -92,6 +92,16 @@ extension OTRXMPPRoom:OTRThreadOwner {
             return nil
         }
         return message
+    }
+    
+    public func setAllMessagesAsReadInTransaction(transaction: YapDatabaseReadWriteTransaction) {
+        transaction.ext(OTRYapDatabaseRelationshipName)?.enumerateEdgesWithName(OTRXMPPRoomMessage.roomEdgeName, destinationKey: self.uniqueId, collection: self.threadCollection(), usingBlock: { (edge, stop) -> Void in
+            
+            if let message = transaction.objectForKey(edge.sourceKey, inCollection: edge.sourceCollection) as? OTRXMPPRoomMessage {
+                message.read = true
+                message.saveWithTransaction(transaction)
+            }
+        })
     }
     
     public func isGroupThread() -> Bool {
