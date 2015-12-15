@@ -21,7 +21,9 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 #import <Foundation/Foundation.h>
-@class OTRDataHandler, OTRPushTLVHandler;
+@import OTRKit;
+
+@class OTRPushTLVHandler;
 
 extern NSString *const OTRMessageStateDidChangeNotification;
 extern NSString *const OTRWillStartGeneratingPrivateKeyNotification;
@@ -39,15 +41,18 @@ typedef NS_ENUM(NSUInteger, OTREncryptionMessageState) {
     OTREncryptionMessageStateError
 };
 
+@interface OTREncryptionManager:NSObject
 
-@interface OTREncryptionManager : NSObject
+
+@property (nonatomic, strong, readonly) OTRKit *otrKit;
+@property (nonatomic, strong, readonly) OTRDataHandler *dataHandler;
+@property (nonatomic, strong, readonly) OTRPushTLVHandler *pushTLVHandler;
 
 + (BOOL) setFileProtection:(NSString*)fileProtection path:(NSString*)path;
 + (BOOL) addSkipBackupAttributeToItemAtURL:(NSURL *)URL;
 
 + (OTREncryptionMessageState)convertEncryptionState:(NSUInteger)messageState;
 
-@property (nonatomic, strong, readonly) OTRDataHandler *dataHandler;
-@property (nonatomic, strong, readonly) OTRPushTLVHandler *pushTLVHandler;
+
 
 @end

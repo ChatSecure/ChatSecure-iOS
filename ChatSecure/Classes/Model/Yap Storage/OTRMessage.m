@@ -16,6 +16,7 @@
 #import "OTRConstants.h"
 #import "OTRMediaItem.h"
 #import "OTRLanguageManager.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 const struct OTRMessageAttributes OTRMessageAttributes = {
 	.date = @"date",
@@ -51,11 +52,6 @@ const struct OTRMessageEdges OTRMessageEdges = {
     return self;
 }
 
-- (OTRBuddy *)buddyWithTransaction:(YapDatabaseReadTransaction *)readTransaction
-{
-    return [OTRBuddy fetchObjectWithUniqueID:self.buddyUniqueId transaction:readTransaction];
-}
-
 #pragma - mark YapDatabaseRelationshipNode
 
 - (NSArray *)yapDatabaseRelationshipEdges
@@ -87,19 +83,54 @@ const struct OTRMessageEdges OTRMessageEdges = {
     return edges;
 }
 
-#pragma - mark Class Methods
+#pragma - mark OTRMessage Protocol methods
 
-+ (NSInteger)numberOfUnreadMessagesWithTransaction:(YapDatabaseReadTransaction*)transaction
+- (NSString *)messageKey {
+    return self.uniqueId;
+}
+
+- (NSString *)messageCollection {
+    return [self.class collection];
+}
+
+- (NSDate *)messageDate {
+    return  self.date;
+}
+
+- (NSString *)threadId {
+    return self.buddyUniqueId;
+}
+
+- (BOOL)messageIncoming
 {
-    __block int count = 0;
-    [transaction enumerateKeysAndObjectsInCollection:[OTRMessage collection] usingBlock:^(NSString *key, OTRMessage *message, BOOL *stop) {
-        if ([message isKindOfClass:[OTRMessage class]]) {
-            if (!message.isRead) {
-                count +=1;
-            }
-        }
-    }];
-    return count;
+    return self.incoming;
+}
+
+- (NSString *)messageMediaItemKey
+{
+    return self.mediaItemUniqueId;
+}
+
+- (NSError *)messageError {
+    return self.error;
+}
+
+- (BOOL)transportedSecurely {
+    return self.transportedSecurely;
+}
+
+- (BOOL)messageRead {
+    return self.isRead;
+}
+
+- (NSString *)remoteMessageId
+{
+    return self.messageId;
+}
+
+- (id<OTRThreadOwner>)threadOwnerWithTransaction:(YapDatabaseReadTransaction *)transaction
+{
+    return [OTRBuddy fetchObjectWithUniqueID:self.buddyUniqueId transaction:transaction];
 }
 
 + (void)deleteAllMessagesWithTransaction:(YapDatabaseReadWriteTransaction*)transaction
@@ -128,71 +159,21 @@ const struct OTRMessageEdges OTRMessageEdges = {
 + (void)receivedDeliveryReceiptForMessageId:(NSString *)messageId transaction:(YapDatabaseReadWriteTransaction*)transaction
 {
     __block OTRMessage *deliveredMessage = nil;
-    [self enumerateMessagesWithMessageId:messageId transaction:transaction usingBlock:^(OTRMessage *message, BOOL *stop) {
-        if (!message.isIncoming) {
+    [transaction enumerateMessagesWithId:messageId block:^(id<OTRMesssageProtocol> _Nonnull message, BOOL * _Null_unspecified stop) {
+        if (![message messageIncoming] && [message isKindOfClass:[OTRMessage class]]) {
             //Media messages are not delivered until the transfer is complete. This is handled in the OTREncryptionManager.
-            if (![message.mediaItemUniqueId length]) {
-                deliveredMessage = message;
+            OTRMessage *msg = (OTRMessage *)message;
+            if (![msg.mediaItemUniqueId length]) {
+                deliveredMessage = msg;
                 *stop = YES;
             }
-            
         }
     }];
+
     if (deliveredMessage) {
         deliveredMessage.delivered = YES;
         [deliveredMessage saveWithTransaction:transaction];
     }
-}
-
-+ (void)showLocalNotificationForMessage:(OTRMessage *)message
-{
-    if (![[UIApplication sharedApplication] applicationState] == UIApplicationStateActive)
-    {
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            NSString * rawMessage = [message.text stringByConvertingHTMLToPlainText];
-            // We are not active, so use a local notification instead
-            __block OTRBuddy *localBuddy = nil;
-            __block OTRAccount *localAccount;
-            __block NSInteger unreadCount = 0;
-            [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-                localBuddy = [message buddyWithTransaction:transaction];
-                localAccount = [localBuddy accountWithTransaction:transaction];
-                unreadCount = [self numberOfUnreadMessagesWithTransaction:transaction];
-            }];
-            
-            NSString *name = localBuddy.username;
-            if ([localBuddy.displayName length]) {
-                name = localBuddy.displayName;
-            }
-            
-            UILocalNotification *localNotification = [[UILocalNotification alloc] init];
-            localNotification.alertAction = REPLY_STRING;
-            localNotification.soundName = UILocalNotificationDefaultSoundName;
-            localNotification.applicationIconBadgeNumber = unreadCount;
-            localNotification.alertBody = [NSString stringWithFormat:@"%@: %@",name,rawMessage];
-            
-            localNotification.userInfo = @{kOTRNotificationBuddyUniqueIdKey:localBuddy.uniqueId};
-        
-            [[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
-        });
-    }
-}
-
-+ (void)enumerateMessagesWithMessageId:(NSString *)messageId transaction:(YapDatabaseReadTransaction *)transaction usingBlock:(void (^)(OTRMessage *message,BOOL *stop))block;
-{
-    if ([messageId length] && block) {
-        NSString *queryString = [NSString stringWithFormat:@"Where %@ = ?",OTRYapDatabseMessageIdSecondaryIndex];
-        YapDatabaseQuery *query = [YapDatabaseQuery queryWithFormat:queryString,messageId];
-        
-        [[transaction ext:OTRYapDatabseMessageIdSecondaryIndexExtension] enumerateKeysMatchingQuery:query usingBlock:^(NSString *collection, NSString *key, BOOL *stop) {
-            OTRMessage *message = [OTRMessage fetchObjectWithUniqueID:key transaction:transaction];
-            if (message) {
-                block(message,stop);
-            }
-        }];
-        
-    }    
 }
 
 @end

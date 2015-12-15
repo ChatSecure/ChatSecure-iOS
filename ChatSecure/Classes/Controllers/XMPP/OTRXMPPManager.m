@@ -63,6 +63,8 @@
 #import "XMPPMessageCarbons.h"
 #import "OTRXMPPMessageYapStroage.h"
 #import "OTRKit.h"
+#import "OTRXMPPRoomManager.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
 @import OTRAssets;
 
 NSString *const OTRXMPPRegisterSucceededNotificationName = @"OTRXMPPRegisterSucceededNotificationName";
@@ -285,8 +287,10 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     self.streamManagement.autoResume = YES;
     [self.streamManagement activate:self.xmppStream];
     
-    
-    
+    //MUC
+    _roomManager = [[OTRXMPPRoomManager alloc] init];
+    self.roomManager.databaseConnection = [self.databaseConnection.database newConnection];
+    [self.roomManager activate:self.xmppStream];
 }
 
 - (void)teardownStream
@@ -479,7 +483,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         NSArray *buddiesArray = [self.account allBuddiesWithTransaction:transaction];
         for (OTRXMPPBuddy *buddy in buddiesArray) {
-            buddy.status = OTRBuddyStatusOffline;
+            buddy.status = OTRThreadStatusOffline;
             buddy.chatState = kOTRChatStateGone;
             
             [buddy saveWithTransaction:transaction];
@@ -594,7 +598,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         NSArray *allBuddies = [self.account allBuddiesWithTransaction:transaction];
         [allBuddies enumerateObjectsUsingBlock:^(OTRXMPPBuddy *buddy, NSUInteger idx, BOOL *stop) {
-            buddy.status = OTRBuddyStatusOffline;
+            buddy.status = OTRThreadStatusOffline;
             buddy.statusMessage = nil;
             [transaction setObject:buddy forKey:buddy.uniqueId inCollection:[OTRXMPPBuddy collection]];
         }];
@@ -679,10 +683,13 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 {
     if ([message.elementID length]) {
         [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-            [OTRMessage enumerateMessagesWithMessageId:message.elementID transaction:transaction usingBlock:^(OTRMessage *message, BOOL *stop) {
-                message.error = error;
-                [message saveWithTransaction:transaction];
-                *stop = YES;
+            [transaction enumerateMessagesWithId:message.elementID block:^(id<OTRMesssageProtocol> _Nonnull databaseMessage, BOOL * _Null_unspecified stop) {
+                if ([databaseMessage isKindOfClass:[OTRMessage class]]) {
+                    ((OTRMessage *)databaseMessage).error = error;
+                    [(OTRMessage *)databaseMessage saveWithTransaction:transaction];
+                    *stop = YES;
+                }
+                
             }];
         }];
     }
@@ -763,10 +770,10 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     
     __block OTRBuddy *buddy = nil;
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        buddy = [message buddyWithTransaction:transaction];
+        buddy = (OTRBuddy *)[message threadOwnerWithTransaction:transaction];
     }];
     
-    if(buddy.status == OTRBuddyStatusOffline) {
+    if(buddy.status == OTRThreadStatusOffline) {
         [self.pushController sendKnock:buddy.uniqueId completion:^(BOOL success, NSError *error) {
             if (!success) {
                 DDLogError(@"Error sending knock");

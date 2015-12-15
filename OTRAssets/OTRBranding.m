@@ -75,6 +75,13 @@ static NSString *const GOOGLE_APP_SCOPE = @"GOOGLE_APP_SCOPE";
     return url;
 }
 
+/** Push server URL e.g. https://chatsecure-push.herokuapp.com/api/v1/ */
++ (NSURL *)pushAPIURL {
+    NSString *urlString = [[self defaultPlist] objectForKey:@"pushAPIURL"];
+    NSURL *url = [NSURL URLWithString:urlString];
+    return url;
+}
+
 #pragma mark Strings
 
 /** The default XMPP resource (e.g. username@example.com/chatsecure) */
@@ -96,6 +103,9 @@ static NSString *const GOOGLE_APP_SCOPE = @"GOOGLE_APP_SCOPE";
 + (NSString*) googleAppScope {
     return [[self defaultPlist] objectForKey:GOOGLE_APP_SCOPE];
 }
+
+
+
 
 
 + (NSDictionary*) defaultPlist {

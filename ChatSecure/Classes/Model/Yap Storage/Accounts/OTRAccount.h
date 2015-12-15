@@ -18,6 +18,13 @@ typedef NS_ENUM(int, OTRAccountType) {
     OTRAccountTypeXMPPTor     = 5
 };
 
+typedef NS_ENUM(int, OTRFingerprintType) {
+    OTRFingerprintTypeNone        = 0,
+    OTRFingerprintTypeOTR    = 1,
+    OTRFingerprintTypeAxolotl  = 2,
+    OTRFingerprintTypeGPG = 3
+};
+
 extern NSString *const OTRAimImageName;
 extern NSString *const OTRGoogleTalkImageName;
 extern NSString *const OTRXMPPImageName;
@@ -68,5 +75,27 @@ extern NSString *const OTRXMPPTorImageName;
  @return the number of accounts removed
  */
 + (NSUInteger)removeAllAccountsOfType:(OTRAccountType)accountType inTransaction:(YapDatabaseReadWriteTransaction *)transaction;
+
+#pragma mark Fingerprints
+
+/** 
+ *  Returns the full share URL invite link for this account. Optionally includes fingerprints of various key types.
+ *  
+ *  @param fingerprintTypes (optional) include a NSSet of boxed of OTRFingerprintType values
+ *  @param completion called on main queue with shareURL, or potentially nil if there's an error during link generation.
+ */
+- (void) generateShareURLWithFingerprintTypes:(NSSet <NSNumber*> *)fingerprintTypes
+                                completion:(void (^)(NSURL* shareURL, NSError *error))completionBlock;
+
+/**
+ *  Returns string representation of OTRFingerprintType
+ *
+ *  - "otr" for OTRFingerprintTypeOTR
+ *  - "omemo" for OTRFingerprintTypeAxolotl
+ *  - "gpg" for OTRFingerprintTypeGPG
+ *
+ *  @return String representation of OTRFingerprintType
+ */
++ (NSString*) fingerprintStringTypeForFingerprintType:(OTRFingerprintType)fingerprintType;
 
 @end

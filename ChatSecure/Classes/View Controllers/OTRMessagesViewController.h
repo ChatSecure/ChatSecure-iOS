@@ -8,10 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
-#import "JSQMessagesViewController.h"
-#import "OTRKit.h"
+#import <JSQMessagesViewController/JSQMessagesViewController.h>
+@import OTRKit;
+@import JSQMessagesViewController;
 
-@class OTRBuddy, OTRXMPPManager, OTRAccount;
+@class OTRBuddy, OTRXMPPManager, OTRAccount, YapDatabaseConnection, OTRYapDatabaseObject;
+
+@protocol OTRThreadOwner,OTRMesssageProtocol,JSQMessageData;
 
 @protocol OTRMessagesViewControllerProtocol <NSObject>
 
@@ -20,16 +23,26 @@
 
 @end
 
-@interface OTRMessagesViewController : JSQMessagesViewController <UISplitViewControllerDelegate, OTRMessagesViewControllerProtocol, UIPopoverPresentationControllerDelegate>
+@interface OTRMessagesViewController : JSQMessagesViewController <OTRMessagesViewControllerProtocol, UIPopoverPresentationControllerDelegate>
 
-@property (nonatomic, strong) OTRBuddy *buddy;
-@property (nonatomic, strong, readonly) OTRAccount *account;
-@property (nonatomic, weak, readonly) OTRXMPPManager *xmppManager;
-
+@property (nonatomic, strong) YapDatabaseConnection *databaseConnection;
+@property (nonatomic, strong) NSString *threadKey;
+@property (nonatomic, strong) NSString *threadCollection;
 @property (nonatomic, strong) UIButton *microphoneButton;
 @property (nonatomic, strong) UIButton *sendButton;
 @property (nonatomic, strong) UIButton *cameraButton;
 
--(void)sendAudioFileURL:(NSURL *)url;
+- (void)setThreadKey:(NSString *)key collection:(NSString *)collection;
+- (void)sendAudioFileURL:(NSURL *)url;
+- (void)sendImageFilePath:(NSString *)filePath asJPEG:(BOOL)asJPEG shouldResize:(BOOL)shouldResize;
+
+- (void)updateEncryptionState;
+
+- (UIBarButtonItem *)rightBarButtonItem;
+
+- (id<OTRThreadOwner>)threadObject;
+- (OTRAccount *)account;
+- (OTRXMPPManager *)xmppManager;
+- (id <OTRMesssageProtocol,JSQMessageData>)messageAtIndexPath:(NSIndexPath *)indexPath;
 
 @end

@@ -13,7 +13,7 @@
 @import YapDatabase;
 #import "OTRImages.h"
 #import "JSQMessagesAvatarImageFactory.h"
-#import "OTRKit.h"
+@import OTRKit;
 
 const struct OTRBuddyAttributes OTRBuddyAttributes = {
 	.username = @"username",
@@ -41,13 +41,18 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
 - (id)init
 {
     if (self = [super init]) {
-        self.status = OTRBuddyStatusOffline;
+        self.status = OTRThreadStatusOffline;
         self.chatState = kOTRChatStateUnknown;
         self.lastSentChatState = kOTRChatStateUnknown;
     }
     return self;
 }
 
+/**
+ The current or generated avatar image either from avatarData or the initials from displayName or username
+ 
+ @return An UIImage from the OTRImages NSCache
+ */
 - (UIImage *)avatarImage
 {
     //on setAvatar clear this buddies image cache
@@ -114,7 +119,7 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
     return [OTRAccount fetchObjectWithUniqueID:self.accountUniqueId transaction:transaction];
 }
 
-- (void)setAllMessagesRead:(YapDatabaseReadWriteTransaction *)transaction
+- (void)setAllMessagesAsReadInTransaction:(YapDatabaseReadWriteTransaction *)transaction
 {
     [[transaction ext:OTRYapDatabaseRelationshipName] enumerateEdgesWithName:OTRMessageEdges.buddy destinationKey:self.uniqueId collection:[OTRBuddy collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
         OTRMessage *message = [[OTRMessage fetchObjectWithUniqueID:edge.sourceKey transaction:transaction] copy];
@@ -136,6 +141,46 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
         
     }];
     return [finalMessage copy];
+}
+
+#pragma - makr OTRThreadOwner Methods
+
+- (NSString *)threadName
+{
+    NSString *threadName = self.displayName;
+    if(![threadName length]) {
+        threadName = self.username;
+    }
+    return threadName;
+}
+
+- (NSString *)threadIdentifier {
+    return self.uniqueId;
+}
+
+- (NSString *)threadAccountIdentifier {
+    return self.accountUniqueId;
+}
+
+- (NSString *)threadCollection {
+    return [OTRBuddy collection];
+}
+
+- (void)setCurrentMessageText:(NSString *)text
+{
+    self.composingMessageString = text;
+}
+
+- (NSString *)currentMessageText {
+    return self.composingMessageString;
+}
+
+- (OTRThreadStatus)currentStatus {
+    return self.status;
+}
+
+- (BOOL)isGroupThread {
+    return NO;
 }
 
 #pragma - mark YapDatabaseRelationshipNode
@@ -198,14 +243,14 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
 {
     NSMutableArray *buddiesToChange = [NSMutableArray array];
     [transaction enumerateKeysAndObjectsInCollection:[self collection] usingBlock:^(NSString *key, OTRBuddy *buddy, BOOL *stop) {
-        if(buddy.status != OTRBuddyStatusOffline)
+        if(buddy.status != OTRThreadStatusOffline)
         {
             [buddiesToChange addObject:buddy];
         }
     }];
     
     [buddiesToChange enumerateObjectsUsingBlock:^(OTRBuddy *buddy, NSUInteger idx, BOOL *stop) {
-        buddy.status = OTRBuddyStatusOffline;
+        buddy.status = OTRThreadStatusOffline;
         [buddy saveWithTransaction:transaction];
     }];
 }

@@ -12,6 +12,8 @@
 #import "OTRConstants.h"
 @import OTRAssets;
 #import "OTRLanguageManager.h"
+#import "XMPPJID.h"
+#import "XMPPStream.h"
 
 static NSUInteger const OTRDefaultPortNumber = 5222;
 

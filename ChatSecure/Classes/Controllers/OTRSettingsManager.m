@@ -127,8 +127,7 @@
     
     OTRLanguageSetting * languageSetting = [[OTRLanguageSetting alloc]initWithTitle:LANGUAGE_STRING description:nil settingsKey:kOTRSettingKeyLanguage];
     languageSetting.imageName = @"globe.png";
-    
-    
+    [newSettingsDictionary setObject:languageSetting forKey:kOTRSettingKeyLanguage];
     
     OTRDonateSetting *donateSetting = [[OTRDonateSetting alloc] initWithTitle:DONATE_STRING description:nil];
     donateSetting.imageName = @"29-heart.png";

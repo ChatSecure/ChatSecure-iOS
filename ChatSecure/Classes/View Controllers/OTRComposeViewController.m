@@ -21,22 +21,32 @@
 #import "OTRNewBuddyViewController.h"
 #import "OTRChooseAccountViewController.h"
 #import "OTRLanguageManager.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
+
+@import OTRAssets;
 
 static CGFloat OTRBuddyInfoCellHeight = 80.0;
 
-@interface OTRComposeViewController () <UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate>
+@interface OTRComposeViewController () <UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, OTRYapViewHandlerDelegateProtocol>
 
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) UISearchBar *searchBar;
 @property (nonatomic, strong) NSLayoutConstraint *  tableViewBottomConstraint;
-@property (nonatomic, strong) YapDatabaseConnection *databaseConnection;
-@property (nonatomic, strong) YapDatabaseViewMappings *mappings;
+@property (nonatomic, strong) OTRYapViewHandler *viewHandler;
 @property (nonatomic, strong) NSArray *searchResults;
 
+@property (nonatomic, strong) NSMutableSet <NSString *>*selectedBuddiesIdSet;
 
 @end
 
 @implementation OTRComposeViewController
+
+- (instancetype)init {
+    if (self = [super init]) {
+        self.selectedBuddiesIdSet = [[NSMutableSet alloc] init];
+    }
+    return self;
+}
 
 - (void)viewDidLoad
 {
@@ -46,8 +56,15 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
     
     /////////// Navigation Bar ///////////
     self.title = COMPOSE_STRING;
+    
     UIBarButtonItem * cancelBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelButtonPressed:)];
-    self.navigationItem.rightBarButtonItem = cancelBarButtonItem;
+    
+    UIImage *checkImage = [UIImage imageNamed:@"ic-check" inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];
+    UIBarButtonItem *doneButtonItem = [[UIBarButtonItem alloc] initWithImage:checkImage style:UIBarButtonItemStylePlain target:self action:@selector(doneButtonPressed:)];
+    doneButtonItem.enabled = NO;
+    
+    self.navigationItem.leftBarButtonItem = cancelBarButtonItem;
+    self.navigationItem.rightBarButtonItem = doneButtonItem;
     
     /////////// Search Bar ///////////
     
@@ -74,20 +91,8 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
     [self.view addConstraint:self.tableViewBottomConstraint];
     
     //////// YapDatabase Connection /////////
-    self.databaseConnection = [[OTRDatabaseManager sharedInstance] newConnection];
-    self.databaseConnection.name = NSStringFromClass([self class]);
-    [self.databaseConnection beginLongLivedReadTransaction];
-    
-    self.mappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[OTRBuddyGroup] view:OTRAllBuddiesDatabaseViewExtensionName];
-    
-    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        [self.mappings updateWithTransaction:transaction];
-    }];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(yapDatabaseDidUpdate:)
-                                                 name:YapDatabaseModifiedNotification
-                                               object:nil];
+    self.viewHandler = [[OTRYapViewHandler alloc] initWithDatabaseConnection:[[OTRDatabaseManager sharedInstance] newConnection]];
+    [self.viewHandler setup:OTRAllBuddiesDatabaseViewExtensionName groups:@[OTRBuddyGroup]];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -112,6 +117,52 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+- (void)doneButtonPressed:(id)sender
+{
+    void (^completion)(NSString *) = ^void(NSString *name) {
+        if ([self.delegate respondsToSelector:@selector(controller:didSelectBuddies:accountId:name:)]) {
+            //TODO: Naive choosing account just any buddy but should really check that account is connected or show picker
+            __block NSString *accountId = nil;
+            [self.viewHandler.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+                NSString *buddyKey  = [self.selectedBuddiesIdSet anyObject];
+                accountId = [OTRBuddy fetchObjectWithUniqueID:buddyKey transaction:transaction].accountUniqueId;
+            }];
+            [self.delegate controller:self didSelectBuddies:[self.selectedBuddiesIdSet allObjects] accountId:accountId name:name];
+        }
+    };
+    
+    if (self.selectedBuddiesIdSet.count > 1) {
+        //Group so need user to select name
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Group Name" message:@"Enter a group name" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *okAction = [UIAlertAction actionWithTitle:OK_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            NSString *name = alertController.textFields.firstObject.text;
+            completion(name);
+        }];
+        
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:CANCEL_STRING style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            
+        }];
+        
+        [alertController addAction:okAction];
+        [alertController addAction:cancelAction];
+        
+        [alertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+            textField.placeholder = @"Group name";
+            
+            [[NSNotificationCenter defaultCenter] addObserverForName:UITextFieldTextDidChangeNotification object:textField queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification * _Nonnull note) {
+                okAction.enabled = textField.text.length > 0;
+            }];
+        }];
+        
+        
+        
+        [self presentViewController:alertController animated:YES completion:nil];
+    } else {
+        completion(nil);
+    }
+    
+}
+
 - (BOOL)canAddBuddies
 {
     if([OTRAccountsManager allAccountsAbleToAddBuddies]) {
@@ -131,11 +182,7 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
     }
     else
     {
-        __block OTRBuddy *buddy;
-        [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-            buddy = [[transaction ext:OTRAllBuddiesDatabaseViewExtensionName] objectAtIndexPath:viewIndexPath withMappings:self.mappings];
-        }];
-        return buddy;
+        return [self.viewHandler object:viewIndexPath];
     }
     
     
@@ -151,6 +198,25 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
     return NO;
 }
 
+- (void)selectedBuddy:(NSString *)buddyId{
+    if (![buddyId length]) {
+        return;
+    }
+    
+    
+    if ([self.selectedBuddiesIdSet containsObject:buddyId]) {
+        [self.selectedBuddiesIdSet removeObject:buddyId];
+    } else {
+        [self.selectedBuddiesIdSet addObject:buddyId];
+    }
+    
+    //Check legth of selected buddies and if none then disable button
+    if ([self.selectedBuddiesIdSet count]) {
+        self.navigationItem.rightBarButtonItem.enabled = YES;
+    } else {
+        self.navigationItem.rightBarButtonItem.enabled = NO;
+    }
+}
 #pragma - mark keyBoardAnimation Methods
 - (void)keyboardWillShow:(NSNotification *)notification
 {
@@ -209,7 +275,7 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
         searchText = [NSString stringWithFormat:@"%@*",searchText];
         
         NSMutableArray *tempSearchResults = [NSMutableArray new];
-        [self.databaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        [self.viewHandler.databaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
             [[transaction ext:OTRBuddyNameSearchDatabaseViewExtensionName] enumerateKeysAndObjectsMatching:searchText usingBlock:^(NSString *collection, NSString *key, id object, BOOL *stop) {
                 if ([object isKindOfClass:[OTRBuddy class]]) {
                     [tempSearchResults addObject:object];
@@ -232,7 +298,7 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
         sections = 1;
     }
     else {
-        sections = [self.mappings numberOfSections];
+        sections = [self.viewHandler.mappings numberOfSections];
     }
     
     if (canAddBuddies) {
@@ -252,7 +318,7 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
             numberOfRows = [self.searchResults count];
         }
         else {
-            numberOfRows = [self.mappings numberOfItemsInSection:0];
+            numberOfRows = [self.viewHandler.mappings numberOfItemsInSection:0];
         }
     }
    
@@ -279,14 +345,18 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
         OTRBuddy * buddy = [self buddyAtIndexPath:indexPath];
         
         __block NSString *buddyAccountName = nil;
-        [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        [self.viewHandler.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
             buddyAccountName = [OTRAccount fetchObjectWithUniqueID:buddy.accountUniqueId transaction:transaction].username;
         }];
         
-        [cell setBuddy:buddy withAccountName:buddyAccountName];
+        [cell setThread:buddy withAccountName:buddyAccountName];
         
         [cell.avatarImageView.layer setCornerRadius:(OTRBuddyInfoCellHeight-2.0*OTRBuddyImageCellPadding)/2.0];
-        
+        if ([self.selectedBuddiesIdSet containsObject:buddy.uniqueId]) {
+            cell.accessoryType = UITableViewCellAccessoryCheckmark;
+        } else {
+            cell.accessoryType = UITableViewCellAccessoryNone;
+        }
         return cell;
     }
     
@@ -316,25 +386,28 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
     NSArray *accounts = [OTRAccountsManager allAccountsAbleToAddBuddies];
     if(indexPath.section == 0 && [accounts count])
     {
-        
-        //add buddy cell
-        UIViewController *viewController = nil;
-        if([accounts count] > 1) {
-            // pick wich account
-            viewController = [[OTRChooseAccountViewController alloc] init];
-            
-        }
-        else {
-            OTRAccount *account = [accounts firstObject];
-            viewController = [[OTRNewBuddyViewController alloc] initWithAccountId:account.uniqueId];
-        }
-        [self.navigationController pushViewController:viewController animated:YES];
-        
+        [self addBuddy:accounts];
     }
-    else if ([self.delegate respondsToSelector:@selector(controller:didSelectBuddy:)]) {
+    else {
         OTRBuddy * buddy = [self buddyAtIndexPath:indexPath];
-        [self.delegate controller:self didSelectBuddy:buddy];
+        [self selectedBuddy:buddy.uniqueId];
+        [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
     }
+}
+
+- (void)addBuddy:(NSArray *)accountsAbleToAddBuddies
+{
+    //add buddy cell
+    UIViewController *viewController = nil;
+    if([accountsAbleToAddBuddies count] > 1) {
+        // pick which account
+        viewController = [[OTRChooseAccountViewController alloc] init];
+    }
+    else {
+        OTRAccount *account = [accountsAbleToAddBuddies firstObject];
+        viewController = [[OTRNewBuddyViewController alloc] initWithAccountId:account.uniqueId];
+    }
+    [self.navigationController pushViewController:viewController animated:YES];
 }
 
 #pragma - mark UIScrollViewDelegate
@@ -346,28 +419,9 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
 
 #pragma - mark YapDatabaseViewUpdate
 
-- (void)yapDatabaseDidUpdate:(NSNotification *)notification;
+- (void)didRecieveChanges:(OTRYapViewHandler *)handler sectionChanges:(NSArray<YapDatabaseViewSectionChange *> *)sectionChanges rowChanges:(NSArray<YapDatabaseViewRowChange *> *)rowChanges
 {
-    // Process the notification(s),
-    // and get the change-set(s) as applies to my view and mappings configuration.
-    NSArray *notifications = [self.databaseConnection beginLongLivedReadTransaction];
-    
-    NSArray *sectionChanges = nil;
-    NSArray *rowChanges = nil;
-    
-    if ([self useSearchResults]) {
-        return;
-    }
-    
-    [[self.databaseConnection ext:OTRAllBuddiesDatabaseViewExtensionName] getSectionChanges:&sectionChanges
-                                                                                 rowChanges:&rowChanges
-                                                                           forNotifications:notifications
-                                                                               withMappings:self.mappings];
-    
-    // No need to update mappings.
-    // The above method did it automatically.
-    
-    if ([sectionChanges count] == 0 & [rowChanges count] == 0)
+    if ([sectionChanges count] == 0 && [rowChanges count] == 0)
     {
         // Nothing has changed that affects our tableView
         return;

@@ -8,6 +8,14 @@
 
 #import <UIKit/UIKit.h>
 @class OTRAccount;
+@class OTRNewBuddyViewController;
+@class OTRBuddy;
+
+@protocol OTRNewBuddyViewControllerDelegate <NSObject>
+@optional
+- (bool)shouldDismissViewController:(OTRNewBuddyViewController *)viewController;
+- (void)controller:(OTRNewBuddyViewController *)viewController didAddBuddy:(OTRBuddy *)buddy;
+@end
 
 @interface OTRNewBuddyViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate>
 
@@ -15,7 +23,9 @@
 @property (nonatomic, strong)UITextField * accountNameTextField;
 @property (nonatomic, strong)UITextField * displayNameTextField;
 
+@property (nonatomic, weak) id<OTRNewBuddyViewControllerDelegate> delegate;
 
 -(id)initWithAccountId:(NSString *)accountId;
+- (void)populateFromQRResult:(NSString *)result;
 
 @end

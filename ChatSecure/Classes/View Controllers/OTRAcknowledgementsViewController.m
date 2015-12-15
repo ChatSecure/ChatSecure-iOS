@@ -8,7 +8,7 @@
 
 #import "OTRAcknowledgementsViewController.h"
 #import "TTTAttributedLabel.h"
-#import "OTRKit.h"
+@import OTRKit;
 #import "OTRTorManager.h"
 #import "PureLayout.h"
 

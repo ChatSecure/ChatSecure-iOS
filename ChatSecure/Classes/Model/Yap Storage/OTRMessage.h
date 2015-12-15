@@ -7,7 +7,9 @@
 //
 
 #import "OTRYapDatabaseObject.h"
+@import JSQMessagesViewController;
 @class OTRBuddy,YapDatabaseReadTransaction, OTRMediaItem;
+@protocol OTRThreadOwner;
 
 extern const struct OTRMessageAttributes {
 	__unsafe_unretained NSString *date;
@@ -29,7 +31,36 @@ extern const struct OTRMessageEdges {
     __unsafe_unretained NSString *media;
 } OTRMessageEdges;
 
-@interface OTRMessage : OTRYapDatabaseObject <YapDatabaseRelationshipNode>
+@protocol OTRMesssageProtocol <NSObject>
+@required
+
+- (NSString *)messageKey;
+
+- (NSString *)messageCollection;
+
+- (NSString *)threadId;
+
+- (BOOL)messageIncoming;
+
+- (NSString *)messageMediaItemKey;
+
+- (NSError *)messageError;
+
+- (BOOL)transportedSecurely;
+
+- (BOOL)messageRead;
+
+- (NSDate *)date;
+
+- (NSString *)text;
+
+- (NSString *)remoteMessageId;
+
+- (id<OTRThreadOwner>)threadOwnerWithTransaction:(YapDatabaseReadTransaction *)transaction;
+
+@end
+
+@interface OTRMessage : OTRYapDatabaseObject <YapDatabaseRelationshipNode, OTRMesssageProtocol>
 
 @property (nonatomic, strong) NSDate *date;
 @property (nonatomic, strong) NSString *text;
@@ -43,17 +74,9 @@ extern const struct OTRMessageEdges {
 @property (nonatomic, strong) NSString *mediaItemUniqueId;
 @property (nonatomic, strong) NSString *buddyUniqueId;
 
-- (OTRBuddy *)buddyWithTransaction:(YapDatabaseReadTransaction *)readTransaction;
-
-
-+ (NSInteger)numberOfUnreadMessagesWithTransaction:(YapDatabaseReadTransaction*)transaction;
 + (void)deleteAllMessagesWithTransaction:(YapDatabaseReadWriteTransaction*)transaction;
 + (void)deleteAllMessagesForBuddyId:(NSString *)uniqueBuddyId transaction:(YapDatabaseReadWriteTransaction*)transaction;
 + (void)deleteAllMessagesForAccountId:(NSString *)uniqueAccountId transaction:(YapDatabaseReadWriteTransaction*)transaction;
 + (void)receivedDeliveryReceiptForMessageId:(NSString *)messageId transaction:(YapDatabaseReadWriteTransaction*)transaction;
-
-+ (void)showLocalNotificationForMessage:(OTRMessage *)message;
-
-+ (void)enumerateMessagesWithMessageId:(NSString *)messageId transaction:(YapDatabaseReadTransaction *)transaction usingBlock:(void (^)(OTRMessage *message,BOOL *stop))block;
 
 @end
