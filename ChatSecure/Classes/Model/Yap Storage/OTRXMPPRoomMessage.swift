@@ -139,7 +139,7 @@ extension OTRXMPPRoomMessage:JSQMessageData {
     }
     
     public func messageRead() -> Bool {
-        return true
+        return self.read
     }
     
 }

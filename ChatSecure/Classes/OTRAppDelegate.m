@@ -286,7 +286,7 @@
     NSAssert(self.backgroundTask == UIBackgroundTaskInvalid, nil);
     
     [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        application.applicationIconBadgeNumber = [OTRMessage numberOfUnreadMessagesWithTransaction:transaction];
+        application.applicationIconBadgeNumber = [transaction numberOfUnreadMessages];
     }];
     
     self.didShowDisconnectionWarning = NO;

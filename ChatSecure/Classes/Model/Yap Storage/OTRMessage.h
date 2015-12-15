@@ -73,8 +73,6 @@ extern const struct OTRMessageEdges {
 
 - (OTRBuddy *)buddyWithTransaction:(YapDatabaseReadTransaction *)readTransaction;
 
-
-+ (NSInteger)numberOfUnreadMessagesWithTransaction:(YapDatabaseReadTransaction*)transaction;
 + (void)deleteAllMessagesWithTransaction:(YapDatabaseReadWriteTransaction*)transaction;
 + (void)deleteAllMessagesForBuddyId:(NSString *)uniqueBuddyId transaction:(YapDatabaseReadWriteTransaction*)transaction;
 + (void)deleteAllMessagesForAccountId:(NSString *)uniqueAccountId transaction:(YapDatabaseReadWriteTransaction*)transaction;

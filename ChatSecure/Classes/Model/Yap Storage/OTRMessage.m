@@ -133,21 +133,6 @@ const struct OTRMessageEdges OTRMessageEdges = {
     return self.messageId;
 }
 
-#pragma - mark Class Methods
-
-+ (NSInteger)numberOfUnreadMessagesWithTransaction:(YapDatabaseReadTransaction*)transaction
-{
-    __block int count = 0;
-    [transaction enumerateKeysAndObjectsInCollection:[OTRMessage collection] usingBlock:^(NSString *key, OTRMessage *message, BOOL *stop) {
-        if ([message isKindOfClass:[OTRMessage class]]) {
-            if (!message.isRead) {
-                count +=1;
-            }
-        }
-    }];
-    return count;
-}
-
 + (void)deleteAllMessagesWithTransaction:(YapDatabaseReadWriteTransaction*)transaction
 {
     [transaction removeAllObjectsInCollection:[OTRMessage collection]];
@@ -205,7 +190,7 @@ const struct OTRMessageEdges OTRMessageEdges = {
             [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
                 localBuddy = [message buddyWithTransaction:transaction];
                 localAccount = [localBuddy accountWithTransaction:transaction];
-                unreadCount = [self numberOfUnreadMessagesWithTransaction:transaction];
+                unreadCount = [transaction numberOfUnreadMessages];
             }];
             
             NSString *name = localBuddy.username;

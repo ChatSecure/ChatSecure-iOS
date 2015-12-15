@@ -9,10 +9,10 @@
 import Foundation
 import YapDatabase
 
-extension YapDatabaseReadTransaction {
+public extension YapDatabaseReadTransaction {
     
     public func enumerateMessages(id id:String, block:(message:OTRMesssageProtocol,stop:UnsafeMutablePointer<ObjCBool>) -> Void) {
-        guard let secondaryIndexTransaction = self.ext(OTRYapDatabseMessageIdSecondaryIndexExtension) as? YapDatabaseSecondaryIndexTransaction else {
+        guard let secondaryIndexTransaction = self.ext(OTRYapDatabseSecondaryIndexExtension) as? YapDatabaseSecondaryIndexTransaction else {
             return
         }
         
@@ -28,7 +28,7 @@ extension YapDatabaseReadTransaction {
     
     /** The jid here is the full jid not real jid or nickname */
     public func enumerateRoomOccupants(jid jid:String, block:(occupant:OTRXMPPRoomOccupant, stop:UnsafeMutablePointer<ObjCBool>) -> Void) {
-        guard let secondaryIndexTransaction = self.ext(OTRYapDatabseMessageIdSecondaryIndexExtension) as? YapDatabaseSecondaryIndexTransaction else {
+        guard let secondaryIndexTransaction = self.ext(OTRYapDatabseSecondaryIndexExtension) as? YapDatabaseSecondaryIndexTransaction else {
             return
         }
         
@@ -40,5 +40,18 @@ extension YapDatabaseReadTransaction {
                 block(occupant: occupant, stop: stop)
             }
         }
+    }
+    
+    public func numberOfUnreadMessages() -> UInt {
+        guard let secondaryIndexTransaction = self.ext(OTRYapDatabseSecondaryIndexExtension) as? YapDatabaseSecondaryIndexTransaction else {
+            return 0
+        }
+        
+        let queryString = "Where \(OTRYapDatabaseUnreadMessageSecondaryIndex) = 0"
+        let query = YapDatabaseQuery(string: queryString, parameters: nil)
+        
+        var count:UInt = 0
+        secondaryIndexTransaction.getNumberOfRows(&count, matchingQuery: query)
+        return count
     }
 }
