@@ -55,7 +55,6 @@
         username = [username lowercaseString];
     }
     account.username = username;
-    account.domain = usernameValue[OTRUsernameCell.DomainKey];
     
     NSNumber *rememberPassword = [[form formRowWithTag:kOTRXLFormRememberPasswordSwitchTag] value];
     if (rememberPassword) {
@@ -86,7 +85,7 @@
     NSNumber *port = [[form formRowWithTag:kOTRXLFormPortTextFieldTag] value];
     NSString *resource = [[form formRowWithTag:kOTRXLFormResourceTextFieldTag] value];
     
-    if (!account.domain && [hostname length]) {
+    if ([hostname length]) {
         account.domain = hostname;
     }
     
@@ -106,7 +105,6 @@
         NSLog(@"Error creating JID from account values!");
     }
     account.username = jid.bare;
-    account.domain = jid.domain;
     account.resource = jid.resource;
     
     // Start generating our OTR key here so it's ready when we need it
@@ -131,6 +129,8 @@
         account = (OTRXMPPAccount *)[self moveValues:form intoAccount:account];
     }
     
+    //Reffresh protocol manager for new account settings
+    [[OTRProtocolManager sharedInstance] removeProtocolForAccount:account];
     _xmppManager = (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:account];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedNotification:) name:OTRXMPPLoginStatusNotificationName object:self.xmppManager];
