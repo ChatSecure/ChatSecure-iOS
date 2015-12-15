@@ -52,11 +52,6 @@ const struct OTRMessageEdges OTRMessageEdges = {
     return self;
 }
 
-- (OTRBuddy *)buddyWithTransaction:(YapDatabaseReadTransaction *)readTransaction
-{
-    return [OTRBuddy fetchObjectWithUniqueID:self.buddyUniqueId transaction:readTransaction];
-}
-
 #pragma - mark YapDatabaseRelationshipNode
 
 - (NSArray *)yapDatabaseRelationshipEdges
@@ -133,6 +128,11 @@ const struct OTRMessageEdges OTRMessageEdges = {
     return self.messageId;
 }
 
+- (id<OTRThreadOwner>)threadOwnerWithTransaction:(YapDatabaseReadTransaction *)transaction
+{
+    return [OTRBuddy fetchObjectWithUniqueID:self.buddyUniqueId transaction:transaction];
+}
+
 + (void)deleteAllMessagesWithTransaction:(YapDatabaseReadWriteTransaction*)transaction
 {
     [transaction removeAllObjectsInCollection:[OTRMessage collection]];
@@ -173,41 +173,6 @@ const struct OTRMessageEdges OTRMessageEdges = {
     if (deliveredMessage) {
         deliveredMessage.delivered = YES;
         [deliveredMessage saveWithTransaction:transaction];
-    }
-}
-
-+ (void)showLocalNotificationForMessage:(OTRMessage *)message
-{
-    if (![[UIApplication sharedApplication] applicationState] == UIApplicationStateActive)
-    {
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            NSString * rawMessage = [message.text stringByConvertingHTMLToPlainText];
-            // We are not active, so use a local notification instead
-            __block OTRBuddy *localBuddy = nil;
-            __block OTRAccount *localAccount;
-            __block NSInteger unreadCount = 0;
-            [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-                localBuddy = [message buddyWithTransaction:transaction];
-                localAccount = [localBuddy accountWithTransaction:transaction];
-                unreadCount = [transaction numberOfUnreadMessages];
-            }];
-            
-            NSString *name = localBuddy.username;
-            if ([localBuddy.displayName length]) {
-                name = localBuddy.displayName;
-            }
-            
-            UILocalNotification *localNotification = [[UILocalNotification alloc] init];
-            localNotification.alertAction = REPLY_STRING;
-            localNotification.soundName = UILocalNotificationDefaultSoundName;
-            localNotification.applicationIconBadgeNumber = unreadCount;
-            localNotification.alertBody = [NSString stringWithFormat:@"%@: %@",name,rawMessage];
-            
-            localNotification.userInfo = @{kOTRNotificationBuddyUniqueIdKey:localBuddy.uniqueId};
-        
-            [[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
-        });
     }
 }
 

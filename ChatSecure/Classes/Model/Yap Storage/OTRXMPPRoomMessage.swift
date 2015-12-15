@@ -95,6 +95,10 @@ extension OTRXMPPRoomMessage:OTRMesssageProtocol {
     public func remoteMessageId() -> String! {
         return self.xmppId
     }
+    
+    public func threadOwnerWithTransaction(transaction: YapDatabaseReadTransaction!) -> OTRThreadOwner! {
+        return OTRXMPPRoom.fetchObjectWithUniqueID(self.threadId(), transaction: transaction)
+    }
 }
 
 

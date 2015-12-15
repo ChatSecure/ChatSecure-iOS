@@ -390,35 +390,21 @@
     //FIXME? [OTRManagedAccount resetAccountsConnectionStatus];
     //[OTRUtilities deleteAllBuddiesAndMessages];
 }
-/*
-// Optional UITabBarControllerDelegate method.
-- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController
-{
-}
-*/
-
-/*
-// Optional UITabBarControllerDelegate method.
-- (void)tabBarController:(UITabBarController *)tabBarController didEndCustomizingViewControllers:(NSArray *)viewControllers changed:(BOOL)changed
-{
-}
-*/
 
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
     
     NSDictionary *userInfo = notification.userInfo;
-    NSString *buddyUniqueId = userInfo[kOTRNotificationBuddyUniqueIdKey];
+    NSString *threadKey = userInfo[kOTRNotificationThreadKey];
+    NSString *threadCollection = userInfo[kOTRNotificationThreadCollection];
     
-    if([buddyUniqueId length]) {
-        
-//        if (!([self.messagesViewController otr_isVisible] || [self.conversationViewController otr_isVisible])) {
-//            self.window.rootViewController = [self defaultConversationNavigationController];
-//        }
-        
-        //[self.conversationViewController enterConversationWithBuddyId:buddyUniqueId];
+    __block id <OTRThreadOwner> thread = nil;
+    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        thread = [transaction objectForKey:threadKey inCollection:threadCollection];
+    }];
+    
+    if (thread) {
+        [self.splitViewCoordinator enterConversatoinWithThread:thread sender:notification];
     }
-    
-
 }
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
