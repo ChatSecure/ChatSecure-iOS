@@ -275,7 +275,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
 
 - (void) otrKit:(OTRKit *)otrKit handleMessageEvent:(OTRKitMessageEvent)event message:(NSString *)message username:(NSString *)username accountName:(NSString *)accountName protocol:(NSString *)protocol tag:(id)tag error:(NSError *)error {
     //incoming and outgoing errors and other events
-    DDLogWarn(@"Message Event: %d Error:%@",(int)event,error);
+    DDLogWarn(@"Message Event: %d Error:%@",(int)event,[OTREncryptionManager errorForMessageEvent:event].localizedDescription);
     
     if ([tag isKindOfClass:[OTRMessage class]]) {
         __block NSError *error = nil;
