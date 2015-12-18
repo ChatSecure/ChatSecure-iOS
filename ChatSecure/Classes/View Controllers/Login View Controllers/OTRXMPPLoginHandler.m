@@ -99,7 +99,13 @@
     
     // Post-process values via XMPPJID for stringprep
     
-    XMPPJID *jid = [XMPPJID jidWithUser:account.username domain:account.domain resource:account.resource];
+    NSString *domain = account.domain;
+    if (![domain length]) {
+        NSDictionary *usernameValue = [[form formRowWithTag:kOTRXLFormUsernameTextFieldTag] value];
+        domain = usernameValue[OTRUsernameCell.DomainKey];
+    }
+    
+    XMPPJID *jid = [XMPPJID jidWithUser:account.username domain:domain resource:account.resource];
     if (!jid) {
         NSParameterAssert(jid != nil);
         NSLog(@"Error creating JID from account values!");
