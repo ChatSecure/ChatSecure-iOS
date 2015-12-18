@@ -390,6 +390,23 @@
     //[OTRUtilities deleteAllBuddiesAndMessages];
 }
 
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(nonnull NSDictionary *)userInfo
+{
+    [self.pushController receiveRemoteNotification:userInfo completion:^(OTRBuddy * _Nullable buddy, NSError * _Nullable error) {
+        [application showLocalNotificationForKnockFrom:buddy];
+    }];
+    
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
+{
+    [self.pushController receiveRemoteNotification:userInfo completion:^(OTRBuddy * _Nullable buddy, NSError * _Nullable error) {
+        [application showLocalNotificationForKnockFrom:buddy];
+        completionHandler(UIBackgroundFetchResultNewData);
+    }];
+    
+}
+
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
     
     NSDictionary *userInfo = notification.userInfo;
