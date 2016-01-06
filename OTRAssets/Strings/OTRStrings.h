@@ -126,7 +126,6 @@
 #define errSSLModuleAttachString [OTRLanguageManager translatedString: @"Module attach failure"]
 #define REMEMBER_PASSPHRASE_INFO_STRING [OTRLanguageManager translatedString: @"Your password will be stored in the iOS Keychain of this device only, and is only as safe as your device passphrase or pin. However, it will not persist during a device backup/restore via iTunes, so please don't forget it, or you may lose your conversation history."]
 #define WAITING_STRING [OTRLanguageManager translatedString: @"Waiting"]
-#define CHAT_ALERT_STRING [OTRLanguageManager translatedString: @"wants to chat"]
 #define SHARE_STRING [OTRLanguageManager translatedString: @"Share"]
 #define OPPORTUNISTIC_OTR_SETTING_TITLE [OTRLanguageManager translatedString: @"Auto-start Encryption"]
 #define SEND_FEEDBACK_STRING [OTRLanguageManager translatedString: @"Send Feedback"]
