@@ -65,6 +65,7 @@
 #import "OTRKit.h"
 #import "OTRXMPPRoomManager.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "OTRXMPPBuddyManager.h"
 @import OTRAssets;
 
 NSString *const OTRXMPPRegisterSucceededNotificationName = @"OTRXMPPRegisterSucceededNotificationName";
@@ -105,6 +106,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 @property (nonatomic, strong) OTRXMPPMessageYapStroage *messageStorage;
 @property (nonatomic) BOOL userInitiatedConnection;
 @property (nonatomic) OTRLoginStatus loginStatus;
+@property (nonatomic, strong) OTRXMPPBuddyManager* xmppBuddyManager;
 
 @property (nonatomic, strong) YapDatabaseConnection *databaseConnection;
 
@@ -291,6 +293,12 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     _roomManager = [[OTRXMPPRoomManager alloc] init];
     self.roomManager.databaseConnection = [self.databaseConnection.database newConnection];
     [self.roomManager activate:self.xmppStream];
+    
+    //Buddy Manager (for deleting)
+    self.xmppBuddyManager = [[OTRXMPPBuddyManager alloc] init];
+    self.xmppBuddyManager.databaseConnection = [self.databaseConnection.database newConnection];
+    self.xmppBuddyManager.protocol = self;
+    [self.xmppBuddyManager activate:self.xmppStream];
 }
 
 - (void)teardownStream

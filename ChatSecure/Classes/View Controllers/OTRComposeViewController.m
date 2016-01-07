@@ -377,7 +377,12 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return UITableViewCellEditingStyleNone;
+    if(indexPath.section == 0 && [self canAddBuddies]) {
+        return UITableViewCellEditingStyleNone;
+    } else {
+        return UITableViewCellEditingStyleDelete;
+    }
+    
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -393,6 +398,22 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
         [self selectedBuddy:buddy.uniqueId];
         [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
     }
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        [self removeBuddy:[self buddyAtIndexPath:indexPath]];
+    }
+}
+
+- (void)removeBuddy:(OTRBuddy *)buddy {
+    __block NSString *key = buddy.uniqueId;
+    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+        OTRBuddy *dbBuddy = [OTRBuddy fetchObjectWithUniqueID:key transaction:transaction];
+        dbBuddy.action = OTRBuddyActionNeedsDelete;
+        [dbBuddy saveWithTransaction:transaction];
+    }];
 }
 
 - (void)addBuddy:(NSArray *)accountsAbleToAddBuddies
@@ -426,9 +447,6 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
         // Nothing has changed that affects our tableView
         return;
     }
-    
-    // Familiar with NSFetchedResultsController?
-    // Then this should look pretty familiar
     
     [self.tableView beginUpdates];
     

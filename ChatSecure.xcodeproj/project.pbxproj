@@ -29,6 +29,8 @@
 		6380456A1BB4C833002D8BAE /* PushDeserializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638045691BB4C832002D8BAE /* PushDeserializer.swift */; };
 		638338DE1BCC508200EB0CA1 /* OTRMessagesGroupViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 638338DC1BCC508200EB0CA1 /* OTRMessagesGroupViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		638338DF1BCC508200EB0CA1 /* OTRMessagesGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 638338DD1BCC508200EB0CA1 /* OTRMessagesGroupViewController.m */; };
+		639C352A1C3DDDDE00132330 /* OTRXMPPBuddyManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 639C35281C3DDDDE00132330 /* OTRXMPPBuddyManager.h */; };
+		639C352B1C3DDDDE00132330 /* OTRXMPPBuddyManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 639C35291C3DDDDE00132330 /* OTRXMPPBuddyManager.m */; };
 		63AB1A071C0D116A005FA351 /* OTRSplitViewCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63AB1A061C0D116A005FA351 /* OTRSplitViewCoordinator.swift */; };
 		63BB66AF1BC5D2F40004A619 /* OTRXMPPRoomYapStorage.h in Headers */ = {isa = PBXBuildFile; fileRef = 63BB66AD1BC5D2F40004A619 /* OTRXMPPRoomYapStorage.h */; };
 		63BB66B01BC5D2F40004A619 /* OTRXMPPRoomYapStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BB66AE1BC5D2F40004A619 /* OTRXMPPRoomYapStorage.m */; };
@@ -784,6 +786,8 @@
 		6396AF9F1A169D54009F3E6C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		6396AFB31A169D54009F3E6C /* ChatSecureTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChatSecureTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6396AFB81A169D54009F3E6C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		639C35281C3DDDDE00132330 /* OTRXMPPBuddyManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPBuddyManager.h; sourceTree = "<group>"; };
+		639C35291C3DDDDE00132330 /* OTRXMPPBuddyManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPBuddyManager.m; sourceTree = "<group>"; };
 		639CDD8F1AD74419009BAABC /* OTRTouchAndHoldGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRTouchAndHoldGestureRecognizer.h; sourceTree = "<group>"; };
 		639CDD901AD74419009BAABC /* OTRTouchAndHoldGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRTouchAndHoldGestureRecognizer.m; sourceTree = "<group>"; };
 		63AB1A061C0D116A005FA351 /* OTRSplitViewCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRSplitViewCoordinator.swift; sourceTree = "<group>"; };
@@ -1133,6 +1137,8 @@
 				6331053F1A16D1A300C17BAE /* XMPPFramework.h */,
 				63BB66AD1BC5D2F40004A619 /* OTRXMPPRoomYapStorage.h */,
 				63BB66AE1BC5D2F40004A619 /* OTRXMPPRoomYapStorage.m */,
+				639C35281C3DDDDE00132330 /* OTRXMPPBuddyManager.h */,
+				639C35291C3DDDDE00132330 /* OTRXMPPBuddyManager.m */,
 			);
 			path = XMPP;
 			sourceTree = "<group>";
@@ -1881,6 +1887,7 @@
 				D93DDBA81BA79AAA00CD8331 /* OTRXMPPServerListViewController.h in Headers */,
 				D93DDBA91BA79AAB00CD8331 /* OTRXMPPLoginHandler.h in Headers */,
 				D93DDBAA1BA79AAD00CD8331 /* OTRXMPPTorLoginHandler.h in Headers */,
+				639C352A1C3DDDDE00132330 /* OTRXMPPBuddyManager.h in Headers */,
 				63D14F351C0FC7A60029F36B /* OTRThreadOwner.h in Headers */,
 				D93DDBAB1BA79AAE00CD8331 /* OTRGoolgeOAuthLoginHandler.h in Headers */,
 				D93DDBAC1BA79AAF00CD8331 /* OTRChatSecureIDCreateAccountHandler.h in Headers */,
@@ -2063,7 +2070,7 @@
 			attributes = {
 				CLASSPREFIX = OTR;
 				LastSwiftMigration = 0700;
-				LastSwiftUpdateCheck = 0700;
+				LastSwiftUpdateCheck = 0720;
 				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Chris Ballinger";
 				TargetAttributes = {
@@ -2355,6 +2362,7 @@
 				D93DDA7A1BA79A2400CD8331 /* UIActionSheet+ChatSecure.m in Sources */,
 				D93DDA7B1BA79A2400CD8331 /* UIActivity+ChatSecure.m in Sources */,
 				D93DDA7C1BA79A2400CD8331 /* UIActivityViewController+ChatSecure.m in Sources */,
+				639C352B1C3DDDDE00132330 /* OTRXMPPBuddyManager.m in Sources */,
 				D93DDA7D1BA79A2400CD8331 /* UIImage+ChatSecure.m in Sources */,
 				D93DDA7E1BA79A2400CD8331 /* UIViewController+ChatSecure.m in Sources */,
 				D93DDA7F1BA79A2400CD8331 /* JSQMessagesCollectionViewCell+ChatSecure.m in Sources */,

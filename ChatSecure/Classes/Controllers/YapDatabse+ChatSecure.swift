@@ -12,11 +12,13 @@ import YapDatabase
 @objc public enum DatabaseViewNames: Int {
     case UnsentGroupMessagesViewName
     case GroupOccupantsViewName
+    case BuddyDeleteActionViewName
     
     public func name() -> String {
         switch self {
         case UnsentGroupMessagesViewName: return "UnsentGroupMessagesViewName"
         case GroupOccupantsViewName: return "GroupOccupantsViewName"
+        case BuddyDeleteActionViewName: return "BuddyDeleteActionViewName"
         }
     }
 }
@@ -96,6 +98,22 @@ public extension YapDatabase {
         }
         
         self.asyncRegisterView(grouping, sorting: sorting, version: "1", whiteList: [OTRXMPPRoomOccupant.collection()], name: .GroupOccupantsViewName, completionQueue: completionQueue, completionBlock: completionBlock)
+    }
+    
+    public func asyncRegisterBuddyActionViewName(completionQueue:dispatch_queue_t?, completionBlock:((Bool) ->Void)?) {
+        let grouping = YapDatabaseViewGrouping.withObjectBlock { (collection, key, object) -> String! in
+            guard let buddy = object as? OTRBuddy where buddy.action == OTRBuddyAction.NeedsDelete else {
+                return nil
+            }
+            
+            return buddy.accountUniqueId
+        }
+        
+        let sorting = YapDatabaseViewSorting.withKeyBlock { (group, collection1, key1, collection2, key2) -> NSComparisonResult in
+            return .OrderedSame
+        }
+        
+        self.asyncRegisterView(grouping, sorting: sorting, version: "1", whiteList: [OTRBuddy.collection()], name: .BuddyDeleteActionViewName, completionQueue: completionQueue, completionBlock: completionBlock)
     }
     
     //Needed for Obj-C

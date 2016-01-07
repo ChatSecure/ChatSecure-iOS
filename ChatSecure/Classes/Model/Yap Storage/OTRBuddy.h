@@ -43,6 +43,11 @@ extern const struct OTRBuddyEdges {
 	__unsafe_unretained NSString *account;
 } OTRBuddyEdges;
 
+typedef NS_ENUM(int, OTRBuddyAction) {
+    OTRBuddyActionNone = 0,
+    OTRBuddyActionNeedsDelete = 1
+};
+
 @interface OTRBuddy : OTRYapDatabaseObject <YapDatabaseRelationshipNode, OTRThreadOwner>
 
 @property (nonatomic, strong) NSString *username;
@@ -53,6 +58,7 @@ extern const struct OTRBuddyEdges {
 @property (nonatomic) OTRChatState lastSentChatState;
 @property (nonatomic) OTRThreadStatus status;
 @property (nonatomic, strong) NSDate *lastMessageDate;
+@property (nonatomic) OTRBuddyAction action;
 
 /**
  * Setting this value does a comparison of against the previously value
