@@ -13,6 +13,7 @@
 #import "OTRAccount.h"
 #import "OTRMessage.h"
 #import "OTRXMPPPresenceSubscriptionRequest.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 NSString *OTRConversationGroup = @"Conversation";
 NSString *OTRConversationDatabaseViewExtensionName = @"OTRConversationDatabaseViewExtensionName";
@@ -46,10 +47,14 @@ NSString *OTRPushAccountGroup = @"Account";
     }
     
     YapDatabaseViewGrouping *viewGrouping = [YapDatabaseViewGrouping withObjectBlock:^NSString *(NSString *collection, NSString *key, id object) {
-        if ([object isKindOfClass:[OTRBuddy class]])
-        {
-            OTRBuddy *buddy = (OTRBuddy *)object;
-            if (buddy.lastMessageDate) {
+        if ([object conformsToProtocol:@protocol(OTRThreadOwner)]) {
+            if ([object isKindOfClass:[OTRBuddy class]])
+            {
+                OTRBuddy *buddy = (OTRBuddy *)object;
+                if (buddy.lastMessageDate) {
+                    return OTRConversationGroup;
+                }
+            } else {
                 return OTRConversationGroup;
             }
         }
@@ -58,11 +63,11 @@ NSString *OTRPushAccountGroup = @"Account";
     
     YapDatabaseViewSorting *viewSorting = [YapDatabaseViewSorting withObjectBlock:^NSComparisonResult(NSString *group, NSString *collection1, NSString *key1, id object1, NSString *collection2, NSString *key2, id object2) {
         if ([group isEqualToString:OTRConversationGroup]) {
-            if ([object1 isKindOfClass:[OTRBuddy class]] && [object2 isKindOfClass:[OTRBuddy class]]) {
-                OTRBuddy *buddy1 = (OTRBuddy *)object1;
-                OTRBuddy *buddy2 = (OTRBuddy *)object2;
+            if ([object1 conformsToProtocol:@protocol(OTRThreadOwner)] && [object2 conformsToProtocol:@protocol(OTRThreadOwner)]) {
+                id <OTRThreadOwner> thread1 = object1;
+                id <OTRThreadOwner> thread2 = object2;
                 
-                return [buddy2.lastMessageDate compare:buddy1.lastMessageDate];
+                return [[thread2 lastMessageDate] compare:[thread1 lastMessageDate]];
             }
         }
         return NSOrderedSame;
@@ -70,11 +75,12 @@ NSString *OTRPushAccountGroup = @"Account";
     
     YapDatabaseViewOptions *options = [[YapDatabaseViewOptions alloc] init];
     options.isPersistent = YES;
-    options.allowedCollections = [[YapWhitelistBlacklist alloc] initWithWhitelist:[NSSet setWithObject:[OTRBuddy collection]]];
+    NSSet *whiteListSet = [NSSet setWithObjects:[OTRBuddy collection],[OTRXMPPRoom collection], nil];
+    options.allowedCollections = [[YapWhitelistBlacklist alloc] initWithWhitelist:whiteListSet];
     
     YapDatabaseView *databaseView = [[YapDatabaseView alloc] initWithGrouping:viewGrouping
                                                                       sorting:viewSorting
-                                                                   versionTag:@"1"
+                                                                   versionTag:@"2"
                                                                       options:options];
     
     return [[OTRDatabaseManager sharedInstance].database registerExtension:databaseView withName:OTRConversationDatabaseViewExtensionName];
@@ -130,26 +136,27 @@ NSString *OTRPushAccountGroup = @"Account";
     }
     
     YapDatabaseViewGrouping *viewGrouping = [YapDatabaseViewGrouping withObjectBlock:^NSString *(NSString *collection, NSString *key, id object) {
-        if ([object isKindOfClass:[OTRMessage class]])
+        if ([object conformsToProtocol:@protocol(OTRMesssageProtocol)])
         {
-            return ((OTRMessage *)object).buddyUniqueId;
+            return [((id <OTRMesssageProtocol>)object) threadId];
         }
         return nil;
     }];
     
     YapDatabaseViewSorting *viewSorting = [YapDatabaseViewSorting withObjectBlock:^NSComparisonResult(NSString *group, NSString *collection1, NSString *key1, id object1, NSString *collection2, NSString *key2, id object2) {
-        if ([object1 isKindOfClass:[OTRMessage class]] && [object2 isKindOfClass:[OTRMessage class]]) {
-            OTRMessage *message1 = (OTRMessage *)object1;
-            OTRMessage *message2 = (OTRMessage *)object2;
+        if ([object1 conformsToProtocol:@protocol(OTRMesssageProtocol)] && [object2 conformsToProtocol:@protocol(OTRMesssageProtocol)]) {
+            id <OTRMesssageProtocol> message1 = (id <OTRMesssageProtocol>)object1;
+            id <OTRMesssageProtocol> message2 = (id <OTRMesssageProtocol>)object2;
             
-            return [message1.date compare:message2.date];
+            return [[message1 date] compare:[message2 date]];
         }
         return NSOrderedSame;
     }];
     
     YapDatabaseViewOptions *options = [[YapDatabaseViewOptions alloc] init];
     options.isPersistent = YES;
-    options.allowedCollections = [[YapWhitelistBlacklist alloc] initWithWhitelist:[NSSet setWithObject:[OTRMessage collection]]];
+    NSSet *whitelist = [NSSet setWithObjects:[OTRMessage collection],[OTRXMPPRoomMessage collection], nil];
+    options.allowedCollections = [[YapWhitelistBlacklist alloc] initWithWhitelist:whitelist];
     
     
     

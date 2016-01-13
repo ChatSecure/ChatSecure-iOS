@@ -65,6 +65,10 @@ NSString *const OTRYapDatabasePassphraseAccountName = @"OTRYapDatabasePassphrase
 
 NSString *const OTRYapDatabaseName = @"ChatSecureYap.sqlite";
 
+//Noticications
+NSString *const kOTRNotificationThreadKey = @"kOTRNotificationThreadKey";
+NSString *const kOTRNotificationThreadCollection = @"kOTRNotificationThreadCollection";
+
 //NSUserDefaults
 NSString *const kOTRDeletedFacebookKey = @"kOTRDeletedFacebookKey";
 
@@ -74,9 +78,6 @@ CGFloat const kOTRDeliveredFontSize           = 13;
 CGFloat const kOTRMessageFontSize             = 16;
 CGFloat const kOTRMessageSentDateLabelHeight  = kOTRSentDateFontSize + 7;
 CGFloat const kOTRMessageDeliveredLabelHeight = kOTRDeliveredFontSize + 7;
-
-//push
-NSString *const kOTRPushAPIEndpoint = @"https://chatsecure-push.herokuapp.com/api/v1/";
 
 NSUInteger const kOTRMinimumPassphraseLength = 8;
 NSUInteger const kOTRMaximumPassphraseLength = 64;

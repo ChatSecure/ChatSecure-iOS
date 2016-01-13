@@ -32,9 +32,7 @@
 #import "OTRConstants.h"
 #import "UserVoice.h"
 #import "OTRAccountTableViewCell.h"
-#import "UIAlertView+Blocks.h"
 #import "UIActionSheet+ChatSecure.h"
-#import "UIActionSheet+Blocks.h"
 #import "OTRSecrets.h"
 @import YapDatabase;
 #import "OTRDatabaseManager.h"
@@ -285,8 +283,8 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     {
         OTRAccount *account = [self accountAtIndexPath:indexPath];
         
-        RIButtonItem * cancelButtonItem = [RIButtonItem itemWithLabel:CANCEL_STRING];
-        RIButtonItem * okButtonItem = [RIButtonItem itemWithLabel:OK_STRING action:^{
+        UIAlertAction * cancelButtonItem = [UIAlertAction actionWithTitle:CANCEL_STRING style:UIAlertActionStyleCancel handler:nil];
+        UIAlertAction * okButtonItem = [UIAlertAction actionWithTitle:OK_STRING style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
             
             if( [[OTRProtocolManager sharedInstance] isAccountConnected:account])
             {
@@ -297,9 +295,10 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
         }];
         
         NSString * message = [NSString stringWithFormat:@"%@ %@?", DELETE_ACCOUNT_MESSAGE_STRING, account.username];
-        UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:DELETE_ACCOUNT_TITLE_STRING message:message cancelButtonItem:cancelButtonItem otherButtonItems:okButtonItem, nil];
-        
-        [alertView show];
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:DELETE_ACCOUNT_TITLE_STRING message:message preferredStyle:UIAlertControllerStyleAlert];
+        [alert addAction:cancelButtonItem];
+        [alert addAction:okButtonItem];
+        [self presentViewController:alert animated:YES completion:nil];
     }
 }
 
@@ -390,45 +389,33 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 }
 
 - (void) donateSettingPressed:(OTRDonateSetting *)setting {
-    
+#warning Hardcoded Whitelabel Value
     NSURL *paypalURL = [NSURL URLWithString:@"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=6YFSLLQGDZFXY"];
+#warning Hardcoded Whitelabel Value
     NSURL *bitcoinURL = [NSURL URLWithString:@"https://coinbase.com/checkouts/0a35048913df24e0ec3d586734d456d7"];
     
-    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
-        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:DONATE_MESSAGE_STRING message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-        
-        UIAlertAction *paypalAlertAction = [UIAlertAction actionWithTitle:@"PayPal" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-            [[UIApplication sharedApplication] openURL:paypalURL];
-        }];
-        
-        UIAlertAction *bitcoinAlertAction = [UIAlertAction actionWithTitle:@"Bitcoin" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-            [[UIApplication sharedApplication] openURL:bitcoinURL];
-        }];
-        
-        UIAlertAction *cancelAlertAction = [UIAlertAction actionWithTitle:CANCEL_STRING style:UIAlertActionStyleCancel handler:nil];
-        
-        [alertController addAction:paypalAlertAction];
-        [alertController addAction:bitcoinAlertAction];
-        [alertController addAction:cancelAlertAction];
-        
-        UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:[self indexPathForSetting:setting]];
-        
-        alertController.popoverPresentationController.sourceView = cell;
-        alertController.popoverPresentationController.sourceRect = cell.bounds;
-        
-        [self presentViewController:alertController animated:YES completion:nil];
-    }
-    else {
-        RIButtonItem *paypalItem = [RIButtonItem itemWithLabel:@"PayPal" action:^{
-            [[UIApplication sharedApplication] openURL:paypalURL];
-        }];
-        RIButtonItem *bitcoinItem = [RIButtonItem itemWithLabel:@"Bitcoin" action:^{
-            [[UIApplication sharedApplication] openURL:bitcoinURL];
-        }];
-        RIButtonItem *cancelItem = [RIButtonItem itemWithLabel:CANCEL_STRING];
-        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:DONATE_MESSAGE_STRING cancelButtonItem:cancelItem destructiveButtonItem:nil otherButtonItems:paypalItem, bitcoinItem, nil];
-        [actionSheet otr_presentInView:self.view];
-    }
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:DONATE_MESSAGE_STRING message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    
+    UIAlertAction *paypalAlertAction = [UIAlertAction actionWithTitle:@"PayPal" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        [[UIApplication sharedApplication] openURL:paypalURL];
+    }];
+    
+    UIAlertAction *bitcoinAlertAction = [UIAlertAction actionWithTitle:@"Bitcoin" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        [[UIApplication sharedApplication] openURL:bitcoinURL];
+    }];
+    
+    UIAlertAction *cancelAlertAction = [UIAlertAction actionWithTitle:CANCEL_STRING style:UIAlertActionStyleCancel handler:nil];
+    
+    [alertController addAction:paypalAlertAction];
+    [alertController addAction:bitcoinAlertAction];
+    [alertController addAction:cancelAlertAction];
+    
+    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:[self indexPathForSetting:setting]];
+    
+    alertController.popoverPresentationController.sourceView = cell;
+    alertController.popoverPresentationController.sourceRect = cell.bounds;
+    
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 #pragma - mark OTRShareSettingDelegate Method
@@ -454,34 +441,23 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 #pragma mark OTRFeedbackSettingDelegate method
 
 - (void) presentUserVoiceViewForSetting:(OTRSetting *)setting {
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:SHOW_USERVOICE_STRING message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    UIAlertAction *cancelAlertAction = [UIAlertAction actionWithTitle:CANCEL_STRING style:UIAlertActionStyleCancel handler:nil];
+    UIAlertAction *showUserVoiceAlertAction = [UIAlertAction actionWithTitle:OK_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+#warning Hardcoded Whitelabel Value
+        UVConfig *config = [UVConfig configWithSite:@"chatsecure.uservoice.com"];
+        [UserVoice presentUserVoiceInterfaceForParentViewController:self andConfig:config];
+    }];
     
-    if(SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
-        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:SHOW_USERVOICE_STRING message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-        UIAlertAction *cancelAlertAction = [UIAlertAction actionWithTitle:CANCEL_STRING style:UIAlertActionStyleCancel handler:nil];
-        UIAlertAction *showUserVoiceAlertAction = [UIAlertAction actionWithTitle:OK_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-            UVConfig *config = [UVConfig configWithSite:@"chatsecure.uservoice.com"];
-            [UserVoice presentUserVoiceInterfaceForParentViewController:self andConfig:config];
-        }];
-        
-        [alertController addAction:cancelAlertAction];
-        [alertController addAction:showUserVoiceAlertAction];
-        
-        UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:[self indexPathForSetting:setting]];
-        
-        alertController.popoverPresentationController.sourceView = cell;
-        alertController.popoverPresentationController.sourceRect = cell.bounds;
-        
-        [self presentViewController:alertController animated:YES completion:nil];
-    }
-    else {
-        RIButtonItem *cancelItem = [RIButtonItem itemWithLabel:CANCEL_STRING];
-        RIButtonItem *showUVItem = [RIButtonItem itemWithLabel:OK_STRING action:^{
-            UVConfig *config = [UVConfig configWithSite:@"chatsecure.uservoice.com"];
-            [UserVoice presentUserVoiceInterfaceForParentViewController:self andConfig:config];
-        }];
-        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:SHOW_USERVOICE_STRING cancelButtonItem:cancelItem destructiveButtonItem:nil otherButtonItems:showUVItem, nil];
-        [actionSheet otr_presentInView:self.view];
-    }
+    [alertController addAction:cancelAlertAction];
+    [alertController addAction:showUserVoiceAlertAction];
+    
+    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:[self indexPathForSetting:setting]];
+    
+    alertController.popoverPresentationController.sourceView = cell;
+    alertController.popoverPresentationController.sourceRect = cell.bounds;
+    
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 #pragma - mark YapDatabse Methods

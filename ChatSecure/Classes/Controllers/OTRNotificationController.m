@@ -7,7 +7,6 @@
 //
 
 #import "OTRNotificationController.h"
-#import "CRToast.h"
 #import "OTRConstants.h"
 #import "OTRSettingsViewController.h"
 #import "OTRXMPPManager.h"
@@ -117,8 +116,8 @@
             accountName = [xmppManager accountName];
             accountName = [XMPPJID jidWithString:accountName].bare;
         }
-        OTRToastOptions *options = [[OTRToastOptions alloc] initWithText:CONNECTED_STRING subtitleText:accountName optionType:OTRToastOptionTypeSuccess];
-        [CRToastManager showNotificationWithOptions:[options dictionary] completionBlock:nil];
+        //OTRToastOptions *options = [[OTRToastOptions alloc] initWithText:CONNECTED_STRING subtitleText:accountName optionType:OTRToastOptionTypeSuccess];
+        //[CRToastManager showNotificationWithOptions:[options dictionary] completionBlock:nil];
     }
 }
 
@@ -144,8 +143,8 @@
             accountName = [xmppManager accountName];
             accountName = [XMPPJID jidWithString:accountName].bare;
         }
-        OTRToastOptions *options = [[OTRToastOptions alloc] initWithText:ACCOUNT_DISCONNECTED_STRING subtitleText:accountName optionType:OTRToastOptionTypeFailure];
-        [CRToastManager showNotificationWithOptions:[options dictionary] completionBlock:nil];
+        //OTRToastOptions *options = [[OTRToastOptions alloc] initWithText:ACCOUNT_DISCONNECTED_STRING subtitleText:accountName optionType:OTRToastOptionTypeFailure];
+        //[CRToastManager showNotificationWithOptions:[options dictionary] completionBlock:nil];
     }
 }
 
@@ -158,7 +157,7 @@
     }
     OTRToastOptions *options = [OTRToastOptions optionsWithText:CONNECTING_STRING subtitleText:accountName];
     options.image = [UIImage otr_imageWithImage:[OTRImages wifiWithColor:[UIColor whiteColor]] scaledToSize:kOTRDefaultNotificationImageSize];
-    [CRToastManager showNotificationWithOptions:[options dictionary] completionBlock:nil];
+    //[CRToastManager showNotificationWithOptions:[options dictionary] completionBlock:nil];
 }
 
 #pragma - mark Class Methods

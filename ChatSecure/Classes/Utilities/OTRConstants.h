@@ -59,12 +59,15 @@ extern NSString *const kOTRAppVersionKey;
 
 extern NSString *const OTRArchiverKey;
 
-
 extern NSString *const OTRFailedRemoteNotificationRegistration;
 extern NSString *const OTRSuccessfulRemoteNotificationRegistration;
 
 extern NSString *const OTRYapDatabasePassphraseAccountName;
 extern NSString *const OTRYapDatabaseName;
+
+//Notifications
+extern NSString *const kOTRNotificationThreadKey;
+extern NSString *const kOTRNotificationThreadCollection;
 
 //NSUserDefaults
 extern NSString *const kOTRDeletedFacebookKey;
@@ -77,9 +80,6 @@ extern CGFloat const kOTRMessageSentDateLabelHeight;
 extern CGFloat const kOTRMessageDeliveredLabelHeight;
 
 extern NSString *const kOTRErrorDomain;
-
-//Push
-extern NSString *const kOTRPushAPIEndpoint;
 
 extern NSUInteger const kOTRMinimumPassphraseLength;
 extern NSUInteger const kOTRMaximumPassphraseLength;

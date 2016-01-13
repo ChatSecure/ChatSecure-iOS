@@ -28,10 +28,13 @@
 #import "NSFileManager+ChatSecure.h"
 @import OTRAssets;
 #import "OTRLanguageManager.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 NSString *const OTRYapDatabaseRelationshipName = @"OTRYapDatabaseRelationshipName";
 NSString *const OTRYapDatabseMessageIdSecondaryIndex = @"OTRYapDatabseMessageIdSecondaryIndex";
-NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseMessageIdSecondaryIndexExtension";
+NSString *const OTRYapDatabseRoomOccupantJIdSecondaryIndex = @"constOTRYapDatabseRoomOccupantJIdSecondaryIndex";
+NSString *const OTRYapDatabseSecondaryIndexExtension = @"OTRYapDatabseMessageIdSecondaryIndexExtension";
+NSString *const OTRYapDatabaseUnreadMessageSecondaryIndex = @"OTRYapDatbaseUnreadMessageSecondaryIndex";
 
 
 @interface OTRDatabaseManager ()
@@ -193,21 +196,32 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension = @"OTRYapDatabseM
 {
     YapDatabaseSecondaryIndexSetup *setup = [[YapDatabaseSecondaryIndexSetup alloc] init];
     [setup addColumn:OTRYapDatabseMessageIdSecondaryIndex withType:YapDatabaseSecondaryIndexTypeText];
+    [setup addColumn:OTRYapDatabseRoomOccupantJIdSecondaryIndex withType:YapDatabaseSecondaryIndexTypeText];
+    [setup addColumn:OTRYapDatabaseUnreadMessageSecondaryIndex withType:YapDatabaseSecondaryIndexTypeInteger];
     
     YapDatabaseSecondaryIndexHandler *indexHandler = [YapDatabaseSecondaryIndexHandler withObjectBlock:^(NSMutableDictionary *dict, NSString *collection, NSString *key, id object) {
-        if ([object isKindOfClass:[OTRMessage class]])
+        if ([object conformsToProtocol:@protocol(OTRMesssageProtocol)])
         {
-            OTRMessage *message = (OTRMessage *)object;
+            id<OTRMesssageProtocol> message = (id <OTRMesssageProtocol>)object;
+                
+            if ([[message remoteMessageId] length]) {
+                [dict setObject:[message remoteMessageId] forKey:OTRYapDatabseMessageIdSecondaryIndex];
+            }
             
-            if ([message.messageId length]) {
-                [dict setObject:message.messageId forKey:OTRYapDatabseMessageIdSecondaryIndex];
+            [dict setObject:@([message messageRead]) forKey:OTRYapDatabaseUnreadMessageSecondaryIndex];
+        }
+        
+        if ([collection isEqualToString:[OTRXMPPRoomOccupant collection]]) {
+            OTRXMPPRoomOccupant *roomOccupant = (OTRXMPPRoomOccupant *)object;
+            if ([roomOccupant.jid length]) {
+                [dict setObject:roomOccupant.jid forKey:OTRYapDatabseRoomOccupantJIdSecondaryIndex];
             }
         }
     }];
     
-    YapDatabaseSecondaryIndex *secondaryIndex = [[YapDatabaseSecondaryIndex alloc] initWithSetup:setup handler:indexHandler];
+    YapDatabaseSecondaryIndex *secondaryIndex = [[YapDatabaseSecondaryIndex alloc] initWithSetup:setup handler:indexHandler versionTag:@"1"];
     
-    return [self.database registerExtension:secondaryIndex withName:OTRYapDatabseMessageIdSecondaryIndexExtension];
+    return [self.database registerExtension:secondaryIndex withName:OTRYapDatabseSecondaryIndexExtension];
 }
 
 + (void) deleteLegacyXMPPFiles {

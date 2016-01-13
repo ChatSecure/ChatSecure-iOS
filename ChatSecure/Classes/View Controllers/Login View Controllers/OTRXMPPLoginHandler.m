@@ -14,6 +14,7 @@
 #import "OTRDatabaseManager.h"
 #import "OTRPasswordGenerator.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "XMPPJID.h"
 
 @interface OTRXMPPLoginHandler()
 @property (nonatomic, strong) NSString *password;
@@ -48,10 +49,12 @@
     NSDictionary *usernameValue = [[form formRowWithTag:kOTRXLFormUsernameTextFieldTag] value];
     NSString *username = usernameValue[OTRUsernameCell.UsernameKey];
     if (!username.length) {
-        username = nickname;
+        // strip whitespace and make nickname lowercase
+        // TODO - replace with hexified Ed25519 identity key
+        username = [nickname stringByReplacingOccurrencesOfString:@" " withString:@""];
+        username = [username lowercaseString];
     }
     account.username = username;
-    account.domain = usernameValue[OTRUsernameCell.DomainKey];
     
     NSNumber *rememberPassword = [[form formRowWithTag:kOTRXLFormRememberPasswordSwitchTag] value];
     if (rememberPassword) {
@@ -82,7 +85,7 @@
     NSNumber *port = [[form formRowWithTag:kOTRXLFormPortTextFieldTag] value];
     NSString *resource = [[form formRowWithTag:kOTRXLFormResourceTextFieldTag] value];
     
-    if (!account.domain && [hostname length]) {
+    if ([hostname length]) {
         account.domain = hostname;
     }
     
@@ -93,6 +96,33 @@
     if ([resource length]) {
         account.resource = resource;
     }
+    
+    // Post-process values via XMPPJID for stringprep
+    
+    NSString *domain = account.domain;
+    if (![domain length]) {
+        NSDictionary *usernameValue = [[form formRowWithTag:kOTRXLFormUsernameTextFieldTag] value];
+        domain = usernameValue[OTRUsernameCell.DomainKey];
+    }
+    
+    XMPPJID *jid = [XMPPJID jidWithUser:account.username domain:domain resource:account.resource];
+    if (!jid) {
+        NSParameterAssert(jid != nil);
+        NSLog(@"Error creating JID from account values!");
+    }
+    account.username = jid.bare;
+    account.resource = jid.resource;
+    
+    // Start generating our OTR key here so it's ready when we need it
+    
+    [[OTRProtocolManager sharedInstance].encryptionManager.otrKit generatePrivateKeyForAccountName:account.username protocol:kOTRProtocolTypeXMPP completion:^(NSString *fingerprint, NSError *error) {
+        NSParameterAssert(fingerprint.length > 0);
+        if (fingerprint.length) {
+            NSLog(@"Fingerprint generated for %@: %@", jid.bare, fingerprint);
+        } else {
+            NSLog(@"Error generating fingerprint for %@: %@", jid.bare, error);
+        }
+    }];
     
     return account;
 }
@@ -105,6 +135,8 @@
         account = (OTRXMPPAccount *)[self moveValues:form intoAccount:account];
     }
     
+    //Reffresh protocol manager for new account settings
+    [[OTRProtocolManager sharedInstance] removeProtocolForAccount:account];
     _xmppManager = (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:account];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedNotification:) name:OTRXMPPLoginStatusNotificationName object:self.xmppManager];

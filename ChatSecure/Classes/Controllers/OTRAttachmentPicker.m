@@ -12,7 +12,6 @@
 #import "OTRStrings.h"
 #import "OTRUtilities.h"
 #import "UIActionSheet+ChatSecure.h"
-#import "UIActionSheet+Blocks.h"
 #import "OTRLanguageManager.h"
 
 @interface OTRAttachmentPicker () <UINavigationControllerDelegate>
@@ -34,58 +33,34 @@
 
 - (void)showAlertControllerWithCompletion:(void (^)(void))completion
 {
-    if (SYSTEM_VERSION_LESS_THAN(@"8.0")) {
-        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil cancelButtonItem:nil destructiveButtonItem:nil otherButtonItems:nil];
-        
-        if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
-            RIButtonItem *takePhotoButton = [RIButtonItem itemWithLabel:USE_CAMERA_STRING action:^{
-                [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
-                [self showImagePickerForSourceType:UIImagePickerControllerSourceTypeCamera];
-            }];
-            [actionSheet addButtonItem:takePhotoButton];
-        }
-        
-        if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary]) {
-            RIButtonItem *photoLibraryButton = [RIButtonItem itemWithLabel:PHOTO_LIBRARY_STRING action:^{
-                [self showImagePickerForSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
-            }];
-            [actionSheet addButtonItem:photoLibraryButton];
-        }
-        RIButtonItem *cancelButton = [RIButtonItem itemWithLabel:CANCEL_STRING];
-
-        [actionSheet addButtonItem:cancelButton];
-        [actionSheet setCancelButtonIndex:[actionSheet numberOfButtons]-1];
-        
-        [actionSheet otr_presentInView:self.parentViewController.view];
-    }
-    else {
-        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-        
-        if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
-            UIAlertAction *takePhotoAction = [UIAlertAction actionWithTitle:USE_CAMERA_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-                [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
-                [self showImagePickerForSourceType:UIImagePickerControllerSourceTypeCamera];
-            }];
-            [alertController addAction:takePhotoAction];
-        }
-        
-        if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary]) {
-            UIAlertAction *openLibraryAction = [UIAlertAction actionWithTitle:PHOTO_LIBRARY_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-                [self showImagePickerForSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
-            }];
-            [alertController addAction:openLibraryAction];
-        }
-        
-        UIAlertAction *cancelAlertAction = [UIAlertAction actionWithTitle:CANCEL_STRING style:UIAlertActionStyleCancel handler:nil];
-        
-        [alertController addAction:cancelAlertAction];
-        
-        alertController.popoverPresentationController.delegate = self.parentViewController;
-        
-        [self.parentViewController presentViewController:alertController animated:YES completion:completion];
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    
+    if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+        UIAlertAction *takePhotoAction = [UIAlertAction actionWithTitle:USE_CAMERA_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
+            [self showImagePickerForSourceType:UIImagePickerControllerSourceTypeCamera];
+        }];
+        [alertController addAction:takePhotoAction];
     }
     
+    if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary]) {
+        UIAlertAction *openLibraryAction = [UIAlertAction actionWithTitle:PHOTO_LIBRARY_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            [self showImagePickerForSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
+        }];
+        [alertController addAction:openLibraryAction];
+    }
     
+    if ([self.delegate respondsToSelector:@selector(attachmentPicker:addAdditionalOptions:)]) {
+        [self.delegate attachmentPicker:self addAdditionalOptions:alertController];
+    }
+    
+    UIAlertAction *cancelAlertAction = [UIAlertAction actionWithTitle:CANCEL_STRING style:UIAlertActionStyleCancel handler:nil];
+    
+    [alertController addAction:cancelAlertAction];
+    
+    alertController.popoverPresentationController.delegate = self.parentViewController;
+    
+    [self.parentViewController presentViewController:alertController animated:YES completion:completion];
 }
 
 - (void)showImagePickerForSourceType:(UIImagePickerControllerSourceType)sourceType

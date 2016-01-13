@@ -17,6 +17,10 @@
 - (void)attachmentPicker:(OTRAttachmentPicker *)attachmentPicker gotPhoto:(UIImage *)photo withInfo:(NSDictionary *)info;
 - (void)attachmentPicker:(OTRAttachmentPicker *)attachmentPicker gotVideoURL:(NSURL *)videoURL;
 
+@optional
+
+- (void)attachmentPicker:(OTRAttachmentPicker *)attachmentPicker addAdditionalOptions:(UIAlertController *)alertController;
+
 @end
 
 @interface OTRAttachmentPicker : NSObject <UIImagePickerControllerDelegate>

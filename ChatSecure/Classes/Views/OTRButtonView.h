@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import "OTRKit.h"
+@import OTRKit;
 
 @interface OTRButtonView : UIView
 

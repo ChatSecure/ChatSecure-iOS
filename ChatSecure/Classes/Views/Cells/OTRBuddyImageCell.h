@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
 @class OTRBuddy;
 
 extern const CGFloat OTRBuddyImageCellPadding;
@@ -18,7 +18,7 @@ extern const CGFloat OTRBuddyImageCellPadding;
 @property (nonatomic, strong) UIColor *imageViewBorderColor;
 @property (nonatomic, readonly) BOOL addedConstraints;
 
-- (void)setBuddy:(OTRBuddy *)buddy;
+- (void)setThread:(id <OTRThreadOwner>)thread;
 
 + (NSString *)reuseIdentifier;
 

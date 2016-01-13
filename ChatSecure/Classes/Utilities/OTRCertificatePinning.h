@@ -25,7 +25,7 @@
 
 + (void)addCertificate:(SecCertificateRef)cert withHostName:(NSString *)hostname;
 
-+ (NSString*)sha1FingerprintForCertificate:(SecCertificateRef)certificate;
++ (NSString*)sha256FingerprintForCertificate:(SecCertificateRef)certificate;
 + (NSDictionary *)allCertificates;
 + (NSArray *)storedCertificatesWithHostName:(NSString *)hostname;
 + (SecCertificateRef)certForTrust:(SecTrustRef)trust;

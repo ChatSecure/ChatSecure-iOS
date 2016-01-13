@@ -50,4 +50,7 @@
 /** Share Base URL e.g. https://chatsecure.org/i/# */
 + (NSURL*) shareBaseURL;
 
+/** Push server URL e.g. https://chatsecure-push.herokuapp.com/api/v1/ */
++ (NSURL *)pushAPIURL;
+
 @end

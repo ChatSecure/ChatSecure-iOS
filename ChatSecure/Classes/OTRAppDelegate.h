@@ -25,16 +25,17 @@
 
 @class OTRTheme;
 @class OTRSettingsViewController;
-@class OTRMessagesHoldTalkViewController;
+@class OTRMessagesViewController;
 @class OTRConversationViewController;
 @class PushController;
 @class PushOTRListener;
+@protocol OTRThreadOwner;
+
 
 @interface OTRAppDelegate : UIResponder <UIApplicationDelegate, BITHockeyManagerDelegate>
 
 @property (nonatomic, strong) UIWindow *window;
 @property (nonatomic, strong) OTRSettingsViewController *settingsViewController;
-@property (nonatomic, strong) OTRMessagesHoldTalkViewController *messagesViewController;
 @property (nonatomic, strong) OTRConversationViewController *conversationViewController;
 
 @property (nonatomic, strong) PushController *pushController;
@@ -45,6 +46,8 @@
 @property (nonatomic) BOOL didShowDisconnectionWarning;
 
 - (void) showConversationViewController;
+
+- (id<OTRThreadOwner>)activeThread;
 
 + (OTRAppDelegate *)appDelegate;
 

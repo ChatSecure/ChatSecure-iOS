@@ -13,11 +13,13 @@
 #import "XMPPMessage+XEP_0280.h"
 #import "NSXMLElement+XEP_0203.h"
 #import "OTRLog.h"
-#import "OTRKit.h"
+@import OTRKit;
 #import "OTRXMPPBuddy.h"
 #import "OTRMessage.h"
 #import "OTRAccount.h"
 #import "OTRConstants.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "OTRThreadOwner.h"
 
 @implementation OTRXMPPMessageYapStroage
 
@@ -68,7 +70,7 @@
 
 - (void)handleMessage:(XMPPMessage *)xmppMessage stream:(XMPPStream *)stream incoming:(BOOL)incoming;
 {
-    [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+    [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         
         if ([stream.tag isKindOfClass:[NSString class]]) {
             NSString *username = [[xmppMessage from] bare];
@@ -87,6 +89,10 @@
                 if (messageBuddy && ![self duplicateMessage:xmppMessage buddyUniqueId:messageBuddy.uniqueId transaction:transaction]) {
                     OTRMessage *message = [self messageFromXMPPMessage:xmppMessage buddyId:messageBuddy.uniqueId];
                     message.incoming = YES;
+                    id<OTRThreadOwner>activeThread = [[OTRAppDelegate appDelegate] activeThread];
+                    if([[activeThread threadIdentifier] isEqualToString:message.threadId]) {
+                        message.read = YES;
+                    }
                     
                     if (messageBuddy) {
                         OTRAccount *account = [OTRAccount fetchObjectWithUniqueID:xmppStream.tag transaction:transaction];
@@ -131,8 +137,8 @@
 {
     __block BOOL result = NO;
     if ([message.elementID length]) {
-        [OTRMessage enumerateMessagesWithMessageId:message.elementID transaction:transaction usingBlock:^(OTRMessage *message, BOOL *stop) {
-            if ([message.buddyUniqueId isEqualToString:buddyUniqueId]) {
+        [transaction enumerateMessagesWithId:message.elementID block:^(id<OTRMesssageProtocol> _Nonnull databaseMessage, BOOL * _Null_unspecified stop) {
+            if ([[databaseMessage threadId] isEqualToString:buddyUniqueId]) {
                 *stop = YES;
                 result = YES;
             }
@@ -172,6 +178,10 @@
                 if ([forwardedMessage isMessageWithBody] && ![forwardedMessage isErrorMessage] && ![OTRKit stringStartsWithOTRPrefix:forwardedMessage.body]) {
                     OTRMessage *message = [self messageFromXMPPMessage:forwardedMessage buddyId:buddy.uniqueId];
                     message.incoming = incoming;
+                    id<OTRThreadOwner>activeThread = [[OTRAppDelegate appDelegate] activeThread];
+                    if([[activeThread threadIdentifier] isEqualToString:message.threadId]) {
+                        message.read = YES;
+                    }
                     [message saveWithTransaction:transaction];
                 }
             }

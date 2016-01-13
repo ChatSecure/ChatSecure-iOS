@@ -34,3 +34,16 @@ FOUNDATION_EXPORT const unsigned char ChatSecureCoreVersionString[];
 #import <ChatSecureCore/OTRTheme.h>
 #import <ChatSecureCore/OTRPushTLVHandlerProtocols.h>
 #import <ChatSecureCore/OTREncryptionManager.h>
+#import <ChatSecureCore/OTRQRCodeActivity.h>
+#import <ChatSecureCore/OTRMessage.h>
+#import <ChatSecureCore/OTRImages.h>
+#import <ChatSecureCore/OTRDatabaseManager.h>
+#import <ChatSecureCore/OTRDatabaseView.h>
+#import <ChatSecureCore/OTRConversationViewController.h>
+#import <ChatSecureCore/OTRMessagesViewController.h>
+#import <ChatSecureCore/OTRMessagesHoldTalkViewController.h>
+#import <ChatSecureCore/OTRMessagesGroupViewController.h>
+#import <ChatSecureCore/OTRComposeViewController.h>
+#import <ChatSecureCore/OTRThreadOwner.h>
+#import <ChatSecureCore/OTRBuddy.h>
+#import <ChatSecureCore/OTRLanguageManager.h>

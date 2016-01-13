@@ -51,9 +51,9 @@
     return self;
 }
 
-- (void)setBuddy:(OTRBuddy *)buddy withAccountName:(NSString *)accountName
+- (void)setThread:(id<OTRThreadOwner>)thread withAccountName:(NSString *)accountName
 {
-    [self setBuddy:buddy];
+    [self setThread:thread];
     if ([accountName length]) {
         if ([self.identifierLabel.text length]) {
             self.accountLabel.text = accountName;
@@ -65,24 +65,17 @@
     }
 }
 
-- (void)setBuddy:(OTRBuddy *)buddy
+- (void)setThread:(id<OTRThreadOwner>)thread
 {
-    [super setBuddy:buddy];
+    [super setThread:thread];
     
-    NSString * displayName = buddy.displayName;
-    NSString * accountName = buddy.username;
+    NSString * name = [thread threadName];
     
-    if ([displayName length]) {
-        self.nameLabel.text = displayName;
-        self.identifierLabel.text = accountName;
-    }
-    else {
-        self.nameLabel.text = accountName;
-        self.identifierLabel.text = nil;
-    }
+    self.nameLabel.text = name;
+    self.identifierLabel.text = nil;
     
-    if ([buddy isKindOfClass:[OTRXMPPBuddy class]]) {
-        if(((OTRXMPPBuddy *)buddy).isPendingApproval) {
+    if ([thread isKindOfClass:[OTRXMPPBuddy class]]) {
+        if(((OTRXMPPBuddy *)thread).isPendingApproval) {
             NSString *pendingString = [NSString stringWithFormat:@" - %@",PENDING_APPROVAL_STRING];
             self.nameLabel.text = [self.nameLabel.text stringByAppendingString:pendingString];
         }

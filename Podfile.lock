@@ -1,27 +1,27 @@
 PODS:
-  - AFNetworking (2.6.0):
-    - AFNetworking/NSURLConnection (= 2.6.0)
-    - AFNetworking/NSURLSession (= 2.6.0)
-    - AFNetworking/Reachability (= 2.6.0)
-    - AFNetworking/Security (= 2.6.0)
-    - AFNetworking/Serialization (= 2.6.0)
-    - AFNetworking/UIKit (= 2.6.0)
-  - AFNetworking/NSURLConnection (2.6.0):
+  - AFNetworking (2.6.1):
+    - AFNetworking/NSURLConnection (= 2.6.1)
+    - AFNetworking/NSURLSession (= 2.6.1)
+    - AFNetworking/Reachability (= 2.6.1)
+    - AFNetworking/Security (= 2.6.1)
+    - AFNetworking/Serialization (= 2.6.1)
+    - AFNetworking/UIKit (= 2.6.1)
+  - AFNetworking/NSURLConnection (2.6.1):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/NSURLSession (2.6.0):
+  - AFNetworking/NSURLSession (2.6.1):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/Reachability (2.6.0)
-  - AFNetworking/Security (2.6.0)
-  - AFNetworking/Serialization (2.6.0)
-  - AFNetworking/UIKit (2.6.0):
+  - AFNetworking/Reachability (2.6.1)
+  - AFNetworking/Security (2.6.1)
+  - AFNetworking/Serialization (2.6.1)
+  - AFNetworking/UIKit (2.6.1):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
   - Appirater (2.0.5)
-  - ARChromeActivity (1.0.4)
+  - ARChromeActivity (1.0.5)
   - BBlock (1.2.1):
     - BBlock/AppKit (= 1.2.1)
     - BBlock/Foundation (= 1.2.1)
@@ -38,22 +38,21 @@ PODS:
   - CocoaLumberjack/Core (1.9.2)
   - CocoaLumberjack/Extensions (1.9.2):
     - CocoaLumberjack/Core
-  - CPAProxy (1.0.0):
+  - CPAProxy (1.1.0):
     - CocoaAsyncSocket
-  - CRToast (0.0.8)
-  - GCDWebServer (3.2.7):
-    - GCDWebServer/Core (= 3.2.7)
-  - GCDWebServer/Core (3.2.7)
+  - GCDWebServer (3.3):
+    - GCDWebServer/Core (= 3.3)
+  - GCDWebServer/Core (3.3)
   - gtm-http-fetcher (1.1)
   - gtm-oauth2 (1.1):
     - gtm-http-fetcher (~> 1.1)
-  - HockeySDK-Source (3.7.3)
+  - HockeySDK-Source (3.8.2)
   - IOCipher/common (0.1.0):
     - libsqlfs/SQLCipher
   - IOCipher/GCDWebServer (0.1.0):
     - GCDWebServer
     - IOCipher/common
-  - JSQMessagesViewController (7.1.0):
+  - JSQMessagesViewController (7.2.0):
     - JSQSystemSoundPlayer (~> 2.0.1)
   - JSQSystemSoundPlayer (2.0.1)
   - JTSImageViewController (1.5.1)
@@ -79,7 +78,7 @@ PODS:
   - MWFeedParser/NSString+HTML (1.0.1)
   - Navajo (0.0.1)
   - OpenInChrome (0.0.1)
-  - OTRKit (1.1.0)
+  - OTRKit (1.1.1)
   - ParkedTextField (0.1.2)
   - ProxyKit/Client (1.0.2):
     - ProxyKit/common
@@ -88,14 +87,12 @@ PODS:
     - CocoaLumberjack (~> 1.9)
   - PureLayout (3.0.1)
   - QRCodeReaderViewController (3.5.2)
-  - SIAlertView (1.3)
   - SQLCipher/common (3.3.1)
   - SQLCipher/fts (3.3.1):
     - SQLCipher/common
   - SSKeychain (1.2.3)
   - TTTAttributedLabel (1.13.4)
   - TUSafariActivity (1.0.4)
-  - UIAlertView-Blocks (1.0)
   - uservoice-iphone-sdk (3.2.3)
   - VTAcknowledgementsViewController (0.15)
   - XLForm (3.0.2)
@@ -259,13 +256,12 @@ DEPENDENCIES:
   - CocoaAsyncSocket (~> 7.4)
   - CocoaLumberjack (~> 1.9)
   - CPAProxy (from `Submodules/CPAProxy/CPAProxy.podspec`)
-  - CRToast (~> 0.0.8)
   - gtm-http-fetcher (from `Podspecs/gtm-http-fetcher.podspec`)
   - gtm-oauth2 (from `Podspecs/gtm-oauth2.podspec`)
   - HockeySDK-Source (~> 3.7)
   - IOCipher/GCDWebServer (from `Submodules/IOCipher/IOCipher.podspec`)
   - JSQMessagesViewController (from `https://github.com/ChatSecure/JSQMessagesViewController`,
-    branch `7.1.0-send_button`)
+    branch `7.2.0-send_button`)
   - JTSImageViewController (~> 1.4)
   - JTTargetActionBlock (~> 1.0)
   - JVFloatLabeledTextField (~> 1.0)
@@ -280,12 +276,10 @@ DEPENDENCIES:
   - ProxyKit/Client (from `Submodules/ProxyKit/ProxyKit.podspec`)
   - PureLayout (~> 3.0)
   - QRCodeReaderViewController (~> 3.5.0)
-  - SIAlertView (from `https://github.com/ChatSecure/SIAlertView.git`, branch `attributedText`)
   - SQLCipher/fts (from `Podspecs/SQLCipher.podspec.json`)
   - SSKeychain (~> 1.2)
   - TTTAttributedLabel (~> 1.10)
   - TUSafariActivity (~> 1.0)
-  - UIAlertView-Blocks (~> 1.0)
   - uservoice-iphone-sdk (~> 3.2)
   - VTAcknowledgementsViewController (~> 0.15)
   - XLForm (from `Submodules/XLForm/XLForm.podspec`)
@@ -305,7 +299,7 @@ EXTERNAL SOURCES:
   IOCipher:
     :path: Submodules/IOCipher/IOCipher.podspec
   JSQMessagesViewController:
-    :branch: 7.1.0-send_button
+    :branch: 7.2.0-send_button
     :git: https://github.com/ChatSecure/JSQMessagesViewController
   OTRKit:
     :path: Submodules/OTRKit/OTRKit.podspec
@@ -313,9 +307,6 @@ EXTERNAL SOURCES:
     :path: Submodules/ParkedTextField/ParkedTextField.podspec
   ProxyKit:
     :path: Submodules/ProxyKit/ProxyKit.podspec
-  SIAlertView:
-    :branch: attributedText
-    :git: https://github.com/ChatSecure/SIAlertView.git
   SQLCipher:
     :podspec: Podspecs/SQLCipher.podspec.json
   XLForm:
@@ -327,29 +318,25 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   JSQMessagesViewController:
-    :commit: aced19e84fe5ecfac7e89db2b247dfbd505127cb
+    :commit: 4bae8b303c4f7e3c34571a4c898bd1f11ecc65a5
     :git: https://github.com/ChatSecure/JSQMessagesViewController
-  SIAlertView:
-    :commit: e9a1a7d7d5a2a4ef5ff2e2e548644222b14edb27
-    :git: https://github.com/ChatSecure/SIAlertView.git
 
 SPEC CHECKSUMS:
-  AFNetworking: 79f7eb1a0fcfa7beb409332b2ca49afe9ce53b05
+  AFNetworking: 8e4e60500beb8bec644cf575beee72990a76d399
   Appirater: e7c0a47fb67ee5041ce8479e6ba960927fb40264
-  ARChromeActivity: 9064d94803338d3377f3e1013a8e8f4821d7daf1
+  ARChromeActivity: 821c7849b566f49583987468733a896fee35aa4d
   BBlock: c56d7f72597ffe1634fcdc73836c5c0fed3271be
   BButton: ab0f2ed3b998ae73c5188b57d270d81e4a1eeb27
   ChatSecure-Push-iOS: 80ce8a66f8a43bb99dc0c38609243a3f07edf8ff
   CocoaAsyncSocket: f5783bdedd232d91b89769bc4b5a1580aed518ad
   CocoaLumberjack: 628fca2e88ef06f7cf6817309aa405f325d9a6fa
-  CPAProxy: 9ca6809d0ee47d90ee149da033a53b911d15ab82
-  CRToast: b087127369b4c603726ef6249d74d0d737629ab8
-  GCDWebServer: 76a9540371d5f12f850b32ec7f555dd2d266e543
+  CPAProxy: cfd27b25328d6517b1f8570c4f0045838353e888
+  GCDWebServer: 106463756391d814b6f506927bee0d6a75a0b427
   gtm-http-fetcher: 4e7de79fc9e774b291eae66a240f17b3a5277ec7
   gtm-oauth2: b31c9d7c82f773f7b7094cbb7da8dc7b5968ce16
-  HockeySDK-Source: 2ed30df0d39d9ffe5aeed4deda8000a20fdcce54
+  HockeySDK-Source: 42b2ead932f97de6b88bed9d1aa2a13b2e6e21ad
   IOCipher: 2bcc56103fbdd9cd9139a5b030ebb97ed6fbc4b9
-  JSQMessagesViewController: ca11f86fa68ca70835f05e169df9244147c1dc40
+  JSQMessagesViewController: 73cab48aa92fc2d512f3b6724f3425cc47a19eb5
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
   JTSImageViewController: 1f8ce1cc93dab0d0af8e53badeea7528560cfec9
   JTTargetActionBlock: 6e9201e5fa88651deb354c91b7c9c6487a1abe55
@@ -361,17 +348,15 @@ SPEC CHECKSUMS:
   MWFeedParser: 2cf646014c1baf6ad1b08c480b40a08180079247
   Navajo: 5fb68239b4e3af4610f31925bae1ca8e6bab8eaa
   OpenInChrome: f1f3f9dec682216fe78a0d7fe0b5b263d6312c32
-  OTRKit: 084a83936ac19e2dbd08096cd94263a979dc4502
+  OTRKit: d3bc784277eb34d4b7844e75e7ea4334e56030d6
   ParkedTextField: 602a34c13acf59577ab1124ac8bc380a33f5fe3a
   ProxyKit: f7be31d07ed93444c433956d18e842ea9c709224
   PureLayout: f35f5384c9c4e4479df041dbe33ad7577b71ddfb
   QRCodeReaderViewController: f20275985c41ae551099641493ab364691d9113e
-  SIAlertView: 20c794b55eaf44d888773ea51647cf8907723919
   SQLCipher: 46ea06f972292f622aeb2d3f960a573a964d378f
   SSKeychain: 3f42991739c6c60a9cf1bbd4dff6c0d3694bcf3d
   TTTAttributedLabel: 0a2ac7b2dd726d32a070dafb01446026b11e624f
   TUSafariActivity: afc55a00965377939107ce4fdc7f951f62454546
-  UIAlertView-Blocks: 7904744fca618afbd2ec646608924f5e69d5acd1
   uservoice-iphone-sdk: 349d9ef36d3c43939d28390b9e86bb32b65fe983
   VTAcknowledgementsViewController: 575f5841fb47b7d9c852ccb406104ea68de07b21
   XLForm: 7817ce29f3f259186e837bb7309ac7e5b7e9b883
@@ -379,4 +364,4 @@ SPEC CHECKSUMS:
   YapDatabase: 814f9ff862a95c1e581d93335a4020482b69155b
   ZXingObjC: bf15b3814f7a105b6d99f47da2333c93a063650a
 
-COCOAPODS: 0.38.2
+COCOAPODS: 0.39.0

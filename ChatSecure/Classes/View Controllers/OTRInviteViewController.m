@@ -13,13 +13,13 @@
 #import "OTRAddBuddyQRCodeViewController.h"
 #import <MessageUI/MessageUI.h>
 #import "OTRAccount.h"
-#import "NSURL+ChatSecure.h"
 #import "Strings.h"
 #import "OTRAppDelegate.h"
 #import "OTRTheme.h"
 #import "OTRColors.h"
 @import OTRAssets;
 #import "OTRLanguageManager.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 static CGFloat const kOTRInvitePadding = 10;
 
@@ -160,13 +160,7 @@ static CGFloat const kOTRInvitePadding = 10;
 
 - (void)linkShareButtonPressed:(id)sender
 {
-    NSURL *url = [self shareURL];
-    
-    NSArray *activityItems = @[url];
-    
-    UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:activityItems applicationActivities:nil];
-    
-    [self presentViewController:activityViewController animated:YES completion:nil];
+    [ShareController shareAccount:self.account sender:sender viewController:self];
 }
 
 - (UIButton *)shareButtonWithIcon:(FAIcon)icon title:(NSString *)title action:(SEL)action
@@ -178,11 +172,6 @@ static CGFloat const kOTRInvitePadding = 10;
     button.titleLabel.font = [button.titleLabel.font fontWithSize:14];
     [button addTarget:self action:action forControlEvents:UIControlEventTouchUpInside];
     return button;
-}
-
-- (NSURL *)shareURL {
-    NSURL *baseURL = [NSURL otr_shareBaseURL];
-    return [NSURL otr_shareLink:baseURL.absoluteString username:self.account.username fingerprint:nil base64Encoded:YES];
 }
 
 #pragma - mark MFMessageComposeViewControllerDelegate Methods

@@ -58,15 +58,16 @@ const CGFloat OTRBuddyImageCellPadding = 12.0;
     [self.avatarImageView.layer setBorderColor:[_imageViewBorderColor CGColor]];
 }
 
-- (void)setBuddy:(OTRBuddy *)buddy
+- (void)setThread:(id<OTRThreadOwner>)thread
 {
-    if(buddy.avatarImage) {
-        self.avatarImageView.image = buddy.avatarImage;
+    UIImage *avatarImage = [thread avatarImage];
+    if(avatarImage) {
+        self.avatarImageView.image = avatarImage;
     }
     else {
         self.avatarImageView.image = [self defaultImage];
     }
-    UIColor *statusColor =  [OTRColors colorWithStatus:buddy.status];
+    UIColor *statusColor =  [OTRColors colorWithStatus:[thread currentStatus]];
     self.imageViewBorderColor = statusColor;
     [self.contentView setNeedsUpdateConstraints];
 }
