@@ -78,9 +78,14 @@ public class OTRSplitViewCoordinator: NSObject, OTRConversationViewControllerDel
     }
     
     public func conversationViewController(conversationViewController: OTRConversationViewController!, didSelectCompose sender: AnyObject!) {
-        let composeViewController = OTRComposeViewController()
-        composeViewController.delegate = self
-        let modalNavigationController = UINavigationController(rootViewController: composeViewController)
+        
+        let appDelegate = UIApplication.sharedApplication().delegate as? OTRAppDelegate
+        var composeViewController:OTRComposeViewController? = nil
+        if let c = appDelegate?.theme.composeViewControllerClass() as? OTRComposeViewController.Type {
+            composeViewController = c.init()
+        }
+        composeViewController!.delegate = self
+        let modalNavigationController = UINavigationController(rootViewController: composeViewController!)
         modalNavigationController.modalPresentationStyle = .FormSheet
         
         //May need to use conversationViewController

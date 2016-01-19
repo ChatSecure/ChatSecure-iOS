@@ -89,15 +89,17 @@
         self.displayNameTextField.autocorrectionType = self.accountNameTextField.autocorrectionType = UITextAutocorrectionTypeNo;
     }
     
+    if (self.storyboard == nil) {
+        self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
+    }
+    self.tableView.dataSource = self;
+    self.tableView.delegate = self;
+    self.tableView.scrollEnabled = NO;
+    self.tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     
-    
-    UITableView * tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
-    tableView.dataSource = self;
-    tableView.delegate = self;
-    tableView.scrollEnabled = NO;
-    tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    
-    [self.view addSubview:tableView];
+    if (self.storyboard == nil) {
+        [self.view addSubview:self.tableView];
+    }
     
     [self.accountNameTextField becomeFirstResponder];
 	// Do any additional setup after loading the view.
@@ -195,7 +197,7 @@
     [self dismissViewController];
 }
 
--(void)doneButtonPressed:(id)sender
+-(IBAction)doneButtonPressed:(id)sender
 {
     if ([self checkFields]) {
         NSString * newBuddyAccountName = [[self.accountNameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] lowercaseString];
