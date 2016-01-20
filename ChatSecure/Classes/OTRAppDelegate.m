@@ -118,14 +118,6 @@
         [application registerUserNotificationSettings:notificationSettings];
 
         [[OTRDatabaseManager sharedInstance] setupDatabaseWithName:OTRYapDatabaseName];
-        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-            OTRAccount *account = [OTRAccount accountForAccountType:OTRAccountTypeJabber];
-            account.rememberPassword = YES;
-            account.username = @"dchiles@dukgo.com";
-            account.password = @"2548588";
-            ((OTRXMPPAccount *)account).domain = @"dukgo.com";
-            //[account saveWithTransaction:transaction];
-        }];
         rootViewController = [self defaultConversationNavigationController];
 #if CHATSECURE_DEMO
         [self performSelector:@selector(loadDemoData) withObject:nil afterDelay:0.0];
@@ -405,6 +397,25 @@
         completionHandler(UIBackgroundFetchResultNewData);
     }];
     
+}
+
+- (BOOL) application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray * _Nullable))restorationHandler {
+    if ([userActivity.activityType isEqualToString:NSUserActivityTypeBrowsingWeb]) {
+        NSURL *url = userActivity.webpageURL;
+        if ([url otr_isInviteLink]) {
+            __block NSString *username = nil;
+            __block NSString *fingerprint = nil;
+            [url otr_decodeShareLink:^(NSString *uName, NSString *fPrint) {
+                username = uName;
+                fingerprint = fPrint;
+            }];
+            if (username.length) {
+                [self handleInvite:username fingerprint:fingerprint];
+            }
+            return YES;
+        }
+    }
+    return NO;
 }
 
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
