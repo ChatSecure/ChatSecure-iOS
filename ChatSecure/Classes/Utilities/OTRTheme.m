@@ -17,7 +17,7 @@
 - (instancetype) init {
     if (self = [super init]) {
         _lightThemeColor = [UIColor whiteColor];
-        _mainThemeColor = [UIColor blackColor];
+        _mainThemeColor = [UIColor colorWithWhite:0.95 alpha:1.0];
         _buttonLabelColor = [UIColor darkGrayColor];
     }
     return self;

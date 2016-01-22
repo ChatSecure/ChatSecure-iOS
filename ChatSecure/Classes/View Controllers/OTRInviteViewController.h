@@ -9,13 +9,14 @@
 #import <UIKit/UIKit.h>
 
 @class OTRAccount;
+@class BButton;
 
 @interface OTRInviteViewController : UIViewController
 
 @property (nonatomic, strong, readonly) UIImageView *titleImageView;
 @property (nonatomic, strong, readonly) UILabel *subtitleLabel;
 
-@property (nonatomic, strong) NSArray *shareButtons;
+@property (nonatomic, strong) NSArray <BButton*> *shareButtons;
 
 @property (nonatomic ,strong) OTRAccount *account;
 

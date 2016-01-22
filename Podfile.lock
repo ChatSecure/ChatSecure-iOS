@@ -21,7 +21,7 @@ PODS:
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
   - Appirater (2.0.5)
-  - ARChromeActivity (1.0.6)
+  - ARChromeActivity (1.0.5)
   - BBlock (1.2.1):
     - BBlock/AppKit (= 1.2.1)
     - BBlock/Foundation (= 1.2.1)
@@ -40,9 +40,9 @@ PODS:
     - CocoaLumberjack/Core
   - CPAProxy (1.1.0):
     - CocoaAsyncSocket
-  - GCDWebServer (3.3.1):
-    - GCDWebServer/Core (= 3.3.1)
-  - GCDWebServer/Core (3.3.1)
+  - GCDWebServer (3.3):
+    - GCDWebServer/Core (= 3.3)
+  - GCDWebServer/Core (3.3)
   - gtm-http-fetcher (1.1)
   - gtm-oauth2 (1.1):
     - gtm-http-fetcher (~> 1.1)
@@ -324,14 +324,14 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   AFNetworking: cb8d14a848e831097108418f5d49217339d4eb60
   Appirater: e7c0a47fb67ee5041ce8479e6ba960927fb40264
-  ARChromeActivity: 5dcf9b9f09323761f992aff3525cdd777f83609d
+  ARChromeActivity: 821c7849b566f49583987468733a896fee35aa4d
   BBlock: c56d7f72597ffe1634fcdc73836c5c0fed3271be
   BButton: ab0f2ed3b998ae73c5188b57d270d81e4a1eeb27
   ChatSecure-Push-iOS: 80ce8a66f8a43bb99dc0c38609243a3f07edf8ff
   CocoaAsyncSocket: f5783bdedd232d91b89769bc4b5a1580aed518ad
   CocoaLumberjack: 628fca2e88ef06f7cf6817309aa405f325d9a6fa
   CPAProxy: cfd27b25328d6517b1f8570c4f0045838353e888
-  GCDWebServer: 852ed5c1056df2f1ab3b32ec54a81d9730bd227f
+  GCDWebServer: 106463756391d814b6f506927bee0d6a75a0b427
   gtm-http-fetcher: 4e7de79fc9e774b291eae66a240f17b3a5277ec7
   gtm-oauth2: b31c9d7c82f773f7b7094cbb7da8dc7b5968ce16
   HockeySDK-Source: 85233ef10090148e5571f7a0a82deb8213b1691e
