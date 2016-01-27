@@ -49,14 +49,13 @@ public class OTRXMPPRoomMessage: OTRYapDatabaseObject {
 
 extension OTRXMPPRoomMessage:YapDatabaseRelationshipNode {
     //MARK: YapRelationshipNode
-    public func yapDatabaseRelationshipEdges() -> [AnyObject]! {
+    public func yapDatabaseRelationshipEdges() -> [YapDatabaseRelationshipEdge]? {
         
         if let roomID = self.roomUniqueId {
             let relationship = YapDatabaseRelationshipEdge(name: OTRXMPPRoomMessage.roomEdgeName, sourceKey: self.uniqueId, collection: OTRXMPPRoomMessage.collection(), destinationKey: roomID, collection: OTRXMPPRoom.collection(), nodeDeleteRules: YDB_NodeDeleteRules.DeleteSourceIfDestinationDeleted)
             return [relationship]
-        } else {
-            return []
         }
+        return nil
     }
 }
 

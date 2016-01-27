@@ -20,7 +20,7 @@
 #import "OTRMessage.h"
 #import "UIViewController+ChatSecure.h"
 #import "OTRLog.h"
-@import YapDatabase;
+@import YapDatabase.YapDatabaseView;
 
 #import "OTRDatabaseManager.h"
 #import "OTRDatabaseView.h"

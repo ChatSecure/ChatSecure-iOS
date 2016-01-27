@@ -8,6 +8,7 @@
 
 #import "OTRYapDatabaseObject.h"
 @import JSQMessagesViewController;
+@import YapDatabase.YapDatabaseRelationship;
 @class OTRBuddy,YapDatabaseReadTransaction, OTRMediaItem;
 @protocol OTRThreadOwner;
 

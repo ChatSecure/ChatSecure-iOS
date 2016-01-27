@@ -46,6 +46,7 @@
 #import "OTRLanguageManager.h"
 #import "OTRDataHandler.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
+@import YapDatabase.YapDatabaseView;
 
 @import AVFoundation;
 @import MediaPlayer;

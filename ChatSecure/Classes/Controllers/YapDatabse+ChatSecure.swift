@@ -44,8 +44,7 @@ public extension YapDatabase {
     }
     
     public func asyncRegisterUnsentGroupMessagesView(completionQueue:dispatch_queue_t?, completionBlock:((Bool) ->Void)?) {
-        
-        self.asyncRegisterView(YapDatabaseViewGrouping.withObjectBlock({ (collection, key, object) -> String! in
+        self.asyncRegisterView(YapDatabaseViewGrouping.withObjectBlock({ (readTransaction, collection, key, object) -> String! in
             guard let message = object as? OTRXMPPRoomMessage else {
                 return nil
             }
@@ -56,7 +55,7 @@ public extension YapDatabase {
             
             return roomId
             
-        }), sorting: YapDatabaseViewSorting.withObjectBlock({ (group, collection1, key1, object1, collection2, key2, object2) -> NSComparisonResult in
+        }), sorting: YapDatabaseViewSorting.withObjectBlock({ (readTransaction, group, collection1, key1, object1, collection2, key2, object2) -> NSComparisonResult in
             
             guard let date1 = (object1 as? OTRXMPPRoomMessage)?.messageDate else {
                 return .OrderedSame
@@ -72,7 +71,7 @@ public extension YapDatabase {
     
     public func asyncRegisterGroupOccupantsView(completionQueue:dispatch_queue_t?, completionBlock:((Bool) ->Void)?) {
         
-        let grouping = YapDatabaseViewGrouping.withObjectBlock { (collection , key , object ) -> String! in
+        let grouping = YapDatabaseViewGrouping.withObjectBlock { (readTransaction, collection , key , object ) -> String! in
             guard let occupant = object as? OTRXMPPRoomOccupant else {
                 return nil
             }
@@ -84,7 +83,7 @@ public extension YapDatabase {
             return roomId
         }
         
-        let sorting = YapDatabaseViewSorting.withObjectBlock { (group, collection1, key1, object1, collection2, key2, object2) -> NSComparisonResult in
+        let sorting = YapDatabaseViewSorting.withObjectBlock { (readTransaction, group, collection1, key1, object1, collection2, key2, object2) -> NSComparisonResult in
             
             guard let name1 = (object1 as? OTRXMPPRoomOccupant)?.realJID ?? (object1 as? OTRXMPPRoomOccupant)?.jid else {
                 return .OrderedSame
@@ -101,7 +100,7 @@ public extension YapDatabase {
     }
     
     public func asyncRegisterBuddyActionViewName(completionQueue:dispatch_queue_t?, completionBlock:((Bool) ->Void)?) {
-        let grouping = YapDatabaseViewGrouping.withObjectBlock { (collection, key, object) -> String! in
+        let grouping = YapDatabaseViewGrouping.withObjectBlock { (readTransaction, collection, key, object) -> String! in
             guard let buddy = object as? OTRBuddy where buddy.action == OTRBuddyAction.NeedsDelete else {
                 return nil
             }
@@ -109,7 +108,7 @@ public extension YapDatabase {
             return buddy.accountUniqueId
         }
         
-        let sorting = YapDatabaseViewSorting.withKeyBlock { (group, collection1, key1, collection2, key2) -> NSComparisonResult in
+        let sorting = YapDatabaseViewSorting.withKeyBlock { (readTransaction, group, collection1, key1, collection2, key2) -> NSComparisonResult in
             return .OrderedSame
         }
         

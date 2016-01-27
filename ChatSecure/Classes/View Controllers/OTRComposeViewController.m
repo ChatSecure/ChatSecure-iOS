@@ -15,7 +15,8 @@
 #import "OTRDatabaseManager.h"
 #import "OTRDatabaseView.h"
 #import "OTRAccountsManager.h"
-@import YapDatabase;
+@import YapDatabase.YapDatabaseFullTextSearch;
+@import YapDatabase.YapDatabaseView;
 #import "OTRStrings.h"
 #import "OTRBuddyInfoCell.h"
 #import "OTRNewBuddyViewController.h"
@@ -416,7 +417,7 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
     }];
 }
 
-- (void)addBuddy:(NSArray *)accountsAbleToAddBuddies
+- (void)addBuddy:(NSArray * _Nullable)accountsAbleToAddBuddies
 {
     //add buddy cell
     UIViewController *viewController = nil;

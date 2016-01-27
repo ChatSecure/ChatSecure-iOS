@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import YapDatabase
+import YapDatabase.YapDatabaseView
 
 @objc public protocol OTRYapViewHandlerDelegateProtocol:NSObjectProtocol {
     
@@ -117,8 +117,8 @@ public class OTRYapViewHandler: NSObject {
             let row = UInt(indexPath.row)
             let section = UInt(indexPath.section)
             
-            if(row < self.mappings?.numberOfItemsInSection(section)) {
-                object = viewTransaction.objectAtRow(row, inSection: section, withMappings: self.mappings)
+            if let mappings = self.mappings where row < mappings.numberOfItemsInSection(section) {
+                object = viewTransaction.objectAtRow(row, inSection: section, withMappings: mappings)
             }
         }
         

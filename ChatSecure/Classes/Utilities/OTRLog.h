@@ -6,10 +6,10 @@
 //  Copyright (c) 2014 Chris Ballinger. All rights reserved.
 //
 
-#import "DDLog.h"
+@import CocoaLumberjack;
 
 #ifdef DEBUG
-    static int ddLogLevel = LOG_LEVEL_VERBOSE;
+    static int ddLogLevel = DDLogLevelVerbose;
 #else
-    static int ddLogLevel = LOG_LEVEL_OFF;
+    static int ddLogLevel = DDLogLevelOff;
 #endif

@@ -31,12 +31,11 @@ public class OTRXMPPRoomOccupant: OTRYapDatabaseObject, YapDatabaseRelationshipN
     }
     
     //MARK: YapDatabaseRelationshipNode Methods
-    public func yapDatabaseRelationshipEdges() -> [AnyObject]! {
+    public func yapDatabaseRelationshipEdges() -> [YapDatabaseRelationshipEdge]? {
         if let roomID = self.roomUniqueId {
             let relationship = YapDatabaseRelationshipEdge(name: OTRXMPPRoomOccupant.roomEdgeName, sourceKey: self.uniqueId, collection: OTRXMPPRoomOccupant.collection(), destinationKey: roomID, collection: OTRXMPPRoom.collection(), nodeDeleteRules: YDB_NodeDeleteRules.DeleteSourceIfDestinationDeleted)
             return [relationship]
-        } else {
-            return []
         }
+        return nil
     }
 }

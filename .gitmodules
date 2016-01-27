@@ -13,9 +13,6 @@
 [submodule "Submodules/CPAProxy"]
 	path = Submodules/CPAProxy
 	url = git@github.com:ursachec/CPAProxy.git
-[submodule "Submodules/YapDatabase"]
-	path = Submodules/YapDatabase
-	url = git@github.com:chrisballinger/YapDatabase.git
 [submodule "Submodules/IOCipher"]
 	path = Submodules/IOCipher
 	url = git@github.com:ChatSecure/IOCipher-ObjC.git

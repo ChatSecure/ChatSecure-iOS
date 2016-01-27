@@ -11,13 +11,13 @@
 #import "NSXMLElement+XMPP.h"
 #import "XMPPMessage+XEP0045.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
-#import "YapDatabase.h"
 #import "OTRXMPPRoomYapStorage.h"
 #import "XMPPIDTracker.h"
 #import "OTRBuddy.h"
 #import "XMPPMUC.h"
 #import "XMPPRoom.h"
 #import "NSDate+XMPPDateTimeProfiles.h"
+@import YapDatabase.YapDatabaseView;
 
 @interface OTRXMPPRoomManager () <XMPPMUCDelegate, XMPPRoomDelegate, XMPPStreamDelegate, OTRYapViewHandlerDelegateProtocol>
 

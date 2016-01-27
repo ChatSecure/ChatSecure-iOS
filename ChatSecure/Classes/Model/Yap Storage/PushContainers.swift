@@ -8,6 +8,7 @@
 
 import Foundation
 import ChatSecure_Push_iOS
+import YapDatabase.YapDatabaseRelationship
 
 let kDeviceAccountRelationshipEdgeName = "OTRPushDeviceAccountRelationshipEdgeName"
 let kBuddyTokenRelationshipEdgeName = "OTRPushBuddyTokenRelationshipEdgeName"
@@ -29,12 +30,12 @@ public class DeviceContainer: OTRYapDatabaseObject, YapDatabaseRelationshipNode 
         }
     }
     
-    public func yapDatabaseRelationshipEdges() -> [AnyObject]! {
+    public func yapDatabaseRelationshipEdges() -> [YapDatabaseRelationshipEdge]? {
         if let accountKey = self.pushAccountKey {
             let accountEdge = YapDatabaseRelationshipEdge(name: kDeviceAccountRelationshipEdgeName, destinationKey: accountKey, collection: Account.yapCollection(), nodeDeleteRules: YDB_NodeDeleteRules())
             return [accountEdge]
         }
-        return []
+        return nil
     }
 }
 
@@ -55,7 +56,7 @@ public class TokenContainer: OTRYapDatabaseObject, YapDatabaseRelationshipNode {
         }
     }
     
-    public func yapDatabaseRelationshipEdges() -> [AnyObject]! {
+    public func yapDatabaseRelationshipEdges() -> [YapDatabaseRelationshipEdge]? {
         var edges:[YapDatabaseRelationshipEdge] = []
         if let buddyKey = self.buddyKey {
             let buddyEdge = YapDatabaseRelationshipEdge(name: kBuddyTokenRelationshipEdgeName, destinationKey: buddyKey, collection: OTRBuddy.collection(), nodeDeleteRules: YDB_NodeDeleteRules.DeleteSourceIfDestinationDeleted)

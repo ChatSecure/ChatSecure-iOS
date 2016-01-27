@@ -72,7 +72,6 @@ typedef NS_ENUM(int, OTRBuddyAction) {
 - (NSInteger)numberOfUnreadMessagesWithTransaction:(YapDatabaseReadTransaction *)transaction;
 - (OTRMessage *)lastMessageWithTransaction:(YapDatabaseReadTransaction *)transaction;
 - (OTRAccount*)accountWithTransaction:(YapDatabaseReadTransaction *)transaction;
-- (void)setAllMessagesRead:(YapDatabaseReadWriteTransaction *)transaction;
 - (void)updateLastMessageDateWithTransaction:(YapDatabaseReadTransaction *)transaction;
 
 + (instancetype)fetchBuddyForUsername:(NSString *)username
