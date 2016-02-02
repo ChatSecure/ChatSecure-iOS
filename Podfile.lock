@@ -43,8 +43,9 @@ PODS:
     - CocoaLumberjack/Default
   - CPAProxy (1.1.0):
     - CocoaAsyncSocket
-  - GCDWebServer (3.3.2):
-    - GCDWebServer/Core (= 3.3.2)
+  - GCDWebServer/CocoaLumberjack (3.3.2):
+    - CocoaLumberjack (~> 2)
+    - GCDWebServer/Core
   - GCDWebServer/Core (3.3.2)
   - gtm-http-fetcher (1.1)
   - gtm-oauth2 (1.1):
@@ -53,7 +54,7 @@ PODS:
   - IOCipher/common (0.1.0):
     - libsqlfs/SQLCipher
   - IOCipher/GCDWebServer (0.1.0):
-    - GCDWebServer
+    - GCDWebServer/CocoaLumberjack
     - IOCipher/common
   - JSQMessagesViewController (7.2.0):
     - JSQSystemSoundPlayer (~> 2.0.1)
@@ -61,6 +62,9 @@ PODS:
   - JTSImageViewController (1.5.1)
   - JTTargetActionBlock (1.0.0)
   - JVFloatLabeledTextField (1.1.0)
+  - KissXML/Core (5.0.3)
+  - KissXML/libxml_module (5.0.3):
+    - KissXML/Core
   - KVOController (1.0.3)
   - libsqlfs/common (1.3)
   - libsqlfs/SQLCipher (1.3):
@@ -99,19 +103,17 @@ PODS:
   - uservoice-iphone-sdk (3.2.3)
   - VTAcknowledgementsViewController (0.17)
   - XLForm (3.0.2)
-  - XMPPFramework (3.6.4):
-    - XMPPFramework/All (= 3.6.4)
-  - XMPPFramework/All (3.6.4):
-    - XMPPFramework/Authentication
+  - XMPPFramework (3.6.7):
+    - XMPPFramework/All (= 3.6.7)
+  - XMPPFramework/All (3.6.7):
     - XMPPFramework/BandwidthMonitor
-    - XMPPFramework/Categories
+    - XMPPFramework/Core
     - XMPPFramework/CoreDataStorage
+    - XMPPFramework/FileTransfer
     - XMPPFramework/GoogleSharedStatus
     - XMPPFramework/ProcessOne
     - XMPPFramework/Reconnect
     - XMPPFramework/Roster
-    - XMPPFramework/SystemInputActivityMonitor
-    - XMPPFramework/Utilities
     - XMPPFramework/XEP-0009
     - XMPPFramework/XEP-0012
     - XMPPFramework/XEP-0016
@@ -121,6 +123,7 @@ PODS:
     - XMPPFramework/XEP-0060
     - XMPPFramework/XEP-0065
     - XMPPFramework/XEP-0066
+    - XMPPFramework/XEP-0077
     - XMPPFramework/XEP-0082
     - XMPPFramework/XEP-0085
     - XMPPFramework/XEP-0092
@@ -128,6 +131,7 @@ PODS:
     - XMPPFramework/XEP-0106
     - XMPPFramework/XEP-0115
     - XMPPFramework/XEP-0136
+    - XMPPFramework/XEP-0147
     - XMPPFramework/XEP-0153
     - XMPPFramework/XEP-0172
     - XMPPFramework/XEP-0184
@@ -143,104 +147,104 @@ PODS:
     - XMPPFramework/XEP-0308
     - XMPPFramework/XEP-0333
     - XMPPFramework/XEP-0335
-  - XMPPFramework/Authentication (3.6.4):
+    - XMPPFramework/XEP-0352
+  - XMPPFramework/BandwidthMonitor (3.6.7):
     - XMPPFramework/Core
-  - XMPPFramework/BandwidthMonitor (3.6.4):
-    - XMPPFramework/Core
-  - XMPPFramework/Categories (3.6.4):
-    - XMPPFramework/Core
-  - XMPPFramework/Core (3.6.4):
-    - CocoaAsyncSocket (~> 7.4)
+  - XMPPFramework/Core (3.6.7):
+    - CocoaAsyncSocket (~> 7.4.1)
     - CocoaLumberjack (~> 2.0)
+    - KissXML/libxml_module (~> 5.0.3)
     - ProxyKit/Client (~> 1.0)
-    - XMPPFramework/KissXML
-  - XMPPFramework/CoreDataStorage (3.6.4):
+  - XMPPFramework/CoreDataStorage (3.6.7):
     - XMPPFramework/Core
-  - XMPPFramework/GoogleSharedStatus (3.6.4):
+  - XMPPFramework/FileTransfer (3.6.7):
     - XMPPFramework/Core
-  - XMPPFramework/KissXML (3.6.4)
-  - XMPPFramework/ProcessOne (3.6.4):
+  - XMPPFramework/GoogleSharedStatus (3.6.7):
     - XMPPFramework/Core
-  - XMPPFramework/Reconnect (3.6.4):
+  - XMPPFramework/ProcessOne (3.6.7):
     - XMPPFramework/Core
-  - XMPPFramework/Roster (3.6.4):
+  - XMPPFramework/Reconnect (3.6.7):
+    - XMPPFramework/Core
+  - XMPPFramework/Roster (3.6.7):
+    - XMPPFramework/Core
+    - XMPPFramework/CoreDataStorage
+  - XMPPFramework/XEP-0009 (3.6.7):
+    - XMPPFramework/Core
+  - XMPPFramework/XEP-0012 (3.6.7):
+    - XMPPFramework/Core
+  - XMPPFramework/XEP-0016 (3.6.7):
+    - XMPPFramework/Core
+  - XMPPFramework/XEP-0045 (3.6.7):
     - XMPPFramework/Core
     - XMPPFramework/CoreDataStorage
     - XMPPFramework/XEP-0203
-  - XMPPFramework/Utilities (3.6.4):
-    - XMPPFramework/Core
-  - XMPPFramework/XEP-0009 (3.6.4):
-    - XMPPFramework/Core
-  - XMPPFramework/XEP-0012 (3.6.4):
-    - XMPPFramework/Core
-  - XMPPFramework/XEP-0016 (3.6.4):
-    - XMPPFramework/Core
-  - XMPPFramework/XEP-0045 (3.6.4):
-    - XMPPFramework/Core
-    - XMPPFramework/CoreDataStorage
-    - XMPPFramework/XEP-0203
-  - XMPPFramework/XEP-0054 (3.6.4):
+  - XMPPFramework/XEP-0054 (3.6.7):
     - XMPPFramework/Core
     - XMPPFramework/Roster
-  - XMPPFramework/XEP-0059 (3.6.4):
+  - XMPPFramework/XEP-0059 (3.6.7):
     - XMPPFramework/Core
-  - XMPPFramework/XEP-0060 (3.6.4):
+  - XMPPFramework/XEP-0060 (3.6.7):
     - XMPPFramework/Core
-  - XMPPFramework/XEP-0065 (3.6.4):
+  - XMPPFramework/XEP-0065 (3.6.7):
     - XMPPFramework/Core
-  - XMPPFramework/XEP-0066 (3.6.4):
+  - XMPPFramework/XEP-0066 (3.6.7):
     - XMPPFramework/Core
-  - XMPPFramework/XEP-0082 (3.6.4):
+  - XMPPFramework/XEP-0077 (3.6.7):
     - XMPPFramework/Core
-  - XMPPFramework/XEP-0085 (3.6.4):
+  - XMPPFramework/XEP-0082 (3.6.7):
     - XMPPFramework/Core
-  - XMPPFramework/XEP-0092 (3.6.4):
+  - XMPPFramework/XEP-0085 (3.6.7):
     - XMPPFramework/Core
-  - XMPPFramework/XEP-0100 (3.6.4):
+  - XMPPFramework/XEP-0092 (3.6.7):
     - XMPPFramework/Core
-  - XMPPFramework/XEP-0106 (3.6.4):
+  - XMPPFramework/XEP-0100 (3.6.7):
     - XMPPFramework/Core
-  - XMPPFramework/XEP-0115 (3.6.4):
+  - XMPPFramework/XEP-0106 (3.6.7):
+    - XMPPFramework/Core
+  - XMPPFramework/XEP-0115 (3.6.7):
     - XMPPFramework/Core
     - XMPPFramework/CoreDataStorage
-  - XMPPFramework/XEP-0136 (3.6.4):
-    - XMPPFramework/Core
+  - XMPPFramework/XEP-0136 (3.6.7):
     - XMPPFramework/CoreDataStorage
     - XMPPFramework/XEP-0085
     - XMPPFramework/XEP-0203
-  - XMPPFramework/XEP-0153 (3.6.4):
+  - XMPPFramework/XEP-0147 (3.6.7):
+    - XMPPFramework/Core
+  - XMPPFramework/XEP-0153 (3.6.7):
     - XMPPFramework/Core
     - XMPPFramework/XEP-0054
-  - XMPPFramework/XEP-0172 (3.6.4):
+  - XMPPFramework/XEP-0172 (3.6.7):
     - XMPPFramework/Core
-  - XMPPFramework/XEP-0184 (3.6.4):
+  - XMPPFramework/XEP-0184 (3.6.7):
     - XMPPFramework/Core
-  - XMPPFramework/XEP-0191 (3.6.4):
+  - XMPPFramework/XEP-0191 (3.6.7):
     - XMPPFramework/Core
-  - XMPPFramework/XEP-0198 (3.6.4):
+  - XMPPFramework/XEP-0198 (3.6.7):
     - XMPPFramework/Core
-  - XMPPFramework/XEP-0199 (3.6.4):
+  - XMPPFramework/XEP-0199 (3.6.7):
     - XMPPFramework/Core
-  - XMPPFramework/XEP-0202 (3.6.4):
-    - XMPPFramework/Core
-    - XMPPFramework/XEP-0082
-  - XMPPFramework/XEP-0203 (3.6.4):
+  - XMPPFramework/XEP-0202 (3.6.7):
     - XMPPFramework/Core
     - XMPPFramework/XEP-0082
-  - XMPPFramework/XEP-0223 (3.6.4):
+  - XMPPFramework/XEP-0203 (3.6.7):
     - XMPPFramework/Core
-  - XMPPFramework/XEP-0224 (3.6.4):
+    - XMPPFramework/XEP-0082
+  - XMPPFramework/XEP-0223 (3.6.7):
     - XMPPFramework/Core
-  - XMPPFramework/XEP-0280 (3.6.4):
+  - XMPPFramework/XEP-0224 (3.6.7):
     - XMPPFramework/Core
-  - XMPPFramework/XEP-0297 (3.6.4):
+  - XMPPFramework/XEP-0280 (3.6.7):
+    - XMPPFramework/Core
+  - XMPPFramework/XEP-0297 (3.6.7):
     - XMPPFramework/Core
     - XMPPFramework/XEP-0203
-  - XMPPFramework/XEP-0308 (3.6.4):
+  - XMPPFramework/XEP-0308 (3.6.7):
     - XMPPFramework/Core
-  - XMPPFramework/XEP-0333 (3.6.4):
+  - XMPPFramework/XEP-0333 (3.6.7):
     - XMPPFramework/Core
-  - XMPPFramework/XEP-0335 (3.6.4):
+  - XMPPFramework/XEP-0335 (3.6.7):
+    - XMPPFramework/Core
+  - XMPPFramework/XEP-0352 (3.6.7):
     - XMPPFramework/Core
   - YapDatabase/SQLCipher (2.8.1):
     - YapDatabase/SQLCipher/Core (= 2.8.1)
@@ -375,12 +379,13 @@ SPEC CHECKSUMS:
   gtm-http-fetcher: 4e7de79fc9e774b291eae66a240f17b3a5277ec7
   gtm-oauth2: b31c9d7c82f773f7b7094cbb7da8dc7b5968ce16
   HockeySDK-Source: 85233ef10090148e5571f7a0a82deb8213b1691e
-  IOCipher: 2bcc56103fbdd9cd9139a5b030ebb97ed6fbc4b9
+  IOCipher: 4cb4cd9a5998f69f4578a51501987dc5951ff092
   JSQMessagesViewController: 73cab48aa92fc2d512f3b6724f3425cc47a19eb5
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
   JTSImageViewController: 1f8ce1cc93dab0d0af8e53badeea7528560cfec9
   JTTargetActionBlock: 6e9201e5fa88651deb354c91b7c9c6487a1abe55
   JVFloatLabeledTextField: ea4a3d8387ddd43724c472bb2b8ab39b79af05d4
+  KissXML: d19dd6dc65e0dc721ba92b3077b8ebdd240f1c1e
   KVOController: 9fd8f0343670994e4b6f9f0b31f5a45663f3e1cf
   libsqlfs: 179e4fb40b8c07fd0ee7933ec4c0b9f4815cbd0e
   Mantle: 299966b00759634931699f69cb6a30b9239b944d
@@ -400,7 +405,7 @@ SPEC CHECKSUMS:
   uservoice-iphone-sdk: 349d9ef36d3c43939d28390b9e86bb32b65fe983
   VTAcknowledgementsViewController: 6056f5f5e5ed995bbf0581bed6ddd29355ca9a80
   XLForm: 7817ce29f3f259186e837bb7309ac7e5b7e9b883
-  XMPPFramework: 8dc2dc87349f2eb7fac1128f7fb8ca5824fa27da
+  XMPPFramework: 38ff8dffab0627c46e3903653383f769938f70f6
   YapDatabase: 861c720d5850a59f9e5c0bad0fd95334012b9dc9
   ZXingObjC: bf15b3814f7a105b6d99f47da2333c93a063650a
 
