@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		3A971C2C5AB08E34FDD18676 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCD1F8E85C658C8D3865B584 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		589E6F7F3D24B2D94700C450 /* Pods_ChatSecureCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57C511FD4101836B708F1B3A /* Pods_ChatSecureCore.framework */; };
 		631098B11BD6FED000494A47 /* YapDatabse+ChatSecure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631098B01BD6FED000494A47 /* YapDatabse+ChatSecure.swift */; };
 		631E1E9F1C583B6900E263CD /* ChatSecureCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9227C2A1BA7952100B5E1D0 /* ChatSecureCore.framework */; };
 		633107201A16D1A300C17BAE /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 633106661A16D1A300C17BAE /* LaunchScreen.xib */; };
@@ -430,7 +429,6 @@
 
 /* Begin PBXFileReference section */
 		154CBBDFA16BDE9C28017B1F /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
-		57C511FD4101836B708F1B3A /* Pods_ChatSecureCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ChatSecureCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		63039E961B0D43FE007C9978 /* OTRXMPPServerListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPServerListViewController.h; sourceTree = "<group>"; };
 		63039E971B0D43FE007C9978 /* OTRXMPPServerListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPServerListViewController.m; sourceTree = "<group>"; };
 		631098B01BD6FED000494A47 /* YapDatabse+ChatSecure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "YapDatabse+ChatSecure.swift"; sourceTree = "<group>"; };
@@ -793,7 +791,6 @@
 		63FABC901A41218E009BF681 /* NSString+ChatSecure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+ChatSecure.m"; sourceTree = "<group>"; };
 		954B60A022C05FDE4DCFEF6E /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		B977533C20F88A4A840303F9 /* Pods.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.beta.xcconfig; path = "Pods/Target Support Files/Pods/Pods.beta.xcconfig"; sourceTree = "<group>"; };
-		C5E2D690A0F99B1590B9C0B8 /* Pods_ChatSecureCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ChatSecureCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CCD1F8E85C658C8D3865B584 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D913A56C1B747B62006C5ACD /* Onboarding.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Onboarding.storyboard; path = Interface/Onboarding.storyboard; sourceTree = "<group>"; };
 		D913A56E1B7481AD006C5ACD /* OTRWelcomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OTRWelcomeViewController.swift; path = Onboarding/OTRWelcomeViewController.swift; sourceTree = "<group>"; };
@@ -863,7 +860,6 @@
 			files = (
 				D9AE3A201BA8CCFE00255537 /* OTRAssets.framework in Frameworks */,
 				8FE09CE9A16DB3D068D19753 /* Pods.framework in Frameworks */,
-				589E6F7F3D24B2D94700C450 /* Pods_ChatSecureCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1534,7 +1530,6 @@
 			isa = PBXGroup;
 			children = (
 				CCD1F8E85C658C8D3865B584 /* Pods.framework */,
-				C5E2D690A0F99B1590B9C0B8 /* Pods_ChatSecureCore.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
