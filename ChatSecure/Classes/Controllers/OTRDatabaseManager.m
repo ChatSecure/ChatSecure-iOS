@@ -8,18 +8,13 @@
 
 #import "OTRDatabaseManager.h"
 
-#import "OTRManagedAccount.h"
 #import "OTREncryptionManager.h"
 #import "OTRLog.h"
 #import "OTRDatabaseView.h"
 #import <SSKeychain/SSKeychain.h>
 #import "OTRConstants.h"
-
-#import "OTRManagedOscarAccount.h"
 #import "OTRXMPPAccount.h"
 #import "OTRXMPPTorAccount.h"
-#import "OTRManagedGoogleAccount.h"
-#import "OTRManagedFacebookAccount.h"
 #import "OTRGoogleOAuthXMPPAccount.h"
 #import "OTRAccount.h"
 #import "OTRMessage.h"
@@ -27,6 +22,7 @@
 #import "IOCipher.h"
 #import "NSFileManager+ChatSecure.h"
 @import OTRAssets;
+@import YapDatabase.YapDatabaseSecondaryIndex;
 #import "OTRLanguageManager.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 
@@ -78,56 +74,6 @@ NSString *const OTRYapDatabaseUnreadMessageSecondaryIndex = @"OTRYapDatbaseUnrea
         DDLogError(@"Error starting media server: %@",error);
     }
     return success;
-}
-
-- (OTRAccount *)accountWithCoreDataAccount:(OTRManagedAccount *)managedAccount
-{
-    NSDictionary *accountDictionary = [managedAccount propertiesDictionary];
-    
-    if ([accountDictionary[kOTRClassKey] isEqualToString:NSStringFromClass([OTRManagedOscarAccount class])]) {
-        return nil;
-    }
-    
-    OTRXMPPAccount *account = (OTRXMPPAccount *)[OTRAccount accountForAccountType:[self accountTypeWithCoreDataClass:accountDictionary[kOTRClassKey]]];
-    
-    account.username = accountDictionary[OTRManagedAccountAttributes.username];
-    account.autologin = [accountDictionary[OTRManagedAccountAttributes.autologin] boolValue];
-    account.rememberPassword = [accountDictionary[OTRManagedAccountAttributes.rememberPassword] boolValue];
-    account.displayName = accountDictionary[OTRManagedAccountAttributes.displayName];
-    account.domain = accountDictionary[OTRManagedXMPPAccountAttributes.domain];
-    account.port = [accountDictionary[OTRManagedXMPPAccountAttributes.port] intValue];
-    
-    ////// transfer saved passwords //////
-    
-    if (account.accountType == OTRAccountTypeGoogleTalk) {
-        NSError *error = nil;
-        SSKeychainQuery * keychainQuery = [[SSKeychainQuery alloc] init];
-        keychainQuery.service = kOTRServiceName;
-        keychainQuery.account = accountDictionary[OTRManagedAccountAttributes.uniqueIdentifier];
-        [keychainQuery fetch:&error];
-        NSDictionary *dictionary = (NSDictionary *)keychainQuery.passwordObject;
-        
-        ((OTROAuthXMPPAccount *)account).oAuthTokenDictionary = dictionary;
-    }
-    else if (account.rememberPassword) {
-        NSError *error = nil;
-        NSString *password = [SSKeychain passwordForService:kOTRServiceName account:accountDictionary[OTRManagedAccountAttributes.uniqueIdentifier] error:&error];
-        
-        account.password = password;
-    }
-    
-    return account;
-}
-
-- (OTRAccountType)accountTypeWithCoreDataClass:(NSString *)coreDataClass
-{
-    if ([coreDataClass isEqualToString:NSStringFromClass([OTRManagedXMPPAccount class])]) {
-        return OTRAccountTypeJabber;
-    }
-    else if ([coreDataClass isEqualToString:NSStringFromClass([OTRManagedGoogleAccount class])]) {
-        return OTRAccountTypeGoogleTalk;
-    }
-    return OTRAccountTypeNone;
 }
 
 - (BOOL)setupYapDatabaseWithName:(NSString *)name
@@ -244,73 +190,6 @@ NSString *const OTRYapDatabaseUnreadMessageSecondaryIndex = @"OTRYapDatbaseUnrea
     }
 }
 
-+ (BOOL)migrateLegacyStore:(NSURL *)storeURL destinationStore:(NSURL*)destinationURL {
-    NSURL *mom1 = [[NSBundle mainBundle] URLForResource:@"ChatSecure" withExtension:@"mom" subdirectory:@"ChatSecure.momd"];
-    NSURL *mom2 = [[NSBundle mainBundle] URLForResource:@"ChatSecure 2" withExtension:@"mom" subdirectory:@"ChatSecure.momd"];
-    NSManagedObjectModel *version1Model = [[NSManagedObjectModel alloc] initWithContentsOfURL:mom1];
-    NSManagedObjectModel *version2Model = [[NSManagedObjectModel alloc] initWithContentsOfURL:mom2];
-    NSArray *xmppMoms = [self legacyXMPPModels];
-    NSUInteger modelCount = xmppMoms.count + 1;
-    NSMutableArray *inputModels = [NSMutableArray arrayWithCapacity:modelCount];
-    NSMutableArray *outputModels = [NSMutableArray arrayWithCapacity:modelCount];
-    [inputModels addObjectsFromArray:xmppMoms];
-    [outputModels addObjectsFromArray:xmppMoms];
-    [inputModels addObject:version1Model];
-    [outputModels addObject:version2Model];
-    
-    NSManagedObjectModel *inputModel = [NSManagedObjectModel modelByMergingModels:inputModels];
-    
-    return [self migrateLegacyStore:storeURL destinationStore:destinationURL sourceModel:inputModel destinationModel:version2Model error:NULL];
-}
-+ (BOOL)isManagedObjectModel:(NSManagedObjectModel *)managedObjectModel compatibleWithStoreAtUrl:(NSURL *)storeUrl {
-    
-    NSError * error = nil;
-    NSDictionary *sourceMetadata = [NSPersistentStoreCoordinator metadataForPersistentStoreOfType:NSSQLiteStoreType URL:storeUrl error:&error];
-    if (!sourceMetadata) {
-        return NO;
-    }
-    return [managedObjectModel isConfiguration:nil compatibleWithStoreMetadata:sourceMetadata];
-}
-
-+ (NSArray*) legacyXMPPModels {
-    NSURL *xmppRosterURL = [[NSBundle mainBundle] URLForResource:@"XMPPRoster" withExtension:@"mom"];
-    NSURL *xmppCapsURL = [[NSBundle mainBundle] URLForResource:@"XMPPCapabilities" withExtension:@"mom"];
-    NSURL *xmppRoomURL = [[NSBundle mainBundle] URLForResource:@"XMPPRoom" withExtension:@"mom" subdirectory:@"XMPPRoom.momd"];
-    NSURL *xmppRoomHybridURL = [[NSBundle mainBundle] URLForResource:@"XMPPRoomHybrid" withExtension:@"mom" subdirectory:@"XMPPRoomHybrid.momd"];
-    NSURL *xmppvCardURL = [[NSBundle mainBundle] URLForResource:@"XMPPvCard" withExtension:@"mom" subdirectory:@"XMPPvCard.momd"];
-    NSURL *xmppMessageArchivingURL = [[NSBundle mainBundle] URLForResource:@"XMPPMessageArchiving" withExtension:@"mom" subdirectory:@"XMPPMessageArchiving.momd"];
-    NSArray *momUrls = @[xmppRosterURL, xmppCapsURL, xmppRoomURL, xmppRoomHybridURL, xmppvCardURL, xmppMessageArchivingURL];
-    NSMutableArray *xmppMoms = [NSMutableArray arrayWithCapacity:momUrls.count];
-    for (NSURL *url in momUrls) {
-        NSManagedObjectModel *model = [[NSManagedObjectModel alloc] initWithContentsOfURL:url];
-        [xmppMoms addObject:model];
-    }
-    return xmppMoms;
-}
-
-+ (BOOL)migrateLegacyStore:(NSURL *)storeURL destinationStore:(NSURL *)dstStoreURL sourceModel:(NSManagedObjectModel*)sourceModel destinationModel:(NSManagedObjectModel*)destinationModel error:(NSError **)outError {
-    
-    // Try to get an inferred mapping model.
-    NSMappingModel *mappingModel =
-    [NSMappingModel inferredMappingModelForSourceModel:sourceModel
-                                      destinationModel:destinationModel error:outError];
-    
-    // If Core Data cannot create an inferred mapping model, return NO.
-    if (!mappingModel) {
-        return NO;
-    }
-    
-    // Create a migration manager to perform the migration.
-    NSMigrationManager *manager = [[NSMigrationManager alloc]
-                                   initWithSourceModel:sourceModel destinationModel:destinationModel];
-    
-    BOOL success = [manager migrateStoreFromURL:storeURL type:NSSQLiteStoreType
-                                        options:nil withMappingModel:mappingModel toDestinationURL:dstStoreURL
-                                destinationType:NSSQLiteStoreType destinationOptions:nil error:outError];
-    
-    return success;
-}
-
 + (NSString *)yapDatabaseDirectory {
     NSString *applicationSupportDirectory = [NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES) lastObject];
     NSString *applicationName = [[[NSBundle mainBundle] infoDictionary] valueForKey:(NSString *)kCFBundleNameKey];
@@ -338,21 +217,6 @@ NSString *const OTRYapDatabaseUnreadMessageSecondaryIndex = @"OTRYapDatbaseUnrea
         [SSKeychain deletePasswordForService:kOTRServiceName account:OTRYapDatabasePassphraseAccountName];
         self.inMemoryPassphrase = passphrase;
     }
-}
-
-- (BOOL)changePassphrase:(NSString*)newPassphrase remember:(BOOL)rememeber {
-    // Temporarily grab old password in case change fails
-    NSString *oldPassword = [self databasePassphrase];
-    NSError *error = nil;
-    [self setDatabasePassphrase:newPassphrase remember:rememeber error:&error];
-    
-    BOOL success = [self.database rekeyDatabase];
-    if (!success) {
-        [self setDatabasePassphrase:oldPassword remember:rememeber error:&error];
-    } else {
-       success = [[OTRMediaFileManager sharedInstance].ioCipher changePassword:newPassphrase oldPassword:oldPassword];
-    }
-    return success;
 }
 
 - (BOOL)hasPassphrase

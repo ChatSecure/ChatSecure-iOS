@@ -33,8 +33,6 @@
 #import "XMPPMessage+XEP_0280.h"
 #import "NSXMLElement+XEP_0203.h"
 #import "XMPPMessageDeliveryReceipts.h"
-#import "OTRStrings.h"
-#import "OTRXMPPManagedPresenceSubscriptionRequest.h"
 #import "OTRYapDatabaseRosterStorage.h"
 
 #import "OTRLog.h"

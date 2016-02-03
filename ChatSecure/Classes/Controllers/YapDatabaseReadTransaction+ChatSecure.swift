@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import YapDatabase
+import YapDatabase.YapDatabaseSecondaryIndex
 
 public extension YapDatabaseReadTransaction {
     
@@ -48,7 +48,7 @@ public extension YapDatabaseReadTransaction {
         }
         
         let queryString = "Where \(OTRYapDatabaseUnreadMessageSecondaryIndex) = 0"
-        let query = YapDatabaseQuery(string: queryString, parameters: nil)
+        let query = YapDatabaseQuery(string: queryString, parameters: [])
         
         var count:UInt = 0
         secondaryIndexTransaction.getNumberOfRows(&count, matchingQuery: query)

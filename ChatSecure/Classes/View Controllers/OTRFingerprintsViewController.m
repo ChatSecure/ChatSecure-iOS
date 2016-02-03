@@ -13,6 +13,7 @@
 #import "OTRDatabaseManager.h"
 #import "OTRDatabaseView.h"
 #import "OTRLanguageManager.h"
+@import YapDatabase.YapDatabaseView;
 
 @interface OTRFingerprintsViewController ()
 

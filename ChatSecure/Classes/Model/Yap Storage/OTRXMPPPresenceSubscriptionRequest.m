@@ -8,7 +8,7 @@
 
 #import "OTRXMPPPresenceSubscriptionRequest.h"
 #import "OTRAccount.h"
-@import YapDatabase;
+@import YapDatabase.YapDatabaseRelationship;
 #import "OTRDatabaseManager.h"
 #import "OTRXMPPAccount.h"
 
@@ -45,7 +45,9 @@ const struct OTRXMPPPresenceSubscriptionRequestEdges OTRXMPPPresenceSubscription
 + (instancetype)fetchPresenceSubscriptionRequestWithJID:(NSString *)jid accontUniqueId:(NSString *)accountUniqueId transaction:(YapDatabaseReadTransaction *)transaction
 {
     __block id request = nil;
-    [[transaction ext:OTRYapDatabaseRelationshipName] enumerateEdgesWithName:OTRXMPPPresenceSubscriptionRequestEdges.account destinationKey:accountUniqueId collection:[OTRAccount collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
+    YapDatabaseRelationshipTransaction *relationshipTransactoin = [transaction ext:OTRYapDatabaseRelationshipName];
+    
+    [relationshipTransactoin enumerateEdgesWithName:OTRXMPPPresenceSubscriptionRequestEdges.account destinationKey:accountUniqueId collection:[OTRAccount collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
         OTRXMPPPresenceSubscriptionRequest *edgeRequest = [OTRXMPPPresenceSubscriptionRequest fetchObjectWithUniqueID:edge.sourceKey transaction:transaction];
         if ([edgeRequest.jid isEqualToString:jid]) {
             request = edgeRequest;

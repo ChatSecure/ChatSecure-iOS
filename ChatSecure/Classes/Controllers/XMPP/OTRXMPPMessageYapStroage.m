@@ -77,7 +77,7 @@
             
             if ([xmppMessage isErrorMessage]) {
                 NSError *error = [xmppMessage errorMessage];
-                DDLogCWarn(@"XMPP Error: %@",error);
+                DDLogWarn(@"XMPP Error: %@",error);
             }
             
             [self handleChatState:xmppMessage username:username stream:stream transaction:transaction];

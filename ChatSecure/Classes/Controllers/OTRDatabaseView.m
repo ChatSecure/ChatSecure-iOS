@@ -7,7 +7,9 @@
 //
 
 #import "OTRDatabaseView.h"
-@import YapDatabase;
+@import YapDatabase.YapDatabaseView;
+@import YapDatabase.YapDatabaseFullTextSearch;
+@import YapDatabase.YapDatabaseFilteredView;
 #import "OTRDatabaseManager.h"
 #import "OTRBuddy.h"
 #import "OTRAccount.h"
@@ -46,7 +48,7 @@ NSString *OTRPushAccountGroup = @"Account";
         return YES;
     }
     
-    YapDatabaseViewGrouping *viewGrouping = [YapDatabaseViewGrouping withObjectBlock:^NSString *(NSString *collection, NSString *key, id object) {
+    YapDatabaseViewGrouping *viewGrouping = [YapDatabaseViewGrouping withObjectBlock:^NSString *(YapDatabaseReadTransaction *transaction, NSString *collection, NSString *key, id object) {
         if ([object conformsToProtocol:@protocol(OTRThreadOwner)]) {
             if ([object isKindOfClass:[OTRBuddy class]])
             {
@@ -61,7 +63,7 @@ NSString *OTRPushAccountGroup = @"Account";
         return nil; // exclude from view
     }];
     
-    YapDatabaseViewSorting *viewSorting = [YapDatabaseViewSorting withObjectBlock:^NSComparisonResult(NSString *group, NSString *collection1, NSString *key1, id object1, NSString *collection2, NSString *key2, id object2) {
+    YapDatabaseViewSorting *viewSorting = [YapDatabaseViewSorting withObjectBlock:^NSComparisonResult(YapDatabaseReadTransaction *transaction, NSString *group, NSString *collection1, NSString *key1, id object1, NSString *collection2, NSString *key2, id object2) {
         if ([group isEqualToString:OTRConversationGroup]) {
             if ([object1 conformsToProtocol:@protocol(OTRThreadOwner)] && [object2 conformsToProtocol:@protocol(OTRThreadOwner)]) {
                 id <OTRThreadOwner> thread1 = object1;
@@ -96,7 +98,7 @@ NSString *OTRPushAccountGroup = @"Account";
         return YES;
     }
     
-    YapDatabaseViewGrouping *viewGrouping = [YapDatabaseViewGrouping withKeyBlock:^NSString *(NSString *collection, NSString *key) {
+    YapDatabaseViewGrouping *viewGrouping = [YapDatabaseViewGrouping withKeyBlock:^NSString *(YapDatabaseReadTransaction *transaction, NSString *collection, NSString *key) {
         if ([collection isEqualToString:[OTRAccount collection]])
         {
             return OTRAllAccountGroup;
@@ -105,7 +107,7 @@ NSString *OTRPushAccountGroup = @"Account";
         return nil;
     }];
     
-    YapDatabaseViewSorting *viewSorting = [YapDatabaseViewSorting withObjectBlock:^NSComparisonResult(NSString *group, NSString *collection1, NSString *key1, id object1, NSString *collection2, NSString *key2, id object2) {
+    YapDatabaseViewSorting *viewSorting = [YapDatabaseViewSorting withObjectBlock:^NSComparisonResult(YapDatabaseReadTransaction *transaction, NSString *group, NSString *collection1, NSString *key1, id object1, NSString *collection2, NSString *key2, id object2) {
         if ([group isEqualToString:OTRAllAccountGroup]) {
             if ([object1 isKindOfClass:[OTRAccount class]] && [object2 isKindOfClass:[OTRAccount class]]) {
                 OTRAccount *account1 = (OTRAccount *)object1;
@@ -135,7 +137,7 @@ NSString *OTRPushAccountGroup = @"Account";
         return YES;
     }
     
-    YapDatabaseViewGrouping *viewGrouping = [YapDatabaseViewGrouping withObjectBlock:^NSString *(NSString *collection, NSString *key, id object) {
+    YapDatabaseViewGrouping *viewGrouping = [YapDatabaseViewGrouping withObjectBlock:^NSString *(YapDatabaseReadTransaction *transaction, NSString *collection, NSString *key, id object) {
         if ([object conformsToProtocol:@protocol(OTRMesssageProtocol)])
         {
             return [((id <OTRMesssageProtocol>)object) threadId];
@@ -143,7 +145,7 @@ NSString *OTRPushAccountGroup = @"Account";
         return nil;
     }];
     
-    YapDatabaseViewSorting *viewSorting = [YapDatabaseViewSorting withObjectBlock:^NSComparisonResult(NSString *group, NSString *collection1, NSString *key1, id object1, NSString *collection2, NSString *key2, id object2) {
+    YapDatabaseViewSorting *viewSorting = [YapDatabaseViewSorting withObjectBlock:^NSComparisonResult(YapDatabaseReadTransaction *transaction, NSString *group, NSString *collection1, NSString *key1, id object1, NSString *collection2, NSString *key2, id object2) {
         if ([object1 conformsToProtocol:@protocol(OTRMesssageProtocol)] && [object2 conformsToProtocol:@protocol(OTRMesssageProtocol)]) {
             id <OTRMesssageProtocol> message1 = (id <OTRMesssageProtocol>)object1;
             id <OTRMesssageProtocol> message2 = (id <OTRMesssageProtocol>)object2;
@@ -204,14 +206,14 @@ NSString *OTRPushAccountGroup = @"Account";
         return YES;
     }
     
-    YapDatabaseViewGrouping *viewGrouping = [YapDatabaseViewGrouping withObjectBlock:^NSString *(NSString *collection, NSString *key, id object) {
+    YapDatabaseViewGrouping *viewGrouping = [YapDatabaseViewGrouping withObjectBlock:^NSString *(YapDatabaseReadTransaction *transaction, NSString *collection, NSString *key, id object) {
         if ([object isKindOfClass:[OTRBuddy class]]) {
             return OTRBuddyGroup;
         }
         return nil;
     }];
     
-    YapDatabaseViewSorting *viewSorting = [YapDatabaseViewSorting withObjectBlock:^NSComparisonResult(NSString *group, NSString *collection1, NSString *key1, id object1, NSString *collection2, NSString *key2, id object2) {
+    YapDatabaseViewSorting *viewSorting = [YapDatabaseViewSorting withObjectBlock:^NSComparisonResult(YapDatabaseReadTransaction *transaction, NSString *group, NSString *collection1, NSString *key1, id object1, NSString *collection2, NSString *key2, id object2) {
         
         OTRBuddy *buddy1 = (OTRBuddy *)object1;
         OTRBuddy *buddy2 = (OTRBuddy *)object2;
@@ -258,7 +260,7 @@ NSString *OTRPushAccountGroup = @"Account";
         return YES;
     }
     
-    YapDatabaseViewGrouping *viewGrouping = [YapDatabaseViewGrouping withKeyBlock:^NSString *(NSString *collection, NSString *key) {
+    YapDatabaseViewGrouping *viewGrouping = [YapDatabaseViewGrouping withKeyBlock:^NSString *(YapDatabaseReadTransaction *transaction, NSString *collection, NSString *key) {
         if ([collection isEqualToString:[OTRXMPPPresenceSubscriptionRequest collection]])
         {
             return OTRAllPresenceSubscriptionRequestGroup;
@@ -267,7 +269,7 @@ NSString *OTRPushAccountGroup = @"Account";
         return nil;
     }];
     
-    YapDatabaseViewSorting *viewSorting = [YapDatabaseViewSorting withObjectBlock:^NSComparisonResult(NSString *group, NSString *collection1, NSString *key1, id object1, NSString *collection2, NSString *key2, id object2) {
+    YapDatabaseViewSorting *viewSorting = [YapDatabaseViewSorting withObjectBlock:^NSComparisonResult(YapDatabaseReadTransaction *transaction, NSString *group, NSString *collection1, NSString *key1, id object1, NSString *collection2, NSString *key2, id object2) {
         
         OTRXMPPPresenceSubscriptionRequest *request1 = (OTRXMPPPresenceSubscriptionRequest *)object1;
         OTRXMPPPresenceSubscriptionRequest *request2 = (OTRXMPPPresenceSubscriptionRequest *)object2;
@@ -294,7 +296,7 @@ NSString *OTRPushAccountGroup = @"Account";
 + (BOOL)registerUnreadMessagesView
 {
     
-    YapDatabaseViewFiltering *viewFiltering = [YapDatabaseViewFiltering withObjectBlock:^BOOL(NSString *group, NSString *collection, NSString *key, id object) {
+    YapDatabaseViewFiltering *viewFiltering = [YapDatabaseViewFiltering withObjectBlock:^BOOL(YapDatabaseReadTransaction *transaction, NSString *group, NSString *collection, NSString *key, id object) {
         
         if ([object isKindOfClass:[OTRMessage class]]) {
             return !((OTRMessage *)object).isRead;

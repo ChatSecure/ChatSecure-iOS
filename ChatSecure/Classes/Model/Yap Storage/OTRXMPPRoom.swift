@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import YapDatabase
+import YapDatabase.YapDatabaseRelationship
 
 public class OTRXMPPRoom: OTRYapDatabaseObject {
     
@@ -95,7 +95,11 @@ extension OTRXMPPRoom:OTRThreadOwner {
     }
     
     public func setAllMessagesAsReadInTransaction(transaction: YapDatabaseReadWriteTransaction) {
-        transaction.ext(OTRYapDatabaseRelationshipName)?.enumerateEdgesWithName(OTRXMPPRoomMessage.roomEdgeName, destinationKey: self.uniqueId, collection: self.threadCollection(), usingBlock: { (edge, stop) -> Void in
+        guard let relationshipTransaction = transaction.ext(OTRYapDatabaseRelationshipName) as? YapDatabaseRelationshipTransaction else {
+            return
+        }
+        
+        relationshipTransaction.enumerateEdgesWithName(OTRXMPPRoomMessage.roomEdgeName, destinationKey: self.uniqueId, collection: self.threadCollection(), usingBlock: { (edge, stop) -> Void in
             
             if let message = transaction.objectForKey(edge.sourceKey, inCollection: edge.sourceCollection) as? OTRXMPPRoomMessage {
                 message.read = true
