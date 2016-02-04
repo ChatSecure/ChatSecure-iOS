@@ -208,7 +208,13 @@ NSString *OTRPushAccountGroup = @"Account";
     
     YapDatabaseViewGrouping *viewGrouping = [YapDatabaseViewGrouping withObjectBlock:^NSString *(YapDatabaseReadTransaction *transaction, NSString *collection, NSString *key, id object) {
         if ([object isKindOfClass:[OTRBuddy class]]) {
-            return OTRBuddyGroup;
+            
+            //Checking to see if the buddy username is equal to the account username in order to remove 'self' buddy
+            OTRBuddy *buddy = (OTRBuddy *)object;
+            OTRAccount *account = [buddy accountWithTransaction:transaction];
+            if (![account.username isEqualToString:buddy.username]) {
+                return OTRBuddyGroup;
+            }
         }
         return nil;
     }];
@@ -247,7 +253,7 @@ NSString *OTRPushAccountGroup = @"Account";
     
     YapDatabaseView *view = [[YapDatabaseView alloc] initWithGrouping:viewGrouping
                                                               sorting:viewSorting
-                                                           versionTag:@"1"
+                                                           versionTag:@"2"
                                                               options:options];
     
     return [[OTRDatabaseManager sharedInstance].database registerExtension:view withName:OTRAllBuddiesDatabaseViewExtensionName];
