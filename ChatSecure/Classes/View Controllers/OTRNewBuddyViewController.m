@@ -71,11 +71,7 @@
     
     UIBarButtonItem *qrButton = [[UIBarButtonItem alloc] initWithTitle:QR_CODE_STRING style:UIBarButtonItemStylePlain target:self action:@selector(qrButtonPressed:)];
     UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(doneButtonPressed:)];
-    if ([QRCodeReader supportsMetadataObjectTypes:@[AVMetadataObjectTypeQRCode]]) {
-        self.navigationItem.rightBarButtonItems = @[doneButton, qrButton];
-    } else {
-        self.navigationItem.rightBarButtonItem = doneButton;
-    }
+    self.navigationItem.rightBarButtonItems = @[doneButton, qrButton];
     
     self.accountNameTextField = [[UITextField alloc] initWithFrame:CGRectZero];
     self.accountNameTextField.placeholder = XMPP_USERNAME_EXAMPLE_STRING;
@@ -245,6 +241,10 @@
 }
 
 - (void) qrButtonPressed:(id)sender {
+    if (![QRCodeReader supportsMetadataObjectTypes:@[AVMetadataObjectTypeQRCode]]) {
+        return;
+    }
+    
     QRCodeReaderViewController *reader = [[QRCodeReaderViewController alloc] init];
     reader.modalPresentationStyle = UIModalPresentationFormSheet;
     reader.delegate = self;
