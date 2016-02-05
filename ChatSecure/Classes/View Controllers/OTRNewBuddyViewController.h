@@ -22,7 +22,7 @@
 @property (nonatomic, strong)OTRAccount * account;
 @property (nonatomic, strong)UITextField * accountNameTextField;
 @property (nonatomic, strong)UITextField * displayNameTextField;
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (nonatomic, strong) IBOutlet UITableView *tableView;
 
 @property (nonatomic, weak) id<OTRNewBuddyViewControllerDelegate> delegate;
 
