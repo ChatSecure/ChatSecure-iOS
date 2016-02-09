@@ -94,6 +94,7 @@ PODS:
     - CocoaLumberjack (~> 2.0)
   - PureLayout (3.0.1)
   - QRCodeReaderViewController (3.5.2)
+  - Reachability (3.2)
   - SQLCipher/common (3.3.1)
   - SQLCipher/fts (3.3.1):
     - SQLCipher/common
@@ -322,6 +323,7 @@ DEPENDENCIES:
   - ProxyKit/Client (from `Submodules/ProxyKit/ProxyKit.podspec`)
   - PureLayout (~> 3.0)
   - QRCodeReaderViewController (~> 3.5.0)
+  - Reachability (~> 3)
   - SQLCipher/fts (from `Podspecs/SQLCipher.podspec.json`)
   - SSKeychain (~> 1.2)
   - TTTAttributedLabel (~> 1.10)
@@ -398,6 +400,7 @@ SPEC CHECKSUMS:
   ProxyKit: 2dac991bddade9b4b5c24228a91e1611213fb60d
   PureLayout: f35f5384c9c4e4479df041dbe33ad7577b71ddfb
   QRCodeReaderViewController: f20275985c41ae551099641493ab364691d9113e
+  Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   SQLCipher: 46ea06f972292f622aeb2d3f960a573a964d378f
   SSKeychain: 04c4ec40f4c3deda524e269bc76e5f30e638a174
   TTTAttributedLabel: 0a2ac7b2dd726d32a070dafb01446026b11e624f

@@ -93,6 +93,7 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
     
     //////// YapDatabase Connection /////////
     self.viewHandler = [[OTRYapViewHandler alloc] initWithDatabaseConnection:[[OTRDatabaseManager sharedInstance] newConnection]];
+    self.viewHandler.delegate = self;
     [self.viewHandler setup:OTRAllBuddiesDatabaseViewExtensionName groups:@[OTRBuddyGroup]];
 }
 
@@ -412,8 +413,13 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
     __block NSString *key = buddy.uniqueId;
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
         OTRBuddy *dbBuddy = [OTRBuddy fetchObjectWithUniqueID:key transaction:transaction];
-        dbBuddy.action = OTRBuddyActionNeedsDelete;
-        [dbBuddy saveWithTransaction:transaction];
+        if (dbBuddy) {
+            BuddyAction *action = [[BuddyAction alloc] init];
+            action.buddy = dbBuddy;
+            action.action = BuddyActionTypeDelete;
+            [action saveWithTransaction:transaction];
+            [dbBuddy removeWithTransaction:transaction];
+        }
     }];
 }
 
@@ -441,7 +447,7 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
 
 #pragma - mark YapDatabaseViewUpdate
 
-- (void)didRecieveChanges:(OTRYapViewHandler *)handler sectionChanges:(NSArray<YapDatabaseViewSectionChange *> *)sectionChanges rowChanges:(NSArray<YapDatabaseViewRowChange *> *)rowChanges
+- (void)didReceiveChanges:(OTRYapViewHandler *)handler sectionChanges:(NSArray<YapDatabaseViewSectionChange *> *)sectionChanges rowChanges:(NSArray<YapDatabaseViewRowChange *> *)rowChanges
 {
     if ([sectionChanges count] == 0 && [rowChanges count] == 0)
     {

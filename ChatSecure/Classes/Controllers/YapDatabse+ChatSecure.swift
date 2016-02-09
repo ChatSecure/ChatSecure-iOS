@@ -99,22 +99,6 @@ public extension YapDatabase {
         self.asyncRegisterView(grouping, sorting: sorting, version: "1", whiteList: [OTRXMPPRoomOccupant.collection()], name: .GroupOccupantsViewName, completionQueue: completionQueue, completionBlock: completionBlock)
     }
     
-    public func asyncRegisterBuddyActionViewName(completionQueue:dispatch_queue_t?, completionBlock:((Bool) ->Void)?) {
-        let grouping = YapDatabaseViewGrouping.withObjectBlock { (readTransaction, collection, key, object) -> String! in
-            guard let buddy = object as? OTRBuddy where buddy.action == OTRBuddyAction.NeedsDelete else {
-                return nil
-            }
-            
-            return buddy.accountUniqueId
-        }
-        
-        let sorting = YapDatabaseViewSorting.withKeyBlock { (readTransaction, group, collection1, key1, collection2, key2) -> NSComparisonResult in
-            return .OrderedSame
-        }
-        
-        self.asyncRegisterView(grouping, sorting: sorting, version: "1", whiteList: [OTRBuddy.collection()], name: .BuddyDeleteActionViewName, completionQueue: completionQueue, completionBlock: completionBlock)
-    }
-    
     //Needed for Obj-C
     public class func viewName(name:DatabaseViewNames) -> String {
         return name.name()

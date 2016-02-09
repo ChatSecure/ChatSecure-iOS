@@ -38,6 +38,7 @@ NSString *const OTRYapDatabaseUnreadMessageSecondaryIndex = @"OTRYapDatbaseUnrea
 @property (nonatomic, strong) YapDatabase *database;
 @property (nonatomic, strong) YapDatabaseConnection *readOnlyDatabaseConnection;
 @property (nonatomic, strong) YapDatabaseConnection *readWriteDatabaseConnection;
+@property (nonatomic, strong) YapDatabaseActionManager *actionManager;
 @property (nonatomic, strong) NSString *inMemoryPassphrase;
 
 @end
@@ -122,6 +123,9 @@ NSString *const OTRYapDatabaseUnreadMessageSecondaryIndex = @"OTRYapDatbaseUnrea
     if (success) success = [OTRDatabaseView registerAllSubscriptionRequestsView];
     if (success) success = [OTRDatabaseView registerUnreadMessagesView];
     if (success) success = [self setupSecondaryIndexes];
+    
+    self.actionManager = [[YapDatabaseActionManager alloc] init];
+    [self.actionManager asyncRegisterWithDatabase:self.database usingName:@"OTRYapDatabaseActionManager" completionBlock:nil];
     
     if (self.database && success) {
         return YES;

@@ -48,3 +48,6 @@ FOUNDATION_EXPORT const unsigned char ChatSecureCoreVersionString[];
 #import <ChatSecureCore/OTRBuddy.h>
 #import <ChatSecureCore/OTRLanguageManager.h>
 #import <ChatSecureCore/NSURL+ChatSecure.h>
+#import <ChatSecureCore/YapActionable.h>
+#import <ChatSecureCore/YapDatabaseActionManager.h>
+#import <ChatSecureCore/OTRProtocolManager.h>

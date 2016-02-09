@@ -44,7 +44,6 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
         self.status = OTRThreadStatusOffline;
         self.chatState = kOTRChatStateUnknown;
         self.lastSentChatState = kOTRChatStateUnknown;
-        self.action = OTRBuddyActionNone;
     }
     return self;
 }
