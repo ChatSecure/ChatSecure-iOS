@@ -47,6 +47,8 @@ pod 'ARChromeActivity', '~> 1.0'
 pod 'CocoaAsyncSocket', '~> 7.4'
 pod 'JTSImageViewController', '~> 1.4'
 pod 'KVOController', '~> 1.0'
+#Reachability only needed for YapActionItems
+pod 'Reachability', '~> 3'
 # pod 'XLForm', '~> 3.0' # Need to use bundle fork
 # pod 'ParkedTextField', '~> 0.1' # Need to use Swift 2.0 fork
 

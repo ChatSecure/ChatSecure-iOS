@@ -71,7 +71,6 @@
     [self.databaseConnection.database asyncRegisterGroupOccupantsView:nil completionBlock:nil];
     
     
-    
     XMPPRoom *room = [self.rooms objectForKey:jid.bare];
     NSString* accountId = self.xmppStream.tag;
     NSString *databaseRoomKey = [OTRXMPPRoom createUniqueId:self.xmppStream.tag jid:jid.bare];
@@ -310,7 +309,7 @@
 
 #pragma - mark OTRYapViewHandlerDelegateProtocol Methods
 
-- (void)didRecieveChanges:(OTRYapViewHandler *)handler sectionChanges:(NSArray<YapDatabaseViewSectionChange *> *)sectionChanges rowChanges:(NSArray<YapDatabaseViewRowChange *> *)rowChanges
+- (void)didReceiveChanges:(OTRYapViewHandler *)handler sectionChanges:(NSArray<YapDatabaseViewSectionChange *> *)sectionChanges rowChanges:(NSArray<YapDatabaseViewRowChange *> *)rowChanges
 {
     [self handleNewViewItems:handler];
 }

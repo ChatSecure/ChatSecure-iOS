@@ -23,7 +23,6 @@
 - (void)setDatabaseConnection:(YapDatabaseConnection *)databaseConnection
 {
     _databaseConnection = databaseConnection;
-    [self.databaseConnection.database asyncRegisterBuddyActionViewName:nil completionBlock:nil];
 }
 
 - (BOOL)activate:(XMPPStream *)aXmppStream
