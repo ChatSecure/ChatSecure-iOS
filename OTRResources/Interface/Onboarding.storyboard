@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="u63-jC-sYl">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="u63-jC-sYl">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -41,8 +41,8 @@
                                     <constraint firstAttribute="height" constant="249" id="a9S-9w-qFB"/>
                                 </constraints>
                             </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RzG-Jv-y0g">
-                                <rect key="frame" x="205" y="413" width="191" height="38"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RzG-Jv-y0g">
+                                <rect key="frame" x="203.5" y="413" width="194" height="38"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="21"/>
                                 <state key="normal" title="Create New Account">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -51,8 +51,8 @@
                                     <segue destination="ZvQ-dC-bHm" kind="show" identifier="createNewAccountSegue" id="BF6-Uh-6zt"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VS9-AF-nlm">
-                                <rect key="frame" x="39" y="550" width="148" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VS9-AF-nlm">
+                                <rect key="frame" x="43" y="550" width="146" height="30"/>
                                 <state key="normal" title="Add Existing Account">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -60,8 +60,8 @@
                                     <segue destination="kXx-ta-MsF" kind="show" id="1BI-0V-RC1"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KXC-AD-yXL">
-                                <rect key="frame" x="530" y="550" width="31" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KXC-AD-yXL">
+                                <rect key="frame" x="527" y="550" width="30" height="30"/>
                                 <state key="normal" title="Skip">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -119,6 +119,81 @@
             </objects>
             <point key="canvasLocation" x="469" y="516"/>
         </scene>
+        <!--Enable Push-->
+        <scene sceneID="ytl-yY-IXw">
+            <objects>
+                <viewController storyboardIdentifier="enablePush" title="Enable Push" id="3du-AF-GcQ" customClass="EnablePushViewController" customModule="ChatSecureCore" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="hut-wH-ziW"/>
+                        <viewControllerLayoutGuide type="bottom" id="02O-Hn-a8E"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="uuE-MF-oGJ">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="J3U-aD-4Vu">
+                                <rect key="frame" x="250" y="493" width="101" height="26"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                <state key="normal" title="Enable Push"/>
+                                <connections>
+                                    <action selector="enablePushPressed:" destination="3du-AF-GcQ" eventType="touchUpInside" id="wPW-VZ-acu"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="i8G-bh-AN7">
+                                <rect key="frame" x="550" y="550" width="30" height="30"/>
+                                <state key="normal" title="Skip"/>
+                                <connections>
+                                    <action selector="skipButtonPressed:" destination="3du-AF-GcQ" eventType="touchUpInside" id="W2J-VJ-LFv"/>
+                                </connections>
+                            </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="PushOnboarding" translatesAutoresizingMaskIntoConstraints="NO" id="kk6-yK-Mn4">
+                                <rect key="frame" x="164" y="42" width="230" height="230"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="230" id="X7X-8n-ejF"/>
+                                    <constraint firstAttribute="height" constant="230" id="l8U-T3-c9I"/>
+                                </constraints>
+                            </imageView>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QUe-lg-gJ2">
+                                <rect key="frame" x="168.5" y="287" width="283" height="198"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="198" id="3tJ-xn-20o"/>
+                                    <constraint firstAttribute="width" constant="283" id="K1M-Mc-jMV"/>
+                                </constraints>
+                                <string key="text">ChatSecure can now automatically notify compatible offline contacts that you'd like to establish a secure conversation. To protect your privacy, these notifications currently do not contain any content.</string>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="02O-Hn-a8E" firstAttribute="top" secondItem="i8G-bh-AN7" secondAttribute="bottom" constant="20" id="3Oa-L9-k3n"/>
+                            <constraint firstItem="J3U-aD-4Vu" firstAttribute="centerX" secondItem="uuE-MF-oGJ" secondAttribute="centerX" id="3yk-kp-6DU"/>
+                            <constraint firstItem="i8G-bh-AN7" firstAttribute="trailing" secondItem="uuE-MF-oGJ" secondAttribute="trailingMargin" id="Bsr-PI-cY8"/>
+                            <constraint firstItem="QUe-lg-gJ2" firstAttribute="top" secondItem="kk6-yK-Mn4" secondAttribute="bottom" constant="15" id="LQl-On-So8"/>
+                            <constraint firstItem="QUe-lg-gJ2" firstAttribute="centerX" secondItem="uuE-MF-oGJ" secondAttribute="centerX" id="bYT-DC-rxj"/>
+                            <constraint firstItem="J3U-aD-4Vu" firstAttribute="top" secondItem="QUe-lg-gJ2" secondAttribute="bottom" constant="8" id="bvO-6i-ie2"/>
+                            <constraint firstItem="02O-Hn-a8E" firstAttribute="top" secondItem="J3U-aD-4Vu" secondAttribute="bottom" constant="81" id="m8D-e5-GmH"/>
+                            <constraint firstItem="QUe-lg-gJ2" firstAttribute="centerX" secondItem="uuE-MF-oGJ" secondAttribute="centerX" constant="10" id="nVp-lF-nqz"/>
+                            <constraint firstItem="kk6-yK-Mn4" firstAttribute="centerY" secondItem="uuE-MF-oGJ" secondAttribute="centerY" id="qxd-9a-Cmc"/>
+                            <constraint firstItem="kk6-yK-Mn4" firstAttribute="top" secondItem="hut-wH-ziW" secondAttribute="bottom" constant="22" id="vt0-8o-vxB"/>
+                            <constraint firstItem="kk6-yK-Mn4" firstAttribute="centerX" secondItem="uuE-MF-oGJ" secondAttribute="centerX" constant="-21" id="yMn-5G-7ue"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="qxd-9a-Cmc"/>
+                                <exclude reference="bYT-DC-rxj"/>
+                            </mask>
+                        </variation>
+                    </view>
+                    <connections>
+                        <outlet property="enablePushButton" destination="J3U-aD-4Vu" id="IKM-SQ-uLW"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="EKU-8h-9fw" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="249" y="1251"/>
+        </scene>
         <!--Existing Account-->
         <scene sceneID="Jmc-QW-jvy">
             <objects>
@@ -149,6 +224,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="PushOnboarding" width="293" height="293"/>
         <image name="chatsecure_logo_transparent" width="132" height="175"/>
     </resources>
 </document>

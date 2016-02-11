@@ -51,12 +51,16 @@ NSString *const kOTRSettingUserAgreedToEULA            = @"kOTRSettingUserAgreed
 NSString *const kOTRSettingAccountsKey                 = @"kOTRSettingAccountsKey";
 NSString *const kOTRSettingsValueUpdatedNotification = @"kOTRSettingsValueUpdatedNotification";
 
+NSString *const kOTRPushEnabledKey = @"kOTRPushEnabledKey";
 
 NSString *const kOTRAppVersionKey     = @"kOTRAppVersionKey";
 
 NSString *const OTRArchiverKey = @"OTRArchiverKey";
 
 NSString *const kOTRErrorDomain = @"com.chatsecure";
+
+
+NSString *const OTRUserNotificationsChanged = @"OTRUserNotificationsChanged";
 
 NSString *const OTRFailedRemoteNotificationRegistration = @"OTRFailedRemoteNotificationRegistration";
 NSString *const OTRSuccessfulRemoteNotificationRegistration = @"OTRSuccessfulRemoteNotificationRegistration";

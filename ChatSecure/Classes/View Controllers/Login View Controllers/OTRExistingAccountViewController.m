@@ -101,7 +101,6 @@
     [accountArray addObject:[OTRWelcomeAccountInfo accountInfoWithText:@"XMPP" image:[UIImage imageNamed:@"xmpp" inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil] didSelectBlock:^{
         OTRXMPPAccount *xmppAccount = [[OTRXMPPAccount alloc] initWithAccountType:OTRAccountTypeJabber];
         OTRBaseLoginViewController *loginViewController = [OTRBaseLoginViewController loginViewControllerForAccount:xmppAccount];
-        loginViewController.completionBlock = self.completionBlock;
         loginViewController.account = xmppAccount;
         [self.navigationController pushViewController:loginViewController animated:YES];
     }]];
@@ -119,7 +118,6 @@
                 googleAccount.oAuthTokenDictionary = auth.parameters;
                 
                 OTRBaseLoginViewController *loginViewController = [[OTRBaseLoginViewController alloc] initWithForm:[OTRXLFormCreator formForAccount:googleAccount] style:UITableViewStyleGrouped];
-                loginViewController.completionBlock = self.completionBlock;
                 loginViewController.account = googleAccount;
                 OTRGoolgeOAuthLoginHandler *loginHandler = [[OTRGoolgeOAuthLoginHandler alloc] init];
                 loginViewController.createLoginHandler = loginHandler;

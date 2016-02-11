@@ -21,6 +21,7 @@
 #import "OTRXMPPAccount.h"
 @import OTRAssets;
 #import "OTRLanguageManager.h"
+#import "OTRInviteViewController.h"
 
 @interface OTRBaseLoginViewController ()
 @end
@@ -83,14 +84,29 @@
                 [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
                     [self.account saveWithTransaction:transaction];
                 }];
-                if (self.completionBlock) {
-                    self.completionBlock(account, nil);
+                
+                // If push isn't enabled, prompt to enable it
+                if ([PushController getPushPreference] == PushPreferenceEnabled) {
+                    [self pushInviteViewController];
                 } else {
-                    [self dismissViewControllerAnimated:YES completion:nil];
+                    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Onboarding" bundle:[OTRAssets resourcesBundle]];
+                    EnablePushViewController *pushVC = [storyboard instantiateViewControllerWithIdentifier:@"enablePush"];
+                    if (pushVC) {
+                        pushVC.account = account;
+                        [self.navigationController pushViewController:pushVC animated:YES];
+                    } else {
+                        [self pushInviteViewController];
+                    }
                 }
             }
         }];
     }
+}
+
+- (void) pushInviteViewController {
+    OTRInviteViewController *inviteVC = [[OTRInviteViewController alloc] init];
+    inviteVC.account = self.account;
+    [self.navigationController pushViewController:inviteVC animated:YES];
 }
 
 - (BOOL)validForm

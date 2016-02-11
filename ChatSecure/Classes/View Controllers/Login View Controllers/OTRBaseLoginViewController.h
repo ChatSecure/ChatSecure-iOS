@@ -18,9 +18,6 @@
 
 @property (nonatomic, strong) id<OTRBaseLoginViewControllerHandlerProtocol> createLoginHandler;
 
-/** if completionBlock is set, you must dismiss VC manually */
-@property (nonatomic, copy) void (^completionBlock)(OTRAccount *account, NSError *error);
-
 /**
  Creates an OTRBaseLoginViewController with correct form and login handler
  

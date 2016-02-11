@@ -147,19 +147,20 @@ static CGFloat kOTRConversationCellHeight = 80.0;
             hasAccounts = YES;
         }
     }];
+    UIStoryboard *onboardingStoryboard = [UIStoryboard storyboardWithName:@"Onboarding" bundle:[OTRAssets resourcesBundle]];
+
     //If there is any number of accounts launch into default conversation view otherwise onboarding time
     if (!hasAccounts) {
-        UIStoryboard *onboardingStoryboard = [UIStoryboard storyboardWithName:@"Onboarding" bundle:[OTRAssets resourcesBundle]];
         UINavigationController *welcomeNavController = [onboardingStoryboard instantiateInitialViewController];
         OTRWelcomeViewController *welcomeViewController = welcomeNavController.viewControllers[0];
-        __weak id welcomeVC = welcomeViewController;
-        [welcomeViewController setCompletionBlock:^(OTRAccount *account, NSError *error) {
-            if (account) {
-                [OTRInviteViewController showInviteFromVC:welcomeVC withAccount:account];
-            }
-        }];
         UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:welcomeViewController];
         [self presentViewController:nav animated:YES completion:nil];
+        self.hasPresentedOnboarding = YES;
+    } else if ([PushController getPushPreference] == PushPreferenceUndefined) {
+        EnablePushViewController *pushVC = [onboardingStoryboard instantiateViewControllerWithIdentifier:@"enablePush"];
+        if (pushVC) {
+            [self presentViewController:pushVC animated:YES completion:nil];
+        }
         self.hasPresentedOnboarding = YES;
     }
 }
@@ -187,7 +188,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [OTRNotificationPermissions checkPermissions];
+    
     [self showOnboardingIfNeeded];
 }
 

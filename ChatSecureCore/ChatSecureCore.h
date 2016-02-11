@@ -48,3 +48,5 @@ FOUNDATION_EXPORT const unsigned char ChatSecureCoreVersionString[];
 #import <ChatSecureCore/OTRBuddy.h>
 #import <ChatSecureCore/OTRLanguageManager.h>
 #import <ChatSecureCore/NSURL+ChatSecure.h>
+#import <ChatSecureCore/OTRInviteViewController.h>
+#import <ChatSecureCore/OTRNotificationPermissions.h>

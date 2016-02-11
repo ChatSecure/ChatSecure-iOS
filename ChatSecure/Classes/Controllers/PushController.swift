@@ -15,6 +15,12 @@ import YapDatabase
     func receiveRemoteNotification(notification:[NSObject:AnyObject], completion:(buddy:OTRBuddy?, error:NSError?) -> Void)
 }
 
+@objc public enum PushPreference: Int {
+    case Undefined
+    case Disabled
+    case Enabled
+}
+
 /** 
     The purpose of this class is to tie together the api client and the data store, YapDatabase.
     It also provides some helper methods that makes dealing with the api easier
@@ -410,7 +416,34 @@ public class PushController: NSObject, OTRPushTLVHandlerDelegate, PushController
         }
     }
     
+    //MARK: Push Preferences
     
+    public static func getPushPreference() -> PushPreference {
+        guard let value = NSUserDefaults.standardUserDefaults().valueForKey(kOTRPushEnabledKey)?.boolValue else {
+            return PushPreference.Undefined
+        }
+        if value {
+            return PushPreference.Enabled
+        } else {
+            return PushPreference.Disabled
+        }
+    }
+    
+    public static func setPushPreference(preference: PushPreference) {
+        var bool = false
+        if preference == .Enabled {
+            bool = true
+        }
+        NSUserDefaults.standardUserDefaults().setBool(bool, forKey: kOTRPushEnabledKey)
+        NSUserDefaults.standardUserDefaults().synchronize()
+    }
+    
+    //MARK: Utility
+    
+    public static func registerForPushNotifications() {
+        let notificationSettings = UIUserNotificationSettings(forTypes: [.Badge, .Alert, .Sound], categories: nil)
+        UIApplication.sharedApplication().registerUserNotificationSettings(notificationSettings)
+    }
     
     
 }
