@@ -173,19 +173,20 @@ public class PushController: NSObject, OTRPushTLVHandlerDelegate, PushController
                 return;
             }
             
-            guard let currentCount = self?.storage.unusedTokenStoreMinimum() else {
+            guard let minimumCount = self?.storage.unusedTokenStoreMinimum() else {
                 return;
             }
             
-            if unusedTokens < currentCount  {
-                tokensToCreate = currentCount
+            if unusedTokens < minimumCount  {
+                tokensToCreate = minimumCount
             }
             
+            //If we have less than minimumCount unused tokens left we need to refetch another batch.
             var error:NSError? = nil
             if tokensToCreate > 0 {
                 
                 let group = dispatch_group_create()
-                for _ in 0...tokensToCreate {
+                for _ in 1...tokensToCreate {
                     dispatch_group_enter(group)
                     self?.fetchNewPushToken(id, name: nil, completion: { (success, err) -> Void in
                         if err != nil {
