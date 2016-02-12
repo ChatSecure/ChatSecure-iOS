@@ -39,20 +39,13 @@ NSString *const kOTRXLFormGenerateSecurePasswordTag               = @"kOTRXLForm
 {
     XLFormDescriptor *descriptor = [self formForAccountType:account.accountType createAccount:NO];
     
-    NSDictionary *username = [OTRUsernameCell createRowDictionaryValueForUsername:account.username domain:nil];
-    [[descriptor formRowWithTag:kOTRXLFormUsernameTextFieldTag] setValue:username];
+    [[descriptor formRowWithTag:kOTRXLFormUsernameTextFieldTag] setValue:account.username];
     [[descriptor formRowWithTag:kOTRXLFormPasswordTextFieldTag] setValue:account.password];
     [[descriptor formRowWithTag:kOTRXLFormRememberPasswordSwitchTag] setValue:@(account.rememberPassword)];
     [[descriptor formRowWithTag:kOTRXLFormLoginAutomaticallySwitchTag] setValue:@(account.autologin)];
     
     if([account isKindOfClass:[OTRXMPPAccount class]]) {
         OTRXMPPAccount *xmppAccount = (OTRXMPPAccount *)account;
-        NSString *jidWithoutDomain = account.username;
-        if ([jidWithoutDomain containsString:@"@"]) {
-            jidWithoutDomain = [[jidWithoutDomain componentsSeparatedByString:@"@"] firstObject];
-        }
-        NSDictionary *username = [OTRUsernameCell createRowDictionaryValueForUsername:jidWithoutDomain domain:xmppAccount.domain];
-        [[descriptor formRowWithTag:kOTRXLFormUsernameTextFieldTag] setValue:username];
         [[descriptor formRowWithTag:kOTRXLFormHostnameTextFieldTag] setValue:xmppAccount.domain];
         [[descriptor formRowWithTag:kOTRXLFormPortTextFieldTag] setValue:@(xmppAccount.port)];
         [[descriptor formRowWithTag:kOTRXLFormResourceTextFieldTag] setValue:xmppAccount.resource];
@@ -115,7 +108,7 @@ NSString *const kOTRXLFormGenerateSecurePasswordTag               = @"kOTRXLForm
         switch (accountType) {
             case OTRAccountTypeJabber:
             case OTRAccountTypeXMPPTor:{
-                [basicSection addFormRow:[self usernameTextFieldRowDescriptorWithValue:nil]];
+                [basicSection addFormRow:[self jidTextFieldRowDescriptorWithValue:nil]];
                 [basicSection addFormRow:[self passwordTextFieldRowDescriptorWithValue:nil]];
                 [basicSection addFormRow:[self rememberPasswordRowDescriptorWithValue:YES]];
                 [basicSection addFormRow:[self loginAutomaticallyRowDescriptorWithValue:NO]];
@@ -127,7 +120,7 @@ NSString *const kOTRXLFormGenerateSecurePasswordTag               = @"kOTRXLForm
                 break;
             }
             case OTRAccountTypeGoogleTalk: {
-                XLFormRowDescriptor *usernameRow = [self usernameTextFieldRowDescriptorWithValue:nil];
+                XLFormRowDescriptor *usernameRow = [self jidTextFieldRowDescriptorWithValue:nil];
                 usernameRow.disabled = @(YES);
                 
                 [basicSection addFormRow:usernameRow];
@@ -159,10 +152,20 @@ NSString *const kOTRXLFormGenerateSecurePasswordTag               = @"kOTRXLForm
     return textFieldDescriptor;
 }
 
++ (XLFormRowDescriptor *)jidTextFieldRowDescriptorWithValue:(NSString *)value
+{
+    XLFormRowDescriptor *usernameDescriptor = [self textfieldFormDescriptorType:XLFormRowDescriptorTypeEmail withTag:kOTRXLFormUsernameTextFieldTag title:USERNAME_STRING placeHolder:XMPP_USERNAME_EXAMPLE_STRING value:value];
+    usernameDescriptor.value = value;
+    usernameDescriptor.required = YES;
+    [usernameDescriptor addValidator:[XLFormValidator emailValidatorLong]];
+    return usernameDescriptor;
+}
+
 + (XLFormRowDescriptor *)usernameTextFieldRowDescriptorWithValue:(NSString *)value
 {
     XLFormRowDescriptor *usernameDescriptor = [XLFormRowDescriptor formRowDescriptorWithTag:kOTRXLFormUsernameTextFieldTag rowType:[OTRUsernameCell kOTRFormRowDescriptorTypeUsername] title:USERNAME_STRING];
     usernameDescriptor.value = value;
+    usernameDescriptor.required = YES;
     [usernameDescriptor addValidator:[[OTRUsernameValidator alloc] init]];
     return usernameDescriptor;
 }

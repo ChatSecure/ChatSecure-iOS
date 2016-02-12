@@ -194,6 +194,10 @@
         if (error) {
             UIAlertAction * infoButton = [UIAlertAction actionWithTitle:INFO_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                 NSString * errorDescriptionString = [NSString stringWithFormat:@"%@ : %@",[error domain],[error localizedDescription]];
+                NSString *xmlErrorString = error.userInfo[OTRXMPPXMLErrorKey];
+                if (xmlErrorString) {
+                    errorDescriptionString = [errorDescriptionString stringByAppendingFormat:@"\n\n%@", xmlErrorString];
+                }
                 
                 if ([[error domain] isEqualToString:@"kCFStreamErrorDomainSSL"]) {
                     NSString * sslString = [OTRXMPPError errorStringWithSSLStatus:(OSStatus)error.code];
