@@ -46,13 +46,20 @@
 - (OTRXMPPAccount *)moveValues:(XLFormDescriptor *)form intoAccount:(OTRXMPPAccount *)account
 {
     NSString *nickname = [[form formRowWithTag:kOTRXLFormNicknameTextFieldTag] value];
-    NSDictionary *usernameValue = [[form formRowWithTag:kOTRXLFormUsernameTextFieldTag] value];
-    NSString *username = usernameValue[OTRUsernameCell.UsernameKey];
-    if (!username.length) {
-        // strip whitespace and make nickname lowercase
-        // TODO - replace with hexified Ed25519 identity key
-        username = [nickname stringByReplacingOccurrencesOfString:@" " withString:@""];
-        username = [username lowercaseString];
+    id usernameValue = [[form formRowWithTag:kOTRXLFormUsernameTextFieldTag] value];
+    
+    NSString *username = nil;
+    if ([usernameValue isKindOfClass:[NSDictionary class]]) {
+        username = usernameValue[OTRUsernameCell.UsernameKey];
+        if (!username.length) {
+            // strip whitespace and make nickname lowercase
+            // TODO - replace with hexified Ed25519 identity key
+            username = [nickname stringByReplacingOccurrencesOfString:@" " withString:@""];
+            username = [username lowercaseString];
+        }
+    } else if ([usernameValue isKindOfClass:[NSString class]]) {
+        NSArray *components = [usernameValue componentsSeparatedByString:@"@"];
+        username = [components firstObject];
     }
     account.username = username;
     
@@ -101,11 +108,16 @@
     
     NSString *domain = account.domain;
     if (![domain length]) {
-        NSDictionary *usernameValue = [[form formRowWithTag:kOTRXLFormUsernameTextFieldTag] value];
-        domain = usernameValue[OTRUsernameCell.DomainKey];
+        id usernameValue = [[form formRowWithTag:kOTRXLFormUsernameTextFieldTag] value];
+        if ([usernameValue isKindOfClass:[NSDictionary class]]) {
+            domain = usernameValue[OTRUsernameCell.DomainKey];
+        } else if ([usernameValue isKindOfClass:[NSString class]]) {
+            NSArray *components = [usernameValue componentsSeparatedByString:@"@"];
+            domain = [components lastObject];
+        }
     }
     
-    XMPPJID *jid = [XMPPJID jidWithUser:account.username domain:domain resource:account.resource];
+    XMPPJID *jid = [XMPPJID jidWithUser:username domain:domain resource:account.resource];
     if (!jid) {
         NSParameterAssert(jid != nil);
         NSLog(@"Error creating JID from account values!");
