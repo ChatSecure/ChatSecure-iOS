@@ -383,6 +383,7 @@
 		D9AE3A331BA8D9AB00255537 /* OTRConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 633105EF1A16D1A300C17BAE /* OTRConstants.m */; };
 		D9AE3A341BA8DAB600255537 /* OTRLanguageManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331051B1A16D1A300C17BAE /* OTRLanguageManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D9AE3A351BA8DAB600255537 /* OTRLanguageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331051C1A16D1A300C17BAE /* OTRLanguageManager.m */; };
+		D9CBBC581C642BAA005CD715 /* EnablePushViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9CBBC571C642BAA005CD715 /* EnablePushViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -855,6 +856,7 @@
 		D9BE65451B6A08ED002D4136 /* XMPPServerInfoCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = XMPPServerInfoCell.xib; path = Interface/XMPPServerInfoCell.xib; sourceTree = "<group>"; };
 		D9C6E69D1B7148EF00572273 /* OTRUsernameCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = OTRUsernameCell.xib; path = Interface/OTRUsernameCell.xib; sourceTree = "<group>"; };
 		D9C6E6A01B71575300572273 /* OTRUsernameCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRUsernameCell.swift; sourceTree = "<group>"; };
+		D9CBBC571C642BAA005CD715 /* EnablePushViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EnablePushViewController.swift; path = "ChatSecure/Classes/View Controllers/Onboarding/EnablePushViewController.swift"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1351,6 +1353,7 @@
 		638D2DFD1AFAD3AE00F3C50C /* Onboarding */ = {
 			isa = PBXGroup;
 			children = (
+				D9CBBC571C642BAA005CD715 /* EnablePushViewController.swift */,
 				D913A56E1B7481AD006C5ACD /* OTRWelcomeViewController.swift */,
 				D989A84D1B5DBD90000608A9 /* OTRExistingAccountViewController.h */,
 				D989A84E1B5DBD90000608A9 /* OTRExistingAccountViewController.m */,
@@ -2259,6 +2262,7 @@
 				D93DDAC01BA79A2600CD8331 /* OTRBoolSetting.m in Sources */,
 				D93DDAC11BA79A2600CD8331 /* OTRCertificateSetting.m in Sources */,
 				D93DDAC21BA79A2600CD8331 /* OTRDonateSetting.m in Sources */,
+				D9CBBC581C642BAA005CD715 /* EnablePushViewController.swift in Sources */,
 				D93DDAC31BA79A2600CD8331 /* OTRDoubleSetting.m in Sources */,
 				D93DDAC41BA79A2600CD8331 /* OTRFeedbackSetting.m in Sources */,
 				D93DDAC51BA79A2600CD8331 /* OTRFingerprintSetting.m in Sources */,
@@ -2638,7 +2642,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				BUNDLE_DISPLAY_NAME_SUFFIX = " α";
+				BUNDLE_DISPLAY_NAME_SUFFIX = "";
 				BUNDLE_ID_SUFFIX = "";
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;

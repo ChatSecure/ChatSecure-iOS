@@ -37,7 +37,7 @@ public extension UIApplication {
     }
     
     public func showLocalNotificationForKnockFrom(thread:OTRThreadOwner) {
-        let chatString = OTRLanguageManager.translatedString("wants to chat")
+        let chatString = OTRLanguageManager.translatedString("wants to chat.")
         let text = "\(thread.threadName()) \(chatString)"
         let unreadCount = self.applicationIconBadgeNumber + 1
         self.showLocalNotificationFor(thread, text: text, unreadCount: unreadCount)

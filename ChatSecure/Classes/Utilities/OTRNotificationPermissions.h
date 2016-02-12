@@ -10,7 +10,6 @@
 
 @interface OTRNotificationPermissions : NSObject
 
-+ (void)checkPermissions;
 + (bool)canSendNotifications;
 
 @end

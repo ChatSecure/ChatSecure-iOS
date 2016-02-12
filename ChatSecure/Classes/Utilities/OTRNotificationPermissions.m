@@ -9,25 +9,12 @@
 #import "OTRNotificationPermissions.h"
 #import "OTRUtilities.h"
 
-static const UIUserNotificationType USER_NOTIFICATION_TYPES_REQUIRED = UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert;
-
 @implementation OTRNotificationPermissions
-
-+ (void)checkPermissions
-{
-    if (![self canSendNotifications]) {
-        UIUserNotificationSettings* requestedSettings = [UIUserNotificationSettings settingsForTypes:USER_NOTIFICATION_TYPES_REQUIRED categories:nil];
-        [[UIApplication sharedApplication] registerUserNotificationSettings:requestedSettings];
-    }
-}
 
 + (bool)canSendNotifications
 {
     UIUserNotificationSettings* notificationSettings = [[UIApplication sharedApplication] currentUserNotificationSettings];
-    bool canSendNotifications = notificationSettings.types == USER_NOTIFICATION_TYPES_REQUIRED;
-    
-    return canSendNotifications;
+    return notificationSettings.types != UIUserNotificationTypeNone;
 }
-
 
 @end

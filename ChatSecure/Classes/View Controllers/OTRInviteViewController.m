@@ -43,6 +43,16 @@ static CGFloat const kOTRInvitePadding = 10;
     return self;
 }
 
+- (void) viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self.navigationItem setHidesBackButton:YES animated:animated];
+}
+
+- (void) viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    [self.navigationItem setHidesBackButton:NO animated:animated];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -179,19 +189,6 @@ static CGFloat const kOTRInvitePadding = 10;
 - (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result
 {
     [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-+ (void) showInviteFromVC:(UIViewController *)vc withAccount:(OTRAccount *)account {
-    NSParameterAssert([NSThread currentThread] == [NSThread mainThread]);
-    NSParameterAssert(vc != nil);
-    NSParameterAssert(account != nil);
-    if (!vc || !account) {
-        return;
-    }
-    OTRInviteViewController *inviteViewController = [[OTRInviteViewController alloc] init];
-    inviteViewController.account = account;
-    [inviteViewController.navigationItem setHidesBackButton:YES animated:YES];
-    [vc.navigationController pushViewController:inviteViewController animated:YES];
 }
 
 @end

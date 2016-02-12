@@ -113,9 +113,6 @@
                 DDLogError(@"Password Error: %@",error);
             }
         }
-        
-        UIUserNotificationSettings *notificationSettings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeBadge | UIUserNotificationTypeAlert | UIUserNotificationTypeSound categories:nil];
-        [application registerUserNotificationSettings:notificationSettings];
 
         [[OTRDatabaseManager sharedInstance] setupDatabaseWithName:OTRYapDatabaseName];
         rootViewController = [self defaultConversationNavigationController];
@@ -143,6 +140,10 @@
     
     OTRNotificationController *notificationController = [OTRNotificationController sharedInstance];
     [notificationController start];
+    
+    if ([PushController getPushPreference] == PushPreferenceEnabled) {
+        [PushController registerForPushNotifications];
+    }
   
     [Appirater setAppId:@"464200063"];
     [Appirater setOpenInAppStore:NO];
@@ -490,7 +491,12 @@
 
 - (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings
 {
-    [application registerForRemoteNotifications];
+    [[NSNotificationCenter defaultCenter] postNotificationName:OTRUserNotificationsChanged object:self userInfo:@{@"settings": notificationSettings}];
+    if (notificationSettings.types == UIUserNotificationTypeNone) {
+        NSLog(@"Push notifications disabled by user.");
+    } else {
+        [application registerForRemoteNotifications];
+    }
 }
 
 - (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(nonnull NSData *)deviceToken

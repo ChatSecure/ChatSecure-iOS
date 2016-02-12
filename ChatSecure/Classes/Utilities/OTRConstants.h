@@ -68,9 +68,11 @@ extern NSString *const OTRYapDatabaseName;
 //Notifications
 extern NSString *const kOTRNotificationThreadKey;
 extern NSString *const kOTRNotificationThreadCollection;
+extern NSString *const OTRUserNotificationsChanged;
 
 //NSUserDefaults
 extern NSString *const kOTRDeletedFacebookKey;
+extern NSString *const kOTRPushEnabledKey;
 
 //Chatview
 extern CGFloat const kOTRSentDateFontSize;

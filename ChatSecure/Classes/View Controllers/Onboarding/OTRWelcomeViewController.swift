@@ -10,8 +10,6 @@ import UIKit
 
 public class OTRWelcomeViewController: UIViewController {
     
-    public var completionBlock: ((account: OTRAccount!, error: NSError!) -> Void)?
-    
     // MARK: - Views
     @IBOutlet var logoImageView: UIImageView!
     @IBOutlet var createAccountButton: UIButton!
@@ -49,7 +47,6 @@ public class OTRWelcomeViewController: UIViewController {
             createAccountVC.form = OTRXLFormCreator.formForAccountType(newAccount.accountType, createAccount: true)
             createAccountVC.createLoginHandler = OTRXMPPCreateAccountHandler()
             createAccountVC.account = newAccount
-            createAccountVC.completionBlock = self.completionBlock
         }
     }
     

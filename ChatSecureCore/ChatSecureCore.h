@@ -51,3 +51,5 @@ FOUNDATION_EXPORT const unsigned char ChatSecureCoreVersionString[];
 #import <ChatSecureCore/YapActionable.h>
 #import <ChatSecureCore/YapDatabaseActionManager.h>
 #import <ChatSecureCore/OTRProtocolManager.h>
+#import <ChatSecureCore/OTRInviteViewController.h>
+#import <ChatSecureCore/OTRNotificationPermissions.h>
