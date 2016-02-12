@@ -7,6 +7,7 @@
 //
 
 #import "OTRXMPPServerInfo.h"
+@import OTRAssets;
 
 /*
  {
@@ -65,6 +66,9 @@
     NSString *resource = [fileName stringByDeletingPathExtension];
     NSString *path = [bundle pathForResource:resource ofType:extension inDirectory:folder];
     UIImage *image = [UIImage imageWithContentsOfFile:path];
+    if (!image) {
+        image = [UIImage imageNamed:@"xmpp" inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];
+    }
     NSParameterAssert(image);
     return image;
 }

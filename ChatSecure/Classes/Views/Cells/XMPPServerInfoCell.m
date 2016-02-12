@@ -83,6 +83,13 @@ NSString *const kOTRFormRowDescriptorTypeXMPPServer = @"kOTRFormRowDescriptorTyp
         self.onionButton.hidden = YES;
         self.onionButton.enabled = NO;
     }
+    if (info.privacyPolicyURL) {
+        self.privacyPolicyButton.enabled = YES;
+        self.privacyPolicyButton.hidden = NO;
+    } else {
+        self.privacyPolicyButton.enabled = NO;
+        self.privacyPolicyButton.hidden = YES;
+    }
     UIImage *countryImage = [UIImage imageNamed:info.countryCode inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];
     self.countryImageView.image = countryImage;
 }

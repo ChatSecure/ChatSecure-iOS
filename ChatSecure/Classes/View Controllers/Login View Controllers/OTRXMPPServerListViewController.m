@@ -64,9 +64,10 @@ NSString *const kOTROTRXMPPServerListViewControllerCustomTag = @"kOTROTRXMPPServ
     if (!self.selectedPreset) {
         NSString *customDomain = [self.form formRowWithTag:kOTROTRXMPPServerListViewControllerCustomTag].value;
         if ([customDomain length]) {
-            OTRXMPPServerInfo *info = (OTRXMPPServerInfo *)self.rowDescriptor.value;
-            info.name = CUSTOM_STRING;
+            OTRXMPPServerInfo *info = [[OTRXMPPServerInfo alloc] init];
+            info.name = customDomain;
             info.domain = customDomain;
+            self.rowDescriptor.value = info;
         }
     }
 }
