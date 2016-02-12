@@ -37,6 +37,7 @@
 #import "OTRCertificateSetting.h"
 #import "OTRUtilities.h"
 #import "OTRFingerprintSetting.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 #import "OTRUtilities.h"
 
@@ -54,7 +55,6 @@
 {
     if (self = [super init])
     {
-        self.settingsGroups = [NSMutableArray array];
         [self populateSettings];
     }
     return self;
@@ -62,6 +62,7 @@
 
 - (void) populateSettings
 {
+    self.settingsGroups = [NSMutableArray array];
     NSMutableDictionary *newSettingsDictionary = [NSMutableDictionary dictionary];
     // Leave this in for now
     OTRViewSetting *accountsViewSetting = [[OTRViewSetting alloc] initWithTitle:ACCOUNTS_STRING description:nil viewControllerClass:nil];
@@ -95,12 +96,15 @@
                                                                                   description:OTR_FINGERPRINTS_SUBTITLE_STRING];
     fingerprintSetting.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
-#if CHATSECURE_PUSH
-    OTRViewSetting *pushViewSetting = [[OTRPushViewSetting alloc] initWithTitle:CHATSECURE_PUSH_STRING description:MANAGE_CHATSECURE_PUSH_ACCOUNT_STRING];
-    pushViewSetting.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    OTRSettingsGroup *pushGroup = [[OTRSettingsGroup alloc] initWithTitle:PUSH_TITLE_STRING settings:@[pushViewSetting]];
-    [settingsGroups addObject:pushGroup];
-#endif
+    
+    if (![OTRNotificationPermissions canSendNotifications] ||
+        [PushController getPushPreference] != PushPreferenceEnabled) {
+        OTRViewSetting *pushViewSetting = [[OTRViewSetting alloc] initWithTitle:CHATSECURE_PUSH_STRING description:nil viewControllerClass:[EnablePushViewController class]];
+        pushViewSetting.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        OTRSettingsGroup *pushGroup = [[OTRSettingsGroup alloc] initWithTitle:PUSH_TITLE_STRING settings:@[pushViewSetting]];
+        [self.settingsGroups addObject:pushGroup];
+    }
+
     
     NSArray *chatSettings;
     NSArray * securitySettings;

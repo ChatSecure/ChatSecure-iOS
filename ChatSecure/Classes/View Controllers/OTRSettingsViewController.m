@@ -127,6 +127,7 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     [super viewWillAppear:animated];
     
     self.tableView.frame = self.view.bounds;
+    [self.settingsManager populateSettings];
     [self.tableView reloadData];
 }
 
@@ -368,6 +369,14 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
 #pragma mark OTRSettingViewDelegate method
 - (void) otrSetting:(OTRSetting*)setting showDetailViewControllerClass:(Class)viewControllerClass
 {
+    if (viewControllerClass == [EnablePushViewController class]) {
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Onboarding" bundle:[OTRAssets resourcesBundle]];
+        EnablePushViewController *enablePushVC = [storyboard instantiateViewControllerWithIdentifier:@"enablePush"];
+        if (enablePushVC) {
+            [self presentViewController:enablePushVC animated:YES completion:nil];
+        }
+        return;
+    }
     UIViewController *viewController = [[viewControllerClass alloc] init];
     viewController.title = setting.title;
     if ([viewController isKindOfClass:[OTRSettingDetailViewController class]]) 

@@ -41,4 +41,8 @@
 + (NSInteger) intForOTRSettingKey:(NSString *)key;
 + (float) floatForOTRSettingKey:(NSString *)key;
 
+/** Recalculates current setting list */
+- (void) populateSettings;
+
+
 @end
