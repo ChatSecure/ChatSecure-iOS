@@ -25,7 +25,7 @@
 #import "OTRConversationViewController.h"
 
 #import "OTRMessagesHoldTalkViewController.h"
-#import "Strings.h"
+#import "OTRStrings.h"
 #import "OTRSettingsViewController.h"
 #import "OTRSettingsManager.h"
 
@@ -37,14 +37,15 @@
 #import "OTRSettingsManager.h"
 #import "OTRSecrets.h"
 #import "OTRDatabaseManager.h"
-#import "SSKeychain.h"
+#import <SSKeychain/SSKeychain.h>
 
 #import "OTRLog.h"
 #import "DDTTYLogger.h"
 #import "OTRAccount.h"
+#import "OTRXMPPAccount.h"
 #import "OTRBuddy.h"
-#import "YAPDatabaseTransaction.h"
-#import "YapDatabaseConnection.h"
+@import YapDatabase;
+
 #import "OTRCertificatePinning.h"
 #import "NSData+XMPP.h"
 #import "NSURL+ChatSecure.h"
@@ -53,7 +54,13 @@
 #import "OTRPasswordGenerator.h"
 #import "UIViewController+ChatSecure.h"
 #import "OTRNotificationController.h"
-#import "UIAlertView+Blocks.h"
+#import "XMPPURI.h"
+#import "OTRProtocolManager.h"
+#import "OTRInviteViewController.h"
+#import "OTRTheme.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "OTRMessagesViewController.h"
+@import OTRAssets;
 
 #if CHATSECURE_DEMO
 #import "OTRChatDemo.h"
@@ -61,23 +68,24 @@
 
 @interface OTRAppDelegate ()
 
+@property (nonatomic, strong) OTRSplitViewCoordinator *splitViewCoordinator;
+@property (nonatomic, strong) OTRSplitViewControllerDelegateObject *splitViewControllerDelegate;
 
 @end
 
 @implementation OTRAppDelegate
 
-@synthesize window = _window;
-@synthesize backgroundTask, backgroundTimer, didShowDisconnectionWarning;
-@synthesize settingsViewController;
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     [DDLog addLogger:[DDTTYLogger sharedInstance]];
     
-    [[BITHockeyManager sharedHockeyManager] configureWithBetaIdentifier:kOTRHockeyBetaIdentifier
-                                                         liveIdentifier:kOTRHockeyLiveIdentifier
+    [[BITHockeyManager sharedHockeyManager] configureWithBetaIdentifier:[OTRSecrets hockeyBetaIdentifier]
+                                                         liveIdentifier:[OTRSecrets hockeyLiveIdentifier]
                                                                delegate:self];
     [[BITHockeyManager sharedHockeyManager] startManager];
+    
+    _theme = [[[self themeClass] alloc] init];
+    [self.theme setupGlobalTheme];
     
     [OTRCertificatePinning loadBundledCertificatesToKeychain];
     
@@ -86,8 +94,7 @@
     UIViewController *rootViewController = nil;
     
     self.settingsViewController = [[OTRSettingsViewController alloc] init];
-    self.conversationViewController = [[OTRConversationViewController alloc] init];
-    self.messagesViewController = [OTRMessagesHoldTalkViewController messagesViewController];
+    self.conversationViewController = [[[self.theme conversationViewControllerClass] alloc] init];
     
     if ([OTRDatabaseManager existsYapDatabase] && ![[OTRDatabaseManager sharedInstance] hasPassphrase]) {
         // user needs to enter password for current database
@@ -105,28 +112,38 @@
             if (error) {
                 DDLogError(@"Password Error: %@",error);
             }
-            
         }
 
         [[OTRDatabaseManager sharedInstance] setupDatabaseWithName:OTRYapDatabaseName];
         rootViewController = [self defaultConversationNavigationController];
-        
-        
 #if CHATSECURE_DEMO
         [self performSelector:@selector(loadDemoData) withObject:nil afterDelay:0.0];
 #endif
     }
-
-    
-
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.rootViewController = rootViewController;
+
+    /*
+    /////////// testing invite VC
+    OTRInviteViewController *inviteVC = [[OTRInviteViewController alloc] init];
+    OTRAccount *account = [[OTRAccount alloc] init];
+    account.username = @"test@example.com";
+    inviteVC.account = account;
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:inviteVC];
+    self.window.rootViewController = nav;
+    ////////////
+    */
+     
     [self.window makeKeyAndVisible];
     
     application.applicationIconBadgeNumber = 0;
     
     OTRNotificationController *notificationController = [OTRNotificationController sharedInstance];
     [notificationController start];
+    
+    if ([PushController getPushPreference] == PushPreferenceEnabled) {
+        [PushController registerForPushNotifications];
+    }
   
     [Appirater setAppId:@"464200063"];
     [Appirater setOpenInAppStore:NO];
@@ -135,7 +152,7 @@
     [self autoLogin];
     
     [self removeFacebookAccounts];
-    
+        
     return YES;
 }
 
@@ -149,24 +166,32 @@
 {
     UIViewController *viewController = nil;
     
+    YapDatabaseConnection *connection = [OTRDatabaseManager sharedInstance].readWriteDatabaseConnection;
+    self.splitViewCoordinator = [[OTRSplitViewCoordinator alloc] initWithDatabaseConnection:connection];
+    self.splitViewControllerDelegate = [[OTRSplitViewControllerDelegateObject alloc] init];
+    
     //ConversationViewController Nav
     UINavigationController *conversationListNavController = [[UINavigationController alloc] initWithRootViewController:self.conversationViewController];
+    self.conversationViewController.delegate = self.splitViewCoordinator;
     
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-        viewController = conversationListNavController;
-    } else {
-        //MessagesViewController Nav
-        UINavigationController *messagesNavController = [[UINavigationController alloc ]initWithRootViewController:self.messagesViewController];
-        
-        //SplitViewController
-        UISplitViewController *splitViewController = [[UISplitViewController alloc] init];
-        splitViewController.viewControllers = [NSArray arrayWithObjects:conversationListNavController, messagesNavController, nil];
-        splitViewController.delegate = self.messagesViewController;
-        splitViewController.title = CHAT_STRING;
-        
-        viewController = splitViewController;
-        
-    }
+    //MessagesViewController Nav
+    UINavigationController *messagesNavController = [[UINavigationController alloc ]initWithRootViewController:[[self.theme messagesViewControllerClass] messagesViewController]];
+    
+    
+    
+    //SplitViewController
+    UISplitViewController *splitViewController = [[UISplitViewController alloc] init];
+    splitViewController.viewControllers = [NSArray arrayWithObjects:conversationListNavController, messagesNavController, nil];
+    splitViewController.delegate = self.splitViewControllerDelegate;
+    splitViewController.title = CHAT_STRING;
+    
+    //setup 'back' button in nav bar
+    messagesNavController.topViewController.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem;
+    messagesNavController.topViewController.navigationItem.leftItemsSupplementBackButton = YES;
+    
+    self.splitViewCoordinator.splitViewController = splitViewController;
+    
+    viewController = splitViewController;
     
     return viewController;
 }
@@ -174,6 +199,34 @@
 - (void)showConversationViewController
 {
     self.window.rootViewController = [self defaultConversationNavigationController];
+}
+
+- (id<OTRThreadOwner>)activeThread
+{
+    __block id<OTRThreadOwner> threadOwner = nil;
+    NSArray <UIViewController *>*viewControllers = [self.splitViewCoordinator.splitViewController viewControllers];
+    [viewControllers enumerateObjectsUsingBlock:^(UIViewController * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSArray <UIViewController *>*result = nil;
+        if ([obj isKindOfClass:[UINavigationController class] ]) {
+            result = [((UINavigationController *)obj) otr_baseViewContorllers];
+        } else {
+            result = @[obj];
+        }
+        
+        [result enumerateObjectsUsingBlock:^(UIViewController * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if([obj isKindOfClass:[OTRMessagesViewController class]] && [obj otr_isVisible])
+            {
+                OTRMessagesViewController *messagesViewController = (OTRMessagesViewController *)obj;
+                threadOwner = [messagesViewController threadObject];
+                *stop = YES;
+            }
+        }];
+        
+        if (threadOwner) {
+            *stop = YES;
+        }
+    }];
+    return threadOwner;
 }
 
 - (void)removeFacebookAccounts
@@ -195,30 +248,18 @@
             void (^moreInfoBlock)(void) = ^void(void) {
                 [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://developers.facebook.com/docs/chat"]];
             };
+        
+            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:FACEBOOK_REMOVED_STRING message:FACEBOOK_REMOVED_MESSAGE_STRING preferredStyle:UIAlertControllerStyleAlert];
             
-            if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")){
-                
-                UIAlertController *alertController = [UIAlertController alertControllerWithTitle:FACEBOOK_REMOVED_STRING message:FACEBOOK_REMOVED_MESSAGE_STRING preferredStyle:UIAlertControllerStyleAlert];
-                
-                UIAlertAction *okAction = [UIAlertAction actionWithTitle:OK_STRING style:UIAlertActionStyleDefault handler:nil];
-                UIAlertAction *moreInfoAction = [UIAlertAction actionWithTitle:INFO_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-                    moreInfoBlock();
-                }];
-                
-                [alertController addAction:okAction];
-                [alertController addAction:moreInfoAction];
-                
-                [self.window.rootViewController presentViewController:alertController animated:YES completion:nil];
-                
-            } else {
-                RIButtonItem *okButtonItem = [RIButtonItem itemWithLabel:OK_STRING];
-                RIButtonItem *moreInfoButtonItem = [RIButtonItem itemWithLabel:INFO_STRING action:^{
-                    moreInfoBlock();
-                }];
-                
-                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:FACEBOOK_REMOVED_STRING message:FACEBOOK_REMOVED_MESSAGE_STRING cancelButtonItem:nil otherButtonItems:okButtonItem,moreInfoButtonItem, nil];
-                [alertView show];
-            }
+            UIAlertAction *okAction = [UIAlertAction actionWithTitle:OK_STRING style:UIAlertActionStyleDefault handler:nil];
+            UIAlertAction *moreInfoAction = [UIAlertAction actionWithTitle:INFO_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                moreInfoBlock();
+            }];
+            
+            [alertController addAction:okAction];
+            [alertController addAction:moreInfoAction];
+            
+            [self.window.rootViewController presentViewController:alertController animated:YES completion:nil];
         }
     }];
 }
@@ -237,7 +278,7 @@
     NSAssert(self.backgroundTask == UIBackgroundTaskInvalid, nil);
     
     [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        application.applicationIconBadgeNumber = [OTRMessage numberOfUnreadMessagesWithTransaction:transaction];
+        application.applicationIconBadgeNumber = [transaction numberOfUnreadMessages];
     }];
     
     self.didShowDisconnectionWarning = NO;
@@ -341,39 +382,57 @@
     //FIXME? [OTRManagedAccount resetAccountsConnectionStatus];
     //[OTRUtilities deleteAllBuddiesAndMessages];
 }
-/*
-// Optional UITabBarControllerDelegate method.
-- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController
-{
-}
-*/
 
-/*
-// Optional UITabBarControllerDelegate method.
-- (void)tabBarController:(UITabBarController *)tabBarController didEndCustomizingViewControllers:(NSArray *)viewControllers changed:(BOOL)changed
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(nonnull NSDictionary *)userInfo
 {
+    [self.pushController receiveRemoteNotification:userInfo completion:^(OTRBuddy * _Nullable buddy, NSError * _Nullable error) {
+        [application showLocalNotificationForKnockFrom:buddy];
+    }];
+    
 }
-*/
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
+{
+    [self.pushController receiveRemoteNotification:userInfo completion:^(OTRBuddy * _Nullable buddy, NSError * _Nullable error) {
+        [application showLocalNotificationForKnockFrom:buddy];
+        completionHandler(UIBackgroundFetchResultNewData);
+    }];
+    
+}
+
+- (BOOL) application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray * _Nullable))restorationHandler {
+    if ([userActivity.activityType isEqualToString:NSUserActivityTypeBrowsingWeb]) {
+        NSURL *url = userActivity.webpageURL;
+        if ([url otr_isInviteLink]) {
+            __block NSString *username = nil;
+            __block NSString *fingerprint = nil;
+            [url otr_decodeShareLink:^(NSString *uName, NSString *fPrint) {
+                username = uName;
+                fingerprint = fPrint;
+            }];
+            if (username.length) {
+                [self handleInvite:username fingerprint:fingerprint];
+            }
+            return YES;
+        }
+    }
+    return NO;
+}
 
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
     
     NSDictionary *userInfo = notification.userInfo;
-    NSString *buddyUniqueId = userInfo[kOTRNotificationBuddyUniqueIdKey];
+    NSString *threadKey = userInfo[kOTRNotificationThreadKey];
+    NSString *threadCollection = userInfo[kOTRNotificationThreadCollection];
     
-    if([buddyUniqueId length]) {
-        __block OTRBuddy *buddy = nil;
-        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-            buddy = [OTRBuddy fetchObjectWithUniqueID:buddyUniqueId transaction:transaction];
-        }];
-        
-        if (!([self.messagesViewController otr_isVisible] || [self.conversationViewController otr_isVisible])) {
-            self.window.rootViewController = [self defaultConversationNavigationController];
-        }
-        
-        [self.conversationViewController enterConversationWithBuddy:buddy];
+    __block id <OTRThreadOwner> thread = nil;
+    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        thread = [transaction objectForKey:threadKey inCollection:threadCollection];
+    }];
+    
+    if (thread) {
+        [self.splitViewCoordinator enterConversatoinWithThread:thread sender:notification];
     }
-    
-
 }
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
@@ -383,13 +442,66 @@
                                                                  annotation:annotation]) {
         return YES;
     }
+    if ([url.scheme isEqualToString:@"xmpp"]) {
+        XMPPURI *xmppURI = [[XMPPURI alloc] initWithURL:url];
+        XMPPJID *jid = xmppURI.jid;
+        NSString *otrFingerprint = xmppURI.queryParameters[@"otr-fingerprint"];
+        NSString *action = xmppURI.queryAction;
+        if (jid && [action isEqualToString:@"subscribe"]) {
+            [self handleInvite:jid.full fingerprint:otrFingerprint];
+        }
+        return YES;
+    }
     return NO;
 }
 
-// Delegation methods
-- (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)devToken {
-    
-    
+- (void)handleInvite:(NSString *)jidString fingerprint:(NSString *)otrFingerprint {
+    NSString *message = [NSString stringWithString:jidString];
+    if (otrFingerprint.length == 40) {
+        message = [message stringByAppendingFormat:@"\n%@", otrFingerprint];
+    }
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:ADD_BUDDY_STRING message:message preferredStyle:(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) ? UIAlertControllerStyleActionSheet : UIAlertControllerStyleAlert];
+    __block NSArray *accounts = nil;
+    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        accounts = [OTRAccount allAccountsWithTransaction:transaction];
+    }];
+    [accounts enumerateObjectsUsingBlock:^(OTRAccount *account, NSUInteger idx, BOOL *stop) {
+        if ([account isKindOfClass:[OTRXMPPAccount class]]) {
+            UIAlertAction *action = [UIAlertAction actionWithTitle:account.username style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:account];
+                OTRBuddy *buddy = [[OTRBuddy alloc] init];
+                buddy.username = jidString;
+                [protocol addBuddy:buddy];
+                /* TODO OTR fingerprint verificaction
+                 if (otrFingerprint) {
+                 // We are missing a method to add fingerprint to trust store
+                 [[OTRKit sharedInstance] setActiveFingerprintVerificationForUsername:buddy.username accountName:account.username protocol:account.protocolTypeString verified:YES completion:nil];
+                 }*/
+            }];
+            [alert addAction:action];
+        }
+    }];
+    if (alert.actions.count > 0) {
+        // No need to show anything if only option is "cancel"
+        UIAlertAction *cancel = [UIAlertAction actionWithTitle:CANCEL_STRING style:UIAlertActionStyleCancel handler:nil];
+        [alert addAction:cancel];
+        [self.window.rootViewController presentViewController:alert animated:YES completion:nil];
+    }
+}
+
+- (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings
+{
+    [[NSNotificationCenter defaultCenter] postNotificationName:OTRUserNotificationsChanged object:self userInfo:@{@"settings": notificationSettings}];
+    if (notificationSettings.types == UIUserNotificationTypeNone) {
+        NSLog(@"Push notifications disabled by user.");
+    } else {
+        [application registerForRemoteNotifications];
+    }
+}
+
+- (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(nonnull NSData *)deviceToken
+{
+    [self.pushController didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
 }
 
 - (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {
@@ -397,10 +509,28 @@
     DDLogError(@"Error in registration. Error: %@%@", [err localizedDescription], [err userInfo]);
 }
 
+#pragma - mark Getters and Setters
+
+- (PushController *)pushController{
+    if (!_pushController) {
+        NSURL *pushAPIEndpoint = [OTRBranding pushAPIURL];
+        OTRPushTLVHandler *tlvHandler = [OTRProtocolManager sharedInstance].encryptionManager.pushTLVHandler;
+        _pushController = [[PushController alloc] initWithBaseURL:pushAPIEndpoint sessionConfiguration:[NSURLSessionConfiguration ephemeralSessionConfiguration] databaseConnection:[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection tlvHandler:tlvHandler];
+
+    }
+    return _pushController;
+}
+
 #pragma - mark Class Methods
 + (OTRAppDelegate *)appDelegate
 {
     return (OTRAppDelegate *)[[UIApplication sharedApplication] delegate];
+}
+
+#pragma mark - Theming
+
+- (Class) themeClass {
+    return [OTRTheme class];
 }
 
 @end

@@ -8,13 +8,13 @@
 
 #import "OTRYapDatabaseRosterStorage.h"
 
-#import "YapDatabaseConnection.h"
+@import YapDatabase;
 #import "OTRDatabaseManager.h"
-#import "YapDatabaseTransaction.h"
 #import "OTRLog.h"
 #import "OTRXMPPBuddy.h"
 #import "OTRXMPPAccount.h"
-#import "Strings.h"
+#import "OTRStrings.h"
+#import "OTRLanguageManager.h"
 
 @interface OTRYapDatabaseRosterStorage ()
 
@@ -138,7 +138,7 @@
     return YES;
 }
 
-- (void)beginRosterPopulationForXMPPStream:(XMPPStream *)stream
+- (void)beginRosterPopulationForXMPPStream:(XMPPStream *)stream withVersion:(NSString *)version
 {
     DDLogVerbose(@"%@ - %@",THIS_FILE,THIS_METHOD);
 }
@@ -186,7 +186,7 @@
         OTRXMPPBuddy *buddy = [self buddyWithJID:[presence from] xmppStream:stream transaction:transaction];
         
         if ([[presence type] isEqualToString:@"unavailable"] || [presence isErrorPresence]) {
-            buddy.status = OTRBuddyStatusOffline;
+            buddy.status = OTRThreadStatusOffline;
             buddy.statusMessage = OFFLINE_STRING;
         }
         else if (buddy) {
@@ -194,24 +194,24 @@
             switch (presence.intShow)
             {
                 case 0  :
-                    buddy.status = OTRBuddyStatusDnd;
+                    buddy.status = OTRThreadStatusDoNotDisturb;
                     defaultMessage = DO_NOT_DISTURB_STRING;
                     break;
                 case 1  :
-                    buddy.status = OTRBuddyStatusXa;
+                    buddy.status = OTRThreadStatusExtendedAway;
                     defaultMessage = EXTENDED_AWAY_STRING;
                     break;
                 case 2  :
-                    buddy.status = OTRBuddyStatusAway;
+                    buddy.status = OTRThreadStatusAway;
                     defaultMessage = AWAY_STRING;
                     break;
                 case 3  :
                 case 4  :
-                    buddy.status = OTRBuddyStatusAvailable;
+                    buddy.status = OTRThreadStatusAvailable;
                     defaultMessage = AVAILABLE_STRING;
                     break;
                 default :
-                    buddy.status = OTRBuddyStatusOffline;
+                    buddy.status = OTRThreadStatusOffline;
                     break;
             }
             
@@ -263,6 +263,13 @@
         }];
     }];
     return jidArray;
+}
+
+- (void)getSubscription:(NSString *__autoreleasing *)subscription ask:(NSString *__autoreleasing *)ask nickname:(NSString *__autoreleasing *)nickname groups:(NSArray *__autoreleasing *)groups forJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream
+{
+    //Can't tell if this is ever called so just a stub for now
+    OTRXMPPBuddy *buddy = [self buddyWithJID:jid xmppStream:stream];
+    *nickname = buddy.displayName;
 }
 
 @end

@@ -22,7 +22,7 @@
 
 #import "OTRSettingsManager.h"
 #import "OTRViewSetting.h"
-#import "Strings.h"
+#import "OTRStrings.h"
 #import "OTRSettingsGroup.h"
 #import "OTRSetting.h"
 #import "OTRBoolSetting.h"
@@ -37,7 +37,7 @@
 #import "OTRCertificateSetting.h"
 #import "OTRUtilities.h"
 #import "OTRFingerprintSetting.h"
-#import "OTRChangeDatabasePassphraseViewController.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 #import "OTRUtilities.h"
 
@@ -55,7 +55,6 @@
 {
     if (self = [super init])
     {
-        self.settingsGroups = [NSMutableArray array];
         [self populateSettings];
     }
     return self;
@@ -63,6 +62,7 @@
 
 - (void) populateSettings
 {
+    self.settingsGroups = [NSMutableArray array];
     NSMutableDictionary *newSettingsDictionary = [NSMutableDictionary dictionary];
     // Leave this in for now
     OTRViewSetting *accountsViewSetting = [[OTRViewSetting alloc] initWithTitle:ACCOUNTS_STRING description:nil viewControllerClass:nil];
@@ -96,15 +96,15 @@
                                                                                   description:OTR_FINGERPRINTS_SUBTITLE_STRING];
     fingerprintSetting.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
-    OTRViewSetting *changeDatabasePassphraseSetting = [[OTRViewSetting alloc] initWithTitle:CHANGE_PASSPHRASE_STRING description:SET_NEW_DATABASE_PASSPHRASE_STRING viewControllerClass:[OTRChangeDatabasePassphraseViewController class]];
-    changeDatabasePassphraseSetting.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
-#if CHATSECURE_PUSH
-    OTRViewSetting *pushViewSetting = [[OTRPushViewSetting alloc] initWithTitle:CHATSECURE_PUSH_STRING description:MANAGE_CHATSECURE_PUSH_ACCOUNT_STRING];
-    pushViewSetting.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    OTRSettingsGroup *pushGroup = [[OTRSettingsGroup alloc] initWithTitle:PUSH_TITLE_STRING settings:@[pushViewSetting]];
-    [settingsGroups addObject:pushGroup];
-#endif
+    if (![OTRNotificationPermissions canSendNotifications] ||
+        [PushController getPushPreference] != PushPreferenceEnabled) {
+        OTRViewSetting *pushViewSetting = [[OTRViewSetting alloc] initWithTitle:CHATSECURE_PUSH_STRING description:nil viewControllerClass:[EnablePushViewController class]];
+        pushViewSetting.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        OTRSettingsGroup *pushGroup = [[OTRSettingsGroup alloc] initWithTitle:PUSH_TITLE_STRING settings:@[pushViewSetting]];
+        [self.settingsGroups addObject:pushGroup];
+    }
+
     
     NSArray *chatSettings;
     NSArray * securitySettings;
@@ -115,7 +115,7 @@
     OTRSettingsGroup *chatSettingsGroup = [[OTRSettingsGroup alloc] initWithTitle:CHAT_STRING settings:chatSettings];
     [self.settingsGroups addObject:chatSettingsGroup];
     
-    securitySettings = @[opportunisticOtrSetting,certSetting,fingerprintSetting, changeDatabasePassphraseSetting];
+    securitySettings = @[opportunisticOtrSetting,certSetting,fingerprintSetting];
     OTRSettingsGroup *securitySettingsGroup = [[OTRSettingsGroup alloc] initWithTitle:SECURITY_STRING settings:securitySettings];
     [self.settingsGroups addObject:securitySettingsGroup];
     
@@ -127,8 +127,7 @@
     
     OTRLanguageSetting * languageSetting = [[OTRLanguageSetting alloc]initWithTitle:LANGUAGE_STRING description:nil settingsKey:kOTRSettingKeyLanguage];
     languageSetting.imageName = @"globe.png";
-    
-    
+    [newSettingsDictionary setObject:languageSetting forKey:kOTRSettingKeyLanguage];
     
     OTRDonateSetting *donateSetting = [[OTRDonateSetting alloc] initWithTitle:DONATE_STRING description:nil];
     donateSetting.imageName = @"29-heart.png";

@@ -11,11 +11,12 @@
 #import "OTRHoldToTalkView.h"
 #import "OTRAudioSessionManager.h"
 #import "OTRAudioTrashView.h"
-#import "Strings.h"
-#import "OTRKit.h"
+#import "OTRStrings.h"
+@import OTRKit;
 #import "OTRBuddy.h"
 #import "OTRXMPPManager.h"
 #import "OTRXMPPAccount.h"
+#import "OTRLanguageManager.h"
 
 @interface OTRMessagesHoldTalkViewController () <OTRHoldToTalkViewStateDelegate, OTRAudioSessionManagerDelegate>
 
@@ -51,6 +52,12 @@
                            forState:UIControlStateNormal];
     
     [self.view setNeedsUpdateConstraints];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [self updateEncryptionState];
 }
 
 #pragma - mark AutoLayout
@@ -163,15 +170,17 @@
 
 - (void)textViewDidChange:(UITextView *)textView
 {
+    OTRXMPPManager *xmppManager = [self xmppManager];
+    OTRBuddy *buddy = (OTRBuddy *)[self threadObject];
     if ([textView.text length]) {
         self.inputToolbar.contentView.rightBarButtonItem = self.sendButton;
         self.inputToolbar.sendButtonLocation = JSQMessagesInputSendButtonLocationRight;
         self.inputToolbar.contentView.rightBarButtonItem.enabled = YES;
         //typing
-        [self.xmppManager sendChatState:kOTRChatStateComposing withBuddyID:self.buddy.uniqueId];
+        [xmppManager sendChatState:kOTRChatStateComposing withBuddyID:buddy.uniqueId];
     }
     else {
-        [[OTRKit sharedInstance] messageStateForUsername:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString completion:^(OTRKitMessageState messageState) {
+        [[OTRKit sharedInstance] messageStateForUsername:buddy.username accountName:self.account.username protocol:self.account.protocolTypeString completion:^(OTRKitMessageState messageState) {
             if (messageState == OTRKitMessageStateEncrypted) {
                 
                 if ([self.hold2TalkButton superview]) {
@@ -186,7 +195,7 @@
         }];
         
         //done typing
-        [self.xmppManager sendChatState:kOTRChatStateActive withBuddyID:self.buddy.uniqueId];
+        [xmppManager sendChatState:kOTRChatStateActive withBuddyID:buddy.uniqueId];
         
     }
 }

@@ -10,7 +10,8 @@
 #import "OTRImages.h"
 #import "UIImage+ChatSecure.h"
 #import "UIActivity+ChatSecure.h"
-#import "Strings.h"
+#import "OTRStrings.h"
+#import "OTRLanguageManager.h"
 
 @interface OTROpenInFacebookActivity ()
 

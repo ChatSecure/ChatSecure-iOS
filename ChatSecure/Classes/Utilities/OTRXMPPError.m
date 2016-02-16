@@ -9,7 +9,8 @@
 #import "OTRXMPPError.h"
 
 #import "NSXMLElement+XMPP.h"
-#import "Strings.h"
+#import "OTRStrings.h"
+#import "OTRLanguageManager.h"
 
 NSString *const OTRXMPPErrorDomain                = @"OTRXMPPErrorDomain";
 NSString *const OTRXMPPXMLErrorKey                = @"OTRXMPPXMLErrorKey";

@@ -39,9 +39,6 @@ NSString *const kOTRNotificationUserNameKey      = @"kOTRNotificationUserNameKey
 NSString *const kOTRNotificationProtocolKey      = @"kOTRNotificationProtocolKey";
 NSString *const kOTRNotificationBuddyUniqueIdKey = @"kOTRNotificationBuddyUniqueIdKey";
 
-NSString *const kOTRXMPPResource = @"chatsecure";
-
-NSString *const kOTRFeedbackEmail = @"support@chatsecure.org";
 
 NSString *const kOTRServiceName            = @"org.chatsecure.ChatSecure";
 NSString *const kOTRCertificateServiceName = @"org.chatsecure.ChatSecure.Certificate";
@@ -52,19 +49,18 @@ NSString *const kOTRSettingKeyOpportunisticOtr         = @"kOTRSettingKeyOpportu
 NSString *const kOTRSettingKeyShowDisconnectionWarning = @"kOTRSettingKeyShowDisconnectionWarning";
 NSString *const kOTRSettingUserAgreedToEULA            = @"kOTRSettingUserAgreedToEULA";
 NSString *const kOTRSettingAccountsKey                 = @"kOTRSettingAccountsKey";
-NSString *const kOTRSettingKeyLanguage                 = @"userSelectedSetting";
 NSString *const kOTRSettingsValueUpdatedNotification = @"kOTRSettingsValueUpdatedNotification";
 
+NSString *const kOTRPushEnabledKey = @"kOTRPushEnabledKey";
 
 NSString *const kOTRAppVersionKey     = @"kOTRAppVersionKey";
-NSString *const OTRActivityTypeQRCode = @"OTRActivityTypeQRCode";
 
 NSString *const OTRArchiverKey = @"OTRArchiverKey";
 
-NSString *const GOOGLE_APP_ID    = @"719137339288.apps.googleusercontent.com";
-NSString *const GOOGLE_APP_SCOPE = @"https://www.googleapis.com/auth/googletalk";
-
 NSString *const kOTRErrorDomain = @"com.chatsecure";
+
+
+NSString *const OTRUserNotificationsChanged = @"OTRUserNotificationsChanged";
 
 NSString *const OTRFailedRemoteNotificationRegistration = @"OTRFailedRemoteNotificationRegistration";
 NSString *const OTRSuccessfulRemoteNotificationRegistration = @"OTRSuccessfulRemoteNotificationRegistration";
@@ -72,6 +68,10 @@ NSString *const OTRSuccessfulRemoteNotificationRegistration = @"OTRSuccessfulRem
 NSString *const OTRYapDatabasePassphraseAccountName = @"OTRYapDatabasePassphraseAccountName";
 
 NSString *const OTRYapDatabaseName = @"ChatSecureYap.sqlite";
+
+//Noticications
+NSString *const kOTRNotificationThreadKey = @"kOTRNotificationThreadKey";
+NSString *const kOTRNotificationThreadCollection = @"kOTRNotificationThreadCollection";
 
 //NSUserDefaults
 NSString *const kOTRDeletedFacebookKey = @"kOTRDeletedFacebookKey";

@@ -28,10 +28,12 @@
 #import "OTROAuthRefresher.h"
 #import "OTROAuthXMPPAccount.h"
 #import "OTRDatabaseManager.h"
-#import "YapDatabaseConnection.h"
-#import "YapDatabaseTransaction.h"
+#import "OTRPushTLVHandler.h"
+@import YapDatabase;
+
 #import <KVOController/FBKVOController.h>
 #import "OTRLog.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 static OTRProtocolManager *sharedManager = nil;
 
@@ -39,7 +41,6 @@ static OTRProtocolManager *sharedManager = nil;
 
 @property (nonatomic) NSUInteger numberOfConnectedProtocols;
 @property (nonatomic) NSUInteger numberOfConnectingProtocols;
-@property (nonatomic, strong) OTRPushManager *pushManager;
 @property (nonatomic, strong) NSMutableDictionary * protocolManagerDictionary;
 @property (nonatomic) dispatch_queue_t internalQueue;
 
@@ -55,6 +56,7 @@ static OTRProtocolManager *sharedManager = nil;
         self.numberOfConnectedProtocols = 0;
         self.numberOfConnectingProtocols = 0;
         self.encryptionManager = [[OTREncryptionManager alloc] init];
+        self.encryptionManager.pushTLVHandler.delegate = [OTRAppDelegate appDelegate].pushController;
         self.protocolManagerDictionary = [[NSMutableDictionary alloc] init];
     }
     return self;
@@ -63,7 +65,9 @@ static OTRProtocolManager *sharedManager = nil;
 - (void)removeProtocolForAccount:(OTRAccount *)account
 {
     @synchronized(self.protocolManagerDictionary) {
-        [self.protocolManagerDictionary removeObjectForKey:account.uniqueId];
+        if (account) {
+            [self.protocolManagerDictionary removeObjectForKey:account.uniqueId];
+        }
     }
 }
 
@@ -115,12 +119,18 @@ static OTRProtocolManager *sharedManager = nil;
     return self;
 }
 
+- (void)setProtocol:(id <OTRProtocol>)protocol forAccount:(OTRAccount *)account
+{
+    [self addProtocol:protocol forAccount:account];
+}
+
 - (id <OTRProtocol>)protocolForAccount:(OTRAccount *)account
 {
     NSObject <OTRProtocol> * protocol = [self.protocolManagerDictionary objectForKey:account.uniqueId];
     if(!protocol)
     {
         protocol = [[[account protocolClass] alloc] initWithAccount:account];
+        protocol.pushController = [OTRAppDelegate appDelegate].pushController;
         if (protocol && account.uniqueId) {
             [self addProtocol:protocol forAccount:account];
         }

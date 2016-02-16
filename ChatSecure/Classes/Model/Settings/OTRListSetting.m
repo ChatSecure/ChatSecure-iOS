@@ -49,7 +49,7 @@
 -(void)setValue:(NSString *)newValue
 {
     [super setValue:newValue];
-    if(self.delegate && [self.delegate respondsToSelector:@selector(referenceView)]) {
+    if(self.delegate && [self.delegate respondsToSelector:@selector(refreshView)]) {
         [self.delegate refreshView];
     }
     

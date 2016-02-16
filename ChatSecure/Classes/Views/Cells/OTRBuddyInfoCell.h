@@ -14,6 +14,6 @@
 @property (nonatomic, strong, readonly) UILabel *identifierLabel;
 @property (nonatomic, strong, readonly) UILabel *accountLabel;
 
-- (void)setBuddy:(OTRBuddy *)buddy withAccountName:(NSString *)accountName;
+- (void)setThread:(id <OTRThreadOwner>)thread withAccountName:(NSString *)accountName;
 
 @end

@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "OTRQRCodeViewController.h"
 
+extern NSString *const kOTRActivityTypeQRCode;
+
 @interface OTRQRCodeActivity : UIActivity <OTRQRCodeViewControllerDelegate>
 
 @end

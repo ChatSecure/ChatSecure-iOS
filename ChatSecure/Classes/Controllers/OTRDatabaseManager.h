@@ -8,15 +8,16 @@
 
 #import <Foundation/Foundation.h>
 
-#import "YapDatabaseConnection.h"
-#import "YapDatabase.h"
-#import "YapDatabaseTransaction.h"
+@import YapDatabase;
+
 #import "OTRMediaServer.h"
 #import "OTRMediaFileManager.h"
 
 extern NSString *const OTRYapDatabaseRelationshipName;
 extern NSString *const OTRYapDatabseMessageIdSecondaryIndex;
-extern NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension;
+extern NSString *const OTRYapDatabseRoomOccupantJIdSecondaryIndex;
+extern NSString *const OTRYapDatabseSecondaryIndexExtension;
+extern NSString *const OTRYapDatabaseUnreadMessageSecondaryIndex;
 
 @interface OTRDatabaseManager : NSObject
 
@@ -38,8 +39,6 @@ extern NSString *const OTRYapDatabseMessageIdSecondaryIndexExtension;
 - (YapDatabaseConnection *)newConnection;
 
 - (void)setDatabasePassphrase:(NSString *)passphrase remember:(BOOL)rememeber error:(NSError**)error;
-/** This only works after calling setDatabasePassphrase */
-- (BOOL)changePassphrase:(NSString*)newPassphrase remember:(BOOL)rememeber;
 
 
 - (BOOL)hasPassphrase;

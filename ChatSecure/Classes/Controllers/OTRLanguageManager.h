@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 extern NSString *const kOTRDefaultLanguageLocale;
+extern NSString *const kOTRSettingKeyLanguage;
 
 @interface OTRLanguageManager : NSObject
 

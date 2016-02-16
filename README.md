@@ -62,9 +62,9 @@ Now you'll need to build the dependencies. During this process we will automatic
     $ bash ./Submodules/OTRKit/scripts/build-all.sh
     $ pod install
     
-Next you'll need to create your own version of environment-specific data. Make a copy of `OTRSecrets-Template.m` as `OTRSecrets.m`:
+Next you'll need to create your own version of environment-specific data. Make a copy of `Secrets-template.plist` as `Secrets.plist`:
 
-    $ cp ChatSecure/Classes/Utilities/OTRSecrets-Template.m ChatSecure/Classes/Utilities/OTRSecrets.m
+    $ cp OTRResources/Secrets-template.plist OTRResources/Secrets.plist
     $ cp ./configurations/OTR_Codesigning.xcconfig.sample ./configurations/OTR_Codesigning.xcconfig
     
 Then set your own value for `PROVISIONING_PROFILE_Debug` in `OTR_Codesigning.xcconfig` to your iOS team provisioning profile identifier to run it on your device. You can get this identifier by temporarily selecting the desired profile in Xcode (Build Settings -> Provisiong Profile), then selecting "Other...".

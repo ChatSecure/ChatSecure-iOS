@@ -8,8 +8,12 @@
 
 #import "OTRXMPPAccount.h"
 #import "OTRXMPPManager.h"
-#import "Strings.h"
+#import "OTRStrings.h"
 #import "OTRConstants.h"
+@import OTRAssets;
+#import "OTRLanguageManager.h"
+#import "XMPPJID.h"
+#import "XMPPStream.h"
 
 static NSUInteger const OTRDefaultPortNumber = 5222;
 
@@ -20,6 +24,8 @@ static NSUInteger const OTRDefaultPortNumber = 5222;
     if (self = [super init]) {
         self.port = [OTRXMPPAccount defaultPort];
         self.resource = [OTRXMPPAccount newResource];
+        self.autologin = YES;
+        self.rememberPassword = YES;
     }
     return self;
 }
@@ -36,7 +42,7 @@ static NSUInteger const OTRDefaultPortNumber = 5222;
 
 - (UIImage *)accountImage
 {
-    return [UIImage imageNamed:OTRXMPPImageName];
+    return [UIImage imageNamed:OTRXMPPImageName inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];
 }
 - (NSString *)accountDisplayName
 {
@@ -72,7 +78,8 @@ static NSUInteger const OTRDefaultPortNumber = 5222;
 + (NSString * )newResource
 {
     int r = arc4random() % 99999;
-    return [NSString stringWithFormat:@"%@%d",kOTRXMPPResource,r];
+    return [NSString stringWithFormat:@"%@%d",[OTRBranding xmppResource],r];
 }
+
 
 @end

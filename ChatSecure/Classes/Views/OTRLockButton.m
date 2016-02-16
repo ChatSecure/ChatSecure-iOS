@@ -8,7 +8,7 @@
 
 #import "OTRLockButton.h"
 #import "UIControl+JTTargetActionBlock.h"
-
+@import OTRAssets;
 
 static NSString *const kOTRLockImageName            = @"Lock_Locked";
 static NSString *const kOTRLockAndVerifiedImageName = @"Lock_Locked_Verified";
@@ -26,22 +26,22 @@ static NSString *const kOTRUnlockImageName          = @"Lock_Unlocked";
     
     switch (lockStatus) {
         case OTRLockStatusUnlocked:
-            backgroundImage = [UIImage imageNamed:kOTRUnlockImageName];
+            backgroundImage = [UIImage imageNamed:kOTRUnlockImageName inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];
             break;
         case OTRLockStatusLockedAndVerified:
-            backgroundImage = [UIImage imageNamed:kOTRLockAndVerifiedImageName];
+            backgroundImage = [UIImage imageNamed:kOTRLockAndVerifiedImageName inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];
             break;
         case OTRLockStatusLockedAndError:
-            backgroundImage = [UIImage imageNamed:kOTRLockedAndErrorImageName];
+            backgroundImage = [UIImage imageNamed:kOTRLockedAndErrorImageName inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];
             break;
         case OTRLockStatusLockedAndWarn:
-            backgroundImage = [UIImage imageNamed:kOTRLockedAndWarnImageName];
+            backgroundImage = [UIImage imageNamed:kOTRLockedAndWarnImageName inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];
             break;
         case OTRLockStatusLocked:
-            backgroundImage = [UIImage imageNamed:kOTRLockImageName];
+            backgroundImage = [UIImage imageNamed:kOTRLockImageName inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];
             break;
         default:
-            backgroundImage = [UIImage imageNamed:kOTRUnlockImageName];
+            backgroundImage = [UIImage imageNamed:kOTRUnlockImageName inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];
             break;
     }
     

@@ -20,21 +20,27 @@
 #import "OTRMessage.h"
 #import "UIViewController+ChatSecure.h"
 #import "OTRLog.h"
-#import "YapDatabaseView.h"
-#import "YapDatabase.h"
+@import YapDatabase.YapDatabaseView;
+
 #import "OTRDatabaseManager.h"
-#import "YapDatabaseConnection.h"
 #import "OTRDatabaseView.h"
-#import "YapDatabaseViewMappings.h"
+#import "OTRStrings.h"
 #import <KVOController/FBKVOController.h>
 #import "OTRAppDelegate.h"
-
+#import "OTRTheme.h"
+#import "OTRProtocolManager.h"
+#import "OTRInviteViewController.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
+@import OTRAssets;
+#import "OTRLanguageManager.h"
+#import "OTRMessagesGroupViewController.h"
+#import "OTRXMPPManager.h"
+#import "OTRXMPPRoomManager.h"
 
 static CGFloat kOTRConversationCellHeight = 80.0;
 
-@interface OTRConversationViewController () <OTRComposeViewControllerDelegate>
+@interface OTRConversationViewController ()
 
-@property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSTimer *cellUpdateTimer;
 @property (nonatomic, strong) YapDatabaseConnection *databaseConnection;
 @property (nonatomic, strong) YapDatabaseViewMappings *mappings;
@@ -42,6 +48,8 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 @property (nonatomic, strong) YapDatabaseViewMappings *unreadMessagesMappings;
 
 @property (nonatomic, strong) UIBarButtonItem *composeBarButtonItem;
+
+@property (nonatomic) BOOL hasPresentedOnboarding;
 @end
 
 @implementation OTRConversationViewController
@@ -51,7 +59,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     [super viewDidLoad];
     
     ////// Reset buddy status //////
-    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+    [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         [OTRBuddy resetAllBuddyStatusesWithTransaction:transaction];
         [OTRBuddy resetAllChatStatesWithTransaction:transaction];
     }];
@@ -60,7 +68,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     ///////////// Setup Navigation Bar //////////////
     
     self.title = CHATS_STRING;
-    UIBarButtonItem *settingsBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"OTRSettingsIcon"] style:UIBarButtonItemStylePlain target:self action:@selector(settingsButtonPressed:)];
+    UIBarButtonItem *settingsBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"OTRSettingsIcon" inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:self action:@selector(settingsButtonPressed:)];
     self.navigationItem.rightBarButtonItem = settingsBarButtonItem;
     
     self.composeBarButtonItem =[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(composeButtonPressed:)];
@@ -115,15 +123,46 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     ////// KVO //////
     __weak typeof(self)weakSelf = self;
     [self.KVOController observe:[OTRProtocolManager sharedInstance] keyPath:NSStringFromSelector(@selector(numberOfConnectedProtocols)) options:NSKeyValueObservingOptionNew block:^(id observer, id object, NSDictionary *change) {
-        __strong typeof(weakSelf)strongSelf = weakSelf;
-        NSUInteger numberConnectedAccounts = [[change objectForKey:NSKeyValueChangeNewKey] unsignedIntegerValue];
-        if (numberConnectedAccounts) {
-            [strongSelf enableComposeButton];
-        }
-        else {
-            [strongSelf disableComposeButton];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(weakSelf)strongSelf = weakSelf;
+            NSUInteger numberConnectedAccounts = [[change objectForKey:NSKeyValueChangeNewKey] unsignedIntegerValue];
+            if (numberConnectedAccounts) {
+                [strongSelf enableComposeButton];
+            }
+            else {
+                [strongSelf disableComposeButton];
+            }
+        });
+    }];
+}
+
+- (void) showOnboardingIfNeeded {
+    if (self.hasPresentedOnboarding) {
+        return;
+    }
+    __block BOOL hasAccounts = NO;
+    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        NSUInteger count = [transaction numberOfKeysInCollection:[OTRAccount collection]];
+        if (count > 0) {
+            hasAccounts = YES;
         }
     }];
+    UIStoryboard *onboardingStoryboard = [UIStoryboard storyboardWithName:@"Onboarding" bundle:[OTRAssets resourcesBundle]];
+
+    //If there is any number of accounts launch into default conversation view otherwise onboarding time
+    if (!hasAccounts) {
+        UINavigationController *welcomeNavController = [onboardingStoryboard instantiateInitialViewController];
+        OTRWelcomeViewController *welcomeViewController = welcomeNavController.viewControllers[0];
+        UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:welcomeViewController];
+        [self presentViewController:nav animated:YES completion:nil];
+        self.hasPresentedOnboarding = YES;
+    } else if ([PushController getPushPreference] == PushPreferenceUndefined) {
+        EnablePushViewController *pushVC = [onboardingStoryboard instantiateViewControllerWithIdentifier:@"enablePush"];
+        if (pushVC) {
+            [self presentViewController:pushVC animated:YES completion:nil];
+        }
+        self.hasPresentedOnboarding = YES;
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -149,7 +188,8 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [OTRNotificationPermissions checkPermissions];
+    
+    [self showOnboardingIfNeeded];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -168,27 +208,9 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 
 - (void)composeButtonPressed:(id)sender
 {
-    OTRComposeViewController * composeViewController = [[OTRComposeViewController alloc] init];
-    composeViewController.delegate = self;
-    UINavigationController * modalNavigationController = [[UINavigationController alloc] initWithRootViewController:composeViewController];
-    modalNavigationController.modalPresentationStyle = UIModalPresentationFormSheet;
-    
-    [self presentViewController:modalNavigationController animated:YES completion:nil];
-}
-
-- (void)enterConversationWithBuddy:(OTRBuddy *)buddy
-{
-    if (buddy) {
-        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-            [buddy setAllMessagesRead:transaction];
-        }];
+    if ([self.delegate respondsToSelector:@selector(conversationViewController:didSelectCompose:)]) {
+        [self.delegate conversationViewController:self didSelectCompose:sender];
     }
-    OTRMessagesHoldTalkViewController *messagesViewController = [OTRAppDelegate appDelegate].messagesViewController;
-    messagesViewController.buddy = buddy;
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone && ![messagesViewController otr_isVisible]) {
-        [self.navigationController pushViewController:messagesViewController animated:YES];
-    }
-    
 }
 
 - (void)updateVisibleCells:(id)sender
@@ -196,24 +218,24 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     NSArray * indexPathsArray = [self.tableView indexPathsForVisibleRows];
     for(NSIndexPath *indexPath in indexPathsArray)
     {
-        OTRBuddy *buddy = [self buddyForIndexPath:indexPath];
+        id <OTRThreadOwner> thread = [self threadForIndexPath:indexPath];
         UITableViewCell * cell = [self.tableView cellForRowAtIndexPath:indexPath];
         if ([cell isKindOfClass:[OTRConversationCell class]]) {
-            [(OTRConversationCell *)cell setBuddy:buddy];
+            [(OTRConversationCell *)cell setThread:thread];
         }
     }
 }
 
-- (OTRBuddy *)buddyForIndexPath:(NSIndexPath *)indexPath
+- (id <OTRThreadOwner>)threadForIndexPath:(NSIndexPath *)indexPath
 {
     
-    __block OTRBuddy *buddy = nil;
+    __block id thread = nil;
     [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         
-        buddy = [[transaction extension:OTRConversationDatabaseViewExtensionName] objectAtIndexPath:indexPath withMappings:self.mappings];
+        thread = [[transaction extension:OTRConversationDatabaseViewExtensionName] objectAtIndexPath:indexPath withMappings:self.mappings];
     }];
     
-    return buddy;
+    return thread;
 }
 
 - (void)enableComposeButton
@@ -231,7 +253,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 - (void)showInbox
 {
     if ([self.navigationItem.leftBarButtonItems count] != 2) {
-        UIBarButtonItem *inboxBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"inbox"] style:UIBarButtonItemStylePlain target:self action:@selector(inboxButtonPressed:)];
+        UIBarButtonItem *inboxBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"inbox" inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:self action:@selector(inboxButtonPressed:)];
         
         self.navigationItem.leftBarButtonItems = @[self.composeBarButtonItem,inboxBarButtonItem];
     }
@@ -295,11 +317,29 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 {
     //Delete conversation
     if(editingStyle == UITableViewCellEditingStyleDelete) {
-        OTRBuddy *cellBuddy = [[self buddyForIndexPath:indexPath] copy];
+        id <OTRThreadOwner> thread = [self threadForIndexPath:indexPath];
         
         [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-            [OTRMessage deleteAllMessagesForBuddyId:cellBuddy.uniqueId transaction:transaction];
+            [OTRMessage deleteAllMessagesForBuddyId:[thread threadIdentifier] transaction:transaction];
         }];
+        
+        if ([thread isKindOfClass:[OTRXMPPRoom class]]) {
+            
+            //Leave room
+            NSString *accountKey = [thread threadAccountIdentifier];
+            __block OTRAccount *account = nil;
+            [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+                account = [OTRAccount fetchObjectWithUniqueID:accountKey transaction:transaction];
+            }];
+            OTRXMPPManager *xmppManager = (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:account];
+            XMPPJID *jid = [XMPPJID jidWithString:((OTRXMPPRoom *)thread).jid];
+            [xmppManager.roomManager leaveRoom:jid];
+            
+            //Delete database items
+            [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+                [((OTRXMPPRoom *)thread) removeWithTransaction:transaction];
+            }];
+        }
     }
     
 }
@@ -307,11 +347,11 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     OTRConversationCell *cell = [tableView dequeueReusableCellWithIdentifier:[OTRConversationCell reuseIdentifier] forIndexPath:indexPath];
-    OTRBuddy * buddy = [self buddyForIndexPath:indexPath];
+    id <OTRThreadOwner> thread = [self threadForIndexPath:indexPath];
     
     [cell.avatarImageView.layer setCornerRadius:(kOTRConversationCellHeight-2.0*OTRBuddyImageCellPadding)/2.0];
     
-    [cell setBuddy:buddy];
+    [cell setThread:thread];
     
     return cell;
 }
@@ -334,10 +374,9 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    OTRBuddy *buddy = [self buddyForIndexPath:indexPath];
-    [self enterConversationWithBuddy:buddy];
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    id <OTRThreadOwner> thread = [self threadForIndexPath:indexPath];
+    if ([self.delegate respondsToSelector:@selector(conversationViewController:didSelectThread:)]) {
+        [self.delegate conversationViewController:self didSelectThread:thread];
     }
 }
 
@@ -449,16 +488,4 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     
     [self.tableView endUpdates];
 }
-
-#pragma - mark OTRComposeViewController Method
-
-- (void)controller:(OTRComposeViewController *)viewController didSelectBuddy:(OTRBuddy *)buddy
-{
-    [viewController dismissViewControllerAnimated:YES completion:^{
-        [self enterConversationWithBuddy:buddy];
-    }];
-}
-
-
-
 @end

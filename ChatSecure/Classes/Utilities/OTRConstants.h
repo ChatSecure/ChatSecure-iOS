@@ -43,9 +43,6 @@ extern NSString *const kOTRNotificationBuddyUniqueIdKey;
 extern NSString *const kOTRXMPPAccountSendDeliveryReceiptsKey;
 extern NSString *const kOTRXMPPAccountSendTypingNotificationsKey;
 
-extern NSString *const kOTRXMPPResource;
-
-extern NSString *const kOTRFeedbackEmail;
 
 extern NSString *const kOTRServiceName;
 extern NSString *const kOTRCertificateServiceName;
@@ -56,16 +53,11 @@ extern NSString *const kOTRSettingKeyOpportunisticOtr;
 extern NSString *const kOTRSettingKeyShowDisconnectionWarning;
 extern NSString *const kOTRSettingUserAgreedToEULA;
 extern NSString *const kOTRSettingAccountsKey;
-extern NSString *const kOTRSettingKeyLanguage;
 extern NSString *const kOTRSettingsValueUpdatedNotification;
 
 extern NSString *const kOTRAppVersionKey;
-extern NSString *const OTRActivityTypeQRCode;
 
 extern NSString *const OTRArchiverKey;
-
-extern NSString *const GOOGLE_APP_ID;
-extern NSString *const GOOGLE_APP_SCOPE;
 
 extern NSString *const OTRFailedRemoteNotificationRegistration;
 extern NSString *const OTRSuccessfulRemoteNotificationRegistration;
@@ -73,8 +65,14 @@ extern NSString *const OTRSuccessfulRemoteNotificationRegistration;
 extern NSString *const OTRYapDatabasePassphraseAccountName;
 extern NSString *const OTRYapDatabaseName;
 
+//Notifications
+extern NSString *const kOTRNotificationThreadKey;
+extern NSString *const kOTRNotificationThreadCollection;
+extern NSString *const OTRUserNotificationsChanged;
+
 //NSUserDefaults
 extern NSString *const kOTRDeletedFacebookKey;
+extern NSString *const kOTRPushEnabledKey;
 
 //Chatview
 extern CGFloat const kOTRSentDateFontSize;

@@ -20,19 +20,26 @@
 //  You should have received a copy of the GNU General Public License
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
-#import <UIKit/UIKit.h>
-#import "HockeySDK.h"
+@import UIKit;
+@import HockeySDK_Source;
 
+@class OTRTheme;
 @class OTRSettingsViewController;
-@class OTRMessagesHoldTalkViewController;
+@class OTRMessagesViewController;
 @class OTRConversationViewController;
+@class PushController;
+@class PushOTRListener;
+@protocol OTRThreadOwner;
+
 
 @interface OTRAppDelegate : UIResponder <UIApplicationDelegate, BITHockeyManagerDelegate>
 
 @property (nonatomic, strong) UIWindow *window;
 @property (nonatomic, strong) OTRSettingsViewController *settingsViewController;
-@property (nonatomic, strong) OTRMessagesHoldTalkViewController *messagesViewController;
 @property (nonatomic, strong) OTRConversationViewController *conversationViewController;
+
+@property (nonatomic, strong) PushController *pushController;
+@property (nonatomic, strong) PushOTRListener *pushListener;
 
 @property (nonatomic, strong) NSTimer *backgroundTimer;
 @property (nonatomic) UIBackgroundTaskIdentifier backgroundTask;
@@ -40,7 +47,15 @@
 
 - (void) showConversationViewController;
 
+- (id<OTRThreadOwner>)activeThread;
+
 + (OTRAppDelegate *)appDelegate;
 
+
+#pragma mark Theming
+
+@property (nonatomic, strong, readonly) OTRTheme *theme;
+/** Override this in subclass to use a different theme class */
+- (Class) themeClass;
 
 @end

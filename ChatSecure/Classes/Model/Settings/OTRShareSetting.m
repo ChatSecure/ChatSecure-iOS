@@ -7,7 +7,7 @@
 //
 
 #import "OTRShareSetting.h"
-#import "Strings.h"
+#import "OTRStrings.h"
 #import "OTRAppDelegate.h"
 #import "OTRQRCodeViewController.h"
 #import "OTRUtilities.h"

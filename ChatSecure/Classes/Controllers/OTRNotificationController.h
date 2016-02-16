@@ -8,8 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
+
+/** This is deprecated! Do not use. */
 @interface OTRNotificationController : NSObject
 
+@property (nonatomic) BOOL enabled;
 
 - (void)start;
 - (void)stop;

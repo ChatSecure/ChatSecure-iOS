@@ -10,7 +10,7 @@
 #import "OTRInLineTextEditTableViewCell.h"
 #import "OTRProtocolManager.h"
 #import <QuartzCore/QuartzCore.h>
-#import "Strings.h"
+#import "OTRStrings.h"
 #import "OTRXMPPManager.h"
 #import "OTRDatabaseManager.h"
 
@@ -19,7 +19,13 @@
 #import "OTRXMPPAccount.h"
 #import "OTRXMPPBuddy.h"
 
-@interface OTRNewBuddyViewController ()
+#import "QRCodeReaderViewController.h"
+#import "QRCodeReader.h"
+#import "XMPPURI.h"
+#import "OTRLanguageManager.h"
+#import "NSURL+ChatSecure.h"
+
+@interface OTRNewBuddyViewController () <QRCodeReaderDelegate>
 
 @property (nonatomic) BOOL isXMPPaccount;
 
@@ -34,7 +40,6 @@
         [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
             self.account = [OTRAccount fetchObjectWithUniqueID:accountId transaction:transaction];
         }];
-
     }
     return self;
     
@@ -63,11 +68,13 @@
     
     //self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelButtonPressed:)];
     
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(doneButtonPressed:)];
     
+    UIBarButtonItem *qrButton = [[UIBarButtonItem alloc] initWithTitle:QR_CODE_STRING style:UIBarButtonItemStylePlain target:self action:@selector(qrButtonPressed:)];
+    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(doneButtonPressed:)];
+    self.navigationItem.rightBarButtonItems = @[doneButton, qrButton];
     
     self.accountNameTextField = [[UITextField alloc] initWithFrame:CGRectZero];
-    self.accountNameTextField.placeholder = REQUIRED_STRING;
+    self.accountNameTextField.placeholder = XMPP_USERNAME_EXAMPLE_STRING;
     
     if (self.isXMPPaccount) {
         self.displayNameTextField = [[UITextField alloc] initWithFrame:CGRectZero];
@@ -78,15 +85,17 @@
         self.displayNameTextField.autocorrectionType = self.accountNameTextField.autocorrectionType = UITextAutocorrectionTypeNo;
     }
     
+    if (self.storyboard == nil) {
+        self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
+    }
+    self.tableView.dataSource = self;
+    self.tableView.delegate = self;
+    self.tableView.scrollEnabled = NO;
+    self.tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     
-    
-    UITableView * tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
-    tableView.dataSource = self;
-    tableView.delegate = self;
-    tableView.scrollEnabled = NO;
-    tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    
-    [self.view addSubview:tableView];
+    if (self.storyboard == nil) {
+        [self.view addSubview:self.tableView];
+    }
     
     [self.accountNameTextField becomeFirstResponder];
 	// Do any additional setup after loading the view.
@@ -108,7 +117,7 @@
     
     if (indexPath.row == 0) {
         textField = self.accountNameTextField;
-        cellText = EMAIL_STRING;
+        cellText = USERNAME_STRING;
     }
     else if(indexPath.row == 1) {
         textField = self.displayNameTextField;
@@ -181,9 +190,10 @@
 
 -(void)cancelButtonPressed:(id)sender
 {
-    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+    [self dismissViewController];
 }
--(void)doneButtonPressed:(id)sender
+
+-(IBAction)doneButtonPressed:(id)sender
 {
     if ([self checkFields]) {
         NSString * newBuddyAccountName = [[self.accountNameTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] lowercaseString];
@@ -203,8 +213,11 @@
         
         id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:self.account];
         [protocol addBuddy:buddy];
-        
-        [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+
+        if (self.delegate != nil && [self.delegate respondsToSelector:@selector(controller:didAddBuddy:)]) {
+            [self.delegate controller:self didAddBuddy:buddy];
+        }
+        [self dismissViewController];
     }
     else
     {
@@ -219,6 +232,65 @@
         
     }
     
+}
+
+- (void)dismissViewController {
+    if (self.delegate == nil || ([self.delegate respondsToSelector:@selector(shouldDismissViewController:)] && [self.delegate shouldDismissViewController:self])) {
+        [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+    }
+}
+
+- (void) qrButtonPressed:(id)sender {
+    if (![QRCodeReader supportsMetadataObjectTypes:@[AVMetadataObjectTypeQRCode]]) {
+        return;
+    }
+    
+    QRCodeReaderViewController *reader = [[QRCodeReaderViewController alloc] init];
+    reader.modalPresentationStyle = UIModalPresentationFormSheet;
+    reader.delegate = self;
+    [self presentViewController:reader animated:YES completion:NULL];
+}
+
+- (void)populateFromQRResult:(NSString *)result
+{
+    NSURL *resultURL = [NSURL URLWithString:result];
+    if ([result containsString:@"xmpp:"]) {
+        XMPPURI *uri = [[XMPPURI alloc] initWithURIString:result];
+        NSString *jid = uri.jid.full;
+        if (jid.length) {
+            self.accountNameTextField.text = jid;
+        }
+    } else if ([resultURL otr_isInviteLink]) {
+        NSURL *url = [NSURL URLWithString:result];
+        __block NSString *username = nil;
+        __block NSString *fingerprint = nil;
+        [url otr_decodeShareLink:^(NSString *uName, NSString *fPrint) {
+            username = uName;
+            fingerprint = fPrint;
+        }];
+        if (username.length) {
+            self.accountNameTextField.text = username;
+        }
+#warning TODO: Process OTR fingerprint
+        // this is where you'd add the OTR (or Axolotl) fingerprint to the trusted store
+    } else {
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Unrecognized Invite Format", @"shown when invite QR code doesnt work") message:nil preferredStyle:UIAlertControllerStyleAlert];
+        [self presentViewController:alert animated:YES completion:nil];
+    }
+}
+
+#pragma mark - QRCodeReader Delegate Methods
+
+- (void)reader:(QRCodeReaderViewController *)reader didScanResult:(NSString *)result
+{
+    [self dismissViewControllerAnimated:YES completion:^{
+        [self populateFromQRResult:result];
+    }];
+}
+
+- (void)readerDidCancel:(QRCodeReaderViewController *)reader
+{
+    [reader dismissViewControllerAnimated:YES completion:NULL];
 }
 
 @end

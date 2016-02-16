@@ -30,10 +30,9 @@
 #import "XMPPvCardAvatarModule.h"
 #import "XMPPMessage+XEP_0184.h"
 #import "XMPPMessage+XEP_0085.h"
+#import "XMPPMessage+XEP_0280.h"
 #import "NSXMLElement+XEP_0203.h"
 #import "XMPPMessageDeliveryReceipts.h"
-#import "Strings.h"
-#import "OTRXMPPManagedPresenceSubscriptionRequest.h"
 #import "OTRYapDatabaseRosterStorage.h"
 
 #import "OTRLog.h"
@@ -49,7 +48,7 @@
 #import "OTRUtilities.h"
 
 #import "OTRDatabaseManager.h"
-#import "YapDatabaseConnection.h"
+@import YapDatabase;
 #import "OTRXMPPBuddy.h"
 #import "OTRXMPPAccount.h"
 #import "OTRMessage.h"
@@ -57,6 +56,15 @@
 #import "OTRXMPPPresenceSubscriptionRequest.h"
 #import "OTRvCardYapDatabaseStorage.h"
 #import "OTRNotificationController.h"
+#import "XMPPStreamManagement.h"
+#import "OTRStreamManagementYapStorage.h"
+#import "XMPPMessageCarbons.h"
+#import "OTRXMPPMessageYapStroage.h"
+#import "OTRKit.h"
+#import "OTRXMPPRoomManager.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "OTRXMPPBuddyManager.h"
+@import OTRAssets;
 
 NSString *const OTRXMPPRegisterSucceededNotificationName = @"OTRXMPPRegisterSucceededNotificationName";
 NSString *const OTRXMPPRegisterFailedNotificationName    = @"OTRXMPPRegisterFailedNotificationName";
@@ -66,10 +74,15 @@ static NSString *const kOTRXMPPErrorDomain = @"kOTRXMPPErrorDomain";
 NSTimeInterval const kOTRChatStatePausedTimeout   = 5;
 NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 
+NSString *const OTRXMPPLoginStatusNotificationName = @"OTRXMPPLoginStatusNotificationName";
+
+NSString *const OTRXMPPOldLoginStatusKey = @"OTRXMPPOldLoginStatusKey";
+NSString *const OTRXMPPNewLoginStatusKey = @"OTRXMPPNewLoginStatusKey";
+NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
+
 
 @interface OTRXMPPManager()
 
-@property (nonatomic, strong) OTRXMPPAccount *account;
 @property (nonatomic) OTRProtocolConnectionStatus connectionStatus;
 
 @property (nonatomic, strong) XMPPStream *xmppStream;
@@ -83,11 +96,15 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 @property (nonatomic, strong) XMPPCapabilitiesCoreDataStorage *xmppCapabilitiesStorage;
 @property (nonatomic, strong) OTRYapDatabaseRosterStorage * xmppRosterStorage;
 @property (nonatomic, strong) OTRCertificatePinning * certificatePinningModule;
-@property (nonatomic, readwrite) BOOL isXmppConnected;
 @property (nonatomic, strong) NSMutableDictionary * buddyTimers;
 @property (nonatomic) dispatch_queue_t workQueue;
 @property (nonatomic) BOOL isRegisteringNewAccount;
+@property (nonatomic, strong) XMPPStreamManagement *streamManagement;
+@property (nonatomic, strong) XMPPMessageCarbons *messageCarbons;
+@property (nonatomic, strong) OTRXMPPMessageYapStroage *messageStorage;
 @property (nonatomic) BOOL userInitiatedConnection;
+@property (nonatomic) OTRLoginStatus loginStatus;
+@property (nonatomic, strong) OTRXMPPBuddyManager* xmppBuddyManager;
 
 @property (nonatomic, strong) YapDatabaseConnection *databaseConnection;
 
@@ -120,7 +137,7 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
     {
         NSAssert([newAccount isKindOfClass:[OTRXMPPAccount class]], @"Must have XMPP account");
         self.isRegisteringNewAccount = NO;
-        self.account = (OTRXMPPAccount *)newAccount;
+        _account = (OTRXMPPAccount *)newAccount;
         
         // Setup the XMPP stream
         [self setupStream];
@@ -252,19 +269,34 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 	[self.xmppRoster addDelegate:self delegateQueue:self.workQueue];
     [self.xmppCapabilities addDelegate:self delegateQueue:self.workQueue];
     
-	// Optional:
-	// 
-	// Replace me with the proper domain and port.
-	// The example below is setup for a typical google talk account.
-	// 
-	// If you don't supply a hostName, then it will be automatically resolved using the JID (below).
-	// For example, if you supply a JID like 'user@quack.com/rsrc'
-	// then the xmpp framework will follow the xmpp specification, and do a SRV lookup for quack.com.
-	// 
-	// If you don't specify a hostPort, then the default (5222) will be used.
-	
-    //	[xmppStream setHostName:@"talk.google.com"];
-    //	[xmppStream setHostPort:5222];	
+    // Message Carbons
+    self.messageCarbons = [[XMPPMessageCarbons alloc] init];
+    [self.messageCarbons activate:self.xmppStream];
+    
+    // Message storage
+    self.messageStorage = [[OTRXMPPMessageYapStroage alloc] initWithDatabaseConnection:self.databaseConnection];
+    [self.messageStorage activate:self.xmppStream];
+    
+    //Stream Management
+    YapDatabaseConnection *databaseConnection = [[OTRDatabaseManager sharedInstance] newConnection];
+    databaseConnection.name = NSStringFromClass([OTRStreamManagementYapStorage class]);
+    OTRStreamManagementYapStorage *streamManagementStorage = [[OTRStreamManagementYapStorage alloc] initWithDatabaseConnection:databaseConnection];
+    self.streamManagement = [[XMPPStreamManagement alloc] initWithStorage:streamManagementStorage];
+    [self.streamManagement automaticallyRequestAcksAfterStanzaCount:10 orTimeout:90];
+    [self.streamManagement automaticallySendAcksAfterStanzaCount:10 orTimeout:90];
+    self.streamManagement.autoResume = YES;
+    [self.streamManagement activate:self.xmppStream];
+    
+    //MUC
+    _roomManager = [[OTRXMPPRoomManager alloc] init];
+    self.roomManager.databaseConnection = [self.databaseConnection.database newConnection];
+    [self.roomManager activate:self.xmppStream];
+    
+    //Buddy Manager (for deleting)
+    self.xmppBuddyManager = [[OTRXMPPBuddyManager alloc] init];
+    self.xmppBuddyManager.databaseConnection = [self.databaseConnection.database newConnection];
+    self.xmppBuddyManager.protocol = self;
+    [self.xmppBuddyManager activate:self.xmppStream];
 }
 
 - (void)teardownStream
@@ -278,6 +310,9 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
     [_xmppvCardTempModule   deactivate];
     [_xmppvCardAvatarModule deactivate];
     [_xmppCapabilities      deactivate];
+    [_streamManagement      deactivate];
+    [_messageCarbons        deactivate];
+    [_messageStorage        deactivate];
 
     [_xmppStream disconnect];
 
@@ -335,9 +370,10 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
     return self.account.domain;
 }
 
-- (void)didRegisterNewAccount
+- (void)didRegisterNewAccountWithStream:(XMPPStream *)stream
 {
     self.isRegisteringNewAccount = NO;
+    [self authenticateWithStream:stream];
     [[NSNotificationCenter defaultCenter] postNotificationName:OTRXMPPRegisterSucceededNotificationName object:self];
 }
 - (void)failedToRegisterNewAccount:(NSError *)error
@@ -356,7 +392,7 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 {
     int r = arc4random() % 99999;
     
-    NSString * resource = [NSString stringWithFormat:@"%@%d",kOTRXMPPResource,r];
+    NSString * resource = [NSString stringWithFormat:@"%@%d",[OTRBranding xmppResource],r];
     
     self.JID = [XMPPJID jidWithString:myJID resource:resource];
     
@@ -453,7 +489,7 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
     [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         NSArray *buddiesArray = [self.account allBuddiesWithTransaction:transaction];
         for (OTRXMPPBuddy *buddy in buddiesArray) {
-            buddy.status = OTRBuddyStatusOffline;
+            buddy.status = OTRThreadStatusOffline;
             buddy.chatState = kOTRChatStateGone;
             
             [buddy saveWithTransaction:transaction];
@@ -514,6 +550,7 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 - (void)xmppStream:(XMPPStream *)sender socketDidConnect:(GCDAsyncSocket *)socket 
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
+    [self changeLoginStatus:OTRLoginStatusConnected error:nil];
 }
 
 - (void)xmppStream:(XMPPStream *)sender willSecureWithSettings:(NSMutableDictionary *)settings
@@ -523,11 +560,15 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
     settings[GCDAsyncSocketSSLProtocolVersionMin] = @(kTLSProtocol1);
     settings[GCDAsyncSocketSSLCipherSuites] = [OTRUtilities cipherSuites];
     settings[GCDAsyncSocketManuallyEvaluateTrust] = @(YES);
+    
+    [self changeLoginStatus:OTRLoginStatusSecuring error:nil];
 }
 
 - (void)xmppStreamDidSecure:(XMPPStream *)sender
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
+    
+    [self changeLoginStatus:OTRLoginStatusSecured error:nil];
 }
 
 - (void)xmppStreamDidConnect:(XMPPStream *)sender
@@ -540,20 +581,61 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
     else{
         [self authenticateWithStream:sender];
     }
+    
+    [self changeLoginStatus:OTRLoginStatusAuthenticating error:nil];
+}
+
+- (void)xmppStreamDidDisconnect:(XMPPStream *)sender withError:(NSError *)error
+{
+    DDLogVerbose(@"%@: %@ %@", THIS_FILE, THIS_METHOD, error);
+    
+    self.connectionStatus = OTRProtocolConnectionStatusDisconnected;
+    
+    [self changeLoginStatus:OTRLoginStatusDisconnected error:error];
+    
+    if (self.loginStatus == OTRLoginStatusDisconnected)
+    {
+        DDLogError(@"Unable to connect to server. Check xmppStream.hostName");
+        
+        [self failedToConnect:error];
+    }
+    
+    //Reset buddy info to offline
+    [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        NSArray *allBuddies = [self.account allBuddiesWithTransaction:transaction];
+        [allBuddies enumerateObjectsUsingBlock:^(OTRXMPPBuddy *buddy, NSUInteger idx, BOOL *stop) {
+            buddy.status = OTRThreadStatusOffline;
+            buddy.statusMessage = nil;
+            [transaction setObject:buddy forKey:buddy.uniqueId inCollection:[OTRXMPPBuddy collection]];
+        }];
+        
+    }];
 }
 
 - (void)xmppStreamDidAuthenticate:(XMPPStream *)sender
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
+    if ([sender supportsStreamManagement]) {
+        [self.streamManagement enableStreamManagementWithResumption:YES maxTimeout:0];
+    }
+    
     self.connectionStatus = OTRProtocolConnectionStatusConnected;
 	[self goOnline];
+    
+    
+    [self changeLoginStatus:OTRLoginStatusAuthenticated error:nil];
+    
+    
 }
 
 - (void)xmppStream:(XMPPStream *)sender didNotAuthenticate:(NSXMLElement *)error
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
     self.connectionStatus = OTRProtocolConnectionStatusDisconnected;
-    [self failedToConnect:[OTRXMPPError errorForXMLElement:error]];
+    NSError *err = [OTRXMPPError errorForXMLElement:error];
+    [self failedToConnect:err];
+    
+    [self changeLoginStatus:OTRLoginStatusSecured error:err];
 }
 
 - (BOOL)xmppStream:(XMPPStream *)sender didReceiveIQ:(XMPPIQ *)iq
@@ -563,7 +645,7 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 }
 
 - (void)xmppStreamDidRegister:(XMPPStream *)sender {
-    [self didRegisterNewAccount];
+    [self didRegisterNewAccountWithStream:sender];
 }
 
 - (void)xmppStream:(XMPPStream *)sender didNotRegister:(NSXMLElement *)xmlError {
@@ -571,6 +653,8 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
     self.isRegisteringNewAccount = NO;
     NSError * error = [OTRXMPPError errorForXMLElement:xmlError];
     [self failedToRegisterNewAccount:error];
+    
+    [self changeLoginStatus:OTRLoginStatusSecured error:error];
 }
 
 -(OTRXMPPBuddy *)buddyWithMessage:(XMPPMessage *)message transaction:(YapDatabaseReadTransaction *)transaction
@@ -584,61 +668,7 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
 
-    [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        
-        OTRXMPPBuddy *messageBuddy = [self buddyWithMessage:xmppMessage transaction:transaction];
-
-        if ([xmppMessage isErrorMessage]) {
-            NSError *error = [xmppMessage errorMessage];
-            DDLogCWarn(@"XMPP Error: %@",error);
-        }
-        else if([xmppMessage hasChatState])
-        {
-            if([xmppMessage hasComposingChatState])
-                messageBuddy.chatState = kOTRChatStateComposing;
-            else if([xmppMessage hasPausedChatState])
-                 messageBuddy.chatState = kOTRChatStatePaused;
-            else if([xmppMessage hasActiveChatState])
-                 messageBuddy.chatState = kOTRChatStateActive;
-            else if([xmppMessage hasInactiveChatState])
-                 messageBuddy.chatState = kOTRChatStateInactive;
-            else if([xmppMessage hasGoneChatState])
-                 messageBuddy.chatState = kOTRChatStateGone;
-            [messageBuddy saveWithTransaction:transaction];
-        }
-        
-        
-        if ([xmppMessage hasReceiptResponse] && ![xmppMessage isErrorMessage]) {
-            [OTRMessage receivedDeliveryReceiptForMessageId:[xmppMessage receiptResponseID] transaction:transaction];
-        }
-        
-        if ([xmppMessage isMessageWithBody] && ![xmppMessage isErrorMessage])
-        {
-            NSString *body = [[xmppMessage elementForName:@"body"] stringValue];
-            
-            NSDate * date = [xmppMessage delayedDeliveryDate];
-            
-            OTRMessage *message = [[OTRMessage alloc] init];
-            message.incoming = YES;
-            message.text = body;
-            message.buddyUniqueId = messageBuddy.uniqueId;
-            if (date) {
-                message.date = date;
-            }
-            
-            message.messageId = [xmppMessage elementID];
-            
-            if (messageBuddy) {
-                [[OTRKit sharedInstance] decodeMessage:message.text username:messageBuddy.username accountName:self.account.username protocol:kOTRProtocolTypeXMPP tag:message];
-            } else {
-                // message from server
-                DDLogWarn(@"No buddy for message: %@", xmppMessage);
-            }
-        }
-        if (messageBuddy) {
-            [transaction setObject:messageBuddy forKey:messageBuddy.uniqueId inCollection:[OTRXMPPBuddy collection]];
-        }
-    }];
+    
 }
 - (void)xmppStream:(XMPPStream *)sender didReceivePresence:(XMPPPresence *)presence
 {
@@ -659,10 +689,13 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 {
     if ([message.elementID length]) {
         [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-            [OTRMessage enumerateMessagesWithMessageId:message.elementID transaction:transaction usingBlock:^(OTRMessage *message, BOOL *stop) {
-                message.error = error;
-                [message saveWithTransaction:transaction];
-                *stop = YES;
+            [transaction enumerateMessagesWithId:message.elementID block:^(id<OTRMesssageProtocol> _Nonnull databaseMessage, BOOL * _Null_unspecified stop) {
+                if ([databaseMessage isKindOfClass:[OTRMessage class]]) {
+                    ((OTRMessage *)databaseMessage).error = error;
+                    [(OTRMessage *)databaseMessage saveWithTransaction:transaction];
+                    *stop = YES;
+                }
+                
             }];
         }];
     }
@@ -672,31 +705,6 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
 - (void)xmppStream:(XMPPStream *)sender didFailToSendPresence:(XMPPPresence *)presence error:(NSError *)error
 {
     DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
-}
-
-- (void)xmppStreamDidDisconnect:(XMPPStream *)sender withError:(NSError *)error
-{
-	DDLogVerbose(@"%@: %@ %@", THIS_FILE, THIS_METHOD, error);
-    
-    self.connectionStatus = OTRProtocolConnectionStatusDisconnected;
-	
-	if (!self.isXmppConnected)
-	{
-		DDLogError(@"Unable to connect to server. Check xmppStream.hostName");
-        [self failedToConnect:error];
-	}
-    else {
-        [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-            NSArray *allBuddies = [self.account allBuddiesWithTransaction:transaction];
-            [allBuddies enumerateObjectsUsingBlock:^(OTRXMPPBuddy *buddy, NSUInteger idx, BOOL *stop) {
-                buddy.status = OTRBuddyStatusOffline;
-                buddy.statusMessage = nil;
-                [transaction setObject:buddy forKey:buddy.uniqueId inCollection:[OTRXMPPBuddy collection]];
-            }];
-            
-        }];
-    }
-    self.isXmppConnected = NO;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -768,8 +776,16 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
     
     __block OTRBuddy *buddy = nil;
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        buddy = [message buddyWithTransaction:transaction];
+        buddy = (OTRBuddy *)[message threadOwnerWithTransaction:transaction];
     }];
+    
+    if(buddy.status == OTRThreadStatusOffline) {
+        [self.pushController sendKnock:buddy.uniqueId completion:^(BOOL success, NSError *error) {
+            if (!success) {
+                DDLogError(@"Error sending knock");
+            }
+        }];
+    }
     
     [self invalidatePausedChatStateTimerForBuddyUniqueId:buddy.uniqueId];
     
@@ -780,6 +796,10 @@ NSTimeInterval const kOTRChatStateInactiveTimeout = 120;
         [xmppMessage addBody:text];
 
         [xmppMessage addActiveChatState];
+        
+        if ([OTRKit stringStartsWithOTRPrefix:text]) {
+            [xmppMessage addPrivateMessageCarbons];
+        }
 		
 		[self.xmppStream sendElement:xmppMessage];
     }
@@ -1021,8 +1041,28 @@ managedBuddyObjectID
 {
     NSData * certifcateData = [OTRCertificatePinning dataForCertificate:[OTRCertificatePinning certForTrust:trust]];
     DDLogVerbose(@"New trustResultType: %d certLength: %d", (int)trustResultType, (int)certifcateData.length);
+    NSError *error = [OTRXMPPError errorForTrustResult:trustResultType withCertData:certifcateData hostname:hostname];
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self failedToConnect:[OTRXMPPError errorForTrustResult:trustResultType withCertData:certifcateData hostname:hostname]];
+        [self failedToConnect:error];
+    });
+    
+    [self changeLoginStatus:OTRLoginStatusDisconnected error:error];
+}
+
+- (void)changeLoginStatus:(OTRLoginStatus)status error:(NSError *)error
+{
+    OTRLoginStatus oldStatus = self.loginStatus;
+    OTRLoginStatus newStatus = status;
+    self.loginStatus = status;
+    
+    NSMutableDictionary *userInfo = [@{OTRXMPPOldLoginStatusKey: @(oldStatus), OTRXMPPNewLoginStatusKey: @(newStatus)} mutableCopy];
+    
+    if (error) {
+        userInfo[OTRXMPPLoginErrorKey] = error;
+    }
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:OTRXMPPLoginStatusNotificationName object:self userInfo:userInfo];
     });
 }
 

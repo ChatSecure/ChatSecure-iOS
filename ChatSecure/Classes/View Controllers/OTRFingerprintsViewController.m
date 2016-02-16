@@ -7,11 +7,13 @@
 //
 
 #import "OTRFingerprintsViewController.h"
-#import "OTRKit.h"
-#import "Strings.h"
+@import OTRKit;
+#import "OTRStrings.h"
 #import "OTRAccount.h"
 #import "OTRDatabaseManager.h"
 #import "OTRDatabaseView.h"
+#import "OTRLanguageManager.h"
+@import YapDatabase.YapDatabaseView;
 
 @interface OTRFingerprintsViewController ()
 

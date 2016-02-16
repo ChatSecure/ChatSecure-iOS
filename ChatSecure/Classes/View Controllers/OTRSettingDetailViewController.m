@@ -21,7 +21,8 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "OTRSettingDetailViewController.h"
-#import "Strings.h"
+#import "OTRStrings.h"
+#import "OTRLanguageManager.h"
 
 @implementation OTRSettingDetailViewController
 @synthesize otrSetting, saveButton, cancelButton;

@@ -7,14 +7,15 @@
 //
 
 #import "OTRNotificationController.h"
-#import "CRToast.h"
 #import "OTRConstants.h"
-#import "OTRLoginViewController.h"
 #import "OTRSettingsViewController.h"
 #import "OTRXMPPManager.h"
 #import "OTRToastOptions.h"
 #import "OTRImages.h"
 #import "UIImage+ChatSecure.h"
+#import "OTRBaseLoginViewController.h"
+#import "OTRStrings.h"
+#import "OTRLanguageManager.h"
 
 @interface OTRNotificationController ()
 
@@ -31,7 +32,7 @@
 - (instancetype)init
 {
     if (self = [super init]) {
-        
+        self.enabled = NO;
         self.notificationQueue = [NSOperationQueue mainQueue];
         self.notificationObservers = [[NSMutableDictionary alloc] init];
         self.started = NO;
@@ -104,21 +105,27 @@
 
 - (void)showLoginSuccessNotification:(NSNotification *)notification
 {
+    if (!self.enabled) {
+        return;
+    }
     UIViewController *topViewController = [self topViewController];
-    if (![topViewController isKindOfClass:[OTRLoginViewController class]]) {
+    if (![topViewController isKindOfClass:[OTRBaseLoginViewController class]]) {
         OTRXMPPManager *xmppManager = notification.object;
         NSString *accountName = nil;
         if (xmppManager) {
             accountName = [xmppManager accountName];
             accountName = [XMPPJID jidWithString:accountName].bare;
         }
-        OTRToastOptions *options = [[OTRToastOptions alloc] initWithText:CONNECTED_STRING subtitleText:accountName optionType:OTRToastOptionTypeSuccess];
-        [CRToastManager showNotificationWithOptions:[options dictionary] completionBlock:nil];
+        //OTRToastOptions *options = [[OTRToastOptions alloc] initWithText:CONNECTED_STRING subtitleText:accountName optionType:OTRToastOptionTypeSuccess];
+        //[CRToastManager showNotificationWithOptions:[options dictionary] completionBlock:nil];
     }
 }
 
 - (void)showLoginFailureNotification:(NSNotification *)notification
 {
+    if (!self.enabled) {
+        return;
+    }
     BOOL isUserInitiated = [[notification.userInfo objectForKey:kOTRProtocolLoginUserInitiated] boolValue];
     
     UIViewController *topViewController = [self topViewController];
@@ -126,7 +133,7 @@
         topViewController = ((UINavigationController *)topViewController).topViewController;
     }
     
-    BOOL correctViewController = !([topViewController isKindOfClass:[OTRLoginViewController class]] || [topViewController isKindOfClass:[OTRSettingsViewController class]]);
+    BOOL correctViewController = !([topViewController isKindOfClass:[OTRBaseLoginViewController class]] || [topViewController isKindOfClass:[OTRSettingsViewController class]]);
     
     
     if (correctViewController && isUserInitiated) {
@@ -136,8 +143,8 @@
             accountName = [xmppManager accountName];
             accountName = [XMPPJID jidWithString:accountName].bare;
         }
-        OTRToastOptions *options = [[OTRToastOptions alloc] initWithText:ACCOUNT_DISCONNECTED_STRING subtitleText:accountName optionType:OTRToastOptionTypeFailure];
-        [CRToastManager showNotificationWithOptions:[options dictionary] completionBlock:nil];
+        //OTRToastOptions *options = [[OTRToastOptions alloc] initWithText:ACCOUNT_DISCONNECTED_STRING subtitleText:accountName optionType:OTRToastOptionTypeFailure];
+        //[CRToastManager showNotificationWithOptions:[options dictionary] completionBlock:nil];
     }
 }
 
@@ -145,9 +152,12 @@
 
 - (void)showAccountConnectingNotificationWithAccountName:(NSString *)accountName
 {
+    if (!self.enabled) {
+        return;
+    }
     OTRToastOptions *options = [OTRToastOptions optionsWithText:CONNECTING_STRING subtitleText:accountName];
     options.image = [UIImage otr_imageWithImage:[OTRImages wifiWithColor:[UIColor whiteColor]] scaledToSize:kOTRDefaultNotificationImageSize];
-    [CRToastManager showNotificationWithOptions:[options dictionary] completionBlock:nil];
+    //[CRToastManager showNotificationWithOptions:[options dictionary] completionBlock:nil];
 }
 
 #pragma - mark Class Methods

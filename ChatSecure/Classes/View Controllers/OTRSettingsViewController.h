@@ -24,7 +24,6 @@
 #import "OTRViewSetting.h"
 #import "OTRSettingsManager.h"
 #import <MessageUI/MessageUI.h>
-#import "OTRLoginViewController.h"
 #import "OTRDonateSetting.h"
 
 @interface OTRSettingsViewController : UIViewController <OTRSettingDelegate, MFMailComposeViewControllerDelegate, OTRDonateSettingDelegate>

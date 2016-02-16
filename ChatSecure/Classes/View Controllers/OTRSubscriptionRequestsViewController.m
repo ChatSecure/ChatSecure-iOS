@@ -11,13 +11,13 @@
 #import "OTRXMPPAccount.h"
 #import "OTRDatabaseManager.h"
 #import "OTRDatabaseView.h"
-#import "Strings.h"
+#import "OTRStrings.h"
 #import "OTRXMPPManager.h"
 #import "OTRProtocolManager.h"
 #import "OTRUtilities.h"
 #import "UIActionSheet+ChatSecure.h"
-#import "YapDatabaseViewMappings.h"
-#import "UIActionSheet+Blocks.h"
+@import YapDatabase.YapDatabaseView;
+#import "OTRLanguageManager.h"
 
 @interface OTRSubscriptionRequestsViewController () <UITableViewDataSource, UITableViewDelegate>
 
@@ -86,43 +86,27 @@
     };
     
     
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:request.jid message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    
+    UIAlertAction *cancelAlertAction = [UIAlertAction actionWithTitle:CANCEL_STRING style:UIAlertActionStyleCancel handler:nil];
+    UIAlertAction *rejectAlertAction = [UIAlertAction actionWithTitle:REJECT_STRING style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
+        rejectBlock();
+    }];
+    UIAlertAction *acceptAlertActtion = [UIAlertAction actionWithTitle:ADD_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        acceptBlock();
+    }];
+    
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
-        
-        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:request.jid message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-        
-        UIAlertAction *cancelAlertAction = [UIAlertAction actionWithTitle:CANCEL_STRING style:UIAlertActionStyleCancel handler:nil];
-        UIAlertAction *rejectAlertAction = [UIAlertAction actionWithTitle:REJECT_STRING style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
-            rejectBlock();
-        }];
-        UIAlertAction *acceptAlertActtion = [UIAlertAction actionWithTitle:ADD_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-            acceptBlock();
-        }];
-        
-        if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
-            UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-            alertController.popoverPresentationController.sourceView = cell;
-            alertController.popoverPresentationController.sourceRect = cell.bounds;
-        }
-        
-        [alertController addAction:cancelAlertAction];
-        [alertController addAction:rejectAlertAction];
-        [alertController addAction:acceptAlertActtion];
-        
-        [self presentViewController:alertController animated:YES completion:nil];
-    }
-    else {
-        RIButtonItem *cancelButton = [RIButtonItem itemWithLabel:CANCEL_STRING];
-        RIButtonItem *rejectButton = [RIButtonItem itemWithLabel:REJECT_STRING action:^{
-            rejectBlock();
-        }];
-        RIButtonItem *addButton = [RIButtonItem itemWithLabel:ADD_STRING action:^{
-            acceptBlock();
-        }];
-        UIActionSheet *actionSeet = [[UIActionSheet alloc] initWithTitle:request.jid cancelButtonItem:cancelButton destructiveButtonItem:rejectButton otherButtonItems:addButton, nil];
-        
-        [actionSeet otr_presentInView:self.view];
+        UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+        alertController.popoverPresentationController.sourceView = cell;
+        alertController.popoverPresentationController.sourceRect = cell.bounds;
     }
     
+    [alertController addAction:cancelAlertAction];
+    [alertController addAction:rejectAlertAction];
+    [alertController addAction:acceptAlertActtion];
+    
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 -(void)doneButtonPressed:(id)sender

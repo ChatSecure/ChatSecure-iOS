@@ -12,6 +12,7 @@
 #import "OTRXMPPBuddy.h"
 #import "OTRMessage.h"
 #import "OTRXMPPAccount.h"
+@import OTRAssets;
 
 @implementation OTRChatDemo
 
@@ -43,14 +44,14 @@
             if (!buddy) {
                 buddy = [[OTRXMPPBuddy alloc] init];
                 NSString *imageName = avatarImageNames[idx];
-                buddy.avatarData = UIImagePNGRepresentation([UIImage imageNamed:imageName]);
+                buddy.avatarData = UIImagePNGRepresentation([UIImage imageNamed:imageName inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil]);
                 buddy.displayName = name;
                 buddy.username = name;
                 buddy.accountUniqueId  = account.uniqueId;
                 
             }
             
-            buddy.status = (NSInteger)OTRBuddyStatusAvailable+idx;
+            buddy.status = (NSInteger)OTRThreadStatusAvailable+idx;
             
             NSArray *textArray = [self shuffleHelloArray:helloArray];
             

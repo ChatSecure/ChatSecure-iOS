@@ -27,6 +27,10 @@ typedef NS_ENUM(NSUInteger, OTRBubbleMessageType) {
 
 + (UIImage *)facebookActivityImage;
 
++ (UIImage *)duckduckgoImage;
+
++ (UIImage *)xmppServerImageWithName:(NSString *)name;
+
 + (UIImage *)warningImage;
 + (UIImage *)circleWarningWithColor:(UIColor *)color;
 + (UIImage *)warningImageWithColor:(UIColor *)color;

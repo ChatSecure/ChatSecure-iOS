@@ -26,7 +26,7 @@
 #import "OTRProtocol.h"
 #import "OTRAccountsManager.h"
 
-@class OTRAccount,OTRBuddy, OTRPushManager;
+@class OTRAccount,OTRBuddy;
 
 @interface OTRProtocolManager : NSObject
 
@@ -38,6 +38,7 @@
 - (BOOL)existsProtocolForAccount:(OTRAccount *)account;
 - (id <OTRProtocol>)protocolForAccount:(OTRAccount *)account;
 - (void)removeProtocolForAccount:(OTRAccount *)account;
+- (void)setProtocol:(id <OTRProtocol>)protocol forAccount:(OTRAccount *)account;
 
 - (BOOL)isAccountConnected:(OTRAccount *)account;
 

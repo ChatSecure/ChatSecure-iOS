@@ -6,8 +6,9 @@ project.xcworkspace
 xcuserdata
 .svn
 DerivedData
-OTRSecrets.m
 *.orig
 *.xccheckout
 
 /Pods/
+
+Secrets.plist

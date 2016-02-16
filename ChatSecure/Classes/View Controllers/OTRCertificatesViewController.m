@@ -49,7 +49,7 @@
     NSMutableArray * tempHashes = [NSMutableArray array];
     NSMutableDictionary * tempDict = [NSMutableDictionary dictionary];
     [newCerts enumerateObjectsUsingBlock:^(NSData * certData, NSUInteger idx, BOOL *stop) {
-        NSString * fingerPrint = [OTRCertificatePinning sha1FingerprintForCertificate:[OTRCertificatePinning certForData:certData]];
+        NSString * fingerPrint = [OTRCertificatePinning sha256FingerprintForCertificate:[OTRCertificatePinning certForData:certData]];
         [tempHashes addObject:fingerPrint];
         tempDict[fingerPrint] = certData;
     }];
@@ -101,7 +101,7 @@
     
     cell.textLabel.text = [certificateHashes[indexPath.row] stringByReplacingOccurrencesOfString:@" " withString:@":"];
     cell.textLabel.font = [UIFont systemFontOfSize:10.0];
-    cell.detailTextLabel.text = @"SHA1";
+    cell.detailTextLabel.text = @"SHA256";
     
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     

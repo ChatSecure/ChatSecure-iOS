@@ -27,7 +27,7 @@
 #import "OTRProtocolManager.h"
 #import "OTRDatabaseManager.h"
 #import "OTRUtilities.h"
-#import "Strings.h"
+#import "OTRStrings.h"
 #import "OTRAppDelegate.h"
 #import "OTRMessagesHoldTalkViewController.h"
 #import "UIViewController+ChatSecure.h"
@@ -36,8 +36,10 @@
 #import "OTRVideoItem.h"
 #import "OTRMediaFileManager.h"
 #import "OTRMediaServer.h"
-
+#import "OTRLanguageManager.h"
 #import "OTRLog.h"
+#import "OTRPushTLVHandler.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 @import AVFoundation;
 
@@ -46,7 +48,7 @@ NSString *const OTRWillStartGeneratingPrivateKeyNotification = @"OTREncryptionMa
 NSString *const OTRDidFinishGeneratingPrivateKeyNotification = @"OTREncryptionManagerdidFinishGeneratingPrivateKeyNotification";
 NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
 
-@interface OTREncryptionManager ()
+@interface OTREncryptionManager () <OTRKitDelegate, OTRDataHandlerDelegate>
 @property (nonatomic, strong) OTRKit *otrKit;
 @end
 
@@ -55,10 +57,11 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
 
 - (id) init {
     if (self = [super init]) {
-        self.otrKit = [OTRKit sharedInstance];
+        _otrKit = [OTRKit sharedInstance];
         [self.otrKit setupWithDataPath:nil];
         self.otrKit.delegate = self;
         _dataHandler = [[OTRDataHandler alloc] initWithOTRKit:self.otrKit delegate:self];
+        _pushTLVHandler = [[OTRPushTLVHandler alloc] initWithOTRKit:self.otrKit delegate:nil];
         NSArray *protectPaths = @[self.otrKit.privateKeyPath, self.otrKit.fingerprintsPath, self.otrKit.instanceTagsPath];
         for (NSString *path in protectPaths) {
             if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
@@ -193,10 +196,12 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     decodedMessage = [OTRUtilities stripHTML:decodedMessage];
     
     if ([decodedMessage length]) {
-        if ([[OTRAppDelegate appDelegate].messagesViewController otr_isVisible] && [[OTRAppDelegate appDelegate].messagesViewController.buddy.uniqueId isEqualToString:originalMessage.buddyUniqueId])
-        {
-            originalMessage.read = YES;
-        }
+        
+        //TODO This needs to be moved
+//        if ([[OTRAppDelegate appDelegate].messagesViewController otr_isVisible] && [[OTRAppDelegate appDelegate].messagesViewController.buddy.uniqueId isEqualToString:originalMessage.buddyUniqueId])
+//        {
+//            originalMessage.read = YES;
+//        }
         
         originalMessage.text = decodedMessage;
         
@@ -210,7 +215,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
             buddy.lastMessageDate = originalMessage.date;
             [buddy saveWithTransaction:transaction];
         } completionBlock:^{
-            [OTRMessage showLocalNotificationForMessage:originalMessage];
+            [[UIApplication sharedApplication] showLocalNotification:originalMessage];
         }];
     }
     
@@ -225,7 +230,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
         buddy = [OTRBuddy fetchBuddyForUsername:username accountName:accountName transaction:transaction];
     } completionBlock:^{
-        [[NSNotificationCenter defaultCenter] postNotificationName:OTRMessageStateDidChangeNotification object:buddy userInfo:@{OTRMessageStateKey:@(messageState)}];
+        [[NSNotificationCenter defaultCenter] postNotificationName:OTRMessageStateDidChangeNotification object:buddy userInfo:@{OTRMessageStateKey:@([[self class] convertEncryptionState:messageState])}];
     }];
 }
 
@@ -239,7 +244,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
         buddy = [OTRBuddy fetchBuddyForUsername:username accountName:accountName transaction:transaction];
     }];
     
-    if(!buddy || buddy.status == OTRBuddyStatusOffline) {
+    if(!buddy || buddy.status == OTRThreadStatusOffline) {
         return NO;
     }
     else {
@@ -270,7 +275,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
 
 - (void) otrKit:(OTRKit *)otrKit handleMessageEvent:(OTRKitMessageEvent)event message:(NSString *)message username:(NSString *)username accountName:(NSString *)accountName protocol:(NSString *)protocol tag:(id)tag error:(NSError *)error {
     //incoming and outgoing errors and other events
-    DDLogWarn(@"Message Event: %d Error:%@",(int)event,error);
+    DDLogWarn(@"Message Event: %d Error:%@",(int)event,[OTREncryptionManager errorForMessageEvent:event].localizedDescription);
     
     if ([tag isKindOfClass:[OTRMessage class]]) {
         __block NSError *error = nil;
@@ -407,6 +412,19 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     return string;
 }
 
++ (OTREncryptionMessageState)convertEncryptionState:(NSUInteger)messageState
+{
+    switch (messageState) {
+        case OTRKitMessageStateEncrypted:
+            return OTREncryptionMessageStateEncrypted;
+        case OTRKitMessageStatePlaintext:
+            return OTREncryptionMessageStatePlaintext;
+        case OTRKitMessageStateFinished:
+            return OTREncryptionMessageStateFinished;
+    }
+    return OTREncryptionMessageStateError;
+}
+
 + (BOOL) setFileProtection:(NSString*)fileProtection path:(NSString*)path {
     NSDictionary *fileAttributes = [NSDictionary dictionaryWithObject:fileProtection forKey:NSFileProtectionKey];
     NSError * error = nil;
@@ -470,10 +488,12 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     mediaItem.isIncoming = YES;
     newMessage.mediaItemUniqueId = mediaItem.uniqueId;
     
-    if ([[OTRAppDelegate appDelegate].messagesViewController otr_isVisible] && [[OTRAppDelegate appDelegate].messagesViewController.buddy.uniqueId isEqualToString:newMessage.buddyUniqueId])
-    {
-        newMessage.read = YES;
-    }
+    
+    //Todo This needs to be moved
+//    if ([[OTRAppDelegate appDelegate].messagesViewController otr_isVisible] && [[OTRAppDelegate appDelegate].messagesViewController.buddy.uniqueId isEqualToString:newMessage.buddyUniqueId])
+//    {
+//        newMessage.read = YES;
+//    }
     
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         [newMessage saveWithTransaction:transaction];

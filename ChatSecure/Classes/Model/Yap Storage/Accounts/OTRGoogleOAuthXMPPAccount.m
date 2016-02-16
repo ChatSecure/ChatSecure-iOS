@@ -7,12 +7,13 @@
 //
 
 #import "OTRGoogleOAuthXMPPAccount.h"
-#import "OTRConstants.h"
-#import "Strings.h"
+#import "OTRStrings.h"
 #import "GTMOAuth2Authentication.h"
 #import "GTMOAuth2SignIn.h"
 #import "OTRSecrets.h"
+@import OTRAssets;
 #import "OTRConstants.h"
+#import "OTRLanguageManager.h"
 
 NSString *const kOTRExpirationDateKey = @"kOTRExpirationDateKey";
 NSString *const kOTRExpiresInKey      = @"expires_in";
@@ -31,7 +32,7 @@ NSString *const kOTRExpiresInKey      = @"expires_in";
 
 - (UIImage *)accountImage
 {
-    return [UIImage imageNamed:OTRGoogleTalkImageName];
+    return [UIImage imageNamed:OTRGoogleTalkImageName inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];
 }
 - (NSString *)accountDisplayName
 {
@@ -81,9 +82,9 @@ NSString *const kOTRExpiresInKey      = @"expires_in";
         auth = [[GTMOAuth2Authentication alloc] init];
         [auth setParameters:[tokenDictionary mutableCopy]];
     }
-    auth.clientID = GOOGLE_APP_ID;
-    auth.clientSecret = kOTRGoogleAppSecret;
-    auth.scope = GOOGLE_APP_SCOPE;
+    auth.clientID = [OTRBranding googleAppId];
+    auth.clientSecret = [OTRSecrets googleAppSecret];
+    auth.scope = [OTRBranding googleAppScope];
     auth.tokenURL = [GTMOAuth2SignIn googleTokenURL];
     return auth;
 }

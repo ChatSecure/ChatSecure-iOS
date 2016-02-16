@@ -9,18 +9,28 @@
 #import "OTRAccountTableViewCell.h"
 
 #import "OTRAccount.h"
-#import "Strings.h"
+#import "OTRStrings.h"
 #import "OTRImages.h"
+#import "OTRLanguageManager.h"
+@import OTRAssets;
 
 @implementation OTRAccountTableViewCell
 
-- (id)initWithReuseIdentifier:(NSString *)identifier
-{
-    return [self initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:identifier];
+- (instancetype) initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+    if (self = [super initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:reuseIdentifier]) {
+        self.shareButton = [UIButton buttonWithType:UIButtonTypeSystem];
+        UIImage *image = [[UIImage imageNamed:@"OTRShareIcon" inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        NSParameterAssert(image != nil);
+        [self.shareButton setImage:image forState:UIControlStateNormal];
+        [self.shareButton sizeToFit];
+        self.accessoryView = self.shareButton;
+    }
+    return self;
 }
 
 - (void)setAccount:(OTRAccount *)account
 {
+    _account = account;
     self.textLabel.text = account.username;
     if (account.displayName.length){
         self.textLabel.text = account.displayName;
@@ -40,6 +50,10 @@
     else {
         self.detailTextLabel.text = nil;
     }
+}
+
++ (NSString*) cellIdentifier {
+    return NSStringFromClass([self class]);
 }
 
 @end

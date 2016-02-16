@@ -7,11 +7,11 @@
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.chrisballinger.$(PRODUCT_NAME:rfc1034identifier)$(BUNDLE_ID_SUFFIX)</string>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>$(PRODUCT_NAME)${BUNDLE_DISPLAY_NAME_SUFFIX}</string>
+	<string>$(PRODUCT_NAME)</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -30,6 +30,7 @@
 				<string>chatsecure</string>
 				<string>fb447241325394334</string>
 				<string>ha52f2393da517e1c89b36ac1df60924ca</string>
+				<string>xmpp</string>
 			</array>
 		</dict>
 	</array>
@@ -41,6 +42,19 @@
 	<string>ChatSecure</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>localhost</key>
+			<dict>
+				<key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
+		</dict>
+	</dict>
 	<key>UIAppFonts</key>
 	<array>
 		<string>FontAwesome.ttf</string>

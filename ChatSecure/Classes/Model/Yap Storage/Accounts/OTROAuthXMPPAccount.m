@@ -7,7 +7,7 @@
 //
 
 #import "OTROAuthXMPPAccount.h"
-#import "SSKeychain.h"
+#import <SSKeychain/SSKeychain.h>
 #import "OTRLog.h"
 #import "OTRConstants.h"
 

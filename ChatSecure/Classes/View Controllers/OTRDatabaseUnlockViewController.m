@@ -10,7 +10,8 @@
 #import "OTRDatabaseManager.h"
 #import "OTRConstants.h"
 #import "OTRAppDelegate.h"
-#import "Strings.h"
+#import "OTRStrings.h"
+#import "OTRLanguageManager.h"
 
 @interface OTRDatabaseUnlockViewController () <UITextFieldDelegate>
 
