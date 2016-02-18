@@ -32,7 +32,13 @@ PODS:
   - BBlock/UIKit (1.2.1)
   - BButton (4.0.2)
   - ChatSecure-Push-iOS (0.1)
-  - CocoaAsyncSocket (7.4.2)
+  - CocoaAsyncSocket (7.4.3):
+    - CocoaAsyncSocket/All (= 7.4.3)
+  - CocoaAsyncSocket/All (7.4.3):
+    - CocoaAsyncSocket/GCD
+    - CocoaAsyncSocket/RunLoop
+  - CocoaAsyncSocket/GCD (7.4.3)
+  - CocoaAsyncSocket/RunLoop (7.4.3)
   - CocoaLumberjack (2.2.0):
     - CocoaLumberjack/Default (= 2.2.0)
     - CocoaLumberjack/Extensions (= 2.2.0)
@@ -247,47 +253,47 @@ PODS:
     - XMPPFramework/Core
   - XMPPFramework/XEP-0352 (3.6.7):
     - XMPPFramework/Core
-  - YapDatabase/SQLCipher (2.8.1):
-    - YapDatabase/SQLCipher/Core (= 2.8.1)
-    - YapDatabase/SQLCipher/Extensions (= 2.8.1)
-  - YapDatabase/SQLCipher/Core (2.8.1):
+  - YapDatabase/SQLCipher (2.8.2):
+    - YapDatabase/SQLCipher/Core (= 2.8.2)
+    - YapDatabase/SQLCipher/Extensions (= 2.8.2)
+  - YapDatabase/SQLCipher/Core (2.8.2):
     - CocoaLumberjack (~> 2)
     - SQLCipher/fts
-  - YapDatabase/SQLCipher/Extensions (2.8.1):
+  - YapDatabase/SQLCipher/Extensions (2.8.2):
     - YapDatabase/SQLCipher/Core
-    - YapDatabase/SQLCipher/Extensions/CloudKit (= 2.8.1)
-    - YapDatabase/SQLCipher/Extensions/ConnectionProxy (= 2.8.1)
-    - YapDatabase/SQLCipher/Extensions/FilteredViews (= 2.8.1)
-    - YapDatabase/SQLCipher/Extensions/FullTextSearch (= 2.8.1)
-    - YapDatabase/SQLCipher/Extensions/Hooks (= 2.8.1)
-    - YapDatabase/SQLCipher/Extensions/Relationships (= 2.8.1)
-    - YapDatabase/SQLCipher/Extensions/RTreeIndex (= 2.8.1)
-    - YapDatabase/SQLCipher/Extensions/SearchResults (= 2.8.1)
-    - YapDatabase/SQLCipher/Extensions/SecondaryIndex (= 2.8.1)
-    - YapDatabase/SQLCipher/Extensions/SecondaryIndex (= 2.8.1)
-    - YapDatabase/SQLCipher/Extensions/Views (= 2.8.1)
-  - YapDatabase/SQLCipher/Extensions/CloudKit (2.8.1):
+    - YapDatabase/SQLCipher/Extensions/CloudKit (= 2.8.2)
+    - YapDatabase/SQLCipher/Extensions/ConnectionProxy (= 2.8.2)
+    - YapDatabase/SQLCipher/Extensions/FilteredViews (= 2.8.2)
+    - YapDatabase/SQLCipher/Extensions/FullTextSearch (= 2.8.2)
+    - YapDatabase/SQLCipher/Extensions/Hooks (= 2.8.2)
+    - YapDatabase/SQLCipher/Extensions/Relationships (= 2.8.2)
+    - YapDatabase/SQLCipher/Extensions/RTreeIndex (= 2.8.2)
+    - YapDatabase/SQLCipher/Extensions/SearchResults (= 2.8.2)
+    - YapDatabase/SQLCipher/Extensions/SecondaryIndex (= 2.8.2)
+    - YapDatabase/SQLCipher/Extensions/SecondaryIndex (= 2.8.2)
+    - YapDatabase/SQLCipher/Extensions/Views (= 2.8.2)
+  - YapDatabase/SQLCipher/Extensions/CloudKit (2.8.2):
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/ConnectionProxy (2.8.1):
+  - YapDatabase/SQLCipher/Extensions/ConnectionProxy (2.8.2):
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/FilteredViews (2.8.1):
+  - YapDatabase/SQLCipher/Extensions/FilteredViews (2.8.2):
     - YapDatabase/SQLCipher/Core
     - YapDatabase/SQLCipher/Extensions/Views
-  - YapDatabase/SQLCipher/Extensions/FullTextSearch (2.8.1):
+  - YapDatabase/SQLCipher/Extensions/FullTextSearch (2.8.2):
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/Hooks (2.8.1):
+  - YapDatabase/SQLCipher/Extensions/Hooks (2.8.2):
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/Relationships (2.8.1):
+  - YapDatabase/SQLCipher/Extensions/Relationships (2.8.2):
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/RTreeIndex (2.8.1):
+  - YapDatabase/SQLCipher/Extensions/RTreeIndex (2.8.2):
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/SearchResults (2.8.1):
+  - YapDatabase/SQLCipher/Extensions/SearchResults (2.8.2):
     - YapDatabase/SQLCipher/Core
     - YapDatabase/SQLCipher/Extensions/FullTextSearch
     - YapDatabase/SQLCipher/Extensions/Views
-  - YapDatabase/SQLCipher/Extensions/SecondaryIndex (2.8.1):
+  - YapDatabase/SQLCipher/Extensions/SecondaryIndex (2.8.2):
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/Views (2.8.1):
+  - YapDatabase/SQLCipher/Extensions/Views (2.8.2):
     - YapDatabase/SQLCipher/Core
   - ZXingObjC (3.1.0):
     - ZXingObjC/All (= 3.1.0)
@@ -374,7 +380,7 @@ SPEC CHECKSUMS:
   BBlock: c56d7f72597ffe1634fcdc73836c5c0fed3271be
   BButton: ab0f2ed3b998ae73c5188b57d270d81e4a1eeb27
   ChatSecure-Push-iOS: 80ce8a66f8a43bb99dc0c38609243a3f07edf8ff
-  CocoaAsyncSocket: f5783bdedd232d91b89769bc4b5a1580aed518ad
+  CocoaAsyncSocket: a18c75dca4b08723628a0bacca6e94803d90be91
   CocoaLumberjack: 17fe8581f84914d5d7e6360f7c70022b173c3ae0
   CPAProxy: cfd27b25328d6517b1f8570c4f0045838353e888
   GCDWebServer: 2a375ec42839a41d7187d04e5b688d32fa5c4cd5
@@ -409,7 +415,7 @@ SPEC CHECKSUMS:
   VTAcknowledgementsViewController: 6056f5f5e5ed995bbf0581bed6ddd29355ca9a80
   XLForm: 7817ce29f3f259186e837bb7309ac7e5b7e9b883
   XMPPFramework: 38ff8dffab0627c46e3903653383f769938f70f6
-  YapDatabase: 861c720d5850a59f9e5c0bad0fd95334012b9dc9
+  YapDatabase: d97b1a0bfd6856745a7a398045f3ca32cf248fda
   ZXingObjC: bf15b3814f7a105b6d99f47da2333c93a063650a
 
 COCOAPODS: 0.39.0
