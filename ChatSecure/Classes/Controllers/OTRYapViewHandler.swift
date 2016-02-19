@@ -27,7 +27,7 @@ public struct keyCollectionPair {
     }
 }
 
-public class OTRYapKeyCollectionHandler {
+public class OTRYapKeyCollectionHandler:NSObject {
     
     var storage = Dictionary<String, keyCollectionPair>()
     
