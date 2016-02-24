@@ -71,7 +71,11 @@
         self.navigationItem.rightBarButtonItem.enabled = NO;
         self.navigationItem.leftBarButtonItem.enabled = NO;
         self.navigationItem.backBarButtonItem.enabled = NO;
-        [self.createLoginHandler performActionWithValidForm:self.form account:self.account completion:^(OTRAccount *account, NSError *error) {
+        [self.createLoginHandler performActionWithValidForm:self.form account:self.account progress:^(NSInteger progress, NSString *summaryString) {
+            NSLog(@"Tor Progress %d: %@", (int)progress, summaryString);
+            [[MBProgressHUD HUDForView:self.view] setProgress:progress/100.0f];
+            [[MBProgressHUD HUDForView:self.view] setLabelText:summaryString];
+            } completion:^(OTRAccount *account, NSError *error) {
             self.form.disabled = NO;
             self.navigationItem.rightBarButtonItem.enabled = YES;
             self.navigationItem.backBarButtonItem.enabled = YES;
@@ -135,20 +139,23 @@
     if (!usernameRow) {
         return;
     }
-    NSMutableDictionary *username = [usernameRow.value mutableCopy];
-    XLFormRowDescriptor *serverRow = [self.form formRowWithTag:kOTRXLFormXMPPServerTag];
-    NSString *domain = nil;
-    if (serverRow) {
-        OTRXMPPServerInfo *serverInfo = serverRow.value;
-        domain = serverInfo.domain;
-    } else {
-        OTRXMPPAccount *xmppAccount = (OTRXMPPAccount*)self.account;
-        domain = xmppAccount.domain;
-    }
-    if (domain) {
-        [username setObject:domain forKey:[OTRUsernameCell DomainKey]];
-        usernameRow.value = username;
-        [self updateFormRow:usernameRow];
+    id usernameValue = usernameRow.value;
+    if ([usernameValue isKindOfClass:[NSDictionary class]]) {
+        NSMutableDictionary *username = [usernameValue mutableCopy];
+        XLFormRowDescriptor *serverRow = [self.form formRowWithTag:kOTRXLFormXMPPServerTag];
+        NSString *domain = nil;
+        if (serverRow) {
+            OTRXMPPServerInfo *serverInfo = serverRow.value;
+            domain = serverInfo.domain;
+        } else {
+            OTRXMPPAccount *xmppAccount = (OTRXMPPAccount*)self.account;
+            domain = xmppAccount.domain;
+        }
+        if (domain) {
+            [username setObject:domain forKey:[OTRUsernameCell DomainKey]];
+            usernameRow.value = username;
+            [self updateFormRow:usernameRow];
+        }
     }
 }
 

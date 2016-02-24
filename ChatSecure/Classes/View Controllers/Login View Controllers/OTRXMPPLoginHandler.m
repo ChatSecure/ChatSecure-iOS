@@ -15,6 +15,9 @@
 #import "OTRPasswordGenerator.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 #import "XMPPJID.h"
+#import "OTRXMPPServerInfo.h"
+#import "OTRXMPPTorAccount.h"
+#import "OTRTorManager.h"
 
 @interface OTRXMPPLoginHandler()
 @property (nonatomic, strong) NSString *password;
@@ -24,6 +27,9 @@
 
 - (void)moveAccountValues:(OTRXMPPAccount *)account intoForm:(XLFormDescriptor *)form
 {
+    if (!account) {
+        return;
+    }
     XLFormRowDescriptor *usernameRow = [form formRowWithTag:kOTRXLFormUsernameTextFieldTag];
     if (!usernameRow.value) {
         NSDictionary *username = [OTRUsernameCell createRowDictionaryValueForUsername:account.username domain:account.domain];
@@ -45,6 +51,14 @@
 
 - (OTRXMPPAccount *)moveValues:(XLFormDescriptor *)form intoAccount:(OTRXMPPAccount *)account
 {
+    if (!account) {
+         BOOL useTor = [[form formRowWithTag:kOTRXLFormUseTorTag].value boolValue];
+        if (useTor) {
+            account = [[OTRXMPPTorAccount alloc] initWithAccountType:OTRAccountTypeXMPPTor];
+        } else {
+            account = [[OTRXMPPAccount alloc] initWithAccountType:OTRAccountTypeJabber];
+        }
+    }
     NSString *nickname = [[form formRowWithTag:kOTRXLFormNicknameTextFieldTag] value];
     id usernameValue = [[form formRowWithTag:kOTRXLFormUsernameTextFieldTag] value];
     
@@ -125,6 +139,18 @@
     account.username = jid.bare;
     account.resource = jid.resource;
     
+    // Use server's .onion if possible, else use FQDN
+    if (account.accountType == OTRAccountTypeXMPPTor) {
+        OTRXMPPServerInfo *serverInfo = [[form formRowWithTag:kOTRXLFormXMPPServerTag] value];
+        OTRXMPPTorAccount *torAccount = (OTRXMPPTorAccount*)account;
+        torAccount.onion = serverInfo.onion;
+        if (torAccount.onion.length) {
+            torAccount.domain = torAccount.onion;
+        } else if (serverInfo.server.length) {
+            torAccount.domain = serverInfo.server;
+        }
+    }
+    
     // Start generating our OTR key here so it's ready when we need it
     
     [[OTRProtocolManager sharedInstance].encryptionManager.otrKit generatePrivateKeyForAccountName:account.username protocol:kOTRProtocolTypeXMPP completion:^(NSString *fingerprint, NSError *error) {
@@ -154,11 +180,36 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedNotification:) name:OTRXMPPLoginStatusNotificationName object:self.xmppManager];
 }
 
-- (void)performActionWithValidForm:(XLFormDescriptor *)form account:(OTRXMPPAccount *)account completion:(void (^)(OTRAccount * account, NSError *error))completion
+- (void)performActionWithValidForm:(XLFormDescriptor *)form account:(OTRXMPPAccount *)account progress:(void (^)(NSInteger progress, NSString *summaryString))progress completion:(void (^)(OTRAccount * account, NSError *error))completion
 {
+    if (form) {
+        account = (OTRXMPPAccount *)[self moveValues:form intoAccount:(OTRXMPPAccount*)account];
+    }
     self.completion = completion;
-    [self prepareForXMPPConnectionFrom:form account:account];
     
+    if (account.accountType == OTRAccountTypeXMPPTor) {
+        //check tor is running
+        if ([OTRTorManager sharedInstance].torManager.status == CPAStatusOpen) {
+            [self finishConnectingWithForm:form account:account];
+        } else if ([OTRTorManager sharedInstance].torManager.status == CPAStatusClosed) {
+            [[OTRTorManager sharedInstance].torManager setupWithCompletion:^(NSString *socksHost, NSUInteger socksPort, NSError *error) {
+                
+                if (error) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        completion(account,error);
+                    });
+                } else {
+                    [self finishConnectingWithForm:form account:account];
+                }
+            } progress:progress];
+        }
+    } else {
+        [self finishConnectingWithForm:form account:account];
+    }
+}
+
+- (void) finishConnectingWithForm:(XLFormDescriptor *)form account:(OTRXMPPAccount *)account {
+    [self prepareForXMPPConnectionFrom:form account:account];
     NSString *password = [[form formRowWithTag:kOTRXLFormPasswordTextFieldTag] value];
     [self.xmppManager connectWithPassword:password userInitiated:YES];
 }

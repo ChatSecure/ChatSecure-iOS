@@ -21,6 +21,7 @@ extern NSString *const kOTRXLFormHostnameTextFieldTag;
 extern NSString *const kOTRXLFormPortTextFieldTag;
 extern NSString *const kOTRXLFormResourceTextFieldTag;
 extern NSString *const kOTRXLFormXMPPServerTag;
+extern NSString *const kOTRXLFormUseTorTag;
 
 @interface OTRXLFormCreator : NSObject
 
