@@ -139,23 +139,18 @@
     if (!usernameRow) {
         return;
     }
-    id usernameValue = usernameRow.value;
-    if ([usernameValue isKindOfClass:[NSDictionary class]]) {
-        NSMutableDictionary *username = [usernameValue mutableCopy];
-        XLFormRowDescriptor *serverRow = [self.form formRowWithTag:kOTRXLFormXMPPServerTag];
-        NSString *domain = nil;
-        if (serverRow) {
-            OTRXMPPServerInfo *serverInfo = serverRow.value;
-            domain = serverInfo.domain;
-        } else {
-            OTRXMPPAccount *xmppAccount = (OTRXMPPAccount*)self.account;
-            domain = xmppAccount.domain;
-        }
-        if (domain) {
-            [username setObject:domain forKey:[OTRUsernameCell DomainKey]];
-            usernameRow.value = username;
-            [self updateFormRow:usernameRow];
-        }
+    XLFormRowDescriptor *serverRow = [self.form formRowWithTag:kOTRXLFormXMPPServerTag];
+    NSString *domain = nil;
+    if (serverRow) {
+        OTRXMPPServerInfo *serverInfo = serverRow.value;
+        domain = serverInfo.domain;
+    } else {
+        OTRXMPPAccount *xmppAccount = (OTRXMPPAccount*)self.account;
+        domain = xmppAccount.domain;
+    }
+    if (domain) {
+        usernameRow.value = domain;
+        [self updateFormRow:usernameRow];
     }
 }
 

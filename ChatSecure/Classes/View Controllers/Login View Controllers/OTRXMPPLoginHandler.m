@@ -32,8 +32,7 @@
     }
     XLFormRowDescriptor *usernameRow = [form formRowWithTag:kOTRXLFormUsernameTextFieldTag];
     if (!usernameRow.value) {
-        NSDictionary *username = [OTRUsernameCell createRowDictionaryValueForUsername:account.username domain:account.domain];
-        usernameRow.value = username;
+        usernameRow.value = account.username;
     }
     [[form formRowWithTag:kOTRXLFormPasswordTextFieldTag] setValue:account.password];
     [[form formRowWithTag:kOTRXLFormRememberPasswordSwitchTag] setValue:@(account.rememberPassword)];
@@ -63,17 +62,12 @@
     id usernameValue = [[form formRowWithTag:kOTRXLFormUsernameTextFieldTag] value];
     
     NSString *username = nil;
-    if ([usernameValue isKindOfClass:[NSDictionary class]]) {
-        username = usernameValue[OTRUsernameCell.UsernameKey];
-        if (!username.length) {
-            // strip whitespace and make nickname lowercase
-            // TODO - replace with hexified Ed25519 identity key
-            username = [nickname stringByReplacingOccurrencesOfString:@" " withString:@""];
-            username = [username lowercaseString];
-        }
-    } else if ([usernameValue isKindOfClass:[NSString class]]) {
-        NSArray *components = [usernameValue componentsSeparatedByString:@"@"];
-        username = [components firstObject];
+    NSArray *components = [usernameValue componentsSeparatedByString:@"@"];
+    username = [components firstObject];
+    if (!username.length) {
+        // strip whitespace and make nickname lowercase
+        username = [nickname stringByReplacingOccurrencesOfString:@" " withString:@""];
+        username = [username lowercaseString];
     }
     account.username = username;
     
@@ -123,12 +117,8 @@
     NSString *domain = account.domain;
     if (![domain length]) {
         id usernameValue = [[form formRowWithTag:kOTRXLFormUsernameTextFieldTag] value];
-        if ([usernameValue isKindOfClass:[NSDictionary class]]) {
-            domain = usernameValue[OTRUsernameCell.DomainKey];
-        } else if ([usernameValue isKindOfClass:[NSString class]]) {
-            NSArray *components = [usernameValue componentsSeparatedByString:@"@"];
-            domain = [components lastObject];
-        }
+        NSArray *components = [usernameValue componentsSeparatedByString:@"@"];
+        domain = [components lastObject];
     }
     
     XMPPJID *jid = [XMPPJID jidWithUser:username domain:domain resource:account.resource];
