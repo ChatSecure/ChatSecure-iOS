@@ -59,11 +59,16 @@
         }
     }
     NSString *nickname = [[form formRowWithTag:kOTRXLFormNicknameTextFieldTag] value];
-    id usernameValue = [[form formRowWithTag:kOTRXLFormUsernameTextFieldTag] value];
+    
+    XLFormRowDescriptor *usernameRow = [form formRowWithTag:kOTRXLFormUsernameTextFieldTag];
     
     NSString *username = nil;
-    NSArray *components = [usernameValue componentsSeparatedByString:@"@"];
-    username = [components firstObject];
+
+    if (![usernameRow isHidden]) {
+        NSArray *components = [usernameRow.value componentsSeparatedByString:@"@"];
+        username = [components firstObject];
+    }
+
     if (!username.length) {
         // strip whitespace and make nickname lowercase
         username = [nickname stringByReplacingOccurrencesOfString:@" " withString:@""];
