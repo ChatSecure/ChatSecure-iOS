@@ -11,8 +11,10 @@ import ChatSecure_Push_iOS
 import YapDatabase
 
 @objc public protocol PushControllerProtocol {
+    
     func sendKnock(buddyKey:String, completion:(success:Bool, error:NSError?) -> Void)
     func receiveRemoteNotification(notification:[NSObject:AnyObject], completion:(buddy:OTRBuddy?, error:NSError?) -> Void)
+    func pushStorage() -> PushStorageProtocol
 }
 
 @objc public enum PushPreference: Int {
@@ -61,6 +63,15 @@ public class PushController: NSObject, OTRPushTLVHandlerDelegate, PushController
                 })
             }
         }
+    }
+    
+    /**
+     A simple function to access the underlying push storage object
+     
+     - returns: The push storage object that controls storing and retrieving push tokens
+     */
+    public func pushStorage() -> PushStorageProtocol {
+        return self.storage
     }
     
     public func registerThisDevice(apns:String, completion:(success: Bool, error: NSError?) -> Void) {

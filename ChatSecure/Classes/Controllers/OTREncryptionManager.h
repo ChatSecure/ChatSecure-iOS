@@ -48,6 +48,21 @@ typedef NS_ENUM(NSUInteger, OTREncryptionMessageState) {
 @property (nonatomic, strong, readonly) OTRDataHandler *dataHandler;
 @property (nonatomic, strong, readonly) OTRPushTLVHandler *pushTLVHandler;
 
+/**
+ * This is the all in one method for getting all the state information from OTR on a given buddy, account, protocol combination.
+ *
+ * @param username The OTR used username
+ * @param accountName The OTR used accountName
+ * @param protocol The OTR used protocol
+ * @param completion The block called async. Current state of session. Is the current session trusted. Does this buddy have trusted fingerprints in teh past
+ * @param completionQueue The dispatch queue to call the completion block. Default main queue
+ */
+- (void)currentEncryptionState:(NSString *)username
+                   accountName:(NSString *)accountName
+                      protocol:(NSString *)protocol
+                    completion:(void (^)(BOOL currentlyTrusted, BOOL hasTurstedFingerprints, OTRKitMessageState messageState))completionBlock
+               completionQueue:(dispatch_queue_t)queue;
+
 + (BOOL) setFileProtection:(NSString*)fileProtection path:(NSString*)path;
 + (BOOL) addSkipBackupAttributeToItemAtURL:(NSURL *)URL;
 

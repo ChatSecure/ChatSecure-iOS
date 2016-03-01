@@ -10,7 +10,7 @@ import Foundation
 import ChatSecure_Push_iOS
 import YapDatabase
 
-public protocol PushStorageProtocol: class {
+@objc public protocol PushStorageProtocol: class {
     func thisDevicePushAccount() -> Account?
     func hasPushAccount() -> Bool
     func saveThisAccount(account:Account)
@@ -24,6 +24,7 @@ public protocol PushStorageProtocol: class {
     func numberUnusedTokens() -> UInt
     func unusedTokenStoreMinimum() -> UInt
     func tokensForBuddy(buddyKey:String, createdByThisAccount:Bool) throws -> [TokenContainer]
+    func numberOfTokensForBuddy(buddyKey:String, createdByThisAccount:Bool) -> Int
     func buddy(username: String, accountName: String) -> OTRBuddy?
     func account(accountUniqueID:String) -> OTRAccount?
     func budy(token:String) -> OTRBuddy?
@@ -183,6 +184,34 @@ class PushStorage: NSObject, PushStorageProtocol {
             throw err
         }
         return tokens
+    }
+    
+    /**
+     Quicker way of getting just the count of the number of tokens. This method may take a little time because of Yap Relationships
+     it iterates over all the relationship edges and counts them.
+     
+     - parameter buddyKey: The uniqueID or yap key for the buddy
+     - parameter createdByThisAccount: A bool to check for the count of tokens created by this account (outgoing) or those created by the buddy (incoming)
+     - returns: The number of push tokens
+    */
+    func numberOfTokensForBuddy(buddyKey: String, createdByThisAccount: Bool) -> Int {
+        var count = 0
+        self.databaseConnection.readWriteWithBlock { (transaction) -> Void in
+            guard let relationshipTransaction = transaction.ext(OTRYapDatabaseRelationshipName) as? YapDatabaseRelationshipTransaction else {
+                return
+            }
+            relationshipTransaction.enumerateEdgesWithName(kBuddyTokenRelationshipEdgeName, destinationKey: buddyKey, collection: OTRBuddy.collection(), usingBlock: { (edge, stop) -> Void in
+                if let tokenContainer = transaction.objectForKey(edge.sourceKey, inCollection: edge.sourceCollection) as? TokenContainer {
+                    if tokenContainer.accountKey != nil && createdByThisAccount {
+                        count++
+                    } else if tokenContainer.accountKey == nil && !createdByThisAccount {
+                       count++
+                    }
+                }
+            })
+        }
+        
+        return count
     }
     
     func buddy(username: String, accountName: String) -> OTRBuddy? {

@@ -9,17 +9,18 @@
 #import <UIKit/UIKit.h>
 
 #import <JSQMessagesViewController/JSQMessagesViewController.h>
+#import "OTRBuddy.h"
 @import OTRKit;
 @import JSQMessagesViewController;
 
-@class OTRBuddy, OTRXMPPManager, OTRAccount, YapDatabaseConnection, OTRYapDatabaseObject;
+@class OTRBuddy, OTRXMPPManager, OTRAccount, YapDatabaseConnection, OTRYapDatabaseObject, MessagesViewControllerState;
 
 @protocol OTRThreadOwner,OTRMesssageProtocol,JSQMessageData;
 
 @protocol OTRMessagesViewControllerProtocol <NSObject>
 
 - (void)receivedTextViewChangedNotification:(NSNotification *)notification;
-- (void)setupAccessoryButtonsWithMessageState:(OTRKitMessageState)messageState;
+- (void)didUpdateState;
 
 @end
 
@@ -31,6 +32,8 @@
 @property (nonatomic, strong) UIButton *microphoneButton;
 @property (nonatomic, strong) UIButton *sendButton;
 @property (nonatomic, strong) UIButton *cameraButton;
+
+@property (nonatomic, strong, readonly) MessagesViewControllerState *state;
 
 - (void)setThreadKey:(NSString *)key collection:(NSString *)collection;
 - (void)sendAudioFileURL:(NSURL *)url;

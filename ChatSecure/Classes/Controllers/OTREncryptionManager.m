@@ -105,6 +105,43 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     }
 }
 
+- (void)currentEncryptionState:(NSString *)username accountName:(NSString *)accountName protocol:(NSString *)protocol completion:(void (^)(BOOL currentlyTrusted, BOOL hasTurstedFingerprints, OTRKitMessageState messageState))completionBlock completionQueue:(dispatch_queue_t)queue
+{
+    if (!queue) {
+        queue = dispatch_get_main_queue();
+    }
+    
+    __block BOOL currentlyTrusted = NO;
+    __block BOOL hasTrustedFingerprints = NO;
+    __block OTRKitMessageState messageState = OTRKitMessageStatePlaintext;
+    
+    dispatch_group_t group = dispatch_group_create();
+    
+    dispatch_group_enter(group);
+    [self.otrKit activeFingerprintIsVerifiedForUsername:username accountName:accountName protocol:protocol completion:^(BOOL isCurrentlyTrusted) {
+        currentlyTrusted = isCurrentlyTrusted;
+        dispatch_group_leave(group);
+    }];
+    
+    dispatch_group_enter(group);
+    [self.otrKit hasVerifiedFingerprintsForUsername:username accountName:accountName protocol:protocol completion:^(BOOL hasVerifiedFingerprints) {
+        hasTrustedFingerprints = hasVerifiedFingerprints;
+        dispatch_group_leave(group);
+    }];
+    
+    dispatch_group_enter(group);
+    [self.otrKit messageStateForUsername:username accountName:accountName protocol:protocol completion:^(OTRKitMessageState msgState) {
+        messageState = msgState;
+        dispatch_group_leave(group);
+    }];
+    
+    dispatch_group_notify(group, queue, ^{
+        if(completionBlock) {
+            completionBlock(currentlyTrusted, hasTrustedFingerprints, messageState);
+        }
+    });
+}
+
 
 #pragma mark OTRKitDelegate methods
 

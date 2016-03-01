@@ -12,6 +12,7 @@
 #import "OTRAudioSessionManager.h"
 #import "OTRAudioTrashView.h"
 #import "OTRStrings.h"
+#import "OTRLog.h"
 @import OTRKit;
 #import "OTRBuddy.h"
 #import "OTRXMPPManager.h"
@@ -33,6 +34,8 @@
 
 @property (nonatomic, strong) UIView *recordingBackgroundView;
 
+@property (nonatomic, strong) UIButton *knockButton;
+
 @end
 
 @implementation OTRMessagesHoldTalkViewController
@@ -50,6 +53,21 @@
     self.keyboardButton.titleLabel.textAlignment = NSTextAlignmentCenter;
     [self.keyboardButton setTitle:[NSString fa_stringForFontAwesomeIcon:FAKeyboardO]
                            forState:UIControlStateNormal];
+    
+    self.knockButton = [JSQMessagesToolbarButtonFactory defaultSendButtonItem];
+    NSString *title = @"Knock";
+    CGFloat maxHeight = 32.0f;
+    [self.knockButton setTitle:title forState:UIControlStateNormal];
+    
+    CGRect sendTitleRect = [title boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, maxHeight)
+                                                   options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
+                                                attributes:@{ NSFontAttributeName : self.knockButton.titleLabel.font }
+                                                   context:nil];
+    
+    self.knockButton.frame = CGRectMake(0.0f,
+                                  0.0f,
+                                  CGRectGetWidth(CGRectIntegral(sendTitleRect)),
+                                  maxHeight);
     
     [self.view setNeedsUpdateConstraints];
 }
@@ -163,68 +181,60 @@
 
 #pragma - mark JSQMessageViewController
 
-- (void)receivedTextViewChangedNotification:(NSNotification *)notification
+- (void)didUpdateState
 {
-    [self textViewDidChange:notification.object];
-}
-
-- (void)textViewDidChange:(UITextView *)textView
-{
-    OTRXMPPManager *xmppManager = [self xmppManager];
-    OTRBuddy *buddy = (OTRBuddy *)[self threadObject];
-    if ([textView.text length]) {
-        self.inputToolbar.contentView.rightBarButtonItem = self.sendButton;
-        self.inputToolbar.sendButtonLocation = JSQMessagesInputSendButtonLocationRight;
+    //OTRXMPPManager *xmppManager = [self xmppManager];
+    //[xmppManager sendChatState:kOTRChatStateActive withBuddyID:buddy.uniqueId];
+    
+    if (self.state.canKnock && !self.state.isThreadOnline && !self.state.hasText) {
+        //Show Knock Button
+        self.inputToolbar.contentView.rightBarButtonItem = self.knockButton;
+        self.inputToolbar.sendButtonLocation = JSQMessagesInputSendButtonLocationNone;
         self.inputToolbar.contentView.rightBarButtonItem.enabled = YES;
-        //typing
-        [xmppManager sendChatState:kOTRChatStateComposing withBuddyID:buddy.uniqueId];
     }
-    else {
-        [[OTRKit sharedInstance] messageStateForUsername:buddy.username accountName:self.account.username protocol:self.account.protocolTypeString completion:^(OTRKitMessageState messageState) {
-            if (messageState == OTRKitMessageStateEncrypted) {
-                
-                if ([self.hold2TalkButton superview]) {
-                     self.inputToolbar.contentView.rightBarButtonItem = self.keyboardButton;
-                } else {
-                     self.inputToolbar.contentView.rightBarButtonItem = self.microphoneButton;
-                }
-               
-                self.inputToolbar.sendButtonLocation = JSQMessagesInputSendButtonLocationNone;
-                self.inputToolbar.contentView.rightBarButtonItem.enabled = YES;
-            }
-        }];
+    else if (self.state.isThreadOnline && self.state.isEncrypted) {
+        //Encrypted Show camera button
+        self.inputToolbar.contentView.leftBarButtonItem = self.cameraButton;
         
-        //done typing
-        [xmppManager sendChatState:kOTRChatStateActive withBuddyID:buddy.uniqueId];
-        
-    }
-}
-
-- (void)setupAccessoryButtonsWithMessageState:(OTRKitMessageState)messageState
-{
-    //set correct camera and microphone
-    if (messageState == OTRKitMessageStateEncrypted) {
-        if (![self.inputToolbar.contentView.textView.text length]) {
-            
+        if (!self.state.hasText) {
+            //No text then show microphone
             if ([self.hold2TalkButton superview]) {
                 self.inputToolbar.contentView.rightBarButtonItem = self.keyboardButton;
             } else {
                 self.inputToolbar.contentView.rightBarButtonItem = self.microphoneButton;
             }
-            
             self.inputToolbar.sendButtonLocation = JSQMessagesInputSendButtonLocationNone;
             self.inputToolbar.contentView.rightBarButtonItem.enabled = YES;
+        } else {
+            //Default Send button
+            [self setupDefaultSendButton];
+            self.inputToolbar.contentView.rightBarButtonItem.enabled = YES;
         }
-        self.inputToolbar.contentView.leftBarButtonItem = self.cameraButton;
+        
+        
+    } else {
+        [self removeMediaButtons];
+        [self setupDefaultSendButton];
+        if (self.state.hasText) {
+            self.inputToolbar.contentView.rightBarButtonItem.enabled = YES;
+        } else {
+            self.inputToolbar.contentView.rightBarButtonItem.enabled = NO;
+        }
     }
-    else {
-        [self removePush2TalkButton];
-        [self removeRecordingBackgroundView];
-        [self removeTrashViewItems];
-        self.inputToolbar.contentView.rightBarButtonItem = self.sendButton;
-        self.inputToolbar.sendButtonLocation = JSQMessagesInputSendButtonLocationRight;
-        self.inputToolbar.contentView.leftBarButtonItem = nil;
-    }
+}
+
+- (void)removeMediaButtons {
+    [self removePush2TalkButton];
+    [self removeRecordingBackgroundView];
+    [self removeTrashViewItems];
+    self.inputToolbar.contentView.leftBarButtonItem = nil;
+}
+
+- (void)setupDefaultSendButton {
+    //Default send button
+    
+    self.inputToolbar.contentView.rightBarButtonItem = self.sendButton;
+    self.inputToolbar.sendButtonLocation = JSQMessagesInputSendButtonLocationRight;
 }
 
 #pragma - mark OTRHoldToTalkViewStateDelegate
@@ -349,6 +359,14 @@
         [self removeTrashViewItems];
         [self.inputToolbar.contentView.textView becomeFirstResponder];
         self.inputToolbar.contentView.rightBarButtonItem = self.microphoneButton;
+    }
+    else if ([sender isEqual:self.knockButton]) {
+        //Sending knock
+        [[OTRAppDelegate appDelegate].pushController sendKnock:self.threadKey completion:^(BOOL success, NSError * _Nullable error) {
+            if(error != nil) {
+                DDLogError(@"Error Sending Push");
+            }
+        }];
     } else {
         [super didPressAccessoryButton:sender];
     }

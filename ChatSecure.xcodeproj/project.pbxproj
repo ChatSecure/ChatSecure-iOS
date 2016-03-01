@@ -34,6 +34,7 @@
 		6380456A1BB4C833002D8BAE /* PushDeserializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638045691BB4C832002D8BAE /* PushDeserializer.swift */; };
 		638338DE1BCC508200EB0CA1 /* OTRMessagesGroupViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 638338DC1BCC508200EB0CA1 /* OTRMessagesGroupViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		638338DF1BCC508200EB0CA1 /* OTRMessagesGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 638338DD1BCC508200EB0CA1 /* OTRMessagesGroupViewController.m */; };
+		63929C961C7D32D9008DB2E3 /* MessagesViewControllerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63929C951C7D32D9008DB2E3 /* MessagesViewControllerState.swift */; };
 		639C352A1C3DDDDE00132330 /* OTRXMPPBuddyManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 639C35281C3DDDDE00132330 /* OTRXMPPBuddyManager.h */; };
 		639C352B1C3DDDDE00132330 /* OTRXMPPBuddyManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 639C35291C3DDDDE00132330 /* OTRXMPPBuddyManager.m */; };
 		63AB1A071C0D116A005FA351 /* OTRSplitViewCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63AB1A061C0D116A005FA351 /* OTRSplitViewCoordinator.swift */; };
@@ -737,6 +738,7 @@
 		638D2E021AFBFE2200F3C50C /* OTRWelcomeAccountTableViewDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OTRWelcomeAccountTableViewDelegate.m; path = Onboarding/OTRWelcomeAccountTableViewDelegate.m; sourceTree = "<group>"; };
 		638FC09B1B0BE46100B37454 /* NSFileManager+ChatSecure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSFileManager+ChatSecure.h"; sourceTree = "<group>"; };
 		638FC09C1B0BE46100B37454 /* NSFileManager+ChatSecure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFileManager+ChatSecure.m"; sourceTree = "<group>"; };
+		63929C951C7D32D9008DB2E3 /* MessagesViewControllerState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessagesViewControllerState.swift; sourceTree = "<group>"; };
 		6396AF9A1A169D54009F3E6C /* ChatSecure.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatSecure.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6396AF9E1A169D54009F3E6C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6396AF9F1A169D54009F3E6C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -1060,6 +1062,7 @@
 				633105961A16D1A300C17BAE /* OTRQRCodeActivity.m */,
 				63D64D641A2FBA8C00E21F77 /* OTRToastOptions.h */,
 				63D64D651A2FBA8C00E21F77 /* OTRToastOptions.m */,
+				63929C951C7D32D9008DB2E3 /* MessagesViewControllerState.swift */,
 				633105971A16D1A300C17BAE /* Settings */,
 				633105B81A16D1A300C17BAE /* Yap Storage */,
 			);
@@ -2252,6 +2255,7 @@
 				6369855B1BC875110083FC53 /* OTRXMPPRoomManager.m in Sources */,
 				63636D6E1C1F78A6009F5FCD /* UINavigationController+ChatSecure.swift in Sources */,
 				63BB66B01BC5D2F40004A619 /* OTRXMPPRoomYapStorage.m in Sources */,
+				63929C961C7D32D9008DB2E3 /* MessagesViewControllerState.swift in Sources */,
 				634E68BE1BAB891C00DC6B25 /* PushContainers.swift in Sources */,
 				D93DDABA1BA79A2500CD8331 /* OTRActivityItemProvider.m in Sources */,
 				D93DDABB1BA79A2500CD8331 /* OTRDomainCellInfo.m in Sources */,

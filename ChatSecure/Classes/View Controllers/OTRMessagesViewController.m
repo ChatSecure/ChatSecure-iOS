@@ -86,6 +86,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     if (self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
         self.senderId = @"";
         self.senderDisplayName = @"";
+        _state = [[MessagesViewControllerState alloc] init];
     }
     return self;
 }
@@ -295,6 +296,25 @@ typedef NS_ENUM(int, OTRDropDownType) {
             self.showTypingIndicator = NO;
         }
         
+        // Update Buddy Status
+        self.state.isThreadOnline = buddy.status != OTRThreadStatusOffline;
+        [self didUpdateState];
+        
+        //Update Buddy knock status
+        //Async because this calls down to the database and iterates over a relation. Might slowdown the UI if on main thread
+        __weak __typeof__(self) weakSelf = self;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            __typeof__(self) strongSelf = weakSelf;
+            __block BOOL canKnock = [[[OTRAppDelegate appDelegate].pushController pushStorage] numberOfTokensForBuddy:buddy.uniqueId createdByThisAccount:NO] > 0;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (canKnock != strongSelf.state.canKnock) {
+                    strongSelf.state.canKnock = canKnock;
+                    [strongSelf didUpdateState];
+                }
+            });
+            
+        });
+        
         [self refreshTitleView];
     }
     
@@ -431,32 +451,27 @@ typedef NS_ENUM(int, OTRDropDownType) {
             UIBarButtonItem * rightBarItem = self.navigationItem.rightBarButtonItem;
             if ([rightBarItem isEqual:self.lockBarButtonItem]) {
                 
-                
-                [[OTRKit sharedInstance] activeFingerprintIsVerifiedForUsername:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString completion:^(BOOL isTrusted) {
+                [[OTRProtocolManager sharedInstance].encryptionManager currentEncryptionState:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString completion:^(BOOL isTrusted, BOOL hasVerifiedFingerprints, OTRKitMessageState messageState) {
                     
-                    [[OTRKit sharedInstance] hasVerifiedFingerprintsForUsername:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString completion:^(BOOL hasVerifiedFingerprints) {
-                        
-                        [[OTRKit sharedInstance] messageStateForUsername:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString completion:^(OTRKitMessageState messageState) {
-                            
-                            //Set correct lock icon and status
-                            if (messageState == OTRKitMessageStateEncrypted && isTrusted) {
-                                self.lockButton.lockStatus = OTRLockStatusLockedAndVerified;
-                            }
-                            else if (messageState == OTRKitMessageStateEncrypted && hasVerifiedFingerprints)
-                            {
-                                self.lockButton.lockStatus = OTRLockStatusLockedAndError;
-                            }
-                            else if (messageState == OTRKitMessageStateEncrypted) {
-                                self.lockButton.lockStatus = OTRLockStatusLockedAndWarn;
-                            }
-                            else {
-                                self.lockButton.lockStatus = OTRLockStatusUnlocked;
-                            }
-                            
-                            [self setupAccessoryButtonsWithMessageState:messageState];
-                        }];
-                    }];
-                }];
+                    //Set correct lock icon and status
+                    if (messageState == OTRKitMessageStateEncrypted && isTrusted) {
+                        self.lockButton.lockStatus = OTRLockStatusLockedAndVerified;
+                    }
+                    else if (messageState == OTRKitMessageStateEncrypted && hasVerifiedFingerprints)
+                    {
+                        self.lockButton.lockStatus = OTRLockStatusLockedAndError;
+                    }
+                    else if (messageState == OTRKitMessageStateEncrypted) {
+                        self.lockButton.lockStatus = OTRLockStatusLockedAndWarn;
+                    }
+                    else {
+                        self.lockButton.lockStatus = OTRLockStatusUnlocked;
+                    }
+                    
+                    self.state.isEncrypted = messageState == OTRKitMessageStateEncrypted;
+                    [self didUpdateState];
+                    
+                } completionQueue:nil];
             }
         }
     }];
@@ -549,7 +564,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }];
 }
 
-- (void)setupAccessoryButtonsWithMessageState:(OTRKitMessageState)messageState
+- (void)setupAccessoryButtonsWithMessageState:(OTRKitMessageState)messageState buddyStatus:(OTRThreadStatus)status textViewHasText:(BOOL)hasText
 {
     self.inputToolbar.contentView.rightBarButtonItem = self.sendButton;
     self.inputToolbar.sendButtonLocation = JSQMessagesInputSendButtonLocationRight;
@@ -702,8 +717,20 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (void)receivedTextViewChangedNotification:(NSNotification *)notification
 {
-    //implemented in subclasses
+    //Check if the text state changes from having some text to some or vice versa
+    UITextView *textView = notification.object;
+    BOOL hasText = [textView.text length] > 0;
+    if(hasText != self.state.hasText) {
+        self.state.hasText = hasText;
+        [self didUpdateState];
+    }
     return;
+}
+
+#pragma - mark Update UI
+
+- (void)didUpdateState {
+    
 }
 
 #pragma - mark Sending Media Items
