@@ -79,7 +79,7 @@
     self.nameLabel.text = nameString;
     
     __block OTRAccount *account = nil;
-    __block id <OTRMesssageProtocol> lastMessage = nil;
+    __block id <OTRMessageProtocol> lastMessage = nil;
 
     
     [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {

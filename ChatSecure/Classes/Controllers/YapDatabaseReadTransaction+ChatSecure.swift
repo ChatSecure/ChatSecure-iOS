@@ -11,7 +11,7 @@ import YapDatabase.YapDatabaseSecondaryIndex
 
 public extension YapDatabaseReadTransaction {
     
-    public func enumerateMessages(id id:String, block:(message:OTRMesssageProtocol,stop:UnsafeMutablePointer<ObjCBool>) -> Void) {
+    public func enumerateMessages(id id:String, block:(message:OTRMessageProtocol,stop:UnsafeMutablePointer<ObjCBool>) -> Void) {
         guard let secondaryIndexTransaction = self.ext(OTRYapDatabseSecondaryIndexExtension) as? YapDatabaseSecondaryIndexTransaction else {
             return
         }
@@ -20,7 +20,7 @@ public extension YapDatabaseReadTransaction {
         let query = YapDatabaseQuery(string: queryString, parameters: [id])
         
         secondaryIndexTransaction.enumerateKeysMatchingQuery(query) { (collection, key, stop) -> Void in
-            if let message = self.objectForKey(key, inCollection: collection) as? OTRMesssageProtocol {
+            if let message = self.objectForKey(key, inCollection: collection) as? OTRMessageProtocol {
                 block(message: message, stop: stop)
             }
         }

@@ -137,7 +137,7 @@
 {
     __block BOOL result = NO;
     if ([message.elementID length]) {
-        [transaction enumerateMessagesWithId:message.elementID block:^(id<OTRMesssageProtocol> _Nonnull databaseMessage, BOOL * _Null_unspecified stop) {
+        [transaction enumerateMessagesWithId:message.elementID block:^(id<OTRMessageProtocol> _Nonnull databaseMessage, BOOL * _Null_unspecified stop) {
             if ([[databaseMessage threadId] isEqualToString:buddyUniqueId]) {
                 *stop = YES;
                 result = YES;

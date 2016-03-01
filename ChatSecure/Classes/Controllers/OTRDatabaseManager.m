@@ -150,9 +150,9 @@ NSString *const OTRYapDatabaseUnreadMessageSecondaryIndex = @"OTRYapDatbaseUnrea
     [setup addColumn:OTRYapDatabaseUnreadMessageSecondaryIndex withType:YapDatabaseSecondaryIndexTypeInteger];
     
     YapDatabaseSecondaryIndexHandler *indexHandler = [YapDatabaseSecondaryIndexHandler withObjectBlock:^(YapDatabaseReadTransaction * _Nonnull transaction, NSMutableDictionary * _Nonnull dict, NSString * _Nonnull collection, NSString * _Nonnull key, id  _Nonnull object) {
-        if ([object conformsToProtocol:@protocol(OTRMesssageProtocol)])
+        if ([object conformsToProtocol:@protocol(OTRMessageProtocol)])
         {
-            id<OTRMesssageProtocol> message = (id <OTRMesssageProtocol>)object;
+            id<OTRMessageProtocol> message = (id <OTRMessageProtocol>)object;
             
             if ([[message remoteMessageId] length]) {
                 [dict setObject:[message remoteMessageId] forKey:OTRYapDatabseMessageIdSecondaryIndex];

@@ -27,7 +27,7 @@ typedef NS_ENUM(NSInteger, OTRThreadStatus) {
 - (nullable NSDate*)lastMessageDate;
 - (nonnull UIImage *)avatarImage;
 - (OTRThreadStatus)currentStatus;
-- (nullable id <OTRMesssageProtocol>)lastMessageWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
+- (nullable id <OTRMessageProtocol>)lastMessageWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
 - (void)setAllMessagesAsReadInTransaction:(nonnull YapDatabaseReadWriteTransaction *)transaction;
 - (BOOL)isGroupThread;
 

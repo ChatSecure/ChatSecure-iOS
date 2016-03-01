@@ -138,17 +138,17 @@ NSString *OTRPushAccountGroup = @"Account";
     }
     
     YapDatabaseViewGrouping *viewGrouping = [YapDatabaseViewGrouping withObjectBlock:^NSString *(YapDatabaseReadTransaction *transaction, NSString *collection, NSString *key, id object) {
-        if ([object conformsToProtocol:@protocol(OTRMesssageProtocol)])
+        if ([object conformsToProtocol:@protocol(OTRMessageProtocol)])
         {
-            return [((id <OTRMesssageProtocol>)object) threadId];
+            return [((id <OTRMessageProtocol>)object) threadId];
         }
         return nil;
     }];
     
     YapDatabaseViewSorting *viewSorting = [YapDatabaseViewSorting withObjectBlock:^NSComparisonResult(YapDatabaseReadTransaction *transaction, NSString *group, NSString *collection1, NSString *key1, id object1, NSString *collection2, NSString *key2, id object2) {
-        if ([object1 conformsToProtocol:@protocol(OTRMesssageProtocol)] && [object2 conformsToProtocol:@protocol(OTRMesssageProtocol)]) {
-            id <OTRMesssageProtocol> message1 = (id <OTRMesssageProtocol>)object1;
-            id <OTRMesssageProtocol> message2 = (id <OTRMesssageProtocol>)object2;
+        if ([object1 conformsToProtocol:@protocol(OTRMessageProtocol)] && [object2 conformsToProtocol:@protocol(OTRMessageProtocol)]) {
+            id <OTRMessageProtocol> message1 = (id <OTRMessageProtocol>)object1;
+            id <OTRMessageProtocol> message2 = (id <OTRMessageProtocol>)object2;
             
             return [[message1 date] compare:[message2 date]];
         }

@@ -59,7 +59,7 @@ extension OTRXMPPRoomMessage:YapDatabaseRelationshipNode {
     }
 }
 
-extension OTRXMPPRoomMessage:OTRMesssageProtocol {
+extension OTRXMPPRoomMessage:OTRMessageProtocol {
     
     //MARK: OTRMessageProtocol
     

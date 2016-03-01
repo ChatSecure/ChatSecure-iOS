@@ -670,7 +670,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }];
 }
 
-- (id <OTRMesssageProtocol,JSQMessageData>)messageAtIndexPath:(NSIndexPath *)indexPath
+- (id <OTRMessageProtocol,JSQMessageData>)messageAtIndexPath:(NSIndexPath *)indexPath
 {
     return [self.viewHandler object:indexPath];
 }
@@ -682,8 +682,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
         showDate = YES;
     }
     else {
-        id <OTRMesssageProtocol> currentMessage = [self messageAtIndexPath:indexPath];
-        id <OTRMesssageProtocol> previousMessage = [self messageAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row-1 inSection:indexPath.section]];
+        id <OTRMessageProtocol> currentMessage = [self messageAtIndexPath:indexPath];
+        id <OTRMessageProtocol> previousMessage = [self messageAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row-1 inSection:indexPath.section]];
         
         NSTimeInterval timeDifference = [[currentMessage date] timeIntervalSinceDate:[previousMessage date]];
         if (timeDifference > kOTRMessageSentDateShowTimeInterval) {
@@ -694,7 +694,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 }
 
 - (BOOL)showSenderDisplayNameAtIndexPath:(NSIndexPath *)indexPath {
-    id<OTRMesssageProtocol,JSQMessageData> message = [self messageAtIndexPath:indexPath];
+    id<OTRMessageProtocol,JSQMessageData> message = [self messageAtIndexPath:indexPath];
     
     if(![self.threadCollection isEqualToString:[OTRXMPPRoom collection]]) {
         return NO;
@@ -706,7 +706,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     if(indexPath.row -1 >= 0) {
         NSIndexPath *previousIndexPath = [NSIndexPath indexPathForRow:indexPath.row - 1 inSection:indexPath.section];
-        id<OTRMesssageProtocol,JSQMessageData> previousMessage = [self messageAtIndexPath:previousIndexPath];
+        id<OTRMessageProtocol,JSQMessageData> previousMessage = [self messageAtIndexPath:previousIndexPath];
         if ([[previousMessage senderId] isEqualToString:message.senderId]) {
             return NO;
         }
@@ -828,7 +828,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 {
     JSQMessagesCollectionViewCell *cell = (JSQMessagesCollectionViewCell *)[super collectionView:collectionView cellForItemAtIndexPath:indexPath];
     
-    id <OTRMesssageProtocol>message = [self messageAtIndexPath:indexPath];
+    id <OTRMessageProtocol>message = [self messageAtIndexPath:indexPath];
     
     UIColor *textColor = nil;
     if ([message messageIncoming]) {
@@ -1102,7 +1102,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (id<JSQMessageBubbleImageDataSource>)collectionView:(JSQMessagesCollectionView *)collectionView messageBubbleImageDataForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    id <OTRMesssageProtocol> message = [self messageAtIndexPath:indexPath];
+    id <OTRMessageProtocol> message = [self messageAtIndexPath:indexPath];
     JSQMessagesBubbleImage *image = nil;
     if ([message messageIncoming]) {
         image = self.incomingBubbleImage;
@@ -1115,7 +1115,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (id <JSQMessageAvatarImageDataSource>)collectionView:(JSQMessagesCollectionView *)collectionView avatarImageDataForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    id <OTRMesssageProtocol> message = [self messageAtIndexPath:indexPath];
+    id <OTRMessageProtocol> message = [self messageAtIndexPath:indexPath];
     UIImage *avatarImage = nil;
     if ([message messageError]) {
         avatarImage = [OTRImages circleWarningWithColor:[OTRColors warnColor]];
@@ -1139,7 +1139,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 - (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForCellTopLabelAtIndexPath:(NSIndexPath *)indexPath
 {
     if ([self showDateAtIndexPath:indexPath]) {
-        id <OTRMesssageProtocol> message = [self messageAtIndexPath:indexPath];
+        id <OTRMessageProtocol> message = [self messageAtIndexPath:indexPath];
         return [[JSQMessagesTimestampFormatter sharedFormatter] attributedTimestampForDate:[message date]];
     }
     return nil;
@@ -1151,7 +1151,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     
     if ([self showSenderDisplayNameAtIndexPath:indexPath]) {
-        id<OTRMesssageProtocol,JSQMessageData> message = [self messageAtIndexPath:indexPath];
+        id<OTRMessageProtocol,JSQMessageData> message = [self messageAtIndexPath:indexPath];
         NSString *displayName = [message senderDisplayName];
         return [[NSAttributedString alloc] initWithString:displayName];
     }
@@ -1162,7 +1162,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 {
-    id <OTRMesssageProtocol> message = [self messageAtIndexPath:indexPath];
+    id <OTRMessageProtocol> message = [self messageAtIndexPath:indexPath];
     
     UIFont *font = [UIFont fontWithName:kFontAwesomeFont size:12];
     if (!font) {
@@ -1261,7 +1261,7 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 
 - (void)deleteMessageAtIndexPath:(NSIndexPath *)indexPath
 {
-    __block id <OTRMesssageProtocol,JSQMessageData> message = [self messageAtIndexPath:indexPath];
+    __block id <OTRMessageProtocol,JSQMessageData> message = [self messageAtIndexPath:indexPath];
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         [transaction removeObjectForKey:[message messageKey] inCollection:[message messageCollection]];
         //Update Last message date for sorting and grouping
@@ -1272,7 +1272,7 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 
 - (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapAvatarImageView:(UIImageView *)avatarImageView atIndexPath:(NSIndexPath *)indexPath
 {
-    id <OTRMesssageProtocol,JSQMessageData> message = [self messageAtIndexPath:indexPath];
+    id <OTRMessageProtocol,JSQMessageData> message = [self messageAtIndexPath:indexPath];
     if ([message messageError]) {
         [self showMessageError:[message messageError]];
     }
@@ -1280,7 +1280,7 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 
 - (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapMessageBubbleAtIndexPath:(NSIndexPath *)indexPath
 {
-    id <OTRMesssageProtocol,JSQMessageData> message = [self messageAtIndexPath:indexPath];
+    id <OTRMessageProtocol,JSQMessageData> message = [self messageAtIndexPath:indexPath];
     if ([message isMediaMessage]) {
         __block OTRMediaItem *item = nil;
         [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
@@ -1316,7 +1316,7 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
             //Inserted new item, probably at the end
             //Get last message and test if isIncoming
             NSIndexPath *lastMessageIndexPath = [NSIndexPath indexPathForRow:numberMappingsItems - 1 inSection:0];
-            id <OTRMesssageProtocol>lastMessage = [self messageAtIndexPath:lastMessageIndexPath];
+            id <OTRMessageProtocol>lastMessage = [self messageAtIndexPath:lastMessageIndexPath];
             if ([lastMessage messageIncoming]) {
                 [self finishReceivingMessage];
             } else {

@@ -15,7 +15,7 @@
 
 @class OTRBuddy, OTRXMPPManager, OTRAccount, YapDatabaseConnection, OTRYapDatabaseObject, MessagesViewControllerState;
 
-@protocol OTRThreadOwner,OTRMesssageProtocol,JSQMessageData;
+@protocol OTRThreadOwner,OTRMessageProtocol,JSQMessageData;
 
 @protocol OTRMessagesViewControllerProtocol <NSObject>
 
@@ -46,6 +46,6 @@
 - (id<OTRThreadOwner>)threadObject;
 - (OTRAccount *)account;
 - (OTRXMPPManager *)xmppManager;
-- (id <OTRMesssageProtocol,JSQMessageData>)messageAtIndexPath:(NSIndexPath *)indexPath;
+- (id <OTRMessageProtocol,JSQMessageData>)messageAtIndexPath:(NSIndexPath *)indexPath;
 
 @end

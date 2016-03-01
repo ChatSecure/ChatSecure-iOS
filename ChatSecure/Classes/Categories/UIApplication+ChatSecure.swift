@@ -12,7 +12,7 @@ import MWFeedParser
 
 public extension UIApplication {
     
-    public func showLocalNotification(message:OTRMesssageProtocol) {
+    public func showLocalNotification(message:OTRMessageProtocol) {
         if (self.applicationState != .Active) {
             let rawMessageString = message.text().stringByConvertingHTMLToPlainText()
             
