@@ -362,9 +362,25 @@
     }
     else if ([sender isEqual:self.knockButton]) {
         //Sending knock
+        
+        //Create PushMessage to insert into conversation timeline
+        __block PushMessage *message = [[PushMessage alloc] init];
+        message.buddyKey = self.threadKey;
+        [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+            [message saveWithTransaction:transaction];
+        }];
+        
+        //Actually send off knock
+        __weak __typeof__(self) weakSelf = self;
         [[OTRAppDelegate appDelegate].pushController sendKnock:self.threadKey completion:^(BOOL success, NSError * _Nullable error) {
+            
+            //If there was an error sending off knock then mark the message with it
             if(error != nil) {
-                DDLogError(@"Error Sending Push");
+                __typeof__(self) strongSelf = weakSelf;
+                message.error = error;
+                [strongSelf.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+                    [message saveWithTransaction:transaction];
+                }];
             }
         }];
     } else {
