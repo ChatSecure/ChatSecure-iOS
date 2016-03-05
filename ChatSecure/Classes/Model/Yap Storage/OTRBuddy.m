@@ -122,12 +122,14 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
 - (void)setAllMessagesAsReadInTransaction:(YapDatabaseReadWriteTransaction *)transaction
 {
     [[transaction ext:OTRYapDatabaseRelationshipName] enumerateEdgesWithName:OTRMessageEdges.buddy destinationKey:self.uniqueId collection:[OTRBuddy collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
-        OTRMessage *message = [[OTRMessage fetchObjectWithUniqueID:edge.sourceKey transaction:transaction] copy];
-        
-        if (!message.isRead) {
-            message.read = YES;
-            [message saveWithTransaction:transaction];
-        }
+        id databseObject = [transaction objectForKey:edge.sourceKey inCollection:edge.sourceCollection];
+        if ([databseObject isKindOfClass:[OTRMessage class]]) {
+            OTRMessage *message = (OTRMessage *)databseObject;
+            if (!message.isRead) {
+                message.read = YES;
+                [message saveWithTransaction:transaction];
+            }
+        }        
     }];
 }
 - (OTRMessage *)lastMessageWithTransaction:(YapDatabaseReadTransaction *)transaction

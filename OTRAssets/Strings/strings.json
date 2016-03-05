@@ -994,5 +994,13 @@
     "SCAN_QR_STRING": {
         "comment": "Label for sharing via QR Code",
         "string": "Scan QR"
+    },
+    "KNOCK_STRING": {
+      "comment": "Label for button after to send push notification knock. Like knocking on a door",
+      "string": "Knock"
+    },
+    "KNOCK_SENT_STRING": {
+        "comment": "Text for label after knock is sent. Like knocking on a door",
+        "string": "Knock Sent"
     }
 }

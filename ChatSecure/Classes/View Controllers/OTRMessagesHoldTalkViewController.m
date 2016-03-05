@@ -55,7 +55,7 @@
                            forState:UIControlStateNormal];
     
     self.knockButton = [JSQMessagesToolbarButtonFactory defaultSendButtonItem];
-    NSString *title = @"Knock";
+    NSString *title = KNOCK_STRING;
     CGFloat maxHeight = 32.0f;
     [self.knockButton setTitle:title forState:UIControlStateNormal];
     

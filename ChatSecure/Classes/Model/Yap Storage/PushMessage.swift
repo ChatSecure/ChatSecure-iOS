@@ -89,6 +89,34 @@ extension PushMessage: YapDatabaseRelationshipNode {
     }
 }
 
+extension PushMessage {
+    func account() -> OTRAccount? {
+        var account:OTRAccount? = nil
+        OTRDatabaseManager.sharedInstance().readOnlyDatabaseConnection .readWithBlock { (transaction) -> Void in
+            let buddy = OTRBuddy.fetchObjectWithUniqueID(self.buddyKey, transaction: transaction)
+            account = buddy.accountWithTransaction(transaction)
+        }
+        return account
+    }
+}
+
 extension PushMessage: JSQMessageData {
+    public func senderId() -> String! {
+        let account = self.account()
+        return account?.uniqueId ?? ""
+    }
     
+    public func senderDisplayName() -> String! {
+        let account = self.account()
+        let displayName = (account?.displayName ?? account?.username) ?? ""
+        return displayName
+    }
+    
+    public func messageHash() -> UInt {
+        return UInt(abs(self.uniqueId.hash))
+    }
+    
+    public func isMediaMessage() -> Bool {
+        return false
+    }
 }

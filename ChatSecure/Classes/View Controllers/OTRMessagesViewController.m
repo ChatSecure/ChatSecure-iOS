@@ -59,7 +59,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     OTRDropDownTypePush          = 2
 };
 
-@interface OTRMessagesViewController () <UITextViewDelegate, OTRAttachmentPickerDelegate, OTRYapViewHandlerDelegateProtocol>
+@interface OTRMessagesViewController () <UITextViewDelegate, OTRAttachmentPickerDelegate, OTRYapViewHandlerDelegateProtocol, OTRMessagesCollectionViewFlowLayoutSizeProtocol>
 
 @property (nonatomic, strong) OTRYapViewHandler *viewHandler;
 
@@ -148,6 +148,11 @@ typedef NS_ENUM(int, OTRDropDownType) {
     YapDatabaseConnection *connection = [self.databaseConnection.database newConnection];
     self.viewHandler = [[OTRYapViewHandler alloc] initWithDatabaseConnection:connection];
     self.viewHandler.delegate = self;
+    
+    ///Custom Layout to account for no bubble cells
+    OTRMessagesCollectionViewFlowLayout *layout = [[OTRMessagesCollectionViewFlowLayout alloc] init];
+    layout.sizeDelegate = self;
+    self.collectionView.collectionViewLayout = layout;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -406,9 +411,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
                 
                 [self showDropdownWithTitle:title buttons:buttons animated:YES tag:OTRDropDownTypeEncryption];
             }];
-            
-            
-            
         };
         if (!self.buttonDropdownView) {
             showEncryptionDropDown();
@@ -421,11 +423,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
                 [self hideDropdownAnimated:YES completion:showEncryptionDropDown];
             }
         }
-        
-        
     }];
-    
-    
     
     [self.navigationItem setRightBarButtonItem:[self rightBarButtonItem]];
 }
@@ -715,6 +713,11 @@ typedef NS_ENUM(int, OTRDropDownType) {
     return YES;
 }
 
+- (BOOL)isPushMessageAtIndexPath:(NSIndexPath *)indexPath {
+    id message = [self messageAtIndexPath:indexPath];
+    return [message isKindOfClass:[PushMessage class]];
+}
+
 - (void)receivedTextViewChangedNotification:(NSNotification *)notification
 {
     //Check if the text state changes from having some text to some or vice versa
@@ -821,6 +824,11 @@ typedef NS_ENUM(int, OTRDropDownType) {
     return nil;
 }
 
+#pragma MARK - OTRMessagesCollectionViewFlowLayoutSizeProtocol methods
+
+- (BOOL)hasBubbleSizeForCellAtIndexPath:(NSIndexPath *)indexPath {
+    return ![self isPushMessageAtIndexPath:indexPath];
+}
 
 #pragma mark - JSQMessagesViewController method overrides
 
@@ -828,7 +836,13 @@ typedef NS_ENUM(int, OTRDropDownType) {
 {
     JSQMessagesCollectionViewCell *cell = (JSQMessagesCollectionViewCell *)[super collectionView:collectionView cellForItemAtIndexPath:indexPath];
     
+    //Fixes times when there needs to be two lines (date & knock sent) and doesn't seem to affect one line instances
+    cell.cellTopLabel.numberOfLines = 0;
+    
     id <OTRMessageProtocol>message = [self messageAtIndexPath:indexPath];
+    if ([message isKindOfClass:[PushMessage class]]) {
+        
+    }
     
     UIColor *textColor = nil;
     if ([message messageIncoming]) {
@@ -1116,6 +1130,10 @@ typedef NS_ENUM(int, OTRDropDownType) {
 - (id <JSQMessageAvatarImageDataSource>)collectionView:(JSQMessagesCollectionView *)collectionView avatarImageDataForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     id <OTRMessageProtocol> message = [self messageAtIndexPath:indexPath];
+    if ([message isKindOfClass:[PushMessage class]]) {
+        return nil;
+    }
+    
     UIImage *avatarImage = nil;
     if ([message messageError]) {
         avatarImage = [OTRImages circleWarningWithColor:[OTRColors warnColor]];
@@ -1138,18 +1156,29 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForCellTopLabelAtIndexPath:(NSIndexPath *)indexPath
 {
+    NSMutableAttributedString *text = [[NSMutableAttributedString alloc] init];
+    
     if ([self showDateAtIndexPath:indexPath]) {
         id <OTRMessageProtocol> message = [self messageAtIndexPath:indexPath];
-        return [[JSQMessagesTimestampFormatter sharedFormatter] attributedTimestampForDate:[message date]];
+        [text appendAttributedString: [[JSQMessagesTimestampFormatter sharedFormatter] attributedTimestampForDate:[message date]]];
     }
-    return nil;
+    
+    if ([self isPushMessageAtIndexPath:indexPath]) {
+        JSQMessagesTimestampFormatter *formatter = [JSQMessagesTimestampFormatter sharedFormatter];
+        NSString *knockString = KNOCK_SENT_STRING;
+        //Add new line if there is already a date string
+        if ([text length] > 0) {
+            knockString = [@"\n" stringByAppendingString:knockString];
+        }
+        [text appendAttributedString:[[NSAttributedString alloc] initWithString:knockString attributes:formatter.dateTextAttributes]];
+    }
+    
+    return text;
 }
 
 
 - (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForMessageBubbleTopLabelAtIndexPath:(NSIndexPath *)indexPath
 {
-    
-    
     if ([self showSenderDisplayNameAtIndexPath:indexPath]) {
         id<OTRMessageProtocol,JSQMessageData> message = [self messageAtIndexPath:indexPath];
         NSString *displayName = [message senderDisplayName];
@@ -1236,10 +1265,15 @@ typedef NS_ENUM(int, OTRDropDownType) {
                    layout:(JSQMessagesCollectionViewFlowLayout *)collectionViewLayout
 heightForCellTopLabelAtIndexPath:(NSIndexPath *)indexPath
 {
+    CGFloat height = 0.0f;
     if ([self showDateAtIndexPath:indexPath]) {
-        return kJSQMessagesCollectionViewCellLabelHeightDefault;
+        height += kJSQMessagesCollectionViewCellLabelHeightDefault;
     }
-    return 0.0f;
+    
+    if ([self isPushMessageAtIndexPath:indexPath]) {
+        height += kJSQMessagesCollectionViewCellLabelHeightDefault;
+    }
+    return height;
 }
 
 - (CGFloat)collectionView:(JSQMessagesCollectionView *)collectionView
@@ -1256,7 +1290,11 @@ heightForMessageBubbleTopLabelAtIndexPath:(NSIndexPath *)indexPath
                    layout:(JSQMessagesCollectionViewFlowLayout *)collectionViewLayout
 heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 {
-    return kJSQMessagesCollectionViewCellLabelHeightDefault;
+    CGFloat height = kJSQMessagesCollectionViewCellLabelHeightDefault;
+    if ([self isPushMessageAtIndexPath:indexPath]) {
+        height = 0.0f;
+    }
+    return height;
 }
 
 - (void)deleteMessageAtIndexPath:(NSIndexPath *)indexPath
