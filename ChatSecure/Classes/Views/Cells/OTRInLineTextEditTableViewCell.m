@@ -54,7 +54,7 @@
     if (!self.addedConstraints && self.textField) {
         
         NSLayoutConstraint *leadingEdgeConstraint = [self.textField autoPinEdge:ALEdgeLeading
-                                                                          toEdge:ALEdgeRight
+                                                                          toEdge:ALEdgeTrailing
                                                                           ofView:self.textLabel
                                                                       withOffset:6];
         

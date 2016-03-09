@@ -135,7 +135,6 @@
 		6396AFBA1A169D54009F3E6C /* ChatSecureTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6396AFB91A169D54009F3E6C /* ChatSecureTests.m */; };
 		639CDD8E1AD71BC4009BAABC /* OTRCircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 639CDD8D1AD71BC4009BAABC /* OTRCircleView.m */; };
 		639CDD911AD74419009BAABC /* OTRTouchAndHoldGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 639CDD901AD74419009BAABC /* OTRTouchAndHoldGestureRecognizer.m */; };
-		63C4BCCC1A1E9B9F001696CD /* ChatSecure.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCC81A1E9B9F001696CD /* ChatSecure.xcdatamodeld */; };
 		63C4BD0F1A1E9BE1001696CD /* OTRManagedAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCCF1A1E9BE1001696CD /* OTRManagedAccount.m */; };
 		63C4BD101A1E9BE1001696CD /* OTRManagedBuddy.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCD11A1E9BE1001696CD /* OTRManagedBuddy.m */; };
 		63C4BD111A1E9BE1001696CD /* OTRManagedEncryptionStatusMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C4BCD31A1E9BE1001696CD /* OTRManagedEncryptionStatusMessage.m */; };
@@ -200,7 +199,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		154CBBDFA16BDE9C28017B1F /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		10EF91240EAB8D86A66C3A2D /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		25A3853627C1F67D3A296AB4 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		632461571A1AE553000EF33B /* OTRCoreDataMigrationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRCoreDataMigrationTests.m; sourceTree = "<group>"; };
 		633104D51A169EC800C17BAE /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -585,10 +584,11 @@
 		63FABC8D1A410EBF009BF681 /* JSQMessagesCollectionViewCell+ChatSecure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "JSQMessagesCollectionViewCell+ChatSecure.m"; sourceTree = "<group>"; };
 		63FABC8F1A41218E009BF681 /* NSString+ChatSecure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+ChatSecure.h"; sourceTree = "<group>"; };
 		63FABC901A41218E009BF681 /* NSString+ChatSecure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+ChatSecure.m"; sourceTree = "<group>"; };
-		954B60A022C05FDE4DCFEF6E /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
-		B977533C20F88A4A840303F9 /* Pods.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.beta.xcconfig; path = "Pods/Target Support Files/Pods/Pods.beta.xcconfig"; sourceTree = "<group>"; };
+		D2AE76ACF06BF15EEB781E7A /* Pods.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.beta.xcconfig; path = "Pods/Target Support Files/Pods/Pods.beta.xcconfig"; sourceTree = "<group>"; };
 		D9365E791A1EB0050006434A /* torrc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = torrc; path = Resources/torrc; sourceTree = "<group>"; };
+		D94563EF1C8FA0AF00DA6162 /* ChatSecure.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = ChatSecure.entitlements; sourceTree = "<group>"; };
 		D973D7051A2D4094004D353E /* Pods-acknowledgements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Pods-acknowledgements.plist"; path = "Pods/Target Support Files/Pods/Pods-acknowledgements.plist"; sourceTree = SOURCE_ROOT; };
+		E0859D2C5569FDC03E70A70F /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1038,6 +1038,7 @@
 		6396AF9C1A169D54009F3E6C /* ChatSecure */ = {
 			isa = PBXGroup;
 			children = (
+				D94563EF1C8FA0AF00DA6162 /* ChatSecure.entitlements */,
 				633105001A16D1A300C17BAE /* Classes */,
 				633104D71A169EE600C17BAE /* Resources */,
 				6396AF9D1A169D54009F3E6C /* Supporting Files */,
@@ -1200,9 +1201,9 @@
 		C1E90FC219EFFEE2E8C7EECF /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				954B60A022C05FDE4DCFEF6E /* Pods.debug.xcconfig */,
-				154CBBDFA16BDE9C28017B1F /* Pods.release.xcconfig */,
-				B977533C20F88A4A840303F9 /* Pods.beta.xcconfig */,
+				10EF91240EAB8D86A66C3A2D /* Pods.debug.xcconfig */,
+				E0859D2C5569FDC03E70A70F /* Pods.release.xcconfig */,
+				D2AE76ACF06BF15EEB781E7A /* Pods.beta.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -1228,6 +1229,7 @@
 				6396AF981A169D54009F3E6C /* Resources */,
 				8A2E66B35EF52AF3A8D65276 /* Copy Pods Resources */,
 				6386E24E1A16DBAD003465DC /* ShellScript */,
+				C3E481117D68ECC599D55685 /* Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1247,6 +1249,7 @@
 				6396AFB01A169D54009F3E6C /* Frameworks */,
 				6396AFB11A169D54009F3E6C /* Resources */,
 				F92CD31427EF6855AC77AF5E /* Copy Pods Resources */,
+				7A8856547F985CE27B66DBDE /* Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1265,7 +1268,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = OTR;
-				LastUpgradeCheck = 0610;
+				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = "Chris Ballinger";
 				TargetAttributes = {
 					6396AF991A169D54009F3E6C = {
@@ -1273,6 +1276,9 @@
 						DevelopmentTeam = 4T8JLQR6GR;
 						SystemCapabilities = {
 							com.apple.DataProtection = {
+								enabled = 1;
+							};
+							com.apple.SafariKeychain = {
 								enabled = 1;
 							};
 						};
@@ -1372,6 +1378,21 @@
 			shellPath = /bin/sh;
 			shellScript = "python \"${SRCROOT}/ChatSecure/Strings/StringsConverter.py\"";
 		};
+		7A8856547F985CE27B66DBDE /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		8A2E66B35EF52AF3A8D65276 /* Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1385,6 +1406,21 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C3E481117D68ECC599D55685 /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		C6209FD4E67B0AE13FA1CE51 /* Check Pods Manifest.lock */ = {
@@ -1495,7 +1531,6 @@
 				633106E61A16D1A300C17BAE /* OTRImages.m in Sources */,
 				633106C11A16D1A300C17BAE /* OTRFingerprintSetting.m in Sources */,
 				633106F41A16D1A300C17BAE /* OTRXMPPLoginViewController.m in Sources */,
-				63C4BCCC1A1E9B9F001696CD /* ChatSecure.xcdatamodeld in Sources */,
 				63D184861A2D3F2400334CD8 /* OTRNotificationController.m in Sources */,
 				639CDD8E1AD71BC4009BAABC /* OTRCircleView.m in Sources */,
 				63FA54911A7B2C2E00F2AEBB /* OTRPauseView.m in Sources */,
@@ -1708,23 +1743,28 @@
 		};
 		632461551A1AE1C1000EF33B /* Beta */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 63DC0EB61A1ABC86002C9598 /* OTR_Release.xcconfig */;
+			baseConfigurationReference = D2AE76ACF06BF15EEB781E7A /* Pods.beta.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				BUNDLE_DISPLAY_NAME_SUFFIX = " β";
 				BUNDLE_ID_SUFFIX = .beta;
+				CODE_SIGN_ENTITLEMENTS = ChatSecure/ChatSecure.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = ChatSecure/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.chrisballinger.$(PRODUCT_NAME:rfc1034identifier)$(BUNDLE_ID_SUFFIX)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Beta;
 		};
 		632461561A1AE1C1000EF33B /* Beta */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B977533C20F88A4A840303F9 /* Pods.beta.xcconfig */;
+			baseConfigurationReference = D2AE76ACF06BF15EEB781E7A /* Pods.beta.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1733,6 +1773,7 @@
 				);
 				INFOPLIST_FILE = ChatSecureTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.chrisballinger.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ChatSecure.app/ChatSecure";
 			};
@@ -1758,6 +1799,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -1818,39 +1860,49 @@
 		};
 		6396AFBE1A169D54009F3E6C /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 63DC0EB41A1ABC86002C9598 /* OTR_Debug.xcconfig */;
+			baseConfigurationReference = 10EF91240EAB8D86A66C3A2D /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				BUNDLE_DISPLAY_NAME_SUFFIX = " α";
 				BUNDLE_ID_SUFFIX = .debug;
+				CODE_SIGN_ENTITLEMENTS = ChatSecure/ChatSecure.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = ChatSecure/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.chrisballinger.$(PRODUCT_NAME:rfc1034identifier)$(BUNDLE_ID_SUFFIX)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
 		6396AFBF1A169D54009F3E6C /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 63DC0EB61A1ABC86002C9598 /* OTR_Release.xcconfig */;
+			baseConfigurationReference = E0859D2C5569FDC03E70A70F /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				BUNDLE_DISPLAY_NAME_SUFFIX = "";
 				BUNDLE_ID_SUFFIX = "";
+				CODE_SIGN_ENTITLEMENTS = ChatSecure/ChatSecure.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = ChatSecure/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.chrisballinger.$(PRODUCT_NAME:rfc1034identifier)$(BUNDLE_ID_SUFFIX)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};
 		6396AFC11A169D54009F3E6C /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 954B60A022C05FDE4DCFEF6E /* Pods.debug.xcconfig */;
+			baseConfigurationReference = 10EF91240EAB8D86A66C3A2D /* Pods.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1863,6 +1915,7 @@
 				);
 				INFOPLIST_FILE = ChatSecureTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.chrisballinger.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ChatSecure.app/ChatSecure";
 			};
@@ -1870,7 +1923,7 @@
 		};
 		6396AFC21A169D54009F3E6C /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 154CBBDFA16BDE9C28017B1F /* Pods.release.xcconfig */;
+			baseConfigurationReference = E0859D2C5569FDC03E70A70F /* Pods.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1879,6 +1932,7 @@
 				);
 				INFOPLIST_FILE = ChatSecureTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.chrisballinger.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ChatSecure.app/ChatSecure";
 			};

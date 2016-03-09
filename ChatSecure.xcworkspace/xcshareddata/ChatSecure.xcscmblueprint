@@ -1,0 +1,65 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "65A79C2919A5538250064F3C245A290D7BFC656E",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "DAAB2C887EFA8AB12BAB622BBAFD20531F9A3784" : 0,
+    "2D31E58E12E928BB18019A2FA755DD659EB4E709" : 0,
+    "65A79C2919A5538250064F3C245A290D7BFC656E" : 0,
+    "98D05BCBC40AE5315578EEE7C186D3063CCA59C3" : 0,
+    "B775552D1BBEEADC6A0BBB2FD048B6AA26CB309D" : 0,
+    "425D736B25093B4D45BF64638604863B9D31F2C1" : 0,
+    "0667158F825A93D2AA325B5DCB5737C5DE9CB558" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "26D133D5-30F9-4B37-AC00-2E75FB53151E",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "DAAB2C887EFA8AB12BAB622BBAFD20531F9A3784" : "ChatSecure-iOS\/Submodules\/YapDatabase\/",
+    "2D31E58E12E928BB18019A2FA755DD659EB4E709" : "ChatSecure-iOS\/Submodules\/ProxyKit\/",
+    "65A79C2919A5538250064F3C245A290D7BFC656E" : "ChatSecure-iOS\/",
+    "98D05BCBC40AE5315578EEE7C186D3063CCA59C3" : "ChatSecure-iOS\/Submodules\/CPAProxy\/",
+    "B775552D1BBEEADC6A0BBB2FD048B6AA26CB309D" : "ChatSecure-iOS\/Submodules\/XMPPFramework\/",
+    "425D736B25093B4D45BF64638604863B9D31F2C1" : "ChatSecure-iOS\/Submodules\/OTRKit\/",
+    "0667158F825A93D2AA325B5DCB5737C5DE9CB558" : "ChatSecure-iOS\/Submodules\/IOCipher\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "ChatSecure",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "ChatSecure.xcworkspace",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:ChatSecure\/IOCipher-ObjC.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "0667158F825A93D2AA325B5DCB5737C5DE9CB558"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:chrisballinger\/ProxyKit.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "2D31E58E12E928BB18019A2FA755DD659EB4E709"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:ChatSecure\/OTRKit.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "425D736B25093B4D45BF64638604863B9D31F2C1"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:ChatSecure\/ChatSecure-iOS.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "65A79C2919A5538250064F3C245A290D7BFC656E"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:ursachec\/CPAProxy.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "98D05BCBC40AE5315578EEE7C186D3063CCA59C3"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:ChatSecure\/XMPPFramework.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "B775552D1BBEEADC6A0BBB2FD048B6AA26CB309D"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:chrisballinger\/YapDatabase.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "DAAB2C887EFA8AB12BAB622BBAFD20531F9A3784"
+    }
+  ]
+}

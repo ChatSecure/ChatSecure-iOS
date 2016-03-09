@@ -12,8 +12,18 @@
     },
     {
       "idiom" : "iphone",
+      "size" : "29x29",
+      "scale" : "3x"
+    },
+    {
+      "idiom" : "iphone",
       "size" : "40x40",
       "scale" : "2x"
+    },
+    {
+      "idiom" : "iphone",
+      "size" : "40x40",
+      "scale" : "3x"
     },
     {
       "idiom" : "iphone",
@@ -87,6 +97,12 @@
       "size" : "76x76",
       "idiom" : "ipad",
       "filename" : "iPadIcon@2x.png",
+      "scale" : "2x"
+    },
+    {
+      "size" : "83.5x83.5",
+      "idiom" : "ipad",
+      "filename" : "ChatSecure_Icon.png",
       "scale" : "2x"
     }
   ],
