@@ -43,10 +43,8 @@ public class OTRWelcomeViewController: UIViewController {
     override public func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "createNewAccountSegue" {
             let createAccountVC: OTRBaseLoginViewController = segue.destinationViewController as! OTRBaseLoginViewController
-            let newAccount = OTRXMPPAccount(accountType: OTRAccountType.Jabber)
-            createAccountVC.form = OTRXLFormCreator.formForAccountType(newAccount.accountType, createAccount: true)
+            createAccountVC.form = OTRXLFormCreator.formForAccountType(OTRAccountType.Jabber, createAccount: true)
             createAccountVC.createLoginHandler = OTRXMPPCreateAccountHandler()
-            createAccountVC.account = newAccount
         }
     }
     

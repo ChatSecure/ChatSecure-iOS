@@ -25,7 +25,7 @@
         [super connectWithPassword:password userInitiated:userInitiated];
     }
     else {
-        NSError * error = [NSError errorWithDomain:OTRXMPPErrorDomain code:OTRXMPPTorError userInfo:@{NSLocalizedDescriptionKey:@"Need to connect to Tor"}];
+        NSError * error = [NSError errorWithDomain:OTRXMPPErrorDomain code:OTRXMPPTorError userInfo:@{NSLocalizedDescriptionKey:NSLocalizedString(@"Need to connect to Tor first.", @"")}];
         [self failedToConnect:error];
     }
 }
@@ -42,6 +42,7 @@
         NSString *proxyHost = [OTRTorManager sharedInstance].torManager.SOCKSHost;
         NSUInteger proxyPort = [OTRTorManager sharedInstance].torManager.SOCKSPort;
         [_xmppStream setProxyHost:proxyHost port:proxyPort version:GCDAsyncSocketSOCKSVersion5];
+        [_xmppStream setProxyUsername:[[NSUUID UUID] UUIDString] password:[[NSUUID UUID] UUIDString]];
     }
     return _xmppStream;
 }
