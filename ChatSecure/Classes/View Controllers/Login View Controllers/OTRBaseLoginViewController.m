@@ -144,14 +144,11 @@
     if (serverRow) {
         OTRXMPPServerInfo *serverInfo = serverRow.value;
         domain = serverInfo.domain;
-    } else {
-        OTRXMPPAccount *xmppAccount = (OTRXMPPAccount*)self.account;
-        domain = xmppAccount.domain;
-    }
-    if (domain) {
         usernameRow.value = domain;
-        [self updateFormRow:usernameRow];
+    } else {
+        usernameRow.value = self.account.username;
     }
+    [self updateFormRow:usernameRow];
 }
 
 #pragma mark XLFormDescriptorDelegate

@@ -20,9 +20,10 @@
     id<OTRBaseLoginViewControllerHandlerProtocol>loginHandler = nil;
     if (account.accountType == OTRAccountTypeGoogleTalk) {
         loginHandler = [[OTRGoolgeOAuthLoginHandler alloc] init];
-    } else if (account.accountType == OTRAccountTypeJabber) {
+    } else if (account.accountType == OTRAccountTypeJabber || account.accountType == OTRAccountTypeXMPPTor) {
         loginHandler = [[OTRXMPPLoginHandler alloc] init];
     }
+    NSParameterAssert(loginHandler != nil);
     return loginHandler;
 }
 

@@ -25,6 +25,10 @@
 
 @implementation OTRXMPPLoginHandler
 
+- (void) dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (void)moveAccountValues:(OTRXMPPAccount *)account intoForm:(XLFormDescriptor *)form
 {
     if (!account) {
@@ -62,19 +66,24 @@
     
     XLFormRowDescriptor *usernameRow = [form formRowWithTag:kOTRXLFormUsernameTextFieldTag];
     
-    NSString *username = nil;
+    NSString *jidNode = nil; // aka 'username' from username@example.com
+    NSString *jidDomain = nil;
 
     if (![usernameRow isHidden]) {
         NSArray *components = [usernameRow.value componentsSeparatedByString:@"@"];
-        username = [components firstObject];
+        if (components.count == 2) {
+            jidNode = [components firstObject];
+            jidDomain = [components lastObject];
+        } else {
+            jidNode = usernameRow.value;
+        }
     }
 
-    if (!username.length) {
+    if (!jidNode.length) {
         // strip whitespace and make nickname lowercase
-        username = [nickname stringByReplacingOccurrencesOfString:@" " withString:@""];
-        username = [username lowercaseString];
+        jidNode = [nickname stringByReplacingOccurrencesOfString:@" " withString:@""];
+        jidNode = [jidNode lowercaseString];
     }
-    account.username = username;
     
     NSNumber *rememberPassword = [[form formRowWithTag:kOTRXLFormRememberPasswordSwitchTag] value];
     if (rememberPassword) {
@@ -105,9 +114,15 @@
     NSNumber *port = [[form formRowWithTag:kOTRXLFormPortTextFieldTag] value];
     NSString *resource = [[form formRowWithTag:kOTRXLFormResourceTextFieldTag] value];
     
-    if ([hostname length]) {
-        account.domain = hostname;
+    if (![hostname length]) {
+        XLFormRowDescriptor *serverRow = [form formRowWithTag:kOTRXLFormXMPPServerTag];
+        if (serverRow) {
+            OTRXMPPServerInfo *serverInfo = serverRow.value;
+            hostname = serverInfo.domain;
+        }
     }
+    account.domain = hostname;
+
     
     if (port) {
         account.port = [port intValue];
@@ -119,14 +134,11 @@
     
     // Post-process values via XMPPJID for stringprep
     
-    NSString *domain = account.domain;
-    if (![domain length]) {
-        id usernameValue = [[form formRowWithTag:kOTRXLFormUsernameTextFieldTag] value];
-        NSArray *components = [usernameValue componentsSeparatedByString:@"@"];
-        domain = [components lastObject];
+    if (!jidDomain.length) {
+        jidDomain = account.domain;
     }
     
-    XMPPJID *jid = [XMPPJID jidWithUser:username domain:domain resource:account.resource];
+    XMPPJID *jid = [XMPPJID jidWithUser:jidNode domain:jidDomain resource:account.resource];
     if (!jid) {
         NSParameterAssert(jid != nil);
         NSLog(@"Error creating JID from account values!");
@@ -215,9 +227,7 @@
     NSError *error = notification.userInfo[OTRXMPPLoginErrorKey];
     OTRAccount *account = self.xmppManager.account;
 
-    if (newStatus == OTRLoginStatusAuthenticated) {
-        [[NSNotificationCenter defaultCenter] removeObserver:self];
-        
+    if (newStatus == OTRLoginStatusAuthenticated) {        
         // Account has been created, so save the password
         account.password = self.password;
         
@@ -226,7 +236,6 @@
         }
     }
     else if (error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:self];
         if (self.completion) {
             self.completion(account,error);
         }
