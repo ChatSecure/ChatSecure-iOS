@@ -72,7 +72,9 @@ def main():
 	strings_json_path = os.path.join(script_directory, 'strings.json')
 	strings_h_path = os.path.join(script_directory, 'OTRStrings.h')
 	temp_strings_h_path = os.path.join(script_directory, 'tempStrings.h')
-	output_directory_path = os.path.join(os.path.join(script_directory, os.pardir), 'Base.lproj')
+	project_root_path = os.path.join(os.path.join(script_directory, os.pardir), os.pardir)
+	localizations_path = os.path.join(os.path.join(project_root_path, 'OTRResources'), 'Localizations')
+	base_lproj_path = os.path.join(localizations_path, 'Base.lproj')
 
 	# Compare Modification Dates
 	strings_json_modified = os.path.getmtime(strings_json_path)
@@ -88,7 +90,7 @@ def main():
 	json_to_strings(strings_dict, strings_h_path, temp_strings_h_path)
 	strings_json_file.close()
 
-	genStrings(inputFilePath=temp_strings_h_path, outputDirectoryPath=output_directory_path)
+	genStrings(inputFilePath=temp_strings_h_path, outputDirectoryPath=base_lproj_path)
 	os.remove(temp_strings_h_path)
 
 if __name__ == "__main__":
