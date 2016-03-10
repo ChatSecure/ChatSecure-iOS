@@ -99,9 +99,9 @@
     NSMutableArray *accountArray = [NSMutableArray array];
     
     [accountArray addObject:[OTRWelcomeAccountInfo accountInfoWithText:@"XMPP" image:[UIImage imageNamed:@"xmpp" inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil] didSelectBlock:^{
-        OTRXMPPAccount *xmppAccount = [[OTRXMPPAccount alloc] initWithAccountType:OTRAccountTypeJabber];
-        OTRBaseLoginViewController *loginViewController = [OTRBaseLoginViewController loginViewControllerForAccount:xmppAccount];
-        loginViewController.account = xmppAccount;
+        OTRBaseLoginViewController *loginViewController = [[OTRBaseLoginViewController alloc] init];
+        loginViewController.form = [OTRXLFormCreator formForAccountType:OTRAccountTypeJabber createAccount:NO];
+        loginViewController.createLoginHandler = [[OTRXMPPLoginHandler alloc] init];
         [self.navigationController pushViewController:loginViewController animated:YES];
     }]];
     [accountArray addObject:[OTRWelcomeAccountInfo accountInfoWithText:@"Google" image:[UIImage imageNamed:@"gtalk" inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil] didSelectBlock:^{

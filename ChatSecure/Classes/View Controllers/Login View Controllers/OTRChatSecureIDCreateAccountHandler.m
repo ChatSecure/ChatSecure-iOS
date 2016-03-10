@@ -54,14 +54,14 @@
     if (!serverInfo) {
         //error no more servers to find
     } else {
-        [self performActionWithValidForm:nil account:self.account completion:self.completion];
+        [self performActionWithValidForm:nil account:self.account progress:nil completion:self.completion];
     }
 }
 
-- (void)performActionWithValidForm:(XLFormDescriptor *)form account:(OTRAccount *)account completion:(void (^)(OTRAccount * account, NSError *error))completion
+- (void)performActionWithValidForm:(XLFormDescriptor *)form account:(OTRAccount *)account progress:(void (^)(NSInteger progress, NSString *summaryString))progress completion:(void (^)(OTRAccount * account, NSError *error))completion
 {
     self.password = [OTRPasswordGenerator passwordWithLength:25];//Create random password
-    [super performActionWithValidForm:form account:account completion:completion];
+    [super performActionWithValidForm:form account:account progress:progress completion:completion];
 }
 - (void)receivedNotification:(NSNotification *)notification
 {

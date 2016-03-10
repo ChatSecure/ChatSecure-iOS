@@ -56,7 +56,7 @@ PODS:
   - gtm-http-fetcher (1.1)
   - gtm-oauth2 (1.1):
     - gtm-http-fetcher (~> 1.1)
-  - HockeySDK-Source (3.8.5)
+  - HockeySDK-Source (3.8.6)
   - IOCipher/common (0.1.0):
     - libsqlfs/SQLCipher
   - IOCipher/GCDWebServer (0.1.0):
@@ -91,13 +91,13 @@ PODS:
   - MWFeedParser/NSString+HTML (1.0.1)
   - Navajo (0.0.1)
   - OpenInChrome (0.0.1)
-  - OTRKit (1.1.1)
+  - OTRKit (1.1.2)
   - ParkedTextField (0.1.2)
-  - ProxyKit/Client (1.0.2):
+  - ProxyKit/Client (1.1.0):
     - ProxyKit/common
-  - ProxyKit/common (1.0.2):
-    - CocoaAsyncSocket (~> 7.3)
-    - CocoaLumberjack (~> 2.0)
+  - ProxyKit/common (1.1.0):
+    - CocoaAsyncSocket (~> 7.4)
+    - CocoaLumberjack (~> 2.2)
   - PureLayout (3.0.1)
   - QRCodeReaderViewController (3.5.2)
   - Reachability (3.2)
@@ -107,7 +107,7 @@ PODS:
   - SSKeychain (1.3.1)
   - TTTAttributedLabel (1.13.4)
   - TUSafariActivity (1.0.4)
-  - uservoice-iphone-sdk (3.2.3)
+  - uservoice-iphone-sdk (3.2.4)
   - VTAcknowledgementsViewController (0.17)
   - XLForm (3.0.2)
   - XMPPFramework (3.6.7):
@@ -253,47 +253,47 @@ PODS:
     - XMPPFramework/Core
   - XMPPFramework/XEP-0352 (3.6.7):
     - XMPPFramework/Core
-  - YapDatabase/SQLCipher (2.8.2):
-    - YapDatabase/SQLCipher/Core (= 2.8.2)
-    - YapDatabase/SQLCipher/Extensions (= 2.8.2)
-  - YapDatabase/SQLCipher/Core (2.8.2):
+  - YapDatabase/SQLCipher (2.8.3):
+    - YapDatabase/SQLCipher/Core (= 2.8.3)
+    - YapDatabase/SQLCipher/Extensions (= 2.8.3)
+  - YapDatabase/SQLCipher/Core (2.8.3):
     - CocoaLumberjack (~> 2)
     - SQLCipher/fts
-  - YapDatabase/SQLCipher/Extensions (2.8.2):
+  - YapDatabase/SQLCipher/Extensions (2.8.3):
     - YapDatabase/SQLCipher/Core
-    - YapDatabase/SQLCipher/Extensions/CloudKit (= 2.8.2)
-    - YapDatabase/SQLCipher/Extensions/ConnectionProxy (= 2.8.2)
-    - YapDatabase/SQLCipher/Extensions/FilteredViews (= 2.8.2)
-    - YapDatabase/SQLCipher/Extensions/FullTextSearch (= 2.8.2)
-    - YapDatabase/SQLCipher/Extensions/Hooks (= 2.8.2)
-    - YapDatabase/SQLCipher/Extensions/Relationships (= 2.8.2)
-    - YapDatabase/SQLCipher/Extensions/RTreeIndex (= 2.8.2)
-    - YapDatabase/SQLCipher/Extensions/SearchResults (= 2.8.2)
-    - YapDatabase/SQLCipher/Extensions/SecondaryIndex (= 2.8.2)
-    - YapDatabase/SQLCipher/Extensions/SecondaryIndex (= 2.8.2)
-    - YapDatabase/SQLCipher/Extensions/Views (= 2.8.2)
-  - YapDatabase/SQLCipher/Extensions/CloudKit (2.8.2):
+    - YapDatabase/SQLCipher/Extensions/CloudKit (= 2.8.3)
+    - YapDatabase/SQLCipher/Extensions/ConnectionProxy (= 2.8.3)
+    - YapDatabase/SQLCipher/Extensions/FilteredViews (= 2.8.3)
+    - YapDatabase/SQLCipher/Extensions/FullTextSearch (= 2.8.3)
+    - YapDatabase/SQLCipher/Extensions/Hooks (= 2.8.3)
+    - YapDatabase/SQLCipher/Extensions/Relationships (= 2.8.3)
+    - YapDatabase/SQLCipher/Extensions/RTreeIndex (= 2.8.3)
+    - YapDatabase/SQLCipher/Extensions/SearchResults (= 2.8.3)
+    - YapDatabase/SQLCipher/Extensions/SecondaryIndex (= 2.8.3)
+    - YapDatabase/SQLCipher/Extensions/SecondaryIndex (= 2.8.3)
+    - YapDatabase/SQLCipher/Extensions/Views (= 2.8.3)
+  - YapDatabase/SQLCipher/Extensions/CloudKit (2.8.3):
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/ConnectionProxy (2.8.2):
+  - YapDatabase/SQLCipher/Extensions/ConnectionProxy (2.8.3):
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/FilteredViews (2.8.2):
+  - YapDatabase/SQLCipher/Extensions/FilteredViews (2.8.3):
     - YapDatabase/SQLCipher/Core
     - YapDatabase/SQLCipher/Extensions/Views
-  - YapDatabase/SQLCipher/Extensions/FullTextSearch (2.8.2):
+  - YapDatabase/SQLCipher/Extensions/FullTextSearch (2.8.3):
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/Hooks (2.8.2):
+  - YapDatabase/SQLCipher/Extensions/Hooks (2.8.3):
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/Relationships (2.8.2):
+  - YapDatabase/SQLCipher/Extensions/Relationships (2.8.3):
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/RTreeIndex (2.8.2):
+  - YapDatabase/SQLCipher/Extensions/RTreeIndex (2.8.3):
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/SearchResults (2.8.2):
+  - YapDatabase/SQLCipher/Extensions/SearchResults (2.8.3):
     - YapDatabase/SQLCipher/Core
     - YapDatabase/SQLCipher/Extensions/FullTextSearch
     - YapDatabase/SQLCipher/Extensions/Views
-  - YapDatabase/SQLCipher/Extensions/SecondaryIndex (2.8.2):
+  - YapDatabase/SQLCipher/Extensions/SecondaryIndex (2.8.3):
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/Views (2.8.2):
+  - YapDatabase/SQLCipher/Extensions/Views (2.8.3):
     - YapDatabase/SQLCipher/Core
   - ZXingObjC (3.1.0):
     - ZXingObjC/All (= 3.1.0)
@@ -386,7 +386,7 @@ SPEC CHECKSUMS:
   GCDWebServer: 2a375ec42839a41d7187d04e5b688d32fa5c4cd5
   gtm-http-fetcher: 4e7de79fc9e774b291eae66a240f17b3a5277ec7
   gtm-oauth2: b31c9d7c82f773f7b7094cbb7da8dc7b5968ce16
-  HockeySDK-Source: 85233ef10090148e5571f7a0a82deb8213b1691e
+  HockeySDK-Source: c6c66ea12e59f0d756fe9989cbc45eda017fc41c
   IOCipher: 4cb4cd9a5998f69f4578a51501987dc5951ff092
   JSQMessagesViewController: 73cab48aa92fc2d512f3b6724f3425cc47a19eb5
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
@@ -401,9 +401,9 @@ SPEC CHECKSUMS:
   MWFeedParser: 2cf646014c1baf6ad1b08c480b40a08180079247
   Navajo: 5fb68239b4e3af4610f31925bae1ca8e6bab8eaa
   OpenInChrome: f1f3f9dec682216fe78a0d7fe0b5b263d6312c32
-  OTRKit: d3bc784277eb34d4b7844e75e7ea4334e56030d6
+  OTRKit: 03e81b5196986bbe65491846a346dfa0aebfee02
   ParkedTextField: 602a34c13acf59577ab1124ac8bc380a33f5fe3a
-  ProxyKit: 2dac991bddade9b4b5c24228a91e1611213fb60d
+  ProxyKit: 1f35adc913debc7ca6748c02487361dabaaea532
   PureLayout: f35f5384c9c4e4479df041dbe33ad7577b71ddfb
   QRCodeReaderViewController: f20275985c41ae551099641493ab364691d9113e
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
@@ -411,11 +411,11 @@ SPEC CHECKSUMS:
   SSKeychain: 04c4ec40f4c3deda524e269bc76e5f30e638a174
   TTTAttributedLabel: 0a2ac7b2dd726d32a070dafb01446026b11e624f
   TUSafariActivity: afc55a00965377939107ce4fdc7f951f62454546
-  uservoice-iphone-sdk: 349d9ef36d3c43939d28390b9e86bb32b65fe983
+  uservoice-iphone-sdk: 2d3d700d701f6983d656ba76778fd15a971b6f98
   VTAcknowledgementsViewController: 6056f5f5e5ed995bbf0581bed6ddd29355ca9a80
   XLForm: 7817ce29f3f259186e837bb7309ac7e5b7e9b883
   XMPPFramework: 38ff8dffab0627c46e3903653383f769938f70f6
-  YapDatabase: d97b1a0bfd6856745a7a398045f3ca32cf248fda
+  YapDatabase: 15b6867a07ff30eac3af28794cd2262b4d0ca4ca
   ZXingObjC: bf15b3814f7a105b6d99f47da2333c93a063650a
 
 COCOAPODS: 0.39.0

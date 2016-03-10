@@ -17,6 +17,8 @@
 #import "OTRXMPPManager.h"
 #import "OTRXMPPServerInfo.h"
 #import "OTRPasswordGenerator.h"
+#import "OTRTorManager.h"
+
 
 @implementation OTRXMPPCreateAccountHandler
 
@@ -45,11 +47,36 @@
     return account;
 }
 
-- (void)performActionWithValidForm:(XLFormDescriptor *)form account:(OTRAccount *)account completion:(void (^)(OTRAccount * account, NSError *error))completion
+- (void)performActionWithValidForm:(XLFormDescriptor *)form account:(OTRAccount *)account progress:(void (^)(NSInteger, NSString *))progress completion:(void (^)(OTRAccount * account, NSError *error))completion
 {
+    if (form) {
+        account = (OTRXMPPAccount *)[super moveValues:form intoAccount:(OTRXMPPAccount*)account];
+    }
     self.completion = completion;
-    [self prepareForXMPPConnectionFrom:form account:(OTRXMPPAccount *)account];
     
+    if (account.accountType == OTRAccountTypeXMPPTor) {
+        //check tor is running
+        if ([OTRTorManager sharedInstance].torManager.status == CPAStatusOpen) {
+            [self finishRegisteringWithForm:form account:account];
+        } else if ([OTRTorManager sharedInstance].torManager.status == CPAStatusClosed) {
+            [[OTRTorManager sharedInstance].torManager setupWithCompletion:^(NSString *socksHost, NSUInteger socksPort, NSError *error) {
+                
+                if (error) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        completion(account,error);
+                    });
+                } else {
+                    [self finishRegisteringWithForm:form account:account];
+                }
+            } progress:progress];
+        }
+    } else {
+        [self finishRegisteringWithForm:form account:account];
+    }
+}
+
+- (void) finishRegisteringWithForm:(XLFormDescriptor *)form account:(OTRAccount *)account {
+    [self prepareForXMPPConnectionFrom:form account:(OTRXMPPAccount *)account];
     XLFormRowDescriptor *passwordRow = [form formRowWithTag:kOTRXLFormPasswordTextFieldTag];
     NSString *passwordFromForm = [passwordRow value];
     if (passwordRow.sectionDescriptor.isHidden == NO &&
@@ -60,7 +87,6 @@
         // if no password provided, generate a strong one
         _password = [OTRPasswordGenerator passwordWithLength:11];
     }
-    
     [self.xmppManager registerNewAccountWithPassword:self.password];
 }
 

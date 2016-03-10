@@ -15,6 +15,9 @@
 #import "OTRPasswordGenerator.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 #import "XMPPJID.h"
+#import "OTRXMPPServerInfo.h"
+#import "OTRXMPPTorAccount.h"
+#import "OTRTorManager.h"
 
 @interface OTRXMPPLoginHandler()
 @property (nonatomic, strong) NSString *password;
@@ -22,12 +25,18 @@
 
 @implementation OTRXMPPLoginHandler
 
+- (void) dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (void)moveAccountValues:(OTRXMPPAccount *)account intoForm:(XLFormDescriptor *)form
 {
+    if (!account) {
+        return;
+    }
     XLFormRowDescriptor *usernameRow = [form formRowWithTag:kOTRXLFormUsernameTextFieldTag];
     if (!usernameRow.value) {
-        NSDictionary *username = [OTRUsernameCell createRowDictionaryValueForUsername:account.username domain:account.domain];
-        usernameRow.value = username;
+        usernameRow.value = account.username;
     }
     [[form formRowWithTag:kOTRXLFormPasswordTextFieldTag] setValue:account.password];
     [[form formRowWithTag:kOTRXLFormRememberPasswordSwitchTag] setValue:@(account.rememberPassword)];
@@ -45,23 +54,36 @@
 
 - (OTRXMPPAccount *)moveValues:(XLFormDescriptor *)form intoAccount:(OTRXMPPAccount *)account
 {
-    NSString *nickname = [[form formRowWithTag:kOTRXLFormNicknameTextFieldTag] value];
-    id usernameValue = [[form formRowWithTag:kOTRXLFormUsernameTextFieldTag] value];
-    
-    NSString *username = nil;
-    if ([usernameValue isKindOfClass:[NSDictionary class]]) {
-        username = usernameValue[OTRUsernameCell.UsernameKey];
-        if (!username.length) {
-            // strip whitespace and make nickname lowercase
-            // TODO - replace with hexified Ed25519 identity key
-            username = [nickname stringByReplacingOccurrencesOfString:@" " withString:@""];
-            username = [username lowercaseString];
+    if (!account) {
+         BOOL useTor = [[form formRowWithTag:kOTRXLFormUseTorTag].value boolValue];
+        if (useTor) {
+            account = [[OTRXMPPTorAccount alloc] initWithAccountType:OTRAccountTypeXMPPTor];
+        } else {
+            account = [[OTRXMPPAccount alloc] initWithAccountType:OTRAccountTypeJabber];
         }
-    } else if ([usernameValue isKindOfClass:[NSString class]]) {
-        NSArray *components = [usernameValue componentsSeparatedByString:@"@"];
-        username = [components firstObject];
     }
-    account.username = username;
+    NSString *nickname = [[form formRowWithTag:kOTRXLFormNicknameTextFieldTag] value];
+    
+    XLFormRowDescriptor *usernameRow = [form formRowWithTag:kOTRXLFormUsernameTextFieldTag];
+    
+    NSString *jidNode = nil; // aka 'username' from username@example.com
+    NSString *jidDomain = nil;
+
+    if (![usernameRow isHidden]) {
+        NSArray *components = [usernameRow.value componentsSeparatedByString:@"@"];
+        if (components.count == 2) {
+            jidNode = [components firstObject];
+            jidDomain = [components lastObject];
+        } else {
+            jidNode = usernameRow.value;
+        }
+    }
+
+    if (!jidNode.length) {
+        // strip whitespace and make nickname lowercase
+        jidNode = [nickname stringByReplacingOccurrencesOfString:@" " withString:@""];
+        jidNode = [jidNode lowercaseString];
+    }
     
     NSNumber *rememberPassword = [[form formRowWithTag:kOTRXLFormRememberPasswordSwitchTag] value];
     if (rememberPassword) {
@@ -92,9 +114,15 @@
     NSNumber *port = [[form formRowWithTag:kOTRXLFormPortTextFieldTag] value];
     NSString *resource = [[form formRowWithTag:kOTRXLFormResourceTextFieldTag] value];
     
-    if ([hostname length]) {
-        account.domain = hostname;
+    if (![hostname length]) {
+        XLFormRowDescriptor *serverRow = [form formRowWithTag:kOTRXLFormXMPPServerTag];
+        if (serverRow) {
+            OTRXMPPServerInfo *serverInfo = serverRow.value;
+            hostname = serverInfo.domain;
+        }
     }
+    account.domain = hostname;
+
     
     if (port) {
         account.port = [port intValue];
@@ -106,24 +134,29 @@
     
     // Post-process values via XMPPJID for stringprep
     
-    NSString *domain = account.domain;
-    if (![domain length]) {
-        id usernameValue = [[form formRowWithTag:kOTRXLFormUsernameTextFieldTag] value];
-        if ([usernameValue isKindOfClass:[NSDictionary class]]) {
-            domain = usernameValue[OTRUsernameCell.DomainKey];
-        } else if ([usernameValue isKindOfClass:[NSString class]]) {
-            NSArray *components = [usernameValue componentsSeparatedByString:@"@"];
-            domain = [components lastObject];
-        }
+    if (!jidDomain.length) {
+        jidDomain = account.domain;
     }
     
-    XMPPJID *jid = [XMPPJID jidWithUser:username domain:domain resource:account.resource];
+    XMPPJID *jid = [XMPPJID jidWithUser:jidNode domain:jidDomain resource:account.resource];
     if (!jid) {
         NSParameterAssert(jid != nil);
         NSLog(@"Error creating JID from account values!");
     }
     account.username = jid.bare;
     account.resource = jid.resource;
+    
+    // Use server's .onion if possible, else use FQDN
+    if (account.accountType == OTRAccountTypeXMPPTor) {
+        OTRXMPPServerInfo *serverInfo = [[form formRowWithTag:kOTRXLFormXMPPServerTag] value];
+        OTRXMPPTorAccount *torAccount = (OTRXMPPTorAccount*)account;
+        torAccount.onion = serverInfo.onion;
+        if (torAccount.onion.length) {
+            torAccount.domain = torAccount.onion;
+        } else if (serverInfo.server.length) {
+            torAccount.domain = serverInfo.server;
+        }
+    }
     
     // Start generating our OTR key here so it's ready when we need it
     
@@ -154,11 +187,36 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedNotification:) name:OTRXMPPLoginStatusNotificationName object:self.xmppManager];
 }
 
-- (void)performActionWithValidForm:(XLFormDescriptor *)form account:(OTRXMPPAccount *)account completion:(void (^)(OTRAccount * account, NSError *error))completion
+- (void)performActionWithValidForm:(XLFormDescriptor *)form account:(OTRXMPPAccount *)account progress:(void (^)(NSInteger progress, NSString *summaryString))progress completion:(void (^)(OTRAccount * account, NSError *error))completion
 {
+    if (form) {
+        account = (OTRXMPPAccount *)[self moveValues:form intoAccount:(OTRXMPPAccount*)account];
+    }
     self.completion = completion;
-    [self prepareForXMPPConnectionFrom:form account:account];
     
+    if (account.accountType == OTRAccountTypeXMPPTor) {
+        //check tor is running
+        if ([OTRTorManager sharedInstance].torManager.status == CPAStatusOpen) {
+            [self finishConnectingWithForm:form account:account];
+        } else if ([OTRTorManager sharedInstance].torManager.status == CPAStatusClosed) {
+            [[OTRTorManager sharedInstance].torManager setupWithCompletion:^(NSString *socksHost, NSUInteger socksPort, NSError *error) {
+                
+                if (error) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        completion(account,error);
+                    });
+                } else {
+                    [self finishConnectingWithForm:form account:account];
+                }
+            } progress:progress];
+        }
+    } else {
+        [self finishConnectingWithForm:form account:account];
+    }
+}
+
+- (void) finishConnectingWithForm:(XLFormDescriptor *)form account:(OTRXMPPAccount *)account {
+    [self prepareForXMPPConnectionFrom:form account:account];
     NSString *password = [[form formRowWithTag:kOTRXLFormPasswordTextFieldTag] value];
     [self.xmppManager connectWithPassword:password userInitiated:YES];
 }
@@ -169,9 +227,7 @@
     NSError *error = notification.userInfo[OTRXMPPLoginErrorKey];
     OTRAccount *account = self.xmppManager.account;
 
-    if (newStatus == OTRLoginStatusAuthenticated) {
-        [[NSNotificationCenter defaultCenter] removeObserver:self];
-        
+    if (newStatus == OTRLoginStatusAuthenticated) {        
         // Account has been created, so save the password
         account.password = self.password;
         
@@ -180,7 +236,6 @@
         }
     }
     else if (error) {
-        [[NSNotificationCenter defaultCenter] removeObserver:self];
         if (self.completion) {
             self.completion(account,error);
         }
