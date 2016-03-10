@@ -188,6 +188,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }];
     
     if ([self.threadKey length]) {
+        [self.viewHandler.keyCollectionObserver observe:self.threadKey collection:self.threadCollection];
+        [self updateviewWithKey:self.threadKey colleciton:self.threadCollection];
         [self.viewHandler setup:OTRChatDatabaseViewExtensionName groups:@[self.threadKey]];
         self.inputToolbar.contentView.textView.text = self.buddy.composingMessageString;
     }
@@ -267,6 +269,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
         [self.collectionView reloadData];
     }
     
+    [self.viewHandler.keyCollectionObserver removeObserver:oldKey forKeyPath:oldCollection];
+    [self.viewHandler.keyCollectionObserver observe:self.threadKey collection:self.threadCollection];
     [self updateviewWithKey:self.threadKey colleciton:self.threadCollection];
 }
 
@@ -1343,6 +1347,7 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 {
     [self updateviewWithKey:key colleciton:collection];
 }
+
 - (void)didReceiveChanges:(OTRYapViewHandler *)handler sectionChanges:(NSArray<YapDatabaseViewSectionChange *> *)sectionChanges rowChanges:(NSArray<YapDatabaseViewRowChange *> *)rowChanges
 {
     if (rowChanges.count) {
