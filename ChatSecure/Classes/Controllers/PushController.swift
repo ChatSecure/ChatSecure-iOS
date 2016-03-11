@@ -236,7 +236,7 @@ public class PushController: NSObject, OTRPushTLVHandlerDelegate, PushController
                 return
             }
             
-            let token = Token(tokenString: tokenString, deviceID: nil)
+            let token = Token(tokenString: tokenString, type: .unknown, deviceID: nil)
             
             let tokenContainer = TokenContainer()
             tokenContainer.pushToken = token
@@ -310,14 +310,28 @@ public class PushController: NSObject, OTRPushTLVHandlerDelegate, PushController
     public func sendKnock(buddyKey:String, completion:(success:Bool, error:NSError?) -> Void) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {[weak self] () -> Void in
             do {
-                guard let token = try self?.storage.tokensForBuddy(buddyKey, createdByThisAccount: false).first?.pushToken else {
+                guard let token = try self?.storage.tokensForBuddy(buddyKey, createdByThisAccount: false).first else {
                     self?.callbackQueue.addOperationWithBlock({ () -> Void in
                         completion(success: false, error: PushError.noTokensFound.error())
                     })
                     return
                 }
                 
-                let message = Message(token: token.tokenString, data: nil)
+                guard let tokenString = token.pushToken?.tokenString else {
+                    self?.callbackQueue.addOperationWithBlock({ () -> Void in
+                        completion(success: false, error: PushError.noTokensFound.error())
+                    })
+                    return
+                }
+                
+                guard let url = token.endpoint else {
+                    self?.callbackQueue.addOperationWithBlock({ () -> Void in
+                        completion(success: false, error: PushError.missingAPIEndpoint.error())
+                    })
+                    return
+                }
+                
+                let message = Message(token: tokenString, url:url , data: nil)
                 
                 self?.apiClient.sendMessage(message, completion: {[weak self] (message, error) -> Void in
                     if let _ = message {

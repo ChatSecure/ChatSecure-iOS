@@ -28,7 +28,7 @@ public class PushDeserializer: NSObject  {
         
         var tokenArray:[TokenContainer] = []
         for tokenString in tokenStrings {
-            let pushToken = Token(tokenString: tokenString, deviceID: nil)
+            let pushToken = Token(tokenString: tokenString,type: .unknown, deviceID: nil)
             let tokenContainer = TokenContainer()
             tokenContainer.pushToken = pushToken
             tokenContainer.endpoint = apiURL
