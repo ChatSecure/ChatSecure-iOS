@@ -312,7 +312,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
 
 - (void) otrKit:(OTRKit *)otrKit handleMessageEvent:(OTRKitMessageEvent)event message:(NSString *)message username:(NSString *)username accountName:(NSString *)accountName protocol:(NSString *)protocol tag:(id)tag error:(NSError *)error {
     //incoming and outgoing errors and other events
-    DDLogWarn(@"Message Event: %d Error:%@",(int)event,[OTREncryptionManager errorForMessageEvent:event].localizedDescription);
+    DDLogWarn(@"Message Event: %d Error:%@",(int)event,[OTREncryptionManager errorForMessageEvent:event string:nil].localizedDescription);
     
     if ([tag isKindOfClass:[OTRMessage class]]) {
         __block NSError *error = nil;
@@ -325,7 +325,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
             case OTRKitMessageEventReceivedMessageMalformed:
             case OTRKitMessageEventReceivedMessageGeneralError:
             case OTRKitMessageEventReceivedMessageUnrecognized:
-                error = [OTREncryptionManager errorForMessageEvent:event];
+                error = [OTREncryptionManager errorForMessageEvent:event string:message];
                 break;
             default:
                 break;
@@ -334,8 +334,11 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
             [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
                 OTRMessage *message = (OTRMessage *)tag;
                 message.error = error;
+                message.text = [OTREncryptionManager errorForMessageEvent:event string:nil].localizedDescription;
                 [message saveWithTransaction:transaction];
             }];
+            // automatically renegotiate a new session when there's an error
+            [self.otrKit initiateEncryptionWithUsername:username accountName:accountName protocol:protocol];
         }
     }
 }
@@ -378,13 +381,17 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
 
 #pragma - mark Class Methods
 
-+ (NSError *)errorForMessageEvent:(OTRKitMessageEvent)event
++ (NSError *)errorForMessageEvent:(OTRKitMessageEvent)event string:(NSString*)string
 {
     
     NSString *eventString = [OTREncryptionManager stringForEvent:event];
     
     NSInteger code = 200 + event;
-    NSMutableDictionary *userInfo = [@{NSLocalizedDescriptionKey:ENCRYPTION_ERROR_STRING} mutableCopy];
+    NSMutableString *description = [NSMutableString stringWithString:ENCRYPTION_ERROR_STRING];
+    if (string.length) {
+        [description appendFormat:@"\n\n%@", string];
+    }
+    NSMutableDictionary *userInfo = [@{NSLocalizedDescriptionKey:description} mutableCopy];
     if ([eventString length]) {
         [userInfo setObject:eventString forKey:NSLocalizedFailureReasonErrorKey];
     }

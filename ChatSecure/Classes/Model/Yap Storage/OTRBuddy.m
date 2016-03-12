@@ -214,15 +214,20 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
 {
     __block OTRBuddy *finalBuddy = nil;
     
+    
     [[transaction ext:OTRYapDatabaseRelationshipName] enumerateEdgesWithName:OTRBuddyEdges.account destinationKey:accountUniqueId collection:[OTRAccount collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
-        OTRBuddy * buddy = [transaction objectForKey:edge.sourceKey inCollection:[OTRBuddy collection]];
+        OTRBuddy * buddy = [transaction objectForKey:edge.sourceKey inCollection:edge.sourceCollection];
         if ([buddy.username isEqualToString:username]) {
             *stop = YES;
             finalBuddy = buddy;
         }
     }];
+
+    if (finalBuddy) {
+        finalBuddy = [finalBuddy copy];
+    }
     
-    return [finalBuddy copy];
+    return finalBuddy;
 }
 
 + (void)resetAllChatStatesWithTransaction:(YapDatabaseReadWriteTransaction *)transaction
