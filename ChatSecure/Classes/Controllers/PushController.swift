@@ -334,7 +334,14 @@ public class PushController: NSObject, OTRPushTLVHandlerDelegate, PushController
                 let message = Message(token: tokenString, url:url , data: nil)
                 
                 self?.apiClient.sendMessage(message, completion: {[weak self] (message, error) -> Void in
-                    if let _ = message {
+                    
+                    if (error?.code == 404) {
+                        // Token was revoked or was never valid.
+                        self?.storage.removeToken(token)
+                        // Retry and see if we have another token to use or will error out with noTokensFound
+                        self?.sendKnock(buddyKey, completion: completion)
+                    }
+                    else if let _ = message {
                         self?.callbackQueue.addOperationWithBlock({ () -> Void in
                             completion(success: true, error: nil)
                         })

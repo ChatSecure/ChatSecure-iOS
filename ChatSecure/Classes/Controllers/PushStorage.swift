@@ -18,6 +18,7 @@ import YapDatabase
     func saveThisDevice(device:Device)
     func unusedToken() -> TokenContainer?
     func removeUnusedToken(token: TokenContainer)
+    func removeToken(token: TokenContainer)
     func associateBuddy(tokenContainer:TokenContainer, buddyKey:String)
     func saveUnusedToken(tokenContainer:TokenContainer)
     func saveUsedToken(tokenContainer:TokenContainer)
@@ -48,6 +49,7 @@ class PushStorage: NSObject, PushStorageProtocol {
     }
     
     enum PushYapCollections: String {
+        ///Alternate Collection for tokens before they're 'attached' to a buddy. Just downloaded from the server
         case unusedTokenCollection = "kYapUnusedTokenCollection"
     }
     
@@ -114,6 +116,12 @@ class PushStorage: NSObject, PushStorageProtocol {
     func removeUnusedToken(token: TokenContainer) {
         self.databaseConnection.readWriteWithBlock { (transaction) -> Void in
             transaction.removeObjectForKey(token.uniqueId, inCollection: PushYapCollections.unusedTokenCollection.rawValue)
+        }
+    }
+    
+    func removeToken(token: TokenContainer) {
+        self.databaseConnection.readWriteWithBlock { (transaction) -> Void in
+            token.removeWithTransaction(transaction)
         }
     }
     
