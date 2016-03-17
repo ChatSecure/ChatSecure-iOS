@@ -28,7 +28,7 @@ import YapDatabase
     func numberOfTokensForBuddy(buddyKey:String, createdByThisAccount:Bool) -> Int
     func buddy(username: String, accountName: String) -> OTRBuddy?
     func account(accountUniqueID:String) -> OTRAccount?
-    func budy(token:String) -> OTRBuddy?
+    func buddy(token:String) -> OTRBuddy?
 }
 
 extension Account {
@@ -238,7 +238,7 @@ class PushStorage: NSObject, PushStorageProtocol {
         return account
     }
     
-    func budy(token: String) -> OTRBuddy? {
+    func buddy(token: String) -> OTRBuddy? {
         var buddy:OTRBuddy? = nil
         self.databaseConnection.readWithBlock { (transaction) -> Void in
             if let relationshipTransaction = transaction.ext(OTRYapDatabaseRelationshipName) as? YapDatabaseRelationshipTransaction {

@@ -285,7 +285,7 @@ public class PushController: NSObject, OTRPushTLVHandlerDelegate, PushController
     public func receiveRemoteNotification(notification: [NSObject : AnyObject], completion:(buddy:OTRBuddy?, error: NSError?) -> Void) {
         do {
             let message = try Deserializer.messageFromPushDictionary(notification)
-            guard let buddy = self.storage.budy(message.token) else {
+            guard let buddy = self.storage.buddy(message.token) else {
                 self.callbackQueue.addOperationWithBlock({ () -> Void in
                     completion(buddy:nil, error: PushError.noBuddyFound.error())
                 })
