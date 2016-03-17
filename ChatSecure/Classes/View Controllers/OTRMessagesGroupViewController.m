@@ -94,7 +94,7 @@
     id <JSQMessageAvatarImageDataSource> imageDataSource = [super collectionView:collectionView avatarImageDataForItemAtIndexPath:indexPath];
     if (!imageDataSource) {
         
-        id <OTRMesssageProtocol, JSQMessageData> message = [self messageAtIndexPath:indexPath];
+        id <OTRMessageProtocol, JSQMessageData> message = [self messageAtIndexPath:indexPath];
         if ([message isKindOfClass:[OTRXMPPRoomMessage class]]) {
             OTRXMPPRoomMessage *roomMessage = (OTRXMPPRoomMessage *)message;
             __block OTRXMPPRoomOccupant *roomOccupant = nil;

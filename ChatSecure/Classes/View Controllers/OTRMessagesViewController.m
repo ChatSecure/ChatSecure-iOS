@@ -59,7 +59,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     OTRDropDownTypePush          = 2
 };
 
-@interface OTRMessagesViewController () <UITextViewDelegate, OTRAttachmentPickerDelegate, OTRYapViewHandlerDelegateProtocol>
+@interface OTRMessagesViewController () <UITextViewDelegate, OTRAttachmentPickerDelegate, OTRYapViewHandlerDelegateProtocol, OTRMessagesCollectionViewFlowLayoutSizeProtocol>
 
 @property (nonatomic, strong) OTRYapViewHandler *viewHandler;
 
@@ -86,6 +86,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     if (self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
         self.senderId = @"";
         self.senderDisplayName = @"";
+        _state = [[MessagesViewControllerState alloc] init];
     }
     return self;
 }
@@ -147,6 +148,11 @@ typedef NS_ENUM(int, OTRDropDownType) {
     YapDatabaseConnection *connection = [self.databaseConnection.database newConnection];
     self.viewHandler = [[OTRYapViewHandler alloc] initWithDatabaseConnection:connection];
     self.viewHandler.delegate = self;
+    
+    ///Custom Layout to account for no bubble cells
+    OTRMessagesCollectionViewFlowLayout *layout = [[OTRMessagesCollectionViewFlowLayout alloc] init];
+    layout.sizeDelegate = self;
+    self.collectionView.collectionViewLayout = layout;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -299,6 +305,25 @@ typedef NS_ENUM(int, OTRDropDownType) {
             self.showTypingIndicator = NO;
         }
         
+        // Update Buddy Status
+        self.state.isThreadOnline = buddy.status != OTRThreadStatusOffline;
+        [self didUpdateState];
+        
+        //Update Buddy knock status
+        //Async because this calls down to the database and iterates over a relation. Might slowdown the UI if on main thread
+        __weak __typeof__(self) weakSelf = self;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            __typeof__(self) strongSelf = weakSelf;
+            __block BOOL canKnock = [[[OTRAppDelegate appDelegate].pushController pushStorage] numberOfTokensForBuddy:buddy.uniqueId createdByThisAccount:NO] > 0;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (canKnock != strongSelf.state.canKnock) {
+                    strongSelf.state.canKnock = canKnock;
+                    [strongSelf didUpdateState];
+                }
+            });
+            
+        });
+        
         [self refreshTitleView];
     }
     
@@ -390,9 +415,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
                 
                 [self showDropdownWithTitle:title buttons:buttons animated:YES tag:OTRDropDownTypeEncryption];
             }];
-            
-            
-            
         };
         if (!self.buttonDropdownView) {
             showEncryptionDropDown();
@@ -405,11 +427,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
                 [self hideDropdownAnimated:YES completion:showEncryptionDropDown];
             }
         }
-        
-        
     }];
-    
-    
     
     [self.navigationItem setRightBarButtonItem:[self rightBarButtonItem]];
 }
@@ -435,32 +453,27 @@ typedef NS_ENUM(int, OTRDropDownType) {
             UIBarButtonItem * rightBarItem = self.navigationItem.rightBarButtonItem;
             if ([rightBarItem isEqual:self.lockBarButtonItem]) {
                 
-                
-                [[OTRKit sharedInstance] activeFingerprintIsVerifiedForUsername:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString completion:^(BOOL isTrusted) {
+                [[OTRProtocolManager sharedInstance].encryptionManager currentEncryptionState:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString completion:^(BOOL isTrusted, BOOL hasVerifiedFingerprints, OTRKitMessageState messageState) {
                     
-                    [[OTRKit sharedInstance] hasVerifiedFingerprintsForUsername:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString completion:^(BOOL hasVerifiedFingerprints) {
-                        
-                        [[OTRKit sharedInstance] messageStateForUsername:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString completion:^(OTRKitMessageState messageState) {
-                            
-                            //Set correct lock icon and status
-                            if (messageState == OTRKitMessageStateEncrypted && isTrusted) {
-                                self.lockButton.lockStatus = OTRLockStatusLockedAndVerified;
-                            }
-                            else if (messageState == OTRKitMessageStateEncrypted && hasVerifiedFingerprints)
-                            {
-                                self.lockButton.lockStatus = OTRLockStatusLockedAndError;
-                            }
-                            else if (messageState == OTRKitMessageStateEncrypted) {
-                                self.lockButton.lockStatus = OTRLockStatusLockedAndWarn;
-                            }
-                            else {
-                                self.lockButton.lockStatus = OTRLockStatusUnlocked;
-                            }
-                            
-                            [self setupAccessoryButtonsWithMessageState:messageState];
-                        }];
-                    }];
-                }];
+                    //Set correct lock icon and status
+                    if (messageState == OTRKitMessageStateEncrypted && isTrusted) {
+                        self.lockButton.lockStatus = OTRLockStatusLockedAndVerified;
+                    }
+                    else if (messageState == OTRKitMessageStateEncrypted && hasVerifiedFingerprints)
+                    {
+                        self.lockButton.lockStatus = OTRLockStatusLockedAndError;
+                    }
+                    else if (messageState == OTRKitMessageStateEncrypted) {
+                        self.lockButton.lockStatus = OTRLockStatusLockedAndWarn;
+                    }
+                    else {
+                        self.lockButton.lockStatus = OTRLockStatusUnlocked;
+                    }
+                    
+                    self.state.isEncrypted = messageState == OTRKitMessageStateEncrypted;
+                    [self didUpdateState];
+                    
+                } completionQueue:nil];
             }
         }
     }];
@@ -553,7 +566,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }];
 }
 
-- (void)setupAccessoryButtonsWithMessageState:(OTRKitMessageState)messageState
+- (void)setupAccessoryButtonsWithMessageState:(OTRKitMessageState)messageState buddyStatus:(OTRThreadStatus)status textViewHasText:(BOOL)hasText
 {
     self.inputToolbar.contentView.rightBarButtonItem = self.sendButton;
     self.inputToolbar.sendButtonLocation = JSQMessagesInputSendButtonLocationRight;
@@ -659,7 +672,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }];
 }
 
-- (id <OTRMesssageProtocol,JSQMessageData>)messageAtIndexPath:(NSIndexPath *)indexPath
+- (id <OTRMessageProtocol,JSQMessageData>)messageAtIndexPath:(NSIndexPath *)indexPath
 {
     return [self.viewHandler object:indexPath];
 }
@@ -671,8 +684,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
         showDate = YES;
     }
     else {
-        id <OTRMesssageProtocol> currentMessage = [self messageAtIndexPath:indexPath];
-        id <OTRMesssageProtocol> previousMessage = [self messageAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row-1 inSection:indexPath.section]];
+        id <OTRMessageProtocol> currentMessage = [self messageAtIndexPath:indexPath];
+        id <OTRMessageProtocol> previousMessage = [self messageAtIndexPath:[NSIndexPath indexPathForItem:indexPath.row-1 inSection:indexPath.section]];
         
         NSTimeInterval timeDifference = [[currentMessage date] timeIntervalSinceDate:[previousMessage date]];
         if (timeDifference > kOTRMessageSentDateShowTimeInterval) {
@@ -683,7 +696,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 }
 
 - (BOOL)showSenderDisplayNameAtIndexPath:(NSIndexPath *)indexPath {
-    id<OTRMesssageProtocol,JSQMessageData> message = [self messageAtIndexPath:indexPath];
+    id<OTRMessageProtocol,JSQMessageData> message = [self messageAtIndexPath:indexPath];
     
     if(![self.threadCollection isEqualToString:[OTRXMPPRoom collection]]) {
         return NO;
@@ -695,7 +708,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     if(indexPath.row -1 >= 0) {
         NSIndexPath *previousIndexPath = [NSIndexPath indexPathForRow:indexPath.row - 1 inSection:indexPath.section];
-        id<OTRMesssageProtocol,JSQMessageData> previousMessage = [self messageAtIndexPath:previousIndexPath];
+        id<OTRMessageProtocol,JSQMessageData> previousMessage = [self messageAtIndexPath:previousIndexPath];
         if ([[previousMessage senderId] isEqualToString:message.senderId]) {
             return NO;
         }
@@ -704,10 +717,27 @@ typedef NS_ENUM(int, OTRDropDownType) {
     return YES;
 }
 
+- (BOOL)isPushMessageAtIndexPath:(NSIndexPath *)indexPath {
+    id message = [self messageAtIndexPath:indexPath];
+    return [message isKindOfClass:[PushMessage class]];
+}
+
 - (void)receivedTextViewChangedNotification:(NSNotification *)notification
 {
-    //implemented in subclasses
+    //Check if the text state changes from having some text to some or vice versa
+    UITextView *textView = notification.object;
+    BOOL hasText = [textView.text length] > 0;
+    if(hasText != self.state.hasText) {
+        self.state.hasText = hasText;
+        [self didUpdateState];
+    }
     return;
+}
+
+#pragma - mark Update UI
+
+- (void)didUpdateState {
+    
 }
 
 #pragma - mark Sending Media Items
@@ -798,6 +828,11 @@ typedef NS_ENUM(int, OTRDropDownType) {
     return nil;
 }
 
+#pragma MARK - OTRMessagesCollectionViewFlowLayoutSizeProtocol methods
+
+- (BOOL)hasBubbleSizeForCellAtIndexPath:(NSIndexPath *)indexPath {
+    return ![self isPushMessageAtIndexPath:indexPath];
+}
 
 #pragma mark - JSQMessagesViewController method overrides
 
@@ -805,7 +840,13 @@ typedef NS_ENUM(int, OTRDropDownType) {
 {
     JSQMessagesCollectionViewCell *cell = (JSQMessagesCollectionViewCell *)[super collectionView:collectionView cellForItemAtIndexPath:indexPath];
     
-    id <OTRMesssageProtocol>message = [self messageAtIndexPath:indexPath];
+    //Fixes times when there needs to be two lines (date & knock sent) and doesn't seem to affect one line instances
+    cell.cellTopLabel.numberOfLines = 0;
+    
+    id <OTRMessageProtocol>message = [self messageAtIndexPath:indexPath];
+    if ([message isKindOfClass:[PushMessage class]]) {
+        
+    }
     
     UIColor *textColor = nil;
     if ([message messageIncoming]) {
@@ -1079,7 +1120,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (id<JSQMessageBubbleImageDataSource>)collectionView:(JSQMessagesCollectionView *)collectionView messageBubbleImageDataForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    id <OTRMesssageProtocol> message = [self messageAtIndexPath:indexPath];
+    id <OTRMessageProtocol> message = [self messageAtIndexPath:indexPath];
     JSQMessagesBubbleImage *image = nil;
     if ([message messageIncoming]) {
         image = self.incomingBubbleImage;
@@ -1092,7 +1133,11 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (id <JSQMessageAvatarImageDataSource>)collectionView:(JSQMessagesCollectionView *)collectionView avatarImageDataForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    id <OTRMesssageProtocol> message = [self messageAtIndexPath:indexPath];
+    id <OTRMessageProtocol> message = [self messageAtIndexPath:indexPath];
+    if ([message isKindOfClass:[PushMessage class]]) {
+        return nil;
+    }
+    
     UIImage *avatarImage = nil;
     if ([message messageError]) {
         avatarImage = [OTRImages circleWarningWithColor:[OTRColors warnColor]];
@@ -1115,20 +1160,31 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForCellTopLabelAtIndexPath:(NSIndexPath *)indexPath
 {
+    NSMutableAttributedString *text = [[NSMutableAttributedString alloc] init];
+    
     if ([self showDateAtIndexPath:indexPath]) {
-        id <OTRMesssageProtocol> message = [self messageAtIndexPath:indexPath];
-        return [[JSQMessagesTimestampFormatter sharedFormatter] attributedTimestampForDate:[message date]];
+        id <OTRMessageProtocol> message = [self messageAtIndexPath:indexPath];
+        [text appendAttributedString: [[JSQMessagesTimestampFormatter sharedFormatter] attributedTimestampForDate:[message date]]];
     }
-    return nil;
+    
+    if ([self isPushMessageAtIndexPath:indexPath]) {
+        JSQMessagesTimestampFormatter *formatter = [JSQMessagesTimestampFormatter sharedFormatter];
+        NSString *knockString = KNOCK_SENT_STRING;
+        //Add new line if there is already a date string
+        if ([text length] > 0) {
+            knockString = [@"\n" stringByAppendingString:knockString];
+        }
+        [text appendAttributedString:[[NSAttributedString alloc] initWithString:knockString attributes:formatter.dateTextAttributes]];
+    }
+    
+    return text;
 }
 
 
 - (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForMessageBubbleTopLabelAtIndexPath:(NSIndexPath *)indexPath
 {
-    
-    
     if ([self showSenderDisplayNameAtIndexPath:indexPath]) {
-        id<OTRMesssageProtocol,JSQMessageData> message = [self messageAtIndexPath:indexPath];
+        id<OTRMessageProtocol,JSQMessageData> message = [self messageAtIndexPath:indexPath];
         NSString *displayName = [message senderDisplayName];
         return [[NSAttributedString alloc] initWithString:displayName];
     }
@@ -1139,7 +1195,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 {
-    id <OTRMesssageProtocol> message = [self messageAtIndexPath:indexPath];
+    id <OTRMessageProtocol> message = [self messageAtIndexPath:indexPath];
     
     UIFont *font = [UIFont fontWithName:kFontAwesomeFont size:12];
     if (!font) {
@@ -1213,10 +1269,15 @@ typedef NS_ENUM(int, OTRDropDownType) {
                    layout:(JSQMessagesCollectionViewFlowLayout *)collectionViewLayout
 heightForCellTopLabelAtIndexPath:(NSIndexPath *)indexPath
 {
+    CGFloat height = 0.0f;
     if ([self showDateAtIndexPath:indexPath]) {
-        return kJSQMessagesCollectionViewCellLabelHeightDefault;
+        height += kJSQMessagesCollectionViewCellLabelHeightDefault;
     }
-    return 0.0f;
+    
+    if ([self isPushMessageAtIndexPath:indexPath]) {
+        height += kJSQMessagesCollectionViewCellLabelHeightDefault;
+    }
+    return height;
 }
 
 - (CGFloat)collectionView:(JSQMessagesCollectionView *)collectionView
@@ -1233,12 +1294,16 @@ heightForMessageBubbleTopLabelAtIndexPath:(NSIndexPath *)indexPath
                    layout:(JSQMessagesCollectionViewFlowLayout *)collectionViewLayout
 heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 {
-    return kJSQMessagesCollectionViewCellLabelHeightDefault;
+    CGFloat height = kJSQMessagesCollectionViewCellLabelHeightDefault;
+    if ([self isPushMessageAtIndexPath:indexPath]) {
+        height = 0.0f;
+    }
+    return height;
 }
 
 - (void)deleteMessageAtIndexPath:(NSIndexPath *)indexPath
 {
-    __block id <OTRMesssageProtocol,JSQMessageData> message = [self messageAtIndexPath:indexPath];
+    __block id <OTRMessageProtocol,JSQMessageData> message = [self messageAtIndexPath:indexPath];
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         [transaction removeObjectForKey:[message messageKey] inCollection:[message messageCollection]];
         //Update Last message date for sorting and grouping
@@ -1249,7 +1314,7 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 
 - (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapAvatarImageView:(UIImageView *)avatarImageView atIndexPath:(NSIndexPath *)indexPath
 {
-    id <OTRMesssageProtocol,JSQMessageData> message = [self messageAtIndexPath:indexPath];
+    id <OTRMessageProtocol,JSQMessageData> message = [self messageAtIndexPath:indexPath];
     if ([message messageError]) {
         [self showMessageError:[message messageError]];
     }
@@ -1257,7 +1322,7 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 
 - (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapMessageBubbleAtIndexPath:(NSIndexPath *)indexPath
 {
-    id <OTRMesssageProtocol,JSQMessageData> message = [self messageAtIndexPath:indexPath];
+    id <OTRMessageProtocol,JSQMessageData> message = [self messageAtIndexPath:indexPath];
     if ([message isMediaMessage]) {
         __block OTRMediaItem *item = nil;
         [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
@@ -1294,7 +1359,7 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
             //Inserted new item, probably at the end
             //Get last message and test if isIncoming
             NSIndexPath *lastMessageIndexPath = [NSIndexPath indexPathForRow:numberMappingsItems - 1 inSection:0];
-            id <OTRMesssageProtocol>lastMessage = [self messageAtIndexPath:lastMessageIndexPath];
+            id <OTRMessageProtocol>lastMessage = [self messageAtIndexPath:lastMessageIndexPath];
             if ([lastMessage messageIncoming]) {
                 [self finishReceivingMessage];
             } else {

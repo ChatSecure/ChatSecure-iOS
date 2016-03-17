@@ -116,7 +116,7 @@
     //Get history if any
     NSXMLElement *historyElement = nil;
     OTRXMPPRoomYapStorage *storage = room.xmppRoomStorage;
-    id<OTRMesssageProtocol> lastMessage = [storage lastMessageInRoom:room accountKey:accountId];
+    id<OTRMessageProtocol> lastMessage = [storage lastMessageInRoom:room accountKey:accountId];
     NSDate *lastMessageDate = [lastMessage date];
     if (lastMessageDate) {
         //Use since as our history marker if we have a last message

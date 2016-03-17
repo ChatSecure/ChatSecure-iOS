@@ -210,6 +210,13 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
     return behaviors;
 }
 
++ (MTLPropertyStorage)storageBehaviorForPropertyWithKey:(NSString *)propertyKey {
+    if ([propertyKey isEqualToString:NSStringFromSelector(@selector(password))]) {
+        return MTLPropertyStorageNone;
+    }
+    return [super storageBehaviorForPropertyWithKey:propertyKey];
+}
+
 #pragma mark Fingerprints
 
 /**

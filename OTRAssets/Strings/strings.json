@@ -981,7 +981,7 @@
     },
     "ONBOARDING_SUCCESS_STRING": {
         "comment": "String used when onboarding works",
-        "string": "You're ready to"
+        "string": "You're ready to use"
     },
     "INVITE_SMS_STRING": {
         "comment": "Label for inviting friends via sms",
@@ -989,10 +989,18 @@
     },
     "INVITE_LINK_STRING": {
         "comment": "Label for inviting friends via URL",
-        "string": "Share Invite Link"
+        "string": "Share Invite"
     },
     "SCAN_QR_STRING": {
         "comment": "Label for sharing via QR Code",
         "string": "Scan QR"
+    },
+    "KNOCK_STRING": {
+      "comment": "Label for button after to send push notification knock. Like knocking on a door",
+      "string": "Knock"
+    },
+    "KNOCK_SENT_STRING": {
+        "comment": "Text for label after knock is sent. Like knocking on a door",
+        "string": "Knock Sent"
     }
 }

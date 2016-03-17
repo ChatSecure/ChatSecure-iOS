@@ -9,17 +9,18 @@
 #import <UIKit/UIKit.h>
 
 #import <JSQMessagesViewController/JSQMessagesViewController.h>
+#import "OTRBuddy.h"
 @import OTRKit;
 @import JSQMessagesViewController;
 
-@class OTRBuddy, OTRXMPPManager, OTRAccount, YapDatabaseConnection, OTRYapDatabaseObject;
+@class OTRBuddy, OTRXMPPManager, OTRAccount, YapDatabaseConnection, OTRYapDatabaseObject, MessagesViewControllerState;
 
-@protocol OTRThreadOwner,OTRMesssageProtocol,JSQMessageData;
+@protocol OTRThreadOwner,OTRMessageProtocol,JSQMessageData;
 
 @protocol OTRMessagesViewControllerProtocol <NSObject>
 
 - (void)receivedTextViewChangedNotification:(NSNotification *)notification;
-- (void)setupAccessoryButtonsWithMessageState:(OTRKitMessageState)messageState;
+- (void)didUpdateState;
 
 @end
 
@@ -32,6 +33,8 @@
 @property (nonatomic, strong) UIButton *sendButton;
 @property (nonatomic, strong) UIButton *cameraButton;
 
+@property (nonatomic, strong, readonly) MessagesViewControllerState *state;
+
 - (void)setThreadKey:(NSString *)key collection:(NSString *)collection;
 - (void)sendAudioFileURL:(NSURL *)url;
 - (void)sendImageFilePath:(NSString *)filePath asJPEG:(BOOL)asJPEG shouldResize:(BOOL)shouldResize;
@@ -43,6 +46,6 @@
 - (id<OTRThreadOwner>)threadObject;
 - (OTRAccount *)account;
 - (OTRXMPPManager *)xmppManager;
-- (id <OTRMesssageProtocol,JSQMessageData>)messageAtIndexPath:(NSIndexPath *)indexPath;
+- (id <OTRMessageProtocol,JSQMessageData>)messageAtIndexPath:(NSIndexPath *)indexPath;
 
 @end

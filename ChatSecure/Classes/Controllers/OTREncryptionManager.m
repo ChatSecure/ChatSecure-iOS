@@ -105,6 +105,43 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     }
 }
 
+- (void)currentEncryptionState:(NSString *)username accountName:(NSString *)accountName protocol:(NSString *)protocol completion:(void (^)(BOOL currentlyTrusted, BOOL hasTurstedFingerprints, OTRKitMessageState messageState))completionBlock completionQueue:(dispatch_queue_t)queue
+{
+    if (!queue) {
+        queue = dispatch_get_main_queue();
+    }
+    
+    __block BOOL currentlyTrusted = NO;
+    __block BOOL hasTrustedFingerprints = NO;
+    __block OTRKitMessageState messageState = OTRKitMessageStatePlaintext;
+    
+    dispatch_group_t group = dispatch_group_create();
+    
+    dispatch_group_enter(group);
+    [self.otrKit activeFingerprintIsVerifiedForUsername:username accountName:accountName protocol:protocol completion:^(BOOL isCurrentlyTrusted) {
+        currentlyTrusted = isCurrentlyTrusted;
+        dispatch_group_leave(group);
+    }];
+    
+    dispatch_group_enter(group);
+    [self.otrKit hasVerifiedFingerprintsForUsername:username accountName:accountName protocol:protocol completion:^(BOOL hasVerifiedFingerprints) {
+        hasTrustedFingerprints = hasVerifiedFingerprints;
+        dispatch_group_leave(group);
+    }];
+    
+    dispatch_group_enter(group);
+    [self.otrKit messageStateForUsername:username accountName:accountName protocol:protocol completion:^(OTRKitMessageState msgState) {
+        messageState = msgState;
+        dispatch_group_leave(group);
+    }];
+    
+    dispatch_group_notify(group, queue, ^{
+        if(completionBlock) {
+            completionBlock(currentlyTrusted, hasTrustedFingerprints, messageState);
+        }
+    });
+}
+
 
 #pragma mark OTRKitDelegate methods
 
@@ -275,7 +312,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
 
 - (void) otrKit:(OTRKit *)otrKit handleMessageEvent:(OTRKitMessageEvent)event message:(NSString *)message username:(NSString *)username accountName:(NSString *)accountName protocol:(NSString *)protocol tag:(id)tag error:(NSError *)error {
     //incoming and outgoing errors and other events
-    DDLogWarn(@"Message Event: %d Error:%@",(int)event,[OTREncryptionManager errorForMessageEvent:event].localizedDescription);
+    DDLogWarn(@"Message Event: %d Error:%@",(int)event,[OTREncryptionManager errorForMessageEvent:event string:nil].localizedDescription);
     
     if ([tag isKindOfClass:[OTRMessage class]]) {
         __block NSError *error = nil;
@@ -288,7 +325,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
             case OTRKitMessageEventReceivedMessageMalformed:
             case OTRKitMessageEventReceivedMessageGeneralError:
             case OTRKitMessageEventReceivedMessageUnrecognized:
-                error = [OTREncryptionManager errorForMessageEvent:event];
+                error = [OTREncryptionManager errorForMessageEvent:event string:message];
                 break;
             default:
                 break;
@@ -297,8 +334,11 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
             [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
                 OTRMessage *message = (OTRMessage *)tag;
                 message.error = error;
+                message.text = [OTREncryptionManager errorForMessageEvent:event string:nil].localizedDescription;
                 [message saveWithTransaction:transaction];
             }];
+            // automatically renegotiate a new session when there's an error
+            [self.otrKit initiateEncryptionWithUsername:username accountName:accountName protocol:protocol];
         }
     }
 }
@@ -341,13 +381,17 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
 
 #pragma - mark Class Methods
 
-+ (NSError *)errorForMessageEvent:(OTRKitMessageEvent)event
++ (NSError *)errorForMessageEvent:(OTRKitMessageEvent)event string:(NSString*)string
 {
     
     NSString *eventString = [OTREncryptionManager stringForEvent:event];
     
     NSInteger code = 200 + event;
-    NSMutableDictionary *userInfo = [@{NSLocalizedDescriptionKey:ENCRYPTION_ERROR_STRING} mutableCopy];
+    NSMutableString *description = [NSMutableString stringWithString:ENCRYPTION_ERROR_STRING];
+    if (string.length) {
+        [description appendFormat:@"\n\n%@", string];
+    }
+    NSMutableDictionary *userInfo = [@{NSLocalizedDescriptionKey:description} mutableCopy];
     if ([eventString length]) {
         [userInfo setObject:eventString forKey:NSLocalizedFailureReasonErrorKey];
     }

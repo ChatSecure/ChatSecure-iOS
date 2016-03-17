@@ -122,12 +122,14 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
 - (void)setAllMessagesAsReadInTransaction:(YapDatabaseReadWriteTransaction *)transaction
 {
     [[transaction ext:OTRYapDatabaseRelationshipName] enumerateEdgesWithName:OTRMessageEdges.buddy destinationKey:self.uniqueId collection:[OTRBuddy collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
-        OTRMessage *message = [[OTRMessage fetchObjectWithUniqueID:edge.sourceKey transaction:transaction] copy];
-        
-        if (!message.isRead) {
-            message.read = YES;
-            [message saveWithTransaction:transaction];
-        }
+        id databseObject = [transaction objectForKey:edge.sourceKey inCollection:edge.sourceCollection];
+        if ([databseObject isKindOfClass:[OTRMessage class]]) {
+            OTRMessage *message = (OTRMessage *)databseObject;
+            if (!message.isRead) {
+                message.read = YES;
+                [message saveWithTransaction:transaction];
+            }
+        }        
     }];
 }
 - (OTRMessage *)lastMessageWithTransaction:(YapDatabaseReadTransaction *)transaction
@@ -212,15 +214,20 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
 {
     __block OTRBuddy *finalBuddy = nil;
     
+    
     [[transaction ext:OTRYapDatabaseRelationshipName] enumerateEdgesWithName:OTRBuddyEdges.account destinationKey:accountUniqueId collection:[OTRAccount collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
-        OTRBuddy * buddy = [transaction objectForKey:edge.sourceKey inCollection:[OTRBuddy collection]];
+        OTRBuddy * buddy = [transaction objectForKey:edge.sourceKey inCollection:edge.sourceCollection];
         if ([buddy.username isEqualToString:username]) {
             *stop = YES;
             finalBuddy = buddy;
         }
     }];
+
+    if (finalBuddy) {
+        finalBuddy = [finalBuddy copy];
+    }
     
-    return [finalBuddy copy];
+    return finalBuddy;
 }
 
 + (void)resetAllChatStatesWithTransaction:(YapDatabaseReadWriteTransaction *)transaction

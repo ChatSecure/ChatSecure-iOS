@@ -17,5 +17,5 @@
 
 - (instancetype)initWithDatabaseConnection:(YapDatabaseConnection *)databaseConnection;
 
-- (id <OTRMesssageProtocol>)lastMessageInRoom:(XMPPRoom *)room accountKey:(NSString *)accountKey;
+- (id <OTRMessageProtocol>)lastMessageInRoom:(XMPPRoom *)room accountKey:(NSString *)accountKey;
 @end

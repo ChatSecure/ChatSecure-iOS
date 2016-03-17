@@ -10,4 +10,7 @@
 
 @interface OTRXMPPTorAccount : OTRXMPPAccount
 
+/** If a server has a .onion address it will be preferred */
+@property (nonatomic, strong) NSString *onion;
+
 @end

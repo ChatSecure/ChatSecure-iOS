@@ -32,7 +32,7 @@ extern const struct OTRMessageEdges {
     __unsafe_unretained NSString *media;
 } OTRMessageEdges;
 
-@protocol OTRMesssageProtocol <NSObject>
+@protocol OTRMessageProtocol <NSObject>
 @required
 
 - (NSString *)messageKey;
@@ -61,7 +61,7 @@ extern const struct OTRMessageEdges {
 
 @end
 
-@interface OTRMessage : OTRYapDatabaseObject <YapDatabaseRelationshipNode, OTRMesssageProtocol>
+@interface OTRMessage : OTRYapDatabaseObject <YapDatabaseRelationshipNode, OTRMessageProtocol>
 
 @property (nonatomic, strong) NSDate *date;
 @property (nonatomic, strong) NSString *text;

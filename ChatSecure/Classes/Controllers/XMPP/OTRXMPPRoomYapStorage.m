@@ -73,7 +73,7 @@
     NSString *elementID = [message elementID];
     if ([elementID length]) {
         __block BOOL result = NO;
-        [transaction enumerateMessagesWithId:elementID block:^(id<OTRMesssageProtocol> _Nonnull databaseMessage, BOOL * _Null_unspecified stop) {
+        [transaction enumerateMessagesWithId:elementID block:^(id<OTRMessageProtocol> _Nonnull databaseMessage, BOOL * _Null_unspecified stop) {
             //Need to check room JID
             //So if message has same ID and same room jid that's got to be the same message, right?
             if ([databaseMessage isKindOfClass:[OTRXMPPRoomMessage class]]) {
@@ -133,9 +133,9 @@
     }
 }
 
-- (id <OTRMesssageProtocol>)lastMessageInRoom:(XMPPRoom *)room accountKey:(NSString *)accountKey
+- (id <OTRMessageProtocol>)lastMessageInRoom:(XMPPRoom *)room accountKey:(NSString *)accountKey
 {
-    __block id<OTRMesssageProtocol> message = nil;
+    __block id<OTRMessageProtocol> message = nil;
     [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
         OTRXMPPRoom *databaseRoom = [self fetchRoomWithXMPPRoomJID:room.roomJID.bare accountId:accountKey inTransaction:transaction];
         message = [databaseRoom lastMessageWithTransaction:transaction];

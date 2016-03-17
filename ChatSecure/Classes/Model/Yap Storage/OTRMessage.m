@@ -159,7 +159,7 @@ const struct OTRMessageEdges OTRMessageEdges = {
 + (void)receivedDeliveryReceiptForMessageId:(NSString *)messageId transaction:(YapDatabaseReadWriteTransaction*)transaction
 {
     __block OTRMessage *deliveredMessage = nil;
-    [transaction enumerateMessagesWithId:messageId block:^(id<OTRMesssageProtocol> _Nonnull message, BOOL * _Null_unspecified stop) {
+    [transaction enumerateMessagesWithId:messageId block:^(id<OTRMessageProtocol> _Nonnull message, BOOL * _Null_unspecified stop) {
         if (![message messageIncoming] && [message isKindOfClass:[OTRMessage class]]) {
             //Media messages are not delivered until the transfer is complete. This is handled in the OTREncryptionManager.
             OTRMessage *msg = (OTRMessage *)message;

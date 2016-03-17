@@ -13,22 +13,11 @@ import ParkedTextField
 public class OTRUsernameValidator: NSObject, XLFormValidatorProtocol {
     public func isValid(row: XLFormRowDescriptor!) -> XLFormValidationStatus! {
         var isValid = false
-        if let value: Dictionary<String, String> = row.value as? Dictionary<String, String> {
-            var hasUsername = false
-            if let username = value[OTRUsernameCell.UsernameKey] {
-                if username.characters.count > 0 {
-                    hasUsername = true
-                }
+        if let value = row.value as? String {
+            let (username, domain) = OTRUsernameCell.splitJID(value)
+            if username.characters.count > 0 && domain.characters.count > 0 {
+                isValid = true
             }
-            var hasDomain = false
-            if let domain = value[OTRUsernameCell.DomainKey] {
-                if domain.characters.count > 0 {
-                    hasDomain = true
-                }
-            }
-            isValid = hasUsername && hasDomain
-        } else {
-            assert(false, "Value must be a Dictionary<String, String>")
         }
         let status: XLFormValidationStatus = XLFormValidationStatus(msg: "", status: isValid, rowDescriptor: row)
         return status
@@ -42,8 +31,6 @@ public class OTRUsernameCell: XLFormBaseCell, UITextFieldDelegate {
     @IBOutlet var usernameField: ParkedTextField!
     
     public static let kOTRFormRowDescriptorTypeUsername = "kOTRFormRowDescriptorTypeUsername"
-    public static let UsernameKey = "username"
-    public static let DomainKey = "domain"
     
     deinit {
         self.usernameField.delegate = nil
@@ -85,23 +72,15 @@ public class OTRUsernameCell: XLFormBaseCell, UITextFieldDelegate {
         super.update()
         self.usernameField.delegate = self
         self.usernameLabel.textColor = UIColor.darkTextColor()
-        if let value: Dictionary<String, String> = self.rowDescriptor!.value as? Dictionary<String, String> {
-            if let username = value[OTRUsernameCell.UsernameKey] {
-                if username.characters.count > 0 {
-                    self.usernameField.typedText = username
-                }
+        
+        if let value = self.rowDescriptor!.value as? NSString {
+            let (username, domain) = OTRUsernameCell.splitJID(value as String)
+            if username.characters.count > 0 {
+                self.usernameField.typedText = username
             }
-            if let domain = value[OTRUsernameCell.DomainKey] {
-                if domain.characters.count > 0 {
-                    var parkedText = domain
-                    if (domain as NSString).containsString("@") == false {
-                        parkedText = "@" + domain
-                    }
-                    self.usernameField.parkedText = parkedText
-                }
+            if domain.characters.count > 0 {
+                self.usernameField.parkedText = "@" + domain
             }
-        } else {
-            assert(false, "Value must be a Dictionary<String, String>")
         }
     }
     
@@ -156,22 +135,25 @@ public class OTRUsernameCell: XLFormBaseCell, UITextFieldDelegate {
     // MARK: UITextField value changes
     
     @IBAction func textFieldValueChanged(sender: ParkedTextField) {
-        let value = OTRUsernameCell.createRowDictionaryValueForUsername(sender.typedText, domain: sender.parkedText)
-        if let row = rowDescriptor {
-            row.value = value
-        }
+        let value = sender.typedText + sender.parkedText
+        rowDescriptor?.value = value
     }
     
     // MARK: Private methods
     
-    public static func createRowDictionaryValueForUsername(username: String?, domain: String?) -> Dictionary<String, String> {
-        let unwrappedUsername = username ?? ""
-        var unwrappedDomain = domain ?? ""
-        if (unwrappedDomain.hasPrefix("@")) {
-            unwrappedDomain = unwrappedDomain.substringFromIndex(unwrappedDomain.startIndex.advancedBy(1))
+    
+    private static func splitJID(jid: String) -> (username: String, domain: String) {
+        let value = jid as NSString
+        var username: String = ""
+        var domain: String = ""
+        if value.containsString("@") {
+            let components = value.componentsSeparatedByString("@")
+            username = components.first ?? ""
+            domain = components.last ?? ""
+        } else {
+            domain = value as String
         }
-        let value: Dictionary<String, String> = [OTRUsernameCell.UsernameKey: unwrappedUsername, OTRUsernameCell.DomainKey: unwrappedDomain]
-        return value
+        return (username, domain)
     }
     
 }

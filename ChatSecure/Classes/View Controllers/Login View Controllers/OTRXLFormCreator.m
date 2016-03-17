@@ -16,6 +16,7 @@
 #import "OTRXMPPServerInfo.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 #import "OTRLanguageManager.h"
+#import "OTRXMPPTorAccount.h"
 
 NSString *const kOTRXLFormCustomizeUsernameSwitchTag        = @"kOTRXLFormCustomizeUsernameSwitchTag";
 NSString *const kOTRXLFormNicknameTextFieldTag        = @"kOTRXLFormNicknameTextFieldTag";
@@ -32,6 +33,7 @@ NSString *const kOTRXLFormShowAdvancedTag               = @"kOTRXLFormShowAdvanc
 
 NSString *const kOTRXLFormGenerateSecurePasswordTag               = @"kOTRXLFormGenerateSecurePasswordTag";
 
+NSString *const kOTRXLFormUseTorTag               = @"kOTRXLFormUseTorTag";
 
 @implementation OTRXLFormCreator
 
@@ -49,12 +51,24 @@ NSString *const kOTRXLFormGenerateSecurePasswordTag               = @"kOTRXLForm
         [[descriptor formRowWithTag:kOTRXLFormHostnameTextFieldTag] setValue:xmppAccount.domain];
         [[descriptor formRowWithTag:kOTRXLFormPortTextFieldTag] setValue:@(xmppAccount.port)];
         [[descriptor formRowWithTag:kOTRXLFormResourceTextFieldTag] setValue:xmppAccount.resource];
+        if (account.accountType == OTRAccountTypeJabber) {
+            XLFormRowDescriptor *torRow = [descriptor formRowWithTag:kOTRXLFormUseTorTag];
+            torRow.hidden = @YES;
+        }
+    }
+    if (account.accountType == OTRAccountTypeXMPPTor) {
+        XLFormRowDescriptor *torRow = [descriptor formRowWithTag:kOTRXLFormUseTorTag];
+        torRow.value = @YES;
+        torRow.disabled = @YES;
+        XLFormRowDescriptor *autologin = [descriptor formRowWithTag:kOTRXLFormLoginAutomaticallySwitchTag];
+        autologin.value = @NO;
+        autologin.disabled = @YES;
     }
     
     return descriptor;
 }
 
-+ (XLFormDescriptor *)formForAccountType:(OTRAccountType)accountType createAccount:(BOOL)createAccount;
++ (XLFormDescriptor *)formForAccountType:(OTRAccountType)accountType createAccount:(BOOL)createAccount
 {
     XLFormDescriptor *descriptor = nil;
     if (createAccount) {
@@ -94,12 +108,16 @@ NSString *const kOTRXLFormGenerateSecurePasswordTag               = @"kOTRXLForm
         serverSection.footerTitle = NSLocalizedString(@"Choose from our list of trusted servers, or use your own.", @"server selection footer");
         [serverSection addFormRow:[self serverRowDescriptorWithValue:nil]];
         
+        XLFormSectionDescriptor *torSection = [XLFormSectionDescriptor formSectionWithTitle:NSLocalizedString(@"Tor", @"password section")];
+        torSection.footerTitle = TOR_WARNING_MESSAGE_STRING;
+        torSection.hidden = [NSString stringWithFormat:@"$%@==0", kOTRXLFormShowAdvancedTag];
+        [torSection addFormRow:[self torRowDescriptorWithValue:NO]];
+        
         [descriptor addFormSection:basicSection];
         [descriptor addFormSection:showAdvancedSection];
         [descriptor addFormSection:accountSection];
+        [descriptor addFormSection:torSection];
         [descriptor addFormSection:serverSection];
-        
-        
     } else {
         descriptor = [XLFormDescriptor formDescriptorWithTitle:NSLocalizedString(@"Log In", @"title for logging in")];
         XLFormSectionDescriptor *basicSection = [XLFormSectionDescriptor formSectionWithTitle:BASIC_STRING];
@@ -111,11 +129,13 @@ NSString *const kOTRXLFormGenerateSecurePasswordTag               = @"kOTRXLForm
                 [basicSection addFormRow:[self jidTextFieldRowDescriptorWithValue:nil]];
                 [basicSection addFormRow:[self passwordTextFieldRowDescriptorWithValue:nil]];
                 [basicSection addFormRow:[self rememberPasswordRowDescriptorWithValue:YES]];
-                [basicSection addFormRow:[self loginAutomaticallyRowDescriptorWithValue:NO]];
+                [basicSection addFormRow:[self loginAutomaticallyRowDescriptorWithValue:YES]];
                 
                 [advancedSection addFormRow:[self hostnameRowDescriptorWithValue:nil]];
-                [advancedSection addFormRow:[self portRowDescriptorWithValue:nil]];
-                [advancedSection addFormRow:[self resourceRowDescriptorWithValue:nil]];
+                [advancedSection addFormRow:[self portRowDescriptorWithValue:@([OTRXMPPAccount defaultPort])]];
+                [advancedSection addFormRow:[self resourceRowDescriptorWithValue:[OTRXMPPAccount newResource]]];
+                
+                [advancedSection addFormRow:[self torRowDescriptorWithValue:NO]];
                 
                 break;
             }
@@ -211,6 +231,12 @@ NSString *const kOTRXLFormGenerateSecurePasswordTag               = @"kOTRXLForm
     [portRowDescriptor addValidator:[XLFormRegexValidator formRegexValidatorWithMsg:@"Incorect port number" regex:@"^$|^([1-9][0-9]{0,3}|[1-5][0-9]{0,4}|6[0-5]{0,2}[0-3][0-5])$"]];
     
     return portRowDescriptor;
+}
+
++ (XLFormRowDescriptor*) torRowDescriptorWithValue:(BOOL)value {
+    XLFormRowDescriptor *torRow = [XLFormRowDescriptor formRowDescriptorWithTag:kOTRXLFormUseTorTag rowType:XLFormRowDescriptorTypeBooleanSwitch title:NSLocalizedString(@"Enable Tor", @"toggle switch for show advanced")];
+    torRow.value = @(value);
+    return torRow;
 }
 
 + (XLFormRowDescriptor *)resourceRowDescriptorWithValue:(NSString *)value
