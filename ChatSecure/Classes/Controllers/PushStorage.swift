@@ -41,7 +41,7 @@ class PushStorage: NSObject, PushStorageProtocol {
     
     let databaseConnection: YapDatabaseConnection
     
-    static let unusedTokenStoreSize:UInt = 50
+    static let unusedTokenStoreSize:UInt = 5
     
     enum PushYapKeys: String {
         case thisDeviceKey = "kYapThisDeviceKey"
