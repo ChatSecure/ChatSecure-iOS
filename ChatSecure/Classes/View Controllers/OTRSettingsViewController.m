@@ -292,6 +292,7 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
                 id<OTRProtocol> protocol = [[OTRProtocolManager sharedInstance] protocolForAccount:account];
                 [protocol disconnect];
             }
+            [[OTRProtocolManager sharedInstance] removeProtocolForAccount:account];
             [OTRAccountsManager removeAccount:account];
         }];
         

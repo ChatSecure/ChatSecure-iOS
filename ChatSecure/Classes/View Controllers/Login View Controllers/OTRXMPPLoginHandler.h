@@ -16,7 +16,7 @@
 @interface OTRXMPPLoginHandler : NSObject <OTRBaseLoginViewControllerHandlerProtocol>
 
 @property (nonatomic, copy) void (^completion)(OTRAccount * account, NSError *error);
-@property (nonatomic, strong, readonly) OTRXMPPManager *xmppManager;
+@property (nonatomic, weak, readonly) OTRXMPPManager *xmppManager;
 
 - (OTRAccount *)moveValues:(XLFormDescriptor *)form intoAccount:(OTRXMPPAccount *)account;
 

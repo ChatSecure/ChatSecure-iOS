@@ -70,4 +70,6 @@ typedef NS_ENUM(NSInteger, OTRLoginStatus) {
 @protocol OTRXMPPProtocol <OTRProtocol>
 - (void)sendChatState:(int)chatState withBuddy:(OTRBuddy *)buddy;
 - (void) setDisplayName:(NSString *) newDisplayName forBuddy:(OTRBuddy *)buddy;
+
+- (void) teardownStream;
 @end

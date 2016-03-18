@@ -85,6 +85,8 @@ extern NSString *const OTRXMPPLoginErrorKey;
 - (BOOL)connectWithJID:(NSString*) myJID password:(NSString*)myPassword;
 - (void)disconnect;
 
+- (void) teardownStream;
+
 - (NSString *)accountName;
 
 - (void)failedToConnect:(NSError *)error;

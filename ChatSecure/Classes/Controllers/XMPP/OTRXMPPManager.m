@@ -107,6 +107,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 @property (nonatomic, strong) OTRXMPPBuddyManager* xmppBuddyManager;
 
 @property (nonatomic, strong) YapDatabaseConnection *databaseConnection;
+@property (nonatomic, strong) XMPPMessageDeliveryReceipts *deliveryReceipts;
 
 - (void)setupStream;
 - (void)teardownStream;
@@ -170,10 +171,10 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     
     [self.certificatePinningModule activate:self.xmppStream];
     
-    XMPPMessageDeliveryReceipts * deliveryReceiptsMoodule = [[XMPPMessageDeliveryReceipts alloc] init];
-    deliveryReceiptsMoodule.autoSendMessageDeliveryReceipts = YES;
-    deliveryReceiptsMoodule.autoSendMessageDeliveryRequests = YES;
-    [deliveryReceiptsMoodule activate:self.xmppStream];
+    self.deliveryReceipts = [[XMPPMessageDeliveryReceipts alloc] init];
+    self.deliveryReceipts.autoSendMessageDeliveryReceipts = YES;
+    self.deliveryReceipts.autoSendMessageDeliveryRequests = YES;
+    [self.deliveryReceipts activate:self.xmppStream];
 	
 #if !TARGET_IPHONE_SIMULATOR
 	{
@@ -313,6 +314,11 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     [_streamManagement      deactivate];
     [_messageCarbons        deactivate];
     [_messageStorage        deactivate];
+    [_certificatePinningModule deactivate];
+    [_deliveryReceipts deactivate];
+    [_streamManagement deactivate];
+    [_roomManager deactivate];
+    [_xmppBuddyManager deactivate];
 
     [_xmppStream disconnect];
 
@@ -325,6 +331,10 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     _xmppCapabilities = nil;
     _xmppCapabilitiesStorage = nil;
     _certificatePinningModule = nil;
+    _deliveryReceipts = nil;
+    _streamManagement = nil;
+    _roomManager = nil;
+    _xmppBuddyManager = nil;
 }
 
 // It's easy to create XML elments to send and to read received XML elements.
@@ -486,8 +496,10 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     
     [self.xmppStream disconnect];
     
+    __weak typeof(self)weakSelf = self;
     [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        NSArray *buddiesArray = [self.account allBuddiesWithTransaction:transaction];
+        __strong typeof(weakSelf)strongSelf = weakSelf;
+        NSArray *buddiesArray = [strongSelf.account allBuddiesWithTransaction:transaction];
         for (OTRXMPPBuddy *buddy in buddiesArray) {
             buddy.status = OTRThreadStatusOffline;
             buddy.chatState = kOTRChatStateGone;
@@ -495,10 +507,11 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
             [buddy saveWithTransaction:transaction];
         }
     } completionQueue:dispatch_get_main_queue() completionBlock:^{
+        __strong typeof(weakSelf)strongSelf = weakSelf;
         if([OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyDeleteOnDisconnect])
         {
             [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-                [OTRMessage deleteAllMessagesForAccountId:self.account.uniqueId transaction:transaction];
+                [OTRMessage deleteAllMessagesForAccountId:strongSelf.account.uniqueId transaction:transaction];
             }];
         }
     }];

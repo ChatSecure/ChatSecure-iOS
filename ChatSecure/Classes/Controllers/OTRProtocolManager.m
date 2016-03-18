@@ -66,6 +66,11 @@ static OTRProtocolManager *sharedManager = nil;
 {
     @synchronized(self.protocolManagerDictionary) {
         if (account) {
+            id protocol = [self.protocolManagerDictionary objectForKey:account.uniqueId];
+            if (protocol && [protocol respondsToSelector:@selector(teardownStream)]) {
+                [protocol teardownStream];
+            }
+            [self.KVOController unobserve:protocol];
             [self.protocolManagerDictionary removeObjectForKey:account.uniqueId];
         }
     }
