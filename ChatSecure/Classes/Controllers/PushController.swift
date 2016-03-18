@@ -438,6 +438,12 @@ public class PushController: NSObject, OTRPushTLVHandlerDelegate, PushController
                     return
                 }
                 
+                // Don't store tokens for Tor accounts
+                let account = self.storage.account(buddy!.accountUniqueId)
+                if account?.accountType == OTRAccountType.XMPPTor {
+                    return
+                }
+                
                 self.saveReceivedPushToken(tokenString, buddyKey: buddyKey, endpoint: url, completion: { (success, error) -> Void in
                     if !success {
                         NSLog("Error saving token")
