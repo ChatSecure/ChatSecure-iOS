@@ -41,6 +41,7 @@ public class OTRSplitViewCoordinator: NSObject, OTRConversationViewControllerDel
             buddy = OTRBuddy.fetchObjectWithUniqueID(buddyKey, transaction: transaction)
         }
         if let b = buddy {
+            OTRProtocolManager.sharedInstance().encryptionManager.maybeRefreshOTRSessionForBuddyKey(b.threadIdentifier(), collection: b.threadCollection())
             self.enterConversatoinWithThread(b, sender: nil)
         }
     }
@@ -64,6 +65,8 @@ public class OTRSplitViewCoordinator: NSObject, OTRConversationViewControllerDel
         guard let mVC = messagesVC else {
             return
         }
+        
+        OTRProtocolManager.sharedInstance().encryptionManager.maybeRefreshOTRSessionForBuddyKey(threadOwner.threadIdentifier(), collection: threadOwner.threadCollection())
         
         mVC.setThreadKey(threadOwner.threadIdentifier(), collection: threadOwner.threadCollection())
         let navController = UINavigationController(rootViewController: mVC)
