@@ -71,38 +71,43 @@
         self.navigationItem.rightBarButtonItem.enabled = NO;
         self.navigationItem.leftBarButtonItem.enabled = NO;
         self.navigationItem.backBarButtonItem.enabled = NO;
+
+		__weak __typeof__(self) weakSelf = self;
         [self.createLoginHandler performActionWithValidForm:self.form account:self.account progress:^(NSInteger progress, NSString *summaryString) {
+            __typeof__(self) strongSelf = weakSelf;
             NSLog(@"Tor Progress %d: %@", (int)progress, summaryString);
-            [[MBProgressHUD HUDForView:self.view] setProgress:progress/100.0f];
-            [[MBProgressHUD HUDForView:self.view] setLabelText:summaryString];
+            [[MBProgressHUD HUDForView:strongSelf.view] setProgress:progress/100.0f];
+            [[MBProgressHUD HUDForView:strongSelf.view] setLabelText:summaryString];
+            
             } completion:^(OTRAccount *account, NSError *error) {
-            self.form.disabled = NO;
-            self.navigationItem.rightBarButtonItem.enabled = YES;
-            self.navigationItem.backBarButtonItem.enabled = YES;
-            self.navigationItem.leftBarButtonItem.enabled = YES;
-            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-            if (error) {
-                [self handleError:error];
-            } else {
-                self.account = account;
-                [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-                    [self.account saveWithTransaction:transaction];
-                }];
-                
-                // If push isn't enabled, prompt to enable it
-                if ([PushController getPushPreference] == PushPreferenceEnabled) {
-                    [self pushInviteViewController];
+                __typeof__(self) strongSelf = weakSelf;
+                strongSelf.form.disabled = NO;
+                strongSelf.navigationItem.rightBarButtonItem.enabled = YES;
+                strongSelf.navigationItem.backBarButtonItem.enabled = YES;
+                strongSelf.navigationItem.leftBarButtonItem.enabled = YES;
+                [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+                if (error) {
+                    [strongSelf handleError:error];
                 } else {
-                    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Onboarding" bundle:[OTRAssets resourcesBundle]];
-                    EnablePushViewController *pushVC = [storyboard instantiateViewControllerWithIdentifier:@"enablePush"];
-                    if (pushVC) {
-                        pushVC.account = account;
-                        [self.navigationController pushViewController:pushVC animated:YES];
+                    strongSelf.account = account;
+                    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+                        [account saveWithTransaction:transaction];
+                    }];
+                    
+                    // If push isn't enabled, prompt to enable it
+                    if ([PushController getPushPreference] == PushPreferenceEnabled) {
+                        [strongSelf pushInviteViewController];
                     } else {
-                        [self pushInviteViewController];
+                        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Onboarding" bundle:[OTRAssets resourcesBundle]];
+                        EnablePushViewController *pushVC = [storyboard instantiateViewControllerWithIdentifier:@"enablePush"];
+                        if (pushVC) {
+                            pushVC.account = account;
+                            [strongSelf.navigationController pushViewController:pushVC animated:YES];
+                        } else {
+                            [strongSelf pushInviteViewController];
+                        }
                     }
                 }
-            }
         }];
     }
 }
@@ -266,9 +271,11 @@
         UIAlertAction *rejectAction = [UIAlertAction actionWithTitle:REJECT_STRING style:UIAlertActionStyleDestructive handler:nil];
         [certAlert addAction:rejectAction];
         
+        __weak __typeof__(self) weakSelf = self;
         UIAlertAction *saveAction = [UIAlertAction actionWithTitle:SAVE_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            __typeof__(self) strongSelf = weakSelf;
             [OTRCertificatePinning addCertificate:[OTRCertificatePinning certForData:certData] withHostName:hostname];
-            [self loginButtonPressed:nil];
+            [strongSelf loginButtonPressed:nil];
         }];
         [certAlert addAction:saveAction];
     }

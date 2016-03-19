@@ -97,14 +97,18 @@
 - (NSArray *)defaultAccountArray
 {
     NSMutableArray *accountArray = [NSMutableArray array];
+    __weak __typeof__(self) weakSelf = self;
     
     [accountArray addObject:[OTRWelcomeAccountInfo accountInfoWithText:@"XMPP" image:[UIImage imageNamed:@"xmpp" inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil] didSelectBlock:^{
-        OTRBaseLoginViewController *loginViewController = [[OTRBaseLoginViewController alloc] init];
+        __typeof__(self) strongSelf = weakSelf;
+		OTRBaseLoginViewController *loginViewController = [[OTRBaseLoginViewController alloc] init];
         loginViewController.form = [OTRXLFormCreator formForAccountType:OTRAccountTypeJabber createAccount:NO];
         loginViewController.createLoginHandler = [[OTRXMPPLoginHandler alloc] init];
-        [self.navigationController pushViewController:loginViewController animated:YES];
+        [strongSelf.navigationController pushViewController:loginViewController animated:YES];
     }]];
+    
     [accountArray addObject:[OTRWelcomeAccountInfo accountInfoWithText:@"Google" image:[UIImage imageNamed:@"gtalk" inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil] didSelectBlock:^{
+        __typeof__(self) strongSelf = weakSelf;
         //Authenicate and go through google oauth
         GTMOAuth2ViewControllerTouch * oauthViewController = [GTMOAuth2ViewControllerTouch controllerWithScope:[OTRBranding googleAppScope] clientID:[OTRBranding googleAppId] clientSecret:[OTRSecrets googleAppSecret] keychainItemName:nil completionHandler:^(GTMOAuth2ViewControllerTouch *viewController, GTMOAuth2Authentication *auth, NSError *error) {
             if (!error) {
@@ -122,16 +126,16 @@
                 OTRGoolgeOAuthLoginHandler *loginHandler = [[OTRGoolgeOAuthLoginHandler alloc] init];
                 loginViewController.createLoginHandler = loginHandler;
                 
-                NSMutableArray *viewControllers = [self.navigationController.viewControllers mutableCopy];
+                NSMutableArray *viewControllers = [strongSelf.navigationController.viewControllers mutableCopy];
                 [viewControllers removeObject:viewController];
                 [viewControllers addObject:loginViewController];
-                [self.navigationController setViewControllers:viewControllers animated:YES];
+                [strongSelf.navigationController setViewControllers:viewControllers animated:YES];
             }
         }];
         [oauthViewController setPopViewBlock:^{
             
         }];
-        [self.navigationController pushViewController:oauthViewController animated:YES];
+        [strongSelf.navigationController pushViewController:oauthViewController animated:YES];
     }]];
     
     return accountArray;
