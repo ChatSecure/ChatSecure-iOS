@@ -48,7 +48,7 @@ target 'ChatSecureCore' do
   #Reachability only needed for YapActionItems
   pod 'Reachability', '~> 3'
   # pod 'XLForm', '~> 3.0' # Need to use bundle fork
-  # pod 'ParkedTextField', '~> 0.1' # Need to use Swift 2.0 fork
+  pod 'ParkedTextField', '~> 0.2'
 
   # QR Codes
   pod 'QRCodeReaderViewController', '~> 3.5.0'
@@ -70,6 +70,5 @@ target 'ChatSecureCore' do
   pod 'CPAProxy', :path => 'Submodules/CPAProxy/CPAProxy.podspec'
   pod 'XMPPFramework', :path => 'Submodules/XMPPFramework/XMPPFramework.podspec'
   pod 'IOCipher/GCDWebServer', :path => 'Submodules/IOCipher/IOCipher.podspec'
-  pod 'ParkedTextField', :path => 'Submodules/ParkedTextField/ParkedTextField.podspec'
   pod 'XLForm', :path => 'Submodules/XLForm/XLForm.podspec'
 end

@@ -91,7 +91,7 @@ PODS:
   - Navajo (0.0.1)
   - OpenInChrome (0.0.1)
   - OTRKit (1.1.2)
-  - ParkedTextField (0.1.2)
+  - ParkedTextField (0.2.1)
   - ProxyKit/Client (1.1.0):
     - ProxyKit/common
   - ProxyKit/common (1.1.0):
@@ -323,7 +323,7 @@ DEPENDENCIES:
   - Navajo (~> 0.0)
   - OpenInChrome (~> 0.0)
   - OTRKit (from `Submodules/OTRKit/OTRKit.podspec`)
-  - ParkedTextField (from `Submodules/ParkedTextField/ParkedTextField.podspec`)
+  - ParkedTextField (~> 0.2)
   - ProxyKit/Client (from `Submodules/ProxyKit/ProxyKit.podspec`)
   - PureLayout (~> 3.0)
   - QRCodeReaderViewController (~> 3.5.0)
@@ -355,8 +355,6 @@ EXTERNAL SOURCES:
     :git: https://github.com/ChatSecure/JSQMessagesViewController
   OTRKit:
     :path: Submodules/OTRKit/OTRKit.podspec
-  ParkedTextField:
-    :path: Submodules/ParkedTextField/ParkedTextField.podspec
   ProxyKit:
     :path: Submodules/ProxyKit/ProxyKit.podspec
   SQLCipher:
@@ -399,7 +397,7 @@ SPEC CHECKSUMS:
   Navajo: 5fb68239b4e3af4610f31925bae1ca8e6bab8eaa
   OpenInChrome: f1f3f9dec682216fe78a0d7fe0b5b263d6312c32
   OTRKit: 03e81b5196986bbe65491846a346dfa0aebfee02
-  ParkedTextField: 602a34c13acf59577ab1124ac8bc380a33f5fe3a
+  ParkedTextField: 72d02a5fdadc089ff25efac04ea21dcc5a2467d3
   ProxyKit: 1f35adc913debc7ca6748c02487361dabaaea532
   PureLayout: f35f5384c9c4e4479df041dbe33ad7577b71ddfb
   QRCodeReaderViewController: f20275985c41ae551099641493ab364691d9113e
