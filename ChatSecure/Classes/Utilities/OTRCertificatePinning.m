@@ -83,7 +83,8 @@ static id AFPublicKeyForCertificate(NSData *certificate) {
     
     NSArray * hostnameCertificatesArray = [OTRCertificatePinning storedCertificatesWithHostName:hostname];
     
-    self.securityPolicy.pinnedCertificates = hostnameCertificatesArray;
+    
+    self.securityPolicy.pinnedCertificates = [[NSSet alloc] initWithArray:hostnameCertificatesArray];
 }
 
 - (BOOL)isValidPinnedTrust:(SecTrustRef)trust withHostName:(NSString *)hostname {

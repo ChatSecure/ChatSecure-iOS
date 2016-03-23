@@ -18,7 +18,7 @@ inhibit_all_warnings!
 source 'https://github.com/CocoaPods/Specs.git'
 
 target 'ChatSecureCore' do
-  pod 'AFNetworking', '~> 2.6'
+  pod 'AFNetworking', '~> 3.0'
   pod "Appirater", '~> 2.0'
   pod 'OpenInChrome', '~> 0.0'
   pod 'MWFeedParser', '~> 1.0'
