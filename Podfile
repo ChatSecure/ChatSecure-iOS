@@ -51,7 +51,7 @@ target 'ChatSecureCore' do
   pod 'ParkedTextField', '~> 0.2'
 
   # QR Codes
-  pod 'QRCodeReaderViewController', '~> 3.5.0'
+  pod 'QRCodeReaderViewController', '~> 4.0'
   pod 'ZXingObjC', '~> 3.0'
 
 
