@@ -47,7 +47,7 @@ target 'ChatSecureCore' do
   pod 'KVOController', '~> 1.0'
   #Reachability only needed for YapActionItems
   pod 'Reachability', '~> 3'
-  # pod 'XLForm', '~> 3.0' # Need to use bundle fork
+  pod 'XLForm', '~> 3.1'
   pod 'ParkedTextField', '~> 0.2'
 
   # QR Codes
@@ -70,5 +70,4 @@ target 'ChatSecureCore' do
   pod 'CPAProxy', :path => 'Submodules/CPAProxy/CPAProxy.podspec'
   pod 'XMPPFramework', :path => 'Submodules/XMPPFramework/XMPPFramework.podspec'
   pod 'IOCipher/GCDWebServer', :path => 'Submodules/IOCipher/IOCipher.podspec'
-  pod 'XLForm', :path => 'Submodules/XLForm/XLForm.podspec'
 end
