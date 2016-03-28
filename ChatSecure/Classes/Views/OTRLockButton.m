@@ -7,7 +7,6 @@
 //
 
 #import "OTRLockButton.h"
-#import "UIControl+JTTargetActionBlock.h"
 @import OTRAssets;
 
 static NSString *const kOTRLockImageName            = @"Lock_Locked";
@@ -16,6 +15,13 @@ static NSString *const kOTRLockedAndErrorImageName  = @"Lock_Locked_red";
 static NSString *const kOTRLockedAndWarnImageName   = @"Lock_Locked_yellow";
 static NSString *const kOTRUnlockImageName          = @"Lock_Unlocked";
 
+typedef void (^ButtonBlock)(id sender);
+
+@interface OTRLockButton ()
+
+@property (nonatomic, strong) ButtonBlock blockAction;
+
+@end
 
 
 @implementation OTRLockButton
@@ -58,20 +64,36 @@ static NSString *const kOTRUnlockImageName          = @"Lock_Unlocked";
     [self didChangeValueForKey:NSStringFromSelector(@selector(lockStatus))];
 }
 
+#pragma - MARK block handler
+
+-(void) handleControlEvent:(UIControlEvents)event
+                 withBlock:(ButtonBlock) block
+{
+    self.blockAction = block;
+    [self addTarget:self action:@selector(callBlock:) forControlEvents:event];
+}
+
+-(void) callBlock:(id)sender{
+    if (self.blockAction) {
+        self.blockAction(sender);
+    }
+}
+
 +(instancetype)lockButtonWithInitailLockStatus:(OTRLockStatus)lockStatus withBlock:(void(^)(OTRLockStatus currentStatus))block
 {
     OTRLockButton * lockButton = [self buttonWithType:UIButtonTypeCustom];
     lockButton.lockStatus = lockStatus;
-    [lockButton addEventHandler:^(id sender, UIEvent *event) {
+    
+    [lockButton handleControlEvent:UIControlEventTouchUpInside withBlock:^(id sender) {
         if (block) {
             OTRLockStatus status = OTRLockStatusUnknown;
             if ([sender isKindOfClass:[OTRLockButton class]]) {
                 status = ((OTRLockButton *)sender).lockStatus;
             }
-        
+            
             block(status);
         }
-    } forControlEvent:UIControlEventTouchUpInside];
+    }];
     return lockButton;
 }
 @end

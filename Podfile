@@ -28,7 +28,6 @@ pod "HockeySDK-Source", '~> 3.7'
 pod 'MBProgressHUD', '~> 0.9'
 pod "SSKeychain", '~> 1.2'
 # pod 'gtm-oauth2', '~> 0.1.0' # Trunk is outdated, using local podspec
-pod 'JTTargetActionBlock', '~> 1.0'
 pod 'YapDatabase/SQLCipher', '~> 2.8'
 pod 'Mantle', '~> 2.0'
 pod 'Navajo', '~> 0.0'

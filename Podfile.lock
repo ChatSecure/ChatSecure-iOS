@@ -66,7 +66,6 @@ PODS:
     - JSQSystemSoundPlayer (~> 2.0.1)
   - JSQSystemSoundPlayer (2.0.1)
   - JTSImageViewController (1.5.1)
-  - JTTargetActionBlock (1.0.0)
   - JVFloatLabeledTextField (1.1.0)
   - KissXML/Core (5.0.3)
   - KissXML/libxml_module (5.0.3):
@@ -316,7 +315,6 @@ DEPENDENCIES:
   - JSQMessagesViewController (from `https://github.com/ChatSecure/JSQMessagesViewController`,
     branch `7.2.0-send_button`)
   - JTSImageViewController (~> 1.4)
-  - JTTargetActionBlock (~> 1.0)
   - JVFloatLabeledTextField (~> 1.0)
   - KVOController (~> 1.0)
   - Mantle (~> 2.0)
@@ -391,7 +389,6 @@ SPEC CHECKSUMS:
   JSQMessagesViewController: 73cab48aa92fc2d512f3b6724f3425cc47a19eb5
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
   JTSImageViewController: 1f8ce1cc93dab0d0af8e53badeea7528560cfec9
-  JTTargetActionBlock: 6e9201e5fa88651deb354c91b7c9c6487a1abe55
   JVFloatLabeledTextField: ea4a3d8387ddd43724c472bb2b8ab39b79af05d4
   KissXML: d19dd6dc65e0dc721ba92b3077b8ebdd240f1c1e
   KVOController: 9fd8f0343670994e4b6f9f0b31f5a45663f3e1cf
