@@ -40,10 +40,6 @@ extern NSString *const kOTRNotificationUserNameKey;
 extern NSString *const kOTRNotificationProtocolKey;
 extern NSString *const kOTRNotificationBuddyUniqueIdKey;
 
-extern NSString *const kOTRXMPPAccountSendDeliveryReceiptsKey;
-extern NSString *const kOTRXMPPAccountSendTypingNotificationsKey;
-
-
 extern NSString *const kOTRServiceName;
 extern NSString *const kOTRCertificateServiceName;
 
