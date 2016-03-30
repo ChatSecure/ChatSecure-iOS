@@ -1,24 +1,18 @@
 PODS:
-  - AFNetworking (2.6.3):
-    - AFNetworking/NSURLConnection (= 2.6.3)
-    - AFNetworking/NSURLSession (= 2.6.3)
-    - AFNetworking/Reachability (= 2.6.3)
-    - AFNetworking/Security (= 2.6.3)
-    - AFNetworking/Serialization (= 2.6.3)
-    - AFNetworking/UIKit (= 2.6.3)
-  - AFNetworking/NSURLConnection (2.6.3):
+  - AFNetworking (3.0.4):
+    - AFNetworking/NSURLSession (= 3.0.4)
+    - AFNetworking/Reachability (= 3.0.4)
+    - AFNetworking/Security (= 3.0.4)
+    - AFNetworking/Serialization (= 3.0.4)
+    - AFNetworking/UIKit (= 3.0.4)
+  - AFNetworking/NSURLSession (3.0.4):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/NSURLSession (2.6.3):
-    - AFNetworking/Reachability
-    - AFNetworking/Security
-    - AFNetworking/Serialization
-  - AFNetworking/Reachability (2.6.3)
-  - AFNetworking/Security (2.6.3)
-  - AFNetworking/Serialization (2.6.3)
-  - AFNetworking/UIKit (2.6.3):
-    - AFNetworking/NSURLConnection
+  - AFNetworking/Reachability (3.0.4)
+  - AFNetworking/Security (3.0.4)
+  - AFNetworking/Serialization (3.0.4)
+  - AFNetworking/UIKit (3.0.4):
     - AFNetworking/NSURLSession
   - Appirater (2.0.5)
   - ARChromeActivity (1.0.6)
@@ -91,24 +85,24 @@ PODS:
   - Navajo (0.0.1)
   - OpenInChrome (0.0.1)
   - OTRKit (1.1.2)
-  - ParkedTextField (0.1.2)
+  - ParkedTextField (0.2.1)
   - ProxyKit/Client (1.1.0):
     - ProxyKit/common
   - ProxyKit/common (1.1.0):
     - CocoaAsyncSocket (~> 7.4)
     - CocoaLumberjack (~> 2.2)
   - PureLayout (3.0.1)
-  - QRCodeReaderViewController (3.5.2)
+  - QRCodeReaderViewController (4.0.1)
   - Reachability (3.2)
   - SQLCipher/common (3.3.1)
   - SQLCipher/fts (3.3.1):
     - SQLCipher/common
-  - SSKeychain (1.3.1)
+  - SSKeychain (1.4.0)
   - TTTAttributedLabel (1.13.4)
   - TUSafariActivity (1.0.4)
-  - uservoice-iphone-sdk (3.2.4)
+  - uservoice-iphone-sdk (3.2.7)
   - VTAcknowledgementsViewController (0.17)
-  - XLForm (3.0.2)
+  - XLForm (3.1.1)
   - XMPPFramework (3.6.7):
     - XMPPFramework/All (= 3.6.7)
   - XMPPFramework/All (3.6.7):
@@ -299,7 +293,7 @@ PODS:
   - ZXingObjC/All (3.1.0)
 
 DEPENDENCIES:
-  - AFNetworking (~> 2.6)
+  - AFNetworking (~> 3.0)
   - Appirater (~> 2.0)
   - ARChromeActivity (~> 1.0)
   - BBlock (~> 1.2)
@@ -323,10 +317,10 @@ DEPENDENCIES:
   - Navajo (~> 0.0)
   - OpenInChrome (~> 0.0)
   - OTRKit (from `Submodules/OTRKit/OTRKit.podspec`)
-  - ParkedTextField (from `Submodules/ParkedTextField/ParkedTextField.podspec`)
+  - ParkedTextField (~> 0.2)
   - ProxyKit/Client (from `Submodules/ProxyKit/ProxyKit.podspec`)
   - PureLayout (~> 3.0)
-  - QRCodeReaderViewController (~> 3.5.0)
+  - QRCodeReaderViewController (~> 4.0)
   - Reachability (~> 3)
   - SQLCipher/fts (from `Podspecs/SQLCipher.podspec.json`)
   - SSKeychain (~> 1.2)
@@ -334,7 +328,7 @@ DEPENDENCIES:
   - TUSafariActivity (~> 1.0)
   - uservoice-iphone-sdk (~> 3.2)
   - VTAcknowledgementsViewController (~> 0.15)
-  - XLForm (from `Submodules/XLForm/XLForm.podspec`)
+  - XLForm (~> 3.1)
   - XMPPFramework (from `Submodules/XMPPFramework/XMPPFramework.podspec`)
   - YapDatabase/SQLCipher (~> 2.8)
   - ZXingObjC (~> 3.0)
@@ -355,14 +349,10 @@ EXTERNAL SOURCES:
     :git: https://github.com/ChatSecure/JSQMessagesViewController
   OTRKit:
     :path: Submodules/OTRKit/OTRKit.podspec
-  ParkedTextField:
-    :path: Submodules/ParkedTextField/ParkedTextField.podspec
   ProxyKit:
     :path: Submodules/ProxyKit/ProxyKit.podspec
   SQLCipher:
     :podspec: Podspecs/SQLCipher.podspec.json
-  XLForm:
-    :path: Submodules/XLForm/XLForm.podspec
   XMPPFramework:
     :path: Submodules/XMPPFramework/XMPPFramework.podspec
 
@@ -372,7 +362,7 @@ CHECKOUT OPTIONS:
     :git: https://github.com/ChatSecure/JSQMessagesViewController
 
 SPEC CHECKSUMS:
-  AFNetworking: cb8d14a848e831097108418f5d49217339d4eb60
+  AFNetworking: a0075feb321559dc78d9d85b55d11caa19eabb93
   Appirater: e7c0a47fb67ee5041ce8479e6ba960927fb40264
   ARChromeActivity: 5dcf9b9f09323761f992aff3525cdd777f83609d
   BBlock: c56d7f72597ffe1634fcdc73836c5c0fed3271be
@@ -399,18 +389,18 @@ SPEC CHECKSUMS:
   Navajo: 5fb68239b4e3af4610f31925bae1ca8e6bab8eaa
   OpenInChrome: f1f3f9dec682216fe78a0d7fe0b5b263d6312c32
   OTRKit: 03e81b5196986bbe65491846a346dfa0aebfee02
-  ParkedTextField: 602a34c13acf59577ab1124ac8bc380a33f5fe3a
+  ParkedTextField: 72d02a5fdadc089ff25efac04ea21dcc5a2467d3
   ProxyKit: 1f35adc913debc7ca6748c02487361dabaaea532
   PureLayout: f35f5384c9c4e4479df041dbe33ad7577b71ddfb
-  QRCodeReaderViewController: f20275985c41ae551099641493ab364691d9113e
+  QRCodeReaderViewController: 6538745c8f4ffa9407a26bd7f9489ea01739e7b0
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   SQLCipher: 46ea06f972292f622aeb2d3f960a573a964d378f
-  SSKeychain: 04c4ec40f4c3deda524e269bc76e5f30e638a174
+  SSKeychain: c71293fa57216a40ab06c23f4085387583293de4
   TTTAttributedLabel: 0a2ac7b2dd726d32a070dafb01446026b11e624f
   TUSafariActivity: afc55a00965377939107ce4fdc7f951f62454546
-  uservoice-iphone-sdk: 2d3d700d701f6983d656ba76778fd15a971b6f98
+  uservoice-iphone-sdk: 9abf27254c8488d7b72d70fb9b621132d6beebd4
   VTAcknowledgementsViewController: 6056f5f5e5ed995bbf0581bed6ddd29355ca9a80
-  XLForm: 7817ce29f3f259186e837bb7309ac7e5b7e9b883
+  XLForm: c9ee7e0f859341279bfd894f9589a9d25c23e4df
   XMPPFramework: 38ff8dffab0627c46e3903653383f769938f70f6
   YapDatabase: 15b6867a07ff30eac3af28794cd2262b4d0ca4ca
   ZXingObjC: bf15b3814f7a105b6d99f47da2333c93a063650a

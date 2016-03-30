@@ -19,12 +19,6 @@
 [submodule "Submodules/xmpp-server-list"]
 	path = Submodules/xmpp-server-list
 	url = git@github.com:ChatSecure/xmpp-server-list.git
-[submodule "Submodules/ParkedTextField"]
-	path = Submodules/ParkedTextField
-	url = git@github.com:chrisballinger/ParkedTextField.git
-[submodule "Submodules/XLForm"]
-	path = Submodules/XLForm
-	url = git@github.com:chrisballinger/XLForm.git
 [submodule "Submodules/ChatSecure-Push-iOS"]
 	path = Submodules/ChatSecure-Push-iOS
 	url = git@github.com:ChatSecure/ChatSecure-Push-iOS.git
