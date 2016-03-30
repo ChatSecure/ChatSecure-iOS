@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="u63-jC-sYl">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="u63-jC-sYl">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -131,14 +131,24 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="J3U-aD-4Vu">
-                                <rect key="frame" x="250" y="493" width="101" height="33"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
-                                <state key="normal" title="Enable Push"/>
-                                <connections>
-                                    <action selector="enablePushPressed:" destination="3du-AF-GcQ" eventType="touchUpInside" id="wPW-VZ-acu"/>
-                                </connections>
-                            </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JPq-4W-Efa">
+                                <rect key="frame" x="159" y="437" width="283" height="163"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="J3U-aD-4Vu">
+                                        <rect key="frame" x="91" y="65" width="101" height="33"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                        <state key="normal" title="Enable Push"/>
+                                        <connections>
+                                            <action selector="enablePushPressed:" destination="3du-AF-GcQ" eventType="touchUpInside" id="wPW-VZ-acu"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="J3U-aD-4Vu" firstAttribute="centerY" secondItem="JPq-4W-Efa" secondAttribute="centerY" id="PSJ-qy-W1S"/>
+                                    <constraint firstItem="J3U-aD-4Vu" firstAttribute="centerX" secondItem="JPq-4W-Efa" secondAttribute="centerX" id="h6f-S5-xU8"/>
+                                </constraints>
+                            </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="i8G-bh-AN7">
                                 <rect key="frame" x="550" y="550" width="30" height="30"/>
                                 <state key="normal" title="Skip"/>
@@ -149,15 +159,22 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="PushOnboarding" translatesAutoresizingMaskIntoConstraints="NO" id="kk6-yK-Mn4">
                                 <rect key="frame" x="164" y="42" width="230" height="230"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="230" id="X7X-8n-ejF"/>
-                                    <constraint firstAttribute="height" constant="230" id="l8U-T3-c9I"/>
+                                    <constraint firstAttribute="width" constant="230" id="X7X-8n-ejF">
+                                        <variation key="widthClass=compact" constant="180"/>
+                                    </constraint>
+                                    <constraint firstAttribute="height" constant="230" id="l8U-T3-c9I">
+                                        <variation key="widthClass=compact" constant="180"/>
+                                    </constraint>
                                 </constraints>
                             </imageView>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QUe-lg-gJ2">
-                                <rect key="frame" x="169" y="287" width="283" height="198"/>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QUe-lg-gJ2">
+                                <rect key="frame" x="159" y="287" width="283" height="150"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <accessibility key="accessibilityConfiguration">
+                                    <accessibilityTraits key="traits" notEnabled="YES"/>
+                                </accessibility>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="198" id="3tJ-xn-20o"/>
+                                    <constraint firstAttribute="height" constant="150" id="3tJ-xn-20o"/>
                                     <constraint firstAttribute="width" constant="283" id="K1M-Mc-jMV"/>
                                 </constraints>
                                 <string key="text">ChatSecure can now automatically notify compatible offline contacts that you'd like to establish a secure conversation. To protect your privacy, these notifications currently do not contain any content.</string>
@@ -168,15 +185,16 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="02O-Hn-a8E" firstAttribute="top" secondItem="i8G-bh-AN7" secondAttribute="bottom" constant="20" id="3Oa-L9-k3n"/>
-                            <constraint firstItem="J3U-aD-4Vu" firstAttribute="centerX" secondItem="uuE-MF-oGJ" secondAttribute="centerX" id="3yk-kp-6DU"/>
+                            <constraint firstItem="02O-Hn-a8E" firstAttribute="top" secondItem="JPq-4W-Efa" secondAttribute="bottom" id="8f1-YP-KSP"/>
                             <constraint firstItem="i8G-bh-AN7" firstAttribute="trailing" secondItem="uuE-MF-oGJ" secondAttribute="trailingMargin" id="Bsr-PI-cY8"/>
                             <constraint firstItem="QUe-lg-gJ2" firstAttribute="top" secondItem="kk6-yK-Mn4" secondAttribute="bottom" constant="15" id="LQl-On-So8"/>
+                            <constraint firstItem="JPq-4W-Efa" firstAttribute="centerX" secondItem="uuE-MF-oGJ" secondAttribute="centerX" id="bDi-MA-4Ft"/>
                             <constraint firstItem="QUe-lg-gJ2" firstAttribute="centerX" secondItem="uuE-MF-oGJ" secondAttribute="centerX" id="bYT-DC-rxj"/>
-                            <constraint firstItem="J3U-aD-4Vu" firstAttribute="top" secondItem="QUe-lg-gJ2" secondAttribute="bottom" constant="8" id="bvO-6i-ie2"/>
-                            <constraint firstItem="02O-Hn-a8E" firstAttribute="top" relation="lessThanOrEqual" secondItem="J3U-aD-4Vu" secondAttribute="bottom" constant="81" id="m8D-e5-GmH"/>
-                            <constraint firstItem="QUe-lg-gJ2" firstAttribute="centerX" secondItem="uuE-MF-oGJ" secondAttribute="centerX" constant="10" id="nVp-lF-nqz"/>
+                            <constraint firstItem="QUe-lg-gJ2" firstAttribute="centerX" secondItem="uuE-MF-oGJ" secondAttribute="centerX" id="nVp-lF-nqz"/>
                             <constraint firstItem="kk6-yK-Mn4" firstAttribute="centerY" secondItem="uuE-MF-oGJ" secondAttribute="centerY" id="qxd-9a-Cmc"/>
+                            <constraint firstItem="JPq-4W-Efa" firstAttribute="top" secondItem="QUe-lg-gJ2" secondAttribute="bottom" id="sHZ-qj-yIH"/>
                             <constraint firstItem="kk6-yK-Mn4" firstAttribute="top" secondItem="hut-wH-ziW" secondAttribute="bottom" constant="22" id="vt0-8o-vxB"/>
+                            <constraint firstItem="JPq-4W-Efa" firstAttribute="width" secondItem="QUe-lg-gJ2" secondAttribute="width" id="xXD-jJ-BEt"/>
                             <constraint firstItem="kk6-yK-Mn4" firstAttribute="centerX" secondItem="uuE-MF-oGJ" secondAttribute="centerX" constant="-21" id="yMn-5G-7ue"/>
                         </constraints>
                         <variation key="default">
