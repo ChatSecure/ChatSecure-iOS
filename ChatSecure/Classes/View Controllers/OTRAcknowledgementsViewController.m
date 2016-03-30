@@ -29,7 +29,11 @@
 @implementation OTRAcknowledgementsViewController
 
 - (instancetype) initWithHeaderLabel:(TTTAttributedLabel*)headerLabel {
-    if (self = [super initWithAcknowledgementsPlistPath:[[self class] defaultAcknowledgementsPlistPath]]) {
+    NSString *plistPath = [[self class] defaultAcknowledgementsPlistPath];
+    if (!plistPath) {
+        plistPath = [[NSBundle mainBundle] pathForResource:@"Pods-ChatSecureCore-acknowledgements" ofType:@"plist"];
+    }
+    if (self = [super initWithAcknowledgementsPlistPath:plistPath]) {
         self.headerText = headerLabel.text;
         self.headerLabel = headerLabel;
         self.headerLabel.delegate = self;
