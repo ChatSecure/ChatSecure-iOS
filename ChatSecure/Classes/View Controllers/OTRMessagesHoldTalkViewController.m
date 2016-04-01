@@ -181,11 +181,18 @@
 
 #pragma - mark JSQMessageViewController
 
+- (void)isTyping {
+    OTRXMPPManager *xmppManager = [self xmppManager];
+    [xmppManager sendChatState:kOTRChatStateComposing withBuddyID:[self threadKey]];
+}
+
+- (void)didFinishTyping {
+    OTRXMPPManager *xmppManager = [self xmppManager];
+    [xmppManager sendChatState:kOTRChatStateActive withBuddyID:[self threadKey]];
+}
+
 - (void)didUpdateState
 {
-    //OTRXMPPManager *xmppManager = [self xmppManager];
-    //[xmppManager sendChatState:kOTRChatStateActive withBuddyID:buddy.uniqueId];
-    
     if (self.state.canKnock && !self.state.isThreadOnline && !self.state.hasText) {
         //Show Knock Button
         self.inputToolbar.contentView.rightBarButtonItem = self.knockButton;

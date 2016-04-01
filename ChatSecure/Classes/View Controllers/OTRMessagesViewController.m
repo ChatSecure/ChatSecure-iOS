@@ -731,12 +731,28 @@ typedef NS_ENUM(int, OTRDropDownType) {
         self.state.hasText = hasText;
         [self didUpdateState];
     }
+    
+    //Everytime the textview has text and a notification comes through we are 'typing' otherwise we are done typing
+    if (hasText) {
+        [self isTyping];
+    } else {
+        [self didFinishTyping];
+    }
+    
     return;
 }
 
 #pragma - mark Update UI
 
 - (void)didUpdateState {
+    
+}
+
+- (void)isTyping {
+    
+}
+
+- (void)didFinishTyping {
     
 }
 

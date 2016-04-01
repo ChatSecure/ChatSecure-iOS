@@ -48,4 +48,10 @@
 - (OTRXMPPManager *)xmppManager;
 - (id <OTRMessageProtocol,JSQMessageData>)messageAtIndexPath:(NSIndexPath *)indexPath;
 
+/** This is called on every key stroke so be careful here. Used in subclasses*/
+- (void)isTyping;
+
+/** This is called once the text view has no text or is cleared after an update*/
+- (void)didFinishTyping;
+
 @end
