@@ -27,6 +27,6 @@
 	<key>ShareBaseURL</key>
 	<string>https://chatsecure.org/i/#</string>
 	<key>pushAPIURL</key>
-	<string>https://chatsecure-push.herokuapp.com/api/v1/</string>
+	<string>https://push.chatsecure.org/api/v1/</string>
 </dict>
 </plist>
