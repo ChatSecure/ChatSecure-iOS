@@ -149,7 +149,7 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
 
 - (NSString *)threadName
 {
-    NSString *threadName = self.displayName;
+    NSString *threadName = [self.displayName stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     if(![threadName length]) {
         threadName = self.username;
     }

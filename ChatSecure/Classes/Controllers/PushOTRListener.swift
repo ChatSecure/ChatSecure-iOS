@@ -43,43 +43,24 @@ class PushOTRListener: NSObject {
         if let dictionary = notification.userInfo as? [String:AnyObject] {
             let number = dictionary[OTRMessageStateKey] as? NSNumber
             if let enumValue = number?.unsignedLongValue where enumValue == OTREncryptionMessageState.Encrypted.rawValue {
-                //We know the conversation just went encrypted
-                //Check to see if we've given this buddy a token before
-                //If we haven't then we need to transmit a token to them
-                do {
-                    if let storedTokens = try self.storage?.tokensForBuddy(buddy.uniqueId, createdByThisAccount: true) {
-                        //Couldn't find any tokens that we gave to this buddy
-                        
-                        guard let account = self.storage?.account(buddy.accountUniqueId) else {
-                            
-                            return
-                        }
-                        
-                        if storedTokens.count <= 0 {
-                            self.pushController?.getNewPushToken(buddy.uniqueId, completion: {[weak self] (t, error) -> Void in
-                                if let token = t {
-                                    self?.sendOffToken(token, buddyUsername: buddy.username, accountUsername: account.username, `protocol`: account.protocolTypeString())
-                                }
-                            })
-                        } else {
-                            if let token = storedTokens[0].pushToken {
-                                self.sendOffToken(token, buddyUsername: buddy.username, accountUsername: account.username, `protocol`: account.protocolTypeString())
-                            }
-                        }
-                    }
-                } catch {
-                    NSLog("Error finding tokens")
-                }
                 
+                
+                if let account = self.storage?.account(buddy.accountUniqueId) {
+                    //Everytime we're starting a new OTR Session we resend a new fresh push token either from the server or the cache
+                    self.pushController?.getNewPushToken(buddy.uniqueId, completion: {[weak self] (t, error) -> Void in
+                        if let token = t {
+                            self?.sendOffToken(token, buddyUsername: buddy.username, accountUsername: account.username, protocol: account.protocolTypeString())
+                        }
+                    })
+                }
             }
-            
         }
     }
     
     func sendOffToken(token:Token, buddyUsername:String, accountUsername:String, `protocol`:String) -> Void {
         if let url = self.pushController?.apiClient.messageEndpont().absoluteString {
             let data = PushSerializer.serialize([token], APIEndpoint: url)
-            self.tlvHandler?.sendPushData(data, username: buddyUsername, accountName:accountUsername  , `protocol`: `protocol`)
+            self.tlvHandler?.sendPushData(data, username: buddyUsername, accountName:accountUsername  , protocol: `protocol`)
         }
     }
     

@@ -1002,5 +1002,13 @@
     "KNOCK_SENT_STRING": {
         "comment": "Text for label after knock is sent. Like knocking on a door",
         "string": "Knock Sent"
+    },
+    "WANTS_TO_CHAT_STRING": {
+        "comment": "This string follows a user's dislplay name or username ex Bob wants to chat.",
+        "string": "wants to chat."
+    },
+    "SOMEONE_STRING": {
+        "comment": "A placeholder for a buddy's username like Someone wants to chat.",
+        "string": "Someone"
     }
 }
