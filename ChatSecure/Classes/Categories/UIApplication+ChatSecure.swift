@@ -36,14 +36,15 @@ public extension UIApplication {
         }
     }
     
-    public func showLocalNotificationForKnockFrom(thread:OTRThreadOwner) {
+    public func showLocalNotificationForKnockFrom(thread:OTRThreadOwner?) {
         let chatString = OTRLanguageManager.translatedString("wants to chat.")
-        let text = "\(thread.threadName()) \(chatString)"
+        let someoneString = OTRLanguageManager.translatedString("Someone")
+        let text = "\(thread?.threadName() ?? someoneString) \(chatString)"
         let unreadCount = self.applicationIconBadgeNumber + 1
         self.showLocalNotificationFor(thread, text: text, unreadCount: unreadCount)
     }
     
-    internal func showLocalNotificationFor(thread:OTRThreadOwner, text:String?, unreadCount:Int?) {
+    internal func showLocalNotificationFor(thread:OTRThreadOwner?, text:String?, unreadCount:Int?) {
         if(self.applicationState != .Active) {
             
             let localNotification = UILocalNotification()
@@ -52,7 +53,9 @@ public extension UIApplication {
             localNotification.applicationIconBadgeNumber = unreadCount ?? 0
             localNotification.alertBody = text
             
-            localNotification.userInfo = [kOTRNotificationThreadKey:thread.threadIdentifier(), kOTRNotificationThreadCollection:thread.threadCollection()]
+            if let t = thread {
+               localNotification.userInfo = [kOTRNotificationThreadKey:t.threadIdentifier(), kOTRNotificationThreadCollection:t.threadCollection()]
+            }
             
             self.presentLocalNotificationNow(localNotification)
         }
