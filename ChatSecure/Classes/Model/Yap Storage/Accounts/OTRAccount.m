@@ -20,6 +20,7 @@
 #import "OTRImages.h"
 #import "NSURL+ChatSecure.h"
 #import "OTRProtocolManager.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 
 NSString *const OTRAimImageName               = @"aim.png";
@@ -127,7 +128,9 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
 - (NSArray *)allBuddiesWithTransaction:(YapDatabaseReadTransaction *)transaction
 {
     NSMutableArray *allBuddies = [NSMutableArray array];
-    [[transaction ext:OTRYapDatabaseRelationshipName] enumerateEdgesWithName:OTRBuddyEdges.account destinationKey:self.uniqueId collection:[OTRAccount collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
+    NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
+    NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameBuddyAccountEdgeName];
+    [[transaction ext:extensionName] enumerateEdgesWithName:edgeName destinationKey:self.uniqueId collection:[OTRAccount collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
         OTRBuddy *buddy = [OTRBuddy fetchObjectWithUniqueID:edge.sourceKey transaction:transaction];
         if (buddy) {
             [allBuddies addObject:buddy];
@@ -168,14 +171,15 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
     return accountsArray;
 }
 
-+ (NSArray *)allAccountsWithTransaction:(YapDatabaseReadTransaction*)transaction
++ (NSArray <OTRAccount *>*)allAccountsWithTransaction:(YapDatabaseReadTransaction*)transaction
 {
-    NSMutableArray *accounts = [NSMutableArray array];
-    NSArray *allAccountKeys = [transaction allKeysInCollection:[OTRAccount collection]];
-    [allAccountKeys enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        id object = [transaction objectForKey:obj inCollection:[OTRAccount collection]];
+    NSMutableArray <OTRAccount *>*accounts = [NSMutableArray array];
+    NSString *collection = [OTRAccount collection];
+    NSArray <NSString*>*allAccountKeys = [transaction allKeysInCollection:collection];
+    [allAccountKeys enumerateObjectsUsingBlock:^(NSString * _Nonnull key, NSUInteger idx, BOOL * _Nonnull stop) {
+        id object = [transaction objectForKey:key inCollection:collection];
         if (object && [object isKindOfClass:[OTRAccount class]]) {
-            [accounts addObject:[object copy]];
+            [accounts addObject:object];
         }
     }];
     

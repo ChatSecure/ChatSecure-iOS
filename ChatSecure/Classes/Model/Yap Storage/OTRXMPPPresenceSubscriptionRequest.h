@@ -18,14 +18,6 @@ extern const struct OTRXMPPPresenceSubscriptionRequestAttributes {
 	__unsafe_unretained NSString *jid;
 } OTRXMPPPresenceSubscriptionRequestAttributes;
 
-extern const struct OTRXMPPPresenceSubscriptionRequestRelationships {
-	__unsafe_unretained NSString *accountUniqueId;
-} OTRXMPPPresenceSubscriptionRequestRelationships;
-
-extern const struct OTRXMPPPresenceSubscriptionRequestEdges {
-	__unsafe_unretained NSString *account;
-} OTRXMPPPresenceSubscriptionRequestEdges;
-
 @interface OTRXMPPPresenceSubscriptionRequest : OTRYapDatabaseObject
 
 @property (nonatomic, strong) NSDate *date;

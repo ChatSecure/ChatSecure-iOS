@@ -12,11 +12,11 @@ import YapDatabase.YapDatabaseSecondaryIndex
 public extension YapDatabaseReadTransaction {
     
     public func enumerateMessages(id id:String, block:(message:OTRMessageProtocol,stop:UnsafeMutablePointer<ObjCBool>) -> Void) {
-        guard let secondaryIndexTransaction = self.ext(OTRYapDatabseSecondaryIndexExtension) as? YapDatabaseSecondaryIndexTransaction else {
+        guard let secondaryIndexTransaction = self.ext(DatabaseExtensionName.SecondaryIndexName.name()) as? YapDatabaseSecondaryIndexTransaction else {
             return
         }
         
-        let queryString = "Where \(OTRYapDatabseMessageIdSecondaryIndex) = ?"
+        let queryString = "Where \(OTRYapDatabseMessageIdSecondaryIndexColumnName) = ?"
         let query = YapDatabaseQuery(string: queryString, parameters: [id])
         
         secondaryIndexTransaction.enumerateKeysMatchingQuery(query) { (collection, key, stop) -> Void in
@@ -28,11 +28,11 @@ public extension YapDatabaseReadTransaction {
     
     /** The jid here is the full jid not real jid or nickname */
     public func enumerateRoomOccupants(jid jid:String, block:(occupant:OTRXMPPRoomOccupant, stop:UnsafeMutablePointer<ObjCBool>) -> Void) {
-        guard let secondaryIndexTransaction = self.ext(OTRYapDatabseSecondaryIndexExtension) as? YapDatabaseSecondaryIndexTransaction else {
+        guard let secondaryIndexTransaction = self.ext(DatabaseExtensionName.SecondaryIndexName.name()) as? YapDatabaseSecondaryIndexTransaction else {
             return
         }
         
-        let queryString = "Where \(OTRYapDatabseRoomOccupantJIdSecondaryIndex) = ?"
+        let queryString = "Where \(OTRYapDatabseRoomOccupantJIdSecondaryIndexColumnName) = ?"
         let query = YapDatabaseQuery(string: queryString, parameters: [jid])
         
         secondaryIndexTransaction.enumerateKeysMatchingQuery(query) { (collection, key, stop) -> Void in
@@ -43,11 +43,11 @@ public extension YapDatabaseReadTransaction {
     }
     
     public func numberOfUnreadMessages() -> UInt {
-        guard let secondaryIndexTransaction = self.ext(OTRYapDatabseSecondaryIndexExtension) as? YapDatabaseSecondaryIndexTransaction else {
+        guard let secondaryIndexTransaction = self.ext(DatabaseExtensionName.SecondaryIndexName.name()) as? YapDatabaseSecondaryIndexTransaction else {
             return 0
         }
         
-        let queryString = "Where \(OTRYapDatabaseUnreadMessageSecondaryIndex) = 0"
+        let queryString = "Where \(OTRYapDatabaseUnreadMessageSecondaryIndexColumnName) = 0"
         let query = YapDatabaseQuery(string: queryString, parameters: [])
         
         var count:UInt = 0

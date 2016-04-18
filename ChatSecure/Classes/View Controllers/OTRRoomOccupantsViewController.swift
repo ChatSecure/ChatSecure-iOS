@@ -19,7 +19,7 @@ public class OTRRoomOccupantsViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
         viewHandler = OTRYapViewHandler(databaseConnection: databaseConnection)
         viewHandler?.delegate = self
-        viewHandler?.setup(DatabaseViewNames.GroupOccupantsViewName.name(), groups: [roomKey])
+        viewHandler?.setup(DatabaseExtensionName.GroupOccupantsViewName.name(), groups: [roomKey])
     }
 
     required public init?(coder aDecoder: NSCoder) {

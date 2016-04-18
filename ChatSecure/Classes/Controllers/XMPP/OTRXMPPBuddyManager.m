@@ -31,7 +31,8 @@
     self.viewHandler = [[OTRYapViewHandler alloc] initWithDatabaseConnection:self.databaseConnection];
     self.viewHandler.delegate = self;
     NSArray *groups = @[accountKey];
-    [self.viewHandler setup:[YapDatabase viewName:DatabaseViewNamesBuddyDeleteActionViewName] groups:groups];
+    NSString *viewName = [YapDatabaseConstants extensionName:DatabaseExtensionNameBuddyDeleteActionViewName];
+    [self.viewHandler setup:viewName groups:groups];
     
     return YES;
 }

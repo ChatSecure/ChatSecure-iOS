@@ -16,9 +16,6 @@
 @property (nonatomic, strong) NSString *resource;
 @property (nonatomic) int port;
 
-/** Returns the XMPP JID representation of the current username */
-- (XMPPJID*) jid;
-
 + (int)defaultPort;
 + (NSString *)newResource;
 

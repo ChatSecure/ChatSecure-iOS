@@ -129,6 +129,7 @@ public class OTRYapViewHandler: NSObject {
         let notifications = self.databaseConnection.beginLongLivedReadTransaction()
         
         //There are no mappings so we need to set them up first
+        //TODO: Some sort of check if the view is registered
         guard let mappings = self.mappings else {
             if let view = self.viewName {
                 if let groups = self.groups {

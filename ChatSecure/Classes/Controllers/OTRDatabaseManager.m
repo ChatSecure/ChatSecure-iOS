@@ -26,12 +26,9 @@
 #import "OTRLanguageManager.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 
-NSString *const OTRYapDatabaseRelationshipName = @"OTRYapDatabaseRelationshipName";
-NSString *const OTRYapDatabseMessageIdSecondaryIndex = @"OTRYapDatabseMessageIdSecondaryIndex";
-NSString *const OTRYapDatabseRoomOccupantJIdSecondaryIndex = @"constOTRYapDatabseRoomOccupantJIdSecondaryIndex";
-NSString *const OTRYapDatabseSecondaryIndexExtension = @"OTRYapDatabseMessageIdSecondaryIndexExtension";
-NSString *const OTRYapDatabaseUnreadMessageSecondaryIndex = @"OTRYapDatbaseUnreadMessageSecondaryIndex";
-
+NSString *const OTRYapDatabseMessageIdSecondaryIndexColumnName = @"OTRYapDatabseMessageIdSecondaryIndex";
+NSString *const OTRYapDatabseRoomOccupantJIdSecondaryIndexColumnName = @"constOTRYapDatabseRoomOccupantJIdSecondaryIndex";
+NSString *const OTRYapDatabaseUnreadMessageSecondaryIndexColumnName = @"OTRYapDatbaseUnreadMessageSecondaryIndex";
 
 @interface OTRDatabaseManager ()
 
@@ -112,22 +109,37 @@ NSString *const OTRYapDatabaseUnreadMessageSecondaryIndex = @"OTRYapDatbaseUnrea
     self.readWriteDatabaseConnection.name = @"readWriteDatabaseConnection";
     
     
-    ////// Register standard views////////
-    YapDatabaseRelationship *databaseRelationship = [[YapDatabaseRelationship alloc] init];
-    BOOL success = [self.database registerExtension:databaseRelationship withName:OTRYapDatabaseRelationshipName];
-    if (success) success = [OTRDatabaseView registerAllAccountsDatabaseView];
-    if (success) success = [OTRDatabaseView registerConversationDatabaseView];
-    if (success) success = [OTRDatabaseView registerChatDatabaseView];
-    if (success) success = [OTRDatabaseView registerBuddyNameSearchDatabaseView];
-    if (success) success = [OTRDatabaseView registerAllBuddiesDatabaseView];
-    if (success) success = [OTRDatabaseView registerAllSubscriptionRequestsView];
-    if (success) success = [OTRDatabaseView registerUnreadMessagesView];
-    if (success) success = [self setupSecondaryIndexes];
+    ////// Register Extensions////////
     
+    // Register realtionship extension
+    YapDatabaseRelationship *databaseRelationship = [[YapDatabaseRelationship alloc] initWithVersionTag:@"1"];
+    [self.database asyncRegisterExtension:databaseRelationship
+                            extensionName:DatabaseExtensionNameRelationshipExtensionName
+                         sendNotification:YES completion:nil];
+    
+    // Register Secondary Index
+    YapDatabaseSecondaryIndex *secondaryIndex = [self setupSecondaryIndexes];
+    [self.database asyncRegisterExtension:secondaryIndex extensionName:DatabaseExtensionNameSecondaryIndexName sendNotification:YES completion:nil];
+    
+    // Register action manager
     self.actionManager = [[YapDatabaseActionManager alloc] init];
-    [self.actionManager asyncRegisterWithDatabase:self.database usingName:@"OTRYapDatabaseActionManager" completionBlock:nil];
+    NSString *actionManagerName = [YapDatabaseConstants extensionName:DatabaseExtensionNameActionManagerName];
+    [self.actionManager asyncRegisterWithDatabase:self.database usingName:actionManagerName completionBlock:nil];
     
-    if (self.database && success) {
+    
+    
+    //Async register all the views
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [OTRDatabaseView registerAllAccountsDatabaseView];
+        [OTRDatabaseView registerConversationDatabaseView];
+        [OTRDatabaseView registerChatDatabaseView];
+        [OTRDatabaseView registerBuddyNameSearchDatabaseView];
+        [OTRDatabaseView registerAllBuddiesDatabaseView];
+        [OTRDatabaseView registerAllSubscriptionRequestsView];
+        [OTRDatabaseView registerUnreadMessagesView];
+    });
+    
+    if (self.database != nil) {
         return YES;
     }
     else {
@@ -142,12 +154,12 @@ NSString *const OTRYapDatabaseUnreadMessageSecondaryIndex = @"OTRYapDatbaseUnrea
     return [self.database newConnection];
 }
 
-- (BOOL)setupSecondaryIndexes
+- (YapDatabaseSecondaryIndex *)setupSecondaryIndexes
 {
     YapDatabaseSecondaryIndexSetup *setup = [[YapDatabaseSecondaryIndexSetup alloc] init];
-    [setup addColumn:OTRYapDatabseMessageIdSecondaryIndex withType:YapDatabaseSecondaryIndexTypeText];
-    [setup addColumn:OTRYapDatabseRoomOccupantJIdSecondaryIndex withType:YapDatabaseSecondaryIndexTypeText];
-    [setup addColumn:OTRYapDatabaseUnreadMessageSecondaryIndex withType:YapDatabaseSecondaryIndexTypeInteger];
+    [setup addColumn:OTRYapDatabseMessageIdSecondaryIndexColumnName withType:YapDatabaseSecondaryIndexTypeText];
+    [setup addColumn:OTRYapDatabseRoomOccupantJIdSecondaryIndexColumnName withType:YapDatabaseSecondaryIndexTypeText];
+    [setup addColumn:OTRYapDatabaseUnreadMessageSecondaryIndexColumnName withType:YapDatabaseSecondaryIndexTypeInteger];
     
     YapDatabaseSecondaryIndexHandler *indexHandler = [YapDatabaseSecondaryIndexHandler withObjectBlock:^(YapDatabaseReadTransaction * _Nonnull transaction, NSMutableDictionary * _Nonnull dict, NSString * _Nonnull collection, NSString * _Nonnull key, id  _Nonnull object) {
         if ([object conformsToProtocol:@protocol(OTRMessageProtocol)])
@@ -155,23 +167,23 @@ NSString *const OTRYapDatabaseUnreadMessageSecondaryIndex = @"OTRYapDatbaseUnrea
             id<OTRMessageProtocol> message = (id <OTRMessageProtocol>)object;
             
             if ([[message remoteMessageId] length]) {
-                [dict setObject:[message remoteMessageId] forKey:OTRYapDatabseMessageIdSecondaryIndex];
+                [dict setObject:[message remoteMessageId] forKey:OTRYapDatabseMessageIdSecondaryIndexColumnName];
             }
             
-            [dict setObject:@([message messageRead]) forKey:OTRYapDatabaseUnreadMessageSecondaryIndex];
+            [dict setObject:@([message messageRead]) forKey:OTRYapDatabaseUnreadMessageSecondaryIndexColumnName];
         }
         
         if ([collection isEqualToString:[OTRXMPPRoomOccupant collection]]) {
             OTRXMPPRoomOccupant *roomOccupant = (OTRXMPPRoomOccupant *)object;
             if ([roomOccupant.jid length]) {
-                [dict setObject:roomOccupant.jid forKey:OTRYapDatabseRoomOccupantJIdSecondaryIndex];
+                [dict setObject:roomOccupant.jid forKey:OTRYapDatabseRoomOccupantJIdSecondaryIndexColumnName];
             }
         }
     }];
     
     YapDatabaseSecondaryIndex *secondaryIndex = [[YapDatabaseSecondaryIndex alloc] initWithSetup:setup handler:indexHandler versionTag:@"1"];
     
-    return [self.database registerExtension:secondaryIndex withName:OTRYapDatabseSecondaryIndexExtension];
+    return secondaryIndex;
 }
 
 + (void) deleteLegacyXMPPFiles {

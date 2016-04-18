@@ -13,6 +13,7 @@
 @import YapDatabase;
 #import "OTRImages.h"
 #import "JSQMessagesAvatarImageFactory.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
 @import OTRKit;
 
 const struct OTRBuddyAttributes OTRBuddyAttributes = {
@@ -26,14 +27,6 @@ const struct OTRBuddyAttributes OTRBuddyAttributes = {
     .lastMessageDate = @"lastMessageDate",
     .avatarData = @"avatarData",
     .encryptionStatus = @"encryptionStatus"
-};
-
-const struct OTRBuddyRelationships OTRBuddyRelationships = {
-	.accountUniqueId = @"accountUniqueId",
-};
-
-const struct OTRBuddyEdges OTRBuddyEdges = {
-	.account = @"account",
 };
 
 @implementation OTRBuddy
@@ -81,14 +74,18 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
 
 - (BOOL)hasMessagesWithTransaction:(YapDatabaseReadTransaction *)transaction
 {
-    NSUInteger numberOfMessages = [[transaction ext:OTRYapDatabaseRelationshipName] edgeCountWithName:OTRMessageEdges.buddy destinationKey:self.uniqueId collection:[OTRBuddy collection]];
+    NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
+    NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameMessageBuddyEdgeName];
+    NSUInteger numberOfMessages = [[transaction ext:extensionName] edgeCountWithName:edgeName destinationKey:self.uniqueId collection:[OTRBuddy collection]];
     return (numberOfMessages > 0);
 }
 
 - (void)updateLastMessageDateWithTransaction:(YapDatabaseReadTransaction *)transaction
 {
     __block NSDate *date = nil;
-    [[transaction ext:OTRYapDatabaseRelationshipName] enumerateEdgesWithName:OTRMessageEdges.buddy destinationKey:self.uniqueId collection:[OTRBuddy collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
+    NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
+    NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameMessageBuddyEdgeName];
+    [[transaction ext:extensionName] enumerateEdgesWithName:edgeName destinationKey:self.uniqueId collection:[OTRBuddy collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
         OTRMessage *message = [OTRMessage fetchObjectWithUniqueID:edge.sourceKey transaction:transaction];
         if (message) {
             if (!date) {
@@ -102,18 +99,6 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
     self.lastMessageDate = date;
 }
 
-- (NSInteger)numberOfUnreadMessagesWithTransaction:(YapDatabaseReadTransaction *)transaction
-{
-    __block NSUInteger count = 0;
-    [[transaction ext:OTRYapDatabaseRelationshipName] enumerateEdgesWithName:OTRMessageEdges.buddy destinationKey:self.uniqueId collection:[OTRBuddy collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
-        OTRMessage *message = [OTRMessage fetchObjectWithUniqueID:edge.sourceKey transaction:transaction];
-        if (!message.isRead) {
-            count += 1;
-        }
-    }];
-    return count;
-}
-
 - (OTRAccount*)accountWithTransaction:(YapDatabaseReadTransaction *)transaction
 {
     return [OTRAccount fetchObjectWithUniqueID:self.accountUniqueId transaction:transaction];
@@ -121,7 +106,9 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
 
 - (void)setAllMessagesAsReadInTransaction:(YapDatabaseReadWriteTransaction *)transaction
 {
-    [[transaction ext:OTRYapDatabaseRelationshipName] enumerateEdgesWithName:OTRMessageEdges.buddy destinationKey:self.uniqueId collection:[OTRBuddy collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
+    NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
+    NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameMessageBuddyEdgeName];
+    [[transaction ext:extensionName] enumerateEdgesWithName:edgeName destinationKey:self.uniqueId collection:[OTRBuddy collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
         id databseObject = [transaction objectForKey:edge.sourceKey inCollection:edge.sourceCollection];
         if ([databseObject isKindOfClass:[OTRMessage class]]) {
             OTRMessage *message = (OTRMessage *)databseObject;
@@ -135,7 +122,9 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
 - (OTRMessage *)lastMessageWithTransaction:(YapDatabaseReadTransaction *)transaction
 {
     __block OTRMessage *finalMessage = nil;
-    [[transaction ext:OTRYapDatabaseRelationshipName] enumerateEdgesWithName:OTRMessageEdges.buddy destinationKey:self.uniqueId collection:[OTRBuddy collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
+    NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
+    NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameMessageBuddyEdgeName];
+    [[transaction ext:extensionName] enumerateEdgesWithName:edgeName destinationKey:self.uniqueId collection:[OTRBuddy collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
         OTRMessage *message = [OTRMessage fetchObjectWithUniqueID:edge.sourceKey transaction:transaction];
         if (!finalMessage ||    [message.date compare:finalMessage.date] == NSOrderedDescending) {
             finalMessage = message;
@@ -191,7 +180,8 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
 {
     NSArray *edges = nil;
     if (self.accountUniqueId) {
-        YapDatabaseRelationshipEdge *accountEdge = [YapDatabaseRelationshipEdge edgeWithName:OTRBuddyEdges.account
+        NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameBuddyAccountEdgeName];
+        YapDatabaseRelationshipEdge *accountEdge = [YapDatabaseRelationshipEdge edgeWithName:edgeName
                                                                               destinationKey:self.accountUniqueId
                                                                                   collection:[OTRAccount collection]
                                                                              nodeDeleteRules:YDB_DeleteSourceIfDestinationDeleted];
@@ -214,7 +204,10 @@ const struct OTRBuddyEdges OTRBuddyEdges = {
 {
     __block OTRBuddy *finalBuddy = nil;
     
-    [[transaction ext:OTRYapDatabaseRelationshipName] enumerateEdgesWithName:OTRBuddyEdges.account destinationKey:accountUniqueId collection:[OTRAccount collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
+    NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
+    NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameBuddyAccountEdgeName];
+    [[transaction ext:extensionName] enumerateEdgesWithName:edgeName destinationKey:accountUniqueId collection:[OTRAccount collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
+        //Some how we're getting OTRXMPPPresensceSubscritionreuest
         OTRBuddy * buddy = [transaction objectForKey:edge.sourceKey inCollection:edge.sourceCollection];
         // Checking buddy class is a hotfix for issue #472
         if (buddy &&
