@@ -860,9 +860,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
     cell.cellTopLabel.numberOfLines = 0;
     
     id <OTRMessageProtocol>message = [self messageAtIndexPath:indexPath];
-    if ([message isKindOfClass:[PushMessage class]]) {
-        
-    }
     
     UIColor *textColor = nil;
     if ([message messageIncoming]) {
@@ -1180,7 +1177,10 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     if ([self showDateAtIndexPath:indexPath]) {
         id <OTRMessageProtocol> message = [self messageAtIndexPath:indexPath];
-        [text appendAttributedString: [[JSQMessagesTimestampFormatter sharedFormatter] attributedTimestampForDate:[message date]]];
+        NSDate *date = [message date];
+        if (date != nil) {
+            [text appendAttributedString: [[JSQMessagesTimestampFormatter sharedFormatter] attributedTimestampForDate:date]];
+        }
     }
     
     if ([self isPushMessageAtIndexPath:indexPath]) {
