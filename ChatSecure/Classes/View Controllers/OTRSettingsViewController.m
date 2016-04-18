@@ -352,6 +352,7 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     UINavigationController *welcomeNavController = [onboardingStoryboard instantiateInitialViewController];
     OTRWelcomeViewController *welcomeViewController = welcomeNavController.viewControllers[0];
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:welcomeViewController];
+    nav.modalPresentationStyle = UIModalPresentationFormSheet;
     [self presentViewController:nav animated:YES completion:nil];
 }
 
@@ -373,6 +374,7 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     if (viewControllerClass == [EnablePushViewController class]) {
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Onboarding" bundle:[OTRAssets resourcesBundle]];
         EnablePushViewController *enablePushVC = [storyboard instantiateViewControllerWithIdentifier:@"enablePush"];
+        enablePushVC.modalPresentationStyle = UIModalPresentationFormSheet;
         if (enablePushVC) {
             [self presentViewController:enablePushVC animated:YES completion:nil];
         }

@@ -154,10 +154,12 @@ static CGFloat kOTRConversationCellHeight = 80.0;
         UINavigationController *welcomeNavController = [onboardingStoryboard instantiateInitialViewController];
         OTRWelcomeViewController *welcomeViewController = welcomeNavController.viewControllers[0];
         UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:welcomeViewController];
+        nav.modalPresentationStyle = UIModalPresentationFormSheet;
         [self presentViewController:nav animated:YES completion:nil];
         self.hasPresentedOnboarding = YES;
     } else if ([PushController getPushPreference] == PushPreferenceUndefined) {
         EnablePushViewController *pushVC = [onboardingStoryboard instantiateViewControllerWithIdentifier:@"enablePush"];
+        pushVC.modalPresentationStyle = UIModalPresentationFormSheet;
         if (pushVC) {
             [self presentViewController:pushVC animated:YES completion:nil];
         }
