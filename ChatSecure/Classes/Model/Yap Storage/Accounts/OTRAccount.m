@@ -171,14 +171,15 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
     return accountsArray;
 }
 
-+ (NSArray *)allAccountsWithTransaction:(YapDatabaseReadTransaction*)transaction
++ (NSArray <OTRAccount *>*)allAccountsWithTransaction:(YapDatabaseReadTransaction*)transaction
 {
-    NSMutableArray *accounts = [NSMutableArray array];
-    NSArray *allAccountKeys = [transaction allKeysInCollection:[OTRAccount collection]];
-    [allAccountKeys enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        id object = [transaction objectForKey:obj inCollection:[OTRAccount collection]];
+    NSMutableArray <OTRAccount *>*accounts = [NSMutableArray array];
+    NSString *collection = [OTRAccount collection];
+    NSArray <NSString*>*allAccountKeys = [transaction allKeysInCollection:collection];
+    [allAccountKeys enumerateObjectsUsingBlock:^(NSString * _Nonnull key, NSUInteger idx, BOOL * _Nonnull stop) {
+        id object = [transaction objectForKey:key inCollection:collection];
         if (object && [object isKindOfClass:[OTRAccount class]]) {
-            [accounts addObject:[object copy]];
+            [accounts addObject:object];
         }
     }];
     
