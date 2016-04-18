@@ -159,6 +159,10 @@ static CGFloat const kOTRInvitePadding = 10;
 
 - (void)qrButtonPressed:(id)sender
 {
+    if (![QRCodeReader supportsMetadataObjectTypes:@[AVMetadataObjectTypeQRCode]]) {
+        return;
+    }
+    
     __weak typeof(self)weakSelf = self;
     OTRAddBuddyQRCodeViewController *reader = [[OTRAddBuddyQRCodeViewController alloc] initWithAccount:self.account completion:^{
         [weakSelf dismissViewControllerAnimated:YES completion:nil];
