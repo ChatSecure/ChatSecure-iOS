@@ -35,14 +35,6 @@ extern const struct OTRBuddyAttributes {
     __unsafe_unretained NSString *encryptionStatus;
 } OTRBuddyAttributes;
 
-extern const struct OTRBuddyRelationships {
-	__unsafe_unretained NSString *accountUniqueId;
-} OTRBuddyRelationships;
-
-extern const struct OTRBuddyEdges {
-	__unsafe_unretained NSString *account;
-} OTRBuddyEdges;
-
 @interface OTRBuddy : OTRYapDatabaseObject <YapDatabaseRelationshipNode, OTRThreadOwner>
 
 @property (nonatomic, strong) NSString *username;
@@ -62,8 +54,6 @@ extern const struct OTRBuddyEdges {
 
 @property (nonatomic, strong) NSString *accountUniqueId;
 
-
-- (NSInteger)numberOfUnreadMessagesWithTransaction:(YapDatabaseReadTransaction *)transaction;
 - (OTRMessage *)lastMessageWithTransaction:(YapDatabaseReadTransaction *)transaction;
 - (OTRAccount*)accountWithTransaction:(YapDatabaseReadTransaction *)transaction;
 - (void)updateLastMessageDateWithTransaction:(YapDatabaseReadTransaction *)transaction;

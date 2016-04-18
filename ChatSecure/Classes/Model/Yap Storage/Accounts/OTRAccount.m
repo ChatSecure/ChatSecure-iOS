@@ -20,6 +20,7 @@
 #import "OTRImages.h"
 #import "NSURL+ChatSecure.h"
 #import "OTRProtocolManager.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 
 NSString *const OTRAimImageName               = @"aim.png";
@@ -127,7 +128,9 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
 - (NSArray *)allBuddiesWithTransaction:(YapDatabaseReadTransaction *)transaction
 {
     NSMutableArray *allBuddies = [NSMutableArray array];
-    [[transaction ext:OTRYapDatabaseRelationshipName] enumerateEdgesWithName:OTRBuddyEdges.account destinationKey:self.uniqueId collection:[OTRAccount collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
+    NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
+    NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameBuddyAccountEdgeName];
+    [[transaction ext:extensionName] enumerateEdgesWithName:edgeName destinationKey:self.uniqueId collection:[OTRAccount collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
         OTRBuddy *buddy = [OTRBuddy fetchObjectWithUniqueID:edge.sourceKey transaction:transaction];
         if (buddy) {
             [allBuddies addObject:buddy];

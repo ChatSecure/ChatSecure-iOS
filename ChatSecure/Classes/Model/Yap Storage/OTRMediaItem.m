@@ -13,6 +13,7 @@
 @import YapDatabase;
 #import "OTRDatabaseManager.h"
 #import "OTRMessage.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 @implementation OTRMediaItem
 
@@ -25,7 +26,8 @@
 
 - (void)touchParentMessageWithTransaction:(YapDatabaseReadWriteTransaction *)transaction
 {
-    [[transaction ext:OTRYapDatabaseRelationshipName] enumerateEdgesWithName:OTRMessageEdges.media destinationKey:self.uniqueId collection:[[self class] collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
+    NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
+    [[transaction ext:extensionName] enumerateEdgesWithName:OTRMessageEdges.media destinationKey:self.uniqueId collection:[[self class] collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
         [transaction touchObjectForKey:edge.sourceKey inCollection:edge.sourceCollection];
     }];
 }
@@ -40,7 +42,8 @@
 - (OTRMessage *)parentMessageInTransaction:(YapDatabaseReadTransaction *)readTransaction
 {
     __block OTRMessage *message = nil;
-    [[readTransaction ext:OTRYapDatabaseRelationshipName] enumerateEdgesWithName:OTRMessageEdges.media destinationKey:self.uniqueId collection:[[self class] collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
+    NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
+    [[readTransaction ext:extensionName] enumerateEdgesWithName:OTRMessageEdges.media destinationKey:self.uniqueId collection:[[self class] collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
         message = [OTRMessage fetchObjectWithUniqueID:edge.sourceKey transaction:readTransaction];
         *stop = YES;
     }];

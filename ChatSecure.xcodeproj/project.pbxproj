@@ -17,6 +17,7 @@
 		634043191BD5AAF300ECA95A /* OTRBuddyEnums.h in Headers */ = {isa = PBXBuildFile; fileRef = 634043181BD5AAF300ECA95A /* OTRBuddyEnums.h */; };
 		6340431B1BD5BCD800ECA95A /* OTRXMPPRoomMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6340431A1BD5BCD800ECA95A /* OTRXMPPRoomMessage.swift */; };
 		6340431D1BD5BD0400ECA95A /* OTRXMPPRoomOccupant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6340431C1BD5BD0400ECA95A /* OTRXMPPRoomOccupant.swift */; };
+		634364231CC192F1009E169F /* YapDatabaseConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634364221CC192F1009E169F /* YapDatabaseConstants.swift */; };
 		634905B01BD05E3900347FE2 /* OTRYapViewHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634905AF1BD05E3900347FE2 /* OTRYapViewHandler.swift */; };
 		634E68BD1BAB887200DC6B25 /* PushController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637645C81B98F9BF00B3402F /* PushController.swift */; };
 		634E68BE1BAB891C00DC6B25 /* PushContainers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633821C81BA8D48D0019C906 /* PushContainers.swift */; };
@@ -697,6 +698,7 @@
 		634043181BD5AAF300ECA95A /* OTRBuddyEnums.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBuddyEnums.h; sourceTree = "<group>"; };
 		6340431A1BD5BCD800ECA95A /* OTRXMPPRoomMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRXMPPRoomMessage.swift; sourceTree = "<group>"; };
 		6340431C1BD5BD0400ECA95A /* OTRXMPPRoomOccupant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRXMPPRoomOccupant.swift; sourceTree = "<group>"; };
+		634364221CC192F1009E169F /* YapDatabaseConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YapDatabaseConstants.swift; sourceTree = "<group>"; };
 		634680811B0404CE00D9A1C5 /* OTRXMPPLoginHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPLoginHandler.h; sourceTree = "<group>"; };
 		634680821B0404CE00D9A1C5 /* OTRXMPPLoginHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPLoginHandler.m; sourceTree = "<group>"; };
 		634680881B041F2F00D9A1C5 /* OTRGoolgeOAuthLoginHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRGoolgeOAuthLoginHandler.h; sourceTree = "<group>"; };
@@ -967,6 +969,7 @@
 			children = (
 				63CBD67F1C642B6B00AC6D1F /* YapExtensions */,
 				631098B01BD6FED000494A47 /* YapDatabse+ChatSecure.swift */,
+				634364221CC192F1009E169F /* YapDatabaseConstants.swift */,
 				63C0C4421BE010B00086B529 /* YapDatabaseReadTransaction+ChatSecure.swift */,
 				D9315CB11BB606890077D2EE /* ShareController.swift */,
 				63F6E18F1A69B9BA0011E6F7 /* OTRAttachmentPicker.h */,
@@ -2250,6 +2253,7 @@
 				D9AE3A351BA8DAB600255537 /* OTRLanguageManager.m in Sources */,
 				6369855B1BC875110083FC53 /* OTRXMPPRoomManager.m in Sources */,
 				63636D6E1C1F78A6009F5FCD /* UINavigationController+ChatSecure.swift in Sources */,
+				634364231CC192F1009E169F /* YapDatabaseConstants.swift in Sources */,
 				63BB66B01BC5D2F40004A619 /* OTRXMPPRoomYapStorage.m in Sources */,
 				63929C961C7D32D9008DB2E3 /* MessagesViewControllerState.swift in Sources */,
 				634E68BE1BAB891C00DC6B25 /* PushContainers.swift in Sources */,

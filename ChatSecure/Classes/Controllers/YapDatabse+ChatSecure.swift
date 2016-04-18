@@ -9,23 +9,9 @@
 import Foundation
 import YapDatabase
 
-@objc public enum DatabaseViewNames: Int {
-    case UnsentGroupMessagesViewName
-    case GroupOccupantsViewName
-    case BuddyDeleteActionViewName
-    
-    public func name() -> String {
-        switch self {
-        case UnsentGroupMessagesViewName: return "UnsentGroupMessagesViewName"
-        case GroupOccupantsViewName: return "GroupOccupantsViewName"
-        case BuddyDeleteActionViewName: return "BuddyDeleteActionViewName"
-        }
-    }
-}
-
 public extension YapDatabase {
     
-    func asyncRegisterView(grouping:YapDatabaseViewGrouping, sorting:YapDatabaseViewSorting, version:String, whiteList:Set<String>, name:DatabaseViewNames, completionQueue:dispatch_queue_t?, completionBlock:((Bool) ->Void)?) {
+    func asyncRegisterView(grouping:YapDatabaseViewGrouping, sorting:YapDatabaseViewSorting, version:String, whiteList:Set<String>, name:DatabaseExtensionName, completionQueue:dispatch_queue_t?, completionBlock:((Bool) ->Void)?) {
         
         if (self.registeredExtension(name.name()) != nil ) {
             let queue:dispatch_queue_t = completionQueue ?? dispatch_get_main_queue()
@@ -99,8 +85,17 @@ public extension YapDatabase {
         self.asyncRegisterView(grouping, sorting: sorting, version: "1", whiteList: [OTRXMPPRoomOccupant.collection()], name: .GroupOccupantsViewName, completionQueue: completionQueue, completionBlock: completionBlock)
     }
     
-    //Needed for Obj-C
-    public class func viewName(name:DatabaseViewNames) -> String {
-        return name.name()
+    /// The same as the normal asyncRegisterExtension except this will send out an NSNotification when registered
+    public func asyncRegisterExtension(`extension`:YapDatabaseExtension, extensionName:DatabaseExtensionName, sendNotification:Bool = true, completion:((ready:Bool) -> Void)?) {
+        self.asyncRegisterExtension(`extension`, withName: extensionName.name(), completionQueue: dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), completionBlock: { (ready) -> Void in
+            
+            if sendNotification {
+                let name = YapDatabaseConstants.notificationName(.RegisteredExtension)
+                let userInfo = [YapDatabaseConstants.notificationKeyName(.ExtensionName):extensionName.name()]
+                NSNotificationCenter.defaultCenter().postNotificationName(name, object: self, userInfo: userInfo)
+            }
+            
+            completion?(ready: ready)
+        })
     }
 }

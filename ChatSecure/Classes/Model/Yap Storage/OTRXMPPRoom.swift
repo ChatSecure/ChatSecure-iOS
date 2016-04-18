@@ -95,7 +95,7 @@ extension OTRXMPPRoom:OTRThreadOwner {
     }
     
     public func setAllMessagesAsReadInTransaction(transaction: YapDatabaseReadWriteTransaction) {
-        guard let relationshipTransaction = transaction.ext(OTRYapDatabaseRelationshipName) as? YapDatabaseRelationshipTransaction else {
+        guard let relationshipTransaction = transaction.ext(DatabaseExtensionName.RelationshipExtensionName.name()) as? YapDatabaseRelationshipTransaction else {
             return
         }
         

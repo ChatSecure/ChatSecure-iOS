@@ -83,7 +83,8 @@
             groups = [[NSArray alloc] init];
         }
         groups = [groups arrayByAddingObject:[OTRXMPPRoom createUniqueId:self.xmppStream.tag jid:jid.bare]];
-        [self.unsentMessagesViewHandler setup:[YapDatabase viewName:DatabaseViewNamesUnsentGroupMessagesViewName] groups:groups];
+        NSString *viewName = [YapDatabaseConstants extensionName:DatabaseExtensionNameUnsentGroupMessagesViewName];
+        [self.unsentMessagesViewHandler setup:viewName groups:groups];
         
         OTRXMPPRoomYapStorage *storage = [[OTRXMPPRoomYapStorage alloc] initWithDatabaseConnection:self.databaseConnection];
         room = [[XMPPRoom alloc] initWithRoomStorage:storage jid:jid];

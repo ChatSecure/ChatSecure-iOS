@@ -13,11 +13,9 @@
 #import "OTRMediaServer.h"
 #import "OTRMediaFileManager.h"
 
-extern NSString *const OTRYapDatabaseRelationshipName;
-extern NSString *const OTRYapDatabseMessageIdSecondaryIndex;
-extern NSString *const OTRYapDatabseRoomOccupantJIdSecondaryIndex;
-extern NSString *const OTRYapDatabseSecondaryIndexExtension;
-extern NSString *const OTRYapDatabaseUnreadMessageSecondaryIndex;
+extern NSString *const OTRYapDatabseMessageIdSecondaryIndexColumnName;
+extern NSString *const OTRYapDatabseRoomOccupantJIdSecondaryIndexColumnName;
+extern NSString *const OTRYapDatabaseUnreadMessageSecondaryIndexColumnName;
 
 @interface OTRDatabaseManager : NSObject
 
