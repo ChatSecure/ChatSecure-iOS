@@ -176,7 +176,10 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
     NSMutableArray *accounts = [NSMutableArray array];
     NSArray *allAccountKeys = [transaction allKeysInCollection:[OTRAccount collection]];
     [allAccountKeys enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        [accounts addObject:[[transaction objectForKey:obj inCollection:[OTRAccount collection]]copy]];
+        id object = [transaction objectForKey:obj inCollection:[OTRAccount collection]];
+        if (object && [object isKindOfClass:[OTRAccount class]]) {
+            [accounts addObject:[object copy]];
+        }
     }];
     
     return accounts;

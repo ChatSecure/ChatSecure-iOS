@@ -9,12 +9,13 @@
 #import "OTRGoolgeOAuthLoginHandler.h"
 #import "OTRGoogleOAuthXMPPAccount.h"
 #import "OTROAuthRefresher.h"
+#import "OTRXMPPLoginHandler.h"
+#import "OTRXMPPManager.h"
 
 @implementation OTRGoolgeOAuthLoginHandler
 
 - (void)performActionWithValidForm:(XLFormDescriptor *)form account:(OTROAuthXMPPAccount *)account progress:(void (^)(NSInteger progress, NSString *summaryString))progress completion:(void (^)(OTRAccount * account, NSError *error))completion
 {
-    account = (OTROAuthXMPPAccount *)[self moveValues:form intoAccount:account];
     [OTROAuthRefresher refreshAccount:account completion:^(id token, NSError *error) {
         if (!error) {
             account.accountSpecificToken = token;
@@ -24,6 +25,13 @@
             completion(account, error);
         }
     }];
+}
+
+// Override superclass to prevent password clash
+- (void) finishConnectingWithForm:(XLFormDescriptor *)form account:(OTRXMPPAccount *)account {
+    [self prepareForXMPPConnectionFrom:form account:account];
+    NSString *password = account.password;
+    [self.xmppManager connectWithPassword:password userInitiated:YES];
 }
 
 @end

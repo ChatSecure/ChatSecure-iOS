@@ -209,7 +209,10 @@ const struct OTRBuddyAttributes OTRBuddyAttributes = {
     [[transaction ext:extensionName] enumerateEdgesWithName:edgeName destinationKey:accountUniqueId collection:[OTRAccount collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
         //Some how we're getting OTRXMPPPresensceSubscritionreuest
         OTRBuddy * buddy = [transaction objectForKey:edge.sourceKey inCollection:edge.sourceCollection];
-        if ([buddy.username isEqualToString:username]) {
+        // Checking buddy class is a hotfix for issue #472
+        if (buddy &&
+            [buddy isKindOfClass:[OTRBuddy class]] &&
+            [buddy.username isEqualToString:username]) {
             *stop = YES;
             finalBuddy = buddy;
         }

@@ -91,13 +91,18 @@
     } else {
         account.rememberPassword = YES;
     }
+    
     NSString *password = [[form formRowWithTag:kOTRXLFormPasswordTextFieldTag] value];
+    
     if (password && password.length > 0) {
         self.password = password;
-    } else {
+    } else if (account.password.length == 0) {
         // No password in field, generate strong password for user
         self.password = [OTRPasswordGenerator passwordWithLength:20];
+    } else {
+        self.password = account.password;
     }
+
     
     NSNumber *autologin = [[form formRowWithTag:kOTRXLFormLoginAutomaticallySwitchTag] value];
     if (autologin) {

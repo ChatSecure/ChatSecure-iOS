@@ -114,12 +114,11 @@
             if (!error) {
                 OTRGoogleOAuthXMPPAccount *googleAccount = [[OTRGoogleOAuthXMPPAccount alloc] initWithAccountType:OTRAccountTypeGoogleTalk];
                 googleAccount.username = auth.userEmail;
+                googleAccount.oAuthTokenDictionary = auth.parameters;
                 
                 [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
                     [googleAccount saveWithTransaction:transaction];
                 }];
-                
-                googleAccount.oAuthTokenDictionary = auth.parameters;
                 
                 OTRBaseLoginViewController *loginViewController = [[OTRBaseLoginViewController alloc] initWithForm:[OTRXLFormCreator formForAccount:googleAccount] style:UITableViewStyleGrouped];
                 loginViewController.account = googleAccount;
