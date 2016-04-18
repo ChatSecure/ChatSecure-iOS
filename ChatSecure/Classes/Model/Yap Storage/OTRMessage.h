@@ -23,15 +23,6 @@ extern const struct OTRMessageAttributes {
     __unsafe_unretained NSString *mediaItem;
 } OTRMessageAttributes;
 
-extern const struct OTRMessageRelationships {
-	__unsafe_unretained NSString *buddyUniqueId;
-} OTRMessageRelationships;
-
-extern const struct OTRMessageEdges {
-	__unsafe_unretained NSString *buddy;
-    __unsafe_unretained NSString *media;
-} OTRMessageEdges;
-
 @protocol OTRMessageProtocol <NSObject>
 @required
 

@@ -29,15 +29,6 @@ const struct OTRMessageAttributes OTRMessageAttributes = {
     .mediaItem = @"mediaItem"
 };
 
-const struct OTRMessageRelationships OTRMessageRelationships = {
-	.buddyUniqueId = @"buddyUniqueId"
-};
-
-const struct OTRMessageEdges OTRMessageEdges = {
-	.buddy = @"buddy",
-    .media = @"media"
-};
-
 
 @implementation OTRMessage
 
@@ -58,7 +49,8 @@ const struct OTRMessageEdges OTRMessageEdges = {
 {
     NSArray *edges = nil;
     if (self.buddyUniqueId) {
-        YapDatabaseRelationshipEdge *buddyEdge = [YapDatabaseRelationshipEdge edgeWithName:OTRMessageEdges.buddy
+        NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameMessageBuddyEdgeName];
+        YapDatabaseRelationshipEdge *buddyEdge = [YapDatabaseRelationshipEdge edgeWithName:edgeName
                                                                             destinationKey:self.buddyUniqueId
                                                                                 collection:[OTRBuddy collection]
                                                                            nodeDeleteRules:YDB_DeleteSourceIfDestinationDeleted];
@@ -67,7 +59,8 @@ const struct OTRMessageEdges OTRMessageEdges = {
     }
     
     if (self.mediaItemUniqueId) {
-        YapDatabaseRelationshipEdge *mediaEdge = [YapDatabaseRelationshipEdge edgeWithName:OTRMessageEdges.media
+        NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameMessageMediaEdgeName];
+        YapDatabaseRelationshipEdge *mediaEdge = [YapDatabaseRelationshipEdge edgeWithName:edgeName
                                                                             destinationKey:self.mediaItemUniqueId
                                                                                 collection:[OTRMediaItem collection]
                                                                            nodeDeleteRules:YDB_DeleteDestinationIfSourceDeleted | YDB_NotifyIfSourceDeleted];
@@ -141,7 +134,8 @@ const struct OTRMessageEdges OTRMessageEdges = {
 + (void)deleteAllMessagesForBuddyId:(NSString *)uniqueBuddyId transaction:(YapDatabaseReadWriteTransaction*)transaction
 {
     NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
-    [[transaction ext:extensionName] enumerateEdgesWithName:OTRMessageEdges.buddy destinationKey:uniqueBuddyId collection:[OTRBuddy collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
+    NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameMessageBuddyEdgeName];
+    [[transaction ext:extensionName] enumerateEdgesWithName:edgeName destinationKey:uniqueBuddyId collection:[OTRBuddy collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
         [transaction removeObjectForKey:edge.sourceKey inCollection:edge.sourceCollection];
     }];
     //Update Last message date for sorting and grouping

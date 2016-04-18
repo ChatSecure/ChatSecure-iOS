@@ -31,11 +31,15 @@ import Foundation
 @objc public enum RelationshipEdgeName: Int {
     case BuddyAccountEdgeName
     case SubscriptionRequestAccountEdgeName
+    case MessageBuddyEdgeName
+    case MessageMediaEdgeName
     
     public func name() -> String {
         switch self {
             case BuddyAccountEdgeName: return "account"
             case SubscriptionRequestAccountEdgeName: return "OTRXMPPPresenceSubscriptionRequestEdges.account"
+            case MessageBuddyEdgeName: return "buddy"
+            case .MessageMediaEdgeName: return "media"
         }
     }
 }

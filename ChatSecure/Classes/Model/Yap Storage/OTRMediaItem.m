@@ -27,7 +27,8 @@
 - (void)touchParentMessageWithTransaction:(YapDatabaseReadWriteTransaction *)transaction
 {
     NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
-    [[transaction ext:extensionName] enumerateEdgesWithName:OTRMessageEdges.media destinationKey:self.uniqueId collection:[[self class] collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
+    NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameMessageMediaEdgeName];
+    [[transaction ext:extensionName] enumerateEdgesWithName:edgeName destinationKey:self.uniqueId collection:[[self class] collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
         [transaction touchObjectForKey:edge.sourceKey inCollection:edge.sourceCollection];
     }];
 }
@@ -43,7 +44,8 @@
 {
     __block OTRMessage *message = nil;
     NSString *extensionName = [YapDatabaseConstants extensionName:DatabaseExtensionNameRelationshipExtensionName];
-    [[readTransaction ext:extensionName] enumerateEdgesWithName:OTRMessageEdges.media destinationKey:self.uniqueId collection:[[self class] collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
+    NSString *edgeName = [YapDatabaseConstants edgeName:RelationshipEdgeNameMessageMediaEdgeName];
+    [[readTransaction ext:extensionName] enumerateEdgesWithName:edgeName destinationKey:self.uniqueId collection:[[self class] collection] usingBlock:^(YapDatabaseRelationshipEdge *edge, BOOL *stop) {
         message = [OTRMessage fetchObjectWithUniqueID:edge.sourceKey transaction:readTransaction];
         *stop = YES;
     }];
