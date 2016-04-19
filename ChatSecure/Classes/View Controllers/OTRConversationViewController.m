@@ -120,6 +120,10 @@ static CGFloat kOTRConversationCellHeight = 80.0;
                                                  name:YapDatabaseModifiedNotification
                                                object:nil];
     
+    NSString *notificationName = [YapDatabaseConstants notificationName:DatbaseNotificationNameRegisteredExtension];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(extensionRegisteredNotification:) name:notificationName object:nil];
+    
     ////// KVO //////
     __weak typeof(self)weakSelf = self;
     [self.KVOController observe:[OTRProtocolManager sharedInstance] keyPath:NSStringFromSelector(@selector(numberOfConnectedProtocols)) options:NSKeyValueObservingOptionNew block:^(id observer, id object, NSDictionary *change) {
@@ -134,6 +138,16 @@ static CGFloat kOTRConversationCellHeight = 80.0;
             }
         });
     }];
+}
+
+// This helps solve a race condition when setting up the database asynchronously
+- (void) extensionRegisteredNotification:(NSNotification*)notification {
+    
+    NSString *key = [YapDatabaseConstants notificationKeyName:DatabaseNotificationKeyExtensionName];
+    NSString *name = notification.userInfo[key];
+    if ([name isEqualToString:OTRConversationDatabaseViewExtensionName]) {
+        [self.tableView reloadData];
+    }
 }
 
 - (void) showOnboardingIfNeeded {
@@ -233,8 +247,10 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     
     __block id thread = nil;
     [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        
-        thread = [[transaction extension:OTRConversationDatabaseViewExtensionName] objectAtIndexPath:indexPath withMappings:self.mappings];
+        YapDatabaseViewTransaction *ext = [transaction ext:OTRConversationDatabaseViewExtensionName];
+        NSParameterAssert(ext != nil);
+        thread = [ext objectAtIndexPath:indexPath withMappings:self.mappings];
+        NSParameterAssert(thread != nil);
     }];
     
     return thread;
@@ -391,7 +407,10 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     NSArray *sectionChanges = nil;
     NSArray *rowChanges = nil;
     
-    [[self.databaseConnection ext:OTRConversationDatabaseViewExtensionName] getSectionChanges:&sectionChanges
+    YapDatabaseViewConnection *ext = [self.databaseConnection ext:OTRConversationDatabaseViewExtensionName];
+    NSParameterAssert(ext != nil);
+    
+    [ext getSectionChanges:&sectionChanges
                                                                                    rowChanges:&rowChanges
                                                                              forNotifications:notifications
                                                                                  withMappings:self.mappings];

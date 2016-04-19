@@ -85,7 +85,7 @@ NSString *OTRPushAccountGroup = @"Account";
                                                                    versionTag:@"2"
                                                                       options:options];
     
-    return [[OTRDatabaseManager sharedInstance].database registerExtension:databaseView withName:OTRConversationDatabaseViewExtensionName];
+    return [[OTRDatabaseManager sharedInstance].database registerExtension:databaseView withName:OTRConversationDatabaseViewExtensionName sendNotification:YES];
 }
 
 
@@ -128,7 +128,7 @@ NSString *OTRPushAccountGroup = @"Account";
                                                                    versionTag:@"1"
                                                                       options:options];
     
-    return [[OTRDatabaseManager sharedInstance].database registerExtension:databaseView withName:OTRAllAccountDatabaseViewExtensionName];
+    return [[OTRDatabaseManager sharedInstance].database registerExtension:databaseView withName:OTRAllAccountDatabaseViewExtensionName sendNotification:YES];
 }
 
 + (BOOL)registerChatDatabaseView
@@ -167,7 +167,7 @@ NSString *OTRPushAccountGroup = @"Account";
                                                            versionTag:@"1"
                                                               options:options];
     
-    return [[OTRDatabaseManager sharedInstance].database registerExtension:view withName:OTRChatDatabaseViewExtensionName];
+    return [[OTRDatabaseManager sharedInstance].database registerExtension:view withName:OTRChatDatabaseViewExtensionName sendNotification:YES];
 }
 
 + (BOOL)registerBuddyNameSearchDatabaseView
@@ -197,7 +197,7 @@ NSString *OTRPushAccountGroup = @"Account";
     
     YapDatabaseFullTextSearch *fullTextSearch = [[YapDatabaseFullTextSearch alloc] initWithColumnNames:propertiesToIndex handler:searchHandler];
     
-    return [[OTRDatabaseManager sharedInstance].database registerExtension:fullTextSearch withName:OTRBuddyNameSearchDatabaseViewExtensionName];
+    return [[OTRDatabaseManager sharedInstance].database registerExtension:fullTextSearch withName:OTRBuddyNameSearchDatabaseViewExtensionName sendNotification:YES];
 }
 
 + (BOOL)registerAllBuddiesDatabaseView
@@ -256,7 +256,7 @@ NSString *OTRPushAccountGroup = @"Account";
                                                            versionTag:@"2"
                                                               options:options];
     
-    return [[OTRDatabaseManager sharedInstance].database registerExtension:view withName:OTRAllBuddiesDatabaseViewExtensionName];
+    return [[OTRDatabaseManager sharedInstance].database registerExtension:view withName:OTRAllBuddiesDatabaseViewExtensionName sendNotification:YES];
 
 }
 
@@ -296,7 +296,7 @@ NSString *OTRPushAccountGroup = @"Account";
                                                                    versionTag:@"1"
                                                                       options:options];
     
-    return [[OTRDatabaseManager sharedInstance].database registerExtension:databaseView withName:OTRAllSubscriptionRequestsViewExtensionName];
+    return [[OTRDatabaseManager sharedInstance].database registerExtension:databaseView withName:OTRAllSubscriptionRequestsViewExtensionName sendNotification:YES];
 }
 
 + (BOOL)registerUnreadMessagesView
@@ -314,7 +314,7 @@ NSString *OTRPushAccountGroup = @"Account";
                                                                                           filtering:viewFiltering];
     
     
-    return [[OTRDatabaseManager sharedInstance].database registerExtension:filteredView withName:OTRUnreadMessagesViewExtensionName];
+    return [[OTRDatabaseManager sharedInstance].database registerExtension:filteredView withName:OTRUnreadMessagesViewExtensionName sendNotification:YES];
 }
 
 @end

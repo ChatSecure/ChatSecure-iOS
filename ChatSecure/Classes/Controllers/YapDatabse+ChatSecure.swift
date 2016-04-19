@@ -87,15 +87,30 @@ public extension YapDatabase {
     
     /// The same as the normal asyncRegisterExtension except this will send out an NSNotification when registered
     public func asyncRegisterExtension(`extension`:YapDatabaseExtension, extensionName:DatabaseExtensionName, sendNotification:Bool = true, completion:((ready:Bool) -> Void)?) {
-        self.asyncRegisterExtension(`extension`, withName: extensionName.name(), completionQueue: dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), completionBlock: { (ready) -> Void in
+        self.asyncRegisterExtension(`extension`, withName: extensionName.name(), completionQueue: dispatch_get_main_queue(), completionBlock: { (ready) -> Void in
             
-            if sendNotification {
-                let name = YapDatabaseConstants.notificationName(.RegisteredExtension)
-                let userInfo = [YapDatabaseConstants.notificationKeyName(.ExtensionName):extensionName.name()]
-                NSNotificationCenter.defaultCenter().postNotificationName(name, object: self, userInfo: userInfo)
+            if ready && sendNotification {
+                self.sendExtensionRegisteredNotification(extensionName.name())
             }
             
             completion?(ready: ready)
         })
+    }
+    
+    public func registerExtension(`extension`:YapDatabaseExtension, withName name:String, sendNotification:Bool = true) -> Bool {
+        let success = self.registerExtension(`extension`, withName: name, connection: nil)
+        if success && sendNotification {
+            self.sendExtensionRegisteredNotification(name)
+        }
+        return success
+    }
+    
+    private func sendExtensionRegisteredNotification(extensionName: String) {
+        dispatch_async(dispatch_get_main_queue()) {
+            let name = YapDatabaseConstants.notificationName(.RegisteredExtension)
+            let userInfo = [YapDatabaseConstants.notificationKeyName(.ExtensionName):extensionName]
+            NSNotificationCenter.defaultCenter().postNotificationName(name, object: self, userInfo: userInfo)
+        }
+
     }
 }
