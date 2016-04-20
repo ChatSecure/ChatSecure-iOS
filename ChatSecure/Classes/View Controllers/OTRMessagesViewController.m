@@ -605,22 +605,15 @@ typedef NS_ENUM(int, OTRDropDownType) {
     self.buttonDropdownView.tag = tag;
     
     CGFloat height = [OTRButtonView heightForTitle:title width:self.view.bounds.size.width buttons:buttons];
-    //Use double navigationController to get to real navbar. Better fix would be to put this in a call back or delegate this to something else
-    UINavigationBar *navBar = [[[self navigationController] navigationController] navigationBar];
-    if (!navBar) {
-        // On iPhone this returns something but it's not in the correct view hierarchy but is on ipad
-        navBar = [[self navigationController] navigationBar];
-    }
     
     [self.view addSubview:self.buttonDropdownView];
     
     [self.buttonDropdownView autoSetDimension:ALDimensionHeight toSize:height];
     [self.buttonDropdownView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
     [self.buttonDropdownView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
-    self.buttonDropdownView.topLayoutConstraint = [self.buttonDropdownView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:navBar withOffset:height*-1];
+    self.buttonDropdownView.topLayoutConstraint = [self.buttonDropdownView autoPinToTopLayoutGuideOfViewController:self withInset:height*-1];
     
     [self.buttonDropdownView layoutIfNeeded];
-    //[self updateViewConstraints];
     
     [UIView animateWithDuration:duration animations:^{
         self.buttonDropdownView.topLayoutConstraint.constant = 0.0;
