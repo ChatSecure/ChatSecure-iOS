@@ -12,8 +12,9 @@
 
 @interface OTRButtonView : UIView
 
-- (id)initWithTitle:(NSString *)title buttons:(NSArray *)buttons;
+@property (nonnull, strong) NSLayoutConstraint *topLayoutConstraint;
 
+- (id)initWithTitle:(NSString *)title buttons:(NSArray *)buttons;
 
 + (CGFloat )heightForTitle:(NSString *)title width:(CGFloat)width buttons:(NSArray *)buttons;
 

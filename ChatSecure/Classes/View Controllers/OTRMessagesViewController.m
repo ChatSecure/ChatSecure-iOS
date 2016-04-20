@@ -47,6 +47,7 @@
 #import "OTRDataHandler.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 @import YapDatabase.YapDatabaseView;
+@import PureLayout;
 
 @import AVFoundation;
 @import MediaPlayer;
@@ -604,16 +605,26 @@ typedef NS_ENUM(int, OTRDropDownType) {
     self.buttonDropdownView.tag = tag;
     
     CGFloat height = [OTRButtonView heightForTitle:title width:self.view.bounds.size.width buttons:buttons];
-    
     //Use double navigationController to get to real navbar. Better fix would be to put this in a call back or delegate this to something else
-    self.buttonDropdownView.frame = CGRectMake(0, self.navigationController.navigationController.navigationBar.frame.size.height+self.navigationController.navigationController.navigationBar.frame.origin.y-height, self.view.bounds.size.width, height);
+    UINavigationBar *navBar = [[[self navigationController] navigationController] navigationBar];
+    if (!navBar) {
+        // On iPhone this returns something but it's not in the correct view hierarchy but is on ipad
+        navBar = [[self navigationController] navigationBar];
+    }
     
     [self.view addSubview:self.buttonDropdownView];
     
+    [self.buttonDropdownView autoSetDimension:ALDimensionHeight toSize:height];
+    [self.buttonDropdownView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+    [self.buttonDropdownView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+    self.buttonDropdownView.topLayoutConstraint = [self.buttonDropdownView autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:navBar withOffset:height*-1];
+    
+    [self.buttonDropdownView layoutIfNeeded];
+    //[self updateViewConstraints];
+    
     [UIView animateWithDuration:duration animations:^{
-        CGRect frame = self.buttonDropdownView.frame;
-        frame.origin.y = self.navigationController.navigationController.navigationBar.frame.size.height+self.navigationController.navigationController.navigationBar.frame.origin.y;
-        self.buttonDropdownView.frame = frame;
+        self.buttonDropdownView.topLayoutConstraint.constant = 0.0;
+        [self.buttonDropdownView layoutIfNeeded];
     } completion:nil];
     
 }
@@ -632,10 +643,9 @@ typedef NS_ENUM(int, OTRDropDownType) {
         }
         
         [UIView animateWithDuration:duration animations:^{
-            CGRect frame = self.buttonDropdownView.frame;
-            CGFloat navBarBottom = self.navigationController.navigationBar.frame.size.height+self.navigationController.navigationBar.frame.origin.y;
-            frame.origin.y = navBarBottom - frame.size.height;
-            self.buttonDropdownView.frame = frame;
+            CGFloat height = self.buttonDropdownView.frame.size.height;
+            self.buttonDropdownView.topLayoutConstraint.constant = height*-1;
+            [self.buttonDropdownView layoutIfNeeded];
             
         } completion:^(BOOL finished) {
             if (finished) {
