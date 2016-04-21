@@ -31,7 +31,6 @@ extern NSString *const kOTRProtocolLoginFailSSLCertificateDataKey;
 extern NSString *const kOTRNotificationErrorKey;
 extern NSString *const kOTRProtocolLoginUserInitiated;
 
-extern NSString *const kOTRGoogleTalkDomain;
 extern NSString *const kOTRProtocolTypeXMPP;
 extern NSString *const kOTRProtocolTypeAIM;
 

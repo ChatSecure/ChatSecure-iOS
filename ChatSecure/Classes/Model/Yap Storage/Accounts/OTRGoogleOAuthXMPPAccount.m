@@ -21,15 +21,6 @@ NSString *const kOTRExpiresInKey      = @"expires_in";
 
 @implementation OTRGoogleOAuthXMPPAccount
 
-- (id)init
-{
-    if(self = [super init])
-    {
-        self.domain = kOTRGoogleTalkDomain;
-    }
-    return self;
-}
-
 - (UIImage *)accountImage
 {
     return [UIImage imageNamed:OTRGoogleTalkImageName inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];

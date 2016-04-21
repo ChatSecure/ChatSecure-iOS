@@ -30,7 +30,6 @@ NSString *const kOTRProtocolLoginFailSSLCertificateDataKey = @"kOTRProtocolLogin
 NSString *const kOTRNotificationErrorKey                   = @"kOTRNotificationErrorKey";
 NSString *const kOTRProtocolLoginUserInitiated             = @"kOTRProtocolLoginUserInitiated";
 
-NSString *const kOTRGoogleTalkDomain = @"talk.google.com";
 NSString *const kOTRProtocolTypeXMPP = @"xmpp";
 NSString *const kOTRProtocolTypeAIM  = @"prpl-oscar";
 
