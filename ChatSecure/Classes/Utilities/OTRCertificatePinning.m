@@ -288,41 +288,6 @@ static id AFPublicKeyForCertificate(NSData *certificate) {
     return nil;
 }
 
-+ (NSDictionary *)bundledCertHashes
-{
-    static NSDictionary *bundledCertHashes = nil;
-    
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        bundledCertHashes = @{@"talk.google.com": @"83 56 59 a4 b0 02 c0 4b 37 91 70 59 70 e5 f7 95 ee 66 a1 70",
-                              @"chat.facebook.com": @"21 f1 6b d6 61 95 d5 b4 3a 06 b4 e9 a0 50 7e 15 30 56 2e d3"};
-    });
-    return bundledCertHashes;
-}
-
-+ (void)loadBundledCertificatesToKeychain
-{
-    NSBundle *bundle = [NSBundle bundleForClass:[self class]];
-    NSArray *paths = [bundle pathsForResourcesOfType:@"cer" inDirectory:@"."];
-    
-    NSMutableDictionary *certificates = [NSMutableDictionary dictionaryWithCapacity:[paths count]];
-    for (NSString *path in paths) {
-        NSData *certificateData = [NSData dataWithContentsOfFile:path];
-        [certificates setObject:certificateData forKey:[[path lastPathComponent] stringByDeletingPathExtension]];
-    }
-    
-    NSDictionary *bundledCertificatesDictionary = [NSDictionary dictionaryWithDictionary:certificates];
-    
-    [bundledCertificatesDictionary enumerateKeysAndObjectsUsingBlock:^(NSString *domain, NSData *bundledCertData, BOOL *stop) {
-        
-        NSString *hash = [self sha256FingerprintForCertificate:[self certForData:bundledCertData]];
-        if ([hash isEqualToString:[self bundledCertHashes][domain]]) {
-            [self addCertificate:[self certForData:bundledCertData] withHostName:domain];
-        }
-    }];
-    
-}
-
 
 
 /**

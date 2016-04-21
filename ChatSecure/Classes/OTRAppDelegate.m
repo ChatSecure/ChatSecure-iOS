@@ -87,8 +87,6 @@
     _theme = [[[self themeClass] alloc] init];
     [self.theme setupGlobalTheme];
     
-    [OTRCertificatePinning loadBundledCertificatesToKeychain];
-    
     [SSKeychain setAccessibilityType:kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly];
     
     UIViewController *rootViewController = nil;

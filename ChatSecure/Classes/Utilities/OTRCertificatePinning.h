@@ -35,8 +35,6 @@
 + (void)deleteAllCertificatesWithHostName:(NSString *)hostname;
 + (void)deleteCertificate:(SecCertificateRef)cert withHostName:(NSString *)hostname;
 
-+ (void)loadBundledCertificatesToKeychain;
-
 + (id)publicKeyWithCertData:(NSData *)certData;
 
 @end
