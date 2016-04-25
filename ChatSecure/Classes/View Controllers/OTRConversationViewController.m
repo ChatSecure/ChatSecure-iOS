@@ -96,24 +96,12 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     self.databaseConnection.name = NSStringFromClass([self class]);
     [self.databaseConnection beginLongLivedReadTransaction];
     
-    self.mappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[OTRConversationGroup]
-                                                               view:OTRConversationDatabaseViewExtensionName];
-    
-    self.subscriptionRequestsMappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[OTRAllPresenceSubscriptionRequestGroup]
-                                                                                   view:OTRAllSubscriptionRequestsViewExtensionName];
-    self.unreadMessagesMappings = [[YapDatabaseViewMappings alloc] initWithGroupFilterBlock:^BOOL(NSString *group, YapDatabaseReadTransaction *transaction) {
-        return YES;
-    } sortBlock:^NSComparisonResult(NSString *group1, NSString *group2, YapDatabaseReadTransaction *transaction) {
-        return NSOrderedSame;
-    } view:OTRUnreadMessagesViewExtensionName];
-    
-    
-        
-    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        [self.mappings updateWithTransaction:transaction];
-        [self.subscriptionRequestsMappings updateWithTransaction:transaction];
-        [self.unreadMessagesMappings updateWithTransaction:transaction];
-    }];
+    [self setupMappings:YES];
+    [self.tableView reloadData];
+    [self setupSubscriptionMappings:YES];
+    [self updateInbox];
+    [self setupUnreadMappings:YES];
+    [self updateTitle];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(yapDatabaseModified:)
@@ -146,8 +134,56 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     NSString *key = [YapDatabaseConstants notificationKeyName:DatabaseNotificationKeyExtensionName];
     NSString *name = notification.userInfo[key];
     if ([name isEqualToString:OTRConversationDatabaseViewExtensionName]) {
+        [self setupMappings:YES];
         [self.tableView reloadData];
+    } else if ([name isEqualToString:OTRAllSubscriptionRequestsViewExtensionName]) {
+        [self setupSubscriptionMappings:YES];
+        [self updateInbox];
+    } else if ([name isEqualToString:OTRUnreadMessagesViewExtensionName]) {
+        [self setupUnreadMappings:YES];
+        [self updateTitle];
     }
+}
+
+- (void) setupMappings:(BOOL)update {
+    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        
+        if (!self.mappings && [transaction ext:OTRConversationDatabaseViewExtensionName]) {
+            self.mappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[OTRConversationGroup]
+                                                                       view:OTRConversationDatabaseViewExtensionName];
+            if (update) {
+                [self.mappings updateWithTransaction:transaction];
+            }
+        }
+    }];
+}
+
+- (void) setupSubscriptionMappings:(BOOL)update {
+    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        if (!self.subscriptionRequestsMappings && [transaction ext:OTRAllSubscriptionRequestsViewExtensionName]) {
+            self.subscriptionRequestsMappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[OTRAllPresenceSubscriptionRequestGroup]
+                                                                                           view:OTRAllSubscriptionRequestsViewExtensionName];
+            if (update){
+                [self.subscriptionRequestsMappings updateWithTransaction:transaction];
+            }
+        }
+    }];
+}
+
+- (void) setupUnreadMappings:(BOOL)update {
+    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        if (!self.unreadMessagesMappings && [transaction ext:OTRUnreadMessagesViewExtensionName]) {
+            
+            self.unreadMessagesMappings = [[YapDatabaseViewMappings alloc] initWithGroupFilterBlock:^BOOL(NSString *group, YapDatabaseReadTransaction *transaction) {
+                return YES;
+            } sortBlock:^NSComparisonResult(NSString *group1, NSString *group2, YapDatabaseReadTransaction *transaction) {
+                return NSOrderedSame;
+            } view:OTRUnreadMessagesViewExtensionName];
+            if (update) {
+                [self.unreadMessagesMappings updateWithTransaction:transaction];
+            }
+        }
+    }];
 }
 
 - (void) showOnboardingIfNeeded {
@@ -407,20 +443,37 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     NSArray *sectionChanges = nil;
     NSArray *rowChanges = nil;
     
-    YapDatabaseViewConnection *ext = [self.databaseConnection ext:OTRConversationDatabaseViewExtensionName];
-    NSParameterAssert(ext != nil);
-    
-    [ext getSectionChanges:&sectionChanges
-                                                                                   rowChanges:&rowChanges
-                                                                             forNotifications:notifications
-                                                                                 withMappings:self.mappings];
+    YapDatabaseViewConnection *conversationExt = [self.databaseConnection ext:OTRConversationDatabaseViewExtensionName];
+    NSParameterAssert(conversationExt != nil);
+    if (conversationExt) {
+        if (!self.mappings) {
+            [self setupMappings:YES];
+            [self.tableView reloadData];
+        } else {
+            [conversationExt getSectionChanges:&sectionChanges
+                                    rowChanges:&rowChanges
+                              forNotifications:notifications
+                                  withMappings:self.mappings];
+        }
+    }
     
     NSArray *subscriptionSectionChanges = nil;
     NSArray *subscriptionRowChanges = nil;
-    [[self.databaseConnection ext:OTRAllSubscriptionRequestsViewExtensionName] getSectionChanges:&subscriptionSectionChanges
-                                                                                      rowChanges:&subscriptionRowChanges
-                                                                                forNotifications:notifications
-                                                                                    withMappings:self.subscriptionRequestsMappings];
+    
+    YapDatabaseViewConnection *subExt = [self.databaseConnection ext:OTRAllSubscriptionRequestsViewExtensionName];
+    NSParameterAssert(subExt != nil);
+    if (subExt) {
+        if (!self.subscriptionRequestsMappings) {
+            [self setupSubscriptionMappings:YES];
+            [self updateInbox];
+        } else {
+            [subExt getSectionChanges:&subscriptionSectionChanges
+                           rowChanges:&subscriptionRowChanges
+                     forNotifications:notifications
+                         withMappings:self.subscriptionRequestsMappings];
+        }
+    }
+    
     
     if ([subscriptionSectionChanges count] || [subscriptionRowChanges count]) {
         [self updateInbox];
@@ -429,10 +482,20 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     NSArray *unreadMessagesSectionChanges = nil;
     NSArray *unreadMessagesRowChanges = nil;
     
-    [[self.databaseConnection ext:OTRUnreadMessagesViewExtensionName] getSectionChanges:&unreadMessagesSectionChanges
-                                                                             rowChanges:&unreadMessagesRowChanges
-                                                                       forNotifications:notifications
-                                                                           withMappings:self.unreadMessagesMappings];
+    YapDatabaseViewConnection *unreadExt = [self.databaseConnection ext:OTRUnreadMessagesViewExtensionName];
+    NSParameterAssert(unreadExt != nil);
+    if (unreadExt) {
+        if (!self.unreadMessagesMappings) {
+            [self setupUnreadMappings:YES];
+            [self updateTitle];
+        } else {
+            [unreadExt getSectionChanges:&unreadMessagesSectionChanges
+                              rowChanges:&unreadMessagesRowChanges
+                        forNotifications:notifications
+                            withMappings:self.unreadMessagesMappings];
+        }
+        
+    }
     
     if ([unreadMessagesSectionChanges count] || [unreadMessagesRowChanges count]) {
         [self updateTitle];
