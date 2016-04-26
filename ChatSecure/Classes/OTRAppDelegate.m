@@ -147,7 +147,7 @@
     [Appirater setOpenInAppStore:NO];
     [Appirater appLaunched:YES];
     
-    [self autoLogin];
+    [self autoLoginFromBackground:NO];
     
     [self removeFacebookAccounts];
         
@@ -330,10 +330,12 @@
     }
 }
 
-- (void)autoLogin
+/** Doesn't stop autoLogin if previous crash when it's a background launch */
+- (void)autoLoginFromBackground:(BOOL)fromBackground
 {
     //Auto Login
-    if (![BITHockeyManager sharedHockeyManager].crashManager.didCrashInLastSession) {
+    if (![BITHockeyManager sharedHockeyManager].crashManager.didCrashInLastSession
+        || fromBackground) {
         [[OTRProtocolManager sharedInstance] loginAccounts:[OTRAccountsManager allAutoLoginAccounts]];
     }
 }
@@ -341,7 +343,7 @@
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     [Appirater appEnteredForeground:YES];
-    [self autoLogin];
+    [self autoLoginFromBackground:NO];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
@@ -391,7 +393,7 @@
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
-    [self autoLogin];
+    [self autoLoginFromBackground:YES];
 
     [self.pushController receiveRemoteNotification:userInfo completion:^(OTRBuddy * _Nullable buddy, NSError * _Nullable error) {
         [application showLocalNotificationForKnockFrom:buddy];
