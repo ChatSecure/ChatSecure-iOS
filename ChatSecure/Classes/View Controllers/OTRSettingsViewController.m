@@ -436,10 +436,8 @@ static NSString *const circleImageName = @"31-circle-plus-large.png";
     
     UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:[self indexPathForSetting:shareSetting]];
     
-    if( SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
-        activityViewController.popoverPresentationController.sourceView = cell;
-        activityViewController.popoverPresentationController.sourceRect = cell.bounds;
-    }
+    activityViewController.popoverPresentationController.sourceView = cell;
+    activityViewController.popoverPresentationController.sourceRect = cell.bounds;
     
     [self presentViewController:activityViewController animated:YES completion:nil];
 }

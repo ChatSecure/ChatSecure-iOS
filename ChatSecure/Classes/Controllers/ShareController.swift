@@ -16,12 +16,13 @@ public class ShareController: NSObject {
             let qrCodeActivity = OTRQRCodeActivity()
             let activityViewController = UIActivityViewController(activityItems: [url], applicationActivities: [qrCodeActivity])
             activityViewController.excludedActivityTypes = [UIActivityTypePrint, UIActivityTypeSaveToCameraRoll, UIActivityTypeAddToReadingList]
-            if let cell = sender as? UITableViewCell {
-                if let ppc = activityViewController.popoverPresentationController {
-                    ppc.sourceView = cell
-                    ppc.sourceRect = cell.bounds
+            if let ppc = activityViewController.popoverPresentationController {
+                if let view = sender as? UIView {
+                    ppc.sourceView = view
+                    ppc.sourceRect = view.bounds
                 }
             }
+            
             viewController.presentViewController(activityViewController, animated: true, completion: nil)
         })
         
