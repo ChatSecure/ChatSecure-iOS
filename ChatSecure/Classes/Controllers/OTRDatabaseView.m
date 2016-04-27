@@ -20,7 +20,6 @@
 NSString *OTRConversationGroup = @"Conversation";
 NSString *OTRConversationDatabaseViewExtensionName = @"OTRConversationDatabaseViewExtensionName";
 NSString *OTRChatDatabaseViewExtensionName = @"OTRChatDatabaseViewExtensionName";
-NSString *OTRBuddyNameSearchDatabaseViewExtensionName = @"OTRBuddyBuddyNameSearchDatabaseViewExtensionName";
 NSString *OTRAllBuddiesDatabaseViewExtensionName = @"OTRAllBuddiesDatabaseViewExtensionName";
 NSString *OTRAllSubscriptionRequestsViewExtensionName = @"AllSubscriptionRequestsViewExtensionName";
 NSString *OTRAllPushAccountInfoViewExtensionName = @"OTRAllPushAccountInfoViewExtensionName";
@@ -168,36 +167,6 @@ NSString *OTRPushAccountGroup = @"Account";
                                                               options:options];
     
     return [[OTRDatabaseManager sharedInstance].database registerExtension:view withName:OTRChatDatabaseViewExtensionName sendNotification:YES];
-}
-
-+ (BOOL)registerBuddyNameSearchDatabaseView
-{
-    if ([[OTRDatabaseManager sharedInstance].database registeredExtension:OTRBuddyNameSearchDatabaseViewExtensionName]) {
-        return YES;
-    }
-    
-    NSArray *propertiesToIndex = @[OTRBuddyAttributes.username,OTRBuddyAttributes.displayName];
-    
-    YapDatabaseFullTextSearchHandler *searchHandler = [YapDatabaseFullTextSearchHandler withObjectBlock:^(NSMutableDictionary *dict, NSString *collection, NSString *key, id object) {
-        if ([object isKindOfClass:[OTRBuddy class]])
-        {
-            OTRBuddy *buddy = (OTRBuddy *)object;
-            
-            if([buddy.username length]) {
-                [dict setObject:buddy.username forKey:OTRBuddyAttributes.username];
-            }
-            
-            if ([buddy.displayName length]) {
-                [dict setObject:buddy.displayName forKey:OTRBuddyAttributes.displayName];
-            }
-            
-            
-        }
-    }];
-    
-    YapDatabaseFullTextSearch *fullTextSearch = [[YapDatabaseFullTextSearch alloc] initWithColumnNames:propertiesToIndex handler:searchHandler];
-    
-    return [[OTRDatabaseManager sharedInstance].database registerExtension:fullTextSearch withName:OTRBuddyNameSearchDatabaseViewExtensionName sendNotification:YES];
 }
 
 + (BOOL)registerAllBuddiesDatabaseView

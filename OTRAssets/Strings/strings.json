@@ -1010,5 +1010,13 @@
     "SOMEONE_STRING": {
         "comment": "A placeholder for a buddy's username like Someone wants to chat.",
         "string": "Someone"
+    },
+    "GROUP_NAME_STRING": {
+        "comment": "The title for the view to enter a group chat name or label",
+        "string": "Group Name"
+    },
+    "ENTER_GROUP_NAME_STRING": {
+        "comment": "The placeholder text for the text field to enter a group chat name or label",
+        "string": "Enter a group name"
     }
 }

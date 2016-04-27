@@ -78,7 +78,7 @@
         
         
         //Update view mappings with this room
-        NSArray *groups = self.unsentMessagesViewHandler.groups;
+        NSArray *groups = [self.unsentMessagesViewHandler groupsArray];
         if (!groups) {
             groups = [[NSArray alloc] init];
         }
