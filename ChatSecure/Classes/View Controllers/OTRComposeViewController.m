@@ -282,8 +282,12 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
     NSNumber *curveValue = userInfo[UIKeyboardAnimationCurveUserInfoKey];
     UIViewAnimationCurve animationCurve = curveValue.intValue;
     
-    CGFloat height = keyboardEndFrame.size.height;
-    if ([notification.name isEqualToString:UIKeyboardWillHideNotification]) {
+    CGFloat viewHeight = CGRectGetMaxY(self.view.frame);
+    CGFloat keyboardY = CGRectGetMinY(keyboardEndFrame);
+    
+    CGFloat height = viewHeight - keyboardY;
+    //If height is less than 0 or it's hiding set to 0
+    if ([notification.name isEqualToString:UIKeyboardWillHideNotification] || height < 0) {
         height = 0;
     }
     
