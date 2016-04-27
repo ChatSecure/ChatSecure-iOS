@@ -172,7 +172,8 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     [self.certificatePinningModule activate:self.xmppStream];
     
     self.deliveryReceipts = [[XMPPMessageDeliveryReceipts alloc] init];
-    self.deliveryReceipts.autoSendMessageDeliveryReceipts = YES;
+    // We want to check if OTR messages can be decrypted
+    self.deliveryReceipts.autoSendMessageDeliveryReceipts = NO;
     self.deliveryReceipts.autoSendMessageDeliveryRequests = YES;
     [self.deliveryReceipts activate:self.xmppStream];
 	
@@ -1069,6 +1070,17 @@ managedBuddyObjectID
     dispatch_async(dispatch_get_main_queue(), ^{
         [[NSNotificationCenter defaultCenter] postNotificationName:OTRXMPPLoginStatusNotificationName object:self userInfo:userInfo];
     });
+}
+
+// Delivery receipts
+- (void) sendDeliveryReceiptForMessage:(OTRMessage*)message {
+    [self.databaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        OTRBuddy *buddy = [OTRBuddy fetchObjectWithUniqueID:message.buddyUniqueId transaction:transaction];        
+        XMPPMessage *tempMessage = [XMPPMessage messageWithType:@"chat" elementID:message.messageId];
+        [tempMessage addAttributeWithName:@"from" stringValue:buddy.username];
+        XMPPMessage *receiptMessage = [tempMessage generateReceiptResponse];
+        [self.xmppStream sendElement:receiptMessage];
+    }];
 }
 
 @end

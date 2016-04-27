@@ -39,9 +39,11 @@
 #import "OTRLanguageManager.h"
 #import "OTRLog.h"
 #import "OTRPushTLVHandler.h"
+#import "OTRXMPPManager.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 @import AVFoundation;
+@import XMPPFramework;
 
 NSString *const OTRMessageStateDidChangeNotification = @"OTREncryptionManagerMessageStateDidChangeNotification";
 NSString *const OTRWillStartGeneratingPrivateKeyNotification = @"OTREncryptionManagerWillStartGeneratingPrivateKeyNotification";
@@ -233,13 +235,6 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     decodedMessage = [OTRUtilities stripHTML:decodedMessage];
     
     if ([decodedMessage length]) {
-        
-        //TODO This needs to be moved
-//        if ([[OTRAppDelegate appDelegate].messagesViewController otr_isVisible] && [[OTRAppDelegate appDelegate].messagesViewController.buddy.uniqueId isEqualToString:originalMessage.buddyUniqueId])
-//        {
-//            originalMessage.read = YES;
-//        }
-        
         originalMessage.text = decodedMessage;
         
         if (wasEncrypted) {
@@ -251,6 +246,11 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
             OTRBuddy *buddy = [OTRBuddy fetchObjectWithUniqueID:originalMessage.buddyUniqueId transaction:transaction];
             buddy.lastMessageDate = originalMessage.date;
             [buddy saveWithTransaction:transaction];
+            
+            // Send delivery receipt
+            OTRAccount *account = [OTRAccount fetchObjectWithUniqueID:buddy.accountUniqueId transaction:transaction];
+            OTRXMPPManager *protocol = (OTRXMPPManager*) [[OTRProtocolManager sharedInstance] protocolForAccount:account];
+            [protocol sendDeliveryReceiptForMessage:originalMessage];
         } completionBlock:^{
             [[UIApplication sharedApplication] showLocalNotification:originalMessage];
         }];

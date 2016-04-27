@@ -24,6 +24,7 @@
 @import UIKit;
 
 #import "OTRBuddy.h"
+#import "OTRMessage.h"
 #import "XMPPFramework.h"
 #import "XMPPReconnect.h"
 #import "XMPPRoster.h"
@@ -103,5 +104,8 @@ extern NSString *const OTRXMPPLoginErrorKey;
 - (void)sendInactiveChatState:(NSTimer *)timer;
 - (NSTimer *)inactiveChatStateTimerForBuddyObjectID:(NSString *)buddyUniqueId;
 - (NSTimer *)pausedChatStateTimerForBuddyObjectID:(NSString *)buddyUniqueId;
+
+// Delivery receipts
+- (void) sendDeliveryReceiptForMessage:(OTRMessage*)message;
 
 @end
