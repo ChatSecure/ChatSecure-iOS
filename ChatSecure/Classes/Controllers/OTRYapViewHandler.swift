@@ -27,6 +27,11 @@ public struct keyCollectionPair {
     }
 }
 
+private enum ViewGroups {
+    case Array([String])
+    case Block(YapDatabaseViewMappingGroupFilter, YapDatabaseViewMappingGroupSort)
+}
+
 public class OTRYapKeyCollectionHandler:NSObject {
     
     var storage = Dictionary<String, keyCollectionPair>()
@@ -47,17 +52,11 @@ public class OTRYapViewHandler: NSObject {
     
     var notificationToken:NSObjectProtocol? = nil
     public var viewName:String? = nil
-    public var groups:[String]? = nil
+    private var groups:ViewGroups? = nil
     public weak var delegate:OTRYapViewHandlerDelegateProtocol? = nil
     public let keyCollectionObserver = OTRYapKeyCollectionHandler()
     
-    public var mappings:YapDatabaseViewMappings? {
-        didSet {
-            self.databaseConnection.asyncReadWithBlock { (transaction) -> Void in
-                self.mappings?.updateWithTransaction(transaction)
-            }
-        }
-    }
+    public var mappings:YapDatabaseViewMappings?
     
     public var databaseConnection:YapDatabaseConnection {
         didSet {
@@ -86,20 +85,46 @@ public class OTRYapViewHandler: NSObject {
     
     public func setup(view:String,groups:[String]) {
         self.viewName = view
-        self.groups = groups
+        let groupsArray = ViewGroups.Array(groups)
+        self.groups = groupsArray
         self.mappings = nil;
-        self.setupMappings(view, groups: groups);
+        self.setupMappings(view, groups: groupsArray);
     }
     
-    func setupMappings(view:String,groups:[String]) {
-        self.databaseConnection.asyncReadWithBlock({ (transaction) -> Void in
+    public func setup(view:String, groupBlock:YapDatabaseViewMappingGroupFilter, sortBlock:YapDatabaseViewMappingGroupSort) {
+        self.viewName = view
+        let groups = ViewGroups.Block(groupBlock,sortBlock)
+        self.groups = groups
+        self.mappings = nil
+        self.setupMappings(view, groups: groups)
+    }
+    
+    public func groupsArray() -> [String]? {
+        guard let groups = self.groups else {
+            return nil
+        }
+        switch groups {
+            case .Array(let array): return array
+            default: return nil
+        }
+    }
+    
+    private func setupMappings(view:String,groups:ViewGroups) {
+        
+        self.databaseConnection.readWithBlock({ (transaction) in
+            // Check if extensions exists. If not then don't setup. https://github.com/yapstudios/YapDatabase/issues/203
             if let _ = transaction.ext(view) {
-                self.mappings  = YapDatabaseViewMappings(groups: groups, view: view)
-            }
-            }, completionQueue: dispatch_get_main_queue()) { () -> Void in
-                if(self.mappings != nil) {
-                    self.delegate?.didSetupMappings?(self)
+                switch groups {
+                case .Array(let array):
+                    self.mappings = YapDatabaseViewMappings(groups: array, view: view)
+                case .Block(let filterBlock, let sortBlock):
+                    self.mappings = YapDatabaseViewMappings(groupFilterBlock: filterBlock, sortBlock: sortBlock, view: view)
                 }
+                self.mappings?.updateWithTransaction(transaction)
+            }
+        })
+        if(self.mappings != nil) {
+            self.delegate?.didSetupMappings?(self)
         }
     }
     
@@ -128,8 +153,6 @@ public class OTRYapViewHandler: NSObject {
     func yapDatbaseModified(notification:NSNotification) {
         let notifications = self.databaseConnection.beginLongLivedReadTransaction()
         
-        //There are no mappings so we need to set them up first
-        //TODO: Some sort of check if the view is registered
         guard let mappings = self.mappings else {
             if let view = self.viewName {
                 if let groups = self.groups {
@@ -147,13 +170,12 @@ public class OTRYapViewHandler: NSObject {
         var rowChanges:NSArray? = nil
         
         databaseView.getSectionChanges(&sectionChanges, rowChanges: &rowChanges, forNotifications: notifications, withMappings: mappings)
-
-        if let sc = sectionChanges as? [YapDatabaseViewSectionChange] {
-            if let rc = rowChanges as? [YapDatabaseViewRowChange] {
-                if sc.count > 0 || rc.count > 0 {
-                    self.delegate?.didReceiveChanges?(self, sectionChanges: sc, rowChanges: rc)
-                }
-            }
+        
+        let sc = sectionChanges as? [YapDatabaseViewSectionChange] ?? [YapDatabaseViewSectionChange]()
+        let rc = rowChanges as? [YapDatabaseViewRowChange] ?? [YapDatabaseViewRowChange]()
+        
+        if sc.count > 0 || rc.count > 0 {
+            self.delegate?.didReceiveChanges?(self, sectionChanges: sc, rowChanges: rc)
         }
         
         for (_,value) in self.keyCollectionObserver.storage {

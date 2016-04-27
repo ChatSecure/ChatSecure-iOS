@@ -17,6 +17,8 @@
 #import "OTRAccountsManager.h"
 @import YapDatabase.YapDatabaseFullTextSearch;
 @import YapDatabase.YapDatabaseView;
+@import YapDatabase.YapDatabaseSearchResultsView;
+@import PureLayout;
 #import "OTRStrings.h"
 #import "OTRBuddyInfoCell.h"
 #import "OTRNewBuddyViewController.h"
@@ -28,14 +30,17 @@
 
 static CGFloat OTRBuddyInfoCellHeight = 80.0;
 
-@interface OTRComposeViewController () <UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, OTRYapViewHandlerDelegateProtocol>
+@interface OTRComposeViewController () <UITableViewDataSource, UITableViewDelegate, OTRYapViewHandlerDelegateProtocol, UISearchResultsUpdating, UISearchControllerDelegate, UISearchBarDelegate>
 
 @property (nonatomic, strong) UITableView *tableView;
-@property (nonatomic, strong) UISearchBar *searchBar;
 @property (nonatomic, strong) NSLayoutConstraint *  tableViewBottomConstraint;
 @property (nonatomic, strong) OTRYapViewHandler *viewHandler;
-@property (nonatomic, strong) NSArray *searchResults;
-
+@property (nonatomic, strong) OTRYapViewHandler *searchViewHandler;
+@property (nonatomic, strong) UISearchController *searchController;
+@property (nonatomic, strong, readonly) YapDatabaseConnection *searchConnection;
+@property (nonatomic, strong, readonly) YapDatabaseSearchQueue *searchQueue;
+@property (nonatomic, weak, readonly) YapDatabase *database;
+@property (nonatomic, weak) YapDatabaseConnection *readWriteConnection;
 @property (nonatomic, strong) NSMutableSet <NSString *>*selectedBuddiesIdSet;
 
 @end
@@ -45,6 +50,10 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
 - (instancetype)init {
     if (self = [super init]) {
         self.selectedBuddiesIdSet = [[NSMutableSet alloc] init];
+        _database = [OTRDatabaseManager sharedInstance].database;
+        _readWriteConnection = [OTRDatabaseManager sharedInstance].readWriteDatabaseConnection;
+        _searchConnection = [self.database newConnection];
+        _searchQueue = [[YapDatabaseSearchQueue alloc] init];
     }
     return self;
 }
@@ -67,14 +76,6 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
     self.navigationItem.leftBarButtonItem = cancelBarButtonItem;
     self.navigationItem.rightBarButtonItem = doneButtonItem;
     
-    /////////// Search Bar ///////////
-    
-    self.searchBar = [[UISearchBar alloc] init];
-    self.searchBar.translatesAutoresizingMaskIntoConstraints = NO;
-    self.searchBar.delegate = self;
-    self.searchBar.placeholder = SEARCH_STRING;
-    [self.view addSubview:self.searchBar];
-    
     /////////// TableView ///////////
     self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     self.tableView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -85,16 +86,29 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
     
     [self.tableView registerClass:[OTRBuddyInfoCell class] forCellReuseIdentifier:[OTRBuddyInfoCell reuseIdentifier]];
     
-    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[tableView]|" options:0 metrics:0 views:@{@"tableView":self.tableView}]];
-    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[searchBar]|" options:0 metrics:0 views:@{@"searchBar":self.searchBar}]];
-    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[topLayoutGuide][searchBar][tableView]" options:0 metrics:0 views:@{@"tableView":self.tableView,@"searchBar":self.searchBar,@"topLayoutGuide":self.topLayoutGuide}]];
-    self.tableViewBottomConstraint = [NSLayoutConstraint constraintWithItem:self.tableView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0];
-    [self.view addConstraint:self.tableViewBottomConstraint];
+    //[self.tableView autoPinToTopLayoutGuideOfViewController:self withInset:0.0];
+    [self.tableView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+    [self.tableView autoPinEdgeToSuperviewEdge:ALEdgeTrailing];
+    [self.tableView autoPinEdgeToSuperviewEdge:ALEdgeLeading];
+    self.tableViewBottomConstraint = [self.tableView autoPinToBottomLayoutGuideOfViewController:self withInset:0.0];
     
-    //////// YapDatabase Connection /////////
-    self.viewHandler = [[OTRYapViewHandler alloc] initWithDatabaseConnection:[[OTRDatabaseManager sharedInstance] newConnection]];
+    [self setupSearchController];
+    
+    //////// View Handlers /////////
+    self.viewHandler = [[OTRYapViewHandler alloc] initWithDatabaseConnection:[self.database newConnection]];
     self.viewHandler.delegate = self;
     [self.viewHandler setup:OTRAllBuddiesDatabaseViewExtensionName groups:@[OTRBuddyGroup]];
+    
+    self.searchViewHandler = [[OTRYapViewHandler alloc] initWithDatabaseConnection:[self.database newConnection]];
+    self.searchViewHandler.delegate = self;
+    NSString *searchViewName = [YapDatabaseConstants extensionName:DatabaseExtensionNameBuddySearchResultsViewName];
+    [self.searchViewHandler setup:searchViewName groupBlock:^BOOL(NSString * _Nonnull group, YapDatabaseReadTransaction * _Nonnull transaction) {
+        return YES;
+    } sortBlock:^NSComparisonResult(NSString * _Nonnull group1, NSString * _Nonnull group2, YapDatabaseReadTransaction * _Nonnull transaction) {
+        return [group1 compare:group2];
+    }];
+    
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -114,9 +128,51 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+- (void)setupSearchController {
+    UITableViewController *searchResultsController = [[UITableViewController alloc] initWithStyle:UITableViewStylePlain];
+    [searchResultsController.tableView registerClass:[OTRBuddyInfoCell class] forCellReuseIdentifier:[OTRBuddyInfoCell reuseIdentifier]];
+    
+    searchResultsController.tableView.dataSource = self;
+    searchResultsController.tableView.delegate = self;
+    searchResultsController.tableView.estimatedRowHeight = 120;
+    searchResultsController.tableView.rowHeight = UITableViewAutomaticDimension;
+    
+    self.searchController = [[UISearchController alloc] initWithSearchResultsController:searchResultsController];
+    self.searchController.searchResultsUpdater = self;
+    self.searchController.dimsBackgroundDuringPresentation = NO;
+    self.searchController.hidesNavigationBarDuringPresentation = NO;
+    self.searchController.delegate = self;
+    
+    self.definesPresentationContext = YES;
+    
+    [self.searchController.searchBar sizeToFit];
+    //self.searchController.searchBar.placeholder = SEARCH_STRING;
+    self.searchController.searchBar.searchBarStyle = UISearchBarStyleMinimal;
+    self.searchController.searchBar.delegate = self;
+    
+    self.tableView.tableHeaderView = self.searchController.searchBar;
+}
+
+- (BOOL)isSearchResultsControllerTableView:(UITableView *)tableView
+{
+    UITableViewController *src = (UITableViewController*)self.searchController.searchResultsController;
+    if (tableView == src.tableView) {
+        return YES;
+    }
+    return NO;
+}
+
+- (OTRYapViewHandler *)viewHandlerForTableView:(UITableView *)tableView {
+    if ([self isSearchResultsControllerTableView:tableView]) {
+        return self.searchViewHandler;
+    }
+    return self.viewHandler;
+}
+
 - (void)cancelButtonPressed:(id)sender
 {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    // Call dismiss from the split view controller instead
+    [self.delegate controllerDidCancel:self];
 }
 
 - (void)doneButtonPressed:(id)sender
@@ -135,7 +191,7 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
     
     if (self.selectedBuddiesIdSet.count > 1) {
         //Group so need user to select name
-        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Group Name" message:@"Enter a group name" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:GROUP_NAME_STRING message:ENTER_GROUP_NAME_STRING preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *okAction = [UIAlertAction actionWithTitle:OK_STRING style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             NSString *name = alertController.textFields.firstObject.text;
             completion(name);
@@ -149,7 +205,7 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
         [alertController addAction:cancelAction];
         
         [alertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-            textField.placeholder = @"Group name";
+            textField.placeholder = GROUP_NAME_STRING;
             
             [[NSNotificationCenter defaultCenter] addObserverForName:UITextFieldTextDidChangeNotification object:textField queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification * _Nonnull note) {
                 okAction.enabled = textField.text.length > 0;
@@ -173,31 +229,11 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
     return NO;
 }
 
-- (OTRBuddy *)buddyAtIndexPath:(NSIndexPath *)indexPath
+- (OTRBuddy *)buddyAtIndexPath:(NSIndexPath *)indexPath withTableView:(UITableView *)tableView
 {
     NSIndexPath *viewIndexPath = [NSIndexPath indexPathForItem:indexPath.row inSection:0];
-    
-    if ([self useSearchResults]) {
-        if (indexPath.row < [self.searchResults count]) {
-            return self.searchResults[viewIndexPath.row];
-        }
-    }
-    else
-    {
-        return [self.viewHandler object:viewIndexPath];
-    }
-    
-    
-    return nil;
-}
-
-- (BOOL)useSearchResults
-{
-    if([self.searchBar.text length])
-    {
-        return YES;
-    }
-    return NO;
+    OTRYapViewHandler *viewHandler = [self viewHandlerForTableView:tableView];
+    return [viewHandler object:viewIndexPath];
 }
 
 - (void)selectedBuddy:(NSString *)buddyId{
@@ -268,42 +304,16 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
     
 }
 
-#pragma - mark UISearchBarDelegateMethods
-
-- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
-{
-    if ([searchText length]) {
-        
-        searchText = [NSString stringWithFormat:@"%@*",searchText];
-        
-        NSMutableArray *tempSearchResults = [NSMutableArray new];
-        [self.viewHandler.databaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
-            [[transaction ext:OTRBuddyNameSearchDatabaseViewExtensionName] enumerateKeysAndObjectsMatching:searchText usingBlock:^(NSString *collection, NSString *key, id object, BOOL *stop) {
-                if ([object isKindOfClass:[OTRBuddy class]]) {
-                    [tempSearchResults addObject:object];
-                }
-            }];
-        } completionBlock:^{
-            self.searchResults = tempSearchResults;
-            [self.tableView reloadData];
-        }];
-    }
-}
-
 #pragma - mark UITableViewDataSource Methods
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
+    OTRYapViewHandler *viewHandler = [self viewHandlerForTableView:tableView];
     BOOL canAddBuddies = [self canAddBuddies];
-    NSInteger sections = 0;
-    if ([self useSearchResults]) {
-        sections = 1;
-    }
-    else {
-        sections = [self.viewHandler.mappings numberOfSections];
-    }
+    NSInteger sections = [viewHandler.mappings numberOfSections];
     
-    if (canAddBuddies) {
+    //If we can add buddies and it's not the search table view then add a section
+    if (canAddBuddies && ![self isSearchResultsControllerTableView:tableView]) {
         sections += 1;
     }
     return sections;
@@ -312,16 +322,12 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     NSInteger numberOfRows = 0;
-    if (section == 0 && [self canAddBuddies]) {
+    if (section == 0 && [self canAddBuddies] && ![self isSearchResultsControllerTableView:tableView]) {
         numberOfRows = 1;
     }
     else {
-        if ([self useSearchResults]) {
-            numberOfRows = [self.searchResults count];
-        }
-        else {
-            numberOfRows = [self.viewHandler.mappings numberOfItemsInSection:0];
-        }
+        OTRYapViewHandler *viewHandler = [self viewHandlerForTableView:tableView];
+        numberOfRows = [viewHandler.mappings numberOfItemsInSection:0];
     }
    
     return numberOfRows;
@@ -329,8 +335,7 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
-    if(indexPath.section == 0 && [self canAddBuddies]) {
+    if(indexPath.section == 0 && [self canAddBuddies] && ![self isSearchResultsControllerTableView:tableView]) {
         // add new buddy cell
         static NSString *addCellIdentifier = @"addCellIdentifier";
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:addCellIdentifier];
@@ -343,11 +348,13 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
         return cell;
     }
     else {
+        OTRYapViewHandler *viewHandler = [self viewHandlerForTableView:tableView];
         OTRBuddyInfoCell *cell = [tableView dequeueReusableCellWithIdentifier:[OTRBuddyInfoCell reuseIdentifier] forIndexPath:indexPath];
-        OTRBuddy * buddy = [self buddyAtIndexPath:indexPath];
+        NSIndexPath *databaseIndexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:0];
+        OTRBuddy * buddy = [self buddyAtIndexPath:databaseIndexPath withTableView:tableView];
         
         __block NSString *buddyAccountName = nil;
-        [self.viewHandler.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        [viewHandler.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
             buddyAccountName = [OTRAccount fetchObjectWithUniqueID:buddy.accountUniqueId transaction:transaction].username;
         }];
         
@@ -379,7 +386,7 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(indexPath.section == 0 && [self canAddBuddies]) {
+    if(indexPath.section == 0 && [self canAddBuddies] && ![self isSearchResultsControllerTableView:tableView]) {
         return UITableViewCellEditingStyleNone;
     } else {
         return UITableViewCellEditingStyleDelete;
@@ -391,12 +398,13 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     NSArray *accounts = [OTRAccountsManager allAccountsAbleToAddBuddies];
-    if(indexPath.section == 0 && [accounts count])
+    if(indexPath.section == 0 && [accounts count] && ![self isSearchResultsControllerTableView:tableView])
     {
         [self addBuddy:accounts];
     }
     else {
-        OTRBuddy * buddy = [self buddyAtIndexPath:indexPath];
+        NSIndexPath *databaseIndexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:0];
+        OTRBuddy * buddy = [self buddyAtIndexPath:databaseIndexPath withTableView:tableView];
         [self selectedBuddy:buddy.uniqueId];
         [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
     }
@@ -405,13 +413,14 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        [self removeBuddy:[self buddyAtIndexPath:indexPath]];
+        NSIndexPath *databaseIndexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:0];
+        [self removeBuddy:[self buddyAtIndexPath:databaseIndexPath withTableView:tableView]];
     }
 }
 
 - (void)removeBuddy:(OTRBuddy *)buddy {
     __block NSString *key = buddy.uniqueId;
-    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+    [self.readWriteConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
         OTRBuddy *dbBuddy = [OTRBuddy fetchObjectWithUniqueID:key transaction:transaction];
         if (dbBuddy) {
             BuddyAction *action = [[BuddyAction alloc] init];
@@ -447,6 +456,17 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
 
 #pragma - mark YapDatabaseViewUpdate
 
+- (void)didSetupMappings:(OTRYapViewHandler *)handler
+{
+    UITableView *tableView = nil;
+    if (self.searchViewHandler == handler) {
+        tableView = ((UITableViewController*)self.searchController.searchResultsController).tableView;
+    } else if (self.viewHandler == handler) {
+        tableView = self.tableView;
+    }
+    [tableView reloadData];
+}
+
 - (void)didReceiveChanges:(OTRYapViewHandler *)handler sectionChanges:(NSArray<YapDatabaseViewSectionChange *> *)sectionChanges rowChanges:(NSArray<YapDatabaseViewRowChange *> *)rowChanges
 {
     if ([sectionChanges count] == 0 && [rowChanges count] == 0)
@@ -455,14 +475,21 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
         return;
     }
     
-    [self.tableView beginUpdates];
+    UITableView *tableView = self.tableView;
+    BOOL isSearchViewHandler = NO;
+    if (self.searchViewHandler == handler) {
+        isSearchViewHandler = YES;
+        tableView = ((UITableViewController*)self.searchController.searchResultsController).tableView;
+    }
+    
+    [tableView beginUpdates];
     
     BOOL canAddBuddies = [self canAddBuddies];
     
     for (YapDatabaseViewSectionChange *sectionChange in sectionChanges)
     {
         NSUInteger sectionIndex = sectionChange.index;
-        if (canAddBuddies) {
+        if (canAddBuddies && !isSearchViewHandler) {
             sectionIndex += 1;
         }
         
@@ -470,13 +497,13 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
         {
             case YapDatabaseViewChangeDelete :
             {
-                [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex]
+                [tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex]
                               withRowAnimation:UITableViewRowAnimationAutomatic];
                 break;
             }
             case YapDatabaseViewChangeInsert :
             {
-                [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex]
+                [tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex]
                               withRowAnimation:UITableViewRowAnimationAutomatic];
                 break;
             }
@@ -492,46 +519,65 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
     {
         NSIndexPath *indexPath = rowChange.indexPath;
         NSIndexPath *newIndexPath = rowChange.newIndexPath;
-        if (canAddBuddies) {
+        if (canAddBuddies && !isSearchViewHandler) {
             indexPath = [NSIndexPath indexPathForItem:rowChange.indexPath.row inSection:1];
             newIndexPath = [NSIndexPath indexPathForItem:rowChange.newIndexPath.row inSection:1];
-        }
-        else {
-            
         }
         
         switch (rowChange.type)
         {
             case YapDatabaseViewChangeDelete :
             {
-                [self.tableView deleteRowsAtIndexPaths:@[ indexPath ]
+                [tableView deleteRowsAtIndexPaths:@[ indexPath ]
                                       withRowAnimation:UITableViewRowAnimationAutomatic];
                 break;
             }
             case YapDatabaseViewChangeInsert :
             {
-                [self.tableView insertRowsAtIndexPaths:@[ newIndexPath ]
+                [tableView insertRowsAtIndexPaths:@[ newIndexPath ]
                                       withRowAnimation:UITableViewRowAnimationAutomatic];
                 break;
             }
             case YapDatabaseViewChangeMove :
             {
-                [self.tableView deleteRowsAtIndexPaths:@[ indexPath ]
+                [tableView deleteRowsAtIndexPaths:@[ indexPath ]
                                       withRowAnimation:UITableViewRowAnimationAutomatic];
-                [self.tableView insertRowsAtIndexPaths:@[ newIndexPath ]
+                [tableView insertRowsAtIndexPaths:@[ newIndexPath ]
                                       withRowAnimation:UITableViewRowAnimationAutomatic];
                 break;
             }
             case YapDatabaseViewChangeUpdate :
             {
-                [self.tableView reloadRowsAtIndexPaths:@[ indexPath ]
+                [tableView reloadRowsAtIndexPaths:@[ indexPath ]
                                       withRowAnimation:UITableViewRowAnimationNone];
                 break;
             }
         }
     }
     
-    [self.tableView endUpdates];
+    [tableView endUpdates];
+}
+
+#pragma - mark UISearchResultsUpdating
+
+- (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
+    NSString *searchString = [self.searchController.searchBar text];
+    if ([searchString length]) {
+        searchString = [NSString stringWithFormat:@"%@*",searchString];
+        [self.searchQueue enqueueQuery:searchString];
+        [self.searchConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+            NSString *searchViewName = [YapDatabaseConstants extensionName:DatabaseExtensionNameBuddySearchResultsViewName];
+            [[transaction ext:searchViewName] performSearchWithQueue:self.searchQueue];
+        }];
+    }
+}
+
+#pragma - mark UISearchControllerDelegate
+
+- (void)willDismissSearchController:(UISearchController *)searchController
+{
+    //Make sure all the checkmarks are correctly updated
+    [self.tableView reloadData];
 }
 
 

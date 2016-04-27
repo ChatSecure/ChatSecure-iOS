@@ -15,6 +15,8 @@ import Foundation
     case RelationshipExtensionName
     case ActionManagerName
     case SecondaryIndexName
+    case BuddyFTSExtensionName
+    case BuddySearchResultsViewName
     
     public func name() -> String {
         switch self {
@@ -24,6 +26,8 @@ import Foundation
             case RelationshipExtensionName: return "OTRYapDatabaseRelationshipName"
             case ActionManagerName: return "OTRYapDatabaseActionManager"
             case SecondaryIndexName: return "OTRYapDatabseMessageIdSecondaryIndexExtension"
+            case BuddyFTSExtensionName: return "OTRBuddyBuddyNameSearchDatabaseViewExtensionName"
+            case BuddySearchResultsViewName: return "DatabaseExtensionName.BuddySearchResultsView"
         }
     }
 }
@@ -64,6 +68,18 @@ import Foundation
     }
 }
 
+@objc public enum BuddyFTSColumnName:Int {
+    case Username
+    case DisplayName
+    
+    public func name() -> String {
+        switch self {
+        case Username: return "username"
+        case DisplayName: return "displayName"
+        }
+    }
+}
+
 /// This is for briding to obj-c. Looking for a better way of using swift enums and stirngs.
 @objc public class YapDatabaseConstants: NSObject {
 
@@ -81,6 +97,10 @@ import Foundation
     
     public class func notificationKeyName(notificationKeyName:DatabaseNotificationKey) -> String {
         return notificationKeyName.name()
+    }
+    
+    public class func buddyFTSColumnName(columnName:BuddyFTSColumnName) -> String {
+        return columnName.name()
     }
     
 }

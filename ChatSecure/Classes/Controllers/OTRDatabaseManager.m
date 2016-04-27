@@ -23,7 +23,7 @@
 #import "NSFileManager+ChatSecure.h"
 @import OTRAssets;
 @import YapDatabase.YapDatabaseSecondaryIndex;
-@import YapDatabase.YapDatabaseActionManager;
+@import YapDatabase.YapDatabaseSearchResultsView;
 #import "OTRLanguageManager.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 
@@ -132,10 +132,18 @@ NSString *const OTRYapDatabaseUnreadMessageSecondaryIndexColumnName = @"OTRYapDa
         [OTRDatabaseView registerAllAccountsDatabaseView];
         [OTRDatabaseView registerConversationDatabaseView];
         [OTRDatabaseView registerChatDatabaseView];
-        [OTRDatabaseView registerBuddyNameSearchDatabaseView];
         [OTRDatabaseView registerAllBuddiesDatabaseView];
         [OTRDatabaseView registerAllSubscriptionRequestsView];
         [OTRDatabaseView registerUnreadMessagesView];
+        
+        //Register Buddy username & displayName FTS and corresponding view
+        YapDatabaseFullTextSearch *buddyFTS = [OTRYapExtensions buddyFTS];
+        NSString *FTSName = [YapDatabaseConstants extensionName:DatabaseExtensionNameBuddyFTSExtensionName];
+        NSString *AllBuddiesName = OTRAllBuddiesDatabaseViewExtensionName;
+        [self.database registerExtension:buddyFTS withName:FTSName];
+        YapDatabaseSearchResultsView *searchResultsView = [[YapDatabaseSearchResultsView alloc] initWithFullTextSearchName:FTSName parentViewName:AllBuddiesName versionTag:nil options:nil];
+        NSString* viewName = [YapDatabaseConstants extensionName:DatabaseExtensionNameBuddySearchResultsViewName];
+        [self.database registerExtension:searchResultsView withName:viewName];
     });
     
     if (self.database != nil) {
