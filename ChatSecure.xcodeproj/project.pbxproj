@@ -21,10 +21,6 @@
 		634905B01BD05E3900347FE2 /* OTRYapViewHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634905AF1BD05E3900347FE2 /* OTRYapViewHandler.swift */; };
 		634E68BD1BAB887200DC6B25 /* PushController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637645C81B98F9BF00B3402F /* PushController.swift */; };
 		634E68BE1BAB891C00DC6B25 /* PushContainers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633821C81BA8D48D0019C906 /* PushContainers.swift */; };
-		634F42A11C643A740030038C /* NSDate+YapDatabase.h in Headers */ = {isa = PBXBuildFile; fileRef = 634F429F1C643A740030038C /* NSDate+YapDatabase.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		634F42A21C643A740030038C /* NSDate+YapDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 634F42A01C643A740030038C /* NSDate+YapDatabase.m */; };
-		634F42A51C643B300030038C /* YapDatabaseLogging.h in Headers */ = {isa = PBXBuildFile; fileRef = 634F42A31C643B300030038C /* YapDatabaseLogging.h */; };
-		634F42A61C643B300030038C /* YapDatabaseLogging.m in Sources */ = {isa = PBXBuildFile; fileRef = 634F42A41C643B300030038C /* YapDatabaseLogging.m */; };
 		63564E0D1BBB114B00EB4CA6 /* PushOTRListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63564E0C1BBB114B00EB4CA6 /* PushOTRListener.swift */; };
 		63564E101BBB1C5200EB4CA6 /* PushStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63564E0F1BBB1C5200EB4CA6 /* PushStorage.swift */; };
 		63636D6E1C1F78A6009F5FCD /* UINavigationController+ChatSecure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63636D6D1C1F78A6009F5FCD /* UINavigationController+ChatSecure.swift */; };
@@ -46,12 +42,6 @@
 		63BB66B41BC5D5F00004A619 /* OTRXMPPRoom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BB66B31BC5D5F00004A619 /* OTRXMPPRoom.swift */; };
 		63C0C4431BE010B00086B529 /* YapDatabaseReadTransaction+ChatSecure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C0C4421BE010B00086B529 /* YapDatabaseReadTransaction+ChatSecure.swift */; };
 		63C0C4451BE184910086B529 /* OTRRoomOccupantsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C0C4441BE184910086B529 /* OTRRoomOccupantsViewController.swift */; };
-		63CBD6881C642B6B00AC6D1F /* YapActionItemPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = 63CBD6821C642B6B00AC6D1F /* YapActionItemPrivate.h */; };
-		63CBD6891C642B6B00AC6D1F /* YapActionable.h in Headers */ = {isa = PBXBuildFile; fileRef = 63CBD6831C642B6B00AC6D1F /* YapActionable.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		63CBD68A1C642B6B00AC6D1F /* YapActionItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 63CBD6841C642B6B00AC6D1F /* YapActionItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		63CBD68B1C642B6B00AC6D1F /* YapActionItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CBD6851C642B6B00AC6D1F /* YapActionItem.m */; };
-		63CBD68C1C642B6B00AC6D1F /* YapDatabaseActionManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 63CBD6861C642B6B00AC6D1F /* YapDatabaseActionManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		63CBD68D1C642B6B00AC6D1F /* YapDatabaseActionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CBD6871C642B6B00AC6D1F /* YapDatabaseActionManager.m */; };
 		63CBD6901C642B9E00AC6D1F /* BuddyActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CBD68F1C642B9E00AC6D1F /* BuddyActions.swift */; };
 		63D14F351C0FC7A60029F36B /* OTRThreadOwner.h in Headers */ = {isa = PBXBuildFile; fileRef = 63D14F341C0FC6A90029F36B /* OTRThreadOwner.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		63DC417B1BB3767100D42857 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DC417A1BB3767000D42857 /* Errors.swift */; };
@@ -703,10 +693,6 @@
 		6346808B1B04206400D9A1C5 /* OTRXMPPCreateAccountHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPCreateAccountHandler.h; sourceTree = "<group>"; };
 		6346808C1B04206400D9A1C5 /* OTRXMPPCreateAccountHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPCreateAccountHandler.m; sourceTree = "<group>"; };
 		634905AF1BD05E3900347FE2 /* OTRYapViewHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRYapViewHandler.swift; sourceTree = "<group>"; };
-		634F429F1C643A740030038C /* NSDate+YapDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+YapDatabase.h"; sourceTree = "<group>"; };
-		634F42A01C643A740030038C /* NSDate+YapDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+YapDatabase.m"; sourceTree = "<group>"; };
-		634F42A31C643B300030038C /* YapDatabaseLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YapDatabaseLogging.h; sourceTree = "<group>"; };
-		634F42A41C643B300030038C /* YapDatabaseLogging.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YapDatabaseLogging.m; sourceTree = "<group>"; };
 		6353AC2B1AD5E32000753B83 /* OTRAudioTrashView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRAudioTrashView.h; sourceTree = "<group>"; };
 		6353AC2C1AD5E32000753B83 /* OTRAudioTrashView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRAudioTrashView.m; sourceTree = "<group>"; };
 		6354BBE21A96C67400E8EBAC /* OTRMediaFileManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRMediaFileManager.h; sourceTree = "<group>"; };
@@ -762,12 +748,6 @@
 		63C7E64A1B20F5730085FA06 /* OTRChatSecureIDCreateAccountHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRChatSecureIDCreateAccountHandler.m; sourceTree = "<group>"; };
 		63C7E64C1B20F69F0085FA06 /* OTRXMPPServerInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OTRXMPPServerInfo.h; path = ChatSecure/Classes/Model/OTRXMPPServerInfo.h; sourceTree = SOURCE_ROOT; };
 		63C7E64D1B20F69F0085FA06 /* OTRXMPPServerInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OTRXMPPServerInfo.m; path = ChatSecure/Classes/Model/OTRXMPPServerInfo.m; sourceTree = SOURCE_ROOT; };
-		63CBD6821C642B6B00AC6D1F /* YapActionItemPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YapActionItemPrivate.h; sourceTree = "<group>"; };
-		63CBD6831C642B6B00AC6D1F /* YapActionable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YapActionable.h; sourceTree = "<group>"; };
-		63CBD6841C642B6B00AC6D1F /* YapActionItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YapActionItem.h; sourceTree = "<group>"; };
-		63CBD6851C642B6B00AC6D1F /* YapActionItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YapActionItem.m; sourceTree = "<group>"; };
-		63CBD6861C642B6B00AC6D1F /* YapDatabaseActionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YapDatabaseActionManager.h; sourceTree = "<group>"; };
-		63CBD6871C642B6B00AC6D1F /* YapDatabaseActionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YapDatabaseActionManager.m; sourceTree = "<group>"; };
 		63CBD68F1C642B9E00AC6D1F /* BuddyActions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BuddyActions.swift; path = YapActions/BuddyActions.swift; sourceTree = "<group>"; };
 		63CFB1021ABA492600A8D27E /* OTRFacebookOAuthXMPPAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRFacebookOAuthXMPPAccount.h; sourceTree = "<group>"; };
 		63CFB1031ABA492600A8D27E /* OTRFacebookOAuthXMPPAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRFacebookOAuthXMPPAccount.m; sourceTree = "<group>"; };
@@ -1434,34 +1414,8 @@
 		63CBD67F1C642B6B00AC6D1F /* YapExtensions */ = {
 			isa = PBXGroup;
 			children = (
-				63CBD6801C642B6B00AC6D1F /* ActionManager */,
 			);
 			path = YapExtensions;
-			sourceTree = "<group>";
-		};
-		63CBD6801C642B6B00AC6D1F /* ActionManager */ = {
-			isa = PBXGroup;
-			children = (
-				63CBD6811C642B6B00AC6D1F /* Internal */,
-				63CBD6831C642B6B00AC6D1F /* YapActionable.h */,
-				63CBD6841C642B6B00AC6D1F /* YapActionItem.h */,
-				63CBD6851C642B6B00AC6D1F /* YapActionItem.m */,
-				63CBD6861C642B6B00AC6D1F /* YapDatabaseActionManager.h */,
-				63CBD6871C642B6B00AC6D1F /* YapDatabaseActionManager.m */,
-			);
-			path = ActionManager;
-			sourceTree = "<group>";
-		};
-		63CBD6811C642B6B00AC6D1F /* Internal */ = {
-			isa = PBXGroup;
-			children = (
-				634F42A31C643B300030038C /* YapDatabaseLogging.h */,
-				634F42A41C643B300030038C /* YapDatabaseLogging.m */,
-				634F429F1C643A740030038C /* NSDate+YapDatabase.h */,
-				634F42A01C643A740030038C /* NSDate+YapDatabase.m */,
-				63CBD6821C642B6B00AC6D1F /* YapActionItemPrivate.h */,
-			);
-			path = Internal;
 			sourceTree = "<group>";
 		};
 		63CBD68E1C642B8100AC6D1F /* YapActions */ = {
@@ -1638,7 +1592,6 @@
 				D93DDB481BA79A7200CD8331 /* OTRXMPPBudyTimers.h in Headers */,
 				D93DDB491BA79A7200CD8331 /* OTRXMPPManager.h in Headers */,
 				D93DDB4A1BA79A7300CD8331 /* OTRXMPPProxyStream.h in Headers */,
-				634F42A11C643A740030038C /* NSDate+YapDatabase.h in Headers */,
 				D93DDB4B1BA79A7300CD8331 /* OTRXMPPTorManager.h in Headers */,
 				D93DDB4C1BA79A7300CD8331 /* OTRYapDatabaseRosterStorage.h in Headers */,
 				D93DDB4E1BA79A7300CD8331 /* OTRXMPPServerInfo.h in Headers */,
@@ -1649,7 +1602,6 @@
 				D93DDB711BA79A7F00CD8331 /* OTROpenInFacebookActivity.h in Headers */,
 				D93DDB721BA79A7F00CD8331 /* OTROpenInTwitterActivity.h in Headers */,
 				D93DDB731BA79A7F00CD8331 /* OTRQRCodeActivity.h in Headers */,
-				63CBD68A1C642B6B00AC6D1F /* YapActionItem.h in Headers */,
 				D93DDB741BA79A8000CD8331 /* OTRToastOptions.h in Headers */,
 				D93DDB751BA79A8000CD8331 /* OTRBoolSetting.h in Headers */,
 				D93DDB761BA79A8100CD8331 /* OTRCertificateSetting.h in Headers */,
@@ -1676,7 +1628,6 @@
 				D93DDB8B1BA79A8D00CD8331 /* OTRImageItem.h in Headers */,
 				D93DDB8C1BA79A8E00CD8331 /* OTRVideoItem.h in Headers */,
 				D93DDB8D1BA79A8F00CD8331 /* OTRAudioItem.h in Headers */,
-				63CBD68C1C642B6B00AC6D1F /* YapDatabaseActionManager.h in Headers */,
 				D93DDB8E1BA79A9000CD8331 /* OTRStreamManagementStorageObject.h in Headers */,
 				D93DDB8F1BA79A9100CD8331 /* OTRBuddy.h in Headers */,
 				D93DDB901BA79A9100CD8331 /* OTRMessage+JSQMessageData.h in Headers */,
@@ -1698,7 +1649,6 @@
 				D93DDBA31BA79AA500CD8331 /* OTRInviteViewController.h in Headers */,
 				D93DDBA41BA79AA600CD8331 /* OTRAddBuddyQRCodeViewController.h in Headers */,
 				D93DDBA51BA79AA700CD8331 /* OTRQRCodeReaderDelegate.h in Headers */,
-				63CBD6891C642B6B00AC6D1F /* YapActionable.h in Headers */,
 				D93DDBA61BA79AA800CD8331 /* OTRBaseLoginViewController.h in Headers */,
 				D93DDBA71BA79AA900CD8331 /* OTRXLFormCreator.h in Headers */,
 				63E353F61BB9E46D005C54C3 /* OTRPushTLVHandlerProtocols.h in Headers */,
@@ -1730,14 +1680,12 @@
 				D93DDBBE1BA79AC600CD8331 /* OTRMessagesViewController.h in Headers */,
 				D93DDBBF1BA79AC700CD8331 /* OTRMessagesHoldTalkViewController.h in Headers */,
 				D93DDBC01BA79AC800CD8331 /* OTRNewBuddyViewController.h in Headers */,
-				63CBD6881C642B6B00AC6D1F /* YapActionItemPrivate.h in Headers */,
 				D93DDBC11BA79ACA00CD8331 /* OTRQRCodeViewController.h in Headers */,
 				D93DDBC21BA79ACB00CD8331 /* OTRSettingDetailViewController.h in Headers */,
 				D93DDBC31BA79ACC00CD8331 /* OTRSettingsViewController.h in Headers */,
 				D978BC921BABE0F4009246CF /* OTRTheme.h in Headers */,
 				D93DDBC41BA79ACE00CD8331 /* OTRSubscriptionRequestsViewController.h in Headers */,
 				D93DDBC51BA79ACF00CD8331 /* OTRCircleView.h in Headers */,
-				634F42A51C643B300030038C /* YapDatabaseLogging.h in Headers */,
 				D93DDBC61BA79AD000CD8331 /* OTRCircleButtonView.h in Headers */,
 				D93DDBC71BA79AD200CD8331 /* XMPPServerInfoCell.h in Headers */,
 				D93DDBC81BA79AD300CD8331 /* OTRAccountTableViewCell.h in Headers */,
@@ -2215,7 +2163,6 @@
 				D93DDA861BA79A2400CD8331 /* OTREncryptionManager.m in Sources */,
 				D93DDA881BA79A2400CD8331 /* OTROAuthRefresher.m in Sources */,
 				6340431B1BD5BCD800ECA95A /* OTRXMPPRoomMessage.swift in Sources */,
-				63CBD68B1C642B6B00AC6D1F /* YapActionItem.m in Sources */,
 				D93DDA891BA79A2400CD8331 /* OTRProtocolManager.m in Sources */,
 				63DC417B1BB3767100D42857 /* Errors.swift in Sources */,
 				D93DDA8A1BA79A2400CD8331 /* OTRSettingsManager.m in Sources */,
@@ -2235,7 +2182,6 @@
 				D93DDA961BA79A2400CD8331 /* OTRXMPPProxyStream.m in Sources */,
 				D9AE3A331BA8D9AB00255537 /* OTRConstants.m in Sources */,
 				D93DDA971BA79A2400CD8331 /* OTRXMPPTorManager.m in Sources */,
-				634F42A61C643B300030038C /* YapDatabaseLogging.m in Sources */,
 				D93DDA981BA79A2400CD8331 /* OTRYapDatabaseRosterStorage.m in Sources */,
 				D93DDA991BA79A2400CD8331 /* OTRXMPPServerInfo.m in Sources */,
 				638045681BB4BDED002D8BAE /* PushSerializer.swift in Sources */,
@@ -2344,7 +2290,6 @@
 				63FA130C1C8A4EB700AE33EF /* OTRMessagesCollectionViewFlowLayout.swift in Sources */,
 				D93DDB101BA79A2B00CD8331 /* OTRCircleButtonView.m in Sources */,
 				D93DDB111BA79A2B00CD8331 /* XMPPServerInfoCell.m in Sources */,
-				63CBD68D1C642B6B00AC6D1F /* YapDatabaseActionManager.m in Sources */,
 				D93DDB121BA79A2B00CD8331 /* OTRAccountTableViewCell.m in Sources */,
 				D93DDB131BA79A2B00CD8331 /* OTRBuddyImageCell.m in Sources */,
 				D93DDB141BA79A2B00CD8331 /* OTRBuddyInfoCell.m in Sources */,
@@ -2370,7 +2315,6 @@
 				D93DDB261BA79A2D00CD8331 /* OTRHoldToTalkView.m in Sources */,
 				D93DDB271BA79A2D00CD8331 /* OTRAudioTrashView.m in Sources */,
 				D93DDB281BA79A2D00CD8331 /* OTRTouchAndHoldGestureRecognizer.m in Sources */,
-				634F42A21C643A740030038C /* NSDate+YapDatabase.m in Sources */,
 				631098B11BD6FED000494A47 /* YapDatabse+ChatSecure.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

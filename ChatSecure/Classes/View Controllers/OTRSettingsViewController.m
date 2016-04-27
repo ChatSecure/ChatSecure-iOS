@@ -45,7 +45,7 @@
 #import "OTRQRCodeActivity.h"
 #import "OTRBaseLoginViewController.h"
 #import "OTRXLFormCreator.h"
-#import <KVOController/FBKVOController.h>
+#import <KVOController/NSObject+FBKVOController.h>
 #import "OTRInviteViewController.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 @import OTRAssets;

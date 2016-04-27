@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import YapDatabase.YapDatabaseActionManager
 
 @objc public enum BuddyActionType: Int {
     case Delete
@@ -17,7 +18,7 @@ import Foundation
     public var action:BuddyActionType = .Delete
     public var buddy:OTRBuddy?
     
-    public func yapActionItems() -> [YapActionItem]! {
+    public func yapActionItems() -> [YapActionItem]? {
         
         guard let buddy = self.buddy else {
             return nil

@@ -18,7 +18,7 @@ inhibit_all_warnings!
 source 'https://github.com/CocoaPods/Specs.git'
 
 target 'ChatSecureCore' do
-  pod 'AFNetworking', '~> 3.0'
+  pod 'AFNetworking', '~> 3.1'
   pod "Appirater", '~> 2.0'
   pod 'OpenInChrome', '~> 0.0'
   pod 'MWFeedParser', '~> 1.0'
@@ -27,7 +27,7 @@ target 'ChatSecureCore' do
   pod 'MBProgressHUD', '~> 0.9'
   pod "SSKeychain", '~> 1.2'
   # pod 'gtm-oauth2', '~> 0.1.0' # Trunk is outdated, using local podspec
-  pod 'YapDatabase/SQLCipher', '~> 2.8'
+  pod 'YapDatabase/SQLCipher', '~> 2.9'
   pod 'Mantle', '~> 2.0'
   pod 'Navajo', '~> 0.0'
   # wating on 8.0 https://github.com/jessesquires/JSQMessagesViewController/pull/840
@@ -58,7 +58,7 @@ target 'ChatSecureCore' do
   # Local Podspecs
   pod 'gtm-http-fetcher', :podspec => 'Podspecs/gtm-http-fetcher.podspec'
   pod 'gtm-oauth2', :podspec => 'Podspecs/gtm-oauth2.podspec'
-  pod 'SQLCipher/fts', :podspec => 'Podspecs/SQLCipher.podspec.json'
+  #pod 'SQLCipher/fts', :podspec => 'Podspecs/SQLCipher.podspec.json'
 
   # Forks
   pod 'JSQMessagesViewController', :git => 'https://github.com/ChatSecure/JSQMessagesViewController', :branch => '7.2.0-send_button'

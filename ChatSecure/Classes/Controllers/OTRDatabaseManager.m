@@ -23,6 +23,7 @@
 #import "NSFileManager+ChatSecure.h"
 @import OTRAssets;
 @import YapDatabase.YapDatabaseSecondaryIndex;
+@import YapDatabase.YapDatabaseActionManager;
 #import "OTRLanguageManager.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 
@@ -124,9 +125,7 @@ NSString *const OTRYapDatabaseUnreadMessageSecondaryIndexColumnName = @"OTRYapDa
     // Register action manager
     self.actionManager = [[YapDatabaseActionManager alloc] init];
     NSString *actionManagerName = [YapDatabaseConstants extensionName:DatabaseExtensionNameActionManagerName];
-    [self.actionManager asyncRegisterWithDatabase:self.database usingName:actionManagerName completionBlock:nil];
-    
-    
+    [self.database asyncRegisterExtension:self.actionManager withName:actionManagerName completionBlock:nil];
     
     //Async register all the views
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{

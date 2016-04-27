@@ -25,7 +25,7 @@
 #import "OTRDatabaseManager.h"
 #import "OTRDatabaseView.h"
 #import "OTRStrings.h"
-#import <KVOController/FBKVOController.h>
+#import <KVOController/NSObject+FBKVOController.h>
 #import "OTRAppDelegate.h"
 #import "OTRTheme.h"
 #import "OTRProtocolManager.h"
@@ -444,7 +444,6 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     NSArray *rowChanges = nil;
     
     YapDatabaseViewConnection *conversationExt = [self.databaseConnection ext:OTRConversationDatabaseViewExtensionName];
-    NSParameterAssert(conversationExt != nil);
     if (conversationExt) {
         if (!self.mappings) {
             [self setupMappings:YES];
@@ -461,7 +460,6 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     NSArray *subscriptionRowChanges = nil;
     
     YapDatabaseViewConnection *subExt = [self.databaseConnection ext:OTRAllSubscriptionRequestsViewExtensionName];
-    NSParameterAssert(subExt != nil);
     if (subExt) {
         if (!self.subscriptionRequestsMappings) {
             [self setupSubscriptionMappings:YES];
@@ -483,7 +481,6 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     NSArray *unreadMessagesRowChanges = nil;
     
     YapDatabaseViewConnection *unreadExt = [self.databaseConnection ext:OTRUnreadMessagesViewExtensionName];
-    NSParameterAssert(unreadExt != nil);
     if (unreadExt) {
         if (!self.unreadMessagesMappings) {
             [self setupUnreadMappings:YES];

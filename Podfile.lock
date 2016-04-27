@@ -1,18 +1,18 @@
 PODS:
-  - AFNetworking (3.0.4):
-    - AFNetworking/NSURLSession (= 3.0.4)
-    - AFNetworking/Reachability (= 3.0.4)
-    - AFNetworking/Security (= 3.0.4)
-    - AFNetworking/Serialization (= 3.0.4)
-    - AFNetworking/UIKit (= 3.0.4)
-  - AFNetworking/NSURLSession (3.0.4):
+  - AFNetworking (3.1.0):
+    - AFNetworking/NSURLSession (= 3.1.0)
+    - AFNetworking/Reachability (= 3.1.0)
+    - AFNetworking/Security (= 3.1.0)
+    - AFNetworking/Serialization (= 3.1.0)
+    - AFNetworking/UIKit (= 3.1.0)
+  - AFNetworking/NSURLSession (3.1.0):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/Reachability (3.0.4)
-  - AFNetworking/Security (3.0.4)
-  - AFNetworking/Serialization (3.0.4)
-  - AFNetworking/UIKit (3.0.4):
+  - AFNetworking/Reachability (3.1.0)
+  - AFNetworking/Security (3.1.0)
+  - AFNetworking/Serialization (3.1.0)
+  - AFNetworking/UIKit (3.1.0):
     - AFNetworking/NSURLSession
   - Appirater (2.0.5)
   - ARChromeActivity (1.0.6)
@@ -64,14 +64,14 @@ PODS:
   - KissXML/Core (5.0.3)
   - KissXML/libxml_module (5.0.3):
     - KissXML/Core
-  - KVOController (1.0.3)
+  - KVOController (1.1.0)
   - libsqlfs/common (1.3)
   - libsqlfs/SQLCipher (1.3):
     - libsqlfs/common
     - SQLCipher/fts
-  - Mantle (2.0.6):
-    - Mantle/extobjc (= 2.0.6)
-  - Mantle/extobjc (2.0.6)
+  - Mantle (2.0.7):
+    - Mantle/extobjc (= 2.0.7)
+  - Mantle/extobjc (2.0.7)
   - MBProgressHUD (0.9.2)
   - MWFeedParser (1.0.1):
     - MWFeedParser/FeedParser (= 1.0.1)
@@ -94,8 +94,8 @@ PODS:
   - PureLayout (3.0.1)
   - QRCodeReaderViewController (4.0.1)
   - Reachability (3.2)
-  - SQLCipher/common (3.3.1)
-  - SQLCipher/fts (3.3.1):
+  - SQLCipher/common (3.4.0)
+  - SQLCipher/fts (3.4.0):
     - SQLCipher/common
   - SSKeychain (1.4.0)
   - TTTAttributedLabel (1.13.4)
@@ -246,54 +246,61 @@ PODS:
     - XMPPFramework/Core
   - XMPPFramework/XEP-0352 (3.6.7):
     - XMPPFramework/Core
-  - YapDatabase/SQLCipher (2.8.3):
-    - YapDatabase/SQLCipher/Core (= 2.8.3)
-    - YapDatabase/SQLCipher/Extensions (= 2.8.3)
-  - YapDatabase/SQLCipher/Core (2.8.3):
+  - YapDatabase/SQLCipher (2.9):
+    - YapDatabase/SQLCipher/Core (= 2.9)
+    - YapDatabase/SQLCipher/Extensions (= 2.9)
+  - YapDatabase/SQLCipher/Core (2.9):
     - CocoaLumberjack (~> 2)
     - SQLCipher/fts
-  - YapDatabase/SQLCipher/Extensions (2.8.3):
+  - YapDatabase/SQLCipher/Extensions (2.9):
     - YapDatabase/SQLCipher/Core
-    - YapDatabase/SQLCipher/Extensions/CloudKit (= 2.8.3)
-    - YapDatabase/SQLCipher/Extensions/ConnectionProxy (= 2.8.3)
-    - YapDatabase/SQLCipher/Extensions/FilteredViews (= 2.8.3)
-    - YapDatabase/SQLCipher/Extensions/FullTextSearch (= 2.8.3)
-    - YapDatabase/SQLCipher/Extensions/Hooks (= 2.8.3)
-    - YapDatabase/SQLCipher/Extensions/Relationships (= 2.8.3)
-    - YapDatabase/SQLCipher/Extensions/RTreeIndex (= 2.8.3)
-    - YapDatabase/SQLCipher/Extensions/SearchResults (= 2.8.3)
-    - YapDatabase/SQLCipher/Extensions/SecondaryIndex (= 2.8.3)
-    - YapDatabase/SQLCipher/Extensions/SecondaryIndex (= 2.8.3)
-    - YapDatabase/SQLCipher/Extensions/Views (= 2.8.3)
-  - YapDatabase/SQLCipher/Extensions/CloudKit (2.8.3):
-    - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/ConnectionProxy (2.8.3):
-    - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/FilteredViews (2.8.3):
+    - YapDatabase/SQLCipher/Extensions/ActionManager (= 2.9)
+    - YapDatabase/SQLCipher/Extensions/CloudKit (= 2.9)
+    - YapDatabase/SQLCipher/Extensions/ConnectionProxy (= 2.9)
+    - YapDatabase/SQLCipher/Extensions/CrossProcessNotification (= 2.9)
+    - YapDatabase/SQLCipher/Extensions/FilteredViews (= 2.9)
+    - YapDatabase/SQLCipher/Extensions/FullTextSearch (= 2.9)
+    - YapDatabase/SQLCipher/Extensions/Hooks (= 2.9)
+    - YapDatabase/SQLCipher/Extensions/Relationships (= 2.9)
+    - YapDatabase/SQLCipher/Extensions/RTreeIndex (= 2.9)
+    - YapDatabase/SQLCipher/Extensions/SearchResults (= 2.9)
+    - YapDatabase/SQLCipher/Extensions/SecondaryIndex (= 2.9)
+    - YapDatabase/SQLCipher/Extensions/Views (= 2.9)
+  - YapDatabase/SQLCipher/Extensions/ActionManager (2.9):
+    - Reachability (~> 3)
     - YapDatabase/SQLCipher/Core
     - YapDatabase/SQLCipher/Extensions/Views
-  - YapDatabase/SQLCipher/Extensions/FullTextSearch (2.8.3):
+  - YapDatabase/SQLCipher/Extensions/CloudKit (2.9):
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/Hooks (2.8.3):
+  - YapDatabase/SQLCipher/Extensions/ConnectionProxy (2.9):
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/Relationships (2.8.3):
+  - YapDatabase/SQLCipher/Extensions/CrossProcessNotification (2.9):
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/RTreeIndex (2.8.3):
+  - YapDatabase/SQLCipher/Extensions/FilteredViews (2.9):
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/SearchResults (2.8.3):
+    - YapDatabase/SQLCipher/Extensions/Views
+  - YapDatabase/SQLCipher/Extensions/FullTextSearch (2.9):
+    - YapDatabase/SQLCipher/Core
+  - YapDatabase/SQLCipher/Extensions/Hooks (2.9):
+    - YapDatabase/SQLCipher/Core
+  - YapDatabase/SQLCipher/Extensions/Relationships (2.9):
+    - YapDatabase/SQLCipher/Core
+  - YapDatabase/SQLCipher/Extensions/RTreeIndex (2.9):
+    - YapDatabase/SQLCipher/Core
+  - YapDatabase/SQLCipher/Extensions/SearchResults (2.9):
     - YapDatabase/SQLCipher/Core
     - YapDatabase/SQLCipher/Extensions/FullTextSearch
     - YapDatabase/SQLCipher/Extensions/Views
-  - YapDatabase/SQLCipher/Extensions/SecondaryIndex (2.8.3):
+  - YapDatabase/SQLCipher/Extensions/SecondaryIndex (2.9):
     - YapDatabase/SQLCipher/Core
-  - YapDatabase/SQLCipher/Extensions/Views (2.8.3):
+  - YapDatabase/SQLCipher/Extensions/Views (2.9):
     - YapDatabase/SQLCipher/Core
   - ZXingObjC (3.1.0):
     - ZXingObjC/All (= 3.1.0)
   - ZXingObjC/All (3.1.0)
 
 DEPENDENCIES:
-  - AFNetworking (~> 3.0)
+  - AFNetworking (~> 3.1)
   - Appirater (~> 2.0)
   - ARChromeActivity (~> 1.0)
   - BBlock (~> 1.2)
@@ -322,7 +329,6 @@ DEPENDENCIES:
   - PureLayout (~> 3.0)
   - QRCodeReaderViewController (~> 4.0)
   - Reachability (~> 3)
-  - SQLCipher/fts (from `Podspecs/SQLCipher.podspec.json`)
   - SSKeychain (~> 1.2)
   - TTTAttributedLabel (~> 1.10)
   - TUSafariActivity (~> 1.0)
@@ -330,7 +336,7 @@ DEPENDENCIES:
   - VTAcknowledgementsViewController (~> 0.15)
   - XLForm (~> 3.1)
   - XMPPFramework (from `Submodules/XMPPFramework/XMPPFramework.podspec`)
-  - YapDatabase/SQLCipher (~> 2.8)
+  - YapDatabase/SQLCipher (~> 2.9)
   - ZXingObjC (~> 3.0)
 
 EXTERNAL SOURCES:
@@ -351,8 +357,6 @@ EXTERNAL SOURCES:
     :path: Submodules/OTRKit/OTRKit.podspec
   ProxyKit:
     :path: Submodules/ProxyKit/ProxyKit.podspec
-  SQLCipher:
-    :podspec: Podspecs/SQLCipher.podspec.json
   XMPPFramework:
     :path: Submodules/XMPPFramework/XMPPFramework.podspec
 
@@ -362,7 +366,7 @@ CHECKOUT OPTIONS:
     :git: https://github.com/ChatSecure/JSQMessagesViewController
 
 SPEC CHECKSUMS:
-  AFNetworking: a0075feb321559dc78d9d85b55d11caa19eabb93
+  AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
   Appirater: e7c0a47fb67ee5041ce8479e6ba960927fb40264
   ARChromeActivity: 5dcf9b9f09323761f992aff3525cdd777f83609d
   BBlock: c56d7f72597ffe1634fcdc73836c5c0fed3271be
@@ -381,9 +385,9 @@ SPEC CHECKSUMS:
   JTSImageViewController: 1f8ce1cc93dab0d0af8e53badeea7528560cfec9
   JVFloatLabeledTextField: ea4a3d8387ddd43724c472bb2b8ab39b79af05d4
   KissXML: d19dd6dc65e0dc721ba92b3077b8ebdd240f1c1e
-  KVOController: 9fd8f0343670994e4b6f9f0b31f5a45663f3e1cf
+  KVOController: 321b5fc59300fcaabd42c0f679baa7a27efbb2fd
   libsqlfs: 179e4fb40b8c07fd0ee7933ec4c0b9f4815cbd0e
-  Mantle: 299966b00759634931699f69cb6a30b9239b944d
+  Mantle: bc40bb061d8c2c6fb48d5083e04d928c3b7f73d9
   MBProgressHUD: 1569cf7ace17a8bac47aabfbb8580a49690386d1
   MWFeedParser: 2cf646014c1baf6ad1b08c480b40a08180079247
   Navajo: 5fb68239b4e3af4610f31925bae1ca8e6bab8eaa
@@ -394,7 +398,7 @@ SPEC CHECKSUMS:
   PureLayout: f35f5384c9c4e4479df041dbe33ad7577b71ddfb
   QRCodeReaderViewController: 6538745c8f4ffa9407a26bd7f9489ea01739e7b0
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
-  SQLCipher: 46ea06f972292f622aeb2d3f960a573a964d378f
+  SQLCipher: 4c768761421736a247ed6cf412d9045615d53dff
   SSKeychain: c71293fa57216a40ab06c23f4085387583293de4
   TTTAttributedLabel: 0a2ac7b2dd726d32a070dafb01446026b11e624f
   TUSafariActivity: afc55a00965377939107ce4fdc7f951f62454546
@@ -402,7 +406,7 @@ SPEC CHECKSUMS:
   VTAcknowledgementsViewController: 6056f5f5e5ed995bbf0581bed6ddd29355ca9a80
   XLForm: c9ee7e0f859341279bfd894f9589a9d25c23e4df
   XMPPFramework: 38ff8dffab0627c46e3903653383f769938f70f6
-  YapDatabase: 15b6867a07ff30eac3af28794cd2262b4d0ca4ca
+  YapDatabase: c00f4197bba2fea17bdbd82c8e8e3f7104b6fa67
   ZXingObjC: bf15b3814f7a105b6d99f47da2333c93a063650a
 
 COCOAPODS: 0.39.0
