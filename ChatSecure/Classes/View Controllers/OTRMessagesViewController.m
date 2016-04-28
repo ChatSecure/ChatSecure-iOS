@@ -190,9 +190,11 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     if ([self.threadKey length]) {
         [self.viewHandler.keyCollectionObserver observe:self.threadKey collection:self.threadCollection];
-        [self updateviewWithKey:self.threadKey colleciton:self.threadCollection];
+        [self updateViewWithKey:self.threadKey colleciton:self.threadCollection];
         [self.viewHandler setup:OTRChatDatabaseViewExtensionName groups:@[self.threadKey]];
-        self.inputToolbar.contentView.textView.text = self.buddy.composingMessageString;
+        if(![self.inputToolbar.contentView.textView.text length]) {
+            [self moveLastComposingTextForThreadKey:self.threadKey colleciton:self.threadCollection toTextView:self.inputToolbar.contentView.textView];
+        }
     }
     
     
@@ -263,16 +265,17 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     self.threadKey = key;
     self.threadCollection = collection;
+    self.senderId = [self.threadObject threadAccountIdentifier];
     
     if (![oldKey isEqualToString:key] || ![oldCollection isEqualToString:collection]) {
         [self saveCurrentMessageText:self.inputToolbar.contentView.textView.text threadKey:oldKey colleciton:oldCollection];
-        self.senderId = [self.threadObject threadAccountIdentifier];
-        [self.collectionView reloadData];
     }
     
     [self.viewHandler.keyCollectionObserver removeObserver:oldKey forKeyPath:oldCollection];
     [self.viewHandler.keyCollectionObserver observe:self.threadKey collection:self.threadCollection];
-    [self updateviewWithKey:self.threadKey colleciton:self.threadCollection];
+    [self updateViewWithKey:self.threadKey colleciton:self.threadCollection];
+    [self moveLastComposingTextForThreadKey:self.threadKey colleciton:self.threadCollection toTextView:self.inputToolbar.contentView.textView];
+    [self.collectionView reloadData];
 }
 
 - (YapDatabaseConnection *)databaseConnection
@@ -288,7 +291,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     return (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:account];
 }
 
-- (void)updateviewWithKey:(NSString *)key colleciton:(NSString *)collection
+- (void)updateViewWithKey:(NSString *)key colleciton:(NSString *)collection
 {
     if ([collection isEqualToString:[OTRBuddy collection]]) {
         __block OTRBuddy *buddy = nil;
@@ -297,6 +300,8 @@ typedef NS_ENUM(int, OTRDropDownType) {
             buddy = [OTRBuddy fetchObjectWithUniqueID:key transaction:transaction];
             account = [OTRAccount fetchObjectWithUniqueID:buddy.accountUniqueId transaction:transaction];
         }];
+        
+        
         
         //Update UI now
         if (buddy.chatState == kOTRChatStateComposing || buddy.chatState == kOTRChatStatePaused) {
@@ -655,23 +660,40 @@ typedef NS_ENUM(int, OTRDropDownType) {
 
 - (void)saveCurrentMessageText:(NSString *)text threadKey:(NSString *)key colleciton:(NSString *)collection
 {
+    if (![key length] || ![collection length]) {
+        return;
+    }
     
     [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
-        id <OTRThreadOwner> thread = [transaction objectForKey:key inCollection:collection];
+        id <OTRThreadOwner> thread = [[transaction objectForKey:key inCollection:collection] copy];
         [thread setCurrentMessageText:text];
+        [transaction setObject:thread forKey:key inCollection:collection];
+        
+        //Send inactive chat State
         OTRAccount *account = [OTRAccount fetchObjectWithUniqueID:[thread threadAccountIdentifier] transaction:transaction];
         OTRXMPPManager *xmppManager = (OTRXMPPManager *)[[OTRProtocolManager sharedInstance] protocolForAccount:account];
         if (![text length]) {
             [xmppManager sendChatState:kOTRChatStateInactive withBuddyID:[thread threadAccountIdentifier]];
         }
     }];
-    if ([self.threadKey length]) {
+}
+
+//* Takes the current value out of the thread object and sets it to the text view and nils out result*/
+- (void)moveLastComposingTextForThreadKey:(NSString *)key colleciton:(NSString *)collection toTextView:(UITextView *)textView {
+    
+    if (![key length] || ![collection length] || !textView) {
         return;
     }
-    OTRBuddy *buddy = self.buddy;
-    buddy.composingMessageString = self.inputToolbar.contentView.textView.text;
-    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        [buddy saveWithTransaction:transaction];
+    
+    __block NSString *text = nil;
+    [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+        id <OTRThreadOwner> thread = [[transaction objectForKey:key inCollection:collection] copy];
+        text = [thread currentMessageText];
+        [thread setCurrentMessageText:nil];
+        [transaction setObject:thread forKey:key inCollection:collection];
+    } completionQueue:dispatch_get_main_queue() completionBlock:^{
+        textView.text = text;
+        [self receivedTextViewChanged:textView];
     }];
 }
 
@@ -729,6 +751,10 @@ typedef NS_ENUM(int, OTRDropDownType) {
 {
     //Check if the text state changes from having some text to some or vice versa
     UITextView *textView = notification.object;
+    [self receivedTextViewChanged:textView];
+}
+
+- (void)receivedTextViewChanged:(UITextView *)textView {
     BOOL hasText = [textView.text length] > 0;
     if(hasText != self.state.hasText) {
         self.state.hasText = hasText;
@@ -743,6 +769,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }
     
     return;
+
 }
 
 #pragma - mark Update UI
@@ -911,16 +938,20 @@ typedef NS_ENUM(int, OTRDropDownType) {
     if ([[OTRProtocolManager sharedInstance] isAccountConnected:self.account]) {
         //Account is connected
         
-        OTRMessage *message = [[OTRMessage alloc] init];
-        message.buddyUniqueId = self.buddy.uniqueId;
+        __block OTRMessage *message = [[OTRMessage alloc] init];
+        message.buddyUniqueId = self.threadKey;
         message.text = text;
         message.read = YES;
         message.transportedSecurely = NO;
         
-        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        __weak __typeof__(self) weakSelf = self;
+        [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+            __typeof__(self) strongSelf = weakSelf;
             [message saveWithTransaction:transaction];
-            self.buddy.lastMessageDate = message.date;
-            [self.buddy saveWithTransaction:transaction];
+            OTRBuddy *buddy = [[OTRBuddy fetchObjectWithUniqueID:strongSelf.threadKey transaction:transaction] copy];
+            buddy.composingMessageString = nil;
+            buddy.lastMessageDate = message.date;
+            [buddy saveWithTransaction:transaction];
         } completionBlock:^{
             [[OTRKit sharedInstance] encodeMessage:message.text tlvs:nil username:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString tag:message];
         }];
@@ -1362,9 +1393,16 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 
 #pragma - mark database view delegate
 
+- (void)didSetupMappings:(OTRYapViewHandler *)handler
+{
+    // The databse view is setup now so refresh from there
+    [self updateViewWithKey:self.threadKey colleciton:self.threadCollection];
+    [self.collectionView reloadData];
+}
+
 - (void)didReceiveChanges:(OTRYapViewHandler *)handler key:(NSString *)key collection:(NSString *)collection
 {
-    [self updateviewWithKey:key colleciton:collection];
+    [self updateViewWithKey:key colleciton:collection];
 }
 
 - (void)didReceiveChanges:(OTRYapViewHandler *)handler sectionChanges:(NSArray<YapDatabaseViewSectionChange *> *)sectionChanges rowChanges:(NSArray<YapDatabaseViewRowChange *> *)rowChanges
