@@ -56,14 +56,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
-    
-    ////// Reset buddy status //////
-    [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        [OTRBuddy resetAllBuddyStatusesWithTransaction:transaction];
-        [OTRBuddy resetAllChatStatesWithTransaction:transaction];
-    }];
-    
+    [super viewDidLoad];    
    
     ///////////// Setup Navigation Bar //////////////
     
