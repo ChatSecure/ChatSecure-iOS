@@ -29,6 +29,7 @@ import YapDatabase
     func buddy(username: String, accountName: String) -> OTRBuddy?
     func account(accountUniqueID:String) -> OTRAccount?
     func buddy(token:String) -> OTRBuddy?
+    func removeAllOurUnusedTokensMissingExpiration(completion:((count:Int)->Void)?)
 }
 
 extension Account {
@@ -40,6 +41,7 @@ extension Account {
 class PushStorage: NSObject, PushStorageProtocol {
     
     let databaseConnection: YapDatabaseConnection
+    let workQueue = dispatch_queue_create("PushStorage_Work_Queue", DISPATCH_QUEUE_SERIAL)
     
     static let unusedTokenStoreSize:UInt = 5
     
@@ -52,8 +54,6 @@ class PushStorage: NSObject, PushStorageProtocol {
         ///Alternate Collection for tokens before they're 'attached' to a buddy. Just downloaded from the server
         case unusedTokenCollection = "kYapUnusedTokenCollection"
     }
-    
-    
     
     init(databaseConnection:YapDatabaseConnection) {
         self.databaseConnection = databaseConnection
@@ -192,6 +192,40 @@ class PushStorage: NSObject, PushStorageProtocol {
             throw err
         }
         return tokens
+    }
+    
+    /** 
+     Asynchronously remvoes all the unused tokens in the unsedTokenCollection that are missing an expires date. This was needed
+     for when we moved from not having expires date to saving expires date in the database. This clears those tokens that have not been
+     given out already.
+     
+     - parameter completion: a block with the number of tokens removed
+     */
+    func removeAllOurUnusedTokensMissingExpiration(completion: ((count: Int) -> Void)?) {
+        var count:Int = 0
+        self.databaseConnection.asyncReadWriteWithBlock({ (transaction) in
+            let collection = PushYapCollections.unusedTokenCollection.rawValue
+            var removeKeyArray:[String] = []
+            transaction.enumerateKeysAndObjectsInCollection(collection, usingBlock: { (key, object, stop) in
+                if let token = object as? TokenContainer {
+                    if token.pushToken?.expires == nil {
+                        removeKeyArray.append(token.uniqueId)
+                    }
+                }
+            })
+            
+            count = removeKeyArray.count
+            transaction.removeObjectsForKeys(removeKeyArray, inCollection: collection)
+            
+            }, completionQueue: self.workQueue) {
+                if let comp = completion {
+                    dispatch_async(dispatch_get_main_queue(), {
+                        comp(count: count)
+                    })
+                }
+                
+                
+        }
     }
     
     /**
