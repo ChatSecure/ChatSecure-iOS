@@ -33,6 +33,7 @@ public class PushController: NSObject, OTRPushTLVHandlerDelegate, PushController
     var apiClient : Client
     var callbackQueue = NSOperationQueue()
     var otrListener: PushOTRListener?
+    let timeBufffer:NSTimeInterval = 60*60*24
     
     public init(baseURL: NSURL, sessionConfiguration: NSURLSessionConfiguration, databaseConnection: YapDatabaseConnection, tlvHandler:OTRPushTLVHandlerProtocol?) {
         self.apiClient = Client(baseUrl: baseURL, urlSessionConfiguration: sessionConfiguration, account: nil)
@@ -40,7 +41,7 @@ public class PushController: NSObject, OTRPushTLVHandlerDelegate, PushController
         super.init()
         self.apiClient.account = self.storage.thisDevicePushAccount()
         self.otrListener = PushOTRListener(storage: self.storage, pushController: self, tlvHandler: tlvHandler)
-        self.storage.removeAllOurUnusedTokensMissingExpiration(nil)
+        self.storage.removeAllOurExpiredUnusedTokens(self.timeBufffer, completion: nil)
     }
     
     public func createNewRandomPushAccount(completion:(success: Bool, error: NSError?) -> Void) {

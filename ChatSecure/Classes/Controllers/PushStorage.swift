@@ -29,7 +29,17 @@ import YapDatabase
     func buddy(username: String, accountName: String) -> OTRBuddy?
     func account(accountUniqueID:String) -> OTRAccount?
     func buddy(token:String) -> OTRBuddy?
-    func removeAllOurUnusedTokensMissingExpiration(completion:((count:Int)->Void)?)
+    
+    /**
+     * Asynchronously remvoes all the unused tokens in the unsedTokenCollection that are missing an expires date. This was needed
+     * for when we moved from not having expires date to saving expires date in the database. This clears those tokens that have not been
+     * given out already.
+     *
+     * parameter timeBuffer: Destry tokens that expire this far into the future. This allows you to clear out tokens that may
+     * expire in the next few hours or days
+     * parameter completion: This is called once all the tokens have been removed and the count of total tokens remvoed
+    */
+    func removeAllOurExpiredUnusedTokens(timeBuffer:NSTimeInterval, completion:((count:Int)->Void)?)
 }
 
 extension Account {
@@ -194,21 +204,21 @@ class PushStorage: NSObject, PushStorageProtocol {
         return tokens
     }
     
-    /** 
-     Asynchronously remvoes all the unused tokens in the unsedTokenCollection that are missing an expires date. This was needed
-     for when we moved from not having expires date to saving expires date in the database. This clears those tokens that have not been
-     given out already.
-     
-     - parameter completion: a block with the number of tokens removed
-     */
-    func removeAllOurUnusedTokensMissingExpiration(completion: ((count: Int) -> Void)?) {
+    func removeAllOurExpiredUnusedTokens(timeBuffer: NSTimeInterval, completion: ((count: Int) -> Void)?) {
         var count:Int = 0
         self.databaseConnection.asyncReadWriteWithBlock({ (transaction) in
             let collection = PushYapCollections.unusedTokenCollection.rawValue
             var removeKeyArray:[String] = []
             transaction.enumerateKeysAndObjectsInCollection(collection, usingBlock: { (key, object, stop) in
                 if let token = object as? TokenContainer {
-                    if token.pushToken?.expires == nil {
+                    //Check that there is an expires date otherwise remove
+                    guard let expiresDate = token.pushToken?.expires else {
+                        removeKeyArray.append(token.uniqueId)
+                        return
+                    }
+                    
+                    // Check that the date is farther in the future than currentDate + timeBuffer
+                    if (NSDate(timeIntervalSinceNow: timeBuffer).compare(expiresDate) == .OrderedDescending ) {
                         removeKeyArray.append(token.uniqueId)
                     }
                 }

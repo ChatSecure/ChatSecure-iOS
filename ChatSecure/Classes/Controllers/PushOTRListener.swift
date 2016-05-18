@@ -56,7 +56,11 @@ class PushOTRListener: NSObject {
                                 if  (error.code == PushError.misingExpiresDate.rawValue) {
                                     self?.pushController?.storage.removeToken(token)
                                     //Somehow we got a token without a expires date. We need to clear the database of these tokens and try again
-                                    self?.pushController?.storage.removeAllOurUnusedTokensMissingExpiration({[weak self] (count) in
+                                    guard let timeBuffer = self?.pushController?.timeBufffer else {
+                                        return
+                                    }
+                                    
+                                    self?.pushController?.storage.removeAllOurExpiredUnusedTokens(timeBuffer, completion: { (count) in
                                         //try again
                                         self?.handleNotification(notification)
                                     })
