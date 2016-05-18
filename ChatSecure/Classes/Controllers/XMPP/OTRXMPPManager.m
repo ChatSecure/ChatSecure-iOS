@@ -255,6 +255,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     
     self.xmppCapabilities.autoFetchHashedCapabilities = YES;
     self.xmppCapabilities.autoFetchNonHashedCapabilities = NO;
+    self.xmppCapabilities.autoFetchMyServerCapabilities = YES;
     
     
 	// Activate xmpp modules
@@ -639,7 +640,9 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     
     [self changeLoginStatus:OTRLoginStatusAuthenticated error:nil];
     
-    
+    // Refetch capabilities to check for XEP-0357 support
+    XMPPJID *jid = [XMPPJID jidWithString:[self.JID bare]];
+    [self.xmppCapabilities fetchCapabilitiesForJID:jid];
 }
 
 - (void)xmppStream:(XMPPStream *)sender didNotAuthenticate:(NSXMLElement *)error
@@ -778,6 +781,12 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     */
     
     
+}
+
+#pragma mark XMPPCapabilitiesDelegate
+
+- (void)xmppCapabilities:(XMPPCapabilities *)sender didDiscoverCapabilities:(NSXMLElement *)caps forJID:(XMPPJID *)jid {
+    DDLogVerbose(@"%@: %@\n%@:%@", THIS_FILE, THIS_METHOD, jid, caps);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

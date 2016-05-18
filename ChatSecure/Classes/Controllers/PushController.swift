@@ -122,8 +122,9 @@ public class PushController: NSObject, OTRPushTLVHandlerDelegate, PushController
         
     }
     
-    
-    
+    public func getPubsubEndpoint(completion:(endpoint:String?,error:NSError?) -> Void) {
+        self.apiClient.getPubsubEndpoint(completion)
+    }
     
     
     public func getNewPushToken(buddyKey:String, completion:(token:Token?,error:NSError?) -> Void) {
