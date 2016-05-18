@@ -48,8 +48,24 @@ class PushOTRListener: NSObject {
                 if let account = self.storage?.account(buddy.accountUniqueId) {
                     //Everytime we're starting a new OTR Session we resend a new fresh push token either from the server or the cache
                     self.pushController?.getNewPushToken(buddy.uniqueId, completion: {[weak self] (t, error) -> Void in
-                        if let token = t {
-                            self?.sendOffToken(token, buddyUsername: buddy.username, accountUsername: account.username, protocol: account.protocolTypeString())
+                        if let token = t, pushToken = token.pushToken {
+                            do {
+                                try self?.sendOffToken(pushToken, buddyUsername: buddy.username, accountUsername: account.username, protocol: account.protocolTypeString())
+                            } catch let error as NSError {
+                                
+                                if  (error.code == PushError.misingExpiresDate.rawValue) {
+                                    self?.pushController?.storage.removeToken(token)
+                                    //Somehow we got a token without a expires date. We need to clear the database of these tokens and try again
+                                    guard let timeBuffer = self?.pushController?.timeBufffer else {
+                                        return
+                                    }
+                                    
+                                    self?.pushController?.storage.removeAllOurExpiredUnusedTokens(timeBuffer, completion: { (count) in
+                                        //try again
+                                        self?.handleNotification(notification)
+                                    })
+                                }
+                            }
                         }
                     })
                 }
@@ -57,10 +73,11 @@ class PushOTRListener: NSObject {
         }
     }
     
-    func sendOffToken(token:Token, buddyUsername:String, accountUsername:String, `protocol`:String) -> Void {
+    func sendOffToken(token:Token, buddyUsername:String, accountUsername:String, `protocol`:String) throws -> Void {
         if let url = self.pushController?.apiClient.messageEndpont().absoluteString {
-            let data = PushSerializer.serialize([token], APIEndpoint: url)
-            self.tlvHandler?.sendPushData(data, username: buddyUsername, accountName:accountUsername  , protocol: `protocol`)
+            if let data = try PushSerializer.serialize([token], APIEndpoint: url) {
+                self.tlvHandler?.sendPushData(data, username: buddyUsername, accountName:accountUsername  , protocol: `protocol`)
+            }
         }
     }
     
