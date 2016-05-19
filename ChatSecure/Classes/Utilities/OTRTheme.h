@@ -31,6 +31,8 @@
 /** Override this in subclass to use a different compose view controller class */
 - (Class) composeViewControllerClass;
 
+/** Override this in subclass to use a different invite view controller class */
+- (Class) inviteViewControllerClass;
 
 
 @end
