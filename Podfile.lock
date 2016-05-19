@@ -25,7 +25,7 @@ PODS:
   - BBlock/StoreKit (1.2.1)
   - BBlock/UIKit (1.2.1)
   - BButton (4.0.2)
-  - ChatSecure-Push-iOS (0.1)
+  - ChatSecure-Push-iOS (0.2)
   - CocoaAsyncSocket (7.4.3):
     - CocoaAsyncSocket/All (= 7.4.3)
   - CocoaAsyncSocket/All (7.4.3):
@@ -371,7 +371,7 @@ SPEC CHECKSUMS:
   ARChromeActivity: 5dcf9b9f09323761f992aff3525cdd777f83609d
   BBlock: c56d7f72597ffe1634fcdc73836c5c0fed3271be
   BButton: ab0f2ed3b998ae73c5188b57d270d81e4a1eeb27
-  ChatSecure-Push-iOS: 80ce8a66f8a43bb99dc0c38609243a3f07edf8ff
+  ChatSecure-Push-iOS: fe8577fd81ff76b1f303dcd51a350fb0c964a6d0
   CocoaAsyncSocket: a18c75dca4b08723628a0bacca6e94803d90be91
   CocoaLumberjack: 17fe8581f84914d5d7e6360f7c70022b173c3ae0
   CPAProxy: cfd27b25328d6517b1f8570c4f0045838353e888

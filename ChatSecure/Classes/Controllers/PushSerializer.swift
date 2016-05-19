@@ -13,17 +13,25 @@ enum jsonKeys: String {
     case endpoint = "endpoint"
     case tokens = "tokens"
     case extraData = "extra_data"
+    case dateExpires = "date_expires"
 }
 
 public class PushSerializer: NSObject {
     
-    public class func serialize(tokens:[Token], APIEndpoint:String) -> NSData? {
+    public class func serialize(tokens:[Token], APIEndpoint:String) throws -> NSData? {
         if tokens.count < 1 {
             return nil
         }
         var tokenStrings:[String] = []
+        var expiresDate:[String?] = []
         for token in tokens {
             tokenStrings.append(token.tokenString)
+            guard let date = token.expires else {
+                throw PushError.misingExpiresDate.error()
+            }
+            
+            let dateString = Deserializer.dateFormatter().stringFromDate(date)
+            expiresDate.append(dateString)
         }
         
         let jsonDictionary = [jsonKeys.endpoint.rawValue: APIEndpoint, jsonKeys.tokens.rawValue: tokenStrings]

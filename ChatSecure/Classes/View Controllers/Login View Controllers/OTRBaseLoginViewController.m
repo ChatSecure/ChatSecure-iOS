@@ -113,7 +113,7 @@
 }
 
 - (void) pushInviteViewController {
-    OTRInviteViewController *inviteVC = [[OTRInviteViewController alloc] init];
+    OTRInviteViewController *inviteVC = [[[[OTRAppDelegate appDelegate].theme inviteViewControllerClass] alloc] init];
     inviteVC.account = self.account;
     [self.navigationController pushViewController:inviteVC animated:YES];
 }

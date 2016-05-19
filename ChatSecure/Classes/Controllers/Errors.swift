@@ -16,6 +16,7 @@ enum PushError: Int {
     case invalidJSON        = 305
     case missingAPIEndpoint = 306
     case missingTokens      = 307
+    case misingExpiresDate  = 308
 }
 
 extension PushError {
@@ -35,6 +36,8 @@ extension PushError {
             return "Missing API endpoint key."
         case .missingTokens:
             return "Missing token key"
+        case .misingExpiresDate:
+            return "Missing expires date"
         }
     }
     
