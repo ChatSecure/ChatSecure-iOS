@@ -51,9 +51,14 @@ public class EnablePushViewController: UIViewController {
     
     func showNextScreen() {
         if self.account != nil {
-            let inviteVC = OTRInviteViewController()
-            inviteVC.account = self.account
-            self.navigationController?.pushViewController(inviteVC, animated: true)
+            
+            let appDelegate = UIApplication.sharedApplication().delegate as? OTRAppDelegate
+            var inviteVC:OTRInviteViewController? = nil
+            if let c = appDelegate?.theme.inviteViewControllerClass() as? OTRInviteViewController.Type {
+                inviteVC = c.init()
+                inviteVC!.account = self.account
+                self.navigationController?.pushViewController(inviteVC!, animated: true)
+            }
         } else {
             self.dismissViewControllerAnimated(true, completion: nil)
         }
