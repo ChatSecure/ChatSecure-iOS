@@ -129,7 +129,7 @@ public class PushController: NSObject, OTRPushTLVHandlerDelegate, PushController
     }
     
     
-    public func getNewPushToken(buddyKey:String, completion:(token:TokenContainer?,error:NSError?) -> Void) {
+    public func getNewPushToken(buddyKey:String?, completion:(token:TokenContainer?,error:NSError?) -> Void) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {[weak self] () -> Void in
             guard let tokenContainer = self?.storage.unusedToken() else {
                 self?.updateUnusedTokenStore({[weak self] (success, error) -> Void in
@@ -145,7 +145,9 @@ public class PushController: NSObject, OTRPushTLVHandlerDelegate, PushController
             }
             
             self?.storage.removeUnusedToken(tokenContainer)
-            self?.storage.associateBuddy(tokenContainer, buddyKey: buddyKey)
+            if let buddyKey = buddyKey {
+                self?.storage.associateBuddy(tokenContainer, buddyKey: buddyKey)
+            }
             self?.callbackQueue.addOperationWithBlock({ () -> Void in
                 completion(token: tokenContainer, error: nil)
             })

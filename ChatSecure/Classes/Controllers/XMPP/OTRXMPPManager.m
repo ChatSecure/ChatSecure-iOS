@@ -65,6 +65,7 @@
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 #import "OTRXMPPBuddyManager.h"
 @import OTRAssets;
+#import "XMPPIQ+XEP_0357.h"
 
 NSString *const OTRXMPPRegisterSucceededNotificationName = @"OTRXMPPRegisterSucceededNotificationName";
 NSString *const OTRXMPPRegisterFailedNotificationName    = @"OTRXMPPRegisterFailedNotificationName";
@@ -787,10 +788,62 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 
 - (void)xmppCapabilities:(XMPPCapabilities *)sender didDiscoverCapabilities:(NSXMLElement *)caps forJID:(XMPPJID *)jid {
     DDLogVerbose(@"%@: %@\n%@:%@", THIS_FILE, THIS_METHOD, jid, caps);
+    
+    // Enable XEP-0357 push bridge if server supports it
+    __block BOOL supportsPushXEP = NO;
+    NSArray <NSXMLElement*> *featureElements = [caps elementsForName:@"feature"];
+    [featureElements enumerateObjectsUsingBlock:^(NSXMLElement * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSString *featureName = [obj attributeStringValueForName:@"var"];
+        if ([featureName isEqualToString:XMPPPushXMLNS]){
+            supportsPushXEP = YES;
+            *stop = YES;
+        }
+    }];
+    PushController *pushController = [OTRAppDelegate appDelegate].pushController;
+    BOOL hasPushAccount = [pushController.pushStorage hasPushAccount];
+    
+    if (supportsPushXEP && hasPushAccount) {
+        [[OTRAppDelegate appDelegate].pushController getPubsubEndpoint:^(NSString * _Nullable endpoint, NSError * _Nullable error) {
+            if (endpoint) {
+                [pushController getNewPushToken:nil completion:^(TokenContainer * _Nullable token, NSError * _Nullable error) {
+                    if (token) {
+                        [self enablePushWithToken:token endpoint:endpoint];
+                    } else if (error) {
+                        DDLogError(@"fetch token error: %@", error);
+                    }
+                }];
+            } else if (error) {
+                DDLogError(@"357 pubsub Error: %@", error);
+            }
+        }];
+    }
+}
+
+- (void) enablePushWithToken:(TokenContainer*)token endpoint:(NSString*)endpoint {
+    __block OTRXMPPAccount *account = nil;
+    [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+        NSString *collection = [self.account.class collection];
+        NSString *key = self.account.uniqueId;
+        account = [[transaction objectForKey:key inCollection:collection] copy];
+        account.pushPubsubEndpoint = endpoint;
+        if (!account.pushPubsubNode.length) {
+            account.pushPubsubNode = [[NSUUID UUID] UUIDString];
+        }
+        [transaction setObject:account forKey:key inCollection:collection];
+    }];
+    XMPPJID *nodeJID = [XMPPJID jidWithString:endpoint]; 
+    NSString *tokenString = token.pushToken.tokenString;
+    if (tokenString.length > 0) {
+        XMPPIQ *enableElement = [XMPPIQ enableNotificationsElementWithJID:nodeJID node:account.pushPubsubNode options:@{@"token": tokenString}];
+        
+        [self.xmppStream sendElement:enableElement];
+    } else {
+        DDLogError(@"Token string length 0!");
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark OTRProtocol 
+#pragma mark OTRProtocol
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 - (void) sendMessage:(OTRMessage*)message

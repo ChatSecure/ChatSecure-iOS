@@ -16,6 +16,9 @@
 @property (nonatomic, strong) NSString *resource;
 @property (nonatomic) int port;
 
+@property (nonatomic, strong) NSString *pushPubsubEndpoint;
+@property (nonatomic, strong) NSString *pushPubsubNode;
+
 + (int)defaultPort;
 + (NSString *)newResource;
 
