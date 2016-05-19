@@ -11,6 +11,7 @@
 #import "OTRMessagesHoldTalkViewController.h"
 #import "OTRComposeViewController.h"
 #import "OTRMessagesGroupViewController.h"
+#import "OTRInviteViewController.h"
 
 @implementation OTRTheme
 
@@ -42,6 +43,10 @@
 
 - (Class)composeViewControllerClass {
     return [OTRComposeViewController class];
+}
+
+- (Class)inviteViewControllerClass {
+    return [OTRInviteViewController class];
 }
 
 @end
