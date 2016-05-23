@@ -391,20 +391,15 @@
     //[OTRUtilities deleteAllBuddiesAndMessages];
 }
 
-- (void)application:(UIApplication *)application didReceiveRemoteNotification:(nonnull NSDictionary *)userInfo
-{
-    [self.pushController receiveRemoteNotification:userInfo completion:^(OTRBuddy * _Nullable buddy, NSError * _Nullable error) {
-        [application showLocalNotificationForKnockFrom:buddy];
-    }];
-    
-}
-
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
     [self autoLoginFromBackground:YES];
 
     [self.pushController receiveRemoteNotification:userInfo completion:^(OTRBuddy * _Nullable buddy, NSError * _Nullable error) {
-        [application showLocalNotificationForKnockFrom:buddy];
+        // Only show notification if buddy lookup succeeds
+        if (buddy) {
+            [application showLocalNotificationForKnockFrom:buddy];
+        }
     }];
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(20 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{

@@ -40,7 +40,7 @@ public class DeviceContainer: OTRYapDatabaseObject, YapDatabaseRelationshipNode 
 }
 
 public class TokenContainer: OTRYapDatabaseObject, YapDatabaseRelationshipNode {
-    var pushToken:Token?
+    public var pushToken:Token?
     var date = NSDate()
     var accountKey: String?
     var buddyKey: String?
