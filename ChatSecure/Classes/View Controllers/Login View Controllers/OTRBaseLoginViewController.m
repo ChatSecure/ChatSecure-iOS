@@ -185,7 +185,19 @@
 
 - (void)handleXMPPError:(NSError *)error
 {
-    [self showAlertViewWithTitle:ERROR_STRING message:XMPP_FAIL_STRING error:error];
+    if (error.code == OTRXMPPXMLErrorConflict) {
+        //Caught the conflict error before there's any alert displayed on the screen
+        //Create a new nickname with a random hex value at the end
+        NSString *uniqueString = [[OTRPasswordGenerator randomDataWithLength:2] hexString];
+        XLFormRowDescriptor* nicknameRow = [self.form formRowWithTag:kOTRXLFormNicknameTextFieldTag];
+        NSString *value = [nicknameRow value];
+        NSString *newValue = [NSString stringWithFormat:@"%@.%@",value,uniqueString];
+        nicknameRow.value = newValue;
+        [self loginButtonPressed:nil];
+    } else {
+        [self showAlertViewWithTitle:ERROR_STRING message:XMPP_FAIL_STRING error:error];
+    }
+    
 }
 
 - (void)showAlertViewWithTitle:(NSString *)title message:(NSString *)message error:(NSError *)error
