@@ -41,11 +41,11 @@ public class OTRSplitViewCoordinator: NSObject, OTRConversationViewControllerDel
             buddy = OTRBuddy.fetchObjectWithUniqueID(buddyKey, transaction: transaction)
         }
         if let b = buddy {
-            self.enterConversatoinWithThread(b, sender: nil)
+            self.enterConversationWithThread(b, sender: nil)
         }
     }
     
-    public func enterConversatoinWithThread(threadOwner:OTRThreadOwner, sender:AnyObject?) {
+    public func enterConversationWithThread(threadOwner:OTRThreadOwner, sender:AnyObject?) {
         guard let splitVC = self.splitViewController else {
             return
         }
@@ -74,7 +74,7 @@ public class OTRSplitViewCoordinator: NSObject, OTRConversationViewControllerDel
     
     //MARK: OTRConversationViewControllerDelegate Methods
     public func conversationViewController(conversationViewController: OTRConversationViewController!, didSelectThread threadOwner: OTRThreadOwner!) {
-        self.enterConversatoinWithThread(threadOwner, sender: conversationViewController)
+        self.enterConversationWithThread(threadOwner, sender: conversationViewController)
     }
     
     public func conversationViewController(conversationViewController: OTRConversationViewController!, didSelectCompose sender: AnyObject!) {

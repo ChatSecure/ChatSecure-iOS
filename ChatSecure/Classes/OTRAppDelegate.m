@@ -438,7 +438,7 @@
     }];
     
     if (thread) {
-        [self.splitViewCoordinator enterConversatoinWithThread:thread sender:notification];
+        [self.splitViewCoordinator enterConversationWithThread:thread sender:notification];
     }
 }
 
