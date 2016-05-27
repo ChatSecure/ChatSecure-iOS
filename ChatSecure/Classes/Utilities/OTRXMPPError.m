@@ -11,6 +11,7 @@
 #import "NSXMLElement+XMPP.h"
 #import "OTRStrings.h"
 #import "OTRLanguageManager.h"
+#import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 NSString *const OTRXMPPErrorDomain                = @"OTRXMPPErrorDomain";
 NSString *const OTRXMPPXMLErrorKey                = @"OTRXMPPXMLErrorKey";
@@ -34,24 +35,34 @@ NSString *const OTRXMPPSSLHostnameKey             = @"OTRXMPPSSLHostnameKey";
     NSError * error = [NSError errorWithDomain:OTRXMPPErrorDomain code:OTRXMPPSSLError userInfo:userInfo];
     return error;
 }
+
 + (NSError *)errorForXMLElement:(NSXMLElement *)xmlError
 {
     NSString * errorString = [self errorStringForXMLElement:xmlError];
     
-    NSMutableDictionary * userInfo = [NSMutableDictionary dictionary];
+    NSMutableDictionary * userInfo = [[NSMutableDictionary alloc] init];
     if (errorString) {
         [userInfo setObject:errorString forKey:NSLocalizedDescriptionKey];
-    } else if (xmlError) {
-        [userInfo setObject:xmlError.stringValue forKey:NSLocalizedDescriptionKey];
     }
     
-    if(xmlError)
-    {
+    if(xmlError) {
         [userInfo setObject:xmlError forKey:OTRXMPPXMLErrorKey];
     }
     
-    NSError * error = [NSError errorWithDomain:OTRXMPPErrorDomain code:OTRXMPPXMLError userInfo:userInfo];
+    NSError * error = [NSError XMPPXMLError:[self errorEnumForXMLElement:xmlError] userInfo:userInfo];
+    
     return error;
+}
+
++ (OTRXMPPXMLError)errorEnumForXMLElement:(NSXMLElement *)xmlError {
+    
+    if([[[xmlError elementsForName:@"error"] firstObject] elementForName:@"conflict" xmlns:@"urn:ietf:params:xml:ns:xmpp-stanzas"]) {
+        return OTRXMPPXMLErrorConflict;
+    } else if([[[xmlError elementsForName:@"error"] firstObject] elementForName:@"not-acceptable" xmlns:@"urn:ietf:params:xml:ns:xmpp-stanzas"]) {
+        return OTRXMPPXMLErrorNotAcceptable;
+    } else {
+        return OTRXMPPXMLErrorUnkownError;
+    }
 }
 
 + (NSString *)errorStringForXMLElement:(NSXMLElement *)xmlError
