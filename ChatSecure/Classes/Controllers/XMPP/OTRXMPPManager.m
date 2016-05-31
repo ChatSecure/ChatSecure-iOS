@@ -684,10 +684,9 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 
 - (void)xmppStream:(XMPPStream *)sender didReceiveMessage:(XMPPMessage *)xmppMessage
 {
-	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
-
-    
+	DDLogVerbose(@"%@: %@ %@", THIS_FILE, THIS_METHOD, xmppMessage);
 }
+
 - (void)xmppStream:(XMPPStream *)sender didReceivePresence:(XMPPPresence *)presence
 {
 	DDLogVerbose(@"%@: %@ - %@\nType: %@\nShow: %@\nStatus: %@", THIS_FILE, THIS_METHOD, [presence from], [presence type], [presence show],[presence status]);
@@ -790,6 +789,18 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     DDLogVerbose(@"%@: %@\n%@:%@", THIS_FILE, THIS_METHOD, jid, caps);
     
     // Enable XEP-0357 push bridge if server supports it
+    NSString *myDomain = [self.xmppStream.myJID domain];
+    if ([[jid bare] isEqualToString:[jid domain]]) {
+        if (![[jid domain] isEqualToString:myDomain]) {
+            // You're checking the server's capabilities but it's not your server(?)
+            return;
+        }
+    } else {
+        if (![[self.xmppStream.myJID bare] isEqualToString:[jid bare]]) {
+            // You're checking someone else's capabilities
+            return;
+        }
+    }
     __block BOOL supportsPushXEP = NO;
     NSArray <NSXMLElement*> *featureElements = [caps elementsForName:@"feature"];
     [featureElements enumerateObjectsUsingBlock:^(NSXMLElement * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
