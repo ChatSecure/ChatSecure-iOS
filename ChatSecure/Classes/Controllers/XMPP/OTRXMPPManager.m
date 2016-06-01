@@ -789,6 +789,11 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     DDLogVerbose(@"%@: %@\n%@:%@", THIS_FILE, THIS_METHOD, jid, caps);
     
     // Enable XEP-0357 push bridge if server supports it
+    // ..but don't register for Tor accounts
+    if (self.account.accountType == OTRAccountTypeXMPPTor) {
+        return;
+    }
+    
     NSString *myDomain = [self.xmppStream.myJID domain];
     if ([[jid bare] isEqualToString:[jid domain]]) {
         if (![[jid domain] isEqualToString:myDomain]) {
