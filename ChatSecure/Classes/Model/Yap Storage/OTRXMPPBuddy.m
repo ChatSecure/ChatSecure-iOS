@@ -23,6 +23,7 @@
 {
     if (self = [super init]) {
         self.pendingApproval = NO;
+        self.hasIncomingSubscriptionRequest = NO;
         self.waitingForvCardTempFetch = NO;
     }
     return self;

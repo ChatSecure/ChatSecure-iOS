@@ -80,6 +80,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     
     [self.tableView registerClass:[OTRConversationCell class] forCellReuseIdentifier:[OTRConversationCell reuseIdentifier]];
     [self.tableView registerClass:[OTRBuddyApprovalCell class] forCellReuseIdentifier:[OTRBuddyApprovalCell reuseIdentifier]];
+    [self.tableView registerClass:[OTRBuddyInfoCell class] forCellReuseIdentifier:[OTRBuddyInfoCell reuseIdentifier]];
     
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[tableView]|" options:0 metrics:0 views:@{@"tableView":self.tableView}]];
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[tableView]|" options:0 metrics:0 views:@{@"tableView":self.tableView}]];
@@ -275,7 +276,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     if ([object isKindOfClass:[OTRXMPPPresenceSubscriptionRequest class]]) {
         OTRXMPPPresenceSubscriptionRequest *request = object;
         OTRXMPPBuddy *buddy = [[OTRXMPPBuddy alloc] init];
-        buddy.pendingApproval = YES;
+        buddy.hasIncomingSubscriptionRequest = YES;
         buddy.displayName = request.displayName;
         buddy.username = request.jid;
         thread = buddy;
@@ -363,7 +364,21 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     OTRXMPPManager *manager = (OTRXMPPManager*)[[OTRProtocolManager sharedInstance] protocolForAccount:account];
     XMPPJID *jid = [XMPPJID jidWithString:request.jid];
     if (approved) {
+        // Create new buddy in database so it can be shown immediately in list
+        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+            OTRXMPPBuddy *buddy = [OTRXMPPBuddy fetchBuddyWithUsername:request.jid withAccountUniqueId:account.uniqueId transaction:transaction];
+            if (!buddy) {
+                buddy = [[OTRXMPPBuddy alloc] init];
+                buddy.username = request.jid;
+                buddy.accountUniqueId = account.uniqueId;
+                // hack to show buddy in conversations view
+                buddy.lastMessageDate = [NSDate date];
+            }
+            buddy.displayName = request.jid;
+            [buddy saveWithTransaction:transaction];
+        }];
         [manager.xmppRoster acceptPresenceSubscriptionRequestFrom:jid andAddToRoster:YES];
+        
     } else {
         [manager.xmppRoster rejectPresenceSubscriptionRequestFrom:jid];
     }
@@ -377,7 +392,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     OTRBuddyImageCell *cell = nil;
     id <OTRThreadOwner> thread = [self threadForIndexPath:indexPath];
     if ([thread isKindOfClass:[OTRXMPPBuddy class]] &&
-        ((OTRXMPPBuddy*)thread).isPendingApproval) {
+        ((OTRXMPPBuddy*)thread).hasIncomingSubscriptionRequest) {
         OTRBuddyApprovalCell *approvalCell = [tableView dequeueReusableCellWithIdentifier:[OTRBuddyApprovalCell reuseIdentifier] forIndexPath:indexPath];
         [approvalCell setActionBlock:^(OTRBuddyApprovalCell *cell, BOOL approved) {
             NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
@@ -390,9 +405,13 @@ static CGFloat kOTRConversationCellHeight = 80.0;
         cell = approvalCell;
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         
+    } else if ([thread isKindOfClass:[OTRXMPPBuddy class]] &&
+               ((OTRXMPPBuddy*)thread).pendingApproval) {
+        cell = [tableView dequeueReusableCellWithIdentifier:[OTRBuddyInfoCell reuseIdentifier] forIndexPath:indexPath];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
     } else {
         cell = [tableView dequeueReusableCellWithIdentifier:[OTRConversationCell reuseIdentifier] forIndexPath:indexPath];
-        //cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+        cell.selectionStyle = UITableViewCellSelectionStyleDefault;
     }
     
     [cell.avatarImageView.layer setCornerRadius:(kOTRConversationCellHeight-2.0*OTRBuddyImageCellPadding)/2.0];
@@ -422,9 +441,10 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 {
     id <OTRThreadOwner> thread = [self threadForIndexPath:indexPath];
     
-    // Bail out if it's a subscription request
+    // Bail out if it's a subscription request or pending approval
     if ([thread isKindOfClass:[OTRXMPPBuddy class]] &&
-    ((OTRXMPPBuddy*)thread).isPendingApproval) {
+        (((OTRXMPPBuddy*)thread).hasIncomingSubscriptionRequest ||
+        ((OTRXMPPBuddy*)thread).isPendingApproval)) {
         return;
     }
 
