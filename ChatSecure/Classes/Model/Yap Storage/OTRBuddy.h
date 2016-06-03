@@ -44,6 +44,8 @@ extern const struct OTRBuddyAttributes {
 @property (nonatomic) OTRChatState chatState;
 @property (nonatomic) OTRChatState lastSentChatState;
 @property (nonatomic) OTRThreadStatus status;
+
+/** the date last message was received for buddy. also used by incoming/outgoing subscription requests to force buddy to appear in conversation view */
 @property (nonatomic, strong) NSDate *lastMessageDate;
 
 /**

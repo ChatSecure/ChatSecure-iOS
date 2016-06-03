@@ -59,6 +59,9 @@ NSString *OTRPushAccountGroup = @"Account";
                 return OTRConversationGroup;
             }
         }
+        if ([object isKindOfClass:[OTRXMPPPresenceSubscriptionRequest class]]) {
+            return OTRAllPresenceSubscriptionRequestGroup;
+        }
         return nil; // exclude from view
     }];
     
@@ -70,18 +73,24 @@ NSString *OTRPushAccountGroup = @"Account";
                 
                 return [[thread2 lastMessageDate] compare:[thread1 lastMessageDate]];
             }
+        } else if ([group isEqualToString:OTRAllPresenceSubscriptionRequestGroup]) {
+            if ([object1 isKindOfClass:[OTRXMPPPresenceSubscriptionRequest class]] && [object2 isKindOfClass:[OTRXMPPPresenceSubscriptionRequest class]]) {
+                OTRXMPPPresenceSubscriptionRequest *request1 = object1;
+                OTRXMPPPresenceSubscriptionRequest *request2 = object2;
+                return [request2.date compare:request1.date];
+            }
         }
         return NSOrderedSame;
     }];
     
     YapDatabaseViewOptions *options = [[YapDatabaseViewOptions alloc] init];
     options.isPersistent = YES;
-    NSSet *whiteListSet = [NSSet setWithObjects:[OTRBuddy collection],[OTRXMPPRoom collection], nil];
+    NSSet *whiteListSet = [NSSet setWithObjects:[OTRBuddy collection],[OTRXMPPRoom collection], [OTRXMPPPresenceSubscriptionRequest collection], nil];
     options.allowedCollections = [[YapWhitelistBlacklist alloc] initWithWhitelist:whiteListSet];
     
     YapDatabaseView *databaseView = [[YapDatabaseView alloc] initWithGrouping:viewGrouping
                                                                       sorting:viewSorting
-                                                                   versionTag:@"2"
+                                                                   versionTag:@"3"
                                                                       options:options];
     
     return [[OTRDatabaseManager sharedInstance].database registerExtension:databaseView withName:OTRConversationDatabaseViewExtensionName sendNotification:YES];
