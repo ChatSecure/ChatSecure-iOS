@@ -33,10 +33,12 @@ NSString *const kOTRProtocolLoginUserInitiated             = @"kOTRProtocolLogin
 NSString *const kOTRProtocolTypeXMPP = @"xmpp";
 NSString *const kOTRProtocolTypeAIM  = @"prpl-oscar";
 
-NSString *const kOTRNotificationAccountNameKey   = @"kOTRNotificationAccountNameKey";
-NSString *const kOTRNotificationUserNameKey      = @"kOTRNotificationUserNameKey";
-NSString *const kOTRNotificationProtocolKey      = @"kOTRNotificationProtocolKey";
-NSString *const kOTRNotificationBuddyUniqueIdKey = @"kOTRNotificationBuddyUniqueIdKey";
+NSString *const kOTRNotificationAccountNameKey       = @"kOTRNotificationAccountNameKey";
+NSString *const kOTRNotificationUserNameKey          = @"kOTRNotificationUserNameKey";
+NSString *const kOTRNotificationProtocolKey          = @"kOTRNotificationProtocolKey";
+NSString *const kOTRNotificationBuddyUniqueIdKey     = @"kOTRNotificationBuddyUniqueIdKey";
+NSString *const kOTRNotificationAccountUniqueIdKey   = @"kOTRNotificationAccountUniqueIdKey";
+NSString *const kOTRNotificationAccountCollectionKey = @"kOTRNotificationAccountCollectionKey";
 
 
 NSString *const kOTRServiceName            = @"org.chatsecure.ChatSecure";

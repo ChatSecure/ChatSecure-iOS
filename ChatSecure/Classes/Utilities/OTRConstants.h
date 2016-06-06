@@ -38,6 +38,9 @@ extern NSString *const kOTRNotificationAccountNameKey;
 extern NSString *const kOTRNotificationUserNameKey;
 extern NSString *const kOTRNotificationProtocolKey;
 extern NSString *const kOTRNotificationBuddyUniqueIdKey;
+extern NSString *const kOTRNotificationAccountUniqueIdKey;
+extern NSString *const kOTRNotificationAccountCollectionKey;
+
 
 extern NSString *const kOTRServiceName;
 extern NSString *const kOTRCertificateServiceName;

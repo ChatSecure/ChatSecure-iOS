@@ -17,6 +17,7 @@ import Foundation
     case SecondaryIndexName
     case BuddyFTSExtensionName
     case BuddySearchResultsViewName
+    case MessageQueueBrokerViewName
     
     public func name() -> String {
         switch self {
@@ -28,6 +29,7 @@ import Foundation
             case SecondaryIndexName: return "OTRYapDatabseMessageIdSecondaryIndexExtension"
             case BuddyFTSExtensionName: return "OTRBuddyBuddyNameSearchDatabaseViewExtensionName"
             case BuddySearchResultsViewName: return "DatabaseExtensionName.BuddySearchResultsView"
+            case MessageQueueBrokerViewName: return "DatabaseExtensionName.MessageQueueBrokerViewName"
         }
     }
 }

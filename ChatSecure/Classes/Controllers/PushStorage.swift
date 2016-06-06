@@ -211,9 +211,9 @@ class PushStorage: NSObject, PushStorageProtocol {
             relationshipTransaction.enumerateEdgesWithName(kBuddyTokenRelationshipEdgeName, destinationKey: buddyKey, collection: OTRBuddy.collection(), usingBlock: { (edge, stop) -> Void in
                 if let tokenContainer = transaction.objectForKey(edge.sourceKey, inCollection: edge.sourceCollection) as? TokenContainer {
                     if tokenContainer.accountKey != nil && createdByThisAccount {
-                        count++
+                        count += 1
                     } else if tokenContainer.accountKey == nil && !createdByThisAccount {
-                       count++
+                       count += 1
                     }
                 }
             })

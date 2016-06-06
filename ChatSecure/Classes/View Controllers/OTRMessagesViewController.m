@@ -46,6 +46,7 @@
 #import "OTRLanguageManager.h"
 #import "OTRDataHandler.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "OTRYapMessageSendAction.h"
 @import YapDatabase.YapDatabaseView;
 @import PureLayout;
 
@@ -935,6 +936,37 @@ typedef NS_ENUM(int, OTRDropDownType) {
     self.navigationController.providesPresentationContextTransitionStyle = YES;
     self.navigationController.definesPresentationContext = YES;
     
+    //1. Create new message database object
+    __block OTRMessage *message = [[OTRMessage alloc] init];
+    message.buddyUniqueId = self.threadKey;
+    message.text = text;
+    message.read = YES;
+    message.transportedSecurely = NO;
+    
+    //2. Create send message task
+    __block OTRYapMessageSendAction *sendingAction = [[OTRYapMessageSendAction alloc] initWithMessageKey:message.uniqueId messageCollection:[OTRMessage collection] buddyKey:message.threadId date:message.date];
+    
+    //3. save both to database
+    __weak __typeof__(self) weakSelf = self;
+    [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+        __typeof__(self) strongSelf = weakSelf;
+        [message saveWithTransaction:transaction];
+        [sendingAction saveWithTransaction:transaction];
+        
+        //update buddy
+        OTRBuddy *buddy = [[OTRBuddy fetchObjectWithUniqueID:strongSelf.threadKey transaction:transaction] copy];
+        buddy.composingMessageString = nil;
+        buddy.lastMessageDate = message.date;
+        [buddy saveWithTransaction:transaction];
+        
+    } completionQueue:dispatch_get_main_queue() completionBlock:^{
+        [weakSelf finishSendingMessage];
+    }];
+    
+    return;
+    
+    //4. that's it the queue should find the sending action and get the message off
+    
     if ([[OTRProtocolManager sharedInstance] isAccountConnected:self.account]) {
         //Account is connected
         
@@ -948,10 +980,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
             __typeof__(self) strongSelf = weakSelf;
             [message saveWithTransaction:transaction];
-            OTRBuddy *buddy = [[OTRBuddy fetchObjectWithUniqueID:strongSelf.threadKey transaction:transaction] copy];
-            buddy.composingMessageString = nil;
-            buddy.lastMessageDate = message.date;
-            [buddy saveWithTransaction:transaction];
+            
         } completionBlock:^{
             [[OTRKit sharedInstance] encodeMessage:message.text tlvs:nil username:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString tag:message];
         }];

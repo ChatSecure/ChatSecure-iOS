@@ -13,62 +13,63 @@
 @protocol OTRThreadOwner;
 
 extern const struct OTRMessageAttributes {
-	__unsafe_unretained NSString *date;
-	__unsafe_unretained NSString *text;
-	__unsafe_unretained NSString *delivered;
-	__unsafe_unretained NSString *read;
-	__unsafe_unretained NSString *incoming;
-    __unsafe_unretained NSString *messageId;
-    __unsafe_unretained NSString *transportedSecurely;
-    __unsafe_unretained NSString *mediaItem;
+	__unsafe_unretained NSString * _Nonnull date;
+	__unsafe_unretained NSString * _Nonnull text;
+	__unsafe_unretained NSString * _Nonnull delivered;
+	__unsafe_unretained NSString * _Nonnull read;
+	__unsafe_unretained NSString * _Nonnull incoming;
+    __unsafe_unretained NSString * _Nonnull messageId;
+    __unsafe_unretained NSString * _Nonnull transportedSecurely;
+    __unsafe_unretained NSString * _Nonnull mediaItem;
 } OTRMessageAttributes;
 
 @protocol OTRMessageProtocol <NSObject>
 @required
 
-- (NSString *)messageKey;
+- (nonnull NSString *)messageKey;
 
-- (NSString *)messageCollection;
+- (nonnull NSString *)messageCollection;
 
-- (NSString *)threadId;
+- (nullable NSString *)threadId;
 
 - (BOOL)messageIncoming;
 
-- (NSString *)messageMediaItemKey;
+- (nullable NSString *)messageMediaItemKey;
 
-- (NSError *)messageError;
+- (nullable NSError *)messageError;
 
 - (BOOL)transportedSecurely;
 
 - (BOOL)messageRead;
 
-- (NSDate *)date;
+- (nonnull NSDate *)date;
 
-- (NSString *)text;
+- (nullable NSString *)text;
 
-- (NSString *)remoteMessageId;
+- (nullable NSString *)remoteMessageId;
 
-- (id<OTRThreadOwner>)threadOwnerWithTransaction:(YapDatabaseReadTransaction *)transaction;
+- (nullable id<OTRThreadOwner>)threadOwnerWithTransaction:(nonnull YapDatabaseReadTransaction *)transaction;
 
 @end
 
 @interface OTRMessage : OTRYapDatabaseObject <YapDatabaseRelationshipNode, OTRMessageProtocol>
 
-@property (nonatomic, strong) NSDate *date;
-@property (nonatomic, strong) NSString *text;
-@property (nonatomic, strong) NSString *messageId;
-@property (nonatomic, strong) NSError *error;
+@property (nonatomic, strong, nonnull) NSDate *date;
+@property (nonatomic, strong, nullable) NSString *text;
+@property (nonatomic, strong, nonnull) NSString *messageId;
+@property (nonatomic, strong, nullable) NSError *error;
 @property (nonatomic, getter = isDelivered) BOOL delivered;
 @property (nonatomic, getter = isRead) BOOL read;
 @property (nonatomic, getter = isIncoming) BOOL incoming;
 @property (nonatomic, getter = isTransportedSecurely) BOOL transportedSecurely;
 
-@property (nonatomic, strong) NSString *mediaItemUniqueId;
-@property (nonatomic, strong) NSString *buddyUniqueId;
+@property (nonatomic, strong, nullable) NSString *mediaItemUniqueId;
+@property (nonatomic, strong, nonnull) NSString *buddyUniqueId;
 
-+ (void)deleteAllMessagesWithTransaction:(YapDatabaseReadWriteTransaction*)transaction;
-+ (void)deleteAllMessagesForBuddyId:(NSString *)uniqueBuddyId transaction:(YapDatabaseReadWriteTransaction*)transaction;
-+ (void)deleteAllMessagesForAccountId:(NSString *)uniqueAccountId transaction:(YapDatabaseReadWriteTransaction*)transaction;
-+ (void)receivedDeliveryReceiptForMessageId:(NSString *)messageId transaction:(YapDatabaseReadWriteTransaction*)transaction;
++ (void)deleteAllMessagesWithTransaction:(nonnull YapDatabaseReadWriteTransaction*)transaction;
++ (void)deleteAllMessagesForBuddyId:(nonnull NSString *)uniqueBuddyId transaction:(nonnull YapDatabaseReadWriteTransaction*)transaction;
++ (void)deleteAllMessagesForAccountId:(nonnull NSString *)uniqueAccountId transaction:(nonnull YapDatabaseReadWriteTransaction*)transaction;
++ (void)receivedDeliveryReceiptForMessageId:(nonnull NSString *)messageId transaction:(nonnull YapDatabaseReadWriteTransaction*)transaction;
++ (nullable id<OTRMessageProtocol>)messageForMessageId:(nonnull NSString *)messageId incoming:(BOOL)incoming transaction:(nonnull YapDatabaseReadTransaction *)transaction;
 
 @end

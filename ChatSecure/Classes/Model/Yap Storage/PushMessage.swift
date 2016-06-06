@@ -28,15 +28,15 @@ public class PushMessage: OTRYapDatabaseObject {
 }
 
 extension PushMessage: OTRMessageProtocol {
-    public func messageKey() -> String! {
+    public func messageKey() -> String {
         return self.uniqueId
     }
     
-    public func messageCollection() -> String! {
+    public func messageCollection() -> String {
         return OTRMessage.collection()
     }
     
-    public func threadId() -> String! {
+    public func threadId() -> String? {
         return self.buddyKey
     }
     
@@ -44,11 +44,11 @@ extension PushMessage: OTRMessageProtocol {
         return false
     }
     
-    public func messageMediaItemKey() -> String! {
+    public func messageMediaItemKey() -> String? {
         return nil
     }
     
-    public func messageError() -> NSError! {
+    public func messageError() -> NSError? {
         return self.error
     }
     
@@ -60,20 +60,23 @@ extension PushMessage: OTRMessageProtocol {
         return true
     }
     
-    public func date() -> NSDate! {
+    public func date() -> NSDate {
         return self.pushDate
     }
     
-    public func text() -> String! {
+    public func text() -> String? {
         return nil
     }
     
-    public func remoteMessageId() -> String! {
+    public func remoteMessageId() -> String? {
         return nil
     }
     
-    public func threadOwnerWithTransaction(transaction: YapDatabaseReadTransaction!) -> OTRThreadOwner! {
-        return OTRBuddy.fetchObjectWithUniqueID(self.buddyKey, transaction: transaction)
+    public func threadOwnerWithTransaction(transaction: YapDatabaseReadTransaction) -> OTRThreadOwner? {
+        guard let key = self.buddyKey else {
+            return nil
+        }
+        return OTRBuddy.fetchObjectWithUniqueID(key, transaction: transaction)
     }
 }
 
@@ -92,9 +95,13 @@ extension PushMessage: YapDatabaseRelationshipNode {
 extension PushMessage {
     func account() -> OTRAccount? {
         var account:OTRAccount? = nil
+        guard let key = self.buddyKey else {
+            return nil
+        }
         OTRDatabaseManager.sharedInstance().readOnlyDatabaseConnection .readWithBlock { (transaction) -> Void in
-            let buddy = OTRBuddy.fetchObjectWithUniqueID(self.buddyKey, transaction: transaction)
-            account = buddy.accountWithTransaction(transaction)
+            if let buddy = OTRBuddy.fetchObjectWithUniqueID(key, transaction: transaction) {
+                account = buddy.accountWithTransaction(transaction)
+            }
         }
         return account
     }

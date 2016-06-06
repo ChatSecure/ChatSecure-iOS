@@ -24,6 +24,7 @@
 @import OTRAssets;
 @import YapDatabase.YapDatabaseSecondaryIndex;
 @import YapDatabase.YapDatabaseSearchResultsView;
+@import YapTaskQueue;
 #import "OTRLanguageManager.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 
@@ -109,6 +110,7 @@ NSString *const OTRYapDatabaseUnreadMessageSecondaryIndexColumnName = @"OTRYapDa
     self.readWriteDatabaseConnection = [self.database newConnection];
     self.readWriteDatabaseConnection.name = @"readWriteDatabaseConnection";
     
+    _messageQueueHandler = [[MessageQueueHandler alloc] initWithDbConnection:self.readWriteDatabaseConnection];
     
     ////// Register Extensions////////
     
@@ -135,6 +137,11 @@ NSString *const OTRYapDatabaseUnreadMessageSecondaryIndexColumnName = @"OTRYapDa
         [OTRDatabaseView registerAllBuddiesDatabaseView];
         [OTRDatabaseView registerAllSubscriptionRequestsView];
         [OTRDatabaseView registerUnreadMessagesView];
+        
+        
+        NSString *name = [YapDatabaseConstants extensionName:DatabaseExtensionNameMessageQueueBrokerViewName];
+        _messageQueueBroker = [YapTaskQueueBroker setupWithDatabase:self.database name:name handler:self.messageQueueHandler error:nil];
+        
         
         //Register Buddy username & displayName FTS and corresponding view
         YapDatabaseFullTextSearch *buddyFTS = [OTRYapExtensions buddyFTS];

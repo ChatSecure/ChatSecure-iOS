@@ -153,6 +153,18 @@ const struct OTRMessageAttributes OTRMessageAttributes = {
     }];
 }
 
++ (id<OTRMessageProtocol>)messageForMessageId:(NSString *)messageId incoming:(BOOL)incoming transaction:(YapDatabaseReadTransaction *)transaction {
+    __block id<OTRMessageProtocol> deliveredMessage = nil;
+    [transaction enumerateMessagesWithId:messageId block:^(id<OTRMessageProtocol> _Nonnull message, BOOL * _Null_unspecified stop) {
+        if ([message messageIncoming] == incoming) {
+            //Media messages are not delivered until the transfer is complete. This is handled in the OTREncryptionManager.
+            deliveredMessage = message;
+            *stop = YES;
+        }
+    }];
+    return deliveredMessage;
+}
+
 + (void)receivedDeliveryReceiptForMessageId:(NSString *)messageId transaction:(YapDatabaseReadWriteTransaction*)transaction
 {
     __block OTRMessage *deliveredMessage = nil;

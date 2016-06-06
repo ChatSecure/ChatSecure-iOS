@@ -13,6 +13,8 @@
 #import "OTRMediaServer.h"
 #import "OTRMediaFileManager.h"
 
+@class MessageQueueHandler, YapTaskQueueBroker;
+
 extern NSString *const OTRYapDatabseMessageIdSecondaryIndexColumnName;
 extern NSString *const OTRYapDatabseRoomOccupantJIdSecondaryIndexColumnName;
 extern NSString *const OTRYapDatabaseUnreadMessageSecondaryIndexColumnName;
@@ -23,6 +25,9 @@ extern NSString *const OTRYapDatabaseUnreadMessageSecondaryIndexColumnName;
 @property (nonatomic, strong) OTRMediaServer *mediaServer;
 @property (nonatomic, readonly) YapDatabaseConnection *readOnlyDatabaseConnection;
 @property (nonatomic, readonly) YapDatabaseConnection *readWriteDatabaseConnection;
+
+@property (nonatomic, readonly) MessageQueueHandler *messageQueueHandler;
+@property (nonatomic, readonly) YapTaskQueueBroker *messageQueueBroker;
 
 
 /**

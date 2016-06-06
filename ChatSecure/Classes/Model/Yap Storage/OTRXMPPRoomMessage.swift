@@ -63,15 +63,15 @@ extension OTRXMPPRoomMessage:OTRMessageProtocol {
     
     //MARK: OTRMessageProtocol
     
-    public func messageKey() -> String! {
+    public func messageKey() -> String {
         return self.uniqueId
     }
     
-    public func messageCollection() -> String! {
+    public func messageCollection() -> String {
         return self.dynamicType.collection()
     }
     
-    public func threadId() -> String! {
+    public func threadId() -> String? {
         return self.roomUniqueId
     }
     
@@ -79,11 +79,11 @@ extension OTRXMPPRoomMessage:OTRMessageProtocol {
         return self.state.incoming()
     }
     
-    public func messageMediaItemKey() -> String! {
+    public func messageMediaItemKey() -> String? {
         return nil
     }
     
-    public func messageError() -> NSError! {
+    public func messageError() -> NSError? {
         return nil
     }
     
@@ -91,12 +91,15 @@ extension OTRXMPPRoomMessage:OTRMessageProtocol {
         return false;
     }
     
-    public func remoteMessageId() -> String! {
+    public func remoteMessageId() -> String? {
         return self.xmppId
     }
     
-    public func threadOwnerWithTransaction(transaction: YapDatabaseReadTransaction!) -> OTRThreadOwner! {
-        return OTRXMPPRoom.fetchObjectWithUniqueID(self.threadId(), transaction: transaction)
+    public func threadOwnerWithTransaction(transaction: YapDatabaseReadTransaction) -> OTRThreadOwner? {
+        guard let key = self.threadId() else {
+            return nil
+        }
+        return OTRXMPPRoom.fetchObjectWithUniqueID(key, transaction: transaction)
     }
 }
 
@@ -110,7 +113,7 @@ extension OTRXMPPRoomMessage:JSQMessageData {
             if (self.state.incoming()) {
                 result = self.senderJID
             } else {
-                guard let thread = transaction.objectForKey(self.threadId(), inCollection: OTRXMPPRoom.collection()) as? OTRXMPPRoom else {
+                guard let key = self.threadId(), thread = transaction.objectForKey(key, inCollection: OTRXMPPRoom.collection()) as? OTRXMPPRoom else {
                     return
                 }
                 result = thread.accountUniqueId
@@ -123,8 +126,11 @@ extension OTRXMPPRoomMessage:JSQMessageData {
         return self.displayName ?? ""
     }
     
-    public func date() -> NSDate! {
-        return self.messageDate
+    public func date() -> NSDate {
+        guard let date = self.messageDate else {
+            return NSDate()
+        }
+        return date
     }
     
     public func isMediaMessage() -> Bool {
@@ -137,7 +143,7 @@ extension OTRXMPPRoomMessage:JSQMessageData {
         return UInt(self.date().timeIntervalSince1970)
     }
     
-    public func text() -> String! {
+    public func text() -> String? {
         return self.messageText
     }
     

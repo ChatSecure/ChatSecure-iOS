@@ -108,6 +108,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 
 @property (nonatomic, strong) YapDatabaseConnection *databaseConnection;
 @property (nonatomic, strong) XMPPMessageDeliveryReceipts *deliveryReceipts;
+@property (nonatomic, strong) OTRXMPPMessageStatusModule *messageStatusModule;
 
 - (void)setupStream;
 - (void)teardownStream;
@@ -299,6 +300,11 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     self.xmppBuddyManager.databaseConnection = [self.databaseConnection.database newConnection];
     self.xmppBuddyManager.protocol = self;
     [self.xmppBuddyManager activate:self.xmppStream];
+    
+    //Message Queue Module
+    MessageQueueHandler *queueHandler = [OTRDatabaseManager sharedInstance].messageQueueHandler;
+    self.messageStatusModule = [[OTRXMPPMessageStatusModule alloc] initWithDatabaseConnection:self.databaseConnection delegate:queueHandler];
+    [self.messageStatusModule activate:self.xmppStream];
 }
 
 - (void)teardownStream
@@ -320,6 +326,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     [_streamManagement deactivate];
     [_roomManager deactivate];
     [_xmppBuddyManager deactivate];
+    [_messageStatusModule deactivate];
 
     [_xmppStream disconnect];
 
@@ -336,6 +343,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     _streamManagement = nil;
     _roomManager = nil;
     _xmppBuddyManager = nil;
+    _messageStatusModule = nil;
 }
 
 // It's easy to create XML elments to send and to read received XML elements.
@@ -362,8 +370,15 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 - (void)goOnline
 {
     self.connectionStatus = OTRProtocolConnectionStatusConnected;
+    NSString *accountKey = self.account.uniqueId;
+    NSString *accountCollection = [[self.account class] collection];
+    NSDictionary *userInfo = nil;
+    if(accountKey && accountCollection) {
+        userInfo = @{kOTRNotificationAccountUniqueIdKey:accountKey,kOTRNotificationAccountCollectionKey:accountCollection};
+    }
     [[NSNotificationCenter defaultCenter]
-     postNotificationName:kOTRProtocolLoginSuccess object:self];
+     postNotificationName:kOTRProtocolLoginSuccess
+     object:self userInfo:userInfo];
 	XMPPPresence *presence = [XMPPPresence presence]; // type="available" is implicit
 	
 	[[self xmppStream] sendElement:presence];
