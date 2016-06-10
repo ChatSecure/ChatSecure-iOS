@@ -854,8 +854,9 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     XMPPJID *nodeJID = [XMPPJID jidWithString:endpoint]; 
     NSString *tokenString = token.pushToken.tokenString;
     if (tokenString.length > 0) {
-        XMPPIQ *enableElement = [XMPPIQ enableNotificationsElementWithJID:nodeJID node:account.pushPubsubNode options:@{@"token": tokenString}];
-        
+        NSDictionary *options = @{@"token": tokenString,
+                                  @"endpoint": endpoint};
+        XMPPIQ *enableElement = [XMPPIQ enableNotificationsElementWithJID:nodeJID node:account.pushPubsubNode options:options];
         [self.xmppStream sendElement:enableElement];
     } else {
         DDLogError(@"Token string length 0!");
