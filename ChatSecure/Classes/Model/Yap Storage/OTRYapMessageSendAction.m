@@ -12,12 +12,13 @@
 
 @implementation OTRYapMessageSendAction
 
-- (instancetype)initWithMessageKey:(NSString *)messageKey messageCollection:(NSString *)messageCollection buddyKey:(NSString *)buddyKey date:(NSDate *)date {
+- (instancetype)initWithMessageKey:(NSString *)messageKey messageCollection:(NSString *)messageCollection buddyKey:(NSString *)buddyKey date:(NSDate *)date sendEncrypted:(BOOL)sendEncrypted {
     if (self = [self init]) {
         self.messsageKey = messageKey;
         self.messageCollection = messageCollection;
         self.buddyKey = buddyKey;
         self.date = date;
+        self.sendEncrypted = sendEncrypted;
     }
     return self;
 }

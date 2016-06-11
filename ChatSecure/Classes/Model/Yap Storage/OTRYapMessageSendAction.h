@@ -21,7 +21,8 @@
 @property (nonatomic, strong, nonnull) NSString *messageCollection;
 @property (nonatomic, strong, nonnull) NSString *buddyKey;
 @property (nonatomic, strong, nonnull) NSDate *date;
+@property (nonatomic) BOOL sendEncrypted;
 
-- (nonnull instancetype)initWithMessageKey:(nonnull NSString *)messageKey messageCollection:(nonnull NSString *)messageCollection buddyKey:(nonnull NSString *)buddyKey date:(nonnull NSDate *)date;
+- (nonnull instancetype)initWithMessageKey:(nonnull NSString *)messageKey messageCollection:(nonnull NSString *)messageCollection buddyKey:(nonnull NSString *)buddyKey date:(nonnull NSDate *)date sendEncrypted:(BOOL)sendEncrypted;
 
 @end

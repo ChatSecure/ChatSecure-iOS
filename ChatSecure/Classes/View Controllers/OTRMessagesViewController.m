@@ -944,7 +944,10 @@ typedef NS_ENUM(int, OTRDropDownType) {
     message.transportedSecurely = NO;
     
     //2. Create send message task
-    __block OTRYapMessageSendAction *sendingAction = [[OTRYapMessageSendAction alloc] initWithMessageKey:message.uniqueId messageCollection:[OTRMessage collection] buddyKey:message.threadId date:message.date];
+    
+    // Possibly better to requery OTRKit?
+    BOOL sendEncrypted = self.state.isEncrypted;
+    __block OTRYapMessageSendAction *sendingAction = [[OTRYapMessageSendAction alloc] initWithMessageKey:message.uniqueId messageCollection:[OTRMessage collection] buddyKey:message.threadId date:message.date sendEncrypted:sendEncrypted];
     
     //3. save both to database
     __weak __typeof__(self) weakSelf = self;
@@ -966,36 +969,6 @@ typedef NS_ENUM(int, OTRDropDownType) {
     return;
     
     //4. that's it the queue should find the sending action and get the message off
-    
-    if ([[OTRProtocolManager sharedInstance] isAccountConnected:self.account]) {
-        //Account is connected
-        
-        __block OTRMessage *message = [[OTRMessage alloc] init];
-        message.buddyUniqueId = self.threadKey;
-        message.text = text;
-        message.read = YES;
-        message.transportedSecurely = NO;
-        
-        __weak __typeof__(self) weakSelf = self;
-        [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-            __typeof__(self) strongSelf = weakSelf;
-            [message saveWithTransaction:transaction];
-            
-        } completionBlock:^{
-            [[OTRKit sharedInstance] encodeMessage:message.text tlvs:nil username:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString tag:message];
-        }];
-        
-    } else {
-        //Account is not currently connected
-        [self hideDropdownAnimated:YES completion:^{
-            UIButton *okButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-            [okButton setTitle:CONNECT_STRING forState:UIControlStateNormal];
-            [okButton addTarget:self action:@selector(connectButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-            
-            
-            [self showDropdownWithTitle:YOU_ARE_NOT_CONNECTED_STRING buttons:@[okButton] animated:YES tag:0];
-        }];
-    }
 }
 
 - (void)didPressAccessoryButton:(UIButton *)sender
