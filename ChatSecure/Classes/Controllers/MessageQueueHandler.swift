@@ -14,6 +14,7 @@ private struct OutstandingMessageInfo {
     let messageKey:String
     let messageCollection:String
     let sendEncrypted:Bool
+    let timer:NSTimer?
     let completion:((success: Bool, retryTimeout: NSTimeInterval) -> Void)
 }
 
@@ -32,6 +33,10 @@ private func ==(lhs: OutstandingMessageInfo, rhs: OutstandingMessageInfo) -> Boo
 }
 
 public class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageStatusModuleDelegate {
+    
+    public var accountTimeout:NSTimeInterval = 30
+    public var otrTimeout:NSTimeInterval = 10
+    public var messageTimeout:NSTimeInterval = 10
     
     let operationQueue = NSOperationQueue()
     let databaseConnection:YapDatabaseConnection
@@ -83,7 +88,7 @@ public class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageSt
                 return
             }
             // Add new item
-            set.insert(OutstandingMessageInfo(messageKey: messageKey, messageCollection: messageCollection,sendEncrypted:sendEncrypted, completion: completion))
+            set.insert(OutstandingMessageInfo(messageKey: messageKey, messageCollection: messageCollection,sendEncrypted:sendEncrypted,timer:nil, completion: completion))
             //Insert back into dictionary
             self.outstandingAccounts.updateValue(set, forKey: accountString)
         }
@@ -100,9 +105,9 @@ public class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageSt
         return messageInfoSet
     }
     
-    private func waitingForBuddy(buddyKey:String,messageKey:String, messageCollection:String, sendEncrypted:Bool, completion:(success: Bool, retryTimeout: NSTimeInterval) -> Void) {
+    private func waitingForBuddy(buddyKey:String,messageKey:String, messageCollection:String, sendEncrypted:Bool, timer:NSTimer,completion:(success: Bool, retryTimeout: NSTimeInterval) -> Void) {
         
-        let messageInfo = OutstandingMessageInfo(messageKey: messageKey, messageCollection: messageCollection,sendEncrypted:sendEncrypted, completion: completion)
+        let messageInfo = OutstandingMessageInfo(messageKey: messageKey, messageCollection: messageCollection,sendEncrypted:sendEncrypted, timer:nil, completion: completion)
         
         dispatch_async(self.isolationQueue) { 
             self.outstandingBuddies.updateValue(messageInfo, forKey: buddyKey)
@@ -118,7 +123,7 @@ public class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageSt
     }
     
     private func waitingForMessage(messageKey:String,messageCollection:String,sendEncrypted:Bool,completion:(success: Bool, retryTimeout: NSTimeInterval) -> Void) {
-        let messageInfo = OutstandingMessageInfo(messageKey: messageKey, messageCollection: messageCollection, sendEncrypted:sendEncrypted, completion: completion)
+        let messageInfo = OutstandingMessageInfo(messageKey: messageKey, messageCollection: messageCollection, sendEncrypted:sendEncrypted, timer:nil, completion: completion)
         let key = "\(messageKey)\(messageCollection)"
         
         dispatch_async(self.isolationQueue) { 
@@ -210,10 +215,13 @@ public class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageSt
                     self.waitingForMessage(message.uniqueId, messageCollection: messageCollection,sendEncrypted:sendEncrypted, completion: completion)
                     OTRKit.sharedInstance().encodeMessage(text, tlvs: nil, username:buddy.username , accountName: account.username, protocol: account.protocolTypeString(), tag: message)
                 } else {
-                    //we need to initate a session
-                    self.waitingForBuddy(buddy.uniqueId, messageKey: message.uniqueId, messageCollection: messageCollection,sendEncrypted:sendEncrypted, completion: completion)
+                    //We need to initate a session
+                    let timer = NSTimer.scheduledTimerWithTimeInterval(self.otrTimeout, target: self, selector: #selector(MessageQueueHandler.otrInitatiateTimeout(_:)), userInfo: buddy.uniqueId, repeats: false)
+                    self.waitingForBuddy(buddy.uniqueId, messageKey: message.uniqueId, messageCollection: messageCollection,sendEncrypted:sendEncrypted, timer:timer, completion: completion)
                     OTRKit.sharedInstance().initiateEncryptionWithUsername(buddy.username, accountName: account.username, protocol: account.protocolTypeString())
-                    //TODO: should probably time out at some point waiting for OTR session
+                    
+                    //Timeout at some point waiting for OTR session
+                    
                 }
                 
             })
@@ -223,8 +231,9 @@ public class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageSt
             self.waitingForAccount(account.uniqueId, messageKey: message.uniqueId, messageCollection: messageCollection,sendEncrypted:sendEncrypted, completion: completion)
             accountProtocol.connectWithPassword(account.password, userInitiated: false)
         } else {
-            // TODO: Maybe try again in a bit. the account might be connected then? even if not auto connecting we might just start up faster then the
-            // can enter credentials
+            // The account might be connected then? even if not auto connecting we might just start up faster then the
+            // can enter credentials. Try again in a bit myabe the account will be ready
+            completion(success: false, retryTimeout: self.accountTimeout)
         }
 
     }
@@ -263,27 +272,6 @@ public class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageSt
         }
     }
     
-    private func handleMessageStateDidChangeNotification(notification:NSNotification) {
-        guard let buddy = notification.object as? OTRBuddy else {
-            return
-        }
-        
-        guard let messageStateInt = (notification.userInfo?[OTRMessageStateKey] as? NSNumber)?.unsignedLongValue else {
-            return
-        }
-        guard let messageState = OTRKitMessageState(rawValue: messageStateInt) where messageState == .Encrypted else {
-            return
-        }
-        
-        // Buddy has gone encrypted
-        // Check if we have an outstanding messages for this buddy
-        guard let messageInfo = self.popWaitingBuddy(buddy.uniqueId) else {
-            return
-        }
-        
-        self.sendMessage(messageInfo)
-    }
-    
     private func didConnectAccount(accountKey:String, accountCollection:String) {
         
         guard let messageSet = self.popWaitingAccount(accountKey) else {
@@ -293,6 +281,35 @@ public class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageSt
         for messageInfo in messageSet {
             self.sendMessage(messageInfo)
         }
+    }
+    
+    //Mark: Callback for OTRSession
+    
+    private func handleMessageStateDidChangeNotification(notification:NSNotification) {
+        guard let buddy = notification.object as? OTRBuddy,
+            messageStateInt = (notification.userInfo?[OTRMessageStateKey] as? NSNumber)?.unsignedLongValue else {
+            return
+        }
+        
+        if let messageState = OTRKitMessageState(rawValue: messageStateInt) where messageState == .Encrypted {
+            // Buddy has gone encrypted
+            // Check if we have an outstanding messages for this buddy
+            guard let messageInfo = self.popWaitingBuddy(buddy.uniqueId) else {
+                return
+            }
+            //Cancle outsanding timer
+            messageInfo.timer?.invalidate()
+            self.sendMessage(messageInfo)
+        }
+    }
+    
+    //Mark: OTR timeout
+    @objc public func otrInitatiateTimeout(timer:NSTimer) {
+        
+        guard let buddyKey = timer.userInfo as? String, messageInfo = self.popWaitingBuddy(buddyKey) else {
+            return
+        }
+        messageInfo.completion(success: false, retryTimeout: self.messageTimeout)
     }
     
     //MARK: Callback from protocol
