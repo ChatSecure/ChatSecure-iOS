@@ -788,10 +788,6 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 - (void)xmppCapabilities:(XMPPCapabilities *)sender didDiscoverCapabilities:(NSXMLElement *)caps forJID:(XMPPJID *)jid {
     DDLogVerbose(@"%@: %@\n%@:%@", THIS_FILE, THIS_METHOD, jid, caps);
     
-    // Disable XEP-0357 for now because of some pending changes to the pubsub node
-    // https://github.com/ChatSecure/RubDub/issues/3
-    return;
-    
     // Enable XEP-0357 push bridge if server supports it
     // ..but don't register for Tor accounts
     if (self.account.accountType == OTRAccountTypeXMPPTor) {
