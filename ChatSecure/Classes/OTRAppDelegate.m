@@ -303,7 +303,7 @@
     }];
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        self.backgroundTimer = [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(timerUpdate:) userInfo:nil repeats:YES];
+        self.backgroundTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(timerUpdate:) userInfo:nil repeats:YES];
     });
 }
                                 
@@ -323,18 +323,18 @@
         }
         self.didShowDisconnectionWarning = YES;
     }
-    if ([application backgroundTimeRemaining] < 10)
+    if ([application backgroundTimeRemaining] < 15)
     {
         // Clean up here
         [self.backgroundTimer invalidate];
         self.backgroundTimer = nil;
         
         [[OTRProtocolManager sharedInstance] disconnectAllAccounts];
-        //FIXME [OTRManagedAccount resetAccountsConnectionStatus];
         
-        
-        [application endBackgroundTask:self.backgroundTask];
-        self.backgroundTask = UIBackgroundTaskInvalid;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(8 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [application endBackgroundTask:self.backgroundTask];
+            self.backgroundTask = UIBackgroundTaskInvalid;
+        });
     }
 }
 
@@ -403,7 +403,10 @@
     }];
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(20 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        completionHandler(UIBackgroundFetchResultNewData);
+        [[OTRProtocolManager sharedInstance] disconnectAllAccounts];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            completionHandler(UIBackgroundFetchResultNewData);
+        });
     });
 }
 
