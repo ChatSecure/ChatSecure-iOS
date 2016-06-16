@@ -46,6 +46,7 @@
 		63C0C4451BE184910086B529 /* OTRRoomOccupantsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C0C4441BE184910086B529 /* OTRRoomOccupantsViewController.swift */; };
 		63CBD6901C642B9E00AC6D1F /* BuddyActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CBD68F1C642B9E00AC6D1F /* BuddyActions.swift */; };
 		63D14F351C0FC7A60029F36B /* OTRThreadOwner.h in Headers */ = {isa = PBXBuildFile; fileRef = 63D14F341C0FC6A90029F36B /* OTRThreadOwner.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		63D639E21D12124F002B4175 /* OTRStreamManagementDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D639E11D12124F002B4175 /* OTRStreamManagementDelegate.swift */; };
 		63DC417B1BB3767100D42857 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DC417A1BB3767000D42857 /* Errors.swift */; };
 		63DDD8B51A9E94B700C0A918 /* OTRMediaTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63DDD8B41A9E94B700C0A918 /* OTRMediaTests.m */; };
 		63DDD8BA1A9E9BD900C0A918 /* samples in Resources */ = {isa = PBXBuildFile; fileRef = 63DDD8B91A9E9BD900C0A918 /* samples */; };
@@ -763,6 +764,7 @@
 		63D184851A2D3F2400334CD8 /* OTRNotificationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRNotificationController.m; sourceTree = "<group>"; };
 		63D27FC31A6DC51C00EC251A /* OTRMediaItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRMediaItem.h; sourceTree = "<group>"; };
 		63D27FC41A6DC51C00EC251A /* OTRMediaItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRMediaItem.m; sourceTree = "<group>"; };
+		63D639E11D12124F002B4175 /* OTRStreamManagementDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRStreamManagementDelegate.swift; sourceTree = "<group>"; };
 		63D64D641A2FBA8C00E21F77 /* OTRToastOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRToastOptions.h; sourceTree = "<group>"; };
 		63D64D651A2FBA8C00E21F77 /* OTRToastOptions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRToastOptions.m; sourceTree = "<group>"; };
 		63DC0EB31A1ABC86002C9598 /* OTR_Codesigning.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = OTR_Codesigning.xcconfig; path = configurations/OTR_Codesigning.xcconfig; sourceTree = "<group>"; };
@@ -1009,6 +1011,7 @@
 			children = (
 				63B916E01B743198003B778F /* OTRStreamManagementYapStorage.h */,
 				63B916E11B743198003B778F /* OTRStreamManagementYapStorage.m */,
+				63D639E11D12124F002B4175 /* OTRStreamManagementDelegate.swift */,
 				637DBB1A1B7D5A23003845B7 /* OTRXMPPMessageYapStroage.h */,
 				637DBB1B1B7D5A23003845B7 /* OTRXMPPMessageYapStroage.m */,
 				633105331A16D1A300C17BAE /* OTRvCardYapDatabaseStorage.h */,
@@ -2216,6 +2219,7 @@
 				D93DDABD1BA79A2500CD8331 /* OTROpenInTwitterActivity.m in Sources */,
 				63BAB26D1C863C60005185F3 /* PushMessage.swift in Sources */,
 				D93DDABE1BA79A2500CD8331 /* OTRQRCodeActivity.m in Sources */,
+				63D639E21D12124F002B4175 /* OTRStreamManagementDelegate.swift in Sources */,
 				D93DDABF1BA79A2500CD8331 /* OTRToastOptions.m in Sources */,
 				D93DDAC01BA79A2600CD8331 /* OTRBoolSetting.m in Sources */,
 				D93DDAC11BA79A2600CD8331 /* OTRCertificateSetting.m in Sources */,

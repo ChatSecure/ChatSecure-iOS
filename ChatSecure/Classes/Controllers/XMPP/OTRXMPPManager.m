@@ -109,6 +109,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 @property (nonatomic, strong) YapDatabaseConnection *databaseConnection;
 @property (nonatomic, strong) XMPPMessageDeliveryReceipts *deliveryReceipts;
 @property (nonatomic, strong) OTRXMPPMessageStatusModule *messageStatusModule;
+@property (nonatomic, strong) OTRStreamManagementDelegate *streamManagementDelegate;
 
 - (void)setupStream;
 - (void)teardownStream;
@@ -283,10 +284,14 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     //Stream Management
     YapDatabaseConnection *databaseConnection = [[OTRDatabaseManager sharedInstance] newConnection];
     databaseConnection.name = NSStringFromClass([OTRStreamManagementYapStorage class]);
+    
+    self.streamManagementDelegate = [[OTRStreamManagementDelegate alloc] initWithDatabaseConnection:databaseConnection];
+    
     OTRStreamManagementYapStorage *streamManagementStorage = [[OTRStreamManagementYapStorage alloc] initWithDatabaseConnection:databaseConnection];
     self.streamManagement = [[XMPPStreamManagement alloc] initWithStorage:streamManagementStorage];
-    [self.streamManagement automaticallyRequestAcksAfterStanzaCount:10 orTimeout:90];
-    [self.streamManagement automaticallySendAcksAfterStanzaCount:10 orTimeout:90];
+    [self.streamManagement addDelegate:self.streamManagementDelegate delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
+    [self.streamManagement automaticallyRequestAcksAfterStanzaCount:5 orTimeout:5];
+    [self.streamManagement automaticallySendAcksAfterStanzaCount:5 orTimeout:5];
     self.streamManagement.autoResume = YES;
     [self.streamManagement activate:self.xmppStream];
     

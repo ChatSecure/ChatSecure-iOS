@@ -181,6 +181,7 @@ const struct OTRMessageAttributes OTRMessageAttributes = {
 
     if (deliveredMessage) {
         deliveredMessage.delivered = YES;
+        deliveredMessage.dateDelivered = [NSDate date];
         [deliveredMessage saveWithTransaction:transaction];
     }
 }

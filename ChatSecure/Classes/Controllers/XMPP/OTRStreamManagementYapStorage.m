@@ -171,6 +171,7 @@
    pendingOutgoingStanzas:(NSArray *)pendingOutgoingStanzas
                 forStream:(XMPPStream *)stream
 {
+    //TODO: only do saves every so often
     [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         OTRStreamManagementStorageObject *storageObject = [self fetchOrCreateStorageObjectWithStream:stream transaction:transaction];
         storageObject.lastDisconnectDate = date;

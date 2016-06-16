@@ -571,6 +571,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
             OTRMessage *tagMessage = transfer.tag;
             OTRMessage *message = [OTRMessage fetchObjectWithUniqueID:tagMessage.uniqueId transaction:transaction];
             message.delivered = YES;
+            message.dateDelivered = [NSDate date];
             [message saveWithTransaction:transaction];
         }];
     }

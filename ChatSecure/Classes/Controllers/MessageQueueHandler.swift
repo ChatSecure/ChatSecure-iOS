@@ -319,6 +319,15 @@ public class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageSt
             return;
         }
         
+        //Update date sent
+        self.databaseConnection.asyncReadWriteWithBlock { (transaction) in
+            guard let message = transaction.objectForKey(messageKey, inCollection: messageCollection)?.copy() as? OTRMessage else {
+                return
+            }
+            message.dateSent = NSDate()
+            message.saveWithTransaction(transaction)
+        }
+        
         messageInfo.completion(success: true, retryTimeout: -1)
     }
     

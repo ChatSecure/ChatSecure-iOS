@@ -54,11 +54,26 @@ extern const struct OTRMessageAttributes {
 
 @interface OTRMessage : OTRYapDatabaseObject <YapDatabaseRelationshipNode, OTRMessageProtocol>
 
+/** The date the message is created for outgoing messages and the date it is received for incoming messages*/
 @property (nonatomic, strong, nonnull) NSDate *date;
+
+/** OUTGOING ONLY. The date that the message left the device and went on the wire.*/
+@property (nonatomic, strong, nullable) NSDate *dateSent;
+
+/** OUTGOING ONLY. The date that the message is acknowledged by the server. Only relevant if the stream supporrts XEP-0198 at the time of sending*/
+@property (nonatomic, strong, nullable) NSDate *dateAcked;
+
+/** OUTGOING ONLY. The date the message is deliverd to the other client. Only relevant if the other client supports XEP-0184. There is no way to query support */
+@property (nonatomic, strong, nullable) NSDate *dateDelivered;
+
+/** Mark message as deliverd via XEP-0184.*/
+@property (nonatomic, getter = isDelivered) BOOL delivered;
+
+
 @property (nonatomic, strong, nullable) NSString *text;
 @property (nonatomic, strong, nonnull) NSString *messageId;
 @property (nonatomic, strong, nullable) NSError *error;
-@property (nonatomic, getter = isDelivered) BOOL delivered;
+
 @property (nonatomic, getter = isRead) BOOL read;
 @property (nonatomic, getter = isIncoming) BOOL incoming;
 @property (nonatomic, getter = isTransportedSecurely) BOOL transportedSecurely;
