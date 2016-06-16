@@ -128,6 +128,9 @@ public class PushController: NSObject, OTRPushTLVHandlerDelegate, PushController
         self.apiClient.getPubsubEndpoint(completion)
     }
     
+    public func getMessagesEndpoint() -> NSURL {
+        return self.apiClient.messageEndpont()
+    }
     
     public func getNewPushToken(buddyKey:String?, completion:(token:TokenContainer?,error:NSError?) -> Void) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {[weak self] () -> Void in

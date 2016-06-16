@@ -850,8 +850,13 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     XMPPJID *nodeJID = [XMPPJID jidWithString:endpoint]; 
     NSString *tokenString = token.pushToken.tokenString;
     if (tokenString.length > 0) {
-        NSDictionary *options = @{@"token": tokenString,
-                                  @"endpoint": endpoint};
+        PushController *pushController = [OTRAppDelegate appDelegate].pushController;
+        NSString *pushEndpointURLString = [pushController getMessagesEndpoint].absoluteString;
+        NSMutableDictionary *options = [NSMutableDictionary dictionary];
+        [options setObject:tokenString forKey:@"token"];
+        if (pushEndpointURLString) {
+            [options setObject:pushEndpointURLString forKey:@"endpoint"];
+        }
         XMPPIQ *enableElement = [XMPPIQ enableNotificationsElementWithJID:nodeJID node:account.pushPubsubNode options:options];
         [self.xmppStream sendElement:enableElement];
     } else {
