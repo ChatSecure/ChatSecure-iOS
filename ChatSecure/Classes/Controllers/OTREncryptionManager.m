@@ -233,6 +233,8 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     NSParameterAssert(originalMessage);
     
     decodedMessage = [OTRUtilities stripHTML:decodedMessage];
+    decodedMessage = [decodedMessage stringByTrimmingCharactersInSet:
+     [NSCharacterSet whitespaceCharacterSet]];
     
     if ([decodedMessage length]) {
         originalMessage.text = decodedMessage;
