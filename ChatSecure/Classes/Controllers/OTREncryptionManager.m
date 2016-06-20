@@ -44,6 +44,7 @@
 
 @import AVFoundation;
 @import XMPPFramework;
+@import OTRAssets;
 
 NSString *const OTRMessageStateDidChangeNotification = @"OTREncryptionManagerMessageStateDidChangeNotification";
 NSString *const OTRWillStartGeneratingPrivateKeyNotification = @"OTREncryptionManagerWillStartGeneratingPrivateKeyNotification";
