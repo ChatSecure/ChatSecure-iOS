@@ -20,7 +20,6 @@
 @import YapDatabase.YapDatabaseSearchResultsView;
 @import PureLayout;
 @import BButton;
-#import "OTRStrings.h"
 #import "OTRBuddyInfoCell.h"
 #import "OTRNewBuddyViewController.h"
 #import "OTRChooseAccountViewController.h"

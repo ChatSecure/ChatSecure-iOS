@@ -7,7 +7,7 @@
 //
 
 #import "OTRIntSettingViewController.h"
-#import "OTRStrings.h"
+@import OTRAssets;
 #import "OTRLanguageManager.h"
 
 @interface OTRIntSettingViewController (Private)

@@ -25,7 +25,6 @@
 #import "OTRConversationViewController.h"
 
 #import "OTRMessagesHoldTalkViewController.h"
-#import "OTRStrings.h"
 #import "OTRSettingsViewController.h"
 #import "OTRSettingsManager.h"
 

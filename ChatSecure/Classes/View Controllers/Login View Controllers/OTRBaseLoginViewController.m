@@ -7,7 +7,6 @@
 //
 
 #import "OTRBaseLoginViewController.h"
-#import "OTRStrings.h"
 #import "OTRColors.h"
 #import "OTRCertificatePinning.h"
 #import "OTRConstants.h"

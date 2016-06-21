@@ -8,7 +8,7 @@
 
 #import "OTRLanguageSetting.h"
 #import "OTRListSettingValue.h"
-#import "OTRStrings.h"
+@import OTRAssets;
 
 @interface OTRLanguageSetting ()
 

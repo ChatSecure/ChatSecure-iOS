@@ -9,7 +9,7 @@
 #import "OTRXLFormCreator.h"
 #import "XLForm.h"
 #import "OTRXMPPAccount.h"
-#import "OTRStrings.h"
+@import OTRAssets;
 #import "XMPPServerInfoCell.h"
 #import "OTRImages.h"
 #import "OTRXMPPServerListViewController.h"

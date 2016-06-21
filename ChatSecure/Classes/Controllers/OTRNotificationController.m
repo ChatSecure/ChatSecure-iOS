@@ -14,8 +14,9 @@
 #import "OTRImages.h"
 #import "UIImage+ChatSecure.h"
 #import "OTRBaseLoginViewController.h"
-#import "OTRStrings.h"
 #import "OTRLanguageManager.h"
+
+@import OTRAssets;
 
 @interface OTRNotificationController ()
 

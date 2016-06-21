@@ -9,7 +9,7 @@
 #import "OTRAttachmentPicker.h"
 
 #import <MobileCoreServices/MobileCoreServices.h>
-#import "OTRStrings.h"
+@import OTRAssets;
 #import "OTRUtilities.h"
 #import "UIActionSheet+ChatSecure.h"
 #import "OTRLanguageManager.h"

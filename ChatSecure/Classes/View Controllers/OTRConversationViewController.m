@@ -24,7 +24,6 @@
 
 #import "OTRDatabaseManager.h"
 #import "OTRDatabaseView.h"
-#import "OTRStrings.h"
 #import <KVOController/NSObject+FBKVOController.h>
 #import "OTRAppDelegate.h"
 #import "OTRTheme.h"

@@ -7,8 +7,7 @@
 //
 
 #import "OTRLanguageManager.h"
-#import "OTRStrings.h"
-#import "OTRAssets.h"
+@import OTRAssets;
 
 NSString *const kOTRSettingKeyLanguage                 = @"userSelectedSetting";
 NSString *const kOTRDefaultLanguageLocale = @"kOTRDefaultLanguageLocale";

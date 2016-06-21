@@ -7,7 +7,7 @@
 //
 
 #import "OTRAddBuddyQRCodeViewController.h"
-#import "OTRStrings.h"
+@import OTRAssets;
 #import "PureLayout.h"
 #import "OTRQRCodeReaderDelegate.h"
 #import "OTRQRCodeViewController.h"

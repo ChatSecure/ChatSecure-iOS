@@ -9,7 +9,6 @@
 #import "OTRXMPPTorAccount.h"
 
 #import "OTRXMPPTorManager.h"
-#import "OTRStrings.h"
 #import "OTRLanguageManager.h"
 @import OTRAssets;
 

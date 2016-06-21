@@ -27,7 +27,7 @@
 #import "OTRProtocolManager.h"
 #import "OTRDatabaseManager.h"
 #import "OTRUtilities.h"
-#import "OTRStrings.h"
+@import OTRAssets;
 #import "OTRAppDelegate.h"
 #import "OTRMessagesHoldTalkViewController.h"
 #import "UIViewController+ChatSecure.h"

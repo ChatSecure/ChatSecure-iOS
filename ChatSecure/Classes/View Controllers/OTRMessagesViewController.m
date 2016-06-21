@@ -21,7 +21,7 @@
 #import "OTRXMPPManager.h"
 #import "OTRLockButton.h"
 #import "OTRButtonView.h"
-#import "OTRStrings.h"
+@import OTRAssets;
 #import "OTRTitleSubtitleView.h"
 @import OTRKit;
 #import "OTRImages.h"

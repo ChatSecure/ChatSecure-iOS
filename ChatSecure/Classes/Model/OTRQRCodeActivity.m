@@ -9,7 +9,6 @@
 #import "OTRQRCodeActivity.h"
 #import "UIImage+ChatSecure.h"
 #import "UIActivity+ChatSecure.h"
-#import "OTRStrings.h"
 #import "OTRLanguageManager.h"
 @import OTRAssets;
 

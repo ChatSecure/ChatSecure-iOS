@@ -11,7 +11,7 @@
 #import "OTRBuddy.h"
 #import "OTRAccount.h"
 #import "OTRXMPPBuddy.h"
-#import "OTRStrings.h"
+@import OTRAssets;
 #import "PureLayout.h"
 #import "OTRDatabaseManager.h"
 #import "OTRLanguageManager.h"

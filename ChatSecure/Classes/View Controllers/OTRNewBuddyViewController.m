@@ -10,7 +10,7 @@
 #import "OTRInLineTextEditTableViewCell.h"
 #import "OTRProtocolManager.h"
 #import <QuartzCore/QuartzCore.h>
-#import "OTRStrings.h"
+@import OTRAssets;
 #import "OTRXMPPManager.h"
 #import "OTRDatabaseManager.h"
 
