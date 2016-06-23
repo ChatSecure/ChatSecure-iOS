@@ -23,6 +23,11 @@
 #import "OTRInviteViewController.h"
 
 @interface OTRBaseLoginViewController ()
+
+@property (nonatomic) bool showPasswordsAsText;
+@property (nonatomic) bool existingAccount;
+@property (nonatomic) NSUInteger loginAttempts;
+
 @end
 
 @implementation OTRBaseLoginViewController
@@ -34,6 +39,10 @@
     UIBarButtonItem *checkButton = [[UIBarButtonItem alloc] initWithImage:checkImage style:UIBarButtonItemStylePlain target:self action:@selector(loginButtonPressed:)];
     
     self.navigationItem.rightBarButtonItem = checkButton;
+    
+    if (self.readOnly) {
+        self.title = ACCOUNT_STRING;
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -64,6 +73,11 @@
 
 - (void)loginButtonPressed:(id)sender
 {
+    if (self.readOnly) {
+        [self dismissViewControllerAnimated:YES completion:nil];
+        return;
+    }
+    self.existingAccount = (self.account != nil);
     if ([self validForm]) {
         self.form.disabled = YES;
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -112,9 +126,13 @@
 }
 
 - (void) pushInviteViewController {
-    OTRInviteViewController *inviteVC = [[[[OTRAppDelegate appDelegate].theme inviteViewControllerClass] alloc] init];
-    inviteVC.account = self.account;
-    [self.navigationController pushViewController:inviteVC animated:YES];
+    if (self.existingAccount) {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    } else {
+        OTRInviteViewController *inviteVC = [[[[OTRAppDelegate appDelegate].theme inviteViewControllerClass] alloc] init];
+        inviteVC.account = self.account;
+        [self.navigationController pushViewController:inviteVC animated:YES];
+    }
 }
 
 - (BOOL)validForm
@@ -153,6 +171,40 @@
         usernameRow.value = self.account.username;
     }
     [self updateFormRow:usernameRow];
+}
+
+#pragma mark Table View methods
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
+    if (self.readOnly) {
+        cell.userInteractionEnabled = NO;
+    } else {
+        XLFormRowDescriptor *desc = [self.form formRowAtIndex:indexPath];
+        if (desc != nil && desc.tag == kOTRXLFormPasswordTextFieldTag) {
+            cell.accessoryType = UITableViewCellAccessoryDetailButton;
+        }
+    }
+    return cell;
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    [super tableView:tableView willDisplayCell:cell forRowAtIndexPath:indexPath];
+    XLFormRowDescriptor *desc = [self.form formRowAtIndex:indexPath];
+    if (desc != nil && desc.tag == kOTRXLFormPasswordTextFieldTag) {
+        XLFormBaseCell *xlCell = [desc cellForFormController:self];
+        if (xlCell != nil && [cell isKindOfClass:XLFormTextFieldCell.class]) {
+            [[(XLFormTextFieldCell*)cell textField] setSecureTextEntry:!self.showPasswordsAsText];
+        }
+    }
+}
+
+- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
+    XLFormRowDescriptor *desc = [self.form formRowAtIndex:indexPath];
+    if (desc != nil && desc.tag == kOTRXLFormPasswordTextFieldTag) {
+        self.showPasswordsAsText = !self.showPasswordsAsText;
+        [self.tableView reloadData];
+    }
 }
 
 #pragma mark XLFormDescriptorDelegate
