@@ -151,6 +151,12 @@
     if (![stream isAuthenticated]) {
         return NO;
     }
+    
+    // For now, always fetch your own vCard until we do a better job of storing it
+    if ([jid isEqualToJID:stream.myJID options:XMPPJIDCompareBare]) {
+        return YES;
+    }
+    
     __block BOOL result = NO;
     
     [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {

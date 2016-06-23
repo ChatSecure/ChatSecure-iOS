@@ -37,6 +37,11 @@
     if ([self.vCardTemp.photo length]) {
         self.avatarData = self.vCardTemp.photo;
     }
+    if (self.vCardTemp.nickname.length) {
+        self.displayName = self.vCardTemp.nickname;
+    } else if (self.vCardTemp.formattedName.length) {
+        self.displayName = self.vCardTemp.formattedName;
+    }
 }
 
 - (void)setAvatarData:(NSData *)avatarData

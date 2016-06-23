@@ -145,11 +145,14 @@ PODS:
     - XMPPFramework/XEP-0280
     - XMPPFramework/XEP-0297
     - XMPPFramework/XEP-0308
+    - XMPPFramework/XEP-0313
     - XMPPFramework/XEP-0333
     - XMPPFramework/XEP-0334
     - XMPPFramework/XEP-0335
     - XMPPFramework/XEP-0352
     - XMPPFramework/XEP-0357
+    - XMPPFramework/XEP-0363
+    - XMPPFramework/XMPPMUCLight
   - XMPPFramework/BandwidthMonitor (3.6.7):
     - XMPPFramework/Core
   - XMPPFramework/Core (3.6.7):
@@ -242,6 +245,9 @@ PODS:
     - XMPPFramework/XEP-0203
   - XMPPFramework/XEP-0308 (3.6.7):
     - XMPPFramework/Core
+  - XMPPFramework/XEP-0313 (3.6.7):
+    - XMPPFramework/Core
+    - XMPPFramework/XEP-0059
   - XMPPFramework/XEP-0333 (3.6.7):
     - XMPPFramework/Core
   - XMPPFramework/XEP-0334 (3.6.7):
@@ -252,6 +258,12 @@ PODS:
     - XMPPFramework/Core
   - XMPPFramework/XEP-0357 (3.6.7):
     - XMPPFramework/Core
+  - XMPPFramework/XEP-0363 (3.6.7):
+    - XMPPFramework/Core
+  - XMPPFramework/XMPPMUCLight (3.6.7):
+    - XMPPFramework/Core
+    - XMPPFramework/CoreDataStorage
+    - XMPPFramework/XEP-0203
   - YapDatabase/SQLCipher (2.9):
     - YapDatabase/SQLCipher/Core (= 2.9)
     - YapDatabase/SQLCipher/Extensions (= 2.9)
@@ -411,7 +423,7 @@ SPEC CHECKSUMS:
   uservoice-iphone-sdk: 9abf27254c8488d7b72d70fb9b621132d6beebd4
   VTAcknowledgementsViewController: 6056f5f5e5ed995bbf0581bed6ddd29355ca9a80
   XLForm: c9ee7e0f859341279bfd894f9589a9d25c23e4df
-  XMPPFramework: 46b686510e4b6ebed5048b906a08934bd8a83aad
+  XMPPFramework: 49d1d67148c734cd0afe0af0aa1724d5ace7f909
   YapDatabase: c00f4197bba2fea17bdbd82c8e8e3f7104b6fa67
   ZXingObjC: bf15b3814f7a105b6d99f47da2333c93a063650a
 

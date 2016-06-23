@@ -118,7 +118,11 @@
             localBuddy = xmppBuddy;
         }
         
-        localBuddy.displayName = [item attributeStringValueForName:@"name"];
+        NSString *name = [item attributeStringValueForName:@"name"];
+        
+        if (name.length) {
+            localBuddy.displayName = name;
+        }
         
         if ([self isPendingApprovalElement:item]) {
             localBuddy.pendingApproval = YES;

@@ -150,6 +150,7 @@
     }
     account.username = jid.bare;
     account.resource = jid.resource;
+    account.displayName = nickname;
     
     // Use server's .onion if possible, else use FQDN
     if (account.accountType == OTRAccountTypeXMPPTor) {
