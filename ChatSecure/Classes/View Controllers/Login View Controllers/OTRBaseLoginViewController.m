@@ -201,6 +201,7 @@ static NSUInteger kOTRMaxLoginAttempts = 5;
         NSString *newValue = [NSString stringWithFormat:@"%@.%@",value,uniqueString];
         nicknameRow.value = newValue;
         [self loginButtonPressed:nil];
+        return;
     } else if (error.code == OTRXMPPXMLErrorPolicyViolation && self.loginAttempts < kOTRMaxLoginAttempts){
         // We've hit a policy violation. This occurs on duckgo because of special characters like russian alphabet.
         // We should give it another shot stripping out offending characters and retrying.
@@ -210,12 +211,15 @@ static NSUInteger kOTRMaxLoginAttempts = 5;
         if ([newValue length] == 0) {
             newValue = [OTRBranding xmppResource];
         }
-        nicknameRow.value = newValue;
-        [self loginButtonPressed:nil];
-    } else {
-        [self showAlertViewWithTitle:ERROR_STRING message:XMPP_FAIL_STRING error:error];
+        
+        if (![newValue isEqualToString:value]) {
+            nicknameRow.value = newValue;
+            [self loginButtonPressed:nil];
+            return;
+        }
     }
     
+    [self showAlertViewWithTitle:ERROR_STRING message:XMPP_FAIL_STRING error:error];
 }
 
 - (void)showAlertViewWithTitle:(NSString *)title message:(NSString *)message error:(NSError *)error
