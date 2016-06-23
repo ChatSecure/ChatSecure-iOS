@@ -15,7 +15,6 @@
     NSString *folderName = @"OTRResources.bundle";
     NSString *bundlePath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:folderName];
     NSBundle *dataBundle = [NSBundle bundleWithPath:bundlePath];
-    NSParameterAssert(dataBundle != nil);
     return dataBundle;
 }
 

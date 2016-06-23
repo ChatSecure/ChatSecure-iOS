@@ -21,14 +21,21 @@
 @import OTRAssets;
 #import "OTRLanguageManager.h"
 #import "OTRInviteViewController.h"
+#import "NSString+ChatSecure.h"
+
+static NSUInteger kOTRMaxLoginAttempts = 5;
 
 @interface OTRBaseLoginViewController ()
+
+@property (nonatomic) NSUInteger loginAttempts;
+
 @end
 
 @implementation OTRBaseLoginViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.loginAttempts = 0;
     
     UIImage *checkImage = [UIImage imageNamed:@"ic-check" inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];
     UIBarButtonItem *checkButton = [[UIBarButtonItem alloc] initWithImage:checkImage style:UIBarButtonItemStylePlain target:self action:@selector(loginButtonPressed:)];
@@ -72,6 +79,7 @@
         self.navigationItem.backBarButtonItem.enabled = NO;
 
 		__weak __typeof__(self) weakSelf = self;
+        self.loginAttempts += 1;
         [self.createLoginHandler performActionWithValidForm:self.form account:self.account progress:^(NSInteger progress, NSString *summaryString) {
             __typeof__(self) strongSelf = weakSelf;
             NSLog(@"Tor Progress %d: %@", (int)progress, summaryString);
@@ -184,13 +192,24 @@
 
 - (void)handleXMPPError:(NSError *)error
 {
-    if (error.code == OTRXMPPXMLErrorConflict) {
+    if (error.code == OTRXMPPXMLErrorConflict && self.loginAttempts < kOTRMaxLoginAttempts) {
         //Caught the conflict error before there's any alert displayed on the screen
         //Create a new nickname with a random hex value at the end
         NSString *uniqueString = [[OTRPasswordGenerator randomDataWithLength:2] hexString];
         XLFormRowDescriptor* nicknameRow = [self.form formRowWithTag:kOTRXLFormNicknameTextFieldTag];
         NSString *value = [nicknameRow value];
         NSString *newValue = [NSString stringWithFormat:@"%@.%@",value,uniqueString];
+        nicknameRow.value = newValue;
+        [self loginButtonPressed:nil];
+    } else if (error.code == OTRXMPPXMLErrorPolicyViolation && self.loginAttempts < kOTRMaxLoginAttempts){
+        // We've hit a policy violation. This occurs on duckgo because of special characters like russian alphabet.
+        // We should give it another shot stripping out offending characters and retrying.
+        XLFormRowDescriptor* nicknameRow = [self.form formRowWithTag:kOTRXLFormNicknameTextFieldTag];
+        NSMutableString *value = [[nicknameRow value] mutableCopy];
+        NSString *newValue = [value otr_stringByRemovingNonEnglishCharacters];
+        if ([newValue length] == 0) {
+            newValue = [OTRBranding xmppResource];
+        }
         nicknameRow.value = newValue;
         [self loginButtonPressed:nil];
     } else {

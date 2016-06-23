@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3A971C2C5AB08E34FDD18676 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCD1F8E85C658C8D3865B584 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		6308D1451CA20762002F5F30 /* Pods-ChatSecureCore-acknowledgements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6308D1441CA20762002F5F30 /* Pods-ChatSecureCore-acknowledgements.plist */; };
 		631098B11BD6FED000494A47 /* YapDatabse+ChatSecure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631098B01BD6FED000494A47 /* YapDatabse+ChatSecure.swift */; };
 		631E1E9F1C583B6900E263CD /* ChatSecureCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9227C2A1BA7952100B5E1D0 /* ChatSecureCore.framework */; };
@@ -24,11 +23,14 @@
 		634E68BE1BAB891C00DC6B25 /* PushContainers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633821C81BA8D48D0019C906 /* PushContainers.swift */; };
 		63564E0D1BBB114B00EB4CA6 /* PushOTRListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63564E0C1BBB114B00EB4CA6 /* PushOTRListener.swift */; };
 		63564E101BBB1C5200EB4CA6 /* PushStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63564E0F1BBB1C5200EB4CA6 /* PushStorage.swift */; };
+		635FCC841D1B5116008F903C /* OTRStringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FCC831D1B5116008F903C /* OTRStringTests.swift */; };
+		635FCC871D1B57ED008F903C /* OTRURLTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 636C63201B571B56008FEE69 /* OTRURLTests.m */; };
+		635FCC891D1B5936008F903C /* Pods_ChatSecureCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 635FCC881D1B5936008F903C /* Pods_ChatSecureCore.framework */; };
+		635FCC8A1D1B5A35008F903C /* OTRResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D93027561BAA381F000CC975 /* OTRResources.bundle */; };
 		63636D6E1C1F78A6009F5FCD /* UINavigationController+ChatSecure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63636D6D1C1F78A6009F5FCD /* UINavigationController+ChatSecure.swift */; };
 		63636D721C1F9D7C009F5FCD /* UIApplication+ChatSecure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63636D711C1F9D7C009F5FCD /* UIApplication+ChatSecure.swift */; };
 		6369855A1BC875110083FC53 /* OTRXMPPRoomManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 636985581BC875110083FC53 /* OTRXMPPRoomManager.h */; };
 		6369855B1BC875110083FC53 /* OTRXMPPRoomManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 636985591BC875110083FC53 /* OTRXMPPRoomManager.m */; };
-		636C63211B571B56008FEE69 /* OTRURLTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 636C63201B571B56008FEE69 /* OTRURLTests.m */; };
 		638045681BB4BDED002D8BAE /* PushSerializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638045671BB4BDEC002D8BAE /* PushSerializer.swift */; };
 		6380456A1BB4C833002D8BAE /* PushDeserializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638045691BB4C832002D8BAE /* PushDeserializer.swift */; };
 		638338DE1BCC508200EB0CA1 /* OTRMessagesGroupViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 638338DC1BCC508200EB0CA1 /* OTRMessagesGroupViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -699,6 +701,8 @@
 		6354BBE31A96C67400E8EBAC /* OTRMediaFileManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRMediaFileManager.m; sourceTree = "<group>"; };
 		63564E0C1BBB114B00EB4CA6 /* PushOTRListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushOTRListener.swift; sourceTree = "<group>"; };
 		63564E0F1BBB1C5200EB4CA6 /* PushStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushStorage.swift; sourceTree = "<group>"; };
+		635FCC831D1B5116008F903C /* OTRStringTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRStringTests.swift; sourceTree = "<group>"; };
+		635FCC881D1B5936008F903C /* Pods_ChatSecureCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Pods_ChatSecureCore.framework; path = "Pods/../build/Debug-iphoneos/Pods_ChatSecureCore.framework"; sourceTree = "<group>"; };
 		63636D6D1C1F78A6009F5FCD /* UINavigationController+ChatSecure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UINavigationController+ChatSecure.swift"; sourceTree = "<group>"; };
 		63636D711C1F9D7C009F5FCD /* UIApplication+ChatSecure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIApplication+ChatSecure.swift"; sourceTree = "<group>"; };
 		636985581BC875110083FC53 /* OTRXMPPRoomManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPRoomManager.h; sourceTree = "<group>"; };
@@ -851,8 +855,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				635FCC891D1B5936008F903C /* Pods_ChatSecureCore.framework in Frameworks */,
 				631E1E9F1C583B6900E263CD /* ChatSecureCore.framework in Frameworks */,
-				3A971C2C5AB08E34FDD18676 /* Pods.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1397,6 +1401,7 @@
 			children = (
 				63DDD8B91A9E9BD900C0A918 /* samples */,
 				636C63201B571B56008FEE69 /* OTRURLTests.m */,
+				635FCC831D1B5116008F903C /* OTRStringTests.swift */,
 				63DDD8B41A9E94B700C0A918 /* OTRMediaTests.m */,
 				63F614DB1BB214660083A06A /* ChatSecureModelTest.swift */,
 				63E353B11BB9D0CF005C54C3 /* PushSerializerTest.swift */,
@@ -1547,6 +1552,7 @@
 		DB9AACD6ED82090C7A6B0076 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				635FCC881D1B5936008F903C /* Pods_ChatSecureCore.framework */,
 				D9AA24691CAB32CB00337ECA /* Pods_ChatSecureCore.framework */,
 				CCD1F8E85C658C8D3865B584 /* Pods.framework */,
 				9B353F12AE2FDB52438B426D /* Pods_ChatSecureCore.framework */,
@@ -1862,7 +1868,6 @@
 					};
 					6396AFB21A169D54009F3E6C = {
 						CreatedOnToolsVersion = 6.1;
-						TestTargetID = 6396AF991A169D54009F3E6C;
 					};
 					D9227C291BA7952100B5E1D0 = {
 						CreatedOnToolsVersion = 7.0;
@@ -1950,6 +1955,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				635FCC8A1D1B5A35008F903C /* OTRResources.bundle in Resources */,
 				63DDD8BA1A9E9BD900C0A918 /* samples in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1999,7 +2005,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ChatSecureCore/Pods-ChatSecureCore-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		6386E24E1A16DBAD003465DC /* ShellScript */ = {
@@ -2116,7 +2122,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ChatSecureCore/Pods-ChatSecureCore-resources.sh\"";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -2136,7 +2142,8 @@
 			files = (
 				63F614DC1BB214660083A06A /* ChatSecureModelTest.swift in Sources */,
 				63DDD8B51A9E94B700C0A918 /* OTRMediaTests.m in Sources */,
-				636C63211B571B56008FEE69 /* OTRURLTests.m in Sources */,
+				635FCC871D1B57ED008F903C /* OTRURLTests.m in Sources */,
+				635FCC841D1B5116008F903C /* OTRStringTests.swift in Sources */,
 				63E353B21BB9D0CF005C54C3 /* PushSerializerTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2479,18 +2486,17 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 63DC0EB61A1ABC86002C9598 /* OTR_Release.xcconfig */;
 			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ENABLE_MODULES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
+					"$(PROJECT_DIR)/build/Debug-iphoneos",
 				);
 				INFOPLIST_FILE = ChatSecureTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.chrisballinger.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "ChatSecureTests/ChatSecureTests-Bridging-Header.h";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ChatSecure.app/ChatSecure";
 			};
 			name = Beta;
 		};
@@ -2628,12 +2634,12 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 63DC0EB41A1ABC86002C9598 /* OTR_Debug.xcconfig */;
 			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
+					"$(PROJECT_DIR)/build/Debug-iphoneos",
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -2646,7 +2652,6 @@
 				PROVISIONING_PROFILE = "655d2ab0-dc16-43ae-a2c0-e13fa3fcb791";
 				SWIFT_OBJC_BRIDGING_HEADER = "ChatSecureTests/ChatSecureTests-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ChatSecure.app/ChatSecure";
 			};
 			name = Debug;
 		};
@@ -2654,18 +2659,17 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 63DC0EB61A1ABC86002C9598 /* OTR_Release.xcconfig */;
 			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ENABLE_MODULES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
+					"$(PROJECT_DIR)/build/Debug-iphoneos",
 				);
 				INFOPLIST_FILE = ChatSecureTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.chrisballinger.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "ChatSecureTests/ChatSecureTests-Bridging-Header.h";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ChatSecure.app/ChatSecure";
 			};
 			name = Release;
 		};
