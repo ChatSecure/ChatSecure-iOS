@@ -26,7 +26,6 @@
 
 @property (nonatomic) bool showPasswordsAsText;
 @property (nonatomic) bool existingAccount;
-@property (nonatomic) NSUInteger loginAttempts;
 
 @end
 
