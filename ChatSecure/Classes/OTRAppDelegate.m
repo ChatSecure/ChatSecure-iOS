@@ -90,8 +90,11 @@
     
     UIViewController *rootViewController = nil;
     
+    // Create 3 primary view controllers, settings, conversation list and messages
     self.settingsViewController = [[OTRSettingsViewController alloc] init];
     self.conversationViewController = [[[self.theme conversationViewControllerClass] alloc] init];
+    self.messagesViewController = [[self.theme messagesViewControllerClass] messagesViewController];
+    
     
     if ([OTRDatabaseManager existsYapDatabase] && ![[OTRDatabaseManager sharedInstance] hasPassphrase]) {
         // user needs to enter password for current database
@@ -112,7 +115,7 @@
         }
 
         [[OTRDatabaseManager sharedInstance] setupDatabaseWithName:OTRYapDatabaseName];
-        rootViewController = [self defaultConversationNavigationController];
+        rootViewController = [self setupDefaultSplitViewControllerWithLeadingViewController:[[UINavigationController alloc] initWithRootViewController:self.conversationViewController]];
 #if CHATSECURE_DEMO
         [self performSelector:@selector(loadDemoData) withObject:nil afterDelay:0.0];
 #endif
@@ -167,43 +170,44 @@
 #endif
 }
 
-- (UIViewController*)defaultConversationNavigationController
+/**
+ * This creates a UISplitViewController using a leading view controller (the left view controller). It uses a navigation controller with
+ * self.messagesViewController as teh right view controller;
+ * This also creates and sets up teh OTRSplitViewCoordinator
+ *
+ * @param leadingViewController The leading or left most view controller in a UISplitViewController. Should most likely be some sort of UINavigationViewController
+ * @return The base default UISplitViewController
+ *
+ */
+- (UISplitViewController *)setupDefaultSplitViewControllerWithLeadingViewController:(nonnull UIViewController *)leadingViewController
 {
-    UIViewController *viewController = nil;
     
     YapDatabaseConnection *connection = [OTRDatabaseManager sharedInstance].readWriteDatabaseConnection;
     self.splitViewCoordinator = [[OTRSplitViewCoordinator alloc] initWithDatabaseConnection:connection];
     self.splitViewControllerDelegate = [[OTRSplitViewControllerDelegateObject alloc] init];
-    
-    //ConversationViewController Nav
-    UINavigationController *conversationListNavController = [[UINavigationController alloc] initWithRootViewController:self.conversationViewController];
     self.conversationViewController.delegate = self.splitViewCoordinator;
     
     //MessagesViewController Nav
-    UINavigationController *messagesNavController = [[UINavigationController alloc ]initWithRootViewController:[[self.theme messagesViewControllerClass] messagesViewController]];
-    
-    
+    self.messagesNavigationController = [[UINavigationController alloc ]initWithRootViewController:self.messagesViewController];
     
     //SplitViewController
     UISplitViewController *splitViewController = [[UISplitViewController alloc] init];
-    splitViewController.viewControllers = [NSArray arrayWithObjects:conversationListNavController, messagesNavController, nil];
+    splitViewController.viewControllers = @[leadingViewController,self.messagesNavigationController];
     splitViewController.delegate = self.splitViewControllerDelegate;
     splitViewController.title = CHAT_STRING;
     
     //setup 'back' button in nav bar
-    messagesNavController.topViewController.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem;
-    messagesNavController.topViewController.navigationItem.leftItemsSupplementBackButton = YES;
+    self.messagesNavigationController.topViewController.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem;
+    self.messagesNavigationController.topViewController.navigationItem.leftItemsSupplementBackButton = YES;
     
     self.splitViewCoordinator.splitViewController = splitViewController;
     
-    viewController = splitViewController;
-    
-    return viewController;
+    return splitViewController;
 }
 
 - (void)showConversationViewController
 {
-    self.window.rootViewController = [self defaultConversationNavigationController];
+    self.window.rootViewController = [self setupDefaultSplitViewControllerWithLeadingViewController:[[UINavigationController alloc] initWithRootViewController:self.conversationViewController]];
 }
 
 - (id<OTRThreadOwner>)activeThread
