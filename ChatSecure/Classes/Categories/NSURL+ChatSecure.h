@@ -31,15 +31,13 @@
  *  @param baseURL the base url that the username and fingerprint will be added to
  *  @param username the username of your own account
  *  @param fingerprints the users fingerprints. key=OTRFingerprintType->NSString, value=fingerprintSTring
- *  @param base64Encoded whether to base64 encode the last path component
  *  @return a url that is shareable
  *
  *  @see +fingerprintStringTypeForFingerprintType:
  */
 + (NSURL*) otr_shareLink:(NSString *)baseURL
                  username:(NSString *)username
-            fingerprints:(NSDictionary <NSString*, NSString*> *)fingerprints
-           base64Encoded:(BOOL)base64Encoded;
+            fingerprints:(NSDictionary <NSString*, NSString*> *)fingerprints;
 
 /**
  *  Synchronously decodes a url into the given username and fingerprint.

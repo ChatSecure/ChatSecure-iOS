@@ -61,11 +61,11 @@
  */
 + (NSURL*) otr_shareLink:(NSString *)baseURL
                 username:(NSString *)username
-            fingerprints:(NSDictionary <NSString*, NSString*> *)fingerprints
-           base64Encoded:(BOOL)base64Encoded {
+            fingerprints:(NSDictionary <NSString*, NSString*> *)fingerprints {
     NSParameterAssert(baseURL);
     NSParameterAssert(username);
     NSString *urlString = @"";
+    BOOL base64Encoded = YES;
     
     NSMutableString *fingerprintsString = [NSMutableString string];
     
@@ -138,8 +138,8 @@
     
     NSString *utf8String = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     components = [utf8String componentsSeparatedByString:@"?otr="];
-    if (components.count == 0) {
-        completion(utf8String, nil);
+    if (components.count == 1) {
+        completion(components.firstObject, nil);
     } else if (components.count == 2) {
         completion(components.firstObject, components.lastObject);
     } else {

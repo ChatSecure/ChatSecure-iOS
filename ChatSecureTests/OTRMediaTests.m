@@ -29,9 +29,7 @@
     [super setUp];
     self.queue = dispatch_queue_create("OTRMediaTestsQUEUE", 0);
     
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsPath = [paths firstObject];
-    NSString *filePath = [documentsPath stringByAppendingPathComponent:@"test.sqlite"];
+    NSString *filePath =  [NSTemporaryDirectory() stringByAppendingPathComponent:NSStringFromSelector(_cmd)];
     
     if([[NSFileManager defaultManager] fileExistsAtPath:filePath isDirectory:nil]) {
         [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];

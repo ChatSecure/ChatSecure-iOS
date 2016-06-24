@@ -14,7 +14,19 @@ import ChatSecure_Push_iOS
 class PushSerializerTest: XCTestCase {
     
     func testSerialization() {
-        let array = [Token(tokenString: "token1", type: .iOS, deviceID: nil),Token(tokenString: "token2", type: .iOS, deviceID: nil),Token(tokenString: "token3", type: .iOS, deviceID: nil)]
+        
+        let date = NSDate(timeIntervalSinceNow: 100)
+        
+        var array = [
+            Token(tokenString: "token1", type: .iOS, deviceID: "deviceid"),
+            Token(tokenString: "token2", type: .iOS, deviceID: "deviceid"),
+            Token(tokenString: "token3", type: .iOS, deviceID: "deviceid")
+        ]
+        array = array.map { (token) -> Token in
+            token.expires = date
+            return token
+        }
+        
         let data = try! PushSerializer.serialize(array, APIEndpoint: "https://example.com/messages")
         XCTAssertNotNil(data,"No json data")
         do {
@@ -23,9 +35,5 @@ class PushSerializerTest: XCTestCase {
         } catch let error as NSError {
             XCTAssertNil(error)
         }
-        
-        
-        
-        
     }
 }
