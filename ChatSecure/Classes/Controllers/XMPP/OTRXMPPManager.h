@@ -80,7 +80,6 @@ extern NSString *const OTRXMPPLoginErrorKey;
 @property BOOL didSecure;
 
 @property (nonatomic, strong, readonly) OTRXMPPAccount *account;
-@property (nonatomic, strong, readonly) NSString *accountUniqueId;
 @property (nonatomic, weak) id <PushControllerProtocol> pushController;
 
 - (BOOL)connectWithJID:(NSString*) myJID password:(NSString*)myPassword;

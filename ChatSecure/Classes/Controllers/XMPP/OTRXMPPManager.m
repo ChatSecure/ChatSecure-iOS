@@ -794,17 +794,24 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     DDLogVerbose(@"%@: %@ %@", THIS_FILE, THIS_METHOD, item);
 
     // Because XMPP sucks, there's no way to know if a vCard has changed without fetching all of them again
-    // So now whenever loading the roster, we fetch every vCard. Great.
-    [self.databaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-        NSString *jidStr = [item attributeStringValueForName:@"jid"];
-        XMPPJID *jid = [[XMPPJID jidWithString:jidStr] bareJID];
-        OTRXMPPBuddy *buddy = [OTRXMPPBuddy fetchBuddyWithUsername:[jid bare] withAccountUniqueId:self.accountUniqueId transaction:transaction];
-        if (!buddy.lastUpdatedvCardTemp ||
-            ([buddy.lastUpdatedvCardTemp timeIntervalSinceNow] < -60*60 &&
-            !buddy.isWaitingForvCardTempFetch)) {
-            [self.xmppvCardTempModule fetchvCardTempForJID:jid ignoreStorage:YES];
-        }
+    // To preserve user mobile data, just fetch each vCard once, only if it's never been fetched
+    // Otherwise you'll only receive vCard updates if someone updates their avatar
+    NSString *jidStr = [item attributeStringValueForName:@"jid"];
+    XMPPJID *jid = [[XMPPJID jidWithString:jidStr] bareJID];
+    __block OTRXMPPBuddy *buddy = nil;
+    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        buddy = [OTRXMPPBuddy fetchBuddyWithUsername:[jid bare] withAccountUniqueId:self.account.uniqueId transaction:transaction];
     }];
+    if (!buddy.vCardTemp) {
+        XMPPvCardTemp *vCard = [self.xmppvCardTempModule vCardTempForJID:jid shouldFetch:YES];
+        if (vCard) {
+            buddy = [buddy copy];
+            buddy.vCardTemp = vCard;
+            [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+                [transaction setObject:buddy forKey:buddy.uniqueId inCollection:[[buddy class] collection]];
+            }];
+        }
+    }
 }
 
 -(void)xmppRoster:(XMPPRoster *)sender didReceivePresenceSubscriptionRequest:(XMPPPresence *)presence
