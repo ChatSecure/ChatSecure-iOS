@@ -52,3 +52,4 @@ FOUNDATION_EXPORT const unsigned char ChatSecureCoreVersionString[];
 #import "OTRInviteViewController.h"
 #import "OTRNotificationPermissions.h"
 #import "OTRBuddyInfoCell.h"
+#import "NSString+ChatSecure.h"
