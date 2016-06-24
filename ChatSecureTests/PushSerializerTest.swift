@@ -14,8 +14,8 @@ import ChatSecure_Push_iOS
 class PushSerializerTest: XCTestCase {
     
     func testSerialization() {
-        let array = [Token(tokenString: "token1", deviceID: nil),Token(tokenString: "token2", deviceID: nil),Token(tokenString: "token3", deviceID: nil)]
-        let data = PushSerializer.serialize(array, APIEndpoint: "https://example.com/messages")
+        let array = [Token(tokenString: "token1", type: .iOS, deviceID: nil),Token(tokenString: "token2", type: .iOS, deviceID: nil),Token(tokenString: "token3", type: .iOS, deviceID: nil)]
+        let data = try! PushSerializer.serialize(array, APIEndpoint: "https://example.com/messages")
         XCTAssertNotNil(data,"No json data")
         do {
             let newArray = try PushDeserializer.deserializeToken(data!)

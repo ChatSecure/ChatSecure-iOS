@@ -60,6 +60,8 @@ NSString *const OTRXMPPSSLHostnameKey             = @"OTRXMPPSSLHostnameKey";
         return OTRXMPPXMLErrorConflict;
     } else if([[[xmlError elementsForName:@"error"] firstObject] elementForName:@"not-acceptable" xmlns:@"urn:ietf:params:xml:ns:xmpp-stanzas"]) {
         return OTRXMPPXMLErrorNotAcceptable;
+    } else if ([[[xmlError elementsForName:@"error"] firstObject] elementForName:@"policy-violation" xmlns:@"urn:ietf:params:xml:ns:xmpp-stanzas"]) {
+        return OTRXMPPXMLErrorPolicyViolation;
     } else {
         return OTRXMPPXMLErrorUnkownError;
     }
