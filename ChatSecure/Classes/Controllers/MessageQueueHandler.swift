@@ -37,6 +37,7 @@ public class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageSt
     public var accountTimeout:NSTimeInterval = 30
     public var otrTimeout:NSTimeInterval = 10
     public var messageTimeout:NSTimeInterval = 10
+    public var maxFailureCount:UInt = 2
     
     let operationQueue = NSOperationQueue()
     let databaseConnection:YapDatabaseConnection
@@ -151,6 +152,28 @@ public class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageSt
         return message
     }
     
+    private func fetchSendingAction(messageKey:String, messageCollection:String, transaction:YapDatabaseReadTransaction) -> OTRYapMessageSendAction? {
+        let key = OTRYapMessageSendAction.actionKeyForMessageKey(messageKey, messageCollection: messageCollection)
+        guard let action = OTRYapMessageSendAction.fetchObjectWithUniqueID(key, transaction: transaction) else {
+            return nil
+        }
+        return action
+    }
+    
+    private func incrementSendActionFailureCount(messageKey:String, messageCollection:String) {
+        self.databaseConnection.readWriteWithBlock { (transaction) in
+            if let sendingAction = self.fetchSendingAction(messageKey, messageCollection: messageCollection, transaction: transaction) {
+                sendingAction.failureCount += 1
+                
+                if(sendingAction.failureCount >= self.maxFailureCount) {
+                    transaction.removeObjectForKey(sendingAction.uniqueId, inCollection: sendingAction.dynamicType.collection())
+                } else {
+                    sendingAction.saveWithTransaction(transaction)
+                }
+            }
+        }
+    }
+    
     //MARK: XMPPManager functions
     
     private func sendMessage(outstandingMessage:OutstandingMessageInfo) {
@@ -215,12 +238,14 @@ public class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageSt
                     self.waitingForMessage(message.uniqueId, messageCollection: messageCollection,sendEncrypted:sendEncrypted, completion: completion)
                     OTRKit.sharedInstance().encodeMessage(text, tlvs: nil, username:buddy.username , accountName: account.username, protocol: account.protocolTypeString(), tag: message)
                 } else {
-                    //We need to initate a session
+                    //We need to initate an OTR session
+                    
+                    //Timeout at some point waiting for OTR session
                     let timer = NSTimer.scheduledTimerWithTimeInterval(self.otrTimeout, target: self, selector: #selector(MessageQueueHandler.otrInitatiateTimeout(_:)), userInfo: buddy.uniqueId, repeats: false)
                     self.waitingForBuddy(buddy.uniqueId, messageKey: message.uniqueId, messageCollection: messageCollection,sendEncrypted:sendEncrypted, timer:timer, completion: completion)
                     OTRKit.sharedInstance().initiateEncryptionWithUsername(buddy.username, accountName: account.username, protocol: account.protocolTypeString())
                     
-                    //Timeout at some point waiting for OTR session
+                    
                     
                 }
                 
@@ -233,6 +258,10 @@ public class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageSt
         } else {
             // The account might be connected then? even if not auto connecting we might just start up faster then the
             // can enter credentials. Try again in a bit myabe the account will be ready
+            
+            // Decided that this won't go into the retry failure because we're just waiting on the user to manually connect the account.
+            // Not really a 'failure' but we should still try to push the messages through at some point.
+            
             completion(success: false, retryTimeout: self.accountTimeout)
         }
 
@@ -246,7 +275,7 @@ public class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageSt
             return
         }
         
-        let messageKey = messageSendingAction.messsageKey
+        let messageKey = messageSendingAction.messageKey
         let messageCollection = messageSendingAction.messageCollection
         var msg:OTRMessage? = nil
         self.databaseConnection.readWithBlock { (transaction) in
@@ -309,6 +338,9 @@ public class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageSt
         guard let buddyKey = timer.userInfo as? String, messageInfo = self.popWaitingBuddy(buddyKey) else {
             return
         }
+        
+        self.incrementSendActionFailureCount(messageInfo.messageKey, messageCollection: messageInfo.messageCollection)
+        
         messageInfo.completion(success: false, retryTimeout: self.messageTimeout)
     }
     
@@ -335,6 +367,8 @@ public class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageSt
         guard let messageInfo = self.popWaitingMessage(messageKey, messageCollection: messageCollection) else {
             return;
         }
+        
+        self.incrementSendActionFailureCount(messageKey, messageCollection: messageCollection)
         
         messageInfo.completion(success: false, retryTimeout: -1)
     }

@@ -17,12 +17,17 @@
  */
 @interface OTRYapMessageSendAction : OTRYapDatabaseObject <YapTaskQueueAction>
 
-@property (nonatomic, strong, nonnull) NSString *messsageKey;
+@property (nonatomic, strong, nonnull) NSString *messageKey;
 @property (nonatomic, strong, nonnull) NSString *messageCollection;
 @property (nonatomic, strong, nonnull) NSString *buddyKey;
 @property (nonatomic, strong, nonnull) NSDate *date;
 @property (nonatomic) BOOL sendEncrypted;
 
+/** The number of sending message failures after a user interaction*/
+@property (nonatomic) NSUInteger failureCount;
+
 - (nonnull instancetype)initWithMessageKey:(nonnull NSString *)messageKey messageCollection:(nonnull NSString *)messageCollection buddyKey:(nonnull NSString *)buddyKey date:(nonnull NSDate *)date sendEncrypted:(BOOL)sendEncrypted;
+
++ (nonnull NSString *)actionKeyForMessageKey:(nonnull NSString *)messageKey messageCollection:(nonnull NSString *)messageCollection;
 
 @end
