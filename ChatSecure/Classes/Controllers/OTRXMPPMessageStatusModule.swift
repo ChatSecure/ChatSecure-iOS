@@ -11,7 +11,7 @@ import XMPPFramework
 
 @objc public protocol OTRXMPPMessageStatusModuleDelegate {
     func didSendMessage(messageKey:String, messageCollection:String)
-    func didFailToSendMessage(messageKey:String, messageCollection:String)
+    func didFailToSendMessage(messageKey:String, messageCollection:String, error:NSError?)
 }
 
 /**
@@ -59,7 +59,7 @@ import XMPPFramework
         }
         
         if let message = self.fetchMessage(messageId) {
-            self.delegate?.didFailToSendMessage(message.messageKey(), messageCollection: message.messageCollection())
+            self.delegate?.didFailToSendMessage(message.messageKey(), messageCollection: message.messageCollection(), error: error)
         }
         
     }

@@ -162,7 +162,7 @@ class PushStorage: NSObject, PushStorageProtocol {
         var tokens:[TokenContainer] = []
         self.databaseConnection.readWriteWithBlock { (transaction) -> Void in
             guard let buddy = transaction.objectForKey(buddyKey, inCollection: OTRBuddy.collection()) as? OTRBuddy else {
-                error = PushError.noBuddyFound.error()
+                error = convertError(PushError.noBuddyFound)
                 return
             }
             

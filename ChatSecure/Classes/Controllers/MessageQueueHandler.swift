@@ -34,9 +34,9 @@ private func ==(lhs: OutstandingMessageInfo, rhs: OutstandingMessageInfo) -> Boo
 
 public class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageStatusModuleDelegate {
     
-    public var accountTimeout:NSTimeInterval = 30
-    public var otrTimeout:NSTimeInterval = 10
-    public var messageTimeout:NSTimeInterval = 10
+    public var accountRetryTimeout:NSTimeInterval = 30
+    public var otrTimeout:NSTimeInterval = 7
+    public var messageRetryTimeout:NSTimeInterval = 10
     public var maxFailureCount:UInt = 2
     
     let operationQueue = NSOperationQueue()
@@ -160,13 +160,26 @@ public class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageSt
         return action
     }
     
-    private func incrementSendActionFailureCount(messageKey:String, messageCollection:String) {
+    private func incrementSendActionFailureCount(messageKey:String, messageCollection:String, error:NSError?) {
         self.databaseConnection.readWriteWithBlock { (transaction) in
             if let sendingAction = self.fetchSendingAction(messageKey, messageCollection: messageCollection, transaction: transaction) {
                 sendingAction.failureCount += 1
                 
                 if(sendingAction.failureCount >= self.maxFailureCount) {
+                    // We reached max failure count and should stop trying and mark message as failed. 
+                    // Possibly in the future we might want to kill all actions in the queue because they're unlikely to succeed
+                    
                     transaction.removeObjectForKey(sendingAction.uniqueId, inCollection: sendingAction.dynamicType.collection())
+                    
+                    //Since we're giving up on this message we need to 'mark' the message with an error
+                    
+                    // get reall message
+                    guard let message  = transaction.objectForKey(messageKey, inCollection: messageCollection) as? OTRMessage else {
+                        return
+                    }
+                    message.error = error
+                    message.saveWithTransaction(transaction)
+                    
                 } else {
                     sendingAction.saveWithTransaction(transaction)
                 }
@@ -230,6 +243,7 @@ public class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageSt
             
             //We're connected now we need to check encryption requirements
             OTRKit.sharedInstance().messageStateForUsername(buddy.username, accountName: account.username, protocol: account.protocolTypeString(), completion: { (messageState) in
+                
                 // If we need to send it encrypted and we have a session or we don't need to encrypt send out message
                 if ((sendEncrypted && messageState == .Encrypted) || !sendEncrypted) {
                     guard let text = message.text else {
@@ -244,9 +258,6 @@ public class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageSt
                     let timer = NSTimer.scheduledTimerWithTimeInterval(self.otrTimeout, target: self, selector: #selector(MessageQueueHandler.otrInitatiateTimeout(_:)), userInfo: buddy.uniqueId, repeats: false)
                     self.waitingForBuddy(buddy.uniqueId, messageKey: message.uniqueId, messageCollection: messageCollection,sendEncrypted:sendEncrypted, timer:timer, completion: completion)
                     OTRKit.sharedInstance().initiateEncryptionWithUsername(buddy.username, accountName: account.username, protocol: account.protocolTypeString())
-                    
-                    
-                    
                 }
                 
             })
@@ -262,7 +273,7 @@ public class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageSt
             // Decided that this won't go into the retry failure because we're just waiting on the user to manually connect the account.
             // Not really a 'failure' but we should still try to push the messages through at some point.
             
-            completion(success: false, retryTimeout: self.accountTimeout)
+            completion(success: false, retryTimeout: self.accountRetryTimeout)
         }
 
     }
@@ -335,13 +346,23 @@ public class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageSt
     //Mark: OTR timeout
     @objc public func otrInitatiateTimeout(timer:NSTimer) {
         
-        guard let buddyKey = timer.userInfo as? String, messageInfo = self.popWaitingBuddy(buddyKey) else {
+        guard let buddyKey = timer.userInfo as? String else {
             return
         }
         
-        self.incrementSendActionFailureCount(messageInfo.messageKey, messageCollection: messageInfo.messageCollection)
+        self.operationQueue.addOperationWithBlock { [weak self] in
+            guard let strongSelf = self else {return}
+            
+            guard let messageInfo = strongSelf.popWaitingBuddy(buddyKey) else {
+                return
+            }
+            
+            let err = convertError(EncryptionError.unableToCreateOTRSession)
+            strongSelf.incrementSendActionFailureCount(messageInfo.messageKey, messageCollection: messageInfo.messageCollection, error: err)
+            
+            messageInfo.completion(success: false, retryTimeout: strongSelf.messageRetryTimeout)
+        }
         
-        messageInfo.completion(success: false, retryTimeout: self.messageTimeout)
     }
     
     //MARK: Callback from protocol
@@ -363,12 +384,12 @@ public class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageSt
         messageInfo.completion(success: true, retryTimeout: -1)
     }
     
-    public func didFailToSendMessage(messageKey:String, messageCollection:String) {
+    public func didFailToSendMessage(messageKey:String, messageCollection:String, error:NSError?) {
         guard let messageInfo = self.popWaitingMessage(messageKey, messageCollection: messageCollection) else {
             return;
         }
         
-        self.incrementSendActionFailureCount(messageKey, messageCollection: messageCollection)
+        self.incrementSendActionFailureCount(messageKey, messageCollection: messageCollection, error:error)
         
         messageInfo.completion(success: false, retryTimeout: -1)
     }

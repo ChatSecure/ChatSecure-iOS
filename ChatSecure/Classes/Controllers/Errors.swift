@@ -8,6 +8,17 @@
 
 import Foundation
 
+protocol ErrorDescription {
+    func localizedDescription() -> String
+    func code() -> Int
+}
+
+/** Convert our enum error types to NSError using the ErrorDescription protocol */
+func convertError<T where T: ErrorDescription>(item:T) -> NSError {
+    return NSError(domain: kOTRErrorDomain, code: item.code(), userInfo: [NSLocalizedDescriptionKey:item.localizedDescription()])
+}
+
+/** Error types for the Push server*/
 enum PushError: Int {
     case noPushDevice       = 301
     case invalidURL         = 302
@@ -18,7 +29,7 @@ enum PushError: Int {
     case missingTokens      = 307
 }
 
-extension PushError {
+extension PushError: ErrorDescription {
     func localizedDescription() -> String {
         switch self {
         case .noPushDevice:
@@ -38,7 +49,25 @@ extension PushError {
         }
     }
     
-    func error() -> NSError {
-        return NSError(domain: kOTRErrorDomain, code: self.rawValue, userInfo: [NSLocalizedDescriptionKey:self.localizedDescription()])
+    func code() -> Int {
+        return self.rawValue
+    }
+}
+
+/** Error types for encryption*/
+enum EncryptionError: Int {
+    case unableToCreateOTRSession = 350
+}
+
+extension EncryptionError: ErrorDescription {
+    func localizedDescription() -> String {
+        switch self {
+        case .unableToCreateOTRSession:
+            return "Unable to create OTR session"
+        }
+    }
+    
+    func code() -> Int {
+        return self.rawValue
     }
 }

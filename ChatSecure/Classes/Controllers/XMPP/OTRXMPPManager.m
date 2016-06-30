@@ -721,19 +721,6 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 
 - (void)xmppStream:(XMPPStream *)sender didFailToSendMessage:(XMPPMessage *)message error:(NSError *)error
 {
-    if ([message.elementID length]) {
-        [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-            [transaction enumerateMessagesWithId:message.elementID block:^(id<OTRMessageProtocol> _Nonnull databaseMessage, BOOL * _Null_unspecified stop) {
-                if ([databaseMessage isKindOfClass:[OTRMessage class]]) {
-                    ((OTRMessage *)databaseMessage).error = error;
-                    [(OTRMessage *)databaseMessage saveWithTransaction:transaction];
-                    *stop = YES;
-                }
-                
-            }];
-        }];
-    }
-    
     DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
 }
 - (void)xmppStream:(XMPPStream *)sender didFailToSendPresence:(XMPPPresence *)presence error:(NSError *)error
