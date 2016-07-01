@@ -75,9 +75,10 @@ extension PushError {
 
 
 @objc public enum OTRXMPPXMLError: Int {
-    case UnkownError   = 1000
-    case Conflict      = 1001
-    case NotAcceptable = 1002
+    case UnkownError     = 1000
+    case Conflict        = 1001
+    case NotAcceptable   = 1002
+    case PolicyViolation = 1003
 }
 
 extension OTRXMPPXMLError: ChatSecureErrorProtocol {
@@ -93,6 +94,8 @@ extension OTRXMPPXMLError: ChatSecureErrorProtocol {
             return "There's a conflict with the username"
         case .NotAcceptable:
             return "Not enough information provided"
+        case .PolicyViolation:
+            return "Server policy violation"
         }
     }
     

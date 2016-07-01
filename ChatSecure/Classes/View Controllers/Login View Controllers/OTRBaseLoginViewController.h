@@ -18,6 +18,8 @@
 
 @property (nonatomic, strong) id<OTRBaseLoginViewControllerHandlerProtocol> createLoginHandler;
 
+@property (nonatomic) BOOL readOnly;
+
 /**
  Creates an OTRBaseLoginViewController with correct form and login handler
  

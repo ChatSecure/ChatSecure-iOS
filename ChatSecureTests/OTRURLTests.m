@@ -7,8 +7,10 @@
 //
 
 #import <XCTest/XCTest.h>
-@import ChatSecureCore;
+#import <ChatSecureCore/NSURL+ChatSecure.h>
+#import <ChatSecureCore/OTRAccount.h>
 #import <OTRAssets/OTRBranding.h>
+
 
 @interface OTRURLTests : XCTestCase
 
@@ -30,13 +32,13 @@
 - (void)testCreatingURL {
     
     NSString *username = @"account@server.com";
-    NSString *baseUrl = [OTRBranding shareBaseURL].absoluteString;
+    NSString *baseUrl = @"https://chatsecure.org/i/#";
     NSString *fingerprint = @"fingerprint";
+    NSString *typeString = [OTRAccount fingerprintStringTypeForFingerprintType:OTRFingerprintTypeOTR];
+    NSDictionary <NSString*,NSString*>*fingerprintDictionary = @{typeString:fingerprint};
     
-    NSURL *url = [NSURL otr_shareLink:baseUrl username:username fingerprint:fingerprint base64Encoded:NO];
-    NSURL *urlWithOutFingerprint = [NSURL otr_shareLink:baseUrl username:username fingerprint:nil base64Encoded:NO];
-    NSURL *base64URL = [NSURL otr_shareLink:baseUrl username:username fingerprint:fingerprint base64Encoded:YES];
-    NSURL *base64URLWithoutFingerprint = [NSURL otr_shareLink:baseUrl username:username fingerprint:nil base64Encoded:YES];
+    NSURL *base64URL = [NSURL otr_shareLink:baseUrl username:username fingerprints:fingerprintDictionary];
+    NSURL *base64URLWithoutFingerprint = [NSURL otr_shareLink:baseUrl username:username fingerprints:nil];
     
     void (^block)(NSString *, NSString *) = ^void(NSString *uName, NSString *fPrint) {
         BOOL equalUsername = [username isEqualToString:uName];
@@ -52,8 +54,6 @@
     
     [base64URL otr_decodeShareLink:block];
     [base64URLWithoutFingerprint otr_decodeShareLink:withoutFingerprintblock];
-    [url otr_decodeShareLink:block];
-    [urlWithOutFingerprint otr_decodeShareLink:withoutFingerprintblock];
 }
 
 @end

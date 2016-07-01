@@ -37,4 +37,13 @@
     }
 }
 
+- (NSString *)otr_stringByRemovingNonEnglishCharacters {
+    NSMutableString *string = [self mutableCopy];
+    
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"([^A-Za-z0-9])" options:0 error:nil];
+    [regex replaceMatchesInString:string options:0 range:NSMakeRange(0, [string length]) withTemplate:@""];
+    
+    return string;
+}
+
 @end
