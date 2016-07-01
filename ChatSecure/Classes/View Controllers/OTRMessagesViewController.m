@@ -1255,63 +1255,71 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }
     NSDictionary *iconAttributes = @{NSFontAttributeName: font};
     
-    
-    ////// Lock Icon //////
-    NSString *lockString = nil;
-    if (message.transportedSecurely) {
-        lockString = [NSString stringWithFormat:@"%@ ",[NSString fa_stringForFontAwesomeIcon:FALock]];
-    }
-    else {
-        lockString = [NSString fa_stringForFontAwesomeIcon:FAUnlock];
-    }
-    
-    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:lockString attributes:iconAttributes];
-    
-    ////// Delivered Icon //////
+    // If OTR message than it's one ot one and we have a lot of information about the message
+    // Otherwise group message and we don't annotate the cell
     if([message isKindOfClass:[OTRMessage class]]) {
         OTRMessage *msg = (OTRMessage *)message;
-        if (msg.isDelivered) {
-            NSString *iconString = [NSString stringWithFormat:@"%@ ",[NSString fa_stringForFontAwesomeIcon:FACheck]];
+        if(!msg.dateSent && !msg.incoming) {
+            // Message not sent yet
+            // Show waiting icon only
             
-            [attributedString appendAttributedString:[[NSAttributedString alloc] initWithString:iconString attributes:iconAttributes]];
-        }
-        
-        if([msg isMediaMessage]) {
+            NSString *waitingString = [NSString fa_stringForFontAwesomeIcon:FAClockO];
+            return [[NSAttributedString alloc] initWithString:waitingString attributes:iconAttributes];
             
-            __block OTRMediaItem *mediaItem = nil;
-            //Get the media item
-            [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-                mediaItem = [OTRMediaItem fetchObjectWithUniqueID:msg.mediaItemUniqueId transaction:transaction];
-            }];
+        } else {
+            ////// Lock Icon //////
+            NSString *lockString = nil;
+            if (message.transportedSecurely) {
+                lockString = [NSString stringWithFormat:@"%@ ",[NSString fa_stringForFontAwesomeIcon:FALock]];
+            }
+            else {
+                lockString = [NSString fa_stringForFontAwesomeIcon:FAUnlock];
+            }
             
-            float percentProgress = mediaItem.transferProgress * 100;
+            NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:lockString attributes:iconAttributes];
             
-            NSString *progressString = nil;
-            NSUInteger insertIndex = 0;
+            //Delivery icon
+            if (msg.isDelivered) {
+                NSString *iconString = [NSString stringWithFormat:@"%@ ",[NSString fa_stringForFontAwesomeIcon:FACheck]];
+                
+                [attributedString appendAttributedString:[[NSAttributedString alloc] initWithString:iconString attributes:iconAttributes]];
+            }
             
-            if (mediaItem.isIncoming && mediaItem.transferProgress < 1) {
-                progressString = [NSString stringWithFormat:@" %@ %.0f%%",INCOMING_STRING,percentProgress];
-                insertIndex = [attributedString length];
-            } else if (!mediaItem.isIncoming) {
-                if(percentProgress > 0) {
-                    progressString = [NSString stringWithFormat:@"%@ %.0f%% ",SENDING_STRING,percentProgress];
-                } else {
-                    progressString = [NSString stringWithFormat:@"%@ ",WAITING_STRING];
+            // Media message progress
+            if([msg isMediaMessage]) {
+                
+                __block OTRMediaItem *mediaItem = nil;
+                //Get the media item
+                [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+                    mediaItem = [OTRMediaItem fetchObjectWithUniqueID:msg.mediaItemUniqueId transaction:transaction];
+                }];
+                
+                float percentProgress = mediaItem.transferProgress * 100;
+                
+                NSString *progressString = nil;
+                NSUInteger insertIndex = 0;
+                
+                if (mediaItem.isIncoming && mediaItem.transferProgress < 1) {
+                    progressString = [NSString stringWithFormat:@" %@ %.0f%%",INCOMING_STRING,percentProgress];
+                    insertIndex = [attributedString length];
+                } else if (!mediaItem.isIncoming) {
+                    if(percentProgress > 0) {
+                        progressString = [NSString stringWithFormat:@"%@ %.0f%% ",SENDING_STRING,percentProgress];
+                    } else {
+                        progressString = [NSString stringWithFormat:@"%@ ",WAITING_STRING];
+                    }
+                }
+                
+                if ([progressString length]) {
+                    UIFont *font = [UIFont systemFontOfSize:12];
+                    [attributedString insertAttributedString:[[NSAttributedString alloc] initWithString:progressString attributes:@{NSFontAttributeName: font}] atIndex:insertIndex];
                 }
             }
-            
-            if ([progressString length]) {
-                UIFont *font = [UIFont systemFontOfSize:12];
-                [attributedString insertAttributedString:[[NSAttributedString alloc] initWithString:progressString attributes:@{NSFontAttributeName: font}] atIndex:insertIndex];
-            }
-            
-            
+            return attributedString;
         }
     }
     
-    
-    
-    return attributedString;
+    return nil;
 }
 
 
