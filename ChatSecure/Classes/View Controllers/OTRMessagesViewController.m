@@ -1259,7 +1259,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     // Otherwise group message and we don't annotate the cell
     if([message isKindOfClass:[OTRMessage class]]) {
         OTRMessage *msg = (OTRMessage *)message;
-        if(!msg.dateSent && !msg.incoming) {
+        if(!msg.dateSent && !msg.incoming && ![msg isMediaMessage]) {
             // Message not sent yet
             // Show waiting icon only
             
@@ -1302,7 +1302,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
                 if (mediaItem.isIncoming && mediaItem.transferProgress < 1) {
                     progressString = [NSString stringWithFormat:@" %@ %.0f%%",INCOMING_STRING,percentProgress];
                     insertIndex = [attributedString length];
-                } else if (!mediaItem.isIncoming) {
+                } else if (!mediaItem.isIncoming && mediaItem.transferProgress < 1) {
                     if(percentProgress > 0) {
                         progressString = [NSString stringWithFormat:@"%@ %.0f%% ",SENDING_STRING,percentProgress];
                     } else {
