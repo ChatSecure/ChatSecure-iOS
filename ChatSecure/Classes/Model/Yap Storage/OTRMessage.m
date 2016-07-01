@@ -43,6 +43,17 @@ const struct OTRMessageAttributes OTRMessageAttributes = {
     return self;
 }
 
+#pragma - mark MTLModel
+
+- (id)decodeValueForKey:(NSString *)key withCoder:(NSCoder *)coder modelVersion:(NSUInteger)modelVersion {
+    // Going from version 0 to version 1.
+    // The dateSent is assumed to be the `date` created. In model version 1 this will be properly set using the sending queue
+    if (modelVersion == 0 && [key isEqualToString:@"dateSent"] ) {
+        return [super decodeValueForKey:@"date" withCoder:coder modelVersion:modelVersion];
+    }
+    return [super decodeValueForKey:key withCoder:coder modelVersion:modelVersion];
+}
+
 #pragma - mark YapDatabaseRelationshipNode
 
 - (NSArray *)yapDatabaseRelationshipEdges
@@ -184,6 +195,10 @@ const struct OTRMessageAttributes OTRMessageAttributes = {
         deliveredMessage.dateDelivered = [NSDate date];
         [deliveredMessage saveWithTransaction:transaction];
     }
+}
+
++ (NSInteger)version {
+    return 1;
 }
 
 @end
