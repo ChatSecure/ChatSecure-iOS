@@ -8,7 +8,6 @@
 
 #import "OTRXMPPAccount.h"
 #import "OTRXMPPManager.h"
-#import "OTRStrings.h"
 #import "OTRConstants.h"
 @import OTRAssets;
 #import "OTRLanguageManager.h"

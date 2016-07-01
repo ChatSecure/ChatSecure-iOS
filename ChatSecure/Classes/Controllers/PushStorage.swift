@@ -29,6 +29,17 @@ import YapDatabase
     func buddy(username: String, accountName: String) -> OTRBuddy?
     func account(accountUniqueID:String) -> OTRAccount?
     func buddy(token:String) -> OTRBuddy?
+    
+    /**
+     * Asynchronously remvoes all the unused tokens in the unsedTokenCollection that are missing an expires date. This was needed
+     * for when we moved from not having expires date to saving expires date in the database. This clears those tokens that have not been
+     * given out already.
+     *
+     * parameter timeBuffer: Destry tokens that expire this far into the future. This allows you to clear out tokens that may
+     * expire in the next few hours or days
+     * parameter completion: This is called once all the tokens have been removed and the count of total tokens remvoed
+    */
+    func removeAllOurExpiredUnusedTokens(timeBuffer:NSTimeInterval, completion:((count:Int)->Void)?)
 }
 
 extension Account {
@@ -40,6 +51,7 @@ extension Account {
 class PushStorage: NSObject, PushStorageProtocol {
     
     let databaseConnection: YapDatabaseConnection
+    let workQueue = dispatch_queue_create("PushStorage_Work_Queue", DISPATCH_QUEUE_SERIAL)
     
     static let unusedTokenStoreSize:UInt = 5
     
@@ -52,8 +64,6 @@ class PushStorage: NSObject, PushStorageProtocol {
         ///Alternate Collection for tokens before they're 'attached' to a buddy. Just downloaded from the server
         case unusedTokenCollection = "kYapUnusedTokenCollection"
     }
-    
-    
     
     init(databaseConnection:YapDatabaseConnection) {
         self.databaseConnection = databaseConnection
@@ -162,7 +172,7 @@ class PushStorage: NSObject, PushStorageProtocol {
         var tokens:[TokenContainer] = []
         self.databaseConnection.readWriteWithBlock { (transaction) -> Void in
             guard let buddy = transaction.objectForKey(buddyKey, inCollection: OTRBuddy.collection()) as? OTRBuddy else {
-                error = convertError(PushError.noBuddyFound)
+                error = NSError.chatSecureError(PushError.noBuddyFound, userInfo: nil)
                 return
             }
             
@@ -192,6 +202,40 @@ class PushStorage: NSObject, PushStorageProtocol {
             throw err
         }
         return tokens
+    }
+    
+    func removeAllOurExpiredUnusedTokens(timeBuffer: NSTimeInterval, completion: ((count: Int) -> Void)?) {
+        var count:Int = 0
+        self.databaseConnection.asyncReadWriteWithBlock({ (transaction) in
+            let collection = PushYapCollections.unusedTokenCollection.rawValue
+            var removeKeyArray:[String] = []
+            transaction.enumerateKeysAndObjectsInCollection(collection, usingBlock: { (key, object, stop) in
+                if let token = object as? TokenContainer {
+                    //Check that there is an expires date otherwise remove
+                    guard let expiresDate = token.pushToken?.expires else {
+                        removeKeyArray.append(token.uniqueId)
+                        return
+                    }
+                    
+                    // Check that the date is farther in the future than currentDate + timeBuffer
+                    if (NSDate(timeIntervalSinceNow: timeBuffer).compare(expiresDate) == .OrderedDescending ) {
+                        removeKeyArray.append(token.uniqueId)
+                    }
+                }
+            })
+            
+            count = removeKeyArray.count
+            transaction.removeObjectsForKeys(removeKeyArray, inCollection: collection)
+            
+            }, completionQueue: self.workQueue) {
+                if let comp = completion {
+                    dispatch_async(dispatch_get_main_queue(), {
+                        comp(count: count)
+                    })
+                }
+                
+                
+        }
     }
     
     /**

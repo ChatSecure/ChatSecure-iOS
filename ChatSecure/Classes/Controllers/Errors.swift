@@ -8,14 +8,31 @@
 
 import Foundation
 
-protocol ErrorDescription {
-    func localizedDescription() -> String
-    func code() -> Int
+public extension NSError {
+    class func XMPPXMLError(error:OTRXMPPXMLError, userInfo:[String:AnyObject]?) -> NSError {
+        return self.chatSecureError(error, userInfo: userInfo)
+    }
+    
+    class func chatSecureError(error:ChatSecureErrorProtocol, userInfo:[String:AnyObject]?) -> NSError {
+        var tempUserInfo:[String:AnyObject] = [NSLocalizedDescriptionKey:error.localizedDescription()]
+        
+        if let additionalDictionary = error.additionalUserInfo() {
+            additionalDictionary.forEach { tempUserInfo.updateValue($1, forKey: $0) }
+        }
+        
+        //Overwrite out userinfo with provided userinfo dicitonary
+        if let additionalDictionary = userInfo {
+            additionalDictionary.forEach { tempUserInfo.updateValue($1, forKey: $0) }
+        }
+        
+        return NSError(domain: kOTRErrorDomain, code: error.code(), userInfo: userInfo)
+    }
 }
 
-/** Convert our enum error types to NSError using the ErrorDescription protocol */
-func convertError<T where T: ErrorDescription>(item:T) -> NSError {
-    return NSError(domain: kOTRErrorDomain, code: item.code(), userInfo: [NSLocalizedDescriptionKey:item.localizedDescription()])
+public protocol ChatSecureErrorProtocol {
+    func code() -> Int
+    func localizedDescription() -> String
+    func additionalUserInfo() -> [String:AnyObject]?
 }
 
 /** Error types for the Push server*/
@@ -27,9 +44,10 @@ enum PushError: Int {
     case invalidJSON        = 305
     case missingAPIEndpoint = 306
     case missingTokens      = 307
+    case misingExpiresDate  = 308
 }
 
-extension PushError: ErrorDescription {
+extension PushError: ChatSecureErrorProtocol {
     func localizedDescription() -> String {
         switch self {
         case .noPushDevice:
@@ -46,11 +64,17 @@ extension PushError: ErrorDescription {
             return "Missing API endpoint key."
         case .missingTokens:
             return "Missing token key"
+        case .misingExpiresDate:
+            return "Missing expires date"
         }
     }
     
     func code() -> Int {
         return self.rawValue
+    }
+    
+    func additionalUserInfo() -> [String : AnyObject]? {
+        return nil
     }
 }
 
@@ -59,7 +83,7 @@ enum EncryptionError: Int {
     case unableToCreateOTRSession = 350
 }
 
-extension EncryptionError: ErrorDescription {
+extension EncryptionError: ChatSecureErrorProtocol {
     func localizedDescription() -> String {
         switch self {
         case .unableToCreateOTRSession:
@@ -69,5 +93,40 @@ extension EncryptionError: ErrorDescription {
     
     func code() -> Int {
         return self.rawValue
+    }
+    
+    func additionalUserInfo() -> [String : AnyObject]? {
+        return nil
+    }
+}
+
+
+@objc public enum OTRXMPPXMLError: Int {
+    case UnkownError     = 1000
+    case Conflict        = 1001
+    case NotAcceptable   = 1002
+    case PolicyViolation = 1003
+}
+
+extension OTRXMPPXMLError: ChatSecureErrorProtocol {
+    public func code() -> Int {
+        return self.rawValue
+    }
+    
+    public func localizedDescription() -> String {
+        switch self {
+        case .UnkownError:
+            return "Unknown Error"
+        case .Conflict:
+            return "There's a conflict with the username"
+        case .NotAcceptable:
+            return "Not enough information provided"
+        case .PolicyViolation:
+            return "Server policy violation"
+        }
+    }
+    
+    public func additionalUserInfo() -> [String : AnyObject]? {
+        return nil
     }
 }

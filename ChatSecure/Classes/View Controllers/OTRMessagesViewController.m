@@ -21,7 +21,7 @@
 #import "OTRXMPPManager.h"
 #import "OTRLockButton.h"
 #import "OTRButtonView.h"
-#import "OTRStrings.h"
+@import OTRAssets;
 #import "OTRTitleSubtitleView.h"
 @import OTRKit;
 #import "OTRImages.h"
@@ -272,7 +272,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
         [self saveCurrentMessageText:self.inputToolbar.contentView.textView.text threadKey:oldKey colleciton:oldCollection];
     }
     
-    [self.viewHandler.keyCollectionObserver removeObserver:oldKey forKeyPath:oldCollection];
+    [self.viewHandler.keyCollectionObserver stopObserving:oldKey collection:oldCollection];
     [self.viewHandler.keyCollectionObserver observe:self.threadKey collection:self.threadCollection];
     [self updateViewWithKey:self.threadKey colleciton:self.threadCollection];
     [self moveLastComposingTextForThreadKey:self.threadKey colleciton:self.threadCollection toTextView:self.inputToolbar.contentView.textView];

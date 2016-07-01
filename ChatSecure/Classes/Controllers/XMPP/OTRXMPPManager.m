@@ -65,6 +65,7 @@
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 #import "OTRXMPPBuddyManager.h"
 @import OTRAssets;
+#import "XMPPIQ+XEP_0357.h"
 
 NSString *const OTRXMPPRegisterSucceededNotificationName = @"OTRXMPPRegisterSucceededNotificationName";
 NSString *const OTRXMPPRegisterFailedNotificationName    = @"OTRXMPPRegisterFailedNotificationName";
@@ -257,6 +258,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     
     self.xmppCapabilities.autoFetchHashedCapabilities = YES;
     self.xmppCapabilities.autoFetchNonHashedCapabilities = NO;
+    self.xmppCapabilities.autoFetchMyServerCapabilities = YES;
     
     
 	// Activate xmpp modules
@@ -659,7 +661,9 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     
     [self changeLoginStatus:OTRLoginStatusAuthenticated error:nil];
     
-    
+    // Refetch capabilities to check for XEP-0357 support
+    XMPPJID *jid = [XMPPJID jidWithString:[self.JID bare]];
+    [self.xmppCapabilities fetchCapabilitiesForJID:jid];
 }
 
 - (void)xmppStream:(XMPPStream *)sender didNotAuthenticate:(NSXMLElement *)error
@@ -700,10 +704,9 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 
 - (void)xmppStream:(XMPPStream *)sender didReceiveMessage:(XMPPMessage *)xmppMessage
 {
-	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
-
-    
+	DDLogVerbose(@"%@: %@ %@", THIS_FILE, THIS_METHOD, xmppMessage);
 }
+
 - (void)xmppStream:(XMPPStream *)sender didReceivePresence:(XMPPPresence *)presence
 {
 	DDLogVerbose(@"%@: %@ - %@\nType: %@\nShow: %@\nStatus: %@", THIS_FILE, THIS_METHOD, [presence from], [presence type], [presence show],[presence status]);
@@ -787,8 +790,89 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     
 }
 
+#pragma mark XMPPCapabilitiesDelegate
+
+- (void)xmppCapabilities:(XMPPCapabilities *)sender didDiscoverCapabilities:(NSXMLElement *)caps forJID:(XMPPJID *)jid {
+    DDLogVerbose(@"%@: %@\n%@:%@", THIS_FILE, THIS_METHOD, jid, caps);
+    
+    // Enable XEP-0357 push bridge if server supports it
+    // ..but don't register for Tor accounts
+    if (self.account.accountType == OTRAccountTypeXMPPTor) {
+        return;
+    }
+    
+    NSString *myDomain = [self.xmppStream.myJID domain];
+    if ([[jid bare] isEqualToString:[jid domain]]) {
+        if (![[jid domain] isEqualToString:myDomain]) {
+            // You're checking the server's capabilities but it's not your server(?)
+            return;
+        }
+    } else {
+        if (![[self.xmppStream.myJID bare] isEqualToString:[jid bare]]) {
+            // You're checking someone else's capabilities
+            return;
+        }
+    }
+    __block BOOL supportsPushXEP = NO;
+    NSArray <NSXMLElement*> *featureElements = [caps elementsForName:@"feature"];
+    [featureElements enumerateObjectsUsingBlock:^(NSXMLElement * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSString *featureName = [obj attributeStringValueForName:@"var"];
+        if ([featureName isEqualToString:XMPPPushXMLNS]){
+            supportsPushXEP = YES;
+            *stop = YES;
+        }
+    }];
+    PushController *pushController = [OTRAppDelegate appDelegate].pushController;
+    BOOL hasPushAccount = [pushController.pushStorage hasPushAccount];
+    
+    if (supportsPushXEP && hasPushAccount) {
+        [[OTRAppDelegate appDelegate].pushController getPubsubEndpoint:^(NSString * _Nullable endpoint, NSError * _Nullable error) {
+            if (endpoint) {
+                [pushController getNewPushToken:nil completion:^(TokenContainer * _Nullable token, NSError * _Nullable error) {
+                    if (token) {
+                        [self enablePushWithToken:token endpoint:endpoint];
+                    } else if (error) {
+                        DDLogError(@"fetch token error: %@", error);
+                    }
+                }];
+            } else if (error) {
+                DDLogError(@"357 pubsub Error: %@", error);
+            }
+        }];
+    }
+}
+
+- (void) enablePushWithToken:(TokenContainer*)token endpoint:(NSString*)endpoint {
+    __block OTRXMPPAccount *account = nil;
+    [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+        NSString *collection = [self.account.class collection];
+        NSString *key = self.account.uniqueId;
+        account = [[transaction objectForKey:key inCollection:collection] copy];
+        account.pushPubsubEndpoint = endpoint;
+        if (!account.pushPubsubNode.length) {
+            account.pushPubsubNode = [[NSUUID UUID] UUIDString];
+        }
+        [transaction setObject:account forKey:key inCollection:collection];
+    }];
+    XMPPJID *nodeJID = [XMPPJID jidWithString:endpoint]; 
+    NSString *tokenString = token.pushToken.tokenString;
+    if (tokenString.length > 0) {
+        PushController *pushController = [OTRAppDelegate appDelegate].pushController;
+        NSString *pushEndpointURLString = [pushController getMessagesEndpoint].absoluteString;
+        NSMutableDictionary *options = [NSMutableDictionary dictionary];
+        [options setObject:tokenString forKey:@"token"];
+        if (pushEndpointURLString) {
+            [options setObject:pushEndpointURLString forKey:@"endpoint"];
+        }
+        XMPPIQ *enableElement = [XMPPIQ enableNotificationsElementWithJID:nodeJID node:account.pushPubsubNode options:options];
+        [self.xmppStream sendElement:enableElement];
+    } else {
+        DDLogError(@"Token string length 0!");
+    }
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark OTRProtocol 
+#pragma mark OTRProtocol
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 - (void) sendMessage:(OTRMessage*)message

@@ -10,13 +10,11 @@
 #import "XMPPvCardTemp.h"
 #import "NSData+XMPP.h"
 
-const struct OTRXMPPBuddyAttributes OTRXMPPBuddyAttributes = {
-	.pendingApproval = @"pendingApproval",
-    .vCardTemp = @"vCardTemp",
-    .photoHash = @"photoHash",
-    .waitingForvCardTempFetch = @"waitingForvCardTempFetch",
-    .lastUpdatedvCardTemp = @"lastUpdatedvCardTemp"
-};
+@interface OTRXMPPBuddy ()
+
+@property (nonatomic, strong) NSDictionary <NSString *,NSNumber *>*resourceInfo;
+
+@end
 
 
 @implementation OTRXMPPBuddy
@@ -25,6 +23,7 @@ const struct OTRXMPPBuddyAttributes OTRXMPPBuddyAttributes = {
 {
     if (self = [super init]) {
         self.pendingApproval = NO;
+        self.hasIncomingSubscriptionRequest = NO;
         self.waitingForvCardTempFetch = NO;
     }
     return self;
@@ -48,6 +47,49 @@ const struct OTRXMPPBuddyAttributes OTRXMPPBuddyAttributes = {
     }
     else {
         self.photoHash = nil;
+    }
+}
+
+- (void)setStatus:(OTRThreadStatus)status forResource:(NSString *)resource
+{
+    if (!resource) {
+        return;
+    }
+    
+    NSDictionary <NSString *,NSNumber *>*newDictionary = @{resource:@(status)};
+    
+    if (!self.resourceInfo) {
+        self.resourceInfo = newDictionary;
+    } else {
+        self.resourceInfo = [self.resourceInfo mtl_dictionaryByAddingEntriesFromDictionary:newDictionary];
+    }
+}
+
+- (void)setStatus:(OTRThreadStatus)status
+{
+    if (status == OTRThreadStatusOffline) {
+        self.resourceInfo = nil;
+    }
+}
+
+- (OTRThreadStatus)status {
+    if (!self.resourceInfo) {
+        return OTRThreadStatusOffline;
+    } else {
+        __block OTRThreadStatus status = OTRThreadStatusOffline;
+        [self.resourceInfo enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, NSNumber * _Nonnull obj, BOOL * _Nonnull stop) {
+            OTRThreadStatus resourceStatus = obj.intValue;
+            // Check if it less than becauase OTRThreadStatusAvailable == 0 and the closer you are to OTRThreadStatusAvailable the more 'real' it is.
+            if (resourceStatus < status) {
+                status = resourceStatus;
+            }
+            
+            if (status == OTRThreadStatusAvailable) {
+                *stop = YES;
+            }
+            
+        }];
+        return status;
     }
 }
 

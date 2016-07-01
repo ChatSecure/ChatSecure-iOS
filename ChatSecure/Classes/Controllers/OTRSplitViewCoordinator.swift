@@ -41,40 +41,71 @@ public class OTRSplitViewCoordinator: NSObject, OTRConversationViewControllerDel
             buddy = OTRBuddy.fetchObjectWithUniqueID(buddyKey, transaction: transaction)
         }
         if let b = buddy {
-            self.enterConversatoinWithThread(b, sender: nil)
+            self.enterConversationWithThread(b, sender: nil)
         }
     }
     
-    public func enterConversatoinWithThread(threadOwner:OTRThreadOwner, sender:AnyObject?) {
+    public func enterConversationWithThread(threadOwner:OTRThreadOwner, sender:AnyObject?) {
         guard let splitVC = self.splitViewController else {
             return
         }
         
         let appDelegate = UIApplication.sharedApplication().delegate as? OTRAppDelegate
-        var messagesVC:OTRMessagesViewController? = nil
-        if threadOwner.isGroupThread() {
+        
+        var messagesViewController:OTRMessagesViewController? = appDelegate?.messagesViewController
+        
+        // 1. If it is a hold-to-talk now but should be a group thread the create group thread. Else if is group
+        if let _  = messagesViewController as? OTRMessagesHoldTalkViewController where threadOwner.isGroupThread() {
             if let c = appDelegate?.theme.groupMessagesViewControllerClass() as? OTRMessagesGroupViewController.Type {
-                messagesVC = c.init()
+                messagesViewController = c.init()
             }
-            
-        } else if let c = appDelegate?.theme.messagesViewControllerClass() as? OTRMessagesViewController.Type {
-            messagesVC = c.init()
+        } else if let _ = messagesViewController as? OTRMessagesGroupViewController where !threadOwner.isGroupThread() {
+            if let c = appDelegate?.theme.messagesViewControllerClass() as? OTRMessagesViewController.Type {
+                messagesViewController = c.init()
+            }
         }
         
-        guard let mVC = messagesVC else {
+        
+        guard let mVC = messagesViewController, navController = appDelegate?.messagesNavigationController else {
             return
         }
         
+        //Set nav controller root view controller to mVC and then show detail with nav controller
+        
         mVC.setThreadKey(threadOwner.threadIdentifier(), collection: threadOwner.threadCollection())
-        let navController = UINavigationController(rootViewController: mVC)
+        
+        if (!navController.viewControllers.contains(mVC)) {
+            navController.setViewControllers([mVC], animated: true)
+        }
+        
+        
         navController.topViewController!.navigationItem.leftBarButtonItem = splitVC.displayModeButtonItem();
         navController.topViewController!.navigationItem.leftItemsSupplementBackButton = true;
+        
+        guard let viewControllers = self.splitViewController?.viewControllers  else {
+            return
+        }
+        
+        //Should we dismiss other views that may be on top of the splitviewcontroller? How?
+        
+        //This ensures if in actual split view side by side won't push duplicate nav controller
+        if (viewControllers.contains(navController)) {
+            return
+        } else {
+            //This works for normal pushing on to like iphone 4,5,6
+            if let otherViewControllers = viewControllers.first?.childViewControllers {
+                if otherViewControllers.contains(navController) {
+                    return
+                }
+            }
+        }
+        
         splitVC.showDetailViewController(navController, sender: sender)
     }
     
     //MARK: OTRConversationViewControllerDelegate Methods
     public func conversationViewController(conversationViewController: OTRConversationViewController!, didSelectThread threadOwner: OTRThreadOwner!) {
-        self.enterConversatoinWithThread(threadOwner, sender: conversationViewController)
+        self.enterConversationWithThread(threadOwner, sender: conversationViewController)
     }
     
     public func conversationViewController(conversationViewController: OTRConversationViewController!, didSelectCompose sender: AnyObject!) {
@@ -96,11 +127,8 @@ public class OTRSplitViewCoordinator: NSObject, OTRConversationViewControllerDel
     public func controller(viewController: OTRComposeViewController, didSelectBuddies buddies: [String]?, accountId: String?, name: String?) {
         self.splitViewController?.dismissViewControllerAnimated(true) { () -> Void in
             
-            guard let buds = buddies else {
-                return
-            }
-            
-            guard let accountKey = accountId else {
+            guard let buds = buddies,
+                accountKey = accountId else {
                 return
             }
             

@@ -13,17 +13,17 @@ public class PushDeserializer: NSObject  {
     
     public class func deserializeToken(data:NSData) throws -> [TokenContainer] {
         guard let jsonDictionary = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions()) as? [String:AnyObject] else {
-            throw convertError(PushError.invalidJSON)
+            throw NSError.chatSecureError(PushError.invalidJSON, userInfo: nil)
         }
         
         guard let apiEndPoint = jsonDictionary[jsonKeys.endpoint.rawValue] as? String else {
-            throw convertError(PushError.missingAPIEndpoint)
+            throw NSError.chatSecureError(PushError.missingAPIEndpoint, userInfo: nil)
         }
         
         let apiURL = NSURL(string: apiEndPoint)
         
         guard let tokenStrings = jsonDictionary[jsonKeys.tokens.rawValue] as? [String] else {
-            throw convertError(PushError.missingTokens)
+            throw NSError.chatSecureError(PushError.missingTokens, userInfo: nil)
         }
         
         var tokenArray:[TokenContainer] = []

@@ -16,7 +16,7 @@
 
 @required
 /**
- This method is called when the view controller 'done' button is pressed. Sends all the selected buddies the accountId to use and an optional name for groups.
+ This method is called when the view controller 'done' button is pressed or a single buddy is selected. Sends all the selected buddies the accountId to use and an optional name for groups.
  */
 - (void)controller:(nonnull OTRComposeViewController *)viewController didSelectBuddies:(nullable NSArray<NSString *> *)buddies accountId:(nullable NSString *)accountId name:(nullable NSString *)name;
 
@@ -31,6 +31,17 @@
 
 @property (nonatomic, weak, nullable) id<OTRComposeViewControllerDelegate> delegate;
 
+/** 
+ * The current state of the compose view controller. In single selection mode if a user taps a on buddy it enters the conversation immediately.
+ * If not in single selection mode than the user can slect multiple 'buddies' at once
+*/
+@property (nonatomic, readonly) BOOL selectionModeIsSingle;
+
 - (void)addBuddy:(nullable NSArray <OTRAccount *>*)accountsAbleToAddBuddies;
+
+/**
+ * This changes the selection mode therefore changing the behevour of selecting a buddy and the right navigation bar button item.
+ */
+- (void)switchSelectionMode;
 
 @end

@@ -21,7 +21,6 @@
 //  along with ChatSecure.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "OTRAboutViewController.h"
-#import "OTRStrings.h"
 #import "OTRConstants.h"
 #import "OTRAppDelegate.h"
 #import "PureLayout.h"
@@ -29,7 +28,6 @@
 #import "OTRSocialButtonsView.h"
 #import "OTRAcknowledgementsViewController.h"
 #import "NSURL+chatsecure.h"
-#import "OTRStrings.h"
 #import "OTRUtilities.h"
 #import "UIActionSheet+ChatSecure.h"
 #import "UIActivityViewController+ChatSecure.h"

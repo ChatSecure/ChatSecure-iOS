@@ -25,7 +25,6 @@
 #import "OTRConversationViewController.h"
 
 #import "OTRMessagesHoldTalkViewController.h"
-#import "OTRStrings.h"
 #import "OTRSettingsViewController.h"
 #import "OTRSettingsManager.h"
 
@@ -91,8 +90,11 @@
     
     UIViewController *rootViewController = nil;
     
+    // Create 3 primary view controllers, settings, conversation list and messages
     self.settingsViewController = [[OTRSettingsViewController alloc] init];
     self.conversationViewController = [[[self.theme conversationViewControllerClass] alloc] init];
+    self.messagesViewController = [[self.theme messagesViewControllerClass] messagesViewController];
+    
     
     if ([OTRDatabaseManager existsYapDatabase] && ![[OTRDatabaseManager sharedInstance] hasPassphrase]) {
         // user needs to enter password for current database
@@ -113,7 +115,7 @@
         }
 
         [[OTRDatabaseManager sharedInstance] setupDatabaseWithName:OTRYapDatabaseName];
-        rootViewController = [self defaultConversationNavigationController];
+        rootViewController = [self setupDefaultSplitViewControllerWithLeadingViewController:[[UINavigationController alloc] initWithRootViewController:self.conversationViewController]];
 #if CHATSECURE_DEMO
         [self performSelector:@selector(loadDemoData) withObject:nil afterDelay:0.0];
 #endif
@@ -147,6 +149,14 @@
     [Appirater setOpenInAppStore:NO];
     [Appirater appLaunched:YES];
     
+    
+    ////// Reset buddy status //////
+    OTRDatabaseManager *databaseManager = [OTRDatabaseManager sharedInstance];
+    [databaseManager.readWriteDatabaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        [OTRBuddy resetAllBuddyStatusesWithTransaction:transaction];
+        [OTRBuddy resetAllChatStatesWithTransaction:transaction];
+    }];
+    
     [self autoLoginFromBackground:NO];
     
     [self removeFacebookAccounts];
@@ -160,43 +170,44 @@
 #endif
 }
 
-- (UIViewController*)defaultConversationNavigationController
+/**
+ * This creates a UISplitViewController using a leading view controller (the left view controller). It uses a navigation controller with
+ * self.messagesViewController as teh right view controller;
+ * This also creates and sets up teh OTRSplitViewCoordinator
+ *
+ * @param leadingViewController The leading or left most view controller in a UISplitViewController. Should most likely be some sort of UINavigationViewController
+ * @return The base default UISplitViewController
+ *
+ */
+- (UISplitViewController *)setupDefaultSplitViewControllerWithLeadingViewController:(nonnull UIViewController *)leadingViewController
 {
-    UIViewController *viewController = nil;
     
     YapDatabaseConnection *connection = [OTRDatabaseManager sharedInstance].readWriteDatabaseConnection;
     self.splitViewCoordinator = [[OTRSplitViewCoordinator alloc] initWithDatabaseConnection:connection];
     self.splitViewControllerDelegate = [[OTRSplitViewControllerDelegateObject alloc] init];
-    
-    //ConversationViewController Nav
-    UINavigationController *conversationListNavController = [[UINavigationController alloc] initWithRootViewController:self.conversationViewController];
     self.conversationViewController.delegate = self.splitViewCoordinator;
     
     //MessagesViewController Nav
-    UINavigationController *messagesNavController = [[UINavigationController alloc ]initWithRootViewController:[[self.theme messagesViewControllerClass] messagesViewController]];
-    
-    
+    self.messagesNavigationController = [[UINavigationController alloc ]initWithRootViewController:self.messagesViewController];
     
     //SplitViewController
     UISplitViewController *splitViewController = [[UISplitViewController alloc] init];
-    splitViewController.viewControllers = [NSArray arrayWithObjects:conversationListNavController, messagesNavController, nil];
+    splitViewController.viewControllers = @[leadingViewController,self.messagesNavigationController];
     splitViewController.delegate = self.splitViewControllerDelegate;
     splitViewController.title = CHAT_STRING;
     
     //setup 'back' button in nav bar
-    messagesNavController.topViewController.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem;
-    messagesNavController.topViewController.navigationItem.leftItemsSupplementBackButton = YES;
+    self.messagesNavigationController.topViewController.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem;
+    self.messagesNavigationController.topViewController.navigationItem.leftItemsSupplementBackButton = YES;
     
     self.splitViewCoordinator.splitViewController = splitViewController;
     
-    viewController = splitViewController;
-    
-    return viewController;
+    return splitViewController;
 }
 
 - (void)showConversationViewController
 {
-    self.window.rootViewController = [self defaultConversationNavigationController];
+    self.window.rootViewController = [self setupDefaultSplitViewControllerWithLeadingViewController:[[UINavigationController alloc] initWithRootViewController:self.conversationViewController]];
 }
 
 - (id<OTRThreadOwner>)activeThread
@@ -295,7 +306,7 @@
     }];
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        self.backgroundTimer = [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(timerUpdate:) userInfo:nil repeats:YES];
+        self.backgroundTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(timerUpdate:) userInfo:nil repeats:YES];
     });
 }
                                 
@@ -315,18 +326,18 @@
         }
         self.didShowDisconnectionWarning = YES;
     }
-    if ([application backgroundTimeRemaining] < 10)
+    if ([application backgroundTimeRemaining] < 15)
     {
         // Clean up here
         [self.backgroundTimer invalidate];
         self.backgroundTimer = nil;
         
         [[OTRProtocolManager sharedInstance] disconnectAllAccounts];
-        //FIXME [OTRManagedAccount resetAccountsConnectionStatus];
         
-        
-        [application endBackgroundTask:self.backgroundTask];
-        self.backgroundTask = UIBackgroundTaskInvalid;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(8 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [application endBackgroundTask:self.backgroundTask];
+            self.backgroundTask = UIBackgroundTaskInvalid;
+        });
     }
 }
 
@@ -383,24 +394,22 @@
     //[OTRUtilities deleteAllBuddiesAndMessages];
 }
 
-- (void)application:(UIApplication *)application didReceiveRemoteNotification:(nonnull NSDictionary *)userInfo
-{
-    [self.pushController receiveRemoteNotification:userInfo completion:^(OTRBuddy * _Nullable buddy, NSError * _Nullable error) {
-        [application showLocalNotificationForKnockFrom:buddy];
-    }];
-    
-}
-
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
     [self autoLoginFromBackground:YES];
 
     [self.pushController receiveRemoteNotification:userInfo completion:^(OTRBuddy * _Nullable buddy, NSError * _Nullable error) {
-        [application showLocalNotificationForKnockFrom:buddy];
+        // Only show notification if buddy lookup succeeds
+        if (buddy) {
+            [application showLocalNotificationForKnockFrom:buddy];
+        }
     }];
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(20 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        completionHandler(UIBackgroundFetchResultNewData);
+        [[OTRProtocolManager sharedInstance] disconnectAllAccounts];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            completionHandler(UIBackgroundFetchResultNewData);
+        });
     });
 }
 
@@ -435,7 +444,7 @@
     }];
     
     if (thread) {
-        [self.splitViewCoordinator enterConversatoinWithThread:thread sender:notification];
+        [self.splitViewCoordinator enterConversationWithThread:thread sender:notification];
     }
 }
 

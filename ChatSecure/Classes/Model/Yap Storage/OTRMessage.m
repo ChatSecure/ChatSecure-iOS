@@ -12,7 +12,7 @@
 @import YapDatabase;
 #import "OTRDatabaseManager.h"
 #import "NSString+HTML.h"
-#import "OTRStrings.h"
+@import OTRAssets;
 #import "OTRConstants.h"
 #import "OTRMediaItem.h"
 #import "OTRLanguageManager.h"

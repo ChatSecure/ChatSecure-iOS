@@ -7,7 +7,6 @@
 //
 
 #import "OTRGoogleOAuthXMPPAccount.h"
-#import "OTRStrings.h"
 #import "GTMOAuth2Authentication.h"
 #import "GTMOAuth2SignIn.h"
 #import "OTRSecrets.h"

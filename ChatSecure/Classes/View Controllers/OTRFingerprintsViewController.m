@@ -8,7 +8,7 @@
 
 #import "OTRFingerprintsViewController.h"
 @import OTRKit;
-#import "OTRStrings.h"
+@import OTRAssets;
 #import "OTRAccount.h"
 #import "OTRDatabaseManager.h"
 #import "OTRDatabaseView.h"

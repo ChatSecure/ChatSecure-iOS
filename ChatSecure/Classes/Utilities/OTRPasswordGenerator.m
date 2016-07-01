@@ -13,10 +13,15 @@ NSUInteger const OTRDefaultPasswordLength = 100;
 @implementation OTRPasswordGenerator
 
 + (NSString *)passwordWithLength:(NSUInteger)length {
-    NSMutableData* passphraseData = [NSMutableData dataWithLength:length];
-    SecRandomCopyBytes(kSecRandomDefault, length, [passphraseData mutableBytes]);
+    NSData *passphraseData = [self randomDataWithLength:length];
     NSString *passphrase = [passphraseData base64EncodedStringWithOptions:0];
     return passphrase;
+}
+
++ (NSData *)randomDataWithLength:(NSUInteger)length {
+    NSMutableData* passphraseData = [NSMutableData dataWithLength:length];
+    SecRandomCopyBytes(kSecRandomDefault, length, [passphraseData mutableBytes]);
+    return passphraseData;
 }
 
 @end

@@ -23,7 +23,6 @@
 #import "OTRSettingsViewController.h"
 #import "OTRProtocolManager.h"
 #import "OTRBoolSetting.h"
-#import "OTRStrings.h"
 #import "OTRSettingTableViewCell.h"
 #import "OTRSettingDetailViewController.h"
 #import "OTRAboutViewController.h"

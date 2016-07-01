@@ -7,7 +7,7 @@
 //
 
 #import "OTRActivityItemProvider.h"
-#import "OTRStrings.h"
+@import OTRAssets;
 #import "OTRQRCodeActivity.h"
 #import "OTRLanguageManager.h"
 

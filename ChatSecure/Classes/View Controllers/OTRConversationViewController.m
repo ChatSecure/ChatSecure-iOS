@@ -11,12 +11,12 @@
 #import "OTRSettingsViewController.h"
 #import "OTRMessagesHoldTalkViewController.h"
 #import "OTRComposeViewController.h"
-#import "OTRSubscriptionRequestsViewController.h"
 
 #import "OTRConversationCell.h"
 #import "OTRNotificationPermissions.h"
 #import "OTRAccount.h"
 #import "OTRBuddy.h"
+#import "OTRXMPPBuddy.h"
 #import "OTRMessage.h"
 #import "UIViewController+ChatSecure.h"
 #import "OTRLog.h"
@@ -24,7 +24,6 @@
 
 #import "OTRDatabaseManager.h"
 #import "OTRDatabaseView.h"
-#import "OTRStrings.h"
 #import <KVOController/NSObject+FBKVOController.h>
 #import "OTRAppDelegate.h"
 #import "OTRTheme.h"
@@ -36,6 +35,8 @@
 #import "OTRMessagesGroupViewController.h"
 #import "OTRXMPPManager.h"
 #import "OTRXMPPRoomManager.h"
+#import "OTRXMPPPresenceSubscriptionRequest.h"
+#import "OTRBuddyApprovalCell.h"
 
 static CGFloat kOTRConversationCellHeight = 80.0;
 
@@ -44,7 +45,6 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 @property (nonatomic, strong) NSTimer *cellUpdateTimer;
 @property (nonatomic, strong) YapDatabaseConnection *databaseConnection;
 @property (nonatomic, strong) YapDatabaseViewMappings *mappings;
-@property (nonatomic, strong) YapDatabaseViewMappings *subscriptionRequestsMappings;
 @property (nonatomic, strong) YapDatabaseViewMappings *unreadMessagesMappings;
 
 @property (nonatomic, strong) UIBarButtonItem *composeBarButtonItem;
@@ -56,14 +56,7 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
-    
-    ////// Reset buddy status //////
-    [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        [OTRBuddy resetAllBuddyStatusesWithTransaction:transaction];
-        [OTRBuddy resetAllChatStatesWithTransaction:transaction];
-    }];
-    
+    [super viewDidLoad];    
    
     ///////////// Setup Navigation Bar //////////////
     
@@ -85,7 +78,8 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     [self.view addSubview:self.tableView];
     
     [self.tableView registerClass:[OTRConversationCell class] forCellReuseIdentifier:[OTRConversationCell reuseIdentifier]];
-    
+    [self.tableView registerClass:[OTRBuddyApprovalCell class] forCellReuseIdentifier:[OTRBuddyApprovalCell reuseIdentifier]];
+    [self.tableView registerClass:[OTRBuddyInfoCell class] forCellReuseIdentifier:[OTRBuddyInfoCell reuseIdentifier]];
     
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[tableView]|" options:0 metrics:0 views:@{@"tableView":self.tableView}]];
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[tableView]|" options:0 metrics:0 views:@{@"tableView":self.tableView}]];
@@ -98,8 +92,6 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     
     [self setupMappings:YES];
     [self.tableView reloadData];
-    [self setupSubscriptionMappings:YES];
-    [self updateInbox];
     [self setupUnreadMappings:YES];
     [self updateTitle];
     
@@ -136,9 +128,6 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     if ([name isEqualToString:OTRConversationDatabaseViewExtensionName]) {
         [self setupMappings:YES];
         [self.tableView reloadData];
-    } else if ([name isEqualToString:OTRAllSubscriptionRequestsViewExtensionName]) {
-        [self setupSubscriptionMappings:YES];
-        [self updateInbox];
     } else if ([name isEqualToString:OTRUnreadMessagesViewExtensionName]) {
         [self setupUnreadMappings:YES];
         [self updateTitle];
@@ -149,22 +138,10 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         
         if (!self.mappings && [transaction ext:OTRConversationDatabaseViewExtensionName]) {
-            self.mappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[OTRConversationGroup]
+            self.mappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[OTRAllPresenceSubscriptionRequestGroup, OTRConversationGroup]
                                                                        view:OTRConversationDatabaseViewExtensionName];
             if (update) {
                 [self.mappings updateWithTransaction:transaction];
-            }
-        }
-    }];
-}
-
-- (void) setupSubscriptionMappings:(BOOL)update {
-    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        if (!self.subscriptionRequestsMappings && [transaction ext:OTRAllSubscriptionRequestsViewExtensionName]) {
-            self.subscriptionRequestsMappings = [[YapDatabaseViewMappings alloc] initWithGroups:@[OTRAllPresenceSubscriptionRequestGroup]
-                                                                                           view:OTRAllSubscriptionRequestsViewExtensionName];
-            if (update){
-                [self.subscriptionRequestsMappings updateWithTransaction:transaction];
             }
         }
     }];
@@ -223,7 +200,6 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     
     [self.cellUpdateTimer invalidate];
     [self.tableView reloadData];
-    [self updateInbox];
     [self updateTitle];
     self.cellUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:60.0 target:self selector:@selector(updateVisibleCells:) userInfo:nil repeats:YES];
     
@@ -278,16 +254,34 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     }
 }
 
-- (id <OTRThreadOwner>)threadForIndexPath:(NSIndexPath *)indexPath
-{
-    
-    __block id thread = nil;
+- (id) objectAtIndexPath:(NSIndexPath*)indexPath {
+    __block id object = nil;
     [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
         YapDatabaseViewTransaction *ext = [transaction ext:OTRConversationDatabaseViewExtensionName];
         NSParameterAssert(ext != nil);
-        thread = [ext objectAtIndexPath:indexPath withMappings:self.mappings];
-        NSParameterAssert(thread != nil);
+        object = [ext objectAtIndexPath:indexPath withMappings:self.mappings];
+        NSParameterAssert(object != nil);
     }];
+    return object;
+}
+
+- (id <OTRThreadOwner>)threadForIndexPath:(NSIndexPath *)indexPath
+{
+    id object = [self objectAtIndexPath:indexPath];
+    
+    id <OTRThreadOwner> thread = nil;
+    
+    // Create a fake buddy for subscription requests
+    if ([object isKindOfClass:[OTRXMPPPresenceSubscriptionRequest class]]) {
+        OTRXMPPPresenceSubscriptionRequest *request = object;
+        OTRXMPPBuddy *buddy = [[OTRXMPPBuddy alloc] init];
+        buddy.hasIncomingSubscriptionRequest = YES;
+        buddy.displayName = request.displayName;
+        buddy.username = request.jid;
+        thread = buddy;
+    } else {
+        thread = object;
+    }
     
     return thread;
 }
@@ -300,43 +294,6 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 - (void)disableComposeButton
 {
     self.composeBarButtonItem.enabled = NO;
-}
-
-#pragma - mark Inbox Methods
-
-- (void)showInbox
-{
-    if ([self.navigationItem.leftBarButtonItems count] != 2) {
-        UIBarButtonItem *inboxBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"inbox" inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:self action:@selector(inboxButtonPressed:)];
-        
-        self.navigationItem.leftBarButtonItems = @[self.composeBarButtonItem,inboxBarButtonItem];
-    }
-}
-
-- (void)hideInbox
-{
-    if ([self.navigationItem.leftBarButtonItems count] > 1) {
-        self.navigationItem.leftBarButtonItems = @[self.composeBarButtonItem];
-    }
-    
-}
-
-- (void)inboxButtonPressed:(id)sender
-{
-    OTRSubscriptionRequestsViewController *viewController = [[OTRSubscriptionRequestsViewController alloc] init];
-    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:viewController];
-    navController.modalPresentationStyle = UIModalPresentationFormSheet;
-    [self.navigationController presentViewController:navController animated:YES completion:nil];
-}
-
-- (void)updateInbox
-{
-    if ([self.subscriptionRequestsMappings numberOfItemsInAllGroups] > 0) {
-        [self showInbox];
-    }
-    else {
-        [self hideInbox];
-    }
 }
 
 - (void)updateTitle
@@ -398,10 +355,63 @@ static CGFloat kOTRConversationCellHeight = 80.0;
     
 }
 
+- (void) handleSubscriptionRequest:(OTRXMPPPresenceSubscriptionRequest*)request approved:(BOOL)approved {
+    __block OTRXMPPAccount *account = nil;
+    [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        account = [request accountWithTransaction:transaction];
+    }];
+    OTRXMPPManager *manager = (OTRXMPPManager*)[[OTRProtocolManager sharedInstance] protocolForAccount:account];
+    XMPPJID *jid = [XMPPJID jidWithString:request.jid];
+    if (approved) {
+        // Create new buddy in database so it can be shown immediately in list
+        [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+            OTRXMPPBuddy *buddy = [OTRXMPPBuddy fetchBuddyWithUsername:request.jid withAccountUniqueId:account.uniqueId transaction:transaction];
+            if (!buddy) {
+                buddy = [[OTRXMPPBuddy alloc] init];
+                buddy.username = request.jid;
+                buddy.accountUniqueId = account.uniqueId;
+                // hack to show buddy in conversations view
+                buddy.lastMessageDate = [NSDate date];
+            }
+            buddy.displayName = request.jid;
+            [buddy saveWithTransaction:transaction];
+        }];
+        [manager.xmppRoster acceptPresenceSubscriptionRequestFrom:jid andAddToRoster:YES];
+        
+    } else {
+        [manager.xmppRoster rejectPresenceSubscriptionRequestFrom:jid];
+    }
+    [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        [request removeWithTransaction:transaction];
+    }];
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    OTRConversationCell *cell = [tableView dequeueReusableCellWithIdentifier:[OTRConversationCell reuseIdentifier] forIndexPath:indexPath];
+    OTRBuddyImageCell *cell = nil;
     id <OTRThreadOwner> thread = [self threadForIndexPath:indexPath];
+    if ([thread isKindOfClass:[OTRXMPPBuddy class]] &&
+        ((OTRXMPPBuddy*)thread).hasIncomingSubscriptionRequest) {
+        OTRBuddyApprovalCell *approvalCell = [tableView dequeueReusableCellWithIdentifier:[OTRBuddyApprovalCell reuseIdentifier] forIndexPath:indexPath];
+        [approvalCell setActionBlock:^(OTRBuddyApprovalCell *cell, BOOL approved) {
+            NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+            id object = [self objectAtIndexPath:indexPath];
+            if ([object isKindOfClass:[OTRXMPPPresenceSubscriptionRequest class]]) {
+                OTRXMPPPresenceSubscriptionRequest *request = object;
+                [self handleSubscriptionRequest:request approved:approved];
+            }
+        }];
+        cell = approvalCell;
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        
+    } else if ([thread isKindOfClass:[OTRXMPPBuddy class]] &&
+               ((OTRXMPPBuddy*)thread).pendingApproval) {
+        cell = [tableView dequeueReusableCellWithIdentifier:[OTRBuddyInfoCell reuseIdentifier] forIndexPath:indexPath];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    } else {
+        cell = [tableView dequeueReusableCellWithIdentifier:[OTRConversationCell reuseIdentifier] forIndexPath:indexPath];
+        cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+    }
     
     [cell.avatarImageView.layer setCornerRadius:(kOTRConversationCellHeight-2.0*OTRBuddyImageCellPadding)/2.0];
     
@@ -429,6 +439,14 @@ static CGFloat kOTRConversationCellHeight = 80.0;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     id <OTRThreadOwner> thread = [self threadForIndexPath:indexPath];
+    
+    // Bail out if it's a subscription request or pending approval
+    if ([thread isKindOfClass:[OTRXMPPBuddy class]] &&
+        (((OTRXMPPBuddy*)thread).hasIncomingSubscriptionRequest ||
+        ((OTRXMPPBuddy*)thread).isPendingApproval)) {
+        return;
+    }
+
     if ([self.delegate respondsToSelector:@selector(conversationViewController:didSelectThread:)]) {
         [self.delegate conversationViewController:self didSelectThread:thread];
     }
@@ -454,27 +472,6 @@ static CGFloat kOTRConversationCellHeight = 80.0;
                               forNotifications:notifications
                                   withMappings:self.mappings];
         }
-    }
-    
-    NSArray *subscriptionSectionChanges = nil;
-    NSArray *subscriptionRowChanges = nil;
-    
-    YapDatabaseViewConnection *subExt = [self.databaseConnection ext:OTRAllSubscriptionRequestsViewExtensionName];
-    if (subExt) {
-        if (!self.subscriptionRequestsMappings) {
-            [self setupSubscriptionMappings:YES];
-            [self updateInbox];
-        } else {
-            [subExt getSectionChanges:&subscriptionSectionChanges
-                           rowChanges:&subscriptionRowChanges
-                     forNotifications:notifications
-                         withMappings:self.subscriptionRequestsMappings];
-        }
-    }
-    
-    
-    if ([subscriptionSectionChanges count] || [subscriptionRowChanges count]) {
-        [self updateInbox];
     }
     
     NSArray *unreadMessagesSectionChanges = nil;

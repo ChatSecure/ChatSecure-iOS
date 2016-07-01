@@ -357,7 +357,7 @@ public class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageSt
                 return
             }
             
-            let err = convertError(EncryptionError.unableToCreateOTRSession)
+            let err = NSError.chatSecureError(EncryptionError.unableToCreateOTRSession, userInfo: nil)
             strongSelf.incrementSendActionFailureCount(messageInfo.messageKey, messageCollection: messageInfo.messageCollection, error: err)
             
             messageInfo.completion(success: false, retryTimeout: strongSelf.messageRetryTimeout)

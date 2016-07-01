@@ -12,4 +12,6 @@
 
 - (NSString *)otr_stringInitialsWithMaxCharacters:(NSUInteger)maxCharacters;
 
+- (NSString *)otr_stringByRemovingNonEnglishCharacters;
+
 @end

@@ -19,7 +19,7 @@
 @import YapDatabase.YapDatabaseView;
 @import YapDatabase.YapDatabaseSearchResultsView;
 @import PureLayout;
-#import "OTRStrings.h"
+@import BButton;
 #import "OTRBuddyInfoCell.h"
 #import "OTRNewBuddyViewController.h"
 #import "OTRChooseAccountViewController.h"
@@ -43,6 +43,9 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
 @property (nonatomic, weak) YapDatabaseConnection *readWriteConnection;
 @property (nonatomic, strong) NSMutableSet <NSString *>*selectedBuddiesIdSet;
 
+@property (nonatomic, strong) UIBarButtonItem *doneBarButtonItem;
+@property (nonatomic, strong) UIBarButtonItem *groupBarButtonItem;
+
 @end
 
 @implementation OTRComposeViewController
@@ -54,6 +57,7 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
         _readWriteConnection = [OTRDatabaseManager sharedInstance].readWriteDatabaseConnection;
         _searchConnection = [self.database newConnection];
         _searchQueue = [[YapDatabaseSearchQueue alloc] init];
+        _selectionModeIsSingle = YES;
     }
     return self;
 }
@@ -70,11 +74,16 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
     UIBarButtonItem * cancelBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelButtonPressed:)];
     
     UIImage *checkImage = [UIImage imageNamed:@"ic-check" inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];
-    UIBarButtonItem *doneButtonItem = [[UIBarButtonItem alloc] initWithImage:checkImage style:UIBarButtonItemStylePlain target:self action:@selector(doneButtonPressed:)];
-    doneButtonItem.enabled = NO;
+    self.doneBarButtonItem = [[UIBarButtonItem alloc] initWithImage:checkImage style:UIBarButtonItemStylePlain target:self action:@selector(doneButtonPressed:)];
+    
+    NSString *groupString = [NSString fa_stringForFontAwesomeIcon:FAGroup];
+    self.groupBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:groupString style:UIBarButtonItemStylePlain target:self action:@selector(groupButtonPressed:)];
+    [self.groupBarButtonItem setTitleTextAttributes:@{NSFontAttributeName: [UIFont fontWithName:kFontAwesomeFont size:[UIFont buttonFontSize]]}
+                                      forState:UIControlStateNormal];
+    
     
     self.navigationItem.leftBarButtonItem = cancelBarButtonItem;
-    self.navigationItem.rightBarButtonItem = doneButtonItem;
+    self.navigationItem.rightBarButtonItem = self.groupBarButtonItem;
     
     /////////// TableView ///////////
     self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
@@ -177,16 +186,10 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
 
 - (void)doneButtonPressed:(id)sender
 {
+    __weak __typeof__(self) weakSelf = self;
     void (^completion)(NSString *) = ^void(NSString *name) {
-        if ([self.delegate respondsToSelector:@selector(controller:didSelectBuddies:accountId:name:)]) {
-            //TODO: Naive choosing account just any buddy but should really check that account is connected or show picker
-            __block NSString *accountId = nil;
-            [self.viewHandler.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
-                NSString *buddyKey  = [self.selectedBuddiesIdSet anyObject];
-                accountId = [OTRBuddy fetchObjectWithUniqueID:buddyKey transaction:transaction].accountUniqueId;
-            }];
-            [self.delegate controller:self didSelectBuddies:[self.selectedBuddiesIdSet allObjects] accountId:accountId name:name];
-        }
+        __typeof__(self) strongSelf = weakSelf;
+        [strongSelf completeSelectingBuddies:strongSelf.selectedBuddiesIdSet groupName:name];
     };
     
     if (self.selectedBuddiesIdSet.count > 1) {
@@ -213,11 +216,40 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
         }];
         
         
-        
         [self presentViewController:alertController animated:YES completion:nil];
     } else {
         completion(nil);
     }
+}
+
+/** Intended to be called if selecting one buddy or after a group chat is created*/
+- (void)completeSelectingBuddies:(NSSet <NSString *>*)buddies groupName:(nullable NSString*)groupName {
+    if ([self.delegate respondsToSelector:@selector(controller:didSelectBuddies:accountId:name:)]) {
+        //TODO: Naive choosing account just any buddy but should really check that account is connected or show picker
+        __block NSString *accountId = nil;
+        [self.viewHandler.databaseConnection readWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+            NSString *buddyKey  = [buddies anyObject];
+            accountId = [OTRBuddy fetchObjectWithUniqueID:buddyKey transaction:transaction].accountUniqueId;
+        }];
+        [self.delegate controller:self didSelectBuddies:[buddies allObjects] accountId:accountId name:groupName];
+    }
+}
+
+- (void) groupButtonPressed:(id)sender {
+    [self switchSelectionMode];
+}
+
+- (void)switchSelectionMode {
+    _selectionModeIsSingle = !_selectionModeIsSingle;
+    
+    //Update right bar button item
+    if (self.selectionModeIsSingle) {
+        self.navigationItem.rightBarButtonItem = self.groupBarButtonItem;
+    } else {
+        self.navigationItem.rightBarButtonItem = self.doneBarButtonItem;
+        self.navigationItem.rightBarButtonItem.enabled = NO;
+    }
+    
     
 }
 
@@ -252,7 +284,7 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
     if ([self.selectedBuddiesIdSet count]) {
         self.navigationItem.rightBarButtonItem.enabled = YES;
     } else {
-        self.navigationItem.rightBarButtonItem.enabled = NO;
+        [self switchSelectionMode];
     }
 }
 #pragma - mark keyBoardAnimation Methods
@@ -409,8 +441,13 @@ static CGFloat OTRBuddyInfoCellHeight = 80.0;
     else {
         NSIndexPath *databaseIndexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:0];
         OTRBuddy * buddy = [self buddyAtIndexPath:databaseIndexPath withTableView:tableView];
-        [self selectedBuddy:buddy.uniqueId];
-        [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+        if (self.selectionModeIsSingle == YES) {
+            NSSet <NSString *>*buddySet = [NSSet setWithObject:buddy.uniqueId];
+            [self completeSelectingBuddies:buddySet groupName:nil];
+        } else {
+            [self selectedBuddy:buddy.uniqueId];
+            [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+        }
     }
 }
 

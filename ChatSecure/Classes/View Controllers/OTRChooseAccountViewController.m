@@ -10,7 +10,7 @@
 
 #import "OTRNewBuddyViewController.h"
 #import <QuartzCore/QuartzCore.h>
-#import "OTRStrings.h"
+@import OTRAssets;
 #import "OTRAccountsManager.h"
 #import "OTRAccount.h"
 #import "OTRLanguageManager.h"

@@ -13,8 +13,9 @@
 #import "OTRLog.h"
 #import "OTRXMPPBuddy.h"
 #import "OTRXMPPAccount.h"
-#import "OTRStrings.h"
 #import "OTRLanguageManager.h"
+
+@import OTRAssets;
 
 @interface OTRYapDatabaseRosterStorage ()
 
@@ -179,39 +180,36 @@
 
 - (void)handlePresence:(XMPPPresence *)presence xmppStream:(XMPPStream *)stream
 {
-    
-    
     [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         
-        OTRXMPPBuddy *buddy = [self buddyWithJID:[presence from] xmppStream:stream transaction:transaction];
+        OTRXMPPBuddy *buddy = [[self buddyWithJID:[presence from] xmppStream:stream transaction:transaction] copy];
+        NSString *resource = [presence from].resource;
         
-        if ([[presence type] isEqualToString:@"unavailable"] || [presence isErrorPresence]) {
-            buddy.status = OTRThreadStatusOffline;
-            buddy.statusMessage = OFFLINE_STRING;
-        }
-        else if (buddy) {
+        OTRThreadStatus newStatus = OTRThreadStatusOffline;
+        NSString *newStatusMessage = OFFLINE_STRING;
+        
+        if (buddy && !([[presence type] isEqualToString:@"unavailable"] || [presence isErrorPresence])) {
             NSString *defaultMessage = OFFLINE_STRING;
             switch (presence.intShow)
             {
                 case 0  :
-                    buddy.status = OTRThreadStatusDoNotDisturb;
-                    defaultMessage = DO_NOT_DISTURB_STRING;
+                    newStatus = OTRThreadStatusDoNotDisturb;
+                    newStatusMessage = DO_NOT_DISTURB_STRING;
                     break;
                 case 1  :
-                    buddy.status = OTRThreadStatusExtendedAway;
-                    defaultMessage = EXTENDED_AWAY_STRING;
+                    newStatus = OTRThreadStatusExtendedAway;
+                    newStatusMessage = EXTENDED_AWAY_STRING;
                     break;
                 case 2  :
-                    buddy.status = OTRThreadStatusAway;
-                    defaultMessage = AWAY_STRING;
+                    newStatus = OTRThreadStatusAway;
+                    newStatusMessage = AWAY_STRING;
                     break;
                 case 3  :
                 case 4  :
-                    buddy.status = OTRThreadStatusAvailable;
-                    defaultMessage = AVAILABLE_STRING;
+                    newStatus =OTRThreadStatusAvailable;
+                    newStatusMessage = AVAILABLE_STRING;
                     break;
                 default :
-                    buddy.status = OTRThreadStatusOffline;
                     break;
             }
             
@@ -222,6 +220,8 @@
                 buddy.statusMessage = defaultMessage;
             }
         }
+        
+        [buddy setStatus:newStatus forResource:resource];
         
         [buddy saveWithTransaction:transaction];
     }];

@@ -10,7 +10,7 @@
 #import "OTRInLineTextEditTableViewCell.h"
 #import "OTRProtocolManager.h"
 #import <QuartzCore/QuartzCore.h>
-#import "OTRStrings.h"
+@import OTRAssets;
 #import "OTRXMPPManager.h"
 #import "OTRDatabaseManager.h"
 
@@ -205,6 +205,8 @@
                 buddy = [[OTRXMPPBuddy alloc] init];
                 buddy.username = newBuddyAccountName;
                 buddy.accountUniqueId = self.account.uniqueId;
+                // hack to show buddy in conversations view
+                buddy.lastMessageDate = [NSDate date];
             }
             
             buddy.displayName = newBuddyDisplayName;

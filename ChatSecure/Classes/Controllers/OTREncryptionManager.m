@@ -27,7 +27,7 @@
 #import "OTRProtocolManager.h"
 #import "OTRDatabaseManager.h"
 #import "OTRUtilities.h"
-#import "OTRStrings.h"
+@import OTRAssets;
 #import "OTRAppDelegate.h"
 #import "OTRMessagesHoldTalkViewController.h"
 #import "UIViewController+ChatSecure.h"
@@ -44,6 +44,7 @@
 
 @import AVFoundation;
 @import XMPPFramework;
+@import OTRAssets;
 
 NSString *const OTRMessageStateDidChangeNotification = @"OTREncryptionManagerMessageStateDidChangeNotification";
 NSString *const OTRWillStartGeneratingPrivateKeyNotification = @"OTREncryptionManagerWillStartGeneratingPrivateKeyNotification";
@@ -233,6 +234,8 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     NSParameterAssert(originalMessage);
     
     decodedMessage = [OTRUtilities stripHTML:decodedMessage];
+    decodedMessage = [decodedMessage stringByTrimmingCharactersInSet:
+     [NSCharacterSet whitespaceCharacterSet]];
     
     if ([decodedMessage length]) {
         originalMessage.text = decodedMessage;

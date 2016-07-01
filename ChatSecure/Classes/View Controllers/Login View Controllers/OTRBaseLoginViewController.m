@@ -7,7 +7,6 @@
 //
 
 #import "OTRBaseLoginViewController.h"
-#import "OTRStrings.h"
 #import "OTRColors.h"
 #import "OTRCertificatePinning.h"
 #import "OTRConstants.h"
@@ -22,19 +21,32 @@
 @import OTRAssets;
 #import "OTRLanguageManager.h"
 #import "OTRInviteViewController.h"
+#import "NSString+ChatSecure.h"
+
+static NSUInteger kOTRMaxLoginAttempts = 5;
 
 @interface OTRBaseLoginViewController ()
+
+@property (nonatomic) bool showPasswordsAsText;
+@property (nonatomic) bool existingAccount;
+@property (nonatomic) NSUInteger loginAttempts;
+
 @end
 
 @implementation OTRBaseLoginViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.loginAttempts = 0;
     
     UIImage *checkImage = [UIImage imageNamed:@"ic-check" inBundle:[OTRAssets resourcesBundle] compatibleWithTraitCollection:nil];
     UIBarButtonItem *checkButton = [[UIBarButtonItem alloc] initWithImage:checkImage style:UIBarButtonItemStylePlain target:self action:@selector(loginButtonPressed:)];
     
     self.navigationItem.rightBarButtonItem = checkButton;
+    
+    if (self.readOnly) {
+        self.title = ACCOUNT_STRING;
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -65,6 +77,11 @@
 
 - (void)loginButtonPressed:(id)sender
 {
+    if (self.readOnly) {
+        [self dismissViewControllerAnimated:YES completion:nil];
+        return;
+    }
+    self.existingAccount = (self.account != nil);
     if ([self validForm]) {
         self.form.disabled = YES;
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -73,6 +90,7 @@
         self.navigationItem.backBarButtonItem.enabled = NO;
 
 		__weak __typeof__(self) weakSelf = self;
+        self.loginAttempts += 1;
         [self.createLoginHandler performActionWithValidForm:self.form account:self.account progress:^(NSInteger progress, NSString *summaryString) {
             __typeof__(self) strongSelf = weakSelf;
             NSLog(@"Tor Progress %d: %@", (int)progress, summaryString);
@@ -113,9 +131,13 @@
 }
 
 - (void) pushInviteViewController {
-    OTRInviteViewController *inviteVC = [[OTRInviteViewController alloc] init];
-    inviteVC.account = self.account;
-    [self.navigationController pushViewController:inviteVC animated:YES];
+    if (self.existingAccount) {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    } else {
+        OTRInviteViewController *inviteVC = [[[[OTRAppDelegate appDelegate].theme inviteViewControllerClass] alloc] init];
+        inviteVC.account = self.account;
+        [self.navigationController pushViewController:inviteVC animated:YES];
+    }
 }
 
 - (BOOL)validForm
@@ -156,6 +178,40 @@
     [self updateFormRow:usernameRow];
 }
 
+#pragma mark Table View methods
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
+    if (self.readOnly) {
+        cell.userInteractionEnabled = NO;
+    } else {
+        XLFormRowDescriptor *desc = [self.form formRowAtIndex:indexPath];
+        if (desc != nil && desc.tag == kOTRXLFormPasswordTextFieldTag) {
+            cell.accessoryType = UITableViewCellAccessoryDetailButton;
+        }
+    }
+    return cell;
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    [super tableView:tableView willDisplayCell:cell forRowAtIndexPath:indexPath];
+    XLFormRowDescriptor *desc = [self.form formRowAtIndex:indexPath];
+    if (desc != nil && desc.tag == kOTRXLFormPasswordTextFieldTag) {
+        XLFormBaseCell *xlCell = [desc cellForFormController:self];
+        if (xlCell != nil && [cell isKindOfClass:XLFormTextFieldCell.class]) {
+            [[(XLFormTextFieldCell*)cell textField] setSecureTextEntry:!self.showPasswordsAsText];
+        }
+    }
+}
+
+- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
+    XLFormRowDescriptor *desc = [self.form formRowAtIndex:indexPath];
+    if (desc != nil && desc.tag == kOTRXLFormPasswordTextFieldTag) {
+        self.showPasswordsAsText = !self.showPasswordsAsText;
+        [self.tableView reloadData];
+    }
+}
+
 #pragma mark XLFormDescriptorDelegate
 
 -(void)formRowDescriptorValueHasChanged:(XLFormRowDescriptor *)formRow oldValue:(id)oldValue newValue:(id)newValue
@@ -185,6 +241,33 @@
 
 - (void)handleXMPPError:(NSError *)error
 {
+    if (error.code == OTRXMPPXMLErrorConflict && self.loginAttempts < kOTRMaxLoginAttempts) {
+        //Caught the conflict error before there's any alert displayed on the screen
+        //Create a new nickname with a random hex value at the end
+        NSString *uniqueString = [[OTRPasswordGenerator randomDataWithLength:2] hexString];
+        XLFormRowDescriptor* nicknameRow = [self.form formRowWithTag:kOTRXLFormNicknameTextFieldTag];
+        NSString *value = [nicknameRow value];
+        NSString *newValue = [NSString stringWithFormat:@"%@.%@",value,uniqueString];
+        nicknameRow.value = newValue;
+        [self loginButtonPressed:nil];
+        return;
+    } else if (error.code == OTRXMPPXMLErrorPolicyViolation && self.loginAttempts < kOTRMaxLoginAttempts){
+        // We've hit a policy violation. This occurs on duckgo because of special characters like russian alphabet.
+        // We should give it another shot stripping out offending characters and retrying.
+        XLFormRowDescriptor* nicknameRow = [self.form formRowWithTag:kOTRXLFormNicknameTextFieldTag];
+        NSMutableString *value = [[nicknameRow value] mutableCopy];
+        NSString *newValue = [value otr_stringByRemovingNonEnglishCharacters];
+        if ([newValue length] == 0) {
+            newValue = [OTRBranding xmppResource];
+        }
+        
+        if (![newValue isEqualToString:value]) {
+            nicknameRow.value = newValue;
+            [self loginButtonPressed:nil];
+            return;
+        }
+    }
+    
     [self showAlertViewWithTitle:ERROR_STRING message:XMPP_FAIL_STRING error:error];
 }
 

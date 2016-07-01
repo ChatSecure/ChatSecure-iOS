@@ -9,7 +9,7 @@
 #import "OTRCertificateDomainViewController.h"
 #import "OTRCertificatePinning.h"
 #import "OTRCertificatesViewController.h"
-#import "OTRStrings.h"
+@import OTRAssets;
 #import "OTRLanguageManager.h"
 
 @interface OTRCertificateDomainViewController ()

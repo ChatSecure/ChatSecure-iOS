@@ -253,7 +253,7 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
                 
                 // Since we only support OTR at the moment, we can finish here, but this should be refactored with a dispatch_group when we support more key types.
                 
-                NSURL *url = [NSURL otr_shareLink:baseURL.absoluteString username:self.username fingerprints:fingerprints base64Encoded:YES];
+                NSURL *url = [NSURL otr_shareLink:baseURL.absoluteString username:self.username fingerprints:fingerprints];
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
                     completionBlock(url, nil);
