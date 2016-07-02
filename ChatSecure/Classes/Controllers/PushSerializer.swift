@@ -27,7 +27,7 @@ public class PushSerializer: NSObject {
         for token in tokens {
             tokenStrings.append(token.tokenString)
             guard let date = token.expires else {
-                throw PushError.misingExpiresDate.error()
+                throw NSError.chatSecureError(PushError.misingExpiresDate, userInfo: nil)
             }
             
             let dateString = Deserializer.dateFormatter().stringFromDate(date)

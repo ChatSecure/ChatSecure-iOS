@@ -30,9 +30,6 @@ extern NSString *const OTRWillStartGeneratingPrivateKeyNotification;
 extern NSString *const OTRDidFinishGeneratingPrivateKeyNotification;
 extern NSString *const OTRMessageStateKey;
 
-extern NSString *const OTREncryptionError;
-extern NSString *const OTRMessageEventKey;
-
 // This is a hack to get around problems using OTRKit.h in swift files
 typedef NS_ENUM(NSUInteger, OTREncryptionMessageState) {
     OTREncryptionMessageStatePlaintext,

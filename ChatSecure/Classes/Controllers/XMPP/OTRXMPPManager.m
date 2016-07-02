@@ -109,6 +109,8 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 
 @property (nonatomic, strong) YapDatabaseConnection *databaseConnection;
 @property (nonatomic, strong) XMPPMessageDeliveryReceipts *deliveryReceipts;
+@property (nonatomic, strong) OTRXMPPMessageStatusModule *messageStatusModule;
+@property (nonatomic, strong) OTRStreamManagementDelegate *streamManagementDelegate;
 
 - (void)setupStream;
 - (void)teardownStream;
@@ -284,10 +286,14 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     //Stream Management
     YapDatabaseConnection *databaseConnection = [[OTRDatabaseManager sharedInstance] newConnection];
     databaseConnection.name = NSStringFromClass([OTRStreamManagementYapStorage class]);
+    
+    self.streamManagementDelegate = [[OTRStreamManagementDelegate alloc] initWithDatabaseConnection:databaseConnection];
+    
     OTRStreamManagementYapStorage *streamManagementStorage = [[OTRStreamManagementYapStorage alloc] initWithDatabaseConnection:databaseConnection];
     self.streamManagement = [[XMPPStreamManagement alloc] initWithStorage:streamManagementStorage];
-    [self.streamManagement automaticallyRequestAcksAfterStanzaCount:10 orTimeout:90];
-    [self.streamManagement automaticallySendAcksAfterStanzaCount:10 orTimeout:90];
+    [self.streamManagement addDelegate:self.streamManagementDelegate delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
+    [self.streamManagement automaticallyRequestAcksAfterStanzaCount:5 orTimeout:5];
+    [self.streamManagement automaticallySendAcksAfterStanzaCount:5 orTimeout:5];
     self.streamManagement.autoResume = YES;
     [self.streamManagement activate:self.xmppStream];
     
@@ -301,6 +307,11 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     self.xmppBuddyManager.databaseConnection = [self.databaseConnection.database newConnection];
     self.xmppBuddyManager.protocol = self;
     [self.xmppBuddyManager activate:self.xmppStream];
+    
+    //Message Queue Module
+    MessageQueueHandler *queueHandler = [OTRDatabaseManager sharedInstance].messageQueueHandler;
+    self.messageStatusModule = [[OTRXMPPMessageStatusModule alloc] initWithDatabaseConnection:self.databaseConnection delegate:queueHandler];
+    [self.messageStatusModule activate:self.xmppStream];
 }
 
 - (void)teardownStream
@@ -322,6 +333,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     [_streamManagement deactivate];
     [_roomManager deactivate];
     [_xmppBuddyManager deactivate];
+    [_messageStatusModule deactivate];
 
     [_xmppStream disconnect];
 
@@ -338,6 +350,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     _streamManagement = nil;
     _roomManager = nil;
     _xmppBuddyManager = nil;
+    _messageStatusModule = nil;
 }
 
 // It's easy to create XML elments to send and to read received XML elements.
@@ -364,8 +377,15 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 - (void)goOnline
 {
     self.connectionStatus = OTRProtocolConnectionStatusConnected;
+    NSString *accountKey = self.account.uniqueId;
+    NSString *accountCollection = [[self.account class] collection];
+    NSDictionary *userInfo = nil;
+    if(accountKey && accountCollection) {
+        userInfo = @{kOTRNotificationAccountUniqueIdKey:accountKey,kOTRNotificationAccountCollectionKey:accountCollection};
+    }
     [[NSNotificationCenter defaultCenter]
-     postNotificationName:kOTRProtocolLoginSuccess object:self];
+     postNotificationName:kOTRProtocolLoginSuccess
+     object:self userInfo:userInfo];
 	XMPPPresence *presence = [XMPPPresence presence]; // type="available" is implicit
 	
 	[[self xmppStream] sendElement:presence];
@@ -704,19 +724,6 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 
 - (void)xmppStream:(XMPPStream *)sender didFailToSendMessage:(XMPPMessage *)message error:(NSError *)error
 {
-    if ([message.elementID length]) {
-        [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-            [transaction enumerateMessagesWithId:message.elementID block:^(id<OTRMessageProtocol> _Nonnull databaseMessage, BOOL * _Null_unspecified stop) {
-                if ([databaseMessage isKindOfClass:[OTRMessage class]]) {
-                    ((OTRMessage *)databaseMessage).error = error;
-                    [(OTRMessage *)databaseMessage saveWithTransaction:transaction];
-                    *stop = YES;
-                }
-                
-            }];
-        }];
-    }
-    
     DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
 }
 - (void)xmppStream:(XMPPStream *)sender didFailToSendPresence:(XMPPPresence *)presence error:(NSError *)error

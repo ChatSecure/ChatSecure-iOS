@@ -13,15 +13,15 @@
 
 @interface OTRYapDatabaseObject : MTLModel
 
-@property (nonatomic, readonly) NSString *uniqueId;
+@property (nonatomic, readonly, nonnull) NSString *uniqueId;
 
-- (instancetype)initWithUniqueId:(NSString *)uniqueId;
+- (nonnull instancetype)initWithUniqueId:(nonnull NSString *)uniqueId;
 
-- (void)saveWithTransaction:(YapDatabaseReadWriteTransaction *)transaction;
-- (void)removeWithTransaction:(YapDatabaseReadWriteTransaction *)transaction;
+- (void)saveWithTransaction:(nonnull YapDatabaseReadWriteTransaction *)transaction;
+- (void)removeWithTransaction:(nonnull YapDatabaseReadWriteTransaction *)transaction;
 
-+ (NSString *)collection;
++ (nonnull NSString *)collection;
 
-+ (instancetype)fetchObjectWithUniqueID:(NSString*)uniqueID transaction:(YapDatabaseReadTransaction*)transaction;
++ (nullable instancetype)fetchObjectWithUniqueID:(nonnull NSString*)uniqueID transaction:(nonnull YapDatabaseReadTransaction*)transaction;
 
 @end

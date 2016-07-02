@@ -37,7 +37,7 @@ public class EnablePushViewController: UIViewController {
     
     override public func viewDidLoad() {
         super.viewDidLoad()
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("didRegisterUserNotificationSettings:"), name: OTRUserNotificationsChanged, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(EnablePushViewController.didRegisterUserNotificationSettings(_:)), name: OTRUserNotificationsChanged, object: nil)
     }
     
     @IBAction func enablePushPressed(sender: AnyObject) {

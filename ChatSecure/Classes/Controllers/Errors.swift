@@ -35,6 +35,7 @@ public protocol ChatSecureErrorProtocol {
     func additionalUserInfo() -> [String:AnyObject]?
 }
 
+/** Error types for the Push server*/
 enum PushError: Int {
     case noPushDevice       = 301
     case invalidURL         = 302
@@ -46,7 +47,7 @@ enum PushError: Int {
     case misingExpiresDate  = 308
 }
 
-extension PushError {
+extension PushError: ChatSecureErrorProtocol {
     func localizedDescription() -> String {
         switch self {
         case .noPushDevice:
@@ -68,8 +69,34 @@ extension PushError {
         }
     }
     
-    func error() -> NSError {
-        return NSError(domain: kOTRErrorDomain, code: self.rawValue, userInfo: [NSLocalizedDescriptionKey:self.localizedDescription()])
+    func code() -> Int {
+        return self.rawValue
+    }
+    
+    func additionalUserInfo() -> [String : AnyObject]? {
+        return nil
+    }
+}
+
+/** Error types for encryption*/
+enum EncryptionError: Int {
+    case unableToCreateOTRSession = 350
+}
+
+extension EncryptionError: ChatSecureErrorProtocol {
+    func localizedDescription() -> String {
+        switch self {
+        case .unableToCreateOTRSession:
+            return "Unable to create OTR session"
+        }
+    }
+    
+    func code() -> Int {
+        return self.rawValue
+    }
+    
+    func additionalUserInfo() -> [String : AnyObject]? {
+        return nil
     }
 }
 

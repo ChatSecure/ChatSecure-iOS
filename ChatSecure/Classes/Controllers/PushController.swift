@@ -96,14 +96,15 @@ public class PushController: NSObject, OTRPushTLVHandlerDelegate, PushController
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {[weak self] () -> Void in
             guard let device = self?.storage.thisDevice() else {
                 self?.callbackQueue.addOperationWithBlock({ () -> Void in
-                    completion(success: false, error:PushError.noPushDevice.error())
+                    
+                    completion(success: false, error:NSError.chatSecureError(PushError.noPushDevice, userInfo: nil))
                 })
                 return
             }
             
             guard let id = device.id else {
                 self?.callbackQueue.addOperationWithBlock({ () -> Void in
-                    completion(success: false, error:PushError.noPushDevice.error())
+                    completion(success: false, error:NSError.chatSecureError(PushError.noPushDevice, userInfo: nil))
                 })
                 return
             }
@@ -187,7 +188,7 @@ public class PushController: NSObject, OTRPushTLVHandlerDelegate, PushController
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {[weak self] () -> Void in
             guard let id = self?.storage.thisDevice()?.id else {
                 self?.callbackQueue.addOperationWithBlock({ () -> Void in
-                    completion(success: false, error: PushError.noPushDevice.error())
+                    completion(success: false, error: NSError.chatSecureError(PushError.noPushDevice, userInfo: nil))
                 })
                 return;
             }
@@ -239,7 +240,7 @@ public class PushController: NSObject, OTRPushTLVHandlerDelegate, PushController
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {[weak self] () -> Void in
             guard let endpointURL = NSURL(string: endpoint) else  {
                 self?.callbackQueue.addOperationWithBlock({ () -> Void in
-                    completion(success: false, error: PushError.invalidURL.error())
+                    completion(success: false, error: NSError.chatSecureError(PushError.invalidURL, userInfo: nil))
                 })
                 return
             }
@@ -260,7 +261,7 @@ public class PushController: NSObject, OTRPushTLVHandlerDelegate, PushController
     
     public func tokensForBuddy(buddyKey:String, createdByThisAccount:Bool, transaction:YapDatabaseReadTransaction) throws -> [TokenContainer] {
         guard let buddy = transaction.objectForKey(buddyKey, inCollection: OTRBuddy.collection()) as? OTRBuddy else {
-            throw PushError.noBuddyFound.error()
+            throw NSError.chatSecureError(PushError.noBuddyFound, userInfo: nil)
         }
         
         var tokens: [TokenContainer] = []
@@ -295,7 +296,7 @@ public class PushController: NSObject, OTRPushTLVHandlerDelegate, PushController
             let message = try Deserializer.messageFromPushDictionary(notification)
             guard let buddy = self.storage.buddy(message.token) else {
                 self.callbackQueue.addOperationWithBlock({ () -> Void in
-                    completion(buddy:nil, error: PushError.noBuddyFound.error())
+                    completion(buddy:nil, error:NSError.chatSecureError(PushError.noBuddyFound, userInfo: nil))
                 })
                 return;
             }
@@ -320,21 +321,21 @@ public class PushController: NSObject, OTRPushTLVHandlerDelegate, PushController
             do {
                 guard let token = try self?.storage.tokensForBuddy(buddyKey, createdByThisAccount: false).first else {
                     self?.callbackQueue.addOperationWithBlock({ () -> Void in
-                        completion(success: false, error: PushError.noTokensFound.error())
+                        completion(success: false, error: NSError.chatSecureError(PushError.noTokensFound, userInfo: nil))
                     })
                     return
                 }
                 
                 guard let tokenString = token.pushToken?.tokenString else {
                     self?.callbackQueue.addOperationWithBlock({ () -> Void in
-                        completion(success: false, error: PushError.noTokensFound.error())
+                        completion(success: false, error: NSError.chatSecureError(PushError.noTokensFound, userInfo: nil))
                     })
                     return
                 }
                 
                 guard let url = token.endpoint else {
                     self?.callbackQueue.addOperationWithBlock({ () -> Void in
-                        completion(success: false, error: PushError.missingAPIEndpoint.error())
+                        completion(success: false, error: NSError.chatSecureError(PushError.missingAPIEndpoint, userInfo: nil))
                     })
                     return
                 }

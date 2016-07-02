@@ -39,8 +39,21 @@ const struct OTRMessageAttributes OTRMessageAttributes = {
         self.messageId = [[NSUUID UUID] UUIDString];
         self.delivered = NO;
         self.read = NO;
+        self.sendEncrypted = NO;
+        self.transportedSecurely = NO;
     }
     return self;
+}
+
+#pragma - mark MTLModel
+
+- (id)decodeValueForKey:(NSString *)key withCoder:(NSCoder *)coder modelVersion:(NSUInteger)modelVersion {
+    // Going from version 0 to version 1.
+    // The dateSent is assumed to be the `date` created. In model version 1 this will be properly set using the sending queue
+    if (modelVersion == 0 && [key isEqualToString:@"dateSent"] ) {
+        return [super decodeValueForKey:@"date" withCoder:coder modelVersion:modelVersion];
+    }
+    return [super decodeValueForKey:key withCoder:coder modelVersion:modelVersion];
 }
 
 #pragma - mark YapDatabaseRelationshipNode
@@ -153,6 +166,18 @@ const struct OTRMessageAttributes OTRMessageAttributes = {
     }];
 }
 
++ (id<OTRMessageProtocol>)messageForMessageId:(NSString *)messageId incoming:(BOOL)incoming transaction:(YapDatabaseReadTransaction *)transaction {
+    __block id<OTRMessageProtocol> deliveredMessage = nil;
+    [transaction enumerateMessagesWithId:messageId block:^(id<OTRMessageProtocol> _Nonnull message, BOOL * _Null_unspecified stop) {
+        if ([message messageIncoming] == incoming) {
+            //Media messages are not delivered until the transfer is complete. This is handled in the OTREncryptionManager.
+            deliveredMessage = message;
+            *stop = YES;
+        }
+    }];
+    return deliveredMessage;
+}
+
 + (void)receivedDeliveryReceiptForMessageId:(NSString *)messageId transaction:(YapDatabaseReadWriteTransaction*)transaction
 {
     __block OTRMessage *deliveredMessage = nil;
@@ -169,8 +194,13 @@ const struct OTRMessageAttributes OTRMessageAttributes = {
 
     if (deliveredMessage) {
         deliveredMessage.delivered = YES;
+        deliveredMessage.dateDelivered = [NSDate date];
         [deliveredMessage saveWithTransaction:transaction];
     }
+}
+
++ (NSUInteger)modelVersion {
+    return 1;
 }
 
 @end

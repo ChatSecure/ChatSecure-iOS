@@ -46,6 +46,7 @@
 #import "OTRLanguageManager.h"
 #import "OTRDataHandler.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
+#import "OTRYapMessageSendAction.h"
 @import YapDatabase.YapDatabaseView;
 @import PureLayout;
 
@@ -362,13 +363,29 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
 }
 
-- (void)showMessageError:(NSError *)error
+- (void)showMessageError:(id<OTRMessageProtocol>)message
 {
+    NSError *error =  [message messageError];
     if (error) {
         UIAlertAction *okButton = [UIAlertAction actionWithTitle:OK_STRING style:UIAlertActionStyleDefault handler:nil];
         
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:ERROR_STRING message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
         [alertController addAction:okButton];
+        
+        if(![message messageIncoming] && [message isKindOfClass:[OTRMessage class]]) {
+            OTRMessage *msg = (OTRMessage *)message;
+            UIAlertAction *resendAction = [UIAlertAction actionWithTitle:@"Resend" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+                    OTRMessage *dbMessage = [transaction objectForKey:msg.uniqueId inCollection:[msg messageCollection]];
+                    dbMessage.error = nil;
+                    OTRYapMessageSendAction *sendingAction = [[OTRYapMessageSendAction alloc] initWithMessageKey:msg.uniqueId messageCollection:[msg messageCollection] buddyKey:msg.buddyUniqueId date:[message date]];
+                    [sendingAction saveWithTransaction:transaction];
+                    [dbMessage saveWithTransaction:transaction];
+                }];
+            }];
+            [alertController addAction:resendAction];
+        }
+        
         [self presentViewController:alertController animated:YES completion:nil];
     }
 }
@@ -935,38 +952,41 @@ typedef NS_ENUM(int, OTRDropDownType) {
     self.navigationController.providesPresentationContextTransitionStyle = YES;
     self.navigationController.definesPresentationContext = YES;
     
-    if ([[OTRProtocolManager sharedInstance] isAccountConnected:self.account]) {
-        //Account is connected
+    //1. Create new message database object
+    
+    // Possibly better to requery OTRKit?
+    BOOL sendEncrypted = self.state.isEncrypted;
+    
+    __block OTRMessage *message = [[OTRMessage alloc] init];
+    message.buddyUniqueId = self.threadKey;
+    message.text = text;
+    message.read = YES;
+    message.transportedSecurely = NO;
+    message.sendEncrypted = sendEncrypted;
+    
+    //2. Create send message task
+    __block OTRYapMessageSendAction *sendingAction = [[OTRYapMessageSendAction alloc] initWithMessageKey:message.uniqueId messageCollection:[OTRMessage collection] buddyKey:message.threadId date:message.date];
+    
+    //3. save both to database
+    __weak __typeof__(self) weakSelf = self;
+    [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+        __typeof__(self) strongSelf = weakSelf;
+        [message saveWithTransaction:transaction];
+        [sendingAction saveWithTransaction:transaction];
         
-        __block OTRMessage *message = [[OTRMessage alloc] init];
-        message.buddyUniqueId = self.threadKey;
-        message.text = text;
-        message.read = YES;
-        message.transportedSecurely = NO;
+        //update buddy
+        OTRBuddy *buddy = [[OTRBuddy fetchObjectWithUniqueID:strongSelf.threadKey transaction:transaction] copy];
+        buddy.composingMessageString = nil;
+        buddy.lastMessageDate = message.date;
+        [buddy saveWithTransaction:transaction];
         
-        __weak __typeof__(self) weakSelf = self;
-        [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-            __typeof__(self) strongSelf = weakSelf;
-            [message saveWithTransaction:transaction];
-            OTRBuddy *buddy = [[OTRBuddy fetchObjectWithUniqueID:strongSelf.threadKey transaction:transaction] copy];
-            buddy.composingMessageString = nil;
-            buddy.lastMessageDate = message.date;
-            [buddy saveWithTransaction:transaction];
-        } completionBlock:^{
-            [[OTRKit sharedInstance] encodeMessage:message.text tlvs:nil username:self.buddy.username accountName:self.account.username protocol:self.account.protocolTypeString tag:message];
-        }];
-        
-    } else {
-        //Account is not currently connected
-        [self hideDropdownAnimated:YES completion:^{
-            UIButton *okButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-            [okButton setTitle:CONNECT_STRING forState:UIControlStateNormal];
-            [okButton addTarget:self action:@selector(connectButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-            
-            
-            [self showDropdownWithTitle:YOU_ARE_NOT_CONNECTED_STRING buttons:@[okButton] animated:YES tag:0];
-        }];
-    }
+    } completionQueue:dispatch_get_main_queue() completionBlock:^{
+        [weakSelf finishSendingMessage];
+    }];
+    
+    return;
+    
+    //4. that's it the queue should find the sending action and get the message off
 }
 
 - (void)didPressAccessoryButton:(UIButton *)sender
@@ -1253,63 +1273,71 @@ typedef NS_ENUM(int, OTRDropDownType) {
     }
     NSDictionary *iconAttributes = @{NSFontAttributeName: font};
     
-    
-    ////// Lock Icon //////
-    NSString *lockString = nil;
-    if (message.transportedSecurely) {
-        lockString = [NSString stringWithFormat:@"%@ ",[NSString fa_stringForFontAwesomeIcon:FALock]];
-    }
-    else {
-        lockString = [NSString fa_stringForFontAwesomeIcon:FAUnlock];
-    }
-    
-    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:lockString attributes:iconAttributes];
-    
-    ////// Delivered Icon //////
+    // If OTR message than it's one ot one and we have a lot of information about the message
+    // Otherwise group message and we don't annotate the cell
     if([message isKindOfClass:[OTRMessage class]]) {
         OTRMessage *msg = (OTRMessage *)message;
-        if (msg.isDelivered) {
-            NSString *iconString = [NSString stringWithFormat:@"%@ ",[NSString fa_stringForFontAwesomeIcon:FACheck]];
+        if(!msg.dateSent && !msg.isIncoming && ![msg isMediaMessage]) {
+            // Message not sent yet
+            // Show waiting icon only
             
-            [attributedString appendAttributedString:[[NSAttributedString alloc] initWithString:iconString attributes:iconAttributes]];
-        }
-        
-        if([msg isMediaMessage]) {
+            NSString *waitingString = [NSString fa_stringForFontAwesomeIcon:FAClockO];
+            return [[NSAttributedString alloc] initWithString:waitingString attributes:iconAttributes];
             
-            __block OTRMediaItem *mediaItem = nil;
-            //Get the media item
-            [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-                mediaItem = [OTRMediaItem fetchObjectWithUniqueID:msg.mediaItemUniqueId transaction:transaction];
-            }];
+        } else {
+            ////// Lock Icon //////
+            NSString *lockString = nil;
+            if (message.transportedSecurely) {
+                lockString = [NSString stringWithFormat:@"%@ ",[NSString fa_stringForFontAwesomeIcon:FALock]];
+            }
+            else {
+                lockString = [NSString fa_stringForFontAwesomeIcon:FAUnlock];
+            }
             
-            float percentProgress = mediaItem.transferProgress * 100;
+            NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:lockString attributes:iconAttributes];
             
-            NSString *progressString = nil;
-            NSUInteger insertIndex = 0;
+            //Delivery icon
+            if (msg.isDelivered) {
+                NSString *iconString = [NSString stringWithFormat:@"%@ ",[NSString fa_stringForFontAwesomeIcon:FACheck]];
+                
+                [attributedString appendAttributedString:[[NSAttributedString alloc] initWithString:iconString attributes:iconAttributes]];
+            }
             
-            if (mediaItem.isIncoming && mediaItem.transferProgress < 1) {
-                progressString = [NSString stringWithFormat:@" %@ %.0f%%",INCOMING_STRING,percentProgress];
-                insertIndex = [attributedString length];
-            } else if (!mediaItem.isIncoming) {
-                if(percentProgress > 0) {
-                    progressString = [NSString stringWithFormat:@"%@ %.0f%% ",SENDING_STRING,percentProgress];
-                } else {
-                    progressString = [NSString stringWithFormat:@"%@ ",WAITING_STRING];
+            // Media message progress
+            if([msg isMediaMessage]) {
+                
+                __block OTRMediaItem *mediaItem = nil;
+                //Get the media item
+                [self.databaseConnection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+                    mediaItem = [OTRMediaItem fetchObjectWithUniqueID:msg.mediaItemUniqueId transaction:transaction];
+                }];
+                
+                float percentProgress = mediaItem.transferProgress * 100;
+                
+                NSString *progressString = nil;
+                NSUInteger insertIndex = 0;
+                
+                if (mediaItem.isIncoming && mediaItem.transferProgress < 1) {
+                    progressString = [NSString stringWithFormat:@" %@ %.0f%%",INCOMING_STRING,percentProgress];
+                    insertIndex = [attributedString length];
+                } else if (!mediaItem.isIncoming && mediaItem.transferProgress < 1) {
+                    if(percentProgress > 0) {
+                        progressString = [NSString stringWithFormat:@"%@ %.0f%% ",SENDING_STRING,percentProgress];
+                    } else {
+                        progressString = [NSString stringWithFormat:@"%@ ",WAITING_STRING];
+                    }
+                }
+                
+                if ([progressString length]) {
+                    UIFont *font = [UIFont systemFontOfSize:12];
+                    [attributedString insertAttributedString:[[NSAttributedString alloc] initWithString:progressString attributes:@{NSFontAttributeName: font}] atIndex:insertIndex];
                 }
             }
-            
-            if ([progressString length]) {
-                UIFont *font = [UIFont systemFontOfSize:12];
-                [attributedString insertAttributedString:[[NSAttributedString alloc] initWithString:progressString attributes:@{NSFontAttributeName: font}] atIndex:insertIndex];
-            }
-            
-            
+            return attributedString;
         }
     }
     
-    
-    
-    return attributedString;
+    return nil;
 }
 
 
@@ -1365,9 +1393,7 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 - (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapAvatarImageView:(UIImageView *)avatarImageView atIndexPath:(NSIndexPath *)indexPath
 {
     id <OTRMessageProtocol,JSQMessageData> message = [self messageAtIndexPath:indexPath];
-    if ([message messageError]) {
-        [self showMessageError:[message messageError]];
-    }
+    [self showMessageError:message];
 }
 
 - (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapMessageBubbleAtIndexPath:(NSIndexPath *)indexPath

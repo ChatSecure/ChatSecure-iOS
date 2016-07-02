@@ -172,7 +172,7 @@ class PushStorage: NSObject, PushStorageProtocol {
         var tokens:[TokenContainer] = []
         self.databaseConnection.readWriteWithBlock { (transaction) -> Void in
             guard let buddy = transaction.objectForKey(buddyKey, inCollection: OTRBuddy.collection()) as? OTRBuddy else {
-                error = PushError.noBuddyFound.error()
+                error = NSError.chatSecureError(PushError.noBuddyFound, userInfo: nil)
                 return
             }
             
@@ -255,9 +255,9 @@ class PushStorage: NSObject, PushStorageProtocol {
             relationshipTransaction.enumerateEdgesWithName(kBuddyTokenRelationshipEdgeName, destinationKey: buddyKey, collection: OTRBuddy.collection(), usingBlock: { (edge, stop) -> Void in
                 if let tokenContainer = transaction.objectForKey(edge.sourceKey, inCollection: edge.sourceCollection) as? TokenContainer {
                     if tokenContainer.accountKey != nil && createdByThisAccount {
-                        count++
+                        count += 1
                     } else if tokenContainer.accountKey == nil && !createdByThisAccount {
-                       count++
+                       count += 1
                     }
                 }
             })

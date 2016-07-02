@@ -63,6 +63,9 @@ target 'ChatSecureCore' do
   # Forks
   pod 'JSQMessagesViewController', :git => 'https://github.com/ChatSecure/JSQMessagesViewController', :branch => '7.2.0-send_button'
 
+  # Use this until able to push proper podspec that depends on 2.9
+  pod 'YapTaskQueue/SQLCipher', '~> 0.1'
+
   # Submodules
   pod 'ChatSecure-Push-iOS', :path => 'Submodules/ChatSecure-Push-iOS/ChatSecure-Push-iOS.podspec'
   pod 'ProxyKit/Client', :path => 'Submodules/ProxyKit/ProxyKit.podspec'

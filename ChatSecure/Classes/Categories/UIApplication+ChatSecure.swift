@@ -14,7 +14,7 @@ public extension UIApplication {
     
     public func showLocalNotification(message:OTRMessageProtocol) {
         if (self.applicationState != .Active) {
-            let rawMessageString = message.text().stringByConvertingHTMLToPlainText()
+            
             
             var thread:OTRThreadOwner? = nil
             var unreadCount:UInt = 0
@@ -30,7 +30,13 @@ public extension UIApplication {
             
             let threadName = threadOwner.threadName()
             
-            let text = "\(threadName): \(rawMessageString)"
+            var text = "\(threadName)"
+            if let msgTxt = message.text() {
+                if let rawMessageString = msgTxt.stringByConvertingHTMLToPlainText() {
+                    text += ": \(rawMessageString)"
+                }
+            }
+            
             
             self.showLocalNotificationFor(threadOwner, text: text, unreadCount: Int(unreadCount))
         }
