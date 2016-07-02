@@ -88,15 +88,14 @@
 - (void)clearvCardTempForJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream
 {
     [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        id<OTRvCard> vCard = nil;
         if ([jid isEqualToJID:stream.myJID options:XMPPJIDCompareBare]) {
-            OTRXMPPAccount *account = [OTRXMPPAccount accountForStream:stream transaction:transaction];
-            account.vCardTemp = nil;
-            [account saveWithTransaction:transaction];
+            vCard = [OTRXMPPAccount accountForStream:stream transaction:transaction];
         } else {
-            OTRXMPPBuddy *buddy = [[self buddyWithJID:jid xmppStream:stream transaction:transaction] copy];
-            buddy.vCardTemp = nil;
-            [buddy saveWithTransaction:transaction];
+            vCard = [[self buddyWithJID:jid xmppStream:stream transaction:transaction] copy];
         }
+        vCard.vCardTemp = nil;
+        [vCard saveWithTransaction:transaction];
     }];
 }
 
@@ -141,19 +140,16 @@
 - (void)setvCardTemp:(XMPPvCardTemp *)vCardTemp forJID:(XMPPJID *)jid xmppStream:(XMPPStream *)stream
 {
     [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        
+        id<OTRvCard> vCard = nil;
         if ([stream.myJID isEqualToJID:jid options:XMPPJIDCompareBare]) {
-            //this is the self buddy
-            OTRXMPPAccount *account = [[OTRXMPPAccount accountForStream:stream transaction:transaction] copy];
-            account.vCardTemp = vCardTemp;
-            [account saveWithTransaction:transaction];
+            vCard = [[OTRXMPPAccount accountForStream:stream transaction:transaction] copy];
         } else {
-            OTRXMPPBuddy *buddy = [[self buddyWithJID:jid xmppStream:stream transaction:transaction] copy];
-            buddy.vCardTemp = vCardTemp;
-            buddy.waitingForvCardTempFetch = NO;
-            buddy.lastUpdatedvCardTemp = [NSDate date];
-            [buddy saveWithTransaction:transaction];
+            vCard = [[self buddyWithJID:jid xmppStream:stream transaction:transaction] copy];
         }
+        vCard.vCardTemp = vCardTemp;
+        vCard.waitingForvCardTempFetch = NO;
+        vCard.lastUpdatedvCardTemp = [NSDate date];
+        [vCard saveWithTransaction:transaction];
     }];
     
 }
@@ -184,38 +180,20 @@
     __block BOOL result = NO;
     
     [self.databaseConnection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        
+        id<OTRvCard> vCard = nil;
         if ([jid isEqualToJID:stream.myJID options:XMPPJIDCompareBare]) {
-            OTRXMPPAccount *account = [[OTRXMPPAccount accountForStream:stream transaction:transaction] copy];
-            if (!account.waitingForvCardTempFetch) {
-                account.waitingForvCardTempFetch = YES;
-                account.lastUpdatedvCardTemp = [NSDate date];
-                result = YES;
-            } else if ([account.lastUpdatedvCardTemp timeIntervalSinceNow] <= -10) {
-                account.lastUpdatedvCardTemp = [NSDate date];
-                result = YES;
-            }
-            if (result) {
-                [account saveWithTransaction:transaction];
-            }
+            vCard = [[OTRXMPPAccount accountForStream:stream transaction:transaction] copy];
         } else {
-            OTRXMPPBuddy * buddy = [[self buddyWithJID:jid xmppStream:stream transaction:transaction] copy];
-            if (!buddy.isWaitingForvCardTempFetch) {
-                
-                buddy.waitingForvCardTempFetch = YES;
-                buddy.lastUpdatedvCardTemp = [NSDate date];
-                
-                result = YES;
-            }
-            else if ([buddy.lastUpdatedvCardTemp timeIntervalSinceNow] <= -10) {
-                
-                buddy.lastUpdatedvCardTemp = [NSDate date];
-                
-                result = YES;
-            }
-            if (result) {
-                [buddy saveWithTransaction:transaction];
-            }
+            vCard = [[self buddyWithJID:jid xmppStream:stream transaction:transaction] copy];
+        }
+        
+        if (vCard.waitingForvCardTempFetch) {
+            result = NO;
+        } else if ([vCard.lastUpdatedvCardTemp timeIntervalSinceNow] <= -24*60*60 ||
+                   !vCard.vCardTemp) {
+            vCard.waitingForvCardTempFetch = YES;
+            [vCard saveWithTransaction:transaction];
+            result = YES;
         }
     }];
     

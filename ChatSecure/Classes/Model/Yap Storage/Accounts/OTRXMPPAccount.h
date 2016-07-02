@@ -7,10 +7,11 @@
 //
 
 #import "OTRAccount.h"
+#import "OTRvCard.h"
 
 @class XMPPJID, XMPPStream, XMPPvCardTemp;
 
-@interface OTRXMPPAccount : OTRAccount
+@interface OTRXMPPAccount : OTRAccount <OTRvCard>
 
 @property (nonatomic, strong) NSString *domain;
 @property (nonatomic, strong) NSString *resource;
@@ -18,11 +19,6 @@
 
 @property (nonatomic, strong) NSString *pushPubsubEndpoint;
 @property (nonatomic, strong) NSString *pushPubsubNode;
-
-@property (nonatomic, strong) XMPPvCardTemp *vCardTemp;
-@property (nonatomic, strong) NSString *photoHash;
-@property (nonatomic) BOOL waitingForvCardTempFetch;
-@property (nonatomic, strong) NSDate *lastUpdatedvCardTemp;
 
 + (int)defaultPort;
 + (NSString *)newResource;

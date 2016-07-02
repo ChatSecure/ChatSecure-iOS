@@ -18,6 +18,10 @@
 
 
 @implementation OTRXMPPBuddy
+@synthesize vCardTemp = _vCardTemp;
+@synthesize lastUpdatedvCardTemp = _lastUpdatedvCardTemp;
+@synthesize waitingForvCardTempFetch = _waitingForvCardTempFetch;
+@synthesize photoHash = _photoHash;
 
 - (id)init
 {

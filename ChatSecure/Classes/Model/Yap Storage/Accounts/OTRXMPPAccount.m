@@ -19,6 +19,10 @@
 static NSUInteger const OTRDefaultPortNumber = 5222;
 
 @implementation OTRXMPPAccount
+@synthesize vCardTemp = _vCardTemp;
+@synthesize lastUpdatedvCardTemp = _lastUpdatedvCardTemp;
+@synthesize waitingForvCardTempFetch = _waitingForvCardTempFetch;
+@synthesize photoHash = _photoHash;
 
 - (id)init
 {

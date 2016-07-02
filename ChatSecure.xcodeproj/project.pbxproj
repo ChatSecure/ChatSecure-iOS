@@ -374,6 +374,7 @@
 		D9AE3A341BA8DAB600255537 /* OTRLanguageManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 6331051B1A16D1A300C17BAE /* OTRLanguageManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D9AE3A351BA8DAB600255537 /* OTRLanguageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331051C1A16D1A300C17BAE /* OTRLanguageManager.m */; };
 		D9CBBC581C642BAA005CD715 /* EnablePushViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9CBBC571C642BAA005CD715 /* EnablePushViewController.swift */; };
+		D9EEEDD31D2739A800B8BC54 /* OTRvCard.h in Headers */ = {isa = PBXBuildFile; fileRef = D9EEEDD11D27388600B8BC54 /* OTRvCard.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EE22362CF225156043E19FA7 /* Pods_ChatSecureCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B353F12AE2FDB52438B426D /* Pods_ChatSecureCore.framework */; };
 /* End PBXBuildFile section */
 
@@ -840,6 +841,7 @@
 		D9C6E69D1B7148EF00572273 /* OTRUsernameCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = OTRUsernameCell.xib; path = Interface/OTRUsernameCell.xib; sourceTree = "<group>"; };
 		D9C6E6A01B71575300572273 /* OTRUsernameCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRUsernameCell.swift; sourceTree = "<group>"; };
 		D9CBBC571C642BAA005CD715 /* EnablePushViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EnablePushViewController.swift; path = "ChatSecure/Classes/View Controllers/Onboarding/EnablePushViewController.swift"; sourceTree = SOURCE_ROOT; };
+		D9EEEDD11D27388600B8BC54 /* OTRvCard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OTRvCard.h; path = "Yap Storage/OTRvCard.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1030,6 +1032,7 @@
 		633105401A16D1A300C17BAE /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				D9EEEDD11D27388600B8BC54 /* OTRvCard.h */,
 				63C7E64C1B20F69F0085FA06 /* OTRXMPPServerInfo.h */,
 				63C7E64D1B20F69F0085FA06 /* OTRXMPPServerInfo.m */,
 				6331058D1A16D1A300C17BAE /* OTRActivityItemProvider.h */,
@@ -1715,6 +1718,7 @@
 				D93DDBD71BA79AEC00CD8331 /* OTRLockButton.h in Headers */,
 				D93DDBD81BA79AEE00CD8331 /* OTRPasswordStrengthView.h in Headers */,
 				D93DDBD91BA79AF000CD8331 /* OTRRememberPasswordView.h in Headers */,
+				D9EEEDD31D2739A800B8BC54 /* OTRvCard.h in Headers */,
 				D93DDBDA1BA79AF100CD8331 /* OTRSocialButtonsView.h in Headers */,
 				D93DDBDB1BA79AF300CD8331 /* OTRTitleSubtitleView.h in Headers */,
 				D93DDBDC1BA79AF500CD8331 /* OTRHoldToTalkView.h in Headers */,
