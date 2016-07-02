@@ -76,7 +76,12 @@ extern const struct OTRMessageAttributes {
 
 @property (nonatomic, getter = isRead) BOOL read;
 @property (nonatomic, getter = isIncoming) BOOL incoming;
+
+/** If the message was sent encrypted*/
 @property (nonatomic, getter = isTransportedSecurely) BOOL transportedSecurely;
+
+/** If the message is intended to be sent encrypted */
+@property (nonatomic) BOOL sendEncrypted;
 
 @property (nonatomic, strong, nullable) NSString *mediaItemUniqueId;
 @property (nonatomic, strong, nonnull) NSString *buddyUniqueId;

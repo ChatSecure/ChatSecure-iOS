@@ -39,6 +39,8 @@ const struct OTRMessageAttributes OTRMessageAttributes = {
         self.messageId = [[NSUUID UUID] UUIDString];
         self.delivered = NO;
         self.read = NO;
+        self.sendEncrypted = NO;
+        self.transportedSecurely = NO;
     }
     return self;
 }
@@ -197,7 +199,7 @@ const struct OTRMessageAttributes OTRMessageAttributes = {
     }
 }
 
-+ (NSInteger)version {
++ (NSUInteger)modelVersion {
     return 1;
 }
 

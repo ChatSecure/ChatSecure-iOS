@@ -298,7 +298,7 @@ public class MessageQueueHandler:NSObject, YapTaskQueueHandler, OTRXMPPMessageSt
             return
         }
         
-        self.sendMessage(message,sendEncrypted: messageSendingAction.sendEncrypted, completion: completion)
+        self.sendMessage(message,sendEncrypted: message.sendEncrypted, completion: completion)
     }
     
     //Mark: Callback for Account

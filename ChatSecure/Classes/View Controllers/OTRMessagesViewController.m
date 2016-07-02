@@ -363,13 +363,29 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
 }
 
-- (void)showMessageError:(NSError *)error
+- (void)showMessageError:(id<OTRMessageProtocol>)message
 {
+    NSError *error =  [message messageError];
     if (error) {
         UIAlertAction *okButton = [UIAlertAction actionWithTitle:OK_STRING style:UIAlertActionStyleDefault handler:nil];
         
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:ERROR_STRING message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
         [alertController addAction:okButton];
+        
+        if(![message messageIncoming] && [message isKindOfClass:[OTRMessage class]]) {
+            OTRMessage *msg = (OTRMessage *)message;
+            UIAlertAction *resendAction = [UIAlertAction actionWithTitle:@"Resend" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+                    OTRMessage *dbMessage = [transaction objectForKey:msg.uniqueId inCollection:[msg messageCollection]];
+                    dbMessage.error = nil;
+                    OTRYapMessageSendAction *sendingAction = [[OTRYapMessageSendAction alloc] initWithMessageKey:msg.uniqueId messageCollection:[msg messageCollection] buddyKey:msg.buddyUniqueId date:[message date]];
+                    [sendingAction saveWithTransaction:transaction];
+                    [dbMessage saveWithTransaction:transaction];
+                }];
+            }];
+            [alertController addAction:resendAction];
+        }
+        
         [self presentViewController:alertController animated:YES completion:nil];
     }
 }
@@ -937,17 +953,19 @@ typedef NS_ENUM(int, OTRDropDownType) {
     self.navigationController.definesPresentationContext = YES;
     
     //1. Create new message database object
+    
+    // Possibly better to requery OTRKit?
+    BOOL sendEncrypted = self.state.isEncrypted;
+    
     __block OTRMessage *message = [[OTRMessage alloc] init];
     message.buddyUniqueId = self.threadKey;
     message.text = text;
     message.read = YES;
     message.transportedSecurely = NO;
+    message.sendEncrypted = sendEncrypted;
     
     //2. Create send message task
-    
-    // Possibly better to requery OTRKit?
-    BOOL sendEncrypted = self.state.isEncrypted;
-    __block OTRYapMessageSendAction *sendingAction = [[OTRYapMessageSendAction alloc] initWithMessageKey:message.uniqueId messageCollection:[OTRMessage collection] buddyKey:message.threadId date:message.date sendEncrypted:sendEncrypted];
+    __block OTRYapMessageSendAction *sendingAction = [[OTRYapMessageSendAction alloc] initWithMessageKey:message.uniqueId messageCollection:[OTRMessage collection] buddyKey:message.threadId date:message.date];
     
     //3. save both to database
     __weak __typeof__(self) weakSelf = self;
@@ -1259,7 +1277,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     // Otherwise group message and we don't annotate the cell
     if([message isKindOfClass:[OTRMessage class]]) {
         OTRMessage *msg = (OTRMessage *)message;
-        if(!msg.dateSent && !msg.incoming && ![msg isMediaMessage]) {
+        if(!msg.dateSent && !msg.isIncoming && ![msg isMediaMessage]) {
             // Message not sent yet
             // Show waiting icon only
             
@@ -1375,9 +1393,7 @@ heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
 - (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapAvatarImageView:(UIImageView *)avatarImageView atIndexPath:(NSIndexPath *)indexPath
 {
     id <OTRMessageProtocol,JSQMessageData> message = [self messageAtIndexPath:indexPath];
-    if ([message messageError]) {
-        [self showMessageError:[message messageError]];
-    }
+    [self showMessageError:message];
 }
 
 - (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapMessageBubbleAtIndexPath:(NSIndexPath *)indexPath
