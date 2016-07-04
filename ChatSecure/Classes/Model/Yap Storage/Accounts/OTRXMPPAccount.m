@@ -13,10 +13,16 @@
 #import "OTRLanguageManager.h"
 #import "XMPPJID.h"
 #import "XMPPStream.h"
+#import "XMPPvCardTemp.h"
+#import "NSData+XMPP.h"
 
 static NSUInteger const OTRDefaultPortNumber = 5222;
 
 @implementation OTRXMPPAccount
+@synthesize vCardTemp = _vCardTemp;
+@synthesize lastUpdatedvCardTemp = _lastUpdatedvCardTemp;
+@synthesize waitingForvCardTempFetch = _waitingForvCardTempFetch;
+@synthesize photoHash = _photoHash;
 
 - (id)init
 {
@@ -78,6 +84,30 @@ static NSUInteger const OTRDefaultPortNumber = 5222;
 {
     int r = arc4random() % 99999;
     return [NSString stringWithFormat:@"%@%d",[OTRBranding xmppResource],r];
+}
+
+- (void)setVCardTemp:(XMPPvCardTemp *)vCardTemp
+{
+    _vCardTemp = vCardTemp;
+    if ([self.vCardTemp.photo length]) {
+        self.avatarData = self.vCardTemp.photo;
+    }
+    if (self.vCardTemp.nickname.length) {
+        self.displayName = self.vCardTemp.nickname;
+    } else if (self.vCardTemp.formattedName.length) {
+        self.displayName = self.vCardTemp.formattedName;
+    }
+}
+
+- (void)setAvatarData:(NSData *)avatarData
+{
+    [super setAvatarData:avatarData];
+    if ([self.avatarData length]) {
+        self.photoHash = [[self.avatarData xmpp_sha1Digest] xmpp_hexStringValue];
+    }
+    else {
+        self.photoHash = nil;
+    }
 }
 
 

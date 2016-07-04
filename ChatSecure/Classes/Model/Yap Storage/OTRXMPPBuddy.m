@@ -18,6 +18,10 @@
 
 
 @implementation OTRXMPPBuddy
+@synthesize vCardTemp = _vCardTemp;
+@synthesize lastUpdatedvCardTemp = _lastUpdatedvCardTemp;
+@synthesize waitingForvCardTempFetch = _waitingForvCardTempFetch;
+@synthesize photoHash = _photoHash;
 
 - (id)init
 {
@@ -36,6 +40,11 @@
     _vCardTemp = vCardTemp;
     if ([self.vCardTemp.photo length]) {
         self.avatarData = self.vCardTemp.photo;
+    }
+    if (self.vCardTemp.nickname.length) {
+        self.displayName = self.vCardTemp.nickname;
+    } else if (self.vCardTemp.formattedName.length) {
+        self.displayName = self.vCardTemp.formattedName;
     }
 }
 

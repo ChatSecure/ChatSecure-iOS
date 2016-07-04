@@ -15,6 +15,7 @@
 @end
 
 @implementation OTRYapDatabaseObject
+@synthesize uniqueId = _uniqueId;
 
 - (id)init
 {

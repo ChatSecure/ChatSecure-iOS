@@ -7,10 +7,11 @@
 //
 
 #import "OTRAccount.h"
+#import "OTRvCard.h"
 
-@class XMPPJID, XMPPStream;
+@class XMPPJID, XMPPStream, XMPPvCardTemp;
 
-@interface OTRXMPPAccount : OTRAccount
+@interface OTRXMPPAccount : OTRAccount <OTRvCard>
 
 @property (nonatomic, strong) NSString *domain;
 @property (nonatomic, strong) NSString *resource;

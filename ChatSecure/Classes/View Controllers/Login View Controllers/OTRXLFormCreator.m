@@ -48,6 +48,7 @@ NSString *const kOTRXLFormUseTorTag               = @"kOTRXLFormUseTorTag";
     
     if([account isKindOfClass:[OTRXMPPAccount class]]) {
         OTRXMPPAccount *xmppAccount = (OTRXMPPAccount *)account;
+        [[descriptor formRowWithTag:kOTRXLFormNicknameTextFieldTag] setValue:xmppAccount.displayName];
         [[descriptor formRowWithTag:kOTRXLFormHostnameTextFieldTag] setValue:xmppAccount.domain];
         [[descriptor formRowWithTag:kOTRXLFormPortTextFieldTag] setValue:@(xmppAccount.port)];
         [[descriptor formRowWithTag:kOTRXLFormResourceTextFieldTag] setValue:xmppAccount.resource];
@@ -71,13 +72,14 @@ NSString *const kOTRXLFormUseTorTag               = @"kOTRXLFormUseTorTag";
 + (XLFormDescriptor *)formForAccountType:(OTRAccountType)accountType createAccount:(BOOL)createAccount
 {
     XLFormDescriptor *descriptor = nil;
+    XLFormRowDescriptor *nicknameRow = [XLFormRowDescriptor formRowDescriptorWithTag:kOTRXLFormNicknameTextFieldTag rowType:XLFormRowDescriptorTypeText title:NSLocalizedString(@"Nickname", @"for choosing your XMPP vCard display name")];
+    
     if (createAccount) {
         descriptor = [XLFormDescriptor formDescriptorWithTitle:NSLocalizedString(@"Sign Up", @"title for creating a new account")];
         descriptor.assignFirstResponderOnShow = YES;
         
         XLFormSectionDescriptor *basicSection = [XLFormSectionDescriptor formSectionWithTitle:NSLocalizedString(@"Basic Setup", @"username section")];
         basicSection.footerTitle = NSLocalizedString(@"Think of a unique nickname that you don't use anywhere else and doesn't contain personal information.", @"basic setup selection footer");
-        XLFormRowDescriptor *nicknameRow = [XLFormRowDescriptor formRowDescriptorWithTag:kOTRXLFormNicknameTextFieldTag rowType:XLFormRowDescriptorTypeText title:NSLocalizedString(@"Nickname", @"for choosing your XMPP vCard display name")];
         nicknameRow.required = YES;
         [basicSection addFormRow:nicknameRow];
         
@@ -122,6 +124,9 @@ NSString *const kOTRXLFormUseTorTag               = @"kOTRXLFormUseTorTag";
         descriptor = [XLFormDescriptor formDescriptorWithTitle:NSLocalizedString(@"Log In", @"title for logging in")];
         XLFormSectionDescriptor *basicSection = [XLFormSectionDescriptor formSectionWithTitle:BASIC_STRING];
         XLFormSectionDescriptor *advancedSection = [XLFormSectionDescriptor formSectionWithTitle:ADVANCED_STRING];
+        
+        [nicknameRow.cellConfigAtConfigure setObject:OPTIONAL_STRING forKey:@"textField.placeholder"];
+        [basicSection addFormRow:nicknameRow];
         
         switch (accountType) {
             case OTRAccountTypeJabber:

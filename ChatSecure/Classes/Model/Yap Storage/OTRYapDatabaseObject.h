@@ -11,7 +11,7 @@
 @import YapDatabase;
 @import Mantle;
 
-@interface OTRYapDatabaseObject : MTLModel
+@protocol OTRYapDatabaseObject <NSObject>
 
 @property (nonatomic, readonly) NSString *uniqueId;
 
@@ -23,5 +23,9 @@
 + (NSString *)collection;
 
 + (instancetype)fetchObjectWithUniqueID:(NSString*)uniqueID transaction:(YapDatabaseReadTransaction*)transaction;
+
+@end
+
+@interface OTRYapDatabaseObject : MTLModel <OTRYapDatabaseObject>
 
 @end
