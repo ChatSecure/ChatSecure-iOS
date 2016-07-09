@@ -42,7 +42,10 @@ target 'ChatSecureCore' do
   pod 'uservoice-iphone-sdk', '~> 3.2'
   pod 'TUSafariActivity', '~> 1.0'
   pod 'ARChromeActivity', '~> 1.0'
-  pod 'CocoaAsyncSocket', '~> 7.4'
+  # We need a commit from next release
+  #pod 'CocoaAsyncSocket', '~> 7.4'
+  pod 'CocoaAsyncSocket', :git => 'https://github.com/robbiehanson/CocoaAsyncSocket.git', :commit => '071109901100334ad54ae704b4c644b6bb89ad21'
+
   pod 'JTSImageViewController', '~> 1.4'
   pod 'KVOController', '~> 1.0'
   #Reachability only needed for YapActionItems

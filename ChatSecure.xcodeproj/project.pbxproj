@@ -2630,7 +2630,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.chrisballinger.ChatSecure;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "9988a231-5968-492c-b874-2e5e534a8710";
+				PROVISIONING_PROFILE = "e7440889-8fd6-4e4e-b3ae-5d0cc8a727f8";
 			};
 			name = Release;
 		};

@@ -71,8 +71,9 @@ NSString *const kOTRExpiresInKey      = @"expires_in";
     if ([tokenDictionary count]) {
         auth = [[GTMOAuth2Authentication alloc] init];
         [auth setParameters:[tokenDictionary mutableCopy]];
+    } else {
+        return nil;
     }
-    NSParameterAssert(auth != nil);
     auth.clientID = [OTRBranding googleAppId];
     auth.clientSecret = [OTRSecrets googleAppSecret];
     auth.scope = [OTRBranding googleAppScope];
