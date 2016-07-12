@@ -312,7 +312,13 @@ typedef NS_ENUM(int, OTRDropDownType) {
         }
         
         // Update Buddy Status
+        BOOL previousState = self.state.isThreadOnline;
         self.state.isThreadOnline = buddy.status != OTRThreadStatusOffline;
+        
+        // Auto-inititate OTR when contact comes online
+        if (!previousState && self.state.isThreadOnline) {
+            [[OTRProtocolManager sharedInstance].encryptionManager maybeRefreshOTRSessionForBuddyKey:key collection:collection];
+        }
         [self didUpdateState];
         
         //Update Buddy knock status
