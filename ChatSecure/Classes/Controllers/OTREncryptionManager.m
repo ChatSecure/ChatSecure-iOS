@@ -145,6 +145,34 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     });
 }
 
+- (void)maybeRefreshOTRSessionForBuddyKey:(NSString *)buddyKey collection:(NSString *)collection {
+    __block OTRBuddy *buddy = nil;
+    __block OTRAccount *account = nil;
+    [[OTRDatabaseManager sharedInstance].readOnlyDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+        id databaseObject = [transaction objectForKey:buddyKey inCollection:collection];
+        if ([databaseObject isKindOfClass:[OTRBuddy class]]) {
+            buddy = databaseObject;
+            account = [buddy accountWithTransaction:transaction];
+        }
+    } completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0) completionBlock:^{
+        
+        if (buddy.status == OTRThreadStatusOffline) {
+            //If the buddy if offline then don't try to start the session up
+            return;
+        }
+        
+        [self.otrKit allFingerprintsForUsername:buddy.username accountName:account.username protocol:account.protocolTypeString completion:^(NSArray<NSString *> *activeFingerprint) {
+            if ([activeFingerprint count] > 0) {
+                [self.otrKit messageStateForUsername:buddy.username accountName:account.username protocol:account.protocolTypeString completion:^(OTRKitMessageState messageState) {
+                    if (messageState != OTRKitMessageStateEncrypted) {
+                        [self.otrKit initiateEncryptionWithUsername:buddy.username accountName:account.username protocol:account.protocolTypeString];
+                    }
+                }];
+            }
+        }];
+    }];
+}
+
 
 #pragma mark OTRKitDelegate methods
 
@@ -270,6 +298,11 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     [[OTRDatabaseManager sharedInstance].readWriteDatabaseConnection asyncReadWithBlock:^(YapDatabaseReadTransaction *transaction) {
         buddy = [OTRBuddy fetchBuddyForUsername:username accountName:accountName transaction:transaction];
     } completionBlock:^{
+        if(!buddy) {
+            // We couldn't find the budy. This is very strange and shouldn't happen.
+            return;
+        }
+        
         [[NSNotificationCenter defaultCenter] postNotificationName:OTRMessageStateDidChangeNotification object:buddy userInfo:@{OTRMessageStateKey:@([[self class] convertEncryptionState:messageState])}];
     }];
 }

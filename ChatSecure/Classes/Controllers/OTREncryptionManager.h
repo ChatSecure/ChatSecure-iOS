@@ -43,7 +43,6 @@ typedef NS_ENUM(NSUInteger, OTREncryptionMessageState) {
 
 @interface OTREncryptionManager:NSObject
 
-
 @property (nonatomic, strong, readonly) OTRKit *otrKit;
 @property (nonatomic, strong, readonly) OTRDataHandler *dataHandler;
 @property (nonatomic, strong, readonly) OTRPushTLVHandler *pushTLVHandler;
@@ -62,6 +61,15 @@ typedef NS_ENUM(NSUInteger, OTREncryptionMessageState) {
                       protocol:(NSString *)protocol
                     completion:(void (^)(BOOL currentlyTrusted, BOOL hasTurstedFingerprints, OTRKitMessageState messageState))completionBlock
                completionQueue:(dispatch_queue_t)queue;
+
+/**
+ * This method takes a buddy key and collection. If it finds an object in the database and `hasGoneEncryptedBefore` is true
+ * It will try to initiate a new OTR session. This is useful when re-entering a converstaion with a buddy.
+ *
+ * @param buddyKey The Yap key for the buddy
+ * @param collection The Yap collection for the buddy
+ */
+- (void)maybeRefreshOTRSessionForBuddyKey:(NSString *)buddyKey collection:(NSString *)collection;
 
 + (BOOL) setFileProtection:(NSString*)fileProtection path:(NSString*)path;
 + (BOOL) addSkipBackupAttributeToItemAtURL:(NSURL *)URL;
