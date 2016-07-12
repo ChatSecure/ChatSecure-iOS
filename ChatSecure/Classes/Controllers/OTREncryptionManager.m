@@ -373,6 +373,9 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
                 message.text = [OTREncryptionManager errorForMessageEvent:event string:nil].localizedDescription;
                 [message saveWithTransaction:transaction];
             }];
+            // Inject message to recipient indicating error
+            NSString *errorString = [NSString stringWithFormat:@"OTR Error: %@", [OTREncryptionManager errorForMessageEvent:event string:nil].localizedDescription];
+            [self otrKit:self.otrKit injectMessage:errorString username:username accountName:accountName protocol:protocol tag:tag];
             // automatically renegotiate a new session when there's an error
             [self.otrKit initiateEncryptionWithUsername:username accountName:accountName protocol:protocol];
         }
@@ -425,7 +428,7 @@ NSString *const OTRMessageStateKey = @"OTREncryptionManagerMessageStateKey";
     NSInteger code = 200 + event;
     NSMutableString *description = [NSMutableString stringWithString:ENCRYPTION_ERROR_STRING];
     if (string.length) {
-        [description appendFormat:@"\n\n%@", string];
+        [description appendFormat:@"\n\n%@: %@", string, eventString];
     }
     NSMutableDictionary *userInfo = [@{NSLocalizedDescriptionKey:description} mutableCopy];
     if ([eventString length]) {
