@@ -16,9 +16,13 @@ before_install:
 install:
   - cp OTRResources/Secrets-template.plist OTRResources/Secrets.plist
   - cp configurations/OTR_Codesigning.xcconfig.sample configurations/OTR_Codesigning.xcconfig
-  - export ARCHS="i386"   # Only build CPAProxy dependencies for i386 to speed things up
-  - bash ./Submodules/CPAProxy/scripts/build-all.sh
-  - bash ./Submodules/OTRKit/scripts/build-all.sh
+  - git clone https://github.com/ChatSecure/ChatSecure-iOS-Precompiled-Dependencies.git
+  - unzip ./ChatSecure-iOS-Precompiled-Dependencies/CPAProxyDependencies.zip -d ./Submodules/CPAProxy/
+  - unzip ./ChatSecure-iOS-Precompiled-Dependencies/OTRKitDependencies.zip -d ./Submodules/OTRKit/
+  # We use precompiled dependencies for tests now
+  #- export ARCHS="i386"   # Only build CPAProxy dependencies for i386 to speed things up
+  #- bash ./Submodules/CPAProxy/scripts/build-all.sh
+  #- bash ./Submodules/OTRKit/scripts/build-all.sh
 
 before_script:
   - export COCOAPODS_DISABLE_DETERMINISTIC_UUIDS=1 # https://github.com/CocoaPods/CocoaPods/issues/3850
