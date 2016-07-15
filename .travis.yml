@@ -19,6 +19,7 @@ install:
   - git clone https://github.com/ChatSecure/ChatSecure-iOS-Precompiled-Dependencies.git
   - unzip ./ChatSecure-iOS-Precompiled-Dependencies/CPAProxyDependencies.zip -d ./Submodules/CPAProxy/
   - unzip ./ChatSecure-iOS-Precompiled-Dependencies/OTRKitDependencies.zip -d ./Submodules/OTRKit/
+  - unzip ./ChatSecure-iOS-Precompiled-Dependencies/Pods.zip
   # We use precompiled dependencies for tests now
   #- export ARCHS="i386"   # Only build CPAProxy dependencies for i386 to speed things up
   #- bash ./Submodules/CPAProxy/scripts/build-all.sh
