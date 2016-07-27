@@ -53,6 +53,38 @@ public class OTRSignalStorageManager: NSObject, SignalStore {
         return identityKeyPair
     }
     
+    private func storePreKey(preKey: NSData, preKeyId: UInt32, transaction:YapDatabaseReadWriteTransaction) -> Bool {
+        guard let preKeyDatabaseObject = OTRSignalPreKey(accountKey: self.accountKey, keyId: preKeyId, keyData: preKey) else {
+            return false
+        }
+        preKeyDatabaseObject.saveWithTransaction(transaction)
+        return true
+    }
+    
+    /** Save a bunch of pre keys in one database transaction */
+    public func storeSignalPreKeys(preKeys:[SignalPreKey]) -> Bool {
+        
+        if preKeys.count == 0 {
+            return true
+        }
+        
+        var success = false
+        self.databaseConnection.readWriteWithBlock { (transaction) in
+            for pKey in preKeys {
+                if let data = pKey.serializedData() {
+                    success = self.storePreKey(data, preKeyId: pKey.preKeyId(), transaction: transaction)
+                } else {
+                    success = false
+                }
+                
+                if !success {
+                    break
+                }
+            }
+        }
+        return success
+    }
+    
     //MARK: SignalSessionStore
     public func sessionRecordForAddress(address: SignalAddress) -> NSData? {
         let yapKey = OTRSignalSession.uniqueKeyForAccountKey(self.accountKey, name: address.name, deviceId: address.deviceId)
@@ -127,13 +159,11 @@ public class OTRSignalStorageManager: NSObject, SignalStore {
     }
     
     public func storePreKey(preKey: NSData, preKeyId: UInt32) -> Bool {
-        guard let preKeyDatabaseObject = OTRSignalPreKey(accountKey: self.accountKey, keyId: preKeyId, keyData: preKey) else {
-            return false
-        }
+        var result = false
         self.databaseConnection.readWriteWithBlock { (transaction) in
-            preKeyDatabaseObject.saveWithTransaction(transaction)
+            result = self.storePreKey(preKey, preKeyId: preKeyId, transaction: transaction)
         }
-        return true
+        return result
     }
     
     public func containsPreKeyWithId(preKeyId: UInt32) -> Bool {
