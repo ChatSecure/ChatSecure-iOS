@@ -25,11 +25,13 @@
 @import YapDatabase.YapDatabaseSecondaryIndex;
 @import YapDatabase.YapDatabaseSearchResultsView;
 #import "OTRLanguageManager.h"
+#import "OTRSignalSession.h"
 #import <ChatSecureCore/ChatSecureCore-Swift.h>
 
 NSString *const OTRYapDatabseMessageIdSecondaryIndexColumnName = @"OTRYapDatabseMessageIdSecondaryIndex";
 NSString *const OTRYapDatabseRoomOccupantJIdSecondaryIndexColumnName = @"constOTRYapDatabseRoomOccupantJIdSecondaryIndex";
 NSString *const OTRYapDatabaseUnreadMessageSecondaryIndexColumnName = @"OTRYapDatbaseUnreadMessageSecondaryIndex";
+NSString *const OTRYapDatabaseSignalSessionSecondaryIndexColumnName = @"OTRYapDatabaseSignalSessionSecondaryIndexColumnName";
 
 @interface OTRDatabaseManager ()
 
@@ -167,6 +169,7 @@ NSString *const OTRYapDatabaseUnreadMessageSecondaryIndexColumnName = @"OTRYapDa
     [setup addColumn:OTRYapDatabseMessageIdSecondaryIndexColumnName withType:YapDatabaseSecondaryIndexTypeText];
     [setup addColumn:OTRYapDatabseRoomOccupantJIdSecondaryIndexColumnName withType:YapDatabaseSecondaryIndexTypeText];
     [setup addColumn:OTRYapDatabaseUnreadMessageSecondaryIndexColumnName withType:YapDatabaseSecondaryIndexTypeInteger];
+    [setup addColumn:OTRYapDatabaseSignalSessionSecondaryIndexColumnName withType:YapDatabaseSecondaryIndexTypeText];
     
     YapDatabaseSecondaryIndexHandler *indexHandler = [YapDatabaseSecondaryIndexHandler withObjectBlock:^(YapDatabaseReadTransaction * _Nonnull transaction, NSMutableDictionary * _Nonnull dict, NSString * _Nonnull collection, NSString * _Nonnull key, id  _Nonnull object) {
         if ([object conformsToProtocol:@protocol(OTRMessageProtocol)])
@@ -186,9 +189,17 @@ NSString *const OTRYapDatabaseUnreadMessageSecondaryIndexColumnName = @"OTRYapDa
                 [dict setObject:roomOccupant.jid forKey:OTRYapDatabseRoomOccupantJIdSecondaryIndexColumnName];
             }
         }
+        
+        if ([object isKindOfClass:[OTRSignalSession class]]) {
+            OTRSignalSession *session = (OTRSignalSession *)object;
+            if ([session.name length]) {
+                NSString *value = [NSString stringWithFormat:@"%@-%@",session.accountKey, session.name];
+                [dict setObject:value forKey:OTRYapDatabaseSignalSessionSecondaryIndexColumnName];
+            }
+        }
     }];
     
-    YapDatabaseSecondaryIndex *secondaryIndex = [[YapDatabaseSecondaryIndex alloc] initWithSetup:setup handler:indexHandler versionTag:@"1"];
+    YapDatabaseSecondaryIndex *secondaryIndex = [[YapDatabaseSecondaryIndex alloc] initWithSetup:setup handler:indexHandler versionTag:@"2"];
     
     return secondaryIndex;
 }

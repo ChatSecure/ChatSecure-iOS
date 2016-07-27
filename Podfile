@@ -57,6 +57,7 @@ target 'ChatSecureCore' do
   pod 'QRCodeReaderViewController', '~> 4.0'
   pod 'ZXingObjC', '~> 3.0'
 
+  pod 'SignalProtocolC', :podspec => 'https://raw.githubusercontent.com/ChatSecure/SignalProtocolC.podspec/3f30f3d50d1a85305df3ff5f047b3dd379f12e73/SignalProtocolC.podspec'
 
   # Local Podspecs
   pod 'gtm-http-fetcher', :podspec => 'Podspecs/gtm-http-fetcher.podspec'
@@ -73,4 +74,5 @@ target 'ChatSecureCore' do
   pod 'CPAProxy', :path => 'Submodules/CPAProxy/CPAProxy.podspec'
   pod 'XMPPFramework', :path => 'Submodules/XMPPFramework/XMPPFramework.podspec'
   pod 'IOCipher/GCDWebServer', :path => 'Submodules/IOCipher/IOCipher.podspec'
+  pod 'SignalProtocol-ObjC', :path => 'Submodules/SignalProtocol-ObjC/SignalProtocol-ObjC.podspec'
 end

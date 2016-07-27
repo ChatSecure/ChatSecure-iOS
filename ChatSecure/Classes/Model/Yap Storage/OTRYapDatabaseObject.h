@@ -11,21 +11,25 @@
 @import YapDatabase;
 @import Mantle;
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol OTRYapDatabaseObject <NSObject>
 
 @property (nonatomic, readonly) NSString *uniqueId;
 
-- (instancetype)initWithUniqueId:(NSString *)uniqueId;
+- (nullable instancetype)initWithUniqueId:(NSString *)uniqueId;
 
 - (void)saveWithTransaction:(YapDatabaseReadWriteTransaction *)transaction;
 - (void)removeWithTransaction:(YapDatabaseReadWriteTransaction *)transaction;
 
 + (NSString *)collection;
 
-+ (instancetype)fetchObjectWithUniqueID:(NSString*)uniqueID transaction:(YapDatabaseReadTransaction*)transaction;
++ (nullable instancetype)fetchObjectWithUniqueID:(NSString*)uniqueID transaction:(YapDatabaseReadTransaction*)transaction;
 
 @end
 
 @interface OTRYapDatabaseObject : MTLModel <OTRYapDatabaseObject>
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -73,7 +73,10 @@ extension PushMessage: OTRMessageProtocol {
     }
     
     public func threadOwnerWithTransaction(transaction: YapDatabaseReadTransaction!) -> OTRThreadOwner! {
-        return OTRBuddy.fetchObjectWithUniqueID(self.buddyKey, transaction: transaction)
+        if let buddyKey = self.buddyKey {
+            return OTRBuddy.fetchObjectWithUniqueID(buddyKey, transaction: transaction)
+        }
+        return nil
     }
 }
 
@@ -93,8 +96,11 @@ extension PushMessage {
     func account() -> OTRAccount? {
         var account:OTRAccount? = nil
         OTRDatabaseManager.sharedInstance().readOnlyDatabaseConnection .readWithBlock { (transaction) -> Void in
-            let buddy = OTRBuddy.fetchObjectWithUniqueID(self.buddyKey, transaction: transaction)
-            account = buddy.accountWithTransaction(transaction)
+            if let buddyKey = self.buddyKey {
+                if let buddy = OTRBuddy.fetchObjectWithUniqueID(buddyKey, transaction: transaction) {
+                    account = buddy.accountWithTransaction(transaction)
+                }
+            }
         }
         return account
     }

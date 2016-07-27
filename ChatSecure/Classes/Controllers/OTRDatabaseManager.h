@@ -16,6 +16,7 @@
 extern NSString *const OTRYapDatabseMessageIdSecondaryIndexColumnName;
 extern NSString *const OTRYapDatabseRoomOccupantJIdSecondaryIndexColumnName;
 extern NSString *const OTRYapDatabaseUnreadMessageSecondaryIndexColumnName;
+extern NSString *const OTRYapDatabaseSignalSessionSecondaryIndexColumnName;
 
 @interface OTRDatabaseManager : NSObject
 

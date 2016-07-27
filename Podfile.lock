@@ -39,10 +39,10 @@ PODS:
     - CocoaLumberjack/Default
   - CPAProxy (1.1.0):
     - CocoaAsyncSocket
-  - GCDWebServer/CocoaLumberjack (3.3.2):
+  - GCDWebServer/CocoaLumberjack (3.3.3):
     - CocoaLumberjack (~> 2)
     - GCDWebServer/Core
-  - GCDWebServer/Core (3.3.2)
+  - GCDWebServer/Core (3.3.3)
   - gtm-http-fetcher (1.1)
   - gtm-oauth2 (1.1):
     - gtm-http-fetcher (~> 1.1)
@@ -90,6 +90,9 @@ PODS:
   - PureLayout (3.0.1)
   - QRCodeReaderViewController (4.0.1)
   - Reachability (3.2)
+  - SignalProtocol-ObjC (0.1.0):
+    - SignalProtocolC (~> 0.1.0)
+  - SignalProtocolC (0.1.0)
   - SQLCipher/common (3.4.0)
   - SQLCipher/fts (3.4.0):
     - SQLCipher/common
@@ -156,7 +159,7 @@ PODS:
     - CocoaAsyncSocket (~> 7.5.0)
     - CocoaLumberjack (~> 2.0)
     - KissXML (~> 5.1.2)
-    - ProxyKit/Client (~> 1.0)
+    - ProxyKit/Client (~> 1.1)
   - XMPPFramework/CoreDataStorage (3.7.0):
     - XMPPFramework/Core
   - XMPPFramework/FileTransfer (3.7.0):
@@ -345,6 +348,8 @@ DEPENDENCIES:
   - PureLayout (~> 3.0)
   - QRCodeReaderViewController (~> 4.0)
   - Reachability (~> 3)
+  - SignalProtocol-ObjC (from `Submodules/SignalProtocol-ObjC/SignalProtocol-ObjC.podspec`)
+  - SignalProtocolC (from `https://raw.githubusercontent.com/ChatSecure/SignalProtocolC.podspec/3f30f3d50d1a85305df3ff5f047b3dd379f12e73/SignalProtocolC.podspec`)
   - SSKeychain (~> 1.2)
   - TTTAttributedLabel (~> 1.10)
   - TUSafariActivity (~> 1.0)
@@ -376,6 +381,10 @@ EXTERNAL SOURCES:
     :path: Submodules/OTRKit/OTRKit.podspec
   ProxyKit:
     :path: Submodules/ProxyKit/ProxyKit.podspec
+  SignalProtocol-ObjC:
+    :path: Submodules/SignalProtocol-ObjC/SignalProtocol-ObjC.podspec
+  SignalProtocolC:
+    :podspec: https://raw.githubusercontent.com/ChatSecure/SignalProtocolC.podspec/3f30f3d50d1a85305df3ff5f047b3dd379f12e73/SignalProtocolC.podspec
   XMPPFramework:
     :path: Submodules/XMPPFramework/XMPPFramework.podspec
 
@@ -397,7 +406,7 @@ SPEC CHECKSUMS:
   CocoaAsyncSocket: e0a7e93b2ffa411592ff87e58524fbbc9b95b4fa
   CocoaLumberjack: 17fe8581f84914d5d7e6360f7c70022b173c3ae0
   CPAProxy: cfd27b25328d6517b1f8570c4f0045838353e888
-  GCDWebServer: 2a375ec42839a41d7187d04e5b688d32fa5c4cd5
+  GCDWebServer: 1c39a1f0763e4eb492bee021e4270fce097d3555
   gtm-http-fetcher: 4e7de79fc9e774b291eae66a240f17b3a5277ec7
   gtm-oauth2: b31c9d7c82f773f7b7094cbb7da8dc7b5968ce16
   HockeySDK-Source: c6c66ea12e59f0d756fe9989cbc45eda017fc41c
@@ -420,6 +429,8 @@ SPEC CHECKSUMS:
   PureLayout: f35f5384c9c4e4479df041dbe33ad7577b71ddfb
   QRCodeReaderViewController: 6538745c8f4ffa9407a26bd7f9489ea01739e7b0
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
+  SignalProtocol-ObjC: ae8344baa57fcf78ac6b98759e826d42974075f7
+  SignalProtocolC: 0ecac3294181945922be08db389af87a6f3c6bf0
   SQLCipher: 4c768761421736a247ed6cf412d9045615d53dff
   SSKeychain: c71293fa57216a40ab06c23f4085387583293de4
   TTTAttributedLabel: 0a2ac7b2dd726d32a070dafb01446026b11e624f
@@ -427,7 +438,7 @@ SPEC CHECKSUMS:
   uservoice-iphone-sdk: 9abf27254c8488d7b72d70fb9b621132d6beebd4
   VTAcknowledgementsViewController: 6056f5f5e5ed995bbf0581bed6ddd29355ca9a80
   XLForm: c9ee7e0f859341279bfd894f9589a9d25c23e4df
-  XMPPFramework: 229663616e75c526bf4e9ba892897827e3722aab
+  XMPPFramework: b5673e137fa3081a8b446fefbb8da5a57637192a
   YapDatabase: c00f4197bba2fea17bdbd82c8e8e3f7104b6fa67
   ZXingObjC: bf15b3814f7a105b6d99f47da2333c93a063650a
 
