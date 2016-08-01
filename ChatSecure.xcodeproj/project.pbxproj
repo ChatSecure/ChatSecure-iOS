@@ -39,6 +39,7 @@
 		635FCC841D1B5116008F903C /* OTRStringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635FCC831D1B5116008F903C /* OTRStringTests.swift */; };
 		635FCC871D1B57ED008F903C /* OTRURLTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 636C63201B571B56008FEE69 /* OTRURLTests.m */; };
 		635FCC8A1D1B5A35008F903C /* OTRResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D93027561BAA381F000CC975 /* OTRResources.bundle */; };
+		6361B78A1D4C268900EDD9EC /* OTROMEMOBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6361B7891D4C268900EDD9EC /* OTROMEMOBundle.swift */; };
 		63636D6E1C1F78A6009F5FCD /* UINavigationController+ChatSecure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63636D6D1C1F78A6009F5FCD /* UINavigationController+ChatSecure.swift */; };
 		63636D721C1F9D7C009F5FCD /* UIApplication+ChatSecure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63636D711C1F9D7C009F5FCD /* UIApplication+ChatSecure.swift */; };
 		6369855A1BC875110083FC53 /* OTRXMPPRoomManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 636985581BC875110083FC53 /* OTRXMPPRoomManager.h */; };
@@ -732,6 +733,7 @@
 		63564E0C1BBB114B00EB4CA6 /* PushOTRListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushOTRListener.swift; sourceTree = "<group>"; };
 		63564E0F1BBB1C5200EB4CA6 /* PushStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushStorage.swift; sourceTree = "<group>"; };
 		635FCC831D1B5116008F903C /* OTRStringTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRStringTests.swift; sourceTree = "<group>"; };
+		6361B7891D4C268900EDD9EC /* OTROMEMOBundle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OTROMEMOBundle.swift; path = "Signal-Storage/OTROMEMOBundle.swift"; sourceTree = "<group>"; };
 		63636D6D1C1F78A6009F5FCD /* UINavigationController+ChatSecure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UINavigationController+ChatSecure.swift"; sourceTree = "<group>"; };
 		63636D711C1F9D7C009F5FCD /* UIApplication+ChatSecure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIApplication+ChatSecure.swift"; sourceTree = "<group>"; };
 		636985581BC875110083FC53 /* OTRXMPPRoomManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPRoomManager.h; sourceTree = "<group>"; };
@@ -1478,6 +1480,7 @@
 				632AA7311D4819E000F65733 /* OTRSignalSignedPreKey.m */,
 				632AA7381D482A1A00F65733 /* OTRSignalSession.h */,
 				632AA7391D482A1A00F65733 /* OTRSignalSession.m */,
+				6361B7891D4C268900EDD9EC /* OTROMEMOBundle.swift */,
 			);
 			name = "Signal-Storage";
 			sourceTree = "<group>";
@@ -2147,6 +2150,7 @@
 				D93DDA851BA79A2400CD8331 /* OTRDatabaseView.m in Sources */,
 				632AA7271D47FEDF00F65733 /* OTRSignalIdentityKey.m in Sources */,
 				D93DDA861BA79A2400CD8331 /* OTREncryptionManager.m in Sources */,
+				6361B78A1D4C268900EDD9EC /* OTROMEMOBundle.swift in Sources */,
 				D93DDA881BA79A2400CD8331 /* OTROAuthRefresher.m in Sources */,
 				6340431B1BD5BCD800ECA95A /* OTRXMPPRoomMessage.swift in Sources */,
 				D93DDA891BA79A2400CD8331 /* OTRProtocolManager.m in Sources */,
@@ -2294,7 +2298,7 @@
 				D93DDB191BA79A2C00CD8331 /* OTRTextFieldTableViewCell.m in Sources */,
 				D93DDB1A1BA79A2C00CD8331 /* OTRButtonView.m in Sources */,
 				D93DDB1B1BA79A2C00CD8331 /* OTRAudioControlsView.m in Sources */,
-				6309E4D61D493B6F002CF8FC /* OTRSignalEncryptionManager.swift in Sources */,
+				6309E4D61D493B6F002CF8FC /* OTRAccountSignalEncryptionManager.swift in Sources */,
 				D93DDB1C1BA79A2C00CD8331 /* OTRPlayPauseProgressView.m in Sources */,
 				D93DDB1D1BA79A2C00CD8331 /* OTRPlayView.m in Sources */,
 				63C0C4431BE010B00086B529 /* YapDatabaseReadTransaction+ChatSecure.swift in Sources */,

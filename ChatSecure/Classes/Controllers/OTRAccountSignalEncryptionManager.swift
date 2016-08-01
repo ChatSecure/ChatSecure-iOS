@@ -15,9 +15,9 @@ public class OTRAccountSignalEncryptionManager {
     
     let storage:OTRSignalStorageManager
     let signalContext:SignalContext
-    let signalKeyHelper:SignalKeyHelper
     
-    public var deviceId:UInt32 {
+    //Don't think this is used for anything? Looks like in Conversations they use 0.
+    public var registrationId:UInt32 {
         get {
             return self.storage.getLocalRegistrationId()
         }
@@ -33,14 +33,17 @@ public class OTRAccountSignalEncryptionManager {
         self.storage = OTRSignalStorageManager(accountKey: accountKey, databaseConnection: databaseConnection, delegate: nil)
         let signalStorage = SignalStorage(signalStore: self.storage)
         self.signalContext = SignalContext(storage: signalStorage)!
-        self.signalKeyHelper = SignalKeyHelper(context: self.signalContext)!
         self.storage.delegate = self
     }
 }
 
 extension OTRAccountSignalEncryptionManager {
+    internal func keyHelper() -> SignalKeyHelper? {
+        return SignalKeyHelper(context: self.signalContext)
+    }
+    
     public func generateRandomSignedPreKey() -> SignalSignedPreKey? {
-        guard let signedPreKey = self.signalKeyHelper.generateSignedPreKeyWithIdentity(self.identityKeyPair, signedPreKeyId: arc4random()),
+        guard let signedPreKey = self.keyHelper()?.generateSignedPreKeyWithIdentity(self.identityKeyPair, signedPreKeyId: arc4random()),
             let data = signedPreKey.serializedData() else {
             return nil
         }
@@ -50,9 +53,36 @@ extension OTRAccountSignalEncryptionManager {
         return nil
     }
     
+    /** 
+     * This creates all the information necessary to publish a 'bundle' to your XMPP server via PEP. It generates prekeys 0 to 99.
+     */
+    public func generateOurNewBundle() -> OTROMEMOBundle? {
+        
+        guard let signedPreKey = self.generateRandomSignedPreKey(), let data = signedPreKey.serializedData() else {
+            return nil
+        }
+        self.storage.storeSignedPreKey(data, signedPreKeyId: signedPreKey.preKeyId())
+        
+        let publicIdentityKey = self.storage.getIdentityKeyPair().publicKey
+        let deviceId = self.registrationId
+        guard let preKeys = self.generatePreKeys(0, count: 100) else {
+            return nil
+        }
+        
+        var preKeyDict = [UInt32:NSData]()
+        for preKey in preKeys {
+            preKeyDict.updateValue(preKey.keyPair().publicKey, forKey: preKey.preKeyId())
+        }
+        
+        return OTROMEMOBundle(deviceId: deviceId, publicIdentityKey: publicIdentityKey, signedPublicPreKey: signedPreKey.keyPair().publicKey, signedPreKeyId: signedPreKey.preKeyId(), signedPreKeySignature: signedPreKey.signature(), preKeys: preKeyDict)
+        
+    }
+    
     //TODO: How do you know where to start?
     public func generatePreKeys(start:UInt, count:UInt) -> [SignalPreKey]? {
-        let preKeys = self.signalKeyHelper.generatePreKeysWithStartingPreKeyId(start, count: count)
+        guard let preKeys = self.keyHelper()?.generatePreKeysWithStartingPreKeyId(start, count: count) else {
+            return nil
+        }
         if self.storage.storeSignalPreKeys(preKeys) {
             return preKeys
         }
@@ -63,8 +93,9 @@ extension OTRAccountSignalEncryptionManager {
 extension OTRAccountSignalEncryptionManager: OTRSignalStorageManagerDelegate {
     
     public func generateNewIdenityKeyPairForAccountKey(accountKey:String) -> OTRAccountSignalIdentity {
-        let keyPair = self.signalKeyHelper.generateIdentityKeyPair()!
-        let registrationId = self.signalKeyHelper.generateRegistrationId()
+        let keyHelper = self.keyHelper()!
+        let keyPair = keyHelper.generateIdentityKeyPair()!
+        let registrationId = keyHelper.generateRegistrationId()
         return OTRAccountSignalIdentity(accountKey: accountKey, identityKeyPair: keyPair, registrationId: registrationId)!
     }
 }
