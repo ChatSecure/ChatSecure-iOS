@@ -14,5 +14,15 @@ public struct OTROMEMOBundle {
     let signedPublicPreKey:NSData
     let signedPreKeyId:UInt32
     let signedPreKeySignature:NSData
+}
+
+public struct OTROMEMOBundleOutgoing {
+    let bundle:OTROMEMOBundle
     let preKeys:[UInt32:NSData]
+}
+
+public struct OTROMEMOBundleIncoming {
+    let bundle:OTROMEMOBundle
+    let preKeyId:UInt32
+    let preKeyData:NSData
 }

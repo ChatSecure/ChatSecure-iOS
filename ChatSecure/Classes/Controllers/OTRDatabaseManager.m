@@ -44,14 +44,17 @@ NSString *const OTRYapDatabaseSignalSessionSecondaryIndexColumnName = @"OTRYapDa
 @end
 
 @implementation OTRDatabaseManager
-
 - (BOOL) setupDatabaseWithName:(NSString*)databaseName {
+    return [self setupDatabaseWithName:databaseName withMediaStorage:YES];
+}
+
+- (BOOL) setupDatabaseWithName:(NSString*)databaseName withMediaStorage:(BOOL)withMediaStorage {
     BOOL success = NO;
     if ([self setupYapDatabaseWithName:databaseName] )
     {
         success = YES;
     }
-    if (success) success = [self setupSecureMediaStorage];
+    if (success && withMediaStorage) success = [self setupSecureMediaStorage];
     
     NSString *databaseDirectory = [OTRDatabaseManager yapDatabaseDirectory];
     //Enumerate all files in yap database directory and exclude from backup

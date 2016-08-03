@@ -56,7 +56,7 @@ extension OTRAccountSignalEncryptionManager {
     /** 
      * This creates all the information necessary to publish a 'bundle' to your XMPP server via PEP. It generates prekeys 0 to 99.
      */
-    public func generateOurNewBundle() -> OTROMEMOBundle? {
+    public func generateOutgoingBundle() -> OTROMEMOBundleOutgoing? {
         
         guard let signedPreKey = self.generateRandomSignedPreKey(), let data = signedPreKey.serializedData() else {
             return nil
@@ -74,8 +74,33 @@ extension OTRAccountSignalEncryptionManager {
             preKeyDict.updateValue(preKey.keyPair().publicKey, forKey: preKey.preKeyId())
         }
         
-        return OTROMEMOBundle(deviceId: deviceId, publicIdentityKey: publicIdentityKey, signedPublicPreKey: signedPreKey.keyPair().publicKey, signedPreKeyId: signedPreKey.preKeyId(), signedPreKeySignature: signedPreKey.signature(), preKeys: preKeyDict)
+        let bundle = OTROMEMOBundle(deviceId: deviceId, publicIdentityKey: publicIdentityKey, signedPublicPreKey: signedPreKey.keyPair().publicKey, signedPreKeyId: signedPreKey.preKeyId(), signedPreKeySignature: signedPreKey.signature())
+        return OTROMEMOBundleOutgoing(bundle: bundle, preKeys: preKeyDict)
+    }
+    
+    /**
+     * This processes fetched OMEMO bundles. After you consume a bundle you can then create preKeyMessages to send to the contact.
+     */
+    public func consumeIncomingBundle(name:String, bundle:OTROMEMOBundleIncoming) {
+        let deviceId = Int32(bundle.bundle.deviceId)
+        let incomingAddress = SignalAddress(name: name, deviceId: deviceId)
+        let sessionBuilder = SignalSessionBuilder(address: incomingAddress, context: self.signalContext)
+        let preKeyBundle = SignalPreKeyBundle(registrationId: 0, deviceId: bundle.bundle.deviceId, preKeyId: bundle.preKeyId, preKeyPublic: bundle.preKeyData, signedPreKeyId: bundle.bundle.signedPreKeyId, signedPreKeyPublic: bundle.bundle.signedPublicPreKey, signature: bundle.bundle.signedPreKeySignature, identityKey: bundle.bundle.publicIdentityKey)
         
+        sessionBuilder.processPreKeyBundle(preKeyBundle)
+    }
+    
+    public func encryptToAddress(data:NSData, name:String, deviceId:UInt32) throws -> SignalCiphertext {
+        let address = SignalAddress(name: name, deviceId: Int32(deviceId))
+        let sessionCipher = SignalSessionCipher(address: address, context: self.signalContext)
+        return try sessionCipher.encryptData(data)
+    }
+    
+    public func decryptFromAddress(data:NSData, name:String, deviceId:UInt32) throws -> NSData {
+        let address = SignalAddress(name: name, deviceId: Int32(deviceId))
+        let sessionCipher = SignalSessionCipher(address: address, context: self.signalContext)
+        let cipherText = SignalCiphertext(data: data, type: .Unknown)
+        return try sessionCipher.decryptCiphertext(cipherText)
     }
     
     //TODO: How do you know where to start?

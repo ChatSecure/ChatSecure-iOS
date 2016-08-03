@@ -34,6 +34,7 @@ extern NSString *const OTRYapDatabaseSignalSessionSecondaryIndexColumnName;
  @return whether setup was successful
  */
 - (BOOL)setupDatabaseWithName:(NSString*)databaseName;
+- (BOOL)setupDatabaseWithName:(NSString*)databaseName withMediaStorage:(BOOL)withMediaStorage;
 
 - (YapDatabaseConnection *)newConnection;
 

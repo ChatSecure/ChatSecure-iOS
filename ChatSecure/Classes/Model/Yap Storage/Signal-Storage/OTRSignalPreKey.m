@@ -15,6 +15,7 @@
     if (self = [super initWithUniqueId:yapKey]) {
         self.accountKey = accountKey;
         self.keyId = keyId;
+        self.keyData = keyData;
     }
     return self;
 }
