@@ -46,6 +46,7 @@
 		6369855B1BC875110083FC53 /* OTRXMPPRoomManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 636985591BC875110083FC53 /* OTRXMPPRoomManager.m */; };
 		638045681BB4BDED002D8BAE /* PushSerializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638045671BB4BDEC002D8BAE /* PushSerializer.swift */; };
 		6380456A1BB4C833002D8BAE /* PushDeserializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638045691BB4C832002D8BAE /* PushDeserializer.swift */; };
+		63828AA01D53F54F00B81249 /* OTROMEMOSignalCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63828A9F1D53F54F00B81249 /* OTROMEMOSignalCoordinator.swift */; };
 		638338DE1BCC508200EB0CA1 /* OTRMessagesGroupViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 638338DC1BCC508200EB0CA1 /* OTRMessagesGroupViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		638338DF1BCC508200EB0CA1 /* OTRMessagesGroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 638338DD1BCC508200EB0CA1 /* OTRMessagesGroupViewController.m */; };
 		63929C961C7D32D9008DB2E3 /* MessagesViewControllerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63929C951C7D32D9008DB2E3 /* MessagesViewControllerState.swift */; };
@@ -745,6 +746,7 @@
 		637DBB1B1B7D5A23003845B7 /* OTRXMPPMessageYapStroage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPMessageYapStroage.m; sourceTree = "<group>"; };
 		638045671BB4BDEC002D8BAE /* PushSerializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushSerializer.swift; sourceTree = "<group>"; };
 		638045691BB4C832002D8BAE /* PushDeserializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushDeserializer.swift; sourceTree = "<group>"; };
+		63828A9F1D53F54F00B81249 /* OTROMEMOSignalCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTROMEMOSignalCoordinator.swift; sourceTree = "<group>"; };
 		638338DC1BCC508200EB0CA1 /* OTRMessagesGroupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRMessagesGroupViewController.h; sourceTree = "<group>"; };
 		638338DD1BCC508200EB0CA1 /* OTRMessagesGroupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRMessagesGroupViewController.m; sourceTree = "<group>"; };
 		638C7CF01B02BE4A004F8EC3 /* OTRBaseLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRBaseLoginViewController.h; sourceTree = "<group>"; };
@@ -923,6 +925,7 @@
 		6309E4D41D493B2D002CF8FC /* Signal Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				63828A9F1D53F54F00B81249 /* OTROMEMOSignalCoordinator.swift */,
 				63BA43DB1D41826F007FAF7F /* OTRSignalStorageManager.swift */,
 				6309E4D51D493B6E002CF8FC /* OTRAccountSignalEncryptionManager.swift */,
 			);
@@ -2279,6 +2282,7 @@
 				D93DDB071BA79A2A00CD8331 /* OTRListSettingViewController.m in Sources */,
 				D93DDB081BA79A2A00CD8331 /* OTRMessagesViewController.m in Sources */,
 				63BA43DC1D41826F007FAF7F /* OTRSignalStorageManager.swift in Sources */,
+				63828AA01D53F54F00B81249 /* OTROMEMOSignalCoordinator.swift in Sources */,
 				D93DDB091BA79A2A00CD8331 /* OTRMessagesHoldTalkViewController.m in Sources */,
 				D93DDB0A1BA79A2A00CD8331 /* OTRNewBuddyViewController.m in Sources */,
 				D93DDB0B1BA79A2A00CD8331 /* OTRQRCodeViewController.m in Sources */,

@@ -35,6 +35,7 @@
 #import "XMPPvCardTemp.h"
 #import "XMPPMessageDeliveryReceipts.h"
 #import "OTRYapDatabaseRosterStorage.h"
+#import "OMEMOModule.h"
 
 #import "OTRLog.h"
 
@@ -107,6 +108,9 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 @property (nonatomic) BOOL userInitiatedConnection;
 @property (nonatomic) OTRLoginStatus loginStatus;
 @property (nonatomic, strong) OTRXMPPBuddyManager* xmppBuddyManager;
+
+@property (nonatomic, strong) OMEMOModule *omemoModule;
+@property (nonatomic, strong) OTROMEMOSignalCoordinator *omemoSignalCoordinator;
 
 @property (nonatomic, strong) YapDatabaseConnection *databaseConnection;
 @property (nonatomic, strong) XMPPMessageDeliveryReceipts *deliveryReceipts;
@@ -303,6 +307,15 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     self.xmppBuddyManager.databaseConnection = [self.databaseConnection.database newConnection];
     self.xmppBuddyManager.protocol = self;
     [self.xmppBuddyManager activate:self.xmppStream];
+    
+    //OMEMO
+    self.omemoModule = [[OMEMOModule alloc] init];
+    self.omemoSignalCoordinator = [[OTROMEMOSignalCoordinator alloc] initWithAccountYapKey:self.account.uniqueId databaseConnection:self.databaseConnection omemoModule:self.omemoModule];
+    [self.omemoModule addDelegate:self.omemoSignalCoordinator delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
+    [self.xmppCapabilities addDelegate:self.omemoSignalCoordinator delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
+    [self.xmppStream addDelegate:self.omemoSignalCoordinator delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
+
+    [self.omemoModule activate:self.xmppStream];
 }
 
 - (void)teardownStream
@@ -325,6 +338,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     [_streamManagement deactivate];
     [_roomManager deactivate];
     [_xmppBuddyManager deactivate];
+    [_omemoModule deactivate];
 
     [_xmppStream disconnect];
 
@@ -341,6 +355,7 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
     _streamManagement = nil;
     _roomManager = nil;
     _xmppBuddyManager = nil;
+    _omemoModule = nil;
 }
 
 // It's easy to create XML elments to send and to read received XML elements.

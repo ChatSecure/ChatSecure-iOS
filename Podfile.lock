@@ -110,6 +110,7 @@ PODS:
     - XMPPFramework/CoreDataStorage
     - XMPPFramework/FileTransfer
     - XMPPFramework/GoogleSharedStatus
+    - XMPPFramework/OMEMO
     - XMPPFramework/ProcessOne
     - XMPPFramework/Reconnect
     - XMPPFramework/Roster
@@ -166,6 +167,10 @@ PODS:
     - XMPPFramework/Core
   - XMPPFramework/GoogleSharedStatus (3.7.0):
     - XMPPFramework/Core
+  - XMPPFramework/OMEMO (3.7.0):
+    - XMPPFramework/Core
+    - XMPPFramework/XEP-0060
+    - XMPPFramework/XEP-0334
   - XMPPFramework/ProcessOne (3.7.0):
     - XMPPFramework/Core
   - XMPPFramework/Reconnect (3.7.0):
@@ -438,7 +443,7 @@ SPEC CHECKSUMS:
   uservoice-iphone-sdk: 9abf27254c8488d7b72d70fb9b621132d6beebd4
   VTAcknowledgementsViewController: 6056f5f5e5ed995bbf0581bed6ddd29355ca9a80
   XLForm: c9ee7e0f859341279bfd894f9589a9d25c23e4df
-  XMPPFramework: b5673e137fa3081a8b446fefbb8da5a57637192a
+  XMPPFramework: bf1218e824424ed82cd5f5983f2c25c59dbb4245
   YapDatabase: c00f4197bba2fea17bdbd82c8e8e3f7104b6fa67
   ZXingObjC: bf15b3814f7a105b6d99f47da2333c93a063650a
 
