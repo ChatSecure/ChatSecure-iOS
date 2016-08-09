@@ -46,6 +46,7 @@
 - (void)loginAccount:(OTRAccount *)account userInitiated:(BOOL)userInitiated;
 - (void)loginAccounts:(NSArray *)accounts;
 - (void)disconnectAllAccounts;
+- (void)disconnectAllAccountsSocketOnly:(BOOL)socketOnly;
 
 - (void)sendMessage:(OTRMessage *)message;
 

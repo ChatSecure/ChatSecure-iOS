@@ -496,11 +496,15 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
 	return YES;
 }
 
-- (void)disconnect
-{
-    [self goOffline];
+- (void) disconnectSocketOnly:(BOOL)socketOnly {
+    if (socketOnly) {
+        [self.xmppStream disconnect];
+        self.connectionStatus = OTRProtocolConnectionStatusDisconnected;
+        return;
+    }
     
-    [self.xmppStream disconnect];
+    [self goOffline];
+    [self.xmppStream disconnectAfterSending];
     
     __weak typeof(self)weakSelf = self;
     [self.databaseConnection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
@@ -521,6 +525,11 @@ NSString *const OTRXMPPLoginErrorKey = @"OTRXMPPLoginErrorKey";
             }];
         }
     }];
+}
+
+- (void)disconnect
+{
+    [self disconnectSocketOnly:NO];
 }
 
 - (void)registerNewAccountWithPassword:(NSString *)newPassword

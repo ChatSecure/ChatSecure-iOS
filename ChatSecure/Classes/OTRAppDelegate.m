@@ -70,6 +70,8 @@
 @property (nonatomic, strong) OTRSplitViewCoordinator *splitViewCoordinator;
 @property (nonatomic, strong) OTRSplitViewControllerDelegateObject *splitViewControllerDelegate;
 
+@property (nonatomic, strong) NSTimer *fetchTimer;
+
 @end
 
 @implementation OTRAppDelegate
@@ -158,6 +160,7 @@
     }];
     
     [self autoLoginFromBackground:NO];
+    [application setMinimumBackgroundFetchInterval:UIApplicationBackgroundFetchIntervalMinimum];
     
     [self removeFacebookAccounts];
         
@@ -377,6 +380,19 @@
     }
     //FIXME? [OTRManagedAccount resetAccountsConnectionStatus];
     application.applicationIconBadgeNumber = 0;
+    
+    if (self.fetchTimer) {
+        if (self.fetchTimer.isValid) {
+            NSDictionary *userInfo = self.fetchTimer.userInfo;
+            void (^completion)(UIBackgroundFetchResult) = [userInfo objectForKey:@"completion"];
+            // We should probbaly return accurate fetch results
+            if (completion) {
+                completion(UIBackgroundFetchResultNewData);
+            }
+            [self.fetchTimer invalidate];
+        }
+        self.fetchTimer = nil;
+    }
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -394,23 +410,35 @@
     //[OTRUtilities deleteAllBuddiesAndMessages];
 }
 
+-(void)application:(UIApplication *)application performFetchWithCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+    [self autoLoginFromBackground:YES];
+    
+    self.fetchTimer = [NSTimer scheduledTimerWithTimeInterval:28.5 target:self selector:@selector(fetchTimerUpdate:) userInfo:@{@"completion": completionHandler} repeats:NO];
+}
+
+- (void) fetchTimerUpdate:(NSTimer*)timer {
+    [[OTRProtocolManager sharedInstance] disconnectAllAccountsSocketOnly:YES];
+    NSDictionary *userInfo = timer.userInfo;
+    void (^completion)(UIBackgroundFetchResult) = [userInfo objectForKey:@"completion"];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        // We should probbaly return accurate fetch results
+        if (completion) {
+            completion(UIBackgroundFetchResultNewData);
+        }
+    });
+    self.fetchTimer = nil;
+}
+
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
-    [self autoLoginFromBackground:YES];
-
+    [self application:application performFetchWithCompletionHandler:completionHandler];
+    
     [self.pushController receiveRemoteNotification:userInfo completion:^(OTRBuddy * _Nullable buddy, NSError * _Nullable error) {
         // Only show notification if buddy lookup succeeds
         if (buddy) {
             [application showLocalNotificationForKnockFrom:buddy];
         }
     }];
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(20 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [[OTRProtocolManager sharedInstance] disconnectAllAccounts];
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            completionHandler(UIBackgroundFetchResultNewData);
-        });
-    });
 }
 
 - (BOOL) application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray * _Nullable))restorationHandler {
