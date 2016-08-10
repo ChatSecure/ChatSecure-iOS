@@ -75,33 +75,51 @@
         if ([stream.tag isKindOfClass:[NSString class]]) {
             NSString *username = [[xmppMessage from] bare];
             
-            if ([xmppMessage isErrorMessage]) {
-                NSError *error = [xmppMessage errorMessage];
-                DDLogWarn(@"XMPP Error: %@",error);
-            }
-            
             [self handleChatState:xmppMessage username:username stream:stream transaction:transaction];
             [self handleDeliverResponse:xmppMessage transaction:transaction];
             
-            if ([xmppMessage isMessageWithBody] && ![xmppMessage isErrorMessage])
-            {
-                OTRXMPPBuddy *messageBuddy = [OTRXMPPBuddy fetchBuddyWithUsername:username withAccountUniqueId:stream.tag transaction:transaction];
-                if (messageBuddy && ![self duplicateMessage:xmppMessage buddyUniqueId:messageBuddy.uniqueId transaction:transaction]) {
-                    OTRMessage *message = [self messageFromXMPPMessage:xmppMessage buddyId:messageBuddy.uniqueId];
-                    message.incoming = YES;
-                    id<OTRThreadOwner>activeThread = [[OTRAppDelegate appDelegate] activeThread];
-                    if([[activeThread threadIdentifier] isEqualToString:message.threadId]) {
-                        message.read = YES;
-                    }
-                    
-                    if (messageBuddy) {
-                        OTRAccount *account = [OTRAccount fetchObjectWithUniqueID:xmppStream.tag transaction:transaction];
-                        [[OTRKit sharedInstance] decodeMessage:message.text username:messageBuddy.username accountName:account.username protocol:kOTRProtocolTypeXMPP tag:message];
+            OTRXMPPBuddy *messageBuddy = [OTRXMPPBuddy fetchBuddyWithUsername:username withAccountUniqueId:stream.tag transaction:transaction];
+            if (!messageBuddy) {
+                // message from server
+                DDLogWarn(@"No buddy for message: %@", xmppMessage);
+                return;
+            }
+            
+            OTRMessage *message = [self messageFromXMPPMessage:xmppMessage buddyId:messageBuddy.uniqueId];
+            message.incoming = YES;
+            id<OTRThreadOwner>activeThread = [[OTRAppDelegate appDelegate] activeThread];
+            if([[activeThread threadIdentifier] isEqualToString:message.threadId]) {
+                message.read = YES;
+            }
+            OTRAccount *account = [OTRAccount fetchObjectWithUniqueID:xmppStream.tag transaction:transaction];
+            
+            
+            if ([xmppMessage isErrorMessage]) {
+                NSError *error = [xmppMessage errorMessage];
+                message.error = error;
+                NSString *errorText = [[xmppMessage elementForName:@"error"] elementForName:@"text"].stringValue;
+                if (!message.text) {
+                    if (errorText) {
+                        message.text = errorText;
                     } else {
-                        // message from server
-                        DDLogWarn(@"No buddy for message: %@", xmppMessage);
+                        message.text = error.localizedDescription;
                     }
                 }
+                if ([errorText containsString:@"OTR Error"]) {
+                    // automatically renegotiate a new session when there's an error
+                    [[OTRKit sharedInstance] initiateEncryptionWithUsername:username accountName:account.username protocol:account.protocolTypeString];
+                }
+                [message saveWithTransaction:transaction];
+                return;
+            }
+            
+            if ([self duplicateMessage:xmppMessage buddyUniqueId:messageBuddy.uniqueId transaction:transaction]) {
+                DDLogWarn(@"Duplicate message received: %@", xmppMessage);
+                return;
+            }
+            
+            if (message.text) {
+                [[OTRKit sharedInstance] decodeMessage:message.text username:messageBuddy.username accountName:account.username protocol:kOTRProtocolTypeXMPP tag:message];
             }
         }
     }];
