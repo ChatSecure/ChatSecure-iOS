@@ -309,16 +309,17 @@
     }];
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        self.backgroundTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(timerUpdate:) userInfo:nil repeats:YES];
+        self.backgroundTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timerUpdate:) userInfo:nil repeats:YES];
     });
 }
                                 
 - (void) timerUpdate:(NSTimer*)timer {
     UIApplication *application = [UIApplication sharedApplication];
 
-    DDLogInfo(@"Timer update, background time left: %f", application.backgroundTimeRemaining);
+    NSTimeInterval timeRemaining = application.backgroundTimeRemaining;
+    DDLogVerbose(@"Timer update, background time left: %f", timeRemaining);
     
-    if ([application backgroundTimeRemaining] < 60 && !self.didShowDisconnectionWarning && [OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyShowDisconnectionWarning]) 
+    if (timeRemaining < 60 && !self.didShowDisconnectionWarning && [OTRSettingsManager boolForOTRSettingKey:kOTRSettingKeyShowDisconnectionWarning])
     {
         UILocalNotification *localNotif = [[UILocalNotification alloc] init];
         if (localNotif) {
@@ -329,15 +330,15 @@
         }
         self.didShowDisconnectionWarning = YES;
     }
-    if ([application backgroundTimeRemaining] < 15)
+    if (timeRemaining < 3)
     {
         // Clean up here
         [self.backgroundTimer invalidate];
         self.backgroundTimer = nil;
         
-        [[OTRProtocolManager sharedInstance] disconnectAllAccounts];
+        [[OTRProtocolManager sharedInstance] disconnectAllAccountsSocketOnly:YES];
         
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(8 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [application endBackgroundTask:self.backgroundTask];
             self.backgroundTask = UIBackgroundTaskInvalid;
         });
