@@ -274,6 +274,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
     [self.viewHandler.keyCollectionObserver stopObserving:oldKey collection:oldCollection];
     [self.viewHandler.keyCollectionObserver observe:self.threadKey collection:self.threadCollection];
     [self updateViewWithKey:self.threadKey colleciton:self.threadCollection];
+    [self.viewHandler setup:OTRChatDatabaseViewExtensionName groups:@[self.threadKey]];
     [self moveLastComposingTextForThreadKey:self.threadKey colleciton:self.threadCollection toTextView:self.inputToolbar.contentView.textView];
     [self.collectionView reloadData];
 }
