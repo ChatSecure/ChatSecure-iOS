@@ -32,9 +32,9 @@ class OTRSignalTest: XCTestCase {
         let ourDatabaseManager = self.setupDatabaseWithName(#function)
         let otherDatbaseManager = self.setupDatabaseWithName("\(#function)-other")
         
-        let ourAccount = OTRXMPPAccount()
+        let ourAccount = TestXMPPAccount()
         ourAccount.username = "ourAccount@something.com"
-        let otherAccount = OTRXMPPAccount()
+        let otherAccount = TestXMPPAccount()
         otherAccount.username = "otherAccount@something.com"
         
         let ourDatabaseConnection = ourDatabaseManager.newConnection()
