@@ -56,7 +56,7 @@ Download the source code and **don't forget** to pull down all of the submodules
     $ cd ChatSecure-iOS/
     $ git submodule update --init --recursive
     
-Now you'll need to build the dependencies. During this process we will automatically verify the integity of each package by checking its GPG signature. Install [GPGTools](https://gpgtools.org) and add the public signing keys for OpenSSL, GnuPG, libevent, and libotr. *(TODO make these links to the keys)*
+Now you'll need to build the dependencies. During this process we will automatically clone the sources off GitHub. You will need to have OpenSSH installed and have a [public key linked to your GitHub account](https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/).
     
     $ bash ./Submodules/CPAProxy/scripts/build-all.sh
     $ bash ./Submodules/OTRKit/scripts/build-all.sh
