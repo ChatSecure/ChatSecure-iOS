@@ -61,14 +61,10 @@ PODS:
     - KissXML/Core (= 5.1.2)
   - KissXML/Core (5.1.2)
   - KVOController (1.1.0)
-  - libsqlfs (1.3):
-    - libsqlfs/standard (= 1.3)
   - libsqlfs/common (1.3)
   - libsqlfs/SQLCipher (1.3):
     - libsqlfs/common
     - SQLCipher (~> 3.4.0)
-  - libsqlfs/standard (1.3):
-    - libsqlfs/common
   - Mantle (2.0.7):
     - Mantle/extobjc (= 2.0.7)
   - Mantle/extobjc (2.0.7)
@@ -345,7 +341,7 @@ DEPENDENCIES:
   - JTSImageViewController (~> 1.4)
   - JVFloatLabeledTextField (~> 1.0)
   - KVOController (~> 1.0)
-  - libsqlfs (from `Podspecs/libsqlfs.podspec`)
+  - libsqlfs/SQLCipher (from `Podspecs/libsqlfs.podspec`)
   - Mantle (~> 2.0)
   - MBProgressHUD (~> 0.9)
   - MWFeedParser (~> 1.0)
@@ -428,7 +424,7 @@ SPEC CHECKSUMS:
   JVFloatLabeledTextField: ea4a3d8387ddd43724c472bb2b8ab39b79af05d4
   KissXML: 246c842586bb77110e04fb88e19376d96245c856
   KVOController: 321b5fc59300fcaabd42c0f679baa7a27efbb2fd
-  libsqlfs: 9f72d806d77e72876ff595feedd4fb497a05c9cf
+  libsqlfs: 54d2a3159625746e6b4aeea109a8d591bdc5fd00
   Mantle: bc40bb061d8c2c6fb48d5083e04d928c3b7f73d9
   MBProgressHUD: 1569cf7ace17a8bac47aabfbb8580a49690386d1
   MWFeedParser: 2cf646014c1baf6ad1b08c480b40a08180079247
@@ -441,7 +437,7 @@ SPEC CHECKSUMS:
   QRCodeReaderViewController: 6538745c8f4ffa9407a26bd7f9489ea01739e7b0
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   SAMKeychain: 6b04852a20684167aea97bdf8ba12c95d3616376
-  SQLCipher: 4c768761421736a247ed6cf412d9045615d53dff
+  SQLCipher: 5edce62bad2091ed65a422927fedee15149ad04c
   TTTAttributedLabel: 0a2ac7b2dd726d32a070dafb01446026b11e624f
   TUSafariActivity: afc55a00965377939107ce4fdc7f951f62454546
   uservoice-iphone-sdk: 9abf27254c8488d7b72d70fb9b621132d6beebd4
@@ -451,6 +447,6 @@ SPEC CHECKSUMS:
   YapDatabase: b1e43555a34a5298e23a045be96817a5ef0da58f
   ZXingObjC: bf15b3814f7a105b6d99f47da2333c93a063650a
 
-PODFILE CHECKSUM: 7317c8e5be8a343078162151f4dd56e8ce700042
+PODFILE CHECKSUM: dd6c8a7ed7006ce4c0f0c66c82e25677751bce40
 
 COCOAPODS: 1.1.0.rc.1

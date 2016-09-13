@@ -59,7 +59,7 @@ abstract_target 'ChatSecureCorePods' do
   pod 'ZXingObjC', '~> 3.0'
 
   # CocoaPods 1.0 cannot compile C files anymore so we rename .c to .m.
-  pod 'libsqlfs', :podspec => 'Podspecs/libsqlfs.podspec'
+  pod 'libsqlfs/SQLCipher', :podspec => 'Podspecs/libsqlfs.podspec'
   pod 'SQLCipher', :podspec => 'Podspecs/SQLCipher.podspec.json'
 
   # Local Podspecs
