@@ -7,8 +7,8 @@
 //
 
 #import "OTRCertificatePinning.h"
-#import <SSKeychain/SSKeychain.h>
-#import "SSKeychainQuery.h"
+#import <SAMKeychain/SAMKeychain.h>
+#import "SAMKeychainQuery.h"
 #import "GCDAsyncSocket.h"
 #import "AFSecurityPolicy.h"
 #import "XMPPStream.h"
@@ -125,7 +125,7 @@ static id AFPublicKeyForCertificate(NSData *certificate) {
     NSData * certData = [OTRCertificatePinning dataForCertificate:cert];
     
     if ([hostname length] && [certData length]) {
-        SSKeychainQuery * keychainQuery = [[SSKeychainQuery alloc] init];
+        SAMKeychainQuery * keychainQuery = [[SAMKeychainQuery alloc] init];
         keychainQuery.service = kOTRCertificateServiceName;
         keychainQuery.account = hostname;
         
@@ -157,7 +157,7 @@ static id AFPublicKeyForCertificate(NSData *certificate) {
 + (NSArray *)storedCertificatesWithHostName:(NSString *)hostname {
     NSArray * certificateArray = nil;
     
-    SSKeychainQuery * keychainQuery = [self keychainQueryForHostName:hostname];
+    SAMKeychainQuery * keychainQuery = [self keychainQueryForHostName:hostname];
     
     NSError * error =nil;
     [keychainQuery fetch:&error];
@@ -214,13 +214,13 @@ static id AFPublicKeyForCertificate(NSData *certificate) {
 + (NSDictionary *)allCertificates {
     NSMutableDictionary * resultsDictionary = [NSMutableDictionary dictionary];
 
-    NSArray * allCertificatesArray = [SSKeychain accountsForService:kOTRCertificateServiceName];
+    NSArray * allCertificatesArray = [SAMKeychain accountsForService:kOTRCertificateServiceName];
     
     
     if ([allCertificatesArray count]) {
         [allCertificatesArray enumerateObjectsUsingBlock:^(NSDictionary * keychainProperties, NSUInteger idx, BOOL *stop) {
             
-            NSString * domain = keychainProperties[kSSKeychainAccountKey];
+            NSString * domain = keychainProperties[kSAMKeychainAccountKey];
             NSArray * certs = [self storedCertificatesWithHostName:domain];
             resultsDictionary[domain] = certs;
         }];
@@ -231,8 +231,8 @@ static id AFPublicKeyForCertificate(NSData *certificate) {
 
 }
 
-+ (SSKeychainQuery *)keychainQueryForHostName:(NSString *)hostname {
-    SSKeychainQuery * keychainQuery = [[SSKeychainQuery alloc] init];
++ (SAMKeychainQuery *)keychainQueryForHostName:(NSString *)hostname {
+    SAMKeychainQuery * keychainQuery = [[SAMKeychainQuery alloc] init];
     keychainQuery.service = kOTRCertificateServiceName;
     keychainQuery.account = hostname;
     
@@ -241,13 +241,13 @@ static id AFPublicKeyForCertificate(NSData *certificate) {
 
 + (void)deleteAllCertificatesWithHostName:(NSString *)hostname {
     NSError * error = nil;
-    [SSKeychain deletePasswordForService:kOTRCertificateServiceName account:hostname error:&error];
+    [SAMKeychain deletePasswordForService:kOTRCertificateServiceName account:hostname error:&error];
     if (error) {
         DDLogError(@"Error deleting all certificates: %@", error);
     }
 }
 + (void)deleteCertificate:(SecCertificateRef)cert withHostName:(NSString *)hostname {
-    SSKeychainQuery * keychainQuery = [self keychainQueryForHostName:hostname];
+    SAMKeychainQuery * keychainQuery = [self keychainQueryForHostName:hostname];
     
     NSError * error = nil;
     

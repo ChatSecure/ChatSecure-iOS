@@ -6,6 +6,7 @@ post_install do |installer|
   installer.pods_project.targets.each do |target|
     target.build_configurations.each do |config|
       config.build_settings['ENABLE_BITCODE'] = 'NO'
+      # config.build_settings['SWIFT_VERSION'] = '2.3'
     end
   end
 end
@@ -17,7 +18,7 @@ inhibit_all_warnings!
 
 source 'https://github.com/CocoaPods/Specs.git'
 
-target 'ChatSecureCore' do
+abstract_target 'ChatSecureCorePods' do
   pod 'AFNetworking', '~> 3.1'
   pod "Appirater", '~> 2.0'
   pod 'OpenInChrome', '~> 0.0'
@@ -25,7 +26,7 @@ target 'ChatSecureCore' do
   pod "CocoaLumberjack", '~> 2.0'
   pod "HockeySDK-Source", '~> 3.7'
   pod 'MBProgressHUD', '~> 0.9'
-  pod "SSKeychain", '~> 1.2'
+  pod "SAMKeychain", '~> 1.5'
   # pod 'gtm-oauth2', '~> 0.1.0' # Trunk is outdated, using local podspec
   pod 'YapDatabase/SQLCipher', '~> 2.9'
   pod 'Mantle', '~> 2.0'
@@ -57,11 +58,13 @@ target 'ChatSecureCore' do
   pod 'QRCodeReaderViewController', '~> 4.0'
   pod 'ZXingObjC', '~> 3.0'
 
+  # CocoaPods 1.0 cannot compile C files anymore so we rename .c to .m.
+  pod 'libsqlfs', :podspec => 'Podspecs/libsqlfs.podspec'
+  pod 'SQLCipher', :podspec => 'Podspecs/SQLCipher.podspec.json'
 
   # Local Podspecs
   pod 'gtm-http-fetcher', :podspec => 'Podspecs/gtm-http-fetcher.podspec'
   pod 'gtm-oauth2', :podspec => 'Podspecs/gtm-oauth2.podspec'
-  #pod 'SQLCipher/fts', :podspec => 'Podspecs/SQLCipher.podspec.json'
 
   # Forks
   pod 'JSQMessagesViewController', :git => 'https://github.com/ChatSecure/JSQMessagesViewController', :branch => '7.2.0-send_button'
@@ -73,4 +76,7 @@ target 'ChatSecureCore' do
   pod 'CPAProxy', :path => 'Submodules/CPAProxy/CPAProxy.podspec'
   pod 'XMPPFramework', :path => 'Submodules/XMPPFramework/XMPPFramework.podspec'
   pod 'IOCipher/GCDWebServer', :path => 'Submodules/IOCipher/IOCipher.podspec'
+
+  target 'ChatSecureCore'
+  target 'ChatSecure'
 end
