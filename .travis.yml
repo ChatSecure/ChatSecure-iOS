@@ -23,8 +23,9 @@ install:
 
 before_script:
   - export COCOAPODS_DISABLE_DETERMINISTIC_UUIDS=1 # https://github.com/CocoaPods/CocoaPods/issues/3850
-  - bundle exec pod repo update
+  - bundle exec pod repo update --silent
   - bundle exec pod install
+  - bundle exec pod update libsqlfs SQLCipher --no-repo-update # Waiting for CocoaPods fix https://github.com/CocoaPods/CocoaPods/pull/5844
 script:
   - set -o pipefail
   - xcodebuild -workspace ChatSecure.xcworkspace -scheme ChatSecureTests -sdk iphonesimulator -destination 'name=iPhone 6' test | xcpretty -c
