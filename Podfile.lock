@@ -348,7 +348,7 @@ DEPENDENCIES:
   - Navajo (~> 0.0)
   - OpenInChrome (~> 0.0)
   - OTRKit (from `Submodules/OTRKit/OTRKit.podspec`)
-  - ParkedTextField (~> 0.2)
+  - ParkedTextField (from `Submodules/ParkedTextField/ParkedTextField.podspec`)
   - ProxyKit/Client (from `Submodules/ProxyKit/ProxyKit.podspec`)
   - PureLayout (~> 3.0)
   - QRCodeReaderViewController (~> 4.0)
@@ -385,6 +385,8 @@ EXTERNAL SOURCES:
     :podspec: Podspecs/libsqlfs.podspec
   OTRKit:
     :path: Submodules/OTRKit/OTRKit.podspec
+  ParkedTextField:
+    :path: Submodules/ParkedTextField/ParkedTextField.podspec
   ProxyKit:
     :path: Submodules/ProxyKit/ProxyKit.podspec
   SQLCipher:
@@ -447,6 +449,6 @@ SPEC CHECKSUMS:
   YapDatabase: b1e43555a34a5298e23a045be96817a5ef0da58f
   ZXingObjC: bf15b3814f7a105b6d99f47da2333c93a063650a
 
-PODFILE CHECKSUM: c643eeee089e78beaf39c3b1153623c43456bbc4
+PODFILE CHECKSUM: dc7a0cd572353ee917d7b98efa82287a89e1583c
 
-COCOAPODS: 1.1.0.rc.1
+COCOAPODS: 1.1.0.rc.2
