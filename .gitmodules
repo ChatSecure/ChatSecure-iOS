@@ -22,3 +22,6 @@
 [submodule "Submodules/ChatSecure-Push-iOS"]
 	path = Submodules/ChatSecure-Push-iOS
 	url = git@github.com:ChatSecure/ChatSecure-Push-iOS.git
+[submodule "Submodules/ParkedTextField"]
+	path = Submodules/ParkedTextField
+	url = git@github.com:ChatSecure/ParkedTextField.git
