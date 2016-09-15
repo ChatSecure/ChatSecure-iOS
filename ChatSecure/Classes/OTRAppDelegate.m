@@ -163,7 +163,12 @@
     [application setMinimumBackgroundFetchInterval:UIApplicationBackgroundFetchIntervalMinimum];
     
     [self removeFacebookAccounts];
-        
+    
+    // For disabling screen dimming while plugged in
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(batteryStateDidChange:) name:UIDeviceBatteryStateDidChangeNotification object:nil];
+    [UIDevice currentDevice].batteryMonitoringEnabled = YES;
+    [self batteryStateDidChange:nil];
+    
     return YES;
 }
 
@@ -341,6 +346,7 @@
     /*
      Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
      */
+    [self batteryStateDidChange:nil];
     
     DDLogInfo(@"Application became active");
     
@@ -524,6 +530,16 @@
 - (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {
     [[NSNotificationCenter defaultCenter] postNotificationName:OTRFailedRemoteNotificationRegistration object:self userInfo:@{kOTRNotificationErrorKey:err}];
     DDLogError(@"Error in registration. Error: %@%@", [err localizedDescription], [err userInfo]);
+}
+
+// To improve usability, keep the app open when you're plugged in
+- (void) batteryStateDidChange:(NSNotification*)notification {
+    UIDeviceBatteryState currentState = [[UIDevice currentDevice] batteryState];
+    if (currentState == UIDeviceBatteryStateCharging || currentState == UIDeviceBatteryStateFull) {
+        [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
+    } else {
+        [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
+    }
 }
 
 #pragma - mark Getters and Setters
