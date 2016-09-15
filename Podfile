@@ -78,5 +78,6 @@ abstract_target 'ChatSecureCorePods' do
   pod 'IOCipher/GCDWebServer', :path => 'Submodules/IOCipher/IOCipher.podspec'
 
   target 'ChatSecureCore'
+  target 'ChatSecureTests'
   target 'ChatSecure'
 end
