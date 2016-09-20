@@ -61,3 +61,6 @@ FOUNDATION_EXPORT const unsigned char ChatSecureCoreVersionString[];
 #import "OTRSignalPreKey.h"
 #import "OTRSignalSignedPreKey.h"
 #import "OTRSignalSession.h"
+
+//OMEMO Models
+#import "OTROMEMODevice.h"

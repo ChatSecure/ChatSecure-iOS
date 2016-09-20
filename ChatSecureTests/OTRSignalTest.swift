@@ -9,6 +9,12 @@
 import XCTest
 @testable import ChatSecureCore
 
+class OTRTestDatabaseManager:OTRDatabaseManager {
+    override class func yapDatabaseDirectory() -> String {
+        return NSTemporaryDirectory()
+    }
+}
+
 class OTRSignalTest: XCTestCase {
     
     override func setUp() {
@@ -17,7 +23,7 @@ class OTRSignalTest: XCTestCase {
     }
     
     func setupDatabaseWithName(name:String) -> OTRDatabaseManager {
-        let datatabseManager = OTRDatabaseManager()
+        let datatabseManager = OTRTestDatabaseManager()
         datatabseManager.setDatabasePassphrase("password", remember: false, error: nil)
         datatabseManager.setupDatabaseWithName(name, withMediaStorage: false)
         return datatabseManager

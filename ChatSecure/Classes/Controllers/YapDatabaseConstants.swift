@@ -37,6 +37,7 @@ import Foundation
     case SubscriptionRequestAccountEdgeName
     case MessageBuddyEdgeName
     case MessageMediaEdgeName
+    case OmemoDeviceEdgeName
     
     public func name() -> String {
         switch self {
@@ -44,6 +45,7 @@ import Foundation
             case SubscriptionRequestAccountEdgeName: return "OTRXMPPPresenceSubscriptionRequestEdges.account"
             case MessageBuddyEdgeName: return "buddy"
             case .MessageMediaEdgeName: return "media"
+            case .OmemoDeviceEdgeName: return "OmemoDeviceEdgeName"
         }
     }
 }

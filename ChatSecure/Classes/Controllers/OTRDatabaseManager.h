@@ -47,7 +47,9 @@ extern NSString *const OTRYapDatabaseSignalSessionSecondaryIndexColumnName;
 
 + (BOOL)existsYapDatabase;
 
++ (NSString *)yapDatabaseDirectory;
 + (NSString *)yapDatabasePathWithName:(NSString *)name;
+
 
 + (instancetype)sharedInstance;
 
