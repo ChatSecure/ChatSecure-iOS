@@ -18,6 +18,7 @@
 #import "OTRXMPPAccount.h"
 #import "OTRLanguageManager.h"
 
+@import AVFoundation;
 @import OTRAssets;
 
 @interface OTRMessagesHoldTalkViewController () <OTRHoldToTalkViewStateDelegate, OTRAudioSessionManagerDelegate>
@@ -105,6 +106,9 @@
 
 - (void)addPush2TalkButton
 {
+    if (self.hold2TalkButton) {
+        [self removePush2TalkButton];
+    }
     self.hold2TalkButton = [[OTRHoldToTalkView alloc] initForAutoLayout];
     [self setHold2TalkStatusWaiting];
     self.hold2TalkButton.delegate = self;
@@ -139,6 +143,9 @@
 
 - (void)addTrashViewItems
 {
+    if (self.trashView) {
+        [self removeTrashViewItems];
+    }
     self.trashView = [[OTRAudioTrashView alloc] initForAutoLayout];
     [self.view addSubview:self.trashView];
     
@@ -153,6 +160,9 @@
 
 - (void)addRecordingBackgroundView
 {
+    if (self.recordingBackgroundView) {
+        [self removeRecordingBackgroundView];
+    }
     self.recordingBackgroundView = [[UIView alloc] initForAutoLayout];
     self.recordingBackgroundView.backgroundColor = [UIColor grayColor];
     self.recordingBackgroundView.alpha = 0.7;
@@ -250,13 +260,31 @@
 - (void)didBeginTouch:(OTRHoldToTalkView *)view
 {
     //start Recording
-    [self addRecordingBackgroundView];
-    [self addTrashViewItems];
-    NSString *temporaryPath = NSTemporaryDirectory();
-    NSString *fileName = [NSString stringWithFormat:@"%@.m4a",[[NSUUID UUID] UUIDString]];
-    NSURL *url = [NSURL fileURLWithPath:[temporaryPath stringByAppendingPathComponent:fileName]];
-    [self.audioSessionManager recordAudioToURL:url error:nil];
-    [self setHold2TalkButtonRecording];
+    [[AVAudioSession sharedInstance] requestRecordPermission:^(BOOL granted) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (granted) {
+                [self addRecordingBackgroundView];
+                [self addTrashViewItems];
+                NSString *temporaryPath = NSTemporaryDirectory();
+                NSString *fileName = [NSString stringWithFormat:@"%@.m4a",[[NSUUID UUID] UUIDString]];
+                NSURL *url = [NSURL fileURLWithPath:[temporaryPath stringByAppendingPathComponent:fileName]];
+                
+                [self.audioSessionManager recordAudioToURL:url error:nil];
+                [self setHold2TalkButtonRecording];
+            } else {
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Microphone Disabled", @"microphone permission is disabled") message:@"To use this feature you must re-enable microphone permissions." preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction *fix = [UIAlertAction actionWithTitle:NSLocalizedString(@"Enable", @"enable permission") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                    NSURL *settings = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+                    [[UIApplication sharedApplication] openURL:settings];
+                }];
+                UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"cancel button") style:UIAlertActionStyleCancel handler:nil];
+                [alert addAction:fix];
+                [alert addAction:cancel];
+                [self presentViewController:alert animated:YES completion:nil];
+            }
+        });
+    }];
+    
 }
 
 - (void)view:(OTRHoldToTalkView *)view touchDidMoveToPointInWindow:(CGPoint)point
@@ -298,19 +326,21 @@
     //stop recording and send
     NSURL *currentURL = [self.audioSessionManager currentRecorderURL];
     [self.audioSessionManager stopRecording];
-    if (self.trashView.trashButton.isHighlighted) {
-        if([[NSFileManager defaultManager] fileExistsAtPath:currentURL.path]) {
-            [[NSFileManager defaultManager] removeItemAtPath:currentURL.path error:nil];
+    
+    if (currentURL) {
+        if (self.trashView.trashButton.isHighlighted) {
+            if([[NSFileManager defaultManager] fileExistsAtPath:currentURL.path]) {
+                [[NSFileManager defaultManager] removeItemAtPath:currentURL.path error:nil];
+            }
+        } else {
+            [self sendAudioFileURL:currentURL];
         }
-    } else {
-        [self sendAudioFileURL:currentURL];
-
     }
+
     
     [self removeTrashViewItems];
     [self setHold2TalkStatusWaiting];
     [self removeRecordingBackgroundView];
-    
 }
 
 - (void)touchCancelled:(OTRHoldToTalkView *)view
