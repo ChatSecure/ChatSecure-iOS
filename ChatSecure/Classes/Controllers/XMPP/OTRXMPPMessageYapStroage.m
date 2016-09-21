@@ -109,6 +109,7 @@
                     // automatically renegotiate a new session when there's an error
                     [[OTRKit sharedInstance] initiateEncryptionWithUsername:username accountName:account.username protocol:account.protocolTypeString];
                 }
+                // Suppress error messages for now...
                 [message saveWithTransaction:transaction];
                 return;
             }
