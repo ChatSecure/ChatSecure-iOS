@@ -7,7 +7,7 @@
 //
 
 #import "OTRAccount.h"
-#import <SSKeychain/SSKeychain.h>
+#import <SAMKeychain/SAMKeychain.h>
 #import "OTRLog.h"
 #import "OTRConstants.h"
 
@@ -99,14 +99,14 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
     
     if (!password.length || !self.rememberPassword) {
         NSError *error = nil;
-        [SSKeychain deletePasswordForService:kOTRServiceName account:self.uniqueId error:&error];
+        [SAMKeychain deletePasswordForService:kOTRServiceName account:self.uniqueId error:&error];
         if (error) {
             DDLogError(@"Error deleting password from keychain: %@%@", [error localizedDescription], [error userInfo]);
         }
         return;
     }
     NSError *error = nil;
-    [SSKeychain setPassword:password forService:kOTRServiceName account:self.uniqueId error:&error];
+    [SAMKeychain setPassword:password forService:kOTRServiceName account:self.uniqueId error:&error];
     if (error) {
         DDLogError(@"Error saving password to keychain: %@%@", [error localizedDescription], [error userInfo]);
     }
@@ -117,7 +117,7 @@ NSString *const OTRXMPPTorImageName           = @"xmpp-tor-logo.png";
         return nil;
     }
     NSError *error = nil;
-    NSString *password = [SSKeychain passwordForService:kOTRServiceName account:self.uniqueId error:&error];
+    NSString *password = [SAMKeychain passwordForService:kOTRServiceName account:self.uniqueId error:&error];
     if (error) {
         DDLogError(@"Error retreiving password from keychain: %@%@", [error localizedDescription], [error userInfo]);
         error = nil;

@@ -46,9 +46,10 @@ There's a more [full list of OTR clients on Wikipedia](https://en.wikipedia.org/
 
 ## Build Instructions
 
-You'll need [Cocoapods](http://cocoapods.org) for most of our dependencies.
+You'll need [Cocoapods](http://cocoapods.org) for most of our dependencies. Due to some issues with CocoaPods and Xcode 8, we need to use the pre-release version, which we'll install with `bundler` and our `Gemfile`.
     
-    $ gem install cocoapods
+    $ ### gem install cocoapods # Until CocoaPods is fixed use the bundle command below instead.
+    $ bundle install
     
 Download the source code and **don't forget** to pull down all of the submodules as well.
 
@@ -56,11 +57,13 @@ Download the source code and **don't forget** to pull down all of the submodules
     $ cd ChatSecure-iOS/
     $ git submodule update --init --recursive
     
-Now you'll need to build the dependencies. During this process we will automatically verify the integity of each package by checking its GPG signature. Install [GPGTools](https://gpgtools.org) and add the public signing keys for OpenSSL, GnuPG, libevent, and libotr. *(TODO make these links to the keys)*
+Now you'll need to build the dependencies.
     
     $ bash ./Submodules/CPAProxy/scripts/build-all.sh
     $ bash ./Submodules/OTRKit/scripts/build-all.sh
-    $ pod install
+    $ ### pod install # Until CocoaPods is fixed use the bundle commands below instead.
+    $ bundle exec pod repo update
+    $ bundle exec pod install
     
 Next you'll need to create your own version of environment-specific data. Make a copy of `Secrets-template.plist` as `Secrets.plist`:
 

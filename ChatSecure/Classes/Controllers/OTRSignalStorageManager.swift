@@ -99,11 +99,17 @@ public class OTRSignalStorageManager: NSObject, SignalStore {
         return maxId
     }
     
-    internal func fetchAllPreKeys(includeDeleted:Bool) -> [OTRSignalPreKey] {
-        self.databaseConnection.readWithBlock { (transaction) in
-            
-        }
-    }
+//    internal func fetchAllPreKeys(includeDeleted:Bool) -> [OTRSignalPreKey] {
+//        self.databaseConnection.readWithBlock { (transaction) in
+//            guard let secondaryIndexTransaction = transaction.ext(DatabaseExtensionName.SecondaryIndexName.name()) as? YapDatabaseSecondaryIndexTransaction else {
+//                return
+//            }
+//            
+//            let query = YapDatabaseQuery(string: "WHERE (OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName) = ?", parameters:  ["\(self.accountKey)"])
+//            secondaryIndexTransaction
+//            
+//        }
+//    }
     
 //    public func fetchOurExistingBundle() -> OTROMEMOBundleOutgoing? {
 //        var bundle:OTROMEMOBundleOutgoing? = nil

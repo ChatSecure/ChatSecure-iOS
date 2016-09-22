@@ -22,6 +22,7 @@
 
 @import Foundation;
 @import UIKit;
+@import XMPPFramework;
 
 #import "OTRBuddy.h"
 #import "OTRMessage.h"

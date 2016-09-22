@@ -146,6 +146,10 @@ static OTRProtocolManager *sharedManager = nil;
 - (void)loginAccount:(OTRAccount *)account userInitiated:(BOOL)userInitiated
 {
     id <OTRProtocol> protocol = [self protocolForAccount:account];
+    if ([protocol connectionStatus] != OTRLoginStatusDisconnected) {
+        DDLogError(@"Account already connected %@", account);
+        return;
+    }
     
     if([account isKindOfClass:[OTROAuthXMPPAccount class]])
     {
@@ -176,13 +180,17 @@ static OTRProtocolManager *sharedManager = nil;
     }];
 }
 
-- (void)disconnectAllAccounts
-{
+- (void)disconnectAllAccountsSocketOnly:(BOOL)socketOnly {
     @synchronized(self.protocolManagerDictionary) {
         [self.protocolManagerDictionary enumerateKeysAndObjectsUsingBlock:^(id key, id <OTRProtocol> protocol, BOOL *stop) {
-            [protocol disconnect];
+            [protocol disconnectSocketOnly:socketOnly];
         }];
     }
+}
+
+- (void)disconnectAllAccounts
+{
+    [self disconnectAllAccountsSocketOnly:NO];
 }
 
 - (void)protocolDidChange:(NSDictionary *)change

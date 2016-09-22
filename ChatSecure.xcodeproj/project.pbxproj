@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		6308D1451CA20762002F5F30 /* Pods-ChatSecureCore-acknowledgements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6308D1441CA20762002F5F30 /* Pods-ChatSecureCore-acknowledgements.plist */; };
-		6309E4D61D493B6F002CF8FC /* OTRAccountSignalEncryptionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6309E4D51D493B6E002CF8FC /* OTRAccountSignalEncryptionManager.swift */; };
+		62541784C9130738A1DC0C3C /* Pods_ChatSecureCorePods_ChatSecure.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F52F68785B05428F442DF47 /* Pods_ChatSecureCorePods_ChatSecure.framework */; };
+		6308D1451CA20762002F5F30 /* Pods-ChatSecureCorePods-ChatSecure-acknowledgements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6308D1441CA20762002F5F30 /* Pods-ChatSecureCorePods-ChatSecure-acknowledgements.plist */; };
 		631098B11BD6FED000494A47 /* YapDatabse+ChatSecure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631098B01BD6FED000494A47 /* YapDatabse+ChatSecure.swift */; };
 		631E1E9F1C583B6900E263CD /* ChatSecureCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9227C2A1BA7952100B5E1D0 /* ChatSecureCore.framework */; };
 		632AA7261D47FEDF00F65733 /* OTRSignalIdentityKey.h in Headers */ = {isa = PBXBuildFile; fileRef = 632AA7241D47FEDF00F65733 /* OTRSignalIdentityKey.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -27,6 +27,7 @@
 		6331072B1A16D1F200C17BAE /* DemoImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 633107291A16D1F200C17BAE /* DemoImages.xcassets */; };
 		6331072C1A16D1F200C17BAE /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6331072A1A16D1F200C17BAE /* Images.xcassets */; };
 		63363FAE1CCAE29B00B0C720 /* OTRYapExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63363FAD1CCAE29B00B0C720 /* OTRYapExtensions.swift */; };
+		633E88CE1D94751B00AD6FBE /* OTRAccountSignalEncryptionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6309E4D51D493B6E002CF8FC /* OTRAccountSignalEncryptionManager.swift */; };
 		634043191BD5AAF300ECA95A /* OTRBuddyEnums.h in Headers */ = {isa = PBXBuildFile; fileRef = 634043181BD5AAF300ECA95A /* OTRBuddyEnums.h */; };
 		6340431B1BD5BCD800ECA95A /* OTRXMPPRoomMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6340431A1BD5BCD800ECA95A /* OTRXMPPRoomMessage.swift */; };
 		6340431D1BD5BD0400ECA95A /* OTRXMPPRoomOccupant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6340431C1BD5BD0400ECA95A /* OTRXMPPRoomOccupant.swift */; };
@@ -79,7 +80,7 @@
 		63E353F61BB9E46D005C54C3 /* OTRPushTLVHandlerProtocols.h in Headers */ = {isa = PBXBuildFile; fileRef = 63E353F51BB9E41D005C54C3 /* OTRPushTLVHandlerProtocols.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		63F614DC1BB214660083A06A /* ChatSecureModelTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F614DB1BB214660083A06A /* ChatSecureModelTest.swift */; };
 		63FA130C1C8A4EB700AE33EF /* OTRMessagesCollectionViewFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FA130B1C8A4EB700AE33EF /* OTRMessagesCollectionViewFlowLayout.swift */; };
-		B642B7F15DE0AA8341861EA5 /* Pods_ChatSecureCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56A3B1E6BE7E08027EF903CD /* Pods_ChatSecureCore.framework */; };
+		7A6540ECCA04445E88F06962 /* Pods_ChatSecureCorePods_ChatSecureTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 281981F599E0F5C8397E6A3F /* Pods_ChatSecureCorePods_ChatSecureTests.framework */; };
 		D9227C241BA78E6B00B5E1D0 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D9227C231BA78E6B00B5E1D0 /* FontAwesome.ttf */; };
 		D9227C2D1BA7952100B5E1D0 /* ChatSecureCore.h in Headers */ = {isa = PBXBuildFile; fileRef = D9227C2C1BA7952100B5E1D0 /* ChatSecureCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D9227C3F1BA7952100B5E1D0 /* ChatSecureCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9227C2A1BA7952100B5E1D0 /* ChatSecureCore.framework */; };
@@ -399,6 +400,7 @@
 		D9AE3A351BA8DAB600255537 /* OTRLanguageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6331051C1A16D1A300C17BAE /* OTRLanguageManager.m */; };
 		D9CBBC581C642BAA005CD715 /* EnablePushViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9CBBC571C642BAA005CD715 /* EnablePushViewController.swift */; };
 		D9EEEDD31D2739A800B8BC54 /* OTRvCard.h in Headers */ = {isa = PBXBuildFile; fileRef = D9EEEDD11D27388600B8BC54 /* OTRvCard.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DDE1CAF4312DE1C724A33B72 /* Pods_ChatSecureCorePods_ChatSecureCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31610826406FD0CB714045AD /* Pods_ChatSecureCorePods_ChatSecureCore.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -455,10 +457,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		56A3B1E6BE7E08027EF903CD /* Pods_ChatSecureCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ChatSecureCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		281981F599E0F5C8397E6A3F /* Pods_ChatSecureCorePods_ChatSecureTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ChatSecureCorePods_ChatSecureTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		31610826406FD0CB714045AD /* Pods_ChatSecureCorePods_ChatSecureCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ChatSecureCorePods_ChatSecureCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		46AAC6968EC686E61C8E8EA4 /* Pods_ChatSecureCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ChatSecureCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		63039E961B0D43FE007C9978 /* OTRXMPPServerListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRXMPPServerListViewController.h; sourceTree = "<group>"; };
 		63039E971B0D43FE007C9978 /* OTRXMPPServerListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRXMPPServerListViewController.m; sourceTree = "<group>"; };
-		6308D1441CA20762002F5F30 /* Pods-ChatSecureCore-acknowledgements.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Pods-ChatSecureCore-acknowledgements.plist"; path = "Pods/Target Support Files/Pods-ChatSecureCore/Pods-ChatSecureCore-acknowledgements.plist"; sourceTree = "<group>"; };
+		6308D1441CA20762002F5F30 /* Pods-ChatSecureCorePods-ChatSecure-acknowledgements.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Pods-ChatSecureCorePods-ChatSecure-acknowledgements.plist"; path = "Pods/Target Support Files/Pods-ChatSecureCorePods-ChatSecure/Pods-ChatSecureCorePods-ChatSecure-acknowledgements.plist"; sourceTree = "<group>"; };
 		6309E4D51D493B6E002CF8FC /* OTRAccountSignalEncryptionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTRAccountSignalEncryptionManager.swift; sourceTree = "<group>"; };
 		631098B01BD6FED000494A47 /* YapDatabse+ChatSecure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "YapDatabse+ChatSecure.swift"; sourceTree = "<group>"; };
 		632AA7241D47FEDF00F65733 /* OTRSignalIdentityKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OTRSignalIdentityKey.h; path = "Signal-Storage/OTRSignalIdentityKey.h"; sourceTree = "<group>"; };
@@ -843,6 +847,7 @@
 		63FABC8D1A410EBF009BF681 /* JSQMessagesCollectionViewCell+ChatSecure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "JSQMessagesCollectionViewCell+ChatSecure.m"; sourceTree = "<group>"; };
 		63FABC8F1A41218E009BF681 /* NSString+ChatSecure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+ChatSecure.h"; sourceTree = "<group>"; };
 		63FABC901A41218E009BF681 /* NSString+ChatSecure.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+ChatSecure.m"; sourceTree = "<group>"; };
+		9F52F68785B05428F442DF47 /* Pods_ChatSecureCorePods_ChatSecure.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ChatSecureCorePods_ChatSecure.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CCD1F8E85C658C8D3865B584 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D913A56C1B747B62006C5ACD /* Onboarding.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Onboarding.storyboard; path = Interface/Onboarding.storyboard; sourceTree = "<group>"; };
 		D913A56E1B7481AD006C5ACD /* OTRWelcomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OTRWelcomeViewController.swift; path = Onboarding/OTRWelcomeViewController.swift; sourceTree = "<group>"; };
@@ -862,7 +867,7 @@
 		D95AD2221B67FD6A007DEBC3 /* OTRCircleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRCircleView.h; sourceTree = "<group>"; };
 		D95AD2231B67FD6A007DEBC3 /* OTRCircleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRCircleView.m; sourceTree = "<group>"; };
 		D95AD2281B684AE1007DEBC3 /* xmpp-server-list */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "xmpp-server-list"; path = "Submodules/xmpp-server-list"; sourceTree = SOURCE_ROOT; };
-		D973D7051A2D4094004D353E /* Pods-ChatSecureCore-acknowledgements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Pods-ChatSecureCore-acknowledgements.plist"; path = "Pods/Target Support Files/Pods-ChatSecureCore/Pods-ChatSecureCore-acknowledgements.plist"; sourceTree = SOURCE_ROOT; };
+		D973D7051A2D4094004D353E /* Pods-ChatSecureCorePods-ChatSecure-acknowledgements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Pods-ChatSecureCorePods-ChatSecure-acknowledgements.plist"; path = "Pods/Target Support Files/Pods-ChatSecureCorePods-ChatSecure/Pods-ChatSecureCorePods-ChatSecure-acknowledgements.plist"; sourceTree = SOURCE_ROOT; };
 		D978BC901BABE0F4009246CF /* OTRTheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTRTheme.h; sourceTree = "<group>"; };
 		D978BC911BABE0F4009246CF /* OTRTheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTRTheme.m; sourceTree = "<group>"; };
 		D989A84D1B5DBD90000608A9 /* OTRExistingAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OTRExistingAccountViewController.h; path = "Login View Controllers/OTRExistingAccountViewController.h"; sourceTree = "<group>"; };
@@ -895,6 +900,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D9227C3F1BA7952100B5E1D0 /* ChatSecureCore.framework in Frameworks */,
+				62541784C9130738A1DC0C3C /* Pods_ChatSecureCorePods_ChatSecure.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -903,6 +909,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				631E1E9F1C583B6900E263CD /* ChatSecureCore.framework in Frameworks */,
+				7A6540ECCA04445E88F06962 /* Pods_ChatSecureCorePods_ChatSecureTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -911,7 +918,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D9AE3A201BA8CCFE00255537 /* OTRAssets.framework in Frameworks */,
-				B642B7F15DE0AA8341861EA5 /* Pods_ChatSecureCore.framework in Frameworks */,
+				DDE1CAF4312DE1C724A33B72 /* Pods_ChatSecureCorePods_ChatSecureCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -950,7 +957,7 @@
 				633106661A16D1A300C17BAE /* LaunchScreen.xib */,
 				D9227C231BA78E6B00B5E1D0 /* FontAwesome.ttf */,
 				D95AD2281B684AE1007DEBC3 /* xmpp-server-list */,
-				D973D7051A2D4094004D353E /* Pods-ChatSecureCore-acknowledgements.plist */,
+				D973D7051A2D4094004D353E /* Pods-ChatSecureCorePods-ChatSecure-acknowledgements.plist */,
 				D9365E791A1EB0050006434A /* torrc */,
 				633107291A16D1F200C17BAE /* DemoImages.xcassets */,
 				6331072A1A16D1F200C17BAE /* Images.xcassets */,
@@ -1581,7 +1588,7 @@
 			isa = PBXGroup;
 			children = (
 				63DC0EB21A1ABC3E002C9598 /* Configurations */,
-				6308D1441CA20762002F5F30 /* Pods-ChatSecureCore-acknowledgements.plist */,
+				6308D1441CA20762002F5F30 /* Pods-ChatSecureCorePods-ChatSecure-acknowledgements.plist */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -1648,7 +1655,10 @@
 			isa = PBXGroup;
 			children = (
 				CCD1F8E85C658C8D3865B584 /* Pods.framework */,
-				56A3B1E6BE7E08027EF903CD /* Pods_ChatSecureCore.framework */,
+				46AAC6968EC686E61C8E8EA4 /* Pods_ChatSecureCore.framework */,
+				9F52F68785B05428F442DF47 /* Pods_ChatSecureCorePods_ChatSecure.framework */,
+				31610826406FD0CB714045AD /* Pods_ChatSecureCorePods_ChatSecureCore.framework */,
+				281981F599E0F5C8397E6A3F /* Pods_ChatSecureCorePods_ChatSecureTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1843,11 +1853,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6396AFBD1A169D54009F3E6C /* Build configuration list for PBXNativeTarget "ChatSecure" */;
 			buildPhases = (
+				26A8ED395C5418B361347335 /* [CP] Check Pods Manifest.lock */,
 				6396AF961A169D54009F3E6C /* Sources */,
 				6396AF971A169D54009F3E6C /* Frameworks */,
 				6396AF981A169D54009F3E6C /* Resources */,
 				6386E24E1A16DBAD003465DC /* ShellScript */,
 				D9227C481BA7952100B5E1D0 /* Embed Frameworks */,
+				1B1F00C90AA4375388D309AF /* [CP] Embed Pods Frameworks */,
+				B54AA4231DBE4A463B56D596 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -1864,9 +1877,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6396AFC01A169D54009F3E6C /* Build configuration list for PBXNativeTarget "ChatSecureTests" */;
 			buildPhases = (
+				77A00DC28BB2926A0668095F /* [CP] Check Pods Manifest.lock */,
 				6396AFAF1A169D54009F3E6C /* Sources */,
 				6396AFB01A169D54009F3E6C /* Frameworks */,
 				6396AFB11A169D54009F3E6C /* Resources */,
+				3465A939CCAAAAC0480C0795 /* [CP] Embed Pods Frameworks */,
+				A32A5DF4737208630E1EA1F8 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -1883,12 +1899,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = D9227C471BA7952100B5E1D0 /* Build configuration list for PBXNativeTarget "ChatSecureCore" */;
 			buildPhases = (
-				DD620CE63C109ADEB3C5E968 /* [CP] Check Pods Manifest.lock */,
+				A6D5997FD889EEEABB9C430A /* [CP] Check Pods Manifest.lock */,
 				D9227C251BA7952100B5E1D0 /* Sources */,
 				D9227C261BA7952100B5E1D0 /* Frameworks */,
 				D9227C271BA7952100B5E1D0 /* Headers */,
 				D9227C281BA7952100B5E1D0 /* Resources */,
-				9B19DC73436919A7B9E16DE4 /* [CP] Copy Pods Resources */,
+				4A17E470489F79ACE0124841 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -1944,14 +1960,19 @@
 				CLASSPREFIX = OTR;
 				LastSwiftMigration = 0700;
 				LastSwiftUpdateCheck = 0720;
-				LastUpgradeCheck = 0700;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = "Chris Ballinger";
 				TargetAttributes = {
 					6396AF991A169D54009F3E6C = {
 						CreatedOnToolsVersion = 6.1;
 						DevelopmentTeam = 4T8JLQR6GR;
+						LastSwiftMigration = 0800;
+						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.DataProtection = {
+								enabled = 1;
+							};
+							com.apple.Keychain = {
 								enabled = 1;
 							};
 							com.apple.Push = {
@@ -1964,10 +1985,12 @@
 					};
 					6396AFB21A169D54009F3E6C = {
 						CreatedOnToolsVersion = 6.1;
+						LastSwiftMigration = 0800;
 					};
 					D9227C291BA7952100B5E1D0 = {
 						CreatedOnToolsVersion = 7.0;
 						DevelopmentTeam = 4T8JLQR6GR;
+						LastSwiftMigration = 0800;
 					};
 					D93027551BAA381F000CC975 = {
 						CreatedOnToolsVersion = 7.0;
@@ -2039,7 +2062,7 @@
 				D99F178E1BAB9B2100604558 /* OTRResources.bundle in Resources */,
 				D9227C241BA78E6B00B5E1D0 /* FontAwesome.ttf in Resources */,
 				6331072C1A16D1F200C17BAE /* Images.xcassets in Resources */,
-				6308D1451CA20762002F5F30 /* Pods-ChatSecureCore-acknowledgements.plist in Resources */,
+				6308D1451CA20762002F5F30 /* Pods-ChatSecureCorePods-ChatSecure-acknowledgements.plist in Resources */,
 				D9365E7A1A1EB0050006434A /* torrc in Resources */,
 				6331072B1A16D1F200C17BAE /* DemoImages.xcassets in Resources */,
 				633107201A16D1A300C17BAE /* LaunchScreen.xib in Resources */,
@@ -2089,6 +2112,66 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		1B1F00C90AA4375388D309AF /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ChatSecureCorePods-ChatSecure/Pods-ChatSecureCorePods-ChatSecure-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		26A8ED395C5418B361347335 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		3465A939CCAAAAC0480C0795 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ChatSecureCorePods-ChatSecureTests/Pods-ChatSecureCorePods-ChatSecureTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		4A17E470489F79ACE0124841 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ChatSecureCorePods-ChatSecureCore/Pods-ChatSecureCorePods-ChatSecureCore-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		6386E24E1A16DBAD003465DC /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2102,22 +2185,7 @@
 			shellPath = /bin/sh;
 			shellScript = "python \"${SRCROOT}/OTRAssets/Strings/StringsConverter.py\"";
 		};
-		9B19DC73436919A7B9E16DE4 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ChatSecureCore/Pods-ChatSecureCore-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		DD620CE63C109ADEB3C5E968 /* [CP] Check Pods Manifest.lock */ = {
+		77A00DC28BB2926A0668095F /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -2129,7 +2197,52 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		A32A5DF4737208630E1EA1F8 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ChatSecureCorePods-ChatSecureTests/Pods-ChatSecureCorePods-ChatSecureTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A6D5997FD889EEEABB9C430A /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		B54AA4231DBE4A463B56D596 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ChatSecureCorePods-ChatSecure/Pods-ChatSecureCorePods-ChatSecure-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -2310,6 +2423,7 @@
 				D93DDB081BA79A2A00CD8331 /* OTRMessagesViewController.m in Sources */,
 				63BA43DC1D41826F007FAF7F /* OTRSignalStorageManager.swift in Sources */,
 				63828AA01D53F54F00B81249 /* OTROMEMOSignalCoordinator.swift in Sources */,
+				633E88CE1D94751B00AD6FBE /* OTRAccountSignalEncryptionManager.swift in Sources */,
 				63D150FC1D8A0C9C006FB2E2 /* OTROMEMODevice.m in Sources */,
 				D93DDB091BA79A2A00CD8331 /* OTRMessagesHoldTalkViewController.m in Sources */,
 				D93DDB0A1BA79A2A00CD8331 /* OTRNewBuddyViewController.m in Sources */,
@@ -2334,7 +2448,6 @@
 				D93DDB191BA79A2C00CD8331 /* OTRTextFieldTableViewCell.m in Sources */,
 				D93DDB1A1BA79A2C00CD8331 /* OTRButtonView.m in Sources */,
 				D93DDB1B1BA79A2C00CD8331 /* OTRAudioControlsView.m in Sources */,
-				6309E4D61D493B6F002CF8FC /* OTRAccountSignalEncryptionManager.swift in Sources */,
 				D93DDB1C1BA79A2C00CD8331 /* OTRPlayPauseProgressView.m in Sources */,
 				D93DDB1D1BA79A2C00CD8331 /* OTRPlayView.m in Sources */,
 				63C0C4431BE010B00086B529 /* YapDatabaseReadTransaction+ChatSecure.swift in Sources */,
@@ -2447,6 +2560,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -2456,8 +2570,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -2466,6 +2582,7 @@
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -2485,6 +2602,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 63DC0EB61A1ABC86002C9598 /* OTR_Release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				BUNDLE_DISPLAY_NAME_SUFFIX = " β";
@@ -2495,13 +2613,14 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = YES;
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = ChatSecure/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.chrisballinger.ChatSecure;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_VERSION = 2.3;
 			};
 			name = Beta;
 		};
@@ -2509,6 +2628,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 63DC0EB61A1ABC86002C9598 /* OTR_Release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
@@ -2520,6 +2640,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.chrisballinger.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "ChatSecureTests/ChatSecureTests-Bridging-Header.h";
+				SWIFT_VERSION = 2.3;
 			};
 			name = Beta;
 		};
@@ -2527,6 +2648,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -2536,8 +2658,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -2547,6 +2671,7 @@
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -2572,6 +2697,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -2581,8 +2707,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -2591,6 +2719,7 @@
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -2601,6 +2730,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -2610,6 +2740,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 63DC0EB41A1ABC86002C9598 /* OTR_Debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				BUNDLE_DISPLAY_NAME_SUFFIX = "";
@@ -2619,14 +2750,16 @@
 				CODE_SIGN_ENTITLEMENTS = ChatSecure/ChatSecure.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				DEVELOPMENT_TEAM = 4T8JLQR6GR;
 				INFOPLIST_FILE = ChatSecure/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.chrisballinger.ChatSecure;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "fe68233f-f26b-451f-b85b-69c7e737d52b";
+				PROVISIONING_PROFILE_SPECIFIER = "ChatSecure Dev Profile";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 2.3;
 			};
 			name = Debug;
 		};
@@ -2634,6 +2767,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 63DC0EB61A1ABC86002C9598 /* OTR_Release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				BUNDLE_DISPLAY_NAME_SUFFIX = "";
@@ -2642,14 +2776,16 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = ChatSecure/ChatSecure.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				DEVELOPMENT_TEAM = 4T8JLQR6GR;
 				INFOPLIST_FILE = ChatSecure/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.chrisballinger.ChatSecure;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "e7440889-8fd6-4e4e-b3ae-5d0cc8a727f8";
+				PROVISIONING_PROFILE = "a8b97d8c-efab-48eb-9c83-20f8985bafbf";
+				PROVISIONING_PROFILE_SPECIFIER = "ChatSecure Ad Hoc";
+				SWIFT_VERSION = 2.3;
 			};
 			name = Release;
 		};
@@ -2657,6 +2793,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 63DC0EB41A1ABC86002C9598 /* OTR_Debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2675,6 +2812,7 @@
 				PROVISIONING_PROFILE = "655d2ab0-dc16-43ae-a2c0-e13fa3fcb791";
 				SWIFT_OBJC_BRIDGING_HEADER = "ChatSecureTests/ChatSecureTests-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 2.3;
 			};
 			name = Debug;
 		};
@@ -2682,6 +2820,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 63DC0EB61A1ABC86002C9598 /* OTR_Release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
@@ -2693,6 +2832,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.chrisballinger.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "ChatSecureTests/ChatSecureTests-Bridging-Header.h";
+				SWIFT_VERSION = 2.3;
 			};
 			name = Release;
 		};
@@ -2700,16 +2840,16 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 63DC0EB41A1ABC86002C9598 /* OTR_Debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = ChatSecureCore/Info.plist;
 				INSTALL_PATH = ../;
@@ -2720,6 +2860,7 @@
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 2.3;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -2729,9 +2870,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 63DC0EB61A1ABC86002C9598 /* OTR_Release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -2739,7 +2881,6 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = ChatSecureCore/Info.plist;
 				INSTALL_PATH = ../;
@@ -2749,6 +2890,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 2.3;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -2758,9 +2900,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 63DC0EB61A1ABC86002C9598 /* OTR_Release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -2768,7 +2911,6 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = ChatSecureCore/Info.plist;
 				INSTALL_PATH = ../;
@@ -2778,6 +2920,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 2.3;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -2787,9 +2930,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 63DC0EB41A1ABC86002C9598 /* OTR_Debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = OTRResources/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
@@ -2806,10 +2949,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 63DC0EB61A1ABC86002C9598 /* OTR_Release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = OTRResources/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
@@ -2826,10 +2969,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 63DC0EB61A1ABC86002C9598 /* OTR_Release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = OTRResources/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
@@ -2846,15 +2989,15 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 63DC0EB41A1ABC86002C9598 /* OTR_Debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = OTRAssets/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -2874,8 +3017,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 63DC0EB61A1ABC86002C9598 /* OTR_Release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -2883,7 +3027,6 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = OTRAssets/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -2903,8 +3046,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 63DC0EB61A1ABC86002C9598 /* OTR_Release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -2912,7 +3056,6 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = OTRAssets/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";

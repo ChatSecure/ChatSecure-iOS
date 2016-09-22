@@ -13,7 +13,7 @@ import YapDatabase.YapDatabaseActionManager
     case Delete
 }
 
-@objc public class BuddyAction: OTRYapDatabaseObject, YapActionable {
+public class BuddyAction: OTRYapDatabaseObject, YapActionable {
     
     public var action:BuddyActionType = .Delete
     public var buddy:OTRBuddy?

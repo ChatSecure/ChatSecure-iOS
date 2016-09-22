@@ -7,7 +7,6 @@
 //
 
 #import "OTRExistingAccountViewController.h"
-#import "PureLayout.h"
 #import "OTRCircleView.h"
 #import "OTRWelcomeAccountTableViewDelegate.h"
 #import "OTRImages.h"
@@ -18,11 +17,11 @@
 #import "OTRGoogleOAuthXMPPAccount.h"
 #import "OTRGoolgeOAuthLoginHandler.h"
 #import "GTMOAuth2ViewControllerTouch.h"
-#import "OTRSecrets.h"
 #import "OTRDatabaseManager.h"
 #import "OTRChatSecureIDCreateAccountHandler.h"
 #import "OTRWelcomeAccountTableViewDelegate.h"
 @import OTRAssets;
+@import PureLayout;
 
 @implementation OTRWelcomeAccountInfo
 

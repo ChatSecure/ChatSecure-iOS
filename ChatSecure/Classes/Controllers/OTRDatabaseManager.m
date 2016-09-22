@@ -11,7 +11,7 @@
 #import "OTREncryptionManager.h"
 #import "OTRLog.h"
 #import "OTRDatabaseView.h"
-#import <SSKeychain/SSKeychain.h>
+#import <SAMKeychain/SAMKeychain.h>
 #import "OTRConstants.h"
 #import "OTRXMPPAccount.h"
 #import "OTRXMPPTorAccount.h"
@@ -264,9 +264,9 @@ NSString *const OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName = @
 {
     if (rememeber) {
         self.inMemoryPassphrase = nil;
-        [SSKeychain setPassword:passphrase forService:kOTRServiceName account:OTRYapDatabasePassphraseAccountName error:error];
+        [SAMKeychain setPassword:passphrase forService:kOTRServiceName account:OTRYapDatabasePassphraseAccountName error:error];
     } else {
-        [SSKeychain deletePasswordForService:kOTRServiceName account:OTRYapDatabasePassphraseAccountName];
+        [SAMKeychain deletePasswordForService:kOTRServiceName account:OTRYapDatabasePassphraseAccountName];
         self.inMemoryPassphrase = passphrase;
     }
 }
@@ -282,7 +282,7 @@ NSString *const OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName = @
         return self.inMemoryPassphrase;
     }
     else {
-        return [SSKeychain passwordForService:kOTRServiceName account:OTRYapDatabasePassphraseAccountName];
+        return [SAMKeychain passwordForService:kOTRServiceName account:OTRYapDatabasePassphraseAccountName];
     }
     
 }
