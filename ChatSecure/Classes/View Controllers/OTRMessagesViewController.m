@@ -1113,7 +1113,13 @@ typedef NS_ENUM(int, OTRDropDownType) {
     
     [[OTRMediaFileManager sharedInstance] copyDataFromFilePath:url.path toEncryptedPath:newPath completionQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0) completion:^(NSError *error) {
         
+        NSData *data = nil;
         if ([[NSFileManager defaultManager] fileExistsAtPath:url.path]) {
+            long long fileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:url.path error:nil][NSFileSize] longLongValue];
+            if (fileSize < 1024 * 1024 * 1) {
+                // Smaller than 1Mb
+                data = [NSData dataWithContentsOfFile:url.path];
+            }
             NSError *err = nil;
             [[NSFileManager defaultManager] removeItemAtPath:url.path error:&err];
             if (err) {
@@ -1127,7 +1133,7 @@ typedef NS_ENUM(int, OTRDropDownType) {
             [audioItem saveWithTransaction:transaction];
         }];
         
-        [self sendMediaItem:audioItem data:nil tag:message];        
+        [self sendMediaItem:audioItem data:data tag:message];
     }];
 }
 
