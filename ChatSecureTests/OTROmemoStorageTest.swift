@@ -13,6 +13,7 @@ class OTROmemoStorageTest: XCTestCase {
     
     var databaseManager:OTRDatabaseManager!
     var omemoStorage:OTROMEMOStorageManager!
+    var signalStorage:OTRSignalStorageManager!
     var accountKey:String!
     var accountCollection:String!
     let initialDevices:[NSNumber] = [1,2,3]
@@ -25,7 +26,8 @@ class OTROmemoStorageTest: XCTestCase {
         do {
             let contents = try NSFileManager().contentsOfDirectoryAtPath(databaseDirectory)
             try contents.forEach { (path) in
-                try NSFileManager().removeItemAtPath(path)
+                let fullPath = (databaseDirectory as NSString).stringByAppendingPathComponent(path)
+                try NSFileManager().removeItemAtPath(fullPath)
             }
         } catch {
             
@@ -47,6 +49,7 @@ class OTROmemoStorageTest: XCTestCase {
         self.databaseManager.setDatabasePassphrase("help", remember: false, error: nil)
         self.databaseManager.setupDatabaseWithName(name, withMediaStorage: false)
         self.omemoStorage = OTROMEMOStorageManager(accountKey: accountKey, accountCollection:accountCollection, databaseConnection: databaseManager.readWriteDatabaseConnection)
+        self.signalStorage = OTRSignalStorageManager(accountKey: accountKey, databaseConnection: databaseManager.readWriteDatabaseConnection, delegate: nil)
         
         databaseManager.readWriteDatabaseConnection.readWriteWithBlock { (transaction) in
             account.saveWithTransaction(transaction)
@@ -96,18 +99,18 @@ class OTROmemoStorageTest: XCTestCase {
     }
     
     func testOmemoFirstDevicesStorage() {
-        self.setupDatabase("test1")
+        self.setupDatabase(#function)
         self.storeInitialDevices()
     }
     
     func testOmemoSecondDeviesStorage() {
-        self.setupDatabase("test2")
+        self.setupDatabase(#function)
         self.storeInitialDevices()
         self.storeSecondDeviceList()
     }
     
     func testOmemoRemoveDevices() {
-        self.setupDatabase("test3")
+        self.setupDatabase(#function)
         self.storeInitialDevices()
         self.storeSecondDeviceList()
         
@@ -115,6 +118,30 @@ class OTROmemoStorageTest: XCTestCase {
         omemoStorage.storeOurDevices(thirdDeviceNumbers)
         let thirdStoredDevices = omemoStorage.getDevicesForParentYapKey(accountKey, yapCollection: accountCollection)
         XCTAssertEqual(thirdStoredDevices.count, 0)
+    }
+    
+    func testPreKeyStorage() {
+        self.setupDatabase(#function)
+        
+        let none = self.signalStorage.currentMaxPreKeyId()
+        XCTAssertNil(none)
+        
+        //Save a few random prekeys with id.
+        //Normally these should be sequential but shouldn't matter
+        let keyIds:[UInt32] =  [1,2,100]
+        keyIds.forEach { (id) in
+            self.signalStorage.storePreKey(NSData(), preKeyId: id)
+        }
+        
+        // Delete a prekey. In this case it's the max id but that shouldn't matter either.
+        self.signalStorage.deletePreKeyWithId(100)
+        XCTAssertFalse(self.signalStorage.containsPreKeyWithId(100))
+        XCTAssertFalse(self.signalStorage.containsPreKeyWithId(999))
+        XCTAssertTrue(self.signalStorage.containsPreKeyWithId(2))
+        
+        
+        let result = self.signalStorage.currentMaxPreKeyId()!
+        XCTAssertEqual(result, 100)
     }
     
 }

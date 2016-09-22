@@ -43,6 +43,7 @@ extension OTRAccountSignalEncryptionManager {
     }
     
     public func generateRandomSignedPreKey() -> SignalSignedPreKey? {
+        //TODO: Find unused prekey id incremented?
         guard let signedPreKey = self.keyHelper()?.generateSignedPreKeyWithIdentity(self.identityKeyPair, signedPreKeyId: arc4random()),
             let data = signedPreKey.serializedData() else {
             return nil
@@ -112,6 +113,11 @@ extension OTRAccountSignalEncryptionManager {
             return preKeys
         }
         return nil
+    }
+    
+    public func sessionRecordExistsForUsername(username:String, deviceId:Int32) -> Bool {
+        let address = SignalAddress(name: username, deviceId: deviceId)
+        return self.storage.sessionRecordExistsForAddress(address)
     }
 }
 

@@ -32,6 +32,8 @@ NSString *const OTRYapDatabseMessageIdSecondaryIndexColumnName = @"OTRYapDatabse
 NSString *const OTRYapDatabseRoomOccupantJIdSecondaryIndexColumnName = @"constOTRYapDatabseRoomOccupantJIdSecondaryIndex";
 NSString *const OTRYapDatabaseUnreadMessageSecondaryIndexColumnName = @"OTRYapDatbaseUnreadMessageSecondaryIndex";
 NSString *const OTRYapDatabaseSignalSessionSecondaryIndexColumnName = @"OTRYapDatabaseSignalSessionSecondaryIndexColumnName";
+NSString *const OTRYapDatabaseSignalPreKeyIdSecondaryIndexColumnName = @"OTRYapDatabaseSignalPreKeyIdSecondaryIndexColumnName";
+NSString *const OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName = @"OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName";
 
 @interface OTRDatabaseManager ()
 
@@ -173,6 +175,8 @@ NSString *const OTRYapDatabaseSignalSessionSecondaryIndexColumnName = @"OTRYapDa
     [setup addColumn:OTRYapDatabseRoomOccupantJIdSecondaryIndexColumnName withType:YapDatabaseSecondaryIndexTypeText];
     [setup addColumn:OTRYapDatabaseUnreadMessageSecondaryIndexColumnName withType:YapDatabaseSecondaryIndexTypeInteger];
     [setup addColumn:OTRYapDatabaseSignalSessionSecondaryIndexColumnName withType:YapDatabaseSecondaryIndexTypeText];
+    [setup addColumn:OTRYapDatabaseSignalPreKeyIdSecondaryIndexColumnName withType:YapDatabaseSecondaryIndexTypeInteger];
+    [setup addColumn:OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName withType:YapDatabaseSecondaryIndexTypeText];
     
     YapDatabaseSecondaryIndexHandler *indexHandler = [YapDatabaseSecondaryIndexHandler withObjectBlock:^(YapDatabaseReadTransaction * _Nonnull transaction, NSMutableDictionary * _Nonnull dict, NSString * _Nonnull collection, NSString * _Nonnull key, id  _Nonnull object) {
         if ([object conformsToProtocol:@protocol(OTRMessageProtocol)])
@@ -198,6 +202,17 @@ NSString *const OTRYapDatabaseSignalSessionSecondaryIndexColumnName = @"OTRYapDa
             if ([session.name length]) {
                 NSString *value = [NSString stringWithFormat:@"%@-%@",session.accountKey, session.name];
                 [dict setObject:value forKey:OTRYapDatabaseSignalSessionSecondaryIndexColumnName];
+            }
+        }
+        
+        if ([object isKindOfClass:[OTRSignalPreKey class]]) {
+            OTRSignalPreKey *preKey = (OTRSignalPreKey *)object;
+            NSNumber *keyId = @(preKey.keyId);
+            if (keyId) {
+                [dict setObject:keyId forKey:OTRYapDatabaseSignalPreKeyIdSecondaryIndexColumnName];
+            }
+            if (preKey.accountKey) {
+                [dict setObject:preKey.accountKey forKey:OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName];
             }
         }
     }];

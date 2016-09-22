@@ -13,9 +13,9 @@ NS_ASSUME_NONNULL_BEGIN
 @interface OTRSignalPreKey : OTRSignalObject
 
 @property (nonatomic) uint32_t keyId;
-@property (nonatomic, strong) NSData *keyData;
+@property (nonatomic, strong, nullable) NSData *keyData;
 
-- (nullable instancetype)initWithAccountKey:(NSString *)accountKey keyId:(uint32_t)keyId keyData:(NSData *)keyData;
+- (nullable instancetype)initWithAccountKey:(NSString *)accountKey keyId:(uint32_t)keyId keyData:(nullable NSData *)keyData;
 
 + (NSString *)uniqueKeyForAccountKey:(NSString *)accountKey keyId:(uint32_t)keyId;
 

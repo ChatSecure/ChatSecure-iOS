@@ -6,8 +6,18 @@
 //  Copyright © 2016 Chris Ballinger. All rights reserved.
 //
 
-#import "OTRSignalPreKey.h"
+#import "OTRSignalObject.h"
+@import YapDatabase;
 
-@interface OTRSignalSignedPreKey : OTRSignalPreKey
+NS_ASSUME_NONNULL_BEGIN
+
+@interface OTRSignalSignedPreKey : OTRSignalObject <YapDatabaseRelationshipNode>
+
+@property (nonatomic) uint32_t keyId;
+@property (nonatomic, strong) NSData *keyData;
+
+- (nullable instancetype)initWithAccountKey:(NSString *)accountKey keyId:(uint32_t)keyId keyData:(NSData *)keyData;
 
 @end
+
+NS_ASSUME_NONNULL_END

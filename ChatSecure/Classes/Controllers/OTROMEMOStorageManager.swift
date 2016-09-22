@@ -36,6 +36,15 @@ public class OTROMEMOStorageManager {
         return self.getDevicesForParentYapKey(self.accountKey, yapCollection: self.accountCollection)
     }
     
+    public func getDevicesForBuddy(username:String) -> [OTROMEMODevice] {
+        var result:[OTROMEMODevice]?
+        self.databaseConnection.readWithBlock { (transaction) in
+            let buddy = OTRBuddy.fetchBuddyWithUsername(username, withAccountUniqueId: self.accountKey, transaction: transaction)
+            result = self.getDevicesForParentYapKey(buddy.uniqueId, yapCollection: OTRBuddy.collection(), transaction: transaction)
+        }
+        return result ?? [OTROMEMODevice]();
+    }
+    
     private func storeDevices(devices:[NSNumber], parentYapKey:String, parentYapCollection:String, transaction:YapDatabaseReadWriteTransaction) {
         
         let previouslyStoredDevices = OTROMEMODevice.allDeviceIdsForParentKey(parentYapKey, collection:parentYapCollection, transaction: transaction)

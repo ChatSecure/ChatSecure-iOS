@@ -39,6 +39,14 @@ let kePepBundles = kPepPrefix+":bundles"
         self.accountYapKey = accountYapKey
         self.workQueue = dispatch_queue_create("OTROMEMOSignalCoordinator-work-queue", DISPATCH_QUEUE_SERIAL)
     }
+    
+    private func isOurJID(jid:XMPPJID) -> Bool {
+        guard let ourJID = self.myJID else {
+            return false;
+        }
+        
+        return jid.isEqualToJID(ourJID, options: XMPPJIDCompareBare)
+    }
 
 }
 
@@ -63,67 +71,46 @@ extension OTROMEMOSignalCoordinator { //OMEMOStorageDelegate
     
     public func storeDeviceIds(deviceIds: [NSNumber], forJID jid: XMPPJID) {
         
-        guard let ourJID = self.myJID else {
-            return;
-        }
-        
-        let isOurDeviceList = jid.isEqualToJID(ourJID, options: XMPPJIDCompareBare)
+        let isOurDeviceList = self.isOurJID(jid)
         
         if (isOurDeviceList) {
             self.omemoStorageManager.storeOurDevices(deviceIds)
         } else {
             self.omemoStorageManager.storeBuddyDevices(deviceIds, buddyUsername: jid.bare())
         }
-        
-        self.signalEncryptionManager.storage.databaseConnection.readWriteWithBlock { (transaction) in
-            
-            var yapParentKey = self.accountYapKey
-            var yapParentCollection = OTRAccount.collection()
-            
-            if !isOurDeviceList {
-                let bareJID = jid.bare()
-                let buddy = OTRBuddy.fetchBuddyWithUsername(bareJID, withAccountUniqueId: self.accountYapKey, transaction: transaction)
-                yapParentKey = buddy.uniqueId
-                yapParentCollection = OTRBuddy.collection()
-            }
-            
-            let previouslyStoredDevices = OTROMEMODevice.allDeviceIdsForParentKey(yapParentKey, collection: yapParentCollection, transaction: transaction)
-            let previouslyStoredDevicesIdSet = previouslyStoredDevices.map({ (device) -> NSNumber in
-                return device.deviceId
-            })
-            
-            if (Set(deviceIds) != Set(previouslyStoredDevicesIdSet)) {
-                //New Devices to be saved and list to be reworked
-                if isOurDeviceList {
-                    //Should probably send out a notification or delegate method because our device changed on us.
-                }
-                
-                
-            }
-            
-        }
-        
     }
     
-//    public func fetchDeviceIdsForJID(jid: XMPPJID) -> [NSNumber] {
+    public func fetchDeviceIdsForJID(jid: XMPPJID) -> [NSNumber] {
+        var devices:[OTROMEMODevice]?
+        if self.isOurJID(jid) {
+            devices = self.omemoStorageManager.getDevicesForOurAccount()
+            
+        } else {
+            devices = self.omemoStorageManager.getDevicesForBuddy(jid.bare())
+        }
+        
+        return (devices?.map({ (device) -> NSNumber in
+            return device.deviceId
+        })) ?? [NSNumber]()
+        
+    }
+
+    // not sure why we need this yet??
+    //Always returns most complete bundle with correct count of prekeys
+//    public func fetchMyBundle() -> OMEMOBundle {
 //        
+//        guard let bundle = self.signalEncryptionManager.storage.fetchOurExistingBundle() else {
+//            let outgoingBundle = self.signalEncryptionManager.generateOutgoingBundle()
+//        }
 //    }
-//    
-//    public func fetchBundleForJID(jid: XMPPJID, deviceId: NSNumber) -> OMEMOBundle {
-//        
-//    }
-//    
-//    public func myDeviceId() -> NSNumber {
-//        return NSNumber(unsignedInt: self.signalEncryptionManager.registrationId)
-//    }
-//    
-//    public func generatePrekeysWithCount(count: UInt) -> [NSNumber : NSData] {
-//        
-//    }
-//    
-//    public func isSessionValid(jid: XMPPJID, deviceId: NSNumber) -> Bool {
-//        
-//    }
+    
+    public func myDeviceId() -> NSNumber {
+        return NSNumber(unsignedInt: self.signalEncryptionManager.registrationId)
+    }
+
+    public func isSessionValid(jid: XMPPJID, deviceId: NSNumber) -> Bool {
+        return self.signalEncryptionManager.sessionRecordExistsForUsername(jid.bare(), deviceId: deviceId.intValue)
+    }
 }
 
 extension OTROMEMOSignalCoordinator:XMPPStreamDelegate {
