@@ -99,17 +99,26 @@ public class OTRSignalStorageManager: NSObject, SignalStore {
         return maxId
     }
     
-//    internal func fetchAllPreKeys(includeDeleted:Bool) -> [OTRSignalPreKey] {
-//        self.databaseConnection.readWithBlock { (transaction) in
-//            guard let secondaryIndexTransaction = transaction.ext(DatabaseExtensionName.SecondaryIndexName.name()) as? YapDatabaseSecondaryIndexTransaction else {
-//                return
-//            }
-//            
-//            let query = YapDatabaseQuery(string: "WHERE (OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName) = ?", parameters:  ["\(self.accountKey)"])
-//            secondaryIndexTransaction
-//            
-//        }
-//    }
+    internal func fetchAllPreKeys(includeDeleted:Bool) -> [OTRSignalPreKey] {
+        var preKeys = [OTRSignalPreKey]()
+        self.databaseConnection.readWithBlock { (transaction) in
+            guard let secondaryIndexTransaction = transaction.ext(DatabaseExtensionName.SecondaryIndexName.name()) as? YapDatabaseSecondaryIndexTransaction else {
+                return
+            }
+            
+            let query = YapDatabaseQuery(string: "WHERE (OTRYapDatabaseSignalPreKeyAccountKeySecondaryIndexColumnName) = ?", parameters:  ["\(self.accountKey)"])
+            secondaryIndexTransaction.enumerateKeysAndObjectsMatchingQuery(query, usingBlock: { (collection, key, object, stop) in
+                guard let preKey = object as? OTRSignalPreKey else {
+                    return
+                }
+                
+                if(preKey.keyData != nil || includeDeleted) {
+                    preKeys.append(preKey)
+                }
+            })
+        }
+        return preKeys
+    }
     
 //    public func fetchOurExistingBundle() -> OTROMEMOBundleOutgoing? {
 //        var bundle:OTROMEMOBundleOutgoing? = nil

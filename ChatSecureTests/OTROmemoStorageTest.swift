@@ -139,9 +139,19 @@ class OTROmemoStorageTest: XCTestCase {
         XCTAssertFalse(self.signalStorage.containsPreKeyWithId(999))
         XCTAssertTrue(self.signalStorage.containsPreKeyWithId(2))
         
-        
         let result = self.signalStorage.currentMaxPreKeyId()!
         XCTAssertEqual(result, 100)
+        
+        //Fetch all the remaining prekeys should get back 1,2
+        let allRemainingPrekeys = self.signalStorage.fetchAllPreKeys(false)
+        let remainingPreKeyIds = allRemainingPrekeys.map { (prekey) -> UInt32 in
+            return prekey.keyId
+        }
+        //Check that it has the two id expected and not the one that was deleted
+        XCTAssertTrue(remainingPreKeyIds.contains(1))
+        XCTAssertTrue(remainingPreKeyIds.contains(2))
+        XCTAssertFalse(remainingPreKeyIds.contains(100))
+        XCTAssertEqual(allRemainingPrekeys.count, 2)
     }
     
 }
